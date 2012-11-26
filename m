@@ -1,207 +1,146 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 08/14] ARM: SPEAr: DT: Update device nodes
-Date: Mon, 26 Nov 2012 16:55:08 +0530
-Message-ID: <CAKohpomH84SfHjZ78Rp9UoXgUZkTjFVoWPK_8N3dL5pxYhOWfA@mail.gmail.com>
-References: <cover.1352608333.git.viresh.kumar@linaro.org>
- <b3925b105ee2c6fe828ef3b54928aeee02a801ae.1352608333.git.viresh.kumar@linaro.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH Resend] gpio: stmpe: Add DT support for stmpe gpio
+Date: Mon, 26 Nov 2012 11:26:28 +0000
+Message-ID: <20121126112628.GH12782@gmail.com>
+References: <c0badc4f4021029a5de4393d7e3ca71494edb8ea.1353686946.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <b3925b105ee2c6fe828ef3b54928aeee02a801ae.1352608333.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c0badc4f4021029a5de4393d7e3ca71494edb8ea.1353686946.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: linus.walleij@linaro.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11 November 2012 10:09, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> From: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
->
-> This patch adds multiple device nodes for SPEAr machines and boards.
->
-> Signed-off-by: Bhavna Yadav <bhavna.yadav-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Deepak Sikri <deepak.sikri-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Rajeev Kumar <rajeev-dlh.kumar-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Shiraz Hashim <shiraz.hashim-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Vijay Kumar Mishra <vijay.kumar-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Vipin Kumar <vipin.kumar-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Vipul Kumar Samar <vipulkumar.samar-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> From: Vipul Kumar Samar <vipulkumar.samar@st.com>
+>=20
+> This patch allows the STMPE GPIO driver to be successfully probed and
+> initialised when Device Tree support is enabled. Bindings are mention=
+ed in
+> Documentation too.
+>=20
+> Signed-off-by: Vipul Kumar Samar <vipulkumar.samar@st.com>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> ---
+> V1->Resend:
+> ----------
+> - Don't move asignment of stmpe_gpio->chip.base to if (pdata) block.
+>=20
+>  Documentation/devicetree/bindings/gpio/gpio-stmpe.txt | 18 +++++++++=
++++++++++
+>  drivers/gpio/gpio-stmpe.c                             | 10 ++++++++-=
+-
+>  drivers/mfd/stmpe.c                                   |  2 ++
+>  3 files changed, 28 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-stmpe=
+=2Etxt
+>=20
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt b/=
+Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
+> new file mode 100644
+> index 0000000..7f010e0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-stmpe.txt
+> @@ -0,0 +1,18 @@
+> +STMPE gpio
+> +----------
+> +
+> +Required properties:
+> + - compatible: "st,stmpe-gpio"
+> +
+> +Optional properties:
+> + - norequest-mask: bitmask specifying which GPIOs should _not_ be re=
+questable
 
-Arnd/Olof,
+You have 'norequest-mask' here and 'st,norequest-mask' in the example.
 
-As discussed (With Arnd) over IRC, i would be sending a PULL request for
-this patchset.
+> +   due to different usage (e.g. touch, keypad)
+> +
+> +Node name must be stmpe_gpio and should be child node of stmpe node =
+to which it
+> +belongs.
+> +
+> +Example:
+> +	stmpe_gpio {
+> +		compatible =3D "st,stmpe-gpio";
+> +		st,norequest-mask =3D <0x20>;	//gpio 5 can't be used
+> +	};
+> diff --git a/drivers/gpio/gpio-stmpe.c b/drivers/gpio/gpio-stmpe.c
+> index dce3472..522c90e 100644
+> --- a/drivers/gpio/gpio-stmpe.c
+> +++ b/drivers/gpio/gpio-stmpe.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/gpio.h>
+>  #include <linux/irq.h>
+>  #include <linux/interrupt.h>
+> +#include <linux/of.h>
+>  #include <linux/mfd/stmpe.h>
+> =20
+>  /*
+> @@ -304,6 +305,7 @@ static void stmpe_gpio_irq_remove(struct stmpe_gp=
+io *stmpe_gpio)
+>  static int __devinit stmpe_gpio_probe(struct platform_device *pdev)
+>  {
+>  	struct stmpe *stmpe =3D dev_get_drvdata(pdev->dev.parent);
+> +	struct device_node *np =3D pdev->dev.of_node;
+>  	struct stmpe_gpio_platform_data *pdata;
+>  	struct stmpe_gpio *stmpe_gpio;
+>  	int ret;
+> @@ -321,13 +323,17 @@ static int __devinit stmpe_gpio_probe(struct pl=
+atform_device *pdev)
+> =20
+>  	stmpe_gpio->dev =3D &pdev->dev;
+>  	stmpe_gpio->stmpe =3D stmpe;
+> -	stmpe_gpio->norequest_mask =3D pdata ? pdata->norequest_mask : 0;
+> -
+>  	stmpe_gpio->chip =3D template_chip;
+>  	stmpe_gpio->chip.ngpio =3D stmpe->num_gpios;
+>  	stmpe_gpio->chip.dev =3D &pdev->dev;
+>  	stmpe_gpio->chip.base =3D pdata ? pdata->gpio_base : -1;
+> =20
+> +	if (pdata)
+> +		stmpe_gpio->norequest_mask =3D pdata->norequest_mask;
+> +	else if (np)
+> +		of_property_read_u32(np, "st,norequest-mask",
+> +				&stmpe_gpio->norequest_mask);
+> +
+>  	if (irq >=3D 0)
+>  		stmpe_gpio->irq_base =3D stmpe->irq_base + STMPE_INT_GPIO(0);
+>  	else
+> diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
+> index fd64efc..3e3ca9c 100644
+> --- a/drivers/mfd/stmpe.c
+> +++ b/drivers/mfd/stmpe.c
+> @@ -298,12 +298,14 @@ static struct resource stmpe_gpio_resources[] =3D=
+ {
+> =20
+>  static struct mfd_cell stmpe_gpio_cell =3D {
+>  	.name		=3D "stmpe-gpio",
+> +	.of_compatible	=3D "st,stmpe-gpio",
+>  	.resources	=3D stmpe_gpio_resources,
+>  	.num_resources	=3D ARRAY_SIZE(stmpe_gpio_resources),
+>  };
+> =20
+>  static struct mfd_cell stmpe_gpio_cell_noirq =3D {
+>  	.name		=3D "stmpe-gpio",
+> +	.of_compatible	=3D "st,stmpe-gpio",
+>  	/* gpio cell resources consist of an irq only so no resources here =
+*/
+>  };
+> =20
+> --=20
+> 1.7.12.rc2.18.g61b472e
 
-There are few updates/fixes in the bindings for few nodes (as the
-drivers for them
-just got pushed by their maintainers after some updates) and here is a diff
-for that. I will merge this diff with current patch in my PULL request.
+If 'st,norequest-mask' is truly required to be in the DT (I don't
+really understand it well enough to comment), and you fix up the
+inconsistency in the Documentation, you can apply my:
 
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Mon, 26 Nov 2012 16:44:53 +0530
-Subject: [PATCH] fixup! ARM: SPEAr: DT: Update device nodes
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
----
- arch/arm/boot/dts/spear1310-evb.dts | 14 ++++----------
- arch/arm/boot/dts/spear1340-evb.dts | 25 ++++++++-----------------
- arch/arm/boot/dts/spear13xx.dtsi    | 14 +++++++-------
- 3 files changed, 19 insertions(+), 34 deletions(-)
-
-diff --git a/arch/arm/boot/dts/spear1310-evb.dts
-b/arch/arm/boot/dts/spear1310-evb.dts
-index cd4e2f8..b56a801 100644
---- a/arch/arm/boot/dts/spear1310-evb.dts
-+++ b/arch/arm/boot/dts/spear1310-evb.dts
-@@ -348,7 +348,6 @@
- 				cs-gpios = <&gpio1 7 0>, <&spics 0>, <&spics 1>;
-
- 				stmpe610@0 {
--					status = "okay";
- 					compatible = "st,stmpe610";
- 					reg = <0>;
- 					#address-cells = <1>;
-@@ -364,15 +363,12 @@
- 					pl022,ctrl-len = <0x7>;
- 					pl022,wait-state = <0>;
- 					pl022,duplex = <0>;
--					id = <0>;
--					blocks = <4>;
--					irq_over_gpio;
--					irq-gpios = <&gpio1 6 0x4>;
-+					interrupts = <6 0x4>;
-+					interrupt-parent = <&gpio1>;
- 					irq-trigger = <0x2>;
-
--					stmpe610-ts {
--						compatible = "stmpe,ts";
--						reg = <0>;
-+					stmpe_touchscreen {
-+						compatible = "st,stmpe-ts";
- 						ts,sample-time = <4>;
- 						ts,mod-12b = <1>;
- 						ts,ref-sel = <0>;
-@@ -386,7 +382,6 @@
- 				};
-
- 				m25p80@1 {
--					status = "okay";
- 					compatible = "st,m25p80";
- 					reg = <1>;
- 					spi-max-frequency = <12000000>;
-@@ -404,7 +399,6 @@
- 				};
-
- 				spidev@2 {
--					status = "okay";
- 					compatible = "spidev";
- 					reg = <2>;
- 					spi-max-frequency = <25000000>;
-diff --git a/arch/arm/boot/dts/spear1340-evb.dts
-b/arch/arm/boot/dts/spear1340-evb.dts
-index c519fa1..d6c30ae 100644
---- a/arch/arm/boot/dts/spear1340-evb.dts
-+++ b/arch/arm/boot/dts/spear1340-evb.dts
-@@ -319,15 +319,12 @@
- 					#address-cells = <1>;
- 					#size-cells = <0>;
- 					reg = <0x41>;
--					irq-over-gpio;
--					irq-gpios = <&gpio0 4 0x4>;
--					id = <0>;
--					blocks = <1>;
-+					interrupts = <4 0x4>;
-+					interrupt-parent = <&gpio0>;
- 					irq-trigger = <0x2>;
-
--					stmpegpio: stmpe-gpio {
--						compatible = "stmpe,gpio";
--						reg = <0>;
-+					stmpegpio: stmpe_gpio {
-+						compatible = "st,stmpe-gpio";
- 						gpio-controller;
- 						#gpio-cells = <2>;
- 					};
-@@ -445,7 +442,6 @@
- 					   <&gpiopinctrl 85 0>;
-
- 				m25p80@0 {
--					status = "okay";
- 					compatible = "m25p80";
- 					reg = <0>;
- 					spi-max-frequency = <12000000>;
-@@ -463,7 +459,6 @@
- 				};
-
- 				stmpe610@1 {
--					status = "okay";
- 					compatible = "st,stmpe610";
- 					spi-max-frequency = <1000000>;
- 					spi-cpha;
-@@ -477,17 +472,14 @@
- 					pl022,ctrl-len = <0x7>;
- 					pl022,wait-state = <0>;
- 					pl022,duplex = <0>;
--					irq-over-gpio;
--					irq-gpios = <&gpiopinctrl 100 0>;
--					id = <0>;
--					blocks = <4>;
-+					interrupts = <100 0>;
-+					interrupt-parent = <&gpiopinctrl>;
- 					irq-trigger = <0x2>;
- 					#address-cells = <1>;
- 					#size-cells = <0>;
-
--					stmpe610-ts {
--						compatible = "stmpe,ts";
--						reg = <0>;
-+					stmpe_touchscreen {
-+						compatible = "st,stmpe-ts";
- 						ts,sample-time = <4>;
- 						ts,mod-12b = <1>;
- 						ts,ref-sel = <0>;
-@@ -501,7 +493,6 @@
- 				};
-
- 				spidev@2 {
--					status = "okay";
- 					compatible = "spidev";
- 					reg = <2>;
- 					spi-max-frequency = <25000000>;
-diff --git a/arch/arm/boot/dts/spear13xx.dtsi b/arch/arm/boot/dts/spear13xx.dtsi
-index 2e650f9..009096d 100644
---- a/arch/arm/boot/dts/spear13xx.dtsi
-+++ b/arch/arm/boot/dts/spear13xx.dtsi
-@@ -65,14 +65,14 @@
- 	};
-
- 	cpufreq {
--		compatible = "st,cpufreq";
-+		compatible = "st,cpufreq-spear";
- 		cpufreq_tbl = < 166000
--			200000
--			250000
--			300000
--			400000
--			500000
--			600000 >;
-+				200000
-+				250000
-+				300000
-+				400000
-+				500000
-+				600000 >;
- 		status = "disable";
- 	};
-
---
-viresh
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
