@@ -1,93 +1,46 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCHv15 2/7] video: add display_timing and videomode
-Date: Mon, 26 Nov 2012 14:37:26 +0200
-Message-ID: <50B36286.7010704@ti.com>
-References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de> <1353920848-1705-3-git-send-email-s.trumtrar@pengutronix.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V1 1/3] mfd: stmpe: Arrange #include <header files> in
+ alphabetical order
+Date: Mon, 26 Nov 2012 13:25:57 +0000
+Message-ID: <20121126132557.GA6824@gmail.com>
+References: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
+ <20121126111639.GR12685@sortiz-mobl>
+ <CAKohpo=EpjP4gpbBTV8BaghCjLVC4x4wvgRW34M9pn0oZ-S5dw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="------------enigE10E60E74F53751CDC28A32F"
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1353920848-1705-3-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohpo=EpjP4gpbBTV8BaghCjLVC4x4wvgRW34M9pn0oZ-S5dw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com
 List-Id: devicetree@vger.kernel.org
 
---------------enigE10E60E74F53751CDC28A32F
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Mon, 26 Nov 2012, Viresh Kumar wrote:
 
-On 2012-11-26 11:07, Steffen Trumtrar wrote:
+> On 26 November 2012 16:46, Samuel Ortiz <sameo@linux.intel.com> wrote=
+:
+> > Hi Viresh,
+> >
+> > On Fri, Nov 23, 2012 at 12:26:18AM +0530, Viresh Kumar wrote:
+> >> This helps managing them better and also reduces chances of adding=
+ an header
+> >> file twice.
+>=20
+> The aim is to maintain the list of header files in alphabetical order=
+=2E
+> It helps in maintaining
+> them.. I was adding some header files for my 3rd patch and was lookin=
+g
+> for the best
+> place to add them and because the list wasn't sorted, i sorted it out
+> in a separate patch.
 
-> +/*
-> + * Subsystem independent description of a videomode.
-> + * Can be generated from struct display_timing.
-> + */
-> +struct videomode {
-> +	u32 pixelclock;		/* pixelclock in Hz */
+Why do you need to sort them? Is there _really_ a need?
 
-I don't know if this is of any importance, but the linux clock framework
-manages clock rates with unsigned long. Would it be better to use the
-same type here?
-
-> +	u32 hactive;
-> +	u32 hfront_porch;
-> +	u32 hback_porch;
-> +	u32 hsync_len;
-> +
-> +	u32 vactive;
-> +	u32 vfront_porch;
-> +	u32 vback_porch;
-> +	u32 vsync_len;
-> +
-> +	u32 hah;		/* hsync active high */
-> +	u32 vah;		/* vsync active high */
-> +	u32 de;			/* data enable */
-> +	u32 pixelclk_pol;
-
-What values will these 4 have? Aren't these booleans?
-
-The data enable comment should be "data enable active high".
-
-The next patch says in the devtree binding documentation that the values
-may be on/off/ignored. Is that represented here somehow, i.e. values are
-0/1/2 or so? If not, what does it mean if the value is left out from
-devtree data, meaning "not used on hardware"?
-
-There's also a "doubleclk" value mentioned in the devtree bindings doc,
-but not shown here.
-
-I think this videomode struct is the one that display drivers are going
-to use (?), in addition to the display_timing, so it would be good to
-document it well.
-
- Tomi
-
-
-
---------------enigE10E60E74F53751CDC28A32F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-Comment: Using GnuPG with undefined - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJQs2KKAAoJEPo9qoy8lh71Kb4QAI/EpmPrknERI/HM5+43WedB
-vhuC6WTKEnoURcQpotJL+wl0WNuLENGR/pkGiRBT2wJVuhERHv7/XeYV4umMvGcR
-yCF4gBYlZrbYYG1tZinJgDJlSgdir7a6j39sXz4ufnxgm11ONVlfqg7iGKCjJ3jS
-7e4qVjmRT5CJ7T+odtuVcJvIlyQw69lSDImJ7EFkqiIopAmpvKQzdb5uCvS6FYAg
-ukJGmH6tPGgMtk25YKIT+CJACs1lZfDysHcX4RpAb4AN29SV0gBsFN/wnVATOCP1
-hUAStv/72Z/jxWvG0Cq1jxwyVB4M6k3WcxoZwGj6yOcquUYH/JUVUtUwwx94qV7l
-l95c4qxgTN+R5H5EKhzBtrZLWGEBWFi/BKM5Fot+4qW5rcF7G4R7hbsVqq3vKr9v
-pwDlTSpi5RG7yZ1bfe6MBGLUFXaivqeWq0UgUPmiK361z5eRU4xtQHs498/VGajz
-UiQQqzlILQlk8EkImHN5SpMbO6JQKUOF8BFYct9fqxMU6PrPUsXJZ8QXp84arEes
-OOrk56fozhgSpQy+H42tEiOfnhPLrUn0ckq1e7L9uPz10xmyMLZdgmeOcEtPntvw
-2JKKL8qBpuuFZiJly9xxKupa6XmQvdghEXJoQCrE9nZA4rgh68ls9oq+WSFAo8iO
-NN0oVfiviH2sJb4GrI46
-=0bJ/
------END PGP SIGNATURE-----
-
---------------enigE10E60E74F53751CDC28A32F--
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
