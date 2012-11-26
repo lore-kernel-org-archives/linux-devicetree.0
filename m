@@ -1,78 +1,188 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 3.6.0] of: Add missing dummy functions
-Date: Mon, 26 Nov 2012 10:38:43 +0000
-Message-ID: <20121126103843.851603E08BB@localhost>
-References: <1350469563-19345-1-git-send-email-srinivas.kandagatla@st.com>
- <507F23F7.5070509@gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCHv15 3/7] video: add of helper for display timings/videomode
+Date: Mon, 26 Nov 2012 18:56:38 +0200
+Message-ID: <50B39F46.7050808@ti.com>
+References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de> <1353920848-1705-4-git-send-email-s.trumtrar@pengutronix.de> <50B37EEC.6090808@ti.com> <20121126161055.GB30791@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <507F23F7.5070509-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enig5AF54A52467687FFCEF6CB34"
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20121126161055.GB30791@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: linux-fbdev@vger.kernel.org, kernel@pengutronix.de, David Airlie <airlied@linux.ie>, devicetree-discuss@lists.ozlabs.org, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Philipp Zabel <p.zabel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 17 Oct 2012 16:32:39 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 10/17/2012 05:26 AM, Srinivas KANDAGATLA wrote:
-> > From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> > 
-> > Some functions in of.h have dummy functions and real implementations,
-> > however few of them have only real implementation.
-> > I think to be more consistent this patch adds below dummy functions if
-> > for non CONFIG_OF's.
-> > 
-> 
-> Fixing these up one by one has annoyed me, but I know Grant has
-> generally resisted blindly creating empty functions. So I would like
-> Grant's comments. I'm fine with these except the ones noted below.
-> 
-> > 	of_find_node_by_type
-> 
-> This should not be used except a few places as using device_type is
-> generally only for true OF.
-> 
-> > 	of_device_is_available
-> > 	of_find_node_with_property
-> 
-> Only used in 2 places.
-> 
-> > 	of_find_matching_node
-> > 	of_find_node_by_path
-> > 	of_find_node_by_phandle
-> > 	of_get_parent
-> > 	of_get_next_parent
-> > 	of_get_next_child
-> > 	of_get_next_available_child
-> > 	of_get_child_by_name
-> 
-> Already have this one.
-> 
-> > 
-> > Hopefully this can eliminate the need to ifdef code in the drivers.
-> 
-> Sometimes we want that for drivers that can be built both for OF and !OF
-> and you can't optimize away all the code and data.
+--------------enig5AF54A52467687FFCEF6CB34
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Right. I've been cautious here for a reason. As much as possible I want
-to encourage of_* calls to be collected together in a driver, not
-scattered all over the place. Often the whole block of OF-aware code in
-a driver can be compiled out if it is grouped together into a function.
+On 2012-11-26 18:10, Steffen Trumtrar wrote:
+> Hi,
+>=20
+> On Mon, Nov 26, 2012 at 04:38:36PM +0200, Tomi Valkeinen wrote:
 
-Also, some of these only make sense in the context of an OF-aware code
-block and there is no sensible empty version.
+>>> +optional properties:
+>>> + - hsync-active: hsync pulse is active low/high/ignored
+>>> + - vsync-active: vsync pulse is active low/high/ignored
+>>> + - de-active: data-enable pulse is active low/high/ignored
+>>> + - pixelclk-inverted: pixelclock is inverted (active on falling edge=
+)/
+>>> +				non-inverted (active on rising edge)/
+>>> +				     ignored (ignore property)
+>>
+>> I think hsync-active and vsync-active are clear, and commonly used, an=
+d
+>> they are used for both drm and fb mode conversions in later patches.
+>>
+>> de-active is not used in drm and fb mode conversions, but I think it's=
 
-So, I'm fine with adding the empty versions on a case-by-case basis, but
-not wholesale.
+>> also clear.
+>>
+>> pixelclk-inverted is not used in the mode conversions. It's also a bit=
 
-g.
+>> unclear to me. What does it mean that pix clock is "active on rising
+>> edge"? The pixel data is driven on rising edge? How about the sync
+>> signals and DE, when are they driven? Does your HW have any settings
+>> related to those?
+>>
+>=20
+> Those are properties commonly found in display specs. That is why they =
+are here.
+> If the GPU does not support the property it can be omitted.
+
+So what does the pixelclk-inverted mean? Normally the SoC drives pixel
+data on rising edge, and the panel samples it at falling edge? And
+vice-versa for inverted? Or the other way around?
+
+When is hsync/vsync set? On rising or falling edge of pclk?
+
+My point here is that the pixelclk-inverted is not crystal clear thing,
+like the hsync/vsync/de-active values are.
+
+And while thinking about this, I realized that the meaning of
+pixelclk-inverted depends on what component is it applied to. Presuming
+normal pixclk means "pixel data on rising edge", the meaning of that
+depends on do we consider the SoC or the panel. The panel needs to
+sample the data on the other edge from the one the SoC uses to drive the
+data.
+
+Does the videomode describe the panel, or does it describe the settings
+programmed to the SoC?
+
+>> OMAP has the invert pclk setting, but it also has a setting to define
+>> when the sync signals are driven. The options are:
+>> - syncs are driven on rising edge of pclk
+>> - syncs are driven on falling edge of pclk
+>> - syncs are driven on the opposite edge of pclk compared to the pixel =
+data
+>>
+>> For DE there's no setting, except the active high/low.
+>>
+>> And if I'm not mistaken, if the optional properties are not defined,
+>> they are not ignored, but left to the default 0. Which means active lo=
+w,
+>> or active on rising edge(?). I think it would be good to have a
+>> "undefined" value for the properties.
+>>
+>=20
+> Yes. As mentioned in my other mail, the intention of the omitted proper=
+ties do
+> not propagate properly. Omitted must be a value < 0, so it is clear in =
+a later
+> stage, that this property shall not be used. And isn't unintentionally =
+considered
+> to be active low.
+
+Ok. Just note that the values are currently stored into u32, and I don't
+think using negative error values with u32 is a good idea.
+
+>> I have some of the same concerns for this series than with the
+>> interpreted power sequences (on fbdev): when you publish the DT
+>> bindings, it's somewhat final version then, and fixing it later will b=
+e
+>> difficult. Of course, video modes are much clearer than the power
+>> sequences, so it's possible there won't be any problems with the DT
+>> bindings.
+>>
+>=20
+> The binding is pretty much at the bare minimum after a lot of discussio=
+n about
+> the properties. Even if the binding changes, I think it will rather gro=
+w than
+> shrink. Take the doubleclock property for example. It got here mistakin=
+gly,
+> because we had a display that has this feature.
+
+Right. That's why I would leave the pixelclock-inverted out for now, if
+we're not totally sure how it's defined. Of course, it could be just me
+who is not understanding the pixclk-inverted =3D).
+
+>> However, I'd still feel safer if the series would be split to non-DT a=
+nd
+>> DT parts. The non-DT parts could be merged quite easily, and people
+>> could start using them in their kernels. This should expose
+>> bugs/problems related to the code.
+>>
+>> The DT part could be merged later, when there's confidence that the
+>> timings are good for all platforms.
+>>
+>> Or, alternatively, all the non-common bindings (de-active, pck
+>> invert,...) that are not used for fbdev or drm currently could be left=
+
+>> out for now. But I'd stil prefer merging it in two parts.
+>=20
+> I don't say that I'm against it, but the whole reason for the series wa=
+s
+> getting the display timings from a DT into a graphics driver. And I thi=
+nk
+> I remember seeing some other attempts at achieving this, but all specif=
+ic
+> to one special case. There is even already a mainline driver that uses =
+an older
+> version of the DT bindings (vt8500-fb).
+
+I think it'd be very useful even without DT bindings. But yes, I
+understand your need for it.
+
+You're now in v15 of the series. Are you sure v16 will be good enough to
+freeze the DT bindings, if 15 previous versions weren't? =3D). Perhaps I'=
+m
+just overly cautious with DT bindings. APIs that are exposed outside the
+kernel scare me, as they should be just and not almost right.
+
+However, I want to also point out that where ever you're going to use
+the videomode DT bindings, when the common display framework is merged
+and presuming you'll use it, you may need to change the DT stuff again
+(for the SoC/gfx card, not the videomode bindings).
+
+ Tomi
+
+
+
+--------------enig5AF54A52467687FFCEF6CB34
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with undefined - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJQs59GAAoJEPo9qoy8lh71xCoP/j0xctzrFMp01pR7G4pLEaPO
+ZE/nphePZF9yiz3ZpiBj573JA90uP2pa/UsqfmivPsDCR+qSXXYTZHQC/6q7LmTq
+XQJ0MQgdv4CpkkCmRByKZGvdOh/R8Mpk6Tyvwq6oApeFtDbJNmYCRarMtFpuer4h
+G8PaukpRHr8RbHlIwgP0rtQGCHuc83kWYwPtmO3hKa6My0fNevb4Sxb3ryeD5zkD
+f5mwE96I5VwIrT4t10sBjYxXqCe3FFBo3Ws3Pi4VBlC2fFRleECo1kgZ5UwJ8TFg
+lUHnDOjzcqdzbcs1z8Zop/Qu28+ZZSCL6omoeEdhuNRoH+5iG3/Rg0lBbQ/7+D4t
+pZzzotDXMNDAVg8VL3Yxao+m/Xmd07kQL/yrweM05/YzNCs718ri9UfVNCuY+Xvb
+5WG55CYx6LWQUvvO6TgbK3xGe+tXzEm5cdCodoH6EOZY02AD+BwrypKHdjG2mEWL
+z8A0WQv7o70e8KoOdSHemNjNP/7cS1NseqQYCUSucgce2zxTL8UU4fB186yF1k+O
+7sVS4AUjJn57IBag/4HoPvWVOJHEwhAdObC4FPOUzhaKxHhVkDnltWjHl8KopyX4
+LrmuLOem9eoDH8vaO4D/LOFzViU3jJ+2BxLLzCBBDgx96NWxCWO8ghZVKqlMHEGC
+R1E7n9TK7hEJOOK6kSQO
+=l9KD
+-----END PGP SIGNATURE-----
+
+--------------enig5AF54A52467687FFCEF6CB34--
