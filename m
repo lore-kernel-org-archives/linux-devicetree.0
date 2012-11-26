@@ -1,59 +1,37 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [RFC PATCH] ASoC: Samsung: Register the audio platform device
-Date: Mon, 26 Nov 2012 14:49:44 +0000
-Message-ID: <20121126144943.GM9411@opensource.wolfsonmicro.com>
-References: <1352894960-17434-1-git-send-email-padma.v@samsung.com>
- <1352894960-17434-2-git-send-email-padma.v@samsung.com>
- <CAAgF-BdHm_VFB-xsZ6kpAu5+9+1yMNVVGM_og+H3QghWQuf8+w@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V1 1/3] mfd: stmpe: Arrange #include <header files> in
+ alphabetical order
+Date: Mon, 26 Nov 2012 20:25:19 +0530
+Message-ID: <CAKohpo=7CEbKgEQ8KbnVpS0Opxn9xjDP26atZBefgHcxXVbMkA@mail.gmail.com>
+References: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
+	<20121126111639.GR12685@sortiz-mobl>
+	<CAKohpo=EpjP4gpbBTV8BaghCjLVC4x4wvgRW34M9pn0oZ-S5dw@mail.gmail.com>
+	<20121126132557.GA6824@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GeONROBiaq1zPAtT"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAgF-BdHm_VFB-xsZ6kpAu5+9+1yMNVVGM_og+H3QghWQuf8+w@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padma Venkat <padma.kvr@gmail.com>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121126132557.GA6824@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com
 List-Id: devicetree@vger.kernel.org
 
+On 26 November 2012 18:55, Lee Jones <lee.jones@linaro.org> wrote:
 
---GeONROBiaq1zPAtT
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> Why do you need to sort them? Is there _really_ a need?
 
-On Mon, Nov 26, 2012 at 08:15:12PM +0530, Padma Venkat wrote:
-> On Wed, Nov 14, 2012 at 5:39 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+Many people & maintainers like to have their header files ordered. The
+reason for that is:
 
-> > +module_init(smdk_audio_init);
-> > +module_exit(smdk_audio_exit);
+If they are not ordered, there is a possibility of adding an header file
+multiple times in a file. This might not do something serious
+when thinking about compilation time or Image size, but adding an header
+file multiple times is simply wrong.
 
-> Ping. Any comments on this patch?
+This can't be caught in patch reviews most of the time, as diff may not show
+the earlier inclusion.
 
-Don't send contentless pings and delete irrelevant context from replies.
-Please refer to the feedback I sent in response to Sangbeom's pull
-request - in short, this isn't the way to do this - do what the other
-platforms do.
+That's why i ordered them. And i don't see any harm in doing so.
 
---GeONROBiaq1zPAtT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQs4F/AAoJELSic+t+oim9sRUP/iajPpRYrQUgv8CWJ+fYKzXi
-FHOHuSlXV1aN/DfSWtREGZVTPPlHo5wN4G67miqJf2vWmdakdMlUOi4sYdIKDmug
-dNP/euAcbosYNS3n7C8GLueI2VAYxmgB1jkEEw+7k/d7lmu5riMpQfupISpxHlbr
-wp4VygWWcVtLmqRAzVqOYucpzV67rpU/fwqKtFZvQ6Icl4nZZwAy55aIGOzaqekc
-ARMdc1MY8r/EqtuoK1za/FKagdVX3kwbiRVOvE1LzCohohCg8RUkmahaDzDmrOjF
-dzO/Y2+2xvNvkrDIRqfzDylKDKJ174f3/liJJPJ84qYK7Qi/VcF1aKBVQH6Wy7cO
-8bUigFrZJri34cNZdfKYZSIEEBmnmnGr06PnuII9QX4MPCmEIZBSdEhLf/6uBbh2
-TKjw050j11Ffgxe9I83mr3BOy0a76PCItGI4/p75gsha+ST2lxEuq1LZKqO1HxXv
-pqZEucfs/ULA3RgNAtJykZBfD2lK8Bx+eYWDpHzoQR7hXIFQnG++SBFwKFpFcv0b
-1DRtpXHFUXzkFEjvihdlKmhCr3DE6YaYf/9q9H9Kvv0AIxISYfjruYmScU6V2CE5
-3aZJ4xKjRSiOTg+ftZijVgexd3H/dIF/ECKcn7VRHnOxJy8vzGmZDBPfI2pwaCRx
-bOmssElZ246BJLHNoeE4
-=jBzo
------END PGP SIGNATURE-----
-
---GeONROBiaq1zPAtT--
+--
+viresh
