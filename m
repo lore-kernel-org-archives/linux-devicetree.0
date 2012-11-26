@@ -1,54 +1,88 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V1 1/3] mfd: stmpe: Arrange #include <header files> in
- alphabetical order
-Date: Mon, 26 Nov 2012 15:31:45 +0000
-Message-ID: <20121126153145.GC6824@gmail.com>
-References: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
- <20121126111639.GR12685@sortiz-mobl>
- <CAKohpo=EpjP4gpbBTV8BaghCjLVC4x4wvgRW34M9pn0oZ-S5dw@mail.gmail.com>
- <20121126132557.GA6824@gmail.com>
- <CAKohpo=7CEbKgEQ8KbnVpS0Opxn9xjDP26atZBefgHcxXVbMkA@mail.gmail.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv15 2/7] video: add display_timing and videomode
+Date: Mon, 26 Nov 2012 16:39:58 +0100
+Message-ID: <20121126153958.GA30791@pengutronix.de>
+References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353920848-1705-3-git-send-email-s.trumtrar@pengutronix.de>
+ <50B36286.7010704@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAKohpo=7CEbKgEQ8KbnVpS0Opxn9xjDP26atZBefgHcxXVbMkA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com
+In-Reply-To: <50B36286.7010704@ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Nov 2012, Viresh Kumar wrote:
+On Mon, Nov 26, 2012 at 02:37:26PM +0200, Tomi Valkeinen wrote:
+> On 2012-11-26 11:07, Steffen Trumtrar wrote:
+> 
+> > +/*
+> > + * Subsystem independent description of a videomode.
+> > + * Can be generated from struct display_timing.
+> > + */
+> > +struct videomode {
+> > +	u32 pixelclock;		/* pixelclock in Hz */
+> 
+> I don't know if this is of any importance, but the linux clock framework
+> manages clock rates with unsigned long. Would it be better to use the
+> same type here?
+> 
 
-> On 26 November 2012 18:55, Lee Jones <lee.jones@linaro.org> wrote:
->=20
-> > Why do you need to sort them? Is there _really_ a need?
->=20
-> Many people & maintainers like to have their header files ordered. Th=
-e
-> reason for that is:
->=20
-> If they are not ordered, there is a possibility of adding an header f=
-ile
-> multiple times in a file. This might not do something serious
-> when thinking about compilation time or Image size, but adding an hea=
-der
-> file multiple times is simply wrong.
->=20
-> This can't be caught in patch reviews most of the time, as diff may n=
-ot show
-> the earlier inclusion.
->=20
-> That's why i ordered them. And i don't see any harm in doing so.
+Hm, I don't know. Anyone? u32 should be large enough for a pixelclock.
 
-I don't see any harm in it, but it's pretty pointless.
+> > +	u32 hactive;
+> > +	u32 hfront_porch;
+> > +	u32 hback_porch;
+> > +	u32 hsync_len;
+> > +
+> > +	u32 vactive;
+> > +	u32 vfront_porch;
+> > +	u32 vback_porch;
+> > +	u32 vsync_len;
+> > +
+> > +	u32 hah;		/* hsync active high */
+> > +	u32 vah;		/* vsync active high */
+> > +	u32 de;			/* data enable */
+> > +	u32 pixelclk_pol;
+> 
+> What values will these 4 have? Aren't these booleans?
+> 
+> The data enable comment should be "data enable active high".
+> 
+> The next patch says in the devtree binding documentation that the values
+> may be on/off/ignored. Is that represented here somehow, i.e. values are
+> 0/1/2 or so? If not, what does it mean if the value is left out from
+> devtree data, meaning "not used on hardware"?
+>
 
-There aren't many maintainers who insist on such things, and the
-ones that do normally carry out these OCD actions themselves. :)
+Hm, I think you might be right here. It is no problem in the DT part of the code.
+The properties are optional, left out means "not used on hardware".
+But this does not propagate correctly to the videomode. I should set the fields
+to -EINVAL in case they are omitted, than everything should work nicely.
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> There's also a "doubleclk" value mentioned in the devtree bindings doc,
+> but not shown here.
+> 
+
+Argh. That slipped through. I have patches that add this property to all
+structs and the devicetree binding. But it is not supposed to be in this
+series, because I want to at least have the binding stable for now.
+
+> I think this videomode struct is the one that display drivers are going
+> to use (?), in addition to the display_timing, so it would be good to
+> document it well.
+> 
+
+Yes. Maybe I have to put more of the devicetree documentation in the code.
+
+Regards,
+Steffen
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
