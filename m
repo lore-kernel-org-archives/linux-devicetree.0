@@ -1,57 +1,101 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 3/3] regulator: add device tree support for max8997
-Date: Mon, 26 Nov 2012 10:51:42 +0100
-Message-ID: <20121126095141.GC9411@opensource.wolfsonmicro.com>
-References: <1353657795-1725-1-git-send-email-thomas.abraham@linaro.org>
- <1353657795-1725-4-git-send-email-thomas.abraham@linaro.org>
- <20121124175954.GI4719@opensource.wolfsonmicro.com>
- <CAJuYYwThsFutYnYg2scmfqUAGxBM2pWmRmoTww+OyZgUuA-7vg@mail.gmail.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 5/9] usb: add phy connection by phy-mode
+Date: Mon, 26 Nov 2012 17:56:49 +0800
+Message-ID: <20121126095648.GA15824@nchen-desktop>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1352909950-32555-6-git-send-email-m.grzeschik@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="i7F3eY7HS/tUJxUd"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAJuYYwThsFutYnYg2scmfqUAGxBM2pWmRmoTww+OyZgUuA-7vg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, myungjoo.ham@samsung.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, Karol Lewandowski <k.lewandowsk@samsung.com>, Rajendra Nayak <rnayak@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
+In-Reply-To: <1352909950-32555-6-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Nov 14, 2012 at 05:19:06PM +0100, Michael Grzeschik wrote:
+> This patch makes it possible to set the connection of the usbphy to the
+> soc. It is derived from the oftree bindings for the ethernetphy and adds
+> similar helperfunctions.
+> 
+> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/of/Kconfig        |    4 ++++
+>  drivers/of/Makefile       |    1 +
+>  drivers/of/of_usbphy.c    |   49 +++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_usbphy.h |   15 ++++++++++++++
+>  include/linux/usb/phy.h   |    8 ++++++++
+>  5 files changed, 77 insertions(+)
+>  create mode 100644 drivers/of/of_usbphy.c
+>  create mode 100644 include/linux/of_usbphy.h
+> 
+> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+> index dfba3e6..28f99fb 100644
+> --- a/drivers/of/Kconfig
+> +++ b/drivers/of/Kconfig
+> @@ -67,6 +67,10 @@ config OF_MDIO
+>  	help
+>  	  OpenFirmware MDIO bus (Ethernet PHY) accessors
+>  
+> +config OF_USBPHY
+> +	depends on USB
+> +	def_bool y
+> +
+>  config OF_PCI
+>  	def_tristate PCI
+>  	depends on PCI
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index e027f44..fdcaf51 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -6,6 +6,7 @@ obj-$(CONFIG_OF_IRQ)    += irq.o
+>  obj-$(CONFIG_OF_DEVICE) += device.o platform.o
+>  obj-$(CONFIG_OF_I2C)	+= of_i2c.o
+>  obj-$(CONFIG_OF_NET)	+= of_net.o
+> +obj-$(CONFIG_OF_USBPHY)	+= of_usbphy.o
+>  obj-$(CONFIG_OF_SELFTEST) += selftest.o
+>  obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
+>  obj-$(CONFIG_OF_PCI)	+= of_pci.o
+> diff --git a/drivers/of/of_usbphy.c b/drivers/of/of_usbphy.c
+> new file mode 100644
+> index 0000000..2e71f7b
+> --- /dev/null
+> +++ b/drivers/of/of_usbphy.c
+> @@ -0,0 +1,49 @@
+> +/*
+> + * OF helpers for network devices.
+> + *
+> + * This file is released under the GPLv2
+> + *
+> + * Initially copied out of drivers/of/of_net.c
+> + */
+> +#include <linux/etherdevice.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of_usbphy.h>
+> +#include <linux/usb/phy.h>
+> +#include <linux/export.h>
+> +
+> +/**
+> + * It maps 'enum usb_phy_interface' found in include/linux/usb/phy.h
+> + * into the device tree binding of 'phy-mode', so that USB
+> + * device driver can get phy interface from device tree.
+> + */
+> +static const char *usbphy_modes[] = {
+> +	[USBPHY_INTERFACE_MODE_NA]	= "",
+> +	[USBPHY_INTERFACE_MODE_UTMI]	= "utmi",
+> +	[USBPHY_INTERFACE_MODE_UTMIW]	= "utmiw",
+> +	[USBPHY_INTERFACE_MODE_ULPI]	= "ulpi",
+> +	[USBPHY_INTERFACE_MODE_SERIAL]	= "fsls",
+"fsls"? or should be "serial"?
+> +};
+> +
 
---i7F3eY7HS/tUJxUd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Best Regards,
+Peter Chen
 
-On Sat, Nov 24, 2012 at 11:46:51PM +0530, Thomas Abraham wrote:
-
-> The max8997 driver is mainlined. I actually meant to say that, this v6
-> version of dt support patch for max8997, is similar in functionality
-> to the v5 version of this patch. I did prepare this patch based on
-> your latest for-next branch.
-
-I find it hard to believe that this was generated against for-next, this
-was where I tried to apply it...
-
---i7F3eY7HS/tUJxUd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQszumAAoJELSic+t+oim97eUP/1vobgggSsowIJv4iToOA0+g
-kQ2gOnvsUBWrgJI/WBiNeQMKNBigMK4/IBn0Rlrct089lifZqLt2flSHLDQk5dKc
-U5qOqRGwg/qEnN0hQcolBC9KZiGHh3nkbMo3H0Xn+ZZj1p6j3cbVAISUJP9WiJGf
-Z1weZ6C7B3Gbu4Nobo3/nNZ43U5oTiuJqW9yUSkyanHE5ObPIN+SvzworOzqRX4B
-wYhUSrsEKH07q67ZS3Rbikj+roTX+/GikQt+3YpbVhsw7XJ97msd7OeokMBLNhhG
-iKSRO5SlEOpvZD1meZ9sVn4MpqTKw85YUp8eO5KnhDhRz+XCMLC4bWfvspdalYUC
-kxJIKJ6fgQ0xhRJoHIvVPBlXDCBSCfYspDNz9K55UZ+N6IUygkLLul/cSMUTDc8+
-mWdgLAGAqiO6MH8jrU9MqvD5l1QDtRJVdQPv3oG1cNoGdycrJ91SKosgSSt4t6PS
-raSw8gxM4MNiITO2a8Fv41UAJkhzh0A7yUVC1Mh6mq9yQop/1a7hSlVQ0/1otqmh
-A7X/MhFZ7ecQE7648Il05NqEO7y2Z/weeetcrU5IZBOpO0lV2stZ472+FUQE3B2v
-Y6G0WNkzPeTXRkyhMpynD9dhAuu5SVXgrLjROZb9lruP3J2FcKd3UuUvaoWXmk+x
-IYNkbsFAvhbk/0awrQnJ
-=5QOm
------END PGP SIGNATURE-----
-
---i7F3eY7HS/tUJxUd--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
