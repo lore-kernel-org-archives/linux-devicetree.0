@@ -1,207 +1,59 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/2] gpiolib: add gpio_export_with_name
-Date: Mon, 26 Nov 2012 13:59:11 +0000
-Message-ID: <20121126135911.2F1D33E187C@localhost>
-References: <20121121101259.GQ4398@game.jcrosoft.org>
- <1353492849-29397-1-git-send-email-plagnioj@jcrosoft.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1353492849-29397-1-git-send-email-plagnioj@jcrosoft.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH] gpio: New driver for GPO emulation using PWM generators
+Date: Mon, 26 Nov 2012 15:46:00 +0000
+Message-ID: <20121126154600.765E03E1AFD@localhost>
+References: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com> <20121123075537.A14713E0A91@localhost> <50AF3E21.4000009@ti.com> <50AF4584.7020604@ti.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <50AF4584.7020604@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Nov 2012 11:14:08 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com> wrote:
-> allow to specify a name to an exported gpio
+On Fri, 23 Nov 2012 10:44:36 +0100, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> Hi Grant,
 > 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> On 11/23/2012 10:13 AM, Peter Ujfalusi wrote:
+> > Hi Grant,
+> > 
+> > On 11/23/2012 08:55 AM, Grant Likely wrote:
+> >> Ugh. and this is why I wanted the PWM and GPIO subsystems to use the
+> >> same namespace and binding. <grumble, mutter> But that's not your fault.
+> >>
+> >> It's pretty horrible to have a separate translator node to convert a PWM
+> >> into a GPIO (with output only of course). The gpio properties should
+> >> appear directly in the PWM node itself and the translation code should
+> >> be in either the pwm or the gpio core. I don't think it should look like
+> >> a separate device.
+> > 
+> > Let me see if I understand your suggestion correctly. In the DT you suggest
+> > something like this:
+> > 
+> > twl_pwmled: pwmled {
+> > 	compatible = "ti,twl4030-pwmled";
+> > 	#pwm-cells = <2>;
+> > 	#gpio-cells = <2>;
+> > 	gpio-controller;
+> > };
+> 
+> After I thought about this.. Is this what we really want?
+> After all what we have here is a PWM generator used to emulate a GPIO signal.
+> The PWM itself can be used for driving a LED (standard LED or backlight and we
+> have DT bindings for these already), vibra motor, or other things.
+> If we combine the PWM with GPIO we should go and 'bloat' the DT node to also
+> include all sort of other uses of PWM at once?
+> 
+> IMHO it is better to keep them as separate things.
+> pwm node to describe the PWM generator,
+> separate nodes to describe it's uses like led, backlight, motor and gpio.
 
-The gpio sysfs ABI is already horrible, racy, and unsafe. Really, we
-need a proper chrdev interface for controlling gpios. Sysfs is fine for
-poking around and experimenting, but we cannot provide any fine grained
-access control, locking or faster IO with the one-file-per-gpio sysfs
-model. So, no, I don't think this is a good idea to extend gpiolib in
-this way.
-
-However, I would be okay with making gpiochips first-class kobjects or
-struct devices that appear as a child of the gpio controller device so
-that userspace could interrogate the device tree node associated with
-the device.
+You're effectively asking the pwm layer to behave like a gpio (which
+is completely reasonable). Having a completely separate translation node
+really doesn't make sense because it is entirely a software construct.
+In fact, the way your using it is *entirely* to make the Linux driver
+model instantiate the translation code. It has *nothing* to do with the
+structure of the hardware. It makes complete sense that if a PWM is
+going to be used as a GPIO, then the PWM node should conform to the GPIO
+binding.
 
 g.
-
-> ---
->  arch/mips/include/asm/mach-au1x00/gpio-au1000.h |    3 ++-
->  arch/mips/include/asm/mach-au1x00/gpio-au1300.h |    3 ++-
->  drivers/gpio/gpiolib.c                          |   12 +++++++-----
->  include/asm-generic/gpio.h                      |    6 ++++--
->  include/linux/gpio.h                            |   23 ++++++++++++++++++++++-
->  5 files changed, 37 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/mips/include/asm/mach-au1x00/gpio-au1000.h b/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
-> index 73853b5a..af4accb 100644
-> --- a/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
-> +++ b/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
-> @@ -633,7 +633,8 @@ static inline int gpio_set_debounce(unsigned gpio, unsigned debounce)
->  	return -ENOSYS;
->  }
->  
-> -static inline int gpio_export(unsigned gpio, bool direction_may_change)
-> +static inline int gpio_export_with_name(unsigned gpio,
-> +	bool direction_may_change, const char *name)
->  {
->  	return -ENOSYS;
->  }
-> diff --git a/arch/mips/include/asm/mach-au1x00/gpio-au1300.h b/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
-> index fb9975c..fcd152e 100644
-> --- a/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
-> +++ b/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
-> @@ -234,7 +234,8 @@ static inline void gpio_unexport(unsigned gpio)
->  {
->  }
->  
-> -static inline int gpio_export(unsigned gpio, bool direction_may_change)
-> +static inline int gpio_export_with_name(unsigned gpio,
-> +	bool direction_may_change, const char *name)
->  {
->  	return -ENOSYS;
->  }
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index b667f76..2141165 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -714,9 +714,10 @@ static struct class gpio_class = {
->  
->  
->  /**
-> - * gpio_export - export a GPIO through sysfs
-> + * gpio_export_with_name - export a GPIO through sysfs
->   * @gpio: gpio to make available, already requested
->   * @direction_may_change: true if userspace may change gpio direction
-> + * @name: gpio name
->   * Context: arch_initcall or later
->   *
->   * When drivers want to make a GPIO accessible to userspace after they
-> @@ -728,7 +729,7 @@ static struct class gpio_class = {
->   *
->   * Returns zero on success, else an error.
->   */
-> -int gpio_export(unsigned gpio, bool direction_may_change)
-> +int gpio_export_with_name(unsigned gpio, bool direction_may_change, const char *name)
->  {
->  	unsigned long		flags;
->  	struct gpio_desc	*desc;
-> @@ -766,7 +767,9 @@ int gpio_export(unsigned gpio, bool direction_may_change)
->  		direction_may_change = false;
->  	spin_unlock_irqrestore(&gpio_lock, flags);
->  
-> -	if (desc->chip->names && desc->chip->names[gpio - desc->chip->base])
-> +	if (name)
-> +		ioname = name;
-> +	else if (desc->chip->names && desc->chip->names[gpio - desc->chip->base])
->  		ioname = desc->chip->names[gpio - desc->chip->base];
->  
->  	dev = device_create(&gpio_class, desc->chip->dev, MKDEV(0, 0),
-> @@ -804,7 +807,7 @@ fail_unlock:
->  	pr_debug("%s: gpio%d status %d\n", __func__, gpio, status);
->  	return status;
->  }
-> -EXPORT_SYMBOL_GPL(gpio_export);
-> +EXPORT_SYMBOL_GPL(gpio_export_with_name);
->  
->  static int match_export(struct device *dev, void *data)
->  {
-> @@ -856,7 +859,6 @@ done:
->  }
->  EXPORT_SYMBOL_GPL(gpio_export_link);
->  
-> -
->  /**
->   * gpio_sysfs_set_active_low - set the polarity of gpio sysfs value
->   * @gpio: gpio to change
-> diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
-> index b6516f3..d04fc55 100644
-> --- a/include/asm-generic/gpio.h
-> +++ b/include/asm-generic/gpio.h
-> @@ -204,7 +204,8 @@ void devm_gpio_free(struct device *dev, unsigned int gpio);
->   * A sysfs interface can be exported by individual drivers if they want,
->   * but more typically is configured entirely from userspace.
->   */
-> -extern int gpio_export(unsigned gpio, bool direction_may_change);
-> +extern int gpio_export_with_name(unsigned gpio, bool direction_may_change,
-> +			const char *name);
->  extern int gpio_export_link(struct device *dev, const char *name,
->  			unsigned gpio);
->  extern int gpio_sysfs_set_active_low(unsigned gpio, int value);
-> @@ -249,7 +250,8 @@ struct device;
->  
->  /* sysfs support is only available with gpiolib, where it's optional */
->  
-> -static inline int gpio_export(unsigned gpio, bool direction_may_change)
-> +static inline int gpio_export_with_name(unsigned gpio,
-> +	bool direction_may_change, const char *name)
->  {
->  	return -ENOSYS;
->  }
-> diff --git a/include/linux/gpio.h b/include/linux/gpio.h
-> index 7ba2762..6e01b8c 100644
-> --- a/include/linux/gpio.h
-> +++ b/include/linux/gpio.h
-> @@ -189,7 +189,8 @@ static inline void gpio_set_value_cansleep(unsigned gpio, int value)
->  	WARN_ON(1);
->  }
->  
-> -static inline int gpio_export(unsigned gpio, bool direction_may_change)
-> +static inline int gpio_export_with_name(unsigned gpio,
-> +	bool direction_may_change, const char *name)
->  {
->  	/* GPIO can never have been requested or set as {in,out}put */
->  	WARN_ON(1);
-> @@ -247,4 +248,24 @@ gpiochip_remove_pin_ranges(struct gpio_chip *chip)
->  
->  #endif /* ! CONFIG_GENERIC_GPIO */
->  
-> +/**
-> + * gpio_export - export a GPIO through sysfs
-> + * @gpio: gpio to make available, already requested
-> + * @direction_may_change: true if userspace may change gpio direction
-> + * Context: arch_initcall or later
-> + *
-> + * When drivers want to make a GPIO accessible to userspace after they
-> + * have requested it -- perhaps while debugging, or as part of their
-> + * public interface -- they may use this routine.  If the GPIO can
-> + * change direction (some can't) and the caller allows it, userspace
-> + * will see "direction" sysfs attribute which may be used to change
-> + * the gpio's direction.  A "value" attribute will always be provided.
-> + *
-> + * Returns zero on success, else an error.
-> + */
-> +static inline int gpio_export(unsigned gpio,bool direction_may_change)
-> +{
-> +	return gpio_export_with_name(gpio, direction_may_change, NULL);
-> +}
-> +
->  #endif /* __LINUX_GPIO_H */
-> -- 
-> 1.7.10.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
