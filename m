@@ -1,88 +1,77 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCHv15 2/7] video: add display_timing and videomode
-Date: Mon, 26 Nov 2012 16:39:58 +0100
-Message-ID: <20121126153958.GA30791@pengutronix.de>
-References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353920848-1705-3-git-send-email-s.trumtrar@pengutronix.de>
- <50B36286.7010704@ti.com>
+From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 5/7] usb: chipidea: usbmisc: add support for ahb,
+ ipg and per clock
+Date: Mon, 26 Nov 2012 16:44:13 +0100
+Message-ID: <20121126154413.GB31008@pengutronix.de>
+References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1353506793-8354-6-git-send-email-m.grzeschik@pengutronix.de>
+ <20121123065115.GC22420@nchen-desktop>
+ <20121123162051.GA31008@pengutronix.de>
+ <20121125091834.GA16661@nchen-desktop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <50B36286.7010704@ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+In-Reply-To: <20121125091834.GA16661@nchen-desktop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2012 at 02:37:26PM +0200, Tomi Valkeinen wrote:
-> On 2012-11-26 11:07, Steffen Trumtrar wrote:
-> 
-> > +/*
-> > + * Subsystem independent description of a videomode.
-> > + * Can be generated from struct display_timing.
-> > + */
-> > +struct videomode {
-> > +	u32 pixelclock;		/* pixelclock in Hz */
-> 
-> I don't know if this is of any importance, but the linux clock framework
-> manages clock rates with unsigned long. Would it be better to use the
-> same type here?
-> 
+On Sun, Nov 25, 2012 at 05:18:35PM +0800, Peter Chen wrote:
+> On Fri, Nov 23, 2012 at 05:20:51PM +0100, Michael Grzeschik wrote:
+> > > usbphy: used to transfer data
+> > > (like your per)
+> > 
+> > The "per" clk is a different clk than the usbphy. We have an usbphy clk
+> > aswell on the mx5x. As discussed before [1], we need a solution to enable
+> > the usbphy clk. The current approach is to let the nop-xceiver enable
+> > this.
+> > 
+> > [1] http://www.spinics.net/lists/linux-usb/msg74489.html
+> It does not matter which the name is, this clock is related to usb 480M or 
+> its source. We use nop-xceiver is just to create struct usb_otg
+> and usb_phy. Clock information can be at imx specific file like
+> cil13xxx_imx.
 
-Hm, I don't know. Anyone? u32 should be large enough for a pixelclock.
+I think the clock task needs to become a sepreate topic, apart from this
+series.
 
-> > +	u32 hactive;
-> > +	u32 hfront_porch;
-> > +	u32 hback_porch;
-> > +	u32 hsync_len;
-> > +
-> > +	u32 vactive;
-> > +	u32 vfront_porch;
-> > +	u32 vback_porch;
-> > +	u32 vsync_len;
-> > +
-> > +	u32 hah;		/* hsync active high */
-> > +	u32 vah;		/* vsync active high */
-> > +	u32 de;			/* data enable */
-> > +	u32 pixelclk_pol;
+> > 
+> > > mx6q:
+> > > - usboh3(Index 162 at DT), used to access register
+> > > - usbphy(Index 182 for otg port at DT), at phy controller
+> > 
+> > > So, we may consider a way to consolidate both mx6q (mx28) and mxc (mx5x, mx3x)
+> > > platforms.
+> > 
+> > Yes, we will discuss a real clktree solution in the usbmisc driver for
+> > the different cores. The first thoughts are, that the clk configuration
+> > has completely to be done inside the usbmisc driver. For this, the
+> > usbmisc needs to become a hard dependency for the ci13xxx_imx glue code.
 > 
-> What values will these 4 have? Aren't these booleans?
-> 
-> The data enable comment should be "data enable active high".
-> 
-> The next patch says in the devtree binding documentation that the values
-> may be on/off/ignored. Is that represented here somehow, i.e. values are
-> 0/1/2 or so? If not, what does it mean if the value is left out from
-> devtree data, meaning "not used on hardware"?
->
+> For my mind, imx usb clock handling is better only at place, that is
+> cil13xxx_imx. We can have imx_clk_enable and imx_clk_disable in it,
+> and handling clk in imx_clk_enable using id_table or what else platform
+> specific.
 
-Hm, I think you might be right here. It is no problem in the DT part of the code.
-The properties are optional, left out means "not used on hardware".
-But this does not propagate correctly to the videomode. I should set the fields
-to -EINVAL in case they are omitted, than everything should work nicely.
+As already mentioned, the clock layout differs from SoC to SoC.
+Therefore the usbmisc can become a mandatory instance over the
+ci13xxx_imx instances in all imx cases. This controlling interface can
+define the special clock setups and connection types for the underlying
+usb cores.
 
-> There's also a "doubleclk" value mentioned in the devtree bindings doc,
-> but not shown here.
-> 
-
-Argh. That slipped through. I have patches that add this property to all
-structs and the devicetree binding. But it is not supposed to be in this
-series, because I want to at least have the binding stable for now.
-
-> I think this videomode struct is the one that display drivers are going
-> to use (?), in addition to the display_timing, so it would be good to
-> document it well.
-> 
-
-Yes. Maybe I have to put more of the devicetree documentation in the code.
+I will send the next series without this clock handling.
 
 Regards,
-Steffen
-
+Michael
 
 -- 
 Pengutronix e.K.                           |                             |
 Industrial Linux Solutions                 | http://www.pengutronix.de/  |
 Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
 Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
