@@ -1,113 +1,128 @@
 From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCHv15 5/7] fbmon: add of_videomode helpers
-Date: Mon, 26 Nov 2012 10:07:26 +0100
-Message-ID: <1353920848-1705-6-git-send-email-s.trumtrar@pengutronix.de>
-References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCHv15 0/7] of: add display helper
+Date: Mon, 26 Nov 2012 10:07:21 +0100
+Message-ID: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
 Sender: linux-media-owner@vger.kernel.org
 To: devicetree-discuss@lists.ozlabs.org
 Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-Add helper to get fb_videomode from devicetree.
+Hi!
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
-Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
-Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
----
- drivers/video/fbmon.c |   42 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/fb.h    |    6 ++++++
- 2 files changed, 48 insertions(+)
+Changes since v14:
+	- fix "const struct *" warning
+		(reported by: Leela Krishna Amudala <l.krishna@samsung.com>)
+	- return -EINVAL when htotal or vtotal are zero
+	- remove unreachable code in of_get_display_timings
+	- include headers in .c files and not implicit in .h
+	- sort includes alphabetically
+	- fix lower/uppercase in binding documentation
+	- rebase onto v3.7-rc7
 
-diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
-index 733553b..4a8484d 100644
---- a/drivers/video/fbmon.c
-+++ b/drivers/video/fbmon.c
-@@ -28,6 +28,7 @@
-  */
- #include <linux/fb.h>
- #include <linux/module.h>
-+#include <linux/of_videomode.h>
- #include <linux/pci.h>
- #include <linux/slab.h>
- #include <linux/videomode.h>
-@@ -1424,6 +1425,47 @@ int fb_videomode_from_videomode(const struct videomode *vm,
- EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
- #endif
- 
-+#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-+static inline void dump_fb_videomode(const struct fb_videomode *m)
-+{
-+	pr_debug("fb_videomode = %ux%u@%uHz (%ukHz) %u %u %u %u %u %u %u %u %u\n",
-+		 m->xres, m->yres, m->refresh, m->pixclock, m->left_margin,
-+		 m->right_margin, m->upper_margin, m->lower_margin,
-+		 m->hsync_len, m->vsync_len, m->sync, m->vmode, m->flag);
-+}
-+
-+/**
-+ * of_get_fb_videomode - get a fb_videomode from devicetree
-+ * @np: device_node with the timing specification
-+ * @fb: will be set to the return value
-+ * @index: index into the list of display timings in devicetree
-+ *
-+ * DESCRIPTION:
-+ * This function is expensive and should only be used, if only one mode is to be
-+ * read from DT. To get multiple modes start with of_get_display_timings ond
-+ * work with that instead.
-+ */
-+int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb,
-+			int index)
-+{
-+	struct videomode vm;
-+	int ret;
-+
-+	ret = of_get_videomode(np, &vm, index);
-+	if (ret)
-+		return ret;
-+
-+	fb_videomode_from_videomode(&vm, fb);
-+
-+	pr_info("%s: got %dx%d display mode from %s\n", __func__, vm.hactive,
-+		vm.vactive, np->name);
-+	dump_fb_videomode(fb);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_get_fb_videomode);
-+#endif
-+
- #else
- int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
- {
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index 4404ec2..c2d933d 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -20,6 +20,7 @@ struct fb_info;
- struct device;
- struct file;
- struct videomode;
-+struct device_node;
- 
- /* Definitions below are used in the parsed monitor specs */
- #define FB_DPMS_ACTIVE_OFF	1
-@@ -715,6 +716,11 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
- extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
- extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
- 
-+#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-+extern int of_get_fb_videomode(struct device_node *np,
-+			       struct fb_videomode *fb,
-+			       int index);
-+#endif
- #if IS_ENABLED(CONFIG_VIDEOMODE)
- extern int fb_videomode_from_videomode(const struct videomode *vm,
- 				       struct fb_videomode *fbmode);
+Changes since v13:
+	- fix "const struct *" warning
+		(reported by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>)
+	- prevent division by zero in fb_videomode_from_videomode
+
+Changes since v12:
+	- rename struct display_timing to via_display_timing in via subsystem
+	- fix refreshrate calculation
+	- fix "const struct *" warnings
+		(reported by: Manjunathappa, Prakash <prakash.pm@ti.com>)
+	- some CodingStyle fixes
+	- rewrite parts of commit messages and display-timings.txt
+	- let display_timing_get_value get all values instead of just typical
+
+Changes since v11:
+	- make pointers const where applicable
+	- add reviewed-by Laurent Pinchart
+
+Changes since v10:
+	- fix function name (drm_)display_mode_from_videomode
+	- add acked-by, reviewed-by, tested-by
+
+Changes since v9:
+	- don't leak memory when previous timings were correct
+	- CodingStyle fixes
+	- move blank lines around
+
+Changes since v8:
+	- fix memory leaks
+	- change API to be more consistent (foo_from_bar(struct bar, struct foo))
+	- include headers were necessary
+	- misc minor bufixe
+
+Changes since v7:
+	- move of_xxx to drivers/video
+	- remove non-binding documentation from display-timings.txt
+	- squash display_timings and videomode in one patch
+	- misc minor fixes
+
+Changes since v6:
+	- get rid of some empty lines etc.
+	- move functions to their subsystems
+	- split of_ from non-of_ functions
+	- add at least some kerneldoc to some functions
+
+Changes since v5:
+	- removed all display stuff and just describe timings
+
+Changes since v4:
+	- refactored functions
+
+Changes since v3:
+	- print error messages
+	- free alloced memory
+	- general cleanup
+
+Changes since v2:
+	- use hardware-near property-names
+	- provide a videomode structure
+	- allow ranges for all properties (<min,typ,max>)
+	- functions to get display_mode or fb_videomode
+
+
+Steffen Trumtrar (7):
+  viafb: rename display_timing to via_display_timing
+  video: add display_timing and videomode
+  video: add of helper for display timings/videomode
+  fbmon: add videomode helpers
+  fbmon: add of_videomode helpers
+  drm_modes: add videomode helpers
+  drm_modes: add of_videomode helpers
+
+ .../devicetree/bindings/video/display-timing.txt   |  107 ++++++++++
+ drivers/gpu/drm/drm_modes.c                        |   70 +++++++
+ drivers/video/Kconfig                              |   21 ++
+ drivers/video/Makefile                             |    4 +
+ drivers/video/display_timing.c                     |   24 +++
+ drivers/video/fbmon.c                              |   93 +++++++++
+ drivers/video/of_display_timing.c                  |  219 ++++++++++++++++++++
+ drivers/video/of_videomode.c                       |   54 +++++
+ drivers/video/via/hw.c                             |    6 +-
+ drivers/video/via/hw.h                             |    2 +-
+ drivers/video/via/lcd.c                            |    2 +-
+ drivers/video/via/share.h                          |    2 +-
+ drivers/video/via/via_modesetting.c                |    8 +-
+ drivers/video/via/via_modesetting.h                |    6 +-
+ drivers/video/videomode.c                          |   44 ++++
+ include/drm/drmP.h                                 |   13 ++
+ include/linux/display_timing.h                     |  104 ++++++++++
+ include/linux/fb.h                                 |   12 ++
+ include/linux/of_display_timing.h                  |   20 ++
+ include/linux/of_videomode.h                       |   18 ++
+ include/linux/videomode.h                          |   54 +++++
+ 21 files changed, 870 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/display-timing.txt
+ create mode 100644 drivers/video/display_timing.c
+ create mode 100644 drivers/video/of_display_timing.c
+ create mode 100644 drivers/video/of_videomode.c
+ create mode 100644 drivers/video/videomode.c
+ create mode 100644 include/linux/display_timing.h
+ create mode 100644 include/linux/of_display_timing.h
+ create mode 100644 include/linux/of_videomode.h
+ create mode 100644 include/linux/videomode.h
+
 -- 
 1.7.10.4
