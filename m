@@ -1,62 +1,78 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: How about a gpio_get(device *, char *) function?
-Date: Mon, 26 Nov 2012 11:17:18 +0000
-Message-ID: <20121126111718.A44E43E0A01@localhost>
-References: <38620644.IyR5R8rjKP@percival>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <38620644.IyR5R8rjKP@percival>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Courbot <acourbot@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 3.6.0] of: Add missing dummy functions
+Date: Mon, 26 Nov 2012 10:38:43 +0000
+Message-ID: <20121126103843.851603E08BB@localhost>
+References: <1350469563-19345-1-git-send-email-srinivas.kandagatla@st.com>
+ <507F23F7.5070509@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <507F23F7.5070509-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 31 Oct 2012 18:04:09 +0900, Alex Courbot <acourbot@nvidia.com> wrote:
-> Hi,
+On Wed, 17 Oct 2012 16:32:39 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 10/17/2012 05:26 AM, Srinivas KANDAGATLA wrote:
+> > From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+> > 
+> > Some functions in of.h have dummy functions and real implementations,
+> > however few of them have only real implementation.
+> > I think to be more consistent this patch adds below dummy functions if
+> > for non CONFIG_OF's.
+> > 
 > 
-> Would anyone be opposed to having a gpio_get() function that works similarly 
-> to e.g. regulator_get() and clk_get()?
+> Fixing these up one by one has annoyed me, but I know Grant has
+> generally resisted blindly creating empty functions. So I would like
+> Grant's comments. I'm fine with these except the ones noted below.
 > 
-> I can see some good reasons to have this:
+> > 	of_find_node_by_type
 > 
-> - Less platform data to pass to drivers,
-> - Consistency between different subsystems. Regulator, clock, PWM, ... all use 
-> this scheme.
-> - The "device-specific indirection" could make some DT structures more 
-> reusable. Right now the only way to address a GPIO through the DT is via a 
-> phandle that includes the GPIO number - thus hard-coded.
+> This should not be used except a few places as using device_type is
+> generally only for true OF.
 > 
-> The implementation would be rather simple, and the function would just return 
-> the right GPIO number (acquired through gpio_request).
+> > 	of_device_is_available
+> > 	of_find_node_with_property
+> 
+> Only used in 2 places.
+> 
+> > 	of_find_matching_node
+> > 	of_find_node_by_path
+> > 	of_find_node_by_phandle
+> > 	of_get_parent
+> > 	of_get_next_parent
+> > 	of_get_next_child
+> > 	of_get_next_available_child
+> > 	of_get_child_by_name
+> 
+> Already have this one.
+> 
+> > 
+> > Hopefully this can eliminate the need to ifdef code in the drivers.
+> 
+> Sometimes we want that for drivers that can be built both for OF and !OF
+> and you can't optimize away all the code and data.
 
-I've got no problem with it, but the devil is in the API details. Draft
-something up (unless you already have and I just haven't seen it yet...
-I'll get to it).  :-)
+Right. I've been cautious here for a reason. As much as possible I want
+to encourage of_* calls to be collected together in a driver, not
+scattered all over the place. Often the whole block of OF-aware code in
+a driver can be compiled out if it is grouped together into a function.
 
-BTW, I would prefer a system that resolves the gpio at .probe() time
-instead of at registration time. That makes deferred probing easier.
+Also, some of these only make sense in the context of an OF-aware code
+block and there is no sensible empty version.
+
+So, I'm fine with adding the empty versions on a case-by-case basis, but
+not wholesale.
 
 g.
-
-> 
-> Rationale for this: I would like to be able to share power sequences between 
-> devices, e.g. to completely extract the per-device resources from the 
-> sequence. Every power sequence step references either a regulator, PWM, or 
-> GPIO. For regulators and PWMs separation is easy because their subsystems 
-> provide regulator_get() and pwm_get() which allow the resource to be 
-> referenced by name in the sequence, and resolved to different instances 
-> depending on the device. GPIOs, on the other hand, can only be referenced by 
-> number - and that makes it necessary to duplicate the sequence's structure in 
-> memory for every device that may use it. It if was possible to reference GPIOs 
-> by names that resolve to different GPIO numbers according to the device, then 
-> the problem would be solved.
-> 
-> There are probably other use-cases that would benefit from this, if you know of 
-> one please feel free to share.
-> 
-> Thanks,
-> Alex.
-> 
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
