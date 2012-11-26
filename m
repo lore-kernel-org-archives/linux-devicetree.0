@@ -1,64 +1,99 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v3 6/7] usb: chipidea: usbmisc: add mx53 support
-Date: Mon, 26 Nov 2012 15:40:05 +0000
-Message-ID: <20121126154005.8CC8D3E1ABE@localhost>
-References: <1353506793-8354-1-git-send-email-m.grzeschik@pengutronix.de> <1353506793-8354-7-git-send-email-m.grzeschik@pengutronix.de> <20121123065340.GD22420@nchen-desktop> <50AF49A5.6030708@pengutronix.de> <20121125080931.GB16062@nchen-desktop>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121125080931.GB16062@nchen-desktop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Subject: Re: [PATCH] of: add 'const' for of_parse_phandle parameter *np
+Date: Mon, 26 Nov 2012 14:10:53 +0000
+Message-ID: <20121126141053.D096C3E199D@localhost>
+References: <1353583003-4560-1-git-send-email-s.trumtrar@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1353583003-4560-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Grant Likely <grant.likely-LR4i4eoOvxHyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 25 Nov 2012 16:09:31 +0800, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> On Fri, Nov 23, 2012 at 11:02:13AM +0100, Marc Kleine-Budde wrote:
-> > On 11/23/2012 07:53 AM, Peter Chen wrote:
-> > > On Wed, Nov 21, 2012 at 03:06:32PM +0100, Michael Grzeschik wrote:
-> > >> This adds mx53 as the next user of the usbmisc driver and makes it
-> > >> possible to disable the overcurrent-detection of the internal phy.
-> > >>
-> > >> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > >> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > >> ---
-> > >> Changes since v2:
-> > >> * added defines for register offsets and bitmasks
-> > >> * fixed disable_oc option for all ports
-> > >>
-> > >>  drivers/usb/chipidea/usbmisc_imx.c |   51 ++++++++++++++++++++++++++++++++++++
-> > >>  1 file changed, 51 insertions(+)
-> > >>
-> > >> diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-> > >> index e090e0f..b1811df 100644
-> > >> --- a/drivers/usb/chipidea/usbmisc_imx.c
-> > >> +++ b/drivers/usb/chipidea/usbmisc_imx.c
-> > >> @@ -19,6 +19,13 @@
-> > >>  
-> > >>  #define USB_DEV_MAX 4
-> > >>  
-> > >> +#define MX53_USB_OTG_PHY_CTRL_0_OFFSET	0x08;
-> > >> +#define MX53_USB_UH2_CTRL_OFFSET	0x14;
-> > >> +#define MX53_USB_UH3_CTRL_OFFSET	0x18;
-> > >> +#define MX53_BM_OVER_CUR_DIS_H1		BIT(5)
-> > >> +#define MX53_BM_OVER_CUR_DIS_OTG	BIT(8)
-> > >> +#define MX53_BM_OVER_CUR_DIS_UHx	BIT(30)
-> > >> +
-> > >>  #define MX6_BM_OVER_CUR_DIS		BIT(7)
-> > > 
-> > > As every SoC platform's non-core register mapping is different,
-> > > it is better to use .h to put register bit definition
-> > 
-> > AFAIK in the kernel we don't make extra .h files any more, if there is
-> > only a single user of the contents.
-> OK, if it is the current rule for kernel, then just keep it.
-> My original mind was there will be more and more bit definition
-> in future, and move it to .h to make the code clean and short.
+On Thu, 22 Nov 2012 12:16:43 +0100, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> The existing function does not change the passed device_node pointer. It is
+> only handed to of_get_property which itself takes a const struct device_node.
+> 
+> of_parse_phandle can therefore take a const pointer as well.
+> 
+> Cc: Grant Likely <grant.likely-LR4i4eoOvxHyB63q8FvJNQ@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Yeah. If there is only one user then keep it in the .c file. The kernel
-is huge, so keeping things out of the global scope is a GoodThing(tm).
+Applied, thanks.
 
 g.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> ---
+>  drivers/of/base.c  |    5 +++--
+>  include/linux/of.h |    4 ++--
+>  2 files changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index af3b22a..eca45b1 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -893,8 +893,8 @@ EXPORT_SYMBOL_GPL(of_property_count_strings);
+>   * Returns the device_node pointer with refcount incremented.  Use
+>   * of_node_put() on it when done.
+>   */
+> -struct device_node *
+> -of_parse_phandle(struct device_node *np, const char *phandle_name, int index)
+> +struct device_node *of_parse_phandle(const struct device_node *np,
+> +				     const char *phandle_name, int index)
+>  {
+>  	const __be32 *phandle;
+>  	int size;
+> @@ -905,6 +905,7 @@ of_parse_phandle(struct device_node *np, const char *phandle_name, int index)
+>  
+>  	return of_find_node_by_phandle(be32_to_cpup(phandle + index));
+>  }
+> +
+>  EXPORT_SYMBOL(of_parse_phandle);
+>  
+>  /**
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index b4e50d5..634b03f 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -255,7 +255,7 @@ extern int of_n_size_cells(struct device_node *np);
+>  extern const struct of_device_id *of_match_node(
+>  	const struct of_device_id *matches, const struct device_node *node);
+>  extern int of_modalias_node(struct device_node *node, char *modalias, int len);
+> -extern struct device_node *of_parse_phandle(struct device_node *np,
+> +extern struct device_node *of_parse_phandle(const struct device_node *np,
+>  					    const char *phandle_name,
+>  					    int index);
+>  extern int of_parse_phandle_with_args(struct device_node *np,
+> @@ -411,7 +411,7 @@ static inline int of_property_match_string(struct device_node *np,
+>  	return -ENOSYS;
+>  }
+>  
+> -static inline struct device_node *of_parse_phandle(struct device_node *np,
+> +static inline struct device_node *of_parse_phandle(const struct device_node *np,
+>  						   const char *phandle_name,
+>  						   int index)
+>  {
+> -- 
+> 1.7.10.4
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
