@@ -1,86 +1,46 @@
-From: Philip Rakity <prakity@nvidia.com>
-Subject: Re: [PATCH 1/2] sdhci: add quirk for lack of 1.8v support
-Date: Sun, 25 Nov 2012 21:26:02 +0100
-Message-ID: <66CF5EBE-E77D-4172-833E-8B392FBE6443@nvidia.com>
-References: <20121125180121.31FB3FACF5@dev.laptop.org>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH 3/3] ASoC: atmel-pcm: add dma support
+Date: Mon, 26 Nov 2012 10:04:28 +0800
+Message-ID: <50B2CE2C.4080700@atmel.com>
+References: <1353651257-2476-1-git-send-email-voice.shen@atmel.com>
+ <1353651257-2476-4-git-send-email-voice.shen@atmel.com>
+ <20121123142747.GP4529@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20121125180121.31FB3FACF5@dev.laptop.org>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Daniel Drake <dsd@laptop.org>
-Cc: "cjb@laptop.org" <cjb@laptop.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "jrudholm@gmail.com" <jrudholm@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20121123142747.GP4529@opensource.wolfsonmicro.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, linux-sound@vger.kernel.org, plagnioj@jcrosoft.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
-On Nov 25, 2012, at 6:01 PM, Daniel Drake <dsd@laptop.org> wrote:
+On 11/23/2012 22:27, Mark Brown wrote:
+> On Fri, Nov 23, 2012 at 02:14:17PM +0800, Bo Shen wrote:
+>> Add dmaengine specific routines and replace PDC ones in
+>> pcm_ops if appropriate.
+>>
+>> Signed-off-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+>> [voice.shen@atmel.com: adapt to soc dmaengine framework]
+>> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+>
+> Why is this not just two separate drivers?
 
-> The OLPC XO-1.75 laptop includes a SDHCI controller which is 1.8v
-> capable, and it truthfully reports so in its capabilities. This
-> alternate voltage is used for driving new "UHS-I" SD cards at their
-> full speed.
-> 
-> However, what the controller doesn't know is that the motherboard
-> physically doesn't have a 1.8v supply available.
-> 
-> Add a quirk so that systems such as this one can override disable
-> 1.8v support, adding support for UHS-I cards (by running them at
-> 3.3v).
-> 
-> This avoids a problem where the system would first try to run the
-> card at 1.8v, fail, and then not be able to fully reset the card
-> to retry at the normal 3.3v voltage.
-> 
-> This is more appropriate than using the MISSING_CAPS quirk, which
-> is intended for cases where the SDHCI controller is actually lying
-> about its capabilities, and would force us to somehow override both
-> caps words from another source.
-> 
-> Signed-off-by: Daniel Drake <dsd@laptop.org>
-> ---
-> drivers/mmc/host/sdhci.c  | 4 ++++
-> include/linux/mmc/sdhci.h | 2 ++
-> 2 files changed, 6 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index c7851c0..7273523 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -2865,6 +2865,10 @@ int sdhci_add_host(struct sdhci_host *host)
-> 		caps[1] &= ~(SDHCI_SUPPORT_SDR104 | SDHCI_SUPPORT_SDR50 |
-> 		       SDHCI_SUPPORT_DDR50);
-> 
-> +	if (host->quirks2 & SDHCI_QUIRK2_NO_1_8_V)
-> +		caps[1] &= ~(SDHCI_SUPPORT_SDR104 | SDHCI_SUPPORT_SDR50 |
-> +		       SDHCI_SUPPORT_DDR50);
-> +
-> 	/* Any UHS-I mode in caps implies SDR12 and SDR25 support. */
-> 	if (caps[1] & (SDHCI_SUPPORT_SDR104 | SDHCI_SUPPORT_SDR50 |
-> 		       SDHCI_SUPPORT_DDR50))
-> diff --git a/include/linux/mmc/sdhci.h b/include/linux/mmc/sdhci.h
-> index 1edcb4d..1a42747 100644
-> --- a/include/linux/mmc/sdhci.h
-> +++ b/include/linux/mmc/sdhci.h
-> @@ -92,6 +92,8 @@ struct sdhci_host {
-> 
-> #define SDHCI_QUIRK2_HOST_OFF_CARD_ON			(1<<0)
-> #define SDHCI_QUIRK2_HOST_NO_CMD23			(1<<1)
-> +/* The system physically doesn't support 1.8v, even if the host does */
-> +#define SDHCI_QUIRK2_NO_1_8_V				(1<<2)
-> 
-> 	int irq;		/* Device IRQ */
-> 	void __iomem *ioaddr;	/* Mapped address */
-> -- 
-> 1.7.11.7
-> 
+I am not sure I got your means.
+As I understand, I should keep the driver using pdc and won't touch it.
+And create new a new driver using dma, am I right?
 
-Reviewed-by:  Philip Rakity <prakity@nvidia.com>
+or else, ...?
 
------------------------------------------------------------------------------------
-This email message is for the sole use of the intended recipient(s) and may contain
-confidential information.  Any unauthorized review, use, disclosure or distribution
-is prohibited.  If you are not the intended recipient, please contact the sender by
-reply email and destroy all copies of the original message.
------------------------------------------------------------------------------------
+Best Regards
+Bo Shen
