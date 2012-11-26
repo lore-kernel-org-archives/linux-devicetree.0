@@ -1,52 +1,62 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: Have of_device_add call platform_device_add rather than device_add
-Date: Mon, 26 Nov 2012 15:28:48 +0000
-Message-ID: <20121126152848.57CB73E1A30@localhost>
-References: <20121121072448.GG19837@obsidianresearch.com> <20121121155104.726B83E0AE2@localhost> <20121121174453.GD6406@obsidianresearch.com> <CACxGe6u2Kfm+x5KsFzNPt7voyeD0x_4V6EO4add=tBwMKJ6VWQ@mail.gmail.com> <20121121181430.GE6406@obsidianresearch.com> <20121122153621.452CA3E129E@localhost> <20121122173020.GA8473@obsidianresearch.com>
+Subject: Re: How about a gpio_get(device *, char *) function?
+Date: Mon, 26 Nov 2012 11:17:18 +0000
+Message-ID: <20121126111718.A44E43E0A01@localhost>
+References: <38620644.IyR5R8rjKP@percival>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121122173020.GA8473@obsidianresearch.com>
+In-Reply-To: <38620644.IyR5R8rjKP@percival>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+To: Alex Courbot <acourbot@nvidia.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 Nov 2012 10:30:20 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-> On Thu, Nov 22, 2012 at 03:36:21PM +0000, Grant Likely wrote:
+On Wed, 31 Oct 2012 18:04:09 +0900, Alex Courbot <acourbot@nvidia.com> wrote:
+> Hi,
 > 
-> > Hmm... I've not tried it with assigned-address. I tried with two sibling
-> > platform devices using just the 'reg' property. That the kernel will
-> > complain about. For powerpc-only, the patch I posted allows the device
-> > to get registered anyway even though the range incorrectly overlaps.
+> Would anyone be opposed to having a gpio_get() function that works similarly 
+> to e.g. regulator_get() and clk_get()?
 > 
-> My second example was done with the reg property..
+> I can see some good reasons to have this:
 > 
->                 gpio0: gpio@10100 {
->                         compatible = "marvell,orion-gpio";
->                         #gpio-cells = <2>;
->                         gpio-controller;
->                         reg = <0x10100 0x40>;
->                 }
->                 chip_cfg@0 {
->                         compatible = "orc,chip_config";
->                         // Doubles up on gpio0
->                         reg = <0x10100 0x4>;
->                 };
+> - Less platform data to pass to drivers,
+> - Consistency between different subsystems. Regulator, clock, PWM, ... all use 
+> this scheme.
+> - The "device-specific indirection" could make some DT structures more 
+> reusable. Right now the only way to address a GPIO through the DT is via a 
+> phandle that includes the GPIO number - thus hard-coded.
 > 
-> 
-> f1010100-f101013f : /internal@f1000000/gpio@10100
->   f1010100-f1010103 : /internal@f1000000/chip_cfg@0
-> 
-> What did you try? Maybe order matters?
+> The implementation would be rather simple, and the function would just return 
+> the right GPIO number (acquired through gpio_request).
 
-(Sorry for not replying to my own mail; I'm doing this offline and my
-sent mail doesn't show)
+I've got no problem with it, but the devil is in the API details. Draft
+something up (unless you already have and I just haven't seen it yet...
+I'll get to it).  :-)
 
-Looks like it is by design. With my dummy devices I see this:
-
-10200c00-102023ff : /amba/overlap@10200c00
-  10201000-10201fff : /amba/dummy@10201000
-    10201400-10201bff : /amba/overlap@10201400
-
-All three of those devices are siblings in the device tree.
+BTW, I would prefer a system that resolves the gpio at .probe() time
+instead of at registration time. That makes deferred probing easier.
 
 g.
+
+> 
+> Rationale for this: I would like to be able to share power sequences between 
+> devices, e.g. to completely extract the per-device resources from the 
+> sequence. Every power sequence step references either a regulator, PWM, or 
+> GPIO. For regulators and PWMs separation is easy because their subsystems 
+> provide regulator_get() and pwm_get() which allow the resource to be 
+> referenced by name in the sequence, and resolved to different instances 
+> depending on the device. GPIOs, on the other hand, can only be referenced by 
+> number - and that makes it necessary to duplicate the sequence's structure in 
+> memory for every device that may use it. It if was possible to reference GPIOs 
+> by names that resolve to different GPIO numbers according to the device, then 
+> the problem would be solved.
+> 
+> There are probably other use-cases that would benefit from this, if you know of 
+> one please feel free to share.
+> 
+> Thanks,
+> Alex.
+> 
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
