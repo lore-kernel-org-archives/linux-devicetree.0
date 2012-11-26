@@ -1,43 +1,64 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH RESEND] i2c: Add support for device-tree based chip
- initialization
-Date: Mon, 26 Nov 2012 20:13:46 +0000
-Message-ID: <20121126201346.4E8963E095F@localhost>
-References: <1353905636-6697-1-git-send-email-linux@roeck-us.net>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: [PATCH] watchdog: davinci_wdt: add OF support
+Date: Mon, 26 Nov 2012 16:41:35 -0500
+Message-ID: <1353966095-23331-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353905636-6697-1-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, wim@iguana.be, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-keystone@list.ti.com
+Cc: Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 25 Nov 2012 20:53:56 -0800, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> Some I2C devices are not or not correctly initialized by the firmware.
-> Configuration would be possible via platform data, but that would require
-> per-driver platform data and a lot of code, and changing it would not be
-> possible without re-compiling the kernel. It is more elegant to do it
-> generically via devicetree properties.
-> 
-> Add a generic I2C devicetree property named "reg-init". This property provides
-> a sequence of device initialization commands to be executed prior to calling
-> the probe function for a given device.
-> 
-> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+This adds OF support for davinci_wdt driver.
 
-This is a very similar problem to the power sequences series that was
-recently posted to this list. I would like that feature and this
-mechanism use the same approach.
+Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+---
+ .../devicetree/bindings/watchdog/davinci-wdt.txt   |   12 ++++++++++++
+ drivers/watchdog/davinci_wdt.c                     |    7 +++++++
+ 2 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
 
-g.
+diff --git a/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+new file mode 100644
+index 0000000..75558cc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/davinci-wdt.txt
+@@ -0,0 +1,12 @@
++DaVinci Watchdog Timer (WDT) Controller
++
++Required properties:
++- compatible : Should be "ti,davinci-wdt"
++- reg : Should contain WDT registers location and length
++
++Examples:
++
++wdt: wdt@2320000 {
++	compatible = "ti,davinci-wdt";
++	reg = <0x02320000 0x80>;
++};
+diff --git a/drivers/watchdog/davinci_wdt.c b/drivers/watchdog/davinci_wdt.c
+index eb44b03..c73e166 100644
+--- a/drivers/watchdog/davinci_wdt.c
++++ b/drivers/watchdog/davinci_wdt.c
+@@ -262,10 +262,17 @@ static int __devexit davinci_wdt_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id davinci_wdt_of_match[] = {
++	{ .compatible = "ti,davinci-wdt", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, davinci_wdt_of_match);
++
+ static struct platform_driver platform_wdt_driver = {
+ 	.driver = {
+ 		.name = "watchdog",
+ 		.owner	= THIS_MODULE,
++		.of_match_table = davinci_wdt_of_match,
+ 	},
+ 	.probe = davinci_wdt_probe,
+ 	.remove = __devexit_p(davinci_wdt_remove),
+-- 
+1.7.9.5
+
