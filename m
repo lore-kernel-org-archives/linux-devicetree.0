@@ -1,128 +1,147 @@
 From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCHv15 0/7] of: add display helper
-Date: Mon, 26 Nov 2012 10:07:21 +0100
-Message-ID: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCHv15 1/7] viafb: rename display_timing to via_display_timing
+Date: Mon, 26 Nov 2012 10:07:22 +0100
+Message-ID: <1353920848-1705-2-git-send-email-s.trumtrar@pengutronix.de>
+References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
 Sender: linux-media-owner@vger.kernel.org
 To: devicetree-discuss@lists.ozlabs.org
 Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+The struct display_timing is specific to the via subsystem. The naming leads to
+collisions with the new struct display_timing, that is supposed to be a shared
+struct between different subsystems.
+To clean this up, prepend the existing struct with the subsystem it is specific
+to.
 
-Changes since v14:
-	- fix "const struct *" warning
-		(reported by: Leela Krishna Amudala <l.krishna@samsung.com>)
-	- return -EINVAL when htotal or vtotal are zero
-	- remove unreachable code in of_get_display_timings
-	- include headers in .c files and not implicit in .h
-	- sort includes alphabetically
-	- fix lower/uppercase in binding documentation
-	- rebase onto v3.7-rc7
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+---
+ drivers/video/via/hw.c              |    6 +++---
+ drivers/video/via/hw.h              |    2 +-
+ drivers/video/via/lcd.c             |    2 +-
+ drivers/video/via/share.h           |    2 +-
+ drivers/video/via/via_modesetting.c |    8 ++++----
+ drivers/video/via/via_modesetting.h |    6 +++---
+ 6 files changed, 13 insertions(+), 13 deletions(-)
 
-Changes since v13:
-	- fix "const struct *" warning
-		(reported by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>)
-	- prevent division by zero in fb_videomode_from_videomode
-
-Changes since v12:
-	- rename struct display_timing to via_display_timing in via subsystem
-	- fix refreshrate calculation
-	- fix "const struct *" warnings
-		(reported by: Manjunathappa, Prakash <prakash.pm@ti.com>)
-	- some CodingStyle fixes
-	- rewrite parts of commit messages and display-timings.txt
-	- let display_timing_get_value get all values instead of just typical
-
-Changes since v11:
-	- make pointers const where applicable
-	- add reviewed-by Laurent Pinchart
-
-Changes since v10:
-	- fix function name (drm_)display_mode_from_videomode
-	- add acked-by, reviewed-by, tested-by
-
-Changes since v9:
-	- don't leak memory when previous timings were correct
-	- CodingStyle fixes
-	- move blank lines around
-
-Changes since v8:
-	- fix memory leaks
-	- change API to be more consistent (foo_from_bar(struct bar, struct foo))
-	- include headers were necessary
-	- misc minor bufixe
-
-Changes since v7:
-	- move of_xxx to drivers/video
-	- remove non-binding documentation from display-timings.txt
-	- squash display_timings and videomode in one patch
-	- misc minor fixes
-
-Changes since v6:
-	- get rid of some empty lines etc.
-	- move functions to their subsystems
-	- split of_ from non-of_ functions
-	- add at least some kerneldoc to some functions
-
-Changes since v5:
-	- removed all display stuff and just describe timings
-
-Changes since v4:
-	- refactored functions
-
-Changes since v3:
-	- print error messages
-	- free alloced memory
-	- general cleanup
-
-Changes since v2:
-	- use hardware-near property-names
-	- provide a videomode structure
-	- allow ranges for all properties (<min,typ,max>)
-	- functions to get display_mode or fb_videomode
-
-
-Steffen Trumtrar (7):
-  viafb: rename display_timing to via_display_timing
-  video: add display_timing and videomode
-  video: add of helper for display timings/videomode
-  fbmon: add videomode helpers
-  fbmon: add of_videomode helpers
-  drm_modes: add videomode helpers
-  drm_modes: add of_videomode helpers
-
- .../devicetree/bindings/video/display-timing.txt   |  107 ++++++++++
- drivers/gpu/drm/drm_modes.c                        |   70 +++++++
- drivers/video/Kconfig                              |   21 ++
- drivers/video/Makefile                             |    4 +
- drivers/video/display_timing.c                     |   24 +++
- drivers/video/fbmon.c                              |   93 +++++++++
- drivers/video/of_display_timing.c                  |  219 ++++++++++++++++++++
- drivers/video/of_videomode.c                       |   54 +++++
- drivers/video/via/hw.c                             |    6 +-
- drivers/video/via/hw.h                             |    2 +-
- drivers/video/via/lcd.c                            |    2 +-
- drivers/video/via/share.h                          |    2 +-
- drivers/video/via/via_modesetting.c                |    8 +-
- drivers/video/via/via_modesetting.h                |    6 +-
- drivers/video/videomode.c                          |   44 ++++
- include/drm/drmP.h                                 |   13 ++
- include/linux/display_timing.h                     |  104 ++++++++++
- include/linux/fb.h                                 |   12 ++
- include/linux/of_display_timing.h                  |   20 ++
- include/linux/of_videomode.h                       |   18 ++
- include/linux/videomode.h                          |   54 +++++
- 21 files changed, 870 insertions(+), 13 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/video/display-timing.txt
- create mode 100644 drivers/video/display_timing.c
- create mode 100644 drivers/video/of_display_timing.c
- create mode 100644 drivers/video/of_videomode.c
- create mode 100644 drivers/video/videomode.c
- create mode 100644 include/linux/display_timing.h
- create mode 100644 include/linux/of_display_timing.h
- create mode 100644 include/linux/of_videomode.h
- create mode 100644 include/linux/videomode.h
-
+diff --git a/drivers/video/via/hw.c b/drivers/video/via/hw.c
+index 898590d..5563c67 100644
+--- a/drivers/video/via/hw.c
++++ b/drivers/video/via/hw.c
+@@ -1467,10 +1467,10 @@ void viafb_set_vclock(u32 clk, int set_iga)
+ 	via_write_misc_reg_mask(0x0C, 0x0C); /* select external clock */
+ }
+ 
+-struct display_timing var_to_timing(const struct fb_var_screeninfo *var,
++struct via_display_timing var_to_timing(const struct fb_var_screeninfo *var,
+ 	u16 cxres, u16 cyres)
+ {
+-	struct display_timing timing;
++	struct via_display_timing timing;
+ 	u16 dx = (var->xres - cxres) / 2, dy = (var->yres - cyres) / 2;
+ 
+ 	timing.hor_addr = cxres;
+@@ -1491,7 +1491,7 @@ struct display_timing var_to_timing(const struct fb_var_screeninfo *var,
+ void viafb_fill_crtc_timing(const struct fb_var_screeninfo *var,
+ 	u16 cxres, u16 cyres, int iga)
+ {
+-	struct display_timing crt_reg = var_to_timing(var,
++	struct via_display_timing crt_reg = var_to_timing(var,
+ 		cxres ? cxres : var->xres, cyres ? cyres : var->yres);
+ 
+ 	if (iga == IGA1)
+diff --git a/drivers/video/via/hw.h b/drivers/video/via/hw.h
+index 6be243c..c3f2572 100644
+--- a/drivers/video/via/hw.h
++++ b/drivers/video/via/hw.h
+@@ -637,7 +637,7 @@ extern int viafb_LCD_ON;
+ extern int viafb_DVI_ON;
+ extern int viafb_hotplug;
+ 
+-struct display_timing var_to_timing(const struct fb_var_screeninfo *var,
++struct via_display_timing var_to_timing(const struct fb_var_screeninfo *var,
+ 	u16 cxres, u16 cyres);
+ void viafb_fill_crtc_timing(const struct fb_var_screeninfo *var,
+ 	u16 cxres, u16 cyres, int iga);
+diff --git a/drivers/video/via/lcd.c b/drivers/video/via/lcd.c
+index 1650379..022b0df 100644
+--- a/drivers/video/via/lcd.c
++++ b/drivers/video/via/lcd.c
+@@ -549,7 +549,7 @@ void viafb_lcd_set_mode(const struct fb_var_screeninfo *var, u16 cxres,
+ 	int panel_hres = plvds_setting_info->lcd_panel_hres;
+ 	int panel_vres = plvds_setting_info->lcd_panel_vres;
+ 	u32 clock;
+-	struct display_timing timing;
++	struct via_display_timing timing;
+ 	struct fb_var_screeninfo panel_var;
+ 	const struct fb_videomode *mode_crt_table, *panel_crt_table;
+ 
+diff --git a/drivers/video/via/share.h b/drivers/video/via/share.h
+index 3158dfc..65c65c6 100644
+--- a/drivers/video/via/share.h
++++ b/drivers/video/via/share.h
+@@ -319,7 +319,7 @@ struct crt_mode_table {
+ 	int refresh_rate;
+ 	int h_sync_polarity;
+ 	int v_sync_polarity;
+-	struct display_timing crtc;
++	struct via_display_timing crtc;
+ };
+ 
+ struct io_reg {
+diff --git a/drivers/video/via/via_modesetting.c b/drivers/video/via/via_modesetting.c
+index 0e431ae..0b414b0 100644
+--- a/drivers/video/via/via_modesetting.c
++++ b/drivers/video/via/via_modesetting.c
+@@ -30,9 +30,9 @@
+ #include "debug.h"
+ 
+ 
+-void via_set_primary_timing(const struct display_timing *timing)
++void via_set_primary_timing(const struct via_display_timing *timing)
+ {
+-	struct display_timing raw;
++	struct via_display_timing raw;
+ 
+ 	raw.hor_total = timing->hor_total / 8 - 5;
+ 	raw.hor_addr = timing->hor_addr / 8 - 1;
+@@ -88,9 +88,9 @@ void via_set_primary_timing(const struct display_timing *timing)
+ 	via_write_reg_mask(VIACR, 0x17, 0x80, 0x80);
+ }
+ 
+-void via_set_secondary_timing(const struct display_timing *timing)
++void via_set_secondary_timing(const struct via_display_timing *timing)
+ {
+-	struct display_timing raw;
++	struct via_display_timing raw;
+ 
+ 	raw.hor_total = timing->hor_total - 1;
+ 	raw.hor_addr = timing->hor_addr - 1;
+diff --git a/drivers/video/via/via_modesetting.h b/drivers/video/via/via_modesetting.h
+index 06e09fe..f6a6503 100644
+--- a/drivers/video/via/via_modesetting.h
++++ b/drivers/video/via/via_modesetting.h
+@@ -33,7 +33,7 @@
+ #define VIA_PITCH_MAX	0x3FF8
+ 
+ 
+-struct display_timing {
++struct via_display_timing {
+ 	u16 hor_total;
+ 	u16 hor_addr;
+ 	u16 hor_blank_start;
+@@ -49,8 +49,8 @@ struct display_timing {
+ };
+ 
+ 
+-void via_set_primary_timing(const struct display_timing *timing);
+-void via_set_secondary_timing(const struct display_timing *timing);
++void via_set_primary_timing(const struct via_display_timing *timing);
++void via_set_secondary_timing(const struct via_display_timing *timing);
+ void via_set_primary_address(u32 addr);
+ void via_set_secondary_address(u32 addr);
+ void via_set_primary_pitch(u32 pitch);
 -- 
 1.7.10.4
