@@ -1,53 +1,49 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: When constructing the bus id consider assigned-addresses as well
-Date: Mon, 26 Nov 2012 14:03:16 +0000
-Message-ID: <20121126140316.99FE23E194B@localhost>
-References: <20121121210240.GC15285@obsidianresearch.com>
+Subject: Re: [PATCH] of/i2c: support more interrupt specifiers
+Date: Mon, 26 Nov 2012 14:08:28 +0000
+Message-ID: <20121126140828.555CF3E196F@localhost>
+References: <1353488322-14764-1-git-send-email-bongkyu.kim@lge.com> <50ACD9F2.40207@gmail.com> <50B2F9FF.9070308@lge.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121121210240.GC15285@obsidianresearch.com>
+In-Reply-To: <50B2F9FF.9070308@lge.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+To: Bongkyu Kim <bongkyu.kim@lge.com>, Rob Herring <robherring2@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 Nov 2012 14:02:40 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-> 'assigned-addresses' is used for certain PCI device type nodes in
-> lieu of 'reg',  since this is enforced by of/address.c, have
-> of_device_make_bus_id look there as well.
+On Mon, 26 Nov 2012 14:11:27 +0900, Bongkyu Kim <bongkyu.kim@lge.com> wrote:
+> On 11/21/2012 10:41 PM, Rob Herring wrote:
+> > On 11/21/2012 02:58 AM, Bongkyu Kim wrote:
+> >> This patch supports more interrupt specifiers for i2c client.
+> > 
+> > Why?
+> > 
 > 
-> Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> If we are registering a device has 2 interrupts like the below,
+> 	i2c@f9968000 {
+> 		lsm330_acc@1D {
+> 			compatible = "ST,lsm330_acc",
+> 			/* #interrupt-cells = <2> */
+> 			interrupts = <73 0x2 65 0x2>,
+> 		};
+> 	};
+> 
+> we can't use second irq(65) in a driver because of mapping first
+> interrupt only.
+> If second irq(65) is mapped, we can use by gpio_to_irq() function at a
+> driver.
+> So, I think that all interrupt specifiers should be parsed and mapped
+> if DT's interrupts property is allowed several interrupt specifiers.
 
-If it is a PCI device, then of_device_make_bus_id() shouldn't come into
-play. PCI devices already have their own naming scheme. Only
-platform_bus device creation uses of_device_make_bus_id(). What am I
-missing?
+This doesn't look like a very good idea. If more than one interrupt is
+provided, then each should be entirely parsed in the driver's .probe() or
+in of_i2c_register_devices(), not split across the two. Using
+gpio_to_irq() to fetch an irq number that was already calculated and
+then thrown away is a bizarre back way of going about it. Plus it is
+error-probe because nothing will check that the gpio and interrupts
+properties agree.
+
+Either the driver should do all the parsing of 2nd and subsequent irqs,
+or the i2c subsystem should be extended to support multiple irq
+resources.
 
 g.
-
-> ---
->  drivers/of/platform.c |    2 ++
->  1 files changed, 2 insertions(+), 0 deletions(-)
-> 
-> of_can_translate_address and of_translate_address already support
-> using assigned-addresses.
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index b80891b..4f0f701 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -105,6 +105,8 @@ void of_device_make_bus_id(struct device *dev)
->  	 * For MMIO, get the physical address
->  	 */
->  	reg = of_get_property(node, "reg", NULL);
-> +	if (!reg)
-> +		reg = of_get_property(node, "assigned-addresses", NULL);
->  	if (reg) {
->  		if (of_can_translate_address(node)) {
->  			addr = of_translate_address(node, reg);
-> -- 
-> 1.7.5.4
-> 
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
