@@ -1,106 +1,196 @@
-From: Mike Turquette <mturquette@ti.com>
-Subject: Re: [PATCH v4 00/12] clk: exynos4: migrate to common clock framework
-Date: Mon, 26 Nov 2012 11:31:16 -0800
-Message-ID: <20121126193116.21126.66261@nucleus>
-References: <1353791885-2566-1-git-send-email-thomas.abraham@linaro.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH RESEND] i2c: Add support for device-tree based chip
+ initialization
+Date: Mon, 26 Nov 2012 12:19:54 -0800
+Message-ID: <20121126201954.GA14617@roeck-us.net>
+References: <1353905636-6697-1-git-send-email-linux@roeck-us.net>
+ <50B39C3A.5080600@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1353791885-2566-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50B39C3A.5080600-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Thomas Abraham (2012-11-24 13:17:53)
-> Changes since v3:
-> - Includes changes suggested by Tomasz Figa <tomasz.figa@gmail.com>
+On Mon, Nov 26, 2012 at 10:43:38AM -0600, Rob Herring wrote:
+> On 11/25/2012 10:53 PM, Guenter Roeck wrote:
+> > Some I2C devices are not or not correctly initialized by the firmware.
+> > Configuration would be possible via platform data, but that would require
+> > per-driver platform data and a lot of code, and changing it would not be
+> > possible without re-compiling the kernel. It is more elegant to do it
+> > generically via devicetree properties.
+> > 
+> > Add a generic I2C devicetree property named "reg-init". This property provides
+> > a sequence of device initialization commands to be executed prior to calling
+> > the probe function for a given device.
+> > 
+> > Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> > ---
+> > Any comments / feedback ?
 > 
+> This has been discussed before in terms of memory mapped registers. I
+> think this is of questionable use of DT and could easily be abused. Not
 
-Hi Thomas,
+Isn't that true for pretty much everything ?
 
-3.7-rc7 is out and I do not wish to take any large changes this close to
-the merge window opening up.  I will review these patches and give any
-feedback now on the common clk bits, but merging in the
-drivers/clk/samsung parts would have to wait until after clk-next is
-rebased onto 3.8-rc.
+Really, I don't think that "it can be abused" should be considered a valid
+argument. It is almost as good (or bad) as "we have always done it that way"
+or "this doesn't scale".
 
-Which tree do you want to merge this through?  Samsung or clk-next?
-Will you split the patches or take it all once you have gathered ACKs?
+> all systems use DT, so this needs to be solved without DT anyway.
+> 
+> Do you have examples of drivers that would use this?
+> 
+I would need it for MAX6697 (for which I submitted a driver a week or so ago),
+and possibly for others. I didn't check further because I don't want to go along
+on this road too far if the idea is rejected.
+
+I took the idea from Broadcom and Marvell PHY chip initialization, which uses
+a similar approach, including the reg-init keyword. As far as I can see
+both don't support platform data based initialization, so one question
+to ask would be when it is mandatory to support platforma data based
+initialization and when it isn't.
+
+> Can this be handled in userspace using the i2c device interface before
+> loading the device's module?
+> 
+Not in my use case.
 
 Thanks,
-Mike
+Guenter
 
-> This patch series migrates the Samsung Exynos4 SoC clock code to adopt the
-> common clock framework. The use of Samsung specific clock structures has
-> been removed and all board support code has been updated. imx-style of
-> clock registration and lookup has been adopted for device tree based
-> exynos4 platforms.
+> Rob
 > 
-> This patch series is based on the for-next branch of Samsung maintainer's
-> tree with all patches merged from clk-next branch of Mike's tree. This
-> series has been tested on Exynos4210 based Origen board and Exynos4412
-> based smdk board.
+> > 
+> >  .../devicetree/bindings/i2c/trivial-devices.txt    |   24 +++++++
+> >  drivers/i2c/i2c-core.c                             |   68 ++++++++++++++++++++
+> >  2 files changed, 92 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > index 2f5322b..33b694e 100644
+> > --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> > @@ -2,6 +2,30 @@ This is a list of trivial i2c devices that have simple device tree
+> >  bindings, consisting only of a compatible field, an address and
+> >  possibly an interrupt line.
+> >  
+> > +Device initialization is supported with an optional reg-init property.
+> > +This property contains a sequence of commands to be written into the chip.
+> > +Each command consists of four values: Register, command type, mask, and data.
+> > +	Register:
+> > +		Register or command address
+> > +	Command type:
+> > +		0: SMBus write byte
+> > +		1: SMBus write byte data
+> > +		2: SMBus write word data
+> > +	Mask:
+> > +		If set, the register is read and masked with this value.
+> > +	Data:
+> > +		Data to be written (or with original data and mask if set)
+> > +
+> > +Example:
+> > +	max6696@1a {
+> > +		compatible = "maxim,max6696";
+> > +		reg = <0x1a>;
+> > +		reg-init = <
+> > +			0x09 1 0x00 0x24
+> > +			0x21 1 0x00 0x05
+> > +		>;
+> > +	};
+> > +
+> >  If a device needs more specific bindings, such as properties to
+> >  describe some aspect of it, there needs to be a specific binding
+> >  document for it just like any other devices.
+> > diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> > index a7edf98..49f8b74 100644
+> > --- a/drivers/i2c/i2c-core.c
+> > +++ b/drivers/i2c/i2c-core.c
+> > @@ -104,6 +104,69 @@ static int i2c_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+> >  #define i2c_device_uevent	NULL
+> >  #endif	/* CONFIG_HOTPLUG */
+> >  
+> > +static int i2c_dev_of_init(struct i2c_client *client, struct device *dev)
+> > +{
+> > +	const u32 *reg_init;
+> > +	int rlen;
+> > +	int val;
+> > +	u32 reg, access, mask, data;
+> > +
+> > +	reg_init = of_get_property(dev->of_node, "reg-init", &rlen);
+> > +	if (!reg_init)
+> > +		return 0;
+> > +
+> > +	if (!rlen || rlen % 4)
+> > +		return -EINVAL;
+> > +
+> > +	while (rlen >= 4) {
+> > +		reg = reg_init[0];
+> > +		access = reg_init[1];
+> > +		mask = reg_init[2];
+> > +		data = reg_init[3];
+> > +
+> > +		if (reg > 0xff)
+> > +			return -EINVAL;
+> > +
+> > +		switch (access) {
+> > +		default:
+> > +			return -EINVAL;
+> > +		case 0:
+> > +			val = 0;
+> > +			break;
+> > +		case 1:
+> > +			val = mask ? i2c_smbus_read_byte_data(client, reg) : 0;
+> > +			break;
+> > +		case 2:
+> > +			val = mask ? i2c_smbus_read_word_data(client, reg) : 0;
+> > +			break;
+> > +		}
+> > +		if (val < 0)
+> > +			return val;
+> > +
+> > +		val &= mask;
+> > +		val |= data;
+> > +
+> > +		switch (access) {
+> > +		default:
+> > +		case 0:
+> > +			val = i2c_smbus_write_byte(client, reg);
+> > +			break;
+> > +		case 1:
+> > +			val = i2c_smbus_write_byte_data(client, reg, val);
+> > +			break;
+> > +		case 2:
+> > +			val = i2c_smbus_write_word_data(client, reg, val);
+> > +			break;
+> > +		}
+> > +		if (val < 0)
+> > +			return val;
+> > +
+> > +		reg_init += 4;
+> > +		rlen -= 4 * sizeof(u32);
+> > +	}
+> > +	return 0;
+> > +}
+> > +
+> >  static int i2c_device_probe(struct device *dev)
+> >  {
+> >  	struct i2c_client	*client = i2c_verify_client(dev);
+> > @@ -122,7 +185,12 @@ static int i2c_device_probe(struct device *dev)
+> >  					client->flags & I2C_CLIENT_WAKE);
+> >  	dev_dbg(dev, "probe\n");
+> >  
+> > +	status = i2c_dev_of_init(client, dev);
+> > +	if (status)
+> > +		goto error;
+> > +
+> >  	status = driver->probe(client, i2c_match_id(driver->id_table, client));
+> > +error:
+> >  	if (status) {
+> >  		client->driver = NULL;
+> >  		i2c_set_clientdata(client, NULL);
+> > 
 > 
-> Thomas Abraham (12):
->   clk: samsung: add common clock framework helper functions for Samsung platforms
->   clk: samsung: add pll clock registration helper functions
->   clk: exynos4: register clocks using common clock framework
->   ARM: Exynos: Rework timer initialization sequence
->   ARM: Exynos4: Migrate clock support to common clock framework
->   ARM: dts: add exynos4 clock controller nodes
->   ARM: dts: add xxti and xusbxti fixed rate clock nodes for exynos4 based platforms
->   ARM: Exynos4: allow legacy board support to specify xxti and xusbxti clock speed
->   ARM: dts: add clock provider information for all controllers in Exynos4 SoC
->   ARM: Exynos4: remove auxdata table from machine file
->   ARM: Exynos: use fin_pll clock as the tick clock source for mct
->   ARM: Exynos: add support for mct clock setup
 > 
->  .../devicetree/bindings/clock/exynos4-clock.txt    |  215 +++
->  arch/arm/boot/dts/exynos4.dtsi                     |   48 +
->  arch/arm/boot/dts/exynos4210-origen.dts            |   12 +
->  arch/arm/boot/dts/exynos4210-smdkv310.dts          |   12 +
->  arch/arm/boot/dts/exynos4210.dtsi                  |    6 +
->  arch/arm/boot/dts/exynos4412-smdk4412.dts          |   12 +
->  arch/arm/boot/dts/exynos4x12.dtsi                  |    6 +
->  arch/arm/mach-exynos/Kconfig                       |    1 +
->  arch/arm/mach-exynos/Makefile                      |    3 -
->  arch/arm/mach-exynos/clock-exynos4.c               | 1602 --------------------
->  arch/arm/mach-exynos/clock-exynos4.h               |   35 -
->  arch/arm/mach-exynos/clock-exynos4210.c            |  188 ---
->  arch/arm/mach-exynos/clock-exynos4212.c            |  192 ---
->  arch/arm/mach-exynos/common.c                      |   57 +-
->  arch/arm/mach-exynos/common.h                      |   21 +-
->  arch/arm/mach-exynos/mach-armlex4210.c             |    3 +-
->  arch/arm/mach-exynos/mach-exynos4-dt.c             |   71 +-
->  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +-
->  arch/arm/mach-exynos/mach-nuri.c                   |    5 +-
->  arch/arm/mach-exynos/mach-origen.c                 |    5 +-
->  arch/arm/mach-exynos/mach-smdk4x12.c               |    5 +-
->  arch/arm/mach-exynos/mach-smdkv310.c               |    7 +-
->  arch/arm/mach-exynos/mach-universal_c210.c         |    3 +-
->  arch/arm/mach-exynos/mct.c                         |   32 +-
->  arch/arm/plat-samsung/Kconfig                      |    4 +-
->  drivers/clk/Makefile                               |    1 +
->  drivers/clk/samsung/Makefile                       |    6 +
->  drivers/clk/samsung/clk-exynos4.c                  |  655 ++++++++
->  drivers/clk/samsung/clk-pll.c                      |  400 +++++
->  drivers/clk/samsung/clk-pll.h                      |   38 +
->  drivers/clk/samsung/clk.c                          |  180 +++
->  drivers/clk/samsung/clk.h                          |  216 +++
->  32 files changed, 1905 insertions(+), 2138 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/clock/exynos4-clock.txt
->  delete mode 100644 arch/arm/mach-exynos/clock-exynos4.c
->  delete mode 100644 arch/arm/mach-exynos/clock-exynos4.h
->  delete mode 100644 arch/arm/mach-exynos/clock-exynos4210.c
->  delete mode 100644 arch/arm/mach-exynos/clock-exynos4212.c
->  create mode 100644 drivers/clk/samsung/Makefile
->  create mode 100644 drivers/clk/samsung/clk-exynos4.c
->  create mode 100644 drivers/clk/samsung/clk-pll.c
->  create mode 100644 drivers/clk/samsung/clk-pll.h
->  create mode 100644 drivers/clk/samsung/clk.c
->  create mode 100644 drivers/clk/samsung/clk.h
-> 
-> -- 
-> 1.7.4.4
