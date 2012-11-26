@@ -1,103 +1,162 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCHv15 7/7] drm_modes: add of_videomode helpers
-Date: Mon, 26 Nov 2012 10:07:28 +0100
-Message-ID: <1353920848-1705-8-git-send-email-s.trumtrar@pengutronix.de>
-References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 2/9] usb: chipidea: ci13xxx_imx: add 2nd and 3rd clock
+ to support imx5x and newer
+Date: Mon, 26 Nov 2012 17:29:31 +0800
+Message-ID: <20121126092931.GA15740@nchen-desktop>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1352909950-32555-3-git-send-email-m.grzeschik@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1352909950-32555-3-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add helper to get drm_display_mode from devicetree.
+On Wed, Nov 14, 2012 at 05:19:03PM +0100, Michael Grzeschik wrote:
+> This patch adds support for a second and third clock to the chipidea driver. On
+> modern freescale ARM cores like the imx51, imx53 and imx6q three clocks ("ahb",
+> "ipg" and "per") must be enabled in order to access the USB core.
+> 
+> In the original driver, the clock was requested without specifying the
+> connection id, further all mainline ARM archs with support for the chipidea
+> core (imx23, imx28) register their USB clock without a connection id.
+> 
+> This patch first renames the existing clk variable to clk_ahb. The connection
+> id "ahb" is added to the devm_clk_get() call. Then the clocks "ipg" and "per"
+> are requested. As all archs don't specify a connection id, all clk_get return
+> the same clock. This ensures compatibility to existing USB support and adds
+> support for imx5x at the same time.
+> 
+> This patch has been tested on imx28 and on imx53 with seperate "ahb", "ipg"
+> and "per" clocks.
+mx23, mx28, and mx6q has the same usb clock sources and different with
+mxc (mx5x, mx3x).
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
-Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
-Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
----
- drivers/gpu/drm/drm_modes.c |   33 +++++++++++++++++++++++++++++++++
- include/drm/drmP.h          |    6 ++++++
- 2 files changed, 39 insertions(+)
+I am not sure which method is better:
+- Add dummy clock at clock.c
+- Add platform information(id_table or something similar) at driver.
 
-diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
-index 8263ea1..3568f0a 100644
---- a/drivers/gpu/drm/drm_modes.c
-+++ b/drivers/gpu/drm/drm_modes.c
-@@ -33,6 +33,7 @@
- #include <linux/list.h>
- #include <linux/list_sort.h>
- #include <linux/export.h>
-+#include <linux/of_videomode.h>
- #include <linux/videomode.h>
- #include <drm/drmP.h>
- #include <drm/drm_crtc.h>
-@@ -541,6 +542,38 @@ int drm_display_mode_from_videomode(const struct videomode *vm,
- EXPORT_SYMBOL_GPL(drm_display_mode_from_videomode);
- #endif
- 
-+#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-+/**
-+ * of_get_drm_display_mode - get a drm_display_mode from devicetree
-+ * @np: device_node with the timing specification
-+ * @dmode: will be set to the return value
-+ * @index: index into the list of display timings in devicetree
-+ *
-+ * This function is expensive and should only be used, if only one mode is to be
-+ * read from DT. To get multiple modes start with of_get_display_timings and
-+ * work with that instead.
-+ */
-+int of_get_drm_display_mode(struct device_node *np,
-+			    struct drm_display_mode *dmode, int index)
-+{
-+	struct videomode vm;
-+	int ret;
-+
-+	ret = of_get_videomode(np, &vm, index);
-+	if (ret)
-+		return ret;
-+
-+	drm_display_mode_from_videomode(&vm, dmode);
-+
-+	pr_info("%s: got %dx%d display mode from %s\n", __func__, vm.hactive,
-+		vm.vactive, np->name);
-+	drm_mode_debug_printmodeline(dmode);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_get_drm_display_mode);
-+#endif
-+
- /**
-  * drm_mode_set_name - set the name on a mode
-  * @mode: name will be set in this mode
-diff --git a/include/drm/drmP.h b/include/drm/drmP.h
-index 2194e97..1784e55 100644
---- a/include/drm/drmP.h
-+++ b/include/drm/drmP.h
-@@ -85,6 +85,7 @@ struct module;
- struct drm_file;
- struct drm_device;
- 
-+struct device_node;
- struct videomode;
- 
- #include <drm/drm_os_linux.h>
-@@ -1460,6 +1461,11 @@ drm_mode_create_from_cmdline_mode(struct drm_device *dev,
- extern int drm_display_mode_from_videomode(const struct videomode *vm,
- 					   struct drm_display_mode *dmode);
- #endif
-+#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-+extern int of_get_drm_display_mode(struct device_node *np,
-+				   struct drm_display_mode *dmode,
-+				   int index);
-+#endif
- 
- /* Modesetting support */
- extern void drm_vblank_pre_modeset(struct drm_device *dev, int crtc);
+Add dummy clock may confuse some users, for example, mx6q has no
+"per" and "ipg" clock at all.
+> 
+> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/usb/chipidea/ci13xxx_imx.c |   54 ++++++++++++++++++++++++++++++------
+>  1 file changed, 45 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
+> index 935de97..570aedf 100644
+> --- a/drivers/usb/chipidea/ci13xxx_imx.c
+> +++ b/drivers/usb/chipidea/ci13xxx_imx.c
+> @@ -32,7 +32,9 @@ struct ci13xxx_imx_data {
+>  	struct device_node *phy_np;
+>  	struct usb_phy *phy;
+>  	struct platform_device *ci_pdev;
+> -	struct clk *clk;
+> +	struct clk *clk_ahb;
+> +	struct clk *clk_ipg;
+> +	struct clk *clk_per;
+>  	struct regulator *reg_vbus;
+>  };
+>  
+> @@ -144,20 +146,48 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
+>  		dev_warn(&pdev->dev, "pinctrl get/select failed, err=%ld\n",
+>  			PTR_ERR(pinctrl));
+>  
+> -	data->clk = devm_clk_get(&pdev->dev, NULL);
+> -	if (IS_ERR(data->clk)) {
+> +	data->clk_ahb = devm_clk_get(&pdev->dev, "ahb");
+> +	if (IS_ERR(data->clk_ahb)) {
+>  		dev_err(&pdev->dev,
+> -			"Failed to get clock, err=%ld\n", PTR_ERR(data->clk));
+> -		return PTR_ERR(data->clk);
+> +			"Failed to get ahb clock, err=%ld\n", PTR_ERR(data->clk_ahb));
+> +		return PTR_ERR(data->clk_ahb);
+>  	}
+>  
+> -	ret = clk_prepare_enable(data->clk);
+> +	data->clk_ipg = devm_clk_get(&pdev->dev, "ipg");
+> +	if (IS_ERR(data->clk_ipg)) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to get ipg clock, err=%ld\n", PTR_ERR(data->clk_ipg));
+> +		return PTR_ERR(data->clk_ipg);
+> +	}
+> +
+> +	data->clk_per = devm_clk_get(&pdev->dev, "per");
+> +	if (IS_ERR(data->clk_per)) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to get per clock, err=%ld\n", PTR_ERR(data->clk_per));
+> +		return PTR_ERR(data->clk_per);
+> +	}
+> +
+> +	ret = clk_prepare_enable(data->clk_ahb);
+>  	if (ret) {
+>  		dev_err(&pdev->dev,
+> -			"Failed to prepare or enable clock, err=%d\n", ret);
+> +			"Failed to prepare or enable ahb clock, err=%d\n", ret);
+>  		return ret;
+>  	}
+>  
+> +	ret = clk_prepare_enable(data->clk_ipg);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to prepare or enable ipg clock, err=%d\n", ret);
+> +		goto err_ipg_failed;
+> +	}
+> +
+> +	ret = clk_prepare_enable(data->clk_per);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to prepare or enable per clock, err=%d\n", ret);
+> +		goto err_per_failed;
+> +	}
+> +
+>  	phy_np = of_parse_phandle(pdev->dev.of_node, "fsl,usbphy", 0);
+>  	if (phy_np) {
+>  		data->phy_np = phy_np;
+> @@ -246,7 +276,11 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
+>  put_np:
+>  	if (phy_np)
+>  		of_node_put(phy_np);
+> -	clk_disable_unprepare(data->clk);
+> +	clk_disable_unprepare(data->clk_per);
+> +err_per_failed:
+> +	clk_disable_unprepare(data->clk_ipg);
+> +err_ipg_failed:
+> +	clk_disable_unprepare(data->clk_ahb);
+>  
+>  	return ret;
+>  }
+> @@ -268,7 +302,9 @@ static int __devexit ci13xxx_imx_remove(struct platform_device *pdev)
+>  
+>  	of_node_put(data->phy_np);
+>  
+> -	clk_disable_unprepare(data->clk);
+> +	clk_disable_unprepare(data->clk_per);
+> +	clk_disable_unprepare(data->clk_ipg);
+> +	clk_disable_unprepare(data->clk_ahb);
+>  
+>  	platform_set_drvdata(pdev, NULL);
+>  
+> -- 
+> 1.7.10.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
 -- 
-1.7.10.4
+
+Best Regards,
+Peter Chen
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
