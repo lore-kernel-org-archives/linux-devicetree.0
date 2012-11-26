@@ -1,100 +1,68 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 5/9] usb: add phy connection by phy-mode
-Date: Mon, 26 Nov 2012 17:56:49 +0800
-Message-ID: <20121126095648.GA15824@nchen-desktop>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/9] usb: chipidea: ci13xxx_imx: add 2nd and 3rd clock to
+ support imx5x and newer
+Date: Mon, 26 Nov 2012 11:22:32 +0100
+Message-ID: <20121126102232.GG10369@pengutronix.de>
 References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
- <1352909950-32555-6-git-send-email-m.grzeschik@pengutronix.de>
+ <1352909950-32555-3-git-send-email-m.grzeschik@pengutronix.de>
+ <20121126092931.GA15740@nchen-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1352909950-32555-6-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20121126092931.GA15740@nchen-desktop>
 Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 14, 2012 at 05:19:06PM +0100, Michael Grzeschik wrote:
-> This patch makes it possible to set the connection of the usbphy to the
-> soc. It is derived from the oftree bindings for the ethernetphy and adds
-> similar helperfunctions.
+On Mon, Nov 26, 2012 at 05:29:31PM +0800, Peter Chen wrote:
+> On Wed, Nov 14, 2012 at 05:19:03PM +0100, Michael Grzeschik wrote:
+> > This patch adds support for a second and third clock to the chipidea driver. On
+> > modern freescale ARM cores like the imx51, imx53 and imx6q three clocks ("ahb",
+> > "ipg" and "per") must be enabled in order to access the USB core.
+> > 
+> > In the original driver, the clock was requested without specifying the
+> > connection id, further all mainline ARM archs with support for the chipidea
+> > core (imx23, imx28) register their USB clock without a connection id.
+> > 
+> > This patch first renames the existing clk variable to clk_ahb. The connection
+> > id "ahb" is added to the devm_clk_get() call. Then the clocks "ipg" and "per"
+> > are requested. As all archs don't specify a connection id, all clk_get return
+> > the same clock. This ensures compatibility to existing USB support and adds
+> > support for imx5x at the same time.
+> > 
+> > This patch has been tested on imx28 and on imx53 with seperate "ahb", "ipg"
+> > and "per" clocks.
+> mx23, mx28, and mx6q has the same usb clock sources and different with
+> mxc (mx5x, mx3x).
 > 
-> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  drivers/of/Kconfig        |    4 ++++
->  drivers/of/Makefile       |    1 +
->  drivers/of/of_usbphy.c    |   49 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_usbphy.h |   15 ++++++++++++++
->  include/linux/usb/phy.h   |    8 ++++++++
->  5 files changed, 77 insertions(+)
->  create mode 100644 drivers/of/of_usbphy.c
->  create mode 100644 include/linux/of_usbphy.h
+> I am not sure which method is better:
+> - Add dummy clock at clock.c
+> - Add platform information(id_table or something similar) at driver.
 > 
-> diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-> index dfba3e6..28f99fb 100644
-> --- a/drivers/of/Kconfig
-> +++ b/drivers/of/Kconfig
-> @@ -67,6 +67,10 @@ config OF_MDIO
->  	help
->  	  OpenFirmware MDIO bus (Ethernet PHY) accessors
->  
-> +config OF_USBPHY
-> +	depends on USB
-> +	def_bool y
-> +
->  config OF_PCI
->  	def_tristate PCI
->  	depends on PCI
-> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-> index e027f44..fdcaf51 100644
-> --- a/drivers/of/Makefile
-> +++ b/drivers/of/Makefile
-> @@ -6,6 +6,7 @@ obj-$(CONFIG_OF_IRQ)    += irq.o
->  obj-$(CONFIG_OF_DEVICE) += device.o platform.o
->  obj-$(CONFIG_OF_I2C)	+= of_i2c.o
->  obj-$(CONFIG_OF_NET)	+= of_net.o
-> +obj-$(CONFIG_OF_USBPHY)	+= of_usbphy.o
->  obj-$(CONFIG_OF_SELFTEST) += selftest.o
->  obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
->  obj-$(CONFIG_OF_PCI)	+= of_pci.o
-> diff --git a/drivers/of/of_usbphy.c b/drivers/of/of_usbphy.c
-> new file mode 100644
-> index 0000000..2e71f7b
-> --- /dev/null
-> +++ b/drivers/of/of_usbphy.c
-> @@ -0,0 +1,49 @@
-> +/*
-> + * OF helpers for network devices.
-> + *
-> + * This file is released under the GPLv2
-> + *
-> + * Initially copied out of drivers/of/of_net.c
-> + */
-> +#include <linux/etherdevice.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of_usbphy.h>
-> +#include <linux/usb/phy.h>
-> +#include <linux/export.h>
-> +
-> +/**
-> + * It maps 'enum usb_phy_interface' found in include/linux/usb/phy.h
-> + * into the device tree binding of 'phy-mode', so that USB
-> + * device driver can get phy interface from device tree.
-> + */
-> +static const char *usbphy_modes[] = {
-> +	[USBPHY_INTERFACE_MODE_NA]	= "",
-> +	[USBPHY_INTERFACE_MODE_UTMI]	= "utmi",
-> +	[USBPHY_INTERFACE_MODE_UTMIW]	= "utmiw",
-> +	[USBPHY_INTERFACE_MODE_ULPI]	= "ulpi",
-> +	[USBPHY_INTERFACE_MODE_SERIAL]	= "fsls",
-"fsls"? or should be "serial"?
-> +};
-> +
+> Add dummy clock may confuse some users, for example, mx6q has no
+> "per" and "ipg" clock at all.
 
-Best Regards,
-Peter Chen
+The general idea is: The USB core has different input clocks. The driver
+has to be provided with these input clocks. When i.MX6 does not have
+these clocks, it only means that this SoC has no software controllable
+gates for these clocks, thus they are not documented. Still this SoC
+has these clocks.
+This way we can describe the differences between the SoC purely on SoC
+level without bothering the driver.
+You might want to ask your hardware guys to get more information what
+input clocks the USB core actually has, there actually is a lot of
+guesswork in it due to missing/inconsistent/confusing documentation.
 
+Sascha
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
 To unsubscribe from this list: send the line "unsubscribe linux-usb" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
