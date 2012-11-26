@@ -1,84 +1,49 @@
-From: Bongkyu Kim <bongkyu.kim@lge.com>
-Subject: Re: [PATCH] of/i2c: support more interrupt specifiers
-Date: Mon, 26 Nov 2012 14:11:27 +0900
-Message-ID: <50B2F9FF.9070308@lge.com>
-References: <1353488322-14764-1-git-send-email-bongkyu.kim@lge.com> <50ACD9F2.40207@gmail.com>
+From: "Bedia, Vaibhav" <vaibhav.bedia-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v3 1/5] rtc: OMAP: Add system pm_power_off to rtc driver
+Date: Mon, 26 Nov 2012 05:19:24 +0000
+Message-ID: <B5906170F1614E41A8A28DE3B8D121433EC4C13C@DBDE01.ent.ti.com>
+References: <1353404927-14412-1-git-send-email-anilkumar@ti.com>
+ <1353404927-14412-2-git-send-email-anilkumar@ti.com>
+ <331ABD5ECB02734CA317220B2BBEABC13EA78AA0@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50ACD9F2.40207@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EA78AA0-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "AnilKumar, Chimata" <anilkumar-l0cyMroinI0@public.gmane.org>, "a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org" <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org" <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Cc: Colin Foe-Parker <colin.foeparker-L+YfUVVR8+RBDgjK7y7TUQ@public.gmane.org>, "rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/21/2012 10:41 PM, Rob Herring wrote:
-> On 11/21/2012 02:58 AM, Bongkyu Kim wrote:
->> This patch supports more interrupt specifiers for i2c client.
+On Thu, Nov 22, 2012 at 11:17:02, AnilKumar, Chimata wrote:
+> +Andrew Morton
 > 
-> Why?
-> 
-
-If we are registering a device has 2 interrupts like the below,
-	i2c@f9968000 {
-		lsm330_acc@1D {
-			compatible = "ST,lsm330_acc",
-			/* #interrupt-cells = <2> */
-			interrupts = <73 0x2 65 0x2>,
-		};
-	};
-
-we can't use second irq(65) in a driver because of mapping first
-interrupt only.
-If second irq(65) is mapped, we can use by gpio_to_irq() function at a
-driver.
-So, I think that all interrupt specifiers should be parsed and mapped
-if DT's interrupts property is allowed several interrupt specifiers.
-
->> Signed-off-by: Bongkyu Kim <bongkyu.kim@lge.com>
->> ---
->>  drivers/of/of_i2c.c | 5 ++++-
->>  1 file changed, 4 insertions(+), 1 deletion(-)
->>
->> diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
->> index 3550f3b..c6d9b7e 100644
->> --- a/drivers/of/of_i2c.c
->> +++ b/drivers/of/of_i2c.c
->> @@ -34,6 +34,7 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->>  		struct dev_archdata dev_ad = {};
->>  		const __be32 *addr;
->>  		int len;
->> +		int nr = 0;
->>  
->>  		dev_dbg(&adap->dev, "of_i2c: register %s\n", node->full_name);
->>  
->> @@ -57,7 +58,9 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
->>  			continue;
->>  		}
->>  
->> -		info.irq = irq_of_parse_and_map(node, 0);
->> +		info.irq = irq_of_parse_and_map(node, nr++);
->> +		while (irq_of_parse_and_map(node, nr))
->> +			nr++;
-> 
-> What's the point if you are just discarding the interrupt number? If
-> this is needed, then shouldn't you fix i2c_board_info first?
-> 
-> Rob
+> On Tue, Nov 20, 2012 at 15:18:43, AnilKumar, Chimata wrote:
+> > From: Colin Foe-Parker <colin.foeparker-L+YfUVVR8+RBDgjK7y7TUQ@public.gmane.org>
+> > 
+> > Add system power off control to rtc driver which is the in-charge
+> > of controlling the BeagleBone system power. The power_off routine
+> > can be hooked up to "pm_power_off" system call.
+> > 
+> > System power off sequence:-
+> > * Set PMIC STATUS_OFF when PMIC_POWER_EN is pulled low
+> > * Enable PMIC_POWER_EN in rtc module
+> > * Set rtc ALARM2 time
+> > * Enable ALARM2 interrupt
+> > 
+> > Added while (1); after the above steps to make sure that no other
+> > process acquire cpu. Otherwise we might see an unexpected behaviour
+> > because we are shutting down all the power rails of SoC except RTC.
 > 
 
-It is better that i2c_board_info will be fixed.
-But, if it will be fixed, all i2c client drivers should be changed.
-I think there're so many i2c drivers currently.
-In my opinion, do not assign to i2c_board_info and just map for all
-interrupts is the better.
-
-Thanks,
-Bongkyu.
-
->>  		info.of_node = of_node_get(node);
->>  		info.archdata = &dev_ad;
->>  
->>
-> 
+Reviewed-by: Vaibhav Bedia <vaibhav.bedia-l0cyMroinI0@public.gmane.org>
