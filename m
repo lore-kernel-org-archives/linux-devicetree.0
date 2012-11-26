@@ -1,58 +1,63 @@
-From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
-Date: Mon, 26 Nov 2012 20:49:53 +0900
-Message-ID: <3319894.UD2L7QhyVv@percival>
-References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com> <20121122133941.24B883E129E@localhost> <20121122214021.GA14771@avionic-0098.adnet.avionic-design.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/2] ASoC: Davinci: machine: Add device tree binding
+Date: Mon, 26 Nov 2012 11:56:19 +0000
+Message-ID: <20121126115619.GF9411@opensource.wolfsonmicro.com>
+References: <1353557099-21599-1-git-send-email-gururaja.hebbar@ti.com>
+ <1353557099-21599-3-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121122214021.GA14771-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0hHDr/TIsw4o3iPK"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1353557099-21599-3-git-send-email-gururaja.hebbar@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Cc: alsa-devel@alsa-project.org, davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lrg@ti.com, perex@perex.cz, nsekhar@ti.com, sudhakar.raj@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, rob@landley.net
 List-Id: devicetree@vger.kernel.org
 
-On Friday 23 November 2012 05:40:21 Thierry Reding wrote:
-> On Thu, Nov 22, 2012 at 01:39:41PM +0000, Grant Likely wrote:
-> [...]
-> 
-> > I do think that each sequence should be contained within a single
-> > property, but I'm open to other suggestions.
-> 
-> IIRC a very early prototype did implement something like that. However
-> because of the resource issues this had to be string based, so that the
-> sequences looked somewhat like (Alex, correct me if I'm wrong):
-> 
-> 	power-on = <"REGULATOR", "power", 1, "GPIO", "enable", 1>;
 
-You're right. Back when the burning sun of July was beating down a little bit 
-too hard on my head.
+--0hHDr/TIsw4o3iPK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-https://lkml.org/lkml/2012/7/9/30
+On Thu, Nov 22, 2012 at 09:34:59AM +0530, Hebbar, Gururaja wrote:
 
-> Instead we could possibly have something like:
-> 
-> 	power-on = <0 &reg 1,
-> 		    1 &gpio 42 0 1>;
-> 
-> Where the first cell in each entry defines the type (0 = regulator, 1 =
-> GPIO) and the rest would be a regular OF specifier for the given type of
-> resource along with some defined parameter such as enable/disable,
-> voltage, delay in ms, ... I don't know if that sounds any better. It
-> looks sort of cryptic but it is more "in the spirit of" DT, right Grant?
-> 
-> Writing this down, it seems to me like even that proposal was already
-> discussed at some point. Again, Alex may remember better.
+> +- dai-data		: A list of DAI data used by SOC code to register
+> +			  DAI, Codecs platform.
+> +			  The string index "should" be as shown below.
+> +dai-data =
+> +"<DAI Name>", 		"<DAI Stream Name>",
+> +"<CODEC DAI Name>",	"<true if evm_aic3x_init is required, else false>",
+> +"<evm ops required (evm_ops or evm_spdif_ops)>";
 
-The idea that we had was to use preprocessor support in DTC to use macros 
-instead of strings for the step type. We also thought about using phandles 
-directly in there as well, but this would require some more API support.
+This continues to have the same issue as with previous versions, this is
+all Linux internals (especially the evm_aic3x_init thing) not a
+description of the hardware, there's not enough information to allow
+someone to work out what the bindings for their system should be.
 
-Anyway, at the current point we are not even sure whether we want or need 
-power seqs in the DT - so let's keep this topic on hold for a while. We can 
-still introduce the feature without DT support, and if it eventually turns out 
-during this winter that expressing power seqs in the DT makes sense, we will 
-have plenty of archives to read in front of the fire.
+Do not post *ANY* further versions that have this evm_aic3x_init stuff
+in them, it's very annoying that you keep on ignoring this feedback.
 
-Alex.
+--0hHDr/TIsw4o3iPK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQs1jbAAoJELSic+t+oim9DmwP/AsAL9pNXNxmU/aCTCVHv1Kz
+YFXb5dBpofd2qcbloEoLvYeZS0QWs8fdJYrplmKd57jZM5/ltBhm443fs6ltQ+vE
+AFlIpDktosTZTvjk8LcDh3IVB1zstGglXJFnb4a2ceFPq+Qee5w0em0cigotNWfY
+BadAv5gLDbhCKbg2XMrQU6Npv1bE79eAOu+4LTyrPieUtK/97Yncjd+nFZCrigr4
+R7Oa5usgW94HQaWVzKajboOHQLSiYlkksmuSV6s5E89QVvmLV5eG08O9Vxlmc7ix
+bwHl404B2t2OeUS6L40M12PrdqQ03nZJNkzOLgdrl/mAitCEPse0rOjGn46udUKy
+VWUHczmETZc2Dp8ybgBr647iIPl1gQKy/um6c4V4h/og7MZwBK+i7yKj7NqFGdrN
+hHIvQpEVpbSwbS6w+iGO5nwNu7qSRQGt80zHqeVTmg5ztbmHcELJ+7OGBtrp6VhF
+nwPVkkJw4Q3w4G/Ui8uIN5sJJ6GefWop7R3NsZsljGKZkNWHj5gNW60YQsP90KBE
+bjdXdUIN1Ofb0D4B6/x35yp8ETZ5myOVO8kMOPTMLteY46z2ZO0QUms2hR5RYQI0
+nUZ5AQAuzGOFLjME/0e+rqNCLOT87Uemag9T8DkDgixwv8RABGkegqlqLdcRkpN3
+8o0zXlSXwpt/L8SF4hx5
+=OcxI
+-----END PGP SIGNATURE-----
+
+--0hHDr/TIsw4o3iPK--
