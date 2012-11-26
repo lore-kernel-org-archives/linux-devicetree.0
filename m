@@ -1,51 +1,110 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH] gpio: stmpe: Add DT support for stmpe gpio
-Date: Mon, 26 Nov 2012 11:28:23 +0000
-Message-ID: <20121126112823.GI12782@gmail.com>
-References: <912d88b8906ce87cf5459cf3d5798e03bfce34c7.1353649737.git.viresh.kumar@linaro.org>
- <20121123103400.GO17471@gmail.com>
- <CAKohponW-Wd+Vrnj8mbdFMmJvwQgPq1jFCZRipBFoEhTknStHQ@mail.gmail.com>
- <20121123121413.GB22268@gmail.com>
- <20121123123048.GM5384@localhost.localdomain>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [GIT PULL]: spear-for-3.8 (was earlier: Re: [PATCH 00/14] ARM: SPEAr:
+ DT updates)
+Date: Mon, 26 Nov 2012 17:02:19 +0530
+Message-ID: <CAKohpokP60SXv02r8kETRLSf+RviFB8bgpO-VNvTfetQG4AtOA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121123123048.GM5384@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shiraz Hashim <shiraz.hashim@st.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, linus.walleij@linaro.org, grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sr-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 Nov 2012, Shiraz Hashim wrote:
+On 22 November 2012 01:54, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org> wrote:
 
-> On Fri, Nov 23, 2012 at 12:14:13PM +0000, Lee Jones wrote:
-> > > >> +             if (np)
-> > > >> +                     of_property_read_u32(np, "st,norequest-m=
-ask",
-> > > >> +                                     &pdata->norequest_mask);
-> > > >
-> > > > Can you explain to me what this does?
-> > >=20
-> > > You mean pdata->norequest_mask?  It marks few gpios as unusable.
-> > > Because these pads might be used by other blocks of stmpe.
-> >=20
-> > I'm not sure if that should be set with DT or not.
-> >=20
-> > Second opinion anyone?
->=20
-> This is a board dependent parameter which just informs gpio driver
-> about pins, which must not be requested. It may happen for a stmpe
-> variant where such gpio pins are multiplexed with some other
-> function.
->=20
-> Hence it must be part of DT itself.
+> We're also running out of time for 3.8 staging, but if you're able to
+> figure out the above I'll make an attempt to apply the patches from above.
 
-Doesn't pinctrl normally handle this kind of stuff?
+Hi Arnd/Olof,
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+To make things easy for you, i have a PULL request for you now :)
+
+The following changes since commit 53d74fd79db19aae506de892273198b160c2ee95:
+
+  Merge commit 'gpio-lw/devel' into spear-for-3.8 (2012-11-26 15:48:53 +0530)
+
+are available in the git repository at:
+
+
+  git://git.linaro.org/people/vireshk/linux.git spear-for-3.8
+
+for you to fetch changes up to df1590d9ae5e37e07e7cf91107e4c2c946ce8bf4:
+
+  ARM: SPEAr3xx: Shirq: Move shirq controller out of plat/ (2012-11-26
+16:55:33 +0530)
+
+----------------------------------------------------------------
+Deepak Sikri (1):
+      ARM: SPEAr: DT: Modify DT bindings for STMMAC
+
+Shiraz Hashim (6):
+      ARM: SPEAr13xx: DT: Add spics gpio controller nodes
+      ARM: SPEAr: DT: Update device nodes
+      ARM: SPEAr13xx: Remove fields not required for ssp controller
+      ARM: SPEAr3xx: shirq: simplify and move the shared irq multiplexor to DT
+      ARM: SPEAr3xx: DT: add shirq node for interrupt multiplexor
+      ARM: SPEAr320: DT: Add SPEAr 320 HMI board support
+
+Vipin Kumar (1):
+      ARM: SPEAr: DT: Update partition info for MTD devices
+
+Vipul Kumar Samar (5):
+      ARM: SPEAr: DT: Update pinctrl list
+      ARM: SPEAr: DT: Fix existing DT support
+      ARM: SPEAr: DT: add uart state to fix warning
+      ARM: SPEAr1310: Move 1310 specific misc register into machine
+specific files
+      ARM: SPEAr1310: Fix AUXDATA for compact flash controller
+
+Viresh Kumar (1):
+      ARM: SPEAr3xx: Shirq: Move shirq controller out of plat/
+
+ .../devicetree/bindings/arm/spear/shirq.txt        |  48 ++++
+ arch/arm/boot/dts/Makefile                         |   3 +-
+ arch/arm/boot/dts/spear1310-evb.dts                | 165 +++++++++--
+ arch/arm/boot/dts/spear1310.dtsi                   |  32 ++-
+ arch/arm/boot/dts/spear1340-evb.dts                | 253 +++++++++++++++--
+ arch/arm/boot/dts/spear1340.dtsi                   |  61 ++++
+ arch/arm/boot/dts/spear13xx.dtsi                   |  72 ++++-
+ arch/arm/boot/dts/spear300-evb.dts                 |  20 +-
+ arch/arm/boot/dts/spear300.dtsi                    |  14 +-
+ arch/arm/boot/dts/spear310-evb.dts                 |  30 +-
+ arch/arm/boot/dts/spear310.dtsi                    |  18 ++
+ arch/arm/boot/dts/spear320-evb.dts                 |  35 ++-
+ arch/arm/boot/dts/spear320-hmi.dts                 | 305 ++++++++++++++++++++
+ arch/arm/boot/dts/spear320.dtsi                    |  39 ++-
+ arch/arm/boot/dts/spear3xx.dtsi                    |   5 +-
+ arch/arm/boot/dts/spear600-evb.dts                 |  46 ++-
+ arch/arm/boot/dts/spear600.dtsi                    |  16 ++
+ arch/arm/mach-spear13xx/include/mach/spear.h       |   8 -
+ arch/arm/mach-spear13xx/spear1310.c                |  16 +-
+ arch/arm/mach-spear13xx/spear13xx.c                |   2 -
+ arch/arm/mach-spear3xx/include/mach/irqs.h         |  10 +-
+ arch/arm/mach-spear3xx/spear300.c                  | 103 -------
+ arch/arm/mach-spear3xx/spear310.c                  | 202 -------------
+ arch/arm/mach-spear3xx/spear320.c                  | 205 +------------
+ arch/arm/mach-spear3xx/spear3xx.c                  |   4 +
+ arch/arm/plat-spear/Makefile                       |   2 +-
+ arch/arm/plat-spear/shirq.c                        | 118 --------
+ drivers/clk/spear/spear1310_clock.c                |   1 +
+ drivers/irqchip/Makefile                           |   3 +-
+ drivers/irqchip/spear-shirq.c                      | 316 +++++++++++++++++++++
+ .../shirq.h => include/linux/irqchip/spear-shirq.h |  49 ++--
+ 31 files changed, 1426 insertions(+), 775 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/spear/shirq.txt
+ create mode 100644 arch/arm/boot/dts/spear320-hmi.dts
+ delete mode 100644 arch/arm/plat-spear/shirq.c
+ create mode 100644 drivers/irqchip/spear-shirq.c
+ rename arch/arm/plat-spear/include/plat/shirq.h =>
+include/linux/irqchip/spear-shirq.h (60%)
