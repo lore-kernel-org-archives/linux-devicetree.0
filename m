@@ -1,99 +1,85 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: add 'const' for of_parse_phandle parameter *np
-Date: Mon, 26 Nov 2012 14:10:53 +0000
-Message-ID: <20121126141053.D096C3E199D@localhost>
-References: <1353583003-4560-1-git-send-email-s.trumtrar@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1353583003-4560-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Grant Likely <grant.likely-LR4i4eoOvxHyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: How about a gpio_get(device *, char *) function?
+Date: Mon, 26 Nov 2012 11:25:13 +0000
+Message-ID: <20121126112513.AE83B3E0A51@localhost>
+References: <38620644.IyR5R8rjKP@percival> <CACRpkdZc3cEGfSKW-b=G31yuw_E-GOXid3jkxZ0tuKYGYRE5Nw@mail.gmail.com> <7471321.6NJDeDGfYW@percival> <CACRpkda9c18E3Msx0dpr8APjSfx5iz4XcS=V1wQaH81ejz7GJQ@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkda9c18E3Msx0dpr8APjSfx5iz4XcS=V1wQaH81ejz7GJQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alex Courbot <acourbot@nvidia.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 Nov 2012 12:16:43 +0100, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> The existing function does not change the passed device_node pointer. It is
-> only handed to of_get_property which itself takes a const struct device_node.
+On Mon, 5 Nov 2012 13:09:20 +0100, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Mon, Nov 5, 2012 at 8:31 AM, Alex Courbot <acourbot@nvidia.com> wrote:
 > 
-> of_parse_phandle can therefore take a const pointer as well.
+> > Interesting. I see you already gave the whole thing a thought. What I don't
+> > understand however is what is so wrong with the current GPIO numberspace that
+> > you want to replace it? Whether we use simple integers or blind pointers, the
+> > adressable space will basically remain the same. GPIO numbers can actually be
+> > considered as handles, and actually I would not mind typedef'ing "int" to a
+> > GPIO handle type in order to add more opacity to the framework.
 > 
-> Cc: Grant Likely <grant.likely-LR4i4eoOvxHyB63q8FvJNQ@public.gmane.org>
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> So the basic problem is scalability and multiplatform support.
+> 
+> Currently we have a global "roof" on GPIO numbers, ARCH_NR_GPIOS,
+> which is helpfully set to 256 in include/asm-generic/gpio.h.
+> 
+> In the embedded case "ARCH" is a particular board for a particular
+> SoC so this number is actually roof:ed for some arbitrary combination
+> of SoC + electronics, at compile time, for that very machine.
+> 
+> So what happens when we try to achieve multiplatform support in the
+> ARM tree (same for others, I expect ACPI etc to run into the same
+> problem) is that this has to be set to some arbitrarily high value so
+> that all GPIOs will fit, and they are not sparse, so if you're just using
+> GPIOs 0 .. 15 and 199935..200000 you will need to reserve
+> 200000 * sizeof(int) bytes.
+> 
+> So to avoid this, arch maintainers try with different clever
+> macros to pack the GPIO number assignments per board
+> downward to begin at 0 and keep the array at minimum size,
+> and do not dynamically grab GPIO numbers as they like.
+> 
+> Contrast this to IRQs which are in the CONFIG_SPARSE_IRQ
+> case stored in a radix tree and IRQs can be sparse like this
+> without wasting much memory. So IRQdomains can for example
+> just grab a number of free IRQ descriptors and the actual
+> numbers returned do not matter.
+> 
+> Using static number assignments also has the side effect
+> that developers will just int mygpio = 42; directly in the code
+> to cut corners and invites such laziness instead of allocating
+> and propagating resources. With abstract handles this does
+> not happen.
+> 
+> So moving forward we need a dynamic, radix tree of sparse GPIOs,
+> and we need to follow the design pattern of IRQ descriptors to
+> keep the kernel consistent, for example pinctrl does this with
+> pins - these are sparse and dynamically allocated. They do not
+> have integer numbers other than locally for a particular pin
+> controller.
+> 
+> > Also the current DT bindings will likely continue to require the legacy API
+> > anyway, so I am not sure we can make it go away.
 
-Applied, thanks.
+It's not. Nothing in the binding is dictating using the current kernel
+API. All that stuff can be refactored without changing the binding.
+
+> We can make any DT business go away as long as all DTS
+> files are maintained in the kernel and especially if their
+> structure is not future-proof. The "DT contract" to make
+> bindings stable and everlasting is being broken every day
+> as things are right now.
+
+Don't go down that path. Firmware bindings are hard and plenty of people
+have experienced the pain of bindings breaking, but *planning* to break
+bindings makes it orders of magnitude worse. At least try to preserve
+compatibility.
+
+> Not that I know the DT stuff by
+> heart, but if the way we're doing GPIO in DT is requiring the
+> OS to use a certain type of static array implementation it must
+> be wrong since DT is supposed to be OS-neutral.
 
 g.
-
-> ---
->  drivers/of/base.c  |    5 +++--
->  include/linux/of.h |    4 ++--
->  2 files changed, 5 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index af3b22a..eca45b1 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -893,8 +893,8 @@ EXPORT_SYMBOL_GPL(of_property_count_strings);
->   * Returns the device_node pointer with refcount incremented.  Use
->   * of_node_put() on it when done.
->   */
-> -struct device_node *
-> -of_parse_phandle(struct device_node *np, const char *phandle_name, int index)
-> +struct device_node *of_parse_phandle(const struct device_node *np,
-> +				     const char *phandle_name, int index)
->  {
->  	const __be32 *phandle;
->  	int size;
-> @@ -905,6 +905,7 @@ of_parse_phandle(struct device_node *np, const char *phandle_name, int index)
->  
->  	return of_find_node_by_phandle(be32_to_cpup(phandle + index));
->  }
-> +
->  EXPORT_SYMBOL(of_parse_phandle);
->  
->  /**
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index b4e50d5..634b03f 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -255,7 +255,7 @@ extern int of_n_size_cells(struct device_node *np);
->  extern const struct of_device_id *of_match_node(
->  	const struct of_device_id *matches, const struct device_node *node);
->  extern int of_modalias_node(struct device_node *node, char *modalias, int len);
-> -extern struct device_node *of_parse_phandle(struct device_node *np,
-> +extern struct device_node *of_parse_phandle(const struct device_node *np,
->  					    const char *phandle_name,
->  					    int index);
->  extern int of_parse_phandle_with_args(struct device_node *np,
-> @@ -411,7 +411,7 @@ static inline int of_property_match_string(struct device_node *np,
->  	return -ENOSYS;
->  }
->  
-> -static inline struct device_node *of_parse_phandle(struct device_node *np,
-> +static inline struct device_node *of_parse_phandle(const struct device_node *np,
->  						   const char *phandle_name,
->  						   int index)
->  {
-> -- 
-> 1.7.10.4
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
