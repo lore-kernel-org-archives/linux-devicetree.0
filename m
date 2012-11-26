@@ -1,46 +1,43 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V1 1/3] mfd: stmpe: Arrange #include <header files> in
- alphabetical order
-Date: Mon, 26 Nov 2012 13:25:57 +0000
-Message-ID: <20121126132557.GA6824@gmail.com>
-References: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
- <20121126111639.GR12685@sortiz-mobl>
- <CAKohpo=EpjP4gpbBTV8BaghCjLVC4x4wvgRW34M9pn0oZ-S5dw@mail.gmail.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: Re: [PATCH 3/3] regulator: add device tree support for max8997
+Date: Mon, 26 Nov 2012 19:16:04 +0530
+Message-ID: <CAJuYYwTt+1-zU3092GmrK2GHR=5QDGT-diVcm_0pe3=oqhuQdA@mail.gmail.com>
+References: <1353657795-1725-1-git-send-email-thomas.abraham@linaro.org>
+	<1353657795-1725-4-git-send-email-thomas.abraham@linaro.org>
+	<20121124175954.GI4719@opensource.wolfsonmicro.com>
+	<CAJuYYwThsFutYnYg2scmfqUAGxBM2pWmRmoTww+OyZgUuA-7vg@mail.gmail.com>
+	<20121126095141.GC9411@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohpo=EpjP4gpbBTV8BaghCjLVC4x4wvgRW34M9pn0oZ-S5dw@mail.gmail.com>
+In-Reply-To: <20121126095141.GC9411@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, myungjoo.ham@samsung.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, Karol Lewandowski <k.lewandowsk@samsung.com>, Rajendra Nayak <rnayak@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Nov 2012, Viresh Kumar wrote:
+On 26 November 2012 15:21, Mark Brown
+<broonie@opensource.wolfsonmicro.com> wrote:
+> On Sat, Nov 24, 2012 at 11:46:51PM +0530, Thomas Abraham wrote:
+>
+>> The max8997 driver is mainlined. I actually meant to say that, this v6
+>> version of dt support patch for max8997, is similar in functionality
+>> to the v5 version of this patch. I did prepare this patch based on
+>> your latest for-next branch.
+>
+> I find it hard to believe that this was generated against for-next, this
+> was where I tried to apply it...
 
-> On 26 November 2012 16:46, Samuel Ortiz <sameo@linux.intel.com> wrote=
-:
-> > Hi Viresh,
-> >
-> > On Fri, Nov 23, 2012 at 12:26:18AM +0530, Viresh Kumar wrote:
-> >> This helps managing them better and also reduces chances of adding=
- an header
-> >> file twice.
->=20
-> The aim is to maintain the list of header files in alphabetical order=
-=2E
-> It helps in maintaining
-> them.. I was adding some header files for my 3rd patch and was lookin=
-g
-> for the best
-> place to add them and because the list wasn't sorted, i sorted it out
-> in a separate patch.
+I tried again to apply this patch on 'for-next' branch of your
+regulator tree (git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git)
 
-Why do you need to sort them? Is there _really_ a need?
+on top of commit 6aa588f43d4a (Merge remote-tracking branches
+'regulator/fix/wm831x', 'regulator/topic/as3711',
+'regulator/topic/da9055', 'regulator/topic/hotplug',
+'regulator/topic/lp8788'.....)
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+and this patch applied cleanly. Could you please let me know if there
+is anything I need to be doing differently for this.
+
+Thanks,
+Thomas.
