@@ -1,55 +1,107 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 3/3] ASoC: atmel-pcm: add dma support
-Date: Mon, 26 Nov 2012 10:36:48 +0100
-Message-ID: <20121126093647.GA9411@opensource.wolfsonmicro.com>
-References: <1353651257-2476-1-git-send-email-voice.shen@atmel.com>
- <1353651257-2476-4-git-send-email-voice.shen@atmel.com>
- <20121123142747.GP4529@opensource.wolfsonmicro.com>
- <50B2CE2C.4080700@atmel.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 4/9] usb: chipidea: ci13xxx-imx: add "dr_mode" property
+ to device tree bindings
+Date: Mon, 26 Nov 2012 17:46:27 +0800
+Message-ID: <20121126094626.GB15740@nchen-desktop>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1352909950-32555-5-git-send-email-m.grzeschik@pengutronix.de>
+ <878va17oii.fsf@ashishki-desk.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VbJkn9YxBvnuCH5J"
-Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <50B2CE2C.4080700@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: plagnioj@jcrosoft.com, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+In-Reply-To: <878va17oii.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Nov 16, 2012 at 01:53:09PM +0200, Alexander Shishkin wrote:
+> Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+> 
+> > From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >
+> > Its necessary to limit a hostonly soc to its single role, since
+> > debugging has shown that reading on the "CAP_DCCPARAMS" register inside
+> > a host-only port, what ci_hdrc_gadget_init does, can lead to an
+> > instable behaviour of the IC.
+> 
+> Probably typos: should be "it's" and "unstable".
+> 
+> [snip]
+> 
+> > --- a/drivers/usb/chipidea/ci13xxx_imx.c
+> > +++ b/drivers/usb/chipidea/ci13xxx_imx.c
+> > @@ -237,6 +237,8 @@ static int __devinit ci13xxx_imx_probe(struct platform_device *pdev)
+> >  		}
+> >  	}
+> >  
+> > +	ci13xxx_get_dr_mode(pdev->dev.of_node, pdata);
+> > +
+> >  	plat_ci = ci13xxx_add_device(&pdev->dev,
+> >  				pdev->resource, pdev->num_resources,
+> >  				pdata);
+> > diff --git a/drivers/usb/chipidea/core.c b/drivers/usb/chipidea/core.c
+> > index b50b77a..3e3e159 100644
+> > --- a/drivers/usb/chipidea/core.c
+> > +++ b/drivers/usb/chipidea/core.c
+> > @@ -63,6 +63,7 @@
+> >  #include <linux/kernel.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/pm_runtime.h>
+> > +#include <linux/of_platform.h>
+> >  #include <linux/usb/ch9.h>
+> >  #include <linux/usb/gadget.h>
+> >  #include <linux/usb/otg.h>
+> > @@ -521,6 +522,23 @@ void ci13xxx_remove_device(struct platform_device *pdev)
+> >  }
+> >  EXPORT_SYMBOL_GPL(ci13xxx_remove_device);
+> >  
+> > +void ci13xxx_get_dr_mode(struct device_node *of_node, struct ci13xxx_platform_data *pdata)
+> > +{
+> > +	const unsigned char *dr_mode;
+> > +
+> > +	dr_mode = of_get_property(of_node, "dr_mode", NULL);
+> > +	if (!dr_mode)
+> > +		return;
+> > +
+> > +	if (!strcmp(dr_mode, "host"))
+> > +		pdata->flags |= CI13XXX_DR_MODE_HOST;
+> > +	else if (!strcmp(dr_mode, "peripheral"))
+> > +		pdata->flags |= CI13XXX_DR_MODE_PERIPHERAL;
+> > +	else if (!strcmp(dr_mode, "otg"))
+> > +		pdata->flags |= CI13XXX_DR_MODE_HOST | CI13XXX_DR_MODE_PERIPHERAL;
+> > +}
+> > +EXPORT_SYMBOL_GPL(ci13xxx_get_dr_mode);
+> > +
+> 
+> I'd prefer this function to live in ci13xxx_imx, since that's where it's
+> used and it doesn't really need anything from core.c anyway. Or maybe it
+> would make sense to make it even more generic (for other devitetree
+> users), since you're saying that other drivers are using this already.
+> 
+> Looks good to me otherwise.
 
---VbJkn9YxBvnuCH5J
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I think it supplies a way that the platform can override the usb role,
+only freescale uses it, but also other platforms may use it. It is a
+generic feature, other chipidea users may need it.
 
-On Mon, Nov 26, 2012 at 10:04:28AM +0800, Bo Shen wrote:
+> 
+> Regards,
+> --
+> Alex
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-> I am not sure I got your means.
-> As I understand, I should keep the driver using pdc and won't touch it.
-> And create new a new driver using dma, am I right?
+-- 
 
-Yes.
+Best Regards,
+Peter Chen
 
---VbJkn9YxBvnuCH5J
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQszgnAAoJELSic+t+oim9htoP/1/uyE/uMlfd+h7LggTBvLbg
-/1V/FDiE0kITKwNEPeUmTCvjlPJ4Fzq+iHWPo4ljPGgvMesXMMBr92lLe0966f9Z
-8thAQQJHZyaAEIM+IDagFK33VtwyxuLUqPSmLFx3wLT7tysaWIXhv7RRfFfpTfv7
-DJARweQT4z9JfJuOHWZpeDlWgBW5MVcMeghn/lw4qOMENRUmCeBp62E38eOoioaU
-q+1EiP39f3j4VY5cYARrKCDFTIxSZv/l6nwP0BZnpWU29/LaVCtBq/gvNOU1g5o9
-HYSRDMzVpUsEIe0j68zky5qt/JO6Ef5kN7/iYy4tDhtWNDIEyAZF6m2e2mejB5q6
-Yrq4HVA7fIFsialLsKe4kxz1auU4VJ71+56aYTiEzlG1HTwCTnc5t0pIASiAb0C5
-6KKElZg0YfZ+CHq1Nzr1ICn7sQvBTkSXe0wfuqirj4AC/qbbIOa7fqorOEKYXs6T
-j/iPDON//p0AQJ48tyAzFFmVueYM1Qw66GGIQQsYiHtAWJhoSPAK8kUVncJdq/5l
-ViWXl3WoTHq7MrFzgC+z42efRcJoVwbjNu07IMZ7DH4sVxU3aa5tgHNhgMsZoTlK
-B7C9m4Br8TCKCvO7ur51PSVFTtHL4C4+14AcMC/PyY9mONwLiNv7YwMJxGwaWDh5
-GlT+INLMWkLuYJ67yZqE
-=4uN4
------END PGP SIGNATURE-----
-
---VbJkn9YxBvnuCH5J--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
