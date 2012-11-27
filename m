@@ -1,246 +1,193 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH RESEND] i2c: Add support for device-tree based chip
- initialization
-Date: Mon, 26 Nov 2012 12:58:38 -1000
-Message-ID: <50B3F41E.3020805@firmworks.com>
-References: <1353905636-6697-1-git-send-email-linux@roeck-us.net>
- <50B39C3A.5080600@gmail.com> <20121126201954.GA14617@roeck-us.net>
- <50B3EF21.9020201@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50B3EF21.9020201-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v2 71/77] sh-pfc: Add OF support
+Date: Tue, 27 Nov 2012 01:03:10 +0100
+Message-ID: <1353974596-30033-72-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1353974596-30033-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1353974596-30033-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Linus Walleij <linus.walleij@linaro.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Phil Edworthy <phil.edworthy@renesas.com>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/26/2012 12:37 PM, Rob Herring wrote:
-> On 11/26/2012 02:19 PM, Guenter Roeck wrote:
->> On Mon, Nov 26, 2012 at 10:43:38AM -0600, Rob Herring wrote:
->>> On 11/25/2012 10:53 PM, Guenter Roeck wrote:
->>>> Some I2C devices are not or not correctly initialized by the firmware.
->>>> Configuration would be possible via platform data, but that would require
->>>> per-driver platform data and a lot of code, and changing it would not be
->>>> possible without re-compiling the kernel. It is more elegant to do it
->>>> generically via devicetree properties.
->>>>
->>>> Add a generic I2C devicetree property named "reg-init". This property provides
->>>> a sequence of device initialization commands to be executed prior to calling
->>>> the probe function for a given device.
->>>>
->>>> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->>>> ---
->>>> Any comments / feedback ?
->>>
->>> This has been discussed before in terms of memory mapped registers. I
->>> think this is of questionable use of DT and could easily be abused. Not
->>
->> Isn't that true for pretty much everything ?
->>
->> Really, I don't think that "it can be abused" should be considered a valid
->> argument. It is almost as good (or bad) as "we have always done it that way"
->> or "this doesn't scale".
-> 
-> DT is a description of the h/w. It is not a h/w configuration mechanism.
+Support device instantiation through the device tree. The compatible
+property is used to select the SoC pinmux information.
 
-And yet, the document that defined the device tree is entitled "IEEE
-Standard for Boot (Initialization, Configuration) Firmware".
-Initialization and configuration was part of the problem set, and part
-of the solution set, from the outset.
+Set the gpio_chip device field to the PFC device to enable automatic
+GPIO OF support.
 
-> Although, you do lots of h/w configuration based on the h/w description.
-> That being said, you can find examples in bindings that are just
-> configuration data so it's not a clear line.
-> 
-> If we do want to support this, then there is no reason for it to be
-> specific to i2c devices or ethernet phys. It was on the pinmux/pinctrl
-> binding discussions the last time this came up IIRC. The first issue
-> will be the need to specify register sizes. Then you get into needing
-> masked writes. Then you need delays and polling reads of register
-> values. Then the discussion dies when it starts to look like a scripting
-> language and Forth is mentioned (happened just last week with runtime
-> interpreted power sequences thread).
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+---
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |   43 ++++++++++++++
+ drivers/pinctrl/sh-pfc/core.c                      |   62 +++++++++++++++++++-
+ drivers/pinctrl/sh-pfc/gpio.c                      |    1 +
+ 3 files changed, 104 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
 
-It would be nice if hardware were simple enough not to need the power of
-a programming language to initialize it, or if hardware variants did not
-proliferate to the point where building new kernels became unattractive.
- The world doesn't appear to be going in that "nice" direction...
+Only GPIO DT bindings are currently implemented, pinmux bindings are still
+work in progress and will be posted soon.
 
-The longer that one resists doing the right thing, the more likely that
-one ends up saddled with a bad half-solution that has to be extended
-into a truly awful hodgepodge.
+On the GPIO side, some DT bindings require aliases for the GPIO (and pinctrl)
+nodes. What's the reason behind that ?
 
-> 
-> Rob
-> 
->>> all systems use DT, so this needs to be solved without DT anyway.
->>>
->>> Do you have examples of drivers that would use this?
->>>
->> I would need it for MAX6697 (for which I submitted a driver a week or so ago),
->> and possibly for others. I didn't check further because I don't want to go along
->> on this road too far if the idea is rejected.
->>
->> I took the idea from Broadcom and Marvell PHY chip initialization, which uses
->> a similar approach, including the reg-init keyword. As far as I can see
->> both don't support platform data based initialization, so one question
->> to ask would be when it is mandatory to support platforma data based
->> initialization and when it isn't.
->>
->>> Can this be handled in userspace using the i2c device interface before
->>> loading the device's module?
->>>
->> Not in my use case.
->>
->> Thanks,
->> Guenter
->>
->>> Rob
->>>
->>>>
->>>>  .../devicetree/bindings/i2c/trivial-devices.txt    |   24 +++++++
->>>>  drivers/i2c/i2c-core.c                             |   68 ++++++++++++++++++++
->>>>  2 files changed, 92 insertions(+)
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
->>>> index 2f5322b..33b694e 100644
->>>> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
->>>> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
->>>> @@ -2,6 +2,30 @@ This is a list of trivial i2c devices that have simple device tree
->>>>  bindings, consisting only of a compatible field, an address and
->>>>  possibly an interrupt line.
->>>>  
->>>> +Device initialization is supported with an optional reg-init property.
->>>> +This property contains a sequence of commands to be written into the chip.
->>>> +Each command consists of four values: Register, command type, mask, and data.
->>>> +	Register:
->>>> +		Register or command address
->>>> +	Command type:
->>>> +		0: SMBus write byte
->>>> +		1: SMBus write byte data
->>>> +		2: SMBus write word data
->>>> +	Mask:
->>>> +		If set, the register is read and masked with this value.
->>>> +	Data:
->>>> +		Data to be written (or with original data and mask if set)
->>>> +
->>>> +Example:
->>>> +	max6696@1a {
->>>> +		compatible = "maxim,max6696";
->>>> +		reg = <0x1a>;
->>>> +		reg-init = <
->>>> +			0x09 1 0x00 0x24
->>>> +			0x21 1 0x00 0x05
->>>> +		>;
->>>> +	};
->>>> +
->>>>  If a device needs more specific bindings, such as properties to
->>>>  describe some aspect of it, there needs to be a specific binding
->>>>  document for it just like any other devices.
->>>> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
->>>> index a7edf98..49f8b74 100644
->>>> --- a/drivers/i2c/i2c-core.c
->>>> +++ b/drivers/i2c/i2c-core.c
->>>> @@ -104,6 +104,69 @@ static int i2c_device_uevent(struct device *dev, struct kobj_uevent_env *env)
->>>>  #define i2c_device_uevent	NULL
->>>>  #endif	/* CONFIG_HOTPLUG */
->>>>  
->>>> +static int i2c_dev_of_init(struct i2c_client *client, struct device *dev)
->>>> +{
->>>> +	const u32 *reg_init;
->>>> +	int rlen;
->>>> +	int val;
->>>> +	u32 reg, access, mask, data;
->>>> +
->>>> +	reg_init = of_get_property(dev->of_node, "reg-init", &rlen);
->>>> +	if (!reg_init)
->>>> +		return 0;
->>>> +
->>>> +	if (!rlen || rlen % 4)
->>>> +		return -EINVAL;
->>>> +
->>>> +	while (rlen >= 4) {
->>>> +		reg = reg_init[0];
->>>> +		access = reg_init[1];
->>>> +		mask = reg_init[2];
->>>> +		data = reg_init[3];
->>>> +
->>>> +		if (reg > 0xff)
->>>> +			return -EINVAL;
->>>> +
->>>> +		switch (access) {
->>>> +		default:
->>>> +			return -EINVAL;
->>>> +		case 0:
->>>> +			val = 0;
->>>> +			break;
->>>> +		case 1:
->>>> +			val = mask ? i2c_smbus_read_byte_data(client, reg) : 0;
->>>> +			break;
->>>> +		case 2:
->>>> +			val = mask ? i2c_smbus_read_word_data(client, reg) : 0;
->>>> +			break;
->>>> +		}
->>>> +		if (val < 0)
->>>> +			return val;
->>>> +
->>>> +		val &= mask;
->>>> +		val |= data;
->>>> +
->>>> +		switch (access) {
->>>> +		default:
->>>> +		case 0:
->>>> +			val = i2c_smbus_write_byte(client, reg);
->>>> +			break;
->>>> +		case 1:
->>>> +			val = i2c_smbus_write_byte_data(client, reg, val);
->>>> +			break;
->>>> +		case 2:
->>>> +			val = i2c_smbus_write_word_data(client, reg, val);
->>>> +			break;
->>>> +		}
->>>> +		if (val < 0)
->>>> +			return val;
->>>> +
->>>> +		reg_init += 4;
->>>> +		rlen -= 4 * sizeof(u32);
->>>> +	}
->>>> +	return 0;
->>>> +}
->>>> +
->>>>  static int i2c_device_probe(struct device *dev)
->>>>  {
->>>>  	struct i2c_client	*client = i2c_verify_client(dev);
->>>> @@ -122,7 +185,12 @@ static int i2c_device_probe(struct device *dev)
->>>>  					client->flags & I2C_CLIENT_WAKE);
->>>>  	dev_dbg(dev, "probe\n");
->>>>  
->>>> +	status = i2c_dev_of_init(client, dev);
->>>> +	if (status)
->>>> +		goto error;
->>>> +
->>>>  	status = driver->probe(client, i2c_match_id(driver->id_table, client));
->>>> +error:
->>>>  	if (status) {
->>>>  		client->driver = NULL;
->>>>  		i2c_set_clientdata(client, NULL);
->>>>
->>>
->>>
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+new file mode 100644
+index 0000000..f08d8c5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+@@ -0,0 +1,43 @@
++* Renesas GPIO and Pin Mux/Config controller
++
++Required Properties:
++- compatible: should be one of the following.
++  - "renesas,pfc-r8a7740": for R8A7740 (R-Mobile A1) compatible pin-controller.
++  - "renesas,pfc-r8a7779": for R8A7779 (R-Car H1) compatible pin-controller.
++  - "renesas,pfc-sh7372": for SH7372 (SH-Mobile AP4) compatible pin-controller.
++  - "renesas,pfc-sh73a0": for SH73A0 (SH-Mobile AG5) compatible pin-controller.
++
++- reg: Base address and length of each memory resource used by the pin
++  controller hardware module.
++
++- gpio-controller: Marks the device node as a gpio controller.
++
++- #gpio-cells: Should be 2. The first cell is the pin number and the second cell
++  is used to specify optional parameters (currently unused).
++
++  The syntax of the gpio specifier used by client nodes should be the following
++  with values derived from the SoC user manual.
++
++  <[phandle of the gpio controller node]
++   [pin number within the gpio controller]
++   [flags and pull up/down]>
++
++
++Example 1: SH73A0 (SH-Mobile AG5) pin controller node
++
++	gpio: pfc@e6050000 {
++		compatible = "renesas,pfc-sh73a0";
++		reg = <0xe6050000 0x8000>,
++		      <0xe605801c 0x1c>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++Example 2: A GPIO LED node that references a GPIO
++
++	leds {
++		compatible = "gpio-leds";
++		led1 {
++			gpios = <&gpio 20 1>; /* Active low */
++		};
++	};
+diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
+index 062308f..9cbe684 100644
+--- a/drivers/pinctrl/sh-pfc/core.c
++++ b/drivers/pinctrl/sh-pfc/core.c
+@@ -19,6 +19,7 @@
+ #include <linux/ioport.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/slab.h>
+ #include <linux/pinctrl/machine.h>
+ #include <linux/platform_device.h>
+@@ -498,8 +499,55 @@ int sh_pfc_config_gpio(struct sh_pfc *pfc, unsigned gpio, int pinmux_type,
+ 	return -1;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id sh_pfc_of_table[] = {
++#ifdef CONFIG_PINCTRL_PFC_R8A7740
++	{
++		.compatible = "renesas,pfc-r8a7740",
++		.data = &r8a7740_pinmux_info,
++	},
++#endif
++#ifdef CONFIG_PINCTRL_PFC_R8A7779
++	{
++		.compatible = "renesas,pfc-r8a7779",
++		.data = &r8a7779_pinmux_info,
++	},
++#endif
++#ifdef CONFIG_PINCTRL_PFC_SH7367
++	{
++		.compatible = "renesas,pfc-sh7367",
++		.data = &sh7367_pinmux_info,
++	},
++#endif
++#ifdef CONFIG_PINCTRL_PFC_SH7372
++	{
++		.compatible = "renesas,pfc-sh7372",
++		.data = &sh7372_pinmux_info,
++	},
++#endif
++#ifdef CONFIG_PINCTRL_PFC_SH7377
++	{
++		.compatible = "renesas,pfc-sh7377",
++		.data = &sh7377_pinmux_info,
++	},
++#endif
++#ifdef CONFIG_PINCTRL_PFC_SH73A0
++	{
++		.compatible = "renesas,pfc-sh73a0",
++		.data = &sh73a0_pinmux_info,
++	},
++#endif
++	{ },
++};
++MODULE_DEVICE_TABLE(of, sh_pfc_of_table);
++#endif
++
+ static int sh_pfc_probe(struct platform_device *pdev)
+ {
++	const struct platform_device_id *platid = platform_get_device_id(pdev);
++#ifdef CONFIG_OF
++	struct device_node *np = pdev->dev.of_node;
++#endif
+ 	struct sh_pfc_soc_info *info;
+ 	struct sh_pfc *pfc;
+ 	int ret;
+@@ -509,8 +557,15 @@ static int sh_pfc_probe(struct platform_device *pdev)
+ 	 */
+ 	BUILD_BUG_ON(PINMUX_FLAG_TYPE > ((1 << PINMUX_FLAG_DBIT_SHIFT) - 1));
+ 
+-	info = pdev->id_entry->driver_data
+-	      ? (void *)pdev->id_entry->driver_data : pdev->dev.platform_data;
++	if (platid)
++		info = (void *)platid->driver_data;
++#ifdef CONFIG_OF
++	else if (np)
++		info = (void *)of_match_device(sh_pfc_of_table, &pdev->dev)->data;
++#endif
++	else
++		info = pdev->dev.platform_data;
++
+ 	if (info == NULL)
+ 		return -ENODEV;
+ 
+@@ -640,6 +695,9 @@ static struct platform_driver sh_pfc_driver = {
+ 	.driver		= {
+ 		.name	= DRV_NAME,
+ 		.owner	= THIS_MODULE,
++#ifdef CONFIG_OF
++		.of_match_table = sh_pfc_of_table,
++#endif
+ 	},
+ };
+ 
+diff --git a/drivers/pinctrl/sh-pfc/gpio.c b/drivers/pinctrl/sh-pfc/gpio.c
+index 22df3fe..1431c5e 100644
+--- a/drivers/pinctrl/sh-pfc/gpio.c
++++ b/drivers/pinctrl/sh-pfc/gpio.c
+@@ -132,6 +132,7 @@ static void sh_pfc_gpio_setup(struct sh_pfc_chip *chip)
+ 	WARN_ON(pfc->info->first_gpio != 0); /* needs testing */
+ 
+ 	gc->label = pfc->info->name;
++	gc->dev = pfc->dev;
+ 	gc->owner = THIS_MODULE;
+ 	gc->base = pfc->info->first_gpio;
+ 	gc->ngpio = (pfc->info->last_gpio - pfc->info->first_gpio) + 1;
+-- 
+1.7.8.6
+
