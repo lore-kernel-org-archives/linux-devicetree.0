@@ -1,40 +1,92 @@
-From: Michael Neuling <mikey@neuling.org>
-Subject: Re: [PATCH v2] drivers/of: Constify device_node->name and ->path_component_name
-Date: Wed, 28 Nov 2012 10:46:04 +1100
-Message-ID: <23435.1354059964@neuling.org>
-References: <1353075625-7755-1-git-send-email-grant.likely@secretlab.ca>
-Return-path: <linux-next-owner@vger.kernel.org>
-In-reply-to: <1353075625-7755-1-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-next-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Jimi Xenidis <jimix@pobox.com>, sfr@canb.auug.org.au, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "David S. Miller" <davem@davemloft.net>, Julian Calaby <julian.calaby@gmail.com>
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [GIT PULL] Exynos DP for v3.8
+Date: Tue, 27 Nov 2012 23:59:14 +0000 (GMT)
+Message-ID: <23089985.76751354060752557.JavaMail.weblogic@epml26>
+Reply-To: jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+MIME-version: 1.0
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org" <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Neither of these should ever be changed once set. Make them const and
-> fix up the users that try to modify it in-place. In one case
-> kmalloc+memcpy is replaced with kstrdup() to avoid modifying the string.
+On Tuesday, November 27, 2012 6:58 PM, Tomi Valkeinen wrote
 > 
-> Build tested with defconfigs on ARM, PowerPC, Sparc, MIPS, x86 among
-> others.
+> On 2012-11-23 08:37, Jingoo Han wrote:
+> > Hi Tomi,
+> >
+> > Thank you for taking care of pull requests for the v3.8 merge window.
+> > These patches have been submitted for more than one month,
+> > and tested with Exynos5250.
+> >
+> > The following changes since commit f4a75d2eb7b1e2206094b901be09adb31ba63681:
+> >
+> >   Linux 3.7-rc6 (Fri Nov 16 17:42:40 2012 -0800)
+> >
+> > are available in the git repository at:
+> >   git://github.com/jingoo/linux.git exynos-dp-next
+> >
+> > ----------------------------------------------------------------
+> > Exynos DP changes for the 3.8 merge window.
+> >
+> > - Device Tree support for Samsung Exynos DP
+> > - SW Link training is cleaned up.
+> > - HPD interrupt is supported.
+> > ----------------------------------------------------------------
+> >
+> > Ajay Kumar (5):
+> >       video: exynos_dp: Add device tree support to DP driver
+> >       video: exynos_dp: device tree documentation
+> >       video: exynos_dp: Reset and initialize DP before requesting irq
+> >       video: exynos_dp: Fix incorrect setting for INT_CTL
+> >       video: exynos_dp: remove redundant parameters
+> >
+> > Sean Paul (8):
+> >       video: exynos_dp: Check DPCD return codes
+> >       video: exynos_dp: Clean up SW link training
+> >       video: exynos_dp: Get pll lock before pattern set
+> >       video: exynos_dp: Improve EDID error handling
+> >       video: exynos_dp: Fix bug when checking dp->irq
+> >       video: exynos_dp: Remove sink control to D0
+> >       video: exynos_dp: Move hotplug into a workqueue
+> >       video: exynos_dp: Enable hotplug interrupts
+> >
+> >  .../devicetree/bindings/video/exynos_dp.txt        |   80 +++
+> >  drivers/video/exynos/exynos_dp_core.c              |  697 ++++++++++++--------
+> >  drivers/video/exynos/exynos_dp_core.h              |   21 +-
+> >  drivers/video/exynos/exynos_dp_reg.c               |   77 ++-
+> >  drivers/video/exynos/exynos_dp_reg.h               |    3 +-
+> >  5 files changed, 583 insertions(+), 295 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/video/exynos_dp.txt
+> 
+> Has the DT bindings been reviewed by the device tree people? It would
+> good to have an ack from them.
 
-Grant,
+CC'ed device tree mailing-list, Grant Likely, Rob Herring, Kukjin Kim, Sylwester Nawrocki.
 
-This breaks powerpc chroma_defconfig in next-20121127 with:
+Hi Tomi,
 
-arch/powerpc/sysdev/scom.c:160:17: error: assignment discards 'const' qualifier from pointer target type [-Werror]
+The DT binding has been posted with device tree mailing-list
+(devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org) for more than 2 months.
+Last patch V8 was posted 1 month ago. However, there is no objection.
+(http://www.spinics.net/lists/linux-fbdev/msg08354.html)
 
-The following fixes it.  The change is to generic code, so I'm not sure
-it's the right fix as it may break other configs/archs.
+Also, Samsung people already reviewed it.
+In my opinion, there is no need to get Ack from the device tree people.
 
-diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
-index 66c434f..77f64e4 100644
---- a/include/linux/debugfs.h
-+++ b/include/linux/debugfs.h
-@@ -23,7 +23,7 @@
- struct file_operations;
- 
- struct debugfs_blob_wrapper {
--	void *data;
-+	const void *data;
- 	unsigned long size;
- };
+Grant, Rob: if you have another opinion, please let me know kindly.
+
+Best regards,
+Jingoo Han
