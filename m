@@ -1,63 +1,67 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/2] ASoC: davinci-mcasp: Add pinctrl support
-Date: Tue, 27 Nov 2012 14:04:02 +0000
-Message-ID: <20121127140402.GE4468@opensource.wolfsonmicro.com>
-References: <1353557099-21599-1-git-send-email-gururaja.hebbar@ti.com>
- <1353557099-21599-2-git-send-email-gururaja.hebbar@ti.com>
- <20121126114511.GE9411@opensource.wolfsonmicro.com>
- <87y5hn1tey.fsf@dell.be.48ers.dk>
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Subject: Re: [PATCH v4 05/11] pwm: pwm-tiecap: pinctrl support
+Date: Tue, 27 Nov 2012 06:20:55 -0800
+Message-ID: <87txsb160o.fsf@dell.be.48ers.dk>
+References: <1353503469-18634-1-git-send-email-avinashphilip@ti.com>
+	<1353503469-18634-6-git-send-email-avinashphilip@ti.com>
+	<20121122205944.GC16716@avionic-0098.adnet.avionic-design.de>
+	<518397C60809E147AF5323E0420B992E3E9EE991@DBDE01.ent.ti.com>
+	<20121123105110.GA6884@avionic-0098.adnet.avionic-design.de>
+	<518397C60809E147AF5323E0420B992E3E9EEAAA@DBDE01.ent.ti.com>
+	<20121123111811.GA5072@avionic-0098.adnet.avionic-design.de>
+	<87mwy8eb7w.fsf@dell.be.48ers.dk>
+	<20121124203423.GA26951@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="65ImJOski3p8EhYV"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <87y5hn1tey.fsf@dell.be.48ers.dk>
+In-Reply-To: <20121124203423.GA26951@avionic-0098.adnet.avionic-design.de>
+	(Thierry Reding's message of "Sat, 24 Nov 2012 21:34:23 +0100")
 Sender: linux-doc-owner@vger.kernel.org
-To: Peter Korsgaard <jacmet@sunsite.dk>
-Cc: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, alsa-devel@alsa-project.org, sudhakar.raj@ti.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, davinci-linux-open-source@linux.davincidsp.com, perex@perex.cz, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: "Philip, Avinash" <avinashphilip@ti.com>, "paul@pwsan.com" <paul@pwsan.com>, "tony@atomide.com" <tony@atomide.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Cousson, Benoit" <b-cousson@ti.com>, "Hiremath, Vaibhav" <hvaibhav@ti.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "Bedia, Vaibhav" <vaibhav.bedia@ti.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+>>>>> "Thierry" == Thierry Reding <thierry.reding@avionic-design.de> writes:
 
---65ImJOski3p8EhYV
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi,
 
-On Mon, Nov 26, 2012 at 09:55:33PM -0800, Peter Korsgaard wrote:
-> >>>>> "Mark" == Mark Brown <broonie@opensource.wolfsonmicro.com> writes:
+ >> There's several different situations:
+ >> 
+ >> - Platform without pinctrl support
+ >> - Platform with pinctrl support but no pinmux specified in dt for device
+ >> (E.G. pinmux setup in bootloader)
+ >> - Pinmux specified in dt
+ >> - Some kind of misconfiguration in dt
+ >> 
+ >> You could argue that devm_pinctrl_get_select_default() shouldn't return
+ >> an error for the first situation, but how should it be able to know the
+ >> difference between 2 and 4?
 
->  Mark> Since the driver is happy to continue without the pins why is it
->  Mark> bothering requesting them in the first place?  In other words, this
->  Mark> should be a hard error.
+ Thierry> In case where the platform supports pinctrl but no pinmux is specified
+ Thierry> for the device it should just assume that no pinmuxing is needed. That
+ Thierry> sounds like the most logical behaviour to me. In those cases pinctrl
+ Thierry> could just assume that the default has already been selected and not
+ Thierry> return an error.
 
-> Sorry, I disagree. As was discussed recently, there's several reasons
-> why the pinctrl call might fail, and not all are fatal (E.G. pinmux
-> already setup by bootloader):
+Agreed.
 
-> http://article.gmane.org/gmane.linux.kernel/1399756
+ Thierry> But you can't reasonably expect to cope with misconfigured DT
+ Thierry> content.  Heck, there's no way for you to even know if it is
+ Thierry> misconfigured.
 
-I'd expect the platform to provide stub mappings for cases where the
-pinmux code shouldn't do anything.
+With 'misconfigured DT' I just mean any kind of real error.
 
---65ImJOski3p8EhYV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+ Thierry> That said, I'm not sure how much of an issue this really
+ Thierry> is. Pinmuxing is only used for functions local to a given
+ Thierry> chip, right? So if an SoC supports pinctrl and a given
+ Thierry> peripheral needs pinmuxing then we can reasonably assume that
+ Thierry> your second case can't happen, can't we?
 
-iQIcBAEBAgAGBQJQtMgCAAoJELSic+t+oim9Np8QAId8bMn26Xnjq/YSiCiUFK01
-iJH8Kk1Z0d/KXeOW+V1nO5x8G8phACWyVYQRdvP+rJ/91EwsRryo32NA0N5Ga3Fs
-tehqHV3o3Cxx2Au0oE3s1xtlkiJYVk8XbYCjwTN0s33VkpMEE7mtULneE6jJmQkB
-oOwYvhJD+bS+HtDzmByRf8pmmWCrI1jelqEy39qnU9IJUM0a/H3r7J2nM9nggqPX
-d+2nnCOnTg8G59ENQptQP0sK8spcZL4FzzZgBMGthJ8oVj53WEyrLYYp5BDnSQr0
-yR3BHzOALm8wCXGa7iGs0ThBt/PVeUtHhyPyPfp3EWOvcyYDh76yR9PVWkDmgNmm
-mHTOABloUiudKxmEkHPQsRCUxb5nK0mohx9M+JRE6eMeKt3XG4ISR4I/+X2LPAuq
-X/03eFg45p5wu6p+RbdN1dWPkAf5g5EfeCAxnahJokqR2+4ObhcIvZ3KH7abzFHi
-2IF0ehAcC1hRe1ss2NnnZNypNkUb3WbV5ShulR/WyEK++ejWcjKrF6tZPx0iQj2t
-IwozIJ2hxcUFSn5zfixaCFx7x8ssGH39AGoeJOcd+Ro2xqJMBDSRXhRhaRAajOT5
-y069bbBoFT7KC0fGhS+WlHFlVY0yTzLwipLm7S7F9T+qo4+h02eRXno4coz61aOP
-6GY1728FhMK8OjBtHTS/
-=WOzO
------END PGP SIGNATURE-----
+Well, peripherals only need pinmuxing if the bootloader didn't already
+set it up in advance. We could naturally enforce people to add
+"redundant" pinmux info to their .dts files, but I'm not sure I like
+that idea.
 
---65ImJOski3p8EhYV--
+-- 
+Bye, Peter Korsgaard
