@@ -1,24 +1,39 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH] cpufreq: SPEAr: Add CPUFreq driver
-Date: Tue, 27 Nov 2012 10:23:21 +0530
-Message-ID: <CAKohpo=jY62tTPZWJhP=BYLe2qZ3C-tY9MG6Ho+6fExavwwv=Q@mail.gmail.com>
-References: <7ec0e3f4b81b70f3def4257e6b9781efd4c7a3d2.1353785862.git.viresh.kumar@linaro.org>
-	<20121127040135.GB27305@S2100-06.ap.freescale.net>
-	<CAKohpomSAogQVeBQ8HaWwwoTVCsMha5d_1Wid6N3t5SnVZTc=w@mail.gmail.com>
-	<20121127051649.GC27305@S2100-06.ap.freescale.net>
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Subject: Re: [PATCH 1/2] ASoC: davinci-mcasp: Add pinctrl support
+Date: Mon, 26 Nov 2012 21:55:33 -0800
+Message-ID: <87y5hn1tey.fsf@dell.be.48ers.dk>
+References: <1353557099-21599-1-git-send-email-gururaja.hebbar@ti.com>
+	<1353557099-21599-2-git-send-email-gururaja.hebbar@ti.com>
+	<20121126114511.GE9411@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <20121127051649.GC27305@S2100-06.ap.freescale.net>
-Sender: cpufreq-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Shiraz HASHIM <shiraz.hashim@st.com>, Deepak SIKRI <deepak.sikri@st.com>, rjw@sisk.pl, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, cpufreq@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121126114511.GE9411@opensource.wolfsonmicro.com> (Mark Brown's
+	message of "Mon, 26 Nov 2012 11:45:11 +0000")
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, alsa-devel@alsa-project.org, sudhakar.raj@ti.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, davinci-linux-open-source@linux.davincidsp.com, perex@perex.cz, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 27 November 2012 10:46, Shawn Guo <shawn.guo@linaro.org> wrote:
-> Shouldn't it also be handled by cpu clock provider?
+>>>>> "Mark" == Mark Brown <broonie@opensource.wolfsonmicro.com> writes:
 
-Not really sure.
+Hi,
 
---
-viresh
+ Mark> On Thu, Nov 22, 2012 at 09:34:58AM +0530, Hebbar, Gururaja wrote:
+ >> +	pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
+ >> +	if (IS_ERR(pinctrl))
+ >> +		dev_warn(&pdev->dev,
+ >> +			"pins are not configured from the driver\n");
+
+ Mark> Since the driver is happy to continue without the pins why is it
+ Mark> bothering requesting them in the first place?  In other words, this
+ Mark> should be a hard error.
+
+Sorry, I disagree. As was discussed recently, there's several reasons
+why the pinctrl call might fail, and not all are fatal (E.G. pinmux
+already setup by bootloader):
+
+http://article.gmane.org/gmane.linux.kernel/1399756
+
+-- 
+Bye, Peter Korsgaard
