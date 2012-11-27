@@ -1,43 +1,24 @@
-From: Shawn Guo <shawn.guo@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 Subject: Re: [PATCH] cpufreq: SPEAr: Add CPUFreq driver
-Date: Tue, 27 Nov 2012 13:16:52 +0800
-Message-ID: <20121127051649.GC27305@S2100-06.ap.freescale.net>
+Date: Tue, 27 Nov 2012 10:23:21 +0530
+Message-ID: <CAKohpo=jY62tTPZWJhP=BYLe2qZ3C-tY9MG6Ho+6fExavwwv=Q@mail.gmail.com>
 References: <7ec0e3f4b81b70f3def4257e6b9781efd4c7a3d2.1353785862.git.viresh.kumar@linaro.org>
- <20121127040135.GB27305@S2100-06.ap.freescale.net>
- <CAKohpomSAogQVeBQ8HaWwwoTVCsMha5d_1Wid6N3t5SnVZTc=w@mail.gmail.com>
+	<20121127040135.GB27305@S2100-06.ap.freescale.net>
+	<CAKohpomSAogQVeBQ8HaWwwoTVCsMha5d_1Wid6N3t5SnVZTc=w@mail.gmail.com>
+	<20121127051649.GC27305@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <cpufreq-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohpomSAogQVeBQ8HaWwwoTVCsMha5d_1Wid6N3t5SnVZTc=w@mail.gmail.com>
+In-Reply-To: <20121127051649.GC27305@S2100-06.ap.freescale.net>
 Sender: cpufreq-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
+To: Shawn Guo <shawn.guo@linaro.org>
 Cc: Shiraz HASHIM <shiraz.hashim@st.com>, Deepak SIKRI <deepak.sikri@st.com>, rjw@sisk.pl, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, cpufreq@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2012 at 09:28:01AM +0530, Viresh Kumar wrote:
-> >> +     if (of_machine_is_compatible("st,spear1340")) {
-> >> +             /*
-> >> +              * SPEAr1340 is special in the sense that due to the possibility
-> >> +              * of multiple clock sources for cpu clk's parent we can have
-> >> +              * different clock source for different frequency of cpu clk.
-> >> +              * Hence we need to choose one from amongst these possible clock
-> >> +              * sources.
-> >> +              */
-> >> +             srcclk = spear1340_cpu_get_possible_parent(newfreq);
-> >
-> > From what I can see, if spear1340 clock driver can handle such special
-> > setup of clk, the driver will be nothing SPEAr specific and can probably
-> > be saved by just using cpufreq-cpu0.
-> 
-> There are few more patches we have for this driver, which are depending
-> on some mach stuff to be pushed first. We need to program system controller
-> too for make cpu clock transitions more stable.
+On 27 November 2012 10:46, Shawn Guo <shawn.guo@linaro.org> wrote:
+> Shouldn't it also be handled by cpu clock provider?
 
-Shouldn't it also be handled by cpu clock provider?
+Not really sure.
 
-Shawn
-
-> They should come after some
-> time.
-
+--
+viresh
