@@ -1,48 +1,97 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V3 3/3] mfd: stmpe: Update DT support in stmpe driver
-Date: Tue, 27 Nov 2012 14:16:48 +0530
-Message-ID: <CAKohpomPMYU5H_tx1BF7TD6F7a5rp5O=xDf3r-TGZ-r9SBp3yA@mail.gmail.com>
-References: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
-	<7a48ae364663ab3a336251fada9aee07ccd728b8.1353610437.git.viresh.kumar@linaro.org>
-	<20121123094132.EFCB73E07BE@localhost>
-	<CAKohpomAM2pw9kgB6khtHzQ2WCXKZ9_pi1_sOH2dQToVS8ep4w@mail.gmail.com>
-	<20121126184015.784993E091F@localhost>
-	<CAKohpo=dHz-fJRdwovOWesAZJwibgrNk-+2t--JK+T_sBsu9Tw@mail.gmail.com>
-	<CAKohpomOxfLhpZqpk3aymdNa7UAGRcex7d+N5srkFDnrhtULTw@mail.gmail.com>
-	<20121127084007.GA7897@gmail.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: [PATCH v5 00/12] Support for AM33xx PWM Subsystem
+Date: Tue, 27 Nov 2012 14:18:05 +0530
+Message-ID: <1354006097-25895-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121127084007.GA7897@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, rabin.vincent@stericsson.com, Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: thierry.reding@avionic-design.de, paul@pwsan.com, tony@atomide.com, linux@arm.linux.org.uk, b-cousson@ti.com
+Cc: hvaibhav@ti.com, anilkumar@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com, vaibhav.bedia@ti.com, "Philip, Avinash" <avinashphilip@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 27 November 2012 14:10, Lee Jones <lee.jones@linaro.org> wrote:
-> On Tue, 27 Nov 2012, Viresh Kumar wrote:
->> Problem is with invert polarity, which the interrupt controller is not aware of.
->> For example, suppose interrupt controller needs Rising edge interrupt, but
->> the board has inverted the line between stmpe and IC. So, we will get
->> Rising high from the routine you mentioned, but we need to generate
->> opposite of that to make it rising high.
->
-> Surely that would be a hardware design error/quirk?
+In AM33xx PWM sub modules like ECAP, EHRPWM & EQEP are  integrated to
+PWM subsystem. All these submodules shares the resources (clock) & has
+a clock gating register in PWM Subsystem. This patch series creates a
+parent PWM Subsystem driver to handle access synchronization of shared
+resources & clock gating from PWM Subsystem configuration space.
+Also Device tree nodes populated to support parent child relation
+between PWMSS, ECAP & EHRPWM submodules.
+In addition EHRPWM module requires explicit clock gating from control
+module & is handled by patch #6 & 7.
 
-Yes.
+As suggested by  Thierry for handling clock gating for PWM submodules
+should handle with a global function. This requires config space
+handling done independent from driver and is done at parent driver.
 
-> Can you give an example where this has happened?
+So the parent<->child relation adopted to handle
+1. pm runtime synchronization
+2. PWM subsystem common config space clock gating for PWM submodules.
 
-I haven't seen this in any of SPEAr boards i have worked on. Maybe Rabin
-would have, that's why he added that part of code :)
+Patches supports
+- Driver support for parent child relation handled patch #1
+- HWMOD data correction in EPWMSS at patch #2
+- Parent child in HWMOD relation handled at patch #3
+- Optional EHRPWM tb clock in patch #6
+- Support for TBCLK clock gating at patch #7.
+- Device tree binding support handled in patch #4,8 
+- Pinctrl support in patch #5 & 9.
+- DT node populated in patch #10 ,11 & 12.
 
-@Rabin/Linus: Do you remember why have you added this in stmpe driver:
+This patch series based on omap_dt/for_3.8/dts_part2 and tested
+on am335x-evm & am335x-evmsk.
 
-+       if (stmpe->pdata->irq_invert_polarity)
-+               icr ^= STMPE_ICR_LSB_HIGH;
-+
+This patch series will come under 3 subsystem basically. But sent
+it in single patch series to have a clearer picture of why the
+OMAP subsystem changes required.
 
-Does somebody actually need it?
+Patches come under PWM (1,4,5,7,8,9)
+Patches come under OMAP (2,3,6)
+Patches come under DT (10,11,12).
 
---
-viresh
+It depends on [1]
+1. https://gitorious.org/linux-pwm/linux-pwm/commit/83af24027b3df1af5c5a9aa9adcdcfeb3429d3be
+pwm: Device tree support for PWM polarity
+
+Changes since v3:
+	- Rebased on top of omap_dt/for_3.8/dts_part2
+	- Add pwm backlight for am335xevm_sk
+	- Moved tipwmss.h to pwm-tipwmss.h
+
+Philip, Avinash (12):
+  PWMSS: Add PWM Subsystem driver for parent<->child relationship
+  ARM: OMAP: AM33xx hwmod: Corrects PWM subsystem HWMOD entries
+  ARM: OMAP: AM33xx hwmod: Add parent-child relationship for PWM
+    subsystem
+  pwm: tiecap: Add device-tree binding
+  pwm: pwm-tiecap: pinctrl support
+  ARM: AM33XX: clk: Add clock node for EHRPWM TBCLK
+  pwm: pwm-tiehrpwm: Adding TBCLK gating support.
+  pwm: tiehrpwm: Add device-tree binding
+  pwm: pwm-tiehrpwm: pinctrl support
+  ARM: dts: AM33XX: Add PWMSS device tree nodes
+  ARM: dts: AM33XX: Add PWM backlight DT data to am335x-evm
+  ARM: dts: AM33XX: Add PWM backlight DT data to am335x-evmsk
+
+ .../devicetree/bindings/pwm/pwm-tiecap.txt         |   23 ++
+ .../devicetree/bindings/pwm/pwm-tiehrpwm.txt       |   23 ++
+ .../devicetree/bindings/pwm/pwm-tipwmss.txt        |   31 ++
+ arch/arm/boot/dts/am335x-evm.dts                   |   23 ++
+ arch/arm/boot/dts/am335x-evmsk.dts                 |   23 ++
+ arch/arm/boot/dts/am33xx.dtsi                      |   84 +++++
+ arch/arm/mach-omap2/clock33xx_data.c               |   37 ++
+ arch/arm/mach-omap2/control.h                      |    8 +
+ arch/arm/mach-omap2/omap_hwmod_33xx_data.c         |  388 +++++++++++++-------
+ drivers/pwm/Kconfig                                |   11 +
+ drivers/pwm/Makefile                               |    1 +
+ drivers/pwm/pwm-tiecap.c                           |   48 +++-
+ drivers/pwm/pwm-tiehrpwm.c                         |   62 +++-
+ drivers/pwm/pwm-tipwmss.c                          |  139 +++++++
+ drivers/pwm/pwm-tipwmss.h                          |   39 ++
+ 15 files changed, 797 insertions(+), 144 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiecap.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-tiehrpwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/pwm-tipwmss.txt
+ create mode 100644 drivers/pwm/pwm-tipwmss.c
+ create mode 100644 drivers/pwm/pwm-tipwmss.h
+
