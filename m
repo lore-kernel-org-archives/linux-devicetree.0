@@ -1,134 +1,123 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v4 00/12] clk: exynos4: migrate to common clock framework
-Date: Tue, 27 Nov 2012 09:57:53 +0900
-Message-ID: <15d501cdcc3a$3b5b6fb0$b2124f10$%kim@samsung.com>
-References: <1353791885-2566-1-git-send-email-thomas.abraham@linaro.org>
- <20121126193116.21126.66261@nucleus>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 6/9] usb: chipidea: add PTW and PTS handling
+Date: Tue, 27 Nov 2012 09:12:30 +0800
+Message-ID: <20121127011210.GA17856@nchen-desktop>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1352909950-32555-7-git-send-email-m.grzeschik@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20121126193116.21126.66261@nucleus>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Mike Turquette' <mturquette@ti.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, t.figa@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1352909950-32555-7-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Mike Turquette wrote:
-> 
-> Quoting Thomas Abraham (2012-11-24 13:17:53)
-> > Changes since v3:
-> > - Includes changes suggested by Tomasz Figa <tomasz.figa@gmail.com>
-> >
-> 
-> Hi Thomas,
-> 
-Hi Mike,
+On Wed, Nov 14, 2012 at 05:19:07PM +0100, Michael Grzeschik wrote:
+>  /**
+>   * hw_device_reset: resets chip (execute without interruption)
+>   * @ci: the controller
+> @@ -237,6 +256,8 @@ int hw_device_reset(struct ci13xxx *ci, u32 mode)
+>  	if (ci->platdata->flags & CI13XXX_DISABLE_STREAMING)
+>  		hw_write(ci, OP_USBMODE, USBMODE_CI_SDIS, USBMODE_CI_SDIS);
+>  
+> +	hw_portsc_configure(ci);
+> +
+>  	/* USBMODE should be configured step by step */
+>  	hw_write(ci, OP_USBMODE, USBMODE_CM, USBMODE_CM_IDLE);
+>  	hw_write(ci, OP_USBMODE, USBMODE_CM, mode);
+> @@ -522,6 +543,32 @@ void ci13xxx_remove_device(struct platform_device *pdev)
+>  }
+>  EXPORT_SYMBOL_GPL(ci13xxx_remove_device);
+>  
+> +void ci13xxx_get_dr_flags(struct device_node *of_node, struct ci13xxx_platform_data *pdata)
+> +{
+> +	int interface = of_get_usbphy_mode(of_node);
+> +
+> +	switch (interface) {
+> +	case USBPHY_INTERFACE_MODE_UTMI:
+> +		pdata->flags |= CI13XXX_PORTSC_PTS_UTMI;
+> +		break;
+> +	case USBPHY_INTERFACE_MODE_UTMIW:
+> +		pdata->flags |= CI13XXX_PORTSC_PTS_UTMI |
+> +			CI13XXX_PORTSC_PTW_16BIT;
+> +		break;
+> +	case USBPHY_INTERFACE_MODE_ULPI:
+> +		pdata->flags |= CI13XXX_PORTSC_PTS_ULPI;
+> +		break;
+> +	case USBPHY_INTERFACE_MODE_SERIAL:
+> +		pdata->flags |= CI13XXX_PORTSC_PTS_FSLS;
+> +		break;
+> +	case USBPHY_INTERFACE_MODE_NA:
+> +	default:
+> +		pr_err("no phy interface defined\n");
+> +	}
+> +
+> +}
+> +EXPORT_SYMBOL_GPL(ci13xxx_get_dr_flags);
+> +
+>  void ci13xxx_get_dr_mode(struct device_node *of_node, struct ci13xxx_platform_data *pdata)
+>  {
+>  	const unsigned char *dr_mode;
+> diff --git a/drivers/usb/chipidea/host.c b/drivers/usb/chipidea/host.c
+> index ebff9f4..b23ee1d 100644
+> --- a/drivers/usb/chipidea/host.c
+> +++ b/drivers/usb/chipidea/host.c
+> @@ -106,6 +106,10 @@ static int host_start(struct ci13xxx *ci)
+>  	if (usb_disabled())
+>  		return -ENODEV;
+>  
+> +	hw_portsc_configure(ci);
+> +
+> +	mdelay(10);
+is usleep_range ok?
+Why host needs 10ms delay, but peripheral mode doesn't?
 
-> 3.7-rc7 is out and I do not wish to take any large changes this close to
-> the merge window opening up.  I will review these patches and give any
-> feedback now on the common clk bits, but merging in the
-> drivers/clk/samsung parts would have to wait until after clk-next is
-> rebased onto 3.8-rc.
+> +
+>  	hcd = usb_create_hcd(&ci_ehci_hc_driver, ci->dev, dev_name(ci->dev));
+>  	if (!hcd)
+>  		return -ENOMEM;
+> diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+> index 906d259..cafca23 100644
+> --- a/include/linux/usb/chipidea.h
+> +++ b/include/linux/usb/chipidea.h
+> @@ -21,6 +21,12 @@ struct ci13xxx_platform_data {
+>  #define CI13XXX_DISABLE_STREAMING	BIT(3)
+>  #define CI13XXX_DR_MODE_HOST		BIT(4)
+>  #define CI13XXX_DR_MODE_PERIPHERAL	BIT(5)
+> +#define CI13XXX_PORTSC_PTW_8BIT		BIT(6)
+> +#define CI13XXX_PORTSC_PTW_16BIT	BIT(7)
+> +#define CI13XXX_PORTSC_PTS_UTMI		BIT(8)
+> +#define CI13XXX_PORTSC_PTS_ULPI		BIT(9)
+> +#define CI13XXX_PORTSC_PTS_FSLS		BIT(10)
+> +
+>  #define CI13XXX_DR_MODE_MASK \
+>  	(CI13XXX_DR_MODE_HOST | CI13XXX_DR_MODE_PERIPHERAL)
+>  
+> @@ -42,4 +48,7 @@ void ci13xxx_remove_device(struct platform_device *pdev);
+>  /* Parse of-tree "dr_mode" property */
+>  void ci13xxx_get_dr_mode(struct device_node *of_node, struct ci13xxx_platform_data *pdata);
+>  
+> +/* Parse of-tree "flags" */
+> +void ci13xxx_get_dr_flags(struct device_node *of_node, struct ci13xxx_platform_data *pdata);
+> +
+>  #endif
+> -- 
+> 1.7.10.4
 > 
-I agree. Would be better if this could be provided early 3.8-rc.
-
-> Which tree do you want to merge this through?  Samsung or clk-next?
-> Will you split the patches or take it all once you have gathered ACKs?
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
-Mike, if you're ok, I'd like to take this series in Samsung tree because this changes are very important and touches many Samsung stuff.
 
-Of course, I can create topic branch for your clk-next if you want.
+-- 
 
-Thanks.
+Best Regards,
+Peter Chen
 
-Best regards,
-Kgene.
 --
-Kukjin Kim <kgene.kim@samsung.com>, Senior Engineer,
-SW Solution Development Team, Samsung Electronics Co., Ltd.
-
-> Thanks,
-> Mike
-> 
-> > This patch series migrates the Samsung Exynos4 SoC clock code to adopt
-> the
-> > common clock framework. The use of Samsung specific clock structures has
-> > been removed and all board support code has been updated. imx-style of
-> > clock registration and lookup has been adopted for device tree based
-> > exynos4 platforms.
-> >
-> > This patch series is based on the for-next branch of Samsung
-> maintainer's
-> > tree with all patches merged from clk-next branch of Mike's tree. This
-> > series has been tested on Exynos4210 based Origen board and Exynos4412
-> > based smdk board.
-> >
-> > Thomas Abraham (12):
-> >   clk: samsung: add common clock framework helper functions for Samsung
-> platforms
-> >   clk: samsung: add pll clock registration helper functions
-> >   clk: exynos4: register clocks using common clock framework
-> >   ARM: Exynos: Rework timer initialization sequence
-> >   ARM: Exynos4: Migrate clock support to common clock framework
-> >   ARM: dts: add exynos4 clock controller nodes
-> >   ARM: dts: add xxti and xusbxti fixed rate clock nodes for exynos4
-> based platforms
-> >   ARM: Exynos4: allow legacy board support to specify xxti and xusbxti
-> clock speed
-> >   ARM: dts: add clock provider information for all controllers in
-> Exynos4 SoC
-> >   ARM: Exynos4: remove auxdata table from machine file
-> >   ARM: Exynos: use fin_pll clock as the tick clock source for mct
-> >   ARM: Exynos: add support for mct clock setup
-> >
-> >  .../devicetree/bindings/clock/exynos4-clock.txt    |  215 +++
-> >  arch/arm/boot/dts/exynos4.dtsi                     |   48 +
-> >  arch/arm/boot/dts/exynos4210-origen.dts            |   12 +
-> >  arch/arm/boot/dts/exynos4210-smdkv310.dts          |   12 +
-> >  arch/arm/boot/dts/exynos4210.dtsi                  |    6 +
-> >  arch/arm/boot/dts/exynos4412-smdk4412.dts          |   12 +
-> >  arch/arm/boot/dts/exynos4x12.dtsi                  |    6 +
-> >  arch/arm/mach-exynos/Kconfig                       |    1 +
-> >  arch/arm/mach-exynos/Makefile                      |    3 -
-> >  arch/arm/mach-exynos/clock-exynos4.c               | 1602 -----------------
-> ---
-> >  arch/arm/mach-exynos/clock-exynos4.h               |   35 -
-> >  arch/arm/mach-exynos/clock-exynos4210.c            |  188 ---
-> >  arch/arm/mach-exynos/clock-exynos4212.c            |  192 ---
-> >  arch/arm/mach-exynos/common.c                      |   57 +-
-> >  arch/arm/mach-exynos/common.h                      |   21 +-
-> >  arch/arm/mach-exynos/mach-armlex4210.c             |    3 +-
-> >  arch/arm/mach-exynos/mach-exynos4-dt.c             |   71 +-
-> >  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +-
-> >  arch/arm/mach-exynos/mach-nuri.c                   |    5 +-
-> >  arch/arm/mach-exynos/mach-origen.c                 |    5 +-
-> >  arch/arm/mach-exynos/mach-smdk4x12.c               |    5 +-
-> >  arch/arm/mach-exynos/mach-smdkv310.c               |    7 +-
-> >  arch/arm/mach-exynos/mach-universal_c210.c         |    3 +-
-> >  arch/arm/mach-exynos/mct.c                         |   32 +-
-> >  arch/arm/plat-samsung/Kconfig                      |    4 +-
-> >  drivers/clk/Makefile                               |    1 +
-> >  drivers/clk/samsung/Makefile                       |    6 +
-> >  drivers/clk/samsung/clk-exynos4.c                  |  655 ++++++++
-> >  drivers/clk/samsung/clk-pll.c                      |  400 +++++
-> >  drivers/clk/samsung/clk-pll.h                      |   38 +
-> >  drivers/clk/samsung/clk.c                          |  180 +++
-> >  drivers/clk/samsung/clk.h                          |  216 +++
-> >  32 files changed, 1905 insertions(+), 2138 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/clock/exynos4-
-> clock.txt
-> >  delete mode 100644 arch/arm/mach-exynos/clock-exynos4.c
-> >  delete mode 100644 arch/arm/mach-exynos/clock-exynos4.h
-> >  delete mode 100644 arch/arm/mach-exynos/clock-exynos4210.c
-> >  delete mode 100644 arch/arm/mach-exynos/clock-exynos4212.c
-> >  create mode 100644 drivers/clk/samsung/Makefile
-> >  create mode 100644 drivers/clk/samsung/clk-exynos4.c
-> >  create mode 100644 drivers/clk/samsung/clk-pll.c
-> >  create mode 100644 drivers/clk/samsung/clk-pll.h
-> >  create mode 100644 drivers/clk/samsung/clk.c
-> >  create mode 100644 drivers/clk/samsung/clk.h
-> >
-> > --
-> > 1.7.4.4
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
