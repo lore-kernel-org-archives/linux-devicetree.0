@@ -1,123 +1,40 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [rtc-linux] [PATCH v3 1/5] rtc: OMAP: Add system pm_power_off
- to rtc driver
-Date: Tue, 27 Nov 2012 15:42:39 -0800
-Message-ID: <20121127154239.0efad6d5.akpm@linux-foundation.org>
-References: <1353404927-14412-1-git-send-email-anilkumar@ti.com>
-	<1353404927-14412-2-git-send-email-anilkumar@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1353404927-14412-2-git-send-email-anilkumar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: rtc-linux@googlegroups.com
-Cc: AnilKumar Ch <anilkumar@ti.com>, a.zummo@towertech.it, sameo@linux.intel.com, tony@atomide.com, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Colin Foe-Parker <colin.foeparker@logicpd.com>
+From: Michael Neuling <mikey@neuling.org>
+Subject: Re: [PATCH v2] drivers/of: Constify device_node->name and ->path_component_name
+Date: Wed, 28 Nov 2012 10:46:04 +1100
+Message-ID: <23435.1354059964@neuling.org>
+References: <1353075625-7755-1-git-send-email-grant.likely@secretlab.ca>
+Return-path: <linux-next-owner@vger.kernel.org>
+In-reply-to: <1353075625-7755-1-git-send-email-grant.likely@secretlab.ca>
+Sender: linux-next-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Jimi Xenidis <jimix@pobox.com>, sfr@canb.auug.org.au, linux-next@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, "David S. Miller" <davem@davemloft.net>, Julian Calaby <julian.calaby@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 Nov 2012 15:18:43 +0530
-AnilKumar Ch <anilkumar@ti.com> wrote:
-
-> From: Colin Foe-Parker <colin.foeparker@logicpd.com>
+> Neither of these should ever be changed once set. Make them const and
+> fix up the users that try to modify it in-place. In one case
+> kmalloc+memcpy is replaced with kstrdup() to avoid modifying the string.
 > 
-> Add system power off control to rtc driver which is the in-charge
-> of controlling the BeagleBone system power. The power_off routine
-> can be hooked up to "pm_power_off" system call.
-> 
-> System power off sequence:-
-> * Set PMIC STATUS_OFF when PMIC_POWER_EN is pulled low
-> * Enable PMIC_POWER_EN in rtc module
-> * Set rtc ALARM2 time
-> * Enable ALARM2 interrupt
-> 
-> Added while (1); after the above steps to make sure that no other
-> process acquire cpu. Otherwise we might see an unexpected behaviour
-> because we are shutting down all the power rails of SoC except RTC.
-> 
-> Signed-off-by: Colin Foe-Parker <colin.foeparker@logicpd.com>
-> [anilkumar@ti.com: move poweroff additions to rtc driver]
-> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
->
-> ...
->
-> +/*
-> + * rtc_power_off: Set the pmic power off sequence. The RTC generates
-> + * pmic_pwr_enable control, which can be used to control an external
-> + * PMIC.
-> + */
-> +static void rtc_power_off(void)
-> +{
-> +	u32 val;
-> +	struct rtc_time tm;
-> +	spinlock_t lock;
+> Build tested with defconfigs on ARM, PowerPC, Sparc, MIPS, x86 among
+> others.
 
-What on earth?
+Grant,
 
-> +	unsigned long flags, time;
-> +
-> +	spin_lock_init(&lock);
-> +
-> +	/* Set PMIC power enable */
-> +	val = readl(rtc_base + OMAP_RTC_PMIC_REG);
-> +	writel(val | OMAP_RTC_PMIC_POWER_EN_EN, rtc_base + OMAP_RTC_PMIC_REG);
-> +
-> +	/* Read rtc time */
-> +	omap_rtc_read_time(NULL, &tm);
-> +
-> +	/* Convert Gregorian date to seconds since 01-01-1970 00:00:00 */
-> +	rtc_tm_to_time(&tm, &time);
-> +
-> +	/* Add shutdown time to the current value */
-> +	time += SHUTDOWN_TIME_SEC;
-> +
-> +	/* Convert seconds since 01-01-1970 00:00:00 to Gregorian date */
-> +	rtc_time_to_tm(time, &tm);
-> +
-> +	if (tm2bcd(&tm) < 0)
-> +		return;
-> +
-> +	pr_info("System will go to power_off state in approx. %d secs\n",
-> +			SHUTDOWN_TIME_SEC);
-> +
-> +	/*
-> +	 * pmic_pwr_enable is controlled by means of ALARM2 event. So here
-> +	 * programming alarm2 expiry time and enabling alarm2 interrupt
-> +	 */
-> +	rtc_write(tm.tm_sec, OMAP_RTC_ALARM2_SECONDS_REG);
-> +	rtc_write(tm.tm_min, OMAP_RTC_ALARM2_MINUTES_REG);
-> +	rtc_write(tm.tm_hour, OMAP_RTC_ALARM2_HOURS_REG);
-> +	rtc_write(tm.tm_mday, OMAP_RTC_ALARM2_DAYS_REG);
-> +	rtc_write(tm.tm_mon, OMAP_RTC_ALARM2_MONTHS_REG);
-> +	rtc_write(tm.tm_year, OMAP_RTC_ALARM2_YEARS_REG);
-> +
-> +	/* Enable alarm2 interrupt */
-> +	val = readl(rtc_base + OMAP_RTC_INTERRUPTS_REG);
-> +	writel(val | OMAP_RTC_INTERRUPTS_IT_ALARM2,
-> +				rtc_base + OMAP_RTC_INTERRUPTS_REG);
-> +
-> +	/* Do not allow to execute any other task */
-> +	spin_lock_irqsave(&lock, flags);
-> +	while (1);
+This breaks powerpc chroma_defconfig in next-20121127 with:
 
-I suspect this doesn't do what you want it to do.
+arch/powerpc/sysdev/scom.c:160:17: error: assignment discards 'const' qualifier from pointer target type [-Werror]
 
-Firstly, please provide adequate code comments here so that code
-readers do not also need to be mind readers.
+The following fixes it.  The change is to generic code, so I'm not sure
+it's the right fix as it may break other configs/archs.
 
-If you want to stop this CPU dead in its tracks (why?) then
-
-	local_irq_disable();
-	while (1)
-		;		/* Note correct code layout */
-
-will do it.  But it means that the NMI watchdog (if present) will come
-along and whack the machine in the head a few seconds later.  And this
-does nothing to stop other CPUs.
-
-But not being a mind reader, I'm really at a loss to suggest what
-should be done here.  
-
-> +}
->
-> ...
->
+diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
+index 66c434f..77f64e4 100644
+--- a/include/linux/debugfs.h
++++ b/include/linux/debugfs.h
+@@ -23,7 +23,7 @@
+ struct file_operations;
+ 
+ struct debugfs_blob_wrapper {
+-	void *data;
++	const void *data;
+ 	unsigned long size;
+ };
