@@ -1,118 +1,78 @@
-From: Qing Xu <qingx@marvell.com>
-Subject: Re: [PATCH 2/7] mfd: max8925: fix mfd device register failure
-Date: Tue, 27 Nov 2012 18:02:57 +0800
-Message-ID: <50B48FD1.4020104@marvell.com>
-References: <1352187498-9754-1-git-send-email-qingx@marvell.com> <CAN1soZyGVaASo2zakxr9EgMdSqVvQyVt0bLDOmFNmN9+NhXWUg@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH v4 0/3] pwm: Drivers for twl4030/6030 PWMs and LEDs
+Date: Tue, 27 Nov 2012 11:09:56 +0100
+Message-ID: <1354010999-31371-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAN1soZyGVaASo2zakxr9EgMdSqVvQyVt0bLDOmFNmN9+NhXWUg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Tero Kristo <t-kristo@ti.com>, Grazvydas Ignotas <notasas@gmail.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2012 04:41 PM, Haojian Zhuang wrote:
-> On Tue, Nov 6, 2012 at 3:38 PM, Qing Xu <qingx@marvell.com> wrote:
->> From: Qing Xu <qingx@marvell.com>
->>
->> we encounter rtc/power/touch driver registry failure, root cause
->> it is resources confilict in insert_resouce, solved by changing
->> mfd_add_devices 5th parameter to NULL
->>
-> Since resources are not used in power/rtc driver and touch driver
-> isn't implemented,
-> it's OK to avoid use resources. Please remove those resources in
-> max8925-core.c also.
->
+Hello,
 
-oh, we can not remove those resources, it is include in mfd_cell,
-such as :
-static struct resource rtc_resources[] = {
-         {
-                 ...
+Changes since v3:
+- pwm-twl-led driver's comment fix patch squashed to the original patch
+- Documentation for the DT bindings of the PWM drivers
+Comments from Thierry Reding addressed:
+- pwm-twl6030 has been removed in the last patch
+- macro for twl_pwm_chip/twl_pwmled_chip lookup
+- locking for read-modify-write sequences
+- separate pwm_ops strictures for twl4030 and twl6030 class
+- _devexit_P() removed
+- Do not select HAVE_PWM in Kconfig file since it is going away AFAIK:
+  https://patchwork.kernel.org/patch/1544851/
+- Remaining (smaller) comments from Thierry also has been addressed.
 
-         },
-};
+Changes since v2:
+- New PWM cycle calculation for twl-pwm driver and twl4030's pwm-twl-led with
+  comment to document the expected behaviour.
 
-static struct mfd_cell rtc_devs[] = {
-         {
-                 .name           = "max8925-rtc",
-                 ...
-                 .resources      = &rtc_resources[0],
-                 ...
+Changes cince v1:
+- The turn on/off sequence has been corrected for twl4030 PWMs as suggested by
+  Grazvydas Ignotas
+- Comment section added to the new drivers to describe what they are controlling
 
-         },
-};
+The series has been tested (with additional, pending patches):
+Zoom2 for twl4030 PWM0 (keypad light), PWM1 (LCD backlight)
+BeagleBoard for twl4030 LEDB (PWMB - pmu_stat led)
+OMAP4 Blaze (SDP4430) for twl6030 PWM1 (keypad light), PWM2 (LCD backlight) and
+LED (charging indication led).
 
-In the struct, the resources is for rtc dev itself's resource, but in:
+Intro mail from v1:
 
-ret = mfd_add_devices(chip->dev, 0, &rtc_devs[0],
-                                  ARRAY_SIZE(rtc_devs),
-                                 &rtc_resources[0], chip->irq_base, NULL);
+The currently available pwm-twl6030.c driver only supports TWL6030's Charging
+indication LED.
+Remove this driver and add two new ones which implements support for all PWM
+driven outputs:
+pwm-twl driver supports twl4030 (PWM 0/1) and twl6030 (PWM 1/2) instances
+pwm-twl-led driver supports twl4030 (PWM driven LED A/B ports) and twl6030's
+Charging indication LED (PWM driven).
 
-the 5th parameter, it is for rtc's child, not rtc itself, we should
-remove it to NULL, otherwise, device register will find conflict
-on child's and parent's resource.
+Regards,
+Peter
+---
+Peter Ujfalusi (3):
+  pwm: New driver to support PWMs on TWL4030/6030 series of PMICs
+  pwm: New driver to support PWM driven LEDs on TWL4030/6030 series of
+    PMICs
+  pwm: Remove pwm-twl6030 driver
 
->> Signed-off-by: Qing Xu <qingx@marvell.com>
->> ---
->>   drivers/mfd/max8925-core.c |   22 ++++++++++------------
->>   1 files changed, 10 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/mfd/max8925-core.c b/drivers/mfd/max8925-core.c
->> index dcc218a..b1eacae 100644
->> --- a/drivers/mfd/max8925-core.c
->> +++ b/drivers/mfd/max8925-core.c
->> @@ -873,7 +873,7 @@ int __devinit max8925_device_init(struct max8925_chip *chip,
->>
->>          ret = mfd_add_devices(chip->dev, 0, &rtc_devs[0],
->>                                ARRAY_SIZE(rtc_devs),
->> -                             &rtc_resources[0], chip->irq_base, NULL);
->> +                             NULL, chip->irq_base, NULL);
->>          if (ret < 0) {
->>                  dev_err(chip->dev, "Failed to add rtc subdev\n");
->>                  goto out;
->> @@ -881,7 +881,7 @@ int __devinit max8925_device_init(struct max8925_chip *chip,
->>
->>          ret = mfd_add_devices(chip->dev, 0, &onkey_devs[0],
->>                                ARRAY_SIZE(onkey_devs),
->> -                             &onkey_resources[0], 0, NULL);
->> +                             NULL, 0, NULL);
->>          if (ret < 0) {
->>                  dev_err(chip->dev, "Failed to add onkey subdev\n");
->>                  goto out_dev;
->> @@ -900,21 +900,19 @@ int __devinit max8925_device_init(struct max8925_chip *chip,
->>                  goto out_dev;
->>          }
->>
->> -       if (pdata && pdata->power) {
->> -               ret = mfd_add_devices(chip->dev, 0, &power_devs[0],
->> -                                       ARRAY_SIZE(power_devs),
->> -                                       &power_supply_resources[0], 0, NULL);
->> -               if (ret < 0) {
->> -                       dev_err(chip->dev, "Failed to add power supply "
->> -                               "subdev\n");
->> -                       goto out_dev;
->> -               }
->> +       ret = mfd_add_devices(chip->dev, 0, &power_devs[0],
->> +                               ARRAY_SIZE(power_devs),
->> +                               NULL, 0, NULL);
->> +       if (ret < 0) {
->> +               dev_err(chip->dev, "Failed to add power supply "
->> +                       "subdev, err = %d\n", ret);
->> +               goto out_dev;
->>          }
->>
->>          if (pdata && pdata->touch) {
->>                  ret = mfd_add_devices(chip->dev, 0, &touch_devs[0],
->>                                        ARRAY_SIZE(touch_devs),
->> -                                     &touch_resources[0], 0, NULL);
->> +                                     NULL, chip->tsc_irq_base, NULL);
->>                  if (ret < 0) {
->>                          dev_err(chip->dev, "Failed to add touch subdev\n");
->>                          goto out_dev;
->> --
->> 1.7.0.4
->>
+ .../devicetree/bindings/pwm/ti,twl-pwm.txt         |  17 +
+ .../devicetree/bindings/pwm/ti,twl-pwmled.txt      |  17 +
+ drivers/pwm/Kconfig                                |  17 +-
+ drivers/pwm/Makefile                               |   3 +-
+ drivers/pwm/pwm-twl-led.c                          | 342 ++++++++++++++++++++
+ drivers/pwm/pwm-twl.c                              | 357 +++++++++++++++++++++
+ drivers/pwm/pwm-twl6030.c                          | 184 -----------
+ 7 files changed, 748 insertions(+), 189 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwm.txt
+ create mode 100644 Documentation/devicetree/bindings/pwm/ti,twl-pwmled.txt
+ create mode 100644 drivers/pwm/pwm-twl-led.c
+ create mode 100644 drivers/pwm/pwm-twl.c
+ delete mode 100644 drivers/pwm/pwm-twl6030.c
+
+-- 
+1.8.0
+
