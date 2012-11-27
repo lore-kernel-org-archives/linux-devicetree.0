@@ -1,50 +1,123 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH] regulator: add device tree support for max8997
-Date: Tue, 27 Nov 2012 20:05:44 +0000
-Message-ID: <20121127200543.GK4468@opensource.wolfsonmicro.com>
-References: <20121126144603.GL9411@opensource.wolfsonmicro.com>
- <1354005272-24214-1-git-send-email-thomas.abraham@linaro.org>
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [rtc-linux] [PATCH v3 1/5] rtc: OMAP: Add system pm_power_off
+ to rtc driver
+Date: Tue, 27 Nov 2012 15:42:39 -0800
+Message-ID: <20121127154239.0efad6d5.akpm@linux-foundation.org>
+References: <1353404927-14412-1-git-send-email-anilkumar@ti.com>
+	<1353404927-14412-2-git-send-email-anilkumar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="9JSHP372f+2dzJ8X"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1354005272-24214-1-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, myungjoo.ham@samsung.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, Karol Lewandowski <k.lewandowsk@samsung.com>, Rajendra Nayak <rnayak@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1353404927-14412-2-git-send-email-anilkumar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: rtc-linux@googlegroups.com
+Cc: AnilKumar Ch <anilkumar@ti.com>, a.zummo@towertech.it, sameo@linux.intel.com, tony@atomide.com, grant.likely@secretlab.ca, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Colin Foe-Parker <colin.foeparker@logicpd.com>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 20 Nov 2012 15:18:43 +0530
+AnilKumar Ch <anilkumar@ti.com> wrote:
 
---9JSHP372f+2dzJ8X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> From: Colin Foe-Parker <colin.foeparker@logicpd.com>
+> 
+> Add system power off control to rtc driver which is the in-charge
+> of controlling the BeagleBone system power. The power_off routine
+> can be hooked up to "pm_power_off" system call.
+> 
+> System power off sequence:-
+> * Set PMIC STATUS_OFF when PMIC_POWER_EN is pulled low
+> * Enable PMIC_POWER_EN in rtc module
+> * Set rtc ALARM2 time
+> * Enable ALARM2 interrupt
+> 
+> Added while (1); after the above steps to make sure that no other
+> process acquire cpu. Otherwise we might see an unexpected behaviour
+> because we are shutting down all the power rails of SoC except RTC.
+> 
+> Signed-off-by: Colin Foe-Parker <colin.foeparker@logicpd.com>
+> [anilkumar@ti.com: move poweroff additions to rtc driver]
+> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
+>
+> ...
+>
+> +/*
+> + * rtc_power_off: Set the pmic power off sequence. The RTC generates
+> + * pmic_pwr_enable control, which can be used to control an external
+> + * PMIC.
+> + */
+> +static void rtc_power_off(void)
+> +{
+> +	u32 val;
+> +	struct rtc_time tm;
+> +	spinlock_t lock;
 
-On Tue, Nov 27, 2012 at 02:04:32PM +0530, Thomas Abraham wrote:
-> Add device tree based discovery support for max8997.
+What on earth?
 
-Applied, thanks.
+> +	unsigned long flags, time;
+> +
+> +	spin_lock_init(&lock);
+> +
+> +	/* Set PMIC power enable */
+> +	val = readl(rtc_base + OMAP_RTC_PMIC_REG);
+> +	writel(val | OMAP_RTC_PMIC_POWER_EN_EN, rtc_base + OMAP_RTC_PMIC_REG);
+> +
+> +	/* Read rtc time */
+> +	omap_rtc_read_time(NULL, &tm);
+> +
+> +	/* Convert Gregorian date to seconds since 01-01-1970 00:00:00 */
+> +	rtc_tm_to_time(&tm, &time);
+> +
+> +	/* Add shutdown time to the current value */
+> +	time += SHUTDOWN_TIME_SEC;
+> +
+> +	/* Convert seconds since 01-01-1970 00:00:00 to Gregorian date */
+> +	rtc_time_to_tm(time, &tm);
+> +
+> +	if (tm2bcd(&tm) < 0)
+> +		return;
+> +
+> +	pr_info("System will go to power_off state in approx. %d secs\n",
+> +			SHUTDOWN_TIME_SEC);
+> +
+> +	/*
+> +	 * pmic_pwr_enable is controlled by means of ALARM2 event. So here
+> +	 * programming alarm2 expiry time and enabling alarm2 interrupt
+> +	 */
+> +	rtc_write(tm.tm_sec, OMAP_RTC_ALARM2_SECONDS_REG);
+> +	rtc_write(tm.tm_min, OMAP_RTC_ALARM2_MINUTES_REG);
+> +	rtc_write(tm.tm_hour, OMAP_RTC_ALARM2_HOURS_REG);
+> +	rtc_write(tm.tm_mday, OMAP_RTC_ALARM2_DAYS_REG);
+> +	rtc_write(tm.tm_mon, OMAP_RTC_ALARM2_MONTHS_REG);
+> +	rtc_write(tm.tm_year, OMAP_RTC_ALARM2_YEARS_REG);
+> +
+> +	/* Enable alarm2 interrupt */
+> +	val = readl(rtc_base + OMAP_RTC_INTERRUPTS_REG);
+> +	writel(val | OMAP_RTC_INTERRUPTS_IT_ALARM2,
+> +				rtc_base + OMAP_RTC_INTERRUPTS_REG);
+> +
+> +	/* Do not allow to execute any other task */
+> +	spin_lock_irqsave(&lock, flags);
+> +	while (1);
 
---9JSHP372f+2dzJ8X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I suspect this doesn't do what you want it to do.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Firstly, please provide adequate code comments here so that code
+readers do not also need to be mind readers.
 
-iQIcBAEBAgAGBQJQtR0KAAoJELSic+t+oim93cQQAIpnzu0M/qWHEWArjWsNOJAd
-ji97Q2kuF0vSDt/dKrSOsrYa1keufsiALl5RjLS4j2DTJy7opPDr6C5vcwuQtz/B
-m6gtXWIhpvlnB4f6rXUaCSS5tO5b7Rkv32M211jlH4N+IqUmhMTWBT/dhy703F7Z
-EBXj5+2VbCtLvnhOZ7unwCEAAIgrp9GuCamv3ARYsjGu8cv38Nqbzf7uoX71ZU0r
-WEiB5l1TAnk+1RFiJ+8+j+3Hf5wVH44aOXW0/SX5qa4gD1tS93e3LZfZGZwK+GFy
-PujIOs2xPrn1SqWKWtIMdTzYASMKC/hMBvh+FW3yw2/naKhVZX0EQCTD0UVTUeum
-E4cvL2FRw2e80gvFV1dcsjkcwaTjHK6wygcxo9RJ2zU3yO2ziXLhYo0cutlHgzpx
-7+M+N5EefXNIXbV7v6+z7zC/rC4vOtuKd1zOIPcDMPYsgERDjLgDS4F5+YM6us+s
-1B9+RmiUdsZgFR0zgZA1KwOmpgpBAouxwzJgGtOHUmwzYnrp/QzWBS6ZoatCpDYd
-XtAEkk+oQ1t8TPHfw8pHmeJIcfUlr+at2uWX8SeMpELtovRRibyZHEekEfvwS+4t
-FdA/lcCqFBdwkXiC1b6WJ9QUfaiTfcxweTx0T+sh63co/jK5cZ6aWiC2DdiTk+LO
-8/8+woDVEQ1RT7Axcz7d
-=GacC
------END PGP SIGNATURE-----
+If you want to stop this CPU dead in its tracks (why?) then
 
---9JSHP372f+2dzJ8X--
+	local_irq_disable();
+	while (1)
+		;		/* Note correct code layout */
+
+will do it.  But it means that the NMI watchdog (if present) will come
+along and whack the machine in the head a few seconds later.  And this
+does nothing to stop other CPUs.
+
+But not being a mind reader, I'm really at a loss to suggest what
+should be done here.  
+
+> +}
+>
+> ...
+>
