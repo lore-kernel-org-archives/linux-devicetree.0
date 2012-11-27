@@ -1,44 +1,94 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH] cpufreq: SPEAr: Add CPUFreq driver
-Date: Tue, 27 Nov 2012 13:06:41 +0100
-Message-ID: <1473585.8JiRFugyHE@vostro.rjw.lan>
-References: <7ec0e3f4b81b70f3def4257e6b9781efd4c7a3d2.1353785862.git.viresh.kumar@linaro.org> <1728458.5AqJNfNVgK@vostro.rjw.lan> <CAKohpo=XirzP5Dj5kZq8Ou7D-W8CjfT8m=_vpjim4oH9jXfdQQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH] fixup! cpufreq: SPEAr: Add CPUFreq driver
+Date: Tue, 27 Nov 2012 18:01:39 +0530
+Message-ID: <2d845c8e19392c2b82a243e6e878ae4e5e771c2f.1353785862.git.viresh.kumar@linaro.org>
 Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <CAKohpo=XirzP5Dj5kZq8Ou7D-W8CjfT8m=_vpjim4oH9jXfdQQ@mail.gmail.com>
 Sender: cpufreq-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: linux-pm@vger.kernel.org, Shawn Guo <shawn.guo@linaro.org>, Shiraz HASHIM <shiraz.hashim@st.com>, Deepak SIKRI <deepak.sikri@st.com>, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, cpufreq@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: rjw@sisk.pl
+Cc: spear-devel@list.st.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, November 27, 2012 05:05:47 PM Viresh Kumar wrote:
-> On 27 November 2012 17:08, Rafael J. Wysocki <rjw@sisk.pl> wrote:
-> > On Tuesday, November 27, 2012 09:28:01 AM Viresh Kumar wrote:
-> >> On 27 November 2012 09:31, Shawn Guo <shawn.guo@linaro.org> wrote:
-> >> > On Sun, Nov 25, 2012 at 01:09:28AM +0530, Viresh Kumar wrote:
-> >> >> +cpufreq {
-> >> >> +     compatible = "st,cpufreq-spear";
-> >> >
-> >> > I do not think we need a "cpufreq" node, as we already have node for
-> >> > cpu to contain these.
-> >>
-> >> Hmm.. Yes, can be done.
-> >
-> > OK, so changes are going to be made to the driver, right?
-> >
-> > I'll drop it then and please resubmit when ready (and tested) after the changes.
-> 
-> Yes, for now this would be the only change i have. I can resend it right now,
-> if you can still pick it for 3.8.
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+Hi Rafael,
 
-Yes, I think I can take it for v3.8 if you resubmit shortly.
+To make review easier and faster, i am sending incremental patch for SPEAr
+cpufreq driver. This patch was earlier discussed here:
 
-Thanks,
-Rafael
+http://lists.infradead.org/pipermail/linux-arm-kernel/2012-November/135088.html
 
+ .../devicetree/bindings/cpufreq/cpufreq-spear.txt  | 33 +++++++++++++++-------
+ drivers/cpufreq/spear-cpufreq.c                    |  4 +--
+ 2 files changed, 25 insertions(+), 12 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt
+index 4cf2819..f3d44984 100644
+--- a/Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt
++++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt
+@@ -6,7 +6,6 @@ It supports both uniprocessor (UP) and symmetric multiprocessor (SMP) systems
+ which share clock across all CPUs.
+ 
+ Required properties:
+-- compatible: "st,cpufreq-spear"
+ - cpufreq_tbl: Table of frequencies CPU could be transitioned into, in the
+   increasing order.
+ 
+@@ -14,16 +13,30 @@ Optional properties:
+ - clock-latency: Specify the possible maximum transition latency for clock, in
+   unit of nanoseconds.
+ 
++Both required and optional properties listed above must be defined under node
++/cpus/cpu@0.
++
+ Examples:
+ --------
++cpus {
++
++	<...>
++
++	cpu@0 {
++		compatible = "arm,cortex-a9";
++		reg = <0>;
++
++		<...>
++
++		cpufreq_tbl = < 166000
++				200000
++				250000
++				300000
++				400000
++				500000
++				600000 >;
++	};
++
++	<...>
+ 
+-cpufreq {
+-	compatible = "st,cpufreq-spear";
+-	cpufreq_tbl = < 166000
+-			200000
+-			250000
+-			300000
+-			400000
+-			500000
+-			600000 >;
+ };
+diff --git a/drivers/cpufreq/spear-cpufreq.c b/drivers/cpufreq/spear-cpufreq.c
+index a7fe880..4575cfe 100644
+--- a/drivers/cpufreq/spear-cpufreq.c
++++ b/drivers/cpufreq/spear-cpufreq.c
+@@ -224,9 +224,9 @@ static int spear_cpufreq_driver_init(void)
+ 	const __be32 *val;
+ 	int cnt, i, ret;
+ 
+-	np = of_find_compatible_node(NULL, NULL, "st,cpufreq-spear");
++	np = of_find_node_by_path("/cpus/cpu@0");
+ 	if (!np) {
+-		pr_err("No cpufreq node found");
++		pr_err("No cpu node found");
+ 		return -ENODEV;
+ 	}
+ 
 -- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+1.7.12.rc2.18.g61b472e
+
