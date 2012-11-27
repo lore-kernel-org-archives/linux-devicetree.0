@@ -1,14 +1,14 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCHv9 1/3] Runtime Interpreted Power Sequences
-Date: Tue, 27 Nov 2012 15:47:16 +0100
-Message-ID: <21841685.UCqg4y24QZ@avalon>
-References: <1353149747-31871-1-git-send-email-acourbot@nvidia.com>
- <50ACB59B.4090404@iki.fi>
- <20121121114018.GA31576@avionic-0098.adnet.avionic-design.de>
+From: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 6/6 v5] cpufreq, highbank: add support for highbank cpufreq
+Date: Tue, 27 Nov 2012 09:04:34 -0600
+Message-ID: <1354028674-23685-7-git-send-email-mark.langsdorf@calxeda.com>
+References: <1351631056-25938-1-git-send-email-mark.langsdorf@calxeda.com>
+ <1354028674-23685-1-git-send-email-mark.langsdorf@calxeda.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1610144966886470669=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121121114018.GA31576-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+In-Reply-To: <1354028674-23685-1-git-send-email-mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,241 +19,399 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Mark Zhang <markz-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomi Valkeinen <tomba-X3B1VOXEql0@public.gmane.org>, Anton Vorontsov <cbouatmailru-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Highbank processors depend on the external ECME to perform voltage
+management based on a requested frequency. Communication between the
+A9 cores and the ECME happens over the pl320 IPC channel.
 
---===============1610144966886470669==
-Content-Type: multipart/signed; boundary="nextPart3396082.iqF65RYg1O"; micalg="pgp-sha1"; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7Bit
+Signed-off-by: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+Changes from v4
+	Removed erroneous changes to arch/arm/Kconfig.
+	Removed unnecessary changes to drivers/cpufreq/Kconfig.arm
+	Alphabetized additions to arch/arm/mach-highbank/Kconfig
+	Changed ipc call and header to match new ipc location in 
+	drivers/mailbox.
+Changes from v3
+        None.
+Changes from v2
+        Changed transition latency binding in code to match documentation.
+Changes from v1
+        Added highbank specific Kconfig changes.
 
+ .../bindings/cpufreq/highbank-cpufreq.txt          |  53 +++++
+ arch/arm/boot/dts/highbank.dts                     |  10 +
+ arch/arm/mach-highbank/Kconfig                     |   2 +
+ drivers/cpufreq/Kconfig.arm                        |  13 ++
+ drivers/cpufreq/Makefile                           |   1 +
+ drivers/cpufreq/highbank-cpufreq.c                 | 229 +++++++++++++++++++++
+ 6 files changed, 308 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/cpufreq/highbank-cpufreq.txt
+ create mode 100644 drivers/cpufreq/highbank-cpufreq.c
 
---nextPart3396082.iqF65RYg1O
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
-
-Hi Thierry,
-
-Sorry for the late reply.
-
-On Wednesday 21 November 2012 12:40:18 Thierry Reding wrote:
-> On Wed, Nov 21, 2012 at 01:06:03PM +0200, Tomi Valkeinen wrote:
-> > On 2012-11-21 06:23, Alex Courbot wrote:
-> > > On Wednesday 21 November 2012 05:54:29 Grant Likely wrote:
-> > >>> With the advent of the device tree and of ARM kernels that are not
-> > >>> board-tied, we cannot rely on these board-specific hooks anymore but
-> > >> 
-> > >> This isn't strictly true. It is still perfectly fine to have board
-> > >> specific code when necessary. However, there is strong encouragement to
-> > >> enable that code in device drivers as much as possible and new board
-> > >> files need to have very strong justification.
-> > > 
-> > > But doesn't introducing board-specific code into the kernel just defeats
-> > > the purpose of the DT? If we extend this logic, we are heading straight
-> > > back to board-definition files. To a lesser extent than before I agree,
-> > > but the problem is fundamentally the same.
-> > 
-> > I don't think so. I'll reiterate my opinion on this subject, as a
-> > summary and for those who haven't read the discussions of the earlier
-> > versions of the series. And perhaps I'll even manage to say something
-> > new =).
-> > 
-> > 
-> > First about the board specific code. I think we may need some board
-> > specific code, even if this series was merged. Let's call them board
-> > drivers. These board drivers would only exist for boards with some weird
-> > setups that cannot be expressed or managed with DT and normal drivers.
-> > 
-> > I think these cases would be quite rare, as I can't even come up with a
-> > very good example. I guess most likely these cases would involve some
-> > small trivial chips for muxing or such, for which it doesn't really make
-> > sense to have a real driver.
-> > 
-> > Say, perhaps a board with two LCDs connected to one video output, and
-> > only one LCD can be enabled at a time, and you need to set some mux chip
-> > to route the signals to the correct LCD. In this case I'd see we should
-> > have hotplug support in the display framework, and the board driver
-> > would act on user input (sysfs file, perhaps), plugging in/out the LCD
-> > device depending on the user input.
-> > 
-> > 
-> > As for expressing device internal details in the DT data, as done in
-> > this series, I don't like it very much. I think the DT data or the board
-> > file should just describe which device is the one in question, and how
-> > it's connected to other components on the board. The driver for the
-> > device should handle everything else.
-> > 
-> > As Alex pointed out, there may be lots of devices that work the same way
-> > when enabled, but require slightly different power-on/off sequences. We
-> > could have these sequences in the driver itself, either as plain code,
-> > or in a table of some sort, possibly using the power sequence framework
-> > presented in this series. The correct code or sequence would be ran
-> > depending on the particular model of the device.
-> > 
-> > I think this approach is correct in the sense that this is what drivers
-> > are supposed to do: handle all the device internal matters. But this
-> > raises the problem of bloating the kernel with possibly lots of
-> > different power sequences, of which only a few would be used by a board,
-> > and all the rest would just be waste of memory.
-> > 
-> > Regarding this problem I have the following questions, to which I don't
-> > have clear answers:
-> > 
-> > - How much of this device specific data is too much? If a driver
-> > supports 10 different models, and the sequences for each model take 100
-> > bytes, this 1000 bytes doesn't sound too much. But where's the limit?
-> > And even if one driver only has 1kB of this data, what if we have lots
-> > of similar drivers?
-> > 
-> > - How many bytes does a power sequence presented in this series take, if
-> > the sequence contains, say, 5 steps, with gpio, delay, pwm, delay and
-> > regulator?
-> > 
-> > - How likely is it that we'll get lots of different models? A hundred
-> > different models for a backlight PWM with different power-on/off
-> > sequences already sounds a really big number. If we're only going to
-> > have each driver supporting, say, no more than 10 models, perhaps the
-> > problem is not even an issue in practice.
-> > 
-> > - Are there ways to limit this bloat in the driver? One obvious way
-> > would be to discard the unused sequences after driver probe, but that
-> > only works for platform devices. Although, I guess these sequences would
-> > mostly be used by platform drivers? If so, then the problem could be
-> > solved by discarding the data after probe. Another would be to load the
-> > sequences from a file as firmware, but that feels quite an awful
-> > solution. Anybody have other ideas?
-> > 
-> > One clear positive side with in-driver approach is that it's totally
-> > inside the kernel, and can be easily reworked in the future, or even
-> > changed to a DT-based approach as presented in this series if that seems
-> > like a better solution. The DT based approach, on the other hand, will
-> > be more or less written to stone after it's merged.
-> > 
-> > 
-> > So, I like the framework of expressing the sequences presented in this
-> > series (except there's a problem with error cases, as I pointed out in
-> > another post), as it can be used inside the drivers. But I'm not so
-> > enthusiastic about presenting the sequences in DT.
-> > 
-> > My suggestion would be to go forward with an in-driver solution, and
-> > look at the DT based solution later if we are seeing an increasing bloat
-> > in the drivers.
-> 
-> Assuming we go with your approach, what's the plan? We're actually
-> facing this problem right now for Tegra. Basically we have a DRM driver
-> that can drive the panel, but we're still missing a way to hook up the
-> backlight and panel enabling code. So we effectively can't support any
-> of the LVDS devices out there without this series.
-> 
-> As I understand it, what you propose is similar to what ASoC does. For a
-> specific board, you'd have to write a driver, presumably for the new
-> panel/display framework, that provides code to power the panel on and
-> off. That means we'll have to have a driver for each panel out there
-> basically, or we'd need to write generic drivers that can be configured
-> to some degree (via platform data or DT). This is similar to how ASoC
-> works, where we have a driver that provides support for a specific codec
-> connected to the Tegra SoC. For the display framework things could be
-> done in a similar way I suppose, so that Tegra could have one display
-> driver to handle all aspects of powering on and off the various panels
-> for the various boards out there.
-
-The common display framework (CDF) includes a driver for dumb parallel panels 
-called panel-dpi. It doesn't handle complex power on/off sequences yet as I 
-haven't run into any need for them, but that's definitely something we could 
-add, possibly using Alexandre's code to express the sequences. Similarly to 
-Tomi, my preferences go for including the sequences in drivers.
-
-> Obviously, a lot of the code will be similar for other SoCs, but maybe
-> that's just the way things are if we choose that approach. There's also
-> the potential for factoring out large chunks of common code later on
-> once we start to see common patterns.
-
-I don't mind duplicating some code in different drivers as a first step. 
-Factoring out common code in a second step is easier (at least for me) than 
-trying to figure out what the common code would look like before the first 
-driver is even written.
-
-> One thing that's not very clear is how the backlight subsystem should be
-> wired up with the display framework. I have a patch on top of the Tegra
-> DRM driver which adds some ad-hoc display support using this power
-> sequences series and the pwm-backlight.
-
-I've touched the backlight API a bit, from both the provider and consumer 
-points of view, and my feeling is that the API will need to be reworked to 
-neatly integrate with the CDF. The backlight API currently depends on fbdev, 
-that's something we should aim to remove. Proposals are welcome :-) Should we 
-create a separate mail thread for this ?
-
-> From reading the proposal for the panel/display framework, it sounds
-> like a lot more is planned than just enabling or disabling panels,
-
-That's correct. CDF implements several other panel control operations (to 
-retrieve the list of modes supported by the panel for instance), and more 
-operations will be needed in the future. I've decided to only implement in the 
-RFC operations that I need for the platforms I work on, and let other 
-developers propose additional operations depending on their use cases.
-
-> but it also seems like a lot of code needs to be written to support things
-> like DSI, DBI or other control busses.
-
-I don't think we need that much code there. The most common control busses for 
-display hardware are DSI, DBI, I2C, SPI and plain GPIOs. The last three 
-control busses are well supported in the Linux kernel, I've implemented DBI 
-support as part of the CDF RFC, and DSI support is missing. If you look at the 
-DBI bus implementation the amount of code isn't overly large.
-
-> At least for Tegra, and I think the same holds for a wide variety of other
-> SoCs, dumb panels would be enough for a start. In the interest of getting a
-> working solution for those setups, maybe we can start small and add just
-> enough framework to register dumb panel drivers to along with code to wire
-> up a backlight to light up the display. Then we could possibly still make it
-> to have a proper solution to support the various LVDS panels for Tegra with
-> 3.9.
-> 
-> I'm adding Laurent on Cc since he's probably busy working on a new
-> proposal for the panel/display framework. Maybe he can share his thought
-> on this.
->
-> All of the above said, I'm willing to help out with the coding if that's
-> what is required to reach a solution that everybody can be happy with.
-
-That's much appreciated. If that means a couple additional hours of sleep per 
-week for me I'll be extremely thankful :-)
-
+diff --git a/Documentation/devicetree/bindings/cpufreq/highbank-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/highbank-cpufreq.txt
+new file mode 100644
+index 0000000..1d5a836
+--- /dev/null
++++ b/Documentation/devicetree/bindings/cpufreq/highbank-cpufreq.txt
+@@ -0,0 +1,53 @@
++Highbank cpufreq driver
++
++This is cpufreq driver for Calxeda ECX-1000 (highbank) processor. It is based
++on the generic cpu0 driver and uses a similar format for bindings. Since
++the EnergyCore Management Engine maintains the voltage based on the
++frequency, the voltage component of the operating points can be set to any
++arbitrary values.
++
++Both required properties listed below must be defined under node /cpus/cpu@0.
++
++Required properties:
++- operating-points: Refer to Documentation/devicetree/bindings/power/opp.txt
++  for details
++- transition-latency: Specify the possible maximum transition latency for clock,
++  in unit of nanoseconds.
++
++Examples:
++
++cpus {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	cpu@0 {
++		compatible = "arm,cortex-a9";
++		reg = <0>;
++		next-level-cache = <&L2>;
++		operating-points = <
++			/* kHz  ignored */
++			790000  1000000
++			396000  1000000
++			198000  1000000
++		>;
++		transition-latency = <200000>;
++	};
++
++	cpu@1 {
++		compatible = "arm,cortex-a9";
++		reg = <1>;
++		next-level-cache = <&L2>;
++	};
++
++	cpu@2 {
++		compatible = "arm,cortex-a9";
++		reg = <2>;
++		next-level-cache = <&L2>;
++	};
++
++	cpu@3 {
++		compatible = "arm,cortex-a9";
++		reg = <3>;
++		next-level-cache = <&L2>;
++	};
++};
+diff --git a/arch/arm/boot/dts/highbank.dts b/arch/arm/boot/dts/highbank.dts
+index 0c6fc34..8624c94 100644
+--- a/arch/arm/boot/dts/highbank.dts
++++ b/arch/arm/boot/dts/highbank.dts
+@@ -36,6 +36,16 @@
+ 			next-level-cache = <&L2>;
+ 			clocks = <&a9pll>;
+ 			clock-names = "cpu";
++			operating-points = <
++				/* kHz    ignored */
++				 1300000  1000000
++				 1200000  1000000
++				 1100000  1000000
++				  800000  1000000
++				  400000  1000000
++				  200000  1000000
++			>;
++			transition-latency = <100000>;
+ 		};
+ 
+ 		cpu@1 {
+diff --git a/arch/arm/mach-highbank/Kconfig b/arch/arm/mach-highbank/Kconfig
+index 2896881..b7862da 100644
+--- a/arch/arm/mach-highbank/Kconfig
++++ b/arch/arm/mach-highbank/Kconfig
+@@ -1,5 +1,7 @@
+ config ARCH_HIGHBANK
+ 	bool "Calxeda ECX-1000 (Highbank)" if ARCH_MULTI_V7
++	select ARCH_HAS_CPUFREQ
++	select ARCH_HAS_OPP
+ 	select ARCH_WANT_OPTIONAL_GPIOLIB
+ 	select ARM_AMBA
+ 	select ARM_GIC
+diff --git a/drivers/cpufreq/Kconfig.arm b/drivers/cpufreq/Kconfig.arm
+index 5961e64..7a8bcdc 100644
+--- a/drivers/cpufreq/Kconfig.arm
++++ b/drivers/cpufreq/Kconfig.arm
+@@ -76,3 +76,16 @@ config ARM_EXYNOS5250_CPUFREQ
+ 	help
+ 	  This adds the CPUFreq driver for Samsung EXYNOS5250
+ 	  SoC.
++
++config ARM_HIGHBANK_CPUFREQ
++       tristate "Calxeda Highbank-based"
++       depends on ARCH_HIGHBANK
++       select CPU_FREQ_TABLE
++       select PM_OPP
++       default m
++       help
++         This adds the CPUFreq driver for Calxeda Highbank SoC
++         based boards.
++
++         If in doubt, say N.
++
+diff --git a/drivers/cpufreq/Makefile b/drivers/cpufreq/Makefile
+index 1bc90e1..9e8f12a 100644
+--- a/drivers/cpufreq/Makefile
++++ b/drivers/cpufreq/Makefile
+@@ -50,6 +50,7 @@ obj-$(CONFIG_ARM_EXYNOS4210_CPUFREQ)	+= exynos4210-cpufreq.o
+ obj-$(CONFIG_ARM_EXYNOS4X12_CPUFREQ)	+= exynos4x12-cpufreq.o
+ obj-$(CONFIG_ARM_EXYNOS5250_CPUFREQ)	+= exynos5250-cpufreq.o
+ obj-$(CONFIG_ARM_OMAP2PLUS_CPUFREQ)     += omap-cpufreq.o
++obj-$(CONFIG_ARM_HIGHBANK_CPUFREQ)	+= highbank-cpufreq.o
+ 
+ ##################################################################################
+ # PowerPC platform drivers
+diff --git a/drivers/cpufreq/highbank-cpufreq.c b/drivers/cpufreq/highbank-cpufreq.c
+new file mode 100644
+index 0000000..f2ac342
+--- /dev/null
++++ b/drivers/cpufreq/highbank-cpufreq.c
+@@ -0,0 +1,229 @@
++/*
++ * Copyright (C) 2012 Calxeda, Inc.
++ *
++ * derived from cpufreq-cpu0 by Freescale Semiconductor
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++#define pr_fmt(fmt)	KBUILD_MODNAME ": " fmt
++
++#include <linux/clk.h>
++#include <linux/cpu.h>
++#include <linux/cpufreq.h>
++#include <linux/err.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/opp.h>
++#include <linux/slab.h>
++#include <linux/mailbox.h>
++
++#define HB_CPUFREQ_CHANGE_NOTE 0x80000001
++
++static unsigned int transition_latency;
++
++static struct device *cpu_dev;
++static struct clk *cpu_clk;
++static struct cpufreq_frequency_table *freq_table;
++
++static int hb_verify_speed(struct cpufreq_policy *policy)
++{
++	return cpufreq_frequency_table_verify(policy, freq_table);
++}
++
++static unsigned int hb_get_speed(unsigned int cpu)
++{
++	return clk_get_rate(cpu_clk) / 1000;
++}
++
++static int hb_voltage_change(unsigned int freq)
++{
++	int i;
++	u32 msg[7];
++
++	msg[0] = HB_CPUFREQ_CHANGE_NOTE;
++	msg[1] = freq / 1000;
++	for (i = 2; i < 7; i++)
++		msg[i] = 0;
++
++	return ipc_transmit(msg);
++}
++
++static int hb_set_target(struct cpufreq_policy *policy,
++			   unsigned int target_freq, unsigned int relation)
++{
++	struct cpufreq_freqs freqs;
++	unsigned long freq_Hz;
++	unsigned int index, cpu;
++	int ret;
++
++	ret = cpufreq_frequency_table_target(policy, freq_table, target_freq,
++					     relation, &index);
++	if (ret) {
++		pr_err("failed to match target freqency %d: %d\n",
++		       target_freq, ret);
++		return ret;
++	}
++
++	freq_Hz = clk_round_rate(cpu_clk, freq_table[index].frequency * 1000);
++	if (freq_Hz < 0)
++		freq_Hz = freq_table[index].frequency * 1000;
++	freqs.new = freq_Hz / 1000;
++	freqs.old = clk_get_rate(cpu_clk) / 1000;
++
++	if (freqs.old == freqs.new)
++		return 0;
++
++	for_each_online_cpu(cpu) {
++		freqs.cpu = cpu;
++		cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
++	}
++
++	pr_debug("%u MHz --> %u MHz\n", freqs.old / 1000, freqs.new / 1000);
++
++	/* scaling up?  scale voltage before frequency */
++	if (freqs.new > freqs.old) {
++		ret = hb_voltage_change(freqs.new);
++		if (ret) {
++			freqs.new = freqs.old;
++			return -EAGAIN;
++		}
++	}
++
++	ret = clk_set_rate(cpu_clk, freqs.new * 1000);
++	if (ret) {
++		pr_err("failed to set clock rate: %d\n", ret);
++		hb_voltage_change(freqs.old);
++		return ret;
++	}
++
++	/* scaling down?  scale voltage after frequency */
++	if (freqs.new < freqs.old) {
++		ret = hb_voltage_change(freqs.new);
++		if (ret) {
++			if (clk_set_rate(cpu_clk, freqs.old * 1000))
++				pr_err("also failed to reset freq\n");
++			freqs.new = freqs.old;
++			return -EAGAIN;
++		}
++	}
++
++	for_each_online_cpu(cpu) {
++		freqs.cpu = cpu;
++		cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
++	}
++
++	return 0;
++}
++
++static int hb_cpufreq_init(struct cpufreq_policy *policy)
++{
++	int ret;
++
++	if (policy->cpu != 0)
++		return -EINVAL;
++
++	ret = cpufreq_frequency_table_cpuinfo(policy, freq_table);
++	if (ret) {
++		pr_err("invalid frequency table: %d\n", ret);
++		return ret;
++	}
++
++	policy->cpuinfo.transition_latency = transition_latency;
++	policy->cur = clk_get_rate(cpu_clk) / 1000;
++
++	policy->shared_type = CPUFREQ_SHARED_TYPE_ANY;
++	cpumask_setall(policy->cpus);
++
++	cpufreq_frequency_table_get_attr(freq_table, policy->cpu);
++
++	return 0;
++}
++
++static int hb_cpufreq_exit(struct cpufreq_policy *policy)
++{
++	cpufreq_frequency_table_put_attr(policy->cpu);
++
++	return 0;
++}
++
++static struct freq_attr *hb_cpufreq_attr[] = {
++	&cpufreq_freq_attr_scaling_available_freqs,
++	NULL,
++};
++
++static struct cpufreq_driver hb_cpufreq_driver = {
++	.flags = CPUFREQ_STICKY,
++	.verify = hb_verify_speed,
++	.target = hb_set_target,
++	.get = hb_get_speed,
++	.init = hb_cpufreq_init,
++	.exit = hb_cpufreq_exit,
++	.name = "highbank-cpufreq",
++	.attr = hb_cpufreq_attr,
++};
++
++static int __devinit hb_cpufreq_driver_init(void)
++{
++	struct device_node *np;
++	int ret;
++
++	np = of_find_node_by_path("/cpus/cpu@0");
++	if (!np) {
++		pr_err("failed to find highbank cpufreq node\n");
++		return -ENOENT;
++	}
++
++	cpu_dev = get_cpu_device(0);
++	if (!cpu_dev) {
++		pr_err("failed to get highbank cpufreq device\n");
++		ret = -ENODEV;
++		goto out_put_node;
++	}
++
++	cpu_dev->of_node = np;
++
++	cpu_clk = clk_get(cpu_dev, NULL);
++	if (IS_ERR(cpu_clk)) {
++		ret = PTR_ERR(cpu_clk);
++		pr_err("failed to get cpu0 clock: %d\n", ret);
++		goto out_put_node;
++	}
++
++	ret = of_init_opp_table(cpu_dev);
++	if (ret) {
++		pr_err("failed to init OPP table: %d\n", ret);
++		goto out_put_node;
++	}
++
++	ret = opp_init_cpufreq_table(cpu_dev, &freq_table);
++	if (ret) {
++		pr_err("failed to init cpufreq table: %d\n", ret);
++		goto out_put_node;
++	}
++
++	if (of_property_read_u32(np, "transition-latency", &transition_latency))
++		transition_latency = CPUFREQ_ETERNAL;
++
++	ret = cpufreq_register_driver(&hb_cpufreq_driver);
++	if (ret) {
++		pr_err("failed register driver: %d\n", ret);
++		goto out_free_table;
++	}
++
++	of_node_put(np);
++	return 0;
++
++out_free_table:
++	opp_free_cpufreq_table(cpu_dev, &freq_table);
++out_put_node:
++	of_node_put(np);
++	return ret;
++}
++late_initcall(hb_cpufreq_driver_init);
++
++MODULE_AUTHOR("Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>");
++MODULE_DESCRIPTION("Calxeda Highbank cpufreq driver");
++MODULE_LICENSE("GPL");
 -- 
-Regards,
-
-Laurent Pinchart
-
---nextPart3396082.iqF65RYg1O
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part.
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQEcBAABAgAGBQJQtNJ6AAoJEIkPb2GL7hl1OqMIAKrpAhIunni9mhXCOKsBgpYj
-jkg0QjJgPi6vwgvhSlVMz/y4WrKuDsWrs5db5muOpNZ9slDzPBbwm1PAiN+PIiE3
-HOg1lKfCUJIPU9lRUw1/T8pCEscdRLzV2imLUyLDOYKhTvL/figxQ8nDylHcbRY9
-+3CIdRvNIljczh1kmFPlpJB3MSmh320jO0Ms354uRX2/Mo6EVzoxtMvr3TTFiphn
-qYUW0wUx18zdzgX03ri+5aijNzoEQIOlEc2rwmCQJQmN4USb1ZkoULAPf6RgdY2Z
-jBx65krhBy2gTkQ97bMy54VpKCkF3dUe890zBL+MJC7PG2r3VkqsSVbsOE77JQo=
-=xm0u
------END PGP SIGNATURE-----
-
---nextPart3396082.iqF65RYg1O--
-
-
---===============1610144966886470669==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1610144966886470669==--
+1.7.11.7
