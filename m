@@ -1,318 +1,524 @@
-From: Qing Xu <qingx@marvell.com>
-Subject: Re: [PATCH 1/7] mfd: max8925: add irqdomain for dt
-Date: Tue, 27 Nov 2012 15:44:21 +0800
-Message-ID: <50B46F55.4000107@marvell.com>
-References: <1352187429-9711-1-git-send-email-qingx@marvell.com> <CAN1soZwQ2bk_TteNvK=b0-CHBc=qs+EdbAHjtKA9gYD+p4XQUw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH] regulator: add device tree support for max8997
+Date: Tue, 27 Nov 2012 14:04:32 +0530
+Message-ID: <1354005272-24214-1-git-send-email-thomas.abraham@linaro.org>
+References: <20121126144603.GL9411@opensource.wolfsonmicro.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAN1soZwQ2bk_TteNvK=b0-CHBc=qs+EdbAHjtKA9gYD+p4XQUw@mail.gmail.com>
+In-reply-to: <20121126144603.GL9411@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+To: linux-kernel@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, myungjoo.ham@samsung.com, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, Karol Lewandowski <k.lewandowsk@samsung.com>, Rajendra Nayak <rnayak@ti.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2012 05:05 PM, Haojian Zhuang wrote:
-> On Tue, Nov 6, 2012 at 3:37 PM, Qing Xu <qingx@marvell.com> wrote:
->> From: Qing Xu <qingx@marvell.com>
->>
->> Add irqdomains for max8925's main irq, and touch irq.
->> Wrap irq register operations into irqdomain's map func.
->> it is necessary for dt support.
->> Also, add dt support for max8925 driver.
->>
->> Signed-off-by: Qing Xu <qingx@marvell.com>
->> ---
->>   drivers/mfd/max8925-core.c  |   87 ++++++++++++++++++++++++++++---------------
->>   drivers/mfd/max8925-i2c.c   |   32 +++++++++++++++-
->>   include/linux/mfd/max8925.h |   12 ++++-
->>   3 files changed, 96 insertions(+), 35 deletions(-)
->>
->> diff --git a/drivers/mfd/max8925-core.c b/drivers/mfd/max8925-core.c
->> index 1e0ab0a..dcc218a 100644
->> --- a/drivers/mfd/max8925-core.c
->> +++ b/drivers/mfd/max8925-core.c
->> @@ -14,10 +14,14 @@
->>   #include <linux/i2c.h>
->>   #include <linux/irq.h>
->>   #include <linux/interrupt.h>
->> +#include <linux/irqdomain.h>
->>   #include <linux/platform_device.h>
->>   #include <linux/regulator/machine.h>
->>   #include <linux/mfd/core.h>
->>   #include <linux/mfd/max8925.h>
->> +#include <linux/of.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/of_irq.h>
->>
->>   static struct resource bk_resources[] __devinitdata = {
->>          { 0x84, 0x84, "mode control", IORESOURCE_REG, },
->> @@ -639,17 +643,34 @@ static struct irq_chip max8925_irq_chip = {
->>          .irq_disable    = max8925_irq_disable,
->>   };
->>
->> +static int max8925_irq_domain_map(struct irq_domain *d, unsigned int virq,
->> +                                irq_hw_number_t hw)
->> +{
->> +       irq_set_chip_data(virq, d->host_data);
->> +       irq_set_chip_and_handler(virq, &max8925_irq_chip, handle_edge_irq);
->> +       irq_set_nested_thread(virq, 1);
->> +#ifdef CONFIG_ARM
->> +       set_irq_flags(virq, IRQF_VALID);
->> +#else
->> +       irq_set_noprobe(virq);
->> +#endif
->> +       return 0;
->> +}
->> +
->> +static struct irq_domain_ops max8925_irq_domain_ops = {
->> +       .map    = max8925_irq_domain_map,
->> +       .xlate  = irq_domain_xlate_onetwocell,
->> +};
->> +
->> +
->>   static int max8925_irq_init(struct max8925_chip *chip, int irq,
->>                              struct max8925_platform_data *pdata)
->>   {
->>          unsigned long flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
->> -       int i, ret;
->> -       int __irq;
->> +       int ret;
->> +       int tsc_irq;
->> +       struct device_node *node = chip->dev->of_node;
->>
->> -       if (!pdata || !pdata->irq_base) {
->> -               dev_warn(chip->dev, "No interrupt support on IRQ base\n");
->> -               return -EINVAL;
->> -       }
->>          /* clear all interrupts */
->>          max8925_reg_read(chip->i2c, MAX8925_CHG_IRQ1);
->>          max8925_reg_read(chip->i2c, MAX8925_CHG_IRQ2);
->> @@ -667,45 +688,51 @@ static int max8925_irq_init(struct max8925_chip *chip, int irq,
->>          max8925_reg_write(chip->rtc, MAX8925_RTC_IRQ_MASK, 0xff);
->>
->>          mutex_init(&chip->irq_lock);
->> -       chip->core_irq = irq;
->> -       chip->irq_base = pdata->irq_base;
->>
->> -       /* register with genirq */
->> -       for (i = 0; i < ARRAY_SIZE(max8925_irqs); i++) {
->> -               __irq = i + chip->irq_base;
->> -               irq_set_chip_data(__irq, chip);
->> -               irq_set_chip_and_handler(__irq, &max8925_irq_chip,
->> -                                        handle_edge_irq);
->> -               irq_set_nested_thread(__irq, 1);
->> -#ifdef CONFIG_ARM
->> -               set_irq_flags(__irq, IRQF_VALID);
->> -#else
->> -               irq_set_noprobe(__irq);
->> -#endif
->> -       }
->> -       if (!irq) {
->> -               dev_warn(chip->dev, "No interrupt support on core IRQ\n");
->> -               goto tsc_irq;
->> +       /* domain1: init charger/rtc/onkey irq domain*/
->> +       chip->irq_base = irq_alloc_descs(-1, 0, MAX8925_NR_IRQS, 0);
->> +       if (chip->irq_base < 0) {
->> +               dev_err(chip->dev, "Failed to allocate interrupts, ret:%d\n",
->> +                       chip->irq_base);
->> +               return -EBUSY;
->>          }
->>
->> +       irq_domain_add_legacy(node, MAX8925_NR_IRQS, chip->irq_base, 0,
->> +                             &max8925_irq_domain_ops, chip);
->> +       chip->core_irq = irq;
->> +       if (!chip->core_irq)
->> +               return -EBUSY;
->> +
->>          ret = request_threaded_irq(irq, NULL, max8925_irq, flags,
->>                                     "max8925", chip);
->>          if (ret) {
->>                  dev_err(chip->dev, "Failed to request core IRQ: %d\n", ret);
->>                  chip->core_irq = 0;
->> +               return -EBUSY;
->>          }
->>
->> -tsc_irq:
->> +       /* domain2: init touch irq domain*/
->>          /* mask TSC interrupt */
->>          max8925_reg_write(chip->adc, MAX8925_TSC_IRQ_MASK, 0x0f);
->>
->> -       if (!pdata->tsc_irq) {
->> +       chip->tsc_irq_base = irq_alloc_descs(-1, 0, MAX8925_NR_TSC_IRQS, 0);
->> +       if (chip->tsc_irq < 0) {
->> +               dev_err(chip->dev, "Failed to allocate interrupts, ret:%d\n",
->> +                       chip->tsc_irq_base);
->> +               return -EBUSY;
->> +       }
->> +
->> +       irq_domain_add_legacy(node, MAX8925_NR_TSC_IRQS, chip->tsc_irq_base, 0,
->> +                             &max8925_irq_domain_ops, chip);
->> +
->> +       tsc_irq = irq_of_parse_and_map(node, 1);
->> +
-> I'm confused on this. Let's look at your definition in DTS.
->
-> +                               pmic: max8925@3c {
-> +                                       compatible = "marvell,max8925";
-> +                                       reg = <0x3c>;
-> +                                       interrupts = <1 0>;
-> +                                       interrupt-parent = <&intcmux4>;
-> +                                       interrupt-controller;
-> +                                       #interrupt-cells = <1>;
-> +
-> pmic is defined as interrupt controller. So it could be referenced as
-> interrupt-parent
-> by other drivers.
->
-> Now you split TSC_IRQS from original MAX8925_NR_IRQS. So TSC_IRQS are calculated
-> from 0. How do you distinguish TSC_IRQS from normal MAX8925_IRQS? Only
-> one phandle
-> is defined in your DTS file.
->
-> So either you keep TSC_IRQS in MAX8925_NR_IRQS, or you add a child
-> node to define
-> a new interrupt controller for tsc irqs.
->
->> +       if (!tsc_irq) {
->>                  dev_warn(chip->dev, "No interrupt support on TSC IRQ\n");
->>                  return 0;
->>          }
->> -       chip->tsc_irq = pdata->tsc_irq;
->> -
->> -       ret = request_threaded_irq(chip->tsc_irq, NULL, max8925_tsc_irq,
->> +       chip->tsc_irq = tsc_irq;
->> +       ret = request_threaded_irq(tsc_irq, NULL, max8925_tsc_irq,
->>                                     flags, "max8925-tsc", chip);
->>          if (ret) {
->>                  dev_err(chip->dev, "Failed to request TSC IRQ: %d\n", ret);
->> @@ -876,7 +903,7 @@ int __devinit max8925_device_init(struct max8925_chip *chip,
->>          if (pdata && pdata->power) {
->>                  ret = mfd_add_devices(chip->dev, 0, &power_devs[0],
->>                                          ARRAY_SIZE(power_devs),
->> -                                     &power_supply_resources[0], 0, NULL);
->> +                                       &power_supply_resources[0], 0, NULL);
->>                  if (ret < 0) {
->>                          dev_err(chip->dev, "Failed to add power supply "
->>                                  "subdev\n");
->> diff --git a/drivers/mfd/max8925-i2c.c b/drivers/mfd/max8925-i2c.c
->> index d9e4b36..b713be6 100644
->> --- a/drivers/mfd/max8925-i2c.c
->> +++ b/drivers/mfd/max8925-i2c.c
->> @@ -135,13 +135,35 @@ static const struct i2c_device_id max8925_id_table[] = {
->>   };
->>   MODULE_DEVICE_TABLE(i2c, max8925_id_table);
->>
->> +
->> +static int __devinit max8925_dt_init(struct device_node *np,
->> +                                   struct device *dev,
->> +                                   struct max8925_platform_data *pdata)
->> +{
->> +       return 0;
->> +}
->> +
-> If you don't need this interface, you need define it.
->
->>   static int __devinit max8925_probe(struct i2c_client *client,
->>                                     const struct i2c_device_id *id)
->>   {
->>          struct max8925_platform_data *pdata = client->dev.platform_data;
->>          static struct max8925_chip *chip;
->> +       struct device_node *node = client->dev.of_node;
->> +       int ret;
->>
->> -       if (!pdata) {
->> +       if (node && !pdata) {
->> +               /* parse DT to get platform data */
->> +               pdata = devm_kzalloc(&client->dev,
->> +                                    sizeof(struct max8925_platform_data),
->> +                                    GFP_KERNEL);
->> +               if (!pdata)
->> +                       return -ENOMEM;
->> +               ret = max8925_dt_init(node, &client->dev, pdata);
->> +               if (ret) {
->> +                       pr_info("%s: failed to parse dt info\n", __func__);
->> +                       return -EINVAL;
->> +               }
->> +       } else if (!pdata) {
->>                  pr_info("%s: platform data is missing\n", __func__);
->>                  return -EINVAL;
->>          }
->> @@ -203,11 +225,18 @@ static int max8925_resume(struct device *dev)
->>
->>   static SIMPLE_DEV_PM_OPS(max8925_pm_ops, max8925_suspend, max8925_resume);
->>
->> +static const struct of_device_id max8925_dt_ids[] = {
->> +       { .compatible = "marvell,max8925", },
-> max8925 isn't the product of Marvell. The vendor is maxium.
->> +       {},
->> +};
->> +MODULE_DEVICE_TABLE(of, max8925_dt_ids);
->> +
->>   static struct i2c_driver max8925_driver = {
->>          .driver = {
->>                  .name   = "max8925",
->>                  .owner  = THIS_MODULE,
->>                  .pm     = &max8925_pm_ops,
->> +               .of_match_table = of_match_ptr(max8925_dt_ids),
->>          },
->>          .probe          = max8925_probe,
->>          .remove         = __devexit_p(max8925_remove),
->> @@ -217,7 +246,6 @@ static struct i2c_driver max8925_driver = {
->>   static int __init max8925_i2c_init(void)
->>   {
->>          int ret;
->> -
->>          ret = i2c_add_driver(&max8925_driver);
->>          if (ret != 0)
->>                  pr_err("Failed to register MAX8925 I2C driver: %d\n", ret);
->> diff --git a/include/linux/mfd/max8925.h b/include/linux/mfd/max8925.h
->> index 74d8e29..67bc540 100644
->> --- a/include/linux/mfd/max8925.h
->> +++ b/include/linux/mfd/max8925.h
->> @@ -185,11 +185,18 @@ enum {
->>          MAX8925_IRQ_GPM_SYSCKEN_R,
->>          MAX8925_IRQ_RTC_ALARM1,
->>          MAX8925_IRQ_RTC_ALARM0,
->> +       MAX8925_NR_IRQS,
->> +};
->> +
->> +/**/
->> +enum {
->>          MAX8925_IRQ_TSC_STICK,
->>          MAX8925_IRQ_TSC_NSTICK,
->> -       MAX8925_NR_IRQS,
->> +       MAX8925_NR_TSC_IRQS,
->>   };
->>
->> +
->> +
->>   struct max8925_chip {
->>          struct device           *dev;
->>          struct i2c_client       *i2c;
->> @@ -201,7 +208,7 @@ struct max8925_chip {
->>          int                     irq_base;
->>          int                     core_irq;
->>          int                     tsc_irq;
->> -
->> +       int                     tsc_irq_base;
->>          unsigned int            wakeup_flag;
->>   };
->>
->> @@ -259,7 +266,6 @@ struct max8925_platform_data {
->>          struct regulator_init_data      *ldo20;
->>
->>          int             irq_base;
->> -       int             tsc_irq;
->>   };
->>
->>   extern int max8925_reg_read(struct i2c_client *, int);
->> --
->> 1.7.0.4
->>
+Add device tree based discovery support for max8997.
 
-update both dts and this patch in v2, please help me review again,
-thank a lot!!
+Cc: Karol Lewandowski <k.lewandowsk@samsung.com>
+Cc: Rajendra Nayak <rnayak@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+---
+This patch is based on 'topic/max8997' branch of Mark Brown's
+regulator tree.
 
--Qing
+ .../bindings/regulator/max8997-regulator.txt       |  146 +++++++++++++++++++
+ drivers/mfd/max8997.c                              |   73 ++++++++++-
+ drivers/regulator/max8997.c                        |  148 +++++++++++++++++++-
+ include/linux/mfd/max8997-private.h                |    1 +
+ include/linux/mfd/max8997.h                        |    1 +
+ 5 files changed, 366 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/max8997-regulator.txt
+
+diff --git a/Documentation/devicetree/bindings/regulator/max8997-regulator.txt b/Documentation/devicetree/bindings/regulator/max8997-regulator.txt
+new file mode 100644
+index 0000000..9fd69a1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/regulator/max8997-regulator.txt
+@@ -0,0 +1,146 @@
++* Maxim MAX8997 Voltage and Current Regulator
++
++The Maxim MAX8997 is a multi-function device which includes volatage and
++current regulators, rtc, charger controller and other sub-blocks. It is
++interfaced to the host controller using a i2c interface. Each sub-block is
++addressed by the host system using different i2c slave address. This document
++describes the bindings for 'pmic' sub-block of max8997.
++
++Required properties:
++- compatible: Should be "maxim,max8997-pmic".
++- reg: Specifies the i2c slave address of the pmic block. It should be 0x66.
++
++- max8997,pmic-buck1-dvs-voltage: A set of 8 voltage values in micro-volt (uV)
++  units for buck1 when changing voltage using gpio dvs. Refer to [1] below
++  for additional information.
++
++- max8997,pmic-buck2-dvs-voltage: A set of 8 voltage values in micro-volt (uV)
++  units for buck2 when changing voltage using gpio dvs. Refer to [1] below
++  for additional information.
++
++- max8997,pmic-buck5-dvs-voltage: A set of 8 voltage values in micro-volt (uV)
++  units for buck5 when changing voltage using gpio dvs. Refer to [1] below
++  for additional information.
++
++[1] If none of the 'max8997,pmic-buck[1/2/5]-uses-gpio-dvs' optional
++    property is specified, the 'max8997,pmic-buck[1/2/5]-dvs-voltage'
++    property should specify atleast one voltage level (which would be a
++    safe operating voltage).
++
++    If either of the 'max8997,pmic-buck[1/2/5]-uses-gpio-dvs' optional
++    property is specified, then all the eigth voltage values for the
++    'max8997,pmic-buck[1/2/5]-dvs-voltage' should be specified.
++
++Optional properties:
++- interrupt-parent: Specifies the phandle of the interrupt controller to which
++  the interrupts from max8997 are delivered to.
++- interrupts: Interrupt specifiers for two interrupt sources.
++  - First interrupt specifier is for 'irq1' interrupt.
++  - Second interrupt specifier is for 'alert' interrupt.
++- max8997,pmic-buck1-uses-gpio-dvs: 'buck1' can be controlled by gpio dvs.
++- max8997,pmic-buck2-uses-gpio-dvs: 'buck2' can be controlled by gpio dvs.
++- max8997,pmic-buck5-uses-gpio-dvs: 'buck5' can be controlled by gpio dvs.
++
++Additional properties required if either of the optional properties are used:
++- max8997,pmic-ignore-gpiodvs-side-effect: When GPIO-DVS mode is used for
++  multiple bucks, changing the voltage value of one of the bucks may affect
++  that of another buck, which is the side effect of the change (set_voltage).
++  Use this property to ignore such side effects and change the voltage.
++
++- max8997,pmic-buck125-default-dvs-idx: Default voltage setting selected from
++  the possible 8 options selectable by the dvs gpios. The value of this
++  property should be between 0 and 7. If not specified or if out of range, the
++  default value of this property is set to 0.
++
++- max8997,pmic-buck125-dvs-gpios: GPIO specifiers for three host gpio's used
++  for dvs. The format of the gpio specifier depends in the gpio controller.
++
++Regulators: The regulators of max8997 that have to be instantiated should be
++included in a sub-node named 'regulators'. Regulator nodes included in this
++sub-node should be of the format as listed below.
++
++	regulator_name {
++		standard regulator bindings here
++	};
++
++The following are the names of the regulators that the max8997 pmic block
++supports. Note: The 'n' in LDOn and BUCKn represents the LDO or BUCK number
++as per the datasheet of max8997.
++
++	- LDOn
++		  - valid values for n are 1 to 18 and 21
++		  - Example: LDO0, LD01, LDO2, LDO21
++	- BUCKn
++		  - valid values for n are 1 to 7.
++		  - Example: BUCK1, BUCK2, BUCK3, BUCK7
++
++	- ENVICHG: Battery Charging Current Monitor Output. This is a fixed
++		   voltage type regulator
++
++	- ESAFEOUT1: (ldo19)
++	- ESAFEOUT2: (ld020)
++
++	- CHARGER_CV: main battery charger voltage control
++	- CHARGER: main battery charger current control
++	- CHARGER_TOPOFF: end of charge current threshold level
++
++The bindings inside the regulator nodes use the standard regulator bindings
++which are documented elsewhere.
++
++Example:
++
++	max8997_pmic@66 {
++		compatible = "maxim,max8997-pmic";
++		interrupt-parent = <&wakeup_eint>;
++		reg = <0x66>;
++		interrupts = <4 0>, <3 0>;
++
++		max8997,pmic-buck1-uses-gpio-dvs;
++		max8997,pmic-buck2-uses-gpio-dvs;
++		max8997,pmic-buck5-uses-gpio-dvs;
++
++		max8997,pmic-ignore-gpiodvs-side-effect;
++		max8997,pmic-buck125-default-dvs-idx = <0>;
++
++		max8997,pmic-buck125-dvs-gpios = <&gpx0 0 1 0 0>, /* SET1 */
++						 <&gpx0 1 1 0 0>, /* SET2 */
++						 <&gpx0 2 1 0 0>; /* SET3 */
++
++		max8997,pmic-buck1-dvs-voltage = <1350000>, <1300000>,
++						 <1250000>, <1200000>,
++						 <1150000>, <1100000>,
++						 <1000000>, <950000>;
++
++		max8997,pmic-buck2-dvs-voltage = <1100000>, <1100000>,
++						 <1100000>, <1100000>,
++						 <1000000>, <1000000>,
++						 <1000000>, <1000000>;
++
++		max8997,pmic-buck5-dvs-voltage = <1200000>, <1200000>,
++						 <1200000>, <1200000>,
++						 <1200000>, <1200000>,
++						 <1200000>, <1200000>;
++
++		regulators {
++			ldo1_reg: LDO1 {
++				regulator-name = "VDD_ABB_3.3V";
++				regulator-min-microvolt = <3300000>;
++				regulator-max-microvolt = <3300000>;
++			};
++
++			ldo2_reg: LDO2 {
++				regulator-name = "VDD_ALIVE_1.1V";
++				regulator-min-microvolt = <1100000>;
++				regulator-max-microvolt = <1100000>;
++				regulator-always-on;
++			};
++
++			buck1_reg: BUCK1 {
++				regulator-name = "VDD_ARM_1.2V";
++				regulator-min-microvolt = <950000>;
++				regulator-max-microvolt = <1350000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++		};
++	};
+diff --git a/drivers/mfd/max8997.c b/drivers/mfd/max8997.c
+index f123517..abd5c80 100644
+--- a/drivers/mfd/max8997.c
++++ b/drivers/mfd/max8997.c
+@@ -21,8 +21,10 @@
+  * This driver is based on max8998.c
+  */
+ 
++#include <linux/err.h>
+ #include <linux/slab.h>
+ #include <linux/i2c.h>
++#include <linux/of_irq.h>
+ #include <linux/interrupt.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/module.h>
+@@ -47,6 +49,13 @@ static struct mfd_cell max8997_devs[] = {
+ 	{ .name = "max8997-led", .id = 2 },
+ };
+ 
++#ifdef CONFIG_OF
++static struct of_device_id __devinitdata max8997_pmic_dt_match[] = {
++	{ .compatible = "maxim,max8997-pmic", .data = TYPE_MAX8997 },
++	{},
++};
++#endif
++
+ int max8997_read_reg(struct i2c_client *i2c, u8 reg, u8 *dest)
+ {
+ 	struct max8997_dev *max8997 = i2c_get_clientdata(i2c);
+@@ -123,6 +132,58 @@ int max8997_update_reg(struct i2c_client *i2c, u8 reg, u8 val, u8 mask)
+ }
+ EXPORT_SYMBOL_GPL(max8997_update_reg);
+ 
++#ifdef CONFIG_OF
++/*
++ * Only the common platform data elements for max8997 are parsed here from the
++ * device tree. Other sub-modules of max8997 such as pmic, rtc and others have
++ * to parse their own platform data elements from device tree.
++ *
++ * The max8997 platform data structure is instantiated here and the drivers for
++ * the sub-modules need not instantiate another instance while parsing their
++ * platform data.
++ */
++static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
++					struct device *dev)
++{
++	struct max8997_platform_data *pd;
++
++	pd = devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
++	if (!pd) {
++		dev_err(dev, "could not allocate memory for pdata\n");
++		return ERR_PTR(-ENOMEM);
++	}
++
++	pd->ono = irq_of_parse_and_map(dev->of_node, 1);
++
++	/*
++	 * ToDo: the 'wakeup' member in the platform data is more of a linux
++	 * specfic information. Hence, there is no binding for that yet and
++	 * not parsed here.
++	 */
++
++	return pd;
++}
++#else
++static struct max8997_platform_data *max8997_i2c_parse_dt_pdata(
++					struct device *dev)
++{
++	return 0;
++}
++#endif
++
++static inline int max8997_i2c_get_driver_data(struct i2c_client *i2c,
++						const struct i2c_device_id *id)
++{
++#ifdef CONFIG_OF
++	if (i2c->dev.of_node) {
++		const struct of_device_id *match;
++		match = of_match_node(max8997_pmic_dt_match, i2c->dev.of_node);
++		return (int)match->data;
++	}
++#endif
++	return (int)id->driver_data;
++}
++
+ static int max8997_i2c_probe(struct i2c_client *i2c,
+ 			    const struct i2c_device_id *id)
+ {
+@@ -137,12 +198,21 @@ static int max8997_i2c_probe(struct i2c_client *i2c,
+ 	i2c_set_clientdata(i2c, max8997);
+ 	max8997->dev = &i2c->dev;
+ 	max8997->i2c = i2c;
+-	max8997->type = id->driver_data;
++	max8997->type = max8997_i2c_get_driver_data(i2c, id);
+ 	max8997->irq = i2c->irq;
+ 
++	if (max8997->dev->of_node) {
++		pdata = max8997_i2c_parse_dt_pdata(max8997->dev);
++		if (IS_ERR(pdata)) {
++			ret = PTR_ERR(pdata);
++			goto err;
++		}
++	}
++
+ 	if (!pdata)
+ 		goto err;
+ 
++	max8997->pdata = pdata;
+ 	max8997->ono = pdata->ono;
+ 
+ 	mutex_init(&max8997->iolock);
+@@ -434,6 +504,7 @@ static struct i2c_driver max8997_i2c_driver = {
+ 		   .name = "max8997",
+ 		   .owner = THIS_MODULE,
+ 		   .pm = &max8997_pm,
++		   .of_match_table = of_match_ptr(max8997_pmic_dt_match),
+ 	},
+ 	.probe = max8997_i2c_probe,
+ 	.remove = max8997_i2c_remove,
+diff --git a/drivers/regulator/max8997.c b/drivers/regulator/max8997.c
+index 64cf2ee..b56c432 100644
+--- a/drivers/regulator/max8997.c
++++ b/drivers/regulator/max8997.c
+@@ -24,6 +24,7 @@
+ #include <linux/bug.h>
+ #include <linux/err.h>
+ #include <linux/gpio.h>
++#include <linux/of_gpio.h>
+ #include <linux/slab.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+@@ -31,6 +32,7 @@
+ #include <linux/regulator/machine.h>
+ #include <linux/mfd/max8997.h>
+ #include <linux/mfd/max8997-private.h>
++#include <linux/regulator/of_regulator.h>
+ 
+ struct max8997_data {
+ 	struct device *dev;
+@@ -933,10 +935,145 @@ static struct regulator_desc regulators[] = {
+ 				  max8997_charger_fixedstate_ops),
+ };
+ 
++#ifdef CONFIG_OF
++static int max8997_pmic_dt_parse_dvs_gpio(struct max8997_dev *iodev,
++			struct max8997_platform_data *pdata,
++			struct device_node *pmic_np)
++{
++	int i, gpio;
++
++	for (i = 0; i < 3; i++) {
++		gpio = of_get_named_gpio(pmic_np,
++					"max8997,pmic-buck125-dvs-gpios", i);
++		if (!gpio_is_valid(gpio)) {
++			dev_err(iodev->dev, "invalid gpio[%d]: %d\n", i, gpio);
++			return -EINVAL;
++		}
++		pdata->buck125_gpios[i] = gpio;
++	}
++	return 0;
++}
++
++static int max8997_pmic_dt_parse_pdata(struct max8997_dev *iodev,
++					struct max8997_platform_data *pdata)
++{
++	struct device_node *pmic_np, *regulators_np, *reg_np;
++	struct max8997_regulator_data *rdata;
++	unsigned int i, dvs_voltage_nr = 1, ret;
++
++	pmic_np = iodev->dev->of_node;
++	if (!pmic_np) {
++		dev_err(iodev->dev, "could not find pmic sub-node\n");
++		return -ENODEV;
++	}
++
++	regulators_np = of_find_node_by_name(pmic_np, "regulators");
++	if (!regulators_np) {
++		dev_err(iodev->dev, "could not find regulators sub-node\n");
++		return -EINVAL;
++	}
++
++	/* count the number of regulators to be supported in pmic */
++	pdata->num_regulators = 0;
++	for_each_child_of_node(regulators_np, reg_np)
++		pdata->num_regulators++;
++
++	rdata = devm_kzalloc(iodev->dev, sizeof(*rdata) *
++				pdata->num_regulators, GFP_KERNEL);
++	if (!rdata) {
++		dev_err(iodev->dev, "could not allocate memory for "
++						"regulator data\n");
++		return -ENOMEM;
++	}
++
++	pdata->regulators = rdata;
++	for_each_child_of_node(regulators_np, reg_np) {
++		for (i = 0; i < ARRAY_SIZE(regulators); i++)
++			if (!of_node_cmp(reg_np->name, regulators[i].name))
++				break;
++
++		if (i == ARRAY_SIZE(regulators)) {
++			dev_warn(iodev->dev, "don't know how to configure "
++				"regulator %s\n", reg_np->name);
++			continue;
++		}
++
++		rdata->id = i;
++		rdata->initdata = of_get_regulator_init_data(
++						iodev->dev, reg_np);
++		rdata->reg_node = reg_np;
++		rdata++;
++	}
++
++	if (of_get_property(pmic_np, "max8997,pmic-buck1-uses-gpio-dvs", NULL))
++		pdata->buck1_gpiodvs = true;
++
++	if (of_get_property(pmic_np, "max8997,pmic-buck2-uses-gpio-dvs", NULL))
++		pdata->buck2_gpiodvs = true;
++
++	if (of_get_property(pmic_np, "max8997,pmic-buck5-uses-gpio-dvs", NULL))
++		pdata->buck5_gpiodvs = true;
++
++	if (pdata->buck1_gpiodvs || pdata->buck2_gpiodvs ||
++						pdata->buck5_gpiodvs) {
++		ret = max8997_pmic_dt_parse_dvs_gpio(iodev, pdata, pmic_np);
++		if (ret)
++			return -EINVAL;
++
++		if (of_property_read_u32(pmic_np,
++				"max8997,pmic-buck125-default-dvs-idx",
++				&pdata->buck125_default_idx)) {
++			pdata->buck125_default_idx = 0;
++		} else {
++			if (pdata->buck125_default_idx >= 8) {
++				pdata->buck125_default_idx = 0;
++				dev_info(iodev->dev, "invalid value for "
++				"default dvs index, using 0 instead\n");
++			}
++		}
++
++		if (of_get_property(pmic_np,
++			"max8997,pmic-ignore-gpiodvs-side-effect", NULL))
++			pdata->ignore_gpiodvs_side_effect = true;
++
++		dvs_voltage_nr = 8;
++	}
++
++	if (of_property_read_u32_array(pmic_np,
++				"max8997,pmic-buck1-dvs-voltage",
++				pdata->buck1_voltage, dvs_voltage_nr)) {
++		dev_err(iodev->dev, "buck1 voltages not specified\n");
++		return -EINVAL;
++	}
++
++	if (of_property_read_u32_array(pmic_np,
++				"max8997,pmic-buck2-dvs-voltage",
++				pdata->buck2_voltage, dvs_voltage_nr)) {
++		dev_err(iodev->dev, "buck2 voltages not specified\n");
++		return -EINVAL;
++	}
++
++	if (of_property_read_u32_array(pmic_np,
++				"max8997,pmic-buck5-dvs-voltage",
++				pdata->buck5_voltage, dvs_voltage_nr)) {
++		dev_err(iodev->dev, "buck5 voltages not specified\n");
++		return -EINVAL;
++	}
++
++	return 0;
++}
++#else
++static int max8997_pmic_dt_parse_pdata(struct max8997_dev *iodev,
++					struct max8997_platform_data *pdata)
++{
++	return 0;
++}
++#endif /* CONFIG_OF */
++
+ static __devinit int max8997_pmic_probe(struct platform_device *pdev)
+ {
+ 	struct max8997_dev *iodev = dev_get_drvdata(pdev->dev.parent);
+-	struct max8997_platform_data *pdata = dev_get_platdata(iodev->dev);
++	struct max8997_platform_data *pdata = iodev->pdata;
+ 	struct regulator_config config = { };
+ 	struct regulator_dev **rdev;
+ 	struct max8997_data *max8997;
+@@ -944,11 +1081,17 @@ static __devinit int max8997_pmic_probe(struct platform_device *pdev)
+ 	int i, ret, size, nr_dvs;
+ 	u8 max_buck1 = 0, max_buck2 = 0, max_buck5 = 0;
+ 
+-	if (!pdata) {
++	if (IS_ERR_OR_NULL(pdata)) {
+ 		dev_err(pdev->dev.parent, "No platform init data supplied.\n");
+ 		return -ENODEV;
+ 	}
+ 
++	if (iodev->dev->of_node) {
++		ret = max8997_pmic_dt_parse_pdata(iodev, pdata);
++		if (ret)
++			return ret;
++	}
++
+ 	max8997 = devm_kzalloc(&pdev->dev, sizeof(struct max8997_data),
+ 			       GFP_KERNEL);
+ 	if (!max8997)
+@@ -1104,6 +1247,7 @@ static __devinit int max8997_pmic_probe(struct platform_device *pdev)
+ 		config.dev = max8997->dev;
+ 		config.init_data = pdata->regulators[i].initdata;
+ 		config.driver_data = max8997;
++		config.of_node = pdata->regulators[i].reg_node;
+ 
+ 		rdev[i] = regulator_register(&regulators[id], &config);
+ 		if (IS_ERR(rdev[i])) {
+diff --git a/include/linux/mfd/max8997-private.h b/include/linux/mfd/max8997-private.h
+index 830152c..6ae21bf 100644
+--- a/include/linux/mfd/max8997-private.h
++++ b/include/linux/mfd/max8997-private.h
+@@ -316,6 +316,7 @@ enum max8997_irq {
+ #define MAX8997_NUM_GPIO	12
+ struct max8997_dev {
+ 	struct device *dev;
++	struct max8997_platform_data *pdata;
+ 	struct i2c_client *i2c; /* 0xcc / PMIC, Battery Control, and FLASH */
+ 	struct i2c_client *rtc; /* slave addr 0x0c */
+ 	struct i2c_client *haptic; /* slave addr 0x90 */
+diff --git a/include/linux/mfd/max8997.h b/include/linux/mfd/max8997.h
+index 328d8e2..1d4a4fe 100644
+--- a/include/linux/mfd/max8997.h
++++ b/include/linux/mfd/max8997.h
+@@ -75,6 +75,7 @@ enum max8998_regulators {
+ struct max8997_regulator_data {
+ 	int id;
+ 	struct regulator_init_data *initdata;
++	struct device_node *reg_node;
+ };
+ 
+ enum max8997_muic_usb_type {
+-- 
+1.6.6.rc2
