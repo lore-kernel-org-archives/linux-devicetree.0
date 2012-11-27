@@ -1,47 +1,41 @@
-From: Sudeep K N <sudeepholla.maillist@gmail.com>
+From: "Rafael J. Wysocki" <rjw@sisk.pl>
 Subject: Re: [PATCH] cpufreq: SPEAr: Add CPUFreq driver
-Date: Tue, 27 Nov 2012 11:19:49 +0000
-Message-ID: <CAPKp9uZY022gdbRYs-a87xb4nnStOWUDQtS=_nJe0p7KTgvFKA@mail.gmail.com>
-References: <7ec0e3f4b81b70f3def4257e6b9781efd4c7a3d2.1353785862.git.viresh.kumar@linaro.org>
-	<CAPKp9uZ-HpAp2KO9qKXsMCoGJS3Vn-VW34h6cbv8o01Vzzi4jw@mail.gmail.com>
-	<CAKohponbWUTtxMBLTGaRTmQX4WArtHAt9KzAnqF2OtQpf46osg@mail.gmail.com>
+Date: Tue, 27 Nov 2012 12:38:15 +0100
+Message-ID: <1728458.5AqJNfNVgK@vostro.rjw.lan>
+References: <7ec0e3f4b81b70f3def4257e6b9781efd4c7a3d2.1353785862.git.viresh.kumar@linaro.org> <20121127040135.GB27305@S2100-06.ap.freescale.net> <CAKohpomSAogQVeBQ8HaWwwoTVCsMha5d_1Wid6N3t5SnVZTc=w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
 Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <CAKohponbWUTtxMBLTGaRTmQX4WArtHAt9KzAnqF2OtQpf46osg@mail.gmail.com>
+In-Reply-To: <CAKohpomSAogQVeBQ8HaWwwoTVCsMha5d_1Wid6N3t5SnVZTc=w@mail.gmail.com>
 Sender: cpufreq-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: rjw@sisk.pl, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, cpufreq@vger.kernel.org, Deepak Sikri <deepak.sikri@st.com>, linux-arm-kernel@lists.infradead.org
+To: linux-pm@vger.kernel.org
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Shiraz HASHIM <shiraz.hashim@st.com>, Deepak SIKRI <deepak.sikri@st.com>, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, cpufreq@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2012 at 9:33 AM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> On 27 November 2012 14:54, Sudeep K N <sudeepholla.maillist@gmail.com> wrote:
->> On Sat, Nov 24, 2012 at 7:39 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
->> [...]
->>> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt
->>> new file mode 100644
->>> index 0000000..4cf2819
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt
->>> @@ -0,0 +1,29 @@
->>> +SPEAr cpufreq driver
->>> +-------------------
->>> +
->>> +SPEAr SoC cpufreq driver for CPU frequency scaling.
->>> +It supports both uniprocessor (UP) and symmetric multiprocessor (SMP) systems
->>> +which share clock across all CPUs.
->>
->> If this is the case, is there any particular reason why you cannot use
->> the generic
->> cpufreq-cpu0 driver ?
->
-> Please go through the discussion already done with Shawn. There is lot of
-> SPEAr specific code here.
->
+On Tuesday, November 27, 2012 09:28:01 AM Viresh Kumar wrote:
+> Hi Shawn,
+> 
+> Thanks for feedback.
+> 
+> On 27 November 2012 09:31, Shawn Guo <shawn.guo@linaro.org> wrote:
+> > On Sun, Nov 25, 2012 at 01:09:28AM +0530, Viresh Kumar wrote:
+> >> +cpufreq {
+> >> +     compatible = "st,cpufreq-spear";
+> >
+> > I do not think we need a "cpufreq" node, as we already have node for
+> > cpu to contain these.
+> 
+> Hmm.. Yes, can be done.
 
-Sorry I missed the fact that there are more patches, I based my commit
-on clock related changes in current patch.
+OK, so changes are going to be made to the driver, right?
+
+I'll drop it then and please resubmit when ready (and tested) after the changes.
+
+Thanks,
+Rafael
+
 
 -- 
-Regards,
-Sudeep
+I speak only for myself.
+Rafael J. Wysocki, Intel Open Source Technology Center.
