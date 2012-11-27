@@ -1,120 +1,245 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/9] usb: chipidea: ci13xxx_imx: add 2nd and 3rd clock to
- support imx5x and newer
-Date: Tue, 27 Nov 2012 08:34:22 +0100
-Message-ID: <20121127073422.GJ10369@pengutronix.de>
-References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
- <1352909950-32555-3-git-send-email-m.grzeschik@pengutronix.de>
- <20121126092931.GA15740@nchen-desktop>
- <20121126102232.GG10369@pengutronix.de>
- <20121127065026.GA18593@nchen-desktop>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121127065026.GA18593@nchen-desktop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Qing Xu <qingx@marvell.com>
+Subject: [PATCH v2 1/7] mfd: max8925: add irqdomain for dt
+Date: Tue, 27 Nov 2012 15:38:30 +0800
+Message-ID: <1354001910-5012-1-git-send-email-qingx@marvell.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: qingx@marvell.com, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2012 at 02:50:26PM +0800, Peter Chen wrote:
-> On Mon, Nov 26, 2012 at 11:22:32AM +0100, Sascha Hauer wrote:
-> > On Mon, Nov 26, 2012 at 05:29:31PM +0800, Peter Chen wrote:
-> > > On Wed, Nov 14, 2012 at 05:19:03PM +0100, Michael Grzeschik wrote:
-> > > > This patch adds support for a second and third clock to the chipidea driver. On
-> > > > modern freescale ARM cores like the imx51, imx53 and imx6q three clocks ("ahb",
-> > > > "ipg" and "per") must be enabled in order to access the USB core.
-> > > > 
-> > > > In the original driver, the clock was requested without specifying the
-> > > > connection id, further all mainline ARM archs with support for the chipidea
-> > > > core (imx23, imx28) register their USB clock without a connection id.
-> > > > 
-> > > > This patch first renames the existing clk variable to clk_ahb. The connection
-> > > > id "ahb" is added to the devm_clk_get() call. Then the clocks "ipg" and "per"
-> > > > are requested. As all archs don't specify a connection id, all clk_get return
-> > > > the same clock. This ensures compatibility to existing USB support and adds
-> > > > support for imx5x at the same time.
-> > > > 
-> > > > This patch has been tested on imx28 and on imx53 with seperate "ahb", "ipg"
-> > > > and "per" clocks.
-> > > mx23, mx28, and mx6q has the same usb clock sources and different with
-> > > mxc (mx5x, mx3x).
-> > > 
-> > > I am not sure which method is better:
-> > > - Add dummy clock at clock.c
-> > > - Add platform information(id_table or something similar) at driver.
-> > > 
-> > > Add dummy clock may confuse some users, for example, mx6q has no
-> > > "per" and "ipg" clock at all.
-> > 
-> > The general idea is: The USB core has different input clocks. The driver
-> > has to be provided with these input clocks. When i.MX6 does not have
-> > these clocks, it only means that this SoC has no software controllable
-> > gates for these clocks, thus they are not documented. Still this SoC
-> > has these clocks.
-> > This way we can describe the differences between the SoC purely on SoC
-> > level without bothering the driver.
-> > You might want to ask your hardware guys to get more information what
-> > input clocks the USB core actually has, there actually is a lot of
-> > guesswork in it due to missing/inconsistent/confusing documentation.
-> Discussed with USB IC module owner, some feedback like below:
-> - You are correct, the input clock for controller is always same, there
-> are three sources:
-> 	- ahb
-> 	- xcvr_clk
-> 	- xcvr_ser_clk
-> - ahb: the source is the system ipg and ahb source, but for usb subsystem,
-> there is NO separate control for ipg and ahb, there is only one bit
-> to control ipg and ahb clock together, just like we say usboh3_ipg_ahb bit
-> at CCM for mx51. The USB controller internal will have two clocks, one for
-> ipg (visit register), and the other is ahb (access DDR). 
-> From the system point, we only need to control usboh3_ipg_ahb,
-> so, this clock is better as "usb_ahb". "ipg" clock for usb may only the
-> system ipg clock.
+From: Qing Xu <qingx@marvell.com>
 
-The i.MX27 has separate gates for ipg (PCCR1[25]) and ahb PCCR1[11])
+Add irqdomains for max8925's main irq, wrap irq register operations
+into irqdomain's map func. it is necessary for dt support.
 
-> 
-> -xcvr_clk: it is the phy output clk, the software can't control it,
-> (for mx28/mx6q, it can be controlled from phy controller), the software
-> can only choose the PHY clk source.
-> 
-> -xcvr_ser_clk, it is used at serial phy mode, we need it as the default
-> phy mode is serial.
-> I find we take it as "usb_per" at mx5 platform, but this xcvr_ser_clk is
-> fixed (60M), and can't be adjusted (it is not different with 54M TLL clock).
-> 
-> So in order to consolidate i.mx usb clock, do you think below definitions
-> are ok:
-> usb_ahb: ahb clock used to visit register and access DDR
-> usb_ipg: system ipg clock (mx28 usb no ipg clock)
-> usb_per: serial phy clock, it is useless if serial phy is not supported, eg mx28, mx6q.
-> usb_phy: phy clock source, either from 24M or PLL.
-> 
-> So, in order to align with kinds of platforms, I suggest:
-> If the clock exists and share the same bit at CCM with others
-> (like usb_ahb and usb_ipg at some platforms), give the same clock num
-> but different connection id.
+Also, add dt support for max8925 driver.
 
-Yes.
+Signed-off-by: Qing Xu <qingx@marvell.com>
+---
+ drivers/mfd/max8925-core.c  |   69 ++++++++++++++++++++++++++-----------------
+ drivers/mfd/max8925-i2c.c   |   37 +++++++++++++++++++++--
+ include/linux/mfd/max8925.h |    3 +-
+ 3 files changed, 78 insertions(+), 31 deletions(-)
 
-> If the clock does not exists, just give a dummy clock but with 
-> connection id (like usb_per at imx6q).
-
-Yes.
-
-Thanks for the informations, it's good to be able to get feedback from
-the hardware people.
-
-Sascha
-
+diff --git a/drivers/mfd/max8925-core.c b/drivers/mfd/max8925-core.c
+index 1e0ab0a..d0ebdbf 100644
+--- a/drivers/mfd/max8925-core.c
++++ b/drivers/mfd/max8925-core.c
+@@ -14,10 +14,13 @@
+ #include <linux/i2c.h>
+ #include <linux/irq.h>
+ #include <linux/interrupt.h>
++#include <linux/irqdomain.h>
+ #include <linux/platform_device.h>
+ #include <linux/regulator/machine.h>
+ #include <linux/mfd/core.h>
+ #include <linux/mfd/max8925.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
+ 
+ static struct resource bk_resources[] __devinitdata = {
+ 	{ 0x84, 0x84, "mode control", IORESOURCE_REG, },
+@@ -639,17 +642,33 @@ static struct irq_chip max8925_irq_chip = {
+ 	.irq_disable	= max8925_irq_disable,
+ };
+ 
++static int max8925_irq_domain_map(struct irq_domain *d, unsigned int virq,
++				 irq_hw_number_t hw)
++{
++	irq_set_chip_data(virq, d->host_data);
++	irq_set_chip_and_handler(virq, &max8925_irq_chip, handle_edge_irq);
++	irq_set_nested_thread(virq, 1);
++#ifdef CONFIG_ARM
++	set_irq_flags(virq, IRQF_VALID);
++#else
++	irq_set_noprobe(virq);
++#endif
++	return 0;
++}
++
++static struct irq_domain_ops max8925_irq_domain_ops = {
++	.map	= max8925_irq_domain_map,
++	.xlate	= irq_domain_xlate_onetwocell,
++};
++
++
+ static int max8925_irq_init(struct max8925_chip *chip, int irq,
+ 			    struct max8925_platform_data *pdata)
+ {
+ 	unsigned long flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+-	int i, ret;
+-	int __irq;
++	int ret;
++	struct device_node *node = chip->dev->of_node;
+ 
+-	if (!pdata || !pdata->irq_base) {
+-		dev_warn(chip->dev, "No interrupt support on IRQ base\n");
+-		return -EINVAL;
+-	}
+ 	/* clear all interrupts */
+ 	max8925_reg_read(chip->i2c, MAX8925_CHG_IRQ1);
+ 	max8925_reg_read(chip->i2c, MAX8925_CHG_IRQ2);
+@@ -667,35 +686,32 @@ static int max8925_irq_init(struct max8925_chip *chip, int irq,
+ 	max8925_reg_write(chip->rtc, MAX8925_RTC_IRQ_MASK, 0xff);
+ 
+ 	mutex_init(&chip->irq_lock);
+-	chip->core_irq = irq;
+-	chip->irq_base = pdata->irq_base;
+ 
+-	/* register with genirq */
+-	for (i = 0; i < ARRAY_SIZE(max8925_irqs); i++) {
+-		__irq = i + chip->irq_base;
+-		irq_set_chip_data(__irq, chip);
+-		irq_set_chip_and_handler(__irq, &max8925_irq_chip,
+-					 handle_edge_irq);
+-		irq_set_nested_thread(__irq, 1);
+-#ifdef CONFIG_ARM
+-		set_irq_flags(__irq, IRQF_VALID);
+-#else
+-		irq_set_noprobe(__irq);
+-#endif
+-	}
+-	if (!irq) {
+-		dev_warn(chip->dev, "No interrupt support on core IRQ\n");
+-		goto tsc_irq;
++	chip->irq_base = irq_alloc_descs(-1, 0, MAX8925_NR_IRQS, 0);
++	if (chip->irq_base < 0) {
++		dev_err(chip->dev, "Failed to allocate interrupts, ret:%d\n",
++			chip->irq_base);
++		return -EBUSY;
+ 	}
+ 
++	irq_domain_add_legacy(node, MAX8925_NR_IRQS, chip->irq_base, 0,
++			      &max8925_irq_domain_ops, chip);
++
++	/* request irq handler for pmic main irq*/
++
++	chip->core_irq = irq;
++	if (!chip->core_irq)
++		return -EBUSY;
+ 	ret = request_threaded_irq(irq, NULL, max8925_irq, flags,
+ 				   "max8925", chip);
+ 	if (ret) {
+ 		dev_err(chip->dev, "Failed to request core IRQ: %d\n", ret);
+ 		chip->core_irq = 0;
++		return -EBUSY;
+ 	}
+ 
+-tsc_irq:
++	/* request irq handler for pmic tsc irq*/
++
+ 	/* mask TSC interrupt */
+ 	max8925_reg_write(chip->adc, MAX8925_TSC_IRQ_MASK, 0x0f);
+ 
+@@ -704,7 +720,6 @@ tsc_irq:
+ 		return 0;
+ 	}
+ 	chip->tsc_irq = pdata->tsc_irq;
+-
+ 	ret = request_threaded_irq(chip->tsc_irq, NULL, max8925_tsc_irq,
+ 				   flags, "max8925-tsc", chip);
+ 	if (ret) {
+@@ -876,7 +891,7 @@ int __devinit max8925_device_init(struct max8925_chip *chip,
+ 	if (pdata && pdata->power) {
+ 		ret = mfd_add_devices(chip->dev, 0, &power_devs[0],
+ 					ARRAY_SIZE(power_devs),
+-				      &power_supply_resources[0], 0, NULL);
++					&power_supply_resources[0], 0, NULL);
+ 		if (ret < 0) {
+ 			dev_err(chip->dev, "Failed to add power supply "
+ 				"subdev\n");
+diff --git a/drivers/mfd/max8925-i2c.c b/drivers/mfd/max8925-i2c.c
+index d9e4b36..2f1966b 100644
+--- a/drivers/mfd/max8925-i2c.c
++++ b/drivers/mfd/max8925-i2c.c
+@@ -135,13 +135,38 @@ static const struct i2c_device_id max8925_id_table[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, max8925_id_table);
+ 
++static int __devinit max8925_dt_init(struct device_node *np,
++				    struct device *dev,
++				    struct max8925_platform_data *pdata)
++{
++	int ret;
++
++	ret = of_property_read_u32(np, "tsc-irq", &pdata->tsc_irq);
++	if (ret) {
++		dev_err(dev, "Not found \"tsc-irq\" property\n");
++		return -EINVAL;
++	}
++	return 0;
++}
++
+ static int __devinit max8925_probe(struct i2c_client *client,
+ 				   const struct i2c_device_id *id)
+ {
+ 	struct max8925_platform_data *pdata = client->dev.platform_data;
+ 	static struct max8925_chip *chip;
+-
+-	if (!pdata) {
++	struct device_node *node = client->dev.of_node;
++
++	if (node && !pdata) {
++		/* parse DT to get platform data */
++		pdata = devm_kzalloc(&client->dev,
++				     sizeof(struct max8925_platform_data),
++				     GFP_KERNEL);
++		if (!pdata)
++			return -ENOMEM;
++
++		if (max8925_dt_init(node, &client->dev, pdata))
++			return -EINVAL;
++	} else if (!pdata) {
+ 		pr_info("%s: platform data is missing\n", __func__);
+ 		return -EINVAL;
+ 	}
+@@ -203,11 +228,18 @@ static int max8925_resume(struct device *dev)
+ 
+ static SIMPLE_DEV_PM_OPS(max8925_pm_ops, max8925_suspend, max8925_resume);
+ 
++static const struct of_device_id max8925_dt_ids[] = {
++	{ .compatible = "maxium,max8925", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, max8925_dt_ids);
++
+ static struct i2c_driver max8925_driver = {
+ 	.driver	= {
+ 		.name	= "max8925",
+ 		.owner	= THIS_MODULE,
+ 		.pm     = &max8925_pm_ops,
++		.of_match_table = of_match_ptr(max8925_dt_ids),
+ 	},
+ 	.probe		= max8925_probe,
+ 	.remove		= __devexit_p(max8925_remove),
+@@ -217,7 +249,6 @@ static struct i2c_driver max8925_driver = {
+ static int __init max8925_i2c_init(void)
+ {
+ 	int ret;
+-
+ 	ret = i2c_add_driver(&max8925_driver);
+ 	if (ret != 0)
+ 		pr_err("Failed to register MAX8925 I2C driver: %d\n", ret);
+diff --git a/include/linux/mfd/max8925.h b/include/linux/mfd/max8925.h
+index 74d8e29..ce8502e 100644
+--- a/include/linux/mfd/max8925.h
++++ b/include/linux/mfd/max8925.h
+@@ -190,6 +190,8 @@ enum {
+ 	MAX8925_NR_IRQS,
+ };
+ 
++
++
+ struct max8925_chip {
+ 	struct device		*dev;
+ 	struct i2c_client	*i2c;
+@@ -201,7 +203,6 @@ struct max8925_chip {
+ 	int			irq_base;
+ 	int			core_irq;
+ 	int			tsc_irq;
+-
+ 	unsigned int            wakeup_flag;
+ };
+ 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.0.4
