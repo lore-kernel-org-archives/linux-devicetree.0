@@ -1,79 +1,105 @@
-From: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v3 03/10] ARM: OMAP: AM33xx hwmod: Add parent-child
- relationship for PWM subsystem
-Date: Tue, 27 Nov 2012 06:24:03 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3E9EFFAC@DBDE01.ent.ti.com>
-References: <1353387831-31538-1-git-send-email-avinashphilip@ti.com>
- <1353387831-31538-4-git-send-email-avinashphilip@ti.com>
- <518397C60809E147AF5323E0420B992E3E9EEA8C@DBDE01.ent.ti.com>
- <B5906170F1614E41A8A28DE3B8D121433EC4C0FA@DBDE01.ent.ti.com>
- <50B33043.2020700@ti.com>
- <B5906170F1614E41A8A28DE3B8D121433EC4D5C7@DBDE01.ent.ti.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 2/9] usb: chipidea: ci13xxx_imx: add 2nd and 3rd clock
+ to support imx5x and newer
+Date: Tue, 27 Nov 2012 14:50:26 +0800
+Message-ID: <20121127065026.GA18593@nchen-desktop>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1352909950-32555-3-git-send-email-m.grzeschik@pengutronix.de>
+ <20121126092931.GA15740@nchen-desktop>
+ <20121126102232.GG10369@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <B5906170F1614E41A8A28DE3B8D121433EC4D5C7-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Bedia, Vaibhav" <vaibhav.bedia-l0cyMroinI0@public.gmane.org>, "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hebbar,
- Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121126102232.GG10369-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Nov 26, 2012 at 16:37:36, Bedia, Vaibhav wrote:
-> Hi Benoit,
-> 
-> On Mon, Nov 26, 2012 at 14:32:59, Cousson, Benoit wrote:
-> > Hi Vaibhav,
+On Mon, Nov 26, 2012 at 11:22:32AM +0100, Sascha Hauer wrote:
+> On Mon, Nov 26, 2012 at 05:29:31PM +0800, Peter Chen wrote:
+> > On Wed, Nov 14, 2012 at 05:19:03PM +0100, Michael Grzeschik wrote:
+> > > This patch adds support for a second and third clock to the chipidea driver. On
+> > > modern freescale ARM cores like the imx51, imx53 and imx6q three clocks ("ahb",
+> > > "ipg" and "per") must be enabled in order to access the USB core.
+> > > 
+> > > In the original driver, the clock was requested without specifying the
+> > > connection id, further all mainline ARM archs with support for the chipidea
+> > > core (imx23, imx28) register their USB clock without a connection id.
+> > > 
+> > > This patch first renames the existing clk variable to clk_ahb. The connection
+> > > id "ahb" is added to the devm_clk_get() call. Then the clocks "ipg" and "per"
+> > > are requested. As all archs don't specify a connection id, all clk_get return
+> > > the same clock. This ensures compatibility to existing USB support and adds
+> > > support for imx5x at the same time.
+> > > 
+> > > This patch has been tested on imx28 and on imx53 with seperate "ahb", "ipg"
+> > > and "per" clocks.
+> > mx23, mx28, and mx6q has the same usb clock sources and different with
+> > mxc (mx5x, mx3x).
 > > 
-> > On 11/26/2012 06:19 AM, Bedia, Vaibhav wrote:
-> > > On Fri, Nov 23, 2012 at 16:36:06, Philip, Avinash wrote:
-> > >> On Tue, Nov 20, 2012 at 10:33:44, Philip, Avinash wrote:
-> > >>> As part of PWM subsystem integration, PWM subsystem are sharing
-> > >>> resources like clock across submodules (ECAP, EQEP & EHRPWM).
-> > >>> To handle resource sharing & IP integration
-> > >>> 1. Rework on parent child relation between PWMSS and
-> > >>>    ECAP, EQEP & EHRPWM child devices to support runtime PM.
-> > >>> 2. Add support for opt_clks in EHRPWM HWMOD entry to handle additional
-> > >>>    clock gating from control module.
-> > >>> 3. Add HWMOD entries for EQEP PWM submodule.
-> > >>>
-> > >>
-> > >> Is there any review on this patch?
-> > >> This patch depends on ECAP & EHRPWM to work in am335x.
-> > > 
-> > > First of all, I think you should break up this patch as per the 3 points
-> > > that you mentioned above.
-
-I will split the patches into 2.
-1. One for correcting hwmod entries  plus adding EQEP HWMOD entry
-2. Adding parent child relation in hwmod entry.
-
-> > > 
-> > > The usage of opt_clks for this does not look right to me. Based on your
-> > > description this clock is necessary and not optional on AM335x and on 
-> > > Davinci platforms this clock does not exist.
+> > I am not sure which method is better:
+> > - Add dummy clock at clock.c
+> > - Add platform information(id_table or something similar) at driver.
+> > 
+> > Add dummy clock may confuse some users, for example, mx6q has no
+> > "per" and "ipg" clock at all.
 > 
-> I checked the DA830 TRM and looks like TBCLK for eHRPWM is an always on clock
-> there. So, the only difference in AM335x is an additional enable bit.
-> 
-> Instead of adding this as opt_clk in hwmod, we could add an always on clock node
-> in Davinci clock data and have the driver always do a clk_enable() on the tbclk
-> as part of the probe sequence. On AM335x, with the right clock node this will enable
-> the clock in hardware and on DA830 it turns into a NOP. This way we can avoid adding
-> the opt_clk entry in hwmod of eHRPWM.
+> The general idea is: The USB core has different input clocks. The driver
+> has to be provided with these input clocks. When i.MX6 does not have
+> these clocks, it only means that this SoC has no software controllable
+> gates for these clocks, thus they are not documented. Still this SoC
+> has these clocks.
+> This way we can describe the differences between the SoC purely on SoC
+> level without bothering the driver.
+> You might want to ask your hardware guys to get more information what
+> input clocks the USB core actually has, there actually is a lot of
+> guesswork in it due to missing/inconsistent/confusing documentation.
+Discussed with USB IC module owner, some feedback like below:
+- You are correct, the input clock for controller is always same, there
+are three sources:
+	- ahb
+	- xcvr_clk
+	- xcvr_ser_clk
+- ahb: the source is the system ipg and ahb source, but for usb subsystem,
+there is NO separate control for ipg and ahb, there is only one bit
+to control ipg and ahb clock together, just like we say usboh3_ipg_ahb bit
+at CCM for mx51. The USB controller internal will have two clocks, one for
+ipg (visit register), and the other is ahb (access DDR). 
+>From the system point, we only need to control usboh3_ipg_ahb,
+so, this clock is better as "usb_ahb". "ipg" clock for usb may only the
+system ipg clock.
 
-I will remove opt_clk in HWMOD and made tbclk is a mandatory clock in EHRPWM driver.
+-xcvr_clk: it is the phy output clk, the software can't control it,
+(for mx28/mx6q, it can be controlled from phy controller), the software
+can only choose the PHY clk source.
 
-Thanks
-Avinash
+-xcvr_ser_clk, it is used at serial phy mode, we need it as the default
+phy mode is serial.
+I find we take it as "usb_per" at mx5 platform, but this xcvr_ser_clk is
+fixed (60M), and can't be adjusted (it is not different with 54M TLL clock).
+
+So in order to consolidate i.mx usb clock, do you think below definitions
+are ok:
+usb_ahb: ahb clock used to visit register and access DDR
+usb_ipg: system ipg clock (mx28 usb no ipg clock)
+usb_per: serial phy clock, it is useless if serial phy is not supported, eg mx28, mx6q.
+usb_phy: phy clock source, either from 24M or PLL.
+
+So, in order to align with kinds of platforms, I suggest:
+If the clock exists and share the same bit at CCM with others
+(like usb_ahb and usb_ipg at some platforms), give the same clock num
+but different connection id.
+If the clock does not exists, just give a dummy clock but with 
+connection id (like usb_per at imx6q).
+
+-- 
+
+Best Regards,
+Peter Chen
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
