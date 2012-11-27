@@ -1,107 +1,38 @@
-From: "Rafael J. Wysocki" <rjw@sisk.pl>
-Subject: Re: [PATCH] fixup! cpufreq: SPEAr: Add CPUFreq driver
-Date: Tue, 27 Nov 2012 20:05:35 +0100
-Message-ID: <4703470.E0i3mLgjYu@vostro.rjw.lan>
-References: <2d845c8e19392c2b82a243e6e878ae4e5e771c2f.1353785862.git.viresh.kumar@linaro.org>
+From: Rabin Vincent <rabin@rab.in>
+Subject: Re: [PATCH V3 3/3] mfd: stmpe: Update DT support in stmpe driver
+Date: Tue, 27 Nov 2012 20:55:54 +0100
+Message-ID: <CAH+eYFCshghQauBdn1rLQ-sKG=Bxa_0XpJsry60TAD3mibNOFA@mail.gmail.com>
+References: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
+ <7a48ae364663ab3a336251fada9aee07ccd728b8.1353610437.git.viresh.kumar@linaro.org>
+ <20121123094132.EFCB73E07BE@localhost> <CAKohpomAM2pw9kgB6khtHzQ2WCXKZ9_pi1_sOH2dQToVS8ep4w@mail.gmail.com>
+ <20121126184015.784993E091F@localhost> <CAKohpo=dHz-fJRdwovOWesAZJwibgrNk-+2t--JK+T_sBsu9Tw@mail.gmail.com>
+ <CAKohpomOxfLhpZqpk3aymdNa7UAGRcex7d+N5srkFDnrhtULTw@mail.gmail.com>
+ <20121127084007.GA7897@gmail.com> <CAKohpomPMYU5H_tx1BF7TD6F7a5rp5O=xDf3r-TGZ-r9SBp3yA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <2d845c8e19392c2b82a243e6e878ae4e5e771c2f.1353785862.git.viresh.kumar@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, spear-devel@list.st.com, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, cpufreq@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKohpomPMYU5H_tx1BF7TD6F7a5rp5O=xDf3r-TGZ-r9SBp3yA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, l.fu@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, November 27, 2012 06:01:39 PM Viresh Kumar wrote:
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> ---
-> Hi Rafael,
-> 
-> To make review easier and faster, i am sending incremental patch for SPEAr
-> cpufreq driver. This patch was earlier discussed here:
-> 
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-November/135088.html
+2012/11/27 Viresh Kumar <viresh.kumar@linaro.org>:
+> On 27 November 2012 14:10, Lee Jones <lee.jones@linaro.org> wrote:
+> I haven't seen this in any of SPEAr boards i have worked on. Maybe Rabin
+> would have, that's why he added that part of code :)
+>
+> @Rabin/Linus: Do you remember why have you added this in stmpe driver:
+>
+> +       if (stmpe->pdata->irq_invert_polarity)
+> +               icr ^= STMPE_ICR_LSB_HIGH;
+> +
+>
+> Does somebody actually need it?
 
-Applied.
+It was (as irq_rev_pol) part of Luotao Fu's proposed STMPE811 patchset
+(https://patchwork.kernel.org/patch/106173/) which I integrated into my
+version of the STMPE driver, which didn't have it in its initial version
+(https://patchwork.kernel.org/patch/103273/).
 
-Thanks,
-Rafael
-
-
->  .../devicetree/bindings/cpufreq/cpufreq-spear.txt  | 33 +++++++++++++++-------
->  drivers/cpufreq/spear-cpufreq.c                    |  4 +--
->  2 files changed, 25 insertions(+), 12 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt
-> index 4cf2819..f3d44984 100644
-> --- a/Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-spear.txt
-> @@ -6,7 +6,6 @@ It supports both uniprocessor (UP) and symmetric multiprocessor (SMP) systems
->  which share clock across all CPUs.
->  
->  Required properties:
-> -- compatible: "st,cpufreq-spear"
->  - cpufreq_tbl: Table of frequencies CPU could be transitioned into, in the
->    increasing order.
->  
-> @@ -14,16 +13,30 @@ Optional properties:
->  - clock-latency: Specify the possible maximum transition latency for clock, in
->    unit of nanoseconds.
->  
-> +Both required and optional properties listed above must be defined under node
-> +/cpus/cpu@0.
-> +
->  Examples:
->  --------
-> +cpus {
-> +
-> +	<...>
-> +
-> +	cpu@0 {
-> +		compatible = "arm,cortex-a9";
-> +		reg = <0>;
-> +
-> +		<...>
-> +
-> +		cpufreq_tbl = < 166000
-> +				200000
-> +				250000
-> +				300000
-> +				400000
-> +				500000
-> +				600000 >;
-> +	};
-> +
-> +	<...>
->  
-> -cpufreq {
-> -	compatible = "st,cpufreq-spear";
-> -	cpufreq_tbl = < 166000
-> -			200000
-> -			250000
-> -			300000
-> -			400000
-> -			500000
-> -			600000 >;
->  };
-> diff --git a/drivers/cpufreq/spear-cpufreq.c b/drivers/cpufreq/spear-cpufreq.c
-> index a7fe880..4575cfe 100644
-> --- a/drivers/cpufreq/spear-cpufreq.c
-> +++ b/drivers/cpufreq/spear-cpufreq.c
-> @@ -224,9 +224,9 @@ static int spear_cpufreq_driver_init(void)
->  	const __be32 *val;
->  	int cnt, i, ret;
->  
-> -	np = of_find_compatible_node(NULL, NULL, "st,cpufreq-spear");
-> +	np = of_find_node_by_path("/cpus/cpu@0");
->  	if (!np) {
-> -		pr_err("No cpufreq node found");
-> +		pr_err("No cpu node found");
->  		return -ENODEV;
->  	}
->  
-> 
--- 
-I speak only for myself.
-Rafael J. Wysocki, Intel Open Source Technology Center.
+It's not something _I_ ever used.
