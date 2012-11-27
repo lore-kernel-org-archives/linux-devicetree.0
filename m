@@ -1,47 +1,120 @@
-From: "Patil, Rachna" <rachna@ti.com>
-Subject: RE: [PATCH RESEND 0/7] MFD: ti_am335x_tscadc: DT support and TSC
- features addition
-Date: Tue, 27 Nov 2012 07:14:36 +0000
-Message-ID: <4CE347531D4CA947960AF71FF095B9323E96FC06@DBDE01.ent.ti.com>
-References: <1352271124-5513-1-git-send-email-rachna@ti.com>
- <4CE347531D4CA947960AF71FF095B9323E96C54A@DBDE01.ent.ti.com>
- <20121121170021.GE18738@sortiz-mobl>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/9] usb: chipidea: ci13xxx_imx: add 2nd and 3rd clock to
+ support imx5x and newer
+Date: Tue, 27 Nov 2012 08:34:22 +0100
+Message-ID: <20121127073422.GJ10369@pengutronix.de>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1352909950-32555-3-git-send-email-m.grzeschik@pengutronix.de>
+ <20121126092931.GA15740@nchen-desktop>
+ <20121126102232.GG10369@pengutronix.de>
+ <20121127065026.GA18593@nchen-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20121121170021.GE18738@sortiz-mobl>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, Jonathan Cameron <jic23@cam.ac.uk>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121127065026.GA18593@nchen-desktop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Samuel,
-
-On Wed, Nov 21, 2012 at 22:30:21, Samuel Ortiz wrote:
-> Hi Rachna,
-> 
-> On Fri, Nov 16, 2012 at 10:33:00AM +0000, Patil, Rachna wrote:
-> > Hi,
+On Tue, Nov 27, 2012 at 02:50:26PM +0800, Peter Chen wrote:
+> On Mon, Nov 26, 2012 at 11:22:32AM +0100, Sascha Hauer wrote:
+> > On Mon, Nov 26, 2012 at 05:29:31PM +0800, Peter Chen wrote:
+> > > On Wed, Nov 14, 2012 at 05:19:03PM +0100, Michael Grzeschik wrote:
+> > > > This patch adds support for a second and third clock to the chipidea driver. On
+> > > > modern freescale ARM cores like the imx51, imx53 and imx6q three clocks ("ahb",
+> > > > "ipg" and "per") must be enabled in order to access the USB core.
+> > > > 
+> > > > In the original driver, the clock was requested without specifying the
+> > > > connection id, further all mainline ARM archs with support for the chipidea
+> > > > core (imx23, imx28) register their USB clock without a connection id.
+> > > > 
+> > > > This patch first renames the existing clk variable to clk_ahb. The connection
+> > > > id "ahb" is added to the devm_clk_get() call. Then the clocks "ipg" and "per"
+> > > > are requested. As all archs don't specify a connection id, all clk_get return
+> > > > the same clock. This ensures compatibility to existing USB support and adds
+> > > > support for imx5x at the same time.
+> > > > 
+> > > > This patch has been tested on imx28 and on imx53 with seperate "ahb", "ipg"
+> > > > and "per" clocks.
+> > > mx23, mx28, and mx6q has the same usb clock sources and different with
+> > > mxc (mx5x, mx3x).
+> > > 
+> > > I am not sure which method is better:
+> > > - Add dummy clock at clock.c
+> > > - Add platform information(id_table or something similar) at driver.
+> > > 
+> > > Add dummy clock may confuse some users, for example, mx6q has no
+> > > "per" and "ipg" clock at all.
 > > 
-> > This is just a gentle reminder of the patch set I had posted earlier viz.
-> > "[PATCH RESEND 0/7] MFD: ti_am335x_tscadc: DT support and TSC features addition"
-> > Can this patch set be pulled in if there are no review comments.
-> > This patch set does not break anything existing, it just adds new features and DT support for the MFD core and its clients.
-> I'm fine with the MFD part, but did you get Dmitry's ACK on the input ones ?
+> > The general idea is: The USB core has different input clocks. The driver
+> > has to be provided with these input clocks. When i.MX6 does not have
+> > these clocks, it only means that this SoC has no software controllable
+> > gates for these clocks, thus they are not documented. Still this SoC
+> > has these clocks.
+> > This way we can describe the differences between the SoC purely on SoC
+> > level without bothering the driver.
+> > You might want to ask your hardware guys to get more information what
+> > input clocks the USB core actually has, there actually is a lot of
+> > guesswork in it due to missing/inconsistent/confusing documentation.
+> Discussed with USB IC module owner, some feedback like below:
+> - You are correct, the input clock for controller is always same, there
+> are three sources:
+> 	- ahb
+> 	- xcvr_clk
+> 	- xcvr_ser_clk
+> - ahb: the source is the system ipg and ahb source, but for usb subsystem,
+> there is NO separate control for ipg and ahb, there is only one bit
+> to control ipg and ahb clock together, just like we say usboh3_ipg_ahb bit
+> at CCM for mx51. The USB controller internal will have two clocks, one for
+> ipg (visit register), and the other is ahb (access DDR). 
+> From the system point, we only need to control usboh3_ipg_ahb,
+> so, this clock is better as "usb_ahb". "ipg" clock for usb may only the
+> system ipg clock.
 
-I received few comments from Dmitry, I will be sending out v2 soon. 
-
-Regards,
-Rachna
+The i.MX27 has separate gates for ipg (PCCR1[25]) and ahb PCCR1[11])
 
 > 
-> Cheers,
-> Samuel.
+> -xcvr_clk: it is the phy output clk, the software can't control it,
+> (for mx28/mx6q, it can be controlled from phy controller), the software
+> can only choose the PHY clk source.
 > 
-> --
-> Intel Open Source Technology Centre
-> http://oss.intel.com/
+> -xcvr_ser_clk, it is used at serial phy mode, we need it as the default
+> phy mode is serial.
+> I find we take it as "usb_per" at mx5 platform, but this xcvr_ser_clk is
+> fixed (60M), and can't be adjusted (it is not different with 54M TLL clock).
 > 
+> So in order to consolidate i.mx usb clock, do you think below definitions
+> are ok:
+> usb_ahb: ahb clock used to visit register and access DDR
+> usb_ipg: system ipg clock (mx28 usb no ipg clock)
+> usb_per: serial phy clock, it is useless if serial phy is not supported, eg mx28, mx6q.
+> usb_phy: phy clock source, either from 24M or PLL.
+> 
+> So, in order to align with kinds of platforms, I suggest:
+> If the clock exists and share the same bit at CCM with others
+> (like usb_ahb and usb_ipg at some platforms), give the same clock num
+> but different connection id.
 
+Yes.
+
+> If the clock does not exists, just give a dummy clock but with 
+> connection id (like usb_per at imx6q).
+
+Yes.
+
+Thanks for the informations, it's good to be able to get feedback from
+the hardware people.
+
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
