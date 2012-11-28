@@ -1,82 +1,153 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [GIT PULL] ASoC: Samsung: Updates for v3.8
-Date: Wed, 28 Nov 2012 11:21:31 +0530
-Message-ID: <CAAgF-Bfv46Xt0hFdPmviCdZbpje1M4MBnmCsHGgdOjcq4SnuJw@mail.gmail.com>
-References: <001601cdcd28$ce5204c0$6af60e40$@com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] gpio: New driver for GPO emulation using PWM generators
+Date: Wed, 28 Nov 2012 09:54:57 +0100
+Message-ID: <50B5D161.6010200@ti.com>
+References: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com>
+ <20121123075537.A14713E0A91@localhost> <50AF3E21.4000009@ti.com>
+ <50AF4584.7020604@ti.com> <20121126154600.765E03E1AFD@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <001601cdcd28$ce5204c0$6af60e40$@com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Sangbeom Kim <sbkim73@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, devicetree-discuss@lists.ozlabs.org, padma venkat <padma.kvr@gmail.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121126154600.765E03E1AFD@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Hi Grant, Lars, Thierry,
 
-On Wed, Nov 28, 2012 at 10:55 AM, Sangbeom Kim <sbkim73@samsung.com> wrote:
->> > There's some problems with this binding.  The main one is the gpios
->> > property the format of which isn't specified at all.
->
->> All of above gpio property is i2s.
->> That is,
->> +     gpios = <&gpz 0 2 0 0>, -> SCLK
->> +             <&gpz 1 2 0 0>,   ->  CDCLK
->> +             <&gpz 2 2 0 0>,   -> LRCK
->> +             <&gpz 3 2 0 0>,   -> SDI
->> +             <&gpz 4 2 0 0>,   -> SDO[0]
->> +             <&gpz 5 2 0 0>,   -> SDO[1]
->> +             <&gpz 6 2 0 0>;   -> SDO[2]
->
->> Do you want like a below one?
->> +sclk-gpios = <&gpz 0 2 0 0>,
->> +cdclk-gpios = <&gpz 1 2 0 0>, ...
->
-> That would be nice but what I was really looking for was some indiciation in the binding document as
-> to what all this stuff means - it should really say what gpz is (though I can figure that out) and
-> it definitely needs to say what the four numbers are.
->
->> > The requirement for an alias is also very odd, where does that come from?
->
->> I don't know that Which one is odd. Please let me know.
->
-> Having them at all is odd - it's not something other DT bindings have needed and there was nothing
-> saying what it was for.
+On 11/26/2012 04:46 PM, Grant Likely wrote:
+> You're effectively asking the pwm layer to behave like a gpio (which
+> is completely reasonable). Having a completely separate translation node
+> really doesn't make sense because it is entirely a software construct.
+> In fact, the way your using it is *entirely* to make the Linux driver
+> model instantiate the translation code. It has *nothing* to do with the
+> structure of the hardware. It makes complete sense that if a PWM is
+> going to be used as a GPIO, then the PWM node should conform to the GPIO
+> binding.
 
-What is the exact requirement here? Should I remove the alias ids or
-I2S1 and I2S2 nodes as they are in disabled state? This is done same
-way as SPI and I2C. Please explain me.
+I understand your point around this. I might say I agree with it as well...
+I spent yesterday with prototyping and I'm not really convinced that it is a
+good approach from C code point of view. I got it working, yes.
+In essence this is what I have on top of the slightly modified gpio-pwm.c
+driver I have submitted:
 
->
->> > Some of the code also looks very peculiar, like the fact that it's
->> > generating a clock name i2s_opclk%d rather than hard coding the
->> > clock, the physical clock would normally be resolved based on the
->> > struct device.
->
->> This is to handle all of Samsung SOCs i2c clock mux.
->> Please look at below clk_lookup table
->
->> In case of 6410, clk_lookup
->> +     CLKDEV_INIT("samsung-i2s.0", "i2s_opclk0", &clk_i2s0),
->> +     CLKDEV_INIT("samsung-i2s.0", "i2s_opclk1", &clk_audio_bus0.clk),
->> +     CLKDEV_INIT("samsung-i2s.1", "i2s_opclk0", &clk_i2s1),
->> +     CLKDEV_INIT("samsung-i2s.1", "i2s_opclk1", &clk_audio_bus1.clk),
->> +#ifdef CONFIG_CPU_S3C6410
->> +     CLKDEV_INIT("samsung-i2s.2", "i2s_opclk0", &clk_i2s2),
->> +     CLKDEV_INIT("samsung-i2s.2", "i2s_opclk1", &clk_audio_bus2.clk),
->
->> In case of exynos5, clk_lookup
->> +     CLKDEV_INIT("samsung-i2s.0", "i2s_opclk0", &exynos5_clk_sclk_i2s.clk),
->> +     CLKDEV_INIT("samsung-i2s.0", "i2s_opclk1",
->> +&exynos5_clk_i2s_bus.clk),
->
->> We try to handle clock source of i2s by only i2s_opclk0 and i2s_opclk1.
->> Each SOCs have different clock source.
->> Is this wrong approach?
->
-> That makes sense but why is the driver not just requesting by name rather than having code to
-> generate the names, and why is this mixed in with the patch adding DT support?
->
+DTS files:
+twl_pwm: pwm {
+	/* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
+	compatible =3D "ti,twl6030-pwm";
+	#pwm-cells =3D <2>;
 
-Thanks
-Padma
+	/* Enable GPIO us of the PWMs */
+	gpio-controller =3D <1>;
+	#gpio-cells =3D <2>;
+	pwm,period_ns =3D <7812500>;
+};
+
+leds {
+	compatible =3D "gpio-leds";
+	backlight {
+		label =3D "omap4::backlight";
+		gpios =3D <&twl_pwm 1 0>; /* PWM1 of twl6030 */
+	};
+
+	keypad {
+		label =3D "omap4::keypad";
+		gpios =3D <&twl_pwm 0 0>; /* PWM0 of twl6030 */
+	};
+};
+
+The bulk of the code in drivers/pwm/core.c to create the pwm-gpo device when
+it is requested going to look something like this. I have removed the error
+checks for now and I still don't have the code to clean up the allocated
+memory for the created device on error, or in case the module is unloaded. =
+We
+should also prevent the pwm core from removal when the pwm-gpo driver is lo=
+aded.
+We need to create the platform device for gpo-pwm, create the pdata structu=
+re
+for it and fill it in. We also need to hand craft the pwm_lookup table so we
+can use pwm_get() to request the PWM. I have other minor changes around this
+to get things working when we booted with DT.
+So the function to do the heavy lifting is something like this:
+static void of_pwmchip_as_gpio(struct pwm_chip *chip)
+{
+	struct platform_device *pdev;
+	struct gpio_pwm *gpos;
+	struct gpio_pwm_pdata *pdata;
+	struct pwm_lookup *lookup;
+	char gpodev_name[15];
+	int i;
+	u32 gpio_mode =3D 0;
+	u32 period_ns =3D 0;
+
+	of_property_read_u32(chip->dev->of_node, "gpio-controller",
+			     &gpio_mode);
+	if (!gpio_mode)
+		return;
+
+	of_property_read_u32(chip->dev->of_node, "pwm,period_ns", &period_ns);
+	if (!period_ns) {
+		dev_err(chip->dev,
+			"period_ns is not specified for GPIO use\n");
+		return;
+	}
+
+	lookup =3D devm_kzalloc(chip->dev, sizeof(*lookup) * chip->npwm,
+			      GFP_KERNEL);
+	pdata =3D devm_kzalloc(chip->dev, sizeof(*pdata), GFP_KERNEL);
+	gpos =3D devm_kzalloc(chip->dev, sizeof(*gpos) * chip->npwm,
+			    GFP_KERNEL);
+
+	pdata->gpos =3D gpos;
+	pdata->num_gpos =3D chip->npwm;
+	pdata->gpio_base =3D -1;
+
+	pdev =3D platform_device_alloc("pwm-gpo", chip->base);
+	pdev->dev.parent =3D chip->dev;
+
+	sprintf(gpodev_name, "pwm-gpo.%d", chip->base);
+	for (i =3D 0; i < chip->npwm; i++) {
+		struct gpio_pwm *gpo =3D &gpos[i];
+		struct pwm_lookup *pl =3D &lookup[i];
+		char con_id[15];
+
+		sprintf(con_id, "pwm-gpo.%d", chip->base + i);
+
+		/* prepare GPO information */
+		gpo->pwm_period_ns =3D period_ns;
+		gpo->name =3D kmemdup(con_id, sizeof(con_id), GFP_KERNEL);;
+
+		/* prepare pwm lookup table */
+		pl->provider =3D dev_name(chip->dev);
+		pl->index =3D i;
+		pl->dev_id =3D kmemdup(gpodev_name, sizeof(gpodev_name),
+				     GFP_KERNEL);
+		pl->con_id =3D kmemdup(con_id, sizeof(con_id), GFP_KERNEL);
+	}
+
+	platform_device_add_data(pdev, pdata, sizeof(*pdata));
+	pwm_add_table(lookup, chip->npwm);
+	platform_device_add(pdev);
+}
+
+PS: as I have said I have removed the error check just to make the code
+snippet more readable and yes we need to do some memory cleanup as well at =
+the
+right time.
+
+Is this something you would like to see?
+
+-- =
+
+P=E9ter
