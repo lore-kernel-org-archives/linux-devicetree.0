@@ -1,75 +1,103 @@
-From: Mike Turquette <mturquette@ti.com>
-Subject: Re: [PATCH 6/6 v6] cpufreq, highbank: add support for highbank cpufreq
-Date: Wed, 28 Nov 2012 13:05:52 -0800
-Message-ID: <20121128210552.21126.90710@nucleus>
-References: <1351631056-25938-1-git-send-email-mark.langsdorf@calxeda.com>
- <1354046672-7392-1-git-send-email-mark.langsdorf@calxeda.com>
- <1354046672-7392-7-git-send-email-mark.langsdorf@calxeda.com>
- <20121128023240.GA28170@S2100-06.ap.freescale.net>
- <50B60E9C.9000405@calxeda.com>
- <20121128145759.GB28170@S2100-06.ap.freescale.net>
- <20121128151741.GC28170@S2100-06.ap.freescale.net>
- <20121128160115.21126.3841@nucleus> <50B6395B.806@calxeda.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <50B6395B.806@calxeda.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Cc: Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH 2/3] ARM/dts: omap3: Add support for IGEPv2 board
+Date: Thu, 29 Nov 2012 00:14:25 +0100
+Message-ID: <1354144466-750-3-git-send-email-javier.martinez@collabora.co.uk>
+References: <1354144466-750-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1354144466-750-1-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, grant.likely@secretlab.ca, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <elezegarcia@gmail.com>, Enrico Butera <ebutera@gmail.com>, Matthias Brugger <matthias.bgg@googlemail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Mark Langsdorf (2012-11-28 08:18:35)
-> On 11/28/2012 10:01 AM, Mike Turquette wrote:
-> > Quoting Shawn Guo (2012-11-28 07:17:44)
-> >> On Wed, Nov 28, 2012 at 10:58:02PM +0800, Shawn Guo wrote:
-> >>> On Wed, Nov 28, 2012 at 07:16:12AM -0600, Mark Langsdorf wrote:
-> >>>> I'd
-> >>>> have to move most of the logic of hb_set_target() into
-> >>>> clk_highbank.c:clk_pll_set_rate() and then add extra logic for when
-> >>>> cpufreq is not enabled/loaded.
-> >>>
-> >>> You only need to move hb_voltage_change() into cpu clock's .set_rate()
-> >>> hook with no need of checking if cpufreq is enabled or not.
-> >>>
-> >> Need to also check whether frequency or voltage should be changed first
-> >> in .set_rate() though.
-> >>
-> >> Shawn
-> >>
-> > 
-> > The notifiers in the clk framework might be a better place for this than
-> > just simply hacking the logic into the .set_rate callback.
-> 
-> Unless the clk notifiers are different than the cpufreq notifiers, they
-> don't handle returning error conditions very well. And given that the
-> voltage change operation can fail (though it almost always succeeds on a
-> retry) I need to be able to handle and detect that error condition.
-> 
+ISEE IGEPv2 is an TI OMAP3 SoC based embedded board.
 
-The notifier handler can handle the case where the transition fails (and
-needs to be retried).
+This patch adds an initial device tree support to boot
+an IGEPv2 from the MMC/SD.
 
-Also you should check out the clk notifiers.  I think they handle
-failure decently.  If a notifer returns an error code then everything
-unrolls and the clk_set_rate operation aborts.
+Currently is working everything that is supported by DT
+on OMAP3 SoCs (MMC/SD, GPIO LEDs, EEPROM, TWL4030 audio).
 
-Regards,
-Mike
+Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+---
+ arch/arm/boot/dts/Makefile           |    1 +
+ arch/arm/boot/dts/omap3-igep0020.dts |   56 ++++++++++++++++++++++++++++++++++
+ 2 files changed, 57 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap3-igep0020.dts
 
-> > I haven't looked at the definition of hb_voltage_change but does the
-> > call graph make any clk api calls?  Are you talking over i2c to a
-> > regulator?  If so then you'll probably hit the same reentrancy problem I
-> > hit when trying to make a general solution.
-> 
-> I'm talking over a pl320 Interprocessor Communication Mailbox to a
-> separate core running it's own RTOS. The RTOS might speak i2c to a
-> regulator but it's a black box to me.
-> 
-> hb_voltage_change() doesn't make any clk api calls. It changes the
-> voltages, and then hb_set_target() makes clk api calls to change the
-> frequency.
-> 
-> --Mark Langsdorf
-> Calxeda, Inc.
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index f37cf9f..1dc0f39 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -66,6 +66,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+ 	omap3-beagle-xm.dtb \
+ 	omap3-evm.dtb \
+ 	omap3-tobi.dtb \
++	omap3-igep0020.dtb \
+ 	omap4-panda.dtb \
+ 	omap4-pandaES.dtb \
+ 	omap4-var_som.dtb \
+diff --git a/arch/arm/boot/dts/omap3-igep0020.dts b/arch/arm/boot/dts/omap3-igep0020.dts
+new file mode 100644
+index 0000000..9dd4d22
+--- /dev/null
++++ b/arch/arm/boot/dts/omap3-igep0020.dts
+@@ -0,0 +1,56 @@
++/*
++ * Device Tree Source for IGEPv2 board
++ *
++ * Copyright (C) 2012 Javier Martinez Canillas <javier@collabora.co.uk>
++ * Copyright (C) 2012 Enric Balletbo i Serra <eballetbo@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++
++/include/ "omap3-igep.dtsi"
++
++/ {
++	model = "IGEPv2";
++	compatible = "isee,omap3-igep0020", "ti,omap3";
++
++	leds {
++		compatible = "gpio-leds";
++		boot {
++			 label = "omap3:green:boot";
++			 gpios = <&gpio1 26 0>;
++			 linux,default-trigger = "default-on";
++		};
++
++		user0 {
++			 label = "omap3:red:user0";
++			 gpios = <&gpio1 27 0>;
++			 default-state = "off";
++		};
++
++		user1 {
++			 label = "omap3:red:user1";
++			 gpios = <&gpio1 28 0>;
++			 default-state = "off";
++		};
++
++		user2 {
++			label = "omap3:green:user1";
++			gpios = <&twl_gpio 19 1>;
++		};
++	};
++};
++
++&i2c3 {
++	clock-frequency = <100000>;
++
++	/*
++	 * Display monitor features are burnt in the EEPROM
++	 * as EDID data.
++	 */
++	eeprom@50 {
++		compatible = "ti,eeprom";
++		reg = <0x50>;
++	};
++};
+-- 
+1.7.7.6
