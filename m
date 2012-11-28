@@ -1,38 +1,50 @@
-From: Alexander Sverdlin <asv-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of_i2c: Honour "status=disabled" property of device
-Date: Wed, 28 Nov 2012 17:51:58 +0100
-Message-ID: <50B6412E.7060906@sysgo.com>
-References: <50B61DDA.5090109@sysgo.com> <50B638CC.6070106@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <50B638CC.6070106-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Jon Smirl <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, alexander sverdlin <alexander.sverdlin.ext-OYasijW0DpE@public.gmane.org>
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH v5 3/4] ARM: OMAP: gpmc: enable hwecc for AM33xx SoCs
+Date: Wed, 28 Nov 2012 17:58:58 +0100
+Message-ID: <1354121939-11246-4-git-send-email-zonque@gmail.com>
+References: <1354121939-11246-1-git-send-email-zonque@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1354121939-11246-1-git-send-email-zonque@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-omap@vger.kernel.org, jon-hunter@ti.com, avinashphilip@ti.com, x0148406@ti.com, tony@atomide.com, paul@pwsan.com, nsekhar@ti.com, jacmet@sunsite.dk, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+The am33xx is capable of handling bch error correction modes, so
+enable that feature in the driver.
 
-On 11/28/2012 05:16 PM, Stephen Warren wrote:
-> On 11/28/2012 07:21 AM, Alexander Sverdlin wrote:
->> of_i2c: Honour "status=disabled" property of device
->>
->> Currently of_i2c_register_devices() function registers all i2c devices,
->> independently from their status property in device tree. According to
->> "ePAPR 1.1" spec, device should only be registered if there is no
->> "status" property, or it has "ok" (or "okay") value (see
->> of_device_is_available()). In case of "platform devices",
->> of_platform_device_create_pdata() checks for "status" and ensures
->> that disabled devices are not populated. But such check for i2c buses
->> was missing until now. Fix it.
-> 
-> Do SPI and other buses (e.g. MDIO/MDIO mux?) need a similar change?
+Signed-off-by: Daniel Mack <zonque@gmail.com>
+---
+ arch/arm/mach-omap2/gpmc-nand.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-You are right, of_register_spi_devices() and of_mdiobus_register() both have exactly the same issue.
-Should it be a follow-up patch, or better to combine them to one patch?
-
+diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
+index f9f23a2..c8a72ba 100644
+--- a/arch/arm/mach-omap2/gpmc-nand.c
++++ b/arch/arm/mach-omap2/gpmc-nand.c
+@@ -92,17 +92,18 @@ static int omap2_nand_gpmc_retime(
+ static bool gpmc_hwecc_bch_capable(enum omap_ecc ecc_opt)
+ {
+ 	/* support only OMAP3 class */
+-	if (!cpu_is_omap34xx()) {
++	if (!cpu_is_omap34xx() && !soc_is_am33xx()) {
+ 		pr_err("BCH ecc is not supported on this CPU\n");
+ 		return 0;
+ 	}
+ 
+ 	/*
+-	 * For now, assume 4-bit mode is only supported on OMAP3630 ES1.x, x>=1.
+-	 * Other chips may be added if confirmed to work.
++	 * For now, assume 4-bit mode is only supported on OMAP3630 ES1.x, x>=1
++	 * and AM33xx derivates. Other chips may be added if confirmed to work.
+ 	 */
+ 	if ((ecc_opt == OMAP_ECC_BCH4_CODE_HW) &&
+-	    (!cpu_is_omap3630() || (GET_OMAP_REVISION() == 0))) {
++	    (!cpu_is_omap3630() || (GET_OMAP_REVISION() == 0)) &&
++	    (!soc_is_am33xx())) {
+ 		pr_err("BCH 4-bit mode is not supported on this CPU\n");
+ 		return 0;
+ 	}
 -- 
-Best regards,
-Alexander Sverdlin.
+1.7.11.7
+
