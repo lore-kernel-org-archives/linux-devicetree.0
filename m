@@ -1,63 +1,28 @@
-From: Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 6/6 v6] cpufreq, highbank: add support for highbank cpufreq
-Date: Wed, 28 Nov 2012 08:01:15 -0800
-Message-ID: <20121128160115.21126.3841@nucleus>
-References: <1351631056-25938-1-git-send-email-mark.langsdorf@calxeda.com>
- <1354046672-7392-1-git-send-email-mark.langsdorf@calxeda.com>
- <1354046672-7392-7-git-send-email-mark.langsdorf@calxeda.com>
- <20121128023240.GA28170@S2100-06.ap.freescale.net>
- <50B60E9C.9000405@calxeda.com>
- <20121128145759.GB28170@S2100-06.ap.freescale.net>
- <20121128151741.GC28170@S2100-06.ap.freescale.net>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] of_i2c: Honour "status=disabled" property of device
+Date: Wed, 28 Nov 2012 09:16:12 -0700
+Message-ID: <50B638CC.6070106@wwwdotorg.org>
+References: <50B61DDA.5090109@sysgo.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121128151741.GC28170-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50B61DDA.5090109-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Sverdlin <asv-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
+Cc: Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Jon Smirl <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, alexander sverdlin <alexander.sverdlin.ext-OYasijW0DpE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Shawn Guo (2012-11-28 07:17:44)
-> On Wed, Nov 28, 2012 at 10:58:02PM +0800, Shawn Guo wrote:
-> > On Wed, Nov 28, 2012 at 07:16:12AM -0600, Mark Langsdorf wrote:
-> > > I'd
-> > > have to move most of the logic of hb_set_target() into
-> > > clk_highbank.c:clk_pll_set_rate() and then add extra logic for when
-> > > cpufreq is not enabled/loaded.
-> > 
-> > You only need to move hb_voltage_change() into cpu clock's .set_rate()
-> > hook with no need of checking if cpufreq is enabled or not.
-> > 
-> Need to also check whether frequency or voltage should be changed first
-> in .set_rate() though.
+On 11/28/2012 07:21 AM, Alexander Sverdlin wrote:
+> of_i2c: Honour "status=disabled" property of device
 > 
-> Shawn
-> 
+> Currently of_i2c_register_devices() function registers all i2c devices,
+> independently from their status property in device tree. According to
+> "ePAPR 1.1" spec, device should only be registered if there is no
+> "status" property, or it has "ok" (or "okay") value (see
+> of_device_is_available()). In case of "platform devices",
+> of_platform_device_create_pdata() checks for "status" and ensures
+> that disabled devices are not populated. But such check for i2c buses
+> was missing until now. Fix it.
 
-The notifiers in the clk framework might be a better place for this than
-just simply hacking the logic into the .set_rate callback.
-
-I haven't looked at the definition of hb_voltage_change but does the
-call graph make any clk api calls?  Are you talking over i2c to a
-regulator?  If so then you'll probably hit the same reentrancy problem I
-hit when trying to make a general solution.
-
-Regards,
-Mike
-
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Do SPI and other buses (e.g. MDIO/MDIO mux?) need a similar change?
