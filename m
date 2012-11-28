@@ -1,46 +1,69 @@
-From: Vinod Koul <vkoul@infradead.org>
-Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a
- slave DMA channel
-Date: Wed, 28 Nov 2012 22:36:49 +0530
-Message-ID: <1354122409.7077.69.camel@vkoul-udesk3>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
-	 <1347662517-4210-3-git-send-email-jon-hunter@ti.com>
-	 <1347852805.1943.130.camel@vkoul-udesk3> <201209171159.27359.arnd@arndb.de>
-	 <20120917223619.GC12445@n2100.arm.linux.org.uk>
-	 <1347938035.1943.162.camel@vkoul-udesk3> <5060DDEB.4000600@ti.com>
-	 <1348547701.1943.190.camel@vkoul-udesk3>
-	 <20121016024318.GF24393@S2101-09.ap.freescale.net>
-	 <1350355144.1648.5259.camel@vkoul-udesk3> <509D6108.1060304@ti.com>
-	 <1353029876.7077.56.camel@vkoul-udesk3>  <50A65F95.6060101@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50A65F95.6060101@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: vinod.koul@intel.com, linux-omap <linux-omap@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Stephen Warren <swarren@nvidia.com>, Shawn Guo <shawn.guo@linaro.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V4 1/3] mfd: stmpe: Get rid of irq_invert_polarity
+Date: Thu, 29 Nov 2012 00:05:20 +0530
+Message-ID: <ed0ae069e49728a4c17f16e1735d8ffd6b1e0060.1354127005.git.viresh.kumar@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sameo@linux.intel.com, grant.likely@secretlab.ca, rabin.vincent@stericsson.com, shiraz.hashim@st.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, lee.jones@linaro.org, linus.walleij@linaro.org, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2012-11-16 at 09:45 -0600, Jon Hunter wrote:
-> 
-> Thanks, Vinod. Can you make sure you also pick up the two fixes  [1][2]
-> I sent out?
-> 
-> Cheers
-> Jon
-> 
-> [1] http://marc.info/?l=linux-omap&m=134859981920598&w=2
-> [2] http://marc.info/?l=linux-omap&m=134998461526129&w=2
-> 
-Applied both and merged the branch to my next.
-It should show up in linux-next tomorrow
+Since the very first patch, stmpe core driver is using irq_invert_polarity as
+part of platform data. But, nobody is actually using it in kernel till now.
 
-Please check
+Also, this is not something part of hardware specs, but is included to cater
+some board mistakes or quirks.
 
-Thanks
+So, better get rid of it. This is earlier discussed here:
 
+https://lkml.org/lkml/2012/11/27/636
+
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+
+This is actually V1 of this patch.
+
+ drivers/mfd/stmpe.c       | 7 -------
+ include/linux/mfd/stmpe.h | 2 --
+ 2 files changed, 9 deletions(-)
+
+diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
+index 8b164f3..fece28b 100644
+--- a/drivers/mfd/stmpe.c
++++ b/drivers/mfd/stmpe.c
+@@ -960,13 +960,6 @@ static int __devinit stmpe_chip_init(struct stmpe *stmpe)
+ 			else
+ 				icr |= STMPE_ICR_LSB_HIGH;
+ 		}
+-
+-		if (stmpe->pdata->irq_invert_polarity) {
+-			if (id == STMPE801_ID)
+-				icr ^= STMPE801_REG_SYS_CTRL_INT_HI;
+-			else
+-				icr ^= STMPE_ICR_LSB_HIGH;
+-		}
+ 	}
+ 
+ 	if (stmpe->pdata->autosleep) {
+diff --git a/include/linux/mfd/stmpe.h b/include/linux/mfd/stmpe.h
+index 15dac79..383ac15 100644
+--- a/include/linux/mfd/stmpe.h
++++ b/include/linux/mfd/stmpe.h
+@@ -190,7 +190,6 @@ struct stmpe_ts_platform_data {
+  * @id: device id to distinguish between multiple STMPEs on the same board
+  * @blocks: bitmask of blocks to enable (use STMPE_BLOCK_*)
+  * @irq_trigger: IRQ trigger to use for the interrupt to the host
+- * @irq_invert_polarity: IRQ line is connected with reversed polarity
+  * @autosleep: bool to enable/disable stmpe autosleep
+  * @autosleep_timeout: inactivity timeout in milliseconds for autosleep
+  * @irq_base: base IRQ number.  %STMPE_NR_IRQS irqs will be used, or
+@@ -207,7 +206,6 @@ struct stmpe_platform_data {
+ 	unsigned int blocks;
+ 	int irq_base;
+ 	unsigned int irq_trigger;
+-	bool irq_invert_polarity;
+ 	bool autosleep;
+ 	bool irq_over_gpio;
+ 	int irq_gpio;
 -- 
-Vinod Koul
-Intel Corp.
-
+1.7.12.rc2.18.g61b472e
