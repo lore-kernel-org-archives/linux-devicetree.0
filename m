@@ -1,69 +1,70 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] ASoC: omap-abe-twl6040: Use "ti,
-	jack-detection" DT property as boolean
-Date: Wed, 28 Nov 2012 11:35:43 +0100
-Message-ID: <1354098943-16185-1-git-send-email-peter.ujfalusi@ti.com>
+From: Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+Subject: Re: [RFC PATCH 3.7.0-rc4 0/4] introduce of_simple_module_id_table
+ macro
+Date: Wed, 28 Nov 2012 10:33:18 +0000
+Message-ID: <50B5E86E.5030905@st.com>
+References: <1353072068-17758-1-git-send-email-srinivas.kandagatla@st.com>
+ <20121120164531.8C8013E102F@localhost>
+Reply-To: srinivas.kandagatla-qxv4g6HH51o@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>
-Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121120164531.8C8013E102F@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Handle the jack detection inforamtion as bool from devicetree.
+On 20/11/12 16:45, Grant Likely wrote:
+> On Fri, 16 Nov 2012 13:21:08 +0000, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org> wrote:
+>> From: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
+>>
+>> This patch series introduces of_simple_module_id_table macro and as an example
+>> uses this macro in 3 files.
+>>
+>> Most of the device tree supported drivers have of_device_id table setup with 
+>> single compatible entry, this use-case is very simple and common.
+>>
+>> #ifdef CONFIG_OF
+>> static struct of_device_id xxx_of_match[] = {
+>> 	{ .compatible = "yyy,zzz" },
+>> 	{ },
+>> };
+>> MODULE_DEVICE_TABLE(of, xxx_of_match);
+>> #endif
+>>
+>> This patch adds a macro for this simple type of device table.
+>> Other subsystems like pm, platform, have similar macros in kernel for
+>> simplest cases.
+>> Now the user can just replace the above code with
+>>
+>> of_simple_module_id_table(xxx_of_match, "yyy,zzz");
+>>
+>> There are more than 200+ hits for this type of pattern in the current kernel.
+> While I like the reduction in lines of source code, I'm not so fond of
+> the form. There is no easy way to extend the syntax for multiple
+> entries and it doesn't cover the frequently present .data field. Can you
+> think of a way to do this that can take a variable number of table
+> entries?
+I think adding data field is straight forward I will send a v2 of this
+macro.
+However adding variable number of table entries kills the very purpose
+of this simple macro in the first-place.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt | 4 ++--
- sound/soc/omap/omap-abe-twl6040.c                            | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt b/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
-index 65dec87..fd40c85 100644
---- a/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
-+++ b/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
-@@ -12,7 +12,7 @@ Required properties:
- 
- Optional properties:
- - ti,dmic: phandle for the OMAP dmic node if the machine have it connected
--- ti,jack_detection: Need to be set to <1> if the board capable to detect jack
-+- ti,jack_detection: Need to be present if the board capable to detect jack
-   insertion, removal.
- 
- Available audio endpoints for the audio-routing table:
-@@ -59,7 +59,7 @@ sound {
- 	compatible = "ti,abe-twl6040";
- 	ti,model = "SDP4430";
- 
--	ti,jack-detection = <1>;
-+	ti,jack-detection;
- 	ti,mclk-freq = <38400000>;
- 
- 	ti,mcpdm = <&mcpdm>;
-diff --git a/sound/soc/omap/omap-abe-twl6040.c b/sound/soc/omap/omap-abe-twl6040.c
-index a57a4e6..1d6ea86 100644
---- a/sound/soc/omap/omap-abe-twl6040.c
-+++ b/sound/soc/omap/omap-abe-twl6040.c
-@@ -331,8 +331,8 @@ static __devinit int omap_abe_probe(struct platform_device *pdev)
- 			num_links = 1;
- 		}
- 
--		of_property_read_u32(node, "ti,jack-detection",
--				     &priv->jack_detection);
-+		priv->jack_detection = of_property_read_bool(node,
-+							   "ti,jack-detection");
- 		of_property_read_u32(node, "ti,mclk-freq",
- 				     &priv->mclk_freq);
- 		if (!priv->mclk_freq) {
--- 
-1.8.0
+>
+> g.
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
