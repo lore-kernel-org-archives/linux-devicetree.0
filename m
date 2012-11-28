@@ -1,79 +1,41 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] support other fsl SoCs with usbmisc + small
- fixes
-Date: Wed, 28 Nov 2012 10:52:18 +0800
-Message-ID: <20121128025217.GC18593@nchen-desktop>
-References: <1354033021-10585-1-git-send-email-m.grzeschik@pengutronix.de>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: How about a gpio_get(device *, char *) function?
+Date: Wed, 28 Nov 2012 12:38:38 +0900
+Message-ID: <2022442.P80mCjSeu2@percival>
+References: <38620644.IyR5R8rjKP@percival> <CACRpkdaUJKs7zx=JWRUb+0Qz2dQU=R5KUK+CoM+nLCgHL99AFA@mail.gmail.com> <20121126111431.AE4C23E09C2@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1354033021-10585-1-git-send-email-m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121126111431.AE4C23E09C2@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2012 at 05:16:55PM +0100, Michael Grzeschik wrote:
-> Nearly every SoC from Freescale has this non-core usb registers. This series
-> adds support for more users of this driver.
-> 
-> This series is based on Peter Chen's work. Its needed to merge his master branch
-> before applying this series:
-> 
-> https://github.com/hzpeterchen/linux-usb.git
+On Monday 26 November 2012 19:14:31 Grant Likely wrote:
+> I don't have any problem with a gpio_get function, but I do agree that
+> making it return an opaque handle is how it should be written with a new
+> set of accessors. The handle should probably be simply the pointer to
+> the &gpio_desc[number] which is a private table in gpiolib.c. The
+> definition of it isn't available outside of gpiolib.c
 
-I have tested it at i.mx6q sabrelite board, it works good.
+That looks like a reasonable approach, but this would make the new API 
+available only to systems that use GPIOlib. Shouldn't we be concerned about 
+making this available to all GPIO implementations? Or is GPIOlib so widely 
+used that we don't care?
 
-I have pushed your commit to my git, please cc me
-your coming chipidea patches, thanks.
+Right now I have a very simple wrapper (for testing purposes) around the 
+current integer-base GPIO namespace that accepts tables mapping consumers to 
+GPIO numbers, much like Thierry did for the PWM subsystem. Integrating it into 
+GPIOlib does not seem to be much more difficult ; it would require some 
+refactoring though as most of the code should be shared by the two APIs.
 
-Alex, please add:
+This also seems to be the right opportunity (although not directly related) to 
+switch the gpio_desc table into something more flexible. Two approaches come to 
+mind: either a linked-list of gpio_chips ordered by base GPIO, or a radix-
+tree. The small number of gpio chips in a system seem to make the first 
+approach reasonable enough - GPIO lookup time would become linear instead of 
+constant, but it should not be noticeable from the consumer perspective.
 
-Reviewed-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Tested-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-
-> 
-> Changes since v3:
-> * removed [PATCH v3 5/7] usb: chipidea: usbmisc: add support for ahb, ipg and per clock
-> 
-> 
-> Marc Kleine-Budde (3):
->   usb: chipidea: usbmisc: unset global varibale usbmisc on driver remove
->   usb: chipidea: usbmisc: fix a potential race condition
->   usb: chipidea: usbmisc: prepare driver to handle more than one soc
-> 
-> Michael Grzeschik (3):
->   usb: chipidea: usbmisc: rename file, struct and functions to usbmisc_imx
->   usb: chipidea: usbmisc: add mx53 support
->   usb: chipidea: usbmisc: add post handling and errata fix for mx25
-> 
->  .../devicetree/bindings/usb/ci13xxx-imx.txt        |    2 +
->  drivers/usb/chipidea/Makefile                      |    2 +-
->  drivers/usb/chipidea/ci13xxx_imx.c                 |   12 +
->  drivers/usb/chipidea/ci13xxx_imx.h                 |    3 +
->  drivers/usb/chipidea/usbmisc_imx.c                 |  252 ++++++++++++++++++++
->  drivers/usb/chipidea/usbmisc_imx6q.c               |  162 -------------
->  6 files changed, 270 insertions(+), 163 deletions(-)
->  create mode 100644 drivers/usb/chipidea/usbmisc_imx.c
->  delete mode 100644 drivers/usb/chipidea/usbmisc_imx6q.c
-> 
-> -- 
-> 1.7.10.4
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
--- 
-
-Best Regards,
-Peter Chen
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Alex.
