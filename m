@@ -1,192 +1,76 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V4 Resend 3/3] mfd: stmpe: Update DT support in stmpe driver
-Date: Thu, 29 Nov 2012 00:17:17 +0530
-Message-ID: <eb65ded18560f902b0713d9df57c43e07704b5ec.1354128258.git.viresh.kumar@linaro.org>
-References: <d1f012d7bb2835f696fc100073f2eb16d9f6204d.1354128258.git.viresh.kumar@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d1f012d7bb2835f696fc100073f2eb16d9f6204d.1354128258.git.viresh.kumar@linaro.org>
-In-Reply-To: <d1f012d7bb2835f696fc100073f2eb16d9f6204d.1354128258.git.viresh.kumar@linaro.org>
-References: <d1f012d7bb2835f696fc100073f2eb16d9f6204d.1354128258.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com, grant.likely@secretlab.ca, rabin.vincent@stericsson.com, shiraz.hashim@st.com
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, lee.jones@linaro.org, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>, Viresh Kumar <viresh.kumar@linaro.org>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH] ASoC: omap-abe-twl6040: Use "ti,jack-detection" DT
+ property as boolean
+Date: Wed, 28 Nov 2012 19:17:20 +0000
+Message-ID: <20121128191719.GA32691@opensource.wolfsonmicro.com>
+References: <1354098943-16185-1-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============9150900626875740763=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1354098943-16185-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Vipul Kumar Samar <vipulkumar.samar@st.com>
 
-This patch extends existing DT support for stmpe devices. This updates:
-- DT support from stmpe SPI and I2C drivers
-- missing header files in stmpe.c
-- stmpe_of_probe() with pwm, rotator and new bindings.
-- Bindings are updated in binding document.
+--===============9150900626875740763==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ELawpaRm0uGyL1wg"
+Content-Disposition: inline
 
-Signed-off-by: Vipul Kumar Samar <vipulkumar.samar@st.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
-V3->V4:
-- Remove need to pass irq type and polarity from DT.
-- Remove need to pass id from platform data.
 
- Documentation/devicetree/bindings/mfd/stmpe.txt |  9 ++++++---
- drivers/mfd/stmpe-i2c.c                         | 15 +++++++++++++++
- drivers/mfd/stmpe-spi.c                         | 15 +++++++++++++++
- drivers/mfd/stmpe.c                             | 22 ++++++++++++++++------
- 4 files changed, 52 insertions(+), 9 deletions(-)
+--ELawpaRm0uGyL1wg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
-index 8f0aeda..d2d88d9 100644
---- a/Documentation/devicetree/bindings/mfd/stmpe.txt
-+++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
-@@ -1,8 +1,11 @@
--* STMPE Multi-Functional Device
-+* ST Microelectronics STMPE Multi-Functional Device
-+
-+STMPE is an MFD device which may expose following inbuilt devices: gpio, keypad,
-+touchscreen, adc, pwm, rotator.
- 
- Required properties:
-- - compatible                   : "st,stmpe[811|1601|2401|2403]"
-- - reg                          : I2C address of the device
-+ - compatible                   : "st,stmpe[610|801|811|1601|2401|2403]"
-+ - reg                          : I2C/SPI address of the device
- 
- Optional properties:
-  - interrupts                   : The interrupt outputs from the controller
-diff --git a/drivers/mfd/stmpe-i2c.c b/drivers/mfd/stmpe-i2c.c
-index c734dc3..003c49b 100644
---- a/drivers/mfd/stmpe-i2c.c
-+++ b/drivers/mfd/stmpe-i2c.c
-@@ -13,6 +13,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/types.h>
- #include "stmpe.h"
- 
-@@ -81,6 +82,19 @@ static const struct i2c_device_id stmpe_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, stmpe_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id stmpe_dt_ids[] = {
-+	{ .compatible = "st,stmpe610", .data = &stmpe_i2c_id[0], },
-+	{ .compatible = "st,stmpe801", .data = &stmpe_i2c_id[1], },
-+	{ .compatible = "st,stmpe811", .data = &stmpe_i2c_id[2], },
-+	{ .compatible = "st,stmpe1601", .data = &stmpe_i2c_id[3], },
-+	{ .compatible = "st,stmpe2401", .data = &stmpe_i2c_id[4], },
-+	{ .compatible = "st,stmpe2403", .data = &stmpe_i2c_id[5], },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, stmpe_dt_ids);
-+#endif
-+
- static struct i2c_driver stmpe_i2c_driver = {
- 	.driver = {
- 		.name = "stmpe-i2c",
-@@ -88,6 +102,7 @@ static struct i2c_driver stmpe_i2c_driver = {
- #ifdef CONFIG_PM
- 		.pm = &stmpe_dev_pm_ops,
- #endif
-+		.of_match_table = of_match_ptr(stmpe_dt_ids),
- 	},
- 	.probe		= stmpe_i2c_probe,
- 	.remove		= __devexit_p(stmpe_i2c_remove),
-diff --git a/drivers/mfd/stmpe-spi.c b/drivers/mfd/stmpe-spi.c
-index 9edfe86..1e2bff0 100644
---- a/drivers/mfd/stmpe-spi.c
-+++ b/drivers/mfd/stmpe-spi.c
-@@ -11,6 +11,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/types.h>
- #include "stmpe.h"
- 
-@@ -119,6 +120,19 @@ static const struct spi_device_id stmpe_spi_id[] = {
- };
- MODULE_DEVICE_TABLE(spi, stmpe_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id stmpe_dt_ids[] = {
-+	{ .compatible = "st,stmpe610", .data = (void *)STMPE610, },
-+	{ .compatible = "st,stmpe801", .data = (void *)STMPE801, },
-+	{ .compatible = "st,stmpe811", .data = (void *)STMPE811, },
-+	{ .compatible = "st,stmpe1601", .data = (void *)STMPE1601, },
-+	{ .compatible = "st,stmpe2401", .data = (void *)STMPE2401, },
-+	{ .compatible = "st,stmpe2403", .data = (void *)STMPE2403, },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, stmpe_dt_ids);
-+#endif
-+
- static struct spi_driver stmpe_spi_driver = {
- 	.driver = {
- 		.name	= "stmpe-spi",
-@@ -126,6 +140,7 @@ static struct spi_driver stmpe_spi_driver = {
- #ifdef CONFIG_PM
- 		.pm	= &stmpe_dev_pm_ops,
- #endif
-+		.of_match_table = of_match_ptr(stmpe_dt_ids),
- 	},
- 	.probe		= stmpe_spi_probe,
- 	.remove		= __devexit_p(stmpe_spi_remove),
-diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
-index 10819e6..88cd8e5 100644
---- a/drivers/mfd/stmpe.c
-+++ b/drivers/mfd/stmpe.c
-@@ -7,12 +7,15 @@
-  * Author: Rabin Vincent <rabin.vincent@stericsson.com> for ST-Ericsson
-  */
- 
-+#include <linux/err.h>
- #include <linux/gpio.h>
- #include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/pm.h>
- #include <linux/slab.h>
- #include <linux/mfd/core.h>
-@@ -1021,6 +1024,12 @@ void __devinit stmpe_of_probe(struct stmpe_platform_data *pdata,
- {
- 	struct device_node *child;
- 
-+	/*
-+	 * Distinct names of same cell-type within multiple instances of stmpe
-+	 * will be guaranteed by DT.
-+	 */
-+	pdata->id = -1;
-+
- 	of_property_read_u32(np, "st,autosleep-timeout",
- 			&pdata->autosleep_timeout);
- 
-@@ -1029,15 +1038,16 @@ void __devinit stmpe_of_probe(struct stmpe_platform_data *pdata,
- 	for_each_child_of_node(np, child) {
- 		if (!strcmp(child->name, "stmpe_gpio")) {
- 			pdata->blocks |= STMPE_BLOCK_GPIO;
--		}
--		if (!strcmp(child->name, "stmpe_keypad")) {
-+		} else if (!strcmp(child->name, "stmpe_keypad")) {
- 			pdata->blocks |= STMPE_BLOCK_KEYPAD;
--		}
--		if (!strcmp(child->name, "stmpe_touchscreen")) {
-+		} else if (!strcmp(child->name, "stmpe_touchscreen")) {
- 			pdata->blocks |= STMPE_BLOCK_TOUCHSCREEN;
--		}
--		if (!strcmp(child->name, "stmpe_adc")) {
-+		} else if (!strcmp(child->name, "stmpe_adc")) {
- 			pdata->blocks |= STMPE_BLOCK_ADC;
-+		} else if (!strcmp(child->name, "stmpe_pwm")) {
-+			pdata->blocks |= STMPE_BLOCK_PWM;
-+		} else if (!strcmp(child->name, "stmpe_rotator")) {
-+			pdata->blocks |= STMPE_BLOCK_ROTATOR;
- 		}
- 	}
- }
--- 
-1.7.12.rc2.18.g61b472e
+On Wed, Nov 28, 2012 at 11:35:43AM +0100, Peter Ujfalusi wrote:
+> Handle the jack detection inforamtion as bool from devicetree.
+
+Applied, thanks.
+
+--ELawpaRm0uGyL1wg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQtmMoAAoJELSic+t+oim9nX0QAIyliEP3d0hsA8+NqXmB22ZK
+V9XKEJKluHf37S6XoOROQlzas1RPAfE93QzDalA7zfCRyIbFGHyh3HWD7iPAi2FO
+J4tlFHzcoV+xJ0XWiAYJ3571dxQdH84jBKp5jwo3lbD3sBJi7m2RxaTaiP5XVeRB
+wc1C+bPWhsukfX8Gu1A6HNuqYz3gMK3UX5JwWIX0ZsZsOS6zkwgVgFMyD4ACYC+A
+BA91Xk3ljbSNTpynBuy6lDg5rZQ/SSEHOEhvzHPOa+92GN0wjb85PQIfu6AY7DQx
+B2EEKs+0K1rxPB1pFSRaQZ0jBiYqxSs7OrecYtpzHWd0g1w4KtE3zWhPZkO0Ed6L
+cI5dodiNtqZ16vBjOBJTa3LzSEoUZzATjwH+/Boc3xqhmcLB3Mx1WiNlrxGM4tXR
+EKwILPIffD1BgVZJrcnZtG5hHKuvRQAeuBBN4NCoAtJvSN1Um9HXqZAcya5maXvS
+woXvGRXQmTIBOw5WyMHIXsfcLiWvV7Fpxbg0RAyZlzWr9YSjNUxzYkYhuY20+TzA
+Z3VcUW0AdP1ncfr7M42+Pe1s/eONA0Kf7mq0H261gGzInPmXBioMkfDyXhSi30zn
+yHgmk7KxvSAkgzeEIcGT1+dtmZjKgXnzaG48Q6W1cJeJFXftem9byrBPqTR4axHy
+1zrPTgiSUJ16ivzmDy1I
+=FsOD
+-----END PGP SIGNATURE-----
+
+--ELawpaRm0uGyL1wg--
+
+--===============9150900626875740763==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============9150900626875740763==--
