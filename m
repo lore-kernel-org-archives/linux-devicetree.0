@@ -1,74 +1,52 @@
-From: Qing Xu <qingx@marvell.com>
-Subject: [PATCH v2 6/7] mfd: max8925: support dt for backlight
-Date: Wed, 28 Nov 2012 10:06:45 +0800
-Message-ID: <1354068405-9779-1-git-send-email-qingx@marvell.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: qingx@marvell.com, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rpurdie@rpsys.net, FlorianSchandinat@gmx.de, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/6 v6] cpufreq, highbank: add support for highbank cpufreq
+Date: Wed, 28 Nov 2012 10:32:42 +0800
+Message-ID: <20121128023240.GA28170@S2100-06.ap.freescale.net>
+References: <1351631056-25938-1-git-send-email-mark.langsdorf@calxeda.com>
+ <1354046672-7392-1-git-send-email-mark.langsdorf@calxeda.com>
+ <1354046672-7392-7-git-send-email-mark.langsdorf@calxeda.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1354046672-7392-7-git-send-email-mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Qing Xu <qingx@marvell.com>
+On Tue, Nov 27, 2012 at 02:04:32PM -0600, Mark Langsdorf wrote:
+> Highbank processors depend on the external ECME to perform voltage
+> management based on a requested frequency. Communication between the
+> A9 cores and the ECME happens over the pl320 IPC channel.
 
-Signed-off-by: Qing Xu <qingx@marvell.com>
----
- drivers/video/backlight/max8925_bl.c |   31 ++++++++++++++++++++++++++++++-
- 1 files changed, 30 insertions(+), 1 deletions(-)
+...
 
-diff --git a/drivers/video/backlight/max8925_bl.c b/drivers/video/backlight/max8925_bl.c
-index f72ba54..1682d00 100644
---- a/drivers/video/backlight/max8925_bl.c
-+++ b/drivers/video/backlight/max8925_bl.c
-@@ -101,6 +101,29 @@ static const struct backlight_ops max8925_backlight_ops = {
- 	.get_brightness	= max8925_backlight_get_brightness,
- };
- 
-+#ifdef CONFIG_OF
-+static int max8925_backlight_dt_init(struct platform_device *pdev,
-+			      struct max8925_backlight_pdata *pdata)
-+{
-+	struct device_node *nproot = pdev->dev.parent->of_node, *np;
-+	int dual_string;
-+
-+	if (!nproot)
-+		return -ENODEV;
-+	np = of_find_node_by_name(nproot, "backlight");
-+	if (!np) {
-+		dev_err(&pdev->dev, "failed to find backlight node\n");
-+		return -ENODEV;
-+	}
-+
-+	of_property_read_u32(np, "max8925-dual-string", &dual_string);
-+	pdata->dual_string = dual_string;
-+	return 0;
-+}
-+#else
-+#define max8925_backlight_dt_init(x, y)	(-1)
-+#endif
-+
- static int __devinit max8925_backlight_probe(struct platform_device *pdev)
- {
- 	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
-@@ -150,6 +173,13 @@ static int __devinit max8925_backlight_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, bl);
- 
- 	value = 0;
-+	if (pdev->dev.parent->of_node && !pdata) {
-+		pdata = devm_kzalloc(&pdev->dev,
-+				     sizeof(struct max8925_backlight_pdata),
-+				     GFP_KERNEL);
-+		max8925_backlight_dt_init(pdev, pdata);
-+	}
-+
- 	if (pdata) {
- 		if (pdata->lxw_scl)
- 			value |= (1 << 7);
-@@ -161,7 +191,6 @@ static int __devinit max8925_backlight_probe(struct platform_device *pdev)
- 	ret = max8925_set_bits(chip->i2c, data->reg_mode_cntl, 0xfe, value);
- 	if (ret < 0)
- 		goto out_brt;
--
- 	backlight_update_status(bl);
- 	return 0;
- out_brt:
--- 
-1.7.0.4
+> +static int hb_voltage_change(unsigned int freq)
+> +{
+> +	int i;
+> +	u32 msg[7];
+> +
+> +	msg[0] = HB_CPUFREQ_CHANGE_NOTE;
+> +	msg[1] = freq / 1000;
+> +	for (i = 2; i < 7; i++)
+> +		msg[i] = 0;
+> +
+> +	return pl320_ipc_transmit(msg);
+
+Is it possible to have this handled inside clk_set_rate() call of cpu
+clock?
+
+Shawn
+
+> +}
