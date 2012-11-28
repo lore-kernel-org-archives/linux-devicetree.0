@@ -1,52 +1,212 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/6 v6] cpufreq, highbank: add support for highbank cpufreq
-Date: Wed, 28 Nov 2012 10:32:42 +0800
-Message-ID: <20121128023240.GA28170@S2100-06.ap.freescale.net>
-References: <1351631056-25938-1-git-send-email-mark.langsdorf@calxeda.com>
- <1354046672-7392-1-git-send-email-mark.langsdorf@calxeda.com>
- <1354046672-7392-7-git-send-email-mark.langsdorf@calxeda.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1354046672-7392-7-git-send-email-mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Qing Xu <qingx@marvell.com>
+Subject: [PATCH v3 7/7] mfd: max8925: add dts
+Date: Wed, 28 Nov 2012 10:09:51 +0800
+Message-ID: <1354068591-10234-1-git-send-email-qingx@marvell.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: qingx@marvell.com, linux@arm.linux.org.uk, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2012 at 02:04:32PM -0600, Mark Langsdorf wrote:
-> Highbank processors depend on the external ECME to perform voltage
-> management based on a requested frequency. Communication between the
-> A9 cores and the ECME happens over the pl320 IPC channel.
+From: Qing Xu <qingx@marvell.com>
 
-...
+add max8925 dts support into mmp2 brownstone platform
 
-> +static int hb_voltage_change(unsigned int freq)
-> +{
-> +	int i;
-> +	u32 msg[7];
-> +
-> +	msg[0] = HB_CPUFREQ_CHANGE_NOTE;
-> +	msg[1] = freq / 1000;
-> +	for (i = 2; i < 7; i++)
-> +		msg[i] = 0;
-> +
-> +	return pl320_ipc_transmit(msg);
+Signed-off-by: Qing Xu <qingx@marvell.com>
+---
+ arch/arm/boot/dts/mmp2-brownstone.dts |  158 +++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/mmp2.dtsi           |    4 +-
+ 2 files changed, 161 insertions(+), 1 deletions(-)
 
-Is it possible to have this handled inside clk_set_rate() call of cpu
-clock?
-
-Shawn
-
-> +}
+diff --git a/arch/arm/boot/dts/mmp2-brownstone.dts b/arch/arm/boot/dts/mmp2-brownstone.dts
+index c9b4f27..d94210b 100644
+--- a/arch/arm/boot/dts/mmp2-brownstone.dts
++++ b/arch/arm/boot/dts/mmp2-brownstone.dts
+@@ -29,6 +29,164 @@
+ 			};
+ 			twsi1: i2c@d4011000 {
+ 				status = "okay";
++				pmic: max8925@3c {
++					compatible = "maxium,max8925";
++					reg = <0x3c>;
++					interrupts = <1>;
++					interrupt-parent = <&intcmux4>;
++					interrupt-controller;
++					#interrupt-cells = <1>;
++					tsc-irq = <0>;
++
++					regulators {
++						SDV1 {
++							regulator-min-microvolt = <637500>;
++							regulator-max-microvolt = <1425000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						SDV2 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2225000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						SDV3 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO1 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO2 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO3 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO4 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO5 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO6 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO7 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO8 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO9 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO10 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++						};
++						LDO11 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO12 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO13 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO14 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO15 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO16 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO17 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO18 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO19 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO20 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++					};
++					backlight {
++						max8925-dual-string = <0>;
++					};
++					charger {
++						batt-detect = <0>;
++						topoff-threshold = <1>;
++						fast-charge = <7>;
++						no-temp-support = <0>;
++						no-insert-detect = <0>;
++					};
++				};
+ 			};
+ 			rtc: rtc@d4010000 {
+ 				status = "okay";
+diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
+index 80f74e2..76f9cc7 100644
+--- a/arch/arm/boot/dts/mmp2.dtsi
++++ b/arch/arm/boot/dts/mmp2.dtsi
+@@ -41,7 +41,7 @@
+ 				mrvl,intc-nr-irqs = <64>;
+ 			};
+ 
+-			intcmux4@d4282150 {
++			intcmux4: interrupt-controller@d4282150 {
+ 				compatible = "mrvl,mmp2-mux-intc";
+ 				interrupts = <4>;
+ 				interrupt-controller;
+@@ -196,6 +196,8 @@
+ 				compatible = "mrvl,mmp-twsi";
+ 				reg = <0xd4011000 0x1000>;
+ 				interrupts = <7>;
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				mrvl,i2c-fast-mode;
+ 				status = "disabled";
+ 			};
+-- 
+1.7.0.4
