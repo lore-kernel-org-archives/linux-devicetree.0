@@ -1,64 +1,64 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH V3 3/3] mfd: stmpe: Update DT support in stmpe driver
-Date: Wed, 28 Nov 2012 09:00:28 +0000
-Message-ID: <20121128090028.GJ2013@gmail.com>
-References: <7a48ae364663ab3a336251fada9aee07ccd728b8.1353610437.git.viresh.kumar@linaro.org>
- <20121123094132.EFCB73E07BE@localhost>
- <CAKohpomAM2pw9kgB6khtHzQ2WCXKZ9_pi1_sOH2dQToVS8ep4w@mail.gmail.com>
- <20121126184015.784993E091F@localhost>
- <CAKohpo=dHz-fJRdwovOWesAZJwibgrNk-+2t--JK+T_sBsu9Tw@mail.gmail.com>
- <CAKohpomOxfLhpZqpk3aymdNa7UAGRcex7d+N5srkFDnrhtULTw@mail.gmail.com>
- <20121127084007.GA7897@gmail.com>
- <CAKohpomPMYU5H_tx1BF7TD6F7a5rp5O=xDf3r-TGZ-r9SBp3yA@mail.gmail.com>
- <CAH+eYFCshghQauBdn1rLQ-sKG=Bxa_0XpJsry60TAD3mibNOFA@mail.gmail.com>
- <CAKohpok6=O_TMaApYQGKbzHmJ8tkST5VAHDnLYgHb0g3gSPwbQ@mail.gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [GIT PULL] ASoC: Samsung: Updates for v3.8
+Date: Wed, 28 Nov 2012 09:08:40 +0000
+Message-ID: <20121128090840.GH32691@opensource.wolfsonmicro.com>
+References: <001601cdcd28$ce5204c0$6af60e40$@com>
+ <CAAgF-Bfv46Xt0hFdPmviCdZbpje1M4MBnmCsHGgdOjcq4SnuJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="G44BJl3Aq1QbV/QL"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAKohpok6=O_TMaApYQGKbzHmJ8tkST5VAHDnLYgHb0g3gSPwbQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rabin Vincent <rabin@rab.in>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, l.fu@pengutronix.de
+In-Reply-To: <CAAgF-Bfv46Xt0hFdPmviCdZbpje1M4MBnmCsHGgdOjcq4SnuJw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padma Venkat <padma.kvr@gmail.com>
+Cc: alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Sangbeom Kim <sbkim73@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 Nov 2012, Viresh Kumar wrote:
 
-> On 28 November 2012 01:25, Rabin Vincent <rabin@rab.in> wrote:
-> > 2012/11/27 Viresh Kumar <viresh.kumar@linaro.org>:
-> >> On 27 November 2012 14:10, Lee Jones <lee.jones@linaro.org> wrote:
-> >> I haven't seen this in any of SPEAr boards i have worked on. Maybe=
- Rabin
-> >> would have, that's why he added that part of code :)
-> >>
-> >> @Rabin/Linus: Do you remember why have you added this in stmpe dri=
-ver:
-> >>
-> >> +       if (stmpe->pdata->irq_invert_polarity)
-> >> +               icr ^=3D STMPE_ICR_LSB_HIGH;
-> >> +
-> >>
-> >> Does somebody actually need it?
-> >
-> > It was (as irq_rev_pol) part of Luotao Fu's proposed STMPE811 patch=
-set
-> > (https://patchwork.kernel.org/patch/106173/) which I integrated int=
-o my
-> > version of the STMPE driver, which didn't have it in its initial ve=
-rsion
-> > (https://patchwork.kernel.org/patch/103273/).
-> >
-> > It's not something _I_ ever used.
->=20
-> I grep'd kernel and nobody is using it there, so lets get rid of it
-> completely :)
-> I will patch it.
+--G44BJl3Aq1QbV/QL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Great. :)
+On Wed, Nov 28, 2012 at 11:21:31AM +0530, Padma Venkat wrote:
+> On Wed, Nov 28, 2012 at 10:55 AM, Sangbeom Kim <sbkim73@samsung.com> wrote:
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> >> > The requirement for an alias is also very odd, where does that come from?
+
+> >> I don't know that Which one is odd. Please let me know.
+
+> > Having them at all is odd - it's not something other DT bindings have needed and there was nothing
+> > saying what it was for.
+
+> What is the exact requirement here? Should I remove the alias ids or
+> I2S1 and I2S2 nodes as they are in disabled state? This is done same
+> way as SPI and I2C. Please explain me.
+
+If you need those aliases you need to explain why.  They're listed as
+mandatory so presumably they must be needed for something?  It might be
+that this is a good idea we didn't think of before so the answer is just
+to document that rather than remove them.
+
+--G44BJl3Aq1QbV/QL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQtdSRAAoJELSic+t+oim9hW4P/iB9/Ver6dz1OkExAxgZhjBi
+RsiZwCfP9WJpy53G5JuutnRFqvrAzjEbOaWI9JiVieg5D+Gl8RCpYt78RkOhaOSa
+PIcXrtkac9NMkfgx8YjH2wqR2o/aebfFan5y8SAIQNHWE9GRe6BjLb0+FLezFTPY
+k2PRsQVExCOeDmv1HvHREmrVBW1OMA2PYQCKH0MfX6nR1CEsOxgu/qgONFUHVlgb
+rPpCVHfXcSXxCmidlEwDax7BcXOsJk337CAE/rjS+86WZxWIipwTmpOIsao3Y/HF
+l9ywAqA0eXFb++FtgAd/0HolORcxV7UewxYCZr6fJO6o4ZVI/0BpMHOfM/Iasw06
+vOwiS99Lf8pkiwuSLEx7B6zNbbERRhP1XBZnOtZoKSoFx2pzTes/yYY5bbKwtwCE
+KH9wAHc0vVMpjkwKXZa9TeaebbqQjZN8lGzrGuHfIjZEAOiiWIehjUB09viB4Ic3
+Kd08qeia1yQqjxp7TetyjMPGYuMOlLzavKB95+CIioGQ7NhYV/VRK4Tqw0IqhXIg
+fko4fZOeVZYLzKeb0ToJkVMr3v1ox4WGhhbyCB9xLFm7rqoEgfkT2bHQ6DsD0Q+p
+9aUGm+Ko0RY33/uZPUrDoYufNahH5Fn3yiQZ9mLq3p2PLzyd/gsDCMqPxpe8+o72
+Q5O/q8xU/OiWt/S3lCdV
+=y6Du
+-----END PGP SIGNATURE-----
+
+--G44BJl3Aq1QbV/QL--
