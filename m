@@ -1,64 +1,69 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [GIT PULL] ASoC: Samsung: Updates for v3.8
-Date: Wed, 28 Nov 2012 09:08:40 +0000
-Message-ID: <20121128090840.GH32691@opensource.wolfsonmicro.com>
-References: <001601cdcd28$ce5204c0$6af60e40$@com>
- <CAAgF-Bfv46Xt0hFdPmviCdZbpje1M4MBnmCsHGgdOjcq4SnuJw@mail.gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] ASoC: omap-abe-twl6040: Use "ti,
+	jack-detection" DT property as boolean
+Date: Wed, 28 Nov 2012 11:35:43 +0100
+Message-ID: <1354098943-16185-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="G44BJl3Aq1QbV/QL"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAgF-Bfv46Xt0hFdPmviCdZbpje1M4MBnmCsHGgdOjcq4SnuJw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padma Venkat <padma.kvr@gmail.com>
-Cc: alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Sangbeom Kim <sbkim73@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>
+Cc: alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+Handle the jack detection inforamtion as bool from devicetree.
 
---G44BJl3Aq1QbV/QL
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt | 4 ++--
+ sound/soc/omap/omap-abe-twl6040.c                            | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-On Wed, Nov 28, 2012 at 11:21:31AM +0530, Padma Venkat wrote:
-> On Wed, Nov 28, 2012 at 10:55 AM, Sangbeom Kim <sbkim73@samsung.com> wrote:
-
-> >> > The requirement for an alias is also very odd, where does that come from?
-
-> >> I don't know that Which one is odd. Please let me know.
-
-> > Having them at all is odd - it's not something other DT bindings have needed and there was nothing
-> > saying what it was for.
-
-> What is the exact requirement here? Should I remove the alias ids or
-> I2S1 and I2S2 nodes as they are in disabled state? This is done same
-> way as SPI and I2C. Please explain me.
-
-If you need those aliases you need to explain why.  They're listed as
-mandatory so presumably they must be needed for something?  It might be
-that this is a good idea we didn't think of before so the answer is just
-to document that rather than remove them.
-
---G44BJl3Aq1QbV/QL
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQtdSRAAoJELSic+t+oim9hW4P/iB9/Ver6dz1OkExAxgZhjBi
-RsiZwCfP9WJpy53G5JuutnRFqvrAzjEbOaWI9JiVieg5D+Gl8RCpYt78RkOhaOSa
-PIcXrtkac9NMkfgx8YjH2wqR2o/aebfFan5y8SAIQNHWE9GRe6BjLb0+FLezFTPY
-k2PRsQVExCOeDmv1HvHREmrVBW1OMA2PYQCKH0MfX6nR1CEsOxgu/qgONFUHVlgb
-rPpCVHfXcSXxCmidlEwDax7BcXOsJk337CAE/rjS+86WZxWIipwTmpOIsao3Y/HF
-l9ywAqA0eXFb++FtgAd/0HolORcxV7UewxYCZr6fJO6o4ZVI/0BpMHOfM/Iasw06
-vOwiS99Lf8pkiwuSLEx7B6zNbbERRhP1XBZnOtZoKSoFx2pzTes/yYY5bbKwtwCE
-KH9wAHc0vVMpjkwKXZa9TeaebbqQjZN8lGzrGuHfIjZEAOiiWIehjUB09viB4Ic3
-Kd08qeia1yQqjxp7TetyjMPGYuMOlLzavKB95+CIioGQ7NhYV/VRK4Tqw0IqhXIg
-fko4fZOeVZYLzKeb0ToJkVMr3v1ox4WGhhbyCB9xLFm7rqoEgfkT2bHQ6DsD0Q+p
-9aUGm+Ko0RY33/uZPUrDoYufNahH5Fn3yiQZ9mLq3p2PLzyd/gsDCMqPxpe8+o72
-Q5O/q8xU/OiWt/S3lCdV
-=y6Du
------END PGP SIGNATURE-----
-
---G44BJl3Aq1QbV/QL--
+diff --git a/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt b/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
+index 65dec87..fd40c85 100644
+--- a/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
++++ b/Documentation/devicetree/bindings/sound/omap-abe-twl6040.txt
+@@ -12,7 +12,7 @@ Required properties:
+ 
+ Optional properties:
+ - ti,dmic: phandle for the OMAP dmic node if the machine have it connected
+-- ti,jack_detection: Need to be set to <1> if the board capable to detect jack
++- ti,jack_detection: Need to be present if the board capable to detect jack
+   insertion, removal.
+ 
+ Available audio endpoints for the audio-routing table:
+@@ -59,7 +59,7 @@ sound {
+ 	compatible = "ti,abe-twl6040";
+ 	ti,model = "SDP4430";
+ 
+-	ti,jack-detection = <1>;
++	ti,jack-detection;
+ 	ti,mclk-freq = <38400000>;
+ 
+ 	ti,mcpdm = <&mcpdm>;
+diff --git a/sound/soc/omap/omap-abe-twl6040.c b/sound/soc/omap/omap-abe-twl6040.c
+index a57a4e6..1d6ea86 100644
+--- a/sound/soc/omap/omap-abe-twl6040.c
++++ b/sound/soc/omap/omap-abe-twl6040.c
+@@ -331,8 +331,8 @@ static __devinit int omap_abe_probe(struct platform_device *pdev)
+ 			num_links = 1;
+ 		}
+ 
+-		of_property_read_u32(node, "ti,jack-detection",
+-				     &priv->jack_detection);
++		priv->jack_detection = of_property_read_bool(node,
++							   "ti,jack-detection");
+ 		of_property_read_u32(node, "ti,mclk-freq",
+ 				     &priv->mclk_freq);
+ 		if (!priv->mclk_freq) {
+-- 
+1.8.0
