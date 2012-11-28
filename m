@@ -1,135 +1,75 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH] gpio: New driver for GPO emulation using PWM generators
-Date: Wed, 28 Nov 2012 22:02:41 +0100
-Message-ID: <50B67BF1.8030808@metafoo.de>
-References: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com> <20121123075537.A14713E0A91@localhost> <50AF3E21.4000009@ti.com> <50AF4584.7020604@ti.com> <20121126154600.765E03E1AFD@localhost> <50B5D161.6010200@ti.com>
+From: Mike Turquette <mturquette@ti.com>
+Subject: Re: [PATCH 6/6 v6] cpufreq, highbank: add support for highbank cpufreq
+Date: Wed, 28 Nov 2012 13:05:52 -0800
+Message-ID: <20121128210552.21126.90710@nucleus>
+References: <1351631056-25938-1-git-send-email-mark.langsdorf@calxeda.com>
+ <1354046672-7392-1-git-send-email-mark.langsdorf@calxeda.com>
+ <1354046672-7392-7-git-send-email-mark.langsdorf@calxeda.com>
+ <20121128023240.GA28170@S2100-06.ap.freescale.net>
+ <50B60E9C.9000405@calxeda.com>
+ <20121128145759.GB28170@S2100-06.ap.freescale.net>
+ <20121128151741.GC28170@S2100-06.ap.freescale.net>
+ <20121128160115.21126.3841@nucleus> <50B6395B.806@calxeda.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50B5D161.6010200@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <50B6395B.806@calxeda.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Langsdorf <mark.langsdorf@calxeda.com>
+Cc: Shawn Guo <shawn.guo@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/2012 09:54 AM, Peter Ujfalusi wrote:
-> Hi Grant, Lars, Thierry,
+Quoting Mark Langsdorf (2012-11-28 08:18:35)
+> On 11/28/2012 10:01 AM, Mike Turquette wrote:
+> > Quoting Shawn Guo (2012-11-28 07:17:44)
+> >> On Wed, Nov 28, 2012 at 10:58:02PM +0800, Shawn Guo wrote:
+> >>> On Wed, Nov 28, 2012 at 07:16:12AM -0600, Mark Langsdorf wrote:
+> >>>> I'd
+> >>>> have to move most of the logic of hb_set_target() into
+> >>>> clk_highbank.c:clk_pll_set_rate() and then add extra logic for when
+> >>>> cpufreq is not enabled/loaded.
+> >>>
+> >>> You only need to move hb_voltage_change() into cpu clock's .set_rate()
+> >>> hook with no need of checking if cpufreq is enabled or not.
+> >>>
+> >> Need to also check whether frequency or voltage should be changed first
+> >> in .set_rate() though.
+> >>
+> >> Shawn
+> >>
+> > 
+> > The notifiers in the clk framework might be a better place for this than
+> > just simply hacking the logic into the .set_rate callback.
 > 
-> On 11/26/2012 04:46 PM, Grant Likely wrote:
->> You're effectively asking the pwm layer to behave like a gpio (which
->> is completely reasonable). Having a completely separate translation node
->> really doesn't make sense because it is entirely a software construct.
->> In fact, the way your using it is *entirely* to make the Linux driver
->> model instantiate the translation code. It has *nothing* to do with the
->> structure of the hardware. It makes complete sense that if a PWM is
->> going to be used as a GPIO, then the PWM node should conform to the GPIO
->> binding.
-> 
-> I understand your point around this. I might say I agree with it as well...
-> I spent yesterday with prototyping and I'm not really convinced that it is a
-> good approach from C code point of view. I got it working, yes.
-> In essence this is what I have on top of the slightly modified gpio-pwm.c
-> driver I have submitted:
-> 
-> DTS files:
-> twl_pwm: pwm {
-> 	/* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
-> 	compatible = "ti,twl6030-pwm";
-> 	#pwm-cells = <2>;
-> 
-> 	/* Enable GPIO us of the PWMs */
-> 	gpio-controller = <1>;
-> 	#gpio-cells = <2>;
-> 	pwm,period_ns = <7812500>;
-> };
-> 
-> leds {
-> 	compatible = "gpio-leds";
-> 	backlight {
-> 		label = "omap4::backlight";
-> 		gpios = <&twl_pwm 1 0>; /* PWM1 of twl6030 */
-> 	};
-> 
-> 	keypad {
-> 		label = "omap4::keypad";
-> 		gpios = <&twl_pwm 0 0>; /* PWM0 of twl6030 */
-> 	};
-> };
-> 
-> The bulk of the code in drivers/pwm/core.c to create the pwm-gpo device when
-> it is requested going to look something like this. I have removed the error
-> checks for now and I still don't have the code to clean up the allocated
-> memory for the created device on error, or in case the module is unloaded. We
-> should also prevent the pwm core from removal when the pwm-gpo driver is loaded.
-> We need to create the platform device for gpo-pwm, create the pdata structure
-> for it and fill it in. We also need to hand craft the pwm_lookup table so we
-> can use pwm_get() to request the PWM. I have other minor changes around this
-> to get things working when we booted with DT.
-> So the function to do the heavy lifting is something like this:
-> static void of_pwmchip_as_gpio(struct pwm_chip *chip)
-> {
-> 	struct platform_device *pdev;
-> 	struct gpio_pwm *gpos;
-> 	struct gpio_pwm_pdata *pdata;
-> 	struct pwm_lookup *lookup;
-> 	char gpodev_name[15];
-> 	int i;
-> 	u32 gpio_mode = 0;
-> 	u32 period_ns = 0;
-> 
-> 	of_property_read_u32(chip->dev->of_node, "gpio-controller",
-> 			     &gpio_mode);
-> 	if (!gpio_mode)
-> 		return;
-> 
-> 	of_property_read_u32(chip->dev->of_node, "pwm,period_ns", &period_ns);
-> 	if (!period_ns) {
-> 		dev_err(chip->dev,
-> 			"period_ns is not specified for GPIO use\n");
-> 		return;
-> 	}
-> 
-> 	lookup = devm_kzalloc(chip->dev, sizeof(*lookup) * chip->npwm,
-> 			      GFP_KERNEL);
-> 	pdata = devm_kzalloc(chip->dev, sizeof(*pdata), GFP_KERNEL);
-> 	gpos = devm_kzalloc(chip->dev, sizeof(*gpos) * chip->npwm,
-> 			    GFP_KERNEL);
-> 
-> 	pdata->gpos = gpos;
-> 	pdata->num_gpos = chip->npwm;
-> 	pdata->gpio_base = -1;
-> 
-> 	pdev = platform_device_alloc("pwm-gpo", chip->base);
-> 	pdev->dev.parent = chip->dev;
-> 
-> 	sprintf(gpodev_name, "pwm-gpo.%d", chip->base);
-> 	for (i = 0; i < chip->npwm; i++) {
-> 		struct gpio_pwm *gpo = &gpos[i];
-> 		struct pwm_lookup *pl = &lookup[i];
-> 		char con_id[15];
-> 
-> 		sprintf(con_id, "pwm-gpo.%d", chip->base + i);
-> 
-> 		/* prepare GPO information */
-> 		gpo->pwm_period_ns = period_ns;
-> 		gpo->name = kmemdup(con_id, sizeof(con_id), GFP_KERNEL);;
-> 
-> 		/* prepare pwm lookup table */
-> 		pl->provider = dev_name(chip->dev);
-> 		pl->index = i;
-> 		pl->dev_id = kmemdup(gpodev_name, sizeof(gpodev_name),
-> 				     GFP_KERNEL);
-> 		pl->con_id = kmemdup(con_id, sizeof(con_id), GFP_KERNEL);
-> 	}
-> 
-> 	platform_device_add_data(pdev, pdata, sizeof(*pdata));
-> 	pwm_add_table(lookup, chip->npwm);
-> 	platform_device_add(pdev);
-> }
+> Unless the clk notifiers are different than the cpufreq notifiers, they
+> don't handle returning error conditions very well. And given that the
+> voltage change operation can fail (though it almost always succeeds on a
+> retry) I need to be able to handle and detect that error condition.
 > 
 
-The whole pwm lookup table creation is a bit ugly. I wonder if we can somehow
-bypass this by using pwm_request_from_chip directly in the pwm-gpo driver.
+The notifier handler can handle the case where the transition fails (and
+needs to be retried).
 
-- Lars
+Also you should check out the clk notifiers.  I think they handle
+failure decently.  If a notifer returns an error code then everything
+unrolls and the clk_set_rate operation aborts.
+
+Regards,
+Mike
+
+> > I haven't looked at the definition of hb_voltage_change but does the
+> > call graph make any clk api calls?  Are you talking over i2c to a
+> > regulator?  If so then you'll probably hit the same reentrancy problem I
+> > hit when trying to make a general solution.
+> 
+> I'm talking over a pl320 Interprocessor Communication Mailbox to a
+> separate core running it's own RTOS. The RTOS might speak i2c to a
+> regulator but it's a black box to me.
+> 
+> hb_voltage_change() doesn't make any clk api calls. It changes the
+> voltages, and then hb_set_target() makes clk api calls to change the
+> frequency.
+> 
+> --Mark Langsdorf
+> Calxeda, Inc.
