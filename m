@@ -1,63 +1,87 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [rtc-linux] [PATCH v3 1/5] rtc: OMAP: Add system pm_power_off
- to rtc driver
-Date: Wed, 28 Nov 2012 11:12:26 +0000
-Message-ID: <20121128111226.GX3332@n2100.arm.linux.org.uk>
-References: <1353404927-14412-1-git-send-email-anilkumar@ti.com>
- <1353404927-14412-2-git-send-email-anilkumar@ti.com>
- <20121127154239.0efad6d5.akpm@linux-foundation.org>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v8 1/2] usb: phy: samsung: Introducing usb phy driver for
+ hsotg
+Date: Wed, 28 Nov 2012 14:02:27 +0100
+Message-ID: <1843164.6kmf7C00lC@amdc1227>
+References: <1352888836-17192-1-git-send-email-p.paneri@samsung.com>
+ <1465375.Xr1CJFmx11@flatron>
+ <CAD6zSYO77GTqVux7B0wDsrj0+332-jU0ivqKY7ExRSKZuHYjDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121127154239.0efad6d5.akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
-Cc: a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, Colin Foe-Parker <colin.foeparker-L+YfUVVR8+RBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAD6zSYO77GTqVux7B0wDsrj0+332-jU0ivqKY7ExRSKZuHYjDQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, Lukasz Majewski <l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 27, 2012 at 03:42:39PM -0800, Andrew Morton wrote:
-> > +	/* Do not allow to execute any other task */
-> > +	spin_lock_irqsave(&lock, flags);
-> > +	while (1);
-> 
-> I suspect this doesn't do what you want it to do.
-> 
-> Firstly, please provide adequate code comments here so that code
-> readers do not also need to be mind readers.
-> 
-> If you want to stop this CPU dead in its tracks (why?) then
-> 
-> 	local_irq_disable();
-> 	while (1)
-> 		;		/* Note correct code layout */
-> 
-> will do it.  But it means that the NMI watchdog (if present) will come
-> along and whack the machine in the head a few seconds later.  And this
-> does nothing to stop other CPUs.
-> 
-> But not being a mind reader, I'm really at a loss to suggest what
-> should be done here.  
+Hi Praveen,
 
-It's hooking into the pm_power_off hook, which is called from kernel/sys.c
-via arch code.  We will have already stopped all other CPUs at this point.
+On Friday 23 of November 2012 09:56:37 Praveen Paneri wrote:
+> >> +static void samsung_usbphy_enable(struct samsung_usbphy *sphy)
+> >> +{
+> >> +     void __iomem *regs = sphy->regs;
+> >> +     u32 phypwr;
+> >> +     u32 phyclk;
+> >> +     u32 rstcon;
+> >> +
+> >> +     /* set clock frequency for PLL */
+> >> +     phyclk = sphy->ref_clk_freq;
+> >> +     phypwr = readl(regs + SAMSUNG_PHYPWR);
+> >> +     rstcon = readl(regs + SAMSUNG_RSTCON);
+> >> +
+> >> +     switch (sphy->cpu_type) {
+> >> +     case TYPE_S3C64XX:
+> >> +             phyclk &= ~PHYCLK_COMMON_ON_N;
+> >> +             phypwr &= ~PHYPWR_NORMAL_MASK;
+> >> +             rstcon |= RSTCON_SWRST;
+> >> +             break;
+> >> +     case TYPE_EXYNOS4210:
+> >> +             phypwr &= ~PHYPWR_NORMAL_MASK_PHY0;
+> >> +             rstcon |= RSTCON_SWRST;
+> >> +     default:
+> >> +             break;
+> >> +     }
+> >> +
+> >> +     writel(phyclk, regs + SAMSUNG_PHYCLK);
+> >> +     /* set to normal of PHY0 */
+> > 
+> > I don't understand this comment.
+> 
+> Will change it to " Configure PHY0 for normal operation"
+> That should be more clear, I suppose.
 
-Why there's that while (1) there I don't know; when pm_power_off is not
-hooked, we don't do anything like that - and what will happen in that
-case is we'll return all the way back to sys_reboot(), which will call
-do_exit(0) on us.
+Yes, much better.
 
-I don't see a problem with that, and I don't see why we need to spin
-(without any power saving too) waiting for some event.  If we've called
-sys_reboot with LINUX_REBOOT_CMD_POWER_OFF, we'd better have already
-killed most of userspace off by that time anyway.
+> >> + */
+> >> +
+> >> +#ifndef __SAMSUNG_USBPHY_PLATFORM_H
+> >> +#define __SAMSUNG_USBPHY_PLATFORM_H
+> >> +
+> >> +/**
+> >> + * samsung_usbphy_data - Platform data for USB PHY driver.
+> >> + * @pmu_isolation: Function to control usb phy isolation in PMU.
+> >> + */
+> >> +struct samsung_usbphy_data {
+> >> +     void (*pmu_isolation)(int on);
+> > 
+> > I believe this should be named in a generic way. This is called PMU
+> > isolation on Exynos SoCs, but on S3C64xx it's USB PHY mask.
+> 
+> Yes! I am aware of it. The fact that this ( MASK or ISOLATION) has
+> always been part of the PMU, pmu_isolation seems quite generic that
+> way. Though you can suggest a better name.
+
+What do you think about set_isolation(int on) or power_isolation(int on)?
+
+Best regards,
+-- 
+Tomasz Figa
+Samsung Poland R&D Center
+SW Solution Development, Linux Platform
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
