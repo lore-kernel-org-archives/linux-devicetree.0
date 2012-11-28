@@ -1,13 +1,16 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [GIT PULL] Exynos DP for v3.8
-Date: Wed, 28 Nov 2012 13:57:46 -0600
-Message-ID: <50B66CBA.3090106@gmail.com>
-References: <23089985.76751354060752557.JavaMail.weblogic@epml26>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpiolib: add gpio_export_with_name
+Date: Wed, 28 Nov 2012 21:19:07 +0100
+Message-ID: <20121128201907.GF4398@game.jcrosoft.org>
+References: <20121121101259.GQ4398@game.jcrosoft.org>
+ <1353492849-29397-1-git-send-email-plagnioj@jcrosoft.com>
+ <20121126135911.2F1D33E187C@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <23089985.76751354060752557.JavaMail.weblogic@epml26>
+Content-Disposition: inline
+In-Reply-To: <20121126135911.2F1D33E187C@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,92 +21,213 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org" <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/27/2012 05:59 PM, Jingoo Han wrote:
-> On Tuesday, November 27, 2012 6:58 PM, Tomi Valkeinen wrote
->>
->> On 2012-11-23 08:37, Jingoo Han wrote:
->>> Hi Tomi,
->>>
->>> Thank you for taking care of pull requests for the v3.8 merge window.
->>> These patches have been submitted for more than one month,
->>> and tested with Exynos5250.
->>>
->>> The following changes since commit f4a75d2eb7b1e2206094b901be09adb31ba63681:
->>>
->>>   Linux 3.7-rc6 (Fri Nov 16 17:42:40 2012 -0800)
->>>
->>> are available in the git repository at:
->>>   git://github.com/jingoo/linux.git exynos-dp-next
->>>
->>> ----------------------------------------------------------------
->>> Exynos DP changes for the 3.8 merge window.
->>>
->>> - Device Tree support for Samsung Exynos DP
->>> - SW Link training is cleaned up.
->>> - HPD interrupt is supported.
->>> ----------------------------------------------------------------
->>>
->>> Ajay Kumar (5):
->>>       video: exynos_dp: Add device tree support to DP driver
->>>       video: exynos_dp: device tree documentation
->>>       video: exynos_dp: Reset and initialize DP before requesting irq
->>>       video: exynos_dp: Fix incorrect setting for INT_CTL
->>>       video: exynos_dp: remove redundant parameters
->>>
->>> Sean Paul (8):
->>>       video: exynos_dp: Check DPCD return codes
->>>       video: exynos_dp: Clean up SW link training
->>>       video: exynos_dp: Get pll lock before pattern set
->>>       video: exynos_dp: Improve EDID error handling
->>>       video: exynos_dp: Fix bug when checking dp->irq
->>>       video: exynos_dp: Remove sink control to D0
->>>       video: exynos_dp: Move hotplug into a workqueue
->>>       video: exynos_dp: Enable hotplug interrupts
->>>
->>>  .../devicetree/bindings/video/exynos_dp.txt        |   80 +++
->>>  drivers/video/exynos/exynos_dp_core.c              |  697 ++++++++++++--------
->>>  drivers/video/exynos/exynos_dp_core.h              |   21 +-
->>>  drivers/video/exynos/exynos_dp_reg.c               |   77 ++-
->>>  drivers/video/exynos/exynos_dp_reg.h               |    3 +-
->>>  5 files changed, 583 insertions(+), 295 deletions(-)
->>>  create mode 100644 Documentation/devicetree/bindings/video/exynos_dp.txt
->>
->> Has the DT bindings been reviewed by the device tree people? It would
->> good to have an ack from them.
+On 13:59 Mon 26 Nov     , Grant Likely wrote:
+> On Wed, 21 Nov 2012 11:14:08 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> > allow to specify a name to an exported gpio
+> > 
+> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 > 
-> CC'ed device tree mailing-list, Grant Likely, Rob Herring, Kukjin Kim, Sylwester Nawrocki.
+> The gpio sysfs ABI is already horrible, racy, and unsafe. Really, we
+> need a proper chrdev interface for controlling gpios. Sysfs is fine for
+> poking around and experimenting, but we cannot provide any fine grained
+> access control, locking or faster IO with the one-file-per-gpio sysfs
+> model.
+I do agree on this and mention it on the ML multiple times but this an ABI
+and we can not change it anymore we need to support it
+> So, no, I don't think this is a good idea to extend gpiolib in
+> this way.
 > 
-> Hi Tomi,
-> 
-> The DT binding has been posted with device tree mailing-list
-> (devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org) for more than 2 months.
-> Last patch V8 was posted 1 month ago. However, there is no objection.
-> (http://www.spinics.net/lists/linux-fbdev/msg08354.html)
-> 
-> Also, Samsung people already reviewed it.
-> In my opinion, there is no need to get Ack from the device tree people.
+> However, I would be okay with making gpiochips first-class kobjects or
+> struct devices that appear as a child of the gpio controller device so
+> that userspace could interrogate the device tree node associated with
+> the device.
+the problem here is that I do not want the user space to become smart
 
-Grant and I can't possibly review every binding for every device of
-every subsystem.
+I want the user space to known which gpio use for a specific feature
+as example you just want to read lack restistor to detect a hw features
 
-While I think there is possibility to make this more common across
-platforms, I don't have any major issues with the binding, so:
+you known the encoding it does not change cross hw but the pin to read do
 
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+So the idea is just to tell the user space use this pin to get your
+information
 
-Rob
+how to do you want to solve this?
 
-> Grant, Rob: if you have another opinion, please let me know kindly.
+This apply to other case:
+ - chip poweron/off
+ - reset
+ etc... all control by userspace
+
+Best Regards,
+J.
 > 
-> Best regards,
-> Jingoo Han
+> g.
 > 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> > ---
+> >  arch/mips/include/asm/mach-au1x00/gpio-au1000.h |    3 ++-
+> >  arch/mips/include/asm/mach-au1x00/gpio-au1300.h |    3 ++-
+> >  drivers/gpio/gpiolib.c                          |   12 +++++++-----
+> >  include/asm-generic/gpio.h                      |    6 ++++--
+> >  include/linux/gpio.h                            |   23 ++++++++++++++++++++++-
+> >  5 files changed, 37 insertions(+), 10 deletions(-)
+> > 
+> > diff --git a/arch/mips/include/asm/mach-au1x00/gpio-au1000.h b/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
+> > index 73853b5a..af4accb 100644
+> > --- a/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
+> > +++ b/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
+> > @@ -633,7 +633,8 @@ static inline int gpio_set_debounce(unsigned gpio, unsigned debounce)
+> >  	return -ENOSYS;
+> >  }
+> >  
+> > -static inline int gpio_export(unsigned gpio, bool direction_may_change)
+> > +static inline int gpio_export_with_name(unsigned gpio,
+> > +	bool direction_may_change, const char *name)
+> >  {
+> >  	return -ENOSYS;
+> >  }
+> > diff --git a/arch/mips/include/asm/mach-au1x00/gpio-au1300.h b/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
+> > index fb9975c..fcd152e 100644
+> > --- a/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
+> > +++ b/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
+> > @@ -234,7 +234,8 @@ static inline void gpio_unexport(unsigned gpio)
+> >  {
+> >  }
+> >  
+> > -static inline int gpio_export(unsigned gpio, bool direction_may_change)
+> > +static inline int gpio_export_with_name(unsigned gpio,
+> > +	bool direction_may_change, const char *name)
+> >  {
+> >  	return -ENOSYS;
+> >  }
+> > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > index b667f76..2141165 100644
+> > --- a/drivers/gpio/gpiolib.c
+> > +++ b/drivers/gpio/gpiolib.c
+> > @@ -714,9 +714,10 @@ static struct class gpio_class = {
+> >  
+> >  
+> >  /**
+> > - * gpio_export - export a GPIO through sysfs
+> > + * gpio_export_with_name - export a GPIO through sysfs
+> >   * @gpio: gpio to make available, already requested
+> >   * @direction_may_change: true if userspace may change gpio direction
+> > + * @name: gpio name
+> >   * Context: arch_initcall or later
+> >   *
+> >   * When drivers want to make a GPIO accessible to userspace after they
+> > @@ -728,7 +729,7 @@ static struct class gpio_class = {
+> >   *
+> >   * Returns zero on success, else an error.
+> >   */
+> > -int gpio_export(unsigned gpio, bool direction_may_change)
+> > +int gpio_export_with_name(unsigned gpio, bool direction_may_change, const char *name)
+> >  {
+> >  	unsigned long		flags;
+> >  	struct gpio_desc	*desc;
+> > @@ -766,7 +767,9 @@ int gpio_export(unsigned gpio, bool direction_may_change)
+> >  		direction_may_change = false;
+> >  	spin_unlock_irqrestore(&gpio_lock, flags);
+> >  
+> > -	if (desc->chip->names && desc->chip->names[gpio - desc->chip->base])
+> > +	if (name)
+> > +		ioname = name;
+> > +	else if (desc->chip->names && desc->chip->names[gpio - desc->chip->base])
+> >  		ioname = desc->chip->names[gpio - desc->chip->base];
+> >  
+> >  	dev = device_create(&gpio_class, desc->chip->dev, MKDEV(0, 0),
+> > @@ -804,7 +807,7 @@ fail_unlock:
+> >  	pr_debug("%s: gpio%d status %d\n", __func__, gpio, status);
+> >  	return status;
+> >  }
+> > -EXPORT_SYMBOL_GPL(gpio_export);
+> > +EXPORT_SYMBOL_GPL(gpio_export_with_name);
+> >  
+> >  static int match_export(struct device *dev, void *data)
+> >  {
+> > @@ -856,7 +859,6 @@ done:
+> >  }
+> >  EXPORT_SYMBOL_GPL(gpio_export_link);
+> >  
+> > -
+> >  /**
+> >   * gpio_sysfs_set_active_low - set the polarity of gpio sysfs value
+> >   * @gpio: gpio to change
+> > diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
+> > index b6516f3..d04fc55 100644
+> > --- a/include/asm-generic/gpio.h
+> > +++ b/include/asm-generic/gpio.h
+> > @@ -204,7 +204,8 @@ void devm_gpio_free(struct device *dev, unsigned int gpio);
+> >   * A sysfs interface can be exported by individual drivers if they want,
+> >   * but more typically is configured entirely from userspace.
+> >   */
+> > -extern int gpio_export(unsigned gpio, bool direction_may_change);
+> > +extern int gpio_export_with_name(unsigned gpio, bool direction_may_change,
+> > +			const char *name);
+> >  extern int gpio_export_link(struct device *dev, const char *name,
+> >  			unsigned gpio);
+> >  extern int gpio_sysfs_set_active_low(unsigned gpio, int value);
+> > @@ -249,7 +250,8 @@ struct device;
+> >  
+> >  /* sysfs support is only available with gpiolib, where it's optional */
+> >  
+> > -static inline int gpio_export(unsigned gpio, bool direction_may_change)
+> > +static inline int gpio_export_with_name(unsigned gpio,
+> > +	bool direction_may_change, const char *name)
+> >  {
+> >  	return -ENOSYS;
+> >  }
+> > diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+> > index 7ba2762..6e01b8c 100644
+> > --- a/include/linux/gpio.h
+> > +++ b/include/linux/gpio.h
+> > @@ -189,7 +189,8 @@ static inline void gpio_set_value_cansleep(unsigned gpio, int value)
+> >  	WARN_ON(1);
+> >  }
+> >  
+> > -static inline int gpio_export(unsigned gpio, bool direction_may_change)
+> > +static inline int gpio_export_with_name(unsigned gpio,
+> > +	bool direction_may_change, const char *name)
+> >  {
+> >  	/* GPIO can never have been requested or set as {in,out}put */
+> >  	WARN_ON(1);
+> > @@ -247,4 +248,24 @@ gpiochip_remove_pin_ranges(struct gpio_chip *chip)
+> >  
+> >  #endif /* ! CONFIG_GENERIC_GPIO */
+> >  
+> > +/**
+> > + * gpio_export - export a GPIO through sysfs
+> > + * @gpio: gpio to make available, already requested
+> > + * @direction_may_change: true if userspace may change gpio direction
+> > + * Context: arch_initcall or later
+> > + *
+> > + * When drivers want to make a GPIO accessible to userspace after they
+> > + * have requested it -- perhaps while debugging, or as part of their
+> > + * public interface -- they may use this routine.  If the GPIO can
+> > + * change direction (some can't) and the caller allows it, userspace
+> > + * will see "direction" sysfs attribute which may be used to change
+> > + * the gpio's direction.  A "value" attribute will always be provided.
+> > + *
+> > + * Returns zero on success, else an error.
+> > + */
+> > +static inline int gpio_export(unsigned gpio,bool direction_may_change)
+> > +{
+> > +	return gpio_export_with_name(gpio, direction_may_change, NULL);
+> > +}
+> > +
+> >  #endif /* __LINUX_GPIO_H */
+> > -- 
+> > 1.7.10.4
+> > 
+> > 
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
+> -- 
+> Grant Likely, B.Sc, P.Eng.
+> Secret Lab Technologies, Ltd.
