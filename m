@@ -1,88 +1,50 @@
-From: Qing Xu <qingx@marvell.com>
-Subject: Re: [PATCH 6/7] mfd: max8925: support dt for backlight
-Date: Wed, 28 Nov 2012 10:11:03 +0800
-Message-ID: <50B572B7.6010205@marvell.com>
-References: <1352188034-9982-1-git-send-email-qingx@marvell.com> <CAN1soZw5RDN+wRacR1YTMqQfy5SNAg_KzGDt+77846M8Qk_7sw@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V3 3/3] mfd: stmpe: Update DT support in stmpe driver
+Date: Wed, 28 Nov 2012 07:43:54 +0530
+Message-ID: <CAKohpok6=O_TMaApYQGKbzHmJ8tkST5VAHDnLYgHb0g3gSPwbQ@mail.gmail.com>
+References: <57384ebc52c7d39d1bae31ba3baa6f820b4ac696.1353610436.git.viresh.kumar@linaro.org>
+	<7a48ae364663ab3a336251fada9aee07ccd728b8.1353610437.git.viresh.kumar@linaro.org>
+	<20121123094132.EFCB73E07BE@localhost>
+	<CAKohpomAM2pw9kgB6khtHzQ2WCXKZ9_pi1_sOH2dQToVS8ep4w@mail.gmail.com>
+	<20121126184015.784993E091F@localhost>
+	<CAKohpo=dHz-fJRdwovOWesAZJwibgrNk-+2t--JK+T_sBsu9Tw@mail.gmail.com>
+	<CAKohpomOxfLhpZqpk3aymdNa7UAGRcex7d+N5srkFDnrhtULTw@mail.gmail.com>
+	<20121127084007.GA7897@gmail.com>
+	<CAKohpomPMYU5H_tx1BF7TD6F7a5rp5O=xDf3r-TGZ-r9SBp3yA@mail.gmail.com>
+	<CAH+eYFCshghQauBdn1rLQ-sKG=Bxa_0XpJsry60TAD3mibNOFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAN1soZw5RDN+wRacR1YTMqQfy5SNAg_KzGDt+77846M8Qk_7sw@mail.gmail.com>
+In-Reply-To: <CAH+eYFCshghQauBdn1rLQ-sKG=Bxa_0XpJsry60TAD3mibNOFA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "FlorianSchandinat@gmx.de" <FlorianSchandinat@gmx.de>, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+To: Rabin Vincent <rabin@rab.in>
+Cc: Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, sameo@linux.intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, l.fu@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2012 05:08 PM, Haojian Zhuang wrote:
-> On Tue, Nov 6, 2012 at 3:47 PM, Qing Xu <qingx@marvell.com> wrote:
->> From: Qing Xu <qingx@marvell.com>
+On 28 November 2012 01:25, Rabin Vincent <rabin@rab.in> wrote:
+> 2012/11/27 Viresh Kumar <viresh.kumar@linaro.org>:
+>> On 27 November 2012 14:10, Lee Jones <lee.jones@linaro.org> wrote:
+>> I haven't seen this in any of SPEAr boards i have worked on. Maybe Rabin
+>> would have, that's why he added that part of code :)
 >>
->> Signed-off-by: Qing Xu <qingx@marvell.com>
->> ---
->>   drivers/video/backlight/max8925_bl.c |   31 ++++++++++++++++++++++++++++++-
->>   1 files changed, 30 insertions(+), 1 deletions(-)
+>> @Rabin/Linus: Do you remember why have you added this in stmpe driver:
 >>
->> diff --git a/drivers/video/backlight/max8925_bl.c b/drivers/video/backlight/max8925_bl.c
->> index f72ba54..7de02ed 100644
->> --- a/drivers/video/backlight/max8925_bl.c
->> +++ b/drivers/video/backlight/max8925_bl.c
->> @@ -101,6 +101,29 @@ static const struct backlight_ops max8925_backlight_ops = {
->>          .get_brightness = max8925_backlight_get_brightness,
->>   };
->>
->> +#ifdef CONFIG_OF
->> +static int max8925_backlight_dt_init(struct platform_device *pdev,
->> +                             struct max8925_backlight_pdata *pdata)
->> +{
->> +       struct device_node *nproot = pdev->dev.parent->of_node, *np;
->> +       int dual_string;
+>> +       if (stmpe->pdata->irq_invert_polarity)
+>> +               icr ^= STMPE_ICR_LSB_HIGH;
 >> +
->> +       if (!nproot)
->> +               return -ENODEV;
->> +       np = of_find_node_by_name(nproot, "backlight");
->> +       if (!np) {
->> +               dev_err(&pdev->dev, "failed to find backlight node\n");
->> +               return -ENODEV;
->> +       }
->> +
->> +       of_property_read_u32(np, "dual-string", &dual_string);
-> Please use the property like "maxium,max8925-dual-string" at here. It's used
-> to avoid naming conflict.
+>>
+>> Does somebody actually need it?
+>
+> It was (as irq_rev_pol) part of Luotao Fu's proposed STMPE811 patchset
+> (https://patchwork.kernel.org/patch/106173/) which I integrated into my
+> version of the STMPE driver, which didn't have it in its initial version
+> (https://patchwork.kernel.org/patch/103273/).
+>
+> It's not something _I_ ever used.
 
-patch updated in v2, and dts patch update in v3
+I grep'd kernel and nobody is using it there, so lets get rid of it
+completely :)
+I will patch it.
 
->> +       pdata->dual_string = dual_string;
->> +       return 0;
->> +}
->> +#else
->> +#define max8925_backlight_dt_init(x, y)        (-1)
->> +#endif
->> +
->>   static int __devinit max8925_backlight_probe(struct platform_device *pdev)
->>   {
->>          struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
->> @@ -150,6 +173,13 @@ static int __devinit max8925_backlight_probe(struct platform_device *pdev)
->>          platform_set_drvdata(pdev, bl);
->>
->>          value = 0;
->> +       if (pdev->dev.parent->of_node && !pdata) {
->> +               pdata = devm_kzalloc(&pdev->dev,
->> +                                    sizeof(struct max8925_backlight_pdata),
->> +                                    GFP_KERNEL);
->> +               max8925_backlight_dt_init(pdev, pdata);
->> +       }
->> +
->>          if (pdata) {
->>                  if (pdata->lxw_scl)
->>                          value |= (1 << 7);
->> @@ -161,7 +191,6 @@ static int __devinit max8925_backlight_probe(struct platform_device *pdev)
->>          ret = max8925_set_bits(chip->i2c, data->reg_mode_cntl, 0xfe, value);
->>          if (ret < 0)
->>                  goto out_brt;
->> -
->>          backlight_update_status(bl);
->>          return 0;
->>   out_brt:
->> --
->> 1.7.0.4
->>
+--
+viresh
