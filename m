@@ -1,92 +1,88 @@
-From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [GIT PULL] Exynos DP for v3.8
-Date: Tue, 27 Nov 2012 23:59:14 +0000 (GMT)
-Message-ID: <23089985.76751354060752557.JavaMail.weblogic@epml26>
-Reply-To: jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 6/9] usb: chipidea: add PTW and PTS handling
+Date: Wed, 28 Nov 2012 09:26:54 +0800
+Message-ID: <20121128012653.GB18593@nchen-desktop>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1352909950-32555-7-git-send-email-m.grzeschik@pengutronix.de>
+ <20121127011210.GA17856@nchen-desktop>
+ <20121127095432.GC31008@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-MIME-version: 1.0
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org" <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121127095432.GC31008-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, November 27, 2012 6:58 PM, Tomi Valkeinen wrote
+On Tue, Nov 27, 2012 at 10:54:32AM +0100, Michael Grzeschik wrote:
 > 
-> On 2012-11-23 08:37, Jingoo Han wrote:
-> > Hi Tomi,
-> >
-> > Thank you for taking care of pull requests for the v3.8 merge window.
-> > These patches have been submitted for more than one month,
-> > and tested with Exynos5250.
-> >
-> > The following changes since commit f4a75d2eb7b1e2206094b901be09adb31ba63681:
-> >
-> >   Linux 3.7-rc6 (Fri Nov 16 17:42:40 2012 -0800)
-> >
-> > are available in the git repository at:
-> >   git://github.com/jingoo/linux.git exynos-dp-next
-> >
-> > ----------------------------------------------------------------
-> > Exynos DP changes for the 3.8 merge window.
-> >
-> > - Device Tree support for Samsung Exynos DP
-> > - SW Link training is cleaned up.
-> > - HPD interrupt is supported.
-> > ----------------------------------------------------------------
-> >
-> > Ajay Kumar (5):
-> >       video: exynos_dp: Add device tree support to DP driver
-> >       video: exynos_dp: device tree documentation
-> >       video: exynos_dp: Reset and initialize DP before requesting irq
-> >       video: exynos_dp: Fix incorrect setting for INT_CTL
-> >       video: exynos_dp: remove redundant parameters
-> >
-> > Sean Paul (8):
-> >       video: exynos_dp: Check DPCD return codes
-> >       video: exynos_dp: Clean up SW link training
-> >       video: exynos_dp: Get pll lock before pattern set
-> >       video: exynos_dp: Improve EDID error handling
-> >       video: exynos_dp: Fix bug when checking dp->irq
-> >       video: exynos_dp: Remove sink control to D0
-> >       video: exynos_dp: Move hotplug into a workqueue
-> >       video: exynos_dp: Enable hotplug interrupts
-> >
-> >  .../devicetree/bindings/video/exynos_dp.txt        |   80 +++
-> >  drivers/video/exynos/exynos_dp_core.c              |  697 ++++++++++++--------
-> >  drivers/video/exynos/exynos_dp_core.h              |   21 +-
-> >  drivers/video/exynos/exynos_dp_reg.c               |   77 ++-
-> >  drivers/video/exynos/exynos_dp_reg.h               |    3 +-
-> >  5 files changed, 583 insertions(+), 295 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/video/exynos_dp.txt
+> I didn't figure out why this is needed. However, we prefer to move this
+> hunk to be in ci_hdrc_probe just before ci_role_start gets called. So
+> hw_portsc_configure will be called only there in the beginning. As the
+> phy setup doesn't change, we need no further call and can take the delay
+> unconditionally of the role.
+
+I agree, as configure phy is common future, it is ok at ci_hdrc_probe.
+Below initialization sequence is ok:
+
+configure_phy
+delay for phy stable
+role_start(init)
+
 > 
-> Has the DT bindings been reviewed by the device tree people? It would
-> good to have an ack from them.
+> > > +
+> > >  	hcd = usb_create_hcd(&ci_ehci_hc_driver, ci->dev, dev_name(ci->dev));
+> > >  	if (!hcd)
+> > >  		return -ENOMEM;
+> > > diff --git a/include/linux/usb/chipidea.h b/include/linux/usb/chipidea.h
+> > > index 906d259..cafca23 100644
+> > > --- a/include/linux/usb/chipidea.h
+> > > +++ b/include/linux/usb/chipidea.h
+> > > @@ -21,6 +21,12 @@ struct ci13xxx_platform_data {
+> > >  #define CI13XXX_DISABLE_STREAMING	BIT(3)
+> > >  #define CI13XXX_DR_MODE_HOST		BIT(4)
+> > >  #define CI13XXX_DR_MODE_PERIPHERAL	BIT(5)
+> > > +#define CI13XXX_PORTSC_PTW_8BIT		BIT(6)
+> > > +#define CI13XXX_PORTSC_PTW_16BIT	BIT(7)
+> > > +#define CI13XXX_PORTSC_PTS_UTMI		BIT(8)
+> > > +#define CI13XXX_PORTSC_PTS_ULPI		BIT(9)
+> > > +#define CI13XXX_PORTSC_PTS_FSLS		BIT(10)
+> > > +
+> > >  #define CI13XXX_DR_MODE_MASK \
+> > >  	(CI13XXX_DR_MODE_HOST | CI13XXX_DR_MODE_PERIPHERAL)
+> > >  
+> > > @@ -42,4 +48,7 @@ void ci13xxx_remove_device(struct platform_device *pdev);
+> > >  /* Parse of-tree "dr_mode" property */
+> > >  void ci13xxx_get_dr_mode(struct device_node *of_node, struct ci13xxx_platform_data *pdata);
+> > >  
+> > > +/* Parse of-tree "flags" */
+> > > +void ci13xxx_get_dr_flags(struct device_node *of_node, struct ci13xxx_platform_data *pdata);
+> > > +
+> > >  #endif
+> > > -- 
+> > > 1.7.10.4
+> > > 
+> > > --
+> > > To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+> > > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
 
-CC'ed device tree mailing-list, Grant Likely, Rob Herring, Kukjin Kim, Sylwester Nawrocki.
+-- 
 
-Hi Tomi,
+Best Regards,
+Peter Chen
 
-The DT binding has been posted with device tree mailing-list
-(devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org) for more than 2 months.
-Last patch V8 was posted 1 month ago. However, there is no objection.
-(http://www.spinics.net/lists/linux-fbdev/msg08354.html)
-
-Also, Samsung people already reviewed it.
-In my opinion, there is no need to get Ack from the device tree people.
-
-Grant, Rob: if you have another opinion, please let me know kindly.
-
-Best regards,
-Jingoo Han
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
