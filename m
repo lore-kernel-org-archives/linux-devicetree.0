@@ -1,43 +1,101 @@
-From: Mark Langsdorf <mark.langsdorf@calxeda.com>
-Subject: Re: [PATCH 6/6 v6] cpufreq, highbank: add support for highbank cpufreq
-Date: Wed, 28 Nov 2012 09:01:15 -0600
-Message-ID: <50B6273B.1000007@calxeda.com>
-References: <1351631056-25938-1-git-send-email-mark.langsdorf@calxeda.com> <1354046672-7392-1-git-send-email-mark.langsdorf@calxeda.com> <1354046672-7392-7-git-send-email-mark.langsdorf@calxeda.com> <20121128023240.GA28170@S2100-06.ap.freescale.net> <50B60E9C.9000405@calxeda.com> <20121128145759.GB28170@S2100-06.ap.freescale.net> <20121128151741.GC28170@S2100-06.ap.freescale.net>
+From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] clk: imx: Remove 'clock-output-names' from the examples
+Date: Wed, 28 Nov 2012 13:34:16 -0200
+Message-ID: <1354116856-25024-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20121128151741.GC28170@S2100-06.ap.freescale.net>
-Sender: linux-pm-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/28/2012 09:17 AM, Shawn Guo wrote:
-> On Wed, Nov 28, 2012 at 10:58:02PM +0800, Shawn Guo wrote:
->> On Wed, Nov 28, 2012 at 07:16:12AM -0600, Mark Langsdorf wrote:
->>> I'd
->>> have to move most of the logic of hb_set_target() into
->>> clk_highbank.c:clk_pll_set_rate() and then add extra logic for when
->>> cpufreq is not enabled/loaded.
->>
->> You only need to move hb_voltage_change() into cpu clock's .set_rate()
->> hook with no need of checking if cpufreq is enabled or not.
->>
-> Need to also check whether frequency or voltage should be changed first
-> in .set_rate() though.
+From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-Yes, that's entirely what I meant when I said that I would need to move
-most of the hb_set_target() logic into .set_rate(). I would also need to
-account for retries if the voltage set operation fails, which it
-sometimes does.
+'clock-output-names' is not used in any of the dts/dtsi files for i.mx.
 
-The ECME handles changing the voltage but doesn't look like a voltage
-regulator. Amongst other things, by design it doesn't export meaningful
-voltage information to Linux. I tried to get cpufreq-clk0 to work with
-the Highbank design and it ended up being much easier and more sane to
-create a separate driver.
+Remove it from the examples, so that the example and the real usage in the
+dtsi files can match.
 
---Mark Langsdorf
-Calxeda, Inc.
+Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ .../devicetree/bindings/clock/imx23-clock.txt      |    5 -----
+ .../devicetree/bindings/clock/imx25-clock.txt      |    4 ----
+ .../devicetree/bindings/clock/imx28-clock.txt      |    5 -----
+ .../devicetree/bindings/clock/imx6q-clock.txt      |    4 ----
+ 4 files changed, 18 deletions(-)
 
+diff --git a/Documentation/devicetree/bindings/clock/imx23-clock.txt b/Documentation/devicetree/bindings/clock/imx23-clock.txt
+index baadbb1..5083c0b 100644
+--- a/Documentation/devicetree/bindings/clock/imx23-clock.txt
++++ b/Documentation/devicetree/bindings/clock/imx23-clock.txt
+@@ -60,11 +60,6 @@ clks: clkctrl@80040000 {
+ 	compatible = "fsl,imx23-clkctrl";
+ 	reg = <0x80040000 0x2000>;
+ 	#clock-cells = <1>;
+-	clock-output-names =
+-		...
+-		"uart",		/* 32 */
+-		...
+-		"end_of_list";
+ };
+ 
+ auart0: serial@8006c000 {
+diff --git a/Documentation/devicetree/bindings/clock/imx25-clock.txt b/Documentation/devicetree/bindings/clock/imx25-clock.txt
+index c2a3525..db4f2f0 100644
+--- a/Documentation/devicetree/bindings/clock/imx25-clock.txt
++++ b/Documentation/devicetree/bindings/clock/imx25-clock.txt
+@@ -146,10 +146,6 @@ clks: ccm@53f80000 {
+ 	compatible = "fsl,imx25-ccm";
+ 	reg = <0x53f80000 0x4000>;
+ 	interrupts = <31>;
+-	clock-output-names = ...
+-			"uart_ipg",
+-			"uart_serial",
+-			...;
+ };
+ 
+ uart1: serial@43f90000 {
+diff --git a/Documentation/devicetree/bindings/clock/imx28-clock.txt b/Documentation/devicetree/bindings/clock/imx28-clock.txt
+index 52a49a4..e6587af 100644
+--- a/Documentation/devicetree/bindings/clock/imx28-clock.txt
++++ b/Documentation/devicetree/bindings/clock/imx28-clock.txt
+@@ -83,11 +83,6 @@ clks: clkctrl@80040000 {
+ 	compatible = "fsl,imx28-clkctrl";
+ 	reg = <0x80040000 0x2000>;
+ 	#clock-cells = <1>;
+-	clock-output-names =
+-		...
+-		"uart",		/* 45 */
+-		...
+-		"end_of_list";
+ };
+ 
+ auart0: serial@8006a000 {
+diff --git a/Documentation/devicetree/bindings/clock/imx6q-clock.txt b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+index 492bd99..d786519 100644
+--- a/Documentation/devicetree/bindings/clock/imx6q-clock.txt
++++ b/Documentation/devicetree/bindings/clock/imx6q-clock.txt
+@@ -206,10 +206,6 @@ clks: ccm@020c4000 {
+ 	reg = <0x020c4000 0x4000>;
+ 	interrupts = <0 87 0x04 0 88 0x04>;
+ 	#clock-cells = <1>;
+-	clock-output-names = ...
+-			     "uart_ipg",
+-			     "uart_serial",
+-			     ...;
+ };
+ 
+ uart1: serial@02020000 {
+-- 
+1.7.9.5
