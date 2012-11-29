@@ -1,49 +1,45 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 Resend 2/3] mfd: stmpe: Remove irq_trigger from
- platform data
-Date: Thu, 29 Nov 2012 15:31:49 +0530
-Message-ID: <CAKohpom3cikKkwyMGSNu8sE+vTdcuFrMFNghmCHSHYpNMvr+=g@mail.gmail.com>
-References: <d1f012d7bb2835f696fc100073f2eb16d9f6204d.1354128258.git.viresh.kumar@linaro.org>
-	<33d71d9d29a3edd2c4a33e0f187cdb89f344af72.1354128258.git.viresh.kumar@linaro.org>
-	<20121129093428.GV2013@gmail.com>
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [fedora-arm] precedence of built-in vs. platform trees?
+Date: Thu, 29 Nov 2012 11:06:32 +0000
+Message-ID: <20121129110632.GB12000@rocoto.smurfnet.nu>
+References: <50B7033C.3030204@jonmasters.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121129093428.GV2013@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: sameo@linux.intel.com, grant.likely@secretlab.ca, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <arm-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50B7033C.3030204-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
+List-Unsubscribe: <https://admin.fedoraproject.org/mailman/options/arm>,
+	<mailto:arm-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.fedoraproject.org/pipermail/arm/>
+List-Post: <mailto:arm-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org>
+List-Help: <mailto:arm-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=help>
+List-Subscribe: <https://admin.fedoraproject.org/mailman/listinfo/arm>,
+	<mailto:arm-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=subscribe>
+Sender: arm-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
+Errors-To: arm-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
+To: Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 November 2012 15:04, Lee Jones <lee.jones@linaro.org> wrote:
-> On Thu, 29 Nov 2012, Viresh Kumar wrote:
->
->> STMPE can confige
->
->             configure?
->
->> the way the device emits interrupts and till now this
->
->                                           until?
-
-Ahh... Will fix them. This happens when you send patches at midnight. :)
-
->> diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
-
->>               ret = devm_request_threaded_irq(ci->dev, stmpe->irq, NULL,
->> -                             stmpe_irq, pdata->irq_trigger | IRQF_ONESHOT,
->> -                             "stmpe", stmpe);
->> +                             stmpe_irq, IRQF_ONESHOT, "stmpe", stmpe);
->
-> Forgive my ignorance, but you're no longer passing irq_trigger.
->
-> Is this intentional? If so, why was it needed before and not now?
-
-Yes, it was intentional. I thought it wasn't required at all. But my mind
-is changing a bit now. I feel it is not required for DT, as trigger prop
-is already passed in the interrupts cell. But for non-DT user, this is
-still required. As there is not other way by which IRQ controller will
-come to know what irq trigger type to enable for this irq line.
-
---
-viresh
+T24gVGh1LCBOb3YgMjksIDIwMTIgYXQgMDE6Mzk6NTZBTSAtMDUwMCwgSm9uIE1hc3RlcnMgd3Jv
+dGU6Cj4gSGV5IGd1eXMsCj4gCj4gSSBhcG9sb2dpemUgaWYgSSBzaG91bGQgaGF2ZSBSVEZNLiBJ
+ZiBhIHBsYXRmb3JtIHByb3ZpZGVzIGEgZGV2aWNlIHRyZWUKPiBhdCBib290IHRpbWUsIGFuZCB0
+aGUga2VybmVsIGFsc28gaGFzIGEgdHJlZSBhcHBlbmRlZCwgd2hhdCBiZWhhdmlvciBpcwo+IHN1
+cHBvc2VkIHRvIGhhcHBlbj8gaS5lLiB3aGF0IGlzIHRoZSBzdGFuZGFyZCB0aGF0IGlzIGFudGlj
+aXBhdGVkIGhlcmU/CgpGcm9tIHRoZSBrZXJuZWwgY29uZmlnIGhlbHAgb24gQ09ORklHX0FSTV9B
+UFBFTkRFRF9EVEI6Cjw8PApUaGlzIGlzIG1lYW50IGFzIGEgYmFja3dhcmQgY29tcGF0aWJpbGl0
+eSBjb252ZW5pZW5jZSBmb3IgdGhvc2UKc3lzdGVtcyB3aXRoIGEgYm9vdGxvYWRlciB0aGF0IGNh
+bid0IGJlIHVwZ3JhZGVkIHRvIGFjY29tbW9kYXRlCnRoZSBkb2N1bWVudGVkIGJvb3QgcHJvdG9j
+b2wgdXNpbmcgYSBkZXZpY2UgdHJlZS4KPj4+CmFuZAo8PDwKRG8gbm90IGxlYXZlIHRoaXMgb3B0
+aW9uIGFjdGl2ZSBpbiBhIHByb2R1Y3Rpb24ga2VybmVsCmlmIHlvdSBkb24ndCBpbnRlbmQgdG8g
+YWx3YXlzIGFwcGVuZCBhIERUQi4KPj4+CgpNZWFuaW5nIHRoYXQgaWYgdGhlIGxvYWRlciBzdXBw
+b3J0cyBwYXNzaW5nIERUQiwgdGhlIGtlcm5lbCBzaG91bGRuJ3QKaGF2ZSBhbiBhcHBlbmRlZCBv
+bmUuCgpBcGFydCBmcm9tIHRoYXQsIGlmIHlvdSB1c2UgYW4gYXBwZW5kZWQgRFRCLCB0aGlzIGNv
+bXBsZXRlbHkgb3ZlcnJpZGVzCmFueSBEVEIgcGFzc2VkIGJ5IHRoZSBsb2FkZXIsIHNvICh1bmxl
+c3MgeW91IGFsc28gZW5hYmxlIHRoZSB1bmhvbHkKQ09ORklHX0FSTV9BVEFHX0RUQl9DT01QQVQp
+IHlvdSBhbHNvIGxvc2UgdGhlIGFiaWxpdHkgdG8gcGFzcyBrZXJuZWwKY29tbWFuZCBsaW5lIG9w
+dGlvbnMgZnJvbSB0aGUgbG9hZGVyLgoKLwoJTGVpZgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwphcm0gbWFpbGluZyBsaXN0CmFybUBsaXN0cy5mZWRvcmFw
+cm9qZWN0Lm9yZwpodHRwczovL2FkbWluLmZlZG9yYXByb2plY3Qub3JnL21haWxtYW4vbGlzdGlu
+Zm8vYXJt
