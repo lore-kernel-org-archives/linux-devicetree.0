@@ -1,48 +1,45 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 6/6 v6] cpufreq, highbank: add support for highbank cpufreq
-Date: Thu, 29 Nov 2012 09:51:36 +0800
-Message-ID: <20121129015133.GD28170@S2100-06.ap.freescale.net>
-References: <1351631056-25938-1-git-send-email-mark.langsdorf@calxeda.com>
- <1354046672-7392-1-git-send-email-mark.langsdorf@calxeda.com>
- <1354046672-7392-7-git-send-email-mark.langsdorf@calxeda.com>
- <20121128023240.GA28170@S2100-06.ap.freescale.net>
- <50B60E9C.9000405@calxeda.com>
- <20121128145759.GB28170@S2100-06.ap.freescale.net>
- <20121128151741.GC28170@S2100-06.ap.freescale.net>
- <20121128160115.21126.3841@nucleus>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH -next] mmc: wmt-sdmmc: fix potential NULL pointer dereference
+ in wmt_mci_probe()
+Date: Wed, 28 Nov 2012 21:31:14 -0500
+Message-ID: <CAPgLHd9bKK54pR591ytB1_S3EOw4F177=Ofqf_h_n9_+SFyi2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121128160115.21126.3841@nucleus>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
-Cc: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux@prisktech.co.nz, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-> The notifiers in the clk framework might be a better place for this than
-> just simply hacking the logic into the .set_rate callback.
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Ah, right.  How did I forget about that nice piece?
+The dereference to 'of_id' should be moved below the NULL test.
 
-> I haven't looked at the definition of hb_voltage_change but does the
-> call graph make any clk api calls?  Are you talking over i2c to a
-> regulator?  If so then you'll probably hit the same reentrancy problem I
-> hit when trying to make a general solution.
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/mmc/host/wmt-sdmmc.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-So, how is your "reentrancy in the common clk framework" series[1]
-going on?  Haven't seen any update since August.
+diff --git a/drivers/mmc/host/wmt-sdmmc.c b/drivers/mmc/host/wmt-sdmmc.c
+index 5ba4605..f737b0c 100644
+--- a/drivers/mmc/host/wmt-sdmmc.c
++++ b/drivers/mmc/host/wmt-sdmmc.c
+@@ -773,7 +773,7 @@ static int __devinit wmt_mci_probe(struct platform_device *pdev)
+ 	struct device_node *np = pdev->dev.of_node;
+ 	const struct of_device_id *of_id =
+ 		of_match_device(wmt_mci_dt_ids, &pdev->dev);
+-	const struct wmt_mci_caps *wmt_caps = of_id->data;
++	const struct wmt_mci_caps *wmt_caps;
+ 	int ret;
+ 	int regular_irq, dma_irq;
+ 
+@@ -787,6 +787,7 @@ static int __devinit wmt_mci_probe(struct platform_device *pdev)
+ 		return -EFAULT;
+ 	}
+ 
++	wmt_caps = of_id->data;
+ 	regular_irq = irq_of_parse_and_map(np, 0);
+ 	dma_irq = irq_of_parse_and_map(np, 1);
+ 
 
-Shawn
 
-[1] http://thread.gmane.org/gmane.linux.ports.arm.kernel/182198
