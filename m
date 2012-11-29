@@ -1,11 +1,21 @@
-From: Qing Xu <qingx-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4 7/7] mfd: max8925: add dts
-Date: Thu, 29 Nov 2012 11:35:20 +0800
-Message-ID: <1354160120-1923-1-git-send-email-qingx@marvell.com>
+From: Mike Turquette <mturquette-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 6/6 v6] cpufreq, highbank: add support for highbank cpufreq
+Date: Wed, 28 Nov 2012 20:34:36 -0800
+Message-ID: <20121129043436.21126.714@nucleus>
+References: <1351631056-25938-1-git-send-email-mark.langsdorf@calxeda.com>
+ <1354046672-7392-1-git-send-email-mark.langsdorf@calxeda.com>
+ <1354046672-7392-7-git-send-email-mark.langsdorf@calxeda.com>
+ <20121128023240.GA28170@S2100-06.ap.freescale.net>
+ <50B60E9C.9000405@calxeda.com>
+ <20121128145759.GB28170@S2100-06.ap.freescale.net>
+ <20121128151741.GC28170@S2100-06.ap.freescale.net>
+ <20121128160115.21126.3841@nucleus>
+ <20121129015133.GD28170@S2100-06.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121129015133.GD28170-+NayF8gZjK2ctlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,209 +26,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: qingx-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, cxie4-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Langsdorf <mark.langsdorf-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Qing Xu <qingx-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Quoting Shawn Guo (2012-11-28 17:51:36)
+> > The notifiers in the clk framework might be a better place for this than
+> > just simply hacking the logic into the .set_rate callback.
+> 
+> Ah, right.  How did I forget about that nice piece?
+> 
+> > I haven't looked at the definition of hb_voltage_change but does the
+> > call graph make any clk api calls?  Are you talking over i2c to a
+> > regulator?  If so then you'll probably hit the same reentrancy problem I
+> > hit when trying to make a general solution.
+> 
+> So, how is your "reentrancy in the common clk framework" series[1]
+> going on?  Haven't seen any update since August.
+> 
 
-add max8925 dts support into mmp2 brownstone platform
+I've begun to look at a dvfs api that builds on top of the clock
+framework, as opposed to using clk_set_rate as the dvfs api itself.
+This eliminates the need for reentrancy, at least for the dvfs case.
 
-Signed-off-by: Qing Xu <qingx-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/mmp2-brownstone.dts |  158 +++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/mmp2.dtsi           |    4 +-
- 2 files changed, 161 insertions(+), 1 deletions(-)
+I'll post more when I have it.  Honestly the reentrancy stuff was just
+too ugly.  I might try again some day but for now I'm thinking a less
+radical approach deserves consideration.
 
-diff --git a/arch/arm/boot/dts/mmp2-brownstone.dts b/arch/arm/boot/dts/mmp2-brownstone.dts
-index c9b4f27..f03d4f4 100644
---- a/arch/arm/boot/dts/mmp2-brownstone.dts
-+++ b/arch/arm/boot/dts/mmp2-brownstone.dts
-@@ -29,6 +29,164 @@
- 			};
- 			twsi1: i2c@d4011000 {
- 				status = "okay";
-+				pmic: max8925@3c {
-+					compatible = "maxim,max8925";
-+					reg = <0x3c>;
-+					interrupts = <1>;
-+					interrupt-parent = <&intcmux4>;
-+					interrupt-controller;
-+					#interrupt-cells = <1>;
-+					tsc-irq = <0>;
-+
-+					regulators {
-+						SDV1 {
-+							regulator-min-microvolt = <637500>;
-+							regulator-max-microvolt = <1425000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						SDV2 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2225000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						SDV3 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO1 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO2 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO3 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO4 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO5 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO6 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO7 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO8 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO9 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO10 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+						};
-+						LDO11 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO12 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO13 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO14 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO15 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO16 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO17 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO18 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO19 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO20 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+					};
-+					backlight {
-+						max8925-dual-string = <0>;
-+					};
-+					charger {
-+						batt-detect = <0>;
-+						topoff-threshold = <1>;
-+						fast-charge = <7>;
-+						no-temp-support = <0>;
-+						no-insert-detect = <0>;
-+					};
-+				};
- 			};
- 			rtc: rtc@d4010000 {
- 				status = "okay";
-diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 80f74e2..76f9cc7 100644
---- a/arch/arm/boot/dts/mmp2.dtsi
-+++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -41,7 +41,7 @@
- 				mrvl,intc-nr-irqs = <64>;
- 			};
- 
--			intcmux4@d4282150 {
-+			intcmux4: interrupt-controller@d4282150 {
- 				compatible = "mrvl,mmp2-mux-intc";
- 				interrupts = <4>;
- 				interrupt-controller;
-@@ -196,6 +196,8 @@
- 				compatible = "mrvl,mmp-twsi";
- 				reg = <0xd4011000 0x1000>;
- 				interrupts = <7>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				mrvl,i2c-fast-mode;
- 				status = "disabled";
- 			};
--- 
-1.7.0.4
+Thanks,
+Mike
+
+> Shawn
+> 
+> [1] http://thread.gmane.org/gmane.linux.ports.arm.kernel/182198
