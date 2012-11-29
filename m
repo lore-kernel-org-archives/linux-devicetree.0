@@ -1,7 +1,7 @@
 From: Alexander Sverdlin <asv-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/2] of_mdio: Honour "status=disabled" property of device
-Date: Thu, 29 Nov 2012 08:45:20 +0100
-Message-ID: <50B71290.2060200@sysgo.com>
+Subject: [PATCH 2/2] of/spi: Honour "status=disabled" property of device
+Date: Thu, 29 Nov 2012 08:59:29 +0100
+Message-ID: <50B715E1.3010501@sysgo.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -17,32 +17,32 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Barry.Song-kQvG35nSl+M@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander sverdlin <alexander.sverdlin.ext-OYasijW0DpE@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Barry.Song-kQvG35nSl+M@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander sverdlin <alexander.sverdlin.ext-OYasijW0DpE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Alexander Sverdlin <alexander.sverdlin-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
 
-of_mdio: Honour "status=disabled" property of device
+of/spi: Honour "status=disabled" property of device
 
-Currently of_mdiobus_register() function registers all PHY devices,
+Currently of_register_spi_devices() function registers all SPI devices,
 independetly from their status property in device tree. According to
 "ePAPR 1.1" spec, device should only be registered if there is no
 "status" property, or it has "ok" (or "okay") value (see
 of_device_is_available()). In case of "platform devices",
 of_platform_device_create_pdata() checks for "status" and ensures
-that disabled devices are not pupulated. But such check for MDIO buses
+that disabled devices are not pupulated. But such check for SPI buses
 was missing until now. Fix it.
 
 Signed-off-by: Alexander Sverdlin <alexander.sverdlin-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
 ---
---- linux.orig/drivers/of/of_mdio.c
-+++ linux/drivers/of/of_mdio.c
-@@ -53,7 +53,7 @@ int of_mdiobus_register(struct mii_bus *
- 		return rc;
+--- linux.orig/drivers/spi/spi.c
++++ linux/drivers/spi/spi.c
+@@ -819,7 +819,7 @@ static void of_register_spi_devices(stru
+ 	if (!master->dev.of_node)
+ 		return;
  
- 	/* Loop over the child nodes and register a phy_device for each one */
--	for_each_child_of_node(np, child) {
-+	for_each_available_child_of_node(np, child) {
- 		const __be32 *paddr;
- 		u32 addr;
- 		int len;
+-	for_each_child_of_node(master->dev.of_node, nc) {
++	for_each_available_child_of_node(master->dev.of_node, nc) {
+ 		/* Alloc an spi_device */
+ 		spi = spi_alloc_device(master);
+ 		if (!spi) {
