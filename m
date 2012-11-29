@@ -1,110 +1,137 @@
-From: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH RESEND v5 0/4] OMAP GPMC DT bindings
-Date: Thu, 29 Nov 2012 05:24:36 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3EA07317@DBDE01.ent.ti.com>
-References: <1354121939-11246-1-git-send-email-zonque@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1354121939-11246-1-git-send-email-zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Cc: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Qing Xu <qingx@marvell.com>
+Subject: [PATCH] Documentation: add docs for max8925 dt
+Date: Thu, 29 Nov 2012 13:52:39 +0800
+Message-ID: <1354168359-19459-1-git-send-email-qingx@marvell.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: qingx@marvell.com, rob@landley.net, linux-doc@vger.kernel.org, sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, haojian.zhuang@gmail.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2012 at 22:28:55, Daniel Mack wrote:
-> [Resending +devicetree-discuss, +Rob, +Grant]
-> 
-> 
-> This is a series of patches to support GPMC peripherals on OMAP boards.
-> 
-> Depends on Linus' master +
-> omap-next (branch omap-for-v3.8/cleanup-headers-gpmc)
+From: Qing Xu <qingx@marvell.com>
 
-Can you resend this series on top of linux_next?
-Some of the missing items I seen 
-1. Of_node not populated in  omap_nand_platform_data structure.
-2. Remove platform device creation from hwmod as GPMC DT is populating.
-   Currently GPMC device creaing from DT & HWMOD.
+add docs for dt of max8925-mfd, max8925-backlight, and
+max8925-battery
 
-Also can you address how this patch series depends on
-mtd: nand: OMAP: ELM error correction support for BCH ecc
+Signed-off-by: Qing Xu <qingx@marvell.com>
+---
+ Documentation/devicetree/bindings/mfd/max8925.txt  |   64 ++++++++++++++++++++
+ .../bindings/power_supply/max8925_batter.txt       |   18 ++++++
+ .../bindings/video/backlight/max8925-backlight.txt |   10 +++
+ 3 files changed, 92 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/max8925.txt
+ create mode 100644 Documentation/devicetree/bindings/power_supply/max8925_batter.txt
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/max8925-backlight.txt
 
-Thanks
-Avinash
+diff --git a/Documentation/devicetree/bindings/mfd/max8925.txt b/Documentation/devicetree/bindings/mfd/max8925.txt
+new file mode 100644
+index 0000000..13bb62b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/max8925.txt
+@@ -0,0 +1,64 @@
++* Maxim max8925 Power Management IC
++
++Required parent device properties:
++- compatible : "maxim,max8925"
++- reg : the I2C slave address for the max8925 chip
++- interrupts : IRQ line for the max8925 chip
++- interrupt-controller: describes the max8925 as an interrupt
++  controller (has its own domain)
++- #interrupt-cells : should be 1.
++	- The cell is the max8925 local IRQ number
++
++Optional parent device properties:
++- tsc-irq: there are 2 IRQ lines for max8925, one is indicated in
++  interrupts property, the other is indicated here.
++
++max8925 consists of a large and varied group of sub-devices:
++
++Device			 Supply Names	 Description
++------			 ------------	 -----------
++max8925-onkey		:		: On key
++max8925-rtc		:		: RTC
++max8925-regulator	:		: Regulators
++max8925-backlight	:		: Backlight
++max8925-touch		:		: Touchscreen
++max8925-power		:		: Charger
++
++Example:
++
++	pmic: max8925@3c {
++		compatible = "maxim,max8925";
++		reg = <0x3c>;
++		interrupts = <1>;
++		interrupt-parent = <&intcmux4>;
++		interrupt-controller;
++		#interrupt-cells = <1>;
++		tsc-irq = <0>;
++
++		regulators {
++			SDV1 {
++				regulator-min-microvolt = <637500>;
++				regulator-max-microvolt = <1425000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++			
++			LDO1 {
++				regulator-min-microvolt = <750000>;
++				regulator-max-microvolt = <3900000>;
++				regulator-boot-on;
++				regulator-always-on;
++			};
++			
++		};
++		backlight {
++			max8925-dual-string = <0>;
++		};
++		charger {
++			batt-detect = <0>;
++			topoff-threshold = <1>;
++			fast-charge = <7>;
++			no-temp-support = <0>;
++			no-insert-detect = <0>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/power_supply/max8925_batter.txt b/Documentation/devicetree/bindings/power_supply/max8925_batter.txt
+new file mode 100644
+index 0000000..d7e3e0c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power_supply/max8925_batter.txt
+@@ -0,0 +1,18 @@
++max8925-battery bindings
++~~~~~~~~~~~~~~~~
++
++Optional properties :
++ - batt-detect: whether support battery detect
++ - topoff-threshold: set charging current in topoff mode
++ - fast-charge: set charging current in fast mode
++ - no-temp-support: whether support temperature protection detect
++ - no-insert-detect: whether support insert detect
++
++Example:
++	charger {
++		batt-detect = <0>;
++		topoff-threshold = <1>;
++		fast-charge = <7>;
++		no-temp-support = <0>;
++		no-insert-detect = <0>;
++	};
+diff --git a/Documentation/devicetree/bindings/video/backlight/max8925-backlight.txt b/Documentation/devicetree/bindings/video/backlight/max8925-backlight.txt
+new file mode 100644
+index 0000000..d692db3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/backlight/max8925-backlight.txt
+@@ -0,0 +1,10 @@
++88pm860x-backlight bindings
++
++Optional properties:
++  - max8925-dual-string: whether support dual string
++
++Example:
++
++	backlights {
++		max8925-dual-string = <0>;
++	};
+-- 
+1.7.0.4
 
-> 
-> The only supported peripheral for now is NAND, but other types would be
-> easy to add.
-> 
-> Version 2 addresses details pointed out by Jon Hunter, Afzal Mohammed
-> and Rob Herring:
-> 
->  - add "reg" and "ti,hwmod" properties to Documentation
->  - use generic of_mtd functions and the property names defined by them,
->    namely "nand-bus-width" and "nand-ecc-mode"
->  - reduce the default register space size in the Documentation to 8K,
->    as found in the hwmod code
->  - switch to a DT layout based on ranges and address translation.
->    Although this property is not currently looked at as long as the
->    handling code still uses the runtime calculation methods, we now
->    have these values in the bindings, eventually allowing us to
->    switch the implementation with less pain.
-> 
-> Version 3 includes fixes pointed out by Jon Hunter:
-> 
->  - better documentation of the 'ranges' property to describe the
->    fact that it's representing the CS lines
->  - GPMC_CS_CONFIGx -> GPMC_CONFIGx in comments
->  - drop interrupt-parent from example bindings
->  - add of_node_put() at the end of the child iteration
-> 
-> Version 4 fixes compilation for !CONFIG_MTD_NAND and includes more
-> details from Jon Hunter and Avinash, Philip:
-> 
->  - Add "num-cs" and "num-waitpins" properties, which will eventually
->    be used to get rid of GPMC_CS_NUM
->  - Better description of generic nand DT properties
->  - Dropped patch 3/4 as an equivalent fix was already merged
->  - Added ti,nand-ecc-use-elm property
-> 
-> Version 5 with regards to Avinash, Philip and Peter Korsgaard:
-> 
->  - Re-add accidentially forgotten
->    Documentation/devicetree/bindings/bus/ti-gpmc.txt
->  - Rename "software" ecc mode to "sw"
->  - Initialize gpmc_nand_data->is_elm_used to 'true' rather than 1
->  - Drop ti,nand-ecc-use-elm binding in favor of a new ecc mode
->    named "bch8-am335xrbl-compatible"
->  - Add two more patches for section mismatch fixups
-> 
-> Daniel Mack (4):
->   mtd: omap-nand: pass device_node in platform data
->   ARM: OMAP: gpmc-nand: drop __init annotation
->   ARM: OMAP: gpmc: enable hwecc for AM33xx SoCs
->   ARM: OMAP: gpmc: add DT bindings for GPMC timings and NAND
-> 
->  Documentation/devicetree/bindings/bus/ti-gpmc.txt  |  76 +++++++++
->  .../devicetree/bindings/mtd/gpmc-nand.txt          |  81 +++++++++
->  arch/arm/mach-omap2/gpmc-nand.c                    |  15 +-
->  arch/arm/mach-omap2/gpmc.c                         | 181 ++++++++++++++++++++-
->  drivers/mtd/nand/omap2.c                           |   4 +-
->  5 files changed, 348 insertions(+), 9 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
->  create mode 100644 Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> 
-> -- 
-> 1.7.11.7
-> 
-> 
