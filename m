@@ -1,48 +1,42 @@
-From: Alexander Sverdlin <asv-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] of/spi: Honour "status=disabled" property of device
-Date: Thu, 29 Nov 2012 08:59:29 +0100
-Message-ID: <50B715E1.3010501@sysgo.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V4 Resend 1/3] mfd: stmpe: Get rid of irq_invert_polarity
+Date: Thu, 29 Nov 2012 09:20:01 +0000
+Message-ID: <20121129092001.GS2013@gmail.com>
+References: <d1f012d7bb2835f696fc100073f2eb16d9f6204d.1354128258.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Barry.Song-kQvG35nSl+M@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexander sverdlin <alexander.sverdlin.ext-OYasijW0DpE@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d1f012d7bb2835f696fc100073f2eb16d9f6204d.1354128258.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: sameo@linux.intel.com, grant.likely@secretlab.ca, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alexander Sverdlin <alexander.sverdlin-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
+On Thu, 29 Nov 2012, Viresh Kumar wrote:
 
-of/spi: Honour "status=disabled" property of device
+> Since the very first patch, stmpe core driver is using irq_invert_pol=
+arity as
+> part of platform data. But, nobody is actually using it in kernel til=
+l now.
+>=20
+> Also, this is not something part of hardware specs, but is included t=
+o cater
+> some board mistakes or quirks.
+>=20
+> So, better get rid of it. This is earlier discussed here:
+>=20
+> https://lkml.org/lkml/2012/11/27/636
+>=20
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Currently of_register_spi_devices() function registers all SPI devices,
-independetly from their status property in device tree. According to
-"ePAPR 1.1" spec, device should only be registered if there is no
-"status" property, or it has "ok" (or "okay") value (see
-of_device_is_available()). In case of "platform devices",
-of_platform_device_create_pdata() checks for "status" and ensures
-that disabled devices are not pupulated. But such check for SPI buses
-was missing until now. Fix it.
+Glad to see the back of it:
 
-Signed-off-by: Alexander Sverdlin <alexander.sverdlin-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
----
---- linux.orig/drivers/spi/spi.c
-+++ linux/drivers/spi/spi.c
-@@ -819,7 +819,7 @@ static void of_register_spi_devices(stru
- 	if (!master->dev.of_node)
- 		return;
- 
--	for_each_child_of_node(master->dev.of_node, nc) {
-+	for_each_available_child_of_node(master->dev.of_node, nc) {
- 		/* Alloc an spi_device */
- 		spi = spi_alloc_device(master);
- 		if (!spi) {
+Acked-by: Lee Jones <lee.jones@linaro.org>
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
