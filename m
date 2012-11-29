@@ -1,136 +1,85 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH RESEND v5 0/4] OMAP GPMC DT bindings
-Date: Thu, 29 Nov 2012 12:58:04 +0100
-Message-ID: <50B74DCC.5060808@gmail.com>
-References: <1354121939-11246-1-git-send-email-zonque@gmail.com> <518397C60809E147AF5323E0420B992E3EA07317@DBDE01.ent.ti.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] gpio: New driver for GPO emulation using PWM generators
+Date: Thu, 29 Nov 2012 13:18:11 +0100
+Message-ID: <50B75283.6010207@ti.com>
+References: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com> <20121123075537.A14713E0A91@localhost> <50AF3E21.4000009@ti.com> <50AF4584.7020604@ti.com> <20121126154600.765E03E1AFD@localhost> <50B5D161.6010200@ti.com> <20121128193006.GB23444@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <518397C60809E147AF5323E0420B992E3EA07317@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Hunter, Jon" <jon-hunter@ti.com>, "Mohammed, Afzal" <afzal@ti.com>, "tony@atomide.com" <tony@atomide.com>, "paul@pwsan.com" <paul@pwsan.com>, "Nori, Sekhar" <nsekhar@ti.com>, "jacmet@sunsite.dk" <jacmet@sunsite.dk>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121128193006.GB23444@avionic-0098.adnet.avionic-design.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Avinash,
+On 11/28/2012 08:30 PM, Thierry Reding wrote:
+> I must say I'm not terribly thrilled to integrate something like this
+> into the PWM subsystem.
 
-On 29.11.2012 06:24, Philip, Avinash wrote:
-> On Wed, Nov 28, 2012 at 22:28:55, Daniel Mack wrote:
->> [Resending +devicetree-discuss, +Rob, +Grant]
->>
->>
->> This is a series of patches to support GPMC peripherals on OMAP boards.
->>
->> Depends on Linus' master +
->> omap-next (branch omap-for-v3.8/cleanup-headers-gpmc)
-> 
-> Can you resend this series on top of linux_next?
+I agree. I would not really want to add my name to something like this =
+either...
 
-The only branch these patches depend on is the
-"omap-for-v3.8/cleanup-headers-gpmc" branch from omap_next. Are you
-actually seeing any merge conflicts with my series? If so, which branch
-are you referring to exactly?
+> I wish hardware engineers wouldn't come up with such designs.
 
-> Some of the missing items I seen 
-> 1. Of_node not populated in  omap_nand_platform_data structure.
+I have checked and rechecked the schematics and datasheets. Still can n=
+ot
+understand how anyone would come to this HW solution (when the twl4030 =
+have at
+least 4 unused GPIO line left unconnected).
 
-Hmm - gpmc_probe_nand_child() from 4/4 adds
+> But since this seems to be a real use-case, if we want to
+> support it we should try and find the "right" solution.
+>=20
+> Reading the above sounds overly complicated. Couldn't we, instead of
+> instantiating an extra driver, just register a GPIO chip if a chip wa=
+nts
+> to support this functionality? Where the GPIO chip's request callback
+> requests the given PWM so that it cannot be used elsewhere? The
+> direction_input callback would need to always fail and the set callba=
+ck
+> can configure the PWM either to 0% or 100% duty-cycle depending on th=
+e
+> desired output value.
 
-  gpmc_nand_data->of_node = child;
+The original driver was doing exactly this. Basically I have added a GP=
+O chip
+(which was just a translator from PWM to GPO). In DT it looked like thi=
+s:
 
-Do I miss anything?
+twl_pwm: pwm {
+	compatible =3D "ti,twl4030-pwmled";
+	#pwm-cells =3D <2>;
+};
 
-> 2. Remove platform device creation from hwmod as GPMC DT is populating.
->    Currently GPMC device creaing from DT & HWMOD.
+pwm_gpo1: gpo1 {
+	compatible =3D "pwm-gpo";
+	#gpio-cells =3D <1>;
+	gpio-controller;
+	pwms =3D <&twl_pwm 0 7812500>;
+	pwm-names =3D "nUSBHOST_PWR_EN";
+};
 
-This is already addressed in cd00b0530 ("ARM: OMAP2+: gpmc: Fix kernel
-BUG for DT boot mode") by Vaibhav Hiremath, which I got via Afzal's USB
-branch:
+user@1 {
+	compatible =3D "example,testuser";
+	gpios =3D <&pwm_gpo1 0>;
+};
 
+When we boot with DT the pwm_get() needs pwms phandle from the device y=
+ou are
+calling it in order to find the PWM in question. If we do not have DT e=
+ntry
+for the GPO driver, we need to build up a pwm_lookup table to ensure th=
+at the
+pwm_get() will find the PWM we want to handle.
 
-https://gitorious.org/x0148406-public/linux-kernel/commit/cd00b053082a5cabbb1a35e072b0c044e17e8ec2/diffs
+We could implement the GPIO related code under for example
+drivers/pwm/pwm-as-gpo.c
+But then I should merge the code from drivers/gpio/gpio-pwm.c inside.
+This is not nice either since we will have a GPIO driver living under p=
+wm/
+directory and I'm not sure how this would use the pwm API when the GPO
+functionality is requested.
 
-As that fix is on the way, I dropped my version which did the same thing.
-
-> Also can you address how this patch series depends on
-> mtd: nand: OMAP: ELM error correction support for BCH ecc
-
-I have your ELM patches on top of mine, and they apply cleanly. But I
-believe it shouldn't be an issue if you base mine on top of yours.
-
-Let me know if you want me to rebase anything again. The best solution
-probably if I make sure the series applies cleanly to whatever tree it
-will be merged trough - but I don't know which that would be eventually.
-
-
-Thanks for the continuing feedback,
-Daniel
-
-
->>
->> The only supported peripheral for now is NAND, but other types would be
->> easy to add.
->>
->> Version 2 addresses details pointed out by Jon Hunter, Afzal Mohammed
->> and Rob Herring:
->>
->>  - add "reg" and "ti,hwmod" properties to Documentation
->>  - use generic of_mtd functions and the property names defined by them,
->>    namely "nand-bus-width" and "nand-ecc-mode"
->>  - reduce the default register space size in the Documentation to 8K,
->>    as found in the hwmod code
->>  - switch to a DT layout based on ranges and address translation.
->>    Although this property is not currently looked at as long as the
->>    handling code still uses the runtime calculation methods, we now
->>    have these values in the bindings, eventually allowing us to
->>    switch the implementation with less pain.
->>
->> Version 3 includes fixes pointed out by Jon Hunter:
->>
->>  - better documentation of the 'ranges' property to describe the
->>    fact that it's representing the CS lines
->>  - GPMC_CS_CONFIGx -> GPMC_CONFIGx in comments
->>  - drop interrupt-parent from example bindings
->>  - add of_node_put() at the end of the child iteration
->>
->> Version 4 fixes compilation for !CONFIG_MTD_NAND and includes more
->> details from Jon Hunter and Avinash, Philip:
->>
->>  - Add "num-cs" and "num-waitpins" properties, which will eventually
->>    be used to get rid of GPMC_CS_NUM
->>  - Better description of generic nand DT properties
->>  - Dropped patch 3/4 as an equivalent fix was already merged
->>  - Added ti,nand-ecc-use-elm property
->>
->> Version 5 with regards to Avinash, Philip and Peter Korsgaard:
->>
->>  - Re-add accidentially forgotten
->>    Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>  - Rename "software" ecc mode to "sw"
->>  - Initialize gpmc_nand_data->is_elm_used to 'true' rather than 1
->>  - Drop ti,nand-ecc-use-elm binding in favor of a new ecc mode
->>    named "bch8-am335xrbl-compatible"
->>  - Add two more patches for section mismatch fixups
->>
->> Daniel Mack (4):
->>   mtd: omap-nand: pass device_node in platform data
->>   ARM: OMAP: gpmc-nand: drop __init annotation
->>   ARM: OMAP: gpmc: enable hwecc for AM33xx SoCs
->>   ARM: OMAP: gpmc: add DT bindings for GPMC timings and NAND
->>
->>  Documentation/devicetree/bindings/bus/ti-gpmc.txt  |  76 +++++++++
->>  .../devicetree/bindings/mtd/gpmc-nand.txt          |  81 +++++++++
->>  arch/arm/mach-omap2/gpmc-nand.c                    |  15 +-
->>  arch/arm/mach-omap2/gpmc.c                         | 181 ++++++++++++++++++++-
->>  drivers/mtd/nand/omap2.c                           |   4 +-
->>  5 files changed, 348 insertions(+), 9 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>  create mode 100644 Documentation/devicetree/bindings/mtd/gpmc-nand.txt
->>
->> -- 
->> 1.7.11.7
->>
->>
-> 
-
+--=20
+P=E9ter
