@@ -1,48 +1,59 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 1/2] of_mdio: Honour "status=disabled" property of device
-Date: Thu, 29 Nov 2012 17:36:30 +0000
-Message-ID: <20121129173630.3EC073E0A04@localhost>
-References: <50B71290.2060200@sysgo.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <50B71290.2060200@sysgo.com>
-Sender: netdev-owner@vger.kernel.org
-To: Alexander Sverdlin <asv@sysgo.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
-Cc: alexander sverdlin <alexander.sverdlin.ext@nsn.com>, w.sang@pengutronix.de, Barry.Song@csr.com, netdev@vger.kernel.org
+From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v6 1/5] ARM: OMAP: gpmc: don't create devices from initcall
+ on DT
+Date: Thu, 29 Nov 2012 12:00:43 -0600
+Message-ID: <50B7A2CB.4020407@ti.com>
+References: <1354204892-22762-1-git-send-email-zonque@gmail.com>
+ <1354204892-22762-2-git-send-email-zonque@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1354204892-22762-2-git-send-email-zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: x0148406-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, avinashphilip-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Nov 2012 08:45:20 +0100, Alexander Sverdlin <asv@sysgo.com> wrote:
-> From: Alexander Sverdlin <alexander.sverdlin@sysgo.com>
-> 
-> of_mdio: Honour "status=disabled" property of device
-> 
-> Currently of_mdiobus_register() function registers all PHY devices,
-> independetly from their status property in device tree. According to
-> "ePAPR 1.1" spec, device should only be registered if there is no
-> "status" property, or it has "ok" (or "okay") value (see
-> of_device_is_available()). In case of "platform devices",
-> of_platform_device_create_pdata() checks for "status" and ensures
-> that disabled devices are not pupulated. But such check for MDIO buses
-> was missing until now. Fix it.
-> 
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@sysgo.com>
 
-Applied, thanks.
-
-g.
-
+On 11/29/2012 10:01 AM, Daniel Mack wrote:
+> On DT driven boards, the gpmc node will match the driver. Hence, there's
+> no need to do that unconditionally from the initcall.
+> 
+> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
-> --- linux.orig/drivers/of/of_mdio.c
-> +++ linux/drivers/of/of_mdio.c
-> @@ -53,7 +53,7 @@ int of_mdiobus_register(struct mii_bus *
->  		return rc;
+>  arch/arm/mach-omap2/gpmc.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+> index 60f1cce..1dcb30c 100644
+> --- a/arch/arm/mach-omap2/gpmc.c
+> +++ b/arch/arm/mach-omap2/gpmc.c
+> @@ -844,6 +844,13 @@ static int __init omap_gpmc_init(void)
+>  	struct platform_device *pdev;
+>  	char *oh_name = "gpmc";
 >  
->  	/* Loop over the child nodes and register a phy_device for each one */
-> -	for_each_child_of_node(np, child) {
-> +	for_each_available_child_of_node(np, child) {
->  		const __be32 *paddr;
->  		u32 addr;
->  		int len;
+> +	/*
+> +	 * if the board boots up with a populated DT, do not
+> +	 * manually add the device from this initcall
+> +	 */
+> +	if (of_have_populated_dt())
+> +		return -ENODEV;
+> +
+>  	oh = omap_hwmod_lookup(oh_name);
+>  	if (!oh) {
+>  		pr_err("Could not look up %s\n", oh_name);
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+Acked-by: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+
+Thanks
+Jon
