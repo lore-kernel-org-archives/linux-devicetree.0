@@ -1,7 +1,7 @@
 From: Qing Xu <qingx-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] mfd: max8925: add dts
-Date: Thu, 29 Nov 2012 11:34:42 +0800
-Message-ID: <1354160082-1814-1-git-send-email-qingx@marvell.com>
+Subject: [PATCH v4 7/7] mfd: max8925: add dts
+Date: Thu, 29 Nov 2012 11:35:20 +0800
+Message-ID: <1354160120-1923-1-git-send-email-qingx@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
