@@ -1,29 +1,83 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V4 Resend 3/3] mfd: stmpe: Update DT support in stmpe driver
-Date: Thu, 29 Nov 2012 14:57:05 +0530
-Message-ID: <CAKohpomw7yn-wj==qscuQ5j2FGv=Ks3RU9py=NWUnnT0_cK1aA@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V4 Resend 2/3] mfd: stmpe: Remove irq_trigger from
+ platform data
+Date: Thu, 29 Nov 2012 09:34:28 +0000
+Message-ID: <20121129093428.GV2013@gmail.com>
 References: <d1f012d7bb2835f696fc100073f2eb16d9f6204d.1354128258.git.viresh.kumar@linaro.org>
-	<eb65ded18560f902b0713d9df57c43e07704b5ec.1354128258.git.viresh.kumar@linaro.org>
-	<20121129092308.GT2013@gmail.com>
+ <33d71d9d29a3edd2c4a33e0f187cdb89f344af72.1354128258.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121129092308.GT2013@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: sameo@linux.intel.com, grant.likely@secretlab.ca, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <33d71d9d29a3edd2c4a33e0f187cdb89f344af72.1354128258.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: rabin.vincent-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shiraz.hashim-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 November 2012 14:53, Lee Jones <lee.jones@linaro.org> wrote:
->> From: Vipul Kumar Samar <vipulkumar.samar@st.com>
->> +     /*
->> +      * Distinct names of same cell-type within multiple instances of stmpe
->> +      * will be guaranteed by DT.
->> +      */
->> +     pdata->id = -1;
->
-> And what if we're not booting with DT?
-
-Then it is responsibility of code creating platform data for stmpe to fill
-it appropriately. i.e. If there is only one instance of stmpe on board, then
-better pass it as -1, else start counting.
+T24gVGh1LCAyOSBOb3YgMjAxMiwgVmlyZXNoIEt1bWFyIHdyb3RlOgoKPiBTVE1QRSBjYW4gY29u
+ZmlnZQoKICAgICAgICAgICAgY29uZmlndXJlPwoKPiB0aGUgd2F5IHRoZSBkZXZpY2UgZW1pdHMg
+aW50ZXJydXB0cyBhbmQgdGlsbCBub3cgdGhpcwoKICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgdW50aWw/Cgo+IGluZm9ybWF0aW9uIGlzIHBhc3NlZCBhcyBwYXJ0IG9m
+IHBsYXRmb3JtIGRhdGEuCj4gCj4gSXQgd291bGQgYWN0dWFsbHkgYmUgZ29vZCB0byBhc2sgdGhl
+IGludGVycnVwdCBjb250cm9sbGVyIGRyaXZlciB3aGF0IGtpbmQgb2YKPiBpbnRlcnJ1cHQgc2ln
+bmFsIGl0IGV4cGVjdHMgZm9yIGEgZ2l2ZW4gaW50ZXJydXB0IGxpbmUuIFdlIGNhbiBnZXQgdGhl
+IGlycSB0eXBlCj4gYnkgY2FsbGluZzogaXJxZF9nZXRfdHJpZ2dlcl90eXBlKCkgcm91dGluZS4K
+PiAKPiBTbywgbm93IHdlIGRvbid0IG5lZWQgdG8gcGFzcyBpdCB2aWEgcGxhdGZvcm0gZGF0YS4g
+VGhpcyBpcyBlYXJsaWVyIGRpc2N1c3NlZAo+IGhlcmU6Cj4gCj4gaHR0cHM6Ly9sa21sLm9yZy9s
+a21sLzIwMTIvMTEvMjYvNzExCj4gCj4gU2lnbmVkLW9mZi1ieTogVmlyZXNoIEt1bWFyIDx2aXJl
+c2gua3VtYXJAbGluYXJvLm9yZz4KPiAtLS0KPiAKPiBATGludXMvU2hpcmF6OiBDYW4geW91IHBs
+ZWFzZSB0ZXN0IHRoaXMgcGF0Y2g/IFlvdSBkb24ndCByZWFsbHkgbmVlZCB0byB0ZXN0IDEvMwo+
+IGFuZCAzLzMsIGJ1dCB3b3VsZCBiZSBnb29kIGlmIHlvdSBkbyB0aGF0IHRvby4uCj4gCj4gVGhp
+cyBpcyBhY3R1YWxseSBWMSBvZiB0aGlzIHBhdGNoLgo+IAo+ICBhcmNoL2FybS9tYWNoLXV4NTAw
+L2JvYXJkLW1vcDUwMC1zdHVpYi5jIHwgMSAtCj4gIGRyaXZlcnMvbWZkL3N0bXBlLmMgICAgICAg
+ICAgICAgICAgICAgICAgfCA3ICsrKystLS0KPiAgaW5jbHVkZS9saW51eC9tZmQvc3RtcGUuaCAg
+ICAgICAgICAgICAgICB8IDIgLS0KPiAgMyBmaWxlcyBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyks
+IDYgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL21hY2gtdXg1MDAvYm9h
+cmQtbW9wNTAwLXN0dWliLmMgYi9hcmNoL2FybS9tYWNoLXV4NTAwL2JvYXJkLW1vcDUwMC1zdHVp
+Yi5jCj4gaW5kZXggNTY0ZjU3ZC4uMGVmY2Y5NyAxMDA2NDQKPiAtLS0gYS9hcmNoL2FybS9tYWNo
+LXV4NTAwL2JvYXJkLW1vcDUwMC1zdHVpYi5jCj4gKysrIGIvYXJjaC9hcm0vbWFjaC11eDUwMC9i
+b2FyZC1tb3A1MDAtc3R1aWIuYwo+IEBAIC01Nyw3ICs1Nyw2IEBAIHN0YXRpYyBzdHJ1Y3Qgc3Rt
+cGVfa2V5cGFkX3BsYXRmb3JtX2RhdGEgc3RtcGUxNjAxX2tleXBhZF9kYXRhID0gewo+ICBzdGF0
+aWMgc3RydWN0IHN0bXBlX3BsYXRmb3JtX2RhdGEgc3RtcGUxNjAxX2RhdGEgPSB7Cj4gIAkuaWQJ
+CT0gMSwKPiAgCS5ibG9ja3MJCT0gU1RNUEVfQkxPQ0tfS0VZUEFELAo+IC0JLmlycV90cmlnZ2Vy
+ICAgID0gSVJRRl9UUklHR0VSX0ZBTExJTkcsCj4gIAkuaXJxX2Jhc2UgICAgICAgPSBNT1A1MDBf
+U1RNUEUxNjAxX0lSUSgwKSwKPiAgCS5rZXlwYWQJCT0gJnN0bXBlMTYwMV9rZXlwYWRfZGF0YSwK
+PiAgCS5hdXRvc2xlZXAgICAgICA9IHRydWUsCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL3N0
+bXBlLmMgYi9kcml2ZXJzL21mZC9zdG1wZS5jCj4gaW5kZXggMzQ0MDhiNC4uMTA4MTllNiAxMDA2
+NDQKPiAtLS0gYS9kcml2ZXJzL21mZC9zdG1wZS5jCj4gKysrIGIvZHJpdmVycy9tZmQvc3RtcGUu
+Ywo+IEBAIC05MTQsNyArOTE0LDYgQEAgc3RhdGljIGludCBfX2RldmluaXQgc3RtcGVfaXJxX2lu
+aXQoc3RydWN0IHN0bXBlICpzdG1wZSwKPiAgCj4gIHN0YXRpYyBpbnQgX19kZXZpbml0IHN0bXBl
+X2NoaXBfaW5pdChzdHJ1Y3Qgc3RtcGUgKnN0bXBlKQo+ICB7Cj4gLQl1bnNpZ25lZCBpbnQgaXJx
+X3RyaWdnZXIgPSBzdG1wZS0+cGRhdGEtPmlycV90cmlnZ2VyOwo+ICAJaW50IGF1dG9zbGVlcF90
+aW1lb3V0ID0gc3RtcGUtPnBkYXRhLT5hdXRvc2xlZXBfdGltZW91dDsKPiAgCXN0cnVjdCBzdG1w
+ZV92YXJpYW50X2luZm8gKnZhcmlhbnQgPSBzdG1wZS0+dmFyaWFudDsKPiAgCXU4IGljciA9IDA7
+Cj4gQEAgLTk0MSw2ICs5NDAsOSBAQCBzdGF0aWMgaW50IF9fZGV2aW5pdCBzdG1wZV9jaGlwX2lu
+aXQoc3RydWN0IHN0bXBlICpzdG1wZSkKPiAgCQlyZXR1cm4gcmV0Owo+ICAKPiAgCWlmIChzdG1w
+ZS0+aXJxID49IDApIHsKPiArCQl1bnNpZ25lZCBpbnQgaXJxX3RyaWdnZXIgPQo+ICsJCQlpcnFk
+X2dldF90cmlnZ2VyX3R5cGUoaXJxX2dldF9pcnFfZGF0YShzdG1wZS0+aXJxKSk7Cj4gKwo+ICAJ
+CWlmIChpZCA9PSBTVE1QRTgwMV9JRCkKPiAgCQkJaWNyID0gU1RNUEU4MDFfUkVHX1NZU19DVFJM
+X0lOVF9FTjsKPiAgCQllbHNlCj4gQEAgLTExMTgsOCArMTEyMCw3IEBAIGludCBfX2RldmluaXQg
+c3RtcGVfcHJvYmUoc3RydWN0IHN0bXBlX2NsaWVudF9pbmZvICpjaSwgaW50IHBhcnRudW0pCj4g
+IAkJCXJldHVybiByZXQ7Cj4gIAo+ICAJCXJldCA9IGRldm1fcmVxdWVzdF90aHJlYWRlZF9pcnEo
+Y2ktPmRldiwgc3RtcGUtPmlycSwgTlVMTCwKPiAtCQkJCXN0bXBlX2lycSwgcGRhdGEtPmlycV90
+cmlnZ2VyIHwgSVJRRl9PTkVTSE9ULAo+IC0JCQkJInN0bXBlIiwgc3RtcGUpOwo+ICsJCQkJc3Rt
+cGVfaXJxLCBJUlFGX09ORVNIT1QsICJzdG1wZSIsIHN0bXBlKTsKCkZvcmdpdmUgbXkgaWdub3Jh
+bmNlLCBidXQgeW91J3JlIG5vIGxvbmdlciBwYXNzaW5nIGlycV90cmlnZ2VyLgoKSXMgdGhpcyBp
+bnRlbnRpb25hbD8gSWYgc28sIHdoeSB3YXMgaXQgbmVlZGVkIGJlZm9yZSBhbmQgbm90IG5vdz8K
+Ci0tIApMZWUgSm9uZXMKTGluYXJvIFNULUVyaWNzc29uIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFy
+by5vcmcg4pSCIE9wZW4gc291cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJv
+OiBGYWNlYm9vayB8IFR3aXR0ZXIgfCBCbG9nCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNl
+dHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xp
+c3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
