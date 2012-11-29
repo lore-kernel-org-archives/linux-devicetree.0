@@ -1,61 +1,65 @@
-From: Barry Song <Barry.Song-kQvG35nSl+M@public.gmane.org>
-Subject: RE: [PATCH] of_i2c: Honour "status=disabled" property of device
-Date: Thu, 29 Nov 2012 03:20:48 +0000
-Message-ID: <5EB3BFCD089AD643B9BB63439F5FD5E90122987C05@SHAASIEXM01.ASIA.ROOT.PRI>
-References: <50B61DDA.5090109@sysgo.com>
+From: Tony Prisk <linux@prisktech.co.nz>
+Subject: Re: [PATCH -next] mmc: wmt-sdmmc: fix potential NULL pointer
+ dereference in wmt_mci_probe()
+Date: Thu, 29 Nov 2012 16:27:25 +1300
+Message-ID: <1354159645.3008.9.camel@gitbox>
+References: <CAPgLHd9bKK54pR591ytB1_S3EOw4F177=Ofqf_h_n9_+SFyi2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <50B61DDA.5090109-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
-Content-Language: en-US
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Sverdlin <asv-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>, Jochen Friedrich <jochen-NIgtFMG+Po8@public.gmane.org>, Jon Smirl <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: alexander sverdlin <alexander.sverdlin.ext-OYasijW0DpE@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAPgLHd9bKK54pR591ytB1_S3EOw4F177=Ofqf_h_n9_+SFyi2g@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Wei Yongjun <weiyj.lk@gmail.com>
+Cc: cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBkZXZpY2V0
-cmVlLWRpc2N1c3MNCj4gW21haWx0bzpkZXZpY2V0cmVlLWRpc2N1c3MtYm91
-bmNlcyticzE0PWNzci5jb21AbGlzdHMub3psYWJzLm9yZ10gT24gQmVoYWxm
-DQo+IE9mIEFsZXhhbmRlciBTdmVyZGxpbg0KPiBTZW50OiBXZWRuZXNkYXks
-IE5vdmVtYmVyIDI4LCAyMDEyIDEwOjIxIFBNDQo+IFRvOiBKb2NoZW4gRnJp
-ZWRyaWNoOyBKb24gU21pcmw7IGxpbnV4LWkyY0B2Z2VyLmtlcm5lbC5vcmc7
-DQo+IGRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnOyBSb2Ig
-SGVycmluZzsgR3JhbnQgTGlrZWx5DQo+IENjOiBhbGV4YW5kZXIgc3ZlcmRs
-aW4NCj4gU3ViamVjdDogW1BBVENIXSBvZl9pMmM6IEhvbm91ciAic3RhdHVz
-PWRpc2FibGVkIiBwcm9wZXJ0eSBvZiBkZXZpY2UNCj4gDQo+IEZyb206IEFs
-ZXhhbmRlciBTdmVyZGxpbiA8YWxleGFuZGVyLnN2ZXJkbGluQHN5c2dvLmNv
-bT4NCj4gDQo+IG9mX2kyYzogSG9ub3VyICJzdGF0dXM9ZGlzYWJsZWQiIHBy
-b3BlcnR5IG9mIGRldmljZQ0KPiANCj4gQ3VycmVudGx5IG9mX2kyY19yZWdp
-c3Rlcl9kZXZpY2VzKCkgZnVuY3Rpb24gcmVnaXN0ZXJzIGFsbCBpMmMgZGV2
-aWNlcywNCj4gaW5kZXBlbmRlbnRseSBmcm9tIHRoZWlyIHN0YXR1cyBwcm9w
-ZXJ0eSBpbiBkZXZpY2UgdHJlZS4gQWNjb3JkaW5nIHRvDQo+ICJlUEFQUiAx
-LjEiIHNwZWMsIGRldmljZSBzaG91bGQgb25seSBiZSByZWdpc3RlcmVkIGlm
-IHRoZXJlIGlzIG5vDQo+ICJzdGF0dXMiIHByb3BlcnR5LCBvciBpdCBoYXMg
-Im9rIiAob3IgIm9rYXkiKSB2YWx1ZSAoc2VlDQo+IG9mX2RldmljZV9pc19h
-dmFpbGFibGUoKSkuIEluIGNhc2Ugb2YgInBsYXRmb3JtIGRldmljZXMiLA0K
-PiBvZl9wbGF0Zm9ybV9kZXZpY2VfY3JlYXRlX3BkYXRhKCkgY2hlY2tzIGZv
-ciAic3RhdHVzIiBhbmQgZW5zdXJlcw0KPiB0aGF0IGRpc2FibGVkIGRldmlj
-ZXMgYXJlIG5vdCBwb3B1bGF0ZWQuIEJ1dCBzdWNoIGNoZWNrIGZvciBpMmMg
-YnVzZXMNCj4gd2FzIG1pc3NpbmcgdW50aWwgbm93LiBGaXggaXQuDQo+IA0K
-PiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kZXIgU3ZlcmRsaW4gPGFsZXhhbmRl
-ci5zdmVyZGxpbkBzeXNnby5jb20+DQo+IC0tLQ0KDQpSZXZpZXdlZC1ieTog
-QmFycnkgU29uZyA8QmFvaHVhLlNvbmdAY3NyLmNvbT4NCg0KPiAtLS0gbGlu
-dXgub3JpZy9kcml2ZXJzL29mL29mX2kyYy5jDQo+ICsrKyBsaW51eC9kcml2
-ZXJzL29mL29mX2kyYy5jDQo+IEBAIC0yOSw3ICsyOSw3IEBAIHZvaWQgb2Zf
-aTJjX3JlZ2lzdGVyX2RldmljZXMoc3RydWN0IGkyY18NCj4gDQo+ICAJZGV2
-X2RiZygmYWRhcC0+ZGV2LCAib2ZfaTJjOiB3YWxraW5nIGNoaWxkIG5vZGVz
-XG4iKTsNCj4gDQo+IC0JZm9yX2VhY2hfY2hpbGRfb2Zfbm9kZShhZGFwLT5k
-ZXYub2Zfbm9kZSwgbm9kZSkgew0KPiArCWZvcl9lYWNoX2F2YWlsYWJsZV9j
-aGlsZF9vZl9ub2RlKGFkYXAtPmRldi5vZl9ub2RlLCBub2RlKSB7DQo+ICAJ
-CXN0cnVjdCBpMmNfYm9hcmRfaW5mbyBpbmZvID0ge307DQo+ICAJCXN0cnVj
-dCBkZXZfYXJjaGRhdGEgZGV2X2FkID0ge307DQo+ICAJCWNvbnN0IF9fYmUz
-MiAqYWRkcjsNCgoKTWVtYmVyIG9mIHRoZSBDU1IgcGxjIGdyb3VwIG9mIGNv
-bXBhbmllcy4gQ1NSIHBsYyByZWdpc3RlcmVkIGluIEVuZ2xhbmQgYW5kIFdh
-bGVzLCByZWdpc3RlcmVkIG51bWJlciA0MTg3MzQ2LCByZWdpc3RlcmVkIG9m
-ZmljZSBDaHVyY2hpbGwgSG91c2UsIENhbWJyaWRnZSBCdXNpbmVzcyBQYXJr
-LCBDb3dsZXkgUm9hZCwgQ2FtYnJpZGdlLCBDQjQgMFdaLCBVbml0ZWQgS2lu
-Z2RvbQpNb3JlIGluZm9ybWF0aW9uIGNhbiBiZSBmb3VuZCBhdCB3d3cuY3Ny
-LmNvbS4gRm9sbG93IENTUiBvbiBUd2l0dGVyIGF0IGh0dHA6Ly90d2l0dGVy
-LmNvbS9DU1JfUExDIGFuZCByZWFkIG91ciBibG9nIGF0IHd3dy5jc3IuY29t
-L2Jsb2cK
+On Wed, 2012-11-28 at 21:31 -0500, Wei Yongjun wrote:
+> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> 
+> The dereference to 'of_id' should be moved below the NULL test.
+> 
+> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> ---
+>  drivers/mmc/host/wmt-sdmmc.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mmc/host/wmt-sdmmc.c b/drivers/mmc/host/wmt-sdmmc.c
+> index 5ba4605..f737b0c 100644
+> --- a/drivers/mmc/host/wmt-sdmmc.c
+> +++ b/drivers/mmc/host/wmt-sdmmc.c
+> @@ -773,7 +773,7 @@ static int __devinit wmt_mci_probe(struct platform_device *pdev)
+>  	struct device_node *np = pdev->dev.of_node;
+>  	const struct of_device_id *of_id =
+>  		of_match_device(wmt_mci_dt_ids, &pdev->dev);
+> -	const struct wmt_mci_caps *wmt_caps = of_id->data;
+> +	const struct wmt_mci_caps *wmt_caps;
+>  	int ret;
+>  	int regular_irq, dma_irq;
+>  
+> @@ -787,6 +787,7 @@ static int __devinit wmt_mci_probe(struct platform_device *pdev)
+>  		return -EFAULT;
+>  	}
+>  
+> +	wmt_caps = of_id->data;
+>  	regular_irq = irq_of_parse_and_map(np, 0);
+>  	dma_irq = irq_of_parse_and_map(np, 1);
+>  
+> 
+
+Arguable this is unnecessary as of_id can never be NULL unless
+of_match_device return's NULL and since it matches against the same
+table as the probe that should never happen.
+
+Given that there is a test at the start already for the NULL pointers,
+this does make sense however - I'm just not sure how it will ever
+happen. You could just remove the test instead.
+
+Either way, this does fix a 'potential' bug, so if everyone else is
+happy:
+
+Acked-by: Tony Prisk <linux@prisktech.co.nz>
+
+Regards
+Tony P
+
