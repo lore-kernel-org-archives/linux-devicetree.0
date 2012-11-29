@@ -1,52 +1,30 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/2] of_mdio: Honour "status=disabled" property of device
-Date: Thu, 29 Nov 2012 11:12:02 -0600
-Message-ID: <50B79762.2040009@gmail.com>
-References: <50B71290.2060200@sysgo.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <50B71290.2060200@sysgo.com>
-Sender: netdev-owner@vger.kernel.org
-To: Alexander Sverdlin <asv@sysgo.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, netdev@vger.kernel.org, Barry.Song@csr.com, w.sang@pengutronix.de, alexander sverdlin <alexander.sverdlin.ext@nsn.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: How about a gpio_get(device *, char *) function?
+Date: Thu, 29 Nov 2012 17:34:07 +0000
+Message-ID: <20121129173407.11A543E0A04@localhost>
+References: <38620644.IyR5R8rjKP@percival> <CACRpkdaUJKs7zx=JWRUb+0Qz2dQU=R5KUK+CoM+nLCgHL99AFA@mail.gmail.com> <20121126111431.AE4C23E09C2@localhost> <2022442.P80mCjSeu2@percival>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2022442.P80mCjSeu2@percival>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alex Courbot <acourbot@nvidia.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2012 01:45 AM, Alexander Sverdlin wrote:
-> From: Alexander Sverdlin <alexander.sverdlin@sysgo.com>
+On Wed, 28 Nov 2012 12:38:38 +0900, Alex Courbot <acourbot@nvidia.com> wrote:
+> On Monday 26 November 2012 19:14:31 Grant Likely wrote:
+> > I don't have any problem with a gpio_get function, but I do agree that
+> > making it return an opaque handle is how it should be written with a new
+> > set of accessors. The handle should probably be simply the pointer to
+> > the &gpio_desc[number] which is a private table in gpiolib.c. The
+> > definition of it isn't available outside of gpiolib.c
 > 
-> of_mdio: Honour "status=disabled" property of device
-> 
-> Currently of_mdiobus_register() function registers all PHY devices,
-> independetly from their status property in device tree. According to
-> "ePAPR 1.1" spec, device should only be registered if there is no
-> "status" property, or it has "ok" (or "okay") value (see
-> of_device_is_available()). In case of "platform devices",
-> of_platform_device_create_pdata() checks for "status" and ensures
-> that disabled devices are not pupulated. But such check for MDIO buses
-> was missing until now. Fix it.
-> 
-> Signed-off-by: Alexander Sverdlin <alexander.sverdlin@sysgo.com>
-> ---
+> That looks like a reasonable approach, but this would make the new API 
+> available only to systems that use GPIOlib. Shouldn't we be concerned about 
+> making this available to all GPIO implementations? Or is GPIOlib so widely 
+> used that we don't care?
 
-Applied.
+I'm tempted to say non-gpiolib is not supported. However, there isn't
+anything that would prevent non-gpiolib users from implementing the api
+themselves, but they'd need to provide their own handle..
 
-Rob
-
-> --- linux.orig/drivers/of/of_mdio.c
-> +++ linux/drivers/of/of_mdio.c
-> @@ -53,7 +53,7 @@ int of_mdiobus_register(struct mii_bus *
->  		return rc;
->  
->  	/* Loop over the child nodes and register a phy_device for each one */
-> -	for_each_child_of_node(np, child) {
-> +	for_each_available_child_of_node(np, child) {
->  		const __be32 *paddr;
->  		u32 addr;
->  		int len;
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+g.
