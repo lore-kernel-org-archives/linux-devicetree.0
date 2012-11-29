@@ -1,220 +1,84 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
-Date: Thu, 29 Nov 2012 20:10:18 +0530
-Message-ID: <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
-References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH v5 4/4] ARM: OMAP: gpmc: add DT bindings for GPMC
+ timings and NAND
+Date: Thu, 29 Nov 2012 14:59:29 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3EA0BB4B@DBDE01.ent.ti.com>
+References: <1354121939-11246-1-git-send-email-zonque@gmail.com>
+ <1354121939-11246-5-git-send-email-zonque@gmail.com>
+ <518397C60809E147AF5323E0420B992E3EA0B986@DBDE01.ent.ti.com>
+ <50B75806.8030501@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-In-Reply-To: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rabin.vincent-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, shiraz.hashim-qxv4g6HH51o@public.gmane.org
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <50B75806.8030501@gmail.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Hunter, Jon" <jon-hunter@ti.com>, "Mohammed, Afzal" <afzal@ti.com>, "tony@atomide.com" <tony@atomide.com>, "paul@pwsan.com" <paul@pwsan.com>, "Nori, Sekhar" <nsekhar@ti.com>, "jacmet@sunsite.dk" <jacmet@sunsite.dk>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Vipul Kumar Samar <vipulkumar.samar-qxv4g6HH51o@public.gmane.org>
+On Thu, Nov 29, 2012 at 18:11:42, Daniel Mack wrote:
+> On 29.11.2012 13:36, Philip, Avinash wrote:
+> > On Wed, Nov 28, 2012 at 22:28:59, Daniel Mack wrote:
+> > [...]
+> >> +	if (!of_property_read_string(child, "ti,nand-ecc-opt", &s)) {
+> >> +		for (val = 0; val < ARRAY_SIZE(nand_ecc_opts); val++)
+> >> +			if (!strcasecmp(s, nand_ecc_opts[val])) {
+> >> +				gpmc_nand_data->ecc_opt = val;
+> >> +				break;
+> >> +			}
+> >> +
+> >> +		/*
+> >> +		 *  AM335x RBL compatibility mode - dependns on runtime
+> >> +		 * detection of the error location module.
+> >> +		 */
+> >> +		if (!strcasecmp(s, "bch8-am335xrbl-compatible")) {
+> >> +			gpmc_nand_data->ecc_opt = OMAP_ECC_BCH8_CODE_HW;
+> >> +			gpmc_nand_data->is_elm_used = true;
+> > 
+> > Remove is_elm_used from struct omap_nand_platform_data. Now this data
+> > populated as part of run time detection of elm module. So please remove
+> > The usage of is_elm_used;
+> 
+> So why do we need "bch8-am335xrbl-compatible" as special case then?
+> 
+> I thought the whole idea here is to tell the driver we want bch8 *and*
+> the usage of the elm, instead of falling back to the (incompatible)
+> software mode? If I remove that assignment, "bch8-am335xrbl-compatible"
+> is the same than "bch8".
+> 
 
-This patch extends existing DT support for stmpe devices. This updates:
-- DT support from stmpe SPI and I2C drivers
-- missing header files in stmpe.c
-- stmpe_of_probe() with pwm, rotator and new bindings.
-- Bindings are updated in binding document.
+Here we have different problems present. 
+1. GPMC-NAND DT binding support.
+2. Compatible ECC layout between kernel, boot loader.
+3. Support for hardware accelerator, i.e ELM for error correction.
 
-Signed-off-by: Vipul Kumar Samar <vipulkumar.samar-qxv4g6HH51o@public.gmane.org>
-Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
-V4->V5:
-------
-- 2/3 and 3/3 merged.
-- irq_trigger is kept same for non-DT booti.
+So priority should go for GPMC DT binding support. 
+Can you please proceed with GPMC-NAND DT bindings without considering
+ELM so that driver features existing can be obtained with DT.
 
-@Lee: I haven't added your Acked-by, because this differs from your Acked
-version.
+I will take care of ECC layout (or RBL) compatibility along with ELM
+series. I will make ELM series on top of your changes. This way we can
+avoid circular dependency
 
- Documentation/devicetree/bindings/mfd/stmpe.txt |  9 ++++++---
- drivers/mfd/stmpe-i2c.c                         | 15 ++++++++++++++
- drivers/mfd/stmpe-spi.c                         | 15 ++++++++++++++
- drivers/mfd/stmpe.c                             | 27 +++++++++++++++++++------
- 4 files changed, 57 insertions(+), 9 deletions(-)
+>
+> Which detail am I missing? :)
 
-diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
-index 8f0aeda..d2d88d9 100644
---- a/Documentation/devicetree/bindings/mfd/stmpe.txt
-+++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
-@@ -1,8 +1,11 @@
--* STMPE Multi-Functional Device
-+* ST Microelectronics STMPE Multi-Functional Device
-+
-+STMPE is an MFD device which may expose following inbuilt devices: gpio, keypad,
-+touchscreen, adc, pwm, rotator.
- 
- Required properties:
-- - compatible                   : "st,stmpe[811|1601|2401|2403]"
-- - reg                          : I2C address of the device
-+ - compatible                   : "st,stmpe[610|801|811|1601|2401|2403]"
-+ - reg                          : I2C/SPI address of the device
- 
- Optional properties:
-  - interrupts                   : The interrupt outputs from the controller
-diff --git a/drivers/mfd/stmpe-i2c.c b/drivers/mfd/stmpe-i2c.c
-index c734dc3..003c49b 100644
---- a/drivers/mfd/stmpe-i2c.c
-+++ b/drivers/mfd/stmpe-i2c.c
-@@ -13,6 +13,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/types.h>
- #include "stmpe.h"
- 
-@@ -81,6 +82,19 @@ static const struct i2c_device_id stmpe_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, stmpe_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id stmpe_dt_ids[] = {
-+	{ .compatible = "st,stmpe610", .data = &stmpe_i2c_id[0], },
-+	{ .compatible = "st,stmpe801", .data = &stmpe_i2c_id[1], },
-+	{ .compatible = "st,stmpe811", .data = &stmpe_i2c_id[2], },
-+	{ .compatible = "st,stmpe1601", .data = &stmpe_i2c_id[3], },
-+	{ .compatible = "st,stmpe2401", .data = &stmpe_i2c_id[4], },
-+	{ .compatible = "st,stmpe2403", .data = &stmpe_i2c_id[5], },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, stmpe_dt_ids);
-+#endif
-+
- static struct i2c_driver stmpe_i2c_driver = {
- 	.driver = {
- 		.name = "stmpe-i2c",
-@@ -88,6 +102,7 @@ static struct i2c_driver stmpe_i2c_driver = {
- #ifdef CONFIG_PM
- 		.pm = &stmpe_dev_pm_ops,
- #endif
-+		.of_match_table = of_match_ptr(stmpe_dt_ids),
- 	},
- 	.probe		= stmpe_i2c_probe,
- 	.remove		= __devexit_p(stmpe_i2c_remove),
-diff --git a/drivers/mfd/stmpe-spi.c b/drivers/mfd/stmpe-spi.c
-index 9edfe86..1e2bff0 100644
---- a/drivers/mfd/stmpe-spi.c
-+++ b/drivers/mfd/stmpe-spi.c
-@@ -11,6 +11,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- #include <linux/types.h>
- #include "stmpe.h"
- 
-@@ -119,6 +120,19 @@ static const struct spi_device_id stmpe_spi_id[] = {
- };
- MODULE_DEVICE_TABLE(spi, stmpe_id);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id stmpe_dt_ids[] = {
-+	{ .compatible = "st,stmpe610", .data = (void *)STMPE610, },
-+	{ .compatible = "st,stmpe801", .data = (void *)STMPE801, },
-+	{ .compatible = "st,stmpe811", .data = (void *)STMPE811, },
-+	{ .compatible = "st,stmpe1601", .data = (void *)STMPE1601, },
-+	{ .compatible = "st,stmpe2401", .data = (void *)STMPE2401, },
-+	{ .compatible = "st,stmpe2403", .data = (void *)STMPE2403, },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, stmpe_dt_ids);
-+#endif
-+
- static struct spi_driver stmpe_spi_driver = {
- 	.driver = {
- 		.name	= "stmpe-spi",
-@@ -126,6 +140,7 @@ static struct spi_driver stmpe_spi_driver = {
- #ifdef CONFIG_PM
- 		.pm	= &stmpe_dev_pm_ops,
- #endif
-+		.of_match_table = of_match_ptr(stmpe_dt_ids),
- 	},
- 	.probe		= stmpe_spi_probe,
- 	.remove		= __devexit_p(stmpe_spi_remove),
-diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
-index 34408b4..bb2dfdb 100644
---- a/drivers/mfd/stmpe.c
-+++ b/drivers/mfd/stmpe.c
-@@ -7,12 +7,15 @@
-  * Author: Rabin Vincent <rabin.vincent-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org> for ST-Ericsson
-  */
- 
-+#include <linux/err.h>
- #include <linux/gpio.h>
- #include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/pm.h>
- #include <linux/slab.h>
- #include <linux/mfd/core.h>
-@@ -1019,6 +1022,14 @@ void __devinit stmpe_of_probe(struct stmpe_platform_data *pdata,
- {
- 	struct device_node *child;
- 
-+	/*
-+	 * Distinct names of same cell-type within multiple instances of stmpe
-+	 * will be guaranteed by DT.
-+	 */
-+	pdata->id = -1;
-+
-+	pdata->irq_trigger = IRQF_TRIGGER_NONE;
-+
- 	of_property_read_u32(np, "st,autosleep-timeout",
- 			&pdata->autosleep_timeout);
- 
-@@ -1027,15 +1038,16 @@ void __devinit stmpe_of_probe(struct stmpe_platform_data *pdata,
- 	for_each_child_of_node(np, child) {
- 		if (!strcmp(child->name, "stmpe_gpio")) {
- 			pdata->blocks |= STMPE_BLOCK_GPIO;
--		}
--		if (!strcmp(child->name, "stmpe_keypad")) {
-+		} else if (!strcmp(child->name, "stmpe_keypad")) {
- 			pdata->blocks |= STMPE_BLOCK_KEYPAD;
--		}
--		if (!strcmp(child->name, "stmpe_touchscreen")) {
-+		} else if (!strcmp(child->name, "stmpe_touchscreen")) {
- 			pdata->blocks |= STMPE_BLOCK_TOUCHSCREEN;
--		}
--		if (!strcmp(child->name, "stmpe_adc")) {
-+		} else if (!strcmp(child->name, "stmpe_adc")) {
- 			pdata->blocks |= STMPE_BLOCK_ADC;
-+		} else if (!strcmp(child->name, "stmpe_pwm")) {
-+			pdata->blocks |= STMPE_BLOCK_PWM;
-+		} else if (!strcmp(child->name, "stmpe_rotator")) {
-+			pdata->blocks |= STMPE_BLOCK_ROTATOR;
- 		}
- 	}
- }
-@@ -1106,6 +1118,9 @@ int __devinit stmpe_probe(struct stmpe_client_info *ci, int partnum)
- 			return -ENODEV;
- 		}
- 		stmpe->variant = stmpe_noirq_variant_info[stmpe->partnum];
-+	} else if (pdata->irq_trigger == IRQF_TRIGGER_NONE) {
-+		pdata->irq_trigger =
-+			irqd_get_trigger_type(irq_get_irq_data(stmpe->irq));
- 	}
- 
- 	ret = stmpe_chip_init(stmpe);
--- 
-1.7.12.rc2.18.g61b472e
+I think what you need is NAND ECC layout to be common across Kernel and
+boot loader. Strictly speaking ELM is not a necessity for it. The common
+layout can be obtained even without presence of ELM, ELM is only a hardware
+accelerator for error correction. If ELM is not used, we can rely on software
+error correction, at least theoretically. But the way software error correction
+is handled currently in omap nand driver will not help us as ecc layout assumed
+is different.
+
+Thanks
+Avinash
+
+> 
+> 
+> Daniel
+> 
+> 
+
