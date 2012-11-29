@@ -1,46 +1,28 @@
-From: Qing Xu <qingx@marvell.com>
-Subject: Re: [PATCH 0/7] mfd: update on max8925 for DT support
-Date: Thu, 29 Nov 2012 13:54:52 +0800
-Message-ID: <50B6F8AC.6050307@marvell.com>
-References: <1352187305-9660-1-git-send-email-qingx@marvell.com> <CAN1soZzAZ9Od_5jC0ZFdw03c5P9Q+gJQswTwp0M1YWM_ti+9xw@mail.gmail.com>
+From: Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
+Subject: [fedora-arm] precedence of built-in vs. platform trees?
+Date: Thu, 29 Nov 2012 01:39:56 -0500
+Message-ID: <50B7033C.3030204@jonmasters.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAN1soZzAZ9Od_5jC0ZFdw03c5P9Q+gJQswTwp0M1YWM_ti+9xw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <arm-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org>
+List-Unsubscribe: <https://admin.fedoraproject.org/mailman/options/arm>,
+	<mailto:arm-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.fedoraproject.org/pipermail/arm/>
+List-Post: <mailto:arm-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org>
+List-Help: <mailto:arm-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=help>
+List-Subscribe: <https://admin.fedoraproject.org/mailman/listinfo/arm>,
+	<mailto:arm-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=subscribe>
+Sender: arm-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
+Errors-To: arm-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: arm-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/23/2012 05:09 PM, Haojian Zhuang wrote:
-> On Tue, Nov 6, 2012 at 3:35 PM, Qing Xu <qingx@marvell.com> wrote:
->> From: Qing Xu <qingx@marvell.com>
->>
->> 1. add irqdomain for max8925, it is necessary for dt support
->> 2. bug fix in max8925 mfd devices'irq base and device registry failure
->> 3. support DT for max8925 mfd devices
->>
->> Qing Xu (7):
->>    mfd: max8925: add irqdomain for dt
->>    mfd: max8925: fix mfd device register failure
->>    mfd: max8925: fix onkey driver irq base
->>    mfd: max8925: support dt for power supply
->>    mfd: max8925: support dt for regulator
->>    mfd: max8925: support dt for backlight
->>    mfd: max8925: add dts
->>
->>   arch/arm/boot/dts/mmp2-brownstone.dts |  166 +++++++++++++++++++++++++++++++++
->>   arch/arm/boot/dts/mmp2.dtsi           |    4 +-
->>   drivers/input/misc/max8925_onkey.c    |    3 -
->>   drivers/mfd/max8925-core.c            |  107 +++++++++++++--------
->>   drivers/mfd/max8925-i2c.c             |   32 ++++++-
->>   drivers/power/max8925_power.c         |   57 ++++++++++-
->>   drivers/regulator/max8925-regulator.c |   35 +++++++-
->>   drivers/video/backlight/max8925_bl.c  |   31 ++++++-
->>   include/linux/mfd/max8925.h           |   12 ++-
->>   9 files changed, 389 insertions(+), 58 deletions(-)
->>
-> No document on devicetree binding?
-I added a new patch of "Documentation: add docs for max8925 dt",
-please help to review, thanks a lot!
+SGV5IGd1eXMsCgpJIGFwb2xvZ2l6ZSBpZiBJIHNob3VsZCBoYXZlIFJURk0uIElmIGEgcGxhdGZv
+cm0gcHJvdmlkZXMgYSBkZXZpY2UgdHJlZQphdCBib290IHRpbWUsIGFuZCB0aGUga2VybmVsIGFs
+c28gaGFzIGEgdHJlZSBhcHBlbmRlZCwgd2hhdCBiZWhhdmlvciBpcwpzdXBwb3NlZCB0byBoYXBw
+ZW4/IGkuZS4gd2hhdCBpcyB0aGUgc3RhbmRhcmQgdGhhdCBpcyBhbnRpY2lwYXRlZCBoZXJlPwoK
+Sm9uLgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwphcm0g
+bWFpbGluZyBsaXN0CmFybUBsaXN0cy5mZWRvcmFwcm9qZWN0Lm9yZwpodHRwczovL2FkbWluLmZl
+ZG9yYXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8vYXJt
