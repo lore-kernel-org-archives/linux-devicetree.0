@@ -1,100 +1,78 @@
 From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH v6 4/5] ARM: OMAP: gpmc: enable hwecc for AM33xx SoCs
-Date: Thu, 29 Nov 2012 14:59:29 -0600
-Message-ID: <50B7CCB1.6000506@ti.com>
-References: <1354204892-22762-1-git-send-email-zonque@gmail.com> <1354204892-22762-5-git-send-email-zonque@gmail.com> <50B7BE9C.6040506@ti.com> <50B7C677.7090504@ti.com> <50B7C8BE.7050002@gmail.com>
+Subject: [PATCH] of: dma: Fix-up for warnings !CONFIG_OF
+Date: Thu, 29 Nov 2012 16:24:27 -0600
+Message-ID: <1354227867-13357-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50B7C8BE.7050002@gmail.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Daniel Mack <zonque@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, x0148406@ti.com, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, rob.herring@calxeda.com, avinashphilip@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Vinod Koul <vinod.koul@linux.intel.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Fengguang Wu <fengguang.wu@intel.com>, Jon Hunter <jon-hunter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+When compiling the kernel with DMA engine support enabled and device-tree
+support disabled, the following warnings are observed.
 
+In file included from drivers/dma/dmaengine.c:65:0:
+include/linux/of_dma.h: In function 'of_dma_controller_free':
+include/linux/of_dma.h:57:1: warning: no return statement in function
+	returning non-void [-Wreturn-type]
+drivers/dma/dmaengine.c: At top level:
+include/linux/of_dma.h:47:12: warning: 'of_dma_controller_register'
+	defined but not used [-Wunused-function]
+include/linux/of_dma.h:55:12: warning: 'of_dma_controller_free' defined
+	but not used [-Wunused-function]
+include/linux/of_dma.h:65:25: warning: 'of_dma_simple_xlate' defined
+	but not used [-Wunused-function]
 
-On 11/29/2012 02:42 PM, Daniel Mack wrote:
-> On 29.11.2012 21:32, Jon Hunter wrote:
->>
->> On 11/29/2012 01:59 PM, Jon Hunter wrote:
->>>
->>> On 11/29/2012 10:01 AM, Daniel Mack wrote:
->>>> The am33xx is capable of handling bch error correction modes, so
->>>> enable that feature in the driver.
->>>>
->>>> Signed-off-by: Daniel Mack <zonque@gmail.com>
->>>> ---
->>>>  arch/arm/mach-omap2/gpmc-nand.c | 9 +++++----
->>>>  1 file changed, 5 insertions(+), 4 deletions(-)
->>>>
->>>> diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
->>>> index f9f23a2..c8a72ba 100644
->>>> --- a/arch/arm/mach-omap2/gpmc-nand.c
->>>> +++ b/arch/arm/mach-omap2/gpmc-nand.c
->>>> @@ -92,17 +92,18 @@ static int omap2_nand_gpmc_retime(
->>>>  static bool gpmc_hwecc_bch_capable(enum omap_ecc ecc_opt)
->>>>  {
->>>>  	/* support only OMAP3 class */
->>>> -	if (!cpu_is_omap34xx()) {
->>>> +	if (!cpu_is_omap34xx() && !soc_is_am33xx()) {
->>>>  		pr_err("BCH ecc is not supported on this CPU\n");
->>>>  		return 0;
->>>>  	}
->>>>  
->>>>  	/*
->>>> -	 * For now, assume 4-bit mode is only supported on OMAP3630 ES1.x, x>=1.
->>>> -	 * Other chips may be added if confirmed to work.
->>>> +	 * For now, assume 4-bit mode is only supported on OMAP3630 ES1.x, x>=1
->>>> +	 * and AM33xx derivates. Other chips may be added if confirmed to work.
->>>>  	 */
->>>>  	if ((ecc_opt == OMAP_ECC_BCH4_CODE_HW) &&
->>>> -	    (!cpu_is_omap3630() || (GET_OMAP_REVISION() == 0))) {
->>>> +	    (!cpu_is_omap3630() || (GET_OMAP_REVISION() == 0)) &&
->>>> +	    (!soc_is_am33xx())) {
->>>>  		pr_err("BCH 4-bit mode is not supported on this CPU\n");
->>>>  		return 0;
->>>>  	}
->>>
->>> Sorry I should have seen this earlier. Ideally, this type of thing
->>> should be reflected by the device-tree/platform-data and we should get
->>> away from these cpu_is_xxxx macros for hardware features (where we can).
->>> Furthermore, we need to avoid including plat-omap/gpmc.h in drivers for
->>> the single zImage work (I see the omap nand driver is including gpmc.h).
->>>
->>> Tony, should this be addressed now or can we live this for the minute
->>> and fix-up later?
->>
->> Actually, I see that you do read the ecc mode from DT, so is this really
->> needed? It would be good to eliminate this.
-> 
-> The ecc mode is read from DT, right. But the gpmc bindings can be used
-> for many OMAP derivates in the future, and this check is there to make
-> sure the configured settings are supported by the hardware after all,
-> just like if the ecc mode would have been passed as static platform
-> data. So what is it exactly that you want to get rid of?
+Fix-up the warnings by adding a return value for the
+of_dma_controller_free() stub and make all the stubs static inline to
+avoid the unused warnings.
 
-The above function.
+Reported-by: Fengguang Wu <fengguang.wu@intel.com>
+Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+---
+ include/linux/of_dma.h |   13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
-If there is a hardware bug that prevents us from using the hw-ecc mode
-that is supported (which is the case for omap3630 es1.0), then we should
-have a GPMC_ERRATA_xxx flag somewhere to indicate this and these errata
-flags should be populated at probe.
+diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+index 84b64f8..b14a34f 100644
+--- a/include/linux/of_dma.h
++++ b/include/linux/of_dma.h
+@@ -44,7 +44,7 @@ extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+ extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+ 		struct of_dma *ofdma);
+ #else
+-static int of_dma_controller_register(struct device_node *np,
++static inline int of_dma_controller_register(struct device_node *np,
+ 		struct dma_chan *(*of_dma_xlate)
+ 		(struct of_phandle_args *, struct of_dma *),
+ 		void *data)
+@@ -52,18 +52,19 @@ static int of_dma_controller_register(struct device_node *np,
+ 	return -ENODEV;
+ }
+ 
+-static int of_dma_controller_free(struct device_node *np)
++static inline int of_dma_controller_free(struct device_node *np)
+ {
++	return 0;
+ }
+ 
+-static struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+-						     char *name)
++static inline struct dma_chan *of_dma_request_slave_channel(
++		struct device_node *np, char *name)
+ {
+ 	return NULL;
+ }
+ 
+-static struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+-		struct of_dma *ofdma)
++static inline struct dma_chan *of_dma_simple_xlate(
++		struct of_phandle_args *dma_spec, struct of_dma *ofdma)
+ {
+ 	return NULL;
+ }
+-- 
+1.7.10.4
 
-> I agree though that we could solve this with via the of_device_id's data
-> pointer of the matching driver. But as you said yourself, this can well
-> be done later, and the problem here is that we still need the
-> cpu_is_xxx() macros for older platforms, right?
-
-Yes, but we cannot/shouldn't use these cpu_is_xxx macros from within
-driver code. Ok, here we can calling a platform function that is calling
-the macro, but for single zImage we cannot do that either. We cannot
-include platform headers in drivers for single zImage. We have to get
-away from that. Therefore, such information needs to be passed by
-platform data, device tree, etc.
-
-I will let Tony decide on how he wants us to handle this.
-
-Cheers
-Jon
