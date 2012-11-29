@@ -1,48 +1,53 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: [PATCH v6 3/5] ARM: OMAP: gpmc-nand: drop __init annotation
-Date: Thu, 29 Nov 2012 17:01:30 +0100
-Message-ID: <1354204892-22762-4-git-send-email-zonque@gmail.com>
-References: <1354204892-22762-1-git-send-email-zonque@gmail.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1354204892-22762-1-git-send-email-zonque@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-omap@vger.kernel.org, jon-hunter@ti.com, avinashphilip@ti.com, x0148406@ti.com, tony@atomide.com, paul@pwsan.com, nsekhar@ti.com, jacmet@sunsite.dk, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: precedence of built-in vs. platform trees?
+Date: Thu, 29 Nov 2012 06:06:40 -1000
+Message-ID: <50B78810.8010508@firmworks.com>
+References: <50B7033C.3030204@jonmasters.org>
+ <CACxGe6uc-E2kHuQeKbJNDgEWLa_DLqDRzC4eRyKReeZTVdQVeA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACxGe6uc-E2kHuQeKbJNDgEWLa_DLqDRzC4eRyKReeZTVdQVeA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, arm-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-gpmc_nand_init() will be called from another driver's probe() function,
-so the easiest way to prevent section mismatches is to drop the
-annotation here.
+On 11/29/2012 1:46 AM, Grant Likely wrote:
+> On Thu, Nov 29, 2012 at 6:39 AM, Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org> wrote:
+>> Hey guys,
+>>
+>> I apologize if I should have RTFM. If a platform provides a device tree
+>> at boot time, and the kernel also has a tree appended, what behavior is
+>> supposed to happen? i.e. what is the standard that is anticipated here?
+> 
+> Hmmm, nobody has asked that before. I don't think it is really defined :-)
+> 
+> I presume that the built-in DT will end up getting used from what I
+> remember about the code.
 
-Signed-off-by: Daniel Mack <zonque@gmail.com>
----
- arch/arm/mach-omap2/gpmc-nand.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+That sounds like the right default, but it would be nice if one could
+override it with a cmdline option.  It's *usually* easier to change the
+kernel than the platform firmware or bootloader, but there are
+exceptions.  In our (OLPC's) case, DT mods can be made trivially by
+editing a script (and the firmware includes an editor).  We use this
+feature all the time in development, and sometimes even for customers,
+for testing bug fixes.
 
-diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
-index 8607735..f9f23a2 100644
---- a/arch/arm/mach-omap2/gpmc-nand.c
-+++ b/arch/arm/mach-omap2/gpmc-nand.c
-@@ -89,7 +89,7 @@ static int omap2_nand_gpmc_retime(
- 	return 0;
- }
- 
--static bool __init gpmc_hwecc_bch_capable(enum omap_ecc ecc_opt)
-+static bool gpmc_hwecc_bch_capable(enum omap_ecc ecc_opt)
- {
- 	/* support only OMAP3 class */
- 	if (!cpu_is_omap34xx()) {
-@@ -110,8 +110,8 @@ static bool __init gpmc_hwecc_bch_capable(enum omap_ecc ecc_opt)
- 	return 1;
- }
- 
--int __init gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
--			  struct gpmc_timings *gpmc_t)
-+int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
-+		   struct gpmc_timings *gpmc_t)
- {
- 	int err	= 0;
- 	struct device *dev = &gpmc_nand_device.dev;
--- 
-1.7.11.7
-
+> 
+> g.
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
