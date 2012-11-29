@@ -1,45 +1,37 @@
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [fedora-arm] precedence of built-in vs. platform trees?
-Date: Thu, 29 Nov 2012 11:06:32 +0000
-Message-ID: <20121129110632.GB12000@rocoto.smurfnet.nu>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: precedence of built-in vs. platform trees?
+Date: Thu, 29 Nov 2012 11:46:12 +0000
+Message-ID: <CACxGe6uc-E2kHuQeKbJNDgEWLa_DLqDRzC4eRyKReeZTVdQVeA@mail.gmail.com>
 References: <50B7033C.3030204@jonmasters.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <arm-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org>
-Content-Disposition: inline
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 In-Reply-To: <50B7033C.3030204-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
-List-Unsubscribe: <https://admin.fedoraproject.org/mailman/options/arm>,
-	<mailto:arm-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.fedoraproject.org/pipermail/arm/>
-List-Post: <mailto:arm-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org>
-List-Help: <mailto:arm-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=help>
-List-Subscribe: <https://admin.fedoraproject.org/mailman/listinfo/arm>,
-	<mailto:arm-request-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org?subject=subscribe>
-Sender: arm-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
-Errors-To: arm-bounces-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, arm-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, arm-TuqUDEhatI4ANWPb/1PvSmm0pvjS0E/A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBOb3YgMjksIDIwMTIgYXQgMDE6Mzk6NTZBTSAtMDUwMCwgSm9uIE1hc3RlcnMgd3Jv
-dGU6Cj4gSGV5IGd1eXMsCj4gCj4gSSBhcG9sb2dpemUgaWYgSSBzaG91bGQgaGF2ZSBSVEZNLiBJ
-ZiBhIHBsYXRmb3JtIHByb3ZpZGVzIGEgZGV2aWNlIHRyZWUKPiBhdCBib290IHRpbWUsIGFuZCB0
-aGUga2VybmVsIGFsc28gaGFzIGEgdHJlZSBhcHBlbmRlZCwgd2hhdCBiZWhhdmlvciBpcwo+IHN1
-cHBvc2VkIHRvIGhhcHBlbj8gaS5lLiB3aGF0IGlzIHRoZSBzdGFuZGFyZCB0aGF0IGlzIGFudGlj
-aXBhdGVkIGhlcmU/CgpGcm9tIHRoZSBrZXJuZWwgY29uZmlnIGhlbHAgb24gQ09ORklHX0FSTV9B
-UFBFTkRFRF9EVEI6Cjw8PApUaGlzIGlzIG1lYW50IGFzIGEgYmFja3dhcmQgY29tcGF0aWJpbGl0
-eSBjb252ZW5pZW5jZSBmb3IgdGhvc2UKc3lzdGVtcyB3aXRoIGEgYm9vdGxvYWRlciB0aGF0IGNh
-bid0IGJlIHVwZ3JhZGVkIHRvIGFjY29tbW9kYXRlCnRoZSBkb2N1bWVudGVkIGJvb3QgcHJvdG9j
-b2wgdXNpbmcgYSBkZXZpY2UgdHJlZS4KPj4+CmFuZAo8PDwKRG8gbm90IGxlYXZlIHRoaXMgb3B0
-aW9uIGFjdGl2ZSBpbiBhIHByb2R1Y3Rpb24ga2VybmVsCmlmIHlvdSBkb24ndCBpbnRlbmQgdG8g
-YWx3YXlzIGFwcGVuZCBhIERUQi4KPj4+CgpNZWFuaW5nIHRoYXQgaWYgdGhlIGxvYWRlciBzdXBw
-b3J0cyBwYXNzaW5nIERUQiwgdGhlIGtlcm5lbCBzaG91bGRuJ3QKaGF2ZSBhbiBhcHBlbmRlZCBv
-bmUuCgpBcGFydCBmcm9tIHRoYXQsIGlmIHlvdSB1c2UgYW4gYXBwZW5kZWQgRFRCLCB0aGlzIGNv
-bXBsZXRlbHkgb3ZlcnJpZGVzCmFueSBEVEIgcGFzc2VkIGJ5IHRoZSBsb2FkZXIsIHNvICh1bmxl
-c3MgeW91IGFsc28gZW5hYmxlIHRoZSB1bmhvbHkKQ09ORklHX0FSTV9BVEFHX0RUQl9DT01QQVQp
-IHlvdSBhbHNvIGxvc2UgdGhlIGFiaWxpdHkgdG8gcGFzcyBrZXJuZWwKY29tbWFuZCBsaW5lIG9w
-dGlvbnMgZnJvbSB0aGUgbG9hZGVyLgoKLwoJTGVpZgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwphcm0gbWFpbGluZyBsaXN0CmFybUBsaXN0cy5mZWRvcmFw
-cm9qZWN0Lm9yZwpodHRwczovL2FkbWluLmZlZG9yYXByb2plY3Qub3JnL21haWxtYW4vbGlzdGlu
-Zm8vYXJt
+On Thu, Nov 29, 2012 at 6:39 AM, Jon Masters <jonathan-Zp4isUonpHBD60Wz+7aTrA@public.gmane.org> wrote:
+> Hey guys,
+>
+> I apologize if I should have RTFM. If a platform provides a device tree
+> at boot time, and the kernel also has a tree appended, what behavior is
+> supposed to happen? i.e. what is the standard that is anticipated here?
+
+Hmmm, nobody has asked that before. I don't think it is really defined :-)
+
+I presume that the built-in DT will end up getting used from what I
+remember about the code.
+
+g.
