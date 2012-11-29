@@ -1,50 +1,51 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH v5 4/4] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Thu, 29 Nov 2012 13:41:42 +0100
-Message-ID: <50B75806.8030501@gmail.com>
-References: <1354121939-11246-1-git-send-email-zonque@gmail.com> <1354121939-11246-5-git-send-email-zonque@gmail.com> <518397C60809E147AF5323E0420B992E3EA0B986@DBDE01.ent.ti.com>
+From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 4/9] usb: chipidea: ci13xxx-imx: add "dr_mode" property to
+ device tree bindings
+Date: Thu, 29 Nov 2012 14:54:02 +0200
+Message-ID: <87pq2wmuxh.fsf@ashishki-desk.ger.corp.intel.com>
+References: <1352909950-32555-1-git-send-email-m.grzeschik@pengutronix.de>
+ <1352909950-32555-5-git-send-email-m.grzeschik@pengutronix.de>
+ <878va17oii.fsf@ashishki-desk.ger.corp.intel.com>
+ <20121126094626.GB15740@nchen-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <518397C60809E147AF5323E0420B992E3EA0B986@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "Hunter, Jon" <jon-hunter@ti.com>, "Mohammed, Afzal" <afzal@ti.com>, "tony@atomide.com" <tony@atomide.com>, "paul@pwsan.com" <paul@pwsan.com>, "Nori, Sekhar" <nsekhar@ti.com>, "jacmet@sunsite.dk" <jacmet@sunsite.dk>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121126094626.GB15740@nchen-desktop>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29.11.2012 13:36, Philip, Avinash wrote:
-> On Wed, Nov 28, 2012 at 22:28:59, Daniel Mack wrote:
-> [...]
->> +	if (!of_property_read_string(child, "ti,nand-ecc-opt", &s)) {
->> +		for (val = 0; val < ARRAY_SIZE(nand_ecc_opts); val++)
->> +			if (!strcasecmp(s, nand_ecc_opts[val])) {
->> +				gpmc_nand_data->ecc_opt = val;
->> +				break;
->> +			}
->> +
->> +		/*
->> +		 *  AM335x RBL compatibility mode - dependns on runtime
->> +		 * detection of the error location module.
->> +		 */
->> +		if (!strcasecmp(s, "bch8-am335xrbl-compatible")) {
->> +			gpmc_nand_data->ecc_opt = OMAP_ECC_BCH8_CODE_HW;
->> +			gpmc_nand_data->is_elm_used = true;
-> 
-> Remove is_elm_used from struct omap_nand_platform_data. Now this data
-> populated as part of run time detection of elm module. So please remove
-> The usage of is_elm_used;
+Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
 
-So why do we need "bch8-am335xrbl-compatible" as special case then?
+> On Fri, Nov 16, 2012 at 01:53:09PM +0200, Alexander Shishkin wrote:
+>> Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+>> I'd prefer this function to live in ci13xxx_imx, since that's where it's
+>> used and it doesn't really need anything from core.c anyway. Or maybe it
+>> would make sense to make it even more generic (for other devitetree
+>> users), since you're saying that other drivers are using this already.
+>> 
+>> Looks good to me otherwise.
+>
+> I think it supplies a way that the platform can override the usb role,
+> only freescale uses it, but also other platforms may use it. It is a
+> generic feature, other chipidea users may need it.
 
-I thought the whole idea here is to tell the driver we want bch8 *and*
-the usage of the elm, instead of falling back to the (incompatible)
-software mode? If I remove that assignment, "bch8-am335xrbl-compatible"
-is the same than "bch8".
+I'm not objecting against the flags, I just don't like the function in
+chipidea core. Platform code can just use the flags. It can be either
+part of the platform driver or a generic dt helper, in case there are
+more users, it doesn't belong to chipidea core.
 
-Which detail am I missing? :)
-
-
-Daniel
-
+Regards,
+--
+Alex
