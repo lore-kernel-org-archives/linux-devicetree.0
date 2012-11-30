@@ -1,27 +1,60 @@
-From: Paul Walmsley <paul@pwsan.com>
-Subject: RE: [PATCH v5 00/12] Support for AM33xx PWM Subsystem
-Date: Fri, 30 Nov 2012 15:38:56 +0000 (UTC)
-Message-ID: <alpine.DEB.2.00.1211301533560.18138@utopia.booyaka.com>
-References: <1354006097-25895-1-git-send-email-avinashphilip@ti.com> <20121128142101.GB21042@avionic-0098.adnet.avionic-design.de> <518397C60809E147AF5323E0420B992E3EA0E480@DBDE01.ent.ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
+Date: Fri, 30 Nov 2012 15:45:42 +0000
+Message-ID: <20121130154542.GG23648@gmail.com>
+References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
+ <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
+ <20121130105731.GN3176@sortiz-mobl>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <518397C60809E147AF5323E0420B992E3EA0E480@DBDE01.ent.ti.com>
+Content-Disposition: inline
+In-Reply-To: <20121130105731.GN3176@sortiz-mobl>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, "tony@atomide.com" <tony@atomide.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Cousson, Benoit" <b-cousson@ti.com>, "Hiremath, Vaibhav" <hvaibhav@ti.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "Bedia, Vaibhav" <vaibhav.bedia@ti.com>
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, grant.likely@secretlab.ca, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Nov 2012, Philip, Avinash wrote:
+On Fri, 30 Nov 2012, Samuel Ortiz wrote:
 
-> Is there any way to get HWMOD and DT patches getting accepted in 3.8?
-> Or should I wait and send rebased patch based on 3.8-rc1?
+> Hi Viresh, Lee,
+>=20
+> On Thu, Nov 29, 2012 at 08:10:18PM +0530, Viresh Kumar wrote:
+> > From: Vipul Kumar Samar <vipulkumar.samar@st.com>
+> >=20
+> > This patch extends existing DT support for stmpe devices. This upda=
+tes:
+> > - DT support from stmpe SPI and I2C drivers
+> > - missing header files in stmpe.c
+> > - stmpe_of_probe() with pwm, rotator and new bindings.
+> > - Bindings are updated in binding document.
+> >=20
+> > Signed-off-by: Vipul Kumar Samar <vipulkumar.samar@st.com>
+> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> > ---
+> > V4->V5:
+> > ------
+> > - 2/3 and 3/3 merged.
+> > - irq_trigger is kept same for non-DT booti.
+> >=20
+> > @Lee: I haven't added your Acked-by, because this differs from your=
+ Acked
+> > version.
+> Lee, are you ok with this one ? Could you give it a test ?
 
-Our upstreams aren't taking any more new features for v3.8, so basing on 
-v3.8-rc1 is the best thing to do now.
+Okay, I've tested it, and it doesn't break anything.
 
-In the meantime, you can try basing your series against a recent for-next 
-HEAD to get an early start on testing, etc.
+But ... I don't see how the changes in the -i2c and -spi files
+are of benefit either. When I boot without the ID table I still
+get "stmpe-i2c 0-0040: stmpe1601 detected, chip id: 0x212".
 
+What is it that actually uses the IDs?
 
-- Paul
+Perhaps Viresh can shine some light on the matter?
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
