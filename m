@@ -1,99 +1,55 @@
-From: Andreas Fenkart <andreas.fenkart@streamunlimited.com>
-Subject: omap_hsmmc: SDIO IRQ on AM335x family
-Date: Fri, 30 Nov 2012 12:18:47 +0100
-Message-ID: <20121130111847.GA24674@blumentopf>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
+Date: Fri, 30 Nov 2012 11:57:31 +0100
+Message-ID: <20121130105731.GN3176@sortiz-mobl>
+References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
+ <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: Venkatraman S <svenkatr@ti.com>, Chris Ball <cjb@laptop.org>, Tony Lindgren <tony@atomide.com>, Daniel Mack <daniel@zonque.org>
+In-Reply-To: <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: rabin.vincent-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shiraz.hashim-qxv4g6HH51o@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Viresh, Lee,
 
-I submitted following patches a while back,
-http://www.spinics.net/lists/linux-mmc/msg17624.html. Since
-there was no feedback I'm taking a step back, documenting:
+On Thu, Nov 29, 2012 at 08:10:18PM +0530, Viresh Kumar wrote:
+> From: Vipul Kumar Samar <vipulkumar.samar-qxv4g6HH51o@public.gmane.org>
+> 
+> This patch extends existing DT support for stmpe devices. This updates:
+> - DT support from stmpe SPI and I2C drivers
+> - missing header files in stmpe.c
+> - stmpe_of_probe() with pwm, rotator and new bindings.
+> - Bindings are updated in binding document.
+> 
+> Signed-off-by: Vipul Kumar Samar <vipulkumar.samar-qxv4g6HH51o@public.gmane.org>
+> Signed-off-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+> V4->V5:
+> ------
+> - 2/3 and 3/3 merged.
+> - irq_trigger is kept same for non-DT booti.
+> 
+> @Lee: I haven't added your Acked-by, because this differs from your Acked
+> version.
+Lee, are you ok with this one ? Could you give it a test ?
 
-1. why is it needed, missing swakeup line
-2. transition, enable workaround by default
-3. device tree configuration
+Cheers,
+Samuel.
 
-
-[why is it needed, problem outline]
-
-The omap_hsmmc module is suspended whenever it is idle, its
-functional clock being turned off. In this mode it is not able to
-forwared IRQs to the system. For that to happen, it needs to tell
-the PRCM to restore it's fclk.
-
-                   ------
-                  | PRCM |
-                   ------
-                    | ^
-               fclk | | swakeup
-                    v |
-                  -------               ------
-      <-- IRQ -- | hsmmc | <-- CIRQ -- | card |
-                  -------               ------
-
-This is done through the swakeup line, which can be configured to
-trigger for various events, among others; CIRQ. The problem is
-that on the AM335x family the swakeup line is missing, it has not
-been routed from the module to the PRCM.
-
-https://www.google.com/search?q=spruh73c
-see 18.2 compare with 20.2.2, or just search the whole doc for
-swakeup
-
-One solution is to keep the fclk enabled while waiting
-for CIRQ. This is the approach taken by existing patches:
-
-http://www.spinics.net/lists/linux-omap/msg63363.html
-http://marc.info/?l=linux-mmc&m=126580279403824&w=2
-http://thread.gmane.org/gmane.linux.kernel.mmc/1107/focus=1109
-
-authors, contributors
-David Vrabel (based my work on it)
-John Rigby
-
-The alternative was to configure dat1 line as a GPIO, while
-waiting for an IRQ. Then configuring it back as dat1 when the
-SDIO card is signalling an IRQ. Or the host starts a transfer. I
-guess this will perform poorly, hence not considering it really.
-
-[transition, enable workaround by default?]
-
-Up to now the driver uses polling, which works for all SOCs.
-Once we enable the IRQ, all chips missing an swakeup will fail.
-But I don't know all of them, so how to transition without
-breaking existing platforms?
-
-Enable IRQ only for AM335x, use polling for others?
-Keep clock running for all, only disable workaround for known
-good platforms?
-
-[device tree configuration]
-
-My previous patch, see link at top, uses a new property
-'ti,swakeup-not-implemented'. Then in the DT files I enabled the
-workaround for my platform.
-
-Now I learned that I should rather use a new 'compatible'
-section. Actually Daniel talked me out of it:
-'Since this feature should always be enabled on one given
-processor, the IP block is actually "compatible" to something
-else than a processor that doesn't support that feature. So the
-"compatible" line alone should be enough of an information for
-the one who provides the DT. On the other hand, if enabling a
-certain option depends on the system design of an application, it
-deserves a special binding in DT.'
-
-I'd prefer the latter now.
-
-
-Thanks for your attention,
-/Andi
-
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
