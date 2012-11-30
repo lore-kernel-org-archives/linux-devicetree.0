@@ -1,37 +1,138 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: When constructing the bus id consider assigned-addresses as well
-Date: Fri, 30 Nov 2012 09:48:05 +0000
-Message-ID: <20121130094806.0D6D73E070C@localhost>
-References: <20121121210240.GC15285@obsidianresearch.com> <20121126140316.99FE23E194B@localhost> <20121126182054.GA30177@obsidianresearch.com> <20121129162648.80DBC3E0912@localhost> <20121129193829.GA10145@obsidianresearch.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121129193829.GA10145@obsidianresearch.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] ARM/dts: omap3: Add generic DT support for IGEP
+ devices
+Date: Fri, 30 Nov 2012 10:48:04 +0100
+Message-ID: <50B880D4.9050906@gmail.com>
+References: <1354144466-750-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1354144466-750-2-git-send-email-javier.martinez@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1354144466-750-2-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Enrico Butera <ebutera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 29 Nov 2012 12:38:29 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-> On Thu, Nov 29, 2012 at 04:26:48PM +0000, Grant Likely wrote:
-> 
-> > Hmmm. okay that makes sense, but something still isn't quite right. So
-> > of_translate_address should take care of drilling down through the bus
-> > layers, and when it gets to the PCI node it /should/ use
-> > of_bus_pci_translate to handle traversing down to the parent node (which
-> > uses the 'assigned-addresses' for the pci node.
-> 
-> The address translation machinery requires PCI format addresses (ie
-> address-cells=3) for all nodes below a PCI bus. Part of this
-> requirement is that 'assigned-addresses' is used for resources, *not*
-> 'reg'.
-> 
-> If you attempt to stick a 'reg' in a block nested below a
-> 'device_type="pci"' the kernel throws lots of error messsages and
-> generates bad address mappings.
+On 11/29/2012 12:14 AM, Javier Martinez Canillas wrote:
+> Add a generic .dtsi device tree source file for the
+> common characteristics across IGEP Technology devices.
+>
+> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> ---
+Acked-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Have you added the appropriate #address-cells and #size-cells to the pci
-device node to go back to a non-pci addressing mode? assigned-addresses
-only makes sense in the pci-device node itself. reg should work for all
-nodes below that, and if it doesn't then it is a bug that we need to
-fix.
-
-g.
+>   arch/arm/boot/dts/omap3-igep.dtsi |   93 +++++++++++++++++++++++++++++++++++++
+>   1 files changed, 93 insertions(+), 0 deletions(-)
+>   create mode 100644 arch/arm/boot/dts/omap3-igep.dtsi
+>
+> diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap3-igep.dtsi
+> new file mode 100644
+> index 0000000..a093bff
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/omap3-igep.dtsi
+> @@ -0,0 +1,93 @@
+> +/*
+> + * Device Tree Source for IGEP Technology devices
+> + *
+> + * Copyright (C) 2012 Javier Martinez Canillas <javier-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+> + * Copyright (C) 2012 Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +/dts-v1/;
+> +
+> +/include/ "omap3.dtsi"
+> +
+> +/ {
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x80000000 0x20000000>; /* 512 MB */
+> +	};
+> +
+> +	sound {
+> +		compatible = "ti,omap-twl4030";
+> +		ti,model = "igep2";
+> +		ti,mcbsp = <&mcbsp2>;
+> +		ti,codec = <&twl_audio>;
+> +	};
+> +};
+> +
+> +&omap3_pmx_core {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <
+> +		  &mcbsp2_pins
+> +	>;
+> +
+> +	uart3_pins: pinmux_uart3_pins {
+> +		pinctrl-single,pins = <
+> +			0x16e 0x100	/* uart3_rx.uart3_rx INPUT | MODE0 */
+> +			0x170 0		/* uart3_tx.uart3_tx OUTPUT | MODE0 */
+> +		>;
+> +	};
+> +
+> +	mcbsp2_pins: pinmux_mcbsp2_pins {
+> +		pinctrl-single,pins = <
+> +			0x1a2 0x0104	/* mcspi1_cs2.gpio_176 INPUT | MODE4 */
+> +		>;
+> +	};
+> +};
+> +
+> +&i2c1 {
+> +	clock-frequency = <2600000>;
+> +
+> +	twl: twl@48 {
+> +		reg = <0x48>;
+> +		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+> +		interrupt-parent = <&intc>;
+> +
+> +		vsim: regulator@10 {
+> +			compatible = "ti,twl4030-vsim";
+> +			regulator-min-microvolt = <1800000>;
+> +			regulator-max-microvolt = <3000000>;
+> +		};
+> +
+> +		twl_audio: audio {
+> +			compatible = "ti,twl4030-audio";
+> +			codec {
+> +			      };
+> +		};
+> +	};
+> +};
+> +
+> +/include/ "twl4030.dtsi"
+> +
+> +&i2c2 {
+> +	clock-frequency = <400000>;
+> +};
+> +
+> +&mmc1 {
+> +	vmmc-supply = <&vmmc1>;
+> +	vmmc_aux-supply = <&vsim>;
+> +	bus-width = <8>;
+> +};
+> +
+> +&mmc2 {
+> +	status = "disabled";
+> +};
+> +
+> +&mmc3 {
+> +	status = "disabled";
+> +};
+> +
+> +&twl_gpio {
+> +	ti,use-leds;
+> +};
+>
