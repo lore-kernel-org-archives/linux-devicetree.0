@@ -1,47 +1,144 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: omap_hsmmc: SDIO IRQ on AM335x family
-Date: Fri, 30 Nov 2012 19:57:35 +0100
-Message-ID: <50B9019F.2020109@gmail.com>
-References: <20121130111847.GA24674@blumentopf> <20121130174022.GM5312@atomide.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
+Date: Sat, 1 Dec 2012 00:33:46 +0530
+Message-ID: <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
+References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
+	<121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
+	<20121130105731.GN3176@sortiz-mobl>
+	<20121130154542.GG23648@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20121130174022.GM5312@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Andreas Fenkart <andreas.fenkart@streamunlimited.com>, Chris Ball <cjb@laptop.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121130154542.GG23648@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
-Hi Andreas,
+On 30 November 2012 21:15, Lee Jones <lee.jones@linaro.org> wrote:
+> But ... I don't see how the changes in the -i2c and -spi files
+> are of benefit either. When I boot without the ID table I still
+> get "stmpe-i2c 0-0040: stmpe1601 detected, chip id: 0x212".
+>
+> What is it that actually uses the IDs?
+>
+> Perhaps Viresh can shine some light on the matter?
 
-On 30.11.2012 18:40, Tony Lindgren wrote:
-> * Andreas Fenkart <andreas.fenkart@streamunlimited.com> [121130 03:21]:
->>
->> The alternative was to configure dat1 line as a GPIO, while
->> waiting for an IRQ. Then configuring it back as dat1 when the
->> SDIO card is signalling an IRQ. Or the host starts a transfer. I
->> guess this will perform poorly, hence not considering it really.
-> 
-> This might work for SDIO cards. It should be disabled for data
-> cards naturally to avoid potential data corruption.
-> 
-> The way to implement this is set named states in the .dts file
-> for the pins using pinctrl-single.c, then have the MMC driver
-> request states "default" "active" and "idle" during the probe,
-> then toggle between active and idle during the runtime.
-> 
-> As far as I remember the GPIO functionality does not need to
-> be enabled, just muxing the pin to GPIO mode for the wake-up
-> is enough.
+As you can see, i wasn't the author of this patch and when you asked
+this question, i didn't had an answer to it. I went through code and
+formed some theory/story :) .
 
-Wouldn't that be racy, given that an interrupt which occurs at beween
-the point in time when the driver decides to wait for IRQs again until
-the mux has finished switching over, could potentially be lost?
+@Grant: i need your help to check if my theory is correct or not. Question
+is about adding below code in any i2c client driver:
 
-If there is another way to solve that cleanly on at least some hardware
-derivats, I'd say that should be preferred and be supported by the driver.
++#ifdef CONFIG_OF
++static const struct of_device_id stmpe_dt_ids[] = {
++       { .compatible = "st,stmpe610", .data = &stmpe_i2c_id[0], },
++       { .compatible = "st,stmpe801", .data = &stmpe_i2c_id[1], },
++       { .compatible = "st,stmpe811", .data = &stmpe_i2c_id[2], },
++       { .compatible = "st,stmpe1601", .data = &stmpe_i2c_id[3], },
++       { .compatible = "st,stmpe2401", .data = &stmpe_i2c_id[4], },
++       { .compatible = "st,stmpe2403", .data = &stmpe_i2c_id[5], },
++       { }
++};
++MODULE_DEVICE_TABLE(of, stmpe_dt_ids);
++#endif
++
+ static struct i2c_driver stmpe_i2c_driver = {
+        .driver = {
+                .name = "stmpe-i2c",
+@@ -88,6 +102,7 @@ static struct i2c_driver stmpe_i2c_driver = {
+ #ifdef CONFIG_PM
+                .pm = &stmpe_dev_pm_ops,
+ #endif
++               .of_match_table = of_match_ptr(stmpe_dt_ids),
 
+So, what is the use of this table when we already have i2c_driver.id_table
+populated.
 
-Daniel
+This is my theory:
+---------------------
+Adapter drivers supporting DT will call:
+of_i2c_register_devices()
+{
+	for_each_child_of_node(adap->dev.of_node, node) {
+		if (of_modalias_node(node, info.type, sizeof(info.type)) < 0)
+                     error condition
+
+                ...
+		result = i2c_new_device(adap, &info);
+
+          ...
+}
+
+of_modalias_node(): expects compatible in child node, i.e. stmpe node in our
+case. If it is not there, then that node is skipped. then it copies
+string after ','
+to info.type. So, for us only "stmpe810" out of "st,stmpe810" is copied.
+
+Now this name, i.e. "stmpe810" is copied as client.name in i2c_new_device()
+and device_register() is called, which will eventually call:
+
+i2c_device_match()
+{
+	/* Attempt an OF style match */
+	if (of_driver_match_device(dev, drv))
+		return 1;
+
+	driver = to_i2c_driver(drv);
+	/* match on an id table if there is one */
+	if (driver->id_table)
+		return i2c_match_id(driver->id_table, client) != NULL;
+}
+
+This first tries to match the table my patch added, _BUT_ the string will
+never match as we had "st,stmpe810" in table and "stmpe810" in dev.
+
+So, we fall back to i2c_match_id(), which will match it against
+i2c_driver.id_table present in driver, which has entry for "stmpe810" and
+so strings matched.
+
+@Lee: This is what happened in your case. :)
+
+So, whether its DT or non DT, true is returned from here if something
+matched.
+
+Later on, this will be called:
+
+static int i2c_device_probe(struct device *dev)
+{
+        .....
+	status = driver->probe(client, i2c_match_id(driver->id_table, client));
+        ....
+}
+
+Which will again match the legacy table to find correct struct i2c_device_id *id
+to pass to probe().
+
+So, the final question: WTF is of_match_table for?
+
+Then i thought maybe it is used when  we don't have child nodes inside parent,
+something related to the phandle way ? I grep'd i2c in arch/arm/boot/dts and
+couldn't find anything of that sort, the way i2c clients are added is:
+
+in dtsi file:
+
+i2c0: i2c@address {
+         ...
+}
+
+in dts file:
+&i2c0 {
+          stmpe810 {
+          ........
+          }
+}
+
+which i believe will be taken care by dtc and will fold client nodes
+as child nodes
+of i2c0.
+
+@Grant: Please throw some light here :)
+
+--
+viresh
