@@ -1,144 +1,131 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
-Date: Sat, 1 Dec 2012 00:33:46 +0530
-Message-ID: <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
-References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
-	<121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
-	<20121130105731.GN3176@sortiz-mobl>
-	<20121130154542.GG23648@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Marek Belisko <marek.belisko@open-nandra.com>
+Subject: [PATCH v4 1/2] leds/tca6507: Add support for devicetree.
+Date: Fri, 30 Nov 2012 23:00:49 +0100
+Message-ID: <1354312850-29264-1-git-send-email-marek.belisko@open-nandra.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121130154542.GG23648@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
+To: cooloney@gmail.com, rpurdie@rpsys.net
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Marek Belisko <marek.belisko@open-nandra.com>
 List-Id: devicetree@vger.kernel.org
 
-On 30 November 2012 21:15, Lee Jones <lee.jones@linaro.org> wrote:
-> But ... I don't see how the changes in the -i2c and -spi files
-> are of benefit either. When I boot without the ID table I still
-> get "stmpe-i2c 0-0040: stmpe1601 detected, chip id: 0x212".
->
-> What is it that actually uses the IDs?
->
-> Perhaps Viresh can shine some light on the matter?
+Support added only for leds (not for gpio's).
 
-As you can see, i wasn't the author of this patch and when you asked
-this question, i didn't had an answer to it. I went through code and
-formed some theory/story :) .
+Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
+---
+Changes from v3:
+- fix code according Bryan suggestions
+- use common leds binding description instead copy'n'paste
+- use "-" instead "_" in bindings example for leds names
 
-@Grant: i need your help to check if my theory is correct or not. Question
-is about adding below code in any i2c client driver:
+Changes from v2:
+- change compatible property to "ti,tca6507"
+- add documentation for linux,default-trigger
 
+Changes from v1:
+- return proper error value not NULL from tca6507_led_dt_init()
+	- remove empty lines
+	- remove kfree()
+ drivers/leds/leds-tca6507.c |   74 +++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 71 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/leds/leds-tca6507.c b/drivers/leds/leds-tca6507.c
+index b26a63b..3ad46fb 100644
+--- a/drivers/leds/leds-tca6507.c
++++ b/drivers/leds/leds-tca6507.c
+@@ -667,6 +667,70 @@ static void tca6507_remove_gpio(struct tca6507_chip *tca)
+ }
+ #endif /* CONFIG_GPIOLIB */
+ 
 +#ifdef CONFIG_OF
-+static const struct of_device_id stmpe_dt_ids[] = {
-+       { .compatible = "st,stmpe610", .data = &stmpe_i2c_id[0], },
-+       { .compatible = "st,stmpe801", .data = &stmpe_i2c_id[1], },
-+       { .compatible = "st,stmpe811", .data = &stmpe_i2c_id[2], },
-+       { .compatible = "st,stmpe1601", .data = &stmpe_i2c_id[3], },
-+       { .compatible = "st,stmpe2401", .data = &stmpe_i2c_id[4], },
-+       { .compatible = "st,stmpe2403", .data = &stmpe_i2c_id[5], },
-+       { }
++static struct tca6507_platform_data *
++tca6507_led_dt_init(struct i2c_client *client)
++{
++	struct device_node *np = client->dev.of_node, *child;
++	struct tca6507_platform_data *pdata;
++	struct led_info *tca_leds;
++	int count = 0;
++
++	for_each_child_of_node(np, child)
++		count++;
++	if (!count)
++		return ERR_PTR(-ENODEV);
++
++	if (count > NUM_LEDS)
++		return ERR_PTR(-ENODEV);
++
++	tca_leds = devm_kzalloc(&client->dev,
++				sizeof(struct led_info) * count, GFP_KERNEL);
++	if (!tca_leds)
++		return ERR_PTR(-ENOMEM);
++
++	for_each_child_of_node(np, child) {
++		struct led_info led;
++		u32 reg;
++		int ret;
++
++		led.name =
++			of_get_property(child, "label", NULL) ? : child->name;
++		led.default_trigger =
++			of_get_property(child, "linux,default-trigger", NULL);
++
++		ret = of_property_read_u32(child, "reg", &reg);
++		if (ret != 0)
++			continue;
++
++		tca_leds[reg] = led;
++	}
++	pdata = devm_kzalloc(&client->dev,
++			sizeof(struct tca6507_platform_data), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	pdata->leds.leds = tca_leds;
++	pdata->leds.num_leds = count;
++
++	return pdata;
++}
++
++static const struct of_device_id of_tca6507_leds_match[] = {
++	{ .compatible = "ti,tca6507", },
++	{},
 +};
-+MODULE_DEVICE_TABLE(of, stmpe_dt_ids);
++
++#else
++static tca6507_platform_data *
++tca6507_led_dt_init(struct i2c_client *client)
++{
++	return ERR_PRT(-ENODEV);
++}
++
++#define of_tca6507_leds_match NULL
 +#endif
 +
- static struct i2c_driver stmpe_i2c_driver = {
-        .driver = {
-                .name = "stmpe-i2c",
-@@ -88,6 +102,7 @@ static struct i2c_driver stmpe_i2c_driver = {
- #ifdef CONFIG_PM
-                .pm = &stmpe_dev_pm_ops,
- #endif
-+               .of_match_table = of_match_ptr(stmpe_dt_ids),
-
-So, what is the use of this table when we already have i2c_driver.id_table
-populated.
-
-This is my theory:
----------------------
-Adapter drivers supporting DT will call:
-of_i2c_register_devices()
-{
-	for_each_child_of_node(adap->dev.of_node, node) {
-		if (of_modalias_node(node, info.type, sizeof(info.type)) < 0)
-                     error condition
-
-                ...
-		result = i2c_new_device(adap, &info);
-
-          ...
-}
-
-of_modalias_node(): expects compatible in child node, i.e. stmpe node in our
-case. If it is not there, then that node is skipped. then it copies
-string after ','
-to info.type. So, for us only "stmpe810" out of "st,stmpe810" is copied.
-
-Now this name, i.e. "stmpe810" is copied as client.name in i2c_new_device()
-and device_register() is called, which will eventually call:
-
-i2c_device_match()
-{
-	/* Attempt an OF style match */
-	if (of_driver_match_device(dev, drv))
-		return 1;
-
-	driver = to_i2c_driver(drv);
-	/* match on an id table if there is one */
-	if (driver->id_table)
-		return i2c_match_id(driver->id_table, client) != NULL;
-}
-
-This first tries to match the table my patch added, _BUT_ the string will
-never match as we had "st,stmpe810" in table and "stmpe810" in dev.
-
-So, we fall back to i2c_match_id(), which will match it against
-i2c_driver.id_table present in driver, which has entry for "stmpe810" and
-so strings matched.
-
-@Lee: This is what happened in your case. :)
-
-So, whether its DT or non DT, true is returned from here if something
-matched.
-
-Later on, this will be called:
-
-static int i2c_device_probe(struct device *dev)
-{
-        .....
-	status = driver->probe(client, i2c_match_id(driver->id_table, client));
-        ....
-}
-
-Which will again match the legacy table to find correct struct i2c_device_id *id
-to pass to probe().
-
-So, the final question: WTF is of_match_table for?
-
-Then i thought maybe it is used when  we don't have child nodes inside parent,
-something related to the phandle way ? I grep'd i2c in arch/arm/boot/dts and
-couldn't find anything of that sort, the way i2c clients are added is:
-
-in dtsi file:
-
-i2c0: i2c@address {
-         ...
-}
-
-in dts file:
-&i2c0 {
-          stmpe810 {
-          ........
-          }
-}
-
-which i believe will be taken care by dtc and will fold client nodes
-as child nodes
-of i2c0.
-
-@Grant: Please throw some light here :)
-
---
-viresh
+ static int tca6507_probe(struct i2c_client *client,
+ 				   const struct i2c_device_id *id)
+ {
+@@ -683,9 +747,12 @@ static int tca6507_probe(struct i2c_client *client,
+ 		return -EIO;
+ 
+ 	if (!pdata || pdata->leds.num_leds != NUM_LEDS) {
+-		dev_err(&client->dev, "Need %d entries in platform-data list\n",
+-			NUM_LEDS);
+-		return -ENODEV;
++		pdata = tca6507_led_dt_init(client);
++		if (IS_ERR(pdata)) {
++			dev_err(&client->dev, "Need %d entries in platform-data list\n",
++				NUM_LEDS);
++			return PTR_ERR(pdata);
++		}
+ 	}
+ 	tca = devm_kzalloc(&client->dev, sizeof(*tca), GFP_KERNEL);
+ 	if (!tca)
+@@ -750,6 +817,7 @@ static struct i2c_driver tca6507_driver = {
+ 	.driver   = {
+ 		.name    = "leds-tca6507",
+ 		.owner   = THIS_MODULE,
++		.of_match_table = of_tca6507_leds_match,
+ 	},
+ 	.probe    = tca6507_probe,
+ 	.remove   = tca6507_remove,
+-- 
+1.7.10.4
