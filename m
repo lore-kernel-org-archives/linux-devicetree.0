@@ -1,158 +1,178 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v3 1/4] mmc: dw_mmc: Add "disable-wp" device tree property
-Date: Thu, 29 Nov 2012 21:04:14 -0800
-Message-ID: <1354251857-21587-1-git-send-email-dianders@chromium.org>
-References: <1353624835-19137-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1353624835-19137-1-git-send-email-dianders@chromium.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Will Newton <will.newton@imgtec.com>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Abhilash Kesavan <a.kesavan@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH] gpio: New driver for GPO emulation using PWM generators
+Date: Fri, 30 Nov 2012 07:47:52 +0100
+Message-ID: <20121130064752.GB26474@avionic-0098.adnet.avionic-design.de>
+References: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com>
+ <20121123075537.A14713E0A91@localhost>
+ <50AF3E21.4000009@ti.com>
+ <50AF4584.7020604@ti.com>
+ <20121126154600.765E03E1AFD@localhost>
+ <50B5D161.6010200@ti.com>
+ <20121129161024.EEA803E0912@localhost>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BwCQnh7xodEAoBMC"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121129161024.EEA803E0912@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The "disable-wp" property is used to specify that a given SD card slot
-doesn't have a concept of write protect.  This eliminates the need for
-special case code for SD slots that should never be write protected
-(like a micro SD slot or a dev board).
 
-The dw_mmc driver is special in needing to specify "disable-wp"
-because the lack of a "wp-gpios" property means to use the special
-purpose write protect line.  On some other mmc devices the lack of
-"wp-gpios" means that write protect should be disabled.
+--BwCQnh7xodEAoBMC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
-Changes in v3:
-- New for this version of the patch series.  Chose "disable-wp" rather
-  than the discussed "broken-internal-wp" since it mapped more cleanly
-  to an existing quirk (and the only reason to specify that the
-  internal wp is broken is if you're disabling the write protect
-  anyway).
+On Thu, Nov 29, 2012 at 04:10:24PM +0000, Grant Likely wrote:
+> On Wed, 28 Nov 2012 09:54:57 +0100, Peter Ujfalusi <peter.ujfalusi@ti.com=
+> wrote:
+> > Hi Grant, Lars, Thierry,
+> >=20
+> > On 11/26/2012 04:46 PM, Grant Likely wrote:
+> > > You're effectively asking the pwm layer to behave like a gpio (which
+> > > is completely reasonable). Having a completely separate translation n=
+ode
+> > > really doesn't make sense because it is entirely a software construct.
+> > > In fact, the way your using it is *entirely* to make the Linux driver
+> > > model instantiate the translation code. It has *nothing* to do with t=
+he
+> > > structure of the hardware. It makes complete sense that if a PWM is
+> > > going to be used as a GPIO, then the PWM node should conform to the G=
+PIO
+> > > binding.
+> >=20
+> > I understand your point around this. I might say I agree with it as wel=
+l...
+> > I spent yesterday with prototyping and I'm not really convinced that it=
+ is a
+> > good approach from C code point of view. I got it working, yes.
+> > In essence this is what I have on top of the slightly modified gpio-pwm=
+=2Ec
+> > driver I have submitted:
+> >=20
+> > DTS files:
+> > twl_pwm: pwm {
+> > 	/* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
+> > 	compatible =3D "ti,twl6030-pwm";
+> > 	#pwm-cells =3D <2>;
+> >=20
+> > 	/* Enable GPIO us of the PWMs */
+> > 	gpio-controller =3D <1>;
+>=20
+> This line should be simply (the property shouldn't have any data):
+> 	gpio-controller;
+>=20
+> > 	#gpio-cells =3D <2>;
+> > 	pwm,period_ns =3D <7812500>;
+>=20
+> Nit: property names should use '-' instead of '_'.
+>=20
+> > };
+> >=20
+> > leds {
+> > 	compatible =3D "gpio-leds";
+> > 	backlight {
+> > 		label =3D "omap4::backlight";
+> > 		gpios =3D <&twl_pwm 1 0>; /* PWM1 of twl6030 */
+> > 	};
+> >=20
+> > 	keypad {
+> > 		label =3D "omap4::keypad";
+> > 		gpios =3D <&twl_pwm 0 0>; /* PWM0 of twl6030 */
+> > 	};
+> > };
+> >=20
+> > The bulk of the code in drivers/pwm/core.c to create the pwm-gpo device=
+ when
+> > it is requested going to look something like this. I have removed the e=
+rror
+> > checks for now and I still don't have the code to clean up the allocated
+> > memory for the created device on error, or in case the module is unload=
+ed. We
+> > should also prevent the pwm core from removal when the pwm-gpo driver i=
+s loaded.
+> > We need to create the platform device for gpo-pwm, create the pdata str=
+ucture
+> > for it and fill it in. We also need to hand craft the pwm_lookup table =
+so we
+> > can use pwm_get() to request the PWM. I have other minor changes around=
+ this
+> > to get things working when we booted with DT.
+> > So the function to do the heavy lifting is something like this:
+> > static void of_pwmchip_as_gpio(struct pwm_chip *chip)
+> > {
+> > 	struct platform_device *pdev;
+> > 	struct gpio_pwm *gpos;
+> > 	struct gpio_pwm_pdata *pdata;
+> > 	struct pwm_lookup *lookup;
+> > 	char gpodev_name[15];
+> > 	int i;
+> > 	u32 gpio_mode =3D 0;
+> > 	u32 period_ns =3D 0;
+> >=20
+> > 	of_property_read_u32(chip->dev->of_node, "gpio-controller",
+> > 			     &gpio_mode);
+> > 	if (!gpio_mode)
+> > 		return;
+> >=20
+> > 	of_property_read_u32(chip->dev->of_node, "pwm,period_ns", &period_ns);
+> > 	if (!period_ns) {
+> > 		dev_err(chip->dev,
+> > 			"period_ns is not specified for GPIO use\n");
+> > 		return;
+> > 	}
+>=20
+> This property name seems ambiguous. What do you need to encode here? It
+> looks like there is a specific PWM period used for the 'on' state. What
+> about the 'off' state? Would different pwm outputs have different
+> frequencies required for GPIO usage.
+>=20
+> Actually, I'm a bit surprised here that a period value is needed at all.
+> I would expect if a PWM is used as a GPIO then the driver would already
+> know how to set it up that way.
 
- .../devicetree/bindings/mmc/synopsis-dw-mshc.txt   |   12 +++++-
- drivers/mmc/host/dw_mmc.c                          |   36 +++++++++++++++++++-
- include/linux/mmc/dw_mmc.h                         |    4 ++
- 3 files changed, 49 insertions(+), 3 deletions(-)
+Just to make sure we're talking about the same thing here: if a PWM is
+used as GPIO the assumption is that it would be set to 0% duty-cycle
+when the GPIO value is set to 0 and 100% duty-cycle when set to the 1.
+The period will still need to be set here, otherwise how would the PWM
+core know what the hardware even supports?
 
-diff --git a/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
-index 06cd32d08..726fd21 100644
---- a/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
-@@ -26,8 +26,16 @@ Required Properties:
- 	* bus-width: as documented in mmc core bindings.
- 
- 	* wp-gpios: specifies the write protect gpio line. The format of the
--	  gpio specifier depends on the gpio controller. If the write-protect
--	  line is not available, this property is optional.
-+	  gpio specifier depends on the gpio controller. If a GPIO is not used
-+	  for write-protect, this property is optional.
-+
-+	* disable-wp: If the wp-gpios property isn't present then (by default)
-+	  we'd assume that the write protect is hooked up directly to the
-+	  controller's special purpose write protect line (accessible via
-+	  the WRTPRT register).  However, it's possible that we simply don't
-+	  want write protect.  In that case specify 'disable-wp'.
-+	  NOTE: This property is not required for slots known to always
-+	  connect to eMMC or SDIO cards.
- 
- Optional properties:
- 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 7342029..b47b1e9 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -74,6 +74,7 @@ struct idmac_desc {
-  * struct dw_mci_slot - MMC slot state
-  * @mmc: The mmc_host representing this slot.
-  * @host: The MMC controller this slot is using.
-+ * @quirks: Slot-level quirks (DW_MCI_SLOT_QUIRK_XXX)
-  * @ctype: Card type for this slot.
-  * @mrq: mmc_request currently being processed or waiting to be
-  *	processed, or NULL when the slot is idle.
-@@ -88,6 +89,8 @@ struct dw_mci_slot {
- 	struct mmc_host		*mmc;
- 	struct dw_mci		*host;
- 
-+	int			quirks;
-+
- 	u32			ctype;
- 
- 	struct mmc_request	*mrq;
-@@ -828,7 +831,8 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
- 	struct dw_mci_board *brd = slot->host->pdata;
- 
- 	/* Use platform get_ro function, else try on board write protect */
--	if (brd->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT)
-+	if ((brd->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT) ||
-+	    (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT))
- 		read_only = 0;
- 	else if (brd->get_ro)
- 		read_only = brd->get_ro(slot->id);
-@@ -1788,6 +1792,30 @@ static struct device_node *dw_mci_of_find_slot_node(struct device *dev, u8 slot)
- 	return NULL;
- }
- 
-+static struct dw_mci_of_slot_quirks {
-+	char *quirk;
-+	int id;
-+} of_slot_quirks[] = {
-+	{
-+		.quirk	= "disable-wp",
-+		.id	= DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
-+	},
-+};
-+
-+static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
-+{
-+	struct device_node *np = dw_mci_of_find_slot_node(dev, slot);
-+	int quirks = 0;
-+	int idx;
-+
-+	/* get quirks */
-+	for (idx = 0; idx < ARRAY_SIZE(of_slot_quirks); idx++)
-+		if (of_get_property(np, of_slot_quirks[idx].quirk, NULL))
-+			quirks |= of_slot_quirks[idx].id;
-+
-+	return quirks;
-+}
-+
- /* find out bus-width for a given slot */
- static u32 dw_mci_of_get_bus_wd(struct device *dev, u8 slot)
- {
-@@ -1803,6 +1831,10 @@ static u32 dw_mci_of_get_bus_wd(struct device *dev, u8 slot)
- 	return bus_wd;
- }
- #else /* CONFIG_OF */
-+static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
-+{
-+	return 0;
-+}
- static u32 dw_mci_of_get_bus_wd(struct device *dev, u8 slot)
- {
- 	return 1;
-@@ -1831,6 +1863,8 @@ static int dw_mci_init_slot(struct dw_mci *host, unsigned int id)
- 	slot->host = host;
- 	host->slot[id] = slot;
- 
-+	slot->quirks = dw_mci_of_get_slot_quirks(host->dev, slot->id);
-+
- 	mmc->ops = &dw_mci_ops;
- 	mmc->f_min = DIV_ROUND_UP(host->bus_hz, 510);
- 	mmc->f_max = host->bus_hz;
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index 34be4f4..24dc3a8 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -212,6 +212,10 @@ struct dw_mci_dma_ops {
- /* Write Protect detection not available */
- #define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
- 
-+/* Slot level quirks */
-+/* This slot has no write protect */
-+#define DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT	BIT(0)
-+
- struct dma_pdata;
- 
- struct block_settings {
--- 
-1.7.7.3
+Unless you're proposing to not include that in the PWM core but rather
+in individual drivers. Then I suppose the driver could choose some
+sensible default.
+
+One other problem is that some PWM devices cannot be setup to achieve a
+0% or 100% duty-cycle but instead will toggle for at least one period.
+This would be another argument in favour of moving the functionality to
+the individual drivers, perhaps with some functionality provided by the
+core to do the gpio_chip registration (a period could be passed to that
+function at registration time), which will likely be the same for all
+hardware that can and wants to support this feature.
+
+Thierry
+
+--BwCQnh7xodEAoBMC
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQuFaYAAoJEN0jrNd/PrOhfVUQAL2WpF6BqK5HHY9A0K4L71K5
+BHuw5dm4I82ejsggkMj2HsPLcci65vcTK7y7AldiAMWOuXPxiKqKZPj2PFhcFxPZ
+MpHdy8tPkR7Y+iwkY7Lxv6j+QrF2nRZzW+2siAAldqqzcHx3my7rF2kl6iFGao0T
+qyIB31Ye385bgfm9EGDcLLLirernrae/r+i1nZv2fF+7xbb3AU4UFxJ9NIxeoeIQ
+Cs4UpDEgrHMkVX8F2Y+vs+5ZfudQ7ZmCtyC9fWGhtHwYELOi8wnj4Yc6xz96+21g
+sKqng8ugCdUN8PgHI+kB9hiUSir0y5TnoKsy3Ko16spRgxyshVbPxlvg8EEfRVtT
+Zl0eLy53LB69GqiaxPs/ZZZ+6o5c20IFmZFLzwe71SXrzb0FOAdnJcctDlZopL0m
+yGufaQi6XrdbfwtQlBE7SMq1tXV3NqJDNPtHmwUe7/i+xwNDvS8HRjcoxr7GYj1g
+EIAo9SJBMHrPKygKUBJBYz9Tz2l1IchM/l/Q0k3Moz8LGhDArk9qMspqGrEGI+bE
+QN5BPv9cuTmDrAH3Sf9aJQnh2Aqh7iYxM9nelOdjZzEQ2e2eWmQ2gy7ujvsp3ZeR
+GYAcAsK64iTc6Hxg9I7PXsRiIJBSBuySIBeXztmMlEDxYdMG6M1h1usXDcbcWj/b
+UbQF0/lYhEtysrpLCsMv
+=LGVD
+-----END PGP SIGNATURE-----
+
+--BwCQnh7xodEAoBMC--
