@@ -1,54 +1,63 @@
-From: Lee Jones <lee.jones@linaro.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
 Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
-Date: Fri, 30 Nov 2012 12:45:18 +0000
-Message-ID: <20121130124518.GF26023@gmail.com>
+Date: Fri, 30 Nov 2012 18:41:11 +0530
+Message-ID: <CAKohpomNFmLwf-Gs_mmXV0ULU87-FWCxVGUTfrEM-m6NNt3nPw@mail.gmail.com>
 References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
- <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
- <20121130105731.GN3176@sortiz-mobl>
+	<121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
+	<20121130105731.GN3176@sortiz-mobl>
+	<20121130124518.GF26023@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121130105731.GN3176@sortiz-mobl>
+In-Reply-To: <20121130124518.GF26023@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, grant.likely@secretlab.ca, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, grant.likely@secretlab.ca, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Nov 2012, Samuel Ortiz wrote:
+On 30 November 2012 18:15, Lee Jones <lee.jones@linaro.org> wrote:
+> The patch doesn't apply for me - does it for you?
+>
+> Viresh, what's it based on?
 
-> Hi Viresh, Lee,
->=20
-> On Thu, Nov 29, 2012 at 08:10:18PM +0530, Viresh Kumar wrote:
-> > From: Vipul Kumar Samar <vipulkumar.samar@st.com>
-> >=20
-> > This patch extends existing DT support for stmpe devices. This upda=
-tes:
-> > - DT support from stmpe SPI and I2C drivers
-> > - missing header files in stmpe.c
-> > - stmpe_of_probe() with pwm, rotator and new bindings.
-> > - Bindings are updated in binding document.
-> >=20
-> > Signed-off-by: Vipul Kumar Samar <vipulkumar.samar@st.com>
-> > Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> > ---
-> > V4->V5:
-> > ------
-> > - 2/3 and 3/3 merged.
-> > - irq_trigger is kept same for non-DT booti.
-> >=20
-> > @Lee: I haven't added your Acked-by, because this differs from your=
- Acked
-> > version.
-> Lee, are you ok with this one ? Could you give it a test ?
+Because this was applied 2 days back by Samuel, and i didn't
+fetch it again yesterday:
 
-The patch doesn't apply for me - does it for you?
+commit 20d5c7defc228cdaeff3ce3442f3a4e86af293c1
+Author: Randy Dunlap <rdunlap@infradead.org>
+Date:   Mon Nov 12 09:20:49 2012 -0800
 
-Viresh, what's it based on?
+    mfd: Fix stmpe.c build when OF is not enabled
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+    Fix build errors when CONFIG_OF is not enabled by including
+    <linux/of.h> (needs to be added in any case).
+    An alternative fix could be to make the driver depend on OF.
+
+    drivers/mfd/stmpe.c:1025:2: error: implicit declaration of
+function 'of_property_read_u32'
+    drivers/mfd/stmpe.c:1030:2: error: implicit declaration of
+function 'for_each_child_of_node'
+    drivers/mfd/stmpe.c:1030:36: error: expected ';' before '{' token
+
+    Signed-off-by: Randy Dunlap <rdunlap@infradead.org>
+    Acked-by: Linus Walleij <linus.walleij@linaro.org>
+    Signed-off-by: Samuel Ortiz <sameo@linux.intel.com>
+---
+ drivers/mfd/stmpe.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
+index 0061d1b..f9f7de7 100644
+--- a/drivers/mfd/stmpe.c
++++ b/drivers/mfd/stmpe.c
+@@ -13,6 +13,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
++#include <linux/of.h>
+
+
+Its a simple conflict to fix, as this is the only place of conflict.
+
+--
+viresh
