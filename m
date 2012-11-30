@@ -1,138 +1,60 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] ARM/dts: omap3: Add generic DT support for IGEP
- devices
-Date: Fri, 30 Nov 2012 10:48:04 +0100
-Message-ID: <50B880D4.9050906@gmail.com>
-References: <1354144466-750-1-git-send-email-javier.martinez@collabora.co.uk>
- <1354144466-750-2-git-send-email-javier.martinez@collabora.co.uk>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] gpio: New driver for GPO emulation using PWM generators
+Date: Fri, 30 Nov 2012 11:09:54 +0000
+Message-ID: <CACxGe6sOhvRC4YFxKmDSc1xJ3Q6DomPpAKjtk3_gdY4XpfONRg@mail.gmail.com>
+References: <1353591723-25233-1-git-send-email-peter.ujfalusi@ti.com>
+ <20121123075537.A14713E0A91@localhost> <50AF3E21.4000009@ti.com>
+ <50AF4584.7020604@ti.com> <20121126154600.765E03E1AFD@localhost>
+ <50B5D161.6010200@ti.com> <20121129161024.EEA803E0912@localhost>
+ <20121130064752.GB26474@avionic-0098.adnet.avionic-design.de>
+ <20121130102039.0267E3E129E@localhost> <20121130110400.GA9400@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1354144466-750-2-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Enrico Butera <ebutera-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-gM/Ye1E23mwN+BqQ9rBEUg@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121130110400.GA9400@avionic-0098.adnet.avionic-design.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Linus Walleij <linus.walleij@linaro.org>, Rob Landley <rob@landley.net>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/29/2012 12:14 AM, Javier Martinez Canillas wrote:
-> Add a generic .dtsi device tree source file for the
-> common characteristics across IGEP Technology devices.
->
-> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> ---
-Acked-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+On Fri, Nov 30, 2012 at 11:04 AM, Thierry Reding
+<thierry.reding@avionic-design.de> wrote:
 
->   arch/arm/boot/dts/omap3-igep.dtsi |   93 +++++++++++++++++++++++++++++++++++++
->   1 files changed, 93 insertions(+), 0 deletions(-)
->   create mode 100644 arch/arm/boot/dts/omap3-igep.dtsi
+>> > One other problem is that some PWM devices cannot be setup to achieve a
+>> > 0% or 100% duty-cycle but instead will toggle for at least one period.
+>> > This would be another argument in favour of moving the functionality to
+>> > the individual drivers, perhaps with some functionality provided by the
+>> > core to do the gpio_chip registration (a period could be passed to that
+>> > function at registration time), which will likely be the same for all
+>> > hardware that can and wants to support this feature.
+>>
+>> It is a bit of an oddball case where if the hardware engineer wires up a
+>> PWM to use as a GPIO, then he better be sure that it is actually fit for
+>> the purpose.
 >
-> diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap3-igep.dtsi
-> new file mode 100644
-> index 0000000..a093bff
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-igep.dtsi
-> @@ -0,0 +1,93 @@
-> +/*
-> + * Device Tree Source for IGEP Technology devices
-> + *
-> + * Copyright (C) 2012 Javier Martinez Canillas <javier-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> + * Copyright (C) 2012 Enric Balletbo i Serra <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +/dts-v1/;
-> +
-> +/include/ "omap3.dtsi"
-> +
-> +/ {
-> +	memory {
-> +		device_type = "memory";
-> +		reg = <0x80000000 0x20000000>; /* 512 MB */
-> +	};
-> +
-> +	sound {
-> +		compatible = "ti,omap-twl4030";
-> +		ti,model = "igep2";
-> +		ti,mcbsp = <&mcbsp2>;
-> +		ti,codec = <&twl_audio>;
-> +	};
-> +};
-> +
-> +&omap3_pmx_core {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <
-> +		  &mcbsp2_pins
-> +	>;
-> +
-> +	uart3_pins: pinmux_uart3_pins {
-> +		pinctrl-single,pins = <
-> +			0x16e 0x100	/* uart3_rx.uart3_rx INPUT | MODE0 */
-> +			0x170 0		/* uart3_tx.uart3_tx OUTPUT | MODE0 */
-> +		>;
-> +	};
-> +
-> +	mcbsp2_pins: pinmux_mcbsp2_pins {
-> +		pinctrl-single,pins = <
-> +			0x1a2 0x0104	/* mcspi1_cs2.gpio_176 INPUT | MODE4 */
-> +		>;
-> +	};
-> +};
-> +
-> +&i2c1 {
-> +	clock-frequency = <2600000>;
-> +
-> +	twl: twl@48 {
-> +		reg = <0x48>;
-> +		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-> +		interrupt-parent = <&intc>;
-> +
-> +		vsim: regulator@10 {
-> +			compatible = "ti,twl4030-vsim";
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <3000000>;
-> +		};
-> +
-> +		twl_audio: audio {
-> +			compatible = "ti,twl4030-audio";
-> +			codec {
-> +			      };
-> +		};
-> +	};
-> +};
-> +
-> +/include/ "twl4030.dtsi"
-> +
-> +&i2c2 {
-> +	clock-frequency = <400000>;
-> +};
-> +
-> +&mmc1 {
-> +	vmmc-supply = <&vmmc1>;
-> +	vmmc_aux-supply = <&vsim>;
-> +	bus-width = <8>;
-> +};
-> +
-> +&mmc2 {
-> +	status = "disabled";
-> +};
-> +
-> +&mmc3 {
-> +	status = "disabled";
-> +};
-> +
-> +&twl_gpio {
-> +	ti,use-leds;
-> +};
+> Yes, I agree. So what we really want is to make this configurable in
+> some way. For DT this could just be controlled by the gpio-controller
+> property. The PWM core could easily setup the gpio_chip in the presence
+> of that property.
 >
+> For non-DT it could probably be done via a flag that is passed to the
+> driver via platform data, in which case the driver would have to call
+> the helper explicitly based on the setting of this flag.
+>
+>> That doesn't prevent the PWM core having some gpio-emulation helper
+>> functionality, but do need to be careful about it.
+>
+> On the other hand, if we turn that support into a helper maybe it is
+> easier to leave it up to the driver whether to call it or not. A big
+> advantage of this would be that the driver could pass a period along
+> that it can choose sensibly according to the chip's capabilities.
+>
+> Something as simple as:
+>
+>         int pwmchip_emulate_gpio(struct pwm_chip *chip, unsigned long period);
+>
+> could do. Cleanup could be done automatically in pwmchip_remove().
+
+Looks reasonable.
+
+g.
