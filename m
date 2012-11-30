@@ -1,57 +1,72 @@
-From: Praveen Paneri <p.paneri@samsung.com>
-Subject: Re: [PATCH v8 2/2] usb: s3c-hsotg: Adding phy driver support
-Date: Fri, 30 Nov 2012 17:54:33 +0530
-Message-ID: <CAD6zSYO+DiDaKJ=a3V97yDLeNFmyfFFiNp9ba8iA-pgcF5fj=Q@mail.gmail.com>
-References: <1352888836-17192-1-git-send-email-p.paneri@samsung.com>
-	<1433031.3ftjAfsj34@flatron>
-	<CAD6zSYMNSX8ASPBLpft-0riBi-xeD_b=BjCjSrftX_5_F2+TDA@mail.gmail.com>
-	<4963449.bQgUShLPPx@amdc1227>
+From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Subject: Re: [PATCH v2 3/3] mtd: nand: omap2: Support for hardware BCH error
+ correction
+Date: Fri, 30 Nov 2012 14:28:00 +0200
+Message-ID: <1354278480.30168.116.camel@sauron.fi.intel.com>
+References: <1351667307-447-1-git-send-email-avinashphilip@ti.com>
+	 <1351667307-447-4-git-send-email-avinashphilip@ti.com>
+Reply-To: artem.bityutskiy@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <4963449.bQgUShLPPx@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Felipe Balbi <balbi@ti.com>, gregkh@linuxfoundation.org, Thomas Abraham <thomas.abraham@linaro.org>, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, Lukasz Majewski <l.majewski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Vivek Gautam <gautam.vivek@samsung.com>
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-DpG9zZfUrUN0u0VUCK+5"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1351667307-447-4-git-send-email-avinashphilip@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: dwmw2@infradead.org, afzal@ti.com, tony@atomide.com, broonie@opensource.wolfsonmicro.com, rmk+kernel@arm.linux.org.uk, gregkh@linuxfoundation.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, ivan.djelic@parrot.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2012 at 6:50 PM, Tomasz Figa <t.figa@samsung.com> wrote:
-> Hi Praveen,
->
-> On Friday 23 of November 2012 09:54:51 Praveen Paneri wrote:
->> We will anyway remove the platform data part soon. If you say I can
->> resend it again.
->
-> I think that the requirement for platform data on DT-enabled systems
-> should be removed before this series get merged, because there are already
-> patches being worked on to remove auxdata tables (common clock framework
-> support by Thomas Abraham).
-Next is to add support for 4210, 4x12 and Exynos5 (patches were sent
-by vivek Gautam already). Not only s3c-hsotg but ehci, ohci and dwc
-will start using phy driver.
-This will remove phy related platform data passed to these drivers and...
->
-> Adding next auxdata entry (containing platform data that must be provided)
-> would make them depend on phy platform data removal patch, which would
-> complicate things.
-s3c-hsotg platform data is also passing "is_osc" (Clock source info)
-and "dma" (dma mode info) from platform_data. IT seems they both are
-not used as on now. May be Lukasz can tell if we can move that to
-config option and get rid of s3c-hsotg_plat completely.
 
-Once that is done only AUXDATA entry, which will be remaining, will be
-that of phy driver and I understand that we have to work towards
-removal of that as well but I guess this is a good first step towards
-the goal.
+--=-DpG9zZfUrUN0u0VUCK+5
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
->
-> Best regards,
-> --
-> Tomasz Figa
-> Samsung Poland R&D Center
-> SW Solution Development, Linux Platform
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Wed, 2012-10-31 at 12:38 +0530, Philip, Avinash wrote:
+> +static int erased_sector_bitflips(u_char *data, u_char *oob,
+> +               struct omap_nand_info *info)
+> +{
+> +       int flip_bits =3D 0, i;
+> +
+> +       for (i =3D 0; i < info->nand.ecc.size; i++) {
+> +               flip_bits +=3D hweight8(~data[i]);
+> +               if (flip_bits > info->nand.ecc.strength)
+> +                       return 0;
+> +       }
+> +
+> +       for (i =3D 0; i < info->nand.ecc.bytes - 1; i++) {
+> +               flip_bits +=3D hweight8(~oob[i]);
+> +               if (flip_bits > info->nand.ecc.strength)
+> +                       return 0;
+> +       }
+
+Why do you need the second for loop?
+
+--=20
+Best Regards,
+Artem Bityutskiy
+
+--=-DpG9zZfUrUN0u0VUCK+5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAABAgAGBQJQuKZQAAoJECmIfjd9wqK0I+YP+gPF+ORK3F+fQONu1/VWC6yh
+x80DhXGE6PRILvF72nEOi9zeAlIn+RnLCf86U27pAxFGK0I3FI97Ju+p0kEHV9VR
+cFiLe7uD2MOMMDhXKMXSSU1ADNsyWiCRK6d9RaMJiu2/bDgPhKzSvTc756T81NPg
+t1n/s9D7oc8QpMyUyDQmqj0LTa8qEU7f+BkXzWemuf5WAgiIWW1XSohiMoSWds9G
+wxv4Xkvcggc3vTmG/H4t8rHfgTdDls9lut2UFym+Uw4HdGG6W7dRXvWOY+eEptnK
+txk7qb4lfkPTuBRLQ/HQ64Qrm+7jAP0SKnawce4TsVZkLhoSmT+wpXnJaNJ5N9DO
+B4gpFlBpXvEj7uFtYwosGrebgi7ANuUL8dbr0DjLCwTeN30SD/NHCoxp45RGSmIw
+6HAQFNa0dPskY5AwPyHuguTmTrIBmnpB9ds2okpWhnAVtSO87vWWkVmS29Z0QaTr
+1OuDbL/3RtlZrReu9Z1ohBNZoMrbPkcQKRBZT8Xw+1jglK9VhQJ6RUCd9u59g+ui
+k9LnQDL8vgLq0oTENSR104ltBRBZhqHhTbjlDQ/cWpHV/j1/kM3j5dLnHjRKKe6l
+gtIrLkclODVgiMLI2tM6KtmDG26wi+9JV9jnPhYKuNj0hs6RMa6e8F1VtkfIGeeB
+BkXuqPk0atd8IOow/Dmw
+=5I13
+-----END PGP SIGNATURE-----
+
+--=-DpG9zZfUrUN0u0VUCK+5--
+
