@@ -1,38 +1,43 @@
-From: Shiraz Hashim <shiraz.linux.kernel@gmail.com>
-Subject: Re: [PATCH] gpio: stmpe: Add DT support for stmpe gpio
-Date: Sun, 2 Dec 2012 00:01:02 +0530
-Message-ID: <CAPub149j12KmED8PkeFA2Xk8Sj-RoMojSS4g1G8W8=Nx0H=ctQ@mail.gmail.com>
-References: <912d88b8906ce87cf5459cf3d5798e03bfce34c7.1353649737.git.viresh.kumar@linaro.org>
-	<20121123103400.GO17471@gmail.com>
-	<CAKohponW-Wd+Vrnj8mbdFMmJvwQgPq1jFCZRipBFoEhTknStHQ@mail.gmail.com>
-	<20121123121413.GB22268@gmail.com>
-	<20121123123048.GM5384@localhost.localdomain>
-	<20121126112823.GI12782@gmail.com>
-	<20121126113230.GT5384@localhost.localdomain>
-	<CACRpkdYR-GVm0ZXXO=Y7SwiK=nWaL5kkeLkXUzf_8p7jG+digA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: How about a gpio_get(device *, char *) function?
+Date: Sat, 1 Dec 2012 19:41:39 +0100
+Message-ID: <CACRpkdZfqn7JwD-876vaKob2Ati7+N5PWOsLpG=j9SwyfufROA@mail.gmail.com>
+References: <38620644.IyR5R8rjKP@percival>
+	<CACRpkdaUJKs7zx=JWRUb+0Qz2dQU=R5KUK+CoM+nLCgHL99AFA@mail.gmail.com>
+	<20121126111431.AE4C23E09C2@localhost>
+	<2022442.P80mCjSeu2@percival>
+	<20121129173407.11A543E0A04@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYR-GVm0ZXXO=Y7SwiK=nWaL5kkeLkXUzf_8p7jG+digA@mail.gmail.com>
+In-Reply-To: <20121129173407.11A543E0A04@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Alex Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 1, 2012 at 10:05 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Mon, Nov 26, 2012 at 12:32 PM, Shiraz Hashim <shiraz.hashim@st.com> wrote:
->> On Mon, Nov 26, 2012 at 11:28:23AM +0000, Lee Jones wrote:
->>>
->>> Doesn't pinctrl normally handle this kind of stuff?
+On Thu, Nov 29, 2012 at 6:34 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Wed, 28 Nov 2012 12:38:38 +0900, Alex Courbot <acourbot@nvidia.com> wrote:
+>> On Monday 26 November 2012 19:14:31 Grant Likely wrote:
+>> > I don't have any problem with a gpio_get function, but I do agree that
+>> > making it return an opaque handle is how it should be written with a new
+>> > set of accessors. The handle should probably be simply the pointer to
+>> > the &gpio_desc[number] which is a private table in gpiolib.c. The
+>> > definition of it isn't available outside of gpiolib.c
 >>
->> Yes, but I think it is only for managing the SoC and its pads.
+>> That looks like a reasonable approach, but this would make the new API
+>> available only to systems that use GPIOlib. Shouldn't we be concerned about
+>> making this available to all GPIO implementations? Or is GPIOlib so widely
+>> used that we don't care?
 >
-> No pinctrl is also for off-SoC pin controllers, you can have
-> pinctrl0, pinctrl1 ... pinctrlN on a system. The number space is
-> local per-pincontroller too.
+> I'm tempted to say non-gpiolib is not supported. However, there isn't
+> anything that would prevent non-gpiolib users from implementing the api
+> themselves, but they'd need to provide their own handle..
 
-OK. Thanks for correcting.
+I get the creeps when you say that ...
 
--- 
-regards
-Shiraz Hashim
+Now I think I have to put on my TODO to remove a few custom GPIO
+implementations so it feels better. ;-)
+
+Yours,
+Linus Walleij
