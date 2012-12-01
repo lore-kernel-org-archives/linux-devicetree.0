@@ -1,37 +1,38 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V2] gpio: stmpe: Add DT support for stmpe gpio
-Date: Sat, 1 Dec 2012 23:08:56 +0530
-Message-ID: <CAKohpomwi3Fzkg51X2tw_VFqDvcCWdFrAOLn8RsuBwqKAT+S4A@mail.gmail.com>
-References: <1e773c8f35fed89f6eb6cc44f393fb76ba4ae3e2.1353929710.git.viresh.kumar@linaro.org>
-	<CACRpkdYk=YM97Hr2BpGwXsojV1UoEfxc=mCvSVR-8ZmhxytvwA@mail.gmail.com>
+From: Shiraz Hashim <shiraz.linux.kernel@gmail.com>
+Subject: Re: [PATCH] gpio: stmpe: Add DT support for stmpe gpio
+Date: Sun, 2 Dec 2012 00:01:02 +0530
+Message-ID: <CAPub149j12KmED8PkeFA2Xk8Sj-RoMojSS4g1G8W8=Nx0H=ctQ@mail.gmail.com>
+References: <912d88b8906ce87cf5459cf3d5798e03bfce34c7.1353649737.git.viresh.kumar@linaro.org>
+	<20121123103400.GO17471@gmail.com>
+	<CAKohponW-Wd+Vrnj8mbdFMmJvwQgPq1jFCZRipBFoEhTknStHQ@mail.gmail.com>
+	<20121123121413.GB22268@gmail.com>
+	<20121123123048.GM5384@localhost.localdomain>
+	<20121126112823.GI12782@gmail.com>
+	<20121126113230.GT5384@localhost.localdomain>
+	<CACRpkdYR-GVm0ZXXO=Y7SwiK=nWaL5kkeLkXUzf_8p7jG+digA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYk=YM97Hr2BpGwXsojV1UoEfxc=mCvSVR-8ZmhxytvwA@mail.gmail.com>
+In-Reply-To: <CACRpkdYR-GVm0ZXXO=Y7SwiK=nWaL5kkeLkXUzf_8p7jG+digA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Linus Walleij <linus.walleij@linaro.org>
-Cc: grant.likely@secretlab.ca, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, lee.jones@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1 December 2012 22:17, Linus Walleij <linus.walleij@linaro.org> wrote:
-> If you can, try to avoid this:
-> Content-Type: text/plain; charset=WINDOWS-1252
-> Content-Transfer-Encoding: quoted-printable
+On Sat, Dec 1, 2012 at 10:05 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Mon, Nov 26, 2012 at 12:32 PM, Shiraz Hashim <shiraz.hashim@st.com> wrote:
+>> On Mon, Nov 26, 2012 at 11:28:23AM +0000, Lee Jones wrote:
+>>>
+>>> Doesn't pinctrl normally handle this kind of stuff?
+>>
+>> Yes, but I think it is only for managing the SoC and its pads.
 >
-> That kind om message encoding makes my life a living hell
-> (but I fixed it, manually editing the whole patch) how did you
-> end up with this? Did you for example issue the command
-> git send-email from a Windows machine using some Windows
-> version of git?
+> No pinctrl is also for off-SoC pin controllers, you can have
+> pinctrl0, pinctrl1 ... pinctrlN on a system. The number space is
+> local per-pincontroller too.
 
-I don't use windows for any linux work. I went through the header
-to see what went wrong and realized, i sent this mail when i was in ARM's
-office and via arm id only. i.e. using arm id's msmtprc settings. I don't
-know why my linaro settings don't work from office, they work from
-outside with no changes.
+OK. Thanks for correcting.
 
-companies use microsoft exchange server and that played with this
-patch. Sorry for making your life miserable :(
-
---
-viresh
+-- 
+regards
+Shiraz Hashim
