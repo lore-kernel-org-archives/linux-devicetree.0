@@ -1,75 +1,60 @@
-From: Ivan Djelic <ivan.djelic@parrot.com>
-Subject: Re: [PATCH v3 4/4] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Sat, 1 Dec 2012 22:50:14 +0100
-Message-ID: <20121201215014.GA11236@parrot.com>
-References: <5097B7EE.3000508@gmail.com>
- <518397C60809E147AF5323E0420B992E3E9DC1F1@DBDE01.ent.ti.com>
- <509A2E75.5060307@gmail.com>
- <518397C60809E147AF5323E0420B992E3E9DE420@DBDE01.ent.ti.com>
- <509EA360.2050504@gmail.com>
- <87mwycjmdn.fsf@dell.be.48ers.dk>
- <50ACA9BB.7090106@gmail.com>
- <518397C60809E147AF5323E0420B992E3E9EEA09@DBDE01.ent.ti.com>
- <50B4C796.4010403@gmail.com>
- <518397C60809E147AF5323E0420B992E3E9F25CB@DBDE01.ent.ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 2/2] ASoC: Samsung: Do not register samsung audio dma
+ device as pdev
+Date: Sun, 2 Dec 2012 13:33:50 +0900
+Message-ID: <20121202043349.GX17981@opensource.wolfsonmicro.com>
+References: <1354356447-16784-1-git-send-email-padma.v@samsung.com>
+ <1354356447-16784-3-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+rRWuC8ZLvVekNoN"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <518397C60809E147AF5323E0420B992E3E9F25CB@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: Daniel Mack <zonque@gmail.com>, Peter Korsgaard <jacmet@sunsite.dk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "paul@pwsan.com" <paul@pwsan.com>, "Mohammed, Afzal" <afzal@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "tony@atomide.com" <tony@atomide.com>, "Hunter, Jon" <jon-hunter@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+In-Reply-To: <1354356447-16784-3-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, padma.kvr@gmail.com, sbkim73@samsung.com, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2012 at 05:01:30AM +0000, Philip, Avinash wrote:
-(...)
-> 
-> Daniel,
-> 
-> So can you start supporting "bch8-am335xrbl-compatible" and remove usage of
-> is_elm_used in dt. This should come in ecc_opt field.
-> 
-> In omap2 NAND driver, AM335x RBL compatibility is achieved depending on ecc_layout
-> and runtime detection of elm module. So options related to can be
-> 1. bch8-am335xrbl-compatible is enabled and run time detection of
->    Of elm module passed, RBL compatibility achieved.
-> 2. bch8-am335xrbl-compatible is enabled and run time detection of
->    of elm module failed, RBL compatibility sacrificed but continue with
->    software BCH8 error correction. Sacrificing RBL compatibility
->    because of constant polynomial addition and usage of 14 byte instead of 13 byte.
-> 
-> Ivan,
-> Do you have any plan of removing addition of constant polynomial to ecc data
-> and go for extra byte checking to find erased pages?
-> This way we can start support BCH8 with RBL compatible and kernel
-> Didn't put any restriction of the ecc layout.
 
-Hello Avinash,
+--+rRWuC8ZLvVekNoN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Sorry about the response delay.
-First a short reminder of pros and cons of the "constant polynomial addition"
-(let's just call it "CPA") feature:
+On Sat, Dec 01, 2012 at 03:37:27PM +0530, Padmavathi Venna wrote:
 
-pros:
-- it elegantly solves all problems related to reading an erased page (no clumsy hack needed)
-- better performance: when a bitflip appears on an erased page (often this is a "sticky" bitflip),
-  there is no need to perform a full scan+cleanup of the page each time it is read
+>  sound/soc/samsung/dma.c         |   24 ++++++------------------
+>  sound/soc/samsung/dma.h         |    3 +++
+>  sound/soc/samsung/i2s.c         |    3 +++
+>  sound/soc/samsung/smdk_wm8994.c |    7 +++++--
+>  4 files changed, 17 insertions(+), 20 deletions(-)
 
-cons:
-- the ecc vector is not compatible with RBL
+This is fine in principle but it's going to break every Samsung based
+platform except the SMDK with WM8994 as only machine driver updated to
+reflect the changed DAI name is that one, the others need updating too.
 
-RBL compatibility is not necessary in my case, because I'm using the OMAP MLC ROM boot mode.
-Rather than completely removing the CPA feature, I'd like to keep it as an option; it could
-even be used with the ELM module.
+This includes pretty much all the platforms I actively work on...
 
-I'm OK to submit a patch in this direction, but first I'd like to wait for the dust to settle
-on arch/arm/mach-omap2 and mtd/nand/omap2.c with Afzal patches and everything; things have become
-a bit complicated to follow recently :-)
-Also, I think it would be nice to move BCH code out of omap2.c into a separate file.
-What do you think ?
+--+rRWuC8ZLvVekNoN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-BR,
---
-Ivan
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQutomAAoJELSic+t+oim93mMP/AlxtiZUA0Kz1t/E8Tpj8b0M
+KTFP6uTk/uO/CWohCJ72Ju7uJkB21Ui88RIL54DxZ9Gdupm1R0iNYW1599JqhY+p
+lf0j/Pm74V8DUuDK1wBKqt+bW33eFC+K+TkVMOoYJQ+FSU+kb34G5+YBEJPFyDJE
+zY0NM+RESCRccKw1xGKV0ledlAXT5wiVCRhStOMXOFthEf8+mG2dClCF6pGlhLXy
+BHetzWtk3ZSRcv94d24L6+xLulWaBY2C0q0rm3usaqRfbNdCAcTIiW6qNbKiWgnb
+6y7dkyqL41KV2ZjF7kQoAYGLtyRfdy1D9BYVCeCjeMJ74XS5vGG2nqCYCaU8vx3A
+IrK/lLGhNr7SoBqTJ2m8Fcdr8uo+WgDlVvhBDAnSxvWjKSTaiBqsuTDHdYB4fBq4
+oEv1Sj9MRzOE7DmoP8LL9avWBxvyqbBpXWJGXToz0VfudzMGrw3oTGNhDjFcIsCQ
+HxsDn7rJddzuSkWRft7x+rvj/ma+5V1XBPWdiw9n5EiYTKE52nl60jV/19pJ+u5F
+8IvTRCl7uG1XcCwiOMpwBftscWTAq8Nx9aqDJw/4nT3qGkEubMvY1QeSNhLfJMCN
+5wh5qfPxVBtyBhfOaEOkkpVEI3bL8uJGsU0zB+KCWGLN28pOBOzxIsoPyvfGKjex
+W3b8tmyMv5bycbJjVkeR
+=aXqc
+-----END PGP SIGNATURE-----
+
+--+rRWuC8ZLvVekNoN--
