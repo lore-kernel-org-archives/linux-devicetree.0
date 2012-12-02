@@ -1,60 +1,38 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 2/2] ASoC: Samsung: Do not register samsung audio dma
- device as pdev
-Date: Sun, 2 Dec 2012 13:33:50 +0900
-Message-ID: <20121202043349.GX17981@opensource.wolfsonmicro.com>
-References: <1354356447-16784-1-git-send-email-padma.v@samsung.com>
- <1354356447-16784-3-git-send-email-padma.v@samsung.com>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH] tty: serial: vt8500: fix return value check in vt8500_serial_probe()
+Date: Sun, 2 Dec 2012 05:10:44 -0500
+Message-ID: <CAPgLHd_gx3BmZh+L1k6koa6eH5SKKEVFedSC_M=nju+Dzq=rug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="+rRWuC8ZLvVekNoN"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1354356447-16784-3-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, padma.kvr@gmail.com, sbkim73@samsung.com, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux@prisktech.co.nz, alan@linux.intel.com, gregkh@linuxfoundation.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-arm-kernel@lists.infradead.org, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
---+rRWuC8ZLvVekNoN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+In case of error, function of_clk_get() returns ERR_PTR()
+and never returns NULL. The NULL test in the return value
+check should be replaced with IS_ERR().
 
-On Sat, Dec 01, 2012 at 03:37:27PM +0530, Padmavathi Venna wrote:
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/tty/serial/vt8500_serial.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
->  sound/soc/samsung/dma.c         |   24 ++++++------------------
->  sound/soc/samsung/dma.h         |    3 +++
->  sound/soc/samsung/i2s.c         |    3 +++
->  sound/soc/samsung/smdk_wm8994.c |    7 +++++--
->  4 files changed, 17 insertions(+), 20 deletions(-)
+diff --git a/drivers/tty/serial/vt8500_serial.c b/drivers/tty/serial/vt8500_serial.c
+index 205d4cf..f528cc2 100644
+--- a/drivers/tty/serial/vt8500_serial.c
++++ b/drivers/tty/serial/vt8500_serial.c
+@@ -604,7 +604,7 @@ static int __devinit vt8500_serial_probe(struct platform_device *pdev)
+ 	vt8500_port->uart.flags = UPF_IOREMAP | UPF_BOOT_AUTOCONF;
+ 
+ 	vt8500_port->clk = of_clk_get(pdev->dev.of_node, 0);
+-	if (vt8500_port->clk) {
++	if (!IS_ERR(vt8500_port->clk)) {
+ 		vt8500_port->uart.uartclk = clk_get_rate(vt8500_port->clk);
+ 	} else {
+ 		/* use the default of 24Mhz if not specified and warn */
 
-This is fine in principle but it's going to break every Samsung based
-platform except the SMDK with WM8994 as only machine driver updated to
-reflect the changed DAI name is that one, the others need updating too.
 
-This includes pretty much all the platforms I actively work on...
-
---+rRWuC8ZLvVekNoN
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQutomAAoJELSic+t+oim93mMP/AlxtiZUA0Kz1t/E8Tpj8b0M
-KTFP6uTk/uO/CWohCJ72Ju7uJkB21Ui88RIL54DxZ9Gdupm1R0iNYW1599JqhY+p
-lf0j/Pm74V8DUuDK1wBKqt+bW33eFC+K+TkVMOoYJQ+FSU+kb34G5+YBEJPFyDJE
-zY0NM+RESCRccKw1xGKV0ledlAXT5wiVCRhStOMXOFthEf8+mG2dClCF6pGlhLXy
-BHetzWtk3ZSRcv94d24L6+xLulWaBY2C0q0rm3usaqRfbNdCAcTIiW6qNbKiWgnb
-6y7dkyqL41KV2ZjF7kQoAYGLtyRfdy1D9BYVCeCjeMJ74XS5vGG2nqCYCaU8vx3A
-IrK/lLGhNr7SoBqTJ2m8Fcdr8uo+WgDlVvhBDAnSxvWjKSTaiBqsuTDHdYB4fBq4
-oEv1Sj9MRzOE7DmoP8LL9avWBxvyqbBpXWJGXToz0VfudzMGrw3oTGNhDjFcIsCQ
-HxsDn7rJddzuSkWRft7x+rvj/ma+5V1XBPWdiw9n5EiYTKE52nl60jV/19pJ+u5F
-8IvTRCl7uG1XcCwiOMpwBftscWTAq8Nx9aqDJw/4nT3qGkEubMvY1QeSNhLfJMCN
-5wh5qfPxVBtyBhfOaEOkkpVEI3bL8uJGsU0zB+KCWGLN28pOBOzxIsoPyvfGKjex
-W3b8tmyMv5bycbJjVkeR
-=aXqc
------END PGP SIGNATURE-----
-
---+rRWuC8ZLvVekNoN--
