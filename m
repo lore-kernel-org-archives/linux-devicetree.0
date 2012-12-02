@@ -1,41 +1,52 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next] serial: xilinx_uartps: fix return value check in xuartps_probe()
-Date: Sun, 2 Dec 2012 05:12:43 -0500
-Message-ID: <CAPgLHd-upT_0ThHxU9rXtsw6CP4vU8zvOnLp6u0ZC_2unpDbTw@mail.gmail.com>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH -next] drm: tegra: fix missing unlock on error
+Date: Sun, 2 Dec 2012 05:25:05 -0500
+Message-ID: <CAPgLHd-UekVrvc8gwNUFaoNtcFcZCNC559GW1wfrmUVHidsiOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: alan@linux.intel.com, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: airlied-cv59FeDIM0c@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-In case of error, function of_clk_get() returns ERR_PTR()
-and never returns NULL. The NULL test in the return value
-check should be replaced with IS_ERR().
+Add the missing unlock before return from function host1x_drm_init()
+and host1x_drm_exit() in the error handling case.
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 ---
- drivers/tty/serial/xilinx_uartps.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/gpu/drm/tegra/host1x.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-index 2be22a2..1eb4657 100644
---- a/drivers/tty/serial/xilinx_uartps.c
-+++ b/drivers/tty/serial/xilinx_uartps.c
-@@ -948,9 +948,9 @@ static int xuartps_probe(struct platform_device *pdev)
- 	struct clk *clk;
- 
- 	clk = of_clk_get(pdev->dev.of_node, 0);
--	if (!clk) {
-+	if (IS_ERR(clk)) {
- 		dev_err(&pdev->dev, "no clock specified\n");
--		return -ENODEV;
-+		return PTR_ERR(clk);
- 	}
- 
- 	rc = clk_prepare_enable(clk);
-
-
+diff --git a/drivers/gpu/drm/tegra/host1x.c b/drivers/gpu/drm/tegra/host1x.c
+index bdb97a5..39629e6 100644
+--- a/drivers/gpu/drm/tegra/host1x.c
++++ b/drivers/gpu/drm/tegra/host1x.c
+@@ -176,6 +176,7 @@ int host1x_drm_init(struct host1x *host1x, struct drm_device *drm)
+ 				dev_err(host1x->dev,
+ 					"DRM setup failed for %s: %d\n",
+ 					dev_name(client->dev), err);
++				mutex_unlock(&host1x->clients_lock);
+ 				return err;
+ 			}
+ 		}
+@@ -203,6 +204,7 @@ int host1x_drm_exit(struct host1x *host1x)
+ 				dev_err(host1x->dev,
+ 					"DRM cleanup failed for %s: %d\n",
+ 					dev_name(client->dev), err);
++				mutex_unlock(&host1x->clients_lock);
+ 				return err;
+ 			}
+ 		}
