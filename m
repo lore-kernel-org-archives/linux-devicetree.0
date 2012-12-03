@@ -1,13 +1,13 @@
 From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH 1/2] sdhci: add quirk for lack of 1.8v support
-Date: Mon, 03 Dec 2012 14:03:28 -0500
-Message-ID: <877gozj6v3.fsf@octavius.laptop.org>
-References: <20121125180121.31FB3FACF5@dev.laptop.org>
+Subject: Re: [PATCH 2/2] mmc: add no-1-8-v device tree flag
+Date: Mon, 03 Dec 2012 14:04:26 -0500
+Message-ID: <8738znj6th.fsf@octavius.laptop.org>
+References: <20121125180255.DB8ADFAD06@dev.laptop.org>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20121125180121.31FB3FACF5@dev.laptop.org> (Daniel Drake's
-	message of "Sun, 25 Nov 2012 13:01:19 -0500 (EST)")
+In-Reply-To: <20121125180255.DB8ADFAD06@dev.laptop.org> (Daniel Drake's
+	message of "Sun, 25 Nov 2012 13:02:54 -0500 (EST)")
 Sender: linux-mmc-owner@vger.kernel.org
 To: Daniel Drake <dsd@laptop.org>
 Cc: linux-mmc@vger.kernel.org, jrudholm@gmail.com, prakity@nvidia.com, devicetree-discuss@lists.ozlabs.org
@@ -22,20 +22,12 @@ On Sun, Nov 25 2012, Daniel Drake wrote:
 > full speed.
 >
 > However, what the controller doesn't know is that the motherboard
-> physically doesn't have a 1.8v supply available.
+> physically doesn't have a 1.8v supply available, so attempting to
+> switch to the 1.8v level will result in a situation that cannot be
+> recovered from without physically replugging the SD card.
 >
-> Add a quirk so that systems such as this one can override disable
-> 1.8v support, adding support for UHS-I cards (by running them at
-> 3.3v).
->
-> This avoids a problem where the system would first try to run the
-> card at 1.8v, fail, and then not be able to fully reset the card
-> to retry at the normal 3.3v voltage.
->
-> This is more appropriate than using the MISSING_CAPS quirk, which
-> is intended for cases where the SDHCI controller is actually lying
-> about its capabilities, and would force us to somehow override both
-> caps words from another source.
+> Add a device tree flag that can be used on systems like these,
+> and hook it up to the equivalent SDHCI quirk.
 >
 > Signed-off-by: Daniel Drake <dsd@laptop.org>
 
