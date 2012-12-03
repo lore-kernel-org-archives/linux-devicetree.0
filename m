@@ -1,214 +1,153 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [linux-keystone] Re: [linux-keystone] [PATCH] spi: davinci: add
- OF support for the spi controller
-Date: Mon, 03 Dec 2012 14:36:03 +0000
-Message-ID: <20121203143603.B8E9C3E0A4C@localhost>
-References: <1352755702-21488-1-git-send-email-m-karicheri2@ti.com>
- <20121115162042.A24F13E194B@localhost> <50B939E2.6010901@ti.com>
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH v2 1/3] leds: leds-pwm: Convert to use devm_get_pwm
+Date: Mon, 3 Dec 2012 10:32:03 -0800
+Message-ID: <CAK5ve-+1eQ3mPLAu2Qxw4LjNA85oEtJE-wZcL=YpQ0xBFJ6+hQ@mail.gmail.com>
+References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com>
+ <1352731270-27534-2-git-send-email-peter.ujfalusi@ti.com> <CAK5ve-JDCSSOKHQG-F1RoDii62=-DiPevaD6SafndYVvOgB6Fw@mail.gmail.com>
+ <50BCB391.1070305@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50B939E2.6010901-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-keystone-uAqBSO/uNfhBDgjK7y7TUQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50BCB391.1070305@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 30 Nov 2012 17:57:38 -0500, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org> wrote:
-> On 11/15/2012 11:20 AM, Grant Likely wrote:
-> > On Mon, 12 Nov 2012 16:28:22 -0500, Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org> wrote:
-> >> This adds OF support to DaVinci SPI controller to configure platform
-> >> data through device bindings.
-> >>
-> >> Signed-off-by: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-> > Hi Murali,
-> >
-> > Comments below...
-> >
-> >> ---
-> >>   .../devicetree/bindings/spi/spi-davinci.txt        |   50 ++++++++++++
-> >>   drivers/spi/spi-davinci.c                          |   80 +++++++++++++++++++-
-> >>   2 files changed, 126 insertions(+), 4 deletions(-)
-> >>   create mode 100644 Documentation/devicetree/bindings/spi/spi-davinci.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
-> >> new file mode 100644
-> >> index 0000000..0369369
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
-> >> @@ -0,0 +1,50 @@
-> >> +Davinci SPI controller device bindings
-> >> +
-> >> +Required properties:
-> >> +- #address-cells: number of cells required to define a chip select
-> >> +	address on the SPI bus.
-> > Will this *ever* be something other than '1'?
-> >
-> >> +- #size-cells: should be zero.
-> >> +- compatible:
-> >> +	- "ti,davinci-spi"
-> > Please use the actual model of the chip here. Don't try to be generic
-> > with the compatible string. A driver can bind against more than one
-> > compatible value and new devices can claim compatiblity with old by
-> > including the old compatible string in this list.
-> >
-> >> +- reg: Offset and length of SPI controller register space
-> >> +- ti,davinci-spi-version: SPI version :- "1.0" or "2.0"
-> > Usually this is determined from the compatible value directly (which is
-> > why compatible strings shouldn't be generic). Don't use a separate
-> > property for it.
-> >
-> >> +- ti,davinci-spi-num-cs: Number of chip selects
-> >> +- ti,davinci-spi-intr-line: interrupt line used to connect the SPI
-> >> +	IP to the ARM interrupt controller withn the SoC. Possible values
-> >> +	are 0 and 1.
-> > ? Isn't that what the interrupts property is for? I don't understand why
-> > this is needed from the description.
-> >
-> >> +- interrupts: interrupt number offset at the irq parent
-> >> +- clocks: spi clk phandle
-> >> +
-> >> +Example of a NOR flash slave device (n25q032) connected to DaVinci
-> >> +SPI controller device over the SPI bus.
-> >> +
-> >> +spi:spi0@20BF0000 {
-> > spi@20BF0000  (use 'spi' not 'spi0')
-> >
-> >> +	#address-cells			= <1>;
-> >> +	#size-cells			= <0>;
-> >> +	compatible			= "ti,davinci-spi";
-> >> +	reg				= <0x20BF0000 0x1000>;
-> >> +	ti,davinci-spi-version		= "1.0";
-> >> +	ti,davinci-spi-num-cs		= <4>;
-> >> +	ti,davinci-spi-intr-line	= <0>;
-> >> +	interrupts			= <338>;
-> >> +	clocks				= <&clkspi>;
-> >> +
-> >> +	flash: n25q032@0 {
-> >> +		#address-cells = <1>;
-> >> +		#size-cells = <1>;
-> >> +		compatible = "st,m25p32";
-> >> +		spi-max-frequency = <25000000>;
-> >> +		reg = <0>;
-> >> +
-> >> +		partition@0 {
-> >> +			label = "u-boot-spl";
-> >> +			reg = <0x0 0x80000>;
-> >> +			read-only;
-> >> +		};
-> >> +
-> >> +		partition@1 {
-> >> +			label = "test";
-> >> +			reg = <0x80000 0x380000>;
-> >> +		};
-> >> +	};
-> >> +};
-> >> diff --git a/drivers/spi/spi-davinci.c b/drivers/spi/spi-davinci.c
-> >> index 71a6423..0f50319 100644
-> >> --- a/drivers/spi/spi-davinci.c
-> >> +++ b/drivers/spi/spi-davinci.c
-> >> @@ -26,6 +26,9 @@
-> >>   #include <linux/err.h>
-> >>   #include <linux/clk.h>
-> >>   #include <linux/dma-mapping.h>
-> >> +#include <linux/of.h>
-> >> +#include <linux/of_device.h>
-> >> +#include <linux/of_irq.h>
-> >>   #include <linux/spi/spi.h>
-> >>   #include <linux/spi/spi_bitbang.h>
-> >>   #include <linux/slab.h>
-> >> @@ -788,6 +791,69 @@ rx_dma_failed:
-> >>   	return r;
-> >>   }
-> >>   
-> >> +#if defined(CONFIG_OF)
-> >> +static const struct of_device_id davinci_spi_of_match[] = {
-> >> +	{
-> >> +		.compatible = "ti,davinci-spi",
-> >> +	},
-> >> +	{ },
-> >> +};
-> >> +MODULE_DEVICE_TABLE(of, davini_spi_of_match);
-> >> +
-> >> +/**
-> >> + * spi_davinci_get_pdata - Get platform_data from DTS binding
-> >> + * @pdev: ptr to platform data
-> >> + *
-> >> + * Parses and populate platform_data from device tree bindings.
-> >> + *
-> >> + * NOTE: Not all platform_data params are supported currently.
-> >> + */
-> >> +static struct davinci_spi_platform_data
-> >> +	*spi_davinci_get_pdata(struct platform_device *pdev)
-> >> +{
-> >> +	struct device_node *node = pdev->dev.of_node;
-> >> +	struct davinci_spi_platform_data *pdata;
-> >> +	unsigned int num_cs, intr_line = 0;
-> >> +	const char *version;
-> >> +
-> >> +	if (pdev->dev.platform_data)
-> >> +		return pdev->dev.platform_data;
-> >> +
-> >> +	if (!pdev->dev.of_node)
-> >> +		return NULL;
-> >> +
-> >> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> >> +	pdev->dev.platform_data = pdata;
-> >> +	if (!pdata)
-> >> +		return NULL;
-> > Since pdata must always be present, roll it directly into struct
-> > spi_davinci and get rid of the kzmalloc here. It is less expensive and
-> > is simpler code.
-> Grant,
-> 
-> Could you elaborate a bit? What you mean by rolling pdata into 
-> spi_davinci? I believe you are referring
-> to davinci_spi. Are you saying change following:-
-> 
-> struct davinci_spi {
-> 
-> ...
-> struct davinci_spi_platform_data *pdata; <= to struct 
-> davinci_spi_platform_data pdata
-> 
-> };
+On Mon, Dec 3, 2012 at 6:13 AM, Peter Ujfalusi <peter.ujfalusi@ti.com> =
+wrote:
+> Hi Bryan,
+>
+> On 11/14/2012 02:14 AM, Bryan Wu wrote:
+>> On Mon, Nov 12, 2012 at 6:41 AM, Peter Ujfalusi <peter.ujfalusi@ti.c=
+om> wrote:
+>>> Update the driver to use the new API for requesting pwm so we can t=
+ake
+>>> advantage of the pwm_lookup table to find the correct pwm to be use=
+d for the
+>>> LED functionality.
+>>> If the devm_get_pwm fails we fall back to legacy mode to try to get=
+ the pwm.
+>>>
+>>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>>> ---
+>>>  drivers/leds/leds-pwm.c  | 19 ++++++-------------
+>>>  include/linux/leds_pwm.h |  2 +-
+>>>  2 files changed, 7 insertions(+), 14 deletions(-)
+>>>
+>>> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+>>> index f2e44c7..c953c75 100644
+>>> --- a/drivers/leds/leds-pwm.c
+>>> +++ b/drivers/leds/leds-pwm.c
+>>> @@ -67,12 +67,11 @@ static int led_pwm_probe(struct platform_device=
+ *pdev)
+>>>                 cur_led =3D &pdata->leds[i];
+>>>                 led_dat =3D &leds_data[i];
+>>>
+>>> -               led_dat->pwm =3D pwm_request(cur_led->pwm_id,
+>>> -                               cur_led->name);
+>>> +               led_dat->pwm =3D devm_pwm_get(&pdev->dev, cur_led->=
+name);
+>>>                 if (IS_ERR(led_dat->pwm)) {
+>>>                         ret =3D PTR_ERR(led_dat->pwm);
+>>> -                       dev_err(&pdev->dev, "unable to request PWM =
+%d\n",
+>>> -                                       cur_led->pwm_id);
+>>> +                       dev_err(&pdev->dev, "unable to request PWM =
+for %s\n",
+>>> +                               cur_led->name);
+>>>                         goto err;
+>>>                 }
+>>>
+>>> @@ -86,10 +85,8 @@ static int led_pwm_probe(struct platform_device =
+*pdev)
+>>>                 led_dat->cdev.flags |=3D LED_CORE_SUSPENDRESUME;
+>>>
+>>>                 ret =3D led_classdev_register(&pdev->dev, &led_dat-=
+>cdev);
+>>> -               if (ret < 0) {
+>>> -                       pwm_free(led_dat->pwm);
+>>> +               if (ret < 0)
+>>>                         goto err;
+>>> -               }
+>>>         }
+>>>
+>>>         platform_set_drvdata(pdev, leds_data);
+>>> @@ -98,10 +95,8 @@ static int led_pwm_probe(struct platform_device =
+*pdev)
+>>>
+>>>  err:
+>>>         if (i > 0) {
+>>> -               for (i =3D i - 1; i >=3D 0; i--) {
+>>> +               for (i =3D i - 1; i >=3D 0; i--)
+>>>                         led_classdev_unregister(&leds_data[i].cdev)=
+;
+>>> -                       pwm_free(leds_data[i].pwm);
+>>> -               }
+>>>         }
+>>>
+>>>         return ret;
+>>> @@ -115,10 +110,8 @@ static int __devexit led_pwm_remove(struct pla=
+tform_device *pdev)
+>>>
+>>>         leds_data =3D platform_get_drvdata(pdev);
+>>>
+>>> -       for (i =3D 0; i < pdata->num_leds; i++) {
+>>> +       for (i =3D 0; i < pdata->num_leds; i++)
+>>>                 led_classdev_unregister(&leds_data[i].cdev);
+>>> -               pwm_free(leds_data[i].pwm);
+>>> -       }
+>>>
+>>>         return 0;
+>>>  }
+>>> diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
+>>> index 33a0711..a65e964 100644
+>>> --- a/include/linux/leds_pwm.h
+>>> +++ b/include/linux/leds_pwm.h
+>>> @@ -7,7 +7,7 @@
+>>>  struct led_pwm {
+>>>         const char      *name;
+>>>         const char      *default_trigger;
+>>> -       unsigned        pwm_id;
+>>> +       unsigned        pwm_id __deprecated;
+>>
+>> I suggest we remove this later, we can provide patches from this fro=
+m
+>> platform data of board file. And I think this patch is good for me t=
+o
+>> merge, will do it soon.
+>
+> I have marked the pwm_id as deprecated for now to allow one kernel cy=
+cle for
+> external (?) drivers to adopt. We can remove it for 3.9 I think.
+>
+> I just checked linux-next today and this series is still not there. D=
+o you
+> want me to resend it for you? I can rebase the patches on top of linu=
+x-next or
+> if you have preference on which tree should I use please let me know.
+>
 
-Not quite. I mean adding this:
-struct davinci_spi {
-	...
-	struct davinci_spi_platform_data pdata;
-};
+Actually, I'm waiting for some feedback from DT maintainers about this
+new binding. But it looks find to me.
+I plan to put this series into my -devel branch and target for 3.9, is
+that OK for you? Right now, it's -rc7. It's better to put this new
+thing for next cycle.
 
-And then in the probe path do something like:
-{
-	struct davinci_spi_platform_data *pdata = pdev.dev.platform_data;
-...
+-Bryan
 
-	if (pdata)
-		dspi->pdata = *pdata; /* Copy from platform_data */
-	else
-		spi_davinci_get_pdata(pdev); /* decode from DT */
-};
-
-My point is that the driver needs a copy of the pdata. By embedding it
-into struct davinci_spi it doesn't need to be allocated with a separate
-devm_kzalloc() call.
-
-This is a minor point though. You could do it either way.
-
-*However* make sure that the driver *does not* save the pointer into
-pdev->dev.platform_data. That field is read-only for drivers. If a
-driver allocates a separate pdata structure, then it needs to store the
-pointer to it inside its private data structure.
-
-g.
+>>
+>> Thanks,
+>> -Bryan
+>>
+>>>         u8              active_low;
+>>>         unsigned        max_brightness;
+>>>         unsigned        pwm_period_ns;
+>>> --
+>>> 1.8.0
+>>>
+>
+>
+> Thanks,
+> P=E9ter
