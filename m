@@ -1,39 +1,85 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: How about a gpio_get(device *, char *) function?
-Date: Mon, 03 Dec 2012 14:15:28 +0000
-Message-ID: <20121203141528.436BF3E0A4C@localhost>
-References: <38620644.IyR5R8rjKP@percival> <CACRpkdaUJKs7zx=JWRUb+0Qz2dQU=R5KUK+CoM+nLCgHL99AFA@mail.gmail.com> <20121126111431.AE4C23E09C2@localhost> <2022442.P80mCjSeu2@percival> <20121129173407.11A543E0A04@localhost> <CACRpkdZfqn7JwD-876vaKob2Ati7+N5PWOsLpG=j9SwyfufROA@mail.gmail.com>
+Subject: Re: [PATCH] of: When constructing the bus id consider assigned-addresses as well
+Date: Mon, 03 Dec 2012 14:27:11 +0000
+Message-ID: <20121203142711.591853E0A4C@localhost>
+References: <20121121210240.GC15285@obsidianresearch.com> <20121126140316.99FE23E194B@localhost> <20121126182054.GA30177@obsidianresearch.com> <20121129162648.80DBC3E0912@localhost> <20121129193829.GA10145@obsidianresearch.com> <20121130094806.0D6D73E070C@localhost> <20121201004948.GA3185@obsidianresearch.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdZfqn7JwD-876vaKob2Ati7+N5PWOsLpG=j9SwyfufROA@mail.gmail.com>
+In-Reply-To: <20121201004948.GA3185@obsidianresearch.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alex Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 1 Dec 2012 19:41:39 +0100, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Thu, Nov 29, 2012 at 6:34 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
-> > On Wed, 28 Nov 2012 12:38:38 +0900, Alex Courbot <acourbot@nvidia.com> wrote:
-> >> On Monday 26 November 2012 19:14:31 Grant Likely wrote:
-> >> > I don't have any problem with a gpio_get function, but I do agree that
-> >> > making it return an opaque handle is how it should be written with a new
-> >> > set of accessors. The handle should probably be simply the pointer to
-> >> > the &gpio_desc[number] which is a private table in gpiolib.c. The
-> >> > definition of it isn't available outside of gpiolib.c
-> >>
-> >> That looks like a reasonable approach, but this would make the new API
-> >> available only to systems that use GPIOlib. Shouldn't we be concerned about
-> >> making this available to all GPIO implementations? Or is GPIOlib so widely
-> >> used that we don't care?
-> >
-> > I'm tempted to say non-gpiolib is not supported. However, there isn't
-> > anything that would prevent non-gpiolib users from implementing the api
-> > themselves, but they'd need to provide their own handle..
+On Fri, 30 Nov 2012 17:49:48 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+> On Fri, Nov 30, 2012 at 09:48:05AM +0000, Grant Likely wrote:
 > 
-> I get the creeps when you say that ...
+> > > If you attempt to stick a 'reg' in a block nested below a
+> > > 'device_type="pci"' the kernel throws lots of error messsages and
+> > > generates bad address mappings.
+> > 
+> > Have you added the appropriate #address-cells and #size-cells to the pci
+> > device node to go back to a non-pci addressing mode?
+> > assigned-addresses
+> 
+> Switching away from the 5 dword address format is not ideal
+> because then there is no way to specify the resource region (prefetch,
+> io, mmio) and mmio would have to be assumed.
 
-hahaha.  Well, what else do we do? By definiton the custom
-implementations are custom. We've got no way to support them unless we
-cast the gpio number to the gpio handle in that case. That would work
-but it would be mighty ugly.
+You don't need to switch away from using 5 cells if that works best for
+you, but I'd be surprised if it was the ideal representation. I would
+expect you to use a representation that makes sense for the internal bus
+architecture of the device. If if exactly matches the PCI address, then
+go ahead with 5 cells, but if it is one or more 32bit busses, then use 1
+or 2 for #address-cells and 1 for #size-cells.
+
+> 
+> > only makes sense in the pci-device node itself. reg should work for all
+> > nodes below that, and if it doesn't then it is a bug that we need to
+> > fix.
+> 
+> Okay.. but how should the DTS be constructed?
+> 
+pcie_bus { // The PCI-E bus
+   device_type = "pci";
+   ranges = <5dw ranges>;
+   #address-cells = <3>;
+   #size-cells = <2>;
+   soc_bridge { // The PCI-E device
+      device_type = "pci";
+
+      // These are important to set up the address format in the child
+      // nodes
+      #address-cells = <3>;
+      #size-cells = <2>;
+
+      // Translation from PCI bus space to local bus space.
+      ranges = <5dw ranges>;
+
+      soc_device { // Internal device
+          reg = <5dw regs>
+      };
+   };
+};
+
+> 
+> This is what I have now, the soc_bridge PCI-E device is DTS modeled as
+> a PCI bridge - it has a ranges with its memory location, and the
+> children nodes are relative to those ranges. This would not be typical
+> for a non-bridge PCI-E device.
+
+Now, if the children of soc_bridge really are PCI devices (and not just
+plain-vanilla memory mapped IP cores like I assume above), then they
+shouldn't be registered in the kernel as platform_devices at all. In
+that case register them as PCI devices and the existing PCI
+infrastructure should do the naming correctly.
+
+> The reason for the 'assigned-address' requirement with the current
+> kernel code is the device_type=pci on soc_bridge. This makes
+> of_match_bus(parent) for soc_device return the PCI structure, which
+> has '.addresses = "assigned-addresses",'
+
+If the soc_devices are getting triggered on that and they shouldn't be,
+then we need a mechanism in the soc_bridge node to kick out of that
+behavoir for its children.
 
 g.
