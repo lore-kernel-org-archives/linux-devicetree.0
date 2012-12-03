@@ -1,46 +1,47 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v1 0/1] spi: davinci: add OF support for the spi controller
-Date: Mon, 3 Dec 2012 13:38:37 -0500
-Message-ID: <1354559918-15105-1-git-send-email-m-karicheri2@ti.com>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH 1/2] sdhci: add quirk for lack of 1.8v support
+Date: Mon, 03 Dec 2012 14:03:28 -0500
+Message-ID: <877gozj6v3.fsf@octavius.laptop.org>
+References: <20121125180121.31FB3FACF5@dev.laptop.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-keystone-uAqBSO/uNfhBDgjK7y7TUQ@public.gmane.org
-Cc: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20121125180121.31FB3FACF5@dev.laptop.org> (Daniel Drake's
+	message of "Sun, 25 Nov 2012 13:01:19 -0500 (EST)")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Daniel Drake <dsd@laptop.org>
+Cc: linux-mmc@vger.kernel.org, jrudholm@gmail.com, prakity@nvidia.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This adds OF support for DaVinci SPI driver. Following are changes from initial
-version based on mostly review comments.
- - removed attribute for spi version. instead, compatibility string is
-   modified to include version info.
- - pdata ptr in davinci_spi_platform_data is replaced with struct itself.
-   spi_davinci_get_pdata() now populates the pdata in the above structure
-   with parsed values from DT bindings.
- - rebased to v3.7 rc7 of linux-next
- - replaces clk_* APIs with their prepare/unprepare versions
+Hi,
 
-Murali Karicheri (1):
-  spi: davinci: add OF support for the spi controller
+On Sun, Nov 25 2012, Daniel Drake wrote:
+> The OLPC XO-1.75 laptop includes a SDHCI controller which is 1.8v
+> capable, and it truthfully reports so in its capabilities. This
+> alternate voltage is used for driving new "UHS-I" SD cards at their
+> full speed.
+>
+> However, what the controller doesn't know is that the motherboard
+> physically doesn't have a 1.8v supply available.
+>
+> Add a quirk so that systems such as this one can override disable
+> 1.8v support, adding support for UHS-I cards (by running them at
+> 3.3v).
+>
+> This avoids a problem where the system would first try to run the
+> card at 1.8v, fail, and then not be able to fully reset the card
+> to retry at the normal 3.3v voltage.
+>
+> This is more appropriate than using the MISSING_CAPS quirk, which
+> is intended for cases where the SDHCI controller is actually lying
+> about its capabilities, and would force us to somehow override both
+> caps words from another source.
+>
+> Signed-off-by: Daniel Drake <dsd@laptop.org>
 
- .../devicetree/bindings/spi/spi-davinci.txt        |   51 ++++++++++
- drivers/spi/spi-davinci.c                          |  102 +++++++++++++++++---
- 2 files changed, 139 insertions(+), 14 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/spi/spi-davinci.txt
+Thanks, pushed to mmc-next for 3.8.
 
+- Chris.
 -- 
-1.7.9.5
-
-
-------------------------------------------------------------------------------
-Keep yourself connected to Go Parallel: 
-BUILD Helping you discover the best ways to construct your parallel projects.
-http://goparallel.sourceforge.net
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
