@@ -1,137 +1,39 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 1/3] leds: leds-pwm: Convert to use devm_get_pwm
-Date: Mon, 3 Dec 2012 15:13:37 +0100
-Message-ID: <50BCB391.1070305@ti.com>
-References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com> <1352731270-27534-2-git-send-email-peter.ujfalusi@ti.com> <CAK5ve-JDCSSOKHQG-F1RoDii62=-DiPevaD6SafndYVvOgB6Fw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: How about a gpio_get(device *, char *) function?
+Date: Mon, 03 Dec 2012 14:15:28 +0000
+Message-ID: <20121203141528.436BF3E0A4C@localhost>
+References: <38620644.IyR5R8rjKP@percival> <CACRpkdaUJKs7zx=JWRUb+0Qz2dQU=R5KUK+CoM+nLCgHL99AFA@mail.gmail.com> <20121126111431.AE4C23E09C2@localhost> <2022442.P80mCjSeu2@percival> <20121129173407.11A543E0A04@localhost> <CACRpkdZfqn7JwD-876vaKob2Ati7+N5PWOsLpG=j9SwyfufROA@mail.gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK5ve-JDCSSOKHQG-F1RoDii62=-DiPevaD6SafndYVvOgB6Fw@mail.gmail.com>
+In-Reply-To: <CACRpkdZfqn7JwD-876vaKob2Ati7+N5PWOsLpG=j9SwyfufROA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alex Courbot <acourbot@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bryan,
+On Sat, 1 Dec 2012 19:41:39 +0100, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Thu, Nov 29, 2012 at 6:34 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+> > On Wed, 28 Nov 2012 12:38:38 +0900, Alex Courbot <acourbot@nvidia.com> wrote:
+> >> On Monday 26 November 2012 19:14:31 Grant Likely wrote:
+> >> > I don't have any problem with a gpio_get function, but I do agree that
+> >> > making it return an opaque handle is how it should be written with a new
+> >> > set of accessors. The handle should probably be simply the pointer to
+> >> > the &gpio_desc[number] which is a private table in gpiolib.c. The
+> >> > definition of it isn't available outside of gpiolib.c
+> >>
+> >> That looks like a reasonable approach, but this would make the new API
+> >> available only to systems that use GPIOlib. Shouldn't we be concerned about
+> >> making this available to all GPIO implementations? Or is GPIOlib so widely
+> >> used that we don't care?
+> >
+> > I'm tempted to say non-gpiolib is not supported. However, there isn't
+> > anything that would prevent non-gpiolib users from implementing the api
+> > themselves, but they'd need to provide their own handle..
+> 
+> I get the creeps when you say that ...
 
-On 11/14/2012 02:14 AM, Bryan Wu wrote:
-> On Mon, Nov 12, 2012 at 6:41 AM, Peter Ujfalusi <peter.ujfalusi@ti.co=
-m> wrote:
->> Update the driver to use the new API for requesting pwm so we can ta=
-ke
->> advantage of the pwm_lookup table to find the correct pwm to be used=
- for the
->> LED functionality.
->> If the devm_get_pwm fails we fall back to legacy mode to try to get =
-the pwm.
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>  drivers/leds/leds-pwm.c  | 19 ++++++-------------
->>  include/linux/leds_pwm.h |  2 +-
->>  2 files changed, 7 insertions(+), 14 deletions(-)
->>
->> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
->> index f2e44c7..c953c75 100644
->> --- a/drivers/leds/leds-pwm.c
->> +++ b/drivers/leds/leds-pwm.c
->> @@ -67,12 +67,11 @@ static int led_pwm_probe(struct platform_device =
-*pdev)
->>                 cur_led =3D &pdata->leds[i];
->>                 led_dat =3D &leds_data[i];
->>
->> -               led_dat->pwm =3D pwm_request(cur_led->pwm_id,
->> -                               cur_led->name);
->> +               led_dat->pwm =3D devm_pwm_get(&pdev->dev, cur_led->n=
-ame);
->>                 if (IS_ERR(led_dat->pwm)) {
->>                         ret =3D PTR_ERR(led_dat->pwm);
->> -                       dev_err(&pdev->dev, "unable to request PWM %=
-d\n",
->> -                                       cur_led->pwm_id);
->> +                       dev_err(&pdev->dev, "unable to request PWM f=
-or %s\n",
->> +                               cur_led->name);
->>                         goto err;
->>                 }
->>
->> @@ -86,10 +85,8 @@ static int led_pwm_probe(struct platform_device *=
-pdev)
->>                 led_dat->cdev.flags |=3D LED_CORE_SUSPENDRESUME;
->>
->>                 ret =3D led_classdev_register(&pdev->dev, &led_dat->=
-cdev);
->> -               if (ret < 0) {
->> -                       pwm_free(led_dat->pwm);
->> +               if (ret < 0)
->>                         goto err;
->> -               }
->>         }
->>
->>         platform_set_drvdata(pdev, leds_data);
->> @@ -98,10 +95,8 @@ static int led_pwm_probe(struct platform_device *=
-pdev)
->>
->>  err:
->>         if (i > 0) {
->> -               for (i =3D i - 1; i >=3D 0; i--) {
->> +               for (i =3D i - 1; i >=3D 0; i--)
->>                         led_classdev_unregister(&leds_data[i].cdev);
->> -                       pwm_free(leds_data[i].pwm);
->> -               }
->>         }
->>
->>         return ret;
->> @@ -115,10 +110,8 @@ static int __devexit led_pwm_remove(struct plat=
-form_device *pdev)
->>
->>         leds_data =3D platform_get_drvdata(pdev);
->>
->> -       for (i =3D 0; i < pdata->num_leds; i++) {
->> +       for (i =3D 0; i < pdata->num_leds; i++)
->>                 led_classdev_unregister(&leds_data[i].cdev);
->> -               pwm_free(leds_data[i].pwm);
->> -       }
->>
->>         return 0;
->>  }
->> diff --git a/include/linux/leds_pwm.h b/include/linux/leds_pwm.h
->> index 33a0711..a65e964 100644
->> --- a/include/linux/leds_pwm.h
->> +++ b/include/linux/leds_pwm.h
->> @@ -7,7 +7,7 @@
->>  struct led_pwm {
->>         const char      *name;
->>         const char      *default_trigger;
->> -       unsigned        pwm_id;
->> +       unsigned        pwm_id __deprecated;
->=20
-> I suggest we remove this later, we can provide patches from this from
-> platform data of board file. And I think this patch is good for me to
-> merge, will do it soon.
+hahaha.  Well, what else do we do? By definiton the custom
+implementations are custom. We've got no way to support them unless we
+cast the gpio number to the gpio handle in that case. That would work
+but it would be mighty ugly.
 
-I have marked the pwm_id as deprecated for now to allow one kernel cycl=
-e for
-external (?) drivers to adopt. We can remove it for 3.9 I think.
-
-I just checked linux-next today and this series is still not there. Do =
-you
-want me to resend it for you? I can rebase the patches on top of linux-=
-next or
-if you have preference on which tree should I use please let me know.
-
->=20
-> Thanks,
-> -Bryan
->=20
->>         u8              active_low;
->>         unsigned        max_brightness;
->>         unsigned        pwm_period_ns;
->> --
->> 1.8.0
->>
-
-
-Thanks,
-P=E9ter
+g.
