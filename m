@@ -1,39 +1,32 @@
-From: Bryan Wu <cooloney@gmail.com>
-Subject: Re: [PATCH v2 1/3] leds: leds-pwm: Convert to use devm_get_pwm
-Date: Tue, 4 Dec 2012 09:34:12 -0800
-Message-ID: <CAK5ve-K69=NqApFTFOZB7Z_KXcRLaWExzbkUhP=GeASMB7JYqw@mail.gmail.com>
-References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com>
- <1352731270-27534-2-git-send-email-peter.ujfalusi@ti.com> <CAK5ve-JDCSSOKHQG-F1RoDii62=-DiPevaD6SafndYVvOgB6Fw@mail.gmail.com>
- <50BCB391.1070305@ti.com> <CAK5ve-+1eQ3mPLAu2Qxw4LjNA85oEtJE-wZcL=YpQ0xBFJ6+hQ@mail.gmail.com>
- <50BDB016.7010908@ti.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH 0/2] sparc: Enable OF functionality for sparc for i2c
+ and spi
+Date: Tue, 04 Dec 2012 16:10:01 -0500 (EST)
+Message-ID: <20121204.161001.1397661306369063374.davem@davemloft.net>
+References: <1354630178-25387-1-git-send-email-andreas@gaisler.com>
+	<CACxGe6sw0zU0NcXw1gjMZka4WyTZgT4heF3r4k0QPHbfcPzbiw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50BDB016.7010908@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6sw0zU0NcXw1gjMZka4WyTZgT4heF3r4k0QPHbfcPzbiw@mail.gmail.com>
+Sender: sparclinux-owner@vger.kernel.org
+To: grant.likely@secretlab.ca
+Cc: andreas@gaisler.com, w.sang@pengutronix.de, sam@ravnborg.org, sparclinux@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net, linux-i2c@vger.kernel.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 4, 2012 at 12:11 AM, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> Hi Bryan,
->
-> On 12/03/2012 07:32 PM, Bryan Wu wrote:
->> On Mon, Dec 3, 2012 at 6:13 AM, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->> Actually, I'm waiting for some feedback from DT maintainers about this
->> new binding. But it looks find to me.
->
-> Would it be possible to have the first (or even better the first two) patch
-> going for 3.8 and we can leave the DT bindings for 3.9?
-> I would like to clean up, fix some of the OMAP related board files for 3.9
-> which would need the patches for the leds-pwm driver itself.
->
+From: Grant Likely <grant.likely@secretlab.ca>
+Date: Tue, 4 Dec 2012 14:44:57 +0000
 
-What's best thing I can do is I can merge these patchset into my
--devel branch, after 3.8 merge window close I will move this -devel
-branch to my for-next branch for 3.9 merge window.
+> On Tue, Dec 4, 2012 at 2:09 PM, Andreas Larsson <andreas@gaisler.com> wrote:
+>> This series removes the dependency on !SPARC for OF_I2C and removes the
+>> depencency of !defined(CONFIG_SPARC) for the function
+>> of_register_spi_devices. I find no reason for these to be unavailable
+>> for sparc.
+>>
+>> I am not sure if these should go through the sparc tree or the
+>> corresponding subsystem trees.
+> 
+> They should go through the subsystem trees.
 
-Does this make sense to you?
-
-Thanks,
--Bryan
+I'll take this into the sparc tree after some build testing, thanks.
