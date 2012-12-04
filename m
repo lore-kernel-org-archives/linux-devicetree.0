@@ -1,79 +1,86 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v7 0/4] Add generic driver for on-chip SRAM
-Date: Tue, 04 Dec 2012 09:53:38 +0100
-Message-ID: <1354611218.3410.11.camel@pizza.hi.pengutronix.de>
-References: <1353680655-21624-1-git-send-email-p.zabel@pengutronix.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [v2 PATCH 01/14] of: add dma-mask binding
+Date: Tue, 04 Dec 2012 07:16:00 -0600
+Message-ID: <50BDF790.3080401@gmail.com>
+References: <1354607640-13229-1-git-send-email-wenyou.yang@atmel.com> <1354607640-13229-2-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1353680655-21624-1-git-send-email-p.zabel@pengutronix.de>
+In-Reply-To: <1354607640-13229-2-git-send-email-wenyou.yang@atmel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+To: Wenyou Yang <wenyou.yang@atmel.com>
+Cc: linux-arm-kernel@lists.infradead.org, JM.Lin@atmel.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Fri, 2012-11-23 at 15:24 +0100, Philipp Zabel wrote:
-> These patches add support to configure on-chip SRAM via device-tree
-> node or platform data and to obtain the resulting genalloc pool from
-> the physical address or a phandle pointing at the device tree node.
-> This allows drivers to allocate SRAM with the genalloc API without
-> hard-coding the genalloc pool pointer.
-
-are there any further comments on this series?
-
-> The on-chip SRAM on i.MX53 and i.MX6q can be registered via device tree
-> and changed to use the simple generic SRAM driver:
+On 12/04/2012 01:53 AM, Wenyou Yang wrote:
+> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 > 
->                 ocram: ocram@00900000 {
->                         compatible = "fsl,imx-ocram", "sram";
->                         reg = <0x00900000 0x3f000>;
->                 };
+> This will allow each device to specify its dma-mask for this we use the
+> coherent_dma_mask as pointer. By default the dma-mask will be set to
+> DMA_BIT_MASK(32).
+> The microblaze architecture hook is drop
 > 
-> A driver that needs to allocate SRAM buffers, like the video processing
-> unit on i.MX53, can retrieve the genalloc pool from a phandle in the
-> device tree using of_get_named_gen_pool(node, "iram", 0) from patch 1:
-> 
->                 vpu@63ff4000 {
->                         /* ... */
->                         iram = <&ocram>;
->                 };
-> 
-> The allocation granularity is hard-coded to 32 bytes for now,
-> until a way to configure it can be agreed upon. There is overhead
-> for bigger SRAMs, where only a much coarser allocation granularity
-> is needed: At 32 bytes minimum allocation size, a 256 KiB SRAM
-> needs a 1 KiB bitmap to track allocations.
-> 
-> Once everybody is ok with it, could the first two patches be merged
-> through the char-misc tree? I'll resend the i.MX and coda patches to
-> the respective lists afterwards.
-
-Arnd, Greg, would you take the first patch "genalloc: add a global pool
-list, allow to find pools by phys address" into the char-misc tree if
-there are no vetoes? Or should I try and get it merged separately,
-first?
-
-regards
-Philipp
-
-> Changes since v6:
->  - Reduced the hard coded allocation granularity to 32 bytes.
-> 
-> regards
-> Philipp
-> 
+> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> Cc: grant.likely@secretlab.ca
+> Cc: rob.herring@calxeda.com
+> Cc: devicetree-discuss@lists.ozlabs.org
 > ---
->  Documentation/devicetree/bindings/misc/sram.txt |   17 ++++
->  arch/arm/boot/dts/imx53.dtsi                    |    5 +
->  arch/arm/boot/dts/imx6q.dtsi                    |    6 ++
->  drivers/media/platform/Kconfig                  |    3 +-
->  drivers/media/platform/coda.c                   |   47 ++++++---
->  drivers/misc/Kconfig                            |    9 ++
->  drivers/misc/Makefile                           |    1 +
->  drivers/misc/sram.c                             |  121 +++++++++++++++++++++++
->  include/linux/genalloc.h                        |   14 +++
->  lib/genalloc.c                                  |   67 +++++++++++++
->  10 files changed, 274 insertions(+), 16 deletions(-)
+
+My same comment as the last version applies. Use dma-ranges.
+
+Rob
+
+>  drivers/of/platform.c |   23 ++++++++++++++++-------
+>  1 file changed, 16 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index b80891b..31ed405 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -130,6 +130,21 @@ void of_device_make_bus_id(struct device *dev)
+>  	dev_set_name(dev, "%s.%d", node->name, magic - 1);
+>  }
+>  
+> +static void of_get_dma_mask(struct device *dev, struct device_node *np)
+> +{
+> +	const __be32 *prop;
+> +	int len;
+> +
+> +	prop = of_get_property(np, "dma-mask", &len);
+> +
+> +	dev->dma_mask = &dev->coherent_dma_mask;
+> +
+> +	if (!prop)
+> +		dev->coherent_dma_mask = DMA_BIT_MASK(32);
+> +	else
+> +		dev->coherent_dma_mask = of_read_number(prop, len / 4);
+> +}
+> +
+>  /**
+>   * of_device_alloc - Allocate and initialize an of_device
+>   * @np: device node to assign to device
+> @@ -171,10 +186,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
+>  		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+>  	}
+>  
+> +	of_get_dma_mask(&dev->dev, np);
+>  	dev->dev.of_node = of_node_get(np);
+> -#if defined(CONFIG_MICROBLAZE)
+> -	dev->dev.dma_mask = &dev->archdata.dma_mask;
+> -#endif
+>  	dev->dev.parent = parent;
+>  
+>  	if (bus_id)
+> @@ -211,10 +224,6 @@ struct platform_device *of_platform_device_create_pdata(
+>  	if (!dev)
+>  		return NULL;
+>  
+> -#if defined(CONFIG_MICROBLAZE)
+> -	dev->archdata.dma_mask = 0xffffffffUL;
+> -#endif
+> -	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+>  	dev->dev.bus = &platform_bus_type;
+>  	dev->dev.platform_data = platform_data;
+>  
+> 
