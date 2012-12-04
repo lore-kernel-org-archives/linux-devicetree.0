@@ -1,60 +1,90 @@
-From: Haojian Zhuang <haojian.zhuang@gmail.com>
-Subject: Re: [PATCH 0/7] mfd: update on max8925 for DT support
-Date: Tue, 4 Dec 2012 15:11:45 +0800
-Message-ID: <CAN1soZzTYjU9nEe1hQWAwz2R0GRfvaQ7HyaMZ3uNxtBV0X14uA@mail.gmail.com>
-References: <1352187305-9660-1-git-send-email-qingx@marvell.com>
-	<CAN1soZzAZ9Od_5jC0ZFdw03c5P9Q+gJQswTwp0M1YWM_ti+9xw@mail.gmail.com>
-	<50B6F8AC.6050307@marvell.com>
+From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: [v2 PATCH 01/14] of: add dma-mask binding
+Date: Tue,  4 Dec 2012 15:53:47 +0800
+Message-ID: <1354607640-13229-2-git-send-email-wenyou.yang@atmel.com>
+References: <1354607640-13229-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50B6F8AC.6050307@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qing Xu <qingx@marvell.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1354607640-13229-1-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: JM.Lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 29, 2012 at 1:54 PM, Qing Xu <qingx@marvell.com> wrote:
-> On 11/23/2012 05:09 PM, Haojian Zhuang wrote:
->>
->> On Tue, Nov 6, 2012 at 3:35 PM, Qing Xu <qingx@marvell.com> wrote:
->>>
->>> From: Qing Xu <qingx@marvell.com>
->>>
->>> 1. add irqdomain for max8925, it is necessary for dt support
->>> 2. bug fix in max8925 mfd devices'irq base and device registry failure
->>> 3. support DT for max8925 mfd devices
->>>
->>> Qing Xu (7):
->>>    mfd: max8925: add irqdomain for dt
->>>    mfd: max8925: fix mfd device register failure
->>>    mfd: max8925: fix onkey driver irq base
->>>    mfd: max8925: support dt for power supply
->>>    mfd: max8925: support dt for regulator
->>>    mfd: max8925: support dt for backlight
->>>    mfd: max8925: add dts
->>>
->>>   arch/arm/boot/dts/mmp2-brownstone.dts |  166
->>> +++++++++++++++++++++++++++++++++
->>>   arch/arm/boot/dts/mmp2.dtsi           |    4 +-
->>>   drivers/input/misc/max8925_onkey.c    |    3 -
->>>   drivers/mfd/max8925-core.c            |  107 +++++++++++++--------
->>>   drivers/mfd/max8925-i2c.c             |   32 ++++++-
->>>   drivers/power/max8925_power.c         |   57 ++++++++++-
->>>   drivers/regulator/max8925-regulator.c |   35 +++++++-
->>>   drivers/video/backlight/max8925_bl.c  |   31 ++++++-
->>>   include/linux/mfd/max8925.h           |   12 ++-
->>>   9 files changed, 389 insertions(+), 58 deletions(-)
->>>
->> No document on devicetree binding?
->
-> I added a new patch of "Documentation: add docs for max8925 dt",
-> please help to review, thanks a lot!
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 
-Acked.
+This will allow each device to specify its dma-mask for this we use the
+coherent_dma_mask as pointer. By default the dma-mask will be set to
+DMA_BIT_MASK(32).
+The microblaze architecture hook is drop
 
-Samuel,
-How do you think about this patch series? From my view, it's ok.
+Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
+Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ drivers/of/platform.c |   23 ++++++++++++++++-------
+ 1 file changed, 16 insertions(+), 7 deletions(-)
 
-Best Regards
-Haojian
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index b80891b..31ed405 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -130,6 +130,21 @@ void of_device_make_bus_id(struct device *dev)
+ 	dev_set_name(dev, "%s.%d", node->name, magic - 1);
+ }
+ 
++static void of_get_dma_mask(struct device *dev, struct device_node *np)
++{
++	const __be32 *prop;
++	int len;
++
++	prop = of_get_property(np, "dma-mask", &len);
++
++	dev->dma_mask = &dev->coherent_dma_mask;
++
++	if (!prop)
++		dev->coherent_dma_mask = DMA_BIT_MASK(32);
++	else
++		dev->coherent_dma_mask = of_read_number(prop, len / 4);
++}
++
+ /**
+  * of_device_alloc - Allocate and initialize an of_device
+  * @np: device node to assign to device
+@@ -171,10 +186,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
+ 		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+ 	}
+ 
++	of_get_dma_mask(&dev->dev, np);
+ 	dev->dev.of_node = of_node_get(np);
+-#if defined(CONFIG_MICROBLAZE)
+-	dev->dev.dma_mask = &dev->archdata.dma_mask;
+-#endif
+ 	dev->dev.parent = parent;
+ 
+ 	if (bus_id)
+@@ -211,10 +224,6 @@ struct platform_device *of_platform_device_create_pdata(
+ 	if (!dev)
+ 		return NULL;
+ 
+-#if defined(CONFIG_MICROBLAZE)
+-	dev->archdata.dma_mask = 0xffffffffUL;
+-#endif
+-	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+ 	dev->dev.bus = &platform_bus_type;
+ 	dev->dev.platform_data = platform_data;
+ 
+-- 
+1.7.9.5
