@@ -1,86 +1,37 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [v2 PATCH 01/14] of: add dma-mask binding
-Date: Tue, 04 Dec 2012 07:16:00 -0600
-Message-ID: <50BDF790.3080401@gmail.com>
-References: <1354607640-13229-1-git-send-email-wenyou.yang@atmel.com> <1354607640-13229-2-git-send-email-wenyou.yang@atmel.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH v2 3/3] mtd: nand: omap2: Support for hardware BCH error
+ correction
+Date: Tue, 4 Dec 2012 13:16:27 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3EA108A9@DBDE01.ent.ti.com>
+References: <1351667307-447-1-git-send-email-avinashphilip@ti.com>
+	 <1351667307-447-4-git-send-email-avinashphilip@ti.com>
+ <1354278480.30168.116.camel@sauron.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1354607640-13229-2-git-send-email-wenyou.yang@atmel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wenyou Yang <wenyou.yang@atmel.com>
-Cc: linux-arm-kernel@lists.infradead.org, JM.Lin@atmel.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1354278480.30168.116.camel@sauron.fi.intel.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "Mohammed, Afzal" <afzal@ti.com>, "tony@atomide.com" <tony@atomide.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2012 01:53 AM, Wenyou Yang wrote:
-> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> 
-> This will allow each device to specify its dma-mask for this we use the
-> coherent_dma_mask as pointer. By default the dma-mask will be set to
-> DMA_BIT_MASK(32).
-> The microblaze architecture hook is drop
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> Cc: grant.likely@secretlab.ca
-> Cc: rob.herring@calxeda.com
-> Cc: devicetree-discuss@lists.ozlabs.org
-> ---
-
-My same comment as the last version applies. Use dma-ranges.
-
-Rob
-
->  drivers/of/platform.c |   23 ++++++++++++++++-------
->  1 file changed, 16 insertions(+), 7 deletions(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index b80891b..31ed405 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -130,6 +130,21 @@ void of_device_make_bus_id(struct device *dev)
->  	dev_set_name(dev, "%s.%d", node->name, magic - 1);
->  }
->  
-> +static void of_get_dma_mask(struct device *dev, struct device_node *np)
-> +{
-> +	const __be32 *prop;
-> +	int len;
-> +
-> +	prop = of_get_property(np, "dma-mask", &len);
-> +
-> +	dev->dma_mask = &dev->coherent_dma_mask;
-> +
-> +	if (!prop)
-> +		dev->coherent_dma_mask = DMA_BIT_MASK(32);
-> +	else
-> +		dev->coherent_dma_mask = of_read_number(prop, len / 4);
-> +}
-> +
->  /**
->   * of_device_alloc - Allocate and initialize an of_device
->   * @np: device node to assign to device
-> @@ -171,10 +186,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
->  		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
->  	}
->  
-> +	of_get_dma_mask(&dev->dev, np);
->  	dev->dev.of_node = of_node_get(np);
-> -#if defined(CONFIG_MICROBLAZE)
-> -	dev->dev.dma_mask = &dev->archdata.dma_mask;
-> -#endif
->  	dev->dev.parent = parent;
->  
->  	if (bus_id)
-> @@ -211,10 +224,6 @@ struct platform_device *of_platform_device_create_pdata(
->  	if (!dev)
->  		return NULL;
->  
-> -#if defined(CONFIG_MICROBLAZE)
-> -	dev->archdata.dma_mask = 0xffffffffUL;
-> -#endif
-> -	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
->  	dev->dev.bus = &platform_bus_type;
->  	dev->dev.platform_data = platform_data;
->  
-> 
+T24gRnJpLCBOb3YgMzAsIDIwMTIgYXQgMTc6NTg6MDAsIEFydGVtIEJpdHl1dHNraXkgd3JvdGU6
+DQo+IE9uIFdlZCwgMjAxMi0xMC0zMSBhdCAxMjozOCArMDUzMCwgUGhpbGlwLCBBdmluYXNoIHdy
+b3RlOg0KPiA+ICtzdGF0aWMgaW50IGVyYXNlZF9zZWN0b3JfYml0ZmxpcHModV9jaGFyICpkYXRh
+LCB1X2NoYXIgKm9vYiwNCj4gPiArICAgICAgICAgICAgICAgc3RydWN0IG9tYXBfbmFuZF9pbmZv
+ICppbmZvKQ0KPiA+ICt7DQo+ID4gKyAgICAgICBpbnQgZmxpcF9iaXRzID0gMCwgaTsNCj4gPiAr
+DQo+ID4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgaW5mby0+bmFuZC5lY2Muc2l6ZTsgaSsrKSB7
+DQo+ID4gKyAgICAgICAgICAgICAgIGZsaXBfYml0cyArPSBod2VpZ2h0OCh+ZGF0YVtpXSk7DQo+
+ID4gKyAgICAgICAgICAgICAgIGlmIChmbGlwX2JpdHMgPiBpbmZvLT5uYW5kLmVjYy5zdHJlbmd0
+aCkNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gMDsNCj4gPiArICAgICAgIH0N
+Cj4gPiArDQo+ID4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgaW5mby0+bmFuZC5lY2MuYnl0ZXMg
+LSAxOyBpKyspIHsNCj4gPiArICAgICAgICAgICAgICAgZmxpcF9iaXRzICs9IGh3ZWlnaHQ4KH5v
+b2JbaV0pOw0KPiA+ICsgICAgICAgICAgICAgICBpZiAoZmxpcF9iaXRzID4gaW5mby0+bmFuZC5l
+Y2Muc3RyZW5ndGgpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIDA7DQo+ID4g
+KyAgICAgICB9DQo+IA0KPiBXaHkgZG8geW91IG5lZWQgdGhlIHNlY29uZCBmb3IgbG9vcD8NCg0K
+QkNIIGVjYyBpcyBzZWxmIHByb3RlY3RlZCAmIGNhbiBjb3JyZWN0IGJpdCBmbGlwcyBpbiBlY2Mg
+Ynl0ZXMuDQpTbyBoZXJlIGNoZWNraW5nIGJpdCBmbGlwcyBpbiByZWFkX2VjYy4gSSB3aWxsIHJl
+bmFtZSB2YXJpYWJsZQ0KIm9vYiIgdG8gInJlYWRfZWNjIg0KDQpUaGFua3MNCkF2aW5hc2gNCg0K
+PiANCj4gLS0gDQo+IEJlc3QgUmVnYXJkcywNCj4gQXJ0ZW0gQml0eXV0c2tpeQ0KPiANCg0K
