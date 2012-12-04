@@ -1,48 +1,25 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: DT and probeable devices...
-Date: Tue, 4 Dec 2012 14:05:33 +0000
-Message-ID: <CACxGe6vDNu04HtHVLBS6fJ5GDVfGb1dD7fq-HPh+vmcc+FWxcQ@mail.gmail.com>
-References: <50BDF6B5.7070306@codethink.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50BDF6B5.7070306-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/2] sparc: Enable OF functionality for sparc for i2c and spi
+Date: Tue,  4 Dec 2012 15:09:36 +0100
+Message-ID: <1354630178-25387-1-git-send-email-andreas@gaisler.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 4, 2012 at 1:12 PM, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
-> Hi,
->
-> Im working on the OMAP5 pandaboard, and have run across a corner case.
->
-> the Ethernet is USB attached (and thus discovered / probed by the USB
-> controller).
->
-> However it has a reset line thats a GPIO on the board.
->
-> Is DT supposed to be able to cover cases like this? If so, how?
+This series removes the dependency on !SPARC for OF_I2C and removes the
+depencency of !defined(CONFIG_SPARC) for the function
+of_register_spi_devices. I find no reason for these to be unavailable
+for sparc.
 
-USB devices can be described as child nodes of the USB bus, though
-they typically aren't because as you mention the USB bus is
-discoverable. There is a binding for USB devices[1]. I don't believe
-the kernel currently does anything to match USB dt nodes with a
-usb_device, but it wouldn't be hard to hook up. You'd probably need a
-hook in usb_new_device() to attach the of_node to the usb_device if it
-exists. Then the driver would have the ability to query the DT node
-for things like gpios.
+I am not sure if these should go through the sparc tree or the
+corresponding subsystem trees.
 
-[1] http://www.openfirmware.org/1275/bindings/usb/usb-1_0.ps
+Andreas Larsson (2):
+  of_i2c: sparc: Allow OF_I2C for sparc
+  spi: sparc: Allow of_register_spi_devices for sparc
 
-g.
+ drivers/of/Kconfig |    2 +-
+ drivers/spi/spi.c  |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
