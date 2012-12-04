@@ -1,32 +1,60 @@
 From: Haojian Zhuang <haojian.zhuang@gmail.com>
-Subject: Re: [PATCH] Documentation: add docs for max8925 dt
-Date: Tue, 4 Dec 2012 15:10:39 +0800
-Message-ID: <CAN1soZyVCV6RWX4yq7BSuP2UcpBMYDuncfo9o5QDNW0o2W2rSQ@mail.gmail.com>
-References: <1354168359-19459-1-git-send-email-qingx@marvell.com>
+Subject: Re: [PATCH 0/7] mfd: update on max8925 for DT support
+Date: Tue, 4 Dec 2012 15:11:45 +0800
+Message-ID: <CAN1soZzTYjU9nEe1hQWAwz2R0GRfvaQ7HyaMZ3uNxtBV0X14uA@mail.gmail.com>
+References: <1352187305-9660-1-git-send-email-qingx@marvell.com>
+	<CAN1soZzAZ9Od_5jC0ZFdw03c5P9Q+gJQswTwp0M1YWM_ti+9xw@mail.gmail.com>
+	<50B6F8AC.6050307@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1354168359-19459-1-git-send-email-qingx@marvell.com>
-Sender: linux-doc-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50B6F8AC.6050307@marvell.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Qing Xu <qingx@marvell.com>
-Cc: rob@landley.net, linux-doc@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, cxie4@marvell.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Nov 29, 2012 at 1:52 PM, Qing Xu <qingx@marvell.com> wrote:
-> From: Qing Xu <qingx@marvell.com>
+On Thu, Nov 29, 2012 at 1:54 PM, Qing Xu <qingx@marvell.com> wrote:
+> On 11/23/2012 05:09 PM, Haojian Zhuang wrote:
+>>
+>> On Tue, Nov 6, 2012 at 3:35 PM, Qing Xu <qingx@marvell.com> wrote:
+>>>
+>>> From: Qing Xu <qingx@marvell.com>
+>>>
+>>> 1. add irqdomain for max8925, it is necessary for dt support
+>>> 2. bug fix in max8925 mfd devices'irq base and device registry failure
+>>> 3. support DT for max8925 mfd devices
+>>>
+>>> Qing Xu (7):
+>>>    mfd: max8925: add irqdomain for dt
+>>>    mfd: max8925: fix mfd device register failure
+>>>    mfd: max8925: fix onkey driver irq base
+>>>    mfd: max8925: support dt for power supply
+>>>    mfd: max8925: support dt for regulator
+>>>    mfd: max8925: support dt for backlight
+>>>    mfd: max8925: add dts
+>>>
+>>>   arch/arm/boot/dts/mmp2-brownstone.dts |  166
+>>> +++++++++++++++++++++++++++++++++
+>>>   arch/arm/boot/dts/mmp2.dtsi           |    4 +-
+>>>   drivers/input/misc/max8925_onkey.c    |    3 -
+>>>   drivers/mfd/max8925-core.c            |  107 +++++++++++++--------
+>>>   drivers/mfd/max8925-i2c.c             |   32 ++++++-
+>>>   drivers/power/max8925_power.c         |   57 ++++++++++-
+>>>   drivers/regulator/max8925-regulator.c |   35 +++++++-
+>>>   drivers/video/backlight/max8925_bl.c  |   31 ++++++-
+>>>   include/linux/mfd/max8925.h           |   12 ++-
+>>>   9 files changed, 389 insertions(+), 58 deletions(-)
+>>>
+>> No document on devicetree binding?
 >
-> add docs for dt of max8925-mfd, max8925-backlight, and
-> max8925-battery
->
-> Signed-off-by: Qing Xu <qingx@marvell.com>
-> ---
->  Documentation/devicetree/bindings/mfd/max8925.txt  |   64 ++++++++++++++++++++
->  .../bindings/power_supply/max8925_batter.txt       |   18 ++++++
->  .../bindings/video/backlight/max8925-backlight.txt |   10 +++
->  3 files changed, 92 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max8925.txt
->  create mode 100644 Documentation/devicetree/bindings/power_supply/max8925_batter.txt
->  create mode 100644 Documentation/devicetree/bindings/video/backlight/max8925-backlight.txt
->
+> I added a new patch of "Documentation: add docs for max8925 dt",
+> please help to review, thanks a lot!
 
-Acked-by: Haojian Zhuang <haojian.zhuang@gmail.com>
+Acked.
+
+Samuel,
+How do you think about this patch series? From my view, it's ok.
+
+Best Regards
+Haojian
