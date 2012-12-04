@@ -1,7 +1,8 @@
 From: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Subject: [v2 PATCH 01/14] of: add dma-mask binding
-Date: Tue,  4 Dec 2012 15:53:47 +0800
-Message-ID: <1354607640-13229-2-git-send-email-wenyou.yang@atmel.com>
+Subject: [v2 PATCH 02/14] of_spi: add generic binding support to specify cs
+ gpio
+Date: Tue,  4 Dec 2012 15:53:48 +0800
+Message-ID: <1354607640-13229-3-git-send-email-wenyou.yang@atmel.com>
 References: <1354607640-13229-1-git-send-email-wenyou.yang@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,72 +20,200 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: JM.Lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: JM.Lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
 
-This will allow each device to specify its dma-mask for this we use the
-coherent_dma_mask as pointer. By default the dma-mask will be set to
-DMA_BIT_MASK(32).
-The microblaze architecture hook is drop
+This will allow to use gpio for chip select with no modification in the
+driver binding
+
+When use the cs-gpios, the gpio number will be passed via the cs_gpio field
+and the number of chip select will automatically increased.
 
 Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
 Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
+Cc: richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 ---
- drivers/of/platform.c |   23 ++++++++++++++++-------
- 1 file changed, 16 insertions(+), 7 deletions(-)
+Hi, Richard,
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index b80891b..31ed405 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -130,6 +130,21 @@ void of_device_make_bus_id(struct device *dev)
- 	dev_set_name(dev, "%s.%d", node->name, magic - 1);
- }
+This patch based on the original patch from Jean-Christophe, 
+ 	[PATCH] of_spi: add generic binding support to specify cs gpio
+and merge the patch from Richard Genoud,
+	[PATCH] [BUG] SPI: array out of bound => no CS
+
+Could you sign your signature in this patch?
+
+Best Regards,
+Wenyou Yang
+
+ Documentation/devicetree/bindings/spi/spi-bus.txt |    6 +++
+ drivers/spi/spi.c                                 |   55 +++++++++++++++++++--
+ include/linux/spi/spi.h                           |    3 ++
+ 3 files changed, 61 insertions(+), 3 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+index d2c33d0..7f59ae30 100644
+--- a/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -12,6 +12,7 @@ The SPI master node requires the following properties:
+ - #size-cells     - should be zero.
+ - compatible      - name of SPI bus controller following generic names
+     		recommended practice.
++- cs-gpios	  - (optional) gpios chip select.
+ No other properties are required in the SPI bus node.  It is assumed
+ that a driver for an SPI bus device will understand that it is an SPI bus.
+ However, the binding does not attempt to define the specific method for
+@@ -21,6 +22,8 @@ assumption that board specific platform code will be used to manage
+ chip selects.  Individual drivers can define additional properties to
+ support describing the chip select layout.
  
-+static void of_get_dma_mask(struct device *dev, struct device_node *np)
-+{
-+	const __be32 *prop;
-+	int len;
++If cs-gpios is used the number of chip select will automatically increased.
 +
-+	prop = of_get_property(np, "dma-mask", &len);
+ Optional property:
+ - num-cs : total number of chipselects
+ 
+@@ -37,6 +40,9 @@ contain the following properties.
+ - spi-cs-high     - (optional) Empty property indicating device requires
+     		chip select active high
+ 
++If a gpio chipselect is used for the SPI slave the gpio number will be passed
++via the controller_data
 +
-+	dev->dma_mask = &dev->coherent_dma_mask;
-+
-+	if (!prop)
-+		dev->coherent_dma_mask = DMA_BIT_MASK(32);
-+	else
-+		dev->coherent_dma_mask = of_read_number(prop, len / 4);
-+}
-+
- /**
-  * of_device_alloc - Allocate and initialize an of_device
-  * @np: device node to assign to device
-@@ -171,10 +186,8 @@ struct platform_device *of_device_alloc(struct device_node *np,
- 		WARN_ON(of_irq_to_resource_table(np, res, num_irq) != num_irq);
+ SPI example for an MPC5200 SPI bus:
+ 	spi@f00 {
+ 		#address-cells = <1>;
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 84c2861..74e6577 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -30,6 +30,7 @@
+ #include <linux/slab.h>
+ #include <linux/mod_devicetable.h>
+ #include <linux/spi/spi.h>
++#include <linux/of_gpio.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/export.h>
+ #include <linux/sched.h>
+@@ -327,6 +328,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
+ 	spi->dev.parent = &master->dev;
+ 	spi->dev.bus = &spi_bus_type;
+ 	spi->dev.release = spidev_release;
++	spi->cs_gpio = -EINVAL;
+ 	device_initialize(&spi->dev);
+ 	return spi;
+ }
+@@ -344,15 +346,16 @@ EXPORT_SYMBOL_GPL(spi_alloc_device);
+ int spi_add_device(struct spi_device *spi)
+ {
+ 	static DEFINE_MUTEX(spi_add_lock);
+-	struct device *dev = spi->master->dev.parent;
++	struct spi_master *master = spi->master;
++	struct device *dev = master->dev.parent;
+ 	struct device *d;
+ 	int status;
+ 
+ 	/* Chipselects are numbered 0..max; validate. */
+-	if (spi->chip_select >= spi->master->num_chipselect) {
++	if (spi->chip_select >= master->num_chipselect) {
+ 		dev_err(dev, "cs%d >= max %d\n",
+ 			spi->chip_select,
+-			spi->master->num_chipselect);
++			master->num_chipselect);
+ 		return -EINVAL;
  	}
  
-+	of_get_dma_mask(&dev->dev, np);
- 	dev->dev.of_node = of_node_get(np);
--#if defined(CONFIG_MICROBLAZE)
--	dev->dev.dma_mask = &dev->archdata.dma_mask;
--#endif
- 	dev->dev.parent = parent;
+@@ -376,6 +379,9 @@ int spi_add_device(struct spi_device *spi)
+ 		goto done;
+ 	}
  
- 	if (bus_id)
-@@ -211,10 +224,6 @@ struct platform_device *of_platform_device_create_pdata(
++	if (master->cs_gpios)
++		spi->cs_gpio = master->cs_gpios[spi->chip_select];
++
+ 	/* Drivers may modify this initial i/o setup, but will
+ 	 * normally rely on the device being setup.  Devices
+ 	 * using SPI_CS_HIGH can't coexist well otherwise...
+@@ -946,6 +952,45 @@ struct spi_master *spi_alloc_master(struct device *dev, unsigned size)
+ }
+ EXPORT_SYMBOL_GPL(spi_alloc_master);
+ 
++#ifdef CONFIG_OF
++static int of_spi_register_master(struct spi_master *master)
++{
++	int nb, i;
++	int *cs;
++	struct device_node *np = master->dev.of_node;
++
++	if (!np)
++		return 0;
++
++	nb = of_gpio_named_count(np, "cs-gpios");
++
++	if (nb < 1)
++		return 0;
++
++	cs = devm_kzalloc(&master->dev,
++			  sizeof(int) * (master->num_chipselect + nb),
++			  GFP_KERNEL);
++	master->cs_gpios = cs;
++
++	if (!master->cs_gpios)
++		return -ENOMEM;
++
++	memset(cs, -EINVAL, master->num_chipselect);
++	cs += master->num_chipselect;
++	master->num_chipselect += nb;
++
++	for (i = 0; i < nb; i++)
++		cs[i] = of_get_named_gpio(np, "cs-gpios", i);
++
++	return 0;
++}
++#else
++static int of_spi_register_master(struct spi_master *master)
++{
++	return 0;
++}
++#endif
++
+ /**
+  * spi_register_master - register SPI master controller
+  * @master: initialized master, originally from spi_alloc_master()
+@@ -977,6 +1022,10 @@ int spi_register_master(struct spi_master *master)
  	if (!dev)
- 		return NULL;
+ 		return -ENODEV;
  
--#if defined(CONFIG_MICROBLAZE)
--	dev->archdata.dma_mask = 0xffffffffUL;
--#endif
--	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
- 	dev->dev.bus = &platform_bus_type;
- 	dev->dev.platform_data = platform_data;
++	status = of_spi_register_master(master);
++	if (status)
++		return status;
++
+ 	/* even if it's just one always-selected device, there must
+ 	 * be at least one chipselect
+ 	 */
+diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+index fa702ae..f629189 100644
+--- a/include/linux/spi/spi.h
++++ b/include/linux/spi/spi.h
+@@ -90,6 +90,7 @@ struct spi_device {
+ 	void			*controller_state;
+ 	void			*controller_data;
+ 	char			modalias[SPI_NAME_SIZE];
++	int			cs_gpio;	/* chip select gpio */
  
+ 	/*
+ 	 * likely need more hooks for more protocol options affecting how
+@@ -362,6 +363,8 @@ struct spi_master {
+ 	int (*transfer_one_message)(struct spi_master *master,
+ 				    struct spi_message *mesg);
+ 	int (*unprepare_transfer_hardware)(struct spi_master *master);
++	/* gpio chip select */
++	int			*cs_gpios;
+ };
+ 
+ static inline void *spi_master_get_devdata(struct spi_master *master)
 -- 
 1.7.9.5
