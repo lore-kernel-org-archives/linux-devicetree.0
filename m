@@ -1,164 +1,84 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCHv15 0/7] of: add display helper
-Date: Wed, 5 Dec 2012 10:00:16 +0100
-Message-ID: <20121205090016.GA22014@pengutronix.de>
-References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
- <CAL1wa8fJ-mCsQFFo5wMLDRcUoOyWvTvFDLKsrrG9k-mxQTsTbg@mail.gmail.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v3 1/3] mtd: nand: omap2: Update nerrors using ecc.strength
+Date: Wed, 5 Dec 2012 17:33:37 +0530
+Message-ID: <50BF3819.9010200@ti.com>
+References: <1354189595-12784-1-git-send-email-avinashphilip@ti.com> <1354189595-12784-2-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL1wa8fJ-mCsQFFo5wMLDRcUoOyWvTvFDLKsrrG9k-mxQTsTbg@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Leela Krishna Amudala <l.krishna@samsung.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1354189595-12784-2-git-send-email-avinashphilip@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, afzal@ti.com, tony@atomide.com, broonie@opensource.wolfsonmicro.com, rmk+kernel@arm.linux.org.uk, gregkh@linuxfoundation.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gururaja.hebbar@ti.com, ivan.djelic@parrot.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Leela,
+Hi Avinash,
 
-unfortunately, nothing new as of yet. I have to work on other stuff at the moment.
+On 11/29/2012 5:16 PM, Philip, Avinash wrote:
+> Update number of errors using nand ecc strength.
+> Also add macro definitions BCH8_ERROR_MAX & BCH4_ERROR_MAX
 
-Regards,
-Steffen
+Can you please describe why the original method of setting nerrors was
+incorrect? Was it causing any issues in any particular configuration?
+Mentioning this will help maintainers assign priority to your patch. If
+this is a real bug affecting existing platforms, then there is a chance
+this patch can get into v3.7 (or at least into v3.8-rc1).
 
+Like Peter who commented on this before, I am not a fan of using macros
+for self-describing constants - especially when you end up using the
+same numbers inside the macro name itself. No need to resend any thing
+just for this, you can wait to see if the maintainers are okay with it.
 
-On Wed, Dec 05, 2012 at 01:25:30PM +0530, Leela Krishna Amudala wrote:
-> Hello Steffen,
+Thanks,
+Sekhar
+
 > 
-> Any update on version 16 ?
+> Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
+> ---
+> :100644 100644 359293e... 7e61dac... M	drivers/mtd/nand/omap2.c
+>  drivers/mtd/nand/omap2.c |   12 ++++++++----
+>  1 files changed, 8 insertions(+), 4 deletions(-)
 > 
-> Best Wishes,
-> Leela Krishna Amudala.
+> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> index 359293e..7e61dac 100644
+> --- a/drivers/mtd/nand/omap2.c
+> +++ b/drivers/mtd/nand/omap2.c
+> @@ -118,6 +118,9 @@
+>  
+>  #define OMAP24XX_DMA_GPMC		4
+>  
+> +#define BCH8_MAX_ERROR		8	/* upto 8 bit correctable */
+> +#define BCH4_MAX_ERROR		4	/* upto 4 bit correctable */
+> +
+>  /* oob info generated runtime depending on ecc algorithm and layout selected */
+>  static struct nand_ecclayout omap_oobinfo;
+>  /* Define some generic bad / good block scan pattern which are used
+> @@ -1042,7 +1045,7 @@ static void omap3_enable_hwecc_bch(struct mtd_info *mtd, int mode)
+>  	struct nand_chip *chip = mtd->priv;
+>  	u32 val;
+>  
+> -	nerrors = (info->nand.ecc.bytes == 13) ? 8 : 4;
+> +	nerrors = info->nand.ecc.strength;
+>  	dev_width = (chip->options & NAND_BUSWIDTH_16) ? 1 : 0;
+>  	nsectors = 1;
+>  	/*
+> @@ -1219,13 +1222,14 @@ static int omap3_init_bch(struct mtd_info *mtd, int ecc_opt)
+>  	struct omap_nand_info *info = container_of(mtd, struct omap_nand_info,
+>  						   mtd);
+>  #ifdef CONFIG_MTD_NAND_OMAP_BCH8
+> -	const int hw_errors = 8;
+> +	const int hw_errors = BCH8_MAX_ERROR;
+>  #else
+> -	const int hw_errors = 4;
+> +	const int hw_errors = BCH4_MAX_ERROR;
+>  #endif
+>  	info->bch = NULL;
+>  
+> -	max_errors = (ecc_opt == OMAP_ECC_BCH8_CODE_HW) ? 8 : 4;
+> +	max_errors = (ecc_opt == OMAP_ECC_BCH8_CODE_HW) ?
+> +		BCH8_MAX_ERROR : BCH4_MAX_ERROR;
+>  	if (max_errors != hw_errors) {
+>  		pr_err("cannot configure %d-bit BCH ecc, only %d-bit supported",
+>  		       max_errors, hw_errors);
 > 
-> On Mon, Nov 26, 2012 at 2:37 PM, Steffen Trumtrar
-> <s.trumtrar@pengutronix.de> wrote:
-> > Hi!
-> >
-> > Changes since v14:
-> >         - fix "const struct *" warning
-> >                 (reported by: Leela Krishna Amudala <l.krishna@samsung.com>)
-> >         - return -EINVAL when htotal or vtotal are zero
-> >         - remove unreachable code in of_get_display_timings
-> >         - include headers in .c files and not implicit in .h
-> >         - sort includes alphabetically
-> >         - fix lower/uppercase in binding documentation
-> >         - rebase onto v3.7-rc7
-> >
-> > Changes since v13:
-> >         - fix "const struct *" warning
-> >                 (reported by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>)
-> >         - prevent division by zero in fb_videomode_from_videomode
-> >
-> > Changes since v12:
-> >         - rename struct display_timing to via_display_timing in via subsystem
-> >         - fix refreshrate calculation
-> >         - fix "const struct *" warnings
-> >                 (reported by: Manjunathappa, Prakash <prakash.pm@ti.com>)
-> >         - some CodingStyle fixes
-> >         - rewrite parts of commit messages and display-timings.txt
-> >         - let display_timing_get_value get all values instead of just typical
-> >
-> > Changes since v11:
-> >         - make pointers const where applicable
-> >         - add reviewed-by Laurent Pinchart
-> >
-> > Changes since v10:
-> >         - fix function name (drm_)display_mode_from_videomode
-> >         - add acked-by, reviewed-by, tested-by
-> >
-> > Changes since v9:
-> >         - don't leak memory when previous timings were correct
-> >         - CodingStyle fixes
-> >         - move blank lines around
-> >
-> > Changes since v8:
-> >         - fix memory leaks
-> >         - change API to be more consistent (foo_from_bar(struct bar, struct foo))
-> >         - include headers were necessary
-> >         - misc minor bufixe
-> >
-> > Changes since v7:
-> >         - move of_xxx to drivers/video
-> >         - remove non-binding documentation from display-timings.txt
-> >         - squash display_timings and videomode in one patch
-> >         - misc minor fixes
-> >
-> > Changes since v6:
-> >         - get rid of some empty lines etc.
-> >         - move functions to their subsystems
-> >         - split of_ from non-of_ functions
-> >         - add at least some kerneldoc to some functions
-> >
-> > Changes since v5:
-> >         - removed all display stuff and just describe timings
-> >
-> > Changes since v4:
-> >         - refactored functions
-> >
-> > Changes since v3:
-> >         - print error messages
-> >         - free alloced memory
-> >         - general cleanup
-> >
-> > Changes since v2:
-> >         - use hardware-near property-names
-> >         - provide a videomode structure
-> >         - allow ranges for all properties (<min,typ,max>)
-> >         - functions to get display_mode or fb_videomode
-> >
-> >
-> > Steffen Trumtrar (7):
-> >   viafb: rename display_timing to via_display_timing
-> >   video: add display_timing and videomode
-> >   video: add of helper for display timings/videomode
-> >   fbmon: add videomode helpers
-> >   fbmon: add of_videomode helpers
-> >   drm_modes: add videomode helpers
-> >   drm_modes: add of_videomode helpers
-> >
-> >  .../devicetree/bindings/video/display-timing.txt   |  107 ++++++++++
-> >  drivers/gpu/drm/drm_modes.c                        |   70 +++++++
-> >  drivers/video/Kconfig                              |   21 ++
-> >  drivers/video/Makefile                             |    4 +
-> >  drivers/video/display_timing.c                     |   24 +++
-> >  drivers/video/fbmon.c                              |   93 +++++++++
-> >  drivers/video/of_display_timing.c                  |  219 ++++++++++++++++++++
-> >  drivers/video/of_videomode.c                       |   54 +++++
-> >  drivers/video/via/hw.c                             |    6 +-
-> >  drivers/video/via/hw.h                             |    2 +-
-> >  drivers/video/via/lcd.c                            |    2 +-
-> >  drivers/video/via/share.h                          |    2 +-
-> >  drivers/video/via/via_modesetting.c                |    8 +-
-> >  drivers/video/via/via_modesetting.h                |    6 +-
-> >  drivers/video/videomode.c                          |   44 ++++
-> >  include/drm/drmP.h                                 |   13 ++
-> >  include/linux/display_timing.h                     |  104 ++++++++++
-> >  include/linux/fb.h                                 |   12 ++
-> >  include/linux/of_display_timing.h                  |   20 ++
-> >  include/linux/of_videomode.h                       |   18 ++
-> >  include/linux/videomode.h                          |   54 +++++
-> >  21 files changed, 870 insertions(+), 13 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/video/display-timing.txt
-> >  create mode 100644 drivers/video/display_timing.c
-> >  create mode 100644 drivers/video/of_display_timing.c
-> >  create mode 100644 drivers/video/of_videomode.c
-> >  create mode 100644 drivers/video/videomode.c
-> >  create mode 100644 include/linux/display_timing.h
-> >  create mode 100644 include/linux/of_display_timing.h
-> >  create mode 100644 include/linux/of_videomode.h
-> >  create mode 100644 include/linux/videomode.h
-> >
-> > --
-> > 1.7.10.4
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-fbdev" in
-> > the body of a message to majordomo@vger.kernel.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
