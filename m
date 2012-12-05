@@ -1,34 +1,34 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
-Date: Wed, 5 Dec 2012 18:54:29 +0530
-Message-ID: <CAKohponvxHhKTtA5ipqmk4QkGdDH9YatT=7rfBqH_OJJRiMBOw@mail.gmail.com>
-References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
-	<121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
-	<20121130105731.GN3176@sortiz-mobl>
-	<20121130154542.GG23648@gmail.com>
-	<CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
-	<CAKohpom-9fFwvCQXdJNXELZC1rfDT0-N+XoYQdTOG2Mo=SyiYw@mail.gmail.com>
-	<20121205131904.GJ2718@gmail.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH v2 1/3] leds: leds-pwm: Convert to use devm_get_pwm
+Date: Wed, 5 Dec 2012 16:36:36 +0100
+Message-ID: <50BF6A04.4040204@ti.com>
+References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com> <1352731270-27534-2-git-send-email-peter.ujfalusi@ti.com> <CAK5ve-JDCSSOKHQG-F1RoDii62=-DiPevaD6SafndYVvOgB6Fw@mail.gmail.com> <50BCB391.1070305@ti.com> <CAK5ve-+1eQ3mPLAu2Qxw4LjNA85oEtJE-wZcL=YpQ0xBFJ6+hQ@mail.gmail.com> <50BDB016.7010908@ti.com> <CAK5ve-K69=NqApFTFOZB7Z_KXcRLaWExzbkUhP=GeASMB7JYqw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121205131904.GJ2718@gmail.com>
+In-Reply-To: <CAK5ve-K69=NqApFTFOZB7Z_KXcRLaWExzbkUhP=GeASMB7JYqw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: grant.likely@secretlab.ca, Samuel Ortiz <sameo@linux.intel.com>, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
+To: Bryan Wu <cooloney@gmail.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 5 December 2012 18:49, Lee Jones <lee.jones@linaro.org> wrote:
->> Ping!!!
->
-> Documentation/development-process/2.Process:
->
-> - Avoid top-posting (the practice of putting your answer above the quoted
->   text you are responding to).  It makes your response harder to read and
->   makes a poor impression.
+On 12/04/2012 06:34 PM, Bryan Wu wrote:
+> What's best thing I can do is I can merge these patchset into my
+> -devel branch, after 3.8 merge window close I will move this -devel
+> branch to my for-next branch for 3.9 merge window.
+>=20
+> Does this make sense to you?
 
-Yes, i know that. Did that in hurry, as it was just an ping and wasn't answering
-any question.
+Not sure if I can get changes related to leds-pwm through linux-omap in=
+ this
+way. The practice is that l-o should be 'in a working condition' alone =
+-
+without linux-next.
 
---
-viresh
+But I'll find something else while waiting for 3.10 to clean up the oma=
+p board
+files related to this.
+
+--=20
+P=E9ter
