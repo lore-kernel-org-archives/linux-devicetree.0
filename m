@@ -1,103 +1,192 @@
-From: Daniel Mack <zonque@gmail.com>
-Subject: Re: [PATCH v6 4/5] ARM: OMAP: gpmc: enable hwecc for AM33xx SoCs
-Date: Wed, 05 Dec 2012 14:04:48 +0100
-Message-ID: <50BF4670.8070602@gmail.com>
-References: <1354204892-22762-1-git-send-email-zonque@gmail.com> <1354204892-22762-5-git-send-email-zonque@gmail.com> <50B7BE9C.6040506@ti.com> <50B7C677.7090504@ti.com> <50B7C8BE.7050002@gmail.com> <50B7CCB1.6000506@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
+Date: Wed, 5 Dec 2012 13:19:04 +0000
+Message-ID: <20121205131904.GJ2718@gmail.com>
+References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
+ <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
+ <20121130105731.GN3176@sortiz-mobl>
+ <20121130154542.GG23648@gmail.com>
+ <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
+ <CAKohpom-9fFwvCQXdJNXELZC1rfDT0-N+XoYQdTOG2Mo=SyiYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50B7CCB1.6000506@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: x0148406@ti.com, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, rob.herring@calxeda.com, avinashphilip@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohpom-9fFwvCQXdJNXELZC1rfDT0-N+XoYQdTOG2Mo=SyiYw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: grant.likely@secretlab.ca, Samuel Ortiz <sameo@linux.intel.com>, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 29.11.2012 21:59, Jon Hunter wrote:
-> On 11/29/2012 02:42 PM, Daniel Mack wrote:
->> On 29.11.2012 21:32, Jon Hunter wrote:
->>>
->>> On 11/29/2012 01:59 PM, Jon Hunter wrote:
->>>>
->>>> On 11/29/2012 10:01 AM, Daniel Mack wrote:
->>>>> The am33xx is capable of handling bch error correction modes, so
->>>>> enable that feature in the driver.
->>>>>
->>>>> Signed-off-by: Daniel Mack <zonque@gmail.com>
->>>>> ---
->>>>>  arch/arm/mach-omap2/gpmc-nand.c | 9 +++++----
->>>>>  1 file changed, 5 insertions(+), 4 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
->>>>> index f9f23a2..c8a72ba 100644
->>>>> --- a/arch/arm/mach-omap2/gpmc-nand.c
->>>>> +++ b/arch/arm/mach-omap2/gpmc-nand.c
->>>>> @@ -92,17 +92,18 @@ static int omap2_nand_gpmc_retime(
->>>>>  static bool gpmc_hwecc_bch_capable(enum omap_ecc ecc_opt)
->>>>>  {
->>>>>  	/* support only OMAP3 class */
->>>>> -	if (!cpu_is_omap34xx()) {
->>>>> +	if (!cpu_is_omap34xx() && !soc_is_am33xx()) {
->>>>>  		pr_err("BCH ecc is not supported on this CPU\n");
->>>>>  		return 0;
->>>>>  	}
->>>>>  
->>>>>  	/*
->>>>> -	 * For now, assume 4-bit mode is only supported on OMAP3630 ES1.x, x>=1.
->>>>> -	 * Other chips may be added if confirmed to work.
->>>>> +	 * For now, assume 4-bit mode is only supported on OMAP3630 ES1.x, x>=1
->>>>> +	 * and AM33xx derivates. Other chips may be added if confirmed to work.
->>>>>  	 */
->>>>>  	if ((ecc_opt == OMAP_ECC_BCH4_CODE_HW) &&
->>>>> -	    (!cpu_is_omap3630() || (GET_OMAP_REVISION() == 0))) {
->>>>> +	    (!cpu_is_omap3630() || (GET_OMAP_REVISION() == 0)) &&
->>>>> +	    (!soc_is_am33xx())) {
->>>>>  		pr_err("BCH 4-bit mode is not supported on this CPU\n");
->>>>>  		return 0;
->>>>>  	}
->>>>
->>>> Sorry I should have seen this earlier. Ideally, this type of thing
->>>> should be reflected by the device-tree/platform-data and we should get
->>>> away from these cpu_is_xxxx macros for hardware features (where we can).
->>>> Furthermore, we need to avoid including plat-omap/gpmc.h in drivers for
->>>> the single zImage work (I see the omap nand driver is including gpmc.h).
->>>>
->>>> Tony, should this be addressed now or can we live this for the minute
->>>> and fix-up later?
->>>
->>> Actually, I see that you do read the ecc mode from DT, so is this really
->>> needed? It would be good to eliminate this.
->>
->> The ecc mode is read from DT, right. But the gpmc bindings can be used
->> for many OMAP derivates in the future, and this check is there to make
->> sure the configured settings are supported by the hardware after all,
->> just like if the ecc mode would have been passed as static platform
->> data. So what is it exactly that you want to get rid of?
-> 
-> The above function.
-> 
-> If there is a hardware bug that prevents us from using the hw-ecc mode
-> that is supported (which is the case for omap3630 es1.0), then we should
-> have a GPMC_ERRATA_xxx flag somewhere to indicate this and these errata
-> flags should be populated at probe.
-> 
->> I agree though that we could solve this with via the of_device_id's data
->> pointer of the matching driver. But as you said yourself, this can well
->> be done later, and the problem here is that we still need the
->> cpu_is_xxx() macros for older platforms, right?
-> 
-> Yes, but we cannot/shouldn't use these cpu_is_xxx macros from within
-> driver code. Ok, here we can calling a platform function that is calling
-> the macro, but for single zImage we cannot do that either. We cannot
-> include platform headers in drivers for single zImage. We have to get
-> away from that. Therefore, such information needs to be passed by
-> platform data, device tree, etc.
-> 
-> I will let Tony decide on how he wants us to handle this.
+> Ping!!!
 
-Any idea yet about this detail? The other small Documentation changes
-you brought up are fixed in my tree and ready for resubmission.
+Documentation/development-process/2.Process:
 
+- Avoid top-posting (the practice of putting your answer above the quot=
+ed
+  text you are responding to).  It makes your response harder to read a=
+nd
+  makes a poor impression.
 
-Daniel
+:)
 
+> On 1 December 2012 00:33, Viresh Kumar <viresh.kumar@linaro.org> wrot=
+e:
+> > On 30 November 2012 21:15, Lee Jones <lee.jones@linaro.org> wrote:
+> >> But ... I don't see how the changes in the -i2c and -spi files
+> >> are of benefit either. When I boot without the ID table I still
+> >> get "stmpe-i2c 0-0040: stmpe1601 detected, chip id: 0x212".
+> >>
+> >> What is it that actually uses the IDs?
+> >>
+> >> Perhaps Viresh can shine some light on the matter?
+> >
+> > As you can see, i wasn't the author of this patch and when you aske=
+d
+> > this question, i didn't had an answer to it. I went through code an=
+d
+> > formed some theory/story :) .
+> >
+> > @Grant: i need your help to check if my theory is correct or not. Q=
+uestion
+> > is about adding below code in any i2c client driver:
+> >
+> > +#ifdef CONFIG_OF
+> > +static const struct of_device_id stmpe_dt_ids[] =3D {
+> > +       { .compatible =3D "st,stmpe610", .data =3D &stmpe_i2c_id[0]=
+, },
+> > +       { .compatible =3D "st,stmpe801", .data =3D &stmpe_i2c_id[1]=
+, },
+> > +       { .compatible =3D "st,stmpe811", .data =3D &stmpe_i2c_id[2]=
+, },
+> > +       { .compatible =3D "st,stmpe1601", .data =3D &stmpe_i2c_id[3=
+], },
+> > +       { .compatible =3D "st,stmpe2401", .data =3D &stmpe_i2c_id[4=
+], },
+> > +       { .compatible =3D "st,stmpe2403", .data =3D &stmpe_i2c_id[5=
+], },
+> > +       { }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, stmpe_dt_ids);
+> > +#endif
+> > +
+> >  static struct i2c_driver stmpe_i2c_driver =3D {
+> >         .driver =3D {
+> >                 .name =3D "stmpe-i2c",
+> > @@ -88,6 +102,7 @@ static struct i2c_driver stmpe_i2c_driver =3D {
+> >  #ifdef CONFIG_PM
+> >                 .pm =3D &stmpe_dev_pm_ops,
+> >  #endif
+> > +               .of_match_table =3D of_match_ptr(stmpe_dt_ids),
+> >
+> > So, what is the use of this table when we already have i2c_driver.i=
+d_table
+> > populated.
+> >
+> > This is my theory:
+> > ---------------------
+> > Adapter drivers supporting DT will call:
+> > of_i2c_register_devices()
+> > {
+> >         for_each_child_of_node(adap->dev.of_node, node) {
+> >                 if (of_modalias_node(node, info.type, sizeof(info.t=
+ype)) < 0)
+> >                      error condition
+> >
+> >                 ...
+> >                 result =3D i2c_new_device(adap, &info);
+> >
+> >           ...
+> > }
+> >
+> > of_modalias_node(): expects compatible in child node, i.e. stmpe no=
+de in our
+> > case. If it is not there, then that node is skipped. then it copies
+> > string after ','
+> > to info.type. So, for us only "stmpe810" out of "st,stmpe810" is co=
+pied.
+> >
+> > Now this name, i.e. "stmpe810" is copied as client.name in i2c_new_=
+device()
+> > and device_register() is called, which will eventually call:
+> >
+> > i2c_device_match()
+> > {
+> >         /* Attempt an OF style match */
+> >         if (of_driver_match_device(dev, drv))
+> >                 return 1;
+> >
+> >         driver =3D to_i2c_driver(drv);
+> >         /* match on an id table if there is one */
+> >         if (driver->id_table)
+> >                 return i2c_match_id(driver->id_table, client) !=3D =
+NULL;
+> > }
+> >
+> > This first tries to match the table my patch added, _BUT_ the strin=
+g will
+> > never match as we had "st,stmpe810" in table and "stmpe810" in dev.
+> >
+> > So, we fall back to i2c_match_id(), which will match it against
+> > i2c_driver.id_table present in driver, which has entry for "stmpe81=
+0" and
+> > so strings matched.
+> >
+> > @Lee: This is what happened in your case. :)
+> >
+> > So, whether its DT or non DT, true is returned from here if somethi=
+ng
+> > matched.
+> >
+> > Later on, this will be called:
+> >
+> > static int i2c_device_probe(struct device *dev)
+> > {
+> >         .....
+> >         status =3D driver->probe(client, i2c_match_id(driver->id_ta=
+ble, client));
+> >         ....
+> > }
+> >
+> > Which will again match the legacy table to find correct struct i2c_=
+device_id *id
+> > to pass to probe().
+> >
+> > So, the final question: WTF is of_match_table for?
+> >
+> > Then i thought maybe it is used when  we don't have child nodes ins=
+ide parent,
+> > something related to the phandle way ? I grep'd i2c in arch/arm/boo=
+t/dts and
+> > couldn't find anything of that sort, the way i2c clients are added =
+is:
+> >
+> > in dtsi file:
+> >
+> > i2c0: i2c@address {
+> >          ...
+> > }
+> >
+> > in dts file:
+> > &i2c0 {
+> >           stmpe810 {
+> >           ........
+> >           }
+> > }
+> >
+> > which i believe will be taken care by dtc and will fold client node=
+s
+> > as child nodes
+> > of i2c0.
+> >
+> > @Grant: Please throw some light here :)
+> >
+> > --
+> > viresh
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
