@@ -1,76 +1,140 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Wed, 5 Dec 2012 16:33:48 -0600
-Message-ID: <50BFCBCC.6030706@ti.com>
-References: <1354734571-10774-1-git-send-email-zonque@gmail.com>
- <1354734571-10774-6-git-send-email-zonque@gmail.com>
- <20121205222232.67B2B3E0E22@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121205222232.67B2B3E0E22@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: x0148406-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, avinashphilip-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
+Date: Wed, 05 Dec 2012 22:42:03 +0000
+Message-ID: <20121205224203.691153E0E22@localhost>
+References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org> <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org> <20121130105731.GN3176@sortiz-mobl> <20121130154542.GG23648@gmail.com> <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-On 12/05/2012 04:22 PM, Grant Likely wrote:
-> On Wed,  5 Dec 2012 20:09:31 +0100, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> This patch adds basic DT bindings for OMAP GPMC.
->>
->> The actual peripherals are instantiated from child nodes within the GPMC
->> node, and the only type of device that is currently supported is NAND.
->>
->> Code was added to parse the generic GPMC timing parameters and some
->> documentation with examples on how to use them.
->>
->> Successfully tested on an AM33xx board.
->>
->> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/bus/ti-gpmc.txt  |  77 ++++++++++
->>  .../devicetree/bindings/mtd/gpmc-nand.txt          |  76 +++++++++
->>  arch/arm/mach-omap2/gpmc.c                         | 171 ++++++++++++++++++++-
->>  3 files changed, 323 insertions(+), 1 deletion(-)
->>  create mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
->>  create mode 100644 Documentation/devicetree/bindings/mtd/gpmc-nand.txt
->>
->> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
->> new file mode 100644
->> index 0000000..7d2a645
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
->> @@ -0,0 +1,77 @@
->> +Device tree bindings for OMAP general purpose memory controllers (GPMC)
->> +
->> +The actual devices are instantiated from the child nodes of a GPMC node.
->> +
->> +Required properties:
->> +
->> + - compatible:		Should be set to "ti,gpmc"
+On Sat, 1 Dec 2012 00:33:46 +0530, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 30 November 2012 21:15, Lee Jones <lee.jones@linaro.org> wrote:
+> > But ... I don't see how the changes in the -i2c and -spi files
+> > are of benefit either. When I boot without the ID table I still
+> > get "stmpe-i2c 0-0040: stmpe1601 detected, chip id: 0x212".
+> >
+> > What is it that actually uses the IDs?
+> >
+> > Perhaps Viresh can shine some light on the matter?
 > 
-> Please, be specific. Use something like "ti,am3340-gpmc" or
-> "ti,omap3430-gpmc". The compatible property is a list so that new
-> devices can claim compatibility with old. Compatible strings that are
-> overly generic are a pet-peave of mine.
+> As you can see, i wasn't the author of this patch and when you asked
+> this question, i didn't had an answer to it. I went through code and
+> formed some theory/story :) .
+> 
+> @Grant: i need your help to check if my theory is correct or not. Question
+> is about adding below code in any i2c client driver:
+> 
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id stmpe_dt_ids[] = {
+> +       { .compatible = "st,stmpe610", .data = &stmpe_i2c_id[0], },
+> +       { .compatible = "st,stmpe801", .data = &stmpe_i2c_id[1], },
+> +       { .compatible = "st,stmpe811", .data = &stmpe_i2c_id[2], },
+> +       { .compatible = "st,stmpe1601", .data = &stmpe_i2c_id[3], },
+> +       { .compatible = "st,stmpe2401", .data = &stmpe_i2c_id[4], },
+> +       { .compatible = "st,stmpe2403", .data = &stmpe_i2c_id[5], },
+> +       { }
+> +};
+> +MODULE_DEVICE_TABLE(of, stmpe_dt_ids);
+> +#endif
+> +
+>  static struct i2c_driver stmpe_i2c_driver = {
+>         .driver = {
+>                 .name = "stmpe-i2c",
+> @@ -88,6 +102,7 @@ static struct i2c_driver stmpe_i2c_driver = {
+>  #ifdef CONFIG_PM
+>                 .pm = &stmpe_dev_pm_ops,
+>  #endif
+> +               .of_match_table = of_match_ptr(stmpe_dt_ids),
+> 
+> So, what is the use of this table when we already have i2c_driver.id_table
+> populated.
+> 
+> This is my theory:
+> ---------------------
+> Adapter drivers supporting DT will call:
+> of_i2c_register_devices()
+> {
+> 	for_each_child_of_node(adap->dev.of_node, node) {
+> 		if (of_modalias_node(node, info.type, sizeof(info.type)) < 0)
+>                      error condition
+> 
+>                 ...
+> 		result = i2c_new_device(adap, &info);
+> 
+>           ...
+> }
+> 
+> of_modalias_node(): expects compatible in child node, i.e. stmpe node in our
+> case. If it is not there, then that node is skipped. then it copies
+> string after ','
+> to info.type. So, for us only "stmpe810" out of "st,stmpe810" is copied.
+> 
+> Now this name, i.e. "stmpe810" is copied as client.name in i2c_new_device()
+> and device_register() is called, which will eventually call:
+> 
+> i2c_device_match()
+> {
+> 	/* Attempt an OF style match */
+> 	if (of_driver_match_device(dev, drv))
+> 		return 1;
+> 
+> 	driver = to_i2c_driver(drv);
+> 	/* match on an id table if there is one */
+> 	if (driver->id_table)
+> 		return i2c_match_id(driver->id_table, client) != NULL;
+> }
+> 
+> This first tries to match the table my patch added, _BUT_ the string will
+> never match as we had "st,stmpe810" in table and "stmpe810" in dev.
 
-We aim to use the binding for omap2,3,4,5 as well as the am33xx devices
-(which are omap based). Would it be sufficient to have "ti,omap2-gpmc"
-implying all omap2+ based devices or should we have a compatible string
-for each device supported?
+of_driver_match_device() matches against the compatible list in
+dev->of_node, not against the device name. So, if the compatible
+property has a string that is in the table, then it really should match
+against it.
 
-Thanks
-Jon
+> 
+> So, we fall back to i2c_match_id(), which will match it against
+> i2c_driver.id_table present in driver, which has entry for "stmpe810" and
+> so strings matched.
+> 
+> @Lee: This is what happened in your case. :)
+> 
+> So, whether its DT or non DT, true is returned from here if something
+> matched.
+> 
+> Later on, this will be called:
+> 
+> static int i2c_device_probe(struct device *dev)
+> {
+>         .....
+> 	status = driver->probe(client, i2c_match_id(driver->id_table, client));
+
+Here things are a bit wonky. Even if matched against the table, it is
+possible that it also matches against i2c_match_id() and that data is
+passed to the driver.
+
+But regardless, it is the responsiblity of the probe function to go and
+look if of_driver_match_device() matches against anything if it cares
+about the of_match_table entries (for instance, if there is extra data
+attached).
+
+>         ....
+> }
+> 
+> Which will again match the legacy table to find correct struct i2c_device_id *id
+> to pass to probe().
+> 
+> So, the final question: WTF is of_match_table for?
+
+A bit of history is valuable here. The whole of_modalias_node() thing is
+really just a best-effort heuristic for figuring out which driver
+*might* work against a device described in the device tree. It won't
+work in all circumstances (and it was created at a time when there was
+resistance to adding DT knowledge to drivers). An of_match_table is the
+robust way of identifying specific devices and allows for matching
+against any entry in the compatible list.
+
+g.
