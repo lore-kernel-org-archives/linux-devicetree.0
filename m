@@ -1,67 +1,107 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: DT and probeable devices...
-Date: Wed, 5 Dec 2012 10:04:36 +1100
-Message-ID: <20121204230436.GB5217@truffula.fritz.box>
-References: <50BDF6B5.7070306@codethink.co.uk>
- <CACxGe6vDNu04HtHVLBS6fJ5GDVfGb1dD7fq-HPh+vmcc+FWxcQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6vDNu04HtHVLBS6fJ5GDVfGb1dD7fq-HPh+vmcc+FWxcQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Stepan Moskovchenko <stepanm@codeaurora.org>
+Subject: [PATCH] of: Output devicetree alias names in uevent
+Date: Tue,  4 Dec 2012 18:30:37 -0800
+Message-ID: <1354674637-6448-1-git-send-email-stepanm@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, mbohan@codeaurora.org, Stepan Moskovchenko <stepanm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 04, 2012 at 02:05:33PM +0000, Grant Likely wrote:
-> On Tue, Dec 4, 2012 at 1:12 PM, Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
-> > Hi,
-> >
-> > Im working on the OMAP5 pandaboard, and have run across a corner case.
-> >
-> > the Ethernet is USB attached (and thus discovered / probed by the USB
-> > controller).
-> >
-> > However it has a reset line thats a GPIO on the board.
-> >
-> > Is DT supposed to be able to cover cases like this? If so, how?
-> 
-> USB devices can be described as child nodes of the USB bus, though
-> they typically aren't because as you mention the USB bus is
-> discoverable. There is a binding for USB devices[1]. I don't believe
-> the kernel currently does anything to match USB dt nodes with a
-> usb_device, but it wouldn't be hard to hook up. You'd probably need a
-> hook in usb_new_device() to attach the of_node to the usb_device if it
-> exists. Then the driver would have the ability to query the DT node
-> for things like gpios.
-> 
-> [1] http://www.openfirmware.org/1275/bindings/usb/usb-1_0.ps
+In some situations, userspace may want to resolve a
+device by function and logical number (ie, "serial0")
+rather than by the base address or full device path. Being
+able to resolve a device by alias frees userspace from the
+burden of otherwise having to maintain a mapping between
+device addresses and their logical assignments on each
+platform when multiple instances of the same hardware block
+are present in the system.
 
-In a more general sense, probeable devices with some small
-non-probeable parts are not new, though I haven't heard of it with usb
-before.  It is very common (or it was, maybe less now in PCIe days) to
-have on-board PCI devices, which are probeable of course, but which
-have their interrupts routed directly to the PIC in a non-probeable
-way.  Standard DT practice in those cases is to include a DT node for
-the device, although you can leave out most of the contents except,
-obviously, for the interrupt routing information.
+Although the uevent device attribute contains devicetree
+compatible information and the full device path, the uevent
+does not list the alises that may have been defined for the
+device.
 
-As Grant says, extending this practice for USB is conceptually
-straightforward, though there will be a bit of implementation work.
+Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
+---
+I have followed the OF_COMPATIBLE convention for adding the
+uevent variables for the alias names, but I can follow some
+other convention if people feel something else is more
+appropriate.
 
--- 
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+ drivers/of/base.c         |   25 +++++++++++++++++++++++++
+ drivers/of/device.c       |    1 +
+ include/linux/of_device.h |    2 ++
+ 3 files changed, 28 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 5806449..291f0a0 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -19,6 +19,7 @@
+  */
+ #include <linux/ctype.h>
+ #include <linux/module.h>
++#include <linux/device.h>
+ #include <linux/of.h>
+ #include <linux/spinlock.h>
+ #include <linux/slab.h>
+@@ -1177,6 +1178,30 @@ static void of_alias_add(struct alias_prop *ap, struct device_node *np,
+ }
+
+ /**
++ * of_device_uevent_aliases - Display OF alises in uevent
++ */
++void of_device_uevent_aliases(struct device_node *node,
++			      struct kobj_uevent_env *env)
++{
++	struct alias_prop *app;
++	int seen = 0;
++
++	mutex_lock(&of_aliases_mutex);
++	list_for_each_entry(app, &aliases_lookup, link) {
++		if (node == app->np) {
++			add_uevent_var(env, "OF_ALIAS_%d=%s%d", seen, app->stem,
++				       app->id);
++			seen++;
++		}
++	}
++
++	if (seen)
++		add_uevent_var(env, "OF_ALIAS_N=%d", seen);
++
++	mutex_unlock(&of_aliases_mutex);
++}
++
++/**
+  * of_alias_scan - Scan all properties of 'aliases' node
+  *
+  * The function scans all the properties of 'aliases' node and populate
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 4c74e4f..06e122d 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -153,6 +153,7 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+ 		seen++;
+ 	}
+ 	add_uevent_var(env, "OF_COMPATIBLE_N=%d", seen);
++	of_device_uevent_aliases(dev->of_node, env);
+ }
+
+ int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
+diff --git a/include/linux/of_device.h b/include/linux/of_device.h
+index 901b743..748056d 100644
+--- a/include/linux/of_device.h
++++ b/include/linux/of_device.h
+@@ -36,6 +36,8 @@ extern ssize_t of_device_get_modalias(struct device *dev,
+ 					char *str, ssize_t len);
+
+ extern void of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
++extern void of_device_uevent_aliases(struct device_node *node,
++					struct kobj_uevent_env *env);
+ extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env);
+
+ static inline void of_device_node_put(struct device *dev)
+--
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
