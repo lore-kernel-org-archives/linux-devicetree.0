@@ -1,34 +1,62 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH v2 1/3] leds: leds-pwm: Convert to use devm_get_pwm
-Date: Wed, 5 Dec 2012 16:36:36 +0100
-Message-ID: <50BF6A04.4040204@ti.com>
-References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com> <1352731270-27534-2-git-send-email-peter.ujfalusi@ti.com> <CAK5ve-JDCSSOKHQG-F1RoDii62=-DiPevaD6SafndYVvOgB6Fw@mail.gmail.com> <50BCB391.1070305@ti.com> <CAK5ve-+1eQ3mPLAu2Qxw4LjNA85oEtJE-wZcL=YpQ0xBFJ6+hQ@mail.gmail.com> <50BDB016.7010908@ti.com> <CAK5ve-K69=NqApFTFOZB7Z_KXcRLaWExzbkUhP=GeASMB7JYqw@mail.gmail.com>
+From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 06/44] of/vendor-prefixes: add Imagination Technologies
+Date: Wed, 5 Dec 2012 16:08:24 +0000
+Message-ID: <1354723742-6195-7-git-send-email-james.hogan@imgtec.com>
+References: <1354723742-6195-1-git-send-email-james.hogan@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK5ve-K69=NqApFTFOZB7Z_KXcRLaWExzbkUhP=GeASMB7JYqw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1354723742-6195-1-git-send-email-james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2012 06:34 PM, Bryan Wu wrote:
-> What's best thing I can do is I can merge these patchset into my
-> -devel branch, after 3.8 merge window close I will move this -devel
-> branch to my for-next branch for 3.9 merge window.
->=20
-> Does this make sense to you?
+The "powervr" prefix which is currently described as "Imagination
+Technologies" isn't really appropriate for non-PowerVR hardware, so
+deprecate it, changing the description of "powervr" to "PowerVR
+(deprecated, use img)", and add a separate "img" prefix for "Imagination
+Technologies Ltd.".
 
-Not sure if I can get changes related to leds-pwm through linux-omap in=
- this
-way. The practice is that l-o should be 'in a working condition' alone =
--
-without linux-next.
+Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+---
+ .../devicetree/bindings/vendor-prefixes.txt        |    3 ++-
+ 1 files changed, 2 insertions(+), 1 deletions(-)
 
-But I'll find something else while waiting for 3.10 to clean up the oma=
-p board
-files related to this.
-
---=20
-P=E9ter
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 9de2b9f..aab2993 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -25,6 +25,7 @@ gef	GE Fanuc Intelligent Platforms Embedded Systems, Inc.
+ hp	Hewlett Packard
+ ibm	International Business Machines (IBM)
+ idt	Integrated Device Technologies, Inc.
++img	Imagination Technologies Ltd.
+ intercontrol	Inter Control Group
+ linux	Linux-specific binding
+ marvell	Marvell Technology Group Ltd.
+@@ -35,7 +36,7 @@ nintendo	Nintendo
+ nvidia	NVIDIA
+ nxp	NXP Semiconductors
+ picochip	Picochip Ltd
+-powervr	Imagination Technologies
++powervr	PowerVR (deprecated, use img)
+ qcom	Qualcomm, Inc.
+ ramtron	Ramtron International
+ realtek Realtek Semiconductor Corp.
+-- 
+1.7.7.6
