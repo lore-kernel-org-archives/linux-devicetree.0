@@ -1,127 +1,90 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: Output devicetree alias names in uevent
-Date: Wed, 05 Dec 2012 23:03:17 +0000
-Message-ID: <20121205230318.013053E0E22@localhost>
-References: <1354674637-6448-1-git-send-email-stepanm@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1354674637-6448-1-git-send-email-stepanm@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-Cc: Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, mbohan@codeaurora.org, Stepan Moskovchenko <stepanm@codeaurora.org>
+Subject: Re: [PATCH v7 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC timings and NAND
+Date: Wed, 05 Dec 2012 23:24:26 +0000
+Message-ID: <20121205232426.BAD573E0E22@localhost>
+References: <1354734571-10774-1-git-send-email-zonque@gmail.com> <1354734571-10774-6-git-send-email-zonque@gmail.com> <20121205222232.67B2B3E0E22@localhost> <50BFCBCC.6030706@ti.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <50BFCBCC.6030706@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: paul@pwsan.com, x0148406@ti.com, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, rob.herring@calxeda.com, Daniel Mack <zonque@gmail.com>, tony@atomide.com, jacmet@sunsite.dk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  4 Dec 2012 18:30:37 -0800, Stepan Moskovchenko <stepanm@codeaurora.org> wrote:
-> In some situations, userspace may want to resolve a
-> device by function and logical number (ie, "serial0")
-> rather than by the base address or full device path. Being
-> able to resolve a device by alias frees userspace from the
-> burden of otherwise having to maintain a mapping between
-> device addresses and their logical assignments on each
-> platform when multiple instances of the same hardware block
-> are present in the system.
+On Wed, 5 Dec 2012 16:33:48 -0600, Jon Hunter <jon-hunter@ti.com> wrote:
+> Hi Grant,
 > 
-> Although the uevent device attribute contains devicetree
-> compatible information and the full device path, the uevent
-> does not list the alises that may have been defined for the
-> device.
+> On 12/05/2012 04:22 PM, Grant Likely wrote:
+> > On Wed,  5 Dec 2012 20:09:31 +0100, Daniel Mack <zonque@gmail.com> wrote:
+> >> This patch adds basic DT bindings for OMAP GPMC.
+> >>
+> >> The actual peripherals are instantiated from child nodes within the GPMC
+> >> node, and the only type of device that is currently supported is NAND.
+> >>
+> >> Code was added to parse the generic GPMC timing parameters and some
+> >> documentation with examples on how to use them.
+> >>
+> >> Successfully tested on an AM33xx board.
+> >>
+> >> Signed-off-by: Daniel Mack <zonque@gmail.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/bus/ti-gpmc.txt  |  77 ++++++++++
+> >>  .../devicetree/bindings/mtd/gpmc-nand.txt          |  76 +++++++++
+> >>  arch/arm/mach-omap2/gpmc.c                         | 171 ++++++++++++++++++++-
+> >>  3 files changed, 323 insertions(+), 1 deletion(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> >>  create mode 100644 Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> >> new file mode 100644
+> >> index 0000000..7d2a645
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> >> @@ -0,0 +1,77 @@
+> >> +Device tree bindings for OMAP general purpose memory controllers (GPMC)
+> >> +
+> >> +The actual devices are instantiated from the child nodes of a GPMC node.
+> >> +
+> >> +Required properties:
+> >> +
+> >> + - compatible:		Should be set to "ti,gpmc"
+> > 
+> > Please, be specific. Use something like "ti,am3340-gpmc" or
+> > "ti,omap3430-gpmc". The compatible property is a list so that new
+> > devices can claim compatibility with old. Compatible strings that are
+> > overly generic are a pet-peave of mine.
 > 
-> Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
-> ---
-> I have followed the OF_COMPATIBLE convention for adding the
-> uevent variables for the alias names, but I can follow some
-> other convention if people feel something else is more
-> appropriate.
+> We aim to use the binding for omap2,3,4,5 as well as the am33xx devices
+> (which are omap based). Would it be sufficient to have "ti,omap2-gpmc"
+> implying all omap2+ based devices or should we have a compatible string
+> for each device supported?
 
-No, this seems fine. Comments below.
+Are they each register-level compatible with one another?
 
->  drivers/of/base.c         |   25 +++++++++++++++++++++++++
->  drivers/of/device.c       |    1 +
->  include/linux/of_device.h |    2 ++
->  3 files changed, 28 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 5806449..291f0a0 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -19,6 +19,7 @@
->   */
->  #include <linux/ctype.h>
->  #include <linux/module.h>
-> +#include <linux/device.h>
->  #include <linux/of.h>
->  #include <linux/spinlock.h>
->  #include <linux/slab.h>
-> @@ -1177,6 +1178,30 @@ static void of_alias_add(struct alias_prop *ap, struct device_node *np,
->  }
-> 
->  /**
-> + * of_device_uevent_aliases - Display OF alises in uevent
-> + */
-> +void of_device_uevent_aliases(struct device_node *node,
-> +			      struct kobj_uevent_env *env)
-> +{
-> +	struct alias_prop *app;
-> +	int seen = 0;
-> +
-> +	mutex_lock(&of_aliases_mutex);
-> +	list_for_each_entry(app, &aliases_lookup, link) {
-> +		if (node == app->np) {
-> +			add_uevent_var(env, "OF_ALIAS_%d=%s%d", seen, app->stem,
-> +				       app->id);
+The general recommended approach here is to make subsequent silicon
+claim compatibility with the first compatible implementation.
 
-add_uevent_var(env, "OF_ALIAS_%d=%s", seen, app->alias);
+So, for an am3358 board:
+	compatible = "ti,am3358-gpmc", "ti,omap2420-gpmc";
 
-> +			seen++;
-> +		}
-> +	}
-> +
-> +	if (seen)
-> +		add_uevent_var(env, "OF_ALIAS_N=%d", seen);
-> +
-> +	mutex_unlock(&of_aliases_mutex);
-> +}
+Essentially, what this means is that "ti,omap2420-gpmc" is the generic
+value instead of "omap2-gpmc". The reason for this is so that the value
+is anchored against a specific implementation, and not against something
+completely imaginary or idealized. If a newer version isn't quite
+compatible with the omap2420-gpmc, then it can drop the compatible claim
+and the driver really should be told about the new device.
 
-Why is this implemented as a separate function? Do you forsee it being
-called by something else? If not, then just roll it into the body of
-of_device_uevent_aliases() please.
+g.
 
-Oh, wait, alias_prop is only defined in drivers/of/base.c. Rats. Can you
-create a header named drivers/of/of_private.h to move it into please? I
-don't want the uevent stuff to appear in drivers/of/base.c.
 
-> +
-> +/**
->   * of_alias_scan - Scan all properties of 'aliases' node
->   *
->   * The function scans all the properties of 'aliases' node and populate
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 4c74e4f..06e122d 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -153,6 +153,7 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
->  		seen++;
->  	}
->  	add_uevent_var(env, "OF_COMPATIBLE_N=%d", seen);
-> +	of_device_uevent_aliases(dev->of_node, env);
->  }
+
 > 
->  int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
-> diff --git a/include/linux/of_device.h b/include/linux/of_device.h
-> index 901b743..748056d 100644
-> --- a/include/linux/of_device.h
-> +++ b/include/linux/of_device.h
-> @@ -36,6 +36,8 @@ extern ssize_t of_device_get_modalias(struct device *dev,
->  					char *str, ssize_t len);
+> Thanks
+> Jon
 > 
->  extern void of_device_uevent(struct device *dev, struct kobj_uevent_env *env);
-> +extern void of_device_uevent_aliases(struct device_node *node,
-> +					struct kobj_uevent_env *env);
->  extern int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env);
-> 
->  static inline void of_device_node_put(struct device *dev)
-> --
-> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
 -- 
 Grant Likely, B.Sc, P.Eng.
