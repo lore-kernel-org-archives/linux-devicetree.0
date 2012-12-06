@@ -1,16 +1,12 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] leds: leds-pwm: Add device tree bindings
-Date: Fri, 7 Dec 2012 15:04:51 +0100
-Message-ID: <50C1F783.6090501@ti.com>
-References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com>
- <1352731270-27534-4-git-send-email-peter.ujfalusi@ti.com>
- <20121206100052.EC8293E0E22@localhost> <50C0913B.9070802@ti.com>
- <20121207133453.800C43E0B87@localhost>
+From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: [grant:spi/next 9/12] drivers/spi/spi.c:1554:23: warning:
+ comparison of distinct pointer types lacks a cast
+Date: Thu, 06 Dec 2012 22:59:40 +0800
+Message-ID: <50c0b2dc.P1a8D2ntc53Wu8vh%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121207133453.800C43E0B87@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,36 +17,48 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/07/2012 02:34 PM, Grant Likely wrote:
-> It really needs to look like this:
-> =
+tree:   git://git.secretlab.ca/git/linux-2.6.git spi/next
+head:   b15d5d7004e25716c8b8dfe4e322a64551e2e6cc
+commit: b3a223ee2d1a4635b0643c547bc0096a37334ed1 [9/12] spi: Remove SPI_BUFSIZ restriction on spi_write_then_read()
+config: make ARCH=x86_64 allyesconfig
 
-> pwmleds {
-> 	compatible =3D "pwm-leds";
-> 	kpad {
-> 		label =3D "omap4::keypad";
-> 		max-brightness =3D <127>;
-> 		pwms =3D <&twl_pwm 0 7812500>;
-> 	};
-> 	charging {
-> 		label =3D "omap4:green:chrg";
-> 		max-brightness =3D <255>;
-> 		pwms =3D <&twl_pwmled 0 7812500>;
-> 	};
-> };
+All warnings:
 
-OK.
-So What we need to do is export the of_pwm_request() from drivers/pwm/core.c
-Client drivers us of_pwm_request(node, NULL); to get the pwm when booted wi=
-th DT.
-Works fine on my setup this way and the DTS section looks just as you have
-described.
-Now I need to clean them up and resubmit.
+drivers/spi/spi.c: In function 'spi_write_then_read':
+drivers/spi/spi.c:1554:23: warning: comparison of distinct pointer types lacks a cast [enabled by default]
 
--- =
+vim +1554 drivers/spi/spi.c
 
-P=E9ter
+0c4a1590 Mark Brown     2011-05-11  1538  		const void *txbuf, unsigned n_tx,
+0c4a1590 Mark Brown     2011-05-11  1539  		void *rxbuf, unsigned n_rx)
+8ae12a0d David Brownell 2006-01-08  1540  {
+068f4070 David Brownell 2007-12-04  1541  	static DEFINE_MUTEX(lock);
+8ae12a0d David Brownell 2006-01-08  1542  
+8ae12a0d David Brownell 2006-01-08  1543  	int			status;
+8ae12a0d David Brownell 2006-01-08  1544  	struct spi_message	message;
+bdff549e David Brownell 2009-04-13  1545  	struct spi_transfer	x[2];
+8ae12a0d David Brownell 2006-01-08  1546  	u8			*local_buf;
+8ae12a0d David Brownell 2006-01-08  1547  
+b3a223ee Mark Brown     2012-12-02  1548  	/* Use preallocated DMA-safe buffer if we can.  We can't avoid
+b3a223ee Mark Brown     2012-12-02  1549  	 * copying here, (as a pure convenience thing), but we can
+b3a223ee Mark Brown     2012-12-02  1550  	 * keep heap costs out of the hot path unless someone else is
+b3a223ee Mark Brown     2012-12-02  1551  	 * using the pre-allocated buffer or the transfer is too large.
+8ae12a0d David Brownell 2006-01-08  1552  	 */
+b3a223ee Mark Brown     2012-12-02  1553  	if ((n_tx + n_rx) > SPI_BUFSIZ || !mutex_trylock(&lock)) {
+b3a223ee Mark Brown     2012-12-02 @1554  		local_buf = kmalloc(max(SPI_BUFSIZ, n_tx + n_rx), GFP_KERNEL);
+b3a223ee Mark Brown     2012-12-02  1555  		if (!local_buf)
+b3a223ee Mark Brown     2012-12-02  1556  			return -ENOMEM;
+b3a223ee Mark Brown     2012-12-02  1557  	} else {
+b3a223ee Mark Brown     2012-12-02  1558  		local_buf = buf;
+b3a223ee Mark Brown     2012-12-02  1559  	}
+8ae12a0d David Brownell 2006-01-08  1560  
+8275c642 Vitaly Wool    2006-01-08  1561  	spi_message_init(&message);
+bdff549e David Brownell 2009-04-13  1562  	memset(x, 0, sizeof x);
+
+---
+0-DAY kernel build testing backend         Open Source Technology Center
+Fengguang Wu, Yuanhan Liu                              Intel Corporation
