@@ -1,49 +1,65 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH -next] serial: xilinx_uartps: fix return value check in xuartps_probe()
-Date: Wed, 05 Dec 2012 23:57:49 +0000
-Message-ID: <20121205235749.D084C3E0E22@localhost>
-References: <CAPgLHd-upT_0ThHxU9rXtsw6CP4vU8zvOnLp6u0ZC_2unpDbTw@mail.gmail.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd-upT_0ThHxU9rXtsw6CP4vU8zvOnLp6u0ZC_2unpDbTw@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>, alan@linux.intel.com, gregkh@linuxfoundation.org, jslaby@suse.cz, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linux-serial@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v7 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC
+ timings and NAND
+Date: Wed, 5 Dec 2012 16:03:03 -0800
+Message-ID: <20121206000302.GM21682@atomide.com>
+References: <1354734571-10774-1-git-send-email-zonque@gmail.com>
+ <1354734571-10774-6-git-send-email-zonque@gmail.com>
+ <20121205222232.67B2B3E0E22@localhost> <50BFCBCC.6030706@ti.com>
+ <20121205232426.BAD573E0E22@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121205232426.BAD573E0E22@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: x0148406-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2 Dec 2012 05:12:43 -0500, Wei Yongjun <weiyj.lk@gmail.com> wrote:
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+* Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> [121205 15:26]:
+> On Wed, 5 Dec 2012 16:33:48 -0600, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
+> > On 12/05/2012 04:22 PM, Grant Likely wrote:
+> > > 
+> > > Please, be specific. Use something like "ti,am3340-gpmc" or
+> > > "ti,omap3430-gpmc". The compatible property is a list so that new
+> > > devices can claim compatibility with old. Compatible strings that are
+> > > overly generic are a pet-peave of mine.
+> > 
+> > We aim to use the binding for omap2,3,4,5 as well as the am33xx devices
+> > (which are omap based). Would it be sufficient to have "ti,omap2-gpmc"
+> > implying all omap2+ based devices or should we have a compatible string
+> > for each device supported?
 > 
-> In case of error, function of_clk_get() returns ERR_PTR()
-> and never returns NULL. The NULL test in the return value
-> check should be replaced with IS_ERR().
+> Are they each register-level compatible with one another?
 > 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> The general recommended approach here is to make subsequent silicon
+> claim compatibility with the first compatible implementation.
+> 
+> So, for an am3358 board:
+> 	compatible = "ti,am3358-gpmc", "ti,omap2420-gpmc";
+> 
+> Essentially, what this means is that "ti,omap2420-gpmc" is the generic
+> value instead of "omap2-gpmc". The reason for this is so that the value
+> is anchored against a specific implementation, and not against something
+> completely imaginary or idealized. If a newer version isn't quite
+> compatible with the omap2420-gpmc, then it can drop the compatible claim
+> and the driver really should be told about the new device.
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+The compatible property can also be used to figure out which ones
+need the workarounds in patch #4 of this series for the DT case.
+So we should be specific with the compatible.
 
-> ---
->  drivers/tty/serial/xilinx_uartps.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/tty/serial/xilinx_uartps.c b/drivers/tty/serial/xilinx_uartps.c
-> index 2be22a2..1eb4657 100644
-> --- a/drivers/tty/serial/xilinx_uartps.c
-> +++ b/drivers/tty/serial/xilinx_uartps.c
-> @@ -948,9 +948,9 @@ static int xuartps_probe(struct platform_device *pdev)
->  	struct clk *clk;
->  
->  	clk = of_clk_get(pdev->dev.of_node, 0);
-> -	if (!clk) {
-> +	if (IS_ERR(clk)) {
->  		dev_err(&pdev->dev, "no clock specified\n");
-> -		return -ENODEV;
-> +		return PTR_ERR(clk);
->  	}
->  
->  	rc = clk_prepare_enable(clk);
-> 
-> 
+Regards,
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+Tony
