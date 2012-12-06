@@ -1,136 +1,31 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2] of: Output devicetree alias names in uevent
-Date: Thu, 06 Dec 2012 19:24:59 +0000
-Message-ID: <20121206192500.0BF073E3A5E@localhost>
-References: <20121205230318.013053E0E22@localhost> <1354780165-872-1-git-send-email-stepanm@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1354780165-872-1-git-send-email-stepanm@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-Cc: Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, mbohan@codeaurora.org, Stepan Moskovchenko <stepanm@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH V6] mfd: stmpe: Update DT support for stmpe driver
+Date: Thu, 6 Dec 2012 21:21:14 +0100
+Message-ID: <CACRpkdZtzaf-VHkPAE8fAOnnyyBxX4uzT_M0VWsim_SxyNXtSg@mail.gmail.com>
+References: <3db3266122f4c54f624477b3fb6763e5821bd3d0.1354807084.git.viresh.kumar@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3db3266122f4c54f624477b3fb6763e5821bd3d0.1354807084.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: sameo@linux.intel.com, lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  5 Dec 2012 23:49:25 -0800, Stepan Moskovchenko <stepanm@codeaurora.org> wrote:
-> In some situations, userspace may want to resolve a
-> device by function and logical number (ie, "serial0")
-> rather than by the base address or full device path. Being
-> able to resolve a device by alias frees userspace from the
-> burden of otherwise having to maintain a mapping between
-> device addresses and their logical assignments on each
-> platform when multiple instances of the same hardware block
-> are present in the system.
-> 
-> Although the uevent device attribute contains devicetree
-> compatible information and the full device path, the uevent
-> does not list the alises that may have been defined for the
-> device.
-> 
-> Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
-> ---
-> v2: Create of_private.h and move struct alias_prop there
->     Add alias uevent variables from of_device_uevent
->     Use app->alias instead of app->stem / app->id directly
->     Expose alias_lookup and of_alias_mutex
-> 
->  drivers/of/base.c       |   23 +++--------------------
->  drivers/of/device.c     |   17 +++++++++++++++++
->  drivers/of/of_private.h |   33 +++++++++++++++++++++++++++++++++
->  3 files changed, 53 insertions(+), 20 deletions(-)
->  create mode 100644 drivers/of/of_private.h
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 5806449..715aef2 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -24,32 +24,15 @@
->  #include <linux/slab.h>
->  #include <linux/proc_fs.h>
-> 
-> -/**
-> - * struct alias_prop - Alias property in 'aliases' node
-> - * @link:	List node to link the structure in aliases_lookup list
-> - * @alias:	Alias property name
-> - * @np:		Pointer to device_node that the alias stands for
-> - * @id:		Index value from end of alias name
-> - * @stem:	Alias string without the index
-> - *
-> - * The structure represents one alias property of 'aliases' node as
-> - * an entry in aliases_lookup list.
-> - */
-> -struct alias_prop {
-> -	struct list_head link;
-> -	const char *alias;
-> -	struct device_node *np;
-> -	int id;
-> -	char stem[0];
-> -};
-> +#include "of_private.h"
-> 
-> -static LIST_HEAD(aliases_lookup);
-> +LIST_HEAD(aliases_lookup);
-> 
->  struct device_node *allnodes;
->  struct device_node *of_chosen;
->  struct device_node *of_aliases;
-> 
-> -static DEFINE_MUTEX(of_aliases_mutex);
-> +DEFINE_MUTEX(of_aliases_mutex);
-> 
->  /* use when traversing tree through the allnext, child, sibling,
->   * or parent members of struct device_node.
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 4c74e4f..b8d31db 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -8,6 +8,7 @@
->  #include <linux/slab.h>
-> 
->  #include <asm/errno.h>
-> +#include "of_private.h"
-> 
->  /**
->   * of_match_device - Tell if a struct device matches an of_device_id list
-> @@ -131,6 +132,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
->  void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
->  {
->  	const char *compat;
-> +	struct alias_prop *app;
->  	int seen = 0, cplen, sl;
-> 
->  	if ((!dev) || (!dev->of_node))
-> @@ -153,6 +155,21 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
->  		seen++;
->  	}
->  	add_uevent_var(env, "OF_COMPATIBLE_N=%d", seen);
-> +
-> +	seen = 0;
-> +	mutex_lock(&of_aliases_mutex);
-> +	list_for_each_entry(app, &aliases_lookup, link) {
-> +		if (dev->of_node == app->np) {
-> +			add_uevent_var(env, "OF_ALIAS_%d=%s", seen,
-> +				       app->alias);
-> +			seen++;
-> +		}
-> +	}
-> +
-> +	if (seen)
-> +		add_uevent_var(env, "OF_ALIAS_N=%d", seen);
-> +
-> +	mutex_unlock(&of_aliases_mutex);
->  }
-> 
->  int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
-> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-> new file mode 100644
-> index 0000000..031608f
-> --- /dev/null
-> +++ b/drivers/of/of_private.h
-> @@ -0,0 +1,33 @@
-> +/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
+On Thu, Dec 6, 2012 at 4:43 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
 
-Oops, that doesn't look right. You need to preserve the copyright
-messages from the file this came from. You didn't write this code, you
-only moved it about.
+> From: Vipul Kumar Samar <vipulkumar.samar@st.com>
+>
+> This patch extends existing DT support for stmpe devices. This updates:
+> - missing header files in stmpe.c
+> - stmpe_of_probe() with pwm, rotator and new bindings.
+> - Bindings are updated in binding document.
+>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Vipul Kumar Samar <vipulkumar.samar@st.com>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-Otherwise the patch looks good. Can you please respin with that change?
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-g.
+Yours,
+Linus Walleij
