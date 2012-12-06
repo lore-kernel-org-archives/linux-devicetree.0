@@ -1,30 +1,31 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V4 0/2] Add DT support for i2s
-Date: Thu, 6 Dec 2012 13:11:42 +0900
-Message-ID: <20121206041141.GA10867@opensource.wolfsonmicro.com>
-References: <1354099669-1735-1-git-send-email-padma.v@samsung.com>
- <CAAgF-Bc4t6WL4vswP6CFeSQrPZBmOuYfVt6_JoB1Za9TBX7mvA@mail.gmail.com>
+From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
+Subject: Regulator suspend state dt question
+Date: Thu, 6 Dec 2012 11:55:11 +0530
+Message-ID: <CAM4voa=X_rBkSXRHd=oEOnXhgyfSAeD8LmYnsTeQtd-SYKWwPg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAAgF-Bc4t6WL4vswP6CFeSQrPZBmOuYfVt6_JoB1Za9TBX7mvA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padma Venkat <padma.kvr@gmail.com>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com, lrg@ti.com, jassisinghbrar@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, lrg@ti.com, broonie@opensource.wolfsonmicro.com
+Cc: Doug Anderson <dianders@chromium.org>, Olof Johansson <olofj@google.com>, Thomas Abraham <thomas.abraham@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 06, 2012 at 09:31:40AM +0530, Padma Venkat wrote:
-> On Wed, Nov 28, 2012 at 4:17 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+Hi,
 
-> > Padmavathi Venna (2):
-> >   ASoC: Samsung: Get I2S src_clk from clock alias id.
-> >   ASoC: SAMSUNG: Add DT support for i2s
+Max77686 PMIC has dt support and I wanted to specify the suspend state of the
+regulator via dt. set_suspend_disable and set_suspend_mode call-backs are
+already implemented in drivers/regulator/max77686.c.
 
-> Any comments on DT support for i2s patch?  If not when this patch can be pulled?
+As of now there is no support in the regulator core to specify the suspend state
+(mode, enabled/disabled) using dt. I can add new properties specifying
+the intial_state,
+mode, enable/disable but I am not too sure if it is appropriate to add
+such bindings to
+the device tree as they are not actually describing the hardware.
 
-Don't send contentless pings.
+Is calling regulator_suspend_prepare from a machine specific file an option ?
 
-I still don't really like what's going on with aliases here, I need to
-understand why things are structured the way they are to say something
-about that.
+Kindly provide me with suggestions as to how I may proceed with this.
+
+Regards,
+Abhilash
