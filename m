@@ -1,192 +1,87 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH v2] ARM: Exynos5250: Enabling dwc3-exynos driver
-Date: Thu, 6 Dec 2012 16:03:06 +0530
-Message-ID: <CAFp+6iFjY9gp1x6eDCLP-WJvv++wO7fw+U_9U+0OnNb99baeEA@mail.gmail.com>
-References: <1352363533-14970-1-git-send-email-gautam.vivek@samsung.com>
-	<1352363533-14970-2-git-send-email-gautam.vivek@samsung.com>
-	<20121206101534.A10123E05A4@localhost>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
+Date: Thu, 6 Dec 2012 10:35:15 +0000
+Message-ID: <20121206103515.GQ2718@gmail.com>
+References: <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
+ <20121130105731.GN3176@sortiz-mobl>
+ <20121130154542.GG23648@gmail.com>
+ <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
+ <20121205224203.691153E0E22@localhost>
+ <CAKohponjLp214EPKgNHqP2N8Tje9U8ZxgywUTSvsjE-TqHy+xw@mail.gmail.com>
+ <20121206095019.GN2718@gmail.com>
+ <CAKohpokNQB6L2vvjmvA7_3KomFXnV9wZ-uBjrfRVuBL=QWgr_Q@mail.gmail.com>
+ <20121206101131.GP2718@gmail.com>
+ <CAKohpom9NK0Tg9fKdddkP-0H8FuVd-=yhHzZr-sWNb_zTVymWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20121206101534.A10123E05A4@localhost>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, yulgon.kim@samsung.com, kgene.kim@samsung.com, p.paneri@samsung.com, linux-usb@vger.kernel.org, tomasz.figa@gmail.com, balbi@ti.com, av.tikhomirov@samsung.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohpom9NK0Tg9fKdddkP-0H8FuVd-=yhHzZr-sWNb_zTVymWw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Samuel Ortiz <sameo@linux.intel.com>, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On Thu, 06 Dec 2012, Viresh Kumar wrote:
 
+> On 6 December 2012 15:41, Lee Jones <lee.jones@linaro.org> wrote:
+> > So then I'm back to my original question, why?
+> >
+> > What is it used for? What difference does it make?
+> >
+> > I could understand if the .data attribute was used in the driver
+> > to make vital decisions based on STMPE version, but it's not. So
+> > why are we burdening the driver with unused code that's not
+> > required? Other than to get your mainlined patch-count up of
+> > course? This has an air of "placing header files in alphabetical
+> > order" about it. ;)
+>=20
+> The count would still be the same as some part of this patch will
+> go :)
+>=20
+> I said that because of Grant's comment: "An of_match_table is the
+> robust way of identifying specific devices and allows for matching
+> against any entry in the compatible list."
+>=20
+> So, thought its better we keep it.
 
-On Thu, Dec 6, 2012 at 3:45 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
-> On Thu, 08 Nov 2012 14:02:13 +0530, Vivek Gautam <gautam.vivek@samsung.com> wrote:
->> Adding DWC3 device tree node for Exynos5250 along with the
->> device address and clock support needed for the controller.
->>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> ---
->>  .../devicetree/bindings/usb/exynos-usb.txt         |   14 +++++++++++
->>  arch/arm/boot/dts/exynos5250.dtsi                  |    6 +++++
->>  arch/arm/mach-exynos/Kconfig                       |    1 +
->>  arch/arm/mach-exynos/clock-exynos5.c               |   24 ++++++++++++++++++++
->>  arch/arm/mach-exynos/include/mach/map.h            |    1 +
->>  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +
->>  6 files changed, 48 insertions(+), 0 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> index 5ff3def1..a7e3eaa 100644
->> --- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> @@ -38,3 +38,17 @@ Example:
->>               reg = <0x12120000 0x100>;
->>               interrupts = <0 71 0>;
->>       };
->> +
->> +DWC3
->> +Required properties:
->> + - compatible: should be "samsung,exynos-dwc3" for USB 3.0 DWC3 controller.
->
-> Nit: Please use a specific chip in compatible strings. ie.
-> "samsung,exynos5250-dwc3". Newer parts using the same core can claim
-> compatibility by including the older string in the compatible list.
->
+Only if you're going to use it, or else it's just unused cruft.
 
-The compatible string "samsung,exynos-dwc3" is added in accordance
-with the driver dt changes
-present at drivers "drivers/usb/dwc3/dwc3-exynos.c". Should i be
-amending the driver side also likewise ?
+> Now, the problem is, with this new table we will bind device and
+> driver based on of_device_id table and probe it using device_id
+> table. Ahh.. that's broken. Maybe yes, can remove it unless we
+> have a real need of it.
 
->> + - reg: physical base address of the controller and length of memory mapped
->> +   region.
->> + - interrupts: interrupt number to the cpu.
->> +
->> +Example:
->> +     usb@12000000 {
->> +             compatible = "samsung,exynos-dwc3";
->> +             reg = <0x12000000 0x10000>;
->> +             interrupts = <0 72 0>;
->> +     };
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
->> index f18abe0..d349636 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -68,6 +68,12 @@
->>               interrupts = <0 96 0>;
->>       };
->>
->> +     usb@12000000 {
->> +             compatible = "samsung,exynos-dwc3";
->> +             reg = <0x12000000 0x10000>;
->> +             interrupts = <0 72 0>;
->> +     };
->> +
->>       rtc {
->>               compatible = "samsung,s3c6410-rtc";
->>               reg = <0x101E0000 0x100>;
->> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
->> index bb3b09a..588814a 100644
->> --- a/arch/arm/mach-exynos/Kconfig
->> +++ b/arch/arm/mach-exynos/Kconfig
->> @@ -422,6 +422,7 @@ config MACH_EXYNOS5_DT
->>       select ARM_AMBA
->>       select SOC_EXYNOS5250
->>       select USE_OF
->> +     select USB_ARCH_HAS_XHCI
->>       help
->>         Machine support for Samsung EXYNOS5 machine with device tree enabled.
->>         Select this if a fdt blob is available for the EXYNOS5 SoC based board.
->> diff --git a/arch/arm/mach-exynos/clock-exynos5.c b/arch/arm/mach-exynos/clock-exynos5.c
->> index a88e0d9..ee094ee 100644
->> --- a/arch/arm/mach-exynos/clock-exynos5.c
->> +++ b/arch/arm/mach-exynos/clock-exynos5.c
->> @@ -740,6 +740,11 @@ static struct clk exynos5_init_clocks_off[] = {
->>               .enable         = exynos5_clk_ip_fsys_ctrl ,
->>               .ctrlbit        = (1 << 18),
->>       }, {
->> +             .name           = "usbdrd30",
->> +             .parent         = &exynos5_clk_aclk_200.clk,
->> +             .enable         = exynos5_clk_ip_fsys_ctrl,
->> +             .ctrlbit        = (1 << 19),
->> +     }, {
->>               .name           = "usbotg",
->>               .enable         = exynos5_clk_ip_fsys_ctrl,
->>               .ctrlbit        = (1 << 7),
->> @@ -1004,6 +1009,16 @@ struct clksrc_sources exynos5_clkset_group = {
->>       .nr_sources     = ARRAY_SIZE(exynos5_clkset_group_list),
->>  };
->>
->> +struct clk *exynos5_clkset_usbdrd30_list[] = {
->> +     [0] = &exynos5_clk_mout_mpll.clk,
->> +     [1] = &exynos5_clk_mout_cpll.clk,
->> +};
->> +
->> +struct clksrc_sources exynos5_clkset_usbdrd30 = {
->> +     .sources        = exynos5_clkset_usbdrd30_list,
->> +     .nr_sources     = ARRAY_SIZE(exynos5_clkset_usbdrd30_list),
->> +};
->> +
->>  /* Possible clock sources for aclk_266_gscl_sub Mux */
->>  static struct clk *clk_src_gscl_266_list[] = {
->>       [0] = &clk_ext_xtal_mux,
->> @@ -1288,6 +1303,15 @@ static struct clksrc_clk exynos5_clksrcs[] = {
->>                       .parent         = &exynos5_clk_mout_cpll.clk,
->>               },
->>               .reg_div = { .reg = EXYNOS5_CLKDIV_GEN, .shift = 4, .size = 3 },
->> +     }, {
->> +             .clk    = {
->> +                     .name           = "sclk_usbdrd30",
->> +                     .enable         = exynos5_clksrc_mask_fsys_ctrl,
->> +                     .ctrlbit        = (1 << 28),
->> +             },
->> +             .sources = &exynos5_clkset_usbdrd30,
->> +             .reg_src = { .reg = EXYNOS5_CLKSRC_FSYS, .shift = 28, .size = 1 },
->> +             .reg_div = { .reg = EXYNOS5_CLKDIV_FSYS0, .shift = 24, .size = 4 },
->>       },
->>  };
->>
->> diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
->> index 471ffaf..064ca1c 100644
->> --- a/arch/arm/mach-exynos/include/mach/map.h
->> +++ b/arch/arm/mach-exynos/include/mach/map.h
->> @@ -197,6 +197,7 @@
->>  #define EXYNOS4_PA_EHCI                      0x12580000
->>  #define EXYNOS4_PA_OHCI                      0x12590000
->>  #define EXYNOS4_PA_HSPHY             0x125B0000
->> +#define EXYNOS5_PA_DRD                       0x12000000
->>  #define EXYNOS5_PA_EHCI                      0x12110000
->>  #define EXYNOS5_PA_OHCI                      0x12120000
->>  #define EXYNOS4_PA_MFC                       0x13400000
->> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
->> index c03f3dd..3032222 100644
->> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
->> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
->> @@ -90,6 +90,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
->>                               "s5p-ehci", NULL),
->>       OF_DEV_AUXDATA("samsung,exynos-ohci", EXYNOS5_PA_OHCI,
->>                               "exynos-ohci", NULL),
->> +     OF_DEV_AUXDATA("samsung,exynos-dwc3", EXYNOS5_PA_DRD,
->> +                             "exynos-dwc3", NULL),
->>       {},
->>  };
->>
->> --
->> 1.7.6.5
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
->
-> --
-> Grant Likely, B.Sc, P.Eng.
-> Secret Lab Technologies, Ltd.
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+Broken or otherwise, if it's unused, it's cruft. :)
 
+> >> By chance
+> >> our non-DT and DT tables had a difference of "st," only in the nam=
+e
+> >> of instances and so it worked without tables. Otherwise it couldn'=
+t
+> >> have worked.
+> >>
+> >> Over that, i am looking to bring the "stmpe,id" binding back again=
+ (unless
+> >> you have a better option), as device name is not coming from DT cu=
+rrently,
+> >> which we discussed earlier.
+> >
+> > Or you could not put unnecessary bindings into the Device Tree
+> > by putting two and two together and realise that using the table
+> > is the correct thing to do instead. This actually gives reason
+> > to you previous patch, but should probably be fixed-up into it
+> > so it has some proper meaning/purpose. ;)
+>=20
+> Couldn't understand this one :(
 
+Really?
 
--- 
-Thanks & Regards
-Vivek
+Let's break it down - what do you need "stmpe,id" for?
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
