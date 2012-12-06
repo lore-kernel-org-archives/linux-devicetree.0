@@ -1,17 +1,14 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Thu, 6 Dec 2012 10:22:30 -0600
-Message-ID: <50C0C646.9000802@ti.com>
-References: <1354734571-10774-1-git-send-email-zonque@gmail.com>
- <1354734571-10774-6-git-send-email-zonque@gmail.com>
- <20121205222232.67B2B3E0E22@localhost> <50BFCBCC.6030706@ti.com>
- <20121205232426.BAD573E0E22@localhost> <20121206000302.GM21682@atomide.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V6] mfd: stmpe: Update DT support for stmpe driver
+Date: Thu, 6 Dec 2012 16:40:54 +0000
+Message-ID: <20121206164054.GV2718@gmail.com>
+References: <3db3266122f4c54f624477b3fb6763e5821bd3d0.1354807084.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121206000302.GM21682-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3db3266122f4c54f624477b3fb6763e5821bd3d0.1354807084.git.viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,48 +19,89 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: x0148406-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 12/05/2012 06:03 PM, Tony Lindgren wrote:
-> * Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> [121205 15:26]:
->> On Wed, 5 Dec 2012 16:33:48 -0600, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
->>> On 12/05/2012 04:22 PM, Grant Likely wrote:
->>>>
->>>> Please, be specific. Use something like "ti,am3340-gpmc" or
->>>> "ti,omap3430-gpmc". The compatible property is a list so that new
->>>> devices can claim compatibility with old. Compatible strings that are
->>>> overly generic are a pet-peave of mine.
->>>
->>> We aim to use the binding for omap2,3,4,5 as well as the am33xx devices
->>> (which are omap based). Would it be sufficient to have "ti,omap2-gpmc"
->>> implying all omap2+ based devices or should we have a compatible string
->>> for each device supported?
->>
->> Are they each register-level compatible with one another?
->>
->> The general recommended approach here is to make subsequent silicon
->> claim compatibility with the first compatible implementation.
->>
->> So, for an am3358 board:
->> 	compatible = "ti,am3358-gpmc", "ti,omap2420-gpmc";
->>
->> Essentially, what this means is that "ti,omap2420-gpmc" is the generic
->> value instead of "omap2-gpmc". The reason for this is so that the value
->> is anchored against a specific implementation, and not against something
->> completely imaginary or idealized. If a newer version isn't quite
->> compatible with the omap2420-gpmc, then it can drop the compatible claim
->> and the driver really should be told about the new device.
-> 
-> The compatible property can also be used to figure out which ones
-> need the workarounds in patch #4 of this series for the DT case.
-> So we should be specific with the compatible.
-
-We should not merged patch #4. Daniel included this here because he is
-using this on the current mainline, however, this is not needed for
-linux-next and so we should drop it.
-
-Cheers
-Jon
+T24gVGh1LCAwNiBEZWMgMjAxMiwgVmlyZXNoIEt1bWFyIHdyb3RlOgoKPiBGcm9tOiBWaXB1bCBL
+dW1hciBTYW1hciA8dmlwdWxrdW1hci5zYW1hckBzdC5jb20+Cj4gCj4gVGhpcyBwYXRjaCBleHRl
+bmRzIGV4aXN0aW5nIERUIHN1cHBvcnQgZm9yIHN0bXBlIGRldmljZXMuIFRoaXMgdXBkYXRlczoK
+PiAtIG1pc3NpbmcgaGVhZGVyIGZpbGVzIGluIHN0bXBlLmMKPiAtIHN0bXBlX29mX3Byb2JlKCkg
+d2l0aCBwd20sIHJvdGF0b3IgYW5kIG5ldyBiaW5kaW5ncy4KPiAtIEJpbmRpbmdzIGFyZSB1cGRh
+dGVkIGluIGJpbmRpbmcgZG9jdW1lbnQuCj4gCj4gQWNrZWQtYnk6IExlZSBKb25lcyA8bGVlLmpv
+bmVzQGxpbmFyby5vcmc+Cj4gU2lnbmVkLW9mZi1ieTogVmlwdWwgS3VtYXIgU2FtYXIgPHZpcHVs
+a3VtYXIuc2FtYXJAc3QuY29tPgo+IFNpZ25lZC1vZmYtYnk6IFZpcmVzaCBLdW1hciA8dmlyZXNo
+Lmt1bWFyQGxpbmFyby5vcmc+Cj4gLS0tCj4gSGkgU2FtdWVsLAo+IAo+IEkgaGF2ZSBhZGRlZCBh
+Y2tlZCBieSBMZWUgYXMgaGUgZWFybGllciBBY2tlZCB0aGlzIHBhdGNoLCBtb3N0IG9mIHRoZSBw
+YXJ0IGlzCj4gc3RpbGwgdGhlIHNhbWUuIEFuZCBub3RoaW5nIG5ldyBhZGRlZC4KPiAKPiBWNS0+
+VjY6Cj4gLSBSZW1vdmVkIG9mX2RldmlkZV9pZCB0YWJsZXMgZnJvbSBzdG1wZS1pMmNbc3BpXS5j
+Cj4gCj4gIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3RtcGUudHh0IHwg
+IDkgKysrKysrLS0tCj4gIGRyaXZlcnMvbWZkL3N0bXBlLmMgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgIHwgMjcgKysrKysrKysrKysrKysrKysrKy0tLS0tLQo+ICAyIGZpbGVzIGNoYW5nZWQs
+IDI3IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3RtcGUudHh0IGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9zdG1wZS50eHQKPiBpbmRleCA4ZjBhZWRhLi5kMmQ4
+OGQ5IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQv
+c3RtcGUudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9z
+dG1wZS50eHQKPiBAQCAtMSw4ICsxLDExIEBACj4gLSogU1RNUEUgTXVsdGktRnVuY3Rpb25hbCBE
+ZXZpY2UKPiArKiBTVCBNaWNyb2VsZWN0cm9uaWNzIFNUTVBFIE11bHRpLUZ1bmN0aW9uYWwgRGV2
+aWNlCj4gKwo+ICtTVE1QRSBpcyBhbiBNRkQgZGV2aWNlIHdoaWNoIG1heSBleHBvc2UgZm9sbG93
+aW5nIGluYnVpbHQgZGV2aWNlczogZ3Bpbywga2V5cGFkLAoKICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgXiB0aGUKCj4gK3RvdWNoc2NyZWVuLCBhZGMsIHB3bSwgcm90
+YXRvci4KPiAgCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gLSAtIGNvbXBhdGlibGUgICAgICAg
+ICAgICAgICAgICAgOiAic3Qsc3RtcGVbODExfDE2MDF8MjQwMXwyNDAzXSIKPiAtIC0gcmVnICAg
+ICAgICAgICAgICAgICAgICAgICAgICA6IEkyQyBhZGRyZXNzIG9mIHRoZSBkZXZpY2UKPiArIC0g
+Y29tcGF0aWJsZSAgICAgICAgICAgICAgICAgICA6ICJzdCxzdG1wZVs2MTB8ODAxfDgxMXwxNjAx
+fDI0MDF8MjQwM10iCj4gKyAtIHJlZyAgICAgICAgICAgICAgICAgICAgICAgICAgOiBJMkMvU1BJ
+IGFkZHJlc3Mgb2YgdGhlIGRldmljZQo+ICAKPiAgT3B0aW9uYWwgcHJvcGVydGllczoKPiAgIC0g
+aW50ZXJydXB0cyAgICAgICAgICAgICAgICAgICA6IFRoZSBpbnRlcnJ1cHQgb3V0cHV0cyBmcm9t
+IHRoZSBjb250cm9sbGVyCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWZkL3N0bXBlLmMgYi9kcml2
+ZXJzL21mZC9zdG1wZS5jCj4gaW5kZXggMzQ0MDhiNC4uYmIyZGZkYiAxMDA2NDQKPiAtLS0gYS9k
+cml2ZXJzL21mZC9zdG1wZS5jCj4gKysrIGIvZHJpdmVycy9tZmQvc3RtcGUuYwo+IEBAIC03LDEy
+ICs3LDE1IEBACj4gICAqIEF1dGhvcjogUmFiaW4gVmluY2VudCA8cmFiaW4udmluY2VudEBzdGVy
+aWNzc29uLmNvbT4gZm9yIFNULUVyaWNzc29uCj4gICAqLwo+ICAKPiArI2luY2x1ZGUgPGxpbnV4
+L2Vyci5oPgo+ICAjaW5jbHVkZSA8bGludXgvZ3Bpby5oPgo+ICAjaW5jbHVkZSA8bGludXgvZXhw
+b3J0Lmg+Cj4gICNpbmNsdWRlIDxsaW51eC9rZXJuZWwuaD4KPiAgI2luY2x1ZGUgPGxpbnV4L2lu
+dGVycnVwdC5oPgo+ICAjaW5jbHVkZSA8bGludXgvaXJxLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9p
+cnFkb21haW4uaD4KPiArI2luY2x1ZGUgPGxpbnV4L29mLmg+Cj4gKyNpbmNsdWRlIDxsaW51eC9v
+Zl9ncGlvLmg+Cj4gICNpbmNsdWRlIDxsaW51eC9wbS5oPgo+ICAjaW5jbHVkZSA8bGludXgvc2xh
+Yi5oPgo+ICAjaW5jbHVkZSA8bGludXgvbWZkL2NvcmUuaD4KPiBAQCAtMTAxOSw2ICsxMDIyLDE0
+IEBAIHZvaWQgX19kZXZpbml0IHN0bXBlX29mX3Byb2JlKHN0cnVjdCBzdG1wZV9wbGF0Zm9ybV9k
+YXRhICpwZGF0YSwKPiAgewo+ICAJc3RydWN0IGRldmljZV9ub2RlICpjaGlsZDsKPiAgCj4gKwkv
+Kgo+ICsJICogRGlzdGluY3QgbmFtZXMgb2Ygc2FtZSBjZWxsLXR5cGUgd2l0aGluIG11bHRpcGxl
+IGluc3RhbmNlcyBvZiBzdG1wZQo+ICsJICogd2lsbCBiZSBndWFyYW50ZWVkIGJ5IERULgo+ICsJ
+ICovCgpJIHRoaW5rIHRoZSBjb21tZW50IGlzIHVubmVjZXNzYXJ5LgoKPiArCXBkYXRhLT5pZCA9
+IC0xOwoKUGVyaGFwcyBQTEFURk9STV9ERVZJRF9BVVRPIHdvdWxkIGJlIGJldHRlcj8KCj4gKwlw
+ZGF0YS0+aXJxX3RyaWdnZXIgPSBJUlFGX1RSSUdHRVJfTk9ORTsKPiArCgpUaGVyZSdzIG5vIG5l
+ZWQgZm9yIHRoaXMuIEl0J3MgZ3VhcmFudGVlZCB0byBiZSB6ZXJvIGJ5OgoKICBwZGF0YSA9IGt6
+YWxsb2Moc2l6ZW9mKCpwZGF0YSksIEdGUF9LRVJORUwpOwoKPiAgCW9mX3Byb3BlcnR5X3JlYWRf
+dTMyKG5wLCAic3QsYXV0b3NsZWVwLXRpbWVvdXQiLAo+ICAJCQkmcGRhdGEtPmF1dG9zbGVlcF90
+aW1lb3V0KTsKPiAgCj4gQEAgLTEwMjcsMTUgKzEwMzgsMTYgQEAgdm9pZCBfX2RldmluaXQgc3Rt
+cGVfb2ZfcHJvYmUoc3RydWN0IHN0bXBlX3BsYXRmb3JtX2RhdGEgKnBkYXRhLAo+ICAJZm9yX2Vh
+Y2hfY2hpbGRfb2Zfbm9kZShucCwgY2hpbGQpIHsKPiAgCQlpZiAoIXN0cmNtcChjaGlsZC0+bmFt
+ZSwgInN0bXBlX2dwaW8iKSkgewo+ICAJCQlwZGF0YS0+YmxvY2tzIHw9IFNUTVBFX0JMT0NLX0dQ
+SU87Cj4gLQkJfQo+IC0JCWlmICghc3RyY21wKGNoaWxkLT5uYW1lLCAic3RtcGVfa2V5cGFkIikp
+IHsKPiArCQl9IGVsc2UgaWYgKCFzdHJjbXAoY2hpbGQtPm5hbWUsICJzdG1wZV9rZXlwYWQiKSkg
+ewo+ICAJCQlwZGF0YS0+YmxvY2tzIHw9IFNUTVBFX0JMT0NLX0tFWVBBRDsKPiAtCQl9Cj4gLQkJ
+aWYgKCFzdHJjbXAoY2hpbGQtPm5hbWUsICJzdG1wZV90b3VjaHNjcmVlbiIpKSB7Cj4gKwkJfSBl
+bHNlIGlmICghc3RyY21wKGNoaWxkLT5uYW1lLCAic3RtcGVfdG91Y2hzY3JlZW4iKSkgewo+ICAJ
+CQlwZGF0YS0+YmxvY2tzIHw9IFNUTVBFX0JMT0NLX1RPVUNIU0NSRUVOOwo+IC0JCX0KPiAtCQlp
+ZiAoIXN0cmNtcChjaGlsZC0+bmFtZSwgInN0bXBlX2FkYyIpKSB7Cj4gKwkJfSBlbHNlIGlmICgh
+c3RyY21wKGNoaWxkLT5uYW1lLCAic3RtcGVfYWRjIikpIHsKPiAgCQkJcGRhdGEtPmJsb2NrcyB8
+PSBTVE1QRV9CTE9DS19BREM7Cj4gKwkJfSBlbHNlIGlmICghc3RyY21wKGNoaWxkLT5uYW1lLCAi
+c3RtcGVfcHdtIikpIHsKPiArCQkJcGRhdGEtPmJsb2NrcyB8PSBTVE1QRV9CTE9DS19QV007Cj4g
+KwkJfSBlbHNlIGlmICghc3RyY21wKGNoaWxkLT5uYW1lLCAic3RtcGVfcm90YXRvciIpKSB7Cj4g
+KwkJCXBkYXRhLT5ibG9ja3MgfD0gU1RNUEVfQkxPQ0tfUk9UQVRPUjsKPiAgCQl9Cj4gIAl9Cj4g
+IH0KPiBAQCAtMTEwNiw2ICsxMTE4LDkgQEAgaW50IF9fZGV2aW5pdCBzdG1wZV9wcm9iZShzdHJ1
+Y3Qgc3RtcGVfY2xpZW50X2luZm8gKmNpLCBpbnQgcGFydG51bSkKPiAgCQkJcmV0dXJuIC1FTk9E
+RVY7Cj4gIAkJfQo+ICAJCXN0bXBlLT52YXJpYW50ID0gc3RtcGVfbm9pcnFfdmFyaWFudF9pbmZv
+W3N0bXBlLT5wYXJ0bnVtXTsKPiArCX0gZWxzZSBpZiAocGRhdGEtPmlycV90cmlnZ2VyID09IElS
+UUZfVFJJR0dFUl9OT05FKSB7Cj4gKwkJcGRhdGEtPmlycV90cmlnZ2VyID0KPiArCQkJaXJxZF9n
+ZXRfdHJpZ2dlcl90eXBlKGlycV9nZXRfaXJxX2RhdGEoc3RtcGUtPmlycSkpOwo+ICAJfQo+ICAK
+PiAgCXJldCA9IHN0bXBlX2NoaXBfaW5pdChzdG1wZSk7Cj4gLS0gCj4gMS43LjEyLnJjMi4xOC5n
+NjFiNDcyZQo+IAoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1QtRXJpY3Nzb24gTGFuZGluZyBUZWFt
+IExlYWQKTGluYXJvLm9yZyDilIIgT3BlbiBzb3VyY2Ugc29mdHdhcmUgZm9yIEFSTSBTb0NzCkZv
+bGxvdyBMaW5hcm86IEZhY2Vib29rIHwgVHdpdHRlciB8IEJsb2cKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcg
+bGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96
+bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
