@@ -1,34 +1,51 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
 Subject: Re: Regulator suspend state dt question
-Date: Thu, 6 Dec 2012 15:28:38 +0900
-Message-ID: <20121206062836.GH10867@opensource.wolfsonmicro.com>
+Date: Thu, 6 Dec 2012 12:32:24 +0530
+Message-ID: <CAM4voakrYQYrj2do0sYr_h0ZsRifAaLnDgeSxp6Z2e_F+_23uQ@mail.gmail.com>
 References: <CAM4voa=X_rBkSXRHd=oEOnXhgyfSAeD8LmYnsTeQtd-SYKWwPg@mail.gmail.com>
+	<20121206062836.GH10867@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAM4voa=X_rBkSXRHd=oEOnXhgyfSAeD8LmYnsTeQtd-SYKWwPg@mail.gmail.com>
+In-Reply-To: <20121206062836.GH10867@opensource.wolfsonmicro.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Abhilash Kesavan <kesavan.abhilash@gmail.com>
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
 Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, lrg@ti.com, Doug Anderson <dianders@chromium.org>, Olof Johansson <olofj@google.com>, Thomas Abraham <thomas.abraham@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 06, 2012 at 11:55:11AM +0530, Abhilash Kesavan wrote:
+Hi Mark,
 
-> As of now there is no support in the regulator core to specify the suspend state
-> (mode, enabled/disabled) using dt. I can add new properties specifying
-> the intial_state,
-> mode, enable/disable but I am not too sure if it is appropriate to add
-> such bindings to
-> the device tree as they are not actually describing the hardware.
+On Thu, Dec 6, 2012 at 11:58 AM, Mark Brown
+<broonie@opensource.wolfsonmicro.com> wrote:
+> On Thu, Dec 06, 2012 at 11:55:11AM +0530, Abhilash Kesavan wrote:
+>
+>> As of now there is no support in the regulator core to specify the suspend state
+>> (mode, enabled/disabled) using dt. I can add new properties specifying
+>> the intial_state,
+>> mode, enable/disable but I am not too sure if it is appropriate to add
+>> such bindings to
+>> the device tree as they are not actually describing the hardware.
+>
+> Well, it does depend on the hardware a bit - some hardware is hard wired
+> to only have one possible suspend state due to power up requirements.
+> But for a lot of hardware it's flexible...
+So, adding such new properties to the drivers/regulator/of_regulator.c
+file would
+not be acceptable right ?
+>
+>> Is calling regulator_suspend_prepare from a machine specific file an option ?
+>
+> This is not really relevant, it's an orthogonal thing about when we
+> trigger the state transition in the regulator.
+OK
+>
+> It's not clear what a good solution is here, sorry.
+Would it be acceptable that I add a new optional "op_mode" property
+for max77686 ?
+If the property is found in dt then assign the value to
+max77686->opmode[i] else use
+enable_mask. I'll be doing this in probe for all the regulators.
 
-Well, it does depend on the hardware a bit - some hardware is hard wired
-to only have one possible suspend state due to power up requirements.
-But for a lot of hardware it's flexible...  
+Thanks for your help.
 
-> Is calling regulator_suspend_prepare from a machine specific file an option ?
-
-This is not really relevant, it's an orthogonal thing about when we
-trigger the state transition in the regulator.
-
-It's not clear what a good solution is here, sorry.
+Abhilash
