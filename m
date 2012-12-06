@@ -1,37 +1,50 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH v2 06/44] of/vendor-prefixes: add Imagination Technologies
-Date: Thu, 6 Dec 2012 09:24:38 +0000
-Message-ID: <50C06456.7090504@imgtec.com>
-References: <1354723742-6195-1-git-send-email-james.hogan@imgtec.com> <1354723742-6195-7-git-send-email-james.hogan@imgtec.com> <20121205222824.005C53E0E22@localhost>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
+Date: Thu, 6 Dec 2012 09:50:19 +0000
+Message-ID: <20121206095019.GN2718@gmail.com>
+References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
+ <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
+ <20121130105731.GN3176@sortiz-mobl>
+ <20121130154542.GG23648@gmail.com>
+ <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
+ <20121205224203.691153E0E22@localhost>
+ <CAKohponjLp214EPKgNHqP2N8Tje9U8ZxgywUTSvsjE-TqHy+xw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <20121205222824.005C53E0E22@localhost>
-Sender: linux-arch-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohponjLp214EPKgNHqP2N8Tje9U8ZxgywUTSvsjE-TqHy+xw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Samuel Ortiz <sameo@linux.intel.com>, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/12/12 22:28, Grant Likely wrote:
-> On Wed, 5 Dec 2012 16:08:24 +0000, James Hogan <james.hogan@imgtec.com> wrote:
->> The "powervr" prefix which is currently described as "Imagination
->> Technologies" isn't really appropriate for non-PowerVR hardware, so
->> deprecate it, changing the description of "powervr" to "PowerVR
->> (deprecated, use img)", and add a separate "img" prefix for "Imagination
->> Technologies Ltd.".
->>
->> Signed-off-by: James Hogan <james.hogan@imgtec.com>
->> Cc: Grant Likely <grant.likely@secretlab.ca>
->> Cc: Rob Herring <rob.herring@calxeda.com>
->> Cc: Rob Landley <rob@landley.net>
->> Cc: devicetree-discuss@lists.ozlabs.org
-> 
-> Applied, thanks.
-> 
-> g.
+> > But regardless, it is the responsiblity of the probe function to go=
+ and
+> > look if of_driver_match_device() matches against anything if it car=
+es
+> > about the of_match_table entries (for instance, if there is extra d=
+ata
+> > attached).
+>=20
+> Ok, so filling .data field in of_device_id[] is not required for our =
+case as
+> we aren't doing anything special in our drivers.
 
-Thanks Grant, I'll drop this patch from the metag patchset.
+This is exactly my point, and the reason I bought it up in the
+first place. Normally when you specify an ID table and populate
+the .data attribute, you parse for it in the code and then cast
+it back to some kind of useful data. However, you're not doing
+that, which is precisely why I wondered if the table was
+necessary at all. In all my testing, the DT portion worked and
+the correct STMPE chip was identified without it.
 
-Cheers
-James
+So, are you adding the table for good reason, or because you
+think it's the right thing to do?
+
+--=20
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
