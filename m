@@ -1,122 +1,48 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH V6] mfd: stmpe: Update DT support for stmpe driver
-Date: Thu,  6 Dec 2012 21:13:23 +0530
-Message-ID: <3db3266122f4c54f624477b3fb6763e5821bd3d0.1354807084.git.viresh.kumar@linaro.org>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: [PATCH resend] spi: Add support for specifying 3-wire mode via device tree
+Date: Thu,  6 Dec 2012 16:55:33 +0100
+Message-ID: <1354809333-18364-1-git-send-email-lars@metafoo.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com
-Cc: lee.jones@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, Vipul Kumar Samar <vipulkumar.samar@st.com>, Viresh Kumar <viresh.kumar@linaro.org>
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net, linux-kernel@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>
 List-Id: devicetree@vger.kernel.org
 
-From: Vipul Kumar Samar <vipulkumar.samar@st.com>
+This patch allows to specify that a SPI device is connected in 3-wire mode via
+device tree.
 
-This patch extends existing DT support for stmpe devices. This updates:
-- missing header files in stmpe.c
-- stmpe_of_probe() with pwm, rotator and new bindings.
-- Bindings are updated in binding document.
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Vipul Kumar Samar <vipulkumar.samar@st.com>
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
+Acked-by: Rob Herring <rob.herring@calxeda.com>
 ---
-Hi Samuel,
+ Documentation/devicetree/bindings/spi/spi-bus.txt | 2 ++
+ drivers/spi/spi.c                                 | 2 ++
+ 2 files changed, 4 insertions(+)
 
-I have added acked by Lee as he earlier Acked this patch, most of the part is
-still the same. And nothing new added.
-
-V5->V6:
-- Removed of_devide_id tables from stmpe-i2c[spi].c
-
- Documentation/devicetree/bindings/mfd/stmpe.txt |  9 ++++++---
- drivers/mfd/stmpe.c                             | 27 +++++++++++++++++++------
- 2 files changed, 27 insertions(+), 9 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
-index 8f0aeda..d2d88d9 100644
---- a/Documentation/devicetree/bindings/mfd/stmpe.txt
-+++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
-@@ -1,8 +1,11 @@
--* STMPE Multi-Functional Device
-+* ST Microelectronics STMPE Multi-Functional Device
-+
-+STMPE is an MFD device which may expose following inbuilt devices: gpio, keypad,
-+touchscreen, adc, pwm, rotator.
+diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+index 77a8b0d..296015e 100644
+--- a/Documentation/devicetree/bindings/spi/spi-bus.txt
++++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+@@ -53,6 +53,8 @@ contain the following properties.
+     		shifted clock phase (CPHA) mode
+ - spi-cs-high     - (optional) Empty property indicating device requires
+     		chip select active high
++- spi-3wire       - (optional) Empty property indicating device requires
++    		    3-wire mode.
  
- Required properties:
-- - compatible                   : "st,stmpe[811|1601|2401|2403]"
-- - reg                          : I2C address of the device
-+ - compatible                   : "st,stmpe[610|801|811|1601|2401|2403]"
-+ - reg                          : I2C/SPI address of the device
+ If a gpio chipselect is used for the SPI slave the gpio number will be passed
+ via the cs_gpio
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index 22c71e2..cb61ada 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -861,6 +861,8 @@ static void of_register_spi_devices(struct spi_master *master)
+ 			spi->mode |= SPI_CPOL;
+ 		if (of_find_property(nc, "spi-cs-high", NULL))
+ 			spi->mode |= SPI_CS_HIGH;
++		if (of_find_property(nc, "spi-3wire", NULL))
++			spi->mode |= SPI_3WIRE;
  
- Optional properties:
-  - interrupts                   : The interrupt outputs from the controller
-diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
-index 34408b4..bb2dfdb 100644
---- a/drivers/mfd/stmpe.c
-+++ b/drivers/mfd/stmpe.c
-@@ -7,12 +7,15 @@
-  * Author: Rabin Vincent <rabin.vincent@stericsson.com> for ST-Ericsson
-  */
- 
-+#include <linux/err.h>
- #include <linux/gpio.h>
- #include <linux/export.h>
- #include <linux/kernel.h>
- #include <linux/interrupt.h>
- #include <linux/irq.h>
- #include <linux/irqdomain.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/pm.h>
- #include <linux/slab.h>
- #include <linux/mfd/core.h>
-@@ -1019,6 +1022,14 @@ void __devinit stmpe_of_probe(struct stmpe_platform_data *pdata,
- {
- 	struct device_node *child;
- 
-+	/*
-+	 * Distinct names of same cell-type within multiple instances of stmpe
-+	 * will be guaranteed by DT.
-+	 */
-+	pdata->id = -1;
-+
-+	pdata->irq_trigger = IRQF_TRIGGER_NONE;
-+
- 	of_property_read_u32(np, "st,autosleep-timeout",
- 			&pdata->autosleep_timeout);
- 
-@@ -1027,15 +1038,16 @@ void __devinit stmpe_of_probe(struct stmpe_platform_data *pdata,
- 	for_each_child_of_node(np, child) {
- 		if (!strcmp(child->name, "stmpe_gpio")) {
- 			pdata->blocks |= STMPE_BLOCK_GPIO;
--		}
--		if (!strcmp(child->name, "stmpe_keypad")) {
-+		} else if (!strcmp(child->name, "stmpe_keypad")) {
- 			pdata->blocks |= STMPE_BLOCK_KEYPAD;
--		}
--		if (!strcmp(child->name, "stmpe_touchscreen")) {
-+		} else if (!strcmp(child->name, "stmpe_touchscreen")) {
- 			pdata->blocks |= STMPE_BLOCK_TOUCHSCREEN;
--		}
--		if (!strcmp(child->name, "stmpe_adc")) {
-+		} else if (!strcmp(child->name, "stmpe_adc")) {
- 			pdata->blocks |= STMPE_BLOCK_ADC;
-+		} else if (!strcmp(child->name, "stmpe_pwm")) {
-+			pdata->blocks |= STMPE_BLOCK_PWM;
-+		} else if (!strcmp(child->name, "stmpe_rotator")) {
-+			pdata->blocks |= STMPE_BLOCK_ROTATOR;
- 		}
- 	}
- }
-@@ -1106,6 +1118,9 @@ int __devinit stmpe_probe(struct stmpe_client_info *ci, int partnum)
- 			return -ENODEV;
- 		}
- 		stmpe->variant = stmpe_noirq_variant_info[stmpe->partnum];
-+	} else if (pdata->irq_trigger == IRQF_TRIGGER_NONE) {
-+		pdata->irq_trigger =
-+			irqd_get_trigger_type(irq_get_irq_data(stmpe->irq));
- 	}
- 
- 	ret = stmpe_chip_init(stmpe);
+ 		/* Device speed */
+ 		prop = of_get_property(nc, "spi-max-frequency", &len);
 -- 
-1.7.12.rc2.18.g61b472e
+1.8.0
