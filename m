@@ -1,65 +1,70 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v7 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC
- timings and NAND
-Date: Wed, 5 Dec 2012 16:03:03 -0800
-Message-ID: <20121206000302.GM21682@atomide.com>
-References: <1354734571-10774-1-git-send-email-zonque@gmail.com>
- <1354734571-10774-6-git-send-email-zonque@gmail.com>
- <20121205222232.67B2B3E0E22@localhost> <50BFCBCC.6030706@ti.com>
- <20121205232426.BAD573E0E22@localhost>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
+Date: Thu, 6 Dec 2012 07:28:22 +0530
+Message-ID: <CAKohponjLp214EPKgNHqP2N8Tje9U8ZxgywUTSvsjE-TqHy+xw@mail.gmail.com>
+References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
+	<121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
+	<20121130105731.GN3176@sortiz-mobl>
+	<20121130154542.GG23648@gmail.com>
+	<CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
+	<20121205224203.691153E0E22@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121205232426.BAD573E0E22@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: x0148406-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121205224203.691153E0E22@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-* Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> [121205 15:26]:
-> On Wed, 5 Dec 2012 16:33:48 -0600, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
-> > On 12/05/2012 04:22 PM, Grant Likely wrote:
-> > > 
-> > > Please, be specific. Use something like "ti,am3340-gpmc" or
-> > > "ti,omap3430-gpmc". The compatible property is a list so that new
-> > > devices can claim compatibility with old. Compatible strings that are
-> > > overly generic are a pet-peave of mine.
-> > 
-> > We aim to use the binding for omap2,3,4,5 as well as the am33xx devices
-> > (which are omap based). Would it be sufficient to have "ti,omap2-gpmc"
-> > implying all omap2+ based devices or should we have a compatible string
-> > for each device supported?
-> 
-> Are they each register-level compatible with one another?
-> 
-> The general recommended approach here is to make subsequent silicon
-> claim compatibility with the first compatible implementation.
-> 
-> So, for an am3358 board:
-> 	compatible = "ti,am3358-gpmc", "ti,omap2420-gpmc";
-> 
-> Essentially, what this means is that "ti,omap2420-gpmc" is the generic
-> value instead of "omap2-gpmc". The reason for this is so that the value
-> is anchored against a specific implementation, and not against something
-> completely imaginary or idealized. If a newer version isn't quite
-> compatible with the omap2420-gpmc, then it can drop the compatible claim
-> and the driver really should be told about the new device.
+First of all, thanks for explaining :)
 
-The compatible property can also be used to figure out which ones
-need the workarounds in patch #4 of this series for the DT case.
-So we should be specific with the compatible.
+On 6 December 2012 04:12, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Sat, 1 Dec 2012 00:33:46 +0530, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+>> This first tries to match the table my patch added, _BUT_ the string will
+>> never match as we had "st,stmpe810" in table and "stmpe810" in dev.
+>
+> of_driver_match_device() matches against the compatible list in
+> dev->of_node, not against the device name. So, if the compatible
+> property has a string that is in the table, then it really should match
+> against it.
 
-Regards,
+How could i misread it? Yes you are correct.
 
-Tony
+>> static int i2c_device_probe(struct device *dev)
+>> {
+>>         .....
+>>       status = driver->probe(client, i2c_match_id(driver->id_table, client));
+>
+> Here things are a bit wonky. Even if matched against the table, it is
+
+table means of_device_id table ?
+
+> possible that it also matches against i2c_match_id() and that data is
+> passed to the driver.
+
+It is a possibility or guarantee ? And so whatever device name we got from
+modalias routine, should match with the names in driver->id_table.
+
+> But regardless, it is the responsiblity of the probe function to go and
+> look if of_driver_match_device() matches against anything if it cares
+> about the of_match_table entries (for instance, if there is extra data
+> attached).
+
+Ok, so filling .data field in of_device_id[] is not required for our case as
+we aren't doing anything special in our drivers.
+
+>> Which will again match the legacy table to find correct struct i2c_device_id *id
+>> to pass to probe().
+>>
+>> So, the final question: WTF is of_match_table for?
+>
+> A bit of history is valuable here. The whole of_modalias_node() thing is
+> really just a best-effort heuristic for figuring out which driver
+> *might* work against a device described in the device tree. It won't
+> work in all circumstances (and it was created at a time when there was
+> resistance to adding DT knowledge to drivers). An of_match_table is the
+> robust way of identifying specific devices and allows for matching
+> against any entry in the compatible list.
+
+Got it.
