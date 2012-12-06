@@ -1,95 +1,136 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Thu, 6 Dec 2012 12:11:02 -0600
-Message-ID: <50C0DFB6.9060501@ti.com>
-References: <1354734571-10774-1-git-send-email-zonque@gmail.com>
- <1354734571-10774-6-git-send-email-zonque@gmail.com>
- <20121205222232.67B2B3E0E22@localhost> <50BFCBCC.6030706@ti.com>
- <20121205232426.BAD573E0E22@localhost> <20121206000302.GM21682@atomide.com>
- <50C0C646.9000802@ti.com> <50C0CDB0.5050008@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50C0CDB0.5050008-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, x0148406-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v2] of: Output devicetree alias names in uevent
+Date: Thu, 06 Dec 2012 19:24:59 +0000
+Message-ID: <20121206192500.0BF073E3A5E@localhost>
+References: <20121205230318.013053E0E22@localhost> <1354780165-872-1-git-send-email-stepanm@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1354780165-872-1-git-send-email-stepanm@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+Cc: Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, mbohan@codeaurora.org, Stepan Moskovchenko <stepanm@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-
-On 12/06/2012 10:54 AM, Daniel Mack wrote:
-> On 06.12.2012 17:22, Jon Hunter wrote:
->>
->> On 12/05/2012 06:03 PM, Tony Lindgren wrote:
->>> * Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> [121205 15:26]:
->>>> On Wed, 5 Dec 2012 16:33:48 -0600, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
->>>>> On 12/05/2012 04:22 PM, Grant Likely wrote:
->>>>>>
->>>>>> Please, be specific. Use something like "ti,am3340-gpmc" or
->>>>>> "ti,omap3430-gpmc". The compatible property is a list so that new
->>>>>> devices can claim compatibility with old. Compatible strings that are
->>>>>> overly generic are a pet-peave of mine.
->>>>>
->>>>> We aim to use the binding for omap2,3,4,5 as well as the am33xx devices
->>>>> (which are omap based). Would it be sufficient to have "ti,omap2-gpmc"
->>>>> implying all omap2+ based devices or should we have a compatible string
->>>>> for each device supported?
->>>>
->>>> Are they each register-level compatible with one another?
->>>>
->>>> The general recommended approach here is to make subsequent silicon
->>>> claim compatibility with the first compatible implementation.
->>>>
->>>> So, for an am3358 board:
->>>> 	compatible = "ti,am3358-gpmc", "ti,omap2420-gpmc";
->>>>
->>>> Essentially, what this means is that "ti,omap2420-gpmc" is the generic
->>>> value instead of "omap2-gpmc". The reason for this is so that the value
->>>> is anchored against a specific implementation, and not against something
->>>> completely imaginary or idealized. If a newer version isn't quite
->>>> compatible with the omap2420-gpmc, then it can drop the compatible claim
->>>> and the driver really should be told about the new device.
->>>
->>> The compatible property can also be used to figure out which ones
->>> need the workarounds in patch #4 of this series for the DT case.
->>> So we should be specific with the compatible.
->>
->> We should not merged patch #4. Daniel included this here because he is
->> using this on the current mainline, however, this is not needed for
->> linux-next and so we should drop it.
+On Wed,  5 Dec 2012 23:49:25 -0800, Stepan Moskovchenko <stepanm@codeaurora.org> wrote:
+> In some situations, userspace may want to resolve a
+> device by function and logical number (ie, "serial0")
+> rather than by the base address or full device path. Being
+> able to resolve a device by alias frees userspace from the
+> burden of otherwise having to maintain a mapping between
+> device addresses and their logical assignments on each
+> platform when multiple instances of the same hardware block
+> are present in the system.
 > 
-> I think we're talking about different things here since awhile.
+> Although the uevent device attribute contains devicetree
+> compatible information and the full device path, the uevent
+> does not list the alises that may have been defined for the
+> device.
 > 
-> The patch I pointed you which is in mainline and which removes the
-> reference to <plat/gpmc.h> from drivers/mtd/nand/omap2.c has nothing to
-> do with my patch #4. It just solves Tony's concern that regarding the
-> multi-arch zImages.
->
-> My code in gpmc.c calls gpmc_nand_init() which in turn calls
-> gpmc_hwecc_bch_capable(). Without path #4, gpmc_hwecc_bch_capable() will
-> return 0, and the nand init will fail consequently, in mainline as well
-> as in linux-next.
+> Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
+> ---
+> v2: Create of_private.h and move struct alias_prop there
+>     Add alias uevent variables from of_device_uevent
+>     Use app->alias instead of app->stem / app->id directly
+>     Expose alias_lookup and of_alias_mutex
+> 
+>  drivers/of/base.c       |   23 +++--------------------
+>  drivers/of/device.c     |   17 +++++++++++++++++
+>  drivers/of/of_private.h |   33 +++++++++++++++++++++++++++++++++
+>  3 files changed, 53 insertions(+), 20 deletions(-)
+>  create mode 100644 drivers/of/of_private.h
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 5806449..715aef2 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -24,32 +24,15 @@
+>  #include <linux/slab.h>
+>  #include <linux/proc_fs.h>
+> 
+> -/**
+> - * struct alias_prop - Alias property in 'aliases' node
+> - * @link:	List node to link the structure in aliases_lookup list
+> - * @alias:	Alias property name
+> - * @np:		Pointer to device_node that the alias stands for
+> - * @id:		Index value from end of alias name
+> - * @stem:	Alias string without the index
+> - *
+> - * The structure represents one alias property of 'aliases' node as
+> - * an entry in aliases_lookup list.
+> - */
+> -struct alias_prop {
+> -	struct list_head link;
+> -	const char *alias;
+> -	struct device_node *np;
+> -	int id;
+> -	char stem[0];
+> -};
+> +#include "of_private.h"
+> 
+> -static LIST_HEAD(aliases_lookup);
+> +LIST_HEAD(aliases_lookup);
+> 
+>  struct device_node *allnodes;
+>  struct device_node *of_chosen;
+>  struct device_node *of_aliases;
+> 
+> -static DEFINE_MUTEX(of_aliases_mutex);
+> +DEFINE_MUTEX(of_aliases_mutex);
+> 
+>  /* use when traversing tree through the allnext, child, sibling,
+>   * or parent members of struct device_node.
+> diff --git a/drivers/of/device.c b/drivers/of/device.c
+> index 4c74e4f..b8d31db 100644
+> --- a/drivers/of/device.c
+> +++ b/drivers/of/device.c
+> @@ -8,6 +8,7 @@
+>  #include <linux/slab.h>
+> 
+>  #include <asm/errno.h>
+> +#include "of_private.h"
+> 
+>  /**
+>   * of_match_device - Tell if a struct device matches an of_device_id list
+> @@ -131,6 +132,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
+>  void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+>  {
+>  	const char *compat;
+> +	struct alias_prop *app;
+>  	int seen = 0, cplen, sl;
+> 
+>  	if ((!dev) || (!dev->of_node))
+> @@ -153,6 +155,21 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
+>  		seen++;
+>  	}
+>  	add_uevent_var(env, "OF_COMPATIBLE_N=%d", seen);
+> +
+> +	seen = 0;
+> +	mutex_lock(&of_aliases_mutex);
+> +	list_for_each_entry(app, &aliases_lookup, link) {
+> +		if (dev->of_node == app->np) {
+> +			add_uevent_var(env, "OF_ALIAS_%d=%s", seen,
+> +				       app->alias);
+> +			seen++;
+> +		}
+> +	}
+> +
+> +	if (seen)
+> +		add_uevent_var(env, "OF_ALIAS_N=%d", seen);
+> +
+> +	mutex_unlock(&of_aliases_mutex);
+>  }
+> 
+>  int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
+> diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
+> new file mode 100644
+> index 0000000..031608f
+> --- /dev/null
+> +++ b/drivers/of/of_private.h
+> @@ -0,0 +1,33 @@
+> +/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
 
-Ok, yes I see that now. I should have looked more closely at linux-next.
+Oops, that doesn't look right. You need to preserve the copyright
+messages from the file this came from. You didn't write this code, you
+only moved it about.
 
-> I understood Tony that he wanted to remove the entiry function and do
-> the check based on DT properties, which will then solve the problem on a
-> different level. However, that change is planned for *after* the merge
-> window.
+Otherwise the patch looks good. Can you please respin with that change?
 
-Well now that it is only being called from within the platform code and
-not from drivers, it is ok.
-
-Cheers
-Jon
+g.
