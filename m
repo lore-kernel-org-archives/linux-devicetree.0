@@ -1,15 +1,22 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCHv15 2/7] video: add display_timing and videomode
-Date: Thu, 06 Dec 2012 10:07:18 +0000
-Message-ID: <20121206100718.C5C263E0EA4@localhost>
-References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353920848-1705-3-git-send-email-s.trumtrar@pengutronix.de>
- <50B36286.7010704@ti.com> <20121126153958.GA30791@pengutronix.de>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
+Date: Thu, 6 Dec 2012 10:11:31 +0000
+Message-ID: <20121206101131.GP2718@gmail.com>
+References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
+ <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
+ <20121130105731.GN3176@sortiz-mobl>
+ <20121130154542.GG23648@gmail.com>
+ <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
+ <20121205224203.691153E0E22@localhost>
+ <CAKohponjLp214EPKgNHqP2N8Tje9U8ZxgywUTSvsjE-TqHy+xw@mail.gmail.com>
+ <20121206095019.GN2718@gmail.com>
+ <CAKohpokNQB6L2vvjmvA7_3KomFXnV9wZ-uBjrfRVuBL=QWgr_Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121126153958.GA30791-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKohpokNQB6L2vvjmvA7_3KomFXnV9wZ-uBjrfRVuBL=QWgr_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,31 +27,54 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: rabin.vincent-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shiraz.hashim-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 Nov 2012 16:39:58 +0100, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Mon, Nov 26, 2012 at 02:37:26PM +0200, Tomi Valkeinen wrote:
-> > On 2012-11-26 11:07, Steffen Trumtrar wrote:
-> > 
-> > > +/*
-> > > + * Subsystem independent description of a videomode.
-> > > + * Can be generated from struct display_timing.
-> > > + */
-> > > +struct videomode {
-> > > +	u32 pixelclock;		/* pixelclock in Hz */
-> > 
-> > I don't know if this is of any importance, but the linux clock framework
-> > manages clock rates with unsigned long. Would it be better to use the
-> > same type here?
-> > 
-> 
-> Hm, I don't know. Anyone? u32 should be large enough for a pixelclock.
-
-4GHz is a pretty large pixel clock. I have no idea how conceivable it is
-that hardware will get to that speed. However, if it will ever be
-larger, then you'll need to account for that in the DT binding so that
-the pixel clock can be specified using 2 cells.
-
-g.
+T24gVGh1LCAwNiBEZWMgMjAxMiwgVmlyZXNoIEt1bWFyIHdyb3RlOgoKPiBPbiA2IERlY2VtYmVy
+IDIwMTIgMTU6MjAsIExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+IHdyb3RlOgo+ID4+
+ID4gQnV0IHJlZ2FyZGxlc3MsIGl0IGlzIHRoZSByZXNwb25zaWJsaXR5IG9mIHRoZSBwcm9iZSBm
+dW5jdGlvbiB0byBnbyBhbmQKPiA+PiA+IGxvb2sgaWYgb2ZfZHJpdmVyX21hdGNoX2RldmljZSgp
+IG1hdGNoZXMgYWdhaW5zdCBhbnl0aGluZyBpZiBpdCBjYXJlcwo+ID4+ID4gYWJvdXQgdGhlIG9m
+X21hdGNoX3RhYmxlIGVudHJpZXMgKGZvciBpbnN0YW5jZSwgaWYgdGhlcmUgaXMgZXh0cmEgZGF0
+YQo+ID4+ID4gYXR0YWNoZWQpLgo+ID4+Cj4gPj4gT2ssIHNvIGZpbGxpbmcgLmRhdGEgZmllbGQg
+aW4gb2ZfZGV2aWNlX2lkW10gaXMgbm90IHJlcXVpcmVkIGZvciBvdXIgY2FzZSBhcwo+ID4+IHdl
+IGFyZW4ndCBkb2luZyBhbnl0aGluZyBzcGVjaWFsIGluIG91ciBkcml2ZXJzLgo+ID4KPiA+IFRo
+aXMgaXMgZXhhY3RseSBteSBwb2ludCwgYW5kIHRoZSByZWFzb24gSSBib3VnaHQgaXQgdXAgaW4g
+dGhlCj4gPiBmaXJzdCBwbGFjZS4gTm9ybWFsbHkgd2hlbiB5b3Ugc3BlY2lmeSBhbiBJRCB0YWJs
+ZSBhbmQgcG9wdWxhdGUKPiA+IHRoZSAuZGF0YSBhdHRyaWJ1dGUsIHlvdSBwYXJzZSBmb3IgaXQg
+aW4gdGhlIGNvZGUgYW5kIHRoZW4gY2FzdAo+ID4gaXQgYmFjayB0byBzb21lIGtpbmQgb2YgdXNl
+ZnVsIGRhdGEuIEhvd2V2ZXIsIHlvdSdyZSBub3QgZG9pbmcKPiA+IHRoYXQsIHdoaWNoIGlzIHBy
+ZWNpc2VseSB3aHkgSSB3b25kZXJlZCBpZiB0aGUgdGFibGUgd2FzCj4gPiBuZWNlc3NhcnkgYXQg
+YWxsLiBJbiBhbGwgbXkgdGVzdGluZywgdGhlIERUIHBvcnRpb24gd29ya2VkIGFuZAo+ID4gdGhl
+IGNvcnJlY3QgU1RNUEUgY2hpcCB3YXMgaWRlbnRpZmllZCB3aXRob3V0IGl0Lgo+IAo+IFByb2Jh
+Ymx5IFZpcHVsIChBdXRob3Igb2YgdGhpcyBwYXRjaCksIGNvcGllZCBpdCBmcm9tIGV4aXN0aW5n
+IGkyYy9zcGkKPiBjbGllbnRzLCB3aGljaCBoYXZlIGFsc28gYWRkZWQgdGhpcyBibGluZGx5IDop
+Cj4gCj4gPiBTbywgYXJlIHlvdSBhZGRpbmcgdGhlIHRhYmxlIGZvciBnb29kIHJlYXNvbiwgb3Ig
+YmVjYXVzZSB5b3UKPiA+IHRoaW5rIGl0J3MgdGhlIHJpZ2h0IHRoaW5nIHRvIGRvPwo+IAo+IEkg
+d291bGQgYmUga2VlcGluZyB0aGUgdGFibGUgYXMgdGhhdCdzIHRoZSByaWdodCB0aGluZyB0byBk
+by4gCgpTbyB0aGVuIEknbSBiYWNrIHRvIG15IG9yaWdpbmFsIHF1ZXN0aW9uLCB3aHk/CgpXaGF0
+IGlzIGl0IHVzZWQgZm9yPyBXaGF0IGRpZmZlcmVuY2UgZG9lcyBpdCBtYWtlPwoKSSBjb3VsZCB1
+bmRlcnN0YW5kIGlmIHRoZSAuZGF0YSBhdHRyaWJ1dGUgd2FzIHVzZWQgaW4gdGhlIGRyaXZlcgp0
+byBtYWtlIHZpdGFsIGRlY2lzaW9ucyBiYXNlZCBvbiBTVE1QRSB2ZXJzaW9uLCBidXQgaXQncyBu
+b3QuIFNvCndoeSBhcmUgd2UgYnVyZGVuaW5nIHRoZSBkcml2ZXIgd2l0aCB1bnVzZWQgY29kZSB0
+aGF0J3Mgbm90CnJlcXVpcmVkPyBPdGhlciB0aGFuIHRvIGdldCB5b3VyIG1haW5saW5lZCBwYXRj
+aC1jb3VudCB1cCBvZgpjb3Vyc2U/IFRoaXMgaGFzIGFuIGFpciBvZiAicGxhY2luZyBoZWFkZXIg
+ZmlsZXMgaW4gYWxwaGFiZXRpY2FsCm9yZGVyIiBhYm91dCBpdC4gOykKCj4gQnkgY2hhbmNlCj4g
+b3VyIG5vbi1EVCBhbmQgRFQgdGFibGVzIGhhZCBhIGRpZmZlcmVuY2Ugb2YgInN0LCIgb25seSBp
+biB0aGUgbmFtZQo+IG9mIGluc3RhbmNlcyBhbmQgc28gaXQgd29ya2VkIHdpdGhvdXQgdGFibGVz
+LiBPdGhlcndpc2UgaXQgY291bGRuJ3QKPiBoYXZlIHdvcmtlZC4KPiAKPiBPdmVyIHRoYXQsIGkg
+YW0gbG9va2luZyB0byBicmluZyB0aGUgInN0bXBlLGlkIiBiaW5kaW5nIGJhY2sgYWdhaW4gKHVu
+bGVzcwo+IHlvdSBoYXZlIGEgYmV0dGVyIG9wdGlvbiksIGFzIGRldmljZSBuYW1lIGlzIG5vdCBj
+b21pbmcgZnJvbSBEVCBjdXJyZW50bHksCj4gd2hpY2ggd2UgZGlzY3Vzc2VkIGVhcmxpZXIuCgpP
+ciB5b3UgY291bGQgbm90IHB1dCB1bm5lY2Vzc2FyeSBiaW5kaW5ncyBpbnRvIHRoZSBEZXZpY2Ug
+VHJlZQpieSBwdXR0aW5nIHR3byBhbmQgdHdvIHRvZ2V0aGVyIGFuZCByZWFsaXNlIHRoYXQgdXNp
+bmcgdGhlIHRhYmxlCmlzIHRoZSBjb3JyZWN0IHRoaW5nIHRvIGRvIGluc3RlYWQuIFRoaXMgYWN0
+dWFsbHkgZ2l2ZXMgcmVhc29uCnRvIHlvdSBwcmV2aW91cyBwYXRjaCwgYnV0IHNob3VsZCBwcm9i
+YWJseSBiZSBmaXhlZC11cCBpbnRvIGl0CnNvIGl0IGhhcyBzb21lIHByb3BlciBtZWFuaW5nL3B1
+cnBvc2UuIDspCgotLSAKTGVlIEpvbmVzCkxpbmFybyBTVC1Fcmljc3NvbiBMYW5kaW5nIFRlYW0g
+TGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9s
+bG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBs
+aXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3ps
+YWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
