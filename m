@@ -1,80 +1,172 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
-Date: Thu, 6 Dec 2012 10:11:31 +0000
-Message-ID: <20121206101131.GP2718@gmail.com>
-References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org>
- <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
- <20121130105731.GN3176@sortiz-mobl>
- <20121130154542.GG23648@gmail.com>
- <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
- <20121205224203.691153E0E22@localhost>
- <CAKohponjLp214EPKgNHqP2N8Tje9U8ZxgywUTSvsjE-TqHy+xw@mail.gmail.com>
- <20121206095019.GN2718@gmail.com>
- <CAKohpokNQB6L2vvjmvA7_3KomFXnV9wZ-uBjrfRVuBL=QWgr_Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKohpokNQB6L2vvjmvA7_3KomFXnV9wZ-uBjrfRVuBL=QWgr_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: rabin.vincent-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, shiraz.hashim-qxv4g6HH51o@public.gmane.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: Exynos5250: Enabling dwc3-exynos driver
+Date: Thu, 06 Dec 2012 10:15:34 +0000
+Message-ID: <20121206101534.A10123E05A4@localhost>
+References: <1352363533-14970-1-git-send-email-gautam.vivek@samsung.com> <1352363533-14970-2-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1352363533-14970-2-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAwNiBEZWMgMjAxMiwgVmlyZXNoIEt1bWFyIHdyb3RlOgoKPiBPbiA2IERlY2VtYmVy
-IDIwMTIgMTU6MjAsIExlZSBKb25lcyA8bGVlLmpvbmVzQGxpbmFyby5vcmc+IHdyb3RlOgo+ID4+
-ID4gQnV0IHJlZ2FyZGxlc3MsIGl0IGlzIHRoZSByZXNwb25zaWJsaXR5IG9mIHRoZSBwcm9iZSBm
-dW5jdGlvbiB0byBnbyBhbmQKPiA+PiA+IGxvb2sgaWYgb2ZfZHJpdmVyX21hdGNoX2RldmljZSgp
-IG1hdGNoZXMgYWdhaW5zdCBhbnl0aGluZyBpZiBpdCBjYXJlcwo+ID4+ID4gYWJvdXQgdGhlIG9m
-X21hdGNoX3RhYmxlIGVudHJpZXMgKGZvciBpbnN0YW5jZSwgaWYgdGhlcmUgaXMgZXh0cmEgZGF0
-YQo+ID4+ID4gYXR0YWNoZWQpLgo+ID4+Cj4gPj4gT2ssIHNvIGZpbGxpbmcgLmRhdGEgZmllbGQg
-aW4gb2ZfZGV2aWNlX2lkW10gaXMgbm90IHJlcXVpcmVkIGZvciBvdXIgY2FzZSBhcwo+ID4+IHdl
-IGFyZW4ndCBkb2luZyBhbnl0aGluZyBzcGVjaWFsIGluIG91ciBkcml2ZXJzLgo+ID4KPiA+IFRo
-aXMgaXMgZXhhY3RseSBteSBwb2ludCwgYW5kIHRoZSByZWFzb24gSSBib3VnaHQgaXQgdXAgaW4g
-dGhlCj4gPiBmaXJzdCBwbGFjZS4gTm9ybWFsbHkgd2hlbiB5b3Ugc3BlY2lmeSBhbiBJRCB0YWJs
-ZSBhbmQgcG9wdWxhdGUKPiA+IHRoZSAuZGF0YSBhdHRyaWJ1dGUsIHlvdSBwYXJzZSBmb3IgaXQg
-aW4gdGhlIGNvZGUgYW5kIHRoZW4gY2FzdAo+ID4gaXQgYmFjayB0byBzb21lIGtpbmQgb2YgdXNl
-ZnVsIGRhdGEuIEhvd2V2ZXIsIHlvdSdyZSBub3QgZG9pbmcKPiA+IHRoYXQsIHdoaWNoIGlzIHBy
-ZWNpc2VseSB3aHkgSSB3b25kZXJlZCBpZiB0aGUgdGFibGUgd2FzCj4gPiBuZWNlc3NhcnkgYXQg
-YWxsLiBJbiBhbGwgbXkgdGVzdGluZywgdGhlIERUIHBvcnRpb24gd29ya2VkIGFuZAo+ID4gdGhl
-IGNvcnJlY3QgU1RNUEUgY2hpcCB3YXMgaWRlbnRpZmllZCB3aXRob3V0IGl0Lgo+IAo+IFByb2Jh
-Ymx5IFZpcHVsIChBdXRob3Igb2YgdGhpcyBwYXRjaCksIGNvcGllZCBpdCBmcm9tIGV4aXN0aW5n
-IGkyYy9zcGkKPiBjbGllbnRzLCB3aGljaCBoYXZlIGFsc28gYWRkZWQgdGhpcyBibGluZGx5IDop
-Cj4gCj4gPiBTbywgYXJlIHlvdSBhZGRpbmcgdGhlIHRhYmxlIGZvciBnb29kIHJlYXNvbiwgb3Ig
-YmVjYXVzZSB5b3UKPiA+IHRoaW5rIGl0J3MgdGhlIHJpZ2h0IHRoaW5nIHRvIGRvPwo+IAo+IEkg
-d291bGQgYmUga2VlcGluZyB0aGUgdGFibGUgYXMgdGhhdCdzIHRoZSByaWdodCB0aGluZyB0byBk
-by4gCgpTbyB0aGVuIEknbSBiYWNrIHRvIG15IG9yaWdpbmFsIHF1ZXN0aW9uLCB3aHk/CgpXaGF0
-IGlzIGl0IHVzZWQgZm9yPyBXaGF0IGRpZmZlcmVuY2UgZG9lcyBpdCBtYWtlPwoKSSBjb3VsZCB1
-bmRlcnN0YW5kIGlmIHRoZSAuZGF0YSBhdHRyaWJ1dGUgd2FzIHVzZWQgaW4gdGhlIGRyaXZlcgp0
-byBtYWtlIHZpdGFsIGRlY2lzaW9ucyBiYXNlZCBvbiBTVE1QRSB2ZXJzaW9uLCBidXQgaXQncyBu
-b3QuIFNvCndoeSBhcmUgd2UgYnVyZGVuaW5nIHRoZSBkcml2ZXIgd2l0aCB1bnVzZWQgY29kZSB0
-aGF0J3Mgbm90CnJlcXVpcmVkPyBPdGhlciB0aGFuIHRvIGdldCB5b3VyIG1haW5saW5lZCBwYXRj
-aC1jb3VudCB1cCBvZgpjb3Vyc2U/IFRoaXMgaGFzIGFuIGFpciBvZiAicGxhY2luZyBoZWFkZXIg
-ZmlsZXMgaW4gYWxwaGFiZXRpY2FsCm9yZGVyIiBhYm91dCBpdC4gOykKCj4gQnkgY2hhbmNlCj4g
-b3VyIG5vbi1EVCBhbmQgRFQgdGFibGVzIGhhZCBhIGRpZmZlcmVuY2Ugb2YgInN0LCIgb25seSBp
-biB0aGUgbmFtZQo+IG9mIGluc3RhbmNlcyBhbmQgc28gaXQgd29ya2VkIHdpdGhvdXQgdGFibGVz
-LiBPdGhlcndpc2UgaXQgY291bGRuJ3QKPiBoYXZlIHdvcmtlZC4KPiAKPiBPdmVyIHRoYXQsIGkg
-YW0gbG9va2luZyB0byBicmluZyB0aGUgInN0bXBlLGlkIiBiaW5kaW5nIGJhY2sgYWdhaW4gKHVu
-bGVzcwo+IHlvdSBoYXZlIGEgYmV0dGVyIG9wdGlvbiksIGFzIGRldmljZSBuYW1lIGlzIG5vdCBj
-b21pbmcgZnJvbSBEVCBjdXJyZW50bHksCj4gd2hpY2ggd2UgZGlzY3Vzc2VkIGVhcmxpZXIuCgpP
-ciB5b3UgY291bGQgbm90IHB1dCB1bm5lY2Vzc2FyeSBiaW5kaW5ncyBpbnRvIHRoZSBEZXZpY2Ug
-VHJlZQpieSBwdXR0aW5nIHR3byBhbmQgdHdvIHRvZ2V0aGVyIGFuZCByZWFsaXNlIHRoYXQgdXNp
-bmcgdGhlIHRhYmxlCmlzIHRoZSBjb3JyZWN0IHRoaW5nIHRvIGRvIGluc3RlYWQuIFRoaXMgYWN0
-dWFsbHkgZ2l2ZXMgcmVhc29uCnRvIHlvdSBwcmV2aW91cyBwYXRjaCwgYnV0IHNob3VsZCBwcm9i
-YWJseSBiZSBmaXhlZC11cCBpbnRvIGl0CnNvIGl0IGhhcyBzb21lIHByb3BlciBtZWFuaW5nL3B1
-cnBvc2UuIDspCgotLSAKTGVlIEpvbmVzCkxpbmFybyBTVC1Fcmljc3NvbiBMYW5kaW5nIFRlYW0g
-TGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBmb3IgQVJNIFNvQ3MKRm9s
-bG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBs
-aXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3ps
-YWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+On Thu, 08 Nov 2012 14:02:13 +0530, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Adding DWC3 device tree node for Exynos5250 along with the
+> device address and clock support needed for the controller.
+> 
+> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/usb/exynos-usb.txt         |   14 +++++++++++
+>  arch/arm/boot/dts/exynos5250.dtsi                  |    6 +++++
+>  arch/arm/mach-exynos/Kconfig                       |    1 +
+>  arch/arm/mach-exynos/clock-exynos5.c               |   24 ++++++++++++++++++++
+>  arch/arm/mach-exynos/include/mach/map.h            |    1 +
+>  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +
+>  6 files changed, 48 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> index 5ff3def1..a7e3eaa 100644
+> --- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> @@ -38,3 +38,17 @@ Example:
+>  		reg = <0x12120000 0x100>;
+>  		interrupts = <0 71 0>;
+>  	};
+> +
+> +DWC3
+> +Required properties:
+> + - compatible: should be "samsung,exynos-dwc3" for USB 3.0 DWC3 controller.
+
+Nit: Please use a specific chip in compatible strings. ie.
+"samsung,exynos5250-dwc3". Newer parts using the same core can claim
+compatibility by including the older string in the compatible list.
+
+> + - reg: physical base address of the controller and length of memory mapped
+> +   region.
+> + - interrupts: interrupt number to the cpu.
+> +
+> +Example:
+> +	usb@12000000 {
+> +		compatible = "samsung,exynos-dwc3";
+> +		reg = <0x12000000 0x10000>;
+> +		interrupts = <0 72 0>;
+> +	};
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index f18abe0..d349636 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -68,6 +68,12 @@
+>  		interrupts = <0 96 0>;
+>  	};
+>  
+> +	usb@12000000 {
+> +		compatible = "samsung,exynos-dwc3";
+> +		reg = <0x12000000 0x10000>;
+> +		interrupts = <0 72 0>;
+> +	};
+> +
+>  	rtc {
+>  		compatible = "samsung,s3c6410-rtc";
+>  		reg = <0x101E0000 0x100>;
+> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+> index bb3b09a..588814a 100644
+> --- a/arch/arm/mach-exynos/Kconfig
+> +++ b/arch/arm/mach-exynos/Kconfig
+> @@ -422,6 +422,7 @@ config MACH_EXYNOS5_DT
+>  	select ARM_AMBA
+>  	select SOC_EXYNOS5250
+>  	select USE_OF
+> +	select USB_ARCH_HAS_XHCI
+>  	help
+>  	  Machine support for Samsung EXYNOS5 machine with device tree enabled.
+>  	  Select this if a fdt blob is available for the EXYNOS5 SoC based board.
+> diff --git a/arch/arm/mach-exynos/clock-exynos5.c b/arch/arm/mach-exynos/clock-exynos5.c
+> index a88e0d9..ee094ee 100644
+> --- a/arch/arm/mach-exynos/clock-exynos5.c
+> +++ b/arch/arm/mach-exynos/clock-exynos5.c
+> @@ -740,6 +740,11 @@ static struct clk exynos5_init_clocks_off[] = {
+>  		.enable		= exynos5_clk_ip_fsys_ctrl ,
+>  		.ctrlbit	= (1 << 18),
+>  	}, {
+> +		.name		= "usbdrd30",
+> +		.parent		= &exynos5_clk_aclk_200.clk,
+> +		.enable		= exynos5_clk_ip_fsys_ctrl,
+> +		.ctrlbit	= (1 << 19),
+> +	}, {
+>  		.name		= "usbotg",
+>  		.enable		= exynos5_clk_ip_fsys_ctrl,
+>  		.ctrlbit	= (1 << 7),
+> @@ -1004,6 +1009,16 @@ struct clksrc_sources exynos5_clkset_group = {
+>  	.nr_sources	= ARRAY_SIZE(exynos5_clkset_group_list),
+>  };
+>  
+> +struct clk *exynos5_clkset_usbdrd30_list[] = {
+> +	[0] = &exynos5_clk_mout_mpll.clk,
+> +	[1] = &exynos5_clk_mout_cpll.clk,
+> +};
+> +
+> +struct clksrc_sources exynos5_clkset_usbdrd30 = {
+> +	.sources        = exynos5_clkset_usbdrd30_list,
+> +	.nr_sources     = ARRAY_SIZE(exynos5_clkset_usbdrd30_list),
+> +};
+> +
+>  /* Possible clock sources for aclk_266_gscl_sub Mux */
+>  static struct clk *clk_src_gscl_266_list[] = {
+>  	[0] = &clk_ext_xtal_mux,
+> @@ -1288,6 +1303,15 @@ static struct clksrc_clk exynos5_clksrcs[] = {
+>  			.parent		= &exynos5_clk_mout_cpll.clk,
+>  		},
+>  		.reg_div = { .reg = EXYNOS5_CLKDIV_GEN, .shift = 4, .size = 3 },
+> +	}, {
+> +		.clk    = {
+> +			.name           = "sclk_usbdrd30",
+> +			.enable         = exynos5_clksrc_mask_fsys_ctrl,
+> +			.ctrlbit        = (1 << 28),
+> +		},
+> +		.sources = &exynos5_clkset_usbdrd30,
+> +		.reg_src = { .reg = EXYNOS5_CLKSRC_FSYS, .shift = 28, .size = 1 },
+> +		.reg_div = { .reg = EXYNOS5_CLKDIV_FSYS0, .shift = 24, .size = 4 },
+>  	},
+>  };
+>  
+> diff --git a/arch/arm/mach-exynos/include/mach/map.h b/arch/arm/mach-exynos/include/mach/map.h
+> index 471ffaf..064ca1c 100644
+> --- a/arch/arm/mach-exynos/include/mach/map.h
+> +++ b/arch/arm/mach-exynos/include/mach/map.h
+> @@ -197,6 +197,7 @@
+>  #define EXYNOS4_PA_EHCI			0x12580000
+>  #define EXYNOS4_PA_OHCI			0x12590000
+>  #define EXYNOS4_PA_HSPHY		0x125B0000
+> +#define EXYNOS5_PA_DRD			0x12000000
+>  #define EXYNOS5_PA_EHCI			0x12110000
+>  #define EXYNOS5_PA_OHCI			0x12120000
+>  #define EXYNOS4_PA_MFC			0x13400000
+> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> index c03f3dd..3032222 100644
+> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
+> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
+> @@ -90,6 +90,8 @@ static const struct of_dev_auxdata exynos5250_auxdata_lookup[] __initconst = {
+>  				"s5p-ehci", NULL),
+>  	OF_DEV_AUXDATA("samsung,exynos-ohci", EXYNOS5_PA_OHCI,
+>  				"exynos-ohci", NULL),
+> +	OF_DEV_AUXDATA("samsung,exynos-dwc3", EXYNOS5_PA_DRD,
+> +				"exynos-dwc3", NULL),
+>  	{},
+>  };
+>  
+> -- 
+> 1.7.6.5
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
