@@ -1,72 +1,43 @@
-From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: Exynos5250: Enabling ehci-s5p driver
-Date: Thu, 6 Dec 2012 16:08:46 +0530
-Message-ID: <CAFp+6iGWngzZN-C3UrvXwT=6PNZqYfrpAjD1_8DTS257v7cJFw@mail.gmail.com>
-References: <1352357665-7435-1-git-send-email-gautam.vivek@samsung.com>
-	<1352357665-7435-2-git-send-email-gautam.vivek@samsung.com>
-	<20121206101645.4C28E3E05A4@localhost>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
+Date: Thu, 6 Dec 2012 16:12:42 +0530
+Message-ID: <CAKohponeU539FR+XCKJQTFnoNKJCnAh5ESB1NGP7ZK0u4Tqwyg@mail.gmail.com>
+References: <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org>
+	<20121130105731.GN3176@sortiz-mobl>
+	<20121130154542.GG23648@gmail.com>
+	<CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com>
+	<20121205224203.691153E0E22@localhost>
+	<CAKohponjLp214EPKgNHqP2N8Tje9U8ZxgywUTSvsjE-TqHy+xw@mail.gmail.com>
+	<20121206095019.GN2718@gmail.com>
+	<CAKohpokNQB6L2vvjmvA7_3KomFXnV9wZ-uBjrfRVuBL=QWgr_Q@mail.gmail.com>
+	<20121206101131.GP2718@gmail.com>
+	<CAKohpom9NK0Tg9fKdddkP-0H8FuVd-=yhHzZr-sWNb_zTVymWw@mail.gmail.com>
+	<20121206103515.GQ2718@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121206101645.4C28E3E05A4@localhost>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121206103515.GQ2718@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Samuel Ortiz <sameo@linux.intel.com>, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 6, 2012 at 3:46 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Thu, 08 Nov 2012 12:24:24 +0530, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> Adding EHCI device tree node for Exynos5250 along with
->> the device base adress and gpio line for vbus.
+On 6 December 2012 16:05, Lee Jones <lee.jones@linaro.org> wrote:
+>> > Or you could not put unnecessary bindings into the Device Tree
+>> > by putting two and two together and realise that using the table
+>> > is the correct thing to do instead. This actually gives reason
+>> > to you previous patch, but should probably be fixed-up into it
+>> > so it has some proper meaning/purpose. ;)
 >>
->> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> Acked-by: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  .../devicetree/bindings/usb/exynos-usb.txt         |   25 ++++++++++++++++++++
->>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 +++
->>  arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++++
->>  arch/arm/mach-exynos/include/mach/map.h            |    1 +
->>  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +
->>  5 files changed, 38 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/usb/exynos-usb.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> new file mode 100644
->> index 0000000..833f5cf
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> @@ -0,0 +1,25 @@
->> +Samsung Exynos SoC USB controller
->> +
->> +The USB devices interface with USB controllers on Exynos SOCs.
->> +The device node has following properties.
->> +
->> +EHCI
->> +Required properties:
->> + - compatible: should be "samsung,exynos-ehci" for USB 2.0
+>> Couldn't understand this one :(
 >
-> Ditto here. Please be specific in compatible strings.  "samsung,exynos5250-ehci"
->
-> Otherwise the binding looks fine to me.
->
+> Really?
 
-Again here, the compatible string is added as per
-"drivers/usb/host/ehci-s5p.c", since same driver works across exynos.
-Please suggest do we need driver side change also to accomodate this ?
+I tried again, but couldn't get it :(
 
-> g.
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> Let's break it down - what do you need "stmpe,id" for?
 
-
-
--- 
-Thanks & Regards
-Vivek
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+To distinguish two instances of of stmpe811 (for instance) on a board.
+Names of stmpe sub-modules would contain .0, .1, if we have an id
+passed to it. Passing -1 would create same names for both gpio blocks
+which belonged to different stmpe811's.
