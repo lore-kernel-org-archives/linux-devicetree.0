@@ -1,8 +1,8 @@
 From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [grant:spi/next 9/12] drivers/spi/spi.c:1554:23: warning:
- comparison of distinct pointer types lacks a cast
-Date: Thu, 06 Dec 2012 22:59:40 +0800
-Message-ID: <50c0b2dc.P1a8D2ntc53Wu8vh%fengguang.wu@intel.com>
+Subject: [grant:spi/next 9/12] drivers/spi/spi.c:1554:37: sparse:
+ incompatible types in comparison expression (different signedness)
+Date: Fri, 07 Dec 2012 01:18:17 +0800
+Message-ID: <50c0d359.Aj5Bwguy9Go3CS7P%fengguang.wu@intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -24,10 +24,11 @@ List-Id: devicetree@vger.kernel.org
 tree:   git://git.secretlab.ca/git/linux-2.6.git spi/next
 head:   b15d5d7004e25716c8b8dfe4e322a64551e2e6cc
 commit: b3a223ee2d1a4635b0643c547bc0096a37334ed1 [9/12] spi: Remove SPI_BUFSIZ restriction on spi_write_then_read()
-config: make ARCH=x86_64 allyesconfig
 
-All warnings:
 
+sparse warnings:
+
++ drivers/spi/spi.c:1554:37: sparse: incompatible types in comparison expression (different signedness)
 drivers/spi/spi.c: In function 'spi_write_then_read':
 drivers/spi/spi.c:1554:23: warning: comparison of distinct pointer types lacks a cast [enabled by default]
 
