@@ -1,332 +1,358 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Subject: Re: [v2 PATCH 07/14] spi/atmel_spi: add DT support
-Date: Fri, 7 Dec 2012 07:58:13 +0100
-Message-ID: <20121207065813.GH4398@game.jcrosoft.org>
-References: <1354607640-13229-1-git-send-email-wenyou.yang@atmel.com>
- <1354607640-13229-8-git-send-email-wenyou.yang@atmel.com>
+From: Stefan Roese <sr@denx.de>
+Subject: [PATCH] mtd: cfi_cmdset_0002: Support Persistent Protection Bits
+ (PPB) locking
+Date: Fri,  7 Dec 2012 08:22:34 +0100
+Message-ID: <1354864954-30290-1-git-send-email-sr@denx.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1354607640-13229-8-git-send-email-wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, JM.Lin-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: linux-mtd-bounces@lists.infradead.org
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org, devicetree-discuss@ozlabs.org
+Cc: Holger Brunck <holger.brunck@keymile.com>, Artem Bityutskiy <dedekind1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 15:53 Tue 04 Dec     , Wenyou Yang wrote:
-> From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> 
-> The atmel_spi use only gpio for chip select.
-no this patch need go on the TOP of mine
+Currently cfi_cmdset_0002.c does not support PPB locking of sectors. This
+patch adds support for this locking/unlocking mechanism. It is needed on
+some platforms, since newer U-Boot versions do support this PPB locking
+and protect for example their environment sector(s) this way.
 
-that is plan for 3.8
+This PPB locking/unlocking will be enabled for all devices supported by
+cfi_cmdset_0002 reporting 8 in the CFI word 0x49 (Sector Protect/Unprotect
+scheme).
 
-Best Regards,
-J.
-> 
-> Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> [wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org: Add driver data and compatible "atmel,at91sam9260-spi", "atmel,at91sam9x5-spi"]
-> Signed-off-by: Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-> Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-> Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-> Cc: rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
-> Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: richard.genoud-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-> ---
-> Hi, Richard,
-> 
-> This patches is based on the original patch from Jean-Christophe
-> 	[PATCH] spi/atmel: add DT support
-> and merge the patch from Richard Genoud
-> 	[PATCH] spi-atmel OF: complete documentation
-> ane wenyou yang add more compatible "atmel,at91sam9260-spi", "atmel,at91sam9x5-spi", 
-> 	add driver data to get IP version and dma support.
-> 
-> Could you sign your signature in this patch?
-> 
-> Best Regards,
-> Wenyou Yang
-> 
->  .../devicetree/bindings/spi/spi_atmel.txt          |   23 +++++
->  drivers/spi/spi-atmel.c                            |  102 +++++++++++++++++---
->  2 files changed, 113 insertions(+), 12 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/spi/spi_atmel.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/spi_atmel.txt b/Documentation/devicetree/bindings/spi/spi_atmel.txt
-> new file mode 100644
-> index 0000000..20cdc91
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/spi_atmel.txt
-> @@ -0,0 +1,23 @@
-> +Atmel SPI device
-> +
-> +Required properties:
-> +- compatible : should be "atmel,at91rm9200-spi".
-> +- reg: Address and length of the register set for the device
-> +- interrupts: Should contain macb interrupt
-> +- cs-gpio: Should contain the GPIOs used for chipselect.
-> +- dma-mask: device coherent dma mask.
-> +
-> +spi0: spi@f0000000 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "atmel,at91rm9200-spi";
-> +	reg = <0xf0000000 0x100>;
-> +	interrupts = <13 4>;
-> +	cs-gpios = <&pioA 14 0
-> +		    &pioA 7 0 /* conflicts with TXD2 */
-> +		    &pioA 1 0 /* conflicts with RXD0 */
-> +		    &pioB 3 0 /* conflicts with ERXDV */
-> +		   >;
-> +	dma-mask = <0xffffffff>;
-> +	status = "disabled";
-> +};
-> diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-> index 37f54c3..e032e3d 100644
-> --- a/drivers/spi/spi-atmel.c
-> +++ b/drivers/spi/spi-atmel.c
-> @@ -19,6 +19,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/spi/spi.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
->  
->  #include <asm/io.h>
->  #include <mach/board.h>
-> @@ -185,6 +186,10 @@
->   * DMA transfers; transfer queue progress is driven by IRQs.  The clock
->   * framework provides the base clock, subdivided for each spi_device.
->   */
-> +struct atmel_spi_pdata {
-> +	u8			version;
-> +};
-> +
->  struct atmel_spi {
->  	spinlock_t		lock;
->  	unsigned long		flags;
-> @@ -203,6 +208,7 @@ struct atmel_spi {
->  	struct spi_transfer	*next_transfer;
->  	unsigned long		next_remaining_bytes;
->  	int			done_status;
-> +	struct atmel_spi_pdata	*pdata;
->  
->  	void			*buffer;
->  	dma_addr_t		buffer_dma;
-> @@ -217,6 +223,51 @@ struct atmel_spi_device {
->  #define BUFFER_SIZE		PAGE_SIZE
->  #define INVALID_DMA_ADDRESS	0xffffffff
->  
-> +static struct atmel_spi_pdata at91rm9200_config = {
-> +	.version = 1,
-> +};
-> +
-> +static struct atmel_spi_pdata at91sam9260_config = {
-> +	.version = 2,
-> +};
-> +
-> +static struct atmel_spi_pdata at91sam9x5_config = {
-> +	.version = 2,
-> +};
-> +
-> +static const struct platform_device_id atmel_spi_devtypes[] = {
-> +	{
-> +		.name = "spi-at91rm9200",
-> +		.driver_data = (unsigned long) &at91rm9200_config,
-> +	}, {
-> +		.name = "spi-at91sam9260",
-> +		.driver_data = (unsigned long) &at91sam9260_config,
-> +	}, {
-> +		.name = "spi-at91sam9x5",
-> +		.driver_data = (unsigned long) &at91sam9x5_config,
-> +	}, {
-> +		/* sentinel */
-> +	}
-> +};
-> +
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id atmel_spi_dt_ids[] = {
-> +	{
-> +		.compatible = "atmel,at91rm9200-spi",
-> +		.data = &at91rm9200_config,
-> +	} , {
-> +		.compatible = "atmel,at91sam9260-spi",
-> +		.data = &at91sam9260_config,
-> +	} , {
-> +		.compatible = "atmel,at91sam9x5-spi",
-> +		.data = &at91sam9x5_config,
-> +	}, {
-> +		/* sentinel */
-> +	}
-> +};
-> +MODULE_DEVICE_TABLE(of, atmel_spi_dt_ids);
-> +#endif
-> +
->  /*
->   * Version 2 of the SPI controller has
->   *  - CR.LASTXFER
-> @@ -229,11 +280,15 @@ struct atmel_spi_device {
->   * register, but I haven't checked that it exists on all chips, and
->   * this is cheaper anyway.
->   */
-> -static bool atmel_spi_is_v2(void)
-> +static bool atmel_spi_is_v2(struct atmel_spi *as)
->  {
-> -	return !cpu_is_at91rm9200();
-> +	if (as->pdata->version == 2)
-> +		return true;
-> +	else
-> +		return false;
->  }
->  
-> +
->  /*
->   * Earlier SPI controllers (e.g. on at91rm9200) have a design bug whereby
->   * they assume that spi slave device state will not change on deselect, so
-> @@ -265,7 +320,7 @@ static void cs_activate(struct atmel_spi *as, struct spi_device *spi)
->  	unsigned active = spi->mode & SPI_CS_HIGH;
->  	u32 mr;
->  
-> -	if (atmel_spi_is_v2()) {
-> +	if (atmel_spi_is_v2(as)) {
->  		/*
->  		 * Always use CSR0. This ensures that the clock
->  		 * switches to the correct idle polarity before we
-> @@ -320,7 +375,7 @@ static void cs_deactivate(struct atmel_spi *as, struct spi_device *spi)
->  			asd->npcs_pin, active ? " (low)" : "",
->  			mr);
->  
-> -	if (atmel_spi_is_v2() || spi->chip_select != 0)
-> +	if (atmel_spi_is_v2(as) || spi->chip_select != 0)
->  		gpio_set_value(asd->npcs_pin, !active);
->  }
->  
-> @@ -710,7 +765,7 @@ static int atmel_spi_setup(struct spi_device *spi)
->  	u32			scbr, csr;
->  	unsigned int		bits = spi->bits_per_word;
->  	unsigned long		bus_hz;
-> -	unsigned int		npcs_pin;
-> +	int			npcs_pin;
->  	int			ret;
->  
->  	as = spi_master_get_devdata(spi->master);
-> @@ -733,7 +788,7 @@ static int atmel_spi_setup(struct spi_device *spi)
->  	}
->  
->  	/* see notes above re chipselect */
-> -	if (!atmel_spi_is_v2()
-> +	if (!atmel_spi_is_v2(as)
->  			&& spi->chip_select == 0
->  			&& (spi->mode & SPI_CS_HIGH)) {
->  		dev_dbg(&spi->dev, "setup: can't be active-high\n");
-> @@ -742,7 +797,7 @@ static int atmel_spi_setup(struct spi_device *spi)
->  
->  	/* v1 chips start out at half the peripheral bus speed. */
->  	bus_hz = clk_get_rate(as->clk);
-> -	if (!atmel_spi_is_v2())
-> +	if (!atmel_spi_is_v2(as))
->  		bus_hz /= 2;
->  
->  	if (spi->max_speed_hz) {
-> @@ -782,7 +837,9 @@ static int atmel_spi_setup(struct spi_device *spi)
->  	csr |= SPI_BF(DLYBCT, 0);
->  
->  	/* chipselect must have been muxed as GPIO (e.g. in board setup) */
-> -	npcs_pin = (unsigned int)spi->controller_data;
-> +	if (!gpio_is_valid(spi->cs_gpio))
-> +		spi->cs_gpio = (int)spi->controller_data;
-> +	npcs_pin = spi->cs_gpio;
->  	asd = spi->controller_state;
->  	if (!asd) {
->  		asd = kzalloc(sizeof(struct atmel_spi_device), GFP_KERNEL);
-> @@ -812,7 +869,7 @@ static int atmel_spi_setup(struct spi_device *spi)
->  		"setup: %lu Hz bpw %u mode 0x%x -> csr%d %08x\n",
->  		bus_hz / scbr, bits, spi->mode, spi->chip_select, csr);
->  
-> -	if (!atmel_spi_is_v2())
-> +	if (!atmel_spi_is_v2(as))
->  		spi_writel(as, CSR0 + 4 * spi->chip_select, csr);
->  
->  	return 0;
-> @@ -899,7 +956,7 @@ static void atmel_spi_cleanup(struct spi_device *spi)
->  {
->  	struct atmel_spi	*as = spi_master_get_devdata(spi->master);
->  	struct atmel_spi_device	*asd = spi->controller_state;
-> -	unsigned		gpio = (unsigned) spi->controller_data;
-> +	unsigned		gpio = spi->cs_gpio;
->  
->  	if (!asd)
->  		return;
-> @@ -916,6 +973,21 @@ static void atmel_spi_cleanup(struct spi_device *spi)
->  	kfree(asd);
->  }
->  
-> +static struct atmel_spi_pdata * __devinit atmel_spi_get_driver_data(
-> +					struct platform_device *pdev)
-> +{
-> +	if (pdev->dev.of_node) {
-> +		const struct of_device_id *match;
-> +		match = of_match_node(atmel_spi_dt_ids, pdev->dev.of_node);
-> +		if (!match)
-> +			return NULL;
-> +		return (struct atmel_spi_pdata *) match->data;
-> +	}
-> +
-> +	return (struct atmel_spi_pdata *)
-> +			platform_get_device_id(pdev)->driver_data;
-> +}
-> +
->  /*-------------------------------------------------------------------------*/
->  
->  static int __devinit atmel_spi_probe(struct platform_device *pdev)
-> @@ -949,7 +1021,8 @@ static int __devinit atmel_spi_probe(struct platform_device *pdev)
->  	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
->  
->  	master->bus_num = pdev->id;
-> -	master->num_chipselect = 4;
-> +	master->dev.of_node = pdev->dev.of_node;
-> +	master->num_chipselect = master->dev.of_node ? 0 : 4;
->  	master->setup = atmel_spi_setup;
->  	master->transfer = atmel_spi_transfer;
->  	master->cleanup = atmel_spi_cleanup;
-> @@ -981,6 +1054,10 @@ static int __devinit atmel_spi_probe(struct platform_device *pdev)
->  	if (ret)
->  		goto out_unmap_regs;
->  
-> +	as->pdata = atmel_spi_get_driver_data(pdev);
-> +	if (!as->pdata)
-> +		goto out_unmap_regs;
-> +
->  	/* Initialize the hardware */
->  	clk_enable(clk);
->  	spi_writel(as, CR, SPI_BIT(SWRST));
-> @@ -1078,12 +1155,13 @@ static int atmel_spi_resume(struct platform_device *pdev)
->  #define	atmel_spi_resume	NULL
->  #endif
->  
-> -
->  static struct platform_driver atmel_spi_driver = {
->  	.driver		= {
->  		.name	= "atmel_spi",
->  		.owner	= THIS_MODULE,
-> +		.of_match_table	= of_match_ptr(atmel_spi_dt_ids),
->  	},
-> +	.id_table	= atmel_spi_devtypes,
->  	.suspend	= atmel_spi_suspend,
->  	.resume		= atmel_spi_resume,
->  	.probe		= atmel_spi_probe,
-> -- 
-> 1.7.9.5
-> 
+Please note that PPB locking does support sector-by-sector locking. But
+the whole chip can only be unlocked together. So unlocking one sector
+will automatically unlock all sectors of this device. Because of this
+chip limitation, the PPB unlocking function saves the current locking
+status of all sectors before unlocking the whole device. After unlocking
+the saved locking status is re-configured. This way only the addressed
+sectors will be unlocked.
+
+To selectively enable this advanced sector protection mechanism, the
+device-tree property "use-advanced-sector-protection" has been created.
+To enable support for this locking this property needs to be present in the
+flash DT node. E.g.:
+
+nor_flash@0,0 {
+	compatible = "amd,s29gl256n", "cfi-flash";
+	bank-width = <2>;
+	use-advanced-sector-protection;
+	...
+
+Tested with Spanion S29GL512S10THI and Micron JS28F512M29EWx flash
+devices.
+
+Signed-off-by: Stefan Roese <sr@denx.de>
+Cc: Holger Brunck <holger.brunck@keymile.com>
+Cc: Artem Bityutskiy <dedekind1@gmail.com>
+---
+ .../devicetree/bindings/mtd/mtd-physmap.txt        |   3 +
+ drivers/mtd/chips/cfi_cmdset_0002.c                | 211 +++++++++++++++++++++
+ drivers/mtd/maps/physmap_of.c                      |   1 +
+ include/linux/mtd/map.h                            |   1 +
+ 4 files changed, 216 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+index 94de19b..15902b8 100644
+--- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
++++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+@@ -23,6 +23,9 @@ file systems on embedded devices.
+    unaligned accesses as implemented in the JFFS2 code via memcpy().
+    By defining "no-unaligned-direct-access", the flash will not be
+    exposed directly to the MTD users (e.g. JFFS2) any more.
++ - use-advanced-sector-protection: boolean to enable support for the
++   advanced sector protection (Spansion: PPB - Persistent Protection
++   Bits) locking.
+ 
+ For JEDEC compatible devices, the following additional properties
+ are defined:
+diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
+index 5ff5c4a..b4f314b 100644
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -33,6 +33,7 @@
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/reboot.h>
++#include <linux/of_platform.h>
+ #include <linux/mtd/map.h>
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/cfi.h>
+@@ -74,6 +75,10 @@ static void put_chip(struct map_info *map, struct flchip *chip, unsigned long ad
+ static int cfi_atmel_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len);
+ static int cfi_atmel_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len);
+ 
++static int cfi_ppb_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len);
++static int cfi_ppb_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len);
++static int cfi_ppb_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len);
++
+ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
+ 	.probe		= NULL, /* Not usable directly */
+ 	.destroy	= cfi_amdstd_destroy,
+@@ -496,6 +501,7 @@ static void cfi_fixup_m29ew_delay_after_resume(struct cfi_private *cfi)
+ struct mtd_info *cfi_cmdset_0002(struct map_info *map, int primary)
+ {
+ 	struct cfi_private *cfi = map->fldrv_priv;
++	struct device_node *np = map->device_node;
+ 	struct mtd_info *mtd;
+ 	int i;
+ 
+@@ -570,6 +576,15 @@ struct mtd_info *cfi_cmdset_0002(struct map_info *map, int primary)
+ 			cfi_tell_features(extp);
+ #endif
+ 
++			if (np && of_property_read_bool(
++				    np, "use-advanced-sector-protection")
++			    && extp->BlkProtUnprot == 8) {
++				printk(KERN_INFO "  Advanced Sector Protection (PPB Locking) supported\n");
++				mtd->_lock = cfi_ppb_lock;
++				mtd->_unlock = cfi_ppb_unlock;
++				mtd->_is_locked = cfi_ppb_is_locked;
++			}
++
+ 			bootloc = extp->TopBottom;
+ 			if ((bootloc < 2) || (bootloc > 5)) {
+ 				printk(KERN_WARNING "%s: CFI contains unrecognised boot "
+@@ -2160,6 +2175,202 @@ static int cfi_atmel_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+ 	return cfi_varsize_frob(mtd, do_atmel_unlock, ofs, len, NULL);
+ }
+ 
++/*
++ * Advanced Sector Protection - PPB (Persistent Protection Bit) locking
++ */
++
++struct ppb_lock {
++	struct flchip *chip;
++	loff_t offset;
++	int locked;
++};
++
++#define MAX_SECTORS			512
++
++#define DO_XXLOCK_ONEBLOCK_LOCK		((void *)1)
++#define DO_XXLOCK_ONEBLOCK_UNLOCK	((void *)2)
++#define DO_XXLOCK_ONEBLOCK_GETLOCK	((void *)3)
++
++static int do_ppb_xxlock(struct map_info *map, struct flchip *chip,
++			 unsigned long adr, int len, void *thunk)
++{
++	struct cfi_private *cfi = map->fldrv_priv;
++	unsigned long timeo;
++	int ret;
++
++	mutex_lock(&chip->mutex);
++	ret = get_chip(map, chip, adr + chip->start, FL_LOCKING);
++	if (ret) {
++		mutex_unlock(&chip->mutex);
++		return ret;
++	}
++
++	pr_debug("MTD %s(): XXLOCK 0x%08lx len %d\n", __func__, adr, len);
++
++	cfi_send_gen_cmd(0xAA, cfi->addr_unlock1, chip->start, map, cfi,
++			 cfi->device_type, NULL);
++	cfi_send_gen_cmd(0x55, cfi->addr_unlock2, chip->start, map, cfi,
++			 cfi->device_type, NULL);
++	/* PPB entry command */
++	cfi_send_gen_cmd(0xC0, cfi->addr_unlock1, chip->start, map, cfi,
++			 cfi->device_type, NULL);
++
++	if (thunk == DO_XXLOCK_ONEBLOCK_LOCK) {
++		chip->state = FL_LOCKING;
++		map_write(map, CMD(0xA0), chip->start + adr);
++		map_write(map, CMD(0x00), chip->start + adr);
++	} else if (thunk == DO_XXLOCK_ONEBLOCK_UNLOCK) {
++		/*
++		 * Unlocking of one specific sector is not supported, so we
++		 * have to unlock all sectors of this device instead
++		 */
++		chip->state = FL_UNLOCKING;
++		map_write(map, CMD(0x80), chip->start);
++		map_write(map, CMD(0x30), chip->start);
++	} else if (thunk == DO_XXLOCK_ONEBLOCK_GETLOCK) {
++		chip->state = FL_JEDEC_QUERY;
++		/* Return locked status: 0->locked, 1->unlocked */
++		ret = !cfi_read_query(map, adr);
++	} else
++		BUG();
++
++	/*
++	 * Wait for some time as unlocking of all sectors takes quite long
++	 */
++	timeo = jiffies + (2 * HZ);	/* 2s max (un)locking */
++	for (;;) {
++		if (chip_ready(map, adr))
++			break;
++
++		if (time_after(jiffies, timeo)) {
++			printk(KERN_ERR "Waiting for chip to be ready timed out.\n");
++			ret = -EIO;
++			break;
++		}
++		mutex_unlock(&chip->mutex);
++		cfi_udelay(1);
++		mutex_lock(&chip->mutex);
++	}
++
++	/* Exit BC commands */
++	map_write(map, CMD(0x90), chip->start);
++	map_write(map, CMD(0x00), chip->start);
++
++	chip->state = FL_READY;
++	put_chip(map, chip, adr + chip->start);
++	mutex_unlock(&chip->mutex);
++
++	return ret;
++}
++
++static int cfi_ppb_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
++{
++	return cfi_varsize_frob(mtd, do_ppb_xxlock, ofs, len,
++				DO_XXLOCK_ONEBLOCK_LOCK);
++}
++
++static int cfi_ppb_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
++{
++	struct mtd_erase_region_info *regions = mtd->eraseregions;
++	struct map_info *map = mtd->priv;
++	struct cfi_private *cfi = map->fldrv_priv;
++	struct ppb_lock *sect;
++	unsigned long adr;
++	loff_t offset;
++	uint64_t length;
++	int chipnum;
++	int i;
++	int sectors;
++	int ret;
++
++	/*
++	 * PPB unlocking always unlocks all sectors of the flash chip.
++	 * We need to re-lock all previously locked sectors. So lets
++	 * first check the locking status of all sectors and save
++	 * it for future use.
++	 */
++	sect = kzalloc(MAX_SECTORS * sizeof(struct ppb_lock), GFP_KERNEL);
++	if (!sect)
++		return -ENOMEM;
++
++	/*
++	 * This code to walk all sectors is a slightly modified version
++	 * of the cfi_varsize_frob() code.
++	 */
++	i = 0;
++	chipnum = 0;
++	adr = 0;
++	sectors = 0;
++	offset = 0;
++	length = mtd->size;
++
++	while (length) {
++		int size = regions[i].erasesize;
++
++		/*
++		 * Only test sectors that shall not be unlocked. The other
++		 * sectors shall be unlocked, so lets keep their locking
++		 * status at "unlocked" (locked=0) for the final re-locking.
++		 */
++		if ((adr < ofs) || (adr >= (ofs + len))) {
++			sect[sectors].chip = &cfi->chips[chipnum];
++			sect[sectors].offset = offset;
++			sect[sectors].locked = do_ppb_xxlock(
++				map, &cfi->chips[chipnum], adr, 0,
++				DO_XXLOCK_ONEBLOCK_GETLOCK);
++		}
++
++		adr += size;
++		offset += size;
++		length -= size;
++
++		if (offset == regions[i].offset + size * regions[i].numblocks)
++			i++;
++
++		if (adr >> cfi->chipshift) {
++			adr = 0;
++			chipnum++;
++
++			if (chipnum >= cfi->numchips)
++				break;
++		}
++
++		sectors++;
++		if (sectors >= MAX_SECTORS) {
++			printk(KERN_ERR "Only %d sectors for PPB locking supported!\n",
++			       MAX_SECTORS);
++			kfree(sect);
++			return -EINVAL;
++		}
++	}
++
++	/* Now unlock the whole chip */
++	ret = cfi_varsize_frob(mtd, do_ppb_xxlock, ofs, len,
++			       DO_XXLOCK_ONEBLOCK_UNLOCK);
++	if (ret) {
++		kfree(sect);
++		return ret;
++	}
++
++	/*
++	 * PPB unlocking always unlocks all sectors of the flash chip.
++	 * We need to re-lock all previously locked sectors.
++	 */
++	for (i = 0; i < sectors; i++) {
++		if (sect[i].locked)
++			do_ppb_xxlock(map, sect[i].chip, sect[i].offset, 0,
++				      DO_XXLOCK_ONEBLOCK_LOCK);
++	}
++
++	kfree(sect);
++	return ret;
++}
++
++static int cfi_ppb_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
++{
++	return cfi_varsize_frob(mtd, do_ppb_xxlock, ofs, len,
++				DO_XXLOCK_ONEBLOCK_GETLOCK) ? 1 : 0;
++}
+ 
+ static void cfi_amdstd_sync (struct mtd_info *mtd)
+ {
+diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
+index 6f19aca..d2999fc 100644
+--- a/drivers/mtd/maps/physmap_of.c
++++ b/drivers/mtd/maps/physmap_of.c
+@@ -238,6 +238,7 @@ static int __devinit of_flash_probe(struct platform_device *dev)
+ 		info->list[i].map.phys = res.start;
+ 		info->list[i].map.size = res_size;
+ 		info->list[i].map.bankwidth = be32_to_cpup(width);
++		info->list[i].map.device_node = dp;
+ 
+ 		err = -ENOMEM;
+ 		info->list[i].map.virt = ioremap(info->list[i].map.phys,
+diff --git a/include/linux/mtd/map.h b/include/linux/mtd/map.h
+index 3595a02..41db531 100644
+--- a/include/linux/mtd/map.h
++++ b/include/linux/mtd/map.h
+@@ -245,6 +245,7 @@ struct map_info {
+ 	unsigned long pfow_base;
+ 	unsigned long map_priv_1;
+ 	unsigned long map_priv_2;
++	struct device_node *device_node;
+ 	void *fldrv_priv;
+ 	struct mtd_chip_driver *fldrv;
+ };
+-- 
+1.8.0.1
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
