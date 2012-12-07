@@ -1,18 +1,16 @@
 From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
-Date: Fri, 07 Dec 2012 13:37:05 +0000
-Message-ID: <20121207133705.59AC03E0B87@localhost>
-References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org> <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org> <20121130105731.GN3176@sortiz-mobl> <20121130154542.GG23648@gmail.com> <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com> <20121205224203.691153E0E22@localhost> <CAKohponjLp214EPKgNHqP2N8Tje9U8ZxgywUTSvsjE-TqHy+xw@mail.gmail.com>
+Date: Fri, 07 Dec 2012 13:44:22 +0000
+Message-ID: <20121207134422.738A23E0B87@localhost>
+References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org> <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org> <20121130105731.GN3176@sortiz-mobl> <20121130154542.GG23648@gmail.com> <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com> <20121205224203.691153E0E22@localhost> <CAKohponBkA+bg7B4TKaU6WbcVBNDHPe4AWqAEE6JGD7zctoULw@mail.gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKohponjLp214EPKgNHqP2N8Tje9U8ZxgywUTSvsjE-TqHy+xw@mail.gmail.com>
+In-Reply-To: <CAKohponBkA+bg7B4TKaU6WbcVBNDHPe4AWqAEE6JGD7zctoULw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Viresh Kumar <viresh.kumar@linaro.org>
 Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Dec 2012 07:28:22 +0530, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> First of all, thanks for explaining :)
-> 
+On Thu, 6 Dec 2012 08:06:20 +0530, Viresh Kumar <viresh.kumar@linaro.org> wrote:
 > On 6 December 2012 04:12, Grant Likely <grant.likely@secretlab.ca> wrote:
 > > On Sat, 1 Dec 2012 00:33:46 +0530, Viresh Kumar <viresh.kumar@linaro.org> wrote:
 > >> This first tries to match the table my patch added, _BUT_ the string will
@@ -23,37 +21,26 @@ On Thu, 6 Dec 2012 07:28:22 +0530, Viresh Kumar <viresh.kumar@linaro.org> wrote:
 > > property has a string that is in the table, then it really should match
 > > against it.
 > 
-> How could i misread it? Yes you are correct.
-> 
-> >> static int i2c_device_probe(struct device *dev)
-> >> {
-> >>         .....
-> >>       status = driver->probe(client, i2c_match_id(driver->id_table, client));
-> >
-> > Here things are a bit wonky. Even if matched against the table, it is
-> 
-> table means of_device_id table ?
+> Grant, but isn't it true that the final device's name would not be the DT
+> way of names? It would simply be "stmpe810" for us and so if we have
+> multiple instances of stmpe on a board, we need to distinguish them
+> ourselves? One way for that was passing id for these instances, which
+> would finally be used, when we create platform devices for sub-modules
+> of stmpe (gpio, keypad, ts, etc).
 
-yes
+of_modalias_node() is based on a *heruistic*. It is a best-effort
+attempt to convert the node's compatible lists into a string that will
+match against an existing driver. In the simple case it works because
+historically i2c has used the chip name for the driver name. We get
+lucky and a lot of drivers will work with DT without changes.
 
-> 
-> > possible that it also matches against i2c_match_id() and that data is
-> > passed to the driver.
-> 
-> It is a possibility or guarantee ? And so whatever device name we got from
-> modalias routine, should match with the names in driver->id_table.
-
-possibility. If the generated alias name does match something in
-driver->id_table, then that pointer will be returned here.
-
-> > But regardless, it is the responsiblity of the probe function to go and
-> > look if of_driver_match_device() matches against anything if it cares
-> > about the of_match_table entries (for instance, if there is extra data
-> > attached).
-> 
-> Ok, so filling .data field in of_device_id[] is not required for our case as
-> we aren't doing anything special in our drivers.
-
-As long as things are simple, correct.
+However, it is in no way guaranteed. Sometimes the strings won't line up
+or a certain silicon vendor will have an extra errata or feature. In
+that case it makes sense to use a DT match table that can parse the
+entries in the compatible list. Or a driver can call of_ helper
+functions. For example, it might call of_alias_get_id() to figure out
+which device id it needs. That's why the full DT parsing exists. It's
+the fallback when the simple heuristic fails. Only use it when you need
+to.
 
 g.
