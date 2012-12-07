@@ -1,173 +1,27 @@
-From: Stepan Moskovchenko <stepanm@codeaurora.org>
-Subject: [PATCH v3] of: Output devicetree alias names in uevent
-Date: Thu,  6 Dec 2012 14:55:41 -0800
-Message-ID: <1354834541-26765-1-git-send-email-stepanm@codeaurora.org>
-References: <20121206192500.0BF073E3A5E@localhost>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20121206192500.0BF073E3A5E@localhost>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Bryan Huntsman <bryanh@codeaurora.org>, Daniel Walker <dwalker@fifo99.com>, David Brown <davidb@codeaurora.org>, mbohan@codeaurora.org, Stepan Moskovchenko <stepanm@codeaurora.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V2 1/2] ASoC: Samsung: Do not register samsung audio dma
+ device as pdev
+Date: Fri, 7 Dec 2012 15:46:46 +0900
+Message-ID: <20121207064644.GI26070@opensource.wolfsonmicro.com>
+References: <1354765837-3469-1-git-send-email-padma.v@samsung.com>
+ <1354765837-3469-2-git-send-email-padma.v@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1354765837-3469-2-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, padma.kvr@gmail.com, sbkim73@samsung.com, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org, kgene.kim@samsung.com, ben@simtec.co.uk, lrg@slimlogic.co.uk, jassisinghbrar@gmail.com, anarsoul@gmail.com, graeme.gregory@wolfsonmicro.com, philipp.zabel@gmail.com, dgreenday@gmail.com, chripell@evolware.org, mcuelenaere@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-In some situations, userspace may want to resolve a
-device by function and logical number (ie, "serial0")
-rather than by the base address or full device path. Being
-able to resolve a device by alias frees userspace from the
-burden of otherwise having to maintain a mapping between
-device addresses and their logical assignments on each
-platform when multiple instances of the same hardware block
-are present in the system.
+On Thu, Dec 06, 2012 at 09:20:36AM +0530, Padmavathi Venna wrote:
+> Previously, the ASoC 'platform' (PCM/DMA) object was instantiated via a
+> platform_device. This didn't represent the hardware well, since there
+> was no separate hardware associated with this platform_device; it was a
+> virtual device with sole purpose to call snd_soc_register_platform().
 
-Although the uevent device attribute contains devicetree
-compatible information and the full device path, the uevent
-does not list the alises that may have been defined for the
-device.
-
-Signed-off-by: Stepan Moskovchenko <stepanm@codeaurora.org>
----
-v3: Fix copyright/license message on of_platform.h to match
-    the messages in the file the code came from.
-
-I also noticed that some of the comments in the original
-header might no longer apply, but I copied the header in
-its entirety. I can try to trim these down if you like.
-
- drivers/of/base.c       |   23 +++--------------------
- drivers/of/device.c     |   17 +++++++++++++++++
- drivers/of/of_private.h |   41 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 61 insertions(+), 20 deletions(-)
- create mode 100644 drivers/of/of_private.h
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 5806449..715aef2 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -24,32 +24,15 @@
- #include <linux/slab.h>
- #include <linux/proc_fs.h>
-
--/**
-- * struct alias_prop - Alias property in 'aliases' node
-- * @link:	List node to link the structure in aliases_lookup list
-- * @alias:	Alias property name
-- * @np:		Pointer to device_node that the alias stands for
-- * @id:		Index value from end of alias name
-- * @stem:	Alias string without the index
-- *
-- * The structure represents one alias property of 'aliases' node as
-- * an entry in aliases_lookup list.
-- */
--struct alias_prop {
--	struct list_head link;
--	const char *alias;
--	struct device_node *np;
--	int id;
--	char stem[0];
--};
-+#include "of_private.h"
-
--static LIST_HEAD(aliases_lookup);
-+LIST_HEAD(aliases_lookup);
-
- struct device_node *allnodes;
- struct device_node *of_chosen;
- struct device_node *of_aliases;
-
--static DEFINE_MUTEX(of_aliases_mutex);
-+DEFINE_MUTEX(of_aliases_mutex);
-
- /* use when traversing tree through the allnext, child, sibling,
-  * or parent members of struct device_node.
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 4c74e4f..b8d31db 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -8,6 +8,7 @@
- #include <linux/slab.h>
-
- #include <asm/errno.h>
-+#include "of_private.h"
-
- /**
-  * of_match_device - Tell if a struct device matches an of_device_id list
-@@ -131,6 +132,7 @@ ssize_t of_device_get_modalias(struct device *dev, char *str, ssize_t len)
- void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
- {
- 	const char *compat;
-+	struct alias_prop *app;
- 	int seen = 0, cplen, sl;
-
- 	if ((!dev) || (!dev->of_node))
-@@ -153,6 +155,21 @@ void of_device_uevent(struct device *dev, struct kobj_uevent_env *env)
- 		seen++;
- 	}
- 	add_uevent_var(env, "OF_COMPATIBLE_N=%d", seen);
-+
-+	seen = 0;
-+	mutex_lock(&of_aliases_mutex);
-+	list_for_each_entry(app, &aliases_lookup, link) {
-+		if (dev->of_node == app->np) {
-+			add_uevent_var(env, "OF_ALIAS_%d=%s", seen,
-+				       app->alias);
-+			seen++;
-+		}
-+	}
-+
-+	if (seen)
-+		add_uevent_var(env, "OF_ALIAS_N=%d", seen);
-+
-+	mutex_unlock(&of_aliases_mutex);
- }
-
- int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
-diff --git a/drivers/of/of_private.h b/drivers/of/of_private.h
-new file mode 100644
-index 0000000..b38415c
---- /dev/null
-+++ b/drivers/of/of_private.h
-@@ -0,0 +1,41 @@
-+/*
-+ * Procedures for creating, accessing and interpreting the device tree.
-+ *
-+ * Paul Mackerras	August 1996.
-+ * Copyright (C) 1996-2005 Paul Mackerras.
-+ *
-+ *  Adapted for 64bit PowerPC by Dave Engebretsen and Peter Bergner.
-+ *    {engebret|bergner}@us.ibm.com
-+ *
-+ *  Adapted for sparc and sparc64 by David S. Miller davem@davemloft.net
-+ *
-+ *  Reconsolidated from arch/x/kernel/prom.c by Stephen Rothwell and
-+ *  Grant Likely.
-+ *
-+ *      This program is free software; you can redistribute it and/or
-+ *      modify it under the terms of the GNU General Public License
-+ *      as published by the Free Software Foundation; either version
-+ *      2 of the License, or (at your option) any later version.
-+ */
-+
-+/**
-+ * struct alias_prop - Alias property in 'aliases' node
-+ * @link:	List node to link the structure in aliases_lookup list
-+ * @alias:	Alias property name
-+ * @np:		Pointer to device_node that the alias stands for
-+ * @id:		Index value from end of alias name
-+ * @stem:	Alias string without the index
-+ *
-+ * The structure represents one alias property of 'aliases' node as
-+ * an entry in aliases_lookup list.
-+ */
-+struct alias_prop {
-+	struct list_head link;
-+	const char *alias;
-+	struct device_node *np;
-+	int id;
-+	char stem[0];
-+};
-+
-+extern struct mutex of_aliases_mutex;
-+extern struct list_head aliases_lookup;
---
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Looks good however this doesn't apply against my topic/samsung branch -
+can you please check if I need anything from Kukjin's tree?  Though I
+guess the easiest thing is just to wait until the merge window is over,
+we're near to the next release.
