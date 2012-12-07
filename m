@@ -1,65 +1,67 @@
-From: kbuild test robot <fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: [grant:spi/next 9/12] drivers/spi/spi.c:1554:37: sparse:
- incompatible types in comparison expression (different signedness)
-Date: Fri, 07 Dec 2012 01:18:17 +0800
-Message-ID: <50c0d359.Aj5Bwguy9Go3CS7P%fengguang.wu@intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: Sharing PCIE driver between Microblaze and Arm zynq
+Date: Fri, 07 Dec 2012 14:11:15 +0000
+Message-ID: <20121207141115.EFC903E0B87@localhost>
+References: <CAHTX3dLxbVxn+D+AV7L0VsGYFOjas3AJ_3M_xncVfxp02FCy=Q@mail.gmail.com> <CAErSpo6xRdwzTuPPqnmvmHSp7awnV7=Z85eWFfktb_hm9Aad_A@mail.gmail.com> <50C1BA9D.5010406@monstr.eu>
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <50C1BA9D.5010406@monstr.eu>
+Sender: linux-arch-owner@vger.kernel.org
+To: monstr@monstr.eu, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, LKML <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, John Linn <John.Linn@xilinx.com>, John Williams <jwilliams@xilinx.com>, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-tree:   git://git.secretlab.ca/git/linux-2.6.git spi/next
-head:   b15d5d7004e25716c8b8dfe4e322a64551e2e6cc
-commit: b3a223ee2d1a4635b0643c547bc0096a37334ed1 [9/12] spi: Remove SPI_BUFSIZ restriction on spi_write_then_read()
+On Fri, 07 Dec 2012 10:45:01 +0100, Michal Simek <monstr@monstr.eu> wrote:
+> On 12/06/2012 10:27 PM, Bjorn Helgaas wrote:
+> > [+cc linux-pci]
+> >
+> > On Thu, Dec 6, 2012 at 7:23 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+> >> Hi guys,
+> >>
+> >> I have a question regarding to sharing generic OF pcie driver between
+> >> two architectures MB and ARM Zynq.
+> >> Is drivers/pci/pcie location good for it?
+> >> Make no sense to have the same driver in two locations.
+> >
+> > I think you're talking about a PCI host bridge driver.  It would
+> > definitely be nice to move toward a generic, shared driver.  Host
+> > bridge drivers are responsible for enumerating the PCI hierarchy below
+> > the bridge.  Enumeration is not really PCIe-specific, so I wouldn't
+> > put it in drivers/pci/pcie.
+> 
+> Not a PCI expert, just trying to find out the proper location for this shared driver.
+> 
+> 
+> >> Is using readl/writel IO functions in this driver the best option
+> >> which we can have?
+> >> Or is there any other recommendation?
+> >
+> > I'm not really a driver person, but if you're writing a new driver,
+> > wouldn't you use the iomap interfaces (ioremap(), ioread32(), etc)
+> > rather than readl()?
+> 
+> That driver exists but it is not in mainline and it is better to directly
+> add it to proper location with correct io functions.
+> The question is if ioread/iowrite functions are correct one.
+> PowerPC io-defs.h suggests that readl/writel should be used for PCI.
+> 
+> 
+> >> Also just want to check if it is correct to use pcie device_type.
+> >
+> > I don't know what you're asking here.  Can you elaborate or give a
+> > specific example?
+> 
+> If node property device_type pcie should be used.
+> device_type = "pcie";
+> 
+> For pci it is device_type = "pci";
+> For network it is device_type = "network"
+> the same for serial, watchdogs.
+> 
+> Do we have any list of device_types which we should use?
 
+Don't use them unless a binding requires it. PCI address lookup code
+uses it, so we put it in those nodes. Otherwise device_type is
+deprecated and has been for a long time now. You should not be using it
+in .dts files.
 
-sparse warnings:
-
-+ drivers/spi/spi.c:1554:37: sparse: incompatible types in comparison expression (different signedness)
-drivers/spi/spi.c: In function 'spi_write_then_read':
-drivers/spi/spi.c:1554:23: warning: comparison of distinct pointer types lacks a cast [enabled by default]
-
-vim +1554 drivers/spi/spi.c
-
-0c4a1590 Mark Brown     2011-05-11  1538  		const void *txbuf, unsigned n_tx,
-0c4a1590 Mark Brown     2011-05-11  1539  		void *rxbuf, unsigned n_rx)
-8ae12a0d David Brownell 2006-01-08  1540  {
-068f4070 David Brownell 2007-12-04  1541  	static DEFINE_MUTEX(lock);
-8ae12a0d David Brownell 2006-01-08  1542  
-8ae12a0d David Brownell 2006-01-08  1543  	int			status;
-8ae12a0d David Brownell 2006-01-08  1544  	struct spi_message	message;
-bdff549e David Brownell 2009-04-13  1545  	struct spi_transfer	x[2];
-8ae12a0d David Brownell 2006-01-08  1546  	u8			*local_buf;
-8ae12a0d David Brownell 2006-01-08  1547  
-b3a223ee Mark Brown     2012-12-02  1548  	/* Use preallocated DMA-safe buffer if we can.  We can't avoid
-b3a223ee Mark Brown     2012-12-02  1549  	 * copying here, (as a pure convenience thing), but we can
-b3a223ee Mark Brown     2012-12-02  1550  	 * keep heap costs out of the hot path unless someone else is
-b3a223ee Mark Brown     2012-12-02  1551  	 * using the pre-allocated buffer or the transfer is too large.
-8ae12a0d David Brownell 2006-01-08  1552  	 */
-b3a223ee Mark Brown     2012-12-02  1553  	if ((n_tx + n_rx) > SPI_BUFSIZ || !mutex_trylock(&lock)) {
-b3a223ee Mark Brown     2012-12-02 @1554  		local_buf = kmalloc(max(SPI_BUFSIZ, n_tx + n_rx), GFP_KERNEL);
-b3a223ee Mark Brown     2012-12-02  1555  		if (!local_buf)
-b3a223ee Mark Brown     2012-12-02  1556  			return -ENOMEM;
-b3a223ee Mark Brown     2012-12-02  1557  	} else {
-b3a223ee Mark Brown     2012-12-02  1558  		local_buf = buf;
-b3a223ee Mark Brown     2012-12-02  1559  	}
-8ae12a0d David Brownell 2006-01-08  1560  
-8275c642 Vitaly Wool    2006-01-08  1561  	spi_message_init(&message);
-bdff549e David Brownell 2009-04-13  1562  	memset(x, 0, sizeof x);
-
----
-0-DAY kernel build testing backend         Open Source Technology Center
-Fengguang Wu, Yuanhan Liu                              Intel Corporation
+g.
