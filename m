@@ -1,113 +1,46 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCHv15 2/7] video: add display_timing and videomode
-Date: Fri, 7 Dec 2012 10:49:48 +0200
-Message-ID: <50C1ADAC.2080403@ti.com>
-References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
- <1353920848-1705-3-git-send-email-s.trumtrar@pengutronix.de>
- <50B36286.7010704@ti.com> <20121126153958.GA30791@pengutronix.de>
- <20121206100718.C5C263E0EA4@localhost>
+From: Vakul Garg <vakul@freescale.com>
+Subject: [PATCH] Revert "crypto: caam - Updated SEC-4.0 device tree binding for ERA information."
+Date: Fri, 7 Dec 2012 14:27:29 +0530
+Message-ID: <1354870649-3656-1-git-send-email-vakul@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3545996210399666732=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121206100718.C5C263E0EA4@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: linux-crypto@vger.kernel.org, linuxppc-dev@ozlabs.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
---===============3545996210399666732==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="------------enig9CEB17DFA3B7CC555C12C4B7"
+This reverts commit a2c0911c09190125f52c9941b9d187f601c2f7be.
 
---------------enig9CEB17DFA3B7CC555C12C4B7
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Vakul Garg <vakul@freescale.com>
+---
+Instead of adding SEC era information in crypto node's compatible, a new
+property 'fsl,sec-era' is being introduced into crypto node.
 
-On 2012-12-06 12:07, Grant Likely wrote:
-> On Mon, 26 Nov 2012 16:39:58 +0100, Steffen Trumtrar <s.trumtrar@pengut=
-ronix.de> wrote:
->> On Mon, Nov 26, 2012 at 02:37:26PM +0200, Tomi Valkeinen wrote:
->>> On 2012-11-26 11:07, Steffen Trumtrar wrote:
->>>
->>>> +/*
->>>> + * Subsystem independent description of a videomode.
->>>> + * Can be generated from struct display_timing.
->>>> + */
->>>> +struct videomode {
->>>> +	u32 pixelclock;		/* pixelclock in Hz */
->>>
->>> I don't know if this is of any importance, but the linux clock framew=
-ork
->>> manages clock rates with unsigned long. Would it be better to use the=
+ .../devicetree/bindings/crypto/fsl-sec4.txt        |    5 ++---
+ 1 files changed, 2 insertions(+), 3 deletions(-)
 
->>> same type here?
->>>
->>
->> Hm, I don't know. Anyone? u32 should be large enough for a pixelclock.=
-
->=20
-> 4GHz is a pretty large pixel clock. I have no idea how conceivable it i=
-s
-> that hardware will get to that speed. However, if it will ever be
-> larger, then you'll need to account for that in the DT binding so that
-> the pixel clock can be specified using 2 cells.
-
-I didn't mention the type because of the size of the field, but only
-because to me it makes sense to use the same type for clock rates all
-around the kernel. In many cases the value will be passed to clk_set_rate=
-().
-
-I can't see any real issues with u32, though.
-
- Tomi
-
-
-
---------------enig9CEB17DFA3B7CC555C12C4B7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-Comment: Using GnuPG with undefined - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJQwa2sAAoJEPo9qoy8lh71pC0P/jCcHcXSVdXCy26V/ZjkV4kj
-s11XdvLyA8ozI6WRGbkpIhaX2iPkS59DMJqwa4W23J16yUy+wVOa7kWSSmFFD5sf
-X7oU7Ac2DpqJ+X9Lg23GHDfZ3343lnNQRYWjM5sp68zZfUi0OkbAPviAvMv06tzi
-SQn/GCMXlFMKunfNRgxRjTzAdJfEaJrmZEMXftR/M5OXrUawnoAFIGFEjdNuGrbp
-iCcb4POx8pJgqY0k1kULoMTeper1hMDUpfIphKedUMtSMRvFaFo3LfSH9tFIPCgd
-EksXy38XpJygJMfyVQudvaTF+ryYaKkNT+ouRdhslvPkzaAeZxm2Mbl3idJy6GKa
-RrsCpwtIcdBx/rrUam4pv5NAHMpkLP432Q8IWlcYexQN/ZUbOOORCQi8yluURcFC
-rfAFFmKQNrQ+s1XYA8drJRW8LMgMJ5jlZvL97zRcpIZWLB/oYfKj0p432SOPufNm
-Lrze0PxtoucJ92KLpW+akS/nrPPkhfjuXRepjdX5J762JUpwnVdOfCg9aUKmpW9/
-bRUed5rOdGhPyKOcjCYiJGAaVt0EDLZ8M5GxMsWpQ8JQccQYuKYqldWKPtrr5Ac6
-2GRZDHrf5aG9mrsFbpN/XMp3dENTetGNhvXA5IfU1aR5Z1FDDZtFTgYc8RwO5wxe
-5ADwylE9JJgYzU9HR+58
-=pisc
------END PGP SIGNATURE-----
-
---------------enig9CEB17DFA3B7CC555C12C4B7--
-
---===============3545996210399666732==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3545996210399666732==--
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+index fc9ce6f..bd7ce12 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+@@ -54,8 +54,7 @@ PROPERTIES
+    - compatible
+       Usage: required
+       Value type: <string>
+-      Definition: Must include "fsl,sec-v4.0". Also includes SEC
+-           ERA versions (optional) with which the device is compatible.
++      Definition: Must include "fsl,sec-v4.0"
+ 
+    - #address-cells
+        Usage: required
+@@ -107,7 +106,7 @@ PROPERTIES
+ 
+ EXAMPLE
+ 	crypto@300000 {
+-		compatible = "fsl,sec-v4.0", "fsl,sec-era-v2.0";
++		compatible = "fsl,sec-v4.0";
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		reg = <0x300000 0x10000>;
+-- 
+1.7.7.6
