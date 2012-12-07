@@ -1,32 +1,56 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH V4 0/2] Add DT support for i2s
-Date: Fri, 07 Dec 2012 13:51:31 +0000
-Message-ID: <20121207135131.A53643E0B87@localhost>
-References: <1354099669-1735-1-git-send-email-padma.v@samsung.com> <CAAgF-Bc4t6WL4vswP6CFeSQrPZBmOuYfVt6_JoB1Za9TBX7mvA@mail.gmail.com> <20121206041141.GA10867@opensource.wolfsonmicro.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20121206041141.GA10867@opensource.wolfsonmicro.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Padma Venkat <padma.kvr@gmail.com>
-Cc: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, Padmavathi Venna <padma.v@samsung.com>, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, jassisinghbrar@gmail.com, kgene.kim@samsung.com, ben-linux@fluff.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] leds: leds-pwm: Add device tree bindings
+Date: Fri, 7 Dec 2012 15:04:51 +0100
+Message-ID: <50C1F783.6090501@ti.com>
+References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com>
+ <1352731270-27534-4-git-send-email-peter.ujfalusi@ti.com>
+ <20121206100052.EC8293E0E22@localhost> <50C0913B.9070802@ti.com>
+ <20121207133453.800C43E0B87@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121207133453.800C43E0B87@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Dec 2012 13:11:42 +0900, Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
-> On Thu, Dec 06, 2012 at 09:31:40AM +0530, Padma Venkat wrote:
-> > On Wed, Nov 28, 2012 at 4:17 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
-> 
-> > > Padmavathi Venna (2):
-> > >   ASoC: Samsung: Get I2S src_clk from clock alias id.
-> > >   ASoC: SAMSUNG: Add DT support for i2s
-> 
-> > Any comments on DT support for i2s patch?  If not when this patch can be pulled?
-> 
-> Don't send contentless pings.
-> 
-> I still don't really like what's going on with aliases here, I need to
-> understand why things are structured the way they are to say something
-> about that.
+On 12/07/2012 02:34 PM, Grant Likely wrote:
+> It really needs to look like this:
+> =
 
-Right. On a brief look, it appears that the binding is using aliases as
-a way to encode implementation specific details of the driver.
+> pwmleds {
+> 	compatible =3D "pwm-leds";
+> 	kpad {
+> 		label =3D "omap4::keypad";
+> 		max-brightness =3D <127>;
+> 		pwms =3D <&twl_pwm 0 7812500>;
+> 	};
+> 	charging {
+> 		label =3D "omap4:green:chrg";
+> 		max-brightness =3D <255>;
+> 		pwms =3D <&twl_pwmled 0 7812500>;
+> 	};
+> };
 
-g.
+OK.
+So What we need to do is export the of_pwm_request() from drivers/pwm/core.c
+Client drivers us of_pwm_request(node, NULL); to get the pwm when booted wi=
+th DT.
+Works fine on my setup this way and the DTS section looks just as you have
+described.
+Now I need to clean them up and resubmit.
+
+-- =
+
+P=E9ter
