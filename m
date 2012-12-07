@@ -1,131 +1,113 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [PATCH RESEND V2 2/2] ASoC: SMDK: WM8994: Add device tree support for
- machine file
-Date: Fri, 07 Dec 2012 13:59:22 +0530
-Message-ID: <1354868962-7862-3-git-send-email-padma.v@samsung.com>
-References: <1354868962-7862-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1354868962-7862-1-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, padma.kvr@gmail.com
-Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org, kgene.kim@samsung.com, lrg@slimlogic.co.uk, jassisinghbrar@gmail.com, anarsoul@gmail.com, graeme.gregory@wolfsonmicro.com, philipp.zabel@gmail.com, dgreenday@gmail.com, chripell@evolware.org, mcuelenaere@gmail.com
+From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCHv15 2/7] video: add display_timing and videomode
+Date: Fri, 7 Dec 2012 10:49:48 +0200
+Message-ID: <50C1ADAC.2080403@ti.com>
+References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1353920848-1705-3-git-send-email-s.trumtrar@pengutronix.de>
+ <50B36286.7010704@ti.com> <20121126153958.GA30791@pengutronix.de>
+ <20121206100718.C5C263E0EA4@localhost>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============3545996210399666732=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121206100718.C5C263E0EA4@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the basic device tree based lookup.
+--===============3545996210399666732==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="------------enig9CEB17DFA3B7CC555C12C4B7"
 
-Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
----
- .../bindings/sound/samsung,smdk-wm8994.txt         |   14 ++++++++++
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |   12 +++++++++
- sound/soc/samsung/smdk_wm8994.c                    |   26 ++++++++++++++++++++
- 3 files changed, 52 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.txt
+--------------enig9CEB17DFA3B7CC555C12C4B7
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.txt b/Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.txt
-new file mode 100644
-index 0000000..13cb189
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.txt
-@@ -0,0 +1,14 @@
-+Samsung SMDK audio complex
-+
-+Required properties:
-+- compatible : "samsung,smdk-wm8994"
-+- samsung,i2s-controller: The phandle of the Samsung I2S0 controller
-+- samsung,audio-codec: The phandle of the WM8994 audio codec
-+Example:
-+
-+sound {
-+		compatible = "samsung,smdk-wm8994";
-+
-+		samsung,i2s-controller = <&i2s_0>;
-+		samsung,audio-codec = <&wm8994>;
-+};
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index a352df4..5cbb08d 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -53,6 +53,11 @@
- 			compatible = "samsung,s524ad0xd1";
- 			reg = <0x51>;
- 		};
-+
-+		wm8994: wm8994@1a {
-+			 compatible = "wlf,wm8994";
-+			 reg = <0x1a>;
-+		};
- 	};
- 
- 	i2c@12C80000 {
-@@ -166,4 +171,11 @@
- 	spi_2: spi@12d40000 {
- 		status = "disabled";
- 	};
-+
-+	sound {
-+		compatible = "samsung,smdk-wm8994";
-+
-+		samsung,i2s-controller = <&i2s_0>;
-+		samsung,audio-codec = <&wm8994>;
-+	};
- };
-diff --git a/sound/soc/samsung/smdk_wm8994.c b/sound/soc/samsung/smdk_wm8994.c
-index dd0aa8c..2f3e2b8 100644
---- a/sound/soc/samsung/smdk_wm8994.c
-+++ b/sound/soc/samsung/smdk_wm8994.c
-@@ -10,6 +10,7 @@
- #include "../codecs/wm8994.h"
- #include <sound/pcm_params.h>
- #include <linux/module.h>
-+#include <linux/of.h>
- 
-  /*
-   * Default CFG switch settings to use this driver:
-@@ -153,9 +154,25 @@ static struct snd_soc_card smdk = {
- static int __devinit smdk_audio_probe(struct platform_device *pdev)
- {
- 	int ret;
-+	struct device_node *np = pdev->dev.of_node;
- 	struct snd_soc_card *card = &smdk;
- 
- 	card->dev = &pdev->dev;
-+
-+	if (np) {
-+		smdk_dai[0].cpu_dai_name = NULL;
-+		smdk_dai[0].cpu_of_node = of_parse_phandle(np,
-+				"samsung,i2s-controller", 0);
-+		if (!smdk_dai[0].cpu_of_node) {
-+			dev_err(&pdev->dev,
-+			   "Property 'samsung,i2s-controller' missing or invalid\n");
-+			ret = -EINVAL;
-+		}
-+
-+		smdk_dai[0].platform_name = NULL;
-+		smdk_dai[0].platform_of_node = smdk_dai[0].cpu_of_node;
-+	}
-+
- 	ret = snd_soc_register_card(card);
- 
- 	if (ret)
-@@ -173,10 +190,19 @@ static int __devexit smdk_audio_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id samsung_wm8994_of_match[] = {
-+	{ .compatible = "samsung,smdk-wm8994", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, samsung_wm8994_of_match);
-+#endif /* CONFIG_OF */
-+
- static struct platform_driver smdk_audio_driver = {
- 	.driver		= {
- 		.name	= "smdk-audio",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(samsung_wm8994_of_match),
- 	},
- 	.probe		= smdk_audio_probe,
- 	.remove		= __devexit_p(smdk_audio_remove),
--- 
-1.7.4.4
+On 2012-12-06 12:07, Grant Likely wrote:
+> On Mon, 26 Nov 2012 16:39:58 +0100, Steffen Trumtrar <s.trumtrar@pengut=
+ronix.de> wrote:
+>> On Mon, Nov 26, 2012 at 02:37:26PM +0200, Tomi Valkeinen wrote:
+>>> On 2012-11-26 11:07, Steffen Trumtrar wrote:
+>>>
+>>>> +/*
+>>>> + * Subsystem independent description of a videomode.
+>>>> + * Can be generated from struct display_timing.
+>>>> + */
+>>>> +struct videomode {
+>>>> +	u32 pixelclock;		/* pixelclock in Hz */
+>>>
+>>> I don't know if this is of any importance, but the linux clock framew=
+ork
+>>> manages clock rates with unsigned long. Would it be better to use the=
+
+>>> same type here?
+>>>
+>>
+>> Hm, I don't know. Anyone? u32 should be large enough for a pixelclock.=
+
+>=20
+> 4GHz is a pretty large pixel clock. I have no idea how conceivable it i=
+s
+> that hardware will get to that speed. However, if it will ever be
+> larger, then you'll need to account for that in the DT binding so that
+> the pixel clock can be specified using 2 cells.
+
+I didn't mention the type because of the size of the field, but only
+because to me it makes sense to use the same type for clock rates all
+around the kernel. In many cases the value will be passed to clk_set_rate=
+().
+
+I can't see any real issues with u32, though.
+
+ Tomi
+
+
+
+--------------enig9CEB17DFA3B7CC555C12C4B7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with undefined - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJQwa2sAAoJEPo9qoy8lh71pC0P/jCcHcXSVdXCy26V/ZjkV4kj
+s11XdvLyA8ozI6WRGbkpIhaX2iPkS59DMJqwa4W23J16yUy+wVOa7kWSSmFFD5sf
+X7oU7Ac2DpqJ+X9Lg23GHDfZ3343lnNQRYWjM5sp68zZfUi0OkbAPviAvMv06tzi
+SQn/GCMXlFMKunfNRgxRjTzAdJfEaJrmZEMXftR/M5OXrUawnoAFIGFEjdNuGrbp
+iCcb4POx8pJgqY0k1kULoMTeper1hMDUpfIphKedUMtSMRvFaFo3LfSH9tFIPCgd
+EksXy38XpJygJMfyVQudvaTF+ryYaKkNT+ouRdhslvPkzaAeZxm2Mbl3idJy6GKa
+RrsCpwtIcdBx/rrUam4pv5NAHMpkLP432Q8IWlcYexQN/ZUbOOORCQi8yluURcFC
+rfAFFmKQNrQ+s1XYA8drJRW8LMgMJ5jlZvL97zRcpIZWLB/oYfKj0p432SOPufNm
+Lrze0PxtoucJ92KLpW+akS/nrPPkhfjuXRepjdX5J762JUpwnVdOfCg9aUKmpW9/
+bRUed5rOdGhPyKOcjCYiJGAaVt0EDLZ8M5GxMsWpQ8JQccQYuKYqldWKPtrr5Ac6
+2GRZDHrf5aG9mrsFbpN/XMp3dENTetGNhvXA5IfU1aR5Z1FDDZtFTgYc8RwO5wxe
+5ADwylE9JJgYzU9HR+58
+=pisc
+-----END PGP SIGNATURE-----
+
+--------------enig9CEB17DFA3B7CC555C12C4B7--
+
+--===============3545996210399666732==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3545996210399666732==--
