@@ -1,72 +1,41 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: Sharing PCIE driver between Microblaze and Arm zynq
-Date: Fri, 07 Dec 2012 10:45:01 +0100
-Message-ID: <50C1BA9D.5010406@monstr.eu>
-References: <CAHTX3dLxbVxn+D+AV7L0VsGYFOjas3AJ_3M_xncVfxp02FCy=Q@mail.gmail.com> <CAErSpo6xRdwzTuPPqnmvmHSp7awnV7=Z85eWFfktb_hm9Aad_A@mail.gmail.com>
-Reply-To: monstr@monstr.eu
+From: "Kumar, Anil" <anilkumar.v-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 0/2]  ARM: davinci: da850: add pinctrl support
+Date: Fri, 7 Dec 2012 15:57:29 +0530
+Message-ID: <1354876051-25938-1-git-send-email-anilkumar.v@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAErSpo6xRdwzTuPPqnmvmHSp7awnV7=Z85eWFfktb_hm9Aad_A@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Michal Simek <michal.simek@xilinx.com>, LKML <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, John Linn <John.Linn@xilinx.com>, John Williams <jwilliams@xilinx.com>, linux-pci@vger.kernel.org
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/06/2012 10:27 PM, Bjorn Helgaas wrote:
-> [+cc linux-pci]
->
-> On Thu, Dec 6, 2012 at 7:23 AM, Michal Simek <michal.simek@xilinx.com> wrote:
->> Hi guys,
->>
->> I have a question regarding to sharing generic OF pcie driver between
->> two architectures MB and ARM Zynq.
->> Is drivers/pci/pcie location good for it?
->> Make no sense to have the same driver in two locations.
->
-> I think you're talking about a PCI host bridge driver.  It would
-> definitely be nice to move toward a generic, shared driver.  Host
-> bridge drivers are responsible for enumerating the PCI hierarchy below
-> the bridge.  Enumeration is not really PCIe-specific, so I wouldn't
-> put it in drivers/pci/pcie.
+This set of patches adds:
 
-Not a PCI expert, just trying to find out the proper location for this shared driver.
+* Add pinctrl-single for handling Padconf registers.
+* Add NAND node to export NAND functionality on da850 EVM.
+* Add NAND pinctrl node to do pin mux according to pinctrl-single driver.
 
+Kumar, Anil (2):
+  ARM: davinci: da850: add pinctrl driver entries
+  ARM: davinci: da850: add NAND driver entries
 
->> Is using readl/writel IO functions in this driver the best option
->> which we can have?
->> Or is there any other recommendation?
->
-> I'm not really a driver person, but if you're writing a new driver,
-> wouldn't you use the iomap interfaces (ioremap(), ioread32(), etc)
-> rather than readl()?
-
-That driver exists but it is not in mainline and it is better to directly
-add it to proper location with correct io functions.
-The question is if ioread/iowrite functions are correct one.
-PowerPC io-defs.h suggests that readl/writel should be used for PCI.
-
-
->> Also just want to check if it is correct to use pcie device_type.
->
-> I don't know what you're asking here.  Can you elaborate or give a
-> specific example?
-
-If node property device_type pcie should be used.
-device_type = "pcie";
-
-For pci it is device_type = "pci";
-For network it is device_type = "network"
-the same for serial, watchdogs.
-
-Do we have any list of device_types which we should use?
-
-Thanks,
-Michal
+ .../devicetree/bindings/arm/davinci/pinctrl.txt    |   29 ++++++++++++++++++++
+ arch/arm/Kconfig                                   |    1 +
+ arch/arm/boot/dts/da850-evm.dts                    |   22 +++++++++++++++
+ arch/arm/boot/dts/da850.dtsi                       |   23 +++++++++++++++
+ arch/arm/configs/da8xx_omapl_defconfig             |    1 +
+ 5 files changed, 76 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/davinci/pinctrl.txt
 
 -- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+1.7.4.1
