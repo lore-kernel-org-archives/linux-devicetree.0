@@ -1,33 +1,37 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH RESEND V2 1/2] ASoC: Samsung: Do not
- register samsung audio dma device as pdev
-Date: Fri, 7 Dec 2012 19:37:46 +0900
-Message-ID: <20121207103745.GK26070@opensource.wolfsonmicro.com>
-References: <1354868962-7862-1-git-send-email-padma.v@samsung.com>
- <1354868962-7862-2-git-send-email-padma.v@samsung.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v3 1/3] mtd: nand: omap2: Update nerrors using ecc.strength
+Date: Fri, 7 Dec 2012 16:10:04 +0530
+Message-ID: <50C1C784.4040209@ti.com>
+References: <1354189595-12784-1-git-send-email-avinashphilip@ti.com> <1354189595-12784-2-git-send-email-avinashphilip@ti.com> <50BF3819.9010200@ti.com> <518397C60809E147AF5323E0420B992E3EA1139B@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-Content-Disposition: inline
-In-Reply-To: <1354868962-7862-2-git-send-email-padma.v@samsung.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, philipp.zabel@gmail.com, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, jassisinghbrar@gmail.com, mcuelenaere@gmail.com, anarsoul@gmail.com, tiwai@suse.de, kgene.kim@samsung.com, ben-linux@fluff.org, padma.kvr@gmail.com, dgreenday@gmail.com, chripell@evolware.org, graeme.gregory@wolfsonmicro.com, lrg@ti.com, linux-arm-kernel@lists.infradead.org, lrg@slimlogic.co.uk
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <518397C60809E147AF5323E0420B992E3EA1139B@DBDE01.ent.ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "Mohammed, Afzal" <afzal@ti.com>, "tony@atomide.com" <tony@atomide.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 07, 2012 at 01:59:21PM +0530, Padmavathi Venna wrote:
-> Previously, the ASoC 'platform' (PCM/DMA) object was instantiated via a
-> platform_device. This didn't represent the hardware well, since there
-> was no separate hardware associated with this platform_device; it was a
-> virtual device with sole purpose to call snd_soc_register_platform().
+On 12/5/2012 6:13 PM, Philip, Avinash wrote:
+> On Wed, Dec 05, 2012 at 17:33:37, Nori, Sekhar wrote:
+>> Hi Avinash,
+>>
+>> On 11/29/2012 5:16 PM, Philip, Avinash wrote:
+>>> Update number of errors using nand ecc strength.
+>>> Also add macro definitions BCH8_ERROR_MAX & BCH4_ERROR_MAX
+>>
+>> Can you please describe why the original method of setting nerrors was
+>> incorrect? Was it causing any issues in any particular configuration?
+> 
+> It affects the reusability of the code. For example BCH8 with AM335x RBL 
+> compatibility requires  14 bytes instead of 13 byte. So setting nerrors
+> with
+> 	nerrors = (info->nand.ecc.bytes == 13) ? 8 : 4;
+> will break am335x RBL compatibility.
 
-Applied, thanks.
+This should be summarized in the patch description so the motivation is
+clear to those who read the history later.
+
+Thanks,
+Sekhar
