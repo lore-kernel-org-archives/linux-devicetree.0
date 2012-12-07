@@ -1,72 +1,72 @@
-From: "Kumar, Anil" <anilkumar.v@ti.com>
-Subject: [PATCH] mtd: nand: davinci: fix the binding documentation
-Date: Fri, 7 Dec 2012 14:39:34 +0530
-Message-ID: <1354871374-4984-1-git-send-email-anilkumar.v@ti.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: Sharing PCIE driver between Microblaze and Arm zynq
+Date: Fri, 07 Dec 2012 10:45:01 +0100
+Message-ID: <50C1BA9D.5010406@monstr.eu>
+References: <CAHTX3dLxbVxn+D+AV7L0VsGYFOjas3AJ_3M_xncVfxp02FCy=Q@mail.gmail.com> <CAErSpo6xRdwzTuPPqnmvmHSp7awnV7=Z85eWFfktb_hm9Aad_A@mail.gmail.com>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
-Cc: rob@landley.net, nsekhar@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, hs@denx.de, David.Woodhouse@intel.com, artem.bityutskiy@linux.intel.com, "Kumar, Anil" <anilkumar.v@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAErSpo6xRdwzTuPPqnmvmHSp7awnV7=Z85eWFfktb_hm9Aad_A@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Michal Simek <michal.simek@xilinx.com>, LKML <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, John Linn <John.Linn@xilinx.com>, John Williams <jwilliams@xilinx.com>, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since the aemif driver conversion to DT along with
-its movement to drivers/ folder is not yet done,
-fix NAND binding documentation to have NAND specific
-DT details only.
+On 12/06/2012 10:27 PM, Bjorn Helgaas wrote:
+> [+cc linux-pci]
+>
+> On Thu, Dec 6, 2012 at 7:23 AM, Michal Simek <michal.simek@xilinx.com> wrote:
+>> Hi guys,
+>>
+>> I have a question regarding to sharing generic OF pcie driver between
+>> two architectures MB and ARM Zynq.
+>> Is drivers/pci/pcie location good for it?
+>> Make no sense to have the same driver in two locations.
+>
+> I think you're talking about a PCI host bridge driver.  It would
+> definitely be nice to move toward a generic, shared driver.  Host
+> bridge drivers are responsible for enumerating the PCI hierarchy below
+> the bridge.  Enumeration is not really PCIe-specific, so I wouldn't
+> put it in drivers/pci/pcie.
 
-Signed-off-by: Kumar, Anil <anilkumar.v@ti.com>
----
-:100644 100644 e37241f... 49fc7ad... M	Documentation/devicetree/bindings/arm/davinci/nand.txt
- .../devicetree/bindings/arm/davinci/nand.txt       |   37 ++++++-------------
- 1 files changed, 12 insertions(+), 25 deletions(-)
+Not a PCI expert, just trying to find out the proper location for this shared driver.
 
-diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-index e37241f..49fc7ad 100644
---- a/Documentation/devicetree/bindings/arm/davinci/nand.txt
-+++ b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-@@ -23,29 +23,16 @@ Recommended properties :
- - ti,davinci-nand-buswidth: buswidth 8 or 16
- - ti,davinci-nand-use-bbt: use flash based bad block table support.
- 
--Example (enbw_cmc board):
--aemif@60000000 {
--	compatible = "ti,davinci-aemif";
--	#address-cells = <2>;
--	#size-cells = <1>;
--	reg = <0x68000000 0x80000>;
--	ranges = <2 0 0x60000000 0x02000000
--		  3 0 0x62000000 0x02000000
--		  4 0 0x64000000 0x02000000
--		  5 0 0x66000000 0x02000000
--		  6 0 0x68000000 0x02000000>;
--	nand@3,0 {
--		compatible = "ti,davinci-nand";
--		reg = <3 0x0 0x807ff
--			6 0x0 0x8000>;
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ti,davinci-chipselect = <1>;
--		ti,davinci-mask-ale = <0>;
--		ti,davinci-mask-cle = <0>;
--		ti,davinci-mask-chipsel = <0>;
--		ti,davinci-ecc-mode = "hw";
--		ti,davinci-ecc-bits = <4>;
--		ti,davinci-nand-use-bbt;
--	};
-+Example(da850 EVM ):
-+nand_cs3@62000000 {
-+	compatible = "ti,davinci-nand";
-+	reg = <0x62000000 0x807ff
-+		0x68000000 0x8000>;
-+	ti,davinci-chipselect = <1>;
-+	ti,davinci-mask-ale = <0>;
-+	ti,davinci-mask-cle = <0>;
-+	ti,davinci-mask-chipsel = <0>;
-+	ti,davinci-ecc-mode = "hw";
-+	ti,davinci-ecc-bits = <4>;
-+	ti,davinci-nand-use-bbt;
- };
+
+>> Is using readl/writel IO functions in this driver the best option
+>> which we can have?
+>> Or is there any other recommendation?
+>
+> I'm not really a driver person, but if you're writing a new driver,
+> wouldn't you use the iomap interfaces (ioremap(), ioread32(), etc)
+> rather than readl()?
+
+That driver exists but it is not in mainline and it is better to directly
+add it to proper location with correct io functions.
+The question is if ioread/iowrite functions are correct one.
+PowerPC io-defs.h suggests that readl/writel should be used for PCI.
+
+
+>> Also just want to check if it is correct to use pcie device_type.
+>
+> I don't know what you're asking here.  Can you elaborate or give a
+> specific example?
+
+If node property device_type pcie should be used.
+device_type = "pcie";
+
+For pci it is device_type = "pci";
+For network it is device_type = "network"
+the same for serial, watchdogs.
+
+Do we have any list of device_types which we should use?
+
+Thanks,
+Michal
+
 -- 
-1.7.4.1
-
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
