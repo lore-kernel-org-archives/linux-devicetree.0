@@ -1,81 +1,114 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCHv15 3/7] video: add of helper for display
- timings/videomode
-Date: Fri, 07 Dec 2012 15:12:48 +0100
-Message-ID: <1354889568.2533.118.camel@pizza.hi.pengutronix.de>
-References: <1353920848-1705-1-git-send-email-s.trumtrar@pengutronix.de>
-	 <1353920848-1705-4-git-send-email-s.trumtrar@pengutronix.de>
-	 <50B37EEC.6090808@ti.com> <20121126161055.GB30791@pengutronix.de>
-	 <50B39F46.7050808@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <50B39F46.7050808@ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, linux-fbdev@vger.kernel.org, kernel@pengutronix.de, David Airlie <airlied@linux.ie>, devicetree-discuss@lists.ozlabs.org, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V7] mfd: stmpe: Update DT support for stmpe driver
+Date: Fri,  7 Dec 2012 20:29:37 +0530
+Message-ID: <91449dfa3338a603f443765b0948aa2e1b98a600.1354892244.git.viresh.kumar@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sameo@linux.intel.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, lee.jones@linaro.org, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>, Viresh Kumar <viresh.kumar@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+From: Vipul Kumar Samar <vipulkumar.samar@st.com>
 
-Am Montag, den 26.11.2012, 18:56 +0200 schrieb Tomi Valkeinen:
-> On 2012-11-26 18:10, Steffen Trumtrar wrote:
-> > Hi,
-> > 
-> > On Mon, Nov 26, 2012 at 04:38:36PM +0200, Tomi Valkeinen wrote:
-> 
-> >>> +optional properties:
-> >>> + - hsync-active: hsync pulse is active low/high/ignored
-> >>> + - vsync-active: vsync pulse is active low/high/ignored
-> >>> + - de-active: data-enable pulse is active low/high/ignored
-> >>> + - pixelclk-inverted: pixelclock is inverted (active on falling edge)/
-> >>> +				non-inverted (active on rising edge)/
-> >>> +				     ignored (ignore property)
-> >>
-> >> I think hsync-active and vsync-active are clear, and commonly used, and
-> >> they are used for both drm and fb mode conversions in later patches.
-> >>
-> >> de-active is not used in drm and fb mode conversions, but I think it's
-> >> also clear.
-> >>
-> >> pixelclk-inverted is not used in the mode conversions. It's also a bit
-> >> unclear to me. What does it mean that pix clock is "active on rising
-> >> edge"? The pixel data is driven on rising edge? How about the sync
-> >> signals and DE, when are they driven? Does your HW have any settings
-> >> related to those?
-> >>
-> > 
-> > Those are properties commonly found in display specs. That is why they are here.
-> > If the GPU does not support the property it can be omitted.
-> 
-> So what does the pixelclk-inverted mean? Normally the SoC drives pixel
-> data on rising edge, and the panel samples it at falling edge? And
-> vice-versa for inverted? Or the other way around?
->
-> When is hsync/vsync set? On rising or falling edge of pclk?
->
-> My point here is that the pixelclk-inverted is not crystal clear thing,
-> like the hsync/vsync/de-active values are.
->
-> And while thinking about this, I realized that the meaning of
-> pixelclk-inverted depends on what component is it applied to. Presuming
-> normal pixclk means "pixel data on rising edge", the meaning of that
-> depends on do we consider the SoC or the panel. The panel needs to
-> sample the data on the other edge from the one the SoC uses to drive the
-> data.
-> 
-> Does the videomode describe the panel, or does it describe the settings
-> programmed to the SoC?
+This patch extends existing DT support for stmpe devices. This updates:
+- missing header files in stmpe.c
+- stmpe_of_probe() with pwm, rotator and new bindings.
+- Bindings are updated in binding document.
 
-How about calling this property pixelclk-active, active high meaning
-driving pixel data on rising edges and sampling on falling edges (the
-pixel clock is high between driving and sampling the data), and active
-low meaning driving on falling edges and sampling on rising edges?
-It is the same from the SoC perspective and from the panel perspective,
-and it mirrors the usage of the other *-active properties.
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Vipul Kumar Samar <vipulkumar.samar@st.com>
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+V6->V7:
+- Minor grammer correction in stmpe.txt
+- Removed comment over pdata->id = -1
 
-[...]
+ Documentation/devicetree/bindings/mfd/stmpe.txt |  9 ++++++---
+ drivers/mfd/stmpe.c                             | 22 ++++++++++++++++------
+ 2 files changed, 22 insertions(+), 9 deletions(-)
 
-regards
-Philipp
+diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
+index 8f0aeda..9fc1715 100644
+--- a/Documentation/devicetree/bindings/mfd/stmpe.txt
++++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
+@@ -1,8 +1,11 @@
+-* STMPE Multi-Functional Device
++* ST Microelectronics STMPE Multi-Functional Device
++
++STMPE is an MFD device which may expose the following inbuilt devices: gpio,
++keypad, touchscreen, adc, pwm, rotator.
+ 
+ Required properties:
+- - compatible                   : "st,stmpe[811|1601|2401|2403]"
+- - reg                          : I2C address of the device
++ - compatible                   : "st,stmpe[610|801|811|1601|2401|2403]"
++ - reg                          : I2C/SPI address of the device
+ 
+ Optional properties:
+  - interrupts                   : The interrupt outputs from the controller
+diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
+index 34408b4..48c4f18 100644
+--- a/drivers/mfd/stmpe.c
++++ b/drivers/mfd/stmpe.c
+@@ -7,12 +7,15 @@
+  * Author: Rabin Vincent <rabin.vincent@stericsson.com> for ST-Ericsson
+  */
+ 
++#include <linux/err.h>
+ #include <linux/gpio.h>
+ #include <linux/export.h>
+ #include <linux/kernel.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+ #include <linux/irqdomain.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+ #include <linux/pm.h>
+ #include <linux/slab.h>
+ #include <linux/mfd/core.h>
+@@ -1019,6 +1022,9 @@ void __devinit stmpe_of_probe(struct stmpe_platform_data *pdata,
+ {
+ 	struct device_node *child;
+ 
++	pdata->id = -1;
++	pdata->irq_trigger = IRQF_TRIGGER_NONE;
++
+ 	of_property_read_u32(np, "st,autosleep-timeout",
+ 			&pdata->autosleep_timeout);
+ 
+@@ -1027,15 +1033,16 @@ void __devinit stmpe_of_probe(struct stmpe_platform_data *pdata,
+ 	for_each_child_of_node(np, child) {
+ 		if (!strcmp(child->name, "stmpe_gpio")) {
+ 			pdata->blocks |= STMPE_BLOCK_GPIO;
+-		}
+-		if (!strcmp(child->name, "stmpe_keypad")) {
++		} else if (!strcmp(child->name, "stmpe_keypad")) {
+ 			pdata->blocks |= STMPE_BLOCK_KEYPAD;
+-		}
+-		if (!strcmp(child->name, "stmpe_touchscreen")) {
++		} else if (!strcmp(child->name, "stmpe_touchscreen")) {
+ 			pdata->blocks |= STMPE_BLOCK_TOUCHSCREEN;
+-		}
+-		if (!strcmp(child->name, "stmpe_adc")) {
++		} else if (!strcmp(child->name, "stmpe_adc")) {
+ 			pdata->blocks |= STMPE_BLOCK_ADC;
++		} else if (!strcmp(child->name, "stmpe_pwm")) {
++			pdata->blocks |= STMPE_BLOCK_PWM;
++		} else if (!strcmp(child->name, "stmpe_rotator")) {
++			pdata->blocks |= STMPE_BLOCK_ROTATOR;
+ 		}
+ 	}
+ }
+@@ -1106,6 +1113,9 @@ int __devinit stmpe_probe(struct stmpe_client_info *ci, int partnum)
+ 			return -ENODEV;
+ 		}
+ 		stmpe->variant = stmpe_noirq_variant_info[stmpe->partnum];
++	} else if (pdata->irq_trigger == IRQF_TRIGGER_NONE) {
++		pdata->irq_trigger =
++			irqd_get_trigger_type(irq_get_irq_data(stmpe->irq));
+ 	}
+ 
+ 	ret = stmpe_chip_init(stmpe);
+-- 
+1.7.12.rc2.18.g61b472e
