@@ -1,141 +1,59 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] leds: leds-pwm: Add device tree bindings
-Date: Fri, 07 Dec 2012 13:34:53 +0000
-Message-ID: <20121207133453.800C43E0B87@localhost>
-References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com>
- <1352731270-27534-4-git-send-email-peter.ujfalusi@ti.com>
- <20121206100052.EC8293E0E22@localhost> <50C0913B.9070802@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50C0913B.9070802-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V5 2/2] mfd: stmpe: Update DT support in stmpe driver
+Date: Fri, 07 Dec 2012 13:37:05 +0000
+Message-ID: <20121207133705.59AC03E0B87@localhost>
+References: <2dcd7cb4c4022fa24b5328974e4226f5aaf89419.1354199865.git.viresh.kumar@linaro.org> <121653def4e985b0c1b59045637dd4518f97e73a.1354199865.git.viresh.kumar@linaro.org> <20121130105731.GN3176@sortiz-mobl> <20121130154542.GG23648@gmail.com> <CAKohpokLVEH+4F_VXh5auUm48cWWe0mumZME8yOCcAezcwJbCQ@mail.gmail.com> <20121205224203.691153E0E22@localhost> <CAKohponjLp214EPKgNHqP2N8Tje9U8ZxgywUTSvsjE-TqHy+xw@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKohponjLp214EPKgNHqP2N8Tje9U8ZxgywUTSvsjE-TqHy+xw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, rabin.vincent@stericsson.com, shiraz.hashim@st.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spear-devel@list.st.com, linus.walleij@linaro.org, Vipul Kumar Samar <vipulkumar.samar@st.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 6 Dec 2012 13:36:11 +0100, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> wrote:
-> Hi Grant,
+On Thu, 6 Dec 2012 07:28:22 +0530, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> First of all, thanks for explaining :)
 > 
-> On 12/06/2012 11:00 AM, Grant Likely wrote:
-> > On Mon, 12 Nov 2012 15:41:10 +0100, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> wrote:
-> >> Support for device tree booted kernel.
-> >> When the kernel is booted with DeviceTree blob we support one led per
-> >> leds-pwm device to have cleaner integration with the PWM subsystem.
-> >>
-> >> For usage see:
-> >> Documentation/devicetree/bindings/leds/leds-pwm.txt
-> >>
-> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-> >> ---
-> >>  .../devicetree/bindings/leds/leds-pwm.txt          |  34 ++++++
-> >>  drivers/leds/leds-pwm.c                            | 125 +++++++++++++++------
-> >>  2 files changed, 127 insertions(+), 32 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-> >> new file mode 100644
-> >> index 0000000..9fe3040
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-> >> @@ -0,0 +1,34 @@
-> >> +LED connected to PWM
-> >> +
-> >> +Required properties:
-> >> +- compatible : should be "pwm-leds".
-> >> +- pwms : PWM property, please refer to: 
-> >> +  Documentation/devicetree/bindings/pwm/pwm.txt
-> >> +- pwm-names : (optional) Name to be used by the PWM subsystem for the PWM device
-> >> +- label : (optional) The label for this LED.  If omitted, the label is
-> >> +  taken from the node name (excluding the unit address).
-> >> +- max-brightness : Maximum brightness possible for the LED
-> >> +- linux,default-trigger :  (optional) This parameter, if present, is a
-> >> +  string defining the trigger assigned to the LED.  Current triggers are:
-> >> +    "backlight" - LED will act as a back-light, controlled by the framebuffer
-> >> +		  system
-> >> +    "default-on" - LED will turn on, but see "default-state" below
-> >> +    "heartbeat" - LED "double" flashes at a load average based rate
-> >> +    "ide-disk" - LED indicates disk activity
-> >> +    "timer" - LED flashes at a fixed, configurable rate
-> > 
-> > The binding mostly looks good. However, it seems to be gratuitously
-> > different from the gpio-leds binding and it duplicates property
-> > definitions. Please match the gpio-leds behaviour with each led defined
-> > as a sub node of the pwm-leds node.
+> On 6 December 2012 04:12, Grant Likely <grant.likely@secretlab.ca> wrote:
+> > On Sat, 1 Dec 2012 00:33:46 +0530, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> >> This first tries to match the table my patch added, _BUT_ the string will
+> >> never match as we had "st,stmpe810" in table and "stmpe810" in dev.
+> >
+> > of_driver_match_device() matches against the compatible list in
+> > dev->of_node, not against the device name. So, if the compatible
+> > property has a string that is in the table, then it really should match
+> > against it.
 > 
-> The GPIO and PWM bindings are substantially different. For start in pwm we do
-> not have of_get_pwm* helpers. To get the PWM itself we need to use wpm_get()
-
-That's just the implementation. I'm talking about the binding. :-)
-
-Implementation should follow binding design, not the other way around.
-Both bindings use the same pattern. There isn't a of_get_pwm helper now,
-but there is nothing preventing one from being created if you need it.
-
-in the controller:
-	#gpio-cells  vs. #pwm-cells
-in the user:
-	gpios = <[gpio specifier]> vs. pwms = <pwm specifier>
-
-The PWM binding states that pwm-names is optional.
-
-> which uses the pwms = <>; pwm-names = <>; properties on the device's main node.
-> This is what I could do at the moment:
+> How could i misread it? Yes you are correct.
 > 
-> twl_pwm: pwm {
-> 	compatible = "ti,twl4030-pwm";
-> 	#pwm-cells = <2>;
-> };
+> >> static int i2c_device_probe(struct device *dev)
+> >> {
+> >>         .....
+> >>       status = driver->probe(client, i2c_match_id(driver->id_table, client));
+> >
+> > Here things are a bit wonky. Even if matched against the table, it is
 > 
-> twl_led: pwmled {
-> 	compatible = "ti,twl4030-pwmled";
-> 	#pwm-cells = <2>;
-> };
+> table means of_device_id table ?
+
+yes
+
 > 
-> pwmleds {
-> 	compatible = "pwm-leds";
-> 	pwms = <&twl_pwm 0 7812500
-> 		&twl_pwmled 0 7812500>;
-> 	pwm-names = "omap4::keypad",
-> 		    "omap4:green:chrg";
-> 	kpad {
-> 		label = "omap4::keypad";
-> 		max-brightness = <127>;
-> 	};
+> > possible that it also matches against i2c_match_id() and that data is
+> > passed to the driver.
 > 
-> 	charging {
-> 		label = "omap4:green:chrg";
-> 		max-brightness = <255>;
-> 	};
+> It is a possibility or guarantee ? And so whatever device name we got from
+> modalias routine, should match with the names in driver->id_table.
 
-That's just a goofy extra layer of indirection and still doesn't follow
-the lead of the gpio-leds pattern. That makes it worse that your
-original binding, not better.
+possibility. If the generated alias name does match something in
+driver->id_table, then that pointer will be returned here.
 
-It really needs to look like this:
+> > But regardless, it is the responsiblity of the probe function to go and
+> > look if of_driver_match_device() matches against anything if it cares
+> > about the of_match_table entries (for instance, if there is extra data
+> > attached).
+> 
+> Ok, so filling .data field in of_device_id[] is not required for our case as
+> we aren't doing anything special in our drivers.
 
-pwmleds {
-	compatible = "pwm-leds";
-	kpad {
-		label = "omap4::keypad";
-		max-brightness = <127>;
-		pwms = <&twl_pwm 0 7812500>;
-	};
-	charging {
-		label = "omap4:green:chrg";
-		max-brightness = <255>;
-		pwms = <&twl_pwmled 0 7812500>;
-	};
-};
+As long as things are simple, correct.
 
 g.
