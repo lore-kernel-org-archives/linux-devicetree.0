@@ -1,81 +1,435 @@
-From: "Kumar, Anil" <anilkumar.v@ti.com>
-Subject: [PATCH 2/2] ARM: davinci: da850: add NAND driver entries
-Date: Fri, 7 Dec 2012 15:57:31 +0530
-Message-ID: <1354876051-25938-3-git-send-email-anilkumar.v@ti.com>
-References: <1354876051-25938-1-git-send-email-anilkumar.v@ti.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v3 2/3] mtd: devices: elm: Add support for ELM error correction
+Date: Fri, 7 Dec 2012 16:07:23 +0530
+Message-ID: <50C1C6E3.5020300@ti.com>
+References: <1354189595-12784-1-git-send-email-avinashphilip@ti.com> <1354189595-12784-3-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1354876051-25938-1-git-send-email-anilkumar.v@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, nsekhar@ti.com, hs@denx.de, "Kumar, Anil" <anilkumar.v@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1354189595-12784-3-git-send-email-avinashphilip@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, afzal@ti.com, tony@atomide.com, broonie@opensource.wolfsonmicro.com, rmk+kernel@arm.linux.org.uk, gregkh@linuxfoundation.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, gururaja.hebbar@ti.com, ivan.djelic@parrot.com, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-Add NAND driver entries to export NAND functionality on da850 EVM and
-NAND pinctrl node to do pin mux according to pinctrl-single driver.
+On 11/29/2012 5:16 PM, Philip, Avinash wrote:
+> The ELM hardware module can be used to speedup BCH 4/8/16 ECC scheme
+> error correction.
+> For now only 4 & 8 bit support is added
+> 
+> Signed-off-by: Philip, Avinash <avinashphilip@ti.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> ---
+> Changes since v2:
+> 	- Remove __devinit & __devexit annotations
+> 
+> Changes since v1:
+> 	- Change build attribute to CONFIG_MTD_NAND_OMAP_BCH
+> 	- Reduced indentation using by passing elm_info , offset
+> 	  to elm_read & elm_write
+> 	- Removed syndrome manipulation functions.
+> 
+> :000000 100644 0000000... b88ee83... A	Documentation/devicetree/bindings/mtd/elm.txt
+> :100644 100644 395733a... 369a194... M	drivers/mtd/devices/Makefile
+> :000000 100644 0000000... d2667f3... A	drivers/mtd/devices/elm.c
+> :000000 100644 0000000... d4fce31... A	include/linux/platform_data/elm.h
+>  Documentation/devicetree/bindings/mtd/elm.txt |   17 +
+>  drivers/mtd/devices/Makefile                  |    4 +-
+>  drivers/mtd/devices/elm.c                     |  418 +++++++++++++++++++++++++
+>  include/linux/platform_data/elm.h             |   54 ++++
+>  4 files changed, 493 insertions(+), 1 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/elm.txt b/Documentation/devicetree/bindings/mtd/elm.txt
+> new file mode 100644
+> index 0000000..b88ee83
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/elm.txt
+> @@ -0,0 +1,17 @@
+> +Error location module
+> +
+> +Required properties:
+> +- compatible: Must be "ti,elm"
+> +- reg: physical base address and size of the registers map.
+> +- interrupts: Interrupt number for the elm.
+> +- interrupt-parent: The parent interrupt controller
+> +
+> +Optional properties:
+> +- ti,hwmods: Name of the hwmod associated to the elm
+> +
+> +Example:
+> +elm: elm@0 {
+> +	compatible	= "ti,elm";
+> +	reg = <0x48080000 0x2000>;
+> +	interrupts = <4>;
+> +};
+> diff --git a/drivers/mtd/devices/Makefile b/drivers/mtd/devices/Makefile
+> index 395733a..369a194 100644
+> --- a/drivers/mtd/devices/Makefile
+> +++ b/drivers/mtd/devices/Makefile
+> @@ -17,8 +17,10 @@ obj-$(CONFIG_MTD_LART)		+= lart.o
+>  obj-$(CONFIG_MTD_BLOCK2MTD)	+= block2mtd.o
+>  obj-$(CONFIG_MTD_DATAFLASH)	+= mtd_dataflash.o
+>  obj-$(CONFIG_MTD_M25P80)	+= m25p80.o
+> +obj-$(CONFIG_MTD_NAND_OMAP_BCH)	+= elm.o
+>  obj-$(CONFIG_MTD_SPEAR_SMI)	+= spear_smi.o
+>  obj-$(CONFIG_MTD_SST25L)	+= sst25l.o
+>  obj-$(CONFIG_MTD_BCM47XXSFLASH)	+= bcm47xxsflash.o
+>  
+> -CFLAGS_docg3.o			+= -I$(src)
+> \ No newline at end of file
+> +
+> +CFLAGS_docg3.o			+= -I$(src)
+> diff --git a/drivers/mtd/devices/elm.c b/drivers/mtd/devices/elm.c
+> new file mode 100644
+> index 0000000..d2667f3
+> --- /dev/null
+> +++ b/drivers/mtd/devices/elm.c
+> @@ -0,0 +1,418 @@
+> +/*
+> + * Error Location Module
+> + *
+> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <linux/platform_device.h>
+> +#include <linux/module.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/of.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/platform_data/elm.h>
+> +
+> +#define ELM_IRQSTATUS			0x018
+> +#define ELM_IRQENABLE			0x01c
+> +#define ELM_LOCATION_CONFIG		0x020
+> +#define ELM_PAGE_CTRL			0x080
+> +#define ELM_SYNDROME_FRAGMENT_0		0x400
+> +#define ELM_SYNDROME_FRAGMENT_6		0x418
+> +#define ELM_LOCATION_STATUS		0x800
+> +#define ELM_ERROR_LOCATION_0		0x880
+> +
+> +/* ELM Interrupt Status Register */
+> +#define INTR_STATUS_PAGE_VALID		BIT(8)
+> +
+> +/* ELM Interrupt Enable Register */
+> +#define INTR_EN_PAGE_MASK		BIT(8)
+> +
+> +/* ELM Location Configuration Register */
+> +#define ECC_BCH_LEVEL_MASK		0x3
+> +
+> +/* ELM syndrome */
+> +#define ELM_SYNDROME_VALID		BIT(16)
+> +
+> +/* ELM_LOCATION_STATUS Register */
+> +#define ECC_CORRECTABLE_MASK		BIT(8)
+> +#define ECC_NB_ERRORS_MASK		0x1f
+> +
+> +/* ELM_ERROR_LOCATION_0-15 Registers */
+> +#define ECC_ERROR_LOCATION_MASK		0x1fff
+> +
+> +#define ELM_ECC_SIZE			0x7ff
+> +
+> +#define SYNDROME_FRAGMENT_REG_SIZE	0x40
+> +#define ERROR_LOCATION_SIZE		0x100
+> +
+> +struct elm_info {
+> +	struct device *dev;
+> +	void __iomem *elm_base;
+> +	struct completion elm_completion;
+> +	struct list_head list;
+> +	enum bch_ecc bch_type;
+> +};
+> +
+> +static LIST_HEAD(elm_devices);
+> +
+> +static void elm_write_reg(struct elm_info *info, int offset, u32 val)
+> +{
+> +	writel(val, info->elm_base + offset);
+> +}
+> +
+> +static u32 elm_read_reg(struct elm_info *info, int offset)
+> +{
+> +	return readl(info->elm_base + offset);
+> +}
+> +
+> +/**
+> + * elm_config - Configure ELM module
+> + * @info:	elm info
+> + */
+> +static void elm_config(struct elm_info *info)
 
-Signed-off-by: Kumar, Anil <anilkumar.v@ti.com>
----
-Depend on link: 
-http://www.spinics.net/lists/linux-doc/msg07535.html
+This is called "config", but there is no configuration information
+passed which looks odd..
 
-:100644 100644 8cac9d2... 05b558a... M	arch/arm/boot/dts/da850-evm.dts
-:100644 100644 94471bc... f198ee8... M	arch/arm/boot/dts/da850.dtsi
- arch/arm/boot/dts/da850-evm.dts |   19 +++++++++++++++++++
- arch/arm/boot/dts/da850.dtsi    |   13 +++++++++++++
- 2 files changed, 32 insertions(+), 0 deletions(-)
+> +{
+> +	u32 reg_val;
+> +
+> +	reg_val = (info->bch_type & ECC_BCH_LEVEL_MASK) | (ELM_ECC_SIZE << 16);
+> +	elm_write_reg(info, ELM_LOCATION_CONFIG, reg_val);
+> +}
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 8cac9d2..05b558a 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -28,4 +28,23 @@
- 			status = "okay";
- 		};
- 	};
-+	nand_cs3@62000000 {
-+		status = "okay";
-+	};
-+};
-+&pmx_core{
-+	pinctrl-names = "default";
-+	pinctrl-0 = <
-+		&nand_cs3_pins
-+	>;
-+
-+	nand_cs3_pins: pinmux_nand_pins {
-+		pinctrl-single,bits = <
-+			0x1c 0x00110000  0x00ff0000     /* EMA_OE, EMA_WE */
-+			0x1c 0x00000110  0x00000ff0     /* EMA_CS[4],EMA_CS[3]*/
-+			0x24 0x11111111  0xffffffff     /* EMA_D[0], EMA_D[1], EMA_D[2], EMA_D[3],
-+							   EMA_D[4], EMA_D[5], EMA_D[6], EMA_D[7] */
-+			0x30 0x01100000  0x0ff00000     /* EMA_A[1], EMA_A[2] */
-+		>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 94471bc..f198ee8 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -67,4 +67,17 @@
- 			status = "disabled";
- 		};
- 	};
-+	nand_cs3@62000000 {
-+		compatible = "ti,davinci-nand";
-+		reg = <0x62000000 0x807ff
-+			0x68000000 0x8000>;
-+		ti,davinci-chipselect = <1>;
-+		ti,davinci-mask-ale = <0>;
-+		ti,davinci-mask-cle = <0>;
-+		ti,davinci-mask-chipsel = <0>;
-+		ti,davinci-ecc-mode = "hw";
-+		ti,davinci-ecc-bits = <4>;
-+		ti,davinci-nand-use-bbt;
-+		status = "disabled";
-+	};
- };
--- 
-1.7.4.1
+Is there a use case where BCH type needs to be changed after NAND has
+been probed? You will have to erase any existing data written to NAND if
+you change the ECC type. That sounds destructive enough to avoid such a
+thing.
 
+> +
+> +/**
+> + * elm_configure_page_mode - Enable/Disable page mode
+> + * @info:	elm info
+> + * @index:	index number of syndrome fragment vector
+> + * @enable:	enable/disable flag for page mode
+> + *
+> + * Enable page mode for syndrome fragment index
+> + */
+> +static void elm_configure_page_mode(struct elm_info *info, int index,
+> +		bool enable)
+> +{
+> +	u32 reg_val;
+> +
+> +	reg_val = elm_read_reg(info, ELM_PAGE_CTRL);
+> +	if (enable)
+> +		reg_val |= BIT(index);	/* enable page mode */
+> +	else
+> +		reg_val &= ~BIT(index);	/* disable page mode */
+> +
+> +	elm_write_reg(info, ELM_PAGE_CTRL, reg_val);
+> +}
+> +
+> +/**
+> + * elm_load_syndrome - Load ELM syndrome reg
+> + * @info:	elm info
+> + * @err_vec:	elm error vectors
+> + * @ecc:	buffer with calculated ecc
+> + *
+> + * Load syndrome fragment registers with calculated ecc in reverse order.
+> + */
+> +static void elm_load_syndrome(struct elm_info *info,
+> +		struct elm_errorvec *err_vec, u8 *ecc)
+> +{
+> +	int i, offset;
+> +	u32 val;
+> +
+> +	for (i = 0; i < ERROR_VECTOR_MAX; i++) {
+> +
+> +		/* Check error reported */
+> +		if (err_vec[i].error_reported) {
+> +			elm_configure_page_mode(info, i, true);
+> +			offset = ELM_SYNDROME_FRAGMENT_0 +
+> +				SYNDROME_FRAGMENT_REG_SIZE * i;
+> +
+> +			/* BCH8 */
+> +			if (info->bch_type) {
+> +
+> +				/* syndrome fragment 0 = ecc[9-12B] */
+> +				val = cpu_to_be32(*(u32 *) &ecc[9]);
+> +				elm_write_reg(info, offset, val);
+> +
+> +				/* syndrome fragment 1 = ecc[5-8B] */
+> +				offset += 4;
+> +				val = cpu_to_be32(*(u32 *) &ecc[5]);
+> +				elm_write_reg(info, offset, val);
+> +
+> +				/* syndrome fragment 2 = ecc[1-4B] */
+> +				offset += 4;
+> +				val = cpu_to_be32(*(u32 *) &ecc[1]);
+> +				elm_write_reg(info, offset, val);
+> +
+> +				/* syndrome fragment 3 = ecc[0B] */
+> +				offset += 4;
+> +				val = ecc[0];
+> +				elm_write_reg(info, offset, val);
+> +			} else {
+> +				/* syndrome fragment 0 = ecc[20-52b] bits */
+> +				val = (cpu_to_be32(*(u32 *) &ecc[3]) >> 4) |
+> +					((ecc[2] & 0xf) << 28);
+> +				elm_write_reg(info, offset, val);
+> +
+> +				/* syndrome fragment 1 = ecc[0-20b] bits */
+> +				offset += 4;
+> +				val = cpu_to_be32(*(u32 *) &ecc[0]) >> 12;
+> +				elm_write_reg(info, offset, val);
+> +			}
+> +		}
+> +
+> +		/* Update ecc pointer with ecc byte size */
+> +		ecc += info->bch_type ? BCH8_SIZE : BCH4_SIZE;
+> +	}
+> +}
+> +
+> +/**
+> + * elm_start_processing - start elm syndrome processing
+> + * @info:	elm info
+> + * @err_vec:	elm error vectors
+> + *
+> + * Set syndrome valid bit for syndrome fragment registers for which
+> + * elm syndrome fragment registers are loaded. This enables elm module
+> + * to start processing syndrome vectors.
+> + */
+> +static void elm_start_processing(struct elm_info *info,
+> +		struct elm_errorvec *err_vec)
+> +{
+> +	int i, offset;
+> +	u32 reg_val;
+> +
+> +	/*
+> +	 * Set syndrome vector valid, so that ELM module
+> +	 * will process it for vectors error is reported
+> +	 */
+> +	for (i = 0; i < ERROR_VECTOR_MAX; i++) {
+> +		if (err_vec[i].error_reported) {
+> +			offset = ELM_SYNDROME_FRAGMENT_6 +
+> +				SYNDROME_FRAGMENT_REG_SIZE * i;
+> +			reg_val = elm_read_reg(info, offset);
+> +			reg_val |= ELM_SYNDROME_VALID;
+> +			elm_write_reg(info, offset, reg_val);
+> +		}
+> +	}
+> +}
+> +
+> +/**
+> + * elm_error_correction - locate correctable error position
+> + * @info:	elm info
+> + * @err_vec:	elm error vectors
+> + *
+> + * On completion of processing by elm module, error location status
+> + * register updated with correctable/uncorrectable error information.
+> + * In case of correctable errors, number of errors located from
+> + * elm location status register & read the positions from
+> + * elm error location register.
+> + */
+> +static void elm_error_correction(struct elm_info *info,
+> +		struct elm_errorvec *err_vec)
+> +{
+> +	int i, j, errors = 0;
+> +	int offset;
+> +	u32 reg_val;
+> +
+> +	for (i = 0; i < ERROR_VECTOR_MAX; i++) {
+> +
+> +		/* Check error reported */
+> +		if (err_vec[i].error_reported) {
+> +			offset = ELM_LOCATION_STATUS + ERROR_LOCATION_SIZE * i;
+> +			reg_val = elm_read_reg(info, offset);
+> +
+> +			/* Check correctable error or not */
+> +			if (reg_val & ECC_CORRECTABLE_MASK) {
+> +				offset = ELM_ERROR_LOCATION_0 +
+> +					ERROR_LOCATION_SIZE * i;
+> +
+> +				/* Read count of correctable errors */
+> +				err_vec[i].error_count = reg_val &
+> +					ECC_NB_ERRORS_MASK;
+> +
+> +				/* Update the error locations in error vector */
+> +				for (j = 0; j < err_vec[i].error_count; j++) {
+> +
+> +					reg_val = elm_read_reg(info, offset);
+> +					err_vec[i].error_loc[j] = reg_val &
+> +						ECC_ERROR_LOCATION_MASK;
+> +
+> +					/* Update error location register */
+> +					offset += 4;
+> +				}
+> +
+> +				errors += err_vec[i].error_count;
+> +			} else {
+> +				err_vec[i].error_uncorrectable = true;
+> +			}
+> +
+> +			/* Clearing interrupts for processed error vectors */
+> +			elm_write_reg(info, ELM_IRQSTATUS, BIT(i));
+> +
+> +			/* Disable page mode */
+> +			elm_configure_page_mode(info, i, false);
+> +		}
+> +	}
+> +}
+> +
+> +/**
+> + * elm_decode_bch_error_page - Locate error position
+> + * @dev:	device pointer
+> + * @ecc_calc:	calculated ECC bytes from GPMC
+> + * @err_vec:	elm error vectors
+> + *
+> + * Called with one or more error reported vectors & vectors with
+> + * error reported is updated in err_vec[].error_reported
+> + *
+> + */
+> +void elm_decode_bch_error_page(struct device *dev, u8 *ecc_calc,
+> +		struct elm_errorvec *err_vec)
+> +{
+> +	struct elm_info *info = dev_get_drvdata(dev);
+> +	u32 reg_val;
+> +
+> +	/* Enable page mode interrupt */
+> +	reg_val = elm_read_reg(info, ELM_IRQSTATUS);
+> +	elm_write_reg(info, ELM_IRQSTATUS, reg_val & INTR_STATUS_PAGE_VALID);
+> +	elm_write_reg(info, ELM_IRQENABLE, INTR_EN_PAGE_MASK);
+> +
+> +	/* Load valid ecc byte to syndrome fragment register */
+> +	elm_load_syndrome(info, err_vec, ecc_calc);
+> +
+> +	/* Enable syndrome processing for which syndrome fragment is updated */
+> +	elm_start_processing(info, err_vec);
+> +
+> +	/* Wait for ELM module to finish locating error correction */
+> +	wait_for_completion(&info->elm_completion);
+> +
+> +	/* Disable page mode interrupt */
+> +	reg_val = elm_read_reg(info, ELM_IRQENABLE);
+> +	elm_write_reg(info, ELM_IRQENABLE, reg_val & ~INTR_EN_PAGE_MASK);
+> +	elm_error_correction(info, err_vec);
+> +}
+> +EXPORT_SYMBOL(elm_decode_bch_error_page);
+> +
+> +static irqreturn_t elm_isr(int this_irq, void *dev_id)
+> +{
+> +	u32 reg_val;
+> +	struct elm_info *info = dev_id;
+> +
+> +	reg_val = elm_read_reg(info, ELM_IRQSTATUS);
+> +
+> +	/* All error vectors processed */
+> +	if (reg_val & INTR_STATUS_PAGE_VALID) {
+> +		elm_write_reg(info, ELM_IRQSTATUS,
+> +				reg_val & INTR_STATUS_PAGE_VALID);
+> +		complete(&info->elm_completion);
+> +		return IRQ_HANDLED;
+> +	}
+> +
+> +	return IRQ_NONE;
+> +}
+> +
+> +struct device *elm_request(enum bch_ecc bch_type)
+> +{
+> +	struct elm_info *info;
+> +
+> +	list_for_each_entry(info, &elm_devices, list) {
+> +		if (info && info->dev) {
+> +				info->bch_type = bch_type;
+> +				elm_config(info);
+> +				return info->dev;
+> +		}
+> +	}
+
+This will always return the first ELM device probed since you never
+remove the allocated device from the list. I wonder why you really need
+a list?
+
+Thanks,
+Sekhar
