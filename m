@@ -1,37 +1,79 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v3 1/3] mtd: nand: omap2: Update nerrors using ecc.strength
-Date: Fri, 7 Dec 2012 16:10:04 +0530
-Message-ID: <50C1C784.4040209@ti.com>
-References: <1354189595-12784-1-git-send-email-avinashphilip@ti.com> <1354189595-12784-2-git-send-email-avinashphilip@ti.com> <50BF3819.9010200@ti.com> <518397C60809E147AF5323E0420B992E3EA1139B@DBDE01.ent.ti.com>
+From: Holger Brunck <holger.brunck@keymile.com>
+Subject: Re: [PATCH] mtd: cfi_cmdset_0002: Support Persistent Protection Bits
+ (PPB) locking
+Date: Fri, 07 Dec 2012 11:41:58 +0100
+Message-ID: <50C1C7F6.9010504@keymile.com>
+References: <1354864954-30290-1-git-send-email-sr@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <518397C60809E147AF5323E0420B992E3EA1139B@DBDE01.ent.ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "Mohammed, Afzal" <afzal@ti.com>, "tony@atomide.com" <tony@atomide.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <1354864954-30290-1-git-send-email-sr@denx.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: linux-mtd-bounces@lists.infradead.org
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Stefan Roese <sr@denx.de>
+Cc: devicetree-discuss@ozlabs.org, linux-mtd@lists.infradead.org, Artem Bityutskiy <dedekind1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/5/2012 6:13 PM, Philip, Avinash wrote:
-> On Wed, Dec 05, 2012 at 17:33:37, Nori, Sekhar wrote:
->> Hi Avinash,
->>
->> On 11/29/2012 5:16 PM, Philip, Avinash wrote:
->>> Update number of errors using nand ecc strength.
->>> Also add macro definitions BCH8_ERROR_MAX & BCH4_ERROR_MAX
->>
->> Can you please describe why the original method of setting nerrors was
->> incorrect? Was it causing any issues in any particular configuration?
+Hi Stefan,
+
+On 12/07/2012 08:22 AM, Stefan Roese wrote:
+> Currently cfi_cmdset_0002.c does not support PPB locking of sectors. This
+> patch adds support for this locking/unlocking mechanism. It is needed on
+> some platforms, since newer U-Boot versions do support this PPB locking
+> and protect for example their environment sector(s) this way.
 > 
-> It affects the reusability of the code. For example BCH8 with AM335x RBL 
-> compatibility requires  14 bytes instead of 13 byte. So setting nerrors
-> with
-> 	nerrors = (info->nand.ecc.bytes == 13) ? 8 : 4;
-> will break am335x RBL compatibility.
+> This PPB locking/unlocking will be enabled for all devices supported by
+> cfi_cmdset_0002 reporting 8 in the CFI word 0x49 (Sector Protect/Unprotect
+> scheme).
+> 
+> Please note that PPB locking does support sector-by-sector locking. But
+> the whole chip can only be unlocked together. So unlocking one sector
+> will automatically unlock all sectors of this device. Because of this
+> chip limitation, the PPB unlocking function saves the current locking
+> status of all sectors before unlocking the whole device. After unlocking
+> the saved locking status is re-configured. This way only the addressed
+> sectors will be unlocked.
+> 
+> To selectively enable this advanced sector protection mechanism, the
+> device-tree property "use-advanced-sector-protection" has been created.
+> To enable support for this locking this property needs to be present in the
+> flash DT node. E.g.:
+> 
+> nor_flash@0,0 {
+> 	compatible = "amd,s29gl256n", "cfi-flash";
+> 	bank-width = <2>;
+> 	use-advanced-sector-protection;
+> 	...
+> 
+> Tested with Spanion S29GL512S10THI and Micron JS28F512M29EWx flash
+> devices.
+> 
+> Signed-off-by: Stefan Roese <sr@denx.de>
+> Cc: Holger Brunck <holger.brunck@keymile.com>
+> Cc: Artem Bityutskiy <dedekind1@gmail.com>
+> ---
+>  .../devicetree/bindings/mtd/mtd-physmap.txt        |   3 +
+>  drivers/mtd/chips/cfi_cmdset_0002.c                | 211 +++++++++++++++++++++
+>  drivers/mtd/maps/physmap_of.c                      |   1 +
+>  include/linux/mtd/map.h                            |   1 +
+>  4 files changed, 216 insertions(+)
+> 
 
-This should be summarized in the patch description so the motivation is
-clear to those who read the history later.
+Tested-by: Holger Brunck <holger.brunck@keymile.com>
 
-Thanks,
-Sekhar
+with an Spanion S29GL512S10THI.
+
+Regards
+Holger
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
