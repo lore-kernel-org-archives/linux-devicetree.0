@@ -1,79 +1,73 @@
-From: Holger Brunck <holger.brunck@keymile.com>
-Subject: Re: [PATCH] mtd: cfi_cmdset_0002: Support Persistent Protection Bits
- (PPB) locking
-Date: Fri, 07 Dec 2012 11:41:58 +0100
-Message-ID: <50C1C7F6.9010504@keymile.com>
-References: <1354864954-30290-1-git-send-email-sr@denx.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH resend] spi: Add support for specifying 3-wire mode via
+ device tree
+Date: Fri, 07 Dec 2012 13:14:05 +0000
+Message-ID: <20121207131405.EBFDE3E0B87@localhost>
+References: <1354809333-18364-1-git-send-email-lars@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <1354864954-30290-1-git-send-email-sr@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: linux-mtd-bounces@lists.infradead.org
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Stefan Roese <sr@denx.de>
-Cc: devicetree-discuss@ozlabs.org, linux-mtd@lists.infradead.org, Artem Bityutskiy <dedekind1@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1354809333-18364-1-git-send-email-lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stefan,
+On Thu,  6 Dec 2012 16:55:33 +0100, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org> wrote:
+> This patch allows to specify that a SPI device is connected in 3-wire mode via
+> device tree.
+> 
+> Signed-off-by: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 
-On 12/07/2012 08:22 AM, Stefan Roese wrote:
-> Currently cfi_cmdset_0002.c does not support PPB locking of sectors. This
-> patch adds support for this locking/unlocking mechanism. It is needed on
-> some platforms, since newer U-Boot versions do support this PPB locking
-> and protect for example their environment sector(s) this way.
-> 
-> This PPB locking/unlocking will be enabled for all devices supported by
-> cfi_cmdset_0002 reporting 8 in the CFI word 0x49 (Sector Protect/Unprotect
-> scheme).
-> 
-> Please note that PPB locking does support sector-by-sector locking. But
-> the whole chip can only be unlocked together. So unlocking one sector
-> will automatically unlock all sectors of this device. Because of this
-> chip limitation, the PPB unlocking function saves the current locking
-> status of all sectors before unlocking the whole device. After unlocking
-> the saved locking status is re-configured. This way only the addressed
-> sectors will be unlocked.
-> 
-> To selectively enable this advanced sector protection mechanism, the
-> device-tree property "use-advanced-sector-protection" has been created.
-> To enable support for this locking this property needs to be present in the
-> flash DT node. E.g.:
-> 
-> nor_flash@0,0 {
-> 	compatible = "amd,s29gl256n", "cfi-flash";
-> 	bank-width = <2>;
-> 	use-advanced-sector-protection;
-> 	...
-> 
-> Tested with Spanion S29GL512S10THI and Micron JS28F512M29EWx flash
-> devices.
-> 
-> Signed-off-by: Stefan Roese <sr@denx.de>
-> Cc: Holger Brunck <holger.brunck@keymile.com>
-> Cc: Artem Bityutskiy <dedekind1@gmail.com>
+Applied, thanks.
+
+g.
+
 > ---
->  .../devicetree/bindings/mtd/mtd-physmap.txt        |   3 +
->  drivers/mtd/chips/cfi_cmdset_0002.c                | 211 +++++++++++++++++++++
->  drivers/mtd/maps/physmap_of.c                      |   1 +
->  include/linux/mtd/map.h                            |   1 +
->  4 files changed, 216 insertions(+)
+>  Documentation/devicetree/bindings/spi/spi-bus.txt | 2 ++
+>  drivers/spi/spi.c                                 | 2 ++
+>  2 files changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> index 77a8b0d..296015e 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+> @@ -53,6 +53,8 @@ contain the following properties.
+>      		shifted clock phase (CPHA) mode
+>  - spi-cs-high     - (optional) Empty property indicating device requires
+>      		chip select active high
+> +- spi-3wire       - (optional) Empty property indicating device requires
+> +    		    3-wire mode.
+>  
+>  If a gpio chipselect is used for the SPI slave the gpio number will be passed
+>  via the cs_gpio
+> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+> index 22c71e2..cb61ada 100644
+> --- a/drivers/spi/spi.c
+> +++ b/drivers/spi/spi.c
+> @@ -861,6 +861,8 @@ static void of_register_spi_devices(struct spi_master *master)
+>  			spi->mode |= SPI_CPOL;
+>  		if (of_find_property(nc, "spi-cs-high", NULL))
+>  			spi->mode |= SPI_CS_HIGH;
+> +		if (of_find_property(nc, "spi-3wire", NULL))
+> +			spi->mode |= SPI_3WIRE;
+>  
+>  		/* Device speed */
+>  		prop = of_get_property(nc, "spi-max-frequency", &len);
+> -- 
+> 1.8.0
 > 
 
-Tested-by: Holger Brunck <holger.brunck@keymile.com>
-
-with an Spanion S29GL512S10THI.
-
-Regards
-Holger
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
