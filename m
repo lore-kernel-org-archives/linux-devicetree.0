@@ -1,44 +1,57 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH 0/2] sparc: Enable OF functionality for sparc for i2c
- and spi
-Date: Fri, 07 Dec 2012 12:30:57 -0500 (EST)
-Message-ID: <20121207.123057.2230821059287428618.davem@davemloft.net>
-References: <CACxGe6sw0zU0NcXw1gjMZka4WyTZgT4heF3r4k0QPHbfcPzbiw@mail.gmail.com>
-	<20121204.161001.1397661306369063374.davem@davemloft.net>
-	<CACxGe6t4YcSuh04UjoYqFp355iLa6ECc5G+Y1TP3kxsL48c6jQ@mail.gmail.com>
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: Sharing PCIE driver between Microblaze and Arm zynq
+Date: Fri, 07 Dec 2012 19:52:15 +0100
+Message-ID: <50C23ADF.3060607@monstr.eu>
+References: <CAHTX3dLxbVxn+D+AV7L0VsGYFOjas3AJ_3M_xncVfxp02FCy=Q@mail.gmail.com> <20121207131706.EC9273E0B87@localhost>
+Reply-To: monstr@monstr.eu
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6t4YcSuh04UjoYqFp355iLa6ECc5G+Y1TP3kxsL48c6jQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org
-Cc: andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121207131706.EC9273E0B87@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Michal Simek <michal.simek@xilinx.com>, LKML <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, John Williams <jwilliams@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Date: Tue, 4 Dec 2012 21:49:26 +0000
-
-> On Tue, Dec 4, 2012 at 9:10 PM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
->> From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
->> Date: Tue, 4 Dec 2012 14:44:57 +0000
+On 12/07/2012 02:17 PM, Grant Likely wrote:
+> On Thu, 6 Dec 2012 15:23:14 +0100, Michal Simek <michal.simek@xilinx.com> wrote:
+>> Hi guys,
 >>
->>> On Tue, Dec 4, 2012 at 2:09 PM, Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> wrote:
->>>> This series removes the dependency on !SPARC for OF_I2C and removes the
->>>> depencency of !defined(CONFIG_SPARC) for the function
->>>> of_register_spi_devices. I find no reason for these to be unavailable
->>>> for sparc.
->>>>
->>>> I am not sure if these should go through the sparc tree or the
->>>> corresponding subsystem trees.
->>>
->>> They should go through the subsystem trees.
->>
->> I'll take this into the sparc tree after some build testing, thanks.
-> 
-> I'd prefer to take the SPI one through my tree, but I won't get my
-> knickers in a knot if you insist.
+>> I have a question regarding to sharing generic OF pcie driver between
+>> two architectures MB and ARM Zynq.
+>> Is drivers/pci/pcie location good for it?
+>> Make no sense to have the same driver in two locations.
+>> Is using readl/writel IO functions in this driver the best option
+>> which we can have?
+>> Or is there any other recommendation?
 
-That's fine:
+Grant: What do you think about readl/iowrite usage in connection to PCI?
 
-Acked-by: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+>> Also just want to check if it is correct to use pcie device_type.
+>> The rest should be the same with pci description:
+>> (http://devicetree.org/MPC5200:PCI#PCI_Address_Translation).
+>
+> Yes. device_type may be deprecated, but the PCI binding predates that.
+
+If it is deprecated, there could be probably problem with early_init_dt_scan_memory()
+which is checking memory device_type (drivers/of/fdt.c).
+
+
+> PowerPC uses pcie in the device type. arch/powerpc/kernel/of_platform.c
+
+ok. I see.
+
+> Some of that powerpc DT PCI support code really should be made generic.
+
+yep.
+
+Thanks,
+Michal
+
+
+-- 
+Michal Simek, Ing. (M.Eng)
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
+Microblaze U-BOOT custodian
