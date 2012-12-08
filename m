@@ -1,68 +1,70 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: Sharing PCIE driver between Microblaze and Arm zynq
-Date: Fri, 7 Dec 2012 19:07:38 +0000
-Message-ID: <201212071907.38366.arnd@arndb.de>
-References: <CAHTX3dLxbVxn+D+AV7L0VsGYFOjas3AJ_3M_xncVfxp02FCy=Q@mail.gmail.com> <CAErSpo6xRdwzTuPPqnmvmHSp7awnV7=Z85eWFfktb_hm9Aad_A@mail.gmail.com> <50C1BA9D.5010406@monstr.eu>
+From: Garg Vakul-B16394 <B16394@freescale.com>
+Subject: RE: [PATCH] Revert "crypto: caam - Updated SEC-4.0 device tree
+ binding for ERA information."
+Date: Sat, 8 Dec 2012 04:30:03 +0000
+Message-ID: <065BBB7616BCE543832A2EF096986B9413FB3F@039-SN2MPN1-011.039d.mgd.msft.net>
+References: <1354870649-3656-1-git-send-email-vakul@freescale.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <50C1BA9D.5010406@monstr.eu>
-Sender: linux-pci-owner@vger.kernel.org
-To: monstr@monstr.eu
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Michal Simek <michal.simek@xilinx.com>, LKML <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, John Linn <John.Linn@xilinx.com>, John Williams <jwilliams@xilinx.com>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1354870649-3656-1-git-send-email-vakul@freescale.com>
+Content-Language: en-US
+Sender: linux-crypto-owner@vger.kernel.org
+To: "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 07 December 2012, Michal Simek wrote:
-> On 12/06/2012 10:27 PM, Bjorn Helgaas wrote:
-> > [+cc linux-pci]
-> >
-> > On Thu, Dec 6, 2012 at 7:23 AM, Michal Simek <michal.simek@xilinx.com> wrote:
-> >> Hi guys,
-> >>
-> >> I have a question regarding to sharing generic OF pcie driver between
-> >> two architectures MB and ARM Zynq.
-> >> Is drivers/pci/pcie location good for it?
-> >> Make no sense to have the same driver in two locations.
-> >
-> > I think you're talking about a PCI host bridge driver.  It would
-> > definitely be nice to move toward a generic, shared driver.  Host
-> > bridge drivers are responsible for enumerating the PCI hierarchy below
-> > the bridge.  Enumeration is not really PCIe-specific, so I wouldn't
-> > put it in drivers/pci/pcie.
+Kindly ignore this.
+I would send another patch updating device tree binding directly with the new proposed property.
+
+> -----Original Message-----
+> From: devicetree-discuss [mailto:devicetree-discuss-
+> bounces+vakul=freescale.com@lists.ozlabs.org] On Behalf Of Vakul Garg
+> Sent: Friday, December 07, 2012 2:27 PM
+> To: linux-crypto@vger.kernel.org; linuxppc-dev@ozlabs.org; devicetree-
+> discuss@lists.ozlabs.org
+> Subject: [PATCH] Revert "crypto: caam - Updated SEC-4.0 device tree
+> binding for ERA information."
 > 
-> Not a PCI expert, just trying to find out the proper location for this shared driver.
-
-I'd suggest creating a drivers/pci/host directory. We will have more of
-these in the future. AFAIK, there is no fully generic (architecture
-independent) way to interface a PCI host driver to the PCI subsystem,
-but I think we are getting closer to that. You are probably fairly
-free to modify the microblaze architecture specific code though if needed.
-
-> >> Is using readl/writel IO functions in this driver the best option
-> >> which we can have?
-> >> Or is there any other recommendation?
-> >
-> > I'm not really a driver person, but if you're writing a new driver,
-> > wouldn't you use the iomap interfaces (ioremap(), ioread32(), etc)
-> > rather than readl()?
+> This reverts commit a2c0911c09190125f52c9941b9d187f601c2f7be.
 > 
-> That driver exists but it is not in mainline and it is better to directly
-> add it to proper location with correct io functions.
-> The question is if ioread/iowrite functions are correct one.
-> PowerPC io-defs.h suggests that readl/writel should be used for PCI.
-
-ioread32/iowrite32 are defined to behave the same way readl/writel regarding
-addressing modes and barriers, but also allow operating on __iomem pointers
-that were returned from ioport_map(). You probably don't need that.
-
-Some architectures like powerpc have their own accessors for on-chip MMIO
-areas, but ARM does not. The PowerPC rule is that you must use either
-readl/writel or ioread32/iowrite32 to access devices connected to a PCI
-bus, but you would not necessarily do that for the PCI host controller
-itself on PowerPC.
-
-	Arnd
-
-	Arnd
+> Signed-off-by: Vakul Garg <vakul@freescale.com>
+> ---
+> Instead of adding SEC era information in crypto node's compatible, a new
+> property 'fsl,sec-era' is being introduced into crypto node.
+> 
+>  .../devicetree/bindings/crypto/fsl-sec4.txt        |    5 ++---
+>  1 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+> b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+> index fc9ce6f..bd7ce12 100644
+> --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+> @@ -54,8 +54,7 @@ PROPERTIES
+>     - compatible
+>        Usage: required
+>        Value type: <string>
+> -      Definition: Must include "fsl,sec-v4.0". Also includes SEC
+> -           ERA versions (optional) with which the device is compatible.
+> +      Definition: Must include "fsl,sec-v4.0"
+> 
+>     - #address-cells
+>         Usage: required
+> @@ -107,7 +106,7 @@ PROPERTIES
+> 
+>  EXAMPLE
+>  	crypto@300000 {
+> -		compatible = "fsl,sec-v4.0", "fsl,sec-era-v2.0";
+> +		compatible = "fsl,sec-v4.0";
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+>  		reg = <0x300000 0x10000>;
+> --
+> 1.7.7.6
+> 
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
