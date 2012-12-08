@@ -1,70 +1,54 @@
-From: Garg Vakul-B16394 <B16394@freescale.com>
-Subject: RE: [PATCH] Revert "crypto: caam - Updated SEC-4.0 device tree
- binding for ERA information."
-Date: Sat, 8 Dec 2012 04:30:03 +0000
-Message-ID: <065BBB7616BCE543832A2EF096986B9413FB3F@039-SN2MPN1-011.039d.mgd.msft.net>
-References: <1354870649-3656-1-git-send-email-vakul@freescale.com>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V4 0/2] Add DT support for i2s
+Date: Sat, 8 Dec 2012 10:07:54 +0530
+Message-ID: <CAAgF-BenOdFJK2LMot73_B=wHOFgD2sq8x-Ou=1CvpkiJpmeQQ@mail.gmail.com>
+References: <1354099669-1735-1-git-send-email-padma.v@samsung.com>
+	<CAAgF-Bc4t6WL4vswP6CFeSQrPZBmOuYfVt6_JoB1Za9TBX7mvA@mail.gmail.com>
+	<20121206041141.GA10867@opensource.wolfsonmicro.com>
+	<20121207135131.A53643E0B87@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1354870649-3656-1-git-send-email-vakul@freescale.com>
-Content-Language: en-US
-Sender: linux-crypto-owner@vger.kernel.org
-To: "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20121207135131.A53643E0B87@localhost>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, Padmavathi Venna <padma.v@samsung.com>, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, jassisinghbrar@gmail.com, kgene.kim@samsung.com, ben-linux@fluff.org, lrg@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Kindly ignore this.
-I would send another patch updating device tree binding directly with the new proposed property.
+Hi,
 
-> -----Original Message-----
-> From: devicetree-discuss [mailto:devicetree-discuss-
-> bounces+vakul=freescale.com@lists.ozlabs.org] On Behalf Of Vakul Garg
-> Sent: Friday, December 07, 2012 2:27 PM
-> To: linux-crypto@vger.kernel.org; linuxppc-dev@ozlabs.org; devicetree-
-> discuss@lists.ozlabs.org
-> Subject: [PATCH] Revert "crypto: caam - Updated SEC-4.0 device tree
-> binding for ERA information."
-> 
-> This reverts commit a2c0911c09190125f52c9941b9d187f601c2f7be.
-> 
-> Signed-off-by: Vakul Garg <vakul@freescale.com>
-> ---
-> Instead of adding SEC era information in crypto node's compatible, a new
-> property 'fsl,sec-era' is being introduced into crypto node.
-> 
->  .../devicetree/bindings/crypto/fsl-sec4.txt        |    5 ++---
->  1 files changed, 2 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> index fc9ce6f..bd7ce12 100644
-> --- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> +++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-> @@ -54,8 +54,7 @@ PROPERTIES
->     - compatible
->        Usage: required
->        Value type: <string>
-> -      Definition: Must include "fsl,sec-v4.0". Also includes SEC
-> -           ERA versions (optional) with which the device is compatible.
-> +      Definition: Must include "fsl,sec-v4.0"
-> 
->     - #address-cells
->         Usage: required
-> @@ -107,7 +106,7 @@ PROPERTIES
-> 
->  EXAMPLE
->  	crypto@300000 {
-> -		compatible = "fsl,sec-v4.0", "fsl,sec-era-v2.0";
-> +		compatible = "fsl,sec-v4.0";
->  		#address-cells = <1>;
->  		#size-cells = <1>;
->  		reg = <0x300000 0x10000>;
-> --
-> 1.7.7.6
-> 
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+On Fri, Dec 7, 2012 at 7:21 PM, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Thu, 6 Dec 2012 13:11:42 +0900, Mark Brown <broonie@opensource.wolfsonmicro.com> wrote:
+>> On Thu, Dec 06, 2012 at 09:31:40AM +0530, Padma Venkat wrote:
+>> > On Wed, Nov 28, 2012 at 4:17 PM, Padmavathi Venna <padma.v@samsung.com> wrote:
+>>
+>> > > Padmavathi Venna (2):
+>> > >   ASoC: Samsung: Get I2S src_clk from clock alias id.
+>> > >   ASoC: SAMSUNG: Add DT support for i2s
+>>
+>> > Any comments on DT support for i2s patch?  If not when this patch can be pulled?
+>>
+>> Don't send contentless pings.
+>>
+>> I still don't really like what's going on with aliases here, I need to
+>> understand why things are structured the way they are to say something
+>> about that.
+>
+> Right. On a brief look, it appears that the binding is using aliases as
+> a way to encode implementation specific details of the driver.
+
+Samsung i2s driver registers the platform device twice one for the
+samsung-i2s.0,1 or 2 and two for samsung-i2s.4(which actually doesn't
+represent any H/W peripheral). The max number of I2S blocks on any
+Samsung SoC are 3, the secondary device registration starts with
+device number 4.The second time registration is for the secondary fifo
+interface of a CPU dai if any exists.
+
+With DT support the device number in the driver is always -1, I used
+alias id for the above purpose.
+
+>
+> g.
+>
+Thanks
+Padma
