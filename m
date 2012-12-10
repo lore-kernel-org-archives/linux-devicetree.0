@@ -1,59 +1,43 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 0/2] add RTC support for Armada 370 and Armada XP
-Date: Mon, 10 Dec 2012 15:17:35 +0100
-Message-ID: <50C5EEFF.1000106@free-electrons.com>
-References: <1355136122-30729-1-git-send-email-gregory.clement@free-electrons.com>
- <20121210150101.4efe862a@skate>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: pci and pcie device-tree binding - range No cells
+Date: Mon, 10 Dec 2012 08:26:37 -0600
+Message-ID: <50C5F11D.9060006@gmail.com>
+References: <50C5D387.90908@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121210150101.4efe862a@skate>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <50C5D387.90908@monstr.eu>
+Sender: linux-pci-owner@vger.kernel.org
+To: monstr@monstr.eu
+Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-pci@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/2012 03:01 PM, Thomas Petazzoni wrote:
-> Dear Gregory CLEMENT,
+On 12/10/2012 06:20 AM, Michal Simek wrote:
+> Hi Grant and others,
 > 
-> On Mon, 10 Dec 2012 11:42:00 +0100, Gregory CLEMENT wrote:
+> I have a question regarding number of cells in ranges property
+> for pci and pcie nodes.
 > 
->> This small patchset adds RTC support for Armada 370 and Armada XP. It
->> was succesfully tested on the evaluation board. The second patch add
->> the lacking documentation for the device tree binding. This serie is
->> 3.9 material.
->>
->> Thanks,
->>
->>
->> Gregory CLEMENT (2):
->>   arm: mvebu: add RTC support for Armada 370 and Armada XP
->>   rtc: rtc-mv: Add the device tree binding documentation
+> Linux pci/pcie powerpc DTSes contain 7 cells (xpedite5370.dts,
+> sequoia.dts, etc)
+> but also 6 cells format too (mpc832x_mds.dts)
 > 
-> Would you mind adding a patch that updates the mvebu_defconfig to
-> include the RTC driver by default?
+> Here is shown 6 cells ranges format and describe
+> http://devicetree.org/Device_Tree_Usage#PCI_Host_Bridge
+> 
+> And also in documentation in the linux
+> Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
+> 
+> Both format uses:
+> #size-cells = <2>;
+> #address-cells = <3>;
+> 
+> What is valid format?
 
-Sure. I will.
+Both. 7 cells are valid when the host (parent) bus is 64-bit and 6 cells
+are valid when the host bus is 32-bit. The ranges property is <<child
+address> <parent address> <size>>. The parent address #address-cells is
+taken from the parent node.
 
-> 
-> Thanks!
-> 
-> Thomas
-> 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Rob
