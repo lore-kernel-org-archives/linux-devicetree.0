@@ -1,45 +1,80 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] OF: update coherent_dma_mask
-Date: Mon, 10 Dec 2012 10:30:01 -0600
-Message-ID: <50C60E09.8050805@gmail.com>
-References: <1355141369-30030-1-git-send-email-subash.rp@samsung.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: pci and pcie device-tree binding - range No cells
+Date: Mon, 10 Dec 2012 18:15:25 +0100
+Message-ID: <20121210181525.3ccd87c6@skate>
+References: <50C5D387.90908@monstr.eu>
+	<50C5F11D.9060006@gmail.com>
+	<50C5FA3E.9030303@monstr.eu>
+	<50C5FE0F.3050108@gmail.com>
+	<50C601B6.2080107@monstr.eu>
+	<AE90C24D6B3A694183C094C60CF0A2F6026B70E7@saturn3.aculab.com>
+	<50C60839.70603@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1355141369-30030-1-git-send-email-subash.rp@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Subash Patel <subashrp@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, subash.rp@samsung.com, kgene.kim@samsung.com, thomas.abraham@linaro.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <50C60839.70603@monstr.eu>
+Sender: linux-pci-owner@vger.kernel.org
+To: monstr@monstr.eu
+Cc: David Laight <David.Laight@ACULAB.COM>, Rob Herring <robherring2@gmail.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/2012 06:09 AM, Subash Patel wrote:
-> This patch is tested in ARM:exynos5250 with LPAE enabled. The coherent_dma_mask
-> needs to be defined to DMA_BIT_MASK(64) as dma-mapping API's check it against
-> 64-bit mask.
-> 
-> Signed-off-by: Subash Patel <subash.rp@samsung.com>
-> ---
->  drivers/of/platform.c |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index 9bdeaf30..3c5417b 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -214,7 +214,7 @@ struct platform_device *of_platform_device_create_pdata(
->  #if defined(CONFIG_MICROBLAZE)
->  	dev->archdata.dma_mask = 0xffffffffUL;
->  #endif
-> -	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
-> +	dev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
->  	dev->dev.bus = &platform_bus_type;
->  	dev->dev.platform_data = platform_data;
+Dear Michal Simek,
 
-This is assuming all masters support 64-bit addressing which is probably
-not universally valid. This really needs to be determined from the DT
-and there's been recent patches to do this[1] although they need more work.
+On Mon, 10 Dec 2012 17:05:13 +0100, Michal Simek wrote:
 
-[1] - https://lkml.org/lkml/2012/12/4/54
+> CC: Thomas: I think it will be interesting to see this discussion
+> because you are using size-cell/address-cells equal 1.
+> http://www.spinics.net/lists/arm-kernel/msg211839.html
 
-Rob
+Thanks for Cc'ing me.
+
+The thing is that on Marvell SoCs, we don't need to describe statically
+in the Device Tree the translation between CPU addresses and PCI device
+addresses, because those translations are set up dynamically at run
+time through address decoding windows.
+
+Marvell SoCs have up to 20 configurable address windows, which allow
+you, at run time, to say "I would like the range from physical address
+0xYYYYYYYY to 0xZZZZZZZZ to correspond to the PCIe device in port 1,
+lane 2, or to the NAND, or to this or that device". Therefore, in the
+PCIe driver I proposed for the Armada 370/XP SoCs [1], there is no need
+to encode all those ranges statically in the DT.
+
+The only "ranges" property I'm using is to allow the DT sub-nodes
+describing each PCIe port/lane to access the CPU registers that allow
+to see if the PCIe link is up or down, access the PCI configuration
+space and so on. So all ranges in my "ranges" property correspond to
+normal CPU registers, like the one you would put in the "reg" property
+for any device. The fact that those devices are PCIe is really
+orthogonal here.
+
+Of course, I have no idea if I'm doing a correct usage of the DT, but I
+certainly don't need those 6 values ranges with bits to say if it's I/O
+space, memory space, bus number, device number and so on. The physical
+addresses at which I'm setting up my address decoding windows are
+decided dynamically at runtime, depending on the number of PCIe devices
+that are found in the different PCIe slots (for now, those windows have
+a statically defined size, but I'd ideally would like to size them to
+match exactly the size of the PCIe device memory, in order to avoid
+wasting physical address space, but I haven't found how to get the size
+needed for each PCIe device during the ARM pcibios initialization
+sequence).
+
+For those willing to have a look at the PCIe patch set for Armada
+370/XP, see:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/136455.html.
+The core of the PCIe driver and its DT binding documentation is at
+http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/136711.html.
+
+Thanks a lot for your comments,
+
+Thomas
+
+[1] that I hope to extend to cover previous Marvell SoCs as well, they
+    work basically the same way
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
