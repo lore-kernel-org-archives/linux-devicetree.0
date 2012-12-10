@@ -1,90 +1,65 @@
-From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH] mtd: cfi_cmdset_0002: Support Persistent Protection Bits
- (PPB) locking
-Date: Mon, 10 Dec 2012 19:40:58 +0100
-Message-ID: <50C62CBA.5040401@denx.de>
-References: <1354864954-30290-1-git-send-email-sr@denx.de>
- <1355151644.2657.41.camel@sauron.fi.intel.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355151644.2657.41.camel-Bxnoe/o8FG+Ef9UqXRslZEEOCMrvLtNR@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Holger Brunck <holger.brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH RFC 00/13] Common video input interfaces bindings and V4L2 OF
+ helpers
+Date: Mon, 10 Dec 2012 20:41:26 +0100
+Message-ID: <1355168499-5847-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: g.liakhovetski@gmx.de, linux-media@vger.kernel.org
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/2012 04:00 PM, Artem Bityutskiy wrote:
-> On Fri, 2012-12-07 at 08:22 +0100, Stefan Roese wrote:
->> +       /*
->> +        * Wait for some time as unlocking of all sectors takes quite long
->> +        */
->> +       timeo = jiffies + (2 * HZ);     /* 2s max (un)locking */
-> 
-> Please, use msecs_to_jiffies() instead.
+Hi all,
 
-Sure, thats better.
+This series is an update of work on common bindings for video capture
+interfaces [1], [2] originally started by Guennadi. I took the liberty
+of resending the original patches and adding my changes on top of it.
 
->> +       for (;;) {
->> +               if (chip_ready(map, adr))
->> +                       break;
->> +
->> +               if (time_after(jiffies, timeo)) {
->> +                       printk(KERN_ERR "Waiting for chip to be ready timed out.\n");
->> +                       ret = -EIO;
->> +                       break;
->> +               }
->> +               mutex_unlock(&chip->mutex);
->> +               cfi_udelay(1);
->> +               mutex_lock(&chip->mutex);
->> +       } 
-> 
-> Would you please educate me a bit and explain what is protected by
-> 'chip->mutex' and by 'get_chip()'.
+I just noticed there were some comments to the v5 of the bindings
+documentation and the example. I might have addressed them in next
+iteration, unless the author prefers to take care of that himself.
 
-AFAIK, chip->mutex protects the access to the chip itself. So that
-sequences are not interrupted.
+This series adds a bunch of empty function/macro definitions for
+when CONFIG_OF(_DEVICE) is disabled, video capture interfaces common
+bindings documentation, related OF helpers and some corrections/
+enhancements of them.
 
-I have to admit that I haven't looked into get_chip() so far. It seems
-to handle a state machine. Normally (idle state) it will just fall
-through (FL_READY).
+Full tree containing this patch series can be browsed at [3].
 
-> Why you need to drop the mutex here?
+[1] http://www.spinics.net/lists/linux-sh/msg13391.html
+[2] http://www.spinics.net/lists/linux-sh/msg13111.html
+[3] http://git.infradead.org/users/kmpark/linux-samsung/shortlog/refs/heads/v3.7-rc8-pq-camera-dt
 
-Not sure, that might not be necessary. Copy and past from another loop
-in the same file.
+Guennadi Liakhovetski (6):
+  i2c: add dummy inline functions for when CONFIG_OF_I2C(_MODULE) isn't
+    defined
+  of: add a dummy inline function for when CONFIG_OF is not defined
+  OF: define of_*_cmp() macros also if CONFIG_OF isn't set
+  OF: make a function pointer argument const
+  media: add V4L2 DT binding documentation
+  media: add a V4L2 OF parser
 
-> Why is it not an ABBA deadlock to do this:
-> 
-> Task 1: In the loop above, has chip locked, doing
->         mutex_lock(&chip->mutex);
-> 
-> Task 2: done mutex_lock(&chip->mutex), now doing
->         ret = get_chip(map, chip, adr + chip->start, FL_LOCKING);
+Sylwester Nawrocki (7):
+  of: Add empty for_each_available_child_of_node() macro definition
+  of: Add empty of_find_device_by_node() function definition
+  of: Add empty of_get_next_child() function definition
+  v4l2-of: Support variable length of data-lanes property
+  v4l2-of: Add v4l2_of_parse_data_lanes() function
+  v4l2-of: Corrected v4l2_of_parse_link() function declaration
+  v4l2-of: Replace "remote" property with "remote-endpoint"
 
-I don't see two different locks/mutexes (only A) here. As get_chip()
-does no request any real mutex. Please correct me if I'm wrong.
+ Documentation/devicetree/bindings/media/v4l2.txt |  162 ++++++++++++++++
+ drivers/media/v4l2-core/Makefile                 |    3 +
+ drivers/media/v4l2-core/v4l2-of.c                |  217 ++++++++++++++++++++++
+ drivers/of/base.c                                |    4 +-
+ include/linux/of.h                               |   36 +++-
+ include/linux/of_i2c.h                           |   12 ++
+ include/linux/of_platform.h                      |    7 +
+ include/media/v4l2-of.h                          |   80 ++++++++
+ 8 files changed, 509 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/v4l2.txt
+ create mode 100644 drivers/media/v4l2-core/v4l2-of.c
+ create mode 100644 include/media/v4l2-of.h
 
-In many other places UDELAY() is called:
-
-#define UDELAY(map, chip, adr, usec)  \
-do {  \
-	mutex_unlock(&chip->mutex);  \
-	cfi_udelay(usec);  \
-	mutex_lock(&chip->mutex);  \
-} while (0)
-
-So dropping this lock seems to be quite common in this driver.
-
-Thanks,
-Stefan
+--
+1.7.9.5
