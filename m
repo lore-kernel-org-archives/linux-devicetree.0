@@ -1,87 +1,56 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: [PATCH] of: Support a PCI device that is compatible with 'simple-bus'
-Date: Mon, 10 Dec 2012 14:51:19 -0700
-Message-ID: <20121210215119.GA32011@obsidianresearch.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 2/3] dmaengine: dw_dmac: Enhance device tree support
+Date: Mon, 10 Dec 2012 22:08:51 +0000
+Message-ID: <201212102208.52347.arnd@arndb.de>
+References: <3100e691db3f94c22afd98b609a1568d7e70dfe7.1350360935.git.viresh.kumar@linaro.org> <169edae67b9a051ca7448e5b62c3cd2c5c1db470.1350360935.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <169edae67b9a051ca7448e5b62c3cd2c5c1db470.1350360935.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-The intended use for this feature is to let a PCI device declare
-itself a 'simple-bus' and then describe additional devices
-(such as GPIOs, I2C, etc) nested below itself.
+On Tuesday 16 October 2012, Viresh Kumar wrote:
+> dw_dmac driver already supports device tree but it used to have its platform
+> data passed the non-DT way.
+> 
+> This patch does following changes:
+> - pass platform data via DT, non-DT way still takes precedence if both are used.
+> - create generic filter routine
+> - Earlier slave information was made available by slave specific filter routines
+>   in chan->private field. Now, this information would be passed from within dmac
+>   DT node. Slave drivers would now be required to pass bus_id (a string) as
+>   parameter to this generic filter(), which would be compared against the slave
+>   data passed from DT, by the generic filter routine.
+> - Update binding document
+> 
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+> Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-The devices nested below the PCI device will use 'reg' addressing
-with the 5 dw format used by PCI.
+I'm deeply sorry for the very late complaint on this, but I only now
+noticed this patch as I was seeing build breakage in linux-next
+because of it.
 
-This is for embedded cases where the PCI device may be a complex
-SOC with no PCI based partitioning of sub-functionality.
+The build bug is not the problem however, but the abuse of the
+API is. Andy, are you sure you understood what this does when
+you gave you Reviewed-by comment?
 
-Tested on an ARM kirkwood system
+Viresh, there are multiple problems with your approach unfortunately:
 
-Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
----
- drivers/of/address.c |   29 +++++++++++++++++++++++++++++
- 1 files changed, 29 insertions(+), 0 deletions(-)
+* It does not follow the binding from
+  Documentation/devicetree/bindings/dma/dma.txt
 
-Grant:
+* It requires slave drivers to know that they are using the dw_dmac
+  driver and pass a pointer to dw_generic_filter, which is not
+  generic at all
 
-> If the soc_devices are getting triggered on that and they shouldn't be,
-> then we need a mechanism in the soc_bridge node to kick out of that
-> behavoir for its children.
+* It requires the dmac node to have information about all slaves
 
-Is this what you were thinking?
+There are also some minor issues, such as the naming of DT
+properties, but the above need to be resolved first.
 
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 0125524..cf9dac5 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -110,6 +110,25 @@ static int of_bus_pci_match(struct device_node *np)
- 	return !strcmp(np->type, "pci") || !strcmp(np->type, "vci");
- }
- 
-+/*
-+ * When simple-bus is nested below a PCI bus then we treat the simple-bus
-+ * as having the same 3 address/2 size semantics as the PCI bus, but create
-+ * platform devices like normal.
-+ */
-+static int of_bus_platform_pci_match(struct device_node *np)
-+{
-+	struct device_node *parent;
-+	int parent_is_pci;
-+
-+	parent = of_get_parent(np);
-+	if (parent == NULL)
-+		return 0;
-+	parent_is_pci = of_bus_pci_match(parent);
-+	of_node_put(parent);
-+
-+	return parent_is_pci && of_device_is_compatible(np, "simple-bus");
-+}
-+
- static void of_bus_pci_count_cells(struct device_node *np,
- 				   int *addrc, int *sizec)
- {
-@@ -293,6 +312,16 @@ static unsigned int of_bus_isa_get_flags(const __be32 *addr)
- 
- static struct of_bus of_busses[] = {
- #ifdef CONFIG_PCI
-+	/* Platform devices beneath a PCI device */
-+	{
-+		.name = "platform_pci",
-+		.addresses = "reg",
-+		.match = of_bus_platform_pci_match,
-+		.count_cells = of_bus_pci_count_cells,
-+		.map = of_bus_pci_map,
-+		.translate = of_bus_pci_translate,
-+		.get_flags = of_bus_pci_get_flags,
-+	},
- 	/* PCI */
- 	{
- 		.name = "pci",
--- 
-1.7.5.4
+	Arnd
