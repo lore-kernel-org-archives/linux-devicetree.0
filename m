@@ -1,125 +1,45 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: pci and pcie device-tree binding - range No cells
-Date: Mon, 10 Dec 2012 17:11:38 +0100
-Message-ID: <50C609BA.8020008@monstr.eu>
-References: <50C5D387.90908@monstr.eu> <50C5F11D.9060006@gmail.com> <50C5FA3E.9030303@monstr.eu> <50C5FE0F.3050108@gmail.com> <50C601B6.2080107@monstr.eu> <50C6078A.8080408@gmail.com>
-Reply-To: monstr@monstr.eu
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] OF: update coherent_dma_mask
+Date: Mon, 10 Dec 2012 10:30:01 -0600
+Message-ID: <50C60E09.8050805@gmail.com>
+References: <1355141369-30030-1-git-send-email-subash.rp@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <50C6078A.8080408@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, linux-pci@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thierry Reding <thierry.reding@avionic-design.de>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1355141369-30030-1-git-send-email-subash.rp@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Subash Patel <subashrp@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, subash.rp@samsung.com, kgene.kim@samsung.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/2012 05:02 PM, Rob Herring wrote:
-> On 12/10/2012 09:37 AM, Michal Simek wrote:
->> On 12/10/2012 04:21 PM, Rob Herring wrote:
->>> On 12/10/2012 09:05 AM, Michal Simek wrote:
->>>> On 12/10/2012 03:26 PM, Rob Herring wrote:
->>>>> On 12/10/2012 06:20 AM, Michal Simek wrote:
->>>>>> Hi Grant and others,
->>>>>>
->>>>>> I have a question regarding number of cells in ranges property
->>>>>> for pci and pcie nodes.
->>>>>>
->>>>>> Linux pci/pcie powerpc DTSes contain 7 cells (xpedite5370.dts,
->>>>>> sequoia.dts, etc)
->>>>>> but also 6 cells format too (mpc832x_mds.dts)
->>>>>>
->>>>>> Here is shown 6 cells ranges format and describe
->>>>>> http://devicetree.org/Device_Tree_Usage#PCI_Host_Bridge
->>>>>>
->>>>>> And also in documentation in the linux
->>>>>> Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
->>>>>>
->>>>>> Both format uses:
->>>>>> #size-cells = <2>;
->>>>>> #address-cells = <3>;
->>>>>>
->>>>>> What is valid format?
->>>>>
->>>>> Both. 7 cells are valid when the host (parent) bus is 64-bit and 6
->>>>> cells
->>>>> are valid when the host bus is 32-bit. The ranges property is <<child
->>>>> address> <parent address> <size>>. The parent address #address-cells is
->>>>> taken from the parent node.
->>>>
->>>> Ok. Got it.
->>>>
->>>> Here is what we use on zynq and microblaze - both 32bit which should be
->>>> fine.
->>>>
->>>>       ps7_axi_interconnect_0: axi@0 {
->>>>           #address-cells = <1>;
->>>>           #size-cells = <1>;
->>>>           axi_pcie_0: axi-pcie@50000000 {
->>>>               #address-cells = <3>;
->>>>               #size-cells = <2>;
->>>>               compatible = "xlnx,axi-pcie-1.05.a";
->>>>               ranges = < 0x02000000 0 0x60000000 0x60000000 0
->>>> 0x10000000 >;
->>>>               ...
->>>>           }
->>>>       }
->>>>
->>>> What I am wondering is pci_process_bridge_OF_ranges() at
->>>> arch/powerpc/kernel/pci-common.c
->>>> where there are used some hardcoded values which should be probably
->>>> loaded from device-tree.
->>>>
->>>> For example:
->>>> 683         int np = pna + 5;
->>>> ...
->>>> 702                 pci_addr = of_read_number(ranges + 1, 2);
->>>> 703                 cpu_addr = of_translate_address(dev, ranges + 3);
->>>> 704                 size = of_read_number(ranges + pna + 3, 2);
->>>
->>> These would always be correct whether you have 6 or 7 cells. pna is the
->>> parent bus address cells size. The pci address is fixed at 3 cells.
->>
->> Sorry for my pci ignorance (have never got hw for mb/zynq)
->> I just want to get better overview how we should we our drivers to be
->> compatible.
->>
->> Does it mean that pci is supposed be always 64 bit wide?
->> And there is no option to have just 32bit values.
->
-> That's what the DT documentation says.
->
-> BTW, you can use 2 cells even if you only have a 32-bit bus.
+On 12/10/2012 06:09 AM, Subash Patel wrote:
+> This patch is tested in ARM:exynos5250 with LPAE enabled. The coherent_dma_mask
+> needs to be defined to DMA_BIT_MASK(64) as dma-mapping API's check it against
+> 64-bit mask.
+> 
+> Signed-off-by: Subash Patel <subash.rp@samsung.com>
+> ---
+>  drivers/of/platform.c |    2 +-
+>  1 files changed, 1 insertions(+), 1 deletions(-)
+> 
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 9bdeaf30..3c5417b 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -214,7 +214,7 @@ struct platform_device *of_platform_device_create_pdata(
+>  #if defined(CONFIG_MICROBLAZE)
+>  	dev->archdata.dma_mask = 0xffffffffUL;
+>  #endif
+> -	dev->dev.coherent_dma_mask = DMA_BIT_MASK(32);
+> +	dev->dev.coherent_dma_mask = DMA_BIT_MASK(64);
+>  	dev->dev.bus = &platform_bus_type;
+>  	dev->dev.platform_data = platform_data;
 
-ok - no problem with that. Just want to be sure about it.
+This is assuming all masters support 64-bit addressing which is probably
+not universally valid. This really needs to be determined from the DT
+and there's been recent patches to do this[1] although they need more work.
 
->>>> Unfortunately we have copied it to microblaze.
->>>
->>> I look at the PCI DT code in powerpc and see a whole bunch of code that
->>> seems like it should be common. The different per arch pci structs
->>> complicates that. No one has really gotten to looking at PCI DT on ARM
->>> yet except you and Thierry for Tegra. We definitely don't want to create
->>> a 3rd copy. Starting the process of moving it to something like
->>> drivers/pci/pci-of.c would be great.
->>
->> We have done pcie working on zynq and the same pcie host is working on
->> Microblaze too.
->> There are just small differences. That's why I have sent another email
->> ("Sharing PCIE driver between Microblaze and Arm zynq") to find out
->> proper location.
->
-> Yes, I've followed the thread. There are lots of areas for consolidation
-> with PCIe hosts both across architectures and within ARM. There are
-> multiple people using DW PCIe IP although not upstream yet that I'm
-> aware of.
+[1] - https://lkml.org/lkml/2012/12/4/54
 
-Your suggestions are really appreciate.
-
-Thanks,
-Michal
-
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+Rob
