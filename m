@@ -1,7 +1,8 @@
 From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH RFC 04/13] OF: make a function pointer argument const
-Date: Mon, 10 Dec 2012 20:41:30 +0100
-Message-ID: <1355168499-5847-5-git-send-email-s.nawrocki@samsung.com>
+Subject: [PATCH RFC 03/13] OF: define of_*_cmp() macros also if CONFIG_OF isn't
+ set
+Date: Mon, 10 Dec 2012 20:41:29 +0100
+Message-ID: <1355168499-5847-4-git-send-email-s.nawrocki@samsung.com>
 References: <1355168499-5847-1-git-send-email-s.nawrocki@samsung.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-reply-to: <1355168499-5847-1-git-send-email-s.nawrocki@samsung.com>
@@ -12,61 +13,47 @@ List-Id: devicetree@vger.kernel.org
 
 From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 
-The "struct device_node *" argument of of_parse_phandle_*() can be const.
+of_*_cmp() macros do not depend on any OF functions and can be defined also
+if CONFIG_OF isn't set. Also include linux/string.h, required by those
+macros.
 
 Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 ---
- drivers/of/base.c  |    4 ++--
- include/linux/of.h |    6 +++---
- 2 files changed, 5 insertions(+), 5 deletions(-)
+ include/linux/of.h |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index af3b22a..c180205 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -894,7 +894,7 @@ EXPORT_SYMBOL_GPL(of_property_count_strings);
-  * of_node_put() on it when done.
-  */
- struct device_node *
--of_parse_phandle(struct device_node *np, const char *phandle_name, int index)
-+of_parse_phandle(const struct device_node *np, const char *phandle_name, int index)
- {
- 	const __be32 *phandle;
- 	int size;
-@@ -939,7 +939,7 @@ EXPORT_SYMBOL(of_parse_phandle);
-  * To get a device_node of the `node2' node you may call this:
-  * of_parse_phandle_with_args(node3, "list", "#list-cells", 1, &args);
-  */
--int of_parse_phandle_with_args(struct device_node *np, const char *list_name,
-+int of_parse_phandle_with_args(const struct device_node *np, const char *list_name,
- 				const char *cells_name, int index,
- 				struct of_phandle_args *out_args)
- {
 diff --git a/include/linux/of.h b/include/linux/of.h
-index 38d4b1a..2fb0dbe 100644
+index 9ba8cf1..38d4b1a 100644
 --- a/include/linux/of.h
 +++ b/include/linux/of.h
-@@ -256,10 +256,10 @@ extern int of_n_size_cells(struct device_node *np);
- extern const struct of_device_id *of_match_node(
- 	const struct of_device_id *matches, const struct device_node *node);
- extern int of_modalias_node(struct device_node *node, char *modalias, int len);
--extern struct device_node *of_parse_phandle(struct device_node *np,
-+extern struct device_node *of_parse_phandle(const struct device_node *np,
- 					    const char *phandle_name,
- 					    int index);
--extern int of_parse_phandle_with_args(struct device_node *np,
-+extern int of_parse_phandle_with_args(const struct device_node *np,
- 	const char *list_name, const char *cells_name, int index,
- 	struct of_phandle_args *out_args);
+@@ -85,6 +85,14 @@ static inline struct device_node *of_node_get(struct device_node *node)
+ static inline void of_node_put(struct device_node *node) { }
+ #endif /* !CONFIG_OF_DYNAMIC */
  
-@@ -412,7 +412,7 @@ static inline int of_property_match_string(struct device_node *np,
- 	return -ENOSYS;
- }
++/* Default string compare functions, Allow arch asm/prom.h to override */
++#if !defined(of_compat_cmp)
++#include <linux/string.h>
++#define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
++#define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
++#define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
++#endif
++
+ #ifdef CONFIG_OF
  
--static inline struct device_node *of_parse_phandle(struct device_node *np,
-+static inline struct device_node *of_parse_phandle(const struct device_node *np,
- 						   const char *phandle_name,
- 						   int index)
- {
+ /* Pointer for first entry in chain of all nodes. */
+@@ -143,13 +151,6 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+ #define OF_ROOT_NODE_SIZE_CELLS_DEFAULT 1
+ #endif
+ 
+-/* Default string compare functions, Allow arch asm/prom.h to override */
+-#if !defined(of_compat_cmp)
+-#define of_compat_cmp(s1, s2, l)	strcasecmp((s1), (s2))
+-#define of_prop_cmp(s1, s2)		strcmp((s1), (s2))
+-#define of_node_cmp(s1, s2)		strcasecmp((s1), (s2))
+-#endif
+-
+ /* flag descriptions */
+ #define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
+ #define OF_DETACHED	2 /* node has been detached from the device tree */
 -- 
 1.7.9.5
