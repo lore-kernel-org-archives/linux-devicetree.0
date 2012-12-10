@@ -1,43 +1,51 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH RFC 12/13] v4l2-of: Corrected v4l2_of_parse_link() function
- declaration
-Date: Mon, 10 Dec 2012 20:41:38 +0100
-Message-ID: <1355168499-5847-13-git-send-email-s.nawrocki@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH RFC 05/13] of: Add empty for_each_available_child_of_node()
+ macro definition
+Date: Mon, 10 Dec 2012 20:41:31 +0100
+Message-ID: <1355168499-5847-6-git-send-email-s.nawrocki@samsung.com>
 References: <1355168499-5847-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1355168499-5847-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: g.liakhovetski@gmx.de, linux-media@vger.kernel.org
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1355168499-5847-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-v4l2_of_parse_link() return value type is int, not void.
+Add this empty macro definition so users can be compiled without
+excluding this macro call with preprocessor directives when CONFIG_OF
+is disabled.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- include/media/v4l2-of.h |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ include/linux/of.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/include/media/v4l2-of.h b/include/media/v4l2-of.h
-index 9b036e6..686d04b 100644
---- a/include/media/v4l2-of.h
-+++ b/include/media/v4l2-of.h
-@@ -49,10 +49,13 @@ int v4l2_of_parse_data_lanes(const struct device_node *node,
- struct device_node *v4l2_of_get_next_link(const struct device_node *parent,
- 					struct device_node *previous);
- struct device_node *v4l2_of_get_remote(const struct device_node *node);
--#else
--static inline void v4l2_of_parse_link(const struct device_node *node,
-+
-+#else /* CONFIG_OF */
-+
-+static inline int v4l2_of_parse_link(const struct device_node *node,
- 				      struct v4l2_of_link *link)
- {
-+	return -ENOSYS;
- }
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 2fb0dbe..7df42cc 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -332,6 +332,9 @@ static inline bool of_have_populated_dt(void)
+ #define for_each_child_of_node(parent, child) \
+ 	while (0)
  
- static inline int v4l2_of_parse_data_lanes(const struct device_node *node,
++#define for_each_available_child_of_node(parent, child) \
++	while (0)
++
+ static inline struct device_node *of_get_child_by_name(
+ 					const struct device_node *node,
+ 					const char *name)
 -- 
 1.7.9.5
