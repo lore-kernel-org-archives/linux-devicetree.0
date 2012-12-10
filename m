@@ -1,33 +1,40 @@
-From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Subject: Re: pci and pcie device-tree binding - range No cells
-Date: Tue, 11 Dec 2012 09:38:17 +1100
-Message-ID: <1355179097.19932.5.camel@pasglop>
-References: <50C5D387.90908@monstr.eu> <50C5F11D.9060006@gmail.com>
-	 <50C5FA3E.9030303@monstr.eu> <50C5FE0F.3050108@gmail.com>
-	 <50C601B6.2080107@monstr.eu> <20121210214323.6EA733E0921@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20121210214323.6EA733E0921@localhost>
-Sender: linux-pci-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: monstr@monstr.eu, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-pci@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Thierry Reding <thierry.reding@avionic-design.de>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v2 3/3] leds: leds-pwm: Add device tree bindings
+Date: Mon, 10 Dec 2012 22:37:22 +0000
+Message-ID: <20121210223722.461773E08FB@localhost>
+References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com> <1352731270-27534-4-git-send-email-peter.ujfalusi@ti.com> <20121206100052.EC8293E0E22@localhost> <50C0913B.9070802@ti.com> <20121207133453.800C43E0B87@localhost> <50C1F783.6090501@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50C1F783.6090501@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2012-12-10 at 21:43 +0000, Grant Likely wrote:
-> > Sorry for my pci ignorance (have never got hw for mb/zynq)
-> > I just want to get better overview how we should we our drivers to
-> be compatible.
+On Fri, 7 Dec 2012 15:04:51 +0100, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> On 12/07/2012 02:34 PM, Grant Likely wrote:
+> > It really needs to look like this:
 > > 
-> > Does it mean that pci is supposed be always 64 bit wide?
-> > And there is no option to have just 32bit values.
+> > pwmleds {
+> > 	compatible = "pwm-leds";
+> > 	kpad {
+> > 		label = "omap4::keypad";
+> > 		max-brightness = <127>;
+> > 		pwms = <&twl_pwm 0 7812500>;
+> > 	};
+> > 	charging {
+> > 		label = "omap4:green:chrg";
+> > 		max-brightness = <255>;
+> > 		pwms = <&twl_pwmled 0 7812500>;
+> > 	};
+> > };
 > 
-> Yes, PCIe addressing is always 64 bits wide. Even on 32bit PCI systems
-> we use 64 bit PCI addressing in the device tree.
+> OK.
+> So What we need to do is export the of_pwm_request() from drivers/pwm/core.c
+> Client drivers us of_pwm_request(node, NULL); to get the pwm when booted with DT.
+> Works fine on my setup this way and the DTS section looks just as you have
+> described.
+> Now I need to clean them up and resubmit.
 
-Right. The size & format of an address cell for PCI is specified in the
-OF PCI bindings and we follow that binding. It's always 3 cells.
+Cool, thanks.
 
-Cheers,
-Ben.
+g.
