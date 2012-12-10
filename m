@@ -1,94 +1,45 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: pci and pcie device-tree binding - range No cells
-Date: Mon, 10 Dec 2012 21:41:27 +0000
-Message-ID: <20121210214127.D51773E0796@localhost>
-References: <50C5D387.90908@monstr.eu> <50C5F11D.9060006@gmail.com> <50C5FA3E.9030303@monstr.eu> <50C5FE0F.3050108@gmail.com>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <50C5FE0F.3050108@gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, monstr@monstr.eu
-Cc: devicetree-discuss@lists.ozlabs.org, linux-pci@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thierry Reding <thierry.reding@avionic-design.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm: mvebu: add RTC support for Armada 370 and Armada
+ XP
+Date: Mon, 10 Dec 2012 21:47:55 +0000
+Message-ID: <20121210214755.9CD823E0C7C@localhost>
+References: <1355136122-30729-1-git-send-email-gregory.clement@free-electrons.com>
+ <1355136122-30729-2-git-send-email-gregory.clement@free-electrons.com>
+ <20121210162819.46fe4f91@skate>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121210162819.46fe4f91@skate>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Dec 2012 09:21:51 -0600, Rob Herring <robherring2@gmail.com> wrote:
-> On 12/10/2012 09:05 AM, Michal Simek wrote:
-> > On 12/10/2012 03:26 PM, Rob Herring wrote:
-> >> On 12/10/2012 06:20 AM, Michal Simek wrote:
-> >>> Hi Grant and others,
-> >>>
-> >>> I have a question regarding number of cells in ranges property
-> >>> for pci and pcie nodes.
-> >>>
-> >>> Linux pci/pcie powerpc DTSes contain 7 cells (xpedite5370.dts,
-> >>> sequoia.dts, etc)
-> >>> but also 6 cells format too (mpc832x_mds.dts)
-> >>>
-> >>> Here is shown 6 cells ranges format and describe
-> >>> http://devicetree.org/Device_Tree_Usage#PCI_Host_Bridge
-> >>>
-> >>> And also in documentation in the linux
-> >>> Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
-> >>>
-> >>> Both format uses:
-> >>> #size-cells = <2>;
-> >>> #address-cells = <3>;
-> >>>
-> >>> What is valid format?
-> >>
-> >> Both. 7 cells are valid when the host (parent) bus is 64-bit and 6 cells
-> >> are valid when the host bus is 32-bit. The ranges property is <<child
-> >> address> <parent address> <size>>. The parent address #address-cells is
-> >> taken from the parent node.
-> > 
-> > Ok. Got it.
-> > 
-> > Here is what we use on zynq and microblaze - both 32bit which should be
-> > fine.
-> > 
-> >     ps7_axi_interconnect_0: axi@0 {
-> >         #address-cells = <1>;
-> >         #size-cells = <1>;
-> >         axi_pcie_0: axi-pcie@50000000 {
-> >             #address-cells = <3>;
-> >             #size-cells = <2>;
-> >             compatible = "xlnx,axi-pcie-1.05.a";
-> >             ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
-> >             ...
-> >         }
-> >     }
-> > 
-> > What I am wondering is pci_process_bridge_OF_ranges() at
-> > arch/powerpc/kernel/pci-common.c
-> > where there are used some hardcoded values which should be probably
-> > loaded from device-tree.
-> > 
-> > For example:
-> > 683         int np = pna + 5;
-> > ...
-> > 702                 pci_addr = of_read_number(ranges + 1, 2);
-> > 703                 cpu_addr = of_translate_address(dev, ranges + 3);
-> > 704                 size = of_read_number(ranges + pna + 3, 2);
+On Mon, 10 Dec 2012 16:28:19 +0100, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Dear Gregory CLEMENT,
 > 
-> These would always be correct whether you have 6 or 7 cells. pna is the
-> parent bus address cells size. The pci address is fixed at 3 cells.
+> On Mon, 10 Dec 2012 11:42:01 +0100, Gregory CLEMENT wrote:
 > 
-> > 
-> > 
-> > Unfortunately we have copied it to microblaze.
+> > +		rtc@10300 {
+> > +			compatible = "marvell,orion-rtc";
+> > +			reg = <0xd0010300 0x20>;
+> > +			interrupts = <50>;
+> > +		};
 > 
-> I look at the PCI DT code in powerpc and see a whole bunch of code that
-> seems like it should be common. The different per arch pci structs
-> complicates that. No one has really gotten to looking at PCI DT on ARM
-> yet except you and Thierry for Tegra. We definitely don't want to create
-> a 3rd copy. Starting the process of moving it to something like
-> drivers/pci/pci-of.c would be great.
+> Maybe an explicit status = "okay" here?
 
-A lot of it should be common. The microblaze code is a copy of the
-powerpc version. I'll strongly nack any attempt to add a third!  :-)
-
-drivers/pci/pci-of.c would be good. I'd also accept drivers/of/pci.c
-which might actually be a good idea in the short term so that it gets
-appropriate supervision while being generalized before being moved into
-the pci directory.
+Only necessary if it is typical for the device to get disabled. I don't
+add status="okay" properties unless it is to enable a device previously
+disabled with status="disabled"
 
 g.
