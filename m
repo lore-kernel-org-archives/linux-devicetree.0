@@ -1,263 +1,44 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v3 4/4] leds: leds-pwm: Add device tree bindings
-Date: Mon, 10 Dec 2012 11:00:37 +0100
-Message-ID: <1355133637-2784-5-git-send-email-peter.ujfalusi@ti.com>
-References: <1355133637-2784-1-git-send-email-peter.ujfalusi@ti.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 0/2] add RTC support for Armada 370 and Armada XP
+Date: Mon, 10 Dec 2012 11:42:00 +0100
+Message-ID: <1355136122-30729-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1355133637-2784-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Support for device tree booted kernel.
+Hello Jason,
 
-For usage see:
-Documentation/devicetree/bindings/leds/leds-pwm.txt
+This small patchset adds RTC support for Armada 370 and Armada XP. It
+was succesfully tested on the evaluation board. The second patch add
+the lacking documentation for the device tree binding. This serie is
+3.9 material.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- .../devicetree/bindings/leds/leds-pwm.txt          |  46 ++++++++
- drivers/leds/leds-pwm.c                            | 124 +++++++++++++++++----
- 2 files changed, 149 insertions(+), 21 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
+Thanks,
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-new file mode 100644
-index 0000000..abdff60
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-@@ -0,0 +1,46 @@
-+LED connected to PWM
-+
-+Required properties:
-+- compatible : should be "pwm-leds".
-+
-+Each LED is represented as a sub-node of the pwm-leds device.  Each
-+node's name represents the name of the corresponding LED.
-+
-+LED sub-node properties:
-+- pwms : PWM property, please refer to: 
-+  Documentation/devicetree/bindings/pwm/pwm.txt
-+- pwm-names : (optional) Name to be used by the PWM subsystem for the PWM device
-+- max-brightness : Maximum brightness possible for the LED
-+- label :  (optional)
-+  see Documentation/devicetree/bindings/leds/common.txt
-+- linux,default-trigger :  (optional)
-+  see Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+
-+twl_pwm: pwm {
-+	/* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
-+	compatible = "ti,twl6030-pwm";
-+	#pwm-cells = <2>;
-+};
-+
-+twl_pwmled: pwmled {
-+	/* provides one PWM (id 0 for Charing indicator LED) */
-+	compatible = "ti,twl6030-pwmled";
-+	#pwm-cells = <2>;
-+};
-+
-+pwmleds {
-+	compatible = "pwm-leds";
-+	kpad {
-+		label = "omap4::keypad";
-+		pwms = <&twl_pwm 0 7812500>;
-+		max-brightness = <127>;
-+	};
-+
-+	charging {
-+		label = "omap4:green:chrg";
-+		pwms = <&twl_pwmled 0 7812500>;
-+		max-brightness = <255>;
-+	};
-+};
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 02f0c0c..a57ac27 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -16,6 +16,7 @@
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/platform_device.h>
-+#include <linux/of_platform.h>
- #include <linux/fb.h>
- #include <linux/leds.h>
- #include <linux/err.h>
-@@ -58,46 +59,115 @@ static inline int sizeof_pwm_leds_priv(int num_leds)
- 		      (sizeof(struct led_pwm_data) * num_leds);
- }
- 
--static int led_pwm_probe(struct platform_device *pdev)
-+static struct led_pwm_priv *led_pwm_create_of(struct platform_device *pdev)
- {
--	struct led_pwm_platform_data *pdata = pdev->dev.platform_data;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *child;
- 	struct led_pwm_priv *priv;
--	int i, ret = 0;
-+	int count, ret;
- 
--	if (!pdata)
--		return -EBUSY;
-+	/* count LEDs in this device, so we know how much to allocate */
-+	count = of_get_child_count(node);
-+	if (!count)
-+		return NULL;
- 
--	priv = devm_kzalloc(&pdev->dev, sizeof_pwm_leds_priv(pdata->num_leds),
-+	priv = devm_kzalloc(&pdev->dev, sizeof_pwm_leds_priv(count),
- 			    GFP_KERNEL);
- 	if (!priv)
--		return -ENOMEM;
-+		return NULL;
-+
-+	for_each_child_of_node(node, child) {
-+		struct led_pwm_data *led_dat = &priv->leds[priv->num_leds];
- 
--	for (i = 0; i < pdata->num_leds; i++) {
--		struct led_pwm *cur_led = &pdata->leds[i];
--		struct led_pwm_data *led_dat = &priv->leds[i];
-+		led_dat->cdev.name = of_get_property(child, "label",
-+						     NULL) ? : child->name;
- 
--		led_dat->pwm = devm_pwm_get(&pdev->dev, cur_led->name);
-+		led_dat->pwm = of_pwm_request(child, NULL);
- 		if (IS_ERR(led_dat->pwm)) {
--			ret = PTR_ERR(led_dat->pwm);
- 			dev_err(&pdev->dev, "unable to request PWM for %s\n",
--				cur_led->name);
-+				led_dat->cdev.name);
- 			goto err;
- 		}
-+		/* Get the period from PWM core when n*/
-+		led_dat->period = pwm_get_period(led_dat->pwm);
-+
-+		led_dat->cdev.default_trigger = of_get_property(child,
-+						"linux,default-trigger", NULL);
-+		of_property_read_u32(child, "max-brightness",
-+				     &led_dat->cdev.max_brightness);
- 
--		led_dat->cdev.name = cur_led->name;
--		led_dat->cdev.default_trigger = cur_led->default_trigger;
--		led_dat->active_low = cur_led->active_low;
--		led_dat->period = cur_led->pwm_period_ns;
- 		led_dat->cdev.brightness_set = led_pwm_set;
- 		led_dat->cdev.brightness = LED_OFF;
--		led_dat->cdev.max_brightness = cur_led->max_brightness;
- 		led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
- 
- 		ret = led_classdev_register(&pdev->dev, &led_dat->cdev);
--		if (ret < 0)
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "failed to register for %s\n",
-+				led_dat->cdev.name);
-+			of_node_put(child);
-+			pwm_put(led_dat->pwm);
- 			goto err;
-+		}
-+		priv->num_leds++;
-+	}
-+
-+	return priv;
-+err:
-+	if (priv->num_leds > 0) {
-+		for (count = priv->num_leds - 1; count >= 0; count--) {
-+			led_classdev_unregister(&priv->leds[count].cdev);
-+			pwm_put(priv->leds[count].pwm);
-+		}
-+	}
-+
-+	return NULL;
-+}
-+
-+static int led_pwm_probe(struct platform_device *pdev)
-+{
-+	struct led_pwm_platform_data *pdata = pdev->dev.platform_data;
-+	struct led_pwm_priv *priv;
-+	int i, ret = 0;
-+
-+	if (pdata && pdata->num_leds) {
-+		priv = devm_kzalloc(&pdev->dev,
-+				    sizeof_pwm_leds_priv(pdata->num_leds),
-+				    GFP_KERNEL);
-+		if (!priv)
-+			return -ENOMEM;
-+
-+		for (i = 0; i < pdata->num_leds; i++) {
-+			struct led_pwm *cur_led = &pdata->leds[i];
-+			struct led_pwm_data *led_dat = &priv->leds[i];
-+
-+			led_dat->pwm = devm_pwm_get(&pdev->dev, cur_led->name);
-+			if (IS_ERR(led_dat->pwm)) {
-+				ret = PTR_ERR(led_dat->pwm);
-+				dev_err(&pdev->dev,
-+					"unable to request PWM for %s\n",
-+					cur_led->name);
-+				goto err;
-+			}
-+
-+			led_dat->cdev.name = cur_led->name;
-+			led_dat->cdev.default_trigger = cur_led->default_trigger;
-+			led_dat->active_low = cur_led->active_low;
-+			led_dat->period = cur_led->pwm_period_ns;
-+			led_dat->cdev.brightness_set = led_pwm_set;
-+			led_dat->cdev.brightness = LED_OFF;
-+			led_dat->cdev.max_brightness = cur_led->max_brightness;
-+			led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
-+
-+			ret = led_classdev_register(&pdev->dev, &led_dat->cdev);
-+			if (ret < 0)
-+				goto err;
-+		}
-+		priv->num_leds = pdata->num_leds;
-+	} else {
-+		priv = led_pwm_create_of(pdev);
-+		if (!priv)
-+			return -ENODEV;
- 	}
--	priv->num_leds = pdata->num_leds;
- 
- 	platform_set_drvdata(pdev, priv);
- 
-@@ -114,21 +184,33 @@ err:
- 
- static int led_pwm_remove(struct platform_device *pdev)
- {
-+	struct led_pwm_platform_data *pdata = pdev->dev.platform_data;
- 	struct led_pwm_priv *priv = platform_get_drvdata(pdev);
- 	int i;
- 
--	for (i = 0; i < priv->num_leds; i++)
-+	for (i = 0; i < priv->num_leds; i++) {
- 		led_classdev_unregister(&priv->leds[i].cdev);
-+		if (!pdata)
-+			pwm_put(priv->leds[i].pwm);
-+	}
- 
- 	return 0;
- }
- 
-+static const struct of_device_id of_pwm_leds_match[] = {
-+	{ .compatible = "pwm-leds", },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, of_pwm_leds_match);
-+
- static struct platform_driver led_pwm_driver = {
- 	.probe		= led_pwm_probe,
- 	.remove		= led_pwm_remove,
- 	.driver		= {
- 		.name	= "leds_pwm",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(of_pwm_leds_match),
- 	},
- };
- 
+
+Gregory CLEMENT (2):
+  arm: mvebu: add RTC support for Armada 370 and Armada XP
+  rtc: rtc-mv: Add the device tree binding documentation
+
+ .../devicetree/bindings/rtc/orion-rtc.txt          |   18 ++++++++++++++++++
+ arch/arm/boot/dts/armada-370-xp.dtsi               |    6 ++++++
+ drivers/rtc/Kconfig                                |    2 +-
+ 3 files changed, 25 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/orion-rtc.txt
+
 -- 
-1.8.0
+1.7.9.5
