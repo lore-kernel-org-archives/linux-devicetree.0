@@ -1,63 +1,87 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH RFC 07/12] ARM: EXYNOS4: Add OF_DEV_AUXDATA for FIMC,
- FIMC-LITE and CSIS
-Date: Mon, 10 Dec 2012 20:46:01 +0100
-Message-ID: <1355168766-6068-8-git-send-email-s.nawrocki@samsung.com>
-References: <1355168766-6068-1-git-send-email-s.nawrocki@samsung.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: [PATCH] of: Support a PCI device that is compatible with 'simple-bus'
+Date: Mon, 10 Dec 2012 14:51:19 -0700
+Message-ID: <20121210215119.GA32011@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1355168766-6068-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, g.liakhovetski-Mmb7MZpHnFY@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Add these temporary OF_DEV_AUXDATA entries so we can use clocks
-before common clock framework support for Exynos4 is available.
+The intended use for this feature is to let a PCI device declare
+itself a 'simple-bus' and then describe additional devices
+(such as GPIOs, I2C, etc) nested below itself.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+The devices nested below the PCI device will use 'reg' addressing
+with the 5 dw format used by PCI.
+
+This is for embedded cases where the PCI device may be a complex
+SOC with no PCI based partitioning of sub-functionality.
+
+Tested on an ARM kirkwood system
+
+Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
 ---
- arch/arm/mach-exynos/mach-exynos4-dt.c |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ drivers/of/address.c |   29 +++++++++++++++++++++++++++++
+ 1 files changed, 29 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c b/arch/arm/mach-exynos/mach-exynos4-dt.c
-index d6bdcfb..6d2eaf8 100644
---- a/arch/arm/mach-exynos/mach-exynos4-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
-@@ -89,6 +89,22 @@ static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
- 	OF_DEV_AUXDATA("arm,pl330", EXYNOS4_PA_PDMA1, "dma-pl330.1", NULL),
- 	OF_DEV_AUXDATA("samsung,exynos4-fb", EXYNOS4_PA_FIMD0,
- 				"exynos4-fb.0", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos4210-csis", EXYNOS4_PA_MIPI_CSIS0,
-+				"s5p-mipi-csis.0", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos4210-csis", EXYNOS4_PA_MIPI_CSIS1,
-+				"s5p-mipi-csis.1", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos4212-fimc", EXYNOS4_PA_FIMC0,
-+				"exynos4-fimc.0", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos4212-fimc", EXYNOS4_PA_FIMC1,
-+				"exynos4-fimc.1", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos4212-fimc", EXYNOS4_PA_FIMC2,
-+				"exynos4-fimc.2", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos4212-fimc", EXYNOS4_PA_FIMC3,
-+				"exynos4-fimc.3", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos4212-fimc-lite", EXYNOS4_PA_FIMC_LITE(0),
-+				"exynos-fimc-lite.0", NULL),
-+	OF_DEV_AUXDATA("samsung,exynos4212-fimc-lite", EXYNOS4_PA_FIMC_LITE(1),
-+				"exynos-fimc-lite.1", NULL),
- 	{},
- };
+Grant:
+
+> If the soc_devices are getting triggered on that and they shouldn't be,
+> then we need a mechanism in the soc_bridge node to kick out of that
+> behavoir for its children.
+
+Is this what you were thinking?
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 0125524..cf9dac5 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -110,6 +110,25 @@ static int of_bus_pci_match(struct device_node *np)
+ 	return !strcmp(np->type, "pci") || !strcmp(np->type, "vci");
+ }
  
++/*
++ * When simple-bus is nested below a PCI bus then we treat the simple-bus
++ * as having the same 3 address/2 size semantics as the PCI bus, but create
++ * platform devices like normal.
++ */
++static int of_bus_platform_pci_match(struct device_node *np)
++{
++	struct device_node *parent;
++	int parent_is_pci;
++
++	parent = of_get_parent(np);
++	if (parent == NULL)
++		return 0;
++	parent_is_pci = of_bus_pci_match(parent);
++	of_node_put(parent);
++
++	return parent_is_pci && of_device_is_compatible(np, "simple-bus");
++}
++
+ static void of_bus_pci_count_cells(struct device_node *np,
+ 				   int *addrc, int *sizec)
+ {
+@@ -293,6 +312,16 @@ static unsigned int of_bus_isa_get_flags(const __be32 *addr)
+ 
+ static struct of_bus of_busses[] = {
+ #ifdef CONFIG_PCI
++	/* Platform devices beneath a PCI device */
++	{
++		.name = "platform_pci",
++		.addresses = "reg",
++		.match = of_bus_platform_pci_match,
++		.count_cells = of_bus_pci_count_cells,
++		.map = of_bus_pci_map,
++		.translate = of_bus_pci_translate,
++		.get_flags = of_bus_pci_get_flags,
++	},
+ 	/* PCI */
+ 	{
+ 		.name = "pci",
 -- 
-1.7.9.5
+1.7.5.4
