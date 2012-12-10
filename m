@@ -1,42 +1,61 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH RFC 06/13] of: Add empty of_find_device_by_node() function
- definition
-Date: Mon, 10 Dec 2012 20:41:32 +0100
-Message-ID: <1355168499-5847-7-git-send-email-s.nawrocki@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH RFC 01/13] i2c: add dummy inline functions for when
+ CONFIG_OF_I2C(_MODULE) isn't defined
+Date: Mon, 10 Dec 2012 20:41:27 +0100
+Message-ID: <1355168499-5847-2-git-send-email-s.nawrocki@samsung.com>
 References: <1355168499-5847-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1355168499-5847-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: g.liakhovetski@gmx.de, linux-media@vger.kernel.org
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1355168499-5847-1-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: g.liakhovetski-Mmb7MZpHnFY@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This allows users to be compiled without excluding this function
-call with preprocessor directives when CONFIG_OF_DEVICE is disabled.
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+If CONFIG_OF_I2C and CONFIG_OF_I2C_MODULE are undefined no declaration of
+of_find_i2c_device_by_node and of_find_i2c_adapter_by_node will be
+available. Add dummy inline functions to avoid compilation breakage.
+
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 ---
- include/linux/of_platform.h |    7 +++++++
- 1 file changed, 7 insertions(+)
+ include/linux/of_i2c.h |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index b47d204..d8f587f 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -96,6 +96,13 @@ extern int of_platform_populate(struct device_node *root,
- 				struct device *parent);
- #endif /* CONFIG_OF_ADDRESS */
- 
-+#else  /* CONFIG_OF_DEVICE */
-+static inline struct platform_device *of_find_device_by_node(
-+					struct device_node *np)
+diff --git a/include/linux/of_i2c.h b/include/linux/of_i2c.h
+index 1cb775f..cfb545c 100644
+--- a/include/linux/of_i2c.h
++++ b/include/linux/of_i2c.h
+@@ -29,6 +29,18 @@ static inline void of_i2c_register_devices(struct i2c_adapter *adap)
+ {
+ 	return;
+ }
++
++static inline struct i2c_client *of_find_i2c_device_by_node(struct device_node *node)
 +{
 +	return NULL;
 +}
 +
- #endif /* CONFIG_OF_DEVICE */
++/* must call put_device() when done with returned i2c_adapter device */
++static inline struct i2c_adapter *of_find_i2c_adapter_by_node(
++						struct device_node *node)
++{
++	return NULL;
++}
+ #endif /* CONFIG_OF_I2C */
  
- #if !defined(CONFIG_OF_ADDRESS)
+ #endif /* __LINUX_OF_I2C_H */
 -- 
 1.7.9.5
