@@ -1,27 +1,85 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V3 2/3] dmaengine: dw_dmac: Enhance device tree support
-Date: Mon, 10 Dec 2012 22:21:06 +0000
-Message-ID: <201212102221.06614.arnd@arndb.de>
-References: <3100e691db3f94c22afd98b609a1568d7e70dfe7.1350360935.git.viresh.kumar@linaro.org> <169edae67b9a051ca7448e5b62c3cd2c5c1db470.1350360935.git.viresh.kumar@linaro.org> <201212102208.52347.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201212102208.52347.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Viresh Kumar <viresh.kumar@linaro.org>, vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: pci and pcie device-tree binding - range No cells
+Date: Mon, 10 Dec 2012 21:43:23 +0000
+Message-ID: <20121210214323.6EA733E0921@localhost>
+References: <50C5D387.90908@monstr.eu> <50C5F11D.9060006@gmail.com> <50C5FA3E.9030303@monstr.eu> <50C5FE0F.3050108@gmail.com> <50C601B6.2080107@monstr.eu>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <50C601B6.2080107@monstr.eu>
+Sender: linux-pci-owner@vger.kernel.org
+To: monstr@monstr.eu, Rob Herring <robherring2@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-pci@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thierry Reding <thierry.reding@avionic-design.de>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 10 December 2012, Arnd Bergmann wrote:
-> The build bug is not the problem however, but the abuse of the
-> API is. Andy, are you sure you understood what this does when
-> you gave you Reviewed-by comment?
+On Mon, 10 Dec 2012 16:37:26 +0100, Michal Simek <monstr@monstr.eu> wrote:
+> On 12/10/2012 04:21 PM, Rob Herring wrote:
+> > On 12/10/2012 09:05 AM, Michal Simek wrote:
+> >> On 12/10/2012 03:26 PM, Rob Herring wrote:
+> >>> On 12/10/2012 06:20 AM, Michal Simek wrote:
+> >>>> Hi Grant and others,
+> >>>>
+> >>>> I have a question regarding number of cells in ranges property
+> >>>> for pci and pcie nodes.
+> >>>>
+> >>>> Linux pci/pcie powerpc DTSes contain 7 cells (xpedite5370.dts,
+> >>>> sequoia.dts, etc)
+> >>>> but also 6 cells format too (mpc832x_mds.dts)
+> >>>>
+> >>>> Here is shown 6 cells ranges format and describe
+> >>>> http://devicetree.org/Device_Tree_Usage#PCI_Host_Bridge
+> >>>>
+> >>>> And also in documentation in the linux
+> >>>> Documentation/devicetree/bindings/pci/83xx-512x-pci.txt
+> >>>>
+> >>>> Both format uses:
+> >>>> #size-cells = <2>;
+> >>>> #address-cells = <3>;
+> >>>>
+> >>>> What is valid format?
+> >>>
+> >>> Both. 7 cells are valid when the host (parent) bus is 64-bit and 6 cells
+> >>> are valid when the host bus is 32-bit. The ranges property is <<child
+> >>> address> <parent address> <size>>. The parent address #address-cells is
+> >>> taken from the parent node.
+> >>
+> >> Ok. Got it.
+> >>
+> >> Here is what we use on zynq and microblaze - both 32bit which should be
+> >> fine.
+> >>
+> >>      ps7_axi_interconnect_0: axi@0 {
+> >>          #address-cells = <1>;
+> >>          #size-cells = <1>;
+> >>          axi_pcie_0: axi-pcie@50000000 {
+> >>              #address-cells = <3>;
+> >>              #size-cells = <2>;
+> >>              compatible = "xlnx,axi-pcie-1.05.a";
+> >>              ranges = < 0x02000000 0 0x60000000 0x60000000 0 0x10000000 >;
+> >>              ...
+> >>          }
+> >>      }
+> >>
+> >> What I am wondering is pci_process_bridge_OF_ranges() at
+> >> arch/powerpc/kernel/pci-common.c
+> >> where there are used some hardcoded values which should be probably
+> >> loaded from device-tree.
+> >>
+> >> For example:
+> >> 683         int np = pna + 5;
+> >> ...
+> >> 702                 pci_addr = of_read_number(ranges + 1, 2);
+> >> 703                 cpu_addr = of_translate_address(dev, ranges + 3);
+> >> 704                 size = of_read_number(ranges + pna + 3, 2);
+> >
+> > These would always be correct whether you have 6 or 7 cells. pna is the
+> > parent bus address cells size. The pci address is fixed at 3 cells.
 > 
+> Sorry for my pci ignorance (have never got hw for mb/zynq)
+> I just want to get better overview how we should we our drivers to be compatible.
+> 
+> Does it mean that pci is supposed be always 64 bit wide?
+> And there is no option to have just 32bit values.
 
-Ah, I just saw that Andy had the right intuition when commenting on
-it at first, but Viresh managed to convince him otherwise, and appearently
-neither had followed the discussion about the dmaengine bindings...
+Yes, PCIe addressing is always 64 bits wide. Even on 32bit PCI systems
+we use 64 bit PCI addressing in the device tree.
 
-	Arnd
+g.
