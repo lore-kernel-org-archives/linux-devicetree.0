@@ -1,82 +1,57 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] mtd: nand: davinci: fix the binding documentation
-Date: Mon, 10 Dec 2012 23:00:43 +0000
-Message-ID: <20121210230043.150293E081F@localhost>
-References: <1354871374-4984-1-git-send-email-anilkumar.v@ti.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1354871374-4984-1-git-send-email-anilkumar.v@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
-Cc: rob@landley.net, nsekhar@ti.com, rob.herring@calxeda.com, hs@denx.de, David.Woodhouse@intel.com, artem.bityutskiy@linux.intel.com, "Kumar, Anil" <anilkumar.v@ti.com>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: pci and pcie device-tree binding - range No cells
+Date: Mon, 10 Dec 2012 13:11:38 -1000
+Message-ID: <50C66C2A.7010102@firmworks.com>
+References: <50C5D387.90908@monstr.eu> <50C5F11D.9060006@gmail.com>
+ <50C5FA3E.9030303@monstr.eu> <50C5FE0F.3050108@gmail.com>
+ <50C601B6.2080107@monstr.eu> <20121210214323.6EA733E0921@localhost>
+ <1355179097.19932.5.camel@pasglop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1355179097.19932.5.camel@pasglop>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 7 Dec 2012 14:39:34 +0530, "Kumar, Anil" <anilkumar.v@ti.com> wrote:
-> Since the aemif driver conversion to DT along with
-> its movement to drivers/ folder is not yet done,
-> fix NAND binding documentation to have NAND specific
-> DT details only.
+On 12/10/2012 12:38 PM, Benjamin Herrenschmidt wrote:
+> On Mon, 2012-12-10 at 21:43 +0000, Grant Likely wrote:
+>>> Sorry for my pci ignorance (have never got hw for mb/zynq)
+>>> I just want to get better overview how we should we our drivers to
+>> be compatible.
+>>>
+>>> Does it mean that pci is supposed be always 64 bit wide?
+>>> And there is no option to have just 32bit values.
+>>
+>> Yes, PCIe addressing is always 64 bits wide. Even on 32bit PCI systems
+>> we use 64 bit PCI addressing in the device tree.
 > 
-> Signed-off-by: Kumar, Anil <anilkumar.v@ti.com>
+> Right. The size & format of an address cell for PCI is specified in the
+> OF PCI bindings and we follow that binding. It's always 3 cells.
 
-Applied, thanks.
+.. and the reason why it must be 3 cells, even if the host PCI bus only
+supports 32-bit addressing, is because a plug-in PCI card has no way of
+knowing what the host supports.
 
-g.
 
-> ---
-> :100644 100644 e37241f... 49fc7ad... M	Documentation/devicetree/bindings/arm/davinci/nand.txt
->  .../devicetree/bindings/arm/davinci/nand.txt       |   37 ++++++-------------
->  1 files changed, 12 insertions(+), 25 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-> index e37241f..49fc7ad 100644
-> --- a/Documentation/devicetree/bindings/arm/davinci/nand.txt
-> +++ b/Documentation/devicetree/bindings/arm/davinci/nand.txt
-> @@ -23,29 +23,16 @@ Recommended properties :
->  - ti,davinci-nand-buswidth: buswidth 8 or 16
->  - ti,davinci-nand-use-bbt: use flash based bad block table support.
->  
-> -Example (enbw_cmc board):
-> -aemif@60000000 {
-> -	compatible = "ti,davinci-aemif";
-> -	#address-cells = <2>;
-> -	#size-cells = <1>;
-> -	reg = <0x68000000 0x80000>;
-> -	ranges = <2 0 0x60000000 0x02000000
-> -		  3 0 0x62000000 0x02000000
-> -		  4 0 0x64000000 0x02000000
-> -		  5 0 0x66000000 0x02000000
-> -		  6 0 0x68000000 0x02000000>;
-> -	nand@3,0 {
-> -		compatible = "ti,davinci-nand";
-> -		reg = <3 0x0 0x807ff
-> -			6 0x0 0x8000>;
-> -		#address-cells = <1>;
-> -		#size-cells = <1>;
-> -		ti,davinci-chipselect = <1>;
-> -		ti,davinci-mask-ale = <0>;
-> -		ti,davinci-mask-cle = <0>;
-> -		ti,davinci-mask-chipsel = <0>;
-> -		ti,davinci-ecc-mode = "hw";
-> -		ti,davinci-ecc-bits = <4>;
-> -		ti,davinci-nand-use-bbt;
-> -	};
-> +Example(da850 EVM ):
-> +nand_cs3@62000000 {
-> +	compatible = "ti,davinci-nand";
-> +	reg = <0x62000000 0x807ff
-> +		0x68000000 0x8000>;
-> +	ti,davinci-chipselect = <1>;
-> +	ti,davinci-mask-ale = <0>;
-> +	ti,davinci-mask-cle = <0>;
-> +	ti,davinci-mask-chipsel = <0>;
-> +	ti,davinci-ecc-mode = "hw";
-> +	ti,davinci-ecc-bits = <4>;
-> +	ti,davinci-nand-use-bbt;
->  };
-> -- 
-> 1.7.4.1
+> Cheers,
+> Ben.
 > 
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
