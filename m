@@ -1,72 +1,33 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: RFC: New release for DTC?
-Date: Mon, 10 Dec 2012 14:40:42 -0800
-Message-ID: <CAPnjgZ23ofzihzCMb-i6NMDFuMrYabfo2JGeSPKz+E3gzqDnLA@mail.gmail.com>
-References: <201208232015.39613.yann.morin.1998@free.fr>
- <20120824013625.GA8067@truffula.fritz.box>
- <201211171250.08597.vapier@gentoo.org>
- <20121118000013.6964A3E08F7@localhost>
+From: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Subject: Re: pci and pcie device-tree binding - range No cells
+Date: Tue, 11 Dec 2012 09:38:17 +1100
+Message-ID: <1355179097.19932.5.camel@pasglop>
+References: <50C5D387.90908@monstr.eu> <50C5F11D.9060006@gmail.com>
+	 <50C5FA3E.9030303@monstr.eu> <50C5FE0F.3050108@gmail.com>
+	 <50C601B6.2080107@monstr.eu> <20121210214323.6EA733E0921@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121118000013.6964A3E08F7@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20121210214323.6EA733E0921@localhost>
+Sender: linux-pci-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: monstr@monstr.eu, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-pci@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Thierry Reding <thierry.reding@avionic-design.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 2012-12-10 at 21:43 +0000, Grant Likely wrote:
+> > Sorry for my pci ignorance (have never got hw for mb/zynq)
+> > I just want to get better overview how we should we our drivers to
+> be compatible.
+> > 
+> > Does it mean that pci is supposed be always 64 bit wide?
+> > And there is no option to have just 32bit values.
+> 
+> Yes, PCIe addressing is always 64 bits wide. Even on 32bit PCI systems
+> we use 64 bit PCI addressing in the device tree.
 
-On Sat, Nov 17, 2012 at 4:00 PM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Sat, 17 Nov 2012 12:50:07 -0500, Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org> wrote:
->> On Thursday 23 August 2012 21:36:25 David Gibson wrote:
->> > On Thu, Aug 23, 2012 at 08:15:39PM +0200, Yann E. MORIN wrote:
->> > > Following advice from Jon Loeliger, I would suggest that a new release
->> > > of DTC be tagged and packaged.
->> > >
->> > > It is important for some projects to rely on a released version, rather
->> > > than use a random cset from the repository. Comes to mind, the automated
->> > > build-systems, such as buildroot.
->> > >
->> > > Of course, I can help, if need be! ;-)
->> > >
->> > > Are there any others who think that a release would make sense?
->> >
->> > This has been a bit of a perrenial problem.  dtc development has been
->> > sufficiently gradual that there haven't been many obvious points for
->> > making new releases.  dtc developers (i.e. Jon and my, mostly) don't
->> > feel much pain from the lack of releases, since the git snapshots
->> > generally work well (thanks to limited scope and a good testsuite).
->> >
->> > I wonder if we should move to a model of just making a release every 3
->> > or 6 months from whatever happens to be in the tree at the time
->> > (barring obvious known breakage, of course).
->>
->> yes please.  even just a version that uses datestamps would be fine.
->> -mike
->
-> Fine by me.
+Right. The size & format of an address cell for PCI is specified in the
+OF PCI bindings and we follow that binding. It's always 3 cells.
 
-So is this happening? I agree a regular release would be useful, and I
-think it has been about 18 months since the last release.
-
-Regards,
-Simon
-
->
-> g.
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+Cheers,
+Ben.
