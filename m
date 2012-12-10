@@ -1,81 +1,173 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: Sharing PCIE driver between Microblaze and Arm zynq
-Date: Mon, 10 Dec 2012 08:36:40 +0100
-Message-ID: <CAHTX3dJ-x2ewDWjbSp0kOwJ5N0XtKa98gFOAKD_AiYeyJp4RYA@mail.gmail.com>
-References: <CAHTX3dLxbVxn+D+AV7L0VsGYFOjas3AJ_3M_xncVfxp02FCy=Q@mail.gmail.com>
-	<CAErSpo6xRdwzTuPPqnmvmHSp7awnV7=Z85eWFfktb_hm9Aad_A@mail.gmail.com>
-	<50C1BA9D.5010406@monstr.eu>
-	<201212071907.38366.arnd@arndb.de>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 0/3] add mie driver for exynos
+Date: Mon, 10 Dec 2012 15:26:03 +0900
+Message-ID: <CAAQKjZM278TfT=dcVJoKRPqWpdChaJv2N6v4O_D-xsxJOLKeRQ@mail.gmail.com>
+References: <1354795695-28009-1-git-send-email-rcsekar@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <201212071907.38366.arnd@arndb.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, LKML <linux-kernel@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Olof Johansson <olof@lixom.net>, linux-arch@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, John Linn <John.Linn@xilinx.com>, John Williams <jwilliams@xilinx.com>, linux-pci@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============1278951949=="
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-Reply-To: <1354795695-28009-1-git-send-email-rcsekar@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: "R. Chandrasekar" <rcsekar@samsung.com>
+Cc: kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, rcsekar.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-2012/12/7 Arnd Bergmann <arnd@arndb.de>:
-> On Friday 07 December 2012, Michal Simek wrote:
->> On 12/06/2012 10:27 PM, Bjorn Helgaas wrote:
->> > [+cc linux-pci]
->> >
->> > On Thu, Dec 6, 2012 at 7:23 AM, Michal Simek <michal.simek@xilinx.com> wrote:
->> >> Hi guys,
->> >>
->> >> I have a question regarding to sharing generic OF pcie driver between
->> >> two architectures MB and ARM Zynq.
->> >> Is drivers/pci/pcie location good for it?
->> >> Make no sense to have the same driver in two locations.
->> >
->> > I think you're talking about a PCI host bridge driver.  It would
->> > definitely be nice to move toward a generic, shared driver.  Host
->> > bridge drivers are responsible for enumerating the PCI hierarchy below
->> > the bridge.  Enumeration is not really PCIe-specific, so I wouldn't
->> > put it in drivers/pci/pcie.
->>
->> Not a PCI expert, just trying to find out the proper location for this shared driver.
+--===============1278951949==
+Content-Type: multipart/alternative; boundary=e89a8fb1f7eebbf64204d079a3f8
+
+--e89a8fb1f7eebbf64204d079a3f8
+Content-Type: text/plain; charset=ISO-8859-1
+
+2012/12/6 R. Chandrasekar <rcsekar@samsung.com>
+
+> From: "R. Chandrasekar" <rcsekar@samsung.com>
 >
-> I'd suggest creating a drivers/pci/host directory. We will have more of
-> these in the future. AFAIK, there is no fully generic (architecture
-> independent) way to interface a PCI host driver to the PCI subsystem,
-> but I think we are getting closer to that. You are probably fairly
-> free to modify the microblaze architecture specific code though if needed.
-
-yep.
-
-
->> >> Is using readl/writel IO functions in this driver the best option
->> >> which we can have?
->> >> Or is there any other recommendation?
->> >
->> > I'm not really a driver person, but if you're writing a new driver,
->> > wouldn't you use the iomap interfaces (ioremap(), ioread32(), etc)
->> > rather than readl()?
->>
->> That driver exists but it is not in mainline and it is better to directly
->> add it to proper location with correct io functions.
->> The question is if ioread/iowrite functions are correct one.
->> PowerPC io-defs.h suggests that readl/writel should be used for PCI.
+> this patch set adds the driver support for the dithering functionality of
+> the
+> mobile image enhancement (mie) module.
 >
-> ioread32/iowrite32 are defined to behave the same way readl/writel regarding
-> addressing modes and barriers, but also allow operating on __iomem pointers
-> that were returned from ioport_map(). You probably don't need that.
+> device tree support is added for mie.
 >
-> Some architectures like powerpc have their own accessors for on-chip MMIO
-> areas, but ARM does not. The PowerPC rule is that you must use either
-> readl/writel or ioread32/iowrite32 to access devices connected to a PCI
-> bus, but you would not necessarily do that for the PCI host controller
-> itself on PowerPC.
+> fimd adds the mie module as plugin and calls the dithering function.
+> dithere is
+> required when the panels bpp is less then fimd output.
+>
+> though mie mie has other functionalities, current system uses only
+> dithereing.
+>
+>
+Please, move mie module into drivers/video/exynos. The mie is a interface
+between fimd and lcd panel(or mipi-dsi, eDP) to enhance image to be
+displayed. And it seems like that this doesn't need drm framework-relevant
+interfaces, such as gem.
 
-ok.
+And also, please refer to the below link, Common Display Framework, for
+more generic way.
+
+http://lists.freedesktop.org/archives/dri-devel/2012-November/030888.html
 
 Thanks,
-Michal
+Inki Dae
 
 
--- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel 2.6 Microblaze Linux - http://www.monstr.eu/fdt/
-Microblaze U-BOOT custodian
+> R. Chandrasekar (3):
+>   DTS: exynos: add device tree support for exynos mie
+>   drm: fimd: add mie plugin support for dithering
+>   drm: mie: add mie driver for exynos
+>
+>  arch/arm/boot/dts/exynos5250.dtsi               |    7 +-
+>  drivers/gpu/drm/exynos/Kconfig                  |    7 +
+>  drivers/gpu/drm/exynos/Makefile                 |    1 +
+>  drivers/gpu/drm/exynos/exynos_drm_fimd.c        |   58 +++++-
+>  drivers/gpu/drm/exynos/exynos_drm_fimd_common.h |   20 ++
+>  drivers/gpu/drm/exynos/exynos_drm_mie.c         |  250
+> +++++++++++++++++++++++
+>  drivers/gpu/drm/exynos/exynos_drm_mie.h         |   50 +++++
+>  drivers/gpu/drm/exynos/exynos_regs-mie.h        |   75 +++++++
+>  8 files changed, 465 insertions(+), 3 deletions(-)
+>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_fimd_common.h
+>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_mie.c
+>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_mie.h
+>  create mode 100644 drivers/gpu/drm/exynos/exynos_regs-mie.h
+>
+> --
+> 1.7.9.5
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
+
+--e89a8fb1f7eebbf64204d079a3f8
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+<br><br><div class=3D"gmail_quote">2012/12/6 R. Chandrasekar <span dir=3D"l=
+tr">&lt;<a href=3D"mailto:rcsekar@samsung.com" target=3D"_blank">rcsekar@sa=
+msung.com</a>&gt;</span><br><blockquote class=3D"gmail_quote" style=3D"marg=
+in:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
+From: &quot;R. Chandrasekar&quot; &lt;<a href=3D"mailto:rcsekar@samsung.com=
+">rcsekar@samsung.com</a>&gt;<br>
+<br>
+this patch set adds the driver support for the dithering functionality of t=
+he<br>
+mobile image enhancement (mie) module.<br>
+<br>
+device tree support is added for mie.<br>
+<br>
+fimd adds the mie module as plugin and calls the dithering function. dither=
+e is<br>
+required when the panels bpp is less then fimd output.<br>
+<br>
+though mie mie has other functionalities, current system uses only ditherei=
+ng.<br>
+<br></blockquote><div><br>Please, move mie module into drivers/video/exynos=
+. The mie is a interface between fimd and lcd panel(or mipi-dsi, eDP) to en=
+hance image to be displayed. And it seems like that this doesn&#39;t need d=
+rm framework-relevant interfaces, such as gem.<br>
+<br>And also, please refer to the below link, Common Display Framework, for=
+ more generic way.<br>=A0=A0=A0=A0=A0=A0=A0 <a href=3D"http://lists.freedes=
+ktop.org/archives/dri-devel/2012-November/030888.html">http://lists.freedes=
+ktop.org/archives/dri-devel/2012-November/030888.html</a><br>
+<br>Thanks,<br>Inki Dae<br>=A0</div><blockquote class=3D"gmail_quote" style=
+=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
+R. Chandrasekar (3):<br>
+=A0 DTS: exynos: add device tree support for exynos mie<br>
+=A0 drm: fimd: add mie plugin support for dithering<br>
+=A0 drm: mie: add mie driver for exynos<br>
+<br>
+=A0arch/arm/boot/dts/exynos5250.dtsi =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =A07=
+ +-<br>
+=A0drivers/gpu/drm/exynos/Kconfig =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0| =A0 =
+=A07 +<br>
+=A0drivers/gpu/drm/exynos/Makefile =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 | =A0 =
+=A01 +<br>
+=A0drivers/gpu/drm/exynos/exynos_drm_fimd.c =A0 =A0 =A0 =A0| =A0 58 +++++-<=
+br>
+=A0drivers/gpu/drm/exynos/exynos_drm_fimd_common.h | =A0 20 ++<br>
+=A0drivers/gpu/drm/exynos/exynos_drm_mie.c =A0 =A0 =A0 =A0 | =A0250 +++++++=
+++++++++++++++++<br>
+=A0drivers/gpu/drm/exynos/exynos_drm_mie.h =A0 =A0 =A0 =A0 | =A0 50 +++++<b=
+r>
+=A0drivers/gpu/drm/exynos/exynos_regs-mie.h =A0 =A0 =A0 =A0| =A0 75 +++++++=
+<br>
+=A08 files changed, 465 insertions(+), 3 deletions(-)<br>
+=A0create mode 100644 drivers/gpu/drm/exynos/exynos_drm_fimd_common.h<br>
+=A0create mode 100644 drivers/gpu/drm/exynos/exynos_drm_mie.c<br>
+=A0create mode 100644 drivers/gpu/drm/exynos/exynos_drm_mie.h<br>
+=A0create mode 100644 drivers/gpu/drm/exynos/exynos_regs-mie.h<br>
+<span class=3D"HOEnZb"><font color=3D"#888888"><br>
+--<br>
+1.7.9.5<br>
+<br>
+_______________________________________________<br>
+dri-devel mailing list<br>
+<a href=3D"mailto:dri-devel@lists.freedesktop.org">dri-devel@lists.freedesk=
+top.org</a><br>
+<a href=3D"http://lists.freedesktop.org/mailman/listinfo/dri-devel" target=
+=3D"_blank">http://lists.freedesktop.org/mailman/listinfo/dri-devel</a><br>
+</font></span></blockquote></div><br>
+
+--e89a8fb1f7eebbf64204d079a3f8--
+
+--===============1278951949==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============1278951949==--
