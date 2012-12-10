@@ -1,102 +1,48 @@
-From: =?ISO-8859-1?Q?St=E9phane_Marchesin?=
-	<stephane.marchesin@gmail.com>
-Subject: Re: [PATCH 0/3] add mie driver for exynos
-Date: Sun, 9 Dec 2012 23:45:47 -0800
-Message-ID: <CACP_E+JdiVxD05k0F57bmXWw1WKiS_NNviXOXYUVegwi5MnrsQ@mail.gmail.com>
-References: <1354795695-28009-1-git-send-email-rcsekar@samsung.com> <CAAQKjZM278TfT=dcVJoKRPqWpdChaJv2N6v4O_D-xsxJOLKeRQ@mail.gmail.com>
+From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 2/3] regulator: max77686: Add support for various
+ operating modes
+Date: Mon, 10 Dec 2012 14:06:49 +0530
+Message-ID: <CAM4voanevLVXW5_WFts2cjDi-5aAbj1_2=EN1amfp14KnKXNug@mail.gmail.com>
+References: <1355120784-31118-1-git-send-email-a.kesavan@samsung.com>
+ <1355120784-31118-2-git-send-email-a.kesavan@samsung.com>
+ <1355120784-31118-3-git-send-email-a.kesavan@samsung.com>
+ <20121210064650.GJ10927@opensource.wolfsonmicro.com>
+ <loom.20121210T091624-754@post.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAQKjZM278TfT=dcVJoKRPqWpdChaJv2N6v4O_D-xsxJOLKeRQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: "R. Chandrasekar" <rcsekar@samsung.com>, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, rcsekar.samsung@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <loom.20121210T091624-754-eS7Uydv5nfjZ+VzJOa5vwg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lrg-l0cyMroinI0@public.gmane.org
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 9, 2012 at 10:26 PM, Inki Dae <inki.dae@samsung.com> wrote:
->
->
-> 2012/12/6 R. Chandrasekar <rcsekar@samsung.com>
->
->> From: "R. Chandrasekar" <rcsekar@samsung.com>
->>
->> this patch set adds the driver support for the dithering functionali=
-ty of
->> the
->> mobile image enhancement (mie) module.
->>
->> device tree support is added for mie.
->>
->> fimd adds the mie module as plugin and calls the dithering function.
->> dithere is
->> required when the panels bpp is less then fimd output.
->>
->> though mie mie has other functionalities, current system uses only
->> dithereing.
->>
->
-> Please, move mie module into drivers/video/exynos. The mie is a inter=
-face
-> between fimd and lcd panel(or mipi-dsi, eDP) to enhance image to be
-> displayed. And it seems like that this doesn't need drm framework-rel=
-evant
-> interfaces, such as gem.
+Adding missed Cc's
 
-Well, if you want to support it from the DRM, it should live in
-drivers/gpu/drm, and I don't think you should add another platform
-driver in the first place. The profusion of platform drivers in exynos
-makes it really difficult to support suspend/resume and initialization
-properly as many devices which operate separately need to sync through
-global variables.
-
-St=E9phane
-
-
+On Mon, Dec 10, 2012 at 1:49 PM, Abhilash Kesavan
+<kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Mark Brown <broonie <at> opensource.wolfsonmicro.com> writes:
 >
-> And also, please refer to the below link, Common Display Framework, f=
-or more
-> generic way.
->
-> http://lists.freedesktop.org/archives/dri-devel/2012-November/030888.=
-html
->
-> Thanks,
-> Inki Dae
->
+> [...]
+>> Binding documenation is mandatory for any new OF properties, please add
+>> this.
+> Patch 3/3 of this series adds documentation for the max77686-opmode property.
 >>
->> R. Chandrasekar (3):
->>   DTS: exynos: add device tree support for exynos mie
->>   drm: fimd: add mie plugin support for dithering
->>   drm: mie: add mie driver for exynos
->>
->>  arch/arm/boot/dts/exynos5250.dtsi               |    7 +-
->>  drivers/gpu/drm/exynos/Kconfig                  |    7 +
->>  drivers/gpu/drm/exynos/Makefile                 |    1 +
->>  drivers/gpu/drm/exynos/exynos_drm_fimd.c        |   58 +++++-
->>  drivers/gpu/drm/exynos/exynos_drm_fimd_common.h |   20 ++
->>  drivers/gpu/drm/exynos/exynos_drm_mie.c         |  250
->> +++++++++++++++++++++++
->>  drivers/gpu/drm/exynos/exynos_drm_mie.h         |   50 +++++
->>  drivers/gpu/drm/exynos/exynos_regs-mie.h        |   75 +++++++
->>  8 files changed, 465 insertions(+), 3 deletions(-)
->>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_fimd_common.h
->>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_mie.c
->>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_mie.h
->>  create mode 100644 drivers/gpu/drm/exynos/exynos_regs-mie.h
->>
->> --
->> 1.7.9.5
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> http://lists.freedesktop.org/mailman/listinfo/dri-devel
 >
 >
 >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
