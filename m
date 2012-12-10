@@ -1,80 +1,90 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: pci and pcie device-tree binding - range No cells
-Date: Mon, 10 Dec 2012 18:15:25 +0100
-Message-ID: <20121210181525.3ccd87c6@skate>
-References: <50C5D387.90908@monstr.eu>
-	<50C5F11D.9060006@gmail.com>
-	<50C5FA3E.9030303@monstr.eu>
-	<50C5FE0F.3050108@gmail.com>
-	<50C601B6.2080107@monstr.eu>
-	<AE90C24D6B3A694183C094C60CF0A2F6026B70E7@saturn3.aculab.com>
-	<50C60839.70603@monstr.eu>
+From: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] mtd: cfi_cmdset_0002: Support Persistent Protection Bits
+ (PPB) locking
+Date: Mon, 10 Dec 2012 19:40:58 +0100
+Message-ID: <50C62CBA.5040401@denx.de>
+References: <1354864954-30290-1-git-send-email-sr@denx.de>
+ <1355151644.2657.41.camel@sauron.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <50C60839.70603@monstr.eu>
-Sender: linux-pci-owner@vger.kernel.org
-To: monstr@monstr.eu
-Cc: David Laight <David.Laight@ACULAB.COM>, Rob Herring <robherring2@gmail.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1355151644.2657.41.camel-Bxnoe/o8FG+Ef9UqXRslZEEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Holger Brunck <holger.brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Michal Simek,
+On 12/10/2012 04:00 PM, Artem Bityutskiy wrote:
+> On Fri, 2012-12-07 at 08:22 +0100, Stefan Roese wrote:
+>> +       /*
+>> +        * Wait for some time as unlocking of all sectors takes quite long
+>> +        */
+>> +       timeo = jiffies + (2 * HZ);     /* 2s max (un)locking */
+> 
+> Please, use msecs_to_jiffies() instead.
 
-On Mon, 10 Dec 2012 17:05:13 +0100, Michal Simek wrote:
+Sure, thats better.
 
-> CC: Thomas: I think it will be interesting to see this discussion
-> because you are using size-cell/address-cells equal 1.
-> http://www.spinics.net/lists/arm-kernel/msg211839.html
+>> +       for (;;) {
+>> +               if (chip_ready(map, adr))
+>> +                       break;
+>> +
+>> +               if (time_after(jiffies, timeo)) {
+>> +                       printk(KERN_ERR "Waiting for chip to be ready timed out.\n");
+>> +                       ret = -EIO;
+>> +                       break;
+>> +               }
+>> +               mutex_unlock(&chip->mutex);
+>> +               cfi_udelay(1);
+>> +               mutex_lock(&chip->mutex);
+>> +       } 
+> 
+> Would you please educate me a bit and explain what is protected by
+> 'chip->mutex' and by 'get_chip()'.
 
-Thanks for Cc'ing me.
+AFAIK, chip->mutex protects the access to the chip itself. So that
+sequences are not interrupted.
 
-The thing is that on Marvell SoCs, we don't need to describe statically
-in the Device Tree the translation between CPU addresses and PCI device
-addresses, because those translations are set up dynamically at run
-time through address decoding windows.
+I have to admit that I haven't looked into get_chip() so far. It seems
+to handle a state machine. Normally (idle state) it will just fall
+through (FL_READY).
 
-Marvell SoCs have up to 20 configurable address windows, which allow
-you, at run time, to say "I would like the range from physical address
-0xYYYYYYYY to 0xZZZZZZZZ to correspond to the PCIe device in port 1,
-lane 2, or to the NAND, or to this or that device". Therefore, in the
-PCIe driver I proposed for the Armada 370/XP SoCs [1], there is no need
-to encode all those ranges statically in the DT.
+> Why you need to drop the mutex here?
 
-The only "ranges" property I'm using is to allow the DT sub-nodes
-describing each PCIe port/lane to access the CPU registers that allow
-to see if the PCIe link is up or down, access the PCI configuration
-space and so on. So all ranges in my "ranges" property correspond to
-normal CPU registers, like the one you would put in the "reg" property
-for any device. The fact that those devices are PCIe is really
-orthogonal here.
+Not sure, that might not be necessary. Copy and past from another loop
+in the same file.
 
-Of course, I have no idea if I'm doing a correct usage of the DT, but I
-certainly don't need those 6 values ranges with bits to say if it's I/O
-space, memory space, bus number, device number and so on. The physical
-addresses at which I'm setting up my address decoding windows are
-decided dynamically at runtime, depending on the number of PCIe devices
-that are found in the different PCIe slots (for now, those windows have
-a statically defined size, but I'd ideally would like to size them to
-match exactly the size of the PCIe device memory, in order to avoid
-wasting physical address space, but I haven't found how to get the size
-needed for each PCIe device during the ARM pcibios initialization
-sequence).
+> Why is it not an ABBA deadlock to do this:
+> 
+> Task 1: In the loop above, has chip locked, doing
+>         mutex_lock(&chip->mutex);
+> 
+> Task 2: done mutex_lock(&chip->mutex), now doing
+>         ret = get_chip(map, chip, adr + chip->start, FL_LOCKING);
 
-For those willing to have a look at the PCIe patch set for Armada
-370/XP, see:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/136455.html.
-The core of the PCIe driver and its DT binding documentation is at
-http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/136711.html.
+I don't see two different locks/mutexes (only A) here. As get_chip()
+does no request any real mutex. Please correct me if I'm wrong.
 
-Thanks a lot for your comments,
+In many other places UDELAY() is called:
 
-Thomas
+#define UDELAY(map, chip, adr, usec)  \
+do {  \
+	mutex_unlock(&chip->mutex);  \
+	cfi_udelay(usec);  \
+	mutex_lock(&chip->mutex);  \
+} while (0)
 
-[1] that I hope to extend to cover previous Marvell SoCs as well, they
-    work basically the same way
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+So dropping this lock seems to be quite common in this driver.
+
+Thanks,
+Stefan
