@@ -1,102 +1,91 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] pwm: core: Export of_pwm_request() so client
- drivers can also use it
-Date: Mon, 10 Dec 2012 23:22:49 +0000
-Message-ID: <20121210232249.7356F3E081F@localhost>
-References: <1355133637-2784-1-git-send-email-peter.ujfalusi@ti.com>
- <1355133637-2784-4-git-send-email-peter.ujfalusi@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: pci and pcie device-tree binding - range No cells
+Date: Mon, 10 Dec 2012 17:24:44 -0600
+Message-ID: <50C66F3C.3010204@gmail.com>
+References: <50C5D387.90908@monstr.eu> <50C5F11D.9060006@gmail.com> <50C5FA3E.9030303@monstr.eu> <50C5FE0F.3050108@gmail.com> <50C601B6.2080107@monstr.eu> <AE90C24D6B3A694183C094C60CF0A2F6026B70E7@saturn3.aculab.com> <50C60839.70603@monstr.eu> <20121210181525.3ccd87c6@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355133637-2784-4-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20121210181525.3ccd87c6@skate>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: monstr@monstr.eu, David Laight <David.Laight@ACULAB.COM>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 10 Dec 2012 11:00:36 +0100, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org> wrote:
-> Allow client driver to use of_pwm_request() to get the pwm they need. This
-> is needed for drivers which handle more than one pwm separately, like
-> leds-pwm driver which have:
+On 12/10/2012 11:15 AM, Thomas Petazzoni wrote:
+> Dear Michal Simek,
 > 
-> pwmleds {
-> 	compatible = "pwm-leds";
-> 	kpad {
-> 		label = "omap4::keypad";
-> 		pwms = <&twl_pwm 0 7812500>;
-> 		max-brightness = <127>;
-> 	};
+> On Mon, 10 Dec 2012 17:05:13 +0100, Michal Simek wrote:
 > 
-> 	charging {
-> 		label = "omap4:green:chrg";
-> 		pwms = <&twl_pwmled 0 7812500>;
-> 		max-brightness = <255>;
-> 	};
-> };
+>> CC: Thomas: I think it will be interesting to see this discussion
+>> because you are using size-cell/address-cells equal 1.
+>> http://www.spinics.net/lists/arm-kernel/msg211839.html
 > 
-> in the dts files.
+> Thanks for Cc'ing me.
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+> The thing is that on Marvell SoCs, we don't need to describe statically
+> in the Device Tree the translation between CPU addresses and PCI device
+> addresses, because those translations are set up dynamically at run
+> time through address decoding windows.
+> 
+> Marvell SoCs have up to 20 configurable address windows, which allow
+> you, at run time, to say "I would like the range from physical address
+> 0xYYYYYYYY to 0xZZZZZZZZ to correspond to the PCIe device in port 1,
+> lane 2, or to the NAND, or to this or that device". Therefore, in the
+> PCIe driver I proposed for the Armada 370/XP SoCs [1], there is no need
+> to encode all those ranges statically in the DT.
 
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+That's not a unique feature. I'm not sure if any powerpc systems do that
+though.
 
-> ---
->  drivers/pwm/core.c  | 2 +-
->  include/linux/pwm.h | 7 +++++++
->  2 files changed, 8 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-> index 903138b..3a7ebcc 100644
-> --- a/drivers/pwm/core.c
-> +++ b/drivers/pwm/core.c
-> @@ -486,7 +486,7 @@ static struct pwm_chip *of_node_to_pwmchip(struct device_node *np)
->   * becomes mandatory for devices that look up the PWM device via the con_id
->   * parameter.
->   */
-> -static struct pwm_device *of_pwm_request(struct device_node *np,
-> +struct pwm_device *of_pwm_request(struct device_node *np,
->  					 const char *con_id)
->  {
->  	struct pwm_device *pwm = NULL;
-> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-> index 6d661f3..d70ffe3 100644
-> --- a/include/linux/pwm.h
-> +++ b/include/linux/pwm.h
-> @@ -175,6 +175,7 @@ struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip *pc,
->  		const struct of_phandle_args *args);
->  
->  struct pwm_device *pwm_get(struct device *dev, const char *consumer);
-> +struct pwm_device *of_pwm_request(struct device_node *np, const char *con_id);
->  void pwm_put(struct pwm_device *pwm);
->  
->  struct pwm_device *devm_pwm_get(struct device *dev, const char *consumer);
-> @@ -213,6 +214,12 @@ static inline struct pwm_device *pwm_get(struct device *dev,
->  	return ERR_PTR(-ENODEV);
->  }
->  
-> +static inline struct pwm_device *of_pwm_request(struct device_node *np,
-> +						const char *con_id)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
->  static inline void pwm_put(struct pwm_device *pwm)
->  {
->  }
-> -- 
-> 1.8.0
-> 
+> The only "ranges" property I'm using is to allow the DT sub-nodes
+> describing each PCIe port/lane to access the CPU registers that allow
+> to see if the PCIe link is up or down, access the PCI configuration
+> space and so on. So all ranges in my "ranges" property correspond to
+> normal CPU registers, like the one you would put in the "reg" property
+> for any device. The fact that those devices are PCIe is really
+> orthogonal here.
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+That doesn't really sound right.
+
+> Of course, I have no idea if I'm doing a correct usage of the DT, but I
+> certainly don't need those 6 values ranges with bits to say if it's I/O
+> space, memory space, bus number, device number and so on. The physical
+> addresses at which I'm setting up my address decoding windows are
+> decided dynamically at runtime, depending on the number of PCIe devices
+> that are found in the different PCIe slots (for now, those windows have
+> a statically defined size, but I'd ideally would like to size them to
+> match exactly the size of the PCIe device memory, in order to avoid
+> wasting physical address space, but I haven't found how to get the size
+> needed for each PCIe device during the ARM pcibios initialization
+> sequence).
+
+I don't think deviating from the normal binding is the right approach.
+Perhaps the host driver should fill in the ranges property with the
+addresses it uses. Then any child devices will get the right address
+translation.
+
+Also, while the h/w may support practically any config, there are
+practical constraints of what Linux will use like there's no reason to
+support more than 64K i/o space. PCI memory addresses generally start at
+0x100000. You probably don't need more than 1 memory window per root
+complex (although prefetchable memory may also be needed).
+
+You could let the DT settings drive the address window configuration.
+
+Rob
+
+> For those willing to have a look at the PCIe patch set for Armada
+> 370/XP, see:
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/136455.html.
+> The core of the PCIe driver and its DT binding documentation is at
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/136711.html.
+> 
+> Thanks a lot for your comments,
+> 
+> Thomas
+> 
+> [1] that I hope to extend to cover previous Marvell SoCs as well, they
+>     work basically the same way
+> 
