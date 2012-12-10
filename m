@@ -1,40 +1,82 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 3/3] leds: leds-pwm: Add device tree bindings
-Date: Mon, 10 Dec 2012 22:37:22 +0000
-Message-ID: <20121210223722.461773E08FB@localhost>
-References: <1352731270-27534-1-git-send-email-peter.ujfalusi@ti.com> <1352731270-27534-4-git-send-email-peter.ujfalusi@ti.com> <20121206100052.EC8293E0E22@localhost> <50C0913B.9070802@ti.com> <20121207133453.800C43E0B87@localhost> <50C1F783.6090501@ti.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50C1F783.6090501@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] mtd: nand: davinci: fix the binding documentation
+Date: Mon, 10 Dec 2012 23:00:43 +0000
+Message-ID: <20121210230043.150293E081F@localhost>
+References: <1354871374-4984-1-git-send-email-anilkumar.v@ti.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1354871374-4984-1-git-send-email-anilkumar.v@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
+Cc: rob@landley.net, nsekhar@ti.com, rob.herring@calxeda.com, hs@denx.de, David.Woodhouse@intel.com, artem.bityutskiy@linux.intel.com, "Kumar, Anil" <anilkumar.v@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 7 Dec 2012 15:04:51 +0100, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> On 12/07/2012 02:34 PM, Grant Likely wrote:
-> > It really needs to look like this:
-> > 
-> > pwmleds {
-> > 	compatible = "pwm-leds";
-> > 	kpad {
-> > 		label = "omap4::keypad";
-> > 		max-brightness = <127>;
-> > 		pwms = <&twl_pwm 0 7812500>;
-> > 	};
-> > 	charging {
-> > 		label = "omap4:green:chrg";
-> > 		max-brightness = <255>;
-> > 		pwms = <&twl_pwmled 0 7812500>;
-> > 	};
-> > };
+On Fri, 7 Dec 2012 14:39:34 +0530, "Kumar, Anil" <anilkumar.v@ti.com> wrote:
+> Since the aemif driver conversion to DT along with
+> its movement to drivers/ folder is not yet done,
+> fix NAND binding documentation to have NAND specific
+> DT details only.
 > 
-> OK.
-> So What we need to do is export the of_pwm_request() from drivers/pwm/core.c
-> Client drivers us of_pwm_request(node, NULL); to get the pwm when booted with DT.
-> Works fine on my setup this way and the DTS section looks just as you have
-> described.
-> Now I need to clean them up and resubmit.
+> Signed-off-by: Kumar, Anil <anilkumar.v@ti.com>
 
-Cool, thanks.
+Applied, thanks.
 
 g.
+
+> ---
+> :100644 100644 e37241f... 49fc7ad... M	Documentation/devicetree/bindings/arm/davinci/nand.txt
+>  .../devicetree/bindings/arm/davinci/nand.txt       |   37 ++++++-------------
+>  1 files changed, 12 insertions(+), 25 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/davinci/nand.txt b/Documentation/devicetree/bindings/arm/davinci/nand.txt
+> index e37241f..49fc7ad 100644
+> --- a/Documentation/devicetree/bindings/arm/davinci/nand.txt
+> +++ b/Documentation/devicetree/bindings/arm/davinci/nand.txt
+> @@ -23,29 +23,16 @@ Recommended properties :
+>  - ti,davinci-nand-buswidth: buswidth 8 or 16
+>  - ti,davinci-nand-use-bbt: use flash based bad block table support.
+>  
+> -Example (enbw_cmc board):
+> -aemif@60000000 {
+> -	compatible = "ti,davinci-aemif";
+> -	#address-cells = <2>;
+> -	#size-cells = <1>;
+> -	reg = <0x68000000 0x80000>;
+> -	ranges = <2 0 0x60000000 0x02000000
+> -		  3 0 0x62000000 0x02000000
+> -		  4 0 0x64000000 0x02000000
+> -		  5 0 0x66000000 0x02000000
+> -		  6 0 0x68000000 0x02000000>;
+> -	nand@3,0 {
+> -		compatible = "ti,davinci-nand";
+> -		reg = <3 0x0 0x807ff
+> -			6 0x0 0x8000>;
+> -		#address-cells = <1>;
+> -		#size-cells = <1>;
+> -		ti,davinci-chipselect = <1>;
+> -		ti,davinci-mask-ale = <0>;
+> -		ti,davinci-mask-cle = <0>;
+> -		ti,davinci-mask-chipsel = <0>;
+> -		ti,davinci-ecc-mode = "hw";
+> -		ti,davinci-ecc-bits = <4>;
+> -		ti,davinci-nand-use-bbt;
+> -	};
+> +Example(da850 EVM ):
+> +nand_cs3@62000000 {
+> +	compatible = "ti,davinci-nand";
+> +	reg = <0x62000000 0x807ff
+> +		0x68000000 0x8000>;
+> +	ti,davinci-chipselect = <1>;
+> +	ti,davinci-mask-ale = <0>;
+> +	ti,davinci-mask-cle = <0>;
+> +	ti,davinci-mask-chipsel = <0>;
+> +	ti,davinci-ecc-mode = "hw";
+> +	ti,davinci-ecc-bits = <4>;
+> +	ti,davinci-nand-use-bbt;
+>  };
+> -- 
+> 1.7.4.1
+> 
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
