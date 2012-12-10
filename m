@@ -1,11 +1,14 @@
 From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 0/4] leds: leds-pwm: Device tree support
-Date: Mon, 10 Dec 2012 11:00:33 +0100
-Message-ID: <1355133637-2784-1-git-send-email-peter.ujfalusi@ti.com>
+Subject: [PATCH v3 2/4] leds: leds-pwm: Preparing the driver for device tree
+ support
+Date: Mon, 10 Dec 2012 11:00:35 +0100
+Message-ID: <1355133637-2784-3-git-send-email-peter.ujfalusi@ti.com>
+References: <1355133637-2784-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1355133637-2784-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,42 +23,104 @@ To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie 
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+In order to be able to add device tree support for leds-pwm driver we need
+to rearrange the data structures used by the drivers.
 
-Changes since v2:
-- rebased on top of linux-next
-- DT bindings now alligned with Grant's request
-- exporting of_pwm_request() from PWM core to allow clean DT bindings
-- DT binding documentation changed to reflect the changes
-
-Changes since v1:
-- As suggested by Bryan Wu: the legacy pwm_request() has been removed from
-  patch 1
-- Device tree bindings added for leds-pwm driver.
-
-When we boot with Device tree we handle one LED per device to be more aligned
-with PWM core's DT implementation.
-An example of the DT usage is provided in the new DT binding documentation for
-leds-pwm.
-
-Tested on OMAP4 Blaze (SDP) with legacy and DT boot.
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 ---
-Peter Ujfalusi (4):
-  leds: leds-pwm: Convert to use devm_get_pwm
-  leds: leds-pwm: Preparing the driver for device tree support
-  pwm: core: Export of_pwm_request() so client drivers can also use it
-  leds: leds-pwm: Add device tree bindings
+ drivers/leds/leds-pwm.c | 39 +++++++++++++++++++++++----------------
+ 1 file changed, 23 insertions(+), 16 deletions(-)
 
- .../devicetree/bindings/leds/leds-pwm.txt          |  46 ++++++
- drivers/leds/leds-pwm.c                            | 158 ++++++++++++++++-----
- drivers/pwm/core.c                                 |   2 +-
- include/linux/leds_pwm.h                           |   2 +-
- include/linux/pwm.h                                |   7 +
- 5 files changed, 175 insertions(+), 40 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
-
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index 351257c..02f0c0c 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -30,6 +30,11 @@ struct led_pwm_data {
+ 	unsigned int		period;
+ };
+ 
++struct led_pwm_priv {
++	int num_leds;
++	struct led_pwm_data leds[];
++};
++
+ static void led_pwm_set(struct led_classdev *led_cdev,
+ 	enum led_brightness brightness)
+ {
+@@ -47,25 +52,29 @@ static void led_pwm_set(struct led_classdev *led_cdev,
+ 	}
+ }
+ 
++static inline int sizeof_pwm_leds_priv(int num_leds)
++{
++	return sizeof(struct led_pwm_priv) +
++		      (sizeof(struct led_pwm_data) * num_leds);
++}
++
+ static int led_pwm_probe(struct platform_device *pdev)
+ {
+ 	struct led_pwm_platform_data *pdata = pdev->dev.platform_data;
+-	struct led_pwm *cur_led;
+-	struct led_pwm_data *leds_data, *led_dat;
++	struct led_pwm_priv *priv;
+ 	int i, ret = 0;
+ 
+ 	if (!pdata)
+ 		return -EBUSY;
+ 
+-	leds_data = devm_kzalloc(&pdev->dev,
+-			sizeof(struct led_pwm_data) * pdata->num_leds,
+-				GFP_KERNEL);
+-	if (!leds_data)
++	priv = devm_kzalloc(&pdev->dev, sizeof_pwm_leds_priv(pdata->num_leds),
++			    GFP_KERNEL);
++	if (!priv)
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < pdata->num_leds; i++) {
+-		cur_led = &pdata->leds[i];
+-		led_dat = &leds_data[i];
++		struct led_pwm *cur_led = &pdata->leds[i];
++		struct led_pwm_data *led_dat = &priv->leds[i];
+ 
+ 		led_dat->pwm = devm_pwm_get(&pdev->dev, cur_led->name);
+ 		if (IS_ERR(led_dat->pwm)) {
+@@ -88,15 +97,16 @@ static int led_pwm_probe(struct platform_device *pdev)
+ 		if (ret < 0)
+ 			goto err;
+ 	}
++	priv->num_leds = pdata->num_leds;
+ 
+-	platform_set_drvdata(pdev, leds_data);
++	platform_set_drvdata(pdev, priv);
+ 
+ 	return 0;
+ 
+ err:
+ 	if (i > 0) {
+ 		for (i = i - 1; i >= 0; i--)
+-			led_classdev_unregister(&leds_data[i].cdev);
++			led_classdev_unregister(&priv->leds[i].cdev);
+ 	}
+ 
+ 	return ret;
+@@ -104,14 +114,11 @@ err:
+ 
+ static int led_pwm_remove(struct platform_device *pdev)
+ {
++	struct led_pwm_priv *priv = platform_get_drvdata(pdev);
+ 	int i;
+-	struct led_pwm_platform_data *pdata = pdev->dev.platform_data;
+-	struct led_pwm_data *leds_data;
+-
+-	leds_data = platform_get_drvdata(pdev);
+ 
+-	for (i = 0; i < pdata->num_leds; i++)
+-		led_classdev_unregister(&leds_data[i].cdev);
++	for (i = 0; i < priv->num_leds; i++)
++		led_classdev_unregister(&priv->leds[i].cdev);
+ 
+ 	return 0;
+ }
 -- 
 1.8.0
