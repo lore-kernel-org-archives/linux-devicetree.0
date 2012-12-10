@@ -1,7 +1,7 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 1/2] arm: mvebu: add RTC support for Armada 370 and Armada XP
-Date: Mon, 10 Dec 2012 11:42:01 +0100
-Message-ID: <1355136122-30729-2-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH 2/2] rtc: rtc-mv: Add the device tree binding documentation
+Date: Mon, 10 Dec 2012 11:42:02 +0100
+Message-ID: <1355136122-30729-3-git-send-email-gregory.clement@free-electrons.com>
 References: <1355136122-30729-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,44 +22,38 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Armada 370 and Armada XP Socs have the same controller that the
-one used in the orion platforms. This patch enables the selection of
-rtc-mv with mvebu platform, and updates the device tree for these
-SoCs.
----
- arch/arm/boot/dts/armada-370-xp.dtsi |    6 ++++++
- drivers/rtc/Kconfig                  |    2 +-
- 2 files changed, 7 insertions(+), 1 deletion(-)
+The support was already written, but the binding documentation was
+lacking.
 
-diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-index cf6c48a..86dccfa 100644
---- a/arch/arm/boot/dts/armada-370-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-@@ -129,6 +129,12 @@
- 			clocks = <&coreclk 0>;
- 			status = "disabled";
- 		};
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ .../devicetree/bindings/rtc/orion-rtc.txt          |   18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/orion-rtc.txt
+
+diff --git a/Documentation/devicetree/bindings/rtc/orion-rtc.txt b/Documentation/devicetree/bindings/rtc/orion-rtc.txt
+new file mode 100644
+index 0000000..3bf63ff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/orion-rtc.txt
+@@ -0,0 +1,18 @@
++* Mvebu Real Time Clock
 +
-+		rtc@10300 {
-+			compatible = "marvell,orion-rtc";
-+			reg = <0xd0010300 0x20>;
-+			interrupts = <50>;
-+		};
- 	};
- };
- 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 19c03ab..9356f75 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -994,7 +994,7 @@ config RTC_DRV_TX4939
- 
- config RTC_DRV_MV
- 	tristate "Marvell SoC RTC"
--	depends on ARCH_KIRKWOOD || ARCH_DOVE
-+	depends on ARCH_KIRKWOOD || ARCH_DOVE || ARCH_MVEBU
- 	help
- 	  If you say yes here you will get support for the in-chip RTC
- 	  that can be found in some of Marvell's SoC devices, such as
++RTC controller for the Kirkwood, the Dove, the Armada 370 and the
++Armada XP SoCs
++
++Required properties:
++- compatible : Should be "marvell,orion-rtc"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- interrupts: IRQ line for the RTC.
++
++Example:
++
++rtc@10300 {
++        compatible = "marvell,orion-rtc";
++        reg = <0xd0010300 0x20>;
++        interrupts = <50>;
++};
 -- 
 1.7.9.5
