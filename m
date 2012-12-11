@@ -1,52 +1,81 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: RFC: New release for DTC?
-Date: Tue, 11 Dec 2012 08:55:17 -0600
-Message-ID: <E1TiREr-0004Mk-IP@jdl.com>
-References: <201208232015.39613.yann.morin.1998@free.fr>
- <20120824013625.GA8067@truffula.fritz.box>
- <201211171250.08597.vapier@gentoo.org> <20121118000013.6964A3E08F7@localhost>
- <CAPnjgZ23ofzihzCMb-i6NMDFuMrYabfo2JGeSPKz+E3gzqDnLA@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH RFC 05/13] of: Add empty for_each_available_child_of_node()
+ macro definition
+Date: Tue, 11 Dec 2012 17:09:57 +0100
+Message-ID: <50C75AD5.2040105@samsung.com>
+References: <1355168499-5847-1-git-send-email-s.nawrocki@samsung.com>
+ <1355168499-5847-6-git-send-email-s.nawrocki@samsung.com>
+ <20121211085707.8D4F03E076D@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <CAPnjgZ23ofzihzCMb-i6NMDFuMrYabfo2JGeSPKz+E3gzqDnLA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20121211085707.8D4F03E076D@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: g.liakhovetski@gmx.de, linux-media@vger.kernel.org, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> >> >
-> >> > This has been a bit of a perrenial problem.  dtc development has been
-> >> > sufficiently gradual that there haven't been many obvious points for
-> >> > making new releases.  dtc developers (i.e. Jon and my, mostly) don't
-> >> > feel much pain from the lack of releases, since the git snapshots
-> >> > generally work well (thanks to limited scope and a good testsuite).
-> >> >
-> >> > I wonder if we should move to a model of just making a release every 3
-> >> > or 6 months from whatever happens to be in the tree at the time
-> >> > (barring obvious known breakage, of course).
-> >>
-> >> yes please.  even just a version that uses datestamps would be fine.
-> >> -mike
-> >
-> > Fine by me.
+On 12/11/2012 09:57 AM, Grant Likely wrote:
+> On Mon, 10 Dec 2012 20:41:31 +0100, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+>> Add this empty macro definition so users can be compiled without
+>> excluding this macro call with preprocessor directives when CONFIG_OF
+>> is disabled.
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
 > 
-> So is this happening? I agree a regular release would be useful, and I
-> think it has been about 18 months since the last release.
+> What non-OF code is calling this function?
 
-I'll apply a couple 3 outstanding patches (from Kim Phillips)
-and get around to tagging a new release.  If you, or anyone else
-have patches or functionality you want in this release, please
-post those patches now.
+It is used in a driver [1] in an OF specific function. The patch is
+in my second series that depends this one.
+"[PATCH RFC 00/12] Device tree support for Exynos4 SoC camera drivers"
 
-jdl
+I thought it was better to add this empty macro definition rather
+than using #ifdef CONFIG_OF in the code. However, in this case
+the local variables would remain unused, so it's not really any
+good solution. It just looked cumbersome to me to have in the code
+something like
+
+#ifdef CONFIG_OF
+int func(void)
+{
+	int x;
+	....
+	return x;
+}	
+#else
+#define func() (-ENOSYS)
+#endif
+
+After all it's not that bad and allows to compile out all OF code
+when it's unused.
+
+Please ignore patches 05..07/13, I'll drop them in next iteration.
+And sorry for the noise.
+
+[1] http://patchwork.linuxtv.org/patch/15852/
+
+>> ---
+>>  include/linux/of.h |    3 +++
+>>  1 file changed, 3 insertions(+)
+>>
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index 2fb0dbe..7df42cc 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -332,6 +332,9 @@ static inline bool of_have_populated_dt(void)
+>>  #define for_each_child_of_node(parent, child) \
+>>  	while (0)
+>>  
+>> +#define for_each_available_child_of_node(parent, child) \
+>> +	while (0)
+>> +
+>>  static inline struct device_node *of_get_child_by_name(
+>>  					const struct device_node *node,
+>>  					const char *name)
+>> -- 
+>> 1.7.9.5
+
+Thanks,
+Sylwester
