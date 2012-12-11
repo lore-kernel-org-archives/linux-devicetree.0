@@ -1,90 +1,116 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v3 1/4] leds: leds-pwm: Convert to use devm_get_pwm
-Date: Tue, 11 Dec 2012 11:00:32 +0100
-Message-ID: <20121211100032.GA8907@avionic-0098.adnet.avionic-design.de>
-References: <1355133637-2784-1-git-send-email-peter.ujfalusi@ti.com>
- <3193669.Hv54bBklsP@barack>
- <20121211083632.GC27084@avionic-0098.adnet.avionic-design.de>
- <1406670.ryvqfkiNXS@barack>
- <20121211093100.GA8437@avionic-0098.adnet.avionic-design.de>
- <50C6FF69.3030001@ti.com>
- <20121211094812.GA22222@avionic-0098.adnet.avionic-design.de>
- <50C70287.1060006@ti.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH RFC 01/12] s5p-csis: Add device tree support
+Date: Tue, 11 Dec 2012 12:24:23 +0100
+Message-ID: <50C717E7.10801@samsung.com>
+References: <1355168766-6068-1-git-send-email-s.nawrocki@samsung.com>
+ <1355168766-6068-2-git-send-email-s.nawrocki@samsung.com>
+ <20121211083658.8AEA23E076D@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zhXaljGHf11kAtnf"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50C70287.1060006@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <20121211083658.8AEA23E076D@localhost>
+Sender: linux-media-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-media@vger.kernel.org, g.liakhovetski@gmx.de, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello Grant,
 
---zhXaljGHf11kAtnf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 12/11/2012 09:36 AM, Grant Likely wrote:
+> On Mon, 10 Dec 2012 20:45:55 +0100, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
+>> s5p-csis is platform device driver for MIPI-CSI frontend to the FIMC
+>> (camera host interface DMA engine and image processor). This patch
+>> adds support for instantiating the MIPI-CSIS devices from DT and
+>> parsing all SoC and board specific properties from device tree.
+>>
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+>> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>  .../bindings/media/soc/samsung-mipi-csis.txt       |   82 +++++++++++
+>>  drivers/media/platform/s5p-fimc/mipi-csis.c        |  155 +++++++++++++++-----
+>>  drivers/media/platform/s5p-fimc/mipi-csis.h        |    1 +
+>>  3 files changed, 202 insertions(+), 36 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt b/Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt
+>> new file mode 100644
+>> index 0000000..f57cbdc
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt
+>> @@ -0,0 +1,82 @@
+>> +Samsung S5P/EXYNOS SoC MIPI-CSI2 receiver (MIPI CSIS)
+>> +-----------------------------------------------------
+>> +
+>> +Required properties:
+>> +
+>> +- compatible	  : "samsung,s5pv210-csis" for S5PV210 SoCs,
+>> +		    "samsung,exynos4210-csis" for Exynos4210 and later SoCs;
+>> +- reg		  : physical base address and size of the device memory mapped
+>> +		    registers;
+>> +- interrupts      : should contain MIPI CSIS interrupt; the format of the
+>> +		    interrupt specifier depends on the interrupt controller;
+>> +- max-data-lanes  : maximum number of data lanes supported (SoC specific);
+>> +- vddio-supply    : MIPI CSIS I/O and PLL voltage supply (e.g. 1.8V);
+>> +- vddcore-supply  : MIPI CSIS Core voltage supply (e.g. 1.1V).
+>> +
+>> +Optional properties:
+>> +
+>> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
+>> +		    value when this property is not specified is 166 MHz;
+>> +- samsung,csis,wclk : CSI-2 wrapper clock selection. If this property is present
+>> +		    external clock from CMU will be used, if not bus clock will
+>> +		    be selected.
+>> +
+>> +The device node should contain one 'port' child node with one child 'endpoint'
+>> +node, as outlined in the common media bindings specification. See
+>> +Documentation/devicetree/bindings/media/v4l2.txt for details. The following are
+>> +properties specific to those nodes. (TODO: update the file path)
+>> +
+>> +port node
+>> +---------
+>> +
+>> +- reg		  : (required) must be 2 for camera C input (CSIS0) or 3 for
+>> +		    camera D input (CSIS1);
+> 
+> 'reg' has a very specific definition. If you're going to use a reg
+> property here, then the parent nodes need to have
+> #address-cells=<1>;#size-cells=<0>; properties to define the address
+> specifier format.
+> 
+> However since you're identifying port numbers that aren't really
+> addresses I would suggest simply changing this property to something
+> like 'port-num'.
+> 
+> Otherwise the binding looks good.
 
-On Tue, Dec 11, 2012 at 10:53:11AM +0100, Peter Ujfalusi wrote:
-> On 12/11/2012 10:48 AM, Thierry Reding wrote:
-> > On Tue, Dec 11, 2012 at 10:39:53AM +0100, Peter Ujfalusi wrote:
-> >> On 12/11/2012 10:31 AM, Thierry Reding wrote:
-> >>> On Tue, Dec 11, 2012 at 09:57:51AM +0100, Peter Ujfalusi wrote:
-> >>> Okay, if there are no intree users that may be broken, then it should=
- be
-> >>> fine to remove it. In that case you might want to remove the pwm_id
-> >>> field as well instead of deprecating it in this patch.
-> >>
-> >> The reason I marked the pwm_id as deprecated is to signal to out of tr=
-ee users
-> >> (if any) that they should stop using it since it is going to go away i=
-n the
-> >> next cycle.
-> >> If we remove it right away the sdp4030 board file will not going to co=
-mpile in
-> >> subsystem trees, only in linux-next.
-> >=20
-> > Okay, go ahead then. As long as the field will be removed eventually
-> > that's fine with me.
->=20
-> Thank you and yes, it will be removed.
->=20
-> Probably it would be a good thing to check other places for legacy
-> pwm_request() users and prepare them to move to (devm_)pwm_get gracefully=
- over
-> coming kernel releases.
+Thank you for the review. Indeed I should have said about #address-cells,
+#size-cells here. I thought using 'reg' was agreed during previous discussions
+on the mailing lists (e.g. [1]), so I just carried on with 'reg'.
+I should just have addressed the comments from Stephen and Rob, instead of
+just resending same version of the documentation. I'll try to take care of
+it in the next post. i.e. rename 'link' node to 'endpoint' and 'remote'
+phandle to 'remote-endpoint'.
 
-Yes, I have a local patch that deprecates pwm_request() and pwm_free()
-to make it easy to spot them (though git grep does a better job actually
-as it doesn't require compilation). I originally planned to replace all
-pwm_request()/pwm_free() usage by pwm_get()/pwm_put() already for 3.8
-but got side-tracked with other stuff but I hope I can make it for 3.9.
-If that works out we could remove pwm_request() and pwm_free()
-completely for 3.10.
+I'm not really sure what advantage 'reg' gives over a new property.
+Would it still be OK to have port nodes names followed by indexes with
+port-num instead of reg, e.g.
 
-Thierry
+foo {
+	port@0 {
+		port-num = <0>;
+	};
 
---zhXaljGHf11kAtnf
-Content-Type: application/pgp-signature
+	port@1 {
+		port-num = <1>;
+	};
+};
+?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQxwRAAAoJEN0jrNd/PrOhAgUQAJGP29h4E13zOyQDgnvS/azA
-/B8wCXN4hr9TkFDJOK7X8bt/Cq/u3ALHqCQKLzl8RxS293vsra50pBk7LOHoBGTR
-+pqnIKoWU/fqZrGaGKN+FNPXmBskpL9cpbc9gSDe4Y2DffOAbZKdbKh8cOgO5NCD
-0qxLFr1mdsTKu+3/yhx714Kt5Ki16WB+3oIctEswyP7/tvxMyECx/88TImQjT3DH
-VzY2DdlUwt7Xq36iLx9QJUS182fgfFI2g6N921QQoxY77/thOkgaYIlG1BhKoATl
-7/8fa5KrR3KEBbmnnA4AD/kzc4IlfFMTkpJQd2ZnwJCeMahtABbfLPZsO2Namuc6
-O1bP8xb4XohhwrG/Th4JkshqDI999y/sgPpw85WFrdFlKKogNodz1radaCtPY3Yl
-w1478QG6qExWlL8Aaxc/OHBbUv6hKwV/S50928afl3xDVcYuLm+Vhm9L86IMGNEo
-61A9aesoVa3Oyu6wYuBVrgDi/j/m/tAagAgohv2iRvehdOAJ0rRpkvfb9pHHBY9K
-7aotIWW9nLIs2rKcyc1vcO/hfmzKiBZewWrjZh5PJfq7rqwWtSfJA0v4jWLWboVh
-rrKYMjIVbWLHDkf9ifpfVgW9dn8wUMhgm6LRSVP1IYcWh2KwQrh4x027dYPVFBEL
-sAUV2/zm7VcDPZgmyHmo
-=7MQE
------END PGP SIGNATURE-----
+[1] http://www.spinics.net/lists/linux-sh/msg13383.html
 
---zhXaljGHf11kAtnf--
+--
+
+Thanks,
+Sylwester
