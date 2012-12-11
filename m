@@ -1,96 +1,54 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH RFC 01/12] s5p-csis: Add device tree support
-Date: Tue, 11 Dec 2012 16:55:50 +0000
-Message-ID: <20121211165550.14BDD3E0C3E@localhost>
-References: <1355168766-6068-1-git-send-email-s.nawrocki@samsung.com> <1355168766-6068-2-git-send-email-s.nawrocki@samsung.com> <20121211083658.8AEA23E076D@localhost> <50C717E7.10801@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <50C717E7.10801@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-media@vger.kernel.org, g.liakhovetski@gmx.de, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH REPOST] fdtget-runtest.sh: use printf instead of /bin/echo -e
+Date: Tue, 11 Dec 2012 10:05:51 -0700
+Message-ID: <1355245551-6988-1-git-send-email-swarren@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, jdl-CYoMK+44s/E@public.gmane.org
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Dec 2012 12:24:23 +0100, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
-> Hello Grant,
-> 
-> On 12/11/2012 09:36 AM, Grant Likely wrote:
-> > On Mon, 10 Dec 2012 20:45:55 +0100, Sylwester Nawrocki <s.nawrocki@samsung.com> wrote:
-> >> s5p-csis is platform device driver for MIPI-CSI frontend to the FIMC
-> >> (camera host interface DMA engine and image processor). This patch
-> >> adds support for instantiating the MIPI-CSIS devices from DT and
-> >> parsing all SoC and board specific properties from device tree.
-> >>
-> >> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> >> Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
-> >> ---
-> >>  .../bindings/media/soc/samsung-mipi-csis.txt       |   82 +++++++++++
-> >>  drivers/media/platform/s5p-fimc/mipi-csis.c        |  155 +++++++++++++++-----
-> >>  drivers/media/platform/s5p-fimc/mipi-csis.h        |    1 +
-> >>  3 files changed, 202 insertions(+), 36 deletions(-)
-> >>  create mode 100644 Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt b/Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt
-> >> new file mode 100644
-> >> index 0000000..f57cbdc
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt
-> >> @@ -0,0 +1,82 @@
-> >> +Samsung S5P/EXYNOS SoC MIPI-CSI2 receiver (MIPI CSIS)
-> >> +-----------------------------------------------------
-> >> +
-> >> +Required properties:
-> >> +
-> >> +- compatible	  : "samsung,s5pv210-csis" for S5PV210 SoCs,
-> >> +		    "samsung,exynos4210-csis" for Exynos4210 and later SoCs;
-> >> +- reg		  : physical base address and size of the device memory mapped
-> >> +		    registers;
-> >> +- interrupts      : should contain MIPI CSIS interrupt; the format of the
-> >> +		    interrupt specifier depends on the interrupt controller;
-> >> +- max-data-lanes  : maximum number of data lanes supported (SoC specific);
-> >> +- vddio-supply    : MIPI CSIS I/O and PLL voltage supply (e.g. 1.8V);
-> >> +- vddcore-supply  : MIPI CSIS Core voltage supply (e.g. 1.1V).
-> >> +
-> >> +Optional properties:
-> >> +
-> >> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
-> >> +		    value when this property is not specified is 166 MHz;
-> >> +- samsung,csis,wclk : CSI-2 wrapper clock selection. If this property is present
-> >> +		    external clock from CMU will be used, if not bus clock will
-> >> +		    be selected.
-> >> +
-> >> +The device node should contain one 'port' child node with one child 'endpoint'
-> >> +node, as outlined in the common media bindings specification. See
-> >> +Documentation/devicetree/bindings/media/v4l2.txt for details. The following are
-> >> +properties specific to those nodes. (TODO: update the file path)
-> >> +
-> >> +port node
-> >> +---------
-> >> +
-> >> +- reg		  : (required) must be 2 for camera C input (CSIS0) or 3 for
-> >> +		    camera D input (CSIS1);
-> > 
-> > 'reg' has a very specific definition. If you're going to use a reg
-> > property here, then the parent nodes need to have
-> > #address-cells=<1>;#size-cells=<0>; properties to define the address
-> > specifier format.
-> > 
-> > However since you're identifying port numbers that aren't really
-> > addresses I would suggest simply changing this property to something
-> > like 'port-num'.
-> > 
-> > Otherwise the binding looks good.
-> 
-> Thank you for the review. Indeed I should have said about #address-cells,
-> #size-cells here. I thought using 'reg' was agreed during previous discussions
-> on the mailing lists (e.g. [1]), so I just carried on with 'reg'.
-> I should just have addressed the comments from Stephen and Rob, instead of
-> just resending same version of the documentation. I'll try to take care of
-> it in the next post. i.e. rename 'link' node to 'endpoint' and 'remote'
-> phandle to 'remote-endpoint'.
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Could be. I can't remember what has been discussed from one day to the
-next.  :-)  If you've got #address/#size-cells in the binding, then reg is
-fine. If that's what you've already got, then just leave it. As long as
-the conventions are intact.
+Not all /bin/echo implementations support the -e option. Instead, use
+printf, which appears to be more widely available than /bin/echo -e.
 
-g.
+See commit eaec1db "fdtget-runtest.sh: Fix failures when /bin/sh isn't
+bash" for history.
+
+I have tested this on Ubuntu 10.04 with /bin/sh pointing to both dash
+and bash.
+
+Reported-by: Mike Frysinger <vapier-aBrp7R+bbdUdnm+yROfE0A@public.gmane.org> # and implemented-by
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ tests/fdtget-runtest.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/tests/fdtget-runtest.sh b/tests/fdtget-runtest.sh
+index c3a3559..8d8b058 100755
+--- a/tests/fdtget-runtest.sh
++++ b/tests/fdtget-runtest.sh
+@@ -8,7 +8,7 @@ rm -f $LOG $EXPECT
+ trap "rm -f $LOG $EXPECT" 0
+ 
+ expect="$1"
+-/bin/echo -e $expect >$EXPECT
++printf '%b\n' "$expect" > $EXPECT
+ shift
+ 
+ verbose_run_log_check "$LOG" $VALGRIND $DTGET "$@"
+-- 
+1.7.10.4
