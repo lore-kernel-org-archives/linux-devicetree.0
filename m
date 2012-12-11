@@ -1,59 +1,119 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 1/2] arm: mvebu: add RTC support for Armada 370 and
- Armada XP
-Date: Tue, 11 Dec 2012 07:00:50 +0100
-Message-ID: <20121211060050.GC25466@lunn.ch>
-References: <1355136122-30729-1-git-send-email-gregory.clement@free-electrons.com>
- <1355136122-30729-2-git-send-email-gregory.clement@free-electrons.com>
- <20121210162819.46fe4f91@skate>
- <20121210214755.9CD823E0C7C@localhost>
- <20121210233723.1f3656d0@skate>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v3 3/4] pwm: core: Export of_pwm_request() so client
+ drivers can also use it
+Date: Tue, 11 Dec 2012 08:00:59 +0100
+Message-ID: <20121211070059.GA8294@avionic-0098.adnet.avionic-design.de>
+References: <1355133637-2784-1-git-send-email-peter.ujfalusi@ti.com>
+ <1355133637-2784-4-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="5vNYLRcllDrimb99"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20121210233723.1f3656d0@skate>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1355133637-2784-4-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 10, 2012 at 11:37:23PM +0100, Thomas Petazzoni wrote:
-> Dear Grant Likely,
-> 
-> On Mon, 10 Dec 2012 21:47:55 +0000, Grant Likely wrote:
-> 
-> > > Maybe an explicit status = "okay" here?
-> > 
-> > Only necessary if it is typical for the device to get disabled. I don't
-> > add status="okay" properties unless it is to enable a device previously
-> > disabled with status="disabled"
-> 
-> Ok, thanks for clarifying what the best practice is. This device being
-> internal to the SoC and having no dependency on external components, it
-> is indeed always available.
 
-Hi Thomas
+--5vNYLRcllDrimb99
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This is not actually true. Its dependent on at least one external
-component, a battery. The driver determines at load time if the clock
-is ticking.
+On Mon, Dec 10, 2012 at 11:00:36AM +0100, Peter Ujfalusi wrote:
+> Allow client driver to use of_pwm_request() to get the pwm they need. This
+> is needed for drivers which handle more than one pwm separately, like
+> leds-pwm driver which have:
 
-There are a few Kirkwood and XP designs which use an external i2c RTC,
-because the battery recommended by Marvell is mechanically not so easy
-to attached to the board, in a robust way.
+Hi Peter,
 
-So i expect some boards will disable this from there own .dts file.
-However, defaulting to enabled would make sense.
+I really was hoping that we didn't have to export this function, but I
+can't think of any other way to solve the problem at hand either. I'd
+prefer to rename the function to of_pwm_get() at the same time to keep
+consistent with other subsystems that provide similar functionality.
+Also, please use all-caps for PWM in prose. And while at it, you can
+drop the "core:" and "so client drivers can also use it" from the
+subject line.
 
-   Andrew
+> pwmleds {
+> 	compatible =3D "pwm-leds";
+> 	kpad {
+> 		label =3D "omap4::keypad";
+> 		pwms =3D <&twl_pwm 0 7812500>;
+> 		max-brightness =3D <127>;
+> 	};
+>=20
+> 	charging {
+> 		label =3D "omap4:green:chrg";
+> 		pwms =3D <&twl_pwmled 0 7812500>;
+> 		max-brightness =3D <255>;
+> 	};
+> };
+>=20
+> in the dts files.
+>=20
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+>  drivers/pwm/core.c  | 2 +-
+>  include/linux/pwm.h | 7 +++++++
+>  2 files changed, 8 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+> index 903138b..3a7ebcc 100644
+> --- a/drivers/pwm/core.c
+> +++ b/drivers/pwm/core.c
+> @@ -486,7 +486,7 @@ static struct pwm_chip *of_node_to_pwmchip(struct dev=
+ice_node *np)
+>   * becomes mandatory for devices that look up the PWM device via the con=
+_id
+>   * parameter.
+>   */
+> -static struct pwm_device *of_pwm_request(struct device_node *np,
+> +struct pwm_device *of_pwm_request(struct device_node *np,
+>  					 const char *con_id)
+>  {
+>  	struct pwm_device *pwm =3D NULL;
+
+This is missing an EXPORT_SYMBOL_GPL.
+
+> diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+> index 6d661f3..d70ffe3 100644
+> --- a/include/linux/pwm.h
+> +++ b/include/linux/pwm.h
+> @@ -175,6 +175,7 @@ struct pwm_device *of_pwm_xlate_with_flags(struct pwm=
+_chip *pc,
+>  		const struct of_phandle_args *args);
+> =20
+>  struct pwm_device *pwm_get(struct device *dev, const char *consumer);
+> +struct pwm_device *of_pwm_request(struct device_node *np, const char *co=
+n_id);
+
+While at it, maybe rename the con_id parameter as well to match
+pwm_get().
+
+Thierry
+
+--5vNYLRcllDrimb99
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQxtorAAoJEN0jrNd/PrOhcNgP/iJ7T4DBj/cHTTczpOm8huIc
+Q3cw7TWMPn8KDsO26u9DlbsQDT7dwLnyvaP0b5IP4mP8yH5VNWrE3Fm7a7hNhPKA
+8GrfJJXjoUu9bERzuP6ChDNFW93IDRwUVOczENpGe7x9+33Eu3XkImk/caQi3Tpr
+xc5IJ873Gg2JGBIZUPHUvBPnh6Melq/GXZyGWeXUvNDlBgpUdNRSPMdVj3lA2skL
+lZFTKJs2baZ7mnXqQ+LUtOkuOUawJiDhNm2IbtPI2zccgoPfuDZD0WaAHLCK9C8q
+ysPa4d5iU1TwdH/7/lVnTC0gSQIyeRCQ6/HEYyq34+c2+Q2DahmgTU6cCAWdv40o
+wsOSdCBiF0gYPoC4MU+wJlIWcj4sd/uyhVX4UIecrCPEzPKhGJqoezYuNss8IrnN
+6UheWs6kUYHAoZAGnZLZh2EAEsTVFQA7bByixUOhiFBEKnafZeTeAWg4YIpvQb0S
+fjlgHkSc/QyFptV5HRNu7KF4p6q4DeFL958/FTL1pzYKjvFjil3+7z0mbmXCkjbN
+m/4KxIZL+HcFXdJmUw2sjGwnPUMRg5wOpaCO9axOmzw8HgMbfGOnCOt5Oj9FP/Y8
+Y/qmCv24lPZNjz1kryw95nVTkyEfqkkN4p3Zh5GV93J5vdrY1EQ9em7I5FG9Mk3U
+oxD1az+ckzDskKVzAZS2
+=Ei8w
+-----END PGP SIGNATURE-----
+
+--5vNYLRcllDrimb99--
