@@ -1,232 +1,370 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: [GIT PULL] Devicetree changes for v3.8
-Date: Tue, 11 Dec 2012 17:44:14 +0000
-Message-ID: <CACxGe6uuB9bfpDNpXhp2wFUHot7UDJxu=sRqqaV8S3K0wq-+5A@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/6] ARM: sunxi: Add pinctrl driver for Allwinner SoCs
+Date: Tue, 11 Dec 2012 19:30:59 +0100
+Message-ID: <50C77BE3.9040906@free-electrons.com>
+References: <1355177301-31928-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1355177301-31928-2-git-send-email-maxime.ripard@free-electrons.com>
+ <CACRpkdbE=y377X4_5c0wD+U3+drBBptDB8x_s-dQjNBemnbsyw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdbE=y377X4_5c0wD+U3+drBBptDB8x_s-dQjNBemnbsyw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, Alejandro Mery <amery@geeks.cl>, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, Stefan Roese <sr@denx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Linus,
 
-Here are the DT changes I've got queued up for v3.8. As described
-below, there are a lot of bug fixes here and documentation updates but
-nothing major. Biggest change is the creation of a common build rule
-for .dtb files.
+Le 11/12/2012 01:28, Linus Walleij a =E9crit :
+> On Mon, Dec 10, 2012 at 11:08 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> =
 
-The following changes since commit 77b67063bb6bce6d475e910d3b886a606d0d91f7:
+>> This IP has 8 banks of 32 bits, with a number of pins actually useful
+>> for each of these banks varying from one to another, and depending on
+>> the SoC used on the board.
+>>
+>> This driver only implements the pinctrl part, the gpio part will come
+>> eventually.
+> =
 
-  Linux 3.7-rc5 (2012-11-11 13:44:33 +0100)
+> It's looking pretty nice already :-)
+> =
 
-are available in the git repository at:
+> Of course I have some comments...
+> =
 
-  git://git.secretlab.ca/git/linux-2.6 tags/devicetree-for-linus
+> OK will it be a combined driver so the same file implement both pinctrl
+> and gpio?
 
-for you to fetch changes up to 58fea354d887fddddd342a8d14b02069161ca904:
+It's not fixed yet, for now I've done a very draft that is a separate
+gpio driver, but relies on the pinctrl_*gpio functions.
 
-  arm64: Fix the dtbs target building (2012-12-10 20:24:57 -0600)
+But since it's still at an early stage, if you have a better solution,
+I'd be happy to follow it.
 
-----------------------------------------------------------------
-Device tree changes for v3.8
+>> +- allwinner,pin-ids: An integer array. Each integer in the array
+>> +  specify a pin with given mux function, with bank, pin and mux packed
+>> +  as below.
+>> +
+>> +    [15..12] : bank number
+>> +    [11..4]  : pin number
+>> +    [3..0]   : mux selection
+> =
 
-Bug fixes, little cleanups, and documentation changes. The most invasive
-thing here touches a bunch of the arch directories to use a common build
-rule for .dtb files. There are no major changes to functionality here
-other than a ew new helper functions.
+> Why are you using this scheme instead of just open-coding the three
+> things? Well maybe I'm not getting it... Device Trees are usually for rea=
+ding,
+> not for bitstuffing, that's why I ask.
 
-----------------------------------------------------------------
-Alexander Sverdlin (3):
-      of_i2c: Honour "status=disabled" property of device
-      of_mdio: Honour "status=disabled" property of device
-      of/spi: Honour "status=disabled" property of device
+I'm used to the mxs syntax, so I based my work on it. But after a quick
+look, it looks like the more recent pinctrl drivers like for bcm2835 or
+mvebu use strings to give a much more readable dt.
 
-Benjamin Herrenschmidt (1):
-      of/fdt: Don't copy garbage after "/" in root node path
+I'll change that.
 
-Catalin Marinas (2):
-      of/fdt: NULL-terminate the root node path
-      arm64: Fix the dtbs target building
+> You should pass all this DT stuff to the devicetree-discuss list because
+> I'm not any good at this (paging Stephen Warren.)
 
-Chaiken, Alison (1):
-      Documentation: correct of_platform_populate() argument list
+Ok, I will :)
 
-Fabio Estevam (1):
-      of: fdt: Constify 'pathp'
+>> +- allwinner,pull: Integer.
+>> +    0: No resistor
+>> +    1: Pull-up resistor
+>> +    2: Pull-down resistor
+> =
 
-Grant Likely (6):
-      Merge tag 'v3.7-rc5' into devicetree/next
-      drivers/of: Constify device_node->name and ->path_component_name
-      powerpc: Fix fallout from device_node->name constification
-      ARM: dt: change .dtb build rules to build in dts directory
-      Merge remote-tracking branch 'robherring/for-next' into devicetree/next
-      devicetree/bindings: Move gpio-leds binding into leds directory
+> This seems legit.
+> =
 
-Gregory CLEMENT (1):
-      rtc: rtc-mv: Add the device tree binding documentation
+>> +config PINCTRL_SUNXI
+>> +       bool
+>> +       select PINMUX
+>> +       select PINCONF
+> =
 
-James Hogan (1):
-      of/vendor-prefixes: add Imagination Technologies
+> If your SoC is only simple pinconfig like pull-up/pull-down, why are
+> you not using PINCONF_GENERIC and <linux/pinctrl/pinconf-generic.h>?
 
-Josh Cartwright (1):
-      arm: l2cc: doc: fix device tree example typo
+It's not only pull-up/pull-down but also "drive levels". Since we don't
+have any useful datasheet for these SoCs, we're not quite sure about
+what this is really about except than it is related to the current of
+the pin though (thus the "to be documented" in the documentation).
 
-Kumar, Anil (1):
-      mtd: nand: davinci: fix the binding documentation
+I didn't saw the pinconf-generic infrastructure, I'll switch to it.
 
-Magnus Damm (1):
-      script: dtc: clean generated files
+> (...)
+>> +       ret =3D of_property_read_u32(node, "allwinner,drive", &val);
+>> +       if (!ret)
+>> +               config |=3D val << DLEVEL_SHIFT | DLEVEL_PRESENT;
+>> +
+>> +       ret =3D of_property_read_u32(node, "allwinner,pull", &val);
+>> +       if (!ret)
+>> +               config |=3D val << PULL_SHIFT | PULL_PRESENT;
+> =
 
-Marek Belisko (1):
-      Documentation: Move common leds properties description to separate file.
+> So looks nice... but can you use generic pinconfig?
 
-Pantelis Antoniou (1):
-      arm-dt: Enable DT proc updates.
+Yes
 
-Randy Dunlap (1):
-      Fix build when CONFIG_W1_MASTER_GPIO=m b exporting "allnodes"
+> =
 
-Rob Herring (2):
-      Merge remote-tracking branch 'grant/devicetree/next' into for-next
-      arm64: Add dtbs target for building all the enabled dtb files
+>> +static void sunxi_pmx_set_config(struct pinctrl_dev *pctldev,
+>> +                                unsigned pin,
+>> +                                u8 config)
+>> +{
+>> +       struct sunxi_pinctrl *pctl =3D pinctrl_dev_get_drvdata(pctldev);
+>> +
+>> +       u32 val =3D readl(pctl->membase + CFG_REG(pin));
+>> +       u32 mask =3D ((1 << CFG_PINS_BITS) - 1) << CFG_OFFSET(pin);
+>> +       writel((val & ~mask) | config << CFG_OFFSET(pin),
+>> +               pctl->membase + CFG_REG(pin));
+>> +}
+> =
 
-Srinivas Kandagatla (1):
-      of: Add vendor prefix for Synopsys Inc.
+> There is something a bit confusing with the naming here, this is
+> configuring the multiplexing (mux) but named config and CFG,
+> which makes for great misunderstandings... can it be changed
+> to eg just pmx_set() and MUX_OFFSET and MUX_REG() for
+> example?
 
-Steffen Trumtrar (1):
-      of: add 'const' for of_parse_phandle parameter *np
+You're right, will do.
 
-Stephen Warren (8):
-      of: Add vendor prefix for Asahi Kasei Corp.
-      ARM: tegra: seaboard: add missing DT vendor prefixes
-      of: introduce for_each_matching_node_and_match()
-      kbuild: centralize .dts->.dtb rule
-      arm64: use new common dtc rule
-      openrisc: use new common dtc rule
-      c6x: use new common dtc rule
-      microblaze: use new common dtc rule
+>> +static struct of_device_id sunxi_pinctrl_match[] __devinitconst =3D {
+>> +       {}
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sunxi_pinctrl_match);
+> =
 
-Thierry Reding (1):
-      of: Add vendor prefix for ON Semiconductor Corp.
+> This table will not match very much :-/
+> =
 
-Viresh Kumar (1):
-      dt: add helper function to read u8 & u16 variables & arrays
+> You should put one example in atleast? Something must have
+> been used to test this...
 
-Wolfram Sang (1):
-      bindings: i2c: use consistent naming for i2c binding descriptions
+Aaah, sorry, I forgot to Cc you in the second patch that adds precisely
+this part of the driver...
 
- .../devicetree/bindings/arm/davinci/nand.txt       |   37 ++----
- Documentation/devicetree/bindings/arm/l2cc.txt     |    2 +-
- .../bindings/i2c/{atmel-i2c.txt => i2c-at91.txt}   |    0
- .../bindings/i2c/{davinci.txt => i2c-davinci.txt}  |    0
- .../bindings/i2c/{gpio-i2c.txt => i2c-gpio.txt}    |    0
- .../bindings/i2c/{fsl-imx-i2c.txt => i2c-imx.txt}  |    0
- .../bindings/i2c/{fsl-i2c.txt => i2c-mpc.txt}      |    0
- .../bindings/i2c/{mux.txt => i2c-mux.txt}          |    0
- .../devicetree/bindings/i2c/i2c-mv64xxx.txt        |   18 +++
- .../bindings/i2c/{nomadik.txt => i2c-nomadik.txt}  |    0
- .../i2c/{cavium-i2c.txt => i2c-octeon.txt}         |    0
- .../bindings/i2c/{omap-i2c.txt => i2c-omap.txt}    |    0
- .../bindings/i2c/{pnx.txt => i2c-pnx.txt}          |    0
- .../i2c/{ce4100-i2c.txt => i2c-pxa-pci-ce4100.txt} |    0
- .../bindings/i2c/{mrvl-i2c.txt => i2c-pxa.txt}     |   18 ---
- .../i2c/{samsung-i2c.txt => i2c-s3c2410.txt}       |    0
- .../bindings/i2c/{sirf-i2c.txt => i2c-sirf.txt}    |    0
- .../i2c/{arm-versatile.txt => i2c-versatile.txt}   |    0
- .../bindings/i2c/{xiic.txt => i2c-xiic.txt}        |    0
- Documentation/devicetree/bindings/leds/common.txt  |   23 ++++
- .../bindings/{gpio/led.txt => leds/leds-gpio.txt}  |   14 +--
- .../devicetree/bindings/rtc/orion-rtc.txt          |   18 +++
- .../devicetree/bindings/vendor-prefixes.txt        |    6 +-
- Documentation/devicetree/usage-model.txt           |    2 +-
- Documentation/kbuild/makefiles.txt                 |   15 +--
- arch/arm/Makefile                                  |    4 +-
- arch/arm/boot/Makefile                             |   12 --
- arch/arm/boot/dts/Makefile                         |    8 ++
- arch/arm/boot/dts/tegra20-seaboard.dts             |    4 +-
- arch/arm/include/asm/prom.h                        |    2 +
- arch/arm/mach-vexpress/v2m.c                       |    2 +-
- arch/arm64/Makefile                                |   17 ++-
- arch/arm64/boot/Makefile                           |    5 -
- arch/arm64/boot/dts/.gitignore                     |    1 +
- arch/arm64/boot/dts/Makefile                       |    5 +
- arch/c6x/Makefile                                  |    2 +-
- arch/c6x/boot/Makefile                             |   20 ---
- arch/c6x/boot/dts/Makefile                         |   20 +++
- arch/c6x/boot/dts/linked_dtb.S                     |    2 +
- arch/c6x/boot/linked_dtb.S                         |    2 -
- arch/microblaze/Makefile                           |    2 +-
- arch/microblaze/boot/Makefile                      |   19 +--
- arch/microblaze/boot/dts/Makefile                  |   22 ++++
- arch/microblaze/boot/dts/linked_dtb.S              |    2 +
- arch/microblaze/boot/linked_dtb.S                  |    3 -
- arch/mips/cavium-octeon/Makefile                   |    3 -
- arch/mips/lantiq/dts/Makefile                      |    3 -
- arch/mips/netlogic/dts/Makefile                    |    3 -
- arch/openrisc/Makefile                             |    2 +-
- arch/openrisc/boot/{ => dts}/Makefile              |    5 -
- arch/powerpc/platforms/powermac/pfunc_core.c       |    2 +-
- arch/powerpc/platforms/pseries/reconfig.c          |    3 +-
- arch/powerpc/sysdev/fsl_pci.c                      |    2 +-
- arch/powerpc/sysdev/scom.c                         |    2 +-
- arch/sparc/kernel/pci_impl.h                       |    2 +-
- drivers/i2c/busses/i2c-ocores.c                    |    4 -
- drivers/of/base.c                                  |  128 ++++++++++++++++----
- drivers/of/fdt.c                                   |   18 +--
- drivers/of/of_i2c.c                                |    2 +-
- drivers/of/of_mdio.c                               |    2 +-
- drivers/of/pdt.c                                   |   12 +-
- drivers/spi/spi.c                                  |    2 +-
- include/linux/of.h                                 |   57 +++++++--
- scripts/Makefile.lib                               |    3 +
- scripts/dtc/Makefile                               |    2 +
- 65 files changed, 357 insertions(+), 207 deletions(-)
- rename Documentation/devicetree/bindings/i2c/{atmel-i2c.txt =>
-i2c-at91.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{davinci.txt =>
-i2c-davinci.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{gpio-i2c.txt =>
-i2c-gpio.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{fsl-imx-i2c.txt =>
-i2c-imx.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{fsl-i2c.txt =>
-i2c-mpc.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{mux.txt => i2c-mux.txt} (100%)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-mv64xxx.txt
- rename Documentation/devicetree/bindings/i2c/{nomadik.txt =>
-i2c-nomadik.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{cavium-i2c.txt =>
-i2c-octeon.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{omap-i2c.txt =>
-i2c-omap.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{pnx.txt => i2c-pnx.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{ce4100-i2c.txt =>
-i2c-pxa-pci-ce4100.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{mrvl-i2c.txt =>
-i2c-pxa.txt} (70%)
- rename Documentation/devicetree/bindings/i2c/{samsung-i2c.txt =>
-i2c-s3c2410.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{sirf-i2c.txt =>
-i2c-sirf.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{arm-versatile.txt =>
-i2c-versatile.txt} (100%)
- rename Documentation/devicetree/bindings/i2c/{xiic.txt => i2c-xiic.txt} (100%)
- create mode 100644 Documentation/devicetree/bindings/leds/common.txt
- rename Documentation/devicetree/bindings/{gpio/led.txt =>
-leds/leds-gpio.txt} (68%)
- create mode 100644 Documentation/devicetree/bindings/rtc/orion-rtc.txt
- create mode 100644 arch/arm64/boot/dts/.gitignore
- create mode 100644 arch/arm64/boot/dts/Makefile
- create mode 100644 arch/c6x/boot/dts/Makefile
- create mode 100644 arch/c6x/boot/dts/linked_dtb.S
- delete mode 100644 arch/c6x/boot/linked_dtb.S
- create mode 100644 arch/microblaze/boot/dts/Makefile
- create mode 100644 arch/microblaze/boot/dts/linked_dtb.S
- delete mode 100644 arch/microblaze/boot/linked_dtb.S
- rename arch/openrisc/boot/{ => dts}/Makefile (75%)
+Sorry again.
 
+>> +static int __devinit sunxi_pinctrl_parse_group(struct platform_device *=
+pdev,
+>> +                                              struct device_node *node,
+>> +                                              int idx,
+>> +                                              const char **out_name)
+>> +{
+>> +       struct sunxi_pinctrl *pctl =3D platform_get_drvdata(pdev);
+>> +       struct sunxi_pinctrl_group *group =3D pctl->groups + idx;
+>> +       struct property *prop;
+>> +       char *group_name;
+>> +       int i;
+>> +       u32 val, proplen;
+>> +
+>> +       group_name =3D devm_kzalloc(&pdev->dev, strlen(node->name) + 4,
+>> +                                 GFP_KERNEL);
+>> +       if (!group_name)
+>> +               return -ENOMEM;
+>> +       if (of_property_read_u32(node, "reg", &val))
+>> +               snprintf(group_name, strlen(node->name), "%s", node->nam=
+e);
+>> +       else
+>> +               snprintf(group_name, strlen(node->name) + 4,
+>> +                        "%s.%d", node->name, val);
+>> +       group->name =3D group_name;
+>> +
+>> +       prop =3D of_find_property(node, "allwinner,pin-ids", &proplen);
+>> +       if (!prop)
+>> +               return -EINVAL;
+>> +       group->npins =3D proplen / sizeof(u32);
+> =
 
---
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+> So storing one u32 for every pin I guess.
+
+I'm not sure to understand what you mean here, but the sizeof is
+definitely useless.
+
+>> +       group->pins =3D devm_kzalloc(&pdev->dev,
+>> +                                  group->npins * sizeof(*group->pins),
+>> +                                  GFP_KERNEL);
+>> +       if (!group->pins)
+>> +               return -ENOMEM;
+>> +
+>> +       group->muxcfg =3D devm_kzalloc(&pdev->dev,
+>> +                                    group->npins * sizeof(*group->muxcf=
+g),
+>> +                                    GFP_KERNEL);
+>> +       if (!group->muxcfg)
+>> +               return -ENOMEM;
+>> +
+>> +       of_property_read_u32_array(node, "allwinner,pin-ids", group->pin=
+s,
+>> +                                  group->npins);
+>> +       for (i =3D 0; i < group->npins; i++) {
+>> +               group->muxcfg[i] =3D MUXID_TO_MUXCFG(group->pins[i]);
+>> +               group->pins[i] =3D MUXID_TO_PIN(group->pins[i]);
+>> +       }
+> =
+
+> This loop is rather awkward I mean, instead of bitstuffing muxcfg and
+> pin ID into a single u32 why not just have them as separate attributes.
+> =
+
+> Then there was somthing about bank ID which I guess is just
+> discarded here?
+
+The bankid is just there for convenience for the device tree to make it
+a bit more readable, but we could keep it in the driver I guess, it
+would ease the registers address computing.
+
+Of course, this is if we want to keep this syntax, which from your
+previous comments, isn't what we want.
+
+>> +static int __devinit sunxi_pinctrl_probe(struct platform_device *pdev)
+>> +{
+>> +       struct sunxi_pinctrl *pctl;
+>> +       int i, ret;
+>> +
+>> +       pctl =3D devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
+>> +       if (!pctl)
+>> +               return -ENOMEM;
+>> +       platform_set_drvdata(pdev, pctl);
+>> +
+>> +       ret =3D sunxi_pinctrl_probe_dt(pdev, pctl);
+>> +       if (ret) {
+>> +               dev_err(&pdev->dev, "dt probe failed: %d\n", ret);
+>> +               return ret;
+>> +       }
+>> +
+>> +       pctl->data =3D (struct sunxi_pinctrl_data *)of_match_device(sunx=
+i_pinctrl_match, &pdev->dev)->data;
+> =
+
+> I can't parse this, what is going on here?
+> Can you break this statement apart somehow?
+
+Retrieval of the data associated to the compatible, here the pins
+available for the various SoC variants. This was in the patch I forgot
+to Cc you, sorry about that.
+
+I guess I could still make this a bit less ugly.
+
+>> +++ b/drivers/pinctrl/pinctrl-sunxi.h
+> =
+
+>> +#define PINS_PER_BANK  32
+>> +
+>> +#define CFG_REG(pin)   (round_down(                                    \
+>> +                               (pin / PINS_PER_BANK) * 0x24 +          \
+>> +                               ((pin % PINS_PER_BANK) / 8) * 0x04, 4))
+>> +#define CFG_OFFSET(pin)        ((pin % 8) * 4)
+>> +
+>> +#define DLEVEL_REG(pin)        (round_down(                            =
+        \
+>> +                               (pin / PINS_PER_BANK) * 0x24 +          \
+>> +                               ((pin % PINS_PER_BANK) / 16) * 0x04 +   \
+>> +                               0x14, 4))
+>> +#define DLEVEL_OFFSET(pin)     ((pin % 16) * 2)
+>> +
+>> +#define PULL_REG(pin)  (round_down(                                    \
+>> +                               (pin / PINS_PER_BANK) * 0x24 +          \
+>> +                               ((pin % PINS_PER_BANK) / 16) * 0x04 +   \
+>> +                               0x1c, 4))
+>> +#define PULL_OFFSET(pin)       ((pin % 16) * 2)
+> =
+
+> These are impossible to understand. Please convert these to
+> documented static inline functions instead so the code can
+> be maintained in the future.
+
+Ok.
+
+>> +#define CFG_PINS_PER_REG       8
+>> +#define CFG_PINS_BITS          4
+>> +#define DLEVEL_PINS_PER_REG    16
+>> +#define DLEVEL_PINS_BITS       2
+>> +#define PULL_PINS_PER_REG      16
+>> +#define PULL_PINS_BITS         2
+>> +
+>> +#define MUXID_TO_PIN(id)       ((((id) >> 12 & 0xf) * 32) + ((id) >> 4 =
+& 0xff))
+>> +#define MUXID_TO_MUXCFG(id)    ((id) & 0xf)
+> =
+
+> Same here.
+
+Ok. Though, it will probably be removed by the previous changes we
+discussed.
+
+>> +#define SUNXI_PINCTRL_PIN_PA0  PINCTRL_PIN(0 + 0, "PA0")
+>> +#define SUNXI_PINCTRL_PIN_PA1  PINCTRL_PIN(0 + 1, "PA1")
+>> +#define SUNXI_PINCTRL_PIN_PA2  PINCTRL_PIN(0 + 2, "PA2")
+>> +#define SUNXI_PINCTRL_PIN_PA3  PINCTRL_PIN(0 + 3, "PA3")
+>> +#define SUNXI_PINCTRL_PIN_PA4  PINCTRL_PIN(0 + 4, "PA4")
+>> +#define SUNXI_PINCTRL_PIN_PA5  PINCTRL_PIN(0 + 5, "PA5")
+>> +#define SUNXI_PINCTRL_PIN_PA6  PINCTRL_PIN(0 + 6, "PA6")
+>> +#define SUNXI_PINCTRL_PIN_PA7  PINCTRL_PIN(0 + 7, "PA7")
+>> +#define SUNXI_PINCTRL_PIN_PA8  PINCTRL_PIN(0 + 8, "PA8")
+>> +#define SUNXI_PINCTRL_PIN_PA9  PINCTRL_PIN(0 + 9, "PA9")
+>> +#define SUNXI_PINCTRL_PIN_PA10 PINCTRL_PIN(0 + 10, "PA10")
+>> +#define SUNXI_PINCTRL_PIN_PA11 PINCTRL_PIN(0 + 11, "PA11")
+>> +#define SUNXI_PINCTRL_PIN_PA12 PINCTRL_PIN(0 + 12, "PA12")
+>> +#define SUNXI_PINCTRL_PIN_PA13 PINCTRL_PIN(0 + 13, "PA13")
+>> +#define SUNXI_PINCTRL_PIN_PA14 PINCTRL_PIN(0 + 14, "PA14")
+>> +#define SUNXI_PINCTRL_PIN_PA15 PINCTRL_PIN(0 + 15, "PA15")
+>> +#define SUNXI_PINCTRL_PIN_PA16 PINCTRL_PIN(0 + 16, "PA16")
+>> +#define SUNXI_PINCTRL_PIN_PA17 PINCTRL_PIN(0 + 17, "PA17")
+>> +#define SUNXI_PINCTRL_PIN_PA18 PINCTRL_PIN(0 + 18, "PA18")
+>> +#define SUNXI_PINCTRL_PIN_PA19 PINCTRL_PIN(0 + 19, "PA19")
+>> +#define SUNXI_PINCTRL_PIN_PA20 PINCTRL_PIN(0 + 20, "PA20")
+>> +#define SUNXI_PINCTRL_PIN_PA21 PINCTRL_PIN(0 + 21, "PA21")
+>> +#define SUNXI_PINCTRL_PIN_PA22 PINCTRL_PIN(0 + 22, "PA22")
+>> +#define SUNXI_PINCTRL_PIN_PA23 PINCTRL_PIN(0 + 23, "PA23")
+>> +#define SUNXI_PINCTRL_PIN_PA24 PINCTRL_PIN(0 + 24, "PA24")
+>> +#define SUNXI_PINCTRL_PIN_PA25 PINCTRL_PIN(0 + 25, "PA25")
+>> +#define SUNXI_PINCTRL_PIN_PA26 PINCTRL_PIN(0 + 26, "PA26")
+>> +#define SUNXI_PINCTRL_PIN_PA27 PINCTRL_PIN(0 + 27, "PA27")
+>> +#define SUNXI_PINCTRL_PIN_PA28 PINCTRL_PIN(0 + 28, "PA28")
+>> +#define SUNXI_PINCTRL_PIN_PA29 PINCTRL_PIN(0 + 29, "PA29")
+>> +#define SUNXI_PINCTRL_PIN_PA30 PINCTRL_PIN(0 + 30, "PA30")
+>> +#define SUNXI_PINCTRL_PIN_PA31 PINCTRL_PIN(0 + 31, "PA31")
+> =
+
+> 0+0, 0+1, 0+2 .... why not just use the scalar? 0, 1, 2, ... 31?
+> =
+
+> I understand that the zero denotes bank 0 or bank A or somtheing
+> (PA, PB etc) so if you need to keep that, use something like
+> =
+
+> #define PA_BASE 0
+> =
+
+> Then
+> =
+
+> #define SUNXI_PINCTRL_PIN_PA28 PINCTRL_PIN(PA_BASE + 28, "PA28")
+> =
+
+> which makes more sense.
+
+Ah right. I will make the change.
+
+Thanks,
+Maxime
+
+-- =
+
+Maxime Ripard, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
