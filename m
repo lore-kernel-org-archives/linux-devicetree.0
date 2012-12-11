@@ -1,72 +1,72 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: question about drivers/pinctrl/pinctrl-at91.c
-Date: Tue, 11 Dec 2012 10:04:03 +0100 (CET)
-Message-ID: <alpine.DEB.2.02.1212110958110.2091@hadrien>
-References: <alpine.DEB.2.02.1212081643590.1984@hadrien> <CACRpkdY_znNHckam+PsysddCib2PP-6Lk4OM8_v34BX+p4pu-A@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] mtd: devices: elm: Add support for ELM error
+ correction
+Date: Tue, 11 Dec 2012 09:03:56 +0000
+Message-ID: <20121211090356.8D3D93E076D@localhost>
+References: <1354189595-12784-1-git-send-email-avinashphilip@ti.com>
+ <1354189595-12784-3-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY_znNHckam+PsysddCib2PP-6Lk4OM8_v34BX+p4pu-A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Julia Lawall <julia.lawall@lip6.fr>, plagnioj@jcrosoft.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1354189595-12784-3-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, afzal-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, gururaja.hebbar-l0cyMroinI0@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>, ivan.djelic-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Dec 2012, Linus Walleij wrote:
+On Thu, 29 Nov 2012 17:16:33 +0530, "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org> wrote:
+> The ELM hardware module can be used to speedup BCH 4/8/16 ECC scheme
+> error correction.
+> For now only 4 & 8 bit support is added
+> 
+> Signed-off-by: Philip, Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+> ---
+> Changes since v2:
+> 	- Remove __devinit & __devexit annotations
+> 
+> Changes since v1:
+> 	- Change build attribute to CONFIG_MTD_NAND_OMAP_BCH
+> 	- Reduced indentation using by passing elm_info , offset
+> 	  to elm_read & elm_write
+> 	- Removed syndrome manipulation functions.
+> 
+> :000000 100644 0000000... b88ee83... A	Documentation/devicetree/bindings/mtd/elm.txt
+> :100644 100644 395733a... 369a194... M	drivers/mtd/devices/Makefile
+> :000000 100644 0000000... d2667f3... A	drivers/mtd/devices/elm.c
+> :000000 100644 0000000... d4fce31... A	include/linux/platform_data/elm.h
+>  Documentation/devicetree/bindings/mtd/elm.txt |   17 +
+>  drivers/mtd/devices/Makefile                  |    4 +-
+>  drivers/mtd/devices/elm.c                     |  418 +++++++++++++++++++++++++
+>  include/linux/platform_data/elm.h             |   54 ++++
+>  4 files changed, 493 insertions(+), 1 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/elm.txt b/Documentation/devicetree/bindings/mtd/elm.txt
+> new file mode 100644
+> index 0000000..b88ee83
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/elm.txt
+> @@ -0,0 +1,17 @@
+> +Error location module
+> +
+> +Required properties:
+> +- compatible: Must be "ti,elm"
 
-> On Sat, Dec 8, 2012 at 4:52 PM, Julia Lawall <julia.lawall@lip6.fr> wrote:
->
-> > The function at91_dt_node_to_map in drivers/pinctrl/pinctrl-at91.c contains
-> > the following code:
-> >
-> >        new_map = devm_kzalloc(pctldev->dev, sizeof(*new_map) * map_num,
-> > GFP_KERNEL);
-> >         if (!new_map)
-> >                 return -ENOMEM;
-> >
-> >         *map = new_map;
-> >         *num_maps = map_num;
-> >
-> >         /* create mux map */
-> >         parent = of_get_parent(np);
-> >         if (!parent) {
-> >                 kfree(new_map);
-> >                 return -EINVAL;
-> >         }
-> >
-> > This is clearly not correct, because the combination of devm_kzalloc and
-> > kfree risks creating a double free.
->
-> Agreed, probably just some spurious leftover.
->
-> > But I am not sure how best to fix it.
-> > Is the data structure intended to normally exist until the driver's remove
-> > function is called?  If so, perhaps the devm_kzalloc is OK.  If I just
-> > remove the kfree, then the structure will persist until the remove function
-> > is called, even though there was an error, which is perhaps not good.  So I
-> > could change the kfree to devm_kfree?
->
-> I was under the impression that if you exit the probe function
-> with a negative value anything allocated with devm_* was freed
-> immediately, that is atleast how it's described in
-> Documentation/driver-model/devres.txt
-> atleast that seems to be the intetion with the whole thing.
+Compatible string is too generic. Need to specify a specific SoC here.
+ie: "ti,omap3430-elm"
 
-That is true, but I wasn't sure taht this function was part of the probe
-function.  Its only reference is in:
+Otherwise the binding looks fine. I haven't reviewed the code though.
 
-static struct pinctrl_ops at91_pctrl_ops = {
-        .get_groups_count       = at91_get_groups_count,
-        .get_group_name         = at91_get_group_name,
-        .get_group_pins         = at91_get_group_pins,
-	.pin_dbg_show           = at91_pin_dbg_show,
-        .dt_node_to_map         = at91_dt_node_to_map,
-        .dt_free_map            = at91_dt_free_map,
-};
-
-Working backwards, one possible call site is pinctrl_get, which is an
-exported function.  Is it safe to assume that it will always be called
-from within a probe function?
-
-thanks,
-julia
+g.
