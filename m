@@ -1,144 +1,93 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] leds: leds-pwm: Preparing the driver for device
- tree support
-Date: Tue, 11 Dec 2012 08:12:53 +0100
-Message-ID: <20121211071253.GC8294@avionic-0098.adnet.avionic-design.de>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v3 4/4] leds: leds-pwm: Add device tree bindings
+Date: Tue, 11 Dec 2012 08:25:45 +0100
+Message-ID: <20121211072545.GD8294@avionic-0098.adnet.avionic-design.de>
 References: <1355133637-2784-1-git-send-email-peter.ujfalusi@ti.com>
- <1355133637-2784-3-git-send-email-peter.ujfalusi@ti.com>
+ <1355133637-2784-5-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3505245983583987728=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355133637-2784-3-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mSxgbZZZvrAyzONB"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1355133637-2784-5-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@secretlab.ca>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---===============3505245983583987728==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="GPJrCs/72TxItFYR"
-Content-Disposition: inline
-
-
---GPJrCs/72TxItFYR
+--mSxgbZZZvrAyzONB
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Dec 10, 2012 at 11:00:35AM +0100, Peter Ujfalusi wrote:
-> In order to be able to add device tree support for leds-pwm driver we need
-> to rearrange the data structures used by the drivers.
->=20
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/leds/leds-pwm.c | 39 +++++++++++++++++++++++----------------
->  1 file changed, 23 insertions(+), 16 deletions(-)
->=20
-> diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-> index 351257c..02f0c0c 100644
-> --- a/drivers/leds/leds-pwm.c
-> +++ b/drivers/leds/leds-pwm.c
-> @@ -30,6 +30,11 @@ struct led_pwm_data {
->  	unsigned int		period;
->  };
+On Mon, Dec 10, 2012 at 11:00:37AM +0100, Peter Ujfalusi wrote:
+[...]
+> +LED sub-node properties:
+> +- pwms : PWM property, please refer to:=20
+> +  Documentation/devicetree/bindings/pwm/pwm.txt
+
+Instead of only referring to the generic PWM binding document, this
+should probably explain what the PWM device is used for.
+
+> +err:
+> +	if (priv->num_leds > 0) {
+> +		for (count =3D priv->num_leds - 1; count >=3D 0; count--) {
+> +			led_classdev_unregister(&priv->leds[count].cdev);
+> +			pwm_put(priv->leds[count].pwm);
+> +		}
+> +	}
+
+Can this not be written more simply as follows?
+
+	while (priv->num_leds--) {
+		...
+	}
+
+>  static int led_pwm_remove(struct platform_device *pdev)
+>  {
+> +	struct led_pwm_platform_data *pdata =3D pdev->dev.platform_data;
+>  	struct led_pwm_priv *priv =3D platform_get_drvdata(pdev);
+>  	int i;
 > =20
-> +struct led_pwm_priv {
-> +	int num_leds;
-> +	struct led_pwm_data leds[];
+> -	for (i =3D 0; i < priv->num_leds; i++)
+> +	for (i =3D 0; i < priv->num_leds; i++) {
+>  		led_classdev_unregister(&priv->leds[i].cdev);
+> +		if (!pdata)
+> +			pwm_put(priv->leds[i].pwm);
+> +	}
+
+Perhaps while at it we can add devm_of_pwm_get() along with exporting
+of_pwm_get() so that you don't have to special-case this?
+
+> +static const struct of_device_id of_pwm_leds_match[] =3D {
+> +	{ .compatible =3D "pwm-leds", },
+> +	{},
 > +};
 
-I think you want leds[0] here. Otherwise your structure is too large by
-sizeof(struct led_pwm_data *).
-
-> +
->  static void led_pwm_set(struct led_classdev *led_cdev,
->  	enum led_brightness brightness)
->  {
-> @@ -47,25 +52,29 @@ static void led_pwm_set(struct led_classdev *led_cdev,
->  	}
->  }
-> =20
-> +static inline int sizeof_pwm_leds_priv(int num_leds)
-
-Perhaps this should return size_t?
-
-> +{
-> +	return sizeof(struct led_pwm_priv) +
-> +		      (sizeof(struct led_pwm_data) * num_leds);
-> +}
-> +
->  static int led_pwm_probe(struct platform_device *pdev)
->  {
->  	struct led_pwm_platform_data *pdata =3D pdev->dev.platform_data;
-> -	struct led_pwm *cur_led;
-> -	struct led_pwm_data *leds_data, *led_dat;
-> +	struct led_pwm_priv *priv;
->  	int i, ret =3D 0;
-> =20
->  	if (!pdata)
->  		return -EBUSY;
-> =20
-> -	leds_data =3D devm_kzalloc(&pdev->dev,
-> -			sizeof(struct led_pwm_data) * pdata->num_leds,
-> -				GFP_KERNEL);
-> -	if (!leds_data)
-> +	priv =3D devm_kzalloc(&pdev->dev, sizeof_pwm_leds_priv(pdata->num_leds),
-> +			    GFP_KERNEL);
-
-I'm not sure if sizeof_pwm_leds_priv() requires to be a separate
-function. You could make it shorter by doing something like:
-
-	size_t extra =3D sizeof(*led_dat) * pdata->num_leds;
-
-	priv =3D devm_kzalloc(&pdev->dev, sizeof(*priv) + extra, GFP_KERNEL);
-
-But that's really just a matter of taste, so no further objections if
-you want to keep the inline function.
+Doesn't this cause a compiler warning for !OF builds?
 
 Thierry
 
---GPJrCs/72TxItFYR
+--mSxgbZZZvrAyzONB
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQxtz1AAoJEN0jrNd/PrOhUU4P+gLJHgWtDm0s/NCnexXBdCrf
-vzMxNBFgJ2yE8onyjjY7xBmb1gcPNZrjM92lTyy87mz6USNcq9EI5nNFzgZysGUQ
-NxsEOlYD2EZ3FNi/9cdhq3T9EOR+G57HetqCvimoOdl7ZMGZ8DDKOADk/Wx25juX
-lHotDE6l9Fcv8z4ObUZR3Nvr0SCU+4pal+q19qHWmeGjVFatB8zStqpNDBpv00ta
-i3Q1TFOeDe7+WZhnMdL9vX5P5Lumlly1idZCd0s70mqJPB54eZId4qiKz2xWyOnl
-Jgl0I8bifWCmRLBobEcwYtynHAnRoxni+JfkXxRp9jju2Sa7EtsQOJ+fxhLOLZ1O
-pLoBcqNvhOPzWjn2lqacamp29ioHkyOR9ZxI/sa5d+7YWlujBMMqErIHcd2PknHb
-Y6j4XdQM9Oyp2xiw4T7DIlt1VaNXqkEL7dD4+GjpH3AUSN6vRyr5sppvBJiqkaqR
-Cr2Avy+64Hwnwnbq9wSi27t/rXmhFeQBbNqiCQ2cQRiKJQiGHf84JqbWMlBuqx/z
-0oTQQwGhy7WdRuyObep2+t0ir0ZPT7ZH+XsMym/Ha8b5MyHqToMUdj08DiLDPylq
-C700jKySZhoFHR0yWM4d1X0NJHb0uBlz2W6tckiY3k5L2148qhlBKK8xnVLZNDi3
-dLhVV8MIKcZ66NwLvumq
-=NODy
+iQIcBAEBAgAGBQJQxt/5AAoJEN0jrNd/PrOh4bgP/3MkJAdYjS3hh62DIIa51Hk3
+V5lSueX3Nwmf5Dsa2pC+JbufN2DGt53DLoioHXk1MA9Ad5Q6DCUwNM7S3I1zy94e
+NfDCOKzOoaVp3e854McCBmFgLQxkDgoWbmROkH3ptDWWNLqNIJukqPaz+fLRuk35
+cnDNY6NylItflxZlV7bfwYjI+V7/ybsT1T7ma0xSAICKGkuG8qBE7B0xG9m2OG58
+Osou1jE0dIpWGy7IaUTbEhqD/JUrgP+lAahAuOg92FqnqKvNO89L40mQo4OO4ehB
+XgQ1vtBxE3FLo7Zmu/6i7AAAunjG03z8DEthfqMuDjwOGiKC9Puou8ngaF80iYCo
+eRO8Qu8XtFtO5SPVwrW8zrf70Bp2f7JE4OGvNCsjEjqYcv4wdzUMauy1X5Ko8oK9
+6GXdJKf+oE4TumazXjwxEd/Ho6olkObDp1qo8T8d+AMRG63fxZeO4qBjllomzb1u
+3vx3osOu0C11fZxuqdWGP03g2dVKJIX5uSfI+8+bTkVIG57tG9SEcX3mQjVzcMNv
+ZUH4BTs+r0tcGChLai9ETadoWvDd2xb3K6xinejoTWlgdsW3XyoGcc3kywY7j7Qa
+htVwQfdnqvjfFss056+cCQfjsUBG8pGYkBOrstEFYAVyBcLO2AyJgW3Si1uqS7EP
+BjL9voO5+ZWYcXI0qFm4
+=aTSb
 -----END PGP SIGNATURE-----
 
---GPJrCs/72TxItFYR--
-
---===============3505245983583987728==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3505245983583987728==--
+--mSxgbZZZvrAyzONB--
