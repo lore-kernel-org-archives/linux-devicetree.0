@@ -1,60 +1,66 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v3 2/3] mtd: devices: elm: Add support for ELM error correction
-Date: Wed, 12 Dec 2012 16:45:51 +0530
-Message-ID: <50C86767.60806@ti.com>
-References: <1354189595-12784-1-git-send-email-avinashphilip@ti.com> <1354189595-12784-3-git-send-email-avinashphilip@ti.com> <50C1C6E3.5020300@ti.com> <518397C60809E147AF5323E0420B992E3EA1FA14@DBDE01.ent.ti.com>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH v3 0/3] ARM/dts: omap3: Add DT support for IGEP devices
+Date: Wed, 12 Dec 2012 12:42:25 +0100
+Message-ID: <CAAwP0s3gf16hZi6RVhsi7ee0YW_boPRy9--pukRcKJfMiWFKDg@mail.gmail.com>
+References: <1354538503-22671-1-git-send-email-javier.martinez@collabora.co.uk>
+ <CAAwP0s2qXuJzwEh-AVORbPApr6XT0JAfsFjrxKDvXArqYk0qXQ@mail.gmail.com> <50C85850.7010906@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <518397C60809E147AF5323E0420B992E3EA1FA14@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Philip, Avinash" <avinashphilip@ti.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "Mohammed, Afzal" <afzal@ti.com>, "tony@atomide.com" <tony@atomide.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50C85850.7010906@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, grant.likely@secretlab.ca, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <elezegarcia@gmail.com>, Enrico Butera <ebutera@gmail.com>, Matthias Brugger <matthias.bgg@googlemail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/10/2012 12:13 PM, Philip, Avinash wrote:
-> On Fri, Dec 07, 2012 at 16:07:23, Nori, Sekhar wrote:
->> On 11/29/2012 5:16 PM, Philip, Avinash wrote:
-
-[...]
-
->>> +struct device *elm_request(enum bch_ecc bch_type)
->>> +{
->>> +	struct elm_info *info;
->>> +
->>> +	list_for_each_entry(info, &elm_devices, list) {
->>> +		if (info && info->dev) {
->>> +				info->bch_type = bch_type;
->>> +				elm_config(info);
->>> +				return info->dev;
->>> +		}
->>> +	}
+On Wed, Dec 12, 2012 at 11:11 AM, Benoit Cousson <b-cousson@ti.com> wrote:
+> Hi Javier,
+>
+> On 12/12/2012 09:25 AM, Javier Martinez Canillas wrote:
+>> On Mon, Dec 3, 2012 at 1:41 PM, Javier Martinez Canillas
+>> <javier.martinez@collabora.co.uk> wrote:
+>>> IGEP technology devices are TI OMAP3 SoC based industrial embedded
+>>> and computer-on-module boards. This patch-set adds initial device
+>>> tree support for these devices.
+>>>
+>>> The device trees allows to boot from an MMC and are working all the
+>>> components that already have device tree support on OMAP3 SoCs:
+>>>
+>>> - MMC/SD
+>>> - UARTs
+>>> - GPIO LEDs
+>>> - TWL4030 codec audio
+>>> - pinmux/pinconf pinctrl
+>>>
+>>> Some peripheral are still not working such as Flash storage and
+>>> Ethernet but support for these will also be included once the
+>>> OMAP GPMC device tree binding patches land on mainline.
+>>>
+>>> This is a v3 of the patch-set that solves issues pointed out by
+>>> Enric Balletbo and Benoit Cousson.
+>>>
+>>> The patch-set is composed of the following patches:
+>>>
+>>> [PATCH v3 1/3] ARM/dts: omap3: Add generic DT support for IGEP devices
+>>> [PATCH v3 2/3] ARM/dts: omap3: Add support for IGEPv2 board
+>>> [PATCH v3 3/3] ARM/dts: omap3: Add support for IGEP COM Module
+>>>
+>>> Best regards,
+>>> Javier
+>>> --
 >>
->> This will always return the first ELM device probed since you never
->> remove the allocated device from the list.
-> 
-> But now I realized that, there is no mechanism of freeing the requested
-> resource.
+>> Hi Benoit and Tony,
+>>
+>> Any comments on these?
+>
+> Nope, that's fine. I'll applied the series for 3.9.
+>
+> Thanks,
+> Benoit
+>
+>
 
-Right. You essentially want to assign an ELM instance to work with a
-given instance of GPMC and that could be done statically too. Just pass
-phandle of ELM node in GPMC DT data?
+Great, thanks a lot for!
 
-> So I will add mechanism to request ELM module successfully only if ELM
-> module is not requested already and add mechanism to free it, on NAND
-> driver module unload (loadable module support). This way ELM driver
-> can achieve multi instance support.
-> 
->> I wonder why you really need a list?
-> 
-> The prime motivation for the list is the driver should support multi
-> instances of ELM by removing global symbols.
-
-I still think a request/free API is bit too much for something that will
-turn out to be a simple 1-to-1 match anyway. Can you please look at the
-phandle suggestion above? I am no DT expert, but I think that will work
-for your use case.
-
-Thanks,
-Sekhar
+Best regards,
+Javier
