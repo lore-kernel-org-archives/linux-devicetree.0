@@ -1,65 +1,52 @@
-From: Qing Xu <qingx@marvell.com>
-Subject: Re: [PATCH 0/7] mfd: update on max8925 for DT support
-Date: Wed, 12 Dec 2012 14:22:03 +0800
-Message-ID: <50C8228B.7040702@marvell.com>
-References: <1352187305-9660-1-git-send-email-qingx@marvell.com> <CAN1soZzAZ9Od_5jC0ZFdw03c5P9Q+gJQswTwp0M1YWM_ti+9xw@mail.gmail.com> <50B6F8AC.6050307@marvell.com> <CAN1soZzTYjU9nEe1hQWAwz2R0GRfvaQ7HyaMZ3uNxtBV0X14uA@mail.gmail.com>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH v3 0/3] ARM/dts: omap3: Add DT support for IGEP devices
+Date: Wed, 12 Dec 2012 09:25:10 +0100
+Message-ID: <CAAwP0s2qXuJzwEh-AVORbPApr6XT0JAfsFjrxKDvXArqYk0qXQ@mail.gmail.com>
+References: <1354538503-22671-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAN1soZzTYjU9nEe1hQWAwz2R0GRfvaQ7HyaMZ3uNxtBV0X14uA@mail.gmail.com>
+In-Reply-To: <1354538503-22671-1-git-send-email-javier.martinez@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@gmail.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, grant.likely@secretlab.ca, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <elezegarcia@gmail.com>, Enrico Butera <ebutera@gmail.com>, Matthias Brugger <matthias.bgg@googlemail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/04/2012 03:11 PM, Haojian Zhuang wrote:
-> On Thu, Nov 29, 2012 at 1:54 PM, Qing Xu <qingx@marvell.com> wrote:
->> On 11/23/2012 05:09 PM, Haojian Zhuang wrote:
->>> On Tue, Nov 6, 2012 at 3:35 PM, Qing Xu <qingx@marvell.com> wrote:
->>>> From: Qing Xu <qingx@marvell.com>
->>>>
->>>> 1. add irqdomain for max8925, it is necessary for dt support
->>>> 2. bug fix in max8925 mfd devices'irq base and device registry failure
->>>> 3. support DT for max8925 mfd devices
->>>>
->>>> Qing Xu (7):
->>>>     mfd: max8925: add irqdomain for dt
->>>>     mfd: max8925: fix mfd device register failure
->>>>     mfd: max8925: fix onkey driver irq base
->>>>     mfd: max8925: support dt for power supply
->>>>     mfd: max8925: support dt for regulator
->>>>     mfd: max8925: support dt for backlight
->>>>     mfd: max8925: add dts
->>>>
->>>>    arch/arm/boot/dts/mmp2-brownstone.dts |  166
->>>> +++++++++++++++++++++++++++++++++
->>>>    arch/arm/boot/dts/mmp2.dtsi           |    4 +-
->>>>    drivers/input/misc/max8925_onkey.c    |    3 -
->>>>    drivers/mfd/max8925-core.c            |  107 +++++++++++++--------
->>>>    drivers/mfd/max8925-i2c.c             |   32 ++++++-
->>>>    drivers/power/max8925_power.c         |   57 ++++++++++-
->>>>    drivers/regulator/max8925-regulator.c |   35 +++++++-
->>>>    drivers/video/backlight/max8925_bl.c  |   31 ++++++-
->>>>    include/linux/mfd/max8925.h           |   12 ++-
->>>>    9 files changed, 389 insertions(+), 58 deletions(-)
->>>>
->>> No document on devicetree binding?
->> I added a new patch of "Documentation: add docs for max8925 dt",
->> please help to review, thanks a lot!
-> Acked.
+On Mon, Dec 3, 2012 at 1:41 PM, Javier Martinez Canillas
+<javier.martinez@collabora.co.uk> wrote:
+> IGEP technology devices are TI OMAP3 SoC based industrial embedded
+> and computer-on-module boards. This patch-set adds initial device
+> tree support for these devices.
 >
-> Samuel,
-> How do you think about this patch series? From my view, it's ok.
+> The device trees allows to boot from an MMC and are working all the
+> components that already have device tree support on OMAP3 SoCs:
 >
-> Best Regards
-> Haojian
+> - MMC/SD
+> - UARTs
+> - GPIO LEDs
+> - TWL4030 codec audio
+> - pinmux/pinconf pinctrl
+>
+> Some peripheral are still not working such as Flash storage and
+> Ethernet but support for these will also be included once the
+> OMAP GPMC device tree binding patches land on mainline.
+>
+> This is a v3 of the patch-set that solves issues pointed out by
+> Enric Balletbo and Benoit Cousson.
+>
+> The patch-set is composed of the following patches:
+>
+> [PATCH v3 1/3] ARM/dts: omap3: Add generic DT support for IGEP devices
+> [PATCH v3 2/3] ARM/dts: omap3: Add support for IGEPv2 board
+> [PATCH v3 3/3] ARM/dts: omap3: Add support for IGEP COM Module
+>
+> Best regards,
+> Javier
+> --
 
+Hi Benoit and Tony,
 
+Any comments on these?
 
-Samuel,
-
-Do you have any comments on these patches? Could they be merged?
-
-Thanks a lot!
-Qing
+Best regards,
+Javier
