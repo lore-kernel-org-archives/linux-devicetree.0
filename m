@@ -1,56 +1,85 @@
-From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 2/3] regulator: max77686: Add support for various
- operating modes
-Date: Wed, 12 Dec 2012 08:28:36 +0530
-Message-ID: <CAM4voanvKFmPoMr4xJKwRMETa0uN4O5+v1Q3+cTWSEXfu22zUQ@mail.gmail.com>
-References: <1355120784-31118-1-git-send-email-a.kesavan@samsung.com>
- <1355120784-31118-2-git-send-email-a.kesavan@samsung.com>
- <1355120784-31118-3-git-send-email-a.kesavan@samsung.com>
- <20121210064650.GJ10927@opensource.wolfsonmicro.com>
- <loom.20121210T091624-754@post.gmane.org>
- <CAM4voanevLVXW5_WFts2cjDi-5aAbj1_2=EN1amfp14KnKXNug@mail.gmail.com>
- <20121211125713.GH9097@opensource.wolfsonmicro.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH V3 2/3] dmaengine: dw_dmac: Enhance device tree support
+Date: Wed, 12 Dec 2012 08:30:35 +0530
+Message-ID: <CAKohpo=FjZuMOC-wuNc3q_FXbk546ttCLr55GkW9AL0Tz-HoBA@mail.gmail.com>
+References: <3100e691db3f94c22afd98b609a1568d7e70dfe7.1350360935.git.viresh.kumar@linaro.org>
+	<169edae67b9a051ca7448e5b62c3cd2c5c1db470.1350360935.git.viresh.kumar@linaro.org>
+	<201212102208.52347.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121211125713.GH9097-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201212102208.52347.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org, andriy.shevchenko@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 11, 2012 at 6:27 PM, Mark Brown
-<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
-> On Mon, Dec 10, 2012 at 02:06:49PM +0530, Abhilash Kesavan wrote:
->> On Mon, Dec 10, 2012 at 1:49 PM, Abhilash Kesavan
->> <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> > Mark Brown <broonie <at> opensource.wolfsonmicro.com> writes:
->
->> >> Binding documenation is mandatory for any new OF properties, please add
->> >> this.
->
->> > Patch 3/3 of this series adds documentation for the max77686-opmode property.
->
-> There is no point in splitting changes like this up, it just makes
-> review harder - in this case it caused me to not read your patch due
-> to the missing documentation.  Put the whole change together unless
-> things are getting too big to review.
-OK.
+Sorry for replying late, was too busy with other work yesterday.
 
-Can you please have a look at Doug's proposal for handling the
-operating mode generically in patch 3/3 of this series.
-If you are OK with it then I'll start work on implementing it.
+On 11 December 2012 03:38, Arnd Bergmann <arnd@arndb.de> wrote:
+> I'm deeply sorry for the very late complaint on this, but I only now
 
-Thanks,
-Abhilash
+Better late than never :)
+
+> noticed this patch as I was seeing build breakage in linux-next
+> because of it.
+
+Oops!! Here is a fix for that
+
+Author: Viresh Kumar <viresh.kumar@linaro.org>
+Date:   Wed Dec 12 08:28:07 2012 +0530
+
+    ARM: SPEAr1310: Fix CF DMA data
+
+    We need to pass string with device-channel name to dma controller
+instead of dma
+    controller specific dma struct. Fix CF dma data.
+
+    Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ arch/arm/mach-spear13xx/spear1310.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-spear13xx/spear1310.c
+b/arch/arm/mach-spear13xx/spear1310.c
+index f65ad5b..54f0e2e 100644
+--- a/arch/arm/mach-spear13xx/spear1310.c
++++ b/arch/arm/mach-spear13xx/spear1310.c
+@@ -36,7 +36,7 @@
+ static struct arasan_cf_pdata cf_pdata = {
+        .cf_if_clk = CF_IF_CLK_166M,
+        .quirk = CF_BROKEN_UDMA,
+-       .dma_priv = &cf_dma_priv,
++       .dma_priv = "cf",
+ };
+
+> Viresh, there are multiple problems with your approach unfortunately:
+>
+> * It does not follow the binding from
+>   Documentation/devicetree/bindings/dma/dma.txt
+
+When i patched it, this patch wasn't there in linux-next/master.
+Probably was getting reviewed somewhere :)
+
+> * It requires slave drivers to know that they are using the dw_dmac
+>   driver and pass a pointer to dw_generic_filter, which is not
+>   generic at all
+>
+> * It requires the dmac node to have information about all slaves
+>
+> There are also some minor issues, such as the naming of DT
+> properties, but the above need to be resolved first.
+
+I saw the binding document and it looks it can be applied to dw_dmac
+too, as there is nothing special for it.
+
+The question is how? We are already late for merge window and this
+one is queued. Supplying a new patch, getting it reviewed/tested and
+being pulled by Linus is not so easy :)
+
+Two ways:
+- Keep it as is, and i will fix it separately and quickly
+- Drop it :(
+
+--
+viresh
