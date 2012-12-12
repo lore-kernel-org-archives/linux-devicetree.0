@@ -1,52 +1,45 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH v3 0/3] ARM/dts: omap3: Add DT support for IGEP devices
-Date: Wed, 12 Dec 2012 09:25:10 +0100
-Message-ID: <CAAwP0s2qXuJzwEh-AVORbPApr6XT0JAfsFjrxKDvXArqYk0qXQ@mail.gmail.com>
-References: <1354538503-22671-1-git-send-email-javier.martinez@collabora.co.uk>
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH V3 2/3] dmaengine: dw_dmac: Enhance device tree support
+Date: Wed, 12 Dec 2012 10:40:21 +0200
+Message-ID: <1355301621.31620.66.camel@smile>
+References: <3100e691db3f94c22afd98b609a1568d7e70dfe7.1350360935.git.viresh.kumar@linaro.org>
+	 <169edae67b9a051ca7448e5b62c3cd2c5c1db470.1350360935.git.viresh.kumar@linaro.org>
+	 <201212102208.52347.arnd@arndb.de>
+	 <CAKohpo=FjZuMOC-wuNc3q_FXbk546ttCLr55GkW9AL0Tz-HoBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1354538503-22671-1-git-send-email-javier.martinez@collabora.co.uk>
+In-Reply-To: <CAKohpo=FjZuMOC-wuNc3q_FXbk546ttCLr55GkW9AL0Tz-HoBA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, grant.likely@secretlab.ca, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <elezegarcia@gmail.com>, Enrico Butera <ebutera@gmail.com>, Matthias Brugger <matthias.bgg@googlemail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 3, 2012 at 1:41 PM, Javier Martinez Canillas
-<javier.martinez@collabora.co.uk> wrote:
-> IGEP technology devices are TI OMAP3 SoC based industrial embedded
-> and computer-on-module boards. This patch-set adds initial device
-> tree support for these devices.
->
-> The device trees allows to boot from an MMC and are working all the
-> components that already have device tree support on OMAP3 SoCs:
->
-> - MMC/SD
-> - UARTs
-> - GPIO LEDs
-> - TWL4030 codec audio
-> - pinmux/pinconf pinctrl
->
-> Some peripheral are still not working such as Flash storage and
-> Ethernet but support for these will also be included once the
-> OMAP GPMC device tree binding patches land on mainline.
->
-> This is a v3 of the patch-set that solves issues pointed out by
-> Enric Balletbo and Benoit Cousson.
->
-> The patch-set is composed of the following patches:
->
-> [PATCH v3 1/3] ARM/dts: omap3: Add generic DT support for IGEP devices
-> [PATCH v3 2/3] ARM/dts: omap3: Add support for IGEPv2 board
-> [PATCH v3 3/3] ARM/dts: omap3: Add support for IGEP COM Module
->
-> Best regards,
-> Javier
-> --
+On Wed, 2012-12-12 at 08:30 +0530, Viresh Kumar wrote: 
+> > * It requires slave drivers to know that they are using the dw_dmac
+> >   driver and pass a pointer to dw_generic_filter, which is not
+> >   generic at all
+> >
+> > * It requires the dmac node to have information about all slaves
+> >
+> > There are also some minor issues, such as the naming of DT
+> > properties, but the above need to be resolved first.
+> 
+> I saw the binding document and it looks it can be applied to dw_dmac
+> too, as there is nothing special for it.
+> 
+> The question is how? We are already late for merge window and this
+> one is queued. Supplying a new patch, getting it reviewed/tested and
+> being pulled by Linus is not so easy :)
+> 
+> Two ways:
+> - Keep it as is, and i will fix it separately and quickly
+> - Drop it :(
+Will we survive if the patch is in mainline? I mean how big the impact
+of it is?
 
-Hi Benoit and Tony,
 
-Any comments on these?
-
-Best regards,
-Javier
+-- 
+Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Intel Finland Oy
