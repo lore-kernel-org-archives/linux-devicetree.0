@@ -1,13 +1,11 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 5/7] pwm: Add devm_of_pwm_get() as exported API for users
-Date: Wed, 12 Dec 2012 10:04:50 +0100
-Message-ID: <1355303092-15523-6-git-send-email-peter.ujfalusi@ti.com>
-References: <1355303092-15523-1-git-send-email-peter.ujfalusi@ti.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH V2 0/4] add RTC support for Armada 370 and Armada XP
+Date: Wed, 12 Dec 2012 10:06:22 +0100
+Message-ID: <1355303186-9267-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355303092-15523-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,86 +16,46 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When booted with DT users can use devm version of of_pwm_get() to benefit
-from automatic resource release.
+Hello,
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
----
- drivers/pwm/core.c  | 30 ++++++++++++++++++++++++++++++
- include/linux/pwm.h |  9 +++++++++
- 2 files changed, 39 insertions(+)
+This small patch set adds RTC support for Armada 370 and Armada XP. It
+was successfully tested on the evaluation board. The third patch add
+the lacking documentation for the device tree binding and was already
+taken by Grant Likely, I keep this one in the series for
+coherency. The only differences with the previous patch set was the
+add of the Acked-by from Andrew Lunn and a new small patch to update
+of the mvebu_configuration. I also split the patch wich add the RTC
+support in two part, one for the RTC subsytem and on for
+mach-mvebu. This series is 3.9 material.
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 3cb741d..4a13da4 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -708,6 +708,36 @@ struct pwm_device *devm_pwm_get(struct device *dev, const char *con_id)
- }
- EXPORT_SYMBOL_GPL(devm_pwm_get);
- 
-+/**
-+ * devm_of_pwm_get() - resource managed of_pwm_get()
-+ * @dev: device for PWM consumer
-+ * @np: device node to get the PWM from
-+ * @con_id: consumer name
-+ *
-+ * This function performs like of_pwm_get() but the acquired PWM device will
-+ * automatically be released on driver detach.
-+ */
-+struct pwm_device *devm_of_pwm_get(struct device *dev, struct device_node *np,
-+				   const char *con_id)
-+{
-+	struct pwm_device **ptr, *pwm;
-+
-+	ptr = devres_alloc(devm_pwm_release, sizeof(**ptr), GFP_KERNEL);
-+	if (!ptr)
-+		return ERR_PTR(-ENOMEM);
-+
-+	pwm = of_pwm_get(np, con_id);
-+	if (!IS_ERR(pwm)) {
-+		*ptr = pwm;
-+		devres_add(dev, ptr);
-+	} else {
-+		devres_free(ptr);
-+	}
-+
-+	return pwm;
-+}
-+EXPORT_SYMBOL_GPL(devm_of_pwm_get);
-+
- static int devm_pwm_match(struct device *dev, void *res, void *data)
- {
- 	struct pwm_device **p = res;
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index 76a1959..70655a2 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -179,6 +179,8 @@ struct pwm_device *of_pwm_get(struct device_node *np, const char *con_id);
- void pwm_put(struct pwm_device *pwm);
- 
- struct pwm_device *devm_pwm_get(struct device *dev, const char *con_id);
-+struct pwm_device *devm_of_pwm_get(struct device *dev, struct device_node *np,
-+				   const char *con_id);
- void devm_pwm_put(struct device *dev, struct pwm_device *pwm);
- #else
- static inline int pwm_set_chip_data(struct pwm_device *pwm, void *data)
-@@ -230,6 +232,13 @@ static inline struct pwm_device *devm_pwm_get(struct device *dev,
- 	return ERR_PTR(-ENODEV);
- }
- 
-+static inline struct pwm_device *devm_of_pwm_get(struct device *dev,
-+						 struct device_node *np,
-+						 const char *con_id)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
- static inline void devm_pwm_put(struct device *dev, struct pwm_device *pwm)
- {
- }
+Alessandro,
+could you take the first patches if you agree with it?
+
+Jason,
+
+I wait for a while if there any feedback, then I will send you a git
+pull request. If I understood well your workflow I will do 2 git pull
+one for dt and one for defconfig.
+
+Thanks
+
+
+Gregory CLEMENT (4):
+  rtc: Add support of rtc-mv for MVEBU SoCs
+  arm: mvebu: Add RTC support for Armada 370 and Armada XP
+  rtc: rtc-mv: Add the device tree binding documentation
+  arm: mvebu: Update defconfig with Marvell RTC support
+
+ .../devicetree/bindings/rtc/orion-rtc.txt          |   18 ++++++++++++++++++
+ arch/arm/boot/dts/armada-370-xp.dtsi               |    6 ++++++
+ arch/arm/configs/mvebu_defconfig                   |    1 +
+ drivers/rtc/Kconfig                                |    2 +-
+ 4 files changed, 26 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/orion-rtc.txt
+
 -- 
-1.8.0
+1.7.9.5
