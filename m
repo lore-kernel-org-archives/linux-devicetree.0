@@ -1,44 +1,27 @@
 From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 Subject: Re: [PATCH V3 2/3] dmaengine: dw_dmac: Enhance device tree support
-Date: Wed, 12 Dec 2012 10:40:21 +0200
-Message-ID: <1355301621.31620.66.camel@smile>
+Date: Wed, 12 Dec 2012 10:42:02 +0200
+Message-ID: <1355301722.31620.68.camel@smile>
 References: <3100e691db3f94c22afd98b609a1568d7e70dfe7.1350360935.git.viresh.kumar@linaro.org>
 	 <169edae67b9a051ca7448e5b62c3cd2c5c1db470.1350360935.git.viresh.kumar@linaro.org>
 	 <201212102208.52347.arnd@arndb.de>
-	 <CAKohpo=FjZuMOC-wuNc3q_FXbk546ttCLr55GkW9AL0Tz-HoBA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKohpo=FjZuMOC-wuNc3q_FXbk546ttCLr55GkW9AL0Tz-HoBA@mail.gmail.com>
+In-Reply-To: <201212102208.52347.arnd@arndb.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Vinod Koul <vinod.koul@intel.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Viresh Kumar <viresh.kumar@linaro.org>, vinod.koul@intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-12-12 at 08:30 +0530, Viresh Kumar wrote: 
-> > * It requires slave drivers to know that they are using the dw_dmac
-> >   driver and pass a pointer to dw_generic_filter, which is not
-> >   generic at all
-> >
-> > * It requires the dmac node to have information about all slaves
-> >
-> > There are also some minor issues, such as the naming of DT
-> > properties, but the above need to be resolved first.
-> 
-> I saw the binding document and it looks it can be applied to dw_dmac
-> too, as there is nothing special for it.
-> 
-> The question is how? We are already late for merge window and this
-> one is queued. Supplying a new patch, getting it reviewed/tested and
-> being pulled by Linus is not so easy :)
-> 
-> Two ways:
-> - Keep it as is, and i will fix it separately and quickly
-> - Drop it :(
-Will we survive if the patch is in mainline? I mean how big the impact
-of it is?
+On Mon, 2012-12-10 at 22:08 +0000, Arnd Bergmann wrote: 
+> The build bug is not the problem however, but the abuse of the
+> API is. Andy, are you sure you understood what this does when
+> you gave you Reviewed-by comment?
 
+Thank you for pointing this out to refresh my memories and go through
+documentation again.
 
 -- 
 Andy Shevchenko <andriy.shevchenko@linux.intel.com>
