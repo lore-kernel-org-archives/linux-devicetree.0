@@ -1,101 +1,146 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: pci and pcie device-tree binding - range No cells
-Date: Wed, 12 Dec 2012 17:16:51 +0100
-Message-ID: <20121212171651.346b81ab@skate>
-References: <50C5D387.90908@monstr.eu>
-	<50C5F11D.9060006@gmail.com>
-	<50C5FA3E.9030303@monstr.eu>
-	<50C5FE0F.3050108@gmail.com>
-	<50C601B6.2080107@monstr.eu>
-	<AE90C24D6B3A694183C094C60CF0A2F6026B70E7@saturn3.aculab.com>
-	<50C60839.70603@monstr.eu>
-	<20121210181525.3ccd87c6@skate>
-	<50C66F3C.3010204@gmail.com>
+From: Andrew Murray <Andrew.Murray@arm.com>
+Subject: [PATCH] pci: Provide support for parsing PCI DT ranges property
+Date: Wed, 12 Dec 2012 16:37:50 +0000
+Message-ID: <20121212163749.GA17371@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <50C66F3C.3010204@gmail.com>
+Content-Disposition: inline
 Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: monstr@monstr.eu, David Laight <David.Laight@ACULAB.COM>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Arnd Bergmann <arnd@arndb.de>
+To: linux-pci@vger.kernel.org
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Michal Simek <monstr@monstr.eu>, Rob Herring <robherring2@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Liviu Dudau <liviu.dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Rob Herring,
+DT bindings for PCI host bridges often use the ranges property to describe
+memory and IO ranges - this binding tends to be the same across architectures
+yet several parsing implementations exist, e.g. arch/mips/pci/pci.c,
+arch/powerpc/kernel/pci-common.c, arch/sparc/kernel/pci.c and
+arch/microblaze/pci/pci-common.c (clone of PPC). Some of these duplicate
+functionality provided by drivers/of/address.c.
 
-On Mon, 10 Dec 2012 17:24:44 -0600, Rob Herring wrote:
+This patch provides a common iterator-based parser for the ranges property, it
+is hoped this will reduce DT representation differences between architectures
+and that architectures will migrate in part to this new parser.
 
-> > Marvell SoCs have up to 20 configurable address windows, which allow
-> > you, at run time, to say "I would like the range from physical
-> > address 0xYYYYYYYY to 0xZZZZZZZZ to correspond to the PCIe device
-> > in port 1, lane 2, or to the NAND, or to this or that device".
-> > Therefore, in the PCIe driver I proposed for the Armada 370/XP SoCs
-> > [1], there is no need to encode all those ranges statically in the
-> > DT.
-> 
-> That's not a unique feature. I'm not sure if any powerpc systems do
-> that though.
+It is also hoped (and the motativation for the patch) that this patch will
+reduce duplication of code when writing host bridge drivers that are supported
+by multiple architectures.
 
-Yes, probably not an unique feature.
+This patch provides struct resources from a device tree node, e.g.:
 
-> > The only "ranges" property I'm using is to allow the DT sub-nodes
-> > describing each PCIe port/lane to access the CPU registers that
-> > allow to see if the PCIe link is up or down, access the PCI
-> > configuration space and so on. So all ranges in my "ranges"
-> > property correspond to normal CPU registers, like the one you would
-> > put in the "reg" property for any device. The fact that those
-> > devices are PCIe is really orthogonal here.
-> 
-> That doesn't really sound right.
+	u32 *last = NULL;
+	struct resource res;
+	while ((last = of_pci_process_ranges(np, res, last))) {
+		//do something with res
+	}
 
-Very likely, but I still don't get what is "the right way".
+Platforms with quirks can then do what they like with the resource or migrate
+common quirk handling to the parser. In an ideal world drivers can just request
+the obtained resources and pass them on (e.g. pci_add_resource_offset).
 
-> I don't think deviating from the normal binding is the right approach.
-> Perhaps the host driver should fill in the ranges property with the
-> addresses it uses. Then any child devices will get the right address
-> translation.
+Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+---
+ drivers/of/address.c       |   53 +++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/of_address.h |    7 +++++
+ 2 files changed, 59 insertions(+), 1 deletions(-)
 
-I don't really understand what you mean here. If you look at the host
-driver code (arch/arm/mach-mvebu/pcie.c), for each PCIe interface
-is simply does:
-
- * Create an address decoding window for the memory BAR
- * Create an address decoding window for the I/O BAR
- * Associate the memory BAR window address and the I/O bar window
-   address with the PCIe interface
-
-And that's it. See
-https://github.com/MISL-EBU-System-SW/mainline-public/blob/marvell-pcie-v1/arch/arm/mach-mvebu/pcie.c#L107.
-
-So this driver is both "deciding" of the physical addresses for each
-PCIe interface, and "associating" them with the PCIe interfaces. How is
-it useful to feed some addresses back into the Device Tree?
-
-> Also, while the h/w may support practically any config, there are
-> practical constraints of what Linux will use like there's no reason to
-> support more than 64K i/o space. PCI memory addresses generally start
-> at 0x100000. You probably don't need more than 1 memory window per
-> root complex (although prefetchable memory may also be needed).
-
-I allocate one 64K I/O window and one memory window per PCIe interface
-whose link is up (i.e a PCIe device is connected).
-
-> You could let the DT settings drive the address window configuration.
-
-No, because I don't want to have absolute addresses for the windows: I
-have 10 PCIe interfaces, but often, only a few of them are used. So I
-don't want in the Device Tree to over-allocate hundreds of MB of
-physical address space if it's not useful.
-
-PCIe is dynamic, address window configuration is dynamic. And we should
-hardcode all this configuration statically in the DT? Doesn't seem like
-the right solution.
-
-Best regards,
-
-Thomas
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index 7e262a6..03bfe61 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -219,6 +219,57 @@ int of_pci_address_to_resource(struct device_node *dev, int bar,
+ 	return __of_address_to_resource(dev, addrp, size, flags, NULL, r);
+ }
+ EXPORT_SYMBOL_GPL(of_pci_address_to_resource);
++
++const __be32 *of_pci_process_ranges(struct device_node *node,
++				    struct resource *res, const __be32 *from)
++{
++	const __be32 *start, *end;
++	int na, ns, np, pna;
++	int rlen;
++	struct of_bus *bus;
++	WARN_ON(!res);
++
++	bus = of_match_bus(node);
++	bus->count_cells(node, &na, &ns);
++	if (!OF_CHECK_COUNTS(na, ns)) {
++		pr_err("Bad cell count for %s\n", node->full_name);
++		return NULL;
++	}
++
++	pna = of_n_addr_cells(node);
++	np = pna + na + ns;
++
++	start = of_get_property(node, "ranges", &rlen);
++	if (start == NULL)
++		return NULL;
++
++	end = start + rlen;
++
++	if (!from)
++		from = start;
++
++	while (from + np <= end) {
++		u64 cpu_addr, size;
++
++		cpu_addr = of_translate_address(node, from + na);
++		size = of_read_number(from + na + pna, ns);
++		res->flags = bus->get_flags(from);
++		from += np;
++
++		if (cpu_addr == OF_BAD_ADDR || size == 0)
++			continue;
++
++		res->name = node->full_name;
++		res->start = cpu_addr;
++		res->end = res->start + size - 1;
++		res->parent = res->child = res->sibling = NULL;
++		return from;
++	}
++
++	return NULL;
++}
++EXPORT_SYMBOL_GPL(of_pci_process_ranges);
++
+ #endif /* CONFIG_PCI */
+ 
+ /*
+@@ -421,7 +472,7 @@ u64 __of_translate_address(struct device_node *dev, const __be32 *in_addr,
+ 		goto bail;
+ 	bus = of_match_bus(parent);
+ 
+-	/* Cound address cells & copy address locally */
++	/* Count address cells & copy address locally */
+ 	bus->count_cells(dev, &na, &ns);
+ 	if (!OF_CHECK_COUNTS(na, ns)) {
+ 		printk(KERN_ERR "prom_parse: Bad cell count for %s\n",
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 01b925a..4582b20 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -26,6 +26,8 @@ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
+ #define pci_address_to_pio pci_address_to_pio
+ #endif
+ 
++const __be32 *of_pci_process_ranges(struct device_node *node,
++				    struct resource *res, const __be32 *from);
+ #else /* CONFIG_OF_ADDRESS */
+ static inline int of_address_to_resource(struct device_node *dev, int index,
+ 					 struct resource *r)
+@@ -48,6 +50,11 @@ static inline const u32 *of_get_address(struct device_node *dev, int index,
+ {
+ 	return NULL;
+ }
++const __be32 *of_pci_process_ranges(struct device_node *node,
++				    struct resource *res, const __be32 *from)
++{
++	return NULL;
++}
+ #endif /* CONFIG_OF_ADDRESS */
+ 
+ 
 -- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+1.7.0.4
