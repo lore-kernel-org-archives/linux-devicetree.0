@@ -1,11 +1,13 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH V2 0/4] add RTC support for Armada 370 and Armada XP
-Date: Wed, 12 Dec 2012 10:06:22 +0100
-Message-ID: <1355303186-9267-1-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH V2 1/4] rtc: Add support of rtc-mv for MVEBU SoCs
+Date: Wed, 12 Dec 2012 10:06:23 +0100
+Message-ID: <1355303186-9267-2-git-send-email-gregory.clement@free-electrons.com>
+References: <1355303186-9267-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1355303186-9267-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,42 +22,28 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+The Armada 370 and Armada XP Socs have the same controller that the
+one used in the orion platforms. This patch enables the selection of
+rtc-mv with mvebu platforms.
 
-This small patch set adds RTC support for Armada 370 and Armada XP. It
-was successfully tested on the evaluation board. The third patch add
-the lacking documentation for the device tree binding and was already
-taken by Grant Likely, I keep this one in the series for
-coherency. The only differences with the previous patch set was the
-add of the Acked-by from Andrew Lunn and a new small patch to update
-of the mvebu_configuration. I also split the patch wich add the RTC
-support in two part, one for the RTC subsytem and on for
-mach-mvebu. This series is 3.9 material.
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+---
+ drivers/rtc/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Alessandro,
-could you take the first patches if you agree with it?
-
-Jason,
-
-I wait for a while if there any feedback, then I will send you a git
-pull request. If I understood well your workflow I will do 2 git pull
-one for dt and one for defconfig.
-
-Thanks
-
-
-Gregory CLEMENT (4):
-  rtc: Add support of rtc-mv for MVEBU SoCs
-  arm: mvebu: Add RTC support for Armada 370 and Armada XP
-  rtc: rtc-mv: Add the device tree binding documentation
-  arm: mvebu: Update defconfig with Marvell RTC support
-
- .../devicetree/bindings/rtc/orion-rtc.txt          |   18 ++++++++++++++++++
- arch/arm/boot/dts/armada-370-xp.dtsi               |    6 ++++++
- arch/arm/configs/mvebu_defconfig                   |    1 +
- drivers/rtc/Kconfig                                |    2 +-
- 4 files changed, 26 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/orion-rtc.txt
-
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 19c03ab..9356f75 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -994,7 +994,7 @@ config RTC_DRV_TX4939
+ 
+ config RTC_DRV_MV
+ 	tristate "Marvell SoC RTC"
+-	depends on ARCH_KIRKWOOD || ARCH_DOVE
++	depends on ARCH_KIRKWOOD || ARCH_DOVE || ARCH_MVEBU
+ 	help
+ 	  If you say yes here you will get support for the in-chip RTC
+ 	  that can be found in some of Marvell's SoC devices, such as
 -- 
 1.7.9.5
