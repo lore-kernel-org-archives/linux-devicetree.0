@@ -1,146 +1,53 @@
-From: Andrew Murray <Andrew.Murray@arm.com>
-Subject: [PATCH] pci: Provide support for parsing PCI DT ranges property
-Date: Wed, 12 Dec 2012 16:37:50 +0000
-Message-ID: <20121212163749.GA17371@arm.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: pci and pcie device-tree binding - range No cells
+Date: Wed, 12 Dec 2012 16:44:58 +0000
+Message-ID: <20121212164458.GA17425@arm.com>
+References: <50C5D387.90908@monstr.eu>
+ <50C5F11D.9060006@gmail.com>
+ <50C5FA3E.9030303@monstr.eu>
+ <50C5FE0F.3050108@gmail.com>
+ <20121210214127.D51773E0796@localhost>
+ <50C85E7D.5080006@monstr.eu>
+ <CACxGe6udeSbEfibC53v0wu8vFRE6K3Fd_P6EX-3JS9F2M=wUeA@mail.gmail.com>
+ <CAPcvp5EJH-Q6wd7my+V+FUVE1=hzwMN-yOfHiukGvDmkcoRcsQ@mail.gmail.com>
+ <20121212121912.GA2776@arm.com>
+ <20121212133424.GA26280@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20121212133424.GA26280@avionic-0098.adnet.avionic-design.de>
 Content-Disposition: inline
 Sender: linux-pci-owner@vger.kernel.org
-To: linux-pci@vger.kernel.org
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Michal Simek <monstr@monstr.eu>, Rob Herring <robherring2@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Liviu Dudau <liviu.dudau@arm.com>
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Michal Simek <monstr@monstr.eu>, Rob Herring <robherring2@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Liviu.Dudau@arm.com
 List-Id: devicetree@vger.kernel.org
 
-DT bindings for PCI host bridges often use the ranges property to describe
-memory and IO ranges - this binding tends to be the same across architectures
-yet several parsing implementations exist, e.g. arch/mips/pci/pci.c,
-arch/powerpc/kernel/pci-common.c, arch/sparc/kernel/pci.c and
-arch/microblaze/pci/pci-common.c (clone of PPC). Some of these duplicate
-functionality provided by drivers/of/address.c.
+On Wed, Dec 12, 2012 at 01:34:24PM +0000, Thierry Reding wrote:
+> On Wed, Dec 12, 2012 at 12:19:12PM +0000, Andrew Murray wrote:
+> > I've been working on a relatively architecture agnostic PCI host bridge driver
+> > and also wanted to avoid duplicating more generic DT parsing code for PCI
+> > bindings.
+> > 
+> > I've ended up with a patch which provides an iterator for returning resources
+> > based on the the typical 'ranges' binding. This has ended up living in
+> > drivers/of/address.c. I originally started out in drivers/of/pci.c and
+> > drivers/pci/pci-of.c but found there were good (and static) implementations in
+> > drivers/of/address.c which can be reused (e.g. of_bus_pci_get_flags,
+> > bus->count_cells).
+> > 
+> > I'm not just ready to post it - but can do before early next week if you can
+> > wait.
+> 
+> I already posted a similar patch[0] as part of a larger series to bring
+> DT support to Tegra PCIe back in July. I suppose what you have must be
+> something pretty close to that. Most of the stuff that had me occupied
+> since then should be done soon and I was planning on resurrecting the
+> series one of these days.
 
-This patch provides a common iterator-based parser for the ranges property, it
-is hoped this will reduce DT representation differences between architectures
-and that architectures will migrate in part to this new parser.
+Thanks for the reference. I've submitted my patch, it's along the lines of your
+existing patch.
 
-It is also hoped (and the motativation for the patch) that this patch will
-reduce duplication of code when writing host bridge drivers that are supported
-by multiple architectures.
+I'm happy to take the best bits from both, drop mine, etc.
 
-This patch provides struct resources from a device tree node, e.g.:
-
-	u32 *last = NULL;
-	struct resource res;
-	while ((last = of_pci_process_ranges(np, res, last))) {
-		//do something with res
-	}
-
-Platforms with quirks can then do what they like with the resource or migrate
-common quirk handling to the parser. In an ideal world drivers can just request
-the obtained resources and pass them on (e.g. pci_add_resource_offset).
-
-Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
----
- drivers/of/address.c       |   53 +++++++++++++++++++++++++++++++++++++++++++-
- include/linux/of_address.h |    7 +++++
- 2 files changed, 59 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index 7e262a6..03bfe61 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -219,6 +219,57 @@ int of_pci_address_to_resource(struct device_node *dev, int bar,
- 	return __of_address_to_resource(dev, addrp, size, flags, NULL, r);
- }
- EXPORT_SYMBOL_GPL(of_pci_address_to_resource);
-+
-+const __be32 *of_pci_process_ranges(struct device_node *node,
-+				    struct resource *res, const __be32 *from)
-+{
-+	const __be32 *start, *end;
-+	int na, ns, np, pna;
-+	int rlen;
-+	struct of_bus *bus;
-+	WARN_ON(!res);
-+
-+	bus = of_match_bus(node);
-+	bus->count_cells(node, &na, &ns);
-+	if (!OF_CHECK_COUNTS(na, ns)) {
-+		pr_err("Bad cell count for %s\n", node->full_name);
-+		return NULL;
-+	}
-+
-+	pna = of_n_addr_cells(node);
-+	np = pna + na + ns;
-+
-+	start = of_get_property(node, "ranges", &rlen);
-+	if (start == NULL)
-+		return NULL;
-+
-+	end = start + rlen;
-+
-+	if (!from)
-+		from = start;
-+
-+	while (from + np <= end) {
-+		u64 cpu_addr, size;
-+
-+		cpu_addr = of_translate_address(node, from + na);
-+		size = of_read_number(from + na + pna, ns);
-+		res->flags = bus->get_flags(from);
-+		from += np;
-+
-+		if (cpu_addr == OF_BAD_ADDR || size == 0)
-+			continue;
-+
-+		res->name = node->full_name;
-+		res->start = cpu_addr;
-+		res->end = res->start + size - 1;
-+		res->parent = res->child = res->sibling = NULL;
-+		return from;
-+	}
-+
-+	return NULL;
-+}
-+EXPORT_SYMBOL_GPL(of_pci_process_ranges);
-+
- #endif /* CONFIG_PCI */
- 
- /*
-@@ -421,7 +472,7 @@ u64 __of_translate_address(struct device_node *dev, const __be32 *in_addr,
- 		goto bail;
- 	bus = of_match_bus(parent);
- 
--	/* Cound address cells & copy address locally */
-+	/* Count address cells & copy address locally */
- 	bus->count_cells(dev, &na, &ns);
- 	if (!OF_CHECK_COUNTS(na, ns)) {
- 		printk(KERN_ERR "prom_parse: Bad cell count for %s\n",
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 01b925a..4582b20 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -26,6 +26,8 @@ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
- #define pci_address_to_pio pci_address_to_pio
- #endif
- 
-+const __be32 *of_pci_process_ranges(struct device_node *node,
-+				    struct resource *res, const __be32 *from);
- #else /* CONFIG_OF_ADDRESS */
- static inline int of_address_to_resource(struct device_node *dev, int index,
- 					 struct resource *r)
-@@ -48,6 +50,11 @@ static inline const u32 *of_get_address(struct device_node *dev, int index,
- {
- 	return NULL;
- }
-+const __be32 *of_pci_process_ranges(struct device_node *node,
-+				    struct resource *res, const __be32 *from)
-+{
-+	return NULL;
-+}
- #endif /* CONFIG_OF_ADDRESS */
- 
- 
--- 
-1.7.0.4
+Andrew Murray
