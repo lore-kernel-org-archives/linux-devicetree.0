@@ -1,36 +1,60 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: pci and pcie device-tree binding - range No cells
-Date: Wed, 12 Dec 2012 10:49:14 +0000
-Message-ID: <CACxGe6udeSbEfibC53v0wu8vFRE6K3Fd_P6EX-3JS9F2M=wUeA@mail.gmail.com>
-References: <50C5D387.90908@monstr.eu> <50C5F11D.9060006@gmail.com>
- <50C5FA3E.9030303@monstr.eu> <50C5FE0F.3050108@gmail.com> <20121210214127.D51773E0796@localhost>
- <50C85E7D.5080006@monstr.eu>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v3 2/3] mtd: devices: elm: Add support for ELM error correction
+Date: Wed, 12 Dec 2012 16:45:51 +0530
+Message-ID: <50C86767.60806@ti.com>
+References: <1354189595-12784-1-git-send-email-avinashphilip@ti.com> <1354189595-12784-3-git-send-email-avinashphilip@ti.com> <50C1C6E3.5020300@ti.com> <518397C60809E147AF5323E0420B992E3EA1FA14@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <50C85E7D.5080006@monstr.eu>
-Sender: linux-pci-owner@vger.kernel.org
-To: Michal Simek <monstr@monstr.eu>
-Cc: Rob Herring <robherring2@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-pci@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thierry Reding <thierry.reding@avionic-design.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <518397C60809E147AF5323E0420B992E3EA1FA14@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Philip, Avinash" <avinashphilip@ti.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, "Mohammed, Afzal" <afzal@ti.com>, "tony@atomide.com" <tony@atomide.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "ivan.djelic@parrot.com" <ivan.djelic@parrot.>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2012 at 10:37 AM, Michal Simek <monstr@monstr.eu> wrote:
-> On 12/10/2012 10:41 PM, Grant Likely wrote:
->> drivers/pci/pci-of.c would be good. I'd also accept drivers/of/pci.c
->> which might actually be a good idea in the short term so that it gets
->> appropriate supervision while being generalized before being moved into
->> the pci directory.
->
-> Ben: Are you willing to move that ppc code to this location?
-> It is probably not good idea that I should do it when I even don't have
-> hardware available for testing (Asking someone else).
+On 12/10/2012 12:13 PM, Philip, Avinash wrote:
+> On Fri, Dec 07, 2012 at 16:07:23, Nori, Sekhar wrote:
+>> On 11/29/2012 5:16 PM, Philip, Avinash wrote:
 
-You're a clever guy, you are more than capable of crafting the patch,
-even if you can't test on hardware. :-)
+[...]
 
-I refactored most of the OF support code without having access to most
-of the affected hardware. Once I got the changes out there for review
-I also asked for spot testing before getting it into linux-next for
-even more testing.
+>>> +struct device *elm_request(enum bch_ecc bch_type)
+>>> +{
+>>> +	struct elm_info *info;
+>>> +
+>>> +	list_for_each_entry(info, &elm_devices, list) {
+>>> +		if (info && info->dev) {
+>>> +				info->bch_type = bch_type;
+>>> +				elm_config(info);
+>>> +				return info->dev;
+>>> +		}
+>>> +	}
+>>
+>> This will always return the first ELM device probed since you never
+>> remove the allocated device from the list.
+> 
+> But now I realized that, there is no mechanism of freeing the requested
+> resource.
 
-g.
+Right. You essentially want to assign an ELM instance to work with a
+given instance of GPMC and that could be done statically too. Just pass
+phandle of ELM node in GPMC DT data?
+
+> So I will add mechanism to request ELM module successfully only if ELM
+> module is not requested already and add mechanism to free it, on NAND
+> driver module unload (loadable module support). This way ELM driver
+> can achieve multi instance support.
+> 
+>> I wonder why you really need a list?
+> 
+> The prime motivation for the list is the driver should support multi
+> instances of ELM by removing global symbols.
+
+I still think a request/free API is bit too much for something that will
+turn out to be a simple 1-to-1 match anyway. Can you please look at the
+phandle suggestion above? I am no DT expert, but I think that will work
+for your use case.
+
+Thanks,
+Sekhar
