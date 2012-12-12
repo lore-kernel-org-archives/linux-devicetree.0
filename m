@@ -1,71 +1,40 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/2] spi: devicetree: add support for loopback mode
-Date: Wed, 12 Dec 2012 10:46:00 +0200
-Message-ID: <1355301960-21523-2-git-send-email-balbi@ti.com>
-References: <1355301960-21523-1-git-send-email-balbi@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 4/4] leds: leds-pwm: Add device tree bindings
+Date: Wed, 12 Dec 2012 10:00:28 +0100
+Message-ID: <50C847AC.3030100@ti.com>
+References: <1355133637-2784-1-git-send-email-peter.ujfalusi@ti.com>
+ <1355133637-2784-5-git-send-email-peter.ujfalusi@ti.com>
+ <20121211072545.GD8294@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1355301960-21523-1-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Balbi <balbi-l0cyMroinI0@public.gmane.org>, FelipeLinux, OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121211072545.GD8294-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-there are a few spi master drivers which make
-use of that flag but there is no way to pass it
-through devicetree.
+On 12/11/2012 08:25 AM, Thierry Reding wrote:
+>> +static const struct of_device_id of_pwm_leds_match[] =3D {
+>> +	{ .compatible =3D "pwm-leds", },
+>> +	{},
+>> +};
+> =
 
-This patch just creates a way to pass SPI_LOOP
-via devicetree.
+> Doesn't this cause a compiler warning for !OF builds?
 
-Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
----
- Documentation/devicetree/bindings/spi/spi-bus.txt | 2 ++
- drivers/spi/spi.c                                 | 2 ++
- 2 files changed, 4 insertions(+)
+This is not causing any compiler warnings.
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-index 296015e..1949586 100644
---- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-@@ -55,6 +55,8 @@ contain the following properties.
-     		chip select active high
- - spi-3wire       - (optional) Empty property indicating device requires
-     		    3-wire mode.
-+- spi-loopback    - (optional) Empty property indicating device requires
-+    		    loopback mode.
- 
- If a gpio chipselect is used for the SPI slave the gpio number will be passed
- via the cs_gpio
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 3f1b9ee..6bcdc03 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -868,6 +868,8 @@ static void of_register_spi_devices(struct spi_master *master)
- 			spi->mode |= SPI_CS_HIGH;
- 		if (of_find_property(nc, "spi-3wire", NULL))
- 			spi->mode |= SPI_3WIRE;
-+		if (of_find_property(nc, "spi-loopback", NULL))
-+			spi->mode |= SPI_LOOP;
- 
- 		/* Device speed */
- 		prop = of_get_property(nc, "spi-max-frequency", &len);
--- 
-1.8.1.rc1.5.g7e0651a
+-- =
 
-
-------------------------------------------------------------------------------
-LogMeIn Rescue: Anywhere, Anytime Remote support for IT. Free Trial
-Remotely access PCs and mobile devices and provide instant support
-Improve your efficiency, and focus on delivering more value-add services
-Discover what IT Professionals Know. Rescue delivers
-http://p.sf.net/sfu/logmein_12329d2d
+P=E9ter
