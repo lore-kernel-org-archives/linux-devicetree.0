@@ -1,72 +1,96 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH V2 0/4] add RTC support for Armada 370 and Armada XP
-Date: Wed, 12 Dec 2012 10:10:00 +0100
-Message-ID: <50C849E8.70105@free-electrons.com>
-References: <1355303186-9267-1-git-send-email-gregory.clement@free-electrons.com>
+From: Daniel Mack <zonque@gmail.com>
+Subject: Re: [PATCH v7 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC timings
+ and NAND
+Date: Wed, 12 Dec 2012 10:13:42 +0100
+Message-ID: <50C84AC6.5030307@gmail.com>
+References: <1354734571-10774-1-git-send-email-zonque@gmail.com> <1354734571-10774-6-git-send-email-zonque@gmail.com> <20121205222232.67B2B3E0E22@localhost> <50BFCBCC.6030706@ti.com> <20121205232426.BAD573E0E22@localhost> <50C0C5AB.3030201@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355303186-9267-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <50C0C5AB.3030201@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, paul@pwsan.com, x0148406@ti.com, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, rob.herring@calxeda.com, tony@atomide.com, jacmet@sunsite.dk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/2012 10:06 AM, Gregory CLEMENT wrote:
-> Hello,
+On 06.12.2012 17:19, Jon Hunter wrote:
 > 
-> This small patch set adds RTC support for Armada 370 and Armada XP. It
-> was successfully tested on the evaluation board. The third patch add
-> the lacking documentation for the device tree binding and was already
-> taken by Grant Likely, I keep this one in the series for
-> coherency. The only differences with the previous patch set was the
-> add of the Acked-by from Andrew Lunn and a new small patch to update
-> of the mvebu_configuration. I also split the patch wich add the RTC
-> support in two part, one for the RTC subsytem and on for
-> mach-mvebu. This series is 3.9 material.
+> On 12/05/2012 05:24 PM, Grant Likely wrote:
+>> On Wed, 5 Dec 2012 16:33:48 -0600, Jon Hunter <jon-hunter@ti.com> wrote:
+>>> Hi Grant,
+>>>
+>>> On 12/05/2012 04:22 PM, Grant Likely wrote:
+>>>> On Wed,  5 Dec 2012 20:09:31 +0100, Daniel Mack <zonque@gmail.com> wrote:
+>>>>> This patch adds basic DT bindings for OMAP GPMC.
+>>>>>
+>>>>> The actual peripherals are instantiated from child nodes within the GPMC
+>>>>> node, and the only type of device that is currently supported is NAND.
+>>>>>
+>>>>> Code was added to parse the generic GPMC timing parameters and some
+>>>>> documentation with examples on how to use them.
+>>>>>
+>>>>> Successfully tested on an AM33xx board.
+>>>>>
+>>>>> Signed-off-by: Daniel Mack <zonque@gmail.com>
+>>>>> ---
+>>>>>  Documentation/devicetree/bindings/bus/ti-gpmc.txt  |  77 ++++++++++
+>>>>>  .../devicetree/bindings/mtd/gpmc-nand.txt          |  76 +++++++++
+>>>>>  arch/arm/mach-omap2/gpmc.c                         | 171 ++++++++++++++++++++-
+>>>>>  3 files changed, 323 insertions(+), 1 deletion(-)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>>>>>  create mode 100644 Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..7d2a645
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/bus/ti-gpmc.txt
+>>>>> @@ -0,0 +1,77 @@
+>>>>> +Device tree bindings for OMAP general purpose memory controllers (GPMC)
+>>>>> +
+>>>>> +The actual devices are instantiated from the child nodes of a GPMC node.
+>>>>> +
+>>>>> +Required properties:
+>>>>> +
+>>>>> + - compatible:		Should be set to "ti,gpmc"
+>>>>
+>>>> Please, be specific. Use something like "ti,am3340-gpmc" or
+>>>> "ti,omap3430-gpmc". The compatible property is a list so that new
+>>>> devices can claim compatibility with old. Compatible strings that are
+>>>> overly generic are a pet-peave of mine.
+>>>
+>>> We aim to use the binding for omap2,3,4,5 as well as the am33xx devices
+>>> (which are omap based). Would it be sufficient to have "ti,omap2-gpmc"
+>>> implying all omap2+ based devices or should we have a compatible string
+>>> for each device supported?
+>>
+>> Are they each register-level compatible with one another?
 > 
-> Alessandro,
-> could you take the first patches if you agree with it?
+> They are not 100% register compatible. There are a couple fields in the
+> binding that are only applicable to OMAP3+ devices.
+> 
+>> The general recommended approach here is to make subsequent silicon
+>> claim compatibility with the first compatible implementation.
+>>
+>> So, for an am3358 board:
+>> 	compatible = "ti,am3358-gpmc", "ti,omap2420-gpmc";
+>>
+>> Essentially, what this means is that "ti,omap2420-gpmc" is the generic
+>> value instead of "omap2-gpmc". The reason for this is so that the value
+>> is anchored against a specific implementation, and not against something
+>> completely imaginary or idealized. If a newer version isn't quite
+>> compatible with the omap2420-gpmc, then it can drop the compatible claim
+>> and the driver really should be told about the new device.
+> 
+> Ok, gotcha! I will do a register comparison and may be recommend to
+> Daniel which compatible strings we will need.
 
-Oups, I meant the first one not the first patches.
+Any idea yet how we want to continue on this? I'm asking because I'm
+leaving for a longer trip by the end of this week, and so anything I
+haven't finished until then will have to be postponed until February or
+be taken over by someone else :)
 
-> 
-> Jason,
-> 
-> I wait for a while if there any feedback, then I will send you a git
-> pull request. If I understood well your workflow I will do 2 git pull
-> one for dt and one for defconfig.
-> 
-> Thanks
-> 
-> 
-> Gregory CLEMENT (4):
->   rtc: Add support of rtc-mv for MVEBU SoCs
->   arm: mvebu: Add RTC support for Armada 370 and Armada XP
->   rtc: rtc-mv: Add the device tree binding documentation
->   arm: mvebu: Update defconfig with Marvell RTC support
-> 
->  .../devicetree/bindings/rtc/orion-rtc.txt          |   18 ++++++++++++++++++
->  arch/arm/boot/dts/armada-370-xp.dtsi               |    6 ++++++
->  arch/arm/configs/mvebu_defconfig                   |    1 +
->  drivers/rtc/Kconfig                                |    2 +-
->  4 files changed, 26 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/orion-rtc.txt
-> 
+Thanks,
+Daniel
 
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
