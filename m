@@ -1,104 +1,148 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: pci and pcie device-tree binding - range No cells
-Date: Wed, 12 Dec 2012 14:34:24 +0100
-Message-ID: <20121212133424.GA26280@avionic-0098.adnet.avionic-design.de>
-References: <50C5D387.90908@monstr.eu>
- <50C5F11D.9060006@gmail.com>
- <50C5FA3E.9030303@monstr.eu>
- <50C5FE0F.3050108@gmail.com>
- <20121210214127.D51773E0796@localhost>
- <50C85E7D.5080006@monstr.eu>
- <CACxGe6udeSbEfibC53v0wu8vFRE6K3Fd_P6EX-3JS9F2M=wUeA@mail.gmail.com>
- <CAPcvp5EJH-Q6wd7my+V+FUVE1=hzwMN-yOfHiukGvDmkcoRcsQ@mail.gmail.com>
- <20121212121912.GA2776@arm.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH 1/1] spi/atmel: add DT support
+Date: Wed, 12 Dec 2012 16:13:08 +0100
+Message-ID: <20121212151308.GK4398@game.jcrosoft.org>
+References: <20121121151713.1F8873E0A47@localhost>
+ <1353674679-13158-1-git-send-email-plagnioj@jcrosoft.com>
+ <50AF7C19.8000306@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
-Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20121212121912.GA2776@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Michal Simek <monstr@monstr.eu>, Rob Herring <robherring2@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-pci@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+In-Reply-To: <50AF7C19.8000306@atmel.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Ferre <nicolas.ferre@atmel.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 14:37 Fri 23 Nov     , Nicolas Ferre wrote:
+> On 11/23/2012 01:44 PM, Jean-Christophe PLAGNIOL-VILLARD :
+> > the atmel_spi use only gpio for chip select
+> > 
+> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> 
+> Seems simple and nice:
+> 
+> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
+grant is ok to have this for 3.8?
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Dec 12, 2012 at 12:19:12PM +0000, Andrew Murray wrote:
-> On Wed, Dec 12, 2012 at 10:49 AM, Grant Likely wrote:
-> > On Wed, Dec 12, 2012 at 10:37 AM, Michal Simek <monstr@monstr.eu<mailto=
-:monstr@monstr.eu>> wrote:
-> > > On 12/10/2012 10:41 PM, Grant Likely wrote:
-> > >> drivers/pci/pci-of.c would be good. I'd also accept drivers/of/pci.c
-> > >> which might actually be a good idea in the short term so that it gets
-> > >> appropriate supervision while being generalized before being moved i=
-nto
-> > >> the pci directory.
-> > >
-> > > Ben: Are you willing to move that ppc code to this location?
-> > > It is probably not good idea that I should do it when I even don't ha=
-ve
-> > > hardware available for testing (Asking someone else).
-> >=20
-> > You're a clever guy, you are more than capable of crafting the patch,
-> > even if you can't test on hardware. :-)
-> >=20
-> > I refactored most of the OF support code without having access to most
-> > of the affected hardware. Once I got the changes out there for review
-> > I also asked for spot testing before getting it into linux-next for
-> > even more testing.
->=20
-> I've been working on a relatively architecture agnostic PCI host bridge d=
-river
-> and also wanted to avoid duplicating more generic DT parsing code for PCI
-> bindings.
->=20
-> I've ended up with a patch which provides an iterator for returning resou=
-rces
-> based on the the typical 'ranges' binding. This has ended up living in
-> drivers/of/address.c. I originally started out in drivers/of/pci.c and
-> drivers/pci/pci-of.c but found there were good (and static) implementatio=
-ns in
-> drivers/of/address.c which can be reused (e.g. of_bus_pci_get_flags,
-> bus->count_cells).
->=20
-> I'm not just ready to post it - but can do before early next week if you =
-can
-> wait.
-
-I already posted a similar patch[0] as part of a larger series to bring
-DT support to Tegra PCIe back in July. I suppose what you have must be
-something pretty close to that. Most of the stuff that had me occupied
-since then should be done soon and I was planning on resurrecting the
-series one of these days.
-
-Thierry
-
-[0]: https://patchwork.kernel.org/patch/1244451/
-
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQyIfgAAoJEN0jrNd/PrOhFsIQALy+Bnja2iVLAKqdX7H3ITNx
-1DWh1zbQ59ZE9Whag1bS3ZU9C4qNLUhOiNxlnDzK6wpEL6m7uaCmO2CVtDjVXl3c
-mOMrfa4Y+Yzxs7/jy6t2PYzxoPUSbE5hp75KpKyvW1vb3TCUHunybxSJ7Yk8VWJC
-5l2adBsqlnD9qDl/hiJOM+CVIcMyaNn9WwXtpX1/8LCHq4Q1oG0rgz+ngbms1Ya4
-yVN0FUZ6DZ/OUxTrPBedqN7FcB0FuATa+qyBI6nhG3ILAhkrWbsyYsOiPM3sVhhE
-i74TTs5cqVy7TKcDpu430Mn0hXR6Pd9ICIcioBwy0SydYy8NAxduiH4ZXz0wvDI/
-tGCBJ5R7+Qz2hpB/os8e4wh8ydq/tSiItdCmt2MHY5UuiVNdP1xAHSXcSQ0H4qE2
-RtJ7I6Y4vSohQGQmCl7FIgXmXSEMUQ4og96/vpoDvkUk3mdStWtyXdq74prig+nM
-QsfeSc4n56L84SEkvnUTB3IWC15hR25YmNjRqZrurm+gfm0M7k9SoxpfOn0fl8eQ
-m9RiP/sjNyeBLdRtlPczClJe9Wd7wF0a+aqoonJNgEZyhNkBH3rZjXZQlViPlVaE
-JaZYJzPyzaclzQmlnxQAekxAz1BD1Z8ugBrWuxFNjUJHyd/itUrg7UOlqr+rq/az
-L3OrozmnuKVCZp+yFYA4
-=W+xV
------END PGP SIGNATURE-----
-
---yrj/dFKFPuw6o+aM--
+Best Regards,
+J.
+> 
+> > Cc: spi-devel-general@lists.sourceforge.net
+> > Cc: Grant Likely <grant.likely@secretlab.ca>
+> > ---
+> > Hi Grant,
+> > 
+> > 	can we have this for 3.8
+> > 	This patch is presetnt on the ML sing Feb 2012 and was depinding on
+> > 	the cs-gpio dt that you just apply
+> > 
+> > Best Regards,
+> > J.
+> >  .../devicetree/bindings/spi/spi_atmel.txt          |   26 ++++++++++++++++++++
+> >  drivers/spi/spi-atmel.c                            |   17 ++++++++++++-
+> >  2 files changed, 42 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/spi/spi_atmel.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/spi/spi_atmel.txt b/Documentation/devicetree/bindings/spi/spi_atmel.txt
+> > new file mode 100644
+> > index 0000000..07e04cd
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/spi/spi_atmel.txt
+> > @@ -0,0 +1,26 @@
+> > +Atmel SPI device
+> > +
+> > +Required properties:
+> > +- compatible : should be "atmel,at91rm9200-spi".
+> > +- reg: Address and length of the register set for the device
+> > +- interrupts: Should contain spi interrupt
+> > +- cs-gpios: chipselects
+> > +
+> > +Example:
+> > +
+> > +spi1: spi@fffcc000 {
+> > +	compatible = "atmel,at91rm9200-spi";
+> > +	reg = <0xfffcc000 0x4000>;
+> > +	interrupts = <13 4 5>;
+> > +	#address-cells = <1>;
+> > +	#size-cells = <0>;
+> > +	cs-gpios = <&pioB 3 0>;
+> > +	status = "okay";
+> > +
+> > +	mmc-slot@0 {
+> > +		compatible = "mmc-spi-slot";
+> > +		reg = <0>;
+> > +		gpios = <&pioC 4 0>;	/* CD */
+> > +		spi-max-frequency = <25000000>;
+> > +	};
+> > +};
+> > diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
+> > index 61fb0ec..1615222 100644
+> > --- a/drivers/spi/spi-atmel.c
+> > +++ b/drivers/spi/spi-atmel.c
+> > @@ -20,6 +20,7 @@
+> >  #include <linux/spi/spi.h>
+> >  #include <linux/slab.h>
+> >  #include <linux/platform_data/atmel.h>
+> > +#include <linux/of.h>
+> >  
+> >  #include <asm/io.h>
+> >  #include <asm/gpio.h>
+> > @@ -768,6 +769,10 @@ static int atmel_spi_setup(struct spi_device *spi)
+> >  
+> >  	/* chipselect must have been muxed as GPIO (e.g. in board setup) */
+> >  	npcs_pin = (unsigned int)spi->controller_data;
+> > +
+> > +	if (gpio_is_valid(spi->cs_gpio))
+> > +		npcs_pin = spi->cs_gpio;
+> > +
+> >  	asd = spi->controller_state;
+> >  	if (!asd) {
+> >  		asd = kzalloc(sizeof(struct atmel_spi_device), GFP_KERNEL);
+> > @@ -937,8 +942,9 @@ static int __devinit atmel_spi_probe(struct platform_device *pdev)
+> >  	/* the spi->mode bits understood by this driver: */
+> >  	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
+> >  
+> > +	master->dev.of_node = pdev->dev.of_node;
+> >  	master->bus_num = pdev->id;
+> > -	master->num_chipselect = 4;
+> > +	master->num_chipselect = master->dev.of_node ? 0 : 4;
+> >  	master->setup = atmel_spi_setup;
+> >  	master->transfer = atmel_spi_transfer;
+> >  	master->cleanup = atmel_spi_cleanup;
+> > @@ -1064,11 +1070,20 @@ static int atmel_spi_resume(struct platform_device *pdev)
+> >  #define	atmel_spi_resume	NULL
+> >  #endif
+> >  
+> > +#if defined(CONFIG_OF)
+> > +static const struct of_device_id atmel_spi_dt_ids[] = {
+> > +	{ .compatible = "atmel,at91rm9200-spi" },
+> > +	{ /* sentinel */ }
+> > +};
+> > +
+> > +MODULE_DEVICE_TABLE(of, atmel_spi_dt_ids);
+> > +#endif
+> >  
+> >  static struct platform_driver atmel_spi_driver = {
+> >  	.driver		= {
+> >  		.name	= "atmel_spi",
+> >  		.owner	= THIS_MODULE,
+> > +		.of_match_table	= of_match_ptr(atmel_spi_dt_ids),
+> >  	},
+> >  	.suspend	= atmel_spi_suspend,
+> >  	.resume		= atmel_spi_resume,
+> > 
+> 
+> 
+> -- 
+> Nicolas Ferre
