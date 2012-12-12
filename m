@@ -1,148 +1,136 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 1/1] spi/atmel: add DT support
-Date: Wed, 12 Dec 2012 16:13:08 +0100
-Message-ID: <20121212151308.GK4398@game.jcrosoft.org>
-References: <20121121151713.1F8873E0A47@localhost>
- <1353674679-13158-1-git-send-email-plagnioj@jcrosoft.com>
- <50AF7C19.8000306@atmel.com>
+From: Artem Bityutskiy <dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] mtd: cfi_cmdset_0002: Support Persistent Protection
+ Bits (PPB) locking
+Date: Wed, 12 Dec 2012 17:25:15 +0200
+Message-ID: <1355325915.3400.8.camel@sauron.fi.intel.com>
+References: <1354864954-30290-1-git-send-email-sr@denx.de>
+ <1355151644.2657.41.camel@sauron.fi.intel.com> <50C62CBA.5040401@denx.de>
+Reply-To: dedekind1-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <50AF7C19.8000306@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============1210072934235576223=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50C62CBA.5040401-ynQEQJNshbs@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>
+Cc: Holger Brunck <holger.brunck-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-mnsaURCQ41sdnm+yROfE0A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 14:37 Fri 23 Nov     , Nicolas Ferre wrote:
-> On 11/23/2012 01:44 PM, Jean-Christophe PLAGNIOL-VILLARD :
-> > the atmel_spi use only gpio for chip select
-> > 
-> > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> 
-> Seems simple and nice:
-> 
-> Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-grant is ok to have this for 3.8?
 
+--===============1210072934235576223==
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-LKocmJZsxOli1r5xDJCw"
+
+
+--=-LKocmJZsxOli1r5xDJCw
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, 2012-12-10 at 19:40 +0100, Stefan Roese wrote:
+> On 12/10/2012 04:00 PM, Artem Bityutskiy wrote:
+> > On Fri, 2012-12-07 at 08:22 +0100, Stefan Roese wrote:
+> >> +       /*
+> >> +        * Wait for some time as unlocking of all sectors takes quite =
+long
+> >> +        */
+> >> +       timeo =3D jiffies + (2 * HZ);     /* 2s max (un)locking */
+> >=20
+> > Please, use msecs_to_jiffies() instead.
+>=20
+> Sure, thats better.
+
+Would you please do this instead?
+
+> AFAIK, chip->mutex protects the access to the chip itself. So that
+> sequences are not interrupted.
+>=20
+> I have to admit that I haven't looked into get_chip() so far. It seems
+> to handle a state machine. Normally (idle state) it will just fall
+> through (FL_READY).
+
+So it looks like the idea is that you first take the mutex, then call
+get_chip() which will wait for the chip becoming really ready, and then
+you can safely use it.
+
+>=20
+> > Why you need to drop the mutex here?
+>=20
+> Not sure, that might not be necessary. Copy and past from another loop
+> in the same file.
+
+Probably from 'get_chip()' ?
+
+> > Why is it not an ABBA deadlock to do this:
+> >=20
+> > Task 1: In the loop above, has chip locked, doing
+> >         mutex_lock(&chip->mutex);
+> >=20
+> > Task 2: done mutex_lock(&chip->mutex), now doing
+> >         ret =3D get_chip(map, chip, adr + chip->start, FL_LOCKING);
+>=20
+> I don't see two different locks/mutexes (only A) here. As get_chip()
+> does no request any real mutex. Please correct me if I'm wrong.
+
+Right, there is indeed no deadlock.
+
+> In many other places UDELAY() is called:
+>=20
+> #define UDELAY(map, chip, adr, usec)  \
+> do {  \
+> 	mutex_unlock(&chip->mutex);  \
+> 	cfi_udelay(usec);  \
+> 	mutex_lock(&chip->mutex);  \
+> } while (0)
+
+Why not to use this as well then for consistency?
+
+--=20
 Best Regards,
-J.
-> 
-> > Cc: spi-devel-general@lists.sourceforge.net
-> > Cc: Grant Likely <grant.likely@secretlab.ca>
-> > ---
-> > Hi Grant,
-> > 
-> > 	can we have this for 3.8
-> > 	This patch is presetnt on the ML sing Feb 2012 and was depinding on
-> > 	the cs-gpio dt that you just apply
-> > 
-> > Best Regards,
-> > J.
-> >  .../devicetree/bindings/spi/spi_atmel.txt          |   26 ++++++++++++++++++++
-> >  drivers/spi/spi-atmel.c                            |   17 ++++++++++++-
-> >  2 files changed, 42 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/spi/spi_atmel.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/spi/spi_atmel.txt b/Documentation/devicetree/bindings/spi/spi_atmel.txt
-> > new file mode 100644
-> > index 0000000..07e04cd
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/spi/spi_atmel.txt
-> > @@ -0,0 +1,26 @@
-> > +Atmel SPI device
-> > +
-> > +Required properties:
-> > +- compatible : should be "atmel,at91rm9200-spi".
-> > +- reg: Address and length of the register set for the device
-> > +- interrupts: Should contain spi interrupt
-> > +- cs-gpios: chipselects
-> > +
-> > +Example:
-> > +
-> > +spi1: spi@fffcc000 {
-> > +	compatible = "atmel,at91rm9200-spi";
-> > +	reg = <0xfffcc000 0x4000>;
-> > +	interrupts = <13 4 5>;
-> > +	#address-cells = <1>;
-> > +	#size-cells = <0>;
-> > +	cs-gpios = <&pioB 3 0>;
-> > +	status = "okay";
-> > +
-> > +	mmc-slot@0 {
-> > +		compatible = "mmc-spi-slot";
-> > +		reg = <0>;
-> > +		gpios = <&pioC 4 0>;	/* CD */
-> > +		spi-max-frequency = <25000000>;
-> > +	};
-> > +};
-> > diff --git a/drivers/spi/spi-atmel.c b/drivers/spi/spi-atmel.c
-> > index 61fb0ec..1615222 100644
-> > --- a/drivers/spi/spi-atmel.c
-> > +++ b/drivers/spi/spi-atmel.c
-> > @@ -20,6 +20,7 @@
-> >  #include <linux/spi/spi.h>
-> >  #include <linux/slab.h>
-> >  #include <linux/platform_data/atmel.h>
-> > +#include <linux/of.h>
-> >  
-> >  #include <asm/io.h>
-> >  #include <asm/gpio.h>
-> > @@ -768,6 +769,10 @@ static int atmel_spi_setup(struct spi_device *spi)
-> >  
-> >  	/* chipselect must have been muxed as GPIO (e.g. in board setup) */
-> >  	npcs_pin = (unsigned int)spi->controller_data;
-> > +
-> > +	if (gpio_is_valid(spi->cs_gpio))
-> > +		npcs_pin = spi->cs_gpio;
-> > +
-> >  	asd = spi->controller_state;
-> >  	if (!asd) {
-> >  		asd = kzalloc(sizeof(struct atmel_spi_device), GFP_KERNEL);
-> > @@ -937,8 +942,9 @@ static int __devinit atmel_spi_probe(struct platform_device *pdev)
-> >  	/* the spi->mode bits understood by this driver: */
-> >  	master->mode_bits = SPI_CPOL | SPI_CPHA | SPI_CS_HIGH;
-> >  
-> > +	master->dev.of_node = pdev->dev.of_node;
-> >  	master->bus_num = pdev->id;
-> > -	master->num_chipselect = 4;
-> > +	master->num_chipselect = master->dev.of_node ? 0 : 4;
-> >  	master->setup = atmel_spi_setup;
-> >  	master->transfer = atmel_spi_transfer;
-> >  	master->cleanup = atmel_spi_cleanup;
-> > @@ -1064,11 +1070,20 @@ static int atmel_spi_resume(struct platform_device *pdev)
-> >  #define	atmel_spi_resume	NULL
-> >  #endif
-> >  
-> > +#if defined(CONFIG_OF)
-> > +static const struct of_device_id atmel_spi_dt_ids[] = {
-> > +	{ .compatible = "atmel,at91rm9200-spi" },
-> > +	{ /* sentinel */ }
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(of, atmel_spi_dt_ids);
-> > +#endif
-> >  
-> >  static struct platform_driver atmel_spi_driver = {
-> >  	.driver		= {
-> >  		.name	= "atmel_spi",
-> >  		.owner	= THIS_MODULE,
-> > +		.of_match_table	= of_match_ptr(atmel_spi_dt_ids),
-> >  	},
-> >  	.suspend	= atmel_spi_suspend,
-> >  	.resume		= atmel_spi_resume,
-> > 
-> 
-> 
-> -- 
-> Nicolas Ferre
+Artem Bityutskiy
+
+--=-LKocmJZsxOli1r5xDJCw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAABAgAGBQJQyKHbAAoJECmIfjd9wqK0da8P/ilCRK34yEUTubOmtcNiJI7O
+OHcVRwU08/i49O412xdNVCUx8YUdQzo4iXRtapdTXwLqODUx3iatIl+2HG/ZXJDg
+j7GYkQm3n9wKKmPkdKC4jCwkknVB6xvmIFwmjYQxqLM85IL7fJ3hc+nDBli1RgQF
+c2ULJ4zU9AvG6IPW7vr+kZ7bNOb05pcW732A9tj16a1KIYYGywTTS9SQqXEv9P2Q
+k0aA+iiQhffn137dWAnwny/RzUXiQR57xndLHzXjySUn3qJh32Z8PXRoALCwSyya
+WmGOxvfjtWEl4+wr++F7wtcSLqbrrJWzoIkFsftDf2+CA/0hqlgIaPml9IFK6zfL
+omCGEaFLhlRpJ9tvUXHSizgSHkGnC/LRjvN9JNSWEWTJns7g9Q2evyNXu1+nOj5c
+HIbYStu/kiBpFXEuXfKYdlaLRtmPXhmZfBks74CW32TdgGrTrI0Ua2FxyFRw35Q+
+zaSJOTGmErA0sQ7KBukZdNA+sFU/eickR2jvJZPZNh2Vnu5NRv4RMW6qaL/1LG/n
+/45RneyA/GeoCEI18CjK5X02eSxHC6RhlNxsGeUqht4b1bCj+dY3aMwjUvpGo7ye
+Gx0NEyOjxbFHa25Clzv2wpXzHUiqjv79NAj7qoYIXEUkv72XkY0kLdNoAmra/YyF
+yYAfTcEq3hAehasmh5UB
+=xh2Z
+-----END PGP SIGNATURE-----
+
+--=-LKocmJZsxOli1r5xDJCw--
+
+
+--===============1210072934235576223==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============1210072934235576223==--
