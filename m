@@ -1,66 +1,58 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH v3 0/3] ARM/dts: omap3: Add DT support for IGEP devices
-Date: Wed, 12 Dec 2012 12:42:25 +0100
-Message-ID: <CAAwP0s3gf16hZi6RVhsi7ee0YW_boPRy9--pukRcKJfMiWFKDg@mail.gmail.com>
-References: <1354538503-22671-1-git-send-email-javier.martinez@collabora.co.uk>
- <CAAwP0s2qXuJzwEh-AVORbPApr6XT0JAfsFjrxKDvXArqYk0qXQ@mail.gmail.com> <50C85850.7010906@ti.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: pci and pcie device-tree binding - range No cells
+Date: Wed, 12 Dec 2012 12:19:12 +0000
+Message-ID: <20121212121912.GA2776@arm.com>
+References: <50C5D387.90908@monstr.eu>
+ <50C5F11D.9060006@gmail.com>
+ <50C5FA3E.9030303@monstr.eu>
+ <50C5FE0F.3050108@gmail.com>
+ <20121210214127.D51773E0796@localhost>
+ <50C85E7D.5080006@monstr.eu>
+ <CACxGe6udeSbEfibC53v0wu8vFRE6K3Fd_P6EX-3JS9F2M=wUeA@mail.gmail.com>
+ <CAPcvp5EJH-Q6wd7my+V+FUVE1=hzwMN-yOfHiukGvDmkcoRcsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50C85850.7010906@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, grant.likely@secretlab.ca, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <elezegarcia@gmail.com>, Enrico Butera <ebutera@gmail.com>, Matthias Brugger <matthias.bgg@googlemail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CAPcvp5EJH-Q6wd7my+V+FUVE1=hzwMN-yOfHiukGvDmkcoRcsQ@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Michal Simek <monstr@monstr.eu>, Rob Herring <robherring2@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-pci@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thierry Reding <thierry.reding@avionic-design.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2012 at 11:11 AM, Benoit Cousson <b-cousson@ti.com> wrote:
-> Hi Javier,
->
-> On 12/12/2012 09:25 AM, Javier Martinez Canillas wrote:
->> On Mon, Dec 3, 2012 at 1:41 PM, Javier Martinez Canillas
->> <javier.martinez@collabora.co.uk> wrote:
->>> IGEP technology devices are TI OMAP3 SoC based industrial embedded
->>> and computer-on-module boards. This patch-set adds initial device
->>> tree support for these devices.
->>>
->>> The device trees allows to boot from an MMC and are working all the
->>> components that already have device tree support on OMAP3 SoCs:
->>>
->>> - MMC/SD
->>> - UARTs
->>> - GPIO LEDs
->>> - TWL4030 codec audio
->>> - pinmux/pinconf pinctrl
->>>
->>> Some peripheral are still not working such as Flash storage and
->>> Ethernet but support for these will also be included once the
->>> OMAP GPMC device tree binding patches land on mainline.
->>>
->>> This is a v3 of the patch-set that solves issues pointed out by
->>> Enric Balletbo and Benoit Cousson.
->>>
->>> The patch-set is composed of the following patches:
->>>
->>> [PATCH v3 1/3] ARM/dts: omap3: Add generic DT support for IGEP devices
->>> [PATCH v3 2/3] ARM/dts: omap3: Add support for IGEPv2 board
->>> [PATCH v3 3/3] ARM/dts: omap3: Add support for IGEP COM Module
->>>
->>> Best regards,
->>> Javier
->>> --
->>
->> Hi Benoit and Tony,
->>
->> Any comments on these?
->
-> Nope, that's fine. I'll applied the series for 3.9.
->
-> Thanks,
-> Benoit
->
->
+On Wed, Dec 12, 2012 at 10:49 AM, Grant Likely wrote:
+> On Wed, Dec 12, 2012 at 10:37 AM, Michal Simek <monstr@monstr.eu<mailto:monstr@monstr.eu>> wrote:
+> > On 12/10/2012 10:41 PM, Grant Likely wrote:
+> >> drivers/pci/pci-of.c would be good. I'd also accept drivers/of/pci.c
+> >> which might actually be a good idea in the short term so that it gets
+> >> appropriate supervision while being generalized before being moved into
+> >> the pci directory.
+> >
+> > Ben: Are you willing to move that ppc code to this location?
+> > It is probably not good idea that I should do it when I even don't have
+> > hardware available for testing (Asking someone else).
+> 
+> You're a clever guy, you are more than capable of crafting the patch,
+> even if you can't test on hardware. :-)
+> 
+> I refactored most of the OF support code without having access to most
+> of the affected hardware. Once I got the changes out there for review
+> I also asked for spot testing before getting it into linux-next for
+> even more testing.
 
-Great, thanks a lot for!
+I've been working on a relatively architecture agnostic PCI host bridge driver
+and also wanted to avoid duplicating more generic DT parsing code for PCI
+bindings.
 
-Best regards,
-Javier
+I've ended up with a patch which provides an iterator for returning resources
+based on the the typical 'ranges' binding. This has ended up living in
+drivers/of/address.c. I originally started out in drivers/of/pci.c and
+drivers/pci/pci-of.c but found there were good (and static) implementations in
+drivers/of/address.c which can be reused (e.g. of_bus_pci_get_flags,
+bus->count_cells).
+
+I'm not just ready to post it - but can do before early next week if you can
+wait.
+
+Andrew Murray
