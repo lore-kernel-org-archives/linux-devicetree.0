@@ -1,79 +1,101 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH] arm: dts: Add uart1 and uart2 to igep boards.
-Date: Wed, 12 Dec 2012 17:09:32 +0100
-Message-ID: <50C8AC3C.9020908@ti.com>
-References: <1355326422-12357-1-git-send-email-matthias.bgg@gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: pci and pcie device-tree binding - range No cells
+Date: Wed, 12 Dec 2012 17:16:51 +0100
+Message-ID: <20121212171651.346b81ab@skate>
+References: <50C5D387.90908@monstr.eu>
+	<50C5F11D.9060006@gmail.com>
+	<50C5FA3E.9030303@monstr.eu>
+	<50C5FE0F.3050108@gmail.com>
+	<50C601B6.2080107@monstr.eu>
+	<AE90C24D6B3A694183C094C60CF0A2F6026B70E7@saturn3.aculab.com>
+	<50C60839.70603@monstr.eu>
+	<20121210181525.3ccd87c6@skate>
+	<50C66F3C.3010204@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1355326422-12357-1-git-send-email-matthias.bgg@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: tony@atomide.com, grant.likely@secretlab.ca, eballetbo@gmail.com, elezegarcia@gmail.com, ebutera@gmail.com, javier.martinez@collabora.co.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <50C66F3C.3010204@gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: monstr@monstr.eu, David Laight <David.Laight@ACULAB.COM>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Thierry Reding <thierry.reding@avionic-design.de>, Rob Herring <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matthias,
+Dear Rob Herring,
 
-On 12/12/2012 04:33 PM, Matthias Brugger wrote:
-> This patch is a follow-up patch for Javier Martinez effort adding initial
-> device tree support to IGEP technology devices. [1]
-> 
-> It adds uart1 and uart2 bindings to the generic dtsi for the IGEP boards.
-> 
-> [1] http://www.spinics.net/lists/linux-omap/msg83409.html
-> 
-> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> ---
->  arch/arm/boot/dts/omap3-igep.dtsi |   24 ++++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap3-igep.dtsi
-> index 125fe00..c02e3c0 100644
-> --- a/arch/arm/boot/dts/omap3-igep.dtsi
-> +++ b/arch/arm/boot/dts/omap3-igep.dtsi
-> @@ -27,6 +27,20 @@
->  };
->  
->  &omap3_pmx_core {
-> +	uart1_pins: pinmux_uart1_pins {
-> +		pinctrl-single,pins = <
-> +			0x152 0x100	/* uart1_rx.uart1_rx INPUT | MODE0 */
-> +			0x14c 0		/* uart1_tx.uart1_tx OUTPUT | MODE0 */
-> +		>;
-> +	};
-> +
-> +	uart2_pins: pinmux_uart2_pins {
-> +		pinctrl-single,pins = <
-> +			0x14a 0x100	/* uart2_rx.uart2_rx INPUT | MODE0 */
-> +			0x148 0		/* uart2_tx.uart2_tx OUTPUT | MODE0 */
-> +		>;
-> +	};
-> +
->  	uart3_pins: pinmux_uart3_pins {
->  		pinctrl-single,pins = <
->  			0x16e 0x100	/* uart3_rx.uart3_rx INPUT | MODE0 */
-> @@ -77,6 +91,16 @@
->  	status = "disabled";
->  };
->  
-> +&uart1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart1_pins>;
-> +};
-> +
-> +&uart2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart2_pins>;
-> +};
-> +
->  &uart3 {
->         pinctrl-names = "default";
->         pinctrl-0 = <&uart3_pins>;
-> 
+On Mon, 10 Dec 2012 17:24:44 -0600, Rob Herring wrote:
 
-That looks good to me. I'll apply it on top of javier's series for 3.9.
+> > Marvell SoCs have up to 20 configurable address windows, which allow
+> > you, at run time, to say "I would like the range from physical
+> > address 0xYYYYYYYY to 0xZZZZZZZZ to correspond to the PCIe device
+> > in port 1, lane 2, or to the NAND, or to this or that device".
+> > Therefore, in the PCIe driver I proposed for the Armada 370/XP SoCs
+> > [1], there is no need to encode all those ranges statically in the
+> > DT.
+> 
+> That's not a unique feature. I'm not sure if any powerpc systems do
+> that though.
 
-Thanks,
-Benoit
+Yes, probably not an unique feature.
 
+> > The only "ranges" property I'm using is to allow the DT sub-nodes
+> > describing each PCIe port/lane to access the CPU registers that
+> > allow to see if the PCIe link is up or down, access the PCI
+> > configuration space and so on. So all ranges in my "ranges"
+> > property correspond to normal CPU registers, like the one you would
+> > put in the "reg" property for any device. The fact that those
+> > devices are PCIe is really orthogonal here.
+> 
+> That doesn't really sound right.
+
+Very likely, but I still don't get what is "the right way".
+
+> I don't think deviating from the normal binding is the right approach.
+> Perhaps the host driver should fill in the ranges property with the
+> addresses it uses. Then any child devices will get the right address
+> translation.
+
+I don't really understand what you mean here. If you look at the host
+driver code (arch/arm/mach-mvebu/pcie.c), for each PCIe interface
+is simply does:
+
+ * Create an address decoding window for the memory BAR
+ * Create an address decoding window for the I/O BAR
+ * Associate the memory BAR window address and the I/O bar window
+   address with the PCIe interface
+
+And that's it. See
+https://github.com/MISL-EBU-System-SW/mainline-public/blob/marvell-pcie-v1/arch/arm/mach-mvebu/pcie.c#L107.
+
+So this driver is both "deciding" of the physical addresses for each
+PCIe interface, and "associating" them with the PCIe interfaces. How is
+it useful to feed some addresses back into the Device Tree?
+
+> Also, while the h/w may support practically any config, there are
+> practical constraints of what Linux will use like there's no reason to
+> support more than 64K i/o space. PCI memory addresses generally start
+> at 0x100000. You probably don't need more than 1 memory window per
+> root complex (although prefetchable memory may also be needed).
+
+I allocate one 64K I/O window and one memory window per PCIe interface
+whose link is up (i.e a PCIe device is connected).
+
+> You could let the DT settings drive the address window configuration.
+
+No, because I don't want to have absolute addresses for the windows: I
+have 10 PCIe interfaces, but often, only a few of them are used. So I
+don't want in the Device Tree to over-allocate hundreds of MB of
+physical address space if it's not useful.
+
+PCIe is dynamic, address window configuration is dynamic. And we should
+hardcode all this configuration statically in the DT? Doesn't seem like
+the right solution.
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
