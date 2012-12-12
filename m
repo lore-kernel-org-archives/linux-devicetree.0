@@ -1,167 +1,56 @@
-From: =?ISO-8859-1?Q?St=E9phane_Marchesin?=
-	<stephane.marchesin@gmail.com>
-Subject: Re: [PATCH 0/3] add mie driver for exynos
-Date: Tue, 11 Dec 2012 15:08:34 -0800
-Message-ID: <CACP_E++D=_akHO5tLw-XQKj8BPbhoy3SE9AUJGd5i-pvA2qsfw@mail.gmail.com>
-References: <1354795695-28009-1-git-send-email-rcsekar@samsung.com>
- <CAAQKjZM278TfT=dcVJoKRPqWpdChaJv2N6v4O_D-xsxJOLKeRQ@mail.gmail.com>
- <CACP_E+JdiVxD05k0F57bmXWw1WKiS_NNviXOXYUVegwi5MnrsQ@mail.gmail.com> <CAAQKjZOVVU0fjj5VruQ-m8pgPoBATpXuzKsZv2F+Ux-aLtcLHw@mail.gmail.com>
+From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH 2/3] regulator: max77686: Add support for various
+ operating modes
+Date: Wed, 12 Dec 2012 08:28:36 +0530
+Message-ID: <CAM4voanvKFmPoMr4xJKwRMETa0uN4O5+v1Q3+cTWSEXfu22zUQ@mail.gmail.com>
+References: <1355120784-31118-1-git-send-email-a.kesavan@samsung.com>
+ <1355120784-31118-2-git-send-email-a.kesavan@samsung.com>
+ <1355120784-31118-3-git-send-email-a.kesavan@samsung.com>
+ <20121210064650.GJ10927@opensource.wolfsonmicro.com>
+ <loom.20121210T091624-754@post.gmane.org>
+ <CAM4voanevLVXW5_WFts2cjDi-5aAbj1_2=EN1amfp14KnKXNug@mail.gmail.com>
+ <20121211125713.GH9097@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAQKjZOVVU0fjj5VruQ-m8pgPoBATpXuzKsZv2F+Ux-aLtcLHw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: kgene.kim@samsung.com, "R. Chandrasekar" <rcsekar@samsung.com>, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, linux-samsung-soc@vger.kernel.org, rcsekar.samsung@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121211125713.GH9097-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 10, 2012 at 1:27 AM, Inki Dae <inki.dae@samsung.com> wrote:
+On Tue, Dec 11, 2012 at 6:27 PM, Mark Brown
+<broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+> On Mon, Dec 10, 2012 at 02:06:49PM +0530, Abhilash Kesavan wrote:
+>> On Mon, Dec 10, 2012 at 1:49 PM, Abhilash Kesavan
+>> <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >
+>> > Mark Brown <broonie <at> opensource.wolfsonmicro.com> writes:
 >
-> 2012/12/10 St=E9phane Marchesin <stephane.marchesin@gmail.com>
->>
->> On Sun, Dec 9, 2012 at 10:26 PM, Inki Dae <inki.dae@samsung.com> wro=
-te:
->> >
->> >
->> > 2012/12/6 R. Chandrasekar <rcsekar@samsung.com>
->> >
->> >> From: "R. Chandrasekar" <rcsekar@samsung.com>
->> >>
->> >> this patch set adds the driver support for the dithering function=
-ality
->> >> of
->> >> the
->> >> mobile image enhancement (mie) module.
->> >>
->> >> device tree support is added for mie.
->> >>
->> >> fimd adds the mie module as plugin and calls the dithering functi=
-on.
->> >> dithere is
->> >> required when the panels bpp is less then fimd output.
->> >>
->> >> though mie mie has other functionalities, current system uses onl=
-y
->> >> dithereing.
->> >>
->> >
->> > Please, move mie module into drivers/video/exynos. The mie is a
->> > interface
->> > between fimd and lcd panel(or mipi-dsi, eDP) to enhance image to b=
-e
->> > displayed. And it seems like that this doesn't need drm
->> > framework-relevant
->> > interfaces, such as gem.
->>
->> Well, if you want to support it from the DRM, it should live in
->> drivers/gpu/drm, and I don't think you should add another platform
->> driver in the first place. The profusion of platform drivers in exyn=
-os
->> makes it really difficult to support suspend/resume and initializati=
-on
->> properly as many devices which operate separately need to sync throu=
-gh
->> global variables.
->>
+>> >> Binding documenation is mandatory for any new OF properties, please add
+>> >> this.
 >
-> MIE could be used by linux framebuffer-based specific driver(s3c-fb) =
-also.
-
-Yes, but it is a DRM driver we're talking about here. Again it is
-really difficult to work with it across suspend-resume. I don't think
-the DRM was ever meant to be a collection of independent platform
-drivers.
-
-> If linux framebuffer-based driver want to use this mie module, should=
- the
-> mie module be placed in drivers/video coping it? I think it's not goo=
-d so
-> it's better way to use this mie module commonly without duplicated co=
-des.
-> And mipi-dsi and eDP drivers also have their own platform device/driv=
-er and
-> are being used by exynos drm driver or s3c-fb driver. Of course, for =
-some
-> IPs such as mie between display controller and lcd panel, It seems li=
-ke that
-> there should be proper framework or interfaces in drivers/video/exyno=
-s or
-> somewhere so that other frameworks can use it commonly. And drm and l=
-inux
-> framebuffer drivers should call the interfaces.
-
-=46or the short term, I think it's fine to duplicate the code.
-
-=46or the longer term, I think framebuffer support should be provided b=
-y
-the drm framebuffer compat layer, and s3c-fb should disappear. This is
-what has been done with all the other DRM drivers.
-
-St=E9phane
-
-
+>> > Patch 3/3 of this series adds documentation for the max77686-opmode property.
 >
-> Thanks,
-> Inki Dae
->
->> St=E9phane
->>
->>
->> >
->> > And also, please refer to the below link, Common Display Framework=
-, for
->> > more
->> > generic way.
->> >
->> >
->> > http://lists.freedesktop.org/archives/dri-devel/2012-November/0308=
-88.html
->> >
->> > Thanks,
->> > Inki Dae
->> >
->> >>
->> >> R. Chandrasekar (3):
->> >>   DTS: exynos: add device tree support for exynos mie
->> >>   drm: fimd: add mie plugin support for dithering
->> >>   drm: mie: add mie driver for exynos
->> >>
->> >>  arch/arm/boot/dts/exynos5250.dtsi               |    7 +-
->> >>  drivers/gpu/drm/exynos/Kconfig                  |    7 +
->> >>  drivers/gpu/drm/exynos/Makefile                 |    1 +
->> >>  drivers/gpu/drm/exynos/exynos_drm_fimd.c        |   58 +++++-
->> >>  drivers/gpu/drm/exynos/exynos_drm_fimd_common.h |   20 ++
->> >>  drivers/gpu/drm/exynos/exynos_drm_mie.c         |  250
->> >> +++++++++++++++++++++++
->> >>  drivers/gpu/drm/exynos/exynos_drm_mie.h         |   50 +++++
->> >>  drivers/gpu/drm/exynos/exynos_regs-mie.h        |   75 +++++++
->> >>  8 files changed, 465 insertions(+), 3 deletions(-)
->> >>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_fimd_common=
-=2Eh
->> >>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_mie.c
->> >>  create mode 100644 drivers/gpu/drm/exynos/exynos_drm_mie.h
->> >>  create mode 100644 drivers/gpu/drm/exynos/exynos_regs-mie.h
->> >>
->> >> --
->> >> 1.7.9.5
->> >>
->> >> _______________________________________________
->> >> dri-devel mailing list
->> >> dri-devel@lists.freedesktop.org
->> >> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->> >
->> >
->> >
->> > _______________________________________________
->> > dri-devel mailing list
->> > dri-devel@lists.freedesktop.org
->> > http://lists.freedesktop.org/mailman/listinfo/dri-devel
->> >
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->
->
+> There is no point in splitting changes like this up, it just makes
+> review harder - in this case it caused me to not read your patch due
+> to the missing documentation.  Put the whole change together unless
+> things are getting too big to review.
+OK.
+
+Can you please have a look at Doug's proposal for handling the
+operating mode generically in patch 3/3 of this series.
+If you are OK with it then I'll start work on implementing it.
+
+Thanks,
+Abhilash
