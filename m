@@ -1,97 +1,109 @@
-From: Tony Camuso <tcamuso@redhat.com>
-Subject: [PATCH] ipmi: add new kernel options to prevent automatic ipmi init
-Date: Thu, 13 Dec 2012 13:40:08 -0500
-Message-ID: <1355424008-20491-1-git-send-email-tcamuso@redhat.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] pinctrl/nomadik: Add Device Tree support
+Date: Thu, 13 Dec 2012 12:08:44 -0700
+Message-ID: <50CA27BC.6060304@wwwdotorg.org>
+References: <1355405825-19400-1-git-send-email-linus.walleij@stericsson.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1355405825-19400-1-git-send-email-linus.walleij@stericsson.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: rob.herring@calxeda.com, openipmi-developer@lists.sourceforge.net, grant.likely@secretlab.ca, minyard@acm.org, Tony Camuso <tcamuso@redhat.com>, Robert Evans <Robert.Evans@stratus.com>, Jim Paradis <jparadis@redhat.com>
+To: Linus Walleij <linus.walleij@stericsson.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Anmar Oueja <anmar.oueja@linaro.org>, Gabriel Fernandez <gabriel.fernandez@stericsson.com>, Lee Jones <lee.jones@linaro.org>, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The configuration change building ipmi_si into the kernel precludes the
-use of a custom driver that can utilize more than one KCS interface,
-multiple IPMBs, and more than one BMC. This capability is important for
-fault-tolerant systems.
+On 12/13/2012 06:37 AM, Linus Walleij wrote:
+> This implements pin multiplexing and pin configuration for the
+> Nomadik pin controller using the device tree.
 
-Even if the kernel option ipmi_si.trydefaults=0 is specified, ipmi_si
-discovers and claims one of the KCS interfaces on a Stratus server.
-The inability to now prevent the kernel from managing this device is a
-regression from previous kernels. The regression breaks a capability
-fault-tolerant vendors have relied upon.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ste,nomadik.txt b/Documentation/devicetree/bindings/pinctrl/ste,nomadik.txt
 
-To support both ACPI opregion access and the need to avoid activation
-of ipmi_si on some platforms, we've added two new kernel options,
-ipmi_si.tryacpi and ipmi_si.trydmi be added to prevent ipmi_si from
-initializing when these options are set to 0 on the kernel command line.
-With these options at the default value of 1, ipmi_si init proceeds
-according to the kernel default.
+> +Required properties:
+> +- compatible: "stericsson,nmk_pinctrl"
 
-Tested-by: Jim Paradis <jparadis@redhat.com>
-Signed-off-by: Robert Evans <Robert.Evans@stratus.com>
-Signed-off-by: Jim Paradis <jparadis@redhat.com>
-Signed-off-by: Tony Camuso <tcamuso@redhat.com>
----
- drivers/char/ipmi/ipmi_si_intf.c | 28 ++++++++++++++++++++++++----
- 1 file changed, 24 insertions(+), 4 deletions(-)
+Minor nit: Is it more common to use - rather than _ in compatible values?
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index 20ab5b3..0a441cf 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -1208,6 +1208,12 @@ static int smi_num; /* Used to sequence the SMIs */
- #define DEFAULT_REGSPACING	1
- #define DEFAULT_REGSIZE		1
- 
-+#ifdef CONFIG_ACPI
-+static int           si_tryacpi = 1;
-+#endif
-+#ifdef CONFIG_DMI
-+static int           si_trydmi = 1;
-+#endif
- static bool          si_trydefaults = 1;
- static char          *si_type[SI_MAX_PARMS];
- #define MAX_SI_TYPE_STR 30
-@@ -1238,6 +1244,16 @@ MODULE_PARM_DESC(hotmod, "Add and remove interfaces.  See"
- 		 " Documentation/IPMI.txt in the kernel sources for the"
- 		 " gory details.");
- 
-+#ifdef CONFIG_ACPI
-+module_param_named(tryacpi, si_tryacpi, bool, 0);
-+MODULE_PARM_DESC(tryacpi, "Setting this to zero will disable the"
-+		 " default scan of the interfaces identified via ACPI");
-+#endif
-+#ifdef CONFIG_DMI
-+module_param_named(trydmi, si_trydmi, bool, 0);
-+MODULE_PARM_DESC(trydmi, "Setting this to zero will disable the"
-+		 " default scan of the interfaces identified via DMI");
-+#endif
- module_param_named(trydefaults, si_trydefaults, bool, 0);
- MODULE_PARM_DESC(trydefaults, "Setting this to 'false' will disable the"
- 		 " default scan of the KCS and SMIC interface at the standard"
-@@ -3408,16 +3424,20 @@ static int init_ipmi_si(void)
- #endif
- 
- #ifdef CONFIG_ACPI
--	pnp_register_driver(&ipmi_pnp_driver);
--	pnp_registered = 1;
-+	if (si_tryacpi) {
-+		pnp_register_driver(&ipmi_pnp_driver);
-+		pnp_registered = 1;
-+	}
- #endif
- 
- #ifdef CONFIG_DMI
--	dmi_find_bmc();
-+	if (si_trydmi)
-+		dmi_find_bmc();
- #endif
- 
- #ifdef CONFIG_ACPI
--	spmi_find_bmc();
-+	if (si_tryacpi)
-+		spmi_find_bmc();
- #endif
- 
- 	/* We prefer devices with interrupts, but in the case of a machine
--- 
-1.7.11.7
+> +ST Ericsson's pin configuration nodes act as a container for an abitrary number of
+
+Typo in "arbitrary" above.
+
+> +subnodes. Each of these subnodes represents some desired configuration for a
+> +pin, a group, or a list of pins or groups. This configuration can include the
+> +mux function to select on those pin(s)/group(s), and various pin configuration
+> +parameters, such as inputn output, pull up, pull down...
+
+Typo in "input" above.
+
+> +The name of each subnode is not important; all subnodes should be enumerated
+> +and processed purely based on their content.
+> +
+> +Required subnode-properties:
+> +- ste,pins : An array of strings. Each string contains the name of a pin or
+> +    group.
+
+The vendor prefix here is ste, but it's stericsson in the compatible
+value above. They should be consistent. ste is nice since it's shorter,
+but I see stericsson in
+Documentation/devicetree/bindings/vendor-prefixes.txt... I wonder if you
+could register ste there too?
+
+> +Optional subnode-properties:
+> +- ste,function: A string containing the name of the function to mux to the
+> +  pin or group.
+> +
+> +- ste,input:			no parameter, set pin in input with no pull mode.
+> +- ste,input_pull_up:		no parameter, set pin in input with pull up mode.
+> +- ste,input_pull_down:		no parameter, set pin in input with pull down mode.
+
+DT property names should definitely use - not _ as a delimiter.
+
+> +- ste,sleep_input:		no parameter, set pin in sleep input with no pull mode.
+> +- ste,sleep_input_pull_up:	no parameter, set pin in sleep input with pull up mode.
+> +- ste,sleep_input_pull_down:	no parameter, set pin in sleep input with pull down mode.
+
+Would ste,sleep-input = <0/1/2> be better? Not really a big deal either way.
+
+> +- ste,sleep_pdis_mode:		integer, 0: pdis disabled, 1: pdis enable.
+
+Should the binding document mention what "pdis" is. It's probably not
+necessary so long as "pdis" is something you can search for in the HW
+documentation.
+
+> +Valid values for pin and group name are in Drivers/pinctrl/pinctrl-nomadik-db8500.c
+
+Hmm. That's rather tying the DT binding documentation to Linux code, and
+DT binding docs should be OS-agnostic. Are the names identical to the HW
+documentation? If so, perhaps you could reference that instead of the
+Linux driver.
+
+> diff --git a/drivers/pinctrl/pinctrl-nomadik.c b/drivers/pinctrl/pinctrl-nomadik.c
+
+> +static int nmk_dt_reserve_map(struct pinctrl_map **map, unsigned *reserved_maps,
+> +static int nmk_dt_add_map_mux(struct pinctrl_map **map, unsigned *reserved_maps,
+> +static int nmk_dt_add_map_configs(struct pinctrl_map **map,
+
+Those (and hence perhaps code that calls it?) is cut/paste from
+pinctrl-tegra.c. Is it worth lifting the functions out into some common
+code to share it?
+
+> +static const char * nmk_find_pin_name(struct pinctrl_dev *pctldev, const char *pin_name)
+
+> +	if (sscanf((char *) pin_name, "GPIO%d",&pin_number) == 1)
+> +		for(i = 0; i < npct->soc->npins; i++)
+
+There are some white-space issues there:
+
+* Shouldn't be a space after the cast in sscanf() call.
+* Should be a space after comma in sscanf() call.
+* Should be a space after "for".
+
+> +int nmk_pinctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
+
+> +	for (i = 0; i < ARRAY_SIZE(nmk_cfg_params); i++) {
+> +		unsigned long cfg = 0;
+> +		int val;
+> +
+> +		ret = of_property_read_u32(np, nmk_cfg_params[i].property, &val);
+
+A lot of those are Booleans not U32s...
