@@ -1,46 +1,40 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [RFC 2/5] ARM: dts: Add Cross Trigger Interface binding
-Date: Wed, 12 Dec 2012 17:23:59 -0600
-Message-ID: <50C9120F.7080809@ti.com>
-References: <1355348588-22318-1-git-send-email-jon-hunter@ti.com> <1355348588-22318-3-git-send-email-jon-hunter@ti.com> <50C90153.9070002@gmail.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [Resend PATCH v6 1/4] pinctrl: atmel-ssc: add pinctrl support
+Date: Thu, 13 Dec 2012 10:10:35 +0800
+Message-ID: <50C9391B.7080204@atmel.com>
+References: <1353464229-20846-1-git-send-email-voice.shen@atmel.com> <20121121022441.GJ4673@opensource.wolfsonmicro.com> <50BC3F1A.1030808@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50C90153.9070002@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Paul Walmsley <paul@pwsan.com>, Pratik Patel <pratikp@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Ming Lei <ming.lei@canonical.com>
+Return-path: <linux-sound-owner@vger.kernel.org>
+In-Reply-To: <50BC3F1A.1030808@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: plagnioj@jcrosoft.com
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
+On 12/3/2012 13:56, Bo Shen wrote:
+> Hi J,
+>
+> On 11/21/2012 10:24, Mark Brown wrote:
+>> On Wed, Nov 21, 2012 at 10:17:09AM +0800, Bo Shen wrote:
+>>> Add pinctrl support for atmel ssc peripheral
+>>>
+>>> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+>>
+>> Acked-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
+>>
+>
+> Ping?
+> Will you pick up this patch, if not, the linux-next (20121130) build
+> will report following error:
+> ---<8---
+> ERROR (phandle_references): Reference to non-existent node or label
+> "pinctrl_ssc0_tx
+> --->8---
 
-On 12/12/2012 04:12 PM, Rob Herring wrote:
-> On 12/12/2012 03:43 PM, Jon Hunter wrote:
->> Adds a device-tree binding for the ARM Cross Trigger Interface (CTI).
->> The ARM Cross Trigger Interface provides a way to route events between
->> processor modules. For example, on OMAP4430 we use the CTI module to
->> route PMU events to the GIC interrupt module.
-> 
-> Do you need to describe the PMU-CTI-GIC connection in DT?
+Ping again?
 
-We definitely could. This is achieved by mapping a trigger-input to a
-trigger-output. So we could list the trigger outputs and inputs in the
-binding. For omap4430 we would have ...
+> Best Regards,
+> Bo Shen
 
-arm,cti-trigin = <0 1 2 3 4 5 6>;
-arm,cti-trigin-names =  "dbgack", "pmuirq", "ptmextout0",
-			"ptmextout1", "commtx", "commrx",
-			"ptmtrigger";
-arm,cti-trigout = <0 1 2 3 4 6 7>;
-arm,cti-trigout-names = "edbgreq", "ptmextin0", "ptmextin1",
-			"ptmextin2", "ptmextin3","mpuirq",
-			"dbgrestart";
-
-So to map the PMU to GIC, we would map the "pmuirq" trigger input to the
-"mpuirq" trigger output. Then we could setup the mapping by name instead
-of index.
-
-Let me know what you think about that.
-
-Cheers
-Jon
