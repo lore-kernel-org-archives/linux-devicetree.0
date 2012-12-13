@@ -1,64 +1,97 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [RFC 2/5] ARM: dts: Add Cross Trigger Interface binding
-Date: Thu, 13 Dec 2012 17:41:40 +0000
-Message-ID: <20121213174139.GA12946@mudshark.cambridge.arm.com>
-References: <1355348588-22318-1-git-send-email-jon-hunter@ti.com>
- <1355348588-22318-3-git-send-email-jon-hunter@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1355348588-22318-3-git-send-email-jon-hunter@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Paul Walmsley <paul@pwsan.com>, Pratik Patel <pratikp@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Ming Lei <ming.lei@canonical.com>, Mark Rutland <Mark.Rutland@arm.com>
+From: Tony Camuso <tcamuso@redhat.com>
+Subject: [PATCH] ipmi: add new kernel options to prevent automatic ipmi init
+Date: Thu, 13 Dec 2012 13:40:08 -0500
+Message-ID: <1355424008-20491-1-git-send-email-tcamuso@redhat.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: rob.herring@calxeda.com, openipmi-developer@lists.sourceforge.net, grant.likely@secretlab.ca, minyard@acm.org, Tony Camuso <tcamuso@redhat.com>, Robert Evans <Robert.Evans@stratus.com>, Jim Paradis <jparadis@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2012 at 09:43:05PM +0000, Jon Hunter wrote:
-> Adds a device-tree binding for the ARM Cross Trigger Interface (CTI).
-> The ARM Cross Trigger Interface provides a way to route events between
-> processor modules. For example, on OMAP4430 we use the CTI module to
-> route PMU events to the GIC interrupt module.
-> 
-> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
-> ---
->  Documentation/devicetree/bindings/arm/cti.txt |   32 +++++++++++++++++++++++++
->  1 file changed, 32 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/cti.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cti.txt b/Documentation/devicetree/bindings/arm/cti.txt
-> new file mode 100644
-> index 0000000..4a0e2d3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/cti.txt
-> @@ -0,0 +1,32 @@
-> +* ARM Cross Trigger Interface (CTI)
-> +
-> +The ARM Cross Trigger Interface provides a way to route events between
-> +processor modules. For example, debug events from one processor can be
-> +broadcasted to other processors. The events that can be routed between
-> +processors are specific to the device.
-> +
-> +Required properties:
-> +
-> +- compatible:			Should be "arm,primecell".
-> +- interrupts:			Interrupt associated with CTI module.
-> +- reg:				Contains timer register address range (base
-> +				address and length).
-> +- arm,cti-name:			A unique name for the CTI module, that will be
-> +				used when requesting the CTI module instance.
-> +
-> +
-> +Optional properties:
-> +
-> +- arm-primecell-periphid:	Primecell peripheral ID associated with CTI
-> +				module.
+The configuration change building ipmi_si into the kernel precludes the
+use of a custom driver that can utilize more than one KCS interface,
+multiple IPMBs, and more than one BMC. This capability is important for
+fault-tolerant systems.
 
-For multi-cluster systems, I wouldn't be surprised to see multiple CTI
-instances, each with different CPU affinities. Can we include an affinity
-property following Mark's proposed binding?
+Even if the kernel option ipmi_si.trydefaults=0 is specified, ipmi_si
+discovers and claims one of the KCS interfaces on a Stratus server.
+The inability to now prevent the kernel from managing this device is a
+regression from previous kernels. The regression breaks a capability
+fault-tolerant vendors have relied upon.
 
-  http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/137290.html
+To support both ACPI opregion access and the need to avoid activation
+of ipmi_si on some platforms, we've added two new kernel options,
+ipmi_si.tryacpi and ipmi_si.trydmi be added to prevent ipmi_si from
+initializing when these options are set to 0 on the kernel command line.
+With these options at the default value of 1, ipmi_si init proceeds
+according to the kernel default.
 
-Will
+Tested-by: Jim Paradis <jparadis@redhat.com>
+Signed-off-by: Robert Evans <Robert.Evans@stratus.com>
+Signed-off-by: Jim Paradis <jparadis@redhat.com>
+Signed-off-by: Tony Camuso <tcamuso@redhat.com>
+---
+ drivers/char/ipmi/ipmi_si_intf.c | 28 ++++++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+index 20ab5b3..0a441cf 100644
+--- a/drivers/char/ipmi/ipmi_si_intf.c
++++ b/drivers/char/ipmi/ipmi_si_intf.c
+@@ -1208,6 +1208,12 @@ static int smi_num; /* Used to sequence the SMIs */
+ #define DEFAULT_REGSPACING	1
+ #define DEFAULT_REGSIZE		1
+ 
++#ifdef CONFIG_ACPI
++static int           si_tryacpi = 1;
++#endif
++#ifdef CONFIG_DMI
++static int           si_trydmi = 1;
++#endif
+ static bool          si_trydefaults = 1;
+ static char          *si_type[SI_MAX_PARMS];
+ #define MAX_SI_TYPE_STR 30
+@@ -1238,6 +1244,16 @@ MODULE_PARM_DESC(hotmod, "Add and remove interfaces.  See"
+ 		 " Documentation/IPMI.txt in the kernel sources for the"
+ 		 " gory details.");
+ 
++#ifdef CONFIG_ACPI
++module_param_named(tryacpi, si_tryacpi, bool, 0);
++MODULE_PARM_DESC(tryacpi, "Setting this to zero will disable the"
++		 " default scan of the interfaces identified via ACPI");
++#endif
++#ifdef CONFIG_DMI
++module_param_named(trydmi, si_trydmi, bool, 0);
++MODULE_PARM_DESC(trydmi, "Setting this to zero will disable the"
++		 " default scan of the interfaces identified via DMI");
++#endif
+ module_param_named(trydefaults, si_trydefaults, bool, 0);
+ MODULE_PARM_DESC(trydefaults, "Setting this to 'false' will disable the"
+ 		 " default scan of the KCS and SMIC interface at the standard"
+@@ -3408,16 +3424,20 @@ static int init_ipmi_si(void)
+ #endif
+ 
+ #ifdef CONFIG_ACPI
+-	pnp_register_driver(&ipmi_pnp_driver);
+-	pnp_registered = 1;
++	if (si_tryacpi) {
++		pnp_register_driver(&ipmi_pnp_driver);
++		pnp_registered = 1;
++	}
+ #endif
+ 
+ #ifdef CONFIG_DMI
+-	dmi_find_bmc();
++	if (si_trydmi)
++		dmi_find_bmc();
+ #endif
+ 
+ #ifdef CONFIG_ACPI
+-	spmi_find_bmc();
++	if (si_tryacpi)
++		spmi_find_bmc();
+ #endif
+ 
+ 	/* We prefer devices with interrupts, but in the case of a machine
+-- 
+1.7.11.7
