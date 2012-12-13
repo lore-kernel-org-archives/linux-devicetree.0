@@ -1,78 +1,219 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [RFC 3/5] ARM: CTI: Convert CTI helpers to AMBA bus driver
-Date: Thu, 13 Dec 2012 15:08:26 +0000
-Message-ID: <20121213150826.GM26540@mudshark.cambridge.arm.com>
-References: <1355348588-22318-1-git-send-email-jon-hunter@ti.com>
- <1355348588-22318-4-git-send-email-jon-hunter@ti.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH] pinctrl/nomadik: Add Device Tree support
+Date: Thu, 13 Dec 2012 16:27:33 +0100
+Message-ID: <20121213152733.GE23971@game.jcrosoft.org>
+References: <1355405825-19400-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1355348588-22318-4-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Paul Walmsley <paul@pwsan.com>, Pratik Patel <pratikp@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Ming Lei <ming.lei@canonical.com>
+In-Reply-To: <1355405825-19400-1-git-send-email-linus.walleij@stericsson.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@stericsson.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Gabriel Fernandez <gabriel.fernandez@stericsson.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Anmar Oueja <anmar.oueja@linaro.org>, Lee Jones <lee.jones@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2012 at 09:43:06PM +0000, Jon Hunter wrote:
-> Convert the Cross Trigger Interface (CTI) helpers in cti.h into a
-> AMBA bus driver so that we can use device-tree to look-up the hardware
-> specific information such as base address and interrupt number during
-> the device probe. This also add APIs to request, cti_get() and release,
-> cti_put(), a CTI module so that drivers can allocate a module at
-> runtime.
+On 14:37 Thu 13 Dec     , Linus Walleij wrote:
+> From: Gabriel Fernandez <gabriel.fernandez@stericsson.com>
 > 
-> Currently, the driver only supports looking-up the CTI hardware
-> information via device-tree, however, the driver could be extended to
-> support non-device-tree configurations if needed for a particular
-> architecture.
+> This implements pin multiplexing and pin configuration for the
+> Nomadik pin controller using the device tree.
 > 
-> The CTI driver only currently supports CTI modules that have a single
-> CPU interrupt, however, could be extended in the future to support more
-> interrupts if a device requires this.
-
-Aha, so elaborating on my earlier comments, we basically want to do the same
-thing for ETB I reckon. This does raise the question about namespaces
-though...
-
-> +/**
-> + * struct cti - Cross Trigger Interface (CTI) struct
-> + *
-> + * @node:      Connects CTI instance to list of CTI instances
-> + * @dev:       Pointer to device structure
-> + * @base:      Mapped virtual address of the CTI module
-> + * @name:      Name associated with CTI instance
-> + * @irq:       Interrupt associated with CTI instance
-> + * @trig_out:  Trigger output associated with interrupt (@irq)
-> + * @reserved:  Used to indicate if CTI instance has been allocated
-> + * @enabled:   Used to indicate if CTI instance has been enabled
-> + */
-> +struct cti {
-> +       struct list_head node;
-> +       struct device *dev;
-> +       void __iomem *base;
-> +       const char *name;
-> +       int irq;
-> +       int trig_out;
-> +       bool reserved;
-> +       bool enabled;
-> +};
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@stericsson.com>
+> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+> ---
+>  .../devicetree/bindings/pinctrl/ste,nomadik.txt    | 111 +++++++++
+>  drivers/pinctrl/pinctrl-nomadik.c                  | 250 +++++++++++++++++++++
+>  2 files changed, 361 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/ste,nomadik.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/ste,nomadik.txt b/Documentation/devicetree/bindings/pinctrl/ste,nomadik.txt
+> new file mode 100644
+> index 0000000..02ff731
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/ste,nomadik.txt
+> @@ -0,0 +1,111 @@
+> +ST Ericsson Nomadik pinmux controller
 > +
-> +#ifdef CONFIG_ARM_AMBA_CTI
+> +Required properties:
+> +- compatible: "stericsson,nmk_pinctrl"
+> +- reg: Should contain the register physical address and length of the PRCMU.
 > +
-> +int cti_map_trigger(struct cti *cti, int trig_in, int trig_out, int chan);
-> +int cti_enable(struct cti *cti);
-> +int cti_disable(struct cti *cti);
-> +int cti_irq_ack(struct cti *cti);
-> +struct cti *cti_get(const char *name);
-> +void cti_put(struct cti *cti);
+> +Please refer to pinctrl-bindings.txt in this directory for details of the
+> +common pinctrl bindings used by client devices, including the meaning of the
+> +phrase "pin configuration node".
+> +
+> +ST Ericsson's pin configuration nodes act as a container for an abitrary number of
+> +subnodes. Each of these subnodes represents some desired configuration for a
+> +pin, a group, or a list of pins or groups. This configuration can include the
+> +mux function to select on those pin(s)/group(s), and various pin configuration
+> +parameters, such as inputn output, pull up, pull down...
+> +
+> +The name of each subnode is not important; all subnodes should be enumerated
+> +and processed purely based on their content.
+> +
+> +Required subnode-properties:
+> +- ste,pins : An array of strings. Each string contains the name of a pin or
+> +    group.
+> +
+> +Optional subnode-properties:
+> +- ste,function: A string containing the name of the function to mux to the
+> +  pin or group.
+> +
+> +- ste,input:			no parameter, set pin in input with no pull mode.
+> +- ste,input_pull_up:		no parameter, set pin in input with pull up mode.
+> +- ste,input_pull_down:		no parameter, set pin in input with pull down mode.
+> +
+> +- ste,output:			integer, 0: output low, 1: output high, 2: output (value is not specified).
+> +- ste,sleep_mode:		integer, 0: sleep mode disable, 1: sleep mode enable.
+> +
+> +- ste,sleep_input:		no parameter, set pin in sleep input with no pull mode.
+> +- ste,sleep_input_pull_up:	no parameter, set pin in sleep input with pull up mode.
+> +- ste,sleep_input_pull_down:	no parameter, set pin in sleep input with pull down mode.
+> +
+> +- ste,sleep_output:		integer, 0: sleep output low, 1: sleep output high, 2: sleep output (value is not specified).
+> +
+> +- ste,sleep_wakeup:		interger, 0: disable sleep wakeup mode, 1: enable sleep wake up mode.
+> +- ste,sleep_gpio:		interger, 0: disable sleep gpio mode, 1: enable sleep gpio mode.
+> +
+> +- ste,sleep_pdis_mode:		integer, 0: pdis disabled, 1: pdis enable.
+> +
+> +
+> +Valid values for pin and group name are in Drivers/pinctrl/pinctrl-nomadik-db8500.c
+> +
+> +Example board file extract:
+> +
+> +	pinctrl {
+> +		compatible = "stericsson,nmk_pinctrl";
+> +		reg = <0x80157000 0x2000>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&uart0_default_mode>;
+???
 
-I wonder whether we should stick these all into a struct and have a general
-way to see which coresight devices we have and then retrieve their ops
-structures (so things like perf can walk a virtual coresight bus containing
-initialised devices). It might also help if we decide to describe the
-plumbing in the device tree, like Rob suggested.
+those 2 are wired
 
-What do you reckon?
 
-Will
+> +
+> +		uart0 {
+> +			uart0_default_mux: uart0_mux {
+> +				u0_default_mux {
+> +					ste,function = "u0";
+> +					ste,pins = "u0_a_1";
+> +					};
+> +			};
+> +			uart0_default_mode: uart0_default {
+> +				uart0_default_cfg1 {
+> +					ste,pins = "GPIO0", "GPIO2";
+> +					ste,input_pull_up;
+> +				};
+> +
+> +				uart0_default_cfg2 {
+> +					ste,pins = "GPIO1", "GPIO3";
+> +					ste,output = <1>;
+> +				};
+> +			};
+> +			uart0_sleep_mode: uart0_sleep {
+> +				uart0_sleep_cfg1 {
+> +					ste,pins = "GPIO0", "GPIO2";
+> +					ste,sleep_mode = <0>;
+> +					ste,sleep_input;
+> +					ste,sleep_wakeup_mode = <1>;
+> +					ste,sleep_pdis_mode = <0>;
+> +				};
+> +				uart0_sleep_cfg2 {
+> +					ste,pins = "GPIO1";
+> +					ste,sleep_mode = <0>;
+> +					ste,sleep_output = <1>;
+> +					ste,sleep_wakeup_mode = <1>;
+> +					ste,sleep_pdis_mode = <0>;
+> +				};
+> +				uart0_sleep_cfg3 {
+> +					ste,pins = "GPIO3";
+> +					ste,sleep_mode = <0>;
+> +					ste,sleep_output = <2>;
+> +					ste,sleep_wakeup_mode = <1>;
+> +					ste,sleep_pdis_mode = <0>;
+> +				};
+
+with such bindings you will endup with 1000s of node
+
+take a loook on at91 how we did to avoid this
+> +			};
+> +		};
+> +	};
+> +
+> +	uart@80120000 {
+> +		compatible = "arm,pl011", "arm,primecell";
+> +		reg = <0x80120000 0x1000>;
+> +		interrupts = <0 11 0x4>;
+> +
+> +		pinctrl-names = "default","sleep";
+> +		pinctrl-0 = <&uart0_default_mux>, <&uart0_default_mode>;
+> +		pinctrl-1 = <&uart0_sleep_mode>;
+> +	};
+> +
+> diff --git a/drivers/pinctrl/pinctrl-nomadik.c b/drivers/pinctrl/pinctrl-nomadik.c
+> index 1068faa..90b25ee 100644
+> --- a/drivers/pinctrl/pinctrl-nomadik.c
+> +++ b/drivers/pinctrl/pinctrl-nomadik.c
+> @@ -25,6 +25,7 @@
+>  #include <linux/irqdomain.h>
+>  #include <linux/slab.h>
+>  #include <linux/of_device.h>
+> +#include <linux/pinctrl/machine.h>
+>  #include <linux/pinctrl/pinctrl.h>
+>  #include <linux/pinctrl/pinmux.h>
+>  #include <linux/pinctrl/pinconf.h>
+> @@ -1503,11 +1504,260 @@ static void nmk_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
+>  	nmk_gpio_dbg_show_one(s, pctldev, chip, offset - chip->base, offset);
+>  }
+>  
+> +static void nmk_pinctrl_dt_free_map(struct pinctrl_dev *pctldev,
+> +		struct pinctrl_map *map, unsigned num_maps)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < num_maps; i++)
+> +		if (map[i].type == PIN_MAP_TYPE_CONFIGS_PIN)
+> +			kfree(map[i].data.configs.configs);
+> +	kfree(map);
+> +}
+> +
+> +static int nmk_dt_reserve_map(struct pinctrl_map **map, unsigned *reserved_maps,
+> +		unsigned *num_maps, unsigned reserve)
+> +{
+> +	unsigned old_num = *reserved_maps;
+> +	unsigned new_num = *num_maps + reserve;
+> +	struct pinctrl_map *new_map;
+> +
+> +	if (old_num >= new_num)
+> +		return 0;
+> +
+> +	new_map = krealloc(*map, sizeof(*new_map) * new_num, GFP_KERNEL);
+> +	if (!new_map)
+> +		return -ENOMEM;
+devm_
+> +
+> +	memset(new_map + old_num, 0, (new_num - old_num) * sizeof(*new_map));
+> +
+> +	*map = new_map;
+> +	*reserved_maps = new_num;
+> +
+> +	return 0;
+> +}
+> +
+
+Best Regards,
+J.
