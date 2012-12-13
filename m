@@ -1,187 +1,64 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFCv2 2/2] ARM: add functions to parse irq affinity from dt
-Date: Thu, 13 Dec 2012 16:49:28 +0000
-Message-ID: <1355417368-6861-3-git-send-email-mark.rutland@arm.com>
-References: <1355417368-6861-1-git-send-email-mark.rutland@arm.com>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [RFC 2/5] ARM: dts: Add Cross Trigger Interface binding
+Date: Thu, 13 Dec 2012 17:41:40 +0000
+Message-ID: <20121213174139.GA12946@mudshark.cambridge.arm.com>
+References: <1355348588-22318-1-git-send-email-jon-hunter@ti.com>
+ <1355348588-22318-3-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355417368-6861-1-git-send-email-mark.rutland-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1355348588-22318-3-git-send-email-jon-hunter@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Paul Walmsley <paul@pwsan.com>, Pratik Patel <pratikp@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Ming Lei <ming.lei@canonical.com>, Mark Rutland <Mark.Rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds functions to handle parsing the CPU affinity of
-interrupts from devicetree, based on an "interrupts-affinity" parameter
-list. It is assumed that drivers which may optionally use this parameter
-implement their own fallback behaviour.
+On Wed, Dec 12, 2012 at 09:43:05PM +0000, Jon Hunter wrote:
+> Adds a device-tree binding for the ARM Cross Trigger Interface (CTI).
+> The ARM Cross Trigger Interface provides a way to route events between
+> processor modules. For example, on OMAP4430 we use the CTI module to
+> route PMU events to the GIC interrupt module.
+> 
+> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> ---
+>  Documentation/devicetree/bindings/arm/cti.txt |   32 +++++++++++++++++++++++++
+>  1 file changed, 32 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/cti.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/cti.txt b/Documentation/devicetree/bindings/arm/cti.txt
+> new file mode 100644
+> index 0000000..4a0e2d3
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/cti.txt
+> @@ -0,0 +1,32 @@
+> +* ARM Cross Trigger Interface (CTI)
+> +
+> +The ARM Cross Trigger Interface provides a way to route events between
+> +processor modules. For example, debug events from one processor can be
+> +broadcasted to other processors. The events that can be routed between
+> +processors are specific to the device.
+> +
+> +Required properties:
+> +
+> +- compatible:			Should be "arm,primecell".
+> +- interrupts:			Interrupt associated with CTI module.
+> +- reg:				Contains timer register address range (base
+> +				address and length).
+> +- arm,cti-name:			A unique name for the CTI module, that will be
+> +				used when requesting the CTI module instance.
+> +
+> +
+> +Optional properties:
+> +
+> +- arm-primecell-periphid:	Primecell peripheral ID associated with CTI
+> +				module.
 
-The patch adds:
-* arm_dt_has_irq_affinity : returns whether or not a device_node has
-  interrupts-affinity information
-* arm_dt_affine_irq_is_single : returns whether an interrupt targets a single
-  CPU (i.e. is an SPI) or multiple CPUs (i.e. is a PPI). This test is
-  independent of the number of affine CPUs we can logically map.
-* arm_dt_irq_get_affinity : fills a cpumask with the CPUs an interrupt is
-  affine to.
+For multi-cluster systems, I wouldn't be surprised to see multiple CTI
+instances, each with different CPU affinities. Can we include an affinity
+property following Mark's proposed binding?
 
-The "interrupts-affinity" property consists of a list of pairs of cells
-specifying how to test if a CPU is affine. This test specification consists of
-a most significant affinity level to match, and values for the MPIDR affinity
-bits down to this level. Each pair of cells has the form:
+  http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/137290.html
 
-	< N 0x00AABBCC >
-	   \   \ \ \ \__ MPIDR.Aff0
-	    \   \ \ \___ MPIDR.Aff1
-	     \   \ \____ MPIDR.Aff2
-	      \   \_____ [must be zero]
-	       \________ level-specifier
-
-The level-specifier is in the range [0-3]. When the value is 3, MPIDR
-affinity levels 2,1,0 are ignored, and all CPUs are matched. Affinity
-bits which are not to be matched should be set to zero.
-
-Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm/include/asm/dt_irq.h |    9 ++++
- arch/arm/kernel/devtree.c     |   91 +++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 100 insertions(+), 0 deletions(-)
- create mode 100644 arch/arm/include/asm/dt_irq.h
-
-diff --git a/arch/arm/include/asm/dt_irq.h b/arch/arm/include/asm/dt_irq.h
-new file mode 100644
-index 0000000..431eeda
---- /dev/null
-+++ b/arch/arm/include/asm/dt_irq.h
-@@ -0,0 +1,9 @@
-+#ifndef ARM_ASM_DT_IRQ_H
-+#define ARM_ASM_DT_IRQ_H
-+
-+bool arm_dt_has_irq_affinity(struct device_node *node);
-+bool arm_dt_affine_irq_is_single(struct device_node *node, int idx);
-+int arm_dt_irq_get_affinity(struct device_node *node, int idx,
-+			    cpumask_t *mask);
-+
-+#endif /* ARM_ASM_DT_IRQ_H */
-diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-index 70f1bde..65d5052 100644
---- a/arch/arm/kernel/devtree.c
-+++ b/arch/arm/kernel/devtree.c
-@@ -20,6 +20,7 @@
- #include <linux/of_platform.h>
- 
- #include <asm/cputype.h>
-+#include <asm/dt_irq.h>
- #include <asm/setup.h>
- #include <asm/page.h>
- #include <asm/smp_plat.h>
-@@ -165,6 +166,96 @@ void __init arm_dt_init_cpu_maps(void)
- 	}
- }
- 
-+#define PROP_IRQ_AFFINITY	"interrupts-affinity"
-+#define AFFINE_LEVEL_IDX(i)	(2*(i))
-+#define AFFINE_MPIDR_IDX(i)	(2*(i) + 1)
-+
-+/*
-+ * Check whether the device has irq affinity information.
-+ * Allows drivers to fall back to current behaviour with a single check.
-+ */
-+bool arm_dt_has_irq_affinity(struct device_node *node)
-+{
-+	return of_find_property(node, PROP_IRQ_AFFINITY, NULL) != NULL;
-+}
-+
-+/*
-+ * Check whether an irq with affinity information is a single cpu
-+ * interrupt (rather than percpu). The node paramenter should be
-+ * checked with arm_dt_has_irq_affinity first.
-+ */
-+bool arm_dt_affine_irq_is_single(struct device_node *node, int idx)
-+{
-+	u32 level;
-+	of_property_read_u32_index(node, PROP_IRQ_AFFINITY, &level,
-+				   AFFINE_LEVEL_IDX(idx));
-+	return level == 0;
-+}
-+
-+struct affine_match_spec {
-+	u32 level;
-+	u32 aff;
-+};
-+
-+static bool arm_dt_affine_mpidr_match(u32 mpidr, struct affine_match_spec *match)
-+{
-+	u32 mask = 0xFFFFFFFF << (8*(match->level));
-+	return (mpidr & mask) == (match->aff & mask);
-+}
-+
-+static int arm_dt_irq_read_match(struct device_node *node, int idx,
-+				 struct affine_match_spec *match)
-+{
-+	int ret;
-+	if (!node)
-+		return -EINVAL;
-+
-+	ret = of_property_read_u32_index(node, PROP_IRQ_AFFINITY, &match->aff,
-+					 AFFINE_MPIDR_IDX(idx));
-+	if (ret)
-+		return ret;
-+
-+	ret = of_property_read_u32_index(node, PROP_IRQ_AFFINITY, &match->level,
-+					 AFFINE_LEVEL_IDX(idx));
-+	if (ret)
-+		return ret;
-+
-+	/*
-+	 * To match all cpus regardless of Aff{2,1,0}, we match at the
-+	 * nonexistent Aff3.
-+	 */
-+	if (match->level > 3)
-+		return -EINVAL;
-+
-+	return ret;
-+
-+}
-+
-+/*
-+ * Get the set of possible cpus that an interrupt at idx is affine to.
-+ */
-+int arm_dt_irq_get_affinity(struct device_node *node, int idx,
-+			    cpumask_t *mask)
-+{
-+	int i, ret;
-+	struct affine_match_spec match;
-+	u32 mpidr;
-+
-+	ret = arm_dt_irq_read_match(node, idx, &match);
-+	if (ret)
-+		return ret;
-+
-+	cpumask_clear(mask);
-+
-+	for_each_possible_cpu(i) {
-+		mpidr = cpu_logical_map(i);
-+		if (arm_dt_affine_mpidr_match(mpidr, &match))
-+			cpumask_set_cpu(i, mask);
-+	}
-+
-+	return 0;
-+}
-+
- /**
-  * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
-  * @dt_phys: physical address of dt blob
--- 
-1.7.0.4
+Will
