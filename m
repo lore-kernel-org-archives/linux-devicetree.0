@@ -1,40 +1,53 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: Re: [Resend PATCH v6 1/4] pinctrl: atmel-ssc: add pinctrl support
-Date: Thu, 13 Dec 2012 10:10:35 +0800
-Message-ID: <50C9391B.7080204@atmel.com>
-References: <1353464229-20846-1-git-send-email-voice.shen@atmel.com> <20121121022441.GJ4673@opensource.wolfsonmicro.com> <50BC3F1A.1030808@atmel.com>
+From: Garg Vakul-B16394 <B16394@freescale.com>
+Subject: RE: [PATCH] Revert "crypto: caam - Updated SEC-4.0 device tree
+ binding for ERA information."
+Date: Thu, 13 Dec 2012 04:04:37 +0000
+Message-ID: <065BBB7616BCE543832A2EF096986B94141389@039-SN2MPN1-011.039d.mgd.msft.net>
+References: <1354870649-3656-1-git-send-email-vakul@freescale.com>
+ <C38A27FC-51EF-44F3-8474-33162DE1A272@kernel.crashing.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sound-owner@vger.kernel.org>
-In-Reply-To: <50BC3F1A.1030808@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: plagnioj@jcrosoft.com
-Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, nicolas.ferre@atmel.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <C38A27FC-51EF-44F3-8474-33162DE1A272@kernel.crashing.org>
+Content-Language: en-US
+Sender: linux-crypto-owner@vger.kernel.org
+To: Kumar Gala <galak@kernel.crashing.org>
+Cc: "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/3/2012 13:56, Bo Shen wrote:
-> Hi J,
->
-> On 11/21/2012 10:24, Mark Brown wrote:
->> On Wed, Nov 21, 2012 at 10:17:09AM +0800, Bo Shen wrote:
->>> Add pinctrl support for atmel ssc peripheral
->>>
->>> Signed-off-by: Bo Shen <voice.shen@atmel.com>
->>
->> Acked-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
->>
->
-> Ping?
-> Will you pick up this patch, if not, the linux-next (20121130) build
-> will report following error:
-> ---<8---
-> ERROR (phandle_references): Reference to non-existent node or label
-> "pinctrl_ssc0_tx
-> --->8---
+Hello Kumar
 
-Ping again?
+This has been applied to: 
 
-> Best Regards,
-> Bo Shen
+git://git.kernel.org/pub/scm/linux/kernel/git/herbert/cryptodev-2.6.git.
 
+Regards
+
+Vakul
+
+> -----Original Message-----
+> From: Kumar Gala [mailto:galak@kernel.crashing.org]
+> Sent: Thursday, December 13, 2012 3:00 AM
+> To: Garg Vakul-B16394
+> Cc: linux-crypto@vger.kernel.org; linuxppc-dev@ozlabs.org; devicetree-
+> discuss@lists.ozlabs.org
+> Subject: Re: [PATCH] Revert "crypto: caam - Updated SEC-4.0 device tree
+> binding for ERA information."
+> 
+> 
+> On Dec 7, 2012, at 2:57 AM, Vakul Garg wrote:
+> 
+> > This reverts commit a2c0911c09190125f52c9941b9d187f601c2f7be.
+> >
+> > Signed-off-by: Vakul Garg <vakul@freescale.com>
+> > ---
+> > Instead of adding SEC era information in crypto node's compatible, a
+> > new property 'fsl,sec-era' is being introduced into crypto node.
+> >
+> > .../devicetree/bindings/crypto/fsl-sec4.txt        |    5 ++---
+> > 1 files changed, 2 insertions(+), 3 deletions(-)
+> 
+> What tree do you think this has been applied to?
+> 
+> - k
