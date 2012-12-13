@@ -1,40 +1,92 @@
-From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] usb: dwc3-exynos: Fix compatible strings for the device
-Date: Thu, 13 Dec 2012 20:22:28 +0530
-Message-ID: <1355410348-5129-3-git-send-email-gautam.vivek@samsung.com>
-References: <1355410348-5129-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1355410348-5129-1-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFC 1/5] ARM: CORESIGHT: Add generic lock/unlock helpers
+Date: Thu, 13 Dec 2012 14:58:03 +0000
+Message-ID: <20121213145803.GL26540@mudshark.cambridge.arm.com>
+References: <1355348588-22318-1-git-send-email-jon-hunter@ti.com>
+ <1355348588-22318-2-git-send-email-jon-hunter@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1355348588-22318-2-git-send-email-jon-hunter-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Using specific chip in compatible strings. Newer SOCs can claim
-device by using older string in the compatible list.
+Hi Jon,
 
-Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/usb/dwc3/dwc3-exynos.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+On Wed, Dec 12, 2012 at 09:43:04PM +0000, Jon Hunter wrote:
+> The Cross Trigger Interface (CTI) helpers in cti.h include definitions
+> for the Coresight Lock Access Register (LAR) and Lock Status Register
+> (LSR). These registers are already defined in coresight.h and so rather
+> than having multiple definitions, just use the definitions from
+> coresight.h.
+> 
+> Add the following coresight macros ...
+> - coresight_unlock() --> Unlocks coresight module
+> - coresight_lock()   --> Locks coresight module
+> 
+> Use the above macros for ETB, ETM and CTI. The do-while(0) statement
+> has been removed from the macro as it is not a multi-line macro.
+> 
+> Signed-off-by: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+> ---
+>  arch/arm/include/asm/cti.h                |   16 +++-------------
+>  arch/arm/include/asm/hardware/coresight.h |   16 ++++++++--------
+>  2 files changed, 11 insertions(+), 21 deletions(-)
 
-diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
-index aae5328..9dce99a 100644
---- a/drivers/usb/dwc3/dwc3-exynos.c
-+++ b/drivers/usb/dwc3/dwc3-exynos.c
-@@ -188,7 +188,7 @@ static int dwc3_exynos_remove(struct platform_device *pdev)
- 
- #ifdef CONFIG_OF
- static const struct of_device_id exynos_dwc3_match[] = {
--	{ .compatible = "samsung,exynos-dwc3" },
-+	{ .compatible = "samsung,exynos5250-dwc3" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, exynos_dwc3_match);
--- 
-1.7.6.5
+[...]
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/arm/include/asm/hardware/coresight.h b/arch/arm/include/asm/hardware/coresight.h
+> index 7ecd793..dcd0e66 100644
+> --- a/arch/arm/include/asm/hardware/coresight.h
+> +++ b/arch/arm/include/asm/hardware/coresight.h
+> @@ -141,17 +141,17 @@
+>  #define ETBFF_TRIGEVT		BIT(9)
+>  #define ETBFF_TRIGFL		BIT(10)
+>  
+> -#define etb_writel(t, v, x) \
+> -	(__raw_writel((v), (t)->etb_regs + (x)))
+> +#define etb_writel(t, v, x) (__raw_writel((v), (t)->etb_regs + (x)))
+>  #define etb_readl(t, x) (__raw_readl((t)->etb_regs + (x)))
+>  
+> -#define etm_lock(t) do { etm_writel((t), 0, CSMR_LOCKACCESS); } while (0)
+> -#define etm_unlock(t) \
+> -	do { etm_writel((t), UNLOCK_MAGIC, CSMR_LOCKACCESS); } while (0)
+> +#define etb_lock(t) coresight_lock((t)->etb_regs)
+> +#define etb_unlock(t) coresight_unlock((t)->etb_regs)
+> +#define etm_lock(t) coresight_lock((t)->etm_regs)
+> +#define etm_unlock(t) coresight_unlock((t)->etm_regs)
+>  
+> -#define etb_lock(t) do { etb_writel((t), 0, CSMR_LOCKACCESS); } while (0)
+> -#define etb_unlock(t) \
+> -	do { etb_writel((t), UNLOCK_MAGIC, CSMR_LOCKACCESS); } while (0)
+> +#define coresight_lock(base) (__raw_writel(0, base + CSMR_LOCKACCESS))
+> +#define coresight_unlock(base) \
+> +	(__raw_writel(UNLOCK_MAGIC, base + CSMR_LOCKACCESS))
+>  
+>  #endif /* __ASM_HARDWARE_CORESIGHT_H */
+
+How about we take this opportunity to divorce the more general coresight
+bits from the etb specific parts, like you've done for the cti. We could
+move the ETB stuff out into asm/etb.h (although it might be nice to keep all
+the coresight device headers in one place... answers on a postcard) and just
+have the architected coresight functionality in this header.
+
+Will
+
+> -- 
+> 1.7.10.4
+> 
+> 
