@@ -1,467 +1,419 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [PATCH V5 2/2] ASoC: SAMSUNG: Add DT support for i2s
-Date: Thu, 13 Dec 2012 16:12:53 +0530
-Message-ID: <1355395373-22058-3-git-send-email-padma.v@samsung.com>
-References: <1355395373-22058-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1355395373-22058-1-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: padma.v@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
-Cc: sbkim73@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, lrg@ti.com, tiwai@suse.de, jassisinghbrar@gmail.com
+From: Linus Walleij <linus.walleij@stericsson.com>
+Subject: [PATCH] pinctrl/nomadik: Add Device Tree support
+Date: Thu, 13 Dec 2012 14:37:05 +0100
+Message-ID: <1355405825-19400-1-git-send-email-linus.walleij@stericsson.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Stephen Warren <swarren@nvidia.com>, Anmar Oueja <anmar.oueja@linaro.org>, Gabriel Fernandez <gabriel.fernandez@stericsson.com>, Lee Jones <lee.jones@linaro.org>, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add support for device based discovery.
+From: Gabriel Fernandez <gabriel.fernandez@stericsson.com>
 
-Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+This implements pin multiplexing and pin configuration for the
+Nomadik pin controller using the device tree.
+
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@stericsson.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- .../devicetree/bindings/sound/samsung-i2s.txt      |   75 +++++++
- sound/soc/samsung/dma.c                            |    1 +
- sound/soc/samsung/dma.h                            |    1 +
- sound/soc/samsung/i2s.c                            |  233 ++++++++++++++++----
- 4 files changed, 269 insertions(+), 41 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
+ .../devicetree/bindings/pinctrl/ste,nomadik.txt    | 111 +++++++++
+ drivers/pinctrl/pinctrl-nomadik.c                  | 250 +++++++++++++++++++++
+ 2 files changed, 361 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/ste,nomadik.txt
 
-diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+diff --git a/Documentation/devicetree/bindings/pinctrl/ste,nomadik.txt b/Documentation/devicetree/bindings/pinctrl/ste,nomadik.txt
 new file mode 100644
-index 0000000..bff47b4
+index 0000000..02ff731
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
-@@ -0,0 +1,75 @@
-+* Samsung I2S controller
++++ b/Documentation/devicetree/bindings/pinctrl/ste,nomadik.txt
+@@ -0,0 +1,111 @@
++ST Ericsson Nomadik pinmux controller
 +
-+Required SoC Specific Properties:
++Required properties:
++- compatible: "stericsson,nmk_pinctrl"
++- reg: Should contain the register physical address and length of the PRCMU.
 +
-+- compatible : "samsung,samsung-i2s"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
++Please refer to pinctrl-bindings.txt in this directory for details of the
++common pinctrl bindings used by client devices, including the meaning of the
++phrase "pin configuration node".
 +
-+[PRELIMINARY: the dma channel allocation will change once there are
-+official DMA bindings]
++ST Ericsson's pin configuration nodes act as a container for an abitrary number of
++subnodes. Each of these subnodes represents some desired configuration for a
++pin, a group, or a list of pins or groups. This configuration can include the
++mux function to select on those pin(s)/group(s), and various pin configuration
++parameters, such as inputn output, pull up, pull down...
 +
-+- tx-dma-channel-secondary: The dma channel specifier for secondary tx
-+  operations. The format of the dma specifier depends on the dma
-+  controller.
-+- tx-dma-channel: The dma channel specifier for tx operations. The format of
-+  the dma specifier depends on the dma controller.
-+- rx-dma-channel: The dma channel specifier for rx operations. The format of
-+  the dma specifier depends on the dma controller.
++The name of each subnode is not important; all subnodes should be enumerated
++and processed purely based on their content.
 +
-+Optional SoC Specific Properties:
++Required subnode-properties:
++- ste,pins : An array of strings. Each string contains the name of a pin or
++    group.
 +
-+- samsung,supports-6ch: If the I2S Primary sound source has 5.1 Channel
-+  support, this flag is enabled.
-+- samsung,supports-rstclr: This flag should be set if I2S software reset bit
-+  control is required. When this flag is set I2S software reset bit will be
-+  enabled or disabled based on need.
-+- samsung,supports-secdai:If I2S block has a secondary FIFO and internal DMA,
-+  then this flag is enabled.
-+- samsung,idma-addr: Internal DMA register base address of the audio
-+  sub system(used in secondary sound source).
++Optional subnode-properties:
++- ste,function: A string containing the name of the function to mux to the
++  pin or group.
 +
-+Required Board Specific Properties:
++- ste,input:			no parameter, set pin in input with no pull mode.
++- ste,input_pull_up:		no parameter, set pin in input with pull up mode.
++- ste,input_pull_down:		no parameter, set pin in input with pull down mode.
 +
-+- gpios: The gpio specifier for data out,data in, LRCLK, CDCLK and SCLK
-+  interface lines. The format of the gpio specifier depends on the gpio
-+  controller.
-+  The syntax of samsung gpio specifier is
-+	<[phandle of the gpio controller node]
-+	 [pin number within the gpio controller]
-+	 [mux function]
-+	 [flags and pull up/down]
-+	 [drive strength]>
++- ste,output:			integer, 0: output low, 1: output high, 2: output (value is not specified).
++- ste,sleep_mode:		integer, 0: sleep mode disable, 1: sleep mode enable.
 +
-+Aliases:
++- ste,sleep_input:		no parameter, set pin in sleep input with no pull mode.
++- ste,sleep_input_pull_up:	no parameter, set pin in sleep input with pull up mode.
++- ste,sleep_input_pull_down:	no parameter, set pin in sleep input with pull down mode.
 +
-+- All the I2S controller nodes are represented in the aliases node using
-+  the following format 'i2s{n}' where n is a unique number for the alias.
++- ste,sleep_output:		integer, 0: sleep output low, 1: sleep output high, 2: sleep output (value is not specified).
 +
-+Example:
++- ste,sleep_wakeup:		interger, 0: disable sleep wakeup mode, 1: enable sleep wake up mode.
++- ste,sleep_gpio:		interger, 0: disable sleep gpio mode, 1: enable sleep gpio mode.
 +
-+- SoC Specific Portion:
++- ste,sleep_pdis_mode:		integer, 0: pdis disabled, 1: pdis enable.
 +
-+i2s@03830000 {
-+	compatible = "samsung,samsung-i2s";
-+	reg = <0x03830000 0x100>;
-+	tx-dma-channel-secondary = <&pdma0 8>;
-+	tx-dma-channel = <&pdma0 10>;
-+	rx-dma-channel = <&pdma0 9>;
-+	samsung,supports-6ch;
-+	samsung,supports-rstclr;
-+	samsung,supports-secdai;
-+	samsung,idma-addr = <0x03000000>;
-+};
 +
-+- Board Specific Portion:
++Valid values for pin and group name are in Drivers/pinctrl/pinctrl-nomadik-db8500.c
 +
-+i2s_0: i2s@03830000 {
-+	gpios = <&gpz 0 2 0 0>, /* I2S_0_SCLK */
-+		<&gpz 1 2 0 0>, /* I2S_0_CDCLK */
-+		<&gpz 2 2 0 0>, /* I2S_0_LRCK */
-+		<&gpz 3 2 0 0>, /* I2S_0_SDI */
-+		<&gpz 4 2 0 0>, /* I2S_0_SDO[1] */
-+		<&gpz 5 2 0 0>, /* I2S_0_SDO[2] */
-+		<&gpz 6 2 0 0>; /* I2S_0_SDO[3] */
-+};
-diff --git a/sound/soc/samsung/dma.c b/sound/soc/samsung/dma.c
-index db87628..eb79844 100644
---- a/sound/soc/samsung/dma.c
-+++ b/sound/soc/samsung/dma.c
-@@ -168,6 +168,7 @@ static int dma_hw_params(struct snd_pcm_substream *substream,
- 		req.cap = (samsung_dma_has_circular() ?
- 			DMA_CYCLIC : DMA_SLAVE);
- 		req.client = prtd->params->client;
-+		req.dt_dmach_prop = prtd->params->dma_prop;
- 		config.direction =
- 			(substream->stream == SNDRV_PCM_STREAM_PLAYBACK
- 			? DMA_MEM_TO_DEV : DMA_DEV_TO_MEM);
-diff --git a/sound/soc/samsung/dma.h b/sound/soc/samsung/dma.h
-index 73d8c7c..9f5b35c 100644
---- a/sound/soc/samsung/dma.h
-+++ b/sound/soc/samsung/dma.h
-@@ -19,6 +19,7 @@ struct s3c_dma_params {
- 	int dma_size;			/* Size of the DMA transfer */
- 	unsigned ch;
- 	struct samsung_dma_ops *ops;
-+	struct property *dma_prop;
- };
- 
- int asoc_dma_platform_register(struct device *dev);
-diff --git a/sound/soc/samsung/i2s.c b/sound/soc/samsung/i2s.c
-index ed5eeae..e3c9673 100644
---- a/sound/soc/samsung/i2s.c
-+++ b/sound/soc/samsung/i2s.c
-@@ -15,11 +15,15 @@
- #include <linux/clk.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/pm_runtime.h>
- 
- #include <sound/soc.h>
- #include <sound/pcm_params.h>
- 
-+#include <mach/dma.h>
++Example board file extract:
 +
- #include <linux/platform_data/asoc-s3c.h>
- 
- #include "dma.h"
-@@ -34,6 +38,10 @@ enum samsung_dai_type {
- 	TYPE_SEC,
- };
- 
-+struct samsung_i2s_dai_data {
-+	int dai_type;
-+};
++	pinctrl {
++		compatible = "stericsson,nmk_pinctrl";
++		reg = <0x80157000 0x2000>;
 +
- struct i2s_dai {
- 	/* Platform device for this DAI */
- 	struct platform_device *pdev;
-@@ -71,6 +79,7 @@ struct i2s_dai {
- 	u32	suspend_i2smod;
- 	u32	suspend_i2scon;
- 	u32	suspend_i2spsr;
-+	unsigned long gpios[7];	/* i2s gpio line numbers */
- };
- 
- /* Lock for cross i/f checks */
-@@ -997,19 +1006,79 @@ static struct i2s_dai *i2s_alloc_dai(struct platform_device *pdev, bool sec)
- 	return i2s;
++		pinctrl-names = "default";
++		pinctrl-0 = <&uart0_default_mode>;
++
++		uart0 {
++			uart0_default_mux: uart0_mux {
++				u0_default_mux {
++					ste,function = "u0";
++					ste,pins = "u0_a_1";
++					};
++			};
++			uart0_default_mode: uart0_default {
++				uart0_default_cfg1 {
++					ste,pins = "GPIO0", "GPIO2";
++					ste,input_pull_up;
++				};
++
++				uart0_default_cfg2 {
++					ste,pins = "GPIO1", "GPIO3";
++					ste,output = <1>;
++				};
++			};
++			uart0_sleep_mode: uart0_sleep {
++				uart0_sleep_cfg1 {
++					ste,pins = "GPIO0", "GPIO2";
++					ste,sleep_mode = <0>;
++					ste,sleep_input;
++					ste,sleep_wakeup_mode = <1>;
++					ste,sleep_pdis_mode = <0>;
++				};
++				uart0_sleep_cfg2 {
++					ste,pins = "GPIO1";
++					ste,sleep_mode = <0>;
++					ste,sleep_output = <1>;
++					ste,sleep_wakeup_mode = <1>;
++					ste,sleep_pdis_mode = <0>;
++				};
++				uart0_sleep_cfg3 {
++					ste,pins = "GPIO3";
++					ste,sleep_mode = <0>;
++					ste,sleep_output = <2>;
++					ste,sleep_wakeup_mode = <1>;
++					ste,sleep_pdis_mode = <0>;
++				};
++			};
++		};
++	};
++
++	uart@80120000 {
++		compatible = "arm,pl011", "arm,primecell";
++		reg = <0x80120000 0x1000>;
++		interrupts = <0 11 0x4>;
++
++		pinctrl-names = "default","sleep";
++		pinctrl-0 = <&uart0_default_mux>, <&uart0_default_mode>;
++		pinctrl-1 = <&uart0_sleep_mode>;
++	};
++
+diff --git a/drivers/pinctrl/pinctrl-nomadik.c b/drivers/pinctrl/pinctrl-nomadik.c
+index 1068faa..90b25ee 100644
+--- a/drivers/pinctrl/pinctrl-nomadik.c
++++ b/drivers/pinctrl/pinctrl-nomadik.c
+@@ -25,6 +25,7 @@
+ #include <linux/irqdomain.h>
+ #include <linux/slab.h>
+ #include <linux/of_device.h>
++#include <linux/pinctrl/machine.h>
+ #include <linux/pinctrl/pinctrl.h>
+ #include <linux/pinctrl/pinmux.h>
+ #include <linux/pinctrl/pinconf.h>
+@@ -1503,11 +1504,260 @@ static void nmk_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
+ 	nmk_gpio_dbg_show_one(s, pctldev, chip, offset - chip->base, offset);
  }
  
-+#ifdef CONFIG_OF
-+static int samsung_i2s_parse_dt_gpio(struct i2s_dai *i2s)
++static void nmk_pinctrl_dt_free_map(struct pinctrl_dev *pctldev,
++		struct pinctrl_map *map, unsigned num_maps)
 +{
-+	struct device *dev = &i2s->pdev->dev;
-+	int index, gpio, ret;
++	int i;
 +
-+	for (index = 0; index < 7; index++) {
-+		gpio = of_get_gpio(dev->of_node, index);
-+		if (!gpio_is_valid(gpio)) {
-+			dev_err(dev, "invalid gpio[%d]: %d\n", index, gpio);
-+			goto free_gpio;
-+		}
-+
-+		ret = gpio_request(gpio, dev_name(dev));
-+		if (ret) {
-+			dev_err(dev, "gpio [%d] request failed\n", gpio);
-+			goto free_gpio;
-+		}
-+		i2s->gpios[index] = gpio;
-+	}
-+	return 0;
-+
-+free_gpio:
-+	while (--index >= 0)
-+		gpio_free(i2s->gpios[index]);
-+	return -EINVAL;
++	for (i = 0; i < num_maps; i++)
++		if (map[i].type == PIN_MAP_TYPE_CONFIGS_PIN)
++			kfree(map[i].data.configs.configs);
++	kfree(map);
 +}
 +
-+static void samsung_i2s_dt_gpio_free(struct i2s_dai *i2s)
++static int nmk_dt_reserve_map(struct pinctrl_map **map, unsigned *reserved_maps,
++		unsigned *num_maps, unsigned reserve)
 +{
-+	unsigned int index;
-+	for (index = 0; index < 7; index++)
-+		gpio_free(i2s->gpios[index]);
-+}
-+#else
-+static int samsung_i2s_parse_dt_gpio(struct i2s_dai *dai)
-+{
-+	return -EINVAL;
-+}
++	unsigned old_num = *reserved_maps;
++	unsigned new_num = *num_maps + reserve;
++	struct pinctrl_map *new_map;
 +
-+static void samsung_i2s_dt_gpio_free(struct i2s_dai *dai)
-+{
-+}
++	if (old_num >= new_num)
++		return 0;
 +
-+#endif
-+
-+static const struct of_device_id exynos_i2s_match[];
-+
- static inline int samsung_i2s_get_driver_data(struct platform_device *pdev)
- {
--	return platform_get_device_id(pdev)->driver_data;
-+#ifdef CONFIG_OF
-+	struct samsung_i2s_dai_data *data;
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match;
-+		match = of_match_node(exynos_i2s_match, pdev->dev.of_node);
-+		data = (struct samsung_i2s_dai_data *) match->data;
-+		return data->dai_type;
-+	} else
-+#endif
-+		return platform_get_device_id(pdev)->driver_data;
- }
- 
- static int samsung_i2s_probe(struct platform_device *pdev)
- {
--	u32 dma_pl_chan, dma_cp_chan, dma_pl_sec_chan;
-+	u32 dma_pl_chan, dma_cp_chan;
-+	u32 dma_pl_sec_chan = 0;
- 	struct i2s_dai *pri_dai, *sec_dai = NULL;
--	struct s3c_audio_pdata *i2s_pdata;
--	struct samsung_i2s *i2s_cfg;
-+	struct s3c_audio_pdata *i2s_pdata = pdev->dev.platform_data;
-+	struct samsung_i2s *i2s_cfg = NULL;
- 	struct resource *res;
--	u32 regs_base, quirks;
-+	u32 regs_base, quirks = 0, idma_addr = 0;
-+	struct property *prop;
-+	struct device_node *np = pdev->dev.of_node;
- 	enum samsung_dai_type samsung_dai_type;
- 	int ret = 0;
- 
-@@ -1024,31 +1093,82 @@ static int samsung_i2s_probe(struct platform_device *pdev)
- 		return 0;
- 	}
- 
--	i2s_pdata = pdev->dev.platform_data;
--	if (i2s_pdata == NULL) {
--		dev_err(&pdev->dev, "Can't work without s3c_audio_pdata\n");
--		return -EINVAL;
-+	pri_dai = i2s_alloc_dai(pdev, false);
-+	if (!pri_dai) {
-+		dev_err(&pdev->dev, "Unable to alloc I2S_pri\n");
++	new_map = krealloc(*map, sizeof(*new_map) * new_num, GFP_KERNEL);
++	if (!new_map)
 +		return -ENOMEM;
- 	}
- 
--	res = platform_get_resource(pdev, IORESOURCE_DMA, 0);
--	if (!res) {
--		dev_err(&pdev->dev, "Unable to get I2S-TX dma resource\n");
--		return -ENXIO;
--	}
--	dma_pl_chan = res->start;
-+	if (!np) {
-+		res = platform_get_resource(pdev, IORESOURCE_DMA, 0);
-+		if (!res) {
-+			dev_err(&pdev->dev,
-+				"Unable to get I2S-TX dma resource\n");
-+			return -ENXIO;
++
++	memset(new_map + old_num, 0, (new_num - old_num) * sizeof(*new_map));
++
++	*map = new_map;
++	*reserved_maps = new_num;
++
++	return 0;
++}
++
++static int nmk_dt_add_map_mux(struct pinctrl_map **map, unsigned *reserved_maps,
++		unsigned *num_maps, const char *group,
++		const char *function)
++{
++	if (*num_maps == *reserved_maps)
++		return -ENOSPC;
++
++	(*map)[*num_maps].type = PIN_MAP_TYPE_MUX_GROUP;
++	(*map)[*num_maps].data.mux.group = group;
++	(*map)[*num_maps].data.mux.function = function;
++	(*num_maps)++;
++
++	return 0;
++}
++
++static int nmk_dt_add_map_configs(struct pinctrl_map **map,
++		unsigned *reserved_maps,
++		unsigned *num_maps, const char *group,
++		unsigned long *configs, unsigned num_configs)
++{
++	unsigned long *dup_configs;
++
++	if (*num_maps == *reserved_maps)
++		return -ENOSPC;
++
++	dup_configs = kmemdup(configs, num_configs * sizeof(*dup_configs),
++			      GFP_KERNEL);
++	if (!dup_configs)
++		return -ENOMEM;
++
++	(*map)[*num_maps].type = PIN_MAP_TYPE_CONFIGS_PIN;
++
++	(*map)[*num_maps].data.configs.group_or_pin = group;
++	(*map)[*num_maps].data.configs.configs = dup_configs;
++	(*map)[*num_maps].data.configs.num_configs = num_configs;
++	(*num_maps)++;
++
++	return 0;
++}
++
++#define NMK_CONFIG_PIN(x,y) { .property = x, .config = y, }
++#define NMK_CONFIG_PIN_ARRAY(x,y) { .property = x, .choice = y, \
++	.size = ARRAY_SIZE(y), }
++
++static const unsigned long nmk_pin_output_modes[] = {
++	PIN_OUTPUT_LOW,
++	PIN_OUTPUT_HIGH,
++	PIN_DIR_OUTPUT,
++};
++
++static const unsigned long nmk_pin_sleep_modes[] = {
++	PIN_SLEEPMODE_ENABLED,
++	PIN_SLEEPMODE_DISABLED,
++};
++
++static const unsigned long nmk_pin_sleep_output_modes[] = {
++	PIN_SLPM_OUTPUT_LOW,
++	PIN_SLPM_OUTPUT_HIGH,
++	PIN_SLPM_DIR_OUTPUT,
++};
++
++static const unsigned long nmk_pin_sleep_wakeup_modes[] = {
++	PIN_SLPM_WAKEUP_DISABLE,
++	PIN_SLPM_WAKEUP_ENABLE,
++};
++
++static const unsigned long nmk_pin_gpio_modes[] = {
++	PIN_GPIOMODE_DISABLED,
++	PIN_GPIOMODE_ENABLED,
++};
++
++static const unsigned long nmk_pin_sleep_pdis_modes[] = {
++	PIN_SLPM_PDIS_DISABLED,
++	PIN_SLPM_PDIS_ENABLED,
++};
++
++struct nmk_cfg_param {
++	const char *property;
++	unsigned long config;
++	const unsigned long *choice;
++	int size;
++};
++
++static const struct nmk_cfg_param nmk_cfg_params[] = {
++	NMK_CONFIG_PIN("ste,input",			PIN_INPUT_NOPULL),
++	NMK_CONFIG_PIN("ste,input_pull_up",		PIN_INPUT_PULLUP),
++	NMK_CONFIG_PIN("ste,input_pull_down",		PIN_INPUT_PULLDOWN),
++	NMK_CONFIG_PIN_ARRAY("ste,output",		nmk_pin_output_modes),
++	NMK_CONFIG_PIN_ARRAY("ste,sleep_mode",		nmk_pin_sleep_modes),
++	NMK_CONFIG_PIN("ste,sleep_input",		PIN_SLPM_INPUT_NOPULL),
++	NMK_CONFIG_PIN("ste,sleep_input_pull_up",	PIN_SLPM_INPUT_PULLUP),
++	NMK_CONFIG_PIN("ste,sleep_input_pull_down",	PIN_SLPM_INPUT_PULLDOWN),
++	NMK_CONFIG_PIN_ARRAY("ste,sleep_output",	nmk_pin_sleep_output_modes),
++	NMK_CONFIG_PIN_ARRAY("ste,sleep_wakeup_mode",	nmk_pin_sleep_wakeup_modes),
++	NMK_CONFIG_PIN_ARRAY("ste,gpio_mode",		nmk_pin_gpio_modes),
++	NMK_CONFIG_PIN_ARRAY("ste,sleep_pdis_mode",	nmk_pin_sleep_pdis_modes),
++};
++
++static int nmk_dt_pin_config(int index, int val, unsigned long *config)
++{
++	int ret = 0;
++
++	if (nmk_cfg_params[index].choice == NULL)
++		*config = nmk_cfg_params[index].config;
++	else {
++		/* test if out of range */
++		if  (val < nmk_cfg_params[index].size) {
++			*config = nmk_cfg_params[index].config |
++				nmk_cfg_params[index].choice[val];
 +		}
-+		dma_pl_chan = res->start;
- 
--	res = platform_get_resource(pdev, IORESOURCE_DMA, 1);
--	if (!res) {
--		dev_err(&pdev->dev, "Unable to get I2S-RX dma resource\n");
--		return -ENXIO;
--	}
--	dma_cp_chan = res->start;
-+		res = platform_get_resource(pdev, IORESOURCE_DMA, 1);
-+		if (!res) {
-+			dev_err(&pdev->dev,
-+				"Unable to get I2S-RX dma resource\n");
-+			return -ENXIO;
-+		}
-+		dma_cp_chan = res->start;
- 
--	res = platform_get_resource(pdev, IORESOURCE_DMA, 2);
--	if (res)
--		dma_pl_sec_chan = res->start;
--	else
--		dma_pl_sec_chan = 0;
-+		res = platform_get_resource(pdev, IORESOURCE_DMA, 2);
-+		if (res)
-+			dma_pl_sec_chan = res->start;
++	}
++	return ret;
++}
 +
-+		if (i2s_pdata == NULL) {
-+			dev_err(&pdev->dev, "Can't work without s3c_audio_pdata\n");
-+			return -EINVAL;
-+		}
++static const char * nmk_find_pin_name(struct pinctrl_dev *pctldev, const char *pin_name)
++{
++	int i, pin_number;
++	struct nmk_pinctrl *npct = pinctrl_dev_get_drvdata(pctldev);
 +
-+		if (&i2s_pdata->type)
-+			i2s_cfg = &i2s_pdata->type.i2s;
++	if (sscanf((char *) pin_name, "GPIO%d",&pin_number) == 1)
++		for(i = 0; i < npct->soc->npins; i++)
++			if (npct->soc->pins[i].number == pin_number)
++				return npct->soc->pins[i].name;
++	return NULL;
++}
 +
-+		if (i2s_cfg) {
-+			quirks = i2s_cfg->quirks;
-+			idma_addr = i2s_cfg->idma_addr;
-+		}
-+	} else {
-+		prop = of_find_property(np, "tx-dma-channel", NULL);
-+		if (!prop) {
-+			dev_err(&pdev->dev, "tx dma channel property not"\
-+					"specified\n");
-+			return -ENXIO;
-+		}
-+		dma_pl_chan = DMACH_DT_PROP;
-+		pri_dai->dma_playback.dma_prop = prop;
++int nmk_pinctrl_dt_subnode_to_map(struct pinctrl_dev *pctldev,
++		struct device_node *np,
++		struct pinctrl_map **map,
++		unsigned *reserved_maps,
++		unsigned *num_maps)
++{
++	int ret, i;
++	const char *function = NULL;
++	unsigned long configs = 0;
++	bool has_config = 0;
++	unsigned reserve = 1;
++	struct property *prop;
++	const char *group, *gpio_name;
 +
-+		prop = of_find_property(np, "rx-dma-channel", NULL);
-+		if (!prop) {
-+			dev_err(&pdev->dev, "tx dma channel property not"\
-+					"specified\n");
-+			return -ENXIO;
-+		}
-+		dma_cp_chan = DMACH_DT_PROP;
-+		pri_dai->dma_capture.dma_prop = prop;
++	ret = of_property_read_string(np, "ste,function", &function);
++	if (ret < 0)
++		reserve = 0;
 +
-+		if (of_find_property(np, "samsung,supports-6ch", NULL))
-+			quirks |= QUIRK_PRI_6CHAN;
++	for (i = 0; i < ARRAY_SIZE(nmk_cfg_params); i++) {
++		unsigned long cfg = 0;
++		int val;
 +
-+		if (of_find_property(np, "samsung,supports-secdai", NULL))
-+			quirks |= QUIRK_SEC_DAI;
-+
-+		if (of_find_property(np, "samsung,supports-rstclr", NULL))
-+			quirks |= QUIRK_NEED_RSTCLR;
-+
-+		if (of_property_read_u32(np, "samsung,idma-addr",
-+					 &idma_addr)) {
-+			if (quirks & QUIRK_SEC_DAI) {
-+				dev_err(&pdev->dev, "idma address is not"\
-+						"specified");
-+				return -EINVAL;
++		ret = of_property_read_u32(np, nmk_cfg_params[i].property, &val);
++		if (ret != -EINVAL) {
++			if (nmk_dt_pin_config(i, val, &cfg) == 0) {
++				configs |= cfg;
++				has_config = 1;
 +			}
 +		}
 +	}
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res) {
-@@ -1063,16 +1183,6 @@ static int samsung_i2s_probe(struct platform_device *pdev)
- 	}
- 	regs_base = res->start;
- 
--	i2s_cfg = &i2s_pdata->type.i2s;
--	quirks = i2s_cfg->quirks;
--
--	pri_dai = i2s_alloc_dai(pdev, false);
--	if (!pri_dai) {
--		dev_err(&pdev->dev, "Unable to alloc I2S_pri\n");
--		ret = -ENOMEM;
--		goto err;
--	}
--
- 	pri_dai->dma_playback.dma_addr = regs_base + I2STXD;
- 	pri_dai->dma_capture.dma_addr = regs_base + I2SRXD;
- 	pri_dai->dma_playback.client =
-@@ -1099,20 +1209,41 @@ static int samsung_i2s_probe(struct platform_device *pdev)
- 		sec_dai->dma_playback.dma_addr = regs_base + I2STXDS;
- 		sec_dai->dma_playback.client =
- 			(struct s3c2410_dma_client *)&sec_dai->dma_playback;
++	ret = of_property_count_strings(np, "ste,pins");
++	if (ret < 0)
++		goto exit;
 +
-+		if (np) {
-+			prop = of_find_property(np, "tx-dma-channel-secondary",
-+						NULL);
-+			if (!prop) {
-+				dev_err(&pdev->dev, "tx dma channel property"\
-+						"not specified\n");
-+				ret = -ENXIO;
-+				goto err;
-+			}
-+			sec_dai->dma_playback.dma_prop = prop;
++	if (has_config)
++		reserve++;
++
++	reserve *= ret;
++
++	ret = nmk_dt_reserve_map(map, reserved_maps, num_maps, reserve);
++	if (ret < 0)
++		goto exit;
++
++	of_property_for_each_string(np, "ste,pins", prop, group) {
++		if (function) {
++			ret = nmk_dt_add_map_mux(map, reserved_maps, num_maps,
++					  group, function);
++			if (ret < 0)
++				goto exit;
++		}
++		if (has_config) {
++			gpio_name = nmk_find_pin_name(pctldev, group);
++
++			ret = nmk_dt_add_map_configs(map, reserved_maps, num_maps,
++					      gpio_name, &configs, 1);
++			if (ret < 0)
++				goto exit;
 +		}
 +
- 		/* Use iDMA always if SysDMA not provided */
- 		sec_dai->dma_playback.channel = dma_pl_sec_chan ? : -1;
- 		sec_dai->dma_playback.dma_size = 4;
- 		sec_dai->base = regs_base;
- 		sec_dai->quirks = quirks;
--		sec_dai->idma_playback.dma_addr = i2s_cfg->idma_addr;
-+		sec_dai->idma_playback.dma_addr = idma_addr;
- 		sec_dai->pri_dai = pri_dai;
- 		pri_dai->sec_dai = sec_dai;
- 	}
- 
--	if (i2s_pdata->cfg_gpio && i2s_pdata->cfg_gpio(pdev)) {
--		dev_err(&pdev->dev, "Unable to configure gpio\n");
--		ret = -EINVAL;
--		goto err;
-+	if (np) {
-+		if (samsung_i2s_parse_dt_gpio(pri_dai)) {
-+			dev_err(&pdev->dev, "Unable to configure gpio\n");
-+			ret = -EINVAL;
-+			goto err;
++	}
++exit:
++	return ret;
++}
++
++int nmk_pinctrl_dt_node_to_map(struct pinctrl_dev *pctldev,
++				 struct device_node *np_config,
++				 struct pinctrl_map **map, unsigned *num_maps)
++{
++	unsigned reserved_maps;
++	struct device_node *np;
++	int ret;
++
++	reserved_maps = 0;
++	*map = NULL;
++	*num_maps = 0;
++
++	for_each_child_of_node(np_config, np) {
++		ret = nmk_pinctrl_dt_subnode_to_map(pctldev, np, map,
++				&reserved_maps, num_maps);
++		if (ret < 0) {
++			nmk_pinctrl_dt_free_map(pctldev, *map, *num_maps);
++			return ret;
 +		}
-+	} else {
-+		if (i2s_pdata->cfg_gpio && i2s_pdata->cfg_gpio(pdev)) {
-+			dev_err(&pdev->dev, "Unable to configure gpio\n");
-+			ret = -EINVAL;
-+			goto err;
-+		}
- 	}
- 
- 	snd_soc_register_dai(&pri_dai->pdev->dev, &pri_dai->i2s_dai_drv);
-@@ -1132,10 +1263,14 @@ static int samsung_i2s_remove(struct platform_device *pdev)
- {
- 	struct i2s_dai *i2s, *other;
- 	struct resource *res;
-+	struct s3c_audio_pdata *i2s_pdata = pdev->dev.platform_data;
- 
- 	i2s = dev_get_drvdata(&pdev->dev);
- 	other = i2s->pri_dai ? : i2s->sec_dai;
- 
-+	if (!i2s_pdata->cfg_gpio && pdev->dev.of_node)
-+		samsung_i2s_dt_gpio_free(i2s->pri_dai);
++	}
 +
- 	if (other) {
- 		other->pri_dai = NULL;
- 		other->sec_dai = NULL;
-@@ -1167,6 +1302,21 @@ static struct platform_device_id samsung_i2s_driver_ids[] = {
- };
- MODULE_DEVICE_TABLE(platform, samsung-i2s-driver-ids);
- 
-+#ifdef CONFIG_OF
-+static struct samsung_i2s_dai_data samsung_i2s_dai_data_array[] = {
-+	[TYPE_PRI] = { TYPE_PRI },
-+	[TYPE_SEC] = { TYPE_SEC },
-+};
++	return 0;
++}
 +
-+static const struct of_device_id exynos_i2s_match[] = {
-+	{ .compatible = "samsung,samsung-i2s",
-+	  .data = &samsung_i2s_dai_data_array[TYPE_PRI],
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, exynos_i2s_match);
-+#endif
-+
- static struct platform_driver samsung_i2s_driver = {
- 	.probe  = samsung_i2s_probe,
- 	.remove = samsung_i2s_remove,
-@@ -1174,6 +1324,7 @@ static struct platform_driver samsung_i2s_driver = {
- 	.driver = {
- 		.name = "samsung-i2s",
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(exynos_i2s_match),
- 	},
+ static struct pinctrl_ops nmk_pinctrl_ops = {
+ 	.get_groups_count = nmk_get_groups_cnt,
+ 	.get_group_name = nmk_get_group_name,
+ 	.get_group_pins = nmk_get_group_pins,
+ 	.pin_dbg_show = nmk_pin_dbg_show,
++	.dt_node_to_map = nmk_pinctrl_dt_node_to_map,
++	.dt_free_map = nmk_pinctrl_dt_free_map,
  };
  
+ static int nmk_pmx_get_funcs_cnt(struct pinctrl_dev *pctldev)
 -- 
-1.7.4.4
+1.7.11.3
