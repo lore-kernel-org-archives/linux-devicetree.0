@@ -1,110 +1,132 @@
-From: Jean Pihet <jean.pihet@newoldbits.com>
-Subject: Re: [RFC 1/5] ARM: CORESIGHT: Add generic lock/unlock helpers
-Date: Thu, 13 Dec 2012 20:36:56 +0100
-Message-ID: <CAORVsuXmKFNuHG+RoDaLehX0-1m=F5Uayvrs9NDRHW4C+9U4Lw@mail.gmail.com>
-References: <1355348588-22318-1-git-send-email-jon-hunter@ti.com>
-	<1355348588-22318-2-git-send-email-jon-hunter@ti.com>
-	<20121213145803.GL26540@mudshark.cambridge.arm.com>
-	<50CA2A13.9090005@ti.com>
+From: Corey Minyard <tcminyard@gmail.com>
+Subject: Re: [PATCH] ipmi: add new kernel options to prevent automatic ipmi
+ init
+Date: Thu, 13 Dec 2012 13:51:23 -0600
+Message-ID: <50CA31BB.2030507@acm.org>
+References: <1355424008-20491-1-git-send-email-tcamuso@redhat.com>
+Reply-To: minyard@acm.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50CA2A13.9090005@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Will Deacon <will.deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Paul Walmsley <paul@pwsan.com>, Pratik Patel <pratikp@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Ming Lei <ming.lei@canonical.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1355424008-20491-1-git-send-email-tcamuso@redhat.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Camuso <tcamuso@redhat.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, openipmi-developer@lists.sourceforge.net, grant.likely@secretlab.ca, Robert Evans <Robert.Evans@stratus.com>, Jim Paradis <jparadis@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon, Will,
+Well, the built-in driver works on systems that have more than one interface
+and more than one BMC, and multiple IPMBs (and all of the other channel
+types for that matter, and the driver handles all the multiplexing and nasty
+addressing).  There is, in fact, no arbitrary limit, and IBM tested
+this fairly extensively with some of their systems.  I'm not sure why you
+would need a custom driver, and if there are some custom things that need
+to be done for your servers, I'd be happy to add that.  I've worked with a
+number of other vendors to get changes like this in.  And then ipmitool,
+freeipmi, openipmi, etc. will work with the device.
 
-On Thu, Dec 13, 2012 at 8:18 PM, Jon Hunter <jon-hunter@ti.com> wrote:
+I don't have a big problem with this patch.  I wonder why you would want
+to compile the standard driver into your kernel if you expected to load a
+module with a custom driver later, though.  None of the distros I know of
+compile it in, it's always a module.
+
+You can also dynamically remove the device from the driver using the hot
+add/remove capability.  To remove it, you can do:
+   echo remove,`cat /proc/ipmi/0/params`
+and it will disassociate that device (IPMI interface 0 in this case) 
+from the
+driver.  So you can iterate through all the devices in /proc/ipmi and
+remove them all at startup.
+
+If none of the above options work for you, we can go ahead with this
+patch.  Just wanted to let you know that current options exist, and see
+if you wanted to take a different direction.
+
+-corey
+
+On 12/13/2012 12:40 PM, Tony Camuso wrote:
+> The configuration change building ipmi_si into the kernel precludes the
+> use of a custom driver that can utilize more than one KCS interface,
+> multiple IPMBs, and more than one BMC. This capability is important for
+> fault-tolerant systems.
 >
-> On 12/13/2012 08:58 AM, Will Deacon wrote:
->> Hi Jon,
->>
->> On Wed, Dec 12, 2012 at 09:43:04PM +0000, Jon Hunter wrote:
->>> The Cross Trigger Interface (CTI) helpers in cti.h include definitions
->>> for the Coresight Lock Access Register (LAR) and Lock Status Register
->>> (LSR). These registers are already defined in coresight.h and so rather
->>> than having multiple definitions, just use the definitions from
->>> coresight.h.
->>>
->>> Add the following coresight macros ...
->>> - coresight_unlock() --> Unlocks coresight module
->>> - coresight_lock()   --> Locks coresight module
->>>
->>> Use the above macros for ETB, ETM and CTI. The do-while(0) statement
->>> has been removed from the macro as it is not a multi-line macro.
->>>
->>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
->>> ---
->>>  arch/arm/include/asm/cti.h                |   16 +++-------------
->>>  arch/arm/include/asm/hardware/coresight.h |   16 ++++++++--------
->>>  2 files changed, 11 insertions(+), 21 deletions(-)
->>
->> [...]
->>
->>> diff --git a/arch/arm/include/asm/hardware/coresight.h b/arch/arm/include/asm/hardware/coresight.h
->>> index 7ecd793..dcd0e66 100644
->>> --- a/arch/arm/include/asm/hardware/coresight.h
->>> +++ b/arch/arm/include/asm/hardware/coresight.h
->>> @@ -141,17 +141,17 @@
->>>  #define ETBFF_TRIGEVT               BIT(9)
->>>  #define ETBFF_TRIGFL                BIT(10)
->>>
->>> -#define etb_writel(t, v, x) \
->>> -    (__raw_writel((v), (t)->etb_regs + (x)))
->>> +#define etb_writel(t, v, x) (__raw_writel((v), (t)->etb_regs + (x)))
->>>  #define etb_readl(t, x) (__raw_readl((t)->etb_regs + (x)))
->>>
->>> -#define etm_lock(t) do { etm_writel((t), 0, CSMR_LOCKACCESS); } while (0)
->>> -#define etm_unlock(t) \
->>> -    do { etm_writel((t), UNLOCK_MAGIC, CSMR_LOCKACCESS); } while (0)
->>> +#define etb_lock(t) coresight_lock((t)->etb_regs)
->>> +#define etb_unlock(t) coresight_unlock((t)->etb_regs)
->>> +#define etm_lock(t) coresight_lock((t)->etm_regs)
->>> +#define etm_unlock(t) coresight_unlock((t)->etm_regs)
->>>
->>> -#define etb_lock(t) do { etb_writel((t), 0, CSMR_LOCKACCESS); } while (0)
->>> -#define etb_unlock(t) \
->>> -    do { etb_writel((t), UNLOCK_MAGIC, CSMR_LOCKACCESS); } while (0)
->>> +#define coresight_lock(base) (__raw_writel(0, base + CSMR_LOCKACCESS))
->>> +#define coresight_unlock(base) \
->>> +    (__raw_writel(UNLOCK_MAGIC, base + CSMR_LOCKACCESS))
->>>
->>>  #endif /* __ASM_HARDWARE_CORESIGHT_H */
->>
->> How about we take this opportunity to divorce the more general coresight
->> bits from the etb specific parts, like you've done for the cti. We could
->> move the ETB stuff out into asm/etb.h (although it might be nice to keep all
->> the coresight device headers in one place... answers on a postcard) and just
->> have the architected coresight functionality in this header.
+> Even if the kernel option ipmi_si.trydefaults=0 is specified, ipmi_si
+> discovers and claims one of the KCS interfaces on a Stratus server.
+> The inability to now prevent the kernel from managing this device is a
+> regression from previous kernels. The regression breaks a capability
+> fault-tolerant vendors have relied upon.
 >
-> Yes I have been wondering about that too. Long term it would be good to
-> find a home in the drivers directory for all these coresight devices
-> too. For now, we could extract the etb/etm parts from coresight.h into
-> etb.h and etm.h, respectively.
-
-I am now writing a HW trace driver that extracts traces from the CMI
-and PMI IP blocks (and later L2CC). It is still in early development
-status.
-
-The idea I have in mind is to have the implementation in
-drivers/power/hw_trace. Eventually this directory would contain the
-drivers for ETM/ETB, CMI, PMI and also the coresight support. It would
-be architected so that the lower level drivers export the necessary
-functions for the higher level code to use the resource. Example: the
-PMI driver would use the ETB and coresight drivers.
-
-What do you think?
-
-Regards,
-Jean
-
+> To support both ACPI opregion access and the need to avoid activation
+> of ipmi_si on some platforms, we've added two new kernel options,
+> ipmi_si.tryacpi and ipmi_si.trydmi be added to prevent ipmi_si from
+> initializing when these options are set to 0 on the kernel command line.
+> With these options at the default value of 1, ipmi_si init proceeds
+> according to the kernel default.
 >
-> Cheers
-> Jon
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Tested-by: Jim Paradis <jparadis@redhat.com>
+> Signed-off-by: Robert Evans <Robert.Evans@stratus.com>
+> Signed-off-by: Jim Paradis <jparadis@redhat.com>
+> Signed-off-by: Tony Camuso <tcamuso@redhat.com>
+> ---
+>   drivers/char/ipmi/ipmi_si_intf.c | 28 ++++++++++++++++++++++++----
+>   1 file changed, 24 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+> index 20ab5b3..0a441cf 100644
+> --- a/drivers/char/ipmi/ipmi_si_intf.c
+> +++ b/drivers/char/ipmi/ipmi_si_intf.c
+> @@ -1208,6 +1208,12 @@ static int smi_num; /* Used to sequence the SMIs */
+>   #define DEFAULT_REGSPACING	1
+>   #define DEFAULT_REGSIZE		1
+>   
+> +#ifdef CONFIG_ACPI
+> +static int           si_tryacpi = 1;
+> +#endif
+> +#ifdef CONFIG_DMI
+> +static int           si_trydmi = 1;
+> +#endif
+>   static bool          si_trydefaults = 1;
+>   static char          *si_type[SI_MAX_PARMS];
+>   #define MAX_SI_TYPE_STR 30
+> @@ -1238,6 +1244,16 @@ MODULE_PARM_DESC(hotmod, "Add and remove interfaces.  See"
+>   		 " Documentation/IPMI.txt in the kernel sources for the"
+>   		 " gory details.");
+>   
+> +#ifdef CONFIG_ACPI
+> +module_param_named(tryacpi, si_tryacpi, bool, 0);
+> +MODULE_PARM_DESC(tryacpi, "Setting this to zero will disable the"
+> +		 " default scan of the interfaces identified via ACPI");
+> +#endif
+> +#ifdef CONFIG_DMI
+> +module_param_named(trydmi, si_trydmi, bool, 0);
+> +MODULE_PARM_DESC(trydmi, "Setting this to zero will disable the"
+> +		 " default scan of the interfaces identified via DMI");
+> +#endif
+>   module_param_named(trydefaults, si_trydefaults, bool, 0);
+>   MODULE_PARM_DESC(trydefaults, "Setting this to 'false' will disable the"
+>   		 " default scan of the KCS and SMIC interface at the standard"
+> @@ -3408,16 +3424,20 @@ static int init_ipmi_si(void)
+>   #endif
+>   
+>   #ifdef CONFIG_ACPI
+> -	pnp_register_driver(&ipmi_pnp_driver);
+> -	pnp_registered = 1;
+> +	if (si_tryacpi) {
+> +		pnp_register_driver(&ipmi_pnp_driver);
+> +		pnp_registered = 1;
+> +	}
+>   #endif
+>   
+>   #ifdef CONFIG_DMI
+> -	dmi_find_bmc();
+> +	if (si_trydmi)
+> +		dmi_find_bmc();
+>   #endif
+>   
+>   #ifdef CONFIG_ACPI
+> -	spmi_find_bmc();
+> +	if (si_tryacpi)
+> +		spmi_find_bmc();
+>   #endif
+>   
+>   	/* We prefer devices with interrupts, but in the case of a machine
