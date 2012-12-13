@@ -1,7 +1,7 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: [RFCv2 1/2] of: add of_property_read_u32_index
-Date: Thu, 13 Dec 2012 16:49:27 +0000
-Message-ID: <1355417368-6861-2-git-send-email-mark.rutland@arm.com>
+Subject: [RFCv2 2/2] ARM: add functions to parse irq affinity from dt
+Date: Thu, 13 Dec 2012 16:49:28 +0000
+Message-ID: <1355417368-6861-3-git-send-email-mark.rutland@arm.com>
 References: <1355417368-6861-1-git-send-email-mark.rutland@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,95 +22,166 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Currently, we have to pre-allocate an array when reading multiple u32
-values from a property using of_property_read_u32_array. This isn't very
-good for times when we want to iterate over elements of a list of
-arbitrary size.
+This patch adds functions to handle parsing the CPU affinity of
+interrupts from devicetree, based on an "interrupts-affinity" parameter
+list. It is assumed that drivers which may optionally use this parameter
+implement their own fallback behaviour.
 
-This patch adds a function to read a single u32 value from an arbitrary
-index in a list, making this case easier.
+The patch adds:
+* arm_dt_has_irq_affinity : returns whether or not a device_node has
+  interrupts-affinity information
+* arm_dt_affine_irq_is_single : returns whether an interrupt targets a single
+  CPU (i.e. is an SPI) or multiple CPUs (i.e. is a PPI). This test is
+  independent of the number of affine CPUs we can logically map.
+* arm_dt_irq_get_affinity : fills a cpumask with the CPUs an interrupt is
+  affine to.
+
+The "interrupts-affinity" property consists of a list of pairs of cells
+specifying how to test if a CPU is affine. This test specification consists of
+a most significant affinity level to match, and values for the MPIDR affinity
+bits down to this level. Each pair of cells has the form:
+
+	< N 0x00AABBCC >
+	   \   \ \ \ \__ MPIDR.Aff0
+	    \   \ \ \___ MPIDR.Aff1
+	     \   \ \____ MPIDR.Aff2
+	      \   \_____ [must be zero]
+	       \________ level-specifier
+
+The level-specifier is in the range [0-3]. When the value is 3, MPIDR
+affinity levels 2,1,0 are ignored, and all CPUs are matched. Affinity
+bits which are not to be matched should be set to zero.
 
 Signed-off-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 ---
- drivers/of/base.c  |   36 ++++++++++++++++++++++++++++++++++++
- include/linux/of.h |   11 +++++++++++
- 2 files changed, 47 insertions(+), 0 deletions(-)
+ arch/arm/include/asm/dt_irq.h |    9 ++++
+ arch/arm/kernel/devtree.c     |   91 +++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 100 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/include/asm/dt_irq.h
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index af3b22a..5ad6830 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -707,6 +707,42 @@ int of_property_read_u32_array(const struct device_node *np,
- EXPORT_SYMBOL_GPL(of_property_read_u32_array);
+diff --git a/arch/arm/include/asm/dt_irq.h b/arch/arm/include/asm/dt_irq.h
+new file mode 100644
+index 0000000..431eeda
+--- /dev/null
++++ b/arch/arm/include/asm/dt_irq.h
+@@ -0,0 +1,9 @@
++#ifndef ARM_ASM_DT_IRQ_H
++#define ARM_ASM_DT_IRQ_H
++
++bool arm_dt_has_irq_affinity(struct device_node *node);
++bool arm_dt_affine_irq_is_single(struct device_node *node, int idx);
++int arm_dt_irq_get_affinity(struct device_node *node, int idx,
++			    cpumask_t *mask);
++
++#endif /* ARM_ASM_DT_IRQ_H */
+diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+index 70f1bde..65d5052 100644
+--- a/arch/arm/kernel/devtree.c
++++ b/arch/arm/kernel/devtree.c
+@@ -20,6 +20,7 @@
+ #include <linux/of_platform.h>
  
- /**
-+ * of_property_read_u32_index - Find and read a 32 bit integer from a multiple
-+ * integer property.
-+ *
-+ * @np:		device node from which the property value is to be read.
-+ * @propname:	name of the property to be searched.
-+ * @out_value:	pointer to return value, modified only if return value is 0.
-+ * @index:	index of the integer in the list of integers.
-+ *
-+ * Search for a property in a device node and read a 32-bit value from
-+ * it. Returns 0 on success, -EINVAL if the property does not exist,
-+ * -ENODATA if property does not have a value, and -EOVERFLOW if the
-+ * index is beyond the range of data.
-+ *
-+ * The out_value is modified only if a valid u32 value can be decoded.
-+ */
-+int of_property_read_u32_index(const struct device_node *np,
-+			       const char *propname, u32 *out_value,
-+			       int idx)
-+{
-+	struct property *prop = of_find_property(np, propname, NULL);
-+	const __be32 *val;
-+
-+	if (!prop)
-+		return -EINVAL;
-+	if (!prop->value)
-+		return -ENODATA;
-+	if ((idx+1) * sizeof(*out_value) > prop->length)
-+		return -EOVERFLOW;
-+
-+	val = prop->value;
-+	*out_value = be32_to_cpup(val + idx);
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(of_property_read_u32_index);
-+
-+/**
-  * of_property_read_u64 - Find and read a 64 bit integer from a property
-  * @np:		device node from which the property value is to be read.
-  * @propname:	name of the property to be searched.
-diff --git a/include/linux/of.h b/include/linux/of.h
-index b4e50d5..37f6f67 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -227,6 +227,10 @@ extern int of_property_read_u32_array(const struct device_node *np,
- 				      const char *propname,
- 				      u32 *out_values,
- 				      size_t sz);
-+extern int of_property_read_u32_index(const struct device_node *np,
-+				      const char *propname,
-+				      u32 *out_value,
-+				      int idx);
- extern int of_property_read_u64(const struct device_node *np,
- 				const char *propname, u64 *out_value);
- 
-@@ -371,6 +375,13 @@ static inline int of_property_read_u32_array(const struct device_node *np,
- 	return -ENOSYS;
+ #include <asm/cputype.h>
++#include <asm/dt_irq.h>
+ #include <asm/setup.h>
+ #include <asm/page.h>
+ #include <asm/smp_plat.h>
+@@ -165,6 +166,96 @@ void __init arm_dt_init_cpu_maps(void)
+ 	}
  }
  
-+static inline int of_property_read_u32_index(const struct device_node *np,
-+					     const char *propname,
-+					     u32 *out_value, int idx)
++#define PROP_IRQ_AFFINITY	"interrupts-affinity"
++#define AFFINE_LEVEL_IDX(i)	(2*(i))
++#define AFFINE_MPIDR_IDX(i)	(2*(i) + 1)
++
++/*
++ * Check whether the device has irq affinity information.
++ * Allows drivers to fall back to current behaviour with a single check.
++ */
++bool arm_dt_has_irq_affinity(struct device_node *node)
 +{
-+	return -ENOSYS;
++	return of_find_property(node, PROP_IRQ_AFFINITY, NULL) != NULL;
 +}
 +
- static inline int of_property_read_string(struct device_node *np,
- 					  const char *propname,
- 					  const char **out_string)
++/*
++ * Check whether an irq with affinity information is a single cpu
++ * interrupt (rather than percpu). The node paramenter should be
++ * checked with arm_dt_has_irq_affinity first.
++ */
++bool arm_dt_affine_irq_is_single(struct device_node *node, int idx)
++{
++	u32 level;
++	of_property_read_u32_index(node, PROP_IRQ_AFFINITY, &level,
++				   AFFINE_LEVEL_IDX(idx));
++	return level == 0;
++}
++
++struct affine_match_spec {
++	u32 level;
++	u32 aff;
++};
++
++static bool arm_dt_affine_mpidr_match(u32 mpidr, struct affine_match_spec *match)
++{
++	u32 mask = 0xFFFFFFFF << (8*(match->level));
++	return (mpidr & mask) == (match->aff & mask);
++}
++
++static int arm_dt_irq_read_match(struct device_node *node, int idx,
++				 struct affine_match_spec *match)
++{
++	int ret;
++	if (!node)
++		return -EINVAL;
++
++	ret = of_property_read_u32_index(node, PROP_IRQ_AFFINITY, &match->aff,
++					 AFFINE_MPIDR_IDX(idx));
++	if (ret)
++		return ret;
++
++	ret = of_property_read_u32_index(node, PROP_IRQ_AFFINITY, &match->level,
++					 AFFINE_LEVEL_IDX(idx));
++	if (ret)
++		return ret;
++
++	/*
++	 * To match all cpus regardless of Aff{2,1,0}, we match at the
++	 * nonexistent Aff3.
++	 */
++	if (match->level > 3)
++		return -EINVAL;
++
++	return ret;
++
++}
++
++/*
++ * Get the set of possible cpus that an interrupt at idx is affine to.
++ */
++int arm_dt_irq_get_affinity(struct device_node *node, int idx,
++			    cpumask_t *mask)
++{
++	int i, ret;
++	struct affine_match_spec match;
++	u32 mpidr;
++
++	ret = arm_dt_irq_read_match(node, idx, &match);
++	if (ret)
++		return ret;
++
++	cpumask_clear(mask);
++
++	for_each_possible_cpu(i) {
++		mpidr = cpu_logical_map(i);
++		if (arm_dt_affine_mpidr_match(mpidr, &match))
++			cpumask_set_cpu(i, mask);
++	}
++
++	return 0;
++}
++
+ /**
+  * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
+  * @dt_phys: physical address of dt blob
 -- 
 1.7.0.4
