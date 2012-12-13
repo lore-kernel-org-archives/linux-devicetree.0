@@ -1,80 +1,56 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH] pci: Provide support for parsing PCI DT ranges property
-Date: Thu, 13 Dec 2012 10:34:12 +0000
-Message-ID: <20121213103412.GA24453@arm.com>
-References: <20121212163749.GA17371@arm.com>
- <20121213091333.GA14828@avionic-0098.adnet.avionic-design.de>
- <20121213094543.GA23446@arm.com>
- <20121213100318.GB13055@avionic-0098.adnet.avionic-design.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20121213100318.GB13055@avionic-0098.adnet.avionic-design.de>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Michal Simek <monstr@monstr.eu>, Rob Herring <robherring2@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Liviu Dudau <Liviu.Dudau@arm.com>
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH V5 0/2]  Add DT support for i2s
+Date: Thu, 13 Dec 2012 16:12:51 +0530
+Message-ID: <1355395373-22058-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: padma.v@samsung.com, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Cc: sbkim73@samsung.com, ben-linux@fluff.org, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, lrg@ti.com, tiwai@suse.de, jassisinghbrar@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2012 at 10:03:18AM +0000, Thierry Reding wrote:
-> On Thu, Dec 13, 2012 at 09:45:43AM +0000, Andrew Murray wrote:
-> > On Thu, Dec 13, 2012 at 09:13:33AM +0000, Thierry Reding wrote:
-> > > Hi Andrew,
-> > > 
-> > > I don't like iterator interfaces too much, but I can live with that.
-> > > Other than that the patch looks good to me and I'll try to work it into
-> > > my Tegra PCIe patch series.
-> > > 
-> > > Just two minor comments below.
-> > > 
-> > > > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > > [...]
-> > > > @@ -421,7 +472,7 @@ u64 __of_translate_address(struct device_node *dev, const __be32 *in_addr,
-> > > >  		goto bail;
-> > > >  	bus = of_match_bus(parent);
-> > > >  
-> > > > -	/* Cound address cells & copy address locally */
-> > > > +	/* Count address cells & copy address locally */
-> > > >  	bus->count_cells(dev, &na, &ns);
-> > > >  	if (!OF_CHECK_COUNTS(na, ns)) {
-> > > >  		printk(KERN_ERR "prom_parse: Bad cell count for %s\n",
-> > > 
-> > > This is really minor, but it should still go into a separate patch.
-> > > 
-> > > > diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> > > > index 01b925a..4582b20 100644
-> > > > --- a/include/linux/of_address.h
-> > > > +++ b/include/linux/of_address.h
-> > > > @@ -26,6 +26,8 @@ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
-> > > >  #define pci_address_to_pio pci_address_to_pio
-> > > >  #endif
-> > > >  
-> > > > +const __be32 *of_pci_process_ranges(struct device_node *node,
-> > > > +				    struct resource *res, const __be32 *from);
-> > > >  #else /* CONFIG_OF_ADDRESS */
-> > > >  static inline int of_address_to_resource(struct device_node *dev, int index,
-> > > >  					 struct resource *r)
-> > > > @@ -48,6 +50,11 @@ static inline const u32 *of_get_address(struct device_node *dev, int index,
-> > > >  {
-> > > >  	return NULL;
-> > > >  }
-> > > > +const __be32 *of_pci_process_ranges(struct device_node *node,
-> > > 
-> > > There should be a blank line to separate the above two lines.
-> > > 
-> > 
-> > Thanks for the feedback.
-> > 
-> > I will send another patch for the typo and leave this patch with you for
-> > working into your existing series.
-> 
-> I suppose you have your own series that uses this patch?
+V5 patches are based on Mark Brown's for-next branch of
+"git://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git"
 
-Not yet, it may be some time before I submit my PCI host bridge driver. Though
-I am making changes else where (e.g. this patch) which I'm hoping to submit as
-early as possible. I can rebase my work for these upstream dependencies.
+Changes since V4:
+	- Add a new patch for renaming the samsung i2s secondary fifo interface
+	  device name from "samsung-i2s.4" to "samsung-i2s-sec"
+	- Add platform_device_id table for the primary and secondary DAIs
+	- Avoid using of alias ids in the i2s driver by adding of_device_id
+	  table. Primary device can get registered via dt or non-dt but secondary
+	  device can get registered only at runtime because the secondary is not
+	  physically present on the board.
 
-I can re-spin this patch with your suggested changes if you prefer?
+Changes since V3:
+        - Added syntex of gpio specifier as suggested by Mark Brown in
+          DT document file
+        - Added the requirement for having I2S alias ids
+        - Explained about gpio lines
+        - Made a seperate patch to get the I2S rclk src clk from alias ID
 
-Andrew Murray
+Changes since V2:
+        - Rebased on 3.7-rc3
+        - Custom DT bindings are prefixed with samsung
+        - As generic device tree DMA helpers not yet mainlined
+          I am still using custom dma bindings. So added a
+          priliminary statement regarding the same. I will rework
+          on my patch once generic DMA helpers are mainlined.
+
+Chnages since V1:
+        - Rebased on 3.6-rc6
+
+Padmavathi Venna (2):
+  ASoC: Samsung: Rename samsung i2s secondary device name
+  ASoC: SAMSUNG: Add DT support for i2s
+
+ .../devicetree/bindings/sound/samsung-i2s.txt      |   75 ++++++
+ sound/soc/samsung/dma.c                            |    1 +
+ sound/soc/samsung/dma.h                            |    1 +
+ sound/soc/samsung/i2s.c                            |  262 ++++++++++++++++----
+ sound/soc/samsung/i2s.h                            |    7 -
+ sound/soc/samsung/smdk_wm8580.c                    |    7 +-
+ sound/soc/samsung/smdk_wm8994.c                    |    4 +-
+ 7 files changed, 300 insertions(+), 57 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
+
+-- 
+1.7.4.4
