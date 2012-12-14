@@ -1,36 +1,48 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration implementation
-Date: Fri, 14 Dec 2012 09:06:49 -0700
-Message-ID: <50CB4E99.9060506@wwwdotorg.org>
-References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com> <1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, grundler@chromium.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, w.sang@pengutronix.de, ben-linux@fluff.org, khali@linux-fr.org, naveen@chromium.org
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH 3/7] ARM: sh7372: support mixed DT and board code interrupt controller init
+Date: Fri, 14 Dec 2012 17:45:27 +0100
+Message-ID: <1355503531-7276-4-git-send-email-g.liakhovetski@gmx.de>
+References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/13/2012 10:50 PM, Naveen Krishna Chatradhi wrote:
-> The arbitrator is a general purpose function which uses two GPIOs to
-> communicate with another device to claim/release a bus.
+Extend DT interrupt controller initialisation to automatically fall back to
+platform data based configuration, if booting without DT. This simplifies
+implementing boards, capable of booting in either mode with a single kernel.
 
-> diff --git a/Documentation/devicetree/bindings/i2c/arbitrator-i2c.txt b/Documentation/devicetree/bindings/i2c/arbitrator-i2c.txt
-> new file mode 100644
-> index 0000000..cb91ea8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/i2c/arbitrator-i2c.txt
-> @@ -0,0 +1,56 @@
-> +Device-Tree bindings for i2c gpio based bus arbitrator
-> +
-> +bus-arbitration-gpios :
-> +	Two GPIOs to use with the GPIO-based bus arbitration protocol
-> +(see below).
-> +The first should be an output, and is used to claim the I2C bus,
-> +the second should be an input, and signals that the other side (Client)
-> +wants to claim the bus. This allows two masters to share the same I2C bus.
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+---
+ arch/arm/mach-shmobile/intc-sh7372.c |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-I'm confused why this is even needed; the I2C protocol itself defines
-how multi-master is supposed to work, just using the regular SCL/SDA lines.
+diff --git a/arch/arm/mach-shmobile/intc-sh7372.c b/arch/arm/mach-shmobile/intc-sh7372.c
+index c923518..9c13ecc 100644
+--- a/arch/arm/mach-shmobile/intc-sh7372.c
++++ b/arch/arm/mach-shmobile/intc-sh7372.c
+@@ -23,6 +23,7 @@
+ #include <linux/irq.h>
+ #include <linux/io.h>
+ #include <linux/sh_intc.h>
++#include <mach/common.h>
+ #include <mach/intc.h>
+ #include <mach/irqs.h>
+ #include <asm/mach-types.h>
+@@ -629,6 +630,11 @@ static const struct of_device_id irq_of_match[] __initconst = {
+ 
+ void __init sh7372_init_irq_of(void)
+ {
++	if (!of_have_populated_dt()) {
++		sh7372_init_irq();
++		return;
++	}
++
+ 	of_irq_init(irq_of_match);
+ 
+ 	sh7372_init_intc(0xe6940000, 0xe6950000, 0xffd20000, 0xffd50000,
+-- 
+1.7.2.5
+
