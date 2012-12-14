@@ -1,60 +1,45 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [GIT PULL] devicetree for v3.8 part 2
-Date: Fri, 14 Dec 2012 22:43:00 +0000
-Message-ID: <CACxGe6u56QU8RdJNvq=1qSESj9g=Hh_12zP_Astr1pcP1gs=LA@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: OMAP2420: Correct H4 board memory size
+Date: Fri, 14 Dec 2012 14:50:48 -0800
+Message-ID: <20121214225048.GO4989@atomide.com>
+References: <1355517258-30745-1-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1355517258-30745-1-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+* Jon Hunter <jon-hunter@ti.com> [121214 12:37]:
+> The system memory node for the OMAP2420 H4 was incorrectly defined as
+> start address followed by end address, instead of start address and
+> size. No noticable side-effects were observed but fix this for
+> correctness.
 
-Here's a couple more devicetree changes that I missed in the first
-pull by putting the tag in the wrong place. Please pull.
+Thanks applying into omap-for-v3.8/fixes-for-merge-window.
 
-g.
-
-The following changes since commit 58fea354d887fddddd342a8d14b02069161ca904:
-
-  arm64: Fix the dtbs target building (2012-12-10 20:24:57 -0600)
-
-are available in the git repository at:
-
-  git://git.secretlab.ca/git/linux-2.6 tags/devicetree-for-linus
-
-for you to fetch changes up to 93c667ca2598bd84f1bd3f2fa176af69707699fe:
-
-  of: *node argument to of_parse_phandle_with_args should be const
-(2012-12-11 17:30:16 +0000)
-
-----------------------------------------------------------------
-Two minor devicetree fixups for v3.8. Addition of dummy inlines and
-constification of node argument to of_parse_phandle_with_args().
-
-----------------------------------------------------------------
-Guennadi Liakhovetski (2):
-      of/i2c: add dummy inline functions for when
-CONFIG_OF_I2C(_MODULE) isn't defined
-      of: *node argument to of_parse_phandle_with_args should be const
-
- drivers/of/base.c      |    2 +-
- include/linux/of.h     |    2 +-
- include/linux/of_i2c.h |   12 ++++++++++++
- 3 files changed, 14 insertions(+), 2 deletions(-)
-
-
---
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Tony
+ 
+> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> ---
+>  arch/arm/boot/dts/omap2420-h4.dts |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/omap2420-h4.dts b/arch/arm/boot/dts/omap2420-h4.dts
+> index 77b84e1..9b0d077 100644
+> --- a/arch/arm/boot/dts/omap2420-h4.dts
+> +++ b/arch/arm/boot/dts/omap2420-h4.dts
+> @@ -15,6 +15,6 @@
+>  
+>  	memory {
+>  		device_type = "memory";
+> -		reg = <0x80000000 0x84000000>; /* 64 MB */
+> +		reg = <0x80000000 0x4000000>; /* 64 MB */
+>  	};
+>  };
+> -- 
+> 1.7.10.4
+> 
