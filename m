@@ -1,37 +1,81 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [PATCH] ARM: dts: Add build target for omap4-panda-a4
-Date: Fri, 14 Dec 2012 15:55:39 -0600
-Message-ID: <1355522139-8241-1-git-send-email-jon-hunter@ti.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH] of: Support a PCI device that is compatible with
+ 'simple-bus'
+Date: Fri, 14 Dec 2012 14:58:14 -0700
+Message-ID: <20121214215814.GA14149@obsidianresearch.com>
+References: <20121210215119.GA32011@obsidianresearch.com>
+ <20121214202629.BD40C3E0BDD@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
-Cc: linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>, Jon Hunter <jon-hunter@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121214202629.BD40C3E0BDD@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Commit 0d9250c (ARM: dts: omap4-panda: Add pinmux configuration for
-HDMI) added a new device-tree source file for Rev A4 of the OMAP4430
-Panda board but it did not add this version to the makefile. Hence,
-add this file to the makefile.
+On Fri, Dec 14, 2012 at 08:26:29PM +0000, Grant Likely wrote:
 
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
----
- arch/arm/boot/dts/Makefile |    1 +
- 1 file changed, 1 insertion(+)
+> > > If the soc_devices are getting triggered on that and they shouldn't be,
+> > > then we need a mechanism in the soc_bridge node to kick out of that
+> > > behavoir for its children.
+> > 
+> > Is this what you were thinking?
+> 
+> Not really. I see what you're trying to do, but doing it this way forces
+> all children of PCI nodes to use the PCI addressing space. Others have
+> had simple children of PCI devices and didn't use the PCI address layout
+> at all. Those users would break with this approach.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 2af359c..f8b4ff4 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -105,6 +105,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
- 	omap3-evm.dtb \
- 	omap3-tobi.dtb \
- 	omap4-panda.dtb \
-+	omap4-panda-a4.dtb \
- 	omap4-panda-es.dtb \
- 	omap4-var-som.dtb \
- 	omap4-sdp.dtb \
--- 
-1.7.10.4
+Yes, that's right.
 
+If you drop 'device_type=pci' from the PCI device (keep it on the host
+bridge), then you can setup a ranges down to a smaller width and
+things seem to work OK. That must be what other users are doing.
+
+However, you can't stay at address-cells=3 for the children. That
+doesn't work.
+
+So, if you have separate PCI regions, like MMIO and prefetch it looks
+like this works OK:
+
+ pci_device@0 {
+   ranges =
+        // MMIO region, BAR 0
+       <0x20000000 0x00000000  0x02000000 0x00000000 0x00000000  0x0 0x8000000
+        // Prefetch region, BAR 1
+        0x40000000 0x00000000  0x42000000 0x00000000 0x00000000  0x0 0x8000000>;
+
+   #size-cells = <1>;
+   #address-cells = <2>;
+   sub {
+     // MMIO region at BAR 0 offset 0x2000
+     reg = <0x20000000 0x00002000 0x1000>;
+   }
+   sub2 {
+     // Prefetch region at BAR 1 offset 0x4000
+     reg = <0x40000000 0x00004000 0x1000>;
+   }
+ }
+
+Which is weird, but OK..
+
+This is good enough for my application.. fixing up address-cells=3 to
+work generally seems pretty complicated at first blush?
+
+> However, if you want to pass a unity mapping from the PCI device to the
+> a child of it, it should be sufficient to use an empty 'ranges;'
+> property in the PCI device node instead of listing out the ranges that
+> you want to translate.
+
+It isn't a unity mapping - the children see address 0 as being the
+start of a BAR. The DTS has three levels of translation:
+
+- platform device child - 0 is the start of a BAR in the pci device
+- pci device - 0 is the start of the host bridge memory window for the
+  BAR's type
+- pci controller - 0 is the start of physical memory
+
+Thanks,
+Jason
