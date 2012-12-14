@@ -1,54 +1,49 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC 2/5] ARM: dts: Add Cross Trigger Interface binding
-Date: Fri, 14 Dec 2012 13:53:31 -0600
-Message-ID: <50CB83BB.6080901@gmail.com>
-References: <1355348588-22318-1-git-send-email-jon-hunter@ti.com> <1355348588-22318-3-git-send-email-jon-hunter@ti.com> <50C90153.9070002@gmail.com> <50C9120F.7080809@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50C9120F.7080809@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Paul Walmsley <paul@pwsan.com>, Pratik Patel <pratikp@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Ming Lei <ming.lei@canonical.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] of: Support a PCI device that is compatible with 'simple-bus'
+Date: Fri, 14 Dec 2012 20:26:29 +0000
+Message-ID: <20121214202629.BD40C3E0BDD@localhost>
+References: <20121210215119.GA32011@obsidianresearch.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121210215119.GA32011@obsidianresearch.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/2012 05:23 PM, Jon Hunter wrote:
+On Mon, 10 Dec 2012 14:51:19 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
+> The intended use for this feature is to let a PCI device declare
+> itself a 'simple-bus' and then describe additional devices
+> (such as GPIOs, I2C, etc) nested below itself.
 > 
-> On 12/12/2012 04:12 PM, Rob Herring wrote:
->> On 12/12/2012 03:43 PM, Jon Hunter wrote:
->>> Adds a device-tree binding for the ARM Cross Trigger Interface (CTI).
->>> The ARM Cross Trigger Interface provides a way to route events between
->>> processor modules. For example, on OMAP4430 we use the CTI module to
->>> route PMU events to the GIC interrupt module.
->>
->> Do you need to describe the PMU-CTI-GIC connection in DT?
+> The devices nested below the PCI device will use 'reg' addressing
+> with the 5 dw format used by PCI.
 > 
-> We definitely could. This is achieved by mapping a trigger-input to a
-> trigger-output. So we could list the trigger outputs and inputs in the
-> binding. For omap4430 we would have ...
+> This is for embedded cases where the PCI device may be a complex
+> SOC with no PCI based partitioning of sub-functionality.
 > 
-> arm,cti-trigin = <0 1 2 3 4 5 6>;
-
-I'd prefer to just spell it out: arm,cti-trigger-in
-
-> arm,cti-trigin-names =  "dbgack", "pmuirq", "ptmextout0",
-> 			"ptmextout1", "commtx", "commrx",
-> 			"ptmtrigger";
-> arm,cti-trigout = <0 1 2 3 4 6 7>;
-> arm,cti-trigout-names = "edbgreq", "ptmextin0", "ptmextin1",
-> 			"ptmextin2", "ptmextin3","mpuirq",
-> 			"dbgrestart";
+> Tested on an ARM kirkwood system
 > 
-> So to map the PMU to GIC, we would map the "pmuirq" trigger input to the
-> "mpuirq" trigger output. Then we could setup the mapping by name instead
-> of index.
+> Signed-off-by: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> ---
+>  drivers/of/address.c |   29 +++++++++++++++++++++++++++++
+>  1 files changed, 29 insertions(+), 0 deletions(-)
+> 
+> Grant:
+> 
+> > If the soc_devices are getting triggered on that and they shouldn't be,
+> > then we need a mechanism in the soc_bridge node to kick out of that
+> > behavoir for its children.
+> 
+> Is this what you were thinking?
 
-I'm not crazy about the name strings and would prefer something with
-phandles. The above binding doesn't really describe the connection of
-the CTI to the GIC. The GIC node would need to define some inputs and
-then you show the connection to the CTI outputs. This may be similar to
-an interrupt nexus node.
+Not really. I see what you're trying to do, but doing it this way forces
+all children of PCI nodes to use the PCI addressing space. Others have
+had simple children of PCI devices and didn't use the PCI address layout
+at all. Those users would break with this approach.
 
-Rob
+However, if you want to pass a unity mapping from the PCI device to the
+a child of it, it should be sufficient to use an empty 'ranges;'
+property in the PCI device node instead of listing out the ranges that
+you want to translate.
 
+g.
