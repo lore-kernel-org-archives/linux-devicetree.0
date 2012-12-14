@@ -1,7 +1,7 @@
 From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH 5/7] ARM: sh7372: allow boards supporting booting with or without DT
-Date: Fri, 14 Dec 2012 17:45:29 +0100
-Message-ID: <1355503531-7276-6-git-send-email-g.liakhovetski@gmx.de>
+Subject: [PATCH 1/7] ARM: sh7372: add missing "#interrupt-cells" properties
+Date: Fri, 14 Dec 2012 17:45:25 +0100
+Message-ID: <1355503531-7276-2-git-send-email-g.liakhovetski@gmx.de>
 References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de>
@@ -10,74 +10,34 @@ To: linux-sh@vger.kernel.org
 Cc: Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-For boards booting without DT no changes should be caused by this patch.
-When booting with DT, devices, whose drivers support DT probing, will not
-be registered.
+Two of four interrupt controllers in sh7372.dtsi are missing the compulsory
+"#interrupt-cells" properties. Fix this.
 
 Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 ---
- arch/arm/mach-shmobile/setup-sh7372.c |   17 ++++++++++++++---
- 1 files changed, 14 insertions(+), 3 deletions(-)
+ arch/arm/boot/dts/sh7372.dtsi |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/mach-shmobile/setup-sh7372.c b/arch/arm/mach-shmobile/setup-sh7372.c
-index bbe6e2a..3e6bf3d 100644
---- a/arch/arm/mach-shmobile/setup-sh7372.c
-+++ b/arch/arm/mach-shmobile/setup-sh7372.c
-@@ -981,9 +981,12 @@ static struct platform_device *sh7372_early_devices[] __initdata = {
- 	&tmu01_device,
- };
+diff --git a/arch/arm/boot/dts/sh7372.dtsi b/arch/arm/boot/dts/sh7372.dtsi
+index da03ee6..00f1645 100644
+--- a/arch/arm/boot/dts/sh7372.dtsi
++++ b/arch/arm/boot/dts/sh7372.dtsi
+@@ -943,6 +943,7 @@
+ 			interrupt-controller;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
++			#interrupt-cells = <1>;
+ 			ranges;
  
--static struct platform_device *sh7372_late_devices[] __initdata = {
-+static struct platform_device *sh7372_late_devices_dt[] __initdata = {
- 	&iic0_device,
- 	&iic1_device,
-+};
-+
-+static struct platform_device *sh7372_late_devices[] __initdata = {
- 	&dma0_device,
- 	&dma1_device,
- 	&dma2_device,
-@@ -1012,13 +1015,11 @@ void __init sh7372_add_standard_devices(void)
- 		{ "A3SP", &scif4_device, },
- 		{ "A3SP", &scif5_device, },
- 		{ "A3SP", &scif6_device, },
--		{ "A3SP", &iic1_device, },
- 		{ "A3SP", &dma0_device, },
- 		{ "A3SP", &dma1_device, },
- 		{ "A3SP", &dma2_device, },
- 		{ "A3SP", &usb_dma0_device, },
- 		{ "A3SP", &usb_dma1_device, },
--		{ "A4R", &iic0_device, },
- 		{ "A4R", &veu0_device, },
- 		{ "A4R", &veu1_device, },
- 		{ "A4R", &veu2_device, },
-@@ -1027,6 +1028,10 @@ void __init sh7372_add_standard_devices(void)
- 		{ "A4R", &tmu00_device, },
- 		{ "A4R", &tmu01_device, },
- 	};
-+	struct pm_domain_device domain_devices_dt[] = {
-+		{ "A3SP", &iic1_device, },
-+		{ "A4R", &iic0_device, },
-+	};
+ 			reg = <0xe6900000 0x70>;
+@@ -1052,6 +1053,7 @@
+ 			interrupt-controller;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
++			#interrupt-cells = <1>;
+ 			ranges;
  
- 	sh7372_init_pm_domains();
- 
-@@ -1035,9 +1040,15 @@ void __init sh7372_add_standard_devices(void)
- 
- 	platform_add_devices(sh7372_late_devices,
- 			    ARRAY_SIZE(sh7372_late_devices));
-+	if (!of_have_populated_dt())
-+		platform_add_devices(sh7372_late_devices_dt,
-+				     ARRAY_SIZE(sh7372_late_devices_dt));
- 
- 	rmobile_add_devices_to_domains(domain_devices,
- 				       ARRAY_SIZE(domain_devices));
-+	if (!of_have_populated_dt())
-+		rmobile_add_devices_to_domains(domain_devices_dt,
-+					       ARRAY_SIZE(domain_devices_dt));
- }
- 
- static void __init sh7372_earlytimer_init(void)
+ 			reg = <0xe6900008 0x70>;
 -- 
 1.7.2.5
 
