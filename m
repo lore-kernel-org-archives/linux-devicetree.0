@@ -1,57 +1,41 @@
-From: Venu Byravarasu <vbyravarasu@nvidia.com>
-Subject: [PATCH 2/2] usb: host: tegra: Resetting PORT0 based on information received via DT.
-Date: Fri, 14 Dec 2012 12:29:08 +0530
-Message-ID: <1355468348-8821-3-git-send-email-vbyravarasu@nvidia.com>
-References: <1355468348-8821-1-git-send-email-vbyravarasu@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1355468348-8821-1-git-send-email-vbyravarasu@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, swarren@wwwdotorg.org, linux@arm.linux.org.uk, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, sjg@chromium.org, olof@lixom.net
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, Venu Byravarasu <vbyravarasu@nvidia.com>
+From: Daniel Mack <zonque@gmail.com>
+Subject: [PATCH v8 1/5] ARM: OMAP: gpmc: don't create devices from initcall on DT
+Date: Fri, 14 Dec 2012 11:36:40 +0100
+Message-ID: <1355481404-27695-2-git-send-email-zonque@gmail.com>
+References: <1355481404-27695-1-git-send-email-zonque@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1355481404-27695-1-git-send-email-zonque@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-omap@vger.kernel.org, jon-hunter@ti.com, avinashphilip@ti.com, x0148406@ti.com, tony@atomide.com, paul@pwsan.com, nsekhar@ti.com, jacmet@sunsite.dk, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Tegra USB host driver is using port instance number,
-to handle some of the hardware issues on SOC e.g. reset PORT0
-twice etc. As instance number based handling looks ugly,
-making use of information passed through DT for achieving this.
+On DT driven boards, the gpmc node will match the driver. Hence, there's
+no need to do that unconditionally from the initcall.
 
-Signed-off-by: Venu Byravarasu <vbyravarasu@nvidia.com>
+Signed-off-by: Daniel Mack <zonque@gmail.com>
 ---
- drivers/usb/host/ehci-tegra.c |    6 +++++-
- 1 files changed, 5 insertions(+), 1 deletions(-)
+ arch/arm/mach-omap2/gpmc.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/drivers/usb/host/ehci-tegra.c b/drivers/usb/host/ehci-tegra.c
-index acf1755..55a9cde 100644
---- a/drivers/usb/host/ehci-tegra.c
-+++ b/drivers/usb/host/ehci-tegra.c
-@@ -43,6 +43,7 @@ struct tegra_ehci_hcd {
- 	struct usb_phy *transceiver;
- 	int host_resumed;
- 	int port_resuming;
-+	bool needs_double_reset;
- 	enum tegra_usb_phy_port_speed port_speed;
- };
+diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+index 65468f6..d5cbd29 100644
+--- a/arch/arm/mach-omap2/gpmc.c
++++ b/arch/arm/mach-omap2/gpmc.c
+@@ -1214,6 +1214,13 @@ static int __init omap_gpmc_init(void)
+ 	struct platform_device *pdev;
+ 	char *oh_name = "gpmc";
  
-@@ -184,7 +185,7 @@ static int tegra_ehci_hub_control(
- 	}
- 
- 	/* For USB1 port we need to issue Port Reset twice internally */
--	if (tegra->phy->instance == 0 &&
-+	if (tegra->needs_double_reset &&
- 	   (typeReq == SetPortFeature && wValue == USB_PORT_FEAT_RESET)) {
- 		spin_unlock_irqrestore(&ehci->lock, flags);
- 		return tegra_ehci_internal_port_reset(ehci, status_reg);
-@@ -666,6 +667,9 @@ static int tegra_ehci_probe(struct platform_device *pdev)
- 	clk_prepare_enable(tegra->emc_clk);
- 	clk_set_rate(tegra->emc_clk, 400000000);
- 
-+	tegra->needs_double_reset = of_property_read_bool(pdev->dev.of_node,
-+		"nvidia,needs-double-reset");
++	/*
++	 * if the board boots up with a populated DT, do not
++	 * manually add the device from this initcall
++	 */
++	if (of_have_populated_dt())
++		return -ENODEV;
 +
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!res) {
- 		dev_err(&pdev->dev, "Failed to get I/O memory\n");
+ 	oh = omap_hwmod_lookup(oh_name);
+ 	if (!oh) {
+ 		pr_err("Could not look up %s\n", oh_name);
 -- 
-1.7.0.4
+1.7.11.7
+
