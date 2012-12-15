@@ -1,47 +1,63 @@
-From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Subject: [PATCH] of: define struct device in of_platform.h if !OF_DEVICE and
- !OF_ADDRESS
-Date: Sat, 15 Dec 2012 14:27:42 +0100
-Message-ID: <1355578062-21876-1-git-send-email-jogo@openwrt.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration
+ implementation
+Date: Sat, 15 Dec 2012 23:21:36 +0900
+Message-ID: <20121215142135.GB22033@opensource.wolfsonmicro.com>
+References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com>
+ <1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
+ <50CB4E99.9060506@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50CB4E99.9060506@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, grundler@chromium.org, devicetree-discuss@lists.ozlabs.org, w.sang@pengutronix.de, ben-linux@fluff.org, khali@linux-fr.org, naveen@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-Fixes the following warning:
 
-include/linux/of_platform.h:106:13: warning: 'struct device' declared inside parameter list [enabled by default]
-include/linux/of_platform.h:106:13: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
+--neYutvxvOLaeuPCA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
----
- include/linux/of_platform.h |    1 +
- 1 file changed, 1 insertion(+)
+On Fri, Dec 14, 2012 at 09:06:49AM -0700, Stephen Warren wrote:
+> On 12/13/2012 10:50 PM, Naveen Krishna Chatradhi wrote:
 
-diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
-index b47d204..3863a4d 100644
---- a/include/linux/of_platform.h
-+++ b/include/linux/of_platform.h
-@@ -100,6 +100,7 @@ extern int of_platform_populate(struct device_node *root,
- 
- #if !defined(CONFIG_OF_ADDRESS)
- struct of_dev_auxdata;
-+struct device;
- static inline int of_platform_populate(struct device_node *root,
- 					const struct of_device_id *matches,
- 					const struct of_dev_auxdata *lookup,
--- 
-1.7.10.4
+> > +The first should be an output, and is used to claim the I2C bus,
+> > +the second should be an input, and signals that the other side (Client)
+> > +wants to claim the bus. This allows two masters to share the same I2C bus.
+
+> I'm confused why this is even needed; the I2C protocol itself defines
+> how multi-master is supposed to work, just using the regular SCL/SDA lines.
+
+Practically speaking essentially no systems actually do that - mostly
+Linux will treat failure to get the bus as an error for example.  You
+also get things like read operations which appear as multiple
+transactions on the I2C bus so require something higher level than what
+multi-master provides.
+
+--neYutvxvOLaeuPCA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQzIdaAAoJELSic+t+oim9ziYP/3Xec5OTpdhalJ/3xknDDvHI
+FhaH4Lk8Fdl3pRAuqJFUdR+4feutuVv+Gii95Wde76uw9Kp4/q6PlKCjrBZ+m4Cb
+GXFpODwvHwOdk8f0MqxaL88KBbUBgq6Psl1lOW8xww898r7M/+2auq+QvLM0IpZt
+sgVOD5qUwfpl5jgyNjEdsTtU2XinhputoGj0IFa4Fc3GPmsmC35F/ttiB+QMnHlC
+vO8ucntVom7Y5UecCD4+eh4iR5Xs6s7x7BH7FxeaLCSsEYH1B8EKrn5v3q4hMmjk
+2tKrhXeHtkxO2+Am1WAC95lrutHxYNPnaNJxE114/eba2d2YKqqHd40028V2twsy
+BT9VlaV0IG9bZTPmXnl2dqFSHj7NYZ8s9LcWkS4AEmo7K+wzQRo7SYdfCOZJed80
+8qWRo3zA5umUn0zW6Jy6aWqFH8EhUZWSXOTTDuAAxgpIS/QjQO/evVtHqg4UQy4V
+4jIpK48FWEC411pPVRTKEKo6d0micOv0GoWv8nvRInBGFxB0wXBrJHSLA7TbnT+t
+oiloBdi3uXvmweLRpg8n+4vbsQHgpdHucpai9u3eUQKU6HuRiJREypphUa3o3/uM
+V8XafhCb5RasXaDKkHCYCeolTzWlVMKnV0bgEYMfifbjvnroQTmYHitQsZf4t95f
+fFQiq2aSuoSJdL8oal5/
+=cduo
+-----END PGP SIGNATURE-----
+
+--neYutvxvOLaeuPCA--
