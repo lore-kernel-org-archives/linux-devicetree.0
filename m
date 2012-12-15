@@ -1,63 +1,94 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration
- implementation
-Date: Sat, 15 Dec 2012 23:21:36 +0900
-Message-ID: <20121215142135.GB22033@opensource.wolfsonmicro.com>
-References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com>
- <1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
- <50CB4E99.9060506@wwwdotorg.org>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] spi: devicetree: add support for loopback mode
+Date: Sat, 15 Dec 2012 16:55:46 +0200
+Message-ID: <20121215145546.GA15606@arwen.pp.htv.fi>
+References: <1355301960-21523-1-git-send-email-balbi@ti.com>
+ <1355301960-21523-2-git-send-email-balbi@ti.com>
+ <20121215003224.CBFD93E0BEC@localhost>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="neYutvxvOLaeuPCA"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50CB4E99.9060506@wwwdotorg.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, grundler@chromium.org, devicetree-discuss@lists.ozlabs.org, w.sang@pengutronix.de, ben-linux@fluff.org, khali@linux-fr.org, naveen@chromium.org
+Content-Type: multipart/mixed; boundary="===============7087357056491129637=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121215003224.CBFD93E0BEC@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---neYutvxvOLaeuPCA
-Content-Type: text/plain; charset=us-ascii
+--===============7087357056491129637==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
 Content-Disposition: inline
 
-On Fri, Dec 14, 2012 at 09:06:49AM -0700, Stephen Warren wrote:
-> On 12/13/2012 10:50 PM, Naveen Krishna Chatradhi wrote:
+--YiEDa0DAkWCtVeE4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +The first should be an output, and is used to claim the I2C bus,
-> > +the second should be an input, and signals that the other side (Client)
-> > +wants to claim the bus. This allows two masters to share the same I2C bus.
+On Sat, Dec 15, 2012 at 12:32:24AM +0000, Grant Likely wrote:
+> On Wed, 12 Dec 2012 10:46:00 +0200, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> > there are a few spi master drivers which make
+> > use of that flag but there is no way to pass it
+> > through devicetree.
+> >=20
+> > This patch just creates a way to pass SPI_LOOP
+> > via devicetree.
+>=20
+> I don't understand how this would be useful since loopback mode is
+> really just a test feature. Is there any reason to do loopback for
+> something other than test?
+>=20
+> I think it would be better to add a sysfs or debugfs property to
+> manipulate the SPI_LOOP flag from userspace. What do you think?
 
-> I'm confused why this is even needed; the I2C protocol itself defines
-> how multi-master is supposed to work, just using the regular SCL/SDA lines.
+might be nicer in the long run, indeed. Want me to look into it, or do
+you wanna do it yourself ?
 
-Practically speaking essentially no systems actually do that - mostly
-Linux will treat failure to get the bus as an error for example.  You
-also get things like read operations which appear as multiple
-transactions on the I2C bus so require something higher level than what
-multi-master provides.
+--=20
+balbi
 
---neYutvxvOLaeuPCA
+--YiEDa0DAkWCtVeE4
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQzIdaAAoJELSic+t+oim9ziYP/3Xec5OTpdhalJ/3xknDDvHI
-FhaH4Lk8Fdl3pRAuqJFUdR+4feutuVv+Gii95Wde76uw9Kp4/q6PlKCjrBZ+m4Cb
-GXFpODwvHwOdk8f0MqxaL88KBbUBgq6Psl1lOW8xww898r7M/+2auq+QvLM0IpZt
-sgVOD5qUwfpl5jgyNjEdsTtU2XinhputoGj0IFa4Fc3GPmsmC35F/ttiB+QMnHlC
-vO8ucntVom7Y5UecCD4+eh4iR5Xs6s7x7BH7FxeaLCSsEYH1B8EKrn5v3q4hMmjk
-2tKrhXeHtkxO2+Am1WAC95lrutHxYNPnaNJxE114/eba2d2YKqqHd40028V2twsy
-BT9VlaV0IG9bZTPmXnl2dqFSHj7NYZ8s9LcWkS4AEmo7K+wzQRo7SYdfCOZJed80
-8qWRo3zA5umUn0zW6Jy6aWqFH8EhUZWSXOTTDuAAxgpIS/QjQO/evVtHqg4UQy4V
-4jIpK48FWEC411pPVRTKEKo6d0micOv0GoWv8nvRInBGFxB0wXBrJHSLA7TbnT+t
-oiloBdi3uXvmweLRpg8n+4vbsQHgpdHucpai9u3eUQKU6HuRiJREypphUa3o3/uM
-V8XafhCb5RasXaDKkHCYCeolTzWlVMKnV0bgEYMfifbjvnroQTmYHitQsZf4t95f
-fFQiq2aSuoSJdL8oal5/
-=cduo
+iQIcBAEBAgAGBQJQzI9xAAoJEIaOsuA1yqREwFgP/RdGkkiBhtfeNQAHXMa/bNxI
+9dUPXPLjMtMLDj0eEgqUOsJWSFhhq7Sh+yenElWQAfyKjtNMqDsm3ZPLb9VRRHue
+a2G1NuD9T86+7NY6FjxglY9XAIqOosIQ3NlwKHnDkNbpwDdVwwQPw8Cw9UJWH/2q
+PM3UHHIWifXqXADKlBiznY5rNnpQVEfY2/zm5U5jcUZDPq4cqfdFMxVneEZOgqtD
+DJpuskr2Udflw17l1rSVDXmNKfGftavMpMTxVN60deZdlNBwkFt/cyfMB8nFewFJ
+RTtKEZNstCkH7AHa/V0fp8s1bB2Zd2zuF00ofGABXx2T7sjqnW082yhFZXPzOgON
+xNRnFThKcF6KkEzO/C/Kl8yXoHC2T1QONDV/quL73xk+5T3eXP723l2U6Qb4d+tf
+hlxPMEIE8HAsspKK6FcYuaNxnKOHLB9pJe1tTEaLIlWFvHL90uzTJz/dEksM+URO
+xFXmEVyN7LDgpDErHUL01daCnHAKF8XiUwa12FEA2Uvn5qw83gTTO0ou3lBjlRaN
+3P6OTxrEvVNaElWW29FRpmjDQ4P7WWzjr6ftIbKtN0SS5BgH81XcLN40XlPx95LK
+mc4jwtxqlcplXOIOks2xfTsTSitJ9aqSwn4mKT00+CWopLXdc7p8NYtX8zOM+05G
+A6cIfq/os96qVbMrQeyI
+=SeZs
 -----END PGP SIGNATURE-----
 
---neYutvxvOLaeuPCA--
+--YiEDa0DAkWCtVeE4--
+
+--===============7087357056491129637==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7087357056491129637==--
