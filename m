@@ -1,29 +1,47 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/7] ARM: sh7372: add missing "#interrupt-cells"
- properties
-Date: Sat, 15 Dec 2012 18:05:28 +0900
-Message-ID: <20121215090527.GI9073@verge.net.au>
-References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de>
- <1355503531-7276-2-git-send-email-g.liakhovetski@gmx.de>
+From: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: [PATCH] of: define struct device in of_platform.h if !OF_DEVICE and
+ !OF_ADDRESS
+Date: Sat, 15 Dec 2012 14:27:42 +0100
+Message-ID: <1355578062-21876-1-git-send-email-jogo@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1355503531-7276-2-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2012 at 05:45:25PM +0100, Guennadi Liakhovetski wrote:
-> Two of four interrupt controllers in sh7372.dtsi are missing the compulsory
-> "#interrupt-cells" properties. Fix this.
+Fixes the following warning:
 
-Thanks.
+include/linux/of_platform.h:106:13: warning: 'struct device' declared inside parameter list [enabled by default]
+include/linux/of_platform.h:106:13: warning: its scope is only this definition or declaration, which is probably not what you want [enabled by default]
 
-I think that is fixed in the latest INTC DT series that I posted just
-a few moments ago "[RFC v7 00/10] ARM: shmobile: DT initialisation of INTC
-and GIC".
+Signed-off-by: Jonas Gorski <jogo-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+---
+ include/linux/of_platform.h |    1 +
+ 1 file changed, 1 insertion(+)
 
-Sorry for sitting on that code for so long. Could you check if the
-problem you saw is resolved?
+diff --git a/include/linux/of_platform.h b/include/linux/of_platform.h
+index b47d204..3863a4d 100644
+--- a/include/linux/of_platform.h
++++ b/include/linux/of_platform.h
+@@ -100,6 +100,7 @@ extern int of_platform_populate(struct device_node *root,
+ 
+ #if !defined(CONFIG_OF_ADDRESS)
+ struct of_dev_auxdata;
++struct device;
+ static inline int of_platform_populate(struct device_node *root,
+ 					const struct of_device_id *matches,
+ 					const struct of_dev_auxdata *lookup,
+-- 
+1.7.10.4
