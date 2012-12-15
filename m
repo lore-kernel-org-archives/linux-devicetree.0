@@ -1,94 +1,265 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/2] spi: devicetree: add support for loopback mode
-Date: Sat, 15 Dec 2012 16:55:46 +0200
-Message-ID: <20121215145546.GA15606@arwen.pp.htv.fi>
-References: <1355301960-21523-1-git-send-email-balbi@ti.com>
- <1355301960-21523-2-git-send-email-balbi@ti.com>
- <20121215003224.CBFD93E0BEC@localhost>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH 6/7] ARM: mackerel: support booting with or without DT
+Date: Sat, 15 Dec 2012 20:02:39 +0100 (CET)
+Message-ID: <Pine.LNX.4.64.1212151950360.7280@axis700.grange>
+References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de>
+ <1355503531-7276-7-git-send-email-g.liakhovetski@gmx.de>
+ <20121215082955.GA17390@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7087357056491129637=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121215003224.CBFD93E0BEC@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20121215082955.GA17390@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---===============7087357056491129637==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YiEDa0DAkWCtVeE4"
-Content-Disposition: inline
+Hi Simon
 
---YiEDa0DAkWCtVeE4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for your comments. I'll reply to other your reviews later, I think, 
+let me just briefly clarify this one.
 
-On Sat, Dec 15, 2012 at 12:32:24AM +0000, Grant Likely wrote:
-> On Wed, 12 Dec 2012 10:46:00 +0200, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
-> > there are a few spi master drivers which make
-> > use of that flag but there is no way to pass it
-> > through devicetree.
-> >=20
-> > This patch just creates a way to pass SPI_LOOP
-> > via devicetree.
->=20
-> I don't understand how this would be useful since loopback mode is
-> really just a test feature. Is there any reason to do loopback for
-> something other than test?
->=20
-> I think it would be better to add a sysfs or debugfs property to
-> manipulate the SPI_LOOP flag from userspace. What do you think?
+On Sat, 15 Dec 2012, Simon Horman wrote:
 
-might be nicer in the long run, indeed. Want me to look into it, or do
-you wanna do it yourself ?
+> On Fri, Dec 14, 2012 at 05:45:30PM +0100, Guennadi Liakhovetski wrote:
+> > This patch adds dynamic switching to booting either with or without DT.
+> > So far only a part of the board initialisation can be done via DT. Devices,
+> > that still need platform data are kept that way. Devices, that can be
+> > initialised from DT will not be supplied from the platform data, if a DT
+> > image is detected.
+> 
+> Hi Guennadi,
+> 
+> I'm not sure that I'm entirely comfortable with the implications
+> for users here.
+> 
+> In the beginning there was no DT for Mackerel, all boots were non-DT,
+> and in general the board and its devices have been well supported.
+> 
+> At the present time Mackerel only boots using DT, though almost all
+> the initialisation is done in C. Thus currently a DT boot fairly full
+> support for the board and its devices.
+> 
+> If I understand things correctly, with this change, a DT boot becomes a
+> limited boot that basically only supports devices that can be initialised
+> using DT. And users are expected to go back to a non-DT boot if they want
+> fuller support.  This seems undesirable.
 
---=20
-balbi
+No, it's in a way the contrary. As you correctly point out after a recent 
+change mackerel _must_ only be booted with DT, and, I think, this way an 
+undesirable change. After this series of patches both becomes possible: 
+booting with and without DT. And in both cases all devices are supported. 
+If booting without DT, all devices are supported in the "legacy" way from 
+the board file. If booting with DT _some_ devices, for which sufficient DT 
+support already exist are initialised from the .dts file, others are still 
+initialised from the .c. This way all devices are still supported. Note, 
+however, that some devices don't have a complete DT support yet, e.g., you 
+cannot specify card-detect GPIOs in .dts because of the lacking pincontrol 
+/ GPIO DT support. As soon as that is added, .dts will have to be 
+extended respectively. Similarly, as more devices get DT support they can 
+be added to the .dts and excluded from the DT boot by putting them under 
 
---YiEDa0DAkWCtVeE4
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
++	if (!of_have_populated_dt()) {
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+clauses. If we ever come to a point, that no-DT booting will not have to 
+be supported any more, these clauses and respective devices can be easily 
+removed from board-mackerel.c. (Continued below)
 
-iQIcBAEBAgAGBQJQzI9xAAoJEIaOsuA1yqREwFgP/RdGkkiBhtfeNQAHXMa/bNxI
-9dUPXPLjMtMLDj0eEgqUOsJWSFhhq7Sh+yenElWQAfyKjtNMqDsm3ZPLb9VRRHue
-a2G1NuD9T86+7NY6FjxglY9XAIqOosIQ3NlwKHnDkNbpwDdVwwQPw8Cw9UJWH/2q
-PM3UHHIWifXqXADKlBiznY5rNnpQVEfY2/zm5U5jcUZDPq4cqfdFMxVneEZOgqtD
-DJpuskr2Udflw17l1rSVDXmNKfGftavMpMTxVN60deZdlNBwkFt/cyfMB8nFewFJ
-RTtKEZNstCkH7AHa/V0fp8s1bB2Zd2zuF00ofGABXx2T7sjqnW082yhFZXPzOgON
-xNRnFThKcF6KkEzO/C/Kl8yXoHC2T1QONDV/quL73xk+5T3eXP723l2U6Qb4d+tf
-hlxPMEIE8HAsspKK6FcYuaNxnKOHLB9pJe1tTEaLIlWFvHL90uzTJz/dEksM+URO
-xFXmEVyN7LDgpDErHUL01daCnHAKF8XiUwa12FEA2Uvn5qw83gTTO0ou3lBjlRaN
-3P6OTxrEvVNaElWW29FRpmjDQ4P7WWzjr6ftIbKtN0SS5BgH81XcLN40XlPx95LK
-mc4jwtxqlcplXOIOks2xfTsTSitJ9aqSwn4mKT00+CWopLXdc7p8NYtX8zOM+05G
-A6cIfq/os96qVbMrQeyI
-=SeZs
------END PGP SIGNATURE-----
+> The approach that I took with the kzm9g was to provide an alternate dts and
+> board file, and compatibility string. Clearly that is not an entirely
+> elegant solution. But it does avoid the problem that I describe above.
+> 
+> > 
+> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > ---
+> >  arch/arm/mach-shmobile/board-mackerel.c |   84 ++++++++++++++++++++++++-------
+> >  1 files changed, 66 insertions(+), 18 deletions(-)
+> > 
+> > diff --git a/arch/arm/mach-shmobile/board-mackerel.c b/arch/arm/mach-shmobile/board-mackerel.c
+> > index 39b8f2e..a6358c9 100644
+> > --- a/arch/arm/mach-shmobile/board-mackerel.c
+> > +++ b/arch/arm/mach-shmobile/board-mackerel.c
+> > @@ -1326,7 +1326,6 @@ static struct platform_device mackerel_camera = {
+> >  
+> >  static struct platform_device *mackerel_devices[] __initdata = {
+> >  	&nor_flash_device,
+> > -	&smc911x_device,
+> >  	&lcdc_device,
+> >  	&usbhs0_device,
+> >  	&usbhs1_device,
+> > @@ -1335,17 +1334,21 @@ static struct platform_device *mackerel_devices[] __initdata = {
+> >  	&fsi_ak4643_device,
+> >  	&fsi_hdmi_device,
+> >  	&nand_flash_device,
+> > +	&ceu_device,
+> > +	&mackerel_camera,
+> > +	&hdmi_device,
+> > +	&hdmi_lcdc_device,
+> > +	&meram_device,
+> > +};
+> > +
+> > +static struct platform_device *mackerel_devices_dt[] __initdata = {
+> > +	&smc911x_device,
+> >  	&sdhi0_device,
+> >  #if !defined(CONFIG_MMC_SH_MMCIF) && !defined(CONFIG_MMC_SH_MMCIF_MODULE)
+> >  	&sdhi1_device,
+> >  #endif
+> >  	&sdhi2_device,
+> >  	&sh_mmcif_device,
+> > -	&ceu_device,
+> > -	&mackerel_camera,
+> > -	&hdmi_device,
+> > -	&hdmi_lcdc_device,
+> > -	&meram_device,
+> >  };
+> >  
+> >  /* Keypad Initialization */
+> > @@ -1404,6 +1407,24 @@ static struct i2c_board_info i2c1_devices[] = {
+> >  	},
+> >  };
+> >  
+> > +static int mackerel_i2c_bus_notify(struct notifier_block *nb,
+> > +				   unsigned long action, void *data)
+> > +{
+> > +	struct device *dev = data;
+> > +
+> > +	if (action != BUS_NOTIFY_ADD_DEVICE ||
+> > +	    strcmp(dev_name(dev->parent), "fff20000.i2c"))
+> > +		return NOTIFY_DONE;
+> > +
+> > +	i2c_new_device(to_i2c_adapter(dev), &i2c0_devices[1]);
+> > +
+> > +	return NOTIFY_OK;
+> > +}
+> > +
+> > +static struct notifier_block mackerel_i2c_notifier = {
+> > +	.notifier_call = mackerel_i2c_bus_notify,
+> > +};
+> > +
+> >  #define GPIO_PORT9CR	IOMEM(0xE6051009)
+> >  #define GPIO_PORT10CR	IOMEM(0xE605100A)
+> >  #define GPIO_PORT167CR	IOMEM(0xE60520A7)
+> > @@ -1420,22 +1441,26 @@ static void __init mackerel_init(void)
+> 
+> I wonder if it would be cleaner to achieve this by providing
+> mackerel_init_dt().
 
---YiEDa0DAkWCtVeE4--
+I thought about this, but initialisation is interleaved and in some cases 
+order is important, so, you would need something like "early_dt()," 
+"mid_early_common()," "late_dt()" etc., which doesn't seem an improvement 
+to me:-)
 
---===============7087357056491129637==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> >  		{ "A3SP", &usbhs0_device, },
+> >  		{ "A3SP", &usbhs1_device, },
+> >  		{ "A3SP", &nand_flash_device, },
+> > +		{ "A4R", &ceu_device, },
+> > +	};
+> > +	struct pm_domain_device domain_devices_dt[] = {
+> >  		{ "A3SP", &sh_mmcif_device, },
+> >  		{ "A3SP", &sdhi0_device, },
+> >  #if !defined(CONFIG_MMC_SH_MMCIF) && !defined(CONFIG_MMC_SH_MMCIF_MODULE)
+> >  		{ "A3SP", &sdhi1_device, },
+> >  #endif
+> >  		{ "A3SP", &sdhi2_device, },
+> > -		{ "A4R", &ceu_device, },
+> >  	};
+> >  	u32 srcr4;
+> >  	struct clk *clk;
+> >  
+> > -	regulator_register_always_on(0, "fixed-1.8V", fixed1v8_power_consumers,
+> > -				     ARRAY_SIZE(fixed1v8_power_consumers), 1800000);
+> > -	regulator_register_always_on(1, "fixed-3.3V", fixed3v3_power_consumers,
+> > -				     ARRAY_SIZE(fixed3v3_power_consumers), 3300000);
+> > -	regulator_register_fixed(2, dummy_supplies, ARRAY_SIZE(dummy_supplies));
+> > +	if (!of_have_populated_dt()) {
+> > +		regulator_register_always_on(0, "fixed-1.8V", fixed1v8_power_consumers,
+> > +					     ARRAY_SIZE(fixed1v8_power_consumers), 1800000);
+> > +		regulator_register_always_on(1, "fixed-3.3V", fixed3v3_power_consumers,
+> > +					     ARRAY_SIZE(fixed3v3_power_consumers), 3300000);
+> > +		regulator_register_fixed(2, dummy_supplies, ARRAY_SIZE(dummy_supplies));
+> > +	}
+> >  
+> >  	/* External clock source */
+> >  	clk_set_rate(&sh7372_dv_clki_clk, 27000000);
+> > @@ -1633,22 +1658,35 @@ static void __init mackerel_init(void)
+> >  	udelay(50);
+> >  	__raw_writel(srcr4 & ~(1 << 13), SRCR4);
+> >  
+> > -	i2c_register_board_info(0, i2c0_devices,
+> > -				ARRAY_SIZE(i2c0_devices));
+> > -	i2c_register_board_info(1, i2c1_devices,
+> > -				ARRAY_SIZE(i2c1_devices));
+> > +	if (!of_have_populated_dt()) {
+> > +		i2c_register_board_info(0, i2c0_devices,
+> > +					ARRAY_SIZE(i2c0_devices));
+> > +		i2c_register_board_info(1, i2c1_devices,
+> > +					ARRAY_SIZE(i2c1_devices));
+> > +	} else {
+> > +		bus_register_notifier(&i2c_bus_type,
+> > +				      &mackerel_i2c_notifier);
+> > +	}
+> >  
+> >  	sh7372_add_standard_devices();
+> >  
+> >  	platform_add_devices(mackerel_devices, ARRAY_SIZE(mackerel_devices));
+> > +	if (!of_have_populated_dt())
+> > +		platform_add_devices(mackerel_devices_dt,
+> > +				     ARRAY_SIZE(mackerel_devices_dt));
+> >  
+> >  	rmobile_add_devices_to_domains(domain_devices,
+> >  				       ARRAY_SIZE(domain_devices));
+> > +	if (!of_have_populated_dt())
+> > +		rmobile_add_devices_to_domains(domain_devices_dt,
+> > +					       ARRAY_SIZE(domain_devices_dt));
+> >  
+> >  	hdmi_init_pm_clock();
+> >  	sh7372_pm_init();
+> >  	pm_clk_add(&fsi_device.dev, "spu2");
+> >  	pm_clk_add(&hdmi_lcdc_device.dev, "hdmi");
+> > +
+> > +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+> >  }
+> >  
+> >  static const char *mackerel_boards_compat_dt[] __initdata = {
+> > @@ -1659,10 +1697,20 @@ static const char *mackerel_boards_compat_dt[] __initdata = {
+> >  DT_MACHINE_START(MACKEREL_DT, "mackerel")
+> >  	.map_io		= sh7372_map_io,
+> >  	.init_early	= sh7372_add_early_devices,
+> > -	.init_irq	= sh7372_init_irq,
+> > +	.init_irq	= sh7372_init_irq_of,
+> > +	.handle_irq	= shmobile_handle_irq_intc,
+> > +	.init_machine	= mackerel_init,
+> > +	.init_late	= sh7372_pm_init_late,
+> > +	.timer		= &shmobile_timer,
+> > +	.dt_compat	= mackerel_boards_compat_dt,
+> > +MACHINE_END
+> > +
+> > +MACHINE_START(MACKEREL, "mackerel")
+> > +	.map_io		= sh7372_map_io,
+> > +	.init_early	= sh7372_add_early_devices,
+> > +	.init_irq	= sh7372_init_irq_of,
+> 
+> Could sh7372_init_irq be used here ?
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+Yes, it could. I'll reply to your other review separately, briefly, by 
+using the conditional, that I proposed in my patch 3/7 we could make the 
+non-dt version static and let everyone just use sh7372_init_irq_of. But 
+this is just an idea, we can keep sh7372_init_irq() too if this is 
+prefered.
 
---===============7087357056491129637==--
+Thanks
+Guennadi
+
+> >  	.handle_irq	= shmobile_handle_irq_intc,
+> >  	.init_machine	= mackerel_init,
+> >  	.init_late	= sh7372_pm_init_late,
+> >  	.timer		= &shmobile_timer,
+> > -	.dt_compat  = mackerel_boards_compat_dt,
+> >  MACHINE_END
+> > -- 
+> > 1.7.2.5
+
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
