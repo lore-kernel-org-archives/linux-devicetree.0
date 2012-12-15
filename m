@@ -1,89 +1,29 @@
-From: Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH 09/10] ARM: shmobile: sh7372: Do not initialise TMU when using DT
-Date: Sat, 15 Dec 2012 18:03:43 +0900
-Message-ID: <1355562224-29448-10-git-send-email-horms+renesas@verge.net.au>
-References: <1355562224-29448-1-git-send-email-horms+renesas@verge.net.au>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/7] ARM: sh7372: add missing "#interrupt-cells"
+ properties
+Date: Sat, 15 Dec 2012 18:05:28 +0900
+Message-ID: <20121215090527.GI9073@verge.net.au>
+References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de>
+ <1355503531-7276-2-git-send-email-g.liakhovetski@gmx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1355562224-29448-1-git-send-email-horms+renesas@verge.net.au>
+Content-Disposition: inline
+In-Reply-To: <1355503531-7276-2-git-send-email-g.liakhovetski@gmx.de>
 Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Bastian Hecht <hechtb@gmail.com>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Simon Horman <horms+renesas@verge.net.au>, Magnus Damm <damm@opensource.se>
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This is in preparation for initialising INTC using DT.
-The proposed INTC configuration is not complete and does
-not allow the TMU to be initialised, to exclude it when using DT.
+On Fri, Dec 14, 2012 at 05:45:25PM +0100, Guennadi Liakhovetski wrote:
+> Two of four interrupt controllers in sh7372.dtsi are missing the compulsory
+> "#interrupt-cells" properties. Fix this.
 
-Cc: Magnus Damm <damm@opensource.se>
-Cc: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
-Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
----
- arch/arm/mach-shmobile/setup-sh7372.c |   17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
+Thanks.
 
-diff --git a/arch/arm/mach-shmobile/setup-sh7372.c b/arch/arm/mach-shmobile/setup-sh7372.c
-index a07954f..90af2e9 100644
---- a/arch/arm/mach-shmobile/setup-sh7372.c
-+++ b/arch/arm/mach-shmobile/setup-sh7372.c
-@@ -968,7 +968,7 @@ static struct platform_device spu1_device = {
- 	.num_resources	= ARRAY_SIZE(spu1_resources),
- };
- 
--static struct platform_device *sh7372_early_devices[] __initdata = {
-+static struct platform_device *sh7372_early_devices_dt[] __initdata = {
- 	&scif0_device,
- 	&scif1_device,
- 	&scif2_device,
-@@ -977,6 +977,9 @@ static struct platform_device *sh7372_early_devices[] __initdata = {
- 	&scif5_device,
- 	&scif6_device,
- 	&cmt2_device,
-+};
-+
-+static struct platform_device *sh7372_early_devices[] __initdata = {
- 	&tmu00_device,
- 	&tmu01_device,
- };
-@@ -1030,6 +1033,8 @@ void __init sh7372_add_standard_devices(void)
- 
- 	sh7372_init_pm_domains();
- 
-+	platform_add_devices(sh7372_early_devices_dt,
-+			    ARRAY_SIZE(sh7372_early_devices_dt));
- 	platform_add_devices(sh7372_early_devices,
- 			    ARRAY_SIZE(sh7372_early_devices));
- 
-@@ -1048,6 +1053,8 @@ static void __init sh7372_earlytimer_init(void)
- 
- void __init sh7372_add_early_devices(void)
- {
-+	early_platform_add_devices(sh7372_early_devices_dt,
-+				   ARRAY_SIZE(sh7372_early_devices_dt));
- 	early_platform_add_devices(sh7372_early_devices,
- 				   ARRAY_SIZE(sh7372_early_devices));
- 
-@@ -1064,8 +1071,8 @@ void __init sh7372_add_early_devices_dt(void)
- {
- 	shmobile_setup_delay(800, 1, 3); /* Cortex-A8 @ 800MHz */
- 
--	early_platform_add_devices(sh7372_early_devices,
--				   ARRAY_SIZE(sh7372_early_devices));
-+	early_platform_add_devices(sh7372_early_devices_dt,
-+				   ARRAY_SIZE(sh7372_early_devices_dt));
- 
- 	/* setup early console here as well */
- 	shmobile_setup_console();
-@@ -1080,8 +1087,8 @@ void __init sh7372_add_standard_devices_dt(void)
- 	/* clocks are setup late during boot in the case of DT */
- 	sh7372_clock_init();
- 
--	platform_add_devices(sh7372_early_devices,
--			    ARRAY_SIZE(sh7372_early_devices));
-+	platform_add_devices(sh7372_early_devices_dt,
-+			    ARRAY_SIZE(sh7372_early_devices_dt));
- 
- 	of_platform_populate(NULL, of_default_bus_match_table,
- 			     sh7372_auxdata_lookup, NULL);
--- 
-1.7.10.4
+I think that is fixed in the latest INTC DT series that I posted just
+a few moments ago "[RFC v7 00/10] ARM: shmobile: DT initialisation of INTC
+and GIC".
 
+Sorry for sitting on that code for so long. Could you check if the
+problem you saw is resolved?
