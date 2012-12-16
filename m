@@ -1,41 +1,58 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH v8 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Sat, 15 Dec 2012 07:27:38 +0000
-Message-ID: <20121215072738.882313E0C08@localhost>
-References: <1355481404-27695-1-git-send-email-zonque@gmail.com>
- <1355481404-27695-6-git-send-email-zonque@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355481404-27695-6-git-send-email-zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: x0148406-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, avinashphilip-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 6/7] ARM: mackerel: support booting with or without DT
+Date: Sun, 16 Dec 2012 20:46:36 +0000
+Message-ID: <20121216204636.ACD283E0AE3@localhost>
+References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de> <1355503531-7276-7-git-send-email-g.liakhovetski@gmx.de>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1355503531-7276-7-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-sh@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Dec 2012 11:36:44 +0100, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This patch adds basic DT bindings for OMAP GPMC.
+On Fri, 14 Dec 2012 17:45:30 +0100, Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
+> This patch adds dynamic switching to booting either with or without DT.
+> So far only a part of the board initialisation can be done via DT. Devices,
+> that still need platform data are kept that way. Devices, that can be
+> initialised from DT will not be supplied from the platform data, if a DT
+> image is detected.
 > 
-> The actual peripherals are instantiated from child nodes within the GPMC
-> node, and the only type of device that is currently supported is NAND.
-> 
-> Code was added to parse the generic GPMC timing parameters and some
-> documentation with examples on how to use them.
-> 
-> Successfully tested on an AM33xx board.
-> 
-> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> ---
+>  
+> +static int mackerel_i2c_bus_notify(struct notifier_block *nb,
+> +				   unsigned long action, void *data)
+> +{
+> +	struct device *dev = data;
+> +
+> +	if (action != BUS_NOTIFY_ADD_DEVICE ||
+> +	    strcmp(dev_name(dev->parent), "fff20000.i2c"))
+> +		return NOTIFY_DONE;
+> +
+> +	i2c_new_device(to_i2c_adapter(dev), &i2c0_devices[1]);
+> +
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block mackerel_i2c_notifier = {
+> +	.notifier_call = mackerel_i2c_bus_notify,
+> +};
 
-For all patches in this series:
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+This looks dodgy. It appears that the purpose of this hook is to create
+the tca6408-keys device because it has some platform data. However,
+this hook will try to create the device every time BUS_NOTIFY_ADD_DEVICE
+happens on the fff20000.i2c bus *including* when the tca6408-keys device
+gets added.
+
+The correct approach when you need to add specific platform data is to
+still put the device into the device tree and make the notifier look for
+that specific device. Then the platform data pointer can be attached at
+BUS_NOTIFY_ADD_DEVICE time.
+
+However, it doesn't look like you need a notifier at all. From what I
+can see the tca6408-keys device does have platform data, but it is all
+simple (no callback pointers). You should instead encode the platform
+data into device tree properties and extract them from the driver.
+
+g.
+
