@@ -1,273 +1,278 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: [PATCH] [media] Add common binding documentation for video interfaces
-Date: Sat, 15 Dec 2012 22:13:36 +0100
-Message-ID: <1355606016-6509-1-git-send-email-sylvester.nawrocki@gmail.com>
-References: <1355168499-5847-9-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1355168499-5847-9-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: g.liakhovetski@gmx.de, linux-media@vger.kernel.org
-Cc: swarren@wwwdotorg.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, nicolas.thery@st.com, s.hauer@pengutronix.de, laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 6/7] ARM: mackerel: support booting with or without DT
+Date: Sun, 16 Dec 2012 09:33:32 +0900
+Message-ID: <20121216003331.GA27881@verge.net.au>
+References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de>
+ <1355503531-7276-7-git-send-email-g.liakhovetski@gmx.de>
+ <20121215082955.GA17390@verge.net.au>
+ <Pine.LNX.4.64.1212151950360.7280@axis700.grange>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1212151950360.7280@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+On Sat, Dec 15, 2012 at 08:02:39PM +0100, Guennadi Liakhovetski wrote:
+> Hi Simon
+> 
+> Thanks for your comments. I'll reply to other your reviews later, I think, 
+> let me just briefly clarify this one.
+> 
+> On Sat, 15 Dec 2012, Simon Horman wrote:
+> 
+> > On Fri, Dec 14, 2012 at 05:45:30PM +0100, Guennadi Liakhovetski wrote:
+> > > This patch adds dynamic switching to booting either with or without DT.
+> > > So far only a part of the board initialisation can be done via DT. Devices,
+> > > that still need platform data are kept that way. Devices, that can be
+> > > initialised from DT will not be supplied from the platform data, if a DT
+> > > image is detected.
+> > 
+> > Hi Guennadi,
+> > 
+> > I'm not sure that I'm entirely comfortable with the implications
+> > for users here.
+> > 
+> > In the beginning there was no DT for Mackerel, all boots were non-DT,
+> > and in general the board and its devices have been well supported.
+> > 
+> > At the present time Mackerel only boots using DT, though almost all
+> > the initialisation is done in C. Thus currently a DT boot fairly full
+> > support for the board and its devices.
+> > 
+> > If I understand things correctly, with this change, a DT boot becomes a
+> > limited boot that basically only supports devices that can be initialised
+> > using DT. And users are expected to go back to a non-DT boot if they want
+> > fuller support.  This seems undesirable.
+> 
+> No, it's in a way the contrary. As you correctly point out after a recent 
+> change mackerel _must_ only be booted with DT, and, I think, this way an 
+> undesirable change. After this series of patches both becomes possible: 
+> booting with and without DT. And in both cases all devices are supported. 
+> If booting without DT, all devices are supported in the "legacy" way from 
+> the board file. If booting with DT _some_ devices, for which sufficient DT 
+> support already exist are initialised from the .dts file, others are still 
+> initialised from the .c. This way all devices are still supported. Note, 
+> however, that some devices don't have a complete DT support yet, e.g., you 
+> cannot specify card-detect GPIOs in .dts because of the lacking pincontrol 
+> / GPIO DT support. As soon as that is added, .dts will have to be 
+> extended respectively. Similarly, as more devices get DT support they can 
+> be added to the .dts and excluded from the DT boot by putting them under 
+> 
+> +	if (!of_have_populated_dt()) {
+> 
+> clauses. If we ever come to a point, that no-DT booting will not have to 
+> be supported any more, these clauses and respective devices can be easily 
+> removed from board-mackerel.c. (Continued below)
 
-This patch adds a document describing common OF bindings for video
-capture, output and video processing devices. It is currently mainly
-focused on video capture devices, with data interfaces defined in
-standards like ITU-R BT.656 or MIPI CSI-2.
-It also documents a method of describing data links between devices.
+Thanks, sorry for misunderstanding things. In that case I think I am
+comfortable with the direction of these changes.
 
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-Hi,
+> > The approach that I took with the kzm9g was to provide an alternate dts and
+> > board file, and compatibility string. Clearly that is not an entirely
+> > elegant solution. But it does avoid the problem that I describe above.
+> > 
+> > > 
+> > > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > > ---
+> > >  arch/arm/mach-shmobile/board-mackerel.c |   84 ++++++++++++++++++++++++-------
+> > >  1 files changed, 66 insertions(+), 18 deletions(-)
+> > > 
+> > > diff --git a/arch/arm/mach-shmobile/board-mackerel.c b/arch/arm/mach-shmobile/board-mackerel.c
+> > > index 39b8f2e..a6358c9 100644
+> > > --- a/arch/arm/mach-shmobile/board-mackerel.c
+> > > +++ b/arch/arm/mach-shmobile/board-mackerel.c
+> > > @@ -1326,7 +1326,6 @@ static struct platform_device mackerel_camera = {
+> > >  
+> > >  static struct platform_device *mackerel_devices[] __initdata = {
+> > >  	&nor_flash_device,
+> > > -	&smc911x_device,
+> > >  	&lcdc_device,
+> > >  	&usbhs0_device,
+> > >  	&usbhs1_device,
+> > > @@ -1335,17 +1334,21 @@ static struct platform_device *mackerel_devices[] __initdata = {
+> > >  	&fsi_ak4643_device,
+> > >  	&fsi_hdmi_device,
+> > >  	&nand_flash_device,
+> > > +	&ceu_device,
+> > > +	&mackerel_camera,
+> > > +	&hdmi_device,
+> > > +	&hdmi_lcdc_device,
+> > > +	&meram_device,
+> > > +};
+> > > +
+> > > +static struct platform_device *mackerel_devices_dt[] __initdata = {
+> > > +	&smc911x_device,
+> > >  	&sdhi0_device,
+> > >  #if !defined(CONFIG_MMC_SH_MMCIF) && !defined(CONFIG_MMC_SH_MMCIF_MODULE)
+> > >  	&sdhi1_device,
+> > >  #endif
+> > >  	&sdhi2_device,
+> > >  	&sh_mmcif_device,
+> > > -	&ceu_device,
+> > > -	&mackerel_camera,
+> > > -	&hdmi_device,
+> > > -	&hdmi_lcdc_device,
+> > > -	&meram_device,
+> > >  };
+> > >  
+> > >  /* Keypad Initialization */
+> > > @@ -1404,6 +1407,24 @@ static struct i2c_board_info i2c1_devices[] = {
+> > >  	},
+> > >  };
+> > >  
+> > > +static int mackerel_i2c_bus_notify(struct notifier_block *nb,
+> > > +				   unsigned long action, void *data)
+> > > +{
+> > > +	struct device *dev = data;
+> > > +
+> > > +	if (action != BUS_NOTIFY_ADD_DEVICE ||
+> > > +	    strcmp(dev_name(dev->parent), "fff20000.i2c"))
+> > > +		return NOTIFY_DONE;
+> > > +
+> > > +	i2c_new_device(to_i2c_adapter(dev), &i2c0_devices[1]);
+> > > +
+> > > +	return NOTIFY_OK;
+> > > +}
+> > > +
+> > > +static struct notifier_block mackerel_i2c_notifier = {
+> > > +	.notifier_call = mackerel_i2c_bus_notify,
+> > > +};
+> > > +
+> > >  #define GPIO_PORT9CR	IOMEM(0xE6051009)
+> > >  #define GPIO_PORT10CR	IOMEM(0xE605100A)
+> > >  #define GPIO_PORT167CR	IOMEM(0xE60520A7)
+> > > @@ -1420,22 +1441,26 @@ static void __init mackerel_init(void)
+> > 
+> > I wonder if it would be cleaner to achieve this by providing
+> > mackerel_init_dt().
+> 
+> I thought about this, but initialisation is interleaved and in some cases 
+> order is important, so, you would need something like "early_dt()," 
+> "mid_early_common()," "late_dt()" etc., which doesn't seem an improvement 
+> to me:-)
 
-This is an updated version of patch [1]. My changes include resolving
-issues pointed out during review, i.e.:
- - renaming 'link' node to 'endpoint,
- - renaming 'remote' phandle to 'remote-endpoint',
- - file v4l2.txt renamed to video-interfaces.txt,
- - removed references to V4L2,
- - added short description of the example DT snippet
+Understood. I guess it is case by case, and in this case the approach
+you have taken does seem to make sense. Magnus, do you have any
+thoughts on this?
 
-and additionally:
- - added "Required properties' paragraph,
- - updated description of 'data-lanes' property,
- - renamed all erroneous occurrences of 'data-width' to 'bus-width',
- - added 'bus-width' property description,
- - modified description of hsync-active, vsync-active properties,
- - added a little paragraph further explaining that each endpoint
-   node has properties determining configuration of its corresponding
-   device.
+> > >  		{ "A3SP", &usbhs0_device, },
+> > >  		{ "A3SP", &usbhs1_device, },
+> > >  		{ "A3SP", &nand_flash_device, },
+> > > +		{ "A4R", &ceu_device, },
+> > > +	};
+> > > +	struct pm_domain_device domain_devices_dt[] = {
+> > >  		{ "A3SP", &sh_mmcif_device, },
+> > >  		{ "A3SP", &sdhi0_device, },
+> > >  #if !defined(CONFIG_MMC_SH_MMCIF) && !defined(CONFIG_MMC_SH_MMCIF_MODULE)
+> > >  		{ "A3SP", &sdhi1_device, },
+> > >  #endif
+> > >  		{ "A3SP", &sdhi2_device, },
+> > > -		{ "A4R", &ceu_device, },
+> > >  	};
+> > >  	u32 srcr4;
+> > >  	struct clk *clk;
+> > >  
+> > > -	regulator_register_always_on(0, "fixed-1.8V", fixed1v8_power_consumers,
+> > > -				     ARRAY_SIZE(fixed1v8_power_consumers), 1800000);
+> > > -	regulator_register_always_on(1, "fixed-3.3V", fixed3v3_power_consumers,
+> > > -				     ARRAY_SIZE(fixed3v3_power_consumers), 3300000);
+> > > -	regulator_register_fixed(2, dummy_supplies, ARRAY_SIZE(dummy_supplies));
+> > > +	if (!of_have_populated_dt()) {
+> > > +		regulator_register_always_on(0, "fixed-1.8V", fixed1v8_power_consumers,
+> > > +					     ARRAY_SIZE(fixed1v8_power_consumers), 1800000);
+> > > +		regulator_register_always_on(1, "fixed-3.3V", fixed3v3_power_consumers,
+> > > +					     ARRAY_SIZE(fixed3v3_power_consumers), 3300000);
+> > > +		regulator_register_fixed(2, dummy_supplies, ARRAY_SIZE(dummy_supplies));
+> > > +	}
+> > >  
+> > >  	/* External clock source */
+> > >  	clk_set_rate(&sh7372_dv_clki_clk, 27000000);
+> > > @@ -1633,22 +1658,35 @@ static void __init mackerel_init(void)
+> > >  	udelay(50);
+> > >  	__raw_writel(srcr4 & ~(1 << 13), SRCR4);
+> > >  
+> > > -	i2c_register_board_info(0, i2c0_devices,
+> > > -				ARRAY_SIZE(i2c0_devices));
+> > > -	i2c_register_board_info(1, i2c1_devices,
+> > > -				ARRAY_SIZE(i2c1_devices));
+> > > +	if (!of_have_populated_dt()) {
+> > > +		i2c_register_board_info(0, i2c0_devices,
+> > > +					ARRAY_SIZE(i2c0_devices));
+> > > +		i2c_register_board_info(1, i2c1_devices,
+> > > +					ARRAY_SIZE(i2c1_devices));
+> > > +	} else {
+> > > +		bus_register_notifier(&i2c_bus_type,
+> > > +				      &mackerel_i2c_notifier);
+> > > +	}
+> > >  
+> > >  	sh7372_add_standard_devices();
+> > >  
+> > >  	platform_add_devices(mackerel_devices, ARRAY_SIZE(mackerel_devices));
+> > > +	if (!of_have_populated_dt())
+> > > +		platform_add_devices(mackerel_devices_dt,
+> > > +				     ARRAY_SIZE(mackerel_devices_dt));
+> > >  
+> > >  	rmobile_add_devices_to_domains(domain_devices,
+> > >  				       ARRAY_SIZE(domain_devices));
+> > > +	if (!of_have_populated_dt())
+> > > +		rmobile_add_devices_to_domains(domain_devices_dt,
+> > > +					       ARRAY_SIZE(domain_devices_dt));
+> > >  
+> > >  	hdmi_init_pm_clock();
+> > >  	sh7372_pm_init();
+> > >  	pm_clk_add(&fsi_device.dev, "spu2");
+> > >  	pm_clk_add(&hdmi_lcdc_device.dev, "hdmi");
+> > > +
+> > > +	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+> > >  }
+> > >  
+> > >  static const char *mackerel_boards_compat_dt[] __initdata = {
+> > > @@ -1659,10 +1697,20 @@ static const char *mackerel_boards_compat_dt[] __initdata = {
+> > >  DT_MACHINE_START(MACKEREL_DT, "mackerel")
+> > >  	.map_io		= sh7372_map_io,
+> > >  	.init_early	= sh7372_add_early_devices,
+> > > -	.init_irq	= sh7372_init_irq,
+> > > +	.init_irq	= sh7372_init_irq_of,
+> > > +	.handle_irq	= shmobile_handle_irq_intc,
+> > > +	.init_machine	= mackerel_init,
+> > > +	.init_late	= sh7372_pm_init_late,
+> > > +	.timer		= &shmobile_timer,
+> > > +	.dt_compat	= mackerel_boards_compat_dt,
+> > > +MACHINE_END
+> > > +
+> > > +MACHINE_START(MACKEREL, "mackerel")
+> > > +	.map_io		= sh7372_map_io,
+> > > +	.init_early	= sh7372_add_early_devices,
+> > > +	.init_irq	= sh7372_init_irq_of,
+> > 
+> > Could sh7372_init_irq be used here ?
+> 
+> Yes, it could. I'll reply to your other review separately, briefly, by 
+> using the conditional, that I proposed in my patch 3/7 we could make the 
+> non-dt version static and let everyone just use sh7372_init_irq_of. But 
+> this is just an idea, we can keep sh7372_init_irq() too if this is 
+> prefered.
 
-[1] https://patchwork.kernel.org/patch/1514381/
+That is my preference at this point.
 
-I'm still unsure about the first sentence, as these bindings can be
-used for describing SoC internal connections between modules as well.
-
-I was considering adding something like:
-
-"This document describes common bindings for video capture, processing
-and output devices using data buses defined in standards like ITU-R
-BT.656, MIPI CSI-2,..."
-
-before the "General concept" paragraph.
-
-And maybe Documentation/devicetree/bindings/video/ would a better place
-for this video-interfaces.txt file ?
-
-Thanks,
-Sylwester
----
- .../devicetree/bindings/media/video-interfaces.txt |  198 ++++++++++++++++++++
- 1 files changed, 198 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/video-interfaces.txt
-
-diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-new file mode 100644
-index 0000000..10ebbc4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-@@ -0,0 +1,198 @@
-+Common bindings for video data receiver and transmitter interfaces
-+
-+General concept
-+---------------
-+
-+Video data pipelines usually consist of external devices, e.g. camera sensors,
-+controlled over an I2C, SPI or UART bus, and SoC internal IP blocks, including
-+video DMA engines and video data processors.
-+
-+SoC internal blocks are described by DT nodes, placed similarly to other SoC
-+blocks.  External devices are represented as child nodes of their respective
-+bus controller nodes, e.g. I2C.
-+
-+Data interfaces on all video devices are described by their child 'port' nodes.
-+Configuration of a port depends on other devices participating in the data
-+transfer and is described by 'endpoint' subnodes.
-+
-+dev {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	port@0 {
-+		endpoint@0 { ... };
-+		endpoint@1 { ... };
-+	};
-+	port@1 { ... };
-+};
-+
-+If a port can be configured to work with more than one other device on the same
-+bus, an 'endpoint' child node must be provided for each of them.  If more than
-+one port is present in a device node or there is more than one endpoint at a
-+port, a common scheme, using '#address-cells', '#size-cells' and 'reg' properties
-+is used.
-+
-+Two 'endpoint' nodes are linked with each other through their 'remote-endpoint'
-+phandles.  An endpoint subnode of a device contains all properties needed for
-+configuration of this device for data exchange with the other device.  In most
-+cases properties at the peer 'endpoint' nodes will be identical, however
-+they might need to be different when there are any signal modifications on the
-+bus between two devices, e.g. there are logic signal inverters on the lines.
-+
-+Required properties
-+-------------------
-+
-+If there is more that one 'port' or more than one 'endpoint' node following
-+properties are required in relevant parent node:
-+
-+- #address-cells : number of cells required to define port number, should be 1.
-+- #size-cells    : should be zero.
-+
-+Optional endpoint properties
-+----------------------------
-+
-+- remote-endpoint : phandle to an 'endpoint' subnode of the other device node.
-+- slave-mode : a boolean property, run the link in slave mode. Default is master
-+  mode.
-+- bus-width : the number of data lines, valid for parallel buses.
-+- data-shift: on parallel data busses, if bus-width is used to specify the
-+  number of data lines, data-shift can be used to specify which data lines are
-+  used, e.g. "bus-width=<10>; data-shift=<2>;" means, that lines 9:2 are used.
-+- hsync-active : active state of HSYNC signal, 0/1 for LOW/HIGH respectively.
-+- vsync-active : active state of VSYNC signal, 0/1 for LOW/HIGH respectively.
-+  Note, that if HSYNC and VSYNC polarities are not specified, embedded
-+  synchronization may be required, where supported.
-+- data-active : similar to HSYNC and VSYNC, specifies data line polarity.
-+- field-even-active: field signal level during the even field data transmission.
-+- pclk-sample : rising (1) or falling (0) edge to sample the pixel clock signal.
-+- data-lanes : an array of physical data lane indexes. Position of an entry
-+  determines logical lane number, while the value of an entry indicates physical
-+  lane, e.g. for 2-lane MIPI CSI-2 bus we could have "data-lanes = <1>, <2>;",
-+  assuming the clock lane is on hardware lane 0. This property is valid for
-+  serial buses only (e.g. MIPI CSI-2).
-+- clock-lanes : a number of physical lane used as a clock lane.
-+- clock-noncontinuous : a boolean property to allow MIPI CSI-2 non-continuous
-+  clock mode.
-+
-+Example
-+-------
-+
-+The below example snippet describes two data pipelines.  ov772x and imx074 are
-+camera sensors with parallel and serial (MIPI CSI-2) video bus respectively.
-+Both sensors are on I2C control bus corresponding to i2c0 controller node.
-+ov772x sensor is linked directly to the ceu0 video host interface.  imx074 is
-+linked to ceu0 through MIPI CSI-2 receiver (csi2). ceu0 has a (single) DMA
-+engine writing captured data to memory.  ceu0 node has single 'port' node which
-+indicates at any time only one of following data pipeline can be active:
-+ov772x -> ceu0 or imx074 -> csi2 -> ceu0.
-+
-+	ceu0: ceu@0xfe910000 {
-+		compatible = "renesas,sh-mobile-ceu";
-+		reg = <0xfe910000 0xa0>;
-+		interrupts = <0x880>;
-+
-+		mclk: master_clock {
-+			compatible = "renesas,ceu-clock";
-+			#clock-cells = <1>;
-+			clock-frequency = <50000000>;	/* Max clock frequency */
-+			clock-output-names = "mclk";
-+		};
-+
-+		port {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			ceu0_1: endpoint@1 {
-+				reg = <1>;		/* Local endpoint # */
-+				remote = <&ov772x_1_1>;	/* Remote phandle */
-+				bus-width = <8>;	/* Used data lines */
-+				data-shift = <0>;	/* Lines 7:0 are used */
-+
-+				/* If hsync-active/vsync-active are missing,
-+				   embedded bt.605 sync is used */
-+				hsync-active = <1>;	/* Active high */
-+				vsync-active = <1>;	/* Active high */
-+				data-active = <1>;	/* Active high */
-+				pclk-sample = <1>;	/* Rising */
-+			};
-+
-+			ceu0_0: endpoint@0 {
-+				reg = <0>;
-+				remote = <&csi2_2>;
-+				immutable;
-+			};
-+		};
-+	};
-+
-+	i2c0: i2c@0xfff20000 {
-+		...
-+		ov772x_1: camera@0x21 {
-+			compatible = "omnivision,ov772x";
-+			reg = <0x21>;
-+			vddio-supply = <&regulator1>;
-+			vddcore-supply = <&regulator2>;
-+
-+			clock-frequency = <20000000>;
-+			clocks = <&mclk 0>;
-+			clock-names = "xclk";
-+
-+			port {
-+				/* With 1 endpoint per port no need in addresses. */
-+				ov772x_1_1: endpoint {
-+					bus-width = <8>;
-+					remote-endpoint = <&ceu0_1>;
-+					hsync-active = <1>;
-+					vsync-active = <0>; /* Who came up with an
-+							       inverter here ?... */
-+					data-active = <1>;
-+					pclk-sample = <1>;
-+				};
-+			};
-+		};
-+
-+		imx074: camera@0x1a {
-+			compatible = "sony,imx074";
-+			reg = <0x1a>;
-+			vddio-supply = <&regulator1>;
-+			vddcore-supply = <&regulator2>;
-+
-+			clock-frequency = <30000000>;	/* Shared clock with ov772x_1 */
-+			clocks = <&mclk 0>;
-+			clock-names = "sysclk";		/* Assuming this is the
-+							   name in the datasheet */
-+			port {
-+				imx074_1: endpoint {
-+					clock-lanes = <0>;
-+					data-lanes = <1>, <2>;
-+					remote-endpoint = <&csi2_1>;
-+				};
-+			};
-+		};
-+	};
-+
-+	csi2: csi2@0xffc90000 {
-+		compatible = "renesas,sh-mobile-csi2";
-+		reg = <0xffc90000 0x1000>;
-+		interrupts = <0x17a0>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		port@1 {
-+			compatible = "renesas,csi2c";	/* One of CSI2I and CSI2C. */
-+			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S,
-+							   PHY_M has port address 0,
-+							   is unused. */
-+			csi2_1: endpoint {
-+				clock-lanes = <0>;
-+				data-lanes = <2>, <1>;
-+				remote-endpoint = <&imx074_1>;
-+			};
-+		};
-+		port@2 {
-+			reg = <2>;			/* port 2: link to the CEU */
-+
-+			csi2_2: endpoint {
-+				immutable;
-+				remote-endpoint = <&ceu0_0>;
-+			};
-+		};
-+	};
---
-1.7.4.1
-
+> Thanks
+> Guennadi
+> 
+> > >  	.handle_irq	= shmobile_handle_irq_intc,
+> > >  	.init_machine	= mackerel_init,
+> > >  	.init_late	= sh7372_pm_init_late,
+> > >  	.timer		= &shmobile_timer,
+> > > -	.dt_compat  = mackerel_boards_compat_dt,
+> > >  MACHINE_END
+> > > -- 
+> > > 1.7.2.5
+> 
+> ---
+> Guennadi Liakhovetski, Ph.D.
+> Freelance Open-Source Software Developer
+> http://www.open-technology.de/
+> 
