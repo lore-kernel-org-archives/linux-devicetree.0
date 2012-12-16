@@ -1,58 +1,34 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 6/7] ARM: mackerel: support booting with or without DT
-Date: Sun, 16 Dec 2012 20:46:36 +0000
-Message-ID: <20121216204636.ACD283E0AE3@localhost>
-References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de> <1355503531-7276-7-git-send-email-g.liakhovetski@gmx.de>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1355503531-7276-7-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-sh@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 2/2] spi: devicetree: add support for loopback mode
+Date: Sun, 16 Dec 2012 21:14:14 +0000
+Message-ID: <20121216211415.0DE793E0BDD@localhost>
+References: <1355301960-21523-1-git-send-email-balbi@ti.com> <1355301960-21523-2-git-send-email-balbi@ti.com> <20121215003224.CBFD93E0BEC@localhost> <20121215145546.GA15606@arwen.pp.htv.fi>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20121215145546.GA15606@arwen.pp.htv.fi>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Felipe Balbi <balbi@ti.com>, spi-devel-general@lists.sourceforge.net, rob@landley.net, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tony Lindgren <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Dec 2012 17:45:30 +0100, Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
-> This patch adds dynamic switching to booting either with or without DT.
-> So far only a part of the board initialisation can be done via DT. Devices,
-> that still need platform data are kept that way. Devices, that can be
-> initialised from DT will not be supplied from the platform data, if a DT
-> image is detected.
+On Sat, 15 Dec 2012 16:55:46 +0200, Felipe Balbi <balbi@ti.com> wrote:
+> On Sat, Dec 15, 2012 at 12:32:24AM +0000, Grant Likely wrote:
+> > On Wed, 12 Dec 2012 10:46:00 +0200, Felipe Balbi <balbi@ti.com> wrote:
+> > > there are a few spi master drivers which make
+> > > use of that flag but there is no way to pass it
+> > > through devicetree.
+> > > 
+> > > This patch just creates a way to pass SPI_LOOP
+> > > via devicetree.
+> > 
+> > I don't understand how this would be useful since loopback mode is
+> > really just a test feature. Is there any reason to do loopback for
+> > something other than test?
+> > 
+> > I think it would be better to add a sysfs or debugfs property to
+> > manipulate the SPI_LOOP flag from userspace. What do you think?
 > 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> ---
->  
-> +static int mackerel_i2c_bus_notify(struct notifier_block *nb,
-> +				   unsigned long action, void *data)
-> +{
-> +	struct device *dev = data;
-> +
-> +	if (action != BUS_NOTIFY_ADD_DEVICE ||
-> +	    strcmp(dev_name(dev->parent), "fff20000.i2c"))
-> +		return NOTIFY_DONE;
-> +
-> +	i2c_new_device(to_i2c_adapter(dev), &i2c0_devices[1]);
-> +
-> +	return NOTIFY_OK;
-> +}
-> +
-> +static struct notifier_block mackerel_i2c_notifier = {
-> +	.notifier_call = mackerel_i2c_bus_notify,
-> +};
+> might be nicer in the long run, indeed. Want me to look into it, or do
+> you wanna do it yourself ?
 
-This looks dodgy. It appears that the purpose of this hook is to create
-the tca6408-keys device because it has some platform data. However,
-this hook will try to create the device every time BUS_NOTIFY_ADD_DEVICE
-happens on the fff20000.i2c bus *including* when the tca6408-keys device
-gets added.
-
-The correct approach when you need to add specific platform data is to
-still put the device into the device tree and make the notifier look for
-that specific device. Then the platform data pointer can be attached at
-BUS_NOTIFY_ADD_DEVICE time.
-
-However, it doesn't look like you need a notifier at all. From what I
-can see the tca6408-keys device does have platform data, but it is all
-simple (no callback pointers). You should instead encode the platform
-data into device tree properties and extract them from the driver.
+Yes, please look into it. After all, you're the one who needs the feature/  :-)
 
 g.
-
