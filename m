@@ -1,53 +1,133 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 6/7] ARM: mackerel: support booting with or without DT
-Date: Mon, 17 Dec 2012 17:00:04 +0000
-Message-ID: <20121217170004.7F6C23E0BDD@localhost>
-References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de> <1355503531-7276-7-git-send-email-g.liakhovetski@gmx.de> <Pine.LNX.4.64.1212171332520.24007@axis700.grange>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1212171332520.24007@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-sh@vger.kernel.org
-Cc: Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH] serial: tegra: add serial driver
+Date: Mon, 17 Dec 2012 17:10:27 +0000
+Message-ID: <20121217171027.6AE573E0BDD@localhost>
+References: <1355746249-15347-1-git-send-email-ldewangan@nvidia.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1355746249-15347-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: alan@linux.intel.com, gregkh@linuxfoundation.org, jslaby@suse.cz
+Cc: rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, swarren@wwwdotorg.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Dec 2012 13:40:45 +0100 (CET), Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
-> This patch adds dynamic switching to booting either with or without DT.
-> So far only a part of the board initialisation can be done via DT. Devices,
-> that still need platform data are kept that way. Devices, that can be
-> initialised from DT will not be supplied from the platform data, if a DT
-> image is detected.
+On Mon, 17 Dec 2012 17:40:49 +0530, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> Nvidia's Tegra has multiple uart controller which supports:
+> - APB dma based controller fifo read/write.
+> - End Of Data interrupt in incoming data to know whether end
+>   of frame achieve or not.
+> - Hw controlled RTS and CTS flow control to reduce SW overhead.
 > 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> Add serial driver to use all above feature.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+
+Hi Laxman,
+
+Comments below...
+
 > ---
->  
->  static const char *mackerel_boards_compat_dt[] __initdata = {
-> @@ -1659,10 +1715,20 @@ static const char *mackerel_boards_compat_dt[] __initdata = {
->  DT_MACHINE_START(MACKEREL_DT, "mackerel")
->  	.map_io		= sh7372_map_io,
->  	.init_early	= sh7372_add_early_devices,
-> +	.init_irq	= sh7372_init_irq_of,
-> +	.handle_irq	= shmobile_handle_irq_intc,
-> +	.init_machine	= mackerel_init,
-> +	.init_late	= sh7372_pm_init_late,
-> +	.timer		= &shmobile_timer,
-> +	.dt_compat	= mackerel_boards_compat_dt,
-> +MACHINE_END
+>  .../bindings/serial/nvidia,serial-tegra.txt        |   26 +
+>  drivers/tty/serial/Kconfig                         |   14 +
+>  drivers/tty/serial/Makefile                        |    1 +
+>  drivers/tty/serial/serial_tegra.c                  | 1398 ++++++++++++++++++++
+>  include/linux/serial_tegra.h                       |   33 +
+>  5 files changed, 1472 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt
+>  create mode 100644 drivers/tty/serial/serial_tegra.c
+>  create mode 100644 include/linux/serial_tegra.h
+> 
+> diff --git a/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt b/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt
+> new file mode 100644
+> index 0000000..fc5803b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt
+
+Nit: nvidia-tegra.txt would be sufficient.
+
+> @@ -0,0 +1,26 @@
+> +NVIDIA Tegra20/Tegra30 high speed (dma based) UART controller driver.
 > +
-> +MACHINE_START(MACKEREL, "mackerel")
-> +	.map_io		= sh7372_map_io,
-> +	.init_early	= sh7372_add_early_devices,
->  	.init_irq	= sh7372_init_irq,
->  	.handle_irq	= shmobile_handle_irq_intc,
->  	.init_machine	= mackerel_init,
->  	.init_late	= sh7372_pm_init_late,
->  	.timer		= &shmobile_timer,
-> -	.dt_compat  = mackerel_boards_compat_dt,
->  MACHINE_END
+> +Required properties:
+> +- compatible : should be "nvidia,tegra20-hsuart", "nvidia,tegra30-hsuart".
+> +- reg: Should contain UART controller registers location and length.
+> +- interrupts: Should contain UART controller interrupts.
+> +- nvidia,dma-request-selector : The Tegra DMA controller's phandle and
+> +  request selector for this UART controller.
+> +- port-number: Uart port number for /dev/ttyHSx where x is port number.
 
-MACHINE_START() handle's the DT case just fine. You shouldn't need
-separate MACHINE_START() and DT_MACHINE_START() stanzas. Please merge. I
-see that there was some discussion around sh7372_init_irq_of(), but I
-it is better to have the single function handle the OF/non-OF case
-gracefully rather than duplicating MACHINE definitions.
+Drop port-number. Use an alias instead (/aliases/serial#)
 
-g.
+Otherwise the binding looks fine.
+
+> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+> index 59c23d0..57dbbc1 100644
+> --- a/drivers/tty/serial/Kconfig
+> +++ b/drivers/tty/serial/Kconfig
+> @@ -269,6 +269,20 @@ config SERIAL_SIRFSOC_CONSOLE
+>            your boot loader about how to pass options to the kernel at
+>            boot time.)
+>  
+> +config SERIAL_SAMSUNG_UARTS_4
+> +	bool
+
+? This looks like a stale hunk
+
+> +config SERIAL_TEGRA
+> +	tristate "Nvidia Tegra20/30 SoC serial controller"
+> +	depends on ARCH_TEGRA && TEGRA20_APB_DMA
+> +	select SERIAL_CORE
+> +	help
+> +	  Support for the on-chip UARTs on the Nvidia Tegra seria SOCs
+> +	  providing /dev/ttyHS0, 1, 2, 3 and 4 (note, some machines may not
+> +	  provide all of these ports, depending on how the serial port
+> +	  are enabled). This driver uses the APB dma to achieve higher baudrate
+> +	  and better performance.
+> +
+>  config SERIAL_MAX3100
+>  	tristate "MAX3100 support"
+>  	depends on SPI
+[...]
+> +static void tegra_uart_set_mctrl(struct uart_port *u, unsigned int mctrl)
+> +{
+> +	struct tegra_uart_port *tup = to_tegra_uport(u);
+> +	unsigned long mcr;
+> +
+> +	mcr = tup->mcr_shadow;
+> +	if (mctrl & TIOCM_RTS) {
+> +		tup->rts_active = true;
+> +		set_rts(tup, true);
+> +	} else {
+> +		tup->rts_active = false;
+> +		set_rts(tup, false);
+> +	}
+
+Or simply:
+	tup->rts_active = !!(mctrl & TIOCM_RTS)
+	set_rts(tup, tup->rts_active);
+
+The driver seems rather verbose in this regard. It isn't something I'd
+nak over, but it does increase the maintenance burden.
+
+> +
+> +	if (mctrl & TIOCM_DTR)
+> +		set_dtr(tup, true);
+> +	else
+> +		set_dtr(tup, false);
+> +	return;
+> +}
+> +static int __devinit tegra_uart_probe(struct platform_device *pdev)
+> +{
+> +	struct tegra_uart_port *tup;
+> +	struct uart_port *u;
+> +	struct tegra_uart_platform_data *pdata = pdev->dev.platform_data;
+
+Since this is a new driver, and all new board support will use device
+tree, when would this platform_data pointer get set? Can you drop the
+platform_data support code entirely?
+
+The driver itself is a lot of code. I've not gone through it in the
+detail that I'd like to, but it appears to be fine. Fix up the above
+comments and you can add my:
+
+Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
+
