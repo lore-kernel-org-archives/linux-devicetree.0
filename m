@@ -1,39 +1,58 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2 0/2] ARM: dts: Add PMU support for OMAP2+
-Date: Mon, 17 Dec 2012 11:52:41 -0600
-Message-ID: <50CF5BE9.3020000@ti.com>
-References: <1355766548-5702-1-git-send-email-jon-hunter@ti.com>
+From: Alan Cox <alan@lxorguk.ukuu.org.uk>
+Subject: Re: [PATCH] serial: tegra: add serial driver
+Date: Mon, 17 Dec 2012 18:23:43 +0000
+Message-ID: <20121217182343.37324522@pyramind.ukuu.org.uk>
+References: <1355746249-15347-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355766548-5702-1-git-send-email-jon-hunter-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1355746249-15347-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: alan@linux.intel.com, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, swarren@wwwdotorg.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 12/17/2012 11:49 AM, Jon Hunter wrote:
-> Add device-tree PMU support for OMAP2, OMAP3 and OMAP4460. OMAP4430
-> is not included because PMU is not currently supported on this device
-> due to absence of a cross-trigger interface driver.
-> 
-> Tested with PERF on OMAP3430 Beagle Board and OMAP4460 Panda Board.
-> Boot tested only on OMAP2420 H4.
 
-Forgot to mention that V2, addresses Mark Rutland's comment on interrupt
-syntax for omap4460 PMU node. I also added a comment on why OMAP4430 is
-not supported too.
+> +
+> +static void tegra_uart_copy_rx_to_tty(struct tegra_uart_port *tup, i=
+nt count)
+> +{
+> +	int copied;
+> +
+> +	tup->uport.icount.rx +=3D count;
+> +	dma_sync_single_for_cpu(tup->uport.dev, tup->rx_dma_buf_phys,
+> +				TEGRA_UART_RX_DMA_BUFFER_SIZE, DMA_FROM_DEVICE);
+> +	copied =3D tty_insert_flip_string(tup->uport.state->port.tty,
 
-Cheers
-Jon
+Reference needed and port.tty can go to NULL
+(good rule of thumb - any use of port.tty directly is probably wrong)
+
+=E2=80=8E
+> +	tty_flip_buffer_push(u->state->port.tty);
+
+Ditto (and elsewhere)
+
+> +	if ((c_cflag & PARENB) =3D=3D PARENB) {
+> +		symb_bit++;
+> +		if ((c_cflag & CMSPAR) =3D=3D CMSPAR) {
+> +			dev_err(tup->uport.dev, "Space parity not supported\n");
+> +			return;
+
+No - this is out of spec and lets user tasks spam the log. Just clear t=
+he
+flag if not supported.
+
+
+> +	/* Baud rate. */
+> +	baud =3D uart_get_baud_rate(u, termios, oldtermios, 200, 4000000);
+> +	spin_unlock_irqrestore(&u->lock, flags);
+> +	tegra_set_baudrate(tup, baud);
+> +	spin_lock_irqsave(&u->lock, flags);
+
+I think you need to use the helpers to put the actual baud it got into =
+the
+termios if not B0 - see 8250.c ?
+
+Alan
