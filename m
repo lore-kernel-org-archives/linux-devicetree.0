@@ -1,96 +1,87 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [RFC 2/5] ARM: dts: Add Cross Trigger Interface binding
-Date: Mon, 17 Dec 2012 10:30:01 -0600
-Message-ID: <50CF4889.5000408@ti.com>
-References: <1355348588-22318-1-git-send-email-jon-hunter@ti.com> <1355348588-22318-3-git-send-email-jon-hunter@ti.com> <20121213174139.GA12946@mudshark.cambridge.arm.com> <50CA2ABA.1050600@ti.com> <20121217162055.GE16561@e106331-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20121217162055.GE16561@e106331-lin.cambridge.arm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <Will.Deacon@arm.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Paul Walmsley <paul@pwsan.com>, Pratik Patel <pratikp@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Ming Lei <ming.lei@canonical.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 6/7] ARM: mackerel: support booting with or without DT
+Date: Mon, 17 Dec 2012 16:38:52 +0000
+Message-ID: <20121217163852.C57FD3E0BDD@localhost>
+References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de> <1355503531-7276-7-git-send-email-g.liakhovetski@gmx.de> <20121216204636.ACD283E0AE3@localhost> <Pine.LNX.4.64.1212162224380.20059@axis700.grange>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1212162224380.20059@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
-On 12/17/2012 10:20 AM, Mark Rutland wrote:
-> On Thu, Dec 13, 2012 at 07:21:30PM +0000, Jon Hunter wrote:
->>
->> On 12/13/2012 11:41 AM, Will Deacon wrote:
->>> On Wed, Dec 12, 2012 at 09:43:05PM +0000, Jon Hunter wrote:
->>>> Adds a device-tree binding for the ARM Cross Trigger Interface (CTI).
->>>> The ARM Cross Trigger Interface provides a way to route events between
->>>> processor modules. For example, on OMAP4430 we use the CTI module to
->>>> route PMU events to the GIC interrupt module.
->>>>
->>>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
->>>> ---
->>>>  Documentation/devicetree/bindings/arm/cti.txt |   32 +++++++++++++++++++++++++
->>>>  1 file changed, 32 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/arm/cti.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/arm/cti.txt b/Documentation/devicetree/bindings/arm/cti.txt
->>>> new file mode 100644
->>>> index 0000000..4a0e2d3
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/arm/cti.txt
->>>> @@ -0,0 +1,32 @@
->>>> +* ARM Cross Trigger Interface (CTI)
->>>> +
->>>> +The ARM Cross Trigger Interface provides a way to route events between
->>>> +processor modules. For example, debug events from one processor can be
->>>> +broadcasted to other processors. The events that can be routed between
->>>> +processors are specific to the device.
->>>> +
->>>> +Required properties:
->>>> +
->>>> +- compatible:			Should be "arm,primecell".
->>>> +- interrupts:			Interrupt associated with CTI module.
->>>> +- reg:				Contains timer register address range (base
->>>> +				address and length).
->>>> +- arm,cti-name:			A unique name for the CTI module, that will be
->>>> +				used when requesting the CTI module instance.
->>>> +
->>>> +
->>>> +Optional properties:
->>>> +
->>>> +- arm-primecell-periphid:	Primecell peripheral ID associated with CTI
->>>> +				module.
->>>
->>> For multi-cluster systems, I wouldn't be surprised to see multiple CTI
->>> instances, each with different CPU affinities. Can we include an affinity
->>> property following Mark's proposed binding?
->>>
->>>   http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/137290.html
->>
->> Yes I can take a look. Would something like that be applicable to pmu as
->> well or is that unlikely to have different affinities? I am just
->> wondering if there is something that we should implement in general for
->> the various primecell components.
+On Sun, 16 Dec 2012 22:36:56 +0100 (CET), Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
+> Hi Grant
 > 
-> Do you mean for describing the PMU's affinity to the perf subsystem or its
-> wiring to the CTI?
+> On Sun, 16 Dec 2012, Grant Likely wrote:
+> 
+> > On Fri, 14 Dec 2012 17:45:30 +0100, Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
+> > > This patch adds dynamic switching to booting either with or without DT.
+> > > So far only a part of the board initialisation can be done via DT. Devices,
+> > > that still need platform data are kept that way. Devices, that can be
+> > > initialised from DT will not be supplied from the platform data, if a DT
+> > > image is detected.
+> > > 
+> > > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > > ---
+> > >  
+> > > +static int mackerel_i2c_bus_notify(struct notifier_block *nb,
+> > > +				   unsigned long action, void *data)
+> > > +{
+> > > +	struct device *dev = data;
+> > > +
+> > > +	if (action != BUS_NOTIFY_ADD_DEVICE ||
+> > > +	    strcmp(dev_name(dev->parent), "fff20000.i2c"))
+> > > +		return NOTIFY_DONE;
+> > > +
+> > > +	i2c_new_device(to_i2c_adapter(dev), &i2c0_devices[1]);
+> > > +
+> > > +	return NOTIFY_OK;
+> > > +}
+> > > +
+> > > +static struct notifier_block mackerel_i2c_notifier = {
+> > > +	.notifier_call = mackerel_i2c_bus_notify,
+> > > +};
+> > 
+> > This looks dodgy. It appears that the purpose of this hook is to create
+> > the tca6408-keys device because it has some platform data. However,
+> > this hook will try to create the device every time BUS_NOTIFY_ADD_DEVICE
+> > happens on the fff20000.i2c bus *including* when the tca6408-keys device
+> > gets added.
+> 
+> I think, this is only called once, when the i2c adapter device is added in 
+> i2c_register_adapter(). I2C client devices have these adapter devices as 
+> their parents, and those devices have "i2c-%d" as their names. Since all 
+> client devices get destroyed when the adapter is unbound, the above should 
+> be safe.
 
-Yes the PMU's affinity in general, ignoring CTI for now.
+Take another look. The way the bus notifiers work is they get called once for every device registered with the given bus type. That means i2c_client objects, not i3c
+> 
+> > The correct approach when you need to add specific platform data is to
+> > still put the device into the device tree and make the notifier look for
+> > that specific device. Then the platform data pointer can be attached at
+> > BUS_NOTIFY_ADD_DEVICE time.
+> > 
+> > However, it doesn't look like you need a notifier at all. From what I
+> > can see the tca6408-keys device does have platform data, but it is all
+> > simple (no callback pointers). You should instead encode the platform
+> > data into device tree properties and extract them from the driver.
+> 
+> Yes, this is the ultimate goal. But the purpose of this patch series is to 
+> move whatever devices are possible right _now_ to DT. Ultimately all of 
+> them should be migrated. So, yes, we could try to begin with tca6408, 
+> because the above hack is certainly the ugliest one in this series, but in 
+> principle this is just one of several devices, that we have to keep in 
+> platform data for now and aim at removing these temporary hacks as soon as 
+> respective drivers implement sufficient DT support.
+> 
+> Thanks
+> Guennadi
+> ---
+> Guennadi Liakhovetski, Ph.D.
+> Freelance Open-Source Software Developer
+> http://www.open-technology.de/
 
-> It's certainly applicable for the former; I've been working on a series to
-> enable support for the PMUs in both clusters in a A15x2 A7x3 coretile using the
-> binding, and I intend to post a series shortly. I'm not sure about the latter,
-> as I don't have much of an understanding about the CTI.
-
-Ok great. I think that this use-case of PMU+CTI is a special case for
-OMAP. CTI could be used for many things and for some reason TI hooked up
-the PMU interrupt via the CTI on OMAP4430 (which has been giving me
-grief ;-)
-
-So if there is a general way to describe the affinity of a module, such
-as PMU, I could re-use this and add to the CTI binding as Will suggested.
-
-> I'm not sure how many other components have affinity concerns, but the
-> intention is for the binding to be reusable.
-
-Great.
-
-Thanks
-Jon
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
