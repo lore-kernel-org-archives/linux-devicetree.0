@@ -1,133 +1,71 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] serial: tegra: add serial driver
-Date: Mon, 17 Dec 2012 17:10:27 +0000
-Message-ID: <20121217171027.6AE573E0BDD@localhost>
-References: <1355746249-15347-1-git-send-email-ldewangan@nvidia.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1355746249-15347-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: alan@linux.intel.com, gregkh@linuxfoundation.org, jslaby@suse.cz
-Cc: rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, swarren@wwwdotorg.org, Laxman Dewangan <ldewangan@nvidia.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/1] spi/atmel: add DT support
+Date: Mon, 17 Dec 2012 17:15:13 +0000
+Message-ID: <20121217171513.9B0ED3E0BEC@localhost>
+References: <20121121151713.1F8873E0A47@localhost>
+	<1353674679-13158-1-git-send-email-plagnioj@jcrosoft.com>
+	<50AF7C19.8000306@atmel.com>
+	<20121212151308.GK4398@game.jcrosoft.org>
+	<20121215010317.C9C933E0BEC@localhost>
+	<20121217101351.GI23971@game.jcrosoft.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20121217101351.GI23971-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Dec 2012 17:40:49 +0530, Laxman Dewangan <ldewangan@nvidia.com> wrote:
-> Nvidia's Tegra has multiple uart controller which supports:
-> - APB dma based controller fifo read/write.
-> - End Of Data interrupt in incoming data to know whether end
->   of frame achieve or not.
-> - Hw controlled RTS and CTS flow control to reduce SW overhead.
+On Mon, 17 Dec 2012 11:13:51 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> On 01:03 Sat 15 Dec     , Grant Likely wrote:
+> > On Wed, 12 Dec 2012 16:13:08 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> > > On 14:37 Fri 23 Nov     , Nicolas Ferre wrote:
+> > > > On 11/23/2012 01:44 PM, Jean-Christophe PLAGNIOL-VILLARD :
+> > > > > the atmel_spi use only gpio for chip select
+> > > > > 
+> > > > > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > > > 
+> > > > Seems simple and nice:
+> > > > 
+> > > > Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> > > grant is ok to have this for 3.8?
+> > 
+> > Not sure how I missed this one. It's pretty straight forward and not
+> > risky, so no problem. However;
+> > 
+> > > > > the atmel_spi use only gpio for chip select
+> > 
+> > I know you know how to write a proper commit message. I'll need
+> > something better than the above before I commit it. I won't make you
+> > resubmit the patch, but do send me a better description.
+> > 
+> ok replace with this please
 > 
-> Add serial driver to use all above feature.
+> spi/atmel: add DT support
 > 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-
-Hi Laxman,
-
-Comments below...
-
-> ---
->  .../bindings/serial/nvidia,serial-tegra.txt        |   26 +
->  drivers/tty/serial/Kconfig                         |   14 +
->  drivers/tty/serial/Makefile                        |    1 +
->  drivers/tty/serial/serial_tegra.c                  | 1398 ++++++++++++++++++++
->  include/linux/serial_tegra.h                       |   33 +
->  5 files changed, 1472 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt
->  create mode 100644 drivers/tty/serial/serial_tegra.c
->  create mode 100644 include/linux/serial_tegra.h
+> Use the newly introduce cs-gpios dt support on atmel.
+> We do not use the hardware cs as it's wired and have buges and limitations.
+> As the the controller's belief that only active-low devices/systems exists.
 > 
-> diff --git a/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt b/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt
-> new file mode 100644
-> index 0000000..fc5803b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt
+> As done on non-dt system.
 
-Nit: nvidia-tegra.txt would be sufficient.
+Done, thanks.
 
-> @@ -0,0 +1,26 @@
-> +NVIDIA Tegra20/Tegra30 high speed (dma based) UART controller driver.
-> +
-> +Required properties:
-> +- compatible : should be "nvidia,tegra20-hsuart", "nvidia,tegra30-hsuart".
-> +- reg: Should contain UART controller registers location and length.
-> +- interrupts: Should contain UART controller interrupts.
-> +- nvidia,dma-request-selector : The Tegra DMA controller's phandle and
-> +  request selector for this UART controller.
-> +- port-number: Uart port number for /dev/ttyHSx where x is port number.
+g.
 
-Drop port-number. Use an alias instead (/aliases/serial#)
 
-Otherwise the binding looks fine.
-
-> diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
-> index 59c23d0..57dbbc1 100644
-> --- a/drivers/tty/serial/Kconfig
-> +++ b/drivers/tty/serial/Kconfig
-> @@ -269,6 +269,20 @@ config SERIAL_SIRFSOC_CONSOLE
->            your boot loader about how to pass options to the kernel at
->            boot time.)
->  
-> +config SERIAL_SAMSUNG_UARTS_4
-> +	bool
-
-? This looks like a stale hunk
-
-> +config SERIAL_TEGRA
-> +	tristate "Nvidia Tegra20/30 SoC serial controller"
-> +	depends on ARCH_TEGRA && TEGRA20_APB_DMA
-> +	select SERIAL_CORE
-> +	help
-> +	  Support for the on-chip UARTs on the Nvidia Tegra seria SOCs
-> +	  providing /dev/ttyHS0, 1, 2, 3 and 4 (note, some machines may not
-> +	  provide all of these ports, depending on how the serial port
-> +	  are enabled). This driver uses the APB dma to achieve higher baudrate
-> +	  and better performance.
-> +
->  config SERIAL_MAX3100
->  	tristate "MAX3100 support"
->  	depends on SPI
-[...]
-> +static void tegra_uart_set_mctrl(struct uart_port *u, unsigned int mctrl)
-> +{
-> +	struct tegra_uart_port *tup = to_tegra_uport(u);
-> +	unsigned long mcr;
-> +
-> +	mcr = tup->mcr_shadow;
-> +	if (mctrl & TIOCM_RTS) {
-> +		tup->rts_active = true;
-> +		set_rts(tup, true);
-> +	} else {
-> +		tup->rts_active = false;
-> +		set_rts(tup, false);
-> +	}
-
-Or simply:
-	tup->rts_active = !!(mctrl & TIOCM_RTS)
-	set_rts(tup, tup->rts_active);
-
-The driver seems rather verbose in this regard. It isn't something I'd
-nak over, but it does increase the maintenance burden.
-
-> +
-> +	if (mctrl & TIOCM_DTR)
-> +		set_dtr(tup, true);
-> +	else
-> +		set_dtr(tup, false);
-> +	return;
-> +}
-> +static int __devinit tegra_uart_probe(struct platform_device *pdev)
-> +{
-> +	struct tegra_uart_port *tup;
-> +	struct uart_port *u;
-> +	struct tegra_uart_platform_data *pdata = pdev->dev.platform_data;
-
-Since this is a new driver, and all new board support will use device
-tree, when would this platform_data pointer get set? Can you drop the
-platform_data support code entirely?
-
-The driver itself is a lot of code. I've not gone through it in the
-detail that I'd like to, but it appears to be fine. Fix up the above
-comments and you can add my:
-
-Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
-
+------------------------------------------------------------------------------
+LogMeIn Rescue: Anywhere, Anytime Remote support for IT. Free Trial
+Remotely access PCs and mobile devices and provide instant support
+Improve your efficiency, and focus on delivering more value-add services
+Discover what IT Professionals Know. Rescue delivers
+http://p.sf.net/sfu/logmein_12329d2d
