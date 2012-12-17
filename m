@@ -1,43 +1,69 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM: tegra: Set SCU base address dynamically from
- DT
-Date: Mon, 17 Dec 2012 15:14:02 -0700
-Message-ID: <50CF992A.8080008@wwwdotorg.org>
-References: <1355725087-11363-1-git-send-email-hdoyu@nvidia.com> <1355725087-11363-4-git-send-email-hdoyu@nvidia.com> <50CF258E.2080207@gmail.com>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH] serial: tegra: add serial driver
+Date: Mon, 17 Dec 2012 12:17:16 -1000
+Message-ID: <50CF99EC.1050509@firmworks.com>
+References: <1355746249-15347-1-git-send-email-ldewangan@nvidia.com>
+ <50CF9043.8030308@wwwdotorg.org> <50CF9580.4050300@firmworks.com>
+ <50CF96D4.6010705@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <50CF258E.2080207-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50CF96D4.6010705-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/17/2012 07:00 AM, Rob Herring wrote:
-> On 12/17/2012 12:18 AM, Hiroshi Doyu wrote:
->> Set Snoop Control Unit(SCU) register base address dynamically from DT.
-
->> diff --git a/arch/arm/mach-tegra/platsmp.c b/arch/arm/mach-tegra/platsmp.c
-
->>  static void __init tegra_smp_init_cpus(void)
->>  {
->> -	unsigned int i, ncores = scu_get_core_count(scu_base);
->> +	struct device_node *np;
->> +	unsigned int i, ncores = 1;
->> +
->> +	np = of_find_matching_node(NULL, cortex_a9_scu_match);
->> +	if (!np)
->> +		return;
->> +	scu_base = of_iomap(np, 0);
+On 12/17/2012 12:04 PM, Stephen Warren wrote:
+> On 12/17/2012 02:58 PM, Mitch Bradley wrote:
+>> On 12/17/2012 11:36 AM, Stephen Warren wrote:
+>>> On 12/17/2012 05:10 AM, Laxman Dewangan wrote:
+>>>> Nvidia's Tegra has multiple uart controller which supports:
+>>>> - APB dma based controller fifo read/write.
+>>>> - End Of Data interrupt in incoming data to know whether end
+>>>>   of frame achieve or not.
+>>>> - Hw controlled RTS and CTS flow control to reduce SW overhead.
+>>>
+>>>> diff --git a/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt b/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt
+>>>
+>>>> +NVIDIA Tegra20/Tegra30 high speed (dma based) UART controller driver.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible : should be "nvidia,tegra20-hsuart", "nvidia,tegra30-hsuart".
+>>>
+>>> One question that isn't addressed here is:
+>>>
+>>> Tegra has 5 UARTs. All of them can use the existing 8250.c by specifying
+>>> compatible = "nvidia,tegra20-uart".
+>>
+>> The way it is supposed to work is that the compatible property should
+>> list "nvidia,tegra30-hsuart" first, followed by a fallback name that
+>> refers to the generic 8250 compatibility.  Having the 8250.c driver bind
+>> to the more-specific tegra30-hsuart name is wrong.
 > 
-> Did you actually test this? Unless something changed, ioremap does not
-> work this early. The only reason to have it mapped this early is to get
-> the core count, but that doesn't work on A15 or A7. So we really need to
-> get core count/mask in a standard way. At least some work to get core
-> count from DT went into 3.8.
+> 8250.c binds to nvidia,tegra20-uart, so that aspect is fine.
+> 
+> However, the real issue is that we probably want 4 of the 5 ports to use
+> the plain old 8250.c (so as not to use up too many DMA channels), but
+> just 1 of the ports to use the DMA-capable high-performance driver (e.g.
+> the one that a particular board has hooked up to a Bluetooth radio). The
+> only way to do that with DT that I know of would be to specify different
+> subsets of legal compatible values for each UART in the per-board .dts file.
 
-Does it work if the machine's .map_io() function has set up a static
-mapping that includes the specified region? I believe that is the case
-on Tegra. What is the alternative if the registers can't be mapped;
-should the code count the number of child nodes in /cpus?
+
+That's an okay way to do it.  The whole purpose of the compatible
+property is to support driver binding.  The mantra to "describe the
+hardware" is good, but shouldn't be taken to extremes.
+
+It would be a good idea to comment the .dts file to explain why the
+compatible property differs between the otherwise-identical nodes.
