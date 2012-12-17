@@ -1,39 +1,77 @@
-From: Hiroshi Doyu <hdoyu@nvidia.com>
-Subject: [PATCH 3/4] ARM: dt: tegra30.dtsi: Add SCU node
-Date: Mon, 17 Dec 2012 08:18:03 +0200
-Message-ID: <1355725087-11363-3-git-send-email-hdoyu@nvidia.com>
-References: <1355725087-11363-1-git-send-email-hdoyu@nvidia.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH 3/7] ARM: sh7372: support mixed DT and board code interrupt
+ controller init
+Date: Mon, 17 Dec 2012 09:02:18 +0100 (CET)
+Message-ID: <Pine.LNX.4.64.1212170900260.24007@axis700.grange>
+References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de>
+ <1355503531-7276-4-git-send-email-g.liakhovetski@gmx.de>
+ <20121215075156.GD9073@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1355725087-11363-1-git-send-email-hdoyu@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Hiroshi Doyu <hdoyu@nvidia.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20121215075156.GD9073@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add Snoop Control Unit(SCU) node for Cortex A9 MP.
+Hi Simon
 
-Signed-off-by: Hiroshi Doyu <hdoyu@nvidia.com>
+On Sat, 15 Dec 2012, Simon Horman wrote:
+
+> On Fri, Dec 14, 2012 at 05:45:27PM +0100, Guennadi Liakhovetski wrote:
+> > Extend DT interrupt controller initialisation to automatically fall back to
+> > platform data based configuration, if booting without DT. This simplifies
+> > implementing boards, capable of booting in either mode with a single kernel.
+> 
+> Hi Guennadi,
+> 
+> Do you have a case in mind where this will be used?
+> My thinking until now has been that sh7372_init_irq_of() should only be called
+> when a board is being initialised using DT.
+
+As discussed in follow-ups to another patch from this series, the idea was 
+to only have one sh7372_init_irq(_of)() function exported, but it's not 
+too important, I'll drop this from v2.
+
+Thanks
+Guennadi
+
+> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > ---
+> >  arch/arm/mach-shmobile/intc-sh7372.c |    6 ++++++
+> >  1 files changed, 6 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/arch/arm/mach-shmobile/intc-sh7372.c b/arch/arm/mach-shmobile/intc-sh7372.c
+> > index c923518..9c13ecc 100644
+> > --- a/arch/arm/mach-shmobile/intc-sh7372.c
+> > +++ b/arch/arm/mach-shmobile/intc-sh7372.c
+> > @@ -23,6 +23,7 @@
+> >  #include <linux/irq.h>
+> >  #include <linux/io.h>
+> >  #include <linux/sh_intc.h>
+> > +#include <mach/common.h>
+> >  #include <mach/intc.h>
+> >  #include <mach/irqs.h>
+> >  #include <asm/mach-types.h>
+> > @@ -629,6 +630,11 @@ static const struct of_device_id irq_of_match[] __initconst = {
+> >  
+> >  void __init sh7372_init_irq_of(void)
+> >  {
+> > +	if (!of_have_populated_dt()) {
+> > +		sh7372_init_irq();
+> > +		return;
+> > +	}
+> > +
+> >  	of_irq_init(irq_of_match);
+> >  
+> >  	sh7372_init_intc(0xe6940000, 0xe6950000, 0xffd20000, 0xffd50000,
+> > -- 
+> > 1.7.2.5
+> > 
+> 
+
 ---
- arch/arm/boot/dts/tegra30.dtsip |    5 +++++
- 1 file changed, 5 insertions(+)
-
-diff --git a/arch/arm/boot/dts/tegra30.dtsip b/arch/arm/boot/dts/tegra30.dtsip
-index 8feba6d..84a41c2 100644
---- a/arch/arm/boot/dts/tegra30.dtsip
-+++ b/arch/arm/boot/dts/tegra30.dtsip
-@@ -91,6 +91,11 @@
- 		};
- 	};
- 
-+	scu {
-+		compatible = "arm,cortex-a9-scu";
-+		reg = <0x50040000 0x58>;
-+	};
-+
- 	timer@50004600 {
- 		compatible = "arm,cortex-a9-twd-timer";
- 		reg = <0x50040600 0x20>;
--- 
-1.7.9.5
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
