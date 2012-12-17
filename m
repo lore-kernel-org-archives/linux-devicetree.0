@@ -1,113 +1,126 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH 5/7] ARM: sh7372: allow boards supporting booting with
- or without DT
-Date: Mon, 17 Dec 2012 09:07:35 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1212170902540.24007@axis700.grange>
-References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de>
- <1355503531-7276-6-git-send-email-g.liakhovetski@gmx.de>
- <20121215080542.GF9073@verge.net.au>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: OMAP2+: Add PMU nodes
+Date: Mon, 17 Dec 2012 09:16:19 +0100
+Message-ID: <50CED4D3.9080106@ti.com>
+References: <1355519930-3851-1-git-send-email-jon-hunter@ti.com> <1355519930-3851-3-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20121215080542.GF9073@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1355519930-3851-3-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, device-tree <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon
+Hi Jon,
 
-On Sat, 15 Dec 2012, Simon Horman wrote:
-
-> On Fri, Dec 14, 2012 at 05:45:29PM +0100, Guennadi Liakhovetski wrote:
-> > For boards booting without DT no changes should be caused by this patch.
-> > When booting with DT, devices, whose drivers support DT probing, will not
-> > be registered.
+On 12/14/2012 10:18 PM, Jon Hunter wrote:
+> Add PMU nodes for OMAP2, OMAP3 and OMAP4460 devices.
 > 
-> This relates in part to my comment on "ARM: sh7372: support mixed DT and
-> board code interrupt controller init".
+> Please note that the node for OMAP4460 has been placed in a separate
+> header file for OMAP4460, because the node is not compatible with
+> OMAP4430.
+
+But where is the omap4430 node then?
+
+Regards,
+Benoit
+
 > 
-> It is my understanding that sh7372_add_standard_devices_dt() already
-> exists in setup-sh7372.c and that it is appropriate to use for bring
-> up boards with DT.
+> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> ---
+>  arch/arm/boot/dts/omap2.dtsi         |    5 +++++
+>  arch/arm/boot/dts/omap3.dtsi         |    6 ++++++
+>  arch/arm/boot/dts/omap4-panda-es.dts |    2 ++
+>  arch/arm/boot/dts/omap4460.dtsi      |   18 ++++++++++++++++++
+>  arch/arm/mach-omap2/pmu.c            |    2 ++
+>  5 files changed, 33 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/omap4460.dtsi
+> 
+> diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
+> index 761c4b6..27f5ea1 100644
+> --- a/arch/arm/boot/dts/omap2.dtsi
+> +++ b/arch/arm/boot/dts/omap2.dtsi
+> @@ -26,6 +26,11 @@
+>  		};
+>  	};
+>  
+> +	pmu {
+> +		compatible = "arm,arm1136-pmu";
+> +		interrupts = <3>;
+> +	};
+> +
+>  	soc {
+>  		compatible = "ti,omap-infra";
+>  		mpu {
+> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+> index 1acc261..6c63118 100644
+> --- a/arch/arm/boot/dts/omap3.dtsi
+> +++ b/arch/arm/boot/dts/omap3.dtsi
+> @@ -26,6 +26,12 @@
+>  		};
+>  	};
+>  
+> +	pmu {
+> +		compatible = "arm,cortex-a8-pmu";
+> +		interrupts = <3>;
+> +		ti,hwmods = "debugss";
+> +	};
+> +
+>  	/*
+>  	 * The soc node represents the soc top level view. It is uses for IPs
+>  	 * that are not memory mapped in the MPU view or for the MPU itself.
+> diff --git a/arch/arm/boot/dts/omap4-panda-es.dts b/arch/arm/boot/dts/omap4-panda-es.dts
+> index 73bc1a6..2a6e344 100644
+> --- a/arch/arm/boot/dts/omap4-panda-es.dts
+> +++ b/arch/arm/boot/dts/omap4-panda-es.dts
+> @@ -5,7 +5,9 @@
+>   * it under the terms of the GNU General Public License version 2 as
+>   * published by the Free Software Foundation.
+>   */
+> +
+>  /include/ "omap4-panda.dts"
+> +/include/ "omap4460.dtsi"
+>  
+>  /* Audio routing is differnet between PandaBoard4430 and PandaBoardES */
+>  &sound {
+> diff --git a/arch/arm/boot/dts/omap4460.dtsi b/arch/arm/boot/dts/omap4460.dtsi
+> new file mode 100644
+> index 0000000..1270890
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/omap4460.dtsi
+> @@ -0,0 +1,18 @@
+> +/*
+> + * Device Tree Source for OMAP4460 SoC
+> + *
+> + * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
+> + *
+> + * This file is licensed under the terms of the GNU General Public License
+> + * version 2.  This program is licensed "as is" without any warranty of any
+> + * kind, whether express or implied.
+> + */
+> +
+> +/ {
+> +	pmu {
+> +		compatible = "arm,cortex-a9-pmu";
+> +		interrupts = <0 54 0x4
+> +			      0 55 0x4>;
+> +		ti,hwmods = "debugss";
+> +	};
+> +};
+> diff --git a/arch/arm/mach-omap2/pmu.c b/arch/arm/mach-omap2/pmu.c
+> index 6e620eb..1a0799c 100644
+> --- a/arch/arm/mach-omap2/pmu.c
+> +++ b/arch/arm/mach-omap2/pmu.c
+> @@ -11,6 +11,8 @@
+>   * the Free Software Foundation; either version 2 of the License, or
+>   * (at your option) any later version.
+>   */
+> +#include <linux/of.h>
+> +
+>  #include <asm/pmu.h>
+>  
+>  #include "soc.h"
+> 
 
-I think, we partially clarified this already in the discussion of patch 
-6/7. This patch makes it possible to use standard functions, e.g. 
-sh7372_add_standard_devices() from both DT and non-DT boots. Whereas when 
-booting with DT, devices, for which sufficient DT support already exists, 
-have to be initialised from DT.
-
-Thanks
-Guennadi
-
-> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > ---
-> >  arch/arm/mach-shmobile/setup-sh7372.c |   17 ++++++++++++++---
-> >  1 files changed, 14 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm/mach-shmobile/setup-sh7372.c b/arch/arm/mach-shmobile/setup-sh7372.c
-> > index bbe6e2a..3e6bf3d 100644
-> > --- a/arch/arm/mach-shmobile/setup-sh7372.c
-> > +++ b/arch/arm/mach-shmobile/setup-sh7372.c
-> > @@ -981,9 +981,12 @@ static struct platform_device *sh7372_early_devices[] __initdata = {
-> >  	&tmu01_device,
-> >  };
-> >  
-> > -static struct platform_device *sh7372_late_devices[] __initdata = {
-> > +static struct platform_device *sh7372_late_devices_dt[] __initdata = {
-> >  	&iic0_device,
-> >  	&iic1_device,
-> > +};
-> > +
-> > +static struct platform_device *sh7372_late_devices[] __initdata = {
-> >  	&dma0_device,
-> >  	&dma1_device,
-> >  	&dma2_device,
-> > @@ -1012,13 +1015,11 @@ void __init sh7372_add_standard_devices(void)
-> >  		{ "A3SP", &scif4_device, },
-> >  		{ "A3SP", &scif5_device, },
-> >  		{ "A3SP", &scif6_device, },
-> > -		{ "A3SP", &iic1_device, },
-> >  		{ "A3SP", &dma0_device, },
-> >  		{ "A3SP", &dma1_device, },
-> >  		{ "A3SP", &dma2_device, },
-> >  		{ "A3SP", &usb_dma0_device, },
-> >  		{ "A3SP", &usb_dma1_device, },
-> > -		{ "A4R", &iic0_device, },
-> >  		{ "A4R", &veu0_device, },
-> >  		{ "A4R", &veu1_device, },
-> >  		{ "A4R", &veu2_device, },
-> > @@ -1027,6 +1028,10 @@ void __init sh7372_add_standard_devices(void)
-> >  		{ "A4R", &tmu00_device, },
-> >  		{ "A4R", &tmu01_device, },
-> >  	};
-> > +	struct pm_domain_device domain_devices_dt[] = {
-> > +		{ "A3SP", &iic1_device, },
-> > +		{ "A4R", &iic0_device, },
-> > +	};
-> >  
-> >  	sh7372_init_pm_domains();
-> >  
-> > @@ -1035,9 +1040,15 @@ void __init sh7372_add_standard_devices(void)
-> >  
-> >  	platform_add_devices(sh7372_late_devices,
-> >  			    ARRAY_SIZE(sh7372_late_devices));
-> > +	if (!of_have_populated_dt())
-> > +		platform_add_devices(sh7372_late_devices_dt,
-> > +				     ARRAY_SIZE(sh7372_late_devices_dt));
-> >  
-> >  	rmobile_add_devices_to_domains(domain_devices,
-> >  				       ARRAY_SIZE(domain_devices));
-> > +	if (!of_have_populated_dt())
-> > +		rmobile_add_devices_to_domains(domain_devices_dt,
-> > +					       ARRAY_SIZE(domain_devices_dt));
-> >  }
-> >  
-> >  static void __init sh7372_earlytimer_init(void)
-> > -- 
-> > 1.7.2.5
-
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
