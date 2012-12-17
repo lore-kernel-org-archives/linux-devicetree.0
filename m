@@ -1,64 +1,70 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH 1/1] spi/atmel: add DT support
-Date: Mon, 17 Dec 2012 11:13:51 +0100
-Message-ID: <20121217101351.GI23971@game.jcrosoft.org>
-References: <20121121151713.1F8873E0A47@localhost>
- <1353674679-13158-1-git-send-email-plagnioj@jcrosoft.com>
- <50AF7C19.8000306@atmel.com>
- <20121212151308.GK4398@game.jcrosoft.org>
- <20121215010317.C9C933E0BEC@localhost>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH] clk: imx25: Fix the examples
+Date: Mon, 17 Dec 2012 11:22:42 +0100
+Message-ID: <20121217102242.GK26326@pengutronix.de>
+References: <1354117857-25210-1-git-send-email-festevam@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20121215010317.C9C933E0BEC@localhost>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1354117857-25210-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01:03 Sat 15 Dec     , Grant Likely wrote:
-> On Wed, 12 Dec 2012 16:13:08 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com> wrote:
-> > On 14:37 Fri 23 Nov     , Nicolas Ferre wrote:
-> > > On 11/23/2012 01:44 PM, Jean-Christophe PLAGNIOL-VILLARD :
-> > > > the atmel_spi use only gpio for chip select
-> > > > 
-> > > > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> > > 
-> > > Seems simple and nice:
-> > > 
-> > > Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
-> > grant is ok to have this for 3.8?
+On Wed, Nov 28, 2012 at 01:50:57PM -0200, Fabio Estevam wrote:
+> From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 > 
-> Not sure how I missed this one. It's pretty straight forward and not
-> risky, so no problem. However;
+> Fix the examples so that they are consistent with the dtsi file.
 > 
-> > > > the atmel_spi use only gpio for chip select
-> 
-> I know you know how to write a proper commit message. I'll need
-> something better than the above before I commit it. I won't make you
-> resubmit the patch, but do send me a better description.
-> 
-ok replace with this please
+> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-spi/atmel: add DT support
+Applied, thanks
 
-Use the newly introduce cs-gpios dt support on atmel.
-We do not use the hardware cs as it's wired and have buges and limitations.
-As the the controller's belief that only active-low devices/systems exists.
+Sascha
 
-As done on non-dt system.
-
-Best Regards,
-J.
-> g.
+> ---
+>  .../devicetree/bindings/clock/imx25-clock.txt      |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/clock/imx25-clock.txt b/Documentation/devicetree/bindings/clock/imx25-clock.txt
+> index db4f2f0..d3ae542 100644
+> --- a/Documentation/devicetree/bindings/clock/imx25-clock.txt
+> +++ b/Documentation/devicetree/bindings/clock/imx25-clock.txt
+> @@ -146,13 +146,14 @@ clks: ccm@53f80000 {
+>  	compatible = "fsl,imx25-ccm";
+>  	reg = <0x53f80000 0x4000>;
+>  	interrupts = <31>;
+> +	#clock-cells = <1>;
+>  };
+>  
+>  uart1: serial@43f90000 {
+>  	compatible = "fsl,imx25-uart", "fsl,imx21-uart";
+>  	reg = <0x43f90000 0x4000>;
+>  	interrupts = <45>;
+> -	clocks = <&clks 79>, <&clks 50>;
+> +	clocks = <&clks 120>, <&clks 57>;
+>  	clock-names = "ipg", "per";
+>  	status = "disabled";
+>  };
+> -- 
+> 1.7.9.5
+> 
+> 
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
