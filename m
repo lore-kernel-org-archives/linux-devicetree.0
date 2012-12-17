@@ -1,70 +1,48 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH] clk: imx25: Fix the examples
-Date: Mon, 17 Dec 2012 11:22:42 +0100
-Message-ID: <20121217102242.GK26326@pengutronix.de>
-References: <1354117857-25210-1-git-send-email-festevam@gmail.com>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [Resend PATCH v6 1/4] pinctrl: atmel-ssc: add pinctrl support
+Date: Mon, 17 Dec 2012 11:23:20 +0100
+Message-ID: <50CEF298.3070508@atmel.com>
+References: <1353464229-20846-1-git-send-email-voice.shen@atmel.com> <20121121022441.GJ4673@opensource.wolfsonmicro.com> <20121217093947.GG23971@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1354117857-25210-1-git-send-email-festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-sound-owner@vger.kernel.org>
+In-Reply-To: <20121217093947.GG23971@game.jcrosoft.org>
+Sender: linux-sound-owner@vger.kernel.org
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Bo Shen <voice.shen@atmel.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Nov 28, 2012 at 01:50:57PM -0200, Fabio Estevam wrote:
-> From: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+On 12/17/2012 10:39 AM, Jean-Christophe PLAGNIOL-VILLARD :
+> On 11:24 Wed 21 Nov     , Mark Brown wrote:
+>> On Wed, Nov 21, 2012 at 10:17:09AM +0800, Bo Shen wrote:
+>>> Add pinctrl support for atmel ssc peripheral
+>>>
+>>> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+>>
+>> Acked-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
 > 
-> Fix the examples so that they are consistent with the dtsi file.
-> 
-> Signed-off-by: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> you handle this one with scc
 
-Applied, thanks
+Hold on Jean-Christophe, I made a little experiment this morning, and
+this patch is not applying correctly on:
+- linus' tree
+- linux-next
+- neither Mark's for-next branch
 
-Sascha
+So, *I* will manage this patch and try to make sure that Mark is able to
+seamlessly include it in his tree on top of a known source for a future
+ASoC "fixes" pull-request.
 
-> ---
->  .../devicetree/bindings/clock/imx25-clock.txt      |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/imx25-clock.txt b/Documentation/devicetree/bindings/clock/imx25-clock.txt
-> index db4f2f0..d3ae542 100644
-> --- a/Documentation/devicetree/bindings/clock/imx25-clock.txt
-> +++ b/Documentation/devicetree/bindings/clock/imx25-clock.txt
-> @@ -146,13 +146,14 @@ clks: ccm@53f80000 {
->  	compatible = "fsl,imx25-ccm";
->  	reg = <0x53f80000 0x4000>;
->  	interrupts = <31>;
-> +	#clock-cells = <1>;
->  };
->  
->  uart1: serial@43f90000 {
->  	compatible = "fsl,imx25-uart", "fsl,imx21-uart";
->  	reg = <0x43f90000 0x4000>;
->  	interrupts = <45>;
-> -	clocks = <&clks 79>, <&clks 50>;
-> +	clocks = <&clks 120>, <&clks 57>;
->  	clock-names = "ipg", "per";
->  	status = "disabled";
->  };
-> -- 
-> 1.7.9.5
-> 
-> 
+Mark, what about rebasing this one on top of current Linus' tree
+(toguether with the one that you have just applied on the topic/atmel
+branch: (ASoC: atmel-ssc: change disable to disable in dts node)?
 
+I hope that once reworked, they will be able to reach Linus' tree soon
+because the lack of this patch is causing DTB compilation errors on all
+AT91...
+
+
+Best regards,
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Nicolas Ferre
