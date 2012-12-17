@@ -1,94 +1,49 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH 6/7] ARM: mackerel: support booting with or without DT
-Date: Sun, 16 Dec 2012 22:36:56 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1212162224380.20059@axis700.grange>
-References: <1355503531-7276-1-git-send-email-g.liakhovetski@gmx.de>
- <1355503531-7276-7-git-send-email-g.liakhovetski@gmx.de>
- <20121216204636.ACD283E0AE3@localhost>
+From: "Kumar, Anil" <anilkumar.v@ti.com>
+Subject: RE: [PATCH 0/2]  ARM: davinci: da850: add pinctrl support
+Date: Mon, 17 Dec 2012 04:26:47 +0000
+Message-ID: <F3DBB1B3EF102E4994C89758CFCA32412A40C5@DBDE01.ent.ti.com>
+References: <1354876051-25938-1-git-send-email-anilkumar.v@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121216204636.ACD283E0AE3@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1354876051-25938-1-git-send-email-anilkumar.v@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Kumar, Anil" <anilkumar.v@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Nori, Sekhar" <nsekhar@ti.com>, "hs@denx.de" <hs@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant
+Hi All,
 
-On Sun, 16 Dec 2012, Grant Likely wrote:
+As pinctrl-single is required for handling Pad configuration of various 
+DaVinci module(for e.g mcasp, i2c etc) with DT. Hence for this patch if
+there are no review comments, could you pull this patch ?
 
-> On Fri, 14 Dec 2012 17:45:30 +0100, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org> wrote:
-> > This patch adds dynamic switching to booting either with or without DT.
-> > So far only a part of the board initialisation can be done via DT. Devices,
-> > that still need platform data are kept that way. Devices, that can be
-> > initialised from DT will not be supplied from the platform data, if a DT
-> > image is detected.
-> > 
-> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-> > ---
-> >  
-> > +static int mackerel_i2c_bus_notify(struct notifier_block *nb,
-> > +				   unsigned long action, void *data)
-> > +{
-> > +	struct device *dev = data;
-> > +
-> > +	if (action != BUS_NOTIFY_ADD_DEVICE ||
-> > +	    strcmp(dev_name(dev->parent), "fff20000.i2c"))
-> > +		return NOTIFY_DONE;
-> > +
-> > +	i2c_new_device(to_i2c_adapter(dev), &i2c0_devices[1]);
-> > +
-> > +	return NOTIFY_OK;
-> > +}
-> > +
-> > +static struct notifier_block mackerel_i2c_notifier = {
-> > +	.notifier_call = mackerel_i2c_bus_notify,
-> > +};
+Thanks,
+Anil     
+
+On Fri, Dec 07, 2012 at 15:57:29, Kumar, Anil wrote:
+> This set of patches adds:
 > 
-> This looks dodgy. It appears that the purpose of this hook is to create
-> the tca6408-keys device because it has some platform data. However,
-> this hook will try to create the device every time BUS_NOTIFY_ADD_DEVICE
-> happens on the fff20000.i2c bus *including* when the tca6408-keys device
-> gets added.
-
-I think, this is only called once, when the i2c adapter device is added in 
-i2c_register_adapter(). I2C client devices have these adapter devices as 
-their parents, and those devices have "i2c-%d" as their names. Since all 
-client devices get destroyed when the adapter is unbound, the above should 
-be safe.
-
-> The correct approach when you need to add specific platform data is to
-> still put the device into the device tree and make the notifier look for
-> that specific device. Then the platform data pointer can be attached at
-> BUS_NOTIFY_ADD_DEVICE time.
+> * Add pinctrl-single for handling Padconf registers.
+> * Add NAND node to export NAND functionality on da850 EVM.
+> * Add NAND pinctrl node to do pin mux according to pinctrl-single driver.
 > 
-> However, it doesn't look like you need a notifier at all. From what I
-> can see the tca6408-keys device does have platform data, but it is all
-> simple (no callback pointers). You should instead encode the platform
-> data into device tree properties and extract them from the driver.
+> Kumar, Anil (2):
+>   ARM: davinci: da850: add pinctrl driver entries
+>   ARM: davinci: da850: add NAND driver entries
+> 
+>  .../devicetree/bindings/arm/davinci/pinctrl.txt    |   29 ++++++++++++++++++++
+>  arch/arm/Kconfig                                   |    1 +
+>  arch/arm/boot/dts/da850-evm.dts                    |   22 +++++++++++++++
+>  arch/arm/boot/dts/da850.dtsi                       |   23 +++++++++++++++
+>  arch/arm/configs/da8xx_omapl_defconfig             |    1 +
+>  5 files changed, 76 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/davinci/pinctrl.txt
+> 
+> -- 
+> 1.7.4.1
+> 
+> 
 
-Yes, this is the ultimate goal. But the purpose of this patch series is to 
-move whatever devices are possible right _now_ to DT. Ultimately all of 
-them should be migrated. So, yes, we could try to begin with tca6408, 
-because the above hack is certainly the ugliest one in this series, but in 
-principle this is just one of several devices, that we have to keep in 
-platform data for now and aim at removing these temporary hacks as soon as 
-respective drivers implement sufficient DT support.
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
