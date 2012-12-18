@@ -1,27 +1,47 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] [media] Add common binding documentation for video interfaces
-Date: Tue, 18 Dec 2012 10:14:29 -0700
-Message-ID: <50D0A475.7010800@wwwdotorg.org>
-References: <1355168499-5847-9-git-send-email-s.nawrocki@samsung.com> <1355606016-6509-1-git-send-email-sylvester.nawrocki@gmail.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v3 1/6] ARM: opcodes: add missing include of linux/linkage.h
+Date: Tue, 18 Dec 2012 17:53:11 +0000
+Message-ID: <1355853196-23676-2-git-send-email-will.deacon@arm.com>
+References: <1355853196-23676-1-git-send-email-will.deacon@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1355606016-6509-1-git-send-email-sylvester.nawrocki@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: g.liakhovetski@gmx.de, linux-media@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, nicolas.thery@st.com, s.hauer@pengutronix.de, laurent.pinchart@ideasonboard.com, hverkuil@xs4all.nl, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1355853196-23676-1-git-send-email-will.deacon-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/15/2012 02:13 PM, Sylwester Nawrocki wrote:
-> From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> 
-> This patch adds a document describing common OF bindings for video
-> capture, output and video processing devices. It is currently mainly
-> focused on video capture devices, with data interfaces defined in
-> standards like ITU-R BT.656 or MIPI CSI-2.
-> It also documents a method of describing data links between devices.
+opcodes.h wants to declare an asmlinkage function, so we need to include
+linux/linkage.h
 
-(quickly/briefly)
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
+Acked-by: Dave Martin <dave.martin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm/include/asm/opcodes.h | 1 +
+ 1 file changed, 1 insertion(+)
 
+diff --git a/arch/arm/include/asm/opcodes.h b/arch/arm/include/asm/opcodes.h
+index 74e211a..e796c59 100644
+--- a/arch/arm/include/asm/opcodes.h
++++ b/arch/arm/include/asm/opcodes.h
+@@ -10,6 +10,7 @@
+ #define __ASM_ARM_OPCODES_H
+ 
+ #ifndef __ASSEMBLY__
++#include <linux/linkage.h>
+ extern asmlinkage unsigned int arm_check_condition(u32 opcode, u32 psr);
+ #endif
+ 
+-- 
+1.8.0
