@@ -1,182 +1,241 @@
-From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] usb: phy: samsung: Add support to set pmu isolation
-Date: Tue, 18 Dec 2012 11:26:07 +0530
-Message-ID: <1355810167-18425-2-git-send-email-gautam.vivek@samsung.com>
-References: <1355810167-18425-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1355810167-18425-1-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpiolib: add gpio_export_with_name
+Date: Tue, 18 Dec 2012 07:04:15 +0100
+Message-ID: <20121218060415.GM23971@game.jcrosoft.org>
+References: <20121121101259.GQ4398@game.jcrosoft.org>
+ <1353492849-29397-1-git-send-email-plagnioj@jcrosoft.com>
+ <20121126135911.2F1D33E187C@localhost>
+ <20121128201907.GF4398@game.jcrosoft.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121128201907.GF4398-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Adding support to parse device node data in order to get
-required properties to set pmu isolation for usb-phy.
+On 21:19 Wed 28 Nov     , Jean-Christophe PLAGNIOL-VILLARD wrote:
+> On 13:59 Mon 26 Nov     , Grant Likely wrote:
+> > On Wed, 21 Nov 2012 11:14:08 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> > > allow to specify a name to an exported gpio
+> > > 
+> > > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > 
+> > The gpio sysfs ABI is already horrible, racy, and unsafe. Really, we
+> > need a proper chrdev interface for controlling gpios. Sysfs is fine for
+> > poking around and experimenting, but we cannot provide any fine grained
+> > access control, locking or faster IO with the one-file-per-gpio sysfs
+> > model.
+> I do agree on this and mention it on the ML multiple times but this an ABI
+> and we can not change it anymore we need to support it
+> > So, no, I don't think this is a good idea to extend gpiolib in
+> > this way.
+> > 
+> > However, I would be okay with making gpiochips first-class kobjects or
+> > struct devices that appear as a child of the gpio controller device so
+> > that userspace could interrogate the device tree node associated with
+> > the device.
+> the problem here is that I do not want the user space to become smart
+> 
+> I want the user space to known which gpio use for a specific feature
+> as example you just want to read lack restistor to detect a hw features
+> 
+> you known the encoding it does not change cross hw but the pin to read do
+> 
+> So the idea is just to tell the user space use this pin to get your
+> information
+> 
+> how to do you want to solve this?
+> 
+> This apply to other case:
+>  - chip poweron/off
+>  - reset
+>  etc... all control by userspace
 
-Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/usb/samsung-usbphy.txt     |   10 +++
- drivers/usb/phy/samsung-usbphy.c                   |   80 ++++++++++++++++++--
- 2 files changed, 82 insertions(+), 8 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-index 7b26e2d..112eaa6 100644
---- a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-+++ b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-@@ -9,3 +9,13 @@ Required properties:
- - compatible : should be "samsung,exynos4210-usbphy"
- - reg : base physical address of the phy registers and length of memory mapped
- 	region.
-+- samsung,usb-phyctrl : should point to usb-phyctrl sub-node which provides
-+			binding data to enable/disable device PHY handled by
-+			PMU register.
-+
-+			Required properties:
-+			- compatible : should be "samsung,usbdev-phyctrl" for
-+					DEVICE type phy.
-+			- samsung,phyctrl-reg: base physical address of
-+						PHY_CONTROL register in PMU.
-+- samsung,enable-mask : should be '1'
-diff --git a/drivers/usb/phy/samsung-usbphy.c b/drivers/usb/phy/samsung-usbphy.c
-index 5c5e1bb5..ef394c3 100644
---- a/drivers/usb/phy/samsung-usbphy.c
-+++ b/drivers/usb/phy/samsung-usbphy.c
-@@ -72,6 +72,8 @@ enum samsung_cpu_type {
-  * @dev: The parent device supplied to the probe function
-  * @clk: usb phy clock
-  * @regs: usb phy register memory base
-+ * @devctrl_reg: usb phy-control pmu register memory base
-+ * @en_mask: enable mask
-  * @ref_clk_freq: reference clock frequency selection
-  * @cpu_type: machine identifier
-  */
-@@ -81,12 +83,62 @@ struct samsung_usbphy {
- 	struct device	*dev;
- 	struct clk	*clk;
- 	void __iomem	*regs;
-+	void __iomem	*devctrl_reg;
-+	u32		en_mask;
- 	int		ref_clk_freq;
- 	int		cpu_type;
- };
- 
- #define phy_to_sphy(x)		container_of((x), struct samsung_usbphy, phy)
- 
-+static int samsung_usbphy_parse_dt_param(struct samsung_usbphy *sphy)
-+{
-+	struct device_node *usb_phyctrl;
-+	u32 reg;
-+
-+	if (!sphy->dev->of_node) {
-+		sphy->devctrl_reg = NULL;
-+		return -ENODEV;
-+	}
-+
-+	usb_phyctrl = of_parse_phandle(sphy->dev->of_node,
-+					"samsung,usb-phyctrl", 0);
-+	if (!usb_phyctrl) {
-+		dev_dbg(sphy->dev, "Can't get usb-phy control node\n");
-+		sphy->devctrl_reg = NULL;
-+		return -ENODEV;
-+	}
-+
-+	of_property_read_u32(usb_phyctrl, "samsung,phyctrl-reg", &reg);
-+
-+	sphy->devctrl_reg = ioremap(reg, SZ_4);
-+
-+	of_property_read_u32(sphy->dev->of_node, "samsung,enable-mask",
-+							&sphy->en_mask);
-+
-+	return 0;
-+}
-+
-+/*
-+ * Set isolation here for phy.
-+ * SOCs control this by controlling corresponding PMU registers
-+ */
-+static void samsung_usbphy_set_isolation(struct samsung_usbphy *sphy, int on)
-+{
-+	void __iomem *usb_phyctrl_reg;
-+	u32 en_mask = sphy->en_mask;
-+	u32 reg;
-+
-+	usb_phyctrl_reg = sphy->devctrl_reg;
-+
-+	reg = readl(usb_phyctrl_reg);
-+
-+	if (on)
-+		writel(reg & ~en_mask, usb_phyctrl_reg);
-+	else
-+		writel(reg | en_mask, usb_phyctrl_reg);
-+}
-+
- /*
-  * Returns reference clock frequency selection value
-  */
-@@ -199,6 +251,8 @@ static int samsung_usbphy_init(struct usb_phy *phy)
- 	/* Disable phy isolation */
- 	if (sphy->plat && sphy->plat->pmu_isolation)
- 		sphy->plat->pmu_isolation(false);
-+	else
-+		samsung_usbphy_set_isolation(sphy, false);
- 
- 	/* Initialize usb phy registers */
- 	samsung_usbphy_enable(sphy);
-@@ -228,6 +282,8 @@ static void samsung_usbphy_shutdown(struct usb_phy *phy)
- 	/* Enable phy isolation */
- 	if (sphy->plat && sphy->plat->pmu_isolation)
- 		sphy->plat->pmu_isolation(true);
-+	else
-+		samsung_usbphy_set_isolation(sphy, true);
- 
- 	clk_disable_unprepare(sphy->clk);
- }
-@@ -249,17 +305,12 @@ static inline int samsung_usbphy_get_driver_data(struct platform_device *pdev)
- static int __devinit samsung_usbphy_probe(struct platform_device *pdev)
- {
- 	struct samsung_usbphy *sphy;
--	struct samsung_usbphy_data *pdata;
-+	struct samsung_usbphy_data *pdata = pdev->dev.platform_data;
- 	struct device *dev = &pdev->dev;
- 	struct resource *phy_mem;
- 	void __iomem	*phy_base;
- 	struct clk *clk;
--
--	pdata = pdev->dev.platform_data;
--	if (!pdata) {
--		dev_err(&pdev->dev, "%s: no platform data defined\n", __func__);
--		return -EINVAL;
--	}
-+	int ret;
- 
- 	phy_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	if (!phy_mem) {
-@@ -283,7 +334,20 @@ static int __devinit samsung_usbphy_probe(struct platform_device *pdev)
- 		return PTR_ERR(clk);
- 	}
- 
--	sphy->dev		= &pdev->dev;
-+	sphy->dev = &pdev->dev;
-+
-+	ret = samsung_usbphy_parse_dt_param(sphy);
-+	if (ret) {
-+		/* fallback to pdata */
-+		if (!pdata) {
-+			dev_err(&pdev->dev,
-+				"%s: no device data found\n", __func__);
-+			return -ENODEV;
-+		} else {
-+			sphy->plat = pdata;
-+		}
-+	}
-+
- 	sphy->plat		= pdata;
- 	sphy->regs		= phy_base;
- 	sphy->clk		= clk;
--- 
-1.7.6.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ping
+> 
+> Best Regards,
+> J.
+> > 
+> > g.
+> > 
+> > > ---
+> > >  arch/mips/include/asm/mach-au1x00/gpio-au1000.h |    3 ++-
+> > >  arch/mips/include/asm/mach-au1x00/gpio-au1300.h |    3 ++-
+> > >  drivers/gpio/gpiolib.c                          |   12 +++++++-----
+> > >  include/asm-generic/gpio.h                      |    6 ++++--
+> > >  include/linux/gpio.h                            |   23 ++++++++++++++++++++++-
+> > >  5 files changed, 37 insertions(+), 10 deletions(-)
+> > > 
+> > > diff --git a/arch/mips/include/asm/mach-au1x00/gpio-au1000.h b/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
+> > > index 73853b5a..af4accb 100644
+> > > --- a/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
+> > > +++ b/arch/mips/include/asm/mach-au1x00/gpio-au1000.h
+> > > @@ -633,7 +633,8 @@ static inline int gpio_set_debounce(unsigned gpio, unsigned debounce)
+> > >  	return -ENOSYS;
+> > >  }
+> > >  
+> > > -static inline int gpio_export(unsigned gpio, bool direction_may_change)
+> > > +static inline int gpio_export_with_name(unsigned gpio,
+> > > +	bool direction_may_change, const char *name)
+> > >  {
+> > >  	return -ENOSYS;
+> > >  }
+> > > diff --git a/arch/mips/include/asm/mach-au1x00/gpio-au1300.h b/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
+> > > index fb9975c..fcd152e 100644
+> > > --- a/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
+> > > +++ b/arch/mips/include/asm/mach-au1x00/gpio-au1300.h
+> > > @@ -234,7 +234,8 @@ static inline void gpio_unexport(unsigned gpio)
+> > >  {
+> > >  }
+> > >  
+> > > -static inline int gpio_export(unsigned gpio, bool direction_may_change)
+> > > +static inline int gpio_export_with_name(unsigned gpio,
+> > > +	bool direction_may_change, const char *name)
+> > >  {
+> > >  	return -ENOSYS;
+> > >  }
+> > > diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+> > > index b667f76..2141165 100644
+> > > --- a/drivers/gpio/gpiolib.c
+> > > +++ b/drivers/gpio/gpiolib.c
+> > > @@ -714,9 +714,10 @@ static struct class gpio_class = {
+> > >  
+> > >  
+> > >  /**
+> > > - * gpio_export - export a GPIO through sysfs
+> > > + * gpio_export_with_name - export a GPIO through sysfs
+> > >   * @gpio: gpio to make available, already requested
+> > >   * @direction_may_change: true if userspace may change gpio direction
+> > > + * @name: gpio name
+> > >   * Context: arch_initcall or later
+> > >   *
+> > >   * When drivers want to make a GPIO accessible to userspace after they
+> > > @@ -728,7 +729,7 @@ static struct class gpio_class = {
+> > >   *
+> > >   * Returns zero on success, else an error.
+> > >   */
+> > > -int gpio_export(unsigned gpio, bool direction_may_change)
+> > > +int gpio_export_with_name(unsigned gpio, bool direction_may_change, const char *name)
+> > >  {
+> > >  	unsigned long		flags;
+> > >  	struct gpio_desc	*desc;
+> > > @@ -766,7 +767,9 @@ int gpio_export(unsigned gpio, bool direction_may_change)
+> > >  		direction_may_change = false;
+> > >  	spin_unlock_irqrestore(&gpio_lock, flags);
+> > >  
+> > > -	if (desc->chip->names && desc->chip->names[gpio - desc->chip->base])
+> > > +	if (name)
+> > > +		ioname = name;
+> > > +	else if (desc->chip->names && desc->chip->names[gpio - desc->chip->base])
+> > >  		ioname = desc->chip->names[gpio - desc->chip->base];
+> > >  
+> > >  	dev = device_create(&gpio_class, desc->chip->dev, MKDEV(0, 0),
+> > > @@ -804,7 +807,7 @@ fail_unlock:
+> > >  	pr_debug("%s: gpio%d status %d\n", __func__, gpio, status);
+> > >  	return status;
+> > >  }
+> > > -EXPORT_SYMBOL_GPL(gpio_export);
+> > > +EXPORT_SYMBOL_GPL(gpio_export_with_name);
+> > >  
+> > >  static int match_export(struct device *dev, void *data)
+> > >  {
+> > > @@ -856,7 +859,6 @@ done:
+> > >  }
+> > >  EXPORT_SYMBOL_GPL(gpio_export_link);
+> > >  
+> > > -
+> > >  /**
+> > >   * gpio_sysfs_set_active_low - set the polarity of gpio sysfs value
+> > >   * @gpio: gpio to change
+> > > diff --git a/include/asm-generic/gpio.h b/include/asm-generic/gpio.h
+> > > index b6516f3..d04fc55 100644
+> > > --- a/include/asm-generic/gpio.h
+> > > +++ b/include/asm-generic/gpio.h
+> > > @@ -204,7 +204,8 @@ void devm_gpio_free(struct device *dev, unsigned int gpio);
+> > >   * A sysfs interface can be exported by individual drivers if they want,
+> > >   * but more typically is configured entirely from userspace.
+> > >   */
+> > > -extern int gpio_export(unsigned gpio, bool direction_may_change);
+> > > +extern int gpio_export_with_name(unsigned gpio, bool direction_may_change,
+> > > +			const char *name);
+> > >  extern int gpio_export_link(struct device *dev, const char *name,
+> > >  			unsigned gpio);
+> > >  extern int gpio_sysfs_set_active_low(unsigned gpio, int value);
+> > > @@ -249,7 +250,8 @@ struct device;
+> > >  
+> > >  /* sysfs support is only available with gpiolib, where it's optional */
+> > >  
+> > > -static inline int gpio_export(unsigned gpio, bool direction_may_change)
+> > > +static inline int gpio_export_with_name(unsigned gpio,
+> > > +	bool direction_may_change, const char *name)
+> > >  {
+> > >  	return -ENOSYS;
+> > >  }
+> > > diff --git a/include/linux/gpio.h b/include/linux/gpio.h
+> > > index 7ba2762..6e01b8c 100644
+> > > --- a/include/linux/gpio.h
+> > > +++ b/include/linux/gpio.h
+> > > @@ -189,7 +189,8 @@ static inline void gpio_set_value_cansleep(unsigned gpio, int value)
+> > >  	WARN_ON(1);
+> > >  }
+> > >  
+> > > -static inline int gpio_export(unsigned gpio, bool direction_may_change)
+> > > +static inline int gpio_export_with_name(unsigned gpio,
+> > > +	bool direction_may_change, const char *name)
+> > >  {
+> > >  	/* GPIO can never have been requested or set as {in,out}put */
+> > >  	WARN_ON(1);
+> > > @@ -247,4 +248,24 @@ gpiochip_remove_pin_ranges(struct gpio_chip *chip)
+> > >  
+> > >  #endif /* ! CONFIG_GENERIC_GPIO */
+> > >  
+> > > +/**
+> > > + * gpio_export - export a GPIO through sysfs
+> > > + * @gpio: gpio to make available, already requested
+> > > + * @direction_may_change: true if userspace may change gpio direction
+> > > + * Context: arch_initcall or later
+> > > + *
+> > > + * When drivers want to make a GPIO accessible to userspace after they
+> > > + * have requested it -- perhaps while debugging, or as part of their
+> > > + * public interface -- they may use this routine.  If the GPIO can
+> > > + * change direction (some can't) and the caller allows it, userspace
+> > > + * will see "direction" sysfs attribute which may be used to change
+> > > + * the gpio's direction.  A "value" attribute will always be provided.
+> > > + *
+> > > + * Returns zero on success, else an error.
+> > > + */
+> > > +static inline int gpio_export(unsigned gpio,bool direction_may_change)
+> > > +{
+> > > +	return gpio_export_with_name(gpio, direction_may_change, NULL);
+> > > +}
+> > > +
+> > >  #endif /* __LINUX_GPIO_H */
+> > > -- 
+> > > 1.7.10.4
+> > > 
+> > > 
+> > > _______________________________________________
+> > > linux-arm-kernel mailing list
+> > > linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> > > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > 
+> > -- 
+> > Grant Likely, B.Sc, P.Eng.
+> > Secret Lab Technologies, Ltd.
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
