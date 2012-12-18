@@ -1,148 +1,81 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: [PATCH v3 6/6] ARM: mach-virt: add SMP support using PSCI
-Date: Tue, 18 Dec 2012 17:53:16 +0000
-Message-ID: <1355853196-23676-7-git-send-email-will.deacon@arm.com>
-References: <1355853196-23676-1-git-send-email-will.deacon@arm.com>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v3 0/6] Add support for a fake, para-virtualised machine
+Date: Tue, 18 Dec 2012 17:53:10 +0000
+Message-ID: <1355853196-23676-1-git-send-email-will.deacon@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1355853196-23676-1-git-send-email-will.deacon@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: dave.martin@linaro.org, arnd@arndb.de, nico@fluxnic.net, Marc.Zyngier@arm.com, devicetree-discuss@lists.ozlabs.org, Will Deacon <will.deacon@arm.com>, xen-devel@lists.xen.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for SMP to mach-virt using the PSCI
-infrastructure.
+Hi,
 
-Signed-off-by: Will Deacon <will.deacon@arm.com>
----
- arch/arm/mach-virt/Kconfig   |  1 +
- arch/arm/mach-virt/Makefile  |  1 +
- arch/arm/mach-virt/platsmp.c | 58 ++++++++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-virt/virt.c    |  4 +++
- 4 files changed, 64 insertions(+)
+This is version three of the patches originally posted here:
+
+  v1.) http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/135870.html
+  v2.) http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/137750.html
+
+Thanks to all those who have provided comments so far.
+Changes for v3 include:
+
+	* Ripped out *even more* SMP code by rebasing onto latest
+	  mainline
+	* Removed function-base property from device-tree binding
+	* Annotated the low-level firmware invocation functions with
+	  noinline to clarify intent
+	* Minor cleanups
+
+As usual, testing this relies on KVM support for PSCI, a magic kvmtool
+and Mark Rutland's arch-timer patches.
+
+Comments welcome,
+
+Will
+
+
+Marc Zyngier (1):
+  ARM: Dummy Virtual Machine platform support
+
+Will Deacon (5):
+  ARM: opcodes: add missing include of linux/linkage.h
+  ARM: opcodes: add opcodes definitions for ARM security extensions
+  ARM: psci: add devicetree binding for describing PSCI firmware
+  ARM: psci: add support for PSCI invocations from the kernel
+  ARM: mach-virt: add SMP support using PSCI
+
+ Documentation/devicetree/bindings/arm/psci.txt |  55 +++++++
+ arch/arm/Kconfig                               |  12 ++
+ arch/arm/Makefile                              |   1 +
+ arch/arm/include/asm/opcodes-sec.h             |  24 +++
+ arch/arm/include/asm/opcodes.h                 |   1 +
+ arch/arm/include/asm/psci.h                    |  36 +++++
+ arch/arm/kernel/Makefile                       |   1 +
+ arch/arm/kernel/psci.c                         | 211 +++++++++++++++++++++++++
+ arch/arm/mach-virt/Kconfig                     |  10 ++
+ arch/arm/mach-virt/Makefile                    |   6 +
+ arch/arm/mach-virt/platsmp.c                   |  58 +++++++
+ arch/arm/mach-virt/virt.c                      |  69 ++++++++
+ 12 files changed, 484 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/psci.txt
+ create mode 100644 arch/arm/include/asm/opcodes-sec.h
+ create mode 100644 arch/arm/include/asm/psci.h
+ create mode 100644 arch/arm/kernel/psci.c
+ create mode 100644 arch/arm/mach-virt/Kconfig
+ create mode 100644 arch/arm/mach-virt/Makefile
  create mode 100644 arch/arm/mach-virt/platsmp.c
+ create mode 100644 arch/arm/mach-virt/virt.c
 
-diff --git a/arch/arm/mach-virt/Kconfig b/arch/arm/mach-virt/Kconfig
-index a568a2a..8958f0d 100644
---- a/arch/arm/mach-virt/Kconfig
-+++ b/arch/arm/mach-virt/Kconfig
-@@ -3,6 +3,7 @@ config ARCH_VIRT
- 	select ARCH_WANT_OPTIONAL_GPIOLIB
- 	select ARM_GIC
- 	select ARM_ARCH_TIMER
-+	select ARM_PSCI
- 	select HAVE_SMP
- 	select CPU_V7
- 	select SPARSE_IRQ
-diff --git a/arch/arm/mach-virt/Makefile b/arch/arm/mach-virt/Makefile
-index 7ddbfa6..042afc1 100644
---- a/arch/arm/mach-virt/Makefile
-+++ b/arch/arm/mach-virt/Makefile
-@@ -3,3 +3,4 @@
- #
- 
- obj-y					:= virt.o
-+obj-$(CONFIG_SMP)			+= platsmp.o
-diff --git a/arch/arm/mach-virt/platsmp.c b/arch/arm/mach-virt/platsmp.c
-new file mode 100644
-index 0000000..e358beb
---- /dev/null
-+++ b/arch/arm/mach-virt/platsmp.c
-@@ -0,0 +1,58 @@
-+/*
-+ * Dummy Virtual Machine - does what it says on the tin.
-+ *
-+ * Copyright (C) 2012 ARM Ltd
-+ * Author: Will Deacon <will.deacon@arm.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/smp.h>
-+#include <linux/of.h>
-+
-+#include <asm/psci.h>
-+#include <asm/smp_plat.h>
-+#include <asm/hardware/gic.h>
-+
-+extern void secondary_startup(void);
-+
-+static void __init virt_smp_init_cpus(void)
-+{
-+	set_smp_cross_call(gic_raise_softirq);
-+}
-+
-+static void __init virt_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+}
-+
-+static int __cpuinit virt_boot_secondary(unsigned int cpu,
-+					 struct task_struct *idle)
-+{
-+	if (psci_ops.cpu_on)
-+		return psci_ops.cpu_on(cpu_logical_map(cpu),
-+				       __pa(secondary_startup));
-+	return -ENODEV;
-+}
-+
-+static void __cpuinit virt_secondary_init(unsigned int cpu)
-+{
-+	gic_secondary_init(0);
-+}
-+
-+struct smp_operations __initdata virt_smp_ops = {
-+	.smp_init_cpus		= virt_smp_init_cpus,
-+	.smp_prepare_cpus	= virt_smp_prepare_cpus,
-+	.smp_secondary_init	= virt_secondary_init,
-+	.smp_boot_secondary	= virt_boot_secondary,
-+};
-diff --git a/arch/arm/mach-virt/virt.c b/arch/arm/mach-virt/virt.c
-index 174b9da..1d0a85a 100644
---- a/arch/arm/mach-virt/virt.c
-+++ b/arch/arm/mach-virt/virt.c
-@@ -20,6 +20,7 @@
- 
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
-+#include <linux/smp.h>
- 
- #include <asm/arch_timer.h>
- #include <asm/hardware/gic.h>
-@@ -56,10 +57,13 @@ static struct sys_timer virt_timer = {
- 	.init = virt_timer_init,
- };
- 
-+extern struct smp_operations virt_smp_ops;
-+
- DT_MACHINE_START(VIRT, "Dummy Virtual Machine")
- 	.init_irq	= gic_init_irq,
- 	.handle_irq     = gic_handle_irq,
- 	.timer		= &virt_timer,
- 	.init_machine	= virt_init,
-+	.smp		= smp_ops(virt_smp_ops),
- 	.dt_compat	= virt_dt_match,
- MACHINE_END
 -- 
 1.8.0
