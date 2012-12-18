@@ -1,69 +1,56 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH] serial: tegra: add serial driver
-Date: Mon, 17 Dec 2012 12:17:16 -1000
-Message-ID: <50CF99EC.1050509@firmworks.com>
-References: <1355746249-15347-1-git-send-email-ldewangan@nvidia.com>
- <50CF9043.8030308@wwwdotorg.org> <50CF9580.4050300@firmworks.com>
- <50CF96D4.6010705@wwwdotorg.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 02/10] SH: intc: Add support OF of IRQ
+Date: Tue, 18 Dec 2012 09:31:50 +0900
+Message-ID: <20121218003150.GH7146@verge.net.au>
+References: <1355562224-29448-1-git-send-email-horms+renesas@verge.net.au>
+ <1355562224-29448-3-git-send-email-horms+renesas@verge.net.au>
+ <2838757.yMqfipzqR7@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50CF96D4.6010705-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, jslaby-AlSwsSmVLrQ@public.gmane.org, alan-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <2838757.yMqfipzqR7@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Bastian Hecht <hechtb@gmail.com>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Magnus Damm <damm@opensource.se>
 List-Id: devicetree@vger.kernel.org
 
-On 12/17/2012 12:04 PM, Stephen Warren wrote:
-> On 12/17/2012 02:58 PM, Mitch Bradley wrote:
->> On 12/17/2012 11:36 AM, Stephen Warren wrote:
->>> On 12/17/2012 05:10 AM, Laxman Dewangan wrote:
->>>> Nvidia's Tegra has multiple uart controller which supports:
->>>> - APB dma based controller fifo read/write.
->>>> - End Of Data interrupt in incoming data to know whether end
->>>>   of frame achieve or not.
->>>> - Hw controlled RTS and CTS flow control to reduce SW overhead.
->>>
->>>> diff --git a/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt b/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt
->>>
->>>> +NVIDIA Tegra20/Tegra30 high speed (dma based) UART controller driver.
->>>> +
->>>> +Required properties:
->>>> +- compatible : should be "nvidia,tegra20-hsuart", "nvidia,tegra30-hsuart".
->>>
->>> One question that isn't addressed here is:
->>>
->>> Tegra has 5 UARTs. All of them can use the existing 8250.c by specifying
->>> compatible = "nvidia,tegra20-uart".
->>
->> The way it is supposed to work is that the compatible property should
->> list "nvidia,tegra30-hsuart" first, followed by a fallback name that
->> refers to the generic 8250 compatibility.  Having the 8250.c driver bind
->> to the more-specific tegra30-hsuart name is wrong.
+On Mon, Dec 17, 2012 at 09:29:44AM +0100, Laurent Pinchart wrote:
+> Hi Iwamatsu-san,
 > 
-> 8250.c binds to nvidia,tegra20-uart, so that aspect is fine.
+> Thank your for the patch.
 > 
-> However, the real issue is that we probably want 4 of the 5 ports to use
-> the plain old 8250.c (so as not to use up too many DMA channels), but
-> just 1 of the ports to use the DMA-capable high-performance driver (e.g.
-> the one that a particular board has hooked up to a Bluetooth radio). The
-> only way to do that with DT that I know of would be to specify different
-> subsets of legal compatible values for each UART in the per-board .dts file.
+> On Saturday 15 December 2012 18:03:36 Simon Horman wrote:
+> > From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+> > 
+> > Add information of device node to struct intc_desc.
+> > 
+> > Cc: Magnus Damm <damm@opensource.se>
+> > Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+> > Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> > 
+> > ---
+> > 
+> > v7
+> > * Delete "renesas,sh_intcs" and "renesas,sh_intca_irq_pins" as compatible.
+> >   Update their documentation.
+> > * Remove of_sh_intc_get_meminfo() and of_sh_intc_get_pint and
+> >   of_sh_intc_get_intc(). They are not used.
+> > 
+> > v2 - v6
+> > * No change
+> > ---
+> >  Documentation/devicetree/bindings/sh/intc.txt |   15 +----
+> >  drivers/sh/intc/core.c                        |    2 +-
+> >  drivers/sh/intc/internals.h                   |    3 +-
+> >  drivers/sh/intc/irqdomain.c                   |    6 +-
+> >  drivers/sh/intc/of_intc.c                     |   76 ----------------------
+> >  include/linux/sh_intc.h                       |   29 +---------
+> >  6 files changed, 9 insertions(+), 122 deletions(-)
+> 
+> Shouldn't this be squashed into patch 01/10 ? 01/10 adds DT bindings support, 
+> and you already modify them in this patch.
 
-
-That's an okay way to do it.  The whole purpose of the compatible
-property is to support driver binding.  The mantra to "describe the
-hardware" is good, but shouldn't be taken to extremes.
-
-It would be a good idea to comment the .dts file to explain why the
-compatible property differs between the otherwise-identical nodes.
+Good point. Yes, I think so.
+I'll probably be the one doing the squashing and if so I'll do so for the
+next spin.
