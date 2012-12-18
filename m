@@ -1,39 +1,106 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V2] serial: tegra: add serial driver
-Date: Tue, 18 Dec 2012 09:49:27 -0700
-Message-ID: <50D09E97.5090805@wwwdotorg.org>
-References: <1355813993-24867-1-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1355813993-24867-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: alan@linux.intel.com, gregkh@linuxfoundation.org, jslaby@suse.cz, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, wmb@firmworks.com
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: [PATCHv16 6/7] drm_modes: add videomode helpers
+Date: Tue, 18 Dec 2012 18:04:15 +0100
+Message-ID: <1355850256-16135-7-git-send-email-s.trumtrar@pengutronix.de>
+References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>, Rob Clark <robdclark@gmail.com>, Leela Krishna Amudala <leelakrishna.a@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/17/2012 11:59 PM, Laxman Dewangan wrote:
-> Nvidia's Tegra has multiple uart controller which supports:
+Add conversion from videomode to drm_display_mode
 
-A few nits:
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+---
+ drivers/gpu/drm/drm_modes.c |   37 +++++++++++++++++++++++++++++++++++++
+ include/drm/drmP.h          |    5 +++++
+ 2 files changed, 42 insertions(+)
 
-That should be NVIDIA.
-
->  .../devicetree/bindings/serial/serial-tegra.txt    |   24 +
-
-I strongly object to this name; I believe nvidia,tegra20-hsuart.txt is
-correct.
-
-> +NVIDIA Tegra20/Tegra30 high speed (dma based) UART controller driver.
-
-DMA, UART (below), ... should be all capitals.
-
-The binding looks reasonable to me. The few parts of the code I looked
-at look OK.
-
-> diff --git a/include/linux/platform_data/serial-tegra.h b/include/linux/platform_data/serial-tegra.h
-> +#endif /* _SERIAL_TEGRA_H_ */
-> +
-
-There's a blank line at the end of the file.
+diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
+index 59450f3..184a22d 100644
+--- a/drivers/gpu/drm/drm_modes.c
++++ b/drivers/gpu/drm/drm_modes.c
+@@ -35,6 +35,7 @@
+ #include <linux/export.h>
+ #include <drm/drmP.h>
+ #include <drm/drm_crtc.h>
++#include <video/videomode.h>
+ 
+ /**
+  * drm_mode_debug_printmodeline - debug print a mode
+@@ -504,6 +505,42 @@ drm_gtf_mode(struct drm_device *dev, int hdisplay, int vdisplay, int vrefresh,
+ }
+ EXPORT_SYMBOL(drm_gtf_mode);
+ 
++#if IS_ENABLED(CONFIG_VIDEOMODE)
++int drm_display_mode_from_videomode(const struct videomode *vm,
++				    struct drm_display_mode *dmode)
++{
++	dmode->hdisplay = vm->hactive;
++	dmode->hsync_start = dmode->hdisplay + vm->hfront_porch;
++	dmode->hsync_end = dmode->hsync_start + vm->hsync_len;
++	dmode->htotal = dmode->hsync_end + vm->hback_porch;
++
++	dmode->vdisplay = vm->vactive;
++	dmode->vsync_start = dmode->vdisplay + vm->vfront_porch;
++	dmode->vsync_end = dmode->vsync_start + vm->vsync_len;
++	dmode->vtotal = dmode->vsync_end + vm->vback_porch;
++
++	dmode->clock = vm->pixelclock / 1000;
++
++	dmode->flags = 0;
++	if (vm->dmt_flags & VESA_DMT_HSYNC_HIGH)
++		dmode->flags |= DRM_MODE_FLAG_PHSYNC;
++	else if (vm->dmt_flags & VESA_DMT_HSYNC_LOW)
++		dmode->flags |= DRM_MODE_FLAG_NHSYNC;
++	if (vm->dmt_flags & VESA_DMT_VSYNC_HIGH)
++		dmode->flags |= DRM_MODE_FLAG_PVSYNC;
++	else if (vm->dmt_flags & VESA_DMT_VSYNC_LOW)
++		dmode->flags |= DRM_MODE_FLAG_NVSYNC;
++	if (vm->data_flags & DISPLAY_FLAGS_INTERLACED)
++		dmode->flags |= DRM_MODE_FLAG_INTERLACE;
++	if (vm->data_flags & DISPLAY_FLAGS_DOUBLESCAN)
++		dmode->flags |= DRM_MODE_FLAG_DBLSCAN;
++	drm_mode_set_name(dmode);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(drm_display_mode_from_videomode);
++#endif
++
+ /**
+  * drm_mode_set_name - set the name on a mode
+  * @mode: name will be set in this mode
+diff --git a/include/drm/drmP.h b/include/drm/drmP.h
+index 3fd8280..5fbb0fe 100644
+--- a/include/drm/drmP.h
++++ b/include/drm/drmP.h
+@@ -85,6 +85,8 @@ struct module;
+ struct drm_file;
+ struct drm_device;
+ 
++struct videomode;
++
+ #include <drm/drm_os_linux.h>
+ #include <drm/drm_hashtab.h>
+ #include <drm/drm_mm.h>
+@@ -1454,6 +1456,9 @@ extern struct drm_display_mode *
+ drm_mode_create_from_cmdline_mode(struct drm_device *dev,
+ 				  struct drm_cmdline_mode *cmd);
+ 
++extern int drm_display_mode_from_videomode(const struct videomode *vm,
++					   struct drm_display_mode *dmode);
++
+ /* Modesetting support */
+ extern void drm_vblank_pre_modeset(struct drm_device *dev, int crtc);
+ extern void drm_vblank_post_modeset(struct drm_device *dev, int crtc);
+-- 
+1.7.10.4
