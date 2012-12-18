@@ -1,7 +1,7 @@
 From: pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: [RFC 5/8] coresight: add CoreSight Funnel driver
-Date: Tue, 18 Dec 2012 11:19:22 -0800
-Message-ID: <1355858365-11849-6-git-send-email-pratikp@codeaurora.org>
+Subject: [RFC 7/8] coresight: add CoreSight STM driver
+Date: Tue, 18 Dec 2012 11:19:24 -0800
+Message-ID: <1355858365-11849-8-git-send-email-pratikp@codeaurora.org>
 References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,36 +24,65 @@ List-Id: devicetree@vger.kernel.org
 
 From: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-This driver manages CoreSight Funnel which acts as a link.
-Funnels have multiple input ports (typically 8) each of which
-represents an input trace data stream. These multiple input trace
-data streams are interleaved into a single output stream coming
-out of the Funnel.
+This driver manages CoreSight STM (System Trace Macrocell) and
+provides apis and user interface to support software
+instrumentation based tracing that takes advantage of the STM
+hardware.
 
 Signed-off-by: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- drivers/coresight/Makefile           |    2 +-
- drivers/coresight/coresight-funnel.c |  260 ++++++++++++++++++++++++++++++++++
- 2 files changed, 261 insertions(+), 1 deletions(-)
- create mode 100644 drivers/coresight/coresight-funnel.c
+ drivers/coresight/Kconfig         |   19 +
+ drivers/coresight/Makefile        |    1 +
+ drivers/coresight/coresight-stm.c |  819 +++++++++++++++++++++++++++++++++++++
+ include/linux/coresight-stm.h     |   51 +++
+ 4 files changed, 890 insertions(+), 0 deletions(-)
+ create mode 100644 drivers/coresight/coresight-stm.c
+ create mode 100644 include/linux/coresight-stm.h
 
+diff --git a/drivers/coresight/Kconfig b/drivers/coresight/Kconfig
+index 6905ef2..5a715e8 100644
+--- a/drivers/coresight/Kconfig
++++ b/drivers/coresight/Kconfig
+@@ -17,4 +17,23 @@ config CORESIGHT_LINKS_AND_SINKS
+ 	  responsible for transporting and collecting the trace data
+ 	  respectively.
+ 
++config CORESIGHT_SOURCE_STM
++	bool "CoreSight System Trace Macrocell driver"
++	select CORESIGHT_LINKS_AND_SINKS
++	help
++	  This driver provides support for hardware assisted software
++	  instrumentation based tracing. This is primarily useful for
++	  logging useful software events or data.
++
++config CORESIGHT_SOURCE_STM_DEFAULT_ENABLE
++	bool "Turn on CoreSight STM tracing by default"
++	depends on CORESIGHT_SOURCE_STM
++	help
++	  Turns on CoreSight STM tracing (hardware assisted software
++	  instrumentation based tracing) by default. Otherwise, tracing is
++	  disabled by default but can be enabled via sysfs.
++
++	  If unsure, say 'N' here to avoid potential power, performance and
++	  memory penalty.
++
+ endif
 diff --git a/drivers/coresight/Makefile b/drivers/coresight/Makefile
-index 3c1debc..9f84ad0 100644
+index b385e81..750aa7c 100644
 --- a/drivers/coresight/Makefile
 +++ b/drivers/coresight/Makefile
-@@ -3,4 +3,4 @@
- #
+@@ -4,3 +4,4 @@
  obj-$(CONFIG_CORESIGHT) += coresight.o
  obj-$(CONFIG_OF) += of_coresight.o
--obj-$(CONFIG_CORESIGHT_LINKS_AND_SINKS) += coresight-tmc.o coresight-tpiu.o coresight-etb.o
-+obj-$(CONFIG_CORESIGHT_LINKS_AND_SINKS) += coresight-tmc.o coresight-tpiu.o coresight-etb.o coresight-funnel.o
-diff --git a/drivers/coresight/coresight-funnel.c b/drivers/coresight/coresight-funnel.c
+ obj-$(CONFIG_CORESIGHT_LINKS_AND_SINKS) += coresight-tmc.o coresight-tpiu.o coresight-etb.o coresight-funnel.o coresight-replicator.o
++obj-$(CONFIG_CORESIGHT_SOURCE_STM) += coresight-stm.o
+diff --git a/drivers/coresight/coresight-stm.c b/drivers/coresight/coresight-stm.c
 new file mode 100644
-index 0000000..7f39a3e
+index 0000000..69966ed
 --- /dev/null
-+++ b/drivers/coresight/coresight-funnel.c
-@@ -0,0 +1,260 @@
-+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
++++ b/drivers/coresight/coresight-stm.c
+@@ -0,0 +1,819 @@
++/* Copyright (c) 2012, The Linux Foundation. All rights reserved.
 + *
 + * This program is free software; you can redistribute it and/or modify
 + * it under the terms of the GNU General Public License version 2 and
@@ -73,160 +102,677 @@ index 0000000..7f39a3e
 +#include <linux/platform_device.h>
 +#include <linux/io.h>
 +#include <linux/err.h>
++#include <linux/fs.h>
++#include <linux/miscdevice.h>
++#include <linux/uaccess.h>
 +#include <linux/slab.h>
++#include <linux/delay.h>
 +#include <linux/clk.h>
++#include <linux/bitmap.h>
 +#include <linux/of_coresight.h>
 +#include <linux/coresight.h>
++#include <linux/coresight-stm.h>
++#include <asm/unaligned.h>
 +
 +#include "coresight-priv.h"
 +
-+#define funnel_writel(drvdata, val, off)	\
-+			__raw_writel((val), drvdata->base + off)
-+#define funnel_readl(drvdata, off)		\
-+			__raw_readl(drvdata->base + off)
++#define stm_writel(drvdata, val, off)	__raw_writel((val), drvdata->base + off)
++#define stm_readl(drvdata, off)		__raw_readl(drvdata->base + off)
 +
-+#define FUNNEL_LOCK(drvdata)						\
++#define STM_LOCK(drvdata)						\
 +do {									\
 +	mb();								\
-+	funnel_writel(drvdata, 0x0, CORESIGHT_LAR);			\
++	stm_writel(drvdata, 0x0, CORESIGHT_LAR);			\
 +} while (0)
-+#define FUNNEL_UNLOCK(drvdata)						\
++#define STM_UNLOCK(drvdata)						\
 +do {									\
-+	funnel_writel(drvdata, CORESIGHT_UNLOCK, CORESIGHT_LAR);	\
++	stm_writel(drvdata, CORESIGHT_UNLOCK, CORESIGHT_LAR);		\
 +	mb();								\
 +} while (0)
 +
-+#define FUNNEL_FUNCTL		(0x000)
-+#define FUNNEL_PRICTL		(0x004)
-+#define FUNNEL_ITATBDATA0	(0xEEC)
-+#define FUNNEL_ITATBCTR2	(0xEF0)
-+#define FUNNEL_ITATBCTR1	(0xEF4)
-+#define FUNNEL_ITATBCTR0	(0xEF8)
++#define STMDMASTARTR			(0xC04)
++#define STMDMASTOPR			(0xC08)
++#define STMDMASTATR			(0xC0C)
++#define STMDMACTLR			(0xC10)
++#define STMDMAIDR			(0xCFC)
++#define STMHEER				(0xD00)
++#define STMHETER			(0xD20)
++#define STMHEMCR			(0xD64)
++#define STMHEMASTR			(0xDF4)
++#define STMHEFEAT1R			(0xDF8)
++#define STMHEIDR			(0xDFC)
++#define STMSPER				(0xE00)
++#define STMSPTER			(0xE20)
++#define STMSPSCR			(0xE60)
++#define STMSPMSCR			(0xE64)
++#define STMSPOVERRIDER			(0xE68)
++#define STMSPMOVERRIDER			(0xE6C)
++#define STMSPTRIGCSR			(0xE70)
++#define STMTCSR				(0xE80)
++#define STMTSSTIMR			(0xE84)
++#define STMTSFREQR			(0xE8C)
++#define STMSYNCR			(0xE90)
++#define STMAUXCR			(0xE94)
++#define STMSPFEAT1R			(0xEA0)
++#define STMSPFEAT2R			(0xEA4)
++#define STMSPFEAT3R			(0xEA8)
++#define STMITTRIGGER			(0xEE8)
++#define STMITATBDATA0			(0xEEC)
++#define STMITATBCTR2			(0xEF0)
++#define STMITATBID			(0xEF4)
++#define STMITATBCTR0			(0xEF8)
 +
-+#define FUNNEL_HOLDTIME_MASK	(0xF00)
-+#define FUNNEL_HOLDTIME_SHFT	(0x8)
-+#define FUNNEL_HOLDTIME		(0x7 << FUNNEL_HOLDTIME_SHFT)
++#define NR_STM_CHANNEL			(32)
++#define BYTES_PER_CHANNEL		(256)
++#define STM_TRACE_BUF_SIZE		(4096)
++#define STM_USERSPACE_HEADER_SIZE	(8)
++#define STM_USERSPACE_MAGIC1_VAL	(0xf0)
++#define STM_USERSPACE_MAGIC2_VAL	(0xf1)
 +
-+struct funnel_drvdata {
++#define OST_START_TOKEN			(0x30)
++#define OST_VERSION			(0x1)
++
++enum stm_pkt_type {
++	STM_PKT_TYPE_DATA	= 0x98,
++	STM_PKT_TYPE_FLAG	= 0xE8,
++	STM_PKT_TYPE_TRIG	= 0xF8,
++};
++
++enum {
++	STM_OPTION_MARKED	= 0x10,
++};
++
++#define stm_channel_addr(drvdata, ch)	(drvdata->chs.base +	\
++					(ch * BYTES_PER_CHANNEL))
++#define stm_channel_off(type, opts)	(type & ~opts)
++
++#ifdef CONFIG_CORESIGHT_SOURCE_STM_DEFAULT_ENABLE
++static int boot_enable = 1;
++#else
++static int boot_enable;
++#endif
++
++module_param_named(
++	boot_enable, boot_enable, int, S_IRUGO
++);
++
++static int boot_nr_channel;
++
++module_param_named(
++	boot_nr_channel, boot_nr_channel, int, S_IRUGO
++);
++
++struct channel_space {
++	void __iomem		*base;
++	unsigned long		*bitmap;
++};
++
++struct stm_drvdata {
 +	void __iomem		*base;
 +	struct device		*dev;
 +	struct coresight_device	*csdev;
++	struct miscdevice	miscdev;
 +	struct clk		*clk;
-+	uint32_t		priority;
++	spinlock_t		spinlock;
++	struct channel_space	chs;
++	bool			enable;
++	DECLARE_BITMAP(entities, OST_ENTITY_MAX);
 +};
 +
-+static void __funnel_enable(struct funnel_drvdata *drvdata, int port)
++static struct stm_drvdata *stmdrvdata;
++
++static int stm_hwevent_isenable(struct stm_drvdata *drvdata)
 +{
-+	uint32_t functl;
++	int ret = 0;
 +
-+	FUNNEL_UNLOCK(drvdata);
++	spin_lock(&drvdata->spinlock);
++	if (drvdata->enable)
++		if (BVAL(stm_readl(drvdata, STMHEMCR), 0))
++			ret = stm_readl(drvdata, STMHEER) == 0 ? 0 : 1;
++	spin_unlock(&drvdata->spinlock);
 +
-+	functl = funnel_readl(drvdata, FUNNEL_FUNCTL);
-+	functl &= ~FUNNEL_HOLDTIME_MASK;
-+	functl |= FUNNEL_HOLDTIME;
-+	functl |= (1 << port);
-+	funnel_writel(drvdata, functl, FUNNEL_FUNCTL);
-+	funnel_writel(drvdata, drvdata->priority, FUNNEL_PRICTL);
-+
-+	FUNNEL_LOCK(drvdata);
++	return ret;
 +}
 +
-+static int funnel_enable(struct coresight_device *csdev, int inport,
-+			 int outport)
++static void __stm_hwevent_enable(struct stm_drvdata *drvdata)
 +{
-+	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
++	STM_UNLOCK(drvdata);
++
++	/*
++	 * Program STMHETER to ensure TRIGOUTHETE (fed to CTI) is asserted
++	 * for HW events.
++	 */
++	stm_writel(drvdata, 0xFFFFFFFF, STMHETER);
++	stm_writel(drvdata, 0xFFFFFFFF, STMHEER);
++	stm_writel(drvdata, 0x5, STMHEMCR);
++
++	STM_LOCK(drvdata);
++}
++
++static int stm_hwevent_enable(struct stm_drvdata *drvdata)
++{
++	int ret = 0;
++
++	spin_lock(&drvdata->spinlock);
++	if (drvdata->enable)
++		__stm_hwevent_enable(drvdata);
++	else
++		ret = -EINVAL;
++	spin_unlock(&drvdata->spinlock);
++
++	return ret;
++}
++
++static int stm_port_isenable(struct stm_drvdata *drvdata)
++{
++	int ret = 0;
++
++	spin_lock(&drvdata->spinlock);
++	if (drvdata->enable)
++		ret = stm_readl(drvdata, STMSPER) == 0 ? 0 : 1;
++	spin_unlock(&drvdata->spinlock);
++
++	return ret;
++}
++
++static void __stm_port_enable(struct stm_drvdata *drvdata)
++{
++	STM_UNLOCK(drvdata);
++
++	stm_writel(drvdata, 0x10, STMSPTRIGCSR);
++	stm_writel(drvdata, 0xFFFFFFFF, STMSPER);
++
++	STM_LOCK(drvdata);
++}
++
++static int stm_port_enable(struct stm_drvdata *drvdata)
++{
++	int ret = 0;
++
++	spin_lock(&drvdata->spinlock);
++	if (drvdata->enable)
++		__stm_port_enable(drvdata);
++	else
++		ret = -EINVAL;
++	spin_unlock(&drvdata->spinlock);
++
++	return ret;
++}
++
++static void __stm_enable(struct stm_drvdata *drvdata)
++{
++	__stm_hwevent_enable(drvdata);
++	__stm_port_enable(drvdata);
++
++	STM_UNLOCK(drvdata);
++
++	stm_writel(drvdata, 0xFFF, STMSYNCR);
++	/* SYNCEN is read-only and HWTEN is not implemented */
++	stm_writel(drvdata, 0x100003, STMTCSR);
++
++	STM_LOCK(drvdata);
++}
++
++static int stm_enable(struct coresight_device *csdev)
++{
++	struct stm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
 +	int ret;
 +
 +	ret = clk_prepare_enable(drvdata->clk);
 +	if (ret)
 +		return ret;
 +
-+	__funnel_enable(drvdata, inport);
++	spin_lock(&drvdata->spinlock);
++	__stm_enable(drvdata);
++	drvdata->enable = true;
++	spin_unlock(&drvdata->spinlock);
 +
-+	dev_info(drvdata->dev, "FUNNEL inport %d enabled\n", inport);
++	dev_info(drvdata->dev, "STM tracing enabled\n");
 +	return 0;
 +}
 +
-+static void __funnel_disable(struct funnel_drvdata *drvdata, int inport)
++static void __stm_hwevent_disable(struct stm_drvdata *drvdata)
 +{
-+	uint32_t functl;
++	STM_UNLOCK(drvdata);
 +
-+	FUNNEL_UNLOCK(drvdata);
++	stm_writel(drvdata, 0x0, STMHEMCR);
++	stm_writel(drvdata, 0x0, STMHEER);
++	stm_writel(drvdata, 0x0, STMHETER);
 +
-+	functl = funnel_readl(drvdata, FUNNEL_FUNCTL);
-+	functl &= ~(1 << inport);
-+	funnel_writel(drvdata, functl, FUNNEL_FUNCTL);
-+
-+	FUNNEL_LOCK(drvdata);
++	STM_LOCK(drvdata);
 +}
 +
-+static void funnel_disable(struct coresight_device *csdev, int inport,
-+			   int outport)
++static void stm_hwevent_disable(struct stm_drvdata *drvdata)
 +{
-+	struct funnel_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
++	spin_lock(&drvdata->spinlock);
++	if (drvdata->enable)
++		__stm_hwevent_disable(drvdata);
++	spin_unlock(&drvdata->spinlock);
++}
 +
-+	__funnel_disable(drvdata, inport);
++static void __stm_port_disable(struct stm_drvdata *drvdata)
++{
++	STM_UNLOCK(drvdata);
++
++	stm_writel(drvdata, 0x0, STMSPER);
++	stm_writel(drvdata, 0x0, STMSPTRIGCSR);
++
++	STM_LOCK(drvdata);
++}
++
++static void stm_port_disable(struct stm_drvdata *drvdata)
++{
++	spin_lock(&drvdata->spinlock);
++	if (drvdata->enable)
++		__stm_port_disable(drvdata);
++	spin_unlock(&drvdata->spinlock);
++}
++
++static void __stm_disable(struct stm_drvdata *drvdata)
++{
++	STM_UNLOCK(drvdata);
++
++	stm_writel(drvdata, 0x100000, STMTCSR);
++
++	STM_LOCK(drvdata);
++
++	__stm_hwevent_disable(drvdata);
++	__stm_port_disable(drvdata);
++}
++
++static void stm_disable(struct coresight_device *csdev)
++{
++	struct stm_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
++
++	spin_lock(&drvdata->spinlock);
++	__stm_disable(drvdata);
++	drvdata->enable = false;
++	spin_unlock(&drvdata->spinlock);
++
++	/* Wait for 100ms so that pending data has been written to HW */
++	msleep(100);
 +
 +	clk_disable_unprepare(drvdata->clk);
 +
-+	dev_info(drvdata->dev, "FUNNEL inport %d disabled\n", inport);
++	dev_info(drvdata->dev, "STM tracing disabled\n");
 +}
 +
-+static const struct coresight_ops_link funnel_link_ops = {
-+	.enable		= funnel_enable,
-+	.disable	= funnel_disable,
++static const struct coresight_ops_source stm_source_ops = {
++	.enable		= stm_enable,
++	.disable	= stm_disable,
 +};
 +
-+static const struct coresight_ops funnel_cs_ops = {
-+	.link_ops	= &funnel_link_ops,
++static const struct coresight_ops stm_cs_ops = {
++	.source_ops	= &stm_source_ops,
 +};
 +
-+static ssize_t funnel_show_priority(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
++static uint32_t stm_channel_alloc(uint32_t off)
 +{
-+	struct funnel_drvdata *drvdata = dev_get_drvdata(dev->parent);
-+	unsigned long val = drvdata->priority;
++	struct stm_drvdata *drvdata = stmdrvdata;
++	uint32_t ch;
++
++	do {
++		ch = find_next_zero_bit(drvdata->chs.bitmap,
++					NR_STM_CHANNEL, off);
++	} while ((ch < NR_STM_CHANNEL) &&
++		 test_and_set_bit(ch, drvdata->chs.bitmap));
++
++	return ch;
++}
++
++static void stm_channel_free(uint32_t ch)
++{
++	struct stm_drvdata *drvdata = stmdrvdata;
++
++	clear_bit(ch, drvdata->chs.bitmap);
++}
++
++static int stm_send(void *addr, const void *data, uint32_t size)
++{
++	uint64_t prepad = 0;
++	uint64_t postpad = 0;
++	char *pad;
++	uint8_t off, endoff;
++	uint32_t len = size;
++
++	/*
++	 * Only 64bit writes are supported. We rely on the compiler to
++	 * generate STRD instruction for the casted 64bit assignments.
++	 */
++
++	off = (unsigned long)data & 0x7;
++
++	if (off) {
++		endoff = 8 - off;
++		pad = (char *)&prepad;
++		pad += off;
++
++		while (endoff && size) {
++			*pad++ = *(char *)data++;
++			endoff--;
++			size--;
++		}
++		*(volatile uint64_t __force *)addr = prepad;
++	}
++
++	/* Now we are 64bit aligned */
++	while (size >= 8) {
++		*(volatile uint64_t __force *)addr = *(uint64_t *)data;
++		data += 8;
++		size -= 8;
++	}
++
++	if (size) {
++		pad = (char *)&postpad;
++
++		while (size) {
++			*pad++ = *(char *)data++;
++			size--;
++		}
++		*(volatile uint64_t __force *)addr = postpad;
++	}
++
++	return roundup(len + off, 8);
++}
++
++static int stm_trace_ost_header(unsigned long ch_addr, uint32_t options,
++				uint8_t entity_id, uint8_t proto_id,
++				const void *payload_data, uint32_t payload_size)
++{
++	void *addr;
++	uint8_t prepad_size;
++	uint64_t header;
++	char *hdr;
++
++	hdr = (char *)&header;
++
++	hdr[0] = OST_START_TOKEN;
++	hdr[1] = OST_VERSION;
++	hdr[2] = entity_id;
++	hdr[3] = proto_id;
++	prepad_size = (unsigned long)payload_data & 0x7;
++	*(uint32_t *)(hdr + 4) = (prepad_size << 24) | payload_size;
++
++	/* For 64bit writes, header is expected to be of the D32M, D32M */
++	options |= STM_OPTION_MARKED;
++	options &= ~STM_OPTION_TIMESTAMPED;
++	addr =  (void *)(ch_addr | stm_channel_off(STM_PKT_TYPE_DATA, options));
++
++	return stm_send(addr, &header, sizeof(header));
++}
++
++static int stm_trace_data(unsigned long ch_addr, uint32_t options,
++			  const void *data, uint32_t size)
++{
++	void *addr;
++
++	options &= ~STM_OPTION_TIMESTAMPED;
++	addr = (void *)(ch_addr | stm_channel_off(STM_PKT_TYPE_DATA, options));
++
++	return stm_send(addr, data, size);
++}
++
++static int stm_trace_ost_tail(unsigned long ch_addr, uint32_t options)
++{
++	void *addr;
++	uint64_t tail = 0x0;
++
++	addr = (void *)(ch_addr | stm_channel_off(STM_PKT_TYPE_FLAG, options));
++
++	return stm_send(addr, &tail, sizeof(tail));
++}
++
++static inline int __stm_trace(uint32_t options, uint8_t entity_id,
++			      uint8_t proto_id, const void *data, uint32_t size)
++{
++	struct stm_drvdata *drvdata = stmdrvdata;
++	int len = 0;
++	uint32_t ch;
++	unsigned long ch_addr;
++
++	/* Allocate channel and get the channel address */
++	ch = stm_channel_alloc(0);
++	ch_addr = (unsigned long)stm_channel_addr(drvdata, ch);
++
++	/* Send the ost header */
++	len += stm_trace_ost_header(ch_addr, options, entity_id, proto_id, data,
++				    size);
++
++	/* Send the payload data */
++	len += stm_trace_data(ch_addr, options, data, size);
++
++	/* Send the ost tail */
++	len += stm_trace_ost_tail(ch_addr, options);
++
++	/* We are done, free the channel */
++	stm_channel_free(ch);
++
++	return len;
++}
++
++/**
++ * stm_trace - trace the binary or string data through STM
++ * @options: tracing options - guaranteed, timestamped, etc
++ * @entity_id: entity representing the trace data
++ * @proto_id: protocol id to distinguish between different binary formats
++ * @data: pointer to binary or string data buffer
++ * @size: size of data to send
++ *
++ * Packetizes the data as the payload to an OST packet and sends it over STM
++ *
++ * CONTEXT:
++ * Can be called from any context.
++ *
++ * RETURNS:
++ * number of bytes transfered over STM
++ */
++int stm_trace(uint32_t options, uint8_t entity_id, uint8_t proto_id,
++			const void *data, uint32_t size)
++{
++	struct stm_drvdata *drvdata = stmdrvdata;
++
++	/* We don't support sizes more than 24bits (0 to 23) */
++	if (!(drvdata && drvdata->enable &&
++	      test_bit(entity_id, drvdata->entities) && size &&
++	      (size < 0x1000000)))
++		return 0;
++
++	return __stm_trace(options, entity_id, proto_id, data, size);
++}
++EXPORT_SYMBOL_GPL(stm_trace);
++
++static ssize_t stm_write(struct file *file, const char __user *data,
++			 size_t size, loff_t *ppos)
++{
++	struct stm_drvdata *drvdata = container_of(file->private_data,
++						   struct stm_drvdata, miscdev);
++	char *buf;
++	uint8_t entity_id, proto_id;
++	uint32_t options;
++
++	if (!drvdata->enable || !size)
++		return -EINVAL;
++
++	if (size > STM_TRACE_BUF_SIZE)
++		size = STM_TRACE_BUF_SIZE;
++
++	buf = kmalloc(size, GFP_KERNEL);
++	if (!buf)
++		return -ENOMEM;
++
++	if (copy_from_user(buf, data, size)) {
++		kfree(buf);
++		dev_dbg(drvdata->dev, "%s: copy_from_user failed\n", __func__);
++		return -EFAULT;
++	}
++
++	if (size >= STM_USERSPACE_HEADER_SIZE &&
++	    buf[0] == STM_USERSPACE_MAGIC1_VAL &&
++	    buf[1] == STM_USERSPACE_MAGIC2_VAL) {
++
++		entity_id = buf[2];
++		proto_id = buf[3];
++		options = *(uint32_t *)(buf + 4);
++
++		if (!test_bit(entity_id, drvdata->entities) ||
++		    !(size - STM_USERSPACE_HEADER_SIZE)) {
++			kfree(buf);
++			return size;
++		}
++
++		__stm_trace(options, entity_id, proto_id,
++			    buf + STM_USERSPACE_HEADER_SIZE,
++			    size - STM_USERSPACE_HEADER_SIZE);
++	} else {
++		if (!test_bit(OST_ENTITY_DEV_NODE, drvdata->entities)) {
++			kfree(buf);
++			return size;
++		}
++
++		__stm_trace(STM_OPTION_TIMESTAMPED, OST_ENTITY_DEV_NODE, 0,
++			    buf, size);
++	}
++
++	kfree(buf);
++
++	return size;
++}
++
++static const struct file_operations stm_fops = {
++	.owner		= THIS_MODULE,
++	.open		= nonseekable_open,
++	.write		= stm_write,
++	.llseek		= no_llseek,
++};
++
++static ssize_t stm_show_hwevent_enable(struct device *dev,
++				       struct device_attribute *attr, char *buf)
++{
++	struct stm_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	unsigned long val = stm_hwevent_isenable(drvdata);
 +
 +	return scnprintf(buf, PAGE_SIZE, "%#lx\n", val);
 +}
 +
-+static ssize_t funnel_store_priority(struct device *dev,
-+				     struct device_attribute *attr,
-+				     const char *buf, size_t size)
++static ssize_t stm_store_hwevent_enable(struct device *dev,
++					struct device_attribute *attr,
++					const char *buf, size_t size)
 +{
-+	struct funnel_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct stm_drvdata *drvdata = dev_get_drvdata(dev->parent);
 +	unsigned long val;
++	int ret = 0;
 +
 +	if (sscanf(buf, "%lx", &val) != 1)
 +		return -EINVAL;
 +
-+	drvdata->priority = val;
++	if (val)
++		ret = stm_hwevent_enable(drvdata);
++	else
++		stm_hwevent_disable(drvdata);
++
++	if (ret)
++		return ret;
 +	return size;
 +}
-+static DEVICE_ATTR(priority, S_IRUGO | S_IWUSR, funnel_show_priority,
-+		   funnel_store_priority);
++static DEVICE_ATTR(hwevent_enable, S_IRUGO | S_IWUSR, stm_show_hwevent_enable,
++		   stm_store_hwevent_enable);
 +
-+static struct attribute *funnel_attrs[] = {
-+	&dev_attr_priority.attr,
++static ssize_t stm_show_port_enable(struct device *dev,
++				    struct device_attribute *attr, char *buf)
++{
++	struct stm_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	unsigned long val = stm_port_isenable(drvdata);
++
++	return scnprintf(buf, PAGE_SIZE, "%#lx\n", val);
++}
++
++static ssize_t stm_store_port_enable(struct device *dev,
++				     struct device_attribute *attr,
++				     const char *buf, size_t size)
++{
++	struct stm_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	unsigned long val;
++	int ret = 0;
++
++	if (sscanf(buf, "%lx", &val) != 1)
++		return -EINVAL;
++
++	if (val)
++		ret = stm_port_enable(drvdata);
++	else
++		stm_port_disable(drvdata);
++
++	if (ret)
++		return ret;
++	return size;
++}
++static DEVICE_ATTR(port_enable, S_IRUGO | S_IWUSR, stm_show_port_enable,
++		   stm_store_port_enable);
++
++static ssize_t stm_show_entities(struct device *dev,
++			       struct device_attribute *attr, char *buf)
++{
++	struct stm_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	ssize_t len;
++
++	len = bitmap_scnprintf(buf, PAGE_SIZE, drvdata->entities,
++			       OST_ENTITY_MAX);
++
++	if (PAGE_SIZE - len < 2)
++		len = -EINVAL;
++	else
++		len += scnprintf(buf + len, 2, "\n");
++
++	return len;
++}
++
++static ssize_t stm_store_entities(struct device *dev,
++				struct device_attribute *attr,
++				const char *buf, size_t size)
++{
++	struct stm_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	unsigned long val1, val2;
++
++	if (sscanf(buf, "%lx %lx", &val1, &val2) != 2)
++		return -EINVAL;
++
++	if (val1 >= OST_ENTITY_MAX)
++		return -EINVAL;
++
++	if (val2)
++		__set_bit(val1, drvdata->entities);
++	else
++		__clear_bit(val1, drvdata->entities);
++
++	return size;
++}
++static DEVICE_ATTR(entities, S_IRUGO | S_IWUSR, stm_show_entities,
++		   stm_store_entities);
++
++static struct attribute *stm_attrs[] = {
++	&dev_attr_hwevent_enable.attr,
++	&dev_attr_port_enable.attr,
++	&dev_attr_entities.attr,
 +	NULL,
 +};
 +
-+static struct attribute_group funnel_attr_grp = {
-+	.attrs = funnel_attrs,
++static struct attribute_group stm_attr_grp = {
++	.attrs = stm_attrs,
 +};
 +
-+static const struct attribute_group *funnel_attr_grps[] = {
-+	&funnel_attr_grp,
++static const struct attribute_group *stm_attr_grps[] = {
++	&stm_attr_grp,
 +	NULL,
 +};
 +
-+static int __devinit funnel_probe(struct platform_device *pdev)
++static int __devinit stm_probe(struct platform_device *pdev)
 +{
 +	int ret;
 +	struct device *dev = &pdev->dev;
 +	struct coresight_platform_data *pdata;
-+	struct funnel_drvdata *drvdata;
++	struct stm_drvdata *drvdata;
 +	struct resource *res;
++	size_t res_size, bitmap_size;
 +	struct coresight_desc *desc;
 +
 +	if (pdev->dev.of_node) {
@@ -239,6 +785,8 @@ index 0000000..7f39a3e
 +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
 +	if (!drvdata)
 +		return -ENOMEM;
++	/* Store the driver data pointer for use in exported functions */
++	stmdrvdata = drvdata;
 +	drvdata->dev = &pdev->dev;
 +	platform_set_drvdata(pdev, drvdata);
 +
@@ -250,6 +798,28 @@ index 0000000..7f39a3e
 +	if (!drvdata->base)
 +		return -ENOMEM;
 +
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
++	if (!res)
++		return -ENODEV;
++
++	if (boot_nr_channel) {
++		res_size = min((resource_size_t)(boot_nr_channel *
++				  BYTES_PER_CHANNEL), resource_size(res));
++		bitmap_size = boot_nr_channel * sizeof(long);
++	} else {
++		res_size = min((resource_size_t)(NR_STM_CHANNEL *
++				 BYTES_PER_CHANNEL), resource_size(res));
++		bitmap_size = NR_STM_CHANNEL * sizeof(long);
++	}
++	drvdata->chs.base = devm_ioremap(dev, res->start, res_size);
++	if (!drvdata->chs.base)
++		return -ENOMEM;
++	drvdata->chs.bitmap = devm_kzalloc(dev, bitmap_size, GFP_KERNEL);
++	if (!drvdata->chs.bitmap)
++		return -ENOMEM;
++
++	spin_lock_init(&drvdata->spinlock);
++
 +	drvdata->clk = devm_clk_get(dev, "core_clk");
 +	if (IS_ERR(drvdata->clk))
 +		return PTR_ERR(drvdata->clk);
@@ -258,61 +828,136 @@ index 0000000..7f39a3e
 +	if (ret)
 +		return ret;
 +
++	bitmap_fill(drvdata->entities, OST_ENTITY_MAX);
++
 +	desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
 +	if (!desc)
 +		return -ENOMEM;
-+	desc->type = CORESIGHT_DEV_TYPE_LINK;
-+	desc->subtype.link_subtype = CORESIGHT_DEV_SUBTYPE_LINK_MERG;
-+	desc->ops = &funnel_cs_ops;
++	desc->type = CORESIGHT_DEV_TYPE_SOURCE;
++	desc->subtype.source_subtype = CORESIGHT_DEV_SUBTYPE_SOURCE_SOFTWARE;
++	desc->ops = &stm_cs_ops;
 +	desc->pdata = pdev->dev.platform_data;
 +	desc->dev = &pdev->dev;
-+	desc->groups = funnel_attr_grps;
++	desc->groups = stm_attr_grps;
 +	desc->owner = THIS_MODULE;
 +	drvdata->csdev = coresight_register(desc);
 +	if (IS_ERR(drvdata->csdev))
 +		return PTR_ERR(drvdata->csdev);
 +
-+	dev_info(dev, "FUNNEL initialized\n");
++	drvdata->miscdev.name = ((struct coresight_platform_data *)
++				 (pdev->dev.platform_data))->name;
++	drvdata->miscdev.minor = MISC_DYNAMIC_MINOR;
++	drvdata->miscdev.fops = &stm_fops;
++	ret = misc_register(&drvdata->miscdev);
++	if (ret)
++		goto err;
++
++	dev_info(drvdata->dev, "STM initialized\n");
++
++	if (boot_enable)
++		coresight_enable(drvdata->csdev);
++
 +	return 0;
++err:
++	coresight_unregister(drvdata->csdev);
++	return ret;
 +}
 +
-+static int __devexit funnel_remove(struct platform_device *pdev)
++static int __devexit stm_remove(struct platform_device *pdev)
 +{
-+	struct funnel_drvdata *drvdata = platform_get_drvdata(pdev);
++	struct stm_drvdata *drvdata = platform_get_drvdata(pdev);
 +
++	misc_deregister(&drvdata->miscdev);
 +	coresight_unregister(drvdata->csdev);
 +	return 0;
 +}
 +
-+static struct of_device_id funnel_match[] = {
-+	{.compatible = "arm,coresight-funnel"},
++static struct of_device_id stm_match[] = {
++	{.compatible = "arm,coresight-stm"},
 +	{}
 +};
 +
-+static struct platform_driver funnel_driver = {
-+	.probe          = funnel_probe,
-+	.remove         = __devexit_p(funnel_remove),
++static struct platform_driver stm_driver = {
++	.probe          = stm_probe,
++	.remove         = __devexit_p(stm_remove),
 +	.driver         = {
-+		.name   = "coresight-funnel",
++		.name   = "coresight-stm",
 +		.owner	= THIS_MODULE,
-+		.of_match_table = funnel_match,
++		.of_match_table = stm_match,
 +	},
 +};
 +
-+static int __init funnel_init(void)
++static int __init stm_init(void)
 +{
-+	return platform_driver_register(&funnel_driver);
++	return platform_driver_register(&stm_driver);
 +}
-+module_init(funnel_init);
++module_init(stm_init);
 +
-+static void __exit funnel_exit(void)
++static void __exit stm_exit(void)
 +{
-+	platform_driver_unregister(&funnel_driver);
++	platform_driver_unregister(&stm_driver);
 +}
-+module_exit(funnel_exit);
++module_exit(stm_exit);
 +
 +MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("CoreSight Funnel driver");
++MODULE_DESCRIPTION("CoreSight System Trace Macrocell driver");
+diff --git a/include/linux/coresight-stm.h b/include/linux/coresight-stm.h
+new file mode 100644
+index 0000000..15d6f8c
+--- /dev/null
++++ b/include/linux/coresight-stm.h
+@@ -0,0 +1,51 @@
++#ifndef _LINUX_CORESIGHT_STM_H
++#define _LINUX_CORESIGHT_STM_H
++
++enum {
++	OST_ENTITY_NONE			= 0x00,
++	OST_ENTITY_FTRACE_EVENTS	= 0x01,
++	OST_ENTITY_TRACE_PRINTK		= 0x02,
++	OST_ENTITY_TRACE_MARKER		= 0x04,
++	OST_ENTITY_DEV_NODE		= 0x08,
++	OST_ENTITY_QVIEW		= 0xFE,
++	OST_ENTITY_MAX			= 0xFF,
++};
++
++enum {
++	STM_OPTION_NONE			= 0x0,
++	STM_OPTION_TIMESTAMPED		= 0x08,
++	STM_OPTION_GUARANTEED		= 0x80,
++};
++
++#ifdef __KERNEL__
++#define stm_log_inv(entity_id, proto_id, data, size)			\
++	stm_trace(STM_OPTION_NONE, entity_id, proto_id, data, size)
++
++#define stm_log_inv_ts(entity_id, proto_id, data, size)			\
++	stm_trace(STM_OPTION_TIMESTAMPED, entity_id, proto_id,		\
++		  data, size)
++
++#define stm_log_gtd(entity_id, proto_id, data, size)			\
++	stm_trace(STM_OPTION_GUARANTEED, entity_id, proto_id,		\
++		  data, size)
++
++#define stm_log_gtd_ts(entity_id, proto_id, data, size)			\
++	stm_trace(STM_OPTION_GUARANTEED | STM_OPTION_TIMESTAMPED,	\
++		  entity_id, proto_id, data, size)
++
++#define stm_log(entity_id, data, size)					\
++	stm_log_inv_ts(entity_id, 0, data, size)
++
++#ifdef CONFIG_CORESIGHT_SOURCE_STM
++extern int stm_trace(uint32_t options, uint8_t entity_id, uint8_t proto_id,
++		     const void *data, uint32_t size);
++#else
++static inline int stm_trace(uint32_t options, uint8_t entity_id,
++			    uint8_t proto_id, const void *data, uint32_t size)
++{
++	return 0;
++}
++#endif
++#endif /* __KERNEL__ */
++
++#endif
 -- 
 Employee of Qualcomm Innovation Center, Inc.
 Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
