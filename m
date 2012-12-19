@@ -1,43 +1,157 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: Exynos5250: Enabling USB 3.0 phy for samsung-usbphy
- driver
-Date: Wed, 19 Dec 2012 00:32:35 +0100
-Message-ID: <50D0FD13.5060508@gmail.com>
-References: <1355845182-14104-1-git-send-email-gautam.vivek@samsung.com> <1355845182-14104-3-git-send-email-gautam.vivek@samsung.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] ARM: mach-virt: add SMP support using PSCI
+Date: Tue, 18 Dec 2012 23:09:39 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1212182308460.1263@xanadu.home>
+References: <1355853196-23676-1-git-send-email-will.deacon@arm.com>
+ <1355853196-23676-7-git-send-email-will.deacon@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1355845182-14104-3-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, thomas.abraham@linaro.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, p.paneri@samsung.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1355853196-23676-7-git-send-email-will.deacon-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/18/2012 04:39 PM, Vivek Gautam wrote:
-> Adding base address information required for enabling
-> USB 3.0 DRD phy on exynos5250 SOC.
->
-> Signed-off-by: Vivek Gautam<gautam.vivek@samsung.com>
+On Tue, 18 Dec 2012, Will Deacon wrote:
+
+> This patch adds support for SMP to mach-virt using the PSCI
+> infrastructure.
+> 
+> Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+
+Reviewed-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+
 > ---
->   arch/arm/boot/dts/exynos5250.dtsi |    3 ++-
->   1 files changed, 2 insertions(+), 1 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index bbdb2c2..07b7477 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -316,7 +316,8 @@
->
->   	usbphy@12130000 {
->   		compatible = "samsung,exynos5250-usbphy";
-> -		reg =<0x12130000 0x100>;
-> +		reg =<0x12130000 0x100>,
-> +		<0x12100000 0x100>;
-
-Doesn't this second memory region mean distinct PHY controller device ?
-Why separate usbphy node can't/shouldn't be created for it ?
-
->   		samsung,usb-phyhandle =<&phy_h0&phy_h1&phy_h2>;
->   		samsung,enable-mask =<1>;
->   	};
+>  arch/arm/mach-virt/Kconfig   |  1 +
+>  arch/arm/mach-virt/Makefile  |  1 +
+>  arch/arm/mach-virt/platsmp.c | 58 ++++++++++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-virt/virt.c    |  4 +++
+>  4 files changed, 64 insertions(+)
+>  create mode 100644 arch/arm/mach-virt/platsmp.c
+> 
+> diff --git a/arch/arm/mach-virt/Kconfig b/arch/arm/mach-virt/Kconfig
+> index a568a2a..8958f0d 100644
+> --- a/arch/arm/mach-virt/Kconfig
+> +++ b/arch/arm/mach-virt/Kconfig
+> @@ -3,6 +3,7 @@ config ARCH_VIRT
+>  	select ARCH_WANT_OPTIONAL_GPIOLIB
+>  	select ARM_GIC
+>  	select ARM_ARCH_TIMER
+> +	select ARM_PSCI
+>  	select HAVE_SMP
+>  	select CPU_V7
+>  	select SPARSE_IRQ
+> diff --git a/arch/arm/mach-virt/Makefile b/arch/arm/mach-virt/Makefile
+> index 7ddbfa6..042afc1 100644
+> --- a/arch/arm/mach-virt/Makefile
+> +++ b/arch/arm/mach-virt/Makefile
+> @@ -3,3 +3,4 @@
+>  #
+>  
+>  obj-y					:= virt.o
+> +obj-$(CONFIG_SMP)			+= platsmp.o
+> diff --git a/arch/arm/mach-virt/platsmp.c b/arch/arm/mach-virt/platsmp.c
+> new file mode 100644
+> index 0000000..e358beb
+> --- /dev/null
+> +++ b/arch/arm/mach-virt/platsmp.c
+> @@ -0,0 +1,58 @@
+> +/*
+> + * Dummy Virtual Machine - does what it says on the tin.
+> + *
+> + * Copyright (C) 2012 ARM Ltd
+> + * Author: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/init.h>
+> +#include <linux/smp.h>
+> +#include <linux/of.h>
+> +
+> +#include <asm/psci.h>
+> +#include <asm/smp_plat.h>
+> +#include <asm/hardware/gic.h>
+> +
+> +extern void secondary_startup(void);
+> +
+> +static void __init virt_smp_init_cpus(void)
+> +{
+> +	set_smp_cross_call(gic_raise_softirq);
+> +}
+> +
+> +static void __init virt_smp_prepare_cpus(unsigned int max_cpus)
+> +{
+> +}
+> +
+> +static int __cpuinit virt_boot_secondary(unsigned int cpu,
+> +					 struct task_struct *idle)
+> +{
+> +	if (psci_ops.cpu_on)
+> +		return psci_ops.cpu_on(cpu_logical_map(cpu),
+> +				       __pa(secondary_startup));
+> +	return -ENODEV;
+> +}
+> +
+> +static void __cpuinit virt_secondary_init(unsigned int cpu)
+> +{
+> +	gic_secondary_init(0);
+> +}
+> +
+> +struct smp_operations __initdata virt_smp_ops = {
+> +	.smp_init_cpus		= virt_smp_init_cpus,
+> +	.smp_prepare_cpus	= virt_smp_prepare_cpus,
+> +	.smp_secondary_init	= virt_secondary_init,
+> +	.smp_boot_secondary	= virt_boot_secondary,
+> +};
+> diff --git a/arch/arm/mach-virt/virt.c b/arch/arm/mach-virt/virt.c
+> index 174b9da..1d0a85a 100644
+> --- a/arch/arm/mach-virt/virt.c
+> +++ b/arch/arm/mach-virt/virt.c
+> @@ -20,6 +20,7 @@
+>  
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+> +#include <linux/smp.h>
+>  
+>  #include <asm/arch_timer.h>
+>  #include <asm/hardware/gic.h>
+> @@ -56,10 +57,13 @@ static struct sys_timer virt_timer = {
+>  	.init = virt_timer_init,
+>  };
+>  
+> +extern struct smp_operations virt_smp_ops;
+> +
+>  DT_MACHINE_START(VIRT, "Dummy Virtual Machine")
+>  	.init_irq	= gic_init_irq,
+>  	.handle_irq     = gic_handle_irq,
+>  	.timer		= &virt_timer,
+>  	.init_machine	= virt_init,
+> +	.smp		= smp_ops(virt_smp_ops),
+>  	.dt_compat	= virt_dt_match,
+>  MACHINE_END
+> -- 
+> 1.8.0
+> 
