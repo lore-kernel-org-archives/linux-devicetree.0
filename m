@@ -1,61 +1,84 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] serial: tegra: add serial driver
-Date: Wed, 19 Dec 2012 13:03:05 +0000
-Message-ID: <20121219130307.B8FCB3E0AD7@localhost>
-References: <1355746249-15347-1-git-send-email-ldewangan@nvidia.com> <50CF9043.8030308@wwwdotorg.org> <50CF9580.4050300@firmworks.com> <50CF96D4.6010705@wwwdotorg.org> <50CF99EC.1050509@firmworks.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <50CF99EC.1050509@firmworks.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mitch Bradley <wmb@firmworks.com>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, rob.herring@calxeda.com, linux-doc@vger.kernel.org, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org, jslaby@suse.cz, alan@linux.intel.com
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] gpiolib: add gpio_export_with_name
+Date: Wed, 19 Dec 2012 13:11:51 +0000
+Message-ID: <20121219131151.789043E0AD7@localhost>
+References: <20121121101259.GQ4398@game.jcrosoft.org>
+ <1353492849-29397-1-git-send-email-plagnioj@jcrosoft.com>
+ <20121126135911.2F1D33E187C@localhost>
+ <20121128201907.GF4398@game.jcrosoft.org>
+ <20121218060415.GM23971@game.jcrosoft.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121218060415.GM23971-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Dec 2012 12:17:16 -1000, Mitch Bradley <wmb@firmworks.com> wrote:
-> On 12/17/2012 12:04 PM, Stephen Warren wrote:
-> > On 12/17/2012 02:58 PM, Mitch Bradley wrote:
-> >> On 12/17/2012 11:36 AM, Stephen Warren wrote:
-> >>> On 12/17/2012 05:10 AM, Laxman Dewangan wrote:
-> >>>> Nvidia's Tegra has multiple uart controller which supports:
-> >>>> - APB dma based controller fifo read/write.
-> >>>> - End Of Data interrupt in incoming data to know whether end
-> >>>>   of frame achieve or not.
-> >>>> - Hw controlled RTS and CTS flow control to reduce SW overhead.
-> >>>
-> >>>> diff --git a/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt b/Documentation/devicetree/bindings/serial/nvidia,serial-tegra.txt
-> >>>
-> >>>> +NVIDIA Tegra20/Tegra30 high speed (dma based) UART controller driver.
-> >>>> +
-> >>>> +Required properties:
-> >>>> +- compatible : should be "nvidia,tegra20-hsuart", "nvidia,tegra30-hsuart".
-> >>>
-> >>> One question that isn't addressed here is:
-> >>>
-> >>> Tegra has 5 UARTs. All of them can use the existing 8250.c by specifying
-> >>> compatible = "nvidia,tegra20-uart".
-> >>
-> >> The way it is supposed to work is that the compatible property should
-> >> list "nvidia,tegra30-hsuart" first, followed by a fallback name that
-> >> refers to the generic 8250 compatibility.  Having the 8250.c driver bind
-> >> to the more-specific tegra30-hsuart name is wrong.
+On Tue, 18 Dec 2012 07:04:15 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> On 21:19 Wed 28 Nov     , Jean-Christophe PLAGNIOL-VILLARD wrote:
+> > On 13:59 Mon 26 Nov     , Grant Likely wrote:
+> > > On Wed, 21 Nov 2012 11:14:08 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> > > > allow to specify a name to an exported gpio
+> > > > 
+> > > > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> > > 
+> > > The gpio sysfs ABI is already horrible, racy, and unsafe. Really, we
+> > > need a proper chrdev interface for controlling gpios. Sysfs is fine for
+> > > poking around and experimenting, but we cannot provide any fine grained
+> > > access control, locking or faster IO with the one-file-per-gpio sysfs
+> > > model.
+> > I do agree on this and mention it on the ML multiple times but this an ABI
+> > and we can not change it anymore we need to support it
+> > > So, no, I don't think this is a good idea to extend gpiolib in
+> > > this way.
+> > > 
+> > > However, I would be okay with making gpiochips first-class kobjects or
+> > > struct devices that appear as a child of the gpio controller device so
+> > > that userspace could interrogate the device tree node associated with
+> > > the device.
+> > the problem here is that I do not want the user space to become smart
 > > 
-> > 8250.c binds to nvidia,tegra20-uart, so that aspect is fine.
+> > I want the user space to known which gpio use for a specific feature
+> > as example you just want to read lack restistor to detect a hw features
 > > 
-> > However, the real issue is that we probably want 4 of the 5 ports to use
-> > the plain old 8250.c (so as not to use up too many DMA channels), but
-> > just 1 of the ports to use the DMA-capable high-performance driver (e.g.
-> > the one that a particular board has hooked up to a Bluetooth radio). The
-> > only way to do that with DT that I know of would be to specify different
-> > subsets of legal compatible values for each UART in the per-board .dts file.
+> > you known the encoding it does not change cross hw but the pin to read do
+> > 
+> > So the idea is just to tell the user space use this pin to get your
+> > information
+> > 
+> > how to do you want to solve this?
+> > 
+> > This apply to other case:
+> >  - chip poweron/off
+> >  - reset
+> >  etc... all control by userspace
 > 
-> 
-> That's an okay way to do it.  The whole purpose of the compatible
-> property is to support driver binding.  The mantra to "describe the
-> hardware" is good, but shouldn't be taken to extremes.
-> 
-> It would be a good idea to comment the .dts file to explain why the
-> compatible property differs between the otherwise-identical nodes.
+> ping
 
-+1
+I've already stated in other thread that I want to see a significantly
+better GPIO interface created. Something based on a char dev and can
+handle 'bursts' of gpio manipulations/reads. I'm not going to accept
+extensions to the sysfs interface.
+
+Within that context I would consider named subsets of the same interface
+that pre-packages a set of related gpio pins.
+
+That said, I'm not convinced that direct gpio access is the abstraction
+that you want. If it is an interface for, say, reading feature bits,
+then it probably does want to be an actual driver that reads the
+gpios/registers/adc/etc and returns the parsed status in a file. That's
+the only way to reliably get the abstraction from your example above.
 
 g.
-
