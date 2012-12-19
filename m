@@ -1,40 +1,41 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] of: add 'const' to of_node_full_name parameter
-Date: Wed, 19 Dec 2012 13:13:24 +0000
-Message-ID: <20121219131324.2DD993E0AD7@localhost>
-References: <1355826723-27763-1-git-send-email-s.trumtrar@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355826723-27763-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH - v2] spi: davinci: add OF support for the spi controller
+Date: Wed, 19 Dec 2012 13:18:50 +0000
+Message-ID: <20121219131850.E421B3E0AD7@localhost>
+References: <1355260839-29865-1-git-send-email-m-karicheri2@ti.com> <20121215002758.14D223E0BEC@localhost>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121215002758.14D223E0BEC@localhost>
+Sender: linux-doc-owner@vger.kernel.org
+To: rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, davinci-linux-open-source@linux.davincidsp.com, linux-keystone@list.ti.com
+Cc: Murali Karicheri <m-karicheri2@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Dec 2012 11:32:03 +0100, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> As the function just returns the np->full_name or the string "<no-node>", the
-> passed device_node pointer is not changed in any way.
+On Sat, 15 Dec 2012 00:27:58 +0000, Grant Likely <grant.likely@secretlab.ca> wrote:
+> On Tue, 11 Dec 2012 16:20:39 -0500, Murali Karicheri <m-karicheri2@ti.com> wrote:
+> > This adds OF support to DaVinci SPI controller to configure platform
+> > data through device bindings. Also replaces clk_enable() with
+> > of clk_prepare_enable() as well as clk_disable() with
+> > clk_disable_unprepare().
+> > 
+> > Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> > Reviewed-by : Grant Likely <grant.likely@secretlab.ca>
 > 
-> The passed parameter can therefore be a const pointer.
+> Applied, thanks.
 > 
-> Also, fix the following error from checkpatch.pl:
+> I did remove the OF_ALIAS_N property though. I know the COMPATIBLE one
+> uses it, but it is actually kind of redundant since it can also be
+> determined by counting the number of OF_ALIAS_* entries, and having the
+> _N one in there means extra work needs to be done to filter it out.
 > 
-> ERROR: "foo* bar" should be "foo *bar"
-> +static inline const char* of_node_full_name(const struct device_node *np)
-> 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Also, I had to add a #ifndef _LINUX_OF_PRIVATE_H wrapper around the
+> whole header file. This is needed for all header files to protect
+> against multiple includes.
 
-Applied, thanks. Will show up in linux-next after the v3.8 merge window closes.
+Ummm.... oops. I replied to the wrong email when applying another patch.
+Sorry for the noise.
+
+But I have applied your patch now. It will appear in linux-next after
+the merge window closes.
 
 g.
+
