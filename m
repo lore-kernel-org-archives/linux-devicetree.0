@@ -1,80 +1,309 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH] of: Support a PCI device that is compatible with
- 'simple-bus'
-Date: Wed, 19 Dec 2012 12:18:00 -0700
-Message-ID: <20121219191800.GA1169@obsidianresearch.com>
-References: <20121210215119.GA32011@obsidianresearch.com>
- <20121214202629.BD40C3E0BDD@localhost>
- <20121214215814.GA14149@obsidianresearch.com>
- <20121219125451.3F1FB3E0AD7@localhost>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: [PATCH 2/6] ARM: pinctrl: sunxi: Add the pinctrl pin set for sun5i
+Date: Wed, 19 Dec 2012 21:18:11 +0100
+Message-ID: <1355948295-19680-3-git-send-email-maxime.ripard@free-electrons.com>
+References: <1355948295-19680-1-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20121219125451.3F1FB3E0AD7@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1355948295-19680-1-git-send-email-maxime.ripard@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Alejandro Mery <amery@geeks.cl>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Stefan Roese <sr@denx.de>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 19, 2012 at 12:54:51PM +0000, Grant Likely wrote:
+Since the Allwinner SoCs variants don't have the same set of pins to
+handle, we need to declare the pin ranges available.
+
+Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+---
+ drivers/pinctrl/pinctrl-sunxi.c |  254 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 254 insertions(+)
+
+diff --git a/drivers/pinctrl/pinctrl-sunxi.c b/drivers/pinctrl/pinctrl-sunxi.c
+index 83d67d8..b031ed0 100644
+--- a/drivers/pinctrl/pinctrl-sunxi.c
++++ b/drivers/pinctrl/pinctrl-sunxi.c
+@@ -26,6 +26,259 @@
+ #include "core.h"
+ #include "pinctrl-sunxi.h"
  
-> Then it sounds like you really don't want PCI addressing in the
-> children. It sounds like the children addresses need to be in the form
-> [bar#] [offset-from-base-of-bar]. In that case, you need the
-> appropriate
-
-They should be interchangeable - in 99% of cases with multiple BARs
-each BAR will be a different address type, so tagging by address type
-or tagging by bar number is basically the same. I started with the 3
-dw format only because that made sense to me and tried to make that
-work. As it turns out the 2dw or 1dw format works fine out without any
-patching and has the same basic functionality via the ranges
-remapping.
-
-> ranges entries to translate from each bar to the PCI address space,
-> which is exactly what other users are doing. Whether your address format
-> uses 2 cells or 3, it shouldn't matter. The translation mechanism is
-> the
-
-It does matter, I could not make 3 cells work, I sent you the various
-approaches I tested that fix this, but they were not terribly
-general.. I'm still very unclear what the root problem is, though..
-
-> In both cases, the type of transfer is encoded by the BAR address and
-> does not get exposed to the child device. Exposing the PCI flags into
-> the child bus(es) really isn't a very good idea because they don't make
-> sense in that context. It may seem expedient, but it will be fragile.
-
-Well, it makes as much sense as for a PCI driver - each of the three
-transfer types has different coding requirements in the driver, so
-each of the three type must be kept separate.
-
-I haven't looked super closely at this, but the basic desire is to
-have IORESOURCE_PREFETCH tagged on the struct resource that reaches
-the platform driver. 'get_flags' for a non-PCI addresses scheme always
-returns IORESOURCE_MEM, and translating through a ranges doesn't
-appear to fix that. This is where 3dw is desirable because it uses a
-get_flags that understands the three resource types.
-
-> I apologize if I'm being dense here and missing something about why you
-> need to use PCI addressing on a non-PCI bus segment. Please let me know
-> if I'm missing something important.
-
-I think you've got it basically right. I misunderstood some of what
-you were originally saying about using ranges from your earlier
-mail. What you described is fine for IORESOURCE_MEM style regions, and
-I've confirmed that it works OK in my cases.
-
-Regards,
-Jason
++static const struct sunxi_desc_pin sun5i_a13_pins[] = {
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PB0,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PB1,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PB2,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PB3,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PB4,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PB10,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PB15,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PB16,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PB17,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PB18,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC0,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC1,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC2,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC3,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC4,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC5,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC6,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC7,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC8,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC9,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC10,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC11,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC12,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC13,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC14,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC15,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PC19,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD2,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD3,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD4,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD5,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD6,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD7,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD10,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD11,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD12,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD13,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD14,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD15,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD18,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD19,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD20,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD21,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD22,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD23,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD24,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD25,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD26,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PD27,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE0,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE1,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE2,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE3,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE4,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE5,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE6,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE7,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE8,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE9,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE10,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out"),
++		SUNXI_FUNCTION(0x4, "uart1")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PE11,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out"),
++		SUNXI_FUNCTION(0x4, "uart1")),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PF0,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PF1,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PF2,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PF3,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PF4,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PF5,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PG0,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PG1,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PG2,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PG3,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out"),
++		SUNXI_FUNCTION(0x4, "uart1")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PG4,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out"),
++		SUNXI_FUNCTION(0x4, "uart1")),
++	/* Hole */
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PG9,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PG10,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PG11,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++	SUNXI_PIN(SUNXI_PINCTRL_PIN_PG12,
++		SUNXI_FUNCTION(0x0, "gpio_in"),
++		SUNXI_FUNCTION(0x1, "gpio_out")),
++};
++
++static const struct sunxi_pinctrl_desc sun5i_a13_pinctrl_data = {
++	.pins = sun5i_a13_pins,
++	.npins = ARRAY_SIZE(sun5i_a13_pins),
++};
++
++
+ static struct sunxi_pinctrl_group *
+ sunxi_pinctrl_find_group_by_name(struct sunxi_pinctrl *pctl, const char *group)
+ {
+@@ -361,6 +614,7 @@ static struct pinctrl_desc sunxi_pctrl_desc = {
+ };
+ 
+ static struct of_device_id sunxi_pinctrl_match[] __devinitconst = {
++	{ .compatible = "allwinner,sun5i-a13-pinctrl", .data = (void *)&sun5i_a13_pinctrl_data },
+ 	{}
+ };
+ MODULE_DEVICE_TABLE(of, sunxi_pinctrl_match);
+-- 
+1.7.9.5
