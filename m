@@ -1,268 +1,106 @@
-From: pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Subject: [RFC 6/8] coresight: add CoreSight Replicator driver
-Date: Tue, 18 Dec 2012 11:19:23 -0800
-Message-ID: <1355858365-11849-7-git-send-email-pratikp@codeaurora.org>
-References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355858365-11849-1-git-send-email-pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, magnus.p.persson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, david.rusling-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, d-deao-l0cyMroinI0@public.gmane.org, christian.bejram-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v4 7/7] leds: leds-pwm: Add device tree bindings
+Date: Wed, 19 Dec 2012 11:40:30 +0000
+Message-ID: <20121219114030.9AC133E0AD7@localhost>
+References: <1355303092-15523-1-git-send-email-peter.ujfalusi@ti.com> <1355303092-15523-8-git-send-email-peter.ujfalusi@ti.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1355303092-15523-8-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Hi Peter,
 
-This driver manages CoreSight Replicator that takes single input
-trace data stream and replicates it to produce two identical
-trace data output streams. Replicators are typically used to
-route single interleaved trace data stream to two or more sinks.
+Thanks for this work. Comments below...
 
-Signed-off-by: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- drivers/coresight/Makefile               |    2 +-
- drivers/coresight/coresight-replicator.c |  211 ++++++++++++++++++++++++++++++
- 2 files changed, 212 insertions(+), 1 deletions(-)
- create mode 100644 drivers/coresight/coresight-replicator.c
+On Wed, 12 Dec 2012 10:04:52 +0100, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> Support for device tree booted kernel.
+> 
+> For usage see:
+> Documentation/devicetree/bindings/leds/leds-pwm.txt
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-diff --git a/drivers/coresight/Makefile b/drivers/coresight/Makefile
-index 9f84ad0..b385e81 100644
---- a/drivers/coresight/Makefile
-+++ b/drivers/coresight/Makefile
-@@ -3,4 +3,4 @@
- #
- obj-$(CONFIG_CORESIGHT) += coresight.o
- obj-$(CONFIG_OF) += of_coresight.o
--obj-$(CONFIG_CORESIGHT_LINKS_AND_SINKS) += coresight-tmc.o coresight-tpiu.o coresight-etb.o coresight-funnel.o
-+obj-$(CONFIG_CORESIGHT_LINKS_AND_SINKS) += coresight-tmc.o coresight-tpiu.o coresight-etb.o coresight-funnel.o coresight-replicator.o
-diff --git a/drivers/coresight/coresight-replicator.c b/drivers/coresight/coresight-replicator.c
-new file mode 100644
-index 0000000..fe37e5e
---- /dev/null
-+++ b/drivers/coresight/coresight-replicator.c
-@@ -0,0 +1,211 @@
-+/* Copyright (c) 2011-2012, The Linux Foundation. All rights reserved.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 and
-+ * only version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/device.h>
-+#include <linux/platform_device.h>
-+#include <linux/io.h>
-+#include <linux/err.h>
-+#include <linux/slab.h>
-+#include <linux/clk.h>
-+#include <linux/of_coresight.h>
-+#include <linux/coresight.h>
-+
-+#include "coresight-priv.h"
-+
-+#define replicator_writel(drvdata, val, off)	\
-+				__raw_writel((val), drvdata->base + off)
-+#define replicator_readl(drvdata, off)		\
-+				__raw_readl(drvdata->base + off)
-+
-+#define REPLICATOR_LOCK(drvdata)					\
-+do {									\
-+	mb();								\
-+	replicator_writel(drvdata, 0x0, CORESIGHT_LAR);			\
-+} while (0)
-+#define REPLICATOR_UNLOCK(drvdata)					\
-+do {									\
-+	replicator_writel(drvdata, CORESIGHT_UNLOCK, CORESIGHT_LAR);	\
-+	mb();								\
-+} while (0)
-+
-+#define REPLICATOR_IDFILTER0		(0x000)
-+#define REPLICATOR_IDFILTER1		(0x004)
-+#define REPLICATOR_ITATBCTR0		(0xEFC)
-+#define REPLICATOR_ITATBCTR1		(0xEF8)
-+
-+struct replicator_drvdata {
-+	void __iomem		*base;
-+	struct device		*dev;
-+	struct coresight_device	*csdev;
-+	struct clk		*clk;
-+};
-+
-+static void __replicator_enable(struct replicator_drvdata *drvdata, int outport)
-+{
-+	REPLICATOR_UNLOCK(drvdata);
-+
-+	if (outport == 0) {
-+		replicator_writel(drvdata, 0x0, REPLICATOR_IDFILTER0);
-+		replicator_writel(drvdata, 0xFF, REPLICATOR_IDFILTER1);
-+	} else {
-+		replicator_writel(drvdata, 0x0, REPLICATOR_IDFILTER1);
-+		replicator_writel(drvdata, 0xFF, REPLICATOR_IDFILTER0);
-+	}
-+
-+	REPLICATOR_LOCK(drvdata);
-+}
-+
-+static int replicator_enable(struct coresight_device *csdev, int inport,
-+			     int outport)
-+{
-+	struct replicator_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-+	int ret;
-+
-+	ret = clk_prepare_enable(drvdata->clk);
-+	if (ret)
-+		return ret;
-+
-+	__replicator_enable(drvdata, outport);
-+
-+	dev_info(drvdata->dev, "REPLICATOR enabled\n");
-+	return 0;
-+}
-+
-+static void __replicator_disable(struct replicator_drvdata *drvdata,
-+				 int outport)
-+{
-+	REPLICATOR_UNLOCK(drvdata);
-+
-+	if (outport == 0)
-+		replicator_writel(drvdata, 0xFF, REPLICATOR_IDFILTER0);
-+	else
-+		replicator_writel(drvdata, 0xFF, REPLICATOR_IDFILTER1);
-+
-+	REPLICATOR_LOCK(drvdata);
-+}
-+
-+static void replicator_disable(struct coresight_device *csdev, int inport,
-+			       int outport)
-+{
-+	struct replicator_drvdata *drvdata = dev_get_drvdata(csdev->dev.parent);
-+
-+	__replicator_disable(drvdata, outport);
-+
-+	clk_disable_unprepare(drvdata->clk);
-+
-+	dev_info(drvdata->dev, "REPLICATOR disabled\n");
-+}
-+
-+static const struct coresight_ops_link replicator_link_ops = {
-+	.enable		= replicator_enable,
-+	.disable	= replicator_disable,
-+};
-+
-+static const struct coresight_ops replicator_cs_ops = {
-+	.link_ops	= &replicator_link_ops,
-+};
-+
-+static int __devinit replicator_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	struct device *dev = &pdev->dev;
-+	struct coresight_platform_data *pdata;
-+	struct replicator_drvdata *drvdata;
-+	struct resource *res;
-+	struct coresight_desc *desc;
-+
-+	if (pdev->dev.of_node) {
-+		pdata = of_get_coresight_platform_data(dev, pdev->dev.of_node);
-+		if (IS_ERR(pdata))
-+			return PTR_ERR(pdata);
-+		pdev->dev.platform_data = pdata;
-+	}
-+
-+	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-+	if (!drvdata)
-+		return -ENOMEM;
-+	drvdata->dev = &pdev->dev;
-+	platform_set_drvdata(pdev, drvdata);
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!res)
-+		return -ENODEV;
-+
-+	drvdata->base = devm_ioremap(dev, res->start, resource_size(res));
-+	if (!drvdata->base)
-+		return -ENOMEM;
-+
-+	drvdata->clk = devm_clk_get(dev, "core_clk");
-+	if (IS_ERR(drvdata->clk))
-+		return PTR_ERR(drvdata->clk);
-+
-+	ret = clk_set_rate(drvdata->clk, CORESIGHT_CLK_RATE_TRACE);
-+	if (ret)
-+		return ret;
-+
-+	desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
-+	if (!desc)
-+		return -ENOMEM;
-+	desc->type = CORESIGHT_DEV_TYPE_LINK;
-+	desc->subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_LINK_SPLIT;
-+	desc->ops = &replicator_cs_ops;
-+	desc->pdata = pdev->dev.platform_data;
-+	desc->dev = &pdev->dev;
-+	desc->owner = THIS_MODULE;
-+	drvdata->csdev = coresight_register(desc);
-+	if (IS_ERR(drvdata->csdev))
-+		return PTR_ERR(drvdata->csdev);
-+
-+	dev_info(dev, "REPLICATOR initialized\n");
-+	return 0;
-+}
-+
-+static int __devexit replicator_remove(struct platform_device *pdev)
-+{
-+	struct replicator_drvdata *drvdata = platform_get_drvdata(pdev);
-+
-+	coresight_unregister(drvdata->csdev);
-+	return 0;
-+}
-+
-+static struct of_device_id replicator_match[] = {
-+	{.compatible = "qcom,coresight-replicator"},
-+	{}
-+};
-+
-+static struct platform_driver replicator_driver = {
-+	.probe          = replicator_probe,
-+	.remove         = __devexit_p(replicator_remove),
-+	.driver         = {
-+		.name   = "coresight-replicator",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = replicator_match,
-+	},
-+};
-+
-+static int __init replicator_init(void)
-+{
-+	return platform_driver_register(&replicator_driver);
-+}
-+module_init(replicator_init);
-+
-+static void __exit replicator_exit(void)
-+{
-+	platform_driver_unregister(&replicator_driver);
-+}
-+module_exit(replicator_exit);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_DESCRIPTION("CoreSight Replicator driver");
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+About commit text: Remember that commit text is the first thing people
+are going to see when looking over what changed in a given subsystem. It
+is also where maintainers like me look first when trying to decide if a
+patch makes sense before applying it. When commit text is bare-bones
+like the above and the patch is non-trivial, then I end up trying to
+reconstruct your though process or rational for a patch.
+
+So, please, if it is anything beyond a trivial patch then tell us more
+than simply "support for device tree booted kernel". What platform did
+you make the change for? How was it tested? Are there any notable design
+decisions that you made when adding this support? Are there any missing
+pieces or possible bugs?
+
+I'm picking on you at the moment, but this is a general comment. The
+commit text is where you get to convince me that the patch is needed and
+tell me about how it was designed. This is really important information;
+particularly for poor random user, bisecting his broken kernel and
+landing on your commit. In this small way, you can make her Christmas
+merrier this year.
+
+
+> ---
+>  .../devicetree/bindings/leds/leds-pwm.txt          |  48 +++++++++
+>  drivers/leds/leds-pwm.c                            | 112 +++++++++++++++++----
+>  2 files changed, 140 insertions(+), 20 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Documentation/devicetree/bindings/leds/leds-pwm.txt
+> new file mode 100644
+> index 0000000..7297107
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
+> @@ -0,0 +1,48 @@
+> +LED connected to PWM
+> +
+> +Required properties:
+> +- compatible : should be "pwm-leds".
+> +
+> +Each LED is represented as a sub-node of the pwm-leds device.  Each
+> +node's name represents the name of the corresponding LED.
+> +
+> +LED sub-node properties:
+> +- pwms : PWM property to point to the PWM device (phandle)/port (id) and to
+> +  specify the period time to be used: <&phandle id period_ns>;
+> +- pwm-names : (optional) Name to be used by the PWM subsystem for the PWM device
+> +  For the pwms and pwm-names property please refer to:
+> +  Documentation/devicetree/bindings/pwm/pwm.txt
+> +- max-brightness : Maximum brightness possible for the LED
+> +- label :  (optional)
+> +  see Documentation/devicetree/bindings/leds/common.txt
+> +- linux,default-trigger :  (optional)
+> +  see Documentation/devicetree/bindings/leds/common.txt
+> +
+> +Example:
+> +
+> +twl_pwm: pwm {
+> +	/* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
+> +	compatible = "ti,twl6030-pwm";
+> +	#pwm-cells = <2>;
+> +};
+> +
+> +twl_pwmled: pwmled {
+> +	/* provides one PWM (id 0 for Charing indicator LED) */
+> +	compatible = "ti,twl6030-pwmled";
+> +	#pwm-cells = <2>;
+> +};
+> +
+> +pwmleds {
+> +	compatible = "pwm-leds";
+> +	kpad {
+> +		label = "omap4::keypad";
+> +		pwms = <&twl_pwm 0 7812500>;
+> +		max-brightness = <127>;
+> +	};
+> +
+> +	charging {
+> +		label = "omap4:green:chrg";
+> +		pwms = <&twl_pwmled 0 7812500>;
+> +		max-brightness = <255>;
+> +	};
+
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
