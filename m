@@ -1,89 +1,64 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: Fix export of of_find_matching_node_and_match()
-Date: Wed, 19 Dec 2012 11:02:49 +0000
-Message-ID: <CACxGe6vTxQGr+t5O4q0J265K02-EEeEiGoOTvB1o-ee2bBrhZg@mail.gmail.com>
-References: <1355914716-19469-1-git-send-email-grant.likely@secretlab.ca>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: CoreSight framework and drivers
+Date: Wed, 19 Dec 2012 11:23:14 +0000
+Message-ID: <20121219112314.GA26329@mudshark.cambridge.arm.com>
+References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1355914716-19469-1-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Stephen Warren <swarren@nvidia.com>, Rob Herring <rob.herring@calxeda.com>, Anatolij Gustschin <agust@denx.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "pratikp@codeaurora.org" <pratikp@codeaurora.org>
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "magnus.p.persson@stericsson.com" <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "jon-hunter@ti.com" <jon-hunter@ti.com>, "d-deao@ti.com" <d-deao@ti.com>, "christian.bejram@stericsson.com" <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 19, 2012 at 10:58 AM, Grant Likely
-<grant.likely@secretlab.ca> wrote:
-> Commit 50c8af4cf9, "of: introduce for_each_matching_node_and_match()"
-> renamed of_find_matching_node() to of_find_matching_node_and_match() and
-> created a new static inline of_find_matching_node() wrapper around the
-> new name. However, the change neglected to change the EXPORT_SYMBOL()
-> reference causing build errors for modules.
->
-> This patch fixes the EXPORT_SYMBOL() statement. Discovered on a PowerPC
-> Efika build with the mpc52xx_uart driver being built as a module.
->
-> Reported-by: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Stephen Warren <swarren@nvidia.com>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Anatolij Gustschin <agust@denx.de>
+Hi Pratik,
 
-Rob, I've just pushed this out to my devicetree/merge branch. If
-you've got any fixes queued up for Linus, then please pull this in
-before sending them on to him. Otherwise I'll send Linus a pull req
-for this fix this evening. Ether way, please reply to let me know what
-you're going to do.
+On Tue, Dec 18, 2012 at 07:19:17PM +0000, pratikp@codeaurora.org wrote:
+> This RFC is aimed at introducing CoreSight framework as well as
+> individual CoreSight trace component drivers adhering to ARM
+> CoreSight specification. Some prior discussion on this can be
+> referred at [1].
+> 
+> There are 3 kinds of CoreSight trace components:
+> 
+> * Sources: Responsible for producing trace data to provide
+>   visibility for the associated entity.
+> 
+> * Links: Transport components that carry trace data.
+> 
+> * Sinks: Collectors for storing trace data or acting as conduits
+>   for off-chip trace data collection.
+> 
+> These components can be connected in various topologies to suite
+> a particular SoCs tracing needs.
+> 
+> Framework is responsible for gathering and using the information
+> about the registered CoreSight components and their connections
+> to allow it to dynamically deduce the sequence of components
+> representing a connection from a CoreSight source to the
+> currently selected CoreSight sink. This helps the framework to
+> program the correct set of components to satisfy user request.
 
-g.
+>From a million miles up, this looks like a sensible sort of design but I
+really think you need to talk to Jon Hunter (he's at least on CC) about
+this, especially where bindings are concerned. If we can get something that
+you both agree on, then we can include the CTI with the other coresight
+components and do a more in-depth review at that point.
 
-The following changes since commit 752451f01c4567b506bf4343082682dbb8fb30dd:
+Finally, how do you plan on exposing this data to the user? I think the only
+sane way is to have per-device file descriptors which act as pipes to the raw
+data but this means we need some readily available, open-source tooling (or
+at least public specifications of the trace formats).
 
-  Merge branch 'i2c-embedded/for-next' of
-git://git.pengutronix.de/git/wsa/linux (2012-12-18 16:51:10 -0800)
-
-are available in the git repository at:
-
-  git://git.secretlab.ca/git/linux-2.6 devicetree/merge
-
-for you to fetch changes up to 80c2022e5645a1a789531d13010292c5c18bf1db:
-
-  of: Fix export of of_find_matching_node_and_match() (2012-12-19
-10:58:53 +0000)
-
-----------------------------------------------------------------
-Grant Likely (1):
-      of: Fix export of of_find_matching_node_and_match()
-
- drivers/of/base.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-> ---
->
-> I'll push this patch out to my tree ASAP.
->
->  drivers/of/base.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index db8d211..2390ddb 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -629,7 +629,7 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
->         read_unlock(&devtree_lock);
->         return np;
->  }
-> -EXPORT_SYMBOL(of_find_matching_node);
-> +EXPORT_SYMBOL(of_find_matching_node_and_match);
->
->  /**
->   * of_modalias_node - Lookup appropriate modalias for a device node
-> --
-> 1.7.10.4
->
-
-
-
---
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+Will
