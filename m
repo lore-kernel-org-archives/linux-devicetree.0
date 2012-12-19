@@ -1,106 +1,94 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v4 7/7] leds: leds-pwm: Add device tree bindings
-Date: Wed, 19 Dec 2012 11:40:30 +0000
-Message-ID: <20121219114030.9AC133E0AD7@localhost>
-References: <1355303092-15523-1-git-send-email-peter.ujfalusi@ti.com> <1355303092-15523-8-git-send-email-peter.ujfalusi@ti.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1355303092-15523-8-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Thierry Reding <thierry.reding@avionic-design.de>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration
+ implementation
+Date: Wed, 19 Dec 2012 12:32:01 +0000
+Message-ID: <20121219123201.B636A3E0AD7@localhost>
+References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com>
+ <1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1355464254-12768-2-git-send-email-ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, naveen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
-
-Thanks for this work. Comments below...
-
-On Wed, 12 Dec 2012 10:04:52 +0100, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> Support for device tree booted kernel.
+On Fri, 14 Dec 2012 11:20:53 +0530, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> The arbitrator is a general purpose function which uses two GPIOs to
+> communicate with another device to claim/release a bus.
 > 
-> For usage see:
-> Documentation/devicetree/bindings/leds/leds-pwm.txt
+> i2c_transfer()
+> 	if adapter->gpio_arbit
+> 		i2c_bus_claim();
+> 			__i2c_transfer();
+> 		i2c_bus_release();
 > 
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Cc: Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-About commit text: Remember that commit text is the first thing people
-are going to see when looking over what changed in a given subsystem. It
-is also where maintainers like me look first when trying to decide if a
-patch makes sense before applying it. When commit text is bare-bones
-like the above and the patch is non-trivial, then I end up trying to
-reconstruct your though process or rational for a patch.
+Hi Naveen,
 
-So, please, if it is anything beyond a trivial patch then tell us more
-than simply "support for device tree booted kernel". What platform did
-you make the change for? How was it tested? Are there any notable design
-decisions that you made when adding this support? Are there any missing
-pieces or possible bugs?
+I'm not convinced on the design of this protocol. It won't scale beyond
+2 bus masters and it seems very specific to the design of a specific
+piece of hardware. I don't think it is mature enough to bake into the
+core i2c infrastructure or bindings. Nor do I think it will handle other
+busses properly.
 
-I'm picking on you at the moment, but this is a general comment. The
-commit text is where you get to convince me that the patch is needed and
-tell me about how it was designed. This is really important information;
-particularly for poor random user, bisecting his broken kernel and
-landing on your commit. In this small way, you can make her Christmas
-merrier this year.
+I can see two alternatives here.
+1) build in hooks for doing i2c bus claim/release, but don't put this
+specific implementation into the core infrastructure
+2) Create an i2c bridge driver. This would kind of be like an i2c
+multiplexer, but it would only have one bus and it would include the
+knowledge of how to use the GPIO lines for bus arbitration.
 
+I think option 2 would be the cleanest option. It would be straight
+forward to design a binding for it by placing a node between the i2c
+bus and all the i2c clients. For example:
 
-> ---
->  .../devicetree/bindings/leds/leds-pwm.txt          |  48 +++++++++
->  drivers/leds/leds-pwm.c                            | 112 +++++++++++++++++----
->  2 files changed, 140 insertions(+), 20 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-> new file mode 100644
-> index 0000000..7297107
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-> @@ -0,0 +1,48 @@
-> +LED connected to PWM
-> +
-> +Required properties:
-> +- compatible : should be "pwm-leds".
-> +
-> +Each LED is represented as a sub-node of the pwm-leds device.  Each
-> +node's name represents the name of the corresponding LED.
-> +
-> +LED sub-node properties:
-> +- pwms : PWM property to point to the PWM device (phandle)/port (id) and to
-> +  specify the period time to be used: <&phandle id period_ns>;
-> +- pwm-names : (optional) Name to be used by the PWM subsystem for the PWM device
-> +  For the pwms and pwm-names property please refer to:
-> +  Documentation/devicetree/bindings/pwm/pwm.txt
-> +- max-brightness : Maximum brightness possible for the LED
-> +- label :  (optional)
-> +  see Documentation/devicetree/bindings/leds/common.txt
-> +- linux,default-trigger :  (optional)
-> +  see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Example:
-> +
-> +twl_pwm: pwm {
-> +	/* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
-> +	compatible = "ti,twl6030-pwm";
-> +	#pwm-cells = <2>;
-> +};
-> +
-> +twl_pwmled: pwmled {
-> +	/* provides one PWM (id 0 for Charing indicator LED) */
-> +	compatible = "ti,twl6030-pwmled";
-> +	#pwm-cells = <2>;
-> +};
-> +
-> +pwmleds {
-> +	compatible = "pwm-leds";
-> +	kpad {
-> +		label = "omap4::keypad";
-> +		pwms = <&twl_pwm 0 7812500>;
-> +		max-brightness = <127>;
-> +	};
-> +
-> +	charging {
-> +		label = "omap4:green:chrg";
-> +		pwms = <&twl_pwmled 0 7812500>;
-> +		max-brightness = <255>;
-> +	};
+i2c@60000000 {
+	compatible = "acme,some-i2c-device";
+	#address-cells = <1>;
+	#size-cells = <0>;
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+	i2c-bridge {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "samaung,i2c-gpio-arbitrate";
+
+		bus-arbitration-gpios = <&gpf0 3 1 0 0>, /* AP_CLAIM */
+			<&gpe0 4 0 3 0>; /* EC_CLAIM */
+	
+		bus-arbitration-slew-delay-us = <10>;
+		bus-arbitration-wait-retry-us = <2000>;
+		bus-arbitration-wait-free-us = <50000>;
+
+		i2c@52 {
+			// Normal i2c device
+		};
+	};
+};
+
+I don't know what the state of the i2c subsystem is with regard to
+supporting i2c multiplexer devices, so there might be some changes
+needed there, but I can't see it being particularly complex. It should
+just be a device in the middle. Any i2c device that is a child of the
+bridge would send transfers to the bridge, and the bridge would be
+responsible to claim the bus and then pass the transfer through
+unchanged.
+
+That eliminates the problem of trying to design an arbitration scheme
+that works for all.
+
+g.
