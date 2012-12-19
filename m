@@ -1,157 +1,104 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 6/6] ARM: mach-virt: add SMP support using PSCI
-Date: Tue, 18 Dec 2012 23:09:39 -0500 (EST)
-Message-ID: <alpine.LFD.2.02.1212182308460.1263@xanadu.home>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH v3 3/6] ARM: psci: add devicetree binding for describing
+ PSCI firmware
+Date: Tue, 18 Dec 2012 23:11:38 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1212182311170.1263@xanadu.home>
 References: <1355853196-23676-1-git-send-email-will.deacon@arm.com>
- <1355853196-23676-7-git-send-email-will.deacon@arm.com>
+ <1355853196-23676-4-git-send-email-will.deacon@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355853196-23676-7-git-send-email-will.deacon-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, xen-devel-GuqFBffKawuEi8DpZVb4nw@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1355853196-23676-4-git-send-email-will.deacon@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>
+Cc: dave.martin@linaro.org, arnd@arndb.de, Marc.Zyngier@arm.com, devicetree-discuss@lists.ozlabs.org, xen-devel@lists.xen.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 On Tue, 18 Dec 2012, Will Deacon wrote:
 
-> This patch adds support for SMP to mach-virt using the PSCI
-> infrastructure.
+> This patch adds a new devicetree binding for describing PSCI firmware
+> to Linux.
 > 
-> Signed-off-by: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Will Deacon <will.deacon@arm.com>
 
-Reviewed-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Nicolas Pitre <nico@linaro.org>
 
 
 > ---
->  arch/arm/mach-virt/Kconfig   |  1 +
->  arch/arm/mach-virt/Makefile  |  1 +
->  arch/arm/mach-virt/platsmp.c | 58 ++++++++++++++++++++++++++++++++++++++++++++
->  arch/arm/mach-virt/virt.c    |  4 +++
->  4 files changed, 64 insertions(+)
->  create mode 100644 arch/arm/mach-virt/platsmp.c
+>  Documentation/devicetree/bindings/arm/psci.txt | 55 ++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/psci.txt
 > 
-> diff --git a/arch/arm/mach-virt/Kconfig b/arch/arm/mach-virt/Kconfig
-> index a568a2a..8958f0d 100644
-> --- a/arch/arm/mach-virt/Kconfig
-> +++ b/arch/arm/mach-virt/Kconfig
-> @@ -3,6 +3,7 @@ config ARCH_VIRT
->  	select ARCH_WANT_OPTIONAL_GPIOLIB
->  	select ARM_GIC
->  	select ARM_ARCH_TIMER
-> +	select ARM_PSCI
->  	select HAVE_SMP
->  	select CPU_V7
->  	select SPARSE_IRQ
-> diff --git a/arch/arm/mach-virt/Makefile b/arch/arm/mach-virt/Makefile
-> index 7ddbfa6..042afc1 100644
-> --- a/arch/arm/mach-virt/Makefile
-> +++ b/arch/arm/mach-virt/Makefile
-> @@ -3,3 +3,4 @@
->  #
->  
->  obj-y					:= virt.o
-> +obj-$(CONFIG_SMP)			+= platsmp.o
-> diff --git a/arch/arm/mach-virt/platsmp.c b/arch/arm/mach-virt/platsmp.c
+> diff --git a/Documentation/devicetree/bindings/arm/psci.txt b/Documentation/devicetree/bindings/arm/psci.txt
 > new file mode 100644
-> index 0000000..e358beb
+> index 0000000..433afe9
 > --- /dev/null
-> +++ b/arch/arm/mach-virt/platsmp.c
-> @@ -0,0 +1,58 @@
-> +/*
-> + * Dummy Virtual Machine - does what it says on the tin.
-> + *
-> + * Copyright (C) 2012 ARM Ltd
-> + * Author: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + * You should have received a copy of the GNU General Public License
-> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
-> + */
+> +++ b/Documentation/devicetree/bindings/arm/psci.txt
+> @@ -0,0 +1,55 @@
+> +* Power State Coordination Interface (PSCI)
 > +
-> +#include <linux/init.h>
-> +#include <linux/smp.h>
-> +#include <linux/of.h>
+> +Firmware implementing the PSCI functions described in ARM document number
+> +ARM DEN 0022A ("Power State Coordination Interface System Software on ARM
+> +processors") can be used by Linux to initiate various CPU-centric power
+> +operations.
 > +
-> +#include <asm/psci.h>
-> +#include <asm/smp_plat.h>
-> +#include <asm/hardware/gic.h>
+> +Issue A of the specification describes functions for CPU suspend, hotplug
+> +and migration of secure software.
 > +
-> +extern void secondary_startup(void);
+> +Functions are invoked by trapping to the privilege level of the PSCI
+> +firmware (specified as part of the binding below) and passing arguments
+> +in a manner similar to that specified by AAPCS:
 > +
-> +static void __init virt_smp_init_cpus(void)
-> +{
-> +	set_smp_cross_call(gic_raise_softirq);
-> +}
+> +	 r0		=> 32-bit Function ID / return value
+> +	{r1 - r3}	=> Parameters
 > +
-> +static void __init virt_smp_prepare_cpus(unsigned int max_cpus)
-> +{
-> +}
+> +Note that the immediate field of the trapping instruction must be set
+> +to #0.
 > +
-> +static int __cpuinit virt_boot_secondary(unsigned int cpu,
-> +					 struct task_struct *idle)
-> +{
-> +	if (psci_ops.cpu_on)
-> +		return psci_ops.cpu_on(cpu_logical_map(cpu),
-> +				       __pa(secondary_startup));
-> +	return -ENODEV;
-> +}
 > +
-> +static void __cpuinit virt_secondary_init(unsigned int cpu)
-> +{
-> +	gic_secondary_init(0);
-> +}
+> +Main node required properties:
 > +
-> +struct smp_operations __initdata virt_smp_ops = {
-> +	.smp_init_cpus		= virt_smp_init_cpus,
-> +	.smp_prepare_cpus	= virt_smp_prepare_cpus,
-> +	.smp_secondary_init	= virt_secondary_init,
-> +	.smp_boot_secondary	= virt_boot_secondary,
-> +};
-> diff --git a/arch/arm/mach-virt/virt.c b/arch/arm/mach-virt/virt.c
-> index 174b9da..1d0a85a 100644
-> --- a/arch/arm/mach-virt/virt.c
-> +++ b/arch/arm/mach-virt/virt.c
-> @@ -20,6 +20,7 @@
->  
->  #include <linux/of_irq.h>
->  #include <linux/of_platform.h>
-> +#include <linux/smp.h>
->  
->  #include <asm/arch_timer.h>
->  #include <asm/hardware/gic.h>
-> @@ -56,10 +57,13 @@ static struct sys_timer virt_timer = {
->  	.init = virt_timer_init,
->  };
->  
-> +extern struct smp_operations virt_smp_ops;
+> + - compatible    : Must be "arm,psci"
 > +
->  DT_MACHINE_START(VIRT, "Dummy Virtual Machine")
->  	.init_irq	= gic_init_irq,
->  	.handle_irq     = gic_handle_irq,
->  	.timer		= &virt_timer,
->  	.init_machine	= virt_init,
-> +	.smp		= smp_ops(virt_smp_ops),
->  	.dt_compat	= virt_dt_match,
->  MACHINE_END
+> + - method        : The method of calling the PSCI firmware. Permitted
+> +                   values are:
+> +
+> +                   "smc" : SMC #0, with the register assignments specified
+> +		           in this binding.
+> +
+> +                   "hvc" : HVC #0, with the register assignments specified
+> +		           in this binding.
+> +
+> +Main node optional properties:
+> +
+> + - cpu_suspend   : Function ID for CPU_SUSPEND operation
+> +
+> + - cpu_off       : Function ID for CPU_OFF operation
+> +
+> + - cpu_on        : Function ID for CPU_ON operation
+> +
+> + - migrate       : Function ID for MIGRATE operation
+> +
+> +
+> +Example:
+> +
+> +	psci {
+> +		compatible	= "arm,psci";
+> +		method		= "smc";
+> +		cpu_suspend	= <0x95c10000>;
+> +		cpu_off		= <0x95c10001>;
+> +		cpu_on		= <0x95c10002>;
+> +		migrate		= <0x95c10003>;
+> +	};
 > -- 
 > 1.8.0
 > 
