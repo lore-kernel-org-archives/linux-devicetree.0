@@ -1,114 +1,100 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v2] usb: phy: samsung: Add support to set pmu isolation
-Date: Wed, 19 Dec 2012 21:28:41 +0100
-Message-ID: <50D22379.9090909@gmail.com>
-References: <1355810167-18425-2-git-send-email-gautam.vivek@samsung.com> <1355838966-11269-1-git-send-email-gautam.vivek@samsung.com> <50D0F9EA.9090002@gmail.com> <CAFp+6iGTRpDRcES862hcXL59DcG=GPEZ6B6r2jtw575P-8kCPw@mail.gmail.com> <CAFp+6iFHzARtKD6Off7h7_0fcxx52rFoT2V8ucy_a2kTd4bf1w@mail.gmail.com>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH 5/5] Input: Add ChromeOS EC keyboard driver
+Date: Wed, 19 Dec 2012 12:35:02 -0800
+Message-ID: <CAPnjgZ3USkBZk+xtTAdBUjt625=VeU3ex9QP-KoBRZwua3eWqQ@mail.gmail.com>
+References: <1355348028-19017-1-git-send-email-sjg@chromium.org>
+	<1355348028-19017-6-git-send-email-sjg@chromium.org>
+	<20121215011345.9D5973E0BEE@localhost>
+	<2990462.l5jY89jKQx@dtor-d630.eng.vmware.com>
+	<20121219125722.DCD3E3E0AD7@localhost>
+	<20121219181643.GA31435@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iFHzARtKD6Off7h7_0fcxx52rFoT2V8ucy_a2kTd4bf1w@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautamvivek1987@gmail.com>
-Cc: linux-usb@vger.kernel.org, dianders@chromium.org, l.majewski@samsung.com, linux-samsung-soc@vger.kernel.org, p.paneri@samsung.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, balbi@ti.com, kyungmin.park@samsung.com, kgene.kim@samsung.com, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, Vivek Gautam <gautam.vivek@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121219181643.GA31435@core.coreip.homeip.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sourav Poddar <sourav.poddar@ti.com>, Felipe Balbi <balbi@ti.com>, Olof Johansson <olof@lixom.net>, Roland Stigge <stigge@antcom.de>, Wolfram Sang <w.sang@pengutronix.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, linux-doc@vger.kernel.org, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 12/19/2012 02:44 PM, Vivek Gautam wrote:
->>>> --- a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
->>>> +++ b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
->>>> @@ -9,3 +9,15 @@ Required properties:
->>>>    - compatible : should be "samsung,exynos4210-usbphy"
->>>>    - reg : base physical address of the phy registers and length of memory
->>>> mapped
->>>>          region.
->>>> +
->>>> +Optional properties:
->>>> +- samsung,usb-phyhandle : should point to usb-phyhandle sub-node which
->>>> provides
->>>> +                       binding data to enable/disable device PHY handled
->>>> by
->>>> +                       PMU register.
->>>> +
->>>> +                       Required properties:
->>>> +                       - compatible : should be "samsung,usbdev-phyctrl"
->>>> for
->>>> +                                       DEVICE type phy.
->>>> +                       - samsung,phyhandle-reg: base physical address of
->>>> +                                               PHY_CONTROL register in
->>>> PMU.
->>>> +- samsung,enable-mask : should be '1'
->>>
->>>
->>> This should only be 1 for Exynos4210+ SoCs, right ?
+On Wed, Dec 19, 2012 at 10:16 AM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Wed, Dec 19, 2012 at 12:57:22PM +0000, Grant Likely wrote:
+>> On Fri, 14 Dec 2012 17:43:31 -0800, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
+>> > On Saturday, December 15, 2012 01:13:45 AM Grant Likely wrote:
+>> > > On Wed, 12 Dec 2012 13:33:48 -0800, Simon Glass <sjg@chromium.org> wrote:
+>> > > > Use the key-matrix layer to interpret key scan information from the EC
+>> > > > and inject input based on the FDT-supplied key map. This driver registers
+>> > > > itself with the ChromeOS EC driver to perform communications.
+>> > > >
+>> > > > Additional FDT bindings are provided to specify rows/columns and the
+>> > > > auto-repeat information.
+>> > > >
+>> > > > Signed-off-by: Simon Glass <sjg@chromium.org>
+>> > > > Signed-off-by: Luigi Semenzato <semenzato@chromium.org>
+>> > > > Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
+>> > > > ---
+>> > > >
+>> > > >  .../devicetree/bindings/input/cros-ec-keyb.txt     |   77 ++++
+>> > > >  drivers/input/keyboard/Kconfig                     |   10 +
+>> > > >  drivers/input/keyboard/Makefile                    |    1 +
+>> > > >  drivers/input/keyboard/cros_ec_keyb.c              |  413
+>> > > >  ++++++++++++++++++++ 4 files changed, 501 insertions(+), 0 deletions(-)
+>> > > >  create mode 100644
+>> > > >  Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+>> > > >  create mode 100644 drivers/input/keyboard/cros_ec_keyb.c
+>> > > >
+>> > > > diff --git a/Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+>> > > > b/Documentation/devicetree/bindings/input/cros-ec-keyb.txt new file mode
+>> > > > 100644
+>> > > > index 0000000..67f51d8
+>> > > > --- /dev/null
+>> > > > +++ b/Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+>> > > > @@ -0,0 +1,77 @@
+>> > > > +ChromeOS EC Keyboard
+>> > > > +
+>> > > > +Google's ChromeOS EC Keyboard is a simple matrix keyboard implemented on
+>> > > > +a separate EC (Embedded Controller) device. It provides a message for
+>> > > > reading +key scans from the EC. These are then converted into keycodes
+>> > > > for processing +by the kernel.
+>> > > > +
+>> > > > +Required properties:
+>> > > > +- compatible: "google,cros-ec-keyb"
+>> > > > +- google,key-rows: Number of keyboard rows (must be <= 8)
+>> > > > +- google,key-columns: Number of keyboard columns (must be <= 13)
+>> > > > +- google,repeat-delay-ms: Key repeat delay in milliseconds
+>> > > > +- google,repeat-rate-ms: Key repeat rate in milliseconds
+>> > >
+>> > > Hmmm, these should probably be in a common binding. Take a look at
+>> > > the other input bindings and make a proposal for properties to add to
+>> > > matrix-keymap.txt.
+>> >
+>> > Actually these are not essentia for bringup and can be set from userspace,
+>> > so I'd say simply drop them.
+>>
+>> Aren't they needed for a working keyboard? If so, I would really think
+>> they should be set correctly without userspace intervention.
 >
-> Yes that's true Exynso4210+ SoCs have only single PHY for both host and device
-> which gets enabled by single bit.
->
->>> S5PV210 uses bit 0 for OTG and bit1 for USB host, doesn't it ? And for
->>> s3c64xx
->>> it seems to be bit 16.
->>>
-> True, S5PV210 uses two bits separately for OTG and HOST, so in that
-> case we would
-> require to set both these bits. Thanks for pointing out !!
->
-> I couldn't see device tree support for S5PV210 and S3C64xx so thought
-> of going for
-> 4210+ SoCs. Better we make this more generic so that once these SoCs
-> are moved to
-> device tree we don't face any issue. Right ??
+> I am sorry if I was unclear, but I was actually talking about the last
+> 2: repeat-delay-ms and repeat-rate-ms. Input core has I believe sane
+> defaults (250 msec delay, 33 cps autorepeat) and user can adjust if
+> other rate is preferred.
 
-Fair enough. Yes, let's not make any future addition of the device tree
-support for the older Samsung platforms unnecessarily difficult. It doesn't
-take much effort, and there is many drivers that are shared by multiple 
-SoCs
-already, starting from s3c64xx to exynos4 series.
+(resending due to mailing problem)
 
->>> How about deriving this information from 'compatible' property instead ?
+I seems like I should remove these two, then.
+
+It would be nice if we could keep these parameters so that the
+keyboard doesn't require user-space set up to work, but I understand
+and agree they are not essential. Regarding Grant's request to come up
+with a common binding, if I remove these then that is not needed,
+right?
+
+Regards,
+Simon
+
 >
-> It will definitely be good to use the compatible property to derive
-> such information,
-> Need to amend the current approach.
+> Thanks.
 >
->>> Maybe you could just encode the USB PMU registers (I assume those aren't
->>> touched by anything but the usb drivers) in a regular 'reg' property in
->>> an usbphy subnode. Then the driver could interpret it also with help
->>> of 'compatible' property. And you could just use of_iomap(). E.g.
->>>
->>>   usbphy@12130000 {
->>>          compatible = "samsung,exynos5250-usbphy";
->>>          reg =<0x12130000 0x100>,<0x12100000 0x100>;
->>>          usbphy-pmu {
->>>                  /* USB device and host PHY_CONTROL registers */
->>>                  reg =<0x10040704 8>;
->>>          };
->>>   };
->>>
->
-> This approach seems nice.
->
->>> Your "samsung,usb-phyhandle" approach seems over-engineered to me.
->>> I might be missing something though.
->>>
->
-> The idea behind using phandles for usb-phy was to get the multiple
-> registers (2 in PMU
-> and 1 in SYSREG) and program them separately as required.
-
-You could still specify multiple <address, size> pairs in 'reg' property
-or perhaps use separate node for SYSREG. And if on some SoCs PHY_CONTROL
-registers do not immediately follow each other in memory it might make
-sense to define the bindings so that each register is specified separately,
-e.g.
-
-reg = <0x10040704 4>, <0x10040708 4>, <0x10050230 4>;
-
-However AFAICS single region for the PHY_CONTROL registers should be
-sufficient for all existing SoCs.
-
---
-
-Thanks,
-Sylwester
+> --
+> Dmitry
