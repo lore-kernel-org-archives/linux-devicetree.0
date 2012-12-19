@@ -1,69 +1,45 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 5/5] Input: Add ChromeOS EC keyboard driver
-Date: Wed, 19 Dec 2012 12:57:22 +0000
-Message-ID: <20121219125722.DCD3E3E0AD7@localhost>
-References: <1355348028-19017-1-git-send-email-sjg@chromium.org> <1355348028-19017-6-git-send-email-sjg@chromium.org> <20121215011345.9D5973E0BEE@localhost> <2990462.l5jY89jKQx@dtor-d630.eng.vmware.com>
+Subject: Re: [PATCH] serial: tegra: add serial driver
+Date: Wed, 19 Dec 2012 13:01:51 +0000
+Message-ID: <20121219130151.F29CA3E0AD7@localhost>
+References: <1355746249-15347-1-git-send-email-ldewangan@nvidia.com> <20121217171027.6AE573E0BDD@localhost> <50CF8F36.2030309@wwwdotorg.org>
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <2990462.l5jY89jKQx@dtor-d630.eng.vmware.com>
+In-Reply-To: <50CF8F36.2030309@wwwdotorg.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Simon Glass <sjg@chromium.org>, LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sourav Poddar <sourav.poddar@ti.com>, Felipe Balbi <balbi@ti.com>, Olof Johansson <olof@lixom.net>, Roland Stigge <stigge@antcom.de>, Wolfram Sang <w.sang@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, alan@linux.intel.com, gregkh@linuxfoundation.org, jslaby@suse.cz, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Dec 2012 17:43:31 -0800, Dmitry Torokhov <dmitry.torokhov@gmail.com> wrote:
-> On Saturday, December 15, 2012 01:13:45 AM Grant Likely wrote:
-> > On Wed, 12 Dec 2012 13:33:48 -0800, Simon Glass <sjg@chromium.org> wrote:
-> > > Use the key-matrix layer to interpret key scan information from the EC
-> > > and inject input based on the FDT-supplied key map. This driver registers
-> > > itself with the ChromeOS EC driver to perform communications.
-> > > 
-> > > Additional FDT bindings are provided to specify rows/columns and the
-> > > auto-repeat information.
-> > > 
-> > > Signed-off-by: Simon Glass <sjg@chromium.org>
-> > > Signed-off-by: Luigi Semenzato <semenzato@chromium.org>
-> > > Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
-> > > ---
-> > > 
-> > >  .../devicetree/bindings/input/cros-ec-keyb.txt     |   77 ++++
-> > >  drivers/input/keyboard/Kconfig                     |   10 +
-> > >  drivers/input/keyboard/Makefile                    |    1 +
-> > >  drivers/input/keyboard/cros_ec_keyb.c              |  413
-> > >  ++++++++++++++++++++ 4 files changed, 501 insertions(+), 0 deletions(-)
-> > >  create mode 100644
-> > >  Documentation/devicetree/bindings/input/cros-ec-keyb.txt
-> > >  create mode 100644 drivers/input/keyboard/cros_ec_keyb.c
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/input/cros-ec-keyb.txt
-> > > b/Documentation/devicetree/bindings/input/cros-ec-keyb.txt new file mode
-> > > 100644
-> > > index 0000000..67f51d8
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/input/cros-ec-keyb.txt
-> > > @@ -0,0 +1,77 @@
-> > > +ChromeOS EC Keyboard
-> > > +
-> > > +Google's ChromeOS EC Keyboard is a simple matrix keyboard implemented on
-> > > +a separate EC (Embedded Controller) device. It provides a message for
-> > > reading +key scans from the EC. These are then converted into keycodes
-> > > for processing +by the kernel.
-> > > +
-> > > +Required properties:
-> > > +- compatible: "google,cros-ec-keyb"
-> > > +- google,key-rows: Number of keyboard rows (must be <= 8)
-> > > +- google,key-columns: Number of keyboard columns (must be <= 13)
-> > > +- google,repeat-delay-ms: Key repeat delay in milliseconds
-> > > +- google,repeat-rate-ms: Key repeat rate in milliseconds
-> > 
-> > Hmmm, these should probably be in a common binding. Take a look at
-> > the other input bindings and make a proposal for properties to add to
-> > matrix-keymap.txt.
+On Mon, 17 Dec 2012 14:31:34 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 12/17/2012 10:10 AM, Grant Likely wrote:
+> > On Mon, 17 Dec 2012 17:40:49 +0530, Laxman Dewangan <ldewangan@nvidia.com> wrote:
+> >> Nvidia's Tegra has multiple uart controller which supports:
+> >> - APB dma based controller fifo read/write.
+> >> - End Of Data interrupt in incoming data to know whether end
+> >>   of frame achieve or not.
+> >> - Hw controlled RTS and CTS flow control to reduce SW overhead.
 > 
-> Actually these are not essentia for bringup and can be set from userspace,
-> so I'd say simply drop them.
+> >> +static int __devinit tegra_uart_probe(struct platform_device *pdev)
+> >> +{
+> >> +	struct tegra_uart_port *tup;
+> >> +	struct uart_port *u;
+> >> +	struct tegra_uart_platform_data *pdata = pdev->dev.platform_data;
+> > 
+> > Since this is a new driver, and all new board support will use device
+> > tree, when would this platform_data pointer get set? Can you drop the
+> > platform_data support code entirely?
+> 
+> Aren't we still supposed to support platform data so that it can
+> override what's in DT in order to fix up bad DTs? Or, has that
+> requirement been dropped. If it has, we can drop a bunch of code from a
+> variety of Tegra-specific drivers, I expect.
 
-Aren't they needed for a working keyboard? If so, I would really think
-they should be set correctly without userspace intervention.
+Do you have an actual user for this? If not, then don't borrow trouble.
+Just drop it. Things like platform_data can always be added later only
+if it is needed.
 
 g.
 
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
