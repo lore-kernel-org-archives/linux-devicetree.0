@@ -1,17 +1,13 @@
 From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] gpiolib: add gpio_export_with_name
-Date: Wed, 19 Dec 2012 13:11:51 +0000
-Message-ID: <20121219131151.789043E0AD7@localhost>
-References: <20121121101259.GQ4398@game.jcrosoft.org>
- <1353492849-29397-1-git-send-email-plagnioj@jcrosoft.com>
- <20121126135911.2F1D33E187C@localhost>
- <20121128201907.GF4398@game.jcrosoft.org>
- <20121218060415.GM23971@game.jcrosoft.org>
+Subject: Re: [PATCH] of: add 'const' to of_node_full_name parameter
+Date: Wed, 19 Dec 2012 13:13:24 +0000
+Message-ID: <20121219131324.2DD993E0AD7@localhost>
+References: <1355826723-27763-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121218060415.GM23971-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+In-Reply-To: <1355826723-27763-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,63 +18,23 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Dec 2012 07:04:15 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> On 21:19 Wed 28 Nov     , Jean-Christophe PLAGNIOL-VILLARD wrote:
-> > On 13:59 Mon 26 Nov     , Grant Likely wrote:
-> > > On Wed, 21 Nov 2012 11:14:08 +0100, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
-> > > > allow to specify a name to an exported gpio
-> > > > 
-> > > > Signed-off-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> > > 
-> > > The gpio sysfs ABI is already horrible, racy, and unsafe. Really, we
-> > > need a proper chrdev interface for controlling gpios. Sysfs is fine for
-> > > poking around and experimenting, but we cannot provide any fine grained
-> > > access control, locking or faster IO with the one-file-per-gpio sysfs
-> > > model.
-> > I do agree on this and mention it on the ML multiple times but this an ABI
-> > and we can not change it anymore we need to support it
-> > > So, no, I don't think this is a good idea to extend gpiolib in
-> > > this way.
-> > > 
-> > > However, I would be okay with making gpiochips first-class kobjects or
-> > > struct devices that appear as a child of the gpio controller device so
-> > > that userspace could interrogate the device tree node associated with
-> > > the device.
-> > the problem here is that I do not want the user space to become smart
-> > 
-> > I want the user space to known which gpio use for a specific feature
-> > as example you just want to read lack restistor to detect a hw features
-> > 
-> > you known the encoding it does not change cross hw but the pin to read do
-> > 
-> > So the idea is just to tell the user space use this pin to get your
-> > information
-> > 
-> > how to do you want to solve this?
-> > 
-> > This apply to other case:
-> >  - chip poweron/off
-> >  - reset
-> >  etc... all control by userspace
+On Tue, 18 Dec 2012 11:32:03 +0100, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> As the function just returns the np->full_name or the string "<no-node>", the
+> passed device_node pointer is not changed in any way.
 > 
-> ping
+> The passed parameter can therefore be a const pointer.
+> 
+> Also, fix the following error from checkpatch.pl:
+> 
+> ERROR: "foo* bar" should be "foo *bar"
+> +static inline const char* of_node_full_name(const struct device_node *np)
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-I've already stated in other thread that I want to see a significantly
-better GPIO interface created. Something based on a char dev and can
-handle 'bursts' of gpio manipulations/reads. I'm not going to accept
-extensions to the sysfs interface.
-
-Within that context I would consider named subsets of the same interface
-that pre-packages a set of related gpio pins.
-
-That said, I'm not convinced that direct gpio access is the abstraction
-that you want. If it is an interface for, say, reading feature bits,
-then it probably does want to be an actual driver that reads the
-gpios/registers/adc/etc and returns the parsed status in a file. That's
-the only way to reliably get the abstraction from your example above.
+Applied, thanks. Will show up in linux-next after the v3.8 merge window closes.
 
 g.
