@@ -1,83 +1,65 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: CoreSight framework and drivers
-Date: Wed, 19 Dec 2012 11:03:58 -0600
-Message-ID: <50D1F37E.6000804@ti.com>
-References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
- <20121219112314.GA26329@mudshark.cambridge.arm.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V5 2/2] ASoC: SAMSUNG: Add DT support for i2s
+Date: Wed, 19 Dec 2012 17:09:37 +0000
+Message-ID: <20121219170937.GV4985@opensource.wolfsonmicro.com>
+References: <1355395373-22058-1-git-send-email-padma.v@samsung.com>
+ <1355395373-22058-3-git-send-email-padma.v@samsung.com>
+ <20121219132414.2CF653E0AD7@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121219112314.GA26329-MRww78TxoiP5vMa5CHWGZ34zcgK1vI+I0E9HWUfgJXw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "magnus.p.persson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <magnus.p.persson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "david.rusling-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <david.rusling-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "d-deao-l0cyMroinI0@public.gmane.org" <d-deao-l0cyMroinI0@public.gmane.org>, "christian.bejram-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <christian.bejram-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="+Yg8W10oK6rlW0RR"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20121219132414.2CF653E0AD7@localhost>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, jassisinghbrar@gmail.com, kgene.kim@samsung.com, sbkim73@samsung.com, tiwai@suse.de, ben-linux@fluff.org, lrg@ti.com
 List-Id: devicetree@vger.kernel.org
 
 
-On 12/19/2012 05:23 AM, Will Deacon wrote:
-> Hi Pratik,
-> 
-> On Tue, Dec 18, 2012 at 07:19:17PM +0000, pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
->> This RFC is aimed at introducing CoreSight framework as well as
->> individual CoreSight trace component drivers adhering to ARM
->> CoreSight specification. Some prior discussion on this can be
->> referred at [1].
->>
->> There are 3 kinds of CoreSight trace components:
->>
->> * Sources: Responsible for producing trace data to provide
->>   visibility for the associated entity.
->>
->> * Links: Transport components that carry trace data.
->>
->> * Sinks: Collectors for storing trace data or acting as conduits
->>   for off-chip trace data collection.
->>
->> These components can be connected in various topologies to suite
->> a particular SoCs tracing needs.
->>
->> Framework is responsible for gathering and using the information
->> about the registered CoreSight components and their connections
->> to allow it to dynamically deduce the sequence of components
->> representing a connection from a CoreSight source to the
->> currently selected CoreSight sink. This helps the framework to
->> program the correct set of components to satisfy user request.
-> 
-> From a million miles up, this looks like a sensible sort of design but I
-> really think you need to talk to Jon Hunter (he's at least on CC) about
-> this, especially where bindings are concerned. If we can get something that
-> you both agree on, then we can include the CTI with the other coresight
-> components and do a more in-depth review at that point.
+--+Yg8W10oK6rlW0RR
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I need to look at these in closer detail, but there are a couple
-high-level items that need to be aligned on which are ...
+On Wed, Dec 19, 2012 at 01:24:14PM +0000, Grant Likely wrote:
+> On Thu, 13 Dec 2012 16:12:53 +0530, Padmavathi Venna <padma.v@samsung.com=
+> wrote:
 
-1. Why not use the AMBA bus framework?
+> > +- compatible : "samsung,samsung-i2s"
 
-You mentioned before that "AMBA bus is for PrimeCell devices (class 0xF)
-as opposed to CoreSight devices (class 0x9)". I will not claim to be
-that familiar with primecell and coresight devices and there
-differences, but this statement does not help me understand why a new
-bus type is needed. Furthermore, the existing ETM and ETB driver in
-arch/arm/kernel/etm.c uses the AMBA bus today and so at least those
-coresight devices are able to use the AMBA bus type.
+> Isn't that kind of redundant?  :-)
 
-2. What about the existing ETM/ETB drivers?
+> The format of the compatible strings should be "<vendor>,<part-number>-i2=
+s".=20
+> Please be specific about the part number that you're doing the binding
+> for. For example; use "samsung,exynos4210-i2s" instead of "samsung,exynos=
+-i2s".
 
-We have existing drivers for ETM and ETB in arch/arm/kernel/etm.c. We
-should either move those drivers to the drivers directory or replace
-them with the new one. However, no point in having two drivers for the
-same coresight device.
+There are actually versioned IPs here (where the versions are used
+publically in a few places) but it's not clearly documented which is
+which.  It would be reasonable to use the IP versions here I think.
 
-Cheers
-Jon
+--+Yg8W10oK6rlW0RR
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ0fS+AAoJELSic+t+oim99iQQAJKF9qTp0/p73XtK6TJwvXVM
+xYY0ZzmZzFv8q6HG7Nx+gw+SE1DAp+GmQefCIAahsEIEnRf/9MHhiz9uuMtP3jLL
+rYCqy5uiYgXDAOhW3dVB7r4l+XFotslkkigm0dDA2GTrLQrWdP2CXqmN2j8fix3G
+MARX79RwNoRLTWHz4LvOgB2tdqjLUfhNEbBSrwnTGLNR3TMa32+26zABO+bgASx9
+dx8A1O9m6Y+ZBuDfVNAVixnMZ90P0+iaM0TKmaEzKMnCsg9779V85PkkhYKMdewc
+NQiwhfsHs26bF/Fub2SJpCYAvMW7YfTU1go3H5UuXOPY2KvgFhZmREx0zBkoGyT9
+jDOUJJPtxYaCNfi+qM2gOxdfSYl0jcbCQ82U+wlWB8GhdZyWzxirk3sE4o78FXZL
+hDKY0dWEtHOY1uKuHQPmQ4eo6ORYaECEBTexHDe+lBmT0DxELeE9b83FCwEItcSC
+Dl316A6Ojo8KJi7Fxwl/xLHFoi6vMNU8lCT/fvdn81z5U5YshxRuJIHy7VJFWccO
+iD2Gt9tPU60Y0YarAnEhK+JhSeabvsWBco7fAQYkk89GSAz8T8BWmmtl2phPtfRd
++fiUK5wb1jYaSztOwZUvCPTBcbLH5owFf/byn2VXZ7be5xRsNGp1u0XMMx0aeRtF
+XvnudmpfXR6Z3+OXztDr
+=tTsm
+-----END PGP SIGNATURE-----
+
+--+Yg8W10oK6rlW0RR--
