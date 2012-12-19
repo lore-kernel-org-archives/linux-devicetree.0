@@ -1,63 +1,115 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH 2/2] usb: dwc3-exynos: Fix compatible strings for the device
-Date: Wed, 19 Dec 2012 19:18:54 +0530
-Message-ID: <CAFp+6iEyqHRzjSR9XxTp6zCbh2iAmbC8Q-kwoojecmWGS4OZ+A@mail.gmail.com>
-References: <1355410348-5129-1-git-send-email-gautam.vivek@samsung.com>
-	<1355410348-5129-3-git-send-email-gautam.vivek@samsung.com>
-	<CAFp+6iGwEYTLZrC74LVNn+R2wNo68Nvu1RWvNeeCi5LESeCo1w@mail.gmail.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: Fix export of of_find_matching_node_and_match()
+Date: Wed, 19 Dec 2012 07:50:00 -0600
+Message-ID: <50D1C608.9040001@gmail.com>
+References: <1355914716-19469-1-git-send-email-grant.likely@secretlab.ca>
+ <CACxGe6vTxQGr+t5O4q0J265K02-EEeEiGoOTvB1o-ee2bBrhZg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iGwEYTLZrC74LVNn+R2wNo68Nvu1RWvNeeCi5LESeCo1w@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org
-Cc: dianders@chromium.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, gregkh@linuxfoundation.org, stern@rowland.harvard.edu, balbi@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, kgene.kim@samsung.com, jg1.han@samsung.com, thomas.abraham@linaro.org, Vivek Gautam <gautam.vivek@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACxGe6vTxQGr+t5O4q0J265K02-EEeEiGoOTvB1o-ee2bBrhZg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CC: Doug Anderson
-
-
-On Thu, Dec 13, 2012 at 9:40 PM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
-> CC: LKML
->
-> On Thu, Dec 13, 2012 at 8:22 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
->> Using specific chip in compatible strings. Newer SOCs can claim
->> device by using older string in the compatible list.
+On 12/19/2012 05:02 AM, Grant Likely wrote:
+> On Wed, Dec 19, 2012 at 10:58 AM, Grant Likely
+> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>> Commit 50c8af4cf9, "of: introduce for_each_matching_node_and_match()"
+>> renamed of_find_matching_node() to of_find_matching_node_and_match() and
+>> created a new static inline of_find_matching_node() wrapper around the
+>> new name. However, the change neglected to change the EXPORT_SYMBOL()
+>> reference causing build errors for modules.
 >>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>> This patch fixes the EXPORT_SYMBOL() statement. Discovered on a PowerPC
+>> Efika build with the mpc52xx_uart driver being built as a module.
+>>
+>> Reported-by: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+>> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>
+> 
+> Rob, I've just pushed this out to my devicetree/merge branch. If
+> you've got any fixes queued up for Linus, then please pull this in
+> before sending them on to him. Otherwise I'll send Linus a pull req
+> for this fix this evening. Ether way, please reply to let me know what
+> you're going to do.
+> 
+
+The only item on my todo is this one:
+
+"of: define struct device in of_platform.h if !OF_DEVICE and !OF_ADDRESS"
+
+But I'm not going to get to it today if you want to pick it up.
+
+Rob
+
+> g.
+> 
+> The following changes since commit 752451f01c4567b506bf4343082682dbb8fb30dd:
+> 
+>   Merge branch 'i2c-embedded/for-next' of
+> git://git.pengutronix.de/git/wsa/linux (2012-12-18 16:51:10 -0800)
+> 
+> are available in the git repository at:
+> 
+>   git://git.secretlab.ca/git/linux-2.6 devicetree/merge
+> 
+> for you to fetch changes up to 80c2022e5645a1a789531d13010292c5c18bf1db:
+> 
+>   of: Fix export of of_find_matching_node_and_match() (2012-12-19
+> 10:58:53 +0000)
+> 
+> ----------------------------------------------------------------
+> Grant Likely (1):
+>       of: Fix export of of_find_matching_node_and_match()
+> 
+>  drivers/of/base.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
 >> ---
->>  drivers/usb/dwc3/dwc3-exynos.c |    2 +-
->>  1 files changed, 1 insertions(+), 1 deletions(-)
 >>
->> diff --git a/drivers/usb/dwc3/dwc3-exynos.c b/drivers/usb/dwc3/dwc3-exynos.c
->> index aae5328..9dce99a 100644
->> --- a/drivers/usb/dwc3/dwc3-exynos.c
->> +++ b/drivers/usb/dwc3/dwc3-exynos.c
->> @@ -188,7 +188,7 @@ static int dwc3_exynos_remove(struct platform_device *pdev)
+>> I'll push this patch out to my tree ASAP.
 >>
->>  #ifdef CONFIG_OF
->>  static const struct of_device_id exynos_dwc3_match[] = {
->> -       { .compatible = "samsung,exynos-dwc3" },
->> +       { .compatible = "samsung,exynos5250-dwc3" },
->>         {},
->>  };
->>  MODULE_DEVICE_TABLE(of, exynos_dwc3_match);
+>>  drivers/of/base.c |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index db8d211..2390ddb 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -629,7 +629,7 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
+>>         read_unlock(&devtree_lock);
+>>         return np;
+>>  }
+>> -EXPORT_SYMBOL(of_find_matching_node);
+>> +EXPORT_SYMBOL(of_find_matching_node_and_match);
+>>
+>>  /**
+>>   * of_modalias_node - Lookup appropriate modalias for a device node
 >> --
->> 1.7.6.5
+>> 1.7.10.4
 >>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
->
+> 
+> 
+> 
 > --
-> Thanks & Regards
-> Vivek
-
-
-
--- 
-Thanks & Regards
-Vivek
+> Grant Likely, B.Sc., P.Eng.
+> Secret Lab Technologies Ltd.
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
