@@ -1,57 +1,102 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 5/9] clocksource: tegra: Enable ARM arch_timer with TSC
-Date: Fri, 21 Dec 2012 00:13:48 +0200
-Message-ID: <20121220221348.GB19766@tbergstrom-lnx.Nvidia.com>
-References: <50D305A6.2080904@arm.com>
- <20121220125507.GB6819@tbergstrom-lnx.Nvidia.com>
- <50D31365.9000009@arm.com>
- <20121220.164230.292625215885249791.hdoyu@nvidia.com>
- <50D34630.9020708@arm.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: CoreSight framework and drivers
+Date: Thu, 20 Dec 2012 16:54:38 -0600
+Message-ID: <50D3972E.4030607@ti.com>
+References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org> <20121219112314.GA26329@mudshark.cambridge.arm.com> <50D1F37E.6000804@ti.com> <20121219212431.GC23594@pratikp-linux.qualcomm.com> <50D34EE5.8090407@ti.com> <20121220195127.GA14877@pratikp-linux.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50D34630.9020708-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org" <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20121220195127.GA14877@pratikp-linux.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Pratik Patel <pratikp@codeaurora.org>
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, "magnus.p.persson@stericsson.com" <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "d-deao@ti.com" <d-deao@ti.com>, "christian.bejram@stericsson.com" <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> > 
-> > "tegra114.dtsi" has the folloiwng "tsc" entry. So can we consider that
-> > if dts has this entry, CNTFRQ is not set, which implies it's in secure
-> > mode. kernel should set it up by itself? Otherwise, skip this setup
-> > and use it. For example:
-> > 
-> >  	tsc {
-> >  		compatible = "nvidia,tegra114-tsc";
-> >  		reg = <0x700f0000 0x20000>;
-> > +		setup-cntfrq;
-> >  	};
-> > 
-> > Is this what you explained in the above?
-> > At least, kernel can survive without bootloader/firmware support, ATM.
+
+On 12/20/2012 01:51 PM, Pratik Patel wrote:
+> On Thu, Dec 20, 2012 at 11:46:13AM -0600, Jon Hunter wrote:
+>>
+>> On 12/19/2012 03:24 PM, Pratik Patel wrote:
+>>
+>> [snip]
+>>
+>>> Currently we use the CoreSight virtual bus to conveniently list
+>>> sysfs configuration attributes for all the registered CoreSight
+>>> devices.
+>>>
+>>> For eg:
+>>> /sys/bus/coresight/devices/coresight-etm0/<attribute>
+>>> /sys/bus/coresight/devices/coresight-etm1/<attribute>
+>>> /sys/bus/coresight/devices/coresight-stm/<attribute>
+>>> /sys/bus/coresight/devices/coresight-tmc-etf/<attribute>
+>>> ...
+>>> ...
+>>>
+>>> Some of the attributes are based on device type (i.e. source,
+>>> link or sink) so they will exist for all devices of that type
+>>> while some are device specific.
+>>>
+>>> Maybe I am misunderstanding the question but are you suggesting
+>>> to register CoreSight devices to the AMBA bus instead of the
+>>> CoreSight core layer code?
+>>
+>> Yes exactly.
+>>
+>>> Will Deacon mentioned earlier that AMBA framework can be changed
+>>> to accomodate devices with a different class but I am more
+>>> concerned with losing some of the stuff that the core layer code
+>>> does (eg. coresight_register, coresight_enable, coresight_disable
+>>> in coresight.c) if we register CoreSight drivers to the AMBA bus
+>>> without letting the core layer know about the device connections.
+>>
+>> I may be missing something, but couldn't you keep all the
+>> register/enable/disable stuff but just register the device with the amba
+>> bus? Obviously some changes would need to be made.
+>>
 > 
-> No. The DT should only describe the hardware, and not something that is
-> Linux specific.
+> Ok, so are you referring to making CoreSight devices register
+> with AMBA bus instead of platform bus keeping everything else
+> intact?
+
+Yes exactly. However, please note I am not saying that we should do
+this, and I asking what direction does the community want us to take
+here? Platform bus or AMBA bus?
+
+>> Personally, I don't have strong feeling either way, but we have ETM/ETB
+>> drivers using AMBA today and so I am hoping we can come to agreement on
+>> this going forward.
+>>
+>> Russell, Will, what are your thoughts?
+>>
+>> Otherwise, looking at the code, I like what you have implemented. I
+>> still need to look closer, but I am struggling to figure out how a
+>> coresight device such as the cross-trigger-interface fits with this
+>> model. This model appears to be geared towards coresight devices used
+>> for traces purposes and are either source, links or sinks. The
+>> cross-trigger-interface is not a source or a sink. However, although you
+>> it could be considered as a link (routing events), it is not really, as
+>> it may not link to other coresight sinks/source.
+>>
+>> In my case, I have PMU-IRQ --> CTI --> GIC. So a non-coresight source
+>> and sink. In away the CTI looks more like a 2nd-level interrupt
+>> controller than anything else. Hence, another type of coresight device
+>> may be needed in addition to source, links and sinks. Or link is
+>> extended in some way to connect to non-coresight sources/sinks.
+>>
+>> Let me know if you have any thoughts.
+>>
 > 
-> Just use the "clock-frequency" attribute in the timer arch-timer node,
-> and get rid of this CNTFRQ setting. The driver already knows how to deal
-> with this situation if this attribute is set.
+> I had left the "None" type for miscellaneous stuff but I agree it
+> should be a separate type - maybe "debug".
+> 
+> Having said that I like the CTI driver you have uploaded. Need to
+> look at it in more detail. Since CTI connections can vary between
+> chip to chip, we need a generic way to deal with it.
 
-The frequency is probed at boottime by the kernel though. It will not
-necessarily be the same for every board.
+Yes if you have any ideas let me know. As Will had mentioned it would be
+good to have a common function table all these devices could use too. I
+will take a closer look at what you have.
 
-Cheers,
-
-Peter.
+Cheers
+Jon
