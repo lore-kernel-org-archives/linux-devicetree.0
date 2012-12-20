@@ -1,37 +1,58 @@
-From: Vinod Koul <vkoul@infradead.org>
-Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a
- slave DMA channel
-Date: Thu, 20 Dec 2012 06:57:54 -0800
-Message-ID: <1356015474.7077.2987.camel@vkoul-udesk3>
-References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
-	 <1347662517-4210-3-git-send-email-jon-hunter@ti.com>
-	 <1347852805.1943.130.camel@vkoul-udesk3> <201209171159.27359.arnd@arndb.de>
-	 <20120917223619.GC12445@n2100.arm.linux.org.uk>
-	 <1347938035.1943.162.camel@vkoul-udesk3> <5060DDEB.4000600@ti.com>
-	 <1348547701.1943.190.camel@vkoul-udesk3>
-	 <20121016024318.GF24393@S2101-09.ap.freescale.net>
-	 <1350355144.1648.5259.camel@vkoul-udesk3>  <509D6108.1060304@ti.com>
-	 <1353029876.7077.56.camel@vkoul-udesk3>  <50D1F562.60904@ti.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 1/4] ARM: EXYNOS: Update & move usb-phy types to
+ generic include layer
+Date: Thu, 20 Dec 2012 08:53:53 -0800
+Message-ID: <CAD=FV=UeAN103KVLb_z-oF8AXu7m00uZs6jw_BOHTz9RExK4SA@mail.gmail.com>
+References: <1355841786-13307-1-git-send-email-gautam.vivek@samsung.com>
+	<1355841786-13307-2-git-send-email-gautam.vivek@samsung.com>
+	<CAD=FV=Ved4TSr7v413u5_o2cBrfegGrpKe1V2qKwQ36v-MQTHA@mail.gmail.com>
+	<CAFp+6iEGhrSh+oFnv1s_Tqdzxh_nhy=NEhCetVF20KVehy3PLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50D1F562.60904@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: vinod.koul@intel.com, Shawn Guo <shawn.guo@linaro.org>, Stephen Warren <swarren@nvidia.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iEGhrSh+oFnv1s_Tqdzxh_nhy=NEhCetVF20KVehy3PLw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, jg1.han@samsung.com, yulgon.kim@samsung.com, linux-samsung-soc@vger.kernel.org, Praveen Paneri <p.paneri@samsung.com>, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, balbi@ti.com, kishon@ti.com, Kukjin Kim <kgene.kim@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2012-12-19 at 11:12 -0600, Jon Hunter wrote:
-> I am not sure if I have missed your pull request, but wanted to see if
-> you had or were going to send a pull request for the DT changes for
-> v3.8? I believe that the merge window ends this week. 
-Not yet sent. I was waiting on Dan's changes, just merged and pushed
-those.
-Pull request should show up in couple of days.
+Vivek,
 
-Thanks
--- 
-Vinod Koul
-Intel Corp.
+On Wed, Dec 19, 2012 at 9:51 PM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
+> Hi Doug,
+>
+>
+> On Thu, Dec 20, 2012 at 3:18 AM, Doug Anderson <dianders@chromium.org> wrote:
+>> Vivek,
+>>
+>> Since you're changing the name, I would have expected to see a removal
+>> of the old enum type in this patch.  I don't see it.  After applying
+>> all of your patches I find that S5P_USB_PHY_HOST and
+>> S5P_USB_PHY_DEVICE are still defined and used.
+>>
+>
+> True that we should have removed the earlier defined enums, infact i
+> did the same
+> in patchset v4 for this series. But since in this patchset i separated
+> out drivers and
+> architecture part, i thought it would be easier to remove them in one
+> shot in a latter commit
+> which will actually touch upon all architecture related code
+> (mach-exynos/setup-usb-phy.c,
+> mach-s5pv210/setup-usb-phy.c, and include/plat/usb-phy.h) once this
+> approach is accepted.
+>
+>> $ git grep S5P_USB_PHY_HOST
+>> arch/arm/mach-exynos/setup-usb-phy.c:   else if (type == S5P_USB_PHY_HOST)
+>> arch/arm/mach-exynos/setup-usb-phy.c:   else if (type == S5P_USB_PHY_HOST)
+>> arch/arm/plat-samsung/include/plat/usb-phy.h:   S5P_USB_PHY_HOST,
+>>
+>> I believe that those usages of the old enum should also be switched
+>> over and the old enum removed.
+>>
+> Sure, those enums need to be removed.
+> If you say i will submit a patch for the same.
 
+It would be nice to add it to the patch series in the next version.  Thanks!
+
+-Doug
