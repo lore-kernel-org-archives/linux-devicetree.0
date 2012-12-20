@@ -1,246 +1,89 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH v5 3/4] USB: ehci-s5p: Add phy driver support
-Date: Thu, 20 Dec 2012 12:07:19 +0530
-Message-ID: <CAFp+6iGe3Hz6OiVNDa=8c98CyNGaELfg-uRbCO0kFdpdv_gQpw@mail.gmail.com>
-References: <1355841786-13307-1-git-send-email-gautam.vivek@samsung.com>
-	<1355841786-13307-4-git-send-email-gautam.vivek@samsung.com>
-	<CAD=FV=WLVpwBo1g41BYwMUdedN3MJcmfaWwYow=RfsLC5bX1jg@mail.gmail.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH] pci: Provide support for parsing PCI DT ranges property
+Date: Thu, 20 Dec 2012 09:25:00 +0100
+Message-ID: <20121220082500.GA32617@avionic-0098.adnet.avionic-design.de>
+References: <20121212163749.GA17371@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WLVpwBo1g41BYwMUdedN3MJcmfaWwYow=RfsLC5bX1jg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, yulgon.kim@samsung.com, linux-samsung-soc@vger.kernel.org, Praveen Paneri <p.paneri@samsung.com>, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, jg1.han@samsung.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, balbi@ti.com, kishon@ti.com, Kukjin Kim <kgene.kim@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Content-Type: multipart/mixed; boundary="===============5449620084133535103=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121212163749.GA17371-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Murray <Andrew.Murray-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Doug,
+
+--===============5449620084133535103==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Content-Disposition: inline
 
 
-On Thu, Dec 20, 2012 at 5:00 AM, Doug Anderson <dianders@chromium.org> wrote:
-> Vivek,
->
-> Again, not a high-level review, but...
->
-Thanks for reviewing. :-)
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->
-> On Tue, Dec 18, 2012 at 6:43 AM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
->> Adding the phy driver to ehci-s5p. Keeping the platform data
->> for continuing the smooth operation for boards which still uses it
->>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> Acked-by: Jingoo Han <jg1.han@samsung.com>
->> ---
->>  drivers/usb/host/ehci-s5p.c |   70 ++++++++++++++++++++++++++++++-------------
->>  1 files changed, 49 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/usb/host/ehci-s5p.c b/drivers/usb/host/ehci-s5p.c
->> index 46ca5ef..50c93af 100644
->> --- a/drivers/usb/host/ehci-s5p.c
->> +++ b/drivers/usb/host/ehci-s5p.c
->> @@ -17,6 +17,7 @@
->>  #include <linux/platform_device.h>
->>  #include <linux/of_gpio.h>
->>  #include <linux/platform_data/usb-ehci-s5p.h>
->> +#include <linux/usb/phy.h>
->>  #include <linux/usb/samsung_usb_phy.h>
->>  #include <plat/usb-phy.h>
->>
->> @@ -33,6 +34,8 @@ struct s5p_ehci_hcd {
->>         struct device *dev;
->>         struct usb_hcd *hcd;
->>         struct clk *clk;
->> +       struct usb_phy *phy;
->> +       struct s5p_ehci_platdata *pdata;
->>  };
->>
->>  static const struct hc_driver s5p_ehci_hc_driver = {
->> @@ -66,6 +69,30 @@ static const struct hc_driver s5p_ehci_hc_driver = {
->>         .clear_tt_buffer_complete       = ehci_clear_tt_buffer_complete,
->>  };
->>
->> +static void s5p_ehci_phy_enable(struct s5p_ehci_hcd *s5p_ehci)
->> +{
->> +       struct platform_device *pdev = to_platform_device(s5p_ehci->dev);
->> +
->> +       if (s5p_ehci->phy) {
->> +               samsung_usbphy_set_type(s5p_ehci->phy, USB_PHY_TYPE_HOST);
->
-> This confuses me.  Why are you setting the type to host here?
->
-Being in host controller, before calling usb_phy_init() we set type to
-Host since, with certain SOCs
-like 4210, same register has different bit settings for HOST type and
-device type. So setting this
-to Host type here make the flow of usb_phy_init to go in the direction of Host.
+On Wed, Dec 12, 2012 at 04:37:50PM +0000, Andrew Murray wrote:
+[...]
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+[...]
+> +	start = of_get_property(node, "ranges", &rlen);
+> +	if (start == NULL)
+> +		return NULL;
+> +
+> +	end = start + rlen;
 
->> +               usb_phy_init(s5p_ehci->phy);
->> +       } else if (s5p_ehci->pdata->phy_init) {
->> +               s5p_ehci->pdata->phy_init(pdev, USB_PHY_TYPE_HOST);
->> +       }
->> +}
->> +
->> +static void s5p_ehci_phy_disable(struct s5p_ehci_hcd *s5p_ehci)
->> +{
->> +       struct platform_device *pdev = to_platform_device(s5p_ehci->dev);
->> +
->> +       if (s5p_ehci->phy) {
->> +               samsung_usbphy_set_type(s5p_ehci->phy, USB_PHY_TYPE_HOST);
->
-> ...and why set it to host here?
->
-Same here...
+I'm currently rewriting large parts of the Tegra PCIe controller driver
+and I'm trying to use this new API. This seems to work fine, except that
+I think this line needs to be:
 
->> +               usb_phy_shutdown(s5p_ehci->phy);
->> +       } else if (s5p_ehci->pdata->phy_exit) {
->> +               s5p_ehci->pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
->> +       }
->> +}
->> +
->>  static void s5p_setup_vbus_gpio(struct platform_device *pdev)
->>  {
->>         int err;
->> @@ -88,20 +115,15 @@ static u64 ehci_s5p_dma_mask = DMA_BIT_MASK(32);
->>
->>  static int s5p_ehci_probe(struct platform_device *pdev)
->>  {
->> -       struct s5p_ehci_platdata *pdata;
->> +       struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
->>         struct s5p_ehci_hcd *s5p_ehci;
->>         struct usb_hcd *hcd;
->>         struct ehci_hcd *ehci;
->>         struct resource *res;
->> +       struct usb_phy *phy;
->>         int irq;
->>         int err;
->>
->> -       pdata = pdev->dev.platform_data;
->> -       if (!pdata) {
->> -               dev_err(&pdev->dev, "No platform data defined\n");
->> -               return -EINVAL;
->> -       }
->> -
->>         /*
->>          * Right now device-tree probed devices don't get dma_mask set.
->>          * Since shared usb code relies on it, set it here for now.
->> @@ -119,6 +141,19 @@ static int s5p_ehci_probe(struct platform_device *pdev)
->>         if (!s5p_ehci)
->>                 return -ENOMEM;
->>
->> +       phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
->> +       if (IS_ERR_OR_NULL(phy)) {
->> +               /* Fallback to pdata */
->> +               if (!pdata) {
->> +                       dev_err(&pdev->dev, "no platform data or transceiver defined\n");
->> +                       return -EPROBE_DEFER;
->
-> Shouldn't you return -EINVAL like the old code did?
+	end = start + rlen / sizeof(__be32);
 
-We are deferring the probe since the usb-phy transceiver may get
-probed after ehci/ohci controllers.
-And if we return -EINVAL like the previous code, we would end up not
-setting the phy.
+Otherwise we'll try to process 4 times as many ranges as there are.
 
->
->> +               } else {
->> +                       s5p_ehci->pdata = pdata;
->> +               }
->> +       } else {
->> +               s5p_ehci->phy = phy;
->> +       }
->> +
->>         s5p_ehci->dev = &pdev->dev;
->>
->>         hcd = usb_create_hcd(&s5p_ehci_hc_driver, &pdev->dev,
->> @@ -164,8 +199,7 @@ static int s5p_ehci_probe(struct platform_device *pdev)
->>                 goto fail_io;
->>         }
->>
->> -       if (pdata->phy_init)
->> -               pdata->phy_init(pdev, USB_PHY_TYPE_HOST);
->> +       s5p_ehci_phy_enable(s5p_ehci);
->>
->>         ehci = hcd_to_ehci(hcd);
->>         ehci->caps = hcd->regs;
->> @@ -176,13 +210,15 @@ static int s5p_ehci_probe(struct platform_device *pdev)
->>         err = usb_add_hcd(hcd, irq, IRQF_SHARED);
->>         if (err) {
->>                 dev_err(&pdev->dev, "Failed to add USB HCD\n");
->> -               goto fail_io;
->> +               goto fail_add_hcd;
->>         }
->>
->>         platform_set_drvdata(pdev, s5p_ehci);
->>
->>         return 0;
->>
->> +fail_add_hcd:
->> +       s5p_ehci_phy_disable(s5p_ehci);
->>  fail_io:
->>         clk_disable_unprepare(s5p_ehci->clk);
->>  fail_clk:
->> @@ -192,14 +228,12 @@ fail_clk:
->>
->>  static int s5p_ehci_remove(struct platform_device *pdev)
->>  {
->> -       struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
->>         struct s5p_ehci_hcd *s5p_ehci = platform_get_drvdata(pdev);
->>         struct usb_hcd *hcd = s5p_ehci->hcd;
->>
->>         usb_remove_hcd(hcd);
->>
->> -       if (pdata && pdata->phy_exit)
->> -               pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
->> +       s5p_ehci_phy_disable(s5p_ehci);
->>
->>         clk_disable_unprepare(s5p_ehci->clk);
->>
->> @@ -223,14 +257,11 @@ static int s5p_ehci_suspend(struct device *dev)
->>         struct s5p_ehci_hcd *s5p_ehci = dev_get_drvdata(dev);
->>         struct usb_hcd *hcd = s5p_ehci->hcd;
->>         bool do_wakeup = device_may_wakeup(dev);
->> -       struct platform_device *pdev = to_platform_device(dev);
->> -       struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
->>         int rc;
->>
->>         rc = ehci_suspend(hcd, do_wakeup);
->>
->> -       if (pdata && pdata->phy_exit)
->> -               pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
->> +       s5p_ehci_phy_disable(s5p_ehci);
->>
->>         clk_disable_unprepare(s5p_ehci->clk);
->>
->> @@ -241,13 +272,10 @@ static int s5p_ehci_resume(struct device *dev)
->>  {
->>         struct s5p_ehci_hcd *s5p_ehci = dev_get_drvdata(dev);
->>         struct usb_hcd *hcd = s5p_ehci->hcd;
->> -       struct platform_device *pdev = to_platform_device(dev);
->> -       struct s5p_ehci_platdata *pdata = pdev->dev.platform_data;
->>
->>         clk_prepare_enable(s5p_ehci->clk);
->>
->> -       if (pdata && pdata->phy_init)
->> -               pdata->phy_init(pdev, USB_PHY_TYPE_HOST);
->> +       s5p_ehci_phy_enable(s5p_ehci);
->>
->>         /* DMA burst Enable */
->>         writel(EHCI_INSNREG00_ENABLE_DMA_BURST, EHCI_INSNREG00(hcd->regs));
->> --
->> 1.7.6.5
->>
->> _______________________________________________
->> devicetree-discuss mailing list
->> devicetree-discuss@lists.ozlabs.org
->> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thierry
 
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
--- 
-Thanks & Regards
-Vivek
+iQIcBAEBAgAGBQJQ0stcAAoJEN0jrNd/PrOhJ3wP/RTl+yPFBH6p5AxEnuzCbT+d
+aB6m7CEG++kw9kkXUAnSw+jIWwRdgmLY5qdcXJaxUyMlx/1qTQESey0mFpSsu0g1
+8u+6ITQ4+q/HzXbfCtRJpERZHxTTJwdY9EijpSTMEC4Whq4sG9m97uTBmfuKs1Gf
+Ot1Hs4z3bUDNCLUje/QqON/emqW/ZqM+bcsHQRGe/O/2Py+0/xuWlRw3+WRE+QuS
+w4uABEyWLLqjWjLqG+oT+xpwwE3SlDVbejH5i9FYEL7OjAsFTpx4h0Kjqr/S4eHD
+8FMBGnX6IlrQOcrpYXlYGKDGd9k6EKIu36P2LxSOfa/JcqNuPacut4MlS7yEJ39z
+Qd8xufL23KkuL+3dzAju9tCaeS7K4EUMWr2uF02PwFeVYsQtSAsVdZtHh9DlnfiG
+ghAtxN/E90ZLNg7uEgM5pFA5eizZ6/yuEY2MPs4NqG9oe24ykR77ZIu4DwJC3p+R
+0rtURMQKVadncw3beSIxRqU/67Ru+xF+J3wiJNL6g9CiSLcOKDAH+gVcPh9qk19/
+0scfxkfTYOE81hG+O58Aw0Ikl6jkwVnCWKvtnAPgDOjRnI+41+7toHlTCsTi6XG1
+hYB0deO3jviEgInQrdO4CUVPdORyvEACrEPgt4rIwVDzk7TZKkbSlHULRgy66yyj
+xqMOHqFgoNTGbyK+s816
+=SKrO
+-----END PGP SIGNATURE-----
+
+--Dxnq1zWXvFF0Q93v--
+
+--===============5449620084133535103==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5449620084133535103==--
