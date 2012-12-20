@@ -1,67 +1,113 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 3/4] USB: ehci-s5p: Add phy driver support
-Date: Thu, 20 Dec 2012 09:51:53 -0800
-Message-ID: <CAD=FV=XsqZGxhcFzFfHnFxYyT2P+HVBWP9fn6LfRAwPfb06QrA@mail.gmail.com>
-References: <1355841786-13307-1-git-send-email-gautam.vivek@samsung.com>
-	<1355841786-13307-4-git-send-email-gautam.vivek@samsung.com>
-	<CAD=FV=WLVpwBo1g41BYwMUdedN3MJcmfaWwYow=RfsLC5bX1jg@mail.gmail.com>
-	<CAFp+6iGe3Hz6OiVNDa=8c98CyNGaELfg-uRbCO0kFdpdv_gQpw@mail.gmail.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/9] ARM: tegra: # of CPU cores detection w/ & w/o
+ HAVE_ARM_SCU
+Date: Thu, 20 Dec 2012 20:18:18 +0200
+Message-ID: <20121220181818.GA26861@arwen.pp.htv.fi>
+References: <1355996654-6579-1-git-send-email-hdoyu@nvidia.com>
+ <1355996654-6579-4-git-send-email-hdoyu@nvidia.com>
+ <20121220100625.GB24693@arwen.pp.htv.fi>
+ <20121220.132136.1599315430686323669.hdoyu@nvidia.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAFp+6iGe3Hz6OiVNDa=8c98CyNGaELfg-uRbCO0kFdpdv_gQpw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============2476010934553930599=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121220.132136.1599315430686323669.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org" <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 19, 2012 at 10:37 PM, Vivek Gautam
-<gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
-> On Thu, Dec 20, 2012 at 5:00 AM, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>
->> On Tue, Dec 18, 2012 at 6:43 AM, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>> +static void s5p_ehci_phy_enable(struct s5p_ehci_hcd *s5p_ehci)
->>> +{
->>> +       struct platform_device *pdev = to_platform_device(s5p_ehci->dev);
->>> +
->>> +       if (s5p_ehci->phy) {
->>> +               samsung_usbphy_set_type(s5p_ehci->phy, USB_PHY_TYPE_HOST);
->>
->> This confuses me.  Why are you setting the type to host here?
->>
-> Being in host controller, before calling usb_phy_init() we set type to
-> Host since, with certain SOCs
-> like 4210, same register has different bit settings for HOST type and
-> device type. So setting this
-> to Host type here make the flow of usb_phy_init to go in the direction of Host.
+--===============2476010934553930599==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9amGYk9869ThD9tj"
+Content-Disposition: inline
 
-OK.  I think I need to study the code more...
+--9amGYk9869ThD9tj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->>>
->>> +       phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
->>> +       if (IS_ERR_OR_NULL(phy)) {
->>> +               /* Fallback to pdata */
->>> +               if (!pdata) {
->>> +                       dev_err(&pdev->dev, "no platform data or transceiver defined\n");
->>> +                       return -EPROBE_DEFER;
->>
->> Shouldn't you return -EINVAL like the old code did?
->
-> We are deferring the probe since the usb-phy transceiver may get
-> probed after ehci/ohci controllers.
-> And if we return -EINVAL like the previous code, we would end up not
-> setting the phy.
+Hi,
 
-OK.  Something is wrong here then, since this really isn't an error:
-* It should be commented about why you're deferring.
-* You shouldn't have a dev_err for something that's not fatal.
+On Thu, Dec 20, 2012 at 12:21:36PM +0100, Hiroshi Doyu wrote:
+> Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote @ Thu, 20 Dec 2012 11:06:25 +0100:
+> ...
+> > > @@ -149,7 +154,26 @@ done:
+> > >   */
+> > >  static void __init tegra_smp_init_cpus(void)
+> > >  {
+> > > -	unsigned int i, ncores =3D scu_get_core_count(scu_base);
+> > > +	unsigned int i, cpu_id, ncores;
+> > > +	u32 l2ctlr;
+> > > +	phys_addr_t pa;
+> > > +
+> > > +	cpu_id =3D read_cpuid(CPUID_ID) & CPU_MASK;
+> > > +	switch (cpu_id) {
+> > > +	case CPU_CORTEX_A15:
+> > > +		asm("mrc p15, 1, %0, c9, c0, 2\n" : "=3Dr" (l2ctlr));
+> > > +		ncores =3D ((l2ctlr >> 24) & 3) + 1;
+> > > +		break;
+> > > +	case CPU_CORTEX_A9:
+> > > +		/* Get SCU physical base */
+> > > +		asm("mrc p15, 4, %0, c15, c0, 0" : "=3Dr" (pa));
+> > > +		scu_base =3D IO_ADDRESS(pa);
+> > > +		ncores =3D scu_get_core_count(scu_base);
+> > > +		break;
+> > > +	default:
+> > > +		BUG();
+> >=20
+> > instead of bugging out, how about setting ncores to 1 instead ?
+>=20
+> Maybe that would be useful in the case of adding new ARM core in the
+> future.
 
-Ideally we'd want something that would force probing to happen in the
-right order.  I spent a little time looking and didn't see anything,
-but maybe I'm missing something obvious.  If nothing pops out, the
-defer seems OK as long as it is commented well.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+right, kernel would at least boot in that case.
+
+--=20
+balbi
+
+--9amGYk9869ThD9tj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ01ZqAAoJEIaOsuA1yqREZoAQAKmi82hURVFWWzf8DVFGy5Gg
+talOWJzhA28D0JM5wahDhth1sImiSh0GyZWSH/d3nc0zxXKARs/I5qjL0X0lmb7q
+zivcdNZv8eJOqAYTwWTBK9ye6Ld3soELKZuxzGBbD11M0k6K9OEsSS4Rr19OBL9V
+ThdKbSRr6gfss6Gv1jq5vxDF13xR3dASgnSaUOzyxu0ZjxfUaNxeJZ9gCcK9lVyH
+CQQKVPkLXTu7K/GZ3k4VxBzTlA7bRz5JVHv2GFIpN4+YbFMEKQ0SSa5Cow2d9Fcr
+KXLRozZW9t5Hd287HAWKagCfYQEMSow1iu7J3ljZVGIHU+xgIykLxZMx3/rp4+bG
+FkabxLtntqwaTp+7QJzN210LmEOToFviztq9D9rTPL9fILEGwsQOlOdEiqB4DFR7
+7g2OmZnIhlm8/+R47bRzx0P7sXhBCtuqdwfOhr6C0dBkoXwhGb+MJBAIIsFDTXoG
+BqdjcQmu/OFIYepLLy22HsAjNWrkVZxSa5d5rvfF02V4TjJnI//ayEFEdENtlp2w
+Wd+/gWRLSolLujoHD+lMkASnQf7+RKBx+k5HSBbQ11rJe/y8mG41G9P1LvUhbKdC
+qb9Mdxnu90LUvnpo+aeEbfjrP8eK+rMEf5vPWiA+cCBRf+gInJNrsGcpFsjbh+K1
+FILqq+wKz98cKdLyMSio
+=LlYW
+-----END PGP SIGNATURE-----
+
+--9amGYk9869ThD9tj--
+
+--===============2476010934553930599==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2476010934553930599==--
