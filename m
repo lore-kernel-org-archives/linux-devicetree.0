@@ -1,40 +1,61 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration implementation
-Date: Wed, 19 Dec 2012 16:17:03 -0800
-Message-ID: <CAPnjgZ30MQS1OT3GOFLG9HntoD8NrzNw6bB_d1fiJEgHcMDGUA@mail.gmail.com>
-References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com>
-	<1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
-	<20121219123201.B636A3E0AD7@localhost>
-	<20121219171423.GW4985@opensource.wolfsonmicro.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [GIT PULL] Device tree bug fixes for v3.8 merge window
+Date: Thu, 20 Dec 2012 00:41:11 +0000
+Message-ID: <CACxGe6s=bSa6ymfad10uP4OkgO+N7ZV0x6LrCtWXc=ww=kJi2w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121219171423.GW4985@opensource.wolfsonmicro.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, lk <linux-kernel@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, Wolfram Sang <w.sang@pengutronix.de>, khali@linux-fr.org, Ben Dooks <ben-linux@fluff.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Grant Grundler <grundler@chromium.org>, Naveen Krishna <naveen@chromium.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 19, 2012 at 9:14 AM, Mark Brown
-<broonie@opensource.wolfsonmicro.com> wrote:
-> On Wed, Dec 19, 2012 at 12:32:01PM +0000, Grant Likely wrote:
->
->> I'm not convinced on the design of this protocol. It won't scale beyond
->> 2 bus masters and it seems very specific to the design of a specific
->> piece of hardware. I don't think it is mature enough to bake into the
->
-> I ought to point out that the original patch would've baked this into
-> the Samsung I2C driver but I asked for it to be split out as it's
-> nothing to do with the controller really and I'm sure I've seen it
-> before.
+Hi Linus,
 
-Grant your idea looks nice to me. I only worry if we should wait until
-we have a second user before going so far with it. But it is certainly
-a nice general solution.
+Some straight forward bug fixes. Please pull
 
-The scaling beyond two bus masters would require the code to be
-changed to check more input lines from other masters. Best avoided for
-now I think until we have a use for it.
+g.
 
-Regards,
-Simon
+The following changes since commit 752451f01c4567b506bf4343082682dbb8fb30dd:
+
+  Merge branch 'i2c-embedded/for-next' of
+git://git.pengutronix.de/git/wsa/linux (2012-12-18 16:51:10 -0800)
+
+are available in the git repository at:
+
+
+  git://git.secretlab.ca/git/linux-2.6 tags/dt-for-linus
+
+for you to fetch changes up to ab28698d33af05abab0bcf8021eafe38f7434f24:
+
+  of: define struct device in of_platform.h if !OF_DEVICE and
+!OF_ADDRESS (2012-12-19 16:15:17 +0000)
+
+----------------------------------------------------------------
+Device tree v3.8 bug fix branch. Fixes an undefined struct device build
+error and a missing symbol export.
+
+----------------------------------------------------------------
+Grant Likely (1):
+      of: Fix export of of_find_matching_node_and_match()
+
+Jonas Gorski (1):
+      of: define struct device in of_platform.h if !OF_DEVICE and !OF_ADDRESS
+
+ drivers/of/base.c           |    2 +-
+ include/linux/of_platform.h |    1 +
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+
+
+--
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
