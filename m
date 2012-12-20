@@ -1,76 +1,37 @@
-From: Hiroshi Doyu <hdoyu@nvidia.com>
-Subject: Re: [PATCH 5/9] clocksource: tegra: Enable ARM arch_timer with TSC
-Date: Thu, 20 Dec 2012 15:42:30 +0100
-Message-ID: <20121220.164230.292625215885249791.hdoyu@nvidia.com>
-References: <50D305A6.2080904@arm.com><20121220125507.GB6819@tbergstrom-lnx.Nvidia.com><50D31365.9000009@arm.com>
+From: Vinod Koul <vkoul@infradead.org>
+Subject: Re: [PATCH V6 2/2] dmaengine: add helper function to request a
+ slave DMA channel
+Date: Thu, 20 Dec 2012 06:57:54 -0800
+Message-ID: <1356015474.7077.2987.camel@vkoul-udesk3>
+References: <1347662517-4210-1-git-send-email-jon-hunter@ti.com>
+	 <1347662517-4210-3-git-send-email-jon-hunter@ti.com>
+	 <1347852805.1943.130.camel@vkoul-udesk3> <201209171159.27359.arnd@arndb.de>
+	 <20120917223619.GC12445@n2100.arm.linux.org.uk>
+	 <1347938035.1943.162.camel@vkoul-udesk3> <5060DDEB.4000600@ti.com>
+	 <1348547701.1943.190.camel@vkoul-udesk3>
+	 <20121016024318.GF24393@S2101-09.ap.freescale.net>
+	 <1350355144.1648.5259.camel@vkoul-udesk3>  <509D6108.1060304@ti.com>
+	 <1353029876.7077.56.camel@vkoul-udesk3>  <50D1F562.60904@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50D31365.9000009@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "marc.zyngier@arm.com" <marc.zyngier@arm.com>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "andrew@lunn.ch" <andrew@lunn.ch>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "johnstul@us.ibm.com" <johnstul@us.ibm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <50D1F562.60904@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: vinod.koul@intel.com, Shawn Guo <shawn.guo@linaro.org>, Stephen Warren <swarren@nvidia.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Dan Williams <djbw@fb.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Marc Zyngier <marc.zyngier@arm.com> wrote @ Thu, 20 Dec 2012 14:32:21 +0100:
+On Wed, 2012-12-19 at 11:12 -0600, Jon Hunter wrote:
+> I am not sure if I have missed your pull request, but wanted to see if
+> you had or were going to send a pull request for the DT changes for
+> v3.8? I believe that the merge window ends this week. 
+Not yet sent. I was waiting on Dan's changes, just merged and pushed
+those.
+Pull request should show up in couple of days.
 
-> On 20/12/12 12:55, Peter De Schrijver wrote:
-> > On Thu, Dec 20, 2012 at 01:33:42PM +0100, Marc Zyngier wrote:
-> >> On 20/12/12 12:22, Peter De Schrijver wrote:
-> >>>>>>> +
-> >>>>>>> +	/* CNTFRQ */
-> >>>>>>> +	asm("mcr p15, 0, %0, c14, c0, 0\n" : : "r" (freq));
-> >>>>>>> +	asm("mrc p15, 0, %0, c14, c0, 0\n" : "=r" (val));
-> >>>>>>> +	BUG_ON(val != freq);
-> >>>>>>
-> >>>>>> This is scary. CNTFRQ is only writable from secure mode, and will
-> >>>>>> explode in any other situation.
-> >>>>>>
-> >>>>>> Also, writing to CNTFRQ doesn't change the timer frequency! This is just
-> >>>>>> a way for secure mode to tell the rest of the world the frequency the
-> >>>>>> timer is ticking at. Unless you've wired the input clock to be able to
-> >>>>>> change the frequency?
-> >>>>>
-> >>>>> ATM, our upstream kernel is expected in secure mode. This situation
-> >>>>> may be changed later, though....
-> >>>>
-> >>>> I appreciate this. But I expect this kernel to be also used on the
-> >>>> non-secure side if someone tried to run KVM with it. And this would go
-> >>>> bang right away.
-> >>>>
-> >>>
-> >>> But the guest wouldn't necessarily have this peripheral, or any other Tegra114
-> >>> peripheral for that matter?
-> >>
-> >> The problem is not so much the guest but the host. The host has to be
-> >> booted in non-secure, so just saying "we do not support non-secure" is
-> >> not a very convincing argument.
-> >>
-> >> Unless of course you've already decided that you don't want to support
-> >> KVM on this SoC...
-> >>
-> > 
-> > I guess that means we can't support KVM yet. Tegra does not have a secure
-> > monitor by default. It all depends on what that system integrator does.
-> 
-> VExpress doesn't have a secure monitor either, and yet we run KVM on it
-> (by switching to non-secure before loading the kernel). Same for Exynos5.
-> 
-> What I'm trying to say is that this code is rather pointless (this
-> should be done by the firmware/bootloader, not the kernel, or the
-> information should be provided in DT if CNTFRQ is not set).
+Thanks
+-- 
+Vinod Koul
+Intel Corp.
 
-"tegra114.dtsi" has the folloiwng "tsc" entry. So can we consider that
-if dts has this entry, CNTFRQ is not set, which implies it's in secure
-mode. kernel should set it up by itself? Otherwise, skip this setup
-and use it. For example:
-
- 	tsc {
- 		compatible = "nvidia,tegra114-tsc";
- 		reg = <0x700f0000 0x20000>;
-+		setup-cntfrq;
- 	};
-
-Is this what you explained in the above?
-At least, kernel can survive without bootloader/firmware support, ATM.
