@@ -1,78 +1,99 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: CoreSight framework and drivers
-Date: Thu, 20 Dec 2012 11:46:13 -0600
-Message-ID: <50D34EE5.8090407@ti.com>
-References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org> <20121219112314.GA26329@mudshark.cambridge.arm.com> <50D1F37E.6000804@ti.com> <20121219212431.GC23594@pratikp-linux.qualcomm.com>
+From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC 4/8] coresight: add CoreSight ETB driver
+Date: Thu, 20 Dec 2012 11:49:03 -0600
+Message-ID: <50D34F8F.5050304@ti.com>
+References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
+ <1355858365-11849-5-git-send-email-pratikp@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <20121219212431.GC23594@pratikp-linux.qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Pratik Patel <pratikp@codeaurora.org>
-Cc: Will Deacon <will.deacon@arm.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "magnus.p.persson@stericsson.com" <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "d-deao@ti.com" <d-deao@ti.com>, "christian.bejram@stericsson.com" <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1355858365-11849-5-git-send-email-pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, magnus.p.persson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, david.rusling-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org, dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, d-deao-l0cyMroinI0@public.gmane.org, christian.bejram-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
-On 12/19/2012 03:24 PM, Pratik Patel wrote:
+On 12/18/2012 01:19 PM, pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org wrote:
+> From: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> 
+> This driver manages CoreSight ETB (Embedded Trace Buffer) which
+> acts as a circular buffer sink collecting generated trace data.
+> 
+> Signed-off-by: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  drivers/coresight/Makefile        |    2 +-
+>  drivers/coresight/coresight-etb.c |  467 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 468 insertions(+), 1 deletions(-)
 
 [snip]
 
-> Currently we use the CoreSight virtual bus to conveniently list
-> sysfs configuration attributes for all the registered CoreSight
-> devices.
-> 
-> For eg:
-> /sys/bus/coresight/devices/coresight-etm0/<attribute>
-> /sys/bus/coresight/devices/coresight-etm1/<attribute>
-> /sys/bus/coresight/devices/coresight-stm/<attribute>
-> /sys/bus/coresight/devices/coresight-tmc-etf/<attribute>
-> ...
-> ...
-> 
-> Some of the attributes are based on device type (i.e. source,
-> link or sink) so they will exist for all devices of that type
-> while some are device specific.
-> 
-> Maybe I am misunderstanding the question but are you suggesting
-> to register CoreSight devices to the AMBA bus instead of the
-> CoreSight core layer code?
+> +static int __devinit etb_probe(struct platform_device *pdev)
+> +{
+> +	int ret;
+> +	struct device *dev = &pdev->dev;
+> +	struct coresight_platform_data *pdata;
+> +	struct etb_drvdata *drvdata;
+> +	struct resource *res;
+> +	struct coresight_desc *desc;
+> +
+> +	if (pdev->dev.of_node) {
+> +		pdata = of_get_coresight_platform_data(dev, pdev->dev.of_node);
+> +		if (IS_ERR(pdata))
+> +			return PTR_ERR(pdata);
+> +		pdev->dev.platform_data = pdata;
+> +	}
+> +
+> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
+> +	if (!drvdata)
+> +		return -ENOMEM;
+> +	drvdata->dev = &pdev->dev;
+> +	platform_set_drvdata(pdev, drvdata);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -ENODEV;
+> +
+> +	drvdata->base = devm_ioremap(dev, res->start, resource_size(res));
+> +	if (!drvdata->base)
+> +		return -ENOMEM;
+> +
+> +	spin_lock_init(&drvdata->spinlock);
+> +
+> +	drvdata->clk = devm_clk_get(dev, "core_clk");
+> +	if (IS_ERR(drvdata->clk))
+> +		return PTR_ERR(drvdata->clk);
+> +
+> +	ret = clk_set_rate(drvdata->clk, CORESIGHT_CLK_RATE_TRACE);
+> +	if (ret)
+> +		return ret;
+> +
+> +	drvdata->buf = devm_kzalloc(dev, ETB_SIZE_WORDS * BYTES_PER_WORD,
+> +				    GFP_KERNEL);
+> +	if (!drvdata->buf)
+> +		return -ENOMEM;
+> +
+> +	desc = devm_kzalloc(dev, sizeof(*desc), GFP_KERNEL);
+> +	if (!desc)
+> +		return -ENOMEM;
+> +	desc->type = CORESIGHT_DEV_TYPE_SINK;
+> +	desc->subtype.sink_subtype = CORESIGHT_DEV_SUBTYPE_SINK_BUFFER;
 
-Yes exactly.
+Can a source be directly connected to a sink or do you need to have a
+link in between?
 
-> Will Deacon mentioned earlier that AMBA framework can be changed
-> to accomodate devices with a different class but I am more
-> concerned with losing some of the stuff that the core layer code
-> does (eg. coresight_register, coresight_enable, coresight_disable
-> in coresight.c) if we register CoreSight drivers to the AMBA bus
-> without letting the core layer know about the device connections.
-
-I may be missing something, but couldn't you keep all the
-register/enable/disable stuff but just register the device with the amba
-bus? Obviously some changes would need to be made.
-
-Personally, I don't have strong feeling either way, but we have ETM/ETB
-drivers using AMBA today and so I am hoping we can come to agreement on
-this going forward.
-
-Russell, Will, what are your thoughts?
-
-Otherwise, looking at the code, I like what you have implemented. I
-still need to look closer, but I am struggling to figure out how a
-coresight device such as the cross-trigger-interface fits with this
-model. This model appears to be geared towards coresight devices used
-for traces purposes and are either source, links or sinks. The
-cross-trigger-interface is not a source or a sink. However, although you
-it could be considered as a link (routing events), it is not really, as
-it may not link to other coresight sinks/source.
-
-In my case, I have PMU-IRQ --> CTI --> GIC. So a non-coresight source
-and sink. In away the CTI looks more like a 2nd-level interrupt
-controller than anything else. Hence, another type of coresight device
-may be needed in addition to source, links and sinks. Or link is
-extended in some way to connect to non-coresight sources/sinks.
-
-Let me know if you have any thoughts.
+The reason, I ask is because on some Cortex-A8 devices we have ETM
+directly connected to ETB and there is no link per-se to configure.
 
 Cheers
 Jon
