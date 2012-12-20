@@ -1,52 +1,48 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration implementation
-Date: Thu, 20 Dec 2012 00:58:05 +0000
-Message-ID: <CACxGe6vyK80pvV1CE=zu7LNEmeKDZg3cpQ5PKZjaVjvL+gc2yg@mail.gmail.com>
-References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com>
- <1355464254-12768-2-git-send-email-ch.naveen@samsung.com> <20121219123201.B636A3E0AD7@localhost>
- <20121219171423.GW4985@opensource.wolfsonmicro.com> <CAPnjgZ30MQS1OT3GOFLG9HntoD8NrzNw6bB_d1fiJEgHcMDGUA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAPnjgZ30MQS1OT3GOFLG9HntoD8NrzNw6bB_d1fiJEgHcMDGUA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, lk <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Naveen Krishna <naveen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] serial: tegra: add serial driver
+Date: Thu, 20 Dec 2012 01:09:02 +0000
+Message-ID: <20121220010902.2116B3E0AD7@localhost>
+References: <1355746249-15347-1-git-send-email-ldewangan@nvidia.com> <20121217171027.6AE573E0BDD@localhost> <50CF8F36.2030309@wwwdotorg.org> <20121219130151.F29CA3E0AD7@localhost> <50D1CC07.6070506@nvidia.com> <50D1F22A.6090801@wwwdotorg.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <50D1F22A.6090801@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Laxman Dewangan <ldewangan@nvidia.com>
+Cc: "alan@linux.intel.com" <alan@linux.intel.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "jslaby@suse.cz" <jslaby@suse.cz>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 20, 2012 at 12:17 AM, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> On Wed, Dec 19, 2012 at 9:14 AM, Mark Brown
-> <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
->> On Wed, Dec 19, 2012 at 12:32:01PM +0000, Grant Likely wrote:
->>
->>> I'm not convinced on the design of this protocol. It won't scale beyond
->>> 2 bus masters and it seems very specific to the design of a specific
->>> piece of hardware. I don't think it is mature enough to bake into the
->>
->> I ought to point out that the original patch would've baked this into
->> the Samsung I2C driver but I asked for it to be split out as it's
->> nothing to do with the controller really and I'm sure I've seen it
->> before.
->
-> Grant your idea looks nice to me. I only worry if we should wait until
-> we have a second user before going so far with it. But it is certainly
-> a nice general solution.
->
-> The scaling beyond two bus masters would require the code to be
-> changed to check more input lines from other masters. Best avoided for
-> now I think until we have a use for it.
+On Wed, 19 Dec 2012 09:58:18 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 12/19/2012 07:15 AM, Laxman Dewangan wrote:
+> > On Wednesday 19 December 2012 06:31 PM, Grant Likely wrote:
+> >> On Mon, 17 Dec 2012 14:31:34 -0700, Stephen
+> >> Warren<swarren@wwwdotorg.org>  wrote:
+> >>> On 12/17/2012 10:10 AM, Grant Likely wrote:
+> >>>> On Mon, 17 Dec 2012 17:40:49 +0530, Laxman
+> >>>> Dewangan<ldewangan@nvidia.com>  wrote:
+> >>>
+> >>> Aren't we still supposed to support platform data so that it can
+> >>> override what's in DT in order to fix up bad DTs? Or, has that
+> >>> requirement been dropped. If it has, we can drop a bunch of code from a
+> >>> variety of Tegra-specific drivers, I expect.
+> >> Do you have an actual user for this? If not, then don't borrow trouble.
+> >> Just drop it. Things like platform_data can always be added later only
+> >> if it is needed.
+> > 
+> > Currently all our board supports DT. we are not using any driver
+> > instantiated by board files.
+> > I will remove the platform data for current patch and if it is require
+> > then will add later with reasoning.
+> > 
+> > Hope this will be fine with Stephen also so that  this basic patch can
+> > be included into tree soon.
+> 
+> I'm fine with it; it's just a change in policy that hadn't been
+> communicated before.
 
-There is two parts to this; the design of the binding, and the
-implementation. Of the two, the binding is the most difficult to
-change, so it is important to get something we can live with long term
-sorted out now. The implementation can start somewhat naive, with a
-plan for how to extend it.
+Not really. For as long as I can remember there has been a strong bias
+against unused code in the kernel. That goes for platform_data support
+code as much as anything else.
 
-Regarding the scaling to multiple devices, it is a much smaller issue
-(if an issue at all) if the arbitration back end is pluggable. Then it
-becomes easy to support hardware with a different arbitration
-protocol. If it gets baked into the core i2c code, then we've got a
-problem and a lot more scrutiny needs to be put into this specific
-protocol.
+What has been policy is that adding DT support must never break existing
+non-DT support as long as non-DT booting is supported by a platform.
 
 g.
