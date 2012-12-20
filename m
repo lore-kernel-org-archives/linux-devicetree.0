@@ -1,116 +1,78 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/9] clocksource: tegra: Enable ARM arch_timer with TSC
-Date: Thu, 20 Dec 2012 11:01:15 +0000
-Message-ID: <50D2EFFB.8030702@arm.com>
-References: <1355996654-6579-1-git-send-email-hdoyu@nvidia.com> <1355996654-6579-6-git-send-email-hdoyu@nvidia.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 3/9] ARM: tegra: # of CPU cores detection w/ & w/o HAVE_ARM_SCU
+Date: Thu, 20 Dec 2012 11:17:08 +0000
+Message-ID: <50D2F3B4.3040302@arm.com>
+References: <1355996654-6579-1-git-send-email-hdoyu@nvidia.com> <1355996654-6579-4-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1355996654-6579-6-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1355996654-6579-4-git-send-email-hdoyu@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Hiroshi Doyu <hdoyu@nvidia.com>
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, John Stultz <johnstul@us.ibm.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 On 20/12/12 09:44, Hiroshi Doyu wrote:
-> Add platform enabler for ARM arch_timer(TSC). TSC is more fine grained
-> timer than TMR0. If it's available, it will be used for clock source
-> and sched_clock. Otherwise, TMR0 is used. In any case TMR0 is
-> necessary for clock event.
+> The method to detect the number of CPU cores on Cortex-A9 MPCore and
+> Cortex-A15 MPCore is different. On Cortex-A9 MPCore we can get this
+> information from the Snoop Control Unit(SCU). On Cortex-A15 MPCore we
+> have to read it from the system coprocessor(CP15), because the SCU on
+> Cortex-A15 MPCore does not have software readable registers. This
+> patch selects the correct method at runtime based on the CPU ID.
 > 
-> Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> Signed-off-by: Hiroshi Doyu <hdoyu@nvidia.com>
 > ---
->  .../bindings/arm/tegra/nvidia,tegra114-tsc.txt     |   11 ++++
->  drivers/clocksource/tegra20_timer.c                |   64 +++++++++++++++++++-
->  2 files changed, 74 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra114-tsc.txt
+>  arch/arm/mach-tegra/platsmp.c |   31 ++++++++++++++++++++++++++++---
+>  1 file changed, 28 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra114-tsc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra114-tsc.txt
-> new file mode 100644
-> index 0000000..9de936a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra114-tsc.txt
-> @@ -0,0 +1,11 @@
-> +NVIDIA Tegra Timer Stamp Counter(TSC)
-> +
-> +Required properties:
-> +- compatible : "nvidia,tegra114-tsc
-> +- reg : Should contain 1 register ranges(address and length)
-> +
-> +Example:
-> +	tsc {
-> +		compatible = "nvidia,tegra114-tsc";
-> +		reg = <0x700f0000 0x20000>;
-> +	};
-> diff --git a/drivers/clocksource/tegra20_timer.c b/drivers/clocksource/tegra20_timer.c
-> index 1d25de8..285a6f1 100644
-> --- a/drivers/clocksource/tegra20_timer.c
-> +++ b/drivers/clocksource/tegra20_timer.c
-> @@ -30,6 +30,7 @@
->  #include <asm/mach/time.h>
->  #include <asm/smp_twd.h>
->  #include <asm/sched_clock.h>
-> +#include <asm/arch_timer.h>
+> diff --git a/arch/arm/mach-tegra/platsmp.c b/arch/arm/mach-tegra/platsmp.c
+> index 1b926df..68e76ef 100644
+> --- a/arch/arm/mach-tegra/platsmp.c
+> +++ b/arch/arm/mach-tegra/platsmp.c
+> @@ -23,6 +23,7 @@
+>  #include <asm/hardware/gic.h>
+>  #include <asm/mach-types.h>
+>  #include <asm/smp_scu.h>
+> +#include <asm/cputype.h>
 >  
->  #define RTC_SECONDS            0x08
->  #define RTC_SHADOW_SECONDS     0x0c
-> @@ -271,10 +272,71 @@ static void __init tegra20_init_tmr(void)
->  	clockevents_register_device(&tegra_clockevent);
->  }
+>  #include <mach/powergate.h>
 >  
-> +#define TSC_CNTCR		0		/* TSC control registers */
-> +#define TSC_CNTCR_ENABLE	(1 << 0)	/* Enable */
-> +#define TSC_CNTCR_HDBG		(1 << 1)	/* Halt on debug */
+> @@ -34,9 +35,13 @@
+>  #include "common.h"
+>  #include "iomap.h"
+>  
+> +#define CPU_MASK		0xff0ffff0
+> +#define CPU_CORTEX_A9		0x410fc090
+> +#define CPU_CORTEX_A15		0x410fc0f0
 > +
-> +#define TSC_CNTCV0		0x8		/* TSC counter (LSW) */
-> +#define TSC_CNTCV1		0xc		/* TSC counter (MSW) */
-> +#define TSC_CNTFID0		0x20		/* TSC freq id 0 */
+>  extern void tegra_secondary_startup(void);
+>  
+> -static void __iomem *scu_base = IO_ADDRESS(TEGRA_ARM_PERIF_BASE);
+> +static void __iomem *scu_base;
+>  
+>  #define EVP_CPU_RESET_VECTOR \
+>  	(IO_ADDRESS(TEGRA_EXCEPTION_VECTORS_BASE) + 0x100)
+> @@ -149,7 +154,26 @@ done:
+>   */
+>  static void __init tegra_smp_init_cpus(void)
+>  {
+> -	unsigned int i, ncores = scu_get_core_count(scu_base);
+> +	unsigned int i, cpu_id, ncores;
+> +	u32 l2ctlr;
+> +	phys_addr_t pa;
 > +
-> +static const struct of_device_id tegra_tsc_match[] __initconst = {
-> +	{ .compatible = "nvidia,tegra114-tsc" },
-> +	{}
-> +};
-> +
-> +static int tegra_arch_timer_init(void)
-> +{
-> +	int err;
-> +	struct device_node *np;
-> +	struct clk *clk;
-> +	void __iomem *tsc_base;
-> +	u32 freq, val;
-> +
-> +	np = of_find_matching_node(NULL, tegra_tsc_match);
-> +	if (!np)
-> +		return -ENODEV;
-> +
-> +	tsc_base = of_iomap(np, 0);
-> +	if (!tsc_base)
-> +		return -ENODEV;
-> +
-> +	clk = clk_get_sys("clk_m", NULL);
-> +	if (IS_ERR(clk)) {
-> +		freq = 12000000;
-> +		pr_warn("Unable to get timer clock. Assuming 12Mhz input clock.\n");
-> +	} else {
-> +		freq = clk_get_rate(clk);
-> +		clk_put(clk);
-> +	}
-> +	writel_relaxed(freq, tsc_base + TSC_CNTFID0);
-> +
-> +	/* CNTFRQ */
-> +	asm("mcr p15, 0, %0, c14, c0, 0\n" : : "r" (freq));
-> +	asm("mrc p15, 0, %0, c14, c0, 0\n" : "=r" (val));
-> +	BUG_ON(val != freq);
+> +	cpu_id = read_cpuid(CPUID_ID) & CPU_MASK;
+> +	switch (cpu_id) {
+> +	case CPU_CORTEX_A15:
+> +		asm("mrc p15, 1, %0, c9, c0, 2\n" : "=r" (l2ctlr));
+> +		ncores = ((l2ctlr >> 24) & 3) + 1;
 
-This is scary. CNTFRQ is only writable from secure mode, and will
-explode in any other situation.
-
-Also, writing to CNTFRQ doesn't change the timer frequency! This is just
-a way for secure mode to tell the rest of the world the frequency the
-timer is ticking at. Unless you've wired the input clock to be able to
-change the frequency?
+Please, do not do that. It doesn't scale to multiple clusters. Instead,
+you can now rely on arm_dt_init_cpu_maps() to do the right thing as long
+as your device tree exposes all the cpu nodes.
 
 	M.
 -- 
 Jazz is not dead. It just smells funny...
+
