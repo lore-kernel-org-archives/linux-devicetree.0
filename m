@@ -1,89 +1,71 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH] pci: Provide support for parsing PCI DT ranges property
-Date: Thu, 20 Dec 2012 09:25:00 +0100
-Message-ID: <20121220082500.GA32617@avionic-0098.adnet.avionic-design.de>
-References: <20121212163749.GA17371@arm.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/9] ARM: Initial support for Tegra 114 SoC.
+Date: Thu, 20 Dec 2012 11:43:58 +0200
+Message-ID: <1355996654-6579-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5449620084133535103=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121212163749.GA17371-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Murray <Andrew.Murray-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linuxppc-dev <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---===============5449620084133535103==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
-Content-Disposition: inline
+This patchset adds initial support for the NVIDIA's new Tegra 114
+SoC (T114) based on the ARM Cortex-A15 MP. It has the minimal support
+to allow the kernel to boot up into shell console. This can be used as
+a basis for adding other device drivers for this SoC. Currently there
+are 2 evaluation boards available, "Dalmore" and "Pluto".
+
+This patchset is against Stephen Warren's linux-next_common branch:
+
+  git://nv-tegra.nvidia.com/user/swarren/linux-2.6 linux-next_common
+
+For those who want to try:
+
+  $ make ARCH=arm tegra_defconfig
+  $ scripts/config -e ARCH_TEGRA_114_SOC -d DRM -d SUSPEND \
+    	-d PM_RUNTIME -d CPU_FREQ -d CPU_IDLE
+  $ make ARCH=arm menuconfig # if needed to configure more
+  $ make ARCH=arm all -j9
+
+Verified that this single image booted up with "Dalmore(T114)",
+"Pluto(T114)" and "Cardhu(T30)". For "Cardhu(T30)" with this single
+image, SPI driver doesn't seem to afford the above configuration , it
+hangs at boot-up. With SPI disabled, it's ok.
 
 
---Dxnq1zWXvFF0Q93v
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hiroshi Doyu (9):
+  ARM: tegra: fuse: Add chipid TEGRA114 0x35
+  HACK: ARM: tegra: Use CLK_IGNORE_UNUSED for Tegra 114 SoC
+  ARM: tegra: # of CPU cores detection w/ & w/o HAVE_ARM_SCU
+  clocksource: tegra: Reorganize funcs by clock functionarities
+  clocksource: tegra: Enable ARM arch_timer with TSC
+  ARM: dt: tegra114: Add new SoC base, Tegra 114 SoC
+  ARM: dt: tegra114: Add new board, Dalmore
+  ARM: dt: tegra114: Add new board, Pluto
+  ARM: tegra: Add initial support for Tegra 114 SoC.
 
-On Wed, Dec 12, 2012 at 04:37:50PM +0000, Andrew Murray wrote:
-[...]
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-[...]
-> +	start = of_get_property(node, "ranges", &rlen);
-> +	if (start == NULL)
-> +		return NULL;
-> +
-> +	end = start + rlen;
+ .../bindings/arm/tegra/nvidia,tegra114-tsc.txt     |   11 +
+ arch/arm/boot/dts/Makefile                         |    4 +-
+ arch/arm/boot/dts/tegra114-dalmore.dts             |   21 ++
+ arch/arm/boot/dts/tegra114-pluto.dts               |   21 ++
+ arch/arm/boot/dts/tegra114.dtsi                    |   89 ++++++++
+ arch/arm/mach-tegra/Kconfig                        |   10 +
+ arch/arm/mach-tegra/Makefile                       |    1 +
+ arch/arm/mach-tegra/board-dt-tegra114.c            |   48 +++++
+ arch/arm/mach-tegra/common.c                       |    1 +
+ arch/arm/mach-tegra/fuse.h                         |    1 +
+ arch/arm/mach-tegra/platsmp.c                      |   31 ++-
+ arch/arm/mach-tegra/tegra30_clocks_data.c          |    2 +
+ drivers/clocksource/tegra20_timer.c                |  222 +++++++++++++-------
+ 13 files changed, 384 insertions(+), 78 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra114-tsc.txt
+ create mode 100644 arch/arm/boot/dts/tegra114-dalmore.dts
+ create mode 100644 arch/arm/boot/dts/tegra114-pluto.dts
+ create mode 100644 arch/arm/boot/dts/tegra114.dtsi
+ create mode 100644 arch/arm/mach-tegra/board-dt-tegra114.c
 
-I'm currently rewriting large parts of the Tegra PCIe controller driver
-and I'm trying to use this new API. This seems to work fine, except that
-I think this line needs to be:
-
-	end = start + rlen / sizeof(__be32);
-
-Otherwise we'll try to process 4 times as many ranges as there are.
-
-Thierry
-
---Dxnq1zWXvFF0Q93v
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQ0stcAAoJEN0jrNd/PrOhJ3wP/RTl+yPFBH6p5AxEnuzCbT+d
-aB6m7CEG++kw9kkXUAnSw+jIWwRdgmLY5qdcXJaxUyMlx/1qTQESey0mFpSsu0g1
-8u+6ITQ4+q/HzXbfCtRJpERZHxTTJwdY9EijpSTMEC4Whq4sG9m97uTBmfuKs1Gf
-Ot1Hs4z3bUDNCLUje/QqON/emqW/ZqM+bcsHQRGe/O/2Py+0/xuWlRw3+WRE+QuS
-w4uABEyWLLqjWjLqG+oT+xpwwE3SlDVbejH5i9FYEL7OjAsFTpx4h0Kjqr/S4eHD
-8FMBGnX6IlrQOcrpYXlYGKDGd9k6EKIu36P2LxSOfa/JcqNuPacut4MlS7yEJ39z
-Qd8xufL23KkuL+3dzAju9tCaeS7K4EUMWr2uF02PwFeVYsQtSAsVdZtHh9DlnfiG
-ghAtxN/E90ZLNg7uEgM5pFA5eizZ6/yuEY2MPs4NqG9oe24ykR77ZIu4DwJC3p+R
-0rtURMQKVadncw3beSIxRqU/67Ru+xF+J3wiJNL6g9CiSLcOKDAH+gVcPh9qk19/
-0scfxkfTYOE81hG+O58Aw0Ikl6jkwVnCWKvtnAPgDOjRnI+41+7toHlTCsTi6XG1
-hYB0deO3jviEgInQrdO4CUVPdORyvEACrEPgt4rIwVDzk7TZKkbSlHULRgy66yyj
-xqMOHqFgoNTGbyK+s816
-=SKrO
------END PGP SIGNATURE-----
-
---Dxnq1zWXvFF0Q93v--
-
---===============5449620084133535103==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============5449620084133535103==--
+-- 
+1.7.9.5
