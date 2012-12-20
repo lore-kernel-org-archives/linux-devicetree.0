@@ -1,53 +1,61 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH] RFC: input: Extend matrix-keypad device tree binding
-Date: Thu, 20 Dec 2012 13:41:47 -0800
-Message-ID: <CAPnjgZ0baa73BEJ8VGW=OMGSe0k=FCz4wnCwv95R8VcGUmoRww@mail.gmail.com>
-References: <1356035039-21653-1-git-send-email-sjg@chromium.org>
-	<20121220211323.GA24981@core.coreip.homeip.net>
+From: Andreas Fenkart <andreas.fenkart@streamunlimited.com>
+Subject: Re: omap_hsmmc: SDIO IRQ on AM335x family
+Date: Thu, 20 Dec 2012 23:04:44 +0100
+Message-ID: <20121220220444.GA350@blumentopf>
+References: <20121130111847.GA24674@blumentopf>
+ <20121130174022.GM5312@atomide.com>
+ <50B9019F.2020109@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <20121220211323.GA24981@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@secretlab.ca>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Roland Stigge <stigge@antcom.de>, linux-doc@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Wolfram Sang <w.sang@pengutronix.de>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Luigi Semenzato <semenzato@chromium.org>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50B9019F.2020109@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Andreas Fenkart <andreas.fenkart@streamunlimited.com>, Chris Ball <cjb@laptop.org>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-omap@vger.kernel.org, santosh.shilimkar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+Hi,
 
-On Thu, Dec 20, 2012 at 1:13 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> Hi Simon,
->
-> On Thu, Dec 20, 2012 at 12:23:58PM -0800, Simon Glass wrote:
->>
->> For the key repeat feature, we need to set this after the input device
->> is registered. So we would need to add a matrix_keypad_setup_input() or
->> similar to be called by the driver after input_register_device(). I am
->> less keen on that idea, and less again on the alternative of perhaps
->> matrix_keypad_register_device() which does input_register_device() and
->> then sets up the key repeat. Thoughts?
->
-> No, we already have default rate and delay. Unless you can prove that
-> random firmware writer's idea of appropriate delay and rate is better
-> then current default - for everyone - and then can successfully argue
-> that that obviously best delay/rate combo should not replace the current
-> one but stay only in DT bindings, let's keep relying on users adjusting
-> their own preferences from respective desktop environments/console/etc.
+On Fri, Nov 30, 2012 at 07:57:35PM +0100, Daniel Mack wrote:
+> 
+> On 30.11.2012 18:40, Tony Lindgren wrote:
+> > * Andreas Fenkart <andreas.fenkart@streamunlimited.com> [121130 03:21]:
+> >>
+> >> The alternative was to configure dat1 line as a GPIO, while
+> >> waiting for an IRQ. Then configuring it back as dat1 when the
+> >> SDIO card is signalling an IRQ. Or the host starts a transfer. I
+> >> guess this will perform poorly, hence not considering it really.
+> > 
+> > This might work for SDIO cards. It should be disabled for data
+> > cards naturally to avoid potential data corruption.
+I don't understand your concern here, could you explain
 
-Seems reasonable. My only comment on this is that the device tree
-comes from kernel, not firmware. This lets us configure an embedded
-system easily (where the user may not have access to repeat rate
-preferences).
+> > The way to implement this is set named states in the .dts file
+> > for the pins using pinctrl-single.c, then have the MMC driver
+> > request states "default" "active" and "idle" during the probe,
+> > then toggle between active and idle during the runtime.
+> > 
+> > As far as I remember the GPIO functionality does not need to
+> > be enabled, just muxing the pin to GPIO mode for the wake-up
+> > is enough.
+> 
+> Wouldn't that be racy, given that an interrupt which occurs at beween
+> the point in time when the driver decides to wait for IRQs again until
+> the mux has finished switching over, could potentially be lost?
 
-Grant are you OK with me just dropping the repeat settings, and
-keeping the other two? If so I will respin the patch.
+The IRQ is level triggered, so can't be lost. I implemented it as
+suggested and surprisingly performance is pretty good. Actually not
+worse than keeping the fclk enabled all times.
 
-Regards,
-Simon
+module: 88W8787 / mwifiex
+tx bitrate: 150.0 MBit/s MCS 7 40Mhz short GI
 
->
-> Thanks.
->
-> --
-> Dmitry
+                   |   tcp tx         |  signal  | cpu idle
+---------------------------------------------------------------
+keep fclk enabled  |   50.3 Mbits/sec | -23 dBm  | 15 %
+suspend/resume     |   49.7 Mbits/sec | -22 dBM  | 13 %
+
+patch follows
+
+/Andi
