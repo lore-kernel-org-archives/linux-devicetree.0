@@ -1,90 +1,78 @@
-From: Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/9] clocksource: tegra: Enable ARM arch_timer with TSC
-Date: Thu, 20 Dec 2012 17:09:04 +0000
-Message-ID: <50D34630.9020708@arm.com>
-References: <50D305A6.2080904@arm.com><20121220125507.GB6819@tbergstrom-lnx.Nvidia.com><50D31365.9000009@arm.com> <20121220.164230.292625215885249791.hdoyu@nvidia.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: CoreSight framework and drivers
+Date: Thu, 20 Dec 2012 11:46:13 -0600
+Message-ID: <50D34EE5.8090407@ti.com>
+References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org> <20121219112314.GA26329@mudshark.cambridge.arm.com> <50D1F37E.6000804@ti.com> <20121219212431.GC23594@pratikp-linux.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121220.164230.292625215885249791.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "andrew-g2DYL2Zd6BY@public.gmane.org" <andrew-g2DYL2Zd6BY@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org" <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <20121219212431.GC23594@pratikp-linux.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Pratik Patel <pratikp@codeaurora.org>
+Cc: Will Deacon <will.deacon@arm.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "magnus.p.persson@stericsson.com" <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "d-deao@ti.com" <d-deao@ti.com>, "christian.bejram@stericsson.com" <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/12/12 14:42, Hiroshi Doyu wrote:
-> Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org> wrote @ Thu, 20 Dec 2012 14:32:21 +0100:
-> 
->> On 20/12/12 12:55, Peter De Schrijver wrote:
->>> On Thu, Dec 20, 2012 at 01:33:42PM +0100, Marc Zyngier wrote:
->>>> On 20/12/12 12:22, Peter De Schrijver wrote:
->>>>>>>>> +
->>>>>>>>> +	/* CNTFRQ */
->>>>>>>>> +	asm("mcr p15, 0, %0, c14, c0, 0\n" : : "r" (freq));
->>>>>>>>> +	asm("mrc p15, 0, %0, c14, c0, 0\n" : "=r" (val));
->>>>>>>>> +	BUG_ON(val != freq);
->>>>>>>>
->>>>>>>> This is scary. CNTFRQ is only writable from secure mode, and will
->>>>>>>> explode in any other situation.
->>>>>>>>
->>>>>>>> Also, writing to CNTFRQ doesn't change the timer frequency! This is just
->>>>>>>> a way for secure mode to tell the rest of the world the frequency the
->>>>>>>> timer is ticking at. Unless you've wired the input clock to be able to
->>>>>>>> change the frequency?
->>>>>>>
->>>>>>> ATM, our upstream kernel is expected in secure mode. This situation
->>>>>>> may be changed later, though....
->>>>>>
->>>>>> I appreciate this. But I expect this kernel to be also used on the
->>>>>> non-secure side if someone tried to run KVM with it. And this would go
->>>>>> bang right away.
->>>>>>
->>>>>
->>>>> But the guest wouldn't necessarily have this peripheral, or any other Tegra114
->>>>> peripheral for that matter?
->>>>
->>>> The problem is not so much the guest but the host. The host has to be
->>>> booted in non-secure, so just saying "we do not support non-secure" is
->>>> not a very convincing argument.
->>>>
->>>> Unless of course you've already decided that you don't want to support
->>>> KVM on this SoC...
->>>>
->>>
->>> I guess that means we can't support KVM yet. Tegra does not have a secure
->>> monitor by default. It all depends on what that system integrator does.
->>
->> VExpress doesn't have a secure monitor either, and yet we run KVM on it
->> (by switching to non-secure before loading the kernel). Same for Exynos5.
->>
->> What I'm trying to say is that this code is rather pointless (this
->> should be done by the firmware/bootloader, not the kernel, or the
->> information should be provided in DT if CNTFRQ is not set).
-> 
-> "tegra114.dtsi" has the folloiwng "tsc" entry. So can we consider that
-> if dts has this entry, CNTFRQ is not set, which implies it's in secure
-> mode. kernel should set it up by itself? Otherwise, skip this setup
-> and use it. For example:
-> 
->  	tsc {
->  		compatible = "nvidia,tegra114-tsc";
->  		reg = <0x700f0000 0x20000>;
-> +		setup-cntfrq;
->  	};
-> 
-> Is this what you explained in the above?
-> At least, kernel can survive without bootloader/firmware support, ATM.
 
-No. The DT should only describe the hardware, and not something that is
-Linux specific.
+On 12/19/2012 03:24 PM, Pratik Patel wrote:
 
-Just use the "clock-frequency" attribute in the timer arch-timer node,
-and get rid of this CNTFRQ setting. The driver already knows how to deal
-with this situation if this attribute is set.
+[snip]
 
-Thanks,
+> Currently we use the CoreSight virtual bus to conveniently list
+> sysfs configuration attributes for all the registered CoreSight
+> devices.
+> 
+> For eg:
+> /sys/bus/coresight/devices/coresight-etm0/<attribute>
+> /sys/bus/coresight/devices/coresight-etm1/<attribute>
+> /sys/bus/coresight/devices/coresight-stm/<attribute>
+> /sys/bus/coresight/devices/coresight-tmc-etf/<attribute>
+> ...
+> ...
+> 
+> Some of the attributes are based on device type (i.e. source,
+> link or sink) so they will exist for all devices of that type
+> while some are device specific.
+> 
+> Maybe I am misunderstanding the question but are you suggesting
+> to register CoreSight devices to the AMBA bus instead of the
+> CoreSight core layer code?
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Yes exactly.
+
+> Will Deacon mentioned earlier that AMBA framework can be changed
+> to accomodate devices with a different class but I am more
+> concerned with losing some of the stuff that the core layer code
+> does (eg. coresight_register, coresight_enable, coresight_disable
+> in coresight.c) if we register CoreSight drivers to the AMBA bus
+> without letting the core layer know about the device connections.
+
+I may be missing something, but couldn't you keep all the
+register/enable/disable stuff but just register the device with the amba
+bus? Obviously some changes would need to be made.
+
+Personally, I don't have strong feeling either way, but we have ETM/ETB
+drivers using AMBA today and so I am hoping we can come to agreement on
+this going forward.
+
+Russell, Will, what are your thoughts?
+
+Otherwise, looking at the code, I like what you have implemented. I
+still need to look closer, but I am struggling to figure out how a
+coresight device such as the cross-trigger-interface fits with this
+model. This model appears to be geared towards coresight devices used
+for traces purposes and are either source, links or sinks. The
+cross-trigger-interface is not a source or a sink. However, although you
+it could be considered as a link (routing events), it is not really, as
+it may not link to other coresight sinks/source.
+
+In my case, I have PMU-IRQ --> CTI --> GIC. So a non-coresight source
+and sink. In away the CTI looks more like a 2nd-level interrupt
+controller than anything else. Hence, another type of coresight device
+may be needed in addition to source, links and sinks. Or link is
+extended in some way to connect to non-coresight sources/sinks.
+
+Let me know if you have any thoughts.
+
+Cheers
+Jon
