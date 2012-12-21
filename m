@@ -1,43 +1,49 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: CoreSight framework and drivers
-Date: Thu, 20 Dec 2012 23:40:11 +0000
-Message-ID: <20121220234011.GE14363@n2100.arm.linux.org.uk>
-References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org> <20121219112314.GA26329@mudshark.cambridge.arm.com> <50D1F37E.6000804@ti.com> <20121219212431.GC23594@pratikp-linux.qualcomm.com> <50D34EE5.8090407@ti.com> <20121220195127.GA14877@pratikp-linux.qualcomm.com> <50D3972E.4030607@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50D3972E.4030607@ti.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Pratik Patel <pratikp@codeaurora.org>, linux-arm-msm@vger.kernel.org, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, "magnus.p.persson@stericsson.com" <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "d-deao@ti.com" <d-deao@ti.com>, "christian.bejram@stericsson.com" <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v3] usb: phy: samsung: Add support to set pmu isolation
+Date: Fri, 21 Dec 2012 13:46:18 +0530
+Message-ID: <1356077779-5759-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 20, 2012 at 04:54:38PM -0600, Jon Hunter wrote:
-> On 12/20/2012 01:51 PM, Pratik Patel wrote:
-> > Ok, so are you referring to making CoreSight devices register
-> > with AMBA bus instead of platform bus keeping everything else
-> > intact?
-> 
-> Yes exactly. However, please note I am not saying that we should do
-> this, and I asking what direction does the community want us to take
-> here? Platform bus or AMBA bus?
+Changes from v2:
+ - Removed the phandle type of device node properties, instead using
+   sub-nodes now.
+ - Removed the property 'samsung,enable-mask' since it is SoC dependent
+   (SoCs like S5PV210 and S3C64XX have different bits to enable/disable
+   phy controller in comparison to exysno4210 onwards).
+ - Maintaining the phy enable mask (which is SoC dependent) for device type phy
+   and host type phy in the driver data.
+ - Re-structuring to get device properties using sub-nodes for 'usbphy-pmu'
 
-One of the issues which worries me about mixing peripheral drivers on
-random different buses is... what happens when we end up with a SoC
-which gates the APB clock at bus level (there are SoCs which gate the
-APB clock at peripheral level.)  In other words, an APB bus only gets
-clocked upon request.
+Changes from v1:
+ - Changed the name of property for phy handler from'samsung,usb-phyctrl'
+   to 'samsung,usb-phyhandle' to make it look more generic.
+ - Similarly 'samsung,phyctrl-reg' is changed to 'samsung,phyhandle-reg'
+ - Added a check for 'samsung,usb-phyhandle' before getting node from
+   phandle.
+ - Putting the node using 'of_node_put()' which had been missed.
+ - Adding necessary check for the pointer in 'samsung_usbphy_set_isolation()'
+   to avoid any NULL pointer dereferencing.
+ - Unmapping the register ioremapped in 'samsung_usbphy_parse_dt_param()'.
 
-We can deal with that with the infrastructure we have in place in the
-AMBA bus layer, but not with the platform bus - we'd have to teach the
-platform bus driver about the special APB clock instead of having it
-handled primerily at the bus layer.
+Based on usb-next branch with Praveen Paneri's patches on top of it.
+- http://lists.infradead.org/pipermail/linux-arm-kernel/2012-November/134476.html
+- http://lists.infradead.org/pipermail/linux-arm-kernel/2012-November/131763.html
 
-At least the coresight ETM peripherals make use of the APB bus.  They
-have a whole pile of registers on the APB bus, and they have the
-primecell IDs stored in the last words of the peripheral, again just
-like the other primecell devices we have using the AMBA bus layer.
+Vivek Gautam (1):
+  usb: phy: samsung: Add support to set pmu isolation
 
-What I'd say is... why stick it on a different bus type from the other
-peripherals which might make things harder in the future?
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |   28 ++++
+ drivers/usb/phy/samsung-usbphy.c                   |  145 +++++++++++++++++---
+ 2 files changed, 152 insertions(+), 21 deletions(-)
+
+-- 
+1.7.6.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
