@@ -1,252 +1,103 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v5 7/7] leds: leds-pwm: Add device tree bindings
-Date: Fri, 21 Dec 2012 10:44:01 +0100
-Message-ID: <1356083041-29179-8-git-send-email-peter.ujfalusi@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v5 5/7] pwm: Add devm_of_pwm_get() as exported API for users
+Date: Fri, 21 Dec 2012 10:43:59 +0100
+Message-ID: <1356083041-29179-6-git-send-email-peter.ujfalusi@ti.com>
 References: <1356083041-29179-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1356083041-29179-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1356083041-29179-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-leds-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The DT binding for the pwm-leds devices are similar to the gpio-leds type.
-LEDs are represented as sub-nodes of the pwm-leds device.
-The code for handling the DT boot is based on the code found in the
-leds-gpio driver and adapted to use PWMs instead of GPIOs.
-To avoid having custom cleanup code in case of DT boot the newly created
-devm_of_pwm_get() API is used to get the correct PWM instance.
+When booted with DT users can use devm version of of_pwm_get() to benefit
+from automatic resource release.
 
-For usage see:
-Documentation/devicetree/bindings/leds/leds-pwm.txt
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 ---
- .../devicetree/bindings/leds/leds-pwm.txt          |  48 +++++++++
- drivers/leds/leds-pwm.c                            | 112 +++++++++++++++++----
- 2 files changed, 140 insertions(+), 20 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
+ drivers/pwm/core.c  | 30 ++++++++++++++++++++++++++++++
+ include/linux/pwm.h |  9 +++++++++
+ 2 files changed, 39 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-pwm.txt b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-new file mode 100644
-index 0000000..7297107
---- /dev/null
-+++ b/Documentation/devicetree/bindings/leds/leds-pwm.txt
-@@ -0,0 +1,48 @@
-+LED connected to PWM
-+
-+Required properties:
-+- compatible : should be "pwm-leds".
-+
-+Each LED is represented as a sub-node of the pwm-leds device.  Each
-+node's name represents the name of the corresponding LED.
-+
-+LED sub-node properties:
-+- pwms : PWM property to point to the PWM device (phandle)/port (id) and to
-+  specify the period time to be used: <&phandle id period_ns>;
-+- pwm-names : (optional) Name to be used by the PWM subsystem for the PWM device
-+  For the pwms and pwm-names property please refer to:
-+  Documentation/devicetree/bindings/pwm/pwm.txt
-+- max-brightness : Maximum brightness possible for the LED
-+- label :  (optional)
-+  see Documentation/devicetree/bindings/leds/common.txt
-+- linux,default-trigger :  (optional)
-+  see Documentation/devicetree/bindings/leds/common.txt
-+
-+Example:
-+
-+twl_pwm: pwm {
-+	/* provides two PWMs (id 0, 1 for PWM1 and PWM2) */
-+	compatible = "ti,twl6030-pwm";
-+	#pwm-cells = <2>;
-+};
-+
-+twl_pwmled: pwmled {
-+	/* provides one PWM (id 0 for Charing indicator LED) */
-+	compatible = "ti,twl6030-pwmled";
-+	#pwm-cells = <2>;
-+};
-+
-+pwmleds {
-+	compatible = "pwm-leds";
-+	kpad {
-+		label = "omap4::keypad";
-+		pwms = <&twl_pwm 0 7812500>;
-+		max-brightness = <127>;
-+	};
-+
-+	charging {
-+		label = "omap4:green:chrg";
-+		pwms = <&twl_pwmled 0 7812500>;
-+		max-brightness = <255>;
-+	};
-+};
-diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
-index 46f4e44..a1ea5f6 100644
---- a/drivers/leds/leds-pwm.c
-+++ b/drivers/leds/leds-pwm.c
-@@ -16,6 +16,7 @@
- #include <linux/kernel.h>
- #include <linux/init.h>
- #include <linux/platform_device.h>
-+#include <linux/of_platform.h>
- #include <linux/fb.h>
- #include <linux/leds.h>
- #include <linux/err.h>
-@@ -58,46 +59,110 @@ static inline size_t sizeof_pwm_leds_priv(int num_leds)
- 		      (sizeof(struct led_pwm_data) * num_leds);
+diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
+index 3cb741d..4a13da4 100644
+--- a/drivers/pwm/core.c
++++ b/drivers/pwm/core.c
+@@ -708,6 +708,36 @@ struct pwm_device *devm_pwm_get(struct device *dev, const char *con_id)
  }
+ EXPORT_SYMBOL_GPL(devm_pwm_get);
  
--static int led_pwm_probe(struct platform_device *pdev)
-+static struct led_pwm_priv *led_pwm_create_of(struct platform_device *pdev)
- {
--	struct led_pwm_platform_data *pdata = pdev->dev.platform_data;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct device_node *child;
- 	struct led_pwm_priv *priv;
--	int i, ret = 0;
-+	int count, ret;
- 
--	if (!pdata)
--		return -EBUSY;
-+	/* count LEDs in this device, so we know how much to allocate */
-+	count = of_get_child_count(node);
-+	if (!count)
-+		return NULL;
- 
--	priv = devm_kzalloc(&pdev->dev, sizeof_pwm_leds_priv(pdata->num_leds),
-+	priv = devm_kzalloc(&pdev->dev, sizeof_pwm_leds_priv(count),
- 			    GFP_KERNEL);
- 	if (!priv)
--		return -ENOMEM;
-+		return NULL;
- 
--	for (i = 0; i < pdata->num_leds; i++) {
--		struct led_pwm *cur_led = &pdata->leds[i];
--		struct led_pwm_data *led_dat = &priv->leds[i];
-+	for_each_child_of_node(node, child) {
-+		struct led_pwm_data *led_dat = &priv->leds[priv->num_leds];
- 
--		led_dat->pwm = devm_pwm_get(&pdev->dev, cur_led->name);
-+		led_dat->cdev.name = of_get_property(child, "label",
-+						     NULL) ? : child->name;
++/**
++ * devm_of_pwm_get() - resource managed of_pwm_get()
++ * @dev: device for PWM consumer
++ * @np: device node to get the PWM from
++ * @con_id: consumer name
++ *
++ * This function performs like of_pwm_get() but the acquired PWM device will
++ * automatically be released on driver detach.
++ */
++struct pwm_device *devm_of_pwm_get(struct device *dev, struct device_node *np,
++				   const char *con_id)
++{
++	struct pwm_device **ptr, *pwm;
 +
-+		led_dat->pwm = devm_of_pwm_get(&pdev->dev, child, NULL);
- 		if (IS_ERR(led_dat->pwm)) {
--			ret = PTR_ERR(led_dat->pwm);
- 			dev_err(&pdev->dev, "unable to request PWM for %s\n",
--				cur_led->name);
-+				led_dat->cdev.name);
- 			goto err;
- 		}
-+		/* Get the period from PWM core when n*/
-+		led_dat->period = pwm_get_period(led_dat->pwm);
++	ptr = devres_alloc(devm_pwm_release, sizeof(**ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
 +
-+		led_dat->cdev.default_trigger = of_get_property(child,
-+						"linux,default-trigger", NULL);
-+		of_property_read_u32(child, "max-brightness",
-+				     &led_dat->cdev.max_brightness);
- 
--		led_dat->cdev.name = cur_led->name;
--		led_dat->cdev.default_trigger = cur_led->default_trigger;
--		led_dat->active_low = cur_led->active_low;
--		led_dat->period = cur_led->pwm_period_ns;
- 		led_dat->cdev.brightness_set = led_pwm_set;
- 		led_dat->cdev.brightness = LED_OFF;
--		led_dat->cdev.max_brightness = cur_led->max_brightness;
- 		led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
- 
- 		ret = led_classdev_register(&pdev->dev, &led_dat->cdev);
--		if (ret < 0)
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "failed to register for %s\n",
-+				led_dat->cdev.name);
-+			of_node_put(child);
- 			goto err;
-+		}
-+		priv->num_leds++;
++	pwm = of_pwm_get(np, con_id);
++	if (!IS_ERR(pwm)) {
++		*ptr = pwm;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
 +	}
 +
-+	return priv;
-+err:
-+	while (priv->num_leds--)
-+		led_classdev_unregister(&priv->leds[priv->num_leds].cdev);
-+
-+	return NULL;
++	return pwm;
 +}
++EXPORT_SYMBOL_GPL(devm_of_pwm_get);
 +
-+static int led_pwm_probe(struct platform_device *pdev)
-+{
-+	struct led_pwm_platform_data *pdata = pdev->dev.platform_data;
-+	struct led_pwm_priv *priv;
-+	int i, ret = 0;
-+
-+	if (pdata && pdata->num_leds) {
-+		priv = devm_kzalloc(&pdev->dev,
-+				    sizeof_pwm_leds_priv(pdata->num_leds),
-+				    GFP_KERNEL);
-+		if (!priv)
-+			return -ENOMEM;
-+
-+		for (i = 0; i < pdata->num_leds; i++) {
-+			struct led_pwm *cur_led = &pdata->leds[i];
-+			struct led_pwm_data *led_dat = &priv->leds[i];
-+
-+			led_dat->pwm = devm_pwm_get(&pdev->dev, cur_led->name);
-+			if (IS_ERR(led_dat->pwm)) {
-+				ret = PTR_ERR(led_dat->pwm);
-+				dev_err(&pdev->dev,
-+					"unable to request PWM for %s\n",
-+					cur_led->name);
-+				goto err;
-+			}
-+
-+			led_dat->cdev.name = cur_led->name;
-+			led_dat->cdev.default_trigger = cur_led->default_trigger;
-+			led_dat->active_low = cur_led->active_low;
-+			led_dat->period = cur_led->pwm_period_ns;
-+			led_dat->cdev.brightness_set = led_pwm_set;
-+			led_dat->cdev.brightness = LED_OFF;
-+			led_dat->cdev.max_brightness = cur_led->max_brightness;
-+			led_dat->cdev.flags |= LED_CORE_SUSPENDRESUME;
-+
-+			ret = led_classdev_register(&pdev->dev, &led_dat->cdev);
-+			if (ret < 0)
-+				goto err;
-+		}
-+		priv->num_leds = pdata->num_leds;
-+	} else {
-+		priv = led_pwm_create_of(pdev);
-+		if (!priv)
-+			return -ENODEV;
- 	}
--	priv->num_leds = pdata->num_leds;
+ static int devm_pwm_match(struct device *dev, void *res, void *data)
+ {
+ 	struct pwm_device **p = res;
+diff --git a/include/linux/pwm.h b/include/linux/pwm.h
+index 76a1959..70655a2 100644
+--- a/include/linux/pwm.h
++++ b/include/linux/pwm.h
+@@ -179,6 +179,8 @@ struct pwm_device *of_pwm_get(struct device_node *np, const char *con_id);
+ void pwm_put(struct pwm_device *pwm);
  
- 	platform_set_drvdata(pdev, priv);
- 
-@@ -121,12 +186,19 @@ static int led_pwm_remove(struct platform_device *pdev)
- 	return 0;
+ struct pwm_device *devm_pwm_get(struct device *dev, const char *con_id);
++struct pwm_device *devm_of_pwm_get(struct device *dev, struct device_node *np,
++				   const char *con_id);
+ void devm_pwm_put(struct device *dev, struct pwm_device *pwm);
+ #else
+ static inline int pwm_set_chip_data(struct pwm_device *pwm, void *data)
+@@ -230,6 +232,13 @@ static inline struct pwm_device *devm_pwm_get(struct device *dev,
+ 	return ERR_PTR(-ENODEV);
  }
  
-+static const struct of_device_id of_pwm_leds_match[] = {
-+	{ .compatible = "pwm-leds", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, of_pwm_leds_match);
++static inline struct pwm_device *devm_of_pwm_get(struct device *dev,
++						 struct device_node *np,
++						 const char *con_id)
++{
++	return ERR_PTR(-ENODEV);
++}
 +
- static struct platform_driver led_pwm_driver = {
- 	.probe		= led_pwm_probe,
- 	.remove		= led_pwm_remove,
- 	.driver		= {
- 		.name	= "leds_pwm",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(of_pwm_leds_match),
- 	},
- };
- 
+ static inline void devm_pwm_put(struct device *dev, struct pwm_device *pwm)
+ {
+ }
 -- 
 1.8.0.2
-
