@@ -1,7 +1,7 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v5 4/7] pwm: core: Rename of_pwm_request() to of_pwm_get() and export it
-Date: Fri, 21 Dec 2012 10:43:58 +0100
-Message-ID: <1356083041-29179-5-git-send-email-peter.ujfalusi@ti.com>
+Subject: [PATCH v5 6/7] leds: leds-pwm: Simplify cleanup code
+Date: Fri, 21 Dec 2012 10:44:00 +0100
+Message-ID: <1356083041-29179-7-git-send-email-peter.ujfalusi@ti.com>
 References: <1356083041-29179-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,97 +12,35 @@ To: Bryan Wu <cooloney@gmail.com>, Richard Purdie <rpurdie@rpsys.net>, Grant Lik
 Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Allow client driver to use of_pwm_get() to get the PWM they need. This
-is needed for drivers which handle more than one PWM separately, like
-leds-pwm driver, which have:
+The code looks more nicer if we use:
 
-pwmleds {
-	compatible = "pwm-leds";
-	kpad {
-		label = "omap4::keypad";
-		pwms = <&twl_pwm 0 7812500>;
-		max-brightness = <127>;
-	};
+while (i--)
 
-	charging {
-		label = "omap4:green:chrg";
-		pwms = <&twl_pwmled 0 7812500>;
-		max-brightness = <255>;
-	};
-};
-
-in the dts files.
+instead:
+if (i > 0)
+	for (i = i - 1; i >= 0; i--)
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- drivers/pwm/core.c  | 8 ++++----
- include/linux/pwm.h | 7 +++++++
- 2 files changed, 11 insertions(+), 4 deletions(-)
+ drivers/leds/leds-pwm.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pwm/core.c b/drivers/pwm/core.c
-index 903138b..3cb741d 100644
---- a/drivers/pwm/core.c
-+++ b/drivers/pwm/core.c
-@@ -471,7 +471,7 @@ static struct pwm_chip *of_node_to_pwmchip(struct device_node *np)
- }
+diff --git a/drivers/leds/leds-pwm.c b/drivers/leds/leds-pwm.c
+index c767837..46f4e44 100644
+--- a/drivers/leds/leds-pwm.c
++++ b/drivers/leds/leds-pwm.c
+@@ -104,10 +104,8 @@ static int led_pwm_probe(struct platform_device *pdev)
+ 	return 0;
  
- /**
-- * of_pwm_request() - request a PWM via the PWM framework
-+ * of_pwm_get() - request a PWM via the PWM framework
-  * @np: device node to get the PWM from
-  * @con_id: consumer name
-  *
-@@ -486,8 +486,7 @@ static struct pwm_chip *of_node_to_pwmchip(struct device_node *np)
-  * becomes mandatory for devices that look up the PWM device via the con_id
-  * parameter.
-  */
--static struct pwm_device *of_pwm_request(struct device_node *np,
--					 const char *con_id)
-+struct pwm_device *of_pwm_get(struct device_node *np, const char *con_id)
- {
- 	struct pwm_device *pwm = NULL;
- 	struct of_phandle_args args;
-@@ -545,6 +544,7 @@ put:
+ err:
+-	if (i > 0) {
+-		for (i = i - 1; i >= 0; i--)
+-			led_classdev_unregister(&priv->leds[i].cdev);
+-	}
++	while (i--)
++		led_classdev_unregister(&priv->leds[i].cdev);
  
- 	return pwm;
- }
-+EXPORT_SYMBOL_GPL(of_pwm_get);
- 
- /**
-  * pwm_add_table() - register PWM device consumers
-@@ -587,7 +587,7 @@ struct pwm_device *pwm_get(struct device *dev, const char *con_id)
- 
- 	/* look up via DT first */
- 	if (IS_ENABLED(CONFIG_OF) && dev && dev->of_node)
--		return of_pwm_request(dev->of_node, con_id);
-+		return of_pwm_get(dev->of_node, con_id);
- 
- 	/*
- 	 * We look up the provider in the static table typically provided by
-diff --git a/include/linux/pwm.h b/include/linux/pwm.h
-index cc908a5..76a1959 100644
---- a/include/linux/pwm.h
-+++ b/include/linux/pwm.h
-@@ -175,6 +175,7 @@ struct pwm_device *of_pwm_xlate_with_flags(struct pwm_chip *pc,
- 		const struct of_phandle_args *args);
- 
- struct pwm_device *pwm_get(struct device *dev, const char *con_id);
-+struct pwm_device *of_pwm_get(struct device_node *np, const char *con_id);
- void pwm_put(struct pwm_device *pwm);
- 
- struct pwm_device *devm_pwm_get(struct device *dev, const char *con_id);
-@@ -213,6 +214,12 @@ static inline struct pwm_device *pwm_get(struct device *dev,
- 	return ERR_PTR(-ENODEV);
- }
- 
-+static inline struct pwm_device *of_pwm_get(struct device_node *np,
-+					    const char *con_id)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
- static inline void pwm_put(struct pwm_device *pwm)
- {
+ 	return ret;
  }
 -- 
 1.8.0.2
