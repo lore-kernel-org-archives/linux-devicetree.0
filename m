@@ -1,339 +1,115 @@
-From: "Evans, Robert" <Robert.Evans-7+ureL1bLXNBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH] ipmi: add new kernel options to prevent automatic ipmi
- init
-Date: Fri, 21 Dec 2012 16:38:15 -0500
-Message-ID: <AC1B83CE65082B4DBDDB681ED2F6B2EF023202C5@EXHQ.corp.stratus.com>
-References: <50CB5B9D.3040208@acm.org>
- <AC1B83CE65082B4DBDDB681ED2F6B2EF023202B4@EXHQ.corp.stratus.com>
+From: Pratik Patel <pratikp@codeaurora.org>
+Subject: Re: CoreSight framework and drivers
+Date: Fri, 21 Dec 2012 14:12:53 -0800
+Message-ID: <20121221221252.GA22404@pratikp-linux.qualcomm.com>
+References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
+ <20121219112314.GA26329@mudshark.cambridge.arm.com>
+ <50D1F37E.6000804@ti.com>
+ <20121219212431.GC23594@pratikp-linux.qualcomm.com>
+ <50D34EE5.8090407@ti.com>
+ <20121220195127.GA14877@pratikp-linux.qualcomm.com>
+ <CAORVsuXB8kS69=UWA_FE42HabgaAA5gB4K52uJ_CFMv8-_hNiw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-class: urn:content-classes:message
-In-Reply-To: <AC1B83CE65082B4DBDDB681ED2F6B2EF023202B4-d72qy8bFiXh4vSn6MaHdYpqQE7yCjDx5@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: minyard-HInyCGIudOg@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Tony Camuso <tcamuso-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, jparadis-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, "Evans,
- Robert" <Robert.Evans-7+ureL1bLXNBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAORVsuXB8kS69=UWA_FE42HabgaAA5gB4K52uJ_CFMv8-_hNiw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Jean Pihet <jean.pihet@newoldbits.com>
+Cc: Jon Hunter <jon-hunter@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, linux-arm-msm@vger.kernel.org, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, Will Deacon <will.deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, "magnus.p.persson@stericsson.com" <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "d-deao@ti.com" <d-deao@ti.com>, "christian.bejram@stericsson.com" <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-I have made a few observations in the past few days:
+On Thu, Dec 20, 2012 at 09:16:15PM +0100, Jean Pihet wrote:
+> Hi Pratik,
+> 
+> On Thu, Dec 20, 2012 at 8:51 PM, Pratik Patel <pratikp@codeaurora.org> wrote:
+> > On Thu, Dec 20, 2012 at 11:46:13AM -0600, Jon Hunter wrote:
+> >>
+> >> On 12/19/2012 03:24 PM, Pratik Patel wrote:
+> >>
+> >> [snip]
+> >>
+> >> > Currently we use the CoreSight virtual bus to conveniently list
+> >> > sysfs configuration attributes for all the registered CoreSight
+> >> > devices.
+> >> >
+> >> > For eg:
+> >> > /sys/bus/coresight/devices/coresight-etm0/<attribute>
+> >> > /sys/bus/coresight/devices/coresight-etm1/<attribute>
+> >> > /sys/bus/coresight/devices/coresight-stm/<attribute>
+> >> > /sys/bus/coresight/devices/coresight-tmc-etf/<attribute>
+> >> > ...
+> >> > ...
+> >> >
+> >> > Some of the attributes are based on device type (i.e. source,
+> >> > link or sink) so they will exist for all devices of that type
+> >> > while some are device specific.
+> >> >
+> >> > Maybe I am misunderstanding the question but are you suggesting
+> >> > to register CoreSight devices to the AMBA bus instead of the
+> >> > CoreSight core layer code?
+> >>
+> >> Yes exactly.
+> >>
+> >> > Will Deacon mentioned earlier that AMBA framework can be changed
+> >> > to accomodate devices with a different class but I am more
+> >> > concerned with losing some of the stuff that the core layer code
+> >> > does (eg. coresight_register, coresight_enable, coresight_disable
+> >> > in coresight.c) if we register CoreSight drivers to the AMBA bus
+> >> > without letting the core layer know about the device connections.
+> >>
+> >> I may be missing something, but couldn't you keep all the
+> >> register/enable/disable stuff but just register the device with the amba
+> >> bus? Obviously some changes would need to be made.
+> >>
+> >
+> > Ok, so are you referring to making CoreSight devices register
+> > with AMBA bus instead of platform bus keeping everything else
+> > intact?
+> >
+> >> Personally, I don't have strong feeling either way, but we have ETM/ETB
+> >> drivers using AMBA today and so I am hoping we can come to agreement on
+> >> this going forward.
+> >>
+> >> Russell, Will, what are your thoughts?
+> >>
+> >> Otherwise, looking at the code, I like what you have implemented. I
+> >> still need to look closer, but I am struggling to figure out how a
+> >> coresight device such as the cross-trigger-interface fits with this
+> >> model. This model appears to be geared towards coresight devices used
+> >> for traces purposes and are either source, links or sinks. The
+> >> cross-trigger-interface is not a source or a sink. However, although you
+> >> it could be considered as a link (routing events), it is not really, as
+> >> it may not link to other coresight sinks/source.
+> >>
+> >> In my case, I have PMU-IRQ --> CTI --> GIC. So a non-coresight source
+> >> and sink. In away the CTI looks more like a 2nd-level interrupt
+> >> controller than anything else. Hence, another type of coresight device
+> >> may be needed in addition to source, links and sinks. Or link is
+> >> extended in some way to connect to non-coresight sources/sinks.
+> >>
+> >> Let me know if you have any thoughts.
+> >>
+> >
+> > I had left the "None" type for miscellaneous stuff but I agree it
+> > should be a separate type - maybe "debug".
+> >
+> > Having said that I like the CTI driver you have uploaded. Need to
+> > look at it in more detail. Since CTI connections can vary between
+> > chip to chip, we need a generic way to deal with it.
+> I am also interested to look at such a framework in order to have a
+> clean implementation of the ETM, PMI/CMI (HW tracing IP on OMAP4+).
+> I am currently busy on a driver for PMI/CMI which requires some
+> configuration of the Coresight, ETM, ETB, ATB etc. IP blocks.
+> 
+> Could you send your patches to linux-arm and linux-omap mailing lists?
+> I will be pleased to review them.
+> 
 
-1) Unique IPMI device ID's did not seem to make a difference.
-Stratus still could not hot remove one of the KCS interfaces.
+Thanks. I did post them to linux-arm-kernel but they are waiting
+on moderator approval. Hopefully they will get posted soon.
 
-
-2) From what I see in IPMI spec section 20.1, having unique
-device ID's is not required:
-
-   Controllers that implement identical sets of applications
-   commands can have the same Device ID in a given system.
-   Thus, a 'standardized' controller could be produced where
-   multiple instances of the controller are used in a system,
-   and all have the same Device ID value.  [The controllers
-   would still be differentiable by their address, location,
-   and associated information for the controllers in the
-   Sensor Data Records.]
-
-
-3) Stratus can get by without a change to kernel 2.6.32
-
-Stratus could not hot-remove all interfaces automatically
-discovered by ipmi_si, but it is possible to hot-remove all
-hardcoded interfaces.  One of the Stratus KCS interfaces will
-always be online at boot time.  Thus if Stratus hardcodes both
-of the KCS interfaces, at least one of those will be detected
-when ipmi_si initializes; this will prevent ipmi_si from trying
-to auto-detect any interfaces.  Later during system startup,
-a Stratus script can run to hot-remove all interfaces from use
-by ipmi_si.  Using this technique Stratus has a method to
-dedicate all the KCS interfaces exclusively for use by the
-Stratus driver without needing any kernel changes.
-
-I have verified this technique with the most recent 2.6.32-348
-kernel released in a Red Hat Enterprise Linux 6.4 beta snapshot.
-As long as the same behavior is present in the upstream kernel,
-we do not need a change to the kernel to support Stratus servers.
-
-
-On 12/17/2012 4:14 PM, Evans, Robert wrote:
->On 12/14/2012 12:02 PM, Corey Minyard wrote:
->>On 12/14/2012 10:25 AM, Evans, Robert wrote:
->>> Corey,
->>>
->>> Thanks for the thoughtful reply.  Below I respond in detail to
->>> these three points.
->>>
->>> 1) Why building a variant kernel with ipmi_si as a module is not
->>>     feasible.
->>>
->>> 2) User mode access to IPMI on Stratus systems (e.g. ipmitool).
->>>
->>> 3) ipmi_si hot removal seems to not work as needed.
->>>
->>> Stratus might be able to use the hot removal option instead of the
->>> proposed patch if hot removal can remove all interfaces from usage
->>> by ipmi_si.  Our testing of this option was not successful as
->>> shown below.
->>>
->>>   - - -
->>>
->>> 1) Why building a variant kernel with ipmi_si as a module is not
->>> feasible:
->>>
->>> Stratus sells servers based upon Red Hat Enterprise Linux (RHEL).
->>> In the next release of RHEL, ipmi_si will be built into the kernel
->>> so that access to ACPI opregion is available early in kernel
->>> startup.  Stratus systems run the Red Hat kernel so that the
->>> system is certified and supported by Red Hat.  For this reason
->>> using a custom kernel configured to build ipmi_si as a module is
->>> not an option.
->>
->>Yes, the RHEL engineer explained this to me, and it makes sense now.
-Thanks.
->>
->>>
->>>
->>> 2) User mode access to IPMI on Stratus systems:
->>>
->>> Although Stratus provides a replacement for ipmi_si, we depend
->>> on ipmi_msghandler and ipmi_devintf.  The device /dev/ipmi0 is
->>> present and this device is utilized by the user-mode system
->>> management software Stratus supplies.
->>>
->>> Therefore other programs like ipmitool can send IPMI commands and
->>> get responses on Stratus systems.
->>
->>Ah, ok. That's good.
->>
->>>
->>>
->>>
->>> 3) Hot removal of the KCS interfaces discovered by ipmi_si seems
->>> to not do enough... One KCS cannot successfully be removed:
->>>
->>> Based upon your suggestion, we tried to use hot removal.  With
->>> RHEL 6.4 Beta (kernel-2.6.32-343.el6), Stratus attempted to hot
->>> remove the IPMI interfaces.  This was booted with
->>>   "ipmi_si.trydefaults=0"
->>> although we expect that kernel option to have no effect since a
->>> BMC is found before the defaults would be tried.
->>>
->>> This is logged when ipmi_si initializes indicating that both BMCs
->>> were discovered:
->>>
->>> ipmi message handler version 39.2
->>> IPMI System Interface driver.
->>> ipmi_si: Trying ACPI-specified kcs state machine at i/o address
-0xca2,
->>> slave address 0x0, irq 0
->>> ipmi: Found new BMC (man_id: 0x000077,  prod_id: 0x05c6, dev_id:
-0x41)
->>> IPMI kcs interface initialized
->>> ipmi_si: Adding SMBIOS-specified kcs state machine
->>> ipmi_si: Trying SMBIOS-specified kcs state machine at i/o address
-0xda2,
->>> slave address 0x20, irq 0
->>> ipmi: interfacing existing BMC (man_id: 0x000077, prod_id: 0x05c6,
->>> dev_id: 0x41)
->>> IPMI kcs interface initialized
->>>
->>> Although there are two different BMCs, because it says
->>>   "interfacing existing BMC"
->>> it appears that ipmi_si assumes they are the same BMC.
->>
->>That's happening in the message handler and it happens because the
->>manufacturer, product, and device id all match. From the spec:
->>
->>    The Device ID is typically used in combination with the Product ID
->>    field such
->>    that the Device IDs for different controllers are unique under a
->>    given Product
->>    ID. A controller can optionally use the Device ID as an 'instance'
->>    identifier if
->>    more than one controller of that kind is used in the system.
->>    (Section 20.1)
->>
->>Different controllers in the same system are supposed to have
-different 
->>device
->>IDs.
->
->I have a made an inquiry to Stratus Hardware Engineering asking why our
->product is not compliant with the specification.  I will pursue a
-change
->to future products to comply.  However, Stratus has several generations
->of systems in the field for which this change will be very difficult.
->
->
->>
->>> Also, I notice the slave address for the first KCS (port CA2) seems
->>> wrong.  Maybe these findings are relevant to what happens next.
->>
->>Probably not relevant. It's not correct because, for some bizarre
->>reason, the slave address is not present in the ACPI information.
->>The slave address is only used by the message handler for the
->>IPMB return address on messages routed over IPMB.
->>
->>It is odd that one interface is specified in ACPI and the other in
-DMI.
->>You can specify all of them in both tables.
->
->The Stratus server is actually two complete servers that operate in
->lockstep to provide reliable operation regardless of any single failed
->component.  One of the two I/O subsystems is active during BIOS POST.
->Only information about the active subsystem is placed in the SMBIOS
->data structure.  Thus dmidecode shows this info for either port CA2
->or DA2 depending upon which I/O CRU was active:
->
->  Handle 0x0048, DMI type 38, 18 bytes
->  IPMI Device Information
->	Interface Type: KCS (Keyboard Control Style)
->	Specification Version: 2.0
->	I2C Slave Address: 0x10
->	NV Storage Device: Not Present
->	Base Address: 0x0000000000000DA2 (I/O)
->	Register Spacing: Successive Byte Boundaries
->	Interrupt Polarity: Active High
->	Interrupt Trigger Mode: Edge
->
->I believe the ACPI data provides information to locate both KCS
-interfaces.
->Therefore only one interface is found at first when ipmi_si calls
->dmi_find_bmc().  And the other interface is discovered by
-acpi_find_bmc()
->or by ipmi_pnp_probe().
->
->>>
->>> After ipmi_si has been initialized, a script runs to load ftmod, the
->>> module that contains the Stratus IPMI driver.  This code was added
-to
->>> hot remove the interfaces discovered by ipmi_si before loading
-ftmod:
->>>
->>> for i in $(cd /proc/ipmi; ls)
->>> do
->>>      dev="IPMI${i}"
->>>      params="$(cat /proc/ipmi/${i}/params)"
->>>      msg="Considering removal of dev: ${dev} ${params}"
->>>      logger -p kern.info -t `basename ${0}` "${msg}"
->>>      echo "${msg}" > /dev/console
->>>      [ -n "${params}" ] &&
->>> 	echo "remove,`cat /proc/ipmi/${i}/params`" \
->>> 		> /sys/module/ipmi_si/parameters/hotmod
->>> done
->>>
->>> In the console log we can see this script run prior to loading the
->>> Stratus ftmod.ko and we also see that ftmod exposes a BMC:
->>>
->>> Considering removal of dev: IPMI0
->>> kcs,i/o,0xca2,rsp=1,rsi=1,rsh=0,irq=0,ipmb=0
->>> Considering removal of dev: IPMI1
->>> kcs,i/o,0xda2,rsp=1,rsi=1,rsh=0,irq=0,ipmb=32
->>> ftmod: module license 'LGPL' taints kernel.
->>> Disabling lock debugging due to kernel taint
->>> FTMOD version lsb-ft-ftmod-9.0.4-209
->>> ftmod: GLOBAL_SIZE=4194304
->>> ftmod: global_cc_memory 0xffff880037400000
->>> ipmi: Found new BMC (man_id: 0x000000,  prod_id: 0x0000, dev_id:
-0x00)
->>> ipmi device interface
->>>
->>> The KCS at port DA2 is removed from use by ipmi_si.  However, the
->>> other KCS is still in use by ipmi_si.  Like ipmi_si, the Stratus
-IPMI
->>> driver uses ipmi_msghandler.  With two interfaces sending commands
-to
->>> the same BMC, responses seem to be misdirected.  The Stratus
-management
->>> software cannot successfully commnicate with that BMC and many
-errors
->>> like this are logged by ipmi_msghandler:
->>>
->>> IPMI message handler: BMC returned incorrect response, expected
-netfn 3d
->>> cmd 75, got netfn 3d cmd 71
->>> IPMI message handler: BMC returned incorrect response, expected
-netfn 3d
->>> cmd 71, got netfn 19 cmd 20
->>> IPMI message handler: BMC returned incorrect response, expected
-netfn b
->>> cmd 40, got netfn 3d cmd 71
->>> IPMI message handler: BMC returned incorrect response, expected
-netfn 3d
->>> cmd 71, got netfn d cmd 2
->>>
->>> I tried a few variations on the remove string, but never got ipmi_si
->>> to stop using the KCS at port CA2.
->>
->>When you remove it, does it disappear from /proc/ipmi? That directory
->>should be empty after running your script.
->
->After my script runs, the kernel still has one device (0) with with
->the proc files from ipmi_si and from ipmi_msghandler.  I see those
-files
->exist after my script runs, but before the Stratus driver gets loaded.
->
->After it is loaded, the Stratus driver is using device (1).  For that
->device, I only see the proc files exposed by ipmi_msghandler:
->
->  # ls /proc/ipmi/?
->  /proc/ipmi/0:
->  ipmb  params  si_stats  stats  type  version
->
->  /proc/ipmi/1:
->  ipmb  stats  version
->
->I still am experimenting with this as I am curious about why the hot-
->remove is not working.
->
->
->>
->>The other strange thing is that, if the other driver is running, the
->>request_region() call in your driver should fail.
->
->The Stratus common low-level machine control code is shared by a
->few different operating systems.  I do not have a list of all the
->I/O ports the common code accesses.  So there is no request for a
->I/O port region when the Stratus common code starts.  The linux-
->specific wrapper around common code simply does in or out
->instructions to access the requested ports.
->
->
->>
->>Perhaps the first driver is leaving the device in a strange state that
-is
->>confusing your driver? That doesn't seem possible. Or maybe there
->>is something in the message handler that is getting messed up? There
->>was a bug in the driver at one point that caused errors like that
->>intermittently, but not all the time.
->
->I think this is unlikely as the Stratus driver does retries and even
->can use a GPIO to reboot the BMC when communications fail.
->
->
->>
->>After sleeping on it a bit, though, I think the patch is a good idea,
-and
->>I'll also add something for openfirmware and PCI. I was hoping to get
->>you a quicker solution, though, than having to deal with a patch.
->>
->>-corey
->
->I appreciate your help and would like the patch as it seems the best
->solution for existing systems.  Thanks again for your assistance.
->
->
->- Robert N. Evans
->
-
-- Robert N. Evans
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
