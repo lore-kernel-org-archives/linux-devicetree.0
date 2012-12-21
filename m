@@ -1,16 +1,13 @@
-From: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v6 0/7] watchdog: dt: add support for the timeout-sec dt
- property
-Date: Fri, 21 Dec 2012 12:32:29 +0100
-Message-ID: <20121221113229.GE13147@spo001.leaseweb.com>
-References: <1353588716-28917-1-git-send-email-fabio.porcedda@gmail.com>
- <CAHkwnC-kOM2dzv9QmxbTgAYg5e2Ni39ixQR73cHt_5krMqwPbA@mail.gmail.com>
+From: Leela Krishna Amudala <leelakrishna.a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv16 0/7] of: add display helper
+Date: Fri, 21 Dec 2012 21:06:07 +0530
+Message-ID: <CAL1wa8fcGs_p=JMa6+yMaGKa7AXKKcKB84_aX+nNhPo3fi2OeA@mail.gmail.com>
+References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHkwnC-kOM2dzv9QmxbTgAYg5e2Ni39ixQR73cHt_5krMqwPbA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1355850256-16135-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,28 +18,161 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabio,
+Hello All,
+Any comments for this patch set..?
 
-> > Hi all,
-> > this patchset add the timeout-sec property to the watchdog core,
-> > to the at91sam9_wdt driver and on all framework enabled watchdog driver
-> > with dt support.
-> > The at91sam9_wdt is tested on evk-pr3,
-> > the other drivers are compile tested only.
-> >
-> > This patchset depends on the patchset already sent:
-> > "[PATCH v9 0/3 RESEND] watchdog: at91sam9_wdt: add device tree support"
-> > that is already pulled in arm-soc/for-next branch.
-> 
-> Ping.
-> 
-> The dependency is already merged.
+Best Wishes,
+Leela Krishna Amudala.
 
-Will not be for this merge window. Will review next week.
-
-Kind regards,
-Wim.
+On Tue, Dec 18, 2012 at 10:34 PM, Steffen Trumtrar
+<s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+>
+> Hi!
+>
+> Finally, right in time before the end of the world on friday, v16 of the
+> display helpers.
+>
+> Changes since v15:
+>         - move include/linux/{videomode,display_timing}.h to include/video
+>         - move include/linux/of_{videomode,display_timing}.h to
+> include/video
+>         - reimplement flags: add VESA flags and data flags
+>         - let pixelclock in struct videomode be unsigned long
+>         - rename of_display_timings_exists to of_display_timings_exist
+>         - revise logging/error messages: replace __func__ with
+> np->full_name
+>         - rename pixelclk-inverted to pixelclk-active
+>         - revise comments in code
+>
+> Changes since v14:
+>         - fix "const struct *" warning
+>                 (reported by: Leela Krishna Amudala
+> <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>)
+>         - return -EINVAL when htotal or vtotal are zero
+>         - remove unreachable code in of_get_display_timings
+>         - include headers in .c files and not implicit in .h
+>         - sort includes alphabetically
+>         - fix lower/uppercase in binding documentation
+>         - rebase onto v3.7-rc7
+>
+> Changes since v13:
+>         - fix "const struct *" warning
+>                 (reported by: Laurent Pinchart
+> <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>)
+>         - prevent division by zero in fb_videomode_from_videomode
+>
+> Changes since v12:
+>         - rename struct display_timing to via_display_timing in via
+> subsystem
+>         - fix refreshrate calculation
+>         - fix "const struct *" warnings
+>                 (reported by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>)
+>         - some CodingStyle fixes
+>         - rewrite parts of commit messages and display-timings.txt
+>         - let display_timing_get_value get all values instead of just
+> typical
+>
+> Changes since v11:
+>         - make pointers const where applicable
+>         - add reviewed-by Laurent Pinchart
+>
+> Changes since v10:
+>         - fix function name (drm_)display_mode_from_videomode
+>         - add acked-by, reviewed-by, tested-by
+>
+> Changes since v9:
+>         - don't leak memory when previous timings were correct
+>         - CodingStyle fixes
+>         - move blank lines around
+>
+> Changes since v8:
+>         - fix memory leaks
+>         - change API to be more consistent (foo_from_bar(struct bar,
+> struct foo))
+>         - include headers were necessary
+>         - misc minor bugfixes
+>
+> Changes since v7:
+>         - move of_xxx to drivers/video
+>         - remove non-binding documentation from display-timings.txt
+>         - squash display_timings and videomode in one patch
+>         - misc minor fixes
+>
+> Changes since v6:
+>         - get rid of some empty lines etc.
+>         - move functions to their subsystems
+>         - split of_ from non-of_ functions
+>         - add at least some kerneldoc to some functions
+>
+> Changes since v5:
+>         - removed all display stuff and just describe timings
+>
+> Changes since v4:
+>         - refactored functions
+>
+> Changes since v3:
+>         - print error messages
+>         - free alloced memory
+>         - general cleanup
+>
+> Changes since v2:
+>         - use hardware-near property-names
+>         - provide a videomode structure
+>         - allow ranges for all properties (<min,typ,max>)
+>         - functions to get display_mode or fb_videomode
+>
+> Regards,
+> Steffen
+>
+>
+>
+> Steffen Trumtrar (7):
+>   viafb: rename display_timing to via_display_timing
+>   video: add display_timing and videomode
+>   video: add of helper for display timings/videomode
+>   fbmon: add videomode helpers
+>   fbmon: add of_videomode helpers
+>   drm_modes: add videomode helpers
+>   drm_modes: add of_videomode helpers
+>
+>  .../devicetree/bindings/video/display-timing.txt   |  109 +++++++++
+>  drivers/gpu/drm/drm_modes.c                        |   70 ++++++
+>  drivers/video/Kconfig                              |   21 ++
+>  drivers/video/Makefile                             |    4 +
+>  drivers/video/display_timing.c                     |   24 ++
+>  drivers/video/fbmon.c                              |   94 ++++++++
+>  drivers/video/of_display_timing.c                  |  239
+> ++++++++++++++++++++
+>  drivers/video/of_videomode.c                       |   54 +++++
+>  drivers/video/via/hw.c                             |    6 +-
+>  drivers/video/via/hw.h                             |    2 +-
+>  drivers/video/via/lcd.c                            |    2 +-
+>  drivers/video/via/share.h                          |    2 +-
+>  drivers/video/via/via_modesetting.c                |    8 +-
+>  drivers/video/via/via_modesetting.h                |    6 +-
+>  drivers/video/videomode.c                          |   39 ++++
+>  include/drm/drmP.h                                 |    9 +
+>  include/linux/fb.h                                 |    8 +
+>  include/video/display_timing.h                     |  124 ++++++++++
+>  include/video/of_display_timing.h                  |   20 ++
+>  include/video/of_videomode.h                       |   18 ++
+>  include/video/videomode.h                          |   48 ++++
+>  21 files changed, 894 insertions(+), 13 deletions(-)
+>  create mode 100644
+> Documentation/devicetree/bindings/video/display-timing.txt
+>  create mode 100644 drivers/video/display_timing.c
+>  create mode 100644 drivers/video/of_display_timing.c
+>  create mode 100644 drivers/video/of_videomode.c
+>  create mode 100644 drivers/video/videomode.c
+>  create mode 100644 include/video/display_timing.h
+>  create mode 100644 include/video/of_display_timing.h
+>  create mode 100644 include/video/of_videomode.h
+>  create mode 100644 include/video/videomode.h
+>
+> --
+> 1.7.10.4
+>
