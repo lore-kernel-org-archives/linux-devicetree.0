@@ -1,67 +1,146 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] RFC: input: Extend matrix-keypad device tree binding
-Date: Fri, 21 Dec 2012 10:47:52 -0600
-Message-ID: <50D492B8.9030205@gmail.com>
-References: <1356035039-21653-1-git-send-email-sjg@chromium.org> <20121220211323.GA24981@core.coreip.homeip.net> <CAPnjgZ0baa73BEJ8VGW=OMGSe0k=FCz4wnCwv95R8VcGUmoRww@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3] usb: phy: samsung: Add support to set pmu isolation
+Date: Fri, 21 Dec 2012 09:05:24 -0800
+Message-ID: <CAD=FV=VQ0PgwaF-hX1jht9Lub0_WbH-_+WhWzOzPyZ2jK9HaHw@mail.gmail.com>
+References: <1356077779-5759-1-git-send-email-gautam.vivek@samsung.com>
+	<1356077779-5759-2-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPnjgZ0baa73BEJ8VGW=OMGSe0k=FCz4wnCwv95R8VcGUmoRww@mail.gmail.com>
+In-Reply-To: <1356077779-5759-2-git-send-email-gautam.vivek@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Simon Glass <sjg@chromium.org>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Roland Stigge <stigge@antcom.de>, Vincent Palatin <vpalatin@chromium.org>, linux-doc@vger.kernel.org, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, LKML <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Wolfram Sang <w.sang@pengutronix.de>, Luigi Semenzato <semenzato@chromium.org>, Rob Herring <rob.herring@calxeda.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Stephen Warren <swarren@nvidia.com>, Sourav Poddar <sourav.poddar@ti.com>
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Thomas Abraham <thomas.abraham@linaro.org>, t.figa@samsung.com, Ben Dooks <ben-linux@fluff.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, l.majewski@samsung.com, kyungmin.park@samsung.com, Grant Likely <grant.likely@secretlab.ca>, heiko@sntech.de, Praveen Paneri <p.paneri@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/20/2012 03:41 PM, Simon Glass wrote:
-> Hi Dmitry,
-> 
-> On Thu, Dec 20, 2012 at 1:13 PM, Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
->> Hi Simon,
->>
->> On Thu, Dec 20, 2012 at 12:23:58PM -0800, Simon Glass wrote:
->>>
->>> For the key repeat feature, we need to set this after the input device
->>> is registered. So we would need to add a matrix_keypad_setup_input() or
->>> similar to be called by the driver after input_register_device(). I am
->>> less keen on that idea, and less again on the alternative of perhaps
->>> matrix_keypad_register_device() which does input_register_device() and
->>> then sets up the key repeat. Thoughts?
->>
->> No, we already have default rate and delay. Unless you can prove that
->> random firmware writer's idea of appropriate delay and rate is better
->> then current default - for everyone - and then can successfully argue
->> that that obviously best delay/rate combo should not replace the current
->> one but stay only in DT bindings, let's keep relying on users adjusting
->> their own preferences from respective desktop environments/console/etc.
-> 
-> Seems reasonable. My only comment on this is that the device tree
-> comes from kernel, not firmware. This lets us configure an embedded
-> system easily (where the user may not have access to repeat rate
-> preferences).
+Vivek,
 
-Maybe for your case, but in general the DT is not tied to the kernel.
+Nothing really serious below and things look good to me, but figured
+I'd put a few nits in (sorry!).
 
-> Grant are you OK with me just dropping the repeat settings, and
-> keeping the other two? If so I will respin the patch.
-> 
 
-One comment is these properties are already defined for omap. You should
-delete them from omap-keypad.txt and refer to this.
+On Fri, Dec 21, 2012 at 12:16 AM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+> diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+> index 7b26e2d..09f06f8 100644
+> --- a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+> +++ b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+> @@ -9,3 +9,31 @@ Required properties:
+>  - compatible : should be "samsung,exynos4210-usbphy"
+>  - reg : base physical address of the phy registers and length of memory mapped
+>         region.
+> +- #address-cells: should be 1.
+> +- #size-cells: should be 0.
 
-Rob
+Doesn't match your example.  Probably should be 1.
 
-> Regards,
-> Simon
-> 
->>
->> Thanks.
->>
->> --
->> Dmitry
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+> diff --git a/drivers/usb/phy/samsung-usbphy.c b/drivers/usb/phy/samsung-usbphy.c
+> index 5c5e1bb5..2260029 100644
+> --- a/drivers/usb/phy/samsung-usbphy.c
+> +++ b/drivers/usb/phy/samsung-usbphy.c
+>  /*
+> + * struct samsung_usbphy_drvdata - driver data for various SoC variants
+> + * @cpu_type: machine identifier
+> + * @devphy_en_mask: device phy enable mask for PHY CONTROL register
+> + * @hostphy_en_mask: host phy enable mask for PHY CONTROL register
+> + *
+> + *     having different mask for host and device type phy
+> + *     helps in setting independent masks in case of SoCs like
+> + *     S5PV210 in which PHY0 and PHY1 enable bits belong to same
+> + *     register placed at [0] and [1] respectively.
+> + *     Although for newer SoCs like exynos these bits belong to
+> + *     different registers altogether placed at [0].
+> + */
+> +struct samsung_usbphy_drvdata {
+> +       int cpu_type;
+> +       int devphy_en_mask;
+
+This is really a "devphy_dis_mask", isn't it?  AKA: setting to 1
+disables the phy and setting to 0 enables the phy.
+
+> +       int hostphy_en_mask;
+
+Code below always uses devphy and only ever inits devphy.  I assume
+future code will init / use hostphy?  Worth moving the hostphy part in
+that patch?
+
+>  struct samsung_usbphy {
+>         struct usb_phy  phy;
+> @@ -81,12 +104,66 @@ struct samsung_usbphy {
+>         struct device   *dev;
+>         struct clk      *clk;
+>         void __iomem    *regs;
+> +       void __iomem    *phyctrl_pmureg;
+>         int             ref_clk_freq;
+> -       int             cpu_type;
+> +       struct samsung_usbphy_drvdata *drv_data;
+
+nit: const
+
+> +static int samsung_usbphy_parse_dt_param(struct samsung_usbphy *sphy)
+> +{
+> +       struct device_node *usbphy_pmu;
+> +       u32 reg[2];
+> +       int ret;
+> +
+> +       if (!sphy->dev->of_node) {
+> +               dev_err(sphy->dev, "Can't get usb-phy node\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       usbphy_pmu = of_get_child_by_name(sphy->dev->of_node, "usbphy-pmu");
+> +       if (!usbphy_pmu)
+> +               dev_warn(sphy->dev, "Can't get usb-phy pmu control node\n");
+> +
+> +       ret = of_property_read_u32_array(usbphy_pmu, "reg", reg, 2);
+
+nit: use ARRAY_SIZE(reg)
+
+> +       if (!ret)
+> +               sphy->phyctrl_pmureg = ioremap(reg[0], reg[1]);
+> +
+> +       of_node_put(usbphy_pmu);
+> +
+> +       if (IS_ERR_OR_NULL(sphy->phyctrl_pmureg)) {
+> +               dev_err(sphy->dev, "Can't get usb-phy pmu control register\n");
+
+I don't think there's any cases where it matters (you'll error out of
+the driver if you return an error here), but seems like it might be
+nice to set sphy->phyctrl_pmureg to NULL here since other places test
+this member against NULL only.
+
+> +static inline struct samsung_usbphy_drvdata
+> +*samsung_usbphy_get_driver_data(struct platform_device *pdev)
+>  {
+>         if (pdev->dev.of_node) {
+>                 const struct of_device_id *match;
+>                 match = of_match_node(samsung_usbphy_dt_match,
+>                                                         pdev->dev.of_node);
+> -               return (int) match->data;
+> +               return (struct samsung_usbphy_drvdata *) match->data;
+
+nit: no need for a cast here, I believe.
+
+>         }
+>
+> -       return platform_get_device_id(pdev)->driver_data;
+> +       return ((struct samsung_usbphy_drvdata *)
+> +                               platform_get_device_id(pdev)->driver_data);
+
+nit: no need for a cast here, I believe.
+
+> +static struct samsung_usbphy_drvdata usbphy_s3c64xx = {
+> +       .cpu_type               = TYPE_S3C64XX,
+> +       .devphy_en_mask         = S3C64XX_USBPHY_ENABLE,
+> +};
+> +
+> +static struct samsung_usbphy_drvdata usbphy_exynos4 = {
+> +       .cpu_type               = TYPE_EXYNOS4210,
+> +       .devphy_en_mask         = EXYNOS_USBPHY_ENABLE,
+> +};
+> +
+
+nit: static const for these structs?
+
+
+
+-Doug
