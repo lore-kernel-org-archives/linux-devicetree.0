@@ -1,45 +1,54 @@
-From: Pratik Patel <pratikp@codeaurora.org>
-Subject: Re: [RFC 3/5] ARM: CTI: Convert CTI helpers to AMBA bus driver
-Date: Fri, 21 Dec 2012 14:35:58 -0800
-Message-ID: <20121221223558.GC2658@pratikp-linux.qualcomm.com>
-References: <1355348588-22318-1-git-send-email-jon-hunter@ti.com>
- <1355348588-22318-4-git-send-email-jon-hunter@ti.com>
- <20121221222703.GB2658@pratikp-linux.qualcomm.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: [PATCH] mtd: physmap_of: fix cmdline partition method w/o linux,
+ mtd-name
+Date: Sun, 23 Dec 2012 13:10:50 +0200
+Message-ID: <df9da712b775781366ae23aac28ed20849b4e4d3.1356260943.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121221222703.GB2658@pratikp-linux.qualcomm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, Ming Lei <ming.lei@canonical.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: linux-mtd-bounces@lists.infradead.org
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org
+Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Baruch Siach <baruch@tkos.co.il>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 21, 2012 at 02:27:03PM -0800, Pratik Patel wrote:
-> On Wed, Dec 12, 2012 at 03:43:06PM -0600, Jon Hunter wrote:
-> > +
-> > +/**
-> > + * cti_irq_ack - acknowledges the CTI trigger output
-> > + * @cti: CTI instance
-> > + *
-> > + * Acknowledges the CTI trigger output by writting to the appropriate
-> > + * bit in the CTI interrupt acknowledge register.
-> > + */
-> > +int cti_irq_ack(struct cti *cti)
-> > +{
-> > +	u32 v;
-> > +
-> > +	if (!cti || !cti->enabled)
-> > +		return -EINVAL;
-> > +
-> > +	v = cti_readl(cti, CTIINTACK);
-> 
-> Just curious if CTIINTACK is a read-write register? This is a
-> read-only for us.
-> 
-Mistyped - its a write-only for us
+Commit d68cbdd4fb (mtd: physmap_of: allow to specify the mtd name for retro
+compatiblity) broke cmdline partitioning using dev_name() in the kernel command
+line.  of_property_read_string() does not touch mtd_name when linux,mtd-name is
+not present in the device tree, which causes map.name to be set to a random
+value.  Fix this by initializing mtd_name to NULL.
 
+Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Signed-off-by: Baruch Siach <baruch@tkos.co.il>
+---
+ drivers/mtd/maps/physmap_of.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
+index 37cdc20..6fb2bd8 100644
+--- a/drivers/mtd/maps/physmap_of.c
++++ b/drivers/mtd/maps/physmap_of.c
+@@ -170,7 +170,7 @@ static int of_flash_probe(struct platform_device *dev)
+ 	resource_size_t res_size;
+ 	struct mtd_part_parser_data ppdata;
+ 	bool map_indirect;
+-	const char *mtd_name;
++	const char *mtd_name = NULL;
+ 
+ 	match = of_match_device(of_flash_match, &dev->dev);
+ 	if (!match)
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+1.7.10.4
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
