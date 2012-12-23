@@ -1,54 +1,50 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: [PATCH] mtd: physmap_of: fix cmdline partition method w/o linux,
- mtd-name
-Date: Sun, 23 Dec 2012 13:10:50 +0200
-Message-ID: <df9da712b775781366ae23aac28ed20849b4e4d3.1356260943.git.baruch@tkos.co.il>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: CoreSight framework and drivers
+Date: Sun, 23 Dec 2012 11:32:39 +0000
+Message-ID: <20121223113239.GG16237@mudshark.cambridge.arm.com>
+References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
+ <20121219112314.GA26329@mudshark.cambridge.arm.com>
+ <50D1F37E.6000804@ti.com>
+ <20121219212431.GC23594@pratikp-linux.qualcomm.com>
+ <50D34EE5.8090407@ti.com>
+ <20121220195127.GA14877@pratikp-linux.qualcomm.com>
+ <50D3972E.4030607@ti.com>
+ <20121221221828.GA2658@pratikp-linux.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: linux-mtd-bounces@lists.infradead.org
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: linux-mtd@lists.infradead.org
-Cc: devicetree-discuss@lists.ozlabs.org, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Baruch Siach <baruch@tkos.co.il>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121221221828.GA2658-9H3kiKr51/JHGpnEYu0o6d07Fnf2crXX0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "magnus.p.persson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <magnus.p.persson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "david.rusling-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <david.rusling-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "d-deao-l0cyMroinI0@public.gmane.org" <d-deao-l0cyMroinI0@public.gmane.org>, "christian.bejram-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <christian.bejram-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit d68cbdd4fb (mtd: physmap_of: allow to specify the mtd name for retro
-compatiblity) broke cmdline partitioning using dev_name() in the kernel command
-line.  of_property_read_string() does not touch mtd_name when linux,mtd-name is
-not present in the device tree, which causes map.name to be set to a random
-value.  Fix this by initializing mtd_name to NULL.
+On Fri, Dec 21, 2012 at 10:18:28PM +0000, Pratik Patel wrote:
+> What user interface do you plan to provide for the CTI? Maybe
+> something consistent with other CoreSight components in sysfs to
+> allow users to enable, disable, map and unmap ???
+> 
+> Please let me know your thoughts.
 
-Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Signed-off-by: Baruch Siach <baruch@tkos.co.il>
----
- drivers/mtd/maps/physmap_of.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Rather than have your current approach of dev nodes + sysfs config files for
+each coresight device, I think it might be better to follow something closer
+to ftrace and stick per-device directories under debugfs/coresight/. Then you
+can have a pipe file and some config files in the same directory for each
+component. You also don't need to do any mapping operations with this (just
+post-process the stream directly).
 
-diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
-index 37cdc20..6fb2bd8 100644
---- a/drivers/mtd/maps/physmap_of.c
-+++ b/drivers/mtd/maps/physmap_of.c
-@@ -170,7 +170,7 @@ static int of_flash_probe(struct platform_device *dev)
- 	resource_size_t res_size;
- 	struct mtd_part_parser_data ppdata;
- 	bool map_indirect;
--	const char *mtd_name;
-+	const char *mtd_name = NULL;
- 
- 	match = of_match_device(of_flash_match, &dev->dev);
- 	if (!match)
--- 
-1.7.10.4
+It might also be fun to play with file redirection for sources and sinks, but
+that's probably a bit too invasive.
 
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+Will
