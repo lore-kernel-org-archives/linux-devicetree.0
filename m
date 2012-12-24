@@ -1,99 +1,86 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH 0/2] usb: exynos: Fix compatible strings used for device
-Date: Mon, 24 Dec 2012 13:43:23 +0530
-Message-ID: <CAFp+6iGq32UV3mZ=QYVizJGQEark0Qztu7m4jy3DvG431ajV1w@mail.gmail.com>
-References: <1355410348-5129-1-git-send-email-gautam.vivek@samsung.com>
-	<20121215072014.2E05E3E0AE3@localhost>
-	<CAFp+6iHaYpinaq8K7rf1GxOJoap6Rd8kGcJn4UmHU28BjTCAsA@mail.gmail.com>
-	<CAFp+6iFVSi_pg39YyeEbAgwDsU4kun7u0g8z3u3dVMP4oLpavQ@mail.gmail.com>
-	<CAD=FV=WtsfDr=W7TB5BYW087FqXyxXCb0xVfGha6_F65cPCE9A@mail.gmail.com>
-	<016901cde163$6be034c0$43a09e40$@samsung.com>
+From: Mark Zhang <nvmarkzhang@gmail.com>
+Subject: Re: [PATCH 0/9] ARM: Initial support for Tegra 114 SoC.
+Date: Mon, 24 Dec 2012 17:58:56 +0800
+Message-ID: <50D82760.6060706@gmail.com>
+References: <1355996654-6579-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <016901cde163$6be034c0$43a09e40$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Doug Anderson <dianders@chromium.org>, balbi@ti.com, Thomas Abraham <thomas.abraham@linaro.org>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, Alan Stern <stern@rowland.harvard.edu>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, jg1.han@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1355996654-6579-1-git-send-email-hdoyu@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Hiroshi Doyu <hdoyu@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, Jason Cooper <jason@lakedaemon.net>, Shawn Guo <shawn.guo@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+On 12/20/2012 05:43 PM, Hiroshi Doyu wrote:
+> Hi,
+> 
+> This patchset adds initial support for the NVIDIA's new Tegra 114
+> SoC (T114) based on the ARM Cortex-A15 MP. It has the minimal support
+> to allow the kernel to boot up into shell console. This can be used as
+> a basis for adding other device drivers for this SoC. Currently there
+> are 2 evaluation boards available, "Dalmore" and "Pluto".
+> 
+> This patchset is against Stephen Warren's linux-next_common branch:
+> 
+>   git://nv-tegra.nvidia.com/user/swarren/linux-2.6 linux-next_common
+> 
+> For those who want to try:
+> 
+>   $ make ARCH=arm tegra_defconfig
+>   $ scripts/config -e ARCH_TEGRA_114_SOC -d DRM -d SUSPEND \
+>     	-d PM_RUNTIME -d CPU_FREQ -d CPU_IDLE
+>   $ make ARCH=arm menuconfig # if needed to configure more
 
+I think we also need to enable:
 
-On Mon, Dec 24, 2012 at 4:45 AM, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> Kukjin Kim wrote:
->>
-> Re-sending due to e-mail client problem...
->
->> Doug Anderson wrote:
->> >
->> > On Fri, Dec 21, 2012 at 12:14 AM, Vivek Gautam
->> > <gautamvivek1987@gmail.com> wrote:
->> > > On Wed, Dec 19, 2012 at 7:16 PM, Vivek Gautam
->> > <gautamvivek1987@gmail.com> wrote:
->> > >>
->> > >> On Sat, Dec 15, 2012 at 12:50 PM, Grant Likely
->> > >> <grant.likely@secretlab.ca> wrote:
->> > >>> On Thu, 13 Dec 2012 20:22:26 +0530, Vivek Gautam
->> > <gautam.vivek@samsung.com> wrote:
->> > >>>> Using chip specific compatible string as it should be.
->> > >>>> So fixing this for ehci-s5p, ohci-exynos and dwc3-exynos
->> > >>>> which till now used a generic 'exynos' in their compatible strings.
->> > >>>>
->> > >>>> This goes as per the discussion happened in the thread for
->> > >>>> [PATCH v2] ARM: Exynos5250: Enabling dwc3-exynos driver
->> > >>>> available at:
->> > >>>> http://www.spinics.net/lists/linux-usb/msg74145.html
->> > >>>>
->> > >>>> Vivek Gautam (2):
->> > >>>>   usb: ehci-s5p/ohci-exynos: Fix compatible strings for the device
->> > >>>>   usb: dwc3-exynos: Fix compatible strings for the device
->> > >>>
->> > >>> for both patches:
->> > >>> Acked-by: Grant Likely <grant.likely@secretlab.ca>
->> > >>>
->> > >
->> > > Any more thought about this patch-set?
->> > > Or does this change seems fine?
->> >
->> > These two changes look good to me.  For both of them:
->> >
->> > Reviewed-by: Doug Anderson <dianders@chromium.org>
->>
->> Well, I have another idea. Yes, I know, specific chip name should be used.
-> But
->> you know the specific chip name in compatible can cause another confusion
->> on other SoC which has same IP. So I think, we need to consider to use
->> common name or any specific name not chip in compatible for IP/driver like
->> following?
->>
->> -     { .compatible = "samsung,exynos-dwc3" },
->> +     { .compatible = "samsung,synopsis-dwc3" },
->>
->> Or if any version or something, how about following?
->>
->> +     { .compatible = "samsung,dwc-v3" },
->>
-Well, yes the newer SoCs with same IP using the chip name can cause some
-confusion, but won't it be fine that -
-"Newer parts using the same core can claim compatibility by
-including the older string in the compatible list" - as quoted by Grant Likely
+CONFIG_ARM_APPENDED_DTB
+CONFIG_ARM_ATAG_DTB_COMPAT
 
-Or, can we try another option, using multiple compatible strings for
-SoC specific
-in of_match_table, so that we don't create any confusion by using same
-compatible
-for newer SoCs also. Like,
+because currently we append the dtb to the kernel image(will not do this
+after u-boot supports dalmore and we can load the dtb in u-boot cmd), so
+we need to make kernel being aware of this.
 
--     { .compatible = "samsung,exynos-dwc3" },
-+     { .compatible = "samsung,exynos5250-dwc3" },
-+     { .compatible = <new SoC using same IP> },
+My experience is after I enabled these 2 configs, kernel starts up normally.
 
->> - Kukjin
->
-
-
-
--- 
-Thanks & Regards
-Vivek
+Mark
+>   $ make ARCH=arm all -j9
+> 
+> Verified that this single image booted up with "Dalmore(T114)",
+> "Pluto(T114)" and "Cardhu(T30)". For "Cardhu(T30)" with this single
+> image, SPI driver doesn't seem to afford the above configuration , it
+> hangs at boot-up. With SPI disabled, it's ok.
+> 
+> 
+> Hiroshi Doyu (9):
+>   ARM: tegra: fuse: Add chipid TEGRA114 0x35
+>   HACK: ARM: tegra: Use CLK_IGNORE_UNUSED for Tegra 114 SoC
+>   ARM: tegra: # of CPU cores detection w/ & w/o HAVE_ARM_SCU
+>   clocksource: tegra: Reorganize funcs by clock functionarities
+>   clocksource: tegra: Enable ARM arch_timer with TSC
+>   ARM: dt: tegra114: Add new SoC base, Tegra 114 SoC
+>   ARM: dt: tegra114: Add new board, Dalmore
+>   ARM: dt: tegra114: Add new board, Pluto
+>   ARM: tegra: Add initial support for Tegra 114 SoC.
+> 
+>  .../bindings/arm/tegra/nvidia,tegra114-tsc.txt     |   11 +
+>  arch/arm/boot/dts/Makefile                         |    4 +-
+>  arch/arm/boot/dts/tegra114-dalmore.dts             |   21 ++
+>  arch/arm/boot/dts/tegra114-pluto.dts               |   21 ++
+>  arch/arm/boot/dts/tegra114.dtsi                    |   89 ++++++++
+>  arch/arm/mach-tegra/Kconfig                        |   10 +
+>  arch/arm/mach-tegra/Makefile                       |    1 +
+>  arch/arm/mach-tegra/board-dt-tegra114.c            |   48 +++++
+>  arch/arm/mach-tegra/common.c                       |    1 +
+>  arch/arm/mach-tegra/fuse.h                         |    1 +
+>  arch/arm/mach-tegra/platsmp.c                      |   31 ++-
+>  arch/arm/mach-tegra/tegra30_clocks_data.c          |    2 +
+>  drivers/clocksource/tegra20_timer.c                |  222 +++++++++++++-------
+>  13 files changed, 384 insertions(+), 78 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra114-tsc.txt
+>  create mode 100644 arch/arm/boot/dts/tegra114-dalmore.dts
+>  create mode 100644 arch/arm/boot/dts/tegra114-pluto.dts
+>  create mode 100644 arch/arm/boot/dts/tegra114.dtsi
+>  create mode 100644 arch/arm/mach-tegra/board-dt-tegra114.c
+> 
