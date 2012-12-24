@@ -1,53 +1,71 @@
-From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v8 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Mon, 24 Dec 2012 09:07:34 +0800
-Message-ID: <50D7AAD6.1090705@gmail.com>
-References: <1355481404-27695-1-git-send-email-zonque@gmail.com>
- <1355481404-27695-6-git-send-email-zonque@gmail.com>
- <20121215072738.882313E0C08@localhost>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V5 2/2] ASoC: SAMSUNG: Add DT support for i2s
+Date: Mon, 24 Dec 2012 09:33:18 +0530
+Message-ID: <CAAgF-BckOnct3gGgrxiG2W-D74sFmD=7HfBOqkj9HTc66ZPoiQ@mail.gmail.com>
+References: <1355395373-22058-1-git-send-email-padma.v@samsung.com>
+	<1355395373-22058-3-git-send-email-padma.v@samsung.com>
+	<20121219132414.2CF653E0AD7@localhost>
+	<20121219170937.GV4985@opensource.wolfsonmicro.com>
+	<CAAgF-Bc3zSyhaMwSOy977PJ-PdtMfDXjFrTvpzETeHJAAQU3vQ@mail.gmail.com>
+	<008401cddfad$ae2d19e0$0a874da0$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121215072738.882313E0C08@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
-Cc: x0148406-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, avinashphilip-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <008401cddfad$ae2d19e0$0a874da0$@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Grant Likely <grant.likely@secretlab.ca>, Padmavathi Venna <padma.v@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, jassisinghbrar@gmail.com, sbkim73@samsung.com, tiwai@suse.de, ben-linux@fluff.org, lrg@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 12/15/2012 03:27 PM, Grant Likely wrote:
-> On Fri, 14 Dec 2012 11:36:44 +0100, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> This patch adds basic DT bindings for OMAP GPMC.
->>
->> The actual peripherals are instantiated from child nodes within the GPMC
->> node, and the only type of device that is currently supported is NAND.
->>
->> Code was added to parse the generic GPMC timing parameters and some
->> documentation with examples on how to use them.
->>
->> Successfully tested on an AM33xx board.
->>
->> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> 
-> For all patches in this series:
-> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Hi,
 
-Thanks Grant!
+On Sat, Dec 22, 2012 at 12:32 AM, Kukjin Kim <kgene.kim@samsung.com> wrote:
+> Padma Venkat wrote:
+>>
+>> Hi,
+>>
+>> On Wed, Dec 19, 2012 at 10:39 PM, Mark Brown
+>> <broonie@opensource.wolfsonmicro.com> wrote:
+>> > On Wed, Dec 19, 2012 at 01:24:14PM +0000, Grant Likely wrote:
+>> >> On Thu, 13 Dec 2012 16:12:53 +0530, Padmavathi Venna
+>> <padma.v@samsung.com> wrote:
+>> >
+>> >> > +- compatible : "samsung,samsung-i2s"
+>> >
+>> >> Isn't that kind of redundant?  :-)
+>> >
+>> >> The format of the compatible strings should be "<vendor>,<part-
+>> number>-i2s".
+>> >> Please be specific about the part number that you're doing the binding
+>> >> for. For example; use "samsung,exynos4210-i2s" instead of
+>> "samsung,exynos-i2s".
+>> >
+>> > There are actually versioned IPs here (where the versions are used
+>> > publically in a few places) but it's not clearly documented which is
+>> > which.  It would be reasonable to use the IP versions here I think.
+>>
+>> Samsung has three i2s drivers one for s3c24xx, one for s3c2412 and one
+>> for rest of the platforms. The above mentioned other platforms has
+>> Version 3/4/5 of i2s controllers. This dt binding is for for the i2s
+>
+> Where is the version defined such as 3, 4, 5? So, what is the
+> "sound/soc/Samsung/s3c-i2s-v2.[ch]"?
 
-Tony, could you apply these patches somewhere so others can base upon
-them? As I said, I'm now travelling and can't continue my work, so I
-would much like to know these series at a safe place :)
+Versions 3, 4, 5 are defined in dev-audio.c file of corresponding platforms.
+s3c-i2s-v2 is used in s3c2412 platform.
 
+>
+>> driver that has support for Version 3/4/5 of i2s controller. So
+>> "samsung,i2s-v5" is okay as compatible name? Please suggest me.
+>>
+> I agree with using version here but we need some consensus about that.
+>
+> - Kukjin
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Again thanks to everyone,
-Daniel
+Thanks
+Padma
