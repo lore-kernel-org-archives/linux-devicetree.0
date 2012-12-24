@@ -1,74 +1,53 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 0/2] usb: exynos: Fix compatible strings used for device
-Date: Sun, 23 Dec 2012 15:15:35 -0800
-Message-ID: <016901cde163$6be034c0$43a09e40$@samsung.com>
-References: <1355410348-5129-1-git-send-email-gautam.vivek@samsung.com>
- <20121215072014.2E05E3E0AE3@localhost>
- <CAFp+6iHaYpinaq8K7rf1GxOJoap6Rd8kGcJn4UmHU28BjTCAsA@mail.gmail.com>
- <CAFp+6iFVSi_pg39YyeEbAgwDsU4kun7u0g8z3u3dVMP4oLpavQ@mail.gmail.com>
- <CAD=FV=WtsfDr=W7TB5BYW087FqXyxXCb0xVfGha6_F65cPCE9A@mail.gmail.com>
+From: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v8 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC timings
+ and NAND
+Date: Mon, 24 Dec 2012 09:07:34 +0800
+Message-ID: <50D7AAD6.1090705@gmail.com>
+References: <1355481404-27695-1-git-send-email-zonque@gmail.com>
+ <1355481404-27695-6-git-send-email-zonque@gmail.com>
+ <20121215072738.882313E0C08@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: 
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Doug Anderson' <dianders@chromium.org>, 'Vivek Gautam' <gautamvivek1987@gmail.com>
-Cc: linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, 'Alan Stern' <stern@rowland.harvard.edu>, 'Grant Likely' <grant.likely@secretlab.ca>, 'Rob Herring' <rob.herring@calxeda.com>, jg1.han@samsung.com, 'Vivek Gautam' <gautam.vivek@samsung.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121215072738.882313E0C08@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: x0148406-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, avinashphilip-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Kukjin Kim wrote:
+On 12/15/2012 03:27 PM, Grant Likely wrote:
+> On Fri, 14 Dec 2012 11:36:44 +0100, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> This patch adds basic DT bindings for OMAP GPMC.
+>>
+>> The actual peripherals are instantiated from child nodes within the GPMC
+>> node, and the only type of device that is currently supported is NAND.
+>>
+>> Code was added to parse the generic GPMC timing parameters and some
+>> documentation with examples on how to use them.
+>>
+>> Successfully tested on an AM33xx board.
+>>
+>> Signed-off-by: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > 
-Re-sending due to e-mail client problem...
+> For all patches in this series:
+> Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 
-> Doug Anderson wrote:
-> >
-> > On Fri, Dec 21, 2012 at 12:14 AM, Vivek Gautam
-> > <gautamvivek1987@gmail.com> wrote:
-> > > On Wed, Dec 19, 2012 at 7:16 PM, Vivek Gautam
-> > <gautamvivek1987@gmail.com> wrote:
-> > >>
-> > >> On Sat, Dec 15, 2012 at 12:50 PM, Grant Likely
-> > >> <grant.likely@secretlab.ca> wrote:
-> > >>> On Thu, 13 Dec 2012 20:22:26 +0530, Vivek Gautam
-> > <gautam.vivek@samsung.com> wrote:
-> > >>>> Using chip specific compatible string as it should be.
-> > >>>> So fixing this for ehci-s5p, ohci-exynos and dwc3-exynos
-> > >>>> which till now used a generic 'exynos' in their compatible strings.
-> > >>>>
-> > >>>> This goes as per the discussion happened in the thread for
-> > >>>> [PATCH v2] ARM: Exynos5250: Enabling dwc3-exynos driver
-> > >>>> available at:
-> > >>>> http://www.spinics.net/lists/linux-usb/msg74145.html
-> > >>>>
-> > >>>> Vivek Gautam (2):
-> > >>>>   usb: ehci-s5p/ohci-exynos: Fix compatible strings for the device
-> > >>>>   usb: dwc3-exynos: Fix compatible strings for the device
-> > >>>
-> > >>> for both patches:
-> > >>> Acked-by: Grant Likely <grant.likely@secretlab.ca>
-> > >>>
-> > >
-> > > Any more thought about this patch-set?
-> > > Or does this change seems fine?
-> >
-> > These two changes look good to me.  For both of them:
-> >
-> > Reviewed-by: Doug Anderson <dianders@chromium.org>
-> 
-> Well, I have another idea. Yes, I know, specific chip name should be used.
-But
-> you know the specific chip name in compatible can cause another confusion
-> on other SoC which has same IP. So I think, we need to consider to use
-> common name or any specific name not chip in compatible for IP/driver like
-> following?
-> 
-> -	{ .compatible = "samsung,exynos-dwc3" },
-> +	{ .compatible = "samsung,synopsis-dwc3" },
-> 
-> Or if any version or something, how about following?
-> 
-> +	{ .compatible = "samsung,dwc-v3" },
-> 
-> - Kukjin
+Thanks Grant!
+
+Tony, could you apply these patches somewhere so others can base upon
+them? As I said, I'm now travelling and can't continue my work, so I
+would much like to know these series at a safe place :)
+
+
+Again thanks to everyone,
+Daniel
