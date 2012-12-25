@@ -1,86 +1,85 @@
-From: Mark Zhang <nvmarkzhang@gmail.com>
-Subject: Re: [PATCH 0/9] ARM: Initial support for Tegra 114 SoC.
-Date: Mon, 24 Dec 2012 17:58:56 +0800
-Message-ID: <50D82760.6060706@gmail.com>
-References: <1355996654-6579-1-git-send-email-hdoyu@nvidia.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH 1/2] regulator: tps51632: add register property for regmap
+Date: Tue, 25 Dec 2012 15:01:12 +0530
+Message-ID: <1356427873-13478-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1355996654-6579-1-git-send-email-hdoyu@nvidia.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Hiroshi Doyu <hdoyu@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Olof Johansson <olof@lixom.net>, Jason Cooper <jason@lakedaemon.net>, Shawn Guo <shawn.guo@linaro.org>, Andrew Lunn <andrew@lunn.ch>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: broonie@opensource.wolfsonmicro.com
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.co, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/20/2012 05:43 PM, Hiroshi Doyu wrote:
-> Hi,
-> 
-> This patchset adds initial support for the NVIDIA's new Tegra 114
-> SoC (T114) based on the ARM Cortex-A15 MP. It has the minimal support
-> to allow the kernel to boot up into shell console. This can be used as
-> a basis for adding other device drivers for this SoC. Currently there
-> are 2 evaluation boards available, "Dalmore" and "Pluto".
-> 
-> This patchset is against Stephen Warren's linux-next_common branch:
-> 
->   git://nv-tegra.nvidia.com/user/swarren/linux-2.6 linux-next_common
-> 
-> For those who want to try:
-> 
->   $ make ARCH=arm tegra_defconfig
->   $ scripts/config -e ARCH_TEGRA_114_SOC -d DRM -d SUSPEND \
->     	-d PM_RUNTIME -d CPU_FREQ -d CPU_IDLE
->   $ make ARCH=arm menuconfig # if needed to configure more
+All TPS51632 registers are not readable/writable and
+non-volatiles.
 
-I think we also need to enable:
+Add property of the registers whether it is readable/writable
+or volatile for regmap framework.
 
-CONFIG_ARM_APPENDED_DTB
-CONFIG_ARM_ATAG_DTB_COMPAT
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+---
+ drivers/regulator/tps51632-regulator.c |   41 ++++++++++++++++++++++++++++----
+ 1 files changed, 36 insertions(+), 5 deletions(-)
 
-because currently we append the dtb to the kernel image(will not do this
-after u-boot supports dalmore and we can load the dtb in u-boot cmd), so
-we need to make kernel being aware of this.
+diff --git a/drivers/regulator/tps51632-regulator.c b/drivers/regulator/tps51632-regulator.c
+index ab21133..b96fb0e 100644
+--- a/drivers/regulator/tps51632-regulator.c
++++ b/drivers/regulator/tps51632-regulator.c
+@@ -205,18 +205,49 @@ skip_pwm_config:
+ 	return ret;
+ }
+ 
+-static bool rd_wr_reg(struct device *dev, unsigned int reg)
++static bool is_volatile_reg(struct device *dev, unsigned int reg)
+ {
+-	if ((reg >= 0x8) && (reg <= 0x10))
++	switch (reg) {
++	case TPS51632_OFFSET_REG:
++	case TPS51632_FAULT_REG:
++	case TPS51632_IMON_REG:
++		return true;
++	default:
+ 		return false;
+-	return true;
++	}
++}
++
++static bool is_read_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case 0x08 ... 0x0F:
++		return false;
++	default:
++		return true;
++	}
++}
++
++static bool is_write_reg(struct device *dev, unsigned int reg)
++{
++	switch (reg) {
++	case TPS51632_VOLTAGE_SELECT_REG:
++	case TPS51632_VOLTAGE_BASE_REG:
++	case TPS51632_VMAX_REG:
++	case TPS51632_DVFS_CONTROL_REG:
++	case TPS51632_POWER_STATE_REG:
++	case TPS51632_SLEW_REGS:
++		return true;
++	default:
++		return false;
++	}
+ }
+ 
+ static const struct regmap_config tps51632_regmap_config = {
+ 	.reg_bits		= 8,
+ 	.val_bits		= 8,
+-	.writeable_reg		= rd_wr_reg,
+-	.readable_reg		= rd_wr_reg,
++	.writeable_reg		= is_write_reg,
++	.readable_reg		= is_read_reg,
++	.volatile_reg		= is_volatile_reg,
+ 	.max_register		= TPS51632_MAX_REG - 1,
+ 	.cache_type		= REGCACHE_RBTREE,
+ };
+-- 
+1.7.1.1
 
-My experience is after I enabled these 2 configs, kernel starts up normally.
-
-Mark
->   $ make ARCH=arm all -j9
-> 
-> Verified that this single image booted up with "Dalmore(T114)",
-> "Pluto(T114)" and "Cardhu(T30)". For "Cardhu(T30)" with this single
-> image, SPI driver doesn't seem to afford the above configuration , it
-> hangs at boot-up. With SPI disabled, it's ok.
-> 
-> 
-> Hiroshi Doyu (9):
->   ARM: tegra: fuse: Add chipid TEGRA114 0x35
->   HACK: ARM: tegra: Use CLK_IGNORE_UNUSED for Tegra 114 SoC
->   ARM: tegra: # of CPU cores detection w/ & w/o HAVE_ARM_SCU
->   clocksource: tegra: Reorganize funcs by clock functionarities
->   clocksource: tegra: Enable ARM arch_timer with TSC
->   ARM: dt: tegra114: Add new SoC base, Tegra 114 SoC
->   ARM: dt: tegra114: Add new board, Dalmore
->   ARM: dt: tegra114: Add new board, Pluto
->   ARM: tegra: Add initial support for Tegra 114 SoC.
-> 
->  .../bindings/arm/tegra/nvidia,tegra114-tsc.txt     |   11 +
->  arch/arm/boot/dts/Makefile                         |    4 +-
->  arch/arm/boot/dts/tegra114-dalmore.dts             |   21 ++
->  arch/arm/boot/dts/tegra114-pluto.dts               |   21 ++
->  arch/arm/boot/dts/tegra114.dtsi                    |   89 ++++++++
->  arch/arm/mach-tegra/Kconfig                        |   10 +
->  arch/arm/mach-tegra/Makefile                       |    1 +
->  arch/arm/mach-tegra/board-dt-tegra114.c            |   48 +++++
->  arch/arm/mach-tegra/common.c                       |    1 +
->  arch/arm/mach-tegra/fuse.h                         |    1 +
->  arch/arm/mach-tegra/platsmp.c                      |   31 ++-
->  arch/arm/mach-tegra/tegra30_clocks_data.c          |    2 +
->  drivers/clocksource/tegra20_timer.c                |  222 +++++++++++++-------
->  13 files changed, 384 insertions(+), 78 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra114-tsc.txt
->  create mode 100644 arch/arm/boot/dts/tegra114-dalmore.dts
->  create mode 100644 arch/arm/boot/dts/tegra114-pluto.dts
->  create mode 100644 arch/arm/boot/dts/tegra114.dtsi
->  create mode 100644 arch/arm/mach-tegra/board-dt-tegra114.c
-> 
