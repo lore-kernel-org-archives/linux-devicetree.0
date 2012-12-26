@@ -1,168 +1,81 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V2 2/2] regulator: tps51632: add DT support
-Date: Tue, 25 Dec 2012 20:36:00 +0530
-Message-ID: <1356447960-6084-2-git-send-email-ldewangan@nvidia.com>
-References: <1356447960-6084-1-git-send-email-ldewangan@nvidia.com>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V5 2/2] ASoC: SAMSUNG: Add DT support for i2s
+Date: Wed, 26 Dec 2012 16:21:58 +0530
+Message-ID: <CAAgF-BdNwk=aB9PdOieb=t-WBmCvB5CWEYic44fc6WwhJUHGmw@mail.gmail.com>
+References: <1355395373-22058-1-git-send-email-padma.v@samsung.com>
+	<1355395373-22058-3-git-send-email-padma.v@samsung.com>
+	<20121219132414.2CF653E0AD7@localhost>
+	<20121219170937.GV4985@opensource.wolfsonmicro.com>
+	<CAAgF-Bc3zSyhaMwSOy977PJ-PdtMfDXjFrTvpzETeHJAAQU3vQ@mail.gmail.com>
+	<008401cddfad$ae2d19e0$0a874da0$@samsung.com>
+	<CAAgF-BckOnct3gGgrxiG2W-D74sFmD=7HfBOqkj9HTc66ZPoiQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1356447960-6084-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, lrg-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAAgF-BckOnct3gGgrxiG2W-D74sFmD=7HfBOqkj9HTc66ZPoiQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Grant Likely <grant.likely@secretlab.ca>, Padmavathi Venna <padma.v@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, jassisinghbrar@gmail.com, sbkim73@samsung.com, tiwai@suse.de, ben-linux@fluff.org, lrg@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add DT support for the TI TPS51632. Add device binding document also.
+Hi,
 
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Changes from V1:
-- Fix compilation error which was not cought in earlier patch.
-- Rebased to linux-next 20121224
+On Mon, Dec 24, 2012 at 9:33 AM, Padma Venkat <padma.kvr@gmail.com> wrote:
+> Hi,
+>
+> On Sat, Dec 22, 2012 at 12:32 AM, Kukjin Kim <kgene.kim@samsung.com> wrote:
+>> Padma Venkat wrote:
+>>>
+>>> Hi,
+>>>
+>>> On Wed, Dec 19, 2012 at 10:39 PM, Mark Brown
+>>> <broonie@opensource.wolfsonmicro.com> wrote:
+>>> > On Wed, Dec 19, 2012 at 01:24:14PM +0000, Grant Likely wrote:
+>>> >> On Thu, 13 Dec 2012 16:12:53 +0530, Padmavathi Venna
+>>> <padma.v@samsung.com> wrote:
+>>> >
+>>> >> > +- compatible : "samsung,samsung-i2s"
+>>> >
+>>> >> Isn't that kind of redundant?  :-)
+>>> >
+>>> >> The format of the compatible strings should be "<vendor>,<part-
+>>> number>-i2s".
+>>> >> Please be specific about the part number that you're doing the binding
+>>> >> for. For example; use "samsung,exynos4210-i2s" instead of
+>>> "samsung,exynos-i2s".
+>>> >
+>>> > There are actually versioned IPs here (where the versions are used
+>>> > publically in a few places) but it's not clearly documented which is
+>>> > which.  It would be reasonable to use the IP versions here I think.
+>>>
+>>> Samsung has three i2s drivers one for s3c24xx, one for s3c2412 and one
+>>> for rest of the platforms. The above mentioned other platforms has
+>>> Version 3/4/5 of i2s controllers. This dt binding is for for the i2s
+>>
+>> Where is the version defined such as 3, 4, 5? So, what is the
+>> "sound/soc/Samsung/s3c-i2s-v2.[ch]"?
+>
+> Versions 3, 4, 5 are defined in dev-audio.c file of corresponding platforms.
+> s3c-i2s-v2 is used in s3c2412 platform.
+>
+>>
+>>> driver that has support for Version 3/4/5 of i2s controller. So
+>>> "samsung,i2s-v5" is okay as compatible name? Please suggest me.
+>>>
+>> I agree with using version here but we need some consensus about that.
 
- .../bindings/regulator/tps51632-regulator.txt      |   27 +++++++++
- drivers/regulator/tps51632-regulator.c             |   59 ++++++++++++++++++++
- 2 files changed, 86 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/regulator/tps51632-regulator.txt
+Any suggestions on i2s compatible name or "samsung,i2s-v5" is okay?
 
-diff --git a/Documentation/devicetree/bindings/regulator/tps51632-regulator.txt b/Documentation/devicetree/bindings/regulator/tps51632-regulator.txt
-new file mode 100644
-index 0000000..2f7e44a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/regulator/tps51632-regulator.txt
-@@ -0,0 +1,27 @@
-+TPS51632 Voltage regulators
-+
-+Required properties:
-+- compatible: Must be "ti,tps51632"
-+- reg: I2C slave address
-+
-+Optional properties:
-+- ti,enable-pwm-dvfs: Enable the DVFS voltage control through the PWM interface.
-+- ti,dvfs-step-20mV: The 20mV step voltage when PWM DVFS enabled. Missing this
-+	will set 10mV step voltage in PWM DVFS mode. In normal mode, the voltage
-+	step is 10mV as per datasheet.
-+
-+Any property defined as part of the core regulator binding, defined in
-+regulator.txt, can also be used.
-+
-+Example:
-+
-+	tps51632 {
-+		compatible = "ti,tps51632";
-+		reg =  <0x43>;
-+		regulator-name = "tps51632-vout";
-+		regulator-min-microvolt = <500000>;
-+		regulator-max-microvolt = <1500000>;
-+		regulator-boot-on;
-+		ti,enable-pwm-dvfs;
-+		ti,dvfs-step-20mV;
-+	};
-diff --git a/drivers/regulator/tps51632-regulator.c b/drivers/regulator/tps51632-regulator.c
-index b96fb0e..7560d07 100644
---- a/drivers/regulator/tps51632-regulator.c
-+++ b/drivers/regulator/tps51632-regulator.c
-@@ -28,10 +28,13 @@
- #include <linux/init.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/regmap.h>
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
-+#include <linux/regulator/of_regulator.h>
- #include <linux/regulator/tps51632-regulator.h>
- #include <linux/slab.h>
- 
-@@ -252,6 +255,49 @@ static const struct regmap_config tps51632_regmap_config = {
- 	.cache_type		= REGCACHE_RBTREE,
- };
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id tps51632_of_match[] = {
-+	{ .compatible = "ti,tps51632",},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tps51632_of_match);
-+
-+static struct tps51632_regulator_platform_data *
-+	of_get_tps51632_platform_data(struct device *dev)
-+{
-+	struct tps51632_regulator_platform_data *pdata;
-+	struct device_node *np = dev->of_node;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata) {
-+		dev_err(dev, "Memory alloc failed for platform data\n");
-+		return NULL;
-+	}
-+
-+	pdata->reg_init_data = of_get_regulator_init_data(dev, dev->of_node);
-+	if (!pdata->reg_init_data) {
-+		dev_err(dev, "Not able to get OF regulator init data\n");
-+		return NULL;
-+	}
-+
-+	pdata->enable_pwm_dvfs =
-+			of_property_read_bool(np, "ti,enable-pwm-dvfs");
-+	pdata->dvfs_step_20mV = of_property_read_bool(np, "ti,dvfs-step-20mV");
-+
-+	pdata->base_voltage_uV = pdata->reg_init_data->constraints.min_uV ? :
-+					TPS51632_MIN_VOLATGE;
-+	pdata->max_voltage_uV = pdata->reg_init_data->constraints.max_uV ? :
-+					TPS51632_MAX_VOLATGE;
-+	return pdata;
-+}
-+#else
-+static struct tps51632_regulator_platform_data *
-+	of_get_tps51632_platform_data(struct device *dev)
-+{
-+	return NULL;
-+}
-+#endif
-+
- static int tps51632_probe(struct i2c_client *client,
- 				const struct i2c_device_id *id)
- {
-@@ -261,7 +307,19 @@ static int tps51632_probe(struct i2c_client *client,
- 	int ret;
- 	struct regulator_config config = { };
- 
-+	if (client->dev.of_node) {
-+		const struct of_device_id *match;
-+		match = of_match_device(of_match_ptr(tps51632_of_match),
-+				&client->dev);
-+		if (!match) {
-+			dev_err(&client->dev, "Error: No device match found\n");
-+			return -ENODEV;
-+		}
-+	}
-+
- 	pdata = client->dev.platform_data;
-+	if (!pdata && client->dev.of_node)
-+		pdata = of_get_tps51632_platform_data(&client->dev);
- 	if (!pdata) {
- 		dev_err(&client->dev, "No Platform data\n");
- 		return -EINVAL;
-@@ -350,6 +408,7 @@ static struct i2c_driver tps51632_i2c_driver = {
- 	.driver = {
- 		.name = "tps51632",
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(tps51632_of_match),
- 	},
- 	.probe = tps51632_probe,
- 	.remove = tps51632_remove,
--- 
-1.7.1.1
+>>
+>> - Kukjin
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Thanks
+> Padma
+
+Thanks
+Padma
