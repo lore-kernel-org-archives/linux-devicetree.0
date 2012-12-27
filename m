@@ -1,67 +1,64 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V5 2/2] ASoC: SAMSUNG: Add DT support for i2s
-Date: Thu, 27 Dec 2012 16:48:18 +0000
-Message-ID: <20121227164818.GD5005@opensource.wolfsonmicro.com>
-References: <1355395373-22058-1-git-send-email-padma.v@samsung.com>
- <1355395373-22058-3-git-send-email-padma.v@samsung.com>
- <20121219132414.2CF653E0AD7@localhost>
- <20121219170937.GV4985@opensource.wolfsonmicro.com>
- <CAAgF-Bc3zSyhaMwSOy977PJ-PdtMfDXjFrTvpzETeHJAAQU3vQ@mail.gmail.com>
- <008401cddfad$ae2d19e0$0a874da0$@samsung.com>
- <CAAgF-BckOnct3gGgrxiG2W-D74sFmD=7HfBOqkj9HTc66ZPoiQ@mail.gmail.com>
- <CAAgF-BdNwk=aB9PdOieb=t-WBmCvB5CWEYic44fc6WwhJUHGmw@mail.gmail.com>
+Subject: Re: [PATCH V2 1/2] regulator: tps51632: add register property for
+ regmap
+Date: Thu, 27 Dec 2012 17:32:33 +0000
+Message-ID: <20121227173233.GI5005@opensource.wolfsonmicro.com>
+References: <1356447960-6084-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pY3vCvL1qV+PayAL"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="UlxN1C6awaFNesUv"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAAgF-BdNwk=aB9PdOieb=t-WBmCvB5CWEYic44fc6WwhJUHGmw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padma Venkat <padma.kvr@gmail.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Padmavathi Venna <padma.v@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, jassisinghbrar@gmail.com, sbkim73@samsung.com, tiwai@suse.de, ben-linux@fluff.org, lrg@ti.com
+In-Reply-To: <1356447960-6084-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---pY3vCvL1qV+PayAL
+--UlxN1C6awaFNesUv
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Dec 26, 2012 at 04:21:58PM +0530, Padma Venkat wrote:
-> Hi,
->=20
-> On Mon, Dec 24, 2012 at 9:33 AM, Padma Venkat <padma.kvr@gmail.com> wrote:
-> > Hi,
+On Tue, Dec 25, 2012 at 08:35:59PM +0530, Laxman Dewangan wrote:
+> All TPS51632 registers are not readable/writable and
+> non-volatiles.
 
-You should always delete irrelevant text from mails, it makes it much
-easier for people to find whatever content you've added.
+Applied both, thanks, but you might wish to consider...
 
-> >> I agree with using version here but we need some consensus about that.
+> +static bool is_read_reg(struct device *dev, unsigned int reg)
+> +{
+> +	switch (reg) {
+> +	case 0x08 ... 0x0F:
+> +		return false;
+> +	default:
+> +		return true;
+> +	}
+> +}
 
-> Any suggestions on i2s compatible name or "samsung,i2s-v5" is okay?
+...using the new table based stuff for the access checks, at least this
+one seems to map on nicely.
 
-I think that's fine.
-
---pY3vCvL1qV+PayAL
+--UlxN1C6awaFNesUv
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJQ3HvLAAoJELSic+t+oim92OwQAIjnHDvG+xboxn0WBEj63k9/
-02LFbqpsexDFKcL2cyljmeSatnWyN66kTfQ+iTuq137VbivhB+LCiwIuGpZ3ChVk
-a6jM0LdFR5In+sc/Cg5lbsi8vMObnbHsqoY7aGmJnykZ/Rd1p6znQMBNAy5pe/2L
-FMd9OJF9J3B4+2h0nqrT2QGclbapblN2klqmbknB+RVawFVfnr9ZkB51XOcSH970
-owEYD6sKvt27HGUCHJ8kUN3g7a1PNtBfcFWYl4eATST7aa5eXxTTrlh2bdGF22is
-zHlyW1GJ8hRkj6ocnWBOfTlnIre5NCTaEPlOAp14GN8lR9feMv7v3GGcf7o5i28O
-HpFnk/ci7/U0IhvxXah/Ub2NLCzy/nqC6QfYF2PvPqSeI0hlqmPkDRjtKJp5TBms
-2yO83/L31JXdz9/SleB5U6seraJPNx4/PTodrL8AZEWiFdZ7tsTs4VXnlaNrxU/J
-RlKztRtEzsXpmgznnmRJ3LxizgrBnZraAzKfduhihKwRyVJOb/1IEaLcqDLYuP6I
-ItNCpazybAG6yxd4PBXmyN8SsmRUghodorRCs1uQ4l3mDirM0lQyILmilz1aM5Va
-nNqFx99Bin9loQJaesWBiImPauNBxDffua/Z/9eo25HwAlO5+YpNMra2wvxR7ush
-er63/jQMb4oC2uPEvp4f
-=cChj
+iQIcBAEBAgAGBQJQ3IYfAAoJELSic+t+oim9i1YP/0MWECJRiBQq4pBJ/mNCbesb
+yjHlCxe3r9Jq2lCNK6QSKkfL/TYbPHpiDRDU1dJdPrMykBSeRhyLBCdeOE5d25EY
+TLIh/PBXSX5c23UVXhczusOvnFR/D2ypS+u00JmODpimFftEFH2oWCWtRb3XIrv+
+wgzGvxWq3iCm5b+yuC0cq+f5WJJGOTXlDxXlcU1qFB5uNa0Pa4fqUagY96/ZHiez
+Vo0MOQsctXlfEh0p/hkvf++Kpl0KxeqWFc/KdAJmRGQ3VTjqEBdPIi6HnsWjA1xn
+xVp9zQ1ku09tgvVB0m/ruwnNdCHZCF6XPIb4XaUWjvtLfwSOOaKNi0N4P52KwNM6
+k8xgc+qZvt37mBmUVV2kXtf/77NhbMHtThzxuSwKmWirpzXPBLmxopnqTamkq3Ge
+QuhjqXs2W6e1arl1tRbcHJxwS7084AUbPJhuXpT1i0Qd9REpQEk90fblVg6DeL3x
+4SH6RnkdIMAnquLwoRAwXmL9XxaY/08b2M9BoTcEdGv9KYudKHv+dgOYc19snm/I
+yU+Gl60chNA1RJElRYfv8gbabGKzPq+ewqvyBZNOx8GQazhwGlmzRp1S+ybco8FA
+mebcCKSu86bpN2XxdEZ5xPJ2Vei544kLYUj/SjmOoMJSQ4qRR8BB21Yfbmq4UKAe
+m2v/w/5tAQhYxReRzw2k
+=meFw
 -----END PGP SIGNATURE-----
 
---pY3vCvL1qV+PayAL--
+--UlxN1C6awaFNesUv--
