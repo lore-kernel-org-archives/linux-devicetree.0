@@ -1,73 +1,67 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: [PATCH 6/6] of_spi: Initialize cs_gpios and cs_gpio with -EEXIST
-Date: Thu, 27 Dec 2012 13:10:47 +0100
-Message-ID: <1356610247-11491-7-git-send-email-andreas@gaisler.com>
-References: <1356610247-11491-1-git-send-email-andreas@gaisler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1356610247-11491-1-git-send-email-andreas@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net, linux-kernel@vger.kernel.org, software@gaisler.com
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V5 2/2] ASoC: SAMSUNG: Add DT support for i2s
+Date: Thu, 27 Dec 2012 16:48:18 +0000
+Message-ID: <20121227164818.GD5005@opensource.wolfsonmicro.com>
+References: <1355395373-22058-1-git-send-email-padma.v@samsung.com>
+ <1355395373-22058-3-git-send-email-padma.v@samsung.com>
+ <20121219132414.2CF653E0AD7@localhost>
+ <20121219170937.GV4985@opensource.wolfsonmicro.com>
+ <CAAgF-Bc3zSyhaMwSOy977PJ-PdtMfDXjFrTvpzETeHJAAQU3vQ@mail.gmail.com>
+ <008401cddfad$ae2d19e0$0a874da0$@samsung.com>
+ <CAAgF-BckOnct3gGgrxiG2W-D74sFmD=7HfBOqkj9HTc66ZPoiQ@mail.gmail.com>
+ <CAAgF-BdNwk=aB9PdOieb=t-WBmCvB5CWEYic44fc6WwhJUHGmw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pY3vCvL1qV+PayAL"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAgF-BdNwk=aB9PdOieb=t-WBmCvB5CWEYic44fc6WwhJUHGmw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padma Venkat <padma.kvr@gmail.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Padmavathi Venna <padma.v@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, jassisinghbrar@gmail.com, sbkim73@samsung.com, tiwai@suse.de, ben-linux@fluff.org, lrg@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Holes in the cs-gpios DT phandle list is supposed to mark that native
-chipselects is to be used. The value returned from of_get_named_gpio_flags in
-this case is -EEXIST. By initializing cs_gpios and cs_gpio with -EEXIST, this
-and only this errno will indicate to a spi controller driver that a native
-chipselect is to be used.
 
-Signed-off-by: Andreas Larsson <andreas@gaisler.com>
----
- drivers/spi/spi.c       |    4 ++--
- include/linux/spi/spi.h |    7 +++++--
- 2 files changed, 7 insertions(+), 4 deletions(-)
+--pY3vCvL1qV+PayAL
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 6f1b717..7494bad 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -334,7 +334,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
- 	spi->dev.parent = &master->dev;
- 	spi->dev.bus = &spi_bus_type;
- 	spi->dev.release = spidev_release;
--	spi->cs_gpio = -EINVAL;
-+	spi->cs_gpio = -EEXIST;
- 	device_initialize(&spi->dev);
- 	return spi;
- }
-@@ -1097,7 +1097,7 @@ static int of_spi_register_master(struct spi_master *master)
- 	}
- 
- 	for (i = 0; i < master->num_chipselect; i++)
--		cs[i] = -EINVAL;
-+		cs[i] = -EEXIST;
- 
- 	for (i = 0; i < nb; i++)
- 		cs[i] = of_get_named_gpio_flags(np, "cs-gpios", i, &flags[i]);
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 96b1055..0701882 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -58,7 +58,8 @@ extern struct bus_type spi_bus_type;
-  * @modalias: Name of the driver to use with this device, or an alias
-  *	for that name.  This appears in the sysfs "modalias" attribute
-  *	for driver coldplugging, and in uevents used for hotplugging
-- * @cs_gpio: Negative or gpio for chip select.
-+ * @cs_gpio: Negative or gpio for chip select.  Set to -EEXIST when chipselect
-+ *	should be handled natively by the controller driver
-  * @cs_gpio_flags: of_gpio_flags corresponding to cs_gpio
-  *
-  * A @spi_device is used to interchange data between an SPI slave
-@@ -262,7 +263,9 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
-  * @unprepare_transfer_hardware: there are currently no more messages on the
-  *	queue so the subsystem notifies the driver that it may relax the
-  *	hardware by issuing this call
-- * @cs_gpios: possible array of negative values or gpios for chip selects
-+ * @cs_gpios: possible array of negative values or gpios for chip selects.  A
-+ *	chipselect that should be handled natively by the controller driver is
-+ *	set to -EEXIST.
-  * @cs_gpio_flags: possible array of of_gpio_flags corresponding to cs_gpios
-  *
-  * Each SPI master controller can communicate with one or more @spi_device
--- 
-1.7.0.4
+On Wed, Dec 26, 2012 at 04:21:58PM +0530, Padma Venkat wrote:
+> Hi,
+>=20
+> On Mon, Dec 24, 2012 at 9:33 AM, Padma Venkat <padma.kvr@gmail.com> wrote:
+> > Hi,
+
+You should always delete irrelevant text from mails, it makes it much
+easier for people to find whatever content you've added.
+
+> >> I agree with using version here but we need some consensus about that.
+
+> Any suggestions on i2s compatible name or "samsung,i2s-v5" is okay?
+
+I think that's fine.
+
+--pY3vCvL1qV+PayAL
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ3HvLAAoJELSic+t+oim92OwQAIjnHDvG+xboxn0WBEj63k9/
+02LFbqpsexDFKcL2cyljmeSatnWyN66kTfQ+iTuq137VbivhB+LCiwIuGpZ3ChVk
+a6jM0LdFR5In+sc/Cg5lbsi8vMObnbHsqoY7aGmJnykZ/Rd1p6znQMBNAy5pe/2L
+FMd9OJF9J3B4+2h0nqrT2QGclbapblN2klqmbknB+RVawFVfnr9ZkB51XOcSH970
+owEYD6sKvt27HGUCHJ8kUN3g7a1PNtBfcFWYl4eATST7aa5eXxTTrlh2bdGF22is
+zHlyW1GJ8hRkj6ocnWBOfTlnIre5NCTaEPlOAp14GN8lR9feMv7v3GGcf7o5i28O
+HpFnk/ci7/U0IhvxXah/Ub2NLCzy/nqC6QfYF2PvPqSeI0hlqmPkDRjtKJp5TBms
+2yO83/L31JXdz9/SleB5U6seraJPNx4/PTodrL8AZEWiFdZ7tsTs4VXnlaNrxU/J
+RlKztRtEzsXpmgznnmRJ3LxizgrBnZraAzKfduhihKwRyVJOb/1IEaLcqDLYuP6I
+ItNCpazybAG6yxd4PBXmyN8SsmRUghodorRCs1uQ4l3mDirM0lQyILmilz1aM5Va
+nNqFx99Bin9loQJaesWBiImPauNBxDffua/Z/9eo25HwAlO5+YpNMra2wvxR7ush
+er63/jQMb4oC2uPEvp4f
+=cChj
+-----END PGP SIGNATURE-----
+
+--pY3vCvL1qV+PayAL--
