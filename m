@@ -1,64 +1,43 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V2 1/2] regulator: tps51632: add register property for
- regmap
-Date: Thu, 27 Dec 2012 17:32:33 +0000
-Message-ID: <20121227173233.GI5005@opensource.wolfsonmicro.com>
-References: <1356447960-6084-1-git-send-email-ldewangan@nvidia.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [PATCH v3 0/3] ARM: dts: omap: add dt data for MUSB
+Date: Thu, 27 Dec 2012 20:35:24 +0200
+Message-ID: <20121227183524.GB7097@blackmetal.musicnaut.iki.fi>
+References: <1348047128-25692-1-git-send-email-kishon@ti.com>
+ <505A8BAB.2020004@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UlxN1C6awaFNesUv"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1356447960-6084-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, lrg@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <505A8BAB.2020004@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---UlxN1C6awaFNesUv
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thu, Sep 20, 2012 at 05:21:15AM +0200, Benoit Cousson wrote:
+> On 09/19/2012 11:32 AM, Kishon Vijay Abraham I wrote:
+> > This patch series adds dt data to get MUSB working in omap4 and omap3
+> > 
+> > Changes from v2:
+> > * Changes the subject of all the patches to include "ARM: dts:"
+> > * Added reg property and interrupt property for "usb_otg_hs". Previously these
+> >   were obtained from ti,hwmods property.
+> > * Rebased on
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git devel-dt
+> > 
+> > Changes from v1:
+> > Just removed the omap-usb2 dt data and sent that as a separate patch.
+> > 
+> > Kishon Vijay Abraham I (3):
+> >   ARM: dts: Add twl6030-usb data
+> >   ARM: dts: Add twl4030-usb data
+> >   ARM: dts: omap: Add usb_otg and glue data
+> 
+> Thanks for the update. I've just pulled the series for 3.7.
 
-On Tue, Dec 25, 2012 at 08:35:59PM +0530, Laxman Dewangan wrote:
-> All TPS51632 registers are not readable/writable and
-> non-volatiles.
+I wonder what happened to the patch #3 (Add usb_otg and glue data)
+of this series? Why was it dropped? I cannot see it in 3.7 or 3.8-rc1.
 
-Applied both, thanks, but you might wish to consider...
-
-> +static bool is_read_reg(struct device *dev, unsigned int reg)
-> +{
-> +	switch (reg) {
-> +	case 0x08 ... 0x0F:
-> +		return false;
-> +	default:
-> +		return true;
-> +	}
-> +}
-
-...using the new table based stuff for the access checks, at least this
-one seems to map on nicely.
-
---UlxN1C6awaFNesUv
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQ3IYfAAoJELSic+t+oim9i1YP/0MWECJRiBQq4pBJ/mNCbesb
-yjHlCxe3r9Jq2lCNK6QSKkfL/TYbPHpiDRDU1dJdPrMykBSeRhyLBCdeOE5d25EY
-TLIh/PBXSX5c23UVXhczusOvnFR/D2ypS+u00JmODpimFftEFH2oWCWtRb3XIrv+
-wgzGvxWq3iCm5b+yuC0cq+f5WJJGOTXlDxXlcU1qFB5uNa0Pa4fqUagY96/ZHiez
-Vo0MOQsctXlfEh0p/hkvf++Kpl0KxeqWFc/KdAJmRGQ3VTjqEBdPIi6HnsWjA1xn
-xVp9zQ1ku09tgvVB0m/ruwnNdCHZCF6XPIb4XaUWjvtLfwSOOaKNi0N4P52KwNM6
-k8xgc+qZvt37mBmUVV2kXtf/77NhbMHtThzxuSwKmWirpzXPBLmxopnqTamkq3Ge
-QuhjqXs2W6e1arl1tRbcHJxwS7084AUbPJhuXpT1i0Qd9REpQEk90fblVg6DeL3x
-4SH6RnkdIMAnquLwoRAwXmL9XxaY/08b2M9BoTcEdGv9KYudKHv+dgOYc19snm/I
-yU+Gl60chNA1RJElRYfv8gbabGKzPq+ewqvyBZNOx8GQazhwGlmzRp1S+ybco8FA
-mebcCKSu86bpN2XxdEZ5xPJ2Vei544kLYUj/SjmOoMJSQ4qRR8BB21Yfbmq4UKAe
-m2v/w/5tAQhYxReRzw2k
-=meFw
------END PGP SIGNATURE-----
-
---UlxN1C6awaFNesUv--
+A.
