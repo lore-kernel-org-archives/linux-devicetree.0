@@ -1,7 +1,7 @@
 From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 3/4] mfd: tps65090: Pass irq domain when adding mfd sub devices
-Date: Fri, 28 Dec 2012 14:59:40 +0530
-Message-ID: <1356686981-4152-4-git-send-email-ldewangan@nvidia.com>
+Subject: [PATCH 4/4] mfd: tps65090: remove suspend/resume callbacks
+Date: Fri, 28 Dec 2012 14:59:41 +0530
+Message-ID: <1356686981-4152-5-git-send-email-ldewangan@nvidia.com>
 References: <1356686981-4152-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,31 +22,62 @@ To: broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, sameo-
 Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, lrg-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-When device is get added through DT then irq_base is 0 (zero)
-and in this case regmap_irq_chip_get_base() generates warning.
-The interrupt of this device get added through irq_domain_add_linear()
-when irq_base is 0.
+The tps65090 mfd driver implement the suspend/resume callbacks
+which just disable and enable irqs in suspend/resume respectively.
 
-Hence pass the irq domain in place of base_irq when calling
-mfd_add_devices().
+This operation is already done in irq suspend and irq_resume and
+hence it is not require to implement the same in the driver.
+
+Remove this non-require code.
 
 Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/mfd/tps65090.c |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+This change is based on Mark Brown's comment when reviewing tps80031 mfd driver
+as we do not need suspend/resume just for disabling/enabling interrupts.
+
+ drivers/mfd/tps65090.c |   23 -----------------------
+ 1 files changed, 0 insertions(+), 23 deletions(-)
 
 diff --git a/drivers/mfd/tps65090.c b/drivers/mfd/tps65090.c
-index e4cf030..3e987be 100644
+index 3e987be..995e7b3 100644
 --- a/drivers/mfd/tps65090.c
 +++ b/drivers/mfd/tps65090.c
-@@ -236,7 +236,7 @@ static int tps65090_i2c_probe(struct i2c_client *client,
+@@ -262,28 +262,6 @@ static int tps65090_i2c_remove(struct i2c_client *client)
+ 	return 0;
+ }
  
- 	ret = mfd_add_devices(tps65090->dev, -1, tps65090s,
- 		ARRAY_SIZE(tps65090s), NULL,
--		regmap_irq_chip_get_base(tps65090->irq_data), NULL);
-+		0, regmap_irq_get_domain(tps65090->irq_data));
- 	if (ret) {
- 		dev_err(&client->dev, "add mfd devices failed with err: %d\n",
- 			ret);
+-#ifdef CONFIG_PM_SLEEP
+-static int tps65090_suspend(struct device *dev)
+-{
+-	struct i2c_client *client = to_i2c_client(dev);
+-	if (client->irq)
+-		disable_irq(client->irq);
+-	return 0;
+-}
+-
+-static int tps65090_resume(struct device *dev)
+-{
+-	struct i2c_client *client = to_i2c_client(dev);
+-	if (client->irq)
+-		enable_irq(client->irq);
+-	return 0;
+-}
+-#endif
+-
+-static const struct dev_pm_ops tps65090_pm_ops = {
+-	SET_SYSTEM_SLEEP_PM_OPS(tps65090_suspend, tps65090_resume)
+-};
+-
+ static const struct i2c_device_id tps65090_id_table[] = {
+ 	{ "tps65090", 0 },
+ 	{ },
+@@ -295,7 +273,6 @@ static struct i2c_driver tps65090_driver = {
+ 		.name	= "tps65090",
+ 		.owner	= THIS_MODULE,
+ 		.of_match_table = of_match_ptr(tps65090_of_match),
+-		.pm	= &tps65090_pm_ops,
+ 	},
+ 	.probe		= tps65090_i2c_probe,
+ 	.remove		= tps65090_i2c_remove,
 -- 
 1.7.1.1
