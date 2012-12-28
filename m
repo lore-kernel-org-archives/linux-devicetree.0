@@ -1,83 +1,50 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 4/4] mfd: tps65090: remove suspend/resume callbacks
-Date: Fri, 28 Dec 2012 14:59:41 +0530
-Message-ID: <1356686981-4152-5-git-send-email-ldewangan@nvidia.com>
-References: <1356686981-4152-1-git-send-email-ldewangan@nvidia.com>
+From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/6] of: Return -ENXIO from of_parse_phandle_with_args
+	for too large index and return errors from of_gpio_named_count
+Date: Fri, 28 Dec 2012 12:02:54 +0100
+Message-ID: <50DD7C5E.4080007@gaisler.com>
+References: <1356610247-11491-1-git-send-email-andreas@gaisler.com>
+	<1356610247-11491-3-git-send-email-andreas@gaisler.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1356686981-4152-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, lrg-l0cyMroinI0@public.gmane.org
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1356610247-11491-3-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The tps65090 mfd driver implement the suspend/resume callbacks
-which just disable and enable irqs in suspend/resume respectively.
+On 2012-12-27 13:10, Andreas Larsson wrote:
+> This lets of_gpio_named_count return an errno on errors by being able to
+> distinguish between reaching the end of the phandle list and getting some other
+> error from of_parse_phandle_with_args.
+>
+> Return error from of_spi_register_master when there is an "cs-gpios" list for
+> which gp_gpio_named_count fails.
+>
+> Adjust drivers/hwmon/gpio-fan.c to cope with error return.
+>
+> Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
 
-This operation is already done in irq suspend and irq_resume and
-hence it is not require to implement the same in the driver.
+The callers of of_gpio_count of course also needs to handle errno 
+returns. I'll take care of that in V2 of the patch-set. But I'll wait 
+for more comments on the patch set before sending V2 unless someone insists.
 
-Remove this non-require code.
+Cheers,
+Andreas
 
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-This change is based on Mark Brown's comment when reviewing tps80031 mfd driver
-as we do not need suspend/resume just for disabling/enabling interrupts.
 
- drivers/mfd/tps65090.c |   23 -----------------------
- 1 files changed, 0 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/mfd/tps65090.c b/drivers/mfd/tps65090.c
-index 3e987be..995e7b3 100644
---- a/drivers/mfd/tps65090.c
-+++ b/drivers/mfd/tps65090.c
-@@ -262,28 +262,6 @@ static int tps65090_i2c_remove(struct i2c_client *client)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int tps65090_suspend(struct device *dev)
--{
--	struct i2c_client *client = to_i2c_client(dev);
--	if (client->irq)
--		disable_irq(client->irq);
--	return 0;
--}
--
--static int tps65090_resume(struct device *dev)
--{
--	struct i2c_client *client = to_i2c_client(dev);
--	if (client->irq)
--		enable_irq(client->irq);
--	return 0;
--}
--#endif
--
--static const struct dev_pm_ops tps65090_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(tps65090_suspend, tps65090_resume)
--};
--
- static const struct i2c_device_id tps65090_id_table[] = {
- 	{ "tps65090", 0 },
- 	{ },
-@@ -295,7 +273,6 @@ static struct i2c_driver tps65090_driver = {
- 		.name	= "tps65090",
- 		.owner	= THIS_MODULE,
- 		.of_match_table = of_match_ptr(tps65090_of_match),
--		.pm	= &tps65090_pm_ops,
- 	},
- 	.probe		= tps65090_i2c_probe,
- 	.remove		= tps65090_i2c_remove,
--- 
-1.7.1.1
+------------------------------------------------------------------------------
+Master HTML5, CSS3, ASP.NET, MVC, AJAX, Knockout.js, Web API and
+much more. Get web development skills now with LearnDevNow -
+350+ hours of step-by-step video tutorials by Microsoft MVPs and experts.
+SALE $99.99 this month only -- learn more at:
+http://p.sf.net/sfu/learnmore_122812
