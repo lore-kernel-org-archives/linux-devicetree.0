@@ -1,16 +1,17 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 Subject: Re: [PATCH] cpuidle: kirkwood: Move out of mach directory, add DT.
-Date: Fri, 28 Dec 2012 10:59:05 -0600
-Message-ID: <50DDCFD9.6080307@gmail.com>
+Date: Fri, 28 Dec 2012 18:28:07 +0100
+Message-ID: <20121228172807.GA7578@lunn.ch>
 References: <1356698844-4220-1-git-send-email-andrew@lunn.ch>
  <50DDAA42.2020101@gmail.com> <20121228143517.GA5172@lunn.ch>
  <50DDB2E3.103@gmail.com> <20121228154927.GC5172@lunn.ch>
- <50DDC54A.3020509@gmail.com> <20121228163815.GD5172@lunn.ch>
+ <50DDC54A.3020509@gmail.com> <50DDCF47.1030305@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121228163815.GD5172-g2DYL2Zd6BY@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <50DDCF47.1030305-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,65 +22,35 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/28/2012 10:38 AM, Andrew Lunn wrote:
->>> The block of registers is for controlling the SDRAM. Its not really a
->>> MFD. The cpuidle code is putting the SDRAM controller into self
->>> refresh mode and then doing a WFI.
->>
->> It is multi-function in the sense that multiple subsystems needing to
->> access shared registers. If you have ECC, then you would need to give
->> EDAC subsystem access to ECC related registers.
+> Putting DDR/SDRAM into self refresh means, you no longer have RAM
+> available to execute and any code CPU needs to execute after that has
+> to be executed either from lock down cache with no cache evictions or
+> from some internal on chip memory with caches disabled to avoid accesses
+> to DDR. Not sure how below code works if the first writel puts DDR into
+> self refresh. Is cpu_do_idle() code copied to some internal memory ?
 > 
-> There is no ECC. Data sheet specifically says its not supported.
+> +	writel(0x7, ddr_operation_base);
+> +	cpu_do_idle();
+> 
+> May be I am missing something but i have worked on such a code for OMAP3
+> kind of devices and seen major issues with DDR self refresh and CPU
+> entering into idle state.
 
-That was only an example.
+Quoting the datasheet:
 
-> Currently, there are no other users of the SDRAM controller than
-> cpuidle. Linux is not touching the configuration, so i assume early
-> boot code in u-boot is setting up the controller.
-> 
->>>>> I could just hard code the address, since its the same for all
->>>>> kirkwood SoCs. Also, the register is not being used by any other
->>>>> code on kirkwood, so its not shared.
->>>>
->>>> Then describe it based on the reference manual, but you need to do so
->>>> assuming you are using all the other registers. I assume there are other
->>>> registers at say 0x1414 or 0x141c. You have to be careful if you create
->>>> separate nodes for each register or sub-group of registers. It needs to
->>>> work no matter what the OS expectation is.
->>>
->>> I don't understand what you are try to explain here. It makes little
->>> sense for the cpuidle driver to take all the SDRAM control registers.
->>
->> Exactly. The same is true of the dts. It makes little sense to describe
->> only 1 register of a h/w block. Perhaps the memory controller subsystem
->> (drivers/memory) can be expanded to include self-refresh functions.
->> Entering self-refresh can be tricky, so it might not really be possible
->> to define a common api here.
-> 
-> For kirkwood it is easy. Poke 0x7 into the register and then WFI.
-> 
-> However, since there are no other users of the SDRAM controller, it
-> seems overkill to implement a drivers/memory driver, or a MFD driver,
-> for just one register.
-> 
-> So maybe i just end up hard coding the register address in the driver?
+  To place the SDRAM into self refresh set the <Cmd> field in the
+  SDRAM Operation Register (Table 174 p. 400) to 0x7. The SDRAM
+  controller waits for 256 cycles and then generates a self refresh
+  command to SDRAM, and clears the SDRAM Operation register.
 
-You could just define the memory controller node and use it directly by
-cpuidle for now. If or when you need to support multiple users, then the
-kernel can be updated to have some intermediate MFD or memory controller
-driver. You just don't want to be changing the DTS when that happens.
-Hardcoding it is what we have now, so it's not any worse and would be
-acceptable.
+I assume we always manage to execute the WFI within these 256 cycles.
 
-Rob
+There is also some text about handling new pending transactions, so
+even if it does not WFI, e.g. because of an interrupts, it seems to do
+the right thing.
 
-> 
-> 	Thanks
-> 
-> 		Andrew
-> 
+    Andrew
