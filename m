@@ -1,57 +1,84 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH] ARM: dts: omap3-igep: Add fixed always-on regulators to common dtsi file
-Date: Sat, 29 Dec 2012 18:04:44 -0300
-Message-ID: <1356815084-6943-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
-Cc: Ezequiel Garcia <elezegarcia@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH] ARM: dts: add board dts file for EXYNOS4412 based Origen board
+Date: Sat, 29 Dec 2012 15:04:52 -0800
+Message-ID: <1356822292-26465-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-These regulators are common to igep0020 and igep0030 boards
-and are needed by smsc911x controller.
+Add a minimal board dts file for EXYNOS4412 based Insignal Origen board.
 
-Cc: Beno=C3=AEt Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Enric Balletbo i Serra <eballetbo@gmail.com>
-Cc: Javier Martinez Canillas <javier@dowhile0.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
 ---
- arch/arm/boot/dts/omap3-igep.dtsi |   12 ++++++++++++
- 1 files changed, 12 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/Makefile              |    1 +
+ arch/arm/boot/dts/exynos4412-origen.dts |   45 +++++++++++++++++++++++++++++++
+ 2 files changed, 46 insertions(+), 0 deletions(-)
+ create mode 100644 arch/arm/boot/dts/exynos4412-origen.dts
 
-diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap=
-3-igep.dtsi
-index dd01c46..91a42ce 100644
---- a/arch/arm/boot/dts/omap3-igep.dtsi
-+++ b/arch/arm/boot/dts/omap3-igep.dtsi
-@@ -24,6 +24,18 @@
- 		ti,mcbsp =3D <&mcbsp2>;
- 		ti,codec =3D <&twl_audio>;
- 	};
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e44da40..c84f9f7 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -43,6 +43,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
+ 	exynos4210-smdkv310.dtb \
+ 	exynos4210-trats.dtb \
+ 	exynos4412-smdk4412.dtb \
++	exynos4412-origen.dtb \
+ 	exynos5250-smdk5250.dtb \
+ 	exynos5250-snow.dtb \
+ 	exynos5440-ssdk5440.dtb
+diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+new file mode 100644
+index 0000000..df880c4
+--- /dev/null
++++ b/arch/arm/boot/dts/exynos4412-origen.dts
+@@ -0,0 +1,45 @@
++/*
++ * Insignal's Exynos4412 based Origen board device tree source
++ *
++ * Copyright (c) 2012-2013 Samsung Electronics Co., Ltd.
++ *		http://www.samsung.com
++ *
++ * Device tree source file for Insignal's Origen board which is based on
++ * Samsung's Exynos4412 SoC.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++*/
 +
-+        vddvario: regulator-vddvario {
-+                compatible =3D "regulator-fixed";
-+                regulator-name =3D "vddvario";
-+                regulator-always-on;
-+        };
++/dts-v1/;
++/include/ "exynos4412.dtsi"
 +
-+        vdd33a: regulator-vdd33a {
-+                compatible =3D "regulator-fixed";
-+                regulator-name =3D "vdd33a";
-+                regulator-always-on;
-+        };
- };
-=20
- &omap3_pmx_core {
---=20
-1.7.8.6
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
++/ {
++	model = "Insignal Origen evaluation board based on Exynos4412";
++	compatible = "insignal,origen4412", "samsung,exynos4412";
++
++	memory {
++		reg = <0x40000000 0x40000000>;
++	};
++
++	chosen {
++		bootargs ="console=ttySAC2,115200";
++	};
++
++	serial@13800000 {
++		status = "okay";
++	};
++
++	serial@13810000 {
++		status = "okay";
++	};
++
++	serial@13820000 {
++		status = "okay";
++	};
++
++	serial@13830000 {
++		status = "okay";
++	};
++};
+-- 
+1.7.5.4
