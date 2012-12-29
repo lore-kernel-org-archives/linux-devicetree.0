@@ -1,56 +1,57 @@
-From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v3 0/5] ARM: Exynos: Enable device tree support for MCT
- controller
-Date: Sat, 29 Dec 2012 12:50:33 -0800
-Message-ID: <1356814238-23895-1-git-send-email-thomas.abraham@linaro.org>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: [PATCH] ARM: dts: omap3-igep: Add fixed always-on regulators to common dtsi file
+Date: Sat, 29 Dec 2012 18:04:44 -0300
+Message-ID: <1356815084-6943-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, chaos.youn-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Cc: Ezequiel Garcia <elezegarcia@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Javier Martinez Canillas <javier@dowhile0.org>
 List-Id: devicetree@vger.kernel.org
 
-Changes since v2:
-- Rebased to linux 3.8-rc1
+These regulators are common to igep0020 and igep0030 boards
+and are needed by smsc911x controller.
 
-Changes since v1:
-- Includes changes suggested by Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Beno=C3=AEt Cousson <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>
+Cc: Enric Balletbo i Serra <eballetbo@gmail.com>
+Cc: Javier Martinez Canillas <javier@dowhile0.org>
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+---
+ arch/arm/boot/dts/omap3-igep.dtsi |   12 ++++++++++++
+ 1 files changed, 12 insertions(+), 0 deletions(-)
 
-This patch series adds device tree support for Exynos4/5 MCT controller.
-This patch series has been tested on Exynos4210 based Origen board, Exynos4412
-based Origen board and Exynos5250 based SMDK board.
+diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap=
+3-igep.dtsi
+index dd01c46..91a42ce 100644
+--- a/arch/arm/boot/dts/omap3-igep.dtsi
++++ b/arch/arm/boot/dts/omap3-igep.dtsi
+@@ -24,6 +24,18 @@
+ 		ti,mcbsp =3D <&mcbsp2>;
+ 		ti,codec =3D <&twl_audio>;
+ 	};
++
++        vddvario: regulator-vddvario {
++                compatible =3D "regulator-fixed";
++                regulator-name =3D "vddvario";
++                regulator-always-on;
++        };
++
++        vdd33a: regulator-vdd33a {
++                compatible =3D "regulator-fixed";
++                regulator-name =3D "vdd33a";
++                regulator-always-on;
++        };
+ };
+=20
+ &omap3_pmx_core {
+--=20
+1.7.8.6
 
-Thomas Abraham (5):
-  ARM: Exynos: add a register base address variable in mct controller driver
-  ARM: Exynos: prepare an array of MCT interrupt numbers and use it
-  ARM: Exynos: add device tree support for MCT controller driver
-  ARM: Exynos: remove static io-remapping of mct registers for Exynos5
-  ARM: dts: add mct device tree node for all supported Exynos SoC's
-
- .../bindings/timer/samsung,exynos4210-mct.txt      |   69 ++++++++
- arch/arm/boot/dts/exynos4210.dtsi                  |    8 +
- arch/arm/boot/dts/exynos4212.dtsi                  |   10 +
- arch/arm/boot/dts/exynos4412.dtsi                  |    8 +
- arch/arm/boot/dts/exynos5250.dtsi                  |   21 +++
- arch/arm/mach-exynos/common.c                      |    5 -
- arch/arm/mach-exynos/include/mach/irqs.h           |    6 -
- arch/arm/mach-exynos/include/mach/map.h            |    1 -
- arch/arm/mach-exynos/include/mach/regs-mct.h       |   53 ------
- arch/arm/mach-exynos/mct.c                         |  175 +++++++++++++-------
- 10 files changed, 232 insertions(+), 124 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
- delete mode 100644 arch/arm/mach-exynos/include/mach/regs-mct.h
-
--- 
-1.7.5.4
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
