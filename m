@@ -1,39 +1,57 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH 1/2] ARM: shmobile: add function declarations for sh7372 DT
- helper functions
-Date: Mon, 31 Dec 2012 12:23:50 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1212311213510.24596@axis700.grange>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH] ARM: dts: omap3-igep: Add fixed always-on regulators to
+ common dtsi file
+Date: Mon, 31 Dec 2012 13:52:14 +0100
+Message-ID: <CABxcv=mpL6=6AvZCwQfcH+sFQXTLEc7mcsXEK_3e8KqDeNhvHw@mail.gmail.com>
+References: <1356815084-6943-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1356815084-6943-1-git-send-email-ezequiel.garcia@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: Ezequiel Garcia <elezegarcia@gmail.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Enric Balletbo i Serra <eballetbo@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-sh7372_add_early_devices_dt() and sh7372_add_standard_devices_dt() are
-defined as global functions in arch/arm/mach-shmobile/setup-sh7372.c,
-but their declarations are missing. Add them to common.h, where similar
-functions for this and other SoC types are already declared.
-
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
----
- arch/arm/mach-shmobile/include/mach/common.h |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/mach-shmobile/include/mach/common.h b/arch/arm/mach-shmobile/include/mach/common.h
-index 7e08fa5..abce184 100644
---- a/arch/arm/mach-shmobile/include/mach/common.h
-+++ b/arch/arm/mach-shmobile/include/mach/common.h
-@@ -23,6 +23,8 @@ extern void sh7372_init_irq(void);
- extern void sh7372_map_io(void);
- extern void sh7372_add_early_devices(void);
- extern void sh7372_add_standard_devices(void);
-+extern void sh7372_add_early_devices_dt(void);
-+extern void sh7372_add_standard_devices_dt(void);
- extern void sh7372_clock_init(void);
- extern void sh7372_pinmux_init(void);
- extern void sh7372_pm_init(void);
--- 
-1.7.2.5
-
+T24gU2F0LCBEZWMgMjksIDIwMTIgYXQgMTA6MDQgUE0sIEV6ZXF1aWVsIEdhcmNpYQo8ZXplcXVp
+ZWwuZ2FyY2lhQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4gVGhlc2UgcmVndWxhdG9ycyBh
+cmUgY29tbW9uIHRvIGlnZXAwMDIwIGFuZCBpZ2VwMDAzMCBib2FyZHMKPiBhbmQgYXJlIG5lZWRl
+ZCBieSBzbXNjOTExeCBjb250cm9sbGVyLgo+Cj4gQ2M6IEJlbm/DrnQgQ291c3NvbiA8Yi1jb3Vz
+c29uQHRpLmNvbT4KPiBDYzogVG9ueSBMaW5kZ3JlbiA8dG9ueUBhdG9taWRlLmNvbT4KPiBDYzog
+RW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSA8ZWJhbGxldGJvQGdtYWlsLmNvbT4KPiBDYzogSmF2aWVy
+IE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXJAZG93aGlsZTAub3JnPgo+IFNpZ25lZC1vZmYtYnk6
+IEV6ZXF1aWVsIEdhcmNpYSA8ZXplcXVpZWwuZ2FyY2lhQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiAt
+LS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtaWdlcC5kdHNpIHwgICAxMiArKysrKysrKysr
+KysKPiAgMSBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+
+Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWlnZXAuZHRzaSBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL29tYXAzLWlnZXAuZHRzaQo+IGluZGV4IGRkMDFjNDYuLjkxYTQyY2UgMTAw
+NjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtaWdlcC5kdHNpCj4gKysrIGIvYXJj
+aC9hcm0vYm9vdC9kdHMvb21hcDMtaWdlcC5kdHNpCj4gQEAgLTI0LDYgKzI0LDE4IEBACj4gICAg
+ICAgICAgICAgICAgIHRpLG1jYnNwID0gPCZtY2JzcDI+Owo+ICAgICAgICAgICAgICAgICB0aSxj
+b2RlYyA9IDwmdHdsX2F1ZGlvPjsKPiAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgIHZkZHZhcmlv
+OiByZWd1bGF0b3ItdmRkdmFyaW8gewo+ICsgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJy
+ZWd1bGF0b3ItZml4ZWQiOwo+ICsgICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAidmRk
+dmFyaW8iOwo+ICsgICAgICAgICAgICAgICAgcmVndWxhdG9yLWFsd2F5cy1vbjsKPiArICAgICAg
+ICB9Owo+ICsKPiArICAgICAgICB2ZGQzM2E6IHJlZ3VsYXRvci12ZGQzM2Egewo+ICsgICAgICAg
+ICAgICAgICAgY29tcGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwo+ICsgICAgICAgICAgICAg
+ICAgcmVndWxhdG9yLW5hbWUgPSAidmRkMzNhIjsKPiArICAgICAgICAgICAgICAgIHJlZ3VsYXRv
+ci1hbHdheXMtb247Cj4gKyAgICAgICAgfTsKPiAgfTsKPgo+ICAmb21hcDNfcG14X2NvcmUgewoK
+SGkgRXplcXVpZWwsCgpUaGlzIHNob3VsZG4ndCBiZSBkZWZpbmVkIG9uIHRoZSBnZW5lcmljIG9t
+YXAzLWlnZXAuZHRzaSBidXQgb24Kb21hcDMtaWdlcDAwMjAuZHRzIHNpbmNlIHRoZSBJR0VQIENP
+TSBNb2R1bGUgZG9lc24ndCBoYXZlIHRoZSBMQU4KU01TQzkyMjEgY2hpcCB3aGljaCBpcyB0aGUg
+b25lIHVzaW5nIHRoZXNlIHJlZ3VsYXRvcnMuCgpPdGhlcndpc2UsIHRoZSBwYXRjaCBsb29rcyBn
+b29kIHRvIG1lIGFuZCBJIHRoaW5rIGl0IGhhcyB0byBiZSBwYXJ0IG9mCnRoZSBzZXJpZXMgdGhh
+dCBhZGQgU01TQzkyMjEgc3VwcG9ydCBmb3IgSUdFUHYyLgoKVGhhbmtzIGEgbG90IGFuZCBiZXN0
+IHJlZ2FyZHMsCkphdmllcgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
