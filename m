@@ -1,538 +1,370 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 8/8] ASoC: OMAP: Remove obsolete machine drivers for Zoom2 and SDP3430
-Date: Mon, 31 Dec 2012 11:51:49 +0100
-Message-ID: <1356951109-4286-9-git-send-email-peter.ujfalusi@ti.com>
-References: <1356951109-4286-1-git-send-email-peter.ujfalusi@ti.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [PATCH 2/2] ARM: shmobile: add a reference DT implementation for
+ mackerel
+Date: Mon, 31 Dec 2012 12:23:54 +0100 (CET)
+Message-ID: <Pine.LNX.4.64.1212311214370.24596@axis700.grange>
+References: <Pine.LNX.4.64.1212311213510.24596@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1356951109-4286-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Grant Likely <grant.likely@secretlab.ca>
-Cc: alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, NeilBrown <neilb@suse.de>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1212311213510.24596@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-sh@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-These boards are using the common omap-twl4030 machine driver, no need for
-separate machine drivers anymore.
+Add a DT-only mackerel implementation. So far it only contains a limited
+set of devices, already implementing DT support. As more drivers are
+extended with DT initialisation option, respective devices shall be added
+to sh7372-mackerel-reference.dts.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 ---
- sound/soc/omap/Kconfig   |  17 ----
- sound/soc/omap/Makefile  |   4 -
- sound/soc/omap/sdp3430.c | 245 -----------------------------------------------
- sound/soc/omap/zoom2.c   | 193 -------------------------------------
- 4 files changed, 459 deletions(-)
- delete mode 100644 sound/soc/omap/sdp3430.c
- delete mode 100644 sound/soc/omap/zoom2.c
 
-diff --git a/sound/soc/omap/Kconfig b/sound/soc/omap/Kconfig
-index e8d2a2f..60259f2 100644
---- a/sound/soc/omap/Kconfig
-+++ b/sound/soc/omap/Kconfig
-@@ -70,15 +70,6 @@ config SND_OMAP_SOC_AM3517EVM
- 	  Say Y if you want to add support for SoC audio on the OMAP3517 / AM3517
- 	  EVM.
+Some notes:
+
+1. since INTCS isn't currently supported, no peripherals, whose interrupts 
+are routed to it, can be used, e.g. I2C0, TMU.
+
+2. MMCIF and SDHI device nodes in .dts lack card-detect and write-protect 
+GPIOs because of missing pinctrl support on sh7372.
+
+3. on mackerel MMCIF and SDHI1 share one slot. A micro-switch is used to 
+switch between the two interfaces and a jumper can be used to switch 
+between 1.8 and 3.3V. This patch enables both interfaces simultaneously 
+and sets voltage on both of them to 1.8V. If desired, this can be changed 
+to specify 3.3V on the SDHI1 device and expect the used to switch the 
+jumper.
+
+4. patches are based on a recent (of 28.12) Linus' tree + shmobile patches 
+from
+
+http://git.kernel.org/?p=linux/kernel/git/horms/renesas.git;a=shortlog;h=refs/heads/devel/intc-of
+
+plus my earlier patch to add DT-specific clock lookup entries to 
+clock-sh7372.c, currently in -next:
+
+http://git.kernel.org/?p=linux/kernel/git/next/linux-next.git;a=commit;h=d5ffbe1dfdb7963d29cfbfa0f2d0e4becba32d5b
+
+ arch/arm/boot/dts/Makefile                        |    3 +-
+ arch/arm/boot/dts/sh7372-mackerel-reference.dts   |  131 +++++++++++++++++++++
+ arch/arm/mach-shmobile/Kconfig                    |    8 ++
+ arch/arm/mach-shmobile/Makefile                   |    1 +
+ arch/arm/mach-shmobile/board-mackerel-reference.c |  122 +++++++++++++++++++
+ 5 files changed, 264 insertions(+), 1 deletions(-)
+ create mode 100644 arch/arm/boot/dts/sh7372-mackerel-reference.dts
+ create mode 100644 arch/arm/mach-shmobile/board-mackerel-reference.c
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e44da40..7fb4696 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -123,7 +123,8 @@ dtb-$(CONFIG_ARCH_U8500) += snowball.dtb \
+ dtb-$(CONFIG_ARCH_SHMOBILE) += emev2-kzm9d.dtb \
+ 	r8a7740-armadillo800eva.dtb \
+ 	sh73a0-kzm9g.dtb \
+-	sh7372-mackerel.dtb
++	sh7372-mackerel.dtb \
++	sh7372-mackerel-reference.dtb
+ dtb-$(CONFIG_ARCH_SPEAR13XX) += spear1310-evb.dtb \
+ 	spear1340-evb.dtb
+ dtb-$(CONFIG_ARCH_SPEAR3XX)+= spear300-evb.dtb \
+diff --git a/arch/arm/boot/dts/sh7372-mackerel-reference.dts b/arch/arm/boot/dts/sh7372-mackerel-reference.dts
+new file mode 100644
+index 0000000..2fd1eff
+--- /dev/null
++++ b/arch/arm/boot/dts/sh7372-mackerel-reference.dts
+@@ -0,0 +1,131 @@
++/*
++ * Device Tree Source for the mackerel board
++ *
++ * Copyright (C) 2012 Renesas Solutions Corp.
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++
++/dts-v1/;
++/include/ "sh7372.dtsi"
++
++/ {
++	model = "Mackerel (AP4 EVM 2nd)";
++	compatible = "renesas,mackerel-reference";
++
++	memory {
++		device_type = "memory";
++		reg = <0x40000000 0x10000000>;
++	};
++
++	reg_1p8v: regulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "1P8V";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	reg_3p3v: regulator@1 {
++		compatible = "regulator-fixed";
++		regulator-name = "3P3V";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		regulator-boot-on;
++		regulator-always-on;
++	};
++
++	lan9220@14000000 {
++		compatible = "smsc,lan9220", "smsc,lan9115";
++		reg = <0x14000000 0x2000000>;
++		phy-mode = "mii";
++		interrupt-parent = <&intca_irq_pins_lo>;
++		interrupts = <0x2c0>;
++		reg-io-width = <4>;
++		smsc,irq-push-pull;
++		smsc,save-mac-address;
++		vddvario-supply = <&reg_1p8v>;
++		vdd33a-supply = <&reg_3p3v>;
++	};
++
++	i2c1: i2c@e6c20000 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "renesas,rmobile-iic";
++		reg = <0xe6c20000 0x1000>;
++		interrupt-parent = <&intca>;
++		interrupts = <0x780 0x7a0 0x7c0 0x7e0>;
++
++		clock-frequency = <100000>;
++
++		accelerometer@53 {
++			compatible = "analog-devices,adxl34x";
++			reg = <0x53>;
++			interrupt-parent = <&intca_irq_pins_hi>;
++			interrupts = <0x32a0>;
++		};
++	};
++
++	mmcif0: mmcif@0xe6bd0000 {
++		compatible = "renesas,sh-mmcif", "renesas,sh7372-mmcif";
++		reg = <0xe6bd0000 0x100>;
++		interrupt-parent = <&intca>;
++		interrupts = <0x1ac0 0x1ae0>;
++		vmmc-supply = <&reg_1p8v>;
++	};
++
++	sdhi0: sdhi@0xe6850000 {
++		compatible = "renesas,shmobile-sdhi";
++		reg = <0xe6850000 0x100>;
++		interrupt-parent = <&intca>;
++		interrupts = <0x0e00 0x0e20 0x0e40>;
++		vmmc-supply = <&reg_3p3v>;
++	};
++
++	sdhi1: sdhi@0xe6860000 {
++		compatible = "renesas,shmobile-sdhi";
++		reg = <0xe6860000 0x100>;
++		interrupt-parent = <&intca>;
++		interrupts = <0x0e80 0x0ea0 0x0ec0>;
++		vmmc-supply = <&reg_1p8v>;
++	};
++
++	sdhi2: sdhi@0xe6870000 {
++		compatible = "renesas,shmobile-sdhi";
++		reg = <0xe6870000 0x100>;
++		interrupt-parent = <&intca>;
++		interrupts = <0x1200 0x1220 0x1240>;
++		vmmc-supply = <&reg_3p3v>;
++	};
++
++	flash@2000000 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "cfi-flash";
++		reg = <0x20000000 0x8000000>;
++		bank-width = <2>;
++		partition@0 {
++			label = "loader";
++			reg = <0 0x80000>;
++		};
++		partition@1 {
++			label = "bootenv";
++			reg = <0x80000 0x80000>;
++		};
++		partition@2 {
++			label = "kernel_ro";
++			reg = <0x100000 0x800000>;
++		};
++		partition@3 {
++			label = "kernel";
++			reg = <0x900000 0x800000>;
++		};
++		partition@4 {
++			label = "data";
++			reg = <0x1100000 0x6f00000>;
++		};
++	};
++};
+diff --git a/arch/arm/mach-shmobile/Kconfig b/arch/arm/mach-shmobile/Kconfig
+index 9255546..c25784b 100644
+--- a/arch/arm/mach-shmobile/Kconfig
++++ b/arch/arm/mach-shmobile/Kconfig
+@@ -76,6 +76,14 @@ config MACH_MACKEREL
+ 	select SND_SOC_AK4642 if SND_SIMPLE_CARD
+ 	select USE_OF
  
--config SND_OMAP_SOC_SDP3430
--	tristate "SoC Audio support for Texas Instruments SDP3430"
--	depends on TWL4030_CORE && SND_OMAP_SOC && MACH_OMAP_3430SDP
--	select SND_OMAP_SOC_MCBSP
--	select SND_SOC_TWL4030
--	help
--	  Say Y if you want to add support for SoC audio on Texas Instruments
--	  SDP3430.
--
- config SND_OMAP_SOC_OMAP_TWL4030
- 	tristate "SoC Audio support for TI SoC based boards with twl4030 codec"
- 	depends on TWL4030_CORE && SND_OMAP_SOC
-@@ -125,11 +116,3 @@ config SND_OMAP_SOC_OMAP3_PANDORA
- 	select SND_SOC_TWL4030
- 	help
- 	  Say Y if you want to add support for SoC audio on the OMAP3 Pandora.
--
--config SND_OMAP_SOC_ZOOM2
--	tristate "SoC Audio support for Zoom2"
--	depends on TWL4030_CORE && SND_OMAP_SOC && MACH_OMAP_ZOOM2
--	select SND_OMAP_SOC_MCBSP
--	select SND_SOC_TWL4030
--	help
--	  Say Y if you want to add support for Soc audio on Zoom2 board.
-diff --git a/sound/soc/omap/Makefile b/sound/soc/omap/Makefile
-index 19637e5..2b22594 100644
---- a/sound/soc/omap/Makefile
-+++ b/sound/soc/omap/Makefile
-@@ -17,11 +17,9 @@ snd-soc-rx51-objs := rx51.o
- snd-soc-ams-delta-objs := ams-delta.o
- snd-soc-osk5912-objs := osk5912.o
- snd-soc-am3517evm-objs := am3517evm.o
--snd-soc-sdp3430-objs := sdp3430.o
- snd-soc-omap-abe-twl6040-objs := omap-abe-twl6040.o
- snd-soc-omap-twl4030-objs := omap-twl4030.o
- snd-soc-omap3pandora-objs := omap3pandora.o
--snd-soc-zoom2-objs := zoom2.o
- snd-soc-omap-hdmi-card-objs := omap-hdmi-card.o
- 
- obj-$(CONFIG_SND_OMAP_SOC_N810) += snd-soc-n810.o
-@@ -30,9 +28,7 @@ obj-$(CONFIG_SND_OMAP_SOC_AMS_DELTA) += snd-soc-ams-delta.o
- obj-$(CONFIG_SND_OMAP_SOC_OSK5912) += snd-soc-osk5912.o
- obj-$(CONFIG_SND_OMAP_SOC_OMAP2EVM) += snd-soc-omap2evm.o
- obj-$(CONFIG_SND_OMAP_SOC_AM3517EVM) += snd-soc-am3517evm.o
--obj-$(CONFIG_SND_OMAP_SOC_SDP3430) += snd-soc-sdp3430.o
- obj-$(CONFIG_SND_OMAP_SOC_OMAP_ABE_TWL6040) += snd-soc-omap-abe-twl6040.o
- obj-$(CONFIG_SND_OMAP_SOC_OMAP_TWL4030) += snd-soc-omap-twl4030.o
- obj-$(CONFIG_SND_OMAP_SOC_OMAP3_PANDORA) += snd-soc-omap3pandora.o
--obj-$(CONFIG_SND_OMAP_SOC_ZOOM2) += snd-soc-zoom2.o
- obj-$(CONFIG_SND_OMAP_SOC_OMAP_HDMI) += snd-soc-omap-hdmi-card.o
-diff --git a/sound/soc/omap/sdp3430.c b/sound/soc/omap/sdp3430.c
-deleted file mode 100644
-index 216cbdd..0000000
---- a/sound/soc/omap/sdp3430.c
-+++ /dev/null
-@@ -1,245 +0,0 @@
--/*
-- * sdp3430.c  --  SoC audio for TI OMAP3430 SDP
-- *
-- * Author: Misael Lopez Cruz <x0052729@ti.com>
-- *
-- * Based on:
-- * Author: Steve Sakoman <steve@sakoman.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-- */
--
--#include <linux/clk.h>
--#include <linux/platform_device.h>
--#include <sound/core.h>
--#include <sound/pcm.h>
--#include <sound/soc.h>
--#include <sound/jack.h>
--
--#include <asm/mach-types.h>
--#include <linux/platform_data/gpio-omap.h>
--
--#include <linux/module.h>
--
--#include "omap-mcbsp.h"
--#include "omap-pcm.h"
--
--static struct snd_soc_card snd_soc_sdp3430;
--
--static int sdp3430_hw_params(struct snd_pcm_substream *substream,
--	struct snd_pcm_hw_params *params)
--{
--	struct snd_soc_pcm_runtime *rtd = substream->private_data;
--	struct snd_soc_dai *codec_dai = rtd->codec_dai;
--	int ret;
--
--	/* Set the codec system clock for DAC and ADC */
--	ret = snd_soc_dai_set_sysclk(codec_dai, 0, 26000000,
--					    SND_SOC_CLOCK_IN);
--	if (ret < 0) {
--		printk(KERN_ERR "can't set codec system clock\n");
--		return ret;
--	}
--
--	return 0;
--}
--
--static struct snd_soc_ops sdp3430_ops = {
--	.hw_params = sdp3430_hw_params,
--};
--
--/* Headset jack */
--static struct snd_soc_jack hs_jack;
--
--/* Headset jack detection DAPM pins */
--static struct snd_soc_jack_pin hs_jack_pins[] = {
--	{
--		.pin = "Headset Mic",
--		.mask = SND_JACK_MICROPHONE,
--	},
--	{
--		.pin = "Headset Stereophone",
--		.mask = SND_JACK_HEADPHONE,
--	},
--};
--
--/* Headset jack detection gpios */
--static struct snd_soc_jack_gpio hs_jack_gpios[] = {
--	{
--		.gpio = (OMAP_MAX_GPIO_LINES + 2),
--		.name = "hsdet-gpio",
--		.report = SND_JACK_HEADSET,
--		.debounce_time = 200,
--	},
--};
--
--/* SDP3430 machine DAPM */
--static const struct snd_soc_dapm_widget sdp3430_twl4030_dapm_widgets[] = {
--	SND_SOC_DAPM_MIC("Ext Mic", NULL),
--	SND_SOC_DAPM_SPK("Ext Spk", NULL),
--	SND_SOC_DAPM_MIC("Headset Mic", NULL),
--	SND_SOC_DAPM_HP("Headset Stereophone", NULL),
--};
--
--static const struct snd_soc_dapm_route audio_map[] = {
--	/* External Mics: MAINMIC, SUBMIC with bias */
--	{"MAINMIC", NULL, "Ext Mic"},
--	{"SUBMIC", NULL, "Ext Mic"},
--	{"Ext Mic", NULL, "Mic Bias 1"},
--	{"Ext Mic", NULL, "Mic Bias 2"},
--
--	/* External Speakers: HFL, HFR */
--	{"Ext Spk", NULL, "HFL"},
--	{"Ext Spk", NULL, "HFR"},
--
--	/* Headset Mic: HSMIC with bias */
--	{"HSMIC", NULL, "Headset Mic"},
--	{"Headset Mic", NULL, "Headset Mic Bias"},
--
--	/* Headset Stereophone (Headphone): HSOL, HSOR */
--	{"Headset Stereophone", NULL, "HSOL"},
--	{"Headset Stereophone", NULL, "HSOR"},
--};
--
--static int sdp3430_twl4030_init(struct snd_soc_pcm_runtime *rtd)
--{
--	struct snd_soc_codec *codec = rtd->codec;
--	struct snd_soc_dapm_context *dapm = &codec->dapm;
--	int ret;
--
--	/* SDP3430 connected pins */
--	snd_soc_dapm_enable_pin(dapm, "Ext Mic");
--	snd_soc_dapm_enable_pin(dapm, "Ext Spk");
--	snd_soc_dapm_disable_pin(dapm, "Headset Mic");
--	snd_soc_dapm_disable_pin(dapm, "Headset Stereophone");
--
--	/* TWL4030 not connected pins */
--	snd_soc_dapm_nc_pin(dapm, "AUXL");
--	snd_soc_dapm_nc_pin(dapm, "AUXR");
--	snd_soc_dapm_nc_pin(dapm, "CARKITMIC");
--	snd_soc_dapm_nc_pin(dapm, "DIGIMIC0");
--	snd_soc_dapm_nc_pin(dapm, "DIGIMIC1");
--
--	snd_soc_dapm_nc_pin(dapm, "OUTL");
--	snd_soc_dapm_nc_pin(dapm, "OUTR");
--	snd_soc_dapm_nc_pin(dapm, "EARPIECE");
--	snd_soc_dapm_nc_pin(dapm, "PREDRIVEL");
--	snd_soc_dapm_nc_pin(dapm, "PREDRIVER");
--	snd_soc_dapm_nc_pin(dapm, "CARKITL");
--	snd_soc_dapm_nc_pin(dapm, "CARKITR");
--
--	/* Headset jack detection */
--	ret = snd_soc_jack_new(codec, "Headset Jack",
--				SND_JACK_HEADSET, &hs_jack);
--	if (ret)
--		return ret;
--
--	ret = snd_soc_jack_add_pins(&hs_jack, ARRAY_SIZE(hs_jack_pins),
--				hs_jack_pins);
--	if (ret)
--		return ret;
--
--	ret = snd_soc_jack_add_gpios(&hs_jack, ARRAY_SIZE(hs_jack_gpios),
--				hs_jack_gpios);
--
--	return ret;
--}
--
--/* Digital audio interface glue - connects codec <--> CPU */
--static struct snd_soc_dai_link sdp3430_dai[] = {
--	{
--		.name = "TWL4030 I2S",
--		.stream_name = "TWL4030 Audio",
--		.cpu_dai_name = "omap-mcbsp.2",
--		.codec_dai_name = "twl4030-hifi",
--		.platform_name = "omap-pcm-audio",
--		.codec_name = "twl4030-codec",
--		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
--			   SND_SOC_DAIFMT_CBM_CFM,
--		.init = sdp3430_twl4030_init,
--		.ops = &sdp3430_ops,
--	},
--	{
--		.name = "TWL4030 PCM",
--		.stream_name = "TWL4030 Voice",
--		.cpu_dai_name = "omap-mcbsp.3",
--		.codec_dai_name = "twl4030-voice",
--		.platform_name = "omap-pcm-audio",
--		.codec_name = "twl4030-codec",
--		.dai_fmt = SND_SOC_DAIFMT_DSP_A | SND_SOC_DAIFMT_IB_NF |
--			   SND_SOC_DAIFMT_CBM_CFM,
--		.ops = &sdp3430_ops,
--	},
--};
--
--/* Audio machine driver */
--static struct snd_soc_card snd_soc_sdp3430 = {
--	.name = "SDP3430",
--	.owner = THIS_MODULE,
--	.dai_link = sdp3430_dai,
--	.num_links = ARRAY_SIZE(sdp3430_dai),
--
--	.dapm_widgets = sdp3430_twl4030_dapm_widgets,
--	.num_dapm_widgets = ARRAY_SIZE(sdp3430_twl4030_dapm_widgets),
--	.dapm_routes = audio_map,
--	.num_dapm_routes = ARRAY_SIZE(audio_map),
--};
--
--static struct platform_device *sdp3430_snd_device;
--
--static int __init sdp3430_soc_init(void)
--{
--	int ret;
--
--	if (!machine_is_omap_3430sdp())
--		return -ENODEV;
--	printk(KERN_INFO "SDP3430 SoC init\n");
--
--	sdp3430_snd_device = platform_device_alloc("soc-audio", -1);
--	if (!sdp3430_snd_device) {
--		printk(KERN_ERR "Platform device allocation failed\n");
--		return -ENOMEM;
--	}
--
--	platform_set_drvdata(sdp3430_snd_device, &snd_soc_sdp3430);
--
--	ret = platform_device_add(sdp3430_snd_device);
--	if (ret)
--		goto err1;
--
--	return 0;
--
--err1:
--	printk(KERN_ERR "Unable to add platform device\n");
--	platform_device_put(sdp3430_snd_device);
--
--	return ret;
--}
--module_init(sdp3430_soc_init);
--
--static void __exit sdp3430_soc_exit(void)
--{
--	snd_soc_jack_free_gpios(&hs_jack, ARRAY_SIZE(hs_jack_gpios),
--				hs_jack_gpios);
--
--	platform_device_unregister(sdp3430_snd_device);
--}
--module_exit(sdp3430_soc_exit);
--
--MODULE_AUTHOR("Misael Lopez Cruz <x0052729@ti.com>");
--MODULE_DESCRIPTION("ALSA SoC SDP3430");
--MODULE_LICENSE("GPL");
--
-diff --git a/sound/soc/omap/zoom2.c b/sound/soc/omap/zoom2.c
-deleted file mode 100644
-index 62a6b02..0000000
---- a/sound/soc/omap/zoom2.c
-+++ /dev/null
-@@ -1,193 +0,0 @@
--/*
-- * zoom2.c  --  SoC audio for Zoom2
-- *
-- * Author: Misael Lopez Cruz <x0052729@ti.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License
-- * version 2 as published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful, but
-- * WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
-- * 02110-1301 USA
-- *
-- */
--
--#include <linux/clk.h>
--#include <linux/platform_device.h>
--#include <linux/gpio.h>
--#include <sound/core.h>
--#include <sound/pcm.h>
--#include <sound/soc.h>
--
--#include <asm/mach-types.h>
--#include <linux/platform_data/asoc-ti-mcbsp.h>
--#include <linux/platform_data/gpio-omap.h>
--
--/* Register descriptions for twl4030 codec part */
--#include <linux/mfd/twl4030-audio.h>
--#include <linux/module.h>
--
--#include "omap-mcbsp.h"
--#include "omap-pcm.h"
--
--static int zoom2_hw_params(struct snd_pcm_substream *substream,
--				struct snd_pcm_hw_params *params)
--{
--	struct snd_soc_pcm_runtime *rtd = substream->private_data;
--	struct snd_soc_dai *codec_dai = rtd->codec_dai;
--	int ret;
--
--	/* Set the codec system clock for DAC and ADC */
--	ret = snd_soc_dai_set_sysclk(codec_dai, 0, 26000000,
--					SND_SOC_CLOCK_IN);
--	if (ret < 0) {
--		printk(KERN_ERR "can't set codec system clock\n");
--		return ret;
--	}
--
--	return 0;
--}
--
--static struct snd_soc_ops zoom2_ops = {
--	.hw_params = zoom2_hw_params,
--};
--
--/* Zoom2 machine DAPM */
--static const struct snd_soc_dapm_widget zoom2_twl4030_dapm_widgets[] = {
--	SND_SOC_DAPM_MIC("Ext Mic", NULL),
--	SND_SOC_DAPM_SPK("Ext Spk", NULL),
--	SND_SOC_DAPM_MIC("Headset Mic", NULL),
--	SND_SOC_DAPM_HP("Headset Stereophone", NULL),
--	SND_SOC_DAPM_LINE("Aux In", NULL),
--};
--
--static const struct snd_soc_dapm_route audio_map[] = {
--	/* External Mics: MAINMIC, SUBMIC with bias */
--	{"MAINMIC", NULL, "Ext Mic"},
--	{"SUBMIC", NULL, "Ext Mic"},
--	{"Ext Mic", NULL, "Mic Bias 1"},
--	{"Ext Mic", NULL, "Mic Bias 2"},
--
--	/* External Speakers: HFL, HFR */
--	{"Ext Spk", NULL, "HFL"},
--	{"Ext Spk", NULL, "HFR"},
--
--	/* Headset Stereophone:  HSOL, HSOR */
--	{"Headset Stereophone", NULL, "HSOL"},
--	{"Headset Stereophone", NULL, "HSOR"},
--
--	/* Headset Mic: HSMIC with bias */
--	{"HSMIC", NULL, "Headset Mic"},
--	{"Headset Mic", NULL, "Headset Mic Bias"},
--
--	/* Aux In: AUXL, AUXR */
--	{"Aux In", NULL, "AUXL"},
--	{"Aux In", NULL, "AUXR"},
--};
--
--static int zoom2_twl4030_init(struct snd_soc_pcm_runtime *rtd)
--{
--	struct snd_soc_codec *codec = rtd->codec;
--	struct snd_soc_dapm_context *dapm = &codec->dapm;
--
--	/* TWL4030 not connected pins */
--	snd_soc_dapm_nc_pin(dapm, "CARKITMIC");
--	snd_soc_dapm_nc_pin(dapm, "DIGIMIC0");
--	snd_soc_dapm_nc_pin(dapm, "DIGIMIC1");
--	snd_soc_dapm_nc_pin(dapm, "EARPIECE");
--	snd_soc_dapm_nc_pin(dapm, "PREDRIVEL");
--	snd_soc_dapm_nc_pin(dapm, "PREDRIVER");
--	snd_soc_dapm_nc_pin(dapm, "CARKITL");
--	snd_soc_dapm_nc_pin(dapm, "CARKITR");
--
--	return 0;
--}
--
--/* Digital audio interface glue - connects codec <--> CPU */
--static struct snd_soc_dai_link zoom2_dai[] = {
--	{
--		.name = "TWL4030 I2S",
--		.stream_name = "TWL4030 Audio",
--		.cpu_dai_name = "omap-mcbsp.2",
--		.codec_dai_name = "twl4030-hifi",
--		.platform_name = "omap-pcm-audio",
--		.codec_name = "twl4030-codec",
--		.dai_fmt = SND_SOC_DAIFMT_I2S | SND_SOC_DAIFMT_NB_NF |
--			   SND_SOC_DAIFMT_CBM_CFM,
--		.init = zoom2_twl4030_init,
--		.ops = &zoom2_ops,
--	},
--	{
--		.name = "TWL4030 PCM",
--		.stream_name = "TWL4030 Voice",
--		.cpu_dai_name = "omap-mcbsp.3",
--		.codec_dai_name = "twl4030-voice",
--		.platform_name = "omap-pcm-audio",
--		.codec_name = "twl4030-codec",
--		.dai_fmt = SND_SOC_DAIFMT_DSP_A | SND_SOC_DAIFMT_IB_NF |
--			   SND_SOC_DAIFMT_CBM_CFM,
--		.ops = &zoom2_ops,
--	},
--};
--
--/* Audio machine driver */
--static struct snd_soc_card snd_soc_zoom2 = {
--	.name = "Zoom2",
--	.owner = THIS_MODULE,
--	.dai_link = zoom2_dai,
--	.num_links = ARRAY_SIZE(zoom2_dai),
--
--	.dapm_widgets = zoom2_twl4030_dapm_widgets,
--	.num_dapm_widgets = ARRAY_SIZE(zoom2_twl4030_dapm_widgets),
--	.dapm_routes = audio_map,
--	.num_dapm_routes = ARRAY_SIZE(audio_map),
--};
--
--static struct platform_device *zoom2_snd_device;
--
--static int __init zoom2_soc_init(void)
--{
--	int ret;
--
--	if (!machine_is_omap_zoom2())
--		return -ENODEV;
--	printk(KERN_INFO "Zoom2 SoC init\n");
--
--	zoom2_snd_device = platform_device_alloc("soc-audio", -1);
--	if (!zoom2_snd_device) {
--		printk(KERN_ERR "Platform device allocation failed\n");
--		return -ENOMEM;
--	}
--
--	platform_set_drvdata(zoom2_snd_device, &snd_soc_zoom2);
--	ret = platform_device_add(zoom2_snd_device);
--	if (ret)
--		goto err1;
--
--	return 0;
--
--err1:
--	printk(KERN_ERR "Unable to add platform device\n");
--	platform_device_put(zoom2_snd_device);
--
--	return ret;
--}
--module_init(zoom2_soc_init);
--
--static void __exit zoom2_soc_exit(void)
--{
--	platform_device_unregister(zoom2_snd_device);
--}
--module_exit(zoom2_soc_exit);
--
--MODULE_AUTHOR("Misael Lopez Cruz <x0052729@ti.com>");
--MODULE_DESCRIPTION("ALSA SoC Zoom2");
--MODULE_LICENSE("GPL");
--
++config MACH_MACKEREL_REFERENCE
++	bool "mackerel board - Reference Device Tree Implementation"
++	depends on ARCH_SH7372
++	select ARCH_REQUIRE_GPIOLIB
++	select REGULATOR_FIXED_VOLTAGE if REGULATOR
++	select SND_SOC_AK4642 if SND_SIMPLE_CARD
++	select USE_OF
++
+ config MACH_KOTA2
+ 	bool "KOTA2 board"
+ 	depends on ARCH_SH73A0
+diff --git a/arch/arm/mach-shmobile/Makefile b/arch/arm/mach-shmobile/Makefile
+index 0b71479..8035165 100644
+--- a/arch/arm/mach-shmobile/Makefile
++++ b/arch/arm/mach-shmobile/Makefile
+@@ -42,6 +42,7 @@ obj-$(CONFIG_ARCH_R8A7779)	+= pm-r8a7779.o
+ obj-$(CONFIG_MACH_AP4EVB)	+= board-ap4evb.o
+ obj-$(CONFIG_MACH_AG5EVM)	+= board-ag5evm.o
+ obj-$(CONFIG_MACH_MACKEREL)	+= board-mackerel.o
++obj-$(CONFIG_MACH_MACKEREL_REFERENCE)	+= board-mackerel-reference.o
+ obj-$(CONFIG_MACH_KOTA2)	+= board-kota2.o
+ obj-$(CONFIG_MACH_BONITO)	+= board-bonito.o
+ obj-$(CONFIG_MACH_MARZEN)	+= board-marzen.o
+diff --git a/arch/arm/mach-shmobile/board-mackerel-reference.c b/arch/arm/mach-shmobile/board-mackerel-reference.c
+new file mode 100644
+index 0000000..1d83653
+--- /dev/null
++++ b/arch/arm/mach-shmobile/board-mackerel-reference.c
+@@ -0,0 +1,122 @@
++/*
++ * mackerel board support - Reference Device Tree Implementation
++ *
++ * Copyright (C) 2012 Renesas Solutions Corp.
++ *
++ * Copyright (C) 2010 Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
++ *
++ * based on ap4evb
++ * Copyright (C) 2010  Magnus Damm
++ * Copyright (C) 2008  Yoshihiro Shimoda
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; version 2 of the License.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * You should have received a copy of the GNU General Public License
++ * along with this program; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
++ */
++#include <linux/init.h>
++#include <linux/irq.h>
++#include <linux/gpio.h>
++
++#include <mach/common.h>
++#include <mach/irqs.h>
++#include <mach/sh7372.h>
++
++#include <asm/mach/arch.h>
++
++#define IRQ7 evt2irq(0x02e0)
++#define IRQ21 evt2irq(0x32a0)
++
++static void __init mackerel_init(void)
++{
++	sh7372_add_standard_devices_dt();
++
++	/* External clock source */
++	clk_set_rate(&sh7372_dv_clki_clk, 27000000);
++
++	sh7372_pinmux_init();
++
++	/* enable SCIFA0 */
++	gpio_request(GPIO_FN_SCIFA0_TXD, NULL);
++	gpio_request(GPIO_FN_SCIFA0_RXD, NULL);
++
++	/* enable SMSC911X */
++	gpio_request(GPIO_FN_CS5A,	NULL);
++	gpio_request(GPIO_FN_IRQ6_39,	NULL);
++
++	/* enable Touchscreen */
++	gpio_request(GPIO_FN_IRQ7_40,	NULL);
++	irq_set_irq_type(IRQ7, IRQ_TYPE_LEVEL_LOW);
++
++	/* enable Accelerometer */
++	gpio_request(GPIO_FN_IRQ21,	NULL);
++	irq_set_irq_type(IRQ21, IRQ_TYPE_LEVEL_HIGH);
++
++	/* enable SDHI0 */
++	gpio_request(GPIO_FN_SDHIWP0, NULL);
++	gpio_request(GPIO_FN_SDHICMD0, NULL);
++	gpio_request(GPIO_FN_SDHICLK0, NULL);
++	gpio_request(GPIO_FN_SDHID0_3, NULL);
++	gpio_request(GPIO_FN_SDHID0_2, NULL);
++	gpio_request(GPIO_FN_SDHID0_1, NULL);
++	gpio_request(GPIO_FN_SDHID0_0, NULL);
++
++	/* SDHI0 PORT172 card-detect IRQ26 */
++	gpio_request(GPIO_FN_IRQ26_172, NULL);
++
++	/* enable SDHI1 */
++	gpio_request(GPIO_FN_SDHICMD1, NULL);
++	gpio_request(GPIO_FN_SDHICLK1, NULL);
++	gpio_request(GPIO_FN_SDHID1_3, NULL);
++	gpio_request(GPIO_FN_SDHID1_2, NULL);
++	gpio_request(GPIO_FN_SDHID1_1, NULL);
++	gpio_request(GPIO_FN_SDHID1_0, NULL);
++
++	/* enable SDHI2 */
++	gpio_request(GPIO_FN_SDHICMD2, NULL);
++	gpio_request(GPIO_FN_SDHICLK2, NULL);
++	gpio_request(GPIO_FN_SDHID2_3, NULL);
++	gpio_request(GPIO_FN_SDHID2_2, NULL);
++	gpio_request(GPIO_FN_SDHID2_1, NULL);
++	gpio_request(GPIO_FN_SDHID2_0, NULL);
++
++	/* card detect pin for microSD slot (CN23) */
++	gpio_request(GPIO_PORT162, NULL);
++	gpio_direction_input(GPIO_PORT162);
++
++	/* MMCIF */
++	gpio_request(GPIO_FN_MMCD0_0, NULL);
++	gpio_request(GPIO_FN_MMCD0_1, NULL);
++	gpio_request(GPIO_FN_MMCD0_2, NULL);
++	gpio_request(GPIO_FN_MMCD0_3, NULL);
++	gpio_request(GPIO_FN_MMCD0_4, NULL);
++	gpio_request(GPIO_FN_MMCD0_5, NULL);
++	gpio_request(GPIO_FN_MMCD0_6, NULL);
++	gpio_request(GPIO_FN_MMCD0_7, NULL);
++	gpio_request(GPIO_FN_MMCCMD0, NULL);
++	gpio_request(GPIO_FN_MMCCLK0, NULL);
++}
++
++static const char *mackerel_compat_dt[] __initdata = {
++	"renesas,mackerel-reference",
++	NULL,
++};
++
++DT_MACHINE_START(MACKEREL, "mackerel-reference")
++	.map_io		= sh7372_map_io,
++	.init_early	= sh7372_add_early_devices_dt,
++	.init_irq	= sh7372_init_irq_of,
++	.handle_irq	= shmobile_handle_irq_intc,
++	.init_machine	= mackerel_init,
++	.init_late	= sh7372_pm_init_late,
++	.timer		= &shmobile_timer,
++	.dt_compat	= mackerel_compat_dt,
++MACHINE_END
 -- 
-1.8.0.2
+1.7.2.5
 
