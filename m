@@ -1,57 +1,97 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH] ARM: dts: omap3-igep: Add fixed always-on regulators to
- common dtsi file
-Date: Mon, 31 Dec 2012 13:52:14 +0100
-Message-ID: <CABxcv=mpL6=6AvZCwQfcH+sFQXTLEc7mcsXEK_3e8KqDeNhvHw@mail.gmail.com>
-References: <1356815084-6943-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1356815084-6943-1-git-send-email-ezequiel.garcia@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: Ezequiel Garcia <elezegarcia@gmail.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Enric Balletbo i Serra <eballetbo@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH RFC v2 00/15] V4L2 device tree bindings and OF helpers
+Date: Mon, 31 Dec 2012 17:02:58 +0100
+Message-ID: <1356969793-27268-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: g.liakhovetski@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gU2F0LCBEZWMgMjksIDIwMTIgYXQgMTA6MDQgUE0sIEV6ZXF1aWVsIEdhcmNpYQo8ZXplcXVp
-ZWwuZ2FyY2lhQGZyZWUtZWxlY3Ryb25zLmNvbT4gd3JvdGU6Cj4gVGhlc2UgcmVndWxhdG9ycyBh
-cmUgY29tbW9uIHRvIGlnZXAwMDIwIGFuZCBpZ2VwMDAzMCBib2FyZHMKPiBhbmQgYXJlIG5lZWRl
-ZCBieSBzbXNjOTExeCBjb250cm9sbGVyLgo+Cj4gQ2M6IEJlbm/DrnQgQ291c3NvbiA8Yi1jb3Vz
-c29uQHRpLmNvbT4KPiBDYzogVG9ueSBMaW5kZ3JlbiA8dG9ueUBhdG9taWRlLmNvbT4KPiBDYzog
-RW5yaWMgQmFsbGV0Ym8gaSBTZXJyYSA8ZWJhbGxldGJvQGdtYWlsLmNvbT4KPiBDYzogSmF2aWVy
-IE1hcnRpbmV6IENhbmlsbGFzIDxqYXZpZXJAZG93aGlsZTAub3JnPgo+IFNpZ25lZC1vZmYtYnk6
-IEV6ZXF1aWVsIEdhcmNpYSA8ZXplcXVpZWwuZ2FyY2lhQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiAt
-LS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtaWdlcC5kdHNpIHwgICAxMiArKysrKysrKysr
-KysKPiAgMSBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygtKQo+
-Cj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL29tYXAzLWlnZXAuZHRzaSBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL29tYXAzLWlnZXAuZHRzaQo+IGluZGV4IGRkMDFjNDYuLjkxYTQyY2UgMTAw
-NjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvb21hcDMtaWdlcC5kdHNpCj4gKysrIGIvYXJj
-aC9hcm0vYm9vdC9kdHMvb21hcDMtaWdlcC5kdHNpCj4gQEAgLTI0LDYgKzI0LDE4IEBACj4gICAg
-ICAgICAgICAgICAgIHRpLG1jYnNwID0gPCZtY2JzcDI+Owo+ICAgICAgICAgICAgICAgICB0aSxj
-b2RlYyA9IDwmdHdsX2F1ZGlvPjsKPiAgICAgICAgIH07Cj4gKwo+ICsgICAgICAgIHZkZHZhcmlv
-OiByZWd1bGF0b3ItdmRkdmFyaW8gewo+ICsgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJy
-ZWd1bGF0b3ItZml4ZWQiOwo+ICsgICAgICAgICAgICAgICAgcmVndWxhdG9yLW5hbWUgPSAidmRk
-dmFyaW8iOwo+ICsgICAgICAgICAgICAgICAgcmVndWxhdG9yLWFsd2F5cy1vbjsKPiArICAgICAg
-ICB9Owo+ICsKPiArICAgICAgICB2ZGQzM2E6IHJlZ3VsYXRvci12ZGQzM2Egewo+ICsgICAgICAg
-ICAgICAgICAgY29tcGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwo+ICsgICAgICAgICAgICAg
-ICAgcmVndWxhdG9yLW5hbWUgPSAidmRkMzNhIjsKPiArICAgICAgICAgICAgICAgIHJlZ3VsYXRv
-ci1hbHdheXMtb247Cj4gKyAgICAgICAgfTsKPiAgfTsKPgo+ICAmb21hcDNfcG14X2NvcmUgewoK
-SGkgRXplcXVpZWwsCgpUaGlzIHNob3VsZG4ndCBiZSBkZWZpbmVkIG9uIHRoZSBnZW5lcmljIG9t
-YXAzLWlnZXAuZHRzaSBidXQgb24Kb21hcDMtaWdlcDAwMjAuZHRzIHNpbmNlIHRoZSBJR0VQIENP
-TSBNb2R1bGUgZG9lc24ndCBoYXZlIHRoZSBMQU4KU01TQzkyMjEgY2hpcCB3aGljaCBpcyB0aGUg
-b25lIHVzaW5nIHRoZXNlIHJlZ3VsYXRvcnMuCgpPdGhlcndpc2UsIHRoZSBwYXRjaCBsb29rcyBn
-b29kIHRvIG1lIGFuZCBJIHRoaW5rIGl0IGhhcyB0byBiZSBwYXJ0IG9mCnRoZSBzZXJpZXMgdGhh
-dCBhZGQgU01TQzkyMjEgc3VwcG9ydCBmb3IgSUdFUHYyLgoKVGhhbmtzIGEgbG90IGFuZCBiZXN0
-IHJlZ2FyZHMsCkphdmllcgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+This series includes the updated DT bindings documentation and the V4L2 OF
+parser. Changes since v1:
+
+ - renamed 'link' nodes to 'endpoint', remote phandle to 'remote-endpoint'
+   in the common bindings documentation file,
+ - removed references to V4L2 in the documentation,
+ - file v4l2.txt renamed to video-interfaces.txt,
+ - dropped patches adding empty function definitions for when CONFIG_OF
+   is disabled,
+ - v4l2_of_parse_link() function renamed to v4l2_of_parse_endpoint,
+ - created separate helpers to parse parallel and MIPI-CSI2 bus properties
+   independently.
+
+The bindings documentation patch is almost unchanged since version posted
+on 12 Dec [1].
+
+This series also includes patches adding device tree support for Exynos4
+SoC camera subsystem drivers. Changes in that part include:
+
+ - code refactoring to not depend on dummy function definitions,
+ - updated to use new helpers from drivers/media/v4l2-core/v4l2-of.c,
+ - added parsing of nodes corresponding to parallel video bus sensors.
+
+My next steps include testing this on top of the common clock framework
+patches for Exynos SoCs, posted recently by Thomas Abraham, and further
+adding support for v4l2 asynchronous sub-device registration. However
+I'd like to possibly have these patches in mainline first, only except
+the "ARM: EXYNOS4: Add OF_DEV_AUXDATA for FIMC, FIMC-LITE and CSIS" one,
+which won't be needed when there is common clock support available.
+
+I appreciate any feedback, especially on the documentation and the OF
+helpers.
+
+Full tree containing all patches can be browsed at [2].
+
+[1] http://patchwork.linuxtv.org/patch/15911/
+[2] http://git.infradead.org/users/kmpark/linux-samsung/shortlog/refs/heads/v3.7-pq-camera-dt
+
+
+Guennadi Liakhovetski (2):
+  [media] Add common video interfaces OF bindings documentation
+  [media] Add a V4L2 OF parser
+
+Sylwester Nawrocki (13):
+  s5p-csis: Add device tree support
+  s5p-fimc: Support for FIMC devices instantiated from the device tree
+  s5p-fimc: Support for FIMC-LITE devices instantiated from the device
+    tree
+  s5p-fimc: Change platform subdevs registration method
+  s5p-fimc: Support camera media device initialization on DT systems
+  s5p-fimc: Add device tree based sensors registration
+  s5p-fimc: Use pinctrl API for camera ports configuration
+  ARM: EXYNOS4: Add OF_DEV_AUXDATA for FIMC, FIMC-LITE and CSIS
+  ARM: dts: Add camera node exynos4.dtsi
+  ARM: dts: Add ISP power domain node for Exynos4x12
+  ARM: dts: Add FIMC and MIPI CSIS device nodes for Exynos4x12
+  ARM: dts: Add camera pinctrl nodes for Exynos4x12 SoCs
+  ARM: dts: Add camera device nodes nodes for PQ board
+
+ .../devicetree/bindings/media/soc/samsung-fimc.txt |  183 +++++++
+ .../bindings/media/soc/samsung-mipi-csis.txt       |   84 ++++
+ .../devicetree/bindings/media/video-interfaces.txt |  198 ++++++++
+ arch/arm/boot/dts/exynos4.dtsi                     |   64 +++
+ arch/arm/boot/dts/exynos4412-slp_pq.dts            |  133 +++++
+ arch/arm/boot/dts/exynos4x12-pinctrl.dtsi          |   33 +-
+ arch/arm/boot/dts/exynos4x12.dtsi                  |   52 ++
+ arch/arm/mach-exynos/mach-exynos4-dt.c             |   16 +
+ drivers/media/platform/s5p-fimc/fimc-capture.c     |    2 +-
+ drivers/media/platform/s5p-fimc/fimc-core.c        |   85 ++--
+ drivers/media/platform/s5p-fimc/fimc-lite.c        |   65 ++-
+ drivers/media/platform/s5p-fimc/fimc-mdevice.c     |  529 +++++++++++++++-----
+ drivers/media/platform/s5p-fimc/fimc-mdevice.h     |   10 +
+ drivers/media/platform/s5p-fimc/mipi-csis.c        |  159 ++++--
+ drivers/media/platform/s5p-fimc/mipi-csis.h        |    1 +
+ drivers/media/v4l2-core/Makefile                   |    3 +
+ drivers/media/v4l2-core/v4l2-of.c                  |  249 +++++++++
+ include/media/s5p_fimc.h                           |   16 +
+ include/media/v4l2-of.h                            |   79 +++
+ 19 files changed, 1739 insertions(+), 222 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/soc/samsung-fimc.txt
+ create mode 100644 Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt
+ create mode 100644 Documentation/devicetree/bindings/media/video-interfaces.txt
+ create mode 100644 drivers/media/v4l2-core/v4l2-of.c
+ create mode 100644 include/media/v4l2-of.h
+
+--
+1.7.9.5
