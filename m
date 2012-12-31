@@ -1,40 +1,60 @@
-From: Hiroshi Doyu <hdoyu@nvidia.com>
-Subject: Re: [PATCH 6/9] ARM: dt: tegra114: Add new SoC base, Tegra 114 SoC
-Date: Mon, 31 Dec 2012 08:12:05 +0100
-Message-ID: <20121231.091205.1954307462967637866.hdoyu@nvidia.com>
-References: <1355996654-6579-1-git-send-email-hdoyu@nvidia.com><1355996654-6579-7-git-send-email-hdoyu@nvidia.com><20121229063913.GA13620@quad.lixom.net>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 0/8] ASoC: OMAP-twl4030: Add support for more3
+	boards
+Date: Mon, 31 Dec 2012 11:51:41 +0100
+Message-ID: <1356951109-4286-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20121229063913.GA13620@quad.lixom.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: "olof@lixom.net" <olof@lixom.net>
-Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "johnstul@us.ibm.com" <johnstul@us.ibm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "andrew@lunn.ch" <andrew@lunn.ch>, "plagnioj@jcrosoft.com" <plagnioj@jcrosoft.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Grant Likely <grant.likely@secretlab.ca>
+Cc: NeilBrown <neilb@suse.de>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+Hello,
 
-Olof Johansson <olof@lixom.net> wrote @ Sat, 29 Dec 2012 07:39:13 +0100:
+This series will update the omap-twl4030 machine driver and the twl4030 codec
+driver to enable support for more boards.
+With this change we can remove two more machine drivers: zoom2 and sdp3430 since
+they will be supported by the common omap-twl4030 machine driver.
+The arch/arm/mach-omap2/ patches will go as a separate series to avoid cross
+tree issues.
 
-> On Thu, Dec 20, 2012 at 11:44:04AM +0200, Hiroshi Doyu wrote:
-> > Initial support for Tegra 114 SoC. This is expected to be included in
-> > the board DTS files, Tegra 114 SoC based evaluation board family.
-> > 
-> > Signed-off-by: Hiroshi Doyu <hdoyu@nvidia.com>
-> 
-> Hi,
-> 
-> I think it could be a good idea to start documenting the cpu configuration in
-> the device tree on some of these larger platforms as well, i.e. include a cpus/
-> hierarchy. Would you mind adding those, please?
+Regards,
+Peter
+---
+Peter Ujfalusi (8):
+  ASoC: twl4030: Correct the support for Voice port
+  ASoC: zoom2: No need to configure the Voice port anymore
+  ASoC: sdp3430: No need to configure the Voice port anymore
+  ASoC: twl4030: Convert MICBIAS to SUPPLY widget
+  ASoC: twl4030: Configure extmute pinmux when the dedicated pin is in
+    use
+  ASoC: sdp3430: No need to configure pin mux for extmute
+  ASoC: omap-twl4030: Add support for routing, voice port and jack
+    detect
+  ASoC: OMAP: Remove obsolete machine drivers for Zoom2 and SDP3430
 
-Ok, I'll.
+ .../devicetree/bindings/sound/omap-twl4030.txt     |  46 ++++
+ sound/soc/codecs/twl4030.c                         |  71 ++++--
+ sound/soc/omap/Kconfig                             |  19 +-
+ sound/soc/omap/Makefile                            |   4 -
+ sound/soc/omap/omap-twl4030.c                      | 204 ++++++++++++++-
+ sound/soc/omap/omap3pandora.c                      |   8 +-
+ sound/soc/omap/sdp3430.c                           | 278 ---------------------
+ sound/soc/omap/zoom2.c                             | 207 ---------------
+ 8 files changed, 304 insertions(+), 533 deletions(-)
+ delete mode 100644 sound/soc/omap/sdp3430.c
+ delete mode 100644 sound/soc/omap/zoom2.c
 
-> It would give you the flexibility of switching over to using device
-> tree to probe the number of cpus in case the platform grows yet another
-> way to figure out the number of cores in the future, without having to
-> update the device-trees at that time. :)
-> 
-> 
-> -Olof
+-- 
+1.8.0.2
