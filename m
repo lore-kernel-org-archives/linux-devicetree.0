@@ -1,59 +1,40 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v5 00/12] clk: exynos4: migrate to common clock framework
-Date: Sun, 30 Dec 2012 21:35:16 -0800
-Message-ID: <CAJuYYwTbdEDkt41FsJUOt3wq7rq9XHDhMari56GG5T8S1dF7=A@mail.gmail.com>
-References: <1356827621-27617-1-git-send-email-thomas.abraham@linaro.org>
-	<20121230052953.GB20903@quad.lixom.net>
+From: Hiroshi Doyu <hdoyu@nvidia.com>
+Subject: Re: [PATCH 6/9] ARM: dt: tegra114: Add new SoC base, Tegra 114 SoC
+Date: Mon, 31 Dec 2012 08:12:05 +0100
+Message-ID: <20121231.091205.1954307462967637866.hdoyu@nvidia.com>
+References: <1355996654-6579-1-git-send-email-hdoyu@nvidia.com><1355996654-6579-7-git-send-email-hdoyu@nvidia.com><20121229063913.GA13620@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20121230052953.GB20903@quad.lixom.net>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20121229063913.GA13620@quad.lixom.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: "olof@lixom.net" <olof@lixom.net>
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "johnstul@us.ibm.com" <johnstul@us.ibm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "shawn.guo@linaro.org" <shawn.guo@linaro.org>, "andrew@lunn.ch" <andrew@lunn.ch>, "plagnioj@jcrosoft.com" <plagnioj@jcrosoft.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29 December 2012 21:29, Olof Johansson <olof@lixom.net> wrote:
-> On Sat, Dec 29, 2012 at 04:33:29PM -0800, Thomas Abraham wrote:
->> Changes since v4:
->> - Rebased to linux-3.8-rc1.
->>
->> Changes since v3:
->> - Includes changes suggested by Tomasz Figa <tomasz.figa@gmail.com>
->>
->> This patch series migrates the Samsung Exynos4 SoC clock code to adopt the
->> common clock framework. The use of Samsung specific clock structures has
->> been removed and all board support code has been updated. imx-style of
->> clock registration and lookup has been adopted for device tree based
->> exynos4 platforms.
->
-> I'd prefer to see if exynos4 and 5 were kept common here, and both transitioned
-> at the same time. Especially since there are no legacy boards for exynos5, it
-> would mean you could have a very clean transition there. What's the plan to
-> follow up with 5?
+Hi Olof,
 
-Ok. I have been looking into Exynos4 since Mr. Kim was already onto
-Exynos5 common clock. Sure, we could do a cleaner Exynos4/5 common
-clock series for v3.9. That would let both exynos4/5 to be built
-together which otherwise this patch series would not allow.
+Olof Johansson <olof@lixom.net> wrote @ Sat, 29 Dec 2012 07:39:13 +0100:
 
->
-> What are the plans to remove legacy board files on exynos4 at this time
-> and switch them to DT-only? You could do it gradually like Stephen Warren
-> did on Tegra, with hooks that call out to some of the legacy code, but
-> configure the board through device tree and do away with the classic
-> machine descriptors, etc.
+> On Thu, Dec 20, 2012 at 11:44:04AM +0200, Hiroshi Doyu wrote:
+> > Initial support for Tegra 114 SoC. This is expected to be included in
+> > the board DTS files, Tegra 114 SoC based evaluation board family.
+> > 
+> > Signed-off-by: Hiroshi Doyu <hdoyu@nvidia.com>
+> 
+> Hi,
+> 
+> I think it could be a good idea to start documenting the cpu configuration in
+> the device tree on some of these larger platforms as well, i.e. include a cpus/
+> hierarchy. Would you mind adding those, please?
 
-I did try this sometime back for exynos4210 based origen board. But
-did not make much progress since certain portions require the older
-samsung gpiolib support and exynos4210 mainline device tree support
-has migrated to newer pinctrl framework. There is some work here to do
-and I will work with Mr. Kim on this.
+Ok, I'll.
 
-Thanks,
-Thomas.
-
->
->
->
+> It would give you the flexibility of switching over to using device
+> tree to probe the number of cpus in case the platform grows yet another
+> way to figure out the number of cores in the future, without having to
+> update the device-trees at that time. :)
+> 
+> 
 > -Olof
