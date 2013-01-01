@@ -1,288 +1,228 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] [media] Add common binding documentation for video interfaces
-Date: Mon, 31 Dec 2012 15:55:11 -0600
-Message-ID: <50E209BF.6010506@gmail.com>
-References: <1355168499-5847-9-git-send-email-s.nawrocki@samsung.com> <1355606016-6509-1-git-send-email-sylvester.nawrocki@gmail.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH] media: rc: gpio-ir-recv.c: change platform_data to DT
+ binding
+Date: Tue, 01 Jan 2013 23:23:16 +0100
+Message-ID: <50E361D4.9070702@gmail.com>
+References: <1355838101-972-1-git-send-email-ujhelyi.m@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1355606016-6509-1-git-send-email-sylvester.nawrocki@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: g.liakhovetski@gmx.de, linux-media@vger.kernel.org, hverkuil@xs4all.nl, s.hauer@pengutronix.de, linux-doc@vger.kernel.org, nicolas.thery@st.com, rob.herring@calxeda.com, laurent.pinchart@ideasonboard.com, Sylwester Nawrocki <s.nawrocki@samsung.com>, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1355838101-972-1-git-send-email-ujhelyi.m@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: ujhelyi.m@gmail.com, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+Cc: linux-media@vger.kernel.org, mchehab@infradead.org, rd@radekdostal.com
 List-Id: devicetree@vger.kernel.org
 
-On 12/15/2012 03:13 PM, Sylwester Nawrocki wrote:
-> From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> 
-> This patch adds a document describing common OF bindings for video
-> capture, output and video processing devices. It is currently mainly
-> focused on video capture devices, with data interfaces defined in
-> standards like ITU-R BT.656 or MIPI CSI-2.
-> It also documents a method of describing data links between devices.
-> 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Hi,
 
-Looks reasonable. You can merge this with the rest of the series.
+Cc: devicetree-discuss@lists.ozlabs.org
 
-Acked-by: Rob Herring <rob.herring@calxeda.com>
+Please Cc this list when introducing any device tree bindings.
 
+And you need documentation for the bindings, so when someone wants
+to use the driver they don't have to extract the bindings' semantics
+from the code.
+
+On 12/18/2012 02:41 PM, ujhelyi.m@gmail.com wrote:
+> From: Matus Ujhelyi<ujhelyi.m@gmail.com>
+
+Please provide proper commit text so it is more clear why the patch is
+needed.
+
+Also, your patch summary line is very misleading, you're not replacing
+platform_data based driver's initialization with device tree based.
+This patch is simply _adding_ another initialization method, without
+breaking support for platform data, isn't it ?
+
+> Signed-off-by: Matus Ujhelyi<ujhelyi.m@gmail.com>
 > ---
-> Hi,
-> 
-> This is an updated version of patch [1]. My changes include resolving
-> issues pointed out during review, i.e.:
->  - renaming 'link' node to 'endpoint,
->  - renaming 'remote' phandle to 'remote-endpoint',
->  - file v4l2.txt renamed to video-interfaces.txt,
->  - removed references to V4L2,
->  - added short description of the example DT snippet
-> 
-> and additionally:
->  - added "Required properties' paragraph,
->  - updated description of 'data-lanes' property,
->  - renamed all erroneous occurrences of 'data-width' to 'bus-width',
->  - added 'bus-width' property description,
->  - modified description of hsync-active, vsync-active properties,
->  - added a little paragraph further explaining that each endpoint
->    node has properties determining configuration of its corresponding
->    device.
-> 
-> [1] https://patchwork.kernel.org/patch/1514381/
-> 
-> I'm still unsure about the first sentence, as these bindings can be
-> used for describing SoC internal connections between modules as well.
-> 
-> I was considering adding something like:
-> 
-> "This document describes common bindings for video capture, processing
-> and output devices using data buses defined in standards like ITU-R
-> BT.656, MIPI CSI-2,..."
-> 
-> before the "General concept" paragraph.
-> 
-> And maybe Documentation/devicetree/bindings/video/ would a better place
-> for this video-interfaces.txt file ?
-> 
-> Thanks,
-> Sylwester
-> ---
->  .../devicetree/bindings/media/video-interfaces.txt |  198 ++++++++++++++++++++
->  1 files changed, 198 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/video-interfaces.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> new file mode 100644
-> index 0000000..10ebbc4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -0,0 +1,198 @@
-> +Common bindings for video data receiver and transmitter interfaces
-> +
-> +General concept
-> +---------------
-> +
-> +Video data pipelines usually consist of external devices, e.g. camera sensors,
-> +controlled over an I2C, SPI or UART bus, and SoC internal IP blocks, including
-> +video DMA engines and video data processors.
-> +
-> +SoC internal blocks are described by DT nodes, placed similarly to other SoC
-> +blocks.  External devices are represented as child nodes of their respective
-> +bus controller nodes, e.g. I2C.
-> +
-> +Data interfaces on all video devices are described by their child 'port' nodes.
-> +Configuration of a port depends on other devices participating in the data
-> +transfer and is described by 'endpoint' subnodes.
-> +
-> +dev {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	port@0 {
-> +		endpoint@0 { ... };
-> +		endpoint@1 { ... };
-> +	};
-> +	port@1 { ... };
+>   drivers/media/rc/gpio-ir-recv.c |   84 ++++++++++++++++++++++++++++++---------
+>   1 file changed, 66 insertions(+), 18 deletions(-)
+>
+> diff --git a/drivers/media/rc/gpio-ir-recv.c b/drivers/media/rc/gpio-ir-recv.c
+> index ba1a1eb..cfba079 100644
+> --- a/drivers/media/rc/gpio-ir-recv.c
+> +++ b/drivers/media/rc/gpio-ir-recv.c
+> @@ -58,19 +58,49 @@ err_get_value:
+>   	return IRQ_HANDLED;
+>   }
+>
+> +static const struct of_device_id gpio_ir_of_match[] = {
+> +	{
+> +		.compatible = "gpio-ir-recv",
+
+Probably better to make it "gpio-ir-receiver".
+
+> +	},
 > +};
-> +
-> +If a port can be configured to work with more than one other device on the same
-> +bus, an 'endpoint' child node must be provided for each of them.  If more than
-> +one port is present in a device node or there is more than one endpoint at a
-> +port, a common scheme, using '#address-cells', '#size-cells' and 'reg' properties
-> +is used.
-> +
-> +Two 'endpoint' nodes are linked with each other through their 'remote-endpoint'
-> +phandles.  An endpoint subnode of a device contains all properties needed for
-> +configuration of this device for data exchange with the other device.  In most
-> +cases properties at the peer 'endpoint' nodes will be identical, however
-> +they might need to be different when there are any signal modifications on the
-> +bus between two devices, e.g. there are logic signal inverters on the lines.
-> +
-> +Required properties
-> +-------------------
-> +
-> +If there is more that one 'port' or more than one 'endpoint' node following
-> +properties are required in relevant parent node:
-> +
-> +- #address-cells : number of cells required to define port number, should be 1.
-> +- #size-cells    : should be zero.
-> +
-> +Optional endpoint properties
-> +----------------------------
-> +
-> +- remote-endpoint : phandle to an 'endpoint' subnode of the other device node.
-> +- slave-mode : a boolean property, run the link in slave mode. Default is master
-> +  mode.
-> +- bus-width : the number of data lines, valid for parallel buses.
-> +- data-shift: on parallel data busses, if bus-width is used to specify the
-> +  number of data lines, data-shift can be used to specify which data lines are
-> +  used, e.g. "bus-width=<10>; data-shift=<2>;" means, that lines 9:2 are used.
-> +- hsync-active : active state of HSYNC signal, 0/1 for LOW/HIGH respectively.
-> +- vsync-active : active state of VSYNC signal, 0/1 for LOW/HIGH respectively.
-> +  Note, that if HSYNC and VSYNC polarities are not specified, embedded
-> +  synchronization may be required, where supported.
-> +- data-active : similar to HSYNC and VSYNC, specifies data line polarity.
-> +- field-even-active: field signal level during the even field data transmission.
-> +- pclk-sample : rising (1) or falling (0) edge to sample the pixel clock signal.
-> +- data-lanes : an array of physical data lane indexes. Position of an entry
-> +  determines logical lane number, while the value of an entry indicates physical
-> +  lane, e.g. for 2-lane MIPI CSI-2 bus we could have "data-lanes = <1>, <2>;",
-> +  assuming the clock lane is on hardware lane 0. This property is valid for
-> +  serial buses only (e.g. MIPI CSI-2).
-> +- clock-lanes : a number of physical lane used as a clock lane.
-> +- clock-noncontinuous : a boolean property to allow MIPI CSI-2 non-continuous
-> +  clock mode.
-> +
-> +Example
-> +-------
-> +
-> +The below example snippet describes two data pipelines.  ov772x and imx074 are
-> +camera sensors with parallel and serial (MIPI CSI-2) video bus respectively.
-> +Both sensors are on I2C control bus corresponding to i2c0 controller node.
-> +ov772x sensor is linked directly to the ceu0 video host interface.  imx074 is
-> +linked to ceu0 through MIPI CSI-2 receiver (csi2). ceu0 has a (single) DMA
-> +engine writing captured data to memory.  ceu0 node has single 'port' node which
-> +indicates at any time only one of following data pipeline can be active:
-> +ov772x -> ceu0 or imx074 -> csi2 -> ceu0.
-> +
-> +	ceu0: ceu@0xfe910000 {
-> +		compatible = "renesas,sh-mobile-ceu";
-> +		reg = <0xfe910000 0xa0>;
-> +		interrupts = <0x880>;
-> +
-> +		mclk: master_clock {
-> +			compatible = "renesas,ceu-clock";
-> +			#clock-cells = <1>;
-> +			clock-frequency = <50000000>;	/* Max clock frequency */
-> +			clock-output-names = "mclk";
-> +		};
-> +
-> +		port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			ceu0_1: endpoint@1 {
-> +				reg = <1>;		/* Local endpoint # */
-> +				remote = <&ov772x_1_1>;	/* Remote phandle */
-> +				bus-width = <8>;	/* Used data lines */
-> +				data-shift = <0>;	/* Lines 7:0 are used */
-> +
-> +				/* If hsync-active/vsync-active are missing,
-> +				   embedded bt.605 sync is used */
-> +				hsync-active = <1>;	/* Active high */
-> +				vsync-active = <1>;	/* Active high */
-> +				data-active = <1>;	/* Active high */
-> +				pclk-sample = <1>;	/* Rising */
-> +			};
-> +
-> +			ceu0_0: endpoint@0 {
-> +				reg = <0>;
-> +				remote = <&csi2_2>;
-> +				immutable;
-> +			};
-> +		};
-> +	};
-> +
-> +	i2c0: i2c@0xfff20000 {
-> +		...
-> +		ov772x_1: camera@0x21 {
-> +			compatible = "omnivision,ov772x";
-> +			reg = <0x21>;
-> +			vddio-supply = <&regulator1>;
-> +			vddcore-supply = <&regulator2>;
-> +
-> +			clock-frequency = <20000000>;
-> +			clocks = <&mclk 0>;
-> +			clock-names = "xclk";
-> +
-> +			port {
-> +				/* With 1 endpoint per port no need in addresses. */
-> +				ov772x_1_1: endpoint {
-> +					bus-width = <8>;
-> +					remote-endpoint = <&ceu0_1>;
-> +					hsync-active = <1>;
-> +					vsync-active = <0>; /* Who came up with an
-> +							       inverter here ?... */
-> +					data-active = <1>;
-> +					pclk-sample = <1>;
-> +				};
-> +			};
-> +		};
-> +
-> +		imx074: camera@0x1a {
-> +			compatible = "sony,imx074";
-> +			reg = <0x1a>;
-> +			vddio-supply = <&regulator1>;
-> +			vddcore-supply = <&regulator2>;
-> +
-> +			clock-frequency = <30000000>;	/* Shared clock with ov772x_1 */
-> +			clocks = <&mclk 0>;
-> +			clock-names = "sysclk";		/* Assuming this is the
-> +							   name in the datasheet */
-> +			port {
-> +				imx074_1: endpoint {
-> +					clock-lanes = <0>;
-> +					data-lanes = <1>, <2>;
-> +					remote-endpoint = <&csi2_1>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	csi2: csi2@0xffc90000 {
-> +		compatible = "renesas,sh-mobile-csi2";
-> +		reg = <0xffc90000 0x1000>;
-> +		interrupts = <0x17a0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@1 {
-> +			compatible = "renesas,csi2c";	/* One of CSI2I and CSI2C. */
-> +			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S,
-> +							   PHY_M has port address 0,
-> +							   is unused. */
-> +			csi2_1: endpoint {
-> +				clock-lanes = <0>;
-> +				data-lanes = <2>, <1>;
-> +				remote-endpoint = <&imx074_1>;
-> +			};
-> +		};
-> +		port@2 {
-> +			reg = <2>;			/* port 2: link to the CEU */
-> +
-> +			csi2_2: endpoint {
-> +				immutable;
-> +				remote-endpoint = <&ceu0_0>;
-> +			};
-> +		};
-> +	};
-> --
-> 1.7.4.1
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+> +MODULE_DEVICE_TABLE(of, gpio_ir_of_matchof_match);
 
+I think you didn't try to build this driver as a module, otherwise you 
+would
+have noticed the above typo...
+
+> +static int __devinit gpio_ir_recv_dt_probe (struct gpio_rc_dev *gpio_dev,
+> +		struct rc_dev *rcdev, struct platform_device *pdev) {
+> +
+> +	struct device_node *node = pdev->dev.of_node;
+> +
+> +	if (!node) {
+> +		pr_err("Missing gpio_nr in the DT\n");
+
+Really ? :)
+
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_u32(node, "gpio_nr",&gpio_dev->gpio_nr)) {
+
+If I'm not mistaken, generic "gpios" property would be more appropriate 
+here...
+
+> +		pr_err("Missing gpio_nr in the DT\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_u64(node, "allowed_protos",&rcdev->allowed_protos))
+> +		rcdev->allowed_protos = RC_BIT_ALL;
+> +
+> +	if (of_property_read_bool(node, "active_low"))
+
+...and this one would not be needed, since the GPIO's active state could be
+passed through generic OF gpio flags, e.g.
+
+	enum of_gpio_flags flags;
+
+	gpio_dev->gpio_nr = of_get_gpio_flags(node, 0, &flags);
+	gpio_dev->active_low = flags & OF_GPIO_ACTIVE_LOW;
+
+> +		gpio_dev->active_low = true;
+> +	else
+> +		gpio_dev->active_low = false;
+> +
+> +	if (of_property_read_string(node, "map_name",&rcdev->map_name))
+> +		rcdev->map_name = NULL;
+
+IIRC underscores are discouraged in the property names. What map_name
+signifies here, anyway ?
+
+> +
+> +	return 0;
+> +}
+> +
+>   static int __devinit gpio_ir_recv_probe(struct platform_device *pdev)
+>   {
+>   	struct gpio_rc_dev *gpio_dev;
+>   	struct rc_dev *rcdev;
+>   	const struct gpio_ir_recv_platform_data *pdata =
+>   					pdev->dev.platform_data;
+> -	int rc;
+> -
+> -	if (!pdata)
+> -		return -EINVAL;
+> -
+> -	if (pdata->gpio_nr<  0)
+> -		return -EINVAL;
+> +	int rc = -EINVAL;
+>
+>   	gpio_dev = kzalloc(sizeof(struct gpio_rc_dev), GFP_KERNEL);
+>   	if (!gpio_dev)
+> @@ -82,6 +112,28 @@ static int __devinit gpio_ir_recv_probe(struct platform_device *pdev)
+>   		goto err_allocate_device;
+>   	}
+>
+> +	if (!pdata) {
+> +
+
+nit: Unnecessary empty line.
+
+> +		if (gpio_ir_recv_dt_probe(gpio_dev, rcdev, pdev))
+> +			goto err_dt_create_of;
+> +
+
+Ditto.
+
+> +	} else {
+> +
+
+Ditto.
+> +		if (pdata->allowed_protos)
+> +			rcdev->allowed_protos = pdata->allowed_protos;
+> +		else
+> +			rcdev->allowed_protos = RC_BIT_ALL;
+> +		rcdev->map_name = pdata->map_name ?: RC_MAP_EMPTY;
+> +
+> +		gpio_dev->gpio_nr = pdata->gpio_nr;
+> +		gpio_dev->active_low = pdata->active_low;
+> +
+
+Ditto.
+
+> +	}
+> +
+> +	if (gpio_dev->gpio_nr<  0) {
+
+if (gpio_is_valid(gpio_dev->gpio_nr))
+
+> +		goto err_gpio_nr;
+> +	}
+> +
+>   	rcdev->priv = gpio_dev;
+>   	rcdev->driver_type = RC_DRIVER_IR_RAW;
+>   	rcdev->input_name = GPIO_IR_DEVICE_NAME;
+> @@ -92,20 +144,13 @@ static int __devinit gpio_ir_recv_probe(struct platform_device *pdev)
+>   	rcdev->input_id.version = 0x0100;
+>   	rcdev->dev.parent =&pdev->dev;
+>   	rcdev->driver_name = GPIO_IR_DRIVER_NAME;
+> -	if (pdata->allowed_protos)
+> -		rcdev->allowed_protos = pdata->allowed_protos;
+> -	else
+> -		rcdev->allowed_protos = RC_BIT_ALL;
+> -	rcdev->map_name = pdata->map_name ?: RC_MAP_EMPTY;
+>
+>   	gpio_dev->rcdev = rcdev;
+> -	gpio_dev->gpio_nr = pdata->gpio_nr;
+> -	gpio_dev->active_low = pdata->active_low;
+>
+> -	rc = gpio_request(pdata->gpio_nr, "gpio-ir-recv");
+> +	rc = gpio_request(gpio_dev->gpio_nr, "gpio-ir-recv");
+>   	if (rc<  0)
+>   		goto err_gpio_request;
+> -	rc  = gpio_direction_input(pdata->gpio_nr);
+> +	rc  = gpio_direction_input(gpio_dev->gpio_nr);
+>   	if (rc<  0)
+>   		goto err_gpio_direction_input;
+>
+> @@ -117,7 +162,7 @@ static int __devinit gpio_ir_recv_probe(struct platform_device *pdev)
+>
+>   	platform_set_drvdata(pdev, gpio_dev);
+>
+> -	rc = request_any_context_irq(gpio_to_irq(pdata->gpio_nr),
+> +	rc = request_any_context_irq(gpio_to_irq(gpio_dev->gpio_nr),
+>   				gpio_ir_recv_irq,
+>   			IRQF_TRIGGER_FALLING | IRQF_TRIGGER_RISING,
+>   					"gpio-ir-recv-irq", gpio_dev);
+> @@ -131,8 +176,10 @@ err_request_irq:
+>   	rc_unregister_device(rcdev);
+>   err_register_rc_device:
+>   err_gpio_direction_input:
+> -	gpio_free(pdata->gpio_nr);
+> +	gpio_free(gpio_dev->gpio_nr);
+>   err_gpio_request:
+> +err_dt_create_of:
+> +err_gpio_nr:
+>   	rc_free_device(rcdev);
+>   	rcdev = NULL;
+>   err_allocate_device:
+> @@ -195,6 +242,7 @@ static struct platform_driver gpio_ir_recv_driver = {
+>   #ifdef CONFIG_PM
+>   		.pm	=&gpio_ir_recv_pm_ops,
+>   #endif
+> +		.of_match_table = of_match_ptr(gpio_ir_of_match),
+>   	},
+>   };
+>   module_platform_driver(gpio_ir_recv_driver);
+
+Thanks,
+Sylwester
