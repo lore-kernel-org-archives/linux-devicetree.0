@@ -1,51 +1,54 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH RFC v2 02/15] [media] Add a V4L2 OF parser
-Date: Wed, 2 Jan 2013 12:58:37 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1301021255380.7829@axis700.grange>
-References: <1356969793-27268-1-git-send-email-s.nawrocki@samsung.com>
- <1356969793-27268-3-git-send-email-s.nawrocki@samsung.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 1/8] ASoC: twl4030: Correct the support for Voice port
+Date: Wed, 2 Jan 2013 13:04:52 +0000
+Message-ID: <20130102130451.GB4627@opensource.wolfsonmicro.com>
+References: <1356951109-4286-1-git-send-email-peter.ujfalusi@ti.com>
+ <1356951109-4286-2-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1356969793-27268-3-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-media@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4bRzO86E/ozDv8r1"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1356951109-4286-2-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Liam Girdwood <lrg@ti.com>, Grant Likely <grant.likely@secretlab.ca>, alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, NeilBrown <neilb@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester
 
-Just one question to this one:
+--4bRzO86E/ozDv8r1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Mon, 31 Dec 2012, Sylwester Nawrocki wrote:
+On Mon, Dec 31, 2012 at 11:51:42AM +0100, Peter Ujfalusi wrote:
+> In order to be able to use the Voice port of twl4030 three bits need to be
+> handled in VOICE_IF register:
+> VIF_EN: to enable the voice port (needed for both playback and capture)
+> VIF_DIN_EN: Need to be enabled for playback only (input to the codec)
+> VIF_DOUT_EN: Need to be enabled for capture only (output from codec)
 
-> diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
-> new file mode 100644
-> index 0000000..cdac04b
-> --- /dev/null
-> +++ b/drivers/media/v4l2-core/v4l2-of.c
-> @@ -0,0 +1,249 @@
-> +/*
-> + * V4L2 OF binding parsing library
-> + *
-> + * Copyright (C) 2012 Renesas Electronics Corp.
-> + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of version 2 of the GNU General Public License as
-> + * published by the Free Software Foundation.
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/slab.h>
+Applied all, thanks.
 
-Is slab.h really needed? I didn't have it in my version. Maybe you meant 
-to include string.h for memset()?
+--4bRzO86E/ozDv8r1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ5DBlAAoJELSic+t+oim9vTEP/Rm8pXQExp8yZGWNANtg84CZ
+v738xn+pykwtaCD+bkxYqYtbP5sQBciBLPgUa5aU6xQXiLQ+2L9UJlAljR7BfBHt
+Aj9AgLa/HR2ez0F+yMj6nFspU7MIuzatQHlE9W98GliY+akH/WyQ1QhMvGhql9N/
+9wTpDUvFOt0xibJ5G29KqH/eeEVDqlgERBJTMmbt7n52gsEDBI5sHXB8tYfvoj1p
+1PLUPO3XznKoqez4uCTKGoONAbP6mK1OaV/ysu9Rx1+jTRpxMqWR4ljo1FvfEDo9
+Lgsr7h4235sttaUsmmcKBvr04rDE8ag4RnbES2L/ppoo6Um0ViotLAW+hc0yjtts
+PVDrK9cuVr3bPYJvirUJwDwdf2MWvlSbgxRMrH2XSDT3VWOEIQfsXquGtLeSS6oi
+HIyx8G93a61oTTnw6BygRlqVJUU/4fIJdisA4ZJlKadKAO7nk2I3DDSEGXsYWIQp
+dHKorUdyFK//8BAXEFwkJhHQXdtisgZ0ZqDwjhBD1JNqSJLp6/tupH9wlPUZddTm
+Q+k/XZ3zTc8efW3Hz8mmh/4j2lOq+Fy6DmM2FICspsewauAFMRHiqqzIQ+w+EWrZ
+AXEMh/1YBV7lomW7C9w87C5tPWwnj+KnW0ion965FvohH/O7YtE4RA5BZits/yhb
+slowedvu7/abnvrg16N9
+=U65t
+-----END PGP SIGNATURE-----
+
+--4bRzO86E/ozDv8r1--
