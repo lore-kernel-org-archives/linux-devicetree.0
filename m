@@ -1,22 +1,48 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 4/4] ARM: tegra: Set SCU base address dynamically from
- DT
-Date: Wed, 02 Jan 2013 12:02:53 -0700
-Message-ID: <50E4845D.6020809@wwwdotorg.org>
-References: <1355725087-11363-1-git-send-email-hdoyu@nvidia.com> <1355725087-11363-4-git-send-email-hdoyu@nvidia.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [RFC 3/5] ARM: CTI: Convert CTI helpers to AMBA bus driver
+Date: Wed, 2 Jan 2013 13:13:47 -0600
+Message-ID: <50E486EB.8030506@ti.com>
+References: <1355348588-22318-1-git-send-email-jon-hunter@ti.com> <1355348588-22318-4-git-send-email-jon-hunter@ti.com> <20121221222703.GB2658@pratikp-linux.qualcomm.com> <20121221223558.GC2658@pratikp-linux.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1355725087-11363-4-git-send-email-hdoyu@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Hiroshi Doyu <hdoyu@nvidia.com>
-Cc: linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20121221223558.GC2658@pratikp-linux.qualcomm.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pratik Patel <pratikp@codeaurora.org>
+Cc: Paul Walmsley <paul@pwsan.com>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, Will Deacon <will.deacon@arm.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, Ming Lei <ming.lei@canonical.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/16/2012 11:18 PM, Hiroshi Doyu wrote:
-> Set Snoop Control Unit(SCU) register base address dynamically from DT.
 
-Hiroshi, what's the status on this patch series? I think Rob had
-comments/objections on patch 4; are you going to post an updated series,
-or is this series replaced by patch 3 in your Tegra114 series?
+On 12/21/2012 04:35 PM, Pratik Patel wrote:
+> On Fri, Dec 21, 2012 at 02:27:03PM -0800, Pratik Patel wrote:
+>> On Wed, Dec 12, 2012 at 03:43:06PM -0600, Jon Hunter wrote:
+>>> +
+>>> +/**
+>>> + * cti_irq_ack - acknowledges the CTI trigger output
+>>> + * @cti: CTI instance
+>>> + *
+>>> + * Acknowledges the CTI trigger output by writting to the appropriate
+>>> + * bit in the CTI interrupt acknowledge register.
+>>> + */
+>>> +int cti_irq_ack(struct cti *cti)
+>>> +{
+>>> +	u32 v;
+>>> +
+>>> +	if (!cti || !cti->enabled)
+>>> +		return -EINVAL;
+>>> +
+>>> +	v = cti_readl(cti, CTIINTACK);
+>>
+>> Just curious if CTIINTACK is a read-write register? This is a
+>> read-only for us.
+>>
+> Mistyped - its a write-only for us
+
+You are right. Looking at the ARM documentation this is a write-only
+register. I had copied this function from the original helpers but had
+not checked if this was readable. I will correct this.
+
+Cheers
+Jon
+
