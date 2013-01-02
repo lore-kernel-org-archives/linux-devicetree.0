@@ -1,50 +1,83 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH RFC v2 02/15] [media] Add a V4L2 OF parser
-Date: Wed, 02 Jan 2013 23:11:20 +0100
-Message-ID: <50E4B088.7070007@gmail.com>
-References: <1356969793-27268-1-git-send-email-s.nawrocki@samsung.com> <1356969793-27268-3-git-send-email-s.nawrocki@samsung.com> <Pine.LNX.4.64.1301021255380.7829@axis700.grange>
+From: Bryan Wu <pengw-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] ARM: DT: tegra: Add board leaver compatible properties
+Date: Wed, 2 Jan 2013 14:50:24 -0800
+Message-ID: <1357167025-6167-1-git-send-email-pengw@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1301021255380.7829@axis700.grange>
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
-
-On 01/02/2013 12:58 PM, Guennadi Liakhovetski wrote:
->> --- /dev/null
->> +++ b/drivers/media/v4l2-core/v4l2-of.c
->> @@ -0,0 +1,249 @@
->> +/*
->> + * V4L2 OF binding parsing library
->> + *
->> + * Copyright (C) 2012 Renesas Electronics Corp.
->> + * Author: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of version 2 of the GNU General Public License as
->> + * published by the Free Software Foundation.
->> + */
->> +#include<linux/kernel.h>
->> +#include<linux/module.h>
->> +#include<linux/of.h>
->> +#include<linux/slab.h>
->
-> Is slab.h really needed? I didn't have it in my version. Maybe you meant
-> to include string.h for memset()?
-
-I don't think it is needed, it looks like my mistake. I'll check it again
-and replace it with string.h.
-
-I've also noticed there are EXPORT_SYMBOL() missing for the first two 
-functions
-in this file. I'll fix it in next version.
-
+Signed-off-by: Bryan Wu <pengw-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
+ Documentation/devicetree/bindings/arm/tegra.txt |   51 ++++++++++++++++++++---
+ 1 file changed, 45 insertions(+), 6 deletions(-)
 
-Thanks,
-Sylwester
+diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
+index 6e69d2e..ff9199a 100644
+--- a/Documentation/devicetree/bindings/arm/tegra.txt
++++ b/Documentation/devicetree/bindings/arm/tegra.txt
+@@ -1,14 +1,53 @@
+ NVIDIA Tegra device tree bindings
+ -------------------------------------------
+ 
+-Boards with the tegra20 SoC shall have the following properties:
++- Boards with the tegra20 SoC shall have the following properties:
++  Required root node property:
++  compatible = "nvidia,tegra20";
+ 
+-Required root node property:
++- Boards with the tegra30 SoC shall have the following properties:
++  Required root node property:
++  compatible = "nvidia,tegra30";
+ 
+-compatible = "nvidia,tegra20";
++Boards
++-------------------------------------------
++
++- NVIDIA Tegra20 Harmony evaluation board:
++  compatible = "nvidia,harmony", "nvidia,tegra20";
++
++- Avionic Design Medcom-Wide board:
++  compatible = "ad,medcom-wide", "ad,tamonten", "nvidia,tegra20";
++
++- Toshiba AC100 / Dynabook AZ;
++  compatible = "compal,paz00", "nvidia,tegra20";
++
++- Avionic Design Plutux board:
++  compatible = "ad,plutux", "ad,tamonten", "nvidia,tegra20";
++
++- NVIDIA Seaboard:
++  compatible = "nvidia,seaboard", "nvidia,tegra20";
++
++- Avionic Design Tamonten SOM:
++  compatible = "ad,tamonten", "nvidia,tegra20";
++
++- Avionic Design Tamonten Evaluation Carrier:
++  compatible = "ad,tec", "ad,tamonten", "nvidia,tegra20";
++
++- Compulab TrimSlice board:
++  compatible = "compulab,trimslice", "nvidia,tegra20";
++
++- NVIDIA Tegra20 Ventana evaluation board:
++  compatible = "nvidia,ventana", "nvidia,tegra20";
++
++- NVIDIA Tegra20 Whistler evaluation board:
++  compatible = "nvidia,whistler", "nvidia,tegra20";
++
++- NVIDIA Tegra30 Cardhu evaluation board:
++  compatible = "nvidia,cardhu", "nvidia,tegra30";
+ 
+-Boards with the tegra30 SoC shall have the following properties:
++- NVIDIA Tegra30 Cardhu A02 evaluation board:
++  compatible = "nvidia,cardhu-a02", "nvidia,cardhu", "nvidia,tegra30";
+ 
+-Required root node property:
++- NVIDIA Tegra30 Cardhu A04 (A05, A06, A07) evaluation board:
++  compatible = "nvidia,cardhu-a04", "nvidia,cardhu", "nvidia,tegra30";
+ 
+-compatible = "nvidia,tegra30";
+-- 
+1.7.10.4
