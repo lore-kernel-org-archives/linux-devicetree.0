@@ -1,47 +1,101 @@
-From: Peng Wu <pengw-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: DT: tegra: Add Tegra30 Beaver board support
-Date: Wed, 2 Jan 2013 10:13:03 -0800
-Message-ID: <50E478AF.2040406@nvidia.com>
-References: <1356032489-27619-1-git-send-email-pengw@nvidia.com> <50DDC743.2080606@gmail.com>	<50DE3146.6090001@nvidia.com> <CAOesGMgW890K4Wo2-SFE4YFn5f8T950BTZ82rkCQfwpV+bsRyQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAOesGMgW890K4Wo2-SFE4YFn5f8T950BTZ82rkCQfwpV+bsRyQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH V7] kbuild: create a rule to run the pre-processor on *.dts files
+Date: Wed,  2 Jan 2013 11:43:35 -0700
+Message-ID: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <glikely@secretlab.ca>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Michal Marek <mmarek@suse.cz>, Jon Loeliger <jdl@jdl.com>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Glass <sjg@chromium.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/28/2012 08:43 PM, Olof Johansson wrote:
-> On Fri, Dec 28, 2012 at 3:54 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
->> On 12/28/2012 09:22 AM, Rob Herring wrote:
->>> On 12/20/2012 01:41 PM, Bryan Wu wrote:
->>>> This patch adds support for Tegra30 Beaver board in upstream kernel.
->>>> diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
->>>> +/ {
->>>> +    model = "NVIDIA Tegra30 Beaver evaluation board";
->>>> +    compatible = "nvidia,beaver", "nvidia,tegra30";
->>> nvidia,beaver needs to be documented.
->> Hmmm. I guess we've managed not to document /any/ of the Tegra
->> board-level compatible values. Bryan, could you make a separate patch to
->> add all the existing board compatible values to
->> Documentation/devicetree/bindings/arm/tegra.txt. The Beaver addition to
->> that file can still be part of the Beaver-specific patch though.
-> Does it need to be documented? Then the "support a new platform only
-> through DTS update" is no longer true. :)
->
-> In the past, I don't think we've strictly documented all derivative
-> platform compatible values, just some of the reference ones?
->
->
-> -Olof
+From: Stephen Warren <swarren@nvidia.com>
 
-Actually in every Tegra board dts file, there is a model string to 
-describe this machine as well as a compatible board string, just like 
-the "nvidia,beaver". So do we still need put this duplicated information 
-in a document file? Or if this is the requirement of DeviceTree. I will 
-do that. I think we have 12 boards need to add such document currently.
+Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
+passing them to dtc for final compilation. This allows the use of #define
+and #include within the .dts file.
 
-Thanks and happy new year.
--Bryan
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+Grant, back in mid-November, you said you'd make a decision on this in
+the next couple of days, but I think this got overlooked.
+
+v7: Build *.dtb from *.dts not src/*.dts.
+v6: No change.
+v5:
+* Update Documentation/kbuild for the new command and rule.
+v4:
+* Use -x assembler-with-cpp so pre-defined macros are set up so that
+  #included header files know to only use cpp syntax, not C syntax.
+* Define __DTS__ for similar reasons.
+* use $(CPP) not $(CC) -E, and use $(cpp_flags).
+* Save the pre-processed results so they can be easily inspected when
+  debugging build issues.
+* The use of -x assembler-with-cpp causes cpp to recognize directives in
+  column 1 only. Hence, there's no need to escape property names that
+  begin with #. Hence, there's no need for separate skeleton.dtsi and
+  skeleton.dtsip. Maintain a separate file extension and build rule so that
+  CPP-usage is opt-in. In particular, when using CPP, #include must be used
+  rather than /include/ so that dependencies work.
+v3: Pass "-x c" not "-xc" to cpp.
+v2: Place make %.dtb: %.dtsp rule into Makefile.lib.
+---
+ Documentation/kbuild/makefiles.txt |   23 +++++++++++++++++++++++
+ scripts/Makefile.lib               |    9 +++++++++
+ 2 files changed, 32 insertions(+)
+
+diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+index 14c3f4f..5198b74 100644
+--- a/Documentation/kbuild/makefiles.txt
++++ b/Documentation/kbuild/makefiles.txt
+@@ -1186,6 +1186,29 @@ When kbuild executes, the following steps are followed (roughly):
+ 		clean-files += *.dtb
+ 		DTC_FLAGS ?= -p 1024
+ 
++    dtc_cpp
++	This is just like dtc as describe above, except that the C pre-
++	processor is invoked upon the .dtsp file before compiling the result
++	with dtc.
++
++	In order for build dependencies to work, all files compiled using
++	dtc_cpp must use the C pre-processor's #include functionality and not
++	dtc's /include/ functionality.
++
++	Using the C pre-processor allows use of #define to create named
++	constants. In turn, the #defines will typically appear in a header
++	file, which may be shared with regular C code. Since the dtc language
++	represents a data structure rather than code in C syntax, similar
++	restrictions are placed on a header file included by a device tree
++	file as for a header file included by an assembly language file.
++	In particular, the C pre-processor is passed -x assembler-with-cpp,
++	which sets macro __ASSEMBLY__. __DTS__ is also set. These allow header
++	files to restrict their content to that compatible with device tree
++	source.
++
++	A central rule exists to create $(obj)/%.dtb from $(src)/%.dtsp;
++	architecture Makefiles do no need to explicitly write out that rule.
++
+ --- 6.8 Custom kbuild commands
+ 
+ 	When kbuild is executing with KBUILD_VERBOSE=0, then only a shorthand
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index bdf42fd..2c2a302 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -269,6 +269,15 @@ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile
+ $(obj)/%.dtb: $(src)/%.dts FORCE
+ 	$(call if_changed_dep,dtc)
+ 
++dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
++
++quiet_cmd_dtc_cpp = DTC+CPP $@
++cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__ -x assembler-with-cpp -o $(dtc-tmp) $< ; \
++	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
++
++$(obj)/%.dtb: $(src)/%.dtsp FORCE
++	$(call if_changed_dep,dtc_cpp)
++
+ # Bzip2
+ # ---------------------------------------------------------------------------
+ 
+-- 
+1.7.10.4
