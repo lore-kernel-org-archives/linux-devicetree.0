@@ -1,158 +1,184 @@
-From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
-Subject: Re: CoreSight framework and drivers
-Date: Wed, 2 Jan 2013 14:00:21 -0600
-Message-ID: <50E491D5.3080106@ti.com>
-References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
- <20121219112314.GA26329@mudshark.cambridge.arm.com> <50D1F37E.6000804@ti.com>
- <20121219212431.GC23594@pratikp-linux.qualcomm.com> <50D34EE5.8090407@ti.com>
- <20121220195127.GA14877@pratikp-linux.qualcomm.com> <50D3972E.4030607@ti.com>
- <20121221221828.GA2658@pratikp-linux.qualcomm.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH RFC v2 01/15] [media] Add common video interfaces OF bindings
+ documentation
+Date: Wed, 02 Jan 2013 22:51:20 +0100
+Message-ID: <50E4ABD8.4040902@gmail.com>
+References: <1356969793-27268-1-git-send-email-s.nawrocki@samsung.com> <1356969793-27268-2-git-send-email-s.nawrocki@samsung.com> <Pine.LNX.4.64.1301021220370.7829@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20121221221828.GA2658-9H3kiKr51/JHGpnEYu0o6d07Fnf2crXX0E9HWUfgJXw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "magnus.p.persson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <magnus.p.persson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "david.rusling-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <david.rusling-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "d-deao-l0cyMroinI0@public.gmane.org" <d-deao-l0cyMroinI0@public.gmane.org>, "christian.bejram-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <christian.bejram-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1301021220370.7829@axis700.grange>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Guennadi,
 
-On 12/21/2012 04:18 PM, Pratik Patel wrote:
-> On Thu, Dec 20, 2012 at 04:54:38PM -0600, Jon Hunter wrote:
+On 01/02/2013 12:31 PM, Guennadi Liakhovetski wrote:
+> Hi Sylwester
+>
+> Thanks for picking up these patches! In general both look good to me, just
+> a couple of nit-picks, that I couldn't help remarking:-)
+
+Sure, thanks again for the feedback.
+
+> On Mon, 31 Dec 2012, Sylwester Nawrocki wrote:
+>
+>> From: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
 >>
->> On 12/20/2012 01:51 PM, Pratik Patel wrote:
->>> On Thu, Dec 20, 2012 at 11:46:13AM -0600, Jon Hunter wrote:
->>>>
->>>> On 12/19/2012 03:24 PM, Pratik Patel wrote:
->>>>
->>>> [snip]
->>>>
->>>>> Currently we use the CoreSight virtual bus to conveniently list
->>>>> sysfs configuration attributes for all the registered CoreSight
->>>>> devices.
->>>>>
->>>>> For eg:
->>>>> /sys/bus/coresight/devices/coresight-etm0/<attribute>
->>>>> /sys/bus/coresight/devices/coresight-etm1/<attribute>
->>>>> /sys/bus/coresight/devices/coresight-stm/<attribute>
->>>>> /sys/bus/coresight/devices/coresight-tmc-etf/<attribute>
->>>>> ...
->>>>> ...
->>>>>
->>>>> Some of the attributes are based on device type (i.e. source,
->>>>> link or sink) so they will exist for all devices of that type
->>>>> while some are device specific.
->>>>>
->>>>> Maybe I am misunderstanding the question but are you suggesting
->>>>> to register CoreSight devices to the AMBA bus instead of the
->>>>> CoreSight core layer code?
->>>>
->>>> Yes exactly.
->>>>
->>>>> Will Deacon mentioned earlier that AMBA framework can be changed
->>>>> to accomodate devices with a different class but I am more
->>>>> concerned with losing some of the stuff that the core layer code
->>>>> does (eg. coresight_register, coresight_enable, coresight_disable
->>>>> in coresight.c) if we register CoreSight drivers to the AMBA bus
->>>>> without letting the core layer know about the device connections.
->>>>
->>>> I may be missing something, but couldn't you keep all the
->>>> register/enable/disable stuff but just register the device with the amba
->>>> bus? Obviously some changes would need to be made.
->>>>
->>>
->>> Ok, so are you referring to making CoreSight devices register
->>> with AMBA bus instead of platform bus keeping everything else
->>> intact?
+>> This patch adds a document describing common OF bindings for video
+>> capture, output and video processing devices. It is curently mainly
+>> focused on video capture devices, with data busses defined by
+>> standards like ITU-R BT.656 or MIPI-CSI2.
+>> It also documents a method of describing data links between devices.
 >>
->> Yes exactly. However, please note I am not saying that we should do
->> this, and I asking what direction does the community want us to take
->> here? Platform bus or AMBA bus?
+>> Signed-off-by: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
+>> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
+>> Reviewed-by: Stephen Warren<swarren@nvidia.com>
 >>
->>>> Personally, I don't have strong feeling either way, but we have ETM/ETB
->>>> drivers using AMBA today and so I am hoping we can come to agreement on
->>>> this going forward.
->>>>
->>>> Russell, Will, what are your thoughts?
->>>>
->>>> Otherwise, looking at the code, I like what you have implemented. I
->>>> still need to look closer, but I am struggling to figure out how a
->>>> coresight device such as the cross-trigger-interface fits with this
->>>> model. This model appears to be geared towards coresight devices used
->>>> for traces purposes and are either source, links or sinks. The
->>>> cross-trigger-interface is not a source or a sink. However, although you
->>>> it could be considered as a link (routing events), it is not really, as
->>>> it may not link to other coresight sinks/source.
->>>>
->>>> In my case, I have PMU-IRQ --> CTI --> GIC. So a non-coresight source
->>>> and sink. In away the CTI looks more like a 2nd-level interrupt
->>>> controller than anything else. Hence, another type of coresight device
->>>> may be needed in addition to source, links and sinks. Or link is
->>>> extended in some way to connect to non-coresight sources/sinks.
->>>>
->>>> Let me know if you have any thoughts.
->>>>
->>>
->>> I had left the "None" type for miscellaneous stuff but I agree it
->>> should be a separate type - maybe "debug".
->>>
->>> Having said that I like the CTI driver you have uploaded. Need to
->>> look at it in more detail. Since CTI connections can vary between
->>> chip to chip, we need a generic way to deal with it.
+>> ---
 >>
->> Yes if you have any ideas let me know. As Will had mentioned it would be
->> good to have a common function table all these devices could use too. I
->> will take a closer look at what you have.
+>> This is basically a resend of my previous version of this patch [1],
+>> with just a few typo/grammar issue corrections.
 >>
-> 
-> I had started on a CTI driver much in line with your current
-> implementation but your approach looks good to me.
-> 
-> Looking at the code though, I couldn't find a way to perform a
-> mapping between two different CTIs. Reason I ask is because we
-> have use cases where we need to map one CTIs input to another
-> CTIs output on the same channel.
+>> [1] http://patchwork.linuxtv.org/patch/15911/
+>> ---
+>>   .../devicetree/bindings/media/video-interfaces.txt |  198 ++++++++++++++++++++
+>>   1 file changed, 198 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/media/video-interfaces.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt b/Documentation/devicetree/bindings/media/video-interfaces.txt
+>> new file mode 100644
+>> index 0000000..d1eea35
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
+>> @@ -0,0 +1,198 @@
+>> +Common bindings for video data receiver and transmitter interfaces
+>> +
+>> +General concept
+>> +---------------
+>> +
+>> +Video data pipelines usually consist of external devices, e.g. camera sensors,
+>> +controlled over an I2C, SPI or UART bus, and SoC internal IP blocks, including
+>> +video DMA engines and video data processors.
+>> +
+>> +SoC internal blocks are described by DT nodes, placed similarly to other SoC
+>> +blocks.  External devices are represented as child nodes of their respective
+>> +bus controller nodes, e.g. I2C.
+>> +
+>> +Data interfaces on all video devices are described by their child 'port' nodes.
+>> +Configuration of a port depends on other devices participating in the data
+>> +transfer and is described by 'endpoint' subnodes.
+>> +
+>> +dev {
+>> +	#address-cells =<1>;
+>> +	#size-cells =<0>;
+>> +	port@0 {
+>> +		endpoint@0 { ... };
+>> +		endpoint@1 { ... };
+>> +	};
+>> +	port@1 { ... };
+>> +};
+>> +
+>> +If a port can be configured to work with more than one other device on the same
+>> +bus, an 'endpoint' child node must be provided for each of them.  If more than
+>> +one port is present in a device node or there is more than one endpoint at a
+>> +port, a common scheme, using '#address-cells', '#size-cells' and 'reg' properties
+>> +is used.
+>> +
+>> +Two 'endpoint' nodes are linked with each other through their 'remote-endpoint'
+>> +phandles.  An endpoint subnode of a device contains all properties needed for
+>> +configuration of this device for data exchange with the other device.  In most
+>> +cases properties at the peer 'endpoint' nodes will be identical, however
+>> +they might need to be different when there is any signal modifications on the
+>> +bus between two devices, e.g. there are logic signal inverters on the lines.
+>> +
+>> +Required properties
+>> +-------------------
+>> +
+>> +If there is more than one 'port' or more than one 'endpoint' node following
+>> +properties are required in relevant parent node:
+>> +
+>> +- #address-cells : number of cells required to define port number, should be 1.
+>> +- #size-cells    : should be zero.
+>> +
+>> +Optional endpoint properties
+>> +----------------------------
+>> +
+>> +- remote-endpoint : phandle to an 'endpoint' subnode of the other device node.
+>
+> This spacing before ":" looks strange to me. I personally prefer the
+> normal English rule - "x: y," i.e. no space before and a space after, but
+> I wouldn't remark on your choice of a space on each side in this specific
+> case, if it was consistent. Whereas sometimes having one space and
+> sometimes having none looks weird to me. I would go for "no space before
+> ':'" throughout this document.
 
-The code is largely based upon the existing cti helpers, which just had
-a cti_map_trigger() function. The use-case you described is not
-supported by the current helpers and so also not supported in my initial
-implementation (although we should add this). Hence, it would be
-probably best to split the cti_map_trigger() into two functions say,
-cti_map_triggerin() and cti_map_triggerout(), to map a trigger
-input/output to a channel.
+Gah, it was so close! ;) Sorry about it, it looked more readable to me 
+that way.
+And I've checked other bindings' documentation and there was many files 
+having
+space on both sides of a colon. Nevertheless, I will change it back to the
+original form.
 
-> Do you intend to support different entities within kernel to map
-> different trig_in or trig_out on the same CTI? If so, it might
-> probably require reference counting for the enable/disable.
+>> +- slave-mode : a boolean property, run the link in slave mode. Default is master
+>> +  mode.
+>> +- bus-width : number of data lines, valid for parallel buses.
+>
+> As we discussed before, both "busses" and "buses" spellings are commonly
+> used at different locations around the world, but I think we should stick
+> to only one of them in a single document. It looks weird to have "buses"
+> in one line and "busses" in the following one.
 
-I need to think about this some more, as this does make it a little more
-complex. Right now only one entity can use a cti module at a time.
+True, I think that was the one occurrence I'd noticed and have forgotten to
+correct then. I'll fix it, thanks for pointing out.
 
-> What user interface do you plan to provide for the CTI? Maybe
-> something consistent with other CoreSight components in sysfs to
-> allow users to enable, disable, map and unmap ???
+>> +- data-shift: on parallel data busses, if bus-width is used to specify the
+>> +  number of data lines, data-shift can be used to specify which data lines are
+>> +  used, e.g. "bus-width=<10>; data-shift=<2>;" means, that lines 9:2 are used.
+>> +- hsync-active : active state of HSYNC signal, 0/1 for LOW/HIGH respectively.
+>> +- vsync-active : active state of VSYNC signal, 0/1 for LOW/HIGH respectively.
+>> +  Note, that if HSYNC and VSYNC polarities are not specified, embedded
+>> +  synchronization may be required, where supported.
+>> +- data-active : similar to HSYNC and VSYNC, specifies data line polarity.
+>> +- field-even-active: field signal level during the even field data transmission.
+>> +- pclk-sample : rising (1) or falling (0) edge to sample the pixel clock signal.
+>
+> Yes, it was in my original document too, but don't we mean "sample data on
+> rising (1) or falling (0) edge of the pixel clock signal?"
 
-Yes that's possible.
+Oops, I've managed to overlooked this. Certainly, it wasn't supposed to mean
+sampling the clock signal. BTW, I had some doubts about this property. 
+On the
+transmitter side we more care about driving, rather than sampling data. And
+usually when a transmitter drives data line at one clock edge type (e.g. 
+rising)
+then the receiver samples data on the other edge (e.g. falling).
 
-> Please let me know your thoughts.
-> 
-> CTIs can easily be made part of the CoreSight core layer using a
-> different type but apart from being part of the CoreSight list
-> containing all the trace and CTI components, not sure if there is
-> anything that is useful to do in the core layer. Need to think
-> about this.
+In the display timing bindings there is a definitions like:
 
-Yes it would be good to make this all part of the same coresight framework.
++ - pixelclk-active: with
++			- active high = drive pixel data on rising edge/
++					sample data on falling edge
++			- active low  = drive pixel data on falling edge/
++					sample data on rising edge
++			- ignored     = ignored
 
-Cheers
-Jon
+where:
+
++    <1>: high active
++    <0>: low active
++    omitted: not used on hardware
+
+
+Then in our case, e.g. pclk-sample = <1>; on the transmitter side would mean
+the receiver, which also has same pclk-sample = <1>; specified in its node,
+has to sample data on rising clock edge and the transmitter is driving data
+on falling edge, right ?
+
+---
+
+Thanks,
+Sylwester
