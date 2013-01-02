@@ -1,71 +1,158 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v5 00/12] clk: exynos4: migrate to common clock framework
-Date: Wed, 2 Jan 2013 11:35:33 -0800
-Message-ID: <20130102193533.GB6583@quad.lixom.net>
-References: <1356827621-27617-1-git-send-email-thomas.abraham@linaro.org>
- <20121230052953.GB20903@quad.lixom.net>
- <02f701cde6f7$5abbcc60$10336520$@samsung.com>
+From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Subject: Re: CoreSight framework and drivers
+Date: Wed, 2 Jan 2013 14:00:21 -0600
+Message-ID: <50E491D5.3080106@ti.com>
+References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
+ <20121219112314.GA26329@mudshark.cambridge.arm.com> <50D1F37E.6000804@ti.com>
+ <20121219212431.GC23594@pratikp-linux.qualcomm.com> <50D34EE5.8090407@ti.com>
+ <20121220195127.GA14877@pratikp-linux.qualcomm.com> <50D3972E.4030607@ti.com>
+ <20121221221828.GA2658@pratikp-linux.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <02f701cde6f7$5abbcc60$10336520$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Thomas Abraham' <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@linaro.org, t.figa@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20121221221828.GA2658-9H3kiKr51/JHGpnEYu0o6d07Fnf2crXX0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Pratik Patel <pratikp-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "magnus.p.persson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <magnus.p.persson-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "david.rusling-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <david.rusling-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org" <arve-z5hGa2qSFaRBDgjK7y7TUQ@public.gmane.org>, "dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dsaxena-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <john.stultz-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "d-deao-l0cyMroinI0@public.gmane.org" <d-deao-l0cyMroinI0@public.gmane.org>, "christian.bejram-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org" <christian.bejram-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 30, 2012 at 05:37:08PM -0800, Kukjin Kim wrote:
-> Olof Johansson wrote:
-> > 
-> > On Sat, Dec 29, 2012 at 04:33:29PM -0800, Thomas Abraham wrote:
-> > > Changes since v4:
-> > > - Rebased to linux-3.8-rc1.
-> > >
-> > > Changes since v3:
-> > > - Includes changes suggested by Tomasz Figa <tomasz.figa@gmail.com>
-> > >
-> > > This patch series migrates the Samsung Exynos4 SoC clock code to adopt
-> > the
-> > > common clock framework. The use of Samsung specific clock structures has
-> > > been removed and all board support code has been updated. imx-style of
-> > > clock registration and lookup has been adopted for device tree based
-> > > exynos4 platforms.
-> > 
-> > I'd prefer to see if exynos4 and 5 were kept common here, and both
-> > transitioned
-> > at the same time. Especially since there are no legacy boards for exynos5,
-> it
-> > would mean you could have a very clean transition there. What's the plan
-> to
-> > follow up with 5?
-> > 
-> Yeah, I'm working on EXYNOS5250 common clk stuff and Thomas is working on
-> EXYNOS5440. So I think, we can move on exynos4 and 5 both common clk at the
-> same time. Note, EXYNOS5 common clk stuff will be submitted in the beginning
-> of Jan.
 
-As per the other reply, that sounds good -- it doesn't make sense to merge one
-without the other but it sounds like maybe they can both be ready in time for
-3.9.
+On 12/21/2012 04:18 PM, Pratik Patel wrote:
+> On Thu, Dec 20, 2012 at 04:54:38PM -0600, Jon Hunter wrote:
+>>
+>> On 12/20/2012 01:51 PM, Pratik Patel wrote:
+>>> On Thu, Dec 20, 2012 at 11:46:13AM -0600, Jon Hunter wrote:
+>>>>
+>>>> On 12/19/2012 03:24 PM, Pratik Patel wrote:
+>>>>
+>>>> [snip]
+>>>>
+>>>>> Currently we use the CoreSight virtual bus to conveniently list
+>>>>> sysfs configuration attributes for all the registered CoreSight
+>>>>> devices.
+>>>>>
+>>>>> For eg:
+>>>>> /sys/bus/coresight/devices/coresight-etm0/<attribute>
+>>>>> /sys/bus/coresight/devices/coresight-etm1/<attribute>
+>>>>> /sys/bus/coresight/devices/coresight-stm/<attribute>
+>>>>> /sys/bus/coresight/devices/coresight-tmc-etf/<attribute>
+>>>>> ...
+>>>>> ...
+>>>>>
+>>>>> Some of the attributes are based on device type (i.e. source,
+>>>>> link or sink) so they will exist for all devices of that type
+>>>>> while some are device specific.
+>>>>>
+>>>>> Maybe I am misunderstanding the question but are you suggesting
+>>>>> to register CoreSight devices to the AMBA bus instead of the
+>>>>> CoreSight core layer code?
+>>>>
+>>>> Yes exactly.
+>>>>
+>>>>> Will Deacon mentioned earlier that AMBA framework can be changed
+>>>>> to accomodate devices with a different class but I am more
+>>>>> concerned with losing some of the stuff that the core layer code
+>>>>> does (eg. coresight_register, coresight_enable, coresight_disable
+>>>>> in coresight.c) if we register CoreSight drivers to the AMBA bus
+>>>>> without letting the core layer know about the device connections.
+>>>>
+>>>> I may be missing something, but couldn't you keep all the
+>>>> register/enable/disable stuff but just register the device with the amba
+>>>> bus? Obviously some changes would need to be made.
+>>>>
+>>>
+>>> Ok, so are you referring to making CoreSight devices register
+>>> with AMBA bus instead of platform bus keeping everything else
+>>> intact?
+>>
+>> Yes exactly. However, please note I am not saying that we should do
+>> this, and I asking what direction does the community want us to take
+>> here? Platform bus or AMBA bus?
+>>
+>>>> Personally, I don't have strong feeling either way, but we have ETM/ETB
+>>>> drivers using AMBA today and so I am hoping we can come to agreement on
+>>>> this going forward.
+>>>>
+>>>> Russell, Will, what are your thoughts?
+>>>>
+>>>> Otherwise, looking at the code, I like what you have implemented. I
+>>>> still need to look closer, but I am struggling to figure out how a
+>>>> coresight device such as the cross-trigger-interface fits with this
+>>>> model. This model appears to be geared towards coresight devices used
+>>>> for traces purposes and are either source, links or sinks. The
+>>>> cross-trigger-interface is not a source or a sink. However, although you
+>>>> it could be considered as a link (routing events), it is not really, as
+>>>> it may not link to other coresight sinks/source.
+>>>>
+>>>> In my case, I have PMU-IRQ --> CTI --> GIC. So a non-coresight source
+>>>> and sink. In away the CTI looks more like a 2nd-level interrupt
+>>>> controller than anything else. Hence, another type of coresight device
+>>>> may be needed in addition to source, links and sinks. Or link is
+>>>> extended in some way to connect to non-coresight sources/sinks.
+>>>>
+>>>> Let me know if you have any thoughts.
+>>>>
+>>>
+>>> I had left the "None" type for miscellaneous stuff but I agree it
+>>> should be a separate type - maybe "debug".
+>>>
+>>> Having said that I like the CTI driver you have uploaded. Need to
+>>> look at it in more detail. Since CTI connections can vary between
+>>> chip to chip, we need a generic way to deal with it.
+>>
+>> Yes if you have any ideas let me know. As Will had mentioned it would be
+>> good to have a common function table all these devices could use too. I
+>> will take a closer look at what you have.
+>>
+> 
+> I had started on a CTI driver much in line with your current
+> implementation but your approach looks good to me.
+> 
+> Looking at the code though, I couldn't find a way to perform a
+> mapping between two different CTIs. Reason I ask is because we
+> have use cases where we need to map one CTIs input to another
+> CTIs output on the same channel.
 
-> > What are the plans to remove legacy board files on exynos4 at this time
-> > and switch them to DT-only? You could do it gradually like Stephen Warren
-> > did on Tegra, with hooks that call out to some of the legacy code, but
-> > configure the board through device tree and do away with the classic
-> > machine descriptors, etc.
-> > 
-> I had a plan to remove non-DT support on EXYNOS4 for v3.10, but if possible,
-> I will try to do it for v3.9. If any updates, let you know.
+The code is largely based upon the existing cti helpers, which just had
+a cti_map_trigger() function. The use-case you described is not
+supported by the current helpers and so also not supported in my initial
+implementation (although we should add this). Hence, it would be
+probably best to split the cti_map_trigger() into two functions say,
+cti_map_triggerin() and cti_map_triggerout(), to map a trigger
+input/output to a channel.
 
-There's no hurry, 3.10 is ok as a target as long as it's taking place. The main
-reason for why I was asking was that there was still some legacy board file
-updates posted, and that I hadn't seen much patches lately that made it obvious
-that there was an effort in that direction. 3.10 sounds like a good target.
+> Do you intend to support different entities within kernel to map
+> different trig_in or trig_out on the same CTI? If so, it might
+> probably require reference counting for the enable/disable.
 
-> Happy New Year!
+I need to think about this some more, as this does make it a little more
+complex. Right now only one entity can use a cti module at a time.
 
-Thanks, you too.
+> What user interface do you plan to provide for the CTI? Maybe
+> something consistent with other CoreSight components in sysfs to
+> allow users to enable, disable, map and unmap ???
 
+Yes that's possible.
 
--Olof
+> Please let me know your thoughts.
+> 
+> CTIs can easily be made part of the CoreSight core layer using a
+> different type but apart from being part of the CoreSight list
+> containing all the trace and CTI components, not sure if there is
+> anything that is useful to do in the core layer. Need to think
+> about this.
+
+Yes it would be good to make this all part of the same coresight framework.
+
+Cheers
+Jon
