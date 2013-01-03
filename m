@@ -1,61 +1,78 @@
-From: Pratik Patel <pratikp@codeaurora.org>
-Subject: Re: CoreSight framework and drivers
-Date: Thu, 3 Jan 2013 10:06:43 -0800
-Message-ID: <20130103180643.GA30277@pratikp-linux.qualcomm.com>
-References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
- <20121219112314.GA26329@mudshark.cambridge.arm.com>
- <50D1F37E.6000804@ti.com>
- <20121219212431.GC23594@pratikp-linux.qualcomm.com>
- <50D34EE5.8090407@ti.com>
- <20121220195127.GA14877@pratikp-linux.qualcomm.com>
- <50D3972E.4030607@ti.com>
- <20121221221828.GA2658@pratikp-linux.qualcomm.com>
- <20121223113239.GG16237@mudshark.cambridge.arm.com>
+From: Bryan Evenson <bevenson@melinkcorp.com>
+Subject: RE: Early kernel hang with big DTB appended
+Date: Thu, 3 Jan 2013 13:40:43 -0500
+Message-ID: <91586D499ADFD74FBCFB8425266A5DE40139F1B06030@pluto.melinkcorp.local>
+References: <7811936.npteFbuYu2@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20121223113239.GG16237@mudshark.cambridge.arm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "magnus.p.persson@stericsson.com" <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "d-deao@ti.com" <d-deao@ti.com>, "christian.bejram@stericsson.com" <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <7811936.npteFbuYu2@amdc1227>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <t.figa@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "nico@linaro.org" <nico@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "bones@secretlab.ca" <bones@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 23, 2012 at 11:32:39AM +0000, Will Deacon wrote:
-> On Fri, Dec 21, 2012 at 10:18:28PM +0000, Pratik Patel wrote:
-> > What user interface do you plan to provide for the CTI? Maybe
-> > something consistent with other CoreSight components in sysfs to
-> > allow users to enable, disable, map and unmap ???
-> > 
-> > Please let me know your thoughts.
+> -----Original Message-----
+> From: linux-arm-kernel-bounces@lists.infradead.org [mailto:linux-arm-
+> kernel-bounces@lists.infradead.org] On Behalf Of Tomasz Figa
+> Sent: Thursday, January 03, 2013 10:55 AM
+> To: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-samsung-soc@vger.kernel.org; linux@arm.linux.org.uk;
+> nico@linaro.org; kgene.kim@samsung.com; thomas.abraham@linaro.org;
+> bones@secretlab.ca; linux-arm-kernel@lists.infradead.org
+> Subject: Early kernel hang with big DTB appended
 > 
-> Rather than have your current approach of dev nodes + sysfs config files for
-> each coresight device, I think it might be better to follow something closer
-> to ftrace and stick per-device directories under debugfs/coresight/. Then you
-> can have a pipe file and some config files in the same directory for each
-> component. You also don't need to do any mapping operations with this (just
-> post-process the stream directly).
+> Hi,
 > 
-
-Thanks for the suggestion. I had initially debated between debugfs
-and sysfs but chose sysfs + dev nodes since using device attributes
-relieves the drivers from manually managing directories and files,
-its taken care of by the device and sysfs layers. Moreover, since
-these are physical devices, device attributes made sense at the
-time.
-
-The map and unmap I was referring to was for the CTI trigger
-mappings. Dev nodes are currently intended to provide the raw
-data collected in the sinks.
-
-Whats the advantage in using debugfs here?
-
-> It might also be fun to play with file redirection for sources and sinks, but
-> that's probably a bit too invasive.
+> I'm observing strange behavior when booting 3.8-rc1 and -rc2 with
+> appended DTB. The kernel hangs very early when the DTB is bigger than
+> some threshold somewhere around 24 KiB. With fullest possible low level
+> UART debugging (and printk patched to use printascii) I'm receiving
+> following
+> output:
 > 
-> Will
+> Uncompressing Linux... done, booting the kernel.
+> Booting Linux on physical CPU 0xa00
+> Linux version 3.8.0-rc1-00073-gdf6efca-dirty (t.figa@amdc1227) (gcc
+> version 4.5.2 (Gentoo 4.5.2 p1.2, pie-0.4.5) ) #2 SMP PREEMPT Thu Jan 3
+> 15:37:35 CET 2013
+> CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7d
+> CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction
+> cache
+> 
+> I tested on two Exynos-based boards (exynos4210-trats and one internal
+> exynos4412-based board) and same happens on both.
+> 
+> Do you have any ideas?
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Tomasz,
+
+Sounds to me like the DTB is not being fully written to memory or that it isn't being fully read from memory.  I've had similar problems when I placed the DTB too close to the end of flash and not all of the DTB was written to flash.
+
+If you load a debug build of U-Boot, I believe there are a number of debug messages related to loading the device tree that U-Boot prints.  Then you can at least verify that U-Boot is loading the entire device tree.
+
+Regards,
+Bryan
+
+> 
+> Best regards,
+> --
+> Tomasz Figa
+> Samsung Poland R&D Center
+> SW Solution Development, Linux Platform
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
