@@ -1,39 +1,38 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Early kernel hang with big DTB appended
-Date: Thu, 03 Jan 2013 16:55 +0100
-Message-ID: <7811936.npteFbuYu2@amdc1227>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 9/9] ARM: tegra: Add initial support for Tegra 114 SoC.
+Date: Thu, 3 Jan 2013 16:28:19 +0000
+Message-ID: <201301031628.19743.arnd@arndb.de>
+References: <1355996654-6579-1-git-send-email-hdoyu@nvidia.com> <1355996654-6579-10-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nico@linaro.org, bones@secretlab.ca, linux@arm.linux.org.uk, thomas.abraham@linaro.org, kgene.kim@samsung.com
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1355996654-6579-10-git-send-email-hdoyu@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Hiroshi Doyu <hdoyu@nvidia.com>, linux-tegra@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Stephen Warren <swarren@wwwdotorg.org>, John Stultz <johnstul@us.ibm.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Olof Johansson <olof@lixom.net>, Thomas Gleixner <tglx@linutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thursday 20 December 2012, Hiroshi Doyu wrote:
+> +
+> +DT_MACHINE_START(TEGRA114_DT, "NVIDIA Tegra114 (Flattened Device Tree)")
+> +       .smp            = smp_ops(tegra_smp_ops),
+> +       .map_io         = tegra_map_common_io,
+> +       .init_early     = tegra30_init_early,
+> +       .init_irq       = tegra_dt_init_irq,
+> +       .handle_irq     = gic_handle_irq,
+> +       .init_time      = clocksource_of_init,
+> +       .init_machine   = tegra114_dt_init,
+> +       .init_late      = tegra_init_late,
+> +       .restart        = tegra_assert_system_reset,
+> +       .dt_compat      = tegra114_dt_board_compat,
+> +MACHINE_END
 
-I'm observing strange behavior when booting 3.8-rc1 and -rc2 with appended 
-DTB. The kernel hangs very early when the DTB is bigger than some 
-threshold somewhere around 24 KiB. With fullest possible low level UART 
-debugging (and printk patched to use printascii) I'm receiving following 
-output:
+This one is so similar to Tegra30 that I wonder if it's actually worth keeping
+them separate still. The only difference I see is the clock initialization.
+Maybe that can be factored out to keep this the same as Tegra30.
 
-Uncompressing Linux... done, booting the kernel.
-Booting Linux on physical CPU 0xa00
-Linux version 3.8.0-rc1-00073-gdf6efca-dirty (t.figa@amdc1227) (gcc 
-version 4.5.2 (Gentoo 4.5.2 p1.2, pie-0.4.5) ) #2 SMP PREEMPT Thu Jan 3 
-15:37:35 CET 2013
-CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7d
-CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+Or are you planning to add more SoC specific here that would make this harder?
 
-I tested on two Exynos-based boards (exynos4210-trats and one internal 
-exynos4412-based board) and same happens on both.
-
-Do you have any ideas?
-
-Best regards,
--- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Linux Platform
+	Arnd
