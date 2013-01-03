@@ -1,78 +1,87 @@
-From: Bryan Evenson <bevenson@melinkcorp.com>
-Subject: RE: Early kernel hang with big DTB appended
-Date: Thu, 3 Jan 2013 13:40:43 -0500
-Message-ID: <91586D499ADFD74FBCFB8425266A5DE40139F1B06030@pluto.melinkcorp.local>
-References: <7811936.npteFbuYu2@amdc1227>
+From: Pratik Patel <pratikp@codeaurora.org>
+Subject: Re: [RFC 3/5] ARM: CTI: Convert CTI helpers to AMBA bus driver
+Date: Thu, 3 Jan 2013 10:47:52 -0800
+Message-ID: <20130103184752.GB30277@pratikp-linux.qualcomm.com>
+References: <1355348588-22318-1-git-send-email-jon-hunter@ti.com>
+ <1355348588-22318-4-git-send-email-jon-hunter@ti.com>
+ <20121221222703.GB2658@pratikp-linux.qualcomm.com>
+ <50E48934.6070201@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7811936.npteFbuYu2@amdc1227>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <t.figa@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
-Cc: "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "nico@linaro.org" <nico@linaro.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "bones@secretlab.ca" <bones@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50E48934.6070201@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Will Deacon <will.deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Walmsley <paul@pwsan.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Ming Lei <ming.lei@canonical.com>, linux-omap <linux-omap@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-arm-kernel-bounces@lists.infradead.org [mailto:linux-arm-
-> kernel-bounces@lists.infradead.org] On Behalf Of Tomasz Figa
-> Sent: Thursday, January 03, 2013 10:55 AM
-> To: devicetree-discuss@lists.ozlabs.org
-> Cc: linux-samsung-soc@vger.kernel.org; linux@arm.linux.org.uk;
-> nico@linaro.org; kgene.kim@samsung.com; thomas.abraham@linaro.org;
-> bones@secretlab.ca; linux-arm-kernel@lists.infradead.org
-> Subject: Early kernel hang with big DTB appended
+On Wed, Jan 02, 2013 at 01:23:32PM -0600, Jon Hunter wrote:
 > 
-> Hi,
+> On 12/21/2012 04:27 PM, Pratik Patel wrote:
+> > On Wed, Dec 12, 2012 at 03:43:06PM -0600, Jon Hunter wrote:
+> >> +
+> >> +/**
+> >> + * cti_irq_ack - acknowledges the CTI trigger output
+> >> + * @cti: CTI instance
+> >> + *
+> >> + * Acknowledges the CTI trigger output by writting to the appropriate
+> >> + * bit in the CTI interrupt acknowledge register.
+> >> + */
+> >> +int cti_irq_ack(struct cti *cti)
+> >> +{
+> >> +	u32 v;
+> >> +
+> >> +	if (!cti || !cti->enabled)
+> >> +		return -EINVAL;
+> >> +
+> >> +	v = cti_readl(cti, CTIINTACK);
+> > 
+> > Just curious if CTIINTACK is a read-write register? This is a
+> > read-only for us.
+> > 
+> >> +	v |= BIT(cti->trig_out);
+> >> +	cti_writel(v, cti, CTIINTACK);
+> >> +
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +
+> >> +static int cti_probe(struct amba_device *dev, const struct amba_id *id)
+> >> +{
+> >> +	struct cti *cti;
+> >> +	struct device_node *np = dev->dev.of_node;
+> >> +	int rc;
+> >> +
+> >> +	if (!np) {
+> >> +		dev_err(&dev->dev, "device-tree not found!\n");
+> >> +		return -ENODEV;
+> >> +	}
+> >> +
+> >> +	cti = devm_kzalloc(&dev->dev, sizeof(struct cti), GFP_KERNEL);
+> >> +	if (!cti) {
+> >> +		dev_err(&dev->dev, "memory allocation failed!\n");
+> >> +		return -ENOMEM;
+> >> +	}
+> >> +
+> >> +	rc = of_property_read_string_index(np, "arm,cti-name", 0, &cti->name);
+> >> +	if (rc) {
+> >> +		dev_err(&dev->dev, "no name found for CTI!\n");
+> >> +		return rc;
+> >> +	}
+> > 
+> > Shouldn't the CTI driver have some kind of clock management that
+> > it does for itself?
 > 
-> I'm observing strange behavior when booting 3.8-rc1 and -rc2 with
-> appended DTB. The kernel hangs very early when the DTB is bigger than
-> some threshold somewhere around 24 KiB. With fullest possible low level
-> UART debugging (and printk patched to use printascii) I'm receiving
-> following
-> output:
+> It does by using runtime PM. If you look at the cti_get/put functions,
+> you will see calls to pm_runtime_get/put. These calls will enable the
+> AMBA apb-clock. If you need to enable additional clocks then you could
+> register pm runtime resume/idle call backs to do this.
 > 
-> Uncompressing Linux... done, booting the kernel.
-> Booting Linux on physical CPU 0xa00
-> Linux version 3.8.0-rc1-00073-gdf6efca-dirty (t.figa@amdc1227) (gcc
-> version 4.5.2 (Gentoo 4.5.2 p1.2, pie-0.4.5) ) #2 SMP PREEMPT Thu Jan 3
-> 15:37:35 CET 2013
-> CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7d
-> CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction
-> cache
-> 
-> I tested on two Exynos-based boards (exynos4210-trats and one internal
-> exynos4412-based board) and same happens on both.
-> 
-> Do you have any ideas?
 
-Tomasz,
+Ok
 
-Sounds to me like the DTB is not being fully written to memory or that it isn't being fully read from memory.  I've had similar problems when I placed the DTB too close to the end of flash and not all of the DTB was written to flash.
-
-If you load a debug build of U-Boot, I believe there are a number of debug messages related to loading the device tree that U-Boot prints.  Then you can at least verify that U-Boot is loading the entire device tree.
-
-Regards,
-Bryan
-
-> 
-> Best regards,
-> --
-> Tomasz Figa
-> Samsung Poland R&D Center
-> SW Solution Development, Linux Platform
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
