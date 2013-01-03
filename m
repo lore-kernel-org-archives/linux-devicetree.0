@@ -1,55 +1,80 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: [PATCH 1/2] ARM: dts: Fix compatible value of pinctrl module on
- EXYNOS5440
-Date: Wed, 02 Jan 2013 16:20:22 -0800
-Message-ID: <1357172423-8217-1-git-send-email-kgene.kim@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: Thomas Abraham <thomas.ab@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, devicetree-discuss@lists.ozlabs.org
+From: Bryan Wu <cooloney@gmail.com>
+Subject: Re: [PATCH v5 0/7] leds: leds-pwm: Device tree support
+Date: Wed, 2 Jan 2013 18:10:13 -0800
+Message-ID: <CAK5ve-L=L2qp1A01Kui9RAMn9mZxL7P-c0sZ1bDveLoKkK0Fzg@mail.gmail.com>
+References: <1356083041-29179-1-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1356083041-29179-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Abraham <thomas.ab@samsung.com>
+Hi Peter,
 
-Fix the incorrect compatible property value of pin-controller module
-EXYNOS5440 SoC.
+I merged this patchset into my for-next branch already.
 
-Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-[kgene.kim@samsung.com: fixed it in gpio together for exynos5440]
-Signed-off-by: Kukjin Kim <kgene.kim@samsung.com>
-Cc: devicetree-discuss@lists.ozlabs.org
----
- arch/arm/boot/dts/exynos5440.dtsi |    2 +-
- drivers/gpio/gpio-samsung.c       |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+Thanks for pushing this.
+-Bryan
 
-diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-index 024269d..25f0fa6 100644
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ b/arch/arm/boot/dts/exynos5440.dtsi
-@@ -86,7 +86,7 @@
- 	};
- 
- 	pinctrl {
--		compatible = "samsung,pinctrl-exynos5440";
-+		compatible = "samsung,exynos5440-pinctrl";
- 		reg = <0xE0000 0x1000>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
-diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
-index 953737d..cac4b45 100644
---- a/drivers/gpio/gpio-samsung.c
-+++ b/drivers/gpio/gpio-samsung.c
-@@ -3026,7 +3026,7 @@ static __init int samsung_gpiolib_init(void)
- 	static const struct of_device_id exynos_pinctrl_ids[] = {
- 		{ .compatible = "samsung,pinctrl-exynos4210", },
- 		{ .compatible = "samsung,pinctrl-exynos4x12", },
--		{ .compatible = "samsung,pinctrl-exynos5440", },
-+		{ .compatible = "samsung,exynos5440-pinctrl", },
- 	};
- 	for_each_matching_node(pctrl_np, exynos_pinctrl_ids)
- 		if (pctrl_np && of_device_is_available(pctrl_np))
--- 
-1.7.10.4
+On Fri, Dec 21, 2012 at 1:43 AM, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> Hello,
+>
+> Changes since v4:
+> - Commit message for patch #7 (DT binding for the leds-pwm driver) has been
+>   updated
+>
+> Changes since v3:
+> Addressed comments from Thierry Redding:
+> - DT binding documentation for leds-pwm updated
+> - of_pwm_request() renamed as of_pwm_get()
+> - introduction of devm_of_pwm_get()
+> - Commit message updates
+> - Other comments has been also addressed
+> - Acked-by from Grant is not added to the patches since they were modified since
+>   v3
+>
+> Changes since v2:
+> - rebased on top of linux-next
+> - DT bindings now alligned with Grant's request
+> - exporting of_pwm_request() from PWM core to allow clean DT bindings
+> - DT binding documentation changed to reflect the changes
+>
+> Changes since v1:
+> - As suggested by Bryan Wu: the legacy pwm_request() has been removed from
+>   patch 1
+> - Device tree bindings added for leds-pwm driver.
+>
+> When we boot with Device tree we handle one LED per device to be more aligned
+> with PWM core's DT implementation.
+> An example of the DT usage is provided in the new DT binding documentation for
+> leds-pwm.
+>
+> Tested on OMAP4 Blaze (SDP), BeagleBoard with legacy and DT boot. On Zoom2 with
+> legacy boot.
+>
+> Regards,
+> Peter
+> ---
+> Peter Ujfalusi (7):
+>   leds: leds-pwm: Convert to use devm_get_pwm
+>   leds: leds-pwm: Preparing the driver for device tree support
+>   pwm: Correct parameter name in header for *pwm_get() functions
+>   pwm: core: Rename of_pwm_request() to of_pwm_get() and export it
+>   pwm: Add devm_of_pwm_get() as exported API for users
+>   leds: leds-pwm: Simplify cleanup code
+>   leds: leds-pwm: Add device tree bindings
+>
+>  .../devicetree/bindings/leds/leds-pwm.txt          |  48 +++++++
+>  drivers/leds/leds-pwm.c                            | 152 +++++++++++++++------
+>  drivers/pwm/core.c                                 |  38 +++++-
+>  include/linux/leds_pwm.h                           |   2 +-
+>  include/linux/pwm.h                                |  20 ++-
+>  5 files changed, 212 insertions(+), 48 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/leds/leds-pwm.txt
+>
+> --
+> 1.8.0.2
+>
