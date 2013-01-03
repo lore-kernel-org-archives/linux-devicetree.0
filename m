@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: [PATCH] OF: Link platform device resources properly.
-Date: Fri,  4 Jan 2013 00:31:24 +0200
-Message-ID: <1357252284-5990-1-git-send-email-panto@antoniou-consulting.com>
+Subject: [PATCH] dtc: Fix util_is_printable_string
+Date: Fri,  4 Jan 2013 00:32:01 +0200
+Message-ID: <1357252321-6097-1-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -20,28 +20,51 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The resources of the platform devices created by the OF core were
-not properly linked. Make sure that they are, so that we don't get
-any crashes when trying to remove the device.
+The method used did not account for multi-part strings.
 
 Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 ---
- drivers/of/device.c | 3 +++
- 1 file changed, 3 insertions(+)
+ scripts/dtc/util.c | 20 +++++++++++++-------
+ 1 file changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/of/device.c b/drivers/of/device.c
-index 4c74e4f..d75fcaf 100644
---- a/drivers/of/device.c
-+++ b/drivers/of/device.c
-@@ -62,6 +62,9 @@ int of_device_add(struct platform_device *ofdev)
- 	if (!ofdev->dev.parent)
- 		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
+diff --git a/scripts/dtc/util.c b/scripts/dtc/util.c
+index 2422c34..45f186b 100644
+--- a/scripts/dtc/util.c
++++ b/scripts/dtc/util.c
+@@ -72,7 +72,7 @@ char *join_path(const char *path, const char *name)
+ int util_is_printable_string(const void *data, int len)
+ {
+ 	const char *s = data;
+-	const char *ss;
++	const char *ss, *se;
  
-+	/* make sure we add the resources to the appropriate lists */
-+	platform_device_link_resources(ofdev);
+ 	/* zero length is not */
+ 	if (len == 0)
+@@ -82,13 +82,19 @@ int util_is_printable_string(const void *data, int len)
+ 	if (s[len - 1] != '\0')
+ 		return 0;
+ 
+-	ss = s;
+-	while (*s && isprint(*s))
+-		s++;
++	se = s + len;
+ 
+-	/* not zero, or not done yet */
+-	if (*s != '\0' || (s + 1 - ss) < len)
+-		return 0;
++	while (s < se) {
++		ss = s;
++		while (s < se && *s && isprint(*s))
++			s++;
 +
- 	return device_add(&ofdev->dev);
- }
++		/* not zero, or not done yet */
++		if (*s != '\0' || s == ss)
++			return 0;
++
++		s++;
++	}
  
+ 	return 1;
+ }
 -- 
 1.7.12
