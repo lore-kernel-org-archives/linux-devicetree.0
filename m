@@ -1,7 +1,7 @@
 From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: [PATCH] dtc: fdtdump, properly handle multi-string properties
-Date: Fri,  4 Jan 2013 00:32:12 +0200
-Message-ID: <1357252332-6131-1-git-send-email-panto@antoniou-consulting.com>
+Subject: [PATCH] OF: Link platform device resources properly.
+Date: Fri,  4 Jan 2013 00:31:24 +0200
+Message-ID: <1357252284-5990-1-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -20,42 +20,28 @@ To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Device tree can store multiple strings in a single property.
-We didn't handle that case properly.
+The resources of the platform devices created by the OF core were
+not properly linked. Make sure that they are, so that we don't get
+any crashes when trying to remove the device.
 
 Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
 ---
- scripts/dtc/fdtdump.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
+ drivers/of/device.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/scripts/dtc/fdtdump.c b/scripts/dtc/fdtdump.c
-index 207a46d..d4fa6d7 100644
---- a/scripts/dtc/fdtdump.c
-+++ b/scripts/dtc/fdtdump.c
-@@ -21,13 +21,23 @@ static void print_data(const char *data, int len)
- {
- 	int i;
- 	const char *p = data;
-+	const char *s;
+diff --git a/drivers/of/device.c b/drivers/of/device.c
+index 4c74e4f..d75fcaf 100644
+--- a/drivers/of/device.c
++++ b/drivers/of/device.c
+@@ -62,6 +62,9 @@ int of_device_add(struct platform_device *ofdev)
+ 	if (!ofdev->dev.parent)
+ 		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
  
- 	/* no data, don't print */
- 	if (len == 0)
- 		return;
++	/* make sure we add the resources to the appropriate lists */
++	platform_device_link_resources(ofdev);
++
+ 	return device_add(&ofdev->dev);
+ }
  
- 	if (util_is_printable_string(data, len)) {
--		printf(" = \"%s\"", (const char *)data);
-+		printf(" = ");
-+
-+		s = data;
-+		do {
-+			printf("\"%s\"", s);
-+			s += strlen(s) + 1;
-+			if (s < data + len)
-+				printf(", ");
-+		} while (s < data + len);
-+
- 	} else if ((len % 4) == 0) {
- 		printf(" = <");
- 		for (i = 0; i < len; i += 4)
 -- 
 1.7.12
