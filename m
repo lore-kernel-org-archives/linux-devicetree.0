@@ -1,28 +1,49 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 4/4] input: keyboard: tegra: remove default key mapping
-Date: Fri, 04 Jan 2013 12:52:45 -0700
-Message-ID: <50E7330D.2060107@wwwdotorg.org>
-References: <1357297330-28878-1-git-send-email-ldewangan@nvidia.com> <1357297330-28878-5-git-send-email-ldewangan@nvidia.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: fdtdump: properly handle multi-string properties
+Date: Sat, 5 Jan 2013 10:38:41 +1100
+Message-ID: <20130104233841.GA4674@truffula.fritz.box>
+References: <1357326766-12691-1-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1357297330-28878-5-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PNTmBPCT7hxwcZjr"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1357326766-12691-1-git-send-email-panto@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Jon Loeliger <jdl@jdl.com>, Matt Porter <mporter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Russ Dill <Russ.Dill@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/04/2013 04:02 AM, Laxman Dewangan wrote:
-> Tegra KBC driver have the default key mapping for 16x8 configuration.
-> The key mapping can be provided through platform data or through DT
-> and the mapping varies from platform to platform, hence this default
-> mapping is not so useful. Remove the default mapping to reduce the code
-> lines of the driver.
 
-Overall, I agree with the intent of this change, but I /think/ the
-default keymap described here actually /is/ useful for the
-Seaboard/Springbank platforms. I guess the KBC driver isn't in the
-device tree for that (or any) board yet, so removing this keymap isn't
-really a regression, but it would be nice if you could come up with a
-change to add suitable keymaps to the device tree files too.
+--PNTmBPCT7hxwcZjr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 04, 2013 at 09:12:46PM +0200, Pantelis Antoniou wrote:
+> Device tree can store multiple strings in a single property.
+> We didn't handle that case properly.
+>=20
+> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+
+Acked-by: David Gibson <david@gibson.dropbear.id.au>
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--PNTmBPCT7hxwcZjr
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlDnaAEACgkQaILKxv3ab8ac3ACdGbLdu6uBCrxtKhqWzfKCIFih
+T4AAoIrAOP5ZSz5Vxl3xL349Mq5XY2nU
+=uwxD
+-----END PGP SIGNATURE-----
+
+--PNTmBPCT7hxwcZjr--
