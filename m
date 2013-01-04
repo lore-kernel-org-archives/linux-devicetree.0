@@ -1,44 +1,29 @@
-From: Tony Prisk <linux@prisktech.co.nz>
-Subject: Re: [PATCH 1/9] sh-pfc: Add OF support
-Date: Fri, 04 Jan 2013 14:12:06 +1300
-Message-ID: <1357261926.25326.2.camel@gitbox>
-References: <1357260060-32164-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	 <1357260060-32164-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: Early kernel hang with big DTB appended
+Date: Thu, 3 Jan 2013 21:48:05 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1301032144490.1263@xanadu.home>
+References: <7811936.npteFbuYu2@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1357260060-32164-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Paul Mundt <lethal@linux-sh.org>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <7811936.npteFbuYu2@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bones@secretlab.ca, linux@arm.linux.org.uk, thomas.abraham@linaro.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-01-04 at 01:40 +0100, Laurent Pinchart wrote:
-> +- #gpio-cells: Should be 2. The first cell is the pin number and the second cell
-> +  is used to specify optional parameters (currently unused).
-...
-> +	gpio: pfc@e6050000 {
-> +		compatible = "renesas,pfc-sh73a0";
-> +		reg = <0xe6050000 0x8000>,
-> +		      <0xe605801c 0x1c>;
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +	};
-> +
-> +Example 2: A GPIO LED node that references a GPIO
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +		led1 {
-> +			gpios = <&gpio 20 1>; /* Active low */
-> +		};
-> +	};
-> +
+On Thu, 3 Jan 2013, Tomasz Figa wrote:
 
-The second cell of gpio is '(currently unused)' but the example shows it
-being used?
+> Hi,
+> 
+> I'm observing strange behavior when booting 3.8-rc1 and -rc2 with appended 
+> DTB. The kernel hangs very early when the DTB is bigger than some 
+> threshold somewhere around 24 KiB.
 
-Regards
-Tony Prisk
+What is the address where you load your zImage?
 
+What if you load it, say, at an offset of 16MB from the start of RAM?  
+Not that this is a fix, but at least that would help isolate the issue.
+
+
+Nicolas
