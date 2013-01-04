@@ -1,88 +1,28 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: Early kernel hang with big DTB appended
-Date: Fri, 04 Jan 2013 11:26:29 +0100
-Message-ID: <3124835.JDXd8LMbPH@amdc1227>
-References: <7811936.npteFbuYu2@amdc1227>
- <91586D499ADFD74FBCFB8425266A5DE40139F1B06030@pluto.melinkcorp.local>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/4] input: keyboard: tegra: cleanups and DT supports
+Date: Fri, 4 Jan 2013 16:32:06 +0530
+Message-ID: <1357297330-28878-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <91586D499ADFD74FBCFB8425266A5DE40139F1B06030@pluto.melinkcorp.local>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Bryan Evenson <bevenson@melinkcorp.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "nico@linaro.org" <nico@linaro.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "thomas.abraham@linaro.org" <thomas.abraham@linaro.org>, "bones@secretlab.ca" <bones@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bryan,
+This patch series:
+ - fix build warning,
+ - use devm_* for allocation,
+ - make column/rows configuration through DT and
+ - remove the rarely used  key mapping table.
 
-Thanks for your reply.
+Laxman Dewangan (4):
+  input: keyboard: tegra: fix build warning
+  input: keyboard: tegra: use devm_* for resource allocation
+  input: keyboard: tegra: add support for rows/cols configuration from
+    dt
+  input: keyboard: tegra: remove default key mapping
 
-On Thursday 03 of January 2013 13:40:43 Bryan Evenson wrote:
-> > -----Original Message-----
-> > From: linux-arm-kernel-bounces@lists.infradead.org [mailto:linux-arm-
-> > kernel-bounces@lists.infradead.org] On Behalf Of Tomasz Figa
-> > Sent: Thursday, January 03, 2013 10:55 AM
-> > To: devicetree-discuss@lists.ozlabs.org
-> > Cc: linux-samsung-soc@vger.kernel.org; linux@arm.linux.org.uk;
-> > nico@linaro.org; kgene.kim@samsung.com; thomas.abraham@linaro.org;
-> > bones@secretlab.ca; linux-arm-kernel@lists.infradead.org
-> > Subject: Early kernel hang with big DTB appended
-> > 
-> > Hi,
-> > 
-> > I'm observing strange behavior when booting 3.8-rc1 and -rc2 with
-> > appended DTB. The kernel hangs very early when the DTB is bigger than
-> > some threshold somewhere around 24 KiB. With fullest possible low
-> > level
-> > UART debugging (and printk patched to use printascii) I'm receiving
-> > following
-> > output:
-> > 
-> > Uncompressing Linux... done, booting the kernel.
-> > Booting Linux on physical CPU 0xa00
-> > Linux version 3.8.0-rc1-00073-gdf6efca-dirty (t.figa@amdc1227) (gcc
-> > version 4.5.2 (Gentoo 4.5.2 p1.2, pie-0.4.5) ) #2 SMP PREEMPT Thu Jan
-> > 3
-> > 15:37:35 CET 2013
-> > CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7d
-> > CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction
-> > cache
-> > 
-> > I tested on two Exynos-based boards (exynos4210-trats and one internal
-> > exynos4412-based board) and same happens on both.
-> > 
-> > Do you have any ideas?
-> 
-> Tomasz,
-> 
-> Sounds to me like the DTB is not being fully written to memory or that
-> it isn't being fully read from memory.  I've had similar problems when
-> I placed the DTB too close to the end of flash and not all of the DTB
-> was written to flash.
-
-I'm using CONFIG_ARM_APPENDED_DTB, as it eases testing a bit, because DTB 
-is built into the resulting uImage for u-boot (appended after zImage) and 
-it does not require OF-aware versions of u-boot.
-
-Also the uImage is stored on an ext4 partition as a regular file, so I 
-would exclude any storage issues.
-
-> 
-> If you load a debug build of U-Boot, I believe there are a number of
-> debug messages related to loading the device tree that U-Boot prints. 
-> Then you can at least verify that U-Boot is loading the entire device
-> tree.
-
-The u-boot I have is not OF-aware, so it just prints the standard messages 
-about loading the uImage.
-
-P.S. With Nicolas' hint about image load address I managed to work around 
-the issue and limit the scope of code where the bug might exist. Please 
-see my reply to Nicolas' post.
-
-Best regards,
--- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Linux Platform
+ .../bindings/input/nvidia,tegra20-kbc.txt          |   22 ++
+ drivers/input/keyboard/tegra-kbc.c                 |  346 ++++++--------------
+ 2 files changed, 120 insertions(+), 248 deletions(-)
