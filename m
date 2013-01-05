@@ -1,42 +1,62 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH 0/6] Introducing Device Tree Overlays
-Date: Sat, 5 Jan 2013 12:13:39 +0200
-Message-ID: <55B9348E-31B8-45C0-9DA2-7102480F55E5@antoniou-consulting.com>
-References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com>
- <20130105033541.GA2501@netboy.at.omicron.at>
- <CAD=GYpZp+QJqPkbejj6Kujv7XHHFrymriM5TCDJ626eaE7zPzw@mail.gmail.com>
- <20130105093558.GA31408@netboy.at.omicron.at>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130105093558.GA31408-TJb37gCd1q6chkuNt9O67llkmcu1nq/N@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH v2 2/4] input: keyboard: tegra: use devm_* for resource
+ allocation
+Date: Sat, 5 Jan 2013 16:50:58 +0530
+Message-ID: <50E80C9A.7040404@nvidia.com>
+References: <1357371910-3164-1-git-send-email-ldewangan@nvidia.com> <1357371910-3164-3-git-send-email-ldewangan@nvidia.com> <20130105080658.GA1315@core.coreip.homeip.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20130105080658.GA1315@core.coreip.homeip.net>
+Sender: linux-input-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Stephen Warren <swarren@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUmljaGFyZCwKCkl0IHNob3VsZCwgYnV0IHRoZXJlIGFyZSBhIGZldyBkaWZmZXJlbmNlcyBp
-biB0aGUgc3ludGF4IHBsdXMgdGhlIGZhY3QgdGhhdCBJIGRpZG4ndCB3cml0ZSBpdC4KSXQgc2hv
-dWxkIGdvIGluIGJ5IGEgc2VwYXJhdGUgcGF0Y2ggYnkgdGhlIG9yaWdpbmFsIGF1dGhvci4gCgpS
-ZWdhcmRzCgotLSBQYW50ZWxpcwoKzpHPgM+MIM+Ezr8gaVBhZCDOvM6/z4UKCjUgzpnOsc69IDIw
-MTMsIDExOjM1IM+ALs68Liwgzr8vzrcgUmljaGFyZCBDb2NocmFuIDxyaWNoYXJkY29jaHJhbkBn
-bWFpbC5jb20+IM6tzrPPgc6xz4jOtToKCj4gT24gU2F0LCBKYW4gMDUsIDIwMTMgYXQgMTI6MTY6
-NTFBTSAtMDYwMCwgSm9lbCBBIEZlcm5hbmRlcyB3cm90ZToKPj4gCj4+IFRoZSBwcm9ibGVtIGJl
-aW5nIGFkZHJlc3NlZCBpcyBkaXNjdXNzZWQgaW4gdGhpcyB0aHJlYWQ6Cj4+IGh0dHA6Ly9wZXJt
-YWxpbmsuZ21hbmUub3JnL2dtYW5lLmxpbnV4Lmtlcm5lbC8xMzg5MDE3Cj4gCj4gVGhhbmtzIGZv
-ciB0aGUgbGluay4KPiAKPiBTaW5jZSB0aGUgbW90aXZhdGlvbiBpcyBhbHJlYWR5IGRvY3VtZW50
-ZWQgaW4gdGhhdCBwb3N0LCB3aHkgbm90IGFkZAo+IGl0IGludG8gRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL292ZXJsYXktbm90ZXMudHh0IGFzIHdlbGw/Cj4gCj4gVGhhbmtzLAo+IFJpY2hhcmQK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJl
-ZS1kaXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9y
-ZwpodHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+HI Dmitry,
+Thanks for quick review.
+
+I will take care of your comment in next version. Some have my answer.
+
+
+On Saturday 05 January 2013 01:36 PM, Dmitry Torokhov wrote:
+> Hi Laxman,
+>
+> On Sat, Jan 05, 2013 at 01:15:08PM +0530, Laxman Dewangan wrote:
+>> Use devm_* for memory, clock, input device allocation. This reduces
+>> code for freeing these resources.
+
+>>   	err = tegra_kbd_setup_keymap(kbc);
+>> -	if (err) {
+>> +	if (err < 0) {
+> Why is this change? As far as I can see tegra_kbd_setup_keymap() never
+> returns positive values.
+
+Ok, mostly errors are in negative and hence this change, I will revert 
+it and will keep original.
+
+>
+>>   		dev_err(&pdev->dev, "failed to setup keymap\n");
+>> -		goto err_put_clk;
+>> +		return err;
+>>   	}
+>>   
+>>   	__set_bit(EV_REP, input_dev->evbit);
+>> @@ -790,15 +784,15 @@ static int tegra_kbc_probe(struct platform_device *pdev)
+>>   
+>>   	err = request_irq(kbc->irq, tegra_kbc_isr,
+>>   			  IRQF_NO_SUSPEND | IRQF_TRIGGER_HIGH, pdev->name, kbc);
+>> -	if (err) {
+>> +	if (err < 0) {
+> Neither request_irq(). BTW, why not devm_request_irq?
+
+I understand from Mark B on different patches that using 
+devm_request_irq() can create race condition when removing device. 
+Interrupt can occur when device resource release is in process and so it 
+can cause isr call which can use the freed pointer. devm_request_irq() 
+should be avoided.
+
+
+Thanks,
+Laxman
