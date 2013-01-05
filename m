@@ -1,42 +1,31 @@
-From: Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/6] Introducing Device Tree Overlays
-Date: Sat, 5 Jan 2013 00:16:51 -0600
-Message-ID: <CAD=GYpZp+QJqPkbejj6Kujv7XHHFrymriM5TCDJ626eaE7zPzw@mail.gmail.com>
-References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com>
- <20130105033541.GA2501@netboy.at.omicron.at>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 4/4] input: keyboard: tegra: remove default key mapping
+Date: Sat, 5 Jan 2013 12:50:50 +0530
+Message-ID: <50E7D452.8030208@nvidia.com>
+References: <1357297330-28878-1-git-send-email-ldewangan@nvidia.com> <1357297330-28878-5-git-send-email-ldewangan@nvidia.com> <50E7330D.2060107@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130105033541.GA2501-TJb37gCd1q6chkuNt9O67llkmcu1nq/N@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <50E7330D.2060107@wwwdotorg.org>
+Sender: linux-input-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Stephen Warren <swarren@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Richard,
+On Saturday 05 January 2013 01:22 AM, Stephen Warren wrote:
+> On 01/04/2013 04:02 AM, Laxman Dewangan wrote:
+>> Tegra KBC driver have the default key mapping for 16x8 configuration.
+>> The key mapping can be provided through platform data or through DT
+>> and the mapping varies from platform to platform, hence this default
+>> mapping is not so useful. Remove the default mapping to reduce the code
+>> lines of the driver.
+> Overall, I agree with the intent of this change, but I /think/ the
+> default keymap described here actually /is/ useful for the
+> Seaboard/Springbank platforms. I guess the KBC driver isn't in the
+> device tree for that (or any) board yet, so removing this keymap isn't
+> really a regression, but it would be nice if you could come up with a
+> change to add suitable keymaps to the device tree files too.
 
-On Fri, Jan 4, 2013 at 9:35 PM, Richard Cochran
-<richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, Jan 04, 2013 at 09:31:04PM +0200, Pantelis Antoniou wrote:
->> The following patchset introduces Device Tree overlays, a method
->> of dynamically altering the kernel's live Device Tree.
->
-> It would be nice to know the motivation for this code.
->
-> What is the use case? What problem or issue is being addressed?
-
-The problem being addressed is discussed in this thread:
-http://permalink.gmane.org/gmane.linux.kernel/1389017
-
-Regards,
-Joel
+OK, I will push the patch for enabling keys in seaboard along with the 
+other changes for DT files for tegra.
