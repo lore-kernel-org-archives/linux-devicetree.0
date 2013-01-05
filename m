@@ -1,230 +1,29 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 2/4] input: keyboard: tegra: use devm_* for resource
- allocation
-Date: Sat, 5 Jan 2013 00:06:58 -0800
-Message-ID: <20130105080658.GA1315@core.coreip.homeip.net>
-References: <1357371910-3164-1-git-send-email-ldewangan@nvidia.com>
- <1357371910-3164-3-git-send-email-ldewangan@nvidia.com>
+From: Richard Cochran <richardcochran@gmail.com>
+Subject: Re: [PATCH 0/6] Introducing Device Tree Overlays
+Date: Sat, 5 Jan 2013 10:35:58 +0100
+Message-ID: <20130105093558.GA31408@netboy.at.omicron.at>
+References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com>
+ <20130105033541.GA2501@netboy.at.omicron.at>
+ <CAD=GYpZp+QJqPkbejj6Kujv7XHHFrymriM5TCDJ626eaE7zPzw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1357371910-3164-3-git-send-email-ldewangan@nvidia.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org
+In-Reply-To: <CAD=GYpZp+QJqPkbejj6Kujv7XHHFrymriM5TCDJ626eaE7zPzw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Joel A Fernandes <agnel.joel@gmail.com>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laxman,
-
-On Sat, Jan 05, 2013 at 01:15:08PM +0530, Laxman Dewangan wrote:
-> Use devm_* for memory, clock, input device allocation. This reduces
-> code for freeing these resources.
+On Sat, Jan 05, 2013 at 12:16:51AM -0600, Joel A Fernandes wrote:
 > 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
-> Changes from V1:
-> None
-> 
->  drivers/input/keyboard/tegra-kbc.c |   93 +++++++++++-------------------------
->  1 files changed, 28 insertions(+), 65 deletions(-)
-> 
-> diff --git a/drivers/input/keyboard/tegra-kbc.c b/drivers/input/keyboard/tegra-kbc.c
-> index f1d3ba0..c036425 100644
-> --- a/drivers/input/keyboard/tegra-kbc.c
-> +++ b/drivers/input/keyboard/tegra-kbc.c
-> @@ -618,7 +618,7 @@ static struct tegra_kbc_platform_data *tegra_kbc_dt_parse_pdata(
->  	if (!np)
->  		return NULL;
->  
-> -	pdata = kzalloc(sizeof(*pdata), GFP_KERNEL);
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
->  	if (!pdata)
->  		return NULL;
->  
-> @@ -700,33 +700,36 @@ static int tegra_kbc_probe(struct platform_device *pdev)
->  	if (!pdata)
->  		pdata = tegra_kbc_dt_parse_pdata(pdev);
->  
-> -	if (!pdata)
-> +	if (!pdata) {
-> +		dev_err(&pdev->dev, "Platform data missing\n");
->  		return -EINVAL;
-> -
-> -	if (!tegra_kbc_check_pin_cfg(pdata, &pdev->dev, &num_rows)) {
-> -		err = -EINVAL;
-> -		goto err_free_pdata;
->  	}
->  
-> +	if (!tegra_kbc_check_pin_cfg(pdata, &pdev->dev, &num_rows))
-> +		return -EINVAL;
-> +
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	if (!res) {
->  		dev_err(&pdev->dev, "failed to get I/O memory\n");
-> -		err = -ENXIO;
-> -		goto err_free_pdata;
-> +		return -ENXIO;
->  	}
->  
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0) {
->  		dev_err(&pdev->dev, "failed to get keyboard IRQ\n");
-> -		err = -ENXIO;
-> -		goto err_free_pdata;
-> +		return -ENXIO;
-> +	}
-> +
-> +	kbc = devm_kzalloc(&pdev->dev, sizeof(*kbc), GFP_KERNEL);
-> +	if (!kbc) {
-> +		dev_err(&pdev->dev, "failed to alloc memory for kbc\n");
-> +		return -ENOMEM;
->  	}
->  
-> -	kbc = kzalloc(sizeof(*kbc), GFP_KERNEL);
-> -	input_dev = input_allocate_device();
-> -	if (!kbc || !input_dev) {
-> -		err = -ENOMEM;
-> -		goto err_free_mem;
-> +	input_dev = devm_input_allocate_device(&pdev->dev);
-> +	if (!input_dev) {
-> +		dev_err(&pdev->dev, "failed to allocate input device\n");
-> +		return -ENOMEM;
->  	}
->  
->  	kbc->pdata = pdata;
-> @@ -735,25 +738,16 @@ static int tegra_kbc_probe(struct platform_device *pdev)
->  	spin_lock_init(&kbc->lock);
->  	setup_timer(&kbc->timer, tegra_kbc_keypress_timer, (unsigned long)kbc);
->  
-> -	res = request_mem_region(res->start, resource_size(res), pdev->name);
-> -	if (!res) {
-> -		dev_err(&pdev->dev, "failed to request I/O memory\n");
-> -		err = -EBUSY;
-> -		goto err_free_mem;
-> -	}
-> -
-> -	kbc->mmio = ioremap(res->start, resource_size(res));
-> +	kbc->mmio = devm_request_and_ioremap(&pdev->dev, res);
->  	if (!kbc->mmio) {
-> -		dev_err(&pdev->dev, "failed to remap I/O memory\n");
-> -		err = -ENXIO;
-> -		goto err_free_mem_region;
-> +		dev_err(&pdev->dev, "Cannot request memregion/iomap address\n");
-> +		return -EADDRNOTAVAIL;
+> The problem being addressed is discussed in this thread:
+> http://permalink.gmane.org/gmane.linux.kernel/1389017
 
-Erm, no, -EBUSY please.
+Thanks for the link.
 
->  	}
->  
-> -	kbc->clk = clk_get(&pdev->dev, NULL);
-> +	kbc->clk = devm_clk_get(&pdev->dev, NULL);
->  	if (IS_ERR(kbc->clk)) {
->  		dev_err(&pdev->dev, "failed to get keyboard clock\n");
-> -		err = PTR_ERR(kbc->clk);
-> -		goto err_iounmap;
-> +		return PTR_ERR(kbc->clk);
->  	}
->  
->  	/*
-> @@ -778,9 +772,9 @@ static int tegra_kbc_probe(struct platform_device *pdev)
->  	input_dev->close = tegra_kbc_close;
->  
->  	err = tegra_kbd_setup_keymap(kbc);
-> -	if (err) {
-> +	if (err < 0) {
+Since the motivation is already documented in that post, why not add
+it into Documentation/devicetree/overlay-notes.txt as well?
 
-Why is this change? As far as I can see tegra_kbd_setup_keymap() never
-returns positive values.
-
->  		dev_err(&pdev->dev, "failed to setup keymap\n");
-> -		goto err_put_clk;
-> +		return err;
->  	}
->  
->  	__set_bit(EV_REP, input_dev->evbit);
-> @@ -790,15 +784,15 @@ static int tegra_kbc_probe(struct platform_device *pdev)
->  
->  	err = request_irq(kbc->irq, tegra_kbc_isr,
->  			  IRQF_NO_SUSPEND | IRQF_TRIGGER_HIGH, pdev->name, kbc);
-> -	if (err) {
-> +	if (err < 0) {
-
-Neither request_irq(). BTW, why not devm_request_irq?
-
->  		dev_err(&pdev->dev, "failed to request keyboard IRQ\n");
-> -		goto err_put_clk;
-> +		return err;
->  	}
->  
->  	disable_irq(kbc->irq);
->  
->  	err = input_register_device(kbc->idev);
-> -	if (err) {
-> +	if (err < 0) {
-
-Again, input_register_device() returns 0 on success.
-
->  		dev_err(&pdev->dev, "failed to register input device\n");
->  		goto err_free_irq;
->  	}
-> @@ -810,46 +804,15 @@ static int tegra_kbc_probe(struct platform_device *pdev)
->  
->  err_free_irq:
->  	free_irq(kbc->irq, pdev);
-> -err_put_clk:
-> -	clk_put(kbc->clk);
-> -err_iounmap:
-> -	iounmap(kbc->mmio);
-> -err_free_mem_region:
-> -	release_mem_region(res->start, resource_size(res));
-> -err_free_mem:
-> -	input_free_device(input_dev);
-> -	kfree(kbc);
-> -err_free_pdata:
-> -	if (!pdev->dev.platform_data)
-> -		kfree(pdata);
-> -
->  	return err;
->  }
->  
->  static int tegra_kbc_remove(struct platform_device *pdev)
->  {
->  	struct tegra_kbc *kbc = platform_get_drvdata(pdev);
-> -	struct resource *res;
-> -
-> -	platform_set_drvdata(pdev, NULL);
->  
->  	free_irq(kbc->irq, pdev);
-> -	clk_put(kbc->clk);
-> -
->  	input_unregister_device(kbc->idev);
-
-You do not need to call input_unregister_device for managed input
-devices, and if you switch request_irq to managed variant you can remove 
-tegra_kbc_remove() altogether.
-
-> -	iounmap(kbc->mmio);
-> -	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	release_mem_region(res->start, resource_size(res));
-> -
-> -	/*
-> -	 * If we do not have platform data attached to the device we
-> -	 * allocated it ourselves and thus need to free it.
-> -	 */
-> -	if (!pdev->dev.platform_data)
-> -		kfree(kbc->pdata);
-> -
-> -	kfree(kbc);
-> -
->  	return 0;
->  }
->  
-> -- 
-> 1.7.1.1
-> 
-
-Thanks.
-
--- 
-Dmitry
+Thanks,
+Richard
