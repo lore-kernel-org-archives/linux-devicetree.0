@@ -1,12 +1,14 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Fix util_is_printable_string
-Date: Sat, 5 Jan 2013 23:49:36 +1100
-Message-ID: <20130105124936.GE4674@truffula.fritz.box>
-References: <1357326778-12725-1-git-send-email-panto@antoniou-consulting.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: Fix compatible value of pinctrl module on
+ EXYNOS5440
+Date: Sat, 5 Jan 2013 14:54:18 -0800
+Message-ID: <CAOesGMiXUJ2+a8znVnzyzx_u1cqg57zxwff3jObTH3yxn_MC8w@mail.gmail.com>
+References: <1357172423-8217-1-git-send-email-kgene.kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6198471465466548880=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1357326778-12725-1-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+In-Reply-To: <1357172423-8217-1-git-send-email-kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,64 +19,54 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>
+To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jan 2, 2013 at 4:20 PM, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> From: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
+> Fix the incorrect compatible property value of pin-controller module
+> EXYNOS5440 SoC.
+>
+> Signed-off-by: Thomas Abraham <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> [kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org: fixed it in gpio together for exynos5440]
+> Signed-off-by: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> ---
+>  arch/arm/boot/dts/exynos5440.dtsi |    2 +-
+>  drivers/gpio/gpio-samsung.c       |    2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
+> index 024269d..25f0fa6 100644
+> --- a/arch/arm/boot/dts/exynos5440.dtsi
+> +++ b/arch/arm/boot/dts/exynos5440.dtsi
+> @@ -86,7 +86,7 @@
+>         };
+>
+>         pinctrl {
+> -               compatible = "samsung,pinctrl-exynos5440";
+> +               compatible = "samsung,exynos5440-pinctrl";
+>                 reg = <0xE0000 0x1000>;
+>                 interrupt-controller;
+>                 #interrupt-cells = <2>;
+> diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
+> index 953737d..cac4b45 100644
+> --- a/drivers/gpio/gpio-samsung.c
+> +++ b/drivers/gpio/gpio-samsung.c
+> @@ -3026,7 +3026,7 @@ static __init int samsung_gpiolib_init(void)
+>         static const struct of_device_id exynos_pinctrl_ids[] = {
+>                 { .compatible = "samsung,pinctrl-exynos4210", },
+>                 { .compatible = "samsung,pinctrl-exynos4x12", },
+> -               { .compatible = "samsung,pinctrl-exynos5440", },
+> +               { .compatible = "samsung,exynos5440-pinctrl", },
 
---===============6198471465466548880==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="r7U+bLA8boMOj+mD"
-Content-Disposition: inline
+Uugh. There's something to be said about consistency, even if it's
+possibly not 100% correct. Is it really worth it to have 5440 be the
+only one with the "right" naming here?
 
 
---r7U+bLA8boMOj+mD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jan 04, 2013 at 09:12:58PM +0200, Pantelis Antoniou wrote:
-> The method used did not account for multi-part strings.
->=20
-> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-
-I think it could do with some more commenting of exactly what it's
-considering a printable string(s).  I'm pretty sure it's doing the
-right thing, but if you're not already familiar with the OF
-multi-string convention, it would be easy to get confused by the
-code.  Other than that
-
-Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---r7U+bLA8boMOj+mD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlDoIWAACgkQaILKxv3ab8afkACdFV6ucIb/p95nMaqhVPapwRQ+
-TasAmwR+agw0IbAU0QtRI7Gj44DbdAuU
-=Oot0
------END PGP SIGNATURE-----
-
---r7U+bLA8boMOj+mD--
-
---===============6198471465466548880==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6198471465466548880==--
+-Olof
