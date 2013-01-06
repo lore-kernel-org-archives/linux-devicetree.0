@@ -1,58 +1,29 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 2/4] input: keyboard: tegra: use devm_* for resource
- allocation
-Date: Sun, 6 Jan 2013 11:57:48 -0800
-Message-ID: <20130106195748.GA28212@core.coreip.homeip.net>
-References: <1357371910-3164-1-git-send-email-ldewangan@nvidia.com>
- <1357371910-3164-3-git-send-email-ldewangan@nvidia.com>
- <20130105080658.GA1315@core.coreip.homeip.net>
- <20130106192739.GA11566@avionic-0098.adnet.avionic-design.de>
+From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: question about drivers/i2c/busses/i2c-davinci.c
+Date: Sun, 6 Jan 2013 21:00:59 +0100 (CET)
+Message-ID: <alpine.DEB.2.02.1301062057260.2029@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130106192739.GA11566@avionic-0098.adnet.avionic-design.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org
+Content-Type: TEXT/PLAIN; format=flowed; charset=US-ASCII
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nsekhar-l0cyMroinI0@public.gmane.org, khilman-l0cyMroinI0@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 06, 2013 at 08:27:39PM +0100, Thierry Reding wrote:
-> On Sat, Jan 05, 2013 at 12:06:58AM -0800, Dmitry Torokhov wrote:
-> > On Sat, Jan 05, 2013 at 01:15:08PM +0530, Laxman Dewangan wrote:
-> [...]
-> > > @@ -735,25 +738,16 @@ static int tegra_kbc_probe(struct platform_device *pdev)
-> > >  	spin_lock_init(&kbc->lock);
-> > >  	setup_timer(&kbc->timer, tegra_kbc_keypress_timer, (unsigned long)kbc);
-> > >  
-> > > -	res = request_mem_region(res->start, resource_size(res), pdev->name);
-> > > -	if (!res) {
-> > > -		dev_err(&pdev->dev, "failed to request I/O memory\n");
-> > > -		err = -EBUSY;
-> > > -		goto err_free_mem;
-> > > -	}
-> > > -
-> > > -	kbc->mmio = ioremap(res->start, resource_size(res));
-> > > +	kbc->mmio = devm_request_and_ioremap(&pdev->dev, res);
-> > >  	if (!kbc->mmio) {
-> > > -		dev_err(&pdev->dev, "failed to remap I/O memory\n");
-> > > -		err = -ENXIO;
-> > > -		goto err_free_mem_region;
-> > > +		dev_err(&pdev->dev, "Cannot request memregion/iomap address\n");
-> > > +		return -EADDRNOTAVAIL;
-> > 
-> > Erm, no, -EBUSY please.
-> 
-> EADDRNOTAVAIL is the canonical error for devm_request_and_ioremap()
-> failure. The kerneldoc comment in lib/devres.c even gives a short
-> example that uses this error code.
+The function davinci_i2c_remove in drivers/i2c/busses/i2c-davinci.c 
+contains the following code:
 
-I am sorry, but I do not consider a function that was added a little
-over a year ago as a canon. If you look at the uses of EADDRNOTAVAIL it
-is used predominantly in networking code to indicate that attempted
-_network_ address is not available.
+         put_device(&pdev->dev);
 
-Thanks.
+         clk_disable_unprepare(dev->clk);
+         clk_put(dev->clk);
+         dev->clk = NULL;
 
--- 
-Dmitry
+         davinci_i2c_write_reg(dev, DAVINCI_I2C_MDR_REG, 0);
+ 	free_irq(dev->irq, dev);
+
+Is there any danger in putting free_irq(dev->irq, dev); after 
+put_device(&pdev->dev);, because the interrupt handler i2c_davinci_isr can 
+eg refer to dev->dev.
+
+thanks,
+julia
