@@ -1,15 +1,15 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: machine_is_dt() ?
-Date: Sun, 6 Jan 2013 15:08:21 +0100
-Message-ID: <20130106140821.GR17242@lunn.ch>
-References: <20130106131805.GQ17242@lunn.ch>
- <20130106134113.GD2631@n2100.arm.linux.org.uk>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] input: keyboard: tegra: use devm_* for resource
+ allocation
+Date: Sun, 6 Jan 2013 20:27:39 +0100
+Message-ID: <20130106192739.GA11566@avionic-0098.adnet.avionic-design.de>
+References: <1357371910-3164-1-git-send-email-ldewangan@nvidia.com>
+ <1357371910-3164-3-git-send-email-ldewangan@nvidia.com>
+ <20130105080658.GA1315@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============5096442939072299005=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130106134113.GD2631-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+In-Reply-To: <20130105080658.GA1315-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,73 +20,88 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 06, 2013 at 01:41:13PM +0000, Russell King - ARM Linux wrote:
-> On Sun, Jan 06, 2013 at 02:18:05PM +0100, Andrew Lunn wrote:
-> > I'm moving the cpuidle code for Kirkwood into drivers/cpuidle. I'm
-> > following the way cpuidle-calxeda.c instantiates the driver, it uses
-> > module_init(calxeda_cpuidle_init) and calxeda_cpuidle_init() uses
-> > of_machine_is_compatible("calxeda,highbank") so only loading the
-> > driver in a ARCH_MULTIPLATFORM kernel when needed.
-> > 
-> > I can follow this model for when kirkwood is booted using device
-> > tree. However, i would also like to use the driver for those boards
-> > which are not yet converted to DT. In that situation, we have a kernel
-> > dedicate to kirkwood and the cpuidle driver is always relevant.
-> > 
-> > Thus i need to code something like:
-> > 
-> > (of_machine_is_compatible("marvell, kirkwood") ||
-> >  !machine_is_dt())
-> > 
-> > However, there is no macro machine_is_dt().
-> > 
-> > Is there a way to tell if a machine has been booted using a machine
-> > number as opposed to DT?
-> 
-> This doesn't seem to me to be the right way to deal with this.  What
-> you're suggesting would mean that if you built a multiplatform kernel
-> which included this driver, and booted it on a non-DT platform, you'd
-> have this driver registered.
 
-Hi Russel
+--===============5096442939072299005==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
 
-Yes, not what i want. I would need to limit it further to non-DT
-platform on Kirkwood.
 
-> It looks to me like many of the CPUFREQ drivers just register themselves
-> if they've been built into the kernel.  No one's thought about making
-> them platform drivers or similar, so the current "if it's built-in, then
-> we use it" approach seems to have persisted.  As many of them are
-> initialized via a late_initcall(), I don't see any problem with them
-> being platform drivers, which will solve the problem in a way that's
-> well established.
-I actually went towards a platform driver to start with. See the
-discussion here:
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-https://patchwork.kernel.org/patch/1915171/
+On Sat, Jan 05, 2013 at 12:06:58AM -0800, Dmitry Torokhov wrote:
+> On Sat, Jan 05, 2013 at 01:15:08PM +0530, Laxman Dewangan wrote:
+[...]
+> > @@ -735,25 +738,16 @@ static int tegra_kbc_probe(struct platform_device=
+ *pdev)
+> >  	spin_lock_init(&kbc->lock);
+> >  	setup_timer(&kbc->timer, tegra_kbc_keypress_timer, (unsigned long)kbc=
+);
+> > =20
+> > -	res =3D request_mem_region(res->start, resource_size(res), pdev->name=
+);
+> > -	if (!res) {
+> > -		dev_err(&pdev->dev, "failed to request I/O memory\n");
+> > -		err =3D -EBUSY;
+> > -		goto err_free_mem;
+> > -	}
+> > -
+> > -	kbc->mmio =3D ioremap(res->start, resource_size(res));
+> > +	kbc->mmio =3D devm_request_and_ioremap(&pdev->dev, res);
+> >  	if (!kbc->mmio) {
+> > -		dev_err(&pdev->dev, "failed to remap I/O memory\n");
+> > -		err =3D -ENXIO;
+> > -		goto err_free_mem_region;
+> > +		dev_err(&pdev->dev, "Cannot request memregion/iomap address\n");
+> > +		return -EADDRNOTAVAIL;
+>=20
+> Erm, no, -EBUSY please.
 
-About 1/2 way down, Rob Herring says:
+EADDRNOTAVAIL is the canonical error for devm_request_and_ioremap()
+failure. The kerneldoc comment in lib/devres.c even gives a short
+example that uses this error code.
 
-      Don't do a platform driver and just check the machine compatible
-      property which is what I did for highbank.
+Thierry
 
-What Rob mostly seems to be objecting to is that
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature
 
-+		cpuidle@1418 {
-+			compatible = "marvell,kirkwood-cpuidle";
-+			reg = <0x1418 0x4>;
-+		};
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-does not describe hardware, so it does not belong in DT. Hence i will
-check of_machine_is_compatible() to see if its a marvell,kirkwood. But
-that does not help with old style boots.
+iQIcBAEBAgAGBQJQ6dArAAoJEN0jrNd/PrOhVc8P/RBfk2kdD1xrPNZQe60rRWi3
+NaFakKFbFyZQrapu3n1bryZol6TiZ70hkKzl/sGvuRXGpP8PbzRW0OyOlBCKNtOk
+BJVN56q7/fDEujKEs6sWKa17O9/Qw+rg58/yRgiTaAvjRIua0nT6lzDFaFkWv+k8
+fX5Z6p6HqOPoCs+UjjHjeU4seWJIyv4fd6XsElckcTe64lalxAHqCUyFKERW1nto
+QSEytY/H++u1gonCch0uf7xKZ/jVDobsOEogTbVdBopSqWIbTBKcTS48AIIiUIu3
+0KHFrsOTWgxDVOWZgQXGcUoDZUazulRRHmTy6yV/9SSD7reZyy0KtqRK7inyaoU6
+THckG8hItxhPEO2/JtOCky1toPo9RvVcKy1b/qjTDY8SRY/RlXRKjODWB0DmODfZ
+WjVeZlRN6CTDPqMw65LKT86vr4X8rKw5gfWR4yxMVu7cpU0FDpCYCf8CmRzz8Oai
+GkXyVAs1gLn19F7au/tc923IeBtOzoSMar5MvsZ0QuKAx2ITS1cNXlvYqgGRXLVe
+EwbRHVBtR6ubbFGNQ4bIqDCwfh+JjTYmYx+RCiNmQAwewKfrsX8nNul897uTutge
+SMyeWnzzBdko0B0Acnvwy2IzlhKyI0KIpmUkRmrfQQh0ZVBjvZieP9ksL0Fgo2fC
+etKQZioi7maSHYwWuj7J
+=qLcb
+-----END PGP SIGNATURE-----
 
-Should i make it both a platform driver for old style boots and check
-of_machine_is_compatible() for DT boots?
+--ibTvN161/egqYuK8--
 
-Thanks
-	Andrew
+--===============5096442939072299005==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============5096442939072299005==--
