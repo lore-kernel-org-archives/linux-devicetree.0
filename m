@@ -1,40 +1,73 @@
-From: Jon Loeliger <jdl@jdl.com>
-Subject: Re: Fix test relying in wrong behavior of is_printable
-Date: Sun, 06 Jan 2013 16:14:23 -0600
-Message-ID: <E1TryU3-0001K5-Iy@jdl.com>
-References: <1357326968-13124-1-git-send-email-panto@antoniou-consulting.com> <20130106035809.GG4674@truffula.fritz.box> <5B13DF52-26BE-4BA1-8BD7-25863B04A3B6@antoniou-consulting.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <5B13DF52-26BE-4BA1-8BD7-25863B04A3B6@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: David Gibson <david@gibson.dropbear.id.au>, Matt Porter <mporter@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Russ Dill <Russ.Dill@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: sunxi: Add pinctrl driver for Allwinner SoCs
+Date: Mon, 7 Jan 2013 00:46:10 +0100
+Message-ID: <CACRpkdYpnfWmo15vtUsvPobhFO3_wvYgaa04Mpa6QjWx2h+ezA@mail.gmail.com>
+References: <1355948295-19680-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1355948295-19680-2-git-send-email-maxime.ripard@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1355948295-19680-2-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alejandro Mery <amery-7FTFmhZxc5Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> Hi David
-> 
-> =CE=91=CF=80=CF=8C =CF=84=CE=BF iPhone =CE=BC=CE=BF=CF=85
-> 
-> 6 =CE=99=CE=B1=CE=BD 2013, 5:58, =CE=BF/=CE=B7 David Gibson <david@gibson.dr=
-> opbear.id.au> =CE=AD=CE=B3=CF=81=CE=B1=CF=88=CE=B5:
-> 
-> > On Fri, Jan 04, 2013 at 09:16:08PM +0200, Pantelis Antoniou wrote:
-> >> After fixing the is_printable bug the test suite fails.
-> >> Fix it with this patch
-> >>=20
-> >> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
-> >=20
-> > Rather than just removing the test, it would be better to still run it
-> > using an explicit -t bi to force the byte output.
-> 
-> Perhaps it wasn't exactly clear in the patch. The old test case output is co=
-> mmented out but there is test case output for the new patch.=20
-> 
-> So the test is not removed.=20
+On Wed, Dec 19, 2012 at 9:18 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
 
-Uh, yeah, something needs to be done here still.
-(There is a failing test still.)
+> The Allwinner SoCs have an IP module that handle both the muxing and the
+> GPIOs.
 
-Could we get a resubmission of the fix, please?
+Sorry for very slow review :-( :-(
 
-Thanks,
-jdl
+>  include/linux/pinctrl/pinconf-generic.h            |    1 +
+
+Can you break this into a separate patch and rebase it?
+
+It does not apply anymore after v3.8...
+
+> diff --git a/include/linux/pinctrl/pinconf-generic.h b/include/linux/pinctrl/pinconf-generic.h
+> index 4f0abb9..5f5968d 100644
+> --- a/include/linux/pinctrl/pinconf-generic.h
+> +++ b/include/linux/pinctrl/pinconf-generic.h
+> @@ -74,6 +74,7 @@ enum pin_config_param {
+>         PIN_CONFIG_DRIVE_PUSH_PULL,
+>         PIN_CONFIG_DRIVE_OPEN_DRAIN,
+>         PIN_CONFIG_DRIVE_OPEN_SOURCE,
+> +       PIN_CONFIG_DRIVE_CURRENT,
+>         PIN_CONFIG_INPUT_SCHMITT,
+>         PIN_CONFIG_INPUT_DEBOUNCE,
+>         PIN_CONFIG_POWER_SOURCE,
+
+Above the definitions there is some kerneldoc and that is where this has to be
+defined.
+
+You also have to defines what the argument to this parameter is.
+
+I think it should be renamed PIN_CONFIG_DRIVE_STRENGTH and the
+argument should be the number of drivers stages.
+
+These things are constructed with totem-pole-like outputs and the number
+of totempoles define the drive strength, usually it will be something like
+
+1 = 2mA
+2 = 4mA
+3 = 6mA
+4 = 8mA
+
+or similar, as you see 2 mA for each added driver stage. The driver can
+convert to any internal representation...
+
+Yours,
+Linus Walleij
