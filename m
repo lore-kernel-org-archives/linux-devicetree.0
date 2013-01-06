@@ -1,71 +1,40 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH] Allow simple cross-compilation of library
-Date: Sun, 06 Jan 2013 16:09:57 -0600
-Message-ID: <E1TryPl-0000Xa-5R@jdl.com>
-References: <E1SjsCv-0006dk-SV@jdl.com>
- <20120628030714.GA10546@truffala.fritz.box>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <20120628030714.GA10546-MK4v0fQdeXQXU02nzanrWNbf9cGiqdzd@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Christoffer Dall <c.dall-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>
+From: Jon Loeliger <jdl@jdl.com>
+Subject: Re: Fix test relying in wrong behavior of is_printable
+Date: Sun, 06 Jan 2013 16:14:23 -0600
+Message-ID: <E1TryU3-0001K5-Iy@jdl.com>
+References: <1357326968-13124-1-git-send-email-panto@antoniou-consulting.com> <20130106035809.GG4674@truffula.fritz.box> <5B13DF52-26BE-4BA1-8BD7-25863B04A3B6@antoniou-consulting.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <5B13DF52-26BE-4BA1-8BD7-25863B04A3B6@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Matt Porter <mporter@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Russ Dill <Russ.Dill@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-> On Wed, Jun 27, 2012 at 08:22:57AM -0500, Jon Loeliger wrote:
-> > 
-> > [ Forwarded to devicetree dev list for comment. --jdl ]
+> Hi David
 > 
-> Yeah, I guess that makes sense.
+> =CE=91=CF=80=CF=8C =CF=84=CE=BF iPhone =CE=BC=CE=BF=CF=85
 > 
-> > 
-> > 
-> > ------- Forwarded Message
-> > 
-> > Subject: [PATCH] Allow simple cross-compilation of library
-> > To: jdl-CYoMK+44s/E@public.gmane.org
-> > From: Christoffer Dall <c.dall-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>
-> > Date: Tue, 05 Jun 2012 13:09:59 -0400
-> > Message-ID: <20120605170959.12774.39782.stgit@ubuntu>
-> > 
-> > 
-> > This is extremely useful when cross-compiling the library to be
-> > linked with cross-compiled QEMU.
-> > 
-> > Signed-off-by: Christoffer Dall <c.dall-lrHrjnjw1UfHK3s98zE1ajGjJy/sRE9J@public.gmane.org>
-> > - ---
-> >  Makefile |    4 ++++
-> >  1 file changed, 4 insertions(+)
-> > 
-> > diff --git a/Makefile b/Makefile
-> > index 1169e6c..efa79c1 100644
-> > - --- a/Makefile
-> > +++ b/Makefile
-> > @@ -15,6 +15,10 @@ EXTRAVERSION =
-> >  LOCAL_VERSION =
-> >  CONFIG_LOCALVERSION =
-> >  
-> > +CC=${CROSS_COMPILE}gcc
-> > +LD=${CROSS_COMPILE}ld
-> > +AS=${CROSS_COMPILE}as
-> > +
-> >  CPPFLAGS = -I libfdt -I .
-> >  WARNINGS = -Werror -Wall -Wpointer-arith -Wcast-qual -Wnested-externs \
-> >  	-Wstrict-prototypes -Wmissing-prototypes -Wredundant-decls
+> 6 =CE=99=CE=B1=CE=BD 2013, 5:58, =CE=BF/=CE=B7 David Gibson <david@gibson.dr=
+> opbear.id.au> =CE=AD=CE=B3=CF=81=CE=B1=CF=88=CE=B5:
+> 
+> > On Fri, Jan 04, 2013 at 09:16:08PM +0200, Pantelis Antoniou wrote:
+> >> After fixing the is_printable bug the test suite fails.
+> >> Fix it with this patch
+> >>=20
+> >> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+> >=20
+> > Rather than just removing the test, it would be better to still run it
+> > using an explicit -t bi to force the byte output.
+> 
+> Perhaps it wasn't exactly clear in the patch. The old test case output is co=
+> mmented out but there is test case output for the new patch.=20
+> 
+> So the test is not removed.=20
 
+Uh, yeah, something needs to be done here still.
+(There is a failing test still.)
 
-Any further comment, or should I just apply this?
+Could we get a resubmission of the fix, please?
 
 Thanks,
 jdl
