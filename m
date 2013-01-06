@@ -1,14 +1,12 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: Fix test relying in wrong behavior of is_printable
-Date: Sun, 6 Jan 2013 13:41:56 +0200
-Message-ID: <5B13DF52-26BE-4BA1-8BD7-25863B04A3B6@antoniou-consulting.com>
-References: <1357326968-13124-1-git-send-email-panto@antoniou-consulting.com>
- <20130106035809.GG4674@truffula.fritz.box>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: machine_is_dt() ?
+Date: Sun, 6 Jan 2013 14:18:05 +0100
+Message-ID: <20130106131805.GQ17242@lunn.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130106035809.GG4674-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,44 +17,31 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>
+To: linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGF2aWQKCs6Rz4DPjCDPhM6/IGlQaG9uZSDOvM6/z4UKCjYgzpnOsc69IDIwMTMsIDU6NTgs
-IM6/L863IERhdmlkIEdpYnNvbiA8ZGF2aWRAZ2lic29uLmRyb3BiZWFyLmlkLmF1PiDOrc6zz4HO
-sc+IzrU6Cgo+IE9uIEZyaSwgSmFuIDA0LCAyMDEzIGF0IDA5OjE2OjA4UE0gKzAyMDAsIFBhbnRl
-bGlzIEFudG9uaW91IHdyb3RlOgo+PiBBZnRlciBmaXhpbmcgdGhlIGlzX3ByaW50YWJsZSBidWcg
-dGhlIHRlc3Qgc3VpdGUgZmFpbHMuCj4+IEZpeCBpdCB3aXRoIHRoaXMgcGF0Y2gKPj4gCj4+IFNp
-Z25lZC1vZmYtYnk6IFBhbnRlbGlzIEFudG9uaW91IDxwYW50b0BhbnRvbmlvdS1jb25zdWx0aW5n
-LmNvbT4KPiAKPiBSYXRoZXIgdGhhbiBqdXN0IHJlbW92aW5nIHRoZSB0ZXN0LCBpdCB3b3VsZCBi
-ZSBiZXR0ZXIgdG8gc3RpbGwgcnVuIGl0Cj4gdXNpbmcgYW4gZXhwbGljaXQgLXQgYmkgdG8gZm9y
-Y2UgdGhlIGJ5dGUgb3V0cHV0LgoKUGVyaGFwcyBpdCB3YXNuJ3QgZXhhY3RseSBjbGVhciBpbiB0
-aGUgcGF0Y2guIFRoZSBvbGQgdGVzdCBjYXNlIG91dHB1dCBpcyBjb21tZW50ZWQgb3V0IGJ1dCB0
-aGVyZSBpcyB0ZXN0IGNhc2Ugb3V0cHV0IGZvciB0aGUgbmV3IHBhdGNoLiAKClNvIHRoZSB0ZXN0
-IGlzIG5vdCByZW1vdmVkLiAKCgpSZWdhcmRzCgotLSBQYW50ZWxpcwo+IAo+PiAtLS0KPj4gdGVz
-dHMvcnVuX3Rlc3RzLnNoIHwgNSArKy0tLQo+PiAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25z
-KCspLCAzIGRlbGV0aW9ucygtKQo+PiAKPj4gZGlmZiAtLWdpdCBhL3Rlc3RzL3J1bl90ZXN0cy5z
-aCBiL3Rlc3RzL3J1bl90ZXN0cy5zaAo+PiBpbmRleCBkZDdmMjE3Li40MzI3OWM5IDEwMDc1NQo+
-PiAtLS0gYS90ZXN0cy9ydW5fdGVzdHMuc2gKPj4gKysrIGIvdGVzdHMvcnVuX3Rlc3RzLnNoCj4+
-IEBAIC00OTgsOSArNDk4LDggQEAgZmR0Z2V0X3Rlc3RzICgpIHsKPj4gCj4+ICAgICAjIHJ1bl9m
-ZHRnZXRfdGVzdCA8ZXhwZWN0ZWQtcmVzdWx0PiBbPGZsYWdzPl0gPGZpbGU+IDxub2RlPiA8cHJv
-cGVydHk+Cj4+ICAgICBydW5fZmR0Z2V0X3Rlc3QgIk15Qm9hcmROYW1lIiAkZHRiIC8gbW9kZWwK
-Pj4gLSAgICBydW5fZmR0Z2V0X3Rlc3QgIjc3IDEyMSA2NiAxMTEgXAo+PiAtOTcgMTE0IDEwMCA3
-OCA5NyAxMDkgMTAxIDAgNzcgMTIxIDY2IDExMSA5NyAxMTQgMTAwIDcwIDk3IDEwOSAxMDUgXAo+
-PiAtMTA4IDEyMSA3OCA5NyAxMDkgMTAxIDAiICRkdGIgLyBjb21wYXRpYmxlCj4+ICsgICAgIyBy
-dW5fZmR0Z2V0X3Rlc3QgIjc3IDEyMSA2NiAxMTEgOTcgMTE0IDEwMCA3OCA5NyAxMDkgMTAxIDAg
-NzcgMTIxIDY2IDExMSA5NyAxMTQgMTAwIDcwIDk3IDEwOSAxMDUgMTA4IDEyMSA3OCA5NyAxMDkg
-MTAxIDAiICRkdGIgLyBjb21wYXRpYmxlCj4+ICsgICAgcnVuX2ZkdGdldF90ZXN0ICJNeUJvYXJk
-TmFtZSBNeUJvYXJkRmFtaWx5TmFtZSIgJGR0YiAvIGNvbXBhdGlibGUKPj4gICAgIHJ1bl9mZHRn
-ZXRfdGVzdCAiTXlCb2FyZE5hbWUgTXlCb2FyZEZhbWlseU5hbWUiIC10IHMgJGR0YiAvIGNvbXBh
-dGlibGUKPj4gICAgIHJ1bl9mZHRnZXRfdGVzdCAzMjc2OCAkZHRiIC9jcHVzL1Bvd2VyUEMsOTcw
-QDEgZC1jYWNoZS1zaXplCj4+ICAgICBydW5fZmR0Z2V0X3Rlc3QgODAwMCAtdHggJGR0YiAvY3B1
-cy9Qb3dlclBDLDk3MEAxIGQtY2FjaGUtc2l6ZQo+IAo+IC0tIAo+IERhdmlkIEdpYnNvbiAgICAg
-ICAgICAgIHwgSSdsbCBoYXZlIG15IG11c2ljIGJhcm9xdWUsIGFuZCBteSBjb2RlCj4gZGF2aWQg
-QVQgZ2lic29uLmRyb3BiZWFyLmlkLmF1ICAgIHwgbWluaW1hbGlzdCwgdGhhbmsgeW91LiAgTk9U
-IF90aGVfIF9vdGhlcl8KPiAgICAgICAgICAgICAgICB8IF93YXlfIF9hcm91bmRfIQo+IGh0dHA6
-Ly93d3cub3psYWJzLm9yZy9+ZGdpYnNvbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRy
-ZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0
-aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
+Hi Folks
+
+I'm moving the cpuidle code for Kirkwood into drivers/cpuidle. I'm
+following the way cpuidle-calxeda.c instantiates the driver, it uses
+module_init(calxeda_cpuidle_init) and calxeda_cpuidle_init() uses
+of_machine_is_compatible("calxeda,highbank") so only loading the
+driver in a ARCH_MULTIPLATFORM kernel when needed.
+
+I can follow this model for when kirkwood is booted using device
+tree. However, i would also like to use the driver for those boards
+which are not yet converted to DT. In that situation, we have a kernel
+dedicate to kirkwood and the cpuidle driver is always relevant.
+
+Thus i need to code something like:
+
+(of_machine_is_compatible("marvell, kirkwood") ||
+ !machine_is_dt())
+
+However, there is no macro machine_is_dt().
+
+Is there a way to tell if a machine has been booted using a machine
+number as opposed to DT?
+
+Thanks
+       Andrew
