@@ -1,100 +1,84 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: Fix test relying in wrong behavior of is_printable
-Date: Sun, 6 Jan 2013 14:58:09 +1100
-Message-ID: <20130106035809.GG4674@truffula.fritz.box>
-References: <1357326968-13124-1-git-send-email-panto@antoniou-consulting.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] input: keyboard: tegra: use devm_* for resource
+ allocation
+Date: Sun, 6 Jan 2013 16:30:28 +0530
+Message-ID: <50E9594C.4040506@nvidia.com>
+References: <1357371910-3164-1-git-send-email-ldewangan@nvidia.com> <1357371910-3164-3-git-send-email-ldewangan@nvidia.com> <20130105080658.GA1315@core.coreip.homeip.net> <50E80C9A.7040404@nvidia.com> <20130105231858.GD6475@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3009226824881944343=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1357326968-13124-1-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130105231858.GD6475-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sunday 06 January 2013 04:48 AM, Dmitry Torokhov wrote:
+> On Sat, Jan 05, 2013 at 04:50:58PM +0530, Laxman Dewangan wrote:
+>> HI Dmitry,
+>> Thanks for quick review.
+>>
+>> I will take care of your comment in next version. Some have my answer.
+>>
+>>
+>> On Saturday 05 January 2013 01:36 PM, Dmitry Torokhov wrote:
+>>> Hi Laxman,
+>>>
+>>> On Sat, Jan 05, 2013 at 01:15:08PM +0530, Laxman Dewangan wrote:
+>>>> Use devm_* for memory, clock, input device allocation. This reduces
+>>>> code for freeing these resources.
+>>>>   	err = tegra_kbd_setup_keymap(kbc);
+>>>> -	if (err) {
+>>>> +	if (err < 0) {
+>>> Why is this change? As far as I can see tegra_kbd_setup_keymap() never
+>>> returns positive values.
+>> Ok, mostly errors are in negative and hence this change, I will
+>> revert it and will keep original.
+>>
+>>>>   		dev_err(&pdev->dev, "failed to setup keymap\n");
+>>>> -		goto err_put_clk;
+>>>> +		return err;
+>>>>   	}
+>>>>   	__set_bit(EV_REP, input_dev->evbit);
+>>>> @@ -790,15 +784,15 @@ static int tegra_kbc_probe(struct platform_device *pdev)
+>>>>   	err = request_irq(kbc->irq, tegra_kbc_isr,
+>>>>   			  IRQF_NO_SUSPEND | IRQF_TRIGGER_HIGH, pdev->name, kbc);
+>>>> -	if (err) {
+>>>> +	if (err < 0) {
+>>> Neither request_irq(). BTW, why not devm_request_irq?
+>> I understand from Mark B on different patches that using
+>> devm_request_irq() can create race condition when removing device.
+>> Interrupt can occur when device resource release is in process and
+>> so it can cause isr call which can use the freed pointer.
+>> devm_request_irq() should be avoided.
+> devm_request_irq() has a potential of creating a race condition, but it
+> depents on the driver. In this particular case tegra driver ensures that
+> interrupts are inhibited when input device is unregistered by providing
+> tegra_kbc_close() method, so in this particular case it is safe to
+> use devm_request_irq().
+>
+> Also, when using managed input devices, the unregistering and final
+> freeing is a 2-step process, so even in absence of close() method, if
+> initialization sequence was:
+>
+> 	devm_input_allocate_device()
+> 	...
+> 	devm_request_irq()
+> 	...
+> 	input_unregister_device()
+>
+> then order of freeing resources (behind the scenes) will be
+>
+> 	devm_input_device_unregister();
+> 	/* input device is still present in memory and can
+> 	 * handle input_event() calls.
+> 	 */
+> 	free_irq();
+> 	devm_input_device_release();
+>
+> So using managed request_irq() _together_ with managed input devices is
+> OK.
 
---===============3009226824881944343==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uc35eWnScqDcQrv5"
-Content-Disposition: inline
-
-
---uc35eWnScqDcQrv5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jan 04, 2013 at 09:16:08PM +0200, Pantelis Antoniou wrote:
-> After fixing the is_printable bug the test suite fails.
-> Fix it with this patch
->=20
-> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-
-Rather than just removing the test, it would be better to still run it
-using an explicit -t bi to force the byte output.
-
-> ---
->  tests/run_tests.sh | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
->=20
-> diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-> index dd7f217..43279c9 100755
-> --- a/tests/run_tests.sh
-> +++ b/tests/run_tests.sh
-> @@ -498,9 +498,8 @@ fdtget_tests () {
-> =20
->      # run_fdtget_test <expected-result> [<flags>] <file> <node> <propert=
-y>
->      run_fdtget_test "MyBoardName" $dtb / model
-> -    run_fdtget_test "77 121 66 111 \
-> -97 114 100 78 97 109 101 0 77 121 66 111 97 114 100 70 97 109 105 \
-> -108 121 78 97 109 101 0" $dtb / compatible
-> +    # run_fdtget_test "77 121 66 111 97 114 100 78 97 109 101 0 77 121 6=
-6 111 97 114 100 70 97 109 105 108 121 78 97 109 101 0" $dtb / compatible
-> +    run_fdtget_test "MyBoardName MyBoardFamilyName" $dtb / compatible
->      run_fdtget_test "MyBoardName MyBoardFamilyName" -t s $dtb / compatib=
-le
->      run_fdtget_test 32768 $dtb /cpus/PowerPC,970@1 d-cache-size
->      run_fdtget_test 8000 -tx $dtb /cpus/PowerPC,970@1 d-cache-size
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---uc35eWnScqDcQrv5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlDo9lEACgkQaILKxv3ab8ZmUgCeP/8Qz1gsx65ab1jcBo5j3otO
-Uc4Anio37VIVkH4oI4FfX2QBAtKWHH1f
-=342s
------END PGP SIGNATURE-----
-
---uc35eWnScqDcQrv5--
-
---===============3009226824881944343==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============3009226824881944343==--
+Thanks for detail explanation. I will modify and sent the new version of 
+patch.
