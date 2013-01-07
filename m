@@ -1,78 +1,27 @@
-From: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCHv16 5/7] fbmon: add of_videomode helpers
-Date: Mon, 7 Jan 2013 06:10:13 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA7FB02@DBDE01.ent.ti.com>
+From: "Mohammed, Afzal" <afzal@ti.com>
+Subject: RE: [PATCHv16 0/7] of: add display helper
+Date: Mon, 7 Jan 2013 06:23:54 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA7FB16@DBDE01.ent.ti.com>
 References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
- <1355850256-16135-6-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1355850256-16135-6-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Valkeinen, Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Cc: Rob Herring <robherring2@gmail.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>, Rob Clark <robdclark@gmail.com>, Leela Krishna Amudala <leelakrishna.a@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
-
-On Tue, Dec 18, 2012 at 22:34:14, Steffen Trumtrar wrote:
-> Add helper to get fb_videomode from devicetree.
-
->  drivers/video/fbmon.c |   42 ++++++++++++++++++++++++++++++++++++++++++
->  include/linux/fb.h    |    4 ++++
-
-This breaks DaVinci (da8xx_omapl_defconfig), following change was
-required to get it build if OF_VIDEOMODE or/and FB_MODE_HELPERS
-is not defined. There may be better solutions, following was the
-one that was used by me to test this series.
-
----8<----------
-
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index 58b9860..0ce30d1 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -716,9 +716,19 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
- extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
- extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
-
-+#if defined(CONFIG_OF_VIDEOMODE) && defined(CONFIG_FB_MODE_HELPERS)
- extern int of_get_fb_videomode(struct device_node *np,
-                               struct fb_videomode *fb,
-                               int index);
-+#else
-+static inline int of_get_fb_videomode(struct device_node *np,
-+                                     struct fb_videomode *fb,
-+                                     int index)
-+{
-+       return -EINVAL;
-+}
-+#endif
-+
- extern int fb_videomode_from_videomode(const struct videomode *vm,
-                                       struct fb_videomode *fbmode);
-
----8<----------
-
-
-> +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-
-As _OF_VIDEOMODE is a bool type CONFIG, isn't,
-
-#ifdef CONFIG_OF_VIDEOMODE
-
-sufficient ?
-
-Regards
-Afzal
+SGkgU3RlZmZlbiwNCg0KT24gVHVlLCBEZWMgMTgsIDIwMTIgYXQgMjI6MzQ6MDksIFN0ZWZmZW4g
+VHJ1bXRyYXIgd3JvdGU6DQoNCj4gRmluYWxseSwgcmlnaHQgaW4gdGltZSBiZWZvcmUgdGhlIGVu
+ZCBvZiB0aGUgd29ybGQgb24gZnJpZGF5LCB2MTYgb2YgdGhlDQo+IGRpc3BsYXkgaGVscGVycy4N
+Cg0KQWZ0ZXIgYW5vdGhlciBiaWcgYmFuZywgeW91ciBzZXJpZXMgaW4gdGhlIHByZXZpb3VzIHdv
+cmxkIHdhcyB0cmllZCA7KQ0KDQpUaGlzIHNlcmllcyBoYXMgYmVlbiB0ZXN0ZWQgb24gREE4NTAg
+RVZNLCBBTTMzNXggRVZNLCBFVk0tU0sgYWxvbmcNCndpdGggdGhlIGZpeCBtZW50aW9uZWQgaW4g
+NS83LCB0aGVyZSB3YXMgYSBidWlsZCBicmVha2FnZSBvbiBkZWZhdWx0DQpjb25maWcgb24gRGFW
+aW5jaSBib2FyZHMgd2l0aCB0aGlzIHNlcmllcywgZml4IGFzIHdlbGwgYXMgbW9yZQ0KZGV0YWls
+cyBhcmUgbWVudGlvbmVkIGFzIHJlcGx5IHRvIDUvNy4NCg0KV2l0aCB0aG9zZSBjaGFuZ2VzIG9y
+IGVxdWl2YWxlbnQgdG8gYWNoaWV2ZSB0aGUgc2FtZSwNCg0KVGVzdGVkLWJ5OiBBZnphbCBNb2hh
+bW1lZCA8QWZ6YWxAdGkuY29tPg0KDQpSZWdhcmRzDQpBZnphbA0K
