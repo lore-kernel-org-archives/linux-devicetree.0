@@ -1,60 +1,59 @@
-From: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 08/10] video: da8xx-fb: obtain fb_videomode info from dt
-Date: Mon, 7 Jan 2013 09:21:15 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA7FC7A@DBDE01.ent.ti.com>
-References: <cover.1357304090.git.afzal@ti.com>
- <78e026555731e0bbe8475610279d3e5265d124b9.1357304090.git.afzal@ti.com>
- <20130107091131.GC23478@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130107091131.GC23478-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Nori,
- Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "Valkeinen,
- Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: Re: Fix test relying in wrong behavior of is_printable
+Date: Mon, 7 Jan 2013 11:55:32 +0200
+Message-ID: <6BBCA320-AB8C-4DE3-BF98-3A77B1E94982@antoniou-consulting.com>
+References: <1357326968-13124-1-git-send-email-panto@antoniou-consulting.com> <20130106035809.GG4674@truffula.fritz.box> <5B13DF52-26BE-4BA1-8BD7-25863B04A3B6@antoniou-consulting.com> <E1TryU3-0001K5-Iy@jdl.com>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <E1TryU3-0001K5-Iy@jdl.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jon Loeliger <jdl@jdl.com>
+Cc: David Gibson <david@gibson.dropbear.id.au>, Matt Porter <mporter@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Russ Dill <Russ.Dill@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
+Err,
 
-On Mon, Jan 07, 2013 at 14:41:31, Steffen Trumtrar wrote:
-> On Mon, Jan 07, 2013 at 10:41:30AM +0530, Afzal Mohammed wrote:
+I can rework and resubmit to remove the comment, but the test doesn't fail:
 
-> > Obtain fb_videomode details for the connected lcd panel using the
-> > display timing details present in DT.
-
-> > +- display-timings: list of different videomodes supported by the lcd
-> > +  panel, represented as childs, can have multiple modes supported, if
-> > +  only one, then it is considered native mode, if multiple modes are
-> > +  provided, native mode can be set explicitly, more details available
-> > +  @Documentation/devicetree/bindings/video/display-timing.txt
-
-> Keep in mind that the text combined with...
-
-> > +		if (of_get_fb_videomode(np, lcdc_info, 0)) {
-> > +			dev_err(&dev->dev, "timings not available in DT\n");
-> > +			return NULL;
-> > +		}
-> > +		return lcdc_info;
-> > +	}
+> $ make check | grep 'MyBoardName.*-t s.*compatible' 
+> fdtget-runtest.sh MyBoardName MyBoardFamilyName -t s label01.dts.fdtget.test.dtb / compatible:	PASS
 > 
-> ... this is not correct. You are just supporting the first display-timings
-> subnode (of_get_fb_videomode(..., 0)).
 
-
-Yes right, I will modify the text to reflect what the driver does.
+As of today's pull.
 
 Regards
-Afzal
+
+-- Pantelis
+
+On Jan 7, 2013, at 12:14 AM, Jon Loeliger wrote:
+
+>> Hi David
+>> 
+>> =CE=91=CF=80=CF=8C =CF=84=CE=BF iPhone =CE=BC=CE=BF=CF=85
+>> 
+>> 6 =CE=99=CE=B1=CE=BD 2013, 5:58, =CE=BF/=CE=B7 David Gibson <david@gibson.dr=
+>> opbear.id.au> =CE=AD=CE=B3=CF=81=CE=B1=CF=88=CE=B5:
+>> 
+>>> On Fri, Jan 04, 2013 at 09:16:08PM +0200, Pantelis Antoniou wrote:
+>>>> After fixing the is_printable bug the test suite fails.
+>>>> Fix it with this patch
+>>>> =20
+>>>> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+>>> =20
+>>> Rather than just removing the test, it would be better to still run it
+>>> using an explicit -t bi to force the byte output.
+>> 
+>> Perhaps it wasn't exactly clear in the patch. The old test case output is co=
+>> mmented out but there is test case output for the new patch.=20
+>> 
+>> So the test is not removed.=20
+> 
+> Uh, yeah, something needs to be done here still.
+> (There is a failing test still.)
+> 
+> Could we get a resubmission of the fix, please?
+> 
+> Thanks,
+> jdl
