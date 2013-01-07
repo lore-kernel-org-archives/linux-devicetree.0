@@ -1,156 +1,112 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: davinci: da850: add pinctrl driver entries
-Date: Mon, 7 Jan 2013 20:35:37 +0530
-Message-ID: <50EAE441.4050804@ti.com>
-References: <1354876051-25938-1-git-send-email-anilkumar.v@ti.com>
-	<1354876051-25938-2-git-send-email-anilkumar.v@ti.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: imx53: pinctrl update
+Date: Mon,  7 Jan 2013 16:15:59 +0100
+Message-ID: <1357571760-487-2-git-send-email-s.trumtrar@pengutronix.de>
+References: <1357571760-487-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1354876051-25938-2-git-send-email-anilkumar.v-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "Kumar, Anil" <anilkumar.v-l0cyMroinI0@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1357571760-487-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anil,
+Add pinctrl for cspi, csi.
+Add new pingroups for can1 and uart3.
 
-On 12/7/2012 3:57 PM, Kumar, Anil wrote:
-> For DT, DaVinci platform can use pinctrl-single driver for handling
-> padconf registers.
-> 
-> Enable PINCTRL Kconfig for all DaVinci platform. Add required
-> pinctrl DT entries in da850 dts file.
-> 
-> Test procedure
->  1)Populate DT file with NAND node information.
->  2)Populate board DT file with pinmux information for NAND.
->  3)Boot and confirm NAND is detected by the kernel.
->  4)cat /proc/mtd to show partitions.
-> 
-> Signed-off-by: Kumar, Anil <anilkumar.v-l0cyMroinI0@public.gmane.org>
-> ---
-> :000000 100644 0000000... f999d9e... A	Documentation/devicetree/bindings/arm/davinci/pinctrl.txt
-> :100644 100644 06e0adf... 54a5405... M	arch/arm/Kconfig
-> :100644 100644 37dc5a3... 8cac9d2... M	arch/arm/boot/dts/da850-evm.dts
-> :100644 100644 fbada87... 94471bc... M	arch/arm/boot/dts/da850.dtsi
-> :100644 100644 f292239... 0892db4... M	arch/arm/configs/da8xx_omapl_defconfig
->  .../devicetree/bindings/arm/davinci/pinctrl.txt    |   29 ++++++++++++++++++++
->  arch/arm/Kconfig                                   |    1 +
->  arch/arm/boot/dts/da850-evm.dts                    |    3 ++
->  arch/arm/boot/dts/da850.dtsi                       |   10 +++++++
->  arch/arm/configs/da8xx_omapl_defconfig             |    1 +
->  5 files changed, 44 insertions(+), 0 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/davinci/pinctrl.txt b/Documentation/devicetree/bindings/arm/davinci/pinctrl.txt
-> new file mode 100644
-> index 0000000..f999d9e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/davinci/pinctrl.txt
-> @@ -0,0 +1,29 @@
-> +* Texas Instruments Davinci pinctrl-single
-> +
-> +This file provides information, what the device node for the
-> +davinci pinctrl-single interface contain.
-> +
-> +Required properties:
-> +- compatible: "pinctrl-single";
-> +
-> +- reg : offset and length of the register set for the mux registers
-> +
-> +- pinctrl-single,bit-per-mux: mask of allowed pinmux function bits in the
-> +  pinmux register
-> +
-> +- pinctrl-single,register-width: pinmux register access width in bits
-> +
-> +- pinctrl-single,function-mask:  mask of allowed pinmux function bits in
-> +  the pinmux register
-> +
-> +Example:
-> +pmx_core:pinmux@14120 {
-> +		compatible = "pinctrl-single";
-> +		reg = <0x14120 0x50>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		pinctrl-single,bit-per-mux;
-> +		pinctrl-single,register-width = <32>;
-> +		pinctrl-single,function-mask = <0xffffffff>;
-> +};
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/imx53.dtsi |   53 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-These bindings are already documented as part of
-Documentation/devicetree/bindings/pinctrl/pinctrl-single.txt. No need to
-repeat.
-
-> +~
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index 06e0adf..54a5405 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -924,6 +924,7 @@ config ARCH_DAVINCI
->  	select GENERIC_IRQ_CHIP
->  	select HAVE_IDE
->  	select NEED_MACH_GPIO_H
-> +	select PINCTRL
-
-No need to force this across DaVinci. You can select only for MACH_DA8XX_DT.
-
->  	select USE_OF
->  	select ZONE_DMA
->  	help
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index 37dc5a3..8cac9d2 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -15,6 +15,9 @@
->  	model = "DA850/AM1808/OMAP-L138 EVM";
->  
->  	soc {
-> +		pmx_core:pinmux@14120 {
-
-'pmx_core:pinmux@1c14120' instead like the way uart is defined?
-
-> +			status = "okay";
-> +		};
->  		serial0: serial@1c42000 {
->  			status = "okay";
->  		};
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index fbada87..94471bc 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
-> @@ -29,6 +29,16 @@
->  		#size-cells = <1>;
->  		ranges = <0x0 0x01c00000 0x400000>;
->  
-> +		pmx_core:pinmux@14120 {
-> +			compatible = "pinctrl-single";
-> +			reg = <0x14120 0x50>;
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +			pinctrl-single,bit-per-mux;
-> +			pinctrl-single,register-width = <32>;
-> +			pinctrl-single,function-mask = <0xffffffff>;
-> +			status = "disabled";
-> +		};
->  		serial0: serial@1c42000 {
->  			compatible = "ns16550a";
->  			reg = <0x42000 0x100>;
-> diff --git a/arch/arm/configs/da8xx_omapl_defconfig b/arch/arm/configs/da8xx_omapl_defconfig
-> index f292239..0892db4 100644
-> --- a/arch/arm/configs/da8xx_omapl_defconfig
-> +++ b/arch/arm/configs/da8xx_omapl_defconfig
-
-I would like the defconfig changes to be separated out into a different
-patch.
-
-Thanks,
-Sekhar
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index 552aed4..160c24a 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -274,6 +274,44 @@
+ 					};
+ 				};
+ 
++				csi {
++					pinctrl_csi_1: csigrp-1 {
++						fsl,pins = <
++							286 0x1d5	/* MX53_PAD_CSI0_DATA_EN__IPU_CSI0_DATA_EN */
++							291 0x1d5	/* MX53_PAD_CSI0_VSYNC__IPU_CSI0_VSYNC */
++							280 0x1d5	/* MX53_PAD_CSI0_MCLK__IPU_CSI0_HSYNC */
++							276 0x1d5	/* MX53_PAD_CSI0_PIXCLK__IPU_CSI0_PIXCLK */
++							409 0x1d5	/* MX53_PAD_CSI0_DAT19__IPU_CSI0_D_19 */
++							402 0x1d5	/* MX53_PAD_CSI0_DAT18__IPU_CSI0_D_18 */
++							395 0x1d5	/* MX53_PAD_CSI0_DAT17__IPU_CSI0_D_17 */
++							388 0x1d5	/* MX53_PAD_CSI0_DAT16__IPU_CSI0_D_16 */
++							381 0x1d5	/* MX53_PAD_CSI0_DAT15__IPU_CSI0_D_15 */
++							374 0x1d5	/* MX53_PAD_CSI0_DAT14__IPU_CSI0_D_14 */
++							367 0x1d5	/* MX53_PAD_CSI0_DAT13__IPU_CSI0_D_13 */
++							360 0x1d5	/* MX53_PAD_CSI0_DAT12__IPU_CSI0_D_12 */
++							352 0x1d5	/* MX53_PAD_CSI0_DAT11__IPU_CSI0_D_11 */
++							344 0x1d5	/* MX53_PAD_CSI0_DAT10__IPU_CSI0_D_10 */
++							336 0x1d5	/* MX53_PAD_CSI0_DAT9__IPU_CSI0_D_9 */
++							328 0x1d5	/* MX53_PAD_CSI0_DAT8__IPU_CSI0_D_8 */
++							320 0x1d5	/* MX53_PAD_CSI0_DAT7__IPU_CSI0_D_7 */
++							312 0x1d5	/* MX53_PAD_CSI0_DAT6__IPU_CSI0_D_6 */
++							304 0x1d5	/* MX53_PAD_CSI0_DAT5__IPU_CSI0_D_5 */
++							296 0x1d5	/* MX53_PAD_CSI0_DAT4__IPU_CSI0_D_4 */
++							276 0x1d5	/* MX53_PAD_CSI0_PIXCLK__IPU_CSI0_PIXCLK */
++						>;
++					};
++				};
++
++				cspi {
++					pinctrl_cspi_1: cspigrp-1 {
++						fsl,pins = <
++							998  0x1d5	/* MX53_PAD_SD1_DATA0__CSPI_MISO */
++							1008 0x1d5	/* MX53_PAD_SD1_CMD__CSPI_MOSI */
++							1022 0x1d5	/* MX53_PAD_SD1_CLK__CSPI_SCLK */
++						>;
++					};
++				};
++
+ 				ecspi1 {
+ 					pinctrl_ecspi1_1: ecspi1grp-1 {
+ 						fsl,pins = <
+@@ -349,6 +387,13 @@
+ 							853 0x80000000  /* MX53_PAD_PATA_DIOR__CAN1_RXCAN */
+ 						>;
+ 					};
++
++					pinctrl_can1_2: can1grp-2 {
++						fsl,pins = <
++							37  0x80000000  /* MX53_PAD_KEY_COL2__CAN1_TXCAN */
++							44  0x80000000  /* MX53_PAD_KEY_ROW2__CAN1_RXCAN */
++						>;
++					};
+ 				};
+ 
+ 				can2 {
+@@ -421,6 +466,14 @@
+ 							880 0x1c5	/* MX53_PAD_PATA_DA_2__UART3_RTS */
+ 						>;
+ 					};
++
++					pinctrl_uart3_2: uart3grp-2 {
++						fsl,pins = <
++							884 0x1c5	/* MX53_PAD_PATA_CS_0__UART3_TXD_MUX */
++							888 0x1c5	/* MX53_PAD_PATA_CS_1__UART3_RXD_MUX */
++						>;
++					};
++
+ 				};
+ 
+ 				uart4 {
+-- 
+1.7.10.4
