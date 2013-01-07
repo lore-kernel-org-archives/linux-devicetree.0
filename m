@@ -1,70 +1,104 @@
-From: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCHv16 5/7] fbmon: add of_videomode helpers
-Date: Mon, 7 Jan 2013 08:46:41 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA7FBF7@DBDE01.ent.ti.com>
-References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
- <1355850256-16135-6-git-send-email-s.trumtrar@pengutronix.de>
- <C8443D0743D26F4388EA172BF4E2A7A93EA7FB02@DBDE01.ent.ti.com>
- <20130107080648.GB23478@pengutronix.de>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH 08/10] video: da8xx-fb: obtain fb_videomode info from dt
+Date: Mon, 7 Jan 2013 10:11:31 +0100
+Message-ID: <20130107091131.GC23478@pengutronix.de>
+References: <cover.1357304090.git.afzal@ti.com>
+ <78e026555731e0bbe8475610279d3e5265d124b9.1357304090.git.afzal@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130107080648.GB23478-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Valkeinen, Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <78e026555731e0bbe8475610279d3e5265d124b9.1357304090.git.afzal@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Afzal Mohammed <afzal@ti.com>
+Cc: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sekhar Nori <nsekhar@ti.com>, Vaibhav Hiremath <hvaibhav@ti.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
+Hi!
 
-On Mon, Jan 07, 2013 at 13:36:48, Steffen Trumtrar wrote:
-> On Mon, Jan 07, 2013 at 06:10:13AM +0000, Mohammed, Afzal wrote:
-
-> > This breaks DaVinci (da8xx_omapl_defconfig), following change was
-> > required to get it build if OF_VIDEOMODE or/and FB_MODE_HELPERS
-> > is not defined. There may be better solutions, following was the
-> > one that was used by me to test this series.
-
-> I just did a quick "make da8xx_omapl_defconfig && make" and it builds just fine.
-> On what version did you apply the series?
-> At the moment I have the series sitting on 3.7. Didn't try any 3.8-rcx yet.
-> But fixing this shouldn't be a problem.
-
-You are right, me idiot, error will happen only upon try to make use of
-of_get_fb_videomode() (defined in this patch) in the da8xx-fb driver
-(with da8xx_omapl_defconfig), to be exact upon adding,
-
-"video: da8xx-fb: obtain fb_videomode info from dt" of my patch series.
-
-The change as I mentioned or something similar would be required as
-any driver that is going to make use of of_get_fb_videomode() would
-break if CONFIG_OF_VIDEOMODE or CONFIG_FB_MODE_HELPERS is not defined.
-
-And testing was done over v3.8-rc2.
-
-> > > +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-> > 
-> > As _OF_VIDEOMODE is a bool type CONFIG, isn't,
-> > 
-> > #ifdef CONFIG_OF_VIDEOMODE
-> > 
-> > sufficient ?
-> > 
+On Mon, Jan 07, 2013 at 10:41:30AM +0530, Afzal Mohammed wrote:
+> Obtain fb_videomode details for the connected lcd panel using the
+> display timing details present in DT.
 > 
-> Yes, that is right. But I think IS_ENABLED is the preferred way to do it, isn't it?
+> Signed-off-by: Afzal Mohammed <afzal@ti.com>
+> ---
+>  .../devicetree/bindings/video/fb-da8xx.txt         |   20 ++++++++++++++++++++
+>  drivers/video/da8xx-fb.c                           |   16 ++++++++++++++++
+>  2 files changed, 36 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/video/fb-da8xx.txt b/Documentation/devicetree/bindings/video/fb-da8xx.txt
+> index 581e014..eeb935b 100644
+> --- a/Documentation/devicetree/bindings/video/fb-da8xx.txt
+> +++ b/Documentation/devicetree/bindings/video/fb-da8xx.txt
+> @@ -6,6 +6,11 @@ Required properties:
+>  	AM335x SoC's - "ti,am3352-lcdc", "ti,da830-lcdc"
+>  - reg: Address range of lcdc register set
+>  - interrupts: lcdc interrupt
+> +- display-timings: list of different videomodes supported by the lcd
+> +  panel, represented as childs, can have multiple modes supported, if
+> +  only one, then it is considered native mode, if multiple modes are
+> +  provided, native mode can be set explicitly, more details available
+> +  @Documentation/devicetree/bindings/video/display-timing.txt
+>  
 
-Now I realize it is.
+Keep in mind that the text combined with...
 
-Regards
-Afzal
+>  Example:
+>  
+> @@ -13,4 +18,19 @@ lcdc@4830e000 {
+>  	compatible = "ti,am3352-lcdc", "ti,da830-lcdc";
+>  	reg =  <0x4830e000 0x1000>;
+>  	interrupts = <36>;
+> +	display-timings {
+> +		800x480p62 {
+> +			clock-frequency = <30000000>;
+> +			hactive = <800>;
+> +			vactive = <480>;
+> +			hfront-porch = <39>;
+> +			hback-porch = <39>;
+> +			hsync-len = <47>;
+> +			vback-porch = <29>;
+> +			vfront-porch = <13>;
+> +			vsync-len = <2>;
+> +			hsync-active = <1>;
+> +			vsync-active = <1>;
+> +		};
+> +	};
+>  };
+> diff --git a/drivers/video/da8xx-fb.c b/drivers/video/da8xx-fb.c
+> index 68ae925..94add01 100644
+> --- a/drivers/video/da8xx-fb.c
+> +++ b/drivers/video/da8xx-fb.c
+> @@ -1261,8 +1261,24 @@ static struct fb_videomode *da8xx_fb_get_videomode(struct platform_device *dev)
+>  {
+>  	struct da8xx_lcdc_platform_data *fb_pdata = dev->dev.platform_data;
+>  	struct fb_videomode *lcdc_info;
+> +	struct device_node *np = dev->dev.of_node;
+>  	int i;
+>  
+> +	if (np) {
+> +		lcdc_info = devm_kzalloc(&dev->dev,
+> +					 sizeof(struct fb_videomode),
+> +					 GFP_KERNEL);
+> +		if (!lcdc_info) {
+> +			dev_err(&dev->dev, "memory allocation failed\n");
+> +			return NULL;
+> +		}
+> +		if (of_get_fb_videomode(np, lcdc_info, 0)) {
+> +			dev_err(&dev->dev, "timings not available in DT\n");
+> +			return NULL;
+> +		}
+> +		return lcdc_info;
+> +	}
+
+... this is not correct. You are just supporting the first display-timings
+subnode (of_get_fb_videomode(..., 0)).
+
+Regards,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
