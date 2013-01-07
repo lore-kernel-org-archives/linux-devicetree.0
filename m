@@ -1,87 +1,75 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 3.9 1/3] misc: new driver for GPIO-connected 7-segment
- displays
-Date: Mon, 7 Jan 2013 20:58:54 +0100
-Message-ID: <20130107205854.1f019816@skate>
-References: <1357576928-29133-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1357576928-29133-2-git-send-email-thomas.petazzoni@free-electrons.com>
- <201301071943.40074.arnd@arndb.de>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCHv16 5/7] fbmon: add of_videomode helpers
+Date: Mon, 7 Jan 2013 14:06:50 -0600
+Message-ID: <CAF6AEGuuM9_n+A4q4tq+24i4YcW97orMN_RKbJ95gFie_qoktA@mail.gmail.com>
+References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
+	<1355850256-16135-6-git-send-email-s.trumtrar@pengutronix.de>
+	<C8443D0743D26F4388EA172BF4E2A7A93EA7FB02@DBDE01.ent.ti.com>
+	<20130107080648.GB23478@pengutronix.de>
+	<C8443D0743D26F4388EA172BF4E2A7A93EA7FBF7@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201301071943.40074.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EA7FBF7@DBDE01.ent.ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: "Mohammed, Afzal" <afzal@ti.com>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, David Airlie <airlied@linux.ie>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Arnd Bergmann,
+On Mon, Jan 7, 2013 at 2:46 AM, Mohammed, Afzal <afzal@ti.com> wrote:
+> Hi Steffen,
+>
+> On Mon, Jan 07, 2013 at 13:36:48, Steffen Trumtrar wrote:
+>> On Mon, Jan 07, 2013 at 06:10:13AM +0000, Mohammed, Afzal wrote:
+>
+>> > This breaks DaVinci (da8xx_omapl_defconfig), following change was
+>> > required to get it build if OF_VIDEOMODE or/and FB_MODE_HELPERS
+>> > is not defined. There may be better solutions, following was the
+>> > one that was used by me to test this series.
+>
+>> I just did a quick "make da8xx_omapl_defconfig && make" and it builds just fine.
+>> On what version did you apply the series?
+>> At the moment I have the series sitting on 3.7. Didn't try any 3.8-rcx yet.
+>> But fixing this shouldn't be a problem.
+>
+> You are right, me idiot, error will happen only upon try to make use of
+> of_get_fb_videomode() (defined in this patch) in the da8xx-fb driver
+> (with da8xx_omapl_defconfig), to be exact upon adding,
+>
+> "video: da8xx-fb: obtain fb_videomode info from dt" of my patch series.
+>
+> The change as I mentioned or something similar would be required as
+> any driver that is going to make use of of_get_fb_videomode() would
+> break if CONFIG_OF_VIDEOMODE or CONFIG_FB_MODE_HELPERS is not defined.
 
-On Mon, 7 Jan 2013 19:43:39 +0000, Arnd Bergmann wrote:
+Shouldn't the driver that depends on CONFIG_OF_VIDEOMODE and
+CONFIG_FB_MODE_HELPERS, explicitly select them?  I don't really see
+the point of having the static-inline fallbacks.
 
-> >  .../devicetree/bindings/misc/gpio-7seg.txt         |   18 +++
-> >  drivers/misc/Kconfig                               |   13 ++
-> >  drivers/misc/Makefile                              |    1 +
-> >  drivers/misc/gpio-7seg.c                           |  168 ++++++++++++++++++++
-> 
-> I wonder if it would make sense to merge this into the LED subsystem
-> rather than having it as a standalone driver.
+fwiw, using 'select' is what I was doing for lcd panel support for
+lcdc/da8xx drm driver (which was using the of videomode helpers,
+albeit a slightly earlier version of the patches):
 
-Hum, maybe. How do you see it fitting inside the LED subsystem? The
-purpose of the device is quite different in its userspace to kernel
-interface, no?
+https://github.com/robclark/kernel-omap4/commit/e2aef5f281348afaaaeaa132699efc2831aa8384
 
-> > diff --git a/Documentation/devicetree/bindings/misc/gpio-7seg.txt b/Documentation/devicetree/bindings/misc/gpio-7seg.txt
-> > new file mode 100644
-> > index 0000000..107d178
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/gpio-7seg.txt
-> > @@ -0,0 +1,18 @@
-> > +* 7-segment driver connected over GPIO through a BCD decoder
-> > +
-> > +Required properties:
-> > +- compatible: "generic,gpio-7seg"
-> > +- gpios: list of GPIOs to use to control the 7-segment display
-> 
-> Maybe list the minimum and maximum number of gpio lines here?
+BR,
+-R
 
-Indeed. Seems like it should be anywhere between 0 and 32 GPIOs.
-
-> > +	sdev->dev_attr.attr.name = "value";
-> > +	sdev->dev_attr.attr.mode = S_IRUGO | S_IWUGO;
-> > +	sdev->dev_attr.show = gpio_7seg_show;
-> > +	sdev->dev_attr.store = gpio_7seg_store;
-> 
-> Any reason why you are not using the DEVICE_ATTR macro?
-
-DEVICE_ATTR declares the structure, and I wanted one per gpio_7seg
-device, which is dynamically allocated, so I thought that using
-DEVICE_ATTR was not possible. But now that you point this, I realize
-that I was stupid. I can perfectly live with one single global 'struct
-device_attribute' that I register to several devices using
-device_create_file(), no?
-
-That said, is it worth the effort to continue polishing this driver,
-after seeing the feedback from Greg about it? I don't mind working on
-it more and fix the problems of course, but if the general answer is
-that we don't want such a driver in the kernel, then I'd better not
-spend more time on this.
-
-Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+>
+> And testing was done over v3.8-rc2.
+>
+>> > > +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
+>> >
+>> > As _OF_VIDEOMODE is a bool type CONFIG, isn't,
+>> >
+>> > #ifdef CONFIG_OF_VIDEOMODE
+>> >
+>> > sufficient ?
+>> >
+>>
+>> Yes, that is right. But I think IS_ENABLED is the preferred way to do it, isn't it?
+>
+> Now I realize it is.
+>
+> Regards
+> Afzal
