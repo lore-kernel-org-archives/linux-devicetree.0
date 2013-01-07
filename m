@@ -1,75 +1,61 @@
-From: Rob Clark <robdclark@gmail.com>
-Subject: Re: [PATCHv16 5/7] fbmon: add of_videomode helpers
-Date: Mon, 7 Jan 2013 14:06:50 -0600
-Message-ID: <CAF6AEGuuM9_n+A4q4tq+24i4YcW97orMN_RKbJ95gFie_qoktA@mail.gmail.com>
-References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
-	<1355850256-16135-6-git-send-email-s.trumtrar@pengutronix.de>
-	<C8443D0743D26F4388EA172BF4E2A7A93EA7FB02@DBDE01.ent.ti.com>
-	<20130107080648.GB23478@pengutronix.de>
-	<C8443D0743D26F4388EA172BF4E2A7A93EA7FBF7@DBDE01.ent.ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
+Date: Mon, 7 Jan 2013 12:09:46 -0800
+Message-ID: <20130107200945.GF14149@atomide.com>
+References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com>
+ <1357584666-17374-2-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EA7FBF7@DBDE01.ent.ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: "Mohammed, Afzal" <afzal@ti.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, David Airlie <airlied@linux.ie>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1357584666-17374-2-git-send-email-panto@antoniou-consulting.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 7, 2013 at 2:46 AM, Mohammed, Afzal <afzal@ti.com> wrote:
-> Hi Steffen,
->
-> On Mon, Jan 07, 2013 at 13:36:48, Steffen Trumtrar wrote:
->> On Mon, Jan 07, 2013 at 06:10:13AM +0000, Mohammed, Afzal wrote:
->
->> > This breaks DaVinci (da8xx_omapl_defconfig), following change was
->> > required to get it build if OF_VIDEOMODE or/and FB_MODE_HELPERS
->> > is not defined. There may be better solutions, following was the
->> > one that was used by me to test this series.
->
->> I just did a quick "make da8xx_omapl_defconfig && make" and it builds just fine.
->> On what version did you apply the series?
->> At the moment I have the series sitting on 3.7. Didn't try any 3.8-rcx yet.
->> But fixing this shouldn't be a problem.
->
-> You are right, me idiot, error will happen only upon try to make use of
-> of_get_fb_videomode() (defined in this patch) in the da8xx-fb driver
-> (with da8xx_omapl_defconfig), to be exact upon adding,
->
-> "video: da8xx-fb: obtain fb_videomode info from dt" of my patch series.
->
-> The change as I mentioned or something similar would be required as
-> any driver that is going to make use of of_get_fb_videomode() would
-> break if CONFIG_OF_VIDEOMODE or CONFIG_FB_MODE_HELPERS is not defined.
+* Pantelis Antoniou <panto@antoniou-consulting.com> [130107 10:54]:
+> A cape loader based on DT overlays and DT objects.
+> 
+> Beaglebone cape manager implementation.
+> 
+> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+> ---
+>  arch/arm/mach-omap2/Kconfig            |    2 +
+>  drivers/misc/Kconfig                   |    2 +
+>  drivers/misc/Makefile                  |    1 +
+>  drivers/misc/cape/Kconfig              |    5 +
+>  drivers/misc/cape/Makefile             |    5 +
+>  drivers/misc/cape/beaglebone/Kconfig   |   11 +
+>  drivers/misc/cape/beaglebone/Makefile  |    5 +
+>  drivers/misc/cape/beaglebone/capemgr.c | 1835 ++++++++++++++++++++++++++++++++
 
-Shouldn't the driver that depends on CONFIG_OF_VIDEOMODE and
-CONFIG_FB_MODE_HELPERS, explicitly select them?  I don't really see
-the point of having the static-inline fallbacks.
+The driver should probably be in drivers/bus?
 
-fwiw, using 'select' is what I was doing for lcd panel support for
-lcdc/da8xx drm driver (which was using the of videomode helpers,
-albeit a slightly earlier version of the patches):
+>  8 files changed, 1866 insertions(+)
+>  create mode 100644 drivers/misc/cape/Kconfig
+>  create mode 100644 drivers/misc/cape/Makefile
+>  create mode 100644 drivers/misc/cape/beaglebone/Kconfig
+>  create mode 100644 drivers/misc/cape/beaglebone/Makefile
+>  create mode 100644 drivers/misc/cape/beaglebone/capemgr.c
+> 
+> diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
+> index 41b581f..f0c2eab 100644
+> --- a/arch/arm/mach-omap2/Kconfig
+> +++ b/arch/arm/mach-omap2/Kconfig
+> @@ -18,6 +18,8 @@ config ARCH_OMAP2PLUS_TYPICAL
+>  	select TWL4030_CORE if ARCH_OMAP3 || ARCH_OMAP4
+>  	select TWL4030_POWER if ARCH_OMAP3 || ARCH_OMAP4
+>  	select VFP
+> +	select OF_OVERLAY
+> +	select OF_RESOLVE
+>  	help
+>  	  Compile a kernel suitable for booting most boards
 
-https://github.com/robclark/kernel-omap4/commit/e2aef5f281348afaaaeaa132699efc2831aa8384
+You should just make the driver depend on OF_OVERLAY and
+OF_RESOLVE as most SoCs won't need this. Then we can select
+it in the omap2plus_defconfig.
 
-BR,
--R
+Regards,
 
->
-> And testing was done over v3.8-rc2.
->
->> > > +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
->> >
->> > As _OF_VIDEOMODE is a bool type CONFIG, isn't,
->> >
->> > #ifdef CONFIG_OF_VIDEOMODE
->> >
->> > sufficient ?
->> >
->>
->> Yes, that is right. But I think IS_ENABLED is the preferred way to do it, isn't it?
->
-> Now I realize it is.
->
-> Regards
-> Afzal
+Tony  
