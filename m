@@ -1,112 +1,47 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] drm/exynos: Get HDMI version from device tree
-Date: Mon, 7 Jan 2013 16:12:54 -0500
-Message-ID: <CAOw6vbJc2iV-u1v-Oc3_HUjyq4JukaOdWZ9+mA8RGeFbBpirpA@mail.gmail.com>
-References: <1357591415-17092-1-git-send-email-seanpaul@chromium.org>
- <50EB3604.60209@firmworks.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
+Date: Mon, 7 Jan 2013 21:35:04 +0000
+Message-ID: <201301072135.05166.arnd@arndb.de>
+References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com> <93BF5C62-ADE8-4EFC-9175-C2D7E43300E3@antoniou-consulting.com> <20130107210551.GL14149@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50EB3604.60209-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Cc: InKi Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130107210551.GL14149@atomide.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Linus Walleij <linus.walleij@stericss>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 7, 2013 at 3:54 PM, Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org> wrote:
-> On 1/7/2013 10:43 AM, Sean Paul wrote:
->> Add a property to the hdmi node so we can specify the HDMI version in
->> the device tree instead of just defaulting to v1.4 with the existence of
->> the dt node.
->>
->> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> ---
->>  .../devicetree/bindings/drm/exynos/hdmi.txt        |    3 +++
->>  drivers/gpu/drm/exynos/exynos_hdmi.c               |   19 ++++++++++---------
->>  2 files changed, 13 insertions(+), 9 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/drm/exynos/hdmi.txt b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
->> index 589edee..d1c7d91 100644
->> --- a/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
->> +++ b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
->> @@ -11,6 +11,8 @@ Required properties:
->>       c) pin function mode.
->>       d) optional flags and pull up/down.
->>       e) drive strength.
->> +- samsung,supports-hdmi-1.4: Define if device supports HDMI v1.4
->> +- samsung,supports-hdmi-1.3: Define if device supports HDMI v1.3
->
-> a) This seems pretty generic, not at all samsung-specific, as the HDMI
-> version numbering space is well-defined by the HDMI spec.
->
-> b) It would be better to make it an integer property whose value
-> encodes the version number, thus eliminating the need to add new
-> properties as new HDMI versions appear.
->
+(Adding Sascha Hauer, Linus Walleij, Lee Jones to Cc)
 
-Thanks for the quick review, Mitch.
+On Monday 07 January 2013, Tony Lindgren wrote:
+> > 
+> > At the end of the line, some kind of hardware glue is going to be needed.
+> > 
+> > I just feel that drawing from a sample size of 1 (maybe 2 if I get to throw
+> > in the beagleboard), it is a bit premature to think about making it overly
+> > general, besides the part that are obviously part of the infrastructure 
+> > (like the DT overlay stuff).
+> > 
+> > What I'm getting at, is that we need some user experience about this, before
+> > going away and creating structure out of possible misconception about the uses. 
+> 
+> IMHO stuff like this will be needed by many SoCs. Some examples of similar
+> things for omaps that have eventually become generic frameworks have been
+> the clock framework, USB OTG support, runtime PM, pinmux framework and
+> so on.
+> 
+> So I suggest a minimal generic API from the start as that will make things
+> a lot easier in the long run.
 
-How about:
+I agree. The ux500 platform already has the concept of "user interface boards",
+which currently is not well integrated into devicetree. I believe Sascha
+mentioned that Pengutronix had been shipping some other systems with add-on
+boards and generating device tree binaries from source for each combination.
 
-- hdmi-version: 0=v1.3, 1=v1.4
+Ideally, both of the above should be able to use the same DT overlay logic
+as BeagleBone, and I'm sure there are more of those.
 
-
->>
->>  Example:
->>
->> @@ -19,4 +21,5 @@ Example:
->>               reg = <0x14530000 0x100000>;
->>               interrupts = <0 95 0>;
->>               hpd-gpio = <&gpx3 7 0xf 1 3>;
->> +             samsung,supports-hdmi-1.4;
->>       };
->> diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
->> index 2c46b6c..9834ae5 100644
->> --- a/drivers/gpu/drm/exynos/exynos_hdmi.c
->> +++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
->> @@ -2444,7 +2444,6 @@ static struct platform_device_id hdmi_driver_types[] = {
->>  static struct of_device_id hdmi_match_types[] = {
->>       {
->>               .compatible = "samsung,exynos5-hdmi",
->> -             .data   = (void *)HDMI_TYPE14,
->>       }, {
->>               /* end node */
->>       }
->> @@ -2498,16 +2497,18 @@ static int __devinit hdmi_probe(struct platform_device *pdev)
->>
->>       platform_set_drvdata(pdev, drm_hdmi_ctx);
->>
->> -     if (dev->of_node) {
->> -             const struct of_device_id *match;
->> -             match = of_match_node(of_match_ptr(hdmi_match_types),
->> -                                     pdev->dev.of_node);
->> -             if (match == NULL)
->> -                     return -ENODEV;
->> -             hdata->type = (enum hdmi_type)match->data;
->> -     } else {
->> +     if (!dev->of_node) {
->>               hdata->type = (enum hdmi_type)platform_get_device_id
->>                                       (pdev)->driver_data;
->> +     } else if (of_get_property(dev->of_node, "samsung,supports-hdmi-1.4",
->> +                             NULL)) {
->> +             hdata->type = HDMI_TYPE14;
->> +     } else if (of_get_property(dev->of_node, "samsung,supports-hdmi-1.3",
->> +                             NULL)) {
->> +             hdata->type = HDMI_TYPE13;
->> +     } else {
->> +             DRM_ERROR("Could not resolve HDMI version support\n");
->> +             return -ENODEV;
->>       }
->>
->>       hdata->hpd_gpio = pdata->hpd_gpio;
->>
+	Arnd
