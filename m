@@ -1,41 +1,83 @@
 From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCHv16 0/7] of: add display helper
-Date: Mon, 7 Jan 2013 08:46:53 +0100
-Message-ID: <20130107074653.GA23478@pengutronix.de>
+Subject: Re: [PATCHv16 5/7] fbmon: add of_videomode helpers
+Date: Mon, 7 Jan 2013 09:06:48 +0100
+Message-ID: <20130107080648.GB23478@pengutronix.de>
 References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
- <C8443D0743D26F4388EA172BF4E2A7A93EA7FB16@DBDE01.ent.ti.com>
+ <1355850256-16135-6-git-send-email-s.trumtrar@pengutronix.de>
+ <C8443D0743D26F4388EA172BF4E2A7A93EA7FB02@DBDE01.ent.ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-media-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EA7FB16@DBDE01.ent.ti.com>
+In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EA7FB02@DBDE01.ent.ti.com>
 Sender: linux-media-owner@vger.kernel.org
 To: "Mohammed, Afzal" <afzal@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <robherring2@gmail.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>, Rob Clark <robdclark@gmail.com>, Leela Krishna Amudala <leelakrishna.a@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, David Airlie <airlied@linux.ie>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 07, 2013 at 06:23:54AM +0000, Mohammed, Afzal wrote:
+Hi Afzal,
+
+On Mon, Jan 07, 2013 at 06:10:13AM +0000, Mohammed, Afzal wrote:
 > Hi Steffen,
 > 
-> On Tue, Dec 18, 2012 at 22:34:09, Steffen Trumtrar wrote:
+> On Tue, Dec 18, 2012 at 22:34:14, Steffen Trumtrar wrote:
+> > Add helper to get fb_videomode from devicetree.
 > 
-> > Finally, right in time before the end of the world on friday, v16 of the
-> > display helpers.
+> >  drivers/video/fbmon.c |   42 ++++++++++++++++++++++++++++++++++++++++++
+> >  include/linux/fb.h    |    4 ++++
 > 
-> After another big bang, your series in the previous world was tried ;)
+> This breaks DaVinci (da8xx_omapl_defconfig), following change was
+> required to get it build if OF_VIDEOMODE or/and FB_MODE_HELPERS
+> is not defined. There may be better solutions, following was the
+> one that was used by me to test this series.
 > 
-> This series has been tested on DA850 EVM, AM335x EVM, EVM-SK along
-> with the fix mentioned in 5/7, there was a build breakage on default
-> config on DaVinci boards with this series, fix as well as more
-> details are mentioned as reply to 5/7.
+> ---8<----------
 > 
-> With those changes or equivalent to achieve the same,
+> diff --git a/include/linux/fb.h b/include/linux/fb.h
+> index 58b9860..0ce30d1 100644
+> --- a/include/linux/fb.h
+> +++ b/include/linux/fb.h
+> @@ -716,9 +716,19 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
+>  extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
+>  extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
 > 
-> Tested-by: Afzal Mohammed <Afzal@ti.com>
->
+> +#if defined(CONFIG_OF_VIDEOMODE) && defined(CONFIG_FB_MODE_HELPERS)
+>  extern int of_get_fb_videomode(struct device_node *np,
+>                                struct fb_videomode *fb,
+>                                int index);
+> +#else
+> +static inline int of_get_fb_videomode(struct device_node *np,
+> +                                     struct fb_videomode *fb,
+> +                                     int index)
+> +{
+> +       return -EINVAL;
+> +}
+> +#endif
+> +
+>  extern int fb_videomode_from_videomode(const struct videomode *vm,
+>                                        struct fb_videomode *fbmode);
+> 
+> ---8<----------
+> 
 
-Thanks.
+I just did a quick "make da8xx_omapl_defconfig && make" and it builds just fine.
+On what version did you apply the series?
+At the moment I have the series sitting on 3.7. Didn't try any 3.8-rcx yet.
+But fixing this shouldn't be a problem.
 
+> 
+> > +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
+> 
+> As _OF_VIDEOMODE is a bool type CONFIG, isn't,
+> 
+> #ifdef CONFIG_OF_VIDEOMODE
+> 
+> sufficient ?
+> 
+
+Yes, that is right. But I think IS_ENABLED is the preferred way to do it, isn't it?
+
+Regards,
 Steffen
 
 -- 
