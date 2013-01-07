@@ -1,133 +1,54 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: [PATCH 5/5] capemgr: Weather cape cape definition
-Date: Mon,  7 Jan 2013 20:51:06 +0200
-Message-ID: <1357584666-17374-6-git-send-email-panto@antoniou-consulting.com>
-References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/9] sh-pfc: Add OF support
+Date: Mon, 07 Jan 2013 19:56:19 +0100
+Message-ID: <2696178.tZLZqFqVI9@avalon>
+References: <1357260060-32164-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1357260060-32164-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1357261926.25326.2.camel@gitbox>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1357261926.25326.2.camel@gitbox>
+Sender: linux-sh-owner@vger.kernel.org
+To: Tony Prisk <linux@prisktech.co.nz>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, Simon Horman <horms@verge.net.au>, Phil Edworthy <phil.edworthy@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Paul Mundt <lethal@linux-sh.org>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-Add the weather cape to the supported capes.
+Hi Tony,
 
-Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
----
- arch/arm/boot/dts/am335x-bone.dts         |  9 ++++-
- firmware/Makefile                         |  5 +++
- firmware/capes/cape-bone-weather-00A0.dts | 66 +++++++++++++++++++++++++++++++
- 3 files changed, 79 insertions(+), 1 deletion(-)
- create mode 100644 firmware/capes/cape-bone-weather-00A0.dts
+On Friday 04 January 2013 14:12:06 Tony Prisk wrote:
+> On Fri, 2013-01-04 at 01:40 +0100, Laurent Pinchart wrote:
+> > +- #gpio-cells: Should be 2. The first cell is the pin number and the
+> > second cell
+> > +  is used to specify optional parameters (currently unused).
+> 
+> ...
+> 
+> > +	gpio: pfc@e6050000 {
+> > +		compatible = "renesas,pfc-sh73a0";
+> > +		reg = <0xe6050000 0x8000>,
+> > +		      <0xe605801c 0x1c>;
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +	};
+> > +
+> > +Example 2: A GPIO LED node that references a GPIO
+> > +
+> > +	leds {
+> > +		compatible = "gpio-leds";
+> > +		led1 {
+> > +			gpios = <&gpio 20 1>; /* Active low */
+> > +		};
+> > +	};
+> > +
+> 
+> The second cell of gpio is '(currently unused)' but the example shows it
+> being used?
 
-diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
-index 5faeece..b02f29a 100644
---- a/arch/arm/boot/dts/am335x-bone.dts
-+++ b/arch/arm/boot/dts/am335x-bone.dts
-@@ -146,7 +146,14 @@
- 
- 		/* mapping between board names and dtb objects */
- 		capemaps {
--
-+			/* Weather cape */
-+			cape@0 {
-+				part-number = "BB-BONE-WTHR-01";
-+				version@00A0 {
-+					version = "00A0";
-+					dtbo = "cape-bone-weather-00A0.dtbo";
-+				};
-+			};
- 		};
- 	};
- };
-diff --git a/firmware/Makefile b/firmware/Makefile
-index 361b2af..5ebb757 100644
---- a/firmware/Makefile
-+++ b/firmware/Makefile
-@@ -136,6 +136,11 @@ fw-shipped-$(CONFIG_USB_VICAM) += vicam/firmware.fw
- fw-shipped-$(CONFIG_VIDEO_CPIA2) += cpia2/stv0672_vp4.bin
- fw-shipped-$(CONFIG_YAM) += yam/1200.bin yam/9600.bin
- 
-+# Capes
-+
-+# the weather cape
-+fw-shipped-$(CONFIG_CAPE_BEAGLEBONE) += capes/cape-bone-weather-00A0.dtbo
-+
- fw-shipped-all := $(fw-shipped-y) $(fw-shipped-m) $(fw-shipped-)
- 
- # Directories which we _might_ need to create, so we have a rule for them.
-diff --git a/firmware/capes/cape-bone-weather-00A0.dts b/firmware/capes/cape-bone-weather-00A0.dts
-new file mode 100644
-index 0000000..ad91577
---- /dev/null
-+++ b/firmware/capes/cape-bone-weather-00A0.dts
-@@ -0,0 +1,66 @@
-+/*
-+* Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
-+*
-+* This program is free software; you can redistribute it and/or modify
-+* it under the terms of the GNU General Public License version 2 as
-+* published by the Free Software Foundation.
-+*/
-+/dts-v1/;
-+/plugin/;
-+
-+/ {
-+       compatible = "ti,beaglebone";
-+       part-number = "BB-BONE-WTHR-01";
-+       version = "00A0";
-+
-+       fragment@0 {
-+               target = <&am33xx_pinmux>;
-+               __overlay__ {
-+			pinctrl-single,pins = <
-+				0x0c 0x37       /* gpmc_ad3.gpio1_3, OMAP_PIN_INPUT_PULLUP | OMAP_MUX_MODE7 - w1-gpio */
-+			>;
-+               };
-+       };
-+
-+       fragment@1 {
-+               target = <&i2c3>;	/* actually I2C2 */
-+
-+               __overlay__ {
-+		       /* needed to avoid gripping by DTC */
-+		       #address-cells = <1>;
-+		       #size-cells = <0>;
-+
-+		       /* Ambient light sensor */
-+		       tsl2550@39 {
-+			       compatible = "tsl,tsl2550";
-+			       reg = <0x39>;
-+		       };
-+
-+		       /* Humidity Sensor */
-+		       sht21@40 {
-+			       compatible = "sensiron,sht21";
-+			       reg = <0x40>;
-+		       };
-+
-+		       /* Barometric pressure sensor */
-+		       bmp085@77 {
-+			       compatible = "bosch,bmp085";
-+			       reg = <0x77>;
-+		       };
-+               };
-+       };
-+
-+       fragment@2 {
-+               target = <&ocp>;
-+               __overlay__ {
-+		       onewire@0 {
-+			       compatible      = "w1-gpio";
-+			       pinctrl-names   = "default";
-+			       pinctrl-0       = <&weather_cape_w1_pins>;
-+			       status          = "okay";
-+
-+			       gpios = <&gpio2 3 0>;
-+		       };
-+               };
-+       };
-+};
+My bad. The second cell can be used to specify that the GPIO is active low. 
+I'll fix the documentation accordingly.
+
 -- 
-1.7.12
+Regards,
+
+Laurent Pinchart
 
