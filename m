@@ -1,13 +1,11 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: imx53: pinctrl update
-Date: Mon,  7 Jan 2013 16:15:59 +0100
-Message-ID: <1357571760-487-2-git-send-email-s.trumtrar@pengutronix.de>
-References: <1357571760-487-1-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH 0/2] Add devicetree for TQMA53 embedded module
+Date: Mon,  7 Jan 2013 16:15:58 +0100
+Message-ID: <1357571760-487-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1357571760-487-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,91 +20,31 @@ To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add pinctrl for cspi, csi.
-Add new pingroups for can1 and uart3.
+Hi!
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx53.dtsi |   53 ++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+This series adds devicetree support for the TQMA53 embedded module.
+As this module can't operate without a base board, most devices are
+disabled in the DT and would have to be enabled in an extra .dts, that
+includes the imx53-tqma53.dtsi.
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index 552aed4..160c24a 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -274,6 +274,44 @@
- 					};
- 				};
- 
-+				csi {
-+					pinctrl_csi_1: csigrp-1 {
-+						fsl,pins = <
-+							286 0x1d5	/* MX53_PAD_CSI0_DATA_EN__IPU_CSI0_DATA_EN */
-+							291 0x1d5	/* MX53_PAD_CSI0_VSYNC__IPU_CSI0_VSYNC */
-+							280 0x1d5	/* MX53_PAD_CSI0_MCLK__IPU_CSI0_HSYNC */
-+							276 0x1d5	/* MX53_PAD_CSI0_PIXCLK__IPU_CSI0_PIXCLK */
-+							409 0x1d5	/* MX53_PAD_CSI0_DAT19__IPU_CSI0_D_19 */
-+							402 0x1d5	/* MX53_PAD_CSI0_DAT18__IPU_CSI0_D_18 */
-+							395 0x1d5	/* MX53_PAD_CSI0_DAT17__IPU_CSI0_D_17 */
-+							388 0x1d5	/* MX53_PAD_CSI0_DAT16__IPU_CSI0_D_16 */
-+							381 0x1d5	/* MX53_PAD_CSI0_DAT15__IPU_CSI0_D_15 */
-+							374 0x1d5	/* MX53_PAD_CSI0_DAT14__IPU_CSI0_D_14 */
-+							367 0x1d5	/* MX53_PAD_CSI0_DAT13__IPU_CSI0_D_13 */
-+							360 0x1d5	/* MX53_PAD_CSI0_DAT12__IPU_CSI0_D_12 */
-+							352 0x1d5	/* MX53_PAD_CSI0_DAT11__IPU_CSI0_D_11 */
-+							344 0x1d5	/* MX53_PAD_CSI0_DAT10__IPU_CSI0_D_10 */
-+							336 0x1d5	/* MX53_PAD_CSI0_DAT9__IPU_CSI0_D_9 */
-+							328 0x1d5	/* MX53_PAD_CSI0_DAT8__IPU_CSI0_D_8 */
-+							320 0x1d5	/* MX53_PAD_CSI0_DAT7__IPU_CSI0_D_7 */
-+							312 0x1d5	/* MX53_PAD_CSI0_DAT6__IPU_CSI0_D_6 */
-+							304 0x1d5	/* MX53_PAD_CSI0_DAT5__IPU_CSI0_D_5 */
-+							296 0x1d5	/* MX53_PAD_CSI0_DAT4__IPU_CSI0_D_4 */
-+							276 0x1d5	/* MX53_PAD_CSI0_PIXCLK__IPU_CSI0_PIXCLK */
-+						>;
-+					};
-+				};
-+
-+				cspi {
-+					pinctrl_cspi_1: cspigrp-1 {
-+						fsl,pins = <
-+							998  0x1d5	/* MX53_PAD_SD1_DATA0__CSPI_MISO */
-+							1008 0x1d5	/* MX53_PAD_SD1_CMD__CSPI_MOSI */
-+							1022 0x1d5	/* MX53_PAD_SD1_CLK__CSPI_SCLK */
-+						>;
-+					};
-+				};
-+
- 				ecspi1 {
- 					pinctrl_ecspi1_1: ecspi1grp-1 {
- 						fsl,pins = <
-@@ -349,6 +387,13 @@
- 							853 0x80000000  /* MX53_PAD_PATA_DIOR__CAN1_RXCAN */
- 						>;
- 					};
-+
-+					pinctrl_can1_2: can1grp-2 {
-+						fsl,pins = <
-+							37  0x80000000  /* MX53_PAD_KEY_COL2__CAN1_TXCAN */
-+							44  0x80000000  /* MX53_PAD_KEY_ROW2__CAN1_RXCAN */
-+						>;
-+					};
- 				};
- 
- 				can2 {
-@@ -421,6 +466,14 @@
- 							880 0x1c5	/* MX53_PAD_PATA_DA_2__UART3_RTS */
- 						>;
- 					};
-+
-+					pinctrl_uart3_2: uart3grp-2 {
-+						fsl,pins = <
-+							884 0x1c5	/* MX53_PAD_PATA_CS_0__UART3_TXD_MUX */
-+							888 0x1c5	/* MX53_PAD_PATA_CS_1__UART3_RXD_MUX */
-+						>;
-+					};
-+
- 				};
- 
- 				uart4 {
+Also, add the missing pinctrl groups to the imx53.dtsi.
+
+The base for this patches is 3.8-rc2.
+
+Regards,
+Steffen
+
+
+Sascha Hauer (1):
+  ARM i.MX53: add dts for the TQ tqma53 module
+
+Steffen Trumtrar (1):
+  ARM: dts: imx53: pinctrl update
+
+ arch/arm/boot/dts/imx53-tqma53.dtsi |  207 +++++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/imx53.dtsi        |   53 +++++++++
+ 2 files changed, 260 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx53-tqma53.dtsi
+
 -- 
 1.7.10.4
