@@ -1,7 +1,7 @@
 From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v7 2/6] watchdog: orion_wdt: add timeout-sec property binding
-Date: Tue,  8 Jan 2013 11:04:11 +0100
-Message-ID: <1357639455-21935-3-git-send-email-fabio.porcedda@gmail.com>
+Subject: [PATCH v7 3/6] watchdog: pnx4008: add timeout-sec property binding
+Date: Tue,  8 Jan 2013 11:04:12 +0100
+Message-ID: <1357639455-21935-4-git-send-email-fabio.porcedda@gmail.com>
 References: <1357639455-21935-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,66 +19,76 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Masanari Iida <standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Only compile tested.
 
 Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Masanari Iida <standby24x7-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- Documentation/devicetree/bindings/watchdog/marvel.txt | 5 +++++
- drivers/watchdog/orion_wdt.c                          | 8 +++-----
- 2 files changed, 8 insertions(+), 5 deletions(-)
+ Documentation/devicetree/bindings/watchdog/pnx4008-wdt.txt | 4 ++++
+ drivers/watchdog/pnx4008_wdt.c                             | 7 +++----
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/watchdog/marvel.txt b/Documentation/devicetree/bindings/watchdog/marvel.txt
-index 0b2503a..5dc8d30 100644
---- a/Documentation/devicetree/bindings/watchdog/marvel.txt
-+++ b/Documentation/devicetree/bindings/watchdog/marvel.txt
-@@ -5,10 +5,15 @@ Required Properties:
- - Compatibility : "marvell,orion-wdt"
- - reg		: Address of the timer registers
+diff --git a/Documentation/devicetree/bindings/watchdog/pnx4008-wdt.txt b/Documentation/devicetree/bindings/watchdog/pnx4008-wdt.txt
+index 7c7f688..556d06c 100644
+--- a/Documentation/devicetree/bindings/watchdog/pnx4008-wdt.txt
++++ b/Documentation/devicetree/bindings/watchdog/pnx4008-wdt.txt
+@@ -5,9 +5,13 @@ Required properties:
+ - reg: physical base address of the controller and length of memory mapped
+   region.
  
 +Optional properties:
-+
-+- timeout-sec	: Contains the watchdog timeout in seconds
++- timeout-sec: contains the watchdog timeout in seconds.
 +
  Example:
  
- 	wdt@20300 {
- 		compatible = "marvell,orion-wdt";
- 		reg = <0x20300 0x28>;
+ 	watchdog@4003C000 {
+ 		compatible = "nxp,pnx4008-wdt";
+ 		reg = <0x4003C000 0x1000>;
 +		timeout-sec = <10>;
- 		status = "okay";
  	};
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index 7c18b3b..b7018600 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -164,12 +164,10 @@ static int orion_wdt_probe(struct platform_device *pdev)
+diff --git a/drivers/watchdog/pnx4008_wdt.c b/drivers/watchdog/pnx4008_wdt.c
+index dcba5da..aa4ec26 100644
+--- a/drivers/watchdog/pnx4008_wdt.c
++++ b/drivers/watchdog/pnx4008_wdt.c
+@@ -142,6 +142,7 @@ static const struct watchdog_ops pnx4008_wdt_ops = {
+ static struct watchdog_device pnx4008_wdd = {
+ 	.info = &pnx4008_wdt_ident,
+ 	.ops = &pnx4008_wdt_ops,
++	.timeout = DEFAULT_HEARTBEAT,
+ 	.min_timeout = 1,
+ 	.max_timeout = MAX_HEARTBEAT,
+ };
+@@ -151,8 +152,7 @@ static int pnx4008_wdt_probe(struct platform_device *pdev)
+ 	struct resource *r;
+ 	int ret = 0;
  
- 	wdt_max_duration = WDT_MAX_CYCLE_COUNT / wdt_tclk;
+-	if (heartbeat < 1 || heartbeat > MAX_HEARTBEAT)
+-		heartbeat = DEFAULT_HEARTBEAT;
++	watchdog_init_timeout(&pnx4008_wdd, heartbeat, pdev->dev.of_node);
  
--	if ((heartbeat < 1) || (heartbeat > wdt_max_duration))
--		heartbeat = wdt_max_duration;
--
--	orion_wdt.timeout = heartbeat;
- 	orion_wdt.min_timeout = 1;
-+	orion_wdt.timeout = wdt_max_duration;
- 	orion_wdt.max_timeout = wdt_max_duration;
-+	watchdog_init_timeout(&orion_wdt, heartbeat, pdev->dev.of_node);
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	wdt_base = devm_request_and_ioremap(&pdev->dev, r);
+@@ -167,7 +167,6 @@ static int pnx4008_wdt_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		goto out;
  
- 	watchdog_set_nowayout(&orion_wdt, nowayout);
- 	ret = watchdog_register_device(&orion_wdt);
-@@ -179,7 +177,7 @@ static int orion_wdt_probe(struct platform_device *pdev)
+-	pnx4008_wdd.timeout = heartbeat;
+ 	pnx4008_wdd.bootstatus = (readl(WDTIM_RES(wdt_base)) & WDOG_RESET) ?
+ 			WDIOF_CARDRESET : 0;
+ 	watchdog_set_nowayout(&pnx4008_wdd, nowayout);
+@@ -181,7 +180,7 @@ static int pnx4008_wdt_probe(struct platform_device *pdev)
  	}
  
- 	pr_info("Initial timeout %d sec%s\n",
--		heartbeat, nowayout ? ", nowayout" : "");
-+		orion_wdt.timeout, nowayout ? ", nowayout" : "");
+ 	dev_info(&pdev->dev, "PNX4008 Watchdog Timer: heartbeat %d sec\n",
+-			heartbeat);
++		 pnx4008_wdd.timeout);
+ 
  	return 0;
- }
  
 -- 
 1.8.0.3
