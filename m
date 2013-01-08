@@ -1,38 +1,99 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
-Date: Tue, 8 Jan 2013 15:26:36 +0200
-Message-ID: <51A6DFCC-BBC8-475D-88C4-1B22186339C1@antoniou-consulting.com>
-References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com> <21E7B891-269B-422D-9038-381FAA15B59B@antoniou-consulting.com> <20130108104832.GE21994@gmail.com> <201301081212.29089.arnd@arndb.de>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201301081212.29089.arnd@arndb.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Linus Walleij <linus>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v7 0/6] watchdog: dt: add support for the timeout-sec
+ dt property
+Date: Tue, 8 Jan 2013 16:34:47 +0100
+Message-ID: <20130108153447.GC7360@game.jcrosoft.org>
+References: <1357639455-21935-1-git-send-email-fabio.porcedda@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1357639455-21935-1-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On Jan 8, 2013, at 2:12 PM, Arnd Bergmann wrote:
-
-> On Tuesday 08 January 2013, Lee Jones wrote:
->>> If there is not, there is no way to automatically load the overlays; you can always
->>> use the kernel command line, or have the a user space application to request the loading
->>> of a specific board's overlay.
->> 
->> Unfortunately, there is no way to probe the UIBs. :(
+On 11:04 Tue 08 Jan     , Fabio Porcedda wrote:
+> Hi all,
+> this patchset add the timeout-sec property to the watchdog core,
+> to the at91sam9_wdt driver and on all framework enabled watchdog driver
+> with dt support.
+> The at91sam9_wdt is tested on evk-pr3,
+> the other drivers are compile tested only.
 > 
-> I thought that some of the newer UIBs had it, just not the old ones.
-> As Pantelis says, we could at least detect the ones that have an EEPROM
-> on them, and use a command line option or device tree attribute for the others.
+
+I'll prefer a macro to abstract the string in every driver
+
+except this fine by me
+
+Best Regards,
+J.
+
+> Best regards
+> Fabio Porcedda
 > 
-> 	Arnd
-
-So I gather the new ones have an eeprom?
-
-Regards
-
--- Pantelis
-
+> changes:
+> v7:
+>   - rebase over v3.8-rc2
+>   - remove the patch already merged
+> v6:
+>   - remove patch for function of_get_timeout_sec as aked by Rob Herring
+>   - add Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+>   - add Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> v5:
+>   - fix codestyle for compilance ti checkpatch.pl about
+>     "ERROR: do not initialise statics to 0 or NULL"
+>     for s3c2410_wdt.c:56 and at91sam9_wdt.c:63
+> v4:
+>   - add of_get_timeout_sec
+>   - add s3c2410_wdt driver
+>   - split driver patch
+>   - fixed watchdog_init_timeout handling of min_timeout and max_timeout
+> v3:
+>   - rename watchdog_probe_dt_timeout ->  watchdog_init_timeout
+>   - move the watchdog_init_timeout function from inline to watchdog_core.c
+>   - add timeout parameter handling code to watchdog_init_timeout
+>   - add timeout-sec property to the pnx4008-wdt driver
+>   - add two small commit for fixup and cleanup
+> v2:
+>   - change "timeout" to "timeout-sec" as asked by Jean-Christophe
+>   - at91sam9_wdt: use the new helper function
+>   - at91sam9_wdt: add bounds checking
+>   - watchdog.h: add bounds checking
+> 
+> Fabio Porcedda (6):
+>   watchdog: core: dt: add support for the timeout-sec dt property
+>   watchdog: orion_wdt: add timeout-sec property binding
+>   watchdog: pnx4008: add timeout-sec property binding
+>   watchdog: s3c2410_wdt: add timeout-sec property binding
+>   watchdog: at91sam9_wdt: add timeout-sec property binding
+>   watchdog: orion_wdt: move the min_timeout initialization
+> 
+>  .../devicetree/bindings/watchdog/atmel-wdt.txt     |  4 +++
+>  .../devicetree/bindings/watchdog/marvel.txt        |  5 +++
+>  .../devicetree/bindings/watchdog/pnx4008-wdt.txt   |  4 +++
+>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |  3 ++
+>  Documentation/watchdog/watchdog-kernel-api.txt     | 10 ++++++
+>  drivers/watchdog/Kconfig                           |  1 +
+>  drivers/watchdog/at91sam9_wdt.c                    | 16 ++++++++--
+>  drivers/watchdog/orion_wdt.c                       | 10 +++---
+>  drivers/watchdog/pnx4008_wdt.c                     |  7 ++--
+>  drivers/watchdog/s3c2410_wdt.c                     |  6 ++--
+>  drivers/watchdog/watchdog_core.c                   | 37 ++++++++++++++++++++++
+>  include/linux/watchdog.h                           |  3 ++
+>  12 files changed, 91 insertions(+), 15 deletions(-)
+> 
+> -- 
+> 1.8.0.3
+> 
