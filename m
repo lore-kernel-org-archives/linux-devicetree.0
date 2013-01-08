@@ -1,124 +1,95 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
-Date: Tue, 8 Jan 2013 12:10:20 +0200
-Message-ID: <21E7B891-269B-422D-9038-381FAA15B59B@antoniou-consulting.com>
-References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com> <93BF5C62-ADE8-4EFC-9175-C2D7E43300E3@antoniou-consulting.com> <20130107210551.GL14149@atomide.com> <201301072135.05166.arnd@arndb.de> <89A7A8FD-935E-4225-8C7B-EA1DBA0C2780@antoniou-consulting.com> <20130108100042.GD21994@gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130108100042.GD21994@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Linus Walleij <linus.wall>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: Fix test relying in wrong behavior of is_printable
+Date: Tue, 8 Jan 2013 19:37:34 +1100
+Message-ID: <20130108083734.GA9055@truffula.fritz.box>
+References: <1357326968-13124-1-git-send-email-panto@antoniou-consulting.com>
+ <20130106035809.GG4674@truffula.fritz.box>
+ <5B13DF52-26BE-4BA1-8BD7-25863B04A3B6@antoniou-consulting.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============7190579236703496143=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5B13DF52-26BE-4BA1-8BD7-25863B04A3B6-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
 
-On Jan 8, 2013, at 12:00 PM, Lee Jones wrote:
+--===============7190579236703496143==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
+Content-Disposition: inline
 
->>>>> At the end of the line, some kind of hardware glue is going to be=
- needed.
->>>>>=20
->>>>> I just feel that drawing from a sample size of 1 (maybe 2 if I ge=
-t to throw
->>>>> in the beagleboard), it is a bit premature to think about making =
-it overly
->>>>> general, besides the part that are obviously part of the infrastr=
-ucture=20
->>>>> (like the DT overlay stuff).
->>>>>=20
->>>>> What I'm getting at, is that we need some user experience about t=
-his, before
->>>>> going away and creating structure out of possible misconception a=
-bout the uses.=20
->>>>=20
->>>> IMHO stuff like this will be needed by many SoCs. Some examples of=
- similar
->>>> things for omaps that have eventually become generic frameworks ha=
-ve been
->>>> the clock framework, USB OTG support, runtime PM, pinmux framework=
- and
->>>> so on.
->>>>=20
->>>> So I suggest a minimal generic API from the start as that will mak=
-e things
->>>> a lot easier in the long run.
->>>=20
->>> I agree. The ux500 platform already has the concept of "user interf=
-ace boards",
->>> which currently is not well integrated into devicetree. I believe S=
-ascha
->>> mentioned that Pengutronix had been shipping some other systems wit=
-h add-on
->>> boards and generating device tree binaries from source for each com=
-bination.
->>>=20
->>> Ideally, both of the above should be able to use the same DT overla=
-y logic
->>> as BeagleBone, and I'm sure there are more of those.
->>=20
->> Hmm, I see.=20
->>=20
->> I will need some more information about the interface of the 'user i=
-nterface boards'.
->> I.e. how is the board identified, what is typically present on those=
- boards, etc.
+
+--AqsLC8rIMeq19msA
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Jan 06, 2013 at 01:41:56PM +0200, Pantelis Antoniou wrote:
+> Hi David
 >=20
-> User Interface Boards are mearly removable PCBs which are interchange=
-able
-> amongst various hardware platforms. They are connected via numerous
-> connectors which carry all sorts of different data links; i2c, spi, r=
-s232,
-> etc. The UIB I'm looking at right now has a touchscreen, speakers, a =
-key
-> pad, leds, jumpers, switches and a bunch of sensors.
+> =CE=91=CF=80=CF=8C =CF=84=CE=BF iPhone =CE=BC=CE=BF=CF=85
 >=20
-> You can find a small example of how we interface to these by viewing
-> 'arch/arm/boot/dts/stuib.dtsi'. To add a UIB to a particular build, w=
-e
-> currently include it as a *.dtsi from a platform's dts file.
-
-I see. What I'm asking about is whether there's a method where you can =
-read
-an EEPROM, or some GPIO code combination where I can find out what kind=
- of board
-is plugged each time.
-
-If there is not, there is no way to automatically load the overlays; yo=
-u can always
-use the kernel command line, or have the a user space application to re=
-quest the loading
-of a specific board's overlay.
-
-Regards
-
--- Pantelis
-
+> 6 =CE=99=CE=B1=CE=BD 2013, 5:58, =CE=BF/=CE=B7 David Gibson <david@gibson=
+=2Edropbear.id.au> =CE=AD=CE=B3=CF=81=CE=B1=CF=88=CE=B5:
 >=20
->> Can we get some input by the owner of other similar hardware? I know=
- the FPGA
->> people have similar requirements for example. There are other people=
- that are hitting
->> problems getting DT to work with their systems, like the V4L people =
-with the order
->> of initialization; see http://lwn.net/Articles/531068/. I think the =
-V4L problem is
->> cleanly solved by the overlay being contained in the V4L device node=
- and applied just before
->> the device is probed.
->>=20
->> In the meantime it would be better to wait until we have some ack fr=
-om the maintainers
->> of the core subsystems about what they think.
->>=20
->> Regards
->>=20
->> -- Pantelis
->>=20
+> > On Fri, Jan 04, 2013 at 09:16:08PM +0200, Pantelis Antoniou wrote:
+> >> After fixing the is_printable bug the test suite fails.
+> >> Fix it with this patch
+> >>=20
+> >> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+> >=20
+> > Rather than just removing the test, it would be better to still run it
+> > using an explicit -t bi to force the byte output.
 >=20
-> --=20
-> Lee Jones
-> Linaro ST-Ericsson Landing Team Lead
-> Linaro.org =E2=94=82 Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+> Perhaps it wasn't exactly clear in the patch. The old test case
+> output is commented out but there is test case output for the new
+> patch.
+
+I realise that, but that's not my point.  Rather than replacing the
+test for the old behaviour with the new one, I'd prefer to keep the
+one checking the old behaviour, forcing that behaviour from fdtget
+using -t bi
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--AqsLC8rIMeq19msA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlDr2s4ACgkQaILKxv3ab8bcTQCcCWwSVGgtW22gP1YLmjw3jNlF
+VjoAn0tBy6jwuB1wayEYQ1Sq6KkwjUJt
+=qU1p
+-----END PGP SIGNATURE-----
+
+--AqsLC8rIMeq19msA--
+
+--===============7190579236703496143==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7190579236703496143==--
