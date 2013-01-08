@@ -1,33 +1,33 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
-Date: Tue, 08 Jan 2013 15:56:00 -0700
-Message-ID: <50ECA400.50007@wwwdotorg.org>
-References: <50EC5EDE.3030208@firmworks.com>
- <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 2/3] dmaengine: dw_dmac: Enhance device tree support
+Date: Tue, 8 Jan 2013 23:09:48 +0000
+Message-ID: <201301082309.48676.arnd@arndb.de>
+References: <3100e691db3f94c22afd98b609a1568d7e70dfe7.1350360935.git.viresh.kumar@linaro.org> <201212102208.52347.arnd@arndb.de> <CAKohpo=FjZuMOC-wuNc3q_FXbk546ttCLr55GkW9AL0Tz-HoBA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1357676181-16728-1-git-send-email-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org, olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAKohpo=FjZuMOC-wuNc3q_FXbk546ttCLr55GkW9AL0Tz-HoBA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vinod Koul <vinod.koul@intel.com>, andriy.shevchenko@linux.intel.com, devicetree-discuss@lists.ozlabs.org, spear-devel@list.st.com, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/08/2013 01:16 PM, Sean Paul wrote:
-> Add a property to the hdmi node so we can specify the HDMI version in
-> the device tree instead of just defaulting to v1.4 with the existence of
-> the dt node.
+On Wednesday 12 December 2012, Viresh Kumar wrote:
+> I saw the binding document and it looks it can be applied to dw_dmac
+> too, as there is nothing special for it.
+> 
+> The question is how? We are already late for merge window and this
+> one is queued. Supplying a new patch, getting it reviewed/tested and
+> being pulled by Linus is not so easy :)
+> 
+> Two ways:
+> - Keep it as is, and i will fix it separately and quickly
+> - Drop it :(
 
-I guess this seems OK to me if required, although I'd certainly like to
-see someone familiar with the Exynos HW confirm whether this should be
-driven purely by DT compatible value for the HDMI IP block instead though.
+It seems we got both lucky and unlucky here, as all the dmaengine patches,
+including this set and the generic DT bindings missed out in the end.
+So there is time to fix it all for 3.9.
+
+	Arnd
