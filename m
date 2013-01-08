@@ -1,14 +1,13 @@
-From: Tony Camuso <tcamuso-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH] ipmi: replace call to try_smi_init() with call to add_smi()
-Date: Tue, 08 Jan 2013 15:12:31 -0500
-Message-ID: <50EC7DAF.8030606@redhat.com>
-References: <1355424008-20491-1-git-send-email-tcamuso@redhat.com>
- <50CA31BB.2030507@acm.org> <50CB3662.5080100@redhat.com>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v2] drm/exynos: Get HDMI version from device tree
+Date: Tue,  8 Jan 2013 15:16:21 -0500
+Message-ID: <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
+References: <50EC5EDE.3030208@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50CB3662.5080100-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <50EC5EDE.3030208-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,40 +18,93 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: minyard-HInyCGIudOg@public.gmane.org
-Cc: k-tanaka-JhyGz2TFV9J8UrSeD/g0lQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Corey Minyard <tcminyard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, myamazak-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Upstream commit 9e368fa0 added function ipmi_pnp_probe(), which
-calls try_smi_init() directly.
+Add a property to the hdmi node so we can specify the HDMI version in
+the device tree instead of just defaulting to v1.4 with the existence of
+the dt node.
 
-try_smi_init() allocates resources for IPMI driver. However
-try_smi_init() can be called again, and the allocated resources
-can be unexpectedly released when the same IPMI resource
-information is found on both ACPI namespace and SMBIOS table.
-ipmi_pnp_probe() should call add_smi() instead of try_smi_init()
-
-For reference, see upstream commit ...
-2407d77a1a013b88ee3b817f2b934e420e5376f5
-
-Signed-off-by: Tony Camuso <tcamuso-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-
+Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
-  drivers/char/ipmi/ipmi_si_intf.c |    2 +-
-  1 files changed, 1 insertions(+), 1 deletions(-)
+ .../devicetree/bindings/drm/exynos/hdmi.txt        |    2 +
+ drivers/gpu/drm/exynos/exynos_hdmi.c               |   22 ++++++++++----------
+ 2 files changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
-index afb89be..20d13c6 100644
---- a/drivers/char/ipmi/ipmi_si_intf.c
-+++ b/drivers/char/ipmi/ipmi_si_intf.c
-@@ -2223,7 +2223,7 @@ static int __devinit ipmi_pnp_probe(struct pnp_dev *dev,
-  	info->dev = &dev->dev;
-  	pnp_set_drvdata(dev, info);
-  
--	return try_smi_init(info);
-+	return add_smi(info);
-  
-  err_free:
-  	kfree(info);
+diff --git a/Documentation/devicetree/bindings/drm/exynos/hdmi.txt b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+index 589edee..228ede6 100644
+--- a/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
++++ b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+@@ -11,6 +11,7 @@ Required properties:
+ 	c) pin function mode.
+ 	d) optional flags and pull up/down.
+ 	e) drive strength.
++- hdmi-version: (major << 8) | minor
+ 
+ Example:
+ 
+@@ -19,4 +20,5 @@ Example:
+ 		reg = <0x14530000 0x100000>;
+ 		interrupts = <0 95 0>;
+ 		hpd-gpio = <&gpx3 7 0xf 1 3>;
++		hdmi-version = <0x104>; /* version 1.4 */
+ 	};
+diff --git a/drivers/gpu/drm/exynos/exynos_hdmi.c b/drivers/gpu/drm/exynos/exynos_hdmi.c
+index 2c46b6c..71736f9 100644
+--- a/drivers/gpu/drm/exynos/exynos_hdmi.c
++++ b/drivers/gpu/drm/exynos/exynos_hdmi.c
+@@ -74,8 +74,8 @@ enum HDMI_PACKET_TYPE {
+ };
+ 
+ enum hdmi_type {
+-	HDMI_TYPE13,
+-	HDMI_TYPE14,
++	HDMI_TYPE13 = (1 << 8) | 3,
++	HDMI_TYPE14 = (1 << 8) | 4,
+ };
+ 
+ struct hdmi_resources {
+@@ -2444,7 +2444,6 @@ static struct platform_device_id hdmi_driver_types[] = {
+ static struct of_device_id hdmi_match_types[] = {
+ 	{
+ 		.compatible = "samsung,exynos5-hdmi",
+-		.data	= (void	*)HDMI_TYPE14,
+ 	}, {
+ 		/* end node */
+ 	}
+@@ -2459,6 +2458,7 @@ static int __devinit hdmi_probe(struct platform_device *pdev)
+ 	struct s5p_hdmi_platform_data *pdata;
+ 	struct resource *res;
+ 	int ret;
++	u32 ver;
+ 
+ 	DRM_DEBUG_KMS("[%d]\n", __LINE__);
+ 
+@@ -2498,16 +2498,16 @@ static int __devinit hdmi_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, drm_hdmi_ctx);
+ 
+-	if (dev->of_node) {
+-		const struct of_device_id *match;
+-		match = of_match_node(of_match_ptr(hdmi_match_types),
+-					pdev->dev.of_node);
+-		if (match == NULL)
+-			return -ENODEV;
+-		hdata->type = (enum hdmi_type)match->data;
+-	} else {
++	if (!dev->of_node) {
+ 		hdata->type = (enum hdmi_type)platform_get_device_id
+ 					(pdev)->driver_data;
++	} else {
++		ret = of_property_read_u32(dev->of_node, "hdmi-version", &ver);
++		if (ret) {
++			DRM_ERROR("Could not resolve HDMI version support\n");
++			return ret;
++		}
++		hdata->type = (enum hdmi_type)ver;
+ 	}
+ 
+ 	hdata->hpd_gpio = pdata->hpd_gpio;
 -- 
-1.7.1
+1.7.7.3
