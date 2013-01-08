@@ -1,28 +1,49 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
-Date: Tue, 8 Jan 2013 12:12:28 +0000
-Message-ID: <201301081212.29089.arnd@arndb.de>
-References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com> <21E7B891-269B-422D-9038-381FAA15B59B@antoniou-consulting.com> <20130108104832.GE21994@gmail.com>
+From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 0/4] mfd/regulator: tps65090: add DT support and
+ suspend/resume cleanups
+Date: Tue, 8 Jan 2013 17:55:42 +0530
+Message-ID: <50EC1046.3000701@nvidia.com>
+References: <1356686981-4152-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130108104832.GE21994@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Pantelis Antoniou <panto@antoniou-consulting.com>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>Li
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1356686981-4152-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "lrg-l0cyMroinI0@public.gmane.org" <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 08 January 2013, Lee Jones wrote:
-> > If there is not, there is no way to automatically load the overlays; you can always
-> > use the kernel command line, or have the a user space application to request the loading
-> > of a specific board's overlay.
-> 
-> Unfortunately, there is no way to probe the UIBs. :(
+Hi Mark,
 
-I thought that some of the newer UIBs had it, just not the old ones.
-As Pantelis says, we could at least detect the ones that have an EEPROM
-on them, and use a command line option or device tree attribute for the others.
+On Friday 28 December 2012 02:59 PM, Laxman Dewangan wrote:
+> The patch series add DT support on TPS65090 device.
+>
+> Also remove the suspend/resume implementation as it duplicates with
+> irq_suspend/irq_resume().
+>
+> Laxman Dewangan (4):
+>    mfd: tps65090: add DT support for tps65090
+>    regulator: tps65090: add DT support
+>    mfd: tps65090: Pass irq domain when adding mfd sub devices
+>    mfd: tps65090: remove suspend/resume callbacks
+>
 
-	Arnd
+
+I am not sure that the patches are created on correct sequence for 
+adapting this in regulator subsystem and mfd subsystem.
+Can you please review whether the changes split is fine or not?
+Idea was to make independent patch for mfd and regulator so that they 
+can apply independently.
+
+Thanks,
+Laxman
