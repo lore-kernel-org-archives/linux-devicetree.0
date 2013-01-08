@@ -1,58 +1,60 @@
-From: "Mohammed, Afzal" <afzal@ti.com>
-Subject: RE: [PATCHv16 5/7] fbmon: add of_videomode helpers
-Date: Tue, 8 Jan 2013 05:31:16 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA80224@DBDE01.ent.ti.com>
-References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
-	<1355850256-16135-6-git-send-email-s.trumtrar@pengutronix.de>
-	<C8443D0743D26F4388EA172BF4E2A7A93EA7FB02@DBDE01.ent.ti.com>
-	<20130107080648.GB23478@pengutronix.de>
-	<C8443D0743D26F4388EA172BF4E2A7A93EA7FBF7@DBDE01.ent.ti.com>
- <CAF6AEGuuM9_n+A4q4tq+24i4YcW97orMN_RKbJ95gFie_qoktA@mail.gmail.com>
+From: Alexandre Courbot <acourbot@nvidia.com>
+Subject: [PATCH 0/4] gpio: introduce descriptor-based interface
+Date: Tue, 8 Jan 2013 16:18:51 +0900
+Message-ID: <1357629535-26033-1-git-send-email-acourbot@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAF6AEGuuM9_n+A4q4tq+24i4YcW97orMN_RKbJ95gFie_qoktA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>
-Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, David Airlie <airlied@linux.ie>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>
+Content-Type: text/plain
+Return-path: <linux-arch-owner@vger.kernel.org>
+Sender: linux-arch-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>
+Cc: Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Alexandre Courbot <gnurou@gmail.com>, Alexandre Courbot <acourbot@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiBUdWUsIEphbiAwOCwgMjAxMyBhdCAwMTozNjo1MCwgUm9iIENsYXJrIHdy
-b3RlOg0KPiBPbiBNb24sIEphbiA3LCAyMDEzIGF0IDI6NDYgQU0sIE1vaGFtbWVkLCBBZnphbCA8
-YWZ6YWxAdGkuY29tPiB3cm90ZToNCj4gPiBPbiBNb24sIEphbiAwNywgMjAxMyBhdCAxMzozNjo0
-OCwgU3RlZmZlbiBUcnVtdHJhciB3cm90ZToNCg0KPiA+PiBJIGp1c3QgZGlkIGEgcXVpY2sgIm1h
-a2UgZGE4eHhfb21hcGxfZGVmY29uZmlnICYmIG1ha2UiIGFuZCBpdCBidWlsZHMganVzdCBmaW5l
-Lg0KPiA+PiBPbiB3aGF0IHZlcnNpb24gZGlkIHlvdSBhcHBseSB0aGUgc2VyaWVzPw0KPiA+PiBB
-dCB0aGUgbW9tZW50IEkgaGF2ZSB0aGUgc2VyaWVzIHNpdHRpbmcgb24gMy43LiBEaWRuJ3QgdHJ5
-IGFueSAzLjgtcmN4IHlldC4NCj4gPj4gQnV0IGZpeGluZyB0aGlzIHNob3VsZG4ndCBiZSBhIHBy
-b2JsZW0uDQoNCj4gPiBUaGUgY2hhbmdlIGFzIEkgbWVudGlvbmVkIG9yIHNvbWV0aGluZyBzaW1p
-bGFyIHdvdWxkIGJlIHJlcXVpcmVkIGFzDQo+ID4gYW55IGRyaXZlciB0aGF0IGlzIGdvaW5nIHRv
-IG1ha2UgdXNlIG9mIG9mX2dldF9mYl92aWRlb21vZGUoKSB3b3VsZA0KPiA+IGJyZWFrIGlmIENP
-TkZJR19PRl9WSURFT01PREUgb3IgQ09ORklHX0ZCX01PREVfSEVMUEVSUyBpcyBub3QgZGVmaW5l
-ZC4NCg0KPiBTaG91bGRuJ3QgdGhlIGRyaXZlciB0aGF0IGRlcGVuZHMgb24gQ09ORklHX09GX1ZJ
-REVPTU9ERSBhbmQNCj4gQ09ORklHX0ZCX01PREVfSEVMUEVSUywgZXhwbGljaXRseSBzZWxlY3Qg
-dGhlbT8gIEkgZG9uJ3QgcmVhbGx5IHNlZQ0KPiB0aGUgcG9pbnQgb2YgaGF2aW5nIHRoZSBzdGF0
-aWMtaW5saW5lIGZhbGxiYWNrcy4NCg0KQnV0IGhlcmUgZGE4eHgtZmIgZHJpdmVyIGRvZXMgbm90
-IGRlcGVuZCBvbiBfT0ZfVklERU9NT0RFIGFuZA0KX0ZCX01PREVfSEVMUEVSUywgY3VycmVudGx5
-IGl0IHdvcmtzIGFzIGEgcHVyZSBwbGF0Zm9ybSBkcml2ZXINCmZvciBEYVZpbmNpIFNvQydzIHdp
-dGhvdXQgdGhvc2UgQ09ORklHJ3MuIEl0IGlzIG9ubHkgdXBvbg0KZW5oYW5jaW5nIHRoZSBkcml2
-ZXIgdG8gbWFrZSB1c2Ugb2Ygb2ZfZ2V0X2ZiX3ZpZGVvbW9kZSgpIGZvcg0KRFQgc3VwcG9ydCB0
-aG9zZSBDT05GSUcncyBhcmUgYmVpbmcgbWFkZSB1c2Ugb2YuDQoNCkFzIHRoZSBkcml2ZXIgY2Fu
-IHdvcmsgdy9vIHRoZXNlIENPTkZJRydzIGFuZCBzbyBhcyBpdCBpcyBub3QgYQ0KZGVwZW5kZW5j
-eSBmb3IgZHJpdmVyIG9uIG5vbi1EVCBib290IChhcyBpbiB0aGUgY2FzZSBvZiBEYVZpbmNpKSwN
-CkkgZGlzYWdyZWUgaW4gc2VsZWN0aW5nIHRob3NlIG9wdGlvbnMgYWx3YXlzLCBidXQgcmF0aGVy
-IGdpdmluZw0KdXNlciBhbiBvcHRpb24gdG8gc2VsZWN0Lg0KDQpBbmQgc2VsZWN0aW5nIHRoZXNl
-IG9wdGlvbnMgYWx3YXlzIHdpbGwgYnJpbmcgaW4gc29tZSBhbW91bnQgb2YgY29kZQ0Kb250byBL
-ZXJuZWwgaW1hZ2Ugdy9vIGFueSBwdXJwb3NlIGluIHRoZSBjYXNlIG9mIERhVmluY2kgYnVpbGRz
-Lg0KDQpBbm90aGVyIG9wdGlvbiB3b3VsZCBiZSB0byBzcHJpbmtsZSBkcml2ZXIgd2l0aCBpZmRl
-ZidzIHRvIGF2b2lkDQppbmxpbmUgZmFsbGJhY2tzLCB3aGljaCBpcyBub3QgYSBnb29kIHRoaW5n
-IHRvIGRvLg0KDQpNb3Jlb3ZlciBoYXZpbmcgYSBzdGF0aWMgaW5saW5lIGZhbGxiYWNrIGlzIG1v
-cmUgaW4gbGluZSB3aXRoIG90aGVyDQpvZl8qJ3MuDQoNCj4gZndpdywgdXNpbmcgJ3NlbGVjdCcg
-aXMgd2hhdCBJIHdhcyBkb2luZyBmb3IgbGNkIHBhbmVsIHN1cHBvcnQgZm9yDQo+IGxjZGMvZGE4
-eHggZHJtIGRyaXZlciAod2hpY2ggd2FzIHVzaW5nIHRoZSBvZiB2aWRlb21vZGUgaGVscGVycywN
-Cj4gYWxiZWl0IGEgc2xpZ2h0bHkgZWFybGllciB2ZXJzaW9uIG9mIHRoZSBwYXRjaGVzKToNCg0K
-SW4geW91ciBjYXNlIGFzIGl0IGlzIGEgbmV3IGRyaXZlciAmIGlzIG1lYW50IG9ubHkgZm9yIERU
-LCB0aGF0DQppcyBmaW5lLCBidXQgaGVyZSBpdCBpcyBhbiBleGlzdGluZyBkcml2ZXIgdGhhdCB3
-b3JrcyB3L28gdGhlc2UuDQoNClJlZ2FyZHMNCkFmemFsDQoNCg==
+This series introduce a first take at implementing the RFC for the new GPIO API
+that I submitted last month. It proposes a new, opaque descriptor-based GPIO API
+that becomes available when GPIOlib is compiled, and provides a safer, more
+abstract alternative to the current integer-based interface. GPIOlib internals
+are also switched to use the descriptor logic, and the former integer API
+becomes a lightweight wrapper around the new descriptor-based API.
+
+Functionally speaking the new API is identical to the integer-based API, with
+only the prefix changing from gpio_ to gpiod_. However, the second patch
+introduces new functions for obtaining GPIOs from a device and a consumer name,
+in a fashion similar to what is done with e.g. regulators and PWMs.
+
+GPIOs can then be provided either by board-specific lookup tables, or through
+the device tree. Device tree lookup might require some attention as it does not
+handle properties with multiple descriptors yet. Also, there is currently no
+equivalent of gpio_request_array() and GPIOs can only be allocated one-by-one.
+Feedback about the relevancy of batch requesting GPIOs is welcome.
+
+This patch series also prepares GPIOlib for the next step, which is getting rid
+of ARCH_NR_GPIOS and of the static array in GPIOlib and replace the latter with
+per-chip arrays that are allocated when the chip is added. Some challenge may
+arise from the fact that gpiochip_add is potentially called before kmalloc is
+available.
+
+Anyway, I expect this patchset to go through several iterations in order to
+address the points mentioned above (and of course the ones I missed). As usual,
+your valuable feedback is most welcome.
+
+Alexandre Courbot (4):
+  gpiolib: introduce descriptor-based GPIO interface
+  gpiolib: add gpiod_get and gpiod_put functions
+  gpiolib: of: convert OF helpers to descriptor API
+  gpiolib: add documentation for new gpiod_ API
+
+ Documentation/gpio.txt        |  94 +++++-
+ drivers/gpio/devres.c         |  59 +++-
+ drivers/gpio/gpiolib-of.c     |  26 +-
+ drivers/gpio/gpiolib.c        | 648 ++++++++++++++++++++++++++++--------------
+ include/asm-generic/gpio.h    | 176 ++++--------
+ include/linux/gpio/consumer.h | 128 +++++++++
+ include/linux/gpio/driver.h   | 171 +++++++++++
+ include/linux/of_gpio.h       |  73 +----
+ 8 files changed, 956 insertions(+), 419 deletions(-)
+ create mode 100644 include/linux/gpio/consumer.h
+ create mode 100644 include/linux/gpio/driver.h
+
+-- 
+1.8.1
