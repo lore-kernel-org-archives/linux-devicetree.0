@@ -1,107 +1,86 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
-Date: Tue, 8 Jan 2013 10:00:42 +0000
-Message-ID: <20130108100042.GD21994@gmail.com>
-References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com>
- <93BF5C62-ADE8-4EFC-9175-C2D7E43300E3@antoniou-consulting.com>
- <20130107210551.GL14149@atomide.com>
- <201301072135.05166.arnd@arndb.de>
- <89A7A8FD-935E-4225-8C7B-EA1DBA0C2780@antoniou-consulting.com>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v7 0/6] watchdog: dt: add support for the timeout-sec dt
+ property
+Date: Tue,  8 Jan 2013 11:04:09 +0100
+Message-ID: <1357639455-21935-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <89A7A8FD-935E-4225-8C7B-EA1DBA0C2780@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Linus Walleij <linus.wall>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> >>> At the end of the line, some kind of hardware glue is going to be=
- needed.
-> >>>=20
-> >>> I just feel that drawing from a sample size of 1 (maybe 2 if I ge=
-t to throw
-> >>> in the beagleboard), it is a bit premature to think about making =
-it overly
-> >>> general, besides the part that are obviously part of the infrastr=
-ucture=20
-> >>> (like the DT overlay stuff).
-> >>>=20
-> >>> What I'm getting at, is that we need some user experience about t=
-his, before
-> >>> going away and creating structure out of possible misconception a=
-bout the uses.=20
-> >>=20
-> >> IMHO stuff like this will be needed by many SoCs. Some examples of=
- similar
-> >> things for omaps that have eventually become generic frameworks ha=
-ve been
-> >> the clock framework, USB OTG support, runtime PM, pinmux framework=
- and
-> >> so on.
-> >>=20
-> >> So I suggest a minimal generic API from the start as that will mak=
-e things
-> >> a lot easier in the long run.
-> >=20
-> > I agree. The ux500 platform already has the concept of "user interf=
-ace boards",
-> > which currently is not well integrated into devicetree. I believe S=
-ascha
-> > mentioned that Pengutronix had been shipping some other systems wit=
-h add-on
-> > boards and generating device tree binaries from source for each com=
-bination.
-> >=20
-> > Ideally, both of the above should be able to use the same DT overla=
-y logic
-> > as BeagleBone, and I'm sure there are more of those.
->=20
-> Hmm, I see.=20
->=20
-> I will need some more information about the interface of the 'user in=
-terface boards'.
-> I.e. how is the board identified, what is typically present on those =
-boards, etc.
+Hi all,
+this patchset add the timeout-sec property to the watchdog core,
+to the at91sam9_wdt driver and on all framework enabled watchdog driver
+with dt support.
+The at91sam9_wdt is tested on evk-pr3,
+the other drivers are compile tested only.
 
-User Interface Boards are mearly removable PCBs which are interchangeab=
-le
-amongst various hardware platforms. They are connected via numerous
-connectors which carry all sorts of different data links; i2c, spi, rs2=
-32,
-etc. The UIB I'm looking at right now has a touchscreen, speakers, a ke=
-y
-pad, leds, jumpers, switches and a bunch of sensors.
+Best regards
+Fabio Porcedda
 
-You can find a small example of how we interface to these by viewing
-'arch/arm/boot/dts/stuib.dtsi'. To add a UIB to a particular build, we
-currently include it as a *.dtsi from a platform's dts file.
+changes:
+v7:
+  - rebase over v3.8-rc2
+  - remove the patch already merged
+v6:
+  - remove patch for function of_get_timeout_sec as aked by Rob Herring
+  - add Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+  - add Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+v5:
+  - fix codestyle for compilance ti checkpatch.pl about
+    "ERROR: do not initialise statics to 0 or NULL"
+    for s3c2410_wdt.c:56 and at91sam9_wdt.c:63
+v4:
+  - add of_get_timeout_sec
+  - add s3c2410_wdt driver
+  - split driver patch
+  - fixed watchdog_init_timeout handling of min_timeout and max_timeout
+v3:
+  - rename watchdog_probe_dt_timeout ->  watchdog_init_timeout
+  - move the watchdog_init_timeout function from inline to watchdog_core.c
+  - add timeout parameter handling code to watchdog_init_timeout
+  - add timeout-sec property to the pnx4008-wdt driver
+  - add two small commit for fixup and cleanup
+v2:
+  - change "timeout" to "timeout-sec" as asked by Jean-Christophe
+  - at91sam9_wdt: use the new helper function
+  - at91sam9_wdt: add bounds checking
+  - watchdog.h: add bounds checking
 
-> Can we get some input by the owner of other similar hardware? I know =
-the FPGA
-> people have similar requirements for example. There are other people =
-that are hitting
-> problems getting DT to work with their systems, like the V4L people w=
-ith the order
-> of initialization; see http://lwn.net/Articles/531068/. I think the V=
-4L problem is
-> cleanly solved by the overlay being contained in the V4L device node =
-and applied just before
-> the device is probed.
->=20
-> In the meantime it would be better to wait until we have some ack fro=
-m the maintainers
-> of the core subsystems about what they think.
-> =20
-> Regards
->=20
-> -- Pantelis
->=20
+Fabio Porcedda (6):
+  watchdog: core: dt: add support for the timeout-sec dt property
+  watchdog: orion_wdt: add timeout-sec property binding
+  watchdog: pnx4008: add timeout-sec property binding
+  watchdog: s3c2410_wdt: add timeout-sec property binding
+  watchdog: at91sam9_wdt: add timeout-sec property binding
+  watchdog: orion_wdt: move the min_timeout initialization
 
---=20
-Lee Jones
-Linaro ST-Ericsson Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+ .../devicetree/bindings/watchdog/atmel-wdt.txt     |  4 +++
+ .../devicetree/bindings/watchdog/marvel.txt        |  5 +++
+ .../devicetree/bindings/watchdog/pnx4008-wdt.txt   |  4 +++
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |  3 ++
+ Documentation/watchdog/watchdog-kernel-api.txt     | 10 ++++++
+ drivers/watchdog/Kconfig                           |  1 +
+ drivers/watchdog/at91sam9_wdt.c                    | 16 ++++++++--
+ drivers/watchdog/orion_wdt.c                       | 10 +++---
+ drivers/watchdog/pnx4008_wdt.c                     |  7 ++--
+ drivers/watchdog/s3c2410_wdt.c                     |  6 ++--
+ drivers/watchdog/watchdog_core.c                   | 37 ++++++++++++++++++++++
+ include/linux/watchdog.h                           |  3 ++
+ 12 files changed, 91 insertions(+), 15 deletions(-)
+
+-- 
+1.8.0.3
