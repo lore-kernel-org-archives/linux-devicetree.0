@@ -1,38 +1,58 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
-Date: Tue, 8 Jan 2013 16:12:59 +0000
-Message-ID: <201301081612.59292.arnd@arndb.de>
-References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com> <201301081212.29089.arnd@arndb.de> <51A6DFCC-BBC8-475D-88C4-1B22186339C1@antoniou-consulting.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] drm/exynos: Get HDMI version from device tree
+Date: Tue, 08 Jan 2013 09:38:39 -0700
+Message-ID: <50EC4B8F.1050802@wwwdotorg.org>
+References: <1357591415-17092-1-git-send-email-seanpaul@chromium.org>
+ <50EB4D11.7000407@wwwdotorg.org>
+ <CAOw6vbKqVnDt7PH1JTtG1cujnfzNOeK-eHhebpX9WSytnhwmBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51A6DFCC-BBC8-475D-88C4-1B22186339C1@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Linus Walleij <linus>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAOw6vbKqVnDt7PH1JTtG1cujnfzNOeK-eHhebpX9WSytnhwmBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: InKi Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 08 January 2013, Pantelis Antoniou wrote:
-> On Jan 8, 2013, at 2:12 PM, Arnd Bergmann wrote:
+On 01/07/2013 04:12 PM, Sean Paul wrote:
 > 
-> > On Tuesday 08 January 2013, Lee Jones wrote:
-> >>> If there is not, there is no way to automatically load the overlays; you can always
-> >>> use the kernel command line, or have the a user space application to request the loading
-> >>> of a specific board's overlay.
-> >> 
-> >> Unfortunately, there is no way to probe the UIBs. :(
-> > 
-> > I thought that some of the newer UIBs had it, just not the old ones.
-> > As Pantelis says, we could at least detect the ones that have an EEPROM
-> > on them, and use a command line option or device tree attribute for the others.
-> > 
-> >       Arnd
+> On Jan 7, 2013 5:32 PM, "Stephen Warren" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org
+> <mailto:swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>> wrote:
+>>
+>> On 01/07/2013 01:43 PM, Sean Paul wrote:
+>> > Add a property to the hdmi node so we can specify the HDMI version in
+>> > the device tree instead of just defaulting to v1.4 with the existence of
+>> > the dt node.
+>>
+>> > diff --git a/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+> b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+>>
+>> > @@ -11,6 +11,8 @@ Required properties:
+>> >       c) pin function mode.
+>> >       d) optional flags and pull up/down.
+>> >       e) drive strength.
+>> > +- samsung,supports-hdmi-1.4: Define if device supports HDMI v1.4
+>> > +- samsung,supports-hdmi-1.3: Define if device supports HDMI v1.3
+>>
+>> Which device; the HDMI controller in the SoC, or the HDMI sink?
+>>
 > 
-> So I gather the new ones have an eeprom?
+> It's the controller.
 
-I don't remember the details unfortunately. Lee should be the one who can find out.
-IIRC there was at least a single integeger number on them.
-
-	Arnd
+Ah OK. Is it different versions of the controller HW IP block that
+support the different HDMI versions, or is it some kind of
+fusing/configuration with the same HW block? If different versions of
+HW, wouldn't this difference usually be represented by different
+compatible values, that indicate the exact HW version? I guess if the
+only difference really is just the HDMI support and there are no other
+bugs/quirks/enhancements, a separate property might make sense.
