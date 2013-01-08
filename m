@@ -1,44 +1,38 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH RESEND] ARM: dts: AM33XX: Rename I2C and GPIO nodes
-Date: Tue, 8 Jan 2013 17:13:01 +0100
-Message-ID: <50EC458D.9000408@ti.com>
-References: <1353498737-21174-1-git-send-email-anilkumar@ti.com> <331ABD5ECB02734CA317220B2BBEABC13EAD4863@DBDE01.ent.ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
+Date: Tue, 8 Jan 2013 16:12:59 +0000
+Message-ID: <201301081612.59292.arnd@arndb.de>
+References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com> <201301081212.29089.arnd@arndb.de> <51A6DFCC-BBC8-475D-88C4-1B22186339C1@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <331ABD5ECB02734CA317220B2BBEABC13EAD4863@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "AnilKumar, Chimata" <anilkumar@ti.com>
-Cc: "tony@atomide.com" <tony@atomide.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Pantelis Antoniou <panto@antoniou-consulting.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51A6DFCC-BBC8-475D-88C4-1B22186339C1@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Stephen Warren <swarren@wwwdotorg.org>, David Gibson <david@gibson.dropbear.id.au>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Linus Walleij <linus>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anil,
-
-On 01/02/2013 11:12 AM, AnilKumar, Chimata wrote:
-> On Wed, Nov 21, 2012 at 17:22:17, AnilKumar, Chimata wrote:
->> Rename I2C and GPIO nodes according to AM33XX TRM. According to
->> AM33XX TRM device instances are starting from "0" like i2c0, i2c1
->> and i2c3.
->>
->> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
->> [panto@antoniou-consulting.com: initial patch by pantelis's]
->> Signed-off-by: AnilKumar Ch <anilkumar@ti.com>
->> ---
->> Changes from first version:
->> 	- Updated pantelis's patch
->> 	  * Modified based on linux-omap/master
->> 	  * Added GPIO nodes renaming as well
+On Tuesday 08 January 2013, Pantelis Antoniou wrote:
+> On Jan 8, 2013, at 2:12 PM, Arnd Bergmann wrote:
 > 
-> Hi Tony/Benoit,
+> > On Tuesday 08 January 2013, Lee Jones wrote:
+> >>> If there is not, there is no way to automatically load the overlays; you can always
+> >>> use the kernel command line, or have the a user space application to request the loading
+> >>> of a specific board's overlay.
+> >> 
+> >> Unfortunately, there is no way to probe the UIBs. :(
+> > 
+> > I thought that some of the newer UIBs had it, just not the old ones.
+> > As Pantelis says, we could at least detect the ones that have an EEPROM
+> > on them, and use a command line option or device tree attribute for the others.
+> > 
+> >       Arnd
 > 
-> If there are no comments could you please pull this patch?
+> So I gather the new ones have an eeprom?
 
-Yep, it is done.
+I don't remember the details unfortunately. Lee should be the one who can find out.
+IIRC there was at least a single integeger number on them.
 
-The patch is available here:
-git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git for_3.9/dts
-
-Regards,
-Benoit
-
+	Arnd
