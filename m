@@ -1,31 +1,29 @@
-From: Alexandre Courbot <acourbot@nvidia.com>
-Subject: Re: [PATCH 2/4] gpiolib: add gpiod_get and gpiod_put functions
-Date: Wed, 9 Jan 2013 10:49:33 +0900
-Message-ID: <CAAVeFu+1jYVTH7+cgRHb8LjQCJhSMZ9vR1=m+AH06bp+7Z4+fw@mail.gmail.com>
-References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com>
- <1357629535-26033-3-git-send-email-acourbot@nvidia.com> <201301081307.04229.arnd@arndb.de>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/2] ARM: shmobile: add a reference DT implementation for
+ mackerel
+Date: Wed, 9 Jan 2013 10:51:12 +0900
+Message-ID: <20130109015112.GA6496@verge.net.au>
+References: <Pine.LNX.4.64.1212311213510.24596@axis700.grange>
+ <Pine.LNX.4.64.1212311214370.24596@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <201301081307.04229.arnd@arndb.de>
-Sender: linux-arch-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1212311214370.24596@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 8, 2013 at 10:07 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 08 January 2013, Alexandre Courbot wrote:
->>
->> Adds new GPIO allocation functions that work with the opaque descriptor
->> interface.
->>
->> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
->
-> I think you need to reorder the patches slightly, since the gpiod_get
-> function introduced here is already being used in the first patch, which
-> breaks bisection.
+On Mon, Dec 31, 2012 at 12:23:54PM +0100, Guennadi Liakhovetski wrote:
+> Add a DT-only mackerel implementation. So far it only contains a limited
+> set of devices, already implementing DT support. As more drivers are
+> extended with DT initialisation option, respective devices shall be added
+> to sh7372-mackerel-reference.dts.
+> 
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 
-Yes, gpiod_get and gpiod_put should only appear from the second patch
-on. Thanks for pointing that out.
+Hi Guennadi,
 
-Alex.
+thanks. This looks good to me.
+I will apply it once I have applied the INTC and pinmux changes.
