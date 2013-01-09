@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 1/4] ARM i.MX53: Add UART2 for low-level debugging
-Date: Wed,  9 Jan 2013 14:44:22 +0100
-Message-ID: <1357739065-9153-2-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH 2/4] ARM: dts: imx53: pinctrl update
+Date: Wed,  9 Jan 2013 14:44:23 +0100
+Message-ID: <1357739065-9153-3-git-send-email-s.trumtrar@pengutronix.de>
 References: <1357739065-9153-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,71 +19,94 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Add pinctrl for cspi, csi.
+Add new pingroups for can1 and uart3.
 
-This is needed for boards like the Garz & Fricke Vincell and
-Vincell LT, that have the serial debugging console on UART2.
-
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/Kconfig.debug       |   10 ++++++++++
- arch/arm/include/debug/imx.S |    7 ++++++-
- 2 files changed, 16 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx53.dtsi |   53 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index 661030d..8e84a24 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -450,6 +450,16 @@ choice
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index 552aed4..160c24a 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -274,6 +274,44 @@
+ 					};
+ 				};
  
- endchoice
- 
-+config DEBUG_IMX50_IMX53_UART_PORT
-+	int "i.MX50 and i.MX53 Debug UART Port (1-2)" if DEBUG_IMX50_IMX53_UART
-+	range 1 2
-+	default 1
-+	depends on SOC_IMX50 || SOC_IMX53
-+	help
-+          Choose UART port on which kernel low-level debug messages
-+          should be output. The default choice (UART1) is correct for
-+	  e.g. the Freescale i.MX53 Quick Start Board.
++				csi {
++					pinctrl_csi_1: csigrp-1 {
++						fsl,pins = <
++							286 0x1d5	/* MX53_PAD_CSI0_DATA_EN__IPU_CSI0_DATA_EN */
++							291 0x1d5	/* MX53_PAD_CSI0_VSYNC__IPU_CSI0_VSYNC */
++							280 0x1d5	/* MX53_PAD_CSI0_MCLK__IPU_CSI0_HSYNC */
++							276 0x1d5	/* MX53_PAD_CSI0_PIXCLK__IPU_CSI0_PIXCLK */
++							409 0x1d5	/* MX53_PAD_CSI0_DAT19__IPU_CSI0_D_19 */
++							402 0x1d5	/* MX53_PAD_CSI0_DAT18__IPU_CSI0_D_18 */
++							395 0x1d5	/* MX53_PAD_CSI0_DAT17__IPU_CSI0_D_17 */
++							388 0x1d5	/* MX53_PAD_CSI0_DAT16__IPU_CSI0_D_16 */
++							381 0x1d5	/* MX53_PAD_CSI0_DAT15__IPU_CSI0_D_15 */
++							374 0x1d5	/* MX53_PAD_CSI0_DAT14__IPU_CSI0_D_14 */
++							367 0x1d5	/* MX53_PAD_CSI0_DAT13__IPU_CSI0_D_13 */
++							360 0x1d5	/* MX53_PAD_CSI0_DAT12__IPU_CSI0_D_12 */
++							352 0x1d5	/* MX53_PAD_CSI0_DAT11__IPU_CSI0_D_11 */
++							344 0x1d5	/* MX53_PAD_CSI0_DAT10__IPU_CSI0_D_10 */
++							336 0x1d5	/* MX53_PAD_CSI0_DAT9__IPU_CSI0_D_9 */
++							328 0x1d5	/* MX53_PAD_CSI0_DAT8__IPU_CSI0_D_8 */
++							320 0x1d5	/* MX53_PAD_CSI0_DAT7__IPU_CSI0_D_7 */
++							312 0x1d5	/* MX53_PAD_CSI0_DAT6__IPU_CSI0_D_6 */
++							304 0x1d5	/* MX53_PAD_CSI0_DAT5__IPU_CSI0_D_5 */
++							296 0x1d5	/* MX53_PAD_CSI0_DAT4__IPU_CSI0_D_4 */
++							276 0x1d5	/* MX53_PAD_CSI0_PIXCLK__IPU_CSI0_PIXCLK */
++						>;
++					};
++				};
 +
- config DEBUG_IMX6Q_UART_PORT
- 	int "i.MX6Q Debug UART Port (1-5)" if DEBUG_IMX6Q_UART
- 	range 1 5
-diff --git a/arch/arm/include/debug/imx.S b/arch/arm/include/debug/imx.S
-index 0c4e17d..4069ea0 100644
---- a/arch/arm/include/debug/imx.S
-+++ b/arch/arm/include/debug/imx.S
-@@ -10,12 +10,17 @@
-  * published by the Free Software Foundation.
-  *
-  */
-+#define IMX50_IMX53_UART1_BASE_ADDR	0x53fbc000
-+#define IMX50_IMX53_UART2_BASE_ADDR	0x53fc0000
- #define IMX6Q_UART1_BASE_ADDR	0x02020000
- #define IMX6Q_UART2_BASE_ADDR	0x021e8000
- #define IMX6Q_UART3_BASE_ADDR	0x021ec000
- #define IMX6Q_UART4_BASE_ADDR	0x021f0000
- #define IMX6Q_UART5_BASE_ADDR	0x021f4000
++				cspi {
++					pinctrl_cspi_1: cspigrp-1 {
++						fsl,pins = <
++							998  0x1d5	/* MX53_PAD_SD1_DATA0__CSPI_MISO */
++							1008 0x1d5	/* MX53_PAD_SD1_CMD__CSPI_MOSI */
++							1022 0x1d5	/* MX53_PAD_SD1_CLK__CSPI_SCLK */
++						>;
++					};
++				};
++
+ 				ecspi1 {
+ 					pinctrl_ecspi1_1: ecspi1grp-1 {
+ 						fsl,pins = <
+@@ -349,6 +387,13 @@
+ 							853 0x80000000  /* MX53_PAD_PATA_DIOR__CAN1_RXCAN */
+ 						>;
+ 					};
++
++					pinctrl_can1_2: can1grp-2 {
++						fsl,pins = <
++							37  0x80000000  /* MX53_PAD_KEY_COL2__CAN1_TXCAN */
++							44  0x80000000  /* MX53_PAD_KEY_ROW2__CAN1_RXCAN */
++						>;
++					};
+ 				};
  
-+#define IMX50_IMX53_UART_BASE_ADDR(n)	IMX50_IMX53_UART##n##_BASE_ADDR
-+#define IMX50_IMX53_UART_BASE(n)	IMX50_IMX53_UART_BASE_ADDR(n)
-+#define IMX50_IMX53_DEBUG_UART_BASE	IMX50_IMX53_UART_BASE(CONFIG_DEBUG_IMX50_IMX53_UART_PORT)
- /*
-  * IMX6Q_UART_BASE_ADDR is put in the middle to force the expansion
-  * of IMX6Q_UART##n##_BASE_ADDR.
-@@ -35,7 +40,7 @@
- #elif defined (CONFIG_DEBUG_IMX51_UART)
- #define UART_PADDR	0x73fbc000
- #elif defined (CONFIG_DEBUG_IMX50_IMX53_UART)
--#define UART_PADDR	0x53fbc000
-+#define UART_PADDR	IMX50_IMX53_DEBUG_UART_BASE
- #elif defined (CONFIG_DEBUG_IMX6Q_UART)
- #define UART_PADDR	IMX6Q_DEBUG_UART_BASE
- #endif
+ 				can2 {
+@@ -421,6 +466,14 @@
+ 							880 0x1c5	/* MX53_PAD_PATA_DA_2__UART3_RTS */
+ 						>;
+ 					};
++
++					pinctrl_uart3_2: uart3grp-2 {
++						fsl,pins = <
++							884 0x1c5	/* MX53_PAD_PATA_CS_0__UART3_TXD_MUX */
++							888 0x1c5	/* MX53_PAD_PATA_CS_1__UART3_RXD_MUX */
++						>;
++					};
++
+ 				};
+ 
+ 				uart4 {
 -- 
 1.7.10.4
