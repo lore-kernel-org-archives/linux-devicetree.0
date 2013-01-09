@@ -1,53 +1,79 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCHv16 0/7] of: add display helper
-Date: Wed, 09 Jan 2013 21:42:47 +0100
-Message-ID: <4468930.nIKSs7INEb@avalon>
-References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
-	<20130109201541.GB4780@pengutronix.de>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH 03/14] of/pci: Add of_pci_get_bus() function
+Date: Wed,  9 Jan 2013 21:43:03 +0100
+Message-ID: <1357764194-12677-4-git-send-email-thierry.reding@avionic-design.de>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
-In-Reply-To: <20130109201541.GB4780@pengutronix.de>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: linux-fbdev@vger.kernel.org, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, dri-devel@lists.freedesktop.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robherring2@gmail.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1357764194-12677-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 09 January 2013 21:15:41 Steffen Trumtrar wrote:
-> On Tue, Dec 18, 2012 at 06:04:09PM +0100, Steffen Trumtrar wrote:
-> > Hi!
-> > 
-> > Finally, right in time before the end of the world on friday, v16 of the
-> > display helpers.
-> 
-> So, any more criticism on the series? Any takers for the series as is?
-> I guess it could be merged via the fbdev-tree if David Airlie can agree
-> to the DRM patches ?! Does that sound about right?
-> 
-> I think the series was tested at least with
-> 	- imx6q: sabrelite, sabresd
-> 	- imx53: tqma53/mba53
-> 	- omap: DA850 EVM, AM335x EVM, EVM-SK
-> 
-> I don't know what Laurent Pinchart, Marek Vasut and Leela Krishna Amudala
-> are using.
+This function can be used to parse the number of a device's parent PCI
+bus from a standard 5-cell PCI resource.
 
-I've used the sh-mobile-lcdcfb driver.
+Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+---
+ drivers/of/of_pci.c    | 21 +++++++++++++++++++++
+ include/linux/of_pci.h |  1 +
+ 2 files changed, 22 insertions(+)
 
-> Those are the people I know from the top of my head, that use or at least
-> did use the patches in one of its iterations. If I forgot anyone, please
-> speak up and possibly add your new HW to the list of tested devices.
-
+diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+index 0dd52df..7d5d2c3 100644
+--- a/drivers/of/of_pci.c
++++ b/drivers/of/of_pci.c
+@@ -43,6 +43,27 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
+ EXPORT_SYMBOL_GPL(of_pci_find_child_device);
+ 
+ /**
++ * of_pci_get_bus() - Get bus number for a device node
++ * @np: device node
++ *
++ * Parses a standard 5-cell PCI resource and returns the 8-bit bus number of
++ * the device's parent PCI bus. On error a negative error code is returned.
++ */
++int of_pci_get_bus(struct device_node *np)
++{
++	unsigned int size;
++	const __be32 *reg;
++
++	reg = of_get_property(np, "reg", &size);
++
++	if (!reg || size < 5 * sizeof(__be32))
++		return -EINVAL;
++
++	return (be32_to_cpup(reg) >> 16) & 0xff;
++}
++EXPORT_SYMBOL_GPL(of_pci_get_bus);
++
++/**
+  * of_pci_get_devfn() - Get device and function numbers for a device node
+  * @np: device node
+  *
+diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
+index 91ec484..9118321 100644
+--- a/include/linux/of_pci.h
++++ b/include/linux/of_pci.h
+@@ -10,6 +10,7 @@ int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
+ struct device_node;
+ struct device_node *of_pci_find_child_device(struct device_node *parent,
+ 					     unsigned int devfn);
++int of_pci_get_bus(struct device_node *np);
+ int of_pci_get_devfn(struct device_node *np);
+ 
+ #endif
 -- 
-Regards,
-
-Laurent Pinchart
+1.8.1
