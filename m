@@ -1,82 +1,59 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/8] SH: intc: Add support OF for INTC
-Date: Wed, 9 Jan 2013 19:11:04 +0000
-Message-ID: <201301091911.04513.arnd@arndb.de>
-References: <1357713007-4005-1-git-send-email-horms+renesas@verge.net.au> <1357713007-4005-2-git-send-email-horms+renesas@verge.net.au> <20130109115352.GB7337@e106331-lin.cambridge.arm.com>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCHv16 0/7] of: add display helper
+Date: Wed, 9 Jan 2013 20:12:01 +0100
+Message-ID: <201301092012.01985.marex@denx.de>
+References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
-  charset="iso-8859-1"
+  charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130109115352.GB7337@e106331-lin.cambridge.arm.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb@gmail.com>, Magnus Damm <damm@opensource.se>, Paul Mundt <lethal@linux-sh.org>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>, Rob Clark <robdclark@gmail.com>, Leela Krishna Amudala <leelakrishna.a@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 09 January 2013, Mark Rutland wrote:
-> Hi,
+Dear Steffen Trumtrar,
+
+> Hi!
 > 
-> Thanks for updating the text, this is far easier to read than previously.
-> 
-> However, I'm still concerned by how complex the binding seems. As I don't have
-> any familiarity with the device, I don't know whether that's just an artifact
-> of the hardware or something that can be cleared up.
-> 
-> I think the approach used by the binding needs some serious review before this
-> should be merged. It seems far more complex than any existing interrupt
-> controller binding. Without a dts example for a complete board (complete with
-> devices wired up to the interrupt controller), it's difficult to judge how this
-> will work in practice.
-> 
-> I've added Arnd to Cc in case he has any thoughts on the matter.
+> Finally, right in time before the end of the world on friday, v16 of the
+> display helpers.
 
-Sorry for having been absent from this discussion for so long. I didn't
-realize there were 9 versions of this patch set.
+I tested this on 3.8-rc1 (next 20130103) with the imx drm driver. After adding 
+the following piece of code (quick hack), this works just fine. Thanks!
 
-I tend to agree with your interpretation above, but I may be missing
-important facts from the previous review rounds.
+diff --git a/drivers/staging/imx-drm/parallel-display.c b/drivers/staging/imx-
+drm/parallel-display.c
+index a8064fc..e45002a 100644
+--- a/drivers/staging/imx-drm/parallel-display.c
++++ b/drivers/staging/imx-drm/parallel-display.c
+@@ -57,6 +57,7 @@ static void imx_pd_connector_destroy(struct drm_connector 
+*connector)
+ static int imx_pd_connector_get_modes(struct drm_connector *connector)
+ {
+        struct imx_parallel_display *imxpd = con_to_imxpd(connector);
++       struct device_node *np = imxpd->dev->of_node;
+        int num_modes = 0;
+ 
+        if (imxpd->edid) {
+@@ -72,6 +73,15 @@ static int imx_pd_connector_get_modes(struct drm_connector 
+*connector)
+                num_modes++;
+        }
+ 
++       if (np) {
++               struct drm_display_mode *mode = drm_mode_create(connector->dev);
++               of_get_drm_display_mode(np, &imxpd->mode, 0);
++               drm_mode_copy(mode, &imxpd->mode);
++               mode->type |= DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED,
++               drm_mode_probed_add(connector, mode);
++               num_modes++;
++       }
++
+        return num_modes;
+ }
 
-For all I can tell, the binding is an attempt to describe the
-entire drivers/sh/intc capabilities, which is probably not the
-best way to approach things. The sh intc driver is not just an
-irqchip driver, but rather a framework to describe arbitrary
-irqchips, which is what makes this so hard.
-
-When I first looked at the situation last year, I suggested doing
-a new irqchip driver with a much simpler binding that can only
-handle the irq chips from shmobile, rather than the whole thing.
-
-I am not sure if the binding in the current form is already the
-"simplified" version, or if it actually implements all the
-capabilities of the intc driver.
-
-> > +       intca: interrupt-controller@0 {
-> > +               compatible = "renesas,sh_intc";
-> > +               interrupt-controller;
-> > +               #address-cells = <1>;
-> > +               #size-cells = <1>;
-> > +               #interrupt-cells = <1>;
-> > +               ranges;
-> > +
-> > +               reg = <0xe6940000 0x200>, <0xe6950000 0x200>;
-> > +               group_size = <19>;
-> > +
-> > +               DIRC: intsrc1 { vector = <0x0560>; };
-> > +               ATAPI: intsrc2 { vector = <0x05E0>; };
-> 
-> This looks suspiciously like a way of encoding a device's interrupt information
-> into the interrupt controller's device node. That strikes me as being the wrong
-> way round.
-
-Agreed, it would be simpler to have e.g. #interrupt-cells = <4>, to describe
-the various offsets when needed (I forgot how many are actually required
-in practice, rather than being computable from the other numbers), and
-possibly a global interrupt-map/interrupt-map-mask property pair to map
-this into a flat number space.
-
-I need to take some more time to understand the actual requirements again,
-but IIRC it would be possible to do something much simpler than the
-proposed binding.
-
-	Arnd
+Best regards,
+Marek Vasut
