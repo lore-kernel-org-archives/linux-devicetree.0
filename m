@@ -1,16 +1,15 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH 0/5] Use SRC to reset IP modules on i.MX5 and i.MX6
-Date: Wed, 9 Jan 2013 15:57:05 -0200
-Message-ID: <CAOMZO5C28qgH5DVooxYg5p6tA7bsFJshr4qxZEyp05A1LR3JWA@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC PATCH 1/5] ARM i.MX6q: Add GPU, VPU, IPU, and OpenVG resets
+ to system reset controller
+Date: Wed, 09 Jan 2013 11:15:45 -0700
+Message-ID: <50EDB3D1.5010900@wwwdotorg.org>
 References: <1357751839-19680-1-git-send-email-p.zabel@pengutronix.de>
- <CAOMZO5Cgem3xyYg9MawnxXx_tDKgtiA_g6odu2wtnAeXWjdfmA@mail.gmail.com>
- <1357753220.8747.3.camel@pizza.hi.pengutronix.de>
- <CAOMZO5C_v92S0kBt66a2SsHGGGSBjJSP18-CQfWQ=sz0YW7ztg@mail.gmail.com>
+ <1357751839-19680-2-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAOMZO5C_v92S0kBt66a2SsHGGGSBjJSP18-CQfWQ=sz0YW7ztg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1357751839-19680-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -25,28 +24,14 @@ To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 9, 2013 at 3:53 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Wed, Jan 9, 2013 at 3:40 PM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->
->> I rebased them onto next-20130109 (with this base compile-tested only).
->
-> Just tested it, but unfortunately I still get the crash.
+On 01/09/2013 10:17 AM, Philipp Zabel wrote:
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/reset/fsl,imx-src.txt      |   45 ++++++++++++++++++++
 
-Ok, since I am on mx51 I just added a:
+I proposed something very similar a while back; it may be useful to look
+at the previous discussion there:
 
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index 1f5d45e..8380b14 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -67,6 +67,7 @@
-                        compatible = "fsl,imx51-ipu";
-                        reg = <0x40000000 0x20000000>;
-                        interrupts = <11 10>;
-+                       reset = <&src 2>;
-                };
+http://www.spinics.net/lists/arm-kernel/msg202451.html
 
-and now it works fine.
-
-Thanks,
-
-Fabio Estevam
+Unfortunately, I haven't had time to follow up on the proposal.
