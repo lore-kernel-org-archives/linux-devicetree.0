@@ -1,104 +1,184 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH v2 2/4] input: keyboard: tegra: use devm_* for resource
- allocation
-Date: Wed, 9 Jan 2013 08:07:45 +0100
-Message-ID: <20130109070745.GA12782@avionic-0098.adnet.avionic-design.de>
-References: <1357371910-3164-1-git-send-email-ldewangan@nvidia.com>
- <1357371910-3164-3-git-send-email-ldewangan@nvidia.com>
- <20130105080658.GA1315@core.coreip.homeip.net>
- <20130106192739.GA11566@avionic-0098.adnet.avionic-design.de>
- <20130106195748.GA28212@core.coreip.homeip.net>
+From: Singh Sandeep-B37400 <B37400@freescale.com>
+Subject: RE: [PATCH] Added device tree binding for TDM and TDM phy
+Date: Wed, 9 Jan 2013 07:10:24 +0000
+Message-ID: <3F1D9DCAAB49B94D88DBE05911FA4E6E69CEB8@039-SN1MPN1-005.039d.mgd.msft.net>
+References: <1357133120-2271-1-git-send-email-Sandeep@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130106195748.GA28212@core.coreip.homeip.net>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, Wolfram Sang <w.sang@pengutronix.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1357133120-2271-1-git-send-email-Sandeep@freescale.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>
+Cc: Aggrwal Poonam-B10812 <B10812@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
+A gentle reminder.
+Any comments are appreciated.
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Regards,
+Sandeep
 
-On Sun, Jan 06, 2013 at 11:57:48AM -0800, Dmitry Torokhov wrote:
-> On Sun, Jan 06, 2013 at 08:27:39PM +0100, Thierry Reding wrote:
-> > On Sat, Jan 05, 2013 at 12:06:58AM -0800, Dmitry Torokhov wrote:
-> > > On Sat, Jan 05, 2013 at 01:15:08PM +0530, Laxman Dewangan wrote:
-> > [...]
-> > > > @@ -735,25 +738,16 @@ static int tegra_kbc_probe(struct platform_de=
-vice *pdev)
-> > > >  	spin_lock_init(&kbc->lock);
-> > > >  	setup_timer(&kbc->timer, tegra_kbc_keypress_timer, (unsigned long=
-)kbc);
-> > > > =20
-> > > > -	res =3D request_mem_region(res->start, resource_size(res), pdev->=
-name);
-> > > > -	if (!res) {
-> > > > -		dev_err(&pdev->dev, "failed to request I/O memory\n");
-> > > > -		err =3D -EBUSY;
-> > > > -		goto err_free_mem;
-> > > > -	}
-> > > > -
-> > > > -	kbc->mmio =3D ioremap(res->start, resource_size(res));
-> > > > +	kbc->mmio =3D devm_request_and_ioremap(&pdev->dev, res);
-> > > >  	if (!kbc->mmio) {
-> > > > -		dev_err(&pdev->dev, "failed to remap I/O memory\n");
-> > > > -		err =3D -ENXIO;
-> > > > -		goto err_free_mem_region;
-> > > > +		dev_err(&pdev->dev, "Cannot request memregion/iomap address\n");
-> > > > +		return -EADDRNOTAVAIL;
-> > >=20
-> > > Erm, no, -EBUSY please.
-> >=20
-> > EADDRNOTAVAIL is the canonical error for devm_request_and_ioremap()
-> > failure. The kerneldoc comment in lib/devres.c even gives a short
-> > example that uses this error code.
->=20
-> I am sorry, but I do not consider a function that was added a little
-> over a year ago as a canon. If you look at the uses of EADDRNOTAVAIL it
-> is used predominantly in networking code to indicate that attempted
-> _network_ address is not available.
-
-EBUSY might be misleading, though. devm_request_and_ioremap() can fail
-in both the request_mem_region() and ioremap() calls. Furthermore it'd
-be good to settle on a consistent error-code instead of doing it
-differently depending on subsystem and/or driver. Currently the various
-error codes used are:
-
-	EBUSY, EADDRNOTAVAIL, ENXIO, ENOMEM, ENODEV, ENOENT, EINVAL,
-	EIO, EFAULT, EADDRINUSE
-
-Also if we can settle on one error code we should follow up with a patch
-to make it consistent across the tree and also update that kerneldoc
-comment. I volunteer to do that if nobody else steps up. I'm also Cc'ing
-Wolfram (the original author), maybe he has some thoughts on this.
-
-Thierry
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQ7RdBAAoJEN0jrNd/PrOh0KEP/0IHiXOk8Csr1OOXsTv8Rs8g
-SdJ9H7y/a/Qc+O1pSA29uTBFVFl7y0fhpzvFAGWXJOl/AAbeBMW+as9gsW0hcO5I
-mfNl6j+99egfm2yxf6EDXLXIKylH92Zr+bHGZyqj4So2vpUODmxvFs3WPcuCXqiL
-EGQKOpt89EzxWIRCMViEc+cZ4hphmm0kqZ6fFc0iGI2zUa/Syao8lTsmmHomqD1p
-1mgH3SCSSolS6X/NY1DXkoMU8V3l94SXcuTGUxY8w/c0UlV0wNhh+KLIVTh8feq9
-TwRkhSRZIHz7MTCRW34JWf/KUr55fuWDEOm+Ndyf7H1A1X17G8YJY+PnfZR2V0P8
-hfT07HvpPLjNE6MCl8Ve3qFuWkCnVxWhiE8P6bzSPBRQ3yBjbK4T5kDaeTS8ehiH
-3siBNi1evqjSI0kx2vFbaOhDqup5QVNreiBCWnG6euazuGXIoASgK7ya5Vatj9gy
-x943j9SDZAft3TvWCmJ1PkLiUyDQKNOLqJbM6VA8xj10/KpSjwz+XQ62X+sAZJp6
-kDUxsW3jsonvXwTCfjRy5PvQJ6rxgQ1Zyr/f7Ajc+7UFGnC2YFH71Gm1835nsNC0
-f0Hx9GbIK5gwXTe+9oAxhh2oLc5YV4ap11pifeVd4fYIdG6WGty1K+t/8QdcB8Mu
-ux4f6Vtt0sKs9N5kstMd
-=ljO5
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
+> -----Original Message-----
+> From: Singh Sandeep-B37400
+> Sent: Wednesday, January 02, 2013 6:55 PM
+> To: devicetree-discuss@lists.ozlabs.org; linuxppc-dev@ozlabs.org
+> Cc: Singh Sandeep-B37400; Aggrwal Poonam-B10812
+> Subject: [PATCH] Added device tree binding for TDM and TDM phy
+> 
+> This controller is available on many Freescale SOCs like MPC8315, P1020,
+> P1010 and P1022
+> 
+> Signed-off-by: Sandeep Singh <Sandeep@freescale.com>
+> Signed-off-by: Poonam Aggrwal <poonam.aggrwal@freescale.com>
+> ---
+>  .../devicetree/bindings/powerpc/fsl/fsl-tdm.txt    |   63
+> ++++++++++++++++++++
+>  .../devicetree/bindings/powerpc/fsl/tdm-phy.txt    |   38 ++++++++++++
+>  2 files changed, 101 insertions(+), 0 deletions(-)  create mode 100644
+> Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+>  create mode 100644 Documentation/devicetree/bindings/powerpc/fsl/tdm-
+> phy.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+> b/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+> new file mode 100644
+> index 0000000..ceb2ef1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+> @@ -0,0 +1,63 @@
+> +TDM Device Tree Binding
+> +
+> +NOTE: The bindings described in this document are preliminary and
+> +subject to change.
+> +
+> +TDM (Time Division Multiplexing)
+> +
+> +Description:
+> +
+> +The TDM is full duplex serial port designed to allow various devices
+> +including digital signal processors (DSPs) to communicate with a
+> +variety of serial devices including industry standard framers, codecs,
+> other DSPs and microprocessors.
+> +
+> +The below properties describe the device tree bindings for Freescale
+> +TDM controller. This TDM controller is available on various Freescale
+> +Processors like MPC8315, P1020, P1022 and P1010.
+> +
+> +Required properties:
+> +
+> +- compatible
+> +    Value type: <string>
+> +    Definition: Should contain "fsl,tdm1.0".
+> +
+> +- reg
+> +    Definition: A standard property. The first reg specifier describes
+> the TDM
+> +    registers, and the second describes the TDM DMAC registers.
+> +
+> +- tdm_tx_clk
+> +    Value type: <u32 or u64>
+> +    Definition: This specifies the value of transmit clock. It should
+> not
+> +    exceed 50Mhz.
+> +
+> +- tdm_rx_clk
+> +    Value type: <u32 or u64>
+> +    Definition: This specifies the value of receive clock. Its value
+> could be
+> +    zero, in which case tdm will operate in shared mode. Its value
+> should not
+> +    exceed 50Mhz.
+> +
+> +- interrupts
+> +    Definition: Two interrupt specifiers. The first is TDM error, and
+> the
+> +    second is TDM DMAC.
+> +
+> +- phy-handle
+> +    Value type: <phandle>
+> +    Definition: Phandle of the line controller node or framer node eg.
+> SLIC,
+> +    E1/T1 etc. (Refer
+> +Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt)
+> +
+> +- fsl,max-time-slots
+> +    Value type: <u32>
+> +    Definition: Maximum number of 8-bit time slots in one TDM frame.
+> This is
+> +    the maximum number which TDM hardware supports.
+> +
+> +Example:
+> +
+> +	tdm@16000 {
+> +		compatible = "fsl,tdm1.0";
+> +		reg = <0x16000 0x200 0x2c000 0x2000>;
+> +		tdm_tx_clk = <2048000>;
+> +		tdm_rx_clk = <0>;
+> +		interrupts = <16 8 62 8>;
+> +		phy-handle = <&tdm-phy>;
+> +		fsl,max-time-slots = <128>;
+> +	};
+> diff --git a/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
+> b/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
+> new file mode 100644
+> index 0000000..2563934
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
+> @@ -0,0 +1,38 @@
+> +TDM PHY Device Tree Binding
+> +
+> +NOTE: The bindings described in this document are preliminary and
+> +subject to change.
+> +
+> +Description:
+> +TDM PHY is the terminal interface of TDM subsystem. It is typically a
+> +line control device like E1/T1 framer or SLIC. A TDM device can have
+> +multiple TDM PHYs.
+> +
+> +Required properties:
+> +
+> +- compatible
+> +    Value type: <string>
+> +    Definition: Should contain generic compatibility like "tdm-phy-slic"
+> or
+> +    "tdm-phy-e1" or "tdm-phy-t1".
+> +
+> +- max-num-ports
+> +    Value type: <u32>
+> +    Definition: Defines the maximum number of ports supported by the
+> SLIC
+> +    device. Only required if the device is SLIC. For E1/T1 devices the
+> number
+> +    of ports are predefined i.e. (24 in case of T1 and 32 in case of
+> E1).
+> +
+> +Apart from the above, there may be other properties required because of
+> +the bus/interface this device is connected on. It could be SPI/local
+> bus, etc.
+> +
+> +Example:
+> +
+> +	tdm-phy@0 {
+> +		compatible = "zarlink,le88266","tdm-phy-slic";
+> +		reg = <0>;
+> +		max-num-ports = <4>;
+> +		spi-max-frequency = <8000000>;
+> +	};
+> +
+> +In the above example properties "reg" and "spi-max-frequency" are SPI
+> +specific as the SLIC device is connected on SPI interface. These
+> +properties might vary depending on the specific interface the device is
+> using.
+> --
+> 1.7.6.GIT
