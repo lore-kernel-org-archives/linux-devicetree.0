@@ -1,58 +1,48 @@
-From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
-Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
-Date: Wed, 9 Jan 2013 12:24:31 +0200
-Message-ID: <7FAB15E3-28AE-465A-82F8-CAE559C57839@antoniou-consulting.com>
-References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com>
- <CACRpkdbx7ptCugpc1+JC5Yk+n835goOuoF6q0pdizsjpZ-G9mQ@mail.gmail.com>
- <57EDCDB4-2AC9-4052-BBA6-9F4A5D3C3D8C@antoniou-consulting.com>
- <201301091021.24147.arnd@arndb.de>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201301091021.24147.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rabin VINCENT <rabin.vincent-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH 1/4] gpiolib: introduce descriptor-based GPIO interface
+Date: Wed, 9 Jan 2013 10:25:48 +0000
+Message-ID: <20130109102548.GD3931@n2100.arm.linux.org.uk>
+References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com> <1357629535-26033-2-git-send-email-acourbot@nvidia.com> <201301081259.29839.arnd@arndb.de> <CAAVeFu+4VbCbj9TaeMm+NMDJ9_M4-j4O0ONF7Yh_un63wS38+Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arch-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAVeFu+4VbCbj9TaeMm+NMDJ9_M4-j4O0ONF7Yh_un63wS38+Q@mail.gmail.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Alexandre Courbot <acourbot@nvidia.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
-
-On Jan 9, 2013, at 12:21 PM, Arnd Bergmann wrote:
-
-> On Wednesday 09 January 2013, Pantelis Antoniou wrote:
->> I've also heard in passing of some boards that just have an area in NAND
->> where a list of plugged in boards is stored. It can be simplified by
->> having the bootloader pass a command line argument.
->> 
->> Other than the different probe method (and possible future hot-plug capability)
->> I don't see anything different.  
->> 
->> What do you think?
+On Wed, Jan 09, 2013 at 10:06:16AM +0900, Alexandre Courbot wrote:
+> On Tue, Jan 8, 2013 at 9:59 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > Please avoid the use of IS_ERR_OR_NULL(), especially on interfaces you
+> > introduce yourself. AFAICT, gpiod_get cannot return NULL, so you
+> > should not check for that.
 > 
-> Just one comment on the command line option from the boot loader: If the
-> boot loader is already DT aware, it should not need to modify the command line,
-> but instead should just enable or disable the right nodes in the tree to
-> statically configure all the peripherals on the extension board. That of course
-> won't work for hotpluggable devices.
-> 
+> Sure - you sound like IS_ERR_OR_NULL() is generally considered evil,
+> may I ask why this is the case?
 
-Both methods work for the beaglebone capemgr. Not every bootloader (or version of
-the bootloader) can modify DT blobs, but the kernel command line is easily modified.
+I think I've explained that in the past; many people just do not think.
+They just use whatever macro they feel like is the right one.  We keep
+seeing this, and this is a persistent problem. It's getting to be more
+of a problem because people are starting to argue back when you point
+out that they're wrong.
 
-> 	Arnd
+People are even starting to believe that documentation which specifies
+explicitly "values where IS_ERR() is true are considered errors,
+everything else is valid" means that the use of IS_ERR_OR_NULL() in such
+cases is permissible.  (I've had such an argument with two people
+recently.)
 
-Regards
+So, interfaces which have well defined return values and even interfaces
+which specify _how_ errors should be checked end up being checked with
+the wrong macros.  People constantly translate IS_ERR() to IS_ERR_OR_NULL()
+even when it's inappropriate.
 
--- Pantelis
+People don't think and people don't read documentation.  People don't
+remember this level of detail.  Whatever the excuse, the problem remains.
+IS_ERR_OR_NULL() always gets used inappropriately and without any regard
+to whether it's correct or not.
 
-P.S. Any word from the core maintainers yet?
+So yes, IS_ERR_OR_NULL() _is_ pure evil.  IMHO this macro is doing more
+harm than good.
