@@ -1,53 +1,104 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM i.MX53: add dts for the TQ tqma53 module
-Date: Wed, 9 Jan 2013 11:48:11 +0800
-Message-ID: <20130109034809.GA11790@S2100-06.ap.freescale.net>
-References: <1357571760-487-1-git-send-email-s.trumtrar@pengutronix.de>
- <1357571760-487-3-git-send-email-s.trumtrar@pengutronix.de>
+From: Praveen Paneri <p.paneri@samsung.com>
+Subject: Re: [PATCH v8 1/2] usb: phy: samsung: Introducing usb phy driver for hsotg
+Date: Wed, 9 Jan 2013 11:28:07 +0530
+Message-ID: <CAD6zSYPvAm2cSZ7wABYM3QNs9qbKf6yPKxdkP-RripK5OGrWag@mail.gmail.com>
+References: <1352888836-17192-1-git-send-email-p.paneri@samsung.com>
+	<1465375.Xr1CJFmx11@flatron>
+	<CAD6zSYO77GTqVux7B0wDsrj0+332-jU0ivqKY7ExRSKZuHYjDQ@mail.gmail.com>
+	<1843164.6kmf7C00lC@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1357571760-487-3-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1843164.6kmf7C00lC@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Felipe Balbi <balbi@ti.com>, gregkh@linuxfoundation.org, Thomas Abraham <thomas.abraham@linaro.org>, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, Lukasz Majewski <l.majewski@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Vivek Gautam <gautam.vivek@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 07, 2013 at 04:16:00PM +0100, Steffen Trumtrar wrote:
-> From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> The tqma53 is an embedded module that has some features on board (e.g. emmc),
-> but mostly just provides access to them on its interface.
-> Going along with the imx53.dtsi, the tqma53.dtsi specifies the existing
-> devices and their pinctrl for this module. All devices that are not on the
-> module are disabled by default and need to be enabled in a baseboard DT.
-> 
-> Signed-off-by: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx53-tqma53.dtsi |  207 +++++++++++++++++++++++++++++++++++
+Hi Tomasz,
 
-Please add the dtb target into arch/arm/boot/dts/Makefile.
+Sorry! I I missed this comment of yours. Is it okay if we keep
+pmu_isolation as it is (as it does not seem much out of the line). We
+have already gone through a lot of rework and there has been no
+fruitful result :(
+Also after Viveks work, this is only milited to non DT SoCs.
 
-...
+Thanks,
+Praveen
 
-> +			usbphy1: usbphy@1 {
-> +				compatible = "nop-usbphy";
-
-Is this compatible something kernel is actually using?
-
-Shawn
-
-> +				status = "okay";
-> +			};
+On Wed, Nov 28, 2012 at 6:32 PM, Tomasz Figa <t.figa@samsung.com> wrote:
+> Hi Praveen,
+>
+> On Friday 23 of November 2012 09:56:37 Praveen Paneri wrote:
+>> >> +static void samsung_usbphy_enable(struct samsung_usbphy *sphy)
+>> >> +{
+>> >> +     void __iomem *regs = sphy->regs;
+>> >> +     u32 phypwr;
+>> >> +     u32 phyclk;
+>> >> +     u32 rstcon;
+>> >> +
+>> >> +     /* set clock frequency for PLL */
+>> >> +     phyclk = sphy->ref_clk_freq;
+>> >> +     phypwr = readl(regs + SAMSUNG_PHYPWR);
+>> >> +     rstcon = readl(regs + SAMSUNG_RSTCON);
+>> >> +
+>> >> +     switch (sphy->cpu_type) {
+>> >> +     case TYPE_S3C64XX:
+>> >> +             phyclk &= ~PHYCLK_COMMON_ON_N;
+>> >> +             phypwr &= ~PHYPWR_NORMAL_MASK;
+>> >> +             rstcon |= RSTCON_SWRST;
+>> >> +             break;
+>> >> +     case TYPE_EXYNOS4210:
+>> >> +             phypwr &= ~PHYPWR_NORMAL_MASK_PHY0;
+>> >> +             rstcon |= RSTCON_SWRST;
+>> >> +     default:
+>> >> +             break;
+>> >> +     }
+>> >> +
+>> >> +     writel(phyclk, regs + SAMSUNG_PHYCLK);
+>> >> +     /* set to normal of PHY0 */
+>> >
+>> > I don't understand this comment.
+>>
+>> Will change it to " Configure PHY0 for normal operation"
+>> That should be more clear, I suppose.
+>
+> Yes, much better.
+>
+>> >> + */
+>> >> +
+>> >> +#ifndef __SAMSUNG_USBPHY_PLATFORM_H
+>> >> +#define __SAMSUNG_USBPHY_PLATFORM_H
+>> >> +
+>> >> +/**
+>> >> + * samsung_usbphy_data - Platform data for USB PHY driver.
+>> >> + * @pmu_isolation: Function to control usb phy isolation in PMU.
+>> >> + */
+>> >> +struct samsung_usbphy_data {
+>> >> +     void (*pmu_isolation)(int on);
+>> >
+>> > I believe this should be named in a generic way. This is called PMU
+>> > isolation on Exynos SoCs, but on S3C64xx it's USB PHY mask.
+>>
+>> Yes! I am aware of it. The fact that this ( MASK or ISOLATION) has
+>> always been part of the PMU, pmu_isolation seems quite generic that
+>> way. Though you can suggest a better name.
+>
+> What do you think about set_isolation(int on) or power_isolation(int on)?
+Sorry! I don't understand the point here.Why to invest so much of time
+and evergy on things we want to remove soon.
+I am a bit reluctant to change this now, after sending 9 versions of
+the same code.
+Lets concentrate on more important things like AUXDATA removal or
+adding support for all DT enabled machines.
+>
+> Best regards,
+> --
+> Tomasz Figa
+> Samsung Poland R&D Center
+> SW Solution Development, Linux Platform
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
