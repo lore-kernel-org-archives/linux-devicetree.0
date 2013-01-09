@@ -1,201 +1,66 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 4/4] ARM i.MX53: dts: add oftree for MBa53 baseboard
-Date: Wed,  9 Jan 2013 14:44:25 +0100
-Message-ID: <1357739065-9153-5-git-send-email-s.trumtrar@pengutronix.de>
-References: <1357739065-9153-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH 1/4] gpiolib: introduce descriptor-based GPIO interface
+Date: Wed, 9 Jan 2013 09:44:16 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1301090932400.6300@xanadu.home>
+References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com> <201301081259.29839.arnd@arndb.de> <CAAVeFu+4VbCbj9TaeMm+NMDJ9_M4-j4O0ONF7Yh_un63wS38+Q@mail.gmail.com> <201301091035.23206.arnd@arndb.de> <20130109104414.GF3931@n2100.arm.linux.org.uk>
+ <20130109111055.GG3931@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1357739065-9153-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <20130109111055.GG3931@n2100.arm.linux.org.uk>
+Sender: linux-arch-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Guenter Roeck <linux@roeck-us.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The MBa53 is a baseboard for the TQMA53 embedded module. This enables/adds only
-supported devices, i.e. it is not feature complete, because of missing drivers
-in mainline linux.
+On Wed, 9 Jan 2013, Russell King - ARM Linux wrote:
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/Makefile        |    1 +
- arch/arm/boot/dts/imx53-MBa53.dts |  146 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 147 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx53-MBa53.dts
+> On Wed, Jan 09, 2013 at 10:44:14AM +0000, Russell King - ARM Linux wrote:
+> > On Wed, Jan 09, 2013 at 10:35:22AM +0000, Arnd Bergmann wrote:
+> > > On Wednesday 09 January 2013, Alexandre Courbot wrote:
+> > > > On Tue, Jan 8, 2013 at 9:59 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > > Please avoid the use of IS_ERR_OR_NULL(), especially on interfaces you
+> > > > > introduce yourself. AFAICT, gpiod_get cannot return NULL, so you
+> > > > > should not check for that.
+> > > > 
+> > > > Sure - you sound like IS_ERR_OR_NULL() is generally considered evil,
+> > > 
+> > > Correct.
+> > > 
+> > > > may I ask why this is the case?
+> > > 
+> > > It's very hard to get right: either you are interested in the error code,
+> > > and then you don't have one in some cases, or you don't care but have
+> > > to check for it anyway. When you define a function, just make it clear
+> > > what the expected return values are, either NULL for error or a negative
+> > > ERR_PTR value, but not both.
+> > 
+> > Indeed, and any code which does this:
+> > 
+> > 	if (IS_ERR_OR_NULL(ptr))
+> > 		return PTR_ERR(ptr);
+> > 
+> > is buggy because on NULL it returns 0, which is generally accepted as being
+> > "success".
+>
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e44da40..04b05e8 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -84,6 +84,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx51-babbage.dtb \
- 	imx53-evk.dtb \
- 	imx53-qsb.dtb \
- 	imx53-smd.dtb \
-+	imx53-MBa53.dtb \
- 	imx6q-arm2.dtb \
- 	imx6q-sabreauto.dtb \
- 	imx6q-sabrelite.dtb \
-diff --git a/arch/arm/boot/dts/imx53-MBa53.dts b/arch/arm/boot/dts/imx53-MBa53.dts
-new file mode 100644
-index 0000000..39ecaeb
---- /dev/null
-+++ b/arch/arm/boot/dts/imx53-MBa53.dts
-@@ -0,0 +1,146 @@
-+/*
-+ * Copyright 2012 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+/include/ "imx53-tqma53.dtsi"
-+
-+/ {
-+	model = "TQ MBa53 starter kit";
-+	compatible = "tq,mba53", "tq,tqma53", "fsl,imx53";
-+
-+	backlight_reg:fixed@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "lcd-supply";
-+		gpio = <&gpio2 5 0>;
-+		startup-delay-us = <5000>;
-+		enable-active-low;
-+        };
-+
-+	backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm2 0 50000 0 0>;
-+		brightness-levels = <0 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100>;
-+		default-brightness-level = <10>;
-+		enable-gpios = <&gpio7 7 0>;
-+		power-supply = <&backlight_reg>;
-+        };
-+};
-+
-+&iomuxc {
-+	lvds1 {
-+		pinctrl_lvds1_1: lvds1-grp1 {
-+			fsl,pins = <730 0x10000		/* LVDS0_TX3 */
-+				    732 0x10000		/* LVDS0_CLK */
-+				    734 0x10000		/* LVDS0_TX2 */
-+				    736 0x10000		/* LVDS0_TX1 */
-+				    738 0x10000>;	/* LVDS0_TX0 */
-+		};
-+
-+		pinctrl_lvds1_2: lvds1-grp2 {
-+			fsl,pins = <720 0x10000		/* LVDS1_TX3 */
-+				    722 0x10000		/* LVDS1_TX2 */
-+				    724 0x10000		/* LVDS1_CLK */
-+				    726 0x10000		/* LVDS1_TX1 */
-+				    728 0x10000>;	/* LVDS1_TX0 */
-+		};
-+	};
-+
-+	disp1 {
-+		pinctrl_disp1_1: disp1-grp1 {
-+			fsl,pins = <689 0x10000		/* DISP1_DRDY	*/
-+				    482 0x10000		/* DISP1_HSYNC	*/
-+				    489 0x10000		/* DISP1_VSYNC	*/
-+				    684 0x10000		/* DISP1_DAT_0	*/
-+				    515 0x10000		/* DISP1_DAT_22	*/
-+				    523 0x10000		/* DISP1_DAT_23	*/
-+				    543 0x10000		/* DISP1_DAT_21	*/
-+				    553 0x10000		/* DISP1_DAT_20	*/
-+				    558 0x10000		/* DISP1_DAT_19	*/
-+				    564 0x10000		/* DISP1_DAT_18	*/
-+				    570 0x10000		/* DISP1_DAT_17	*/
-+				    575 0x10000		/* DISP1_DAT_16	*/
-+				    580 0x10000		/* DISP1_DAT_15	*/
-+				    585 0x10000		/* DISP1_DAT_14	*/
-+				    590 0x10000		/* DISP1_DAT_13	*/
-+				    595 0x10000		/* DISP1_DAT_12	*/
-+				    628 0x10000		/* DISP1_DAT_11	*/
-+				    634 0x10000		/* DISP1_DAT_10	*/
-+				    639 0x10000		/* DISP1_DAT_9	*/
-+				    644 0x10000		/* DISP1_DAT_8	*/
-+				    649 0x10000		/* DISP1_DAT_7	*/
-+				    654 0x10000		/* DISP1_DAT_6	*/
-+				    659 0x10000		/* DISP1_DAT_5	*/
-+				    664 0x10000		/* DISP1_DAT_4	*/
-+				    669 0x10000		/* DISP1_DAT_3	*/
-+				    674 0x10000		/* DISP1_DAT_2	*/
-+				    679 0x10000		/* DISP1_DAT_1	*/
-+				    684 0x10000>;	/* DISP1_DAT_0	*/
-+		};
-+	};
-+};
-+
-+&cspi {
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	codec: sgtl5000@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+	};
-+
-+	expander: pca9554@20 {
-+		compatible = "pca9554";
-+		reg = <0x20>;
-+		interrupts = <109>;
-+	};
-+
-+	sensor2: lm75@49 {
-+		compatible = "lm75";
-+		reg = <0x49>;
-+	};
-+};
-+
-+&fec {
-+	status = "okay";
-+};
-+
-+&esdhc2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&ecspi1 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&can2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
--- 
-1.7.10.4
+[ examples of broken code skipped ]
+
+> These are just a few of the issues I've picked out at random from grepping
+> the kernel source for IS_ERR_OR_NULL().  Yes, there's some valid use cases
+> but the above are all horrid, buggy or down right wrong, and I wouldn't be
+> at all surprised if that was all too common.
+
+I do agree with Russell here.  Despite the original intentions behind 
+IS_ERR_OR_NULL() which were certainly legitimate, the end result in 
+practice is less reliable code with increased maintenance costs.  Unlike 
+other convenience macros in the kernel, this one is giving a false sense 
+of correctness with too many people falling in the trap of using it just 
+because it is available.
+
+I strongly think this macro should simply be removed from the source 
+tree entirely and the code reverted to explicit tests against NULL when 
+appropriate.
+
+
+Nicolas
