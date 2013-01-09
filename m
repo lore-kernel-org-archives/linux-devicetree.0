@@ -1,142 +1,265 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH 1/4] gpiolib: introduce descriptor-based GPIO interface
-Date: Wed, 9 Jan 2013 11:10:55 +0000
-Message-ID: <20130109111055.GG3931@n2100.arm.linux.org.uk>
-References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com> <201301081259.29839.arnd@arndb.de> <CAAVeFu+4VbCbj9TaeMm+NMDJ9_M4-j4O0ONF7Yh_un63wS38+Q@mail.gmail.com> <201301091035.23206.arnd@arndb.de> <20130109104414.GF3931@n2100.arm.linux.org.uk>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 3/8] ARM: shmobile: Add support OF of INTC for sh7372
+Date: Wed, 9 Jan 2013 11:17:55 +0000
+Message-ID: <20130109111742.GA7337@e106331-lin.cambridge.arm.com>
+References: <1357713007-4005-1-git-send-email-horms+renesas@verge.net.au>
+ <1357713007-4005-4-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arch-owner@vger.kernel.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1357713007-4005-4-git-send-email-horms+renesas@verge.net.au>
+Content-Language: en-US
 Content-Disposition: inline
-In-Reply-To: <20130109104414.GF3931@n2100.arm.linux.org.uk>
-Sender: linux-arch-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arch@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, Guenter Roeck <linux@roeck-us.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb@gmail.com>, Magnus Damm <damm@opensource.se>, Paul Mundt <lethal@linux-sh.org>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 09, 2013 at 10:44:14AM +0000, Russell King - ARM Linux wrote:
-> On Wed, Jan 09, 2013 at 10:35:22AM +0000, Arnd Bergmann wrote:
-> > On Wednesday 09 January 2013, Alexandre Courbot wrote:
-> > > On Tue, Jan 8, 2013 at 9:59 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> > > > Please avoid the use of IS_ERR_OR_NULL(), especially on interfaces you
-> > > > introduce yourself. AFAICT, gpiod_get cannot return NULL, so you
-> > > > should not check for that.
-> > > 
-> > > Sure - you sound like IS_ERR_OR_NULL() is generally considered evil,
-> > 
-> > Correct.
-> > 
-> > > may I ask why this is the case?
-> > 
-> > It's very hard to get right: either you are interested in the error code,
-> > and then you don't have one in some cases, or you don't care but have
-> > to check for it anyway. When you define a function, just make it clear
-> > what the expected return values are, either NULL for error or a negative
-> > ERR_PTR value, but not both.
+On Wed, Jan 09, 2013 at 06:30:02AM +0000, Simon Horman wrote:
+> From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
 > 
-> Indeed, and any code which does this:
+> This CPU has four interrupt controllers (INTCA, pins-High and pins-Low).
+> This supports these.
+> Note: This supports DT of INTCA only.
 > 
-> 	if (IS_ERR_OR_NULL(ptr))
-> 		return PTR_ERR(ptr);
+> Cc: Magnus Damm <damm@opensource.se>
+> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
 > 
-> is buggy because on NULL it returns 0, which is generally accepted as being
-> "success".
+> ---
+> 
+> v9
+> * Update compatible string to use '-' instead of '_'
+> ---
+>  arch/arm/mach-shmobile/include/mach/common.h |    1 +
+>  arch/arm/mach-shmobile/intc-sh7372.c         |  113 ++++++++++++++++++++------
+>  2 files changed, 89 insertions(+), 25 deletions(-)
+> 
+> diff --git a/arch/arm/mach-shmobile/include/mach/common.h b/arch/arm/mach-shmobile/include/mach/common.h
+> index d0a5790..223250b 100644
+> --- a/arch/arm/mach-shmobile/include/mach/common.h
+> +++ b/arch/arm/mach-shmobile/include/mach/common.h
+> @@ -18,6 +18,7 @@ extern int shmobile_enter_wfi(struct cpuidle_device *dev,
+>  			      struct cpuidle_driver *drv, int index);
+>  extern void shmobile_cpuidle_set_driver(struct cpuidle_driver *drv);
+>  
+> +extern void sh7372_init_irq_of(void);
+>  extern void sh7372_init_irq(void);
+>  extern void sh7372_map_io(void);
+>  extern void sh7372_add_early_devices(void);
+> diff --git a/arch/arm/mach-shmobile/intc-sh7372.c b/arch/arm/mach-shmobile/intc-sh7372.c
+> index a91caad..bbde18d 100644
+> --- a/arch/arm/mach-shmobile/intc-sh7372.c
+> +++ b/arch/arm/mach-shmobile/intc-sh7372.c
+> @@ -16,6 +16,8 @@
+>   * along with this program; if not, write to the Free Software
+>   * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+>   */
+> +#define pr_fmt(fmt) "intc: " fmt
+> +
+>  #include <linux/kernel.h>
+>  #include <linux/init.h>
+>  #include <linux/interrupt.h>
+> @@ -551,23 +553,28 @@ static void intcs_demux(unsigned int irq, struct irq_desc *desc)
+>  
+>  static void __iomem *intcs_ffd2;
+>  static void __iomem *intcs_ffd5;
+> -
+> -void __init sh7372_init_irq(void)
+> +static void __iomem *intca_e694;
+> +static void __iomem *intca_e695;
+> +
+> +static void __init sh7372_init_intc(resource_size_t intca0_start,
+> +				    resource_size_t intca1_start,
+> +				    resource_size_t intcs0_start,
+> +				    resource_size_t intcs1_start,
+> +				    unsigned short vect)
+>  {
+>  	void __iomem *intevtsa;
+>  	int n;
+>  
+> -	intcs_ffd2 = ioremap_nocache(0xffd20000, PAGE_SIZE);
+> -	intevtsa = intcs_ffd2 + 0x100;
+> -	intcs_ffd5 = ioremap_nocache(0xffd50000, PAGE_SIZE);
+> +	intca_e694 = IOMEM(intca0_start);
+> +	intca_e695 = IOMEM(intca1_start);
+>  
+> -	register_intc_controller(&intca_desc);
+> -	register_intc_controller(&intca_irq_pins_lo_desc);
+> -	register_intc_controller(&intca_irq_pins_hi_desc);
+> -	register_intc_controller(&intcs_desc);
+> +	intcs_ffd2 = ioremap_nocache(intcs0_start, PAGE_SIZE);
+> +	intevtsa = intcs_ffd2 + 0x100;
+> +	intcs_ffd5 = ioremap_nocache(intcs1_start, PAGE_SIZE);
 
-                oh = omap_hwmod_lookup(oh_name);
-                if (!oh) {
+I think you need to check the return value of ioremap_nocache (it looks like it
+could return NULL), but I'm not certain of its semantics.
 
-        oh = omap_hwmod_lookup(oh_name);
-        if (IS_ERR_OR_NULL(oh)) {
+>  
+>  	/* setup dummy cascade chip for INTCS */
+> -	n = evt2irq(0xf80);
+> +	n = evt2irq(vect);
+> +
+>  	irq_alloc_desc_at(n, numa_node_id());
+>  	irq_set_chip_and_handler_name(n, &dummy_irq_chip,
+>  				      handle_level_irq, "level");
+> @@ -581,6 +588,65 @@ void __init sh7372_init_irq(void)
+>  	iowrite16(0, intcs_ffd2 + 0x104);
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +static unsigned short intevtsa_vect;
+> +
+> +#define INTC_RES_MAX 2
+> +static struct {
+> +	struct intc_desc intc_desc;
+> +	struct resource intc_res[INTC_RES_MAX];
+> +} intc_data __initdata;
+> +
+> +static int __init intc_of_init(struct device_node *np,
+> +			       struct device_node *parent)
+> +{
+> +	int ret, i;
+> +
+> +	memset(&intc_data, 0, sizeof(intc_data));
+> +
+> +	for (i = 0; i < INTC_RES_MAX; i++) {
+> +		ret = of_address_to_resource(np, i, &intc_data.intc_res[i]);
+> +		if (ret < 0)
+> +			break;
+> +	}
+> +
+> +	intc_data.intc_desc.name = (char *)of_node_full_name(np);
+> +	intc_data.intc_desc.resource = intc_data.intc_res;
+> +	intc_data.intc_desc.num_resources = i;
+> +
+> +	ret = of_sh_intc_get_intc(np, &intc_data.intc_desc);
+> +	if (ret)
+> +		return ret;
+> +
+> +	of_sh_intc_get_intevtsa_vect(np, &intevtsa_vect);
+> +
+> +	register_intc_controller(&intc_data.intc_desc);
+> +	return 0;
+> +}
 
-Does this function return NULL on errors or an errno-encoded-pointer on
-errors?
+You seem to have the same code for r8a7740. They should be consolidated.
 
-        d = debugfs_create_dir("pm_debug", NULL);
-        if (IS_ERR_OR_NULL(d))
-                return PTR_ERR(d);
+> +
+> +static const struct of_device_id irq_of_match[] __initconst = {
+> +	{ .compatible = "renesas,sh-intc", .data = intc_of_init },
+> +	{ /*sentinel*/ }
+> +};
+> +
+> +void __init sh7372_init_irq_of(void)
+> +{
+> +	of_irq_init(irq_of_match);
+> +
+> +	register_intc_controller(&intcs_desc);
 
-Well, covered above.  NULL is success here.
+What if of_irq_init fails?
 
-        err = gpio_request(en_vdd_1v05, "EN_VDD_1V05");
-        if (err) {
-                pr_err("%s: gpio_request failed: %d\n", __func__, err);
-                return err;
-        }
+> +}
+> +#endif /* CONFIG_OF */
+> +
+> +void __init sh7372_init_irq(void)
+> +{
+> +	register_intc_controller(&intca_desc);
+> +	register_intc_controller(&intca_irq_pins_lo_desc);
+> +	register_intc_controller(&intca_irq_pins_hi_desc);
+> +	register_intc_controller(&intcs_desc);
+> +
+> +	sh7372_init_intc(0xe6940000, 0xe6950000, 0xffd20000, 0xffd50000, 0xf80);
 
-        gpio_direction_output(en_vdd_1v05, 1);
+It might be better if these magic numbers were macro'd out for legibility.
 
-        regulator = regulator_get(NULL, "vdd_ldo0,vddio_pex_clk");
-        if (IS_ERR_OR_NULL(regulator)) {
-                pr_err("%s: regulator_get failed: %d\n", __func__,
-                       (int)PTR_ERR(regulator));
-                goto err_reg;
-        }
-...
-err_reg:
-        gpio_free(en_vdd_1v05);
+> +}
+> +
+>  static unsigned short ffd2[0x200];
+>  static unsigned short ffd5[0x100];
+>  
+> @@ -624,9 +690,6 @@ void sh7372_intcs_resume(void)
+>  		__raw_writeb(ffd5[k], intcs_ffd5 + k);
+>  }
+>  
+> -#define E694_BASE IOMEM(0xe6940000)
+> -#define E695_BASE IOMEM(0xe6950000)
+> -
+>  static unsigned short e694[0x200];
+>  static unsigned short e695[0x200];
+>  
+> @@ -635,22 +698,22 @@ void sh7372_intca_suspend(void)
+>  	int k;
+>  
+>  	for (k = 0x00; k <= 0x38; k += 4)
+> -		e694[k] = __raw_readw(E694_BASE + k);
+> +		e694[k] = __raw_readw(intca_e694 + k);
+>  
+>  	for (k = 0x80; k <= 0xb4; k += 4)
+> -		e694[k] = __raw_readb(E694_BASE + k);
+> +		e694[k] = __raw_readb(intca_e694 + k);
+>  
+>  	for (k = 0x180; k <= 0x1b4; k += 4)
+> -		e694[k] = __raw_readb(E694_BASE + k);
+> +		e694[k] = __raw_readb(intca_e694 + k);
+>  
+>  	for (k = 0x00; k <= 0x50; k += 4)
+> -		e695[k] = __raw_readw(E695_BASE + k);
+> +		e695[k] = __raw_readw(intca_e695 + k);
+>  
+>  	for (k = 0x80; k <= 0xa8; k += 4)
+> -		e695[k] = __raw_readb(E695_BASE + k);
+> +		e695[k] = __raw_readb(intca_e695 + k);
+>  
+>  	for (k = 0x180; k <= 0x1a8; k += 4)
+> -		e695[k] = __raw_readb(E695_BASE + k);
+> +		e695[k] = __raw_readb(intca_e695 + k);
+>  }
 
-        return err;
-}
+I'm unfamiliar with the hardware, what are these registers being iterated over?
 
-So 'err' here is never set.  when IS_ERR_OR_NULL evaluates true.
-Setting 'err' to PTR_ERR(regulator) is not correct because a NULL return
-sets 'err' to zero.  Same here:
+How do they correspond to entries in the binding?
 
-        /* create property id */
-        ret = ipp_create_id(&ctx->prop_idr, &ctx->prop_lock, c_node,
-                &property->prop_id);
-        if (ret) {
-                DRM_ERROR("failed to create id.\n");
-                goto err_clear;
-        }
-...
-        c_node->start_work = ipp_create_cmd_work();
-        if (IS_ERR_OR_NULL(c_node->start_work)) {
-                DRM_ERROR("failed to create start work.\n");
-                goto err_clear;
-        }
-        c_node->stop_work = ipp_create_cmd_work();
-        if (IS_ERR_OR_NULL(c_node->stop_work)) {
-                DRM_ERROR("failed to create stop work.\n");
-                goto err_free_start;
-        }
-        c_node->event_work = ipp_create_event_work();
-        if (IS_ERR_OR_NULL(c_node->event_work)) {
-                DRM_ERROR("failed to create event work.\n");
-                goto err_free_stop;
-        }
+>  
+>  void sh7372_intca_resume(void)
+> @@ -658,20 +721,20 @@ void sh7372_intca_resume(void)
+>  	int k;
+>  
+>  	for (k = 0x00; k <= 0x38; k += 4)
+> -		__raw_writew(e694[k], E694_BASE + k);
+> +		__raw_writew(e694[k], intca_e694 + k);
+>  
+>  	for (k = 0x80; k <= 0xb4; k += 4)
+> -		__raw_writeb(e694[k], E694_BASE + k);
+> +		__raw_writeb(e694[k], intca_e694 + k);
+>  
+>  	for (k = 0x180; k <= 0x1b4; k += 4)
+> -		__raw_writeb(e694[k], E694_BASE + k);
+> +		__raw_writeb(e694[k], intca_e694 + k);
+>  
+>  	for (k = 0x00; k <= 0x50; k += 4)
+> -		__raw_writew(e695[k], E695_BASE + k);
+> +		__raw_writew(e695[k], intca_e695 + k);
+>  
+>  	for (k = 0x80; k <= 0xa8; k += 4)
+> -		__raw_writeb(e695[k], E695_BASE + k);
+> +		__raw_writeb(e695[k], intca_e695 + k);
+>  
+>  	for (k = 0x180; k <= 0x1a8; k += 4)
+> -		__raw_writeb(e695[k], E695_BASE + k);
+> +		__raw_writeb(e695[k], intca_e695 + k);
+>  }
+> -- 
+> 1.7.10.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-We also have it cropping up as a way to 'verify' function arguments
-are correct:
+Thanks,
+Mark.
 
-int __pm_genpd_add_device(struct generic_pm_domain *genpd, struct device *dev,
-                          struct gpd_timing_data *td)
-{
-        if (IS_ERR_OR_NULL(genpd) || IS_ERR_OR_NULL(dev))
-                return -EINVAL;
-
-And then we have this beauty in USB code:
-
-        if (!IS_ERR_OR_NULL(udc->transceiver))
-                (void) otg_set_peripheral(udc->transceiver->otg, NULL);
-        else
-                pullup_disable(udc);
-...
-        seq_printf(s,
-                "UDC rev %d.%d, fifo mode %d, gadget %s\n"
-                "hmc %d, transceiver %s\n",
-                tmp >> 4, tmp & 0xf,
-                fifo_mode,
-                udc->driver ? udc->driver->driver.name : "(none)",
-                HMC,
-                udc->transceiver
-                        ? udc->transceiver->label
-                        : (cpu_is_omap1710()
-                                ? "external" : "(none)"));
-
-If udc->transceiver were to be an error code, the above will segfault or
-access memory at the top of memory space.
-
-These are just a few of the issues I've picked out at random from grepping
-the kernel source for IS_ERR_OR_NULL().  Yes, there's some valid use cases
-but the above are all horrid, buggy or down right wrong, and I wouldn't be
-at all surprised if that was all too common.
