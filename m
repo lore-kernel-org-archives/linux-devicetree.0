@@ -1,50 +1,42 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH 05/14] lib: Add I/O map cache implementation
-Date: Wed, 9 Jan 2013 16:17:58 -0700
-Message-ID: <20130109231758.GA27065@obsidianresearch.com>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <201301092119.57067.arnd@arndb.de>
- <20130109215428.GA13648@avionic-0098.adnet.avionic-design.de>
- <201301092210.49452.arnd@arndb.de>
- <50EDF95F.4070209@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50EDF95F.4070209@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Thierry Reding <thierry.reding@avionic-design.de>, linux-tegra@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Andrew Murray <andrew.murray@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: [RFC PATCH 4/7] ARM: s3c64xx: Fix build error with CONFIG_S3C_DEV_FB disabled
+Date: Thu, 10 Jan 2013 00:41:46 +0100
+Message-ID: <1357774909-29938-5-git-send-email-tomasz.figa@gmail.com>
+References: <1357774909-29938-1-git-send-email-tomasz.figa@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1357774909-29938-1-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 09, 2013 at 04:12:31PM -0700, Stephen Warren wrote:
-> On 01/09/2013 03:10 PM, Arnd Bergmann wrote:
-> > On Wednesday 09 January 2013, Thierry Reding wrote:
-> >> What happens on Tegra is that we need to map 256 MiB of physical memory
-> >> to access all the PCIe extended configuration space. However, ioremap()
-> >> on such a large region fails if not enough vmalloc() space is available.
-> >>
-> >> This was observed when somebody tested this on CardHu which has a 1 GiB
-> >> of RAM and therefore remapping the full 256 MiB fails.
-> ...
-> > Have you checked if the hardware supports an alternative config
-> > space access mechanism that does not depend on a huge address range?
-> > A lot of them provide an index/data register pair somewhere, as the
-> > original PC implementation did.
-> 
-> That would be nice, but I've talked to the HW engineers, and there's no
-> indication that any alternative mechanism exists.
+If there is no board selecting CONFIG_S3C_DEV_FB enabled, build will fail on
+arch/arm/mach-s3c64xx/pm.c, where s3c_device_fb is referenced.
 
-It seems to be convention that extended config space is often only
-accessible through mmio space, that was true on x86 last I checked
-too..
+This patch adds ifdef guard around the code making it compile only when
+CONFIG_S3C_DEV_FB is enabled.
 
-You could decrease the size of the mapping to only span the bus
-numbers that are configured for use via DT.
+Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+---
+ arch/arm/mach-s3c64xx/pm.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Are there any concerns about these config registers being accessed
-from a context where a new mapping can't be made? Interrupt? Machine
-Check? PCI-E Advanced Error Reporting?
-
-Cheers,
-Jason
+diff --git a/arch/arm/mach-s3c64xx/pm.c b/arch/arm/mach-s3c64xx/pm.c
+index f6b13a2..3686785 100644
+--- a/arch/arm/mach-s3c64xx/pm.c
++++ b/arch/arm/mach-s3c64xx/pm.c
+@@ -338,10 +338,10 @@ int __init s3c64xx_pm_init(void)
+ 
+ 	for (i = 0; i < ARRAY_SIZE(s3c64xx_pm_domains); i++)
+ 		pm_genpd_init(&s3c64xx_pm_domains[i]->pd, NULL, false);
+-
++#ifdef CONFIG_S3C_DEV_FB
+ 	if (dev_get_platdata(&s3c_device_fb.dev))
+ 		pm_genpd_add_device(&s3c64xx_pm_f.pd, &s3c_device_fb.dev);
+-
++#endif
+ 	return 0;
+ }
+ 
+-- 
+1.8.1
