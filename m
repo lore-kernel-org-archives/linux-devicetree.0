@@ -1,44 +1,63 @@
-From: "AnilKumar, Chimata" <anilkumar@ti.com>
-Subject: RE: [PATCH 0/3] can: Add D_CAN raminit support to am335x-evm
-Date: Wed, 9 Jan 2013 12:20:00 +0000
-Message-ID: <331ABD5ECB02734CA317220B2BBEABC13EAE677A@DBDE01.ent.ti.com>
-References: <1352916505-12343-1-git-send-email-anilkumar@ti.com>
- <50ED5FA5.9020305@ti.com>
+From: Tony Camuso <tcamuso-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] ipmi: replace call to try_smi_init() with call to
+ add_smi()
+Date: Wed, 09 Jan 2013 08:39:55 -0500
+Message-ID: <50ED732B.5070608@redhat.com>
+References: <1355424008-20491-1-git-send-email-tcamuso@redhat.com>
+ <50CA31BB.2030507@acm.org> <50CB3662.5080100@redhat.com>
+ <50EC7DAF.8030606@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50ED5FA5.9020305@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: "wg@grandegger.com" <wg@grandegger.com>, "mkl@pengutronix.de" <mkl@pengutronix.de>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50EC7DAF.8030606-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: minyard-HInyCGIudOg@public.gmane.org
+Cc: k-tanaka-JhyGz2TFV9J8UrSeD/g0lQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, openipmi-developer-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Corey Minyard <tcminyard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, myamazak-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 09, 2013 at 17:46:37, Cousson, Benoit wrote:
-> Hi Anil,
-> 
-> On 11/14/2012 07:08 PM, AnilKumar Ch wrote:
-> > This patch series adds d_can raminit support to c_can/d_can driver,
-> > which is required to init/de-init D_CAN message RAM (holds message
-> > objects). Added corresponding DT changes to get resource of RAMINIT
-> > register and device instance.
-> > 
-> > These patches were tested on AM335x-EVM along with pinctrl data addition
-> > patch, which is not added to am335x-evm.dts (only supports CPLD profile#0)
-> > because d_can1 is supported under CPLD profile#1.
-> > 
-> > AnilKumar Ch (3):
-> >   can: c_can: Add d_can raminit support
-> >   ARM: dts: AM33XX: Add d_can instances to aliases
-> >   ARM: dts: AM33XX: Add memory resource to d_can node
-> 
-> I've just applied both DTS patches with Acked-by from Marc in my
-> for_3.9/dts branch.
-> 
-Hi Benoit,
+Rescinding.
 
-Thanks much
+This hunk is already upstream.
 
-Thanks
-AnilKumar
+On 01/08/2013 03:12 PM, Tony Camuso wrote:
+> Upstream commit 9e368fa0 added function ipmi_pnp_probe(), which
+> calls try_smi_init() directly.
+>
+> try_smi_init() allocates resources for IPMI driver. However
+> try_smi_init() can be called again, and the allocated resources
+> can be unexpectedly released when the same IPMI resource
+> information is found on both ACPI namespace and SMBIOS table.
+> ipmi_pnp_probe() should call add_smi() instead of try_smi_init()
+>
+> For reference, see upstream commit ...
+> 2407d77a1a013b88ee3b817f2b934e420e5376f5
+>
+> Signed-off-by: Tony Camuso <tcamuso-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>
+> ---
+>   drivers/char/ipmi/ipmi_si_intf.c |    2 +-
+>   1 files changed, 1 insertions(+), 1 deletions(-)
+>
+> diff --git a/drivers/char/ipmi/ipmi_si_intf.c b/drivers/char/ipmi/ipmi_si_intf.c
+> index afb89be..20d13c6 100644
+> --- a/drivers/char/ipmi/ipmi_si_intf.c
+> +++ b/drivers/char/ipmi/ipmi_si_intf.c
+> @@ -2223,7 +2223,7 @@ static int __devinit ipmi_pnp_probe(struct pnp_dev *dev,
+>       info->dev = &dev->dev;
+>       pnp_set_drvdata(dev, info);
+>
+> -    return try_smi_init(info);
+> +    return add_smi(info);
+>
+>   err_free:
+>       kfree(info);
