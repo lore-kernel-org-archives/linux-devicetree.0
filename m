@@ -1,48 +1,38 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCHv16 0/7] of: add display helper
-Date: Wed, 9 Jan 2013 21:59:07 +0100
-Message-ID: <201301092159.08157.marex@denx.de>
-References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de> <20130109201541.GB4780@pengutronix.de>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 05/14] lib: Add I/O map cache implementation
+Date: Wed, 9 Jan 2013 21:19:56 +0000
+Message-ID: <201301092119.57067.arnd@arndb.de>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+ <1357764194-12677-6-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20130109201541.GB4780@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>, Rob Clark <robdclark@gmail.com>, Leela Krishna Amudala <leelakrishna.a@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1357764194-12677-6-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Steffen Trumtrar,
-
-> On Tue, Dec 18, 2012 at 06:04:09PM +0100, Steffen Trumtrar wrote:
-> > Hi!
-> > 
-> > Finally, right in time before the end of the world on friday, v16 of the
-> > display helpers.
+On Wednesday 09 January 2013, Thierry Reding wrote:
+> The I/O map cache is used to map large regions of physical memory in
+> smaller chunks to avoid running out of vmalloc()/ioremap() space.
 > 
-> So, any more criticism on the series? Any takers for the series as is?
-> I guess it could be merged via the fbdev-tree if David Airlie can agree
-> to the DRM patches ?! Does that sound about right?
-> 
-> I think the series was tested at least with
-> 	- imx6q: sabrelite, sabresd
-> 	- imx53: tqma53/mba53
-> 	- omap: DA850 EVM, AM335x EVM, EVM-SK
-> 
-> I don't know what Laurent Pinchart, Marek Vasut and Leela Krishna Amudala
-> are using.
+> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 
-MX53QSB and another custom MX53 board.
+Can you explain why this is necessary and which problem it solves?
+The implementation looks reasonable, but it's not clear to me if
+we really need this new interface.
 
-> Those are the people I know from the top of my head, that use
-> or at least did use the patches in one of its iterations. If I forgot
-> anyone, please speak up and possibly add your new HW to the list of tested
-> devices.
-> 
-> Thanks,
-> Steffen
+In what cases does it actually save ioremap space?
 
-Best regards,
-Marek Vasut
+	Arnd
