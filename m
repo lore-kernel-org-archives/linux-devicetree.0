@@ -1,43 +1,82 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH V2 0/4] add RTC support for Armada 370 and Armada XP
-Date: Wed, 09 Jan 2013 19:49:40 +0100
-Message-ID: <6174336.QCHWFhIiR1@bender>
-References: <1355303186-9267-1-git-send-email-gregory.clement@free-electrons.com>
- <50C849E8.70105@free-electrons.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/8] SH: intc: Add support OF for INTC
+Date: Wed, 9 Jan 2013 19:11:04 +0000
+Message-ID: <201301091911.04513.arnd@arndb.de>
+References: <1357713007-4005-1-git-send-email-horms+renesas@verge.net.au> <1357713007-4005-2-git-send-email-horms+renesas@verge.net.au> <20130109115352.GB7337@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <50C849E8.70105@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20130109115352.GB7337@e106331-lin.cambridge.arm.com>
+Sender: linux-sh-owner@vger.kernel.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, rtc-linux@googlegroups.com, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Alessandro Zummo <a.zummo@towertech.it>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb@gmail.com>, Magnus Damm <damm@opensource.se>, Paul Mundt <lethal@linux-sh.org>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 12 December 2012 10:10:00 Gregory CLEMENT wrote:
-> On 12/12/2012 10:06 AM, Gregory CLEMENT wrote:
-> > Hello,
-> > 
-> > This small patch set adds RTC support for Armada 370 and Armada XP. It
-> > was successfully tested on the evaluation board. The third patch add
-> > the lacking documentation for the device tree binding and was already
-> > taken by Grant Likely, I keep this one in the series for
-> > coherency. The only differences with the previous patch set was the
-> > add of the Acked-by from Andrew Lunn and a new small patch to update
-> > of the mvebu_configuration. I also split the patch wich add the RTC
-> > support in two part, one for the RTC subsytem and on for
-> > mach-mvebu. This series is 3.9 material.
+On Wednesday 09 January 2013, Mark Rutland wrote:
+> Hi,
+> 
+> Thanks for updating the text, this is far easier to read than previously.
+> 
+> However, I'm still concerned by how complex the binding seems. As I don't have
+> any familiarity with the device, I don't know whether that's just an artifact
+> of the hardware or something that can be cleared up.
+> 
+> I think the approach used by the binding needs some serious review before this
+> should be merged. It seems far more complex than any existing interrupt
+> controller binding. Without a dts example for a complete board (complete with
+> devices wired up to the interrupt controller), it's difficult to judge how this
+> will work in practice.
+> 
+> I've added Arnd to Cc in case he has any thoughts on the matter.
 
-Tested-by: Florian Fainelli <florian@openwrt.org>
+Sorry for having been absent from this discussion for so long. I didn't
+realize there were 9 versions of this patch set.
 
-on RD-A370-A1
--- 
-Florian
+I tend to agree with your interpretation above, but I may be missing
+important facts from the previous review rounds.
+
+For all I can tell, the binding is an attempt to describe the
+entire drivers/sh/intc capabilities, which is probably not the
+best way to approach things. The sh intc driver is not just an
+irqchip driver, but rather a framework to describe arbitrary
+irqchips, which is what makes this so hard.
+
+When I first looked at the situation last year, I suggested doing
+a new irqchip driver with a much simpler binding that can only
+handle the irq chips from shmobile, rather than the whole thing.
+
+I am not sure if the binding in the current form is already the
+"simplified" version, or if it actually implements all the
+capabilities of the intc driver.
+
+> > +       intca: interrupt-controller@0 {
+> > +               compatible = "renesas,sh_intc";
+> > +               interrupt-controller;
+> > +               #address-cells = <1>;
+> > +               #size-cells = <1>;
+> > +               #interrupt-cells = <1>;
+> > +               ranges;
+> > +
+> > +               reg = <0xe6940000 0x200>, <0xe6950000 0x200>;
+> > +               group_size = <19>;
+> > +
+> > +               DIRC: intsrc1 { vector = <0x0560>; };
+> > +               ATAPI: intsrc2 { vector = <0x05E0>; };
+> 
+> This looks suspiciously like a way of encoding a device's interrupt information
+> into the interrupt controller's device node. That strikes me as being the wrong
+> way round.
+
+Agreed, it would be simpler to have e.g. #interrupt-cells = <4>, to describe
+the various offsets when needed (I forgot how many are actually required
+in practice, rather than being computable from the other numbers), and
+possibly a global interrupt-map/interrupt-map-mask property pair to map
+this into a flat number space.
+
+I need to take some more time to understand the actual requirements again,
+but IIRC it would be possible to do something much simpler than the
+proposed binding.
+
+	Arnd
