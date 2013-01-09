@@ -1,78 +1,50 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [RFC PATCH 5/5] ARM i.MX5: Add system reset controller (SRC) to
- i.MX51 and i.MX53 device tree
-Date: Wed,  9 Jan 2013 18:17:19 +0100
-Message-ID: <1357751839-19680-6-git-send-email-p.zabel@pengutronix.de>
-References: <1357751839-19680-1-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [RFC PATCH 0/5] Use SRC to reset IP modules on i.MX5 and i.MX6
+Date: Wed,  9 Jan 2013 18:17:14 +0100
+Message-ID: <1357751839-19680-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1357751839-19680-1-git-send-email-p.zabel@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, kernel@pengutronix.de, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Also, link SRC to IPU via phandle.
+The system reset controller (SRC) on i.MX51, i.MX53, and i.MX6q controls
+reset lines to the GPU, VPU, IPU, and OpenVG IP modules.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+The following patches allow to link modules and SRC reset lines via phandle
+properties in the device tree. Drivers can then request their IP modules
+to be reset by the SRC.
+The IPU driver is made to use this mechanism during initialization, to
+improve robustness in the case of bootloaders leaving the IPU enabled.
+
+Fabio, does this help with your spurious interrupt issue?
+
+regards
+Philipp
+
 ---
- arch/arm/boot/dts/imx51.dtsi |    6 ++++++
- arch/arm/boot/dts/imx53.dtsi |    9 +++++++++
- 2 files changed, 15 insertions(+)
-
-diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
-index 1f5d45e..b3e9742 100644
---- a/arch/arm/boot/dts/imx51.dtsi
-+++ b/arch/arm/boot/dts/imx51.dtsi
-@@ -448,6 +448,12 @@
- 				status = "disabled";
- 			};
- 
-+			src: src@73fd0000 {
-+				compatible = "fsl,imx5-src";
-+				reg = <0x73fd0000 0x4000>;
-+				#reset-cells = <1>;
-+			};
-+
- 			clks: ccm@73fd4000{
- 				compatible = "fsl,imx51-ccm";
- 				reg = <0x73fd4000 0x4000>;
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index edc3f1e..7266942 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -72,6 +72,9 @@
- 			compatible = "fsl,imx53-ipu";
- 			reg = <0x18000000 0x080000000>;
- 			interrupts = <11 10>;
-+			clocks = <&clks 59>, <&clks 110>, <&clks 61>;
-+			clock-names = "bus", "di0", "di1";
-+			reset = <&src 2>;
- 		};
- 
- 		aips@50000000 { /* AIPS1 */
-@@ -497,6 +500,12 @@
- 				status = "disabled";
- 			};
- 
-+			src: src@53fd0000 {
-+				compatible = "fsl,imx5-src";
-+				reg = <0x53fd0000 0x4000>;
-+				#reset-cells = <1>;
-+			};
-+
- 			clks: ccm@53fd4000{
- 				compatible = "fsl,imx53-ccm";
- 				reg = <0x53fd4000 0x4000>;
--- 
-1.7.10.4
+ .../devicetree/bindings/reset/fsl,imx-src.txt      |   45 +++++++++++++++++
+ .../bindings/staging/imx-drm/fsl-imx-drm.txt       |    3 ++
+ arch/arm/boot/dts/imx51.dtsi                       |    6 +++
+ arch/arm/boot/dts/imx53.dtsi                       |    9 ++++
+ arch/arm/boot/dts/imx6q.dtsi                       |    3 ++
+ arch/arm/mach-imx/Kconfig                          |    1 +
+ arch/arm/mach-imx/common.h                         |    3 +-
+ arch/arm/mach-imx/mach-imx6q.c                     |    2 +-
+ arch/arm/mach-imx/mm-imx5.c                        |    2 +
+ arch/arm/mach-imx/src.c                            |   52 +++++++++++++++++++-
+ drivers/staging/imx-drm/ipu-v3/ipu-common.c        |   20 ++++++--
+ include/linux/imx-src.h                            |    6 +++
+ 12 files changed, 146 insertions(+), 6 deletions(-) 
