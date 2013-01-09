@@ -1,265 +1,103 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 3/8] ARM: shmobile: Add support OF of INTC for sh7372
-Date: Wed, 9 Jan 2013 11:17:55 +0000
-Message-ID: <20130109111742.GA7337@e106331-lin.cambridge.arm.com>
-References: <1357713007-4005-1-git-send-email-horms+renesas@verge.net.au>
- <1357713007-4005-4-git-send-email-horms+renesas@verge.net.au>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
+Date: Wed, 9 Jan 2013 11:48:09 +0000
+Message-ID: <201301091148.09320.arnd@arndb.de>
+References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com>
+ <20130109081131.GH21994@gmail.com>
+ <CACRpkdbx7ptCugpc1+JC5Yk+n835goOuoF6q0pdizsjpZ-G9mQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1357713007-4005-4-git-send-email-horms+renesas@verge.net.au>
-Content-Language: en-US
-Content-Disposition: inline
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms+renesas@verge.net.au>
-Cc: "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb@gmail.com>, Magnus Damm <damm@opensource.se>, Paul Mundt <lethal@linux-sh.org>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdbx7ptCugpc1+JC5Yk+n835goOuoF6q0pdizsjpZ-G9mQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rabin VINCENT <rabin.vincent-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 09, 2013 at 06:30:02AM +0000, Simon Horman wrote:
-> From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+On Wednesday 09 January 2013, Linus Walleij wrote:
+> On Wed, Jan 9, 2013 at 9:11 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> > On Tue, 08 Jan 2013, Arnd Bergmann wrote:
+> >> I don't remember the details unfortunately. Lee should be the one who can find out.
+> >> IIRC there was at least a single integeger number on them.
+> >
+> > Not as far as I can remember. There was (is?) a crude method of
+> > identifying UIBs, but attempting to obtain certain I2C lines and
+> > testing which ones were accessible. However, if there is an issue
+> > with I2C, the wrong UIB was 'probed'.
 > 
-> This CPU has four interrupt controllers (INTCA, pins-High and pins-Low).
-> This supports these.
-> Note: This supports DT of INTCA only.
+> Right, so the UIBs had different GPIO expanders on some I2C addresses,
+> so we attempt to communicate with the expander to see if it's board type A,
+> and if it doesn't respond it's deemed to be board type B.
 > 
-> Cc: Magnus Damm <damm@opensource.se>
-> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
-> Signed-off-by: Simon Horman <horms+renesas@verge.net.au>
+> This is the code:
+> arch/arm/mach-ux500/board-mop500-uib.c
+
+Ok, no idea what I was confusing it with then.
+
+> Compare this other case: the Integrator has pluggable daughterboards,
+> (called LMs, logic modules) and in that case we have specific registers
+> to detect them, and register the daughter board on this specific bus
+> that Russell came up with in arch/arm/mach-integrator/lm.c,
+> the actual board detection is in arch/arm/mach-integrator/integrator_ap.c:
 > 
-> ---
+> static void __init ap_init(void)
+> {
+>         unsigned long sc_dec;
+>         int i;
 > 
-> v9
-> * Update compatible string to use '-' instead of '_'
-> ---
->  arch/arm/mach-shmobile/include/mach/common.h |    1 +
->  arch/arm/mach-shmobile/intc-sh7372.c         |  113 ++++++++++++++++++++------
->  2 files changed, 89 insertions(+), 25 deletions(-)
+>         platform_device_register(&cfi_flash_device);
 > 
-> diff --git a/arch/arm/mach-shmobile/include/mach/common.h b/arch/arm/mach-shmobile/include/mach/common.h
-> index d0a5790..223250b 100644
-> --- a/arch/arm/mach-shmobile/include/mach/common.h
-> +++ b/arch/arm/mach-shmobile/include/mach/common.h
-> @@ -18,6 +18,7 @@ extern int shmobile_enter_wfi(struct cpuidle_device *dev,
->  			      struct cpuidle_driver *drv, int index);
->  extern void shmobile_cpuidle_set_driver(struct cpuidle_driver *drv);
->  
-> +extern void sh7372_init_irq_of(void);
->  extern void sh7372_init_irq(void);
->  extern void sh7372_map_io(void);
->  extern void sh7372_add_early_devices(void);
-> diff --git a/arch/arm/mach-shmobile/intc-sh7372.c b/arch/arm/mach-shmobile/intc-sh7372.c
-> index a91caad..bbde18d 100644
-> --- a/arch/arm/mach-shmobile/intc-sh7372.c
-> +++ b/arch/arm/mach-shmobile/intc-sh7372.c
-> @@ -16,6 +16,8 @@
->   * along with this program; if not, write to the Free Software
->   * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
->   */
-> +#define pr_fmt(fmt) "intc: " fmt
-> +
->  #include <linux/kernel.h>
->  #include <linux/init.h>
->  #include <linux/interrupt.h>
-> @@ -551,23 +553,28 @@ static void intcs_demux(unsigned int irq, struct irq_desc *desc)
->  
->  static void __iomem *intcs_ffd2;
->  static void __iomem *intcs_ffd5;
-> -
-> -void __init sh7372_init_irq(void)
-> +static void __iomem *intca_e694;
-> +static void __iomem *intca_e695;
-> +
-> +static void __init sh7372_init_intc(resource_size_t intca0_start,
-> +				    resource_size_t intca1_start,
-> +				    resource_size_t intcs0_start,
-> +				    resource_size_t intcs1_start,
-> +				    unsigned short vect)
->  {
->  	void __iomem *intevtsa;
->  	int n;
->  
-> -	intcs_ffd2 = ioremap_nocache(0xffd20000, PAGE_SIZE);
-> -	intevtsa = intcs_ffd2 + 0x100;
-> -	intcs_ffd5 = ioremap_nocache(0xffd50000, PAGE_SIZE);
-> +	intca_e694 = IOMEM(intca0_start);
-> +	intca_e695 = IOMEM(intca1_start);
->  
-> -	register_intc_controller(&intca_desc);
-> -	register_intc_controller(&intca_irq_pins_lo_desc);
-> -	register_intc_controller(&intca_irq_pins_hi_desc);
-> -	register_intc_controller(&intcs_desc);
-> +	intcs_ffd2 = ioremap_nocache(intcs0_start, PAGE_SIZE);
-> +	intevtsa = intcs_ffd2 + 0x100;
-> +	intcs_ffd5 = ioremap_nocache(intcs1_start, PAGE_SIZE);
-
-I think you need to check the return value of ioremap_nocache (it looks like it
-could return NULL), but I'm not certain of its semantics.
-
->  
->  	/* setup dummy cascade chip for INTCS */
-> -	n = evt2irq(0xf80);
-> +	n = evt2irq(vect);
-> +
->  	irq_alloc_desc_at(n, numa_node_id());
->  	irq_set_chip_and_handler_name(n, &dummy_irq_chip,
->  				      handle_level_irq, "level");
-> @@ -581,6 +588,65 @@ void __init sh7372_init_irq(void)
->  	iowrite16(0, intcs_ffd2 + 0x104);
->  }
->  
-> +#ifdef CONFIG_OF
-> +static unsigned short intevtsa_vect;
-> +
-> +#define INTC_RES_MAX 2
-> +static struct {
-> +	struct intc_desc intc_desc;
-> +	struct resource intc_res[INTC_RES_MAX];
-> +} intc_data __initdata;
-> +
-> +static int __init intc_of_init(struct device_node *np,
-> +			       struct device_node *parent)
-> +{
-> +	int ret, i;
-> +
-> +	memset(&intc_data, 0, sizeof(intc_data));
-> +
-> +	for (i = 0; i < INTC_RES_MAX; i++) {
-> +		ret = of_address_to_resource(np, i, &intc_data.intc_res[i]);
-> +		if (ret < 0)
-> +			break;
-> +	}
-> +
-> +	intc_data.intc_desc.name = (char *)of_node_full_name(np);
-> +	intc_data.intc_desc.resource = intc_data.intc_res;
-> +	intc_data.intc_desc.num_resources = i;
-> +
-> +	ret = of_sh_intc_get_intc(np, &intc_data.intc_desc);
-> +	if (ret)
-> +		return ret;
-> +
-> +	of_sh_intc_get_intevtsa_vect(np, &intevtsa_vect);
-> +
-> +	register_intc_controller(&intc_data.intc_desc);
-> +	return 0;
-> +}
-
-You seem to have the same code for r8a7740. They should be consolidated.
-
-> +
-> +static const struct of_device_id irq_of_match[] __initconst = {
-> +	{ .compatible = "renesas,sh-intc", .data = intc_of_init },
-> +	{ /*sentinel*/ }
-> +};
-> +
-> +void __init sh7372_init_irq_of(void)
-> +{
-> +	of_irq_init(irq_of_match);
-> +
-> +	register_intc_controller(&intcs_desc);
-
-What if of_irq_init fails?
-
-> +}
-> +#endif /* CONFIG_OF */
-> +
-> +void __init sh7372_init_irq(void)
-> +{
-> +	register_intc_controller(&intca_desc);
-> +	register_intc_controller(&intca_irq_pins_lo_desc);
-> +	register_intc_controller(&intca_irq_pins_hi_desc);
-> +	register_intc_controller(&intcs_desc);
-> +
-> +	sh7372_init_intc(0xe6940000, 0xe6950000, 0xffd20000, 0xffd50000, 0xf80);
-
-It might be better if these magic numbers were macro'd out for legibility.
-
-> +}
-> +
->  static unsigned short ffd2[0x200];
->  static unsigned short ffd5[0x100];
->  
-> @@ -624,9 +690,6 @@ void sh7372_intcs_resume(void)
->  		__raw_writeb(ffd5[k], intcs_ffd5 + k);
->  }
->  
-> -#define E694_BASE IOMEM(0xe6940000)
-> -#define E695_BASE IOMEM(0xe6950000)
-> -
->  static unsigned short e694[0x200];
->  static unsigned short e695[0x200];
->  
-> @@ -635,22 +698,22 @@ void sh7372_intca_suspend(void)
->  	int k;
->  
->  	for (k = 0x00; k <= 0x38; k += 4)
-> -		e694[k] = __raw_readw(E694_BASE + k);
-> +		e694[k] = __raw_readw(intca_e694 + k);
->  
->  	for (k = 0x80; k <= 0xb4; k += 4)
-> -		e694[k] = __raw_readb(E694_BASE + k);
-> +		e694[k] = __raw_readb(intca_e694 + k);
->  
->  	for (k = 0x180; k <= 0x1b4; k += 4)
-> -		e694[k] = __raw_readb(E694_BASE + k);
-> +		e694[k] = __raw_readb(intca_e694 + k);
->  
->  	for (k = 0x00; k <= 0x50; k += 4)
-> -		e695[k] = __raw_readw(E695_BASE + k);
-> +		e695[k] = __raw_readw(intca_e695 + k);
->  
->  	for (k = 0x80; k <= 0xa8; k += 4)
-> -		e695[k] = __raw_readb(E695_BASE + k);
-> +		e695[k] = __raw_readb(intca_e695 + k);
->  
->  	for (k = 0x180; k <= 0x1a8; k += 4)
-> -		e695[k] = __raw_readb(E695_BASE + k);
-> +		e695[k] = __raw_readb(intca_e695 + k);
->  }
-
-I'm unfamiliar with the hardware, what are these registers being iterated over?
-
-How do they correspond to entries in the binding?
-
->  
->  void sh7372_intca_resume(void)
-> @@ -658,20 +721,20 @@ void sh7372_intca_resume(void)
->  	int k;
->  
->  	for (k = 0x00; k <= 0x38; k += 4)
-> -		__raw_writew(e694[k], E694_BASE + k);
-> +		__raw_writew(e694[k], intca_e694 + k);
->  
->  	for (k = 0x80; k <= 0xb4; k += 4)
-> -		__raw_writeb(e694[k], E694_BASE + k);
-> +		__raw_writeb(e694[k], intca_e694 + k);
->  
->  	for (k = 0x180; k <= 0x1b4; k += 4)
-> -		__raw_writeb(e694[k], E694_BASE + k);
-> +		__raw_writeb(e694[k], intca_e694 + k);
->  
->  	for (k = 0x00; k <= 0x50; k += 4)
-> -		__raw_writew(e695[k], E695_BASE + k);
-> +		__raw_writew(e695[k], intca_e695 + k);
->  
->  	for (k = 0x80; k <= 0xa8; k += 4)
-> -		__raw_writeb(e695[k], E695_BASE + k);
-> +		__raw_writeb(e695[k], intca_e695 + k);
->  
->  	for (k = 0x180; k <= 0x1a8; k += 4)
-> -		__raw_writeb(e695[k], E695_BASE + k);
-> +		__raw_writeb(e695[k], intca_e695 + k);
->  }
-> -- 
-> 1.7.10.4
+>         sc_dec = readl(ap_syscon_base + INTEGRATOR_SC_DEC_OFFSET);
+>         for (i = 0; i < 4; i++) {
+>                 struct lm_device *lmdev;
 > 
+>                 if ((sc_dec & (16 << i)) == 0)
+>                         continue;
 > 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>                 lmdev = kzalloc(sizeof(struct lm_device), GFP_KERNEL);
+>                 if (!lmdev)
+>                         continue;
 > 
+>                 lmdev->resource.start = 0xc0000000 + 0x10000000 * i;
+>                 lmdev->resource.end = lmdev->resource.start + 0x0fffffff;
+>                 lmdev->resource.flags = IORESOURCE_MEM;
+>                 lmdev->irq = IRQ_AP_EXPINT0 + i;
+>                 lmdev->id = i;
+> 
+>                 lm_device_register(lmdev);
+>         }
+> 
+>         integrator_init(false);
+> }
+> 
+> In this case I think the autodetect is so nice that device tree probing
+> is mostly pointless. If it wasn't for the fact that we get a
+> cross-depenency to defined interrupts and clocks and whatever that
+> are coming from the device tree. Which is where DT shows its
+> all-or-nothing face.
 
-Thanks,
-Mark.
+Well, the extension bus above can easily be represented as a single device
+with four interrupts and four memory ranges. The child devices don't
+have to show up in DT at all, since they can be detected, but the detection
+mechanism should be there. This is the same as PCI devices, where we have
+to describe the host controller, but not the add-on cards.
 
+> So to get an elegant DT probing in this case I *guess* the right thing
+> to do is to dynamically add nodes to the device tree from the board
+> code, or have all alternatives inside the DT marked "disable" and then
+> mark them as "okay" from the board code by modifying the DT at
+> runtime.
+
+That would also work, but I think the other way is simpler.
+
+	Arnd
