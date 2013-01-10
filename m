@@ -1,62 +1,126 @@
-From: kishon <kishon@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: omap: Add omap-usb2 dt data
-Date: Thu, 10 Jan 2013 15:46:55 +0530
-Message-ID: <50EE9517.3030703@ti.com>
-References: <1348050772-27819-1-git-send-email-kishon@ti.com> <1348050772-27819-3-git-send-email-kishon@ti.com> <50EE8A89.4010801@ti.com> <50EE921D.8020601@ti.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 05/14] lib: Add I/O map cache implementation
+Date: Thu, 10 Jan 2013 11:25:44 +0100
+Message-ID: <20130110102544.GA5546@avionic-0098.adnet.avionic-design.de>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+ <20130109231758.GA27065@obsidianresearch.com>
+ <20130110071937.GG15212@avionic-0098.adnet.avionic-design.de>
+ <201301100917.19577.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <50EE921D.8020601@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, balbi@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============0857543750375467300=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201301100917.19577.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On Thursday 10 January 2013 03:34 PM, Benoit Cousson wrote:
-> On 01/10/2013 10:31 AM, kishon wrote:
->> Hi Benoit,
->>
->> On Wednesday 19 September 2012 04:02 PM, Kishon Vijay Abraham I wrote:
->>> Add omap-usb2 data node in omap4 device tree file. Since omap-usb2 is
->>> connected to ocp2scp, omap-usb2 dt data is added as a child node
->>> of ocp2scp.
->>>
->>> Acked-by: Felipe Balbi <balbi@ti.com>
->>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>
->> This patch is also missing in mainline :-(
->
-> Well, in that case this was done on purpose :-)
->
->>
->> Thanks
->> Kishon
->>
->>> ---
->>>    arch/arm/boot/dts/omap4.dtsi |    5 +++++
->>>    1 file changed, 5 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
->>> index 4fbb9dc..28eaddc 100644
->>> --- a/arch/arm/boot/dts/omap4.dtsi
->>> +++ b/arch/arm/boot/dts/omap4.dtsi
->>> @@ -303,6 +303,11 @@
->>>                #size-cells = <1>;
->>>                ranges;
->>>                ti,hwmods = "ocp2scp_usb_phy";
->>> +            usb2phy@4a0ad080 {
->>> +                compatible = "ti,omap-usb2";
->>> +                reg = <0x4a0ad080 0x58>,
->>> +                      <0x4a002300 0x4>; /* TO BE REMOVED: SCM */
->
-> Rob and I did not agree to use that temp hack in the case of DT, so you
-> were supposed to repost with a proper driver for the SCM part that
-> control the USB.
+--===============0857543750375467300==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
+Content-Disposition: inline
 
-Ok. Missed that. Will work on that.
 
-Thanks
-Kishon
+--a8Wt8u1KmwUX3Y2C
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jan 10, 2013 at 09:17:19AM +0000, Arnd Bergmann wrote:
+> On Thursday 10 January 2013, Thierry Reding wrote:
+> > On Wed, Jan 09, 2013 at 04:17:58PM -0700, Jason Gunthorpe wrote:
+> > > On Wed, Jan 09, 2013 at 04:12:31PM -0700, Stephen Warren wrote:
+> > > You could decrease the size of the mapping to only span the bus
+> > > numbers that are configured for use via DT.
+> >=20
+> > That won't work, unfortunately. The mapping is such that the bus number
+> > is not encoded in the uppermost bits, the extended register number is.
+> > So the only thing that we could do is decrease the size of the extended
+> > register space for *all* devices.
+>=20
+> But you could still a method to map 16 separate areas per bus, each 65536
+> bytes long, which results in 1MB per bus. That is probably ok, since
+> very few systems have more than a handful of buses in practice.
+>=20
+> In theory, doing static mappings on a per-page base would let you
+> do 16 devices at a time, but it's probably worth doing at this fine
+> granularity.
+
+I don't understand how this would help. The encoding is like this:
+
+	[27:24] extended register number
+	[23:16] bus number
+	[15:11] device number
+	[10: 8] function number
+	[ 7: 0] register number
+
+So it doesn't matter whether I use separate areas per bus or not. As
+soon as the whole extended configuration space needs to be accessed a
+whopping 28 bits (256 MiB) are required.
+
+What you propose would work if only regular configuration space is
+supported. I'm not sure if that's an option.
+
+> > > Are there any concerns about these config registers being accessed
+> > > from a context where a new mapping can't be made? Interrupt? Machine
+> > > Check? PCI-E Advanced Error Reporting?
+> >=20
+> > I haven't checked but I would expect configuration space accesses to not
+> > happen in interrupt context. Usually they are limited to enumeration and
+> > driver probe.
+>=20
+> Actually, AER probably needs this, and I believe some broken devices=20
+> need to mask interrupts using the PCI command word in the config space,
+> it it can happen.
+
+Ugh... that would kill any such dynamic mapping approach. Perhaps if we
+could mark a device as requiring a static mapping we could pin that
+cache entry. But that doesn't sound very encouraging.
+
+Thierry
+
+--a8Wt8u1KmwUX3Y2C
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ7pcoAAoJEN0jrNd/PrOhzWAQAJU8h6+cUFml8Y/ItAuxpx7X
+4JokweZ46zAbLIRfTn7XVX7ICa80iPbgf0eJjno2w9mDpr1NA6DUvNg4/IWncM1t
+3yQngkKc98gz0rRV7wjpzlTav8q1W5KjTK4WexEX+n6Z6rsjAtlxIzViAvSPOekH
+Nr/oHRaAYirdndAH8dmL8aifZKayaHDKYtVCIJ2xQOXTyplwZYIN5DWFWs4pdHta
+IE5ZUTc5qf8djpvrlIcjBrPPVSxS6B/04uU9ovbFxbrqIGhnnwfqlYNiU+j+p57x
+sRV0QsXk0XwAPvAdD3JzQsSB2U6ZEKlDleOWNO3yhFWobFQrLF9zktzm4wIvooo6
+e4aekihXMHjCN2CjRl7dk/NXw2dyFY4AIc1YEdDuXXt3N8eUhamvDVV9RMvx80wK
+CiiKA1M1SuEqHRKK7CBPSrGMBo3alogKNwAtPPfqAjPaiELtkmgjOGa4x/rzmVBH
+M4VsH/C+p231Hg5vdQ+GKYgPEV0OYZ90BJpGUSZMeYliAroVenXgo37NDozD+Mdu
+hW8lmae/L10twv36bZu720P16aU9RF60Mqa7x/RpLePt112VgyAA6vTc5V0ARGF5
+Im4zjmaPp6vG67byaXXJb5aokg0sIfo1ezFnS6oMrqV8Wg+2clhWu8KQ7JTcDjPV
+UhtFN0S5FBlhiZigRKGN
+=sViQ
+-----END PGP SIGNATURE-----
+
+--a8Wt8u1KmwUX3Y2C--
+
+--===============0857543750375467300==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0857543750375467300==--
