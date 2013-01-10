@@ -1,128 +1,57 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 4/4] ARM i.MX53: dts: add oftree for MBa53 baseboard
-Date: Thu, 10 Jan 2013 08:21:30 +0100
-Message-ID: <20130110072130.GA17605@pengutronix.de>
-References: <1357739065-9153-1-git-send-email-s.trumtrar@pengutronix.de>
- <1357739065-9153-5-git-send-email-s.trumtrar@pengutronix.de>
- <20130110024543.GE2265@S2101-09.ap.freescale.net>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 00/14] Rewrite Tegra PCIe driver
+Date: Thu, 10 Jan 2013 09:34:47 +0100
+Message-ID: <20130110093447.646ed07c@skate>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+	<20130109222517.3c590553@skate>
+	<20130110065537.GC15212@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130110024543.GE2265-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130110065537.GC15212@avionic-0098.adnet.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: linux-tegra@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Bjorn Helgaas <bhelgaas@google.com>, Andrew Murray <andrew.murray@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi!
+Dear Thierry Reding,
 
-On Thu, Jan 10, 2013 at 10:45:45AM +0800, Shawn Guo wrote:
-> On Wed, Jan 09, 2013 at 02:44:25PM +0100, Steffen Trumtrar wrote:
-> > The MBa53 is a baseboard for the TQMA53 embedded module. This enables/adds only
-> > supported devices, i.e. it is not feature complete, because of missing drivers
-> > in mainline linux.
-> > 
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/Makefile        |    1 +
-> >  arch/arm/boot/dts/imx53-MBa53.dts |  146 +++++++++++++++++++++++++++++++++++++
-> >  2 files changed, 147 insertions(+)
-> >  create mode 100644 arch/arm/boot/dts/imx53-MBa53.dts
-> > 
-> I do not like the CamelCase in filename, and do not want to be the first
-> one doing that in  arch/arm/boot/dts.
-> 
+On Thu, 10 Jan 2013 07:55:37 +0100, Thierry Reding wrote:
 
-Okay, no problem. I will change that.
+> The reason is that with the latest bindings the matching of root ports
+> to device tree nodes works as-is and nothing else indicates that the
+> emulated host bridge is actually required to make any of this work. So
+> in order not to introduce unneeded code I've left it out for now. If
+> somebody decides that we actually need this host bridge (for standards
+> compliance or whatnot) it could easily be added back.
 
-> > diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> > index e44da40..04b05e8 100644
-> > --- a/arch/arm/boot/dts/Makefile
-> > +++ b/arch/arm/boot/dts/Makefile
-> > @@ -84,6 +84,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx51-babbage.dtb \
-> >  	imx53-evk.dtb \
-> >  	imx53-qsb.dtb \
-> >  	imx53-smd.dtb \
-> > +	imx53-MBa53.dtb \
-> 
-> Change it to lower case and sort it properly.
-> 
+Ok.
 
-Ditto.
+> However, before the emulated bridge implementation can be merged I think
+> the PCI ID issue needs to be resolved.
 
-> >  	imx6q-arm2.dtb \
-> >  	imx6q-sabreauto.dtb \
-> >  	imx6q-sabrelite.dtb \
-> > diff --git a/arch/arm/boot/dts/imx53-MBa53.dts b/arch/arm/boot/dts/imx53-MBa53.dts
-> > new file mode 100644
-> > index 0000000..39ecaeb
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/imx53-MBa53.dts
-> > @@ -0,0 +1,146 @@
-> > +/*
-> > + * Copyright 2012 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix
-> > + *
-> > + * The code contained herein is licensed under the GNU General Public
-> > + * License. You may obtain a copy of the GNU General Public License
-> > + * Version 2 or later at the following locations:
-> > + *
-> > + * http://www.opensource.org/licenses/gpl-license.html
-> > + * http://www.gnu.org/copyleft/gpl.html
-> > + */
-> > +
-> > +/dts-v1/;
-> > +/include/ "imx53-tqma53.dtsi"
-> > +
-> > +/ {
-> > +	model = "TQ MBa53 starter kit";
-> > +	compatible = "tq,mba53", "tq,tqma53", "fsl,imx53";
-> > +
-> > +	backlight_reg:fixed@0 {
-> 
-> The node name is not good.  Also we generally have a space between
-> label and node names.
-> 
-> > +		compatible = "regulator-fixed";
-> > +		regulator-name = "lcd-supply";
-> > +		gpio = <&gpio2 5 0>;
-> > +		startup-delay-us = <5000>;
-> > +		enable-active-low;
-> > +        };
-> 
-> Use tab instead of space.
-> 
-> > +
-> > +	backlight {
-> > +		compatible = "pwm-backlight";
-> > +		pwms = <&pwm2 0 50000 0 0>;
-> > +		brightness-levels = <0 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100>;
-> > +		default-brightness-level = <10>;
-> > +		enable-gpios = <&gpio7 7 0>;
-> > +		power-supply = <&backlight_reg>;
-> > +        };
-> 
-> Ditto
-> 
+Indeed. I am not sure yet how to solve that, though.
 
-Hm, I wonder why my highlighting didn't show that. I will fix that and
-will resend this patch.
+> > So, I instantiate one unique emulated Host Bridge, and then one
+> > emulated PCI-to-PCI Bridge for each PCIe interface that I have.
+> 
+> Oh dear, that's even worse than on Tegra. The Marvell hardware doesn't
+> even expose the root ports as PCI devices on the bus?
 
-Thanks,
-Steffen
+My understanding is that no, it doesn't, but I am still figuring out
+many things in this PCIe topic.
 
+> I suppose that in your case it really makes sense because you already
+> need the emulated PCI-to-PCI bridges and therefore adding an emulated
+> host bridge doesn't add much. As I said, for Tegra everything still
+> works without, so I didn't see a reason to add needless code.
+
+Ok, thanks!
+
+Thomas
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
