@@ -1,183 +1,54 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2] ARM i.MX53: dts: add oftree for MBa53 baseboard
-Date: Thu, 10 Jan 2013 11:27:27 +0100
-Message-ID: <1357813647-22095-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [RFC PATCH 5/7] ARM: s3c64xx: Add board file for boot using
+ Device Tree
+Date: Thu, 10 Jan 2013 10:52:22 +0000
+Message-ID: <20130110105221.GG20956@opensource.wolfsonmicro.com>
+References: <1357774909-29938-1-git-send-email-tomasz.figa@gmail.com>
+ <1357774909-29938-6-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uc35eWnScqDcQrv5"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1357774909-29938-6-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-The MBa53 is a baseboard for the TQMA53 embedded module. This enables/adds only
-supported devices, i.e. it is not feature complete, because of missing drivers
-in mainline linux.
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/Makefile        |    1 +
- arch/arm/boot/dts/imx53-mba53.dts |  130 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 131 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx53-mba53.dts
+--uc35eWnScqDcQrv5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e44da40..8ad484e 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -82,6 +82,7 @@ dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
- dtb-$(CONFIG_ARCH_MXC) += imx51-babbage.dtb \
- 	imx53-ard.dtb \
- 	imx53-evk.dtb \
-+	imx53-mba53.dtb \
- 	imx53-qsb.dtb \
- 	imx53-smd.dtb \
- 	imx6q-arm2.dtb \
-diff --git a/arch/arm/boot/dts/imx53-mba53.dts b/arch/arm/boot/dts/imx53-mba53.dts
-new file mode 100644
-index 0000000..e54fffd
---- /dev/null
-+++ b/arch/arm/boot/dts/imx53-mba53.dts
-@@ -0,0 +1,130 @@
-+/*
-+ * Copyright 2012 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix
-+ * Copyright 2012 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
-+
-+/dts-v1/;
-+/include/ "imx53-tqma53.dtsi"
-+
-+/ {
-+	model = "TQ MBa53 starter kit";
-+	compatible = "tq,mba53", "tq,tqma53", "fsl,imx53";
-+};
-+
-+&iomuxc {
-+	lvds1 {
-+		pinctrl_lvds1_1: lvds1-grp1 {
-+			fsl,pins = <730 0x10000		/* LVDS0_TX3 */
-+				    732 0x10000		/* LVDS0_CLK */
-+				    734 0x10000		/* LVDS0_TX2 */
-+				    736 0x10000		/* LVDS0_TX1 */
-+				    738 0x10000>;	/* LVDS0_TX0 */
-+		};
-+
-+		pinctrl_lvds1_2: lvds1-grp2 {
-+			fsl,pins = <720 0x10000		/* LVDS1_TX3 */
-+				    722 0x10000		/* LVDS1_TX2 */
-+				    724 0x10000		/* LVDS1_CLK */
-+				    726 0x10000		/* LVDS1_TX1 */
-+				    728 0x10000>;	/* LVDS1_TX0 */
-+		};
-+	};
-+
-+	disp1 {
-+		pinctrl_disp1_1: disp1-grp1 {
-+			fsl,pins = <689 0x10000		/* DISP1_DRDY	*/
-+				    482 0x10000		/* DISP1_HSYNC	*/
-+				    489 0x10000		/* DISP1_VSYNC	*/
-+				    684 0x10000		/* DISP1_DAT_0	*/
-+				    515 0x10000		/* DISP1_DAT_22	*/
-+				    523 0x10000		/* DISP1_DAT_23	*/
-+				    543 0x10000		/* DISP1_DAT_21	*/
-+				    553 0x10000		/* DISP1_DAT_20	*/
-+				    558 0x10000		/* DISP1_DAT_19	*/
-+				    564 0x10000		/* DISP1_DAT_18	*/
-+				    570 0x10000		/* DISP1_DAT_17	*/
-+				    575 0x10000		/* DISP1_DAT_16	*/
-+				    580 0x10000		/* DISP1_DAT_15	*/
-+				    585 0x10000		/* DISP1_DAT_14	*/
-+				    590 0x10000		/* DISP1_DAT_13	*/
-+				    595 0x10000		/* DISP1_DAT_12	*/
-+				    628 0x10000		/* DISP1_DAT_11	*/
-+				    634 0x10000		/* DISP1_DAT_10	*/
-+				    639 0x10000		/* DISP1_DAT_9	*/
-+				    644 0x10000		/* DISP1_DAT_8	*/
-+				    649 0x10000		/* DISP1_DAT_7	*/
-+				    654 0x10000		/* DISP1_DAT_6	*/
-+				    659 0x10000		/* DISP1_DAT_5	*/
-+				    664 0x10000		/* DISP1_DAT_4	*/
-+				    669 0x10000		/* DISP1_DAT_3	*/
-+				    674 0x10000		/* DISP1_DAT_2	*/
-+				    679 0x10000		/* DISP1_DAT_1	*/
-+				    684 0x10000>;	/* DISP1_DAT_0	*/
-+		};
-+	};
-+};
-+
-+&cspi {
-+	status = "okay";
-+};
-+
-+&i2c2 {
-+	codec: sgtl5000@a {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x0a>;
-+	};
-+
-+	expander: pca9554@20 {
-+		compatible = "pca9554";
-+		reg = <0x20>;
-+		interrupts = <109>;
-+	};
-+
-+	sensor2: lm75@49 {
-+		compatible = "lm75";
-+		reg = <0x49>;
-+	};
-+};
-+
-+&fec {
-+	status = "okay";
-+};
-+
-+&esdhc2 {
-+	status = "okay";
-+};
-+
-+&uart3 {
-+	status = "okay";
-+};
-+
-+&ecspi1 {
-+	status = "okay";
-+};
-+
-+&uart1 {
-+	status = "okay";
-+};
-+
-+&uart2 {
-+	status = "okay";
-+};
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&can2 {
-+	status = "okay";
-+};
-+
-+&i2c3 {
-+	status = "okay";
-+};
--- 
-1.7.10.4
+On Thu, Jan 10, 2013 at 12:41:47AM +0100, Tomasz Figa wrote:
+
+> + * The following lookup table is used to override device names when devices
+> + * are registered from device tree. This is temporarily added to enable
+> + * device tree support addition for the Exynos4 architecture.
+
+Cut'n'paste.
+
+--uc35eWnScqDcQrv5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ7p1eAAoJELSic+t+oim9qEkP/jSlMsffaNHoWSBi7KO7Vpq/
+JWoHrMvjcH9kohxjogA7B8wqvOXKZaP2lBOoP+2A84hkuGXvjkUzldvIgpo5mx4e
+R/QPtB9FMwabLvQaHfKzMcbTNSryfbhG8yCuZB6659Bp0pEJoUGLfFKFAjqOLLNt
+EZid5sYXfG6idipiogmZ3SXrsQZxN/fCqY3igzo2es+FIAQXJtMZJ179SaOA+75b
+lli9IoBohpkgD0/NdtXO3Rjalcjw+wlAhQw5dUwjwNMJpKfDGyj7UDrJqothLpXl
+DbN2xWezaK2+G9/6SMPPsVsRCmki+MLH5iafAr8cZyzEVGFdzpTHG0fyTk0Rx3TV
+/S6IZD9GdA6uAb8rGnNOUNFXSAIxSKsLgYX5sNSEVnHzZ/SRoIsU9FrsRn5zpe7J
+Tya0aJK0E+9q3lHlBgg5taUy4y3TagFuQevKPeA5kgcfiPC0fLdqVzd7AWtNV5ON
+IvmdvdfGp2aQVZhGhld2gCWGY7ibktGAjZD93D4hAYqWiv9y09QpF47ndSbqjdz0
+F4Xp2IC1K2480/ebZiDo2xVGvW7Z79jlzev0ejk8s31swRtjjxWXfhnNPMLPn4qp
+Thfx3gOa3jkVyuVEuhNgtcyHvSTBESnxOdlKYcNPQAT6NcLCa6uEyXTSXcrRTREL
+o7NoiZHlEpKLqpTbqcJr
+=klIZ
+-----END PGP SIGNATURE-----
+
+--uc35eWnScqDcQrv5--
