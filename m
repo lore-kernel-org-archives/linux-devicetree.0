@@ -1,54 +1,59 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [RFC PATCH 5/7] ARM: s3c64xx: Add board file for boot using
- Device Tree
-Date: Thu, 10 Jan 2013 10:52:22 +0000
-Message-ID: <20130110105221.GG20956@opensource.wolfsonmicro.com>
-References: <1357774909-29938-1-git-send-email-tomasz.figa@gmail.com>
- <1357774909-29938-6-git-send-email-tomasz.figa@gmail.com>
+From: kishon <kishon@ti.com>
+Subject: Re: [PATCH v3 0/3] ARM: dts: omap: add dt data for MUSB
+Date: Thu, 10 Jan 2013 16:23:11 +0530
+Message-ID: <50EE9D97.6000803@ti.com>
+References: <1348047128-25692-1-git-send-email-kishon@ti.com> <505A8BAB.2020004@ti.com> <20121227183524.GB7097@blackmetal.musicnaut.iki.fi> <50EE5D61.1020307@ti.com> <50EE90B6.2060308@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="uc35eWnScqDcQrv5"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1357774909-29938-6-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50EE90B6.2060308@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---uc35eWnScqDcQrv5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Thursday 10 January 2013 03:28 PM, Benoit Cousson wrote:
+> Hi Kishon,
+>
+> On 01/10/2013 07:19 AM, kishon wrote:
+>> On Friday 28 December 2012 12:05 AM, Aaro Koskinen wrote:
+>>> Hi,
+>>>
+>>> On Thu, Sep 20, 2012 at 05:21:15AM +0200, Benoit Cousson wrote:
+>>>> On 09/19/2012 11:32 AM, Kishon Vijay Abraham I wrote:
+>>>>> This patch series adds dt data to get MUSB working in omap4 and omap3
+>>>>>
+>>>>> Changes from v2:
+>>>>> * Changes the subject of all the patches to include "ARM: dts:"
+>>>>> * Added reg property and interrupt property for "usb_otg_hs".
+>>>>> Previously these
+>>>>>     were obtained from ti,hwmods property.
+>>>>> * Rebased on
+>>>>>
+>>>>> git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git
+>>>>> devel-dt
+>>>>>
+>>>>> Changes from v1:
+>>>>> Just removed the omap-usb2 dt data and sent that as a separate patch.
+>>>>>
+>>>>> Kishon Vijay Abraham I (3):
+>>>>>     ARM: dts: Add twl6030-usb data
+>>>>>     ARM: dts: Add twl4030-usb data
+>>>>>     ARM: dts: omap: Add usb_otg and glue data
+>>>>
+>>>> Thanks for the update. I've just pulled the series for 3.7.
+>>>
+>>> I wonder what happened to the patch #3 (Add usb_otg and glue data)
+>>> of this series? Why was it dropped? I cannot see it in 3.7 or 3.8-rc1.
+>
+> I don't remember the context, can you repost it rebased on 3.8-rc2? Did
+> it generate some discussion at that time?
 
-On Thu, Jan 10, 2013 at 12:41:47AM +0100, Tomasz Figa wrote:
+That patch also has SCM register. It might be rejected because of that. 
+Will work on the that.
 
-> + * The following lookup table is used to override device names when devices
-> + * are registered from device tree. This is temporarily added to enable
-> + * device tree support addition for the Exynos4 architecture.
-
-Cut'n'paste.
-
---uc35eWnScqDcQrv5
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQ7p1eAAoJELSic+t+oim9qEkP/jSlMsffaNHoWSBi7KO7Vpq/
-JWoHrMvjcH9kohxjogA7B8wqvOXKZaP2lBOoP+2A84hkuGXvjkUzldvIgpo5mx4e
-R/QPtB9FMwabLvQaHfKzMcbTNSryfbhG8yCuZB6659Bp0pEJoUGLfFKFAjqOLLNt
-EZid5sYXfG6idipiogmZ3SXrsQZxN/fCqY3igzo2es+FIAQXJtMZJ179SaOA+75b
-lli9IoBohpkgD0/NdtXO3Rjalcjw+wlAhQw5dUwjwNMJpKfDGyj7UDrJqothLpXl
-DbN2xWezaK2+G9/6SMPPsVsRCmki+MLH5iafAr8cZyzEVGFdzpTHG0fyTk0Rx3TV
-/S6IZD9GdA6uAb8rGnNOUNFXSAIxSKsLgYX5sNSEVnHzZ/SRoIsU9FrsRn5zpe7J
-Tya0aJK0E+9q3lHlBgg5taUy4y3TagFuQevKPeA5kgcfiPC0fLdqVzd7AWtNV5ON
-IvmdvdfGp2aQVZhGhld2gCWGY7ibktGAjZD93D4hAYqWiv9y09QpF47ndSbqjdz0
-F4Xp2IC1K2480/ebZiDo2xVGvW7Z79jlzev0ejk8s31swRtjjxWXfhnNPMLPn4qp
-Thfx3gOa3jkVyuVEuhNgtcyHvSTBESnxOdlKYcNPQAT6NcLCa6uEyXTSXcrRTREL
-o7NoiZHlEpKLqpTbqcJr
-=klIZ
------END PGP SIGNATURE-----
-
---uc35eWnScqDcQrv5--
+Thanks
+Kishon
