@@ -1,52 +1,52 @@
-From: kishon <kishon@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: omap: Add omap-usb2 dt data
-Date: Thu, 10 Jan 2013 15:01:53 +0530
-Message-ID: <50EE8A89.4010801@ti.com>
-References: <1348050772-27819-1-git-send-email-kishon@ti.com> <1348050772-27819-3-git-send-email-kishon@ti.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH v3 0/3] ARM: dts: omap: add dt data for MUSB
+Date: Thu, 10 Jan 2013 10:58:14 +0100
+Message-ID: <50EE90B6.2060308@ti.com>
+References: <1348047128-25692-1-git-send-email-kishon@ti.com> <505A8BAB.2020004@ti.com> <20121227183524.GB7097@blackmetal.musicnaut.iki.fi> <50EE5D61.1020307@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1348050772-27819-3-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, b-cousson@ti.com
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, balbi@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50EE5D61.1020307@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kishon <kishon@ti.com>
+Cc: Aaro Koskinen <aaro.koskinen@iki.fi>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+Hi Kishon,
 
-On Wednesday 19 September 2012 04:02 PM, Kishon Vijay Abraham I wrote:
-> Add omap-usb2 data node in omap4 device tree file. Since omap-usb2 is
-> connected to ocp2scp, omap-usb2 dt data is added as a child node
-> of ocp2scp.
->
-> Acked-by: Felipe Balbi <balbi@ti.com>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+On 01/10/2013 07:19 AM, kishon wrote:
+> On Friday 28 December 2012 12:05 AM, Aaro Koskinen wrote:
+>> Hi,
+>>
+>> On Thu, Sep 20, 2012 at 05:21:15AM +0200, Benoit Cousson wrote:
+>>> On 09/19/2012 11:32 AM, Kishon Vijay Abraham I wrote:
+>>>> This patch series adds dt data to get MUSB working in omap4 and omap3
+>>>>
+>>>> Changes from v2:
+>>>> * Changes the subject of all the patches to include "ARM: dts:"
+>>>> * Added reg property and interrupt property for "usb_otg_hs".
+>>>> Previously these
+>>>>    were obtained from ti,hwmods property.
+>>>> * Rebased on
+>>>>   
+>>>> git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git
+>>>> devel-dt
+>>>>
+>>>> Changes from v1:
+>>>> Just removed the omap-usb2 dt data and sent that as a separate patch.
+>>>>
+>>>> Kishon Vijay Abraham I (3):
+>>>>    ARM: dts: Add twl6030-usb data
+>>>>    ARM: dts: Add twl4030-usb data
+>>>>    ARM: dts: omap: Add usb_otg and glue data
+>>>
+>>> Thanks for the update. I've just pulled the series for 3.7.
+>>
+>> I wonder what happened to the patch #3 (Add usb_otg and glue data)
+>> of this series? Why was it dropped? I cannot see it in 3.7 or 3.8-rc1.
 
-This patch is also missing in mainline :-(
+I don't remember the context, can you repost it rebased on 3.8-rc2? Did
+it generate some discussion at that time?
 
-Thanks
-Kishon
-
-> ---
->   arch/arm/boot/dts/omap4.dtsi |    5 +++++
->   1 file changed, 5 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index 4fbb9dc..28eaddc 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -303,6 +303,11 @@
->   			#size-cells = <1>;
->   			ranges;
->   			ti,hwmods = "ocp2scp_usb_phy";
-> +			usb2phy@4a0ad080 {
-> +				compatible = "ti,omap-usb2";
-> +				reg = <0x4a0ad080 0x58>,
-> +				      <0x4a002300 0x4>; /* TO BE REMOVED: SCM */
-> +			};
->   		};
->   	};
->   };
->
-
+Benoit
