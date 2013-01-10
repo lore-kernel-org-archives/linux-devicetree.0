@@ -1,15 +1,11 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 05/14] lib: Add I/O map cache implementation
-Date: Thu, 10 Jan 2013 11:25:44 +0100
-Message-ID: <20130110102544.GA5546@avionic-0098.adnet.avionic-design.de>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <20130109231758.GA27065@obsidianresearch.com>
- <20130110071937.GG15212@avionic-0098.adnet.avionic-design.de>
- <201301100917.19577.arnd@arndb.de>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2] ARM i.MX53: dts: add oftree for MBa53 baseboard
+Date: Thu, 10 Jan 2013 11:27:27 +0100
+Message-ID: <1357813647-22095-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0857543750375467300=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201301100917.19577.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,107 +16,168 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The MBa53 is a baseboard for the TQMA53 embedded module. This enables/adds only
+supported devices, i.e. it is not feature complete, because of missing drivers
+in mainline linux.
 
---===============0857543750375467300==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="a8Wt8u1KmwUX3Y2C"
-Content-Disposition: inline
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ arch/arm/boot/dts/Makefile        |    1 +
+ arch/arm/boot/dts/imx53-mba53.dts |  130 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 131 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx53-mba53.dts
 
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jan 10, 2013 at 09:17:19AM +0000, Arnd Bergmann wrote:
-> On Thursday 10 January 2013, Thierry Reding wrote:
-> > On Wed, Jan 09, 2013 at 04:17:58PM -0700, Jason Gunthorpe wrote:
-> > > On Wed, Jan 09, 2013 at 04:12:31PM -0700, Stephen Warren wrote:
-> > > You could decrease the size of the mapping to only span the bus
-> > > numbers that are configured for use via DT.
-> >=20
-> > That won't work, unfortunately. The mapping is such that the bus number
-> > is not encoded in the uppermost bits, the extended register number is.
-> > So the only thing that we could do is decrease the size of the extended
-> > register space for *all* devices.
->=20
-> But you could still a method to map 16 separate areas per bus, each 65536
-> bytes long, which results in 1MB per bus. That is probably ok, since
-> very few systems have more than a handful of buses in practice.
->=20
-> In theory, doing static mappings on a per-page base would let you
-> do 16 devices at a time, but it's probably worth doing at this fine
-> granularity.
-
-I don't understand how this would help. The encoding is like this:
-
-	[27:24] extended register number
-	[23:16] bus number
-	[15:11] device number
-	[10: 8] function number
-	[ 7: 0] register number
-
-So it doesn't matter whether I use separate areas per bus or not. As
-soon as the whole extended configuration space needs to be accessed a
-whopping 28 bits (256 MiB) are required.
-
-What you propose would work if only regular configuration space is
-supported. I'm not sure if that's an option.
-
-> > > Are there any concerns about these config registers being accessed
-> > > from a context where a new mapping can't be made? Interrupt? Machine
-> > > Check? PCI-E Advanced Error Reporting?
-> >=20
-> > I haven't checked but I would expect configuration space accesses to not
-> > happen in interrupt context. Usually they are limited to enumeration and
-> > driver probe.
->=20
-> Actually, AER probably needs this, and I believe some broken devices=20
-> need to mask interrupts using the PCI command word in the config space,
-> it it can happen.
-
-Ugh... that would kill any such dynamic mapping approach. Perhaps if we
-could mark a device as requiring a static mapping we could pin that
-cache entry. But that doesn't sound very encouraging.
-
-Thierry
-
---a8Wt8u1KmwUX3Y2C
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQ7pcoAAoJEN0jrNd/PrOhzWAQAJU8h6+cUFml8Y/ItAuxpx7X
-4JokweZ46zAbLIRfTn7XVX7ICa80iPbgf0eJjno2w9mDpr1NA6DUvNg4/IWncM1t
-3yQngkKc98gz0rRV7wjpzlTav8q1W5KjTK4WexEX+n6Z6rsjAtlxIzViAvSPOekH
-Nr/oHRaAYirdndAH8dmL8aifZKayaHDKYtVCIJ2xQOXTyplwZYIN5DWFWs4pdHta
-IE5ZUTc5qf8djpvrlIcjBrPPVSxS6B/04uU9ovbFxbrqIGhnnwfqlYNiU+j+p57x
-sRV0QsXk0XwAPvAdD3JzQsSB2U6ZEKlDleOWNO3yhFWobFQrLF9zktzm4wIvooo6
-e4aekihXMHjCN2CjRl7dk/NXw2dyFY4AIc1YEdDuXXt3N8eUhamvDVV9RMvx80wK
-CiiKA1M1SuEqHRKK7CBPSrGMBo3alogKNwAtPPfqAjPaiELtkmgjOGa4x/rzmVBH
-M4VsH/C+p231Hg5vdQ+GKYgPEV0OYZ90BJpGUSZMeYliAroVenXgo37NDozD+Mdu
-hW8lmae/L10twv36bZu720P16aU9RF60Mqa7x/RpLePt112VgyAA6vTc5V0ARGF5
-Im4zjmaPp6vG67byaXXJb5aokg0sIfo1ezFnS6oMrqV8Wg+2clhWu8KQ7JTcDjPV
-UhtFN0S5FBlhiZigRKGN
-=sViQ
------END PGP SIGNATURE-----
-
---a8Wt8u1KmwUX3Y2C--
-
---===============0857543750375467300==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0857543750375467300==--
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index e44da40..8ad484e 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -82,6 +82,7 @@ dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
+ dtb-$(CONFIG_ARCH_MXC) += imx51-babbage.dtb \
+ 	imx53-ard.dtb \
+ 	imx53-evk.dtb \
++	imx53-mba53.dtb \
+ 	imx53-qsb.dtb \
+ 	imx53-smd.dtb \
+ 	imx6q-arm2.dtb \
+diff --git a/arch/arm/boot/dts/imx53-mba53.dts b/arch/arm/boot/dts/imx53-mba53.dts
+new file mode 100644
+index 0000000..e54fffd
+--- /dev/null
++++ b/arch/arm/boot/dts/imx53-mba53.dts
+@@ -0,0 +1,130 @@
++/*
++ * Copyright 2012 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix
++ * Copyright 2012 Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix
++ *
++ * The code contained herein is licensed under the GNU General Public
++ * License. You may obtain a copy of the GNU General Public License
++ * Version 2 or later at the following locations:
++ *
++ * http://www.opensource.org/licenses/gpl-license.html
++ * http://www.gnu.org/copyleft/gpl.html
++ */
++
++/dts-v1/;
++/include/ "imx53-tqma53.dtsi"
++
++/ {
++	model = "TQ MBa53 starter kit";
++	compatible = "tq,mba53", "tq,tqma53", "fsl,imx53";
++};
++
++&iomuxc {
++	lvds1 {
++		pinctrl_lvds1_1: lvds1-grp1 {
++			fsl,pins = <730 0x10000		/* LVDS0_TX3 */
++				    732 0x10000		/* LVDS0_CLK */
++				    734 0x10000		/* LVDS0_TX2 */
++				    736 0x10000		/* LVDS0_TX1 */
++				    738 0x10000>;	/* LVDS0_TX0 */
++		};
++
++		pinctrl_lvds1_2: lvds1-grp2 {
++			fsl,pins = <720 0x10000		/* LVDS1_TX3 */
++				    722 0x10000		/* LVDS1_TX2 */
++				    724 0x10000		/* LVDS1_CLK */
++				    726 0x10000		/* LVDS1_TX1 */
++				    728 0x10000>;	/* LVDS1_TX0 */
++		};
++	};
++
++	disp1 {
++		pinctrl_disp1_1: disp1-grp1 {
++			fsl,pins = <689 0x10000		/* DISP1_DRDY	*/
++				    482 0x10000		/* DISP1_HSYNC	*/
++				    489 0x10000		/* DISP1_VSYNC	*/
++				    684 0x10000		/* DISP1_DAT_0	*/
++				    515 0x10000		/* DISP1_DAT_22	*/
++				    523 0x10000		/* DISP1_DAT_23	*/
++				    543 0x10000		/* DISP1_DAT_21	*/
++				    553 0x10000		/* DISP1_DAT_20	*/
++				    558 0x10000		/* DISP1_DAT_19	*/
++				    564 0x10000		/* DISP1_DAT_18	*/
++				    570 0x10000		/* DISP1_DAT_17	*/
++				    575 0x10000		/* DISP1_DAT_16	*/
++				    580 0x10000		/* DISP1_DAT_15	*/
++				    585 0x10000		/* DISP1_DAT_14	*/
++				    590 0x10000		/* DISP1_DAT_13	*/
++				    595 0x10000		/* DISP1_DAT_12	*/
++				    628 0x10000		/* DISP1_DAT_11	*/
++				    634 0x10000		/* DISP1_DAT_10	*/
++				    639 0x10000		/* DISP1_DAT_9	*/
++				    644 0x10000		/* DISP1_DAT_8	*/
++				    649 0x10000		/* DISP1_DAT_7	*/
++				    654 0x10000		/* DISP1_DAT_6	*/
++				    659 0x10000		/* DISP1_DAT_5	*/
++				    664 0x10000		/* DISP1_DAT_4	*/
++				    669 0x10000		/* DISP1_DAT_3	*/
++				    674 0x10000		/* DISP1_DAT_2	*/
++				    679 0x10000		/* DISP1_DAT_1	*/
++				    684 0x10000>;	/* DISP1_DAT_0	*/
++		};
++	};
++};
++
++&cspi {
++	status = "okay";
++};
++
++&i2c2 {
++	codec: sgtl5000@a {
++		compatible = "fsl,sgtl5000";
++		reg = <0x0a>;
++	};
++
++	expander: pca9554@20 {
++		compatible = "pca9554";
++		reg = <0x20>;
++		interrupts = <109>;
++	};
++
++	sensor2: lm75@49 {
++		compatible = "lm75";
++		reg = <0x49>;
++	};
++};
++
++&fec {
++	status = "okay";
++};
++
++&esdhc2 {
++	status = "okay";
++};
++
++&uart3 {
++	status = "okay";
++};
++
++&ecspi1 {
++	status = "okay";
++};
++
++&uart1 {
++	status = "okay";
++};
++
++&uart2 {
++	status = "okay";
++};
++
++&can1 {
++	status = "okay";
++};
++
++&can2 {
++	status = "okay";
++};
++
++&i2c3 {
++	status = "okay";
++};
+-- 
+1.7.10.4
