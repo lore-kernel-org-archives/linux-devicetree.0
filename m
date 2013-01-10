@@ -1,104 +1,134 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/2] ARM: dts: omap: Add omap-usb2 dt data
-Date: Thu, 10 Jan 2013 14:45:51 +0200
-Message-ID: <20130110124551.GU28920@arwen.pp.htv.fi>
-References: <1348050772-27819-1-git-send-email-kishon@ti.com>
- <1348050772-27819-3-git-send-email-kishon@ti.com>
- <50EE8A89.4010801@ti.com>
- <50EE921D.8020601@ti.com>
- <50EE9517.3030703@ti.com>
-Reply-To: <balbi@ti.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] mfd: stmpe: Pull IRQ GPIO number from DT during DT-based
+ probe
+Date: Thu, 10 Jan 2013 12:57:35 +0000
+Message-ID: <20130110125735.GB4964@gmail.com>
+References: <1357568989-16237-1-git-send-email-marex@denx.de>
+ <20130108094134.GA21994@gmail.com>
+ <201301081044.14876.marex@denx.de>
+ <201301081048.38149.marex@denx.de>
+ <CAKohpo=YnLJN4_xA1WTiJaZeb-Oyc=RypYUyaSibmn6G4X9m4A@mail.gmail.com>
+ <20130108111104.GF21994@gmail.com>
+ <CAKohpomiS+UFzgiJaQbm8aZVPY0jeYhm1k7Yndk50z8=K4LvGQ@mail.gmail.com>
+ <CACRpkdZWi4M3HmO_rq1O9aGTKYR0iMLXJo+nos3hYu3C_DFRHQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="hFEw+uh9kF5V6COn"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <50EE9517.3030703@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: kishon <kishon@ti.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, balbi@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CACRpkdZWi4M3HmO_rq1O9aGTKYR0iMLXJo+nos3hYu3C_DFRHQ@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Marek =?utf-8?B?VmHFoXV0?= <marex@denx.de>, vipul kumar samar <vipulkumar.samar@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
---hFEw+uh9kF5V6COn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Thu, 10 Jan 2013, Linus Walleij wrote:
 
-On Thu, Jan 10, 2013 at 03:46:55PM +0530, kishon wrote:
-> Hi,
->=20
-> On Thursday 10 January 2013 03:34 PM, Benoit Cousson wrote:
-> >On 01/10/2013 10:31 AM, kishon wrote:
-> >>Hi Benoit,
-> >>
-> >>On Wednesday 19 September 2012 04:02 PM, Kishon Vijay Abraham I wrote:
-> >>>Add omap-usb2 data node in omap4 device tree file. Since omap-usb2 is
-> >>>connected to ocp2scp, omap-usb2 dt data is added as a child node
-> >>>of ocp2scp.
+> On Tue, Jan 8, 2013 at 12:14 PM, Viresh Kumar <viresh.kumar@linaro.or=
+g> wrote:
+> > On 8 January 2013 16:41, Lee Jones <lee.jones@linaro.org> wrote:
+> >>> Hmm.. I tried a bit, but couldn't find any such call :(
+> >>> Probably an assumption is taken here. GPIO pins which are going t=
+o be used as
+> >>> interrupt lines, wouldn't be getting set in output mode at all. S=
+o,
+> >>> once they are put
+> >>> in input mode in beginning, nobody would change it ever.
 > >>>
-> >>>Acked-by: Felipe Balbi <balbi@ti.com>
-> >>>Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> >>
-> >>This patch is also missing in mainline :-(
-> >
-> >Well, in that case this was done on purpose :-)
-> >
-> >>
-> >>Thanks
-> >>Kishon
-> >>
-> >>>---
-> >>>   arch/arm/boot/dts/omap4.dtsi |    5 +++++
-> >>>   1 file changed, 5 insertions(+)
+> >>> Much of gpio controllers configure gpio pins in input mode in the=
+ir probe().
 > >>>
-> >>>diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dt=
-si
-> >>>index 4fbb9dc..28eaddc 100644
-> >>>--- a/arch/arm/boot/dts/omap4.dtsi
-> >>>+++ b/arch/arm/boot/dts/omap4.dtsi
-> >>>@@ -303,6 +303,11 @@
-> >>>               #size-cells =3D <1>;
-> >>>               ranges;
-> >>>               ti,hwmods =3D "ocp2scp_usb_phy";
-> >>>+            usb2phy@4a0ad080 {
-> >>>+                compatible =3D "ti,omap-usb2";
-> >>>+                reg =3D <0x4a0ad080 0x58>,
-> >>>+                      <0x4a002300 0x4>; /* TO BE REMOVED: SCM */
+> >>> Maybe, there is something else :)
+> >>
+> >> Pinctrl?
 > >
-> >Rob and I did not agree to use that temp hack in the case of DT, so you
-> >were supposed to repost with a proper driver for the SCM part that
-> >control the USB.
+> > I don't think pinctrl is playing with it. I searched for
+> > "direction_input" string and
+> > pinctrl routine also had similar name. I couldn't fine use of
+> > direction_input anywhere
+> > in kernel, for setting them as irqs for OF cases.
 >=20
-> Ok. Missed that. Will work on that.
+> pinctrl has pinctrl_gpio_direction_input() and
+> pinctrl_gpio_direction_output() which are supposed to
+> be called *only* by GPIOlib frontends using pinctrl
+> as backend to control the pins.
+>=20
+> But if it's a pinctrl driver using standard pinconfig from
+> include/linux/pinctrl/pinconf-generic.h
+> I'm all for adding a PIN_CONFIG_INPUT_ENABLE
+> to these definintions so it can be set up as input
+> at boot from the device tree using hogs or something,
+> that make things easy when using GPIOs as IRQ
+> providers only.
+>=20
+> So the alternative is to just set up the IRQ using the
+> gpiolib functions for this: of_get_gpio() if you need the
+> number from DT, then gpio_request() and
+> gpio_direction_input() as on any GPIO. This can be
+> done in the device driver or board code depending
+> on use case.
+>=20
+> In the Nomadik I did this (maybe ugly) hack for a
+> similar case:
+>=20
+> +/*
+> + * The SMSC911x IRQ is connected to a GPIO pin, but the driver expec=
+ts
+> + * to simply request an IRQ passed as a resource. So the GPIO pin ne=
+eds
+> + * to be requested by this hog and set as input.
+> + */
+> +static int __init cpu8815_eth_init(void)
+> +{
+> +       struct device_node *eth;
+> +       int gpio, irq, err;
+> +
+> +       eth =3D of_find_node_by_path("/external-bus@34000000/ethernet=
+@300");
+> +       if (!eth) {
+> +               pr_info("could not find any ethernet controller\n");
+> +               return 0;
+> +       }
+> +       gpio =3D of_get_gpio(eth, 0);
+> +       err =3D gpio_request(gpio, "eth_irq");
+> +       if (err) {
+> +               pr_info("failed to request ethernet GPIO\n");
+> +               return -ENODEV;
+> +       }
+> +       err =3D gpio_direction_input(gpio);
+> +       if (err) {
+> +               pr_info("failed to set ehernet GPIO as input\n");
+> +               return -ENODEV;
+> +       }
+> +       irq =3D gpio_to_irq(gpio);
+> +       pr_info("enabled ethernet GPIO %d, IRQ %d\n", gpio, irq);
+> +       return 0;
+> +}
+> +device_initcall(cpu8815_eth_init);
 
-Didn't Tony say we should access SCM directly since it's a one time
-thing ?
+Yep, that looks pretty gross!
 
-Tony ?
+> I haven't read review comments on that patch.
+>=20
+> Maybe it's not such a good idea to add the GPIO to the device itself
+> when it's being hogged by board code like this. It's a bit of a grey =
+area
+> so I'm a bit confused here.
+>=20
+> Maybe the GPIO lib actually needs a "hog" mechanism that can
+> request and set GPIO pins as input/output on boot and then
+> forget about them.
+>=20
+> Yours,
+> Linus Walleij
 
 --=20
-balbi
-
---hFEw+uh9kF5V6COn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQ7rf/AAoJEIaOsuA1yqREyG4P+QH5KEVnnUeSCuX4pK5Mpkm0
-QOm9z2T9vYLUYQSGfWxt01AUXq0MbUcl6eZGpGr34lEb53QiEt8TpOw18uPt7sw8
-ibOryP1pvD0RsWsNqcd9V6tJzW3U22Q4Zh0OmuTNKcATGXm5seBMxKvN4JBU3C32
-nm7yOARCblgBPl4WKUrnG10wAKfYJZhWPg5w9j+rKn1Kzd2s2O/+IkYJfMUlnchp
-yDh+HZnGD66xZUKECRCaUkK/+yvl1uePR3Gbt16ZYpRvPxp7NkvaGIfGtILJyShw
-vS/U2rf3L9v+umdTHWZ5bqhJiLSXvETZSehzAn9YWQRJLu7PSCsaAnEqEbddUkCA
-uhh9ws7foJT1WWkojbvIwgYGrHf6mUugnVuxb2DWLo4KsZcqE8fBynMOkmaf5iIl
-kxDPPjWCmm6UgGn5nVimsX6aogLWmAszj3OGzIsf1gjzojDCn0TZN4SqcyszLAHR
-pqOb9TnCuSlvOsNeQF0+xD7xMQjmjxMdiFr0nzcwfim1JOztc0b0W/qoRedxt1j8
-yye8+Ehs8wZVk9vigynwGCq0ihhrG/HwSID+v9fpFOYG6Ao6eME/6ti/55PyfNQD
-an8bPso1rnDQzf4/voqrr9vxbOFEOeMvLz8+0UOr4YZydLKzGjgzcJIMaCvH2MXF
-nd+9crNCEsXhYzPdJ56w
-=ip/K
------END PGP SIGNATURE-----
-
---hFEw+uh9kF5V6COn--
+Lee Jones
+Linaro ST-Ericsson Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
