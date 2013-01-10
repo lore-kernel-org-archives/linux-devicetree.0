@@ -1,76 +1,155 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: [RFC PATCH 1/7] ARM: common: vic: Parse interrupt and resume masks from device tree
-Date: Thu, 10 Jan 2013 00:41:43 +0100
-Message-ID: <1357774909-29938-2-git-send-email-tomasz.figa@gmail.com>
-References: <1357774909-29938-1-git-send-email-tomasz.figa@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1357774909-29938-1-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Tomasz Figa <tomasz.figa@gmail.com>
+From: Scott Wood <scottwood@freescale.com>
+Subject: Re: [PATCH] Added device tree binding for TDM and TDM phy
+Date: Wed, 9 Jan 2013 18:07:05 -0600
+Message-ID: <1357776425.18196.18@snotra>
+References: <1357133120-2271-1-git-send-email-Sandeep@freescale.com>
+ <3F1D9DCAAB49B94D88DBE05911FA4E6E69CEB8@039-SN1MPN1-005.039d.mgd.msft.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="Flowed"; DelSp="Yes"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <3F1D9DCAAB49B94D88DBE05911FA4E6E69CEB8@039-SN1MPN1-005.039d.mgd.msft.net>
+ (from B37400@freescale.com on Wed Jan  9 01:10:24 2013)
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Singh Sandeep-B37400 <B37400@freescale.com>
+Cc: "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Aggrwal Poonam-B10812 <B10812@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch extends vic_of_init to parse valid interrupt sources
-and resume sources masks from device tree.
+On 01/09/2013 01:10:24 AM, Singh Sandeep-B37400 wrote:
+> A gentle reminder.
+> Any comments are appreciated.
+> 
+> Regards,
+> Sandeep
+> 
+> > -----Original Message-----
+> > From: Singh Sandeep-B37400
+> > Sent: Wednesday, January 02, 2013 6:55 PM
+> > To: devicetree-discuss@lists.ozlabs.org; linuxppc-dev@ozlabs.org
+> > Cc: Singh Sandeep-B37400; Aggrwal Poonam-B10812
+> > Subject: [PATCH] Added device tree binding for TDM and TDM phy
+> >
+> > This controller is available on many Freescale SOCs like MPC8315,  
+> P1020,
+> > P1010 and P1022
+> >
+> > Signed-off-by: Sandeep Singh <Sandeep@freescale.com>
+> > Signed-off-by: Poonam Aggrwal <poonam.aggrwal@freescale.com>
+> > ---
+> >  .../devicetree/bindings/powerpc/fsl/fsl-tdm.txt    |   63
+> > ++++++++++++++++++++
+> >  .../devicetree/bindings/powerpc/fsl/tdm-phy.txt    |   38  
+> ++++++++++++
+> >  2 files changed, 101 insertions(+), 0 deletions(-)  create mode  
+> 100644
+> > Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+> >  create mode 100644  
+> Documentation/devicetree/bindings/powerpc/fsl/tdm-
+> > phy.txt
+> >
+> > diff --git  
+> a/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+> > b/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+> > new file mode 100644
+> > index 0000000..ceb2ef1
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+> > @@ -0,0 +1,63 @@
+> > +TDM Device Tree Binding
+> > +
+> > +NOTE: The bindings described in this document are preliminary and
+> > +subject to change.
+> > +
+> > +TDM (Time Division Multiplexing)
+> > +
+> > +Description:
+> > +
+> > +The TDM is full duplex serial port designed to allow various  
+> devices
+> > +including digital signal processors (DSPs) to communicate with a
+> > +variety of serial devices including industry standard framers,  
+> codecs,
+> > other DSPs and microprocessors.
+> > +
+> > +The below properties describe the device tree bindings for  
+> Freescale
+> > +TDM controller. This TDM controller is available on various  
+> Freescale
+> > +Processors like MPC8315, P1020, P1022 and P1010.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible
+> > +    Value type: <string>
+> > +    Definition: Should contain "fsl,tdm1.0".
+> > +
+> > +- reg
+> > +    Definition: A standard property. The first reg specifier  
+> describes
+> > the TDM
+> > +    registers, and the second describes the TDM DMAC registers.
+> > +
+> > +- tdm_tx_clk
+> > +    Value type: <u32 or u64>
+> > +    Definition: This specifies the value of transmit clock. It  
+> should
+> > not
+> > +    exceed 50Mhz.
+> > +
+> > +- tdm_rx_clk
+> > +    Value type: <u32 or u64>
+> > +    Definition: This specifies the value of receive clock. Its  
+> value
+> > could be
+> > +    zero, in which case tdm will operate in shared mode. Its value
+> > should not
+> > +    exceed 50Mhz.
 
-If mask values are not specified in device tree, all sources
-are assumed to be valid, as before this patch.
+Please don't use underscores in property names, and use the vendor  
+prefix: "fsl,tdm-tx-clk" and "fsl,tdm-rx-clk".
 
-Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
----
- Documentation/devicetree/bindings/arm/vic.txt | 6 ++++++
- arch/arm/common/vic.c                         | 7 ++++++-
- 2 files changed, 12 insertions(+), 1 deletion(-)
+> > diff --git  
+> a/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
+> > b/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
+> > new file mode 100644
+> > index 0000000..2563934
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
+> > @@ -0,0 +1,38 @@
+> > +TDM PHY Device Tree Binding
+> > +
+> > +NOTE: The bindings described in this document are preliminary and
+> > +subject to change.
+> > +
+> > +Description:
+> > +TDM PHY is the terminal interface of TDM subsystem. It is  
+> typically a
+> > +line control device like E1/T1 framer or SLIC. A TDM device can  
+> have
+> > +multiple TDM PHYs.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible
+> > +    Value type: <string>
+> > +    Definition: Should contain generic compatibility like  
+> "tdm-phy-slic"
+> > or
+> > +    "tdm-phy-e1" or "tdm-phy-t1".
 
-diff --git a/Documentation/devicetree/bindings/arm/vic.txt b/Documentation/devicetree/bindings/arm/vic.txt
-index 266716b..bb7137c 100644
---- a/Documentation/devicetree/bindings/arm/vic.txt
-+++ b/Documentation/devicetree/bindings/arm/vic.txt
-@@ -18,6 +18,9 @@ Required properties:
- Optional properties:
- 
- - interrupts : Interrupt source for parent controllers if the VIC is nested.
-+- interrupt-mask : Bit mask of valid interrupt sources (defaults to all valid)
-+- wakeup-mask : Bit mask of interrupt sources that can wake up the system
-+  (defaults to all allowed)
- 
- Example:
- 
-@@ -26,4 +29,7 @@ Example:
- 		interrupt-controller;
- 		#interrupt-cells = <1>;
- 		reg = <0x60000 0x1000>;
-+
-+		interrupt-mask = <0xffffff7f>;
-+		wakeup-mask = <0x0000ff7f>;
- 	};
-diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
-index e4df17c..c2889da 100644
---- a/arch/arm/common/vic.c
-+++ b/arch/arm/common/vic.c
-@@ -407,6 +407,8 @@ void __init vic_init(void __iomem *base, unsigned int irq_start,
- int __init vic_of_init(struct device_node *node, struct device_node *parent)
- {
- 	void __iomem *regs;
-+	u32 interrupt_mask = ~0;
-+	u32 wakeup_mask = ~0;
- 
- 	if (WARN(parent, "non-root VICs are not supported"))
- 		return -EINVAL;
-@@ -415,10 +417,13 @@ int __init vic_of_init(struct device_node *node, struct device_node *parent)
- 	if (WARN_ON(!regs))
- 		return -EIO;
- 
-+	of_property_read_u32(node, "interrupt-mask", &interrupt_mask);
-+	of_property_read_u32(node, "wakeup-mask", &wakeup_mask);
-+
- 	/*
- 	 * Passing -1 as first IRQ makes the simple domain allocate descriptors
- 	 */
--	__vic_init(regs, -1, ~0, ~0, node);
-+	__vic_init(regs, -1, interrupt_mask, wakeup_mask, node);
- 
- 	return 0;
- }
--- 
-1.8.1
+Does this "generic" string (plus the other properties) tell you all you  
+need to know about the device?  If there are other possible "generic"  
+compatibles, they should be listed or else different people will make  
+up different strings for the same thing.
+
+-Scott
