@@ -1,58 +1,68 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC PATCH 1/5] ARM i.MX6q: Add GPU, VPU, IPU, and OpenVG resets
- to system reset controller
-Date: Thu, 10 Jan 2013 11:19:18 -0700
-Message-ID: <50EF0626.1050301@wwwdotorg.org>
-References: <1357751839-19680-1-git-send-email-p.zabel@pengutronix.de>
- <1357751839-19680-2-git-send-email-p.zabel@pengutronix.de>
- <50EDB3D1.5010900@wwwdotorg.org>
- <1357825911.2363.667.camel@pizza.hi.pengutronix.de>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 05/14] lib: Add I/O map cache implementation
+Date: Thu, 10 Jan 2013 11:20:07 -0700
+Message-ID: <20130110182007.GA28004@obsidianresearch.com>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+ <20130109231758.GA27065@obsidianresearch.com>
+ <20130110071937.GG15212@avionic-0098.adnet.avionic-design.de>
+ <201301100917.19577.arnd@arndb.de>
+ <20130110102544.GA5546@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1357825911.2363.667.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130110102544.GA5546-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/10/2013 06:51 AM, Philipp Zabel wrote:
-> Hi Stephen,
+On Thu, Jan 10, 2013 at 11:25:44AM +0100, Thierry Reding wrote:
+> On Thu, Jan 10, 2013 at 09:17:19AM +0000, Arnd Bergmann wrote:
+> > On Thursday 10 January 2013, Thierry Reding wrote:
+> > > On Wed, Jan 09, 2013 at 04:17:58PM -0700, Jason Gunthorpe wrote:
+> > > > On Wed, Jan 09, 2013 at 04:12:31PM -0700, Stephen Warren wrote:
+> > > > You could decrease the size of the mapping to only span the bus
+> > > > numbers that are configured for use via DT.
+> > > 
+> > > That won't work, unfortunately. The mapping is such that the bus number
+> > > is not encoded in the uppermost bits, the extended register number is.
+> > > So the only thing that we could do is decrease the size of the extended
+> > > register space for *all* devices.
+> > 
+> > But you could still a method to map 16 separate areas per bus, each 65536
+> > bytes long, which results in 1MB per bus. That is probably ok, since
+> > very few systems have more than a handful of buses in practice.
+> > 
+> > In theory, doing static mappings on a per-page base would let you
+> > do 16 devices at a time, but it's probably worth doing at this fine
+> > granularity.
 > 
-> Am Mittwoch, den 09.01.2013, 11:15 -0700 schrieb Stephen Warren:
->> On 01/09/2013 10:17 AM, Philipp Zabel wrote:
->>> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>> ---
->>>  .../devicetree/bindings/reset/fsl,imx-src.txt      |   45 ++++++++++++++++++++
->>
->> I proposed something very similar a while back; it may be useful to look
->> at the previous discussion there:
->>
->> http://www.spinics.net/lists/arm-kernel/msg202451.html
+> I don't understand how this would help. The encoding is like this:
 > 
-> Thanks, I had started playing around with some "reset subsystem"
-> patches, but so far shied away from what feels like a whole lot of code
-> for little effect. I came to the same conclusion that replacing gpio
-> resets would probably be overkill, but I was only peripherally aware of
-> the tegra reset controller.
+> 	[27:24] extended register number
+> 	[23:16] bus number
+> 	[15:11] device number
+> 	[10: 8] function number
+> 	[ 7: 0] register number
+> 
+> So it doesn't matter whether I use separate areas per bus or not. As
+> soon as the whole extended configuration space needs to be accessed a
+> whopping 28 bits (256 MiB) are required.
 
-> So a simple common struct and some oftree parsing code in drivers/reset
-> that can replace both the proposed imx patch and what
-> tegra_periph_reset_* do would be considered useful?
+You'd piece a mapping together, each bus requires 16 64k mappings, a
+simple 2d array of busnr*16 of pointers would do the trick. A more
+clever solution would be to allocate contiguous virtual memory and
+split that up..
 
-Yes, I didn't really imagine the "reset subsystem" would do more than
-parsing the DT property that represented the reset and look up the
-registered reset controller and reset ID. Plus, provide some central
-function to pass the parsed reset ID to the reset controller driver. Of
-course, if it expanded to cover non-DT cases it might get more complex,
-but that can always be added later.
+> > Actually, AER probably needs this, and I believe some broken devices 
+> > need to mask interrupts using the PCI command word in the config space,
+> > it it can happen.
+> 
+> Ugh... that would kill any such dynamic mapping approach. Perhaps if we
+> could mark a device as requiring a static mapping we could pin that
+> cache entry. But that doesn't sound very encouraging.
+
+AER applies to pretty much every PCI-E device these days.
+
+Jason
