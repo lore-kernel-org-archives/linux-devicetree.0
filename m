@@ -1,16 +1,15 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] ARM i.MX53: add dts for the TQ tqma53 module
-Date: Thu, 10 Jan 2013 10:09:04 +0800
-Message-ID: <20130110020903.GD2265@S2101-09.ap.freescale.net>
+Subject: Re: [PATCH 4/4] ARM i.MX53: dts: add oftree for MBa53 baseboard
+Date: Thu, 10 Jan 2013 10:45:45 +0800
+Message-ID: <20130110024543.GE2265@S2101-09.ap.freescale.net>
 References: <1357739065-9153-1-git-send-email-s.trumtrar@pengutronix.de>
- <1357739065-9153-4-git-send-email-s.trumtrar@pengutronix.de>
- <CAOMZO5BXKbjh1J+ms2b4taGaT34xAUM+L3E4FouyZ6tOnQTofg@mail.gmail.com>
+ <1357739065-9153-5-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOMZO5BXKbjh1J+ms2b4taGaT34xAUM+L3E4FouyZ6tOnQTofg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1357739065-9153-5-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,21 +20,88 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 09, 2013 at 02:30:34PM -0200, Fabio Estevam wrote:
-> On Wed, Jan 9, 2013 at 11:44 AM, Steffen Trumtrar
-> <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+On Wed, Jan 09, 2013 at 02:44:25PM +0100, Steffen Trumtrar wrote:
+> The MBa53 is a baseboard for the TQMA53 embedded module. This enables/adds only
+> supported devices, i.e. it is not feature complete, because of missing drivers
+> in mainline linux.
 > 
-> > +
-> > +&wdog1 {
-> > +       status = "okay";
-> > +};
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile        |    1 +
+>  arch/arm/boot/dts/imx53-MBa53.dts |  146 +++++++++++++++++++++++++++++++++++++
+>  2 files changed, 147 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx53-MBa53.dts
 > 
-> This can be removed, since imx53.dtsi already enables the watchdog.
+I do not like the CamelCase in filename, and do not want to be the first
+one doing that in  arch/arm/boot/dts.
 
-I fixed it up and applied the patch.
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index e44da40..04b05e8 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -84,6 +84,7 @@ dtb-$(CONFIG_ARCH_MXC) += imx51-babbage.dtb \
+>  	imx53-evk.dtb \
+>  	imx53-qsb.dtb \
+>  	imx53-smd.dtb \
+> +	imx53-MBa53.dtb \
+
+Change it to lower case and sort it properly.
+
+>  	imx6q-arm2.dtb \
+>  	imx6q-sabreauto.dtb \
+>  	imx6q-sabrelite.dtb \
+> diff --git a/arch/arm/boot/dts/imx53-MBa53.dts b/arch/arm/boot/dts/imx53-MBa53.dts
+> new file mode 100644
+> index 0000000..39ecaeb
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx53-MBa53.dts
+> @@ -0,0 +1,146 @@
+> +/*
+> + * Copyright 2012 Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Pengutronix
+> + *
+> + * The code contained herein is licensed under the GNU General Public
+> + * License. You may obtain a copy of the GNU General Public License
+> + * Version 2 or later at the following locations:
+> + *
+> + * http://www.opensource.org/licenses/gpl-license.html
+> + * http://www.gnu.org/copyleft/gpl.html
+> + */
+> +
+> +/dts-v1/;
+> +/include/ "imx53-tqma53.dtsi"
+> +
+> +/ {
+> +	model = "TQ MBa53 starter kit";
+> +	compatible = "tq,mba53", "tq,tqma53", "fsl,imx53";
+> +
+> +	backlight_reg:fixed@0 {
+
+The node name is not good.  Also we generally have a space between
+label and node names.
+
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "lcd-supply";
+> +		gpio = <&gpio2 5 0>;
+> +		startup-delay-us = <5000>;
+> +		enable-active-low;
+> +        };
+
+Use tab instead of space.
+
+> +
+> +	backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm2 0 50000 0 0>;
+> +		brightness-levels = <0 24 28 32 36 40 44 48 52 56 60 64 68 72 76 80 84 88 92 96 100>;
+> +		default-brightness-level = <10>;
+> +		enable-gpios = <&gpio7 7 0>;
+> +		power-supply = <&backlight_reg>;
+> +        };
+
+Ditto
 
 Shawn
