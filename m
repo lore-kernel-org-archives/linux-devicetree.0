@@ -1,71 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/4] gpio: introduce descriptor-based interface
-Date: Thu, 10 Jan 2013 10:08:44 +0000
-Message-ID: <201301101008.45091.arnd@arndb.de>
-References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com> <201301091046.13020.arnd@arndb.de> <2270940.DTxEYMZtED@percival>
+From: kishon <kishon@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: omap: Add omap-usb2 dt data
+Date: Thu, 10 Jan 2013 15:46:55 +0530
+Message-ID: <50EE9517.3030703@ti.com>
+References: <1348050772-27819-1-git-send-email-kishon@ti.com> <1348050772-27819-3-git-send-email-kishon@ti.com> <50EE8A89.4010801@ti.com> <50EE921D.8020601@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <2270940.DTxEYMZtED@percival>
-Sender: linux-arch-owner@vger.kernel.org
-To: Alex Courbot <acourbot@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <50EE921D.8020601@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, balbi@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 10 January 2013, Alex Courbot wrote:
-> On Wednesday 09 January 2013 18:46:12 Arnd Bergmann wrote:
-> > 
-> > Only legacy users did this. Initially there was only the header file,
-> > with the API declared but several different implementations of it.
-> > gpiolib was introduced later to reduce code duplication and allow having
-> > multiple implementations in the same kernel.
-> 
-> Does the following sound reasonable?
-> 1) Make sure every target that uses GENERIC_GPIO also implements its drivers 
-> using gpiolib, convert the (hopefully) few ones that don't to use gpiolib
-> 2) Make GENERIC_GPIO require GPIOLIB or just merge both options into a single 
-> one
-> 3) Turn gpio into a full subsystem (like pinctrl)
-> 
-> This should make things less blurry and easier to maintain (less header files, 
-> only one interface, etc.) GPIO controllers would also be better integrated 
-> into the driver model.
+Hi,
 
-Yes, I think that would be good.
+On Thursday 10 January 2013 03:34 PM, Benoit Cousson wrote:
+> On 01/10/2013 10:31 AM, kishon wrote:
+>> Hi Benoit,
+>>
+>> On Wednesday 19 September 2012 04:02 PM, Kishon Vijay Abraham I wrote:
+>>> Add omap-usb2 data node in omap4 device tree file. Since omap-usb2 is
+>>> connected to ocp2scp, omap-usb2 dt data is added as a child node
+>>> of ocp2scp.
+>>>
+>>> Acked-by: Felipe Balbi <balbi@ti.com>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>
+>> This patch is also missing in mainline :-(
+>
+> Well, in that case this was done on purpose :-)
+>
+>>
+>> Thanks
+>> Kishon
+>>
+>>> ---
+>>>    arch/arm/boot/dts/omap4.dtsi |    5 +++++
+>>>    1 file changed, 5 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+>>> index 4fbb9dc..28eaddc 100644
+>>> --- a/arch/arm/boot/dts/omap4.dtsi
+>>> +++ b/arch/arm/boot/dts/omap4.dtsi
+>>> @@ -303,6 +303,11 @@
+>>>                #size-cells = <1>;
+>>>                ranges;
+>>>                ti,hwmods = "ocp2scp_usb_phy";
+>>> +            usb2phy@4a0ad080 {
+>>> +                compatible = "ti,omap-usb2";
+>>> +                reg = <0x4a0ad080 0x58>,
+>>> +                      <0x4a002300 0x4>; /* TO BE REMOVED: SCM */
+>
+> Rob and I did not agree to use that temp hack in the case of DT, so you
+> were supposed to repost with a proper driver for the SCM part that
+> control the USB.
 
-I've tried to find platforms that don't yet use GPIOLIB and fortunately
-there are very few left:
+Ok. Missed that. Will work on that.
 
-I found two that provide the generic gpio interfaces when gpiolib
-is disabled, but use gpiolib otherwise for the same hardware,
-arch/m68k/include/asm/mcfgpio.h and arch/blackfin/include/asm/gpio.h.
-I would assume that we can simply remove the non-gpiolib shortcut
-here at cost of a small overhead.
-
-Then there are a bunch that use gpiolib but have a nontrivial
-implementation of gpio_get_value and other functions. I'm not sure
-if these are a problematic with your code.
-
-> > Regarding the integration of pinctrl with gpio,
-> > I was thinking in the past that we could make pinctrl provide everything
-> > that gpiolib does, and have a generic gpiolib driver on top of pinctrl
-> > so that platforms don't need to implement both interfaces but only need
-> > to provide a pure pinctrl driver. Not sure if this makes any sense.
-> 
-> That would work if all GPIOs were connected to a ball, but how about GPIO 
-> expanders that are external to the chip? They have no use for pinctrl AFAICT. 
-> On the other hand, maybe we can have one pinctrl-gpio driver for those chips 
-> where pinctrl alone can emulate all the functionality of a GPIO controller. 
-> Maybe such a driver exists already?
-
-I don't think we have that yet, but it would be another option: rather
-than putting a generic gpiolib driver on top of pinctrl, we could have
-pinctrl support for all gpios that go through gpiolib, and move device
-drivers over to use pinctrl as the way to manage gpios rather than the
-classic gpio drivers. That would be a larger change though, and require
-that we pull in the pinctrl subsystem on a lot of machines that don't
-need it today.
-
-	Arnd
+Thanks
+Kishon
