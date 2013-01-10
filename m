@@ -1,15 +1,17 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 05/14] lib: Add I/O map cache implementation
-Date: Thu, 10 Jan 2013 18:26:55 +0000
-Message-ID: <201301101826.56248.arnd@arndb.de>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <201301100917.19577.arnd@arndb.de>
- <20130110102544.GA5546@avionic-0098.adnet.avionic-design.de>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: omap: Add omap-usb2 dt data
+Date: Thu, 10 Jan 2013 10:35:01 -0800
+Message-ID: <20130110183501.GX14149@atomide.com>
+References: <1348050772-27819-1-git-send-email-kishon@ti.com>
+ <1348050772-27819-3-git-send-email-kishon@ti.com>
+ <50EE8A89.4010801@ti.com> <50EE921D.8020601@ti.com>
+ <50EE9517.3030703@ti.com> <20130110124551.GU28920@arwen.pp.htv.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130110102544.GA5546-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130110124551.GU28920-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,44 +22,40 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kishon <kishon-l0cyMroinI0@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 10 January 2013, Thierry Reding wrote:
-> I don't understand how this would help. The encoding is like this:
+* Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [130110 04:49]:
+> On Thu, Jan 10, 2013 at 03:46:55PM +0530, kishon wrote:
+> > On Thursday 10 January 2013 03:34 PM, Benoit Cousson wrote:
+> > >
+> > >Rob and I did not agree to use that temp hack in the case of DT, so you
+> > >were supposed to repost with a proper driver for the SCM part that
+> > >control the USB.
+> > 
+> > Ok. Missed that. Will work on that.
 > 
->         [27:24] extended register number
->         [23:16] bus number
->         [15:11] device number
->         [10: 8] function number
->         [ 7: 0] register number
+> Didn't Tony say we should access SCM directly since it's a one time
+> thing ?
 > 
-> So it doesn't matter whether I use separate areas per bus or not. As
-> soon as the whole extended configuration space needs to be accessed a
-> whopping 28 bits (256 MiB) are required.
-> 
-> What you propose would work if only regular configuration space is
-> supported. I'm not sure if that's an option.
+> Tony ?
 
-I mean something like:
+The SCM parts should be a separate driver that eventually will be
+a child of the minimal SCM core driver. The reason why it should be
+separate is because the SCM registers are in a different block as
+pointed out by Paul.
 
-struct tegra_bus_private {
-	...
-	void __iomem *config_space[16];
-};
+There's a good chance that we'll be able to eventually handle the USB
+SCM registers directly via pinctrl-single.c using pinconf-bits + generic
+pinconf binding. That is pending the changes from Haojian to implement
+generic pinconf for pinctrl-single.c.
 
+As the USB SCM registers can get quite complex, I suggest creating a
+minimal driver to handle that, and then eventually that driver might
+just use the generic pinconf API for setting the SCM registers for
+things like bias voltage, pulls and comparators.
 
-void tegra_scan_bus(struct pci_bus *bus)
-{
-	int i;
-	struct tegra_bus_private *priv = bus->dev->private;
+Regards,
 
-	for (i=0; i<16; i++)
-		priv->config_space[i] = ioremap(config_space_phys +
-				 65536 * bus->primary + i * SZ_1M, 65536);
-
-	...
-}
-
-	Arnd
+Tony
