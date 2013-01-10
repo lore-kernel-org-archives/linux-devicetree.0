@@ -1,16 +1,17 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [RFC PATCH 1/5] ARM i.MX6q: Add GPU, VPU, IPU, and OpenVG
- resets to system reset controller
-Date: Thu, 10 Jan 2013 14:54:49 +0100
-Message-ID: <1357826089.2363.671.camel@pizza.hi.pengutronix.de>
+Subject: Re: [RFC PATCH 0/5] Use SRC to reset IP modules on i.MX5 and i.MX6
+Date: Thu, 10 Jan 2013 15:36:01 +0100
+Message-ID: <1357828561.2363.676.camel@pizza.hi.pengutronix.de>
 References: <1357751839-19680-1-git-send-email-p.zabel@pengutronix.de>
- <1357751839-19680-2-git-send-email-p.zabel@pengutronix.de>
- <20130110065622.GA7466@S2101-09.ap.freescale.net>
+ <CAOMZO5Cgem3xyYg9MawnxXx_tDKgtiA_g6odu2wtnAeXWjdfmA@mail.gmail.com>
+ <1357753220.8747.3.camel@pizza.hi.pengutronix.de>
+ <CAOMZO5C_v92S0kBt66a2SsHGGGSBjJSP18-CQfWQ=sz0YW7ztg@mail.gmail.com>
+ <CAOMZO5C28qgH5DVooxYg5p6tA7bsFJshr4qxZEyp05A1LR3JWA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130110065622.GA7466-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+In-Reply-To: <CAOMZO5C28qgH5DVooxYg5p6tA7bsFJshr4qxZEyp05A1LR3JWA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,30 +22,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Am Donnerstag, den 10.01.2013, 14:56 +0800 schrieb Shawn Guo:
-> Hi Philipp,
+Am Mittwoch, den 09.01.2013, 15:57 -0200 schrieb Fabio Estevam:
+> On Wed, Jan 9, 2013 at 3:53 PM, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> > On Wed, Jan 9, 2013 at 3:40 PM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> >
+> >> I rebased them onto next-20130109 (with this base compile-tested only).
+> >
+> > Just tested it, but unfortunately I still get the crash.
 > 
-> On Wed, Jan 09, 2013 at 06:17:15PM +0100, Philipp Zabel wrote:
-> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >  .../devicetree/bindings/reset/fsl,imx-src.txt      |   45 ++++++++++++++++++++
-> >  arch/arm/mach-imx/src.c                            |   41 ++++++++++++++++++
-> >  include/linux/imx-src.h                            |    6 +++
-> >  3 files changed, 92 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx-src.txt
-> >  create mode 100644 include/linux/imx-src.h
+> Ok, since I am on mx51 I just added a:
 > 
-> I'm with Stephen that we should try to create a common API for this.
-> Instead of ask device drivers to call IMX specific imx_src_reset(),
-> we should have them call some type of common API with struct device
-> as the argument.
+> diff --git a/arch/arm/boot/dts/imx51.dtsi b/arch/arm/boot/dts/imx51.dtsi
+> index 1f5d45e..8380b14 100644
+> --- a/arch/arm/boot/dts/imx51.dtsi
+> +++ b/arch/arm/boot/dts/imx51.dtsi
+> @@ -67,6 +67,7 @@
+>                         compatible = "fsl,imx51-ipu";
+>                         reg = <0x40000000 0x20000000>;
+>                         interrupts = <11 10>;
+> +                       reset = <&src 2>;
+>                 };
+> 
+> and now it works fine.
 
-Agreed. At least for devices with a single dedicated reset line this
-would be a much better API.
+Thanks, sorry for missing the essential part for i.MX51.
+So it seems hooking up the SRC to a common peripheral device reset call
+is the way to go.
 
 regards
 Philipp
