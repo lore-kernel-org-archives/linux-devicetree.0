@@ -1,52 +1,122 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 05/14] lib: Add I/O map cache implementation
-Date: Thu, 10 Jan 2013 14:06:14 -0700
-Message-ID: <20130110210614.GA21836@obsidianresearch.com>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <20130109231758.GA27065@obsidianresearch.com>
- <20130110071937.GG15212@avionic-0098.adnet.avionic-design.de>
- <201301100917.19577.arnd@arndb.de>
- <20130110102544.GA5546@avionic-0098.adnet.avionic-design.de>
- <20130110182007.GA28004@obsidianresearch.com>
- <20130110185505.GA22944@avionic-0098.adnet.avionic-design.de>
- <20130110190327.GA23110@avionic-0098.adnet.avionic-design.de>
- <20130110192417.GA18478@obsidianresearch.com>
- <20130110202007.GA26139@avionic-0098.adnet.avionic-design.de>
+From: Matt Porter <mporter@ti.com>
+Subject: Re: [RFC PATCH v3 05/16] ARM: edma: add AM33XX crossbar event support
+Date: Thu, 10 Jan 2013 17:54:34 -0500
+Message-ID: <20130110225434.GT14660@beef>
+References: <1350566815-409-1-git-send-email-mporter@ti.com>
+ <1350566815-409-6-git-send-email-mporter@ti.com>
+ <508D12DC.8010400@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130110202007.GA26139-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <508D12DC.8010400@ti.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2013 at 09:20:07PM +0100, Thierry Reding wrote:
-
-> > Arnd's version is good too, but you would be restricted to aligned
-> > powers of two for the bus number range in the DT, which is probably
-> > not that big a deal either?
+On Sun, Oct 28, 2012 at 04:41:24PM +0530, Sekhar Nori wrote:
+> On 10/18/2012 6:56 PM, Matt Porter wrote:
+> > Adds support for the per-EDMA channel event mux. This is required
+> > for any peripherals using DMA crossbar mapped events.
+> > 
+> > Signed-off-by: Matt Porter <mporter@ti.com>
+> > ---
+> >  arch/arm/common/edma.c             |   63 +++++++++++++++++++++++++++++++++++-
+> >  include/linux/platform_data/edma.h |    1 +
+> >  2 files changed, 63 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/arch/arm/common/edma.c b/arch/arm/common/edma.c
+> > index 6d2a590..b761b7a 100644
+> > --- a/arch/arm/common/edma.c
+> > +++ b/arch/arm/common/edma.c
+> > @@ -1425,6 +1425,53 @@ static int edma_of_read_u32_to_s16_array(const struct device_node *np,
+> >  	return 0;
+> >  }
+> >  
+> > +static int edma_xbar_event_map(struct device *dev,
+> > +			       struct device_node *node,
+> > +			       struct edma_soc_info *pdata, int len)
+> > +{
+> > +	int ret = 0;
+> > +	int i;
+> > +	struct resource res;
+> > +	void *xbar;
+> > +	s16 (*xbar_chans)[2];
+> > +	u32 shift, offset, mux;
+> > +
+> > +	xbar_chans = devm_kzalloc(dev,
+> > +				  len/sizeof(s16) + 2*sizeof(s16),
+> > +				  GFP_KERNEL);
+> > +	if (!xbar_chans)
+> > +		return -ENOMEM;
+> > +
+> > +	ret = of_address_to_resource(node, 1, &res);
+> > +	if (IS_ERR_VALUE(ret))
+> > +		return -EIO;
+> > +
+> > +	xbar = devm_ioremap(dev, res.start, resource_size(&res));
+> > +	if (!xbar)
+> > +		return -EIO;
 > 
-> Stephen suggested on IRC that we could try to keep a bit of dynamicity
-> in the allocation scheme if we create the bus mapping when the first
-> device on the bus is probed and discard the mapping if no devices are
-> found.
+> -ENOMEM is more appropiate for ioremap failures.
 
-You probably don't need to mess around with 'discard on empty' the
-kernel should only access bus numbers that are in the range of the
-subordinate busses of the bridges. So if you establish a mapping on a
-bus-by-bus basis at first access, it should be fine and very close to
-minimal..
+Fixed in v4.
 
-Jason
+> 
+> > +
+> > +	ret = edma_of_read_u32_to_s16_array(node,
+> > +					    "ti,edma-xbar-event-map",
+> > +					    (s16 *)xbar_chans,
+> > +					    len/sizeof(u32));
+> > +	if (IS_ERR_VALUE(ret))
+> > +		return -EIO;
+> > +
+> > +	for (i = 0; xbar_chans[i][0] != -1; i++) {
+> > +		shift = (xbar_chans[i][1] % 4) * 8;
+> > +		offset = xbar_chans[i][1] >> 2;
+> > +		offset <<= 2;
+> > +		mux = __raw_readl((void *)((u32)xbar + offset));
+> 
+> Dont use __raw* variants of io accessors. There will be ordering issues
+> on ARMv7.
+
+Fixed in v4.
+
+> 
+> > +		mux &= (~(0xff << shift));
+> > +		mux |= (xbar_chans[i][0] << shift);
+> 
+> Unnecessary parens above.
+
+Fixed in v4.
+
+> 
+> > +		__raw_writel(mux, (void *)((u32)xbar + offset));
+> > +	}
+> > +
+> > +	pdata->xbar_chans = xbar_chans;
+> > +
+> > +	return 0;
+> > +}
+> > +
+> >  static int edma_of_parse_dt(struct device *dev,
+> >  			    struct device_node *node,
+> >  			    struct edma_soc_info *pdata)
+> > @@ -1453,7 +1500,6 @@ static int edma_of_parse_dt(struct device *dev,
+> >  	pdata->n_slot = value;
+> >  
+> >  	pdata->n_cc = 1;
+> > -	/* This is unused */
+> 
+> The comment should have not been part of 4/16?
+
+Correct. I moved the change to the correct patch in v4.
+
+> 
+> Thanks,
+> Sekhar
+> _______________________________________________
+> Davinci-linux-open-source mailing list
+> Davinci-linux-open-source@linux.davincidsp.com
+> http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source
