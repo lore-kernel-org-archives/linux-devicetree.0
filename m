@@ -1,31 +1,33 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [RFC PATCH 5/7] ARM: s3c64xx: Add board file for boot using Device Tree
-Date: Thu, 10 Jan 2013 11:55:01 +0100
-Message-ID: <1513533.R0vnZSVmMe@flatron>
-References: <1357774909-29938-1-git-send-email-tomasz.figa@gmail.com> <1357774909-29938-6-git-send-email-tomasz.figa@gmail.com> <20130110105221.GG20956@opensource.wolfsonmicro.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM i.MX53: dts: add oftree for MBa53 baseboard
+Date: Thu, 10 Jan 2013 18:59:24 +0800
+Message-ID: <20130110105921.GH2265@S2101-09.ap.freescale.net>
+References: <1357813647-22095-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130110105221.GG20956@opensource.wolfsonmicro.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1357813647-22095-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On Thu, Jan 10, 2013 at 11:27:27AM +0100, Steffen Trumtrar wrote:
+> The MBa53 is a baseboard for the TQMA53 embedded module. This enables/adds only
+> supported devices, i.e. it is not feature complete, because of missing drivers
+> in mainline linux.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-On Thursday 10 of January 2013 10:52:22 Mark Brown wrote:
-> On Thu, Jan 10, 2013 at 12:41:47AM +0100, Tomasz Figa wrote:
-> > + * The following lookup table is used to override device names when
-> > devices + * are registered from device tree. This is temporarily
-> > added to enable + * device tree support addition for the Exynos4
-> > architecture.
-> Cut'n'paste.
-
-Oh my, you got me. ;)
-
-I will correct it in next version. Thanks for spotting this.
-
-Best regards,
-Tomasz Figa
+Applied, thanks.
