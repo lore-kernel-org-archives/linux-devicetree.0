@@ -1,68 +1,174 @@
-From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH 05/14] lib: Add I/O map cache implementation
-Date: Thu, 10 Jan 2013 11:20:07 -0700
-Message-ID: <20130110182007.GA28004@obsidianresearch.com>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <20130109231758.GA27065@obsidianresearch.com>
- <20130110071937.GG15212@avionic-0098.adnet.avionic-design.de>
- <201301100917.19577.arnd@arndb.de>
- <20130110102544.GA5546@avionic-0098.adnet.avionic-design.de>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [REPOST PATCH v3 1/4] mmc: dw_mmc: Add "disable-wp" device tree
+ property
+Date: Thu, 10 Jan 2013 10:24:26 -0800
+Message-ID: <1357842269-15062-1-git-send-email-dianders@chromium.org>
+References: <1354251857-21587-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130110102544.GA5546-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1354251857-21587-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Will Newton <will.newton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2013 at 11:25:44AM +0100, Thierry Reding wrote:
-> On Thu, Jan 10, 2013 at 09:17:19AM +0000, Arnd Bergmann wrote:
-> > On Thursday 10 January 2013, Thierry Reding wrote:
-> > > On Wed, Jan 09, 2013 at 04:17:58PM -0700, Jason Gunthorpe wrote:
-> > > > On Wed, Jan 09, 2013 at 04:12:31PM -0700, Stephen Warren wrote:
-> > > > You could decrease the size of the mapping to only span the bus
-> > > > numbers that are configured for use via DT.
-> > > 
-> > > That won't work, unfortunately. The mapping is such that the bus number
-> > > is not encoded in the uppermost bits, the extended register number is.
-> > > So the only thing that we could do is decrease the size of the extended
-> > > register space for *all* devices.
-> > 
-> > But you could still a method to map 16 separate areas per bus, each 65536
-> > bytes long, which results in 1MB per bus. That is probably ok, since
-> > very few systems have more than a handful of buses in practice.
-> > 
-> > In theory, doing static mappings on a per-page base would let you
-> > do 16 devices at a time, but it's probably worth doing at this fine
-> > granularity.
-> 
-> I don't understand how this would help. The encoding is like this:
-> 
-> 	[27:24] extended register number
-> 	[23:16] bus number
-> 	[15:11] device number
-> 	[10: 8] function number
-> 	[ 7: 0] register number
-> 
-> So it doesn't matter whether I use separate areas per bus or not. As
-> soon as the whole extended configuration space needs to be accessed a
-> whopping 28 bits (256 MiB) are required.
+The "disable-wp" property is used to specify that a given SD card slot
+doesn't have a concept of write protect.  This eliminates the need for
+special case code for SD slots that should never be write protected
+(like a micro SD slot or a dev board).
 
-You'd piece a mapping together, each bus requires 16 64k mappings, a
-simple 2d array of busnr*16 of pointers would do the trick. A more
-clever solution would be to allocate contiguous virtual memory and
-split that up..
+The dw_mmc driver is special in needing to specify "disable-wp"
+because the lack of a "wp-gpios" property means to use the special
+purpose write protect line.  On some other mmc devices the lack of
+"wp-gpios" means that write protect should be disabled.
 
-> > Actually, AER probably needs this, and I believe some broken devices 
-> > need to mask interrupts using the PCI command word in the config space,
-> > it it can happen.
-> 
-> Ugh... that would kill any such dynamic mapping approach. Perhaps if we
-> could mark a device as requiring a static mapping we could pin that
-> cache entry. But that doesn't sound very encouraging.
+Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Acked-by: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+Changes in v3:
+- New for this version of the patch series.  Chose "disable-wp" rather
+  than the discussed "broken-internal-wp" since it mapped more cleanly
+  to an existing quirk (and the only reason to specify that the
+  internal wp is broken is if you're disabling the write protect
+  anyway).
+- Reposted series 3 with Seungwon's ack, since it hasn't been picked
+  up by anyone.
 
-AER applies to pretty much every PCI-E device these days.
+ .../devicetree/bindings/mmc/synopsis-dw-mshc.txt   |   12 +++++-
+ drivers/mmc/host/dw_mmc.c                          |   36 +++++++++++++++++++-
+ include/linux/mmc/dw_mmc.h                         |    4 ++
+ 3 files changed, 49 insertions(+), 3 deletions(-)
 
-Jason
+diff --git a/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
+index 06cd32d08..726fd21 100644
+--- a/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
+@@ -26,8 +26,16 @@ Required Properties:
+ 	* bus-width: as documented in mmc core bindings.
+ 
+ 	* wp-gpios: specifies the write protect gpio line. The format of the
+-	  gpio specifier depends on the gpio controller. If the write-protect
+-	  line is not available, this property is optional.
++	  gpio specifier depends on the gpio controller. If a GPIO is not used
++	  for write-protect, this property is optional.
++
++	* disable-wp: If the wp-gpios property isn't present then (by default)
++	  we'd assume that the write protect is hooked up directly to the
++	  controller's special purpose write protect line (accessible via
++	  the WRTPRT register).  However, it's possible that we simply don't
++	  want write protect.  In that case specify 'disable-wp'.
++	  NOTE: This property is not required for slots known to always
++	  connect to eMMC or SDIO cards.
+ 
+ Optional properties:
+ 
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index 323c502..bc0b030 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -74,6 +74,7 @@ struct idmac_desc {
+  * struct dw_mci_slot - MMC slot state
+  * @mmc: The mmc_host representing this slot.
+  * @host: The MMC controller this slot is using.
++ * @quirks: Slot-level quirks (DW_MCI_SLOT_QUIRK_XXX)
+  * @ctype: Card type for this slot.
+  * @mrq: mmc_request currently being processed or waiting to be
+  *	processed, or NULL when the slot is idle.
+@@ -88,6 +89,8 @@ struct dw_mci_slot {
+ 	struct mmc_host		*mmc;
+ 	struct dw_mci		*host;
+ 
++	int			quirks;
++
+ 	u32			ctype;
+ 
+ 	struct mmc_request	*mrq;
+@@ -825,7 +828,8 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
+ 	struct dw_mci_board *brd = slot->host->pdata;
+ 
+ 	/* Use platform get_ro function, else try on board write protect */
+-	if (brd->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT)
++	if ((brd->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT) ||
++	    (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT))
+ 		read_only = 0;
+ 	else if (brd->get_ro)
+ 		read_only = brd->get_ro(slot->id);
+@@ -1785,6 +1789,30 @@ static struct device_node *dw_mci_of_find_slot_node(struct device *dev, u8 slot)
+ 	return NULL;
+ }
+ 
++static struct dw_mci_of_slot_quirks {
++	char *quirk;
++	int id;
++} of_slot_quirks[] = {
++	{
++		.quirk	= "disable-wp",
++		.id	= DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
++	},
++};
++
++static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
++{
++	struct device_node *np = dw_mci_of_find_slot_node(dev, slot);
++	int quirks = 0;
++	int idx;
++
++	/* get quirks */
++	for (idx = 0; idx < ARRAY_SIZE(of_slot_quirks); idx++)
++		if (of_get_property(np, of_slot_quirks[idx].quirk, NULL))
++			quirks |= of_slot_quirks[idx].id;
++
++	return quirks;
++}
++
+ /* find out bus-width for a given slot */
+ static u32 dw_mci_of_get_bus_wd(struct device *dev, u8 slot)
+ {
+@@ -1800,6 +1828,10 @@ static u32 dw_mci_of_get_bus_wd(struct device *dev, u8 slot)
+ 	return bus_wd;
+ }
+ #else /* CONFIG_OF */
++static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
++{
++	return 0;
++}
+ static u32 dw_mci_of_get_bus_wd(struct device *dev, u8 slot)
+ {
+ 	return 1;
+@@ -1828,6 +1860,8 @@ static int dw_mci_init_slot(struct dw_mci *host, unsigned int id)
+ 	slot->host = host;
+ 	host->slot[id] = slot;
+ 
++	slot->quirks = dw_mci_of_get_slot_quirks(host->dev, slot->id);
++
+ 	mmc->ops = &dw_mci_ops;
+ 	mmc->f_min = DIV_ROUND_UP(host->bus_hz, 510);
+ 	mmc->f_max = host->bus_hz;
+diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
+index 34be4f4..24dc3a8 100644
+--- a/include/linux/mmc/dw_mmc.h
++++ b/include/linux/mmc/dw_mmc.h
+@@ -212,6 +212,10 @@ struct dw_mci_dma_ops {
+ /* Write Protect detection not available */
+ #define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
+ 
++/* Slot level quirks */
++/* This slot has no write protect */
++#define DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT	BIT(0)
++
+ struct dma_pdata;
+ 
+ struct block_settings {
+-- 
+1.7.7.3
