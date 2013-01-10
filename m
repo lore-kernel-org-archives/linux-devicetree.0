@@ -1,100 +1,104 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH] ARM: kernel: DT cpu map validity check helper function
-Date: Thu, 10 Jan 2013 12:33:21 +0000
-Message-ID: <20130110123321.GD4728@e102568-lin.cambridge.arm.com>
-References: <1357818507-8716-1-git-send-email-lorenzo.pieralisi@arm.com>
- <20130110121514.GD29952@linaro.org>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 2/2] ARM: dts: omap: Add omap-usb2 dt data
+Date: Thu, 10 Jan 2013 14:45:51 +0200
+Message-ID: <20130110124551.GU28920@arwen.pp.htv.fi>
+References: <1348050772-27819-1-git-send-email-kishon@ti.com>
+ <1348050772-27819-3-git-send-email-kishon@ti.com>
+ <50EE8A89.4010801@ti.com>
+ <50EE921D.8020601@ti.com>
+ <50EE9517.3030703@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130110121514.GD29952@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hFEw+uh9kF5V6COn"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Dave Martin <dave.martin@linaro.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hiroshi Doyu <hdoyu@nvidia.com>
+In-Reply-To: <50EE9517.3030703@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: kishon <kishon@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, balbi@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2013 at 12:15:14PM +0000, Dave Martin wrote:
-> On Thu, Jan 10, 2013 at 11:48:27AM +0000, Lorenzo Pieralisi wrote:
-> > Since the introduction of /cpu nodes bindings for ARM and the
-> > corresponding parse function arm_dt_init_cpu_maps(), the cpu_logical_map
-> > and the number of possible CPUs are set according to the DT /cpu
-> > nodes entries. Currently most of the existing ARM SMP platforms detect the
-> > number of cores through HW probing in their .smp_init_cpus functions and set
-> > the possible CPU mask accordingly.
-> > This method should be upgraded so that the CPU counting mechanism will be
-> > based on DT, keeping legacy HW probing mechanism as a fall back solution.
-> > 
-> > In order to implement this fall back solution mechanism, the ARM DT code
-> > should provide a helper function to platforms to check if the cpu map
-> > has been properly initialized through DT. If the check fails the
-> > platform will resort to legacy HW based cores counting mechanism.
-> > 
-> > This patch implements a trivial flag and a helper function that platform
-> > can call to check whether DT based cpu map initialization and cores count
-> > were completed successfully.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > ---
-> >  arch/arm/include/asm/prom.h | 10 ++++++++++
-> >  arch/arm/kernel/devtree.c   |  5 +++++
-> >  2 files changed, 15 insertions(+)
-> > 
-> > diff --git a/arch/arm/include/asm/prom.h b/arch/arm/include/asm/prom.h
-> > index a219227..487614a 100644
-> > --- a/arch/arm/include/asm/prom.h
-> > +++ b/arch/arm/include/asm/prom.h
-> > @@ -18,6 +18,15 @@
-> >  extern struct machine_desc *setup_machine_fdt(unsigned int dt_phys);
-> >  extern void arm_dt_memblock_reserve(void);
-> >  extern void __init arm_dt_init_cpu_maps(void);
-> > +/*
-> > + * Return true if cpu map initialization has been
-> > + * carried out correctly from DT
-> > + */
-> > +static inline bool __init arm_dt_cpu_map_valid(void)
-> > +{
-> > +	extern bool valid_dt_cpu_map;
-> > +	return valid_dt_cpu_map;
-> > +}
-> >  
-> >  #else /* CONFIG_OF */
-> >  
-> > @@ -28,6 +37,7 @@ static inline struct machine_desc *setup_machine_fdt(unsigned int dt_phys)
-> >  
-> >  static inline void arm_dt_memblock_reserve(void) { }
-> >  static inline void arm_dt_init_cpu_maps(void) { }
-> > +static inline bool __init arm_dt_cpu_map_valid(void) { return false; }
-> >  
-> >  #endif /* CONFIG_OF */
-> >  #endif /* ASMARM_PROM_H */
-> > diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-> > index 70f1bde..c82af3b 100644
-> > --- a/arch/arm/kernel/devtree.c
-> > +++ b/arch/arm/kernel/devtree.c
-> > @@ -62,6 +62,10 @@ void __init arm_dt_memblock_reserve(void)
-> >  		memblock_reserve(base, size);
-> >  	}
-> >  }
-> > +/*
-> > + * Export DT cpu map validity flag to platforms
-> > + */
-> > +bool valid_dt_cpu_map __initdata;
-> 
-> Is there any possibility of this being useful after boot?
-> Hopefully not, but maybe there's something I haven't considered.
+--hFEw+uh9kF5V6COn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I do not think so, at least for the use cases I have envisaged at the moment,
-but it is certainly something I should consider.
+On Thu, Jan 10, 2013 at 03:46:55PM +0530, kishon wrote:
+> Hi,
+>=20
+> On Thursday 10 January 2013 03:34 PM, Benoit Cousson wrote:
+> >On 01/10/2013 10:31 AM, kishon wrote:
+> >>Hi Benoit,
+> >>
+> >>On Wednesday 19 September 2012 04:02 PM, Kishon Vijay Abraham I wrote:
+> >>>Add omap-usb2 data node in omap4 device tree file. Since omap-usb2 is
+> >>>connected to ocp2scp, omap-usb2 dt data is added as a child node
+> >>>of ocp2scp.
+> >>>
+> >>>Acked-by: Felipe Balbi <balbi@ti.com>
+> >>>Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >>
+> >>This patch is also missing in mainline :-(
+> >
+> >Well, in that case this was done on purpose :-)
+> >
+> >>
+> >>Thanks
+> >>Kishon
+> >>
+> >>>---
+> >>>   arch/arm/boot/dts/omap4.dtsi |    5 +++++
+> >>>   1 file changed, 5 insertions(+)
+> >>>
+> >>>diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dt=
+si
+> >>>index 4fbb9dc..28eaddc 100644
+> >>>--- a/arch/arm/boot/dts/omap4.dtsi
+> >>>+++ b/arch/arm/boot/dts/omap4.dtsi
+> >>>@@ -303,6 +303,11 @@
+> >>>               #size-cells =3D <1>;
+> >>>               ranges;
+> >>>               ti,hwmods =3D "ocp2scp_usb_phy";
+> >>>+            usb2phy@4a0ad080 {
+> >>>+                compatible =3D "ti,omap-usb2";
+> >>>+                reg =3D <0x4a0ad080 0x58>,
+> >>>+                      <0x4a002300 0x4>; /* TO BE REMOVED: SCM */
+> >
+> >Rob and I did not agree to use that temp hack in the case of DT, so you
+> >were supposed to repost with a proper driver for the SCM part that
+> >control the USB.
+>=20
+> Ok. Missed that. Will work on that.
 
-Thanks,
-Lorenzo
+Didn't Tony say we should access SCM directly since it's a one time
+thing ?
+
+Tony ?
+
+--=20
+balbi
+
+--hFEw+uh9kF5V6COn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ7rf/AAoJEIaOsuA1yqREyG4P+QH5KEVnnUeSCuX4pK5Mpkm0
+QOm9z2T9vYLUYQSGfWxt01AUXq0MbUcl6eZGpGr34lEb53QiEt8TpOw18uPt7sw8
+ibOryP1pvD0RsWsNqcd9V6tJzW3U22Q4Zh0OmuTNKcATGXm5seBMxKvN4JBU3C32
+nm7yOARCblgBPl4WKUrnG10wAKfYJZhWPg5w9j+rKn1Kzd2s2O/+IkYJfMUlnchp
+yDh+HZnGD66xZUKECRCaUkK/+yvl1uePR3Gbt16ZYpRvPxp7NkvaGIfGtILJyShw
+vS/U2rf3L9v+umdTHWZ5bqhJiLSXvETZSehzAn9YWQRJLu7PSCsaAnEqEbddUkCA
+uhh9ws7foJT1WWkojbvIwgYGrHf6mUugnVuxb2DWLo4KsZcqE8fBynMOkmaf5iIl
+kxDPPjWCmm6UgGn5nVimsX6aogLWmAszj3OGzIsf1gjzojDCn0TZN4SqcyszLAHR
+pqOb9TnCuSlvOsNeQF0+xD7xMQjmjxMdiFr0nzcwfim1JOztc0b0W/qoRedxt1j8
+yye8+Ehs8wZVk9vigynwGCq0ihhrG/HwSID+v9fpFOYG6Ao6eME/6ti/55PyfNQD
+an8bPso1rnDQzf4/voqrr9vxbOFEOeMvLz8+0UOr4YZydLKzGjgzcJIMaCvH2MXF
+nd+9crNCEsXhYzPdJ56w
+=ip/K
+-----END PGP SIGNATURE-----
+
+--hFEw+uh9kF5V6COn--
