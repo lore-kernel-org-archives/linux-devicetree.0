@@ -1,132 +1,80 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 4/4] usb: chipidea: imx: Add system suspend/resume API
-Date: Thu, 10 Jan 2013 16:35:54 +0800
-Message-ID: <1357806954-27960-4-git-send-email-peter.chen@freescale.com>
-References: <1357806954-27960-1-git-send-email-peter.chen@freescale.com>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 1/4] gpiolib: introduce descriptor-based GPIO interface
+Date: Thu, 10 Jan 2013 09:36:47 +0100
+Message-ID: <20130110083647.GA26256@avionic-0098.adnet.avionic-design.de>
+References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com>
+ <201301081259.29839.arnd@arndb.de>
+ <CAAVeFu+4VbCbj9TaeMm+NMDJ9_M4-j4O0ONF7Yh_un63wS38+Q@mail.gmail.com>
+ <201301091035.23206.arnd@arndb.de>
+ <20130109104414.GF3931@n2100.arm.linux.org.uk>
+ <20130109111055.GG3931@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1357806954-27960-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1yeeQ81UyVL57Vl7"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130109111055.GG3931@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-arch@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Alexandre Courbot <acourbot@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-During the system suspend/resume procedure, the USB also
-needs to go suspend/resume procedure, this patch adds
-related APIs. It is tested at i.mx6q sabrelite. Meanwhile,
-it fixes the bug that the USB will out of work after
-system suspend/resume.
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/usb/chipidea/bits.h        |    1 +
- drivers/usb/chipidea/ci13xxx_imx.c |   61 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 62 insertions(+), 0 deletions(-)
+--1yeeQ81UyVL57Vl7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
-index ba9c6ef..d1467bb 100644
---- a/drivers/usb/chipidea/bits.h
-+++ b/drivers/usb/chipidea/bits.h
-@@ -47,6 +47,7 @@
- #define PORTSC_FPR            BIT(6)
- #define PORTSC_SUSP           BIT(7)
- #define PORTSC_HSP            BIT(9)
-+#define PORTSC_PHCD           BIT(23) /* phy suspend mode */
- #define PORTSC_PTC            (0x0FUL << 16)
- 
- /* DEVLC */
-diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
-index 342eab0..dd257b1 100644
---- a/drivers/usb/chipidea/ci13xxx_imx.c
-+++ b/drivers/usb/chipidea/ci13xxx_imx.c
-@@ -25,6 +25,7 @@
- #include <linux/mfd/syscon.h>
- 
- #include "ci.h"
-+#include "bits.h"
- #include "ci13xxx_imx.h"
- 
- #define pdev_to_phy(pdev) \
-@@ -321,6 +322,63 @@ static int ci13xxx_imx_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM
-+static int ci13xxx_imx_suspend(struct device *dev)
-+{
-+	struct ci13xxx_imx_data *data =
-+		platform_get_drvdata(to_platform_device(dev));
-+	struct platform_device *plat_ci;
-+	struct ci13xxx	*ci;
-+
-+	plat_ci = data->ci_pdev;
-+	ci = platform_get_drvdata(plat_ci);
-+
-+	hw_write(ci, OP_PORTSC, PORTSC_PHCD, 1);
-+
-+	if (data->phy)
-+		usb_phy_set_suspend(data->phy, 1);
-+
-+	clk_disable_unprepare(data->clk);
-+
-+	return 0;
-+}
-+
-+static int ci13xxx_imx_resume(struct device *dev)
-+{
-+	int ret;
-+	struct ci13xxx_imx_data *data =
-+		platform_get_drvdata(to_platform_device(dev));
-+	struct platform_device *plat_ci;
-+	struct ci13xxx	*ci;
-+
-+	plat_ci = data->ci_pdev;
-+	ci = platform_get_drvdata(plat_ci);
-+
-+	ret = clk_prepare_enable(data->clk);
-+	if (ret) {
-+		dev_err(dev,
-+			"Failed to prepare or enable clock, err=%d\n", ret);
-+		return ret;
-+	}
-+
-+	if (hw_read(ci, OP_PORTSC, PORTSC_PHCD)) {
-+		hw_write(ci, OP_PORTSC, PORTSC_PHCD, 0);
-+		/* Some clks sync between Controller and USB PHY */
-+		mdelay(1);
-+	}
-+
-+	if (data->phy)
-+		usb_phy_set_suspend(data->phy, 0);
-+
-+	return ret;
-+}
-+
-+static const struct dev_pm_ops ci13xxx_imx_pm_ops = {
-+	.suspend	= ci13xxx_imx_suspend,
-+	.resume		= ci13xxx_imx_resume,
-+};
-+#endif
-+
- static const struct of_device_id ci13xxx_imx_dt_ids[] = {
- 	{ .compatible = "fsl,imx27-usb", },
- 	{ /* sentinel */ }
-@@ -334,6 +392,9 @@ static struct platform_driver ci13xxx_imx_driver = {
- 		.name = "imx_usb",
- 		.owner = THIS_MODULE,
- 		.of_match_table = ci13xxx_imx_dt_ids,
-+#ifdef CONFIG_PM
-+		.pm	= &ci13xxx_imx_pm_ops,
-+#endif
- 	 },
- };
- 
--- 
-1.7.0.4
+On Wed, Jan 09, 2013 at 11:10:55AM +0000, Russell King - ARM Linux wrote:
+[...]
+>         err =3D gpio_request(en_vdd_1v05, "EN_VDD_1V05");
+>         if (err) {
+>                 pr_err("%s: gpio_request failed: %d\n", __func__, err);
+>                 return err;
+>         }
+>=20
+>         gpio_direction_output(en_vdd_1v05, 1);
+>=20
+>         regulator =3D regulator_get(NULL, "vdd_ldo0,vddio_pex_clk");
+>         if (IS_ERR_OR_NULL(regulator)) {
+>                 pr_err("%s: regulator_get failed: %d\n", __func__,
+>                        (int)PTR_ERR(regulator));
+>                 goto err_reg;
+>         }
+> ...
+> err_reg:
+>         gpio_free(en_vdd_1v05);
+>=20
+>         return err;
+> }
+>=20
+> So 'err' here is never set.  when IS_ERR_OR_NULL evaluates true.
+> Setting 'err' to PTR_ERR(regulator) is not correct because a NULL return
+> sets 'err' to zero.
 
+FWIW, this one is fixed in the Tegra PCIe series I posted yesterday.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thierry
+
+--1yeeQ81UyVL57Vl7
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ7n2fAAoJEN0jrNd/PrOhtWoQAIsub3xEWnrISfzqdxi0DgBM
+BLYxCMLkSmhXzNdhhvRKVE/G1O/YaH/vGwR/NsawCEm5/LzCIiqa8qLwUlkcslfV
+KpojQmCqR7ajIDC4YhPC4BZHoTbOSZiDWPjEuYnu7cY42lWLlYLpUrIuj1EPpej4
+SYAk2giYo+r1j+Ysp5875zCR+RusWLnKe6np+3ZdglFLOS33g4AjI2a9BTDZhEZN
+Pe3JLvGbE0r5/5DXicHkHqQ1e+YnqW5M7LoVBSBG+52RQtZN13gzS1AKmi+pLlS6
+syA5SJjZyfuAT9PFOE7g67kQDhmwSu6P5Ea+hgeGWOJeDMtdILw9g9BF1P9DgIxp
+Rhn0pK2lCIqamGj1i2on5kehxvvuUbZ+A9h4aF1uQ//GLUI609jhHJGuV2qJsJVk
+imK8ujvR44foHd50rcag1XJbiVzcnpMJ9hrVX1cqqrCMzmtsNVLYGZsnVCH8G0Yk
+4TTAtijQbRJWJq8TC0tt0UzDdQ35PIOa3WJf+bqad1fpVONbqBHpzax5/xbBW9KR
+TEW/lfukgEF2Vz+KU5k6cUnonJypGWp+DXuTKBT2BNoacZRuBoy1TwxmDkiNsptm
+rckwDHaz5NsmFmziXJwuyvXqcs0tvdeJcdrTdn6LZ05xxJa8inYMUFTjDPv9CXp3
+UxWTJMbu2DgYrcw51W9l
+=9ho0
+-----END PGP SIGNATURE-----
+
+--1yeeQ81UyVL57Vl7--
