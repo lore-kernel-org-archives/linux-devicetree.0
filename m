@@ -1,58 +1,172 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 05/14] lib: Add I/O map cache implementation
-Date: Thu, 10 Jan 2013 09:17:19 +0000
-Message-ID: <201301100917.19577.arnd@arndb.de>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <20130109231758.GA27065@obsidianresearch.com>
- <20130110071937.GG15212@avionic-0098.adnet.avionic-design.de>
+From: Singh Sandeep-B37400 <B37400@freescale.com>
+Subject: RE: [PATCH] Added device tree binding for TDM and TDM phy
+Date: Thu, 10 Jan 2013 09:24:21 +0000
+Message-ID: <3F1D9DCAAB49B94D88DBE05911FA4E6E69E4F0@039-SN1MPN1-005.039d.mgd.msft.net>
+References: <1357133120-2271-1-git-send-email-Sandeep@freescale.com>
+ <3F1D9DCAAB49B94D88DBE05911FA4E6E69CEB8@039-SN1MPN1-005.039d.mgd.msft.net>
+ <1357776425.18196.18@snotra>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130110071937.GG15212-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1357776425.18196.18@snotra>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Wood Scott-B07421 <B07421@freescale.com>
+Cc: "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Aggrwal Poonam-B10812 <B10812@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 10 January 2013, Thierry Reding wrote:
-> On Wed, Jan 09, 2013 at 04:17:58PM -0700, Jason Gunthorpe wrote:
-> > On Wed, Jan 09, 2013 at 04:12:31PM -0700, Stephen Warren wrote:
-> > You could decrease the size of the mapping to only span the bus
-> > numbers that are configured for use via DT.
+> -----Original Message-----
+> From: Wood Scott-B07421
+> Sent: Thursday, January 10, 2013 5:37 AM
+> To: Singh Sandeep-B37400
+> Cc: devicetree-discuss@lists.ozlabs.org; linuxppc-dev@ozlabs.org; Aggrwal
+> Poonam-B10812
+> Subject: Re: [PATCH] Added device tree binding for TDM and TDM phy
 > 
-> That won't work, unfortunately. The mapping is such that the bus number
-> is not encoded in the uppermost bits, the extended register number is.
-> So the only thing that we could do is decrease the size of the extended
-> register space for *all* devices.
-
-But you could still a method to map 16 separate areas per bus, each 65536
-bytes long, which results in 1MB per bus. That is probably ok, since
-very few systems have more than a handful of buses in practice.
-
-In theory, doing static mappings on a per-page base would let you
-do 16 devices at a time, but it's probably worth doing at this fine
-granularity.
-
-> > Are there any concerns about these config registers being accessed
-> > from a context where a new mapping can't be made? Interrupt? Machine
-> > Check? PCI-E Advanced Error Reporting?
+> On 01/09/2013 01:10:24 AM, Singh Sandeep-B37400 wrote:
+> > A gentle reminder.
+> > Any comments are appreciated.
+> >
+> > Regards,
+> > Sandeep
+> >
+> > > -----Original Message-----
+> > > From: Singh Sandeep-B37400
+> > > Sent: Wednesday, January 02, 2013 6:55 PM
+> > > To: devicetree-discuss@lists.ozlabs.org; linuxppc-dev@ozlabs.org
+> > > Cc: Singh Sandeep-B37400; Aggrwal Poonam-B10812
+> > > Subject: [PATCH] Added device tree binding for TDM and TDM phy
+> > >
+> > > This controller is available on many Freescale SOCs like MPC8315,
+> > P1020,
+> > > P1010 and P1022
+> > >
+> > > Signed-off-by: Sandeep Singh <Sandeep@freescale.com>
+> > > Signed-off-by: Poonam Aggrwal <poonam.aggrwal@freescale.com>
+> > > ---
+> > >  .../devicetree/bindings/powerpc/fsl/fsl-tdm.txt    |   63
+> > > ++++++++++++++++++++
+> > >  .../devicetree/bindings/powerpc/fsl/tdm-phy.txt    |   38
+> > ++++++++++++
+> > >  2 files changed, 101 insertions(+), 0 deletions(-)  create mode
+> > 100644
+> > > Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+> > >  create mode 100644
+> > Documentation/devicetree/bindings/powerpc/fsl/tdm-
+> > > phy.txt
+> > >
+> > > diff --git
+> > a/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+> > > b/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+> > > new file mode 100644
+> > > index 0000000..ceb2ef1
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
+> > > @@ -0,0 +1,63 @@
+> > > +TDM Device Tree Binding
+> > > +
+> > > +NOTE: The bindings described in this document are preliminary and
+> > > +subject to change.
+> > > +
+> > > +TDM (Time Division Multiplexing)
+> > > +
+> > > +Description:
+> > > +
+> > > +The TDM is full duplex serial port designed to allow various
+> > devices
+> > > +including digital signal processors (DSPs) to communicate with a
+> > > +variety of serial devices including industry standard framers,
+> > codecs,
+> > > other DSPs and microprocessors.
+> > > +
+> > > +The below properties describe the device tree bindings for
+> > Freescale
+> > > +TDM controller. This TDM controller is available on various
+> > Freescale
+> > > +Processors like MPC8315, P1020, P1022 and P1010.
+> > > +
+> > > +Required properties:
+> > > +
+> > > +- compatible
+> > > +    Value type: <string>
+> > > +    Definition: Should contain "fsl,tdm1.0".
+> > > +
+> > > +- reg
+> > > +    Definition: A standard property. The first reg specifier
+> > describes
+> > > the TDM
+> > > +    registers, and the second describes the TDM DMAC registers.
+> > > +
+> > > +- tdm_tx_clk
+> > > +    Value type: <u32 or u64>
+> > > +    Definition: This specifies the value of transmit clock. It
+> > should
+> > > not
+> > > +    exceed 50Mhz.
+> > > +
+> > > +- tdm_rx_clk
+> > > +    Value type: <u32 or u64>
+> > > +    Definition: This specifies the value of receive clock. Its
+> > value
+> > > could be
+> > > +    zero, in which case tdm will operate in shared mode. Its value
+> > > should not
+> > > +    exceed 50Mhz.
 > 
-> I haven't checked but I would expect configuration space accesses to not
-> happen in interrupt context. Usually they are limited to enumeration and
-> driver probe.
+> Please don't use underscores in property names, and use the vendor
+> prefix: "fsl,tdm-tx-clk" and "fsl,tdm-rx-clk".
 
-Actually, AER probably needs this, and I believe some broken devices 
-need to mask interrupts using the PCI command word in the config space,
-it it can happen.
+Ok.
 
-	Arnd
+> 
+> > > diff --git
+> > a/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
+> > > b/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
+> > > new file mode 100644
+> > > index 0000000..2563934
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
+> > > @@ -0,0 +1,38 @@
+> > > +TDM PHY Device Tree Binding
+> > > +
+> > > +NOTE: The bindings described in this document are preliminary and
+> > > +subject to change.
+> > > +
+> > > +Description:
+> > > +TDM PHY is the terminal interface of TDM subsystem. It is
+> > typically a
+> > > +line control device like E1/T1 framer or SLIC. A TDM device can
+> > have
+> > > +multiple TDM PHYs.
+> > > +
+> > > +Required properties:
+> > > +
+> > > +- compatible
+> > > +    Value type: <string>
+> > > +    Definition: Should contain generic compatibility like
+> > "tdm-phy-slic"
+> > > or
+> > > +    "tdm-phy-e1" or "tdm-phy-t1".
+> 
+> Does this "generic" string (plus the other properties) tell you all you
+> need to know about the device?  If there are other possible "generic"
+> compatibles, they should be listed or else different people will make up
+> different strings for the same thing.
+
+This property will describe the type of device, and will help TDM framework
+to know if it is E1/T1/SLIC device. Further details can be extracted from other
+compatible strings.
+There are only three generic compatibles field types, which are already mentioned
+in definition. Do I need to make this thing more clear.
+> 
+> -Scott
