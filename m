@@ -1,110 +1,31 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] ARM: sunxi: gpio: Add Allwinner SoCs GPIO drivers
-Date: Thu, 10 Jan 2013 12:06:44 +0100
-Message-ID: <CACRpkda0yhVvCW9edWBi3XusfS4NaiWqKsoCfLpT9+X5iO-GXg@mail.gmail.com>
-References: <1357317909-12458-1-git-send-email-maxime.ripard@free-electrons.com>
-	<1357317909-12458-2-git-send-email-maxime.ripard@free-electrons.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [RFC PATCH 1/7] ARM: common: vic: Parse interrupt and resume masks from device tree
+Date: Thu, 10 Jan 2013 12:10:38 +0100
+Message-ID: <25622346.hsAr9IOJWj@flatron>
+References: <1357774909-29938-1-git-send-email-tomasz.figa@gmail.com> <1357774909-29938-2-git-send-email-tomasz.figa@gmail.com> <20130110110314.GH20956@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1357317909-12458-2-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130110110314.GH20956@opensource.wolfsonmicro.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 4, 2013 at 5:45 PM, Maxime Ripard
-<maxime.ripard@free-electrons.com> wrote:
+On Thursday 10 of January 2013 11:03:14 Mark Brown wrote:
+> On Thu, Jan 10, 2013 at 12:41:43AM +0100, Tomasz Figa wrote:
+> > +- interrupt-mask : Bit mask of valid interrupt sources (defaults to
+> > all valid) +- wakeup-mask : Bit mask of interrupt sources that can
+> > wake up the system +  (defaults to all allowed)
+> 
+> Should this really be configured in the VIC itself?  It seems like
+> something that might change at runtime (for example, due to the user
+> configuring wakes in sysfs).
 
-> The IP responsible for the muxing on the Allwinner SoCs are also
-> handling the GPIOs on the system. This patch adds the needed driver that
-> relies on the pinctrl driver for most of its operations.
->
-> The number of pins available for GPIOs operations are already declared
-> in the pinctrl driver, we only need to probe a generic driver to handle
-> the banks available for each SoC.
->
-> This driver has been tested on a A13-Olinuxino.
->
-> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+This is not the runtime interrupt/wakeup mask, but a global mask of 
+available interrupt/wakeup lines on particular platform, which still have 
+to be configured and enabled appropriately by user.
 
-Looking mostly good!
-
-> +static int __devinit
-> +sunxi_pinctrl_register_gpio_ranges(struct sunxi_pinctrl *pctl)
-> +{
-> +       int id = 0, base = 0, npins = 1, i, prev_pin = -1;
-> +       struct pinctrl_gpio_range *range;
-> +
-> +       for (i = 0; i < pctl->desc->npins; i++) {
-> +               const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
-> +               unsigned pin_num = pin->pin.number;
-> +
-> +               if (prev_pin < 0) {
-> +                       prev_pin = pin_num;
-> +                       base = pin_num;
-> +               } else if (prev_pin + 1 != pin_num) {
-> +                       range = devm_kzalloc(pctl->dev,
-> +                                       sizeof(*range),
-> +                                       GFP_KERNEL);
-> +                       if (!range)
-> +                               return -ENOMEM;
-> +
-> +                       range->name = "sunxi";
-> +                       range->id = id;
-> +                       range->base = base;
-> +                       range->pin_base = base;
-> +                       range->npins = npins;
-> +
-> +                       pinctrl_add_gpio_range(pctl->pctl_dev, range);
-> +
-> +                       id++;
-> +                       npins = 1;
-> +                       prev_pin = pin_num;
-> +                       base = prev_pin;
-> +               } else {
-> +                       prev_pin++;
-> +                       npins++;
-> +               }
-> +       }
-> +
-> +       range = devm_kzalloc(pctl->dev, sizeof(*range),
-> +                       GFP_KERNEL);
-> +       if (!range)
-> +               return -ENOMEM;
-> +
-> +       range->name = "sunxi";
-> +       range->id = id;
-> +       range->base = base;
-> +       range->pin_base = base;
-> +       range->npins = npins;
-> +
-> +       pinctrl_add_gpio_range(pctl->pctl_dev, range);
-> +
-> +       return 0;
-> +}
-
-Really hairy way to add ranges right?
-
-Registering ranges from the pinctrl side is deprecated and discouraged.
-
-Instead register the ranges from the GPIO driver.
-
-Use gpiochip_add_pin_range() from the GPIO driver.
-
-An example is provided in
-drivers/pinctrl/pinctrl-coh901.c
-
-After you have done this, you can probably get rid of this as well:
-
-+static int __init sunxi_gpio_init(void)
-+{
-+       return platform_driver_register(&sunxi_gpio_driver);
-+}
-+postcore_initcall(sunxi_gpio_init);
-
-This will become a simple module_init() if you are handling
-deferred probe correctly.
-
-Yours,
-Linus Walleij
+Best regards,
+Tomasz Figa
