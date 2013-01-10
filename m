@@ -1,60 +1,107 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [RFC PATCH 1/7] ARM: common: vic: Parse interrupt and resume
- masks from device tree
-Date: Thu, 10 Jan 2013 11:24:58 +0000
-Message-ID: <20130110112458.GK20956@opensource.wolfsonmicro.com>
-References: <1357774909-29938-1-git-send-email-tomasz.figa@gmail.com>
- <1357774909-29938-2-git-send-email-tomasz.figa@gmail.com>
- <20130110110314.GH20956@opensource.wolfsonmicro.com>
- <25622346.hsAr9IOJWj@flatron>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] mfd: stmpe: Pull IRQ GPIO number from DT during DT-based probe
+Date: Thu, 10 Jan 2013 12:42:53 +0100
+Message-ID: <CACRpkdZWi4M3HmO_rq1O9aGTKYR0iMLXJo+nos3hYu3C_DFRHQ@mail.gmail.com>
+References: <1357568989-16237-1-git-send-email-marex@denx.de>
+	<20130108094134.GA21994@gmail.com>
+	<201301081044.14876.marex@denx.de>
+	<201301081048.38149.marex@denx.de>
+	<CAKohpo=YnLJN4_xA1WTiJaZeb-Oyc=RypYUyaSibmn6G4X9m4A@mail.gmail.com>
+	<20130108111104.GF21994@gmail.com>
+	<CAKohpomiS+UFzgiJaQbm8aZVPY0jeYhm1k7Yndk50z8=K4LvGQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lildS9pRFgpM/xzO"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <25622346.hsAr9IOJWj@flatron>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <CAKohpomiS+UFzgiJaQbm8aZVPY0jeYhm1k7Yndk50z8=K4LvGQ@mail.gmail.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, =?UTF-8?B?TWFyZWsgVmHFoXV0?= <marex@denx.de>
+Cc: vipul kumar samar <vipulkumar.samar@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 8, 2013 at 12:14 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> On 8 January 2013 16:41, Lee Jones <lee.jones@linaro.org> wrote:
+>>> Hmm.. I tried a bit, but couldn't find any such call :(
+>>> Probably an assumption is taken here. GPIO pins which are going to be used as
+>>> interrupt lines, wouldn't be getting set in output mode at all. So,
+>>> once they are put
+>>> in input mode in beginning, nobody would change it ever.
+>>>
+>>> Much of gpio controllers configure gpio pins in input mode in their probe().
+>>>
+>>> Maybe, there is something else :)
+>>
+>> Pinctrl?
+>
+> I don't think pinctrl is playing with it. I searched for
+> "direction_input" string and
+> pinctrl routine also had similar name. I couldn't fine use of
+> direction_input anywhere
+> in kernel, for setting them as irqs for OF cases.
 
---lildS9pRFgpM/xzO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+pinctrl has pinctrl_gpio_direction_input() and
+pinctrl_gpio_direction_output() which are supposed to
+be called *only* by GPIOlib frontends using pinctrl
+as backend to control the pins.
 
-On Thu, Jan 10, 2013 at 12:10:38PM +0100, Tomasz Figa wrote:
+But if it's a pinctrl driver using standard pinconfig from
+include/linux/pinctrl/pinconf-generic.h
+I'm all for adding a PIN_CONFIG_INPUT_ENABLE
+to these definintions so it can be set up as input
+at boot from the device tree using hogs or something,
+that make things easy when using GPIOs as IRQ
+providers only.
 
-> This is not the runtime interrupt/wakeup mask, but a global mask of=20
-> available interrupt/wakeup lines on particular platform, which still have=
-=20
-> to be configured and enabled appropriately by user.
+So the alternative is to just set up the IRQ using the
+gpiolib functions for this: of_get_gpio() if you need the
+number from DT, then gpio_request() and
+gpio_direction_input() as on any GPIO. This can be
+done in the device driver or board code depending
+on use case.
 
-Ah, OK.
+In the Nomadik I did this (maybe ugly) hack for a
+similar case:
 
-Reviewed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
++/*
++ * The SMSC911x IRQ is connected to a GPIO pin, but the driver expects
++ * to simply request an IRQ passed as a resource. So the GPIO pin needs
++ * to be requested by this hog and set as input.
++ */
++static int __init cpu8815_eth_init(void)
++{
++       struct device_node *eth;
++       int gpio, irq, err;
++
++       eth = of_find_node_by_path("/external-bus@34000000/ethernet@300");
++       if (!eth) {
++               pr_info("could not find any ethernet controller\n");
++               return 0;
++       }
++       gpio = of_get_gpio(eth, 0);
++       err = gpio_request(gpio, "eth_irq");
++       if (err) {
++               pr_info("failed to request ethernet GPIO\n");
++               return -ENODEV;
++       }
++       err = gpio_direction_input(gpio);
++       if (err) {
++               pr_info("failed to set ehernet GPIO as input\n");
++               return -ENODEV;
++       }
++       irq = gpio_to_irq(gpio);
++       pr_info("enabled ethernet GPIO %d, IRQ %d\n", gpio, irq);
++       return 0;
++}
++device_initcall(cpu8815_eth_init);
 
---lildS9pRFgpM/xzO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+I haven't read review comments on that patch.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Maybe it's not such a good idea to add the GPIO to the device itself
+when it's being hogged by board code like this. It's a bit of a grey area
+so I'm a bit confused here.
 
-iQIcBAEBAgAGBQJQ7qT+AAoJELSic+t+oim981kP/0J+Qy1FpeC1W2toi9x/u8Mb
-nOoS8+UdOrZy9FseeHMTNDdmEwbJ9X9zi31xOwSQju16T+XwEL0bBqzAqiDHXMFJ
-UUgKXYXr4pZE3tzngVnEcOUW9DVR9El13N37R5KhpKeSgwFLeRt947ru+FcJp6gS
-9o126Hk4VT5Ft/d8xylEBWEOlfKtV3i7bRyNEevnAjcyxEBEBDTWzB1/MMcG+kf2
-4Ft7Ac3kD6R+rTI+UGCOcZ7hNMgk+2hEHn6TTzFMBP1SZXLkuo7HECsLZjNbQQoi
-PHX0B0JP4cRe5PusCe4O2pQTmjROkUSNWNpjaAiWWBGuXgtpe2fLMtdDplptzAJ9
-meSrMnhwKuH+AsbMvSmE8wMSe9MXeh6D2Cab8f8TuoGJSVVS+EMUYUxck299WfgL
-Td6nF8fw3Ml1ehOnxNgj1SrqDuDdjMP6vpyvytzK7VyA53UuX9yU5otIMtlAlpbC
-/1ClIToUy0jL4mh5+uHWNInDOBhlHOUzPz7JRJHs6NtMFWKpMqxL+LvuNfsKeuRU
-6XSr3OKLV+rlIRN8CDPp+bPhwxKlxAgaTQZ1laMKo8IIwCUjubi3CWfQGau18GiY
-pgV6epcpCq98vEV9VCAr+Ebm3x6+gmUqFMlr4JzMsDD9/gms9ew9lfw/Z/WZBJvD
-vgt1DqjWnhSRQDdPLDnP
-=f6sk
------END PGP SIGNATURE-----
+Maybe the GPIO lib actually needs a "hog" mechanism that can
+request and set GPIO pins as input/output on boot and then
+forget about them.
 
---lildS9pRFgpM/xzO--
+Yours,
+Linus Walleij
