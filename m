@@ -1,155 +1,60 @@
-From: Scott Wood <scottwood@freescale.com>
-Subject: Re: [PATCH] Added device tree binding for TDM and TDM phy
-Date: Wed, 9 Jan 2013 18:07:05 -0600
-Message-ID: <1357776425.18196.18@snotra>
-References: <1357133120-2271-1-git-send-email-Sandeep@freescale.com>
- <3F1D9DCAAB49B94D88DBE05911FA4E6E69CEB8@039-SN1MPN1-005.039d.mgd.msft.net>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [RFC PATCH 4/7] ARM: s3c64xx: Fix build error with
+ CONFIG_S3C_DEV_FB disabled
+Date: Wed, 09 Jan 2013 16:15:23 -0800
+Message-ID: <00a201cdeec7$99f5d560$cde18020$@samsung.com>
+References: <1357774909-29938-1-git-send-email-tomasz.figa@gmail.com>
+ <1357774909-29938-5-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="Flowed"; DelSp="Yes"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <3F1D9DCAAB49B94D88DBE05911FA4E6E69CEB8@039-SN1MPN1-005.039d.mgd.msft.net>
- (from B37400@freescale.com on Wed Jan  9 01:10:24 2013)
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: Singh Sandeep-B37400 <B37400@freescale.com>
-Cc: "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Aggrwal Poonam-B10812 <B10812@freescale.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1357774909-29938-5-git-send-email-tomasz.figa@gmail.com>
+Content-language: en-us
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Tomasz Figa' <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk
 List-Id: devicetree@vger.kernel.org
 
-On 01/09/2013 01:10:24 AM, Singh Sandeep-B37400 wrote:
-> A gentle reminder.
-> Any comments are appreciated.
+Tomasz Figa wrote:
 > 
-> Regards,
-> Sandeep
+> If there is no board selecting CONFIG_S3C_DEV_FB enabled, build will fail
+on
+> arch/arm/mach-s3c64xx/pm.c, where s3c_device_fb is referenced.
 > 
-> > -----Original Message-----
-> > From: Singh Sandeep-B37400
-> > Sent: Wednesday, January 02, 2013 6:55 PM
-> > To: devicetree-discuss@lists.ozlabs.org; linuxppc-dev@ozlabs.org
-> > Cc: Singh Sandeep-B37400; Aggrwal Poonam-B10812
-> > Subject: [PATCH] Added device tree binding for TDM and TDM phy
-> >
-> > This controller is available on many Freescale SOCs like MPC8315,  
-> P1020,
-> > P1010 and P1022
-> >
-> > Signed-off-by: Sandeep Singh <Sandeep@freescale.com>
-> > Signed-off-by: Poonam Aggrwal <poonam.aggrwal@freescale.com>
-> > ---
-> >  .../devicetree/bindings/powerpc/fsl/fsl-tdm.txt    |   63
-> > ++++++++++++++++++++
-> >  .../devicetree/bindings/powerpc/fsl/tdm-phy.txt    |   38  
-> ++++++++++++
-> >  2 files changed, 101 insertions(+), 0 deletions(-)  create mode  
-> 100644
-> > Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
-> >  create mode 100644  
-> Documentation/devicetree/bindings/powerpc/fsl/tdm-
-> > phy.txt
-> >
-> > diff --git  
-> a/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
-> > b/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
-> > new file mode 100644
-> > index 0000000..ceb2ef1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/fsl-tdm.txt
-> > @@ -0,0 +1,63 @@
-> > +TDM Device Tree Binding
-> > +
-> > +NOTE: The bindings described in this document are preliminary and
-> > +subject to change.
-> > +
-> > +TDM (Time Division Multiplexing)
-> > +
-> > +Description:
-> > +
-> > +The TDM is full duplex serial port designed to allow various  
-> devices
-> > +including digital signal processors (DSPs) to communicate with a
-> > +variety of serial devices including industry standard framers,  
-> codecs,
-> > other DSPs and microprocessors.
-> > +
-> > +The below properties describe the device tree bindings for  
-> Freescale
-> > +TDM controller. This TDM controller is available on various  
-> Freescale
-> > +Processors like MPC8315, P1020, P1022 and P1010.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible
-> > +    Value type: <string>
-> > +    Definition: Should contain "fsl,tdm1.0".
-> > +
-> > +- reg
-> > +    Definition: A standard property. The first reg specifier  
-> describes
-> > the TDM
-> > +    registers, and the second describes the TDM DMAC registers.
-> > +
-> > +- tdm_tx_clk
-> > +    Value type: <u32 or u64>
-> > +    Definition: This specifies the value of transmit clock. It  
-> should
-> > not
-> > +    exceed 50Mhz.
-> > +
-> > +- tdm_rx_clk
-> > +    Value type: <u32 or u64>
-> > +    Definition: This specifies the value of receive clock. Its  
-> value
-> > could be
-> > +    zero, in which case tdm will operate in shared mode. Its value
-> > should not
-> > +    exceed 50Mhz.
+> This patch adds ifdef guard around the code making it compile only when
+> CONFIG_S3C_DEV_FB is enabled.
+> 
+> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> ---
+>  arch/arm/mach-s3c64xx/pm.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/mach-s3c64xx/pm.c b/arch/arm/mach-s3c64xx/pm.c
+> index f6b13a2..3686785 100644
+> --- a/arch/arm/mach-s3c64xx/pm.c
+> +++ b/arch/arm/mach-s3c64xx/pm.c
+> @@ -338,10 +338,10 @@ int __init s3c64xx_pm_init(void)
+> 
+>  	for (i = 0; i < ARRAY_SIZE(s3c64xx_pm_domains); i++)
+>  		pm_genpd_init(&s3c64xx_pm_domains[i]->pd, NULL, false);
+> -
+> +#ifdef CONFIG_S3C_DEV_FB
+>  	if (dev_get_platdata(&s3c_device_fb.dev))
+>  		pm_genpd_add_device(&s3c64xx_pm_f.pd,
+> &s3c_device_fb.dev);
+> -
+> +#endif
+>  	return 0;
+>  }
+> 
+> --
+> 1.8.1
 
-Please don't use underscores in property names, and use the vendor  
-prefix: "fsl,tdm-tx-clk" and "fsl,tdm-rx-clk".
+This should be separated patch from this series as a fix.
 
-> > diff --git  
-> a/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
-> > b/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
-> > new file mode 100644
-> > index 0000000..2563934
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/powerpc/fsl/tdm-phy.txt
-> > @@ -0,0 +1,38 @@
-> > +TDM PHY Device Tree Binding
-> > +
-> > +NOTE: The bindings described in this document are preliminary and
-> > +subject to change.
-> > +
-> > +Description:
-> > +TDM PHY is the terminal interface of TDM subsystem. It is  
-> typically a
-> > +line control device like E1/T1 framer or SLIC. A TDM device can  
-> have
-> > +multiple TDM PHYs.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible
-> > +    Value type: <string>
-> > +    Definition: Should contain generic compatibility like  
-> "tdm-phy-slic"
-> > or
-> > +    "tdm-phy-e1" or "tdm-phy-t1".
+Let me pick this up into -fixes.
 
-Does this "generic" string (plus the other properties) tell you all you  
-need to know about the device?  If there are other possible "generic"  
-compatibles, they should be listed or else different people will make  
-up different strings for the same thing.
+Thanks.
 
--Scott
+- Kukjin
