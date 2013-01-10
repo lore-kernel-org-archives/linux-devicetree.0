@@ -1,53 +1,113 @@
-From: Leela Krishna Amudala <leelakrishna.a@gmail.com>
-Subject: Re: [PATCHv16 0/7] of: add display helper
-Date: Thu, 10 Jan 2013 08:21:36 +0530
-Message-ID: <CAL1wa8eQfr4ZV7zjCKp-kpBTMBzEjY_fj+UtDAy-auJXTCJghQ@mail.gmail.com>
-References: <1355850256-16135-1-git-send-email-s.trumtrar@pengutronix.de> <20130109201541.GB4780@pengutronix.de>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [PATCH 0/4] gpio: introduce descriptor-based interface
+Date: Thu, 10 Jan 2013 13:07:36 +0900
+Message-ID: <2270940.DTxEYMZtED@percival>
+References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com> <CAAVeFu+vWe+ZGBPy2MMEv=7n-ob=F65rfz+b6ND9zk1d16LbEA@mail.gmail.com> <201301091046.13020.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20130109201541.GB4780@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, kernel@pengutronix.de, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, David Airlie <airlied@linux.ie>, Rob Clark <robdclark@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <201301091046.13020.arnd@arndb.de>
+Sender: linux-arch-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
+On Wednesday 09 January 2013 18:46:12 Arnd Bergmann wrote:
+> > The question is, do we want to totally get rid of the integer
+> > namespace? That would be the ultimate step, but would require another
+> > way to identify GPIOs (controller_device:offset might be such a way),
+> > and also to reorganize sysfs nodes. Wouldn't that be considered
+> > breaking user-space? 'cause we all know what happens to those who
+> > break user-space.
+> 
+> 
+> The user interface could eventually be the only part of the kernel that
+> uses the numbers, but you are right that we cannot change that.
 
-On Thu, Jan 10, 2013 at 1:45 AM, Steffen Trumtrar
-<s.trumtrar@pengutronix.de> wrote:
->
-> On Tue, Dec 18, 2012 at 06:04:09PM +0100, Steffen Trumtrar wrote:
-> > Hi!
-> >
-> > Finally, right in time before the end of the world on friday, v16 of the
-> > display helpers.
-> >
->
-> So, any more criticism on the series? Any takers for the series as is?
-> I guess it could be merged via the fbdev-tree if David Airlie can agree
-> to the DRM patches ?! Does that sound about right?
->
-> I think the series was tested at least with
->         - imx6q: sabrelite, sabresd
->         - imx53: tqma53/mba53
->         - omap: DA850 EVM, AM335x EVM, EVM-SK
->
-> I don't know what Laurent Pinchart, Marek Vasut and Leela Krishna Amudala
-> are using.
+That's sad, as it makes it necessary to maintain the global integer namespace 
+(assigning a base GPIO to each controller and making sure the controllers 
+ranges do no overlap) even if it is not used internally anymore. We could make 
+global numbers assignment transparent, but that would potentially change the 
+GPIO numbers in user-space and cause another incompatibility.
 
-I tested V16 patches with Exynos: smdk5250 board and it works fine for me.
+> > With the current code, a driver should depend on gpiolib being
+> > compiled if it uses the new interface. It is not even declared if
+> > gpiolib is not used.
+> > 
+> > Given that both interfaces are quite close, one could imagine having a
+> > gpiod wrapper around the integer namespace (the "opaque descriptors"
+> > would then just be casted integers). This way drivers would only need
+> > to depend on GENERIC_GPIO. It's a little bit weird to have gpiod
+> > wrapping around gpio in one case and the opposite in another though -
+> > I'd rather have these platforms convert to GPIO descriptors internally
+> > (or even better, to gpiolib), but this is probably asking too much.
+> 
+> 
+> I think it would be reasonable to force everybody to use gpiolib,
+> that's much easier than converting everyone to the descriptor based
+> interface.
+> 
+> 
+> > I do not know all the details of gpiolib's history, but why would
+> > anyone want to implement the generic gpio interface and not use
+> > gpiolib anyways?
+> 
+> 
+> Only legacy users did this. Initially there was only the header file,
+> with the API declared but several different implementations of it.
+> gpiolib was introduced later to reduce code duplication and allow having
+> multiple implementations in the same kernel.
 
-> Those are the people I know from the top of my head, that use
-> or at least did use the patches in one of its iterations. If I forgot
-> anyone, please speak up and possibly add your new HW to the list of tested
-> devices.
->
-> Thanks,
-> Steffen
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Does the following sound reasonable?
+1) Make sure every target that uses GENERIC_GPIO also implements its drivers 
+using gpiolib, convert the (hopefully) few ones that don't to use gpiolib
+2) Make GENERIC_GPIO require GPIOLIB or just merge both options into a single 
+one
+3) Turn gpio into a full subsystem (like pinctrl)
+
+This should make things less blurry and easier to maintain (less header files, 
+only one interface, etc.) GPIO controllers would also be better integrated 
+into the driver model.
+
+> > > If we are adding a new way to deal with GPIOs, would it make sense to
+> > > have that more closely integrated into pinctrl in one form or another?
+> > > My feeling is that there is already a significant overlap between the
+> > > two, and while the addition of the gpiod_* functions doesn't
+> > > necessarily
+> > > make this worse, it could be a chance to improve the current situation
+> > > to make the interface more consistent with pinctrl.
+> > 
+> > 
+> > That may be a chance to introduce deeper changes indeed - what do you
+> > have in mind exactly?
+> 
+> 
+> I don't know enough about pinctrl to have a specific idea yet, but maybe
+> someone else has ideas.
+
+I had a deeper look at pinctrl, and indeed I can see the connection between 
+the two. There already interfaces to link GPIO ranges to pin ranges and have 
+GPIO drivers switch the pin to the correct state when a GPIO is requested 
+(this, btw, should also be updated to not use global GPIO numbers at some 
+point). Maybe some tighter integration that I just don't see yet can be done 
+too.
+
+> Regarding the integration of pinctrl with gpio,
+> I was thinking in the past that we could make pinctrl provide everything
+> that gpiolib does, and have a generic gpiolib driver on top of pinctrl
+> so that platforms don't need to implement both interfaces but only need
+> to provide a pure pinctrl driver. Not sure if this makes any sense.
+
+That would work if all GPIOs were connected to a ball, but how about GPIO 
+expanders that are external to the chip? They have no use for pinctrl AFAICT. 
+On the other hand, maybe we can have one pinctrl-gpio driver for those chips 
+where pinctrl alone can emulate all the functionality of a GPIO controller. 
+Maybe such a driver exists already?
+
+But in general, I agree pinctrl should be a source of inspiration for how to 
+design GPIO. In particular, having a per-chip integer namespace instead of a 
+single global one is definitely something to take (and that's how things work 
+in the DT already).
+
+Alex.
