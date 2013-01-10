@@ -1,56 +1,110 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [RFC PATCH 1/7] ARM: common: vic: Parse interrupt and resume
- masks from device tree
-Date: Thu, 10 Jan 2013 11:03:14 +0000
-Message-ID: <20130110110314.GH20956@opensource.wolfsonmicro.com>
-References: <1357774909-29938-1-git-send-email-tomasz.figa@gmail.com>
- <1357774909-29938-2-git-send-email-tomasz.figa@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] ARM: sunxi: gpio: Add Allwinner SoCs GPIO drivers
+Date: Thu, 10 Jan 2013 12:06:44 +0100
+Message-ID: <CACRpkda0yhVvCW9edWBi3XusfS4NaiWqKsoCfLpT9+X5iO-GXg@mail.gmail.com>
+References: <1357317909-12458-1-git-send-email-maxime.ripard@free-electrons.com>
+	<1357317909-12458-2-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="wayzTnRSUXKNfBqd"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1357774909-29938-2-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1357317909-12458-2-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jan 4, 2013 at 5:45 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
 
---wayzTnRSUXKNfBqd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> The IP responsible for the muxing on the Allwinner SoCs are also
+> handling the GPIOs on the system. This patch adds the needed driver that
+> relies on the pinctrl driver for most of its operations.
+>
+> The number of pins available for GPIOs operations are already declared
+> in the pinctrl driver, we only need to probe a generic driver to handle
+> the banks available for each SoC.
+>
+> This driver has been tested on a A13-Olinuxino.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-On Thu, Jan 10, 2013 at 12:41:43AM +0100, Tomasz Figa wrote:
+Looking mostly good!
 
-> +- interrupt-mask : Bit mask of valid interrupt sources (defaults to all valid)
-> +- wakeup-mask : Bit mask of interrupt sources that can wake up the system
-> +  (defaults to all allowed)
+> +static int __devinit
+> +sunxi_pinctrl_register_gpio_ranges(struct sunxi_pinctrl *pctl)
+> +{
+> +       int id = 0, base = 0, npins = 1, i, prev_pin = -1;
+> +       struct pinctrl_gpio_range *range;
+> +
+> +       for (i = 0; i < pctl->desc->npins; i++) {
+> +               const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
+> +               unsigned pin_num = pin->pin.number;
+> +
+> +               if (prev_pin < 0) {
+> +                       prev_pin = pin_num;
+> +                       base = pin_num;
+> +               } else if (prev_pin + 1 != pin_num) {
+> +                       range = devm_kzalloc(pctl->dev,
+> +                                       sizeof(*range),
+> +                                       GFP_KERNEL);
+> +                       if (!range)
+> +                               return -ENOMEM;
+> +
+> +                       range->name = "sunxi";
+> +                       range->id = id;
+> +                       range->base = base;
+> +                       range->pin_base = base;
+> +                       range->npins = npins;
+> +
+> +                       pinctrl_add_gpio_range(pctl->pctl_dev, range);
+> +
+> +                       id++;
+> +                       npins = 1;
+> +                       prev_pin = pin_num;
+> +                       base = prev_pin;
+> +               } else {
+> +                       prev_pin++;
+> +                       npins++;
+> +               }
+> +       }
+> +
+> +       range = devm_kzalloc(pctl->dev, sizeof(*range),
+> +                       GFP_KERNEL);
+> +       if (!range)
+> +               return -ENOMEM;
+> +
+> +       range->name = "sunxi";
+> +       range->id = id;
+> +       range->base = base;
+> +       range->pin_base = base;
+> +       range->npins = npins;
+> +
+> +       pinctrl_add_gpio_range(pctl->pctl_dev, range);
+> +
+> +       return 0;
+> +}
 
-Should this really be configured in the VIC itself?  It seems like
-something that might change at runtime (for example, due to the user
-configuring wakes in sysfs).
+Really hairy way to add ranges right?
 
---wayzTnRSUXKNfBqd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Registering ranges from the pinctrl side is deprecated and discouraged.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Instead register the ranges from the GPIO driver.
 
-iQIcBAEBAgAGBQJQ7p/qAAoJELSic+t+oim9ZIAQAJrjZ6n9JmPEHA/Udtvgw9C4
-SAZ/48TSsRfAeOKOBLhH0YtwQ5mWGhpnNkRRND7VBDoTqCO7iuBRIFSuD5SDW8Gc
-YR+G/GjSdc6ljrqqKzS2J2hII6x3+t2MmFqVxsOkLX1ESSlZIBm++tKLn8A/nzIP
-RIJloJmYm4sduhb6/z43cDyH6WekP20WrPoEca0LhvZmvW9ctH7Z3icGDlbQF6YZ
-MKciFbzysSGmqWrC9k6h72FFPsrZj5px0mNg5TML+TcJLWjXFT4h9SC15Ycp++hp
-lQ9no5b6sGr6dAi4HhbfHsFvKN+T5fUGGvP/IbkO9P0Pq+VRRc8zAA7qeciRD3NY
-dcb9kVdIcL5WiQ4vrhOY04kEYWOsRGdP/pIecwFpq7i260C42gTeh2E6nsgS+wQ9
-t6gt0VUhpSc1Q8bLkMC2axLp0WfmRBUpnKQpLXsIAd/gTFzMDwm7wuThAS60Kjh6
-Z+PDn8Lh7W7dhwy1RsJ9DnSokHZnlbvB+ISEqmog5fXQBtU4tT79RtyiPor0rOtT
-7LcWt0VPmDnQKRwibiwC17hutvqfD5+riMllm4TLWGW0V9AaKJhroyzWCutKP7HO
-Ccc2t/RDMEietw22nCiy3u6nMnLi4B+/uAiX3yRrVPOd1J1WrNLVc9Ub6xKAhWse
-HXL/LOWpcCnQ6/oPHRo/
-=RQJ9
------END PGP SIGNATURE-----
+Use gpiochip_add_pin_range() from the GPIO driver.
 
---wayzTnRSUXKNfBqd--
+An example is provided in
+drivers/pinctrl/pinctrl-coh901.c
+
+After you have done this, you can probably get rid of this as well:
+
++static int __init sunxi_gpio_init(void)
++{
++       return platform_driver_register(&sunxi_gpio_driver);
++}
++postcore_initcall(sunxi_gpio_init);
+
+This will become a simple module_init() if you are handling
+deferred probe correctly.
+
+Yours,
+Linus Walleij
