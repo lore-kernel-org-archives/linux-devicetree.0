@@ -1,71 +1,101 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 2/2] ARM: dts: fix compatible value for exynos pinctrl
-Date: Wed, 09 Jan 2013 17:34:03 -0800
-Message-ID: <00e001cdeed2$94c89a90$be59cfb0$@samsung.com>
-References: <1357172423-8217-1-git-send-email-kgene.kim@samsung.com>
- <1357172423-8217-2-git-send-email-kgene.kim@samsung.com>
- <CAOesGMiSgcuD7z4yc2Z+_hi+PZnuv9pa7saeGymwT0DPz=j8dQ@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/8] SH: intc: Add support OF for INTC
+Date: Thu, 10 Jan 2013 10:56:51 +0900
+Message-ID: <20130110015651.GJ21832@verge.net.au>
+References: <1357713007-4005-1-git-send-email-horms+renesas@verge.net.au>
+ <1357713007-4005-2-git-send-email-horms+renesas@verge.net.au>
+ <20130109115352.GB7337@e106331-lin.cambridge.arm.com>
+ <201301091911.04513.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAOesGMiSgcuD7z4yc2Z+_hi+PZnuv9pa7saeGymwT0DPz=j8dQ@mail.gmail.com>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Olof Johansson' <olof@lixom.net>
-Cc: linux-samsung-soc@vger.kernel.org, 'Thomas Abraham' <thomas.ab@samsung.com>, 'Linus Walleij' <linus.walleij@linaro.org>, 'Grant Likely' <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201301091911.04513.arnd@arndb.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb@gmail.com>, Magnus Damm <damm@opensource.se>, Paul Mundt <lethal@linux-sh.org>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-Olof Johansson wrote:
+On Wed, Jan 09, 2013 at 07:11:04PM +0000, Arnd Bergmann wrote:
+> On Wednesday 09 January 2013, Mark Rutland wrote:
+> > Hi,
+> > 
+> > Thanks for updating the text, this is far easier to read than previously.
+> > 
+> > However, I'm still concerned by how complex the binding seems. As I don't have
+> > any familiarity with the device, I don't know whether that's just an artifact
+> > of the hardware or something that can be cleared up.
+> > 
+> > I think the approach used by the binding needs some serious review before this
+> > should be merged. It seems far more complex than any existing interrupt
+> > controller binding. Without a dts example for a complete board (complete with
+> > devices wired up to the interrupt controller), it's difficult to judge how this
+> > will work in practice.
+> > 
+> > I've added Arnd to Cc in case he has any thoughts on the matter.
 > 
-> On Wed, Jan 2, 2013 at 4:20 PM, Kukjin Kim <kgene.kim@samsung.com>
-> wrote:
-> > Fix the incorrect compatible property value of pinctrl for EXYNOS4 SoCs.
+> Sorry for having been absent from this discussion for so long. I didn't
+> realize there were 9 versions of this patch set.
 > 
-> Ah, this answers my question from the previous patch. So, why do 5450
-> as a separate patch?
+> I tend to agree with your interpretation above, but I may be missing
+> important facts from the previous review rounds.
 > 
-OK, let me create one patch to fix it :-)
+> For all I can tell, the binding is an attempt to describe the
+> entire drivers/sh/intc capabilities, which is probably not the
+> best way to approach things. The sh intc driver is not just an
+> irqchip driver, but rather a framework to describe arbitrary
+> irqchips, which is what makes this so hard.
+> 
+> When I first looked at the situation last year, I suggested doing
+> a new irqchip driver with a much simpler binding that can only
+> handle the irq chips from shmobile, rather than the whole thing.
+> 
+> I am not sure if the binding in the current form is already the
+> "simplified" version, or if it actually implements all the
+> capabilities of the intc driver.
 
-> 
-> > diff --git
-a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> > index e97a278..4598a47 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> > +++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> > @@ -7,9 +7,9 @@ on-chip controllers onto these pads.
-> >
-> >  Required Properties:
-> >  - compatible: should be one of the following.
-> > -  - "samsung,pinctrl-exynos4210": for Exynos4210 compatible pin-
-> controller.
-> > -  - "samsung,pinctrl-exynos4x12": for Exynos4x12 compatible pin-
-> controller.
-> > -  - "samsung,pinctrl-exynos5250": for Exynos5250 compatible pin-
-> controller.
-> > +  - "samsung,exynos4210-pinctrl": for Exynos4210 compatible pin-
-> controller.
-> > +  - "samsung,exynos4x12-pinctrl": for Exynos4x12 compatible pin-
-> controller.
-> > +  - "samsung,exynos5250-pinctrl": for Exynos5250 compatible pin-
-> controller.
-> 
-> Do we care about backwards compatibility for ARM device trees yet?
-> It's becoming time to start caring soon, if we don't. So while this
-> might be OK for this time around, we should start requiring some
-> backwards compatibility for bindings that have been used in at least
-> one released kernel.
-> 
-Agree, let me check again.
+I think its more on the side of implementing the capabilities of
+the intc driver than being simplified.
 
-> Once we do care, then you can update the dts/dtsi files, but you'll
-> need to keep both the old and the new bindings in the C file below.
+Although some effort has gone into this patchset my primary
+aim is to provide something that provides the basis for supporting
+the INTC controller on all existing boards.
+
+I more than open to concrete ideas of how this can be achieved in agreeable way.
+
+> > > +       intca: interrupt-controller@0 {
+> > > +               compatible = "renesas,sh_intc";
+> > > +               interrupt-controller;
+> > > +               #address-cells = <1>;
+> > > +               #size-cells = <1>;
+> > > +               #interrupt-cells = <1>;
+> > > +               ranges;
+> > > +
+> > > +               reg = <0xe6940000 0x200>, <0xe6950000 0x200>;
+> > > +               group_size = <19>;
+> > > +
+> > > +               DIRC: intsrc1 { vector = <0x0560>; };
+> > > +               ATAPI: intsrc2 { vector = <0x05E0>; };
+> > 
+> > This looks suspiciously like a way of encoding a device's interrupt information
+> > into the interrupt controller's device node. That strikes me as being the wrong
+> > way round.
 > 
-OK, I see.
+> Agreed, it would be simpler to have e.g. #interrupt-cells = <4>, to describe
+> the various offsets when needed (I forgot how many are actually required
+> in practice, rather than being computable from the other numbers), and
+> possibly a global interrupt-map/interrupt-map-mask property pair to map
+> this into a flat number space.
 
-Thanks.
+I'm not sure that I see what you are getting at here.
 
-[...]
-
-- Kukjin
+> I need to take some more time to understand the actual requirements again,
+> but IIRC it would be possible to do something much simpler than the
+> proposed binding.
+> 
+> 	Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
