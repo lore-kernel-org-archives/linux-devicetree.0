@@ -1,148 +1,134 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
-Date: Thu, 10 Jan 2013 17:48:46 -0700
-Message-ID: <50EF616E.7040609@wwwdotorg.org>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de> <1357764194-12677-11-git-send-email-thierry.reding@avionic-design.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1357764194-12677-11-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH v2] input: Extend matrix-keypad device tree binding
+Date: Thu, 10 Jan 2013 17:41:32 -0800
+Message-ID: <1357868492-16023-1-git-send-email-sjg@chromium.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+Sender: linux-input-owner@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Simon Glass <sjg@chromium.org>, linux-input@vger.kernel.org, Rob Landley <rob@landley.net>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Roland Stigge <stigge@antcom.de>, linux-doc@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, Wolfram Sang <w.sang@pengutronix.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Luigi Semenzato <semenzato@chromium.org>, Olof Johansson <olof@lixom.net>, Rob Herring <rob.herring@calxeda.com>, Stephen Warren <swarren@nvidia.com>, Alban Bedel <alban.bedel@avionic-design.de>
 List-Id: devicetree@vger.kernel.org
 
-On 01/09/2013 01:43 PM, Thierry Reding wrote:
-> Move the PCIe driver from arch/arm/mach-tegra into the drivers/pci/host
-> directory. The motivation is to collect various host controller drivers
-> in the same location in order to facilitate refactoring.
-> 
-> The Tegra PCIe driver has been largely rewritten, both in order to turn
-> it into a proper platform driver and to add MSI (based on code by
-> Krishna Kishore <kthota-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>) as well as device tree support.
+Some matrix keypad drivers can support different numbers of rows and
+columns. Add a generic binding for these.
 
-> diff --git a/arch/arm/mach-tegra/board-dt-tegra20.c b/arch/arm/mach-tegra/board-dt-tegra20.c
+Implementation note:
 
->  static void __init trimslice_init(void)
->  {
->  #ifdef CONFIG_TEGRA_PCI
-> -	int ret;
-> -
-> -	ret = tegra_pcie_init(true, true);
-> -	if (ret)
-> -		pr_err("tegra_pci_init() failed: %d\n", ret);
-> +	platform_device_register(&tegra_pcie_device);
+In order to implement this binding in the kernel, we will need to modify
+matrix_keypad_() to look up the number of rows and cols in
+the keymap. Perhaps this could be done by passing 0 for these parameters?
+Many of the parameters can already be set to NULL. Ick.
 
-That struct doesn't actually exist anywhere; only an extern definition
-is added (and that extern definition isn't removed by patch 14 either).
+Signed-off-by: Simon Glass <sjg@chromium.org>
+---
+Changes in v2:
+- Remove repeat rate parameters
+- Update TI OMAP, tca8418 and lpc32xx bindings to use this one
 
-> diff --git a/drivers/pci/host/Kconfig b/drivers/pci/host/Kconfig
+ .../devicetree/bindings/input/lpc32xx-key.txt      |    9 ++++++---
+ .../devicetree/bindings/input/matrix-keymap.txt    |    8 ++++++++
+ .../devicetree/bindings/input/omap-keypad.txt      |   13 +++++--------
+ .../devicetree/bindings/input/tca8418_keypad.txt   |    6 ++++--
+ 4 files changed, 23 insertions(+), 13 deletions(-)
 
-> +config PCI_TEGRA
-> +	bool "NVIDIA Tegra PCIe controller"
-> +	depends on ARCH_TEGRA_2x_SOC
+diff --git a/Documentation/devicetree/bindings/input/lpc32xx-key.txt b/Documentation/devicetree/bindings/input/lpc32xx-key.txt
+index 31afd50..bcf62f8 100644
+--- a/Documentation/devicetree/bindings/input/lpc32xx-key.txt
++++ b/Documentation/devicetree/bindings/input/lpc32xx-key.txt
+@@ -1,19 +1,22 @@
+ NXP LPC32xx Key Scan Interface
+ 
++This binding is based on the matrix-keymap binding with the following
++changes:
++
+ Required Properties:
+ - compatible: Should be "nxp,lpc3220-key"
+ - reg: Physical base address of the controller and length of memory mapped
+   region.
+ - interrupts: The interrupt number to the cpu.
+-- keypad,num-rows: Number of rows and columns, e.g. 1: 1x1, 6: 6x6
+-- keypad,num-columns: Must be equal to keypad,num-rows since LPC32xx only
+-  supports square matrices
+ - nxp,debounce-delay-ms: Debounce delay in ms
+ - nxp,scan-delay-ms: Repeated scan period in ms
+ - linux,keymap: the key-code to be reported when the key is pressed
+   and released, see also
+   Documentation/devicetree/bindings/input/matrix-keymap.txt
+ 
++Note: keypad,num-rows and keypad,num-columns are required, and must be equal
++since LPC32xx only supports square matrices
++
+ Example:
+ 
+ 	key@40050000 {
+diff --git a/Documentation/devicetree/bindings/input/matrix-keymap.txt b/Documentation/devicetree/bindings/input/matrix-keymap.txt
+index 3cd8b98..c54919f 100644
+--- a/Documentation/devicetree/bindings/input/matrix-keymap.txt
++++ b/Documentation/devicetree/bindings/input/matrix-keymap.txt
+@@ -9,6 +9,12 @@ Required properties:
+ 	row << 24 | column << 16 | key-code
+ 
+ Optional properties:
++Properties for the number of rows and columns are optional because some
++drivers will use fixed values for these.
++- keypad,num-rows: Number of row lines connected to the keypad controller.
++- keypad,num-columns: Number of column lines connected to the keypad
++  controller.
++
+ Some users of this binding might choose to specify secondary keymaps for
+ cases where there is a modifier key such as a Fn key. Proposed names
+ for said properties are "linux,fn-keymap" or with another descriptive
+@@ -17,3 +23,5 @@ word for the modifier other from "Fn".
+ Example:
+ 	linux,keymap = < 0x00030012
+ 			 0x0102003a >;
++	keypad,num-rows = <2>;
++	keypad,num-columns = <8>;
+diff --git a/Documentation/devicetree/bindings/input/omap-keypad.txt b/Documentation/devicetree/bindings/input/omap-keypad.txt
+index f2fa5e1..34ed1c6 100644
+--- a/Documentation/devicetree/bindings/input/omap-keypad.txt
++++ b/Documentation/devicetree/bindings/input/omap-keypad.txt
+@@ -6,19 +6,16 @@ A key can be placed at each intersection of a unique row and a unique column.
+ The keypad controller can sense a key-press and key-release and report the
+ event using a interrupt to the cpu.
+ 
++This binding is based on the matrix-keymap binding with the following
++changes:
++
++keypad,num-rows and keypad,num-columns are required.
++
+ Required SoC Specific Properties:
+ - compatible: should be one of the following
+    - "ti,omap4-keypad": For controllers compatible with omap4 keypad
+       controller.
+ 
+-Required Board Specific Properties, in addition to those specified by
+-the shared matrix-keyboard bindings:
+-- keypad,num-rows: Number of row lines connected to the keypad
+-  controller.
+-
+-- keypad,num-columns: Number of column lines connected to the
+-  keypad controller.
+-
+ Optional Properties specific to linux:
+ - linux,keypad-no-autorepeat: do no enable autorepeat feature.
+ 
+diff --git a/Documentation/devicetree/bindings/input/tca8418_keypad.txt b/Documentation/devicetree/bindings/input/tca8418_keypad.txt
+index 2a1538f..2551850 100644
+--- a/Documentation/devicetree/bindings/input/tca8418_keypad.txt
++++ b/Documentation/devicetree/bindings/input/tca8418_keypad.txt
+@@ -1,8 +1,10 @@
++This binding is based on the matrix-keymap binding with the following
++changes:
++
++keypad,num-rows and keypad,num-columns are required.
+ 
+ Required properties:
+ - compatible: "ti,tca8418"
+ - reg: the I2C address
+ - interrupts: IRQ line number, should trigger on falling edge
+-- keypad,num-rows: The number of rows
+-- keypad,num-columns: The number of columns
+ - linux,keymap: Keys definitions, see keypad-matrix.
+-- 
+1.7.7.3
 
-Perhaps depend on ARCH_TEGRA; that will save churn once this is ported
-to Tegra30, and shouldn't cause any problems before then.
-
-> diff --git a/drivers/pci/host/pci-tegra.c b/drivers/pci/host/pci-tegra.c
-
-> +#define AFI_INTR_CODE		0xb8
-> +#define  AFI_INTR_CODE_MASK	0xf
-> +#define  AFI_INTR_MASTER_ABORT	4
-> +#define  AFI_INTR_LEGACY	6
-
-Adding defines for at least some other codes here, would help further
-below ...
-
-> +static irqreturn_t tegra_pcie_isr(int irq, void *arg)
-
-> +	if (code == AFI_INTR_MASTER_ABORT) {
-> +		dev_dbg(pcie->dev, "%s, signature: %08x\n", err_msg[code],
-> +			signature);
-> +	} else
-> +		dev_err(pcie->dev, "%s, signature: %08x\n", err_msg[code],
-> +			signature);
-> +
-> +	if (code == 3 || code == 4 || code == 7) {
-
-... i.e. here.
-
-> +		u32 fpci = afi_readl(pcie, AFI_UPPER_FPCI_ADDRESS) & 0xff;
-> +		u64 address = (u64)fpci << 32 | (signature & 0xfffffffc);
-> +		dev_dbg(pcie->dev, "  FPCI address: %10llx\n", address);
-
-I'd suggest making that dev_err(), or at least something higher than
-debug, since the message indicating the error happened is dev_err(), so
-the complete details may as well be available since they're small.
-
-> +static int tegra_pcie_enable_controller(struct tegra_pcie *pcie)
-> +{
-> +	unsigned int timeout;
-> +	unsigned long value;
-> +
-> +	/* enable dual controller and both ports */
-> +	value = afi_readl(pcie, AFI_PCIE_CONFIG);
-> +	value &= ~(AFI_PCIE_CONFIG_PCIEC0_DISABLE_DEVICE |
-> +		   AFI_PCIE_CONFIG_PCIEC1_DISABLE_DEVICE |
-> +		   AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_MASK);
-> +	value |= AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_DUAL;
-> +	afi_writel(pcie, value, AFI_PCIE_CONFIG);
-
-Eventually, we should probably derive the port enables from the state of
-the root port DT nodes, so that we can disable some and presumably save
-a little power. Also, I notice that the nvidia,num-lanes property isn't
-implemented yet. Still, we can probably take care of this later.
-
-> +static void tegra_pcie_power_off(struct tegra_pcie *pcie)
-
-> +	if (!IS_ERR_OR_NULL(pcie->pex_clk_supply)) {
-
-Hmm. I think we should make supplies mandatory; it doesn't make sense
-for regulator support to be disabled on Tegra, and where a specific
-board doesn't actually have a regulator, you're supposed to provide a
-dummy fixed regulator so the driver doesn't have to care.
-
-The same comment obviously applies to tegra_pcie_power_on() and wherever
-regulator_get() happens.
-
-> +static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
-
-> +	pcie->vdd_supply = devm_regulator_get(pcie->dev, "vdd");
-> +	if (IS_ERR(pcie->vdd_supply))
-> +		return PTR_ERR(pcie->vdd_supply);
-> +
-> +	pcie->pex_clk_supply = devm_regulator_get(pcie->dev, "pex-clk");
-> +	if (IS_ERR(pcie->pex_clk_supply))
-> +		return PTR_ERR(pcie->pex_clk_supply);
-
-Oh, I guess the regulator_get() calls are already strict.
-
-> +static int tegra_pcie_add_port(struct tegra_pcie *pcie, struct device_node *np)
-
-> +	port = devm_kzalloc(pcie->dev, sizeof(*port), GFP_KERNEL);
-> +	if (!port)
-> +		return -ENOMEM;
-> +
-> +	INIT_LIST_HEAD(&port->list);
-> +	port->index = index;
-> +	port->pcie = pcie;
-> +
-> +	port->base = devm_request_and_ioremap(pcie->dev, &regs);
-> +	if (!port->base)
-> +		return -EADDRNOTAVAIL;
-> +
-> +	if (!tegra_pcie_port_check_link(port)) {
-> +		dev_info(pcie->dev, "link %u down, ignoring\n", port->index);
-
-Perhaps devm_kfree(port)? Not a big leak, but equally if you don't, it's
-an unreferenced memory block.
-
-> +		return -ENODEV;
-> +	}
-> +
-> +	list_add_tail(&port->list, &pcie->ports);
-> +
-> +	return 0;
-> +}
