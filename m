@@ -1,32 +1,47 @@
-From: Will Newton <will.newton@gmail.com>
-Subject: Re: [PATCH v4 1/5] mmc: dw_mmc: Add "disable-wp" device tree property
-Date: Fri, 11 Jan 2013 17:12:45 +0000
-Message-ID: <CAFbHwiTqpmiStLuLWn=aGQmR9yL+JOtYt=EkSAPf=PnTi0W1xw@mail.gmail.com>
-References: <1357842269-15062-1-git-send-email-dianders@chromium.org>
-	<1357923834-31641-1-git-send-email-dianders@chromium.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH] ARM: kernel: DT cpu map validity check helper function
+Date: Fri, 11 Jan 2013 17:20:12 +0000
+Message-ID: <20130111172012.GG30538@e102568-lin.cambridge.arm.com>
+References: <1357921058-11322-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <20130111163057.GE23505@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1357923834-31641-1-git-send-email-dianders@chromium.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: linux-mmc@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Will Newton <will.newton@imgtec.com>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Abhilash Kesavan <a.kesavan@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130111163057.GE23505@n2100.arm.linux.org.uk>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Pawel Moll <Pawel.Moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tony Lindgren <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, David Brown <davidb@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Hiroshi Doyu <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2013 at 5:03 PM, Doug Anderson <dianders@chromium.org> wrote:
-> The "disable-wp" property is used to specify that a given SD card slot
-> doesn't have a concept of write protect.  This eliminates the need for
-> special case code for SD slots that should never be write protected
-> (like a micro SD slot or a dev board).
->
-> The dw_mmc driver is special in needing to specify "disable-wp"
-> because the lack of a "wp-gpios" property means to use the special
-> purpose write protect line.  On some other mmc devices the lack of
-> "wp-gpios" means that write protect should be disabled.
->
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+On Fri, Jan 11, 2013 at 04:30:57PM +0000, Russell King - ARM Linux wrote:
+> On Fri, Jan 11, 2013 at 04:17:38PM +0000, Lorenzo Pieralisi wrote:
+> > This patch implements a helper function that platforms can call to check
+> > whether DT based cpu map initialization and cores count were completed
+> > successfully.
+> 
+> Umm, are you sure this works?  Two problems here:
+> - the kernel boot marks the booting CPU (in our case, CPU0) as present,
+>   possible and online before arch code gets called.  smp_init_cpus()
+>   will be called with the maps already initialized per that.
 
-This looks ok to me too.
+Gah, my bad, you are definitely right.
 
-Acked-by: Will Newton <will.newton@imgtec.com>
+> - this really needs to be paired with a patch showing how you intend it
+>   to be used; merely adding the helper without any sign of it being used
+>   means it's just bloat which may not end up being used.
+
+Ok, that's a fair point, I will ask to get it merged with an implementation
+that relies on it, showing its usage.
+
+Thanks for the review,
+Lorenzo
