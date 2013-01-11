@@ -1,46 +1,69 @@
-From: Chen Peter-B29397 <B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH 1/4] ARM: dts: mxs-phy: Change mxs phy clock usage
-Date: Fri, 11 Jan 2013 03:06:16 +0000
-Message-ID: <F281D0F91ED19E4D8E63A7504E8A649803D63A8D@039-SN2MPN1-022.039d.mgd.msft.net>
-References: <1357806954-27960-1-git-send-email-peter.chen@freescale.com>
- <20130111022525.GC9139@S2101-09.ap.freescale.net>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Fri, 11 Jan 2013 04:40:15 +0100
+Message-ID: <20130111034015.GA28094@avionic-0098.adnet.avionic-design.de>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+ <1357764194-12677-11-git-send-email-thierry.reding@avionic-design.de>
+ <50EF54B6.6010100@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130111022525.GC9139-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, "mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org" <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>, maxime.ripard@free-electro
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MGYHOYXEY6WxJCY8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50EF54B6.6010100@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: linux-tegra@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Andrew Murray <andrew.murray@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
- 
-> On Thu, Jan 10, 2013 at 04:35:51PM +0800, Peter Chen wrote:
-> > For mxs-phy user i.mx6q, the PHY's clock is controlled by
-> > hardware automatically, the software only needs to enable it
-> > at probe, this clock should be used like below:
-> >
-> > - Enable at mxs-phy's probe, and disable at mxs-phy's remove, so
-> > The clk framework doesn't need to know it. But other mxs-phy user
-> > mx28/mx23 may need it, so we give mxs-phy a dummy clock for imx6q.
-> > - During the runtime, we don't need to control it.
-> >
-> Turning it into a dummy clock, you will have no way to maintain the
-> use count.  It could possibly cause parent clock be turned off while
-> usbphy is in use.
-> 
-> Let's try to find some other way.
-> 
-I will keep the phyclk unchanged, but just let it control a reserved bit
-In that case, the clk framework will know USB is using PLL.
 
-Meanwhile, the real USB PHY clk gate will only be open one time at
-phy driver's probe.
+--MGYHOYXEY6WxJCY8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Shawn
+On Thu, Jan 10, 2013 at 04:54:30PM -0700, Stephen Warren wrote:
+> On 01/09/2013 01:43 PM, Thierry Reding wrote:
+> > Move the PCIe driver from arch/arm/mach-tegra into the drivers/pci/host
+> > directory. The motivation is to collect various host controller drivers
+> > in the same location in order to facilitate refactoring.
+> >=20
+> > The Tegra PCIe driver has been largely rewritten, both in order to turn
+> > it into a proper platform driver and to add MSI (based on code by
+> > Krishna Kishore <kthota@nvidia.com>) as well as device tree support.
+>=20
+> This driver doesn't compile unless CONFIG_PCI_MSI is also enabled.
+> Should it select that, or contain a few ifdefs?
+>=20
+> drivers/pci/host/pci-tegra.c:900: undefined reference to `write_msi_msg'
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Right, it'll need #ifdefs around the arch_{setup,teardown}_msi_irq(). Or
+select PCI_MSI unconditionally. Once this is merged I was going to post
+a patch that enables PCI_MSI in tegra_defconfig anyway. But it might be
+better to keep it optional anyway since the remainder of the code copes
+with it properly.
+
+Thierry
+
+--MGYHOYXEY6WxJCY8
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ74mfAAoJEN0jrNd/PrOhjbsP/2W/s/cNZbYyUEqt7o5TBlFQ
+fthSHLtiGCfJ3L+20feBFQ0gS6sQqC4uqvBPJG28g0hwXnAuJrIpzvu0JXfTH+cZ
+USPeEIV/pJBhZV15b3v53wFbNvGAAr/44nm1XEyjtmNd/HEXH4hlupBWs+xzUA+z
+cJJPtu8HaMvS67D93cj5IEDHaC6YMs12xK52/IQThOxqV50sa6bsnwqB4X99W0bj
+TdJZBnUcVpOzHc2HXcuyqzMjwlH0k8RVJLq5sBz9+mjUwkLjrHy5a8DBQ0pnOQEF
+y7BmSEpwpqMl5aHN/7zr9WM5WWlmLNN0puTc0s81Xb8bEm6HfXjbLY1YEYQbOmTb
++maRcSNKKwmp7EPun7iTHxLOFCIKqSRUe4erV8SsG1IfRPFoc3LCmznNC6He+YaQ
+bu3H3+IcgId75p6fQ883TEWHlrYbzkaAgeudmVZguDTE8UbDw23C7YDeOP0UQMT1
+PAJNLCv5vDdcG++TqBa2T5gLQ1L6mrDu1HzYq+YyLnvOu+af+6NN/UakdDg7qHy8
+yXIhG0COBPc35fM0e/3UTp2fenEpGI9nNGk01tiRXCw0uURES/F7sw0MspQ0IgxF
+Y8z8cw8cQwIVSx11+qJOIhIRFNR/IsGOViMUZsyx2g1JPvzwXP2OgcCNv6gu0bgN
+j8Lgr4VVNq943c+Y6ds4
+=nSC6
+-----END PGP SIGNATURE-----
+
+--MGYHOYXEY6WxJCY8--
