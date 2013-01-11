@@ -1,33 +1,46 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH 1/4] ARM: dts: mxs-phy: Change mxs phy clock usage
-Date: Fri, 11 Jan 2013 10:25:27 +0800
-Message-ID: <20130111022525.GC9139@S2101-09.ap.freescale.net>
+From: Chen Peter-B29397 <B29397-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 1/4] ARM: dts: mxs-phy: Change mxs phy clock usage
+Date: Fri, 11 Jan 2013 03:06:16 +0000
+Message-ID: <F281D0F91ED19E4D8E63A7504E8A649803D63A8D@039-SN2MPN1-022.039d.mgd.msft.net>
 References: <1357806954-27960-1-git-send-email-peter.chen@freescale.com>
+ <20130111022525.GC9139@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1357806954-27960-1-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: alexander.shishkin@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, dong.aisheng@linaro.org, rob@landley.net, balbi@ti.com, kernel@pengutronix.de, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, festevam@gmail.com, marex@denx.de, mkl@pengutronix.de, m.grzeschik@pengutronix.de, matt@genesi-usa.com, maxime.ripard@free-electrons.com
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130111022525.GC9139-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+Content-Language: en-US
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "marex-ynQEQJNshbs@public.gmane.org" <marex-ynQEQJNshbs@public.gmane.org>, "mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org" <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>, maxime.ripard@free-electro
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2013 at 04:35:51PM +0800, Peter Chen wrote:
-> For mxs-phy user i.mx6q, the PHY's clock is controlled by
-> hardware automatically, the software only needs to enable it
-> at probe, this clock should be used like below:
+ 
+> On Thu, Jan 10, 2013 at 04:35:51PM +0800, Peter Chen wrote:
+> > For mxs-phy user i.mx6q, the PHY's clock is controlled by
+> > hardware automatically, the software only needs to enable it
+> > at probe, this clock should be used like below:
+> >
+> > - Enable at mxs-phy's probe, and disable at mxs-phy's remove, so
+> > The clk framework doesn't need to know it. But other mxs-phy user
+> > mx28/mx23 may need it, so we give mxs-phy a dummy clock for imx6q.
+> > - During the runtime, we don't need to control it.
+> >
+> Turning it into a dummy clock, you will have no way to maintain the
+> use count.  It could possibly cause parent clock be turned off while
+> usbphy is in use.
 > 
-> - Enable at mxs-phy's probe, and disable at mxs-phy's remove, so
-> The clk framework doesn't need to know it. But other mxs-phy user
-> mx28/mx23 may need it, so we give mxs-phy a dummy clock for imx6q.
-> - During the runtime, we don't need to control it.
+> Let's try to find some other way.
 > 
-Turning it into a dummy clock, you will have no way to maintain the
-use count.  It could possibly cause parent clock be turned off while
-usbphy is in use.
+I will keep the phyclk unchanged, but just let it control a reserved bit
+In that case, the clk framework will know USB is using PLL.
 
-Let's try to find some other way.
+Meanwhile, the real USB PHY clk gate will only be open one time at
+phy driver's probe.
 
-Shawn
+> Shawn
 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
