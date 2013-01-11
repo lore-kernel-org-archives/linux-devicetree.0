@@ -1,89 +1,49 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [PATCH] ARM: dts: OMAP3: Add support for OMAP3430 SDP board
-Date: Fri, 11 Jan 2013 10:39:22 -0600
-Message-ID: <1357922362-7641-1-git-send-email-jon-hunter@ti.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: Early kernel hang with big DTB appended
+Date: Fri, 11 Jan 2013 17:45:31 +0100
+Message-ID: <20130111164531.GC13025@pengutronix.de>
+References: <7811936.npteFbuYu2@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Jon Hunter <jon-hunter@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <7811936.npteFbuYu2@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, nico@linaro.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, bones@secretlab.ca, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Adds basic device-tree support for OMAP3430 SDP board which has 256MB
-of RAM and uses the TWL4030 power management IC.
+On Thu, Jan 03, 2013 at 04:55:00PM +0100, Tomasz Figa wrote:
+> Hi,
+> 
+> I'm observing strange behavior when booting 3.8-rc1 and -rc2 with appended 
+> DTB. The kernel hangs very early when the DTB is bigger than some 
+> threshold somewhere around 24 KiB. With fullest possible low level UART 
+> debugging (and printk patched to use printascii) I'm receiving following 
+> output:
+> 
+> Uncompressing Linux... done, booting the kernel.
+> Booting Linux on physical CPU 0xa00
+> Linux version 3.8.0-rc1-00073-gdf6efca-dirty (t.figa@amdc1227) (gcc 
+> version 4.5.2 (Gentoo 4.5.2 p1.2, pie-0.4.5) ) #2 SMP PREEMPT Thu Jan 3 
+> 15:37:35 CET 2013
+> CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7d
+> CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+> 
+> I tested on two Exynos-based boards (exynos4210-trats and one internal 
+> exynos4412-based board) and same happens on both.
+> 
+> Do you have any ideas?
 
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
----
- arch/arm/boot/dts/Makefile         |    1 +
- arch/arm/boot/dts/omap3430-sdp.dts |   46 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 47 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3430-sdp.dts
+Another thing besides the things already mentioned is that the dtb may
+not cross a 1MiB boundary. The Kernel uses a single 1Mib section
+(aligned to 1Mib) to initially map the dtb. Once you cross that boundary
+parts of the dtb won't be accessible for the Kernel anymore.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e44da40..5d6dff0 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -104,6 +104,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
- 	omap3-beagle.dtb \
- 	omap3-beagle-xm.dtb \
- 	omap3-evm.dtb \
-+	omap3430-sdp.dtb \
- 	omap3-tobi.dtb \
- 	omap4-panda.dtb \
- 	omap4-panda-a4.dtb \
-diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
-new file mode 100644
-index 0000000..be0650d
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3430-sdp.dts
-@@ -0,0 +1,46 @@
-+/*
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+/include/ "omap3.dtsi"
-+
-+/ {
-+	model = "TI OMAP3430 SDP";
-+	compatible = "ti,omap3430-sdp", "ti,omap3";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x10000000>; /* 256 MB */
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <2600000>;
-+
-+	twl: twl@48 {
-+		reg = <0x48>;
-+		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+		interrupt-parent = <&intc>;
-+	};
-+};
-+
-+/include/ "twl4030.dtsi"
-+
-+&mmc1 {
-+	vmmc-supply = <&vmmc1>;
-+	vmmc_aux-supply = <&vsim>;
-+	bus-width = <8>;
-+};
-+
-+&mmc2 {
-+	status = "disabled";
-+};
-+
-+&mmc3 {
-+	status = "disabled";
-+};
+Sascha
+
 -- 
-1.7.10.4
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
