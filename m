@@ -1,54 +1,32 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2] input: Extend matrix-keypad device tree binding
-Date: Fri, 11 Jan 2013 09:13:43 -0800
-Message-ID: <20130111171343.GE11224@core.coreip.homeip.net>
-References: <1357868492-16023-1-git-send-email-sjg@chromium.org>
- <50F0473F.404@wwwdotorg.org>
+From: Will Newton <will.newton@gmail.com>
+Subject: Re: [PATCH v4 1/5] mmc: dw_mmc: Add "disable-wp" device tree property
+Date: Fri, 11 Jan 2013 17:12:45 +0000
+Message-ID: <CAFbHwiTqpmiStLuLWn=aGQmR9yL+JOtYt=EkSAPf=PnTi0W1xw@mail.gmail.com>
+References: <1357842269-15062-1-git-send-email-dianders@chromium.org>
+	<1357923834-31641-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50F0473F.404@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Simon Glass <sjg@chromium.org>, LKML <linux-kernel@vger.kernel.org>, Roland Stigge <stigge@antcom.de>, Vincent Palatin <vpalatin@chromium.org>, linux-doc@vger.kernel.org, Wolfram Sang <w.sang@pengutronix.de>, Felipe Balbi <balbi@ti.com>, Luigi Semenzato <semenzato@chromium.org>, Rob Herring <rob.herring@calxeda.com>, linux-input@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, Sourav Poddar <sourav.poddar@ti.com>, Alban Bedel <alban.bedel@avionic-design.de>, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1357923834-31641-1-git-send-email-dianders@chromium.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: linux-mmc@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Will Newton <will.newton@imgtec.com>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Abhilash Kesavan <a.kesavan@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2013 at 10:09:19AM -0700, Stephen Warren wrote:
-> On 01/10/2013 06:41 PM, Simon Glass wrote:
-> > Some matrix keypad drivers can support different numbers of rows and
-> > columns. Add a generic binding for these.
-> > 
-> > Implementation note:
-> > 
-> > In order to implement this binding in the kernel, we will need to modify
-> > matrix_keypad_() to look up the number of rows and cols in
-> > the keymap. Perhaps this could be done by passing 0 for these parameters?
-> > Many of the parameters can already be set to NULL. Ick.
-> 
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
-> 
-> Note that the Tegra bindings are based on matrix-keypad.txt, and
-> recently added the following properties:
-> 
-> > - nvidia,kbc-row-pins: The KBC pins which are configured as row. This is an
-> >   array of pin numbers which is used as rows.
-> > - nvidia,kbc-col-pins: The KBC pins which are configured as column. This is an
-> >   array of pin numbers which is used as column.
-> 
-> Those both define the number of rows/columns (indirectly via the
-> property lengths) *and* define which pins are used for the rows/columns.
-> How will this influence/interact-with any changes you're planning to the
-> core matrix keymap parsing code; would Tegra require your "new"
-> keypad,num-rows/keypad,num-columns properties even though the
-> information is redundant, or will the Tegra driver have some way of
-> passing this information to the core?
+On Fri, Jan 11, 2013 at 5:03 PM, Doug Anderson <dianders@chromium.org> wrote:
+> The "disable-wp" property is used to specify that a given SD card slot
+> doesn't have a concept of write protect.  This eliminates the need for
+> special case code for SD slots that should never be write protected
+> (like a micro SD slot or a dev board).
+>
+> The dw_mmc driver is special in needing to specify "disable-wp"
+> because the lack of a "wp-gpios" property means to use the special
+> purpose write protect line.  On some other mmc devices the lack of
+> "wp-gpios" means that write protect should be disabled.
+>
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
 
-Even if we decide to move lookup of keypad,num-rows/keypad,num-columns
-into matrix-keypad code we will still allow callers to override DT data,
-like we do with platform keymaps.
+This looks ok to me too.
 
-Thanks.
-
--- 
-Dmitry
+Acked-by: Will Newton <will.newton@imgtec.com>
