@@ -1,78 +1,33 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH 5/5] Input: Add ChromeOS EC keyboard driver
-Date: Thu, 10 Jan 2013 17:51:33 -0800
-Message-ID: <CAPnjgZ315QhvTw9C=MLA=QhGa1Wo572tRN5KyRsNpEJ3Wmq4vg@mail.gmail.com>
-References: <1355348028-19017-1-git-send-email-sjg@chromium.org>
-	<1355348028-19017-6-git-send-email-sjg@chromium.org>
-	<20121215011345.9D5973E0BEE@localhost>
-	<2990462.l5jY89jKQx@dtor-d630.eng.vmware.com>
-	<20121219125722.DCD3E3E0AD7@localhost>
-	<20121219181643.GA31435@core.coreip.homeip.net>
-	<CAPnjgZ2MH_iD73oOZe7pEEAVg_8c5dFWHdeaNfD6A4E9NeWRug@mail.gmail.com>
-	<CACxGe6s2UxekcZ1zdYiP_FjgYPhjKzob8HMK-PGN6XD8wBWquA@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH 1/4] ARM: dts: mxs-phy: Change mxs phy clock usage
+Date: Fri, 11 Jan 2013 10:25:27 +0800
+Message-ID: <20130111022525.GC9139@S2101-09.ap.freescale.net>
+References: <1357806954-27960-1-git-send-email-peter.chen@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6s2UxekcZ1zdYiP_FjgYPhjKzob8HMK-PGN6XD8wBWquA@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1357806954-27960-1-git-send-email-peter.chen@freescale.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sourav Poddar <sourav.poddar@ti.com>, Felipe Balbi <balbi@ti.com>, Olof Johansson <olof@lixom.net>, Roland Stigge <stigge@antcom.de>, Wolfram Sang <w.sang@pengutronix.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+To: Peter Chen <peter.chen@freescale.com>
+Cc: alexander.shishkin@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, dong.aisheng@linaro.org, rob@landley.net, balbi@ti.com, kernel@pengutronix.de, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, festevam@gmail.com, marex@denx.de, mkl@pengutronix.de, m.grzeschik@pengutronix.de, matt@genesi-usa.com, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On Thu, Jan 10, 2013 at 04:35:51PM +0800, Peter Chen wrote:
+> For mxs-phy user i.mx6q, the PHY's clock is controlled by
+> hardware automatically, the software only needs to enable it
+> at probe, this clock should be used like below:
+> 
+> - Enable at mxs-phy's probe, and disable at mxs-phy's remove, so
+> The clk framework doesn't need to know it. But other mxs-phy user
+> mx28/mx23 may need it, so we give mxs-phy a dummy clock for imx6q.
+> - During the runtime, we don't need to control it.
+> 
+Turning it into a dummy clock, you will have no way to maintain the
+use count.  It could possibly cause parent clock be turned off while
+usbphy is in use.
 
-On Wed, Dec 19, 2012 at 12:42 PM, Grant Likely
-<grant.likely@secretlab.ca> wrote:
-> On Wed, Dec 19, 2012 at 8:20 PM, Simon Glass <sjg@chromium.org> wrote:
->> On Wed, Dec 19, 2012 at 10:16 AM, Dmitry Torokhov
->> <dmitry.torokhov@gmail.com> wrote:
->>>
->>> On Wed, Dec 19, 2012 at 12:57:22PM +0000, Grant Likely wrote:
->>> > On Fri, 14 Dec 2012 17:43:31 -0800, Dmitry Torokhov
->>> > <dmitry.torokhov@gmail.com> wrote:
->>> > > On Saturday, December 15, 2012 01:13:45 AM Grant Likely wrote:
->>> > > > > +Required properties:
->>> > > > > +- compatible: "google,cros-ec-keyb"
->>> > > > > +- google,key-rows: Number of keyboard rows (must be <= 8)
->>> > > > > +- google,key-columns: Number of keyboard columns (must be <= 13)
->>> > > > > +- google,repeat-delay-ms: Key repeat delay in milliseconds
->>> > > > > +- google,repeat-rate-ms: Key repeat rate in milliseconds
->>> > > >
->>> > > > Hmmm, these should probably be in a common binding. Take a look at
->>> > > > the other input bindings and make a proposal for properties to add
->>> > > > to
->>> > > > matrix-keymap.txt.
->>> > >
->>> > > Actually these are not essentia for bringup and can be set from
->>> > > userspace,
->>> > > so I'd say simply drop them.
->>> >
->>> > Aren't they needed for a working keyboard? If so, I would really think
->>> > they should be set correctly without userspace intervention.
->>>
->>> I am sorry if I was unclear, but I was actually talking about the last
->>> 2: repeat-delay-ms and repeat-rate-ms. Input core has I believe sane
->>> defaults (250 msec delay, 33 cps autorepeat) and user can adjust if
->>> other rate is preferred.
->>
->>
->> I seems like I should remove these two, then.
->>
->> It would be nice if we could keep these parameters so that the keyboard
->> doesn't require user-space set up to work, but I understand and agree they
->> are not essential. Regarding Grant's request to come up with a common
->> binding, if I remove these then that is not needed, right?
->
-> I have no problem keeping the properties, but it does look like
-> something applicable to all users, not just this driver.
+Let's try to find some other way.
 
-I dropped keyboard repeat from the common binding and resent. If that
-goes in then I can try again later when Dmitry is on holiday :-), or I
-can put it just in our own driver. I don't mind either way, so someone
-should let me know which is best.
+Shawn
 
->
-> g.
-
-Regards,
-Simon
