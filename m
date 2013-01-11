@@ -1,49 +1,67 @@
-From: Matt Porter <mporter@ti.com>
-Subject: [PATCH v4 14/14] ARM: dts: add AM33XX SPI DMA support
-Date: Fri, 11 Jan 2013 00:48:50 -0500
-Message-ID: <1357883330-5364-15-git-send-email-mporter@ti.com>
-References: <1357883330-5364-1-git-send-email-mporter@ti.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1357883330-5364-1-git-send-email-mporter@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>
-Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <djbw@fb.com>, Rob Herring <rob.herring@calxeda.com>
+From: Singh Sandeep-B37400 <B37400@freescale.com>
+Subject: RE: [PATCH] Added device tree binding for TDM and TDM phy
+Date: Fri, 11 Jan 2013 06:01:47 +0000
+Message-ID: <3F1D9DCAAB49B94D88DBE05911FA4E6E69F5FD@039-SN1MPN1-005.039d.mgd.msft.net>
+References: <1357133120-2271-1-git-send-email-Sandeep@freescale.com>
+ <3F1D9DCAAB49B94D88DBE05911FA4E6E69CEB8@039-SN1MPN1-005.039d.mgd.msft.net>
+ <1357776425.18196.18@snotra>
+ <3F1D9DCAAB49B94D88DBE05911FA4E6E69E4F0@039-SN1MPN1-005.039d.mgd.msft.net>
+ <1357847318.27576.9@snotra>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1357847318.27576.9@snotra>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: Wood Scott-B07421 <B07421@freescale.com>
+Cc: "linuxppc-dev@ozlabs.org" <linuxppc-dev@ozlabs.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Aggrwal Poonam-B10812 <B10812@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds DMA resources to the AM33XX SPI nodes.
-
-Signed-off-by: Matt Porter <mporter@ti.com>
----
- arch/arm/boot/dts/am33xx.dtsi |   10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 278b75d..8fd3648 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -356,6 +356,11 @@
- 			interrupt = <65>;
- 			ti,spi-num-cs = <2>;
- 			ti,hwmods = "spi0";
-+			dmas = <&edma 16
-+				&edma 17
-+				&edma 18
-+				&edma 19>;
-+			dma-names = "tx0", "rx0", "tx1", "rx1";
- 			status = "disabled";
- 		};
- 
-@@ -367,6 +372,11 @@
- 			interrupt = <125>;
- 			ti,spi-num-cs = <2>;
- 			ti,hwmods = "spi1";
-+			dmas = <&edma 42
-+				&edma 43
-+				&edma 44
-+				&edma 45>;
-+			dma-names = "tx0", "rx0", "tx1", "rx1";
- 			status = "disabled";
- 		};
- 
--- 
-1.7.9.5
+> -----Original Message-----
+> From: Wood Scott-B07421
+> Sent: Friday, January 11, 2013 1:19 AM
+> To: Singh Sandeep-B37400
+> Cc: Wood Scott-B07421; devicetree-discuss@lists.ozlabs.org; linuxppc-
+> dev@ozlabs.org; Aggrwal Poonam-B10812
+> Subject: Re: [PATCH] Added device tree binding for TDM and TDM phy
+> 
+> On 01/10/2013 03:24:21 AM, Singh Sandeep-B37400 wrote:
+> > > > > +- compatible
+> > > > > +    Value type: <string>
+> > > > > +    Definition: Should contain generic compatibility like
+> > > > "tdm-phy-slic"
+> > > > > or
+> > > > > +    "tdm-phy-e1" or "tdm-phy-t1".
+> > >
+> > > Does this "generic" string (plus the other properties) tell you all
+> > you
+> > > need to know about the device?  If there are other possible
+> > "generic"
+> > > compatibles, they should be listed or else different people will
+> > make up
+> > > different strings for the same thing.
+> >
+> > This property will describe the type of device, and will help TDM
+> > framework to know if it is E1/T1/SLIC device. Further details can be
+> > extracted from other compatible strings.
+> > There are only three generic compatibles field types, which are
+> > already mentioned in definition. Do I need to make this thing more
+> > clear.
+> 
+> The word "like" suggests that there are other possibilites.  It would be
+> clearer as:
+> 
+> Definition: One of "tdm-phy-slic", "tdm-phy-e1", or "tdm-phy-t1".
+> 
+> -Scott
+Ok, thanks for your comments.
