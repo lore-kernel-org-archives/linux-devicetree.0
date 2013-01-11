@@ -1,180 +1,43 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v4 1/5] mmc: dw_mmc: Add "disable-wp" device tree property
-Date: Fri, 11 Jan 2013 09:03:50 -0800
-Message-ID: <1357923834-31641-1-git-send-email-dianders@chromium.org>
-References: <1357842269-15062-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1357842269-15062-1-git-send-email-dianders@chromium.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: linux-samsung-soc@vger.kernel.org, Thomas Abraham <thomas.abraham@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Will Newton <will.newton@imgtec.com>, Chris Ball <cjb@laptop.org>, Jaehoon Chung <jh80.chung@samsung.com>, Seungwon Jeon <tgih.jun@samsung.com>, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Abhilash Kesavan <a.kesavan@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v2] input: Extend matrix-keypad device tree binding
+Date: Fri, 11 Jan 2013 10:09:19 -0700
+Message-ID: <50F0473F.404@wwwdotorg.org>
+References: <1357868492-16023-1-git-send-email-sjg@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1357868492-16023-1-git-send-email-sjg@chromium.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Simon Glass <sjg@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Roland Stigge <stigge@antcom.de>, Vincent Palatin <vpalatin@chromium.org>, linux-doc@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Wolfram Sang <w.sang@pengutronix.de>, Felipe Balbi <balbi@ti.com>, Luigi Semenzato <semenzato@chromium.org>, Rob Herring <rob.herring@calxeda.com>, linux-input@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, Sourav Poddar <sourav.poddar@ti.com>, Alban Bedel <alban.bedel@avionic-design.de>, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-The "disable-wp" property is used to specify that a given SD card slot
-doesn't have a concept of write protect.  This eliminates the need for
-special case code for SD slots that should never be write protected
-(like a micro SD slot or a dev board).
+On 01/10/2013 06:41 PM, Simon Glass wrote:
+> Some matrix keypad drivers can support different numbers of rows and
+> columns. Add a generic binding for these.
+> 
+> Implementation note:
+> 
+> In order to implement this binding in the kernel, we will need to modify
+> matrix_keypad_() to look up the number of rows and cols in
+> the keymap. Perhaps this could be done by passing 0 for these parameters?
+> Many of the parameters can already be set to NULL. Ick.
 
-The dw_mmc driver is special in needing to specify "disable-wp"
-because the lack of a "wp-gpios" property means to use the special
-purpose write protect line.  On some other mmc devices the lack of
-"wp-gpios" means that write protect should be disabled.
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
-Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
----
-Changes in v4:
-- Added a comment about the fact that a future patch will remove the
-  controller-level quirk; the comments and quirk will be removed in
-  the future change "mmc: dw_mmc: Remove
-  DW_MCI_QUIRK_NO_WRITE_PROTECT".  I split the patch up this way to
-  preserve bisectability and also to keep changes logically separated.
-  I will squash if desired.
+Note that the Tegra bindings are based on matrix-keypad.txt, and
+recently added the following properties:
 
-Changes in v3:
-- New for this version of the patch series.  Chose "disable-wp" rather
-  than the discussed "broken-internal-wp" since it mapped more cleanly
-  to an existing quirk (and the only reason to specify that the
-  internal wp is broken is if you're disabling the write protect
-  anyway).
+> - nvidia,kbc-row-pins: The KBC pins which are configured as row. This is an
+>   array of pin numbers which is used as rows.
+> - nvidia,kbc-col-pins: The KBC pins which are configured as column. This is an
+>   array of pin numbers which is used as column.
 
- .../devicetree/bindings/mmc/synopsis-dw-mshc.txt   |   12 +++++-
- drivers/mmc/host/dw_mmc.c                          |   41 +++++++++++++++++++-
- include/linux/mmc/dw_mmc.h                         |    9 ++++
- 3 files changed, 59 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
-index 06cd32d08..726fd21 100644
---- a/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
-+++ b/Documentation/devicetree/bindings/mmc/synopsis-dw-mshc.txt
-@@ -26,8 +26,16 @@ Required Properties:
- 	* bus-width: as documented in mmc core bindings.
- 
- 	* wp-gpios: specifies the write protect gpio line. The format of the
--	  gpio specifier depends on the gpio controller. If the write-protect
--	  line is not available, this property is optional.
-+	  gpio specifier depends on the gpio controller. If a GPIO is not used
-+	  for write-protect, this property is optional.
-+
-+	* disable-wp: If the wp-gpios property isn't present then (by default)
-+	  we'd assume that the write protect is hooked up directly to the
-+	  controller's special purpose write protect line (accessible via
-+	  the WRTPRT register).  However, it's possible that we simply don't
-+	  want write protect.  In that case specify 'disable-wp'.
-+	  NOTE: This property is not required for slots known to always
-+	  connect to eMMC or SDIO cards.
- 
- Optional properties:
- 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 323c502..90f7d99 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -74,6 +74,7 @@ struct idmac_desc {
-  * struct dw_mci_slot - MMC slot state
-  * @mmc: The mmc_host representing this slot.
-  * @host: The MMC controller this slot is using.
-+ * @quirks: Slot-level quirks (DW_MCI_SLOT_QUIRK_XXX)
-  * @ctype: Card type for this slot.
-  * @mrq: mmc_request currently being processed or waiting to be
-  *	processed, or NULL when the slot is idle.
-@@ -88,6 +89,8 @@ struct dw_mci_slot {
- 	struct mmc_host		*mmc;
- 	struct dw_mci		*host;
- 
-+	int			quirks;
-+
- 	u32			ctype;
- 
- 	struct mmc_request	*mrq;
-@@ -825,7 +828,13 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
- 	struct dw_mci_board *brd = slot->host->pdata;
- 
- 	/* Use platform get_ro function, else try on board write protect */
--	if (brd->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT)
-+
-+	/*
-+	 * NOTE: DW_MCI_QUIRK_NO_WRITE_PROTECT will be removed in a future
-+	 * patch in the series once reference to it is removed.
-+	 */
-+	if ((brd->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT) ||
-+	    (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT))
- 		read_only = 0;
- 	else if (brd->get_ro)
- 		read_only = brd->get_ro(slot->id);
-@@ -1785,6 +1794,30 @@ static struct device_node *dw_mci_of_find_slot_node(struct device *dev, u8 slot)
- 	return NULL;
- }
- 
-+static struct dw_mci_of_slot_quirks {
-+	char *quirk;
-+	int id;
-+} of_slot_quirks[] = {
-+	{
-+		.quirk	= "disable-wp",
-+		.id	= DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
-+	},
-+};
-+
-+static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
-+{
-+	struct device_node *np = dw_mci_of_find_slot_node(dev, slot);
-+	int quirks = 0;
-+	int idx;
-+
-+	/* get quirks */
-+	for (idx = 0; idx < ARRAY_SIZE(of_slot_quirks); idx++)
-+		if (of_get_property(np, of_slot_quirks[idx].quirk, NULL))
-+			quirks |= of_slot_quirks[idx].id;
-+
-+	return quirks;
-+}
-+
- /* find out bus-width for a given slot */
- static u32 dw_mci_of_get_bus_wd(struct device *dev, u8 slot)
- {
-@@ -1800,6 +1833,10 @@ static u32 dw_mci_of_get_bus_wd(struct device *dev, u8 slot)
- 	return bus_wd;
- }
- #else /* CONFIG_OF */
-+static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
-+{
-+	return 0;
-+}
- static u32 dw_mci_of_get_bus_wd(struct device *dev, u8 slot)
- {
- 	return 1;
-@@ -1828,6 +1865,8 @@ static int dw_mci_init_slot(struct dw_mci *host, unsigned int id)
- 	slot->host = host;
- 	host->slot[id] = slot;
- 
-+	slot->quirks = dw_mci_of_get_slot_quirks(host->dev, slot->id);
-+
- 	mmc->ops = &dw_mci_ops;
- 	mmc->f_min = DIV_ROUND_UP(host->bus_hz, 510);
- 	mmc->f_max = host->bus_hz;
-diff --git a/include/linux/mmc/dw_mmc.h b/include/linux/mmc/dw_mmc.h
-index 34be4f4..de61de5 100644
---- a/include/linux/mmc/dw_mmc.h
-+++ b/include/linux/mmc/dw_mmc.h
-@@ -209,9 +209,18 @@ struct dw_mci_dma_ops {
- #define DW_MCI_QUIRK_HIGHSPEED			BIT(2)
- /* Unreliable card detection */
- #define DW_MCI_QUIRK_BROKEN_CARD_DETECTION	BIT(3)
-+
- /* Write Protect detection not available */
-+/*
-+ * NOTE: DW_MCI_QUIRK_NO_WRITE_PROTECT will be removed in a future
-+ * patch in the series once reference to it is removed.
-+ */
- #define DW_MCI_QUIRK_NO_WRITE_PROTECT		BIT(4)
- 
-+/* Slot level quirks */
-+/* This slot has no write protect */
-+#define DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT	BIT(0)
-+
- struct dma_pdata;
- 
- struct block_settings {
--- 
-1.7.7.3
+Those both define the number of rows/columns (indirectly via the
+property lengths) *and* define which pins are used for the rows/columns.
+How will this influence/interact-with any changes you're planning to the
+core matrix keymap parsing code; would Tegra require your "new"
+keypad,num-rows/keypad,num-columns properties even though the
+information is redundant, or will the Tegra driver have some way of
+passing this information to the core?
