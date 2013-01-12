@@ -1,47 +1,150 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/2] arm: tegra: Add new DT property to USB node.
-Date: Fri, 11 Jan 2013 17:43:52 -0700
-Message-ID: <50F0B1C8.400@wwwdotorg.org>
-References: <50CF89AF.3000308@wwwdotorg.org> <Pine.LNX.4.44L0.1212171704060.1409-100000@iolanthe.rowland.org> <20130112001414.GA21909@kroah.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v5 2/4] usb: phy: samsung: Add host phy support to
+ samsung-phy driver
+Date: Fri, 11 Jan 2013 16:50:45 -0800
+Message-ID: <CAD=FV=XhMbWjCR5r=R3+zE1524NuUUvFDf2HZuCrXPmsei4BNA@mail.gmail.com>
+References: <1355841786-13307-1-git-send-email-gautam.vivek@samsung.com>
+	<1355841786-13307-3-git-send-email-gautam.vivek@samsung.com>
+	<CAD=FV=WMjqszsTQja82_uZc4Ue50TfTmSNO2yOhSMCX1w1L5Dg@mail.gmail.com>
+	<CAFp+6iHYRRS3uSWnmdqBvfOgUDKKJUzMvqoj1HP2uXS=Fdaifg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130112001414.GA21909@kroah.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: Alan Stern <stern@rowland.harvard.edu>, Venu Byravarasu <vbyravarasu@nvidia.com>, Felipe Balbi <balbi@ti.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, sjg@chromium.org, olof@lixom.net, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iHYRRS3uSWnmdqBvfOgUDKKJUzMvqoj1HP2uXS=Fdaifg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, yulgon.kim@samsung.com, linux-samsung-soc@vger.kernel.org, Praveen Paneri <p.paneri@samsung.com>, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, jg1.han@samsung.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, balbi@ti.com, kishon@ti.com, Kukjin Kim <kgene.kim@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/11/2013 05:14 PM, Greg KH wrote:
-> On Mon, Dec 17, 2012 at 05:04:41PM -0500, Alan Stern wrote:
->> On Mon, 17 Dec 2012, Stephen Warren wrote:
->>
->>> On 12/13/2012 11:59 PM, Venu Byravarasu wrote:
->>>> As Tegra USB host driver is using instance number for resetting
->>>> PORT0 twice, adding a new DT property for handling this.
->>>
->>> Alan, Greg, Felip,e
->>>
->>> This series looks fine to me.
->>>
->>> I'd like to take all the Tegra-related USB patches through the Tegra
->>> tree for 3.9 if possible (so I'm looking for your acks here). I believe
->>> Venu plans to significantly clean up the EHCI/PHY driver split for
->>> Tegra, rework the drivers, and add support for Tegra30 in addition to
->>> Tegra20. Some of this requires changes to some Tegra board files and
->>> device trees to maintain "git bisect" I don't know for sure yet, but I
->>> believe that rework may also end up conflicting with other clock-related
->>> rework that will show up for Tegra in 3.9. Are you OK with this? I'll
->>> certainly look for your review/acks on the patches before picking them
->>> up though.
->>
->> Regarding the changes to drivers/usb/host/ehci-tegra.c:
->>
->> Acked-by: Alan Stern <stern@rowland.harvard.edu>
-> 
-> That's fine with me as well, feel free to think that I have now dropped
-> all tegra-related patches from my queue, you can take them all :)
+Vivek,
 
-Thanks, applied to Tegra's for-3.9/usb branch.
+On Fri, Jan 11, 2013 at 4:40 AM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
+>>> +#define HOST_CTRL0_REFCLKSEL_MASK              (0x3)
+>>> +#define HOST_CTRL0_REFCLKSEL_XTAL              (0x0 << 19)
+>>> +#define HOST_CTRL0_REFCLKSEL_EXTL              (0x1 << 19)
+>>> +#define HOST_CTRL0_REFCLKSEL_CLKCORE           (0x2 << 19)
+>>> +
+>>> +#define HOST_CTRL0_FSEL_MASK                   (0x7 << 16)
+>>> +#define HOST_CTRL0_FSEL(_x)                    ((_x) << 16)
+>>> +#define HOST_CTRL0_FSEL_CLKSEL_50M             (0x7)
+>>> +#define HOST_CTRL0_FSEL_CLKSEL_24M             (0x5)
+>>> +#define HOST_CTRL0_FSEL_CLKSEL_20M             (0x4)
+>>> +#define HOST_CTRL0_FSEL_CLKSEL_19200K          (0x3)
+>>> +#define HOST_CTRL0_FSEL_CLKSEL_12M             (0x2)
+>>> +#define HOST_CTRL0_FSEL_CLKSEL_10M             (0x1)
+>>> +#define HOST_CTRL0_FSEL_CLKSEL_9600K           (0x0)
+>>
+>> Add the shifts to the #defines and remove HOST_CTRL0_FSEL(_x).  That
+>> makes it match the older phy more closely.
+>>
+> Wouldn't it hamper the readability when shifts are used ??
+> I mean if we have something like this -
+>
+> phyhost |= HOST_CTRL0_FSEL(phyclk)
+>
+> so, if we are using the shifts then
+> phyhost |= (HOST_CTRL0_FSEL_CLKSEL_24M << HOST_CTRL0_FSEL_SHIFT)
 
+I was actually suggesting modifying the #defines like this:
+
+#define HOST_CTRL0_FSEL_SHIFT 16
+#define HOST_CTRL0_FSEL_MASK                   (0x7 << HOST_CTRL0_FSEL_SHIFT)
+#define HOST_CTRL0_FSEL_CLKSEL_50M             (0x7 << HOST_CTRL0_FSEL_SHIFT)
+#define HOST_CTRL0_FSEL_CLKSEL_24M             (0x5 << HOST_CTRL0_FSEL_SHIFT)
+#define HOST_CTRL0_FSEL_CLKSEL_20M             (0x4 << HOST_CTRL0_FSEL_SHIFT)
+#define HOST_CTRL0_FSEL_CLKSEL_19200K          (0x3 << HOST_CTRL0_FSEL_SHIFT)
+#define HOST_CTRL0_FSEL_CLKSEL_12M             (0x2 << HOST_CTRL0_FSEL_SHIFT)
+#define HOST_CTRL0_FSEL_CLKSEL_10M             (0x1 << HOST_CTRL0_FSEL_SHIFT)
+#define HOST_CTRL0_FSEL_CLKSEL_9600K           (0x0 << HOST_CTRL0_FSEL_SHIFT)
+
+...then the code doesn't need to think about shifts, right?
+
+
+>>>         if (IS_ERR(ref_clk)) {
+>>>                 dev_err(sphy->dev, "Failed to get reference clock\n");
+>>>                 return PTR_ERR(ref_clk);
+>>>         }
+>>>
+>>> -       switch (clk_get_rate(ref_clk)) {
+>>> -       case 12 * MHZ:
+>>> -               refclk_freq = PHYCLK_CLKSEL_12M;
+>>> -               break;
+>>> -       case 24 * MHZ:
+>>> -               refclk_freq = PHYCLK_CLKSEL_24M;
+>>> -               break;
+>>> -       case 48 * MHZ:
+>>> -               refclk_freq = PHYCLK_CLKSEL_48M;
+>>> -               break;
+>>> -       default:
+>>> -               if (sphy->cpu_type == TYPE_S3C64XX)
+>>> -                       refclk_freq = PHYCLK_CLKSEL_48M;
+>>> -               else
+>>> +       if (sphy->cpu_type == TYPE_EXYNOS5250) {
+>>> +               /* set clock frequency for PLL */
+>>> +               switch (clk_get_rate(ref_clk)) {
+>>> +               case 96 * 100000:
+>>
+>> nit: change to 9600 * KHZ to match; below too.
+>>
+> sure.
+>
+>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_9600K;
+>>
+>> Why |= with 0?
+>>
+> kept this just to keep things look similar :-). will remove this line,
+
+My comment was about keeping things similar.  Right now the 5250 code
+has the |= and the non-5250 code doesn't.  I don't care which is
+picked but the two sides of the "if" should be symmetric.
+
+See parts of the patch below.
+
+>>> +                       break;
+>>> +               case 10 * MHZ:
+>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_10M;
+>>> +                       break;
+>>> +               case 12 * MHZ:
+>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_12M;
+>>> +                       break;
+>>> +               case 192 * 100000:
+>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_19200K;
+>>> +                       break;
+>>> +               case 20 * MHZ:
+>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_20M;
+>>> +                       break;
+>>> +               case 50 * MHZ:
+>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_50M;
+>>> +                       break;
+>>> +               case 24 * MHZ:
+>>> +               default:
+>>> +                       /* default reference clock */
+>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_24M;
+>>> +                       break;
+>>> +               }
+>>> +       } else {
+>>> +               switch (clk_get_rate(ref_clk)) {
+>>> +               case 12 * MHZ:
+>>> +                       refclk_freq = PHYCLK_CLKSEL_12M;
+>>> +                       break;
+>>> +               case 24 * MHZ:
+>>>                         refclk_freq = PHYCLK_CLKSEL_24M;
+>>> -               break;
+>>> +                       break;
+>>> +               case 48 * MHZ:
+>>> +                       refclk_freq = PHYCLK_CLKSEL_48M;
+>>> +                       break;
+>>> +               default:
+>>> +                       if (sphy->cpu_type == TYPE_S3C64XX)
+>>> +                               refclk_freq = PHYCLK_CLKSEL_48M;
+>>> +                       else
+>>> +                               refclk_freq = PHYCLK_CLKSEL_24M;
+>>> +                       break;
+>>> +               }
+>>>         }
+>>>         clk_put(ref_clk);
+>>>
+>>>         return refclk_freq;
+>>>  }
+
+-Doug
