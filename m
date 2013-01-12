@@ -1,73 +1,48 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
-Date: Fri, 11 Jan 2013 13:34:36 -0700
-Message-ID: <50F0775C.5050204@wwwdotorg.org>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de> <1357764194-12677-11-git-send-email-thierry.reding@avionic-design.de> <50EF616E.7040609@wwwdotorg.org> <20130111035246.GB28094@avionic-0098.adnet.avionic-design.de>
+From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm: tegra: Add new DT property to USB node.
+Date: Fri, 11 Jan 2013 16:14:14 -0800
+Message-ID: <20130112001414.GA21909@kroah.com>
+References: <50CF89AF.3000308@wwwdotorg.org>
+ <Pine.LNX.4.44L0.1212171704060.1409-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130111035246.GB28094@avionic-0098.adnet.avionic-design.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: linux-tegra@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Andrew Murray <andrew.murray@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.44L0.1212171704060.1409-100000-IYeN2dnnYyZXsRXLowluHWD2FQJk+8+b@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Venu Byravarasu <vbyravarasu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/10/2013 08:52 PM, Thierry Reding wrote:
-> On Thu, Jan 10, 2013 at 05:48:46PM -0700, Stephen Warren wrote:
->> On 01/09/2013 01:43 PM, Thierry Reding wrote:
->>> Move the PCIe driver from arch/arm/mach-tegra into the
->>> drivers/pci/host directory. The motivation is to collect
->>> various host controller drivers in the same location in order
->>> to facilitate refactoring.
->>> 
->>> The Tegra PCIe driver has been largely rewritten, both in order
->>> to turn it into a proper platform driver and to add MSI (based
->>> on code by Krishna Kishore <kthota@nvidia.com>) as well as
->>> device tree support.
->> 
->>> diff --git a/arch/arm/mach-tegra/board-dt-tegra20.c
->>> b/arch/arm/mach-tegra/board-dt-tegra20.c
-
->>> +static int tegra_pcie_enable_controller(struct tegra_pcie
->>> *pcie) +{ +	unsigned int timeout; +	unsigned long value; + +	/*
->>> enable dual controller and both ports */ +	value =
->>> afi_readl(pcie, AFI_PCIE_CONFIG); +	value &=
->>> ~(AFI_PCIE_CONFIG_PCIEC0_DISABLE_DEVICE | +
->>> AFI_PCIE_CONFIG_PCIEC1_DISABLE_DEVICE | +
->>> AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_MASK); +	value |=
->>> AFI_PCIE_CONFIG_SM2TMS0_XBAR_CONFIG_DUAL; +	afi_writel(pcie,
->>> value, AFI_PCIE_CONFIG);
->> 
->> Eventually, we should probably derive the port enables from the
->> state of the root port DT nodes, so that we can disable some and
->> presumably save a little power. Also, I notice that the
->> nvidia,num-lanes property isn't implemented yet. Still, we can
->> probably take care of this later.
+On Mon, Dec 17, 2012 at 05:04:41PM -0500, Alan Stern wrote:
+> On Mon, 17 Dec 2012, Stephen Warren wrote:
 > 
-> Yes, the plan was to eventually derive the disable bits from the
-> port status and setup the XBAR_CONFIG field based on the
-> combination of nvidia,num-lanes properties.
+> > On 12/13/2012 11:59 PM, Venu Byravarasu wrote:
+> > > As Tegra USB host driver is using instance number for resetting
+> > > PORT0 twice, adding a new DT property for handling this.
+> > 
+> > Alan, Greg, Felip,e
+> > 
+> > This series looks fine to me.
+> > 
+> > I'd like to take all the Tegra-related USB patches through the Tegra
+> > tree for 3.9 if possible (so I'm looking for your acks here). I believe
+> > Venu plans to significantly clean up the EHCI/PHY driver split for
+> > Tegra, rework the drivers, and add support for Tegra30 in addition to
+> > Tegra20. Some of this requires changes to some Tegra board files and
+> > device trees to maintain "git bisect" I don't know for sure yet, but I
+> > believe that rework may also end up conflicting with other clock-related
+> > rework that will show up for Tegra in 3.9. Are you OK with this? I'll
+> > certainly look for your review/acks on the patches before picking them
+> > up though.
 > 
-> I assume we should simply fail if the configuration specified by 
-> nvidia,num-lanes is invalid?
-
-Makes sense to me.
-
->>> +static int tegra_pcie_parse_dt(struct tegra_pcie *pcie)
->> 
->>> +	pcie->vdd_supply = devm_regulator_get(pcie->dev, "vdd"); +	if
->>> (IS_ERR(pcie->vdd_supply)) +		return
->>> PTR_ERR(pcie->vdd_supply); + +	pcie->pex_clk_supply =
->>> devm_regulator_get(pcie->dev, "pex-clk"); +	if
->>> (IS_ERR(pcie->pex_clk_supply)) +		return
->>> PTR_ERR(pcie->pex_clk_supply);
->> 
->> Oh, I guess the regulator_get() calls are already strict.
+> Regarding the changes to drivers/usb/host/ehci-tegra.c:
 > 
-> Yeah, I think they can't return NULL, right? In that case I can
-> just drop the extra checks in tegra_pcie_power_{on,off}().
+> Acked-by: Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>
 
-It looks like NULL can be returned if !CONFIG_REGULATOR. The comment
-in the dummy implementation implies that drivers should treat a NULL
-value as valid regulator in most cases.
+That's fine with me as well, feel free to think that I have now dropped
+all tegra-related patches from my queue, you can take them all :)
+
+thanks,
+
+greg k-h
