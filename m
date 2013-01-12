@@ -1,150 +1,120 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v5 2/4] usb: phy: samsung: Add host phy support to
- samsung-phy driver
-Date: Fri, 11 Jan 2013 16:50:45 -0800
-Message-ID: <CAD=FV=XhMbWjCR5r=R3+zE1524NuUUvFDf2HZuCrXPmsei4BNA@mail.gmail.com>
-References: <1355841786-13307-1-git-send-email-gautam.vivek@samsung.com>
-	<1355841786-13307-3-git-send-email-gautam.vivek@samsung.com>
-	<CAD=FV=WMjqszsTQja82_uZc4Ue50TfTmSNO2yOhSMCX1w1L5Dg@mail.gmail.com>
-	<CAFp+6iHYRRS3uSWnmdqBvfOgUDKKJUzMvqoj1HP2uXS=Fdaifg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 1/2] ARM: sunxi: gpio: Add Allwinner SoCs GPIO drivers
+Date: Sat, 12 Jan 2013 10:06:44 +0100
+Message-ID: <50F127A4.907@free-electrons.com>
+References: <1357317909-12458-1-git-send-email-maxime.ripard@free-electrons.com> <1357317909-12458-2-git-send-email-maxime.ripard@free-electrons.com> <CACRpkda0yhVvCW9edWBi3XusfS4NaiWqKsoCfLpT9+X5iO-GXg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iHYRRS3uSWnmdqBvfOgUDKKJUzMvqoj1HP2uXS=Fdaifg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautamvivek1987@gmail.com>
-Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, yulgon.kim@samsung.com, linux-samsung-soc@vger.kernel.org, Praveen Paneri <p.paneri@samsung.com>, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, jg1.han@samsung.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, balbi@ti.com, kishon@ti.com, Kukjin Kim <kgene.kim@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkda0yhVvCW9edWBi3XusfS4NaiWqKsoCfLpT9+X5iO-GXg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Vivek,
+Hi Linus,
 
-On Fri, Jan 11, 2013 at 4:40 AM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
->>> +#define HOST_CTRL0_REFCLKSEL_MASK              (0x3)
->>> +#define HOST_CTRL0_REFCLKSEL_XTAL              (0x0 << 19)
->>> +#define HOST_CTRL0_REFCLKSEL_EXTL              (0x1 << 19)
->>> +#define HOST_CTRL0_REFCLKSEL_CLKCORE           (0x2 << 19)
->>> +
->>> +#define HOST_CTRL0_FSEL_MASK                   (0x7 << 16)
->>> +#define HOST_CTRL0_FSEL(_x)                    ((_x) << 16)
->>> +#define HOST_CTRL0_FSEL_CLKSEL_50M             (0x7)
->>> +#define HOST_CTRL0_FSEL_CLKSEL_24M             (0x5)
->>> +#define HOST_CTRL0_FSEL_CLKSEL_20M             (0x4)
->>> +#define HOST_CTRL0_FSEL_CLKSEL_19200K          (0x3)
->>> +#define HOST_CTRL0_FSEL_CLKSEL_12M             (0x2)
->>> +#define HOST_CTRL0_FSEL_CLKSEL_10M             (0x1)
->>> +#define HOST_CTRL0_FSEL_CLKSEL_9600K           (0x0)
->>
->> Add the shifts to the #defines and remove HOST_CTRL0_FSEL(_x).  That
->> makes it match the older phy more closely.
->>
-> Wouldn't it hamper the readability when shifts are used ??
-> I mean if we have something like this -
->
-> phyhost |= HOST_CTRL0_FSEL(phyclk)
->
-> so, if we are using the shifts then
-> phyhost |= (HOST_CTRL0_FSEL_CLKSEL_24M << HOST_CTRL0_FSEL_SHIFT)
+On 10/01/2013 12:06, Linus Walleij wrote:
+> On Fri, Jan 4, 2013 at 5:45 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+>> +static int __devinit
+>> +sunxi_pinctrl_register_gpio_ranges(struct sunxi_pinctrl *pctl)
+>> +{
+>> +       int id = 0, base = 0, npins = 1, i, prev_pin = -1;
+>> +       struct pinctrl_gpio_range *range;
+>> +
+>> +       for (i = 0; i < pctl->desc->npins; i++) {
+>> +               const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
+>> +               unsigned pin_num = pin->pin.number;
+>> +
+>> +               if (prev_pin < 0) {
+>> +                       prev_pin = pin_num;
+>> +                       base = pin_num;
+>> +               } else if (prev_pin + 1 != pin_num) {
+>> +                       range = devm_kzalloc(pctl->dev,
+>> +                                       sizeof(*range),
+>> +                                       GFP_KERNEL);
+>> +                       if (!range)
+>> +                               return -ENOMEM;
+>> +
+>> +                       range->name = "sunxi";
+>> +                       range->id = id;
+>> +                       range->base = base;
+>> +                       range->pin_base = base;
+>> +                       range->npins = npins;
+>> +
+>> +                       pinctrl_add_gpio_range(pctl->pctl_dev, range);
+>> +
+>> +                       id++;
+>> +                       npins = 1;
+>> +                       prev_pin = pin_num;
+>> +                       base = prev_pin;
+>> +               } else {
+>> +                       prev_pin++;
+>> +                       npins++;
+>> +               }
+>> +       }
+>> +
+>> +       range = devm_kzalloc(pctl->dev, sizeof(*range),
+>> +                       GFP_KERNEL);
+>> +       if (!range)
+>> +               return -ENOMEM;
+>> +
+>> +       range->name = "sunxi";
+>> +       range->id = id;
+>> +       range->base = base;
+>> +       range->pin_base = base;
+>> +       range->npins = npins;
+>> +
+>> +       pinctrl_add_gpio_range(pctl->pctl_dev, range);
+>> +
+>> +       return 0;
+>> +}
+> 
+> Really hairy way to add ranges right?
 
-I was actually suggesting modifying the #defines like this:
+Yes... I didn't find any best way to do so. It was either that or
+duplicate the already existing informations we had about the pins ranges
+into a ranges array, which is pretty error-prone.
 
-#define HOST_CTRL0_FSEL_SHIFT 16
-#define HOST_CTRL0_FSEL_MASK                   (0x7 << HOST_CTRL0_FSEL_SHIFT)
-#define HOST_CTRL0_FSEL_CLKSEL_50M             (0x7 << HOST_CTRL0_FSEL_SHIFT)
-#define HOST_CTRL0_FSEL_CLKSEL_24M             (0x5 << HOST_CTRL0_FSEL_SHIFT)
-#define HOST_CTRL0_FSEL_CLKSEL_20M             (0x4 << HOST_CTRL0_FSEL_SHIFT)
-#define HOST_CTRL0_FSEL_CLKSEL_19200K          (0x3 << HOST_CTRL0_FSEL_SHIFT)
-#define HOST_CTRL0_FSEL_CLKSEL_12M             (0x2 << HOST_CTRL0_FSEL_SHIFT)
-#define HOST_CTRL0_FSEL_CLKSEL_10M             (0x1 << HOST_CTRL0_FSEL_SHIFT)
-#define HOST_CTRL0_FSEL_CLKSEL_9600K           (0x0 << HOST_CTRL0_FSEL_SHIFT)
+I guess I could add some comments though.
 
-...then the code doesn't need to think about shifts, right?
+> Registering ranges from the pinctrl side is deprecated and discouraged.
+> 
+> Instead register the ranges from the GPIO driver.
+> 
+> Use gpiochip_add_pin_range() from the GPIO driver.
+> 
+> An example is provided in
+> drivers/pinctrl/pinctrl-coh901.c
 
+Ok, will do. But we need to find a way to share the pins arrays between
+the pinctrl and gpio drivers then.
 
->>>         if (IS_ERR(ref_clk)) {
->>>                 dev_err(sphy->dev, "Failed to get reference clock\n");
->>>                 return PTR_ERR(ref_clk);
->>>         }
->>>
->>> -       switch (clk_get_rate(ref_clk)) {
->>> -       case 12 * MHZ:
->>> -               refclk_freq = PHYCLK_CLKSEL_12M;
->>> -               break;
->>> -       case 24 * MHZ:
->>> -               refclk_freq = PHYCLK_CLKSEL_24M;
->>> -               break;
->>> -       case 48 * MHZ:
->>> -               refclk_freq = PHYCLK_CLKSEL_48M;
->>> -               break;
->>> -       default:
->>> -               if (sphy->cpu_type == TYPE_S3C64XX)
->>> -                       refclk_freq = PHYCLK_CLKSEL_48M;
->>> -               else
->>> +       if (sphy->cpu_type == TYPE_EXYNOS5250) {
->>> +               /* set clock frequency for PLL */
->>> +               switch (clk_get_rate(ref_clk)) {
->>> +               case 96 * 100000:
->>
->> nit: change to 9600 * KHZ to match; below too.
->>
-> sure.
->
->>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_9600K;
->>
->> Why |= with 0?
->>
-> kept this just to keep things look similar :-). will remove this line,
+Maybe add a pinctrl-sunxi-pins.h file? or merge the pinctrl and gpio
+drivers?
 
-My comment was about keeping things similar.  Right now the 5250 code
-has the |= and the non-5250 code doesn't.  I don't care which is
-picked but the two sides of the "if" should be symmetric.
+I'm kind of reluctant to merging the drivers into one single messy file,
+but if that's the way to go, fine.
 
-See parts of the patch below.
+> 
+> After you have done this, you can probably get rid of this as well:
+> 
+> +static int __init sunxi_gpio_init(void)
+> +{
+> +       return platform_driver_register(&sunxi_gpio_driver);
+> +}
+> +postcore_initcall(sunxi_gpio_init);
+> 
+> This will become a simple module_init() if you are handling
+> deferred probe correctly.
 
->>> +                       break;
->>> +               case 10 * MHZ:
->>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_10M;
->>> +                       break;
->>> +               case 12 * MHZ:
->>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_12M;
->>> +                       break;
->>> +               case 192 * 100000:
->>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_19200K;
->>> +                       break;
->>> +               case 20 * MHZ:
->>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_20M;
->>> +                       break;
->>> +               case 50 * MHZ:
->>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_50M;
->>> +                       break;
->>> +               case 24 * MHZ:
->>> +               default:
->>> +                       /* default reference clock */
->>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_24M;
->>> +                       break;
->>> +               }
->>> +       } else {
->>> +               switch (clk_get_rate(ref_clk)) {
->>> +               case 12 * MHZ:
->>> +                       refclk_freq = PHYCLK_CLKSEL_12M;
->>> +                       break;
->>> +               case 24 * MHZ:
->>>                         refclk_freq = PHYCLK_CLKSEL_24M;
->>> -               break;
->>> +                       break;
->>> +               case 48 * MHZ:
->>> +                       refclk_freq = PHYCLK_CLKSEL_48M;
->>> +                       break;
->>> +               default:
->>> +                       if (sphy->cpu_type == TYPE_S3C64XX)
->>> +                               refclk_freq = PHYCLK_CLKSEL_48M;
->>> +                       else
->>> +                               refclk_freq = PHYCLK_CLKSEL_24M;
->>> +                       break;
->>> +               }
->>>         }
->>>         clk_put(ref_clk);
->>>
->>>         return refclk_freq;
->>>  }
+Ok. Thanks for your review!
+Maxime
 
--Doug
+-- 
+Maxime Ripard, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
