@@ -1,120 +1,122 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 1/2] ARM: sunxi: gpio: Add Allwinner SoCs GPIO drivers
-Date: Sat, 12 Jan 2013 10:06:44 +0100
-Message-ID: <50F127A4.907@free-electrons.com>
-References: <1357317909-12458-1-git-send-email-maxime.ripard@free-electrons.com> <1357317909-12458-2-git-send-email-maxime.ripard@free-electrons.com> <CACRpkda0yhVvCW9edWBi3XusfS4NaiWqKsoCfLpT9+X5iO-GXg@mail.gmail.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Sat, 12 Jan 2013 13:36:40 +0100
+Message-ID: <20130112123640.GA22505@avionic-0098.adnet.avionic-design.de>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+ <50EF54B6.6010100@wwwdotorg.org>
+ <20130111034015.GA28094@avionic-0098.adnet.avionic-design.de>
+ <201301111536.14799.arnd@arndb.de>
+ <20130111154516.GA25335@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkda0yhVvCW9edWBi3XusfS4NaiWqKsoCfLpT9+X5iO-GXg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============4247010504394466139=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130111154516.GA25335-RM9K5IK7kjIyiCvfTdI0JKcOhU4Rzj621B7CTYaBSLdn68oJJulU0Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
 
-On 10/01/2013 12:06, Linus Walleij wrote:
-> On Fri, Jan 4, 2013 at 5:45 PM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
->> +static int __devinit
->> +sunxi_pinctrl_register_gpio_ranges(struct sunxi_pinctrl *pctl)
->> +{
->> +       int id = 0, base = 0, npins = 1, i, prev_pin = -1;
->> +       struct pinctrl_gpio_range *range;
->> +
->> +       for (i = 0; i < pctl->desc->npins; i++) {
->> +               const struct sunxi_desc_pin *pin = pctl->desc->pins + i;
->> +               unsigned pin_num = pin->pin.number;
->> +
->> +               if (prev_pin < 0) {
->> +                       prev_pin = pin_num;
->> +                       base = pin_num;
->> +               } else if (prev_pin + 1 != pin_num) {
->> +                       range = devm_kzalloc(pctl->dev,
->> +                                       sizeof(*range),
->> +                                       GFP_KERNEL);
->> +                       if (!range)
->> +                               return -ENOMEM;
->> +
->> +                       range->name = "sunxi";
->> +                       range->id = id;
->> +                       range->base = base;
->> +                       range->pin_base = base;
->> +                       range->npins = npins;
->> +
->> +                       pinctrl_add_gpio_range(pctl->pctl_dev, range);
->> +
->> +                       id++;
->> +                       npins = 1;
->> +                       prev_pin = pin_num;
->> +                       base = prev_pin;
->> +               } else {
->> +                       prev_pin++;
->> +                       npins++;
->> +               }
->> +       }
->> +
->> +       range = devm_kzalloc(pctl->dev, sizeof(*range),
->> +                       GFP_KERNEL);
->> +       if (!range)
->> +               return -ENOMEM;
->> +
->> +       range->name = "sunxi";
->> +       range->id = id;
->> +       range->base = base;
->> +       range->pin_base = base;
->> +       range->npins = npins;
->> +
->> +       pinctrl_add_gpio_range(pctl->pctl_dev, range);
->> +
->> +       return 0;
->> +}
-> 
-> Really hairy way to add ranges right?
+--===============4247010504394466139==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EVF5PPMfhYS0aIcm"
+Content-Disposition: inline
 
-Yes... I didn't find any best way to do so. It was either that or
-duplicate the already existing informations we had about the pins ranges
-into a ranges array, which is pretty error-prone.
 
-I guess I could add some comments though.
+--EVF5PPMfhYS0aIcm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> Registering ranges from the pinctrl side is deprecated and discouraged.
-> 
-> Instead register the ranges from the GPIO driver.
-> 
-> Use gpiochip_add_pin_range() from the GPIO driver.
-> 
-> An example is provided in
-> drivers/pinctrl/pinctrl-coh901.c
+On Fri, Jan 11, 2013 at 04:45:16PM +0100, Thierry Reding wrote:
+> On Fri, Jan 11, 2013 at 03:36:14PM +0000, Arnd Bergmann wrote:
+> > On Friday 11 January 2013, Thierry Reding wrote:
+> > > Right, it'll need #ifdefs around the arch_{setup,teardown}_msi_irq().=
+ Or
+> > > select PCI_MSI unconditionally. Once this is merged I was going to po=
+st
+> > > a patch that enables PCI_MSI in tegra_defconfig anyway. But it might =
+be
+> > > better to keep it optional anyway since the remainder of the code cop=
+es
+> > > with it properly.
+> > >=20
+> > Actually, we need something better than that. You cannot define
+> > arch_setup_msi_irq in a tegra specific pci host driver, because that
+> > will seriously mess up other platforms in multiplatform configurations
+> > by giving a link error when they also define this function, or with a
+> > run-time error when they don't support it.
+> >=20
+> > I think what we should do here is fix it the right way by adding
+> > a pci host specific callback rather than an architecture specific
+> > callback in drivers/pci/msi.c. There is already a default version
+> > of arch_setup_msi_irqs (with s), and we can probably do the
+> > same for arch_setup_msi_irq (without s) to fall back to the
+> > arch version for most architectures.
+> > Most architectures (at least powerpc, sparc, ia64 and x86) already
+> > multiplex the msi handlers internally, but ARM does not because
+> > there is only one implementation (iop33x) at the moment.
+> >=20
+> > We can add a generix multiplex and then move architectures over to
+> > use it.
+>=20
+> I already hinted at that in one of the other subthreads. Having such a
+> multiplex would also allow the driver to be built as a module. I had
+> already thought about this when I was working on an earlier version of
+> these patches. Basically these would be two ops attached to the host
+> bridge, and the generic arch_setup_msi_irq() could then look that up
+> given the struct pci_dev that is passed to it and call this new per-
+> host bridge .setup_msi_irq().
 
-Ok, will do. But we need to find a way to share the pins arrays between
-the pinctrl and gpio drivers then.
+struct pci_ops looks like a good place to put these. They'll be
+available from each struct pci_bus, so should be easy to call from
+arch_setup_msi_irq().
 
-Maybe add a pinctrl-sunxi-pins.h file? or merge the pinctrl and gpio
-drivers?
+Any objections?
 
-I'm kind of reluctant to merging the drivers into one single messy file,
-but if that's the way to go, fine.
+Thierry
 
-> 
-> After you have done this, you can probably get rid of this as well:
-> 
-> +static int __init sunxi_gpio_init(void)
-> +{
-> +       return platform_driver_register(&sunxi_gpio_driver);
-> +}
-> +postcore_initcall(sunxi_gpio_init);
-> 
-> This will become a simple module_init() if you are handling
-> deferred probe correctly.
+--EVF5PPMfhYS0aIcm
+Content-Type: application/pgp-signature
 
-Ok. Thanks for your review!
-Maxime
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
--- 
-Maxime Ripard, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+iQIcBAEBAgAGBQJQ8VjXAAoJEN0jrNd/PrOhFWsQAIIvLUhTrpqlNwFmzOoZiyRc
+pZzCDmOrad/vwXbThJuzn9752yAoN3YAE9tnGGlnCrc4YcptmrHZYfItYMUYZPe5
+lcLaj9M5v6lOpLZMBlUiRcKftPK/5DK3xd+wZsFUVKSewY+Pu1Jbd58AIpmPSZpA
+yOaIbme9ugbDO+TsJDQ70TLHX3wAmC+gyoSwT5JW21K4I0Ch7Ga7DpPl8XzpgGv5
+N7lNCT7fe+qkvmg8/5ONL34FPYP/qgE7mX+uxSrd2aop0PNDU9YDNmeZ4TmgLX5s
+aqFLMEivpJ/ALNbKlDqvCb2DesXKnT3fZpLFuZG4P6I881hxkU1a14ddB52zc3jH
+CJ/BLkX2r8lYUR7Z0H3FoR8/q1J/zbmEfVTobF5aC0XGUZnibs4j9YlZRUmgj7jw
+ZAHpba8/1uUt3VicgQawNF5xG2ct2qGKDj3XONHWwlpZzfvCcCVav73Uqbko8rVg
+7wkIxdEgNKeP9O9f1Z1uH6Ypg3dxWKnN4A3uq5GRUT8sORWBYytbopdO096AuCXA
+wmAYwHPLjCExTYI2M1jQuA+9WEuMJa2dF+/ofTqqUakhMERHVyjNvJNxYeC43+Jv
+8ezg3JzlLohRQ9gQJRQKQfbL0KJbEfFvzGb/9CAc9zTJPvWKmlqn5ruCouAQFyyl
+dxpC/IfYKv7nMfybBxN5
+=9Fax
+-----END PGP SIGNATURE-----
+
+--EVF5PPMfhYS0aIcm--
+
+--===============4247010504394466139==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4247010504394466139==--
