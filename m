@@ -1,43 +1,33 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
-Date: Sat, 12 Jan 2013 21:12:25 +0000
-Message-ID: <201301122112.25772.arnd@arndb.de>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de> <20130111154516.GA25335@avionic-0098.adnet.avionic-design.de> <20130112123640.GA22505@avionic-0098.adnet.avionic-design.de>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [PATCH v2] hwmon: Driver for Maxim MAX6697 and compatibles
+Date: Sat, 12 Jan 2013 22:47:05 +0100
+Message-ID: <20130112224705.72fd59d2@endymion.delvare>
+References: <1355722390-24798-1-git-send-email-linux@roeck-us.net>
+	<20130111174105.GA23433@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130112123640.GA22505@avionic-0098.adnet.avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, linux-tegra@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Andrew Murray <andrew.murray@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130111174105.GA23433@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 12 January 2013, Thierry Reding wrote:
-> > I already hinted at that in one of the other subthreads. Having such a
-> > multiplex would also allow the driver to be built as a module. I had
-> > already thought about this when I was working on an earlier version of
-> > these patches. Basically these would be two ops attached to the host
-> > bridge, and the generic arch_setup_msi_irq() could then look that up
-> > given the struct pci_dev that is passed to it and call this new per-
-> > host bridge .setup_msi_irq().
-> 
-> struct pci_ops looks like a good place to put these. They'll be
-> available from each struct pci_bus, so should be easy to call from
-> arch_setup_msi_irq().
-> 
-> Any objections?
-> 
+Hi Guenter,
 
-struct pci_ops has a long history of being specifically about
-config space read/write operations, so on the one hand it does
-not feel like the right place to put interrupt specific operations,
-but on the other hand, the name sounds appropriate and I cannot
-think of any other place to put this, so it's fine with me.
+On Fri, 11 Jan 2013 09:41:05 -0800, Guenter Roeck wrote:
+> On Sun, Dec 16, 2012 at 09:33:09PM -0800, Guenter Roeck wrote:
+> > Add support for MAX6581, MAX6602, MAX6622, MAX6636, MAX6689, MAX6693,
+> > MAX6694, MAX6697, MAX6698, and MAX6699 temperature sensors
+> > 
+> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> 
+> I plan to line this driver up for 3.9. Only change from the code below is to
+> replace SENSORS_LIMIT with clamp_val. Any objections, make yourself heard.
 
-The only alternative I can think of is to introduce a new
-structure next to it in struct pci_bus, but that feels a bit
-pointless. Maybe Bjorn has a preference one way or the other.
+I am in the process of reviewing this driver, I do have some comments
+and hope to be done by tomorrow evening.
 
-	Arnd
+-- 
+Jean Delvare
