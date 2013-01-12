@@ -1,61 +1,43 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH v2 1/8] sh-pfc: Add OF support
-Date: Sat, 12 Jan 2013 18:18:54 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1301121745320.14443@axis700.grange>
-References: <1357693395-1653-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1357693395-1653-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Sat, 12 Jan 2013 21:12:25 +0000
+Message-ID: <201301122112.25772.arnd@arndb.de>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de> <20130111154516.GA25335@avionic-0098.adnet.avionic-design.de> <20130112123640.GA22505@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1357693395-1653-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Linus Walleij <linus.walleij@linaro.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Phil Edworthy <phil.edworthy@renesas.com>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130112123640.GA22505@avionic-0098.adnet.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, linux-tegra@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Andrew Murray <andrew.murray@arm.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent
-
-On Wed, 9 Jan 2013, Laurent Pinchart wrote:
-
-> Support device instantiation through the device tree. The compatible
-> property is used to select the SoC pinmux information.
+On Saturday 12 January 2013, Thierry Reding wrote:
+> > I already hinted at that in one of the other subthreads. Having such a
+> > multiplex would also allow the driver to be built as a module. I had
+> > already thought about this when I was working on an earlier version of
+> > these patches. Basically these would be two ops attached to the host
+> > bridge, and the generic arch_setup_msi_irq() could then look that up
+> > given the struct pci_dev that is passed to it and call this new per-
+> > host bridge .setup_msi_irq().
 > 
-> Set the gpio_chip device field to the PFC device to enable automatic
-> GPIO OF support.
+> struct pci_ops looks like a good place to put these. They'll be
+> available from each struct pci_bus, so should be easy to call from
+> arch_setup_msi_irq().
 > 
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-> Cc: devicetree-discuss@lists.ozlabs.org
+> Any objections?
+> 
 
-This whole pinctrl mega-series is a very welcome improvement to the 
-sh-/r-mobile GPIO framework, and is very well done IMHO! But, 
-unfortunately, as discussed with you privately yesterday, there is still a 
-problem with pinctrl DT support on sh73a0, which will, probably, enforce 
-an update to one or several of patches from this lot. To explain to other 
-readers, on sh73a0 pin numbers are not contiguous, they are sparse. 
-When pins are referred to from C code, macro names are used, which are 
-then correctly decoded to respective positions in pin descriptor tables. 
-Whereas with DT, pins are referred to from .dts files using their physical 
-numbers, which then refer to either wrong or missing entries in those 
-tables.
+struct pci_ops has a long history of being specifically about
+config space read/write operations, so on the one hand it does
+not feel like the right place to put interrupt specific operations,
+but on the other hand, the name sounds appropriate and I cannot
+think of any other place to put this, so it's fine with me.
 
-I do not know where this problem should be solved best - either in 
-descriptor tables, or in DT handling code, so, I don't know which patches 
-would be affected. Don't think you'll want to keep the one-to-one 
-index-to-pin mapping by also making pin-descriptor arrays sparse, so, so 
-far I only see one possibility to fix this - by using the .enum_id field 
-from struct sh_pfc_pin instead of just the index - both in  C and in DT 
-case, and those .enum_id values will have to provide physical pin numbers 
-instead of plane indices. That way you'd have to update at least 
-drivers/pinctrl/sh-pfc/pfc-sh73a0.c and the sh_pfc_map_gpios() function in 
-drivers/pinctrl/sh-pfc/pinctrl.c.
+The only alternative I can think of is to introduce a new
+structure next to it in struct pci_bus, but that feels a bit
+pointless. Maybe Bjorn has a preference one way or the other.
 
-Anyway, I'm sure you'll find a suitable solution of this problem and for 
-now I'll let Simon decide which patches he wants to apply and which ones 
-he'd prefer to hold back;-)
-
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+	Arnd
