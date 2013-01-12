@@ -1,111 +1,61 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH V7] kbuild: create a rule to run the pre-processor on
- *.dts files
-Date: Sat, 12 Jan 2013 09:03:47 -0800
-Message-ID: <CAPnjgZ2soP+JrfgVyiEdp4=qvGvg5pqDmQr26drx9HZzm+XLBA@mail.gmail.com>
-References: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH v2 1/8] sh-pfc: Add OF support
+Date: Sat, 12 Jan 2013 18:18:54 +0100 (CET)
+Message-ID: <Pine.LNX.4.64.1301121745320.14443@axis700.grange>
+References: <1357693395-1653-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1357693395-1653-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Grant Likely <glikely@secretlab.ca>, David Gibson <david@gibson.dropbear.id.au>, Michal Marek <mmarek@suse.cz>, Jon Loeliger <jdl@jdl.com>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1357693395-1653-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Cc: linux-sh@vger.kernel.org, Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Linus Walleij <linus.walleij@linaro.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Phil Edworthy <phil.edworthy@renesas.com>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 2, 2013 at 10:43 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> From: Stephen Warren <swarren@nvidia.com>
->
-> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
-> passing them to dtc for final compilation. This allows the use of #define
-> and #include within the .dts file.
->
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Hi Laurent
 
-Acked-by: Simon Glass <sjg@chromium.org>
+On Wed, 9 Jan 2013, Laurent Pinchart wrote:
 
-> ---
-> Grant, back in mid-November, you said you'd make a decision on this in
-> the next couple of days, but I think this got overlooked.
->
-> v7: Build *.dtb from *.dts not src/*.dts.
-> v6: No change.
-> v5:
-> * Update Documentation/kbuild for the new command and rule.
-> v4:
-> * Use -x assembler-with-cpp so pre-defined macros are set up so that
->   #included header files know to only use cpp syntax, not C syntax.
-> * Define __DTS__ for similar reasons.
-> * use $(CPP) not $(CC) -E, and use $(cpp_flags).
-> * Save the pre-processed results so they can be easily inspected when
->   debugging build issues.
-> * The use of -x assembler-with-cpp causes cpp to recognize directives in
->   column 1 only. Hence, there's no need to escape property names that
->   begin with #. Hence, there's no need for separate skeleton.dtsi and
->   skeleton.dtsip. Maintain a separate file extension and build rule so that
->   CPP-usage is opt-in. In particular, when using CPP, #include must be used
->   rather than /include/ so that dependencies work.
-> v3: Pass "-x c" not "-xc" to cpp.
-> v2: Place make %.dtb: %.dtsp rule into Makefile.lib.
-> ---
->  Documentation/kbuild/makefiles.txt |   23 +++++++++++++++++++++++
->  scripts/Makefile.lib               |    9 +++++++++
->  2 files changed, 32 insertions(+)
->
-> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-> index 14c3f4f..5198b74 100644
-> --- a/Documentation/kbuild/makefiles.txt
-> +++ b/Documentation/kbuild/makefiles.txt
-> @@ -1186,6 +1186,29 @@ When kbuild executes, the following steps are followed (roughly):
->                 clean-files += *.dtb
->                 DTC_FLAGS ?= -p 1024
->
-> +    dtc_cpp
-> +       This is just like dtc as describe above, except that the C pre-
-> +       processor is invoked upon the .dtsp file before compiling the result
-> +       with dtc.
-> +
-> +       In order for build dependencies to work, all files compiled using
-> +       dtc_cpp must use the C pre-processor's #include functionality and not
-> +       dtc's /include/ functionality.
-> +
-> +       Using the C pre-processor allows use of #define to create named
-> +       constants. In turn, the #defines will typically appear in a header
-> +       file, which may be shared with regular C code. Since the dtc language
-> +       represents a data structure rather than code in C syntax, similar
-> +       restrictions are placed on a header file included by a device tree
-> +       file as for a header file included by an assembly language file.
-> +       In particular, the C pre-processor is passed -x assembler-with-cpp,
-> +       which sets macro __ASSEMBLY__. __DTS__ is also set. These allow header
-> +       files to restrict their content to that compatible with device tree
-> +       source.
-> +
-> +       A central rule exists to create $(obj)/%.dtb from $(src)/%.dtsp;
-> +       architecture Makefiles do no need to explicitly write out that rule.
-> +
->  --- 6.8 Custom kbuild commands
->
->         When kbuild is executing with KBUILD_VERBOSE=0, then only a shorthand
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index bdf42fd..2c2a302 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -269,6 +269,15 @@ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile
->  $(obj)/%.dtb: $(src)/%.dts FORCE
->         $(call if_changed_dep,dtc)
->
-> +dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
-> +
-> +quiet_cmd_dtc_cpp = DTC+CPP $@
-> +cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__ -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-> +       $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
-> +
-> +$(obj)/%.dtb: $(src)/%.dtsp FORCE
-> +       $(call if_changed_dep,dtc_cpp)
-> +
->  # Bzip2
->  # ---------------------------------------------------------------------------
->
-> --
-> 1.7.10.4
->
+> Support device instantiation through the device tree. The compatible
+> property is used to select the SoC pinmux information.
+> 
+> Set the gpio_chip device field to the PFC device to enable automatic
+> GPIO OF support.
+> 
+> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> Cc: devicetree-discuss@lists.ozlabs.org
+
+This whole pinctrl mega-series is a very welcome improvement to the 
+sh-/r-mobile GPIO framework, and is very well done IMHO! But, 
+unfortunately, as discussed with you privately yesterday, there is still a 
+problem with pinctrl DT support on sh73a0, which will, probably, enforce 
+an update to one or several of patches from this lot. To explain to other 
+readers, on sh73a0 pin numbers are not contiguous, they are sparse. 
+When pins are referred to from C code, macro names are used, which are 
+then correctly decoded to respective positions in pin descriptor tables. 
+Whereas with DT, pins are referred to from .dts files using their physical 
+numbers, which then refer to either wrong or missing entries in those 
+tables.
+
+I do not know where this problem should be solved best - either in 
+descriptor tables, or in DT handling code, so, I don't know which patches 
+would be affected. Don't think you'll want to keep the one-to-one 
+index-to-pin mapping by also making pin-descriptor arrays sparse, so, so 
+far I only see one possibility to fix this - by using the .enum_id field 
+from struct sh_pfc_pin instead of just the index - both in  C and in DT 
+case, and those .enum_id values will have to provide physical pin numbers 
+instead of plane indices. That way you'd have to update at least 
+drivers/pinctrl/sh-pfc/pfc-sh73a0.c and the sh_pfc_map_gpios() function in 
+drivers/pinctrl/sh-pfc/pinctrl.c.
+
+Anyway, I'm sure you'll find a suitable solution of this problem and for 
+now I'll let Simon decide which patches he wants to apply and which ones 
+he'd prefer to hold back;-)
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
