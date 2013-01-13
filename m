@@ -1,92 +1,51 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: [PATCH 6/6] ARM: dts: Add dts file for S3C6410-based Mini6410 board
-Date: Sun, 13 Jan 2013 02:10:58 +0100
-Message-ID: <1358039458-31960-7-git-send-email-tomasz.figa@gmail.com>
-References: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Tomasz Figa <tomasz.figa@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] of_i2c: I2C child node 10-bit client addressing
+Date: Sat, 12 Jan 2013 20:03:47 -0700
+Message-ID: <50F22413.60807@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Bharat Kumar Reddy Gooty <bharat_404-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>, "Grant Likely (grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org)" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic device tree sources for FriendlyARM Mini6410 board
-based on Samsung S3C6410 SoC.
+FYI, re:
 
-Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
----
- arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/s3c6410-mini6410.dts | 50 ++++++++++++++++++++++++++++++++++
- 2 files changed, 51 insertions(+)
- create mode 100644 arch/arm/boot/dts/s3c6410-mini6410.dts
+> https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-November/022645.html
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index e44da40..9ca30ea 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -120,6 +120,7 @@ dtb-$(CONFIG_ARCH_U8500) += snowball.dtb \
- 	hrefprev60.dtb \
- 	hrefv60plus.dtb \
- 	ccu9540.dtb
-+dtb-$(CONFIG_ARCH_S3C64XX) += s3c6410-mini6410.dtb
- dtb-$(CONFIG_ARCH_SHMOBILE) += emev2-kzm9d.dtb \
- 	r8a7740-armadillo800eva.dtb \
- 	sh73a0-kzm9g.dtb \
-diff --git a/arch/arm/boot/dts/s3c6410-mini6410.dts b/arch/arm/boot/dts/s3c6410-mini6410.dts
-new file mode 100644
-index 0000000..9ac82c2
---- /dev/null
-+++ b/arch/arm/boot/dts/s3c6410-mini6410.dts
-@@ -0,0 +1,50 @@
-+/*
-+ * Samsung's S3C6410 based Mini6410 board device tree source
-+ *
-+ * Copyright (c) 2013 Tomasz Figa <tomasz.figa@gmail.com>
-+ *
-+ * Device tree source file for FriendlyARM Mini6410 board which is based on
-+ * Samsung's S3C6410 SoC.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+/dts-v1/;
-+/include/ "s3c6410.dtsi"
-+
-+/ {
-+	model = "FriendlyARM Mini6410 board based on S3C6410";
-+	compatible = "friendlyarm,mini6410", "samsung,s3c6410";
-+
-+	memory {
-+		reg = <0x50000000 0x10000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttySAC0,115200n8 earlyprintk rootwait root=/dev/mmcblk0p1";
-+	};
-+
-+	serial@7f005000 {
-+		status = "okay";
-+	};
-+
-+	serial@7f005400 {
-+		status = "okay";
-+	};
-+
-+	serial@7f005800 {
-+		status = "okay";
-+	};
-+
-+	serial@7f005c00 {
-+		status = "okay";
-+	};
-+
-+	sdhci@7c200000 {
-+		bus-width = <4>;
-+		non-removable;
-+		status = "okay";
-+	};
-+};
--- 
-1.8.1
+I know that was a long time ago, but I was searching for information on
+which chips supported 10-bit I2C addresses, and found a partial answer
+to the question:
+
+Grant Likely wrote:
+> Is it possible for a device to have an address that fits in the first 7
+> bits, but still requires 10 bit address transactions?
+
+The following chip (link below) certainly supports a 10-bit I2C address
+with the top-most 3 bits set to 0. Now, it does also respond to a 7-bit
+I2C address of the same value, so this perhaps isn't quite an exact
+answer to Grant's question. However, it does indicate to me that we
+shouldn't determine whether to use 7- or 10-bit addresses solely from
+the set bits in the I2C address; a separate property or flag bit in the
+address field would be better, I think.
+
+http://www.ti.com/lit/ds/snvs839/snvs839.pdf
+
+Quoting it:
+
+> 7-BIT and 10-BIT ADDRESSING MODES
+>
+> The LM8330 supports both the 7-bit and 10-bit addressing modes as defined in the NXP (Philips) I 2 C
+> Specification UM10204 rev 0.3 from 2007. The default 7-bit slave address is 0x88, and the default 10-bit slave
+> address is 0x088. NOTE: The upper three address bits in 10-bit mode are hard tied to 0.
