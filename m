@@ -1,52 +1,33 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH] pci: Provide support for parsing PCI DT ranges property
-Date: Mon, 14 Jan 2013 09:24:45 +0000
-Message-ID: <20130114092445.GB23333@arm.com>
-References: <20121212163749.GA17371@arm.com>
- <CACxGe6uZATX2uBjuDUsJ489-jmvFbLm-NQ6Q3SGqRVky9XGJYg@mail.gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: tegra: Use DT /cpu node to detect number of
+	CPU core
+Date: Mon, 14 Jan 2013 09:27:20 +0000
+Message-ID: <20130114092720.GX23505@n2100.arm.linux.org.uk>
+References: <1358149970-28156-1-git-send-email-hdoyu@nvidia.com> <1358149970-28156-2-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6uZATX2uBjuDUsJ489-jmvFbLm-NQ6Q3SGqRVky9XGJYg@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Thierry Reding <thierry.reding@avionic-design.de>, Michal Simek <monstr@monstr.eu>, Rob Herring <robherring2@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Liviu Dudau <Liviu.Dudau@arm.com>
+In-Reply-To: <1358149970-28156-2-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 15, 2012 at 01:06:41AM +0000, Grant Likely wrote:
-> On Wed, Dec 12, 2012 at 4:37 PM, Andrew Murray <Andrew.Murray@arm.com> wrote:
-> > DT bindings for PCI host bridges often use the ranges property to describe
-> > memory and IO ranges - this binding tends to be the same across architectures
-> > yet several parsing implementations exist, e.g. arch/mips/pci/pci.c,
-> > arch/powerpc/kernel/pci-common.c, arch/sparc/kernel/pci.c and
-> > arch/microblaze/pci/pci-common.c (clone of PPC). Some of these duplicate
-> > functionality provided by drivers/of/address.c.
-> 
-> Hi Andrew,
-> 
-> Thanks for looking into this. This definitely needs to be done.
-> 
-> However, I cannot merge this patch as-is because it actually makes
-> things worse by adding yet another implementation of the parsing code.
-> Plus it doesn't actually have any users.  :-)
+On Mon, Jan 14, 2013 at 09:52:50AM +0200, Hiroshi Doyu wrote:
+> +	if (!arm_dt_cpu_map_valid())
+> +		set_cpu_possible(0, true);
 
-I understand. Though I see Thierry has included this in his patch set - I
-guess that means there is potentially one user now :).
+You don't need to do any of this (and, therefore, I don't think you even
+need the first patch.)
 
-> 
-> Instead, move the existing code that you need out of
-> arch/powerpc/kernel/pci-common.c into a shared place and add in the
-> features you need. Bonus points if you fixup microblaze or others at
-> the same time.
+The generic boot code will set CPU0 as possible, present and online.  Think
+about it: you're booting on that very CPU so it better be possible, present
+and online.  If it isn't, what CPU is executing your code?
 
-In most part the patch I submitted was the common code from powerpc but
-without quirks and tie-ins to powerpc structures. I'd like to convert
-powerpc to using my patch and others but won't get time to do this at
-present :(
+arm_dt_init_cpu_maps() will only ever set _additional_ CPUs in the possible
+map.
 
-> 
-> g.
-> 
-Andrew Murray
+Ergo, by the time the above code is run, CPU0 will already be marked as
+possible.  Therefore, the above code and arm_dt_cpu_map_valid() is not
+required.
