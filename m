@@ -1,92 +1,229 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] ARM: kernel: DT cpu map validity check helper function
-Date: Mon, 14 Jan 2013 09:52:49 +0200
-Message-ID: <1358149970-28156-1-git-send-email-hdoyu@nvidia.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH v5 2/4] usb: phy: samsung: Add host phy support to
+ samsung-phy driver
+Date: Mon, 14 Jan 2013 13:36:49 +0530
+Message-ID: <CAFp+6iF4Q2uUzJKf8d-jMZoxBcVzxBAxLyKDqF4B8=p+_JYuCQ@mail.gmail.com>
+References: <1355841786-13307-1-git-send-email-gautam.vivek@samsung.com>
+	<1355841786-13307-3-git-send-email-gautam.vivek@samsung.com>
+	<CAD=FV=WMjqszsTQja82_uZc4Ue50TfTmSNO2yOhSMCX1w1L5Dg@mail.gmail.com>
+	<CAFp+6iHYRRS3uSWnmdqBvfOgUDKKJUzMvqoj1HP2uXS=Fdaifg@mail.gmail.com>
+	<CAD=FV=XhMbWjCR5r=R3+zE1524NuUUvFDf2HZuCrXPmsei4BNA@mail.gmail.com>
+	<CAFp+6iHFw2orVOxxzb+daQJsA46zUk2ZOA=h6QwGAme18JngXw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAFp+6iHFw2orVOxxzb+daQJsA46zUk2ZOA=h6QwGAme18JngXw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, yulgon.kim@samsung.com, linux-samsung-soc@vger.kernel.org, Praveen Paneri <p.paneri@samsung.com>, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, jg1.han@samsung.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, balbi@ti.com, kishon@ti.com, Kukjin Kim <kgene.kim@samsung.com>, Alan Stern <stern@rowland.harvard.edu>, Rob Herring <rob.herring@calxeda.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Hi Doug,
 
-Since the introduction of /cpu nodes bindings for ARM and the
-corresponding parse function arm_dt_init_cpu_maps(), the cpu_logical_map
-and the number of possible CPUs are set according to the DT /cpu
-nodes entries. Currently most of the existing ARM SMP platforms detect the
-number of cores through HW probing in their .smp_init_cpus functions and set
-the possible CPU mask accordingly.
-This method should be upgraded so that the CPU counting mechanism will be
-based on DT, keeping legacy HW probing mechanism as a fall back solution.
 
-In order to implement this fall back solution mechanism, the ARM DT code
-should provide a helper function to platforms to check if the cpu map
-has been properly initialized through DT. If the check fails the
-platform will resort to legacy HW based cores counting mechanism.
+On Mon, Jan 14, 2013 at 11:15 AM, Vivek Gautam
+<gautamvivek1987@gmail.com> wrote:
+> Hi Doug,
+>
+>
+> On Sat, Jan 12, 2013 at 6:20 AM, Doug Anderson <dianders@chromium.org> wrote:
+>> Vivek,
+>>
+>> On Fri, Jan 11, 2013 at 4:40 AM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
+>>>>> +#define HOST_CTRL0_REFCLKSEL_MASK              (0x3)
+>>>>> +#define HOST_CTRL0_REFCLKSEL_XTAL              (0x0 << 19)
+>>>>> +#define HOST_CTRL0_REFCLKSEL_EXTL              (0x1 << 19)
+>>>>> +#define HOST_CTRL0_REFCLKSEL_CLKCORE           (0x2 << 19)
+>>>>> +
+>>>>> +#define HOST_CTRL0_FSEL_MASK                   (0x7 << 16)
+>>>>> +#define HOST_CTRL0_FSEL(_x)                    ((_x) << 16)
+>>>>> +#define HOST_CTRL0_FSEL_CLKSEL_50M             (0x7)
+>>>>> +#define HOST_CTRL0_FSEL_CLKSEL_24M             (0x5)
+>>>>> +#define HOST_CTRL0_FSEL_CLKSEL_20M             (0x4)
+>>>>> +#define HOST_CTRL0_FSEL_CLKSEL_19200K          (0x3)
+>>>>> +#define HOST_CTRL0_FSEL_CLKSEL_12M             (0x2)
+>>>>> +#define HOST_CTRL0_FSEL_CLKSEL_10M             (0x1)
+>>>>> +#define HOST_CTRL0_FSEL_CLKSEL_9600K           (0x0)
+>>>>
+>>>> Add the shifts to the #defines and remove HOST_CTRL0_FSEL(_x).  That
+>>>> makes it match the older phy more closely.
+>>>>
+>>> Wouldn't it hamper the readability when shifts are used ??
+>>> I mean if we have something like this -
+>>>
+>>> phyhost |= HOST_CTRL0_FSEL(phyclk)
+>>>
+>>> so, if we are using the shifts then
+>>> phyhost |= (HOST_CTRL0_FSEL_CLKSEL_24M << HOST_CTRL0_FSEL_SHIFT)
+>>
+>> I was actually suggesting modifying the #defines like this:
+>>
+>> #define HOST_CTRL0_FSEL_SHIFT 16
+>> #define HOST_CTRL0_FSEL_MASK                   (0x7 << HOST_CTRL0_FSEL_SHIFT)
+>> #define HOST_CTRL0_FSEL_CLKSEL_50M             (0x7 << HOST_CTRL0_FSEL_SHIFT)
+>> #define HOST_CTRL0_FSEL_CLKSEL_24M             (0x5 << HOST_CTRL0_FSEL_SHIFT)
+>> #define HOST_CTRL0_FSEL_CLKSEL_20M             (0x4 << HOST_CTRL0_FSEL_SHIFT)
+>> #define HOST_CTRL0_FSEL_CLKSEL_19200K          (0x3 << HOST_CTRL0_FSEL_SHIFT)
+>> #define HOST_CTRL0_FSEL_CLKSEL_12M             (0x2 << HOST_CTRL0_FSEL_SHIFT)
+>> #define HOST_CTRL0_FSEL_CLKSEL_10M             (0x1 << HOST_CTRL0_FSEL_SHIFT)
+>> #define HOST_CTRL0_FSEL_CLKSEL_9600K           (0x0 << HOST_CTRL0_FSEL_SHIFT)
+>>
+>> ...then the code doesn't need to think about shifts, right?
+>>
+>
+> right right, sorry i din't get your point earlier. :-(
+>
+> this way things will be similar in samsung_usbphy_get_refclk_freq()
+> across exynos 5 and older SoCs.
+>
+> Is it fine if we don't use macro for SHIFT, earlier code also doesn't use it.
+> Can we just do like this ..
+> #define HOST_CTRL0_FSEL_MASK                       (0x7 << 16)
+> #define HOST_CTRL0_FSEL_CLKSEL_50M            (0x7 << 16)
+> #define HOST_CTRL0_FSEL_CLKSEL_24M            (0x5 << 16)
+> #define HOST_CTRL0_FSEL_CLKSEL_20M            (0x4 << 16)
+> #define HOST_CTRL0_FSEL_CLKSEL_19200K       (0x3 << 16)
+> #define HOST_CTRL0_FSEL_CLKSEL_12M            (0x2 << 16)
+> #define HOST_CTRL0_FSEL_CLKSEL_10M            (0x1 << 16)
+> #define HOST_CTRL0_FSEL_CLKSEL_9600K         (0x0 << 16)
+>
 
-This patch implements a helper function that platforms can call to check
-whether DT based cpu map initialization and cores count were completed
-successfully.
+Actually missed one thing here, this "HOST_CTRL0_FSEL_CLKSEL_XX" is
+being used by
+HOST/OTG blocks to prepare reference clock, that's the reason we kept
+            #define HOST_CTRL0_FSEL(_x)                  ((_x) << 16)
+and       #define OTG_SYS_FSEL(_x)                       ((_x) << 4)
+where (_x) is the reference clock returned from
+samsung_usbphy_get_refclk_freq().
 
-Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
----
- arch/arm/include/asm/prom.h |   10 ++++++++++
- arch/arm/kernel/devtree.c   |    6 ++++++
- 2 files changed, 16 insertions(+)
+So in order to avoid confusion we can change the macro names only and
+keep something like
+#define HOST_CTRL0_FSEL_MASK                       (0x7 << 16)
+#define HOST_CTRL0_FSEL(_x)                             ((_x) << 16)
 
-diff --git a/arch/arm/include/asm/prom.h b/arch/arm/include/asm/prom.h
-index a219227..487614a 100644
---- a/arch/arm/include/asm/prom.h
-+++ b/arch/arm/include/asm/prom.h
-@@ -18,6 +18,15 @@
- extern struct machine_desc *setup_machine_fdt(unsigned int dt_phys);
- extern void arm_dt_memblock_reserve(void);
- extern void __init arm_dt_init_cpu_maps(void);
-+/*
-+ * Return true if cpu map initialization has been
-+ * carried out correctly from DT
-+ */
-+static inline bool __init arm_dt_cpu_map_valid(void)
-+{
-+	extern bool valid_dt_cpu_map;
-+	return valid_dt_cpu_map;
-+}
- 
- #else /* CONFIG_OF */
- 
-@@ -28,6 +37,7 @@ static inline struct machine_desc *setup_machine_fdt(unsigned int dt_phys)
- 
- static inline void arm_dt_memblock_reserve(void) { }
- static inline void arm_dt_init_cpu_maps(void) { }
-+static inline bool __init arm_dt_cpu_map_valid(void) { return false; }
- 
- #endif /* CONFIG_OF */
- #endif /* ASMARM_PROM_H */
-diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
-index 70f1bde..4d8d1ec 100644
---- a/arch/arm/kernel/devtree.c
-+++ b/arch/arm/kernel/devtree.c
-@@ -64,6 +64,11 @@ void __init arm_dt_memblock_reserve(void)
- }
- 
- /*
-+ * Export DT cpu map validity flag to platforms
-+ */
-+bool valid_dt_cpu_map __initdata;
-+
-+/*
-  * arm_dt_init_cpu_maps - Function retrieves cpu nodes from the device tree
-  * and builds the cpu logical map array containing MPIDR values related to
-  * logical cpus
-@@ -158,6 +163,7 @@ void __init arm_dt_init_cpu_maps(void)
- 	 * a reg property, the DT CPU list can be considered valid and the
- 	 * logical map created in smp_setup_processor_id() can be overridden
- 	 */
-+	valid_dt_cpu_map = true;
- 	for (i = 0; i < cpuidx; i++) {
- 		set_cpu_possible(i, true);
- 		cpu_logical_map(i) = tmp_map[i];
+#define FSEL_CLKSEL_50M                                   (0x7)
+#define FSEL_CLKSEL_24M                                   (0x5)
+#define FSEL_CLKSEL_20M                                   (0x4)
+#define FSEL_CLKSEL_19200K                              (0x3)
+#define FSEL_CLKSEL_12M                                   (0x2)
+#define FSEL_CLKSEL_10M                                   (0x1)
+#define FSEL_CLKSEL_9600K                                (0x0)
+
+...
+
+#define OTG_SYS_FSEL_MASK                             (0x7 << 4)
+#define OTG_SYS_FSEL(_x)                                   ((_x) << 4)
+
+
+>>
+>>>>>         if (IS_ERR(ref_clk)) {
+>>>>>                 dev_err(sphy->dev, "Failed to get reference clock\n");
+>>>>>                 return PTR_ERR(ref_clk);
+>>>>>         }
+>>>>>
+>>>>> -       switch (clk_get_rate(ref_clk)) {
+>>>>> -       case 12 * MHZ:
+>>>>> -               refclk_freq = PHYCLK_CLKSEL_12M;
+>>>>> -               break;
+>>>>> -       case 24 * MHZ:
+>>>>> -               refclk_freq = PHYCLK_CLKSEL_24M;
+>>>>> -               break;
+>>>>> -       case 48 * MHZ:
+>>>>> -               refclk_freq = PHYCLK_CLKSEL_48M;
+>>>>> -               break;
+>>>>> -       default:
+>>>>> -               if (sphy->cpu_type == TYPE_S3C64XX)
+>>>>> -                       refclk_freq = PHYCLK_CLKSEL_48M;
+>>>>> -               else
+>>>>> +       if (sphy->cpu_type == TYPE_EXYNOS5250) {
+>>>>> +               /* set clock frequency for PLL */
+>>>>> +               switch (clk_get_rate(ref_clk)) {
+>>>>> +               case 96 * 100000:
+>>>>
+>>>> nit: change to 9600 * KHZ to match; below too.
+>>>>
+>>> sure.
+>>>
+>>>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_9600K;
+>>>>
+>>>> Why |= with 0?
+>>>>
+>>> kept this just to keep things look similar :-). will remove this line,
+>>
+>> My comment was about keeping things similar.  Right now the 5250 code
+>> has the |= and the non-5250 code doesn't.  I don't care which is
+>> picked but the two sides of the "if" should be symmetric.
+>>
+>
+> True, it's good to maintain symmetry in the code.
+> I shall amend the code as suggested.
+>
+
+And to maintain symmetry we can avoid putting |=
+since refclk_freq is anyways initialized to 0, so this wouldn't make
+any difference.
+right ?
+
+>> See parts of the patch below.
+>>
+>>>>> +                       break;
+>>>>> +               case 10 * MHZ:
+>>>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_10M;
+>>>>> +                       break;
+
+so we can change this to something like
+
+                           case 10 * MHZ:
+                                     refclk_freq = FSEL_CLKSEL_10M;
+                                     break;
+and so on.
+will this be fine ?
+
+>>>>> +               case 12 * MHZ:
+>>>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_12M;
+>>>>> +                       break;
+>>>>> +               case 192 * 100000:
+>>>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_19200K;
+>>>>> +                       break;
+>>>>> +               case 20 * MHZ:
+>>>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_20M;
+>>>>> +                       break;
+>>>>> +               case 50 * MHZ:
+>>>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_50M;
+>>>>> +                       break;
+>>>>> +               case 24 * MHZ:
+>>>>> +               default:
+>>>>> +                       /* default reference clock */
+>>>>> +                       refclk_freq |= HOST_CTRL0_FSEL_CLKSEL_24M;
+>>>>> +                       break;
+>>>>> +               }
+>>>>> +       } else {
+>>>>> +               switch (clk_get_rate(ref_clk)) {
+>>>>> +               case 12 * MHZ:
+>>>>> +                       refclk_freq = PHYCLK_CLKSEL_12M;
+>>>>> +                       break;
+>>>>> +               case 24 * MHZ:
+>>>>>                         refclk_freq = PHYCLK_CLKSEL_24M;
+>>>>> -               break;
+>>>>> +                       break;
+>>>>> +               case 48 * MHZ:
+>>>>> +                       refclk_freq = PHYCLK_CLKSEL_48M;
+>>>>> +                       break;
+>>>>> +               default:
+>>>>> +                       if (sphy->cpu_type == TYPE_S3C64XX)
+>>>>> +                               refclk_freq = PHYCLK_CLKSEL_48M;
+>>>>> +                       else
+>>>>> +                               refclk_freq = PHYCLK_CLKSEL_24M;
+>>>>> +                       break;
+>>>>> +               }
+>>>>>         }
+>>>>>         clk_put(ref_clk);
+>>>>>
+>>>>>         return refclk_freq;
+>>>>>  }
+>>
+
+
 -- 
-1.7.9.5
+Thanks & Regards
+Vivek
