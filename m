@@ -1,94 +1,115 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 02/11] ARM: nomadik: initial devicetree support
-Date: Mon, 14 Jan 2013 10:00:30 +0000
-Message-ID: <20130114100030.GA7990@e106331-lin.cambridge.arm.com>
-References: <1357599359-7385-1-git-send-email-linus.walleij@linaro.org>
- <20130108095729.GA2718@e106331-lin.cambridge.arm.com>
- <20130111170411.320D73E20EC@localhost>
- <20130111175749.GJ19765@e106331-lin.cambridge.arm.com>
- <CACRpkdbeeQC0bE7CEkBeHU=M03VBXNLd_20eyzjT39YJB9H-wg@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: PMU node location
+Date: Mon, 14 Jan 2013 10:11:29 +0000
+Message-ID: <20130114101129.GB7990@e106331-lin.cambridge.arm.com>
+References: <50EEC672.5050405@monstr.eu> <50F18742.5070501@gmail.com>
+ <20130114091834.GK19765@e106331-lin.cambridge.arm.com>
+ <CAHTX3dLm-LQzPfbRvaPMbOeTg72pBCy2+KqsnftLJKpgFskW9A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdbeeQC0bE7CEkBeHU=M03VBXNLd_20eyzjT39YJB9H-wg@mail.gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAHTX3dLm-LQzPfbRvaPMbOeTg72pBCy2+KqsnftLJKpgFskW9A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alessandro Rubini <rubini@unipv.it>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
+Cc: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2013 at 07:02:06AM +0000, Linus Walleij wrote:
-> On Fri, Jan 11, 2013 at 6:57 PM, Mark Rutland <mark.rutland@arm.com> wrote:
-> > On Fri, Jan 11, 2013 at 05:04:11PM +0000, Grant Likely wrote:
-> >> On Tue, 8 Jan 2013 09:57:29 +0000, Mark Rutland <mark.rutland@arm.com> wrote:
+On Mon, Jan 14, 2013 at 09:36:10AM +0000, Michal Simek wrote:
+> 2013/1/14 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
+> > On Sat, Jan 12, 2013 at 03:54:42PM +0000, Rob Herring wrote:
+> >> On 01/10/2013 07:47 AM, Michal Simek wrote:
+> >> > Hi Rob, Mark, Grant and others,
 > >> >
-> >> > Maybe I've misunderstood how this is laid out, but I can't see where we get a
-> >> > cpus node from in the board's dts. Has this just been forgotten?
+> >> > I want to check with you the location of ARM pmu node
+> >> > I see that
+> >> > 1) highbank and dbx5x0 have it in soc node
+> >> >
+> >> > 2) vexpress and tegra have no main bus and pmu is in root like all
+> >> > others devices.
+> >> > (Any reason no to have main bus? Does it mean that there is no bus or
+> >> > that all
+> >> > devices are accessible?)
 > >>
-> >> A cpus node isn't required if it doesn't provide any non-discoverable
-> >> information.
+> >> That seems really wrong in general. Any memory mapped device is on a bus
+> >> of some kind. I'm not sure the reasoning. Perhaps Stephen can explain.
+> >>
+> >> > 3) omap2/omap3 have added pmu node to root node(mailing list)
+> >> >
+> >> > 4) Just for completeness no platform has it in the bus.
+> >> >
+> >> >
+> >> > That's why I have obvious question what it is proper location for pmu node?
+> >>
+> >> Obviously, highbank is the true and correct way. ;)
+> >>
+> >> The pmu is part of the cpu, so it could be part of /cpus. That may cause
+> >> problems having non-cpu nodes and it would not get probed (although
+> >> technically that is a Linux problem and should not influence the DT).
 > >
-> > Seeing the discussion around the Tegra #CPUs detection code, I'd think we
-> > should have one:
+> > If we were going to allow cpu nodes in /cpus, I'd rather we supported a pmu
+> > node in each /cpus/cpuN node. That way the description of heterogeneous
+> > clusters would be intuitive (each pmu node representing a single cpu-affine
+> > unit rather than the collection of all cpu-affine units). That way describing
+> > heterogeneous clusters would become intuitive (cpu affinity would be implicit,
+> > and wouldn't have to be described separately as with my proposed binding [1]).
 > >
-> > http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/140209.html
+> > and I'm not sure how you'd handle PMUs which used the same PPI
 > 
-> Sorry I cannot figure out how to handle this request.
+> This is the same as is done with mpcore private timers which uses the same
+> PPI. Based on gic binding it is solved by 3rd cell (flags) "bits[15:8]
+> PPI interrupt cpu mask"
+
+What I meant was that for PPIs, you have to use the percpu_irq functions,
+requesting each PPI irq once globally, then enabling it on a subset of all
+cores. You have to be very careful to ensure you don't attempt to request the
+same PPI twice.  For example you might have different PPIs in different
+clusters, and you have no guarantee that the nodes sharing the same PPI are
+grouped together in any consistent order. Ensuring that you've dealt with all
+nodes and not double-requested an irq is going to get messy.
+
+> This also open one more question for me because we have mpcore timers
+> on the bus but they are in mpcore. They should be also moved to /cpu/cpuN node.
+
+If we're doing this it'd probably be good to have some common framework with
+the PMU code for handling both cpu-affine description and global description in
+the root of the tree. We have to be careful to ensure we don't break current
+device trees.
+
 > 
-> The Nomadik has one (1) ARM926EJ-S CPU.
-
-Oh! I hadn't realised the Nomadik was v5. The above will be completely
-irrelevant. Sorry for wasting everyone's timer over this.
-
-In way of an explanation, further down the thread [1,2] it becomes a discussion
-of /cpus node requirements. The long and short of it is that for v{6,7} there's
-no standard way of detecting the number of CPUs, and no way of detecting the
-CPU IDs (MPIDR.Aff{2,1,0}), so we should always describe this in dt.
-
-For v5 this is indeed useless.
-
-> Currently there is no other uniprocessor machine in arch/arm/* doing this,
-> so have I understood it correctly that you are asking me to do something
-> that has never been done before, and that all the existing device tree
-> implementations should also do this in the end?
-
-I think all v6+ platforms should have /cpus/cpu@N nodes for consistency across
-UP and SMP systems. For v{4,5}, this isn't really necessary, unless people want
-to conform to the letter of the law from ePAPR ("A cpus node is required for
-all device trees."). I'm not too worried about this.
-
-> The references discussion introduce ARM_CPU_PART_CORTEX_A15
-> and ARM_CPU_PART_CORTEX_A9 and these are vastly newer
-> systems than the Nomadik, there is no handling of the older CPU types.
-
-Sorry, I should've linked to the more relevant parts of the thread [1,2].
-
-> Are you asking for some new infrastructure to support, mainly for
-> the sake of itself (like the nice completeness of the device tre), cpu
-> nodes in these device trees?
-
-I was asking for a /cpus/cpu node, but as you've pointed out this is a v5
-platform, and as such this isn't needed.
-
-> Does this reasoning also extend to the MIPS, PPC and Sun use of
-> device trees as well then, as they don't do that, or do you mean this
-> should be done only for the ARM family?
+> 		ps7_scutimer_0: ps7-scutimer@f8f00600 {
+> 			compatible = "xlnx,ps7-scutimer-1.00.a", "arm,cortex-a9-twd-timer";
+> 			interrupt-parent = <&ps7_scugic_0>;
+> 			interrupts = <1 13 0x0301>;
+> 			reg = < 0xf8f00600 0x20 >;
+> 		} ;
 > 
-> As you see I don't quite get it, could you elaborate?
-
-Hopefully the above explanation makes sense?
-
-> Yours,
-> Linus Walleij
+> 
+> btw: what is the main reason for Soc node name? Because of
+> highbank.dts includes ecx-common.dtsi
+> where soc is used as bus.
+> 
+> Thanks,
+> Michal
+> 
+> 
+> -- 
+> Michal Simek, Ing. (M.Eng)
+> w: www.monstr.eu p: +42-0-721842854
+> Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+> Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+> Microblaze U-BOOT custodian
+> 
 
 Thanks,
 Mark.
