@@ -1,50 +1,41 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: $(make uImage) is stupid [Was: Re: Early kernel hang with big DTB
- appended]
-Date: Mon, 14 Jan 2013 09:45:24 +0100
-Message-ID: <20130114084524.GN14860@pengutronix.de>
-References: <7811936.npteFbuYu2@amdc1227>
- <alpine.LFD.2.02.1301032144490.1263@xanadu.home>
- <35730055.SShm3zF9mO@amdc1227>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH] pci: Provide support for parsing PCI DT ranges property
+Date: Mon, 14 Jan 2013 09:15:26 +0000
+Message-ID: <20130114091526.GA23333@arm.com>
+References: <20121212163749.GA17371@arm.com>
+ <20121220082500.GA32617@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20121220082500.GA32617@avionic-0098.adnet.avionic-design.de>
 Content-Disposition: inline
-In-Reply-To: <35730055.SShm3zF9mO@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, thomas.abraham@linaro.org, bones@secretlab.ca, linux-arm-kernel@lists.infradead.org
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Michal Simek <monstr@monstr.eu>, Rob Herring <robherring2@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Liviu Dudau <Liviu.Dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, Dec 20, 2012 at 08:25:00AM +0000, Thierry Reding wrote:
+> On Wed, Dec 12, 2012 at 04:37:50PM +0000, Andrew Murray wrote:
+> [...]
+> > diff --git a/drivers/of/address.c b/drivers/of/address.c
+> [...]
+> > +	start = of_get_property(node, "ranges", &rlen);
+> > +	if (start == NULL)
+> > +		return NULL;
+> > +
+> > +	end = start + rlen;
+> 
+> I'm currently rewriting large parts of the Tegra PCIe controller driver
+> and I'm trying to use this new API. This seems to work fine, except that
+> I think this line needs to be:
+> 
+> 	end = start + rlen / sizeof(__be32);
+> 
+> Otherwise we'll try to process 4 times as many ranges as there are.
+> 
+> Thierry
 
-unrelated to the original problem ...
+Good catch. Thanks for taking this on.
 
-On Fri, Jan 04, 2013 at 11:18:56AM +0100, Tomasz Figa wrote:
-> We are using uImages built with same parameters as those used in simp=
-le=20
-> 'make uImage', just with a DTB appended to zImage before running mkim=
-age=20
-> on it.
-note that the parameters used for $(make uImage) are not optimal, only
-safe. They use (letting the MMU aside) the link address of the final
-image as load address. That means as U-Boot probably didn't choose the
-right address when reading the image it has to move it to the link
-address and then jumps into it. Then the decompressor notices that the
-compressed image is located where the decompressed image should go to
-and so has to move the image again.
-
-So you could save quite some time during boot if you'd teach U-Boot tha=
-t
-it can just use the image where it was loaded to.
-
-Best regards
-Uwe
-
---=20
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig        =
-    |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
+Andrew Murray
