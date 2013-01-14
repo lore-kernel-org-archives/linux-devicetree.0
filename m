@@ -1,83 +1,52 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: PMU node location
-Date: Mon, 14 Jan 2013 09:18:34 +0000
-Message-ID: <20130114091834.GK19765@e106331-lin.cambridge.arm.com>
-References: <50EEC672.5050405@monstr.eu>
- <50F18742.5070501@gmail.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH] pci: Provide support for parsing PCI DT ranges property
+Date: Mon, 14 Jan 2013 09:24:45 +0000
+Message-ID: <20130114092445.GB23333@arm.com>
+References: <20121212163749.GA17371@arm.com>
+ <CACxGe6uZATX2uBjuDUsJ489-jmvFbLm-NQ6Q3SGqRVky9XGJYg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50F18742.5070501-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6uZATX2uBjuDUsJ489-jmvFbLm-NQ6Q3SGqRVky9XGJYg@mail.gmail.com>
 Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Sender: linux-pci-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Thierry Reding <thierry.reding@avionic-design.de>, Michal Simek <monstr@monstr.eu>, Rob Herring <robherring2@gmail.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Liviu Dudau <Liviu.Dudau@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 12, 2013 at 03:54:42PM +0000, Rob Herring wrote:
-> On 01/10/2013 07:47 AM, Michal Simek wrote:
-> > Hi Rob, Mark, Grant and others,
-> > 
-> > I want to check with you the location of ARM pmu node
-> > I see that
-> > 1) highbank and dbx5x0 have it in soc node
-> > 
-> > 2) vexpress and tegra have no main bus and pmu is in root like all
-> > others devices.
-> > (Any reason no to have main bus? Does it mean that there is no bus or
-> > that all
-> > devices are accessible?)
+On Sat, Dec 15, 2012 at 01:06:41AM +0000, Grant Likely wrote:
+> On Wed, Dec 12, 2012 at 4:37 PM, Andrew Murray <Andrew.Murray@arm.com> wrote:
+> > DT bindings for PCI host bridges often use the ranges property to describe
+> > memory and IO ranges - this binding tends to be the same across architectures
+> > yet several parsing implementations exist, e.g. arch/mips/pci/pci.c,
+> > arch/powerpc/kernel/pci-common.c, arch/sparc/kernel/pci.c and
+> > arch/microblaze/pci/pci-common.c (clone of PPC). Some of these duplicate
+> > functionality provided by drivers/of/address.c.
 > 
-> That seems really wrong in general. Any memory mapped device is on a bus
-> of some kind. I'm not sure the reasoning. Perhaps Stephen can explain.
+> Hi Andrew,
 > 
-> > 3) omap2/omap3 have added pmu node to root node(mailing list)
-> > 
-> > 4) Just for completeness no platform has it in the bus.
-> > 
-> > 
-> > That's why I have obvious question what it is proper location for pmu node?
+> Thanks for looking into this. This definitely needs to be done.
 > 
-> Obviously, highbank is the true and correct way. ;)
-> 
-> The pmu is part of the cpu, so it could be part of /cpus. That may cause
-> problems having non-cpu nodes and it would not get probed (although
-> technically that is a Linux problem and should not influence the DT).
+> However, I cannot merge this patch as-is because it actually makes
+> things worse by adding yet another implementation of the parsing code.
+> Plus it doesn't actually have any users.  :-)
 
-If we were going to allow cpu nodes in /cpus, I'd rather we supported a pmu
-node in each /cpus/cpuN node. That way the description of heterogeneous
-clusters would be intuitive (each pmu node representing a single cpu-affine
-unit rather than the collection of all cpu-affine units). That way describing
-heterogeneous clusters would become intuitive (cpu affinity would be implicit,
-and wouldn't have to be described separately as with my proposed binding [1]).
-
-and I'm not sure how you'd handle PMUs which used the same PPI
-
-> Since it is not on a bus, then putting it at the top level probably
-> makes more sense than on a bus.
-
-Agreed. I think this makes the most sense.
+I understand. Though I see Thierry has included this in his patch set - I
+guess that means there is potentially one user now :).
 
 > 
-> Rob
-> 
-> > 
-> > Thanks,
-> > Michal
-> > 
-> 
+> Instead, move the existing code that you need out of
+> arch/powerpc/kernel/pci-common.c into a shared place and add in the
+> features you need. Bonus points if you fixup microblaze or others at
+> the same time.
 
-Thanks,
-Mark.
+In most part the patch I submitted was the common code from powerpc but
+without quirks and tie-ins to powerpc structures. I'd like to convert
+powerpc to using my patch and others but won't get time to do this at
+present :(
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2012-December/137290.html
+> 
+> g.
+> 
+Andrew Murray
