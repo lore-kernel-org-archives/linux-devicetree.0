@@ -1,92 +1,34 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/6] ARM: common: vic: Parse interrupt and resume masks
- from device tree
-Date: Sun, 13 Jan 2013 19:08:49 -0600
-Message-ID: <50F35AA1.1010902@gmail.com>
-References: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com> <1358039458-31960-2-git-send-email-tomasz.figa@gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [RFC-v2 0/7] Capebus; a bus for SoCs using simple expansion
+ connectors
+Date: Mon, 14 Jan 2013 02:23:27 +0000
+Message-ID: <20130114022326.GA4928@sirena.org.uk>
+References: <1351783952-11804-1-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1358039458-31960-2-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, linux@arm.linux.org.uk, kwangwoo.lee@gmail.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, mcuelenaere@gmail.com, augulis.darius@gmail.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1351783952-11804-1-git-send-email-panto@antoniou-consulting.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Tony Lindgren <tony@atomide.com>, Paul Walmsley <paul@pwsan.com>, "Hiremath, Vaibhav" <hvaibhav@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2013 07:10 PM, Tomasz Figa wrote:
-> This patch extends vic_of_init to parse valid interrupt sources
-> and resume sources masks from device tree.
+On Thu, Nov 01, 2012 at 05:32:25PM +0200, Pantelis Antoniou wrote:
+> Capebus is created to address the problem of many SoCs that can provide a
+> multitude of hardware interfaces but in order to keep costs down the main
+> boards only support a limited number of them. The rest are typically brought
+> out to pin connectors on to which other boards, named capes are connected and
+> allow those peripherals to be used.
 > 
-> If mask values are not specified in device tree, all sources
-> are assumed to be valid, as before this patch.
-> 
-> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> ---
->  Documentation/devicetree/bindings/arm/vic.txt | 6 ++++++
->  arch/arm/common/vic.c                         | 7 ++++++-
->  2 files changed, 12 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/vic.txt b/Documentation/devicetree/bindings/arm/vic.txt
-> index 266716b..bb7137c 100644
-> --- a/Documentation/devicetree/bindings/arm/vic.txt
-> +++ b/Documentation/devicetree/bindings/arm/vic.txt
-> @@ -18,6 +18,9 @@ Required properties:
->  Optional properties:
->  
->  - interrupts : Interrupt source for parent controllers if the VIC is nested.
-> +- interrupt-mask : Bit mask of valid interrupt sources (defaults to all valid)
+> These capes connect to the SoC interfaces but might also contain various other
+> parts that may need some kind of driver to work.
 
-Can you explain why this is needed and is not just the OR of all
-interrupts described in the DT?
+I've not yet actually looked at the code but this sounds very similar to
+some work I wanted to do on handling coldpluggable modules on reference
+designs.  In that case it's not so much about pin count as about the
+fact that we have to detect at runtime what's connected to the system
+but I think the overall effect is very similar and there's definite
+overlap.
 
-> +- wakeup-mask : Bit mask of interrupt sources that can wake up the system
-> +  (defaults to all allowed)
-
-Seems like this would be all VIC interrupts unless the wake-up handling
-is done in some shadow controller. If the former is true, then wake-up
-capability is really a property of individual devices. If the later,
-then this property would belong in that shadow controller.
-
-Rob
-
->  
->  Example:
->  
-> @@ -26,4 +29,7 @@ Example:
->  		interrupt-controller;
->  		#interrupt-cells = <1>;
->  		reg = <0x60000 0x1000>;
-> +
-> +		interrupt-mask = <0xffffff7f>;
-> +		wakeup-mask = <0x0000ff7f>;
->  	};
-> diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
-> index e4df17c..c2889da 100644
-> --- a/arch/arm/common/vic.c
-> +++ b/arch/arm/common/vic.c
-> @@ -407,6 +407,8 @@ void __init vic_init(void __iomem *base, unsigned int irq_start,
->  int __init vic_of_init(struct device_node *node, struct device_node *parent)
->  {
->  	void __iomem *regs;
-> +	u32 interrupt_mask = ~0;
-> +	u32 wakeup_mask = ~0;
->  
->  	if (WARN(parent, "non-root VICs are not supported"))
->  		return -EINVAL;
-> @@ -415,10 +417,13 @@ int __init vic_of_init(struct device_node *node, struct device_node *parent)
->  	if (WARN_ON(!regs))
->  		return -EIO;
->  
-> +	of_property_read_u32(node, "interrupt-mask", &interrupt_mask);
-> +	of_property_read_u32(node, "wakeup-mask", &wakeup_mask);
-> +
->  	/*
->  	 * Passing -1 as first IRQ makes the simple domain allocate descriptors
->  	 */
-> -	__vic_init(regs, -1, ~0, ~0, node);
-> +	__vic_init(regs, -1, interrupt_mask, wakeup_mask, node);
->  
->  	return 0;
->  }
-> 
+Can you please CC me on future versions of the code?
