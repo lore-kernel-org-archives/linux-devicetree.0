@@ -1,50 +1,29 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v8 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC
- timings and NAND
-Date: Mon, 14 Jan 2013 10:06:02 -0800
-Message-ID: <20130114180602.GV14149@atomide.com>
-References: <1355481404-27695-1-git-send-email-zonque@gmail.com>
- <1355481404-27695-6-git-send-email-zonque@gmail.com>
- <CALF0-+UbqFF17X1Ok1s1AGKg6SBmvMc1mvjVuZb=Ej7xo+qcmA@mail.gmail.com>
+From: Chris Ball <cjb@laptop.org>
+Subject: Re: [PATCH] mmc: add BCM2835 driver
+Date: Mon, 14 Jan 2013 14:33:00 -0500
+Message-ID: <871udntv9v.fsf@laptop.org>
+References: <1357191289-10455-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CALF0-+UbqFF17X1Ok1s1AGKg6SBmvMc1mvjVuZb=Ej7xo+qcmA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ezequiel Garcia <elezegarcia@gmail.com>
-Cc: Daniel Mack <zonque@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, jon-hunter@ti.com, avinashphilip@ti.com, x0148406@ti.com, paul@pwsan.com, nsekhar@ti.com, jacmet@sunsite.dk, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Javier Martinez Canillas <martinez.javier@gmail.com>, Enric Balletbo Serra <eballetbo@gmail.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1357191289-10455-1-git-send-email-swarren@wwwdotorg.org>
+	(Stephen Warren's message of "Wed, 2 Jan 2013 22:34:49 -0700")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Ezequiel Garcia <elezegarcia@gmail.com> [121223 13:49]:
-> On Fri, Dec 14, 2012 at 7:36 AM, Daniel Mack <zonque@gmail.com> wrote:
-> > +
-> > +Example for an AM33xx board:
-> > +
-> > +       gpmc: gpmc@50000000 {
-> > +               compatible = "ti,am3352-gpmc";
-> > +               ti,hwmods = "gpmc";
-> > +               reg = <0x50000000 0x1000000>;
-> > +               interrupts = <100>;
-> > +               gpmc,num-cs = <8>;
-> > +               gpmc,num-waitpins = <2>;
-> > +               #address-cells = <2>;
-> > +               #size-cells = <1>;
-> > +               ranges = <0 0 0x08000000 0x2000>;       /* CS0: NAND */
-> > +
-> > +               nand@0,0 {
-> > +                       reg = <0 0 0>; /* CS0, offset 0 */
-> 
-> I'm a bit confused by this: what are the other two values in "reg"?
-> I see you've only added a binding for CS.
-> 
-> I've extended a bit on your work and added a binding to enable OneNAND
-> device on my IGEP board.
-> 
-> I might send some patches in case anyone wants to give it a try.
+Hi Stephen,
 
-Daniel, should this be updated to just pass the CS?
+On Thu, Jan 03 2013, Stephen Warren wrote:
+> Add a very simple driver for the BCM2835 SoC, which is used in the
+> Raspberry Pi board.
+>
+> Signed-off-by: Stephen Warren <swarren@wwwdotorg.org>
 
-Regards,
+Looks good, thanks -- pushed to mmc-next for 3.9.
 
-Tony
+- Chris.
+-- 
+Chris Ball   <cjb@laptop.org>   <http://printf.net/>
+One Laptop Per Child
