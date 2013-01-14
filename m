@@ -1,56 +1,45 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] cpsw: Add support to read cpu MAC address
-Date: Mon, 14 Jan 2013 20:26:51 +0000
-Message-ID: <20130114202651.5360F3E249D@localhost>
-References: <1357917302-32550-1-git-send-email-michal.bachraty@streamunlimited.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1357917302-32550-1-git-send-email-michal.bachraty@streamunlimited.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Michal Bachraty <michal.bachraty@streamunlimited.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: [GIT PULL] DeviceTree fixes for 3.8
+Date: Mon, 14 Jan 2013 15:17:23 -0600
+Message-ID: <50F475E3.5060409@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@wwwdotorg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Jan 2013 16:15:02 +0100, Michal Bachraty <michal.bachraty@streamunlimited.com> wrote:
-> Signed-off-by: Michal Bachraty <michal.bachraty@streamunlimited.com>
-> ---
->  Documentation/devicetree/bindings/net/cpsw.txt |   10 +-
->  arch/arm/boot/dts/am33xx.dtsi                  |    5 +-
->  drivers/net/ethernet/ti/cpsw.c                 |  121 +++++++++++++++++++++---
->  include/linux/platform_data/cpsw.h             |    8 ++
->  4 files changed, 128 insertions(+), 16 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
-> index dcaabe9..432122c 100644
-> --- a/Documentation/devicetree/bindings/net/cpsw.txt
-> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
-> @@ -4,7 +4,7 @@ TI SoC Ethernet Switch Controller Device Tree Bindings
->  Required properties:
->  - compatible		: Should be "ti,cpsw"
->  - reg			: physical base address and size of the cpsw
-> -			  registers map
-> +			  registers map and mac-address cpu config registers
->  - interrupts		: property with a value describing the interrupt
->  			  number
->  - interrupt-parent	: The parent interrupt controller
-> @@ -25,17 +25,23 @@ Required properties:
->  - slave_reg_ofs		: Specifies slave register offset
->  - sliver_reg_ofs	: Specifies slave sliver register offset
->  - phy_id		: Specifies slave phy id
-> -- mac-address		: Specifies slave MAC address
->  
->  Optional properties:
->  - ti,hwmods		: Must be "cpgmac0"
->  - no_bd_ram		: Must be 0 or 1
-> +- mac-address-source 	: Specifies source of MAC address ("user-defined-mac",
-> +			  "cpu-id0-mac", "cpu-id01-mac", "random-mac"). If not
-> +			  specified, "cpu-id0-mac" is selected
+Linus,
 
-Drop the '-mac' suffix on the values. The property is already named
-"mac-address-source", so I think it is already unambiguious from the
-context.  :-)
+Please pull these 2 small fixes for DT. The move to common dtb build rules
+went in through the DT tree, so I'm taking the fixes too.
 
-Otherwise the patch looks good to me, but I haven't gone over the code
-in fine detail.
+Rob
 
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+The following changes since commit 9931faca02c604c22335f5a935a501bb2ace6e20:
 
+  Linux 3.8-rc3 (2013-01-09 18:59:55 -0800)
+
+are available in the git repository at:
+
+  git://sources.calxeda.com/kernel/linux.git tags/dt-fixes-for-3.8
+
+for you to fetch changes up to 1ab3681271c84b7f926be9ae3be1d769b7e933e9:
+
+  ARM: dts: prevent *.dtb from always being rebuilt (2013-01-14 08:08:31 -0600)
+
+----------------------------------------------------------------
+DeviceTree fixes for 3.8
+
+2 fixes to prevent unconditional re-compile of dts files on arm and arm64.
+
+----------------------------------------------------------------
+Stephen Warren (2):
+      arm64: dts: prevent *.dtb from always being rebuilt
+      ARM: dts: prevent *.dtb from always being rebuilt
+
+ arch/arm/boot/dts/Makefile   |    1 +
+ arch/arm64/boot/dts/Makefile |    1 +
+ 2 files changed, 2 insertions(+)
