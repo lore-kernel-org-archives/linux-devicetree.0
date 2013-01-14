@@ -1,92 +1,113 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 5/6] ARM: dts: Add basic dts include files for Samsung
- S3C64xx SoCs
-Date: Mon, 14 Jan 2013 15:05:32 +0000
-Message-ID: <20130114150531.GE21142@e102568-lin.cambridge.arm.com>
-References: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com>
- <1358039458-31960-6-git-send-email-tomasz.figa@gmail.com>
- <20130114144841.GE7990@e106331-lin.cambridge.arm.com>
+From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+Subject: Re: [PATCH V7] kbuild: create a rule to run the pre-processor on
+ *.dts files
+Date: Mon, 14 Jan 2013 15:53:22 +0100
+Message-ID: <20130114145322.GG31527@game.jcrosoft.org>
+References: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130114144841.GE7990@e106331-lin.cambridge.arm.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <Mark.Rutland@arm.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "kwangwoo.lee@gmail.com" <kwangwoo.lee@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "mcuelenaere@gmail.com" <mcuelenaere@gmail.com>, "augulis.darius@gmail.com" <augulis.darius@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dave Martin <dave.martin@linaro.org>
+In-Reply-To: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Grant Likely <glikely@secretlab.ca>, David Gibson <david@gibson.dropbear.id.au>, Michal Marek <mmarek@suse.cz>, Jon Loeliger <jdl@jdl.com>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Glass <sjg@chromium.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2013 at 02:48:41PM +0000, Mark Rutland wrote:
-> Hello,
+On 11:43 Wed 02 Jan     , Stephen Warren wrote:
+> From: Stephen Warren <swarren@nvidia.com>
 > 
-> This all looks good. I just have a couple of comments about the cpus node.
+> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
+> passing them to dtc for final compilation. This allows the use of #define
+> and #include within the .dts file.
 > 
-> On Sun, Jan 13, 2013 at 01:10:57AM +0000, Tomasz Figa wrote:
-> > This patch adds basic device tree definitions for Samsung S3C64xx SoCs.
-> > 
-> > Since all the SoCs in the series are very similar, the files are created
-> > hierarchically - one file for the whole series and then separate files
-> > for particular SoCs including the common one.
-> > 
-> > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
-> 
-> [...]
-> 
-> > diff --git a/arch/arm/boot/dts/s3c64xx.dtsi b/arch/arm/boot/dts/s3c64xx.dtsi
-> > new file mode 100644
-> > index 0000000..55d6e08
-> > --- /dev/null
-> > +++ b/arch/arm/boot/dts/s3c64xx.dtsi
-> > @@ -0,0 +1,97 @@
-> > +/*
-> > + * Samsung's S3C64xx SoC series common device tree source
-> > + *
-> > + * Copyright (c) 2013 Tomasz Figa <tomasz.figa@gmail.com>
-> > + *
-> > + * Samsung's S3C64xx SoC series device nodes are listed in this file.
-> > + * Particular SoCs from S3C64xx series can include this file and provide
-> > + * values for SoCs specfic bindings.
-> > + *
-> > + * Note: This file does not include device nodes for all the controllers in
-> > + * S3C64xx SoCs. As device tree coverage for S3C64xx increases, additional
-> > + * nodes can be added to this file.
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License version 2 as
-> > + * published by the Free Software Foundation.
-> > + */
-> > +
-> > +/include/ "skeleton.dtsi"
-> > +
-> > +/ {
-> > +	cpus {
-> > +		cpu@0 {
-> > +			compatible = "arm,arm1176jzf-s";
-> > +		};
-> > +	};
-> 
-> You can drop the unit address from the cpu node - it's meant to be there to
-> differentiate multiple nodes (and is supposed to match the reg property, which
-> the 1176jzf-s can't have, as it doesn't have an MPIDR).
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 
-Well, this is a point that I should consider since the kernel docs I wrote are
-misleading, they require the reg property that can not be there on UP.
-True, MPIDR does not exist in this case, but I have to document this in the
-bindings since it is unclear.
-
+Best Regards,
+J.
+> ---
+> Grant, back in mid-November, you said you'd make a decision on this in
+> the next couple of days, but I think this got overlooked.
 > 
-> Also, "arm,arm1176jzf-s" isn't listed in the binding doc. There was a question
-> about how to maintain this list [1], but I can't seem to find a conclusion, if
-> any were reached.  It might be worth appending "arm,arm1176" to the compatible
-> list for the cpu node in case we want to enable something via dt for all 1176
-> variations.
+> v7: Build *.dtb from *.dts not src/*.dts.
+> v6: No change.
+> v5:
+> * Update Documentation/kbuild for the new command and rule.
+> v4:
+> * Use -x assembler-with-cpp so pre-defined macros are set up so that
+>   #included header files know to only use cpp syntax, not C syntax.
+> * Define __DTS__ for similar reasons.
+> * use $(CPP) not $(CC) -E, and use $(cpp_flags).
+> * Save the pre-processed results so they can be easily inspected when
+>   debugging build issues.
+> * The use of -x assembler-with-cpp causes cpp to recognize directives in
+>   column 1 only. Hence, there's no need to escape property names that
+>   begin with #. Hence, there's no need for separate skeleton.dtsi and
+>   skeleton.dtsip. Maintain a separate file extension and build rule so that
+>   CPP-usage is opt-in. In particular, when using CPP, #include must be used
+>   rather than /include/ so that dependencies work.
+> v3: Pass "-x c" not "-xc" to cpp.
+> v2: Place make %.dtb: %.dtsp rule into Makefile.lib.
+> ---
+>  Documentation/kbuild/makefiles.txt |   23 +++++++++++++++++++++++
+>  scripts/Makefile.lib               |    9 +++++++++
+>  2 files changed, 32 insertions(+)
 > 
-> Dave, Lorenzo, any thoughts?
-
-Eh, frankly I do not know how to handle this. Either we add a compatible
-string to the bindings anytime a DT gets merged in the kernel but how
-to maintain it, it has to be defined. Happy to hear some feedback on
-this.
-
-Lorenzo
+> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+> index 14c3f4f..5198b74 100644
+> --- a/Documentation/kbuild/makefiles.txt
+> +++ b/Documentation/kbuild/makefiles.txt
+> @@ -1186,6 +1186,29 @@ When kbuild executes, the following steps are followed (roughly):
+>  		clean-files += *.dtb
+>  		DTC_FLAGS ?= -p 1024
+>  
+> +    dtc_cpp
+> +	This is just like dtc as describe above, except that the C pre-
+> +	processor is invoked upon the .dtsp file before compiling the result
+> +	with dtc.
+> +
+> +	In order for build dependencies to work, all files compiled using
+> +	dtc_cpp must use the C pre-processor's #include functionality and not
+> +	dtc's /include/ functionality.
+> +
+> +	Using the C pre-processor allows use of #define to create named
+> +	constants. In turn, the #defines will typically appear in a header
+> +	file, which may be shared with regular C code. Since the dtc language
+> +	represents a data structure rather than code in C syntax, similar
+> +	restrictions are placed on a header file included by a device tree
+> +	file as for a header file included by an assembly language file.
+> +	In particular, the C pre-processor is passed -x assembler-with-cpp,
+> +	which sets macro __ASSEMBLY__. __DTS__ is also set. These allow header
+> +	files to restrict their content to that compatible with device tree
+> +	source.
+> +
+> +	A central rule exists to create $(obj)/%.dtb from $(src)/%.dtsp;
+> +	architecture Makefiles do no need to explicitly write out that rule.
+> +
+>  --- 6.8 Custom kbuild commands
+>  
+>  	When kbuild is executing with KBUILD_VERBOSE=0, then only a shorthand
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index bdf42fd..2c2a302 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -269,6 +269,15 @@ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile
+>  $(obj)/%.dtb: $(src)/%.dts FORCE
+>  	$(call if_changed_dep,dtc)
+>  
+> +dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
+> +
+> +quiet_cmd_dtc_cpp = DTC+CPP $@
+> +cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__ -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+> +	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
+> +
+> +$(obj)/%.dtb: $(src)/%.dtsp FORCE
+> +	$(call if_changed_dep,dtc_cpp)
+> +
+>  # Bzip2
+>  # ---------------------------------------------------------------------------
+>  
+> -- 
+> 1.7.10.4
+> 
