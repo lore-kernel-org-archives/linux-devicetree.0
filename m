@@ -1,113 +1,143 @@
-From: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Subject: Re: [PATCH V7] kbuild: create a rule to run the pre-processor on
- *.dts files
-Date: Mon, 14 Jan 2013 15:53:22 +0100
-Message-ID: <20130114145322.GG31527@game.jcrosoft.org>
-References: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v2 2/4] input: keyboard: tegra: use devm_* for resource
+ allocation
+Date: Mon, 14 Jan 2013 16:49:59 +0100
+Message-ID: <20130114154959.GA25049@avionic-0098.adnet.avionic-design.de>
+References: <1357371910-3164-1-git-send-email-ldewangan@nvidia.com>
+ <1357371910-3164-3-git-send-email-ldewangan@nvidia.com>
+ <20130105080658.GA1315@core.coreip.homeip.net>
+ <20130106192739.GA11566@avionic-0098.adnet.avionic-design.de>
+ <20130106195748.GA28212@core.coreip.homeip.net>
+ <20130109070745.GA12782@avionic-0098.adnet.avionic-design.de>
+ <20130109091939.GA4369@core.coreip.homeip.net>
+ <20130109092352.GA28037@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Grant Likely <glikely@secretlab.ca>, David Gibson <david@gibson.dropbear.id.au>, Michal Marek <mmarek@suse.cz>, Jon Loeliger <jdl@jdl.com>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Sam Ravnborg <sam@ravnborg.org>, Simon Glass <sjg@chromium.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
+In-Reply-To: <20130109092352.GA28037@avionic-0098.adnet.avionic-design.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Laxman Dewangan <ldewangan@nvidia.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, Wolfram Sang <w.sang@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11:43 Wed 02 Jan     , Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
-> 
-> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
-> passing them to dtc for final compilation. This allows the use of #define
-> and #include within the .dts file.
-> 
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
 
-Best Regards,
-J.
-> ---
-> Grant, back in mid-November, you said you'd make a decision on this in
-> the next couple of days, but I think this got overlooked.
-> 
-> v7: Build *.dtb from *.dts not src/*.dts.
-> v6: No change.
-> v5:
-> * Update Documentation/kbuild for the new command and rule.
-> v4:
-> * Use -x assembler-with-cpp so pre-defined macros are set up so that
->   #included header files know to only use cpp syntax, not C syntax.
-> * Define __DTS__ for similar reasons.
-> * use $(CPP) not $(CC) -E, and use $(cpp_flags).
-> * Save the pre-processed results so they can be easily inspected when
->   debugging build issues.
-> * The use of -x assembler-with-cpp causes cpp to recognize directives in
->   column 1 only. Hence, there's no need to escape property names that
->   begin with #. Hence, there's no need for separate skeleton.dtsi and
->   skeleton.dtsip. Maintain a separate file extension and build rule so that
->   CPP-usage is opt-in. In particular, when using CPP, #include must be used
->   rather than /include/ so that dependencies work.
-> v3: Pass "-x c" not "-xc" to cpp.
-> v2: Place make %.dtb: %.dtsp rule into Makefile.lib.
-> ---
->  Documentation/kbuild/makefiles.txt |   23 +++++++++++++++++++++++
->  scripts/Makefile.lib               |    9 +++++++++
->  2 files changed, 32 insertions(+)
-> 
-> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-> index 14c3f4f..5198b74 100644
-> --- a/Documentation/kbuild/makefiles.txt
-> +++ b/Documentation/kbuild/makefiles.txt
-> @@ -1186,6 +1186,29 @@ When kbuild executes, the following steps are followed (roughly):
->  		clean-files += *.dtb
->  		DTC_FLAGS ?= -p 1024
->  
-> +    dtc_cpp
-> +	This is just like dtc as describe above, except that the C pre-
-> +	processor is invoked upon the .dtsp file before compiling the result
-> +	with dtc.
-> +
-> +	In order for build dependencies to work, all files compiled using
-> +	dtc_cpp must use the C pre-processor's #include functionality and not
-> +	dtc's /include/ functionality.
-> +
-> +	Using the C pre-processor allows use of #define to create named
-> +	constants. In turn, the #defines will typically appear in a header
-> +	file, which may be shared with regular C code. Since the dtc language
-> +	represents a data structure rather than code in C syntax, similar
-> +	restrictions are placed on a header file included by a device tree
-> +	file as for a header file included by an assembly language file.
-> +	In particular, the C pre-processor is passed -x assembler-with-cpp,
-> +	which sets macro __ASSEMBLY__. __DTS__ is also set. These allow header
-> +	files to restrict their content to that compatible with device tree
-> +	source.
-> +
-> +	A central rule exists to create $(obj)/%.dtb from $(src)/%.dtsp;
-> +	architecture Makefiles do no need to explicitly write out that rule.
-> +
->  --- 6.8 Custom kbuild commands
->  
->  	When kbuild is executing with KBUILD_VERBOSE=0, then only a shorthand
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index bdf42fd..2c2a302 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -269,6 +269,15 @@ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile
->  $(obj)/%.dtb: $(src)/%.dts FORCE
->  	$(call if_changed_dep,dtc)
->  
-> +dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
-> +
-> +quiet_cmd_dtc_cpp = DTC+CPP $@
-> +cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__ -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-> +	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
-> +
-> +$(obj)/%.dtb: $(src)/%.dtsp FORCE
-> +	$(call if_changed_dep,dtc_cpp)
-> +
->  # Bzip2
->  # ---------------------------------------------------------------------------
->  
-> -- 
-> 1.7.10.4
-> 
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jan 09, 2013 at 10:23:52AM +0100, Thierry Reding wrote:
+> On Wed, Jan 09, 2013 at 01:19:39AM -0800, Dmitry Torokhov wrote:
+> > On Wed, Jan 09, 2013 at 08:07:45AM +0100, Thierry Reding wrote:
+> > > On Sun, Jan 06, 2013 at 11:57:48AM -0800, Dmitry Torokhov wrote:
+> > > > On Sun, Jan 06, 2013 at 08:27:39PM +0100, Thierry Reding wrote:
+> > > > > On Sat, Jan 05, 2013 at 12:06:58AM -0800, Dmitry Torokhov wrote:
+> > > > > > On Sat, Jan 05, 2013 at 01:15:08PM +0530, Laxman Dewangan wrote:
+> > > > > [...]
+> > > > > > > @@ -735,25 +738,16 @@ static int tegra_kbc_probe(struct platf=
+orm_device *pdev)
+> > > > > > >  	spin_lock_init(&kbc->lock);
+> > > > > > >  	setup_timer(&kbc->timer, tegra_kbc_keypress_timer, (unsigne=
+d long)kbc);
+> > > > > > > =20
+> > > > > > > -	res =3D request_mem_region(res->start, resource_size(res), =
+pdev->name);
+> > > > > > > -	if (!res) {
+> > > > > > > -		dev_err(&pdev->dev, "failed to request I/O memory\n");
+> > > > > > > -		err =3D -EBUSY;
+> > > > > > > -		goto err_free_mem;
+> > > > > > > -	}
+> > > > > > > -
+> > > > > > > -	kbc->mmio =3D ioremap(res->start, resource_size(res));
+> > > > > > > +	kbc->mmio =3D devm_request_and_ioremap(&pdev->dev, res);
+> > > > > > >  	if (!kbc->mmio) {
+> > > > > > > -		dev_err(&pdev->dev, "failed to remap I/O memory\n");
+> > > > > > > -		err =3D -ENXIO;
+> > > > > > > -		goto err_free_mem_region;
+> > > > > > > +		dev_err(&pdev->dev, "Cannot request memregion/iomap addres=
+s\n");
+> > > > > > > +		return -EADDRNOTAVAIL;
+> > > > > >=20
+> > > > > > Erm, no, -EBUSY please.
+> > > > >=20
+> > > > > EADDRNOTAVAIL is the canonical error for devm_request_and_ioremap=
+()
+> > > > > failure. The kerneldoc comment in lib/devres.c even gives a short
+> > > > > example that uses this error code.
+> > > >=20
+> > > > I am sorry, but I do not consider a function that was added a little
+> > > > over a year ago as a canon. If you look at the uses of EADDRNOTAVAI=
+L it
+> > > > is used predominantly in networking code to indicate that attempted
+> > > > _network_ address is not available.
+> > >=20
+> > > EBUSY might be misleading, though. devm_request_and_ioremap() can fail
+> > > in both the request_mem_region() and ioremap() calls. Furthermore it'd
+> > > be good to settle on a consistent error-code instead of doing it
+> > > differently depending on subsystem and/or driver. Currently the vario=
+us
+> > > error codes used are:
+> > >=20
+> > > 	EBUSY, EADDRNOTAVAIL, ENXIO, ENOMEM, ENODEV, ENOENT, EINVAL,
+> > > 	EIO, EFAULT, EADDRINUSE
+> > >=20
+> > > Also if we can settle on one error code we should follow up with a pa=
+tch
+> > > to make it consistent across the tree and also update that kerneldoc
+> > > comment. I volunteer to do that if nobody else steps up. I'm also Cc'=
+ing
+> > > Wolfram (the original author), maybe he has some thoughts on this.
+> > >=20
+> >=20
+> > If you going to change all drivers make devm_request_and_ioremap()
+> > return ERR_PTR()-encoded errors and then we can differentiate what
+> > part of it failed.
+>=20
+> Yeah, that thought also crossed my mind. I'll give other people some
+> time to comment before hurling myself into preparing patches.
+
+I've prepared a patch that changes devm_request_and_ioremap() to return
+ERR_PTR()-encoded errors and adjusts all callers. As you can imagine it
+is a bit on the huge side. scripts/get_maintainer.pl lists 156 people
+and mailing lists. I've gone through the list, and as far as I can tell
+everyone on that list is actually affected by the patch, so there's not
+much potential for tuning it down.
+
+There is also the issue of whose tree this should go into. Unfortunately
+the patch can't be broken down into smaller chunks because it changes
+how the devm_request_and_ioremap() function's return value is handled in
+an incompatible way, so it won't be possible to gradually phase this in.
+Furthermore I can imagine that until the end of the release cycle new
+code may be added on which the same transformations need to be done. I
+have a semantic patch to do the bulk of the work, but quite a bit of
+coordination will be required.
+
+I'm adding Arnd and Greg on Cc, maybe they can advise on how best to
+handle this kind of patch.
+
+Thierry
+
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ9CknAAoJEN0jrNd/PrOhh0kP/2DM6RgWVZ+2DSN62B0yZdrp
+ZdAKkJyYXc2jAMtWJkI1hB6gddfkOGOcgCI5bVwimG08QVaSPi5Y65NLJHXjxfJr
+YnswsEP6+Xmo/UvUCoBHEhx41kNbUu7zIfZz15GHIa3ZHb2y3ZWpSZdLOLh8E8bb
+Z8PBhuwKAfYUqGOFbcz0DFJKnZypWtPO5leY2PH4WJO1KhtFou6FOp7HXdtYHxbT
+Cn5aGvHrG//g11aeqk1oq/gYKmiyopotRHw11AjARLzXdoc0zIIQLu5v5I0lrwV1
+dNZjhNZYl2Z9y0wwJguoMPdk1F9AkpDLebgKCr3JB5amm61AhP/XwQ9fYjFXuXyh
+t0PtOfwAq5yZUFyxGHFuEkxllRfCXbPHe/wfGZCl7usCiSBKm88AoUfpdkOTBZeC
+jPHr404Ymazwxx9BYNG0StFf7N9UkBMAydVbJxYt3Ru8HFROecqrQ+fPCvVD/Bxf
+/rg5Iw1rWXFRxSvH+ybnPW6aHq75ksbI8EDLKOB9CJsEMFtvU7OEimpcnTCLSLda
+q/KqBaWuD3PiStCetDgL1GV7QFAYh/Azxfsw0h8zzd6nD9w2L3wYtnzbV96dDDxG
+Si8xPf0oD+zAa+iddY9zL+NpBRC4AmDniYvq+8prxQKEo+c8J5pFx4LEVNZkCAVI
+wffnk8NAesxGL0ADiO21
+=l2O0
+-----END PGP SIGNATURE-----
+
+--tThc/1wpZn/ma/RB--
