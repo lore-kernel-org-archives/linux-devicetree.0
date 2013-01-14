@@ -1,46 +1,92 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] OF: Link platform device resources properly.
-Date: Mon, 14 Jan 2013 08:57:13 -0600
-Message-ID: <50F41CC9.1000105@gmail.com>
-References: <1357252284-5990-1-git-send-email-panto@antoniou-consulting.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 5/6] ARM: dts: Add basic dts include files for Samsung
+ S3C64xx SoCs
+Date: Mon, 14 Jan 2013 15:05:32 +0000
+Message-ID: <20130114150531.GE21142@e102568-lin.cambridge.arm.com>
+References: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com>
+ <1358039458-31960-6-git-send-email-tomasz.figa@gmail.com>
+ <20130114144841.GE7990@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1357252284-5990-1-git-send-email-panto@antoniou-consulting.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Matt Porter <mporter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Russ Dill <Russ.Dill@ti.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130114144841.GE7990@e106331-lin.cambridge.arm.com>
+Content-Disposition: inline
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Rutland <Mark.Rutland@arm.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "kwangwoo.lee@gmail.com" <kwangwoo.lee@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "mcuelenaere@gmail.com" <mcuelenaere@gmail.com>, "augulis.darius@gmail.com" <augulis.darius@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Dave Martin <dave.martin@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/03/2013 04:31 PM, Pantelis Antoniou wrote:
-> The resources of the platform devices created by the OF core were
-> not properly linked. Make sure that they are, so that we don't get
-> any crashes when trying to remove the device.
+On Mon, Jan 14, 2013 at 02:48:41PM +0000, Mark Rutland wrote:
+> Hello,
 > 
-> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
-> ---
->  drivers/of/device.c | 3 +++
->  1 file changed, 3 insertions(+)
+> This all looks good. I just have a couple of comments about the cpus node.
 > 
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 4c74e4f..d75fcaf 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -62,6 +62,9 @@ int of_device_add(struct platform_device *ofdev)
->  	if (!ofdev->dev.parent)
->  		set_dev_node(&ofdev->dev, of_node_to_nid(ofdev->dev.of_node));
->  
-> +	/* make sure we add the resources to the appropriate lists */
-> +	platform_device_link_resources(ofdev);
-> +
-
-Submit this with the patch that adds this function or state the
-dependency please.
-
-Rob
-
->  	return device_add(&ofdev->dev);
->  }
->  
+> On Sun, Jan 13, 2013 at 01:10:57AM +0000, Tomasz Figa wrote:
+> > This patch adds basic device tree definitions for Samsung S3C64xx SoCs.
+> > 
+> > Since all the SoCs in the series are very similar, the files are created
+> > hierarchically - one file for the whole series and then separate files
+> > for particular SoCs including the common one.
+> > 
+> > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
 > 
+> [...]
+> 
+> > diff --git a/arch/arm/boot/dts/s3c64xx.dtsi b/arch/arm/boot/dts/s3c64xx.dtsi
+> > new file mode 100644
+> > index 0000000..55d6e08
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/s3c64xx.dtsi
+> > @@ -0,0 +1,97 @@
+> > +/*
+> > + * Samsung's S3C64xx SoC series common device tree source
+> > + *
+> > + * Copyright (c) 2013 Tomasz Figa <tomasz.figa@gmail.com>
+> > + *
+> > + * Samsung's S3C64xx SoC series device nodes are listed in this file.
+> > + * Particular SoCs from S3C64xx series can include this file and provide
+> > + * values for SoCs specfic bindings.
+> > + *
+> > + * Note: This file does not include device nodes for all the controllers in
+> > + * S3C64xx SoCs. As device tree coverage for S3C64xx increases, additional
+> > + * nodes can be added to this file.
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +
+> > +/include/ "skeleton.dtsi"
+> > +
+> > +/ {
+> > +	cpus {
+> > +		cpu@0 {
+> > +			compatible = "arm,arm1176jzf-s";
+> > +		};
+> > +	};
+> 
+> You can drop the unit address from the cpu node - it's meant to be there to
+> differentiate multiple nodes (and is supposed to match the reg property, which
+> the 1176jzf-s can't have, as it doesn't have an MPIDR).
+
+Well, this is a point that I should consider since the kernel docs I wrote are
+misleading, they require the reg property that can not be there on UP.
+True, MPIDR does not exist in this case, but I have to document this in the
+bindings since it is unclear.
+
+> 
+> Also, "arm,arm1176jzf-s" isn't listed in the binding doc. There was a question
+> about how to maintain this list [1], but I can't seem to find a conclusion, if
+> any were reached.  It might be worth appending "arm,arm1176" to the compatible
+> list for the cpu node in case we want to enable something via dt for all 1176
+> variations.
+> 
+> Dave, Lorenzo, any thoughts?
+
+Eh, frankly I do not know how to handle this. Either we add a compatible
+string to the bindings anytime a DT gets merged in the kernel but how
+to maintain it, it has to be defined. Happy to hear some feedback on
+this.
+
+Lorenzo
