@@ -1,57 +1,92 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 0/4] mfd/regulator: tps65090: add DT support and
- suspend/resume cleanups
-Date: Mon, 14 Jan 2013 08:29:38 +0900
-Message-ID: <20130113232937.GQ5041@opensource.wolfsonmicro.com>
-References: <1356686981-4152-1-git-send-email-ldewangan@nvidia.com>
- <50EC1046.3000701@nvidia.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/6] ARM: common: vic: Parse interrupt and resume masks
+ from device tree
+Date: Sun, 13 Jan 2013 19:08:49 -0600
+Message-ID: <50F35AA1.1010902@gmail.com>
+References: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com> <1358039458-31960-2-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8HhMLSHvAouSipEr"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50EC1046.3000701@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "sameo@linux.intel.com" <sameo@linux.intel.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "lrg@ti.com" <lrg@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1358039458-31960-2-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, linux@arm.linux.org.uk, kwangwoo.lee@gmail.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, mcuelenaere@gmail.com, augulis.darius@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On 01/12/2013 07:10 PM, Tomasz Figa wrote:
+> This patch extends vic_of_init to parse valid interrupt sources
+> and resume sources masks from device tree.
+> 
+> If mask values are not specified in device tree, all sources
+> are assumed to be valid, as before this patch.
+> 
+> Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/arm/vic.txt | 6 ++++++
+>  arch/arm/common/vic.c                         | 7 ++++++-
+>  2 files changed, 12 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/vic.txt b/Documentation/devicetree/bindings/arm/vic.txt
+> index 266716b..bb7137c 100644
+> --- a/Documentation/devicetree/bindings/arm/vic.txt
+> +++ b/Documentation/devicetree/bindings/arm/vic.txt
+> @@ -18,6 +18,9 @@ Required properties:
+>  Optional properties:
+>  
+>  - interrupts : Interrupt source for parent controllers if the VIC is nested.
+> +- interrupt-mask : Bit mask of valid interrupt sources (defaults to all valid)
 
---8HhMLSHvAouSipEr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Can you explain why this is needed and is not just the OR of all
+interrupts described in the DT?
 
-On Tue, Jan 08, 2013 at 05:55:42PM +0530, Laxman Dewangan wrote:
+> +- wakeup-mask : Bit mask of interrupt sources that can wake up the system
+> +  (defaults to all allowed)
 
-> I am not sure that the patches are created on correct sequence for
-> adapting this in regulator subsystem and mfd subsystem.
-> Can you please review whether the changes split is fine or not?
-> Idea was to make independent patch for mfd and regulator so that
-> they can apply independently.
+Seems like this would be all VIC interrupts unless the wake-up handling
+is done in some shadow controller. If the former is true, then wake-up
+capability is really a property of individual devices. If the later,
+then this property would belong in that shadow controller.
 
-The addition of pdata to the header means that they can't be applied
-independantly but that's not the end of the world.
+Rob
 
---8HhMLSHvAouSipEr
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQ80NHAAoJELSic+t+oim9DQQP/3BZX1kTC5bm9upkt+JSD0Er
-UDq9cSrc4Uu6z/MaY7qNiPLCfnnNk/hiyuAvxrpHq9FC6lWqeIpvns5TJKzHHkLt
-0y82TdAguHVvVn6+3xiogbN96ouIfFVEC+/Y07lZnxeQSS9NVOkeF+R1Qkz9KEUJ
-/gTdpttm4PCUb2Ch8zj93zHVaG9nktmK81MPi+zl6jFmJyiKEWBtGO/vKCNKqMPJ
-d3LR5WoH3yRwtqglBafRRYLUzeVarfCUmjB6NT16EXU3SIUzYX8XQDh71BQM8A8K
-LxiehxEZyVGao5popuxiAXbSDy6gsvslOZ84tvzr93crz0sWWYULPvi5y7CtvLTI
-/NJsQRH6TKKJxPq7TMfgz/y7MUJ4gBOFyBj4mVEcnAn5xkCGJoMJtrFNC/WlJOmk
-mulPJ3EMJMJ9q3+360ZI7vqT3gXKypxlCXl2yHKq2L95EUE8fLIhnccxz39/dB56
-r21En4THZ0GuXCYmH75AWPg/lm3mXCp7C0lAz1d+wA6M6JRgIXecfvBXhuMMSuOD
-jUoPbNYE52fXFcUeBJ0rMUlh7WZWN3/bi67juuGWO1wySrjKKBQUhZqUUS0kjgkI
-aywMq1IC0R8VHe0mx0r9wArqmNbnR6T8BZ2Df7nPQIRWWcmpSrmOCQOnxiGgloR6
-OKmfmWhLGEFi7Csta4og
-=KBIN
------END PGP SIGNATURE-----
-
---8HhMLSHvAouSipEr--
+>  
+>  Example:
+>  
+> @@ -26,4 +29,7 @@ Example:
+>  		interrupt-controller;
+>  		#interrupt-cells = <1>;
+>  		reg = <0x60000 0x1000>;
+> +
+> +		interrupt-mask = <0xffffff7f>;
+> +		wakeup-mask = <0x0000ff7f>;
+>  	};
+> diff --git a/arch/arm/common/vic.c b/arch/arm/common/vic.c
+> index e4df17c..c2889da 100644
+> --- a/arch/arm/common/vic.c
+> +++ b/arch/arm/common/vic.c
+> @@ -407,6 +407,8 @@ void __init vic_init(void __iomem *base, unsigned int irq_start,
+>  int __init vic_of_init(struct device_node *node, struct device_node *parent)
+>  {
+>  	void __iomem *regs;
+> +	u32 interrupt_mask = ~0;
+> +	u32 wakeup_mask = ~0;
+>  
+>  	if (WARN(parent, "non-root VICs are not supported"))
+>  		return -EINVAL;
+> @@ -415,10 +417,13 @@ int __init vic_of_init(struct device_node *node, struct device_node *parent)
+>  	if (WARN_ON(!regs))
+>  		return -EIO;
+>  
+> +	of_property_read_u32(node, "interrupt-mask", &interrupt_mask);
+> +	of_property_read_u32(node, "wakeup-mask", &wakeup_mask);
+> +
+>  	/*
+>  	 * Passing -1 as first IRQ makes the simple domain allocate descriptors
+>  	 */
+> -	__vic_init(regs, -1, ~0, ~0, node);
+> +	__vic_init(regs, -1, interrupt_mask, wakeup_mask, node);
+>  
+>  	return 0;
+>  }
+> 
