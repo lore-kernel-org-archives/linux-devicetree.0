@@ -1,69 +1,171 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: Early kernel hang with big DTB appended
-Date: Mon, 14 Jan 2013 17:13:09 -0500 (EST)
-Message-ID: <alpine.LFD.2.02.1301141655570.6300@xanadu.home>
-References: <7811936.npteFbuYu2@amdc1227> <20130111164531.GC13025@pengutronix.de>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH v2 2/4] input: keyboard: tegra: use devm_* for resource
+ allocation
+Date: Mon, 14 Jan 2013 23:15:51 +0100
+Message-ID: <20130114221551.GA30020@avionic-0098.adnet.avionic-design.de>
+References: <1357371910-3164-1-git-send-email-ldewangan@nvidia.com>
+ <1357371910-3164-3-git-send-email-ldewangan@nvidia.com>
+ <20130105080658.GA1315@core.coreip.homeip.net>
+ <20130106192739.GA11566@avionic-0098.adnet.avionic-design.de>
+ <20130106195748.GA28212@core.coreip.homeip.net>
+ <20130109070745.GA12782@avionic-0098.adnet.avionic-design.de>
+ <20130109091939.GA4369@core.coreip.homeip.net>
+ <20130109092352.GA28037@avionic-0098.adnet.avionic-design.de>
+ <20130114154959.GA25049@avionic-0098.adnet.avionic-design.de>
+ <20130114161644.GC14721@kroah.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130111164531.GC13025@pengutronix.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Tomasz Figa <t.figa@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, kgene.kim@samsung.com, thomas.abraham@linaro.org, bones@secretlab.ca, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="AqsLC8rIMeq19msA"
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130114161644.GC14721@kroah.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, Wolfram Sang <w.sang@pengutronix.de>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Jan 2013, Sascha Hauer wrote:
 
-> On Thu, Jan 03, 2013 at 04:55:00PM +0100, Tomasz Figa wrote:
-> > Hi,
-> > 
-> > I'm observing strange behavior when booting 3.8-rc1 and -rc2 with appended 
-> > DTB. The kernel hangs very early when the DTB is bigger than some 
-> > threshold somewhere around 24 KiB. With fullest possible low level UART 
-> > debugging (and printk patched to use printascii) I'm receiving following 
-> > output:
-> > 
-> > Uncompressing Linux... done, booting the kernel.
-> > Booting Linux on physical CPU 0xa00
-> > Linux version 3.8.0-rc1-00073-gdf6efca-dirty (t.figa@amdc1227) (gcc 
-> > version 4.5.2 (Gentoo 4.5.2 p1.2, pie-0.4.5) ) #2 SMP PREEMPT Thu Jan 3 
-> > 15:37:35 CET 2013
-> > CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7d
-> > CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-> > 
-> > I tested on two Exynos-based boards (exynos4210-trats and one internal 
-> > exynos4412-based board) and same happens on both.
-> > 
-> > Do you have any ideas?
-> 
-> Another thing besides the things already mentioned is that the dtb may
-> not cross a 1MiB boundary. The Kernel uses a single 1Mib section
-> (aligned to 1Mib) to initially map the dtb. Once you cross that boundary
-> parts of the dtb won't be accessible for the Kernel anymore.
+--AqsLC8rIMeq19msA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Crap.  You're right.  This patch should fix this issue.
+On Mon, Jan 14, 2013 at 08:16:44AM -0800, Greg Kroah-Hartman wrote:
+> On Mon, Jan 14, 2013 at 04:49:59PM +0100, Thierry Reding wrote:
+> > On Wed, Jan 09, 2013 at 10:23:52AM +0100, Thierry Reding wrote:
+> > > On Wed, Jan 09, 2013 at 01:19:39AM -0800, Dmitry Torokhov wrote:
+> > > > On Wed, Jan 09, 2013 at 08:07:45AM +0100, Thierry Reding wrote:
+> > > > > On Sun, Jan 06, 2013 at 11:57:48AM -0800, Dmitry Torokhov wrote:
+> > > > > > On Sun, Jan 06, 2013 at 08:27:39PM +0100, Thierry Reding wrote:
+> > > > > > > On Sat, Jan 05, 2013 at 12:06:58AM -0800, Dmitry Torokhov wro=
+te:
+> > > > > > > > On Sat, Jan 05, 2013 at 01:15:08PM +0530, Laxman Dewangan w=
+rote:
+> > > > > > > [...]
+> > > > > > > > > @@ -735,25 +738,16 @@ static int tegra_kbc_probe(struct p=
+latform_device *pdev)
+> > > > > > > > >  	spin_lock_init(&kbc->lock);
+> > > > > > > > >  	setup_timer(&kbc->timer, tegra_kbc_keypress_timer, (uns=
+igned long)kbc);
+> > > > > > > > > =20
+> > > > > > > > > -	res =3D request_mem_region(res->start, resource_size(re=
+s), pdev->name);
+> > > > > > > > > -	if (!res) {
+> > > > > > > > > -		dev_err(&pdev->dev, "failed to request I/O memory\n");
+> > > > > > > > > -		err =3D -EBUSY;
+> > > > > > > > > -		goto err_free_mem;
+> > > > > > > > > -	}
+> > > > > > > > > -
+> > > > > > > > > -	kbc->mmio =3D ioremap(res->start, resource_size(res));
+> > > > > > > > > +	kbc->mmio =3D devm_request_and_ioremap(&pdev->dev, res);
+> > > > > > > > >  	if (!kbc->mmio) {
+> > > > > > > > > -		dev_err(&pdev->dev, "failed to remap I/O memory\n");
+> > > > > > > > > -		err =3D -ENXIO;
+> > > > > > > > > -		goto err_free_mem_region;
+> > > > > > > > > +		dev_err(&pdev->dev, "Cannot request memregion/iomap ad=
+dress\n");
+> > > > > > > > > +		return -EADDRNOTAVAIL;
+> > > > > > > >=20
+> > > > > > > > Erm, no, -EBUSY please.
+> > > > > > >=20
+> > > > > > > EADDRNOTAVAIL is the canonical error for devm_request_and_ior=
+emap()
+> > > > > > > failure. The kerneldoc comment in lib/devres.c even gives a s=
+hort
+> > > > > > > example that uses this error code.
+> > > > > >=20
+> > > > > > I am sorry, but I do not consider a function that was added a l=
+ittle
+> > > > > > over a year ago as a canon. If you look at the uses of EADDRNOT=
+AVAIL it
+> > > > > > is used predominantly in networking code to indicate that attem=
+pted
+> > > > > > _network_ address is not available.
+> > > > >=20
+> > > > > EBUSY might be misleading, though. devm_request_and_ioremap() can=
+ fail
+> > > > > in both the request_mem_region() and ioremap() calls. Furthermore=
+ it'd
+> > > > > be good to settle on a consistent error-code instead of doing it
+> > > > > differently depending on subsystem and/or driver. Currently the v=
+arious
+> > > > > error codes used are:
+> > > > >=20
+> > > > > 	EBUSY, EADDRNOTAVAIL, ENXIO, ENOMEM, ENODEV, ENOENT, EINVAL,
+> > > > > 	EIO, EFAULT, EADDRINUSE
+> > > > >=20
+> > > > > Also if we can settle on one error code we should follow up with =
+a patch
+> > > > > to make it consistent across the tree and also update that kernel=
+doc
+> > > > > comment. I volunteer to do that if nobody else steps up. I'm also=
+ Cc'ing
+> > > > > Wolfram (the original author), maybe he has some thoughts on this.
+> > > > >=20
+> > > >=20
+> > > > If you going to change all drivers make devm_request_and_ioremap()
+> > > > return ERR_PTR()-encoded errors and then we can differentiate what
+> > > > part of it failed.
+> > >=20
+> > > Yeah, that thought also crossed my mind. I'll give other people some
+> > > time to comment before hurling myself into preparing patches.
+> >=20
+> > I've prepared a patch that changes devm_request_and_ioremap() to return
+> > ERR_PTR()-encoded errors and adjusts all callers. As you can imagine it
+> > is a bit on the huge side. scripts/get_maintainer.pl lists 156 people
+> > and mailing lists. I've gone through the list, and as far as I can tell
+> > everyone on that list is actually affected by the patch, so there's not
+> > much potential for tuning it down.
+> >=20
+> > There is also the issue of whose tree this should go into. Unfortunately
+> > the patch can't be broken down into smaller chunks because it changes
+> > how the devm_request_and_ioremap() function's return value is handled in
+> > an incompatible way, so it won't be possible to gradually phase this in.
+> > Furthermore I can imagine that until the end of the release cycle new
+> > code may be added on which the same transformations need to be done. I
+> > have a semantic patch to do the bulk of the work, but quite a bit of
+> > coordination will be required.
+> >=20
+> > I'm adding Arnd and Greg on Cc, maybe they can advise on how best to
+> > handle this kind of patch.
+>=20
+> You should provide a "wrapper" function that does the correct return
+> value, convert drivers over to it, and then, when everyone is changed,
+> drop the old call.  To change 156 different drivers all at once, in a
+> way that is not detectable by the compiler breaking the build, is not a
+> good thing to do at all.
+>=20
+> By doing it in this manner, it will take longer, but you can push the
+> patches through the different maintainer's trees.  If they are slow,
+> I'll be glad to take the remaining patches in my driver-core tree to do
+> the final bits.
 
-@Tomasz: please could you confirm this fixes your initial problem?
+It certainly sounds like a less complicated way to do it. But it also
+involves adding a function with a made up name and drop a function with
+a perfectly good name instead. I wouldn't even know what name to choose
+for the new API.
 
+Thierry
 
-diff --git a/arch/arm/kernel/head.S b/arch/arm/kernel/head.S
-index 4eee351f46..61fcb18c7e 100644
---- a/arch/arm/kernel/head.S
-+++ b/arch/arm/kernel/head.S
-@@ -246,6 +246,7 @@ __create_page_tables:
- 
- 	/*
- 	 * Then map boot params address in r2 if specified.
-+	 * We map 2 sections in case the ATAGs/DTB crosses a section boundary.
- 	 */
- 	mov	r0, r2, lsr #SECTION_SHIFT
- 	movs	r0, r0, lsl #SECTION_SHIFT
-@@ -253,6 +254,8 @@ __create_page_tables:
- 	addne	r3, r3, #PAGE_OFFSET
- 	addne	r3, r4, r3, lsr #(SECTION_SHIFT - PMD_ORDER)
- 	orrne	r6, r7, r0
-+	strne	r6, [r3], #1 << PMD_ORDER
-+	addne	r6, r6, #1 << SECTION_SHIFT
- 	strne	r6, [r3]
- 
- #ifdef CONFIG_DEBUG_LL
+--AqsLC8rIMeq19msA
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ9IOXAAoJEN0jrNd/PrOhpzIP/1nnZVmPvoVuQmLXjf0NZ7rf
+5WIrjY9B5LSpCr1vqt2KIPAoYuOwM6PPTU2jmk7yl0TV2ZMzAj4l7ooTPQqrGhYy
+3Q9jwdrO2MLPRT2jW+/6c4UFBbK0M++gLw5AWBkDNPlocAyd2LlqJQIcJZBekfaI
+UNeZnVGaXCd8oHDKQeYzzet+LG486eBjX3HwxlnsCHyLSjA/HM/x4UG10EvM3+qA
+2xmUFuEKfIvqVEeQg1zNIyXeHnU47rMb9LmpANyau1rjE9EZtvgyBt9fDhutpEcj
+cg9SQWjQakZ67tTz3WP9NBKFaWXi7gMZiyw448E1LM+NABM+qTmzQCDHTDoenCyq
+PxLeMOhctSBSHva9uT2hoOycFOS8hLR0twKWxwpakSAQqMv6S/NRZnnsiWDftmeT
+pKgjwQb6XkSNT+01lAA044+Lnhn7Lk4JGN2uE0bXiq4zO1n0Iknyp9BwWWzmInEM
+6S+fTfelg5npfm02NgvzLDY9sVCqyqZYNQzNvpVsd2kHpEugAd+eAAwaOna8Troh
+zM6FWeLtp0YP3NceFsNn4txDdbi9G6UANiKiMPdspglOSSp7ldN+60JG25SKF1Wy
+0YO2a3kynWVGRi5njTAArt0LdHmYqLvHeuJKTvrQ3sDBEaXiKhLhspqveNqO9JGz
+Qx3E80c9Yj6B66x9jmeY
+=1of4
+-----END PGP SIGNATURE-----
+
+--AqsLC8rIMeq19msA--
