@@ -1,48 +1,131 @@
-From: Alex Courbot <acourbot@nvidia.com>
-Subject: Re: [PATCH 0/4] gpio: introduce descriptor-based interface
-Date: Mon, 14 Jan 2013 19:21:31 +0900
-Message-ID: <50F3DC2B.6000603@nvidia.com>
-References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com> <201301091046.13020.arnd@arndb.de> <2270940.DTxEYMZtED@percival> <201301101008.45091.arnd@arndb.de>
+From: Hiroshi Doyu <hdoyu@nvidia.com>
+Subject: Re: [PATCH 4/4] ARM: tegra: Set SCU base address dynamically from DT
+Date: Mon, 14 Jan 2013 11:43:30 +0100
+Message-ID: <20130114.124330.851549576173829665.hdoyu@nvidia.com>
+References: <1355725087-11363-1-git-send-email-hdoyu@nvidia.com><1355725087-11363-4-git-send-email-hdoyu@nvidia.com><50CF258E.2080207@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <201301101008.45091.arnd@arndb.de>
-Sender: linux-arch-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Mike Frysinger <vapier@gentoo.org>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@linaro.org>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, gnurou@gmail.com, linux-m68k@lists.linux-m68k.org, uclinux-dist-devel@blackfin.uclinux.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <50CF258E.2080207@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "robherring2@gmail.com" <robherring2@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob@landley.net" <rob@landley.net>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/10/2013 07:08 PM, Arnd Bergmann wrote:
-> I've tried to find platforms that don't yet use GPIOLIB and fortunately
-> there are very few left:
->
-> I found two that provide the generic gpio interfaces when gpiolib
-> is disabled, but use gpiolib otherwise for the same hardware,
-> arch/m68k/include/asm/mcfgpio.h and arch/blackfin/include/asm/gpio.h.
-> I would assume that we can simply remove the non-gpiolib shortcut
-> here at cost of a small overhead.
+Rob Herring <robherring2@gmail.com> wrote @ Mon, 17 Dec 2012 15:00:46 +0100:
 
-I performed a search on my side too (checking configurations options 
-which select GENERIC_GPIO but not ARCH_REQUIRE_GPIOLIB) and found the 
-same list. This takes some time btw - many platforms use this combo to 
-make GPIO support optional. Can I ask how you figured out these two archs?
+> On 12/17/2012 12:18 AM, Hiroshi Doyu wrote:
+> > Set Snoop Control Unit(SCU) register base address dynamically from DT.
+> > 
+> > Signed-off-by: Hiroshi Doyu <hdoyu@nvidia.com>
+> > ---
+> >  arch/arm/mach-tegra/platsmp.c |   23 ++++++++++++++++++++---
+> >  1 file changed, 20 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm/mach-tegra/platsmp.c b/arch/arm/mach-tegra/platsmp.c
+> > index 1b926df..45c0b79 100644
+> > --- a/arch/arm/mach-tegra/platsmp.c
+> > +++ b/arch/arm/mach-tegra/platsmp.c
+> > @@ -18,6 +18,8 @@
+> >  #include <linux/jiffies.h>
+> >  #include <linux/smp.h>
+> >  #include <linux/io.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_address.h>
+> >  
+> >  #include <asm/cacheflush.h>
+> >  #include <asm/hardware/gic.h>
+> > @@ -36,7 +38,7 @@
+> >  
+> >  extern void tegra_secondary_startup(void);
+> >  
+> > -static void __iomem *scu_base = IO_ADDRESS(TEGRA_ARM_PERIF_BASE);
+> > +static void __iomem *scu_base;
+> >  
+> >  #define EVP_CPU_RESET_VECTOR \
+> >  	(IO_ADDRESS(TEGRA_EXCEPTION_VECTORS_BASE) + 0x100)
+> > @@ -143,14 +145,28 @@ done:
+> >  	return status;
+> >  }
+> >  
+> > +static const struct of_device_id cortex_a9_scu_match[] __initconst = {
+> > +	{ .compatible = "arm,cortex-a9-scu", },
+> > +	{}
+> > +};
+> > +
+> >  /*
+> >   * Initialise the CPU possible map early - this describes the CPUs
+> >   * which may be present or become present in the system.
+> >   */
+> >  static void __init tegra_smp_init_cpus(void)
+> >  {
+> > -	unsigned int i, ncores = scu_get_core_count(scu_base);
+> > +	struct device_node *np;
+> > +	unsigned int i, ncores = 1;
+> > +
+> > +	np = of_find_matching_node(NULL, cortex_a9_scu_match);
+> > +	if (!np)
+> > +		return;
+> > +	scu_base = of_iomap(np, 0);
+> 
+> Did you actually test this? Unless something changed, ioremap does not
+> work this early. The only reason to have it mapped this early is to get
+> the core count, but that doesn't work on A15 or A7. So we really need to
+> get core count/mask in a standard way. At least some work to get core
+> count from DT went into 3.8.
+> 
+> BTW, you can get the scu address on the A9 by reading cp15 register:
+> 
+> 	/* Get SCU base */
+> 	asm("mrc p15, 4, %0, c15, c0, 0" : "=r" (base));
+> 
+> It's still probably good to have the DT node, but the reg property can
+> be optional in this case.
+> 
+> We need to move away from having the DT matching code within the
+> platforms. This should all be moved to the scu code in a scu_of_init
+> function that could be called from common code.
 
-I'd assume the overhead induced by forcibly compiling GPIOlib is 
-neglectable, but let's make sure this is ok indeed - Mike, Geert, would 
-you mind if selecting GENERIC_GPIO enforced GPIOlib to be compiled in, 
-effectively making it mandatory to implement the generic GPIO interface 
-using GPIOlib? Both your implementations support GPIOlib already, but 
-can also work without it, and that would make that possibility obsolete.
+If we can get SCU base address from CP15, do we still need SCU entry
+in DT? If not, the following would be the only API to get SCU base?
 
-> Then there are a bunch that use gpiolib but have a nontrivial
-> implementation of gpio_get_value and other functions. I'm not sure
-> if these are a problematic with your code.
+>From 9bbecb50759f39d9c762977145407ea4f8a4d5ac Mon Sep 17 00:00:00 2001
+From: Hiroshi Doyu <hdoyu@nvidia.com>
+Date: Mon, 14 Jan 2013 12:35:33 +0200
+Subject: [PATCH 1/1] ARM: Add API to detect SCU base address from CP15
 
-AFAICT these all implement an inline path that bypasses GPIOlib when the 
-GPIO number is known at compile time, for faster bitbanging I presume. 
-It should be totally harmless to keep them. Unfortunately, I don't think 
-it would be possible to have a similar trick using handlers.
+Add API to detect SCU base address from CP15.
 
-Thanks,
-Alex.
+Signed-off-by: Hiroshi Doyu <hdoyu@nvidia.com>
+---
+ arch/arm/include/asm/smp_scu.h |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm/include/asm/smp_scu.h b/arch/arm/include/asm/smp_scu.h
+index 4eb6d00..6015ede 100644
+--- a/arch/arm/include/asm/smp_scu.h
++++ b/arch/arm/include/asm/smp_scu.h
+@@ -6,6 +6,20 @@
+ #define SCU_PM_POWEROFF	3
+ 
+ #ifndef __ASSEMBLER__
++static inline phys_addr_t scu_get_base(void)
++{
++	phys_addr_t pa;
++	unsigned long part_number = read_cpuid_part_number();
++
++	switch (part_number) {
++	case ARM_CPU_PART_CORTEX_A9:
++		/* Get SCU physical base */
++		asm("mrc p15, 4, %0, c15, c0, 0" : "=r" (pa));
++		return pa;
++	default:
++		return 0;
++	}
++}
+ unsigned int scu_get_core_count(void __iomem *);
+ void scu_enable(void __iomem *);
+ int scu_power_mode(void __iomem *, unsigned int);
+-- 
+1.7.9.5
