@@ -1,94 +1,101 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: PMU node location
-Date: Mon, 14 Jan 2013 10:36:10 +0100
-Message-ID: <CAHTX3dLm-LQzPfbRvaPMbOeTg72pBCy2+KqsnftLJKpgFskW9A@mail.gmail.com>
-References: <50EEC672.5050405@monstr.eu> <50F18742.5070501@gmail.com>
- <20130114091834.GK19765@e106331-lin.cambridge.arm.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: tegra: Use DT /cpu node to detect number of
+ CPU core
+Date: Mon, 14 Jan 2013 10:49:25 +0100
+Message-ID: <20130114.114925.1476619399284636466.hdoyu@nvidia.com>
+References: <1358149970-28156-1-git-send-email-hdoyu@nvidia.com><1358149970-28156-2-git-send-email-hdoyu@nvidia.com><20130114092720.GX23505@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130114091834.GK19765-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130114092720.GX23505-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org" <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2013/1/14 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
-> On Sat, Jan 12, 2013 at 03:54:42PM +0000, Rob Herring wrote:
->> On 01/10/2013 07:47 AM, Michal Simek wrote:
->> > Hi Rob, Mark, Grant and others,
->> >
->> > I want to check with you the location of ARM pmu node
->> > I see that
->> > 1) highbank and dbx5x0 have it in soc node
->> >
->> > 2) vexpress and tegra have no main bus and pmu is in root like all
->> > others devices.
->> > (Any reason no to have main bus? Does it mean that there is no bus or
->> > that all
->> > devices are accessible?)
->>
->> That seems really wrong in general. Any memory mapped device is on a bus
->> of some kind. I'm not sure the reasoning. Perhaps Stephen can explain.
->>
->> > 3) omap2/omap3 have added pmu node to root node(mailing list)
->> >
->> > 4) Just for completeness no platform has it in the bus.
->> >
->> >
->> > That's why I have obvious question what it is proper location for pmu node?
->>
->> Obviously, highbank is the true and correct way. ;)
->>
->> The pmu is part of the cpu, so it could be part of /cpus. That may cause
->> problems having non-cpu nodes and it would not get probed (although
->> technically that is a Linux problem and should not influence the DT).
->
-> If we were going to allow cpu nodes in /cpus, I'd rather we supported a pmu
-> node in each /cpus/cpuN node. That way the description of heterogeneous
-> clusters would be intuitive (each pmu node representing a single cpu-affine
-> unit rather than the collection of all cpu-affine units). That way describing
-> heterogeneous clusters would become intuitive (cpu affinity would be implicit,
-> and wouldn't have to be described separately as with my proposed binding [1]).
->
-> and I'm not sure how you'd handle PMUs which used the same PPI
+Hi Russell,
 
-This is the same as is done with mpcore private timers which uses the same
-PPI. Based on gic binding it is solved by 3rd cell (flags) "bits[15:8]
-PPI interrupt cpu mask"
+Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote @ Mon, 14 Jan 2013 10:27:20 +0100:
 
-This also open one more question for me because we have mpcore timers
-on the bus but they are in mpcore. They should be also moved to /cpu/cpuN node.
+> On Mon, Jan 14, 2013 at 09:52:50AM +0200, Hiroshi Doyu wrote:
+> > +	if (!arm_dt_cpu_map_valid())
+> > +		set_cpu_possible(0, true);
+> 
+> You don't need to do any of this (and, therefore, I don't think you even
+> need the first patch.)
+> 
+> The generic boot code will set CPU0 as possible, present and online.  Think
+> about it: you're booting on that very CPU so it better be possible, present
+> and online.  If it isn't, what CPU is executing your code?
+> 
+> arm_dt_init_cpu_maps() will only ever set _additional_ CPUs in the possible
+> map.
+> 
+> Ergo, by the time the above code is run, CPU0 will already be marked as
+> possible.  Therefore, the above code and arm_dt_cpu_map_valid() is not
+> required.
 
-		ps7_scutimer_0: ps7-scutimer@f8f00600 {
-			compatible = "xlnx,ps7-scutimer-1.00.a", "arm,cortex-a9-twd-timer";
-			interrupt-parent = <&ps7_scugic_0>;
-			interrupts = <1 13 0x0301>;
-			reg = < 0xf8f00600 0x20 >;
-		} ;
+Right.
 
+In Tegra, we've decided to not use SCU based detection at all any more
+and to continue with a single core even when DT cpu detection
+fails. For Tegra, "arm_dt_cpu_map_valid()" is not necessary. For other
+SoCs, this would be necessary when they want to detect again with
+SCU.
 
-btw: what is the main reason for Soc node name? Because of
-highbank.dts includes ecx-common.dtsi
-where soc is used as bus.
+Now this original Tegra patch would be independet of the 1st patch as
+below:
 
-Thanks,
-Michal
+>From 36061aff7a772524a1d1785884889619042d4445 Mon Sep 17 00:00:00 2001
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Date: Mon, 26 Nov 2012 12:25:14 +0200
+Subject: [PATCH 1/1] ARM: tegra: Use DT /cpu node to detect number of CPU
+ core
 
+SCU based detection only works with Cortex-A9 MP and it doesn't
+support ones with multiple clusters. The only way to detect number of
+CPU core correctly is with DT /cpu node.
 
+Tegra SoCs decided to use DT detection as the only way and to not use
+SCU based detection at all. Even if DT /cpu node based detection
+fails, it continues with a single core
+
+Signed-off-by: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Based on the discussion:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/140608.html
+---
+ arch/arm/mach-tegra/platsmp.c |   15 ---------------
+ 1 file changed, 15 deletions(-)
+
+diff --git a/arch/arm/mach-tegra/platsmp.c b/arch/arm/mach-tegra/platsmp.c
+index 6867030..689ee4b 100644
+--- a/arch/arm/mach-tegra/platsmp.c
++++ b/arch/arm/mach-tegra/platsmp.c
+@@ -177,23 +177,8 @@ done:
+ 	return status;
+ }
+ 
+-/*
+- * Initialise the CPU possible map early - this describes the CPUs
+- * which may be present or become present in the system.
+- */
+ static void __init tegra_smp_init_cpus(void)
+ {
+-	unsigned int i, ncores = scu_get_core_count(scu_base);
+-
+-	if (ncores > nr_cpu_ids) {
+-		pr_warn("SMP: %u cores greater than maximum (%u), clipping\n",
+-			ncores, nr_cpu_ids);
+-		ncores = nr_cpu_ids;
+-	}
+-
+-	for (i = 0; i < ncores; i++)
+-		set_cpu_possible(i, true);
+-
+ 	set_smp_cross_call(gic_raise_softirq);
+ }
+ 
 -- 
-Michal Simek, Ing. (M.Eng)
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian
+1.7.9.5
