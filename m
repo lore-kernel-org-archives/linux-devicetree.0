@@ -1,89 +1,60 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 3/4] Enable ecc-mode selection in the driver
-Date: Tue, 15 Jan 2013 13:51:19 +0100
-Message-ID: <20130115125119.GH13482@lunn.ch>
-References: <cover.1358242644.git.s.peter@mpl.ch>
- <2d08c4c072fd4922a6056362adb96a455307d583.1358242644.git.s.peter@mpl.ch>
+From: Sergei Shtylyov <sshtylyov@mvista.com>
+Subject: Re: [RFC PATCH 2/7] ARM: OMAP: devices: create device for usb part
+ of control module
+Date: Tue, 15 Jan 2013 16:53:30 +0400
+Message-ID: <50F5514A.2040207@mvista.com>
+References: <1358239378-10030-1-git-send-email-kishon@ti.com> <1358239378-10030-3-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2d08c4c072fd4922a6056362adb96a455307d583.1358242644.git.s.peter-R0yVo0h44Ow@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stefan Peter <s.peter-R0yVo0h44Ow@public.gmane.org>
-Cc: andrew-g2DYL2Zd6BY@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1358239378-10030-3-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: grant.likely@secretlab.ca, b-cousson@ti.com, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, balbi@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 15, 2013 at 01:13:12PM +0100, Stefan Peter wrote:
-> In order to be able to use the ecc-mode, add the bch module to the default
-> settings for the kirwood boards and enable the activation in orin-nand.c
-> 
-> Signed-off-by: Stefan Peter <s.peter-R0yVo0h44Ow@public.gmane.org>
+Hello.
+
+On 15-01-2013 12:42, Kishon Vijay Abraham I wrote:
+
+> A seperate driver has been added to handle the usb part of control
+> module. A device for the above driver is created here, using the register
+> address information to be used by the driver for powering on the PHY and
+> for writing to the mailbox.
+
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 > ---
-> diff --git a/arch/arm/configs/kirkwood_defconfig b/arch/arm/configs/kirkwood_defconfig
-> index 93f3794..4a9d3f7 100644
-> --- a/arch/arm/configs/kirkwood_defconfig
-> +++ b/arch/arm/configs/kirkwood_defconfig
-> @@ -84,6 +84,7 @@ CONFIG_MTD_CFI_STAA=y
->  CONFIG_MTD_PHYSMAP=y
->  CONFIG_MTD_M25P80=y
->  CONFIG_MTD_NAND=y
-> +CONFIG_MTD_NAND_ECC_BCH=y
->  CONFIG_MTD_NAND_ORION=y
->  CONFIG_BLK_DEV_LOOP=y
->  # CONFIG_SCSI_PROC_FS is not set
-> diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
-> index cd72b92..1a35257 100644
-> --- a/drivers/mtd/nand/orion_nand.c
-> +++ b/drivers/mtd/nand/orion_nand.c
-> @@ -14,6 +14,7 @@
->  #include <linux/module.h>
->  #include <linux/platform_device.h>
->  #include <linux/of.h>
-> +#include <linux/of_mtd.h>
->  #include <linux/mtd/mtd.h>
->  #include <linux/mtd/nand.h>
->  #include <linux/mtd/partitions.h>
-> @@ -130,6 +131,7 @@ static int __init orion_nand_probe(struct platform_device *pdev)
->  		if (!of_property_read_u32(pdev->dev.of_node,
->  						"chip-delay", &val))
->  			board->chip_delay = (u8)val;
-> +		board->ecc_mode = of_get_nand_ecc_mode(pdev->dev.of_node);
+>   arch/arm/mach-omap2/devices.c |   50 +++++++++++++++++++++++++++++++++++++++++
+>   1 file changed, 50 insertions(+)
 
->  	} else
->  		board = pdev->dev.platform_data;
->  
-> @@ -140,7 +142,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
->  	nc->IO_ADDR_R = nc->IO_ADDR_W = io_base;
->  	nc->cmd_ctrl = orion_nand_cmd_ctrl;
->  	nc->read_buf = orion_nand_read_buf;
-> -	nc->ecc.mode = NAND_ECC_SOFT;
-> +	nc->ecc.mode = board->ecc_mode == NAND_ECC_SOFT_BCH ?
-> +		NAND_ECC_SOFT_BCH : NAND_ECC_SOFT;
+> diff --git a/arch/arm/mach-omap2/devices.c b/arch/arm/mach-omap2/devices.c
+> index 5e304d0..a761faf4 100644
+> --- a/arch/arm/mach-omap2/devices.c
+> +++ b/arch/arm/mach-omap2/devices.c
+[...]
+> @@ -254,6 +255,54 @@ static inline void omap_init_camera(void)
+>   #endif
+>   }
+>
+> +#if (defined(CONFIG_OMAP_CONTROL_USB) || \
+> +				defined(CONFIG_OMAP_CONTROL_USB_MODULE))
 
-Hi Stefan
+    () around || not needed, and you're indenting the second line too much.
 
-What about a user that wants one of the other valid values?
-NAND_ECC_OOB_FIRST, NAND_ECC_HW_SYNDROME, etc.
+> +static inline void __init omap_init_control_usb(void)
+> +{
+> +	int ret = 0;
 
-Would:
+    Initializer not needed.
 
-	if (IS_ERR(board->ecc_mode)) {
-		nc->ecc.mode = NAND_ECC_SOFT;
-		dev_info(&pdev->dev, "Defaulting to NAND_ECC_SOFT");
-	} else
-		nc->ecc.mode = board->ecc_mode
+> +
+> +	if (cpu_is_omap44xx()) {
+> +		ret = platform_device_register(&omap4_control_usb);
+> +		if (ret)
+> +			pr_err("Error registering omap_control_usb device: %d\n"
+> +			    , ret);
 
-be better?
+    Please leave the comma on the previous line.
 
-   Andrew
+WBR, Sergei
