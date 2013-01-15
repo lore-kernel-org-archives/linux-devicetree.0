@@ -1,8 +1,8 @@
 From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH 3/6] arm: mvebu: Enable USB controllers on Armada 370 Mirabox
- board
-Date: Tue, 15 Jan 2013 06:54:27 -0300
-Message-ID: <1358243670-11935-3-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH 4/6] arm: mvebu: Enable USB controllers on Armada XP
+ evaluation board
+Date: Tue, 15 Jan 2013 06:54:28 -0300
+Message-ID: <1358243670-11935-4-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1358243670-11935-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -27,16 +27,16 @@ Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
 ---
- arch/arm/boot/dts/armada-370-mirabox.dts |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/armada-xp-db.dts |   12 ++++++++++++
+ 1 files changed, 12 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-mirabox.dts b/arch/arm/boot/dts/armada-370-mirabox.dts
-index 1864820..dd0c57d 100644
---- a/arch/arm/boot/dts/armada-370-mirabox.dts
-+++ b/arch/arm/boot/dts/armada-370-mirabox.dts
-@@ -62,5 +62,13 @@
- 			 * Wifi/Bluetooth chip
- 			 */
+diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
+index c7035c5..c84e1fe 100644
+--- a/arch/arm/boot/dts/armada-xp-db.dts
++++ b/arch/arm/boot/dts/armada-xp-db.dts
+@@ -97,5 +97,17 @@
+ 			status = "okay";
+ 			/* No CD or WP GPIOs */
  		};
 +
 +		usb@d0050000 {
@@ -44,6 +44,10 @@ index 1864820..dd0c57d 100644
 +		};
 +
 +		usb@d0051000 {
++			status = "okay";
++		};
++
++		usb@d0052000 {
 +			status = "okay";
 +		};
  	};
