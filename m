@@ -1,73 +1,79 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH] ARM: bcm2835: fix clock node aliasing in device tree
-Date: Mon, 14 Jan 2013 21:26:50 -0700
-Message-ID: <1358224010-6619-1-git-send-email-swarren@wwwdotorg.org>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH] usb: phy: samsung: Add support to set pmu isolation
+Date: Tue, 15 Jan 2013 11:08:16 +0530
+Message-ID: <CAFp+6iE7zEJ7E_pRCOYz5mQqbk-MFE6Hwr02pRRT1yP+X3z7kQ@mail.gmail.com>
+References: <1357891738-26259-1-git-send-email-gautam.vivek@samsung.com>
+	<CAD=FV=Vxdjo5aOU25a-iDNDaiGZCu0+G-p5y1NifXHUJBF0AHg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-rpi-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=Vxdjo5aOU25a-iDNDaiGZCu0+G-p5y1NifXHUJBF0AHg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, l.majewski@samsung.com, linux-samsung-soc@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Praveen Paneri <p.paneri@samsung.com>, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, balbi@ti.com, Kyungmin Park <kyungmin.park@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Both clock nodes in the current device tree are named "clock" and hence
-end up being the same node. Rename the nodes to different names to avoid
-this. In fact, fixed-clock uses the node name as the clock name, so name
-the nodes after the clock they represent. Move the clocks into a
-"clocks" sub-node to group them and avoid any possible naming conflicts
-with other nodes also named after the device type.
+Hi Doug,
 
-Signed-off-by: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
----
- arch/arm/boot/dts/bcm2835.dtsi |   26 +++++++++++++++++---------
- 1 file changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm2835.dtsi b/arch/arm/boot/dts/bcm2835.dtsi
-index c69a591..4bf2a87 100644
---- a/arch/arm/boot/dts/bcm2835.dtsi
-+++ b/arch/arm/boot/dts/bcm2835.dtsi
-@@ -89,15 +89,23 @@
- 		};
- 	};
- 
--	clk_i2c: clock {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <150000000>;
--	};
-+	clocks {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
- 
--	clk_mmc: clock {
--		compatible = "fixed-clock";
--		#clock-cells = <0>;
--		clock-frequency = <100000000>;
-+		clk_mmc: mmc {
-+			compatible = "fixed-clock";
-+			reg = <0>;
-+			#clock-cells = <0>;
-+			clock-frequency = <100000000>;
-+		};
-+
-+		clk_i2c: i2c {
-+			compatible = "fixed-clock";
-+			reg = <1>;
-+			#clock-cells = <0>;
-+			clock-frequency = <150000000>;
-+		};
- 	};
- };
+On Tue, Jan 15, 2013 at 3:41 AM, Doug Anderson <dianders@chromium.org> wrote:
+> Vivek,
+>
+> Sorry for being so absent from these reviews.  I'll try to look over a
+> few patches today, but please don't hold up anything on account of my
+> reviews.  I'm definitely a bit of an interested bystander in USB land.
+>  ;)
+>
+> In general things look pretty good here.  :)  One last comment below...
+>
+> On Fri, Jan 11, 2013 at 12:08 AM, Vivek Gautam
+> <gautam.vivek@samsung.com> wrote:> +static int
+> samsung_usbphy_parse_dt(struct samsung_usbphy *sphy)
+>> +{
+>> +       struct device_node *usbphy_sys;
+>> +
+>> +       /* Getting node for system controller interface for usb-phy */
+>> +       usbphy_sys = of_get_child_by_name(sphy->dev->of_node, "usbphy-sys");
+>> +       if (!usbphy_sys)
+>> +               dev_warn(sphy->dev, "No sys-controller interface for usb-phy\n");
+>
+> Seems like you ought to return with an error here.  Calling of_iomap()
+> with a NULL value seems undesirable.
+>
+
+Yeah, true. This should have been returning error value alongwith dev_err().
+
+>> +
+>> +       sphy->pmuregs = of_iomap(usbphy_sys, 0);
+>> +
+>> +       of_node_put(usbphy_sys);
+>> +
+>> +       if (sphy->pmuregs == NULL) {
+>> +               dev_err(sphy->dev, "Can't get usb-phy pmu control register\n");
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +/*
+>> + * Set isolation here for phy.
+>> + * Here 'on = true' would mean USB PHY block is isolated, hence
+>> + * de-activated and vice-versa.
+>> + */
+>
+> Thank you very much for this comment.  :)  This explains one of the
+> confusions I had earlier...
+>
+Your welcome :-)
+>
+> Once you fix the one error condition above you can add my
+> "Reviewed-by".  Thanks!
+>
+Sure, thanks !!
+
+
+
 -- 
-1.7.10.4
+Thanks & Regards
+Vivek
