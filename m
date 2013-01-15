@@ -1,61 +1,62 @@
-From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] input: keyboard: tegra: use devm_* for resource
- allocation
-Date: Tue, 15 Jan 2013 13:32:48 +0100
-Message-ID: <20130115123248.GB2625@pengutronix.de>
-References: <1357371910-3164-1-git-send-email-ldewangan@nvidia.com>
- <20130114161644.GC14721@kroah.com>
- <20130114221551.GA30020@avionic-0098.adnet.avionic-design.de>
- <201301142224.11243.arnd@arndb.de>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 3/4] Enable ecc-mode selection in the driver
+Date: Tue, 15 Jan 2013 07:33:07 -0500
+Message-ID: <20130115123307.GA13433@titan.lakedaemon.net>
+References: <cover.1358242644.git.s.peter@mpl.ch>
+ <2d08c4c072fd4922a6056362adb96a455307d583.1358242644.git.s.peter@mpl.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bCsyhTFzCvuiizWE"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <201301142224.11243.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <2d08c4c072fd4922a6056362adb96a455307d583.1358242644.git.s.peter-R0yVo0h44Ow@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stefan Peter <s.peter-R0yVo0h44Ow@public.gmane.org>
+Cc: andrew-g2DYL2Zd6BY@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Stefan,
 
---bCsyhTFzCvuiizWE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is a good-looking patch series, nice and small!  A few comments:
 
-On Mon, Jan 14, 2013 at 10:24:11PM +0000, Arnd Bergmann wrote:
-> On Monday 14 January 2013, Thierry Reding wrote:
-> > It certainly sounds like a less complicated way to do it. But it also
-> > involves adding a function with a made up name and drop a function with
-> > a perfectly good name instead. I wouldn't even know what name to choose
-> > for the new API.
-> >=20
->=20
-> How about devm_ioremap_resource()? Sounds equally fitting, and is shorter.
+On Tue, Jan 15, 2013 at 01:13:12PM +0100, Stefan Peter wrote:
+> In order to be able to use the ecc-mode, add the bch module to the default
+> settings for the kirwood boards and enable the activation in orin-nand.c
 
-2 cents, I wrote back then:
+s/orin-nand/orion-nand/
 
-* the new function is not named 'devm_ioremap_resource' because it does mor=
-e than
-  just ioremap, namely request_mem_region. I didn't want to create implicit
-  knowledge here.
+> 
+> Signed-off-by: Stefan Peter <s.peter-R0yVo0h44Ow@public.gmane.org>
+> ---
+> diff --git a/arch/arm/configs/kirkwood_defconfig b/arch/arm/configs/kirkwood_defconfig
+> index 93f3794..4a9d3f7 100644
+> --- a/arch/arm/configs/kirkwood_defconfig
+> +++ b/arch/arm/configs/kirkwood_defconfig
+> @@ -84,6 +84,7 @@ CONFIG_MTD_CFI_STAA=y
+>  CONFIG_MTD_PHYSMAP=y
+>  CONFIG_MTD_M25P80=y
+>  CONFIG_MTD_NAND=y
+> +CONFIG_MTD_NAND_ECC_BCH=y
+>  CONFIG_MTD_NAND_ORION=y
+>  CONFIG_BLK_DEV_LOOP=y
+>  # CONFIG_SCSI_PROC_FS is not set
 
---=20
-Pengutronix e.K.                           | Wolfram Sang                |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Please make the defconfig change a separate patch.
 
---bCsyhTFzCvuiizWE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-Content-Disposition: inline
+As a general note (this series shouldn't be a problem), please sort the
+series so that you add the driver feature first, then enable it in
+defconfig, then use it in DT.  This way, a future bisection won't run
+into any nasty surprises, other than what they're looking for. ;-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
+thx,
 
-iEYEARECAAYFAlD1THAACgkQD27XaX1/VRsbUQCeO3T9fGRUTenwPGNdf2Wfow+S
-2yQAnjkdp45Tk8czgujiurdGGiEEMDvr
-=LQve
------END PGP SIGNATURE-----
-
---bCsyhTFzCvuiizWE--
+Jason.
