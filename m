@@ -1,13 +1,15 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH v2 4/4] usb: chipidea: imx: Add system suspend/resume API
-Date: Tue, 15 Jan 2013 14:08:37 +0800
-Message-ID: <1358230117-19443-4-git-send-email-peter.chen@freescale.com>
-References: <1358230117-19443-1-git-send-email-peter.chen@freescale.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v4 1/5] mmc: dw_mmc: Add "disable-wp" device tree property
+Date: Mon, 14 Jan 2013 22:20:04 -0800
+Message-ID: <20130115062004.GA19801@quad.lixom.net>
+References: <1357842269-15062-1-git-send-email-dianders@chromium.org>
+ <1357923834-31641-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1358230117-19443-1-git-send-email-peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1357923834-31641-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,119 +20,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
-Cc: marex-ynQEQJNshbs@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Will Newton <will.newton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-During the system suspend/resume procedure, the USB also
-needs to go suspend/resume procedure, this patch adds
-related APIs. It is tested at i.mx6q sabrelite. Meanwhile,
-it fixes the bug that the USB will out of work after
-system suspend/resume.
+On Fri, Jan 11, 2013 at 09:03:50AM -0800, Doug Anderson wrote:
+> The "disable-wp" property is used to specify that a given SD card slot
+> doesn't have a concept of write protect.  This eliminates the need for
+> special case code for SD slots that should never be write protected
+> (like a micro SD slot or a dev board).
+> 
+> The dw_mmc driver is special in needing to specify "disable-wp"
+> because the lack of a "wp-gpios" property means to use the special
+> purpose write protect line.  On some other mmc devices the lack of
+> "wp-gpios" means that write protect should be disabled.
+> 
+> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Acked-by: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Signed-off-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
- drivers/usb/chipidea/bits.h        |    1 +
- drivers/usb/chipidea/ci13xxx_imx.c |   61 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 62 insertions(+), 0 deletions(-)
+Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 
-diff --git a/drivers/usb/chipidea/bits.h b/drivers/usb/chipidea/bits.h
-index ba9c6ef..d1467bb 100644
---- a/drivers/usb/chipidea/bits.h
-+++ b/drivers/usb/chipidea/bits.h
-@@ -47,6 +47,7 @@
- #define PORTSC_FPR            BIT(6)
- #define PORTSC_SUSP           BIT(7)
- #define PORTSC_HSP            BIT(9)
-+#define PORTSC_PHCD           BIT(23) /* phy suspend mode */
- #define PORTSC_PTC            (0x0FUL << 16)
- 
- /* DEVLC */
-diff --git a/drivers/usb/chipidea/ci13xxx_imx.c b/drivers/usb/chipidea/ci13xxx_imx.c
-index 342eab0..dd257b1 100644
---- a/drivers/usb/chipidea/ci13xxx_imx.c
-+++ b/drivers/usb/chipidea/ci13xxx_imx.c
-@@ -25,6 +25,7 @@
- #include <linux/mfd/syscon.h>
- 
- #include "ci.h"
-+#include "bits.h"
- #include "ci13xxx_imx.h"
- 
- #define pdev_to_phy(pdev) \
-@@ -321,6 +322,63 @@ static int ci13xxx_imx_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+#ifdef CONFIG_PM
-+static int ci13xxx_imx_suspend(struct device *dev)
-+{
-+	struct ci13xxx_imx_data *data =
-+		platform_get_drvdata(to_platform_device(dev));
-+	struct platform_device *plat_ci;
-+	struct ci13xxx	*ci;
-+
-+	plat_ci = data->ci_pdev;
-+	ci = platform_get_drvdata(plat_ci);
-+
-+	hw_write(ci, OP_PORTSC, PORTSC_PHCD, 1);
-+
-+	if (data->phy)
-+		usb_phy_set_suspend(data->phy, 1);
-+
-+	clk_disable_unprepare(data->clk);
-+
-+	return 0;
-+}
-+
-+static int ci13xxx_imx_resume(struct device *dev)
-+{
-+	int ret;
-+	struct ci13xxx_imx_data *data =
-+		platform_get_drvdata(to_platform_device(dev));
-+	struct platform_device *plat_ci;
-+	struct ci13xxx	*ci;
-+
-+	plat_ci = data->ci_pdev;
-+	ci = platform_get_drvdata(plat_ci);
-+
-+	ret = clk_prepare_enable(data->clk);
-+	if (ret) {
-+		dev_err(dev,
-+			"Failed to prepare or enable clock, err=%d\n", ret);
-+		return ret;
-+	}
-+
-+	if (hw_read(ci, OP_PORTSC, PORTSC_PHCD)) {
-+		hw_write(ci, OP_PORTSC, PORTSC_PHCD, 0);
-+		/* Some clks sync between Controller and USB PHY */
-+		mdelay(1);
-+	}
-+
-+	if (data->phy)
-+		usb_phy_set_suspend(data->phy, 0);
-+
-+	return ret;
-+}
-+
-+static const struct dev_pm_ops ci13xxx_imx_pm_ops = {
-+	.suspend	= ci13xxx_imx_suspend,
-+	.resume		= ci13xxx_imx_resume,
-+};
-+#endif
-+
- static const struct of_device_id ci13xxx_imx_dt_ids[] = {
- 	{ .compatible = "fsl,imx27-usb", },
- 	{ /* sentinel */ }
-@@ -334,6 +392,9 @@ static struct platform_driver ci13xxx_imx_driver = {
- 		.name = "imx_usb",
- 		.owner = THIS_MODULE,
- 		.of_match_table = ci13xxx_imx_dt_ids,
-+#ifdef CONFIG_PM
-+		.pm	= &ci13xxx_imx_pm_ops,
-+#endif
- 	 },
- };
- 
--- 
-1.7.0.4
+Nit below.
+
+> @@ -825,7 +828,13 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
+>  	struct dw_mci_board *brd = slot->host->pdata;
+>  
+>  	/* Use platform get_ro function, else try on board write protect */
+> -	if (brd->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT)
+> +
+> +	/*
+> +	 * NOTE: DW_MCI_QUIRK_NO_WRITE_PROTECT will be removed in a future
+> +	 * patch in the series once reference to it is removed.
+> +	 */
+> +	if ((brd->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT) ||
+> +	    (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT))
+
+Given that it never worked properly, you could have nuked it first and avoid
+the extra churn. Still, not a strong enough reason to respin the series, IMHO.
+
+
+-Olof
