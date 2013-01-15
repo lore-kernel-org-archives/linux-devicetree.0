@@ -1,7 +1,7 @@
 From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH 2/6] arm: mvebu: Enable USB controllers on Armada 370 evaluation board
-Date: Tue, 15 Jan 2013 06:54:26 -0300
-Message-ID: <1358243670-11935-2-git-send-email-ezequiel.garcia@free-electrons.com>
+Subject: [PATCH 5/6] arm: mvebu: Enable USB controllers on Armada XP OpenBlocks AX3-4 board
+Date: Tue, 15 Jan 2013 06:54:29 -0300
+Message-ID: <1358243670-11935-5-git-send-email-ezequiel.garcia@free-electrons.com>
 References: <1358243670-11935-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1358243670-11935-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -15,23 +15,24 @@ Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.g
 Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/armada-370-db.dts |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts |    9 +++++++++
+ 1 files changed, 9 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/armada-370-db.dts b/arch/arm/boot/dts/armada-370-db.dts
-index 8e66a7c..3d93902 100644
---- a/arch/arm/boot/dts/armada-370-db.dts
-+++ b/arch/arm/boot/dts/armada-370-db.dts
-@@ -74,5 +74,13 @@
- 			status = "disabled";
- 			/* No CD or WP GPIOs */
+diff --git a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+index b24644f..55f5b6f 100644
+--- a/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
++++ b/arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts
+@@ -127,5 +127,14 @@
+ 			nr-ports = <2>;
+ 			status = "okay";
  		};
-+
 +		usb@d0050000 {
 +			status = "okay";
 +		};
-+
 +		usb@d0051000 {
++			status = "okay";
++		};
++		usb@d0052000 {
 +			status = "okay";
 +		};
  	};
