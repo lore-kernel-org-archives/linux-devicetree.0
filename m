@@ -1,114 +1,217 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
-Date: Tue, 15 Jan 2013 22:14:41 +0100
-Message-ID: <20130115211441.GA13139@avionic-0098.adnet.avionic-design.de>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <20130114095706.GA23467@arm.com>
- <20130115120855.GA5637@avionic-0098.adnet.avionic-design.de>
- <201301151244.12767.arnd@arndb.de> <20130115154038.GA11241@arm.com>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [PATCH v3] hwmon: Driver for Maxim MAX6697 and compatibles
+Date: Tue, 15 Jan 2013 22:50:34 +0100
+Message-ID: <20130115225034.38294f9d@endymion.delvare>
+References: <1358277904-7421-1-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4171163522720820654=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130115154038.GA11241-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1358277904-7421-1-git-send-email-linux@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Guenter,
 
---===============4171163522720820654==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
-Content-Disposition: inline
-
-
---sdtB3X0nJg68CQEu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jan 15, 2013 at 03:40:38PM +0000, Andrew Murray wrote:
-> On Tue, Jan 15, 2013 at 12:44:12PM +0000, Arnd Bergmann wrote:
-> > On Tuesday 15 January 2013, Thierry Reding wrote:
-> > > I'm not sure I follow you're reasoning here. Is it possible to use MS=
-Is
-> > > without PCI? If not then I think there's little sense in keeping the
-> > > implementations separate.
-> >=20
-> > Conceptually, you can use MSI for any device, but the Linux interfaces
-> > for MSI are tied to PCI. If you use an MSI controller for a non-PCI
-> > device, it would probably just appear as a regular interrupt controller.
-> >=20
-> > > Furthermore, if MSI controller and PCI host bridge are separate entit=
-ies
-> > > how do you look up the MSI controller given a PCI device?
-> >=20
-> > The host bridge can contain a pointer ot the MSI controller. You can
-> > have multiple host bridges sharing a single MSI controller or you
-> > can have separate ones for each host.
+On Tue, 15 Jan 2013 11:25:04 -0800, Guenter Roeck wrote:
+> Add support for MAX6581, MAX6602, MAX6622, MAX6636, MAX6689, MAX6693,
+> MAX6694, MAX6697, MAX6698, and MAX6699 temperature sensors
 >=20
-> Yes and I hoped this relationship would be described by a device tree pha=
-ndle
-> as is done for relating devices to their interrupt-parent (where device t=
-rees
-> are used). This would provide (arguably unnecessarily) greater flexibilit=
-y,
-> e.g. if you have two PCI/MSI controller pairs, the MSIs only offer limite=
-d MSIs
-> and you only use one PCI fabric - you could service different parts of the
-> fabric by different MSI controllers (assuming you relate MSI controllers =
-to
-> part of the fabric and that you'd want to). Perhaps there would be benefi=
-ts for
-> virtualisation as well?
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> ---
+> v2:
+> - Add suppport for platform data and devicetree based chip initializa=
+tion
+> - Drop S_IRUGOWU macro: s/S_IRUGOWU/S_IRUGO | S_IWUSR/
+> v3:
+> - Clarify devicetree documentation and platform data, indicating that=
+ all
+>   configuration information must be specified
+> - Fix alert-mask and over-temperature-mask values in devicetree examp=
+le
+> - Align bit masks in configuration data with tempX index values
+> - Fix memset size in initialization code
+> - Handle extended temperature range for MAX6581 correctly
+> - Make data caching time dependent on chip type and configuration dat=
+a
+> - Fix have_ext bit map for MAX6581
+> - Sort entries in max6697_chip_data[] array alphabetically
+> - Fix race condition when reading alarms
+> - Define and use constants for second index in data->temp array
+> - Rename show_temp11 to show_temp_input. Drop second index (always ze=
+ro)
+> - Use DIV_ROUND_CLOSEST to convert milli-degrees to degrees in set_te=
+mp
+> - Handle error return in set_temp correctly
+> - Make max6697_attributes a two-dimensional array to reduce risk of e=
+rrors when
+>   accessing it
+> - Drop temp1_fault as it is never used (local temperature sensor can =
+not be
+>   faulty)
+> - Fix reading extended-range-enable property
+> - If no configuration data is specified, read extended range and resi=
+stance
+>   cancellation configuration from chip
+> - Drop some unnecessary comments
+> - Include linux/types.h in platform_data/max6697.h
+> - Drop unused define MAX6697_MAX_CONFIG_REG
+> - Add comments to fields in struct max6697_platform_data
+> - Add support to configure beta compensation on MAX6693 and MAX6694
 
-Is there actually hardware that supports this? I assumed that the MSI
-controller would have to be tightly coupled to the PCI host bridge in
-order to raise an interrupt when an MSI is received via PCI.
+Thanks for the update. I have a few more comments:
 
-Thierry
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/i2c/max6697.txt
+> (...)
+> +- extended-range-enable
+> +	Only valid for MAX6581. Set to enable extended temperature range.
+> +	Extended temperature will be disabled if not specified.
+> +- beta-compensation-enable
+> +	Only valid for MAX6693 and MX6694. Set to enable beta compensation =
+on
+> +	remote temperature channel 1.
+> +	beta compensation will be disabled if not specified.
 
---sdtB3X0nJg68CQEu
-Content-Type: application/pgp-signature
+Capital B.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+> (...)
+> +static ssize_t show_temp_input(struct device *dev,
+> +			       struct device_attribute *devattr, char *buf)
+> +{
+> +	int index =3D to_sensor_dev_attr(devattr)->index;
+> +	struct max6697_data *data =3D max6697_update_device(dev);
+> +	int temp;
+> +
+> +	if (IS_ERR(data))
+> +		return PTR_ERR(data);
+> +
+> +	temp =3D data->temp[index][MAX6697_TEMP_INPUT];
+> +	temp <<=3D 3;
+> +	temp |=3D data->temp[index][MAX6697_TEMP_EXT] >> 5;
+> +	temp -=3D data->temp_offset << 3;
 
-iQIcBAEBAgAGBQJQ9cbBAAoJEN0jrNd/PrOhtl4P/jFRPjJMBYsIefiaxa04+iqT
-3x9QHWpfSoQabBZedImODOBW//x/WY95wzU1svRNSn9KRP57HNoI1dSetfx7dsxv
-UWJ5lklcJjfBCgj7m2WyG9V9Oh1YrZYJ006pie/Qi5i4YsVuLwAbXc5HyhwHHBzZ
-/Xm3QRPqAyXHY/mWLdqRDMMC0EntcfK6VxiM7vGyhYlFDu/0Vok7leXUXu1KB4/c
-yDVHB7miuzYAqX4BhrCk2Qvyt2vB7+EU40ZNOahWOJA0IYY9PcAHN36/WB6JKxFu
-6my0R/Hl9XqsLim6e8nEbE6oglNnDgSITjKD+GHrQ7Jk+crhUyLBWbJpRpDVCI3Z
-TqKhJgaHB5nOal4aCy3rCWx9Bzg6IT+LN3xGjLtzx3OxwCbDAdDjTO9knF4FEu3h
-QlRMcx0Nm/vKmXE8GSeDBvjbDIoz6fAILZoIhDYG7cAcjeshDuUYLa9ZKJDxrsZU
-VlVI51jMty+wLcAY9yVL3TYo/pPH96Iw4xNPC7gGSFe/QELh7coynxeEOjGxcC1C
-BuuJrVP3iN1ozDsdU4N5sBqJMnn2yiuIHxznScPifa/9TK44OcmDffKUFOOYOXTV
-raEZJjmFfCQqQf7FWdQcgK7KEYLB+5rAPhJxw+kdA5D5y8t6IFBTPn1faIf9e2XE
-SQaQ+rKu8bPN9+wyPtr3
-=JrIc
------END PGP SIGNATURE-----
+You could save one shifting by reordering the operations.
 
---sdtB3X0nJg68CQEu--
+> +
+> +	return sprintf(buf, "%d\n", temp * 125);
+> +}
+> (...)
+> +static ssize_t set_temp(struct device *dev,
+> +			struct device_attribute *devattr,
+> +			const char *buf, size_t count)
+> +{
+> +	int nr =3D to_sensor_dev_attr_2(devattr)->nr;
+> +	int index =3D to_sensor_dev_attr_2(devattr)->index;
+> +	struct i2c_client *client =3D to_i2c_client(dev);
+> +	struct max6697_data *data =3D i2c_get_clientdata(client);
+> +	long temp;
+> +	int ret;
+> +
+> +	ret =3D kstrtol(buf, 10, &temp);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	mutex_lock(&data->update_lock);
+> +	temp =3D clamp_val(DIV_ROUND_CLOSEST(temp, 1000), -data->temp_offse=
+t,
+> +			 127);
 
---===============4171163522720820654==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+This 127 is OK for all chips but the MAX6851. I agree that the
+temperature data format table in the datasheet looks wrong, but the
+description of the EXTRANGE configuration bit description sheds some
+light:
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+"Extended-Range Enable Bit. Set bit 1 to logic 1 to set the temperature=
+ and limit data
+range to -64=B0C to +191=B0C. Set bit 1 to logic 0 to set the range to =
+0=B0C to +255=B0C."
 
---===============4171163522720820654==--
+> +	temp +=3D data->temp_offset;
+> +	data->temp[nr][index] =3D temp;
+> +	ret =3D i2c_smbus_write_byte_data(client,
+> +					index =3D=3D 2 ? MAX6697_REG_MAX[nr]
+> +						   : MAX6697_REG_CRIT[nr],
+> +					temp);
+> +	mutex_unlock(&data->update_lock);
+> +
+> +	return ret < 0 ? ret : count;
+> +}
+> (...)
+> +static int max6697_init_chip(struct i2c_client *client)
+> +{
+> +	struct max6697_data *data =3D i2c_get_clientdata(client);
+> +	struct max6697_platform_data *pdata =3D dev_get_platdata(&client->d=
+ev);
+> +	struct max6697_platform_data p;
+> +	const struct max6697_chip_data *chip =3D data->chip;
+> +	int factor =3D chip->channels;
+> +	int ret;
+> +	u8 reg;
+> +
+> +	/*
+> +	 * Don't touch configuration if neither platform data nor OF
+> +	 * configuration was specified. If that is the case, use the
+> +	 * current chip configuration.
+> +	 */
+> +	if (!pdata && !client->dev.of_node) {
+> +		reg =3D i2c_smbus_read_byte_data(client, MAX6697_REG_CONFIG);
+> +		if (reg < 0)
+
+reg is unsigned. I don't get why gcc doesn't complain...
+
+> +			return reg;
+> +		if (data->type =3D=3D max6581) {
+> +			data->temp_offset =3D
+> +			  (reg & MAX6581_CONF_EXTENDED) ? 64 : 0;
+
+data->temp_offset is 0 at this point so an "if" construct should be
+more efficient.
+
+> +			reg =3D i2c_smbus_read_byte_data(client,
+> +						       MAX6581_REG_RESISTANCE);
+
+reg is unsigned.
+
+> +			if (reg < 0)
+> +				return reg;
+> +			factor +=3D hweight8(reg);
+> +		} else {
+> +			if (reg & MAX6697_CONF_RESISTANCE)
+> +				factor++;
+> +		}
+> +		goto done;
+> +	}
+> (...)
+> --- /dev/null
+> +++ b/include/linux/platform_data/max6697.h
+> @@ -0,0 +1,36 @@
+> +/*
+> + * max6697.h
+> + *     Copyright (c) 2012 Guenter Roeck <linux@roeck-us.net>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef MAX6697_H
+> +#define MAX6697_H
+> +
+> +#include <linux/types.h>
+> +
+> +/*
+> + * For all bit masks:
+> + * bit 0:    local temperature
+> + * bit 1..7: remote temperatures
+> + */
+> +struct max6697_platform_data {
+> +	bool smbus_timeout_disable;	/* set to disable smbus timeouts */
+
+"SMBus"
+
+--=20
+Jean Delvare
