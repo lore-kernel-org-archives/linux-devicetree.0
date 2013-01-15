@@ -1,15 +1,16 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] mmc: dw_mmc: Add "disable-wp" device tree property
-Date: Mon, 14 Jan 2013 22:20:04 -0800
-Message-ID: <20130115062004.GA19801@quad.lixom.net>
-References: <1357842269-15062-1-git-send-email-dianders@chromium.org>
- <1357923834-31641-1-git-send-email-dianders@chromium.org>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] input: keyboard: tegra: use devm_* for resource
+ allocation
+Date: Tue, 15 Jan 2013 07:44:18 +0100
+Message-ID: <20130115064418.GA31561@avionic-0098.adnet.avionic-design.de>
+References: <1357371910-3164-1-git-send-email-ldewangan@nvidia.com>
+ <20130114161644.GC14721@kroah.com>
+ <20130114221551.GA30020@avionic-0098.adnet.avionic-design.de>
+ <201301142224.11243.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============8218566189502329644=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1357923834-31641-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-Reply-To: <201301142224.11243.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,43 +21,68 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Will Newton <will.newton-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Abhilash Kesavan <a.kesavan-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2013 at 09:03:50AM -0800, Doug Anderson wrote:
-> The "disable-wp" property is used to specify that a given SD card slot
-> doesn't have a concept of write protect.  This eliminates the need for
-> special case code for SD slots that should never be write protected
-> (like a micro SD slot or a dev board).
-> 
-> The dw_mmc driver is special in needing to specify "disable-wp"
-> because the lack of a "wp-gpios" property means to use the special
-> purpose write protect line.  On some other mmc devices the lack of
-> "wp-gpios" means that write protect should be disabled.
-> 
-> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Acked-by: Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Acked-by: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-
-Nit below.
-
-> @@ -825,7 +828,13 @@ static int dw_mci_get_ro(struct mmc_host *mmc)
->  	struct dw_mci_board *brd = slot->host->pdata;
->  
->  	/* Use platform get_ro function, else try on board write protect */
-> -	if (brd->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT)
-> +
-> +	/*
-> +	 * NOTE: DW_MCI_QUIRK_NO_WRITE_PROTECT will be removed in a future
-> +	 * patch in the series once reference to it is removed.
-> +	 */
-> +	if ((brd->quirks & DW_MCI_QUIRK_NO_WRITE_PROTECT) ||
-> +	    (slot->quirks & DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT))
-
-Given that it never worked properly, you could have nuked it first and avoid
-the extra churn. Still, not a strong enough reason to respin the series, IMHO.
+--===============8218566189502329644==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
+Content-Disposition: inline
 
 
--Olof
+--LZvS9be/3tNcYl/X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jan 14, 2013 at 10:24:11PM +0000, Arnd Bergmann wrote:
+> On Monday 14 January 2013, Thierry Reding wrote:
+> > It certainly sounds like a less complicated way to do it. But it also
+> > involves adding a function with a made up name and drop a function with
+> > a perfectly good name instead. I wouldn't even know what name to choose
+> > for the new API.
+> >=20
+>=20
+> How about devm_ioremap_resource()? Sounds equally fitting, and is shorter.
+
+Yes, that sounds good. Thanks for the suggestion.
+
+Thierry
+
+--LZvS9be/3tNcYl/X
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ9PrCAAoJEN0jrNd/PrOh8EUQAINqNe6OAwnG8+v2YacerpeP
+jpM0W7ng9kly+Jh7wPl2MpBEzDoKAp9AvmPmOuPZVaLBhVikJB0pB/cQgtERlLxA
+KJgtdEepQb5RInvaZ3lMO07W/OlsZyP3F16e4GO5MEN3VN93QqFgWACRl8U+52aM
+yEbUu6cHImAsxEeWTiLzAJJpTqTmvj0+BN15W4jirVJKWG6dyp6QQP0QyWONro/a
+FEH0UygwPMAz8Mv5eL3p8of87Xt07A4NMAjfTSOpLVIilX3ElJkKsKfr5IbHD+nX
+r8UODa6sM4LD1c1w0TM5so1DpsVE+YEdm6PbCOeqLa3zqJ3gpkm/psrd9Dwp6ThG
+P0FZUrjDcGucznVzRY9LuU5etPd9oLcdMsF65J6k4wXgaAFQ92lQ2yC97H6p7q2j
+k+YdPIPz8jKouwlpywHvLvmcjZv4tO8r/L5dVuT77uinWN8ZNFjfFbRylgbrLPxb
+OfVF1sBokC6kGTAww71VaNURxOFt28QkGEkr8juCO83eZR2Ms4/NQxmLHggoGPf/
+GDdDX81LW2tXRK5AFPFduXOsxt+Fek/E7R0B0EyFY6u+JLVeLhj2htZz2LOh/JHF
+hbU9kZaO44C16wx4/4XhnGsLUxhPGw0MS1aVF/EmKiq4op9QxR2BO0xpDM3i6H45
+piEnYv4jP0kNIUbOhlJm
+=n2WD
+-----END PGP SIGNATURE-----
+
+--LZvS9be/3tNcYl/X--
+
+--===============8218566189502329644==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============8218566189502329644==--
