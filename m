@@ -1,69 +1,66 @@
-From: Ezequiel Garcia <elezegarcia@gmail.com>
-Subject: Re: [PATCH v8 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Tue, 15 Jan 2013 15:10:11 -0300
-Message-ID: <CALF0-+WpCc=291-thQz2=U_kBFztaq50j+U=Hm8C9ho3UZBejw@mail.gmail.com>
-References: <1355481404-27695-1-git-send-email-zonque@gmail.com>
-	<1355481404-27695-6-git-send-email-zonque@gmail.com>
-	<CALF0-+UbqFF17X1Ok1s1AGKg6SBmvMc1mvjVuZb=Ej7xo+qcmA@mail.gmail.com>
-	<20130114180602.GV14149@atomide.com>
-	<CACTFLAMT2-6VRkNSO3OF6X=afTYKRz=JcDkYqqyZ4VNT5xBVkw@mail.gmail.com>
-	<20130115180324.GZ14149@atomide.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: Early kernel hang with big DTB appended
+Date: Tue, 15 Jan 2013 13:12:46 -0500 (EST)
+Message-ID: <alpine.LFD.2.02.1301151311400.6300@xanadu.home>
+References: <7811936.npteFbuYu2@amdc1227> <20130111164531.GC13025@pengutronix.de> <alpine.LFD.2.02.1301141655570.6300@xanadu.home> <1389186.eYbeMx0y73@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130115180324.GZ14149@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Daniel Mack <zonque@gmail.com>, Paul Walmsley <paul@pwsan.com>, x0148406@ti.com, Enric Balletbo Serra <eballetbo@gmail.com>, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, avinashphilip@ti.com, jon-hunter@ti.com, rob.herring@calxeda.com, Javier Martinez Canillas <martinez.javier@gmail.com>, linux-arm-kernel@lists.infradead.org, jacmet@sunsite.dk, grant.likely@secretlab.ca, linux-omap@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1389186.eYbeMx0y73@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, kgene.kim@samsung.com, thomas.abraham@linaro.org, bones@secretlab.ca, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 15, 2013 at 3:03 PM, Tony Lindgren <tony@atomide.com> wrote:
-> * Daniel Mack <zonque@gmail.com> [130114 15:30]:
->> On Jan 15, 2013 2:06 AM, "Tony Lindgren" <tony@atomide.com> wrote:
->> >
->> > * Ezequiel Garcia <elezegarcia@gmail.com> [121223 13:49]:
->> > > On Fri, Dec 14, 2012 at 7:36 AM, Daniel Mack <zonque@gmail.com> wrote:
->> > > > +
->> > > > +Example for an AM33xx board:
->> > > > +
->> > > > +       gpmc: gpmc@50000000 {
->> > > > +               compatible = "ti,am3352-gpmc";
->> > > > +               ti,hwmods = "gpmc";
->> > > > +               reg = <0x50000000 0x1000000>;
->> > > > +               interrupts = <100>;
->> > > > +               gpmc,num-cs = <8>;
->> > > > +               gpmc,num-waitpins = <2>;
->> > > > +               #address-cells = <2>;
->> > > > +               #size-cells = <1>;
->> > > > +               ranges = <0 0 0x08000000 0x2000>;       /* CS0: NAND
->> */
->> > > > +
->> > > > +               nand@0,0 {
->> > > > +                       reg = <0 0 0>; /* CS0, offset 0 */
->> > >
->> > > I'm a bit confused by this: what are the other two values in "reg"?
->> > > I see you've only added a binding for CS.
->> > >
->> > > I've extended a bit on your work and added a binding to enable OneNAND
->> > > device on my IGEP board.
->> > >
->> > > I might send some patches in case anyone wants to give it a try.
->> >
->> > Daniel, should this be updated to just pass the CS?
->>
->> No, as Rob pointed out earlier in a thread about this topic, the 'ranges'
->> feature will help doing the math for the offset calculation eventually, so
->> we need to pass all three values.
->
-> OK thanks. Applying this set into omap-for-v3.9/gpmc.
->
-> Also sounds like Ezequiel needs to update his follow up patches accordingly.
->
+On Tue, 15 Jan 2013, Tomasz Figa wrote:
 
-Ok, I'll do that anytime this week.
+> Hi Nicolas,
+> 
+> On Monday 14 of January 2013 17:13:09 Nicolas Pitre wrote:
+> > On Fri, 11 Jan 2013, Sascha Hauer wrote:
+> > > On Thu, Jan 03, 2013 at 04:55:00PM +0100, Tomasz Figa wrote:
+> > > > Hi,
+> > > > 
+> > > > I'm observing strange behavior when booting 3.8-rc1 and -rc2 with
+> > > > appended DTB. The kernel hangs very early when the DTB is bigger
+> > > > than some threshold somewhere around 24 KiB. With fullest possible
+> > > > low level UART debugging (and printk patched to use printascii) I'm
+> > > > receiving following output:
+> > > > 
+> > > > Uncompressing Linux... done, booting the kernel.
+> > > > Booting Linux on physical CPU 0xa00
+> > > > Linux version 3.8.0-rc1-00073-gdf6efca-dirty (t.figa@amdc1227) (gcc
+> > > > version 4.5.2 (Gentoo 4.5.2 p1.2, pie-0.4.5) ) #2 SMP PREEMPT Thu
+> > > > Jan 3
+> > > > 15:37:35 CET 2013
+> > > > CPU: ARMv7 Processor [413fc090] revision 0 (ARMv7), cr=10c53c7d
+> > > > CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction
+> > > > cache
+> > > > 
+> > > > I tested on two Exynos-based boards (exynos4210-trats and one
+> > > > internal
+> > > > exynos4412-based board) and same happens on both.
+> > > > 
+> > > > Do you have any ideas?
+> > > 
+> > > Another thing besides the things already mentioned is that the dtb may
+> > > not cross a 1MiB boundary. The Kernel uses a single 1Mib section
+> > > (aligned to 1Mib) to initially map the dtb. Once you cross that
+> > > boundary parts of the dtb won't be accessible for the Kernel anymore.
+> > 
+> > Crap.  You're right.  This patch should fix this issue.
+> > 
+> > @Tomasz: please could you confirm this fixes your initial problem?
+> 
+> I just tested the patch and it fixes the problem indeed. The kernel
+> now boots successfully after applying the patch, while undoing it
+> makes the kernel fail to boot again. Thanks.
+> 
+> Tested-by: Tomasz Figa <t.figa@samsung.com>
 
-Thanks,
+Thanks.
 
--- 
-    Ezequiel
+The patch is queued as 7628/1 in RMK's patch system.
+
+
+Nicolas
