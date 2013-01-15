@@ -1,104 +1,143 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v5 2/4] usb: phy: samsung: Add host phy support to
- samsung-phy driver
-Date: Mon, 14 Jan 2013 15:45:30 -0800
-Message-ID: <CAD=FV=Vxo8D+W_=m1+ODEarMXgCgcT0cSs3KekTkGyvVVANyMA@mail.gmail.com>
-References: <1355841786-13307-1-git-send-email-gautam.vivek@samsung.com>
- <1355841786-13307-3-git-send-email-gautam.vivek@samsung.com>
- <CAD=FV=WMjqszsTQja82_uZc4Ue50TfTmSNO2yOhSMCX1w1L5Dg@mail.gmail.com>
- <CAFp+6iHYRRS3uSWnmdqBvfOgUDKKJUzMvqoj1HP2uXS=Fdaifg@mail.gmail.com>
- <CAD=FV=XhMbWjCR5r=R3+zE1524NuUUvFDf2HZuCrXPmsei4BNA@mail.gmail.com>
- <CAFp+6iHFw2orVOxxzb+daQJsA46zUk2ZOA=h6QwGAme18JngXw@mail.gmail.com>
- <CAFp+6iF4Q2uUzJKf8d-jMZoxBcVzxBAxLyKDqF4B8=p+_JYuCQ@mail.gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/8] sh-pfc: Add OF support
+Date: Tue, 15 Jan 2013 10:10:19 +0900
+Message-ID: <20130115011019.GA13304@verge.net.au>
+References: <1357693395-1653-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1357693395-1653-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <Pine.LNX.4.64.1301121745320.14443@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAFp+6iF4Q2uUzJKf8d-jMZoxBcVzxBAxLyKDqF4B8=p+_JYuCQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, yulgon.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <Pine.LNX.4.64.1301121745320.14443@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Phil Edworthy <phil.edworthy@renesas.com>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Vivek,
+On Sat, Jan 12, 2013 at 06:18:54PM +0100, Guennadi Liakhovetski wrote:
+> Hi Laurent
+> 
+> On Wed, 9 Jan 2013, Laurent Pinchart wrote:
+> 
+> > Support device instantiation through the device tree. The compatible
+> > property is used to select the SoC pinmux information.
+> > 
+> > Set the gpio_chip device field to the PFC device to enable automatic
+> > GPIO OF support.
+> > 
+> > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > Cc: devicetree-discuss@lists.ozlabs.org
+> 
+> This whole pinctrl mega-series is a very welcome improvement to the 
+> sh-/r-mobile GPIO framework, and is very well done IMHO! But, 
+> unfortunately, as discussed with you privately yesterday, there is still a 
+> problem with pinctrl DT support on sh73a0, which will, probably, enforce 
+> an update to one or several of patches from this lot. To explain to other 
+> readers, on sh73a0 pin numbers are not contiguous, they are sparse. 
+> When pins are referred to from C code, macro names are used, which are 
+> then correctly decoded to respective positions in pin descriptor tables. 
+> Whereas with DT, pins are referred to from .dts files using their physical 
+> numbers, which then refer to either wrong or missing entries in those 
+> tables.
+> 
+> I do not know where this problem should be solved best - either in 
+> descriptor tables, or in DT handling code, so, I don't know which patches 
+> would be affected. Don't think you'll want to keep the one-to-one 
+> index-to-pin mapping by also making pin-descriptor arrays sparse, so, so 
+> far I only see one possibility to fix this - by using the .enum_id field 
+> from struct sh_pfc_pin instead of just the index - both in  C and in DT 
+> case, and those .enum_id values will have to provide physical pin numbers 
+> instead of plane indices. That way you'd have to update at least 
+> drivers/pinctrl/sh-pfc/pfc-sh73a0.c and the sh_pfc_map_gpios() function in 
+> drivers/pinctrl/sh-pfc/pinctrl.c.
+> 
+> Anyway, I'm sure you'll find a suitable solution of this problem and for 
+> now I'll let Simon decide which patches he wants to apply and which ones 
+> he'd prefer to hold back;-)
+
+Actually, I'd appreciate some guidance from Laurent on this.
+It seems that the problems you raise go quite far back into the mega-series.
+
+I was intending to send pull requests for the following branches soon.
+But I am now concerned that at least the sh73a0 patches may need reworking.
+
+pfc2: (based on a merge of sh-soc2 and pfc)
+sh-pfc: Add shx3 pinmux support
+sh-pfc: Add sh7786 pinmux support
+sh-pfc: Add sh7785 pinmux support
+sh-pfc: Add sh7757 pinmux support
+sh-pfc: Add sh7734 pinmux support
+sh-pfc: Add sh7724 pinmux support
+sh-pfc: Add sh7723 pinmux support
+sh-pfc: Add sh7722 pinmux support
+sh-pfc: Add sh7720 pinmux support
+sh-pfc: Add sh7269 pinmux support
+sh-pfc: Add sh7264 pinmux support
+sh-pfc: Add sh7203 pinmux support
+sh-pfc: Add sh73a0 pinmux support
+sh-pfc: Add sh7372 pinmux support
+sh-pfc: Add r8a7779 pinmux support
+sh-pfc: Add r8a7740 pinmux support
+sh-pfc: Support pinmux info in driver data instead of platform data
+sh-pfc: Move driver from drivers/sh/ to drivers/pinctrl/
+sh-pfc: Remove unused resource and num_resources platform data fields
+sh-pfc: Remove platform device registration
+
+sh-soc2: (based on pfc)
+sh: shx3: Register PFC platform device
+sh: sh7786: Register PFC platform device
+sh: sh7785: Register PFC platform device
+sh: sh7757: Register PFC platform device
+sh: sh7734: Register PFC platform device
+sh: sh7724: Register PFC platform device
+sh: sh7723: Register PFC platform device
+sh: sh7722: Register PFC platform device
+sh: sh7720: Register PFC platform device
+sh: sh7269: Register PFC platform device
+sh: sh7264: Register PFC platform device
+sh: sh7203: Register PFC platform device
+sh: Add PFC platform device registration helper function
 
 
-On Mon, Jan 14, 2013 at 12:06 AM, Vivek Gautam
-<gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> Is it fine if we don't use macro for SHIFT, earlier code also doesn't use it.
->> Can we just do like this ..
->> #define HOST_CTRL0_FSEL_MASK                       (0x7 << 16)
->> #define HOST_CTRL0_FSEL_CLKSEL_50M            (0x7 << 16)
->> #define HOST_CTRL0_FSEL_CLKSEL_24M            (0x5 << 16)
->> #define HOST_CTRL0_FSEL_CLKSEL_20M            (0x4 << 16)
->> #define HOST_CTRL0_FSEL_CLKSEL_19200K       (0x3 << 16)
->> #define HOST_CTRL0_FSEL_CLKSEL_12M            (0x2 << 16)
->> #define HOST_CTRL0_FSEL_CLKSEL_10M            (0x1 << 16)
->> #define HOST_CTRL0_FSEL_CLKSEL_9600K         (0x0 << 16)
+soc: (based on sh-soc)
+ARM: shmobile: sh73a0: Add pin control resources
+ARM: shmobile: sh7372: Add pin control resources
+ARM: shmobile: r8a7740: Add pin control resources
+ARM: shmobile: sh73a0: Register PFC platform device
+ARM: shmobile: sh7372: Register PFC platform device
+ARM: shmobile: r8a7779: Register PFC platform device
+ARM: shmobile: r8a7740: Register PFC platform device
+ARM: shmobile: Select PINCTRL
+ARM: shmobile: add function declarations for sh7372 DT helper functions
+ARM: sh7372: fix cache clean / invalidate order
+ARM: sh7372: add clock lookup entries for DT-based devices
+ARM: mach-shmobile: sh73a0 external IRQ wake update
+ARM: shmobile: sh73a0: fixup div4_clks bitmap
+ARM: shmobile: r8a7740: add TMU timer support
+ARM: shmobile: Remove duplicate inclusion of dma-mapping.h in setup-r8a7740.c
 
-I don't have a problem with just putting the << 16 there...
+pfc: (based on sh-soc)
+sh-pfc: Support passing resources through platform device
+sh-pfc: Split platform device and platform driver registration
+sh-pfc: Use sh_pfc_ namespace prefix through the whole driver
+sh-pfc: Sort headers alphabetically
+sh-pfc: Remove check for impossible error condition
+sh-pfc: Let the compiler decide whether to inline functions
+sh-pfc: Use devm_ioremap_nocache()
+sh-pfc: Use devm_kzalloc()
+sh-pfc: Move platform device and driver to the core
+sh-pfc: Merge PFC core and gpio
+sh-pfc: Merge PFC core and pinctrl
+sh-pfc: Move private definitions and declarations to private header
+sh-pfc: Split platform data from the sh_pfc structure
+sh-pfc: Remove all use of __devinit/__devexit
 
-> Actually missed one thing here, this "HOST_CTRL0_FSEL_CLKSEL_XX" is
-> being used by
-> HOST/OTG blocks to prepare reference clock, that's the reason we kept
->             #define HOST_CTRL0_FSEL(_x)                  ((_x) << 16)
-> and       #define OTG_SYS_FSEL(_x)                       ((_x) << 4)
-> where (_x) is the reference clock returned from
-> samsung_usbphy_get_refclk_freq().
-
-I feel like samsung_usbphy_get_refclk_freq() is supposed to be
-returning an already shifted value.  ...at least that's how it appears
-to work with existing code.  Why does it feel like that?  ...because
-with existing code we have:
-
-#define PHYCLK_CLKSEL_MASK (0x3 << 0)
-#define PHYCLK_CLKSEL_48M (0x0 << 0)
-#define PHYCLK_CLKSEL_12M (0x2 << 0)
-#define PHYCLK_CLKSEL_24M (0x3 << 0)
-
-Those #defines are what are returned by
-samsung_usbphy_get_refclk_freq().  The fact that the "<< 0" is there
-implies (to me) that the existing function would return shifted values
-if it were applicable.
-
-For exynos you are having the same function return things like:
-
-#define FSEL_CLKSEL_50M (0x7)
-#define FSEL_CLKSEL_24M (0x5)
-#define FSEL_CLKSEL_20M (0x4)
-
-...to me that means that the exynos code is returning unshifted values.
-
-
-If you say that samsung_usbphy_get_refclk_freq() is in charge of
-returning shifted values then you no longer need the HOST_CTRL0_FSEL()
-macro.
-
-
-In any case, I will defer to whatever Felipe thinks is best here (if
-he has an opinion on it).  I am only pointing out that the exynos code
-and existing code seem to be specifying things differently.  That's
-weird to me.
-
-
-> so we can change this to something like
->
->                            case 10 * MHZ:
->                                      refclk_freq = FSEL_CLKSEL_10M;
->                                      break;
-> and so on.
-> will this be fine ?
-
-Seems good to me.
-
-
--Doug
+sh-soc:
+sh: shx3: Fix last GPIO index
+sh: sh7786: Fix last GPIO index
+sh: sh7786: Fix port E, G and J GPIOs
+sh: sh7757: Fix GPIO_FN_ET0_MDIO and GPIO_FN_ET1_MDIO GPIO entries
+sh: sh7723: Rename GPIO_FN_SIUOSPD to GPIO_FN_SIUAOSPD
+sh: sh7269: Rename CRX0CRX1(CRX2) marks to match GPIO names
+sh: sh7264: Rename CRX0CRX1 mark to match GPIO names
