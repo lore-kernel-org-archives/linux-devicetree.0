@@ -1,72 +1,60 @@
-From: Artem Bityutskiy <dedekind1@gmail.com>
-Subject: Re: [PATCH v8 2/5] mtd: omap-nand: pass device_node in platform data
-Date: Tue, 15 Jan 2013 21:35:45 +0200
-Message-ID: <1358278545.1668.10.camel@kyv>
-References: <1355481404-27695-1-git-send-email-zonque@gmail.com>
-	 <1355481404-27695-3-git-send-email-zonque@gmail.com>
-	 <20130115185251.GB14149@atomide.com> <1358276967.1668.0.camel@kyv>
-	 <20130115192624.GD14149@atomide.com>
-Reply-To: dedekind1@gmail.com
+From: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 0/6] arm: mvebu: Add support for USB host controllers in Armada 370/XP
+Date: Tue, 15 Jan 2013 20:54:19 +0100
+Message-ID: <9636031.hlmqlZtOEo@bender>
+References: <50F5289D.80903@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-YVPHlURYise3scmIFSlZ"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130115192624.GD14149@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, jon-hunter@ti.com, avinashphilip@ti.com, x0148406@ti.com, paul@pwsan.com, nsekhar@ti.com, jacmet@sunsite.dk, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>, linux-mtd@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50F5289D.80903-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Ezequiel,
 
---=-YVPHlURYise3scmIFSlZ
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+On Tuesday 15 January 2013 06:59:57 Ezequiel Garcia wrote:
+> Hi,
+> 
+> This small patch set enables USB support on Armada 370 and Armada XP platforms.
+> It's based on Jason Cooper's mvebu/dt branch.
+> 
+> Any comments or feedback are welcome.
 
-On Tue, 2013-01-15 at 11:26 -0800, Tony Lindgren wrote:
-> * Artem Bityutskiy <dedekind1@gmail.com> [130115 11:12]:
-> > On Tue, 2013-01-15 at 10:52 -0800, Tony Lindgren wrote:
-> > > Artem,
-> > >=20
-> > > Looks like this patch related to making GPMC work with DT was
-> > > never sent to linux-mtd or to you so adding to cc.
-> > >=20
-> > > Is this OK to apply along with the GPMC patches, or do you want to
-> > > take this separately with the MTD patches?
-> >=20
-> > Please, go ahead!
->=20
-> OK thanks. Can I add your Acked-by too?
+I successfully tested this serie on a Marvell RD-A370-A1 and a DB-MV784MP-GP:
 
-Yes Tony, please, do:
+Tested-by: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 
-Acked-by: Artem Bityutskiy <dedekind1@gmail.com>
+Thanks!
 
---=20
-Best Regards,
-Artem Bityutskiy
-
---=-YVPHlURYise3scmIFSlZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAABAgAGBQJQ9a+RAAoJECmIfjd9wqK0U/QQAMeOcaqX2fPwd8roaUoxtLSY
-qjVpZHYDYNCFh6ERbPIv8iZHQhjJ0Q5B7xj4WbYhEXFeXTAtEiA9hIs2/JZe6//k
-xpPOtrr/W+8GTIkvr3sKp8PvLsN5u/6RCmbP7bkRnjnwniv/Ffa6W4oHLrVZJQjw
-qqe6Zne2hGr94E7opUayvml9R8pKLGrPl7EO3QwzHwB8uvOo1/QTUZATpjEP8E0T
-JrGgt52DD8+BpgqF+2O2RP2RRH+VyxJxZpIU5C5O4PzDWtt4bxaeiICR8+L0XSla
-DvAas7lQ/9z5MfgPaQb759EuJgegM/Y1UfuAeuBsYh4ZHfpDVnKLqaXfZBiiVMVC
-iNVzDsOZhXCa9cVjFFhT6wIAN8vXS0ptJ/GgAZGOglT7VhGbSY8WiCgEWMU7IHQp
-FxPJOsxGvI0S3GBuUi5ILoPwcJegkfqO4wuqggbIwtuY3dhv9IsPr5mVEy9aND1W
-AhuKxom0NoLUcD9g4GZQOt02fDe6hfM0/OLGu8eIgscmLcQR0UdW9Q1AANY1ZXeE
-23LhugoUyDiOs++623XhKMKK8lQkLpNZoAHs5BuBbCt1XPKc/k2VOUJccNqfrm5g
-4tH5sOOGPgkKGe+WoFDm+0hJwSUURolwszqt/oFi1XrP15TzyREmse8w41gmwL0e
-O5Agq7f27Dmhb5L0N8X1
-=a7eK
------END PGP SIGNATURE-----
-
---=-YVPHlURYise3scmIFSlZ--
-
+> 
+> Ezequiel Garcia (6):
+>  arm: mvebu: Add support for USB host controllers in Armada 370/XP
+>  arm: mvebu: Enable USB controllers on Armada 370 evaluation board
+>  arm: mvebu: Enable USB controllers on Armada 370 Mirabox board
+>  arm: mvebu: Enable USB controllers on Armada XP evaluation board
+>  arm: mvebu: Enable USB controllers on Armada XP OpenBlocks AX3-4 board
+>  arm: mvebu: Update defconfig to select USB support
+> 
+>  arch/arm/boot/dts/armada-370-db.dts              |    8 ++++++++
+>  arch/arm/boot/dts/armada-370-mirabox.dts         |    8 ++++++++
+>  arch/arm/boot/dts/armada-370-xp.dtsi             |   15 +++++++++++++++
+>  arch/arm/boot/dts/armada-370.dtsi                |    9 +++++++++
+>  arch/arm/boot/dts/armada-xp-db.dts               |   12 ++++++++++++
+>  arch/arm/boot/dts/armada-xp-openblocks-ax3-4.dts |    9 +++++++++
+>  arch/arm/boot/dts/armada-xp.dtsi                 |   17 +++++++++++++++++
+>  arch/arm/configs/mvebu_defconfig                 |    5 ++++-
+>  arch/arm/mach-mvebu/Kconfig                      |    1 +
+>  9 files changed, 83 insertions(+), 1 deletions(-)
+>  
+> Thanks!
+> 
+> 
+-- 
+Florian
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
