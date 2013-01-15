@@ -1,46 +1,66 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 2/6] arm: mvebu: Enable USB controllers on Armada 370
- evaluation board
-Date: Tue, 15 Jan 2013 10:58:30 -0300
-Message-ID: <50F56086.2040101@free-electrons.com>
-References: <1358243670-11935-1-git-send-email-ezequiel.garcia@free-electrons.com> <1358243670-11935-2-git-send-email-ezequiel.garcia@free-electrons.com> <201301151307.26665.arnd@arndb.de>
+From: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH 08/10] video: da8xx-fb: obtain fb_videomode info from dt
+Date: Tue, 15 Jan 2013 13:59:03 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA85B05@DBDE01.ent.ti.com>
+References: <cover.1357304090.git.afzal@ti.com>
+ <78e026555731e0bbe8475610279d3e5265d124b9.1357304090.git.afzal@ti.com>
+ <20130107091131.GC23478@pengutronix.de>
+ <C8443D0743D26F4388EA172BF4E2A7A93EA7FC7A@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201301151307.26665.arnd-r2nGTMty4D4@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EA7FC7A-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Nori,
+ Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "Valkeinen,
+ Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Steffen,
 
-On 01/15/2013 10:07 AM, Arnd Bergmann wrote:
-> On Tuesday 15 January 2013, Ezequiel Garcia wrote:
->> Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->> Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->=20
-> The patches look good, but when you have four trivial patches
-> doing the same thing in different files, and you decide that it's
-> not worth writing a changelog for them, they should probably
-> go into a single patch.
->
+On Mon, Jan 07, 2013 at 14:51:15, Mohammed, Afzal wrote:
+> On Mon, Jan 07, 2013 at 14:41:31, Steffen Trumtrar wrote:
+> > On Mon, Jan 07, 2013 at 10:41:30AM +0530, Afzal Mohammed wrote:
 
-Mmm... maybe you're right and such splitting is excessive.
-It seemed tidier this way, enabling each board on a different patch.
+> > > +- display-timings: list of different videomodes supported by the lcd
+> > > +  panel, represented as childs, can have multiple modes supported, if
+> > > +  only one, then it is considered native mode, if multiple modes are
+> > > +  provided, native mode can be set explicitly, more details available
+> > > +  @Documentation/devicetree/bindings/video/display-timing.txt
+> 
+> > Keep in mind that the text combined with...
+> 
+> > > +		if (of_get_fb_videomode(np, lcdc_info, 0)) {
+> > > +			dev_err(&dev->dev, "timings not available in DT\n");
+> > > +			return NULL;
+> > > +		}
+> > > +		return lcdc_info;
+> > > +	}
+> > 
+> > ... this is not correct. You are just supporting the first display-timings
+> > subnode (of_get_fb_videomode(..., 0)).
+> 
+> 
+> Yes right, I will modify the text to reflect what the driver does.
 
-I can squash them on a v2, if you want me to.
+Thinking about it further, it seems the right thing to do
+in this case would be to invoke as,
 
-Thanks for reviewing!
+"of_get_fb_videomode(np, lcd_info, OF_USE_NATIVE_MODE)".
 
---=20
-Ezequiel Garc=EDa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Updated version has been posted to the lists (forgot to cc you)
+
+Regards
+Afzal
