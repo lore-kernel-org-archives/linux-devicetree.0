@@ -1,83 +1,75 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] ARM i.MX6: use reserved bit for mxs phy clock
- gate
-Date: Wed, 16 Jan 2013 10:10:37 +0800
-Message-ID: <20130116021035.GE16514@nchen-desktop>
-References: <1358230117-19443-1-git-send-email-peter.chen@freescale.com>
- <20130115113313.GB32113@S2101-09.ap.freescale.net>
- <20130116011845.GB16514@nchen-desktop>
- <20130116014855.GA8118@S2101-09.ap.freescale.net>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 12/12] video: da8xx-fb: set upstream clock rate (if
+ reqd)
+Date: Wed, 16 Jan 2013 10:32:10 +0530
+Message-ID: <50F63452.1060004@ti.com>
+References: <cover.1358251447.git.afzal@ti.com> <26e787b021cda89a080f80657c2094b9ff2decaf.1358251448.git.afzal@ti.com> <20130115153222.23734.7924@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130116014855.GA8118-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marex-ynQEQJNshbs@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130115153222.23734.7924@quantum>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Afzal Mohammed <afzal@ti.com>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2013 at 09:48:57AM +0800, Shawn Guo wrote:
-> On Wed, Jan 16, 2013 at 09:18:46AM +0800, Peter Chen wrote:
-> > On Tue, Jan 15, 2013 at 07:33:16PM +0800, Shawn Guo wrote:
-> > > On Tue, Jan 15, 2013 at 02:08:34PM +0800, Peter Chen wrote:
-> > > > For mxs-phy user i.mx6q, the PHY's clock is controlled by
-> > > > hardware automatically, the software only needs to enable it
-> > > > at probe, disable it at remove. During the runtime,
-> > > > we don't need to control it. So for the usbphy clk policy:
-> > > > 
-> > > > - Keep refcount for usbphy as clk framework needs to know if
-> > > > it is off or on.
-> > > 
-> I thought it might be okay to access anatop for enabling the clock in
-> usb driver.  But I found it's just too ugly to do that when I look at
-> the code a little bit closer.  I prefer to keep clock driver unchanged
-> and just call clk_prepare_enable() at platform level to enable the
-> clock.  I really dislike the code accessing anatop for enabling the
-> clock.  That's the part different from you v1 patch.
-
-It is a way, but how to consolidate other mxx-phy users, like mx28.
-It needs to call clk_prepare_enable runtime.
+On 1/15/2013 9:02 PM, Mike Turquette wrote:
+> Quoting Afzal Mohammed (2013-01-15 05:44:36)
+>> LCDC IP has a clock divider to adjust pixel clock, this limits pixel
+>> clock range to fck/255 - fck/2(fck - rate of input clock to LCDC IP).
+>> In the case of AM335x, where this IP is present, default fck is not
+>> sufficient to provide normal pixel clock rates, hence rendering this
+>> driver unusable on AM335x.
+>>
+>> If input clock too is configurable, allowable range of pixel clock
+>> would increase. Here initially it is checked whether with present fck,
+>> divider in IP could be configured to obtain required rate, if not,
+>> fck is adjusted. This makes it usable on AM335x.
+>>
+>> Note:
+>> A better (if allowable) solution may be to represent clock divider in
+>> LCDC IP as a basic divider clock - the one defined in common clock
+>> framework. But for this to happen, all the platform's using this driver
+>> should be using common clock framework (DaVinci is yet to be converted
+>> to use common clock framework). And it has to be determined whether
+>> common clock framework allows this kind of a clock modelling inside a
+>> driver and for this to be part of clock tree. Advantage of doing so
+>> would be better resolution for pixel clock, even though without this
+>> existing use cases are working properly. Or another extreme alternative
+>> would be to replicate clk-divider of common clock framework inside the
+>> driver, but that probably is not preferred and not worth as it would be
+>> duplication and without much advantage to existing users.
+>>
 > 
-> > I send the v2 patch due to below reasons,
-> > There are other PLL3 users, it is better keep refcount
-> > to all its children, or the user will be confused when the
-> > PLL3 goes to disable, but the usb otg part is still used
-> > 
-> This is the part I'm not sure how it works.  You said, the PLL will be
-> managed by hardware during USB suspend/resume.  I assume that it means
-> the PLL will be powered off when USB suspends and be powered on when
-> USB resumes.  If that's the case, how other users of the PLL work when
-> PLL is powered off by USB hardware.
-
-It is a little complicated:
-You can understand both PLL7 and PLL3 like below:
-PLL_POWER_BIT && usb_is_not_suspend
-For PLL7: USB host 1 is the only user, so we can keep PLL7_POWER_BIT is always on
-and let the usb hardware controller it automatically. Other way is let the
-clock framework and usb hardware controller it together.
-For PLL3, as there are other users, so software must control PLL3_POWER_BIT,
-or the PLL3 will be off if the usb enters suspend.
-
-This PLL_POWER_BIT is not related to usbphy clock gate, this power bit can be
-usbphy's parent.
-
+> Afzal,
 > 
-> Shawn
+> Modeling the divider inside your IP block as a clock is supported in the
+> common clock framework.  Linking up these sorts of clocks to the clock
+> tree was one of the original design goals of CCF.
 > 
-> > For PLL7, we can do it, and let the PLL7 be out of clock framework
-> > management.
-> > 
-> > But I still think keep usbphy as PLL child is better solution,
-> > in that case, the clock maintainer can know the real clock usage.
-> > 
+> Regarding DaVinci: converting that platform over to use CCF would be the
+> best approach.
 
--- 
+This is work in progress. There are patches that have been posted. Work
+has been slow on this though due to lack of bandwidth.
 
-Best Regards,
-Peter Chen
+> An alternative would be that you could break
+> single-image boot for AM335x and DaVinci, by having AM335x use CCF and
+> DaVinci use the legacy clock framework.  From the LCDC driver's
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Single image for DaVinci and AM335x is not possible anyway since ARMv5
+and ARMv6+ cannot be supported in a single image.
+
+> perspective this should not matter and is indeed the purpose of the
+> clk.h api and clkdev interfaces, however looking at this driver I can
+> see there would still be a lot ifdef-ery going on... better to just
+> convert everything over to CCF.
+
+Waiting for DaVinci CCF to complete will be too long a wait. Probably
+convert to CCF just for AM335x ATM. There would be some ifdef'ry but
+hopefully that need not be inside function bodies. Would have to see the
+implementation, I guess.
+
+Thanks,
+Sekhar
