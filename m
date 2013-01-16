@@ -1,97 +1,61 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH v4 2/4] ARM: Exynos5250: Enabling ohci-exynos driver
-Date: Wed, 16 Jan 2013 20:39:16 +0530
-Message-ID: <CAFp+6iFsTj+F4MN0EKQueVpzju+OYV75C1thxVC8udv3tm9raw@mail.gmail.com>
-References: <1358257112-19595-1-git-send-email-gautam.vivek@samsung.com>
-	<1358257112-19595-3-git-send-email-gautam.vivek@samsung.com>
-	<2542030.a14I18dBkO@flatron>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [RFC PATCH 0/5] Reset controller API to reset IP modules on i.MX5 and
+ i.MX6
+Date: Wed, 16 Jan 2013 17:13:00 +0100
+Message-ID: <1358352787-15441-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2542030.a14I18dBkO@flatron>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Vivek Gautam <gautam.vivek@samsung.com>, jg1.han@samsung.com, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+The system reset controller (SRC) on i.MX51, i.MX53, and i.MX6q controls
+reset lines to the GPU, VPU, IPU, and OpenVG IP modules.
 
+The following patches add a simple API for devices to request being reset
+by separate reset controller hardware. They implement the reset signal
+device tree binding proposed by Stephen Warren. Contrary to Tegra hardware,
+the i.MX SRC has self-deasserting reset bits, so I've included both
+ops to manually assert/deassert a reset line, as well as a reset
+operation that is supposed to assert the reset line and wait for it to
+deassert.
 
-On Wed, Jan 16, 2013 at 1:14 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Vivek,
->
-> On Tuesday 15 of January 2013 19:08:30 Vivek Gautam wrote:
->> Adding OHCI device tree node for Exynos5250 along with
->> the device base address.
->>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> Acked-by: Jingoo Han <jg1.han@samsung.com>
->> Acked-by: Grant Likely <grant.likely@secretlab.ca>
->> ---
->>  .../devicetree/bindings/usb/exynos-usb.txt         |   15
->> +++++++++++++++ arch/arm/boot/dts/exynos5250.dtsi                  |
->> 6 ++++++ 2 files changed, 21 insertions(+), 0 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> b/Documentation/devicetree/bindings/usb/exynos-usb.txt index
->> e8bbb47..f66fcdd 100644
->> --- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
->> @@ -23,3 +23,18 @@ Example:
->>               interrupts = <0 71 0>;
->>               samsung,vbus-gpio = <&gpx2 6 1 3 3>;
->>       };
->> +
->> +OHCI
->> +Required properties:
->> + - compatible: should be "samsung,exynos4210-ohci" for USB 2.0
->> +   OHCI companion controller in host mode.
->> + - reg: physical base address of the controller and length of memory
->> mapped +   region.
->> + - interrupts: interrupt number to the cpu.
->> +
->> +Example:
->> +     usb@12120000 {
->> +             compatible = "samsung,exynos4210-ohci";
->> +             reg = <0x12120000 0x100>;
->> +             interrupts = <0 71 0>;
->> +     };
->> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
->> b/arch/arm/boot/dts/exynos5250.dtsi index 2cbe53e..ebb0907 100644
->> --- a/arch/arm/boot/dts/exynos5250.dtsi
->> +++ b/arch/arm/boot/dts/exynos5250.dtsi
->> @@ -281,6 +281,12 @@
->>               interrupts = <0 71 0>;
->>       };
->>
->> +     usb@12120000 {
->> +             compatible = "samsung,exynos4210-ohci";
->> +             reg = <0x12120000 0x100>;
->> +             interrupts = <0 71 0>;
->
-> For Samsung platforms we decided per board enabling of nodes and so this
-> node should also contain:
->
->                 status = "disabled";
->
-> while in dts file of board using ohci there would be an overriding entry:
->
->         usb@12120000 {
->                 status = "okay";
->         };
->
+The i.MX SRC is enhanced to provide a reset controller and the IPU driver
+is made to request being reset by calling the device_reset(&pdev->dev)
+convenience wrapper during probing.
 
-Yes, i could see that for exynos4x dt.
+regards
+Philipp
 
-> I know that Exynos5250 has not been yet converted into this convention,
-> but using it when adding new devices will simplify the process.
->
-
-Sure, will change this and other patches for usb as suggested.
-Thanks for the review. :-)
-
-
-
--- 
-Thanks & Regards
-Vivek
+---
+ .../devicetree/bindings/reset/fsl,imx-src.txt      |   49 ++++
+ Documentation/devicetree/bindings/reset/reset.txt  |   75 ++++++
+ .../bindings/staging/imx-drm/fsl-imx-drm.txt       |    3 +
+ arch/arm/boot/dts/imx51.dtsi                       |    7 +
+ arch/arm/boot/dts/imx53.dtsi                       |    7 +
+ arch/arm/boot/dts/imx6q.dtsi                       |    3 +
+ arch/arm/mach-imx/Kconfig                          |    1 +
+ arch/arm/mach-imx/common.h                         |    3 +-
+ arch/arm/mach-imx/mach-imx6q.c                     |    2 +-
+ arch/arm/mach-imx/mm-imx5.c                        |    2 +
+ arch/arm/mach-imx/src.c                            |   86 ++++++-
+ drivers/Kconfig                                    |    2 +
+ drivers/Makefile                                   |    2 +
+ drivers/reset/Kconfig                              |   10 +
+ drivers/reset/Makefile                             |    2 +
+ drivers/reset/core.c                               |  241 ++++++++++++++++++++
+ drivers/staging/imx-drm/ipu-v3/ipu-common.c        |   12 +-
+ include/linux/imx-src.h                            |    6 +
+ 18 files changed, 507 insertions(+), 6 deletions(-)
