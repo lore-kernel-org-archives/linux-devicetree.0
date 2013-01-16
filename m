@@ -1,93 +1,99 @@
-From: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v4 0/3] mtd: nand: OMAP: ELM error correction support
- for BCH ecc
-Date: Wed, 16 Jan 2013 12:22:01 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3EA5DFA9@DBDE01.ent.ti.com>
-References: <1357286211-5012-1-git-send-email-avinashphilip@ti.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 3/4] Enable ecc-mode selection in the driver
+Date: Wed, 16 Jan 2013 14:24:22 +0100
+Message-ID: <20130116132422.GI17242@lunn.ch>
+References: <cover.1358242644.git.s.peter@mpl.ch>
+ <2d08c4c072fd4922a6056362adb96a455307d583.1358242644.git.s.peter@mpl.ch>
+ <20130115125119.GH13482@lunn.ch>
+ <50F6927D.3070303@mpl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1357286211-5012-1-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hebbar,
- Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "ivan.djelic-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org" <ivan.djelic-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50F6927D.3070303@mpl.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Peter <s.peter@mpl.ch>
+Cc: Andrew Lunn <andrew@lunn.ch>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, jason@lakedaemon.net, dwmw2@infradead.org, jm@lentin.co.uk, arnd@arndb.de, sebastian.hesselbarth@googlemail.com, iwamatsu@nigauri.org, artem.bityutskiy@linux.intel.com, wfp5p@virginia.edu, gregkh@linuxfoundation.org, broonie@opensource.wolfsonmicro.com, mchehab@redhat.com, nico@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Artem,
+On Wed, Jan 16, 2013 at 12:43:57PM +0100, Stefan Peter wrote:
+> Hi Andrew
+> 
+> on 15.01.2013 13:51, Andrew Lunn wrote:
+> > On Tue, Jan 15, 2013 at 01:13:12PM +0100, Stefan Peter wrote:
+> >> In order to be able to use the ecc-mode, add the bch module to the default
+> >> settings for the kirwood boards and enable the activation in orin-nand.c
+> >>
+> >> Signed-off-by: Stefan Peter <s.peter@mpl.ch>
+> >> ---
+> >> diff --git a/arch/arm/configs/kirkwood_defconfig b/arch/arm/configs/kirkwood_defconfig
+> >> index 93f3794..4a9d3f7 100644
+> >> --- a/arch/arm/configs/kirkwood_defconfig
+> >> +++ b/arch/arm/configs/kirkwood_defconfig
+> >> @@ -84,6 +84,7 @@ CONFIG_MTD_CFI_STAA=y
+> >>  CONFIG_MTD_PHYSMAP=y
+> >>  CONFIG_MTD_M25P80=y
+> >>  CONFIG_MTD_NAND=y
+> >> +CONFIG_MTD_NAND_ECC_BCH=y
+> >>  CONFIG_MTD_NAND_ORION=y
+> >>  CONFIG_BLK_DEV_LOOP=y
+> >>  # CONFIG_SCSI_PROC_FS is not set
+> >> diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
+> >> index cd72b92..1a35257 100644
+> >> --- a/drivers/mtd/nand/orion_nand.c
+> >> +++ b/drivers/mtd/nand/orion_nand.c
+> >> @@ -14,6 +14,7 @@
+> >>  #include <linux/module.h>
+> >>  #include <linux/platform_device.h>
+> >>  #include <linux/of.h>
+> >> +#include <linux/of_mtd.h>
+> >>  #include <linux/mtd/mtd.h>
+> >>  #include <linux/mtd/nand.h>
+> >>  #include <linux/mtd/partitions.h>
+> >> @@ -130,6 +131,7 @@ static int __init orion_nand_probe(struct platform_device *pdev)
+> >>  		if (!of_property_read_u32(pdev->dev.of_node,
+> >>  						"chip-delay", &val))
+> >>  			board->chip_delay = (u8)val;
+> >> +		board->ecc_mode = of_get_nand_ecc_mode(pdev->dev.of_node);
+> > 
+> >>  	} else
+> >>  		board = pdev->dev.platform_data;
+> >>  
+> >> @@ -140,7 +142,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
+> >>  	nc->IO_ADDR_R = nc->IO_ADDR_W = io_base;
+> >>  	nc->cmd_ctrl = orion_nand_cmd_ctrl;
+> >>  	nc->read_buf = orion_nand_read_buf;
+> >> -	nc->ecc.mode = NAND_ECC_SOFT;
+> >> +	nc->ecc.mode = board->ecc_mode == NAND_ECC_SOFT_BCH ?
+> >> +		NAND_ECC_SOFT_BCH : NAND_ECC_SOFT;
+> > 
+> > Hi Stefan
+> > 
+> > What about a user that wants one of the other valid values?
+> > NAND_ECC_OOB_FIRST, NAND_ECC_HW_SYNDROME, etc.
+> 
+> As far as I understand, NAND_ECC_NONE, NAND_ECC_SOFT and
+> NAND_ECC_SOFT_BCH are the only ECC modes that do not require
+> corresponding hardware support which is missing in the marvell
+> 88F6180/88F619x/88F628x. From my point of view, NAND_ECC_NONE does not
+> make sense, too, because MLC NAND Flash requires ECC to be usable.
+> 
+> > 
+> > Would:
+> > 
+> > 	if (IS_ERR(board->ecc_mode)) {
+> > 		nc->ecc.mode = NAND_ECC_SOFT;
+> > 		dev_info(&pdev->dev, "Defaulting to NAND_ECC_SOFT");
+> > 	} else
+> > 		nc->ecc.mode = board->ecc_mode
+> > 
+> > be better?
+> 
+> I feel safer by limiting the modes to what I could test.
 
-On Fri, Jan 04, 2013 at 13:26:48, Philip, Avinash wrote:
-> Support to use ELM as BCH 4 & 8 bit error correction module. Also performance
-> enhancement by adding single shot read_page and write_page functions for the
-> nand flashes with page size less than 4 KB.
-> 
-> ELM module can be used to correct errors reported by BCH 4, 8 & 16 bit
-> ECC scheme. For now only 4 & 8 bit support is added.
-> 
-> BCH 4 & 8 bit error detection support is already available in mainline
-> kernel and works with software error correction.
-> 
-> This series is based on linux 3.8-rc2 and tested with [1].
-> Also this patch series depend on [1] for NAND flash device
-> tree data and gpmc nand device tree binding documentation updates.
-> 
-> 1. [PATCH v7 0/5] OMAP GPMC DT bindings
-> http://www.spinics.net/lists/linux-omap/msg83505.html
-> 
-> Tested on am335x-evm for BCH 4 and 8 bit error correction.
+Hi Stefan
 
-Can you apply this patch series on l2-mtd tree as it will help RBL compatibility
-ecc layout for NAND flash in am335x-platforms and hardware based BCH error
-correction.
+O.K, but i still think a warning message would be useful when
+board->ecc_mode is an error code.
 
-Thanks
-Avinash
-
-> 
-> Changes since v1:
-> 	- Erased page is identified by checking byte [13/7] in read
-> 	  ecc. To filter out bit flips in OOB area, check 0 bits in
-> 	  the byte greater than 4.
-> 	- GPMC ecc engine configuration moves to omap2.c NAND driver.
-> 
-> Changes since v2:
-> 	- Added runtime detection of elm module, instead of depending
-> 	  on platform data.
-> 	- Added bit flip correction in OOB ecc data if bit flip happen
-> 	  OOB data.
-> 
-> Changes since v3:
-> 	- Availability and usability of ELM module is detected from device
-> 	  tree nodes by checking availability of ELM node in device tree.
-> 
-> Philip Avinash (3):
->   mtd: nand: omap2: Update nerrors using ecc.strength
->   mtd: devices: elm: Add support for ELM error correction
->   mtd: nand: omap2: Support for hardware BCH error correction.
-> 
->  Documentation/devicetree/bindings/mtd/elm.txt      |   16 +
->  .../devicetree/bindings/mtd/gpmc-nand.txt          |    4 +
->  drivers/mtd/devices/Makefile                       |    4 +-
->  drivers/mtd/devices/elm.c                          |  405 ++++++++++++++
->  drivers/mtd/nand/omap2.c                           |  583 ++++++++++++++++++--
->  include/linux/platform_data/elm.h                  |   54 ++
->  6 files changed, 1023 insertions(+), 43 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mtd/elm.txt
->  create mode 100644 drivers/mtd/devices/elm.c
->  create mode 100644 include/linux/platform_data/elm.h
-> 
-> -- 
-> 1.7.9.5
-> 
-> 
+		Andrew
