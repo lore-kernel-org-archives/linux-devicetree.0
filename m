@@ -1,26 +1,47 @@
-From: Stefan Peter <s.peter@mpl.ch>
+From: Stefan Peter <s.peter-R0yVo0h44Ow@public.gmane.org>
 Subject: Re: [PATCH 3/4] Enable ecc-mode selection in the driver
-Date: Wed, 16 Jan 2013 12:43:57 +0100
-Message-ID: <50F6927D.3070303@mpl.ch>
-References: <cover.1358242644.git.s.peter@mpl.ch> <2d08c4c072fd4922a6056362adb96a455307d583.1358242644.git.s.peter@mpl.ch> <20130115125119.GH13482@lunn.ch>
+Date: Wed, 16 Jan 2013 12:44:09 +0100
+Message-ID: <50F69289.8060401@mpl.ch>
+References: <cover.1358242644.git.s.peter@mpl.ch>
+ <2d08c4c072fd4922a6056362adb96a455307d583.1358242644.git.s.peter@mpl.ch>
+ <20130115123307.GA13433@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130115125119.GH13482@lunn.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, jason@lakedaemon.net, dwmw2@infradead.org, jm@lentin.co.uk, arnd@arndb.de, sebastian.hesselbarth@googlemail.com, iwamatsu@nigauri.org, artem.bityutskiy@linux.intel.com, wfp5p@virginia.edu, gregkh@linuxfoundation.org, broonie@opensource.wolfsonmicro.com, mchehab@redhat.com, nico@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130115123307.GA13433-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: andrew-g2DYL2Zd6BY@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org, nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, wfp5p-4Ng6DfrEGID2fBVCVOL8/A@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, jm-Pj/HzkgeCk7QXOPxS62xeg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew
+Hi Jason
 
-on 15.01.2013 13:51, Andrew Lunn wrote:
+on 15.01.2013 13:33, Jason Cooper wrote:
+> Stefan,
+> 
+> This is a good-looking patch series, nice and small!  A few comments:
+> 
 > On Tue, Jan 15, 2013 at 01:13:12PM +0100, Stefan Peter wrote:
 >> In order to be able to use the ecc-mode, add the bch module to the default
 >> settings for the kirwood boards and enable the activation in orin-nand.c
+> 
+> s/orin-nand/orion-nand/
+
+Will fix.
+
+> 
 >>
->> Signed-off-by: Stefan Peter <s.peter@mpl.ch>
+>> Signed-off-by: Stefan Peter <s.peter-R0yVo0h44Ow@public.gmane.org>
 >> ---
 >> diff --git a/arch/arm/configs/kirkwood_defconfig b/arch/arm/configs/kirkwood_defconfig
 >> index 93f3794..4a9d3f7 100644
@@ -34,64 +55,22 @@ on 15.01.2013 13:51, Andrew Lunn wrote:
 >>  CONFIG_MTD_NAND_ORION=y
 >>  CONFIG_BLK_DEV_LOOP=y
 >>  # CONFIG_SCSI_PROC_FS is not set
->> diff --git a/drivers/mtd/nand/orion_nand.c b/drivers/mtd/nand/orion_nand.c
->> index cd72b92..1a35257 100644
->> --- a/drivers/mtd/nand/orion_nand.c
->> +++ b/drivers/mtd/nand/orion_nand.c
->> @@ -14,6 +14,7 @@
->>  #include <linux/module.h>
->>  #include <linux/platform_device.h>
->>  #include <linux/of.h>
->> +#include <linux/of_mtd.h>
->>  #include <linux/mtd/mtd.h>
->>  #include <linux/mtd/nand.h>
->>  #include <linux/mtd/partitions.h>
->> @@ -130,6 +131,7 @@ static int __init orion_nand_probe(struct platform_device *pdev)
->>  		if (!of_property_read_u32(pdev->dev.of_node,
->>  						"chip-delay", &val))
->>  			board->chip_delay = (u8)val;
->> +		board->ecc_mode = of_get_nand_ecc_mode(pdev->dev.of_node);
 > 
->>  	} else
->>  		board = pdev->dev.platform_data;
->>  
->> @@ -140,7 +142,8 @@ static int __init orion_nand_probe(struct platform_device *pdev)
->>  	nc->IO_ADDR_R = nc->IO_ADDR_W = io_base;
->>  	nc->cmd_ctrl = orion_nand_cmd_ctrl;
->>  	nc->read_buf = orion_nand_read_buf;
->> -	nc->ecc.mode = NAND_ECC_SOFT;
->> +	nc->ecc.mode = board->ecc_mode == NAND_ECC_SOFT_BCH ?
->> +		NAND_ECC_SOFT_BCH : NAND_ECC_SOFT;
-> 
-> Hi Stefan
-> 
-> What about a user that wants one of the other valid values?
-> NAND_ECC_OOB_FIRST, NAND_ECC_HW_SYNDROME, etc.
+> Please make the defconfig change a separate patch.
 
-As far as I understand, NAND_ECC_NONE, NAND_ECC_SOFT and
-NAND_ECC_SOFT_BCH are the only ECC modes that do not require
-corresponding hardware support which is missing in the marvell
-88F6180/88F619x/88F628x. From my point of view, NAND_ECC_NONE does not
-make sense, too, because MLC NAND Flash requires ECC to be usable.
+Will do.
 
 > 
-> Would:
-> 
-> 	if (IS_ERR(board->ecc_mode)) {
-> 		nc->ecc.mode = NAND_ECC_SOFT;
-> 		dev_info(&pdev->dev, "Defaulting to NAND_ECC_SOFT");
-> 	} else
-> 		nc->ecc.mode = board->ecc_mode
-> 
-> be better?
+> As a general note (this series shouldn't be a problem), please sort the
+> series so that you add the driver feature first, then enable it in
+> defconfig, then use it in DT.  This way, a future bisection won't run
+> into any nasty surprises, other than what they're looking for. ;-)
 
-I feel safer by limiting the modes to what I could test.
+Will do.
 
-Regards
+Thank you very much for your review.
 
 Stefan Peter
-
-
 -- 
 MPL AG, Switzerland                     http://www.mpl.ch
 Tel. +41 (0)56 483 34 34          Fax: +41(0)56 493 30 20
