@@ -1,75 +1,81 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v2 12/12] video: da8xx-fb: set upstream clock rate (if
- reqd)
-Date: Wed, 16 Jan 2013 10:32:10 +0530
-Message-ID: <50F63452.1060004@ti.com>
-References: <cover.1358251447.git.afzal@ti.com> <26e787b021cda89a080f80657c2094b9ff2decaf.1358251448.git.afzal@ti.com> <20130115153222.23734.7924@quantum>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH v4 1/4] ARM: Exynos5250: Enabling ehci-s5p driver
+Date: Wed, 16 Jan 2013 10:51:17 +0530
+Message-ID: <CAFp+6iFgaT9D2hR0pX34jo2g+GHftmA0Mw3y96-oKe0KakZOxA@mail.gmail.com>
+References: <1358257112-19595-1-git-send-email-gautam.vivek@samsung.com>
+	<1358257112-19595-2-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130115153222.23734.7924@quantum>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Afzal Mohammed <afzal@ti.com>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1358257112-19595-2-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, jg1.han@samsung.com, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/15/2013 9:02 PM, Mike Turquette wrote:
-> Quoting Afzal Mohammed (2013-01-15 05:44:36)
->> LCDC IP has a clock divider to adjust pixel clock, this limits pixel
->> clock range to fck/255 - fck/2(fck - rate of input clock to LCDC IP).
->> In the case of AM335x, where this IP is present, default fck is not
->> sufficient to provide normal pixel clock rates, hence rendering this
->> driver unusable on AM335x.
->>
->> If input clock too is configurable, allowable range of pixel clock
->> would increase. Here initially it is checked whether with present fck,
->> divider in IP could be configured to obtain required rate, if not,
->> fck is adjusted. This makes it usable on AM335x.
->>
->> Note:
->> A better (if allowable) solution may be to represent clock divider in
->> LCDC IP as a basic divider clock - the one defined in common clock
->> framework. But for this to happen, all the platform's using this driver
->> should be using common clock framework (DaVinci is yet to be converted
->> to use common clock framework). And it has to be determined whether
->> common clock framework allows this kind of a clock modelling inside a
->> driver and for this to be part of clock tree. Advantage of doing so
->> would be better resolution for pixel clock, even though without this
->> existing use cases are working properly. Or another extreme alternative
->> would be to replicate clk-divider of common clock framework inside the
->> driver, but that probably is not preferred and not worth as it would be
->> duplication and without much advantage to existing users.
->>
-> 
-> Afzal,
-> 
-> Modeling the divider inside your IP block as a clock is supported in the
-> common clock framework.  Linking up these sorts of clocks to the clock
-> tree was one of the original design goals of CCF.
-> 
-> Regarding DaVinci: converting that platform over to use CCF would be the
-> best approach.
+On Tue, Jan 15, 2013 at 7:08 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+> Adding EHCI device tree node for Exynos5250 along with
+> the device base adress and gpio line for vbus.
+>
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Acked-by: Jingoo Han <jg1.han@samsung.com>
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+>  .../devicetree/bindings/usb/exynos-usb.txt         |   25 ++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 +++
+>  arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++++
+>  3 files changed, 35 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/exynos-usb.txt
+>
+> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> new file mode 100644
+> index 0000000..e8bbb47
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> @@ -0,0 +1,25 @@
+> +Samsung Exynos SoC USB controller
+> +
+> +The USB devices interface with USB controllers on Exynos SOCs.
+> +The device node has following properties.
+> +
+> +EHCI
+> +Required properties:
+> + - compatible: should be "samsung,exynos4210-ehci" for USB 2.0
+> +   EHCI controller in host mode.
+> + - reg: physical base address of the controller and length of memory mapped
+> +   region.
+> + - interrupts: interrupt number to the cpu.
+> +
+> +Optional properties:
+> + - samsung,vbus-gpio:  if present, specifies the GPIO that
+> +   needs to be pulled up for the bus to be powered.
+> +
+> +Example:
+> +
+> +       usb@12110000 {
+> +               compatible = "samsung,exynos4210-ehci";
+> +               reg = <0x12110000 0x100>;
+> +               interrupts = <0 71 0>;
+> +               samsung,vbus-gpio = <&gpx2 6 1 3 3>;
+> +       };
+> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> index 942d576..7363e14 100644
+> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> @@ -204,4 +204,8 @@
+>                 samsung,mfc-r = <0x43000000 0x800000>;
+>                 samsung,mfc-l = <0x51000000 0x800000>;
+>         };
+> +
+> +       usb@12110000 {
+> +               samsung,vbus-gpio = <&gpx2 6 1 3 3>;
+> +       };
 
-This is work in progress. There are patches that have been posted. Work
-has been slow on this though due to lack of bandwidth.
+Add required vbus gpio for snow board also here.
 
-> An alternative would be that you could break
-> single-image boot for AM335x and DaVinci, by having AM335x use CCF and
-> DaVinci use the legacy clock framework.  From the LCDC driver's
+>  };
 
-Single image for DaVinci and AM335x is not possible anyway since ARMv5
-and ARMv6+ cannot be supported in a single image.
 
-> perspective this should not matter and is indeed the purpose of the
-> clk.h api and clkdev interfaces, however looking at this driver I can
-> see there would still be a lot ifdef-ery going on... better to just
-> convert everything over to CCF.
-
-Waiting for DaVinci CCF to complete will be too long a wait. Probably
-convert to CCF just for AM335x ATM. There would be some ifdef'ry but
-hopefully that need not be inside function bodies. Would have to see the
-implementation, I guess.
-
-Thanks,
-Sekhar
+-- 
+Thanks & Regards
+Vivek
