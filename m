@@ -1,78 +1,125 @@
-From: kishon <kishon@ti.com>
-Subject: Re: [RFC PATCH 0/7] usb: musb: add driver for control module
-Date: Wed, 16 Jan 2013 11:31:32 +0530
-Message-ID: <50F6423C.2020307@ti.com>
-References: <1358239378-10030-1-git-send-email-kishon@ti.com> <201301151341.08297.arnd@arndb.de> <50F56A1A.3040504@ti.com> <20130115150432.GB26272@arwen.pp.htv.fi> <6C6B28D4DC342643927BEAFCE8707BF63EA5ACAB@DBDE01.ent.ti.com>
+From: Wolfram Sang <w.sang@pengutronix.de>
+Subject: Re: [PATCH v2 2/4] input: keyboard: tegra: use devm_* for resource
+ allocation
+Date: Wed, 16 Jan 2013 07:35:33 +0100
+Message-ID: <20130116063533.GA22345@pengutronix.de>
+References: <1357371910-3164-3-git-send-email-ldewangan@nvidia.com>
+ <20130105080658.GA1315@core.coreip.homeip.net>
+ <20130106192739.GA11566@avionic-0098.adnet.avionic-design.de>
+ <20130106195748.GA28212@core.coreip.homeip.net>
+ <20130109070745.GA12782@avionic-0098.adnet.avionic-design.de>
+ <20130109091939.GA4369@core.coreip.homeip.net>
+ <20130109092352.GA28037@avionic-0098.adnet.avionic-design.de>
+ <20130114154959.GA25049@avionic-0098.adnet.avionic-design.de>
+ <20130115130623.GC2625@pengutronix.de>
+ <20130115154423.GA13871@avionic-0098.adnet.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <6C6B28D4DC342643927BEAFCE8707BF63EA5ACAB@DBDE01.ent.ti.com>
+Content-Disposition: inline
+In-Reply-To: <20130115154423.GA13871@avionic-0098.adnet.avionic-design.de>
 Sender: linux-doc-owner@vger.kernel.org
-To: "B, Ravi" <ravibabu@ti.com>
-Cc: "Balbi, Felipe" <balbi@ti.com>, Arnd Bergmann <arnd@arndb.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "Cousson, Benoit" <b-cousson@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Laxman Dewangan <ldewangan@nvidia.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Ravi,
 
-On Tuesday 15 January 2013 09:36 PM, B, Ravi wrote:
->> Hi,
->>
->> On Tue, Jan 15, 2013 at 08:09:22PM +0530, kishon wrote:
->>> Hi Arnd,
->>>
->>> On Tuesday 15 January 2013 07:11 PM, Arnd Bergmann wrote:
->>>> On Tuesday 15 January 2013, Kishon Vijay Abraham I wrote:
->>>>> Added a new driver for the usb part of control module.
->> This has an
->>>>> API to power on the USB2 phy and an API to write to the mailbox
->>>>> depending on whether MUSB has to act in host mode or in
->> device mode.
->>>>>
->>>>> Writing to control module registers for doing the above
->> task which
->>>>> was previously done in omap glue and in omap-usb2 phy is removed.
->>>>>
->>>>> Also added the dt data to get MUSB working in OMAP platforms.
->>>>> This series has patches for both drivers and ARCH
->> folders, so If it
->>>>> has to be split I'll do it.
->>>>>
->>>>
->>>> The series looks good to me, I just had a minor comment on
->> one patch.
->>>>
->>>> One a somewhat related topic, I wonder whether there are
->> any plans on
->>>> your side to change this driver to support multiple bus
->> glues to be
->>>> built for one kernel image. With a multiplatform kernel,
->> we may need
->>>> all of TUSB6010/OMAP2PLUS/DSPS/UX500 for instance.
->>>
->>> We don't have plans as of now. I actually don't expect any
->> changes in
->>> the driver other than the Kconfig changes. Anyways the
->> probe of glue's
->>> other than the platform it's running won't get called. right Felipe?
->
-> If understand correctly the control module driver used to configure the respective usb phy of SoC to respective usb modes using the common set of control module APIs.
-What if, if control module interface (register defintions) varies b/w 
-different revision or spin of same type of SoCs, if usbphy type is changed.
-Well in that case, we can write to the registers based on the IP 
-revision check (I think thats the common practice to do).
+--BOKacYhQ+x31HxR3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In this case whether the single instance of control module driver is 
-good enough to cater of all cpu types of same SoC series ?
-Of course. I don't see why we can't have the same driver to handle 
-different versions of the same IP.
-The only reason where we might need multiple instance is if the SoC have 
-multiple control module which Arnd already pointed out.
+Hi,
 
-> Whether cpu_is_xxx() can be used to differentiate b/w different cpu types in CM driver?
-Not needed at all IMHO. We can use revision register to differentiate.
+> > Then, I added the example code in the documentation using EADDRNOTAVAIL.
+> > Yes, I was brave with this one. Yet, EINVAL, EBUSY, ENOENT, did not
+> > really cut it and are so heavily used in drivers that they turned into a
+> > generic "something is wrong" error. I tried here to use a not overloaded
+> > error code in order to be specific again. Since the patches were
+> > accepted, I assumed it wasn't seen as a namespace violation. (Then
+> > again, it probably would have been if that error code would go out to
+> > userspace) Naturally, I didn't have the resources to check all patches
+> > for a consistent error code.
+>=20
+> The problem with the current approach is that people (me included) keep
+> telling people to use this or that error code in an attempt to achieve
+> some kind of consistency. Also using an error message to distinguish
+> between reasons for failure makes it impossible to handle the error
+> other than by visual inspection. Granted, there are currently no code
+> paths that require this.
 
-Btw I think Felipe looped you for a different reason ;-)
+Yes, so currently, this is rather a cosmetic change. And for that, it is
+quite intrusive. I think something like this is needed somewhen as part
+of a bigger overhaul. That's what I called "master plan" last time. That
+could be that resource handling gets aligned in general, also taking
+e.g. interrupt resources into account. But only changing error code
+handling for this function, doesn't seem too useful to me and might even
+need another change later, then.
 
-Thanks
-Kishon
+> One problem with the original patch was also that it didn't actually
+> convert any existing uses, so there was little chance of anyone noticing
+
+Like with the error codes now, there are so many different ways of
+handling resources that I did not want to mass convert all the drivers
+without being able to test them. I was hoping for a migration over time
+with patches from people who really tested what they did.
+
+> potential problems. More than a year later this function is used by many
+> subsystems and a lot of drivers. It just so happened that I observed how
+> many people just didn't know what error codes to choose and often just
+> grabbing one randomly.
+
+Yes, and concerning resources this needs cleaning on a bigger scale IMO.
+
+> By adding devm_ioremap_resource() and having it return ERR_PTR()-encoded
+> error codes we get rid of all these problems and put the responsibility
+> for choosing the error code where, in my opinion, it belongs: the
+> failing function.
+
+For completeness, it leaves the problem that people might forget to use
+ERR_PTR (seen that often in the clk framework). And the change is huge
+while I can't see any real benefit right now.
+
+> > When working with this function, there was also the idea to abstract
+> > getting the resource away. Which then gave Sascha Hauer and me the
+> > question, if drivers really have to do this or if this couldn't be done
+> > by the kernel somehow, i.e. giving the drivers already the resources
+> > they need, completely prepared.
+>=20
+> I'm not sure I like that very much. That could possibly lead to a new
+> problem where drivers that need to do something special have to jump
+> through hoops to achieve something that may otherwise be simple.
+
+I assume that drivers are already doing something special :) So, that
+would turn up in the conversion process. I can't promise that it would
+really work, it would need some playing around.
+
+> Anyway, if people don't think this is a sensible conversion I should
+> waste no more time on it. On the other hand I have the patch series
+> ready so I might as well post it for broader review.
+
+Working on patches is hardly a waste. Even if not accepted, you gain
+understanding. Please put me on CC, if you post the patches.
+
+Regards,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--BOKacYhQ+x31HxR3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlD2SjUACgkQD27XaX1/VRtPPgCfb3MiZpVKu3WeAg/j/kJr7oHC
+5NIAn25m9eZdHRVZADPAT2u2LcGT7yo7
+=GLjc
+-----END PGP SIGNATURE-----
+
+--BOKacYhQ+x31HxR3--
