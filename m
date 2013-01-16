@@ -1,38 +1,52 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
-Date: Wed, 16 Jan 2013 16:17:16 +0000
-Message-ID: <20130116161716.GA10630@arm.com>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <20130115154038.GA11241@arm.com>
- <20130115211441.GA13139@avionic-0098.adnet.avionic-design.de>
- <201301161400.26587.arnd@arndb.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4] hwmon: Driver for Maxim MAX6697 and compatibles
+Date: Wed, 16 Jan 2013 08:35:39 -0800
+Message-ID: <20130116163539.GA27120@roeck-us.net>
+References: <1358289387-996-1-git-send-email-linux@roeck-us.net>
+ <20130116095331.2e3769f0@endymion.delvare>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201301161400.26587.arnd@arndb.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+In-Reply-To: <20130116095331.2e3769f0@endymion.delvare>
+Sender: linux-doc-owner@vger.kernel.org
+To: Jean Delvare <khali@linux-fr.org>
+Cc: lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2013 at 02:00:26PM +0000, Arnd Bergmann wrote:
-> On Tuesday 15 January 2013, Thierry Reding wrote:
-> > Is there actually hardware that supports this? I assumed that the MSI
-> > controller would have to be tightly coupled to the PCI host bridge in
-> > order to raise an interrupt when an MSI is received via PCI.
+On Wed, Jan 16, 2013 at 09:53:31AM +0100, Jean Delvare wrote:
+> On Tue, 15 Jan 2013 14:36:27 -0800, Guenter Roeck wrote:
+> > Add support for MAX6581, MAX6602, MAX6622, MAX6636, MAX6689, MAX6693,
+> > MAX6694, MAX6697, MAX6698, and MAX6699 temperature sensors
+> > 
+> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> > ---
+> > (...)
+> > v4:
+> > - s/beta/Beta at beginning of sentence in device tree description file
+> > - Optimize temperature calculation in show_temp_input
+> > - Accept temperatures up to 255 degrees C (191 degrees C in extended
+> >   temperature mode) for MAX6581
+> > - Define reg as int in max6697_init_chip to be able to catch error cases
+> > - Optimize assignment to data->temp_offset in max6697_init_chip
+> > - smbus->SMBus in platform_data/max6697.h
+> > 
+> >  Documentation/devicetree/bindings/i2c/max6697.txt |   64 ++
+> >  Documentation/hwmon/max6697                       |   58 ++
+> >  drivers/hwmon/Kconfig                             |   11 +
+> >  drivers/hwmon/Makefile                            |    1 +
+> >  drivers/hwmon/max6697.c                           |  726 +++++++++++++++++++++
+> >  include/linux/platform_data/max6697.h             |   36 +
+> >  6 files changed, 896 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/i2c/max6697.txt
+> >  create mode 100644 Documentation/hwmon/max6697
+> >  create mode 100644 drivers/hwmon/max6697.c
+> >  create mode 100644 include/linux/platform_data/max6697.h
 > 
-> No, as long as it's guaranteed that the MSI notification won't arrive
-> at the CPU before any inbound DMA data before it, the MSI controller
-> can be anywhere. Typically, the MSI controller is actually closer to
-> the CPU core than to the PCI bridge. On X86, I believe the MSI address
-> is on normally on the the "local APIC" on each CPU.
+> Reviewed-by: Jean Delvare <khali@linux-fr.org>
+> 
+> Please update lm-sensors' wiki to mention this driver.
+> 
+Done. Thanks a lot for the review!
 
-MSIs are indistinguishable from other memory-write transactions originating
-from the RC other than the address they target. Anything that can capture
-that write in the address space (even a page fault) could be an MSI controller
-and call interrupt handlers. And so the RC / MSI controllers don't need to
-be aware of each other.
-
-Andrew Murray
+Guenter
