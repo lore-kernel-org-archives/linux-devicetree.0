@@ -1,117 +1,49 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v5 1/4] ARM: Exynos5250: Enabling ehci-s5p driver
-Date: Wed, 16 Jan 2013 08:51:36 +0100
-Message-ID: <2045700.EdOLCZiruB@flatron>
-References: <CAFp+6iFgaT9D2hR0pX34jo2g+GHftmA0Mw3y96-oKe0KakZOxA@mail.gmail.com> <1358315143-16620-1-git-send-email-gautam.vivek@samsung.com>
+From: Jean Delvare <khali@linux-fr.org>
+Subject: Re: [PATCH v4] hwmon: Driver for Maxim MAX6697 and compatibles
+Date: Wed, 16 Jan 2013 09:53:31 +0100
+Message-ID: <20130116095331.2e3769f0@endymion.delvare>
+References: <1358289387-996-1-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1358315143-16620-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, kgene.kim@samsung.com, grant.likely@secretlab.ca, dianders@chromium.org, jg1.han@samsung.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1358289387-996-1-git-send-email-linux@roeck-us.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
-
-Same comment as for patch 2.
-
-Best regards,
-Tomasz
-
-On Wednesday 16 of January 2013 11:15:43 Vivek Gautam wrote:
-> Adding EHCI device tree node for Exynos5250 along with
-> the device base adress and gpio line for vbus.
+On Tue, 15 Jan 2013 14:36:27 -0800, Guenter Roeck wrote:
+> Add support for MAX6581, MAX6602, MAX6622, MAX6636, MAX6689, MAX6693,
+> MAX6694, MAX6697, MAX6698, and MAX6699 temperature sensors
 > 
-> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> Acked-by: Jingoo Han <jg1.han@samsung.com>
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 > ---
+> (...)
+> v4:
+> - s/beta/Beta at beginning of sentence in device tree description file
+> - Optimize temperature calculation in show_temp_input
+> - Accept temperatures up to 255 degrees C (191 degrees C in extended
+>   temperature mode) for MAX6581
+> - Define reg as int in max6697_init_chip to be able to catch error cases
+> - Optimize assignment to data->temp_offset in max6697_init_chip
+> - smbus->SMBus in platform_data/max6697.h
 > 
-> Changes from v4:
->  - Added gpio line for VBUS of USB2.0 on snow board.
-> 
->  .../devicetree/bindings/usb/exynos-usb.txt         |   25
-> ++++++++++++++++++++ arch/arm/boot/dts/exynos5250-smdk5250.dts         
-> |    4 +++ arch/arm/boot/dts/exynos5250-snow.dts              |    4
-> +++ arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++++ 4
-> files changed, 39 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/exynos-usb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> b/Documentation/devicetree/bindings/usb/exynos-usb.txt new file mode
-> 100644
-> index 0000000..e8bbb47
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-> @@ -0,0 +1,25 @@
-> +Samsung Exynos SoC USB controller
-> +
-> +The USB devices interface with USB controllers on Exynos SOCs.
-> +The device node has following properties.
-> +
-> +EHCI
-> +Required properties:
-> + - compatible: should be "samsung,exynos4210-ehci" for USB 2.0
-> +   EHCI controller in host mode.
-> + - reg: physical base address of the controller and length of memory
-> mapped +   region.
-> + - interrupts: interrupt number to the cpu.
-> +
-> +Optional properties:
-> + - samsung,vbus-gpio:  if present, specifies the GPIO that
-> +   needs to be pulled up for the bus to be powered.
-> +
-> +Example:
-> +
-> +	usb@12110000 {
-> +		compatible = "samsung,exynos4210-ehci";
-> +		reg = <0x12110000 0x100>;
-> +		interrupts = <0 71 0>;
-> +		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
-> +	};
-> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> b/arch/arm/boot/dts/exynos5250-smdk5250.dts index 942d576..7363e14
-> 100644
-> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> @@ -204,4 +204,8 @@
->  		samsung,mfc-r = <0x43000000 0x800000>;
->  		samsung,mfc-l = <0x51000000 0x800000>;
->  	};
-> +
-> +	usb@12110000 {
-> +		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
-> +	};
->  };
-> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts
-> b/arch/arm/boot/dts/exynos5250-snow.dts index 17dd951..47b6b84 100644
-> --- a/arch/arm/boot/dts/exynos5250-snow.dts
-> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
-> @@ -40,4 +40,8 @@
->  				<&gpc4 5 2 3 0>, <&gpc4 6 2 3 0>;
->  		};
->  	};
-> +
-> +	usb@12110000 {
-> +		samsung,vbus-gpio = <&gpx1 1 1 3 3>;
-> +	};
->  };
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
-> b/arch/arm/boot/dts/exynos5250.dtsi index 30485de..2cbe53e 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -275,6 +275,12 @@
->  		#size-cells = <0>;
->  	};
-> 
-> +	usb@12110000 {
-> +		compatible = "samsung,exynos4210-ehci";
-> +		reg = <0x12110000 0x100>;
-> +		interrupts = <0 71 0>;
-> +	};
-> +
->  	amba {
->  		#address-cells = <1>;
->  		#size-cells = <1>;
+>  Documentation/devicetree/bindings/i2c/max6697.txt |   64 ++
+>  Documentation/hwmon/max6697                       |   58 ++
+>  drivers/hwmon/Kconfig                             |   11 +
+>  drivers/hwmon/Makefile                            |    1 +
+>  drivers/hwmon/max6697.c                           |  726 +++++++++++++++++++++
+>  include/linux/platform_data/max6697.h             |   36 +
+>  6 files changed, 896 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/max6697.txt
+>  create mode 100644 Documentation/hwmon/max6697
+>  create mode 100644 drivers/hwmon/max6697.c
+>  create mode 100644 include/linux/platform_data/max6697.h
+
+Reviewed-by: Jean Delvare <khali@linux-fr.org>
+
+Please update lm-sensors' wiki to mention this driver.
+
+-- 
+Jean Delvare
