@@ -1,106 +1,78 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: [PATCH v5 1/4] ARM: Exynos5250: Enabling ehci-s5p driver
-Date: Wed, 16 Jan 2013 11:15:43 +0530
-Message-ID: <1358315143-16620-1-git-send-email-gautam.vivek@samsung.com>
-References: <CAFp+6iFgaT9D2hR0pX34jo2g+GHftmA0Mw3y96-oKe0KakZOxA@mail.gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAFp+6iFgaT9D2hR0pX34jo2g+GHftmA0Mw3y96-oKe0KakZOxA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, kgene.kim@samsung.com, grant.likely@secretlab.ca, dianders@chromium.org, jg1.han@samsung.com
+From: kishon <kishon@ti.com>
+Subject: Re: [RFC PATCH 0/7] usb: musb: add driver for control module
+Date: Wed, 16 Jan 2013 11:31:32 +0530
+Message-ID: <50F6423C.2020307@ti.com>
+References: <1358239378-10030-1-git-send-email-kishon@ti.com> <201301151341.08297.arnd@arndb.de> <50F56A1A.3040504@ti.com> <20130115150432.GB26272@arwen.pp.htv.fi> <6C6B28D4DC342643927BEAFCE8707BF63EA5ACAB@DBDE01.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <6C6B28D4DC342643927BEAFCE8707BF63EA5ACAB@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "B, Ravi" <ravibabu@ti.com>
+Cc: "Balbi, Felipe" <balbi@ti.com>, Arnd Bergmann <arnd@arndb.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "Cousson, Benoit" <b-cousson@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding EHCI device tree node for Exynos5250 along with
-the device base adress and gpio line for vbus.
+Hi Ravi,
 
-Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-Acked-by: Jingoo Han <jg1.han@samsung.com>
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
----
+On Tuesday 15 January 2013 09:36 PM, B, Ravi wrote:
+>> Hi,
+>>
+>> On Tue, Jan 15, 2013 at 08:09:22PM +0530, kishon wrote:
+>>> Hi Arnd,
+>>>
+>>> On Tuesday 15 January 2013 07:11 PM, Arnd Bergmann wrote:
+>>>> On Tuesday 15 January 2013, Kishon Vijay Abraham I wrote:
+>>>>> Added a new driver for the usb part of control module.
+>> This has an
+>>>>> API to power on the USB2 phy and an API to write to the mailbox
+>>>>> depending on whether MUSB has to act in host mode or in
+>> device mode.
+>>>>>
+>>>>> Writing to control module registers for doing the above
+>> task which
+>>>>> was previously done in omap glue and in omap-usb2 phy is removed.
+>>>>>
+>>>>> Also added the dt data to get MUSB working in OMAP platforms.
+>>>>> This series has patches for both drivers and ARCH
+>> folders, so If it
+>>>>> has to be split I'll do it.
+>>>>>
+>>>>
+>>>> The series looks good to me, I just had a minor comment on
+>> one patch.
+>>>>
+>>>> One a somewhat related topic, I wonder whether there are
+>> any plans on
+>>>> your side to change this driver to support multiple bus
+>> glues to be
+>>>> built for one kernel image. With a multiplatform kernel,
+>> we may need
+>>>> all of TUSB6010/OMAP2PLUS/DSPS/UX500 for instance.
+>>>
+>>> We don't have plans as of now. I actually don't expect any
+>> changes in
+>>> the driver other than the Kconfig changes. Anyways the
+>> probe of glue's
+>>> other than the platform it's running won't get called. right Felipe?
+>
+> If understand correctly the control module driver used to configure the respective usb phy of SoC to respective usb modes using the common set of control module APIs.
+What if, if control module interface (register defintions) varies b/w 
+different revision or spin of same type of SoCs, if usbphy type is changed.
+Well in that case, we can write to the registers based on the IP 
+revision check (I think thats the common practice to do).
 
-Changes from v4:
- - Added gpio line for VBUS of USB2.0 on snow board.
+In this case whether the single instance of control module driver is 
+good enough to cater of all cpu types of same SoC series ?
+Of course. I don't see why we can't have the same driver to handle 
+different versions of the same IP.
+The only reason where we might need multiple instance is if the SoC have 
+multiple control module which Arnd already pointed out.
 
- .../devicetree/bindings/usb/exynos-usb.txt         |   25 ++++++++++++++++++++
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |    4 +++
- arch/arm/boot/dts/exynos5250-snow.dts              |    4 +++
- arch/arm/boot/dts/exynos5250.dtsi                  |    6 ++++
- 4 files changed, 39 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/exynos-usb.txt
+> Whether cpu_is_xxx() can be used to differentiate b/w different cpu types in CM driver?
+Not needed at all IMHO. We can use revision register to differentiate.
 
-diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-new file mode 100644
-index 0000000..e8bbb47
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
-@@ -0,0 +1,25 @@
-+Samsung Exynos SoC USB controller
-+
-+The USB devices interface with USB controllers on Exynos SOCs.
-+The device node has following properties.
-+
-+EHCI
-+Required properties:
-+ - compatible: should be "samsung,exynos4210-ehci" for USB 2.0
-+   EHCI controller in host mode.
-+ - reg: physical base address of the controller and length of memory mapped
-+   region.
-+ - interrupts: interrupt number to the cpu.
-+
-+Optional properties:
-+ - samsung,vbus-gpio:  if present, specifies the GPIO that
-+   needs to be pulled up for the bus to be powered.
-+
-+Example:
-+
-+	usb@12110000 {
-+		compatible = "samsung,exynos4210-ehci";
-+		reg = <0x12110000 0x100>;
-+		interrupts = <0 71 0>;
-+		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
-+	};
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index 942d576..7363e14 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -204,4 +204,8 @@
- 		samsung,mfc-r = <0x43000000 0x800000>;
- 		samsung,mfc-l = <0x51000000 0x800000>;
- 	};
-+
-+	usb@12110000 {
-+		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
-index 17dd951..47b6b84 100644
---- a/arch/arm/boot/dts/exynos5250-snow.dts
-+++ b/arch/arm/boot/dts/exynos5250-snow.dts
-@@ -40,4 +40,8 @@
- 				<&gpc4 5 2 3 0>, <&gpc4 6 2 3 0>;
- 		};
- 	};
-+
-+	usb@12110000 {
-+		samsung,vbus-gpio = <&gpx1 1 1 3 3>;
-+	};
- };
-diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-index 30485de..2cbe53e 100644
---- a/arch/arm/boot/dts/exynos5250.dtsi
-+++ b/arch/arm/boot/dts/exynos5250.dtsi
-@@ -275,6 +275,12 @@
- 		#size-cells = <0>;
- 	};
- 
-+	usb@12110000 {
-+		compatible = "samsung,exynos4210-ehci";
-+		reg = <0x12110000 0x100>;
-+		interrupts = <0 71 0>;
-+	};
-+
- 	amba {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
--- 
-1.7.6.5
+Btw I think Felipe looped you for a different reason ;-)
+
+Thanks
+Kishon
