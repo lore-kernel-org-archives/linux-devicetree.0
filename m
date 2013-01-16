@@ -1,14 +1,14 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/7] dt: describe base reset signal binding
-Date: Wed, 16 Jan 2013 15:06:00 -0700
-Message-ID: <50F72448.8070807@wwwdotorg.org>
+Subject: Re: [PATCH 2/7] reset: Add reset controller API
+Date: Wed, 16 Jan 2013 15:15:26 -0700
+Message-ID: <50F7267E.8090309@wwwdotorg.org>
 References: <1358352787-15441-1-git-send-email-p.zabel@pengutronix.de>
- <1358352787-15441-2-git-send-email-p.zabel@pengutronix.de>
+ <1358352787-15441-3-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1358352787-15441-2-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1358352787-15441-3-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,32 +20,87 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 On 01/16/2013 09:13 AM, Philipp Zabel wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> This binding is intended to represent the hardware reset signals present
-> internally in most IC (SoC, FPGA, ...) designs.
-> 
-> Such a binding would allow the creation of a "reset subsystem", which
-> could replace APIs such as the following Tegra-specific API:
-> 
-> void tegra_periph_reset_deassert(struct clk *c);
-> void tegra_periph_reset_assert(struct clk *c);
-> 
-> (Note that at present, Tegra couples reset assertion with the clock for
-> the affected peripheral module. However, reset and clocking are two
-> separate, yet admittedly related, concepts).
-> 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> This adds a simple API for devices to request being reset
+> by separate reset controller hardware and implements the
+> reset signal device tree binding.
 
-You probably want to update the patch description; it was somewhat
-appropriate when I sent the patch as an RFC to see what people thought
-about the idea, but now you're actually providing the whole thing a more
-specific description would be better.
 
-Your S-o-b line should be present in all patches you send; add it after
-mine. See Documentation/SubmittingPatches section "Sign your work" item
-(c) (or perhaps (b) if you modified it).
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+
+> +obj-$(CONFIG_RESET_CONTROLLER) += core.o
+> +
+
+nit: blank line at EOF.
+
+> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+
+> +/**
+> + * reset_control_reset - reset the controlled device
+> + * @rstc: reset controller
+> + */
+> +int reset_control_reset(struct reset_control *rstc)
+
+What time period is the reset signal asserted for; should there be a
+parameter to control this?
+
+> +{
+> +	if (rstc->rcdev->ops->reset)
+> +		return rstc->rcdev->ops->reset(rstc->id);
+> +
+> +	return 0;
+> +}
+
+If there's no op, shouldn't the function fail?
+
+> +/**
+> + * reset_control_is_asserted - deasserts the reset line
+
+Comment seems wrong.
+
+Is this API useful; why wouldn't drivers just assert to de-assert it
+based on their needs?
+
+> +/**
+> + * reset_control_get - Lookup and obtain a reference to a reset controller.
+> + * @dev: device to be reset by the controller
+> + * @id: reset line name
+> + *
+> + * Returns a struct reset_control or IS_ERR() condition containing errno.
+
+OK, so NULL can't ever (legally) be returned.
+
+> +struct reset_control *reset_control_get(struct device *dev, const char *id)
+
+> +	rcdev_node = NULL;
+> +	for (i = 0; rcdev_node == NULL; i++) {
+...
+> +		rcdev_node = args.np;
+> +		rcdev_index = args.args[0];
+
+Even though the loop condition tests rcdev_node, it'd be a lot easier to
+realize that the loop bails out here because of that if you explicitly
+wrote a break; here. Otherwise, it took a while for me to realize.
+
+> +void reset_control_put(struct reset_control *rstc)
+> +{
+> +	if (rstc == NULL || IS_ERR(rstc))
+> +		return;
+
+... so (re: two comments above) you don't need to check for NULL here;
+if someone passes NULL in here, they're passing some value that
+reset_control_get() never passed back, so this API is free to do
+whatever it wants...
+
+> +	kfree(rstc);
+> +	module_put(rstc->rcdev->owner);
+
+You need to module_put() first, or copy rstc->rcdev, since otherwise
+you're reading *rstc after it's freed.
+
+This implementation only supports device tree. People might want the
+APIs to work on non-device-tree systems too, although I guess that
+should be easy enough to retrofit without changing the driver-visible API...
