@@ -1,122 +1,82 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [RFC PATCH 0/7] usb: musb: add driver for control module
-Date: Wed, 16 Jan 2013 09:13:51 +0200
-Message-ID: <20130116071351.GC610@arwen.pp.htv.fi>
-References: <1358239378-10030-1-git-send-email-kishon@ti.com>
- <201301151341.08297.arnd@arndb.de>
- <50F56A1A.3040504@ti.com>
- <20130115150432.GB26272@arwen.pp.htv.fi>
- <6C6B28D4DC342643927BEAFCE8707BF63EA5ACAB@DBDE01.ent.ti.com>
- <50F6423C.2020307@ti.com>
-Reply-To: <balbi@ti.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v4 2/4] ARM: Exynos5250: Enabling ohci-exynos driver
+Date: Wed, 16 Jan 2013 08:44:54 +0100
+Message-ID: <2542030.a14I18dBkO@flatron>
+References: <1358257112-19595-1-git-send-email-gautam.vivek@samsung.com> <1358257112-19595-3-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yudcn1FV7Hsu/q59"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <50F6423C.2020307@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: kishon <kishon@ti.com>
-Cc: "B, Ravi" <ravibabu@ti.com>, "Balbi, Felipe" <balbi@ti.com>, Arnd Bergmann <arnd@arndb.de>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "Cousson, Benoit" <b-cousson@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1358257112-19595-3-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, kgene.kim@samsung.com, grant.likely@secretlab.ca, dianders@chromium.org, jg1.han@samsung.com
 List-Id: devicetree@vger.kernel.org
 
---yudcn1FV7Hsu/q59
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Vivek,
 
-On Wed, Jan 16, 2013 at 11:31:32AM +0530, kishon wrote:
-> Hi Ravi,
->=20
-> On Tuesday 15 January 2013 09:36 PM, B, Ravi wrote:
-> >>Hi,
-> >>
-> >>On Tue, Jan 15, 2013 at 08:09:22PM +0530, kishon wrote:
-> >>>Hi Arnd,
-> >>>
-> >>>On Tuesday 15 January 2013 07:11 PM, Arnd Bergmann wrote:
-> >>>>On Tuesday 15 January 2013, Kishon Vijay Abraham I wrote:
-> >>>>>Added a new driver for the usb part of control module.
-> >>This has an
-> >>>>>API to power on the USB2 phy and an API to write to the mailbox
-> >>>>>depending on whether MUSB has to act in host mode or in
-> >>device mode.
-> >>>>>
-> >>>>>Writing to control module registers for doing the above
-> >>task which
-> >>>>>was previously done in omap glue and in omap-usb2 phy is removed.
-> >>>>>
-> >>>>>Also added the dt data to get MUSB working in OMAP platforms.
-> >>>>>This series has patches for both drivers and ARCH
-> >>folders, so If it
-> >>>>>has to be split I'll do it.
-> >>>>>
-> >>>>
-> >>>>The series looks good to me, I just had a minor comment on
-> >>one patch.
-> >>>>
-> >>>>One a somewhat related topic, I wonder whether there are
-> >>any plans on
-> >>>>your side to change this driver to support multiple bus
-> >>glues to be
-> >>>>built for one kernel image. With a multiplatform kernel,
-> >>we may need
-> >>>>all of TUSB6010/OMAP2PLUS/DSPS/UX500 for instance.
-> >>>
-> >>>We don't have plans as of now. I actually don't expect any
-> >>changes in
-> >>>the driver other than the Kconfig changes. Anyways the
-> >>probe of glue's
-> >>>other than the platform it's running won't get called. right Felipe?
-> >
-> >If understand correctly the control module driver used to configure the =
-respective usb phy of SoC to respective usb modes using the common set of c=
-ontrol module APIs.
-> What if, if control module interface (register defintions) varies b/w
-> different revision or spin of same type of SoCs, if usbphy type is
-> changed.
-> Well in that case, we can write to the registers based on the IP
-> revision check (I think thats the common practice to do).
->=20
-> In this case whether the single instance of control module driver is
-> good enough to cater of all cpu types of same SoC series ?
-> Of course. I don't see why we can't have the same driver to handle
-> different versions of the same IP.
-> The only reason where we might need multiple instance is if the SoC
-> have multiple control module which Arnd already pointed out.
->=20
-> >Whether cpu_is_xxx() can be used to differentiate b/w different cpu type=
-s in CM driver?
-> Not needed at all IMHO. We can use revision register to differentiate.
->=20
-> Btw I think Felipe looped you for a different reason ;-)
+On Tuesday 15 of January 2013 19:08:30 Vivek Gautam wrote:
+> Adding OHCI device tree node for Exynos5250 along with
+> the device base address.
+> 
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> Acked-by: Jingoo Han <jg1.han@samsung.com>
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+>  .../devicetree/bindings/usb/exynos-usb.txt         |   15
+> +++++++++++++++ arch/arm/boot/dts/exynos5250.dtsi                  |   
+> 6 ++++++ 2 files changed, 21 insertions(+), 0 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> b/Documentation/devicetree/bindings/usb/exynos-usb.txt index
+> e8bbb47..f66fcdd 100644
+> --- a/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/exynos-usb.txt
+> @@ -23,3 +23,18 @@ Example:
+>  		interrupts = <0 71 0>;
+>  		samsung,vbus-gpio = <&gpx2 6 1 3 3>;
+>  	};
+> +
+> +OHCI
+> +Required properties:
+> + - compatible: should be "samsung,exynos4210-ohci" for USB 2.0
+> +   OHCI companion controller in host mode.
+> + - reg: physical base address of the controller and length of memory
+> mapped +   region.
+> + - interrupts: interrupt number to the cpu.
+> +
+> +Example:
+> +	usb@12120000 {
+> +		compatible = "samsung,exynos4210-ohci";
+> +		reg = <0x12120000 0x100>;
+> +		interrupts = <0 71 0>;
+> +	};
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> b/arch/arm/boot/dts/exynos5250.dtsi index 2cbe53e..ebb0907 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -281,6 +281,12 @@
+>  		interrupts = <0 71 0>;
+>  	};
+> 
+> +	usb@12120000 {
+> +		compatible = "samsung,exynos4210-ohci";
+> +		reg = <0x12120000 0x100>;
+> +		interrupts = <0 71 0>;
 
-right, it was to look at removing <mach/*> inclusion from all
-davinci-link glue layers (they should be combined, btw).
+For Samsung platforms we decided per board enabling of nodes and so this 
+node should also contain:
 
---=20
-balbi
+		status = "disabled";
 
---yudcn1FV7Hsu/q59
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+while in dts file of board using ohci there would be an overriding entry:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+	usb@12120000 {
+		status = "okay";
+	};
 
-iQIcBAEBAgAGBQJQ9lMvAAoJEIaOsuA1yqREO/AQAIwAHg6dYr4x0bi2305oS1EU
-gi0A/7MZfAPgMs0Xkg3H9frW8b2SKxMKocod7d8cnyehDjgy+ZWve4D46un6H7Pf
-fjGZDJ1LtwxNfqwL1+Gpu0h5MicTg7AQFFZ8BMu/Nna7pMOfYlY3FF7TBgXPqIXM
-ffLhbTaLXKcTuuqIkkeC8uJzui5lit7VTDVjGcMRIs1fErXsdRKqLlJiQhjtugQI
-uTKz88BXkuqLpad454EeDOjXAi4ICfKkptpRXTwdleStKH1jFKS1NGv4vKZS9GOG
-9OiXKzyJskgdAytfXStmaqU8xKL0gEnEXYy6hYbX0c7sAB13Q/r7FFq16l5d/Ciq
-94f9sKwATKy2K4TqRRv0v3j1xcUqs56COrP2OjoLmOVXDj+U0roAL098sfl82g7n
-xLbmmIxfm9lMAMzaO+oTNQjRAacEOQed+MkcKXffigAVEg/InHYQUJPfpvybCsyL
-HpqgNzPeyUYOWcprymwB+DVfod7neDRrHbGnBAwyFc3j7OMxmxDooQ5eQtcOUirA
-Skbk/Ao0BzsBS3RSogSNvf37C1o7Z5VkckbMJQVQQLRy1rWaitNQej061207DuhX
-RvBMlN/7y1bbT3zJujNHMJXQYmvPjaW4/vp/4zwlVvzQ77NzVJN+iCVvUnJB+d6e
-RU3os564k207B3m3VYyW
-=l0eC
------END PGP SIGNATURE-----
+I know that Exynos5250 has not been yet converted into this convention, 
+but using it when adding new devices will simplify the process.
 
---yudcn1FV7Hsu/q59--
+Best regards,
+Tomasz
