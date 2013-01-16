@@ -1,164 +1,111 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 05/14] lib: Add I/O map cache implementation
-Date: Wed, 16 Jan 2013 11:18:22 +0100
-Message-ID: <20130116101822.GA17706@avionic-0098.adnet.avionic-design.de>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <20130109231758.GA27065@obsidianresearch.com>
- <20130110071937.GG15212@avionic-0098.adnet.avionic-design.de>
- <201301100917.19577.arnd@arndb.de>
- <20130110102544.GA5546@avionic-0098.adnet.avionic-design.de>
- <20130110182007.GA28004@obsidianresearch.com>
- <20130110185505.GA22944@avionic-0098.adnet.avionic-design.de>
- <20130110190327.GA23110@avionic-0098.adnet.avionic-design.de>
- <20130110192417.GA18478@obsidianresearch.com>
+From: Dave Martin <dave.martin@linaro.org>
+Subject: Re: [PATCH 5/6] ARM: dts: Add basic dts include files for Samsung
+ S3C64xx SoCs
+Date: Wed, 16 Jan 2013 10:59:57 +0000
+Message-ID: <20130116105957.GA1963@linaro.org>
+References: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com>
+ <1358039458-31960-6-git-send-email-tomasz.figa@gmail.com>
+ <20130114144841.GE7990@e106331-lin.cambridge.arm.com>
+ <20130114150531.GE21142@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4728084380536866641=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130110192417.GA18478-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130114150531.GE21142@e102568-lin.cambridge.arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "kwangwoo.lee@gmail.com" <kwangwoo.lee@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "mcuelenaere@gmail.com" <mcuelenaere@gmail.com>, "augulis.darius@gmail.com" <augulis.darius@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 14, 2013 at 03:05:32PM +0000, Lorenzo Pieralisi wrote:
+> On Mon, Jan 14, 2013 at 02:48:41PM +0000, Mark Rutland wrote:
+> > Hello,
+> > 
+> > This all looks good. I just have a couple of comments about the cpus node.
+> > 
+> > On Sun, Jan 13, 2013 at 01:10:57AM +0000, Tomasz Figa wrote:
+> > > This patch adds basic device tree definitions for Samsung S3C64xx SoCs.
+> > > 
+> > > Since all the SoCs in the series are very similar, the files are created
+> > > hierarchically - one file for the whole series and then separate files
+> > > for particular SoCs including the common one.
+> > > 
+> > > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> > 
+> > [...]
+> > 
+> > > diff --git a/arch/arm/boot/dts/s3c64xx.dtsi b/arch/arm/boot/dts/s3c64xx.dtsi
+> > > new file mode 100644
+> > > index 0000000..55d6e08
+> > > --- /dev/null
+> > > +++ b/arch/arm/boot/dts/s3c64xx.dtsi
+> > > @@ -0,0 +1,97 @@
+> > > +/*
+> > > + * Samsung's S3C64xx SoC series common device tree source
+> > > + *
+> > > + * Copyright (c) 2013 Tomasz Figa <tomasz.figa@gmail.com>
+> > > + *
+> > > + * Samsung's S3C64xx SoC series device nodes are listed in this file.
+> > > + * Particular SoCs from S3C64xx series can include this file and provide
+> > > + * values for SoCs specfic bindings.
+> > > + *
+> > > + * Note: This file does not include device nodes for all the controllers in
+> > > + * S3C64xx SoCs. As device tree coverage for S3C64xx increases, additional
+> > > + * nodes can be added to this file.
+> > > + *
+> > > + * This program is free software; you can redistribute it and/or modify
+> > > + * it under the terms of the GNU General Public License version 2 as
+> > > + * published by the Free Software Foundation.
+> > > + */
+> > > +
+> > > +/include/ "skeleton.dtsi"
+> > > +
+> > > +/ {
+> > > +	cpus {
+> > > +		cpu@0 {
+> > > +			compatible = "arm,arm1176jzf-s";
+> > > +		};
+> > > +	};
+> > 
+> > You can drop the unit address from the cpu node - it's meant to be there to
+> > differentiate multiple nodes (and is supposed to match the reg property, which
+> > the 1176jzf-s can't have, as it doesn't have an MPIDR).
+> 
+> Well, this is a point that I should consider since the kernel docs I wrote are
+> misleading, they require the reg property that can not be there on UP.
+> True, MPIDR does not exist in this case, but I have to document this in the
+> bindings since it is unclear.
+> 
+> > 
+> > Also, "arm,arm1176jzf-s" isn't listed in the binding doc. There was a question
+> > about how to maintain this list [1], but I can't seem to find a conclusion, if
+> > any were reached.  It might be worth appending "arm,arm1176" to the compatible
+> > list for the cpu node in case we want to enable something via dt for all 1176
+> > variations.
+> > 
+> > Dave, Lorenzo, any thoughts?
+> 
+> Eh, frankly I do not know how to handle this. Either we add a compatible
+> string to the bindings anytime a DT gets merged in the kernel but how
+> to maintain it, it has to be defined. Happy to hear some feedback on
+> this.
 
---===============4728084380536866641==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
-Content-Disposition: inline
+Well, the number of CPU types does not grow rapidly.  It will be much
+less than one per SoC -- so keeping the list up to date shouldn't be
+that much effort.
 
+For ARM1176JZF-S, it could make sense for the comatible list to be
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+	"arm,arm1176jzf-s", "arm,arm1176"
 
-On Thu, Jan 10, 2013 at 12:24:17PM -0700, Jason Gunthorpe wrote:
-> On Thu, Jan 10, 2013 at 08:03:27PM +0100, Thierry Reding wrote:
->=20
-> > > > You'd piece a mapping together, each bus requires 16 64k mappings, a
-> > > > simple 2d array of busnr*16 of pointers would do the trick. A more
-> > > > clever solution would be to allocate contiguous virtual memory and
-> > > > split that up..
-> =20
-> > > Oh, I see. I'm not very familiar with the internals of remapping, so
-> > > I'll need to do some more reading. Thanks for the hints.
-> >=20
-> > I forgot to ask. What's the advantage of having a contiguous virtual
-> > memory area and splitting it up versus remapping each chunk separately?
->=20
-> Not alot, really, but it saves you from the pointer array and
-> associated overhead. IIRC it is fairly easy to do in the kernel.
->=20
-> Arnd's version is good too, but you would be restricted to aligned
-> powers of two for the bus number range in the DT, which is probably
-> not that big a deal either?
+...since the differences between 1176 variants are software probeable
+(i.e., whether there is an FPU or not).  AFAIK the J, Z apply to all
+ARM1176, and the -S (synthesisable RTL) is nothing to do with software.
+The kernel probably only really needs to know "arm,arm1176".
 
-I've been trying to make this work, but this implementation always
-triggers a BUG_ON() in lib/ioremap.c, line 27:
+Cheers
+---Dave
 
-	27 		BUG_ON(!pte_none(*pte));
-
-which seems to indicate that the page is already mapped, right?
-
-Below is the relevant code:
-
-struct tegra_pcie_bus {
-	struct vm_struct *area;
-	struct list_head list;
-	unsigned int nr;
-};
-
-static struct tegra_pcie_bus *tegra_pcie_bus_alloc(struct tegra_pcie *pcie,
-						   unsigned int busnr)
-{
-	unsigned long flags =3D VM_READ | VM_WRITE | VM_IO | VM_PFNMAP |
-			      VM_DONTEXPAND | VM_DONTDUMP;
-	phys_addr_t cs =3D pcie->cs->start;
-	struct tegra_pcie_bus *bus;
-	struct vm_struct *vm;
-	unsigned int i;
-	int err;
-
-	bus =3D devm_kzalloc(pcie->dev, sizeof(*bus), GFP_KERNEL);
-	if (!bus)
-		return ERR_PTR(-ENOMEM);
-
-	INIT_LIST_HEAD(&bus->list);
-	bus->nr =3D busnr;
-
-	bus->area =3D get_vm_area(SZ_1M, VM_IOREMAP);
-	if (!bus->area) {
-		err =3D -ENOMEM;
-		goto free;
-	}
-
-	for (i =3D 0; i < 16; i++) {
-		unsigned long virt =3D (unsigned long)bus->area->addr +
-				     i * SZ_64K;
-		phys_addr_t phys =3D cs + busnr * SZ_64K + i * SZ_1M;
-
-		err =3D ioremap_page_range(virt, virt + SZ_64K - 1, phys,
-					 vm_get_page_prot(flags));
-		if (err < 0) {
-			dev_err(pcie->dev, "ioremap_page_range() failed: %d\n",
-				err);
-			goto unmap;
-		}
-	}
-
-	return bus;
-
-unmap:
-	vunmap(bus->area->addr);
-	free_vm_area(bus->area);
-free:
-	devm_kfree(pcie->dev, bus);
-	return ERR_PTR(err);
-}
-
-Anybody see what's wrong with that?
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQ9n5tAAoJEN0jrNd/PrOhUlQP/RUVN/UfOSvzFvZTgmNnopVr
-uBS3wbP1GjJT+aMYih9UQyZMuyKfuiZrivc3pdcADdzxyrnNJ4nrHX/Ovsvbu274
-na483q/qLqwUCuU7oDg+0ntFC7XxPJadt2/vITq/MzhMRMy9V3cNBQAk+ga4NK/U
-WbZ4iX2sMsnJ6wQfFuLavOnXHivdGfgLZ2DaofoTb++TjlzO1bm5zh2rJ9Tc8VyM
-Umo93ebyGERRv/IsNGEfb3ZZ7QhyLcHsBDoow1XFfvja4poCumKNMHFz8bbiLK5w
-MOvEBoy/q+vwo7ZL3i3/YCxKxUoLQ/+dq6SbmXjDjVTjjiLWXH3t0lhkODoHsrWH
-YsiqBIK4bnDS6qNUGWYM8HlTzOHmhhIobkeT+Do/gA0P1gvsoKsh+YpfBiqVof27
-M9YDteY1M4pypSw6GctkDPwPTkSM1qCUpFXidvpya7jyrlMpncEG/NiYgEcGsNJP
-eyYJ+ky0CznzcuNukcGMa+NOt5eCZzBJnBmNoOU41M1kljZ06/AJKKOI8jsddf3q
-nZVDhxnavMXi7uagRpiQjc48oLdEVV2SdBtpVdLIQiHplme8EJj2sQ5c7/XY8WTd
-yVDcA3WWkdezFGWxya6C5sbsd2PI/G7qvg19h8GLQgC+CGS1ctRdYr/soLYBrMMT
-xIWtdPiPzIl1NqC6TT/S
-=z/1p
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
-
---===============4728084380536866641==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4728084380536866641==--
+> 
+> Lorenzo
+> 
