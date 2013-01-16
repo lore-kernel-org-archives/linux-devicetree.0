@@ -1,68 +1,93 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 05/14] lib: Add I/O map cache implementation
-Date: Wed, 16 Jan 2013 12:52:25 +0100
-Message-ID: <20130116115225.GA15873@avionic-0098.adnet.avionic-design.de>
-References: <20130109231758.GA27065@obsidianresearch.com>
- <20130110071937.GG15212@avionic-0098.adnet.avionic-design.de>
- <201301100917.19577.arnd@arndb.de>
- <20130110102544.GA5546@avionic-0098.adnet.avionic-design.de>
- <20130110182007.GA28004@obsidianresearch.com>
- <20130110185505.GA22944@avionic-0098.adnet.avionic-design.de>
- <20130110190327.GA23110@avionic-0098.adnet.avionic-design.de>
- <20130110192417.GA18478@obsidianresearch.com>
- <20130116101822.GA17706@avionic-0098.adnet.avionic-design.de>
- <20130116112556.GR23505@n2100.arm.linux.org.uk>
+From: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v4 0/3] mtd: nand: OMAP: ELM error correction support
+ for BCH ecc
+Date: Wed, 16 Jan 2013 12:22:01 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3EA5DFA9@DBDE01.ent.ti.com>
+References: <1357286211-5012-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="opJtzjQTFsWo+cga"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130116112556.GR23505-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1357286211-5012-1-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hebbar,
+ Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "ivan.djelic-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org" <ivan.djelic-ITF29qwbsa/QT0dZR+AlfA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Artem,
 
---opJtzjQTFsWo+cga
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, Jan 04, 2013 at 13:26:48, Philip, Avinash wrote:
+> Support to use ELM as BCH 4 & 8 bit error correction module. Also performance
+> enhancement by adding single shot read_page and write_page functions for the
+> nand flashes with page size less than 4 KB.
+> 
+> ELM module can be used to correct errors reported by BCH 4, 8 & 16 bit
+> ECC scheme. For now only 4 & 8 bit support is added.
+> 
+> BCH 4 & 8 bit error detection support is already available in mainline
+> kernel and works with software error correction.
+> 
+> This series is based on linux 3.8-rc2 and tested with [1].
+> Also this patch series depend on [1] for NAND flash device
+> tree data and gpmc nand device tree binding documentation updates.
+> 
+> 1. [PATCH v7 0/5] OMAP GPMC DT bindings
+> http://www.spinics.net/lists/linux-omap/msg83505.html
+> 
+> Tested on am335x-evm for BCH 4 and 8 bit error correction.
 
-On Wed, Jan 16, 2013 at 11:25:56AM +0000, Russell King - ARM Linux wrote:
-> On Wed, Jan 16, 2013 at 11:18:22AM +0100, Thierry Reding wrote:
-> > 		err =3D ioremap_page_range(virt, virt + SZ_64K - 1, phys,
->=20
-> Why -1 here?
+Can you apply this patch series on l2-mtd tree as it will help RBL compatibility
+ecc layout for NAND flash in am335x-platforms and hardware based BCH error
+correction.
 
-Right, I forgot that end in these functions always means one byte after
-the end. Removing the -1 seems to get past the remapping at least.
-Reading the configuration space through the mapping doesn't though. I'll
-investigate some more.
+Thanks
+Avinash
 
-Thanks for pointing this out Russell.
-
-Thierry
-
---opJtzjQTFsWo+cga
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQ9pR5AAoJEN0jrNd/PrOhFAwP/RJbvVzV80bNgHLrp+Cm89Bt
-eWkJ0siumvDSyHm2o7GmgNN1AbgR2LlH7a5AVbBZo2HutMEWjMLe7dNNS4LPuhz/
-w+GmY9J3qlSjNRrClJrOu2p6vhhIIDYKKTCQTj0YTRT2fCa5RzM5oo2LlPVvLJRW
-vgUCDHBlA14NWPBGODjffpgyiH4Cv/jtV95o8rv2kCgce+Hr/VkhUxDtjdXN/WDL
-IQs7xwS5lj8ZAPG4ylv/Sp5OLDDpF3nHOrkikEeuBCZZwy89buiHta32JBVeRWo4
-Flz7/VGIOuaTdrVGbWqyN2PRsmeRco/c1R1ep0o8IVMykLx9DwzBRnOVpeh8gn7s
-0USCfRIRhIEhhV0GQNNbOLoMs55nu0nreBChWqmDfpu16ORDrcWyiB/+eFx/Kwvl
-yp+Y35n155CXmpWv5mpG/MxsS4nkJ0yAwpdtVDKykaN1wA14/Q0z0kj2Q4z9Vl+n
-LPXgDBnvQe1XQfsu/gIUR5qmhpcPQMFIQ3NskjpqgrNIGWMotZXYhh2vLFiyQCn9
-LVggn2ru7EE7erN6d4/HRxRpzYGfr1IDclGpbyHt6zfLlYjVWgE9wJQnji398NGZ
-wePCQc2hWTdOGAfkQHiJrqjSFiaMYzfDFFwu/cN/WIK37geQTF5DLr/krdyxHxOx
-3HvFjPjAwtgIeScXZXtj
-=b3tU
------END PGP SIGNATURE-----
-
---opJtzjQTFsWo+cga--
+> 
+> Changes since v1:
+> 	- Erased page is identified by checking byte [13/7] in read
+> 	  ecc. To filter out bit flips in OOB area, check 0 bits in
+> 	  the byte greater than 4.
+> 	- GPMC ecc engine configuration moves to omap2.c NAND driver.
+> 
+> Changes since v2:
+> 	- Added runtime detection of elm module, instead of depending
+> 	  on platform data.
+> 	- Added bit flip correction in OOB ecc data if bit flip happen
+> 	  OOB data.
+> 
+> Changes since v3:
+> 	- Availability and usability of ELM module is detected from device
+> 	  tree nodes by checking availability of ELM node in device tree.
+> 
+> Philip Avinash (3):
+>   mtd: nand: omap2: Update nerrors using ecc.strength
+>   mtd: devices: elm: Add support for ELM error correction
+>   mtd: nand: omap2: Support for hardware BCH error correction.
+> 
+>  Documentation/devicetree/bindings/mtd/elm.txt      |   16 +
+>  .../devicetree/bindings/mtd/gpmc-nand.txt          |    4 +
+>  drivers/mtd/devices/Makefile                       |    4 +-
+>  drivers/mtd/devices/elm.c                          |  405 ++++++++++++++
+>  drivers/mtd/nand/omap2.c                           |  583 ++++++++++++++++++--
+>  include/linux/platform_data/elm.h                  |   54 ++
+>  6 files changed, 1023 insertions(+), 43 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/elm.txt
+>  create mode 100644 drivers/mtd/devices/elm.c
+>  create mode 100644 include/linux/platform_data/elm.h
+> 
+> -- 
+> 1.7.9.5
+> 
+> 
