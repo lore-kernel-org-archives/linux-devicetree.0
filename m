@@ -1,76 +1,193 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 5/6] arm: mvebu: Enable USB controllers on Armada XP
- OpenBlocks AX3-4 board
-Date: Wed, 16 Jan 2013 20:37:13 +0100
-Message-ID: <20130116203713.7b396070@skate>
-References: <1358243670-11935-1-git-send-email-ezequiel.garcia@free-electrons.com>
-	<1358243670-11935-5-git-send-email-ezequiel.garcia@free-electrons.com>
-	<CABMQnVLD+VKj53dfQC24AwCboed3EGt+gqTKt-B9q8nhEx3Ytg@mail.gmail.com>
-	<CALF0-+XKGk+ru3VZ6815KTu_Aj_daYafr+Y5WJ9dXUoFqbTHOQ@mail.gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/7] reset: Add reset controller API
+Date: Wed, 16 Jan 2013 21:15:47 +0100
+Message-ID: <20130116201547.GW1906@pengutronix.de>
+References: <1358352787-15441-1-git-send-email-p.zabel@pengutronix.de>
+ <1358352787-15441-3-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALF0-+XKGk+ru3VZ6815KTu_Aj_daYafr+Y5WJ9dXUoFqbTHOQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1358352787-15441-3-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Ezequiel Garcia,
-
-On Wed, 16 Jan 2013 16:16:59 -0300, Ezequiel Garcia wrote:
-
-> >> +               usb@d0050000 {
-> >> +                       status = "okay";
-> >> +               };
-> >> +               usb@d0051000 {
-> >> +                       status = "okay";
-> >> +               };
-> >> +               usb@d0052000 {
-> >> +                       status = "okay";
-> >> +               };
-> > USB2 of openblocks-ax3-4 is used as Mini-PCIE.
-> > I think this is unnecessary.
+On Wed, Jan 16, 2013 at 05:13:02PM +0100, Philipp Zabel wrote:
+> This adds a simple API for devices to request being reset
+> by separate reset controller hardware and implements the
+> reset signal device tree binding.
 > 
-> Mmm... could you explain this with some more detail.
-> Unfortunately, I don't have access to an Openblocks board to check on
-> this, so I'd appreciate any clarification.
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> ---
+>  drivers/Kconfig        |    2 +
+>  drivers/Makefile       |    2 +
+>  drivers/reset/Kconfig  |   10 ++
+>  drivers/reset/Makefile |    2 +
+>  drivers/reset/core.c   |  241 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 257 insertions(+)
+>  create mode 100644 drivers/reset/Kconfig
+>  create mode 100644 drivers/reset/Makefile
+>  create mode 100644 drivers/reset/core.c
 > 
-> Is there any Openblocks datasheet or hardware schematics publicly
-> available for me to look at?
+> diff --git a/drivers/Kconfig b/drivers/Kconfig
+> index f5fb072..51f73ae 100644
+> --- a/drivers/Kconfig
+> +++ b/drivers/Kconfig
+> @@ -158,4 +158,6 @@ source "drivers/irqchip/Kconfig"
+>  
+>  source "drivers/ipack/Kconfig"
+>  
+> +source "drivers/reset/Kconfig"
+> +
+>  endmenu
+> diff --git a/drivers/Makefile b/drivers/Makefile
+> index 346ecc5..870bf7e 100644
+> --- a/drivers/Makefile
+> +++ b/drivers/Makefile
+> @@ -42,6 +42,8 @@ ifndef CONFIG_ARCH_USES_GETTIMEOFFSET
+>  obj-y				+= clocksource/
+>  endif
+>  
+> +obj-$(CONFIG_RESET_CONTROLLER)	+= reset/
+> +
+>  # tty/ comes before char/ so that the VT console is the boot-time
+>  # default.
+>  obj-y				+= tty/
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> new file mode 100644
+> index 0000000..82dc89e
+> --- /dev/null
+> +++ b/drivers/reset/Kconfig
+> @@ -0,0 +1,10 @@
+> +menuconfig RESET_CONTROLLER
+> +	bool "Reset Controller Support"
+> +	help
+> +	  Generic Reset Controller support.
+> +
+> +	  This framework is designed to abstract reset handling of devices
+> +	  via GPIOs or SoC-internal reset controller modules.
+> +
+> +	  If unsure, say no.
+> +
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> new file mode 100644
+> index 0000000..9a7b6df
+> --- /dev/null
+> +++ b/drivers/reset/Makefile
+> @@ -0,0 +1,2 @@
+> +obj-$(CONFIG_RESET_CONTROLLER) += core.o
+> +
+> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
+> new file mode 100644
+> index 0000000..f0ed61b
+> --- /dev/null
+> +++ b/drivers/reset/core.c
+> @@ -0,0 +1,241 @@
+> +#include <linux/device.h>
+> +#include <linux/err.h>
+> +#include <linux/export.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/reset.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/slab.h>
+> +
+> +static DEFINE_MUTEX(reset_controller_list_mutex);
+> +static LIST_HEAD(reset_controller_list);
+> +
+> +/**
+> + * struct reset_control - a reset control
+> + *
+> + * @id: ID of the reset controller in the reset
+> + *      controller device
+> + */
+> +struct reset_control {
+> +	struct reset_controller_dev *rcdev;
+> +	unsigned int id;
+> +};
+> +
+> +/**
+> + * reset_controller_register - register a reset controller
+> + *
+> + * @ops: a pointer to struct reset_controller_ops callbacks
+> + *
+> + * Returns a struct reset_controller_dev or IS_ERR() condition
+> + * containing errno.
 
-As far as I know, there is no public document. I've been given access
-to a PDF, in Japanese, that gives some details about the hardware.
+The comment seems wrong.
 
->From what I can read, only 2 USB ports are used from the internal
-Marvell EHCI controller.
+> + */
+> +int reset_controller_register(struct reset_controller_dev *rcdev)
+> +{
+> +	mutex_lock(&reset_controller_list_mutex);
+> +	list_add(&rcdev->list, &reset_controller_list);
+> +	mutex_unlock(&reset_controller_list_mutex);
+> +
+> +	return 0;
+> +}
+> +
+> +/**
+> + * reset_control_reset - reset the controlled device
+> + * @rstc: reset controller
+> + */
+> +int reset_control_reset(struct reset_control *rstc)
+> +{
+> +	if (rstc->rcdev->ops->reset)
+> +		return rstc->rcdev->ops->reset(rstc->id);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(reset_control_reset);
+> +
+> +/**
+> + * reset_control_assert - asserts the reset line
+> + * @rstc: reset controller
+> + */
+> +int reset_control_assert(struct reset_control *rstc)
+> +{
+> +	if (rstc->rcdev->ops->assert)
+> +		return rstc->rcdev->ops->assert(rstc->id);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(reset_control_assert);
+> +
+> +/**
+> + * reset_control_deassert - deasserts the reset line
+> + * @rstc: reset controller
+> + */
+> +int reset_control_deassert(struct reset_control *rstc)
+> +{
+> +	if (rstc->rcdev->ops->deassert)
+> +		return rstc->rcdev->ops->deassert(rstc->id);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(reset_control_deassert);
+> +
+> +/**
+> + * reset_control_is_asserted - deasserts the reset line
 
-Another USB port is available, but it is connected to a USB controller
-that sits on the PCIe bus. And the PCIe interface on which this USB
-controller is connected is not enabled in the default U-Boot shipped
-with AX3-4 (at least not with the generation I have). I've been given
-an U-Boot version that is supposed to enable this PCIe interface, but I
-haven't tested yet.
+copy-paste from the function above?
 
-Anyway, from a Marvell EHCI controller perspective, only two ports are
-used, as Nobuhiro said. I am not sure which ports, but it seems like
-the first two ones were used. One of the two physical ports is a
-combined USB / eSATA port, but I don't think this makes any difference
-at the software level.
+Sascha
 
-I don't have the OpenBlocks AX3-4 with me right now, but I could
-probably make a test on Friday.
 
-Best regards,
-
-Thomas
 -- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
