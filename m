@@ -1,78 +1,93 @@
-From: Pratik Patel <pratikp@codeaurora.org>
-Subject: Re: CoreSight framework and drivers
-Date: Tue, 15 Jan 2013 16:14:59 -0800
-Message-ID: <20130116001458.GB7013@pratikp-linux.qualcomm.com>
-References: <20121219112314.GA26329@mudshark.cambridge.arm.com>
- <50D1F37E.6000804@ti.com>
- <20121219212431.GC23594@pratikp-linux.qualcomm.com>
- <50D34EE5.8090407@ti.com>
- <20121220195127.GA14877@pratikp-linux.qualcomm.com>
- <50D3972E.4030607@ti.com>
- <20121221221828.GA2658@pratikp-linux.qualcomm.com>
- <20121223113239.GG16237@mudshark.cambridge.arm.com>
- <20130103180643.GA30277@pratikp-linux.qualcomm.com>
- <20130107115836.GB13542@mudshark.cambridge.arm.com>
+From: Peter Chen <peter.chen@freescale.com>
+Subject: Re: [PATCH v2 1/4] ARM i.MX6: use reserved bit for mxs phy clock
+ gate
+Date: Wed, 16 Jan 2013 09:18:46 +0800
+Message-ID: <20130116011845.GB16514@nchen-desktop>
+References: <1358230117-19443-1-git-send-email-peter.chen@freescale.com>
+ <20130115113313.GB32113@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130107115836.GB13542@mudshark.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "magnus.p.persson@stericsson.com" <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "d-deao@ti.com" <d-deao@ti.com>, "christian.bejram@stericsson.com" <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20130115113313.GB32113@S2101-09.ap.freescale.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: alexander.shishkin@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, balbi@ti.com, kernel@pengutronix.de, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, festevam@gmail.com, marex@denx.de, mkl@pengutronix.de, m.grzeschik@pengutronix.de, matt@genesi-usa.com, maxime.ripard@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 07, 2013 at 11:58:36AM +0000, Will Deacon wrote:
-> On Thu, Jan 03, 2013 at 06:06:43PM +0000, Pratik Patel wrote:
-> > On Sun, Dec 23, 2012 at 11:32:39AM +0000, Will Deacon wrote:
-> > > On Fri, Dec 21, 2012 at 10:18:28PM +0000, Pratik Patel wrote:
-> > > > What user interface do you plan to provide for the CTI? Maybe
-> > > > something consistent with other CoreSight components in sysfs to
-> > > > allow users to enable, disable, map and unmap ???
-> > > > 
-> > > > Please let me know your thoughts.
-> > > 
-> > > Rather than have your current approach of dev nodes + sysfs config files for
-> > > each coresight device, I think it might be better to follow something closer
-> > > to ftrace and stick per-device directories under debugfs/coresight/. Then you
-> > > can have a pipe file and some config files in the same directory for each
-> > > component. You also don't need to do any mapping operations with this (just
-> > > post-process the stream directly).
-> > > 
+On Tue, Jan 15, 2013 at 07:33:16PM +0800, Shawn Guo wrote:
+> On Tue, Jan 15, 2013 at 02:08:34PM +0800, Peter Chen wrote:
+> > For mxs-phy user i.mx6q, the PHY's clock is controlled by
+> > hardware automatically, the software only needs to enable it
+> > at probe, disable it at remove. During the runtime,
+> > we don't need to control it. So for the usbphy clk policy:
 > > 
-> > Thanks for the suggestion. I had initially debated between debugfs
-> > and sysfs but chose sysfs + dev nodes since using device attributes
-> > relieves the drivers from manually managing directories and files,
-> > its taken care of by the device and sysfs layers. Moreover, since
-> > these are physical devices, device attributes made sense at the
-> > time.
-> > 
-> > The map and unmap I was referring to was for the CTI trigger
-> > mappings. Dev nodes are currently intended to provide the raw
-> > data collected in the sinks.
-> > 
-> > Whats the advantage in using debugfs here?
+> > - Keep refcount for usbphy as clk framework needs to know if
+> > it is off or on.
 > 
-> The main things I like about debugfs are (a) it's a text-driven interface
-> and easy to script with and (b) it matches what we do for ftrace.
-> 
-> Furthermore, it means that subtle differences between devices can be hidden
-> in the driver and not require different vendor tools for parsing the trace
-> data.
-> 
-Sorry for the delay and maybe I am missing something but it seems
-we can take care of such protocol or parsing/decoding differences
-even with device nodes since that seems independent of the
-interface used - per device debugfs attributes or per device
-device nodes.
+> Just checked the reference manual, it seems that not only bit 6
+> (EN_USB_CLKS) but also bit 12 (POWER) are controlled by USB hardware.
+> If this is true, I think that PLL3 and PLL7 are really designed for
+> USB PHY use only.  Do you actually see other real users of these two
+> PLLs on imx6q besides USB PHY?  If not, we can just provide a dummy
+> clock to mxs-phy driver on imx6q, and keep real clocks usbphy1 and
+> usbphy2 there for platform init function to enable them if USB support
+> is built in.  Then, we can save all these dirty hacks.  Thoughts?
+It was my v1 patch did.
 
-CoreSight trace solution is typically a SoC wide solution and
-hence can get used by non-Linux processors or hardware. Using
-debugfs would imply compiling it and exposing all the debug
-knobs even if the use case was to use the CoreSight solution for
-something that didn't need all that.
+I send the v2 patch due to below reasons,
+There are other PLL3 users, it is better keep refcount
+to all its children, or the user will be confused when the
+PLL3 goes to disable, but the usb otg part is still used
+
+For PLL7, we can do it, and let the PLL7 be out of clock framework
+management.
+
+But I still think keep usbphy as PLL child is better solution,
+in that case, the clock maintainer can know the real clock usage.
+
+> 
+> Shawn
+> 
+> > - Use reserved bit, in that case, clk_enable/disable will
+> > only update refcount, but without any hardware effects.
+> > 
+> > Signed-off-by: Peter Chen <peter.chen@freescale.com>
+> > ---
+> > Changes for v2:
+> > - Use reserved bit for usb phy clk control
+> > 
+> >  arch/arm/mach-imx/clk-imx6q.c |   10 ++++++++--
+> >  1 files changed, 8 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/arch/arm/mach-imx/clk-imx6q.c b/arch/arm/mach-imx/clk-imx6q.c
+> > index 7f2c10c..85dcc89 100644
+> > --- a/arch/arm/mach-imx/clk-imx6q.c
+> > +++ b/arch/arm/mach-imx/clk-imx6q.c
+> > @@ -208,8 +208,14 @@ int __init mx6q_clocks_init(void)
+> >  	clk[pll7_usb_host] = imx_clk_pllv3(IMX_PLLV3_USB,	"pll7_usb_host","osc", base + 0x20, 0x3);
+> >  	clk[pll8_mlb]      = imx_clk_pllv3(IMX_PLLV3_MLB,	"pll8_mlb",	"osc", base + 0xd0, 0x0);
+> >  
+> > -	clk[usbphy1] = imx_clk_gate("usbphy1", "pll3_usb_otg", base + 0x10, 6);
+> > -	clk[usbphy2] = imx_clk_gate("usbphy2", "pll7_usb_host", base + 0x20, 6);
+> > +	/*
+> > +	 * Bit 20 is the reserved and read-only bit, we do this only for:
+> > +	 * - Do nothing for usbphy clk_enable/disable
+> > +	 * - Keep refcount when do usbphy clk_enable/disable, in that case,
+> > +	 * the clk framework can know the USB phy clk is on or off
+> > +	 */
+> > +	clk[usbphy1] = imx_clk_gate("usbphy1", "pll3_usb_otg", base + 0x10, 20);
+> > +	clk[usbphy2] = imx_clk_gate("usbphy2", "pll7_usb_host", base + 0x20, 20);
+> >  
+> >  	clk[sata_ref] = imx_clk_fixed_factor("sata_ref", "pll6_enet", 1, 5);
+> >  	clk[pcie_ref] = imx_clk_fixed_factor("pcie_ref", "pll6_enet", 1, 4);
+> > -- 
+> > 1.7.0.4
+> > 
+> > 
 
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+
+Best Regards,
+Peter Chen
+
