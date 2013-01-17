@@ -1,82 +1,66 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
-Date: Thu, 17 Jan 2013 16:22:18 +0000
-Message-ID: <20130117162218.GA29016@arm.com>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <20130115154038.GA11241@arm.com>
- <20130115211441.GA13139@avionic-0098.adnet.avionic-design.de>
- <201301161400.26587.arnd@arndb.de>
- <20130116161716.GA10630@arm.com>
- <20130116183101.GA28660@avionic-0098.adnet.avionic-design.de>
- <20130117154236.GA25943@arm.com>
- <20130117160501.GC2186@avionic-0098.adnet.avionic-design.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/2] ARM: dts: Fix compatible value of pinctrl module
+ on EXYNOS5440
+Date: Thu, 17 Jan 2013 09:39:22 -0700
+Message-ID: <50F8293A.1030807@wwwdotorg.org>
+References: <1357172423-8217-1-git-send-email-kgene.kim@samsung.com> <CACRpkdYCw8pyR2hGkMT_uMCyHUU_fCF4Zn9DhXPyuF+74JLfAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130117160501.GC2186@avionic-0098.adnet.avionic-design.de>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYCw8pyR2hGkMT_uMCyHUU_fCF4Zn9DhXPyuF+74JLfAg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, linux-samsung-soc@vger.kernel.org, Thomas Abraham <thomas.ab@samsung.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2013 at 04:05:02PM +0000, Thierry Reding wrote:
-> On Thu, Jan 17, 2013 at 03:42:36PM +0000, Andrew Murray wrote:
-> > On Wed, Jan 16, 2013 at 06:31:01PM +0000, Thierry Reding wrote:
-> > > Alright, putting the functions into pci_ops doesn't sound like a very
-> > > good idea then. Or perhaps it would make sense for hardware where the
-> > > root complex and the MSI controller are handled by the same driver.
-> > > Basically it could be done as a shortcut and if those are not filled
-> > > in, the drivers could still opt to look up an MSI controller from a
-> > > phandle specified in DT.
-> > > 
-> > > Even another alternative would be to keep the functions within the
-> > > struct pci_ops and use generic ones if an external MSI controller is
-> > > used. Just tossing around ideas.
-> > 
-> > I think an ideal solution would be for additional logic in drivers/msi.c
-> > (e.g. in functions like msi_capability_init) to determine (based on the
-> > passed in pci_dev) which MSI controller ops to use. I'm not sure the best
-> > way to implement an association between an MSI controller and PCI busses
-> > (I believe arch/sparc does something like this - perhaps there will be
-> > inspiration there).
-> > 
-> > As you've pointed out, most RCs will have their own MSI controllers - so
-> > it should be easy to register and associate both together.
-> > 
-> > I've submitted my previous work on MSI controller registration, but it
-> > doesn't quite solve this problem - perhaps it can be a starting point?
+On 01/17/2013 01:34 AM, Linus Walleij wrote:
+> On Thu, Jan 3, 2013 at 1:20 AM, Kukjin Kim <kgene.kim@samsung.com> wrote:
 > 
-> We basically have two cases:
+>> From: Thomas Abraham <thomas.ab@samsung.com>
+>>
+>> Fix the incorrect compatible property value of pin-controller module
+>> EXYNOS5440 SoC.
+>>
+> (...)
+>>
+>>         pinctrl {
+>> -               compatible = "samsung,pinctrl-exynos5440";
+>> +               compatible = "samsung,exynos5440-pinctrl";
+>>                 reg = <0xE0000 0x1000>;
+>>                 interrupt-controller;
+>>                 #interrupt-cells = <2>;
+>> diff --git a/drivers/gpio/gpio-samsung.c b/drivers/gpio/gpio-samsung.c
+>> index 953737d..cac4b45 100644
+>> --- a/drivers/gpio/gpio-samsung.c
+>> +++ b/drivers/gpio/gpio-samsung.c
+>> @@ -3026,7 +3026,7 @@ static __init int samsung_gpiolib_init(void)
+>>         static const struct of_device_id exynos_pinctrl_ids[] = {
+>>                 { .compatible = "samsung,pinctrl-exynos4210", },
+>>                 { .compatible = "samsung,pinctrl-exynos4x12", },
+>> -               { .compatible = "samsung,pinctrl-exynos5440", },
+>> +               { .compatible = "samsung,exynos5440-pinctrl", },
+>>         };
+>>         for_each_matching_node(pctrl_np, exynos_pinctrl_ids)
+>>                 if (pctrl_np && of_device_is_available(pctrl_np))
 > 
->   - The PCI host bridge contains registers for MSI support. In that case
->     it makes little sense to uncouple the MSI implementation from the
->     host bridge driver.
-> 
->   - An MSI controller exists outside of the PCI host bridge. The PCI
->     host bridge would in that case have to lookup an MSI controller (via
->     DT phandle or some other method).
-> 
-> In either of those cases, does it make sense to use the MSI support
-> outside the scope of the PCI infrastructure? That is, would devices
-> other than PCI devices be able to generate an MSI?
+> I am tempted to apply this patch just to annoy people with
+> obsessive-compulsive disorder (but that's a bit mean).
+> Reference:
+> http://izismile.com/2011/08/16/obnoxious_ways_to_drive_people_with_ocd_nuts_16_pics.html
 
-I've come around to your way of thinking. Your approach sounds good for
-registration of MSI ops - let the RC host driver do it (it probably has its
-own), or use a helper for following a phandle to get ops that are not part
-of the driver. MSIs won't be used outside of PCI devices.
+Aargh. Those pencils are wrong:-)
 
-Though existing drivers will use MSI framework functions to request MSIs, that
-will result in callbacks to the arch_setup_msi_irqs type functions. These
-functions would need to be updated to find these new ops if they exist, i.e. by
-traversing the pci_dev structure up to the RC and finding a suitable structure.
+> But I'd like a word from Rob, Grant or Stephen so I have some
+> guidance here.
 
-Perhaps the msi ops could live alongside pci_ops in the pci_bus structure. This
-way when traversing up the buses from the provided pci_dev - the first bus with
-msi ops populated would be used?
+Yes, the existing order looks odd c.f. existing practice.
 
-If no ops are found, the standard arch callbacks can be called - thus preserving
-exiting functionality.
+I notice that only one of the strangely ordered entries in
+exynos_pinctrl_ids[] is fixed. Surely they should all be fixed?
 
-Andrew Murray
+It's probably worth adding the new names to exynos_pinctrl_ids[] rather
+than replacing them. That allows the driver to be backwards-compatible
+with older DTBs, and partially decouples the driver change from the
+.dts/.dtsi file. Still, the whole backwards-compatible DTB thing seems a
+little irrelevant when the .dts files are in the kernel source tree anyway.
