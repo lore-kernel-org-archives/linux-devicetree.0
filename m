@@ -1,45 +1,74 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: tegra: add support for rcv-sel and drive type
-Date: Thu, 17 Jan 2013 10:58:44 +0100
-Message-ID: <CACRpkdZTbkeEGnoYcn4VoDd+Nz_JtBUP3V8fA1qbE2ndEk0g7Q@mail.gmail.com>
-References: <1357387375-25919-1-git-send-email-ldewangan@nvidia.com>
- <CACRpkdYe0MPC=jiOgzd0zRkiAFas21O80MiR8dp9UdmwptDfmw@mail.gmail.com>
- <50F7B801.4020704@nvidia.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 2/2] ARM: dts: fix compatible value for exynos pinctrl
+Date: Thu, 17 Jan 2013 11:16:59 +0100
+Message-ID: <5593414.DjjP9pdJVI@amdc1227>
+References: <1357172423-8217-1-git-send-email-kgene.kim@samsung.com>
+ <1357172423-8217-2-git-send-email-kgene.kim@samsung.com>
+ <CAOesGMiSgcuD7z4yc2Z+_hi+PZnuv9pa7saeGymwT0DPz=j8dQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50F7B801.4020704-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAOesGMiSgcuD7z4yc2Z+_hi+PZnuv9pa7saeGymwT0DPz=j8dQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, Thomas Abraham <thomas.ab@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2013 at 9:36 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> On Thursday 17 January 2013 02:00 PM, Linus Walleij wrote:
+Hi Olof,
 
->> Stephen, can you look at this patch?
->>
->> Authors: you need Stephen's ACK on this.
->
-> Stephen have already given his reviewed by on thi series and I posted V2
-> version of taking care his comment.
-> Stephen's comment was in
-> Re: [PATCH 2/2] pinctrl: tegra114: add pinctrl driver for NVIDIA's Tegra114
-> SoC
->
-> Can you please review the v2 version of this series?
+On Saturday 05 of January 2013 14:57:54 Olof Johansson wrote:
+> On Wed, Jan 2, 2013 at 4:20 PM, Kukjin Kim <kgene.kim@samsung.com> 
+wrote:
+> > Fix the incorrect compatible property value of pinctrl for EXYNOS4
+> > SoCs.
+> Ah, this answers my question from the previous patch. So, why do 5450
+> as a separate patch?
+> 
+> > diff --git
+> > a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+> > b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt index
+> > e97a278..4598a47 100644
+> > --- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+> > +++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+> > @@ -7,9 +7,9 @@ on-chip controllers onto these pads.
+> > 
+> >  Required Properties:
+> >  - compatible: should be one of the following.
+> > 
+> > -  - "samsung,pinctrl-exynos4210": for Exynos4210 compatible
+> > pin-controller. -  - "samsung,pinctrl-exynos4x12": for Exynos4x12
+> > compatible pin-controller. -  - "samsung,pinctrl-exynos5250": for
+> > Exynos5250 compatible pin-controller. +  -
+> > "samsung,exynos4210-pinctrl": for Exynos4210 compatible
+> > pin-controller. +  - "samsung,exynos4x12-pinctrl": for Exynos4x12
+> > compatible pin-controller. +  - "samsung,exynos5250-pinctrl": for
+> > Exynos5250 compatible pin-controller.
+> Do we care about backwards compatibility for ARM device trees yet?
+> It's becoming time to start caring soon, if we don't. So while this
+> might be OK for this time around, we should start requiring some
+> backwards compatibility for bindings that have been used in at least
+> one released kernel.
 
-Sure I'll get to it. Walking the INBOX in reverse order...
+This also brings the general problem of dts verification.
 
-Thanks,
-Linus Walleij
+As of now, we don't have any way of checking dts files for compliance with 
+defined bindings. Moreover we don't even have a way of defining those 
+bindings other than plain text documentation.
+
+Now, the problem is that anyone can put anything in their device tree 
+sources and we can't check if the information is specified correctly by 
+any other means that someone reading it and confirming with documentation 
+and/or driver code (the documentation isn't always up to date...).
+
+I remember there was some effort going towards encoding device tree 
+bindings using something like XML schemas, but I'm not sure to what point 
+it got and what was the conclusion. (Personally I think that it was a bit 
+overcomplicated, but I never had time to polish and implement some of my 
+ideas, eventually letting the problem fade off from my mind.)
+
+Best regards,
+-- 
+Tomasz Figa
+Samsung Poland R&D Center
+SW Solution Development, Linux Platform
