@@ -1,61 +1,68 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: CoreSight framework and drivers
-Date: Thu, 17 Jan 2013 10:55:45 +0000
-Message-ID: <20130117105545.GB3699@mudshark.cambridge.arm.com>
-References: <50D1F37E.6000804@ti.com>
- <20121219212431.GC23594@pratikp-linux.qualcomm.com>
- <50D34EE5.8090407@ti.com>
- <20121220195127.GA14877@pratikp-linux.qualcomm.com>
- <50D3972E.4030607@ti.com>
- <20121221221828.GA2658@pratikp-linux.qualcomm.com>
- <20121223113239.GG16237@mudshark.cambridge.arm.com>
- <20130103180643.GA30277@pratikp-linux.qualcomm.com>
- <20130107115836.GB13542@mudshark.cambridge.arm.com>
- <20130116001458.GB7013@pratikp-linux.qualcomm.com>
+From: kishon <kishon@ti.com>
+Subject: Re: [RFC PATCH 2/6] ARM: OMAP: USB: Add phy binding information
+Date: Thu, 17 Jan 2013 16:33:16 +0530
+Message-ID: <50F7DA74.2020009@ti.com>
+References: <1358348462-27693-1-git-send-email-kishon@ti.com> <1358348462-27693-3-git-send-email-kishon@ti.com> <50F7C6C7.3030400@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130116001458.GB7013@pratikp-linux.qualcomm.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Pratik Patel <pratikp@codeaurora.org>
-Cc: Jon Hunter <jon-hunter@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "magnus.p.persson@stericsson.com" <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "d-deao@ti.com" <d-deao@ti.com>, "christian.bejram@stericsson.com" <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <50F7C6C7.3030400@ti.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, balbi@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, horms@verge.net.au, magnus.damm@gmail.com, cbou@mail.ru, dwmw2@infradead.org, alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, leoli@freescale.com, eric.y.miao@gmail.com, haojian.zhuang@gmail.com, stern@rowland.harvard.edu
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2013 at 12:14:59AM +0000, Pratik Patel wrote:
-> On Mon, Jan 07, 2013 at 11:58:36AM +0000, Will Deacon wrote:
-> > On Thu, Jan 03, 2013 at 06:06:43PM +0000, Pratik Patel wrote:
-> > > Whats the advantage in using debugfs here?
-> > 
-> > The main things I like about debugfs are (a) it's a text-driven interface
-> > and easy to script with and (b) it matches what we do for ftrace.
-> > 
-> > Furthermore, it means that subtle differences between devices can be hidden
-> > in the driver and not require different vendor tools for parsing the trace
-> > data.
-> > 
-> Sorry for the delay and maybe I am missing something but it seems
-> we can take care of such protocol or parsing/decoding differences
-> even with device nodes since that seems independent of the
-> interface used - per device debugfs attributes or per device
-> device nodes.
+Hi,
 
-You seem to be arguing that the two interfaces are equivalent, in which case
-I say that we should follow ftrace's lead and use debugfs for this...
+On Thursday 17 January 2013 03:09 PM, Roger Quadros wrote:
+> On 01/16/2013 05:00 PM, Kishon Vijay Abraham I wrote:
+>> This is in preparation for the changes in PHY library to support adding
+>> and getting multiple PHYs of the same type. In the new design, the
+>> binding information between the PHY and the USB controller should be
+>> specified in the platform specific initialization code. So it's been
+>> done for OMAP platforms here.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>> This kind-of binding should be done in all the platforms (I've done only
+>> for OMAP platform).
+>>   arch/arm/mach-omap2/usb-musb.c |    7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/mach-omap2/usb-musb.c b/arch/arm/mach-omap2/usb-musb.c
+>> index 9d27e3f..bbe2fa5 100644
+>> --- a/arch/arm/mach-omap2/usb-musb.c
+>> +++ b/arch/arm/mach-omap2/usb-musb.c
+>> @@ -24,6 +24,7 @@
+>>   #include <linux/dma-mapping.h>
+>>   #include <linux/io.h>
+>>   #include <linux/usb/musb.h>
+>> +#include <linux/usb/phy.h>
+>>
+>>   #include "omap_device.h"
+>>   #include "soc.h"
+>> @@ -85,8 +86,12 @@ void __init usb_musb_init(struct omap_musb_board_data *musb_board_data)
+>>   	musb_plat.mode = board_data->mode;
+>>   	musb_plat.extvbus = board_data->extvbus;
+>>
+>> -	if (cpu_is_omap44xx())
+>> +	if (cpu_is_omap44xx()) {
+>>   		musb_plat.has_mailbox = true;
+>> +		usb_bind_phy("musb-hdrc.0.auto", 0, "omap-usb2.1.auto");
+>> +	} else if (cpu_is_omap34xx()) {
+>> +		usb_bind_phy("musb-hdrc.0.auto", 0, "twl4030_usb");
+>> +	}
+>
+> Are you sure than these OMAP platforms cannot be wired in any other way
+> to the PHY?
+>
+> If they can be then this association must come from the board files or
+> device tree.
 
-...but I still maintain that debugfs is also far easier to work with from
-userspace.
+I had given some thought about that and since all the existing OMAP 
+platforms had it this way, I added it here.
+You having pointed that out, I'll move these to board files.
 
-> CoreSight trace solution is typically a SoC wide solution and
-> hence can get used by non-Linux processors or hardware. Using
-> debugfs would imply compiling it and exposing all the debug
-> knobs even if the use case was to use the CoreSight solution for
-> something that didn't need all that.
-
-Many debug features require debugfs to be compiled, so I don't buy that as a
-show-stopping argument in favour of using dev nodes. I also think that exposing
-all of the debug knobs is actually a good thing, given the low-level nature of
-coresight devices (where we're offloading most of the knowledge to userspace
-anyway).
-
-Will
+Thanks
+Kishon
