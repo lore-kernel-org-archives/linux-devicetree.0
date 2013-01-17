@@ -1,16 +1,15 @@
 From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/6] ARM: sunxi: Add pinctrl driver for Allwinner SoCs
-Date: Thu, 17 Jan 2013 10:55:04 +0100
-Message-ID: <CACRpkdbezF8WgwL4Z4B+tLT7CpROXD0iEQD9TowFuSFLyeuhkQ@mail.gmail.com>
-References: <1355948295-19680-1-git-send-email-maxime.ripard@free-electrons.com>
- <1355948295-19680-2-git-send-email-maxime.ripard@free-electrons.com>
- <CACRpkdYpnfWmo15vtUsvPobhFO3_wvYgaa04Mpa6QjWx2h+ezA@mail.gmail.com>
- <50EAEED2.8020003@free-electrons.com>
+Subject: Re: [PATCH 1/2] pinctrl: tegra: add support for rcv-sel and drive type
+Date: Thu, 17 Jan 2013 10:58:44 +0100
+Message-ID: <CACRpkdZTbkeEGnoYcn4VoDd+Nz_JtBUP3V8fA1qbE2ndEk0g7Q@mail.gmail.com>
+References: <1357387375-25919-1-git-send-email-ldewangan@nvidia.com>
+ <CACRpkdYe0MPC=jiOgzd0zRkiAFas21O80MiR8dp9UdmwptDfmw@mail.gmail.com>
+ <50F7B801.4020704@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50EAEED2.8020003-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <50F7B801.4020704-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,24 +20,26 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Alejandro Mery <amery-7FTFmhZxc5Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pritesh Raithatha <praithatha-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 7, 2013 at 4:50 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Le 07/01/2013 00:46, Linus Walleij a =E9crit :
+On Thu, Jan 17, 2013 at 9:36 AM, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On Thursday 17 January 2013 02:00 PM, Linus Walleij wrote:
 
->> or similar, as you see 2 mA for each added driver stage. The driver can
->> convert to any internal representation...
+>> Stephen, can you look at this patch?
+>>
+>> Authors: you need Stephen's ACK on this.
 >
-> Ok, I will do it.
+> Stephen have already given his reviewed by on thi series and I posted V2
+> version of taking care his comment.
+> Stephen's comment was in
+> Re: [PATCH 2/2] pinctrl: tegra114: add pinctrl driver for NVIDIA's Tegra114
+> SoC
 >
-> Do you have other comments on the driver that I should wait for before
-> sending a v3?
+> Can you please review the v2 version of this series?
 
-Not really, I'm walking my inbox (which has again exploded) maybe
-you've already sent new patches...
+Sure I'll get to it. Walking the INBOX in reverse order...
 
 Thanks,
 Linus Walleij
