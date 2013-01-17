@@ -1,46 +1,48 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/7] ARM i.MX5: Add system reset controller (SRC) to
- i.MX51 and i.MX53 device tree
-Date: Thu, 17 Jan 2013 14:37:24 +0800
-Message-ID: <20130117063722.GL26179@S2101-09.ap.freescale.net>
-References: <1358352787-15441-1-git-send-email-p.zabel@pengutronix.de>
- <1358352787-15441-8-git-send-email-p.zabel@pengutronix.de>
- <50F72780.8040208@wwwdotorg.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] pinctrl: tegra: add support for rcv-sel and drive type
+Date: Thu, 17 Jan 2013 09:30:15 +0100
+Message-ID: <CACRpkdYe0MPC=jiOgzd0zRkiAFas21O80MiR8dp9UdmwptDfmw@mail.gmail.com>
+References: <1357387375-25919-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <50F72780.8040208-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1357387375-25919-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>, Stephen Warren <swarren@wwwdotorg.org>
+Cc: praithatha@nvidia.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2013 at 03:19:44PM -0700, Stephen Warren wrote:
-> On 01/16/2013 09:13 AM, Philipp Zabel wrote:
-> > Also, link SRC to IPU via phandle.
-> 
-> Aside from the comments I already made, the series,
-> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> although I'm not 100% sure if the ordering of patches maintains a
-> working i.MX build all the time? Does "git bisect" work across the series?
-> 
-> Who would merge these patches?
+On Sat, Jan 5, 2013 at 1:02 PM, Laxman Dewangan <ldewangan@nvidia.com> wrote:
 
-I would assume IMX --> arm-soc --> mainline?
+> From: Pritesh Raithatha <praithatha@nvidia.com>
+>
+> NVIDIA's Tegra114 added two more configuration parameter in pinmux i.e.
+> rcv-sel and drive type.
+>
+> rcv-sel: Select between High and Normal VIL/VIH receivers.
+>         RCVR_SEL=1: High VIL/VIH
+>         RCVR_SEL=0: Normal VIL/VIH
+>
+> drv_type: Ouptput drive type:
+>         33-50 ohm driver: 0x1
+>         66-100ohm driver: 0x0
+>
+> Add support of these parameters to be configure from DTS file.
+>
+> Tegra20 and Tegra30 does not support this configuration and hence initialize their
+> pinmux structure with reg = -1.
+>
+> Originally written by Pritesh Raithatha.
+> Changes by ldewangan:
+>         - remove drvtype_width as it is always 2.
+>         - Better describe the change.
+>
+> Signed-off-by: Pritesh Raithatha <praithatha@nvidia.com>
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
 
-Philipp, please copy arm-soc folks (Arnd and Olof) on the next post,
-so that they can get a chance to review this tiny reset subsystem.
+Stephen, can you look at this patch?
 
-Shawn
+Authors: you need Stephen's ACK on this.
+
+Yours,
+Linus Walleij
