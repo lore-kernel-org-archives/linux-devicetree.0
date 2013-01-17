@@ -1,98 +1,46 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/8] SH: intc: Add support OF for INTC
-Date: Thu, 17 Jan 2013 15:20:29 +0900
-Message-ID: <20130117062029.GA26725@verge.net.au>
-References: <1357713007-4005-1-git-send-email-horms+renesas@verge.net.au>
- <1357713007-4005-2-git-send-email-horms+renesas@verge.net.au>
- <20130109115352.GB7337@e106331-lin.cambridge.arm.com>
- <201301091911.04513.arnd@arndb.de>
- <20130110015651.GJ21832@verge.net.au>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/7] ARM i.MX5: Add system reset controller (SRC) to
+ i.MX51 and i.MX53 device tree
+Date: Thu, 17 Jan 2013 14:37:24 +0800
+Message-ID: <20130117063722.GL26179@S2101-09.ap.freescale.net>
+References: <1358352787-15441-1-git-send-email-p.zabel@pengutronix.de>
+ <1358352787-15441-8-git-send-email-p.zabel@pengutronix.de>
+ <50F72780.8040208@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130110015651.GJ21832@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms+renesas@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Magnus Damm <magnus.damm@gmail.com>, Bastian Hecht <hechtb@gmail.com>, Magnus Damm <damm@opensource.se>, Paul Mundt <lethal@linux-sh.org>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+In-Reply-To: <50F72780.8040208-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2013 at 10:56:51AM +0900, Simon Horman wrote:
-> On Wed, Jan 09, 2013 at 07:11:04PM +0000, Arnd Bergmann wrote:
-> > On Wednesday 09 January 2013, Mark Rutland wrote:
-> > > Hi,
-> > > 
-> > > Thanks for updating the text, this is far easier to read than previously.
-> > > 
-> > > However, I'm still concerned by how complex the binding seems. As I don't have
-> > > any familiarity with the device, I don't know whether that's just an artifact
-> > > of the hardware or something that can be cleared up.
-> > > 
-> > > I think the approach used by the binding needs some serious review before this
-> > > should be merged. It seems far more complex than any existing interrupt
-> > > controller binding. Without a dts example for a complete board (complete with
-> > > devices wired up to the interrupt controller), it's difficult to judge how this
-> > > will work in practice.
-> > > 
-> > > I've added Arnd to Cc in case he has any thoughts on the matter.
-> > 
-> > Sorry for having been absent from this discussion for so long. I didn't
-> > realize there were 9 versions of this patch set.
-> > 
-> > I tend to agree with your interpretation above, but I may be missing
-> > important facts from the previous review rounds.
-> > 
-> > For all I can tell, the binding is an attempt to describe the
-> > entire drivers/sh/intc capabilities, which is probably not the
-> > best way to approach things. The sh intc driver is not just an
-> > irqchip driver, but rather a framework to describe arbitrary
-> > irqchips, which is what makes this so hard.
-> > 
-> > When I first looked at the situation last year, I suggested doing
-> > a new irqchip driver with a much simpler binding that can only
-> > handle the irq chips from shmobile, rather than the whole thing.
-> > 
-> > I am not sure if the binding in the current form is already the
-> > "simplified" version, or if it actually implements all the
-> > capabilities of the intc driver.
+On Wed, Jan 16, 2013 at 03:19:44PM -0700, Stephen Warren wrote:
+> On 01/16/2013 09:13 AM, Philipp Zabel wrote:
+> > Also, link SRC to IPU via phandle.
 > 
-> I think its more on the side of implementing the capabilities of
-> the intc driver than being simplified.
+> Aside from the comments I already made, the series,
+> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 > 
-> Although some effort has gone into this patchset my primary
-> aim is to provide something that provides the basis for supporting
-> the INTC controller on all existing boards.
+> although I'm not 100% sure if the ordering of patches maintains a
+> working i.MX build all the time? Does "git bisect" work across the series?
 > 
-> I more than open to concrete ideas of how this can be achieved in agreeable way.
-> 
-> > > > +       intca: interrupt-controller@0 {
-> > > > +               compatible = "renesas,sh_intc";
-> > > > +               interrupt-controller;
-> > > > +               #address-cells = <1>;
-> > > > +               #size-cells = <1>;
-> > > > +               #interrupt-cells = <1>;
-> > > > +               ranges;
-> > > > +
-> > > > +               reg = <0xe6940000 0x200>, <0xe6950000 0x200>;
-> > > > +               group_size = <19>;
-> > > > +
-> > > > +               DIRC: intsrc1 { vector = <0x0560>; };
-> > > > +               ATAPI: intsrc2 { vector = <0x05E0>; };
-> > > 
-> > > This looks suspiciously like a way of encoding a device's interrupt information
-> > > into the interrupt controller's device node. That strikes me as being the wrong
-> > > way round.
-> > 
-> > Agreed, it would be simpler to have e.g. #interrupt-cells = <4>, to describe
-> > the various offsets when needed (I forgot how many are actually required
-> > in practice, rather than being computable from the other numbers), and
-> > possibly a global interrupt-map/interrupt-map-mask property pair to map
-> > this into a flat number space.
-> 
-> I'm not sure that I see what you are getting at here.
-> 
-> > I need to take some more time to understand the actual requirements again,
-> > but IIRC it would be possible to do something much simpler than the
-> > proposed binding.
+> Who would merge these patches?
 
-Ping
+I would assume IMX --> arm-soc --> mainline?
+
+Philipp, please copy arm-soc folks (Arnd and Olof) on the next post,
+so that they can get a chance to review this tiny reset subsystem.
+
+Shawn
