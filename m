@@ -1,47 +1,70 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
-Date: Thu, 17 Jan 2013 15:42:36 +0000
-Message-ID: <20130117154236.GA25943@arm.com>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <20130115154038.GA11241@arm.com>
- <20130115211441.GA13139@avionic-0098.adnet.avionic-design.de>
- <201301161400.26587.arnd@arndb.de>
- <20130116161716.GA10630@arm.com>
- <20130116183101.GA28660@avionic-0098.adnet.avionic-design.de>
+From: Sergei Shtylyov <sshtylyov@mvista.com>
+Subject: Re: [RFC PATCH 2/7] ARM: OMAP: devices: create device for usb part
+ of control module
+Date: Thu, 17 Jan 2013 19:43:58 +0300
+Message-ID: <50F82A4E.3080304@mvista.com>
+References: <1358239378-10030-1-git-send-email-kishon@ti.com> <1358239378-10030-3-git-send-email-kishon@ti.com> <50F5514A.2040207@mvista.com> <50F56703.1060202@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130116183101.GA28660@avionic-0098.adnet.avionic-design.de>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <50F56703.1060202@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: kishon <kishon@ti.com>
+Cc: grant.likely@secretlab.ca, b-cousson@ti.com, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, balbi@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2013 at 06:31:01PM +0000, Thierry Reding wrote:
-> Alright, putting the functions into pci_ops doesn't sound like a very
-> good idea then. Or perhaps it would make sense for hardware where the
-> root complex and the MSI controller are handled by the same driver.
-> Basically it could be done as a shortcut and if those are not filled
-> in, the drivers could still opt to look up an MSI controller from a
-> phandle specified in DT.
-> 
-> Even another alternative would be to keep the functions within the
-> struct pci_ops and use generic ones if an external MSI controller is
-> used. Just tossing around ideas.
+Hello.
 
-I think an ideal solution would be for additional logic in drivers/msi.c
-(e.g. in functions like msi_capability_init) to determine (based on the
-passed in pci_dev) which MSI controller ops to use. I'm not sure the best
-way to implement an association between an MSI controller and PCI busses
-(I believe arch/sparc does something like this - perhaps there will be
-inspiration there).
+On 01/15/2013 05:26 PM, kishon wrote:
 
-As you've pointed out, most RCs will have their own MSI controllers - so
-it should be easy to register and associate both together.
+>> On 15-01-2013 12:42, Kishon Vijay Abraham I wrote:
 
-I've submitted my previous work on MSI controller registration, but it
-doesn't quite solve this problem - perhaps it can be a starting point?
+>>> A seperate driver has been added to handle the usb part of control
+>>> module. A device for the above driver is created here, using the register
+>>> address information to be used by the driver for powering on the PHY and
+>>> for writing to the mailbox.
 
-Andrew Murray
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>>   arch/arm/mach-omap2/devices.c |   50
+>>> +++++++++++++++++++++++++++++++++++++++++
+>>>   1 file changed, 50 insertions(+)
+
+>>> diff --git a/arch/arm/mach-omap2/devices.c
+>>> b/arch/arm/mach-omap2/devices.c
+>>> index 5e304d0..a761faf4 100644
+>>> --- a/arch/arm/mach-omap2/devices.c
+>>> +++ b/arch/arm/mach-omap2/devices.c
+>> [...]
+>>> @@ -254,6 +255,54 @@ static inline void omap_init_camera(void)
+>>>   #endif
+>>>   }
+>>>
+>>> +#if (defined(CONFIG_OMAP_CONTROL_USB) || \
+>>> +                defined(CONFIG_OMAP_CONTROL_USB_MODULE))
+
+>>     () around || not needed, and you're indenting the second line too much.
+
+>>> +static inline void __init omap_init_control_usb(void)
+>>> +{
+>>> +    int ret = 0;
+
+>>     Initializer not needed.
+
+>>> +
+>>> +    if (cpu_is_omap44xx()) {
+>>> +        ret = platform_device_register(&omap4_control_usb);
+>>> +        if (ret)
+>>> +            pr_err("Error registering omap_control_usb device: %d\n"
+>>> +                , ret);
+
+>>     Please leave the comma on the previous line.
+
+> Sure. I'll fix it.
+
+   Actually, you can use #if IS_ENABLED(CONFIG_OMAP_CONTROL_USB) now instead of
+your above constuct.
+
+WBR, Sergei
+
