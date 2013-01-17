@@ -1,111 +1,162 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: DT: tegra: Add Colibri T20 512MB COM
-Date: Thu, 17 Jan 2013 15:13:55 -0700
-Message-ID: <50F877A3.5030107@wwwdotorg.org>
-References: <1358423961-24318-1-git-send-email-dev@lynxeye.de>  <50F86533.9010000@wwwdotorg.org> <1358458144.18489.14.camel@tellur>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1358458144.18489.14.camel@tellur>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Subject: [PATCHv2] am33xx: cpsw: default to ethernet hwaddr from efuse if not defined in dt
+Date: Thu, 17 Jan 2013 23:18:54 +0100
+Message-ID: <1358461134-13452-1-git-send-email-jacmet@sunsite.dk>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mugunthanvnm@ti.com, hvaibhav@ti.com, richardcochran@gmail.com, tony@atomide.com, michal.bachraty@gmail.com
+Cc: Peter Korsgaard <jacmet@sunsite.dk>
 List-Id: devicetree@vger.kernel.org
 
-On 01/17/2013 02:29 PM, Lucas Stach wrote:
-> Am Donnerstag, den 17.01.2013, 13:55 -0700 schrieb Stephen Warren:
->> On 01/17/2013 04:59 AM, Lucas Stach wrote:
->>> This adds the device tree include file for the Toradex Colibri T20
->>> Computer on Module (COM). It's only valid for the 512MB RAM version of
->>> the module, as the 256MB version needs different EMC tables and flash
->>> configuration. To make this clear the suffix -512 was added to the board
->>> compatible string.
->>>
->>> The Colibri T20 uses a Tegra2 SoC and has onboard USB Ethernet and AC97
->>> sound.
->>>
->>> Still some things like onboard NAND support missing, but should be a
->>> good base for further development.
->>
->>> diff --git a/arch/arm/boot/dts/tegra20-colibri-512.dtsi b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
->>
->>> +		temperature-sensor@4c {
->>> +			compatible = "national,lm95245";
->>
->> You should probably add that compatible value to
->> Documentation/devicetree/bindings/i2c/trivial-devices.txt.
->>
-> Yep, will send a separate patch for this.
-> 
->>> +	i2c@7000c000 {
->>> +		clock-frequency = <400000>;
->>> +	};
->>> +
->>> +	i2c_ddc: i2c@7000c400 {
->>> +		clock-frequency = <100000>;
->>> +	};
->>> +
->>> +	i2c@7000c500 {
->>> +		clock-frequency = <400000>;
->>> +	};
->>
->>> +	serial@70006000 {
->>> +		clock-frequency = <216000000>;
->>> +	};
->>> +
->>> +	serial@70006300 {
->>> +		clock-frequency = <216000000>;
->>> +	};
->>> +
->>> +	usb@c5000000 {
->>> +		dr_mode = "otg";
->>> +	};
->>> +
->>> +	usb@c5004000 {
->>> +		status = "okay";
->>> +		nvidia,phy-reset-gpio = <&gpio 169 0>; /* gpio PV1 */
->>> +	};
->>> +
->>> +	sdhci@c8000600 {
->>> +		cd-gpios = <&gpio 23 0>; /* gpio PC7 */
->>> +		vmmc-supply = <&ldo5_reg>;
->>> +		vqmmc-supply = <&vcc_sd_reg>;
->>> +	};
->>
->> I assume that all of those nodes are meant to have status="okay"?
->>
->> Oh, I see those are in the top-level board .dts file. You may as well
->> put all the properties there; stuff like the GPIOs and regulators at
->> least would be purely specific to the individual board, and not the COM.
->
-> I would like to keep everything that is defined by the COM to reside in
-> the COM dtsi. You are right that the regulator in this case is board
-> specific and should be moved to the board file, I missed this while
-> splitting things out. But at least the GPIO is defined by the fixed COM
-> pinout.
+When booting with CONFIG_ARM_APPENDED_DTB (either because of using an old
+U-Boot, not wanting the hassle of 2 files or when using Falcon fast boot
+mode in U-Boot), nothing updates the ethernet hwaddr specified for the
+CPSW slaves, causing the driver to use a random hwaddr, which is some times
+troublesome.
 
-If these are really defined by the COM itself, it does indeed make sense
-for the COM .dtsi file to define those properties. But, I have a hard
-time understanding how the COM design can force the carrier module into
-using a particular GPIO for the SD controller CD functionality; couldn't
-the carrier use any GPIO passed through the COM<->carrier connector for
-any purpose?
+The am33xx has unique ethernet hwaddrs programmed in the efuse, so it makes
+more sense to default to these rather than random ones. Add a fixup step
+which adds mac-address dt properties using the efuse addresses if the DTB
+didn't contain valid ones.
 
->>> +	com_regulators {
->>
->> I think just call that "regulators"; the final board .dts file can
->> easily add more sub-nodes to this node, so there's no need to try and
->> avoid any naming conflict here. See Cardhu as an example.
->
-> I don't really see the benefit of merging those nodes. They are separate
-> regulators, some are located on the COM, others on the carrier board. So
-> I would like to keep them in separate nodes, unless you have strong
-> feelings to change this.
+Signed-off-by: Peter Korsgaard <jacmet@sunsite.dk>
+---
+Changes since v1:
+- Use omap_arch_initcall as pointed out by Tony
 
-The issue here is that if we don't do this, we end up with wierd node
-names; plain "regulators" is a fairly canonical name for what the name
-contains, and purely indicates the type of the node. "com_regulators" is
-unusual, and starts to encode identity into the node name itself, which
-is something not usually done in the node name (differentiation between
-identities is usually done using the unit address; "@nnn"),
+ arch/arm/mach-omap2/Makefile      |    3 ++
+ arch/arm/mach-omap2/am33xx-cpsw.c |   94 +++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-omap2/control.h     |    4 ++
+ 3 files changed, 101 insertions(+)
+ create mode 100644 arch/arm/mach-omap2/am33xx-cpsw.c
+
+diff --git a/arch/arm/mach-omap2/Makefile b/arch/arm/mach-omap2/Makefile
+index 65fb6fb..54fb2ee 100644
+--- a/arch/arm/mach-omap2/Makefile
++++ b/arch/arm/mach-omap2/Makefile
+@@ -298,4 +298,7 @@ endif
+ emac-$(CONFIG_TI_DAVINCI_EMAC)		:= am35xx-emac.o
+ obj-y					+= $(emac-m) $(emac-y)
+ 
++cpsw-$(CONFIG_TI_CPSW)			:= am33xx-cpsw.o
++obj-y					+= $(cpsw-m) $(cpsw-y)
++
+ obj-y					+= common-board-devices.o twl-common.o dss-common.o
+diff --git a/arch/arm/mach-omap2/am33xx-cpsw.c b/arch/arm/mach-omap2/am33xx-cpsw.c
+new file mode 100644
+index 0000000..eec29a4
+--- /dev/null
++++ b/arch/arm/mach-omap2/am33xx-cpsw.c
+@@ -0,0 +1,94 @@
++/*
++ * am335x specific cpsw dt fixups
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License as
++ * published by the Free Software Foundation version 2.
++ *
++ * This program is distributed "as is" WITHOUT ANY WARRANTY of any
++ * kind, whether express or implied; without even the implied warranty
++ * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/kernel.h>
++#include <linux/init.h>
++#include <linux/etherdevice.h>
++#include <linux/of.h>
++#include <linux/of_net.h>
++
++#include "soc.h"
++#include "control.h"
++
++/**
++ * am33xx_dt_cpsw_set_mac_from_efuse - Add mac-address property using
++ * ethernet hwaddr from efuse
++ * @np:		Pointer to the cpsw slave to set mac address of
++ * @idx:	Mac address index to use from efuse
++ */
++static void am33xx_dt_cpsw_set_mac_from_efuse(struct device_node *np, int idx)
++{
++	struct property *prop;
++	u32 lo, hi;
++	u8 *mac;
++
++	switch (idx) {
++	case 0:
++		lo = omap_ctrl_readl(AM33XX_CONTROL_MAC_ID0_LOW);
++		hi = omap_ctrl_readl(AM33XX_CONTROL_MAC_ID0_HIGH);
++		break;
++
++	case 1:
++		lo = omap_ctrl_readl(AM33XX_CONTROL_MAC_ID1_LOW);
++		hi = omap_ctrl_readl(AM33XX_CONTROL_MAC_ID1_HIGH);
++		break;
++
++	default:
++		pr_err("cpsw.%d: too many slaves found\n", idx);
++		return;
++	}
++
++	prop = kzalloc(sizeof(*prop) + ETH_ALEN, GFP_KERNEL);
++	if (!prop)
++		return;
++
++	prop->value = prop + 1;
++	prop->length = ETH_ALEN;
++	prop->name = kstrdup("mac-address", GFP_KERNEL);
++	if (!prop->name) {
++		kfree(prop);
++		return;
++	}
++
++	mac = prop->value;
++
++	mac[0] = hi;
++	mac[1] = hi >> 8;
++	mac[2] = hi >> 16;
++	mac[3] = hi >> 24;
++	mac[4] = lo;
++	mac[5] = lo >> 8;
++
++	of_update_property(np, prop);
++
++	pr_info("cpsw.%d: No hwaddr in dt. Using %pM from efuse\n", idx, mac);
++}
++
++static int __init am33xx_dt_cpsw_mac_fixup(void)
++{
++	struct device_node *np, *slave;
++	int idx = 0;
++
++	if (!soc_is_am33xx())
++		return -ENODEV;
++
++	for_each_compatible_node(np, NULL, "ti,cpsw")
++		for_each_node_by_name(slave, "slave") {
++			if (!of_get_mac_address(slave))
++				am33xx_dt_cpsw_set_mac_from_efuse(slave, idx);
++			idx++;
++		}
++
++	return 0;
++}
++omap_arch_initcall(am33xx_dt_cpsw_mac_fixup);
+diff --git a/arch/arm/mach-omap2/control.h b/arch/arm/mach-omap2/control.h
+index e6c3281..266d512 100644
+--- a/arch/arm/mach-omap2/control.h
++++ b/arch/arm/mach-omap2/control.h
+@@ -352,6 +352,10 @@
+ /* AM33XX CONTROL_STATUS register */
+ #define AM33XX_CONTROL_STATUS		0x040
+ #define AM33XX_CONTROL_SEC_CLK_CTRL	0x1bc
++#define AM33XX_CONTROL_MAC_ID0_LOW	0x630
++#define AM33XX_CONTROL_MAC_ID0_HIGH	0x634
++#define AM33XX_CONTROL_MAC_ID1_LOW	0x638
++#define AM33XX_CONTROL_MAC_ID1_HIGH	0x63c
+ 
+ /* AM33XX CONTROL_STATUS bitfields (partial) */
+ #define AM33XX_CONTROL_STATUS_SYSBOOT1_SHIFT		22
+-- 
+1.7.10.4
+
