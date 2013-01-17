@@ -1,72 +1,63 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 06/14] ARM: EXYNOS: add System MMU definition to DT
-Date: Thu, 17 Jan 2013 16:39:41 +0000
-Message-ID: <20130117163941.GL3699@mudshark.cambridge.arm.com>
-References: <003601cdd790$082a1310$187e3930$%cho@samsung.com>
-	<20130116115114.GB16543@mudshark.cambridge.arm.com>
-	<20130116.184321.179736289870581833.hdoyu@nvidia.com>
+From: Steven King <sfking@fdwdc.com>
+Subject: Re: [PATCH 0/4] gpio: introduce descriptor-based interface
+Date: Thu, 17 Jan 2013 08:50:43 -0800
+Message-ID: <201301170850.43655.sfking@fdwdc.com>
+References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com>
+ <CACRpkda6dqAj+DzrMCnKET7Z9PtuW0+k9ea3YDL8Z1D=oFVRpQ@mail.gmail.com>
+ <50F7E83E.8000105@uclinux.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <50F7E83E.8000105@uclinux.org>
 Content-Disposition: inline
-In-Reply-To: <20130116.184321.179736289870581833.hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "subash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <subash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "sanghyun75.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <sanghyun75.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XWGXanvQGlWp@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Ungerer <gerg@uclinux.org>
+Cc: linux-arch <linux-arch@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linus Walleij <linus.walleij@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Alex Courbot <acourbot@nvidia.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hiroshi,
+On Thursday 17 January 2013 4:02:06 am Greg Ungerer wrote:
+> Hi Linus,
+>
+> (My gerg@snapgear.com email no longer gets to me, gerg@uclinux.org is
+> the best direct email for me now).
+>
+> On 01/17/2013 09:15 PM, Linus Walleij wrote:
+> > On Thu, Jan 10, 2013 at 11:08 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >> I've tried to find platforms that don't yet use GPIOLIB and fortunately
+> >> there are very few left:
+> >>
+> >> I found two that provide the generic gpio interfaces when gpiolib
+> >> is disabled, but use gpiolib otherwise for the same hardware,
+> >> arch/m68k/include/asm/mcfgpio.h and arch/blackfin/include/asm/gpio.h.
+> >> I would assume that we can simply remove the non-gpiolib shortcut
+> >> here at cost of a small overhead.
+> >
+> > Geert/Greg: interested in looking into this issue?
+> >
+> > The GPIO maintainers want to get rid of non-gpiolib platforms.
+>
+> Steven King did most of the ColdFire GPIO work (CC'ed on this).
+> Steven: are you happy to drop the non-gpiolib support?
+>
+> Regards
+> Greg
 
-On Wed, Jan 16, 2013 at 04:43:21PM +0000, Hiroshi Doyu wrote:
-> Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org> wrote @ Wed, 16 Jan 2013 12:51:14 +0100:
-> > Given that this information is not discoverable, it needs to be encoded
-> > in the device tree, but where? I can see two approaches:
-> > 
-> >   1. For each IOMMU node, list phandles to the devices connected to it
-> >      and have a corresponding list of StreamIDs.
-> > 
-> > or
-> > 
-> >   2. For each device wishing to use an IOMMU, have a phandle to the
-> >      IOMMU node and a separate StreamID property. The IOMMU would then
-> >      parse this information when the device is added to the bus.
-> > 
-> > Although I prefer the second approach, it has the downside of affecting
-> > all device bindings that wish to use an IOMMU, so I'm open to any other
-> > ideas.
-> 
-> Actually the above summarize tegra SMMU situation well too. For
-> example, each IOMMU'able device has IOVA constraint that some of the
-> address area isn't available because of its MMIO. This info needs to
-> be described in DT. If <IOMMU phandle> + some parametes are embedded
-> in a device node, that info could be dealt at a bus notifier(*1).
-> 
-> *1: http://lists.linuxfoundation.org/pipermail/iommu/2012-November/004934.html
+Well, my concern is the small, single chip platforms with limited ram and 
+speeds measured in MHz.  My goal was that these platforms that had very basic 
+gpio needs, no offboard gpio, just toggling a few pins for spi or whatever, 
+could do that without pulling in a bunch of code they dont need.  I realize 
+that for x86 or arm people with their giga Hz cpus with gigabytes of ram, its 
+no big deal, but my little 60 MHz coldfire v2s with only 16 megs of ram (and 
+even more constraining, 2 megs of flash) need all the help they can get.
 
-I've been thinking about this a bit more and, unfortunately, my conclusion
-is that method (2) above is problematic, so we do need something similar to
-(1).
-
-The reason for this comes about when dealing with chained IOMMUs. In this
-case, each IOMMU in the chain needs to know about all of the masters hanging
-beneath it (potentially behind other IOMMUs) but may also need to supplement
-each device with additional data relevant to that point in the IOMMU chain.
-In the case of the ARM System MMU, this could be StreamID information (as
-the StreamID for a device can change as the transaction stream passes
-through an SMMU) and for your case it could be that the DMA window is
-widened along the chain.
-
-So, extending the mmu-master property described in this thread to be
-"mmu-masters : a list of phandles to device nodes representing bus masters
-for which the IOMMU can provide a translation" is probably a good start.
-
-Will
+I haven't been keeping up with the kernel list of late, can someone point me 
+to what''s being discussed so I can see what were talking about here?
