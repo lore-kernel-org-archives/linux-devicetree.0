@@ -1,170 +1,61 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/7] reset: Add reset controller API
-Date: Thu, 17 Jan 2013 11:45:23 +0100
-Message-ID: <1358419524.2411.126.camel@pizza.hi.pengutronix.de>
-References: <1358352787-15441-1-git-send-email-p.zabel@pengutronix.de>
- <1358352787-15441-3-git-send-email-p.zabel@pengutronix.de>
- <50F7267E.8090309@wwwdotorg.org>
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: CoreSight framework and drivers
+Date: Thu, 17 Jan 2013 10:55:45 +0000
+Message-ID: <20130117105545.GB3699@mudshark.cambridge.arm.com>
+References: <50D1F37E.6000804@ti.com>
+ <20121219212431.GC23594@pratikp-linux.qualcomm.com>
+ <50D34EE5.8090407@ti.com>
+ <20121220195127.GA14877@pratikp-linux.qualcomm.com>
+ <50D3972E.4030607@ti.com>
+ <20121221221828.GA2658@pratikp-linux.qualcomm.com>
+ <20121223113239.GG16237@mudshark.cambridge.arm.com>
+ <20130103180643.GA30277@pratikp-linux.qualcomm.com>
+ <20130107115836.GB13542@mudshark.cambridge.arm.com>
+ <20130116001458.GB7013@pratikp-linux.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50F7267E.8090309-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130116001458.GB7013@pratikp-linux.qualcomm.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Pratik Patel <pratikp@codeaurora.org>
+Cc: Jon Hunter <jon-hunter@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "magnus.p.persson@stericsson.com" <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "d-deao@ti.com" <d-deao@ti.com>, "christian.bejram@stericsson.com" <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
+On Wed, Jan 16, 2013 at 12:14:59AM +0000, Pratik Patel wrote:
+> On Mon, Jan 07, 2013 at 11:58:36AM +0000, Will Deacon wrote:
+> > On Thu, Jan 03, 2013 at 06:06:43PM +0000, Pratik Patel wrote:
+> > > Whats the advantage in using debugfs here?
+> > 
+> > The main things I like about debugfs are (a) it's a text-driven interface
+> > and easy to script with and (b) it matches what we do for ftrace.
+> > 
+> > Furthermore, it means that subtle differences between devices can be hidden
+> > in the driver and not require different vendor tools for parsing the trace
+> > data.
+> > 
+> Sorry for the delay and maybe I am missing something but it seems
+> we can take care of such protocol or parsing/decoding differences
+> even with device nodes since that seems independent of the
+> interface used - per device debugfs attributes or per device
+> device nodes.
 
-Am Mittwoch, den 16.01.2013, 15:15 -0700 schrieb Stephen Warren:
-> On 01/16/2013 09:13 AM, Philipp Zabel wrote:
-> > This adds a simple API for devices to request being reset
-> > by separate reset controller hardware and implements the
-> > reset signal device tree binding.
-> 
-> 
-> > diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> 
-> > +obj-$(CONFIG_RESET_CONTROLLER) += core.o
-> > +
-> 
-> nit: blank line at EOF.
+You seem to be arguing that the two interfaces are equivalent, in which case
+I say that we should follow ftrace's lead and use debugfs for this...
 
-Ok.
+...but I still maintain that debugfs is also far easier to work with from
+userspace.
 
-> > diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> 
-> > +/**
-> > + * reset_control_reset - reset the controlled device
-> > + * @rstc: reset controller
-> > + */
-> > +int reset_control_reset(struct reset_control *rstc)
-> 
-> What time period is the reset signal asserted for; should there be a
-> parameter to control this?
+> CoreSight trace solution is typically a SoC wide solution and
+> hence can get used by non-Linux processors or hardware. Using
+> debugfs would imply compiling it and exposing all the debug
+> knobs even if the use case was to use the CoreSight solution for
+> something that didn't need all that.
 
-"The reset controller knows".
+Many debug features require debugfs to be compiled, so I don't buy that as a
+show-stopping argument in favour of using dev nodes. I also think that exposing
+all of the debug knobs is actually a good thing, given the low-level nature of
+coresight devices (where we're offloading most of the knowledge to userspace
+anyway).
 
-On i.MX, the SRC does all necessary things in hardware (and optionally
-causes an interrupt to signal when it's ready - right now the SRC driver
-just polls for the reset line to deassert).
-
-For reset controllers that need to be manually asserted/deasserted, and
-still want to provide the .reset callback, we should think about some
-timing configuration. But IMHO that should be separate from the API.
-
-I've thought about adding an example gpio-reset controller driver, which
-knows about the necessary delays and just toggles gpios. This could be
-represented in the device tree as follows:
-
-	gpio_reset: gpio_reset {
-		compatible = "gpio-reset"
-		gpios = <&gpioa 0 0>, <&gpioc 5 0>, <&gpiod 3 1>;
-		reset-delays = <10>, <100>, <50>;
-		#reset-cells = <1>;
-	};
-
-	device-to-be-reset {
-		resets = <&gpio_reset 2>; /* GPIOD3, active-low, 50ms */
-	};
-
-Or one could add another reset-cell to configure the delay:
-
-	gpio_reset: gpio_reset {
-		compatible = "gpio-reset"
-		gpios = <&gpioa 0 0>, <&gpioc 5 0>, <&gpiod 3 1>;
-		#reset-cells = <2>;
-	};
-
-	device-to-be-reset {
-		resets = <&gpio_reset 2 50>; /* GPIOD3, active-low, 50ms */
-	};
-
-I'd prefer the former over the latter. In any case, I think the timing
-information should reside either in the reset controller or in the
-framework.
-
-> > +{
-> > +	if (rstc->rcdev->ops->reset)
-> > +		return rstc->rcdev->ops->reset(rstc->id);
-> > +
-> > +	return 0;
-> > +}
-> 
-> If there's no op, shouldn't the function fail?
-
-Yes, I'll change that.
-
-> > +/**
-> > + * reset_control_is_asserted - deasserts the reset line
-> 
-> Comment seems wrong.
-> 
-> Is this API useful; why wouldn't drivers just assert to de-assert it
-> based on their needs?
-
-Probably not, I'll drop this.
-
-> > +/**
-> > + * reset_control_get - Lookup and obtain a reference to a reset controller.
-> > + * @dev: device to be reset by the controller
-> > + * @id: reset line name
-> > + *
-> > + * Returns a struct reset_control or IS_ERR() condition containing errno.
-> 
-> OK, so NULL can't ever (legally) be returned.
-
-Right.
-
-> > +struct reset_control *reset_control_get(struct device *dev, const char *id)
-> 
-> > +	rcdev_node = NULL;
-> > +	for (i = 0; rcdev_node == NULL; i++) {
-> ...
-> > +		rcdev_node = args.np;
-> > +		rcdev_index = args.args[0];
-> 
-> Even though the loop condition tests rcdev_node, it'd be a lot easier to
-> realize that the loop bails out here because of that if you explicitly
-> wrote a break; here. Otherwise, it took a while for me to realize.
-
-Ok.
-
-> > +void reset_control_put(struct reset_control *rstc)
-> > +{
-> > +	if (rstc == NULL || IS_ERR(rstc))
-> > +		return;
-> 
-> ... so (re: two comments above) you don't need to check for NULL here;
-> if someone passes NULL in here, they're passing some value that
-> reset_control_get() never passed back, so this API is free to do
-> whatever it wants...
-
-Yes, I'll remove it.
-
-> > +	kfree(rstc);
-> > +	module_put(rstc->rcdev->owner);
-> 
-> You need to module_put() first, or copy rstc->rcdev, since otherwise
-> you're reading *rstc after it's freed.
-
-Ow, sorry for wasting your time with this one.
-
-> This implementation only supports device tree. People might want the
-> APIs to work on non-device-tree systems too, although I guess that
-> should be easy enough to retrofit without changing the driver-visible API...
-
-Indeed.
-
-regards
-Philipp
+Will
