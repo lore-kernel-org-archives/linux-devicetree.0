@@ -1,67 +1,44 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [RFC PATCH 2/6] ARM: OMAP: USB: Add phy binding information
-Date: Thu, 17 Jan 2013 11:39:19 +0200
-Message-ID: <50F7C6C7.3030400@ti.com>
-References: <1358348462-27693-1-git-send-email-kishon@ti.com> <1358348462-27693-3-git-send-email-kishon@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/6] ARM: sunxi: Add pinctrl driver for Allwinner SoCs
+Date: Thu, 17 Jan 2013 10:55:04 +0100
+Message-ID: <CACRpkdbezF8WgwL4Z4B+tLT7CpROXD0iEQD9TowFuSFLyeuhkQ@mail.gmail.com>
+References: <1355948295-19680-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1355948295-19680-2-git-send-email-maxime.ripard@free-electrons.com>
+ <CACRpkdYpnfWmo15vtUsvPobhFO3_wvYgaa04Mpa6QjWx2h+ezA@mail.gmail.com>
+ <50EAEED2.8020003@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1358348462-27693-3-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, balbi@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, horms@verge.net.au, magnus.damm@gmail.com, cbou@mail.ru, dwmw2@infradead.org, alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, leoli@freescale.com, eric.y.miao@gmail.com, haojian.zhuang@gmail.com, stern@rowland.harvard.edu
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50EAEED2.8020003-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Alejandro Mery <amery-7FTFmhZxc5Q@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/16/2013 05:00 PM, Kishon Vijay Abraham I wrote:
-> This is in preparation for the changes in PHY library to support adding
-> and getting multiple PHYs of the same type. In the new design, the
-> binding information between the PHY and the USB controller should be
-> specified in the platform specific initialization code. So it's been
-> done for OMAP platforms here.
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
-> This kind-of binding should be done in all the platforms (I've done only
-> for OMAP platform). 
->  arch/arm/mach-omap2/usb-musb.c |    7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/mach-omap2/usb-musb.c b/arch/arm/mach-omap2/usb-musb.c
-> index 9d27e3f..bbe2fa5 100644
-> --- a/arch/arm/mach-omap2/usb-musb.c
-> +++ b/arch/arm/mach-omap2/usb-musb.c
-> @@ -24,6 +24,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/io.h>
->  #include <linux/usb/musb.h>
-> +#include <linux/usb/phy.h>
->  
->  #include "omap_device.h"
->  #include "soc.h"
-> @@ -85,8 +86,12 @@ void __init usb_musb_init(struct omap_musb_board_data *musb_board_data)
->  	musb_plat.mode = board_data->mode;
->  	musb_plat.extvbus = board_data->extvbus;
->  
-> -	if (cpu_is_omap44xx())
-> +	if (cpu_is_omap44xx()) {
->  		musb_plat.has_mailbox = true;
-> +		usb_bind_phy("musb-hdrc.0.auto", 0, "omap-usb2.1.auto");
-> +	} else if (cpu_is_omap34xx()) {
-> +		usb_bind_phy("musb-hdrc.0.auto", 0, "twl4030_usb");
-> +	}
+On Mon, Jan 7, 2013 at 4:50 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Le 07/01/2013 00:46, Linus Walleij a =E9crit :
 
-Are you sure than these OMAP platforms cannot be wired in any other way
-to the PHY?
+>> or similar, as you see 2 mA for each added driver stage. The driver can
+>> convert to any internal representation...
+>
+> Ok, I will do it.
+>
+> Do you have other comments on the driver that I should wait for before
+> sending a v3?
 
-If they can be then this association must come from the board files or
-device tree.
+Not really, I'm walking my inbox (which has again exploded) maybe
+you've already sent new patches...
 
->  
->  	if (soc_is_am35xx()) {
->  		oh_name = "am35x_otg_hs";
-> 
-
---
-cheers,
--roger
+Thanks,
+Linus Walleij
