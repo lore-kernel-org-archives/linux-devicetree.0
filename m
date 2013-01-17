@@ -1,69 +1,155 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/4] gpio: introduce descriptor-based interface
-Date: Thu, 17 Jan 2013 12:25:57 +0100
-Message-ID: <CACRpkdZ8f4FVL5cd3etMf5ENoSCd=ivfnSmAN41+hNvuvD+7mg@mail.gmail.com>
-References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com>
-	<201301091046.13020.arnd@arndb.de>
-	<2270940.DTxEYMZtED@percival>
-	<201301101008.45091.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <201301101008.45091.arnd@arndb.de>
-Sender: linux-arch-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Alex Courbot <acourbot@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Linus WALLEIJ <linus.walleij@stericsson.com>, Roland Stigge <stigge@antcom.de>
+From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Subject: [PATCH 2/2] ARM: DT: tegra: Add Toradex Iris carrier board with T20 512MB COM
+Date: Thu, 17 Jan 2013 12:59:21 +0100
+Message-ID: <1358423961-24318-2-git-send-email-dev@lynxeye.de>
+References: <1358423961-24318-1-git-send-email-dev@lynxeye.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1358423961-24318-1-git-send-email-dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2013 at 11:08 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Thursday 10 January 2013, Alex Courbot wrote:
+This adds the device tree for the Toradex Iris carrier board used
+together with a Colibri T20 512MB COM.
 
->> > Regarding the integration of pinctrl with gpio,
->> > I was thinking in the past that we could make pinctrl provide everything
->> > that gpiolib does, and have a generic gpiolib driver on top of pinctrl
->> > so that platforms don't need to implement both interfaces but only need
->> > to provide a pure pinctrl driver. Not sure if this makes any sense.
->>
->> That would work if all GPIOs were connected to a ball, but how about GPIO
->> expanders that are external to the chip? They have no use for pinctrl AFAICT.
->> On the other hand, maybe we can have one pinctrl-gpio driver for those chips
->> where pinctrl alone can emulate all the functionality of a GPIO controller.
->> Maybe such a driver exists already?
->
-> I don't think we have that yet, but it would be another option: rather
-> than putting a generic gpiolib driver on top of pinctrl, we could have
-> pinctrl support for all gpios that go through gpiolib, and move device
-> drivers over to use pinctrl as the way to manage gpios rather than the
-> classic gpio drivers. That would be a larger change though, and require
-> that we pull in the pinctrl subsystem on a lot of machines that don't
-> need it today.
+The Iris has the following features, in brackets the current status:
+- DVI and VGA output through DVI-I connector (DVI-D enabled and tested)
+- LVDS output
+- 1 USB host port (enabled and tested)
+- 1 USB OTG port (enabled)
+- 100 MBit Ethernet (enabled and tested)
+- 5 UART ports  (2 on 10way headers enabled and tested)
+- 1 MicroSD Slot (enabled and tested)
+- Audio connectors (enabled, only HP out and Line-in tested)
+- i2c RTC
+- GPIO connector (enabled, only sparsely tested)
+- external i2c bus
+- 4 PWM out
+- analog in
 
-Not quite following but have the following loose idea:
+Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/tegra.txt |  1 +
+ arch/arm/boot/dts/Makefile                      |  1 +
+ arch/arm/boot/dts/tegra20-iris-512.dts          | 88 +++++++++++++++++++++++++
+ 3 files changed, 90 insertions(+)
+ create mode 100644 arch/arm/boot/dts/tegra20-iris-512.dts
 
-- Add API such as <linux/pinctrl/gpio.h> with struct pin_gpio_ops {}
-  or similar. As orthogonal to the mux and config interfaces we already
-  have.
-
-- Add ops like .set_input(), .set_output(), .drive_high() and .drive_low()
-  (etc) to the ops struct so all functionality currently provided by
-  gpiolib can be implemened by a driver.
-
-- Make global pin numbers optional in gpiolib for the next part...
-
-- Register a generic GPIO chip on top of the pinctrl-gpio.c, preferably
-  only supporting Alex' descriptors.
-
-- Provide a userspace interface to pinctrl with something like /dev/pinctrlN
-  with an ioctl() interface, solving also Roland Stigge's issue with
-  driving many pins at the same time in a smooth way.
-
-Sounds like a plan?
-
-I'd like to avoid the either-or-approach where you have to use
-pinctrl only or only gpiolib, so a compatibility layer kindof.
-
-I'm prepping a talk at ELC so will try to jot down something more
-substantial.
-
-Yours,
-Linus Walleij
+diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
+index ccd4ef4..ed9c853 100644
+--- a/Documentation/devicetree/bindings/arm/tegra.txt
++++ b/Documentation/devicetree/bindings/arm/tegra.txt
+@@ -31,3 +31,4 @@ board-specific compatible values:
+   nvidia,ventana
+   nvidia,whistler
+   toradex,colibri_t20-512
++  toradex,iris
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 5c13de2..b756c51 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -134,6 +134,7 @@ dtb-$(CONFIG_ARCH_SPEAR6XX)+= spear600-evb.dtb
+ dtb-$(CONFIG_ARCH_SUNXI) += sun4i-a10-cubieboard.dtb \
+ 	sun5i-a13-olinuxino.dtb
+ dtb-$(CONFIG_ARCH_TEGRA) += tegra20-harmony.dtb \
++	tegra20-iris-512.dtb \
+ 	tegra20-medcom-wide.dtb \
+ 	tegra20-paz00.dtb \
+ 	tegra20-plutux.dtb \
+diff --git a/arch/arm/boot/dts/tegra20-iris-512.dts b/arch/arm/boot/dts/tegra20-iris-512.dts
+new file mode 100644
+index 0000000..22959a1
+--- /dev/null
++++ b/arch/arm/boot/dts/tegra20-iris-512.dts
+@@ -0,0 +1,88 @@
++/dts-v1/;
++
++/include/ "tegra20-colibri-512.dtsi"
++
++/ {
++	model = "Toradex Colibri T20 512MB on Iris";
++	compatible = "toradex,iris", "toradex,colibri_t20-512", "nvidia,tegra20";
++
++	host1x {
++		hdmi {
++			status = "okay";
++		};
++	};
++
++	pinmux {
++		state_default: pinmux {
++			hdint {
++				nvidia,tristate = <0>;
++			};
++
++			i2cddc {
++				nvidia,tristate = <0>;
++			};
++
++			sdio4 {
++				nvidia,tristate = <0>;
++			};
++
++			uarta {
++				nvidia,tristate = <0>;
++			};
++
++			uartd {
++				nvidia,tristate = <0>;
++			};
++		};
++	};
++
++	usb@c5000000 {
++		status = "okay";
++	};
++
++	usb@c5008000 {
++		status = "okay";
++	};
++
++	serial@70006000 {
++		status = "okay";
++	};
++
++	serial@70006300 {
++		status = "okay";
++	};
++
++	i2c_ddc: i2c@7000c400 {
++		status = "okay";
++	};
++
++	sdhci@c8000600 {
++		status = "okay";
++		bus-width = <4>;
++	};
++
++	board_regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		
++		usb_host_vbus {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "usb_host_vbus";
++			regulator-min-microvolt = <5000000>;
++			regulator-max-microvolt = <5000000>;
++			regulator-boot-on;
++			regulator-always-on;
++			gpio = <&gpio 178 0>;
++		};
++
++		vcc_sd_reg: regulator@3 {
++			compatible = "regulator-fixed";
++			reg = <1>;
++			regulator-name = "vcc_sd";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++		};
++	};
++};
+-- 
+1.8.0.2
