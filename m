@@ -1,74 +1,97 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 2/2] ARM: dts: fix compatible value for exynos pinctrl
-Date: Thu, 17 Jan 2013 11:16:59 +0100
-Message-ID: <5593414.DjjP9pdJVI@amdc1227>
-References: <1357172423-8217-1-git-send-email-kgene.kim@samsung.com>
- <1357172423-8217-2-git-send-email-kgene.kim@samsung.com>
- <CAOesGMiSgcuD7z4yc2Z+_hi+PZnuv9pa7saeGymwT0DPz=j8dQ@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
+Date: Thu, 17 Jan 2013 11:20:27 +0100
+Message-ID: <CACRpkdZ8hgV_=ev8Kcq=i7K15jrvwW+Or7p+=8fP+8Rb7GGvTQ@mail.gmail.com>
+References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com>
+ <20130109081131.GH21994@gmail.com>
+ <CACRpkdbx7ptCugpc1+JC5Yk+n835goOuoF6q0pdizsjpZ-G9mQ@mail.gmail.com>
+ <201301091148.09320.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAOesGMiSgcuD7z4yc2Z+_hi+PZnuv9pa7saeGymwT0DPz=j8dQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, Thomas Abraham <thomas.ab@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201301091148.09320.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rabin VINCENT <rabin.vincent-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+On Wed, Jan 9, 2013 at 12:48 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 09 January 2013, Linus Walleij wrote:
 
-On Saturday 05 of January 2013 14:57:54 Olof Johansson wrote:
-> On Wed, Jan 2, 2013 at 4:20 PM, Kukjin Kim <kgene.kim@samsung.com> 
-wrote:
-> > Fix the incorrect compatible property value of pinctrl for EXYNOS4
-> > SoCs.
-> Ah, this answers my question from the previous patch. So, why do 5450
-> as a separate patch?
-> 
-> > diff --git
-> > a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> > b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt index
-> > e97a278..4598a47 100644
-> > --- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> > +++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-> > @@ -7,9 +7,9 @@ on-chip controllers onto these pads.
-> > 
-> >  Required Properties:
-> >  - compatible: should be one of the following.
-> > 
-> > -  - "samsung,pinctrl-exynos4210": for Exynos4210 compatible
-> > pin-controller. -  - "samsung,pinctrl-exynos4x12": for Exynos4x12
-> > compatible pin-controller. -  - "samsung,pinctrl-exynos5250": for
-> > Exynos5250 compatible pin-controller. +  -
-> > "samsung,exynos4210-pinctrl": for Exynos4210 compatible
-> > pin-controller. +  - "samsung,exynos4x12-pinctrl": for Exynos4x12
-> > compatible pin-controller. +  - "samsung,exynos5250-pinctrl": for
-> > Exynos5250 compatible pin-controller.
-> Do we care about backwards compatibility for ARM device trees yet?
-> It's becoming time to start caring soon, if we don't. So while this
-> might be OK for this time around, we should start requiring some
-> backwards compatibility for bindings that have been used in at least
-> one released kernel.
+>> static void __init ap_init(void)
+>> {
+>>         unsigned long sc_dec;
+>>         int i;
+>>
+>>         platform_device_register(&cfi_flash_device);
+>>
+>>         sc_dec = readl(ap_syscon_base + INTEGRATOR_SC_DEC_OFFSET);
+>>         for (i = 0; i < 4; i++) {
+>>                 struct lm_device *lmdev;
+>>
+>>                 if ((sc_dec & (16 << i)) == 0)
+>>                         continue;
+>>
+>>                 lmdev = kzalloc(sizeof(struct lm_device), GFP_KERNEL);
+>>                 if (!lmdev)
+>>                         continue;
+>>
+>>                 lmdev->resource.start = 0xc0000000 + 0x10000000 * i;
+>>                 lmdev->resource.end = lmdev->resource.start + 0x0fffffff;
+>>                 lmdev->resource.flags = IORESOURCE_MEM;
+>>                 lmdev->irq = IRQ_AP_EXPINT0 + i;
+>>                 lmdev->id = i;
+>>
+>>                 lm_device_register(lmdev);
+>>         }
+>>
+>>         integrator_init(false);
+>> }
+>>
+>> In this case I think the autodetect is so nice that device tree probing
+>> is mostly pointless. If it wasn't for the fact that we get a
+>> cross-depenency to defined interrupts and clocks and whatever that
+>> are coming from the device tree. Which is where DT shows its
+>> all-or-nothing face.
+>
+> Well, the extension bus above can easily be represented as a single device
+> with four interrupts and four memory ranges. The child devices don't
+> have to show up in DT at all, since they can be detected, but the detection
+> mechanism should be there. This is the same as PCI devices, where we have
+> to describe the host controller, but not the add-on cards.
 
-This also brings the general problem of dts verification.
+Right, so the picture is more complex.
 
-As of now, we don't have any way of checking dts files for compliance with 
-defined bindings. Moreover we don't even have a way of defining those 
-bindings other than plain text documentation.
+Each logic module / plug-in card spawn a set of struct amba_device
+primecells.
 
-Now, the problem is that anyone can put anything in their device tree 
-sources and we can't check if the information is specified correctly by 
-any other means that someone reading it and confirming with documentation 
-and/or driver code (the documentation isn't always up to date...).
+Each of them need clocks and interrupts. These are then cascaded
+from the clocks/irqs on the main board.
 
-I remember there was some effort going towards encoding device tree 
-bindings using something like XML schemas, but I'm not sure to what point 
-it got and what was the conclusion. (Personally I think that it was a bit 
-overcomplicated, but I never had time to polish and implement some of my 
-ideas, eventually letting the problem fade off from my mind.)
+>> So to get an elegant DT probing in this case I *guess* the right thing
+>> to do is to dynamically add nodes to the device tree from the board
+>> code, or have all alternatives inside the DT marked "disable" and then
+>> mark them as "okay" from the board code by modifying the DT at
+>> runtime.
+>
+> That would also work, but I think the other way is simpler.
 
-Best regards,
--- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Linux Platform
+So when taking into account that the daugther boards are not just
+spawning themselves but a number of devices in turn, I thin
+it's the only way...
+
+I will get to tackle this when I've converted the Integrator PCI to DT
+and removed the Integrator boardfiles.
+
+Yours,
+Linus Walleij
