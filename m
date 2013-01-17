@@ -1,15 +1,16 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/5] capemgr: Beaglebone DT overlay based cape manager
-Date: Thu, 17 Jan 2013 10:35:41 +0000
-Message-ID: <201301171035.41407.arnd@arndb.de>
-References: <1357584666-17374-1-git-send-email-panto@antoniou-consulting.com>
- <201301091148.09320.arnd@arndb.de>
- <CACRpkdZ8hgV_=ev8Kcq=i7K15jrvwW+Or7p+=8fP+8Rb7GGvTQ@mail.gmail.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 6/7] ARM i.MX5: Add System Reset Controller (SRC)
+ support for i.MX51 and i.MX53
+Date: Thu, 17 Jan 2013 11:45:25 +0100
+Message-ID: <1358419525.2411.127.camel@pizza.hi.pengutronix.de>
+References: <1358352787-15441-1-git-send-email-p.zabel@pengutronix.de>
+ <1358352787-15441-7-git-send-email-p.zabel@pengutronix.de>
+ <20130117061200.GK26179@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdZ8hgV_=ev8Kcq=i7K15jrvwW+Or7p+=8fP+8Rb7GGvTQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <20130117061200.GK26179-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,25 +21,137 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rabin VINCENT <rabin.vincent-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 17 January 2013, Linus Walleij wrote:
-> Each logic module / plug-in card spawn a set of struct amba_device
-> primecells.
+Hi Shawn,
+
+thank you for your comments.
+
+Am Donnerstag, den 17.01.2013, 14:12 +0800 schrieb Shawn Guo:
+> On Wed, Jan 16, 2013 at 05:13:06PM +0100, Philipp Zabel wrote:
+> > The SRC in i.MX51 and i.MX53 is similar to the one in i.MX6q minus
+> > the IPU2 reset line and multi core CPU reset/enable bits.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  arch/arm/mach-imx/Kconfig      |    1 +
+> >  arch/arm/mach-imx/common.h     |    3 ++-
+> >  arch/arm/mach-imx/mach-imx6q.c |    2 +-
+> >  arch/arm/mach-imx/mm-imx5.c    |    2 ++
+> >  arch/arm/mach-imx/src.c        |   14 +++++++++++++-
+> >  5 files changed, 19 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
+> > index 3e628fd..d7924e5 100644
+> > --- a/arch/arm/mach-imx/Kconfig
+> > +++ b/arch/arm/mach-imx/Kconfig
+> > @@ -829,6 +829,7 @@ config	SOC_IMX53
+> >  	select ARCH_MX53
+> >  	select HAVE_CAN_FLEXCAN if CAN
+> >  	select IMX_HAVE_PLATFORM_IMX2_WDT
+> > +	select HAVE_IMX_SRC
 > 
-> Each of them need clocks and interrupts. These are then cascaded
-> from the clocks/irqs on the main board.
+> Please sort it in name.  Should we manage to have it selected for imx51
+> too, since you have code added for imx51 below?
 
-But can they be cascaded from any clocks and irqs on the mainboard,
-or just a few selected ones that are connected to the plug-in
-module?
+Yes, I'll add that.
 
-If you can describe which IRQs and clocks are routed to the
-connector, then everything below it can be locally described
-again. For the interrupts, you can use an
-interrupt-map/interrupt-map-mask pair, and I'd assume for
-the clocks, you just need to provide the right labels.
+> >  	select PINCTRL
+> >  	select PINCTRL_IMX53
+> >  	select SOC_IMX5
+> > diff --git a/arch/arm/mach-imx/common.h b/arch/arm/mach-imx/common.h
+> > index 7191ab4..f36be3c 100644
+> > --- a/arch/arm/mach-imx/common.h
+> > +++ b/arch/arm/mach-imx/common.h
+> > @@ -133,7 +133,8 @@ static inline void imx_smp_prepare(void) {}
+> >  #endif
+> >  extern void imx_enable_cpu(int cpu, bool enable);
+> >  extern void imx_set_cpu_jump(int cpu, void *jump_addr);
+> > -extern void imx_src_init(void);
+> > +extern void imx5_src_init(void);
+> > +extern void imx6q_src_init(void);
+> >  extern void imx_src_prepare_restart(void);
+> >  extern void imx_gpc_init(void);
+> >  extern void imx_gpc_pre_suspend(void);
+> > diff --git a/arch/arm/mach-imx/mach-imx6q.c b/arch/arm/mach-imx/mach-imx6q.c
+> > index cd277a0..b1e076c 100644
+> > --- a/arch/arm/mach-imx/mach-imx6q.c
+> > +++ b/arch/arm/mach-imx/mach-imx6q.c
+> > @@ -229,7 +229,7 @@ static const struct of_device_id imx6q_irq_match[] __initconst = {
+> >  static void __init imx6q_init_irq(void)
+> >  {
+> >  	l2x0_of_init(0, ~0UL);
+> > -	imx_src_init();
+> > +	imx6q_src_init();
+> 
+> I'm not sure this is necessary.  See below ...
+> 
+> >  	imx_gpc_init();
+> >  	of_irq_init(imx6q_irq_match);
+> >  }
+> > diff --git a/arch/arm/mach-imx/mm-imx5.c b/arch/arm/mach-imx/mm-imx5.c
+> > index 79d71cf..53f87be 100644
+> > --- a/arch/arm/mach-imx/mm-imx5.c
+> > +++ b/arch/arm/mach-imx/mm-imx5.c
+> > @@ -106,6 +106,7 @@ void __init imx51_init_early(void)
+> >  	mxc_set_cpu_type(MXC_CPU_MX51);
+> >  	mxc_iomux_v3_init(MX51_IO_ADDRESS(MX51_IOMUXC_BASE_ADDR));
+> >  	mxc_arch_reset_init(MX51_IO_ADDRESS(MX51_WDOG1_BASE_ADDR));
+> > +	imx5_src_init();
+> >  }
+> >  
+> >  void __init imx53_init_early(void)
+> > @@ -113,6 +114,7 @@ void __init imx53_init_early(void)
+> >  	mxc_set_cpu_type(MXC_CPU_MX53);
+> >  	mxc_iomux_v3_init(MX53_IO_ADDRESS(MX53_IOMUXC_BASE_ADDR));
+> >  	mxc_arch_reset_init(MX53_IO_ADDRESS(MX53_WDOG1_BASE_ADDR));
+> > +	imx5_src_init();
+> >  }
+> >  
+> >  void __init mx50_init_irq(void)
+> > diff --git a/arch/arm/mach-imx/src.c b/arch/arm/mach-imx/src.c
+> > index 41687c6..e350250 100644
+> > --- a/arch/arm/mach-imx/src.c
+> > +++ b/arch/arm/mach-imx/src.c
+> > @@ -125,7 +125,19 @@ void imx_src_prepare_restart(void)
+> >  	writel_relaxed(0, src_base + SRC_GPR1);
+> >  }
+> >  
+> > -void __init imx_src_init(void)
+> > +void __init imx5_src_init(void)
+> > +{
+> > +	struct device_node *np;
+> > +
+> > +	np = of_find_compatible_node(NULL, NULL, "fsl,imx5-src");
+> 
+> In fsl,imx-src.txt, we have 
+> 
+>   compatible: Should be "fsl,<chip>-src"
+> 
+> But imx5 is not a chip name.  I would suggest we have the imx-src driver
+> only look for compatible "fsl,imx51-src", and for dts
+> 
+>   imx51: compatible = "fsl,imx51-src";
+>   imx53: compatible = "fsl,imx53-src", "fsl,imx51-src";
+>   imx6q: compatible = "fsl,imx6q-src", "fsl,imx51-src";
+> 
+> so that we do not need imx5_src_init and imx6q_src_init which are
+> basically doing the same thing.
 
-	Arnd
+So we should unconditionally clear the BP_SRC_SCR_WARM_RESET_ENABLE bit
+on i.MX5, too? I'll try that.
+
+> > +	src_base = of_iomap(np, 0);
+> > +	WARN_ON(!src_base);
+> 
+> As imx51 still supports non-DT boot, we should have a check on np.
+> If np is NULL, mostly likely it's a non-DT boot on imx51, and we
+> should bail out instead of giving a fat warning.
+
+Ok. I'll apply this and the comments from your other mails before
+sending the next version.
+
+regards
+Philipp
