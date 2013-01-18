@@ -1,473 +1,120 @@
-From: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [RESEND PATCH v9 1/2] usb: phy: samsung: Introducing usb phy driver
- for hsotg
-Date: Fri, 18 Jan 2013 14:30:22 +0530
-Message-ID: <1358499623-13901-2-git-send-email-p.paneri@samsung.com>
-References: <1358499623-13901-1-git-send-email-p.paneri@samsung.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1358499623-13901-1-git-send-email-p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Fri, 18 Jan 2013 09:18:47 +0000
+Message-ID: <20130118091847.GA7171@arm.com>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+ <20130115154038.GA11241@arm.com>
+ <20130115211441.GA13139@avionic-0098.adnet.avionic-design.de>
+ <201301161400.26587.arnd@arndb.de>
+ <20130116161716.GA10630@arm.com>
+ <20130116183101.GA28660@avionic-0098.adnet.avionic-design.de>
+ <20130117154236.GA25943@arm.com>
+ <20130117160501.GC2186@avionic-0098.adnet.avionic-design.de>
+ <20130117162218.GA29016@arm.com>
+ <20130117203010.GA24584@avionic-0098.adnet.avionic-design.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130117203010.GA24584@avionic-0098.adnet.avionic-design.de>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver uses usb_phy interface to interact with s3c-hsotg. Supports
-phy_init and phy_shutdown functions to enable/disable usb phy. Support
-will be extended to host controllers and more Samsung SoCs.
+On Thu, Jan 17, 2013 at 08:30:10PM +0000, Thierry Reding wrote:
+> On Thu, Jan 17, 2013 at 04:22:18PM +0000, Andrew Murray wrote:
+> > On Thu, Jan 17, 2013 at 04:05:02PM +0000, Thierry Reding wrote:
+> > > On Thu, Jan 17, 2013 at 03:42:36PM +0000, Andrew Murray wrote:
+> > > > On Wed, Jan 16, 2013 at 06:31:01PM +0000, Thierry Reding wrote:
+> > > > > Alright, putting the functions into pci_ops doesn't sound like a very
+> > > > > good idea then. Or perhaps it would make sense for hardware where the
+> > > > > root complex and the MSI controller are handled by the same driver.
+> > > > > Basically it could be done as a shortcut and if those are not filled
+> > > > > in, the drivers could still opt to look up an MSI controller from a
+> > > > > phandle specified in DT.
+> > > > > 
+> > > > > Even another alternative would be to keep the functions within the
+> > > > > struct pci_ops and use generic ones if an external MSI controller is
+> > > > > used. Just tossing around ideas.
+> > > > 
+> > > > I think an ideal solution would be for additional logic in drivers/msi.c
+> > > > (e.g. in functions like msi_capability_init) to determine (based on the
+> > > > passed in pci_dev) which MSI controller ops to use. I'm not sure the best
+> > > > way to implement an association between an MSI controller and PCI busses
+> > > > (I believe arch/sparc does something like this - perhaps there will be
+> > > > inspiration there).
+> > > > 
+> > > > As you've pointed out, most RCs will have their own MSI controllers - so
+> > > > it should be easy to register and associate both together.
+> > > > 
+> > > > I've submitted my previous work on MSI controller registration, but it
+> > > > doesn't quite solve this problem - perhaps it can be a starting point?
+> > > 
+> > > We basically have two cases:
+> > > 
+> > >   - The PCI host bridge contains registers for MSI support. In that case
+> > >     it makes little sense to uncouple the MSI implementation from the
+> > >     host bridge driver.
+> > > 
+> > >   - An MSI controller exists outside of the PCI host bridge. The PCI
+> > >     host bridge would in that case have to lookup an MSI controller (via
+> > >     DT phandle or some other method).
+> > > 
+> > > In either of those cases, does it make sense to use the MSI support
+> > > outside the scope of the PCI infrastructure? That is, would devices
+> > > other than PCI devices be able to generate an MSI?
+> > 
+> > I've come around to your way of thinking. Your approach sounds good for
+> > registration of MSI ops - let the RC host driver do it (it probably has its
+> > own), or use a helper for following a phandle to get ops that are not part
+> > of the driver. MSIs won't be used outside of PCI devices.
+> > 
+> > Though existing drivers will use MSI framework functions to request MSIs, that
+> > will result in callbacks to the arch_setup_msi_irqs type functions. These
+> > functions would need to be updated to find these new ops if they exist, i.e. by
+> > traversing the pci_dev structure up to the RC and finding a suitable structure.
+> > 
+> > Perhaps the msi ops could live alongside pci_ops in the pci_bus structure. This
+> > way when traversing up the buses from the provided pci_dev - the first bus with
+> > msi ops populated would be used?
+> > 
+> > If no ops are found, the standard arch callbacks can be called - thus preserving
+> > exiting functionality.
+> 
+> Yes, what you describe is exactly what I had in mind. I've been thinking
+> about a possible implementation and there may be some details that could
+> prove difficult to resolve. For instance, we likely need to pass context
+> around for the MSI ops, or else make sure that they can find the context
+> from the struct pci_dev or by traversing upwards from it.
+> 
+> I think for the case where the MSI hardware is controlled by the same
+> driver as the PCI host bridge, doing this is easy because the context
+> could be part of the PCI host bridge context, which in case of Tegra is
+> stored in struct pci_bus' sysdata field (which is actually an ARM struct
+> pci_sys_data and in turn stores a pointer to the struct tegra_pcie in
+> the .private_data field). Other drivers often just use a global variable
+> assuming that there will only ever be a single instance of the PCI host
+> bridge.
 
-Signed-off-by: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/usb/samsung-usbphy.txt     |   11 +
- drivers/usb/phy/Kconfig                            |    8 +
- drivers/usb/phy/Makefile                           |    1 +
- drivers/usb/phy/samsung-usbphy.c                   |  354 ++++++++++++++++++++
- include/linux/platform_data/samsung-usbphy.h       |   27 ++
- 5 files changed, 401 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/usb/samsung-usbphy.txt
- create mode 100644 drivers/usb/phy/samsung-usbphy.c
- create mode 100644 include/linux/platform_data/samsung-usbphy.h
+Yes.
 
-diff --git a/Documentation/devicetree/bindings/usb/samsung-usbphy.txt b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-new file mode 100644
-index 0000000..7b26e2d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/samsung-usbphy.txt
-@@ -0,0 +1,11 @@
-+* Samsung's usb phy transceiver
-+
-+The Samsung's phy transceiver is used for controlling usb otg phy for
-+s3c-hsotg usb device controller.
-+TODO: Adding the PHY binding with controller(s) according to the under
-+developement generic PHY driver.
-+
-+Required properties:
-+- compatible : should be "samsung,exynos4210-usbphy"
-+- reg : base physical address of the phy registers and length of memory mapped
-+	region.
-diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-index 5de6e7f..36a85b6 100644
---- a/drivers/usb/phy/Kconfig
-+++ b/drivers/usb/phy/Kconfig
-@@ -45,3 +45,11 @@ config USB_RCAR_PHY
- 
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called rcar-phy.
-+
-+config SAMSUNG_USBPHY
-+	bool "Samsung USB PHY controller Driver"
-+	depends on USB_S3C_HSOTG
-+	select USB_OTG_UTILS
-+	help
-+	  Enable this to support Samsung USB phy controller for samsung
-+	  SoCs.
-diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
-index 1a579a8..ec304f6 100644
---- a/drivers/usb/phy/Makefile
-+++ b/drivers/usb/phy/Makefile
-@@ -9,3 +9,4 @@ obj-$(CONFIG_USB_ISP1301)		+= isp1301.o
- obj-$(CONFIG_MV_U3D_PHY)		+= mv_u3d_phy.o
- obj-$(CONFIG_USB_EHCI_TEGRA)	+= tegra_usb_phy.o
- obj-$(CONFIG_USB_RCAR_PHY)		+= rcar-phy.o
-+obj-$(CONFIG_SAMSUNG_USBPHY)		+= samsung-usbphy.o
-diff --git a/drivers/usb/phy/samsung-usbphy.c b/drivers/usb/phy/samsung-usbphy.c
-new file mode 100644
-index 0000000..5c5e1bb
---- /dev/null
-+++ b/drivers/usb/phy/samsung-usbphy.c
-@@ -0,0 +1,354 @@
-+/* linux/drivers/usb/phy/samsung-usbphy.c
-+ *
-+ * Copyright (c) 2012 Samsung Electronics Co., Ltd.
-+ *              http://www.samsung.com
-+ *
-+ * Author: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ * Samsung USB2.0 High-speed OTG transceiver, talks to S3C HS OTG controller
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/usb/otg.h>
-+#include <linux/platform_data/samsung-usbphy.h>
-+
-+/* Register definitions */
-+
-+#define SAMSUNG_PHYPWR				(0x00)
-+
-+#define PHYPWR_NORMAL_MASK			(0x19 << 0)
-+#define PHYPWR_OTG_DISABLE			(0x1 << 4)
-+#define PHYPWR_ANALOG_POWERDOWN			(0x1 << 3)
-+#define PHYPWR_FORCE_SUSPEND			(0x1 << 1)
-+/* For Exynos4 */
-+#define PHYPWR_NORMAL_MASK_PHY0			(0x39 << 0)
-+#define PHYPWR_SLEEP_PHY0			(0x1 << 5)
-+
-+#define SAMSUNG_PHYCLK				(0x04)
-+
-+#define PHYCLK_MODE_USB11			(0x1 << 6)
-+#define PHYCLK_EXT_OSC				(0x1 << 5)
-+#define PHYCLK_COMMON_ON_N			(0x1 << 4)
-+#define PHYCLK_ID_PULL				(0x1 << 2)
-+#define PHYCLK_CLKSEL_MASK			(0x3 << 0)
-+#define PHYCLK_CLKSEL_48M			(0x0 << 0)
-+#define PHYCLK_CLKSEL_12M			(0x2 << 0)
-+#define PHYCLK_CLKSEL_24M			(0x3 << 0)
-+
-+#define SAMSUNG_RSTCON				(0x08)
-+
-+#define RSTCON_PHYLINK_SWRST			(0x1 << 2)
-+#define RSTCON_HLINK_SWRST			(0x1 << 1)
-+#define RSTCON_SWRST				(0x1 << 0)
-+
-+#ifndef MHZ
-+#define MHZ (1000*1000)
-+#endif
-+
-+enum samsung_cpu_type {
-+	TYPE_S3C64XX,
-+	TYPE_EXYNOS4210,
-+};
-+
-+/*
-+ * struct samsung_usbphy - transceiver driver state
-+ * @phy: transceiver structure
-+ * @plat: platform data
-+ * @dev: The parent device supplied to the probe function
-+ * @clk: usb phy clock
-+ * @regs: usb phy register memory base
-+ * @ref_clk_freq: reference clock frequency selection
-+ * @cpu_type: machine identifier
-+ */
-+struct samsung_usbphy {
-+	struct usb_phy	phy;
-+	struct samsung_usbphy_data *plat;
-+	struct device	*dev;
-+	struct clk	*clk;
-+	void __iomem	*regs;
-+	int		ref_clk_freq;
-+	int		cpu_type;
-+};
-+
-+#define phy_to_sphy(x)		container_of((x), struct samsung_usbphy, phy)
-+
-+/*
-+ * Returns reference clock frequency selection value
-+ */
-+static int samsung_usbphy_get_refclk_freq(struct samsung_usbphy *sphy)
-+{
-+	struct clk *ref_clk;
-+	int refclk_freq = 0;
-+
-+	ref_clk = clk_get(sphy->dev, "xusbxti");
-+	if (IS_ERR(ref_clk)) {
-+		dev_err(sphy->dev, "Failed to get reference clock\n");
-+		return PTR_ERR(ref_clk);
-+	}
-+
-+	switch (clk_get_rate(ref_clk)) {
-+	case 12 * MHZ:
-+		refclk_freq = PHYCLK_CLKSEL_12M;
-+		break;
-+	case 24 * MHZ:
-+		refclk_freq = PHYCLK_CLKSEL_24M;
-+		break;
-+	case 48 * MHZ:
-+		refclk_freq = PHYCLK_CLKSEL_48M;
-+		break;
-+	default:
-+		if (sphy->cpu_type == TYPE_S3C64XX)
-+			refclk_freq = PHYCLK_CLKSEL_48M;
-+		else
-+			refclk_freq = PHYCLK_CLKSEL_24M;
-+		break;
-+	}
-+	clk_put(ref_clk);
-+
-+	return refclk_freq;
-+}
-+
-+static void samsung_usbphy_enable(struct samsung_usbphy *sphy)
-+{
-+	void __iomem *regs = sphy->regs;
-+	u32 phypwr;
-+	u32 phyclk;
-+	u32 rstcon;
-+
-+	/* set clock frequency for PLL */
-+	phyclk = sphy->ref_clk_freq;
-+	phypwr = readl(regs + SAMSUNG_PHYPWR);
-+	rstcon = readl(regs + SAMSUNG_RSTCON);
-+
-+	switch (sphy->cpu_type) {
-+	case TYPE_S3C64XX:
-+		phyclk &= ~PHYCLK_COMMON_ON_N;
-+		phypwr &= ~PHYPWR_NORMAL_MASK;
-+		rstcon |= RSTCON_SWRST;
-+		break;
-+	case TYPE_EXYNOS4210:
-+		phypwr &= ~PHYPWR_NORMAL_MASK_PHY0;
-+		rstcon |= RSTCON_SWRST;
-+	default:
-+		break;
-+	}
-+
-+	writel(phyclk, regs + SAMSUNG_PHYCLK);
-+	/* Configure PHY0 for normal operation*/
-+	writel(phypwr, regs + SAMSUNG_PHYPWR);
-+	/* reset all ports of PHY and Link */
-+	writel(rstcon, regs + SAMSUNG_RSTCON);
-+	udelay(10);
-+	rstcon &= ~RSTCON_SWRST;
-+	writel(rstcon, regs + SAMSUNG_RSTCON);
-+}
-+
-+static void samsung_usbphy_disable(struct samsung_usbphy *sphy)
-+{
-+	void __iomem *regs = sphy->regs;
-+	u32 phypwr;
-+
-+	phypwr = readl(regs + SAMSUNG_PHYPWR);
-+
-+	switch (sphy->cpu_type) {
-+	case TYPE_S3C64XX:
-+		phypwr |= PHYPWR_NORMAL_MASK;
-+		break;
-+	case TYPE_EXYNOS4210:
-+		phypwr |= PHYPWR_NORMAL_MASK_PHY0;
-+	default:
-+		break;
-+	}
-+
-+	/* Disable analog and otg block power */
-+	writel(phypwr, regs + SAMSUNG_PHYPWR);
-+}
-+
-+/*
-+ * The function passed to the usb driver for phy initialization
-+ */
-+static int samsung_usbphy_init(struct usb_phy *phy)
-+{
-+	struct samsung_usbphy *sphy;
-+	int ret = 0;
-+
-+	sphy = phy_to_sphy(phy);
-+
-+	/* Enable the phy clock */
-+	ret = clk_prepare_enable(sphy->clk);
-+	if (ret) {
-+		dev_err(sphy->dev, "%s: clk_prepare_enable failed\n", __func__);
-+		return ret;
-+	}
-+
-+	/* Disable phy isolation */
-+	if (sphy->plat && sphy->plat->pmu_isolation)
-+		sphy->plat->pmu_isolation(false);
-+
-+	/* Initialize usb phy registers */
-+	samsung_usbphy_enable(sphy);
-+
-+	/* Disable the phy clock */
-+	clk_disable_unprepare(sphy->clk);
-+	return ret;
-+}
-+
-+/*
-+ * The function passed to the usb driver for phy shutdown
-+ */
-+static void samsung_usbphy_shutdown(struct usb_phy *phy)
-+{
-+	struct samsung_usbphy *sphy;
-+
-+	sphy = phy_to_sphy(phy);
-+
-+	if (clk_prepare_enable(sphy->clk)) {
-+		dev_err(sphy->dev, "%s: clk_prepare_enable failed\n", __func__);
-+		return;
-+	}
-+
-+	/* De-initialize usb phy registers */
-+	samsung_usbphy_disable(sphy);
-+
-+	/* Enable phy isolation */
-+	if (sphy->plat && sphy->plat->pmu_isolation)
-+		sphy->plat->pmu_isolation(true);
-+
-+	clk_disable_unprepare(sphy->clk);
-+}
-+
-+static const struct of_device_id samsung_usbphy_dt_match[];
-+
-+static inline int samsung_usbphy_get_driver_data(struct platform_device *pdev)
-+{
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match;
-+		match = of_match_node(samsung_usbphy_dt_match,
-+							pdev->dev.of_node);
-+		return (int) match->data;
-+	}
-+
-+	return platform_get_device_id(pdev)->driver_data;
-+}
-+
-+static int __devinit samsung_usbphy_probe(struct platform_device *pdev)
-+{
-+	struct samsung_usbphy *sphy;
-+	struct samsung_usbphy_data *pdata;
-+	struct device *dev = &pdev->dev;
-+	struct resource *phy_mem;
-+	void __iomem	*phy_base;
-+	struct clk *clk;
-+
-+	pdata = pdev->dev.platform_data;
-+	if (!pdata) {
-+		dev_err(&pdev->dev, "%s: no platform data defined\n", __func__);
-+		return -EINVAL;
-+	}
-+
-+	phy_mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (!phy_mem) {
-+		dev_err(dev, "%s: missing mem resource\n", __func__);
-+		return -ENODEV;
-+	}
-+
-+	phy_base = devm_request_and_ioremap(dev, phy_mem);
-+	if (!phy_base) {
-+		dev_err(dev, "%s: register mapping failed\n", __func__);
-+		return -ENXIO;
-+	}
-+
-+	sphy = devm_kzalloc(dev, sizeof(*sphy), GFP_KERNEL);
-+	if (!sphy)
-+		return -ENOMEM;
-+
-+	clk = devm_clk_get(dev, "otg");
-+	if (IS_ERR(clk)) {
-+		dev_err(dev, "Failed to get otg clock\n");
-+		return PTR_ERR(clk);
-+	}
-+
-+	sphy->dev		= &pdev->dev;
-+	sphy->plat		= pdata;
-+	sphy->regs		= phy_base;
-+	sphy->clk		= clk;
-+	sphy->phy.dev		= sphy->dev;
-+	sphy->phy.label		= "samsung-usbphy";
-+	sphy->phy.init		= samsung_usbphy_init;
-+	sphy->phy.shutdown	= samsung_usbphy_shutdown;
-+	sphy->cpu_type		= samsung_usbphy_get_driver_data(pdev);
-+	sphy->ref_clk_freq	= samsung_usbphy_get_refclk_freq(sphy);
-+
-+	platform_set_drvdata(pdev, sphy);
-+
-+	return usb_add_phy(&sphy->phy, USB_PHY_TYPE_USB2);
-+}
-+
-+static int __exit samsung_usbphy_remove(struct platform_device *pdev)
-+{
-+	struct samsung_usbphy *sphy = platform_get_drvdata(pdev);
-+
-+	usb_remove_phy(&sphy->phy);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id samsung_usbphy_dt_match[] = {
-+	{
-+		.compatible = "samsung,s3c64xx-usbphy",
-+		.data = (void *)TYPE_S3C64XX,
-+	}, {
-+		.compatible = "samsung,exynos4210-usbphy",
-+		.data = (void *)TYPE_EXYNOS4210,
-+	},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, samsung_usbphy_dt_match);
-+#endif
-+
-+static struct platform_device_id samsung_usbphy_driver_ids[] = {
-+	{
-+		.name		= "s3c64xx-usbphy",
-+		.driver_data	= TYPE_S3C64XX,
-+	}, {
-+		.name		= "exynos4210-usbphy",
-+		.driver_data	= TYPE_EXYNOS4210,
-+	},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(platform, samsung_usbphy_driver_ids);
-+
-+static struct platform_driver samsung_usbphy_driver = {
-+	.probe		= samsung_usbphy_probe,
-+	.remove		= __devexit_p(samsung_usbphy_remove),
-+	.id_table	= samsung_usbphy_driver_ids,
-+	.driver		= {
-+		.name	= "samsung-usbphy",
-+		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(samsung_usbphy_dt_match),
-+	},
-+};
-+
-+module_platform_driver(samsung_usbphy_driver);
-+
-+MODULE_DESCRIPTION("Samsung USB phy controller");
-+MODULE_AUTHOR("Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-+MODULE_LICENSE("GPL");
-+MODULE_ALIAS("platform:samsung-usbphy");
-diff --git a/include/linux/platform_data/samsung-usbphy.h b/include/linux/platform_data/samsung-usbphy.h
-new file mode 100644
-index 0000000..1bd24cb
---- /dev/null
-+++ b/include/linux/platform_data/samsung-usbphy.h
-@@ -0,0 +1,27 @@
-+/*
-+ * Copyright (C) 2012 Samsung Electronics Co.Ltd
-+ *		http://www.samsung.com/
-+ * Author: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-+ *
-+ * Defines platform data for samsung usb phy driver.
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+#ifndef __SAMSUNG_USBPHY_PLATFORM_H
-+#define __SAMSUNG_USBPHY_PLATFORM_H
-+
-+/**
-+ * samsung_usbphy_data - Platform data for USB PHY driver.
-+ * @pmu_isolation: Function to control usb phy isolation in PMU.
-+ */
-+struct samsung_usbphy_data {
-+	void (*pmu_isolation)(int on);
-+};
-+
-+extern void samsung_usbphy_set_pdata(struct samsung_usbphy_data *pd);
-+
-+#endif /* __SAMSUNG_USBPHY_PLATFORM_H */
--- 
-1.7.1
+> If the MSI controller is external to the PCI host bridge, things get a
+> little more complicated. The easiest way would probably be to store the
+> context along with the PCI host bridge context and use simple wrappers
+> around the actual implementations to retrieve the PHB context and pass
+> the attached MSI context.
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This would be nice, but may not be necessary. The MSI controller could use
+a global (file-scope) variable to hold context gained from its probe and
+assume it will be the only instance of that MSI controller.
+
+> 
+> Maybe this could even be made more generic by adding a struct msi_ops *
+> along with a struct msi_chip * in struct pci_bus. Perhaps I should try
+> and code something up to make things more concrete.
+
+This would be the most complete way to handle this.
+
+Andrew Murray
