@@ -1,71 +1,89 @@
-From: Andrew Murray <Andrew.Murray@arm.com>
-Subject: [PATCH RFC 1/2] Implementation of pci_fixup_irqs for descendants
- of a specified bus
-Date: Fri, 18 Jan 2013 11:37:42 +0000
-Message-ID: <20130118113742.GA9006@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH 3/4] ARM: dts: Add #dma-cells for generic dma binding support
+Date: Fri, 18 Jan 2013 17:03:43 +0530
+Message-ID: <1358508824-20352-4-git-send-email-padma.v@samsung.com>
+References: <1358508824-20352-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1358508824-20352-1-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: padma.v@samsung.com, padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Continuing from discussion with Thierry (lkml.org/lkml/2013/1/18/107) perhaps
-this will be useful to fold into your patchset. 
+This patch adds #dma-cells property to PL330 DMA controller
+nodes for supporting generic dma dt bindings on samsung
+exynos5250 platform.
+
+Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
 ---
-This patch provides pci_bus_fixup_irqs which performs the same
-function as pci_fixup_irqs but only to descendants of the specified
-bus.
+ .../devicetree/bindings/dma/arm-pl330.txt          |    9 ++++++---
+ arch/arm/boot/dts/exynos5250.dtsi                  |    4 ++++
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
-This can reduce unnecessary fixing up of device irqs when new buses
-are added.
-
-Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
-Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
----
- drivers/pci/setup-irq.c |   15 +++++++++++++++
- include/linux/pci.h     |    3 +++
- 2 files changed, 18 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
-index eb219a1..ea91874 100644
---- a/drivers/pci/setup-irq.c
-+++ b/drivers/pci/setup-irq.c
-@@ -62,3 +62,18 @@ pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
- 	for_each_pci_dev(dev)
- 		pdev_fixup_irq(dev, swizzle, map_irq);
- }
-+
-+void __init
-+pci_bus_fixup_irqs(struct pci_bus *bus,
-+		u8 (*swizzle)(struct pci_dev *, u8 *),
-+		int (*map_irq)(const struct pci_dev *, u8, u8))
-+{
-+	struct pci_dev *dev;
-+
-+	list_for_each_entry(dev, &bus->devices, bus_list) {
-+		pdev_fixup_irq(dev, swizzle, map_irq);
-+
-+		if (dev->subordinate)
-+			pci_bus_fixup_irqs(dev->subordinate, swizzle, map_irq);
-+	}
-+}
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 5faa831..1b3c2eb 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -953,6 +953,9 @@ void pdev_enable_device(struct pci_dev *);
- int pci_enable_resources(struct pci_dev *, int mask);
- void pci_fixup_irqs(u8 (*)(struct pci_dev *, u8 *),
- 		    int (*)(const struct pci_dev *, u8, u8));
-+void pci_bus_fixup_irqs(struct pci_bus *bus,
-+		u8 (*swizzle)(struct pci_dev *, u8 *),
-+		int (*map_irq)(const struct pci_dev *, u8, u8));
- #define HAVE_PCI_REQ_REGIONS	2
- int __must_check pci_request_regions(struct pci_dev *, const char *);
- int __must_check pci_request_regions_exclusive(struct pci_dev *, const char *);
+diff --git a/Documentation/devicetree/bindings/dma/arm-pl330.txt b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+index 36e27d5..457a233 100644
+--- a/Documentation/devicetree/bindings/dma/arm-pl330.txt
++++ b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+@@ -8,6 +8,8 @@ Required properties:
+   - reg: physical base address of the controller and length of memory mapped
+     region.
+   - interrupts: interrupt number to the cpu.
++  - #dma-cells: must be at least 1. used to represent the number of integer
++    cells in the dmas property of client device.
+ 
+ Optional properties:
+ - dma-coherent      : Present if dma operations are coherent
+@@ -18,6 +20,7 @@ Example:
+ 		compatible = "arm,pl330", "arm,primecell";
+ 		reg = <0x12680000 0x1000>;
+ 		interrupts = <99>;
++		#dma-cells = <1>;
+ 	};
+ 
+ Client drivers (device nodes requiring dma transfers from dev-to-mem or
+@@ -27,7 +30,7 @@ as shown below.
+   [property name]  = <[phandle of the dma controller] [dma request id]>;
+ 
+       where 'dma request id' is the dma request number which is connected
+-      to the client controller. The 'property name' is recommended to be
+-      of the form <name>-dma-channel.
++      to the client controller. The 'property name' is 'dmas' as recommended
++      by the generic dma device tree binding helpers.
+ 
+-  Example:  tx-dma-channel = <&pdma0 12>;
++  Example:  dmas = <&pdma0 12>;
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 30485de..46bae01 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -286,24 +286,28 @@
+ 			compatible = "arm,pl330", "arm,primecell";
+ 			reg = <0x121A0000 0x1000>;
+ 			interrupts = <0 34 0>;
++			#dma-cells = <1>;
+ 		};
+ 
+ 		pdma1: pdma@121B0000 {
+ 			compatible = "arm,pl330", "arm,primecell";
+ 			reg = <0x121B0000 0x1000>;
+ 			interrupts = <0 35 0>;
++			#dma-cells = <1>;
+ 		};
+ 
+ 		mdma0: mdma@10800000 {
+ 			compatible = "arm,pl330", "arm,primecell";
+ 			reg = <0x10800000 0x1000>;
+ 			interrupts = <0 33 0>;
++			#dma-cells = <1>;
+ 		};
+ 
+ 		mdma1: mdma@11C10000 {
+ 			compatible = "arm,pl330", "arm,primecell";
+ 			reg = <0x11C10000 0x1000>;
+ 			interrupts = <0 124 0>;
++			#dma-cells = <1>;
+ 		};
+ 	};
+ 
 -- 
-1.7.0.4
+1.7.4.4
