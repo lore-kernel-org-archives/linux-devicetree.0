@@ -1,30 +1,71 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH RFC 2/2] Improve bios32 support for DT PCI host bridge
-	controllers
-Date: Fri, 18 Jan 2013 11:43:40 +0000
-Message-ID: <20130118114340.GD23505@n2100.arm.linux.org.uk>
-References: <20130118114019.GA9034@arm.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [RFC PATCH 0/7] usb: musb: add driver for control module
+Date: Fri, 18 Jan 2013 13:47:32 +0200
+Message-ID: <20130118114731.GA4379@arwen.pp.htv.fi>
+References: <1358239378-10030-1-git-send-email-kishon@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130118114019.GA9034-5wv7dgnIgG8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Murray <Andrew.Murray-5wv7dgnIgG8@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1358239378-10030-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: grant.likely@secretlab.ca, b-cousson@ti.com, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, balbi@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 18, 2013 at 11:40:19AM +0000, Andrew Murray wrote:
->  static void __init pcibios_init_hw(struct hw_pci *hw, struct list_head *head)
->  {
->  	struct pci_sys_data *sys = NULL;
-> +	static int busnr;
->  	int ret;
-> -	int nr, busnr;
-> -
-> -	for (nr = busnr = 0; nr < hw->nr_controllers; nr++) {
-> +	int nr;
-> +	for (nr = 0; nr < hw->nr_controllers; nr++) {
+--SLDf9lqlvOQaIe6s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Please try to retain the originally formatting.  There should be a blank
-line between "int nr;" and "for...".
+Hi,
+
+On Tue, Jan 15, 2013 at 02:12:51PM +0530, Kishon Vijay Abraham I wrote:
+> Added a new driver for the usb part of control module. This has an API
+> to power on the USB2 phy and an API to write to the mailbox depending on
+> whether MUSB has to act in host mode or in device mode.
+>=20
+> Writing to control module registers for doing the above task which was
+> previously done in omap glue and in omap-usb2 phy is removed.
+>=20
+> Also added the dt data to get MUSB working in OMAP platforms.
+> This series has patches for both drivers and ARCH folders, so If it has to
+> be split I'll do it.
+>=20
+> This series was developed on
+> git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git xceiv
+>=20
+> Did basic enumeration testing in omap4 beagle, omap4 sdp and omap3 beagle.
+
+can you resend without RFC tag so I can apply ?
+
+Thank you
+
+--=20
+balbi
+
+--SLDf9lqlvOQaIe6s
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ+TZTAAoJEIaOsuA1yqREsScP/34CWYF8lCszxE4JnttVT6ss
+R9DBLkNy9YARvIPlabfVGIPxwR090gumMaVQZJX4PoeEVwV9bBIQnCaYNy/VoEGA
+1J2aBO8Qhce/wBIfPoFPNFyWI3BO78w+KZ25NhDpR1oFAr0kWaEX21wVYvkRXzZE
+3IdWykSn+BMqKrTG2AK2GdvNA/PBoPROrMk2zhsulXjwSdwNVXq6otuhxqDq5a7K
+WYaqz+KV4ou+NiX/uz+NtdmGsSV/nO+Zpmm0WZ9kFkMAIob+DrZ1fiiEokhQhyDk
+0BnKgjABPpEDW9hE/xeINBwt285SpyiEkhoUqQBeHdFFV6C1ZtApkw05/4BjT0ln
+DWs8vQHw4CMcdWAUY3wOQUNvi4GzlEjLINZHfvU3HHv2vZm4EDRnLf0Jt2xTuEbX
+119b7gU1Bj610XfOJun2HjuQcmVFZbB930gQ0Sd0V+IwWT9uWjMOu/Fb7sqeyjhV
+Gf0VaqusLnV9wkCJoMlilTQ14ItL+bAtoJ5dZqKk5XrAY1X2ik4ZrMPyeXNvEoRq
+/DmmUnHJwJP6U7DMKmgB75WNmd4uGm4RuP94XndUnIcdbDer/lpsVAZEyO583B9W
+KlWMtpMA42vXJ+MyNRO8hGsxRormBLXRsuf3kr8sgFWsBTRYleNTwcfg+1RmuOdQ
+PtLRocrVaAcoFIcFs0ob
+=58vG
+-----END PGP SIGNATURE-----
+
+--SLDf9lqlvOQaIe6s--
