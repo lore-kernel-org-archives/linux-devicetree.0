@@ -1,71 +1,93 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [RFC PATCH 0/7] usb: musb: add driver for control module
-Date: Fri, 18 Jan 2013 13:47:32 +0200
-Message-ID: <20130118114731.GA4379@arwen.pp.htv.fi>
-References: <1358239378-10030-1-git-send-email-kishon@ti.com>
-Reply-To: <balbi@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SLDf9lqlvOQaIe6s"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1358239378-10030-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: grant.likely@secretlab.ca, b-cousson@ti.com, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, arnd@arndb.de, balbi@ti.com, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH V6 00/10]  Add DT support for i2s
+Date: Fri, 18 Jan 2013 17:16:59 +0530
+Message-ID: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: padma.v@samsung.com, padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
---SLDf9lqlvOQaIe6s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch set is dependent on the following patches from
+Vinod Koul next branch
+1)of: Add generic device tree DMA helpers
+2)dmaengine: add helper function to request a slave DMA channel
 
-Hi,
+and also dependent on
+1)DMA: PL330: Add xlate function
+2)DMA: PL330: Register the DMA controller with the generic DMA helpers
+3)ARM: dts: Add #dma-cells for generic dma binding support
+4)DMA: PL330: Modify pl330 filter based on new generic dma dt bindings.
 
-On Tue, Jan 15, 2013 at 02:12:51PM +0530, Kishon Vijay Abraham I wrote:
-> Added a new driver for the usb part of control module. This has an API
-> to power on the USB2 phy and an API to write to the mailbox depending on
-> whether MUSB has to act in host mode or in device mode.
->=20
-> Writing to control module registers for doing the above task which was
-> previously done in omap glue and in omap-usb2 phy is removed.
->=20
-> Also added the dt data to get MUSB working in OMAP platforms.
-> This series has patches for both drivers and ARCH folders, so If it has to
-> be split I'll do it.
->=20
-> This series was developed on
-> git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git xceiv
->=20
-> Did basic enumeration testing in omap4 beagle, omap4 sdp and omap3 beagle.
+This patch set is made based Kukjin Kim for-next branch
 
-can you resend without RFC tag so I can apply ?
+Changes since V5:
+	- Add generic DMA DT binding support
+	- Change the compatible name as suggested by Grant,Mark and Kukjin
+	- Make dma dev request api compatible to DT and non-DT
+	- Fix compilation error in dmaengine.h for non-DT case 
+	- Add basic device tree based lookup for smdk wm8994 machine file.
+	- Make SPI driver use generic DMA DT bindings support
 
-Thank you
+Changes since V4:
+        - Add a new patch for renaming the samsung i2s secondary fifo interface
+          device name from "samsung-i2s.4" to "samsung-i2s-sec"
+        - Add platform_device_id table for the primary and secondary DAIs
+        - Avoid using of alias ids in the i2s driver by adding of_device_id
+          table. Primary device can get registered via dt or non-dt but secondary
+          device can get registered only at runtime because the secondary is not
+          physically present on the board.
 
---=20
-balbi
+Changes since V3:
+        - Added syntex of gpio specifier as suggested by Mark Brown in
+          DT document file
+        - Added the requirement for having I2S alias ids
+        - Explained about gpio lines
+        - Made a seperate patch to get the I2S rclk src clk from alias ID
 
---SLDf9lqlvOQaIe6s
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes since V2:
+        - Rebased on 3.7-rc3
+        - Custom DT bindings are prefixed with samsung
+        - As generic device tree DMA helpers not yet mainlined
+          I am still using custom dma bindings. So added a
+          priliminary statement regarding the same. I will rework
+          on my patch once generic DMA helpers are mainlined.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Chnages since V1:
+        - Rebased on 3.6-rc6
 
-iQIcBAEBAgAGBQJQ+TZTAAoJEIaOsuA1yqREsScP/34CWYF8lCszxE4JnttVT6ss
-R9DBLkNy9YARvIPlabfVGIPxwR090gumMaVQZJX4PoeEVwV9bBIQnCaYNy/VoEGA
-1J2aBO8Qhce/wBIfPoFPNFyWI3BO78w+KZ25NhDpR1oFAr0kWaEX21wVYvkRXzZE
-3IdWykSn+BMqKrTG2AK2GdvNA/PBoPROrMk2zhsulXjwSdwNVXq6otuhxqDq5a7K
-WYaqz+KV4ou+NiX/uz+NtdmGsSV/nO+Zpmm0WZ9kFkMAIob+DrZ1fiiEokhQhyDk
-0BnKgjABPpEDW9hE/xeINBwt285SpyiEkhoUqQBeHdFFV6C1ZtApkw05/4BjT0ln
-DWs8vQHw4CMcdWAUY3wOQUNvi4GzlEjLINZHfvU3HHv2vZm4EDRnLf0Jt2xTuEbX
-119b7gU1Bj610XfOJun2HjuQcmVFZbB930gQ0Sd0V+IwWT9uWjMOu/Fb7sqeyjhV
-Gf0VaqusLnV9wkCJoMlilTQ14ItL+bAtoJ5dZqKk5XrAY1X2ik4ZrMPyeXNvEoRq
-/DmmUnHJwJP6U7DMKmgB75WNmd4uGm4RuP94XndUnIcdbDer/lpsVAZEyO583B9W
-KlWMtpMA42vXJ+MyNRO8hGsxRormBLXRsuf3kr8sgFWsBTRYleNTwcfg+1RmuOdQ
-PtLRocrVaAcoFIcFs0ob
-=58vG
------END PGP SIGNATURE-----
+Padmavathi Venna (10):
+  ASoC: Samsung: Rename samsung i2s secondary device name
+  ASoC: SAMSUNG: Add DT support for i2s
+  ARM: SAMSUNG: Make dma request compatible to generic dma bindings.
+  spi: s3c64xx: Modify SPI driver to use generic DMA DT support
+  ARM: dts: Add nodes for i2s controllers for Samsung Exynos5 platforms
+  ARM: EXYNOS: Enable platform support for I2S controllers
+  ASoC: SMDK: WM8994: Add device tree support for machine file
+  ARM: dts: Modify SPI nodes according generic DMA DT bindings
+  ASoC: Samsung: Update Kconfig for I2S,SPDIF and PCM audio
+  dmaengine: Fix compilation error in non-DT case
 
---SLDf9lqlvOQaIe6s--
+ .../bindings/sound/samsung,smdk-wm8994.txt         |   14 ++
+ .../devicetree/bindings/sound/samsung-i2s.txt      |   63 +++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   26 +++
+ arch/arm/boot/dts/exynos5250.dtsi                  |   44 +++-
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |    6 +
+ arch/arm/plat-samsung/dma-ops.c                    |   10 +-
+ arch/arm/plat-samsung/include/plat/dma-ops.h       |    3 +-
+ arch/arm/plat-samsung/s3c-dma-ops.c                |    3 +-
+ drivers/spi/spi-s3c64xx.c                          |   77 ++-----
+ include/linux/dmaengine.h                          |    2 +-
+ sound/soc/samsung/Kconfig                          |    6 +-
+ sound/soc/samsung/dma.c                            |    3 +-
+ sound/soc/samsung/dma.h                            |    1 +
+ sound/soc/samsung/i2s.c                            |  238 ++++++++++++++++----
+ sound/soc/samsung/i2s.h                            |    7 -
+ sound/soc/samsung/smdk_wm8580.c                    |    7 +-
+ sound/soc/samsung/smdk_wm8994.c                    |   30 +++-
+ 17 files changed, 410 insertions(+), 130 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung,smdk-wm8994.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
+
+-- 
+1.7.4.4
