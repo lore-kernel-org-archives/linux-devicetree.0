@@ -1,371 +1,101 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH v2 32/76] ARC: [DeviceTree] Basic support
-Date: Fri, 18 Jan 2013 17:54:46 +0530
-Message-ID: <1358511930-7424-33-git-send-email-vgupta@synopsys.com>
-References: <1358511930-7424-1-git-send-email-vgupta@synopsys.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: Exynos5250: Enabling samsung usb phy
+Date: Fri, 18 Jan 2013 15:10:13 +0200
+Message-ID: <20130118131013.GG4672@arwen.pp.htv.fi>
+References: <1355845182-14104-1-git-send-email-gautam.vivek@samsung.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1358511930-7424-1-git-send-email-vgupta@synopsys.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: arnd@arndb.de, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+Content-Type: multipart/mixed; boundary="===============4199437735349179049=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1355845182-14104-1-git-send-email-gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is minimal infrastructure needed for devicetree work.
-It uses an a sample "skeleton" devicetree - embedded in kernel image -
-to print the board, manufacturer by parsing the top-level "compatible"
-string.
+--===============4199437735349179049==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PyMzGVE0NRonI6bs"
+Content-Disposition: inline
 
-As of now we don't need any additional "board" specific "machine_desc".
+--PyMzGVE0NRonI6bs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-TODO: support interpreting the command line as boot-loader passed dtb
+Hi,
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: Rob Herring <rob.herring@calxeda.com>
----
- arch/arc/Kconfig                |    9 +++++
- arch/arc/Makefile               |    9 +++++
- arch/arc/boot/dtb/Makefile      |   22 ++++++++++++
- arch/arc/boot/dts/skeleton.dts  |   10 ++++++
- arch/arc/boot/dts/skeleton.dtsi |   21 ++++++++++++
- arch/arc/include/asm/prom.h     |   15 ++++++++
- arch/arc/include/asm/sections.h |    1 +
- arch/arc/kernel/Makefile        |    2 +
- arch/arc/kernel/devtree.c       |   69 +++++++++++++++++++++++++++++++++++++++
- arch/arc/kernel/setup.c         |    9 +++++
- arch/arc/mm/init.c              |   13 +++++++
- 11 files changed, 180 insertions(+), 0 deletions(-)
- create mode 100644 arch/arc/boot/dtb/Makefile
- create mode 100644 arch/arc/boot/dts/skeleton.dts
- create mode 100644 arch/arc/boot/dts/skeleton.dtsi
- create mode 100644 arch/arc/include/asm/prom.h
- create mode 100644 arch/arc/kernel/devtree.c
+On Tue, Dec 18, 2012 at 09:09:40PM +0530, Vivek Gautam wrote:
+> This patch-set enables the samsung-usbphy driver on exynos5250,
+> which enables the support for USB2 type and USB3 type phys.
+> The corresponding phy driver patches are available at:
+>  1) https://lkml.org/lkml/2012/12/18/201
+>  2) https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-December/0=
+24559.html
+>=20
+> Tested this patch-set on exynos5250 with following patch-sets for
+> USB 2.0 and USB 3.0:
+>  - https://patchwork.kernel.org/patch/1794651/
+>  - https://lkml.org/lkml/2012/12/18/201
+>  - https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-December/02=
+4559.html
+>  - http://comments.gmane.org/gmane.linux.usb.general/76352
+>  - https://lkml.org/lkml/2012/12/13/492
+>=20
+> Vivek Gautam (2):
+>   ARM: Exynos5250: Enabling samsung-usbphy driver
+>   ARM: Exynos5250: Enabling USB 3.0 phy for samsung-usbphy driver
 
-diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
-index d457a83..5175cf7 100644
---- a/arch/arc/Kconfig
-+++ b/arch/arc/Kconfig
-@@ -21,7 +21,10 @@ config ARC
- 	select GENERIC_SMP_IDLE_THREAD
- 	select HAVE_GENERIC_HARDIRQS
- 	select HOTPLUG if !INITRAMFS_SOURCE=""
-+	select IRQ_DOMAIN
- 	select MODULES_USE_ELF_RELA
-+	select OF
-+	select OF_EARLY_FLATTREE
- 
- config SCHED_OMIT_FRAME_POINTER
- 	def_bool y
-@@ -316,6 +319,12 @@ config CMDLINE_UBOOT
- 	  to it. kernel startup code will copy the string into cmdline buffer
- 	  and also append CONFIG_CMDLINE.
- 
-+config ARC_BUILTIN_DTB_NAME
-+	string "Built in DTB"
-+	help
-+	  Set the name of the DTB to embed in the vmlinux binary
-+	  Leaving it blank selects the minimal "skeleton" dtb
-+
- source "kernel/Kconfig.preempt"
- 
- endmenu	 # "ARC Architecture Configuration"
-diff --git a/arch/arc/Makefile b/arch/arc/Makefile
-index 4d52a3b..d697e9c 100644
---- a/arch/arc/Makefile
-+++ b/arch/arc/Makefile
-@@ -83,6 +83,9 @@ head-y		:= arch/arc/kernel/head.o
- # See arch/arc/Kbuild for content of core part of the kernel
- core-y		+= arch/arc/
- 
-+# w/o this dtb won't embed into kernel binary
-+core-y		+= arch/arc/boot/dtb/
-+
- # w/o this ifneq, make ARCH=arc clean was crapping out
- ifneq ($(platform-y),)
- core-y		+= arch/arc/plat-$(PLATFORM)/
-@@ -101,6 +104,12 @@ bootpImage: vmlinux
- uImage: vmlinux
- 	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
- 
-+%.dtb %.dtb.S %.dtb.o:
-+	$(Q)$(MAKE) $(build)=$(boot)/dtb $(boot)/dtb/$@
-+
-+dtbs:
-+	$(Q)$(MAKE) $(build)=$(boot)/dtb $(boot)/dtb/$@
-+
- archclean:
- 	$(Q)$(MAKE) $(clean)=$(boot)
- 
-diff --git a/arch/arc/boot/dtb/Makefile b/arch/arc/boot/dtb/Makefile
-new file mode 100644
-index 0000000..825af84
---- /dev/null
-+++ b/arch/arc/boot/dtb/Makefile
-@@ -0,0 +1,22 @@
-+ifeq ($(CONFIG_OF),y)
-+
-+dtb-y	+= skeleton.dtb
-+
-+# Built-in dtb
-+builtindtb-y				:= skeleton
-+
-+ifneq ($(CONFIG_ARC_BUILTIN_DTB_NAME),"")
-+	builtindtb-y			:= $(CONFIG_ARC_BUILTIN_DTB_NAME)
-+endif
-+
-+obj-y	+= $(patsubst "%",%,$(builtindtb-y)).dtb.o
-+
-+clean-files += $(obj)/$(dtb-y) $(obj)/*.dtb.S $(obj)/*.dtb.o
-+
-+# Rule to build device tree blobs
-+$(obj)/%.dtb: $(src)/../dts/%.dts FORCE
-+	$(call if_changed_dep,dtc)
-+
-+$(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
-+
-+endif
-diff --git a/arch/arc/boot/dts/skeleton.dts b/arch/arc/boot/dts/skeleton.dts
-new file mode 100644
-index 0000000..25a84fb
---- /dev/null
-+++ b/arch/arc/boot/dts/skeleton.dts
-@@ -0,0 +1,10 @@
-+/*
-+ * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+/include/ "skeleton.dtsi"
-diff --git a/arch/arc/boot/dts/skeleton.dtsi b/arch/arc/boot/dts/skeleton.dtsi
-new file mode 100644
-index 0000000..f6a457a
---- /dev/null
-+++ b/arch/arc/boot/dts/skeleton.dtsi
-@@ -0,0 +1,21 @@
-+/*
-+ * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * Skeleton device tree; the bare minimum needed to boot; just include and
-+ * add a compatible value.
-+ */
-+
-+/ {
-+	compatible = "snps,arc-angel4", "snps,arc-ml509";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	chosen { };
-+	aliases { };
-+	memory { device_type = "memory"; reg = <0 0>; };
-+};
-diff --git a/arch/arc/include/asm/prom.h b/arch/arc/include/asm/prom.h
-new file mode 100644
-index 0000000..f54489b
---- /dev/null
-+++ b/arch/arc/include/asm/prom.h
-@@ -0,0 +1,15 @@
-+/*
-+ * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#ifndef _ASM_ARC_PROM_H_
-+#define _ASM_ARC_PROM_H_
-+
-+#define HAVE_ARCH_DEVTREE_FIXUPS
-+extern int __init setup_machine_fdt(void *dt);
-+
-+#endif
-diff --git a/arch/arc/include/asm/sections.h b/arch/arc/include/asm/sections.h
-index fc15f2e..6fc1159 100644
---- a/arch/arc/include/asm/sections.h
-+++ b/arch/arc/include/asm/sections.h
-@@ -13,5 +13,6 @@
- 
- extern char _int_vec_base_lds[];
- extern char __arc_dccm_base[];
-+extern char __dtb_start[];
- 
- #endif
-diff --git a/arch/arc/kernel/Makefile b/arch/arc/kernel/Makefile
-index ae140e5..5fefb7d 100644
---- a/arch/arc/kernel/Makefile
-+++ b/arch/arc/kernel/Makefile
-@@ -8,6 +8,8 @@
- obj-y	:= arcksyms.o setup.o irq.o time.o reset.o ptrace.o entry.o process.o \
- 	   signal.o traps.o sys.o troubleshoot.o stacktrace.o clk.o
- 
-+obj-$(CONFIG_OF)			+= devtree.o
-+
- obj-$(CONFIG_ARC_FPU_SAVE_RESTORE)	+= fpu.o
- CFLAGS_fpu.o   += -mdpfp
- 
-diff --git a/arch/arc/kernel/devtree.c b/arch/arc/kernel/devtree.c
-new file mode 100644
-index 0000000..021293d
---- /dev/null
-+++ b/arch/arc/kernel/devtree.c
-@@ -0,0 +1,69 @@
-+/*
-+ * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
-+ *
-+ * Based on highly stipped down version of METAG
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+
-+#include <linux/init.h>
-+#include <linux/export.h>
-+#include <linux/errno.h>
-+#include <linux/types.h>
-+#include <linux/reboot.h>
-+#include <linux/bootmem.h>
-+#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_platform.h>
-+#include <asm/prom.h>
-+
-+/* called from unflatten_device_tree() to bootstrap devicetree itself */
-+void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
-+{
-+	return alloc_bootmem_align(size, align);
-+}
-+
-+/**
-+ * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
-+ * @dt:		virtual address pointer to dt blob
-+ *
-+ * If a dtb was passed to the kernel, then use it to choose the correct
-+ * machine_desc and to setup the system.
-+ */
-+int __init setup_machine_fdt(void *dt)
-+{
-+	struct boot_param_header *devtree = dt;
-+	unsigned long dt_root;
-+	char *model, *compat;
-+	char manufacturer[16];
-+
-+	/* check device tree validity */
-+	if (be32_to_cpu(devtree->magic) != OF_DT_HEADER)
-+		return 1;
-+
-+	/* Search the mdescs for the 'best' compatible value match */
-+	initial_boot_params = devtree;
-+	dt_root = of_get_flat_dt_root();
-+
-+	/* compat = "<manufacturer>,<model>" */
-+	compat = of_get_flat_dt_prop(dt_root, "compatible", NULL);
-+	if (!compat)
-+		compat = "<unknown>";
-+
-+	model = strchr(compat, ',');
-+	if (model)
-+		model++;
-+
-+	strlcpy(manufacturer, compat, model ? model - compat : strlen(compat));
-+
-+	pr_info("Board \"%s\" from %s (Manufacturer)\n", model, manufacturer);
-+
-+	/* Retrieve various information from the /chosen node */
-+	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
-+
-+	return 0;
-+}
-diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-index 82ac206..27aebd6 100644
---- a/arch/arc/kernel/setup.c
-+++ b/arch/arc/kernel/setup.c
-@@ -13,6 +13,8 @@
- #include <linux/console.h>
- #include <linux/module.h>
- #include <linux/cpu.h>
-+#include <linux/of_fdt.h>
-+#include <asm/sections.h>
- #include <asm/arcregs.h>
- #include <asm/tlb.h>
- #include <asm/cache.h>
-@@ -20,6 +22,7 @@
- #include <asm/page.h>
- #include <asm/irq.h>
- #include <asm/arcregs.h>
-+#include <asm/prom.h>
- 
- #define FIX_PTR(x)  __asm__ __volatile__(";" : "+r"(x))
- 
-@@ -57,6 +60,8 @@ void __init __attribute__((weak)) arc_platform_early_init(void)
- 
- void __init setup_arch(char **cmdline_p)
- {
-+	int rc;
-+
- #ifdef CONFIG_CMDLINE_UBOOT
- 	/* Make sure that a whitespace is inserted before */
- 	strlcat(command_line, " ", sizeof(command_line));
-@@ -71,6 +76,8 @@ void __init setup_arch(char **cmdline_p)
- 	strlcpy(boot_command_line, command_line, COMMAND_LINE_SIZE);
- 	*cmdline_p = command_line;
- 
-+	rc = setup_machine_fdt(__dtb_start);
-+
- 	/* To force early parsing of things like mem=xxx */
- 	parse_early_param();
- 
-@@ -81,6 +88,8 @@ void __init setup_arch(char **cmdline_p)
- 
- 	setup_arch_memory();
- 
-+	unflatten_device_tree();
-+
- 	/* Can be issue if someone passes cmd line arg "ro"
- 	 * But that is unlikely so keeping it as it is
- 	 */
-diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-index 9897847..1087a97 100644
---- a/arch/arc/mm/init.c
-+++ b/arch/arc/mm/init.c
-@@ -38,6 +38,11 @@ static int __init setup_mem_sz(char *str)
- }
- early_param("mem", setup_mem_sz);
- 
-+void __init early_init_dt_add_memory_arch(u64 base, u64 size)
-+{
-+	pr_err("%s(%llx, %llx)\n", __func__, base, size);
-+}
-+
- /*
-  * First memory setup routine called from setup_arch()
-  * 1. setup swapper's mm @init_mm
-@@ -181,3 +186,11 @@ void __init free_initrd_mem(unsigned long start, unsigned long end)
- 	free_init_pages("initrd memory", start, end);
- }
- #endif
-+
-+#ifdef CONFIG_OF_FLATTREE
-+void __init early_init_dt_setup_initrd_arch(unsigned long start,
-+					    unsigned long end)
-+{
-+	pr_err("%s(%lx, %lx)\n", __func__, start, end);
-+}
-+#endif /* CONFIG_OF_FLATTREE */
--- 
-1.7.4.1
+What should I do with this series ? Is it ready to apply ? If it is,
+then please resend with Kukjim's Acked-by.
+
+cheers
+
+--=20
+balbi
+
+--PyMzGVE0NRonI6bs
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJQ+Um1AAoJEIaOsuA1yqRE9D4P/jM87o9sF5BhHZ1wW05XWkPf
+Ogounha5VfOsBV7nAkGrK9r8kXFzrg3onbJ6S2O9Oqa9F/PEJH60ixjghBXTja9n
+cursCGf4KlhoxFJ1pWA2TGjyjjMa2XoUFtN8M5RQOX7Ryx9jN1d7ETivDuwdcvdD
+OFewjYFSUajnNfNZJIzIGXUUJ2xGkirwXi3HGd3anITWxooT4IoSeU2i8bLMK0vG
+ypBWouEi8MJZliEVnyoNOWYpnZODrPUWxWZEsRB/DEemFdj3g56EN8o2DkRdXl9f
+gzx2/bWOH/tAz/mDVMoqf6u0IaLusMByONaeE7zOj34UykvdePRO1VDDzLnozp5F
++YC/ItRXHmEAWQBIiHQdjZyAqRLsRr5JS97aIzJpGg2rnaZ5jWeUp411QxMurEZe
+h6ppnocvv0IHhHn2j6gG7YyOykQdRfHND4gpCMyJVjE+N/R7tWWSrVii6IDEwIox
+EYtktmpV0yaFYORJQeQy4RcJ7SoUltdAqONmfcByX0Ausq35pWynnLYEubceX2rG
+9pyVSaDZbyJYFv4igWs4LkLW+aNYIkX2Dj0YhpG7UAMBlRmXqAKpnaPuybRW+lcM
+5UcYCRByDcT2oD5N0eYEmTEABwCD6S8yrgGLWoPsfzdO9TQw9LE5gON2sncCxk0t
+q1CGkpg56EUi6+6pNtdq
+=sxUC
+-----END PGP SIGNATURE-----
+
+--PyMzGVE0NRonI6bs--
+
+--===============4199437735349179049==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4199437735349179049==--
