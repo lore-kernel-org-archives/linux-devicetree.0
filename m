@@ -1,57 +1,78 @@
-From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Subject: Re: [PATCH 3/4] Enable ecc-mode selection in the driver
-Date: Fri, 18 Jan 2013 09:27:48 +0200
-Message-ID: <1358494068.21816.2.camel@sauron.fi.intel.com>
-References: <cover.1358242644.git.s.peter@mpl.ch>
-	 <2d08c4c072fd4922a6056362adb96a455307d583.1358242644.git.s.peter@mpl.ch>
-	 <20130115125119.GH13482@lunn.ch> <50F6927D.3070303@mpl.ch>
-Reply-To: artem.bityutskiy@linux.intel.com
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-CrpCoex3dzrHKWZmEWFd"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50F6927D.3070303@mpl.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Peter <s.peter@mpl.ch>
-Cc: Andrew Lunn <andrew@lunn.ch>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, jason@lakedaemon.net, dwmw2@infradead.org, jm@lentin.co.uk, arnd@arndb.de, sebastian.hesselbarth@googlemail.com, iwamatsu@nigauri.org, wfp5p@virginia.edu, gregkh@linuxfoundation.org, broonie@opensource.wolfsonmicro.com, mchehab@redhat.com, nico@linaro.org
+From: Praveen Paneri <p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [RESEND PATCH v9 0/2] usb: phy: samsung: Introducing usb phy driver
+ for samsung SoCs
+Date: Fri, 18 Jan 2013 14:30:21 +0530
+Message-ID: <1358499623-13901-1-git-send-email-p.paneri@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, l.majewski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Changes from v8:
+Resending this patch series after rebasing to the latest usb-next branch.
+Rewording inline comments for better readability.
+Removed IS_ENABLED(CONFIG_OF) as pdev->dev.of_node is enough to check for dt support.
+Using of_match_ptr to add of_match_table to platform_driver structure.
+Removed unnecessary variables.
 
---=-CrpCoex3dzrHKWZmEWFd
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Changes from v7:
+Rebased to the latest usb-next branch.
+Separating arch patches from these driver patches.
 
-On Wed, 2013-01-16 at 12:43 +0100, Stefan Peter wrote:
-> Hi Andrew
+Changes from v6:
+Modified register definitions according to the existing ones.
+Changed default PHY clk selection for SoCs.
+Improved binding text and rebased to the latest usb-next.
 
-For some reasons I do not see your patches in the mailing lists which
-are in CC.
+Changes from v5:
+Moved clk_get() to driver's probe function. Now reference clock frequency
+selection value is stored in samsung_usbphy structure for later use. Used
+IS_ENABLED() instead of #ifdef in samsung_usbphy_get_driver_data().
 
---=20
-Best Regards,
-Artem Bityutskiy
+Changes from v4:
+Moved header file contents to driver's source file
+Removed unnecessary print message from driver's probe function
+Dropped the Free Software Foundation address from the header
 
---=-CrpCoex3dzrHKWZmEWFd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+Changes from v3:
+Replaced susbsys_initcall()/module_exit() by module_platform_driver().
+Accordingly in the hsotg driver returned -EPROBE_DEFER until phy driver
+is registered
+Removed unnecessary devm_usb_put_phy() call from the hsotg driver remove.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Changes from v2:
+Changed the driver filenames to samsung-usbphy
+Rectified coding style related errors
 
-iQIcBAABAgAGBQJQ+Pl0AAoJECmIfjd9wqK0LWIP/3CDKUIxU/JRAmJzi5wXaK3n
-Of62QwKuNC8u+7iwK9WfKSP2AdliJlGG2mfYWfHudB71awAviuENsk+k0OfbPazf
-HluqmYRj8QfxSyuDpuPyjTcsgabSqRRr4DnnGPbmXidg2i3Bokk9SL1dGfAlEXRK
-NX7VCEmFnhUAQLsI2ukfxD/I8Eoj3jevHmvQidO9fjK8CqBDTwIv3Mv8ENEDfzcy
-LUIrvRKrNtM5b0Fnt1G01vwa/218xtDMEoxx83+F1t9E5XKIgFrwU+eNjXAnCQJd
-4MaSPZDYUmPQh5lj8ie7jj5so/MVZk5acTfJWhz/ZtIqJBSEmaoDWspo3+iqawT9
-2GAZtIlBtqXObD+P1+wZbyW1t3BC5dj7W1OG1CT7jwuzK+k8lO0puHb5gCeLdACk
-YxQ/r6EbWe/EaGPc65uff/ZFwgVYeTo4riH79XPULZCGXNAtzM/f++a6axco8zzt
-tkkRA4EeS16AtHMi4eApjVgMZifjWyNhSR7yAgrfW5oHirqZHj1TtPMPG/xfHfs5
-X0GNphmcPFv2kA2Xlwr7bXO7MuqG5ZiY87CZBbmsUknKBhlilDK3IL2RJFk1GzBR
-ntqR7fxTmvALuHYJDCGo29FfKq+yjFIY253ZWC2ZXuQWmDg103qnOSxKFCpESHGi
-HtZu+8muHyb5z/7VZK5V
-=l9HE
------END PGP SIGNATURE-----
+Changes from v1:
+Rebased patches to latest usb-next branch
+Changed the name 'sec_usbphy' to 'samsung_usbphy'
 
---=-CrpCoex3dzrHKWZmEWFd--
+This patch set introduces a phy driver for samsung SoCs. It uses the existing
+transceiver infrastructure to provide phy control functions. Use of this driver
+can be extended for usb host phy as well. Over the period of time all the phy
+related code for most of the samsung SoCs can be integrated here.
+Removing the existing phy code from mach-s3c64xx. Same can be done for other SoCs
+when they start supporting this phy driver. 
+This driver is tested with smdk6410 and Exynos4210(with DT).
+
+Praveen Paneri (2):
+  usb: phy: samsung: Introducing usb phy driver for hsotg
+  usb: s3c-hsotg: Adding phy driver support
+
+ .../devicetree/bindings/usb/samsung-usbphy.txt     |   11 +
+ drivers/usb/gadget/s3c-hsotg.c                     |   37 ++-
+ drivers/usb/phy/Kconfig                            |    8 +
+ drivers/usb/phy/Makefile                           |    1 +
+ drivers/usb/phy/samsung-usbphy.c                   |  354 ++++++++++++++++++++
+ include/linux/platform_data/samsung-usbphy.h       |   27 ++
+ 6 files changed, 428 insertions(+), 10 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/samsung-usbphy.txt
+ create mode 100644 drivers/usb/phy/samsung-usbphy.c
+ create mode 100644 include/linux/platform_data/samsung-usbphy.h
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
