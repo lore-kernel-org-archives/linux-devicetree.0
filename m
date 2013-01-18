@@ -1,38 +1,62 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH v4 0/3] mtd: nand: OMAP: ELM error correction support
- for BCH ecc
-Date: Fri, 18 Jan 2013 03:54:51 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3EA5F353@DBDE01.ent.ti.com>
-References: <1357286211-5012-1-git-send-email-avinashphilip@ti.com>
-	 <518397C60809E147AF5323E0420B992E3EA5DFA9@DBDE01.ent.ti.com>
- <1358424375.2731.234.camel@sauron.fi.intel.com>
+From: Philip Avinash <avinashphilip@ti.com>
+Subject: [PATCH] ARM: OMAP: gpmc: Add device tree documentation for elm handle
+Date: Fri, 18 Jan 2013 10:27:46 +0530
+Message-ID: <1358485066-27495-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1358424375.2731.234.camel@sauron.fi.intel.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "tony@atomide.com" <tony@atomide.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "zonque@gmail.com" <zonque@gmail.com>, "Mohammed, Afzal" <afzal@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "ivan.djelic@parrot.com" <ivan.dj>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, artem.bityutskiy@linux.intel.com, zonque@gmail.com
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com, Philip Avinash <avinashphilip@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKYW4gMTcsIDIwMTMgYXQgMTc6MzY6MTUsIEFydGVtIEJpdHl1dHNraXkgd3JvdGU6
-DQo+IE9uIFdlZCwgMjAxMy0wMS0xNiBhdCAxMjoyMiArMDAwMCwgUGhpbGlwLCBBdmluYXNoIHdy
-b3RlOg0KPiA+ID4gVGhpcyBzZXJpZXMgaXMgYmFzZWQgb24gbGludXggMy44LXJjMiBhbmQgdGVz
-dGVkIHdpdGggWzFdLg0KPiA+ID4gQWxzbyB0aGlzIHBhdGNoIHNlcmllcyBkZXBlbmQgb24gWzFd
-IGZvciBOQU5EIGZsYXNoIGRldmljZQ0KPiA+ID4gdHJlZSBkYXRhIGFuZCBncG1jIG5hbmQgZGV2
-aWNlIHRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIHVwZGF0ZXMuDQo+ID4gPiANCj4gPiA+IDEu
-IFtQQVRDSCB2NyAwLzVdIE9NQVAgR1BNQyBEVCBiaW5kaW5ncw0KPiA+ID4gaHR0cDovL3d3dy5z
-cGluaWNzLm5ldC9saXN0cy9saW51eC1vbWFwL21zZzgzNTA1Lmh0bWwNCj4gPiA+IA0KPiA+ID4g
-VGVzdGVkIG9uIGFtMzM1eC1ldm0gZm9yIEJDSCA0IGFuZCA4IGJpdCBlcnJvciBjb3JyZWN0aW9u
-Lg0KPiA+IA0KPiA+IENhbiB5b3UgYXBwbHkgdGhpcyBwYXRjaCBzZXJpZXMgb24gbDItbXRkIHRy
-ZWUgYXMgaXQgd2lsbCBoZWxwIFJCTCBjb21wYXRpYmlsaXR5DQo+ID4gZWNjIGxheW91dCBmb3Ig
-TkFORCBmbGFzaCBpbiBhbTMzNXgtcGxhdGZvcm1zIGFuZCBoYXJkd2FyZSBiYXNlZCBCQ0ggZXJy
-b3INCj4gPiBjb3JyZWN0aW9uLg0KPiANCj4gT0ssIEkndmUgYXBwbGllZCB0aGVtLiBJIGRyb3Bw
-ZWQgdGhlIHBhcnQgdGhhdCB1cGRhdGVzIHRoZQ0KPiBkb2N1bWVudGF0aW9uLiBQbGVhc2UsIGhh
-bmRsZSBpdCBzZXBhcmF0ZWx5IHdoZW4gRGFuaWVsJ3MgcGF0Y2hlcyBhcmUNCj4gaW4uDQo+IA0K
-PiBQdXNoZWQgdG8gbDItbXRkLmdpdCwgdGhhbmtzIQ0KDQpUaGFua3MgZm9yIGFwcGx5aW5nIHRo
-aXMgcGF0Y2ggc2VyaWVzLg0KSSB3aWxsIHVwZGF0ZSBncG1jLW5hbmQgZG9jdW1lbnRhdGlvbiBw
-YXJ0IGluIGEgc2VwYXJhdGUgcGF0Y2guDQoNClRoYW5rcywNCkF2aW5hc2gNCg0KPiANCj4gLS0g
-DQo+IEJlc3QgUmVnYXJkcywNCj4gQXJ0ZW0gQml0eXV0c2tpeQ0KPiANCg0K
+In case ELM module available, omap2 NAND driver can opt for hardware
+correction method for bit flip errors in NAND flash with BCH. Hence the
+detection of ELM module is done through devicetree population of elm_id.
+This patch update device tree documentation for gpmc-nand for elm-id
+data population.
+
+Signed-off-by: Philip Avinash <avinashphilip@ti.com>
+---
+This patch based [1] and depends on [2]. As Artem suggested, this patch can
+go in omap_tree due to the dependency on [3].
+Discussion can found at [4]
+
+Tony,
+  Can you accept this patch.
+
+1. http://git.kernel.org/?p=linux/kernel/git/tmlind/linux-omap.git;a=shortlog;h=refs/heads/omap-for-v3.9/gpmc
+2. mtd: nand: omap2: Support for hardware BCH error correction
+   http://git.infradead.org/users/dedekind/l2-mtd-2.6.git/commit/576daed18c3f27bb5d0e57e1df11e8f7b493dce8
+3. ARM: OMAP: gpmc: add DT bindings for GPMC timings and NAND
+   http://git.kernel.org/?p=linux/kernel/git/tmlind/linux-omap.git;a=commit;h=bc6b1e7b86f5d8e4a6fc1c0189e64bba4077efe0
+4. https://lkml.org/lkml/2013/1/17/167   
+
+ .../devicetree/bindings/mtd/gpmc-nand.txt          |    4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+index 9f464f9..e7f8d7e 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+@@ -29,6 +29,9 @@ Optional properties:
+ 		"bch4"		4-bit BCH ecc code
+ 		"bch8"		8-bit BCH ecc code
+ 
++ - elm_id:	Specifies elm device node. This is required to support BCH
++ 		error correction using ELM module.
++
+ For inline partiton table parsing (optional):
+ 
+  - #address-cells: should be set to 1
+@@ -46,6 +49,7 @@ Example for an AM33xx board:
+ 		#address-cells = <2>;
+ 		#size-cells = <1>;
+ 		ranges = <0 0 0x08000000 0x2000>;	/* CS0: NAND */
++		elm_id = <&elm>;
+ 
+ 		nand@0,0 {
+ 			reg = <0 0 0>; /* CS0, offset 0 */
+-- 
+1.7.9.5
+
