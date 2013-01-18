@@ -1,50 +1,42 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-Subject: Re: [PATCH 2/3] ARM: dts: AM33XX: Add GPMC node
-Date: Fri, 18 Jan 2013 14:17:43 +0100
-Message-ID: <1358515063.3873.31.camel@coredoba.hi.pengutronix.de>
-References: <1358491295-4022-1-git-send-email-avinashphilip@ti.com>
-	 <1358491295-4022-3-git-send-email-avinashphilip@ti.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH v7 2/4] usb: phy: samsung: Add host phy support to
+ samsung-phy driver
+Date: Fri, 18 Jan 2013 19:51:08 +0530
+Message-ID: <CAFp+6iF9H+n1Fwr89es-jtDAN=ht1PuXQER9vQ=jG2RZQTceWw@mail.gmail.com>
+References: <1357916550-11421-3-git-send-email-gautam.vivek@samsung.com>
+	<1358166135-22073-1-git-send-email-gautam.vivek@samsung.com>
+	<20130118131633.GJ4672@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1358491295-4022-3-git-send-email-avinashphilip@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Philip Avinash <avinashphilip@ti.com>
-Cc: b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, zonque@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130118131633.GJ4672@arwen.pp.htv.fi>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, jg1.han@samsung.com, linux-samsung-soc@vger.kernel.org, p.paneri@samsung.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, kgene.kim@samsung.com, rob.herring@calxeda.com, sylvester.nawrocki@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2013-01-18 at 12:11 +0530, Philip Avinash wrote:
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index eaef5e7..f4209d8 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -393,5 +393,17 @@
->  			ti,hwmods = "elm";
->  			status = "disabled";
->  		};
-> +
-> +		gpmc: gpmc@50000000 {
-> +			compatible = "ti,am3352-gpmc";
-> +			ti,hwmods = "gpmc";
-> +			reg = <0x50000000 0x2000>;
-> +			interrupts = <100>;
-> +			num-cs = <8>;
+Hi Felipe,
 
-According to the AM335x TRM (SPRUH73G) page 254 we have GPMC_CSn[6:0],
-so num-cs should probably be <7>.
 
-> +			num-waitpins = <2>;
-> +			#address-cells = <2>;
-> +			#size-cells = <1>;
-> +			status = "disabled";
-> +		};
->  	};
->  };
+On Fri, Jan 18, 2013 at 6:46 PM, Felipe Balbi <balbi@ti.com> wrote:
+> Hi,
+>
+> On Mon, Jan 14, 2013 at 05:52:15PM +0530, Vivek Gautam wrote:
+>> This patch adds host phy support to samsung-usbphy driver and
+>> further adds support for samsung's exynos5250 usb-phy.
+>>
+>> Signed-off-by: Praveen Paneri <p.paneri@samsung.com>
+>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>
+> Missing Kukjim's Acked-by here
+>
+
+Hope you are fine with the changes happened after discussion in thread:
+[PATCH v5 2/4] usb: phy: samsung: Add host phy support to samsung-phy driver
+
+Is it something you want me to modify in this patch ?
+
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-
+Thanks & Regards
+Vivek
