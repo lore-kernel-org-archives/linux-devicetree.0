@@ -1,55 +1,88 @@
-From: kishon <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [RFC PATCH 0/6] USB: Add multiple PHYs of same type
-Date: Fri, 18 Jan 2013 17:24:59 +0530
-Message-ID: <50F93813.4010107@ti.com>
-References: <1358348462-27693-1-git-send-email-kishon@ti.com>
- <20130118114859.GC4379@arwen.pp.htv.fi>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130118114859.GC4379-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cbou-JGs/UdohzUI@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH V6 05/10] ARM: dts: Add nodes for i2s controllers for Samsung
+ Exynos5 platforms
+Date: Fri, 18 Jan 2013 17:17:04 +0530
+Message-ID: <1358509629-20471-6-git-send-email-padma.v@samsung.com>
+References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: padma.v@samsung.com, padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
+Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 18 January 2013 05:18 PM, Felipe Balbi wrote:
-> On Wed, Jan 16, 2013 at 08:30:56PM +0530, Kishon Vijay Abraham I wrote:
->> New platforms are being added which has multiple PHY's (of same type) and
->> which has multiple USB controllers. The binding information has to be
->> present in the PHY library (otg.c) in order for it to return the
->> appropriate PHY whenever the USB controller request for the PHY. So
->> added a new API to pass the binding information. This API should be
->> called by platform specific initialization code.
->>
->> So the binding should be done something like
->> usb_bind_phy("musb-hdrc.0.auto", 0, "omap-usb2.1.auto"); specifying the USB
->> controller device name, index, and the PHY device name.
->> I have done this binding for OMAP platforms, but it should be done for
->> all the platforms.
->>
->> After this design, the phy can be got by passing the USB controller device
->> pointer and the index.
->>
->> Developed this patch series on
->> git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git xceiv
->> after applying "usb: musb: add driver for control module" patch series.
->>
->> Did basic enumeration testing in omap4 panda, omap4 sdp and omap3 beagle.
->
-> please resend without RFC so I can apply.
+Add device nodes for the three instances of i2s controllers in Exynos5
+platforms. Enable instance i2s 0 for exynos5250 board and disable all
+other i2s instances.
 
-I'll resend after addressing Roger's comments in a while.
+Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+---
+ arch/arm/boot/dts/exynos5250-smdk5250.dts |   14 ++++++++++++++
+ arch/arm/boot/dts/exynos5250.dtsi         |   29 +++++++++++++++++++++++++++++
+ 2 files changed, 43 insertions(+), 0 deletions(-)
 
-Thanks
-Kishon
+diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+index e05b18f..9516da8 100644
+--- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
++++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+@@ -204,4 +204,18 @@
+ 		samsung,mfc-r = <0x43000000 0x800000>;
+ 		samsung,mfc-l = <0x51000000 0x800000>;
+ 	};
++
++	i2s@03830000 {
++		gpios = <&gpz 0 2 0 0>, <&gpz 1 2 0 0>, <&gpz 2 2 0 0>,
++			<&gpz 3 2 0 0>, <&gpz 4 2 0 0>, <&gpz 5 2 0 0>,
++			<&gpz 6 2 0 0>;
++	};
++
++	i2s@12D60000 {
++		status = "disabled";
++	};
++
++	i2s@12D70000 {
++		status = "disabled";
++	};
+ };
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+index 46bae01..7e51e69 100644
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -275,6 +275,35 @@
+ 		#size-cells = <0>;
+ 	};
+ 
++	i2s@03830000 {
++		compatible = "samsung,i2s-v5";
++		reg = <0x03830000 0x100>;
++		dmas = <&pdma0 10
++			&pdma0 9
++			&pdma0 8>;
++		dma-names = "tx", "rx", "tx-sec";
++		samsung,supports-6ch;
++		samsung,supports-rstclr;
++		samsung,supports-secdai;
++		samsung,idma-addr = <0x03000000>;
++	};
++
++	i2s@12D60000 {
++		compatible = "samsung,i2s-v5";
++		reg = <0x12D60000 0x100>;
++		dmas = <&pdma1 12
++			&pdma1 11>;
++		dma-names = "tx", "rx";
++	};
++
++	i2s@12D70000 {
++		compatible = "samsung,i2s-v5";
++		reg = <0x12D70000 0x100>;
++		dmas = <&pdma0 12
++			&pdma0 11>;
++		dma-names = "tx", "rx";
++	};
++
+ 	amba {
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-- 
+1.7.4.4
