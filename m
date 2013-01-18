@@ -1,36 +1,38 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH v6 3/4] USB: ehci-s5p: Add phy driver support
-Date: Fri, 18 Jan 2013 20:01:45 +0530
-Message-ID: <CAFp+6iEonM8Kp0LztsqaQ0G1+425tK9f06hyUBeQkbvOaHOzeA@mail.gmail.com>
-References: <1357916550-11421-1-git-send-email-gautam.vivek@samsung.com>
-	<1357916550-11421-4-git-send-email-gautam.vivek@samsung.com>
-	<20130118131617.GI4672@arwen.pp.htv.fi>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 0/5] ARM: dts: OMAP3+: PWM support for TWL and selected boards
+Date: Fri, 18 Jan 2013 15:36:29 +0100
+Message-ID: <1358519794-13214-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130118131617.GI4672@arwen.pp.htv.fi>
-Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com, Alan Stern <stern@rowland.harvard.edu>
-Cc: Vivek Gautam <gautam.vivek@samsung.com>, jg1.han@samsung.com, linux-samsung-soc@vger.kernel.org, p.paneri@samsung.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, kgene.kim@samsung.com, rob.herring@calxeda.com, sylvester.nawrocki@gmail.com, Doug Anderson <dianders@chromium.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Alan,
+Hi,
 
+Add the needed DT sections for twl4030 and twl6030 for the PWM childs.
+Update the omap4-sdp to have working backlight and keypad/charging LED support.
+Use the pwm-leds driver on BeagleBoard for the pmu_stat LED instead of the hacky
+twl403-gpio mapped PWM.
 
-On Fri, Jan 18, 2013 at 6:46 PM, Felipe Balbi <balbi@ti.com> wrote:
-> On Fri, Jan 11, 2013 at 08:32:29PM +0530, Vivek Gautam wrote:
->> Adding the phy driver to ehci-s5p. Keeping the platform data
->> for continuing the smooth operation for boards which still uses it
->>
->> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> Acked-by: Jingoo Han <jg1.han@samsung.com>
->
-> Missing Alan's Acked-by here.
->
+Regards,
+Peter
+---
+Peter Ujfalusi (5):
+  ARM: dts: twl4030: Add PWM support
+  ARM: dts: twl6030: Add PWM support
+  ARM: dts: omap3-beagle-xm: Use pwm-leds for pmu_stat LED
+  ARM: dts: omap4-sdp: Add support for pwm-leds (keypad and charging LED)
+  ARM: dts: omap4-sdp: Add support for pwm-backlight
 
-Any comments on this patch-series ?
-
+ arch/arm/boot/dts/omap3-beagle-xm.dts | 14 ++++++++++----
+ arch/arm/boot/dts/omap4-sdp.dts       | 26 ++++++++++++++++++++++++++
+ arch/arm/boot/dts/twl4030.dtsi        | 10 ++++++++++
+ arch/arm/boot/dts/twl6030.dtsi        | 12 ++++++++++++
+ 4 files changed, 58 insertions(+), 4 deletions(-)
 
 -- 
-Thanks & Regards
-Vivek
+1.8.1
+
