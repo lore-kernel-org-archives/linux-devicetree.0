@@ -1,68 +1,71 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [PATCH 2/4] DMA: PL330: Register the DMA controller with the generic
- DMA helpers
-Date: Fri, 18 Jan 2013 17:03:42 +0530
-Message-ID: <1358508824-20352-3-git-send-email-padma.v@samsung.com>
-References: <1358508824-20352-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1358508824-20352-1-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: padma.v@samsung.com, padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org
-Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org
+From: Andrew Murray <Andrew.Murray@arm.com>
+Subject: [PATCH RFC 1/2] Implementation of pci_fixup_irqs for descendants
+ of a specified bus
+Date: Fri, 18 Jan 2013 11:37:42 +0000
+Message-ID: <20130118113742.GA9006@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch registers the pl330 dma controller driver with the generic
-device tree dma helper functions.
-
-Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+Continuing from discussion with Thierry (lkml.org/lkml/2013/1/18/107) perhaps
+this will be useful to fold into your patchset. 
 ---
- drivers/dma/pl330.c |   20 ++++++++++++++++++++
- 1 files changed, 20 insertions(+), 0 deletions(-)
+This patch provides pci_bus_fixup_irqs which performs the same
+function as pci_fixup_irqs but only to descendants of the specified
+bus.
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index b0a9080..b80ef97 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -2874,6 +2874,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
- 	struct dma_pl330_platdata *pdat;
- 	struct dma_pl330_dmac *pdmac;
- 	struct dma_pl330_chan *pch;
-+	struct of_dma_filter_info *pfi;
- 	struct pl330_info *pi;
- 	struct dma_device *pd;
- 	struct resource *res;
-@@ -2990,6 +2991,23 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
- 		pi->pcfg.data_bus_width / 8, pi->pcfg.num_chan,
- 		pi->pcfg.num_peri, pi->pcfg.num_events);
- 
-+	pfi = devm_kzalloc(&adev->dev, sizeof(*pfi), GFP_KERNEL);
-+	if (!pfi) {
-+		dev_err(&adev->dev, "unable to allocate mem\n");
-+		return -ENOMEM;
+This can reduce unnecessary fixing up of device irqs when new buses
+are added.
+
+Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
+Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+---
+ drivers/pci/setup-irq.c |   15 +++++++++++++++
+ include/linux/pci.h     |    3 +++
+ 2 files changed, 18 insertions(+), 0 deletions(-)
+
+diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
+index eb219a1..ea91874 100644
+--- a/drivers/pci/setup-irq.c
++++ b/drivers/pci/setup-irq.c
+@@ -62,3 +62,18 @@ pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
+ 	for_each_pci_dev(dev)
+ 		pdev_fixup_irq(dev, swizzle, map_irq);
+ }
++
++void __init
++pci_bus_fixup_irqs(struct pci_bus *bus,
++		u8 (*swizzle)(struct pci_dev *, u8 *),
++		int (*map_irq)(const struct pci_dev *, u8, u8))
++{
++	struct pci_dev *dev;
++
++	list_for_each_entry(dev, &bus->devices, bus_list) {
++		pdev_fixup_irq(dev, swizzle, map_irq);
++
++		if (dev->subordinate)
++			pci_bus_fixup_irqs(dev->subordinate, swizzle, map_irq);
 +	}
-+
-+	pfi->dma_cap = pd->cap_mask;
-+	pfi->filter_fn = pl330_filter;
-+
-+	ret = of_dma_controller_register(adev->dev.of_node,
-+					 of_dma_pl330_xlate, pfi);
-+	if (ret) {
-+		dev_err(&adev->dev, "unable to register DMA to the\
-+					generic DT DMA helpers\n");
-+		goto probe_err2;
-+	}
-+
- 	return 0;
- 
- probe_err4:
-@@ -3016,6 +3034,8 @@ static int pl330_remove(struct amba_device *adev)
- 	if (!pdmac)
- 		return 0;
- 
-+	of_dma_controller_free(adev->dev.of_node);
-+
- 	amba_set_drvdata(adev, NULL);
- 
- 	/* Idle the DMAC */
++}
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 5faa831..1b3c2eb 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -953,6 +953,9 @@ void pdev_enable_device(struct pci_dev *);
+ int pci_enable_resources(struct pci_dev *, int mask);
+ void pci_fixup_irqs(u8 (*)(struct pci_dev *, u8 *),
+ 		    int (*)(const struct pci_dev *, u8, u8));
++void pci_bus_fixup_irqs(struct pci_bus *bus,
++		u8 (*swizzle)(struct pci_dev *, u8 *),
++		int (*map_irq)(const struct pci_dev *, u8, u8));
+ #define HAVE_PCI_REQ_REGIONS	2
+ int __must_check pci_request_regions(struct pci_dev *, const char *);
+ int __must_check pci_request_regions_exclusive(struct pci_dev *, const char *);
 -- 
-1.7.4.4
+1.7.0.4
