@@ -1,407 +1,388 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH RFC v3 02/15] [media] Add a V4L2 OF parser
-Date: Fri, 18 Jan 2013 16:48:43 +0100
-Message-ID: <50F96EDB.7090300@samsung.com>
-References: <1356969793-27268-3-git-send-email-s.nawrocki@samsung.com>
- <1357232962-7425-1-git-send-email-s.nawrocki@samsung.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v2 32/76] ARC: [DeviceTree] Basic support
+Date: Fri, 18 Jan 2013 09:53:59 -0600
+Message-ID: <50F97017.4090705@gmail.com>
+References: <1358511930-7424-1-git-send-email-vgupta@synopsys.com> <1358511930-7424-33-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1357232962-7425-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: laurent.pinchart@ideasonboard.com, Hans Verkuil <hverkuil@xs4all.nl>, Mauro Carvalho Chehab <mchehab@redhat.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, g.liakhovetski@gmx.de, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <1358511930-7424-33-git-send-email-vgupta@synopsys.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/03/2013 06:09 PM, Sylwester Nawrocki wrote:
-> From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+On 01/18/2013 06:24 AM, Vineet Gupta wrote:
+> This is minimal infrastructure needed for devicetree work.
+> It uses an a sample "skeleton" devicetree - embedded in kernel image -
+> to print the board, manufacturer by parsing the top-level "compatible"
+> string.
 > 
-> Add a V4L2 OF parser, implementing bindings documented in
-> Documentation/devicetree/bindings/media/video-interfaces.txt.
+> As of now we don't need any additional "board" specific "machine_desc".
 > 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-
-Hans, Laurent, Mauro, would you have any comments on this ?
-Anything that needs to be changed/improved ?
-
-I'd like to send a pull request including this patch, together
-with an updated patch series [1] (v3) adding initial device tree
-support to the Exynos camera subsystem drivers.
-
-[1] http://www.spinics.net/lists/linux-media/msg57947.html
-
-Thanks,
-Sylwester
+> TODO: support interpreting the command line as boot-loader passed dtb
+> 
+> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: Rob Herring <rob.herring@calxeda.com>
 > ---
-> Changes since v2:
->  - added missing EXPORT_SYMBOL for v4l2_of_parse_mipi_csi2()
->    and v4l2_of_parse_parallel_bus() functions,
->  - include string.h header instead of slab.h.
+>  arch/arc/Kconfig                |    9 +++++
+>  arch/arc/Makefile               |    9 +++++
+>  arch/arc/boot/dtb/Makefile      |   22 ++++++++++++
+
+This is .../boot/dts/Makefile on other arches. We should be consistent.
+
+>  arch/arc/boot/dts/skeleton.dts  |   10 ++++++
+>  arch/arc/boot/dts/skeleton.dtsi |   21 ++++++++++++
+>  arch/arc/include/asm/prom.h     |   15 ++++++++
+>  arch/arc/include/asm/sections.h |    1 +
+>  arch/arc/kernel/Makefile        |    2 +
+>  arch/arc/kernel/devtree.c       |   69 +++++++++++++++++++++++++++++++++++++++
+>  arch/arc/kernel/setup.c         |    9 +++++
+>  arch/arc/mm/init.c              |   13 +++++++
+>  11 files changed, 180 insertions(+), 0 deletions(-)
+>  create mode 100644 arch/arc/boot/dtb/Makefile
+>  create mode 100644 arch/arc/boot/dts/skeleton.dts
+>  create mode 100644 arch/arc/boot/dts/skeleton.dtsi
+>  create mode 100644 arch/arc/include/asm/prom.h
+>  create mode 100644 arch/arc/kernel/devtree.c
 > 
->  drivers/media/v4l2-core/Makefile  |    3 +
->  drivers/media/v4l2-core/v4l2-of.c |  251 +++++++++++++++++++++++++++++++++++++
->  include/media/v4l2-of.h           |   79 ++++++++++++
->  3 files changed, 333 insertions(+)
->  create mode 100644 drivers/media/v4l2-core/v4l2-of.c
->  create mode 100644 include/media/v4l2-of.h
-> 
-> diff --git a/drivers/media/v4l2-core/Makefile b/drivers/media/v4l2-core/Makefile
-> index c2d61d4..00f64d6 100644
-> --- a/drivers/media/v4l2-core/Makefile
-> +++ b/drivers/media/v4l2-core/Makefile
-> @@ -9,6 +9,9 @@ videodev-objs	:=	v4l2-dev.o v4l2-ioctl.o v4l2-device.o v4l2-fh.o \
->  ifeq ($(CONFIG_COMPAT),y)
->    videodev-objs += v4l2-compat-ioctl32.o
->  endif
-> +ifeq ($(CONFIG_OF),y)
-> +  videodev-objs += v4l2-of.o
-> +endif
-> 
->  obj-$(CONFIG_VIDEO_DEV) += videodev.o v4l2-int-device.o
->  obj-$(CONFIG_VIDEO_V4L2) += v4l2-common.o
-> diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
+> diff --git a/arch/arc/Kconfig b/arch/arc/Kconfig
+> index d457a83..5175cf7 100644
+> --- a/arch/arc/Kconfig
+> +++ b/arch/arc/Kconfig
+> @@ -21,7 +21,10 @@ config ARC
+>  	select GENERIC_SMP_IDLE_THREAD
+>  	select HAVE_GENERIC_HARDIRQS
+>  	select HOTPLUG if !INITRAMFS_SOURCE=""
+> +	select IRQ_DOMAIN
+>  	select MODULES_USE_ELF_RELA
+> +	select OF
+> +	select OF_EARLY_FLATTREE
+>  
+>  config SCHED_OMIT_FRAME_POINTER
+>  	def_bool y
+> @@ -316,6 +319,12 @@ config CMDLINE_UBOOT
+>  	  to it. kernel startup code will copy the string into cmdline buffer
+>  	  and also append CONFIG_CMDLINE.
+>  
+> +config ARC_BUILTIN_DTB_NAME
+> +	string "Built in DTB"
+> +	help
+> +	  Set the name of the DTB to embed in the vmlinux binary
+> +	  Leaving it blank selects the minimal "skeleton" dtb
+> +
+>  source "kernel/Kconfig.preempt"
+>  
+>  endmenu	 # "ARC Architecture Configuration"
+> diff --git a/arch/arc/Makefile b/arch/arc/Makefile
+> index 4d52a3b..d697e9c 100644
+> --- a/arch/arc/Makefile
+> +++ b/arch/arc/Makefile
+> @@ -83,6 +83,9 @@ head-y		:= arch/arc/kernel/head.o
+>  # See arch/arc/Kbuild for content of core part of the kernel
+>  core-y		+= arch/arc/
+>  
+> +# w/o this dtb won't embed into kernel binary
+> +core-y		+= arch/arc/boot/dtb/
+> +
+>  # w/o this ifneq, make ARCH=arc clean was crapping out
+>  ifneq ($(platform-y),)
+>  core-y		+= arch/arc/plat-$(PLATFORM)/
+> @@ -101,6 +104,12 @@ bootpImage: vmlinux
+>  uImage: vmlinux
+>  	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+>  
+> +%.dtb %.dtb.S %.dtb.o:
+> +	$(Q)$(MAKE) $(build)=$(boot)/dtb $(boot)/dtb/$@
+> +
+> +dtbs:
+> +	$(Q)$(MAKE) $(build)=$(boot)/dtb $(boot)/dtb/$@
+> +
+>  archclean:
+>  	$(Q)$(MAKE) $(clean)=$(boot)
+>  
+> diff --git a/arch/arc/boot/dtb/Makefile b/arch/arc/boot/dtb/Makefile
 > new file mode 100644
-> index 0000000..483245c
+> index 0000000..825af84
 > --- /dev/null
-> +++ b/drivers/media/v4l2-core/v4l2-of.c
-> @@ -0,0 +1,251 @@
+> +++ b/arch/arc/boot/dtb/Makefile
+> @@ -0,0 +1,22 @@
+> +ifeq ($(CONFIG_OF),y)
+> +
+> +dtb-y	+= skeleton.dtb
+> +
+> +# Built-in dtb
+> +builtindtb-y				:= skeleton
+> +
+> +ifneq ($(CONFIG_ARC_BUILTIN_DTB_NAME),"")
+> +	builtindtb-y			:= $(CONFIG_ARC_BUILTIN_DTB_NAME)
+> +endif
+> +
+> +obj-y	+= $(patsubst "%",%,$(builtindtb-y)).dtb.o
+> +
+> +clean-files += $(obj)/$(dtb-y) $(obj)/*.dtb.S $(obj)/*.dtb.o
+> +
+> +# Rule to build device tree blobs
+> +$(obj)/%.dtb: $(src)/../dts/%.dts FORCE
+> +	$(call if_changed_dep,dtc)
+
+There are common rules that went into 3.8. Please use them.
+
+> +
+> +$(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
+> +
+> +endif
+> diff --git a/arch/arc/boot/dts/skeleton.dts b/arch/arc/boot/dts/skeleton.dts
+> new file mode 100644
+> index 0000000..25a84fb
+> --- /dev/null
+> +++ b/arch/arc/boot/dts/skeleton.dts
+> @@ -0,0 +1,10 @@
 > +/*
-> + * V4L2 OF binding parsing library
-> + *
-> + * Copyright (C) 2012 Renesas Electronics Corp.
-> + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> + * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
 > + *
 > + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of version 2 of the GNU General Public License as
+> + * it under the terms of the GNU General Public License version 2 as
 > + * published by the Free Software Foundation.
 > + */
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/string.h>
-> +#include <linux/types.h>
+> +/dts-v1/;
 > +
-> +#include <media/v4l2-of.h>
+> +/include/ "skeleton.dtsi"
+> diff --git a/arch/arc/boot/dts/skeleton.dtsi b/arch/arc/boot/dts/skeleton.dtsi
+> new file mode 100644
+> index 0000000..f6a457a
+> --- /dev/null
+> +++ b/arch/arc/boot/dts/skeleton.dtsi
+> @@ -0,0 +1,21 @@
+> +/*
+> + * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +/*
+> + * Skeleton device tree; the bare minimum needed to boot; just include and
+> + * add a compatible value.
+> + */
+> +
+> +/ {
+> +	compatible = "snps,arc-angel4", "snps,arc-ml509";
+
+Normally, you wouldn't have this as part of skeleton. If you need
+something generic, then perhaps generic.dts would be better.
+
+> +	#address-cells = <1>;
+> +	#size-cells = <1>;
+> +	chosen { };
+> +	aliases { };
+> +	memory { device_type = "memory"; reg = <0 0>; };
+> +};
+> diff --git a/arch/arc/include/asm/prom.h b/arch/arc/include/asm/prom.h
+> new file mode 100644
+> index 0000000..f54489b
+> --- /dev/null
+> +++ b/arch/arc/include/asm/prom.h
+> @@ -0,0 +1,15 @@
+> +/*
+> + * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef _ASM_ARC_PROM_H_
+> +#define _ASM_ARC_PROM_H_
+> +
+> +#define HAVE_ARCH_DEVTREE_FIXUPS
+> +extern int __init setup_machine_fdt(void *dt);
+> +
+> +#endif
+> diff --git a/arch/arc/include/asm/sections.h b/arch/arc/include/asm/sections.h
+> index fc15f2e..6fc1159 100644
+> --- a/arch/arc/include/asm/sections.h
+> +++ b/arch/arc/include/asm/sections.h
+> @@ -13,5 +13,6 @@
+>  
+>  extern char _int_vec_base_lds[];
+>  extern char __arc_dccm_base[];
+> +extern char __dtb_start[];
+>  
+>  #endif
+> diff --git a/arch/arc/kernel/Makefile b/arch/arc/kernel/Makefile
+> index ae140e5..5fefb7d 100644
+> --- a/arch/arc/kernel/Makefile
+> +++ b/arch/arc/kernel/Makefile
+> @@ -8,6 +8,8 @@
+>  obj-y	:= arcksyms.o setup.o irq.o time.o reset.o ptrace.o entry.o process.o \
+>  	   signal.o traps.o sys.o troubleshoot.o stacktrace.o clk.o
+>  
+> +obj-$(CONFIG_OF)			+= devtree.o
+> +
+>  obj-$(CONFIG_ARC_FPU_SAVE_RESTORE)	+= fpu.o
+>  CFLAGS_fpu.o   += -mdpfp
+>  
+> diff --git a/arch/arc/kernel/devtree.c b/arch/arc/kernel/devtree.c
+> new file mode 100644
+> index 0000000..021293d
+> --- /dev/null
+> +++ b/arch/arc/kernel/devtree.c
+> @@ -0,0 +1,69 @@
+> +/*
+> + * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
+> + *
+> + * Based on highly stipped down version of METAG
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +
+> +#include <linux/init.h>
+> +#include <linux/export.h>
+> +#include <linux/errno.h>
+> +#include <linux/types.h>
+> +#include <linux/reboot.h>
+> +#include <linux/bootmem.h>
+> +#include <linux/of.h>
+> +#include <linux/of_fdt.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_platform.h>
+> +#include <asm/prom.h>
+> +
+> +/* called from unflatten_device_tree() to bootstrap devicetree itself */
+> +void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
+> +{
+> +	return alloc_bootmem_align(size, align);
+> +}
 > +
 > +/**
-> + * v4l2_of_parse_mipi_csi2() - parse MIPI CSI-2 bus properties
-> + * @node: pointer to endpoint device_node
-> + * @endpoint: pointer to v4l2_of_endpoint data structure
+> + * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
+> + * @dt:		virtual address pointer to dt blob
 > + *
-> + * Return: 0 on success or negative error value otherwise.
+> + * If a dtb was passed to the kernel, then use it to choose the correct
+> + * machine_desc and to setup the system.
 > + */
-> +int v4l2_of_parse_mipi_csi2(const struct device_node *node,
-> +			    struct v4l2_of_endpoint *endpoint)
+> +int __init setup_machine_fdt(void *dt)
 > +{
-> +	struct v4l2_of_mipi_csi2 *mipi_csi2 = &endpoint->mipi_csi_2;
-> +	u32 data_lanes[ARRAY_SIZE(mipi_csi2->data_lanes)];
-> +	struct property *prop;
-> +	const __be32 *lane = NULL;
-> +	u32 v;
-> +	int i = 0;
+> +	struct boot_param_header *devtree = dt;
+> +	unsigned long dt_root;
+> +	char *model, *compat;
+> +	char manufacturer[16];
 > +
-> +	prop = of_find_property(node, "data-lanes", NULL);
-> +	if (!prop)
-> +		return -EINVAL;
-> +	do {
-> +		lane = of_prop_next_u32(prop, lane, &data_lanes[i]);
-> +	} while (lane && i++ < ARRAY_SIZE(data_lanes));
+> +	/* check device tree validity */
+> +	if (be32_to_cpu(devtree->magic) != OF_DT_HEADER)
+> +		return 1;
 > +
-> +	mipi_csi2->num_data_lanes = i;
-> +	while (i--)
-> +		mipi_csi2->data_lanes[i] = data_lanes[i];
+> +	/* Search the mdescs for the 'best' compatible value match */
+> +	initial_boot_params = devtree;
+> +	dt_root = of_get_flat_dt_root();
 > +
-> +	if (!of_property_read_u32(node, "clock-lanes", &v))
-> +		mipi_csi2->clock_lane = v;
+> +	/* compat = "<manufacturer>,<model>" */
+> +	compat = of_get_flat_dt_prop(dt_root, "compatible", NULL);
+> +	if (!compat)
+> +		compat = "<unknown>";
 > +
-> +	if (of_get_property(node, "clock-noncontinuous", &v))
-> +		endpoint->mbus_flags |= V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK;
+> +	model = strchr(compat, ',');
+> +	if (model)
+> +		model++;
+> +
+> +	strlcpy(manufacturer, compat, model ? model - compat : strlen(compat));
+> +
+> +	pr_info("Board \"%s\" from %s (Manufacturer)\n", model, manufacturer);
+> +
+> +	/* Retrieve various information from the /chosen node */
+> +	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
 > +
 > +	return 0;
 > +}
-> +EXPORT_SYMBOL(v4l2_of_parse_mipi_csi2);
+> diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
+> index 82ac206..27aebd6 100644
+> --- a/arch/arc/kernel/setup.c
+> +++ b/arch/arc/kernel/setup.c
+> @@ -13,6 +13,8 @@
+>  #include <linux/console.h>
+>  #include <linux/module.h>
+>  #include <linux/cpu.h>
+> +#include <linux/of_fdt.h>
+> +#include <asm/sections.h>
+>  #include <asm/arcregs.h>
+>  #include <asm/tlb.h>
+>  #include <asm/cache.h>
+> @@ -20,6 +22,7 @@
+>  #include <asm/page.h>
+>  #include <asm/irq.h>
+>  #include <asm/arcregs.h>
+> +#include <asm/prom.h>
+>  
+>  #define FIX_PTR(x)  __asm__ __volatile__(";" : "+r"(x))
+>  
+> @@ -57,6 +60,8 @@ void __init __attribute__((weak)) arc_platform_early_init(void)
+>  
+>  void __init setup_arch(char **cmdline_p)
+>  {
+> +	int rc;
 > +
-> +/**
-> + * v4l2_of_parse_parallel_bus() - parse parallel bus properties
-> + * @node: pointer to endpoint device_node
-> + * @endpoint: pointer to v4l2_of_endpoint data structure
-> + */
-> +void v4l2_of_parse_parallel_bus(const struct device_node *node,
-> +				struct v4l2_of_endpoint *endpoint)
+>  #ifdef CONFIG_CMDLINE_UBOOT
+>  	/* Make sure that a whitespace is inserted before */
+>  	strlcat(command_line, " ", sizeof(command_line));
+> @@ -71,6 +76,8 @@ void __init setup_arch(char **cmdline_p)
+>  	strlcpy(boot_command_line, command_line, COMMAND_LINE_SIZE);
+>  	*cmdline_p = command_line;
+>  
+> +	rc = setup_machine_fdt(__dtb_start);
+> +
+>  	/* To force early parsing of things like mem=xxx */
+>  	parse_early_param();
+>  
+> @@ -81,6 +88,8 @@ void __init setup_arch(char **cmdline_p)
+>  
+>  	setup_arch_memory();
+>  
+> +	unflatten_device_tree();
+> +
+>  	/* Can be issue if someone passes cmd line arg "ro"
+>  	 * But that is unlikely so keeping it as it is
+>  	 */
+> diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
+> index 9897847..1087a97 100644
+> --- a/arch/arc/mm/init.c
+> +++ b/arch/arc/mm/init.c
+> @@ -38,6 +38,11 @@ static int __init setup_mem_sz(char *str)
+>  }
+>  early_param("mem", setup_mem_sz);
+>  
+> +void __init early_init_dt_add_memory_arch(u64 base, u64 size)
 > +{
-> +	unsigned int flags = 0;
-> +	u32 v;
-> +
-> +	if (WARN_ON(!endpoint))
-> +		return;
-> +
-> +	if (!of_property_read_u32(node, "hsync-active", &v))
-> +		flags |= v ? V4L2_MBUS_HSYNC_ACTIVE_HIGH :
-> +			V4L2_MBUS_HSYNC_ACTIVE_LOW;
-> +
-> +	if (!of_property_read_u32(node, "vsync-active", &v))
-> +		flags |= v ? V4L2_MBUS_VSYNC_ACTIVE_HIGH :
-> +			V4L2_MBUS_VSYNC_ACTIVE_LOW;
-> +
-> +	if (!of_property_read_u32(node, "pclk-sample", &v))
-> +		flags |= v ? V4L2_MBUS_PCLK_SAMPLE_RISING :
-> +			V4L2_MBUS_PCLK_SAMPLE_FALLING;
-> +
-> +	if (!of_property_read_u32(node, "field-even-active", &v))
-> +		flags |= v ? V4L2_MBUS_FIELD_EVEN_HIGH :
-> +			V4L2_MBUS_FIELD_EVEN_LOW;
-> +	if (flags)
-> +		endpoint->mbus_type = V4L2_MBUS_PARALLEL;
-> +	else
-> +		endpoint->mbus_type = V4L2_MBUS_BT656;
-> +
-> +	if (!of_property_read_u32(node, "data-active", &v))
-> +		flags |= v ? V4L2_MBUS_DATA_ACTIVE_HIGH :
-> +			V4L2_MBUS_DATA_ACTIVE_LOW;
-> +
-> +	if (of_get_property(node, "slave-mode", &v))
-> +		flags |= V4L2_MBUS_SLAVE;
-> +
-> +	if (!of_property_read_u32(node, "bus-width", &v))
-> +		endpoint->parallel.bus_width = v;
-> +
-> +	if (!of_property_read_u32(node, "data-shift", &v))
-> +		endpoint->parallel.data_shift = v;
-> +
-> +	endpoint->mbus_flags = flags;
-> +}
-> +EXPORT_SYMBOL(v4l2_of_parse_parallel_bus);
-> +
-> +/**
-> + * v4l2_of_parse_endpoint() - parse all endpoint node properties
-> + * @node: pointer to endpoint device_node
-> + * @endpoint: pointer to v4l2_of_endpoint data structure
-> + *
-> + * All properties are optional. If none are found, we don't set any flags.
-> + * This means the port has a static configuration and no properties have
-> + * to be specified explicitly.
-> + * If any properties that identify the bus as parallel are found and
-> + * slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if we recognise
-> + * the bus as serial CSI-2 and clock-noncontinuous isn't set, we set the
-> + * V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag.
-> + * The caller should hold a reference to @node.
-> + */
-> +void v4l2_of_parse_endpoint(const struct device_node *node,
-> +			    struct v4l2_of_endpoint *endpoint)
-> +{
-> +	const struct device_node *port_node = of_get_parent(node);
-> +	bool data_lanes_present = false;
-> +
-> +	memset(endpoint, 0, sizeof(*endpoint));
-> +
-> +	endpoint->local_node = node;
-> +
-> +	/* Doesn't matter, whether the below two calls succeed */
-> +	of_property_read_u32(port_node, "reg", &endpoint->port);
-> +	of_property_read_u32(node, "reg", &endpoint->addr);
-> +
-> +	v4l2_of_parse_parallel_bus(node, endpoint);
-> +
-> +	/* If any parallel bus properties have been found, skip serial ones */
-> +	if (endpoint->parallel.bus_width || endpoint->parallel.data_shift ||
-> +	    endpoint->mbus_flags) {
-> +		/* Default parallel bus-master */
-> +		if (!(endpoint->mbus_flags & V4L2_MBUS_SLAVE))
-> +			endpoint->mbus_flags |= V4L2_MBUS_MASTER;
-> +		return;
-> +	}
-> +
-> +	endpoint->mbus_type = V4L2_MBUS_CSI2;
-> +
-> +	if (!v4l2_of_parse_mipi_csi2(node, endpoint))
-> +		data_lanes_present = true;
-> +
-> +	if ((endpoint->mipi_csi_2.clock_lane || data_lanes_present) &&
-> +	    !(endpoint->mbus_flags & V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK)) {
-> +		/* Default CSI-2: continuous clock */
-> +		endpoint->mbus_flags |= V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
-> +	}
-> +}
-> +EXPORT_SYMBOL(v4l2_of_parse_endpoint);
-> +
-> +/*
-> + * Return a refcounted next "endpoint" DT node. Contrary to the common OF
-> + * practice, we do not drop the reference to previous, users have to do it
-> + * themselves, when they're done with the node.
-> + */
-> +struct device_node *v4l2_of_get_next_endpoint(const struct device_node *parent,
-> +					struct device_node *previous)
-> +{
-> +	struct device_node *child, *port;
-> +
-> +	if (!parent)
-> +		return NULL;
-> +
-> +	if (!previous) {
-> +		/*
-> +		 * If this is the first call, we have to find a port within this
-> +		 * node
-> +		 */
-> +		for_each_child_of_node(parent, port) {
-> +			if (!of_node_cmp(port->name, "port"))
-> +				break;
-> +		}
-> +		if (port) {
-> +			/* Found a port, get a link */
-> +			child = of_get_next_child(port, NULL);
-> +			of_node_put(port);
-> +		} else {
-> +			child = NULL;
-> +		}
-> +		if (!child)
-> +			pr_err("%s(): Invalid DT: %s has no link children!\n",
-> +			       __func__, parent->name);
-> +	} else {
-> +		port = of_get_parent(previous);
-> +		if (!port)
-> +			/* Hm, has someone given us the root node?... */
-> +			return NULL;
-> +
-> +		/* Avoid dropping previous refcount to 0 */
-> +		of_node_get(previous);
-> +		child = of_get_next_child(port, previous);
-> +		if (child) {
-> +			of_node_put(port);
-> +			return child;
-> +		}
-> +
-> +		/* No more links under this port, try the next one */
-> +		do {
-> +			port = of_get_next_child(parent, port);
-> +			if (!port)
-> +				return NULL;
-> +		} while (of_node_cmp(port->name, "port"));
-> +
-> +		/* Pick up the first link on this port */
-> +		child = of_get_next_child(port, NULL);
-> +		of_node_put(port);
-> +	}
-> +
-> +	return child;
-> +}
-> +EXPORT_SYMBOL(v4l2_of_get_next_endpoint);
-> +
-> +/**
-> + * v4l2_of_get_remote_port_parent() - get remote port's parent node
-> + * @node: pointer to local endpoint device_node
-> + *
-> + * Return: Remote device node associated with remote endpoint node linked
-> + *	   to @node. Use of_node_put() on it when done.
-> + */
-> +struct device_node *v4l2_of_get_remote_port_parent(
-> +			       const struct device_node *node)
-> +{
-> +	struct device_node *re, *tmp;
-> +
-> +	/* Get remote endpoint DT node. */
-> +	re = of_parse_phandle(node, "remote-endpoint", 0);
-> +	if (!re)
-> +		return NULL;
-> +
-> +	/* Remote port. */
-> +	tmp = of_get_parent(re);
-> +	of_node_put(re);
-> +	if (!tmp)
-> +		return NULL;
-> +
-> +	/* Remote device node. */
-> +	re = of_get_parent(tmp);
-> +	of_node_put(tmp);
-> +
-> +	return re;
-> +}
-> +EXPORT_SYMBOL(v4l2_of_get_remote_port_parent);
-> diff --git a/include/media/v4l2-of.h b/include/media/v4l2-of.h
-> new file mode 100644
-> index 0000000..1aba3b3
-> --- /dev/null
-> +++ b/include/media/v4l2-of.h
-> @@ -0,0 +1,79 @@
-> +/*
-> + * V4L2 OF binding parsing library
-> + *
-> + * Copyright (C) 2012 Renesas Electronics Corp.
-> + * Author: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of version 2 of the GNU General Public License as
-> + * published by the Free Software Foundation.
-> + */
-> +#ifndef _V4L2_OF_H
-> +#define _V4L2_OF_H
-> +
-> +#include <linux/list.h>
-> +#include <linux/types.h>
-> +#include <linux/errno.h>
-> +
-> +#include <media/v4l2-mediabus.h>
-> +
-> +struct device_node;
-> +
-> +struct v4l2_of_mipi_csi2 {
-> +	unsigned char data_lanes[4];
-> +	unsigned char clock_lane;
-> +	unsigned short num_data_lanes;
-> +};
-> +
-> +struct v4l2_of_endpoint {
-> +	unsigned int port;
-> +	unsigned int addr;
-> +	struct list_head head;
-> +	const struct device_node *local_node;
-> +	const __be32 *remote;
-> +	enum v4l2_mbus_type mbus_type;
-> +	unsigned int mbus_flags;
-> +	union {
-> +		struct {
-> +			unsigned char bus_width;
-> +			unsigned char data_shift;
-> +		} parallel;
-> +		struct v4l2_of_mipi_csi2 mipi_csi_2;
-> +	};
-> +};
-> +
-> +#ifdef CONFIG_OF
-> +int v4l2_of_parse_mipi_csi2(const struct device_node *node,
-> +			    struct v4l2_of_endpoint *endpoint);
-> +void v4l2_of_parse_parallel_bus(const struct device_node *node,
-> +				struct v4l2_of_endpoint *endpoint);
-> +void v4l2_of_parse_endpoint(const struct device_node *node,
-> +			    struct v4l2_of_endpoint *link);
-> +struct device_node *v4l2_of_get_next_endpoint(const struct device_node *parent,
-> +					struct device_node *previous);
-> +struct device_node *v4l2_of_get_remote_port_parent(
-> +					const struct device_node *node);
-> +#else /* CONFIG_OF */
-> +
-> +static inline int v4l2_of_parse_endpoint(const struct device_node *node,
-> +					struct v4l2_of_endpoint *link)
-> +{
-> +	return -ENOSYS;
+> +	pr_err("%s(%llx, %llx)\n", __func__, base, size);
+
+? Is this todo?
+
 > +}
 > +
-> +static inline struct device_node *v4l2_of_get_next_endpoint(
-> +					const struct device_node *parent,
-> +					struct device_node *previous)
+>  /*
+>   * First memory setup routine called from setup_arch()
+>   * 1. setup swapper's mm @init_mm
+> @@ -181,3 +186,11 @@ void __init free_initrd_mem(unsigned long start, unsigned long end)
+>  	free_init_pages("initrd memory", start, end);
+>  }
+>  #endif
+> +
+> +#ifdef CONFIG_OF_FLATTREE
+> +void __init early_init_dt_setup_initrd_arch(unsigned long start,
+> +					    unsigned long end)
 > +{
-> +	return NULL;
+> +	pr_err("%s(%lx, %lx)\n", __func__, start, end);
+
+And this?
+
 > +}
-> +
-> +static inline struct device_node *v4l2_of_get_remote_endpoint(
-> +					const struct device_node *node)
-> +{
-> +	return NULL;
-> +}
-> +
-> +#endif /* CONFIG_OF */
-> +
-> +#endif /* _V4L2_OF_H */
-> --
-> 1.7.9.5
+> +#endif /* CONFIG_OF_FLATTREE */
+> 
