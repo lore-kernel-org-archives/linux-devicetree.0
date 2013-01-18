@@ -1,44 +1,38 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 1/2] ARM: dts: Fix compatible value of pinctrl module on
- EXYNOS5440
-Date: Thu, 17 Jan 2013 19:40:51 -0800
-Message-ID: <009901cdf52d$a0dcf0e0$e296d2a0$@samsung.com>
-References: <1357172423-8217-1-git-send-email-kgene.kim@samsung.com>
- <CACRpkdYCw8pyR2hGkMT_uMCyHUU_fCF4Zn9DhXPyuF+74JLfAg@mail.gmail.com>
- <50F8B257.1090108@gmail.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH v4 0/3] mtd: nand: OMAP: ELM error correction support
+ for BCH ecc
+Date: Fri, 18 Jan 2013 03:54:51 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3EA5F353@DBDE01.ent.ti.com>
+References: <1357286211-5012-1-git-send-email-avinashphilip@ti.com>
+	 <518397C60809E147AF5323E0420B992E3EA5DFA9@DBDE01.ent.ti.com>
+ <1358424375.2731.234.camel@sauron.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <50F8B257.1090108@gmail.com>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Rob Herring' <robherring2@gmail.com>, 'Linus Walleij' <linus.walleij@linaro.org>
-Cc: 'Grant Likely' <grant.likely@secretlab.ca>, 'Stephen Warren' <swarren@wwwdotorg.org>, linux-samsung-soc@vger.kernel.org, 'Thomas Abraham' <thomas.ab@samsung.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1358424375.2731.234.camel@sauron.fi.intel.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "tony@atomide.com" <tony@atomide.com>, "rmk+kernel@arm.linux.org.uk" <rmk+kernel@arm.linux.org.uk>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "zonque@gmail.com" <zonque@gmail.com>, "Mohammed, Afzal" <afzal@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "ivan.djelic@parrot.com" <ivan.dj>
 List-Id: devicetree@vger.kernel.org
 
-Rob Herring wrote:
-
-[...]
-
-> 
-> As long as we're consistently inconsistent... What about 4210 and 4x12?
-> Hopefully, the reason was to avoid breaking them.
-> 
-> This creates horrible incompatibilities between dts and kernel versions
-> by changing both. Any prior kernel will not work with this dts or later.
-> And more importantly this kernel version or newer will not work with
-> existing dtb's. We've been pretty lax on this as DT support has been
-> under heavy development, but things need to start tightening up. That
-> being said, if this isn't yet a concern for this platform, then I don't
-> really care.
-> 
-
-I think, this can be applied for v3.8 and this two fixes should be harmless
-for DT compatibility of Samsung stuff.
-
-If there is no other concerns, let me pick up with Linus Walleij's ack.
-
-Thanks.
-
-- Kukjin
+T24gVGh1LCBKYW4gMTcsIDIwMTMgYXQgMTc6MzY6MTUsIEFydGVtIEJpdHl1dHNraXkgd3JvdGU6
+DQo+IE9uIFdlZCwgMjAxMy0wMS0xNiBhdCAxMjoyMiArMDAwMCwgUGhpbGlwLCBBdmluYXNoIHdy
+b3RlOg0KPiA+ID4gVGhpcyBzZXJpZXMgaXMgYmFzZWQgb24gbGludXggMy44LXJjMiBhbmQgdGVz
+dGVkIHdpdGggWzFdLg0KPiA+ID4gQWxzbyB0aGlzIHBhdGNoIHNlcmllcyBkZXBlbmQgb24gWzFd
+IGZvciBOQU5EIGZsYXNoIGRldmljZQ0KPiA+ID4gdHJlZSBkYXRhIGFuZCBncG1jIG5hbmQgZGV2
+aWNlIHRyZWUgYmluZGluZyBkb2N1bWVudGF0aW9uIHVwZGF0ZXMuDQo+ID4gPiANCj4gPiA+IDEu
+IFtQQVRDSCB2NyAwLzVdIE9NQVAgR1BNQyBEVCBiaW5kaW5ncw0KPiA+ID4gaHR0cDovL3d3dy5z
+cGluaWNzLm5ldC9saXN0cy9saW51eC1vbWFwL21zZzgzNTA1Lmh0bWwNCj4gPiA+IA0KPiA+ID4g
+VGVzdGVkIG9uIGFtMzM1eC1ldm0gZm9yIEJDSCA0IGFuZCA4IGJpdCBlcnJvciBjb3JyZWN0aW9u
+Lg0KPiA+IA0KPiA+IENhbiB5b3UgYXBwbHkgdGhpcyBwYXRjaCBzZXJpZXMgb24gbDItbXRkIHRy
+ZWUgYXMgaXQgd2lsbCBoZWxwIFJCTCBjb21wYXRpYmlsaXR5DQo+ID4gZWNjIGxheW91dCBmb3Ig
+TkFORCBmbGFzaCBpbiBhbTMzNXgtcGxhdGZvcm1zIGFuZCBoYXJkd2FyZSBiYXNlZCBCQ0ggZXJy
+b3INCj4gPiBjb3JyZWN0aW9uLg0KPiANCj4gT0ssIEkndmUgYXBwbGllZCB0aGVtLiBJIGRyb3Bw
+ZWQgdGhlIHBhcnQgdGhhdCB1cGRhdGVzIHRoZQ0KPiBkb2N1bWVudGF0aW9uLiBQbGVhc2UsIGhh
+bmRsZSBpdCBzZXBhcmF0ZWx5IHdoZW4gRGFuaWVsJ3MgcGF0Y2hlcyBhcmUNCj4gaW4uDQo+IA0K
+PiBQdXNoZWQgdG8gbDItbXRkLmdpdCwgdGhhbmtzIQ0KDQpUaGFua3MgZm9yIGFwcGx5aW5nIHRo
+aXMgcGF0Y2ggc2VyaWVzLg0KSSB3aWxsIHVwZGF0ZSBncG1jLW5hbmQgZG9jdW1lbnRhdGlvbiBw
+YXJ0IGluIGEgc2VwYXJhdGUgcGF0Y2guDQoNClRoYW5rcywNCkF2aW5hc2gNCg0KPiANCj4gLS0g
+DQo+IEJlc3QgUmVnYXJkcywNCj4gQXJ0ZW0gQml0eXV0c2tpeQ0KPiANCg0K
