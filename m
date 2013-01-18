@@ -1,160 +1,57 @@
-From: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: AM33XX: Add NAND flash device tree data to
- am335x-evm
-Date: Fri, 18 Jan 2013 12:11:35 +0530
-Message-ID: <1358491295-4022-4-git-send-email-avinashphilip@ti.com>
-References: <1358491295-4022-1-git-send-email-avinashphilip@ti.com>
+From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
+Subject: Re: [PATCH 3/4] Enable ecc-mode selection in the driver
+Date: Fri, 18 Jan 2013 09:27:48 +0200
+Message-ID: <1358494068.21816.2.camel@sauron.fi.intel.com>
+References: <cover.1358242644.git.s.peter@mpl.ch>
+	 <2d08c4c072fd4922a6056362adb96a455307d583.1358242644.git.s.peter@mpl.ch>
+	 <20130115125119.GH13482@lunn.ch> <50F6927D.3070303@mpl.ch>
+Reply-To: artem.bityutskiy@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1358491295-4022-1-git-send-email-avinashphilip-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: b-cousson-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org, Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
+	boundary="=-CrpCoex3dzrHKWZmEWFd"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50F6927D.3070303@mpl.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Peter <s.peter@mpl.ch>
+Cc: Andrew Lunn <andrew@lunn.ch>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, jason@lakedaemon.net, dwmw2@infradead.org, jm@lentin.co.uk, arnd@arndb.de, sebastian.hesselbarth@googlemail.com, iwamatsu@nigauri.org, wfp5p@virginia.edu, gregkh@linuxfoundation.org, broonie@opensource.wolfsonmicro.com, mchehab@redhat.com, nico@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-NAND flash connected in am335x-evm on GPMC controller. This patch adds
-device tree node in am335x-evm with GPMC controller timing for NAND flash
-interface, NAND partition table, ECC scheme, elm handle id, pin-mux
-setup.
 
-Signed-off-by: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am335x-evm.dts |   98 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 97 insertions(+), 1 deletion(-)
+--=-CrpCoex3dzrHKWZmEWFd
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index d649644..1c6b1a8 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -26,7 +26,8 @@
- 
- 	am33xx_pinmux: pinmux@44e10800 {
- 		pinctrl-names = "default";
--		pinctrl-0 = <&matrix_keypad_s0 &volume_keys_s0>;
-+		pinctrl-0 = <&matrix_keypad_s0 &volume_keys_s0
-+			&nandflash_pins_s0>;
- 
- 		matrix_keypad_s0: matrix_keypad_s0 {
- 			pinctrl-single,pins = <
-@@ -44,6 +45,26 @@
- 				0x154 0x27	/* spi0_d0.gpio0_3, INPUT | MODE7 */
- 			>;
- 		};
-+
-+		nandflash_pins_s0: nandflash_pins_s0 {
-+			pinctrl-single,pins = <
-+				0x0 0x30	/* gpmc_ad0.gpmc_ad0, INPUT | PULLUP | MODE0 */
-+				0x4 0x30	/* gpmc_ad1.gpmc_ad1, INPUT | PULLUP | MODE0 */
-+				0x8 0x30	/* gpmc_ad2.gpmc_ad2, INPUT | PULLUP | MODE0 */
-+				0xc 0x30	/* gpmc_ad3.gpmc_ad3, INPUT | PULLUP | MODE0 */
-+				0x10 0x30	/* gpmc_ad4.gpmc_ad4, INPUT | PULLUP | MODE0 */
-+				0x14 0x30	/* gpmc_ad5.gpmc_ad5, INPUT | PULLUP | MODE0 */
-+				0x18 0x30	/* gpmc_ad6.gpmc_ad6, INPUT | PULLUP | MODE0 */
-+				0x1c 0x30	/* gpmc_ad7.gpmc_ad7, INPUT | PULLUP | MODE0 */
-+				0x70 0x30	/* gpmc_wait0.gpmc_wait0, INPUT | PULLUP | MODE0 */
-+				0x74 0x37	/* gpmc_wpn.gpio0_30, INPUT | PULLUP | MODE7 */
-+				0x7c 0x8	/* gpmc_csn0.gpmc_csn0,  PULL DISA */
-+				0x90 0x8	/* gpmc_advn_ale.gpmc_advn_ale, PULL DISA */
-+				0x94 0x8	/* gpmc_oen_ren.gpmc_oen_ren, PULL DISA */
-+				0x98 0x8	/* gpmc_wen.gpmc_wen, PULL DISA */
-+				0x9c 0x8	/* gpmc_be0n_cle.gpmc_be0n_cle, PULL DISA */
-+			>;
-+		};
- 	};
- 
- 	ocp {
-@@ -102,6 +123,81 @@
- 				reg = <0x48>;
- 			};
- 		};
-+
-+		elm: elm@48080000 {
-+			status = "okay";
-+		};
-+
-+		gpmc: gpmc@50000000 {
-+			status = "okay";
-+			ranges = <0 0 0x08000000 0x10000000>;	/* CS0: NAND */
-+
-+			nand@0,0 {
-+				reg = <0 0 0>; /* CS0, offset 0 */
-+				nand-bus-width = <8>;
-+				ti,nand-ecc-opt = "bch8";
-+
-+				gpmc,sync-clk = <0>;
-+				gpmc,cs-on = <0>;
-+				gpmc,cs-rd-off = <44>;
-+				gpmc,cs-wr-off = <44>;
-+				gpmc,adv-on = <6>;
-+				gpmc,adv-rd-off = <34>;
-+				gpmc,adv-wr-off = <44>;
-+				gpmc,we-off = <40>;
-+				gpmc,oe-off = <54>;
-+				gpmc,access = <64>;
-+				gpmc,rd-cycle = <82>;
-+				gpmc,wr-cycle = <82>;
-+				gpmc,wr-access = <40>;
-+				gpmc,wr-data-mux-bus = <0>;
-+
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				elm_id = <&elm>;
-+
-+				/* MTD partition table */
-+				partition@0 {
-+					label = "SPL1";
-+					reg = <0x00000000 0x000020000>;
-+				};
-+
-+				partition@1 {
-+					label = "SPL2";
-+					reg = <0x00020000 0x00020000>;
-+				};
-+
-+				partition@2 {
-+					label = "SPL3";
-+					reg = <0x00040000 0x00020000>;
-+				};
-+
-+				partition@3 {
-+					label = "SPL4";
-+					reg = <0x00060000 0x00020000>;
-+				};
-+
-+				partition@4 {
-+					label = "U-boot";
-+					reg = <0x00080000 0x001e0000>;
-+				};
-+
-+				partition@5 {
-+					label = "environment";
-+					reg = <0x00260000 0x00020000>;
-+				};
-+
-+				partition@6 {
-+					label = "Kernel";
-+					reg = <0x00280000 0x00500000>;
-+				};
-+
-+				partition@7 {
-+					label = "File-System";
-+					reg = <0x00780000 0x0F880000>;
-+				};
-+			};
-+		};
- 	};
- 
- 	vbat: fixedregulator@0 {
--- 
-1.7.9.5
+On Wed, 2013-01-16 at 12:43 +0100, Stefan Peter wrote:
+> Hi Andrew
+
+For some reasons I do not see your patches in the mailing lists which
+are in CC.
+
+--=20
+Best Regards,
+Artem Bityutskiy
+
+--=-CrpCoex3dzrHKWZmEWFd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part
+Content-Transfer-Encoding: 7bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAABAgAGBQJQ+Pl0AAoJECmIfjd9wqK0LWIP/3CDKUIxU/JRAmJzi5wXaK3n
+Of62QwKuNC8u+7iwK9WfKSP2AdliJlGG2mfYWfHudB71awAviuENsk+k0OfbPazf
+HluqmYRj8QfxSyuDpuPyjTcsgabSqRRr4DnnGPbmXidg2i3Bokk9SL1dGfAlEXRK
+NX7VCEmFnhUAQLsI2ukfxD/I8Eoj3jevHmvQidO9fjK8CqBDTwIv3Mv8ENEDfzcy
+LUIrvRKrNtM5b0Fnt1G01vwa/218xtDMEoxx83+F1t9E5XKIgFrwU+eNjXAnCQJd
+4MaSPZDYUmPQh5lj8ie7jj5so/MVZk5acTfJWhz/ZtIqJBSEmaoDWspo3+iqawT9
+2GAZtIlBtqXObD+P1+wZbyW1t3BC5dj7W1OG1CT7jwuzK+k8lO0puHb5gCeLdACk
+YxQ/r6EbWe/EaGPc65uff/ZFwgVYeTo4riH79XPULZCGXNAtzM/f++a6axco8zzt
+tkkRA4EeS16AtHMi4eApjVgMZifjWyNhSR7yAgrfW5oHirqZHj1TtPMPG/xfHfs5
+X0GNphmcPFv2kA2Xlwr7bXO7MuqG5ZiY87CZBbmsUknKBhlilDK3IL2RJFk1GzBR
+ntqR7fxTmvALuHYJDCGo29FfKq+yjFIY253ZWC2ZXuQWmDg103qnOSxKFCpESHGi
+HtZu+8muHyb5z/7VZK5V
+=l9HE
+-----END PGP SIGNATURE-----
+
+--=-CrpCoex3dzrHKWZmEWFd--
