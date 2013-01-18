@@ -1,32 +1,44 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH v4 1/1] ARM i.MX6: change mxs usbphy clock usage
-Date: Fri, 18 Jan 2013 10:55:10 +0800
-Message-ID: <20130118025508.GB31381@S2101-09.ap.freescale.net>
-References: <1358476685-28572-1-git-send-email-peter.chen@freescale.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH 1/2] ARM: dts: Fix compatible value of pinctrl module on
+ EXYNOS5440
+Date: Thu, 17 Jan 2013 19:40:51 -0800
+Message-ID: <009901cdf52d$a0dcf0e0$e296d2a0$@samsung.com>
+References: <1357172423-8217-1-git-send-email-kgene.kim@samsung.com>
+ <CACRpkdYCw8pyR2hGkMT_uMCyHUU_fCF4Zn9DhXPyuF+74JLfAg@mail.gmail.com>
+ <50F8B257.1090108@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1358476685-28572-1-git-send-email-peter.chen@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, kernel@pengutronix.de, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, festevam@gmail.com, marex@denx.de, mkl@pengutronix.de, m.grzeschik@pengutronix.de, maxime.ripard@free-electrons.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <50F8B257.1090108@gmail.com>
+Content-language: en-us
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Rob Herring' <robherring2@gmail.com>, 'Linus Walleij' <linus.walleij@linaro.org>
+Cc: 'Grant Likely' <grant.likely@secretlab.ca>, 'Stephen Warren' <swarren@wwwdotorg.org>, linux-samsung-soc@vger.kernel.org, 'Thomas Abraham' <thomas.ab@samsung.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 18, 2013 at 10:38:05AM +0800, Peter Chen wrote:
-> This mxs usbphy is only needs to be on after system boots
-> up, and software never needs to control it anymore.
-> Meanwhile, usbphy's parent needs to be notified if usb
-> is suspend or not. So we design below mxs usbphy usage:
-> 
-> - usbphy1_gate and usbphy2_gate:
-> Their parents are dummy clock, we only needs to enable
-> it after system boots up.
-> - usbphy1 and usbphy2
-> Usage reserved bit for this clock, in that case, the refcount
-> will be updated, but without hardware changing.
-> 
-> Signed-off-by: Peter Chen <peter.chen@freescale.com>
+Rob Herring wrote:
 
-Applied, thanks.
+[...]
 
+> 
+> As long as we're consistently inconsistent... What about 4210 and 4x12?
+> Hopefully, the reason was to avoid breaking them.
+> 
+> This creates horrible incompatibilities between dts and kernel versions
+> by changing both. Any prior kernel will not work with this dts or later.
+> And more importantly this kernel version or newer will not work with
+> existing dtb's. We've been pretty lax on this as DT support has been
+> under heavy development, but things need to start tightening up. That
+> being said, if this isn't yet a concern for this platform, then I don't
+> really care.
+> 
+
+I think, this can be applied for v3.8 and this two fixes should be harmless
+for DT compatibility of Samsung stuff.
+
+If there is no other concerns, let me pick up with Linus Walleij's ack.
+
+Thanks.
+
+- Kukjin
