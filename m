@@ -1,486 +1,367 @@
-From: kishon <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/4] drivers: usb: phy: add a new driver for usb part
- of control module
-Date: Fri, 18 Jan 2013 17:40:04 +0530
-Message-ID: <50F93B9C.108@ti.com>
-References: <1358502045-27008-1-git-send-email-kishon@ti.com>
- <1358502045-27008-2-git-send-email-kishon@ti.com>
- <20130118115909.GA4672@arwen.pp.htv.fi>
+From: Stefan Roese <sr@denx.de>
+Subject: [PATCH v3] mtd: cfi_cmdset_0002: Support Persistent Protection Bits
+ (PPB) locking
+Date: Fri, 18 Jan 2013 13:10:05 +0100
+Message-ID: <1358511005-23258-1-git-send-email-sr@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130118115909.GA4672-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: linux-mtd-bounces@lists.infradead.org
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: linux-mtd@lists.infradead.org
+Cc: devicetree-discuss@ozlabs.org, Artem Bityutskiy <dedekind1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Currently cfi_cmdset_0002.c does not support PPB locking of sectors. This
+patch adds support for this locking/unlocking mechanism. It is needed on
+some platforms, since newer U-Boot versions do support this PPB locking
+and protect for example their environment sector(s) this way.
 
-On Friday 18 January 2013 05:29 PM, Felipe Balbi wrote:
-> Hi,
->
-> On Fri, Jan 18, 2013 at 03:10:42PM +0530, Kishon Vijay Abraham I wrote:
->> Added a new driver for the usb part of control module. This has an API
->> to power on the USB2 phy and an API to write to the mailbox depending on
->> whether MUSB has to act in host mode or in device mode.
->>
->> Writing to control module registers for doing the above task which was
->> previously done in omap glue and in omap-usb2 phy will be removed.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->> ---
->>   Documentation/devicetree/bindings/usb/omap-usb.txt |   26 ++-
->>   Documentation/devicetree/bindings/usb/usb-phy.txt  |    5 +
->>   drivers/usb/phy/Kconfig                            |    9 +
->>   drivers/usb/phy/Makefile                           |    1 +
->>   drivers/usb/phy/omap-control-usb.c                 |  204 ++++++++++++++++++++
->>   include/linux/usb/omap_control_usb.h               |   72 +++++++
->>   6 files changed, 316 insertions(+), 1 deletion(-)
->>   create mode 100644 drivers/usb/phy/omap-control-usb.c
->>   create mode 100644 include/linux/usb/omap_control_usb.h
->>
->> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
->> index 29a043e..ead6ba9 100644
->> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
->> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
->> @@ -1,4 +1,4 @@
->> -OMAP GLUE
->> +OMAP GLUE AND OTHER OMAP SPECIFIC COMPONENTS
->>
->>   OMAP MUSB GLUE
->>    - compatible : Should be "ti,omap4-musb" or "ti,omap3-musb"
->> @@ -16,6 +16,10 @@ OMAP MUSB GLUE
->>    - power : Should be "50". This signifies the controller can supply upto
->>      100mA when operating in host mode.
->>
->> +Optional properties:
->> + - ctrl_module : phandle of the control module this glue uses to write to
->> +   mailbox
->> +
->>   SOC specific device node entry
->>   usb_otg_hs: usb_otg_hs@4a0ab000 {
->>   	compatible = "ti,omap4-musb";
->> @@ -23,6 +27,7 @@ usb_otg_hs: usb_otg_hs@4a0ab000 {
->>   	multipoint = <1>;
->>   	num_eps = <16>;
->>   	ram_bits = <12>;
->> +	ctrl_module = <&omap_control_usb>;
->>   };
->>
->>   Board specific device node entry
->> @@ -31,3 +36,22 @@ Board specific device node entry
->>   	mode = <3>;
->>   	power = <50>;
->>   };
->> +
->> +OMAP CONTROL USB
->> +
->> +Required properties:
->> + - compatible: Should be "ti,omap-control-usb"
->> + - reg : Address and length of the register set for the device. It contains
->> +   the address of "control_dev_conf" and "otghs_control".
->> + - reg-names: The names of the register addresses corresponding to the registers
->> +   filled in "reg".
->> + - ti,has_mailbox: This is used to specify if the platform has mailbox in
->> +   control module.
->> +
->> +omap_control_usb: omap-control-usb@4a002300 {
->> +	compatible = "ti,omap-control-usb";
->> +	reg = <0x4a002300 0x4>,
->> +	      <0x4a00233c 0x4>;
->> +	reg-names = "control_dev_conf", "otghs_control";
->> +	ti,has_mailbox;
->> +};
->> diff --git a/Documentation/devicetree/bindings/usb/usb-phy.txt b/Documentation/devicetree/bindings/usb/usb-phy.txt
->> index 80d4148..2466b6f 100644
->> --- a/Documentation/devicetree/bindings/usb/usb-phy.txt
->> +++ b/Documentation/devicetree/bindings/usb/usb-phy.txt
->> @@ -8,10 +8,15 @@ Required properties:
->>   add the address of control module dev conf register until a driver for
->>   control module is added
->>
->> +Optional properties:
->> + - ctrl_module : phandle of the control module used by PHY driver to power on
->> +   the PHY.
->> +
->>   This is usually a subnode of ocp2scp to which it is connected.
->>
->>   usb2phy@4a0ad080 {
->>   	compatible = "ti,omap-usb2";
->>   	reg = <0x4a0ad080 0x58>,
->>   	      <0x4a002300 0x4>;
->> +	ctrl_module = <&omap_control_usb>;
->>   };
->> diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
->> index 5de6e7f..a7277ee 100644
->> --- a/drivers/usb/phy/Kconfig
->> +++ b/drivers/usb/phy/Kconfig
->> @@ -14,6 +14,15 @@ config OMAP_USB2
->>   	  The USB OTG controller communicates with the comparator using this
->>   	  driver.
->>
->> +config OMAP_CONTROL_USB
->> +	tristate "OMAP CONTROL USB Driver"
->> +	depends on ARCH_OMAP2PLUS
->> +	help
->> +	  Enable this to add support for the USB part present in the control
->> +	  module. This driver has API to power on the PHY and to write to the
->> +	  mailbox. The mailbox is present only in omap4 and the register to
->> +	  power on the PHY is present in omap4 and omap5.
->> +
->>   config USB_ISP1301
->>   	tristate "NXP ISP1301 USB transceiver support"
->>   	depends on USB || USB_GADGET
->> diff --git a/drivers/usb/phy/Makefile b/drivers/usb/phy/Makefile
->> index 1a579a8..0dea4d2 100644
->> --- a/drivers/usb/phy/Makefile
->> +++ b/drivers/usb/phy/Makefile
->> @@ -5,6 +5,7 @@
->>   ccflags-$(CONFIG_USB_DEBUG) := -DDEBUG
->>
->>   obj-$(CONFIG_OMAP_USB2)			+= omap-usb2.o
->> +obj-$(CONFIG_OMAP_CONTROL_USB)		+= omap-control-usb.o
->>   obj-$(CONFIG_USB_ISP1301)		+= isp1301.o
->>   obj-$(CONFIG_MV_U3D_PHY)		+= mv_u3d_phy.o
->>   obj-$(CONFIG_USB_EHCI_TEGRA)	+= tegra_usb_phy.o
->> diff --git a/drivers/usb/phy/omap-control-usb.c b/drivers/usb/phy/omap-control-usb.c
->> new file mode 100644
->> index 0000000..7edeb41
->> --- /dev/null
->> +++ b/drivers/usb/phy/omap-control-usb.c
->> @@ -0,0 +1,204 @@
->> +/*
->> + * omap-control-usb.c - The USB part of control module.
->> + *
->> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * Author: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/slab.h>
->> +#include <linux/of.h>
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/usb/omap_control_usb.h>
->> +
->> +static struct omap_control_usb *control_usb;
->> +
->> +/**
->> + * get_omap_control_dev - returns the device pointer for this control device
->> + *
->> + * This API should be called to get the device pointer for this control
->> + * module device. This device pointer should be passed to all other API's
->> + * in this driver.
->> + *
->> + * To be used by PHY driver and glue driver
->> + */
->> +struct device *get_omap_control_dev(void)
->
-> let's do a small rename here and call it:
->
-> omap_get_control_dev(), just to keep consistency with rest of the file.
+This PPB locking/unlocking will be enabled for all devices supported by
+cfi_cmdset_0002 reporting 8 in the CFI word 0x49 (Sector Protect/Unprotect
+scheme).
 
-Ok.
->
->> +{
->> +	if (!control_usb)
->> +		return ERR_PTR(-ENODEV);
->> +
->> +	return control_usb->dev;
->> +}
->> +EXPORT_SYMBOL_GPL(get_omap_control_dev);
->> +
->> +/**
->> + * omap_control_usb_phy_power - power on/off the phy using control module reg
->> + * @dev: the control module device
->> + * @on: 0 or 1, based on powering on or off the PHY
->> + */
->> +void omap_control_usb_phy_power(struct device *dev, int on)
->> +{
->> +	u32 val;
->> +	struct omap_control_usb	*control_usb = dev_get_drvdata(dev);
->> +
->> +	if (on) {
->> +		val = readl(control_usb->dev_conf);
->> +		if (val & PHY_PD)
->> +			writel(~PHY_PD, control_usb->dev_conf);
->> +	} else {
->> +		writel(PHY_PD, control_usb->dev_conf);
->> +	}
->
-> this can be better. I would rather have this:
->
-> struct omap_control_usb *ctrl = dev_get_drvdata(dev);
-> u32 val;
->
-> val = readl(ctrl->dev_conf);
->
-> if (on)
-> 	val &= ~OMAP_CTRL_DEV_PHY_PD;
-> else
-> 	val |= OMAP_CTRL_DEV_PHY_PD;
->
-> writel(val, ctrl->dev_conf);
->
->
->
->> +}
->> +EXPORT_SYMBOL_GPL(omap_control_usb_phy_power);
->> +
->> +/**
->> + * omap_control_usb_host_mode - set AVALID, VBUSVALID and ID pin in grounded
->> + * @dev: struct device *
->> + *
->> + * This is an API to write to the mailbox register to notify the usb core that
->> + * a usb device has been connected.
->> + */
->> +void omap_control_usb_host_mode(struct device *dev)
->> +{
->> +	u32 val;
->> +	struct omap_control_usb	*control_usb = dev_get_drvdata(dev);
->> +
->> +	val = AVALID | VBUSVALID;
->> +
->> +	writel(val, control_usb->otghs_control);
->
-> I would like to make this future proof too:
->
-> val = readl(ctrl->otghs_control);
-> val |= OMAP_CTRL_DEV_AVALID | OMAP_CTRL_DEV_VBUSVALID;
-> writel(val, ctrl->otghs_control);
+Please note that PPB locking does support sector-by-sector locking. But
+the whole chip can only be unlocked together. So unlocking one sector
+will automatically unlock all sectors of this device. Because of this
+chip limitation, the PPB unlocking function saves the current locking
+status of all sectors before unlocking the whole device. After unlocking
+the saved locking status is re-configured. This way only the addressed
+sectors will be unlocked.
 
-I think we might then have to add
-val &= ~(IDDIG | SESSEND) right?
+To selectively enable this advanced sector protection mechanism, the
+device-tree property "use-advanced-sector-protection" has been created.
+To enable support for this locking this property needs to be present in the
+flash DT node. E.g.:
 
-Similar things should be done for below API's also so that we don't 
-inadvertently carry forward the settings.
->
->> +void omap_control_usb_device_mode(struct device *dev)
->> +{
->> +	u32 val;
->> +	struct omap_control_usb	*control_usb = dev_get_drvdata(dev);
->> +
->> +	val = IDDIG | AVALID | VBUSVALID;
->
-> ditto. Read it before changing it. (the idea is that in future the other
-> bits might be used for something else, so you risk breaking future
-> functionality).
->
->> +
->> +	writel(val, control_usb->otghs_control);
->> +}
->> +EXPORT_SYMBOL_GPL(omap_control_usb_device_mode);
->> +
->> +/**
->> + * omap_control_usb_set_sessionend - Enable SESSIONEND and IDIG to high
->> + * impedance
->> + * @dev: struct device *
->> + *
->> + * This is an API to write to the mailbox register to notify the usb core
->> + * it's now in disconnected state.
->> + */
->> +void omap_control_usb_set_sessionend(struct device *dev)
->> +{
->> +	u32 val;
->> +	struct omap_control_usb	*control_usb = dev_get_drvdata(dev);
->> +
->> +	val = SESSEND | IDDIG;
->
-> ditto
->
->> +
->> +	writel(val, control_usb->otghs_control);
->> +}
->> +EXPORT_SYMBOL_GPL(omap_control_usb_set_sessionend);
->> +
->> +static int omap_control_usb_probe(struct platform_device *pdev)
->> +{
->> +	struct resource	*res;
->> +	struct device_node *np = pdev->dev.of_node;
->> +	struct omap_control_usb_platform_data *pdata = pdev->dev.platform_data;
->> +
->> +	control_usb = devm_kzalloc(&pdev->dev, sizeof(*control_usb),
->> +	    GFP_KERNEL);
->
-> you're using space indentation here.
->
->> +	if (!control_usb) {
->> +		dev_err(&pdev->dev, "unable to alloc memory for control usb\n");
->> +		return -ENOMEM;
->> +	}
->> +
->> +	if (np) {
->> +		control_usb->has_mailbox = of_property_read_bool(np,
->> +		    "ti,has_mailbox");
->> +	} else if (pdata) {
->> +		control_usb->has_mailbox = pdata->has_mailbox;
->> +	} else {
->> +		dev_err(&pdev->dev, "no pdata present\n");
->> +		return -EINVAL;
->
-> does it make sense to default to has_mailbox as true ? I mean, seems
-> like this is how it's going to be in future devices looking at the
-> current trend.
+nor_flash@0,0 {
+	compatible = "amd,s29gl256n", "cfi-flash";
+	bank-width = <2>;
+	use-advanced-sector-protection;
+	...
 
-No actually. omap5 doesn't have mailbox in control module ;-)
->
-> Another idea is to try to get the extra resource below, if it fails you
-> try to continue without it ;-)
+Tested with Spanion S29GL512S10THI and Micron JS28F512M29EWx flash
+devices.
 
-I prefer the way it is now because mailbox is needed for MUSB to be 
-functional in OMAP4 and we should fail if we don't have it. No?
->
->> +	}
->> +
->> +	control_usb->dev	= &pdev->dev;
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> +	    "control_dev_conf");
->
-> using space indentation here again.
->
->> +	control_usb->dev_conf = devm_request_and_ioremap(&pdev->dev, res);
->> +	if (control_usb->dev_conf == NULL) {
->> +		dev_err(&pdev->dev, "Failed to obtain io memory\n");
->> +		return -EADDRNOTAVAIL;
->> +	}
->> +
->> +	if (control_usb->has_mailbox) {
->> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM,
->> +		    "otghs_control");
->> +		control_usb->otghs_control = devm_request_and_ioremap(
->> +		    &pdev->dev, res);
->> +		if (control_usb->otghs_control == NULL) {
->> +			dev_err(&pdev->dev, "Failed to obtain io memory\n");
->> +			return -EADDRNOTAVAIL;
->> +		}
->> +	}
->> +
->> +	dev_set_drvdata(control_usb->dev, control_usb);
->> +
->> +	return 0;
->> +}
->> +
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id omap_control_usb_id_table[] = {
->> +	{ .compatible = "ti,omap-control-usb" },
->> +	{}
->> +};
->> +MODULE_DEVICE_TABLE(of, omap_control_usb_id_table);
->> +#endif
->> +
->> +static struct platform_driver omap_control_usb_driver = {
->> +	.probe		= omap_control_usb_probe,
->> +	.driver		= {
->> +		.name	= "omap-control-usb",
->> +		.owner	= THIS_MODULE,
->
-> no need to set owner here. When you register the platform_driver, it
-> will be set for you.
+Signed-off-by: Stefan Roese <sr@denx.de>
+Tested-by: Holger Brunck <holger.brunck@keymile.com>
+Cc: Artem Bityutskiy <dedekind1@gmail.com>
+---
+v3:
+- Added #ifdef CONFIG_OF to of_property_read_bool() probing code
+- Rebased upon l2-mtd master branch
 
-Ok.
->
->> +		.of_match_table = of_match_ptr(omap_control_usb_id_table),
->> +	},
->> +};
->> +
->> +static int __init omap_control_usb_init(void)
->> +{
->> +	return platform_driver_register(&omap_control_usb_driver);
->> +}
->> +subsys_initcall(omap_control_usb_init);
->> +
->> +static void __exit omap_control_usb_exit(void)
->> +{
->> +	platform_driver_unregister(&omap_control_usb_driver);
->> +}
->> +module_exit(omap_control_usb_exit);
->> +
->> +MODULE_ALIAS("platform: omap_control_usb");
->> +MODULE_AUTHOR("Texas Instruments Inc.");
->> +MODULE_DESCRIPTION("OMAP CONTROL USB DRIVER");
->
-> don't scream to your users like that ;-)
->
-> MODULE_DESCRIPTION("OMAP Control Module USB Driver");
+v2:
+- Use msecs_to_jiffies
+- Use UDELAY macro
 
-Ok.
->
->> +MODULE_LICENSE("GPL v2");
->> diff --git a/include/linux/usb/omap_control_usb.h b/include/linux/usb/omap_control_usb.h
->> new file mode 100644
->> index 0000000..a16f993
->> --- /dev/null
->> +++ b/include/linux/usb/omap_control_usb.h
->> @@ -0,0 +1,72 @@
->> +/*
->> + * omap_control_usb.h - Header file for the USB part of control module.
->> + *
->> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License as published by
->> + * the Free Software Foundation; either version 2 of the License, or
->> + * (at your option) any later version.
->> + *
->> + * Author: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + *
->> + */
->> +
->> +#ifndef __OMAP_CONTROL_USB_H__
->> +#define __OMAP_CONTROL_USB_H__
->> +
->> +struct omap_control_usb {
->> +	struct device *dev;
->> +
->> +	u32 __iomem *dev_conf;
->> +	u32 __iomem *otghs_control;
->> +
->> +	u8 has_mailbox:1;
->> +};
->> +
->> +struct omap_control_usb_platform_data {
->> +	u8 has_mailbox:1;
->> +};
->> +
->> +#define	PHY_PD		BIT(0)
->> +
->> +#define	AVALID		BIT(0)
->> +#define	BVALID		BIT(1)
->> +#define	VBUSVALID	BIT(2)
->> +#define	SESSEND		BIT(3)
->> +#define	IDDIG		BIT(4)
->
-> please prepend with OMAP_CTRL_ or something similar.
+ .../devicetree/bindings/mtd/mtd-physmap.txt        |   3 +
+ drivers/mtd/chips/cfi_cmdset_0002.c                | 212 +++++++++++++++++++++
+ drivers/mtd/maps/physmap_of.c                      |   1 +
+ include/linux/mtd/map.h                            |   1 +
+ 4 files changed, 217 insertions(+)
 
-Sure.
+diff --git a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+index dab7847..61c5ec8 100644
+--- a/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
++++ b/Documentation/devicetree/bindings/mtd/mtd-physmap.txt
+@@ -26,6 +26,9 @@ file systems on embedded devices.
+  - linux,mtd-name: allow to specify the mtd name for retro capability with
+    physmap-flash drivers as boot loader pass the mtd partition via the old
+    device name physmap-flash.
++ - use-advanced-sector-protection: boolean to enable support for the
++   advanced sector protection (Spansion: PPB - Persistent Protection
++   Bits) locking.
+ 
+ For JEDEC compatible devices, the following additional properties
+ are defined:
+diff --git a/drivers/mtd/chips/cfi_cmdset_0002.c b/drivers/mtd/chips/cfi_cmdset_0002.c
+index b861972..5d5ed93 100644
+--- a/drivers/mtd/chips/cfi_cmdset_0002.c
++++ b/drivers/mtd/chips/cfi_cmdset_0002.c
+@@ -33,6 +33,7 @@
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/reboot.h>
++#include <linux/of_platform.h>
+ #include <linux/mtd/map.h>
+ #include <linux/mtd/mtd.h>
+ #include <linux/mtd/cfi.h>
+@@ -74,6 +75,10 @@ static void put_chip(struct map_info *map, struct flchip *chip, unsigned long ad
+ static int cfi_atmel_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len);
+ static int cfi_atmel_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len);
+ 
++static int cfi_ppb_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len);
++static int cfi_ppb_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len);
++static int cfi_ppb_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len);
++
+ static struct mtd_chip_driver cfi_amdstd_chipdrv = {
+ 	.probe		= NULL, /* Not usable directly */
+ 	.destroy	= cfi_amdstd_destroy,
+@@ -496,6 +501,7 @@ static void cfi_fixup_m29ew_delay_after_resume(struct cfi_private *cfi)
+ struct mtd_info *cfi_cmdset_0002(struct map_info *map, int primary)
+ {
+ 	struct cfi_private *cfi = map->fldrv_priv;
++	struct device_node *np = map->device_node;
+ 	struct mtd_info *mtd;
+ 	int i;
+ 
+@@ -570,6 +576,17 @@ struct mtd_info *cfi_cmdset_0002(struct map_info *map, int primary)
+ 			cfi_tell_features(extp);
+ #endif
+ 
++#ifdef CONFIG_OF
++			if (np && of_property_read_bool(
++				    np, "use-advanced-sector-protection")
++			    && extp->BlkProtUnprot == 8) {
++				printk(KERN_INFO "  Advanced Sector Protection (PPB Locking) supported\n");
++				mtd->_lock = cfi_ppb_lock;
++				mtd->_unlock = cfi_ppb_unlock;
++				mtd->_is_locked = cfi_ppb_is_locked;
++			}
++#endif
++
+ 			bootloc = extp->TopBottom;
+ 			if ((bootloc < 2) || (bootloc > 5)) {
+ 				printk(KERN_WARNING "%s: CFI contains unrecognised boot "
+@@ -2172,6 +2189,201 @@ static int cfi_atmel_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+ 	return cfi_varsize_frob(mtd, do_atmel_unlock, ofs, len, NULL);
+ }
+ 
++/*
++ * Advanced Sector Protection - PPB (Persistent Protection Bit) locking
++ */
++
++struct ppb_lock {
++	struct flchip *chip;
++	loff_t offset;
++	int locked;
++};
++
++#define MAX_SECTORS			512
++
++#define DO_XXLOCK_ONEBLOCK_LOCK		((void *)1)
++#define DO_XXLOCK_ONEBLOCK_UNLOCK	((void *)2)
++#define DO_XXLOCK_ONEBLOCK_GETLOCK	((void *)3)
++
++static int do_ppb_xxlock(struct map_info *map, struct flchip *chip,
++			 unsigned long adr, int len, void *thunk)
++{
++	struct cfi_private *cfi = map->fldrv_priv;
++	unsigned long timeo;
++	int ret;
++
++	mutex_lock(&chip->mutex);
++	ret = get_chip(map, chip, adr + chip->start, FL_LOCKING);
++	if (ret) {
++		mutex_unlock(&chip->mutex);
++		return ret;
++	}
++
++	pr_debug("MTD %s(): XXLOCK 0x%08lx len %d\n", __func__, adr, len);
++
++	cfi_send_gen_cmd(0xAA, cfi->addr_unlock1, chip->start, map, cfi,
++			 cfi->device_type, NULL);
++	cfi_send_gen_cmd(0x55, cfi->addr_unlock2, chip->start, map, cfi,
++			 cfi->device_type, NULL);
++	/* PPB entry command */
++	cfi_send_gen_cmd(0xC0, cfi->addr_unlock1, chip->start, map, cfi,
++			 cfi->device_type, NULL);
++
++	if (thunk == DO_XXLOCK_ONEBLOCK_LOCK) {
++		chip->state = FL_LOCKING;
++		map_write(map, CMD(0xA0), chip->start + adr);
++		map_write(map, CMD(0x00), chip->start + adr);
++	} else if (thunk == DO_XXLOCK_ONEBLOCK_UNLOCK) {
++		/*
++		 * Unlocking of one specific sector is not supported, so we
++		 * have to unlock all sectors of this device instead
++		 */
++		chip->state = FL_UNLOCKING;
++		map_write(map, CMD(0x80), chip->start);
++		map_write(map, CMD(0x30), chip->start);
++	} else if (thunk == DO_XXLOCK_ONEBLOCK_GETLOCK) {
++		chip->state = FL_JEDEC_QUERY;
++		/* Return locked status: 0->locked, 1->unlocked */
++		ret = !cfi_read_query(map, adr);
++	} else
++		BUG();
++
++	/*
++	 * Wait for some time as unlocking of all sectors takes quite long
++	 */
++	timeo = jiffies + msecs_to_jiffies(2000);	/* 2s max (un)locking */
++	for (;;) {
++		if (chip_ready(map, adr))
++			break;
++
++		if (time_after(jiffies, timeo)) {
++			printk(KERN_ERR "Waiting for chip to be ready timed out.\n");
++			ret = -EIO;
++			break;
++		}
++
++		UDELAY(map, chip, adr, 1);
++	}
++
++	/* Exit BC commands */
++	map_write(map, CMD(0x90), chip->start);
++	map_write(map, CMD(0x00), chip->start);
++
++	chip->state = FL_READY;
++	put_chip(map, chip, adr + chip->start);
++	mutex_unlock(&chip->mutex);
++
++	return ret;
++}
++
++static int cfi_ppb_lock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
++{
++	return cfi_varsize_frob(mtd, do_ppb_xxlock, ofs, len,
++				DO_XXLOCK_ONEBLOCK_LOCK);
++}
++
++static int cfi_ppb_unlock(struct mtd_info *mtd, loff_t ofs, uint64_t len)
++{
++	struct mtd_erase_region_info *regions = mtd->eraseregions;
++	struct map_info *map = mtd->priv;
++	struct cfi_private *cfi = map->fldrv_priv;
++	struct ppb_lock *sect;
++	unsigned long adr;
++	loff_t offset;
++	uint64_t length;
++	int chipnum;
++	int i;
++	int sectors;
++	int ret;
++
++	/*
++	 * PPB unlocking always unlocks all sectors of the flash chip.
++	 * We need to re-lock all previously locked sectors. So lets
++	 * first check the locking status of all sectors and save
++	 * it for future use.
++	 */
++	sect = kzalloc(MAX_SECTORS * sizeof(struct ppb_lock), GFP_KERNEL);
++	if (!sect)
++		return -ENOMEM;
++
++	/*
++	 * This code to walk all sectors is a slightly modified version
++	 * of the cfi_varsize_frob() code.
++	 */
++	i = 0;
++	chipnum = 0;
++	adr = 0;
++	sectors = 0;
++	offset = 0;
++	length = mtd->size;
++
++	while (length) {
++		int size = regions[i].erasesize;
++
++		/*
++		 * Only test sectors that shall not be unlocked. The other
++		 * sectors shall be unlocked, so lets keep their locking
++		 * status at "unlocked" (locked=0) for the final re-locking.
++		 */
++		if ((adr < ofs) || (adr >= (ofs + len))) {
++			sect[sectors].chip = &cfi->chips[chipnum];
++			sect[sectors].offset = offset;
++			sect[sectors].locked = do_ppb_xxlock(
++				map, &cfi->chips[chipnum], adr, 0,
++				DO_XXLOCK_ONEBLOCK_GETLOCK);
++		}
++
++		adr += size;
++		offset += size;
++		length -= size;
++
++		if (offset == regions[i].offset + size * regions[i].numblocks)
++			i++;
++
++		if (adr >> cfi->chipshift) {
++			adr = 0;
++			chipnum++;
++
++			if (chipnum >= cfi->numchips)
++				break;
++		}
++
++		sectors++;
++		if (sectors >= MAX_SECTORS) {
++			printk(KERN_ERR "Only %d sectors for PPB locking supported!\n",
++			       MAX_SECTORS);
++			kfree(sect);
++			return -EINVAL;
++		}
++	}
++
++	/* Now unlock the whole chip */
++	ret = cfi_varsize_frob(mtd, do_ppb_xxlock, ofs, len,
++			       DO_XXLOCK_ONEBLOCK_UNLOCK);
++	if (ret) {
++		kfree(sect);
++		return ret;
++	}
++
++	/*
++	 * PPB unlocking always unlocks all sectors of the flash chip.
++	 * We need to re-lock all previously locked sectors.
++	 */
++	for (i = 0; i < sectors; i++) {
++		if (sect[i].locked)
++			do_ppb_xxlock(map, sect[i].chip, sect[i].offset, 0,
++				      DO_XXLOCK_ONEBLOCK_LOCK);
++	}
++
++	kfree(sect);
++	return ret;
++}
++
++static int cfi_ppb_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
++{
++	return cfi_varsize_frob(mtd, do_ppb_xxlock, ofs, len,
++				DO_XXLOCK_ONEBLOCK_GETLOCK) ? 1 : 0;
++}
+ 
+ static void cfi_amdstd_sync (struct mtd_info *mtd)
+ {
+diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
+index 67cc73c..263d9e1 100644
+--- a/drivers/mtd/maps/physmap_of.c
++++ b/drivers/mtd/maps/physmap_of.c
+@@ -241,6 +241,7 @@ static int of_flash_probe(struct platform_device *dev)
+ 		info->list[i].map.phys = res.start;
+ 		info->list[i].map.size = res_size;
+ 		info->list[i].map.bankwidth = be32_to_cpup(width);
++		info->list[i].map.device_node = dp;
+ 
+ 		err = -ENOMEM;
+ 		info->list[i].map.virt = ioremap(info->list[i].map.phys,
+diff --git a/include/linux/mtd/map.h b/include/linux/mtd/map.h
+index f6eb433..8b9bfd7 100644
+--- a/include/linux/mtd/map.h
++++ b/include/linux/mtd/map.h
+@@ -245,6 +245,7 @@ struct map_info {
+ 	unsigned long pfow_base;
+ 	unsigned long map_priv_1;
+ 	unsigned long map_priv_2;
++	struct device_node *device_node;
+ 	void *fldrv_priv;
+ 	struct mtd_chip_driver *fldrv;
+ };
+-- 
+1.8.1.1
 
-Thanks
-Kishon
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
