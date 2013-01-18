@@ -1,49 +1,152 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 0/3] ARM: dts: omap: add dt data for MUSB
-Date: Fri, 18 Jan 2013 15:21:13 +0530
-Message-ID: <1358502676-27193-1-git-send-email-kishon@ti.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Fri, 18 Jan 2013 09:56:20 +0000
+Message-ID: <20130118095620.GA7552@arm.com>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+ <1357764194-12677-11-git-send-email-thierry.reding@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1357764194-12677-11-git-send-email-thierry.reding@avionic-design.de>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Bjorn Helgaas <bhelgaas@google.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds dt data to get MUSB working in omap4 and omap3.
-Long time back a patch series with the same title was sent but only
-a part of it got merged. The rest of it wasn't merged because of
-adding omap control usb data to glue and usb phy.
+On Wed, Jan 09, 2013 at 08:43:10PM +0000, Thierry Reding wrote:
+> Move the PCIe driver from arch/arm/mach-tegra into the drivers/pci/host
+> directory. The motivation is to collect various host controller drivers
+> in the same location in order to facilitate refactoring.
+> 
+> The Tegra PCIe driver has been largely rewritten, both in order to turn
+> it into a proper platform driver and to add MSI (based on code by
+> Krishna Kishore <kthota@nvidia.com>) as well as device tree support.
+> 
+> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 
-Now there exists a separate driver for control usb and hence added a
-separate dt node for control usb.
+[snip]
 
-This series was developed on
-git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git xceiv
-+ "usb: musb: add driver for control module" patch series
+> +static int tegra_pcie_enable(struct tegra_pcie *pcie)
+> +{
+> +       struct hw_pci hw;
+> +
+> +       memset(&hw, 0, sizeof(hw));
+> +
+> +       hw.nr_controllers = 1;
+> +       hw.private_data = (void **)&pcie;
+> +       hw.setup = tegra_pcie_setup;
+> +       hw.scan = tegra_pcie_scan_bus;
+> +       hw.map_irq = tegra_pcie_map_irq;
+> +
+> +       pci_common_init(&hw);
+> +
+> +       return 0;
+> +}
 
-Did basic enumeration testing in omap4 panda, omap4 sdp and omap3 beagle.
+[snip]
 
-Kishon Vijay Abraham I (3):
-  ARM: dts: omap: Add omap control usb data
-  ARM: dts: omap: Add omap-usb2 dt data
-  ARM: dts: omap: Add usb_otg and glue data
+> +static int tegra_pcie_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *port;
+> +       struct tegra_pcie *pcie;
+> +       int err;
+> +
+> +       pcie = devm_kzalloc(&pdev->dev, sizeof(*pcie), GFP_KERNEL);
+> +       if (!pcie)
+> +               return -ENOMEM;
+> +
+> +       INIT_LIST_HEAD(&pcie->ports);
+> +       pcie->dev = &pdev->dev;
+> +
+> +       err = tegra_pcie_parse_dt(pcie);
+> +       if (err < 0)
+> +               return err;
+> +
+> +       pcibios_min_mem = 0;
+> +
+> +       err = tegra_pcie_get_resources(pcie);
+> +       if (err < 0) {
+> +               dev_err(&pdev->dev, "failed to request resources: %d\n", err);
+> +               return err;
+> +       }
+> +
+> +       err = tegra_pcie_enable_controller(pcie);
+> +       if (err)
+> +               goto put_resources;
+> +
+> +       /* probe root ports */
+> +       for_each_child_of_node(pdev->dev.of_node, port) {
+> +               if (!of_device_is_available(port))
+> +                       continue;
+> +
+> +               err = tegra_pcie_add_port(pcie, port);
+> +               if (err < 0) {
+> +                       dev_err(&pdev->dev, "failed to add port %s: %d\n",
+> +                               port->name, err);
+> +               }
+> +       }
+> +
+> +       /* setup the AFI address translations */
+> +       tegra_pcie_setup_translations(pcie);
+> +
+> +       if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> +               err = tegra_pcie_enable_msi(pcie);
+> +               if (err < 0) {
+> +                       dev_err(&pdev->dev,
+> +                               "failed to enable MSI support: %d\n",
+> +                               err);
+> +                       goto put_resources;
+> +               }
+> +       }
+> +
+> +       err = tegra_pcie_enable(pcie);
+> +       if (err < 0) {
+> +               dev_err(&pdev->dev, "failed to enable PCIe ports: %d\n", err);
+> +               goto disable_msi;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, pcie);
+> +       return 0;
+> +
+> +disable_msi:
+> +       if (IS_ENABLED(CONFIG_PCI_MSI))
+> +               tegra_pcie_disable_msi(pcie);
+> +put_resources:
+> +       tegra_pcie_put_resources(pcie);
+> +       return err;
+> +}
+> +
 
- Documentation/devicetree/bindings/usb/omap-usb.txt |    2 ++
- arch/arm/boot/dts/omap3-beagle-xm.dts              |    6 +++++
- arch/arm/boot/dts/omap3-evm.dts                    |    6 +++++
- arch/arm/boot/dts/omap3-overo.dtsi                 |    6 +++++
- arch/arm/boot/dts/omap3.dtsi                       |   12 ++++++++++
- arch/arm/boot/dts/omap4-panda.dts                  |    6 +++++
- arch/arm/boot/dts/omap4-sdp.dts                    |    6 +++++
- arch/arm/boot/dts/omap4.dtsi                       |   25 ++++++++++++++++++++
- arch/arm/boot/dts/twl4030.dtsi                     |    2 +-
- 9 files changed, 70 insertions(+), 1 deletion(-)
+[snip]
 
--- 
-1.7.9.5
+> +
+> +static const struct of_device_id tegra_pcie_of_match[] = {
+> +       { .compatible = "nvidia,tegra20-pcie", },
+> +       { },
+> +};
+> +
+> +static struct platform_driver tegra_pcie_driver = {
+> +       .driver = {
+> +               .name = "tegra-pcie",
+> +               .owner = THIS_MODULE,
+> +               .of_match_table = tegra_pcie_of_match,
+> +       },
+> +       .probe = tegra_pcie_probe,
+> +       .remove = tegra_pcie_remove,
+> +};
+> +module_platform_driver(tegra_pcie_driver);
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+If you have multiple 'nvidia,tegra20-pcie's in your DT then you will end up
+with multiple calls to tegra_pcie_probe/tegra_pcie_enable/pci_common_init.
+
+However pci_common_init/pcibios_init_hw assumes it will only ever be called
+once, and will thus result in trying to create multiple busses with the same
+bus number. (The first root bus it creates is always zero provided you haven't
+implemented hw->scan).
+
+I have a patch for this if you want to fold it into your series? (I see you've
+made changes to bios32 for per-controller data).
+
+Andrew Murray
