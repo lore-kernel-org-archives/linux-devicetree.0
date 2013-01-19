@@ -1,88 +1,100 @@
-From: Ezequiel Garcia <elezegarcia@gmail.com>
-Subject: Re: [PATCH v8 5/5] ARM: OMAP: gpmc: add DT bindings for GPMC timings
- and NAND
-Date: Fri, 18 Jan 2013 19:12:00 -0300
-Message-ID: <CALF0-+V81LXXMGGum45=SvZUN55iNYf3THGcdGFhn85BgEe0Vw@mail.gmail.com>
-References: <1355481404-27695-1-git-send-email-zonque@gmail.com>
-	<1355481404-27695-6-git-send-email-zonque@gmail.com>
-	<CALF0-+UbqFF17X1Ok1s1AGKg6SBmvMc1mvjVuZb=Ej7xo+qcmA@mail.gmail.com>
-	<20130114180602.GV14149@atomide.com>
-	<CACTFLAMT2-6VRkNSO3OF6X=afTYKRz=JcDkYqqyZ4VNT5xBVkw@mail.gmail.com>
-	<20130115180324.GZ14149@atomide.com>
-	<CALF0-+WnkH-xH0_SfXU89a7bt+HaAH73a03zBbM=i5ugTEE3ww@mail.gmail.com>
-	<20130118211121.GU14149@atomide.com>
+From: Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH 5/6] arm: mvebu: Enable USB controllers on Armada XP
+ OpenBlocks AX3-4 board
+Date: Sat, 19 Jan 2013 09:07:51 +0900
+Message-ID: <CABMQnVLtXfs+bUsSm0xN6KRO8hCeaqy6xKbRaHS-qX0OdiZfbQ@mail.gmail.com>
+References: <1358243670-11935-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1358243670-11935-5-git-send-email-ezequiel.garcia@free-electrons.com>
+ <CABMQnVLD+VKj53dfQC24AwCboed3EGt+gqTKt-B9q8nhEx3Ytg@mail.gmail.com>
+ <CALF0-+XKGk+ru3VZ6815KTu_Aj_daYafr+Y5WJ9dXUoFqbTHOQ@mail.gmail.com> <20130116203713.7b396070@skate>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130118211121.GU14149@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Daniel Mack <zonque@gmail.com>, Paul Walmsley <paul@pwsan.com>, x0148406@ti.com, Enric Balletbo Serra <eballetbo@gmail.com>, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, avinashphilip@ti.com, jon-hunter@ti.com, rob.herring@calxeda.com, Javier Martinez Canillas <martinez.javier@gmail.com>, linux-arm-kernel@lists.infradead.org, jacmet@sunsite.dk, grant.likely@secretlab.ca, linux-omap@vger.kernel.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130116203713.7b396070@skate>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 18, 2013 at 6:11 PM, Tony Lindgren <tony@atomide.com> wrote:
-> * Ezequiel Garcia <elezegarcia@gmail.com> [130118 11:43]:
->> Tony,
->>
->> On Tue, Jan 15, 2013 at 3:03 PM, Tony Lindgren <tony@atomide.com> wrote:
->> > * Daniel Mack <zonque@gmail.com> [130114 15:30]:
->> >> On Jan 15, 2013 2:06 AM, "Tony Lindgren" <tony@atomide.com> wrote:
->> >> >
->> >> > * Ezequiel Garcia <elezegarcia@gmail.com> [121223 13:49]:
->> >> > > On Fri, Dec 14, 2012 at 7:36 AM, Daniel Mack <zonque@gmail.com> wrote:
->> >> > > > +
->> >> > > > +Example for an AM33xx board:
->> >> > > > +
->> >> > > > +       gpmc: gpmc@50000000 {
->> >> > > > +               compatible = "ti,am3352-gpmc";
->> >> > > > +               ti,hwmods = "gpmc";
->> >> > > > +               reg = <0x50000000 0x1000000>;
->> >> > > > +               interrupts = <100>;
->> >> > > > +               gpmc,num-cs = <8>;
->> >> > > > +               gpmc,num-waitpins = <2>;
->> >> > > > +               #address-cells = <2>;
->> >> > > > +               #size-cells = <1>;
->> >> > > > +               ranges = <0 0 0x08000000 0x2000>;       /* CS0: NAND
->> >> */
->> >> > > > +
->> >> > > > +               nand@0,0 {
->> >> > > > +                       reg = <0 0 0>; /* CS0, offset 0 */
->> >> > >
->> >> > > I'm a bit confused by this: what are the other two values in "reg"?
->> >> > > I see you've only added a binding for CS.
->> >> > >
->> >> > > I've extended a bit on your work and added a binding to enable OneNAND
->> >> > > device on my IGEP board.
->> >> > >
->> >> > > I might send some patches in case anyone wants to give it a try.
->> >> >
->> >> > Daniel, should this be updated to just pass the CS?
->> >>
->> >> No, as Rob pointed out earlier in a thread about this topic, the 'ranges'
->> >> feature will help doing the math for the offset calculation eventually, so
->> >> we need to pass all three values.
->> >
->> > OK thanks. Applying this set into omap-for-v3.9/gpmc.
->> >
->> > Also sounds like Ezequiel needs to update his follow up patches accordingly.
->> >
->>
->> The patches for OneNAND that were posted on the ML apply cleanly
->> on top omap-for-v3.9/gpmc.
->>
->> What do you want me to update?
+Hi,
+
+Thomas, Thank you for the detailed explanation.
+
+Ezequiel, I checked your patch on OpenBlocks AX3, work fine.
+
+But I have a question. your patch "arm: mvebu: Add support for USB
+host controllers in Armada 370/XP"
+was set USB controller of 0xd0050000 to IRQ 45. I think this is 47,
+and 0xd0052000 is 45.
+Because manual has been written irq 45 is USB2.
+I'm sorry if if my lack of understanding or typo in the manual.
+
+Best regards,
+  Nobuhiro
+
+On Thu, Jan 17, 2013 at 4:37 AM, Thomas Petazzoni
+<thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Dear Ezequiel Garcia,
 >
-> Oh I though you need to update the binding for the reg for your patches
-> based on the comments above?
+> On Wed, 16 Jan 2013 16:16:59 -0300, Ezequiel Garcia wrote:
 >
+>> >> +               usb@d0050000 {
+>> >> +                       status = "okay";
+>> >> +               };
+>> >> +               usb@d0051000 {
+>> >> +                       status = "okay";
+>> >> +               };
+>> >> +               usb@d0052000 {
+>> >> +                       status = "okay";
+>> >> +               };
+>> > USB2 of openblocks-ax3-4 is used as Mini-PCIE.
+>> > I think this is unnecessary.
+>>
+>> Mmm... could you explain this with some more detail.
+>> Unfortunately, I don't have access to an Openblocks board to check on
+>> this, so I'd appreciate any clarification.
+>>
+>> Is there any Openblocks datasheet or hardware schematics publicly
+>> available for me to look at?
+>
+> As far as I know, there is no public document. I've been given access
+> to a PDF, in Japanese, that gives some details about the hardware.
+>
+> From what I can read, only 2 USB ports are used from the internal
+> Marvell EHCI controller.
+>
+> Another USB port is available, but it is connected to a USB controller
+> that sits on the PCIe bus. And the PCIe interface on which this USB
+> controller is connected is not enabled in the default U-Boot shipped
+> with AX3-4 (at least not with the generation I have). I've been given
+> an U-Boot version that is supposed to enable this PCIe interface, but I
+> haven't tested yet.
+>
+> Anyway, from a Marvell EHCI controller perspective, only two ports are
+> used, as Nobuhiro said. I am not sure which ports, but it seems like
+> the first two ones were used. One of the two physical ports is a
+> combined USB / eSATA port, but I don't think this makes any difference
+> at the software level.
+>
+> I don't have the OpenBlocks AX3-4 with me right now, but I could
+> probably make a test on Friday.
+>
+> Best regards,
+>
+> Thomas
+> --
+> Thomas Petazzoni, Free Electrons
+> Kernel, drivers, real-time and embedded Linux
+> development, consulting, training and support.
+> http://free-electrons.com
 
-Mmm... I believe there isn't anything to update (feel free to correct me).
-Actually, if you take a look at my patches you'll see they're almost
-identical to Daniel's NAND patches, adapted for OneNAND.
 
-I'll re-send them, to fix a tiny typo in the added Documentation.
-
-Thanks,
 
 -- 
-    Ezequiel
+Nobuhiro Iwamatsu
+   iwamatsu at {nigauri.org / debian.org}
+   GPG ID: 40AD1FA6
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
