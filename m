@@ -1,57 +1,74 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: PMU node location
-Date: Sat, 19 Jan 2013 10:35:50 -0600
-Message-ID: <50FACB66.30805@gmail.com>
-References: <50EEC672.5050405@monstr.eu> <50F18742.5070501@gmail.com>
- <50F225AC.6030407@wwwdotorg.org>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v3 4/8] MFD: ti_am335x_tscadc: add device tree binding
+ information
+Date: Sat, 19 Jan 2013 23:28:14 +0100
+Message-ID: <50FB1DFE.6090805@metafoo.de>
+References: <cover.1358502134.git.rachna@ti.com> <daf18b4779ac3c6b69b1e7e2d1a4abd18b13fee5.1358502134.git.rachna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50F225AC.6030407-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Peter Crosthwaite <peter.crosthwaite-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Soren Brinkmann <sorenb-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <daf18b4779ac3c6b69b1e7e2d1a4abd18b13fee5.1358502134.git.rachna-l0cyMroinI0@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Patil, Rachna" <rachna-l0cyMroinI0@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Benit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/12/2013 09:10 PM, Stephen Warren wrote:
-> On 01/12/2013 08:54 AM, Rob Herring wrote:
->> On 01/10/2013 07:47 AM, Michal Simek wrote:
->>> Hi Rob, Mark, Grant and others,
->>>
->>> I want to check with you the location of ARM pmu node
->>> I see that
->>> 1) highbank and dbx5x0 have it in soc node
->>>
->>> 2) vexpress and tegra have no main bus and pmu is in root like all
->>> others devices.
->>> (Any reason no to have main bus? Does it mean that there is no bus or
->>> that all
->>> devices are accessible?)
->>
->> That seems really wrong in general. Any memory mapped device is on a bus
->> of some kind. I'm not sure the reasoning. Perhaps Stephen can explain.
+Hi,
+
+On 01/18/2013 11:48 AM, Patil, Rachna wrote:
+> From: "Patil, Rachna" <rachna-l0cyMroinI0@public.gmane.org>
 > 
-> I saw no need to have add a bus node (there wasn't one before I started
-> touching DT on Tegra); the top-level of the DT represents the CPU's
-> entire view of the address space and has #address-cells/#size-cells, so
-> devices get probed there just fine, whether they're addressed MMIO
-> devices or not.
+> Signed-off-by: Patil, Rachna <rachna-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mfd/ti_am335x_tscadc.txt   |   35 ++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ti_am335x_tscadc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/ti_am335x_tscadc.txt b/Documentation/devicetree/bindings/mfd/ti_am335x_tscadc.txt
+> new file mode 100644
+> index 0000000..c13c492
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/ti_am335x_tscadc.txt
+> @@ -0,0 +1,35 @@
+> +Texas Instruments - TSC / ADC multi-functional device
+> +
+> +ti_tscadc is a multi-function device with touchscreen and ADC on chip.
+> +This document describes the binding for mfd device.
+> +
+> +Required properties:
+> +- compatible: "ti,ti-tscadc"
+> +- reg: Specifies the address of MFD block
+> +- interrupts: IRQ line connected to the main SoC
+> +- interrupt-parent: The parent interrupt controller
 
-The top level doesn't really represent a bus. It is basically all the
-things that have no hierarchical relationship (cpu, memory, chosen,
-peripheral buses). The reason to have a bus node is to define "simple-bus"
+The subnodes and their properties also need documentation.
 
-While I would do it differently, I don't recommend changing it at this
-point. Although, this could be changed without compatibility issues.
+> +
+> +Optional properties:
+> +- ti,hwmods: Hardware information related to TSC/ADC MFD device
+> +
+> +Example:
+> +
+> +	tscadc: tscadc@44e0d000 {
+> +		compatible = "ti,ti-tscadc";
+> +		reg = <0x44e0d000 0x1000>;
+> +
+> +		interrupt-parent = <&intc>;
+> +		interrupts = <16>;
+> +		ti,hwmods = "adc_tsc";
+> +
+> +		tsc {
+> +			wires = <4>;
+> +			x-plate-resistance = <200>;
+> +			steps-to-configure = <5>;
+> +			wire-config = <0x00 0x11 0x22 0x33>;
 
-Rob
+Non-standard properties should have a vendor prefix.
+
+> +		};
+> +
+> +		adc {
+> +			adc-channels = <4>;
+> +		};
+> +	};
