@@ -1,64 +1,35 @@
-From: Alex Courbot <acourbot@nvidia.com>
-Subject: Re: [PATCH 0/4] gpio: introduce descriptor-based interface
-Date: Sun, 20 Jan 2013 15:07:02 +0900
-Message-ID: <50FB8986.9010205@nvidia.com>
-References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com> <CACRpkda6dqAj+DzrMCnKET7Z9PtuW0+k9ea3YDL8Z1D=oFVRpQ@mail.gmail.com> <50F7E83E.8000105@uclinux.org> <201301170850.43655.sfking@fdwdc.com>
+From: David Linares <daluis-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
+Subject: ARM: Voipac i.MX25: Support with device tree on v3.8-rc1 or later
+Date: Sun, 20 Jan 2013 12:51:57 +0000
+Message-ID: <DUB118-W244A6AACB427066AC4EB6DC9100@phx.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <201301170850.43655.sfking@fdwdc.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Steven King <sfking@fdwdc.com>
-Cc: Greg Ungerer <gerg@uclinux.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@secretlab.ca>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, gnurou@gmail.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steven,
 
-On 01/18/2013 01:50 AM, Steven King wrote:
-> Well, my concern is the small, single chip platforms with limited ram and
-> speeds measured in MHz.  My goal was that these platforms that had very basic
-> gpio needs, no offboard gpio, just toggling a few pins for spi or whatever,
-> could do that without pulling in a bunch of code they dont need.  I realize
-> that for x86 or arm people with their giga Hz cpus with gigabytes of ram, its
-> no big deal, but my little 60 MHz coldfire v2s with only 16 megs of ram (and
-> even more constraining, 2 megs of flash) need all the help they can get.
+Hi guys,
 
-Running readelf on gpiolib.o built for Tegra, here are the footprints:
+I have just signed up to this distribution list to try to get some support/understanding of an issue I am having when switching from kernel v3.7.3 to v3.8-rc1.
+I am using a Voipac i.MX25 and on v3.7.3, barebox correctly loads the kernel and my board is correctly up and running.
+After switching to v3.8-rc1 (in order to get some fixes for a few drivers), barebox doesn't seem to load the kernel anymore, or the kernel initialization doesn't go very far as I don't see any kernel message.
+So I had a look at the commits between the two kernel versions and I noticed a commit for iMX25 to use devicetree, so I am pretty sure that would explain my problems at kernel loading time as it is the only commit affecting the boot.
+Is there somebody on this mailing list that could help me with devicetree?
+At first I would just need to verify that the parameters sent by the bootloader are still correct for devicetree and maybe get a few hints on how to debug this issue and see how far the init has gone.
 
-.text: 9412B
-.data: 260B
-.bss: 12312B
-.rodata: 268B
-
-Total: 22252B or 22KB.
-
-... of which more than half is the BSS section which consists of a 
-static array of 1024 GPIO descriptors, an arbitrary number that you can 
-tune and is way too large even for Tegra (but we have to use these 
-gigabytes somehow). Say you only need to use 256 GPIOs and .bss is down 
-to ~3KB, for a total overhead of 15kB or 0.09% of your 16MB which, in 
-perspective, suddenly seem gigantic. :)
-
-If you are concerned about the additional indirection that GPIOlib 
-introduces and the potential slowdown for bitbanging, you can always 
-define custom gpio_set_value() and gpio_get_value() macros to shortcut 
-GPIOlib when the GPIO is in the range you want performance for.
-
-> I haven't been keeping up with the kernel list of late, can someone point me
-> to what''s being discussed so I can see what were talking about here?
-
-Arnd explained it already, but basically we'd like to consolidate the 
-GPIO subsystem around GPIOlib and introduce safer interfaces (while 
-preserving backward compatibility). Good progress in that direction 
-would be achieved if all users of the GENERIC_GPIO interface relied on 
-GPIOlib (making GENERIC_GPIO require GPIOLIB).
-
-Actually the question of switching to GPIOlib is only worth being asked 
-if you are making use of drivers that require GENERIC_GPIO. If this is 
-not the case and your GPIOs are only used by your own platform code, you 
-can always give up using defining GENERIC_GPIO and continue implementing 
-them your own way.
-
-Thanks,
-Alex.
+Thank you very much,
+Best regards,
+David
+ 		 	   		  
