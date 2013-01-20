@@ -1,146 +1,64 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: [PATCH v2 3/3] arm: omap2: gpmc: add DT bindings for OneNAND
-Date: Sat, 19 Jan 2013 19:27:57 -0300
-Message-ID: <1358634477-25868-3-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1358634477-25868-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1358634477-25868-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, thomas.petazzoni@free-electrons.com, martinez.javier@gmail.com, zonque@gmail.com, grant.likely@secretlab.ca, eballetbo@gmail.com, matthias.bgg@googlemail.com, jon-hunter@ti.com, b-cousson@ti.com, tony@atomide.com, Ezequiel Garcia <elezegarcia@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [PATCH 0/4] gpio: introduce descriptor-based interface
+Date: Sun, 20 Jan 2013 15:07:02 +0900
+Message-ID: <50FB8986.9010205@nvidia.com>
+References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com> <CACRpkda6dqAj+DzrMCnKET7Z9PtuW0+k9ea3YDL8Z1D=oFVRpQ@mail.gmail.com> <50F7E83E.8000105@uclinux.org> <201301170850.43655.sfking@fdwdc.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arch-owner@vger.kernel.org>
+In-Reply-To: <201301170850.43655.sfking@fdwdc.com>
+Sender: linux-arch-owner@vger.kernel.org
+To: Steven King <sfking@fdwdc.com>
+Cc: Greg Ungerer <gerg@uclinux.org>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@secretlab.ca>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, gnurou@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree bindings for OMAP OneNAND devices.
-Tested on an OMAP3 3430 IGEPv2 board.
+Hi Steven,
 
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
----
-Changes from v1:
- * Fix typo in Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
+On 01/18/2013 01:50 AM, Steven King wrote:
+> Well, my concern is the small, single chip platforms with limited ram and
+> speeds measured in MHz.  My goal was that these platforms that had very basic
+> gpio needs, no offboard gpio, just toggling a few pins for spi or whatever,
+> could do that without pulling in a bunch of code they dont need.  I realize
+> that for x86 or arm people with their giga Hz cpus with gigabytes of ram, its
+> no big deal, but my little 60 MHz coldfire v2s with only 16 megs of ram (and
+> even more constraining, 2 megs of flash) need all the help they can get.
 
- .../devicetree/bindings/mtd/gpmc-onenand.txt       |   43 +++++++++++++++++++
- arch/arm/mach-omap2/gpmc.c                         |   44 ++++++++++++++++++++
- 2 files changed, 87 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
+Running readelf on gpiolib.o built for Tegra, here are the footprints:
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
-new file mode 100644
-index 0000000..deec9da
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
-@@ -0,0 +1,43 @@
-+Device tree bindings for GPMC connected OneNANDs
-+
-+GPMC connected OneNAND (found on OMAP boards) are represented as child nodes of
-+the GPMC controller with a name of "onenand".
-+
-+All timing relevant properties as well as generic gpmc child properties are
-+explained in a separate documents - please refer to
-+Documentation/devicetree/bindings/bus/ti-gpmc.txt
-+
-+Required properties:
-+
-+ - reg:			The CS line the peripheral is connected to
-+
-+Optional properties:
-+
-+ - dma-channel:		DMA Channel index
-+
-+For inline partiton table parsing (optional):
-+
-+ - #address-cells: should be set to 1
-+ - #size-cells: should be set to 1
-+
-+Example for an OMAP3430 board:
-+
-+	gpmc: gpmc@6e000000 {
-+		compatible = "ti,omap3430-gpmc";
-+		ti,hwmods = "gpmc";
-+		reg = <0x6e000000 0x1000000>;
-+		interrupts = <20>;
-+		gpmc,num-cs = <8>;
-+		gpmc,num-waitpins = <4>;
-+		#address-cells = <2>;
-+		#size-cells = <1>;
-+
-+		onenand@0 {
-+			reg = <0 0 0>; /* CS0, offset 0 */
-+
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			/* partitions go here */
-+		};
-+	};
-diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-index 01ce462..f7de9eb 100644
---- a/arch/arm/mach-omap2/gpmc.c
-+++ b/arch/arm/mach-omap2/gpmc.c
-@@ -39,6 +39,7 @@
- #include "omap_device.h"
- #include "gpmc.h"
- #include "gpmc-nand.h"
-+#include "gpmc-onenand.h"
- 
- #define	DEVICE_NAME		"omap-gpmc"
- 
-@@ -1259,6 +1260,43 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
- }
- #endif
- 
-+#ifdef CONFIG_MTD_ONENAND
-+static int gpmc_probe_onenand_child(struct platform_device *pdev,
-+				 struct device_node *child)
-+{
-+	u32 val;
-+	struct omap_onenand_platform_data *gpmc_onenand_data;
-+
-+	if (of_property_read_u32(child, "reg", &val) < 0) {
-+		dev_err(&pdev->dev, "%s has no 'reg' property\n",
-+			child->full_name);
-+		return -ENODEV;
-+	}
-+
-+	gpmc_onenand_data = devm_kzalloc(&pdev->dev, sizeof(*gpmc_onenand_data),
-+					 GFP_KERNEL);
-+	if (!gpmc_onenand_data)
-+		return -ENOMEM;
-+
-+	gpmc_onenand_data->cs = val;
-+	gpmc_onenand_data->of_node = child;
-+	gpmc_onenand_data->dma_channel = -1;
-+
-+	if (!of_property_read_u32(child, "dma-channel", &val))
-+		gpmc_onenand_data->dma_channel = val;
-+
-+	gpmc_onenand_init(gpmc_onenand_data);
-+
-+	return 0;
-+}
-+#else
-+static int gpmc_probe_onenand_child(struct platform_device *pdev,
-+				    struct device_node *child)
-+{
-+	return 0;
-+}
-+#endif
-+
- static int gpmc_probe_dt(struct platform_device *pdev)
- {
- 	int ret;
-@@ -1276,6 +1314,12 @@ static int gpmc_probe_dt(struct platform_device *pdev)
- 			return ret;
- 	}
- 
-+	for_each_node_by_name(child, "onenand") {
-+		ret = gpmc_probe_onenand_child(pdev, child);
-+		of_node_put(child);
-+		if (ret < 0)
-+			return ret;
-+	}
- 	return 0;
- }
- #else
--- 
-1.7.8.6
+.text: 9412B
+.data: 260B
+.bss: 12312B
+.rodata: 268B
 
+Total: 22252B or 22KB.
+
+... of which more than half is the BSS section which consists of a 
+static array of 1024 GPIO descriptors, an arbitrary number that you can 
+tune and is way too large even for Tegra (but we have to use these 
+gigabytes somehow). Say you only need to use 256 GPIOs and .bss is down 
+to ~3KB, for a total overhead of 15kB or 0.09% of your 16MB which, in 
+perspective, suddenly seem gigantic. :)
+
+If you are concerned about the additional indirection that GPIOlib 
+introduces and the potential slowdown for bitbanging, you can always 
+define custom gpio_set_value() and gpio_get_value() macros to shortcut 
+GPIOlib when the GPIO is in the range you want performance for.
+
+> I haven't been keeping up with the kernel list of late, can someone point me
+> to what''s being discussed so I can see what were talking about here?
+
+Arnd explained it already, but basically we'd like to consolidate the 
+GPIO subsystem around GPIOlib and introduce safer interfaces (while 
+preserving backward compatibility). Good progress in that direction 
+would be achieved if all users of the GENERIC_GPIO interface relied on 
+GPIOlib (making GENERIC_GPIO require GPIOLIB).
+
+Actually the question of switching to GPIOlib is only worth being asked 
+if you are making use of drivers that require GENERIC_GPIO. If this is 
+not the case and your GPIOs are only used by your own platform code, you 
+can always give up using defining GENERIC_GPIO and continue implementing 
+them your own way.
+
+Thanks,
+Alex.
