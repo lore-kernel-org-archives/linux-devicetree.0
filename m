@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 1/8] Adjust util_is_printable_string() comment and fix test
-Date: Mon, 21 Jan 2013 12:59:15 -0800
-Message-ID: <1358801962-21707-2-git-send-email-sjg@chromium.org>
+Subject: [PATCH 2/8] Move property-printing into util
+Date: Mon, 21 Jan 2013 12:59:16 -0800
+Message-ID: <1358801962-21707-3-git-send-email-sjg@chromium.org>
 References: <1358801962-21707-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,52 +22,138 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit which changed the behaviour of this function broke one
-of the tests. Also the comment should be updated to reflect its new
-behaviour.
+The function that prints a property can be useful to other programs,
+so move it into util.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- tests/run_tests.sh |    4 +---
- util.h             |    8 +++++---
- 2 files changed, 6 insertions(+), 6 deletions(-)
+ fdtdump.c |   37 +------------------------------------
+ util.c    |   37 +++++++++++++++++++++++++++++++++++++
+ util.h    |   14 ++++++++++++++
+ 3 files changed, 52 insertions(+), 36 deletions(-)
 
-diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index dd7f217..e04512c 100755
---- a/tests/run_tests.sh
-+++ b/tests/run_tests.sh
-@@ -498,9 +498,7 @@ fdtget_tests () {
+diff --git a/fdtdump.c b/fdtdump.c
+index b2c5b37..03ea429 100644
+--- a/fdtdump.c
++++ b/fdtdump.c
+@@ -17,41 +17,6 @@
+ #define PALIGN(p, a)	((void *)(ALIGN((unsigned long)(p), (a))))
+ #define GET_CELL(p)	(p += 4, *((const uint32_t *)(p-4)))
  
-     # run_fdtget_test <expected-result> [<flags>] <file> <node> <property>
-     run_fdtget_test "MyBoardName" $dtb / model
--    run_fdtget_test "77 121 66 111 \
--97 114 100 78 97 109 101 0 77 121 66 111 97 114 100 70 97 109 105 \
--108 121 78 97 109 101 0" $dtb / compatible
-+    run_fdtget_test "MyBoardName MyBoardFamilyName" $dtb / compatible
-     run_fdtget_test "MyBoardName MyBoardFamilyName" -t s $dtb / compatible
-     run_fdtget_test 32768 $dtb /cpus/PowerPC,970@1 d-cache-size
-     run_fdtget_test 8000 -tx $dtb /cpus/PowerPC,970@1 d-cache-size
+-static void print_data(const char *data, int len)
+-{
+-	int i;
+-	const char *p = data;
+-	const char *s;
+-
+-	/* no data, don't print */
+-	if (len == 0)
+-		return;
+-
+-	if (util_is_printable_string(data, len)) {
+-		printf(" = ");
+-
+-		s = data;
+-		do {
+-			printf("\"%s\"", s);
+-			s += strlen(s) + 1;
+-			if (s < data + len)
+-				printf(", ");
+-		} while (s < data + len);
+-
+-	} else if ((len % 4) == 0) {
+-		printf(" = <");
+-		for (i = 0; i < len; i += 4)
+-			printf("0x%08x%s", fdt32_to_cpu(GET_CELL(p)),
+-			       i < (len - 4) ? " " : "");
+-		printf(">");
+-	} else {
+-		printf(" = [");
+-		for (i = 0; i < len; i++)
+-			printf("%02x%s", *p++, i < len - 1 ? " " : "");
+-		printf("]");
+-	}
+-}
+-
+ static void dump_blob(void *blob)
+ {
+ 	struct fdt_header *bph = blob;
+@@ -147,7 +112,7 @@ static void dump_blob(void *blob)
+ 		p = PALIGN(p + sz, 4);
+ 
+ 		printf("%*s%s", depth * shift, "", s);
+-		print_data(t, sz);
++		utilfdt_print_data(t, sz);
+ 		printf(";\n");
+ 	}
+ }
+diff --git a/util.c b/util.c
+index 45f186b..b081fa8 100644
+--- a/util.c
++++ b/util.c
+@@ -335,3 +335,40 @@ int utilfdt_decode_type(const char *fmt, int *type, int *size)
+ 		return -1;
+ 	return 0;
+ }
++
++void utilfdt_print_data(const char *data, int len)
++{
++	int i;
++	const char *p = data;
++	const char *s;
++
++	/* no data, don't print */
++	if (len == 0)
++		return;
++
++	if (util_is_printable_string(data, len)) {
++		printf(" = ");
++
++		s = data;
++		do {
++			printf("\"%s\"", s);
++			s += strlen(s) + 1;
++			if (s < data + len)
++				printf(", ");
++		} while (s < data + len);
++
++	} else if ((len % 4) == 0) {
++		const uint32_t *cell = (const uint32_t *)data;
++
++		printf(" = <");
++		for (i = 0; i < len; i += 4)
++			printf("0x%08x%s", fdt32_to_cpu(cell[i]),
++			       i < (len - 4) ? " " : "");
++		printf(">");
++	} else {
++		printf(" = [");
++		for (i = 0; i < len; i++)
++			printf("%02x%s", *p++, i < len - 1 ? " " : "");
++		printf("]");
++	}
++}
 diff --git a/util.h b/util.h
-index c8eb45d..e9043be 100644
+index e9043be..543a173 100644
 --- a/util.h
 +++ b/util.h
-@@ -57,12 +57,14 @@ extern char *xstrdup(const char *s);
- extern char *join_path(const char *path, const char *name);
+@@ -152,4 +152,18 @@ int utilfdt_decode_type(const char *fmt, int *type, int *size);
+ 	"\tOptional modifier prefix:\n" \
+ 	"\t\thh or b=byte, h=2 byte, l=4 byte (default)\n";
  
- /**
-- * Check a string of a given length to see if it is all printable and
-- * has a valid terminator.
-+ * Check a property of a given length to see if it is all printable and
-+ * has a valid terminator. The property can contain either a single string,
-+ * or multiple strings each of non-zero length.
-  *
-  * @param data	The string to check
-  * @param len	The string length including terminator
-- * @return 1 if a valid printable string, 0 if not */
-+ * @return 1 if a valid printable string, 0 if not
++/**
++ * Print property data in a readable format to stdout
++ *
++ * Properties that look like strings will be printed as strings. Otherwise
++ * the data will be displayed either as cells (if len is a multiple of 4
++ * bytes) or bytes.
++ *
++ * If len is 0 then this function does nothing.
++ *
++ * @param data	Pointers to property data
++ * @param len	Length of property data
 + */
- int util_is_printable_string(const void *data, int len);
- 
- /*
++void utilfdt_print_data(const char *data, int len);
++
+ #endif /* _UTIL_H */
 -- 
 1.7.7.3
