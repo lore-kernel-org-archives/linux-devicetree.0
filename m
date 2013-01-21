@@ -1,158 +1,128 @@
-From: =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?=
-	<u.kleine-koenig@pengutronix.de>
-Subject: [PATCH] serial/efm32: parse location property
-Date: Mon, 21 Jan 2013 14:22:56 +0100
-Message-ID: <1358774576-13275-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: kishon <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC PATCH 5/6] usb: otg: add device tree support to otg library
+Date: Mon, 21 Jan 2013 19:04:45 +0530
+Message-ID: <50FD43F5.1020208@ti.com>
+References: <1358348462-27693-1-git-send-email-kishon@ti.com>
+ <1358348462-27693-6-git-send-email-kishon@ti.com> <50FD40D1.8020405@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-serial@vger.kernel.org, kernel@pengutronix.de, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50FD40D1.8020405-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, cbou-JGs/UdohzUI@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The non-dt probing allowed passing the location via platform data from
-the beginning. So make up leeway for device tree probing.
+On Monday 21 January 2013 06:51 PM, Roger Quadros wrote:
+> On 01/16/2013 05:01 PM, Kishon Vijay Abraham I wrote:
+>> Added an API devm_usb_get_phy_by_phandle(), to get usb phy by passing a
+>> device node phandle value. This function will return a pointer to
+>> the phy on success, -EPROBE_DEFER if there is a device_node for the phandle,
+>> but the phy has not been added, or a ERR_PTR() otherwise.
+>>
+>> Cc: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   drivers/usb/otg/otg.c   |   77 +++++++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/usb/phy.h |    8 +++++
+>>   2 files changed, 85 insertions(+)
+>>
+>> diff --git a/drivers/usb/otg/otg.c b/drivers/usb/otg/otg.c
+>> index dbf2043..e9799bb 100644
+>> --- a/drivers/usb/otg/otg.c
+>> +++ b/drivers/usb/otg/otg.c
+>> @@ -13,7 +13,9 @@
+>>   #include <linux/export.h>
+>>   #include <linux/err.h>
+>>   #include <linux/device.h>
+>> +#include <linux/module.h>
+>>   #include <linux/slab.h>
+>> +#include <linux/of.h>
+>>
+>>   #include <linux/usb/otg.h>
+>>
+>> @@ -34,6 +36,20 @@ static struct usb_phy *__usb_find_phy(struct device *dev, u8 index)
+>>   	return ERR_PTR(-ENODEV);
+>>   }
+>>
+>> +static struct usb_phy *__of_usb_find_phy(struct device_node *node)
+>> +{
+>> +	struct usb_phy  *phy;
+>> +
+>> +	list_for_each_entry(phy, &phy_list, head) {
+>> +		if (node != phy->dev->of_node)
+>> +			continue;
+>> +
+>> +		return phy;
+>> +	}
+>> +
+>> +	return ERR_PTR(-ENODEV);
+>> +}
+>> +
+>>   static void devm_usb_phy_release(struct device *dev, void *res)
+>>   {
+>>   	struct usb_phy *phy = *(struct usb_phy **)res;
+>> @@ -109,6 +125,67 @@ err0:
+>>   }
+>>   EXPORT_SYMBOL(usb_get_phy);
+>>
+>> + /**
+>> + * devm_usb_get_phy_by_phandle - find the USB PHY by phandle
+>> + * @dev - device that requests this phy
+>> + * @phandle - name of the property holding the phy phandle value
+>> + * @index - the index of the phy
+>> + *
+>> + * Returns the phy driver associated with the given phandle value,
+>> + * after getting a refcount to it, -ENODEV if there is no such phy or
+>> + * -EPROBE_DEFER if there is a phandle to the phy, but the device is
+>> + * not yet loaded. While at that, it also associates the device with
+>> + * the phy using devres. On driver detach, release function is invoked
+>> + * on the devres data, then, devres data is freed.
+>> + *
+>> + * For use by USB host and peripheral drivers.
+>> + */
+>> +struct usb_phy *devm_usb_get_phy_by_phandle(struct device *dev,
+>> +	const char *phandle, u8 index)
+>> +{
+>> +	struct usb_phy	*phy = NULL, **ptr;
+>> +	unsigned long	flags;
+>> +	struct device_node *node;
+>> +
+>> +	if (!dev->of_node) {
+>> +		dev_dbg(dev, "device does not have a device node entry\n");
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>> +
+>> +	node = of_parse_phandle(dev->of_node, phandle, index);
+>> +	if (!node) {
+>> +		dev_dbg(dev, "failed to get %s phandle in %s node\n", phandle,
+>> +			dev->of_node->full_name);
+>> +		return ERR_PTR(-ENODEV);
+>> +	}
+>> +
+>> +	ptr = devres_alloc(devm_usb_phy_release, sizeof(*ptr), GFP_KERNEL);
+>> +	if (!ptr) {
+>> +		dev_dbg(dev, "failed to allocate memory for devres\n");
+>> +		return ERR_PTR(-ENOMEM);
+>> +	}
+>
+> I fail to understand why you need ptr at all and why do devres_alloc()
+> for it.
 
-Signed-off-by: Uwe Kleine-K=C3=B6nig <u.kleine-koenig@pengutronix.de>
----
-Hello,
+Thats how we create a "managed device resource". You can have a look at 
+Documentation/driver-model/devres.txt and drivers/base/devres.c.
 
-I wonder if the location property should be mandatory. Do you have an
-opinion?=20
+I'm not sure if that is what you are looking for :-P
 
-BTW, I was surprised that I had to use of_property_read_u32 but not
-of_property_read_u8. I would have expected that the only difference
-between those two is the returned type, but actually the format to
-specify an u8 is different. Is this intended? (Probably it is. If so, i=
-s
-it maybe sensible to accentuate the difference by using a different
-function name for the u32 case?)
-
-Best regards
-Uwe
-
- .../devicetree/bindings/tty/serial/efm32-uart.txt  |    6 ++++
- drivers/tty/serial/efm32-uart.c                    |   31 ++++++++++++=
-+++-----
- 2 files changed, 30 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/tty/serial/efm32-uart.tx=
-t b/Documentation/devicetree/bindings/tty/serial/efm32-uart.txt
-index 6588b69..8e080b8 100644
---- a/Documentation/devicetree/bindings/tty/serial/efm32-uart.txt
-+++ b/Documentation/devicetree/bindings/tty/serial/efm32-uart.txt
-@@ -5,10 +5,16 @@ Required properties:
- - reg : Address and length of the register set
- - interrupts : Should contain uart interrupt
-=20
-+Optional properties:
-+- location : Decides the location of the USART I/O pins.
-+  Allowed range : [0 .. 5]
-+  Default: 0
-+
- Example:
-=20
- uart@0x4000c400 {
- 	compatible =3D "efm32,uart";
- 	reg =3D <0x4000c400 0x400>;
- 	interrupts =3D <15>;
-+	location =3D <0>;
- };
-diff --git a/drivers/tty/serial/efm32-uart.c b/drivers/tty/serial/efm32=
--uart.c
-index a8cbb26..67ff23b 100644
---- a/drivers/tty/serial/efm32-uart.c
-+++ b/drivers/tty/serial/efm32-uart.c
-@@ -81,6 +81,7 @@ struct efm32_uart_port {
- 	struct uart_port port;
- 	unsigned int txirq;
- 	struct clk *clk;
-+	struct efm32_uart_pdata pdata;
- };
- #define to_efm_port(_port) container_of(_port, struct efm32_uart_port,=
- port)
- #define efm_debug(efm_port, format, arg...)			\
-@@ -300,13 +301,8 @@ static irqreturn_t efm32_uart_txirq(int irq, void =
-*data)
- static int efm32_uart_startup(struct uart_port *port)
- {
- 	struct efm32_uart_port *efm_port =3D to_efm_port(port);
--	u32 location =3D 0;
--	struct efm32_uart_pdata *pdata =3D dev_get_platdata(port->dev);
- 	int ret;
-=20
--	if (pdata)
--		location =3D UARTn_ROUTE_LOCATION(pdata->location);
--
- 	ret =3D clk_enable(efm_port->clk);
- 	if (ret) {
- 		efm_debug(efm_port, "failed to enable clk\n");
-@@ -315,7 +311,9 @@ static int efm32_uart_startup(struct uart_port *por=
-t)
- 	port->uartclk =3D clk_get_rate(efm_port->clk);
-=20
- 	/* Enable pins at configured location */
--	efm32_uart_write32(efm_port, location | UARTn_ROUTE_RXPEN | UARTn_ROU=
-TE_TXPEN,
-+	efm32_uart_write32(efm_port,
-+			UARTn_ROUTE_LOCATION(efm_port->pdata.location) |
-+			UARTn_ROUTE_RXPEN | UARTn_ROUTE_TXPEN,
- 			UARTn_ROUTE);
-=20
- 	ret =3D request_irq(port->irq, efm32_uart_rxirq, 0,
-@@ -674,11 +672,24 @@ static int efm32_uart_probe_dt(struct platform_de=
-vice *pdev,
- 		struct efm32_uart_port *efm_port)
- {
- 	struct device_node *np =3D pdev->dev.of_node;
-+	u32 location;
- 	int ret;
-=20
- 	if (!np)
- 		return 1;
-=20
-+	ret =3D of_property_read_u32(np, "location", &location);
-+	if (!ret) {
-+		if (location > 5) {
-+			dev_err(&pdev->dev, "invalid location\n");
-+			return -EINVAL;
-+		}
-+		efm_debug(efm_port, "using location %u\n", location);
-+		efm_port->pdata.location =3D location;
-+	} else {
-+		efm_debug(efm_port, "fall back to location 0\n");
-+	}
-+
- 	ret =3D of_alias_get_id(np, "serial");
- 	if (ret < 0) {
- 		dev_err(&pdev->dev, "failed to get alias id: %d\n", ret);
-@@ -738,10 +749,16 @@ static int efm32_uart_probe(struct platform_devic=
-e *pdev)
- 	efm_port->port.flags =3D UPF_BOOT_AUTOCONF;
-=20
- 	ret =3D efm32_uart_probe_dt(pdev, efm_port);
--	if (ret > 0)
-+	if (ret > 0) {
- 		/* not created by device tree */
-+		const struct efm32_uart_pdata *pdata =3D dev_get_platdata(&pdev->dev=
-);
-+
- 		efm_port->port.line =3D pdev->id;
-=20
-+		if (pdata)
-+			efm_port->pdata =3D *pdata;
-+	}
-+
- 	if (efm_port->port.line >=3D 0 &&
- 			efm_port->port.line < ARRAY_SIZE(efm32_uart_ports))
- 		efm32_uart_ports[efm_port->port.line] =3D efm_port;
---=20
-1.7.10.4
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
