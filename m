@@ -1,120 +1,49 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 3/3] arm: omap2: gpmc: add DT bindings for OneNAND
-Date: Mon, 21 Jan 2013 12:30:20 +0000
-Message-ID: <20130121123020.GI15707@e106331-lin.cambridge.arm.com>
-References: <1358634477-25868-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1358634477-25868-3-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [RFC PATCH 6/6] USB: MUSB: OMAP: get PHY by phandle for dt boot
+Date: Mon, 21 Jan 2013 15:18:44 +0200
+Message-ID: <50FD4034.5040402@ti.com>
+References: <1358348462-27693-1-git-send-email-kishon@ti.com> <1358348462-27693-7-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1358634477-25868-3-git-send-email-ezequiel.garcia@free-electrons.com>
-Content-Disposition: inline
-Sender: linux-omap-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "martinez.javier@gmail.com" <martinez.javier@gmail.com>, "matthias.bgg@googlemail.com" <matthias.bgg@googlemail.com>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1358348462-27693-7-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, linux-sh@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, balbi@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, horms@verge.net.au, magnus.damm@gmail.com, cbou@mail.ru, dwmw2@infradead.org, alexander.shishkin@linux.intel.com, gregkh@linuxfoundation.org, leoli@freescale.com, eric.y.miao@gmail.com, haojian.zhuang@gmail.com, stern@rowland.harvard.edu
 List-Id: devicetree@vger.kernel.org
 
-[...]
-
-> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-> index 01ce462..f7de9eb 100644
-> --- a/arch/arm/mach-omap2/gpmc.c
-> +++ b/arch/arm/mach-omap2/gpmc.c
-> @@ -39,6 +39,7 @@
->  #include "omap_device.h"
->  #include "gpmc.h"
->  #include "gpmc-nand.h"
-> +#include "gpmc-onenand.h"
->  
->  #define	DEVICE_NAME		"omap-gpmc"
->  
-> @@ -1259,6 +1260,43 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
->  }
->  #endif
->  
-> +#ifdef CONFIG_MTD_ONENAND
-> +static int gpmc_probe_onenand_child(struct platform_device *pdev,
-> +				 struct device_node *child)
-> +{
-> +	u32 val;
-> +	struct omap_onenand_platform_data *gpmc_onenand_data;
-> +
-> +	if (of_property_read_u32(child, "reg", &val) < 0) {
-> +		dev_err(&pdev->dev, "%s has no 'reg' property\n",
-> +			child->full_name);
-> +		return -ENODEV;
-> +	}
-> +
-> +	gpmc_onenand_data = devm_kzalloc(&pdev->dev, sizeof(*gpmc_onenand_data),
-> +					 GFP_KERNEL);
-> +	if (!gpmc_onenand_data)
-> +		return -ENOMEM;
-> +
-> +	gpmc_onenand_data->cs = val;
-> +	gpmc_onenand_data->of_node = child;
-> +	gpmc_onenand_data->dma_channel = -1;
-> +
-> +	if (!of_property_read_u32(child, "dma-channel", &val))
-> +		gpmc_onenand_data->dma_channel = val;
-> +
-> +	gpmc_onenand_init(gpmc_onenand_data);
-> +
-> +	return 0;
-> +}
-> +#else
-> +static int gpmc_probe_onenand_child(struct platform_device *pdev,
-> +				    struct device_node *child)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->  static int gpmc_probe_dt(struct platform_device *pdev)
->  {
->  	int ret;
-> @@ -1276,6 +1314,12 @@ static int gpmc_probe_dt(struct platform_device *pdev)
->  			return ret;
->  	}
->  
-
-This doesn't look right to me:
-
-> +	for_each_node_by_name(child, "onenand") {
-> +		ret = gpmc_probe_onenand_child(pdev, child);
-> +		of_node_put(child);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-
-for_each_node_by_name automatically calls of_node_put on each node once passed,
-and as far as I can tell, gpmc_probe_onenand_child doesn't do anything that'd
-increment a node's refcount.
-
-As far as I can see, you only need the of_node_put in the error case:
-
-for_each_node_by_name(child, "onenand") {
-	ret = gpmc_probe_onenand_child(pdev, child);
-	if (ret < 0) {
-		of_node_put(child);
-		return ret;
-	}
-}
-
-Have I missed something here?
-
->  	return 0;
->  }
->  #else
-> -- 
-> 1.7.8.6
+On 01/16/2013 05:01 PM, Kishon Vijay Abraham I wrote:
+> The OMAP glue has been modified to get PHY by phandle for dt boot.
 > 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/usb/musb/omap2430.c |    7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
+> index 3628a50..08709cf 100644
+> --- a/drivers/usb/musb/omap2430.c
+> +++ b/drivers/usb/musb/omap2430.c
+> @@ -346,7 +346,12 @@ static int omap2430_musb_init(struct musb *musb)
+>  	 * up through ULPI.  TWL4030-family PMICs include one,
+>  	 * which needs a driver, drivers aren't always needed.
+>  	 */
+> -	musb->xceiv = devm_usb_get_phy(dev, 0);
+> +	if (dev->parent->of_node)
+> +		musb->xceiv = devm_usb_get_phy_by_phandle(dev->parent,
+> +		    "usb_phy", 0);
+
+Why dev->parent and not just dev?
+
+> +	else
+> +		musb->xceiv = devm_usb_get_phy(dev, 0);
+> +
+>  	if (IS_ERR_OR_NULL(musb->xceiv)) {
+>  		pr_err("HS USB OTG: no transceiver configured\n");
+>  		return -ENODEV;
 > 
 
-Thanks,
-Mark.
-
+--
+cheers,
+-roger
