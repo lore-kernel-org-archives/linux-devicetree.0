@@ -1,143 +1,79 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v5 00/12] clk: exynos4: migrate to common clock framework
-Date: Mon, 21 Jan 2013 11:07:20 -0800
-Message-ID: <20130121190720.3982.81903@quantum>
-References: <1356827621-27617-1-git-send-email-thomas.abraham@linaro.org>
- <50FD50BC.4020902@samsung.com> <2433961.3Qz5gqDyvb@amdc1227>
+From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Subject: Re: [PATCH 3/6] arm: kconfig: don't select TWD with local timer for
+ Armada 370/XP
+Date: Mon, 21 Jan 2013 13:29:37 -0600
+Message-ID: <CAKGA1b=9WQNwHOz=k13XVc=MyZT1UrcaYj8muF2A5B4eJA5+MA@mail.gmail.com>
+References: <1358790842-2986-1-git-send-email-gregory.clement@free-electrons.com>
+ <1358790842-2986-4-git-send-email-gregory.clement@free-electrons.com>
+ <201301211831.45947.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <2433961.3Qz5gqDyvb@amdc1227>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <201301211831.45947.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TZUIDd8j+nm9g@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Tomasz Figa (2013-01-21 08:22:39)
-> Hi Thomas, Sylwester,
-> 
-> On Monday 21 of January 2013 15:29:16 Sylwester Nawrocki wrote:
-> > On 12/30/2012 01:33 AM, Thomas Abraham wrote:
-> > > Changes since v4:
-> > > - Rebased to linux-3.8-rc1.
-> > > 
-> > > Changes since v3:
-> > > - Includes changes suggested by Tomasz Figa <tomasz.figa@gmail.com>
-> > > 
-> > > This patch series migrates the Samsung Exynos4 SoC clock code to adopt
-> > > the common clock framework. The use of Samsung specific clock
-> > > structures has been removed and all board support code has been
-> > > updated. imx-style of clock registration and lookup has been adopted
-> > > for device tree based exynos4 platforms.
-> > > 
-> > > This patch series depends on this series:
-> > > http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg14471
-> > > .html and this patch
-> > > http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg14472
-> > > .html> 
-> > > Thomas Abraham (12):
-> > >   clk: samsung: add common clock framework helper functions for
-> > >   Samsung platforms clk: samsung: add pll clock registration helper
-> > >   functions
-> > >   clk: exynos4: register clocks using common clock framework
-> > >   ARM: Exynos: Rework timer initialization sequence
-> > >   ARM: Exynos4: Migrate clock support to common clock framework
-> > >   ARM: dts: add exynos4 clock controller nodes
-> > >   ARM: dts: add xxti and xusbxti fixed rate clock nodes for exynos4
-> > >   based platforms ARM: Exynos4: allow legacy board support to specify
-> > >   xxti and xusbxti clock speed ARM: dts: add clock provider
-> > >   information for all controllers in Exynos4 SoC ARM: Exynos4: remove
-> > >   auxdata table from machine file
-> > >   ARM: Exynos: use fin_pll clock as the tick clock source for mct
-> > >   ARM: Exynos: add support for mct clock setup
-> > >  
-> > >  .../devicetree/bindings/clock/exynos4-clock.txt    |  215 +++++++
-> > >  arch/arm/boot/dts/exynos4.dtsi                     |   50 ++
-> > >  arch/arm/boot/dts/exynos4210-origen.dts            |   12 +
-> > >  arch/arm/boot/dts/exynos4210-smdkv310.dts          |   12 +
-> > >  arch/arm/boot/dts/exynos4210.dtsi                  |    6 +
-> > >  arch/arm/boot/dts/exynos4412-origen.dts            |   12 +
-> > >  arch/arm/boot/dts/exynos4412-smdk4412.dts          |   12 +
-> > >  arch/arm/boot/dts/exynos4x12.dtsi                  |    6 +
-> > >  arch/arm/mach-exynos/Kconfig                       |    1 +
-> > >  arch/arm/mach-exynos/Makefile                      |    3 -
-> > >  arch/arm/mach-exynos/clock-exynos4.h               |   35 -
-> > >  arch/arm/mach-exynos/clock-exynos4210.c            |  188 ------
-> > >  arch/arm/mach-exynos/clock-exynos4212.c            |  192 ------
-> > >  arch/arm/mach-exynos/common.c                      |   57 ++-
-> > >  arch/arm/mach-exynos/common.h                      |   21 +-
-> > >  arch/arm/mach-exynos/mach-armlex4210.c             |    3 +-
-> > >  arch/arm/mach-exynos/mach-exynos4-dt.c             |   72 +--
-> > >  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +-
-> > >  arch/arm/mach-exynos/mach-nuri.c                   |    5 +-
-> > >  arch/arm/mach-exynos/mach-origen.c                 |    5 +-
-> > >  arch/arm/mach-exynos/mach-smdk4x12.c               |    5 +-
-> > >  arch/arm/mach-exynos/mach-smdkv310.c               |    7 +-
-> > >  arch/arm/mach-exynos/mach-universal_c210.c         |    3 +-
-> > >  arch/arm/mach-exynos/mct.c                         |   32 +-
-> > >  arch/arm/plat-samsung/Kconfig                      |    4 +-
-> > >  drivers/clk/Makefile                               |    1 +
-> > >  drivers/clk/samsung/Makefile                       |    6 +
-> > >  drivers/clk/samsung/clk-exynos4.c                  |  655
-> > >  ++++++++++++++++++++ drivers/clk/samsung/clk-pll.c                  
-> > >     |  400 ++++++++++++ drivers/clk/samsung/clk-pll.h                
-> > >       |   38 ++
-> > >  drivers/clk/samsung/clk.c                          |  180 ++++++
-> > >  drivers/clk/samsung/clk.h                          |  216 +++++++
-> > >  32 files changed, 1919 insertions(+), 537 deletions(-)
-> > >  create mode 100644
-> > >  Documentation/devicetree/bindings/clock/exynos4-clock.txt delete
-> > >  mode 100644 arch/arm/mach-exynos/clock-exynos4.h
-> > >  delete mode 100644 arch/arm/mach-exynos/clock-exynos4210.c
-> > >  delete mode 100644 arch/arm/mach-exynos/clock-exynos4212.c
-> > >  create mode 100644 drivers/clk/samsung/Makefile
-> > >  create mode 100644 drivers/clk/samsung/clk-exynos4.c
-> > >  create mode 100644 drivers/clk/samsung/clk-pll.c
-> > >  create mode 100644 drivers/clk/samsung/clk-pll.h
-> > >  create mode 100644 drivers/clk/samsung/clk.c
-> > >  create mode 100644 drivers/clk/samsung/clk.h
-> > 
-> > Thanks Thomas! The patch series generally looks good to me, I've tested
-> > it on an Exynos4412 based board. I have applied couple fixes that Tomasz
-> > Figa has sent you off the mailing list. And to make a MIPI-CSI2 camera
-> > working a small fixup patch as below.
-> > 
-> > I have just one remark, but this could possibly be done as a follow up
-> > patch. Namely it may make sense to rename various sclk_* clocks to just
-> > "sclk", so for instance we don't have "fimd", "sclk_fimd", "fimc",
-> > "sclk_fimc" but e.g. "bus" or "gate" and "sclk" for each device. Such
-> > naming might be better for handling devices at core subsystems level,
-> > e.g. Runtime PM or devfreq.
-> > 
-> > Please feel free to add:
-> > 
-> > Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> > Tested-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> 
-> I fully agree with Sylwester. After adding mentioned fixup patches, feel 
-> free to add my Reviewed-by and Tested-by as well.
-> 
-> > 
-> > I would be great to have this patch set merged for 3.9, so people can
-> > switch earlier to the common clock API, rather than modifying files
-> > that will be removed soon.
-> 
-> Yes, it would be great to have this series merged earlier, because it's 
-> very important for further development of Device Tree support on Samsung 
-> platforms. Possibly for 3.9 it could be merged as an alternative to the 
-> legacy clock code and after enough testing legacy code could be dropped in 
-> next kernel release.
-> 
+On Mon, Jan 21, 2013 at 12:31 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Monday 21 January 2013, Gregory CLEMENT wrote:
+>> @@ -1624,7 +1624,7 @@ config LOCAL_TIMERS
+>>         bool "Use local timer interrupts"
+>>         depends on SMP
+>>         default y
+>> -       select HAVE_ARM_TWD if (!ARCH_MSM_SCORPIONMP && !EXYNOS4_MCT)
+>> +       select HAVE_ARM_TWD if (!ARCH_MSM_SCORPIONMP && !EXYNOS4_MCT && !ARMADA_370_XP_TIMER)
+>>
+>
+> Maybe it can be written as
+>
+> config LOCAL_TIMERS
+>         bool "Use local timer interrupts"
+>         depends on SMP
+>         default y
+>
+> config HAVE_ARM_TWD
+>         depends on LOCAL_TIMERS
+>         default ARCH_MULTIPLATFORM || (!ARCH_MSM_SCORPIONMP && !EXYNOS4_MCT)
+>         default y
+>
+> This will still be slightly wrong (generating extra code) on a multiplatform
+> kernel that has no platform other than MSM or EXYNOS, but the other alternative
+> would be that each platform with TWD support has to select HAVE_ARM_TWD itself.
 
-I thought that the Exynos4 and Exynos5 ports to the common clk framework
-were going to be merged.  Is that still the plan?
+Why would having each platform with TWD support select HAVE_ARM_TWD be
+a problem?
 
-Regards,
-Mike
+If we look at it logically, this is the most efficient solution in
+terms of brevity of the (already huge) Kconfig.
 
-> Best regards
-> -- 
-> Tomasz Figa
-> Samsung Poland R&D Center
-> SW Solution Development, Linux Platform
+On multiplatform kernels where at least one arch has TWD support, it
+will be included, and where not, it will not.
+
+It doesn't seem logical for a feature descriptor (HAVE_ARM_TWD) to
+rely on greater knowledge of what platforms may or may not support it.
+If we had to include every platform in that list it would be unwieldy.
+
+Which leads me to this; I wonder if there should be a policy document
+that basically describes what HAVE_* really is meant for, and how
+dependencies on ARCH_* (or MACH_* in the world of multiplatform)
+should be handled for architectural features? That way there's a
+little more fixed definition of how Kconfigs should be written to
+effectively support multiplatform kernels and allow people to identify
+misuses and get rid of them for multiplatform, if only just to get the
+information out of the heads of maintainers and into a file somewhere
+that we can reference... maybe it exists already but I am missing it?
+
+--
+Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Product Development Analyst, Genesi USA, Inc.
