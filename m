@@ -1,73 +1,76 @@
-From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Subject: Re: [PATCH 3/7] ARM i.MX6q: Add GPU, VPU, IPU, and OpenVG resets to
- System Reset Controller (SRC)
-Date: Mon, 21 Jan 2013 11:47:12 -0600
-Message-ID: <CAKGA1bmkyU_LEJt17SvUwUUh0wXG-2o_5nOGaW8RWDV45g3bVg@mail.gmail.com>
-References: <1358352787-15441-1-git-send-email-p.zabel@pengutronix.de>
- <1358352787-15441-4-git-send-email-p.zabel@pengutronix.de>
- <CAKGA1bmjKQcX3RzSjbnuYqoJqbzXYGa_Whv7QQkNyAhBDzZWdw@mail.gmail.com>
- <1358761930.2522.54.camel@pizza.hi.pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1358761930.2522.54.camel-/rZezPiN1rtR6QfukMTsflXZhhPuCNm+@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH 0/6] arm: mvebu: add support for local timer for Armada 370/XP
+Date: Mon, 21 Jan 2013 18:53:56 +0100
+Message-ID: <1358790842-2986-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Nicolas Pitre <nico@fluxnic.net>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ike Pan <ike.pan@canonical.com>, Jani Monoses <jani.monoses@canonical.com>, Chris Van Hoof <vanhoof@canonical.com>, Dan Frazier <dann.frazier@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Jon Masters <jcm@redhat.com>, David Marlin <dmarlin@redhat.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2013 at 3:52 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> Hi Matt,
->
-> thank you for your comments.
->
-> Am Freitag, den 18.01.2013, 13:57 -0600 schrieb Matt Sealey:
->> On Wed, Jan 16, 2013 at 10:13 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->>
->> +
->> +static int imx_src_reset(unsigned long sw_reset_idx)
->> +{
->>
->> Having a name like imx_src_reset seems needlessly generic and
->> confusing. Surely we are performing a reset on an SoC unit and not
->> having the SRC itself reset, even if it is clearer when we look at the
->> argument?
->
-> imx_src_reset_module, then? Also, I'll add the struct
-> reset_controller_dev pointer as an argument next time:
->
-> static int imx_src_reset_module(struct reset_controller_dev *rcdev,
->                 unsigned long sw_reset_idx)
+Hello,
 
-Yes, sure.
+The Armada XP SoCs comes with private timers. This allows us to use
+local timers through CONFIG_LOCAL_TIMERS and as stated in the kconfig
+help, it prevents a "thundering herd" at every timer tick.
 
-> Yes, maybe the module reset part of the SRC should be implemented as a
-> proper device driver in drivers/reset. Then we could use the interrupt
-> functionality and WARN_ON(timeout), as you suggest.
+Armada 370 also have these private timers, and even if it comes only
+with a single CPU, the feature is also enabled for this SoC to keep
+the code generic.
 
-That would be ideal. Maybe Shawn or Fabio can bug a hardware guy to
-shed some light on what a reasonable timeout might actually be for a
-module to cause such a warning. I think it should definitely cause
-one.. as I said, I was using 5 seconds, you used 1 second, I don't
-think a shorter delay would be unreasonable, but maybe it could take
-up to 10 seconds, or maybe I am wrong - maybe it is in fact impossible
-in hardware for a reset to "fail" at least visibly because the
-interrupt will always fire making the warning a never-traveled path.
-It is certainly not something that would be documented, so without a
-view of the RTL logic here, we wouldn't know.
+In order to be able to use the local timer, I also had to add the
+support for the per-CPU interrupts.
 
-Shawn, Fabio?
+As this patch set need to modify several sub-systems, I'd like that
+Jason take the whole series with the acked-by of each maintainer.
+
+Jason I also try to create the patch to fit the order you expect
+drivers, then boards and finally dt.
+
+The 1st patch which add support for local interrupt should go directly
+to the driver branch of Jason.
+
+The 2nd patch which adds local timer support for Armada 370/XP should
+received a acked-by John Stultz or Thomas Gleixner before going to the
+driver branch of Jason.
+
+For the 3rd patch, which just allow to not select TWD by default when
+local timers are selected for Armada 370/XP, it would be nice if
+Russell could give his acked-by. I think this patch should go to the
+board branch of Jason, but I am not sure.
+
+The 4th patch is an update to the mvebu_defconfig and should go to the
+board branch of Jason.
+
+The 5th and 6th patches are about the DT bindings. An acked-by or at
+least a reviewed-by from Rob Herring or Grant Likely would be nice
+before going ending to the dt branch of Jason.
+
+This patch set is based on 3.8-rc4 and is obviously 3.9 material. The
+git branch called local_timer is available at:
+https://github.com/MISL-EBU-System-SW/mainline-public.git.
+
+Thanks,
+
+Gregory CLEMENT (6):
+  arm: mvebu: Add support for local interrupt
+  clocksource: time-armada-370-xp: add local timer support
+  arm: kconfig: don't select TWD with local timer for Armada 370/XP
+  arm: mvebu: update defconfig with local timer support
+  arm: mvebu: update DT to support local timers
+  clocksource: update and move armada-370-xp-timer documentation to
+    timer directory
+
+ .../bindings/arm/armada-370-xp-timer.txt           |   12 --
+ .../bindings/timer/marvell,armada-370-xp-timer.txt |   15 ++
+ arch/arm/Kconfig                                   |    2 +-
+ arch/arm/boot/dts/armada-370-xp.dtsi               |    5 +-
+ arch/arm/configs/mvebu_defconfig                   |    1 -
+ arch/arm/mach-mvebu/irq-armada-370-xp.c            |   18 ++-
+ drivers/clocksource/time-armada-370-xp.c           |  150 +++++++++++++++-----
+ 7 files changed, 144 insertions(+), 59 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/armada-370-xp-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
 
 -- 
-Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Product Development Analyst, Genesi USA, Inc.
+1.7.9.5
