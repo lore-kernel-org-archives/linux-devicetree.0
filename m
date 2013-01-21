@@ -1,171 +1,143 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] arm/dts: Add basic support for gta04 (Openmoko next
- generation) board.
-Date: Mon, 21 Jan 2013 10:46:36 -0800
-Message-ID: <20130121184635.GK22517@atomide.com>
-References: <1351633367-19082-1-git-send-email-marek.belisko@open-nandra.com>
- <CAAfyv34D4bTO=k8niM42CDQFb0tP4uOnvX_KPT3+F6z59jPg3Q@mail.gmail.com>
- <20121115115925.2FE453E09BB@localhost>
- <CAAfyv34ihnwL9JheLzY61zthTkBexTOe3cgkbU4Z+sFG2w1g6g@mail.gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v5 00/12] clk: exynos4: migrate to common clock framework
+Date: Mon, 21 Jan 2013 11:07:20 -0800
+Message-ID: <20130121190720.3982.81903@quantum>
+References: <1356827621-27617-1-git-send-email-thomas.abraham@linaro.org>
+ <50FD50BC.4020902@samsung.com> <2433961.3Qz5gqDyvb@amdc1227>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAAfyv34ihnwL9JheLzY61zthTkBexTOe3cgkbU4Z+sFG2w1g6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2433961.3Qz5gqDyvb@amdc1227>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sylvester.nawrocki@gmail.com, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121115 05:31]:
-> CC'ing Tony
+Quoting Tomasz Figa (2013-01-21 08:22:39)
+> Hi Thomas, Sylwester,
 > 
-> On Thu, Nov 15, 2012 at 12:59 PM, Grant Likely
-> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > On Wed, 14 Nov 2012 21:26:58 +0100, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> CC' Grant & Rob
-> >
-> > Hi Marek
-> >
-> > Since this is an OMAP board, you should send the changes to Tony and
-> > they should be merged through the arm-soc tree.
+> On Monday 21 of January 2013 15:29:16 Sylwester Nawrocki wrote:
+> > On 12/30/2012 01:33 AM, Thomas Abraham wrote:
+> > > Changes since v4:
+> > > - Rebased to linux-3.8-rc1.
+> > > 
+> > > Changes since v3:
+> > > - Includes changes suggested by Tomasz Figa <tomasz.figa@gmail.com>
+> > > 
+> > > This patch series migrates the Samsung Exynos4 SoC clock code to adopt
+> > > the common clock framework. The use of Samsung specific clock
+> > > structures has been removed and all board support code has been
+> > > updated. imx-style of clock registration and lookup has been adopted
+> > > for device tree based exynos4 platforms.
+> > > 
+> > > This patch series depends on this series:
+> > > http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg14471
+> > > .html and this patch
+> > > http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg14472
+> > > .html> 
+> > > Thomas Abraham (12):
+> > >   clk: samsung: add common clock framework helper functions for
+> > >   Samsung platforms clk: samsung: add pll clock registration helper
+> > >   functions
+> > >   clk: exynos4: register clocks using common clock framework
+> > >   ARM: Exynos: Rework timer initialization sequence
+> > >   ARM: Exynos4: Migrate clock support to common clock framework
+> > >   ARM: dts: add exynos4 clock controller nodes
+> > >   ARM: dts: add xxti and xusbxti fixed rate clock nodes for exynos4
+> > >   based platforms ARM: Exynos4: allow legacy board support to specify
+> > >   xxti and xusbxti clock speed ARM: dts: add clock provider
+> > >   information for all controllers in Exynos4 SoC ARM: Exynos4: remove
+> > >   auxdata table from machine file
+> > >   ARM: Exynos: use fin_pll clock as the tick clock source for mct
+> > >   ARM: Exynos: add support for mct clock setup
+> > >  
+> > >  .../devicetree/bindings/clock/exynos4-clock.txt    |  215 +++++++
+> > >  arch/arm/boot/dts/exynos4.dtsi                     |   50 ++
+> > >  arch/arm/boot/dts/exynos4210-origen.dts            |   12 +
+> > >  arch/arm/boot/dts/exynos4210-smdkv310.dts          |   12 +
+> > >  arch/arm/boot/dts/exynos4210.dtsi                  |    6 +
+> > >  arch/arm/boot/dts/exynos4412-origen.dts            |   12 +
+> > >  arch/arm/boot/dts/exynos4412-smdk4412.dts          |   12 +
+> > >  arch/arm/boot/dts/exynos4x12.dtsi                  |    6 +
+> > >  arch/arm/mach-exynos/Kconfig                       |    1 +
+> > >  arch/arm/mach-exynos/Makefile                      |    3 -
+> > >  arch/arm/mach-exynos/clock-exynos4.h               |   35 -
+> > >  arch/arm/mach-exynos/clock-exynos4210.c            |  188 ------
+> > >  arch/arm/mach-exynos/clock-exynos4212.c            |  192 ------
+> > >  arch/arm/mach-exynos/common.c                      |   57 ++-
+> > >  arch/arm/mach-exynos/common.h                      |   21 +-
+> > >  arch/arm/mach-exynos/mach-armlex4210.c             |    3 +-
+> > >  arch/arm/mach-exynos/mach-exynos4-dt.c             |   72 +--
+> > >  arch/arm/mach-exynos/mach-exynos5-dt.c             |    2 +-
+> > >  arch/arm/mach-exynos/mach-nuri.c                   |    5 +-
+> > >  arch/arm/mach-exynos/mach-origen.c                 |    5 +-
+> > >  arch/arm/mach-exynos/mach-smdk4x12.c               |    5 +-
+> > >  arch/arm/mach-exynos/mach-smdkv310.c               |    7 +-
+> > >  arch/arm/mach-exynos/mach-universal_c210.c         |    3 +-
+> > >  arch/arm/mach-exynos/mct.c                         |   32 +-
+> > >  arch/arm/plat-samsung/Kconfig                      |    4 +-
+> > >  drivers/clk/Makefile                               |    1 +
+> > >  drivers/clk/samsung/Makefile                       |    6 +
+> > >  drivers/clk/samsung/clk-exynos4.c                  |  655
+> > >  ++++++++++++++++++++ drivers/clk/samsung/clk-pll.c                  
+> > >     |  400 ++++++++++++ drivers/clk/samsung/clk-pll.h                
+> > >       |   38 ++
+> > >  drivers/clk/samsung/clk.c                          |  180 ++++++
+> > >  drivers/clk/samsung/clk.h                          |  216 +++++++
+> > >  32 files changed, 1919 insertions(+), 537 deletions(-)
+> > >  create mode 100644
+> > >  Documentation/devicetree/bindings/clock/exynos4-clock.txt delete
+> > >  mode 100644 arch/arm/mach-exynos/clock-exynos4.h
+> > >  delete mode 100644 arch/arm/mach-exynos/clock-exynos4210.c
+> > >  delete mode 100644 arch/arm/mach-exynos/clock-exynos4212.c
+> > >  create mode 100644 drivers/clk/samsung/Makefile
+> > >  create mode 100644 drivers/clk/samsung/clk-exynos4.c
+> > >  create mode 100644 drivers/clk/samsung/clk-pll.c
+> > >  create mode 100644 drivers/clk/samsung/clk-pll.h
+> > >  create mode 100644 drivers/clk/samsung/clk.c
+> > >  create mode 100644 drivers/clk/samsung/clk.h
+> > 
+> > Thanks Thomas! The patch series generally looks good to me, I've tested
+> > it on an Exynos4412 based board. I have applied couple fixes that Tomasz
+> > Figa has sent you off the mailing list. And to make a MIPI-CSI2 camera
+> > working a small fixup patch as below.
+> > 
+> > I have just one remark, but this could possibly be done as a follow up
+> > patch. Namely it may make sense to rename various sclk_* clocks to just
+> > "sclk", so for instance we don't have "fimd", "sclk_fimd", "fimc",
+> > "sclk_fimc" but e.g. "bus" or "gate" and "sclk" for each device. Such
+> > naming might be better for handling devices at core subsystems level,
+> > e.g. Runtime PM or devfreq.
+> > 
+> > Please feel free to add:
+> > 
+> > Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> > Tested-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> 
+> I fully agree with Sylwester. After adding mentioned fixup patches, feel 
+> free to add my Reviewed-by and Tested-by as well.
+> 
+> > 
+> > I would be great to have this patch set merged for 3.9, so people can
+> > switch earlier to the common clock API, rather than modifying files
+> > that will be removed soon.
+> 
+> Yes, it would be great to have this series merged earlier, because it's 
+> very important for further development of Device Tree support on Samsung 
+> platforms. Possibly for 3.9 it could be merged as an alternative to the 
+> legacy clock code and after enough testing legacy code could be dropped in 
+> next kernel release.
+> 
 
-Looks like this one fell through the cracks for v3.8 merge
-window. Can you please update it and send it to Benoit with
-linux-omap and LAKML lists cc:d?
-
-Now scripts/get_maintainer.pl should do the right trick for
-this patch.
+I thought that the Exynos4 and Exynos5 ports to the common clk framework
+were going to be merged.  Is that still the plan?
 
 Regards,
+Mike
 
-Tony
-
-
-> > g.
-> >
-> >>
-> >> On Tue, Oct 30, 2012 at 10:42 PM, Marek Belisko
-> >> <marek.belisko-e6Ot0yJZRx5zTq7rFmK8cA@public.gmane.org> wrote:
-> >> > Signed-off-by: Marek Belisko <marek.belisko-e6Ot0yJZRx5zTq7rFmK8cA@public.gmane.org>
-> >> > ---
-> >> >  arch/arm/boot/dts/omap3-gta04.dts |   65 +++++++++++++++++++++++++++++++++++++
-> >> >  1 file changed, 65 insertions(+)
-> >> >  create mode 100644 arch/arm/boot/dts/omap3-gta04.dts
-> >> >
-> >> > diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
-> >> > new file mode 100644
-> >> > index 0000000..76efd13
-> >> > --- /dev/null
-> >> > +++ b/arch/arm/boot/dts/omap3-gta04.dts
-> >> > @@ -0,0 +1,65 @@
-> >> > +/*
-> >> > + * Copyright (C) 2012 Marek Belisko <marek.belisko-e6Ot0yJZRx5zTq7rFmK8cA@public.gmane.org>
-> >> > + *
-> >> > + * Based on omap3-beagle-xm.dts
-> >> > + *
-> >> > + * This program is free software; you can redistribute it and/or modify
-> >> > + * it under the terms of the GNU General Public License version 2 as
-> >> > + * published by the Free Software Foundation.
-> >> > + */
-> >> > +/dts-v1/;
-> >> > +
-> >> > +/include/ "omap3.dtsi"
-> >> > +
-> >> > +/ {
-> >> > +       model = "OMAP3 GTA04";
-> >> > +       compatible = "ti,omap3-gta04", "ti,omap3";
-> >> > +
-> >> > +       memory {
-> >> > +               device_type = "memory";
-> >> > +               reg = <0x80000000 0x20000000>; /* 512 MB */
-> >> > +       };
-> >> > +
-> >> > +       gpio-keys {
-> >> > +               compatible = "gpio-keys";
-> >> > +               #address-cells = <1>;
-> >> > +               #size-cells = <0>;
-> >> > +               aux-button {
-> >> > +                       label = "AUX";
-> >> > +                       linux,code = <169>;
-> >> > +                       gpios = <&gpio1 7 1>;
-> >> > +                       gpio-key,wakeup;
-> >> > +               };
-> >> > +       };
-> >> > +};
-> >> > +
-> >> > +&i2c1 {
-> >> > +       clock-frequency = <2600000>;
-> >> > +
-> >> > +       twl: twl@48 {
-> >> > +               reg = <0x48>;
-> >> > +               interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-> >> > +               interrupt-parent = <&intc>;
-> >> > +       };
-> >> > +};
-> >> > +
-> >> > +/include/ "twl4030.dtsi"
-> >> > +
-> >> > +&i2c2 {
-> >> > +       clock-frequency = <400000>;
-> >> > +       /* Pressure Sensor */
-> >> > +       bmp085@77 {
-> >> > +               compatible = "bosch,bmp085";
-> >> > +               reg = <0x77>;
-> >> > +       };
-> >> > +};
-> >> > +
-> >> > +&i2c3 {
-> >> > +       clock-frequency = <100000>;
-> >> > +};
-> >> > +
-> >> > +&mmc1 {
-> >> > +       vmmc-supply = <&vmmc1>;
-> >> > +       bus-width = <4>;
-> >> > +};
-> >> > +
-> >> > --
-> >> > 1.7.9.5
-> >> >
-> >>
-> >>
-> >>
-> >> --
-> >> as simple and primitive as possible
-> >> -------------------------------------------------
-> >> Marek Belisko - OPEN-NANDRA
-> >> Freelance Developer
-> >>
-> >> Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-> >> Tel: +421 915 052 184
-> >> skype: marekwhite
-> >> twitter: #opennandra
-> >> web: http://open-nandra.com
-> >
-> > --
-> > Grant Likely, B.Sc, P.Eng.
-> > Secret Lab Technologies, Ltd.
-> 
-> Marek
-> 
+> Best regards
 > -- 
-> as simple and primitive as possible
-> -------------------------------------------------
-> Marek Belisko - OPEN-NANDRA
-> Freelance Developer
-> 
-> Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-> Tel: +421 915 052 184
-> skype: marekwhite
-> twitter: #opennandra
-> web: http://open-nandra.com
+> Tomasz Figa
+> Samsung Poland R&D Center
+> SW Solution Development, Linux Platform
