@@ -1,140 +1,69 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/7] ARM i.MX6q: Add GPU, VPU, IPU, and OpenVG resets
- to System Reset Controller (SRC)
-Date: Mon, 21 Jan 2013 10:52:10 +0100
-Message-ID: <1358761930.2522.54.camel@pizza.hi.pengutronix.de>
-References: <1358352787-15441-1-git-send-email-p.zabel@pengutronix.de>
- <1358352787-15441-4-git-send-email-p.zabel@pengutronix.de>
- <CAKGA1bmjKQcX3RzSjbnuYqoJqbzXYGa_Whv7QQkNyAhBDzZWdw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKGA1bmjKQcX3RzSjbnuYqoJqbzXYGa_Whv7QQkNyAhBDzZWdw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH v4 0/7] ARM: Exynos: Enable device tree support for MCT controller
+Date: Mon, 21 Jan 2013 02:02:15 -0800
+Message-ID: <1358762542-19008-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, t.figa@samsung.com, chaos.youn@samsung.com, sylvester.nawrocki@gmail.com, olof@lixom.net, swarren@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Matt,
+Changes since v3:
+- Based on Stephen Warren's CONFIG_CLKSRC_OF patches (merged from arm-soc
+  'timer/cleanup' branch).
+- Moved the mct driver from mach-exynos to drivers/clocksource
 
-thank you for your comments.
+Changes since v2:
+- Rebased to linux 3.8-rc1
 
-Am Freitag, den 18.01.2013, 13:57 -0600 schrieb Matt Sealey:
-> On Wed, Jan 16, 2013 at 10:13 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > The SRC has auto-deasserting reset bits that control reset lines to
-> > the GPU, VPU, IPU, and OpenVG IP modules. This patch adds a reset
-> > controller that can be controlled by those devices using the
-> > reset controller API.
-> >
-> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Hi Philipp,
-> 
-> I'm so glad someone actually sat down and coded this :)
-> 
-> +
-> +static int imx_src_reset(unsigned long sw_reset_idx)
-> +{
-> 
-> Having a name like imx_src_reset seems needlessly generic and
-> confusing. Surely we are performing a reset on an SoC unit and not
-> having the SRC itself reset, even if it is clearer when we look at the
-> argument?
+Changes since v1:
+- Includes changes suggested by Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
 
-imx_src_reset_module, then? Also, I'll add the struct
-reset_controller_dev pointer as an argument next time:
+This patch series adds device tree support for Exynos4/5 MCT controller and
+moves the MCT driver from mach-exynos to drivers/clocksource. These patches
+are based on Stephen Warren's CONFIG_CLKSRC_OF patches which were merged from
+the 'timer/cleanup' branch of the arm-soc tree. It also depends on the
+following two patches.
 
-static int imx_src_reset_module(struct reset_controller_dev *rcdev,
-                unsigned long sw_reset_idx)
+- http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/143084.html
+- http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/143119.html
 
-> +       timeout = jiffies + msecs_to_jiffies(1000);
-> +       while (readl(src_base + SRC_SCR) & bit) {
-> +               if (time_after(jiffies, timeout))
-> +                       return -ETIME;
-> +               cpu_relax();
-> 
-> ... I do wonder though, all versions of the very-similar i.MX SRC
-> (i.MX51, i.MX53, i.MX6) implementing these bits actually have an
-> interrupt (with the same status-bit positions as the reset-enable
-> register) which fires when the unit actually resets.
-> 
-> Rather than poll with a timeout shouldn't we be waiting for the
-> interrupt and doing some completion event? It seems a little overly
-> involved to me to poll and cpu_relax() when we can just let the kernel
-> do whatever it likes while the hardware does the job.
-> 
-> It is technically impossible for the unit to "never reset" without
-> there being something hideously wrong elsewhere (i.e. if you ask the
-> VPU to reset, and it never fires the interrupt, you have far, far more
-> problems than just a locked VPU), but we actually should have no idea
-> without some empirical data (under every scenario at least) how long
-> it would actually take so having a timeout seems rather odd. Having a
-> timeout of a full second also *seems* to be far too long under the
-> same circumstances but I don't think anyone can predict what the real
-> values might be.
-> 
-> I looked at writing this exact same kind of code a long while back
-> including support for i.MX51 and i.MX53 as a cleanup for the older
-> version of Sascha's IPU driver, and simply never got it nice enough to
-> submit upstream (it is currently stuffed away in a huge backup disk
-> and I have no idea where the kernel tree is), but the way I handled it
-> was something like registering a real interrupt handler in the src
-> initialization function and then simply setting the bit and letting
-> the completion event do the work. I also did have a timeout for 5000ms
-> which basically would still capture any reset oddities - if we passed
-> 5 seconds, and the unit did not reset, to start executing WARN_ON or
-> something to give the kernel developer (or user) a real indication
-> that something is *actually* hideously wrong with their board
-> implementation or the stability of their SoC, power rails, heatsink
-> etc.. or million other possibilities (any warning is at least better
-> than none).
-> 
-> I could never get the warning code to ever execute except in a
-> contrived test scenario (I set a reserved bit and faked that it never
-> fired an interrupt) but in my opinion, ANY warning on this kind of
-> failure to reset is better than just returning -ETIME to the reset
-> consumer and hoping the consumer reports a reasonable error to the
-> kernel log - if the SRC fails to reset a unit then this is not an
-> error condition so low in seriousness that telling the consumer
-> something timed out is adequate (based on the intended and functional
-> implementation of the SRC controller itself). As I said, what I
-> decided on was that I would return -ETIMEDOUT (the wrong code, but
-> bear with me, I was hacking) but before return, pr_err the problem
-> unit, and then WARN_ON inside the SRC driver itself, so that
-> everything would carry on (no system lockups or panics), but the
-> driver was not responsible for reporting the problem and the
-> seriousness was implicated in something a little more noticable than a
-> single line in a log.
-> 
-> I understand that waiting on an interrupt or completion event is not
-> available infrastructure in the current reset-controller code... but
-> maybe it should be a little more advanced than polling implementation
-> :D
+This patch series has been tested on Exynos4210 based Origen board, Exynos4412
+based Origen board and Exynos5250 based SMDK board.
 
-Yes, maybe the module reset part of the SRC should be implemented as a
-proper device driver in drivers/reset. Then we could use the interrupt
-functionality and WARN_ON(timeout), as you suggest.
+Thomas Abraham (7):
+  ARM: Exynos: add a register base address variable in mct controller driver
+  ARM: Exynos: prepare an array of MCT interrupt numbers and use it
+  ARM: Exynos: add device tree support for MCT controller driver
+  ARM: Exynos: allow dt based discovery of mct controller using clocksource_of_init
+  ARM: dts: add mct device tree node for all supported Exynos SoC's
+  ARM: Exynos: remove static io-remapping of mct registers for Exynos5
+  ARM: Exynos: move mct driver to drivers/clocksource
 
-> I am not not-acking the code, and I would be overjoyed for it to go in
-> as-is (maybe with a function rename as above), but I would appreciate
-> the consideration that a reset-controller with some way of reporting a
-> successful reset other than polling is something that might come in
-> handy for other people (and i.MX SRC would be a highly desirable use
-> case) and at the very least in the case of the i.MX SRC, "this unit
-> did not reset after [possibly more than] a whole second of waiting" is
-> not encompassed within if (ret) pr_err("unit did not reset") in the
-> driver.. nor would this be an immediate and serious indication to the
-> driver or end-user.
-
-regards
-Philipp
+ .../bindings/timer/samsung,exynos4210-mct.txt      |   68 +++++++
+ arch/arm/Kconfig                                   |    2 +-
+ arch/arm/boot/dts/exynos4210.dtsi                  |    7 +
+ arch/arm/boot/dts/exynos4212.dtsi                  |    9 +
+ arch/arm/boot/dts/exynos4412.dtsi                  |    7 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |   20 ++
+ arch/arm/mach-exynos/Kconfig                       |    8 +-
+ arch/arm/mach-exynos/Makefile                      |    2 -
+ arch/arm/mach-exynos/common.c                      |    5 -
+ arch/arm/mach-exynos/common.h                      |    2 +-
+ arch/arm/mach-exynos/include/mach/irqs.h           |    6 -
+ arch/arm/mach-exynos/include/mach/map.h            |    1 -
+ arch/arm/mach-exynos/include/mach/regs-mct.h       |   53 ------
+ arch/arm/mach-exynos/mach-armlex4210.c             |    2 +-
+ arch/arm/mach-exynos/mach-exynos4-dt.c             |    3 +-
+ arch/arm/mach-exynos/mach-exynos5-dt.c             |    3 +-
+ arch/arm/mach-exynos/mach-nuri.c                   |    2 +-
+ arch/arm/mach-exynos/mach-origen.c                 |    2 +-
+ arch/arm/mach-exynos/mach-smdk4x12.c               |    4 +-
+ arch/arm/mach-exynos/mach-smdkv310.c               |    4 +-
+ drivers/clocksource/Kconfig                        |    5 +
+ drivers/clocksource/Makefile                       |    1 +
+ .../mct.c => drivers/clocksource/exynos_mct.c      |  197 +++++++++++++-------
+ 23 files changed, 264 insertions(+), 149 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
+ delete mode 100644 arch/arm/mach-exynos/include/mach/regs-mct.h
+ rename arch/arm/mach-exynos/mct.c => drivers/clocksource/exynos_mct.c (67%)
