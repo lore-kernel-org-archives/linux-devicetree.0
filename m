@@ -1,132 +1,171 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH v4 3/7] ARM: Exynos: add device tree support for MCT
- controller driver
-Date: Mon, 21 Jan 2013 10:34:01 -0800
-Message-ID: <CAJuYYwQTSOBtJ_7YQs9FpkU=vpKRR=YG0MXmX10OkiBsHmNUSQ@mail.gmail.com>
-References: <1358762542-19008-1-git-send-email-thomas.abraham@linaro.org>
-	<1358762542-19008-4-git-send-email-thomas.abraham@linaro.org>
-	<20130121134610.GJ15707@e106331-lin.cambridge.arm.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] arm/dts: Add basic support for gta04 (Openmoko next
+ generation) board.
+Date: Mon, 21 Jan 2013 10:46:36 -0800
+Message-ID: <20130121184635.GK22517@atomide.com>
+References: <1351633367-19082-1-git-send-email-marek.belisko@open-nandra.com>
+ <CAAfyv34D4bTO=k8niM42CDQFb0tP4uOnvX_KPT3+F6z59jPg3Q@mail.gmail.com>
+ <20121115115925.2FE453E09BB@localhost>
+ <CAAfyv34ihnwL9JheLzY61zthTkBexTOe3cgkbU4Z+sFG2w1g6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130121134610.GJ15707@e106331-lin.cambridge.arm.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "swarren@nvidia.com" <swarren@nvidia.com>, "sylvester.nawrocki@gmail.com" <sylvester.nawrocki@gmail.com>, "chaos.youn@samsung.com" <chaos.youn@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAAfyv34ihnwL9JheLzY61zthTkBexTOe3cgkbU4Z+sFG2w1g6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc,
+* Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [121115 05:31]:
+> CC'ing Tony
+> 
+> On Thu, Nov 15, 2012 at 12:59 PM, Grant Likely
+> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> > On Wed, 14 Nov 2012 21:26:58 +0100, Belisko Marek <marek.belisko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> CC' Grant & Rob
+> >
+> > Hi Marek
+> >
+> > Since this is an OMAP board, you should send the changes to Tony and
+> > they should be merged through the arm-soc tree.
 
-On 21 January 2013 05:46, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Mon, Jan 21, 2013 at 10:02:18AM +0000, Thomas Abraham wrote:
->> Allow the MCT controller base address and interrupts to be obtained from
->> device tree and remove unused static definitions of these. The non-dt support
->> for Exynos5250 is removed but retained for Exynos4210 based platforms.
->>
->> Cc: Changhwan Youn <chaos.youn@samsung.com>
->> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
->> ---
->>  .../bindings/timer/samsung,exynos4210-mct.txt      |   68 ++++++++++++++++++++
->>  arch/arm/mach-exynos/include/mach/irqs.h           |    6 --
->>  arch/arm/mach-exynos/mct.c                         |   49 +++++++++++----
->>  3 files changed, 105 insertions(+), 18 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
->>
->> diff --git a/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
->> new file mode 100644
->> index 0000000..cb47bfb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/timer/samsung,exynos4210-mct.txt
->> @@ -0,0 +1,68 @@
->> +Samsung's Multi Core Timer (MCT)
->> +
->> +The Samsung's Multi Core Timer (MCT) module includes two main blocks, the
->> +global timer and CPU local timers. The global timer is a 64-bit free running
->> +up-counter and can generate 4 interrupts when the counter reaches one of the
->> +four preset counter values. The CPU local timers are 32-bit free running
->> +down-counters and generate an interrupt when the counter expires. There is
->> +one CPU local timer instantiated in MCT for every CPU in the system.
->> +
->> +Required properties:
->> +
->> +- compatible: should be "samsung,exynos4210-mct".
->> +  (a) "samsung,exynos4210-mct", for mct compatible with Exynos4210 mct.
->> +  (b) "samsung,exynos4412-mct", for mct compatible with Exynos4412 mct.
->> +
->> +- reg: base address of the mct controller and length of the address space
->> +  it occupies.
->> +
->> +- interrupts: the list of interrupts generated by the controller. The following
->> +  should be the order of the interrupts specified. The local timer interrupts
->> +  should be specified after the four global timer interrupts have been
->> +  specified.
->> +
->> +     0: Global Timer Interrupt 0
->> +     1: Global Timer Interrupt 1
->> +     2: Global Timer Interrupt 2
->> +     3: Global Timer Interrupt 3
->> +     4: Local Timer Interrupt 0
->> +     5: Local Timer Interrupt 1
->> +     6: ..
->> +     7: ..
->> +     i: Local Timer Interrupt n
->> +
->> +Example 1: In this example, the system uses only the first global timer
->> +        interrupt generated by MCT and the remaining three global timer
->> +        interrupts are unused. Two local timer interrupts have been
->> +        specified.
->> +
->> +     mct@10050000 {
->> +             compatible = "samsung,exynos4210-mct";
->> +             reg = <0x10050000 0x800>;
->> +             interrupts = <0 57 0>, <0 0 0>, <0 0 0>, <0 0 0>,
->> +                          <0 42 0>, <0 48 0>;
->
-> Rather than padding the interrupts list with nonexistent interrupts, could you
-> not use something like a #global-interrupts property?
->
-> That way you don't have to list fake interrupts, you know exactly how many
-> global interrupts to expect (so you can sanity-check the list without any
-> special knowledge of the interrupt controller), and it's easier to support
-> future revisions which could have more interrupts, in a backwards-compatible
-> fashion.
+Looks like this one fell through the cracks for v3.8 merge
+window. Can you please update it and send it to Benoit with
+linux-omap and LAKML lists cc:d?
 
-Yes, you are right. I will do this change in the next version. Thanks
-for your suggestion.
+Now scripts/get_maintainer.pl should do the right trick for
+this patch.
 
-Thanks,
-Thomas.
+Regards,
 
->
->> +     };
->> +
->> +Example 2: In this example, the MCT global and local timer interrupts are
->> +        connected to two seperate interrupt controllers. Hence, an
->> +        interrupt-map is created to map the interrupts to the respective
->> +        interrupt controllers.
->> +
->> +     mct@101C0000 {
->> +             compatible = "samsung,exynos4210-mct";
->> +             reg = <0x101C0000 0x800>;
->> +             interrupt-controller;
->> +             #interrups-cells = <2>;
->> +             interrupt-parent = <&mct_map>;
->> +             interrupts = <0 0>, <1 0>, <2 0>, <3 0>,
->> +                          <4 0>, <5 0>;
->> +
->> +             mct_map: mct-map {
->> +                     #interrupt-cells = <2>;
->> +                     #address-cells = <0>;
->> +                     #size-cells = <0>;
->> +                     interrupt-map = <0x0 0 &combiner 23 3>,
->> +                                     <0x4 0 &gic 0 120 0>,
->> +                                     <0x5 0 &gic 0 121 0>;
->> +             };
->> +     };
->
->
-> [...]
->
-> Thanks,
-> Mark.
->
+Tony
+
+
+> > g.
+> >
+> >>
+> >> On Tue, Oct 30, 2012 at 10:42 PM, Marek Belisko
+> >> <marek.belisko-e6Ot0yJZRx5zTq7rFmK8cA@public.gmane.org> wrote:
+> >> > Signed-off-by: Marek Belisko <marek.belisko-e6Ot0yJZRx5zTq7rFmK8cA@public.gmane.org>
+> >> > ---
+> >> >  arch/arm/boot/dts/omap3-gta04.dts |   65 +++++++++++++++++++++++++++++++++++++
+> >> >  1 file changed, 65 insertions(+)
+> >> >  create mode 100644 arch/arm/boot/dts/omap3-gta04.dts
+> >> >
+> >> > diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
+> >> > new file mode 100644
+> >> > index 0000000..76efd13
+> >> > --- /dev/null
+> >> > +++ b/arch/arm/boot/dts/omap3-gta04.dts
+> >> > @@ -0,0 +1,65 @@
+> >> > +/*
+> >> > + * Copyright (C) 2012 Marek Belisko <marek.belisko-e6Ot0yJZRx5zTq7rFmK8cA@public.gmane.org>
+> >> > + *
+> >> > + * Based on omap3-beagle-xm.dts
+> >> > + *
+> >> > + * This program is free software; you can redistribute it and/or modify
+> >> > + * it under the terms of the GNU General Public License version 2 as
+> >> > + * published by the Free Software Foundation.
+> >> > + */
+> >> > +/dts-v1/;
+> >> > +
+> >> > +/include/ "omap3.dtsi"
+> >> > +
+> >> > +/ {
+> >> > +       model = "OMAP3 GTA04";
+> >> > +       compatible = "ti,omap3-gta04", "ti,omap3";
+> >> > +
+> >> > +       memory {
+> >> > +               device_type = "memory";
+> >> > +               reg = <0x80000000 0x20000000>; /* 512 MB */
+> >> > +       };
+> >> > +
+> >> > +       gpio-keys {
+> >> > +               compatible = "gpio-keys";
+> >> > +               #address-cells = <1>;
+> >> > +               #size-cells = <0>;
+> >> > +               aux-button {
+> >> > +                       label = "AUX";
+> >> > +                       linux,code = <169>;
+> >> > +                       gpios = <&gpio1 7 1>;
+> >> > +                       gpio-key,wakeup;
+> >> > +               };
+> >> > +       };
+> >> > +};
+> >> > +
+> >> > +&i2c1 {
+> >> > +       clock-frequency = <2600000>;
+> >> > +
+> >> > +       twl: twl@48 {
+> >> > +               reg = <0x48>;
+> >> > +               interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+> >> > +               interrupt-parent = <&intc>;
+> >> > +       };
+> >> > +};
+> >> > +
+> >> > +/include/ "twl4030.dtsi"
+> >> > +
+> >> > +&i2c2 {
+> >> > +       clock-frequency = <400000>;
+> >> > +       /* Pressure Sensor */
+> >> > +       bmp085@77 {
+> >> > +               compatible = "bosch,bmp085";
+> >> > +               reg = <0x77>;
+> >> > +       };
+> >> > +};
+> >> > +
+> >> > +&i2c3 {
+> >> > +       clock-frequency = <100000>;
+> >> > +};
+> >> > +
+> >> > +&mmc1 {
+> >> > +       vmmc-supply = <&vmmc1>;
+> >> > +       bus-width = <4>;
+> >> > +};
+> >> > +
+> >> > --
+> >> > 1.7.9.5
+> >> >
+> >>
+> >>
+> >>
+> >> --
+> >> as simple and primitive as possible
+> >> -------------------------------------------------
+> >> Marek Belisko - OPEN-NANDRA
+> >> Freelance Developer
+> >>
+> >> Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+> >> Tel: +421 915 052 184
+> >> skype: marekwhite
+> >> twitter: #opennandra
+> >> web: http://open-nandra.com
+> >
+> > --
+> > Grant Likely, B.Sc, P.Eng.
+> > Secret Lab Technologies, Ltd.
+> 
+> Marek
+> 
+> -- 
+> as simple and primitive as possible
+> -------------------------------------------------
+> Marek Belisko - OPEN-NANDRA
+> Freelance Developer
+> 
+> Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+> Tel: +421 915 052 184
+> skype: marekwhite
+> twitter: #opennandra
+> web: http://open-nandra.com
