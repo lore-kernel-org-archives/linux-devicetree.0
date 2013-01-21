@@ -1,48 +1,49 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH] ARM: architected timers: allow dt based discovery using
- =?UTF-8?Q?clocksource=5Fof=5Finit?=
-Date: Mon, 21 Jan 2013 19:25:55 +0100
-Message-ID: <ef8b986a3b0a2c3fae230c8d7416d42d@localhost>
+ clocksource_of_init
+Date: Mon, 21 Jan 2013 10:30:47 -0800
+Message-ID: <CAJuYYwSfH8jTterd6aNc_Aw81PBschfCUf=REKB35=Y4a=i_7A@mail.gmail.com>
 References: <1358731326-2979-1-git-send-email-thomas.abraham@linaro.org>
  <50FD7904.1070201@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <50FD7904.1070201@wwwdotorg.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: swarren@nvidia.com, johnstul@us.ibm.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50FD7904.1070201-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 21 Jan 2013 10:21:08 -0700, Stephen Warren <swarren@wwwdotorg.org>
-wrote:
+Hi Stephen,
+
+On 21 January 2013 09:21, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
 > On 01/20/2013 06:22 PM, Thomas Abraham wrote:
 >> Add an entry in __clksrc_of_table so that ARMv7 architected timer is
 >> discoverable using call to clocksource_of_init.
-> 
->> diff --git a/arch/arm/kernel/arch_timer.c
-b/arch/arm/kernel/arch_timer.c
-> 
+>
+>> diff --git a/arch/arm/kernel/arch_timer.c b/arch/arm/kernel/arch_timer.c
+>
 >> +#ifdef CONFIG_CLKSRC_OF
->> +CLOCKSOURCE_OF_DECLARE(armv7_timer, "arm,armv7-timer",
->> arch_timer_of_register)
+>> +CLOCKSOURCE_OF_DECLARE(armv7_timer, "arm,armv7-timer", arch_timer_of_register)
 >> +#endif
-> 
+>
 > I wonder if we shouldn't enhance include/linux/clocksource.h to define
 > CLOCKSOURCE_OF_DECLARE even when !CONFIG_CLKSRC_OF; that way, drivers
 > wouldn't need that ifdef.
 
-Indeed. That would be a lot nicer.
+Yes, it will be helpful to have a !CONFIG_CLKSRC_OF version of
+CLOCKSOURCE_OF_DECLARE. And can CONFIG_CLKSRC_OF be enabled by default
+for all ARM platforms?
 
-        M.
--- 
-Fast, cheap, reliable. Pick two.
+Thanks,
+Thomas.
