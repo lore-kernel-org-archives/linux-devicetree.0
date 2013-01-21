@@ -1,67 +1,37 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/6] arm: mvebu: Add support for local interrupt
-Date: Mon, 21 Jan 2013 23:07:10 +0100
-Message-ID: <50FDBC0E.1030706@free-electrons.com>
-References: <1358790842-2986-1-git-send-email-gregory.clement@free-electrons.com>
- <1358790842-2986-2-git-send-email-gregory.clement@free-electrons.com>
- <20130121191744.0a04b941@skate>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 2/7] ARM: sunxi: Add pinctrl driver for Allwinner SoCs
+Date: Mon, 21 Jan 2013 23:09:07 +0100
+Message-ID: <CACRpkdb8xLeP+RB+JfuEQu=MQ0yO6tVFasVrMsOE4FSfJHrOiw@mail.gmail.com>
+References: <1358544639-14761-1-git-send-email-maxime.ripard@free-electrons.com>
+	<1358544639-14761-3-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130121191744.0a04b941@skate>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi@marvell>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1358544639-14761-3-git-send-email-maxime.ripard@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>, arm@kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Stefan Roese <sr@denx.de>, Alejandro Mery <amery@geeks.cl>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/2013 07:17 PM, Thomas Petazzoni wrote:
-> Dear Gregory CLEMENT,
-> 
-> Just some minor nitpicks below.
+On Fri, Jan 18, 2013 at 10:30 PM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> The Allwinner SoCs have an IP module that handle both the muxing and the
+> GPIOs.
+>
+> This IP has 8 banks of 32 bits, with a number of pins actually useful
+> for each of these banks varying from one to another, and depending on
+> the SoC used on the board.
+>
+> This driver only implements the pinctrl part, the gpio part will come
+> eventually.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 
-OK I will take them into account for the V2.
+Patch title says "ARM: " but all changed except one line is to the pinctrl
+tree so I have applied it to the pinctrl tree on a separate allwinner
+branch for now (will merge it to devel when deemde stable).
 
-Thanks
+ARM SoC boys: can I have an ACK on this oneliner?
 
-> 
-> On Mon, 21 Jan 2013 18:53:57 +0100, Gregory CLEMENT wrote:
-> 
->> +	if (hw < ARMADA_370_XP_MAX_PER_CPU_IRQS) {
->> +
-> 
-> Unneeded empty line.
-> 
->> +		irq_set_percpu_devid(virq);
->> +		irq_set_chip_and_handler(virq, &armada_370_xp_irq_chip,
->> +					handle_percpu_devid_irq);
->> +
->> +	} else {
->> +		irq_set_chip_and_handler(virq, &armada_370_xp_irq_chip,
->> +					handle_level_irq);
->> +	}
-> 
-> Braces useless since there is only one statement in the else.
-> 
->> +		set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
-> 
-> Incorrect indentation for this line.
-> 
-> Thomas
-> 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Yours,
+Linus Walleij
