@@ -1,118 +1,38 @@
-From: Ezequiel Garcia <elezegarcia@gmail.com>
-Subject: Re: [PATCH v2 3/3] arm: omap2: gpmc: add DT bindings for OneNAND
-Date: Mon, 21 Jan 2013 13:57:42 -0300
-Message-ID: <CALF0-+VOxtsfQLZCGujvjMrsGacbfVTMytRUX=CfKa3+FgnU1w@mail.gmail.com>
-References: <1358634477-25868-1-git-send-email-ezequiel.garcia@free-electrons.com>
-	<1358634477-25868-3-git-send-email-ezequiel.garcia@free-electrons.com>
-	<20130121123020.GI15707@e106331-lin.cambridge.arm.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] ARM: architected timers: allow dt based discovery using
+ clocksource_of_init
+Date: Mon, 21 Jan 2013 10:21:08 -0700
+Message-ID: <50FD7904.1070201@wwwdotorg.org>
+References: <1358731326-2979-1-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130121123020.GI15707@e106331-lin.cambridge.arm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Daniel Mack <zonque@gmail.com>
-Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "martinez.javier@gmail.com" <martinez.javier@gmail.com>, "matthias.bgg@googlemail.com" <matthias.bgg@googlemail.com>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1358731326-2979-1-git-send-email-thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+On 01/20/2013 06:22 PM, Thomas Abraham wrote:
+> Add an entry in __clksrc_of_table so that ARMv7 architected timer is
+> discoverable using call to clocksource_of_init.
 
-On Mon, Jan 21, 2013 at 9:30 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> [...]
->
->> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
->> index 01ce462..f7de9eb 100644
->> --- a/arch/arm/mach-omap2/gpmc.c
->> +++ b/arch/arm/mach-omap2/gpmc.c
->> @@ -39,6 +39,7 @@
->>  #include "omap_device.h"
->>  #include "gpmc.h"
->>  #include "gpmc-nand.h"
->> +#include "gpmc-onenand.h"
->>
->>  #define      DEVICE_NAME             "omap-gpmc"
->>
->> @@ -1259,6 +1260,43 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
->>  }
->>  #endif
->>
->> +#ifdef CONFIG_MTD_ONENAND
->> +static int gpmc_probe_onenand_child(struct platform_device *pdev,
->> +                              struct device_node *child)
->> +{
->> +     u32 val;
->> +     struct omap_onenand_platform_data *gpmc_onenand_data;
->> +
->> +     if (of_property_read_u32(child, "reg", &val) < 0) {
->> +             dev_err(&pdev->dev, "%s has no 'reg' property\n",
->> +                     child->full_name);
->> +             return -ENODEV;
->> +     }
->> +
->> +     gpmc_onenand_data = devm_kzalloc(&pdev->dev, sizeof(*gpmc_onenand_data),
->> +                                      GFP_KERNEL);
->> +     if (!gpmc_onenand_data)
->> +             return -ENOMEM;
->> +
->> +     gpmc_onenand_data->cs = val;
->> +     gpmc_onenand_data->of_node = child;
->> +     gpmc_onenand_data->dma_channel = -1;
->> +
->> +     if (!of_property_read_u32(child, "dma-channel", &val))
->> +             gpmc_onenand_data->dma_channel = val;
->> +
->> +     gpmc_onenand_init(gpmc_onenand_data);
->> +
->> +     return 0;
->> +}
->> +#else
->> +static int gpmc_probe_onenand_child(struct platform_device *pdev,
->> +                                 struct device_node *child)
->> +{
->> +     return 0;
->> +}
->> +#endif
->> +
->>  static int gpmc_probe_dt(struct platform_device *pdev)
->>  {
->>       int ret;
->> @@ -1276,6 +1314,12 @@ static int gpmc_probe_dt(struct platform_device *pdev)
->>                       return ret;
->>       }
->>
->
-> This doesn't look right to me:
->
->> +     for_each_node_by_name(child, "onenand") {
->> +             ret = gpmc_probe_onenand_child(pdev, child);
->> +             of_node_put(child);
->> +             if (ret < 0)
->> +                     return ret;
->> +     }
->
-> for_each_node_by_name automatically calls of_node_put on each node once passed,
-> and as far as I can tell, gpmc_probe_onenand_child doesn't do anything that'd
-> increment a node's refcount.
->
-> As far as I can see, you only need the of_node_put in the error case:
->
-> for_each_node_by_name(child, "onenand") {
->         ret = gpmc_probe_onenand_child(pdev, child);
->         if (ret < 0) {
->                 of_node_put(child);
->                 return ret;
->         }
-> }
->
-> Have I missed something here?
->
+> diff --git a/arch/arm/kernel/arch_timer.c b/arch/arm/kernel/arch_timer.c
 
-Mmm... perhaps I've overlooked that code.
+> +#ifdef CONFIG_CLKSRC_OF
+> +CLOCKSOURCE_OF_DECLARE(armv7_timer, "arm,armv7-timer", arch_timer_of_register)
+> +#endif
 
-After some digging through source and reading for_each_node_by_name()
-it seems to me you're right.
-
-@Daniel: It seems this would also apply to the NAND binding.
-What do you think?
-
--- 
-    Ezequiel
+I wonder if we shouldn't enhance include/linux/clocksource.h to define
+CLOCKSOURCE_OF_DECLARE even when !CONFIG_CLKSRC_OF; that way, drivers
+wouldn't need that ifdef.
