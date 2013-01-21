@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 4/8] Export fdt_stringlist_contains()
-Date: Mon, 21 Jan 2013 12:59:18 -0800
-Message-ID: <1358801962-21707-5-git-send-email-sjg@chromium.org>
+Subject: [PATCH 8/8] RFC: Check offset in fdt_string()
+Date: Mon, 21 Jan 2013 12:59:22 -0800
+Message-ID: <1358801962-21707-9-git-send-email-sjg@chromium.org>
 References: <1358801962-21707-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,61 +22,35 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This function is useful outside libfdt, so export it.
+(We probably don't want this patch, and certainly can't apply it as is,
+but I send it in order to find out the intent of fdt_string()).
 
+At present fdt_string() says that returns:
+
+   - a pointer to the string, on success
+   - NULL, if stroffset is out of bounds
+
+However it does not in fact return NULL. Changing it to do so also
+breaks 15 tests (segfault).
+
+What is the intended behaviour of this function, please?
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- libfdt/fdt_ro.c |    5 ++---
- libfdt/libfdt.h |   14 ++++++++++++++
- 2 files changed, 16 insertions(+), 3 deletions(-)
+ libfdt/fdt_ro.c |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
 diff --git a/libfdt/fdt_ro.c b/libfdt/fdt_ro.c
-index 42da2bd..50007f6 100644
+index 50007f6..cba8772 100644
 --- a/libfdt/fdt_ro.c
 +++ b/libfdt/fdt_ro.c
-@@ -515,8 +515,7 @@ int fdt_node_offset_by_phandle(const void *fdt, uint32_t phandle)
- 	return offset; /* error from fdt_next_node() */
+@@ -77,6 +77,8 @@ static int _fdt_nodename_eq(const void *fdt, int offset,
+ 
+ const char *fdt_string(const void *fdt, int stroffset)
+ {
++	if (stroffset < 0 || stroffset >= fdt_size_dt_strings(fdt))
++		return NULL;
+ 	return (const char *)fdt + fdt_off_dt_strings(fdt) + stroffset;
  }
  
--static int _fdt_stringlist_contains(const char *strlist, int listlen,
--				    const char *str)
-+int fdt_stringlist_contains(const char *strlist, int listlen, const char *str)
- {
- 	int len = strlen(str);
- 	const char *p;
-@@ -542,7 +541,7 @@ int fdt_node_check_compatible(const void *fdt, int nodeoffset,
- 	prop = fdt_getprop(fdt, nodeoffset, "compatible", &len);
- 	if (!prop)
- 		return len;
--	if (_fdt_stringlist_contains(prop, len, compatible))
-+	if (fdt_stringlist_contains(prop, len, compatible))
- 		return 0;
- 	else
- 		return 1;
-diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
-index 8e57a06..c0075e7 100644
---- a/libfdt/libfdt.h
-+++ b/libfdt/libfdt.h
-@@ -816,6 +816,20 @@ int fdt_node_check_compatible(const void *fdt, int nodeoffset,
- int fdt_node_offset_by_compatible(const void *fdt, int startoffset,
- 				  const char *compatible);
- 
-+/**
-+ * fdt_stringlist_contains - check a string list property for a string
-+ * @strlist: Property containing a list of strings to check
-+ * @listlen: Length of property
-+ * @str: String to search for
-+ *
-+ * This is a utility function provided for convenience. The list contains
-+ * one or more strings, each terminated by \0, as is found in a device tree
-+ * "compatible" property.
-+ *
-+ * @return: 1 if the string is found in the list, 0 not found, or invalid list
-+ */
-+int fdt_stringlist_contains(const char *strlist, int listlen, const char *str);
-+
- /**********************************************************************/
- /* Write-in-place functions                                           */
- /**********************************************************************/
 -- 
 1.7.7.3
