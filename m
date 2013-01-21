@@ -1,60 +1,125 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/6] arm: kconfig: don't select TWD with local timer for
- Armada 370/XP
-Date: Mon, 21 Jan 2013 18:31:45 +0000
-Message-ID: <201301211831.45947.arnd@arndb.de>
-References: <1358790842-2986-1-git-send-email-gregory.clement@free-electrons.com>
- <1358790842-2986-4-git-send-email-gregory.clement@free-electrons.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 3/3] arm: omap2: gpmc: add DT bindings for OneNAND
+Date: Mon, 21 Jan 2013 10:33:48 -0800
+Message-ID: <20130121183348.GI22517@atomide.com>
+References: <1358634477-25868-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1358634477-25868-3-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130121123020.GI15707@e106331-lin.cambridge.arm.com>
+ <CALF0-+VOxtsfQLZCGujvjMrsGacbfVTMytRUX=CfKa3+FgnU1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1358790842-2986-4-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, John Stultz <johnstul@us.ibm.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Chris Van Hoof <vanhoof@canonical.com>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Nadav Haklai <nadavh@marvell>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALF0-+VOxtsfQLZCGujvjMrsGacbfVTMytRUX=CfKa3+FgnU1w@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ezequiel Garcia <elezegarcia@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Daniel Mack <zonque@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "martinez.javier@gmail.com" <martinez.javier@gmail.com>, "matthias.bgg@googlemail.com" <matthias.bgg@googlemail.com>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 21 January 2013, Gregory CLEMENT wrote:
-> @@ -1624,7 +1624,7 @@ config LOCAL_TIMERS
->         bool "Use local timer interrupts"
->         depends on SMP
->         default y
-> -       select HAVE_ARM_TWD if (!ARCH_MSM_SCORPIONMP && !EXYNOS4_MCT)
-> +       select HAVE_ARM_TWD if (!ARCH_MSM_SCORPIONMP && !EXYNOS4_MCT && !ARMADA_370_XP_TIMER)
->         
+* Ezequiel Garcia <elezegarcia@gmail.com> [130121 09:00]:
+> Hi Mark,
+> 
+> On Mon, Jan 21, 2013 at 9:30 AM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > [...]
+> >
+> >> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+> >> index 01ce462..f7de9eb 100644
+> >> --- a/arch/arm/mach-omap2/gpmc.c
+> >> +++ b/arch/arm/mach-omap2/gpmc.c
+> >> @@ -39,6 +39,7 @@
+> >>  #include "omap_device.h"
+> >>  #include "gpmc.h"
+> >>  #include "gpmc-nand.h"
+> >> +#include "gpmc-onenand.h"
+> >>
+> >>  #define      DEVICE_NAME             "omap-gpmc"
+> >>
+> >> @@ -1259,6 +1260,43 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
+> >>  }
+> >>  #endif
+> >>
+> >> +#ifdef CONFIG_MTD_ONENAND
+> >> +static int gpmc_probe_onenand_child(struct platform_device *pdev,
+> >> +                              struct device_node *child)
+> >> +{
+> >> +     u32 val;
+> >> +     struct omap_onenand_platform_data *gpmc_onenand_data;
+> >> +
+> >> +     if (of_property_read_u32(child, "reg", &val) < 0) {
+> >> +             dev_err(&pdev->dev, "%s has no 'reg' property\n",
+> >> +                     child->full_name);
+> >> +             return -ENODEV;
+> >> +     }
+> >> +
+> >> +     gpmc_onenand_data = devm_kzalloc(&pdev->dev, sizeof(*gpmc_onenand_data),
+> >> +                                      GFP_KERNEL);
+> >> +     if (!gpmc_onenand_data)
+> >> +             return -ENOMEM;
+> >> +
+> >> +     gpmc_onenand_data->cs = val;
+> >> +     gpmc_onenand_data->of_node = child;
+> >> +     gpmc_onenand_data->dma_channel = -1;
+> >> +
+> >> +     if (!of_property_read_u32(child, "dma-channel", &val))
+> >> +             gpmc_onenand_data->dma_channel = val;
+> >> +
+> >> +     gpmc_onenand_init(gpmc_onenand_data);
+> >> +
+> >> +     return 0;
+> >> +}
+> >> +#else
+> >> +static int gpmc_probe_onenand_child(struct platform_device *pdev,
+> >> +                                 struct device_node *child)
+> >> +{
+> >> +     return 0;
+> >> +}
+> >> +#endif
+> >> +
+> >>  static int gpmc_probe_dt(struct platform_device *pdev)
+> >>  {
+> >>       int ret;
+> >> @@ -1276,6 +1314,12 @@ static int gpmc_probe_dt(struct platform_device *pdev)
+> >>                       return ret;
+> >>       }
+> >>
+> >
+> > This doesn't look right to me:
+> >
+> >> +     for_each_node_by_name(child, "onenand") {
+> >> +             ret = gpmc_probe_onenand_child(pdev, child);
+> >> +             of_node_put(child);
+> >> +             if (ret < 0)
+> >> +                     return ret;
+> >> +     }
+> >
+> > for_each_node_by_name automatically calls of_node_put on each node once passed,
+> > and as far as I can tell, gpmc_probe_onenand_child doesn't do anything that'd
+> > increment a node's refcount.
+> >
+> > As far as I can see, you only need the of_node_put in the error case:
+> >
+> > for_each_node_by_name(child, "onenand") {
+> >         ret = gpmc_probe_onenand_child(pdev, child);
+> >         if (ret < 0) {
+> >                 of_node_put(child);
+> >                 return ret;
+> >         }
+> > }
+> >
+> > Have I missed something here?
+> >
+> 
+> Mmm... perhaps I've overlooked that code.
+> 
+> After some digging through source and reading for_each_node_by_name()
+> it seems to me you're right.
+> 
+> @Daniel: It seems this would also apply to the NAND binding.
+> What do you think?
 
-Your change is fine, but I just noticed that this line is asking for trouble
-when we enable multipleform support for MSM and/or EXYNOS.
+Would prefer this done as a fix against the omap-for-v3.9/gpmc
+branch before we apply Ezequiel's patches.
 
-Also, I wonder if we should change this somehow in 3.8, because it seems
-that for a multiplatform kernel including armadaxp and e.g. versatile express,
-you have no ARM_TWD support in the kernel, which seems wrong. Is there any
-reason we can't enable the ARM_TWD code to be built-in on platforms that
-don't use it?
+Regards,
 
-Maybe it can be written as
-
-config LOCAL_TIMERS
-	bool "Use local timer interrupts"
-	depends on SMP
-	default y
-
-config HAVE_ARM_TWD
-	depends on LOCAL_TIMERS
-	default ARCH_MULTIPLATFORM || (!ARCH_MSM_SCORPIONMP && !EXYNOS4_MCT)
-	default y
-
-This will still be slightly wrong (generating extra code) on a multiplatform
-kernel that has no platform other than MSM or EXYNOS, but the other alternative
-would be that each platform with TWD support has to select HAVE_ARM_TWD itself.
-
-	Arnd
+Tony
