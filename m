@@ -1,121 +1,154 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [U-Boot] [PATCH 1/5] treewide: include libfdt_env.h before fdt.h
-Date: Mon, 21 Jan 2013 11:17:49 +1100
-Message-ID: <20130121001749.GA24829@truffula.fritz.box>
-References: <20130116175904.47ee25bd2596f28796698759@freescale.com>
- <1358382963.18317.17@snotra>
- <20130117115456.71a38e3275230cdbb175bfe4@freescale.com>
- <50F843CD.1030309@cideas.com>
- <20130117235048.GF26321@truffula.fritz.box>
- <50F93932.60700@cideas.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/8] sh-pfc: Add OF support
+Date: Mon, 21 Jan 2013 09:38:28 +0900
+Message-ID: <20130121003828.GD19062@verge.net.au>
+References: <1357693395-1653-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <1357693395-1653-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <Pine.LNX.4.64.1301121745320.14443@axis700.grange>
+ <20130115011019.GA13304@verge.net.au>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8482167025633690990=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50F93932.60700-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Gerald Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
-Cc: Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, u-boot-0aAXYlwwYIKGBzrmiIFOJg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130115011019.GA13304@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Phil Edworthy <phil.edworthy@renesas.com>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 15, 2013 at 10:10:19AM +0900, Simon Horman wrote:
+> On Sat, Jan 12, 2013 at 06:18:54PM +0100, Guennadi Liakhovetski wrote:
+> > Hi Laurent
+> > 
+> > On Wed, 9 Jan 2013, Laurent Pinchart wrote:
+> > 
+> > > Support device instantiation through the device tree. The compatible
+> > > property is used to select the SoC pinmux information.
+> > > 
+> > > Set the gpio_chip device field to the PFC device to enable automatic
+> > > GPIO OF support.
+> > > 
+> > > Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+> > > Cc: devicetree-discuss@lists.ozlabs.org
+> > 
+> > This whole pinctrl mega-series is a very welcome improvement to the 
+> > sh-/r-mobile GPIO framework, and is very well done IMHO! But, 
+> > unfortunately, as discussed with you privately yesterday, there is still a 
+> > problem with pinctrl DT support on sh73a0, which will, probably, enforce 
+> > an update to one or several of patches from this lot. To explain to other 
+> > readers, on sh73a0 pin numbers are not contiguous, they are sparse. 
+> > When pins are referred to from C code, macro names are used, which are 
+> > then correctly decoded to respective positions in pin descriptor tables. 
+> > Whereas with DT, pins are referred to from .dts files using their physical 
+> > numbers, which then refer to either wrong or missing entries in those 
+> > tables.
+> > 
+> > I do not know where this problem should be solved best - either in 
+> > descriptor tables, or in DT handling code, so, I don't know which patches 
+> > would be affected. Don't think you'll want to keep the one-to-one 
+> > index-to-pin mapping by also making pin-descriptor arrays sparse, so, so 
+> > far I only see one possibility to fix this - by using the .enum_id field 
+> > from struct sh_pfc_pin instead of just the index - both in  C and in DT 
+> > case, and those .enum_id values will have to provide physical pin numbers 
+> > instead of plane indices. That way you'd have to update at least 
+> > drivers/pinctrl/sh-pfc/pfc-sh73a0.c and the sh_pfc_map_gpios() function in 
+> > drivers/pinctrl/sh-pfc/pinctrl.c.
+> > 
+> > Anyway, I'm sure you'll find a suitable solution of this problem and for 
+> > now I'll let Simon decide which patches he wants to apply and which ones 
+> > he'd prefer to hold back;-)
+> 
+> Actually, I'd appreciate some guidance from Laurent on this.
+> It seems that the problems you raise go quite far back into the mega-series.
+> 
+> I was intending to send pull requests for the following branches soon.
+> But I am now concerned that at least the sh73a0 patches may need reworking.
 
---===============8482167025633690990==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
-Content-Disposition: inline
+I have concluded that the changes below are safe and have
+proceeded with sending them to arm-soc. However, I am still awaiting
+a response from arm-soc.
 
-
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jan 18, 2013 at 06:59:46AM -0500, Gerald Van Baren wrote:
-> On 01/17/2013 06:50 PM, David Gibson wrote:
-> > On Thu, Jan 17, 2013 at 01:32:45PM -0500, Jerry Van Baren wrote:
-> >> Hi Scott, Kim, David,
->=20
-> [snip]
->=20
-> >> libfdt_env.h is where Kim typedef'ed fdt16_t, fdt32_t, fdt64_t
-> >>=20
-> >> I suspect the original intent was to have <libfdt.h> be the file=20
-> >> that people #included.  For whatever reason, most includes are=20
-> >> (picking on fdt_ro.c arbitrarily): 51 #include "libfdt_env.h" 53
-> >> #include <fdt.h> 54 #include <libfdt.h> Since libfdt.h #includes
-> >> fdt.h and libfdt_env.h, lines 51 and 53 (above) are redundant.
-> >> It sorts out OK in dtc because libfdt_env.h includes stdint.h and
-> >> defines fdt*_t, but it messes me up in u-boot where (currently)
-> >> libfdt_env.h does *not* include stdint.h...
-> >=20
-> > Ok, so, the uboot libfdt_env.h should be fixed to define uintXX_t
-> > and fdtXX_t (either by including stdint or my other means).  The
-> > purpose of libfdt_env.h is to define the things that libfdt
-> > requires, and those types are (now) such a requirement.
->=20
-> I like the move, but have not done it (yet).  I made a trial patch
-> (see below) that uses libfdt.h as the interface and cleans out the
-> (now redundant) other *fdt*.h includes.  If this is in the right
-> direction, I'll move the fdtXX_t typedefs and formally submit it.
->=20
-> The test suite has one failure, but it fails with or without my changes.
->=20
-> $ make check | grep FAIL
-> fdtget-runtest.sh 77 121 66 111 97 114 100 78 97 109 101 0 77 121 66
-> 111 97 114 100 70 97 109 105 108 121 78 97 109 101 0
-> label01.dts.fdtget.test.dtb / compatible:	FAIL Results differ from
-> expected
-> *                FAIL:	1
->=20
-> ********** TEST SUMMARY
-> *     Total testcases:	1443
-> *                PASS:	1442
-> *                FAIL:	1
-> *   Bad configuration:	0
-> * Strange test result:	0
-> **********
-
-Yeah, Jon and I are aware of that recently introduced bug.  I've had
-other projects to attend to and haven't had a chance to fix it yet.
-It's basically a testsuite bug though, so it should be harmless.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlD8iS0ACgkQaILKxv3ab8Zs6wCgk5Dih2joxPgTbdIxwQaOj2OK
-p1MAoIFun+G0B/V8IImghphhW61D8zdK
-=3SRd
------END PGP SIGNATURE-----
-
---yrj/dFKFPuw6o+aM--
-
---===============8482167025633690990==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8482167025633690990==--
+> pfc2: (based on a merge of sh-soc2 and pfc)
+> sh-pfc: Add shx3 pinmux support
+> sh-pfc: Add sh7786 pinmux support
+> sh-pfc: Add sh7785 pinmux support
+> sh-pfc: Add sh7757 pinmux support
+> sh-pfc: Add sh7734 pinmux support
+> sh-pfc: Add sh7724 pinmux support
+> sh-pfc: Add sh7723 pinmux support
+> sh-pfc: Add sh7722 pinmux support
+> sh-pfc: Add sh7720 pinmux support
+> sh-pfc: Add sh7269 pinmux support
+> sh-pfc: Add sh7264 pinmux support
+> sh-pfc: Add sh7203 pinmux support
+> sh-pfc: Add sh73a0 pinmux support
+> sh-pfc: Add sh7372 pinmux support
+> sh-pfc: Add r8a7779 pinmux support
+> sh-pfc: Add r8a7740 pinmux support
+> sh-pfc: Support pinmux info in driver data instead of platform data
+> sh-pfc: Move driver from drivers/sh/ to drivers/pinctrl/
+> sh-pfc: Remove unused resource and num_resources platform data fields
+> sh-pfc: Remove platform device registration
+> 
+> sh-soc2: (based on pfc)
+> sh: shx3: Register PFC platform device
+> sh: sh7786: Register PFC platform device
+> sh: sh7785: Register PFC platform device
+> sh: sh7757: Register PFC platform device
+> sh: sh7734: Register PFC platform device
+> sh: sh7724: Register PFC platform device
+> sh: sh7723: Register PFC platform device
+> sh: sh7722: Register PFC platform device
+> sh: sh7720: Register PFC platform device
+> sh: sh7269: Register PFC platform device
+> sh: sh7264: Register PFC platform device
+> sh: sh7203: Register PFC platform device
+> sh: Add PFC platform device registration helper function
+> 
+> 
+> soc: (based on sh-soc)
+> ARM: shmobile: sh73a0: Add pin control resources
+> ARM: shmobile: sh7372: Add pin control resources
+> ARM: shmobile: r8a7740: Add pin control resources
+> ARM: shmobile: sh73a0: Register PFC platform device
+> ARM: shmobile: sh7372: Register PFC platform device
+> ARM: shmobile: r8a7779: Register PFC platform device
+> ARM: shmobile: r8a7740: Register PFC platform device
+> ARM: shmobile: Select PINCTRL
+> ARM: shmobile: add function declarations for sh7372 DT helper functions
+> ARM: sh7372: fix cache clean / invalidate order
+> ARM: sh7372: add clock lookup entries for DT-based devices
+> ARM: mach-shmobile: sh73a0 external IRQ wake update
+> ARM: shmobile: sh73a0: fixup div4_clks bitmap
+> ARM: shmobile: r8a7740: add TMU timer support
+> ARM: shmobile: Remove duplicate inclusion of dma-mapping.h in setup-r8a7740.c
+> 
+> pfc: (based on sh-soc)
+> sh-pfc: Support passing resources through platform device
+> sh-pfc: Split platform device and platform driver registration
+> sh-pfc: Use sh_pfc_ namespace prefix through the whole driver
+> sh-pfc: Sort headers alphabetically
+> sh-pfc: Remove check for impossible error condition
+> sh-pfc: Let the compiler decide whether to inline functions
+> sh-pfc: Use devm_ioremap_nocache()
+> sh-pfc: Use devm_kzalloc()
+> sh-pfc: Move platform device and driver to the core
+> sh-pfc: Merge PFC core and gpio
+> sh-pfc: Merge PFC core and pinctrl
+> sh-pfc: Move private definitions and declarations to private header
+> sh-pfc: Split platform data from the sh_pfc structure
+> sh-pfc: Remove all use of __devinit/__devexit
+> 
+> sh-soc:
+> sh: shx3: Fix last GPIO index
+> sh: sh7786: Fix last GPIO index
+> sh: sh7786: Fix port E, G and J GPIOs
+> sh: sh7757: Fix GPIO_FN_ET0_MDIO and GPIO_FN_ET1_MDIO GPIO entries
+> sh: sh7723: Rename GPIO_FN_SIUOSPD to GPIO_FN_SIUAOSPD
+> sh: sh7269: Rename CRX0CRX1(CRX2) marks to match GPIO names
+> sh: sh7264: Rename CRX0CRX1 mark to match GPIO names
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
