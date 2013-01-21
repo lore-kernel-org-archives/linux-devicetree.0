@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 2/8] Move property-printing into util
-Date: Mon, 21 Jan 2013 12:59:16 -0800
-Message-ID: <1358801962-21707-3-git-send-email-sjg@chromium.org>
+Subject: [PATCH 4/8] Export fdt_stringlist_contains()
+Date: Mon, 21 Jan 2013 12:59:18 -0800
+Message-ID: <1358801962-21707-5-git-send-email-sjg@chromium.org>
 References: <1358801962-21707-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,138 +22,61 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The function that prints a property can be useful to other programs,
-so move it into util.
+This function is useful outside libfdt, so export it.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- fdtdump.c |   37 +------------------------------------
- util.c    |   37 +++++++++++++++++++++++++++++++++++++
- util.h    |   14 ++++++++++++++
- 3 files changed, 52 insertions(+), 36 deletions(-)
+ libfdt/fdt_ro.c |    5 ++---
+ libfdt/libfdt.h |   14 ++++++++++++++
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-diff --git a/fdtdump.c b/fdtdump.c
-index b2c5b37..03ea429 100644
---- a/fdtdump.c
-+++ b/fdtdump.c
-@@ -17,41 +17,6 @@
- #define PALIGN(p, a)	((void *)(ALIGN((unsigned long)(p), (a))))
- #define GET_CELL(p)	(p += 4, *((const uint32_t *)(p-4)))
+diff --git a/libfdt/fdt_ro.c b/libfdt/fdt_ro.c
+index 42da2bd..50007f6 100644
+--- a/libfdt/fdt_ro.c
++++ b/libfdt/fdt_ro.c
+@@ -515,8 +515,7 @@ int fdt_node_offset_by_phandle(const void *fdt, uint32_t phandle)
+ 	return offset; /* error from fdt_next_node() */
+ }
  
--static void print_data(const char *data, int len)
--{
--	int i;
--	const char *p = data;
--	const char *s;
--
--	/* no data, don't print */
--	if (len == 0)
--		return;
--
--	if (util_is_printable_string(data, len)) {
--		printf(" = ");
--
--		s = data;
--		do {
--			printf("\"%s\"", s);
--			s += strlen(s) + 1;
--			if (s < data + len)
--				printf(", ");
--		} while (s < data + len);
--
--	} else if ((len % 4) == 0) {
--		printf(" = <");
--		for (i = 0; i < len; i += 4)
--			printf("0x%08x%s", fdt32_to_cpu(GET_CELL(p)),
--			       i < (len - 4) ? " " : "");
--		printf(">");
--	} else {
--		printf(" = [");
--		for (i = 0; i < len; i++)
--			printf("%02x%s", *p++, i < len - 1 ? " " : "");
--		printf("]");
--	}
--}
--
- static void dump_blob(void *blob)
+-static int _fdt_stringlist_contains(const char *strlist, int listlen,
+-				    const char *str)
++int fdt_stringlist_contains(const char *strlist, int listlen, const char *str)
  {
- 	struct fdt_header *bph = blob;
-@@ -147,7 +112,7 @@ static void dump_blob(void *blob)
- 		p = PALIGN(p + sz, 4);
- 
- 		printf("%*s%s", depth * shift, "", s);
--		print_data(t, sz);
-+		utilfdt_print_data(t, sz);
- 		printf(";\n");
- 	}
- }
-diff --git a/util.c b/util.c
-index 45f186b..b081fa8 100644
---- a/util.c
-+++ b/util.c
-@@ -335,3 +335,40 @@ int utilfdt_decode_type(const char *fmt, int *type, int *size)
- 		return -1;
- 	return 0;
- }
-+
-+void utilfdt_print_data(const char *data, int len)
-+{
-+	int i;
-+	const char *p = data;
-+	const char *s;
-+
-+	/* no data, don't print */
-+	if (len == 0)
-+		return;
-+
-+	if (util_is_printable_string(data, len)) {
-+		printf(" = ");
-+
-+		s = data;
-+		do {
-+			printf("\"%s\"", s);
-+			s += strlen(s) + 1;
-+			if (s < data + len)
-+				printf(", ");
-+		} while (s < data + len);
-+
-+	} else if ((len % 4) == 0) {
-+		const uint32_t *cell = (const uint32_t *)data;
-+
-+		printf(" = <");
-+		for (i = 0; i < len; i += 4)
-+			printf("0x%08x%s", fdt32_to_cpu(cell[i]),
-+			       i < (len - 4) ? " " : "");
-+		printf(">");
-+	} else {
-+		printf(" = [");
-+		for (i = 0; i < len; i++)
-+			printf("%02x%s", *p++, i < len - 1 ? " " : "");
-+		printf("]");
-+	}
-+}
-diff --git a/util.h b/util.h
-index e9043be..543a173 100644
---- a/util.h
-+++ b/util.h
-@@ -152,4 +152,18 @@ int utilfdt_decode_type(const char *fmt, int *type, int *size);
- 	"\tOptional modifier prefix:\n" \
- 	"\t\thh or b=byte, h=2 byte, l=4 byte (default)\n";
+ 	int len = strlen(str);
+ 	const char *p;
+@@ -542,7 +541,7 @@ int fdt_node_check_compatible(const void *fdt, int nodeoffset,
+ 	prop = fdt_getprop(fdt, nodeoffset, "compatible", &len);
+ 	if (!prop)
+ 		return len;
+-	if (_fdt_stringlist_contains(prop, len, compatible))
++	if (fdt_stringlist_contains(prop, len, compatible))
+ 		return 0;
+ 	else
+ 		return 1;
+diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+index 8e57a06..c0075e7 100644
+--- a/libfdt/libfdt.h
++++ b/libfdt/libfdt.h
+@@ -816,6 +816,20 @@ int fdt_node_check_compatible(const void *fdt, int nodeoffset,
+ int fdt_node_offset_by_compatible(const void *fdt, int startoffset,
+ 				  const char *compatible);
  
 +/**
-+ * Print property data in a readable format to stdout
++ * fdt_stringlist_contains - check a string list property for a string
++ * @strlist: Property containing a list of strings to check
++ * @listlen: Length of property
++ * @str: String to search for
 + *
-+ * Properties that look like strings will be printed as strings. Otherwise
-+ * the data will be displayed either as cells (if len is a multiple of 4
-+ * bytes) or bytes.
++ * This is a utility function provided for convenience. The list contains
++ * one or more strings, each terminated by \0, as is found in a device tree
++ * "compatible" property.
 + *
-+ * If len is 0 then this function does nothing.
-+ *
-+ * @param data	Pointers to property data
-+ * @param len	Length of property data
++ * @return: 1 if the string is found in the list, 0 not found, or invalid list
 + */
-+void utilfdt_print_data(const char *data, int len);
++int fdt_stringlist_contains(const char *strlist, int listlen, const char *str);
 +
- #endif /* _UTIL_H */
+ /**********************************************************************/
+ /* Write-in-place functions                                           */
+ /**********************************************************************/
 -- 
 1.7.7.3
