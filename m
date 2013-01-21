@@ -1,73 +1,171 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH v7 2/4] usb: phy: samsung: Add host phy support to
- samsung-phy driver
-Date: Mon, 21 Jan 2013 15:33:36 +0530
-Message-ID: <CAFp+6iFN47wTbGPwL4qeU6eUWNfB9zU7qrDjsZ272nq9rmq9aA@mail.gmail.com>
-References: <1357916550-11421-3-git-send-email-gautam.vivek@samsung.com>
-	<1358166135-22073-1-git-send-email-gautam.vivek@samsung.com>
-	<20130118131633.GJ4672@arwen.pp.htv.fi>
-	<CAFp+6iF9H+n1Fwr89es-jtDAN=ht1PuXQER9vQ=jG2RZQTceWw@mail.gmail.com>
-	<20130118142251.GL4672@arwen.pp.htv.fi>
-	<CAFp+6iE5gU5QrheYyHLV2yfO=d3j3fVA7qq8CQ4KLysjXFRh3w@mail.gmail.com>
-	<20130118150732.GP4672@arwen.pp.htv.fi>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 32/76] ARC: [DeviceTree] Basic support
+Date: Mon, 21 Jan 2013 15:44:28 +0530
+Message-ID: <50FD1504.5020408@synopsys.com>
+References: <1358511930-7424-1-git-send-email-vgupta@synopsys.com>
+ <1358511930-7424-33-git-send-email-vgupta@synopsys.com>
+ <50F97017.4090705@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130118150732.GP4672@arwen.pp.htv.fi>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kgene.kim@samsung.com
-Cc: balbi@ti.com, Vivek Gautam <gautam.vivek@samsung.com>, jg1.han@samsung.com, linux-samsung-soc@vger.kernel.org, p.paneri@samsung.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, sylvester.nawrocki@gmail.com, Doug Anderson <dianders@chromium.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50F97017.4090705-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
-
-
-On Fri, Jan 18, 2013 at 8:37 PM, Felipe Balbi <balbi@ti.com> wrote:
-> On Fri, Jan 18, 2013 at 07:59:52PM +0530, Vivek Gautam wrote:
->> HI Balbi,
+On Friday 18 January 2013 09:23 PM, Rob Herring wrote:
+> On 01/18/2013 06:24 AM, Vineet Gupta wrote:
+>> This is minimal infrastructure needed for devicetree work.
+>> It uses an a sample "skeleton" devicetree - embedded in kernel image -
+>> to print the board, manufacturer by parsing the top-level "compatible"
+>> string.
 >>
+>> As of now we don't need any additional "board" specific "machine_desc".
 >>
->> On Fri, Jan 18, 2013 at 7:52 PM, Felipe Balbi <balbi@ti.com> wrote:
->> > On Fri, Jan 18, 2013 at 07:51:08PM +0530, Vivek Gautam wrote:
->> >> Hi Felipe,
->> >>
->> >>
->> >> On Fri, Jan 18, 2013 at 6:46 PM, Felipe Balbi <balbi@ti.com> wrote:
->> >> > Hi,
->> >> >
->> >> > On Mon, Jan 14, 2013 at 05:52:15PM +0530, Vivek Gautam wrote:
->> >> >> This patch adds host phy support to samsung-usbphy driver and
->> >> >> further adds support for samsung's exynos5250 usb-phy.
->> >> >>
->> >> >> Signed-off-by: Praveen Paneri <p.paneri@samsung.com>
->> >> >> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
->> >> >
->> >> > Missing Kukjim's Acked-by here
->> >> >
->> >>
->> >> Hope you are fine with the changes happened after discussion in thread:
->> >> [PATCH v5 2/4] usb: phy: samsung: Add host phy support to samsung-phy driver
->> >>
->> >> Is it something you want me to modify in this patch ?
->> >
->> > please send the final patch and we shall see. After quickly browsing
->> > that thread, I didn't see anything scary, but I'd like to see your final
->> > version before giving my final answer ;-)
->> >
+>> TODO: support interpreting the command line as boot-loader passed dtb
 >>
->> this series of patch is the final version from my side unless Doug or
->> you have any further comments
->> on the thread :
->> https://lkml.org/lkml/2013/1/14/481
->>
->> Seems like Doug wanted to know your opinion in this regard. ;-)
->
-> only Kukjim's Acked-by missing ;-)
->
+>> Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  arch/arc/Kconfig                |    9 +++++
+>>  arch/arc/Makefile               |    9 +++++
+>>  arch/arc/boot/dtb/Makefile      |   22 ++++++++++++
+> 
+> This is .../boot/dts/Makefile on other arches. We should be consistent.
 
-Any comments on this patch-series please ?
+OK, everything moved over to boot/dts folder, boot/dtb nuked, although latter
+seemed a clean approach - specially given that some arches have billions of source
+files in them - anyways not a big worry for ARC port.
 
 
--- 
-Thanks & Regards
-Vivek
+>> [snip....]
+>>
+>> +
+>> +# Rule to build device tree blobs
+>> +$(obj)/%.dtb: $(src)/../dts/%.dts FORCE
+>> +	$(call if_changed_dep,dtc)
+> 
+> There are common rules that went into 3.8. Please use them.
+
+How does the equivalent of following look like:
+
+diff --git a/arch/arc/boot/dts/Makefile b/arch/arc/boot/dts/Makefile
+
+@@ -1,7 +1,5 @@
+ ifeq ($(CONFIG_OF),y)
+
+-dtb-y  += skeleton.dtb
+-
+ # Built-in dtb
+ builtindtb-y                           := skeleton
+
+@@ -11,12 +9,6 @@ endif
+
+ obj-y  += $(patsubst "%",%,$(builtindtb-y)).dtb.o
+
+-clean-files += $(obj)/$(dtb-y) $(obj)/*.dtb.S $(obj)/*.dtb.o
+-
+-# Rule to build device tree blobs
+-$(obj)/%.dtb: $(src)/../dts/%.dts FORCE
+-       $(call if_changed_dep,dtc)
+-
+-$(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
++clean-files += *.dtb
+
+One observation above is that the explicitly build dtb file (make ARCH=arc
+angel4.dtb) doesn't get cleaned with make {clean,distclean} despite above
+clean-files and this is true even for orig version.
+
+>> +
+>> +$(obj)/dtbs: $(addprefix $(obj)/, $(dtb-y))
+>> +
+>> +endif
+>> diff --git a/arch/arc/boot/dts/skeleton.dts b/arch/arc/boot/dts/skeleton.dts
+>> new file mode 100644
+>> index 0000000..25a84fb
+>> --- /dev/null
+>> +++ b/arch/arc/boot/dts/skeleton.dts
+>> @@ -0,0 +1,10 @@
+>> +/*
+>> + * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +/dts-v1/;
+>> +
+>> +/include/ "skeleton.dtsi"
+>> diff --git a/arch/arc/boot/dts/skeleton.dtsi b/arch/arc/boot/dts/skeleton.dtsi
+>> new file mode 100644
+>> index 0000000..f6a457a
+>> --- /dev/null
+>> +++ b/arch/arc/boot/dts/skeleton.dtsi
+>> @@ -0,0 +1,21 @@
+>> +/*
+>> + * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +/*
+>> + * Skeleton device tree; the bare minimum needed to boot; just include and
+>> + * add a compatible value.
+>> + */
+>> +
+>> +/ {
+>> +	compatible = "snps,arc-angel4", "snps,arc-ml509";
+> 
+> Normally, you wouldn't have this as part of skeleton. If you need
+> something generic, then perhaps generic.dts would be better.
+
+So you mean rename arc/arc/boot/dts/skeleton.dts to arch/arc/boot/dts/generic.dts
+as that's what the semantics are here. I agree.
+
+However I think skeleton semantics are better: I'll take out the specific boards
+name from it, and for empty CONFIG_ARC_BUILTIN_DTB_NAME, include a real board DT
+file rather than skeleton. OK ?
+
+
+>> [snipped...]
+>>  early_param("mem", setup_mem_sz);
+>>  
+>> +void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+>> +{
+>> +	pr_err("%s(%llx, %llx)\n", __func__, base, size);
+> 
+> ? Is this todo?
+
+Yes, ARC port currently doesn't handle the cmdline provided by DT - given that I
+added the the DT support itself very recently. I plan to fix this soon, but assume
+it not absolutely must in terms of requirements.
+
+
+>> +#ifdef CONFIG_OF_FLATTREE
+>> +void __init early_init_dt_setup_initrd_arch(unsigned long start,
+>> +					    unsigned long end)
+>> +{
+>> +	pr_err("%s(%lx, %lx)\n", __func__, start, end);
+> 
+> And this?
+
+Ditto !
+
+Many thanks for your review.
+-Vineet
