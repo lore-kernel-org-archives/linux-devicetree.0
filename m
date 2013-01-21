@@ -1,76 +1,57 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 0/2] Adding USB 3.0 DRD-phy support for exynos5250
-Date: Mon, 21 Jan 2013 10:26:43 +0200
-Message-ID: <20130121082643.GF8777@arwen.pp.htv.fi>
-References: <1358168377-22919-1-git-send-email-gautam.vivek@samsung.com>
- <CAFp+6iHbvwTBUSZO2EvCaeCT=g=UzubLGrmPHjKUgi9Ef7enzQ@mail.gmail.com>
-Reply-To: <balbi@ti.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: ARM: Voipac i.MX25: Support with device tree on v3.8-rc1 or later
+Date: Mon, 21 Jan 2013 09:44:07 +0100
+Message-ID: <20130121084407.GV1906@pengutronix.de>
+References: <DUB118-W244A6AACB427066AC4EB6DC9100@phx.gbl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oFbHfjnMgUMsrGjO"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAFp+6iHbvwTBUSZO2EvCaeCT=g=UzubLGrmPHjKUgi9Ef7enzQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautamvivek1987@gmail.com>
-Cc: balbi@ti.com, linux-usb@vger.kernel.org, kgene.kim@samsung.com, p.paneri@samsung.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, sylvester.nawrocki@gmail.com, av.tikhomirov@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>, Doug Anderson <dianders@chromium.org>, kishon <kishon@ti.com>, Grant Likely <grant.likely@secretlab.ca>
+In-Reply-To: <DUB118-W244A6AACB427066AC4EB6DC9100-MsuGFMq8XAE@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Linares <daluis-PkbjNfxxIARBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---oFbHfjnMgUMsrGjO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Sun, Jan 20, 2013 at 12:51:57PM +0000, David Linares wrote:
+> 
+> Hi guys,
+> 
+> I have just signed up to this distribution list to try to get some
+> support/understanding of an issue I am having when switching from
+> kernel v3.7.3 to v3.8-rc1.  I am using a Voipac i.MX25 and on v3.7.3,
+> barebox correctly loads the kernel and my board is correctly up and
+> running.  After switching to v3.8-rc1 (in order to get some fixes for
+> a few drivers), barebox doesn't seem to load the kernel anymore, or
+> the kernel initialization doesn't go very far as I don't see any
+> kernel message.  So I had a look at the commits between the two kernel
+> versions and I noticed a commit for iMX25 to use devicetree, so I am
+> pretty sure that would explain my problems at kernel loading time as
+> it is the only commit affecting the boot.  Is there somebody on this
+> mailing list that could help me with devicetree?  At first I would
+> just need to verify that the parameters sent by the bootloader are
+> still correct for devicetree and maybe get a few hints on how to debug
+> this issue and see how far the init has gone.
 
-Hi,
+You should try git bisect to find the offending commit. Once you found
+it it should be easy to track the problem down, or at least refer to the
+exact commit breaking it. earlyprintk might also be an option to get
+some messaged out of the non booting kernel.
 
-On Mon, Jan 21, 2013 at 12:15:10PM +0530, Vivek Gautam wrote:
-> Hi Felipe,
->=20
->=20
-> On Mon, Jan 14, 2013 at 6:29 PM, Vivek Gautam <gautam.vivek@samsung.com> =
-wrote:
-> > Changes from v2:
-> >  - Renaming 'samsung-usbphy.c' driver to 'samsung-usb2.c' indicating
-> >    usb 2.0 phy controller's driver for Samsung's SoCs.
-> >  - Moving the register definitions and strcuture definitions to
-> >    common header file 'samsung-usbphy.h' to be used across
-> >    usb 2.0 and usb 3.0 phy.
-> >  - Keeping common exported function definitions in samsung-usbphy.c
-> >    which can be used across usb 2.0 and usb 3.0 phy.
-> >  - Writting separate driver file for Samsung's USB 3.0 phy controller.
-> >    and making it dependent on USB_DWC3.
-> >
->=20
-> Is the re-organization being done here fine as per requirements for
-> separate drivers for usb 2.0 type PHY and usb 3.0 type PHY ?
+Sascha
 
-should be fine ;-) If there is *truly generic* pieces, it makes sense to
-re-use - unless those "generic" parts are common driver churn
-(platform_driver definition, module_init(), module_exit(), etc).
-
---=20
-balbi
-
---oFbHfjnMgUMsrGjO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJQ/PvDAAoJEIaOsuA1yqREbJcQAKGcvaVboLtCXoQJuWnrfC0b
-Eupv6hbk2ZQtt8hUwriSa0IFQm80T/xj2psZX2UxN+PpXyB3KPNMe6ADgvPNyb9f
-EGwbhP3f7lylAaDa8lZY6yzqKHo7T/x6ufMC2vIApPxYzDyMMQJ53s3z/ZVStNNc
-vJK0CEsZDrlY2ojtv0yq5RjARg+9t+ddAC/6IYZlXW5p87BYk2Ty4mgM9PvFgCR6
-qGSCgOc8aHx2YwSglRogpfDPlMLdlhjaateM/35wg7BRtPnZIRO73pZsw8FrBVNX
-hLnkubTlzGMGzp8fRU4z7CdRoCcR9WOQ4PHw435jCIBPB36mXsg/BeWAsWAlkAKC
-wKGVJMCKaQy1/Olqjq0KAPRm9ZVzvDYIy/2/1fNPEP/DJBGk9XoAHG5WGYlVCBjm
-7PJjcAAhsZtSZR2A7Htub1uCdinPqjHLE3oIbxvwn8pfR3MeJDuPu5w2FUXqLkJc
-rFISQZTEkwbhF3IFlXDQ/G5CwziQDV/KIWON+JR87RskMIg4uOC2FFTbPcHKHBfl
-+bo0i07EuP6reE8PkWgr+DQ0iX1DYcFoa88iN2GdvIh/+ScPv5G8qPNnkakcGOqQ
-YFkFOxzaoPUOsQ8J112OquZ5An2rsHNJdNsgN3FU6mEAe3IKL9LsfZSFTkzwSLrJ
-uCX4lIde+gH/0c0WQVla
-=hJDy
------END PGP SIGNATURE-----
-
---oFbHfjnMgUMsrGjO--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
