@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH 3/8] .gitignore: Add rule for *.patch
-Date: Mon, 21 Jan 2013 12:59:17 -0800
-Message-ID: <1358801962-21707-4-git-send-email-sjg@chromium.org>
+Subject: [PATCH 1/8] Adjust util_is_printable_string() comment and fix test
+Date: Mon, 21 Jan 2013 12:59:15 -0800
+Message-ID: <1358801962-21707-2-git-send-email-sjg@chromium.org>
 References: <1358801962-21707-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,25 +22,52 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Ignore any patch files that we find, since these are likely to be
-used when sending patches upstream.
+This commit which changed the behaviour of this function broke one
+of the tests. Also the comment should be updated to reflect its new
+behaviour.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
- .gitignore |    1 +
- 1 files changed, 1 insertions(+), 0 deletions(-)
+ tests/run_tests.sh |    4 +---
+ util.h             |    8 +++++---
+ 2 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/.gitignore b/.gitignore
-index 7cabc49..545b899 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -1,6 +1,7 @@
- *.o
- *.d
- *.a
-+*.patch
- *.so
- *~
- *.tab.[ch]
+diff --git a/tests/run_tests.sh b/tests/run_tests.sh
+index dd7f217..e04512c 100755
+--- a/tests/run_tests.sh
++++ b/tests/run_tests.sh
+@@ -498,9 +498,7 @@ fdtget_tests () {
+ 
+     # run_fdtget_test <expected-result> [<flags>] <file> <node> <property>
+     run_fdtget_test "MyBoardName" $dtb / model
+-    run_fdtget_test "77 121 66 111 \
+-97 114 100 78 97 109 101 0 77 121 66 111 97 114 100 70 97 109 105 \
+-108 121 78 97 109 101 0" $dtb / compatible
++    run_fdtget_test "MyBoardName MyBoardFamilyName" $dtb / compatible
+     run_fdtget_test "MyBoardName MyBoardFamilyName" -t s $dtb / compatible
+     run_fdtget_test 32768 $dtb /cpus/PowerPC,970@1 d-cache-size
+     run_fdtget_test 8000 -tx $dtb /cpus/PowerPC,970@1 d-cache-size
+diff --git a/util.h b/util.h
+index c8eb45d..e9043be 100644
+--- a/util.h
++++ b/util.h
+@@ -57,12 +57,14 @@ extern char *xstrdup(const char *s);
+ extern char *join_path(const char *path, const char *name);
+ 
+ /**
+- * Check a string of a given length to see if it is all printable and
+- * has a valid terminator.
++ * Check a property of a given length to see if it is all printable and
++ * has a valid terminator. The property can contain either a single string,
++ * or multiple strings each of non-zero length.
+  *
+  * @param data	The string to check
+  * @param len	The string length including terminator
+- * @return 1 if a valid printable string, 0 if not */
++ * @return 1 if a valid printable string, 0 if not
++ */
+ int util_is_printable_string(const void *data, int len);
+ 
+ /*
 -- 
 1.7.7.3
