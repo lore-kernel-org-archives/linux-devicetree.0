@@ -1,53 +1,103 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 3/4] ARM: OMAP2: MUSB: Specify omap4 has mailbox
-Date: Mon, 21 Jan 2013 19:38:27 +0530
-Message-ID: <1358777308-2409-4-git-send-email-kishon@ti.com>
-References: <1358777308-2409-1-git-send-email-kishon@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [RESEND PATCH v9 0/2] usb: phy: samsung: Introducing usb phy
+ driver for samsung SoCs
+Date: Mon, 21 Jan 2013 15:23:23 +0100
+Message-ID: <1427513.LyTIEL8olI@amdc1227>
+References: <1358499623-13901-1-git-send-email-p.paneri@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1358777308-2409-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rob.herring@calxeda.com, rob@landley.net, tony@atomide.com, balbi@ti.com, b-cousson@ti.com, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: grant.likely@secretlab.ca, linux@arm.linux.org.uk, gregkh@linuxfoundation.org, kishon@ti.com
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1358499623-13901-1-git-send-email-p.paneri@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Praveen Paneri <p.paneri@samsung.com>
+Cc: linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, balbi@ti.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de, gautam.vivek@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Added has_mailbox to the musb platform data to specify that omap uses
-an external mailbox (in control module) to communicate with the musb
-core during device connect and disconnect.
+On Friday 18 of January 2013 14:30:21 Praveen Paneri wrote:
+> Changes from v8:
+> Resending this patch series after rebasing to the latest usb-next
+> branch. Rewording inline comments for better readability.
+> Removed IS_ENABLED(CONFIG_OF) as pdev->dev.of_node is enough to check
+> for dt support. Using of_match_ptr to add of_match_table to
+> platform_driver structure. Removed unnecessary variables.
+> 
+> Changes from v7:
+> Rebased to the latest usb-next branch.
+> Separating arch patches from these driver patches.
+> 
+> Changes from v6:
+> Modified register definitions according to the existing ones.
+> Changed default PHY clk selection for SoCs.
+> Improved binding text and rebased to the latest usb-next.
+> 
+> Changes from v5:
+> Moved clk_get() to driver's probe function. Now reference clock
+> frequency selection value is stored in samsung_usbphy structure for
+> later use. Used IS_ENABLED() instead of #ifdef in
+> samsung_usbphy_get_driver_data().
+> 
+> Changes from v4:
+> Moved header file contents to driver's source file
+> Removed unnecessary print message from driver's probe function
+> Dropped the Free Software Foundation address from the header
+> 
+> Changes from v3:
+> Replaced susbsys_initcall()/module_exit() by module_platform_driver().
+> Accordingly in the hsotg driver returned -EPROBE_DEFER until phy driver
+> is registered
+> Removed unnecessary devm_usb_put_phy() call from the hsotg driver
+> remove.
+> 
+> Changes from v2:
+> Changed the driver filenames to samsung-usbphy
+> Rectified coding style related errors
+> 
+> Changes from v1:
+> Rebased patches to latest usb-next branch
+> Changed the name 'sec_usbphy' to 'samsung_usbphy'
+> 
+> This patch set introduces a phy driver for samsung SoCs. It uses the
+> existing transceiver infrastructure to provide phy control functions.
+> Use of this driver can be extended for usb host phy as well. Over the
+> period of time all the phy related code for most of the samsung SoCs
+> can be integrated here. Removing the existing phy code from
+> mach-s3c64xx. Same can be done for other SoCs when they start
+> supporting this phy driver.
+> This driver is tested with smdk6410 and Exynos4210(with DT).
+> 
+> Praveen Paneri (2):
+>   usb: phy: samsung: Introducing usb phy driver for hsotg
+>   usb: s3c-hsotg: Adding phy driver support
+> 
+>  .../devicetree/bindings/usb/samsung-usbphy.txt     |   11 +
+>  drivers/usb/gadget/s3c-hsotg.c                     |   37 ++-
+>  drivers/usb/phy/Kconfig                            |    8 +
+>  drivers/usb/phy/Makefile                           |    1 +
+>  drivers/usb/phy/samsung-usbphy.c                   |  354
+> ++++++++++++++++++++ include/linux/platform_data/samsung-usbphy.h      
+> |   27 ++
+>  6 files changed, 428 insertions(+), 10 deletions(-)
+>  create mode 100644
+> Documentation/devicetree/bindings/usb/samsung-usbphy.txt create mode
+> 100644 drivers/usb/phy/samsung-usbphy.c
+>  create mode 100644 include/linux/platform_data/samsung-usbphy.h
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe
+> linux-samsung-soc" in the body of a message to
+> majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/mach-omap2/usb-musb.c |    3 +++
- include/linux/usb/musb.h       |    2 ++
- 2 files changed, 5 insertions(+)
+Tested on Exynos4210-Trats.
 
-diff --git a/arch/arm/mach-omap2/usb-musb.c b/arch/arm/mach-omap2/usb-musb.c
-index 7b33b37..9d27e3f 100644
---- a/arch/arm/mach-omap2/usb-musb.c
-+++ b/arch/arm/mach-omap2/usb-musb.c
-@@ -85,6 +85,9 @@ void __init usb_musb_init(struct omap_musb_board_data *musb_board_data)
- 	musb_plat.mode = board_data->mode;
- 	musb_plat.extvbus = board_data->extvbus;
- 
-+	if (cpu_is_omap44xx())
-+		musb_plat.has_mailbox = true;
-+
- 	if (soc_is_am35xx()) {
- 		oh_name = "am35x_otg_hs";
- 		name = "musb-am35x";
-diff --git a/include/linux/usb/musb.h b/include/linux/usb/musb.h
-index eb50525..053c268 100644
---- a/include/linux/usb/musb.h
-+++ b/include/linux/usb/musb.h
-@@ -99,6 +99,8 @@ struct musb_hdrc_platform_data {
- 	/* MUSB_HOST, MUSB_PERIPHERAL, or MUSB_OTG */
- 	u8		mode;
- 
-+	u8		has_mailbox:1;
-+
- 	/* for clk_get() */
- 	const char	*clock;
- 
+Tested-by: Tomasz Figa <t.figa@samsung.com>
+
+I also have patches for Exynos 4x12, which I will send once this series 
+and generic PMU isolation setting patches get merged.
+
+Best regards,
 -- 
-1.7.9.5
+Tomasz Figa
+Samsung Poland R&D Center
+SW Solution Development, Linux Platform
