@@ -1,52 +1,593 @@
-From: Thomas Abraham <thomas.abraham@linaro.org>
-Subject: Re: [PATCH] of: fix incorrect return value of
- of_find_matching_node_and_match()
-Date: Sun, 20 Jan 2013 19:48:15 -0800
-Message-ID: <CAJuYYwT_psGiQjpwM0qCvfTAhzLV+Yxjk5sVADO4BSnTSxG5sA@mail.gmail.com>
-References: <1358619642-23607-1-git-send-email-thomas.abraham@linaro.org>
- <50FC66BA.9030503@gmail.com>
- <CAJuYYwT++66UUT5wdZh=B=VC7s2=T4w0qO6G7CEG6eCHT5WBCg@mail.gmail.com>
- <50FCB5B9.8000802@gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 5/6] OF: Introduce Device Tree resolve support.
+Date: Mon, 21 Jan 2013 15:48:36 +1100
+Message-ID: <20130121044836.GB24829@truffula.fritz.box>
+References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com>
+ <1357327870-13615-6-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <50FCB5B9.8000802@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: grant.likely@secretlab.ca, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@wwwdotorg.org>
+Content-Type: multipart/mixed; boundary="===============8942358229032545907=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1357327870-13615-6-git-send-email-panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Cc: Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20 January 2013 19:27, Rob Herring <robherring2@gmail.com> wrote:
-> On 01/20/2013 03:56 PM, Thomas Abraham wrote:
->> On 20 January 2013 13:50, Rob Herring <robherring2@gmail.com> wrote:
->>> On 01/19/2013 12:20 PM, Thomas Abraham wrote:
->>>> The of_find_matching_node_and_match() function incorrectly sets the matched
->>>> entry to 'matches' when the compatible value of a node matches one of the
->>>> possible values. This results in incorrectly selecting the the first entry in
->>>> the 'matches' list as the matched entry. Fix this by noting down the result of
->>>> the call to of_match_node() and setting that as the matched entry.
->>>
->>> Looks fine, but is this breaking something in 3.8 or can it wait for 3.9?
->>
->> Yes, it can wait for 3.9. I am using this function while adding device
->> tree support for timers on exynos platform which will probably merged
->> in 3.9.
->
-> Applied for 3.9. It's in my for-next branch on sources.calxeda.com. This
-> is a stable branch.
->
-> Rob
 
-Thank you Rob.
+--===============8942358229032545907==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Content-Disposition: inline
 
-Regards,
-Thomas.
+
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 04, 2013 at 09:31:09PM +0200, Pantelis Antoniou wrote:
+> Introduce support for dynamic device tree resolution.
+> Using it, it is possible to prepare a device tree that's
+> been loaded on runtime to be modified and inserted at the kernel
+> live tree.
+>=20
+> Signed-off-by: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+> ---
+>  .../devicetree/dynamic-resolution-notes.txt        |  25 ++
+>  drivers/of/Kconfig                                 |   9 +
+>  drivers/of/Makefile                                |   1 +
+>  drivers/of/resolver.c                              | 394 +++++++++++++++=
+++++++
+>  include/linux/of.h                                 |  17 +
+>  5 files changed, 446 insertions(+)
+>  create mode 100644 Documentation/devicetree/dynamic-resolution-notes.txt
+>  create mode 100644 drivers/of/resolver.c
+>=20
+> diff --git a/Documentation/devicetree/dynamic-resolution-notes.txt b/Docu=
+mentation/devicetree/dynamic-resolution-notes.txt
+> new file mode 100644
+> index 0000000..0b396c4
+> --- /dev/null
+> +++ b/Documentation/devicetree/dynamic-resolution-notes.txt
+> @@ -0,0 +1,25 @@
+> +Device Tree Dynamic Resolver Notes
+> +----------------------------------
+> +
+> +This document describes the implementation of the in-kernel
+> +Device Tree resolver, residing in drivers/of/resolver.c and is a
+> +companion document to Documentation/devicetree/dt-object-internal.txt[1]
+> +
+> +How the resolver works
+> +----------------------
+> +
+> +The resolver is given as an input an arbitrary tree compiled with the
+> +proper dtc option and having a /plugin/ tag. This generates the
+> +appropriate __fixups__ & __local_fixups__ nodes as described in [1].
+> +
+> +In sequence the resolver works by the following steps:
+> +
+> +1. Get the maximum device tree phandle value from the live tree + 1.
+> +2. Adjust all the local phandles of the tree to resolve by that amount.
+> +3. Using the __local__fixups__ node information adjust all local referen=
+ces
+> +   by the same amount.
+> +4. For each property in the __fixups__ node locate the node it references
+> +   in the live tree. This is the label used to tag the node.
+> +5. Retrieve the phandle of the target of the fixup.
+> +5. For each fixup in the property locate the node:property:offset locati=
+on
+> +   and replace it with the phandle value.
+
+Hrm.  So, I'm really still not convinced by this approach.
+
+	First, I think it's unwise to allow overlays to change
+essentially anything in the base tree, rather than having the base
+tree define sockets of some sort where things can be attached.
+
+	Second, even allowing overlays to change anything, I don't see
+a lot of reason to do this kind of resolution within the kernel and
+with data stored in the dtb itself, rather than doing the resolution
+in userspace from an annotated overlay dts or dtb, then inserting the
+fully resolved product into the kernel.  In either case, the overlay
+needs to be constructed with pretty intimate knowledge of the base
+tree.
+
+That said, I have some implementation comments below.
+
+[snip]
+> +/**
+> + * Find a subtree's maximum phandle value.
+> + */
+> +static phandle __of_get_tree_max_phandle(struct device_node *node,
+> +		phandle max_phandle)
+> +{
+> +	struct device_node *child;
+> +
+> +	if (node->phandle !=3D 0 && node->phandle !=3D OF_PHANDLE_ILLEGAL &&
+> +			node->phandle > max_phandle)
+> +		max_phandle =3D node->phandle;
+> +
+> +	__for_each_child_of_node(node, child)
+> +		max_phandle =3D __of_get_tree_max_phandle(child, max_phandle);
+
+Recursion is best avoided given the kernel's limited stack space.
+This is also trivial to implement non-recursively, using the allnext
+pointer.
+
+> +
+> +	return max_phandle;
+> +}
+> +
+> +/**
+> + * Find live tree's maximum phandle value.
+> + */
+> +static phandle of_get_tree_max_phandle(void)
+> +{
+> +	struct device_node *node;
+> +	phandle phandle;
+> +
+> +	/* get root node */
+> +	node =3D of_find_node_by_path("/");
+> +	if (node =3D=3D NULL)
+> +		return OF_PHANDLE_ILLEGAL;
+> +
+> +	/* now search recursively */
+> +	read_lock(&devtree_lock);
+> +	phandle =3D __of_get_tree_max_phandle(node, 0);
+> +	read_unlock(&devtree_lock);
+> +
+> +	of_node_put(node);
+> +
+> +	return phandle;
+> +}
+> +
+> +/**
+> + * Adjust a subtree's phandle values by a given delta.
+> + * Makes sure not to just adjust the device node's phandle value,
+> + * but modify the phandle properties values as well.
+> + */
+> +static void __of_adjust_tree_phandles(struct device_node *node,
+> +		int phandle_delta)
+> +{
+> +	struct device_node *child;
+> +	struct property *prop;
+> +	phandle phandle;
+> +
+> +	/* first adjust the node's phandle direct value */
+> +	if (node->phandle !=3D 0 && node->phandle !=3D OF_PHANDLE_ILLEGAL)
+> +		node->phandle +=3D phandle_delta;
+
+You need to have some kind of check for overflow here, or the adjusted
+phandle could be one of the illegal values (0 or -1) - or wrap around
+and colllide with existing phandle values in the base tree.  dtc
+(currently) allocates phandles from the bottom, but there's no
+guarantee that a base tree will only have low phandle values - it only
+takes one node with phandle set to 0xfffffffe in the base tree to have
+this function make a mess of things.
+
+
+> +	/* now adjust phandle & linux,phandle values */
+> +	for_each_property_of_node(node, prop) {
+> +
+> +		/* only look for these two */
+> +		if (of_prop_cmp(prop->name, "phandle") !=3D 0 &&
+> +		    of_prop_cmp(prop->name, "linux,phandle") !=3D 0)
+> +			continue;
+> +
+> +		/* must be big enough */
+> +		if (prop->length < 4)
+> +			continue;
+
+If prop->length !=3D 4 (including > 4) something is pretty wrong, and
+you should probably bail with an error message.
+
+> +
+> +		/* read phandle value */
+> +		phandle =3D be32_to_cpu(*(uint32_t *)prop->value);
+> +		if (phandle =3D=3D OF_PHANDLE_ILLEGAL)	/* unresolved */
+> +			continue;
+> +
+> +		/* adjust */
+> +		*(uint32_t *)prop->value =3D cpu_to_be32(node->phandle);
+> +	}
+> +
+> +	/* now do the children recursively */
+> +	__for_each_child_of_node(node, child)
+> +		__of_adjust_tree_phandles(child, phandle_delta);
+
+Again, recursion is not a good idea.
+
+> +}
+> +
+> +/**
+> + * Adjust the local phandle references by the given phandle delta.
+> + * Assumes the existances of a __local_fixups__ node at the root
+> + * of the tree. Does not take any devtree locks so make sure you
+> + * call this on a tree which is at the detached state.
+> + */
+> +static int __of_adjust_tree_phandle_references(struct device_node *node,
+> +		int phandle_delta)
+> +{
+> +	phandle phandle;
+> +	struct device_node *refnode, *child;
+> +	struct property *rprop, *sprop;
+> +	char *propval, *propcur, *propend, *nodestr, *propstr, *s;
+> +	int offset, propcurlen;
+> +	int err;
+> +
+> +	/* locate the symbols & fixups nodes on resolve */
+> +	__for_each_child_of_node(node, child)
+> +		if (of_node_cmp(child->name, "__local_fixups__") =3D=3D 0)
+> +			break;
+> +
+> +	/* no local fixups */
+> +	if (child =3D=3D NULL)
+> +		return 0;
+> +
+> +	/* find the local fixups property */
+> +	for_each_property_of_node(child, rprop) {
+> +
+> +		/* skip properties added automatically */
+> +		if (of_prop_cmp(rprop->name, "name") =3D=3D 0)
+> +			continue;
+
+Ok, so you're interpreting any property except name in the
+__local_fixups__ node in exactly the same way?  That's a bit strange.
+Why not just have a single property rather than a node's worth in that
+case.
+
+> +		/* make a copy */
+> +		propval =3D kmalloc(rprop->length, GFP_KERNEL);
+> +		if (propval =3D=3D NULL) {
+> +			pr_err("%s: Could not copy value of '%s'\n",
+> +					__func__, rprop->name);
+> +			return -ENOMEM;
+> +		}
+> +		memcpy(propval, rprop->value, rprop->length);
+> +
+> +		propend =3D propval + rprop->length;
+> +		for (propcur =3D propval; propcur < propend;
+> +				propcur +=3D propcurlen + 1) {
+> +
+> +			propcurlen =3D strlen(propcur);
+> +
+> +			nodestr =3D propcur;
+> +			s =3D strchr(propcur, ':');
+
+So, using strings with separators like this doesn't sit will with
+existing device tree practice.  More similar to existing things would
+have NUL separators and the integer values in binary, rather than
+text (and yes, there is precedent for mixed string and integer content
+in properties).
+
+
+> +			if (s =3D=3D NULL) {
+> +				pr_err("%s: Illegal symbol entry '%s' (1)\n",
+> +					__func__, propcur);
+> +				err =3D -EINVAL;
+> +				goto err_fail;
+> +			}
+> +			*s++ =3D '\0';
+
+And using the separators you do leads to this rather ugly copy then
+mangle-in-place approach to parsing.
+
+> +			propstr =3D s;
+> +			s =3D strchr(s, ':');
+> +			if (s =3D=3D NULL) {
+> +				pr_err("%s: Illegal symbol entry '%s' (2)\n",
+> +					__func__, (char *)rprop->value);
+> +				err =3D -EINVAL;
+> +				goto err_fail;
+> +			}
+> +
+> +			*s++ =3D '\0';
+> +			offset =3D simple_strtoul(s, NULL, 10);
+> +
+> +			/* look into the resolve node for the full path */
+> +			refnode =3D __of_find_node_by_full_name(node, nodestr);
+> +			if (refnode =3D=3D NULL) {
+> +				pr_warn("%s: Could not find refnode '%s'\n",
+> +					__func__, (char *)rprop->value);
+> +				continue;
+> +			}
+> +
+> +			/* now find the property */
+> +			for_each_property_of_node(refnode, sprop) {
+> +				if (of_prop_cmp(sprop->name, propstr) =3D=3D 0)
+> +					break;
+> +			}
+> +
+> +			if (sprop =3D=3D NULL) {
+> +				pr_err("%s: Could not find property '%s'\n",
+> +					__func__, (char *)rprop->value);
+> +				err =3D -ENOENT;
+> +				goto err_fail;
+> +			}
+> +
+> +			phandle =3D be32_to_cpu(*(uint32_t *)
+> +					(sprop->value + offset));
+> +			*(uint32_t *)(sprop->value + offset) =3D
+> +				cpu_to_be32(phandle + phandle_delta);
+> +		}
+> +
+> +		kfree(propval);
+> +	}
+> +
+> +	return 0;
+> +
+> +err_fail:
+> +	kfree(propval);
+> +	return err;
+> +}
+> +
+> +/**
+> + * of_resolve	- Resolve the given node against the live tree.
+> + *
+> + * @resolve:	Node to resolve
+> + *
+> + * Perform dynamic Device Tree resolution against the live tree
+> + * to the given node to resolve. This depends on the live tree
+> + * having a __symbols__ node, and the resolve node the __fixups__ &
+> + * __local_fixups__ nodes (if needed).
+> + * The result of the operation is a resolve node that it's contents
+> + * are fit to be inserted or operate upon the live tree.
+> + * Returns 0 on success or a negative error value on error.
+> + */
+> +int of_resolve(struct device_node *resolve)
+> +{
+> +	struct device_node *child, *refnode;
+> +	struct device_node *root_sym, *resolve_sym, *resolve_fix;
+> +	struct property *rprop, *sprop;
+> +	const char *refpath;
+> +	char *propval, *propcur, *propend, *nodestr, *propstr, *s;
+> +	int offset, propcurlen;
+> +	phandle phandle, phandle_delta;
+> +	int err;
+> +
+> +	/* the resolve node must exist, and be detached */
+> +	if (resolve =3D=3D NULL ||
+> +			!of_node_check_flag(resolve, OF_DETACHED)) {
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* first we need to adjust the phandles */
+> +	phandle_delta =3D of_get_tree_max_phandle() + 1;
+> +	__of_adjust_tree_phandles(resolve, phandle_delta);
+> +	err =3D __of_adjust_tree_phandle_references(resolve, phandle_delta);
+> +	if (err !=3D 0)
+> +		return err;
+> +
+> +	root_sym =3D NULL;
+> +	resolve_sym =3D NULL;
+> +	resolve_fix =3D NULL;
+> +
+> +	/* this may fail (if no fixups are required) */
+> +	root_sym =3D of_find_node_by_path("/__symbols__");
+> +
+> +	/* locate the symbols & fixups nodes on resolve */
+> +	__for_each_child_of_node(resolve, child) {
+> +
+> +		if (resolve_sym =3D=3D NULL &&
+
+No need for the NULL check.  If there are duplicate node names, you've
+already got big trouble, and picking the last matching will do no
+worse than picking the first matching.
+
+> +				of_node_cmp(child->name, "__symbols__") =3D=3D 0)
+> +			resolve_sym =3D child;
+> +
+> +		if (resolve_fix =3D=3D NULL &&
+> +				of_node_cmp(child->name, "__fixups__") =3D=3D 0)
+> +			resolve_fix =3D child;
+> +
+> +		/* both found, don't bother anymore */
+> +		if (resolve_sym !=3D NULL && resolve_fix !=3D NULL)
+> +			break;
+> +	}
+> +
+> +	/* we do allow for the case where no fixups are needed */
+> +	if (resolve_fix =3D=3D NULL)
+> +		goto merge_sym;
+
+Hrm.  I'm not convinced that's one of the kernel-allowed forms of
+goto.
+
+> +
+> +	/* we need to fixup, but no root symbols... */
+> +	if (root_sym =3D=3D NULL)
+> +		return -EINVAL;
+> +
+> +	for_each_property_of_node(resolve_fix, rprop) {
+> +
+> +		/* skip properties added automatically */
+> +		if (of_prop_cmp(rprop->name, "name") =3D=3D 0)
+> +			continue;
+> +
+> +		err =3D of_property_read_string(root_sym,
+> +				rprop->name, &refpath);
+> +		if (err !=3D 0) {
+> +			pr_err("%s: Could not find symbol '%s'\n",
+> +					__func__, rprop->name);
+> +			goto err_fail;
+> +		}
+> +
+> +		refnode =3D of_find_node_by_path(refpath);
+> +		if (refnode =3D=3D NULL) {
+> +			pr_err("%s: Could not find node by path '%s'\n",
+> +					__func__, refpath);
+> +			err =3D -ENOENT;
+> +			goto err_fail;
+> +		}
+> +
+> +		phandle =3D refnode->phandle;
+> +		of_node_put(refnode);
+> +
+> +		pr_debug("%s: %s phandle is 0x%08x\n",
+> +				__func__, rprop->name, phandle);
+> +
+> +		/* make a copy */
+> +		propval =3D kmalloc(rprop->length, GFP_KERNEL);
+> +		if (propval =3D=3D NULL) {
+> +			pr_err("%s: Could not copy value of '%s'\n",
+> +					__func__, rprop->name);
+> +			err =3D -ENOMEM;
+> +			goto err_fail;
+> +		}
+> +
+> +		memcpy(propval, rprop->value, rprop->length);
+> +
+> +		propend =3D propval + rprop->length;
+> +		for (propcur =3D propval; propcur < propend;
+> +				propcur +=3D propcurlen + 1) {
+> +			propcurlen =3D strlen(propcur);
+> +
+> +			nodestr =3D propcur;
+> +			s =3D strchr(propcur, ':');
+> +			if (s =3D=3D NULL) {
+> +				pr_err("%s: Illegal symbol "
+> +					"entry '%s' (1)\n",
+> +					__func__, (char *)rprop->value);
+> +				kfree(propval);
+> +				err =3D -EINVAL;
+> +				goto err_fail;
+> +			}
+> +			*s++ =3D '\0';
+> +
+> +			propstr =3D s;
+> +			s =3D strchr(s, ':');
+> +			if (s =3D=3D NULL) {
+> +				pr_err("%s: Illegal symbol "
+> +					"entry '%s' (2)\n",
+> +					__func__, (char *)rprop->value);
+> +				kfree(propval);
+> +				err =3D -EINVAL;
+> +				goto err_fail;
+> +			}
+> +
+> +			*s++ =3D '\0';
+> +			offset =3D simple_strtoul(s, NULL, 10);
+> +
+> +			/* look into the resolve node for the full path */
+> +			refnode =3D __of_find_node_by_full_name(resolve,
+> +					nodestr);
+
+Re-using the 'refnode' variable here is pretty confusing, since it
+means very different things earlier and here (node pointed to, versus
+node containing the property which points).
+
+> +			if (refnode =3D=3D NULL) {
+> +				pr_err("%s: Could not find refnode '%s'\n",
+> +					__func__, (char *)rprop->value);
+> +				kfree(propval);
+> +				err =3D -ENOENT;
+> +				goto err_fail;
+> +			}
+> +
+> +			/* now find the property */
+> +			for_each_property_of_node(refnode, sprop) {
+> +				if (of_prop_cmp(sprop->name, propstr) =3D=3D 0)
+> +					break;
+> +			}
+> +
+> +			if (sprop =3D=3D NULL) {
+> +				pr_err("%s: Could not find property '%s'\n",
+> +					__func__, (char *)rprop->value);
+> +				kfree(propval);
+> +				err =3D -ENOENT;
+> +				goto err_fail;
+> +			}
+> +
+> +			*(uint32_t *)(sprop->value + offset) =3D
+> +				cpu_to_be32(phandle);
+> +		}
+> +
+> +		kfree(propval);
+> +	}
+> +
+> +merge_sym:
+> +
+> +	of_node_put(root_sym);
+> +
+> +	return 0;
+> +
+> +err_fail:
+> +
+> +	if (root_sym !=3D NULL)
+> +		of_node_put(root_sym);
+> +
+> +	return err;
+> +}
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index c38e41a..ab52243 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -650,4 +650,21 @@ static inline int of_multi_prop_cmp(const struct pro=
+perty *prop, const char *val
+> =20
+>  #endif	/* !CONFIG_OF */
+> =20
+> +
+> +/* illegal phandle value (set when unresolved) */
+> +#define OF_PHANDLE_ILLEGAL	0xdeadbeef
+
+Ugh.  0 and -1 are already reserved as illegal phandle values, don't
+invent a new one.
+
+> +
+> +#ifdef CONFIG_OF_RESOLVE
+> +
+> +int of_resolve(struct device_node *resolve);
+> +
+> +#else
+> +
+> +static inline int of_resolve(struct device_node *resolve)
+> +{
+> +	return -ENOTSUPP;
+> +}
+> +
+> +#endif
+> +
+>  #endif /* _LINUX_OF_H */
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlD8yKQACgkQaILKxv3ab8YFrACdGZK65jOath7YPc//NXBJOfC+
+i6sAn083k2uR+IcqhNKvIbAUiPskAjEL
+=0T6A
+-----END PGP SIGNATURE-----
+
+--oLBj+sq0vYjzfsbl--
+
+--===============8942358229032545907==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============8942358229032545907==--
