@@ -1,70 +1,76 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
+From: Felipe Balbi <balbi@ti.com>
 Subject: Re: [PATCH v3 0/2] Adding USB 3.0 DRD-phy support for exynos5250
-Date: Mon, 21 Jan 2013 12:15:10 +0530
-Message-ID: <CAFp+6iHbvwTBUSZO2EvCaeCT=g=UzubLGrmPHjKUgi9Ef7enzQ@mail.gmail.com>
+Date: Mon, 21 Jan 2013 10:26:43 +0200
+Message-ID: <20130121082643.GF8777@arwen.pp.htv.fi>
 References: <1358168377-22919-1-git-send-email-gautam.vivek@samsung.com>
+ <CAFp+6iHbvwTBUSZO2EvCaeCT=g=UzubLGrmPHjKUgi9Ef7enzQ@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oFbHfjnMgUMsrGjO"
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1358168377-22919-1-git-send-email-gautam.vivek@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iHbvwTBUSZO2EvCaeCT=g=UzubLGrmPHjKUgi9Ef7enzQ@mail.gmail.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: linux-usb@vger.kernel.org, kgene.kim@samsung.com, p.paneri@samsung.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, sylvester.nawrocki@gmail.com, av.tikhomirov@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>, Doug Anderson <dianders@chromium.org>, kishon <kishon@ti.com>, Grant Likely <grant.likely@secretlab.ca>
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: balbi@ti.com, linux-usb@vger.kernel.org, kgene.kim@samsung.com, p.paneri@samsung.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, sylvester.nawrocki@gmail.com, av.tikhomirov@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>, Doug Anderson <dianders@chromium.org>, kishon <kishon@ti.com>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+--oFbHfjnMgUMsrGjO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+Hi,
 
-On Mon, Jan 14, 2013 at 6:29 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
-> Changes from v2:
->  - Renaming 'samsung-usbphy.c' driver to 'samsung-usb2.c' indicating
->    usb 2.0 phy controller's driver for Samsung's SoCs.
->  - Moving the register definitions and strcuture definitions to
->    common header file 'samsung-usbphy.h' to be used across
->    usb 2.0 and usb 3.0 phy.
->  - Keeping common exported function definitions in samsung-usbphy.c
->    which can be used across usb 2.0 and usb 3.0 phy.
->  - Writting separate driver file for Samsung's USB 3.0 phy controller.
->    and making it dependent on USB_DWC3.
->
+On Mon, Jan 21, 2013 at 12:15:10PM +0530, Vivek Gautam wrote:
+> Hi Felipe,
+>=20
+>=20
+> On Mon, Jan 14, 2013 at 6:29 PM, Vivek Gautam <gautam.vivek@samsung.com> =
+wrote:
+> > Changes from v2:
+> >  - Renaming 'samsung-usbphy.c' driver to 'samsung-usb2.c' indicating
+> >    usb 2.0 phy controller's driver for Samsung's SoCs.
+> >  - Moving the register definitions and strcuture definitions to
+> >    common header file 'samsung-usbphy.h' to be used across
+> >    usb 2.0 and usb 3.0 phy.
+> >  - Keeping common exported function definitions in samsung-usbphy.c
+> >    which can be used across usb 2.0 and usb 3.0 phy.
+> >  - Writting separate driver file for Samsung's USB 3.0 phy controller.
+> >    and making it dependent on USB_DWC3.
+> >
+>=20
+> Is the re-organization being done here fine as per requirements for
+> separate drivers for usb 2.0 type PHY and usb 3.0 type PHY ?
 
-Is the re-organization being done here fine as per requirements for
-separate drivers for usb 2.0 type PHY and usb 3.0 type PHY ?
+should be fine ;-) If there is *truly generic* pieces, it makes sense to
+re-use - unless those "generic" parts are common driver churn
+(platform_driver definition, module_init(), module_exit(), etc).
 
-> Rebased on top of usb-next followed by following patches/patch-threads:
->         -- [PATCH v9 1/2] usb: phy: samsung: Introducing usb phy driver for hsotg
->         -- [PATCH] usb: phy: samsung: Add support to set pmu isolation (version 6)
->         -- [PATCH v6 0/4] Adding usb2.0 host-phy support for exynos5250
->
-> Changes form v1:
->  - Moved architecture related patch out of this patch-set.
->  - Replaced unnecessary multi-line macro definitions by
->    single line definitions.
->  - Creating new data structure for USB 3.0 phy type and embedding
->    it in 'samsung_usbphy' structure.
->  - Adding a flag in 'samsung_usbphy' structure to check if device
->    has usb 3.0 type phy or not.
->  - Restructuring probe sequence for USB 3.0 phy, such that we are
->    initializing only when device has usb3.0 type phy.
->
-> Vivek Gautam (2):
->   usb: phy: samsung: Common out the generic stuff
->   usb: phy: samsung: Add PHY support for USB 3.0 controller
->
->  drivers/usb/phy/Kconfig          |    8 +
->  drivers/usb/phy/Makefile         |    3 +-
->  drivers/usb/phy/samsung-usb2.c   |  511 +++++++++++++++++++++++++++
->  drivers/usb/phy/samsung-usb3.c   |  349 +++++++++++++++++++
->  drivers/usb/phy/samsung-usbphy.c |  713 +-------------------------------------
->  drivers/usb/phy/samsung-usbphy.h |  328 +++++++++++++++++
->  6 files changed, 1205 insertions(+), 707 deletions(-)
->  create mode 100644 drivers/usb/phy/samsung-usb2.c
->  create mode 100644 drivers/usb/phy/samsung-usb3.c
->  create mode 100644 drivers/usb/phy/samsung-usbphy.h
->
+--=20
+balbi
 
+--oFbHfjnMgUMsrGjO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
--- 
-Thanks & Regards
-Vivek
+iQIcBAEBAgAGBQJQ/PvDAAoJEIaOsuA1yqREbJcQAKGcvaVboLtCXoQJuWnrfC0b
+Eupv6hbk2ZQtt8hUwriSa0IFQm80T/xj2psZX2UxN+PpXyB3KPNMe6ADgvPNyb9f
+EGwbhP3f7lylAaDa8lZY6yzqKHo7T/x6ufMC2vIApPxYzDyMMQJ53s3z/ZVStNNc
+vJK0CEsZDrlY2ojtv0yq5RjARg+9t+ddAC/6IYZlXW5p87BYk2Ty4mgM9PvFgCR6
+qGSCgOc8aHx2YwSglRogpfDPlMLdlhjaateM/35wg7BRtPnZIRO73pZsw8FrBVNX
+hLnkubTlzGMGzp8fRU4z7CdRoCcR9WOQ4PHw435jCIBPB36mXsg/BeWAsWAlkAKC
+wKGVJMCKaQy1/Olqjq0KAPRm9ZVzvDYIy/2/1fNPEP/DJBGk9XoAHG5WGYlVCBjm
+7PJjcAAhsZtSZR2A7Htub1uCdinPqjHLE3oIbxvwn8pfR3MeJDuPu5w2FUXqLkJc
+rFISQZTEkwbhF3IFlXDQ/G5CwziQDV/KIWON+JR87RskMIg4uOC2FFTbPcHKHBfl
++bo0i07EuP6reE8PkWgr+DQ0iX1DYcFoa88iN2GdvIh/+ScPv5G8qPNnkakcGOqQ
+YFkFOxzaoPUOsQ8J112OquZ5An2rsHNJdNsgN3FU6mEAe3IKL9LsfZSFTkzwSLrJ
+uCX4lIde+gH/0c0WQVla
+=hJDy
+-----END PGP SIGNATURE-----
+
+--oFbHfjnMgUMsrGjO--
