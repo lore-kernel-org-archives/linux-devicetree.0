@@ -1,38 +1,65 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 0/4] gpio: introduce descriptor-based interface
-Date: Tue, 22 Jan 2013 09:55:32 +0100
-Message-ID: <CACRpkdZHgEQRwKZXS6Juk763z+AAXB3SnG=wLdX+aJY0X=nYKQ@mail.gmail.com>
-References: <1357629535-26033-1-git-send-email-acourbot@nvidia.com>
-	<CACRpkda6dqAj+DzrMCnKET7Z9PtuW0+k9ea3YDL8Z1D=oFVRpQ@mail.gmail.com>
-	<50F7E83E.8000105@uclinux.org>
-	<201301170850.43655.sfking@fdwdc.com>
-	<50FB8986.9010205@nvidia.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/6] arm: mvebu: Add support for local interrupt
+Date: Tue, 22 Jan 2013 10:09:03 +0100
+Message-ID: <50FE572F.4090402@free-electrons.com>
+References: <1358790842-2986-1-git-send-email-gregory.clement@free-electrons.com>
+ <1358790842-2986-2-git-send-email-gregory.clement@free-electrons.com>
+ <20130121191744.0a04b941@skate> <50FDBC0E.1030706@free-electrons.com>
+ <20130121232637.GA3412@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50FB8986.9010205@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Courbot <acourbot@nvidia.com>, Steven King <sfking@fdwdc.com>
-Cc: Greg Ungerer <gerg@uclinux.org>, Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@secretlab.ca>, Guenter Roeck <linux@roeck-us.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, gnurou@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130121232637.GA3412@localhost>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi@marvell>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 20, 2013 at 7:07 AM, Alex Courbot <acourbot@nvidia.com> wrote:
+On 01/22/2013 12:26 AM, Ezequiel Garcia wrote:
+> Hi Thomas and Gregory,
+> 
+> On Mon, Jan 21, 2013 at 11:07:10PM +0100, Gregory CLEMENT wrote:
+>> On 01/21/2013 07:17 PM, Thomas Petazzoni wrote:
+>>>> +		irq_set_percpu_devid(virq);
+>>>> +		irq_set_chip_and_handler(virq, &armada_370_xp_irq_chip,
+>>>> +					handle_percpu_devid_irq);
+>>>> +
+>>>> +	} else {
+>>>> +		irq_set_chip_and_handler(virq, &armada_370_xp_irq_chip,
+>>>> +					handle_level_irq);
+>>>> +	}
+>>>
+>>> Braces useless since there is only one statement in the else.
+>>>
+> 
+> IMHO, this is an exception to the rule.
+> Since the first block is more than one line,
+> we usually put braces on the single line block too.
+> (or at least that's what Documentation/CodingStyle says).
+> 
 
-> Actually the question of switching to GPIOlib is only worth being asked if
-> you are making use of drivers that require GENERIC_GPIO. If this is not the
-> case and your GPIOs are only used by your own platform code, you can always
-> give up using defining GENERIC_GPIO and continue implementing them your own
-> way.
+You're right!
+I would have liked to say I have done it on purpose, but in fact these
+braces are here only because during development I had had multiples lines
+inside the else.
+However, as you pointed it, I will keep it.
 
-Agreed. The problem can be summed up like this:
+> Regards,
+> 
 
-#include <linux/gpio.h>
 
-Considered ambiguous.
-
-#include <asm/foo/bar/baz-gpio.h>
-
-OK with me.
-
-Yours,
-Linus Walleij
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
