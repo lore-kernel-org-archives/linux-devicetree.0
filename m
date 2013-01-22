@@ -1,206 +1,43 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: [PATCH v8 4/4] USB: ohci-exynos: Add phy driver support
-Date: Tue, 22 Jan 2013 18:30:43 +0530
-Message-ID: <1358859643-5030-5-git-send-email-gautam.vivek@samsung.com>
-References: <1358859643-5030-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1358859643-5030-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, stern@rowland.harvard.edu, kgene.kim@samsung.com, thomas.abraham@linaro.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, sylvester.nawrocki@gmail.com, dianders@chromium.org, jg1.han@samsung.com, p.paneri@samsung.com
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 0/4] pwm_backlight: Error fixes and update for DT support
+Date: Tue, 22 Jan 2013 14:39:52 +0100
+Message-ID: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Richard Purdie <rpurdie@rpsys.net>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Thierry Reding <thierry.reding@avionic-design.de>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adding the phy-driver to ohci-exynos. Keeping the platform data
-for continuing the smooth operation for boards which still uses it
+Hi,
 
-Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-Acked-by: Jingoo Han <jg1.han@samsung.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
-Acked-by: Kukjin Kim <kgene.kim@samsung.com>
+This small series will:
+- Fix the case when the kernel is booted in non DT mode and the board file try
+to use levels array to specify the brightness levels.
+- Validate the dft_brightness in all cases not only in DT mode.
+- Add support in case of DT boot to be able to use the whole range of PWM.
+
+Currently boards in legacy mode uses the 'max_brightness' value to specify the
+maximum steps the PWM can be configured. When these boards move to DT support
+they can no longer do this, they have to use the levels array. If we want to
+have the same range in both DT and non DT case we would need to add all the
+numbers from 0 to max (which can be 256) to the 'brightness-levels' array.
+With the new property we can simply allow the whole range to be configured.
+
+Regards,
+Peter
 ---
- drivers/usb/host/ohci-exynos.c |   84 ++++++++++++++++++++++++++++++----------
- 1 files changed, 63 insertions(+), 21 deletions(-)
+Peter Ujfalusi (4):
+  pwm_backlight: Fix PWM levels support in non DT case
+  pwm_backlight: Validate dft_brightness in main probe function
+  pwm_backlight: Refactor the DT parsing code
+  pwm_backlight: Add support for the whole range of the PWM in DT mode
 
-diff --git a/drivers/usb/host/ohci-exynos.c b/drivers/usb/host/ohci-exynos.c
-index 804fb62..1b38409 100644
---- a/drivers/usb/host/ohci-exynos.c
-+++ b/drivers/usb/host/ohci-exynos.c
-@@ -15,6 +15,7 @@
- #include <linux/of.h>
- #include <linux/platform_device.h>
- #include <linux/platform_data/usb-exynos.h>
-+#include <linux/usb/phy.h>
- #include <linux/usb/samsung_usb_phy.h>
- #include <plat/usb-phy.h>
- 
-@@ -22,8 +23,31 @@ struct exynos_ohci_hcd {
- 	struct device *dev;
- 	struct usb_hcd *hcd;
- 	struct clk *clk;
-+	struct usb_phy *phy;
-+	struct usb_otg *otg;
-+	struct exynos4_ohci_platdata *pdata;
- };
- 
-+static void exynos_ohci_phy_enable(struct exynos_ohci_hcd *exynos_ohci)
-+{
-+	struct platform_device *pdev = to_platform_device(exynos_ohci->dev);
-+
-+	if (exynos_ohci->phy)
-+		usb_phy_init(exynos_ohci->phy);
-+	else if (exynos_ohci->pdata->phy_init)
-+		exynos_ohci->pdata->phy_init(pdev, USB_PHY_TYPE_HOST);
-+}
-+
-+static void exynos_ohci_phy_disable(struct exynos_ohci_hcd *exynos_ohci)
-+{
-+	struct platform_device *pdev = to_platform_device(exynos_ohci->dev);
-+
-+	if (exynos_ohci->phy)
-+		usb_phy_shutdown(exynos_ohci->phy);
-+	else if (exynos_ohci->pdata->phy_exit)
-+		exynos_ohci->pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
-+}
-+
- static int ohci_exynos_reset(struct usb_hcd *hcd)
- {
- 	return ohci_init(hcd_to_ohci(hcd));
-@@ -79,20 +103,15 @@ static u64 ohci_exynos_dma_mask = DMA_BIT_MASK(32);
- 
- static int exynos_ohci_probe(struct platform_device *pdev)
- {
--	struct exynos4_ohci_platdata *pdata;
-+	struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
- 	struct exynos_ohci_hcd *exynos_ohci;
- 	struct usb_hcd *hcd;
- 	struct ohci_hcd *ohci;
- 	struct resource *res;
-+	struct usb_phy *phy;
- 	int irq;
- 	int err;
- 
--	pdata = pdev->dev.platform_data;
--	if (!pdata) {
--		dev_err(&pdev->dev, "No platform data defined\n");
--		return -EINVAL;
--	}
--
- 	/*
- 	 * Right now device-tree probed devices don't get dma_mask set.
- 	 * Since shared usb code relies on it, set it here for now.
-@@ -108,6 +127,20 @@ static int exynos_ohci_probe(struct platform_device *pdev)
- 	if (!exynos_ohci)
- 		return -ENOMEM;
- 
-+	phy = devm_usb_get_phy(&pdev->dev, USB_PHY_TYPE_USB2);
-+	if (IS_ERR_OR_NULL(phy)) {
-+		/* Fallback to pdata */
-+		if (!pdata) {
-+			dev_warn(&pdev->dev, "no platform data or transceiver defined\n");
-+			return -EPROBE_DEFER;
-+		} else {
-+			exynos_ohci->pdata = pdata;
-+		}
-+	} else {
-+		exynos_ohci->phy = phy;
-+		exynos_ohci->otg = phy->otg;
-+	}
-+
- 	exynos_ohci->dev = &pdev->dev;
- 
- 	hcd = usb_create_hcd(&exynos_ohci_hc_driver, &pdev->dev,
-@@ -153,8 +186,11 @@ static int exynos_ohci_probe(struct platform_device *pdev)
- 		goto fail_io;
- 	}
- 
--	if (pdata->phy_init)
--		pdata->phy_init(pdev, USB_PHY_TYPE_HOST);
-+	if (exynos_ohci->otg)
-+		exynos_ohci->otg->set_host(exynos_ohci->otg,
-+					&exynos_ohci->hcd->self);
-+
-+	exynos_ohci_phy_enable(exynos_ohci);
- 
- 	ohci = hcd_to_ohci(hcd);
- 	ohci_hcd_init(ohci);
-@@ -162,13 +198,15 @@ static int exynos_ohci_probe(struct platform_device *pdev)
- 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (err) {
- 		dev_err(&pdev->dev, "Failed to add USB HCD\n");
--		goto fail_io;
-+		goto fail_add_hcd;
- 	}
- 
- 	platform_set_drvdata(pdev, exynos_ohci);
- 
- 	return 0;
- 
-+fail_add_hcd:
-+	exynos_ohci_phy_disable(exynos_ohci);
- fail_io:
- 	clk_disable_unprepare(exynos_ohci->clk);
- fail_clk:
-@@ -178,14 +216,16 @@ fail_clk:
- 
- static int exynos_ohci_remove(struct platform_device *pdev)
- {
--	struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
- 	struct exynos_ohci_hcd *exynos_ohci = platform_get_drvdata(pdev);
- 	struct usb_hcd *hcd = exynos_ohci->hcd;
- 
- 	usb_remove_hcd(hcd);
- 
--	if (pdata && pdata->phy_exit)
--		pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
-+	if (exynos_ohci->otg)
-+		exynos_ohci->otg->set_host(exynos_ohci->otg,
-+					&exynos_ohci->hcd->self);
-+
-+	exynos_ohci_phy_disable(exynos_ohci);
- 
- 	clk_disable_unprepare(exynos_ohci->clk);
- 
-@@ -209,8 +249,6 @@ static int exynos_ohci_suspend(struct device *dev)
- 	struct exynos_ohci_hcd *exynos_ohci = dev_get_drvdata(dev);
- 	struct usb_hcd *hcd = exynos_ohci->hcd;
- 	struct ohci_hcd *ohci = hcd_to_ohci(hcd);
--	struct platform_device *pdev = to_platform_device(dev);
--	struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
- 	unsigned long flags;
- 	int rc = 0;
- 
-@@ -229,8 +267,11 @@ static int exynos_ohci_suspend(struct device *dev)
- 
- 	clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
- 
--	if (pdata && pdata->phy_exit)
--		pdata->phy_exit(pdev, USB_PHY_TYPE_HOST);
-+	if (exynos_ohci->otg)
-+		exynos_ohci->otg->set_host(exynos_ohci->otg,
-+					&exynos_ohci->hcd->self);
-+
-+	exynos_ohci_phy_disable(exynos_ohci);
- 
- 	clk_disable_unprepare(exynos_ohci->clk);
- 
-@@ -244,13 +285,14 @@ static int exynos_ohci_resume(struct device *dev)
- {
- 	struct exynos_ohci_hcd *exynos_ohci = dev_get_drvdata(dev);
- 	struct usb_hcd *hcd = exynos_ohci->hcd;
--	struct platform_device *pdev = to_platform_device(dev);
--	struct exynos4_ohci_platdata *pdata = pdev->dev.platform_data;
- 
- 	clk_prepare_enable(exynos_ohci->clk);
- 
--	if (pdata && pdata->phy_init)
--		pdata->phy_init(pdev, USB_PHY_TYPE_HOST);
-+	if (exynos_ohci->otg)
-+		exynos_ohci->otg->set_host(exynos_ohci->otg,
-+					&exynos_ohci->hcd->self);
-+
-+	exynos_ohci_phy_enable(exynos_ohci);
- 
- 	ohci_resume(hcd, false);
- 
+ .../bindings/video/backlight/pwm-backlight.txt     | 12 +++++-
+ drivers/video/backlight/pwm_bl.c                   | 49 ++++++++++++----------
+ 2 files changed, 38 insertions(+), 23 deletions(-)
+
 -- 
-1.7.6.5
+1.8.1.1
+
