@@ -1,61 +1,31 @@
-From: kishon <kishon@ti.com>
-Subject: Re: [PATCH v1 6/6] USB: MUSB: OMAP: get PHY by phandle for dt boot
-Date: Tue, 22 Jan 2013 20:51:58 +0530
-Message-ID: <50FEAE96.30706@ti.com>
-References: <1358848694-20145-1-git-send-email-kishon@ti.com> <1358848694-20145-7-git-send-email-kishon@ti.com> <50FE9F5C.2010501@ti.com> <50FEA447.1090701@ti.com> <50FEA696.8000506@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50FEA696.8000506@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: tony@atomide.com, balbi@ti.com, linux@arm.linux.org.uk, eballetbo@gmail.com, javier@dowhile0.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH v2 0/2] ARM: Exynos5250: Enabling samsung usb phy
+Date: Tue, 22 Jan 2013 21:01:18 +0530
+Message-ID: <1358868680-5757-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, kgene.kim@samsung.com, grant.likely@secretlab.ca, dianders@chromium.org, balbi@ti.com, thomas.abraham@linaro.org, sylvester.nawrocki@gmail.com, tomasz.figa@gmail.com, p.paneri@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 January 2013 08:17 PM, Roger Quadros wrote:
-> On 01/22/2013 04:37 PM, kishon wrote:
->> On Tuesday 22 January 2013 07:47 PM, Roger Quadros wrote:
->>> On 01/22/2013 11:58 AM, Kishon Vijay Abraham I wrote:
->>>> The OMAP glue has been modified to get PHY by phandle for dt boot.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>    drivers/usb/musb/omap2430.c |    7 ++++++-
->>>>    1 file changed, 6 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
->>>> index 1a8cf6d..e43faeb 100644
->>>> --- a/drivers/usb/musb/omap2430.c
->>>> +++ b/drivers/usb/musb/omap2430.c
->>>> @@ -345,7 +345,12 @@ static int omap2430_musb_init(struct musb *musb)
->>>>         * up through ULPI.  TWL4030-family PMICs include one,
->>>>         * which needs a driver, drivers aren't always needed.
->>>>         */
->>>> -    musb->xceiv = devm_usb_get_phy_dev(dev, 0);
->>>> +    if (dev->parent->of_node)
->>>> +        musb->xceiv = devm_usb_get_phy_by_phandle(dev->parent,
->>>> +            "usb_phy", 0);
->>>> +    else
->>>> +        musb->xceiv = devm_usb_get_phy_dev(dev, 0);
->>>> +
->>>>        if (IS_ERR_OR_NULL(musb->xceiv)) {
->>>>            pr_err("HS USB OTG: no transceiver configured\n");
->>>>            return -ENODEV;
->>>
->>> This will not work with PHY driver as a module. You need to use deferred probing mechanism here
->>> after you have addressed my comment in patch 2 and also devm_usb_get_phy_by_phandle()
->>
->> IIUC, even using -EPROBE_DEFER might not help if we are making the PHY driver as module, since the kernel will try to probe only till the prompt comes.
->>
-> Oh really? I thought deferred probing takes place whenever a new driver is bound to a device.
-You might also be right. I'm not so sure.
+Changes from v1:
+ - Putting separate device nodes for usb 2.0 phy and usb 3.0 phy
+   based on separate driver for samsung usb 3.0 phy and
+   samsung usb 2.0 phy:
+   [PATCH v3 0/2] Adding USB 3.0 DRD-phy support for exynos5250
+   [PATCH v8 0/4] Adding usb2.0 host-phy support for exynos5250
+ - Aligning as per the patch:
+   usb: phy: samsung: Add support to set pmu isolation
+ - Replaced phy-handle approach for PHY CONTROL registers
+   to child nodes.
+ - Removing AUX data entry from exynos5250 dt file.
 
-What does "prompt comes" have to do with it?
+Vivek Gautam (2):
+  ARM: Exynos5250: Enabling samsung-usbphy driver
+  ARM: Exynos5250: Enabling samsung-usb3-phy driver
 
-I just meant end of boot process. But it's better to check if deferred 
-probing takes place whenever a new driver is bound to a device as you 
-just mentioned.
+ arch/arm/boot/dts/exynos5250.dtsi |   28 ++++++++++++++++++++++++++++
+ 1 files changed, 28 insertions(+), 0 deletions(-)
 
-Thanks
-Kishon
+-- 
+1.7.6.5
