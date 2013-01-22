@@ -1,545 +1,171 @@
-From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Subject: [PATCH v2 2/3] ARM: DT: tegra: Add Colibri T20 512MB COM
-Date: Tue, 22 Jan 2013 22:46:08 +0100
-Message-ID: <1358891169-5939-2-git-send-email-dev@lynxeye.de>
-References: <1358423961-24318-1-git-send-email-dev@lynxeye.de>
- <1358891169-5939-1-git-send-email-dev@lynxeye.de>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1358891169-5939-1-git-send-email-dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [PATCH v16 RESEND 0/7] of: add display helper
+Date: Tue, 22 Jan 2013 15:50:48 -0600
+Message-ID: <CAF6AEGvFNA1gc_5XWqL_baEnn8DTn0R-xqui034rg3Eo-V_6Qw@mail.gmail.com>
+References: <1358766482-6275-1-git-send-email-s.trumtrar@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1358766482-6275-1-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: devicetree-discuss@lists.ozlabs.org, David Airlie <airlied@linux.ie>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "Mohammed, Afzal" <afzal@ti.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-This adds the device tree include file for the Toradex Colibri T20
-Computer on Module (COM). It's only valid for the 512MB RAM version of
-the module, as the 256MB version needs different EMC tables and flash
-configuration. To make this clear the suffix -512 was added to the board
-compatible string.
+On Mon, Jan 21, 2013 at 5:07 AM, Steffen Trumtrar
+<s.trumtrar@pengutronix.de> wrote:
+> Hi!
+>
+> There was still no maintainer, that commented, ack'd, nack'd, apply'd the
+> series. So, this is just a resend.
+> The patches were tested with:
+>
+>         - v15 on Tegra by Thierry
+>         - sh-mobile-lcdcfb by Laurent
+>         - MX53QSB by Marek
+>         - Exynos: smdk5250 by Leela
+>         - AM335X EVM & AM335X EVM-SK by Afzal
+>         - imx6q: sabrelite, sabresd by Philipp and me
+>         - imx53: tqma53/mba53 by me
 
-The Colibri T20 uses a Tegra2 SoC and has onboard USB Ethernet and AC97
-sound.
 
-Still some things like onboard NAND support missing, but should be a
-good base for further development.
+btw, you can add my tested-by for this series..  I've been using them
+for the tilcdc lcd-panel output driver support.
 
-Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
----
-v2:
-- remove some whitespace
-- remove nodes that don't carry any additional info
-- unify regulator node between module and carrier board
----
- Documentation/devicetree/bindings/arm/tegra.txt |   1 +
- arch/arm/boot/dts/tegra20-colibri-512.dtsi      | 491 ++++++++++++++++++++++++
- 2 files changed, 492 insertions(+)
- create mode 100644 arch/arm/boot/dts/tegra20-colibri-512.dtsi
+BR,
+-R
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra.txt b/Documentation/devicetree/bindings/arm/tegra.txt
-index a5d3353..ccd4ef4 100644
---- a/Documentation/devicetree/bindings/arm/tegra.txt
-+++ b/Documentation/devicetree/bindings/arm/tegra.txt
-@@ -30,3 +30,4 @@ board-specific compatible values:
-   nvidia,seaboard
-   nvidia,ventana
-   nvidia,whistler
-+  toradex,colibri_t20-512
-diff --git a/arch/arm/boot/dts/tegra20-colibri-512.dtsi b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-new file mode 100644
-index 0000000..4441620
---- /dev/null
-+++ b/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-@@ -0,0 +1,491 @@
-+/include/ "tegra20.dtsi"
-+
-+/ {
-+	model = "Toradex Colibri T20 512MB";
-+	compatible = "toradex,colibri_t20-512", "nvidia,tegra20";
-+
-+	memory {
-+		reg = <0x00000000 0x20000000>;
-+	};
-+
-+	host1x {
-+		hdmi {
-+			vdd-supply = <&hdmi_vdd_reg>;
-+			pll-supply = <&hdmi_pll_reg>;
-+
-+			nvidia,ddc-i2c-bus = <&i2c_ddc>;
-+			nvidia,hpd-gpio = <&gpio 111 0>; /* PN7 */
-+		};
-+	};
-+
-+	pinmux {
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&state_default>;
-+
-+		state_default: pinmux {
-+			audio_refclk {
-+				nvidia,pins = "cdev1";
-+				nvidia,function = "plla_out";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <0>;
-+			};
-+			crt {
-+				nvidia,pins = "crtp";
-+				nvidia,function = "crt";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+			dap3 {
-+				nvidia,pins = "dap3";
-+				nvidia,function = "dap3";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <0>;
-+			};
-+			displaya {
-+				nvidia,pins = "ld0", "ld1", "ld2", "ld3",
-+					"ld4", "ld5", "ld6", "ld7", "ld8",
-+					"ld9", "ld10", "ld11", "ld12", "ld13",
-+					"ld14", "ld15", "ld16", "ld17",
-+					"lhs", "lpw0", "lpw2", "lsc0",
-+					"lsc1", "lsck", "lsda", "lspi", "lvs";
-+				nvidia,function = "displaya";
-+				nvidia,tristate = <1>;
-+			};
-+			gpio_dte {
-+				nvidia,pins = "dte";
-+				nvidia,function = "rsvd1";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <0>;
-+			};
-+			gpio_gmi {
-+				nvidia,pins = "ata", "atc", "atd", "ate",
-+					"dap1", "dap2", "dap4", "gpu", "irrx",
-+					"irtx", "spia", "spib", "spic";
-+				nvidia,function = "gmi";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <0>;
-+			};
-+			gpio_pta {
-+				nvidia,pins = "pta";
-+				nvidia,function = "rsvd4";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <0>;
-+			};
-+			gpio_uac {
-+				nvidia,pins = "uac";
-+				nvidia,function = "rsvd2";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <0>;
-+			};
-+			hdint {
-+				nvidia,pins = "hdint";
-+				nvidia,function = "hdmi";
-+				nvidia,tristate = <1>;
-+			};
-+			i2c1 {
-+				nvidia,pins = "rm";
-+				nvidia,function = "i2c1";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+			i2c3 {
-+				nvidia,pins = "dtf";
-+				nvidia,function = "i2c3";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+			i2cddc {
-+				nvidia,pins = "ddc";
-+				nvidia,function = "i2c2";
-+				nvidia,pull = <2>;
-+				nvidia,tristate = <1>;
-+			};
-+			i2cp {
-+				nvidia,pins = "i2cp";
-+				nvidia,function = "i2cp";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <0>;
-+			};
-+			irda {
-+				nvidia,pins = "uad";
-+				nvidia,function = "irda";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+			nand {
-+				nvidia,pins = "kbca", "kbcc", "kbcd",
-+					"kbce", "kbcf";
-+				nvidia,function = "nand";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <0>;
-+			};
-+			owc {
-+				nvidia,pins = "owc";
-+				nvidia,function = "owr";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+			pmc {
-+				nvidia,pins = "pmc";
-+				nvidia,function = "pwr_on";
-+				nvidia,tristate = <0>;
-+			};
-+			pwm {
-+				nvidia,pins = "sdb", "sdc", "sdd";
-+				nvidia,function = "pwm";
-+				nvidia,tristate = <1>;
-+			};
-+			sdio4 {
-+				nvidia,pins = "atb", "gma", "gme";
-+				nvidia,function = "sdio4";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+			spi1 {
-+				nvidia,pins = "spid", "spie", "spif";
-+				nvidia,function = "spi1";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+			spi4 {
-+				nvidia,pins = "slxa", "slxc", "slxd", "slxk";
-+				nvidia,function = "spi4";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+			uarta {
-+				nvidia,pins = "sdio1";
-+				nvidia,function = "uarta";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+			uartd {
-+				nvidia,pins = "gmc";
-+				nvidia,function = "uartd";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+			ulpi {
-+				nvidia,pins = "uaa", "uab", "uda";
-+				nvidia,function = "ulpi";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <0>;
-+			};
-+			ulpi_refclk {
-+				nvidia,pins = "cdev2";
-+				nvidia,function = "pllp_out4";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <0>;
-+			};
-+			usb_gpio {
-+				nvidia,pins = "spig", "spih";
-+				nvidia,function = "spi2_alt";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <0>;
-+			};
-+			vi {
-+				nvidia,pins = "dta", "dtb", "dtc", "dtd";
-+				nvidia,function = "vi";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+			vi_sc {
-+				nvidia,pins = "csus";
-+				nvidia,function = "vi_sensor_clk";
-+				nvidia,pull = <0>;
-+				nvidia,tristate = <1>;
-+			};
-+		};
-+	};
-+
-+	i2c@7000c000 {
-+		clock-frequency = <400000>;
-+	};
-+
-+	i2c_ddc: i2c@7000c400 {
-+		clock-frequency = <100000>;
-+	};
-+
-+	i2c@7000c500 {
-+		clock-frequency = <400000>;
-+	};
-+
-+	i2c@7000d000 {
-+		status = "okay";
-+		clock-frequency = <400000>;
-+
-+		pmic: tps6586x@34 {
-+			compatible = "ti,tps6586x";
-+			reg = <0x34>;
-+			interrupts = <0 86 0x4>;
-+
-+			ti,system-power-controller;
-+
-+			#gpio-cells = <2>;
-+			gpio-controller;
-+
-+			sys-supply = <&vdd_5v0_reg>;
-+			vin-sm0-supply = <&sys_reg>;
-+			vin-sm1-supply = <&sys_reg>;
-+			vin-sm2-supply = <&sys_reg>;
-+			vinldo01-supply = <&sm2_reg>;
-+			vinldo23-supply = <&sm2_reg>;
-+			vinldo4-supply = <&sm2_reg>;
-+			vinldo678-supply = <&sm2_reg>;
-+			vinldo9-supply = <&sm2_reg>;
-+
-+			regulators {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				sys_reg: regulator@0 {
-+					reg = <0>;
-+					regulator-compatible = "sys";
-+					regulator-name = "vdd_sys";
-+					regulator-always-on;
-+				};
-+
-+				regulator@1 {
-+					reg = <1>;
-+					regulator-compatible = "sm0";
-+					regulator-name = "vdd_sm0,vdd_core";
-+					regulator-min-microvolt = <1275000>;
-+					regulator-max-microvolt = <1275000>;
-+					regulator-always-on;
-+				};
-+
-+				regulator@2 {
-+					reg = <2>;
-+					regulator-compatible = "sm1";
-+					regulator-name = "vdd_sm1,vdd_cpu";
-+					regulator-min-microvolt = <1100000>;
-+					regulator-max-microvolt = <1100000>;
-+					regulator-always-on;
-+				};
-+
-+				sm2_reg: regulator@3 {
-+					reg = <3>;
-+					regulator-compatible = "sm2";
-+					regulator-name = "vdd_sm2,vin_ldo*";
-+					regulator-min-microvolt = <3700000>;
-+					regulator-max-microvolt = <3700000>;
-+					regulator-always-on;
-+				};
-+
-+				/* LDO0 is not connected to anything */
-+
-+				regulator@5 {
-+					reg = <5>;
-+					regulator-compatible = "ldo1";
-+					regulator-name = "vdd_ldo1,avdd_pll*";
-+					regulator-min-microvolt = <1100000>;
-+					regulator-max-microvolt = <1100000>;
-+					regulator-always-on;
-+				};
-+
-+				regulator@6 {
-+					reg = <6>;
-+					regulator-compatible = "ldo2";
-+					regulator-name = "vdd_ldo2,vdd_rtc";
-+					regulator-min-microvolt = <1200000>;
-+					regulator-max-microvolt = <1200000>;
-+				};
-+
-+				/* LDO3 is not connected to anything */
-+
-+				regulator@8 {
-+					reg = <8>;
-+					regulator-compatible = "ldo4";
-+					regulator-name = "vdd_ldo4,avdd_osc,vddio_sys";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+					regulator-always-on;
-+				};
-+
-+				ldo5_reg: regulator@9 {
-+					reg = <9>;
-+					regulator-compatible = "ldo5";
-+					regulator-name = "vdd_ldo5,vdd_fuse";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+				};
-+
-+				regulator@10 {
-+					reg = <10>;
-+					regulator-compatible = "ldo6";
-+					regulator-name = "vdd_ldo6,avdd_vdac,vddio_vi,vddio_cam";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+				};
-+
-+				hdmi_vdd_reg: regulator@11 {
-+					reg = <11>;
-+					regulator-compatible = "ldo7";
-+					regulator-name = "vdd_ldo7,avdd_hdmi";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+				};
-+
-+				hdmi_pll_reg: regulator@12 {
-+					reg = <12>;
-+					regulator-compatible = "ldo8";
-+					regulator-name = "vdd_ldo8,avdd_hdmi_pll";
-+					regulator-min-microvolt = <1800000>;
-+					regulator-max-microvolt = <1800000>;
-+				};
-+
-+				regulator@13 {
-+					reg = <13>;
-+					regulator-compatible = "ldo9";
-+					regulator-name = "vdd_ldo9,avdd_2v85,vdd_ddr_rx";
-+					regulator-min-microvolt = <2850000>;
-+					regulator-max-microvolt = <2850000>;
-+					regulator-always-on;
-+				};
-+
-+				regulator@14 {
-+					reg = <14>;
-+					regulator-compatible = "ldo_rtc";
-+					regulator-name = "vdd_rtc_out,vdd_cell";
-+					regulator-min-microvolt = <3300000>;
-+					regulator-max-microvolt = <3300000>;
-+					regulator-always-on;
-+				};
-+			};
-+		};
-+
-+		temperature-sensor@4c {
-+			compatible = "national,lm95245";
-+			reg = <0x4c>;
-+		};
-+	};
-+
-+	memory-controller@7000f400 {
-+		emc-table@83250 {
-+			reg = <83250>;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = <83250>;
-+			nvidia,emc-registers =   <0x00000005 0x00000011
-+				0x00000004 0x00000002 0x00000004 0x00000004
-+				0x00000001 0x0000000a 0x00000002 0x00000002
-+				0x00000001 0x00000001 0x00000003 0x00000004
-+				0x00000003 0x00000009 0x0000000c 0x0000025f
-+				0x00000000 0x00000003 0x00000003 0x00000002
-+				0x00000002 0x00000001 0x00000008 0x000000c8
-+				0x00000003 0x00000005 0x00000003 0x0000000c
-+				0x00000002 0x00000000 0x00000000 0x00000002
-+				0x00000000 0x00000000 0x00000083 0x00520006
-+				0x00000010 0x00000008 0x00000000 0x00000000
-+				0x00000000 0x00000000 0x00000000 0x00000000>;
-+		};
-+		emc-table@133200 {
-+			reg = <133200>;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = <133200>;
-+			nvidia,emc-registers =   <0x00000008 0x00000019
-+				0x00000006 0x00000002 0x00000004 0x00000004
-+				0x00000001 0x0000000a 0x00000002 0x00000002
-+				0x00000002 0x00000001 0x00000003 0x00000004
-+				0x00000003 0x00000009 0x0000000c 0x0000039f
-+				0x00000000 0x00000003 0x00000003 0x00000002
-+				0x00000002 0x00000001 0x00000008 0x000000c8
-+				0x00000003 0x00000007 0x00000003 0x0000000c
-+				0x00000002 0x00000000 0x00000000 0x00000002
-+				0x00000000 0x00000000 0x00000083 0x00510006
-+				0x00000010 0x00000008 0x00000000 0x00000000
-+				0x00000000 0x00000000 0x00000000 0x00000000>;
-+		};
-+		emc-table@166500 {
-+			reg = <166500>;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = <166500>;
-+			nvidia,emc-registers =   <0x0000000a 0x00000021
-+				0x00000008 0x00000003 0x00000004 0x00000004
-+				0x00000002 0x0000000a 0x00000003 0x00000003
-+				0x00000002 0x00000001 0x00000003 0x00000004
-+				0x00000003 0x00000009 0x0000000c 0x000004df
-+				0x00000000 0x00000003 0x00000003 0x00000003
-+				0x00000003 0x00000001 0x00000009 0x000000c8
-+				0x00000003 0x00000009 0x00000004 0x0000000c
-+				0x00000002 0x00000000 0x00000000 0x00000002
-+				0x00000000 0x00000000 0x00000083 0x004f0006
-+				0x00000010 0x00000008 0x00000000 0x00000000
-+				0x00000000 0x00000000 0x00000000 0x00000000>;
-+		};
-+		emc-table@333000 {
-+			reg = <333000>;
-+			compatible = "nvidia,tegra20-emc-table";
-+			clock-frequency = <333000>;
-+			nvidia,emc-registers =   <0x00000014 0x00000041
-+				0x0000000f 0x00000005 0x00000004 0x00000005
-+				0x00000003 0x0000000a 0x00000005 0x00000005
-+				0x00000004 0x00000001 0x00000003 0x00000004
-+				0x00000003 0x00000009 0x0000000c 0x000009ff
-+				0x00000000 0x00000003 0x00000003 0x00000005
-+				0x00000005 0x00000001 0x0000000e 0x000000c8
-+				0x00000003 0x00000011 0x00000006 0x0000000c
-+				0x00000002 0x00000000 0x00000000 0x00000002
-+				0x00000000 0x00000000 0x00000083 0x00380006
-+				0x00000010 0x00000008 0x00000000 0x00000000
-+				0x00000000 0x00000000 0x00000000 0x00000000>;
-+		};
-+	};
-+
-+	ac97: ac97 {
-+		status = "okay";
-+		nvidia,codec-reset-gpio = <&gpio 168 0>; /* gpio PV0 */
-+		nvidia,codec-sync-gpio = <&gpio 120 0>; /* gpio PP0 */
-+	};
-+
-+	usb@c5004000 {
-+		status = "okay";
-+		nvidia,phy-reset-gpio = <&gpio 169 0>; /* gpio PV1 */
-+	};
-+
-+	sdhci@c8000600 {
-+		cd-gpios = <&gpio 23 0>; /* gpio PC7 */
-+	};
-+
-+	sound {
-+		compatible = "nvidia,tegra-audio-wm9712-colibri_t20",
-+			         "nvidia,tegra-audio-wm9712";
-+		nvidia,model = "Colibri T20 AC97 Audio";
-+
-+		nvidia,audio-routing =
-+			"Headphone", "HPOUTL",
-+			"Headphone", "HPOUTR",
-+			"LineIn", "LINEINL",
-+			"LineIn", "LINEINR",
-+			"Mic", "MIC1";
-+
-+		nvidia,ac97-controller = <&ac97>;
-+	};
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vdd_5v0_reg: regulator@100 {
-+			compatible = "regulator-fixed";
-+			reg = <100>;
-+			regulator-name = "vdd_5v0";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		regulator@101 {
-+			compatible = "regulator-fixed";
-+			reg = <101>;
-+			regulator-name = "internal_usb";
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			enable-active-high;
-+			regulator-boot-on;
-+			regulator-always-on;
-+			gpio = <&gpio 217 0>;
-+		};
-+	};
-+};
--- 
-1.8.0.2
+
+>
+>
+> Changes since v15:
+>         - move include/linux/{videomode,display_timing}.h to include/video
+>         - move include/linux/of_{videomode,display_timing}.h to include/video
+>         - reimplement flags: add VESA flags and data flags
+>         - let pixelclock in struct videomode be unsigned long
+>         - rename of_display_timings_exists to of_display_timings_exist
+>         - revise logging/error messages: replace __func__ with np->full_name
+>         - rename pixelclk-inverted to pixelclk-active
+>         - revise comments in code
+>
+> Changes since v14:
+>         - fix "const struct *" warning
+>                 (reported by: Leela Krishna Amudala <l.krishna@samsung.com>)
+>         - return -EINVAL when htotal or vtotal are zero
+>         - remove unreachable code in of_get_display_timings
+>         - include headers in .c files and not implicit in .h
+>         - sort includes alphabetically
+>         - fix lower/uppercase in binding documentation
+>         - rebase onto v3.7-rc7
+>
+> Changes since v13:
+>         - fix "const struct *" warning
+>                 (reported by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>)
+>         - prevent division by zero in fb_videomode_from_videomode
+>
+> Changes since v12:
+>         - rename struct display_timing to via_display_timing in via subsystem
+>         - fix refreshrate calculation
+>         - fix "const struct *" warnings
+>                 (reported by: Manjunathappa, Prakash <prakash.pm@ti.com>)
+>         - some CodingStyle fixes
+>         - rewrite parts of commit messages and display-timings.txt
+>         - let display_timing_get_value get all values instead of just typical
+>
+> Changes since v11:
+>         - make pointers const where applicable
+>         - add reviewed-by Laurent Pinchart
+>
+> Changes since v10:
+>         - fix function name (drm_)display_mode_from_videomode
+>         - add acked-by, reviewed-by, tested-by
+>
+> Changes since v9:
+>         - don't leak memory when previous timings were correct
+>         - CodingStyle fixes
+>         - move blank lines around
+>
+> Changes since v8:
+>         - fix memory leaks
+>         - change API to be more consistent (foo_from_bar(struct bar, struct foo))
+>         - include headers were necessary
+>         - misc minor bugfixes
+>
+> Changes since v7:
+>         - move of_xxx to drivers/video
+>         - remove non-binding documentation from display-timings.txt
+>         - squash display_timings and videomode in one patch
+>         - misc minor fixes
+>
+> Changes since v6:
+>         - get rid of some empty lines etc.
+>         - move functions to their subsystems
+>         - split of_ from non-of_ functions
+>         - add at least some kerneldoc to some functions
+>
+> Changes since v5:
+>         - removed all display stuff and just describe timings
+>
+> Changes since v4:
+>         - refactored functions
+>
+> Changes since v3:
+>         - print error messages
+>         - free alloced memory
+>         - general cleanup
+>
+> Changes since v2:
+>         - use hardware-near property-names
+>         - provide a videomode structure
+>         - allow ranges for all properties (<min,typ,max>)
+>         - functions to get display_mode or fb_videomode
+>
+>
+> Regards,
+> Steffen
+>
+>
+> Steffen Trumtrar (7):
+>   viafb: rename display_timing to via_display_timing
+>   video: add display_timing and videomode
+>   video: add of helper for display timings/videomode
+>   fbmon: add videomode helpers
+>   fbmon: add of_videomode helpers
+>   drm_modes: add videomode helpers
+>   drm_modes: add of_videomode helpers
+>
+>  .../devicetree/bindings/video/display-timing.txt   |  109 +++++++++
+>  drivers/gpu/drm/drm_modes.c                        |   70 ++++++
+>  drivers/video/Kconfig                              |   21 ++
+>  drivers/video/Makefile                             |    4 +
+>  drivers/video/display_timing.c                     |   24 ++
+>  drivers/video/fbmon.c                              |   94 ++++++++
+>  drivers/video/of_display_timing.c                  |  239 ++++++++++++++++++++
+>  drivers/video/of_videomode.c                       |   54 +++++
+>  drivers/video/via/hw.c                             |    6 +-
+>  drivers/video/via/hw.h                             |    2 +-
+>  drivers/video/via/lcd.c                            |    2 +-
+>  drivers/video/via/share.h                          |    2 +-
+>  drivers/video/via/via_modesetting.c                |    8 +-
+>  drivers/video/via/via_modesetting.h                |    6 +-
+>  drivers/video/videomode.c                          |   39 ++++
+>  include/drm/drmP.h                                 |    9 +
+>  include/linux/fb.h                                 |    8 +
+>  include/video/display_timing.h                     |  124 ++++++++++
+>  include/video/of_display_timing.h                  |   20 ++
+>  include/video/of_videomode.h                       |   18 ++
+>  include/video/videomode.h                          |   48 ++++
+>  21 files changed, 894 insertions(+), 13 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/video/display-timing.txt
+>  create mode 100644 drivers/video/display_timing.c
+>  create mode 100644 drivers/video/of_display_timing.c
+>  create mode 100644 drivers/video/of_videomode.c
+>  create mode 100644 drivers/video/videomode.c
+>  create mode 100644 include/video/display_timing.h
+>  create mode 100644 include/video/of_display_timing.h
+>  create mode 100644 include/video/of_videomode.h
+>  create mode 100644 include/video/videomode.h
+>
+> --
+> 1.7.10.4
+>
