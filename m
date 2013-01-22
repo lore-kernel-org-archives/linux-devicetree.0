@@ -1,43 +1,56 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 0/4] pwm_backlight: Error fixes and update for DT support
-Date: Tue, 22 Jan 2013 14:39:52 +0100
-Message-ID: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com>
+Subject: [PATCH 1/4] pwm_backlight: Fix PWM levels support in non DT case
+Date: Tue, 22 Jan 2013 14:39:53 +0100
+Message-ID: <1358861996-27194-2-git-send-email-peter.ujfalusi@ti.com>
+References: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: Richard Purdie <rpurdie@rpsys.net>
 Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Thierry Reding <thierry.reding@avionic-design.de>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+It is expected that board files would have:
+static unsigned int bl_levels[] = { 0, 50, 100, 150, 200, 250, };
 
-This small series will:
-- Fix the case when the kernel is booted in non DT mode and the board file try
-to use levels array to specify the brightness levels.
-- Validate the dft_brightness in all cases not only in DT mode.
-- Add support in case of DT boot to be able to use the whole range of PWM.
+static struct platform_pwm_backlight_data bl_data = {
+	.levels = bl_levels,
+	.max_brightness = ARRAY_SIZE(bl_levels),
+	.dft_brightness = 4,
+	.pwm_period_ns = 7812500,
+};
 
-Currently boards in legacy mode uses the 'max_brightness' value to specify the
-maximum steps the PWM can be configured. When these boards move to DT support
-they can no longer do this, they have to use the levels array. If we want to
-have the same range in both DT and non DT case we would need to add all the
-numbers from 0 to max (which can be 256) to the 'brightness-levels' array.
-With the new property we can simply allow the whole range to be configured.
+In this case the max_brightness would be out of range in the levels array.
+Decrement the received max_brightness in every case (DT or non DT) when the
+levels has been provided.
 
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Peter Ujfalusi (4):
-  pwm_backlight: Fix PWM levels support in non DT case
-  pwm_backlight: Validate dft_brightness in main probe function
-  pwm_backlight: Refactor the DT parsing code
-  pwm_backlight: Add support for the whole range of the PWM in DT mode
+ drivers/video/backlight/pwm_bl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- .../bindings/video/backlight/pwm-backlight.txt     | 12 +++++-
- drivers/video/backlight/pwm_bl.c                   | 49 ++++++++++++----------
- 2 files changed, 38 insertions(+), 23 deletions(-)
-
+diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
+index 069983c..f0d6854 100644
+--- a/drivers/video/backlight/pwm_bl.c
++++ b/drivers/video/backlight/pwm_bl.c
+@@ -142,7 +142,6 @@ static int pwm_backlight_parse_dt(struct device *dev,
+ 		}
+ 
+ 		data->dft_brightness = value;
+-		data->max_brightness--;
+ 	}
+ 
+ 	/*
+@@ -202,6 +201,7 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	if (data->levels) {
++		data->max_brightness--;
+ 		max = data->levels[data->max_brightness];
+ 		pb->levels = data->levels;
+ 	} else
 -- 
 1.8.1.1
 
