@@ -1,52 +1,42 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/7] ARM i.MX6q: Add GPU, VPU, IPU, and OpenVG resets to
- System Reset Controller (SRC)
-Date: Tue, 22 Jan 2013 15:50:05 +0800
-Message-ID: <20130122075003.GF2272@S2100-06.ap.freescale.net>
-References: <1358352787-15441-1-git-send-email-p.zabel@pengutronix.de>
- <1358352787-15441-4-git-send-email-p.zabel@pengutronix.de>
- <CAKGA1bmjKQcX3RzSjbnuYqoJqbzXYGa_Whv7QQkNyAhBDzZWdw@mail.gmail.com>
- <1358761930.2522.54.camel@pizza.hi.pengutronix.de>
- <CAKGA1bmkyU_LEJt17SvUwUUh0wXG-2o_5nOGaW8RWDV45g3bVg@mail.gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 2/7] ARM: sunxi: Add pinctrl driver for Allwinner SoCs
+Date: Tue, 22 Jan 2013 00:09:20 -0800
+Message-ID: <20130122080920.GB27384@quad.lixom.net>
+References: <1358544639-14761-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1358544639-14761-3-git-send-email-maxime.ripard@free-electrons.com>
+ <CACRpkdb8xLeP+RB+JfuEQu=MQ0yO6tVFasVrMsOE4FSfJHrOiw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAKGA1bmkyU_LEJt17SvUwUUh0wXG-2o_5nOGaW8RWDV45g3bVg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CACRpkdb8xLeP+RB+JfuEQu=MQ0yO6tVFasVrMsOE4FSfJHrOiw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, arm@kernel.org, Arnd Bergmann <arnd@arndb.de>, Stefan Roese <sr@denx.de>, Alejandro Mery <amery@geeks.cl>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2013 at 11:47:12AM -0600, Matt Sealey wrote:
-> > Yes, maybe the module reset part of the SRC should be implemented as a
-> > proper device driver in drivers/reset. Then we could use the interrupt
-> > functionality and WARN_ON(timeout), as you suggest.
+On Mon, Jan 21, 2013 at 11:09:07PM +0100, Linus Walleij wrote:
+> On Fri, Jan 18, 2013 at 10:30 PM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > The Allwinner SoCs have an IP module that handle both the muxing and the
+> > GPIOs.
+> >
+> > This IP has 8 banks of 32 bits, with a number of pins actually useful
+> > for each of these banks varying from one to another, and depending on
+> > the SoC used on the board.
+> >
+> > This driver only implements the pinctrl part, the gpio part will come
+> > eventually.
+> >
+> > Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
 > 
-> That would be ideal. Maybe Shawn or Fabio can bug a hardware guy to
-> shed some light on what a reasonable timeout might actually be for a
-> module to cause such a warning. I think it should definitely cause
-> one.. as I said, I was using 5 seconds, you used 1 second, I don't
-> think a shorter delay would be unreasonable, but maybe it could take
-> up to 10 seconds, or maybe I am wrong - maybe it is in fact impossible
-> in hardware for a reset to "fail" at least visibly because the
-> interrupt will always fire making the warning a never-traveled path.
-> It is certainly not something that would be documented, so without a
-> view of the RTL logic here, we wouldn't know.
+> Patch title says "ARM: " but all changed except one line is to the pinctrl
+> tree so I have applied it to the pinctrl tree on a separate allwinner
+> branch for now (will merge it to devel when deemde stable).
 > 
-> Shawn, Fabio?
-> 
-Just talked to hardware people, the reset should finish in a few
-clock cycles, so even 1 millisecond should be enough.
+> ARM SoC boys: can I have an ACK on this oneliner?
 
-Shawn
+Acked-by: Olof Johansson <olof@lixom.net>
+
+
+-Olof
