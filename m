@@ -1,119 +1,231 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH v6 0/4] Adding usb2.0 host-phy support for exynos5250
-Date: Tue, 22 Jan 2013 15:07:25 +0530
-Message-ID: <CAFp+6iGEZMKv+6QvrdfZ1z5o0QGzunxyxiJL_8YjnyGr0pJTKw@mail.gmail.com>
-References: <1357916550-11421-1-git-send-email-gautam.vivek@samsung.com>
-	<053c01cdf860$9e98df20$dbca9d60$@samsung.com>
-	<20130122085004.GD16143@arwen.pp.htv.fi>
-	<CAFp+6iEoCF91HiDbixqsKX5XS_UQrN=+2O7puPqN1MvjY_eHBg@mail.gmail.com>
-	<20130122092947.GJ16143@arwen.pp.htv.fi>
-	<20130122093214.GK16143@arwen.pp.htv.fi>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v1 2/6] usb: otg: utils: add facilities in phy lib to support
+ multiple PHYs of same type
+Date: Tue, 22 Jan 2013 15:28:10 +0530
+Message-ID: <1358848694-20145-3-git-send-email-kishon@ti.com>
+References: <1358848694-20145-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130122093214.GK16143@arwen.pp.htv.fi>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, sylvester.nawrocki@gmail.com, dianders@chromium.org, jg1.han@samsung.com, p.paneri@samsung.com, cpgs@samsung.com, Alan Stern <stern@rowland.harvard.edu>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1358848694-20145-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: kishon-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
+In order to add support for multipe PHY's of the same type, new API's
+for adding PHY and getting PHY has been added. Now the binding
+information for the PHY and controller should be done in platform file
+using usb_bind_phy API. And for getting a PHY, the device pointer of the
+USB controller and an index should be passed. Based on the binding
+information that is added in the platform file, usb_get_phy_dev will return the
+appropriate PHY.
+Already existing API's to add and get phy by type is not removed. These
+API's are deprecated and will be removed once all the platforms start to
+use the new API.
 
+Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+---
+ drivers/usb/otg/otg.c   |  114 ++++++++++++++++++++++++++++++++++++++++++++++-
+ include/linux/usb/phy.h |   13 ++++++
+ 2 files changed, 126 insertions(+), 1 deletion(-)
 
-On Tue, Jan 22, 2013 at 3:02 PM, Felipe Balbi <balbi@ti.com> wrote:
-> HI,
->
-> On Tue, Jan 22, 2013 at 11:29:47AM +0200, Felipe Balbi wrote:
->> On Tue, Jan 22, 2013 at 02:45:26PM +0530, Vivek Gautam wrote:
->> > Hi Felipe,
->> >
->> >
->> > On Tue, Jan 22, 2013 at 2:20 PM, Felipe Balbi <balbi@ti.com> wrote:
->> > > HI,
->> > >
->> > > On Mon, Jan 21, 2013 at 09:23:28PM -0800, Kukjin Kim wrote:
->> > >> Vivek Gautam wrote:
->> > >> >
->> > >> > Changes from v5:
->> > >> >  - Rebased on top of latest patches:
->> > >> >         usb: phy: samsung: Introducing usb phy driver for hsotg (v9)
->> > >> >         usb: phy: samsung: Add support to set pmu isolation (v6)
->> > >> >    As a result adding hostphy enable mask and hostphy register offsets
->> > >> >    to driver data in order to access the HOSTPHY CONTROL register.
->> > >> >
->> > >> >  - Adding member 'otg' to struct samsung-usbphy so that its consumers
->> > >> >    can call otg->set_host so as to make 'phy' aware of the consumer type:
->> > >> >     HOST/DEVICE
->> > >> >
->> > >> >  - Adding 'otg' to 'struct s5p_ehci_hcd' and 'struct exynos_ohci_hcd'
->> > >> >    which keeps track of 'otg' of the controllers' phy. This then sets
->> > >> >    the host.
->> > >> >
->> > >> >  - Moved samsung_usbphy_set_type() calls from ehci-s5p and ohci-exynos
->> > >> >    to phy driver itself where based on phy_type it is called.
->> > >> >
->> > >> >  - Added separate macro definition for USB20PHY_CFG register to select
->> > >> >    between host/device type usb link.
->> > >> >
->> > >> >  - Removing unnecessary argument 'phy_type' from
->> > >> > samsung_usbphy_set_type()
->> > >> >    and samsung_usbphy_cfg_sel().
->> > >> >
->> > >> >  - Addressed few nits:
->> > >> >     -- added macro for 'KHZ'
->> > >> >     -- removing useless 'if' from samsung_usbphy_cfg_sel()
->> > >> >     -- keeping the place of clk_get intact and requesting driver
->> > >> >        data before that.
->> > >> >
->> > >> > Vivek Gautam (4):
->> > >> >   ARM: EXYNOS: Update & move usb-phy types to generic include layer
->> > >> >   usb: phy: samsung: Add host phy support to samsung-phy driver
->> > >> >   USB: ehci-s5p: Add phy driver support
->> > >> >   USB: ohci-exynos: Add phy driver support
->> > >> >
->> > >> >  .../devicetree/bindings/usb/samsung-usbphy.txt     |   12 +-
->> > >> >  drivers/usb/host/ehci-s5p.c                        |   81 +++-
->> > >> >  drivers/usb/host/ohci-exynos.c                     |   85 +++-
->> > >> >  drivers/usb/phy/Kconfig                            |    2 +-
->> > >> >  drivers/usb/phy/samsung-usbphy.c                   |  512
->> > >> ++++++++++++++++++--
->> > >> >  include/linux/usb/samsung_usb_phy.h                |   16 +
->> > >> >  6 files changed, 635 insertions(+), 73 deletions(-)
->> > >> >  create mode 100644 include/linux/usb/samsung_usb_phy.h
->> > >> >
->> > >> > --
->> > >> > 1.7.6.5
->> > >>
->> > >> Looks good to me,
->> > >>
->> > >> Felipe and Greg, I don't know who should take this series anyway, feel free
->> > >> to add  my ack:
->> > >>
->> > >> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
->> > >
->> > > I will take care of it. But I need Alan's Acked-by for EHCI and OHCI
->> > > parts.
->> > >
->> >
->> > We got Alan's ACK for:
->> > USB: ehci-s5p: Add phy driver support
->> > USB: ohci-exynos: Add phy driver support
->>
->> Ok, then as soon as I get back to the office (in a few hours), I'll
->> start queueing those.
->
-> Actually, if you want to make my life a little easier today, you could
-> resend the series with all Acks in place ;-)
->
-
-Sure, will resend the patches with proper Acks and version :-)
-
-> ps: hehe, I'm about to go a little nuts today, too many things happening
-> at once ;-)
->
-:-)
-
-
+diff --git a/drivers/usb/otg/otg.c b/drivers/usb/otg/otg.c
+index 492ba2f..1f30b22 100644
+--- a/drivers/usb/otg/otg.c
++++ b/drivers/usb/otg/otg.c
+@@ -36,6 +36,20 @@ static struct usb_phy *__usb_find_phy(struct list_head *list,
+ 	return ERR_PTR(-ENODEV);
+ }
+ 
++static struct usb_phy *__usb_find_phy_dev(struct device *dev,
++	struct list_head *list, u8 index)
++{
++	struct usb_phy_bind *phy_bind = NULL;
++
++	list_for_each_entry(phy_bind, list, list) {
++		if (!(strcmp(phy_bind->dev_name, dev_name(dev))) &&
++				phy_bind->index == index)
++			return phy_bind->phy;
++	}
++
++	return ERR_PTR(-ENODEV);
++}
++
+ static void devm_usb_phy_release(struct device *dev, void *res)
+ {
+ 	struct usb_phy *phy = *(struct usb_phy **)res;
+@@ -112,6 +126,69 @@ err0:
+ EXPORT_SYMBOL(usb_get_phy);
+ 
+ /**
++ * usb_get_phy_dev - find the USB PHY
++ * @dev - device that requests this phy
++ * @index - the index of the phy
++ *
++ * Returns the phy driver, after getting a refcount to it; or
++ * -ENODEV if there is no such phy.  The caller is responsible for
++ * calling usb_put_phy() to release that count.
++ *
++ * For use by USB host and peripheral drivers.
++ */
++struct usb_phy *usb_get_phy_dev(struct device *dev, u8 index)
++{
++	struct usb_phy	*phy = NULL;
++	unsigned long	flags;
++
++	spin_lock_irqsave(&phy_lock, flags);
++
++	phy = __usb_find_phy_dev(dev, &phy_bind_list, index);
++	if (IS_ERR(phy)) {
++		pr_err("unable to find transceiver\n");
++		goto err0;
++	}
++
++	get_device(phy->dev);
++
++err0:
++	spin_unlock_irqrestore(&phy_lock, flags);
++
++	return phy;
++}
++EXPORT_SYMBOL(usb_get_phy_dev);
++
++/**
++ * devm_usb_get_phy_dev - find the USB PHY using device ptr and index
++ * @dev - device that requests this phy
++ * @index - the index of the phy
++ *
++ * Gets the phy using usb_get_phy_dev(), and associates a device with it using
++ * devres. On driver detach, release function is invoked on the devres data,
++ * then, devres data is freed.
++ *
++ * For use by USB host and peripheral drivers.
++ */
++struct usb_phy *devm_usb_get_phy_dev(struct device *dev, u8 index)
++{
++	struct usb_phy **ptr, *phy;
++
++	ptr = devres_alloc(devm_usb_phy_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return NULL;
++
++	phy = usb_get_phy_dev(dev, index);
++	if (!IS_ERR(phy)) {
++		*ptr = phy;
++		devres_add(dev, ptr);
++	} else
++		devres_free(ptr);
++
++	return phy;
++}
++EXPORT_SYMBOL(devm_usb_get_phy_dev);
++
++/**
+  * devm_usb_put_phy - release the USB PHY
+  * @dev - device that wants to release this phy
+  * @phy - the phy returned by devm_usb_get_phy()
+@@ -186,6 +263,36 @@ out:
+ EXPORT_SYMBOL(usb_add_phy);
+ 
+ /**
++ * usb_add_phy_dev - declare the USB PHY
++ * @x: the USB phy to be used; or NULL
++ *
++ * This call is exclusively for use by phy drivers, which
++ * coordinate the activities of drivers for host and peripheral
++ * controllers, and in some cases for VBUS current regulation.
++ */
++int usb_add_phy_dev(struct usb_phy *x)
++{
++	struct usb_phy_bind *phy_bind;
++	unsigned long flags;
++
++	if (!x->dev) {
++		dev_err(x->dev, "no device provided for PHY\n");
++		return -EINVAL;
++	}
++
++	spin_lock_irqsave(&phy_lock, flags);
++	list_for_each_entry(phy_bind, &phy_bind_list, list)
++		if (!(strcmp(phy_bind->phy_dev_name, dev_name(x->dev))))
++			phy_bind->phy = x;
++
++	list_add_tail(&x->head, &phy_list);
++
++	spin_unlock_irqrestore(&phy_lock, flags);
++	return 0;
++}
++EXPORT_SYMBOL(usb_add_phy_dev);
++
++/**
+  * usb_remove_phy - remove the OTG PHY
+  * @x: the USB OTG PHY to be removed;
+  *
+@@ -194,10 +301,15 @@ EXPORT_SYMBOL(usb_add_phy);
+ void usb_remove_phy(struct usb_phy *x)
+ {
+ 	unsigned long	flags;
++	struct usb_phy_bind *phy_bind;
+ 
+ 	spin_lock_irqsave(&phy_lock, flags);
+-	if (x)
++	if (x) {
++		list_for_each_entry(phy_bind, &phy_bind_list, list)
++			if (phy_bind->phy == x)
++				phy_bind->phy = NULL;
+ 		list_del(&x->head);
++	}
+ 	spin_unlock_irqrestore(&phy_lock, flags);
+ }
+ EXPORT_SYMBOL(usb_remove_phy);
+diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
+index fbeab1a..3a9ae3e 100644
+--- a/include/linux/usb/phy.h
++++ b/include/linux/usb/phy.h
+@@ -124,6 +124,7 @@ struct usb_phy_bind {
+ 
+ /* for board-specific init logic */
+ extern int usb_add_phy(struct usb_phy *, enum usb_phy_type type);
++extern int usb_add_phy_dev(struct usb_phy *);
+ extern void usb_remove_phy(struct usb_phy *);
+ 
+ /* helpers for direct access thru low-level io interface */
+@@ -164,6 +165,8 @@ usb_phy_shutdown(struct usb_phy *x)
+ extern struct usb_phy *usb_get_phy(enum usb_phy_type type);
+ extern struct usb_phy *devm_usb_get_phy(struct device *dev,
+ 	enum usb_phy_type type);
++extern struct usb_phy *usb_get_phy_dev(struct device *dev, u8 index);
++extern struct usb_phy *devm_usb_get_phy_dev(struct device *dev, u8 index);
+ extern void usb_put_phy(struct usb_phy *);
+ extern void devm_usb_put_phy(struct device *dev, struct usb_phy *x);
+ extern struct usb_phy_bind *usb_bind_phy(const char *dev_name, u8 index,
+@@ -180,6 +183,16 @@ static inline struct usb_phy *devm_usb_get_phy(struct device *dev,
+ 	return NULL;
+ }
+ 
++static inline struct usb_phy *usb_get_phy_dev(struct device *dev, u8 index)
++{
++	return NULL;
++}
++
++static inline struct usb_phy *devm_usb_get_phy_dev(struct device *dev, u8 index)
++{
++	return NULL;
++}
++
+ static inline void usb_put_phy(struct usb_phy *x)
+ {
+ }
 -- 
-Thanks & Regards
-Vivek
+1.7.9.5
