@@ -1,57 +1,166 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/6] arm: kconfig: don't select TWD with local timer for
- Armada 370/XP
-Date: Tue, 22 Jan 2013 21:19:23 +0000
-Message-ID: <201301222119.23750.arnd@arndb.de>
-References: <1358790842-2986-1-git-send-email-gregory.clement@free-electrons.com>
- <201301212044.41865.arnd@arndb.de> <50FEFAB9.4030503@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <50FEFAB9.4030503@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Matt Sealey <matt@genesi-usa.com>, Nadav Haklai <nadavh@marvell.com>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, John Stultz <johnstul@us.ibm.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Jon Masters <jcm@redhat.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM Kernel ML <linux-arm-kernel@lists.infradead.org>, Chris Van Hoof <vanhoof@canonical.c>
+From: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Subject: [PATCH v2 1/3] ARM: DT: tegra: move serial clock-frequency attr into the SoC dtsi
+Date: Tue, 22 Jan 2013 22:46:07 +0100
+Message-ID: <1358891169-5939-1-git-send-email-dev@lynxeye.de>
+References: <1358423961-24318-1-git-send-email-dev@lynxeye.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1358423961-24318-1-git-send-email-dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 22 January 2013, Rob Herring wrote:
-> No, I expect all future platforms will have architected timers. TWD is
-> pretty much A9 and A5 only I believe. Same with SCU. I've probably
-> missed some in my list.
+No Tegra Platform is running PLL_P at another rate than 216MHz, nor is
+any using an other PLL as UART source clock. Move attribute into SoC
+level dtsi file to slim down board DT files.
 
-Ah, I was incorrectly assuming that TWD was referring to the architected
-timers, sorry about that.
+Signed-off-by: Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>
+---
+v2:
+- initial revision
+---
+ arch/arm/boot/dts/tegra20-harmony.dts   | 1 -
+ arch/arm/boot/dts/tegra20-paz00.dts     | 2 --
+ arch/arm/boot/dts/tegra20-seaboard.dts  | 1 -
+ arch/arm/boot/dts/tegra20-tamonten.dtsi | 1 -
+ arch/arm/boot/dts/tegra20-trimslice.dts | 1 -
+ arch/arm/boot/dts/tegra20-ventana.dts   | 1 -
+ arch/arm/boot/dts/tegra20-whistler.dts  | 1 -
+ arch/arm/boot/dts/tegra20.dtsi          | 5 +++++
+ 8 files changed, 5 insertions(+), 8 deletions(-)
 
-Maybe we should do this differently then and do the more logical
-
-config LOCAL_TIMERS
-	bool
-
-config ARM_TWD
-	bool "ARM TWD local timer"
-	depends on SMP && CPU_V7
-	select LOCAL_TIMERS
-
-config EXYNOS4_MCT
-	bool "Samsung Exynos4 MCT Timer"
-	depends on SMP && ARCH_EXYNOS
-	select LOCAL_TIMERS
-
-config MSM_LOCAL_TIMER
-	bool "Qualcomm MSM Local Timer"
-	depends on SMP && ARCH_MSM
-	select LOCAL_TIMERS
-
-That way we have no implicit assumptions. Everything will still work if you
-disable local timers, but of course we will enable them in the defconfigs.
-
-	Arnd
+diff --git a/arch/arm/boot/dts/tegra20-harmony.dts b/arch/arm/boot/dts/tegra20-harmony.dts
+index 54295e3..96f4ccd 100644
+--- a/arch/arm/boot/dts/tegra20-harmony.dts
++++ b/arch/arm/boot/dts/tegra20-harmony.dts
+@@ -252,7 +252,6 @@
+ 
+ 	serial@70006300 {
+ 		status = "okay";
+-		clock-frequency = <216000000>;
+ 	};
+ 
+ 	i2c@7000c000 {
+diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dts
+index 80d9635..7744c8b 100644
+--- a/arch/arm/boot/dts/tegra20-paz00.dts
++++ b/arch/arm/boot/dts/tegra20-paz00.dts
+@@ -244,12 +244,10 @@
+ 
+ 	serial@70006000 {
+ 		status = "okay";
+-		clock-frequency = <216000000>;
+ 	};
+ 
+ 	serial@70006200 {
+ 		status = "okay";
+-		clock-frequency = <216000000>;
+ 	};
+ 
+ 	i2c@7000c000 {
+diff --git a/arch/arm/boot/dts/tegra20-seaboard.dts b/arch/arm/boot/dts/tegra20-seaboard.dts
+index d4e4ff2..0b48359 100644
+--- a/arch/arm/boot/dts/tegra20-seaboard.dts
++++ b/arch/arm/boot/dts/tegra20-seaboard.dts
+@@ -303,7 +303,6 @@
+ 
+ 	serial@70006300 {
+ 		status = "okay";
+-		clock-frequency = <216000000>;
+ 	};
+ 
+ 	i2c@7000c000 {
+diff --git a/arch/arm/boot/dts/tegra20-tamonten.dtsi b/arch/arm/boot/dts/tegra20-tamonten.dtsi
+index a239ccd..4766aba 100644
+--- a/arch/arm/boot/dts/tegra20-tamonten.dtsi
++++ b/arch/arm/boot/dts/tegra20-tamonten.dtsi
+@@ -276,7 +276,6 @@
+ 	};
+ 
+ 	serial@70006300 {
+-		clock-frequency = <216000000>;
+ 		status = "okay";
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/tegra20-trimslice.dts b/arch/arm/boot/dts/tegra20-trimslice.dts
+index 4b6c486..adf6024 100644
+--- a/arch/arm/boot/dts/tegra20-trimslice.dts
++++ b/arch/arm/boot/dts/tegra20-trimslice.dts
+@@ -263,7 +263,6 @@
+ 
+ 	serial@70006000 {
+ 		status = "okay";
+-		clock-frequency = <216000000>;
+ 	};
+ 
+ 	dvi_ddc: i2c@7000c000 {
+diff --git a/arch/arm/boot/dts/tegra20-ventana.dts b/arch/arm/boot/dts/tegra20-ventana.dts
+index e3d3b29..5b15c30 100644
+--- a/arch/arm/boot/dts/tegra20-ventana.dts
++++ b/arch/arm/boot/dts/tegra20-ventana.dts
+@@ -300,7 +300,6 @@
+ 
+ 	serial@70006300 {
+ 		status = "okay";
+-		clock-frequency = <216000000>;
+ 	};
+ 
+ 	i2c@7000c000 {
+diff --git a/arch/arm/boot/dts/tegra20-whistler.dts b/arch/arm/boot/dts/tegra20-whistler.dts
+index b8e0ee1..ea57c0f 100644
+--- a/arch/arm/boot/dts/tegra20-whistler.dts
++++ b/arch/arm/boot/dts/tegra20-whistler.dts
+@@ -255,7 +255,6 @@
+ 
+ 	serial@70006000 {
+ 		status = "okay";
+-		clock-frequency = <216000000>;
+ 	};
+ 
+ 	hdmi_ddc: i2c@7000c400 {
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index 9c4870f..8324ef4 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -223,6 +223,7 @@
+ 		reg = <0x70006000 0x40>;
+ 		reg-shift = <2>;
+ 		interrupts = <0 36 0x04>;
++		clock-frequency = <216000000>;
+ 		nvidia,dma-request-selector = <&apbdma 8>;
+ 		status = "disabled";
+ 	};
+@@ -232,6 +233,7 @@
+ 		reg = <0x70006040 0x40>;
+ 		reg-shift = <2>;
+ 		interrupts = <0 37 0x04>;
++		clock-frequency = <216000000>;
+ 		nvidia,dma-request-selector = <&apbdma 9>;
+ 		status = "disabled";
+ 	};
+@@ -241,6 +243,7 @@
+ 		reg = <0x70006200 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <0 46 0x04>;
++		clock-frequency = <216000000>;
+ 		nvidia,dma-request-selector = <&apbdma 10>;
+ 		status = "disabled";
+ 	};
+@@ -250,6 +253,7 @@
+ 		reg = <0x70006300 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <0 90 0x04>;
++		clock-frequency = <216000000>;
+ 		nvidia,dma-request-selector = <&apbdma 19>;
+ 		status = "disabled";
+ 	};
+@@ -259,6 +263,7 @@
+ 		reg = <0x70006400 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <0 91 0x04>;
++		clock-frequency = <216000000>;
+ 		nvidia,dma-request-selector = <&apbdma 20>;
+ 		status = "disabled";
+ 	};
+-- 
+1.8.0.2
