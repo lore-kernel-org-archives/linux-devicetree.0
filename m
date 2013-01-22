@@ -1,55 +1,45 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH] gpio/omap: fix pm_runtime for IRQ functions
-Date: Tue, 22 Jan 2013 11:07:45 +0100
-Message-ID: <CACRpkdbtUo4oU_yjwukuYW89sk4OM0NY+ZcwQprLEu_9mqZFgg@mail.gmail.com>
-References: <1358531362-27933-1-git-send-email-jlu@pengutronix.de>
-	<50FCE27D.7060500@ti.com>
-	<CACRpkdYpCbWtk6PbgLm0HWFBihDqA_G_1btYQ38+WfeXridPJA@mail.gmail.com>
-	<50FE61CB.5010906@ti.com>
+From: Cong Ding <dinggnu@gmail.com>
+Subject: Re: [PATCH] of: dma.c: fix memory leakage
+Date: Tue, 22 Jan 2013 10:10:53 +0000
+Message-ID: <20130122101053.GA2427@gmail.com>
+References: <1358600805-20193-1-git-send-email-dinggnu@gmail.com>
+ <50FC6EB1.4050704@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <50FE61CB.5010906@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Jan Luebbe <jlu@pengutronix.de>, Kevin Hilman <khilman@deeprootsystems.com>, linux-omap@vger.kernel.org, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <50FC6EB1.4050704@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Vinod Koul <vinod.koul@intel.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2013 at 10:54 AM, Rajendra Nayak <rnayak@ti.com> wrote:
-> On Tuesday 22 January 2013 01:52 PM, Linus Walleij wrote:
->>
->> In the Nomadik I had a similar situation with a GPIO used for the
->> ethernet IRQ. I put the GPIO number in a special board-specific
->> node and added this to the machine,
->
-> Thanks Linus. Are there any bindings already available on how these
-> special board-specific nodes can be defined in the dts files?
+On Sun, Jan 20, 2013 at 04:24:49PM -0600, Rob Herring wrote:
+> On 01/19/2013 07:06 AM, Cong Ding wrote:
+> > The memory allocated to ofdma might be a leakage when error occurs.
+> > 
+> > Signed-off-by: Cong Ding <dinggnu@gmail.com>
+> 
+> You need to send this to whomever is working on DMA bindings.
+Thank you bob, I added Vinod the the receiver list.
 
-No generic bindings as they are per definition board-specific.
+- cong
 
-So in the Nomadik case it looks like this:
-
-        /* Custom board node with GPIO pins to active etc */
-        usb-s8815 {
-                /* The S8815 is using this very GPIO pin for the SMSC91x IRQs */
-                ethernet-gpio {
-                        gpios = <&gpio3 19 0x1>;
-                        interrupts = <19 0x1>;
-                        interrupt-parent = <&gpio3>;
-                };
-                /* This will bias the MMC/SD card detect line */
-                mmcsd-gpio {
-                        gpios = <&gpio3 16 0x1>;
-                };
-        };
-
-First I added custom nodes to the IP blocks, but it was no good idea
-as it's not generic for that driver at all, just a board pecularity.
-
-> Are there any using some such in the mainline already?
-
-I just sent a pull request for the Nomadik example but I don't
-know about any others.
-
-Yours,
-Linus Walleij
+> 
+> > ---
+> >  drivers/of/dma.c |    1 +
+> >  1 file changed, 1 insertion(+)
+> > 
+> > diff --git a/drivers/of/dma.c b/drivers/of/dma.c
+> > index 59631b2..583e50e3 100644
+> > --- a/drivers/of/dma.c
+> > +++ b/drivers/of/dma.c
+> > @@ -107,6 +107,7 @@ int of_dma_controller_register(struct device_node *np,
+> >  	if (!nbcells) {
+> >  		pr_err("%s: #dma-cells property is missing or invalid\n",
+> >  		       __func__);
+> > +		kfree(ofdma);
+> >  		return -EINVAL;
+> >  	}
+> >  
+> > 
