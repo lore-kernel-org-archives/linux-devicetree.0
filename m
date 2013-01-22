@@ -1,95 +1,77 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: arm: Kernel failures when several memory banks are used with starting
- address above 128MB
-Date: Tue, 22 Jan 2013 20:18:13 +0100
-Message-ID: <CAHTX3dJZxuoz_0Eaa7QcoK9bF4LdLuWcDcwK3OUKc6qY_0PeuQ@mail.gmail.com>
+From: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Tue, 22 Jan 2013 12:29:01 -0700
+Message-ID: <20130122192901.GE30647@obsidianresearch.com>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+ <20130115154038.GA11241@arm.com>
+ <20130115211441.GA13139@avionic-0098.adnet.avionic-design.de>
+ <201301161400.26587.arnd@arndb.de> <20130116161716.GA10630@arm.com>
+ <20130116183101.GA28660@avionic-0098.adnet.avionic-design.de>
+ <20130117154236.GA25943@arm.com>
+ <20130117160501.GC2186@avionic-0098.adnet.avionic-design.de>
+ <20130117162218.GA29016@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Russell King <linux@arm.linux.org.uk>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, Michal Simek <monstr@monstr.eu>, Stephen Warren <swarren@nvidia.com>, Catalin Marinas <catalin.marinas@arm.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, John Williams <jwilliams@xilinx.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130117162218.GA29016-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jan 17, 2013 at 04:22:18PM +0000, Andrew Murray wrote:
 
-I have a question regarding to the case where DTS specify one memory bank
-for example <0x0 0x40000000> with CONFIG_ARM_PATCH_PHYS_VIRT=y
-where the kernel can be loaded at a 16MB boundary.
-I was testing it on the 3.8-rc4 on arm zynq.
+> > In either of those cases, does it make sense to use the MSI support
+> > outside the scope of the PCI infrastructure? That is, would devices
+> > other than PCI devices be able to generate an MSI?
+> 
+> I've come around to your way of thinking. Your approach sounds good for
+> registration of MSI ops - let the RC host driver do it (it probably has its
+> own), or use a helper for following a phandle to get ops that are not part
+> of the driver. MSIs won't be used outside of PCI devices.
 
-1. If the kernel is loaded within 0 - 127MB memory then the kernel can
-work with the whole
-1GB memory. It shows that the memory in front of the kernel is also
-available for the kernel.
+Here is a bit of additional info on some MSI stuff..
 
-2. If the kernel is loaded on the higher addresses then it fails by
-these error messages.
-"Ignoring RAM at 00000000-3fffffff (vmalloc region overlap).
-Memory policy: ECC disabled, Data cache writeback
-Kernel panic - not syncing: ERROR: Failed to allocate 0x1000 bytes below 0x0."
+This can be pretty complex. For instance on hyper transport systems
+the PCI to HT bridge has an MSI controller that maps between PCI and
+HT MSI formats, that mapping is configurable, so technically each
+brige could be considered a MSI controller. Typically the mapping
+controllers are all setup the same so there is not much problem with
+this. However *native* HT devices can (which are super rare) can use a
+different MSI format than PCI devices. From a linux perspective HT is
+just a variant of PCI.
+ 
+On x86 the MSI is delivered to the CPU APIC complex which converts it
+into a vectored interrupt - part of the value of MSI is that the MSI
+data can vector the interrupt to a specific CPU, or group of CPUs or
+whatever.
 
-3. If I use several memory banks solution
-for example
-reg = <0 0x10000000 0x10000000 0x30000000>;
-and the kernel is loaded to 0x10008000 then the first memory bank is
-ignored and kernel will boot.
-"Ignoring RAM at 00000000-0fffffff (vmalloc region overlap)." with
-768MB of memory.
+Presumably SMP ARMs will evolve similar MSI based interrupt vectoring
+capabilities, and presumably on-chip, non-PCI peripherals will evolve
+options to use MSI as well (ie multi-queue ethernet). So it might be
+worth giving some thought to how things could migrate in that
+direction someday.
 
-4. The next interesting example is description with 3 memory banks.
-reg = <0 0x10000000 0x10000000 0x20000000 0x30000000 0x10000000>;
-which behaves as point 3. It means the first 128MB is ignored and only
-768MB of ram is available.
+I have a bit hacky MSI driver for Kirkwood, this work you have to
+generalize the interface could let me actually upstream it :) The MSI
+is built using the Host2CPU doorbell registers, so it is entirely
+unrelated to the PCI-E RC driver.
 
+However, my use of the MSI driver on kirkwood is to assign MSIs to a
+PCI-E device via non-standard registers, more like an on chip
+peripheral. This is because the Host2CPU doorbell doesn't fit 100%
+perfectly with the standard PCI MSI stuff, and the hardware has funny
+needs.. So an 'allocate a MSI interrupt' API would be snazzy too :)
 
-The real question is how the kernel should behave for these situations.
-I would expect that if the kernel is within one memory bank
-then it will use this whole bank
-Or
-I would expect that the memory which is in front of the kernel start address
-will be simple ignored and the kernel will find out which memory bank
-is used and will use it.
-Not just caused kernel panic.
-Or
-Is there any expectation that you have to run the relocatable kernel
-in the first 128MB of the memory
-or changing DTS depending on the kernel position where it is loaded?
-
-
-For me is important to solve the case 2 above which can be easily
-solved in mm/mmu.c in sanity_check_meminfo
-where bank->start and bank->size will be setup depends on kernel position.
-
-
-
-Another interesting case is to enable highmem. Kernel starts from
-0x10008000 with one memory bank
-reg = <0x10000000 0x30000000>; which works without any problem
-
-But for the same case (enable highmem. Kernel starts from 0x10008000.)
-with two memory banks.
-reg = <0 0x10000000 0x10000000 0x30000000>; is failing with this error.
-"Machine: Xilinx Zynq Platform, model: Zynq ZC702 Development Board
-bootconsole [earlycon0] enabled
-Memory policy: ECC disabled, Data cache writeback
-Kernel panic - not syncing: ERROR: Failed to allocate 0x1000 bytes below 0x0."
-
-Also this is the case which quite weird because kernel with higmem on
-wants to use the first memory
-bank and then failed. My proposed solution is to ignore all memory
-banks which are in front of the kernel
-which ensure that these
-
-
-Thanks for your comments,
-Michal
+Jason
