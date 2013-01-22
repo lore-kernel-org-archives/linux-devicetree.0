@@ -1,58 +1,69 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/6] arm: kconfig: don't select TWD with local timer for
- Armada 370/XP
-Date: Tue, 22 Jan 2013 15:57:02 +0000
-Message-ID: <201301221557.02976.arnd@arndb.de>
-References: <1358790842-2986-1-git-send-email-gregory.clement@free-electrons.com>
- <201301211831.45947.arnd@arndb.de> <50FDC322.2040107@free-electrons.com>
+From: kishon <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v1 0/6] USB: Add support for multiple PHYs of same type
+Date: Tue, 22 Jan 2013 21:46:33 +0530
+Message-ID: <50FEBB61.9000707@ti.com>
+References: <1358848694-20145-1-git-send-email-kishon@ti.com> <2D906ABA-71F2-4843-9DBE-F82527A1240A@dominion.thruhere.net> <50FEB3FD.3050001@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <50FDC322.2040107@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, John Stultz <johnstul@us.ibm.com>, Grant Likely <grant.likely@secretlab.ca>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Russell King <linux@arm.linux.org.uk>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50FEB3FD.3050001-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org List" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 21 January 2013, Gregory CLEMENT wrote:
-> I don't see a strong reason to not enable it if we don't use it. My concern
-> was that I don't need it so I didn't want to include it and generating extra
-> code for nothing. Then just after having sent this patch set, I received your
-> patch set about build regression in 3.8 and especially the part about
-> CONFIG_MULTIPLATFORM made me realized that it could be a problem.
+Hi,
 
-Ok.
+On Tuesday 22 January 2013 09:15 PM, kishon wrote:
+> On Tuesday 22 January 2013 09:11 PM, Koen Kooi wrote:
+>>
+>> Op 22 jan. 2013, om 10:58 heeft Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>> het volgende geschreven:
+>>
+>>> This patch series adds support for adding multiple PHY's (of same type).
+>>> The binding information has to be present in the PHY library (otg.c) in
+>>> order for it to return the appropriate PHY whenever the USB controller
+>>> request for the PHY. So added a new API usb_bind_phy() to pass the
+>>> binding
+>>> information. This API should be called by platform specific
+>>> initialization
+>>> code.
+>>>
+>>> So the binding should be done something like
+>>> usb_bind_phy("musb-hdrc.0.auto", 0, "omap-usb2.1.auto"); specifying
+>>> the USB
+>>> controller device name, index, and the PHY device name.
+>>> I have done this binding for OMAP platforms, but it should be done for
+>>> all the platforms.
+>>>
+>>> After this design, the phy can be got by passing the USB controller
+>>> device
+>>> pointer and the index.
+>>>
+>>> Developed this patch series on
+>>> git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git xceiv
+>>> after applying "usb: musb: add driver for control module" patch series
+>>> and "ARM: dts: omap: add dt data for MUSB"
+>>>
+>>> Did basic enumeration testing in omap4 panda and omap3 beagle.
+>>
+>> With this patchset USB completely breaks on am33xx beaglebone, is that
+>> intended?
+> Not really.
+> Does am33xx makes use of omap2430.c? Which PHY does am33xx uses?
 
-> > Maybe it can be written as
-> > 
-> > config LOCAL_TIMERS
-> >       bool "Use local timer interrupts"
-> >       depends on SMP
-> >       default y
-> > 
-> > config HAVE_ARM_TWD
-> >       depends on LOCAL_TIMERS
-> >       default ARCH_MULTIPLATFORM || (!ARCH_MSM_SCORPIONMP && !EXYNOS4_MCT)
-> 
-> So in this case why not written something like this:
->         default ARCH_MULTIPLATFORM || (!ARCH_MSM_SCORPIONMP && !EXYNOS4_MCT && !ARMADA_370_XP_TIMER)
+I figured out it uses drivers/usb/musb/musb_dsps.c (So it doesn't use 
+omap2430.c). I think it uses TWL4030_USB (TPS659x0) as PHY.
 
-That does not change anything, because ARMADA_370_XP_TIMER is only ever enabled
-when ARCH_MULTIPLATFORM is enabled as well.
+Then we need to adapt am33xx to use devm_usb_get_phy_by_phandle.
+I'll see how to do it.
 
-> >       default y
-> I am not a kconfig expert, but won't this line set HAVE_ARM_TWD to 'y' whatever
-> the result of the previous line?
+Thank you for testing and reporting it :-)
 
-Yes, that was a mistake on my side.
-
-	Arnd
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
