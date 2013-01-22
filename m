@@ -1,107 +1,69 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: arm: Kernel failures when several memory banks are used with
- starting address above 128MB
-Date: Tue, 22 Jan 2013 15:36:37 -0500 (EST)
-Message-ID: <alpine.LFD.2.02.1301221528050.6300@xanadu.home>
-References: <CAHTX3dJZxuoz_0Eaa7QcoK9bF4LdLuWcDcwK3OUKc6qY_0PeuQ@mail.gmail.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 3/3] arm: omap2: gpmc: add DT bindings for OneNAND
+Date: Tue, 22 Jan 2013 12:40:54 -0800
+Message-ID: <20130122204053.GT22517@atomide.com>
+References: <1358634477-25868-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1358634477-25868-3-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130121123020.GI15707@e106331-lin.cambridge.arm.com>
+ <CALF0-+VOxtsfQLZCGujvjMrsGacbfVTMytRUX=CfKa3+FgnU1w@mail.gmail.com>
+ <20130121183348.GI22517@atomide.com>
+ <af696cd0-8a7f-4839-9600-87d5b9172585@email.android.com>
+ <CALF0-+WvfyygnV5A=E8UGc=zp9pab79FzJRe1KywjPw-B4UGZA@mail.gmail.com>
+ <20130122182749.GM15361@atomide.com>
+ <CALF0-+XdsKvJJpmxZEYXyhTZksgKRoAJ4TcyPV+G9WUbb7Dt_g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAHTX3dJZxuoz_0Eaa7QcoK9bF4LdLuWcDcwK3OUKc6qY_0PeuQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Williams <jwilliams-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CALF0-+XdsKvJJpmxZEYXyhTZksgKRoAJ4TcyPV+G9WUbb7Dt_g@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ezequiel Garcia <elezegarcia@gmail.com>
+Cc: Daniel Mack <zonque@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "martinez.javier@gmail.com" <martinez.javier@gmail.com>, "matthias.bgg@googlemail.com" <matthias.bgg@googlemail.com>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Jan 2013, Michal Simek wrote:
-
-> Hi,
+* Ezequiel Garcia <elezegarcia@gmail.com> [130122 11:46]:
+> On Tue, Jan 22, 2013 at 3:27 PM, Tony Lindgren <tony@atomide.com> wrote:
+> > * Ezequiel Garcia <elezegarcia@gmail.com> [130122 10:17]:
+> >> On Mon, Jan 21, 2013 at 10:32 PM, Daniel Mack <zonque@gmail.com> wrote:
+> >> >
+> >> > I'm currently far away from my computer and can't prepare a patch for this, sorry. But I think you are right, so please just submit a patch for that, anyone :-)
+> >> >
+> >>
+> >> Ok, I'll try to submit a patch as soon as possible. If anyone wants to
+> >> do it instead, fine by me.
+> >
+> > No please go ahead as it seems that you can easily test it too.
+> >
 > 
-> I have a question regarding to the case where DTS specify one memory bank
-> for example <0x0 0x40000000> with CONFIG_ARM_PATCH_PHYS_VIRT=y
-> where the kernel can be loaded at a 16MB boundary.
-> I was testing it on the 3.8-rc4 on arm zynq.
+> No problem.
 > 
-> 1. If the kernel is loaded within 0 - 127MB memory then the kernel can
-> work with the whole
-> 1GB memory. It shows that the memory in front of the kernel is also
-> available for the kernel.
+> I now wonder if it's okey to exit upon probe failure.
+> In particular, the for_each should be like this:
 > 
-> 2. If the kernel is loaded on the higher addresses then it fails by
-> these error messages.
-> "Ignoring RAM at 00000000-3fffffff (vmalloc region overlap).
-> Memory policy: ECC disabled, Data cache writeback
-> Kernel panic - not syncing: ERROR: Failed to allocate 0x1000 bytes below 0x0."
+>         for_each_node_by_name(child, "nand") {
+>                 ret = gpmc_probe_nand_child(pdev, child);
+>                 if (ret < 0) {
+>                         of_node_put(child);
+>                         return ret;
+>                 }
+>         }
 > 
-> 3. If I use several memory banks solution
-> for example
-> reg = <0 0x10000000 0x10000000 0x30000000>;
-> and the kernel is loaded to 0x10008000 then the first memory bank is
-> ignored and kernel will boot.
-> "Ignoring RAM at 00000000-0fffffff (vmalloc region overlap)." with
-> 768MB of memory.
+> or like this:
 > 
-> 4. The next interesting example is description with 3 memory banks.
-> reg = <0 0x10000000 0x10000000 0x20000000 0x30000000 0x10000000>;
-> which behaves as point 3. It means the first 128MB is ignored and only
-> 768MB of ram is available.
+>         for_each_node_by_name(child, "nand") {
+>                 ret = gpmc_probe_nand_child(pdev, child);
+>                 WARN_ON(ret < 0);
+>         }
 > 
-> 
-> The real question is how the kernel should behave for these situations.
-> I would expect that if the kernel is within one memory bank
-> then it will use this whole bank
-> Or
-> I would expect that the memory which is in front of the kernel start address
-> will be simple ignored and the kernel will find out which memory bank
-> is used and will use it.
-> Not just caused kernel panic.
-> Or
-> Is there any expectation that you have to run the relocatable kernel
-> in the first 128MB of the memory
-> or changing DTS depending on the kernel position where it is loaded?
+> Ideas?
 
-There are two kernel config symbols influencing this:
+Well I would return and make sure the resources are freed.
 
-config AUTO_ZRELADDR
-        bool "Auto calculation of the decompressed kernel image address"
-        depends on !ZBOOT_ROM && !ARCH_U300
-        help
-          ZRELADDR is the physical address where the decompressed kernel
-          image will be placed. If AUTO_ZRELADDR is selected, the address
-          will be determined at run-time by masking the current IP with
-          0xf8000000. This assumes the zImage being placed in the first 128MB
-          from start of memory.
+However, if this relates to using bootloader configured values
+for the few cases where we don't have the timing information
+for calculations available, then just doing a warning is
+the way to go.
 
-config ARM_PATCH_PHYS_VIRT
-        bool "Patch physical to virtual translations at runtime" if EMBEDDED
-        default y
-        depends on !XIP_KERNEL && MMU
-        depends on !ARCH_REALVIEW || !SPARSEMEM
-        help
-          Patch phys-to-virt and virt-to-phys translation functions at
-          boot and module load time according to the position of the
-          kernel in system memory.
+Regards,
 
-          This can only be used with non-XIP MMU kernels where the base
-          of physical memory is at a 16MB boundary.
-
-          Only disable this option if you know that you do not require
-          this feature (eg, building a kernel for a single machine) and
-          you need to shrink the kernel to the minimal size.
-
-Of course, the kernel must be loaded at some address within the provided 
-RAM information in DT as well.  If you cannot meet those restrictions 
-then the corresponding features have to be disabled in your build.
-
-
-Nicolas
+Tony
