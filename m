@@ -1,45 +1,179 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/6] arm: mvebu: Add support for local interrupt
-Date: Mon, 21 Jan 2013 20:26:38 -0300
-Message-ID: <20130121232637.GA3412@localhost>
-References: <1358790842-2986-1-git-send-email-gregory.clement@free-electrons.com>
- <1358790842-2986-2-git-send-email-gregory.clement@free-electrons.com>
- <20130121191744.0a04b941@skate>
- <50FDBC0E.1030706@free-electrons.com>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH 6/6] OF: Introduce DT overlay support.
+Date: Tue, 22 Jan 2013 14:50:56 +1100
+Message-ID: <20130122035056.GF23500@truffula.fritz.box>
+References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com>
+ <1357327870-13615-7-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Pql/uPZNXIm1JCle"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <50FDBC0E.1030706-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi@marvell>
+In-Reply-To: <1357327870-13615-7-git-send-email-panto@antoniou-consulting.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhvbWFzIGFuZCBHcmVnb3J5LAoKT24gTW9uLCBKYW4gMjEsIDIwMTMgYXQgMTE6MDc6MTBQ
-TSArMDEwMCwgR3JlZ29yeSBDTEVNRU5UIHdyb3RlOgo+IE9uIDAxLzIxLzIwMTMgMDc6MTcgUE0s
-IFRob21hcyBQZXRhenpvbmkgd3JvdGU6Cj4gPj4gKwkJaXJxX3NldF9wZXJjcHVfZGV2aWQodmly
-cSk7Cj4gPj4gKwkJaXJxX3NldF9jaGlwX2FuZF9oYW5kbGVyKHZpcnEsICZhcm1hZGFfMzcwX3hw
-X2lycV9jaGlwLAo+ID4+ICsJCQkJCWhhbmRsZV9wZXJjcHVfZGV2aWRfaXJxKTsKPiA+PiArCj4g
-Pj4gKwl9IGVsc2Ugewo+ID4+ICsJCWlycV9zZXRfY2hpcF9hbmRfaGFuZGxlcih2aXJxLCAmYXJt
-YWRhXzM3MF94cF9pcnFfY2hpcCwKPiA+PiArCQkJCQloYW5kbGVfbGV2ZWxfaXJxKTsKPiA+PiAr
-CX0KPiA+IAo+ID4gQnJhY2VzIHVzZWxlc3Mgc2luY2UgdGhlcmUgaXMgb25seSBvbmUgc3RhdGVt
-ZW50IGluIHRoZSBlbHNlLgo+ID4gCgpJTUhPLCB0aGlzIGlzIGFuIGV4Y2VwdGlvbiB0byB0aGUg
-cnVsZS4KU2luY2UgdGhlIGZpcnN0IGJsb2NrIGlzIG1vcmUgdGhhbiBvbmUgbGluZSwKd2UgdXN1
-YWxseSBwdXQgYnJhY2VzIG9uIHRoZSBzaW5nbGUgbGluZSBibG9jayB0b28uCihvciBhdCBsZWFz
-dCB0aGF0J3Mgd2hhdCBEb2N1bWVudGF0aW9uL0NvZGluZ1N0eWxlIHNheXMpLgoKUmVnYXJkcywK
-Ci0tIApFemVxdWllbCBHYXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCwgS2Vy
-bmVsIGFuZCBBbmRyb2lkIEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1k
-aXNjdXNzIG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpo
-dHRwczovL2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+
+--Pql/uPZNXIm1JCle
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 04, 2013 at 09:31:10PM +0200, Pantelis Antoniou wrote:
+> Introduce DT overlay support.
+> Using this functionality it is possible to dynamically overlay a part of
+> the kernel's tree with another tree that's been dynamically loaded.
+> It is also possible to remove node and properties.
+>=20
+> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+> ---
+>  Documentation/devicetree/overlay-notes.txt | 179 +++++++
+>  drivers/of/Kconfig                         |  10 +
+>  drivers/of/Makefile                        |   1 +
+>  drivers/of/overlay.c                       | 831 +++++++++++++++++++++++=
+++++++
+>  include/linux/of.h                         | 107 ++++
+>  5 files changed, 1128 insertions(+)
+>  create mode 100644 Documentation/devicetree/overlay-notes.txt
+>  create mode 100644 drivers/of/overlay.c
+>=20
+> diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/d=
+evicetree/overlay-notes.txt
+> new file mode 100644
+> index 0000000..5289cbb
+> --- /dev/null
+> +++ b/Documentation/devicetree/overlay-notes.txt
+> @@ -0,0 +1,179 @@
+> +Device Tree Overlay Notes
+> +-------------------------
+> +
+> +This document describes the implementation of the in-kernel
+> +device tree overlay functionality residing in drivers/of/overlay.c and i=
+s a
+> +companion document to Documentation/devicetree/dt-object-internal.txt[1]=
+ &
+> +Documentation/devicetree/dynamic-resolution-notes.txt[2]
+> +
+> +How overlays work
+> +-----------------
+> +
+> +A Device Tree's overlay purpose is to modify the kernel's live tree, and
+> +have the modification affecting the state of the the kernel in a way that
+> +is reflecting the changes.
+
+Um.. I'm having a great deal of trouble parsing that sentence.
+
+> +Since the kernel mainly deals with devices, any new device node that res=
+ult
+> +in an active device should have it created while if the device node is e=
+ither
+> +disabled or removed all together, the affected device should be deregist=
+ered.
+> +
+> +Lets take an example where we have a foo board with the following base t=
+ree
+> +which is taken from [1].
+> +
+> +---- foo.dts -----------------------------------------------------------=
+------
+> +	/* FOO platform */
+> +	/ {
+> +		compatible =3D "corp,foo";
+> +
+> +		/* shared resources */
+> +		res: res {
+> +		};
+> +
+> +		/* On chip peripherals */
+> +		ocp: ocp {
+> +			/* peripherals that are always instantiated */
+> +			peripheral1 { ... };
+> +		}
+> +	};
+> +---- foo.dts -----------------------------------------------------------=
+------
+> +
+> +The overlay bar.dts, when loaded (and resolved as described in [2]) shou=
+ld
+> +
+> +---- bar.dts -----------------------------------------------------------=
+------
+> +/plugin/;	/* allow undefined label references and record them */
+> +/ {
+> +	....	/* various properties for loader use; i.e. part id etc. */
+> +	fragment@0 {
+> +		target =3D <&ocp>;
+> +		__overlay__ {
+> +			/* bar peripheral */
+> +			bar {
+> +				compatible =3D "corp,bar";
+> +				... /* various properties and child nodes */
+> +			}
+> +		};
+> +	};
+> +};
+> +---- bar.dts -----------------------------------------------------------=
+------
+> +
+> +result in foo+bar.dts
+> +
+> +---- foo+bar.dts -------------------------------------------------------=
+------
+> +	/* FOO platform + bar peripheral */
+> +	/ {
+> +		compatible =3D "corp,foo";
+> +
+> +		/* shared resources */
+> +		res: res {
+> +		};
+> +
+> +		/* On chip peripherals */
+> +		ocp: ocp {
+> +			/* peripherals that are always instantiated */
+> +			peripheral1 { ... };
+> +
+> +			/* bar peripheral */
+> +			bar {
+> +				compatible =3D "corp,bar";
+> +				... /* various properties and child nodes */
+> +			}
+> +		}
+> +	};
+> +---- foo+bar.dts -------------------------------------------------------=
+------
+> +
+> +As a result of the the overlay, a new device node (bar) has been created
+> +so a bar platform device will be registered and if a matching device dri=
+ver
+> +is loaded the device will be created as expected.
+
+Hrm.  This all seems rather complicated.  Maybe it needs to be, but
+I'm not entirely convinced yet.
+
+One other point - both of these patches are assuming that the overlay
+is in the "live tree" format, but it still needs a bunch of extra
+mangling.  Would it simplify things to just go straight from the
+overlay in flat tree form to modifications to the system-wide live
+tree.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--Pql/uPZNXIm1JCle
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlD+DKAACgkQaILKxv3ab8a1bQCdHVwRPPq/XIGHB/7PsWQMfIBe
+vBMAnRkWwnob5D1uEZBG3Htmb3QCj9/R
+=uHL2
+-----END PGP SIGNATURE-----
+
+--Pql/uPZNXIm1JCle--
