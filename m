@@ -1,105 +1,66 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 4/4] pwm_backlight: Add support for the whole range of the PWM in DT mode
-Date: Tue, 22 Jan 2013 14:39:56 +0100
-Message-ID: <1358861996-27194-5-git-send-email-peter.ujfalusi@ti.com>
+From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 2/4] pwm_backlight: Validate dft_brightness in main probe
+ function
+Date: Tue, 22 Jan 2013 14:39:54 +0100
+Message-ID: <1358861996-27194-3-git-send-email-peter.ujfalusi@ti.com>
 References: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Richard Purdie <rpurdie@rpsys.net>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Thierry Reding <thierry.reding@avionic-design.de>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1358861996-27194-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When booting with DT make it possible to use the whole range of the PWM when
-controlling the backlight in a same way it is possible when the kernel is
-booted in non DT mode.
-A new property "max-brightness-level" can be used to specify the maximum
-value the PWM can handle (time slots).
-DTS files can use either the "brightness-levels" or the "max-brightness-level"
-to configure the PWM.
-In case both of these properties exist the driver will prefer the
-"brightness-levels" over the "max-brightness-level".
+Move the dft_brightness validity check from the DT parsing function to the
+main probe. In this way we can validate it in case we are booting with or
+without DT.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
 ---
- .../bindings/video/backlight/pwm-backlight.txt     | 12 +++++++++--
- drivers/video/backlight/pwm_bl.c                   | 24 ++++++++++++++--------
- 2 files changed, 25 insertions(+), 11 deletions(-)
+ drivers/video/backlight/pwm_bl.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-index 1e4fc72..517924b 100644
---- a/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-+++ b/Documentation/devicetree/bindings/video/backlight/pwm-backlight.txt
-@@ -3,13 +3,21 @@ pwm-backlight bindings
- Required properties:
-   - compatible: "pwm-backlight"
-   - pwms: OF device-tree PWM specification (see PWM binding[0])
-+
-+  Brightness range can be configured with either "brightness-levels" or with
-+  "max-brightness-level".
-   - brightness-levels: Array of distinct brightness levels. Typically these
-       are in the range from 0 to 255, but any range starting at 0 will do.
-       The actual brightness level (PWM duty cycle) will be interpolated
-       from these values. 0 means a 0% duty cycle (darkest/off), while the
-       last value in the array represents a 100% duty cycle (brightest).
--  - default-brightness-level: the default brightness level (index into the
--      array defined by the "brightness-levels" property)
-+  - max-brightness-level: The maximum brightness level the PWM supports. When
-+      the brightness is specified using this property the whole range from 0 to
-+      "max-brightness-level" will be available to configure.
-+  - default-brightness-level: the default brightness level. With
-+      "brightness-levels" it is an index into the array defined by the
-+      "brightness-levels" property. When it is used with "max-brightness-level"
-+      it is the value in the range from 0 to "max-brightness-level"
- 
- Optional properties:
-   - pwm-names: a list of names for the PWM devices specified in the
 diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index df2d115..c0e4bc7 100644
+index f0d6854..2a81c24 100644
 --- a/drivers/video/backlight/pwm_bl.c
 +++ b/drivers/video/backlight/pwm_bl.c
-@@ -111,10 +111,17 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 
- 	/* determine the number of brightness levels */
- 	prop = of_find_property(node, "brightness-levels", &num_levels);
--	if (!prop)
--		return -EINVAL;
-+	if (!prop) {
-+		/* Levels not provided, look for the maximum property */
-+		ret = of_property_read_u32(node, "max-brightness-level",
-+					   &value);
-+		if (ret < 0)
-+			return ret;
- 
--	num_levels /= sizeof(u32);
-+		data->max_brightness = value;
-+	} else {
-+		num_levels /= sizeof(u32);
-+	}
- 
- 	/* read brightness levels from DT property */
- 	if (num_levels > 0) {
-@@ -130,14 +137,13 @@ static int pwm_backlight_parse_dt(struct device *dev,
+@@ -135,12 +135,6 @@ static int pwm_backlight_parse_dt(struct device *dev,
+ 		if (ret < 0)
  			return ret;
  
- 		data->max_brightness = num_levels;
+-		if (value >= data->max_brightness) {
+-			dev_warn(dev, "invalid default brightness level: %u, using %u\n",
+-				 value, data->max_brightness - 1);
+-			value = data->max_brightness - 1;
+-		}
+-
+ 		data->dft_brightness = value;
+ 	}
+ 
+@@ -249,6 +243,12 @@ static int pwm_backlight_probe(struct platform_device *pdev)
+ 		goto err_alloc;
+ 	}
+ 
++	if (data->dft_brightness > data->max_brightness) {
++		dev_warn(&pdev->dev,
++			 "invalid default brightness level: %u, using %u\n",
++			 data->dft_brightness, data->max_brightness);
++		data->dft_brightness = data->max_brightness;
 +	}
+ 	bl->props.brightness = data->dft_brightness;
+ 	backlight_update_status(bl);
  
--		ret = of_property_read_u32(node, "default-brightness-level",
--					   &value);
--		if (ret < 0)
--			return ret;
-+	ret = of_property_read_u32(node, "default-brightness-level", &value);
-+	if (ret < 0)
-+		return ret;
- 
--		data->dft_brightness = value;
--	}
-+	data->dft_brightness = value;
- 
- 	/*
- 	 * TODO: Most users of this driver use a number of GPIOs to control
 -- 
 1.8.1.1
