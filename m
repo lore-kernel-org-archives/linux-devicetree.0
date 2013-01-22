@@ -1,69 +1,552 @@
-From: kishon <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v1 0/6] USB: Add support for multiple PHYs of same type
-Date: Tue, 22 Jan 2013 21:46:33 +0530
-Message-ID: <50FEBB61.9000707@ti.com>
-References: <1358848694-20145-1-git-send-email-kishon@ti.com> <2D906ABA-71F2-4843-9DBE-F82527A1240A@dominion.thruhere.net> <50FEB3FD.3050001@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 1/3] fb: backlight: Add the Himax HX-8357B LCD controller
+Date: Tue, 22 Jan 2013 17:23:09 +0100
+Message-ID: <1358871791-14214-2-git-send-email-maxime.ripard@free-electrons.com>
+References: <1358871791-14214-1-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <50FEB3FD.3050001-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org List" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Jason Kridner <jkridner-hcmAuCOw+vXj4SYmN/TMmA@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1358871791-14214-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Brian Lilly <brian-ZKiFAVwZFM2FeswfMrDH8w@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/video/backlight/Kconfig  |    7 +
+ drivers/video/backlight/Makefile |    1 +
+ drivers/video/backlight/hx8357.c |  482 ++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 490 insertions(+)
+ create mode 100644 drivers/video/backlight/hx8357.c
 
-On Tuesday 22 January 2013 09:15 PM, kishon wrote:
-> On Tuesday 22 January 2013 09:11 PM, Koen Kooi wrote:
->>
->> Op 22 jan. 2013, om 10:58 heeft Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->> het volgende geschreven:
->>
->>> This patch series adds support for adding multiple PHY's (of same type).
->>> The binding information has to be present in the PHY library (otg.c) in
->>> order for it to return the appropriate PHY whenever the USB controller
->>> request for the PHY. So added a new API usb_bind_phy() to pass the
->>> binding
->>> information. This API should be called by platform specific
->>> initialization
->>> code.
->>>
->>> So the binding should be done something like
->>> usb_bind_phy("musb-hdrc.0.auto", 0, "omap-usb2.1.auto"); specifying
->>> the USB
->>> controller device name, index, and the PHY device name.
->>> I have done this binding for OMAP platforms, but it should be done for
->>> all the platforms.
->>>
->>> After this design, the phy can be got by passing the USB controller
->>> device
->>> pointer and the index.
->>>
->>> Developed this patch series on
->>> git://git.kernel.org/pub/scm/linux/kernel/git/balbi/usb.git xceiv
->>> after applying "usb: musb: add driver for control module" patch series
->>> and "ARM: dts: omap: add dt data for MUSB"
->>>
->>> Did basic enumeration testing in omap4 panda and omap3 beagle.
->>
->> With this patchset USB completely breaks on am33xx beaglebone, is that
->> intended?
-> Not really.
-> Does am33xx makes use of omap2430.c? Which PHY does am33xx uses?
-
-I figured out it uses drivers/usb/musb/musb_dsps.c (So it doesn't use 
-omap2430.c). I think it uses TWL4030_USB (TPS659x0) as PHY.
-
-Then we need to adapt am33xx to use devm_usb_get_phy_by_phandle.
-I'll see how to do it.
-
-Thank you for testing and reporting it :-)
-
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+index 765a945..c39bed0 100644
+--- a/drivers/video/backlight/Kconfig
++++ b/drivers/video/backlight/Kconfig
+@@ -126,6 +126,13 @@ config LCD_AMS369FG06
+ 	  If you have an AMS369FG06 AMOLED Panel, say Y to enable its
+ 	  LCD control driver.
+ 
++config LCD_HX8357
++	tristate "Himax HX-8357 LCD Driver"
++	depends on SPI
++	help
++	  If you have a HX-8357 LCD panel, say Y to enable its LCD control
++	  driver.
++
+ endif # LCD_CLASS_DEVICE
+ 
+ #
+diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+index e7ce729..b69d391 100644
+--- a/drivers/video/backlight/Makefile
++++ b/drivers/video/backlight/Makefile
+@@ -14,6 +14,7 @@ obj-$(CONFIG_LCD_TOSA)		   += tosa_lcd.o
+ obj-$(CONFIG_LCD_S6E63M0)	+= s6e63m0.o
+ obj-$(CONFIG_LCD_LD9040)	+= ld9040.o
+ obj-$(CONFIG_LCD_AMS369FG06)	+= ams369fg06.o
++obj-$(CONFIG_LCD_HX8357)	+= hx8357.o
+ 
+ obj-$(CONFIG_BACKLIGHT_CLASS_DEVICE) += backlight.o
+ obj-$(CONFIG_BACKLIGHT_ATMEL_PWM)    += atmel-pwm-bl.o
+diff --git a/drivers/video/backlight/hx8357.c b/drivers/video/backlight/hx8357.c
+new file mode 100644
+index 0000000..ee4d607
+--- /dev/null
++++ b/drivers/video/backlight/hx8357.c
+@@ -0,0 +1,482 @@
++/*
++ * Driver for the Himax HX-8357 LCD Controller
++ *
++ * Copyright 2012 Free Electrons
++ *
++ * Licensed under the GPLv2 or later.
++ */
++
++#include <linux/delay.h>
++#include <linux/lcd.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_gpio.h>
++#include <linux/spi/spi.h>
++
++#define HX8357_NUM_IM_PINS	3
++
++#define HX8357_SWRESET			0x01
++#define HX8357_GET_RED_CHANNEL		0x06
++#define HX8357_GET_GREEN_CHANNEL	0x07
++#define HX8357_GET_BLUE_CHANNEL		0x08
++#define HX8357_GET_POWER_MODE		0x0a
++#define HX8357_GET_MADCTL		0x0b
++#define HX8357_GET_PIXEL_FORMAT		0x0c
++#define HX8357_GET_DISPLAY_MODE		0x0d
++#define HX8357_GET_SIGNAL_MODE		0x0e
++#define HX8357_GET_DIAGNOSTIC_RESULT	0x0f
++#define HX8357_ENTER_SLEEP_MODE		0x10
++#define HX8357_EXIT_SLEEP_MODE		0x11
++#define HX8357_ENTER_PARTIAL_MODE	0x12
++#define HX8357_ENTER_NORMAL_MODE	0x13
++#define HX8357_EXIT_INVERSION_MODE	0x20
++#define HX8357_ENTER_INVERSION_MODE	0x21
++#define HX8357_SET_DISPLAY_OFF		0x28
++#define HX8357_SET_DISPLAY_ON		0x29
++#define HX8357_SET_COLUMN_ADDRESS	0x2a
++#define HX8357_SET_PAGE_ADDRESS		0x2b
++#define HX8357_WRITE_MEMORY_START	0x2c
++#define HX8357_READ_MEMORY_START	0x2e
++#define HX8357_SET_PARTIAL_AREA		0x30
++#define HX8357_SET_SCROLL_AREA		0x33
++#define HX8357_SET_TEAR_OFF		0x34
++#define HX8357_SET_TEAR_ON		0x35
++#define HX8357_SET_ADDRESS_MODE		0x36
++#define HX8357_SET_SCROLL_START		0x37
++#define HX8357_EXIT_IDLE_MODE		0x38
++#define HX8357_ENTER_IDLE_MOD		0x39
++#define HX8357_SET_PIXEL_FORMAT		0x3a
++#define HX8357_SET_PIXEL_FORMAT_DBI_3BIT	(0x1)
++#define HX8357_SET_PIXEL_FORMAT_DBI_16BIT	(0x5)
++#define HX8357_SET_PIXEL_FORMAT_DBI_18BIT	(0x6)
++#define HX8357_SET_PIXEL_FORMAT_DPI_3BIT	(0x1 << 4)
++#define HX8357_SET_PIXEL_FORMAT_DPI_16BIT	(0x5 << 4)
++#define HX8357_SET_PIXEL_FORMAT_DPI_18BIT	(0x6 << 4)
++#define HX8357_WRITE_MEMORY_CONTINUE	0x3c
++#define HX8357_READ_MEMORY_CONTINUE	0x3e
++#define HX8357_SET_TEAR_SCAN_LINES	0x44
++#define HX8357_GET_SCAN_LINES		0x45
++#define HX8357_READ_DDB_START		0xa1
++#define HX8357_SET_DISPLAY_MODE		0xb4
++#define HX8357_SET_DISPLAY_MODE_RGB_THROUGH	(0x3)
++#define HX8357_SET_DISPLAY_MODE_RGB_INTERFACE	(1 << 4)
++#define HX8357_SET_PANEL_DRIVING	0xc0
++#define HX8357_SET_DISPLAY_FRAME	0xc5
++#define HX8357_SET_RGB			0xc6
++#define HX8357_SET_RGB_ENABLE_HIGH		(1 << 1)
++#define HX8357_SET_GAMMA		0xc8
++#define HX8357_SET_POWER		0xd0
++#define HX8357_SET_VCOM			0xd1
++#define HX8357_SET_POWER_NORMAL		0xd2
++#define HX8357_SET_PANEL_RELATED	0xe9
++
++struct hx8357_data {
++	unsigned		im_pins[HX8357_NUM_IM_PINS];
++	unsigned		reset;
++	struct spi_device	*spi;
++	int			state;
++};
++
++static int hx8357_spi_write_then_read(struct lcd_device *lcdev,
++				void *txbuf, u16 txlen,
++				void *rxbuf, u16 rxlen)
++{
++	struct hx8357_data *lcd = lcd_get_data(lcdev);
++	struct spi_message msg;
++	struct spi_transfer xfer[2];
++	u16 *local_txbuf = NULL;
++	int ret = 0;
++
++	memset(xfer, 0, sizeof(xfer));
++	spi_message_init(&msg);
++
++	if (txlen) {
++		int i;
++
++		local_txbuf = kcalloc(sizeof(*local_txbuf), txlen, GFP_KERNEL);
++
++		if (!local_txbuf) {
++			dev_err(&lcdev->dev, "Couldn't allocate data buffer.\n");
++			return -ENOMEM;
++		}
++
++		for (i = 0; i < txlen; i++) {
++			local_txbuf[i] = ((u8 *)txbuf)[i];
++			if (i > 0)
++				local_txbuf[i] |= 1 << 8;
++		}
++
++		xfer[0].len = 2 * txlen;
++		xfer[0].bits_per_word = 9;
++		xfer[0].tx_buf = local_txbuf;
++		spi_message_add_tail(&xfer[0], &msg);
++	}
++
++	if (rxlen) {
++		xfer[1].len = rxlen;
++		xfer[1].bits_per_word = 8;
++		xfer[1].rx_buf = rxbuf;
++		spi_message_add_tail(&xfer[1], &msg);
++	}
++
++	ret = spi_sync(lcd->spi, &msg);
++	if (ret < 0)
++		dev_err(&lcdev->dev, "Couldn't send SPI data.\n");
++
++	if (txlen)
++		kfree(local_txbuf);
++
++	return ret;
++}
++
++static inline int hx8357_spi_write_array(struct lcd_device *lcdev,
++					u8 *value, u8 len)
++{
++	return hx8357_spi_write_then_read(lcdev, value, len, NULL, 0);
++}
++
++static inline int hx8357_spi_write_byte(struct lcd_device *lcdev,
++					u8 value)
++{
++	return hx8357_spi_write_then_read(lcdev, &value, 1, NULL, 0);
++}
++
++static int hx8357_enter_standby(struct lcd_device *lcdev)
++{
++	int ret;
++
++	ret = hx8357_spi_write_byte(lcdev, HX8357_SET_DISPLAY_OFF);
++	if (ret < 0)
++		return ret;
++
++	usleep_range(10000, 12000);
++
++	ret = hx8357_spi_write_byte(lcdev, HX8357_ENTER_SLEEP_MODE);
++	if (ret < 0)
++		return ret;
++
++	msleep(120);
++
++	return 0;
++}
++
++static int hx8357_exit_standby(struct lcd_device *lcdev)
++{
++	int ret;
++
++	ret = hx8357_spi_write_byte(lcdev, HX8357_EXIT_SLEEP_MODE);
++	if (ret < 0)
++		return ret;
++
++	msleep(120);
++
++	ret = hx8357_spi_write_byte(lcdev, HX8357_SET_DISPLAY_ON);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++static int hx8357_lcd_init(struct lcd_device *lcdev)
++{
++	struct hx8357_data *lcd = lcd_get_data(lcdev);
++	u8 buf[16];
++	int ret;
++
++	/*
++	 * Set the interface selection pins to SPI mode, with three
++	 * wires
++	 */
++	gpio_set_value_cansleep(lcd->im_pins[0], 1);
++	gpio_set_value_cansleep(lcd->im_pins[1], 0);
++	gpio_set_value_cansleep(lcd->im_pins[2], 1);
++
++	/* Reset the screen */
++	gpio_set_value(lcd->reset, 1);
++	usleep_range(10000, 12000);
++	gpio_set_value(lcd->reset, 0);
++	usleep_range(10000, 12000);
++	gpio_set_value(lcd->reset, 1);
++	msleep(120);
++
++	buf[0] = HX8357_SET_POWER;
++	buf[1] = 0x44;
++	buf[2] = 0x41;
++	buf[3] = 0x06;
++	ret = hx8357_spi_write_array(lcdev, buf, 4);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_VCOM;
++	buf[1] = 0x40;
++	buf[2] = 0x10;
++	ret = hx8357_spi_write_array(lcdev, buf, 3);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_POWER_NORMAL;
++	buf[1] = 0x05;
++	buf[2] = 0x12;
++	ret = hx8357_spi_write_array(lcdev, buf, 3);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_PANEL_DRIVING;
++	buf[1] = 0x14;
++	buf[2] = 0x3b;
++	buf[3] = 0x00;
++	buf[4] = 0x02;
++	buf[5] = 0x11;
++	ret = hx8357_spi_write_array(lcdev, buf, 6);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_DISPLAY_FRAME;
++	buf[1] = 0x0c;
++	ret = hx8357_spi_write_array(lcdev, buf, 2);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_PANEL_RELATED;
++	buf[1] = 0x01;
++	ret = hx8357_spi_write_array(lcdev, buf, 2);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = 0xea;
++	buf[1] = 0x03;
++	buf[2] = 0x00;
++	buf[3] = 0x00;
++	ret = hx8357_spi_write_array(lcdev, buf, 4);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = 0xeb;
++	buf[1] = 0x40;
++	buf[2] = 0x54;
++	buf[3] = 0x26;
++	buf[4] = 0xdb;
++	ret = hx8357_spi_write_array(lcdev, buf, 5);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_GAMMA;
++	buf[1] = 0x00;
++	buf[2] = 0x15;
++	buf[3] = 0x00;
++	buf[4] = 0x22;
++	buf[5] = 0x00;
++	buf[6] = 0x08;
++	buf[7] = 0x77;
++	buf[8] = 0x26;
++	buf[9] = 0x77;
++	buf[10] = 0x22;
++	buf[11] = 0x04;
++	buf[12] = 0x00;
++	ret = hx8357_spi_write_array(lcdev, buf, 13);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_ADDRESS_MODE;
++	buf[1] = 0xc0;
++	ret = hx8357_spi_write_array(lcdev, buf, 2);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_PIXEL_FORMAT;
++	buf[1] = HX8357_SET_PIXEL_FORMAT_DPI_18BIT |
++		HX8357_SET_PIXEL_FORMAT_DBI_18BIT;
++	ret = hx8357_spi_write_array(lcdev, buf, 2);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_COLUMN_ADDRESS;
++	buf[1] = 0x00;
++	buf[2] = 0x00;
++	buf[3] = 0x01;
++	buf[4] = 0x3f;
++	ret = hx8357_spi_write_array(lcdev, buf, 5);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_PAGE_ADDRESS;
++	buf[1] = 0x00;
++	buf[2] = 0x00;
++	buf[3] = 0x01;
++	buf[4] = 0xdf;
++	ret = hx8357_spi_write_array(lcdev, buf, 5);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_RGB;
++	buf[1] = 0x02;
++	ret = hx8357_spi_write_array(lcdev, buf, 2);
++	if (ret < 0)
++		return ret;
++
++	buf[0] = HX8357_SET_DISPLAY_MODE;
++	buf[1] = HX8357_SET_DISPLAY_MODE_RGB_THROUGH |
++		HX8357_SET_DISPLAY_MODE_RGB_INTERFACE;
++	ret = hx8357_spi_write_array(lcdev, buf, 2);
++	if (ret < 0)
++		return ret;
++
++	ret = hx8357_spi_write_byte(lcdev, HX8357_EXIT_SLEEP_MODE);
++	if (ret < 0)
++		return ret;
++
++	msleep(120);
++
++	ret = hx8357_spi_write_byte(lcdev, HX8357_SET_DISPLAY_ON);
++	if (ret < 0)
++		return ret;
++
++	usleep_range(5000, 7000);
++
++	ret = hx8357_spi_write_byte(lcdev, HX8357_WRITE_MEMORY_START);
++	if (ret < 0)
++		return ret;
++
++	return 0;
++}
++
++#define POWER_IS_ON(pwr)	((pwr) <= FB_BLANK_NORMAL)
++
++static int hx8357_set_power(struct lcd_device *lcdev, int power)
++{
++	struct hx8357_data *lcd = lcd_get_data(lcdev);
++	int ret = 0;
++
++	if (POWER_IS_ON(power) && !POWER_IS_ON(lcd->state))
++		ret = hx8357_exit_standby(lcdev);
++	else if (!POWER_IS_ON(power) && POWER_IS_ON(lcd->state))
++		ret = hx8357_enter_standby(lcdev);
++
++	if (ret == 0)
++		lcd->state = power;
++	else
++		dev_warn(&lcdev->dev, "failed to set power mode %d\n", power);
++
++	return ret;
++}
++
++static int hx8357_get_power(struct lcd_device *lcdev)
++{
++	struct hx8357_data *lcd = lcd_get_data(lcdev);
++
++	return lcd->state;
++}
++
++static struct lcd_ops hx8357_ops = {
++	.set_power	= hx8357_set_power,
++	.get_power	= hx8357_get_power,
++};
++
++static int __devinit hx8357_probe(struct spi_device *spi)
++{
++	struct lcd_device *lcdev;
++	struct hx8357_data *lcd;
++	int i, ret;
++
++	lcd = devm_kzalloc(&spi->dev, sizeof(*lcd), GFP_KERNEL);
++	if (!lcd) {
++		dev_err(&spi->dev, "Couldn't allocate lcd internal structure!\n");
++		return -ENOMEM;
++	}
++
++	ret = spi_setup(spi);
++	if (ret < 0) {
++		dev_err(&spi->dev, "SPI setup failed.\n");
++		return ret;
++	}
++
++	lcd->spi = spi;
++
++	lcd->reset = of_get_named_gpio(spi->dev.of_node, "gpios-reset", 0);
++	if (!gpio_is_valid(lcd->reset)) {
++		dev_err(&spi->dev, "Missing dt property: gpios-reset\n");
++		return -EINVAL;
++	}
++
++	ret = devm_gpio_request_one(&spi->dev, lcd->reset,
++				    GPIOF_OUT_INIT_HIGH,
++				    "hx8357-reset");
++	if (ret) {
++		dev_err(&spi->dev,
++			"failed to request gpio %d: %d\n",
++			lcd->reset, ret);
++		return -EINVAL;
++	}
++
++	for (i = 0; i < HX8357_NUM_IM_PINS; i++) {
++		lcd->im_pins[i] = of_get_named_gpio(spi->dev.of_node,
++						"im-gpios", i);
++		if (lcd->im_pins[i] == -EPROBE_DEFER) {
++			dev_info(&spi->dev, "GPIO requested is not here yet, deferring the probe\n");
++			return -EPROBE_DEFER;
++		}
++		if (!gpio_is_valid(lcd->im_pins[i])) {
++			dev_err(&spi->dev, "Missing dt property: im-gpios\n");
++			return -EINVAL;
++		}
++
++		ret = devm_gpio_request_one(&spi->dev, lcd->im_pins[i],
++					GPIOF_DIR_OUT, "im_pins");
++		if (ret) {
++			dev_err(&spi->dev, "failed to request gpio %d: %d\n",
++				lcd->im_pins[i], ret);
++			return -EINVAL;
++		}
++	}
++
++	lcdev = lcd_device_register("mxsfb", &spi->dev, lcd, &hx8357_ops);
++	if (IS_ERR(lcdev)) {
++		ret = PTR_ERR(lcdev);
++		return ret;
++	}
++	spi_set_drvdata(spi, lcdev);
++
++	ret = hx8357_lcd_init(lcdev);
++	if (ret) {
++		dev_err(&spi->dev, "Couldn't initialize panel\n");
++		goto init_error;
++	}
++
++	dev_info(&spi->dev, "Panel probed\n");
++
++	return 0;
++
++init_error:
++	lcd_device_unregister(lcdev);
++	return ret;
++}
++
++static int __devexit hx8357_remove(struct spi_device *spi)
++{
++	struct lcd_device *lcdev = spi_get_drvdata(spi);
++
++	lcd_device_unregister(lcdev);
++	return 0;
++}
++
++static const struct of_device_id hx8357_dt_ids[] = {
++	{ .compatible = "himax,hx8357" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, hx8357_dt_ids);
++
++static struct spi_driver hx8357_driver = {
++	.probe  = hx8357_probe,
++	.remove = __devexit_p(hx8357_remove),
++	.driver = {
++		.name = "hx8357",
++		.of_match_table = of_match_ptr(hx8357_dt_ids),
++	},
++};
++
++module_spi_driver(hx8357_driver);
++
++MODULE_AUTHOR("Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
++MODULE_DESCRIPTION("Himax HX-8357 LCD Driver");
++MODULE_LICENSE("GPL");
+-- 
+1.7.10.4
