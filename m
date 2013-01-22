@@ -1,130 +1,55 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v1 1/6] usb: otg: Add an API to bind the USB controller and PHY
-Date: Tue, 22 Jan 2013 15:28:09 +0530
-Message-ID: <1358848694-20145-2-git-send-email-kishon@ti.com>
-References: <1358848694-20145-1-git-send-email-kishon@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH] gpio/omap: fix pm_runtime for IRQ functions
+Date: Tue, 22 Jan 2013 11:07:45 +0100
+Message-ID: <CACRpkdbtUo4oU_yjwukuYW89sk4OM0NY+ZcwQprLEu_9mqZFgg@mail.gmail.com>
+References: <1358531362-27933-1-git-send-email-jlu@pengutronix.de>
+	<50FCE27D.7060500@ti.com>
+	<CACRpkdYpCbWtk6PbgLm0HWFBihDqA_G_1btYQ38+WfeXridPJA@mail.gmail.com>
+	<50FE61CB.5010906@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1358848694-20145-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, balbi@ti.com, linux@arm.linux.org.uk, eballetbo@gmail.com, javier@dowhile0.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kishon@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <50FE61CB.5010906@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Jan Luebbe <jlu@pengutronix.de>, Kevin Hilman <khilman@deeprootsystems.com>, linux-omap@vger.kernel.org, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-In order to support platforms which has multiple PHY's (of same type) and
-which has multiple USB controllers, a new design is adopted wherin the binding
-information (between the PHY and the USB controller) should be passed to the
-PHY library from platform specific file (board file). 
-So added a new API to pass the binding information.
+On Tue, Jan 22, 2013 at 10:54 AM, Rajendra Nayak <rnayak@ti.com> wrote:
+> On Tuesday 22 January 2013 01:52 PM, Linus Walleij wrote:
+>>
+>> In the Nomadik I had a similar situation with a GPIO used for the
+>> ethernet IRQ. I put the GPIO number in a special board-specific
+>> node and added this to the machine,
+>
+> Thanks Linus. Are there any bindings already available on how these
+> special board-specific nodes can be defined in the dts files?
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- drivers/usb/otg/otg.c   |   37 +++++++++++++++++++++++++++++++++++++
- include/linux/usb/phy.h |   22 ++++++++++++++++++++++
- 2 files changed, 59 insertions(+)
+No generic bindings as they are per definition board-specific.
 
-diff --git a/drivers/usb/otg/otg.c b/drivers/usb/otg/otg.c
-index a30c041..492ba2f 100644
---- a/drivers/usb/otg/otg.c
-+++ b/drivers/usb/otg/otg.c
-@@ -18,6 +18,7 @@
- #include <linux/usb/otg.h>
- 
- static LIST_HEAD(phy_list);
-+static LIST_HEAD(phy_bind_list);
- static DEFINE_SPINLOCK(phy_lock);
- 
- static struct usb_phy *__usb_find_phy(struct list_head *list,
-@@ -201,6 +202,42 @@ void usb_remove_phy(struct usb_phy *x)
- }
- EXPORT_SYMBOL(usb_remove_phy);
- 
-+/**
-+ * usb_bind_phy - bind the phy and the controller that uses the phy
-+ * @dev_name: the device name of the device that will bind to the phy
-+ * @index: index to specify the port number
-+ * @phy_dev_name: the device name of the phy
-+ *
-+ * Fills the phy_bind structure with the dev_name and phy_dev_name. This will
-+ * be used when the phy driver registers the phy and when the controller
-+ * requests this phy.
-+ *
-+ * To be used by platform specific initialization code.
-+ */
-+struct usb_phy_bind __init *usb_bind_phy(const char *dev_name, u8 index,
-+				const char *phy_dev_name)
-+{
-+	struct usb_phy_bind *phy_bind;
-+	unsigned long flags;
-+
-+	phy_bind = kzalloc(sizeof(*phy_bind), GFP_KERNEL);
-+	if (!phy_bind) {
-+		pr_err("phy_bind(): No memory for phy_bind");
-+		return ERR_PTR(-ENOMEM);
-+	}
-+
-+	phy_bind->dev_name = dev_name;
-+	phy_bind->phy_dev_name = phy_dev_name;
-+	phy_bind->index = index;
-+
-+	spin_lock_irqsave(&phy_lock, flags);
-+	list_add_tail(&phy_bind->list, &phy_bind_list);
-+	spin_unlock_irqrestore(&phy_lock, flags);
-+
-+	return phy_bind;
-+}
-+EXPORT_SYMBOL_GPL(usb_bind_phy);
-+
- const char *otg_state_string(enum usb_otg_state state)
- {
- 	switch (state) {
-diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
-index a29ae1e..fbeab1a 100644
---- a/include/linux/usb/phy.h
-+++ b/include/linux/usb/phy.h
-@@ -106,6 +106,21 @@ struct usb_phy {
- 			enum usb_device_speed speed);
- };
- 
-+/**
-+ * struct usb_phy_bind - represent the binding for the phy
-+ * @dev_name: the device name of the device that will bind to the phy
-+ * @phy_dev_name: the device name of the phy
-+ * @index: used if a single controller uses multiple phys
-+ * @phy: reference to the phy
-+ * @list: to maintain a linked list of the binding information
-+ */
-+struct usb_phy_bind {
-+	const char	*dev_name;
-+	const char	*phy_dev_name;
-+	u8		index;
-+	struct usb_phy	*phy;
-+	struct list_head list;
-+};
- 
- /* for board-specific init logic */
- extern int usb_add_phy(struct usb_phy *, enum usb_phy_type type);
-@@ -151,6 +166,8 @@ extern struct usb_phy *devm_usb_get_phy(struct device *dev,
- 	enum usb_phy_type type);
- extern void usb_put_phy(struct usb_phy *);
- extern void devm_usb_put_phy(struct device *dev, struct usb_phy *x);
-+extern struct usb_phy_bind *usb_bind_phy(const char *dev_name, u8 index,
-+				const char *phy_dev_name);
- #else
- static inline struct usb_phy *usb_get_phy(enum usb_phy_type type)
- {
-@@ -171,6 +188,11 @@ static inline void devm_usb_put_phy(struct device *dev, struct usb_phy *x)
- {
- }
- 
-+static inline struct usb_phy_bind *usb_bind_phy(const char *dev_name, u8 index,
-+				const char *phy_dev_name)
-+{
-+	return NULL;
-+}
- #endif
- 
- static inline int
--- 
-1.7.9.5
+So in the Nomadik case it looks like this:
+
+        /* Custom board node with GPIO pins to active etc */
+        usb-s8815 {
+                /* The S8815 is using this very GPIO pin for the SMSC91x IRQs */
+                ethernet-gpio {
+                        gpios = <&gpio3 19 0x1>;
+                        interrupts = <19 0x1>;
+                        interrupt-parent = <&gpio3>;
+                };
+                /* This will bias the MMC/SD card detect line */
+                mmcsd-gpio {
+                        gpios = <&gpio3 16 0x1>;
+                };
+        };
+
+First I added custom nodes to the IP blocks, but it was no good idea
+as it's not generic for that driver at all, just a board pecularity.
+
+> Are there any using some such in the mainline already?
+
+I just sent a pull request for the Nomadik example but I don't
+know about any others.
+
+Yours,
+Linus Walleij
