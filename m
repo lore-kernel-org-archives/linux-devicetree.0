@@ -1,81 +1,109 @@
-From: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 3/4] pwm_backlight: Refactor the DT parsing code
-Date: Tue, 22 Jan 2013 14:39:55 +0100
-Message-ID: <1358861996-27194-4-git-send-email-peter.ujfalusi@ti.com>
-References: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v1 2/6] usb: otg: utils: add facilities in phy lib to
+ support multiple PHYs of same type
+Date: Tue, 22 Jan 2013 16:07:26 +0200
+Message-ID: <50FE9D1E.3010800@ti.com>
+References: <1358848694-20145-1-git-send-email-kishon@ti.com> <1358848694-20145-3-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1358861996-27194-1-git-send-email-peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1358848694-20145-3-git-send-email-kishon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: tony@atomide.com, balbi@ti.com, linux@arm.linux.org.uk, eballetbo@gmail.com, javier@dowhile0.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-In preparation to support the whole range of the PWM device in a similar way
-it is possible when we boot in legacy mode (non DT mode).
+On 01/22/2013 11:58 AM, Kishon Vijay Abraham I wrote:
+> In order to add support for multipe PHY's of the same type, new API's
+> for adding PHY and getting PHY has been added. Now the binding
+> information for the PHY and controller should be done in platform file
+> using usb_bind_phy API. And for getting a PHY, the device pointer of the
+> USB controller and an index should be passed. Based on the binding
+> information that is added in the platform file, usb_get_phy_dev will return the
+> appropriate PHY.
+> Already existing API's to add and get phy by type is not removed. These
+> API's are deprecated and will be removed once all the platforms start to
+> use the new API.
+> 
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/usb/otg/otg.c   |  114 ++++++++++++++++++++++++++++++++++++++++++++++-
+>  include/linux/usb/phy.h |   13 ++++++
+>  2 files changed, 126 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/usb/otg/otg.c b/drivers/usb/otg/otg.c
+> index 492ba2f..1f30b22 100644
+> --- a/drivers/usb/otg/otg.c
+> +++ b/drivers/usb/otg/otg.c
+> @@ -36,6 +36,20 @@ static struct usb_phy *__usb_find_phy(struct list_head *list,
+>  	return ERR_PTR(-ENODEV);
+>  }
+>  
+> +static struct usb_phy *__usb_find_phy_dev(struct device *dev,
+> +	struct list_head *list, u8 index)
+> +{
+> +	struct usb_phy_bind *phy_bind = NULL;
+> +
+> +	list_for_each_entry(phy_bind, list, list) {
+> +		if (!(strcmp(phy_bind->dev_name, dev_name(dev))) &&
+> +				phy_bind->index == index)
+> +			return phy_bind->phy;
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
----
- drivers/video/backlight/pwm_bl.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+If the PHY driver has not yet called usb_add_phy_dev() (e.g. driver not yet loaeded)
+then this will return NULL.
 
-diff --git a/drivers/video/backlight/pwm_bl.c b/drivers/video/backlight/pwm_bl.c
-index 2a81c24..df2d115 100644
---- a/drivers/video/backlight/pwm_bl.c
-+++ b/drivers/video/backlight/pwm_bl.c
-@@ -100,7 +100,7 @@ static int pwm_backlight_parse_dt(struct device *dev,
- {
- 	struct device_node *node = dev->of_node;
- 	struct property *prop;
--	int length;
-+	int num_levels = 0;
- 	u32 value;
- 	int ret;
- 
-@@ -110,26 +110,27 @@ static int pwm_backlight_parse_dt(struct device *dev,
- 	memset(data, 0, sizeof(*data));
- 
- 	/* determine the number of brightness levels */
--	prop = of_find_property(node, "brightness-levels", &length);
-+	prop = of_find_property(node, "brightness-levels", &num_levels);
- 	if (!prop)
- 		return -EINVAL;
- 
--	data->max_brightness = length / sizeof(u32);
-+	num_levels /= sizeof(u32);
- 
- 	/* read brightness levels from DT property */
--	if (data->max_brightness > 0) {
--		size_t size = sizeof(*data->levels) * data->max_brightness;
-+	if (num_levels > 0) {
-+		size_t size = sizeof(*data->levels) * num_levels;
- 
- 		data->levels = devm_kzalloc(dev, size, GFP_KERNEL);
- 		if (!data->levels)
- 			return -ENOMEM;
- 
- 		ret = of_property_read_u32_array(node, "brightness-levels",
--						 data->levels,
--						 data->max_brightness);
-+						 data->levels, num_levels);
- 		if (ret < 0)
- 			return ret;
- 
-+		data->max_brightness = num_levels;
-+
- 		ret = of_property_read_u32(node, "default-brightness-level",
- 					   &value);
- 		if (ret < 0)
--- 
-1.8.1.1
+> +	}
+> +
+> +	return ERR_PTR(-ENODEV);
+> +}
+> +
+>  static void devm_usb_phy_release(struct device *dev, void *res)
+>  {
+>  	struct usb_phy *phy = *(struct usb_phy **)res;
+> @@ -112,6 +126,69 @@ err0:
+>  EXPORT_SYMBOL(usb_get_phy);
+>  
+>  /**
+> + * usb_get_phy_dev - find the USB PHY
+> + * @dev - device that requests this phy
+> + * @index - the index of the phy
+> + *
+> + * Returns the phy driver, after getting a refcount to it; or
+> + * -ENODEV if there is no such phy.  The caller is responsible for
+> + * calling usb_put_phy() to release that count.
+> + *
+> + * For use by USB host and peripheral drivers.
+> + */
+> +struct usb_phy *usb_get_phy_dev(struct device *dev, u8 index)
+> +{
+> +	struct usb_phy	*phy = NULL;
+> +	unsigned long	flags;
+> +
+> +	spin_lock_irqsave(&phy_lock, flags);
+> +
+> +	phy = __usb_find_phy_dev(dev, &phy_bind_list, index);
+> +	if (IS_ERR(phy)) {
+> +		pr_err("unable to find transceiver\n");
+> +		goto err0;
+> +	}
+
+Since NULL is not IS_ERR(), you will do a NULL pointer reference below.
+
+In such cases we would want to use the deferred probe mechanism. So should we return
+-EPROBE_DEFER?
+
+> +
+> +	get_device(phy->dev);
+> +
+> +err0:
+> +	spin_unlock_irqrestore(&phy_lock, flags);
+> +
+> +	return phy;
+> +}
+> +EXPORT_SYMBOL(usb_get_phy_dev);
+> +
+
+--
+cheers,
+-roger
