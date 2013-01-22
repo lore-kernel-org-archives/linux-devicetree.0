@@ -1,65 +1,95 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/6] arm: mvebu: Add support for local interrupt
-Date: Tue, 22 Jan 2013 10:09:03 +0100
-Message-ID: <50FE572F.4090402@free-electrons.com>
-References: <1358790842-2986-1-git-send-email-gregory.clement@free-electrons.com>
- <1358790842-2986-2-git-send-email-gregory.clement@free-electrons.com>
- <20130121191744.0a04b941@skate> <50FDBC0E.1030706@free-electrons.com>
- <20130121232637.GA3412@localhost>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH v6 0/4] Adding usb2.0 host-phy support for exynos5250
+Date: Tue, 22 Jan 2013 14:45:26 +0530
+Message-ID: <CAFp+6iEoCF91HiDbixqsKX5XS_UQrN=+2O7puPqN1MvjY_eHBg@mail.gmail.com>
+References: <1357916550-11421-1-git-send-email-gautam.vivek@samsung.com>
+	<053c01cdf860$9e98df20$dbca9d60$@samsung.com>
+	<20130122085004.GD16143@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130121232637.GA3412@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi@marvell>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130122085004.GD16143@arwen.pp.htv.fi>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, sylvester.nawrocki@gmail.com, dianders@chromium.org, jg1.han@samsung.com, p.paneri@samsung.com, cpgs@samsung.com, Alan Stern <stern@rowland.harvard.edu>
 List-Id: devicetree@vger.kernel.org
 
-On 01/22/2013 12:26 AM, Ezequiel Garcia wrote:
-> Hi Thomas and Gregory,
-> 
-> On Mon, Jan 21, 2013 at 11:07:10PM +0100, Gregory CLEMENT wrote:
->> On 01/21/2013 07:17 PM, Thomas Petazzoni wrote:
->>>> +		irq_set_percpu_devid(virq);
->>>> +		irq_set_chip_and_handler(virq, &armada_370_xp_irq_chip,
->>>> +					handle_percpu_devid_irq);
->>>> +
->>>> +	} else {
->>>> +		irq_set_chip_and_handler(virq, &armada_370_xp_irq_chip,
->>>> +					handle_level_irq);
->>>> +	}
->>>
->>> Braces useless since there is only one statement in the else.
->>>
-> 
-> IMHO, this is an exception to the rule.
-> Since the first block is more than one line,
-> we usually put braces on the single line block too.
-> (or at least that's what Documentation/CodingStyle says).
-> 
+Hi Felipe,
 
-You're right!
-I would have liked to say I have done it on purpose, but in fact these
-braces are here only because during development I had had multiples lines
-inside the else.
-However, as you pointed it, I will keep it.
 
-> Regards,
-> 
+On Tue, Jan 22, 2013 at 2:20 PM, Felipe Balbi <balbi@ti.com> wrote:
+> HI,
+>
+> On Mon, Jan 21, 2013 at 09:23:28PM -0800, Kukjin Kim wrote:
+>> Vivek Gautam wrote:
+>> >
+>> > Changes from v5:
+>> >  - Rebased on top of latest patches:
+>> >         usb: phy: samsung: Introducing usb phy driver for hsotg (v9)
+>> >         usb: phy: samsung: Add support to set pmu isolation (v6)
+>> >    As a result adding hostphy enable mask and hostphy register offsets
+>> >    to driver data in order to access the HOSTPHY CONTROL register.
+>> >
+>> >  - Adding member 'otg' to struct samsung-usbphy so that its consumers
+>> >    can call otg->set_host so as to make 'phy' aware of the consumer type:
+>> >     HOST/DEVICE
+>> >
+>> >  - Adding 'otg' to 'struct s5p_ehci_hcd' and 'struct exynos_ohci_hcd'
+>> >    which keeps track of 'otg' of the controllers' phy. This then sets
+>> >    the host.
+>> >
+>> >  - Moved samsung_usbphy_set_type() calls from ehci-s5p and ohci-exynos
+>> >    to phy driver itself where based on phy_type it is called.
+>> >
+>> >  - Added separate macro definition for USB20PHY_CFG register to select
+>> >    between host/device type usb link.
+>> >
+>> >  - Removing unnecessary argument 'phy_type' from
+>> > samsung_usbphy_set_type()
+>> >    and samsung_usbphy_cfg_sel().
+>> >
+>> >  - Addressed few nits:
+>> >     -- added macro for 'KHZ'
+>> >     -- removing useless 'if' from samsung_usbphy_cfg_sel()
+>> >     -- keeping the place of clk_get intact and requesting driver
+>> >        data before that.
+>> >
+>> > Vivek Gautam (4):
+>> >   ARM: EXYNOS: Update & move usb-phy types to generic include layer
+>> >   usb: phy: samsung: Add host phy support to samsung-phy driver
+>> >   USB: ehci-s5p: Add phy driver support
+>> >   USB: ohci-exynos: Add phy driver support
+>> >
+>> >  .../devicetree/bindings/usb/samsung-usbphy.txt     |   12 +-
+>> >  drivers/usb/host/ehci-s5p.c                        |   81 +++-
+>> >  drivers/usb/host/ohci-exynos.c                     |   85 +++-
+>> >  drivers/usb/phy/Kconfig                            |    2 +-
+>> >  drivers/usb/phy/samsung-usbphy.c                   |  512
+>> ++++++++++++++++++--
+>> >  include/linux/usb/samsung_usb_phy.h                |   16 +
+>> >  6 files changed, 635 insertions(+), 73 deletions(-)
+>> >  create mode 100644 include/linux/usb/samsung_usb_phy.h
+>> >
+>> > --
+>> > 1.7.6.5
+>>
+>> Looks good to me,
+>>
+>> Felipe and Greg, I don't know who should take this series anyway, feel free
+>> to add  my ack:
+>>
+>> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
+>
+> I will take care of it. But I need Alan's Acked-by for EHCI and OHCI
+> parts.
+>
+
+We got Alan's ACK for:
+USB: ehci-s5p: Add phy driver support
+USB: ohci-exynos: Add phy driver support
+
 
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Thanks & Regards
+Vivek
