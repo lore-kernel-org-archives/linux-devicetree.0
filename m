@@ -1,71 +1,52 @@
-From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: Exynos5250: Enabling samsung usb phy
-Date: Tue, 22 Jan 2013 11:24:25 +0530
-Message-ID: <CAFp+6iFM8g28PohX=95qMccNDkdmt86gKNg9=AJXdrCovsryPQ@mail.gmail.com>
-References: <1355845182-14104-1-git-send-email-gautam.vivek@samsung.com>
-	<20130118131013.GG4672@arwen.pp.htv.fi>
-	<20130118131250.GH4672@arwen.pp.htv.fi>
-	<053501cdf85e$507c2560$f1747020$@samsung.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/7] ARM i.MX6q: Add GPU, VPU, IPU, and OpenVG resets to
+ System Reset Controller (SRC)
+Date: Tue, 22 Jan 2013 15:50:05 +0800
+Message-ID: <20130122075003.GF2272@S2100-06.ap.freescale.net>
+References: <1358352787-15441-1-git-send-email-p.zabel@pengutronix.de>
+ <1358352787-15441-4-git-send-email-p.zabel@pengutronix.de>
+ <CAKGA1bmjKQcX3RzSjbnuYqoJqbzXYGa_Whv7QQkNyAhBDzZWdw@mail.gmail.com>
+ <1358761930.2522.54.camel@pizza.hi.pengutronix.de>
+ <CAKGA1bmkyU_LEJt17SvUwUUh0wXG-2o_5nOGaW8RWDV45g3bVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <053501cdf85e$507c2560$f1747020$@samsung.com>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKGA1bmkyU_LEJt17SvUwUUh0wXG-2o_5nOGaW8RWDV45g3bVg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+On Mon, Jan 21, 2013 at 11:47:12AM -0600, Matt Sealey wrote:
+> > Yes, maybe the module reset part of the SRC should be implemented as a
+> > proper device driver in drivers/reset. Then we could use the interrupt
+> > functionality and WARN_ON(timeout), as you suggest.
+> 
+> That would be ideal. Maybe Shawn or Fabio can bug a hardware guy to
+> shed some light on what a reasonable timeout might actually be for a
+> module to cause such a warning. I think it should definitely cause
+> one.. as I said, I was using 5 seconds, you used 1 second, I don't
+> think a shorter delay would be unreasonable, but maybe it could take
+> up to 10 seconds, or maybe I am wrong - maybe it is in fact impossible
+> in hardware for a reset to "fail" at least visibly because the
+> interrupt will always fire making the warning a never-traveled path.
+> It is certainly not something that would be documented, so without a
+> view of the RTL logic here, we wouldn't know.
+> 
+> Shawn, Fabio?
+> 
+Just talked to hardware people, the reset should finish in a few
+clock cycles, so even 1 millisecond should be enough.
 
-
-On Tue, Jan 22, 2013 at 10:36 AM, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Felipe Balbi wrote:
->>
->> On Fri, Jan 18, 2013 at 03:10:13PM +0200, Felipe Balbi wrote:
->> > Hi,
->> >
->> > On Tue, Dec 18, 2012 at 09:09:40PM +0530, Vivek Gautam wrote:
->> > > This patch-set enables the samsung-usbphy driver on exynos5250,
->> > > which enables the support for USB2 type and USB3 type phys.
->> > > The corresponding phy driver patches are available at:
->> > >  1) https://lkml.org/lkml/2012/12/18/201
->> > >  2) https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-
->> December/024559.html
->> > >
->> > > Tested this patch-set on exynos5250 with following patch-sets for
->> > > USB 2.0 and USB 3.0:
->> > >  - https://patchwork.kernel.org/patch/1794651/
->> > >  - https://lkml.org/lkml/2012/12/18/201
->> > >  - https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-
->> December/024559.html
->> > >  - http://comments.gmane.org/gmane.linux.usb.general/76352
->> > >  - https://lkml.org/lkml/2012/12/13/492
->> > >
->> > > Vivek Gautam (2):
->> > >   ARM: Exynos5250: Enabling samsung-usbphy driver
->> > >   ARM: Exynos5250: Enabling USB 3.0 phy for samsung-usbphy driver
->> >
->> > What should I do with this series ? Is it ready to apply ? If it is,
->> > then please resend with Kukjim's Acked-by.
->>
->> actually, now that I look again, it's all under arch/arm/, so Kukjim can
->> take all of those through his tree ;-)
->>
-> Yes, once Vivek addresses comments from Sylwester, let me pick up into
-> Samsung tree :-)
->
-
-Sure, i shall update this patch-series based on separate drivers for
-USB 3.0 PHY controller
-as posted in following patch series :
-[PATCH v3 0/2] Adding USB 3.0 DRD-phy support for exynos5250
-
-
-
--- 
-Thanks & Regards
-Vivek
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shawn
