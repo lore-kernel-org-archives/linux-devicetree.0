@@ -1,12 +1,15 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 00/14] DMA Engine support for AM33XX
-Date: Wed, 23 Jan 2013 16:37:55 +0530
-Message-ID: <50FFC48B.80902@ti.com>
-References: <1358281974-8411-1-git-send-email-mporter@ti.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] ARM: OMAP: devices: create device for usb part of
+ control module
+Date: Wed, 23 Jan 2013 13:24:22 +0200
+Message-ID: <20130123112422.GF29258@arwen.pp.htv.fi>
+References: <1358777308-2409-1-git-send-email-kishon@ti.com>
+ <1358777308-2409-3-git-send-email-kishon@ti.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="------------090500030202030700080108"
+Content-Type: multipart/mixed; boundary="===============0875166743167326036=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1358281974-8411-1-git-send-email-mporter-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1358777308-2409-3-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,232 +20,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---------------090500030202030700080108
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+--===============0875166743167326036==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cpvLTH7QU4gwfq3S"
+Content-Disposition: inline
 
-Matt,
+--cpvLTH7QU4gwfq3S
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wednesday 16 January 2013 02:02 AM, Matt Porter wrote:
+Hi,
 
-[..]
+On Mon, Jan 21, 2013 at 07:38:26PM +0530, Kishon Vijay Abraham I wrote:
+> A seperate driver has been added to handle the usb part of control
+> module. A device for the above driver is created here, using the register
+> address information to be used by the driver for powering on the PHY and
+> for writing to the mailbox.
+>=20
+> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 
-> This series adds DMA Engine support for AM33xx, which uses
-> an EDMA DMAC. The EDMA DMAC has been previously supported by only
-> a private API implementation (much like the situation with OMAP
-> DMA) found on the DaVinci family of SoCs.
->
-> The series applies on top of 3.8-rc3 and the following patches:
->
-> 	- TPS65910 REGMAP_IRQ build fix:
-> 	  https://patchwork.kernel.org/patch/1857701/
-> 	- dmaengine DT support from Vinod's dmaengine_dt branch in
-> 	  git://git.infradead.org/users/vkoul/slave-dma.git since
-> 	  027478851791df751176398be02a3b1c5f6aa824
-> 	- edma dmaengine driver fix:
-> 	  https://patchwork.kernel.org/patch/1961521/
-> 	- dmaengine dma_get_channel_caps v2:
-> 	  https://patchwork.kernel.org/patch/1961601/
-> 	- dmaengine edma driver channel caps support v2:
-> 	  https://patchwork.kernel.org/patch/1961591/
->
-> The approach taken is similar to how OMAP DMA is being converted to
-> DMA Engine support. With the functional EDMA private API already
-> existing in mach-davinci/dma.c, we first move that to an ARM common
-> area so it can be shared. Adding DT and runtime PM support to the
-> private EDMA API implementation allows it to run on AM33xx. AM33xx
-> *only* boots using DT so we leverage Jon's generic DT DMA helpers to
-> register EDMA DMAC with the of_dma framework and then add support
-> for calling the dma_request_slave_channel() API to both the mmc
-> and spi drivers.
->
-> With this series both BeagleBone and the AM335x EVM have working
-> MMC and SPI support.
->
-> This is tested on BeagleBone with a SPI framebuffer driver and MMC
-> rootfs. A trivial gpio DMA event misc driver was used to test the
-> crossbar DMA event support. It is also tested on the AM335x EVM
-> with the onboard SPI flash and MMC rootfs. The branch at
-> https://github.com/ohporter/linux/tree/edma-dmaengine-am33xx-v4
-> has the complete series, dependencies, and some test
-> drivers/defconfigs.
->
-> Regression testing was done on AM180x-EVM (which also makes use
-> of the EDMA dmaengine driver and the EDMA private API) using SD,
-> SPI flash, and the onboard audio supported by the ASoC Davinci
-> driver. Regression testing was also done on a BeagleBoard xM
-> booting from the legacy board file using MMC rootfs.
->
-> Matt Porter (14):
->    ARM: davinci: move private EDMA API to arm/common
->    ARM: edma: remove unused transfer controller handlers
->    ARM: edma: add AM33XX support to the private EDMA API
->    dmaengine: edma: enable build for AM33XX
->    dmaengine: edma: Add TI EDMA device tree binding
->    ARM: dts: add AM33XX EDMA support
->    dmaengine: add dma_request_slave_channel_compat()
->    mmc: omap_hsmmc: convert to dma_request_slave_channel_compat()
->    mmc: omap_hsmmc: set max_segs based on dma engine limitations
->    mmc: omap_hsmmc: add generic DMA request support to the DT binding
->    ARM: dts: add AM33XX MMC support
->    spi: omap2-mcspi: convert to dma_request_slave_channel_compat()
->    spi: omap2-mcspi: add generic DMA request support to the DT binding
->    ARM: dts: add AM33XX SPI DMA support
->
-While going through the series and testing it out, I observed an issue
-with MMC driver. You need patch in the end of the email to avoid the
-issue. Same is attached in case mailer damages it. Can you please
-add it with your series if you agree ?
+Tony ? Without this we won't have the control module driver.
 
-Overall the series looks good to my eyes.
-Acked-tested-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+--=20
+balbi
 
-Regards,
-Santosh
+--cpvLTH7QU4gwfq3S
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
- From 2dcc90b7a4b2dcdb52ddd052ca7f3e88a78e83e4 Mon Sep 17 00:00:00 2001
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Date: Wed, 23 Jan 2013 16:04:32 +0530
-Subject: [PATCH] mmc: omap_hsmmc: Skip platform_get_resource_byname() for dt
-  case
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-MMC driver probe will abort for DT case because of failed
-platform_get_resource_byname() lookup. Fix it by skipping resource
-byname lookup for device tree build.
+iQIcBAEBAgAGBQJQ/8hmAAoJEIaOsuA1yqREIvYP/j2I79PlB/krUKdUObwk1GJC
+bZ/iM9t2xPxdjNs5DtKBow0FyEsUDIzOUVs2XsKRInuEPHgGhoJg5tdsPbnoYprQ
+bX9eZshPgW39GXDQGO2KvJDFLoMI2O3O0Ud5sFmIBvFc/EwuF0JttSCYl7KvlSc8
+Ul1JjptDy2BYwqdZ09ppfueKkwaHxWZX952V/k7pkV7Nsd4w8JiV7vNiXoxmmbyt
+Y6arAnhZADS+qjPnRkmB8yCWPN0hmRu8eJaK1fh25fmEXiFiYvZ0J1rgq8rbfBoC
+IqDbUP0Gs85XtKrwLBZlBvSt5wN0EXjPLsgZOI/gaBnpteqj+fZWqlpt0Q/JHNNN
+W883S49/SjAQxQjOnXuCLr8qm5S3IaDDtNgtbB+sWxGcdd4tDGIYSvM8r9JjQ+xk
+cdTtp/HQdx2rnJrgISUvW/Vsvv5P0+zV5MZYTqjzo71NGwXH+wbxFpMM+dYG6Yty
+liKQjMcXrh5D5h/Of+o2pM5KnRD4CjANomVu4dq+09ZUKBlotIlbPWgg7Uabf1+j
+/fPPbGOlHPozn4W3UKsf4yI9upnX84Cf+PQvCe1ouVttBWu5ynE9aTzaXD1hXIoS
+d5pz3IjUe4A2qnOW4GJwFkMXXjTLmreftV+Aa85gldsIrMdDhJEv21Kdv6dDURaX
+HH1B5evD0ymZkiv3Ndvw
+=sCR7
+-----END PGP SIGNATURE-----
 
-Issue is hidden because hwmod popullates the IO resources which
-helps to succeed platform_get_resource_byname() and probe.
+--cpvLTH7QU4gwfq3S--
 
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
----
-  drivers/mmc/host/omap_hsmmc.c |   28 +++++++++++++++-------------
-  1 file changed, 15 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index f74bd69..d4655e7 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -1897,21 +1897,23 @@ static int omap_hsmmc_probe(struct 
-platform_device *pdev)
-
-  	omap_hsmmc_conf_bus_power(host);
-
--	res = platform_get_resource_byname(pdev, IORESOURCE_DMA, "tx");
--	if (!res) {
--		dev_err(mmc_dev(host->mmc), "cannot get DMA TX channel\n");
--		ret = -ENXIO;
--		goto err_irq;
--	}
--	tx_req = res->start;
-+	if (!pdev->dev.of_node) {
-+		res = platform_get_resource_byname(pdev, IORESOURCE_DMA, "tx");
-+		if (!res) {
-+			dev_err(mmc_dev(host->mmc), "cannot get DMA TX channel\n");
-+			ret = -ENXIO;
-+			goto err_irq;
-+		}
-+		tx_req = res->start;
-
--	res = platform_get_resource_byname(pdev, IORESOURCE_DMA, "rx");
--	if (!res) {
--		dev_err(mmc_dev(host->mmc), "cannot get DMA RX channel\n");
--		ret = -ENXIO;
--		goto err_irq;
-+		res = platform_get_resource_byname(pdev, IORESOURCE_DMA, "rx");
-+		if (!res) {
-+			dev_err(mmc_dev(host->mmc), "cannot get DMA RX channel\n");
-+			ret = -ENXIO;
-+			goto err_irq;
-+		}
-+		rx_req = res->start;
-  	}
--	rx_req = res->start;
-
-  	dma_cap_zero(mask);
-  	dma_cap_set(DMA_SLAVE, mask);
--- 
-1.7.9.5
-
-
-
-
-
---------------090500030202030700080108
-Content-Type: text/x-patch;
-	name="0001-mmc-omap_hsmmc-Skip-platform_get_resource_byname-for.patch"
-Content-Transfer-Encoding: 7bit
-Content-Disposition: attachment;
-	filename*0="0001-mmc-omap_hsmmc-Skip-platform_get_resource_byname-for.pa";
-	filename*1="tch"
-
->From 2dcc90b7a4b2dcdb52ddd052ca7f3e88a78e83e4 Mon Sep 17 00:00:00 2001
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Date: Wed, 23 Jan 2013 16:04:32 +0530
-Subject: [PATCH] mmc: omap_hsmmc: Skip platform_get_resource_byname() for dt
- case
-
-MMC driver probe will abort for DT case because of failed
-platform_get_resource_byname() lookup. Fix it by skipping resource
-byname lookup for device tree build.
-
-Issue is hidden because hwmod popullates the IO resources which
-helps to succeed platform_get_resource_byname() and probe.
-
-Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
----
- drivers/mmc/host/omap_hsmmc.c |   28 +++++++++++++++-------------
- 1 file changed, 15 insertions(+), 13 deletions(-)
-
-diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
-index f74bd69..d4655e7 100644
---- a/drivers/mmc/host/omap_hsmmc.c
-+++ b/drivers/mmc/host/omap_hsmmc.c
-@@ -1897,21 +1897,23 @@ static int omap_hsmmc_probe(struct platform_device *pdev)
- 
- 	omap_hsmmc_conf_bus_power(host);
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_DMA, "tx");
--	if (!res) {
--		dev_err(mmc_dev(host->mmc), "cannot get DMA TX channel\n");
--		ret = -ENXIO;
--		goto err_irq;
--	}
--	tx_req = res->start;
-+	if (!pdev->dev.of_node) {
-+		res = platform_get_resource_byname(pdev, IORESOURCE_DMA, "tx");
-+		if (!res) {
-+			dev_err(mmc_dev(host->mmc), "cannot get DMA TX channel\n");
-+			ret = -ENXIO;
-+			goto err_irq;
-+		}
-+		tx_req = res->start;
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_DMA, "rx");
--	if (!res) {
--		dev_err(mmc_dev(host->mmc), "cannot get DMA RX channel\n");
--		ret = -ENXIO;
--		goto err_irq;
-+		res = platform_get_resource_byname(pdev, IORESOURCE_DMA, "rx");
-+		if (!res) {
-+			dev_err(mmc_dev(host->mmc), "cannot get DMA RX channel\n");
-+			ret = -ENXIO;
-+			goto err_irq;
-+		}
-+		rx_req = res->start;
- 	}
--	rx_req = res->start;
- 
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
--- 
-1.7.9.5
-
-
---------------090500030202030700080108
+--===============0875166743167326036==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -253,4 +84,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---------------090500030202030700080108--
+--===============0875166743167326036==--
