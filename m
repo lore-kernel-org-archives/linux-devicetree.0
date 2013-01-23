@@ -1,101 +1,63 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH RFC v3 02/15] [media] Add a V4L2 OF parser
-Date: Wed, 23 Jan 2013 11:44:50 +0100
-Message-ID: <50FFBF22.7030506@samsung.com>
-References: <1356969793-27268-3-git-send-email-s.nawrocki@samsung.com>
- <1357232962-7425-1-git-send-email-s.nawrocki@samsung.com>
- <201301211235.14450.hverkuil@xs4all.nl>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v5 00/14] DMA Engine support for AM33XX
+Date: Wed, 23 Jan 2013 16:19:18 +0530
+Message-ID: <50FFC02E.5090703@ti.com>
+References: <1358281974-8411-1-git-send-email-mporter@ti.com>
+	<50FEB6B2.5020303@ti.com>
+	<20130123022133.GA5727@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <201301211235.14450.hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, g.liakhovetski@gmx.de, laurent.pinchart@ideasonboard.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20130123022133.GA5727-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/2013 12:35 PM, Hans Verkuil wrote:
-[...]
->> +/**
->> + * v4l2_of_parse_mipi_csi2() - parse MIPI CSI-2 bus properties
->> + * @node: pointer to endpoint device_node
->> + * @endpoint: pointer to v4l2_of_endpoint data structure
->> + *
->> + * Return: 0 on success or negative error value otherwise.
->> + */
->> +int v4l2_of_parse_mipi_csi2(const struct device_node *node,
->> +			    struct v4l2_of_endpoint *endpoint)
->> +{
->> +	struct v4l2_of_mipi_csi2 *mipi_csi2 = &endpoint->mipi_csi_2;
->> +	u32 data_lanes[ARRAY_SIZE(mipi_csi2->data_lanes)];
->> +	struct property *prop;
->> +	const __be32 *lane = NULL;
->> +	u32 v;
->> +	int i = 0;
->> +
->> +	prop = of_find_property(node, "data-lanes", NULL);
->> +	if (!prop)
->> +		return -EINVAL;
->> +	do {
->> +		lane = of_prop_next_u32(prop, lane, &data_lanes[i]);
->> +	} while (lane && i++ < ARRAY_SIZE(data_lanes));
->> +
->> +	mipi_csi2->num_data_lanes = i;
->> +	while (i--)
->> +		mipi_csi2->data_lanes[i] = data_lanes[i];
->> +
->> +	if (!of_property_read_u32(node, "clock-lanes", &v))
->> +		mipi_csi2->clock_lane = v;
+Hi Mark,
+
+On 1/23/2013 7:51 AM, Mark Brown wrote:
+> On Tue, Jan 22, 2013 at 09:26:34PM +0530, Sekhar Nori wrote:
+>> On 1/16/2013 2:02 AM, Matt Porter wrote:
 > 
-> Hmm, the property name is 'clock-lanes', but only one lane is obtained here.
+>>> This series adds DMA Engine support for AM33xx, which uses
+>>> an EDMA DMAC. The EDMA DMAC has been previously supported by only
+>>> a private API implementation (much like the situation with OMAP
+>>> DMA) found on the DaVinci family of SoCs.
 > 
-> Why is the property name plural in that case?
-
-This is how we agreed it with Guennadi, the argumentation was that it is 
-more consistent with 'data-lanes'. Also I think it is better to use plural 
-form right from the beginning, rather than introducing another 'clock-lanes' 
-property along 'clock-lane' when there would be a need to handle busses 
-with more than one clock lane in the future.
-
-[...]
->> +/**
->> + * v4l2_of_parse_endpoint() - parse all endpoint node properties
->> + * @node: pointer to endpoint device_node
->> + * @endpoint: pointer to v4l2_of_endpoint data structure
->> + *
->> + * All properties are optional. If none are found, we don't set any flags.
->> + * This means the port has a static configuration and no properties have
->> + * to be specified explicitly.
->> + * If any properties that identify the bus as parallel are found and
->> + * slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if we recognise
->> + * the bus as serial CSI-2 and clock-noncontinuous isn't set, we set the
->> + * V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag.
->> + * The caller should hold a reference to @node.
->> + */
->> +void v4l2_of_parse_endpoint(const struct device_node *node,
->> +			    struct v4l2_of_endpoint *endpoint)
->> +{
->> +	const struct device_node *port_node = of_get_parent(node);
->> +	bool data_lanes_present = false;
->> +
->> +	memset(endpoint, 0, sizeof(*endpoint));
->> +
->> +	endpoint->local_node = node;
->> +
->> +	/* Doesn't matter, whether the below two calls succeed */
+>> Will you take this series through the OMAP tree? Only 1/14 touches
+>> mach-davinci and I am mostly okay with it except some changes I just
+>> requested Matt to make in another thread.
 > 
-> 'It doesn't matter whether the two calls below succeed. If they don't
-> then the default value 0 is used.'
-> 
-> At least, that's how I understand the code.
+> Is this series somewhere near actually getting merged then? It seemed
+> like there was lots of stuff going on.
 
-Yeah, it's more precise this way. I'll amend it, thanks!
+I don't think there is a lot of churn on this now. 5 of the patches have
+already been acked by Tony. I had a look at the first two patches (from
+davinci perspective) and they mostly look good to me.
 
->> +	of_property_read_u32(port_node, "reg", &endpoint->port);
->> +	of_property_read_u32(node, "reg", &endpoint->addr);
+That said, I was not intending to suggest the entire series was ready
+for merging. Since the series touches multiple areas of the kernel, I
+wanted to make sure we have one person shepherding the series towards
+mainline.
 
---
+Patch 1/14 has some changes in sound/ can you please take a look and ack
+them?
 
-Regards,
-Sylwester
+Thanks,
+Sekhar
+
+------------------------------------------------------------------------------
+Master Visual Studio, SharePoint, SQL, ASP.NET, C# 2012, HTML5, CSS,
+MVC, Windows 8 Apps, JavaScript and much more. Keep your skills current
+with LearnDevNow - 3,200 step-by-step video tutorials by Microsoft
+MVPs and experts. ON SALE this month only -- learn more at:
+http://p.sf.net/sfu/learnnow-d2d
