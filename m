@@ -1,80 +1,574 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH] ARM: dts: specify all the per-cpu interrupts of arch timer
- for exynos5440
-Date: Tue, 22 Jan 2013 14:05:18 -0800
-Message-ID: <063f01cdf8ec$926cda30$b7468e90$@samsung.com>
-References: <1358818887-16870-1-git-send-email-kgene.kim@samsung.com>
- <20130122101554.GA18876@e106331-lin.cambridge.arm.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH 1/3] fb: backlight: Add the Himax HX-8357B LCD controller
+Date: Wed, 23 Jan 2013 10:51:22 +0900
+Message-ID: <00c001cdf90c$2566a4a0$7033ede0$%han@samsung.com>
+References: <1358871791-14214-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1358871791-14214-2-git-send-email-maxime.ripard@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20130122101554.GA18876@e106331-lin.cambridge.arm.com>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Mark Rutland' <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 'Thomas Abraham' <thomas.ab@samsung.com>, devicetree-discuss@lists.ozlabs.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, 'Tony Lindgren' <tony@atomide.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1358871791-14214-2-git-send-email-maxime.ripard@free-electrons.com>
+Content-language: ko
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Maxime Ripard' <maxime.ripard@free-electrons.com>
+Cc: 'Shawn Guo' <shawn.guo@linaro.org>, 'Brian Lilly' <brian@crystalfontz.com>, linux-arm-kernel@lists.infradead.org, 'Richard Purdie' <rpurdie@rpsys.net>, 'Florian Tobias Schandinat' <FlorianSchandinat@gmx.de>, 'Grant Likely' <grant.likely@secretlab.ca>, 'Rob Herring' <rob.herring@calxeda.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Mark Rutland wrote:
->
-+ devicetree-discuss, Grant Likely, Rob Herring and Tony Lindgren
- 
-> On Tue, Jan 22, 2013 at 01:41:27AM +0000, Kukjin Kim wrote:
-> > From: Thomas Abraham <thomas.ab@samsung.com>
-> >
-> > Need to be changed requirements in the 'cpus' node for exynos5440
-> > to specify all the per-cpu interrupts of arch timer.
+On Wednesday, January 23, 2013 1:23 AM, Maxime Ripard wrote
 > 
-> The node(s) for the arch timer should not be in the cpus/cpu@N nodes.
-> Instead, there should be one node (in the root of the tree).
+> Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+> ---
+>  drivers/video/backlight/Kconfig  |    7 +
+>  drivers/video/backlight/Makefile |    1 +
+>  drivers/video/backlight/hx8357.c |  482 ++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 490 insertions(+)
+>  create mode 100644 drivers/video/backlight/hx8357.c
 > 
-Well, I don't think so. As per my understanding, the local timers are
-attached to every ARM cores (cpus) and it generates certain interrupt to the
-GIC. So the correct representation for this in device tree is to include the
-interrupts in the cpu nodes in dts file. Your comments  refer to a
-limitation in the Linux kernel implementation of the arch_timer and it
-should not result in representing the hardware details incorrectly in the
-dts file.
-
-> If this works currently it's only because the driver picks up one of the
-nodes,
-> and luckily it's the same as the others. This is not guaranteed to work in
-> future, and will likely break.
+> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+> index 765a945..c39bed0 100644
+> --- a/drivers/video/backlight/Kconfig
+> +++ b/drivers/video/backlight/Kconfig
+> @@ -126,6 +126,13 @@ config LCD_AMS369FG06
+>  	  If you have an AMS369FG06 AMOLED Panel, say Y to enable its
+>  	  LCD control driver.
 > 
-It is up to the Linux kernel implementation of arch_timer to handle the
-hardware details in dts file accordingly.
-
-> >
-> > Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-> > Signed-off-by: Kukjin Kim <kgene.kim@samsung.com>
-> > ---
-> >  arch/arm/boot/dts/exynos5440.dtsi |   20 ++++++++++++++++----
-> >  1 file changed, 16 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/arch/arm/boot/dts/exynos5440.dtsi
-> b/arch/arm/boot/dts/exynos5440.dtsi
-> > index 5406689..c5bd8ed 100644
-> > --- a/arch/arm/boot/dts/exynos5440.dtsi
-> > +++ b/arch/arm/boot/dts/exynos5440.dtsi
-> > @@ -28,7 +28,10 @@
-> >  			compatible = "arm,cortex-a15";
-> >  			timer {
-> >  				compatible = "arm,armv7-timer";
-> > -				interrupts = <1 13 0xf08>;
-> > +				interrupts = <1 13 0xf08>,
-> > +					     <1 14 0xf08>,
-> > +					     <1 11 0xf08>,
-> > +					     <1 10 0xf08>;
+> +config LCD_HX8357
+> +	tristate "Himax HX-8357 LCD Driver"
+> +	depends on SPI
+> +	help
+> +	  If you have a HX-8357 LCD panel, say Y to enable its LCD control
+> +	  driver.
+> +
+>  endif # LCD_CLASS_DEVICE
 > 
-> Also, this interrupts list is updated differently to all the other nodes.
-Typo?
+>  #
+> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+> index e7ce729..b69d391 100644
+> --- a/drivers/video/backlight/Makefile
+> +++ b/drivers/video/backlight/Makefile
+> @@ -14,6 +14,7 @@ obj-$(CONFIG_LCD_TOSA)		   += tosa_lcd.o
+>  obj-$(CONFIG_LCD_S6E63M0)	+= s6e63m0.o
+>  obj-$(CONFIG_LCD_LD9040)	+= ld9040.o
+>  obj-$(CONFIG_LCD_AMS369FG06)	+= ams369fg06.o
+> +obj-$(CONFIG_LCD_HX8357)	+= hx8357.o
 > 
-Hmm, I think this should be fine. If any concerns, please let me know in
-detail.
+>  obj-$(CONFIG_BACKLIGHT_CLASS_DEVICE) += backlight.o
+>  obj-$(CONFIG_BACKLIGHT_ATMEL_PWM)    += atmel-pwm-bl.o
+> diff --git a/drivers/video/backlight/hx8357.c b/drivers/video/backlight/hx8357.c
+> new file mode 100644
+> index 0000000..ee4d607
+> --- /dev/null
+> +++ b/drivers/video/backlight/hx8357.c
+> @@ -0,0 +1,482 @@
+> +/*
+> + * Driver for the Himax HX-8357 LCD Controller
+> + *
+> + * Copyright 2012 Free Electrons
+> + *
+> + * Licensed under the GPLv2 or later.
+> + */
+> +
+> +#include <linux/delay.h>
+> +#include <linux/lcd.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/spi/spi.h>
+> +
+> +#define HX8357_NUM_IM_PINS	3
+> +
+> +#define HX8357_SWRESET			0x01
+> +#define HX8357_GET_RED_CHANNEL		0x06
+> +#define HX8357_GET_GREEN_CHANNEL	0x07
+> +#define HX8357_GET_BLUE_CHANNEL		0x08
+> +#define HX8357_GET_POWER_MODE		0x0a
+> +#define HX8357_GET_MADCTL		0x0b
+> +#define HX8357_GET_PIXEL_FORMAT		0x0c
+> +#define HX8357_GET_DISPLAY_MODE		0x0d
+> +#define HX8357_GET_SIGNAL_MODE		0x0e
+> +#define HX8357_GET_DIAGNOSTIC_RESULT	0x0f
+> +#define HX8357_ENTER_SLEEP_MODE		0x10
+> +#define HX8357_EXIT_SLEEP_MODE		0x11
+> +#define HX8357_ENTER_PARTIAL_MODE	0x12
+> +#define HX8357_ENTER_NORMAL_MODE	0x13
+> +#define HX8357_EXIT_INVERSION_MODE	0x20
+> +#define HX8357_ENTER_INVERSION_MODE	0x21
+> +#define HX8357_SET_DISPLAY_OFF		0x28
+> +#define HX8357_SET_DISPLAY_ON		0x29
+> +#define HX8357_SET_COLUMN_ADDRESS	0x2a
+> +#define HX8357_SET_PAGE_ADDRESS		0x2b
+> +#define HX8357_WRITE_MEMORY_START	0x2c
+> +#define HX8357_READ_MEMORY_START	0x2e
+> +#define HX8357_SET_PARTIAL_AREA		0x30
+> +#define HX8357_SET_SCROLL_AREA		0x33
+> +#define HX8357_SET_TEAR_OFF		0x34
+> +#define HX8357_SET_TEAR_ON		0x35
+> +#define HX8357_SET_ADDRESS_MODE		0x36
+> +#define HX8357_SET_SCROLL_START		0x37
+> +#define HX8357_EXIT_IDLE_MODE		0x38
+> +#define HX8357_ENTER_IDLE_MOD		0x39
 
-[...]
+Please change MOD to MODE as below :-)
 
-Thanks.
+  HX8357_ENTER_IDLE_MODE
 
-- Kukjin
+> +#define HX8357_SET_PIXEL_FORMAT		0x3a
+> +#define HX8357_SET_PIXEL_FORMAT_DBI_3BIT	(0x1)
+> +#define HX8357_SET_PIXEL_FORMAT_DBI_16BIT	(0x5)
+> +#define HX8357_SET_PIXEL_FORMAT_DBI_18BIT	(0x6)
+> +#define HX8357_SET_PIXEL_FORMAT_DPI_3BIT	(0x1 << 4)
+> +#define HX8357_SET_PIXEL_FORMAT_DPI_16BIT	(0x5 << 4)
+> +#define HX8357_SET_PIXEL_FORMAT_DPI_18BIT	(0x6 << 4)
+> +#define HX8357_WRITE_MEMORY_CONTINUE	0x3c
+> +#define HX8357_READ_MEMORY_CONTINUE	0x3e
+> +#define HX8357_SET_TEAR_SCAN_LINES	0x44
+> +#define HX8357_GET_SCAN_LINES		0x45
+> +#define HX8357_READ_DDB_START		0xa1
+> +#define HX8357_SET_DISPLAY_MODE		0xb4
+> +#define HX8357_SET_DISPLAY_MODE_RGB_THROUGH	(0x3)
+> +#define HX8357_SET_DISPLAY_MODE_RGB_INTERFACE	(1 << 4)
+> +#define HX8357_SET_PANEL_DRIVING	0xc0
+> +#define HX8357_SET_DISPLAY_FRAME	0xc5
+> +#define HX8357_SET_RGB			0xc6
+> +#define HX8357_SET_RGB_ENABLE_HIGH		(1 << 1)
+> +#define HX8357_SET_GAMMA		0xc8
+> +#define HX8357_SET_POWER		0xd0
+> +#define HX8357_SET_VCOM			0xd1
+> +#define HX8357_SET_POWER_NORMAL		0xd2
+> +#define HX8357_SET_PANEL_RELATED	0xe9
+> +
+> +struct hx8357_data {
+> +	unsigned		im_pins[HX8357_NUM_IM_PINS];
+> +	unsigned		reset;
+> +	struct spi_device	*spi;
+> +	int			state;
+> +};
+> +
+> +static int hx8357_spi_write_then_read(struct lcd_device *lcdev,
+> +				void *txbuf, u16 txlen,
+> +				void *rxbuf, u16 rxlen)
+> +{
+> +	struct hx8357_data *lcd = lcd_get_data(lcdev);
+> +	struct spi_message msg;
+> +	struct spi_transfer xfer[2];
+> +	u16 *local_txbuf = NULL;
+> +	int ret = 0;
+> +
+> +	memset(xfer, 0, sizeof(xfer));
+> +	spi_message_init(&msg);
+> +
+> +	if (txlen) {
+> +		int i;
+> +
+> +		local_txbuf = kcalloc(sizeof(*local_txbuf), txlen, GFP_KERNEL);
+> +
+> +		if (!local_txbuf) {
+> +			dev_err(&lcdev->dev, "Couldn't allocate data buffer.\n");
+> +			return -ENOMEM;
+> +		}
+> +
+> +		for (i = 0; i < txlen; i++) {
+> +			local_txbuf[i] = ((u8 *)txbuf)[i];
+> +			if (i > 0)
+> +				local_txbuf[i] |= 1 << 8;
+> +		}
+> +
+> +		xfer[0].len = 2 * txlen;
+> +		xfer[0].bits_per_word = 9;
+> +		xfer[0].tx_buf = local_txbuf;
+> +		spi_message_add_tail(&xfer[0], &msg);
+> +	}
+> +
+> +	if (rxlen) {
+> +		xfer[1].len = rxlen;
+> +		xfer[1].bits_per_word = 8;
+> +		xfer[1].rx_buf = rxbuf;
+> +		spi_message_add_tail(&xfer[1], &msg);
+> +	}
+> +
+> +	ret = spi_sync(lcd->spi, &msg);
+> +	if (ret < 0)
+> +		dev_err(&lcdev->dev, "Couldn't send SPI data.\n");
+> +
+> +	if (txlen)
+> +		kfree(local_txbuf);
+> +
+> +	return ret;
+> +}
+> +
+> +static inline int hx8357_spi_write_array(struct lcd_device *lcdev,
+> +					u8 *value, u8 len)
+> +{
+> +	return hx8357_spi_write_then_read(lcdev, value, len, NULL, 0);
+> +}
+> +
+> +static inline int hx8357_spi_write_byte(struct lcd_device *lcdev,
+> +					u8 value)
+> +{
+> +	return hx8357_spi_write_then_read(lcdev, &value, 1, NULL, 0);
+> +}
+> +
+> +static int hx8357_enter_standby(struct lcd_device *lcdev)
+> +{
+> +	int ret;
+> +
+> +	ret = hx8357_spi_write_byte(lcdev, HX8357_SET_DISPLAY_OFF);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	usleep_range(10000, 12000);
+> +
+> +	ret = hx8357_spi_write_byte(lcdev, HX8357_ENTER_SLEEP_MODE);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	msleep(120);
+> +
+> +	return 0;
+> +}
+> +
+> +static int hx8357_exit_standby(struct lcd_device *lcdev)
+> +{
+> +	int ret;
+> +
+> +	ret = hx8357_spi_write_byte(lcdev, HX8357_EXIT_SLEEP_MODE);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	msleep(120);
+> +
+> +	ret = hx8357_spi_write_byte(lcdev, HX8357_SET_DISPLAY_ON);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +static int hx8357_lcd_init(struct lcd_device *lcdev)
+> +{
+> +	struct hx8357_data *lcd = lcd_get_data(lcdev);
+> +	u8 buf[16];
+> +	int ret;
+> +
+> +	/*
+> +	 * Set the interface selection pins to SPI mode, with three
+> +	 * wires
+> +	 */
+> +	gpio_set_value_cansleep(lcd->im_pins[0], 1);
+> +	gpio_set_value_cansleep(lcd->im_pins[1], 0);
+> +	gpio_set_value_cansleep(lcd->im_pins[2], 1);
+> +
+> +	/* Reset the screen */
+> +	gpio_set_value(lcd->reset, 1);
+> +	usleep_range(10000, 12000);
+> +	gpio_set_value(lcd->reset, 0);
+> +	usleep_range(10000, 12000);
+> +	gpio_set_value(lcd->reset, 1);
+> +	msleep(120);
+> +
+> +	buf[0] = HX8357_SET_POWER;
+> +	buf[1] = 0x44;
+> +	buf[2] = 0x41;
+> +	buf[3] = 0x06;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 4);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_VCOM;
+> +	buf[1] = 0x40;
+> +	buf[2] = 0x10;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 3);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_POWER_NORMAL;
+> +	buf[1] = 0x05;
+> +	buf[2] = 0x12;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 3);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_PANEL_DRIVING;
+> +	buf[1] = 0x14;
+> +	buf[2] = 0x3b;
+> +	buf[3] = 0x00;
+> +	buf[4] = 0x02;
+> +	buf[5] = 0x11;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 6);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_DISPLAY_FRAME;
+> +	buf[1] = 0x0c;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_PANEL_RELATED;
+> +	buf[1] = 0x01;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = 0xea;
+> +	buf[1] = 0x03;
+> +	buf[2] = 0x00;
+> +	buf[3] = 0x00;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 4);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = 0xeb;
+> +	buf[1] = 0x40;
+> +	buf[2] = 0x54;
+> +	buf[3] = 0x26;
+> +	buf[4] = 0xdb;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 5);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_GAMMA;
+> +	buf[1] = 0x00;
+> +	buf[2] = 0x15;
+> +	buf[3] = 0x00;
+> +	buf[4] = 0x22;
+> +	buf[5] = 0x00;
+> +	buf[6] = 0x08;
+> +	buf[7] = 0x77;
+> +	buf[8] = 0x26;
+> +	buf[9] = 0x77;
+> +	buf[10] = 0x22;
+> +	buf[11] = 0x04;
+> +	buf[12] = 0x00;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 13);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_ADDRESS_MODE;
+> +	buf[1] = 0xc0;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_PIXEL_FORMAT;
+> +	buf[1] = HX8357_SET_PIXEL_FORMAT_DPI_18BIT |
+> +		HX8357_SET_PIXEL_FORMAT_DBI_18BIT;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_COLUMN_ADDRESS;
+> +	buf[1] = 0x00;
+> +	buf[2] = 0x00;
+> +	buf[3] = 0x01;
+> +	buf[4] = 0x3f;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 5);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_PAGE_ADDRESS;
+> +	buf[1] = 0x00;
+> +	buf[2] = 0x00;
+> +	buf[3] = 0x01;
+> +	buf[4] = 0xdf;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 5);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_RGB;
+> +	buf[1] = 0x02;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	buf[0] = HX8357_SET_DISPLAY_MODE;
+> +	buf[1] = HX8357_SET_DISPLAY_MODE_RGB_THROUGH |
+> +		HX8357_SET_DISPLAY_MODE_RGB_INTERFACE;
+> +	ret = hx8357_spi_write_array(lcdev, buf, 2);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret = hx8357_spi_write_byte(lcdev, HX8357_EXIT_SLEEP_MODE);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	msleep(120);
+> +
+> +	ret = hx8357_spi_write_byte(lcdev, HX8357_SET_DISPLAY_ON);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	usleep_range(5000, 7000);
+> +
+> +	ret = hx8357_spi_write_byte(lcdev, HX8357_WRITE_MEMORY_START);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return 0;
+> +}
+> +
+> +#define POWER_IS_ON(pwr)	((pwr) <= FB_BLANK_NORMAL)
+> +
+> +static int hx8357_set_power(struct lcd_device *lcdev, int power)
+> +{
+> +	struct hx8357_data *lcd = lcd_get_data(lcdev);
+> +	int ret = 0;
+> +
+> +	if (POWER_IS_ON(power) && !POWER_IS_ON(lcd->state))
+> +		ret = hx8357_exit_standby(lcdev);
+> +	else if (!POWER_IS_ON(power) && POWER_IS_ON(lcd->state))
+> +		ret = hx8357_enter_standby(lcdev);
+> +
+> +	if (ret == 0)
+> +		lcd->state = power;
+> +	else
+> +		dev_warn(&lcdev->dev, "failed to set power mode %d\n", power);
+> +
+> +	return ret;
+> +}
+> +
+> +static int hx8357_get_power(struct lcd_device *lcdev)
+> +{
+> +	struct hx8357_data *lcd = lcd_get_data(lcdev);
+> +
+> +	return lcd->state;
+> +}
+> +
+> +static struct lcd_ops hx8357_ops = {
+> +	.set_power	= hx8357_set_power,
+> +	.get_power	= hx8357_get_power,
+> +};
+> +
+> +static int __devinit hx8357_probe(struct spi_device *spi)
+
+Please remove '__devexit', because it is useless.
+Also, it makes build error.
+
+(http://comments.gmane.org/gmane.linux.kernel/1395773)
+
+> +{
+> +	struct lcd_device *lcdev;
+> +	struct hx8357_data *lcd;
+> +	int i, ret;
+> +
+> +	lcd = devm_kzalloc(&spi->dev, sizeof(*lcd), GFP_KERNEL);
+> +	if (!lcd) {
+> +		dev_err(&spi->dev, "Couldn't allocate lcd internal structure!\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = spi_setup(spi);
+> +	if (ret < 0) {
+> +		dev_err(&spi->dev, "SPI setup failed.\n");
+> +		return ret;
+> +	}
+> +
+> +	lcd->spi = spi;
+> +
+> +	lcd->reset = of_get_named_gpio(spi->dev.of_node, "gpios-reset", 0);
+> +	if (!gpio_is_valid(lcd->reset)) {
+> +		dev_err(&spi->dev, "Missing dt property: gpios-reset\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	ret = devm_gpio_request_one(&spi->dev, lcd->reset,
+> +				    GPIOF_OUT_INIT_HIGH,
+> +				    "hx8357-reset");
+> +	if (ret) {
+> +		dev_err(&spi->dev,
+> +			"failed to request gpio %d: %d\n",
+> +			lcd->reset, ret);
+> +		return -EINVAL;
+> +	}
+> +
+> +	for (i = 0; i < HX8357_NUM_IM_PINS; i++) {
+> +		lcd->im_pins[i] = of_get_named_gpio(spi->dev.of_node,
+> +						"im-gpios", i);
+> +		if (lcd->im_pins[i] == -EPROBE_DEFER) {
+> +			dev_info(&spi->dev, "GPIO requested is not here yet, deferring the probe\n");
+> +			return -EPROBE_DEFER;
+> +		}
+> +		if (!gpio_is_valid(lcd->im_pins[i])) {
+> +			dev_err(&spi->dev, "Missing dt property: im-gpios\n");
+> +			return -EINVAL;
+> +		}
+> +
+> +		ret = devm_gpio_request_one(&spi->dev, lcd->im_pins[i],
+> +					GPIOF_DIR_OUT, "im_pins");
+
+Please replace GPIOF_DIR_OUT with GPIOF_OUT_INIT_LOW.
+If you want to set Low value, please use GPIOF_OUT_INIT_LOW.
+
+
+> +		if (ret) {
+> +			dev_err(&spi->dev, "failed to request gpio %d: %d\n",
+> +				lcd->im_pins[i], ret);
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	lcdev = lcd_device_register("mxsfb", &spi->dev, lcd, &hx8357_ops);
+> +	if (IS_ERR(lcdev)) {
+> +		ret = PTR_ERR(lcdev);
+> +		return ret;
+> +	}
+> +	spi_set_drvdata(spi, lcdev);
+> +
+> +	ret = hx8357_lcd_init(lcdev);
+> +	if (ret) {
+> +		dev_err(&spi->dev, "Couldn't initialize panel\n");
+> +		goto init_error;
+> +	}
+> +
+> +	dev_info(&spi->dev, "Panel probed\n");
+> +
+> +	return 0;
+> +
+> +init_error:
+> +	lcd_device_unregister(lcdev);
+> +	return ret;
+> +}
+> +
+> +static int __devexit hx8357_remove(struct spi_device *spi)
+
+Please remove '__devexit'.
+
+> +{
+> +	struct lcd_device *lcdev = spi_get_drvdata(spi);
+> +
+> +	lcd_device_unregister(lcdev);
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id hx8357_dt_ids[] = {
+> +	{ .compatible = "himax,hx8357" },
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, hx8357_dt_ids);
+> +
+> +static struct spi_driver hx8357_driver = {
+> +	.probe  = hx8357_probe,
+> +	.remove = __devexit_p(hx8357_remove),
+
+Please remove '__devexit_p'.
+
+> +	.driver = {
+> +		.name = "hx8357",
+> +		.of_match_table = of_match_ptr(hx8357_dt_ids),
+> +	},
+> +};
+> +
+> +module_spi_driver(hx8357_driver);
+> +
+> +MODULE_AUTHOR("Maxime Ripard <maxime.ripard@free-electrons.com>");
+> +MODULE_DESCRIPTION("Himax HX-8357 LCD Driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 1.7.10.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-fbdev" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
