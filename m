@@ -1,39 +1,79 @@
-From: Afzal Mohammed <afzal@ti.com>
-Subject: [PATCH v4 08/12] video: da8xx-fb: invoke platform callback safely
-Date: Wed, 23 Jan 2013 17:18:34 +0530
-Message-ID: <ed23f584e1e0f44145c0db1a537d79b013713ae5.1358937685.git.afzal@ti.com>
-References: <cover.1358937685.git.afzal@ti.com>
+From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] usb: exynos: Fix compatible strings used for device
+Date: Wed, 23 Jan 2013 17:50:04 +0530
+Message-ID: <CAFp+6iH2_18s=HwsLhekyUZW=yNCjZzskiA5s-ofrCbzDBGL4Q@mail.gmail.com>
+References: <CAFp+6iHaYpinaq8K7rf1GxOJoap6Rd8kGcJn4UmHU28BjTCAsA@mail.gmail.com>
+	<CAFp+6iFVSi_pg39YyeEbAgwDsU4kun7u0g8z3u3dVMP4oLpavQ@mail.gmail.com>
+	<CAD=FV=WtsfDr=W7TB5BYW087FqXyxXCb0xVfGha6_F65cPCE9A@mail.gmail.com>
+	<016901cde163$6be034c0$43a09e40$@samsung.com>
+	<CAFp+6iGq32UV3mZ=QYVizJGQEark0Qztu7m4jy3DvG431ajV1w@mail.gmail.com>
+	<50DB811A.8010408@gmail.com>
+	<054601cdf862$534a8ad0$f9dfa070$@samsung.com>
+	<CAFp+6iGrp8b+T3n+xNha7jMFMgDsFR8E9zCijoUANZgmN4QL_A@mail.gmail.com>
+	<20130122084817.GC16143@arwen.pp.htv.fi>
+	<063e01cdf8ec$85e637c0$91b2a740$@samsung.com>
+	<20130123095021.GB22054@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1358937685.git.afzal@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-fbdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130123095021.GB22054-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Ensure that platform data is present before checking whether platform
-callback is present (the one used to control backlight). So far this
-was not an issue as driver was purely non-DT triggered, but now DT
-support has been added.
+Hi all,
 
-Signed-off-by: Afzal Mohammed <afzal@ti.com>
----
- drivers/video/da8xx-fb.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/video/da8xx-fb.c b/drivers/video/da8xx-fb.c
-index 08ee8eb..0beed20 100644
---- a/drivers/video/da8xx-fb.c
-+++ b/drivers/video/da8xx-fb.c
-@@ -1347,7 +1347,7 @@ static int fb_probe(struct platform_device *device)
- 	par->dev = &device->dev;
- 	par->lcdc_clk = fb_clk;
- 	par->lcd_fck_rate = clk_get_rate(fb_clk);
--	if (fb_pdata->panel_power_ctrl) {
-+	if (fb_pdata && fb_pdata->panel_power_ctrl) {
- 		par->panel_power_ctrl = fb_pdata->panel_power_ctrl;
- 		par->panel_power_ctrl(1);
- 	}
+On Wed, Jan 23, 2013 at 3:20 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> Hi,
+>
+> On Tue, Jan 22, 2013 at 02:04:56PM -0800, Kukjin Kim wrote:
+>> Felipe Balbi wrote:
+>> > Hi,
+>> >
+>> Hi Felipe,
+>>
+>> [...]
+>>
+>> > > Right, DWC has version number, but that being the kind of USB controller
+>> > > (USB 2.0 and USB 3.0)
+>> > >
+>> > > DWC2: USB High Speed controller (as also indicated in the patch from
+>> > > Paul: [RFC PATCH 0/6] DWC2 DesignWare HS OTG driver)
+>> > > DWC3: USB Super Speed controller
+>> > >
+>> > > Is it fine if we use something like shown below, as suggested by you
+>> earlier ?
+>> > >
+>> > > -     { .compatible = "samsung,exynos-dwc3" },
+>> > > +     { .compatible = "samsung,synopsis-dwc3" }
+>> >
+>> > You're both missing a point here. The synopsys IP driver is called
+>> > dwc3.ko and that's compatible with synopsys,dwc3. Your glue layer driver
+>> > (dwc3-exynos.ko) is compatible with your platform, so
+>> > samsung,exynos-dwc3 sounds correct to me.
+>> >
+>> Hmm...yeah, you're right and agreed.
+>>
+>> However, we need to use more clear name there like "samsung,exynos-dwusb3"
+>> in compatible, because you know there are lots of other IPs in Synopsis
+>> Design Ware brand. So we have to include usb in compatible for that.
+>
+> fair enough.
+>
+
+Thanks for your suggestions. This definitely make things clear.
+I shall then keep "samsung,exynos-dwusb3" as the compatible string or,
+should i be including '5250' string as well, something like
+"samsung,exynos5250-dwusb3"
+as pointed out by Grant earlier ?  :-O
+
+
 -- 
-1.7.12
+Thanks & Regards
+Vivek
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
