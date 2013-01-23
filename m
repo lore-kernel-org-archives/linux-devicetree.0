@@ -1,31 +1,23 @@
-From: Vakul Garg <vakul-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH] crypto: caam - Added property fsl,
- sec-era in SEC4.0 device tree binding.
-Date: Wed, 23 Jan 2013 12:15:11 +0530
-Message-ID: <1358923511-1511-1-git-send-email-vakul@freescale.com>
+From: Vakul Garg <vakul@freescale.com>
+Subject: [PATCHv1] crypto: caam - Added property fsl,sec-era in SEC4.0 device tree binding.
+Date: Wed, 23 Jan 2013 12:51:08 +0530
+Message-ID: <1358925668-10330-1-git-send-email-vakul@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 This new property defines the era of the particular SEC version.
 The compatible property in device tree "crypto" node has been updated
 not to contain SEC era numbers.
 
-Signed-off-by: Vakul Garg <vakul-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Vakul Garg <vakul@freescale.com>
 ---
+Changelog:
+	1. Marked fsl,sec-era as 'optional'.
+
  .../devicetree/bindings/crypto/fsl-sec4.txt        |   12 +++++++++---
  1 files changed, 9 insertions(+), 3 deletions(-)
 
@@ -42,7 +34,7 @@ index fc9ce6f..dc40055 100644
 +      Definition: Must include "fsl,sec-v4.0"
 +
 +   - fsl,sec-era
-+      Usage: required
++      Usage: optional
 +      Value type: <u32>
 +      Definition: A standard property. Define the 'ERA' of the SEC
 +          device.
