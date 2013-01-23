@@ -1,45 +1,87 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 3/3] arm: mvebu: Update defconfig to select USB support
-Date: Wed, 23 Jan 2013 12:26:32 -0300
-Message-ID: <1358954792-16160-3-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1358954792-16160-1-git-send-email-ezequiel.garcia@free-electrons.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1358954792-16160-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V2 2/2] ASoC: Davinci: machine: Add device
+ tree binding
+Date: Wed, 23 Jan 2013 23:48:12 +0800
+Message-ID: <20130123154804.GB4565@opensource.wolfsonmicro.com>
+References: <1357293277-25543-1-git-send-email-gururaja.hebbar@ti.com>
+ <1357293277-25543-3-git-send-email-gururaja.hebbar@ti.com>
+ <20130104122612.GM4627@opensource.wolfsonmicro.com>
+ <1BAFE6F6C881BF42822005164F1491C33EB50DCF@DBDE01.ent.ti.com>
+Mime-Version: 1.0
+Content-Type: multipart/mixed; boundary="===============6654928875579751763=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1BAFE6F6C881BF42822005164F1491C33EB50DCF@DBDE01.ent.ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "Girdwood, Liam" <lrg@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Tested-by: Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>
-Tested-by: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/configs/mvebu_defconfig |    5 ++++-
- 1 files changed, 4 insertions(+), 1 deletions(-)
 
-diff --git a/arch/arm/configs/mvebu_defconfig b/arch/arm/configs/mvebu_defconfig
-index c3c6326..f8d0183 100644
---- a/arch/arm/configs/mvebu_defconfig
-+++ b/arch/arm/configs/mvebu_defconfig
-@@ -42,7 +42,10 @@ CONFIG_SERIAL_8250_CONSOLE=y
- CONFIG_SERIAL_8250_DW=y
- CONFIG_GPIOLIB=y
- CONFIG_GPIO_SYSFS=y
--# CONFIG_USB_SUPPORT is not set
-+CONFIG_USB_SUPPORT=y
-+CONFIG_USB=y
-+CONFIG_USB_EHCI_HCD=y
-+CONFIG_USB_EHCI_ROOT_HUB_TT=y
- CONFIG_MMC=y
- CONFIG_MMC_MVSDIO=y
- CONFIG_RTC_CLASS=y
--- 
-1.7.8.6
+--===============6654928875579751763==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cmJC7u66zC7hs+87"
+Content-Disposition: inline
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--cmJC7u66zC7hs+87
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jan 23, 2013 at 12:39:35PM +0000, Hebbar, Gururaja wrote:
+> On Fri, Jan 04, 2013 at 17:56:12, Mark Brown wrote:
+
+> > The CODEC driver biases should be changed over to be supplies, this
+> > makes the above much more natural - the routing there is a hack for
+> > older versions of ASoc.  Otherwise this looks fine.
+
+> ON TLV320AIC3x Codec, MIC Bias power on/off share the same register bits
+> with Bias voltage output.
+
+So you need to use an event to write the actual enable bit.
+
+> SGTL5000 --> Single register for MIC BIAS enable & output impedance of MIC
+> Bias. The driver uses SND_SOC_DAPM_POST_PMU & SND_SOC_DAPM_PRE_PMD macro to
+> handle the MIC Bias enable & disable event.
+
+This is the way these things should be handled.
+
+--cmJC7u66zC7hs+87
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRAAXBAAoJELSic+t+oim9rrgQAISesYdjuKRSOr7Cl6Wov66E
+W8yoSKFgyszYduCsI6vvqbsTYdIWo959GrZ8iL07K5IDKQcIVOW3mAvwiHwnSRA6
+WUNNeYV8xVuF8ydqgOA5Ak7BHfhnbJg7PQ05QE8bCHD+Y5j5ROKFdcE8pLIpyJXk
+dzzB1f8RQ7U03kOvQbfRvFhCJguK+NJZRG31LPj314wbrXNqk5j66fwNWZIR2ALO
+mJWVlG5cdZ5T5wPhbW3QLcFY9sCOm8yIWvnt4qbm49VFWrS+UPDA07Hi4CJtURUq
+VBPJuoXPcalzwgG2rL9efn2qY21ZDx34GplICMFEncVMuuQbwWmrwmSPdYAuM9ns
+KLBiO+mFmJxvFv5SYWUkj0n7X7HFsWsKD8+4Ohes6Z1CeLYk+oLjojH6PNQ6bsg0
+JeMNv10hCTszfzCr79nEY7v0sbkeZhVFY3A2RLXWzEUb5kFE5wV5oXT/9O0yFVGi
+Plbx1P7WTyzKqEp/Z++vgt3gEsjVKKgrpkNgkK5UZzi0Fu4VqaoWrNTIVu554dqv
+n40c1juxtZm8HUa1nC21MNmHL7TPRv6elXPjJdIME7puh7QaT0l4KIHw58oRemlQ
+alyCXrFcR0bO2W63wIcYOKL9XhgBBjaFQTiwGD0EIRg2/3yXPstleMeF2D0nA6W3
+XCvL/4nH/KQKLC0VWidG
+=C8iW
+-----END PGP SIGNATURE-----
+
+--cmJC7u66zC7hs+87--
+
+--===============6654928875579751763==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6654928875579751763==--
