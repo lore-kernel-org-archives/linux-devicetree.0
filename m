@@ -1,46 +1,108 @@
-From: kishon <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v1 0/6] USB: Add support for multiple PHYs of same type
-Date: Wed, 23 Jan 2013 19:56:37 +0530
-Message-ID: <50FFF31D.2070908@ti.com>
-References: <1358848694-20145-1-git-send-email-kishon@ti.com>
- <2D906ABA-71F2-4843-9DBE-F82527A1240A@dominion.thruhere.net>
- <50FEB3FD.3050001@ti.com> <50FEBB61.9000707@ti.com>
- <B9531499-0746-44DA-BDBB-999D4CA31E63@dominion.thruhere.net>
- <C8443D0743D26F4388EA172BF4E2A7A93EA922F5@DBDE01.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EA922F5-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi,
- Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org" <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org List" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 1/3] arm: mvebu: Add support for USB host controllers in Armada 370/XP
+Date: Wed, 23 Jan 2013 12:26:30 -0300
+Message-ID: <1358954792-16160-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Afzal,
+The Armada 370 and Armada XP SoC has an Orion EHCI USB controller.
+This patch adds support for this controller in Armada 370
+and Armada XP SoC common device tree files.
 
-On Wednesday 23 January 2013 07:28 PM, Mohammed, Afzal wrote:
-> Hi Koen,
->
-> On Tue, Jan 22, 2013 at 22:32:56, Koen Kooi wrote:
->
->> Actually it uses nop-phy as a phy, which is missing from arch/arm/boot/dts/am33xx.dtsi, so mainline is already broken. But adding the nop-phy to the DT is easy enough to patch in locally.
->
-> USB first instance of am335x works in mainline as of now.
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Tested-by: Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>
+Tested-by: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+Changes from v1:
+ * Remove uneeded USB_ARCH_HAS_EHCI selection as noted by Florian.
 
-Can you check if this series indeed breaks am335x?
+ arch/arm/boot/dts/armada-370-xp.dtsi |   15 +++++++++++++++
+ arch/arm/boot/dts/armada-370.dtsi    |    9 +++++++++
+ arch/arm/boot/dts/armada-xp.dtsi     |   17 +++++++++++++++++
+ 3 files changed, 41 insertions(+), 0 deletions(-)
 
-Thanks for your help.
+diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+index 28276fe..fa025c4 100644
+--- a/arch/arm/boot/dts/armada-370-xp.dtsi
++++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+@@ -145,6 +145,21 @@
+ 			clocks = <&gateclk 17>;
+ 			status = "disabled";
+ 		};
++
++		usb@d0050000 {
++			compatible = "marvell,orion-ehci";
++			reg = <0xd0050000 0x500>;
++			interrupts = <45>;
++			status = "disabled";
++		};
++
++		usb@d0051000 {
++			compatible = "marvell,orion-ehci";
++			reg = <0xd0051000 0x500>;
++			interrupts = <46>;
++			status = "disabled";
++		};
++
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/armada-370.dtsi b/arch/arm/boot/dts/armada-370.dtsi
+index 88f9bab..8188d13 100644
+--- a/arch/arm/boot/dts/armada-370.dtsi
++++ b/arch/arm/boot/dts/armada-370.dtsi
+@@ -144,5 +144,14 @@
+ 				dmacap,memset;
+ 			};
+ 		};
++
++		usb@d0050000 {
++			clocks = <&coreclk 0>;
++		};
++
++		usb@d0051000 {
++			clocks = <&coreclk 0>;
++		};
++
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/armada-xp.dtsi b/arch/arm/boot/dts/armada-xp.dtsi
+index 2e37ef1..c22a0c8 100644
+--- a/arch/arm/boot/dts/armada-xp.dtsi
++++ b/arch/arm/boot/dts/armada-xp.dtsi
+@@ -134,5 +134,22 @@
+ 				dmacap,memset;
+ 			};
+ 		};
++
++		usb@d0050000 {
++			clocks = <&gateclk 18>;
++		};
++
++		usb@d0051000 {
++			clocks = <&gateclk 19>;
++		};
++
++		usb@d0052000 {
++			compatible = "marvell,orion-ehci";
++			reg = <0xd0052000 0x500>;
++			interrupts = <47>;
++			clocks = <&gateclk 20>;
++			status = "disabled";
++		};
++
+ 	};
+ };
+-- 
+1.7.8.6
 
-Regards
-Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
