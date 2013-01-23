@@ -1,104 +1,58 @@
-From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
-Subject: RE: [alsa-devel] [PATCH V2 2/2] ASoC: Davinci: machine: Add device
-	tree binding
-Date: Wed, 23 Jan 2013 12:39:35 +0000
-Message-ID: <1BAFE6F6C881BF42822005164F1491C33EB50DCF@DBDE01.ent.ti.com>
-References: <1357293277-25543-1-git-send-email-gururaja.hebbar@ti.com>
- <1357293277-25543-3-git-send-email-gururaja.hebbar@ti.com>
- <20130104122612.GM4627@opensource.wolfsonmicro.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 0/2] usb: exynos: Fix compatible strings used for device
+Date: Wed, 23 Jan 2013 13:40:11 +0100
+Message-ID: <50FFDA2B.4010506@samsung.com>
+References: <CAFp+6iHaYpinaq8K7rf1GxOJoap6Rd8kGcJn4UmHU28BjTCAsA@mail.gmail.com>
+ <CAFp+6iFVSi_pg39YyeEbAgwDsU4kun7u0g8z3u3dVMP4oLpavQ@mail.gmail.com>
+ <CAD=FV=WtsfDr=W7TB5BYW087FqXyxXCb0xVfGha6_F65cPCE9A@mail.gmail.com>
+ <016901cde163$6be034c0$43a09e40$@samsung.com>
+ <CAFp+6iGq32UV3mZ=QYVizJGQEark0Qztu7m4jy3DvG431ajV1w@mail.gmail.com>
+ <50DB811A.8010408@gmail.com> <054601cdf862$534a8ad0$f9dfa070$@samsung.com>
+ <CAFp+6iGrp8b+T3n+xNha7jMFMgDsFR8E9zCijoUANZgmN4QL_A@mail.gmail.com>
+ <20130122084817.GC16143@arwen.pp.htv.fi>
+ <063e01cdf8ec$85e637c0$91b2a740$@samsung.com>
+ <20130123095021.GB22054@arwen.pp.htv.fi>
+ <CAFp+6iH2_18s=HwsLhekyUZW=yNCjZzskiA5s-ofrCbzDBGL4Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130104122612.GM4627@opensource.wolfsonmicro.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "rob@landley.net" <rob@landley.net>, "Girdwood, Liam" <lrg@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAFp+6iH2_18s=HwsLhekyUZW=yNCjZzskiA5s-ofrCbzDBGL4Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: balbi@ti.com, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Thomas Abraham <thomas.abraham@linaro.org>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, Alan Stern <stern@rowland.harvard.edu>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, jg1.han@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 04, 2013 at 17:56:12, Mark Brown wrote:
-> On Fri, Jan 04, 2013 at 03:24:37PM +0530, Hebbar Gururaja wrote:
->=20
-> > +		"MIC3L",                "Mic Bias 2V",
-> > +		"MIC3R",                "Mic Bias 2V",
-> > +		"Mic Bias 2V",          "Mic Jack",
->=20
-> The CODEC driver biases should be changed over to be supplies, this
-> makes the above much more natural - the routing there is a hack for
-> older versions of ASoc.  Otherwise this looks fine.
+Hi,
 
+On 01/23/2013 01:20 PM, Vivek Gautam wrote:
+>>>>> -     { .compatible = "samsung,exynos-dwc3" },
+>>>>> +     { .compatible = "samsung,synopsis-dwc3" }
+>>>>
+>>>> You're both missing a point here. The synopsys IP driver is called
+>>>> dwc3.ko and that's compatible with synopsys,dwc3. Your glue layer driver
+>>>> (dwc3-exynos.ko) is compatible with your platform, so
+>>>> samsung,exynos-dwc3 sounds correct to me.
+>>>>
+>>> Hmm...yeah, you're right and agreed.
+>>>
+>>> However, we need to use more clear name there like "samsung,exynos-dwusb3"
+>>> in compatible, because you know there are lots of other IPs in Synopsis
+>>> Design Ware brand. So we have to include usb in compatible for that.
+>>
+>> fair enough.
+>>
+> 
+> Thanks for your suggestions. This definitely make things clear.
+> I shall then keep "samsung,exynos-dwusb3" as the compatible string or,
+> should i be including '5250' string as well, something like
+> "samsung,exynos5250-dwusb3"
+> as pointed out by Grant earlier ?  :-O
 
-ON TLV320AIC3x Codec, MIC Bias power on/off share the same register bit=
-s
-with Bias voltage output.
+IMHO this needs to be "samsung,exynos5250-dwusb3", rather than 
+"samsung,exynos-dwusb3". :)
 
-Page 0 / Register 25: MICBIAS Control Register
+--
 
-BIT	READ/WRITE	RESET VALUE	DESCRIPTION
-D7=96D6	R/W 			00 	MICBIAS Level Control
-					00: MICBIAS output is powered down
-					01: MICBIAS output is powered to 2.0V
-					10: MICBIAS output is powered to 2.5V
-					11: MICBIAS output is connected to AVDD
-
-
-Because of this, I find it difficult to use SND_SOC_DAPM_SUPPLY macro.
-
-I found a similar implementation (MIC BIAS enable + Bias voltage select=
-ion)
-in 2 other platform (WM8900 & SGTL5000).
-
-WM8900 --> Different registers for MIC BIAS enable & Bias voltage selec=
-tion.
-However both are implemented using different macros
-
-static const char *mic_bias_level_txt[] =3D { "0.9*AVDD", "0.65*AVDD" }=
-;
-
-static const struct soc_enum mic_bias_level =3D
-SOC_ENUM_SINGLE(WM8900_REG_INCTL, 8, 2, mic_bias_level_txt);
-
-=2E..
-static const struct snd_kcontrol_new wm8900_snd_controls[] =3D {
-SOC_ENUM("Mic Bias Level", mic_bias_level),
-=2E..
-
-SND_SOC_DAPM_SUPPLY("Mic Bias", WM8900_REG_POWER1, 4, 0, NULL, 0),
-
-
-
-SGTL5000 --> Single register for MIC BIAS enable & output impedance of =
-MIC
-Bias. The driver uses SND_SOC_DAPM_POST_PMU & SND_SOC_DAPM_PRE_PMD macr=
-o to
-handle the MIC Bias enable & disable event.
-
-
-static int mic_bias_event(struct snd_soc_dapm_widget *w,
-        struct snd_kcontrol *kcontrol, int event)
-{
-        switch (event) {
-        case SND_SOC_DAPM_POST_PMU:
-	...
-
-static const struct snd_soc_dapm_widget sgtl5000_dapm_widgets[] =3D {
-	...
-        SND_SOC_DAPM_SUPPLY("Mic Bias", SGTL5000_CHIP_MIC_CTRL, 8, 0,
-                            mic_bias_event,
-                            SND_SOC_DAPM_POST_PMU | SND_SOC_DAPM_PRE_PM=
-D),
-
-
-Since TLV320AIC3x Codec uses single register bit-set to indicate BIA st=
-ate
-& Voltage level, I am not able to able to change existing code to
-SND_SOC_DAPM_SUPPLY macro.
-
-
-Could you please show some pointers on how to handle/implement
-SND_SOC_DAPM_SUPPLY in above scenario?
-
-
-Thanks & Regards,=20
-Gururaja
+Thanks,
+Sylwester
