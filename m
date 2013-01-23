@@ -1,127 +1,48 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [RFC PATCH v3 02/16] ARM: davinci: move private EDMA API to
- arm/common
-Date: Wed, 23 Jan 2013 16:00:10 -0500
-Message-ID: <20130123210010.GB5256@beef>
-References: <1350566815-409-1-git-send-email-mporter@ti.com>
- <1350566815-409-3-git-send-email-mporter@ti.com>
- <508CEA05.8060200@ti.com>
- <20130110235157.GU14660@beef>
- <d631bf39a8b8474bae448d089497fe0e@DLEE74.ent.ti.com>
+From: Eric =?UTF-8?B?QsOpbmFyZA==?= <eric@eukrea.com>
+Subject: Re: [PATCH v2 2/3] arm: mvebu: Enable USB controllers on Armada
+ 370/XP boards
+Date: Wed, 23 Jan 2013 22:14:58 +0100
+Message-ID: <20130123221458.6237568b@e6520eb>
+References: <1358954792-16160-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1358954792-16160-2-git-send-email-ezequiel.garcia@free-electrons.com>
+ <CALF0-+XJEXJ2B3NLu5DvyxaDuuMNP=zk+z8QUd4GTQULW3BpyA@mail.gmail.com>
+ <20130123190352.2d001218@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d631bf39a8b8474bae448d089497fe0e@DLEE74.ent.ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: "Nori, Sekhar" <nsekhar@ti.com>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "Cousson, Benoit" <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20130123190352.2d001218@skate>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ezequiel Garcia <elezegarcia@gmail.com>, Jason Cooper <jason@lakedaemon.net>, Nobuhiro Iwamatsu <iwamatsu@nigauri.org>, Michael Opdenacker <michael.opdenacker@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, Yehuda Yitschak <yehuday@marvell.com>, Arnd Bergmann <arnd@arndb.de>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Florian Fainelli <florian@openwrt.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2013 at 03:40:06PM +0000, Sekhar Nori wrote:
-> Matt,
-> 
-> Sorry about the late reply. I noticed this mail only after I started to
-> look at v5 of your series :(
-
-Any time is fine! :)
- 
-> On 1/11/2013 5:21 AM, Matt Porter wrote:
-> > On Sun, Oct 28, 2012 at 01:47:09PM +0530, Sekhar Nori wrote:
-> >> On 10/18/2012 6:56 PM, Matt Porter wrote:
-> >>> Move mach-davinci/dma.c to common/edma.c so it can be used
-> >>> by OMAP (specifically AM33xx) as well. This just moves the
-> >>> private EDMA API but does not support OMAP.
-> >>>
-> >>> Signed-off-by: Matt Porter <mporter@ti.com>
-> >>> ---
-> >>
-> >>> diff --git a/arch/arm/mach-davinci/devices.c b/arch/arm/mach-davinci/devices.c
-> >>> index 4c48a36..f45d591 100644
-> >>> --- a/arch/arm/mach-davinci/devices.c
-> >>> +++ b/arch/arm/mach-davinci/devices.c
-> >>> @@ -19,9 +19,10 @@
-> >>>  #include <mach/irqs.h>
-> >>>  #include <mach/cputype.h>
-> >>>  #include <mach/mux.h>
-> >>> -#include <mach/edma.h>
-> >>>  #include <linux/platform_data/mmc-davinci.h>
-> >>>  #include <mach/time.h>
-> >>> +#include <linux/platform_data/edma.h>
-> >>
-> >> Can you please introduce a patch to clean this mixture of linux/ and
-> >> mach/ includes?
-> > 
-> > Yeah, are you ok with a follow on series to clean all these files? I
-> > don't want to make this series longer with something not dma related
-> > that's purely cleanup from the great header reorg of 2012.
-> 
-> Okay. I agree doing this sort of change now will cause merge issues.
-
-Ok.
-
-> 
-> > 
-> >>> +
-> >>>  
-> >>>  #include "davinci.h"
-> >>>  #include "clock.h"
-> >>> @@ -141,10 +142,10 @@ static struct resource mmcsd0_resources[] = {
-> >>>  	},
-> >>>  	/* DMA channels: RX, then TX */
-> >>>  	{
-> >>> -		.start = EDMA_CTLR_CHAN(0, DAVINCI_DMA_MMCRXEVT),
-> >>> +		.start = EDMA_CTLR_CHAN(0, 26),
-> >>
-> >> Instead of just replacing the event #defines with plain numbers, can you
-> >> introduce a mach-davinci local edma.h which can then be included in the
-> >> davinci platform files which refer to edma channel numbers?
-> > 
-> > Ok, so when I removed the old edma.h it was full of unused defines and
-> > we are left with just this one. If I introduced something like that it
-> > would be used in just one place here. and only for these two values.
-> > How about we just add a comment?
-> 
-> I prefer adding a local #define in this file. This will keep it
-> consistent with what is done in arch/arm/mach-davinci/dm365.c for
-> example. Same for the change in sound/soc/davinci/davinci-sffsdr.c
-
-Ok, will do.
-
-> > 
-> >>
-> >>> diff --git a/arch/arm/plat-omap/Kconfig b/arch/arm/plat-omap/Kconfig
-> >>> index 7cd56ed..153fab8 100644
-> >>> --- a/arch/arm/plat-omap/Kconfig
-> >>> +++ b/arch/arm/plat-omap/Kconfig
-> >>> @@ -28,6 +28,7 @@ config ARCH_OMAP2PLUS
-> >>>  	select OMAP_DM_TIMER
-> >>>  	select PROC_DEVICETREE if PROC_FS
-> >>>  	select SPARSE_IRQ
-> >>> +	select TI_PRIV_EDMA
-> >>
-> >> This hunk does not seem to belong to subject of this patch.
-> > 
-> > Let me reword the subject/description. The idea of this logical
-> > chunk was to put everything in place to make it build on OMAP,
-> > with the expectation that the build fails without the next patch
-> > in the series.
-> 
-> But this will break bisect. With just this patch applied, omap build
-> breaks. Looks like it will be more logical to merge this hunk with 3/14
-> since that's when you really start using the private DMA support on OMAP
-> platforms.
-
-Ahh, yes,. thanks for pointing that out. I will address it and add your
-ack. Thanks.
-
-> This issue is a must fix IMO.
- 
-Ok.
-
-> I am ok with the patch otherwise. With these changes done, you can add:
-> 
-> Acked-by: Sekhar Nori <nsekhar@ti.com>
-> 
-> Thanks,
-> Sekhar
+SGkgVGhvbWFzLAoKTGUgV2VkLCAyMyBKYW4gMjAxMyAxOTowMzo1MiArMDEwMCwKVGhvbWFzIFBl
+dGF6em9uaSA8dGhvbWFzLnBldGF6em9uaUBmcmVlLWVsZWN0cm9ucy5jb20+IGEgw6ljcml0IDoK
+PiBPbiBXZWQsIDIzIEphbiAyMDEzIDE0OjA0OjQyIC0wMzAwLCBFemVxdWllbCBHYXJjaWEgd3Jv
+dGU6Cj4gCj4gPiBmcm9tIHRoZSBPcGVuQmxvY2tzIEFYMy00IGJvYXJkIGR0cyBmaWxlLCBzaW5j
+ZSB5b3UgbWVudGlvbmVkIHRoaXMKPiA+IGJvYXJkIHVzZXMgdGhhdCBVU0IKPiA+IHBvcnQgZm9y
+IGEgUENJZSBjb25uZWN0b3IgLS0gaWYgSSB1bmRlcnN0b29kIGNvcnJlY3RseS4KPiAKPiBOby4g
+VGhlIE9wZW5CbG9ja3MgaGFzIGEgZGlmZmVyZW50IFVTQiBjb250cm9sbGVyIHRoYXQgc2l0cyBv
+biB0aGUgUENJZQo+IGJ1cy4gVGhlcmUgaXMgbm90aGluZyBsaWtlIGEgUENJZSBwb3J0IHRoYXQg
+dXNlcyBhIFVTQiBwb3J0LCB0aGF0Cj4gZG9lc24ndCBtYWtlIHNlbnNlLgo+IApJIGRvbid0IGhh
+dmUgYSBBWDMtNCBidXQgaXQgc2VlbXMgdG8gaGF2ZSBhIE1pbmlQQ0llIHNvY2tldCBhbmQKbm90
+IGEgUENJZSBvbmUuCk1pbmlQQ0llIHNwZWNpZmljYXRpb24gaW5jbHVkZXMgYm90aCBQQ0llIF9h
+bmRfIFVTQjIuMCBzaWduYWxzIChvbiBwaW5zCjM2JjM4KSAoYW5kIGFsc28gU01CdXMsIFNJTSBh
+bmQgTEVEcyBkcml2ZXJzIGNoZWNrIHRoZSBmb2xsb3dpbmcgdGFibGUKZm9yIGRldGFpbHMgaHR0
+cDovL3Bpbm91dHNndWlkZS5jb20vU2xvdHMvbWluaV9wY2llX3Bpbm91dC5zaHRtbCApIHNvCnRo
+ZSBwb3NzaWJpbGl0eSB0byBoYXZlIGEgVVNCIHBvcnQgY29ubmVjdGVkIHRvIHRoZSBNaW5pUENJ
+ZSBvbiB0aGUKQVgzLTQgbWFrZXMgc2Vuc2UuCgpGb3IgZXhhbXBsZSBtb3N0IDNHIE1pbmlQQ0ll
+IGJvYXJkcyBhcmUgdXNpbmcgdGhlIFVTQjIuMCBzaWduYWxzIGFuZApub3QgdGhlIFBDSWUgb25l
+cy4KCkVyaWMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xp
+bnV4LWFybS1rZXJuZWwK
