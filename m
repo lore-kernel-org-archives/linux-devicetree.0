@@ -1,834 +1,537 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH v2] hwmon: Driver for Texas Instruments INA209
-Date: Tue, 22 Jan 2013 20:28:41 -0800
-Message-ID: <1358915321-30200-1-git-send-email-linux@roeck-us.net>
+From: David Gibson <david@gibson.dropbear.id.au>
+Subject: Re: [PATCH 5/6] OF: Introduce Device Tree resolve support.
+Date: Wed, 23 Jan 2013 15:40:41 +1100
+Message-ID: <20130123044041.GS23500@truffula.fritz.box>
+References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com>
+ <1357327870-13615-6-git-send-email-panto@antoniou-consulting.com>
+ <20130121044836.GB24829@truffula.fritz.box>
+ <EEEDB0B2-7410-456B-BED7-89FD5E407553@antoniou-consulting.com>
+ <20130122040524.GG23500@truffula.fritz.box>
+ <AB11FABF-6A45-493D-869D-7549FD758DD2@antoniou-consulting.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BuGwuXnZwGGQ9GEc"
 Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <AB11FABF-6A45-493D-869D-7549FD758DD2@antoniou-consulting.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: lm-sensors@lm-sensors.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>, Paul Hays <haysp@magma.net>, "Ira W. Snyder" <iws@ovro.caltech.edu>
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add support for the TI / Burr-Brown INA209 voltage / current / power
-monitor.
 
-Cc: Paul Hays <haysp@magma.net>
-Cc: Ira W. Snyder <iws@ovro.caltech.edu>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
----
-v2:
-- Updated Paul Hays' e-mail address and added as driver author
-- ina290_init_client -> ina209_init_client
-- Added devicetree support
-- Simplified chip initialization code
+--BuGwuXnZwGGQ9GEc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
- Documentation/devicetree/bindings/i2c/ina209.txt |   18 +
- Documentation/hwmon/ina209                       |   93 ++++
- drivers/hwmon/Kconfig                            |   10 +
- drivers/hwmon/Makefile                           |    1 +
- drivers/hwmon/ina209.c                           |  636 ++++++++++++++++++++++
- 5 files changed, 758 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/ina209.txt
- create mode 100644 Documentation/hwmon/ina209
- create mode 100644 drivers/hwmon/ina209.c
+On Tue, Jan 22, 2013 at 01:06:09PM +0200, Pantelis Antoniou wrote:
+> Hi
+>=20
+> On Jan 22, 2013, at 6:05 AM, David Gibson wrote:
+>=20
+> > On Mon, Jan 21, 2013 at 12:59:15PM +0200, Pantelis Antoniou wrote:
+> >> Hi David
+> >>=20
+> >> On Jan 21, 2013, at 6:48 AM, David Gibson wrote:
+> >>=20
+> >>> On Fri, Jan 04, 2013 at 09:31:09PM +0200, Pantelis Antoniou wrote:
+> >>>> Introduce support for dynamic device tree resolution.
+> >>>> Using it, it is possible to prepare a device tree that's
+> >>>> been loaded on runtime to be modified and inserted at the kernel
+> >>>> live tree.
+> >>>>=20
+> >>>> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
+> >>>> ---
+> >>>> .../devicetree/dynamic-resolution-notes.txt        |  25 ++
+> >>>> drivers/of/Kconfig                                 |   9 +
+> >>>> drivers/of/Makefile                                |   1 +
+> >>>> drivers/of/resolver.c                              | 394 +++++++++++=
+++++++++++
+> >>>> include/linux/of.h                                 |  17 +
+> >>>> 5 files changed, 446 insertions(+)
+> >>>> create mode 100644 Documentation/devicetree/dynamic-resolution-notes=
+=2Etxt
+> >>>> create mode 100644 drivers/of/resolver.c
+> >>>>=20
+> >>>> diff --git a/Documentation/devicetree/dynamic-resolution-notes.txt b=
+/Documentation/devicetree/dynamic-resolution-notes.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..0b396c4
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/dynamic-resolution-notes.txt
+> >>>> @@ -0,0 +1,25 @@
+> >>>> +Device Tree Dynamic Resolver Notes
+> >>>> +----------------------------------
+> >>>> +
+> >>>> +This document describes the implementation of the in-kernel
+> >>>> +Device Tree resolver, residing in drivers/of/resolver.c and is a
+> >>>> +companion document to Documentation/devicetree/dt-object-internal.t=
+xt[1]
+> >>>> +
+> >>>> +How the resolver works
+> >>>> +----------------------
+> >>>> +
+> >>>> +The resolver is given as an input an arbitrary tree compiled with t=
+he
+> >>>> +proper dtc option and having a /plugin/ tag. This generates the
+> >>>> +appropriate __fixups__ & __local_fixups__ nodes as described in [1].
+> >>>> +
+> >>>> +In sequence the resolver works by the following steps:
+> >>>> +
+> >>>> +1. Get the maximum device tree phandle value from the live tree + 1.
+> >>>> +2. Adjust all the local phandles of the tree to resolve by that amo=
+unt.
+> >>>> +3. Using the __local__fixups__ node information adjust all local re=
+ferences
+> >>>> +   by the same amount.
+> >>>> +4. For each property in the __fixups__ node locate the node it refe=
+rences
+> >>>> +   in the live tree. This is the label used to tag the node.
+> >>>> +5. Retrieve the phandle of the target of the fixup.
+> >>>> +5. For each fixup in the property locate the node:property:offset l=
+ocation
+> >>>> +   and replace it with the phandle value.
+> >>>=20
+> >>> Hrm.  So, I'm really still not convinced by this approach.
+> >>>=20
+> >>> 	First, I think it's unwise to allow overlays to change
+> >>> essentially anything in the base tree, rather than having the base
+> >>> tree define sockets of some sort where things can be attached.
+> >>>=20
+> >>=20
+> >> One could say that the labels define the sockets. It's not just things
+> >> to be attached, properties might have to change, or something more com=
+plex,
+> >> as we've found out in practice.
+> >=20
+> > Hrm.  I know a number of these have come up previously in that big
+> > thread, but can you summarise some of these cases here.  If things
+> > need modification in the base tree that still seems to me like the
+> > base tree hasn't properly described the socket arrangement (I realise
+> > that allowing such descriptions may require extensions to some of our
+> > device tree conventions).
+> >=20
+>=20
+> It would be pointless to number all the use-cases that Grant put in that
+> long document, but I can summarize the cases that we've seen on the bone.
+>=20
+> * Addition of child device nodes to the ocp node, creates new platform
+> devices of various kind (audio/video/pwms/timers) - almost any kind of
+> platform device that the SoC supports. Removing the overlay unregisters
+> the devices (but precious few drivers support that cleanly ATM). Since
+> the capes don't support hotplug that's not a big deal.
 
-diff --git a/Documentation/devicetree/bindings/i2c/ina209.txt b/Documentation/devicetree/bindings/i2c/ina209.txt
-new file mode 100644
-index 0000000..9dd2bee
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/ina209.txt
-@@ -0,0 +1,18 @@
-+ina209 properties
-+
-+Required properties:
-+- compatible: Must be "ti,ina209"
-+- reg: I2C address
-+
-+Optional properties:
-+
-+- shunt-resistor
-+	Shunt resistor value in micro-Ohm
-+
-+Example:
-+
-+temp-sensor@4c {
-+	compatible = "ti,ina209";
-+	reg = <0x4c>;
-+	shunt-resistor = <5000>;
-+};
-diff --git a/Documentation/hwmon/ina209 b/Documentation/hwmon/ina209
-new file mode 100644
-index 0000000..672501d
---- /dev/null
-+++ b/Documentation/hwmon/ina209
-@@ -0,0 +1,93 @@
-+Kernel driver ina209
-+=====================
-+
-+Supported chips:
-+  * Burr-Brown / Texas Instruments INA209
-+    Prefix: 'ina209'
-+    Addresses scanned: -
-+    Datasheet:
-+        http://www.ti.com/lit/gpn/ina209
-+
-+Author: Paul Hays <Paul.Hays@cattail.ca>
-+Author: Ira W. Snyder <iws@ovro.caltech.edu>
-+Author: Guenter Roeck <linux@roeck-us.net>
-+
-+
-+Description
-+-----------
-+
-+The TI / Burr-Brown INA209 monitors voltage, current, and power on the high side
-+of a D.C. power supply. It can perform measurements and calculations in the
-+background to supply readings at any time. It includes a programmable
-+calibration multiplier to scale the displayed current and power values.
-+
-+
-+Sysfs entries
-+-------------
-+
-+The INA209 chip is highly configurable both via hardwiring and via
-+the I2C bus. See the datasheet for details.
-+
-+This tries to expose most monitoring features of the hardware via
-+sysfs. It does not support every feature of this chip.
-+
-+
-+in0_input		shunt voltage (mV)
-+in0_input_highest	shunt voltage historical maximum reading (mV)
-+in0_input_lowest	shunt voltage historical minimum reading (mV)
-+in0_reset_history	reset shunt voltage history
-+in0_max			shunt voltage max alarm limit (mV)
-+in0_min			shunt voltage min alarm limit (mV)
-+in0_crit_max		shunt voltage crit max alarm limit (mV)
-+in0_crit_min		shunt voltage crit min alarm limit (mV)
-+in0_max_alarm		shunt voltage max alarm limit exceeded
-+in0_min_alarm		shunt voltage min alarm limit exceeded
-+in0_crit_max_alarm	shunt voltage crit max alarm limit exceeded
-+in0_crit_min_alarm	shunt voltage crit min alarm limit exceeded
-+
-+in1_input		bus voltage (mV)
-+in1_input_highest	bus voltage historical maximum reading (mV)
-+in1_input_lowest	bus voltage historical minimum reading (mV)
-+in1_reset_history	reset bus voltage history
-+in1_max			bus voltage max alarm limit (mV)
-+in1_min			bus voltage min alarm limit (mV)
-+in1_crit_max		bus voltage crit max alarm limit (mV)
-+in1_crit_min		bus voltage crit min alarm limit (mV)
-+in1_max_alarm		bus voltage max alarm limit exceeded
-+in1_min_alarm		bus voltage min alarm limit exceeded
-+in1_crit_max_alarm	bus voltage crit max alarm limit exceeded
-+in1_crit_min_alarm	bus voltage crit min alarm limit exceeded
-+
-+power1_input		power measurement (uW)
-+power1_input_highest	power historical maximum reading (uW)
-+power1_reset_history	reset power history
-+power1_max		power max alarm limit (uW)
-+power1_crit		power crit alarm limit (uW)
-+power1_max_alarm	power max alarm limit exceeded
-+power1_crit_alarm	power crit alarm limit exceeded
-+
-+curr1_input		current measurement (mA)
-+
-+update_interval		data conversion time; affects number of samples used
-+			to average results for shunt and bus voltages.
-+
-+General Remarks
-+---------------
-+
-+The power and current registers in this chip require that the calibration
-+register is programmed correctly before they are used. Normally this is expected
-+to be done in the BIOS. In the absence of BIOS programming, the shunt resistor
-+voltage can be provided using platform data. The driver uses platform data from
-+the ina2xx driver for this purpose. If calibration register data is not provided
-+via platform data, the driver checks if the calibration register has been
-+programmed (ie has a value not equal to zero). If so, this value is retained.
-+Otherwise, a default value reflecting a shunt resistor value of 10 mOhm is
-+programmed into the calibration register.
-+
-+
-+Output Pins
-+-----------
-+
-+Output pin programming is a board feature which depends on the BIOS. It is
-+outside the scope of a hardware monitoring driver to enable or disable output
-+pins.
-diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-index 3588b2a..5e77cef 100644
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -1157,6 +1157,16 @@ config SENSORS_AMC6821
- 	  This driver can also be build as a module.  If so, the module
- 	  will be called amc6821.
- 
-+config SENSORS_INA209
-+	tristate "TI / Burr Brown INA209"
-+	depends on I2C
-+	help
-+	  If you say yes here you get support for the TI / Burr Brown INA209
-+	  voltage / current / power monitor I2C interface.
-+
-+	  This driver can also be built as a module. If so, the module will
-+	  be called ina209.
-+
- config SENSORS_INA2XX
- 	tristate "Texas Instruments INA219 and compatibles"
- 	depends on I2C
-diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-index a37a82c..8d6d97e 100644
---- a/drivers/hwmon/Makefile
-+++ b/drivers/hwmon/Makefile
-@@ -65,6 +65,7 @@ obj-$(CONFIG_SENSORS_ULTRA45)	+= ultra45_env.o
- obj-$(CONFIG_SENSORS_I5K_AMB)	+= i5k_amb.o
- obj-$(CONFIG_SENSORS_IBMAEM)	+= ibmaem.o
- obj-$(CONFIG_SENSORS_IBMPEX)	+= ibmpex.o
-+obj-$(CONFIG_SENSORS_INA209)	+= ina209.o
- obj-$(CONFIG_SENSORS_INA2XX)	+= ina2xx.o
- obj-$(CONFIG_SENSORS_IT87)	+= it87.o
- obj-$(CONFIG_SENSORS_JC42)	+= jc42.o
-diff --git a/drivers/hwmon/ina209.c b/drivers/hwmon/ina209.c
-new file mode 100644
-index 0000000..c6fdd5b
---- /dev/null
-+++ b/drivers/hwmon/ina209.c
-@@ -0,0 +1,636 @@
-+/*
-+ * Driver for the Texas Instruments / Burr Brown INA209
-+ * Bidirectional Current/Power Monitor
-+ *
-+ * Copyright (C) 2012 Guenter Roeck <linux@roeck-us.net>
-+ *
-+ * Derived from Ira W. Snyder's original driver submission
-+ *	Copyright (C) 2008 Paul Hays <Paul.Hays@cattail.ca>
-+ *	Copyright (C) 2008-2009 Ira W. Snyder <iws@ovro.caltech.edu>
-+ *
-+ * Aligned with ina2xx driver
-+ *	Copyright (C) 2012 Lothar Felten <l-felten@ti.com>
-+ *	Thanks to Jan Volkering
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; version 2 of the License.
-+ *
-+ * Datasheet:
-+ * http://www.ti.com/lit/gpn/ina209
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/err.h>
-+#include <linux/slab.h>
-+#include <linux/bug.h>
-+#include <linux/i2c.h>
-+#include <linux/hwmon.h>
-+#include <linux/hwmon-sysfs.h>
-+
-+#include <linux/platform_data/ina2xx.h>
-+
-+/* register definitions */
-+#define INA209_CONFIGURATION		0x00
-+#define INA209_STATUS			0x01
-+#define INA209_STATUS_MASK		0x02
-+#define INA209_SHUNT_VOLTAGE		0x03
-+#define INA209_BUS_VOLTAGE		0x04
-+#define INA209_POWER			0x05
-+#define INA209_CURRENT			0x06
-+#define INA209_SHUNT_VOLTAGE_POS_PEAK	0x07
-+#define INA209_SHUNT_VOLTAGE_NEG_PEAK	0x08
-+#define INA209_BUS_VOLTAGE_MAX_PEAK	0x09
-+#define INA209_BUS_VOLTAGE_MIN_PEAK	0x0a
-+#define INA209_POWER_PEAK		0x0b
-+#define INA209_SHUNT_VOLTAGE_POS_WARN	0x0c
-+#define INA209_SHUNT_VOLTAGE_NEG_WARN	0x0d
-+#define INA209_POWER_WARN		0x0e
-+#define INA209_BUS_VOLTAGE_OVER_WARN	0x0f
-+#define INA209_BUS_VOLTAGE_UNDER_WARN	0x10
-+#define INA209_POWER_OVER_LIMIT		0x11
-+#define INA209_BUS_VOLTAGE_OVER_LIMIT	0x12
-+#define INA209_BUS_VOLTAGE_UNDER_LIMIT	0x13
-+#define INA209_CRITICAL_DAC_POS		0x14
-+#define INA209_CRITICAL_DAC_NEG		0x15
-+#define INA209_CALIBRATION		0x16
-+
-+#define INA209_REGISTERS		0x17
-+
-+#define INA209_CONFIG_DEFAULT		0x3c47	/* PGA=8, full range */
-+#define INA209_SHUNT_DEFAULT		10000	/* uOhm */
-+
-+struct ina209_data {
-+	struct device *hwmon_dev;
-+
-+	struct mutex update_lock;
-+	bool valid;
-+	unsigned long last_updated;	/* in jiffies */
-+
-+	u16 regs[INA209_REGISTERS];	/* All chip registers */
-+
-+	u16 config_orig;		/* Original configuration */
-+	u16 calibration_orig;		/* Original calibration */
-+	u16 update_interval;
-+};
-+
-+static struct ina209_data *ina209_update_device(struct device *dev)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct ina209_data *data = i2c_get_clientdata(client);
-+	struct ina209_data *ret = data;
-+	s32 val;
-+	int i;
-+
-+	mutex_lock(&data->update_lock);
-+
-+	if (!data->valid ||
-+	    time_after(jiffies, data->last_updated + data->update_interval)) {
-+		for (i = 0; i < ARRAY_SIZE(data->regs); i++) {
-+			val = i2c_smbus_read_word_swapped(client, i);
-+			if (val < 0) {
-+				ret = ERR_PTR(val);
-+				goto abort;
-+			}
-+			data->regs[i] = val;
-+		}
-+		data->last_updated = jiffies;
-+		data->valid = true;
-+	}
-+abort:
-+	mutex_unlock(&data->update_lock);
-+	return ret;
-+}
-+
-+/*
-+ * Read a value from a device register and convert it to the
-+ * appropriate sysfs units
-+ */
-+static long ina209_from_reg(const u8 reg, const u16 val)
-+{
-+	switch (reg) {
-+	case INA209_SHUNT_VOLTAGE:
-+	case INA209_SHUNT_VOLTAGE_POS_PEAK:
-+	case INA209_SHUNT_VOLTAGE_NEG_PEAK:
-+	case INA209_SHUNT_VOLTAGE_POS_WARN:
-+	case INA209_SHUNT_VOLTAGE_NEG_WARN:
-+		/* LSB=10 uV. Convert to mV. */
-+		return DIV_ROUND_CLOSEST(val, 100);
-+
-+	case INA209_BUS_VOLTAGE:
-+	case INA209_BUS_VOLTAGE_MAX_PEAK:
-+	case INA209_BUS_VOLTAGE_MIN_PEAK:
-+	case INA209_BUS_VOLTAGE_OVER_WARN:
-+	case INA209_BUS_VOLTAGE_UNDER_WARN:
-+	case INA209_BUS_VOLTAGE_OVER_LIMIT:
-+	case INA209_BUS_VOLTAGE_UNDER_LIMIT:
-+		/* LSB=4 mV, last 3 bits unused */
-+		return (val >> 3) * 4;
-+
-+	case INA209_CRITICAL_DAC_POS:
-+		/* LSB=1 mV, in the upper 8 bits */
-+		return val >> 8;
-+
-+	case INA209_CRITICAL_DAC_NEG:
-+		/* LSB=1 mV, in the upper 8 bits */
-+		return -1 * (val >> 8);
-+
-+	case INA209_POWER:
-+	case INA209_POWER_PEAK:
-+	case INA209_POWER_WARN:
-+	case INA209_POWER_OVER_LIMIT:
-+		/* LSB=20 mW. Convert to uW */
-+		return val * 20 * 1000L;
-+
-+	case INA209_CURRENT:
-+		/* LSB=1 mA (selected). Is in mA */
-+		return val;
-+	}
-+
-+	/* programmer goofed */
-+	WARN_ON_ONCE(1);
-+	return 0;
-+}
-+
-+/*
-+ * Take a value and convert it to register format, clamping the value
-+ * to the appropriate range.
-+ */
-+static int ina209_to_reg(u8 reg, u16 old, long val)
-+{
-+	switch (reg) {
-+	case INA209_SHUNT_VOLTAGE_POS_WARN:
-+	case INA209_SHUNT_VOLTAGE_NEG_WARN:
-+		/* Limit to +- 320 mV, 10 uV LSB */
-+		return clamp_val(val, -320, 320) * 100;
-+
-+	case INA209_BUS_VOLTAGE_OVER_WARN:
-+	case INA209_BUS_VOLTAGE_UNDER_WARN:
-+	case INA209_BUS_VOLTAGE_OVER_LIMIT:
-+	case INA209_BUS_VOLTAGE_UNDER_LIMIT:
-+		/*
-+		 * Limit to 0-32000 mV, 4 mV LSB
-+		 *
-+		 * The last three bits aren't part of the value, but we'll
-+		 * preserve them in their original state.
-+		 */
-+		return (DIV_ROUND_CLOSEST(clamp_val(val, 0, 32000), 4) << 3)
-+		  | (old & 0x7);
-+
-+	case INA209_CRITICAL_DAC_NEG:
-+		/*
-+		 * Limit to -255-0 mV, 1 mV LSB
-+		 * Convert the value to a positive value for the register
-+		 *
-+		 * The value lives in the top 8 bits only, be careful
-+		 * and keep original value of other bits.
-+		 */
-+		return (clamp_val(-val, 0, 255) << 8) | (old & 0xff);
-+
-+	case INA209_CRITICAL_DAC_POS:
-+		/*
-+		 * Limit to 0-255 mV, 1 mV LSB
-+		 *
-+		 * The value lives in the top 8 bits only, be careful
-+		 * and keep original value of other bits.
-+		 */
-+		return (clamp_val(val, 0, 255) << 8) | (old & 0xff);
-+
-+	case INA209_POWER_WARN:
-+	case INA209_POWER_OVER_LIMIT:
-+		/* 20 mW LSB */
-+		return DIV_ROUND_CLOSEST(val, 20 * 1000);
-+	}
-+
-+	/* Other registers are read-only, return access error */
-+	return -EACCES;
-+}
-+
-+static int ina209_interval_from_reg(u16 reg)
-+{
-+	return 68 >> (15 - ((reg >> 3) & 0x0f));
-+}
-+
-+static u16 ina209_reg_from_interval(u16 config, long interval)
-+{
-+	int i, adc;
-+
-+	if (interval <= 0) {
-+		adc = 8;
-+	} else {
-+		adc = 15;
-+		for (i = 34 + 34 / 2; i; i >>= 1) {
-+			if (i < interval)
-+				break;
-+			adc--;
-+		}
-+	}
-+	return (config & 0xf807) | (adc << 3) | (adc << 7);
-+}
-+
-+static ssize_t ina209_set_interval(struct device *dev,
-+				   struct device_attribute *da,
-+				   const char *buf, size_t count)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct ina209_data *data = ina209_update_device(dev);
-+	long val;
-+	u16 regval;
-+	int ret;
-+
-+	if (IS_ERR(data))
-+		return PTR_ERR(data);
-+
-+	ret = kstrtol(buf, 10, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	mutex_lock(&data->update_lock);
-+	regval = ina209_reg_from_interval(data->regs[INA209_CONFIGURATION],
-+					  val);
-+	i2c_smbus_write_word_swapped(client, INA209_CONFIGURATION, regval);
-+	data->regs[INA209_CONFIGURATION] = regval;
-+	data->update_interval = ina209_interval_from_reg(regval);
-+	mutex_unlock(&data->update_lock);
-+	return count;
-+}
-+
-+static ssize_t ina209_show_interval(struct device *dev,
-+				    struct device_attribute *da, char *buf)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct ina209_data *data = i2c_get_clientdata(client);
-+
-+	return snprintf(buf, PAGE_SIZE, "%d\n", data->update_interval);
-+}
-+
-+/*
-+ * History is reset by writing 1 into bit 0 of the respective peak register.
-+ * Since more than one peak register may be affected by the scope of a
-+ * reset_history attribute write, use a bit mask in attr->index to identify
-+ * which registers are affected.
-+ */
-+static u16 ina209_reset_history_regs[] = {
-+	INA209_SHUNT_VOLTAGE_POS_PEAK,
-+	INA209_SHUNT_VOLTAGE_NEG_PEAK,
-+	INA209_BUS_VOLTAGE_MAX_PEAK,
-+	INA209_BUS_VOLTAGE_MIN_PEAK,
-+	INA209_POWER_PEAK
-+};
-+
-+static ssize_t ina209_reset_history(struct device *dev,
-+				    struct device_attribute *da,
-+				    const char *buf,
-+				    size_t count)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct ina209_data *data = i2c_get_clientdata(client);
-+	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
-+	u32 mask = attr->index;
-+	long val;
-+	int i, ret;
-+
-+	ret = kstrtol(buf, 10, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	mutex_lock(&data->update_lock);
-+	for (i = 0; i < ARRAY_SIZE(ina209_reset_history_regs); i++) {
-+		if (mask & (1 << i))
-+			i2c_smbus_write_word_swapped(client,
-+					ina209_reset_history_regs[i], 1);
-+	}
-+	data->valid = false;
-+	mutex_unlock(&data->update_lock);
-+	return count;
-+}
-+
-+static ssize_t ina209_set_value(struct device *dev,
-+				struct device_attribute *da,
-+				const char *buf,
-+				size_t count)
-+{
-+	struct i2c_client *client = to_i2c_client(dev);
-+	struct ina209_data *data = ina209_update_device(dev);
-+	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
-+	int reg = attr->index;
-+	long val;
-+	int ret;
-+
-+	if (IS_ERR(data))
-+		return PTR_ERR(data);
-+
-+	ret = kstrtol(buf, 10, &val);
-+	if (ret < 0)
-+		return ret;
-+
-+	mutex_lock(&data->update_lock);
-+	ret = ina209_to_reg(reg, data->regs[reg], val);
-+	if (ret < 0) {
-+		count = ret;
-+		goto abort;
-+	}
-+	i2c_smbus_write_word_swapped(client, reg, ret);
-+	data->regs[reg] = ret;
-+abort:
-+	mutex_unlock(&data->update_lock);
-+	return count;
-+}
-+
-+static ssize_t ina209_show_value(struct device *dev,
-+				 struct device_attribute *da,
-+				 char *buf)
-+{
-+	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
-+	struct ina209_data *data = ina209_update_device(dev);
-+	long val;
-+
-+	if (IS_ERR(data))
-+		return PTR_ERR(data);
-+
-+	val = ina209_from_reg(attr->index, data->regs[attr->index]);
-+	return snprintf(buf, PAGE_SIZE, "%ld\n", val);
-+}
-+
-+static ssize_t ina209_show_alarm(struct device *dev,
-+				 struct device_attribute *da,
-+				 char *buf)
-+{
-+	struct sensor_device_attribute *attr = to_sensor_dev_attr(da);
-+	struct ina209_data *data = ina209_update_device(dev);
-+	const unsigned int mask = attr->index;
-+	u16 status;
-+
-+	if (IS_ERR(data))
-+		return PTR_ERR(data);
-+
-+	status = data->regs[INA209_STATUS];
-+
-+	/*
-+	 * All alarms are in the INA209_STATUS register. To avoid a long
-+	 * switch statement, the mask is passed in attr->index
-+	 */
-+	return snprintf(buf, PAGE_SIZE, "%u\n", !!(status & mask));
-+}
-+
-+/* Shunt voltage, history, limits, alarms */
-+static SENSOR_DEVICE_ATTR(in0_input, S_IRUGO, ina209_show_value, NULL,
-+			  INA209_SHUNT_VOLTAGE);
-+static SENSOR_DEVICE_ATTR(in0_input_highest, S_IRUGO, ina209_show_value, NULL,
-+			  INA209_SHUNT_VOLTAGE_POS_PEAK);
-+static SENSOR_DEVICE_ATTR(in0_input_lowest, S_IRUGO, ina209_show_value, NULL,
-+			  INA209_SHUNT_VOLTAGE_NEG_PEAK);
-+static SENSOR_DEVICE_ATTR(in0_reset_history, S_IWUSR, NULL,
-+			  ina209_reset_history, (1 << 0) | (1 << 1));
-+static SENSOR_DEVICE_ATTR(in0_max, S_IRUGO | S_IWUSR, ina209_show_value,
-+			  ina209_set_value, INA209_SHUNT_VOLTAGE_POS_WARN);
-+static SENSOR_DEVICE_ATTR(in0_min, S_IRUGO | S_IWUSR, ina209_show_value,
-+			  ina209_set_value, INA209_SHUNT_VOLTAGE_NEG_WARN);
-+static SENSOR_DEVICE_ATTR(in0_crit_max, S_IRUGO | S_IWUSR, ina209_show_value,
-+			  ina209_set_value, INA209_CRITICAL_DAC_POS);
-+static SENSOR_DEVICE_ATTR(in0_crit_min, S_IRUGO | S_IWUSR, ina209_show_value,
-+			  ina209_set_value, INA209_CRITICAL_DAC_NEG);
-+
-+static SENSOR_DEVICE_ATTR(in0_min_alarm,  S_IRUGO, ina209_show_alarm, NULL,
-+			  1 << 11);
-+static SENSOR_DEVICE_ATTR(in0_max_alarm, S_IRUGO, ina209_show_alarm, NULL,
-+			  1 << 12);
-+static SENSOR_DEVICE_ATTR(in0_crit_min_alarm, S_IRUGO, ina209_show_alarm, NULL,
-+			  1 << 6);
-+static SENSOR_DEVICE_ATTR(in0_crit_max_alarm, S_IRUGO, ina209_show_alarm, NULL,
-+			  1 << 7);
-+
-+/* Bus voltage, history, limits, alarms */
-+static SENSOR_DEVICE_ATTR(in1_input, S_IRUGO, ina209_show_value, NULL,
-+			  INA209_BUS_VOLTAGE);
-+static SENSOR_DEVICE_ATTR(in1_input_highest, S_IRUGO, ina209_show_value, NULL,
-+			  INA209_BUS_VOLTAGE_MAX_PEAK);
-+static SENSOR_DEVICE_ATTR(in1_input_lowest, S_IRUGO, ina209_show_value, NULL,
-+			  INA209_BUS_VOLTAGE_MIN_PEAK);
-+static SENSOR_DEVICE_ATTR(in1_reset_history, S_IWUSR, NULL,
-+			  ina209_reset_history, (1 << 2) | (1 << 3));
-+static SENSOR_DEVICE_ATTR(in1_max, S_IRUGO | S_IWUSR, ina209_show_value,
-+			  ina209_set_value, INA209_BUS_VOLTAGE_OVER_WARN);
-+static SENSOR_DEVICE_ATTR(in1_min, S_IRUGO | S_IWUSR, ina209_show_value,
-+			  ina209_set_value, INA209_BUS_VOLTAGE_UNDER_WARN);
-+static SENSOR_DEVICE_ATTR(in1_crit_max, S_IRUGO | S_IWUSR, ina209_show_value,
-+			  ina209_set_value, INA209_BUS_VOLTAGE_OVER_LIMIT);
-+static SENSOR_DEVICE_ATTR(in1_crit_min, S_IRUGO | S_IWUSR, ina209_show_value,
-+			  ina209_set_value, INA209_BUS_VOLTAGE_UNDER_LIMIT);
-+
-+static SENSOR_DEVICE_ATTR(in1_min_alarm, S_IRUGO, ina209_show_alarm, NULL,
-+			  1 << 14);
-+static SENSOR_DEVICE_ATTR(in1_max_alarm, S_IRUGO, ina209_show_alarm, NULL,
-+			  1 << 15);
-+static SENSOR_DEVICE_ATTR(in1_crit_min_alarm, S_IRUGO, ina209_show_alarm, NULL,
-+			  1 << 9);
-+static SENSOR_DEVICE_ATTR(in1_crit_max_alarm, S_IRUGO, ina209_show_alarm, NULL,
-+			  1 << 10);
-+
-+/* Power */
-+static SENSOR_DEVICE_ATTR(power1_input, S_IRUGO, ina209_show_value, NULL,
-+			  INA209_POWER);
-+static SENSOR_DEVICE_ATTR(power1_input_highest, S_IRUGO, ina209_show_value,
-+			  NULL, INA209_POWER_PEAK);
-+static SENSOR_DEVICE_ATTR(power1_reset_history, S_IWUSR, NULL,
-+			  ina209_reset_history, 1 << 4);
-+static SENSOR_DEVICE_ATTR(power1_max, S_IRUGO | S_IWUSR, ina209_show_value,
-+			  ina209_set_value, INA209_POWER_WARN);
-+static SENSOR_DEVICE_ATTR(power1_crit, S_IRUGO | S_IWUSR, ina209_show_value,
-+			  ina209_set_value, INA209_POWER_OVER_LIMIT);
-+
-+static SENSOR_DEVICE_ATTR(power1_max_alarm, S_IRUGO, ina209_show_alarm, NULL,
-+			  1 << 13);
-+static SENSOR_DEVICE_ATTR(power1_crit_alarm, S_IRUGO, ina209_show_alarm, NULL,
-+			  1 << 8);
-+
-+/* Current */
-+static SENSOR_DEVICE_ATTR(curr1_input, S_IRUGO, ina209_show_value, NULL,
-+			  INA209_CURRENT);
-+
-+static SENSOR_DEVICE_ATTR(update_interval, S_IRUGO | S_IWUSR,
-+			  ina209_show_interval, ina209_set_interval, 0);
-+
-+/*
-+ * Finally, construct an array of pointers to members of the above objects,
-+ * as required for sysfs_create_group()
-+ */
-+static struct attribute *ina209_attributes[] = {
-+	&sensor_dev_attr_in0_input.dev_attr.attr,
-+	&sensor_dev_attr_in0_input_highest.dev_attr.attr,
-+	&sensor_dev_attr_in0_input_lowest.dev_attr.attr,
-+	&sensor_dev_attr_in0_reset_history.dev_attr.attr,
-+	&sensor_dev_attr_in0_max.dev_attr.attr,
-+	&sensor_dev_attr_in0_min.dev_attr.attr,
-+	&sensor_dev_attr_in0_crit_max.dev_attr.attr,
-+	&sensor_dev_attr_in0_crit_min.dev_attr.attr,
-+	&sensor_dev_attr_in0_max_alarm.dev_attr.attr,
-+	&sensor_dev_attr_in0_min_alarm.dev_attr.attr,
-+	&sensor_dev_attr_in0_crit_max_alarm.dev_attr.attr,
-+	&sensor_dev_attr_in0_crit_min_alarm.dev_attr.attr,
-+
-+	&sensor_dev_attr_in1_input.dev_attr.attr,
-+	&sensor_dev_attr_in1_input_highest.dev_attr.attr,
-+	&sensor_dev_attr_in1_input_lowest.dev_attr.attr,
-+	&sensor_dev_attr_in1_reset_history.dev_attr.attr,
-+	&sensor_dev_attr_in1_max.dev_attr.attr,
-+	&sensor_dev_attr_in1_min.dev_attr.attr,
-+	&sensor_dev_attr_in1_crit_max.dev_attr.attr,
-+	&sensor_dev_attr_in1_crit_min.dev_attr.attr,
-+	&sensor_dev_attr_in1_max_alarm.dev_attr.attr,
-+	&sensor_dev_attr_in1_min_alarm.dev_attr.attr,
-+	&sensor_dev_attr_in1_crit_max_alarm.dev_attr.attr,
-+	&sensor_dev_attr_in1_crit_min_alarm.dev_attr.attr,
-+
-+	&sensor_dev_attr_power1_input.dev_attr.attr,
-+	&sensor_dev_attr_power1_input_highest.dev_attr.attr,
-+	&sensor_dev_attr_power1_reset_history.dev_attr.attr,
-+	&sensor_dev_attr_power1_max.dev_attr.attr,
-+	&sensor_dev_attr_power1_crit.dev_attr.attr,
-+	&sensor_dev_attr_power1_max_alarm.dev_attr.attr,
-+	&sensor_dev_attr_power1_crit_alarm.dev_attr.attr,
-+
-+	&sensor_dev_attr_curr1_input.dev_attr.attr,
-+
-+	&sensor_dev_attr_update_interval.dev_attr.attr,
-+
-+	NULL,
-+};
-+
-+static const struct attribute_group ina209_group = {
-+	.attrs = ina209_attributes,
-+};
-+
-+static void ina209_restore_conf(struct i2c_client *client,
-+				struct ina209_data *data)
-+{
-+	/* Restore initial configuration */
-+	i2c_smbus_write_word_swapped(client, INA209_CONFIGURATION,
-+				     data->config_orig);
-+	i2c_smbus_write_word_swapped(client, INA209_CALIBRATION,
-+				     data->calibration_orig);
-+}
-+
-+static int ina209_init_client(struct i2c_client *client,
-+			      struct ina209_data *data)
-+{
-+	struct ina2xx_platform_data *pdata = dev_get_platdata(&client->dev);
-+	u32 shunt;
-+	int reg;
-+
-+	reg = i2c_smbus_read_word_swapped(client, INA209_CALIBRATION);
-+	if (reg < 0)
-+		return reg;
-+	data->calibration_orig = reg;
-+
-+	reg = i2c_smbus_read_word_swapped(client, INA209_CONFIGURATION);
-+	if (reg < 0)
-+		return reg;
-+	data->config_orig = reg;
-+
-+	if (pdata) {
-+		if (pdata->shunt_uohms <= 0)
-+			return -EINVAL;
-+		shunt = pdata->shunt_uohms;
-+	} else if (!of_property_read_u32(client->dev.of_node, "shunt-resistor",
-+					 &shunt)) {
-+		if (shunt == 0)
-+			return -EINVAL;
-+	} else {
-+		shunt = data->calibration_orig ?
-+		  40960000 / data->calibration_orig : INA209_SHUNT_DEFAULT;
-+	}
-+
-+	i2c_smbus_write_word_swapped(client, INA209_CONFIGURATION,
-+				     INA209_CONFIG_DEFAULT);
-+	data->update_interval = ina209_interval_from_reg(INA209_CONFIG_DEFAULT);
-+
-+	/*
-+	 * Calibrate current LSB to 1mA. Shunt is in uOhms.
-+	 * See equation 13 in datasheet.
-+	 */
-+	i2c_smbus_write_word_swapped(client, INA209_CALIBRATION,
-+				     clamp_val(40960000 / shunt, 1, 65535));
-+
-+	/* Clear status register */
-+	i2c_smbus_read_word_swapped(client, INA209_STATUS);
-+
-+	return 0;
-+}
-+
-+static int ina209_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct i2c_adapter *adapter = client->adapter;
-+	struct ina209_data *data;
-+	int ret;
-+
-+	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_WORD_DATA))
-+		return -ENODEV;
-+
-+	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	i2c_set_clientdata(client, data);
-+	mutex_init(&data->update_lock);
-+
-+	ret = ina209_init_client(client, data);
-+	if (ret)
-+		return ret;
-+
-+	/* Register sysfs hooks */
-+	ret = sysfs_create_group(&client->dev.kobj, &ina209_group);
-+	if (ret)
-+		goto out_restore_conf;
-+
-+	data->hwmon_dev = hwmon_device_register(&client->dev);
-+	if (IS_ERR(data->hwmon_dev)) {
-+		ret = PTR_ERR(data->hwmon_dev);
-+		goto out_hwmon_device_register;
-+	}
-+
-+	return 0;
-+
-+out_hwmon_device_register:
-+	sysfs_remove_group(&client->dev.kobj, &ina209_group);
-+out_restore_conf:
-+	ina209_restore_conf(client, data);
-+	return ret;
-+}
-+
-+static int ina209_remove(struct i2c_client *client)
-+{
-+	struct ina209_data *data = i2c_get_clientdata(client);
-+
-+	hwmon_device_unregister(data->hwmon_dev);
-+	sysfs_remove_group(&client->dev.kobj, &ina209_group);
-+	ina209_restore_conf(client, data);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id ina209_id[] = {
-+	{ "ina209", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, ina209_id);
-+
-+/* This is the driver that will be inserted */
-+static struct i2c_driver ina209_driver = {
-+	.class		= I2C_CLASS_HWMON,
-+	.driver = {
-+		.name	= "ina209",
-+	},
-+	.probe		= ina209_probe,
-+	.remove		= ina209_remove,
-+	.id_table	= ina209_id,
-+};
-+
-+module_i2c_driver(ina209_driver);
-+
-+MODULE_AUTHOR("Ira W. Snyder <iws@ovro.caltech.edu>, Paul Hays <Paul.Hays@cattail.ca>, Guenter Roeck <linux@roeck-us.net>");
-+MODULE_DESCRIPTION("INA209 driver");
-+MODULE_LICENSE("GPL");
--- 
-1.7.9.7
+Ok, that's just adding nodes, which is straightforward.
 
+> * Addition of pinctrl configuration nodes.
+
+Ok, do you know where I can look to see how the pinctrl stuff works?
+
+> * Addition of i2c/spi etc device nodes and modification of the parent's
+> node status property to "okay",
+
+Ok.  I'm assuming this is basically just to enable the bus controller
+which was previously disabled because it had nothing attached to it?
+
+> creates the bus platform device & registers
+> the devices on the bus. Slight complication with i2c client devices which
+> are not platform devices need special handling.
+
+And this part is again just adding nodes.
+
+> * Modification of configuration parameters of a disabled device and subse=
+quent
+> enablement.=20
+
+What sorts of modification are necessary to the parameters?  Other
+than changing status =3D "disabled" of course.  This is the only case I
+see here which might be changing data other than the status property,
+which if it were the only one could reasonably be special cased, I
+think.
+
+> >> As far as the unwise part, a good deal of care has been taken so that=
+=20
+> >> people that don't use the overlay functionality have absolutely no
+> >> overhead, or anything modified in the way they use DT.
+> >=20
+> > Yeah, that's not what I'm concerned about.  I'm concerned about hard
+> > to debug problems because some subtle change in the base tree or the
+> > overlay or both causes the overlay to alter something in the base tree
+> > it really shouldn't.
+>=20
+> Define shouldn't. Let's say someone inserts a bogus overlay that makes th=
+e system
+> fail, or misbehave in some other manner. What is the different between=20
+> using the overlay and inserting kernel module that fails in a
+> similar manner?
+
+Hm, you do have a point there.
+
+Another reason for a more constrained format did occur to me though -
+it opens the possibility for multiple interchangeable sockets on the
+same board.  e.g. we get the BeaglePlus or whatever which can take two
+capes simultaneously.  With the current scheme an identical cape would
+need different overlays for insertion in socket A and socket B because
+it would need different labels for all the fixups.
+
+> As far as supporting arbitrary overlays, that is not the case, and never =
+will
+> be. Now since the beaglebone is for hobbyists too, we can't restrict what
+> a user can do in any way; but that person is free to do whatever he wants.
+>=20
+> >>> 	Second, even allowing overlays to change anything, I don't see
+> >>> a lot of reason to do this kind of resolution within the kernel and
+> >>> with data stored in the dtb itself, rather than doing the resolution
+> >>> in userspace from an annotated overlay dts or dtb, then inserting the
+> >>> fully resolved product into the kernel.  In either case, the overlay
+> >>> needs to be constructed with pretty intimate knowledge of the base
+> >>> tree.
+> >>=20
+> >> Fair enough, but that's one more thing of user-space crud to drag alon=
+g, which
+> >> will get enabled pretty late in the boot sequence. Meaning a whole bun=
+ch of devices,
+> >> like consoles, and root filesystems on the devices that need an overla=
+y to operate
+> >> won't work easily enough.
+> >=20
+> > Hrm.  But doesn't your scheme already require userspace to identify
+> > the hardware and load the overlay?  So why is having it resolve the
+> > overlay significantly harder?
+>=20
+> There is no user-space involved what so ever. The only place where
+> user-space might be involved is supplying the dtbo firmware image as a
+> result of the loader driver issuing request_firmware(). =20
+
+Right.. and couldn't the request_firmware() involve processing the
+resolutions, rather than just grabbing the file.
+
+> > AFAICT devices wanted early can be handled in several possible ways
+> > without having the resolved in kernel: an initramfs is the most
+> > obvious, but for things you want really early, it should be possible
+> > to do the resolution from the platform's bootloader update tool - so
+> > the pre-resolved overlay gets bundled with the kernel/initrd/whatever
+> > to get fired up from the bootloader.
+>=20
+> No. Just no. It is a support nightmare when dealing with the hobbyist mar=
+ket.
+> Something similar has been tried before. While I don't have an exact figu=
+re,=20
+> having users tinker with any part of the bootloader/init sequence in orde=
+r to=20
+> add some new cape lead to an unacceptable number of RMAed boards, which
+> had absolutely nothing wrong with them, besides the fact that the person =
+tinkering
+> with it couldn't get it booting after screwing it.
+> This wiped off any amount of profit for the board maker; possibly even ma=
+de the
+> whole operation a loss.
+
+Ok.  I certainly don't want to dismiss usability concerns. I was
+envisaging this pre-resolving process asn being part of the platform's
+equivalent of running the lilo / update-grub / whatever script.  So
+I'm trying to understand what's different about the platform's boot
+sequence it so much more fraught in this case.
+
+The other thing I notice is that this sort of concern is exactly why I
+lean towards the idea of a more constrained "overlay" format where the
+base tree desribes what a socket can add / change, rather than
+allowing arbitrary alterations to the base tree.  With such
+constraints, it's going to be much harder to screw up the basic
+platform booting due to a bad overlay.  Obviously the cape won't work
+properly without correct device information, but you won't be able to
+clobber the basic device information for the board.
+
+[snip]
+> >>> That said, I have some implementation comments below.
+> >>>=20
+> >>> [snip]
+> >>>> +/**
+> >>>> + * Find a subtree's maximum phandle value.
+> >>>> + */
+> >>>> +static phandle __of_get_tree_max_phandle(struct device_node *node,
+> >>>> +		phandle max_phandle)
+> >>>> +{
+> >>>> +	struct device_node *child;
+> >>>> +
+> >>>> +	if (node->phandle !=3D 0 && node->phandle !=3D OF_PHANDLE_ILLEGAL =
+&&
+> >>>> +			node->phandle > max_phandle)
+> >>>> +		max_phandle =3D node->phandle;
+> >>>> +
+> >>>> +	__for_each_child_of_node(node, child)
+> >>>> +		max_phandle =3D __of_get_tree_max_phandle(child, max_phandle);
+> >>>=20
+> >>> Recursion is best avoided given the kernel's limited stack space.
+> >>> This is also trivial to implement non-recursively, using the allnext
+> >>> pointer.
+> >>=20
+> >> The caller passes a tree that's not yet been inserted in the live
+> >> tree.
+> >=20
+> > Um.. isn't this used to find the max phandle in the base tree, so how
+> > is it not inserted in the live tree yet?
+>=20
+> We have a use case (for devices that must be inserted very early in the b=
+oot
+> process) that the overlay is stored in a part of the base tree, not in a
+> different dtbo file. Some phandle juggling there uses this function.
+> This patchset only uses it on the base tree.
+
+Ok.  Nonetheless it's not hard to avoid a recursive approach here.
+
+> >> So there's no allnodes pointer yet.=20
+> >=20
+> > I would strongly suggest populating that in the subtree as you build
+> > it, then.  Except that I don't think it is a detached subtree in this
+> > case, though it is in some of the cases below.
+> >=20
+> >> Care has been taken for the function
+> >> to not have excessive local variables. I would guess about 20-32 bytes=
+ for
+> >> the stack frame + the local variables, so with a 4K stack we would ove=
+rflow at a=20
+> >> nest level of 128, which has a pretty slim chance for a real system.
+> >=20
+> > Hrm.  Recursion still makes me nervous.  I believe there are platforms
+> > that have a non-trivial lower-bound on stack usage per frame, even
+> > with few local variables.
+>=20
+> How about having a recursion limit argument set to something sane
+> like 10?
+
+Ugh.  It's really best just to avoid recursion in the kernel.
+
+> >>>> +
+> >>>> +	return max_phandle;
+> >>>> +}
+> >>>> +
+> >>>> +/**
+> >>>> + * Find live tree's maximum phandle value.
+> >>>> + */
+> >>>> +static phandle of_get_tree_max_phandle(void)
+> >>>> +{
+> >>>> +	struct device_node *node;
+> >>>> +	phandle phandle;
+> >>>> +
+> >>>> +	/* get root node */
+> >>>> +	node =3D of_find_node_by_path("/");
+> >>>> +	if (node =3D=3D NULL)
+> >>>> +		return OF_PHANDLE_ILLEGAL;
+> >>>> +
+> >>>> +	/* now search recursively */
+> >>>> +	read_lock(&devtree_lock);
+> >>>> +	phandle =3D __of_get_tree_max_phandle(node, 0);
+> >>>> +	read_unlock(&devtree_lock);
+> >>>> +
+> >>>> +	of_node_put(node);
+> >>>> +
+> >>>> +	return phandle;
+> >>>> +}
+> >>>> +
+> >>>> +/**
+> >>>> + * Adjust a subtree's phandle values by a given delta.
+> >>>> + * Makes sure not to just adjust the device node's phandle value,
+> >>>> + * but modify the phandle properties values as well.
+> >>>> + */
+> >>>> +static void __of_adjust_tree_phandles(struct device_node *node,
+> >>>> +		int phandle_delta)
+> >>>> +{
+> >>>> +	struct device_node *child;
+> >>>> +	struct property *prop;
+> >>>> +	phandle phandle;
+> >>>> +
+> >>>> +	/* first adjust the node's phandle direct value */
+> >>>> +	if (node->phandle !=3D 0 && node->phandle !=3D OF_PHANDLE_ILLEGAL)
+> >>>> +		node->phandle +=3D phandle_delta;
+> >>>=20
+> >>> You need to have some kind of check for overflow here, or the adjusted
+> >>> phandle could be one of the illegal values (0 or -1) - or wrap around
+> >>> and colllide with existing phandle values in the base tree.  dtc
+> >>> (currently) allocates phandles from the bottom, but there's no
+> >>> guarantee that a base tree will only have low phandle values - it only
+> >>> takes one node with phandle set to 0xfffffffe in the base tree to have
+> >>> this function make a mess of things.
+> >>=20
+> >> Correct, I'll take care of handling the overflow.
+> >>=20
+> >>>=20
+> >>>=20
+> >>>> +	/* now adjust phandle & linux,phandle values */
+> >>>> +	for_each_property_of_node(node, prop) {
+> >>>> +
+> >>>> +		/* only look for these two */
+> >>>> +		if (of_prop_cmp(prop->name, "phandle") !=3D 0 &&
+> >>>> +		    of_prop_cmp(prop->name, "linux,phandle") !=3D 0)
+> >>>> +			continue;
+> >>>> +
+> >>>> +		/* must be big enough */
+> >>>> +		if (prop->length < 4)
+> >>>> +			continue;
+> >>>=20
+> >>> If prop->length !=3D 4 (including > 4) something is pretty wrong, and
+> >>> you should probably bail with an error message.
+> >>=20
+> >> OK, just playing it safe here.
+> >>=20
+> >>>=20
+> >>>> +
+> >>>> +		/* read phandle value */
+> >>>> +		phandle =3D be32_to_cpu(*(uint32_t *)prop->value);
+> >>>> +		if (phandle =3D=3D OF_PHANDLE_ILLEGAL)	/* unresolved */
+> >>>> +			continue;
+> >>>> +
+> >>>> +		/* adjust */
+> >>>> +		*(uint32_t *)prop->value =3D cpu_to_be32(node->phandle);
+> >>>> +	}
+> >>>> +
+> >>>> +	/* now do the children recursively */
+> >>>> +	__for_each_child_of_node(node, child)
+> >>>> +		__of_adjust_tree_phandles(child, phandle_delta);
+> >>>=20
+> >>> Again, recursion is not a good idea.
+> >>>=20
+> >>=20
+> >> No other way to handle it. This is not a node that's in the live
+> >> tree yet.
+> >=20
+> > There's always another way to handle it, although it may be less
+> > elegant.  In this case it should be easy though - populate the allnext
+> > pointers when you unflatten the tree.  Or, have the offset applied
+> > when you actually apply the overlay rather than as a separate pass.
+>=20
+> Previous comment applies here too. Recursion limit counter?
+
+Is a nasty band-aid, when it's really not that hard to avoid recursion
+altogether.
+
+> >>>> +}
+> >>>> +
+> >>>> +/**
+> >>>> + * Adjust the local phandle references by the given phandle delta.
+> >>>> + * Assumes the existances of a __local_fixups__ node at the root
+> >>>> + * of the tree. Does not take any devtree locks so make sure you
+> >>>> + * call this on a tree which is at the detached state.
+> >>>> + */
+> >>>> +static int __of_adjust_tree_phandle_references(struct device_node *=
+node,
+> >>>> +		int phandle_delta)
+> >>>> +{
+> >>>> +	phandle phandle;
+> >>>> +	struct device_node *refnode, *child;
+> >>>> +	struct property *rprop, *sprop;
+> >>>> +	char *propval, *propcur, *propend, *nodestr, *propstr, *s;
+> >>>> +	int offset, propcurlen;
+> >>>> +	int err;
+> >>>> +
+> >>>> +	/* locate the symbols & fixups nodes on resolve */
+> >>>> +	__for_each_child_of_node(node, child)
+> >>>> +		if (of_node_cmp(child->name, "__local_fixups__") =3D=3D 0)
+> >>>> +			break;
+> >>>> +
+> >>>> +	/* no local fixups */
+> >>>> +	if (child =3D=3D NULL)
+> >>>> +		return 0;
+> >>>> +
+> >>>> +	/* find the local fixups property */
+> >>>> +	for_each_property_of_node(child, rprop) {
+> >>>> +
+> >>>> +		/* skip properties added automatically */
+> >>>> +		if (of_prop_cmp(rprop->name, "name") =3D=3D 0)
+> >>>> +			continue;
+> >>>=20
+> >>> Ok, so you're interpreting any property except name in the
+> >>> __local_fixups__ node in exactly the same way?  That's a bit strange.
+> >>> Why not just have a single property rather than a node's worth in that
+> >>> case.
+> >>=20
+> >> It saves space. For example you might have to resolve a label reference
+> >> more than once. So instead of doing:
+> >>=20
+> >> 	label =3D "/foo:bar:0";
+> >> 	label =3D "/bar:foo:4";
+> >>=20
+> >> You can do this:
+> >>=20
+> >> 	label =3D "/foo:bar:0", "/bar/foo:4";
+> >=20
+> > Um.. you seem to have read me as saying the exact opposite of what I
+> > said.  I'm _suggesting_ that you use:
+> > 	__local_fixups__ =3D "/foo:bar:0", "/bar/foo:4";
+> > Since the 'label' name has no meaning in the case of local fixups.
+>=20
+> Err, I misread that.
+>=20
+> At first I tried to do it the way you suggested but run into the following
+> problem: The DTC enforces the properties to always precede the child node=
+s.
+> I wasn't able to find a way to insert the __local_fixups__ property easil=
+y.
+> Perhaps you can suggest where would you put it?=20
+
+Ah, ok.  I haven't looked at your dtc patch in any detail yet, since I
+wanted to review the concept first, through these patches.
+
+So the basic answer is that you should add the extra annotations for
+overlays onto the live tree that dtc maintains before flatenning it,
+rather than doing it as part of the flattening process.  On the live
+tree you can add properties and subnodes in whatever order.  It also
+means that you'll see the right overlay annotations for all dtc output
+formats.
+
+> >>>> +		/* make a copy */
+> >>>> +		propval =3D kmalloc(rprop->length, GFP_KERNEL);
+> >>>> +		if (propval =3D=3D NULL) {
+> >>>> +			pr_err("%s: Could not copy value of '%s'\n",
+> >>>> +					__func__, rprop->name);
+> >>>> +			return -ENOMEM;
+> >>>> +		}
+> >>>> +		memcpy(propval, rprop->value, rprop->length);
+> >>>> +
+> >>>> +		propend =3D propval + rprop->length;
+> >>>> +		for (propcur =3D propval; propcur < propend;
+> >>>> +				propcur +=3D propcurlen + 1) {
+> >>>> +
+> >>>> +			propcurlen =3D strlen(propcur);
+> >>>> +
+> >>>> +			nodestr =3D propcur;
+> >>>> +			s =3D strchr(propcur, ':');
+> >>>=20
+> >>> So, using strings with separators like this doesn't sit will with
+> >>> existing device tree practice.  More similar to existing things would
+> >>> have NUL separators and the integer values in binary, rather than
+> >>> text (and yes, there is precedent for mixed string and integer content
+> >>> in properties).
+> >>>=20
+> >>=20
+> >> Hmm, I guess it can be done, but I wouldn't expect any space savings.
+> >=20
+> > I'm not after space savings, just least-surprise by matching existing
+> > common practices.
+>=20
+> Maybe. You also lose the ability to print the contents of the node and
+> easily inspect. It's your call really, I don't mind that much.
+
+Hm, ok I'll give it some thought.  There are bigger things I'd like to
+be convinced on before worrying too much about details like this :).
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--BuGwuXnZwGGQ9GEc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlD/ackACgkQaILKxv3ab8YC/ACcDKjmxtyBRKnF43lSVlEOFcTy
+qJ4AmwXMWLh49v9Tpoyy0I6Z2KR6SKlw
+=25Rn
+-----END PGP SIGNATURE-----
+
+--BuGwuXnZwGGQ9GEc--
