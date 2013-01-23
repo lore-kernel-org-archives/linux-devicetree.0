@@ -1,14 +1,11 @@
-From: Michal Bachraty <michal.bachraty-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv2] am33xx: cpsw: default to ethernet hwaddr from efuse if
- not defined in dt
-Date: Fri, 18 Jan 2013 09:26:47 +0100
-Message-ID: <CAAfrEwZ-SBiHpZqYRwEpcm-qkeb=S-nuzZyqaG5K2qqCcELqSQ@mail.gmail.com>
-References: <1358461134-13452-1-git-send-email-jacmet@sunsite.dk>
- <50F8DA3A.3090406@ti.com>
+From: "Sobota, Justin" <jsobota-l0cyMroinI0@public.gmane.org>
+Subject: New DTC Release
+Date: Wed, 23 Jan 2013 21:57:59 +0000
+Message-ID: <311ECDE3E284F649854AED0B108A0CE114B7939C@DFLE08.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============9039664772836114278=="
+Content-Type: multipart/mixed; boundary="===============8699453182006411809=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50F8DA3A.3090406-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,114 +16,115 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Cc: michal.bachraty-6oiIBCxl0MMjD8S081q9vkEOCMrvLtNR@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: "jdl-CYoMK+44s/E@public.gmane.org" <jdl-CYoMK+44s/E@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============9039664772836114278==
-Content-Type: multipart/alternative; boundary=14dae9340a6957c3b804d38bdf94
+--===============8699453182006411809==
+Content-Language: en-US
+Content-Type: multipart/alternative;
+	boundary="_000_311ECDE3E284F649854AED0B108A0CE114B7939CDFLE08entticom_"
 
---14dae9340a6957c3b804d38bdf94
-Content-Type: text/plain; charset=ISO-8859-1
-
-On Fri, Jan 18, 2013 at 6:14 AM, Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org> wrote:
-
-> On 1/18/2013 3:48 AM, Peter Korsgaard wrote:
->
->> When booting with CONFIG_ARM_APPENDED_DTB (either because of using an old
->> U-Boot, not wanting the hassle of 2 files or when using Falcon fast boot
->> mode in U-Boot), nothing updates the ethernet hwaddr specified for the
->> CPSW slaves, causing the driver to use a random hwaddr, which is some
->> times
->> troublesome.
->>
->> The am33xx has unique ethernet hwaddrs programmed in the efuse, so it
->> makes
->> more sense to default to these rather than random ones. Add a fixup step
->> which adds mac-address dt properties using the efuse addresses if the DTB
->> didn't contain valid ones.
->>
->> Signed-off-by: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
->>
->>
-> This implementation looks fine.
-> Acked-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
->
-> Regards
-> Mugunthan V N
->
-
-Thanks,
-My approach for cpsw driver is posted here:
-https://patchwork.kernel.org/patch/1966481/
-I added DT option mac-address-source because there is still possiblility to
-have mac address set by the u-boot in the future. Beaglebone have special
-eeprom on board, were you can have stored user MAC and u-boot can read
-eeprom
-data. Maybe some users will want this feature.  Also in cpsw dt binding
-documentation, there is mention  /* Filled in by U-Boot */.  For that
-purpose,
-code I proposed can easily deal with any driver exteds.
-
-Reading CPU mac address registers with (my approach) or without (your
-approach) DT should be more discussed. Also your way seems to be fine.
-
---14dae9340a6957c3b804d38bdf94
-Content-Type: text/html; charset=ISO-8859-1
+--_000_311ECDE3E284F649854AED0B108A0CE114B7939CDFLE08entticom_
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 
-<br><br><div class=3D"gmail_quote">On Fri, Jan 18, 2013 at 6:14 AM, Mugunth=
-an V N <span dir=3D"ltr">&lt;<a href=3D"mailto:mugunthanvnm-l0cyMroinI0@public.gmane.org" target=
-=3D"_blank">mugunthanvnm-l0cyMroinI0@public.gmane.org</a>&gt;</span> wrote:<br><blockquote class=
-=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padd=
-ing-left:1ex">
-<div class=3D"im">On 1/18/2013 3:48 AM, Peter Korsgaard wrote:<br>
-<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
-x #ccc solid;padding-left:1ex">
-When booting with CONFIG_ARM_APPENDED_DTB (either because of using an old<b=
-r>
-U-Boot, not wanting the hassle of 2 files or when using Falcon fast boot<br=
->
-mode in U-Boot), nothing updates the ethernet hwaddr specified for the<br>
-CPSW slaves, causing the driver to use a random hwaddr, which is some times=
-<br>
-troublesome.<br>
-<br>
-The am33xx has unique ethernet hwaddrs programmed in the efuse, so it makes=
-<br>
-more sense to default to these rather than random ones. Add a fixup step<br=
->
-which adds mac-address dt properties using the efuse addresses if the DTB<b=
-r>
-didn&#39;t contain valid ones.<br>
-<br>
-Signed-off-by: Peter Korsgaard &lt;<a href=3D"mailto:jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org" tar=
-get=3D"_blank">jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org</a>&gt;<br>
-<br>
-</blockquote>
-<br></div>
-This implementation looks fine.<br>
-Acked-by: Mugunthan V N &lt;<a href=3D"mailto:mugunthanvnm-l0cyMroinI0@public.gmane.org" target=
-=3D"_blank">mugunthanvnm-l0cyMroinI0@public.gmane.org</a>&gt;<br>
-<br>
-Regards<span class=3D"HOEnZb"><font color=3D"#888888"><br>
-Mugunthan V N<br>
-</font></span></blockquote></div><br>Thanks,<br>My approach for cpsw driver=
- is posted here: <a href=3D"https://patchwork.kernel.org/patch/1966481/">ht=
-tps://patchwork.kernel.org/patch/1966481/</a><br>I added DT option mac-addr=
-ess-source because there is still possiblility to <br>
-have mac address set by the u-boot in the future. Beaglebone have special <=
-br>eeprom on board, were you can have stored user MAC and u-boot can read e=
-eprom <br>data. Maybe some users will want this feature.=A0 Also in cpsw dt=
- binding <br>
-documentation, there is mention=A0 /* Filled in by U-Boot */.=A0 For that p=
-urpose, <br>code I proposed can easily deal with any driver exteds. <br><br=
->Reading CPU mac address registers with (my approach) or without (your <br>
-approach) DT should be more discussed. Also your way seems to be fine. <br>
+Jon,
 
---14dae9340a6957c3b804d38bdf94--
+Will it be possible to do a new DTC release sometime in the near future?  I=
+'ve integrated libfdt from DTCv1.3.0 into a TI software component that will=
+ be released with a BSD-type license.  During the integration I noticed a l=
+ot of applicable fixes have been made on the master since the last release =
+in 2011.  David informed me the master is generally stable enough to consum=
+e but I'd feel more comfortable using an official DTC release.
 
---===============9039664772836114278==
+One additional item I brought up with David is the lack of license header i=
+n fdt.h and libfdt_env.h.  He responded the lack of license in both headers=
+ is an oversight.  If a new release can be spun I'd like to request the lic=
+ense header be added to these files.
+
+Thanks,
+Justin
+
+
+--_000_311ECDE3E284F649854AED0B108A0CE114B7939CDFLE08entticom_
+Content-Type: text/html; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+
+<html xmlns:v=3D"urn:schemas-microsoft-com:vml" xmlns:o=3D"urn:schemas-micr=
+osoft-com:office:office" xmlns:w=3D"urn:schemas-microsoft-com:office:word" =
+xmlns:m=3D"http://schemas.microsoft.com/office/2004/12/omml" xmlns=3D"http:=
+//www.w3.org/TR/REC-html40">
+<head>
+<meta http-equiv=3D"Content-Type" content=3D"text/html; charset=3Dus-ascii"=
+>
+<meta name=3D"Generator" content=3D"Microsoft Word 14 (filtered medium)">
+<style><!--
+/* Font Definitions */
+@font-face
+	{font-family:Calibri;
+	panose-1:2 15 5 2 2 2 4 3 2 4;}
+/* Style Definitions */
+p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin:0in;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Calibri","sans-serif";}
+a:link, span.MsoHyperlink
+	{mso-style-priority:99;
+	color:blue;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{mso-style-priority:99;
+	color:purple;
+	text-decoration:underline;}
+span.EmailStyle17
+	{mso-style-type:personal-compose;
+	font-family:"Calibri","sans-serif";
+	color:windowtext;}
+.MsoChpDefault
+	{mso-style-type:export-only;
+	font-family:"Calibri","sans-serif";}
+@page WordSection1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.0in 1.0in 1.0in;}
+div.WordSection1
+	{page:WordSection1;}
+--></style><!--[if gte mso 9]><xml>
+<o:shapedefaults v:ext=3D"edit" spidmax=3D"1026" />
+</xml><![endif]--><!--[if gte mso 9]><xml>
+<o:shapelayout v:ext=3D"edit">
+<o:idmap v:ext=3D"edit" data=3D"1" />
+</o:shapelayout></xml><![endif]-->
+</head>
+<body lang=3D"EN-US" link=3D"blue" vlink=3D"purple">
+<div class=3D"WordSection1">
+<p class=3D"MsoNormal">Jon,<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Will it be possible to do a new DTC release sometime=
+ in the near future?&nbsp; I've integrated libfdt from DTCv1.3.0 into a TI =
+software component that will be released with a BSD-type license.&nbsp; Dur=
+ing the integration I noticed a lot of applicable
+ fixes have been made on the master since the last release in 2011.&nbsp; D=
+avid informed me the master is generally stable enough to consume but I&#82=
+17;d feel more comfortable using an official DTC release.<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">One additional item I brought up with David is the l=
+ack of license header in fdt.h and libfdt_env.h.&nbsp; He responded the lac=
+k of license in both headers is an oversight. &nbsp;If a new release can be=
+ spun I&#8217;d like to request the license header
+ be added to these files.<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+<p class=3D"MsoNormal">Thanks,<o:p></o:p></p>
+<p class=3D"MsoNormal">Justin<o:p></o:p></p>
+<p class=3D"MsoNormal"><o:p>&nbsp;</o:p></p>
+</div>
+</body>
+</html>
+
+--_000_311ECDE3E284F649854AED0B108A0CE114B7939CDFLE08entticom_--
+
+--===============8699453182006411809==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -137,4 +135,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============9039664772836114278==--
+--===============8699453182006411809==--
