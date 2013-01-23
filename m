@@ -1,66 +1,63 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH 2/3] ARM: dts: AM33XX: Add GPMC node
-Date: Wed, 23 Jan 2013 06:32:12 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3EA62B27@DBDE01.ent.ti.com>
-References: <1358491295-4022-1-git-send-email-avinashphilip@ti.com>
-	<1358491295-4022-3-git-send-email-avinashphilip@ti.com>
- <8738xu9rni.fsf@dell.be.48ers.dk>
+From: Vakul Garg <vakul-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] crypto: caam - Added property fsl,
+ sec-era in SEC4.0 device tree binding.
+Date: Wed, 23 Jan 2013 12:15:11 +0530
+Message-ID: <1358923511-1511-1-git-send-email-vakul@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8738xu9rni.fsf@dell.be.48ers.dk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Korsgaard <jacmet@sunsite.dk>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, "tony@atomide.com" <tony@atomide.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Nori, Sekhar" <nsekhar@ti.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "zonque@gmail.com" <zonque@gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2013 at 02:31:53, Peter Korsgaard wrote:
-> >>>>> "Philip" == Philip Avinash <avinashphilip@ti.com> writes:
-> 
->  Philip> From: "Philip, Avinash" <avinashphilip@ti.com>
->  Philip> Add GPMC data node to AM33XX device tree file.
-> 
->  Philip> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
->  Philip> ---
->  Philip>  arch/arm/boot/dts/am33xx.dtsi |   12 ++++++++++++
->  Philip>  1 file changed, 12 insertions(+)
-> 
->  Philip> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
->  Philip> index eaef5e7..f4209d8 100644
->  Philip> --- a/arch/arm/boot/dts/am33xx.dtsi
->  Philip> +++ b/arch/arm/boot/dts/am33xx.dtsi
->  Philip> @@ -393,5 +393,17 @@
->  Philip>  			ti,hwmods = "elm";
->  Philip>  			status = "disabled";
->  Philip>  		};
->  Philip> +
->  Philip> +		gpmc: gpmc@50000000 {
->  Philip> +			compatible = "ti,am3352-gpmc";
->  Philip> +			ti,hwmods = "gpmc";
->  Philip> +			reg = <0x50000000 0x2000>;
->  Philip> +			interrupts = <100>;
->  Philip> +			num-cs = <8>;
-> 
-> Next to Jan's comment about am335x having 7 cs signals, I just realized
-> the difference in compatible string between the gpmc and elm. The gpmc
-> refers to a real device (which is afaik how it should be done), but the
-> elm compatible is simply ti,am33xx-elm.
-> 
-> Presumably it should have been ti,am3352-elm in the binding instead?
+This new property defines the era of the particular SEC version.
+The compatible property in device tree "crypto" node has been updated
+not to contain SEC era numbers.
 
-I thought of following the file name convention. I will correct to "ti,am3352-elm"
+Signed-off-by: Vakul Garg <vakul-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ .../devicetree/bindings/crypto/fsl-sec4.txt        |   12 +++++++++---
+ 1 files changed, 9 insertions(+), 3 deletions(-)
 
-> 
-> Other than that it looks fine.
-> 
-> Acked-by: Peter Korsgaard <jacmet@sunsite.dk>
-
-Thanks
-Avinash
-
-> 
-> -- 
-> Bye, Peter Korsgaard
-> 
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+index fc9ce6f..dc40055 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+@@ -54,8 +54,13 @@ PROPERTIES
+    - compatible
+       Usage: required
+       Value type: <string>
+-      Definition: Must include "fsl,sec-v4.0". Also includes SEC
+-           ERA versions (optional) with which the device is compatible.
++      Definition: Must include "fsl,sec-v4.0"
++
++   - fsl,sec-era
++      Usage: required
++      Value type: <u32>
++      Definition: A standard property. Define the 'ERA' of the SEC
++          device.
+ 
+    - #address-cells
+        Usage: required
+@@ -107,7 +112,8 @@ PROPERTIES
+ 
+ EXAMPLE
+ 	crypto@300000 {
+-		compatible = "fsl,sec-v4.0", "fsl,sec-era-v2.0";
++		compatible = "fsl,sec-v4.0";
++		fsl,sec-era = <0x2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		reg = <0x300000 0x10000>;
+-- 
+1.7.7.6
