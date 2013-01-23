@@ -1,51 +1,83 @@
-From: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] arm: mvebu: Enable USB controllers on Armada
- 370/XP boards
-Date: Wed, 23 Jan 2013 15:08:02 -0300
-Message-ID: <CALF0-+W+dU5jvTeiX8pLan1hre7+Db3krD3KnW0XoFRvfkkoXQ@mail.gmail.com>
-References: <1358954792-16160-1-git-send-email-ezequiel.garcia@free-electrons.com>
-	<1358954792-16160-2-git-send-email-ezequiel.garcia@free-electrons.com>
-	<CALF0-+XJEXJ2B3NLu5DvyxaDuuMNP=zk+z8QUd4GTQULW3BpyA@mail.gmail.com>
-	<20130123190352.2d001218@skate>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130123190352.2d001218@skate>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH RFC v3 00/14] V4L2 device tree bindings and OF helpers
+Date: Wed, 23 Jan 2013 20:31:15 +0100
+Message-ID: <1358969489-20420-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org
+Cc: hverkuil@xs4all.nl, g.liakhovetski@gmx.de, laurent.pinchart@ideasonboard.com, kyungmin.park@samsung.com, kgene.kim@samsung.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, myungjoo.ham@samsung.com, sw0312.kim@samsung.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
+This series includes the updated device tree bindings documentation and
+the V4L2 OF parser (v4). There were just couple minor changes since v3:
+     - improved clock-lanes property description,
+     - grammar corrections of the example dts snippet description,
+     - minor comments corrections.
 
-On Wed, Jan 23, 2013 at 3:03 PM, Thomas Petazzoni
-<thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Wed, 23 Jan 2013 14:04:42 -0300, Ezequiel Garcia wrote:
->
->> from the OpenBlocks AX3-4 board dts file, since you mentioned this
->> board uses that USB
->> port for a PCIe connector -- if I understood correctly.
->
-> No. The OpenBlocks has a different USB controller that sits on the PCIe
-> bus. There is nothing like a PCIe port that uses a USB port, that
-> doesn't make sense.
->
+This series also includes patches adding device tree support for Exynos4
+SoC camera subsystem. Changes in this part include:
+ - dropped patch adding OF_DEV_AUXDATA entries as this series has
+   been tested with the new Exynos4 clocks driver;
+ - max-data-lanes property of the CSIS device node replaced with bus-width;
+ - added clock-frequency property to FIMC device nodes;
+ - corrected FIMC-LITE devices registration (the code didn't consider
+   they are child nodes of the fimc-is node);
+ - removed the "inactive" camera port pinctrl state, it is now optional
+   and handling of it wasn't implemeted at the driver yet anyway;
 
-Mmm... indeed, I got it completely wrong.
+I have also tested this patch set with the FIMC-IS (the camera ISP
+subsystem with a dedicated ARM MCU) driver.
 
->> So, IMHO, if OpenBlocks uses third USB port to connect some PCIe
->> controller, we should activate it in the dts file.
->>
->> What do you think?
->
-> No, see above.
->
+For the media patches 01..09/14 I intend to send a pull request within
+a few days. Patches 10..13/14 I'd like to be applied by the Samsung
+platforms maintainer.
 
-So, what do you think about the patch series to be pushed as it is?
+Patch 14/14 is an example only.
 
--- 
-    Ezequiel
+Thank you for all reviews!
+
+Guennadi Liakhovetski (2):
+  [media] Add common video interfaces OF bindings documentation
+  [media] Add a V4L2 OF parser
+
+Sylwester Nawrocki (12):
+  s5p-csis: Add device tree support
+  s5p-fimc: Add device tree support for FIMC devices
+  s5p-fimc: Add device tree support for FIMC-LITE devices
+  s5p-fimc: Change platform subdevs registration method
+  s5p-fimc: Add device tree support for the main media device driver
+  s5p-fimc: Add device tree based sensors registration
+  s5p-fimc: Use pinctrl API for camera ports configuration
+  ARM: dts: Add camera to node exynos4.dtsi
+  ARM: dts: Add ISP power domain node for Exynos4x12
+  ARM: dts: Add FIMC and MIPI CSIS device nodes for Exynos4x12
+  ARM: dts: Add camera pinctrl nodes for Exynos4x12 SoCs
+  ARM: dts: Add camera device nodes nodes for PQ board
+
+ .../devicetree/bindings/media/soc/samsung-fimc.txt |  184 +++++++
+ .../bindings/media/soc/samsung-mipi-csis.txt       |   82 +++
+ .../devicetree/bindings/media/video-interfaces.txt |  204 ++++++++
+ arch/arm/boot/dts/exynos4.dtsi                     |   64 +++
+ arch/arm/boot/dts/exynos4412-slp_pq.dts            |  169 +++++++
+ arch/arm/boot/dts/exynos4x12-pinctrl.dtsi          |   33 +-
+ arch/arm/boot/dts/exynos4x12.dtsi                  |   52 ++
+ drivers/media/platform/s5p-fimc/fimc-capture.c     |    2 +-
+ drivers/media/platform/s5p-fimc/fimc-core.c        |   94 ++--
+ drivers/media/platform/s5p-fimc/fimc-lite.c        |   65 ++-
+ drivers/media/platform/s5p-fimc/fimc-mdevice.c     |  526 +++++++++++++++-----
+ drivers/media/platform/s5p-fimc/fimc-mdevice.h     |    6 +
+ drivers/media/platform/s5p-fimc/mipi-csis.c        |  158 ++++--
+ drivers/media/platform/s5p-fimc/mipi-csis.h        |    1 +
+ drivers/media/v4l2-core/Makefile                   |    3 +
+ drivers/media/v4l2-core/v4l2-of.c                  |  253 ++++++++++
+ include/media/s5p_fimc.h                           |   17 +
+ include/media/v4l2-of.h                            |   79 +++
+ 18 files changed, 1771 insertions(+), 221 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/soc/samsung-fimc.txt
+ create mode 100644 Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt
+ create mode 100644 Documentation/devicetree/bindings/media/video-interfaces.txt
+ create mode 100644 drivers/media/v4l2-core/v4l2-of.c
+ create mode 100644 include/media/v4l2-of.h
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
