@@ -1,104 +1,101 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ARM: dts: specify all the per-cpu interrupts of arch
- timer for exynos5440
-Date: Wed, 23 Jan 2013 10:36:14 +0000
-Message-ID: <20130123103614.GD32237@e106331-lin.cambridge.arm.com>
-References: <1358818887-16870-1-git-send-email-kgene.kim@samsung.com>
- <20130122101554.GA18876@e106331-lin.cambridge.arm.com>
- <063f01cdf8ec$926cda30$b7468e90$@samsung.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH RFC v3 02/15] [media] Add a V4L2 OF parser
+Date: Wed, 23 Jan 2013 11:44:50 +0100
+Message-ID: <50FFBF22.7030506@samsung.com>
+References: <1356969793-27268-3-git-send-email-s.nawrocki@samsung.com>
+ <1357232962-7425-1-git-send-email-s.nawrocki@samsung.com>
+ <201301211235.14450.hverkuil@xs4all.nl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <063f01cdf8ec$926cda30$b7468e90$@samsung.com>
-Content-Language: en-US
-Content-Disposition: inline
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Thomas Abraham' <thomas.ab@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, 'Tony Lindgren' <tony@atomide.com>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <201301211235.14450.hverkuil@xs4all.nl>
+Sender: linux-media-owner@vger.kernel.org
+To: Hans Verkuil <hverkuil@xs4all.nl>
+Cc: linux-media@vger.kernel.org, g.liakhovetski@gmx.de, laurent.pinchart@ideasonboard.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2013 at 10:05:18PM +0000, Kukjin Kim wrote:
-> Mark Rutland wrote:
-> >
-> + devicetree-discuss, Grant Likely, Rob Herring and Tony Lindgren
->  
-> > On Tue, Jan 22, 2013 at 01:41:27AM +0000, Kukjin Kim wrote:
-> > > From: Thomas Abraham <thomas.ab@samsung.com>
-> > >
-> > > Need to be changed requirements in the 'cpus' node for exynos5440
-> > > to specify all the per-cpu interrupts of arch timer.
-> > 
-> > The node(s) for the arch timer should not be in the cpus/cpu@N nodes.
-> > Instead, there should be one node (in the root of the tree).
-> > 
-> Well, I don't think so. As per my understanding, the local timers are
-> attached to every ARM cores (cpus) and it generates certain interrupt to the
-> GIC. So the correct representation for this in device tree is to include the
-> interrupts in the cpu nodes in dts file. Your comments  refer to a
-> limitation in the Linux kernel implementation of the arch_timer and it
-> should not result in representing the hardware details incorrectly in the
-> dts file.
-
-I disagree. The "correct representation" is whatever the devicetree binding
-documentation describes. It does not describe placing timer nodes in the cpu
-nodes.
-
+On 01/21/2013 12:35 PM, Hans Verkuil wrote:
+[...]
+>> +/**
+>> + * v4l2_of_parse_mipi_csi2() - parse MIPI CSI-2 bus properties
+>> + * @node: pointer to endpoint device_node
+>> + * @endpoint: pointer to v4l2_of_endpoint data structure
+>> + *
+>> + * Return: 0 on success or negative error value otherwise.
+>> + */
+>> +int v4l2_of_parse_mipi_csi2(const struct device_node *node,
+>> +			    struct v4l2_of_endpoint *endpoint)
+>> +{
+>> +	struct v4l2_of_mipi_csi2 *mipi_csi2 = &endpoint->mipi_csi_2;
+>> +	u32 data_lanes[ARRAY_SIZE(mipi_csi2->data_lanes)];
+>> +	struct property *prop;
+>> +	const __be32 *lane = NULL;
+>> +	u32 v;
+>> +	int i = 0;
+>> +
+>> +	prop = of_find_property(node, "data-lanes", NULL);
+>> +	if (!prop)
+>> +		return -EINVAL;
+>> +	do {
+>> +		lane = of_prop_next_u32(prop, lane, &data_lanes[i]);
+>> +	} while (lane && i++ < ARRAY_SIZE(data_lanes));
+>> +
+>> +	mipi_csi2->num_data_lanes = i;
+>> +	while (i--)
+>> +		mipi_csi2->data_lanes[i] = data_lanes[i];
+>> +
+>> +	if (!of_property_read_u32(node, "clock-lanes", &v))
+>> +		mipi_csi2->clock_lane = v;
 > 
-> > If this works currently it's only because the driver picks up one of the
-> nodes,
-> > and luckily it's the same as the others. This is not guaranteed to work in
-> > future, and will likely break.
-> > 
-> It is up to the Linux kernel implementation of arch_timer to handle the
-> hardware details in dts file accordingly.
-
-The binding specification does not specify that there should be multiple timer
-nodes, nor does it specify that they should be under cpu nodes. The timers,
-being a banked resource, can be described with one node.
-
-It is not up to the Linux kernel to handle undocumented variations of bindings.
-
+> Hmm, the property name is 'clock-lanes', but only one lane is obtained here.
 > 
-> > >
-> > > Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-> > > Signed-off-by: Kukjin Kim <kgene.kim@samsung.com>
-> > > ---
-> > >  arch/arm/boot/dts/exynos5440.dtsi |   20 ++++++++++++++++----
-> > >  1 file changed, 16 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/arch/arm/boot/dts/exynos5440.dtsi
-> > b/arch/arm/boot/dts/exynos5440.dtsi
-> > > index 5406689..c5bd8ed 100644
-> > > --- a/arch/arm/boot/dts/exynos5440.dtsi
-> > > +++ b/arch/arm/boot/dts/exynos5440.dtsi
-> > > @@ -28,7 +28,10 @@
-> > >  			compatible = "arm,cortex-a15";
-> > >  			timer {
-> > >  				compatible = "arm,armv7-timer";
-> > > -				interrupts = <1 13 0xf08>;
-> > > +				interrupts = <1 13 0xf08>,
-> > > +					     <1 14 0xf08>,
-> > > +					     <1 11 0xf08>,
-> > > +					     <1 10 0xf08>;
-> > 
-> > Also, this interrupts list is updated differently to all the other nodes.
-> Typo?
-> > 
-> Hmm, I think this should be fine. If any concerns, please let me know in
-> detail.
+> Why is the property name plural in that case?
 
-Sorry, I misread the diff. Your patch in fact corrects them to be consistent
-where they weren't previously.
+This is how we agreed it with Guennadi, the argumentation was that it is 
+more consistent with 'data-lanes'. Also I think it is better to use plural 
+form right from the beginning, rather than introducing another 'clock-lanes' 
+property along 'clock-lane' when there would be a need to handle busses 
+with more than one clock lane in the future.
 
+[...]
+>> +/**
+>> + * v4l2_of_parse_endpoint() - parse all endpoint node properties
+>> + * @node: pointer to endpoint device_node
+>> + * @endpoint: pointer to v4l2_of_endpoint data structure
+>> + *
+>> + * All properties are optional. If none are found, we don't set any flags.
+>> + * This means the port has a static configuration and no properties have
+>> + * to be specified explicitly.
+>> + * If any properties that identify the bus as parallel are found and
+>> + * slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if we recognise
+>> + * the bus as serial CSI-2 and clock-noncontinuous isn't set, we set the
+>> + * V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag.
+>> + * The caller should hold a reference to @node.
+>> + */
+>> +void v4l2_of_parse_endpoint(const struct device_node *node,
+>> +			    struct v4l2_of_endpoint *endpoint)
+>> +{
+>> +	const struct device_node *port_node = of_get_parent(node);
+>> +	bool data_lanes_present = false;
+>> +
+>> +	memset(endpoint, 0, sizeof(*endpoint));
+>> +
+>> +	endpoint->local_node = node;
+>> +
+>> +	/* Doesn't matter, whether the below two calls succeed */
 > 
-> [...]
+> 'It doesn't matter whether the two calls below succeed. If they don't
+> then the default value 0 is used.'
 > 
-> Thanks.
-> 
-> - Kukjin
-> 
-> 
+> At least, that's how I understand the code.
 
-Thanks,
-Mark.
+Yeah, it's more precise this way. I'll amend it, thanks!
+
+>> +	of_property_read_u32(port_node, "reg", &endpoint->port);
+>> +	of_property_read_u32(node, "reg", &endpoint->addr);
+
+--
+
+Regards,
+Sylwester
