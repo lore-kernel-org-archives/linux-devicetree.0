@@ -1,75 +1,25 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] ARM: dts: specify all the per-cpu interrupts of arch
- timer for exynos5440
-Date: Wed, 23 Jan 2013 07:55:26 -0600
-Message-ID: <50FFEBCE.3080502@gmail.com>
-References: <1358818887-16870-1-git-send-email-kgene.kim@samsung.com> <20130122101554.GA18876@e106331-lin.cambridge.arm.com> <063f01cdf8ec$926cda30$b7468e90$@samsung.com> <20130123103614.GD32237@e106331-lin.cambridge.arm.com>
+From: "Mohammed, Afzal" <afzal@ti.com>
+Subject: RE: [PATCH v1 0/6] USB: Add support for multiple PHYs of same type
+Date: Wed, 23 Jan 2013 13:58:47 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA922F5@DBDE01.ent.ti.com>
+References: <1358848694-20145-1-git-send-email-kishon@ti.com>
+ <2D906ABA-71F2-4843-9DBE-F82527A1240A@dominion.thruhere.net>
+ <50FEB3FD.3050001@ti.com> <50FEBB61.9000707@ti.com>
+ <B9531499-0746-44DA-BDBB-999D4CA31E63@dominion.thruhere.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130123103614.GD32237@e106331-lin.cambridge.arm.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Thomas Abraham' <thomas.ab@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, 'Tony Lindgren' <tony@atomide.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <B9531499-0746-44DA-BDBB-999D4CA31E63@dominion.thruhere.net>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Koen Kooi <koen@dominion.thruhere.net>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tony@atomide.com" <tony@atomide.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Balbi, Felipe" <balbi@ti.com>, "eballetbo@gmail.com" <eballetbo@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, "javier@dowhile0.org" <javier@dowhile0.org>, "linux-omap@vger.kernel.org List" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/23/2013 04:36 AM, Mark Rutland wrote:
-> On Tue, Jan 22, 2013 at 10:05:18PM +0000, Kukjin Kim wrote:
->> Mark Rutland wrote:
->>>
->> + devicetree-discuss, Grant Likely, Rob Herring and Tony Lindgren
->>  
->>> On Tue, Jan 22, 2013 at 01:41:27AM +0000, Kukjin Kim wrote:
->>>> From: Thomas Abraham <thomas.ab@samsung.com>
->>>>
->>>> Need to be changed requirements in the 'cpus' node for exynos5440
->>>> to specify all the per-cpu interrupts of arch timer.
->>>
->>> The node(s) for the arch timer should not be in the cpus/cpu@N nodes.
->>> Instead, there should be one node (in the root of the tree).
->>>
->> Well, I don't think so. As per my understanding, the local timers are
->> attached to every ARM cores (cpus) and it generates certain interrupt to the
->> GIC. So the correct representation for this in device tree is to include the
->> interrupts in the cpu nodes in dts file. Your comments  refer to a
->> limitation in the Linux kernel implementation of the arch_timer and it
->> should not result in representing the hardware details incorrectly in the
->> dts file.
-> 
-> I disagree. The "correct representation" is whatever the devicetree binding
-> documentation describes. It does not describe placing timer nodes in the cpu
-> nodes.
-
-I don't think we should add other nodes to /cpus besides cpu nodes.
-
-The presence of architected timers is defined by the cpu being a
-Cortex-A15. So you don't really need a timer node at all. All that is
-really needed is the interrupt. You could add interrupts property
-directly to each cpu node. The location of PMU nodes has come up
-recently as well, and the PMU interrupt could be added as well.
-
-Whether we should change the binding at this point is questionable.
-Normally, we wouldn't want to do that, but as this is all pretty new it
-may be okay to make an exception here. However, I don't see anything
-that is fundamentally broken with the current binding. Multi-cluster
-could introduce some issues.
-
->>
->>> If this works currently it's only because the driver picks up one of the
->> nodes,
->>> and luckily it's the same as the others. This is not guaranteed to work in
->>> future, and will likely break.
->>>
->> It is up to the Linux kernel implementation of arch_timer to handle the
->> hardware details in dts file accordingly.
-> 
-> The binding specification does not specify that there should be multiple timer
-> nodes, nor does it specify that they should be under cpu nodes. The timers,
-> being a banked resource, can be described with one node.
-> 
-> It is not up to the Linux kernel to handle undocumented variations of bindings.
-
-Except things done before documentation was enforced.
-
-Rob
+SGkgS29lbiwNCg0KT24gVHVlLCBKYW4gMjIsIDIwMTMgYXQgMjI6MzI6NTYsIEtvZW4gS29vaSB3
+cm90ZToNCiANCj4gQWN0dWFsbHkgaXQgdXNlcyBub3AtcGh5IGFzIGEgcGh5LCB3aGljaCBpcyBt
+aXNzaW5nIGZyb20gYXJjaC9hcm0vYm9vdC9kdHMvYW0zM3h4LmR0c2ksIHNvIG1haW5saW5lIGlz
+IGFscmVhZHkgYnJva2VuLiBCdXQgYWRkaW5nIHRoZSBub3AtcGh5IHRvIHRoZSBEVCBpcyBlYXN5
+IGVub3VnaCB0byBwYXRjaCBpbiBsb2NhbGx5Lg0KDQpVU0IgZmlyc3QgaW5zdGFuY2Ugb2YgYW0z
+MzV4IHdvcmtzIGluIG1haW5saW5lIGFzIG9mIG5vdy4NCg0KUmVnYXJkcw0KQWZ6YWwNCg==
