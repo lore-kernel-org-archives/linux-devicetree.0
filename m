@@ -1,63 +1,60 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v5 00/14] DMA Engine support for AM33XX
-Date: Wed, 23 Jan 2013 16:19:18 +0530
-Message-ID: <50FFC02E.5090703@ti.com>
-References: <1358281974-8411-1-git-send-email-mporter@ti.com>
-	<50FEB6B2.5020303@ti.com>
-	<20130123022133.GA5727@opensource.wolfsonmicro.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH] ARM: dts: specify all the per-cpu interrupts of arch
+ timer for exynos5440
+Date: Wed, 23 Jan 2013 16:25:44 +0530
+Message-ID: <50FFC1B0.8000601@ti.com>
+References: <1358818887-16870-1-git-send-email-kgene.kim@samsung.com> <20130122101554.GA18876@e106331-lin.cambridge.arm.com> <063f01cdf8ec$926cda30$b7468e90$@samsung.com> <20130123103614.GD32237@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20130123022133.GA5727-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130123103614.GD32237@e106331-lin.cambridge.arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Tony Lindgren' <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, 'Thomas Abraham' <thomas.ab@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <marc.zyngier@arm.com>, Benoit Cousson <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Looping Marc, Benoit
 
-On 1/23/2013 7:51 AM, Mark Brown wrote:
-> On Tue, Jan 22, 2013 at 09:26:34PM +0530, Sekhar Nori wrote:
->> On 1/16/2013 2:02 AM, Matt Porter wrote:
-> 
->>> This series adds DMA Engine support for AM33xx, which uses
->>> an EDMA DMAC. The EDMA DMAC has been previously supported by only
->>> a private API implementation (much like the situation with OMAP
->>> DMA) found on the DaVinci family of SoCs.
-> 
->> Will you take this series through the OMAP tree? Only 1/14 touches
->> mach-davinci and I am mostly okay with it except some changes I just
->> requested Matt to make in another thread.
-> 
-> Is this series somewhere near actually getting merged then? It seemed
-> like there was lots of stuff going on.
+On Wednesday 23 January 2013 04:06 PM, Mark Rutland wrote:
+> On Tue, Jan 22, 2013 at 10:05:18PM +0000, Kukjin Kim wrote:
+>> Mark Rutland wrote:
+>>>
+>> + devicetree-discuss, Grant Likely, Rob Herring and Tony Lindgren
+>>
+>>> On Tue, Jan 22, 2013 at 01:41:27AM +0000, Kukjin Kim wrote:
+>>>> From: Thomas Abraham <thomas.ab@samsung.com>
+>>>>
+>>>> Need to be changed requirements in the 'cpus' node for exynos5440
+>>>> to specify all the per-cpu interrupts of arch timer.
+>>>
+>>> The node(s) for the arch timer should not be in the cpus/cpu@N nodes.
+>>> Instead, there should be one node (in the root of the tree).
+>>>
+>> Well, I don't think so. As per my understanding, the local timers are
+>> attached to every ARM cores (cpus) and it generates certain interrupt to the
+>> GIC. So the correct representation for this in device tree is to include the
+>> interrupts in the cpu nodes in dts file. Your comments  refer to a
+>> limitation in the Linux kernel implementation of the arch_timer and it
+>> should not result in representing the hardware details incorrectly in the
+>> dts file.
+>
+> I disagree. The "correct representation" is whatever the devicetree binding
+> documentation describes. It does not describe placing timer nodes in the cpu
+> nodes.
+>
+This seems to be exact same topic what is getting discussed here [1]
+Technically DT is suppose to represent how the hardware is rather than
+how the bindings are done.
 
-I don't think there is a lot of churn on this now. 5 of the patches have
-already been acked by Tony. I had a look at the first two patches (from
-davinci perspective) and they mostly look good to me.
+But as Marc pointed out, the approach taken currently is to not 
+duplicate the banked information. The thread [1] isn't concluded
+yet but looks like we might want to avoid duplicating the information
+considering, more of such duplication needs to follow. e.g gic i/f
 
-That said, I was not intending to suggest the entire series was ready
-for merging. Since the series touches multiple areas of the kernel, I
-wanted to make sure we have one person shepherding the series towards
-mainline.
+Am still waiting on what Benoit has to say ?
 
-Patch 1/14 has some changes in sound/ can you please take a look and ack
-them?
+Regards,
+Santosh
 
-Thanks,
-Sekhar
-
-------------------------------------------------------------------------------
-Master Visual Studio, SharePoint, SQL, ASP.NET, C# 2012, HTML5, CSS,
-MVC, Windows 8 Apps, JavaScript and much more. Keep your skills current
-with LearnDevNow - 3,200 step-by-step video tutorials by Microsoft
-MVPs and experts. ON SALE this month only -- learn more at:
-http://p.sf.net/sfu/learnnow-d2d
+[1] http://www.spinics.net/lists/linux-omap/msg85110.html
