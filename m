@@ -1,83 +1,65 @@
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Subject: Re: [PATCH RFC v3 01/15] [media] Add common video interfaces OF bindings documentation
-Date: Wed, 23 Jan 2013 13:59:39 +0100
-Message-ID: <201301231359.39655.hverkuil@xs4all.nl>
-References: <1356969793-27268-2-git-send-email-s.nawrocki@samsung.com> <201301211131.11047.hverkuil@xs4all.nl> <50FFB9A4.1090300@samsung.com>
+From: "Mohammed, Afzal" <afzal@ti.com>
+Subject: RE: [PATCH v2 12/12] video: da8xx-fb: set upstream clock rate (if
+ reqd)
+Date: Wed, 23 Jan 2013 13:00:20 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA9123E@DBDE01.ent.ti.com>
+References: <cover.1358251447.git.afzal@ti.com>
+ <26e787b021cda89a080f80657c2094b9ff2decaf.1358251448.git.afzal@ti.com>
+ <20130115153222.23734.7924@quantum> <50F63452.1060004@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <50FFB9A4.1090300@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-media@vger.kernel.org, g.liakhovetski@gmx.de, laurent.pinchart@ideasonboard.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50F63452.1060004@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Nori, Sekhar" <nsekhar@ti.com>, Mike Turquette <mturquette@linaro.org>
+Cc: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 23 January 2013 11:21:24 Sylwester Nawrocki wrote:
-> Hi Hans,
-> 
-> On 01/21/2013 11:31 AM, Hans Verkuil wrote:
-> [...]
-> >> +Required properties
-> >> +-------------------
-> >> +
-> >> +If there is more than one 'port' or more than one 'endpoint' node following
-> >> +properties are required in relevant parent node:
-> >> +
-> >> +- #address-cells : number of cells required to define port number, should be 1.
-> >> +- #size-cells    : should be zero.
-> >> +
-> >> +Optional endpoint properties
-> >> +----------------------------
-> >> +
-> >> +- remote-endpoint: phandle to an 'endpoint' subnode of the other device node.
-> >> +- slave-mode: a boolean property, run the link in slave mode. Default is master
-> >> +  mode.
-> >> +- bus-width: number of data lines, valid for parallel busses.
-> >> +- data-shift: on parallel data busses, if bus-width is used to specify the
-> >> +  number of data lines, data-shift can be used to specify which data lines are
-> >> +  used, e.g. "bus-width=<10>; data-shift=<2>;" means, that lines 9:2 are used.
-> >> +- hsync-active: active state of HSYNC signal, 0/1 for LOW/HIGH respectively.
-> >> +- vsync-active: active state of VSYNC signal, 0/1 for LOW/HIGH respectively.
-> >> +  Note, that if HSYNC and VSYNC polarities are not specified, embedded
-> >> +  synchronization may be required, where supported.
-> >> +- data-active: similar to HSYNC and VSYNC, specifies data line polarity.
-> >> +- field-even-active: field signal level during the even field data transmission.
-> >> +- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
-> >> +  signal.
-> >> +- data-lanes: an array of physical data lane indexes. Position of an entry
-> >> +  determines logical lane number, while the value of an entry indicates physical
-> >> +  lane, e.g. for 2-lane MIPI CSI-2 bus we could have "data-lanes = <1>, <2>;",
-> >> +  assuming the clock lane is on hardware lane 0. This property is valid for
-> >> +  serial busses only (e.g. MIPI CSI-2).
-> >> +- clock-lanes: a number of physical lane used as a clock lane.
-> > 
-> > This doesn't parse. Do you mean:
-> > 
-> > "a number of physical lanes used as clock lanes."?
-> 
-> Not really, an index (an array of indexes?) of physical lanes(s) used as clock
-> lane (s).
-> 
-> Currently there are only use cases for one clock lane (MIPI CSI-2 bus).
-> I'm not sure what's better, to keep that in singular (clock-lane) or plural
-> form. The plural form seems more generic. So I'm inclined to define it as:
-> 
-> clock-lanes - similarly to 'data-lanes' property, an array of physical
-> clock lane indexes. For MIPI CSI-2 bus this array contains only one entry.
-> 
-> Would it be OK like this ?
-
-I'd go with this:
-
-- clock-lanes: an array of physical clock lane indexes. Position of an entry
-  determines the logical lane number, while the value of an entry indicates
-  physical lane, e.g. for a MIPI CSI-2 bus we could have "clock-lanes = <0>;",
-  which places the clock lane on hardware lane 0. This property is valid for
-  serial busses only (e.g. MIPI CSI-2). Note that for the MIPI CSI-2 bus this
-  array contains only one entry.
-
-Regards,
-
-	Hans
+SGkgTWlrZSwNCg0KT24gV2VkLCBKYW4gMTYsIDIwMTMgYXQgMTA6MzI6MTAsIE5vcmksIFNla2hh
+ciB3cm90ZToNCj4gT24gMS8xNS8yMDEzIDk6MDIgUE0sIE1pa2UgVHVycXVldHRlIHdyb3RlOg0K
+PiA+IFF1b3RpbmcgQWZ6YWwgTW9oYW1tZWQgKDIwMTMtMDEtMTUgMDU6NDQ6MzYpDQoNCj4gPj4g
+Tm90ZToNCj4gPj4gQSBiZXR0ZXIgKGlmIGFsbG93YWJsZSkgc29sdXRpb24gbWF5IGJlIHRvIHJl
+cHJlc2VudCBjbG9jayBkaXZpZGVyIGluDQo+ID4+IExDREMgSVAgYXMgYSBiYXNpYyBkaXZpZGVy
+IGNsb2NrIC0gdGhlIG9uZSBkZWZpbmVkIGluIGNvbW1vbiBjbG9jaw0KPiA+PiBmcmFtZXdvcmsu
+IEJ1dCBmb3IgdGhpcyB0byBoYXBwZW4sIGFsbCB0aGUgcGxhdGZvcm0ncyB1c2luZyB0aGlzIGRy
+aXZlcg0KPiA+PiBzaG91bGQgYmUgdXNpbmcgY29tbW9uIGNsb2NrIGZyYW1ld29yayAoRGFWaW5j
+aSBpcyB5ZXQgdG8gYmUgY29udmVydGVkDQo+ID4+IHRvIHVzZSBjb21tb24gY2xvY2sgZnJhbWV3
+b3JrKS4gQW5kIGl0IGhhcyB0byBiZSBkZXRlcm1pbmVkIHdoZXRoZXINCj4gPj4gY29tbW9uIGNs
+b2NrIGZyYW1ld29yayBhbGxvd3MgdGhpcyBraW5kIG9mIGEgY2xvY2sgbW9kZWxsaW5nIGluc2lk
+ZSBhDQo+ID4+IGRyaXZlciBhbmQgZm9yIHRoaXMgdG8gYmUgcGFydCBvZiBjbG9jayB0cmVlLiBB
+ZHZhbnRhZ2Ugb2YgZG9pbmcgc28NCj4gPj4gd291bGQgYmUgYmV0dGVyIHJlc29sdXRpb24gZm9y
+IHBpeGVsIGNsb2NrLCBldmVuIHRob3VnaCB3aXRob3V0IHRoaXMNCj4gPj4gZXhpc3RpbmcgdXNl
+IGNhc2VzIGFyZSB3b3JraW5nIHByb3Blcmx5LiBPciBhbm90aGVyIGV4dHJlbWUgYWx0ZXJuYXRp
+dmUNCj4gPj4gd291bGQgYmUgdG8gcmVwbGljYXRlIGNsay1kaXZpZGVyIG9mIGNvbW1vbiBjbG9j
+ayBmcmFtZXdvcmsgaW5zaWRlIHRoZQ0KPiA+PiBkcml2ZXIsIGJ1dCB0aGF0IHByb2JhYmx5IGlz
+IG5vdCBwcmVmZXJyZWQgYW5kIG5vdCB3b3J0aCBhcyBpdCB3b3VsZCBiZQ0KPiA+PiBkdXBsaWNh
+dGlvbiBhbmQgd2l0aG91dCBtdWNoIGFkdmFudGFnZSB0byBleGlzdGluZyB1c2Vycy4NCg0KPiA+
+IE1vZGVsaW5nIHRoZSBkaXZpZGVyIGluc2lkZSB5b3VyIElQIGJsb2NrIGFzIGEgY2xvY2sgaXMg
+c3VwcG9ydGVkIGluIHRoZQ0KPiA+IGNvbW1vbiBjbG9jayBmcmFtZXdvcmsuICBMaW5raW5nIHVw
+IHRoZXNlIHNvcnRzIG9mIGNsb2NrcyB0byB0aGUgY2xvY2sNCj4gPiB0cmVlIHdhcyBvbmUgb2Yg
+dGhlIG9yaWdpbmFsIGRlc2lnbiBnb2FscyBvZiBDQ0YuDQoNCj4gPiBSZWdhcmRpbmcgRGFWaW5j
+aTogY29udmVydGluZyB0aGF0IHBsYXRmb3JtIG92ZXIgdG8gdXNlIENDRiB3b3VsZCBiZSB0aGUN
+Cj4gPiBiZXN0IGFwcHJvYWNoLg0KDQo+IFRoaXMgaXMgd29yayBpbiBwcm9ncmVzcy4gVGhlcmUg
+YXJlIHBhdGNoZXMgdGhhdCBoYXZlIGJlZW4gcG9zdGVkLiBXb3JrDQo+IGhhcyBiZWVuIHNsb3cg
+b24gdGhpcyB0aG91Z2ggZHVlIHRvIGxhY2sgb2YgYmFuZHdpZHRoLg0KDQo+ID4gQW4gYWx0ZXJu
+YXRpdmUgd291bGQgYmUgdGhhdCB5b3UgY291bGQgYnJlYWsNCj4gPiBzaW5nbGUtaW1hZ2UgYm9v
+dCBmb3IgQU0zMzV4IGFuZCBEYVZpbmNpLCBieSBoYXZpbmcgQU0zMzV4IHVzZSBDQ0YgYW5kDQo+
+ID4gRGFWaW5jaSB1c2UgdGhlIGxlZ2FjeSBjbG9jayBmcmFtZXdvcmsuICBGcm9tIHRoZSBMQ0RD
+IGRyaXZlcidzDQoNCj4gU2luZ2xlIGltYWdlIGZvciBEYVZpbmNpIGFuZCBBTTMzNXggaXMgbm90
+IHBvc3NpYmxlIGFueXdheSBzaW5jZSBBUk12NQ0KPiBhbmQgQVJNdjYrIGNhbm5vdCBiZSBzdXBw
+b3J0ZWQgaW4gYSBzaW5nbGUgaW1hZ2UuDQoNCj4gPiBwZXJzcGVjdGl2ZSB0aGlzIHNob3VsZCBu
+b3QgbWF0dGVyIGFuZCBpcyBpbmRlZWQgdGhlIHB1cnBvc2Ugb2YgdGhlDQo+ID4gY2xrLmggYXBp
+IGFuZCBjbGtkZXYgaW50ZXJmYWNlcywgaG93ZXZlciBsb29raW5nIGF0IHRoaXMgZHJpdmVyIEkg
+Y2FuDQo+ID4gc2VlIHRoZXJlIHdvdWxkIHN0aWxsIGJlIGEgbG90IGlmZGVmLWVyeSBnb2luZyBv
+bi4uLiBiZXR0ZXIgdG8ganVzdA0KPiA+IGNvbnZlcnQgZXZlcnl0aGluZyBvdmVyIHRvIENDRi4N
+Cg0KPiBXYWl0aW5nIGZvciBEYVZpbmNpIENDRiB0byBjb21wbGV0ZSB3aWxsIGJlIHRvbyBsb25n
+IGEgd2FpdC4gUHJvYmFibHkNCj4gY29udmVydCB0byBDQ0YganVzdCBmb3IgQU0zMzV4IEFUTS4g
+VGhlcmUgd291bGQgYmUgc29tZSBpZmRlZidyeSBidXQNCj4gaG9wZWZ1bGx5IHRoYXQgbmVlZCBu
+b3QgYmUgaW5zaWRlIGZ1bmN0aW9uIGJvZGllcy4gV291bGQgaGF2ZSB0byBzZWUgdGhlDQo+IGlt
+cGxlbWVudGF0aW9uLCBJIGd1ZXNzLg0KDQp2NCBwb3N0ZWQgaGFzIHRoZSBkaXZpZGVyIGluIExD
+REMgSVAgbW9kZWxlZCBieSBjbG9jayBub2RlIGZvciBDQ0YsIGZvcg0Kbm9uLUNDRiAoRGFWaW5j
+aSksIGV4aXN0aW5nIGxvZ2ljIGlzIGtlcHQgYXMgaXMgd2l0aCB0aGUgaGVscCBvZiBpZmRlZidz
+DQooYXMgRGFWaW5jaSBtYWludGFpbmVyIG1lbnRpb25lZCB0aGF0IERhVmluY2kgQ0NGIG1heSB0
+YWtlIHNvbWUgdGltZSkNCg0KUmVnYXJkcw0KQWZ6YWwNCg0KDQo=
