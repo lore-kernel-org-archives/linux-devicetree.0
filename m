@@ -1,112 +1,104 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH RFC v3 01/15] [media] Add common video interfaces OF
- bindings documentation
-Date: Wed, 23 Jan 2013 11:21:24 +0100
-Message-ID: <50FFB9A4.1090300@samsung.com>
-References: <1356969793-27268-2-git-send-email-s.nawrocki@samsung.com>
- <1357232629-7336-1-git-send-email-s.nawrocki@samsung.com>
- <201301211131.11047.hverkuil@xs4all.nl>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] ARM: dts: specify all the per-cpu interrupts of arch
+ timer for exynos5440
+Date: Wed, 23 Jan 2013 10:36:14 +0000
+Message-ID: <20130123103614.GD32237@e106331-lin.cambridge.arm.com>
+References: <1358818887-16870-1-git-send-email-kgene.kim@samsung.com>
+ <20130122101554.GA18876@e106331-lin.cambridge.arm.com>
+ <063f01cdf8ec$926cda30$b7468e90$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <201301211131.11047.hverkuil@xs4all.nl>
-Sender: linux-media-owner@vger.kernel.org
-To: Hans Verkuil <hverkuil@xs4all.nl>
-Cc: linux-media@vger.kernel.org, g.liakhovetski@gmx.de, laurent.pinchart@ideasonboard.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <063f01cdf8ec$926cda30$b7468e90$@samsung.com>
+Content-Language: en-US
+Content-Disposition: inline
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Thomas Abraham' <thomas.ab@samsung.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, 'Tony Lindgren' <tony@atomide.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Hans,
+On Tue, Jan 22, 2013 at 10:05:18PM +0000, Kukjin Kim wrote:
+> Mark Rutland wrote:
+> >
+> + devicetree-discuss, Grant Likely, Rob Herring and Tony Lindgren
+>  
+> > On Tue, Jan 22, 2013 at 01:41:27AM +0000, Kukjin Kim wrote:
+> > > From: Thomas Abraham <thomas.ab@samsung.com>
+> > >
+> > > Need to be changed requirements in the 'cpus' node for exynos5440
+> > > to specify all the per-cpu interrupts of arch timer.
+> > 
+> > The node(s) for the arch timer should not be in the cpus/cpu@N nodes.
+> > Instead, there should be one node (in the root of the tree).
+> > 
+> Well, I don't think so. As per my understanding, the local timers are
+> attached to every ARM cores (cpus) and it generates certain interrupt to the
+> GIC. So the correct representation for this in device tree is to include the
+> interrupts in the cpu nodes in dts file. Your comments  refer to a
+> limitation in the Linux kernel implementation of the arch_timer and it
+> should not result in representing the hardware details incorrectly in the
+> dts file.
 
-On 01/21/2013 11:31 AM, Hans Verkuil wrote:
-[...]
->> +Required properties
->> +-------------------
->> +
->> +If there is more than one 'port' or more than one 'endpoint' node following
->> +properties are required in relevant parent node:
->> +
->> +- #address-cells : number of cells required to define port number, should be 1.
->> +- #size-cells    : should be zero.
->> +
->> +Optional endpoint properties
->> +----------------------------
->> +
->> +- remote-endpoint: phandle to an 'endpoint' subnode of the other device node.
->> +- slave-mode: a boolean property, run the link in slave mode. Default is master
->> +  mode.
->> +- bus-width: number of data lines, valid for parallel busses.
->> +- data-shift: on parallel data busses, if bus-width is used to specify the
->> +  number of data lines, data-shift can be used to specify which data lines are
->> +  used, e.g. "bus-width=<10>; data-shift=<2>;" means, that lines 9:2 are used.
->> +- hsync-active: active state of HSYNC signal, 0/1 for LOW/HIGH respectively.
->> +- vsync-active: active state of VSYNC signal, 0/1 for LOW/HIGH respectively.
->> +  Note, that if HSYNC and VSYNC polarities are not specified, embedded
->> +  synchronization may be required, where supported.
->> +- data-active: similar to HSYNC and VSYNC, specifies data line polarity.
->> +- field-even-active: field signal level during the even field data transmission.
->> +- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
->> +  signal.
->> +- data-lanes: an array of physical data lane indexes. Position of an entry
->> +  determines logical lane number, while the value of an entry indicates physical
->> +  lane, e.g. for 2-lane MIPI CSI-2 bus we could have "data-lanes = <1>, <2>;",
->> +  assuming the clock lane is on hardware lane 0. This property is valid for
->> +  serial busses only (e.g. MIPI CSI-2).
->> +- clock-lanes: a number of physical lane used as a clock lane.
-> 
-> This doesn't parse. Do you mean:
-> 
-> "a number of physical lanes used as clock lanes."?
+I disagree. The "correct representation" is whatever the devicetree binding
+documentation describes. It does not describe placing timer nodes in the cpu
+nodes.
 
-Not really, an index (an array of indexes?) of physical lanes(s) used as clock
-lane (s).
+> 
+> > If this works currently it's only because the driver picks up one of the
+> nodes,
+> > and luckily it's the same as the others. This is not guaranteed to work in
+> > future, and will likely break.
+> > 
+> It is up to the Linux kernel implementation of arch_timer to handle the
+> hardware details in dts file accordingly.
 
-Currently there are only use cases for one clock lane (MIPI CSI-2 bus).
-I'm not sure what's better, to keep that in singular (clock-lane) or plural
-form. The plural form seems more generic. So I'm inclined to define it as:
+The binding specification does not specify that there should be multiple timer
+nodes, nor does it specify that they should be under cpu nodes. The timers,
+being a banked resource, can be described with one node.
 
-clock-lanes - similarly to 'data-lanes' property, an array of physical
-clock lane indexes. For MIPI CSI-2 bus this array contains only one entry.
+It is not up to the Linux kernel to handle undocumented variations of bindings.
 
-Would it be OK like this ?
+> 
+> > >
+> > > Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+> > > Signed-off-by: Kukjin Kim <kgene.kim@samsung.com>
+> > > ---
+> > >  arch/arm/boot/dts/exynos5440.dtsi |   20 ++++++++++++++++----
+> > >  1 file changed, 16 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/arch/arm/boot/dts/exynos5440.dtsi
+> > b/arch/arm/boot/dts/exynos5440.dtsi
+> > > index 5406689..c5bd8ed 100644
+> > > --- a/arch/arm/boot/dts/exynos5440.dtsi
+> > > +++ b/arch/arm/boot/dts/exynos5440.dtsi
+> > > @@ -28,7 +28,10 @@
+> > >  			compatible = "arm,cortex-a15";
+> > >  			timer {
+> > >  				compatible = "arm,armv7-timer";
+> > > -				interrupts = <1 13 0xf08>;
+> > > +				interrupts = <1 13 0xf08>,
+> > > +					     <1 14 0xf08>,
+> > > +					     <1 11 0xf08>,
+> > > +					     <1 10 0xf08>;
+> > 
+> > Also, this interrupts list is updated differently to all the other nodes.
+> Typo?
+> > 
+> Hmm, I think this should be fine. If any concerns, please let me know in
+> detail.
 
->> +- clock-noncontinuous: a boolean property to allow MIPI CSI-2 non-continuous
->> +  clock mode.
->> +
->> +Example
->> +-------
->> +
->> +The below example snippet describes two data pipelines.  ov772x and imx074 are
-> 
-> s/below example snippet/example snippet below/
-> 
->> +camera sensors with parallel and serial (MIPI CSI-2) video bus respectively.
-> 
-> s/with/with a/
-> 
->> +Both sensors are on I2C control bus corresponding to i2c0 controller node.
-> 
-> s/on/on the/
-> s/to/to the/
-> 
->> +ov772x sensor is linked directly to the ceu0 video host interface.  imx074 is
->> +linked to ceu0 through MIPI CSI-2 receiver (csi2). ceu0 has a (single) DMA
-> 
-> s/through/through the/
-> 
->> +engine writing captured data to memory.  ceu0 node has single 'port' node which
-> 
-> s/single/a single/
-> 
->> +indicates at any time only one of following data pipeline can be active:
-> 
-> s/at/that at/
-> s/one of/one of the/
-> s/pipeline/pipelines/
+Sorry, I misread the diff. Your patch in fact corrects them to be consistent
+where they weren't previously.
 
-Ok, I'll corect all these. Thanks.
+> 
+> [...]
+> 
+> Thanks.
+> 
+> - Kukjin
+> 
+> 
 
---
-
-Regards,
-Sylwester
+Thanks,
+Mark.
