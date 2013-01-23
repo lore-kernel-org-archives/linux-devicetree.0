@@ -1,58 +1,83 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 0/2] usb: exynos: Fix compatible strings used for device
-Date: Wed, 23 Jan 2013 13:40:11 +0100
-Message-ID: <50FFDA2B.4010506@samsung.com>
-References: <CAFp+6iHaYpinaq8K7rf1GxOJoap6Rd8kGcJn4UmHU28BjTCAsA@mail.gmail.com>
- <CAFp+6iFVSi_pg39YyeEbAgwDsU4kun7u0g8z3u3dVMP4oLpavQ@mail.gmail.com>
- <CAD=FV=WtsfDr=W7TB5BYW087FqXyxXCb0xVfGha6_F65cPCE9A@mail.gmail.com>
- <016901cde163$6be034c0$43a09e40$@samsung.com>
- <CAFp+6iGq32UV3mZ=QYVizJGQEark0Qztu7m4jy3DvG431ajV1w@mail.gmail.com>
- <50DB811A.8010408@gmail.com> <054601cdf862$534a8ad0$f9dfa070$@samsung.com>
- <CAFp+6iGrp8b+T3n+xNha7jMFMgDsFR8E9zCijoUANZgmN4QL_A@mail.gmail.com>
- <20130122084817.GC16143@arwen.pp.htv.fi>
- <063e01cdf8ec$85e637c0$91b2a740$@samsung.com>
- <20130123095021.GB22054@arwen.pp.htv.fi>
- <CAFp+6iH2_18s=HwsLhekyUZW=yNCjZzskiA5s-ofrCbzDBGL4Q@mail.gmail.com>
+From: Hans Verkuil <hverkuil@xs4all.nl>
+Subject: Re: [PATCH RFC v3 01/15] [media] Add common video interfaces OF bindings documentation
+Date: Wed, 23 Jan 2013 13:59:39 +0100
+Message-ID: <201301231359.39655.hverkuil@xs4all.nl>
+References: <1356969793-27268-2-git-send-email-s.nawrocki@samsung.com> <201301211131.11047.hverkuil@xs4all.nl> <50FFB9A4.1090300@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAFp+6iH2_18s=HwsLhekyUZW=yNCjZzskiA5s-ofrCbzDBGL4Q@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautamvivek1987@gmail.com>
-Cc: balbi@ti.com, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Thomas Abraham <thomas.abraham@linaro.org>, linux-usb@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org, Alan Stern <stern@rowland.harvard.edu>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, jg1.han@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>, cpgs@samsung.com
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <50FFB9A4.1090300@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-media@vger.kernel.org, g.liakhovetski@gmx.de, laurent.pinchart@ideasonboard.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 01/23/2013 01:20 PM, Vivek Gautam wrote:
->>>>> -     { .compatible = "samsung,exynos-dwc3" },
->>>>> +     { .compatible = "samsung,synopsis-dwc3" }
->>>>
->>>> You're both missing a point here. The synopsys IP driver is called
->>>> dwc3.ko and that's compatible with synopsys,dwc3. Your glue layer driver
->>>> (dwc3-exynos.ko) is compatible with your platform, so
->>>> samsung,exynos-dwc3 sounds correct to me.
->>>>
->>> Hmm...yeah, you're right and agreed.
->>>
->>> However, we need to use more clear name there like "samsung,exynos-dwusb3"
->>> in compatible, because you know there are lots of other IPs in Synopsis
->>> Design Ware brand. So we have to include usb in compatible for that.
->>
->> fair enough.
->>
+On Wed 23 January 2013 11:21:24 Sylwester Nawrocki wrote:
+> Hi Hans,
 > 
-> Thanks for your suggestions. This definitely make things clear.
-> I shall then keep "samsung,exynos-dwusb3" as the compatible string or,
-> should i be including '5250' string as well, something like
-> "samsung,exynos5250-dwusb3"
-> as pointed out by Grant earlier ?  :-O
+> On 01/21/2013 11:31 AM, Hans Verkuil wrote:
+> [...]
+> >> +Required properties
+> >> +-------------------
+> >> +
+> >> +If there is more than one 'port' or more than one 'endpoint' node following
+> >> +properties are required in relevant parent node:
+> >> +
+> >> +- #address-cells : number of cells required to define port number, should be 1.
+> >> +- #size-cells    : should be zero.
+> >> +
+> >> +Optional endpoint properties
+> >> +----------------------------
+> >> +
+> >> +- remote-endpoint: phandle to an 'endpoint' subnode of the other device node.
+> >> +- slave-mode: a boolean property, run the link in slave mode. Default is master
+> >> +  mode.
+> >> +- bus-width: number of data lines, valid for parallel busses.
+> >> +- data-shift: on parallel data busses, if bus-width is used to specify the
+> >> +  number of data lines, data-shift can be used to specify which data lines are
+> >> +  used, e.g. "bus-width=<10>; data-shift=<2>;" means, that lines 9:2 are used.
+> >> +- hsync-active: active state of HSYNC signal, 0/1 for LOW/HIGH respectively.
+> >> +- vsync-active: active state of VSYNC signal, 0/1 for LOW/HIGH respectively.
+> >> +  Note, that if HSYNC and VSYNC polarities are not specified, embedded
+> >> +  synchronization may be required, where supported.
+> >> +- data-active: similar to HSYNC and VSYNC, specifies data line polarity.
+> >> +- field-even-active: field signal level during the even field data transmission.
+> >> +- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel clock
+> >> +  signal.
+> >> +- data-lanes: an array of physical data lane indexes. Position of an entry
+> >> +  determines logical lane number, while the value of an entry indicates physical
+> >> +  lane, e.g. for 2-lane MIPI CSI-2 bus we could have "data-lanes = <1>, <2>;",
+> >> +  assuming the clock lane is on hardware lane 0. This property is valid for
+> >> +  serial busses only (e.g. MIPI CSI-2).
+> >> +- clock-lanes: a number of physical lane used as a clock lane.
+> > 
+> > This doesn't parse. Do you mean:
+> > 
+> > "a number of physical lanes used as clock lanes."?
+> 
+> Not really, an index (an array of indexes?) of physical lanes(s) used as clock
+> lane (s).
+> 
+> Currently there are only use cases for one clock lane (MIPI CSI-2 bus).
+> I'm not sure what's better, to keep that in singular (clock-lane) or plural
+> form. The plural form seems more generic. So I'm inclined to define it as:
+> 
+> clock-lanes - similarly to 'data-lanes' property, an array of physical
+> clock lane indexes. For MIPI CSI-2 bus this array contains only one entry.
+> 
+> Would it be OK like this ?
 
-IMHO this needs to be "samsung,exynos5250-dwusb3", rather than 
-"samsung,exynos-dwusb3". :)
+I'd go with this:
 
---
+- clock-lanes: an array of physical clock lane indexes. Position of an entry
+  determines the logical lane number, while the value of an entry indicates
+  physical lane, e.g. for a MIPI CSI-2 bus we could have "clock-lanes = <0>;",
+  which places the clock lane on hardware lane 0. This property is valid for
+  serial busses only (e.g. MIPI CSI-2). Note that for the MIPI CSI-2 bus this
+  array contains only one entry.
 
-Thanks,
-Sylwester
+Regards,
+
+	Hans
