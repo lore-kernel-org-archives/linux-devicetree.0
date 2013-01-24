@@ -1,25 +1,36 @@
-From: Peter Korsgaard <jacmet@sunsite.dk>
-Subject: Re: [PATCH] mtd: devices: elm: Removes <xx> literals in elm DT node
-Date: Thu, 24 Jan 2013 09:30:38 +0100
-Message-ID: <8738xr2dap.fsf@dell.be.48ers.dk>
-References: <9580c5839ea64e09ddd61610ce922d7cd1adc861.1359010256.git.avinashphilip@ti.com>
+From: "Kumar, Anil" <anilkumar.v@ti.com>
+Subject: [PATCH 0/2] ARM: davinci: da850: add wdt DT node
+Date: Thu, 24 Jan 2013 14:08:13 +0530
+Message-ID: <1359016695-10362-1-git-send-email-anilkumar.v@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <9580c5839ea64e09ddd61610ce922d7cd1adc861.1359010256.git.avinashphilip@ti.com>
-	(Philip Avinash's message of "Thu, 24 Jan 2013 12:23:30 +0530")
-Sender: linux-doc-owner@vger.kernel.org
-To: Philip Avinash <avinashphilip@ti.com>
-Cc: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, linux-kernel@vger.kernel.org, gururaja.hebbar@ti.com, linux-mtd@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
+Cc: b-cousson@ti.com, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux@arm.linux.org.uk, nsekhar@ti.com, khilman@deeprootsystems.com, hs@denx.de, anilkumar.v@ti.com
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Philip" == Philip Avinash <avinashphilip@ti.com> writes:
+Add wdt DT node and OF_DEV_AUXDATA for wdt driver in
+da850 board dt file to use wdt clock.
 
- Philip> As part of removing generalized dependency, replace <xx>
- Philip> literal fields in DT compatible field with <52> for am335x
- Philip> platforms.
+This series applies on top of v3.8-rc4.
 
-Acked-by: Peter Korsgaard <jacmet@sunsite.dk>
+This is tested on da850 EVM.
+
+Test Procedure:
+
+$watchdog -F /dev/watchdog (Device should not reboot)
+ After wdt heartbeat timeout(DEFAULT_HEARTBEAT is 60 sec)
+$ctr + c   (Device should reboot after heartbeat timeout)
+
+Kumar, Anil (2):
+  ARM: davinci: da850: add wdt DT node
+  ARM: davinci: da850: add wdt OF_DEV_AUXDATA entry
+
+ arch/arm/boot/dts/da850-evm.dts  |    3 +++
+ arch/arm/boot/dts/da850.dtsi     |    5 +++++
+ arch/arm/mach-davinci/da8xx-dt.c |    8 +++++++-
+ 3 files changed, 15 insertions(+), 1 deletions(-)
 
 -- 
-Bye, Peter Korsgaard
+1.7.4.1
