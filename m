@@ -1,50 +1,65 @@
-From: Philip Avinash <avinashphilip@ti.com>
-Subject: [PATCH] mtd: devices: elm: Removes <xx> literals in elm DT node
-Date: Thu, 24 Jan 2013 12:23:30 +0530
-Message-ID: <9580c5839ea64e09ddd61610ce922d7cd1adc861.1359010256.git.avinashphilip@ti.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v16 RESEND 0/7] of: add display helper
+Date: Thu, 24 Jan 2013 08:56:45 +0100
+Message-ID: <20130124075645.GA12862@pengutronix.de>
+References: <1358766482-6275-1-git-send-email-s.trumtrar@pengutronix.de>
+ <CAF6AEGvFNA1gc_5XWqL_baEnn8DTn0R-xqui034rg3Eo-V_6Qw@mail.gmail.com>
+ <20130123091202.GA11828@pengutronix.de>
+ <CAPM=9txadRcm4j7_GryvxgosEhF8S3-1rGxqR_bw8UXMaoVWug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net
-Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, hvaibhav@ti.com, Philip Avinash <avinashphilip@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPM=9txadRcm4j7_GryvxgosEhF8S3-1rGxqR_bw8UXMaoVWug@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Dave Airlie <airlied@gmail.com>
+Cc: Rob Clark <robdclark@gmail.com>, devicetree-discuss@lists.ozlabs.org, David Airlie <airlied@linux.ie>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "Mohammed, Afzal" <afzal@ti.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-As part of removing generalized dependency, replace <xx> literal fields
-in DT compatible field with <52> for am335x platforms.
+On Thu, Jan 24, 2013 at 10:15:54AM +1000, Dave Airlie wrote:
+> >> > Hi!
+> >> >
+> >> > There was still no maintainer, that commented, ack'd, nack'd, apply'd the
+> >> > series. So, this is just a resend.
+> >> > The patches were tested with:
+> >> >
+> >> >         - v15 on Tegra by Thierry
+> >> >         - sh-mobile-lcdcfb by Laurent
+> >> >         - MX53QSB by Marek
+> >> >         - Exynos: smdk5250 by Leela
+> >> >         - AM335X EVM & AM335X EVM-SK by Afzal
+> >> >         - imx6q: sabrelite, sabresd by Philipp and me
+> >> >         - imx53: tqma53/mba53 by me
+> >>
+> >>
+> >> btw, you can add my tested-by for this series..  I've been using them
+> >> for the tilcdc lcd-panel output driver support.
+> >>
+> >
+> > Thanks. The more drivers the merrier ;-)
+> >
+> 
+> I'll probably merge these via my tree for lack of anyone else doing
+> it. I just don't want to end up as the fbdev maintainer by default,
 
-Signed-off-by: Philip Avinash <avinashphilip@ti.com>
----
- Documentation/devicetree/bindings/mtd/elm.txt |    2 +-
- drivers/mtd/devices/elm.c                     |    2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+\o/ very good to hear. Thanks.
 
-diff --git a/Documentation/devicetree/bindings/mtd/elm.txt b/Documentation/devicetree/bindings/mtd/elm.txt
-index e43c668..8c1528c 100644
---- a/Documentation/devicetree/bindings/mtd/elm.txt
-+++ b/Documentation/devicetree/bindings/mtd/elm.txt
-@@ -10,7 +10,7 @@ Optional properties:
- 
- Example:
- elm: elm@0 {
--	compatible	= "ti,am33xx-elm";
-+	compatible = "ti,am3352-elm";
- 	reg = <0x48080000 0x2000>;
- 	interrupts = <4>;
- };
-diff --git a/drivers/mtd/devices/elm.c b/drivers/mtd/devices/elm.c
-index f78f43f..f034239 100644
---- a/drivers/mtd/devices/elm.c
-+++ b/drivers/mtd/devices/elm.c
-@@ -381,7 +381,7 @@ static int elm_remove(struct platform_device *pdev)
- 
- #ifdef CONFIG_OF
- static const struct of_device_id elm_of_match[] = {
--	{ .compatible = "ti,am33xx-elm" },
-+	{ .compatible = "ti,am3352-elm" },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, elm_of_match);
+> maybe if we move the console stuff out of drivers/video to somewhere
+
+Okay. That confused me for a second, but it doesn't seem to be directed at
+me *phew*.
+
+> else I'd be willing to look after it, but the thought of maintaining
+> fbdev drivers would drive me to a liver transplant.
+> 
+> Dave.
+> 
+
+Regards,
+Steffen
+
 -- 
-1.7.9.5
-
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
