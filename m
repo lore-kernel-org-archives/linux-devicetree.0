@@ -1,97 +1,30 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH] ARM: dts: specify all the per-cpu interrupts of arch
- timer for exynos5440
-Date: Thu, 24 Jan 2013 13:16:34 +0000
-Message-ID: <51013432.3080903@arm.com>
-References: <1358818887-16870-1-git-send-email-kgene.kim@samsung.com> <20130122101554.GA18876@e106331-lin.cambridge.arm.com> <063f01cdf8ec$926cda30$b7468e90$@samsung.com> <20130123103614.GD32237@e106331-lin.cambridge.arm.com> <50FFC1B0.8000601@ti.com> <51012C4B.5080300@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: [PATCH v2 0/2] usb: exynos: Fix compatible strings used for device
+Date: Thu, 24 Jan 2013 19:15:28 +0530
+Message-ID: <1359035130-22667-1-git-send-email-gautam.vivek@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51012C4B.5080300@ti.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Rutland <Mark.Rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Tony Lindgren' <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, 'Thomas Abraham' <thomas.ab@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: linux-usb@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, stern@rowland.harvard.edu, kgene.kim@samsung.com, thomas.abraham@linaro.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, sylvester.nawrocki@gmail.com, dianders@chromium.org, jg1.han@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Benoit,
+Using chip specific compatible string as it should be.
+So fixing this for ehci-s5p, ohci-exynos and dwc3-exynos
+which till now used a generic 'exynos' in their compatible strings.
 
-On 24/01/13 12:42, Benoit Cousson wrote:
-> Hi Santosh,
-> 
-> On 01/23/2013 11:55 AM, Santosh Shilimkar wrote:
->> Looping Marc, Benoit
->>
->> On Wednesday 23 January 2013 04:06 PM, Mark Rutland wrote:
->>> On Tue, Jan 22, 2013 at 10:05:18PM +0000, Kukjin Kim wrote:
->>>> Mark Rutland wrote:
->>>>>
->>>> + devicetree-discuss, Grant Likely, Rob Herring and Tony Lindgren
->>>>
->>>>> On Tue, Jan 22, 2013 at 01:41:27AM +0000, Kukjin Kim wrote:
->>>>>> From: Thomas Abraham <thomas.ab@samsung.com>
->>>>>>
->>>>>> Need to be changed requirements in the 'cpus' node for exynos5440
->>>>>> to specify all the per-cpu interrupts of arch timer.
->>>>>
->>>>> The node(s) for the arch timer should not be in the cpus/cpu@N nodes.
->>>>> Instead, there should be one node (in the root of the tree).
->>>>>
->>>> Well, I don't think so. As per my understanding, the local timers are
->>>> attached to every ARM cores (cpus) and it generates certain interrupt
->>>> to the
->>>> GIC. So the correct representation for this in device tree is to
->>>> include the
->>>> interrupts in the cpu nodes in dts file. Your comments  refer to a
->>>> limitation in the Linux kernel implementation of the arch_timer and it
->>>> should not result in representing the hardware details incorrectly in
->>>> the
->>>> dts file.
->>>
->>> I disagree. The "correct representation" is whatever the devicetree
->>> binding
->>> documentation describes. It does not describe placing timer nodes in
->>> the cpu
->>> nodes.
->>>
->> This seems to be exact same topic what is getting discussed here [1]
->> Technically DT is suppose to represent how the hardware is rather than
->> how the bindings are done.
->>
->> But as Marc pointed out, the approach taken currently is to not
->> duplicate the banked information. The thread [1] isn't concluded
->> yet but looks like we might want to avoid duplicating the information
->> considering, more of such duplication needs to follow. e.g gic i/f
->>
->> Am still waiting on what Benoit has to say ?
-> 
-> I agree with you :-)
-> 
-> I'm not sure the binding was properly done to reflect the HW accurately.
-> 
-> A local timer for my point of view should be located in the cpu node
-> like a L1 cache. Or at least referenced in each cpu by a phandle.
->
-> What was the rational to put it in the root?
+Changes from v1:
+	- Changing compatible string from "samsung,exynos5250-dwc3" to
+	  "samsung,exynos5250-dwusb3" as per discussion happened in thread:
+	  [PATCH 0/2] usb: exynos: Fix compatible strings used for device.
 
-The rational was to follow what we already do for most (all?) banked
-resources. We already have TWD, GIC and PMU that have a root node,
-avoiding duplicated resources. I think consistency is an important thing
-to have.
+Vivek Gautam (2):
+  usb: ehci-s5p/ohci-exynos: Fix compatible strings for the device
+  usb: dwc3-exynos: Fix compatible strings for the device
 
-If we decide to move everything into CPU nodes and duplicate all the
-banked resources, fine. But that has impacts that reach far beyond the
-simple case of the timer.
+ drivers/usb/dwc3/dwc3-exynos.c |    2 +-
+ drivers/usb/host/ehci-s5p.c    |    2 +-
+ drivers/usb/host/ohci-exynos.c |    2 +-
+ 3 files changed, 3 insertions(+), 3 deletions(-)
 
-In particular, good luck with the GIC distributor interface, where the
-32 first interrupts are per CPU. This would also mandate a redesign of
-the way we specify a PPI, as the CPU mask in the third field doesn't
-mean a thing anymore.
-
-If you insist on having a phandle to a timer node, fine by me.
-
-Cheers,
-
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+1.7.6.5
