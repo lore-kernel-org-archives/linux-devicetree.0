@@ -1,431 +1,233 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH] drm/i2c: Add driver for PTN3460 LVDS/DP bridge
-Date: Thu, 24 Jan 2013 13:09:06 -0500
-Message-ID: <1359050946-25061-1-git-send-email-seanpaul@chromium.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH RFC v4 01/14] [media] Add common video interfaces OF
+ bindings documentation
+Date: Thu, 24 Jan 2013 19:30:10 +0100
+Message-ID: <51017DB2.5050905@samsung.com>
+References: <1358969489-20420-1-git-send-email-s.nawrocki@samsung.com>
+ <1358969489-20420-2-git-send-email-s.nawrocki@samsung.com>
+ <1525960.fMnIjkZnjX@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1525960.fMnIjkZnjX@avalon>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: linux-media@vger.kernel.org, hverkuil@xs4all.nl, g.liakhovetski@gmx.de, kyungmin.park@samsung.com, kgene.kim@samsung.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, myungjoo.ham@samsung.com, sw0312.kim@samsung.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the driver for the PTN3460 LVDS/DP bridge chip.
+Hi Laurent,
 
-The driver allows the EDID emulation to be selected from device tree,
-along with specifying the GPIOs driving powerdown and reset pins.
+Thanks for the review.
 
-The chip has a bug in it such that when the powerdown and reset pins
-are toggled, the hotplug line blips before the bridge is completely
-ready. This forces us to wait for the maximum specified setup time
-(90ms) before interacting with the chip via i2c or doing DP training, as
-opposed to watching the hotplug line. This limitation means that we need
-to synchronize the bridge driver with the DP driver via the
-ptn3460_wait_until_ready function.
+On 01/24/2013 11:16 AM, Laurent Pinchart wrote:
+[...]
+>> +Data interfaces on all video devices are described by their child 'port'
+>> +nodes. Configuration of a port depends on other devices participating in
+>> +the data transfer and is described by 'endpoint' subnodes.
+>> +
+>> +dev {
+>> +	#address-cells = <1>;
+>> +	#size-cells = <0>;
+>> +	port@0 {
+>> +		endpoint@0 { ... };
+>> +		endpoint@1 { ... };
+>> +	};
+>> +	port@1 { ... };
+>> +};
+>> +
+>> +If a port can be configured to work with more than one other device on the
+>> +same bus, an 'endpoint' child node must be provided for each of them.  If
+>> +more than one port is present in a device node or there is more than one
+>> +endpoint at a port, a common scheme, using '#address-cells', '#size-cells'
+>> +and 'reg' properties is used.
+> 
+> Wouldn't this cause problems if the device has both video ports and a child 
+> bus ? Using #address-cells and #size-cells for the video ports would prevent 
+> the child bus from being handled in the usual way.
 
-Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- .../devicetree/bindings/drm/i2c/ptn3460.txt        |   27 ++
- drivers/gpu/drm/Kconfig                            |    2 +
- drivers/gpu/drm/i2c/Kconfig                        |    6 +
- drivers/gpu/drm/i2c/Makefile                       |    2 +
- drivers/gpu/drm/i2c/ptn3460.c                      |  283 ++++++++++++++++++++
- include/drm/i2c/ptn3460.h                          |   19 ++
- 6 files changed, 339 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/drm/i2c/ptn3460.txt
- create mode 100644 drivers/gpu/drm/i2c/Kconfig
- create mode 100644 drivers/gpu/drm/i2c/ptn3460.c
- create mode 100644 include/drm/i2c/ptn3460.h
+Indeed, it looks like a serious issue in these bindings.
 
-diff --git a/Documentation/devicetree/bindings/drm/i2c/ptn3460.txt b/Documentation/devicetree/bindings/drm/i2c/ptn3460.txt
-new file mode 100644
-index 0000000..c1cd329
---- /dev/null
-+++ b/Documentation/devicetree/bindings/drm/i2c/ptn3460.txt
-@@ -0,0 +1,27 @@
-+ptn3460-bridge bindings
-+
-+Required properties:
-+	- compatible: "nxp,ptn3460"
-+	- reg: i2c address of the bridge
-+	- powerdown-gpio: OF device-tree gpio specification
-+	- reset-gpio: OF device-tree gpio specification
-+	- edid-emulation: The EDID emulation entry to use
-+		+-------+------------+------------------+
-+		| Value | Resolution | Description      |
-+		|   0   |  1024x768  | NXP Generic      |
-+		|   1   |  1920x1080 | NXP Generic      |
-+		|   2   |  1920x1080 | NXP Generic      |
-+		|   3   |  1600x900  | Samsung LTM200KT |
-+		|   4   |  1920x1080 | Samsung LTM230HT |
-+		|   5   |  1366x768  | NXP Generic      |
-+		|   6   |  1600x900  | ChiMei M215HGE   |
-+		+-------+------------+------------------+
-+
-+Example:
-+	ptn3460-bridge@20 {
-+		compatible = "nxp,ptn3460";
-+		reg = <0x20>;
-+		powerdown-gpio = <&gpy2 5 1 0 0>;
-+		reset-gpio = <&gpx1 5 1 0 0>;
-+		edid-emulation = <5>;
-+	};
-diff --git a/drivers/gpu/drm/Kconfig b/drivers/gpu/drm/Kconfig
-index 983201b..45006a8 100644
---- a/drivers/gpu/drm/Kconfig
-+++ b/drivers/gpu/drm/Kconfig
-@@ -212,3 +212,5 @@ source "drivers/gpu/drm/cirrus/Kconfig"
- source "drivers/gpu/drm/shmobile/Kconfig"
- 
- source "drivers/gpu/drm/tegra/Kconfig"
-+
-+source "drivers/gpu/drm/i2c/Kconfig"
-diff --git a/drivers/gpu/drm/i2c/Kconfig b/drivers/gpu/drm/i2c/Kconfig
-new file mode 100644
-index 0000000..a015f61
---- /dev/null
-+++ b/drivers/gpu/drm/i2c/Kconfig
-@@ -0,0 +1,6 @@
-+config DRM_PTN3460
-+	tristate "PTN3460 DP/LVDS bridge"
-+	depends on DRM && I2C
-+	---help---
-+	  Adds the driver for the NXP PTN3460 DP/LVDS bridge chip.
-+
-diff --git a/drivers/gpu/drm/i2c/Makefile b/drivers/gpu/drm/i2c/Makefile
-index 9286256..392904c 100644
---- a/drivers/gpu/drm/i2c/Makefile
-+++ b/drivers/gpu/drm/i2c/Makefile
-@@ -3,5 +3,7 @@ ccflags-y := -Iinclude/drm
- ch7006-y := ch7006_drv.o ch7006_mode.o
- obj-$(CONFIG_DRM_I2C_CH7006) += ch7006.o
- 
-+obj-$(CONFIG_DRM_PTN3460) += ptn3460.o
-+
- sil164-y := sil164_drv.o
- obj-$(CONFIG_DRM_I2C_SIL164) += sil164.o
-diff --git a/drivers/gpu/drm/i2c/ptn3460.c b/drivers/gpu/drm/i2c/ptn3460.c
-new file mode 100644
-index 0000000..6716d52
---- /dev/null
-+++ b/drivers/gpu/drm/i2c/ptn3460.c
-@@ -0,0 +1,283 @@
-+/*
-+ * NXP PTN3460 DP/LVDS bridge driver
-+ *
-+ * Copyright (C) 2013 Google, Inc.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/pm.h>
-+#include <linux/i2c.h>
-+#include <linux/gpio.h>
-+#include <linux/delay.h>
-+
-+#include "drmP.h"
-+
-+#include "i2c/ptn3460.h"
-+
-+#define PTN3460_EDID_EMULATION_ADDR		0x84
-+#define PTN3460_EDID_ENABLE_EMULATION		0
-+#define PTN3460_EDID_EMULATION_SELECTION	1
-+
-+#define PTN3460_READY_BLOCK	0
-+#define PTN3460_READY_UNBLOCK	1
-+
-+struct ptn3460_platform_data {
-+	struct device *dev;
-+	struct i2c_client *client;
-+	u8 addr;
-+	int gpio_pd_n;
-+	int gpio_rst_n;
-+	u32 edid_emulation;
-+	struct delayed_work ptn_work;
-+};
-+
-+static atomic_t ptn3460_ready;
-+static wait_queue_head_t ptn3460_wait_queue;
-+
-+static void initialize_wait_queue_once(void)
-+{
-+	static atomic_t wait_queue_initialized;
-+
-+	if (!atomic_cmpxchg(&wait_queue_initialized, 0, 1))
-+		init_waitqueue_head(&ptn3460_wait_queue);
-+}
-+
-+int ptn3460_wait_until_ready(int timeout_ms)
-+{
-+	int ret;
-+
-+	if (!of_find_compatible_node(NULL, NULL, "nxp,ptn3460"))
-+		return 0;
-+
-+	initialize_wait_queue_once();
-+
-+	ret = wait_event_timeout(ptn3460_wait_queue,
-+			atomic_read(&ptn3460_ready) == PTN3460_READY_UNBLOCK,
-+			msecs_to_jiffies(timeout_ms));
-+	if (!ret) {
-+		DRM_ERROR("Wait until ready timed out\n");
-+		return -ETIMEDOUT;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ptn3460_write_byte(struct ptn3460_platform_data *pd, char addr,
-+		char val)
-+{
-+	int ret;
-+	char buf[2];
-+
-+	buf[0] = addr;
-+	buf[1] = val;
-+
-+	ret = i2c_master_send(pd->client, buf, ARRAY_SIZE(buf));
-+	if (ret <= 0) {
-+		DRM_ERROR("Failed to send i2c command, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ptn3460_init_platform_data_from_dt(struct i2c_client *client)
-+{
-+	int ret;
-+	struct ptn3460_platform_data *pd;
-+	struct device *dev = &client->dev;
-+
-+	dev->platform_data = devm_kzalloc(dev,
-+				sizeof(struct ptn3460_platform_data),
-+				GFP_KERNEL);
-+	if (!dev->platform_data) {
-+		DRM_ERROR("Can't allocate platform data\n");
-+		return -ENOMEM;
-+	}
-+	pd = dev->platform_data;
-+	pd->dev = dev;
-+	pd->client = client;
-+
-+	/* Fill platform data with device tree data */
-+	pd->gpio_pd_n = of_get_named_gpio(dev->of_node, "powerdown-gpio", 0);
-+	pd->gpio_rst_n = of_get_named_gpio(dev->of_node, "reset-gpio", 0);
-+
-+	ret = of_property_read_u32(dev->of_node, "edid-emulation",
-+			&pd->edid_emulation);
-+	if (ret) {
-+		DRM_ERROR("Can't read edid emulation value\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+
-+}
-+
-+static int ptn3460_select_edid(struct ptn3460_platform_data *pd)
-+{
-+	int ret;
-+	char val;
-+
-+	val = 1 << PTN3460_EDID_ENABLE_EMULATION |
-+		pd->edid_emulation << PTN3460_EDID_EMULATION_SELECTION;
-+
-+	ret = ptn3460_write_byte(pd, PTN3460_EDID_EMULATION_ADDR, val);
-+	if (ret) {
-+		DRM_ERROR("Failed to write edid value, ret=%d\n", ret);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void ptn3460_work(struct work_struct *work)
-+{
-+	struct ptn3460_platform_data *pd =
-+		container_of(work, struct ptn3460_platform_data, ptn_work.work);
-+	int ret;
-+
-+	if (!pd) {
-+		DRM_ERROR("pd is null\n");
-+		return;
-+	}
-+
-+	ret = ptn3460_select_edid(pd);
-+	if (ret)
-+		DRM_ERROR("Select edid failed ret=%d\n", ret);
-+
-+	atomic_set(&ptn3460_ready, PTN3460_READY_UNBLOCK);
-+	wake_up(&ptn3460_wait_queue);
-+}
-+
-+static int ptn3460_power_up(struct ptn3460_platform_data *pd)
-+{
-+	int ret;
-+
-+	if (pd->gpio_pd_n > 0)
-+		gpio_set_value(pd->gpio_pd_n, 1);
-+
-+	if (pd->gpio_rst_n > 0) {
-+		gpio_set_value(pd->gpio_rst_n, 0);
-+		udelay(10);
-+		gpio_set_value(pd->gpio_rst_n, 1);
-+	}
-+
-+	ret = schedule_delayed_work(&pd->ptn_work, msecs_to_jiffies(90));
-+	if (ret < 0)
-+		DRM_ERROR("Could not schedule work ret=%d\n", ret);
-+
-+	return 0;
-+}
-+
-+static int ptn3460_power_down(struct ptn3460_platform_data *pd)
-+{
-+	if (work_pending(&pd->ptn_work.work))
-+		flush_work(&pd->ptn_work.work);
-+
-+	atomic_set(&ptn3460_ready, PTN3460_READY_BLOCK);
-+
-+	if (pd->gpio_rst_n > 0)
-+		gpio_set_value(pd->gpio_rst_n, 1);
-+
-+	if (pd->gpio_pd_n > 0)
-+		gpio_set_value(pd->gpio_pd_n, 0);
-+
-+	return 0;
-+}
-+
-+int ptn3460_suspend(struct device *dev)
-+{
-+	return ptn3460_power_down(dev->platform_data);
-+}
-+
-+int ptn3460_resume(struct device *dev)
-+{
-+	return ptn3460_power_up(dev->platform_data);
-+}
-+
-+int ptn3460_probe(struct i2c_client *client, const struct i2c_device_id *device)
-+{
-+	struct device *dev = &client->dev;
-+	struct ptn3460_platform_data *pd;
-+	int ret;
-+
-+	ret = ptn3460_init_platform_data_from_dt(client);
-+	if (ret)
-+		return ret;
-+	pd = dev->platform_data;
-+
-+	if (pd->gpio_pd_n > 0) {
-+		ret = gpio_request_one(pd->gpio_pd_n, GPIOF_OUT_INIT_HIGH,
-+					"PTN3460_PD_N");
-+		if (ret)
-+			goto err_pd;
-+	}
-+	if (pd->gpio_rst_n > 0) {
-+		/*
-+		 * Request the reset pin low to avoid the bridge being
-+		 * initialized prematurely
-+		 */
-+		ret = gpio_request_one(pd->gpio_rst_n, GPIOF_OUT_INIT_LOW,
-+					"PTN3460_RST_N");
-+		if (ret)
-+			goto err_pd;
-+	}
-+
-+	initialize_wait_queue_once();
-+
-+	INIT_DELAYED_WORK(&pd->ptn_work, ptn3460_work);
-+
-+	ret = ptn3460_power_up(pd);
-+	if (ret)
-+		goto err_pd;
-+
-+	return 0;
-+
-+err_pd:
-+	devm_kfree(dev, pd);
-+	return ret;
-+}
-+
-+int ptn3460_remove(struct i2c_client *client)
-+{
-+	struct ptn3460_platform_data *pd = client->dev.platform_data;
-+
-+	if (!pd)
-+		return 0;
-+
-+	if (work_pending(&pd->ptn_work.work))
-+		flush_work(&pd->ptn_work.work);
-+
-+	devm_kfree(&client->dev, pd);
-+	return 0;
-+}
-+
-+static const struct i2c_device_id ptn3460_ids[] = {
-+	{ "ptn3460", 0 },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, ptn3460_ids);
-+
-+static SIMPLE_DEV_PM_OPS(ptn3460_pm_ops, ptn3460_suspend, ptn3460_resume);
-+
-+static struct i2c_driver ptn3460_driver = {
-+	.id_table	= ptn3460_ids,
-+	.probe          = ptn3460_probe,
-+	.remove         = ptn3460_remove,
-+	.driver		= {
-+		.name	= "ptn3460",
-+		.owner	= THIS_MODULE,
-+		.pm	= &ptn3460_pm_ops,
-+	},
-+};
-+module_i2c_driver(ptn3460_driver);
-diff --git a/include/drm/i2c/ptn3460.h b/include/drm/i2c/ptn3460.h
-new file mode 100644
-index 0000000..778b21a
---- /dev/null
-+++ b/include/drm/i2c/ptn3460.h
-@@ -0,0 +1,19 @@
-+/*
-+ * Copyright (C) 2013 Google, Inc.
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef _DRM_I2C_PTN3460_H_
-+#define _DRM_I2C_PTN3460_H_
-+
-+int ptn3460_wait_until_ready(int timeout_ms);
-+
-+#endif
--- 
-1.7.7.3
+> A possible solution would be to number ports with a dash instead of a @, as 
+> done in pinctrl for instance. We would then get
+> 
+> 	port-0 {
+> 		endpoint-0 { ... };
+> 		endpoint-1 { ... };
+> 	};
+> 	port-1 { ... };
+
+Sounds like a good alternative, I can't think of any better solution at the
+moment.
+
+>> +Two 'endpoint' nodes are linked with each other through their
+>> +'remote-endpoint' phandles.  An endpoint subnode of a device contains all
+>> +properties needed for configuration of this device for data exchange with
+>> +the other device.  In most cases properties at the peer 'endpoint' nodes
+>> +will be identical, however they might need to be different when there is
+>> +any signal modifications on the bus between two devices, e.g. there are
+>> +logic signal inverters on the lines.
+>> +
+>> +Required properties
+>> +-------------------
+>> +
+>> +If there is more than one 'port' or more than one 'endpoint' node following
+>> +properties are required in relevant parent node:
+>> +
+>> +- #address-cells : number of cells required to define port number, should
+>> be 1.
+>> +- #size-cells    : should be zero.
+> 
+> I wonder if we should specify whether a port is a data sink or data source. A 
+> source can be connected to multiple sinks at the same time, but a sink can 
+> only be connected to a single source. If we want to perform automatic sanity 
+> checks in the core knowing the direction might help.
+
+Multiple sources can be linked to a single sink, but only one link can be 
+active at any time.
+
+So I'm not sure if knowing if a DT port is a data source or data sink would
+let us to validate device tree structure statically in general.
+
+Such source/sink property could be useful later at runtime, when data pipeline
+is set up for streaming.
+
+How do you think this could be represented ? By just having boolean 
+properties like: 'source' and 'sink' in the port nodes ? Or perhaps in the 
+endpoint nodes, since some devices might be bidirectional ? I don't recall 
+any at the moment though.
+
+>> +Optional endpoint properties
+>> +----------------------------
+>> +
+>> +- remote-endpoint: phandle to an 'endpoint' subnode of the other device
+>> +  node.
+>> +- slave-mode: a boolean property, run the link in slave mode.
+>> +  Default is master mode.
+> 
+> What are master and slave modes ? It might be worth it describing them.
+
+This was originally proposed by Guennadi, I think he knows exactly what's
+the meaning of this property. I'll dig into relevant documentation to 
+find out and provide more detailed description.
+
+>> +- bus-width: number of data lines, valid for parallel busses.
+>> +- data-shift: on parallel data busses, if bus-width is used to specify the
+>> +  number of data lines, data-shift can be used to specify which data lines
+>> +  are used, e.g. "bus-width=<10>; data-shift=<2>;" means, that lines 9:2
+>> +  are used.
+>> +- hsync-active: active state of HSYNC signal, 0/1 for LOW/HIGH
+>> +  respectively.
+>> +- vsync-active: active state of VSYNC signal, 0/1 for LOW/HIGH
+>> +  respectively. Note, that if HSYNC and VSYNC polarities are not
+>> +  specified, embedded synchronization may be required, where supported.
+>> +- data-active: similar to HSYNC and VSYNC, specifies data line polarity.
+>> +- field-even-active: field signal level during the even field data
+>> +  transmission.
+>> +- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel
+>> +  clock signal.
+>> +- data-lanes: an array of physical data lane indexes. Position of an entry
+>> +  determines the logical lane number, while the value of an entry indicates
+>> +  physical lane, e.g. for 2-lane MIPI CSI-2 bus we could have
+>> +  "data-lanes = <1>, <2>;", assuming the clock lane is on hardware lane 0.
+>> +  This property is valid for serial busses only (e.g. MIPI CSI-2).
+>> +- clock-lanes: an array of physical clock lane indexes. Position of an
+>> +  entry determines the logical lane number, while the value of an entry
+>> +  indicates physical lane, e.g. for a MIPI CSI-2 bus we could have
+>> +  "clock-lanes = <0>;", which places the clock lane on hardware lane 0.
+>> +  This property is valid for serial busses only (e.g. MIPI CSI-2). Note
+>> +  that for the MIPI CSI-2 bus this array contains only one entry.
+>> +- clock-noncontinuous: a boolean property to allow MIPI CSI-2
+>> +  non-continuous clock mode.
+>> +
+>> +Example
+>> +-------
+>> +
+>> +The example snippet below describes two data pipelines.  ov772x and imx074
+>> +are camera sensors with a parallel and serial (MIPI CSI-2) video bus
+>> +respectively. Both sensors are on the I2C control bus corresponding to the
+>> +i2c0 controller node.  ov772x sensor is linked directly to the ceu0 video
+>> +host interface. imx074 is linked to ceu0 through the MIPI CSI-2 receiver
+>> +(csi2). ceu0 has a (single) DMA engine writing captured data to memory. 
+>> +ceu0 node has a single 'port' node which indicates that at any time only
+>> +one of the following data pipelines can be active: ov772x -> ceu0 or
+>> +imx074 -> csi2 -> ceu0.
+>> +
+>> +	ceu0: ceu@0xfe910000 {
+>> +		compatible = "renesas,sh-mobile-ceu";
+>> +		reg = <0xfe910000 0xa0>;
+>> +		interrupts = <0x880>;
+>> +
+>> +		mclk: master_clock {
+>> +			compatible = "renesas,ceu-clock";
+>> +			#clock-cells = <1>;
+>> +			clock-frequency = <50000000>;	/* Max clock frequency */
+>> +			clock-output-names = "mclk";
+>> +		};
+>> +
+>> +		port {
+>> +			#address-cells = <1>;
+>> +			#size-cells = <0>;
+>> +
+>> +			ceu0_1: endpoint@1 {
+>> +				reg = <1>;		/* Local endpoint # */
+>> +				remote = <&ov772x_1_1>;	/* Remote phandle */
+>> +				bus-width = <8>;	/* Used data lines */
+>> +				data-shift = <0>;	/* Lines 7:0 are used */
+> 
+> As data-shift is optional, shouldn't it be left out when equal to 0 ? It 
+> would, however, be nice to have a non-zero data-shift somewhere in the 
+> example.
+
+Yes, good point. data-shift could be ommited. I'm going to increase the 
+bus-width and make data-shit non-zero.
+
+>> +
+>> +				/* If hsync-active/vsync-active are missing,
+>> +				   embedded bt.605 sync is used */
+>> +				hsync-active = <1>;	/* Active high */
+>> +				vsync-active = <1>;	/* Active high */
+>> +				data-active = <1>;	/* Active high */
+>> +				pclk-sample = <1>;	/* Rising */
+>> +			};
+>> +
+>> +			ceu0_0: endpoint@0 {
+>> +				reg = <0>;
+>> +				remote = <&csi2_2>;
+>> +				immutable;
+> 
+> What is the immutable property for her e?
+
+I was staring at this yesterday and finally I forgot to remove it. It is
+undocumented and I think it's not supposed to be here. Guennadi, would
+you have any comments on that ?
+
+>> +			};
+>> +		};
+>> +	};
+>> +
+>> +	i2c0: i2c@0xfff20000 {
+>> +		...
+>> +		ov772x_1: camera@0x21 {
+>> +			compatible = "omnivision,ov772x";
+>> +			reg = <0x21>;
+>> +			vddio-supply = <&regulator1>;
+>> +			vddcore-supply = <&regulator2>;
+>> +
+>> +			clock-frequency = <20000000>;
+>> +			clocks = <&mclk 0>;
+>> +			clock-names = "xclk";
+>> +
+>> +			port {
+>> +				/* With 1 endpoint per port no need in addresses. */
+> 
+> s/in/for/ ?
+
+I proposed same change to Guennadi, but he argued that "in" is also
+commonly used. I agreed even though 'for' seemed more natural to me.
+I would change it, unless there is a strong opposition. :)
+
+--
+
+Regards,
+Sylwester
