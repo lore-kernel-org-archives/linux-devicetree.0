@@ -1,17 +1,13 @@
-From: Florian Vaussard <florian.vaussard-p8DiymsW2f8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: omap3-overo: Add support for pwm-leds
-Date: Thu, 24 Jan 2013 22:14:37 +0100
-Message-ID: <5101A43D.7080108@epfl.ch>
-References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch>
- <1358963812-19947-2-git-send-email-florian.vaussard@epfl.ch>
- <5101510C.9050407@ti.com> <51015663.8080109@epfl.ch>
- <5101570A.1030303@ti.com> <5101663C.7020301@epfl.ch> <51016A84.20703@ti.com>
-Reply-To: florian.vaussard-p8DiymsW2f8@public.gmane.org
+From: Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>
+Subject: Re: [PATCH] drm/i2c: Add driver for PTN3460 LVDS/DP bridge
+Date: Thu, 24 Jan 2013 22:22:00 +0100
+Message-ID: <CAKMK7uGQredcS=rqH+m8uDKb72mszOxY6HPjcJpj5g0AwhHvOw@mail.gmail.com>
+References: <1359050946-25061-1-git-send-email-seanpaul@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51016A84.20703-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1359050946-25061-1-git-send-email-seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,35 +18,42 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
->>
->>>> I am working on a patch for pwm-twl-led to defer using a workqueue right now.
->>>
->>> Great!
->>> The only thing I worry about is the latency we are going to get with the
->>> workqueue.
->>>
->>
->> If the latency becomes critical, we can create our own workqueue.
+On Thu, Jan 24, 2013 at 7:09 PM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> This patch adds the driver for the PTN3460 LVDS/DP bridge chip.
 >
-> Hrm, when we handled the led via gpio-leds it was also going through the same
-> path at the end, via i2c to twl4030.
-> I think the fix for this is going to be needed in the pwm core level. Just
-> need to look at the gpio code to have similar handling of might_sleep interfaces.
+> The driver allows the EDID emulation to be selected from device tree,
+> along with specifying the GPIOs driving powerdown and reset pins.
 >
+> The chip has a bug in it such that when the powerdown and reset pins
+> are toggled, the hotplug line blips before the bridge is completely
+> ready. This forces us to wait for the maximum specified setup time
+> (90ms) before interacting with the chip via i2c or doing DP training, as
+> opposed to watching the hotplug line. This limitation means that we need
+> to synchronize the bridge driver with the DP driver via the
+> ptn3460_wait_until_ready function.
+>
+> Signed-off-by: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+>  .../devicetree/bindings/drm/i2c/ptn3460.txt        |   27 ++
+>  drivers/gpu/drm/Kconfig                            |    2 +
+>  drivers/gpu/drm/i2c/Kconfig                        |    6 +
+>  drivers/gpu/drm/i2c/Makefile                       |    2 +
+>  drivers/gpu/drm/i2c/ptn3460.c                      |  283 ++++++++++++++++++++
 
-You are right. But then the pwm core must provide a way to know if the 
-pwm access function are callable
-from atomic context or not (the gpio framework provides gpio_cansleep()).
-This implies a good amount of changes to the pwm framework, and 
-currently we are the only driver using
-non-atomic access.
+Afaict from reading through the code, this is just a bit of
+special-purpose i2c code to control some hw. Imo you can just put that
+into your driver directory, since currently all the drivers in drm/i2c
+are drm_encoder_slaves (potentially shared between drivers), and I
+think we should keep it at that.
 
-I will take a closer look to the complexity of this solution tomorrow.
-
-Florian
+Of course, if you plane to extend that to such an encoder slave
+driver, then we could move it back.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
