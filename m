@@ -1,298 +1,74 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH RFC v4 01/14] [media] Add common video interfaces OF bindings documentation
-Date: Thu, 24 Jan 2013 11:16:32 +0100
-Message-ID: <1525960.fMnIjkZnjX@avalon>
-References: <1358969489-20420-1-git-send-email-s.nawrocki@samsung.com> <1358969489-20420-2-git-send-email-s.nawrocki@samsung.com>
+From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Subject: RE: [alsa-devel] [PATCH V2 2/2] ASoC: Davinci: machine: Add device
+ tree binding
+Date: Thu, 24 Jan 2013 10:24:21 +0000
+Message-ID: <1BAFE6F6C881BF42822005164F1491C33EB5312F@DBDE01.ent.ti.com>
+References: <1357293277-25543-1-git-send-email-gururaja.hebbar@ti.com>
+ <1357293277-25543-3-git-send-email-gururaja.hebbar@ti.com>
+ <20130104122612.GM4627@opensource.wolfsonmicro.com>
+ <1BAFE6F6C881BF42822005164F1491C33EB50DCF@DBDE01.ent.ti.com>
+ <20130123154804.GB4565@opensource.wolfsonmicro.com>
+ <1BAFE6F6C881BF42822005164F1491C33EB52FD9@DBDE01.ent.ti.com>
+ <20130124100252.GE4955@opensource.wolfsonmicro.com>
+ <1BAFE6F6C881BF42822005164F1491C33EB530BB@DBDE01.ent.ti.com>
+ <20130124101301.GG4955@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1358969489-20420-2-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: linux-media@vger.kernel.org, hverkuil@xs4all.nl, g.liakhovetski@gmx.de, kyungmin.park@samsung.com, kgene.kim@samsung.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, myungjoo.ham@samsung.com, sw0312.kim@samsung.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=Windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130124101301.GG4955@opensource.wolfsonmicro.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "rob@landley.net" <rob@landley.net>, "Girdwood, Liam" <lrg@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+On Thu, Jan 24, 2013 at 15:43:03, Mark Brown wrote:
+> On Thu, Jan 24, 2013 at 10:06:42AM +0000, Hebbar, Gururaja wrote:
+>=20
+> > What I meant was that by using this macro (SND_SOC_DAPM_POST_PMU &
+> > SND_SOC_DAPM_PRE_PMD) I can just save and restore existing voltage =
+values inside
+> > the event. They will not be user configurable (available to user th=
+rough some widget).
+>=20
+> Well, you *could* add separate register control for that=20
 
-Thanks for the patch.
+That=92s what I am doing using a different register control
 
-On Wednesday 23 January 2013 20:31:16 Sylwester Nawrocki wrote:
-> From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> 
-> This patch adds a document describing common OF bindings for video
-> capture, output and video processing devices. It is curently mainly
-> focused on video capture devices, with data busses defined by
-> standards like ITU-R BT.656 or MIPI-CSI2.
-> It also documents a method of describing data links between devices.
-> 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> Reviewed-by: Stephen Warren <swarren@nvidia.com>
-> Acked-by: Rob Herring <rob.herring@calxeda.com>
-> ---
-> 
-> Changes since v3:
->  - improved clock-lanes property description,
->  - grammar corrections of the example dts snippet description.
-> ---
->  .../devicetree/bindings/media/video-interfaces.txt |  204 +++++++++++++++++
->  1 file changed, 204 insertions(+)
->  create mode 100644
-> Documentation/devicetree/bindings/media/video-interfaces.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/video-interfaces.txt
-> b/Documentation/devicetree/bindings/media/video-interfaces.txt new file
-> mode 100644
-> index 0000000..0da126f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/video-interfaces.txt
-> @@ -0,0 +1,204 @@
-> +Common bindings for video data receiver and transmitter interfaces
-> +
-> +General concept
-> +---------------
-> +
-> +Video data pipelines usually consist of external devices, e.g. camera
-> +sensors, controlled over an I2C, SPI or UART bus, and SoC internal IP
-> +blocks, including video DMA engines and video data processors.
-> +
-> +SoC internal blocks are described by DT nodes, placed similarly to other
-> +SoC blocks.  External devices are represented as child nodes of their
-> +respective bus controller nodes, e.g. I2C.
-> +
-> +Data interfaces on all video devices are described by their child 'port'
-> +nodes. Configuration of a port depends on other devices participating in
-> +the data transfer and is described by 'endpoint' subnodes.
-> +
-> +dev {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	port@0 {
-> +		endpoint@0 { ... };
-> +		endpoint@1 { ... };
-> +	};
-> +	port@1 { ... };
-> +};
-> +
-> +If a port can be configured to work with more than one other device on the
-> +same bus, an 'endpoint' child node must be provided for each of them.  If
-> +more than one port is present in a device node or there is more than one
-> +endpoint at a port, a common scheme, using '#address-cells', '#size-cells'
-> +and 'reg' properties is used.
 
-Wouldn't this cause problems if the device has both video ports and a child 
-bus ? Using #address-cells and #size-cells for the video ports would prevent 
-the child bus from being handled in the usual way.
+	+static const char *mic_bias_level_txt[] =3D { "off", "2V", "2.5V", "A=
+VDD" };
+	+
+	+static const struct soc_enum mic_bias_level =3D
+	+SOC_ENUM_SINGLE(MICBIAS_CTRL, 6, 4, mic_bias_level_txt);
+	+
+	 static const struct snd_kcontrol_new aic3x_snd_controls[] =3D {
+		/* Output */
+		SOC_DOUBLE_R_TLV("PCM Playback Volume",
+	@@ -391,6 +396,9 @@ static const struct snd_kcontrol_new aic3x_snd_con=
+trols[] =3D {
+		SOC_DOUBLE_R("PGA Capture Switch", LADC_VOL, RADC_VOL, 7, 0x01, 1),
+	=20
+		SOC_ENUM("ADC HPF Cut-off", aic3x_enum[ADC_HPF_ENUM]),
+	+
+	+	/* Mic Bias Level */
+	+	SOC_ENUM("Mic Bias Level", mic_bias_level),
 
-A possible solution would be to number ports with a dash instead of a @, as 
-done in pinctrl for instance. We would then get
 
-	port-0 {
-		endpoint-0 { ... };
-		endpoint-1 { ... };
-	};
-	port-1 { ... };
 
-> +Two 'endpoint' nodes are linked with each other through their
-> +'remote-endpoint' phandles.  An endpoint subnode of a device contains all
-> +properties needed for configuration of this device for data exchange with
-> +the other device.  In most cases properties at the peer 'endpoint' nodes
-> +will be identical, however they might need to be different when there is
-> +any signal modifications on the bus between two devices, e.g. there are
-> +logic signal inverters on the lines.
-> +
-> +Required properties
-> +-------------------
-> +
-> +If there is more than one 'port' or more than one 'endpoint' node following
-> +properties are required in relevant parent node:
-> +
-> +- #address-cells : number of cells required to define port number, should
-> be 1.
-> +- #size-cells    : should be zero.
+> but it's not
+> really something that should obviously be exposed to users; usually
+> that'd be something that is fixed by the platform via platform data.
 
-I wonder if we should specify whether a port is a data sink or data source. A 
-source can be connected to multiple sinks at the same time, but a sink can 
-only be connected to a single source. If we want to perform automatic sanity 
-checks in the core knowing the direction might help.
+Will look into this angle.
 
-> +Optional endpoint properties
-> +----------------------------
-> +
-> +- remote-endpoint: phandle to an 'endpoint' subnode of the other device
-> +  node.
-> +- slave-mode: a boolean property, run the link in slave mode.
-> +  Default is master mode.
+>=20
 
-What are master and slave modes ? It might be worth it describing them.
+Going by the way of using extra register control, will my method (code =
+change
+attached in prev mail) be sufficient?
 
-> +- bus-width: number of data lines, valid for parallel busses.
-> +- data-shift: on parallel data busses, if bus-width is used to specify the
-> +  number of data lines, data-shift can be used to specify which data lines
-> +  are used, e.g. "bus-width=<10>; data-shift=<2>;" means, that lines 9:2
-> +  are used.
-> +- hsync-active: active state of HSYNC signal, 0/1 for LOW/HIGH
-> +  respectively.
-> +- vsync-active: active state of VSYNC signal, 0/1 for LOW/HIGH
-> +  respectively. Note, that if HSYNC and VSYNC polarities are not
-> +  specified, embedded synchronization may be required, where supported.
-> +- data-active: similar to HSYNC and VSYNC, specifies data line polarity.
-> +- field-even-active: field signal level during the even field data
-> +  transmission.
-> +- pclk-sample: sample data on rising (1) or falling (0) edge of the pixel
-> +  clock signal.
-> +- data-lanes: an array of physical data lane indexes. Position of an entry
-> +  determines the logical lane number, while the value of an entry indicates
-> +  physical lane, e.g. for 2-lane MIPI CSI-2 bus we could have
-> +  "data-lanes = <1>, <2>;", assuming the clock lane is on hardware lane 0.
-> +  This property is valid for serial busses only (e.g. MIPI CSI-2).
-> +- clock-lanes: an array of physical clock lane indexes. Position of an
-> +  entry determines the logical lane number, while the value of an entry
-> +  indicates physical lane, e.g. for a MIPI CSI-2 bus we could have
-> +  "clock-lanes = <0>;", which places the clock lane on hardware lane 0.
-> +  This property is valid for serial busses only (e.g. MIPI CSI-2). Note
-> +  that for the MIPI CSI-2 bus this array contains only one entry.
-> +- clock-noncontinuous: a boolean property to allow MIPI CSI-2
-> +  non-continuous clock mode.
-> +
-> +Example
-> +-------
-> +
-> +The example snippet below describes two data pipelines.  ov772x and imx074
-> +are camera sensors with a parallel and serial (MIPI CSI-2) video bus
-> +respectively. Both sensors are on the I2C control bus corresponding to the
-> +i2c0 controller node.  ov772x sensor is linked directly to the ceu0 video
-> +host interface. imx074 is linked to ceu0 through the MIPI CSI-2 receiver
-> +(csi2). ceu0 has a (single) DMA engine writing captured data to memory. 
-> +ceu0 node has a single 'port' node which indicates that at any time only
-> +one of the following data pipelines can be active: ov772x -> ceu0 or
-> +imx074 -> csi2 -> ceu0.
-> +
-> +	ceu0: ceu@0xfe910000 {
-> +		compatible = "renesas,sh-mobile-ceu";
-> +		reg = <0xfe910000 0xa0>;
-> +		interrupts = <0x880>;
-> +
-> +		mclk: master_clock {
-> +			compatible = "renesas,ceu-clock";
-> +			#clock-cells = <1>;
-> +			clock-frequency = <50000000>;	/* Max clock frequency */
-> +			clock-output-names = "mclk";
-> +		};
-> +
-> +		port {
-> +			#address-cells = <1>;
-> +			#size-cells = <0>;
-> +
-> +			ceu0_1: endpoint@1 {
-> +				reg = <1>;		/* Local endpoint # */
-> +				remote = <&ov772x_1_1>;	/* Remote phandle */
-> +				bus-width = <8>;	/* Used data lines */
-> +				data-shift = <0>;	/* Lines 7:0 are used */
 
-As data-shift is optional, shouldn't it be left out when equal to 0 ? It 
-would, however, be nice to have a non-zero data-shift somewhere in the 
-example.
-
-> +
-> +				/* If hsync-active/vsync-active are missing,
-> +				   embedded bt.605 sync is used */
-> +				hsync-active = <1>;	/* Active high */
-> +				vsync-active = <1>;	/* Active high */
-> +				data-active = <1>;	/* Active high */
-> +				pclk-sample = <1>;	/* Rising */
-> +			};
-> +
-> +			ceu0_0: endpoint@0 {
-> +				reg = <0>;
-> +				remote = <&csi2_2>;
-> +				immutable;
-
-What is the immutable property for her e?
-
-> +			};
-> +		};
-> +	};
-> +
-> +	i2c0: i2c@0xfff20000 {
-> +		...
-> +		ov772x_1: camera@0x21 {
-> +			compatible = "omnivision,ov772x";
-> +			reg = <0x21>;
-> +			vddio-supply = <&regulator1>;
-> +			vddcore-supply = <&regulator2>;
-> +
-> +			clock-frequency = <20000000>;
-> +			clocks = <&mclk 0>;
-> +			clock-names = "xclk";
-> +
-> +			port {
-> +				/* With 1 endpoint per port no need in addresses. */
-
-s/in/for/ ?
-
-> +				ov772x_1_1: endpoint {
-> +					bus-width = <8>;
-> +					remote-endpoint = <&ceu0_1>;
-> +					hsync-active = <1>;
-> +					vsync-active = <0>; /* Who came up with an
-> +							       inverter here ?... */
-> +					data-active = <1>;
-> +					pclk-sample = <1>;
-> +				};
-> +			};
-> +		};
-> +
-> +		imx074: camera@0x1a {
-> +			compatible = "sony,imx074";
-> +			reg = <0x1a>;
-> +			vddio-supply = <&regulator1>;
-> +			vddcore-supply = <&regulator2>;
-> +
-> +			clock-frequency = <30000000>;	/* Shared clock with ov772x_1 */
-> +			clocks = <&mclk 0>;
-> +			clock-names = "sysclk";		/* Assuming this is the
-> +							   name in the datasheet */
-> +			port {
-> +				imx074_1: endpoint {
-> +					clock-lanes = <0>;
-> +					data-lanes = <1>, <2>;
-> +					remote-endpoint = <&csi2_1>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +
-> +	csi2: csi2@0xffc90000 {
-> +		compatible = "renesas,sh-mobile-csi2";
-> +		reg = <0xffc90000 0x1000>;
-> +		interrupts = <0x17a0>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		port@1 {
-> +			compatible = "renesas,csi2c";	/* One of CSI2I and CSI2C. */
-> +			reg = <1>;			/* CSI-2 PHY #1 of 2: PHY_S,
-> +							   PHY_M has port address 0,
-> +							   is unused. */
-> +			csi2_1: endpoint {
-> +				clock-lanes = <0>;
-> +				data-lanes = <2>, <1>;
-> +				remote-endpoint = <&imx074_1>;
-> +			};
-> +		};
-> +		port@2 {
-> +			reg = <2>;			/* port 2: link to the CEU */
-> +
-> +			csi2_2: endpoint {
-> +				immutable;
-> +				remote-endpoint = <&ceu0_0>;
-> +			};
-> +		};
-> +	};
-
--- 
-Regards,
-
-Laurent Pinchart
+Regards,=20
+Gururaja
