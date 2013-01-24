@@ -1,178 +1,127 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: [PATCH RFC] media: tvp514x: add OF support
-Date: Thu, 24 Jan 2013 14:42:20 +0530
-Message-ID: <1359018740-6399-1-git-send-email-prabhakar.lad@ti.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-Sender: linux-media-owner@vger.kernel.org
-To: LMML <linux-media@vger.kernel.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree-discuss@lists.ozlabs.org, LDOC <linux-doc@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Subject: RE: [alsa-devel] [PATCH V2 2/2] ASoC: Davinci: machine: Add device
+ tree binding
+Date: Thu, 24 Jan 2013 09:33:34 +0000
+Message-ID: <1BAFE6F6C881BF42822005164F1491C33EB52FD9@DBDE01.ent.ti.com>
+References: <1357293277-25543-1-git-send-email-gururaja.hebbar@ti.com>
+ <1357293277-25543-3-git-send-email-gururaja.hebbar@ti.com>
+ <20130104122612.GM4627@opensource.wolfsonmicro.com>
+ <1BAFE6F6C881BF42822005164F1491C33EB50DCF@DBDE01.ent.ti.com>
+ <20130123154804.GB4565@opensource.wolfsonmicro.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130123154804.GB4565@opensource.wolfsonmicro.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "rob@landley.net" <rob@landley.net>, "Girdwood, Liam" <lrg@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Lad, Prabhakar <prabhakar.lad@ti.com>
+On Wed, Jan 23, 2013 at 21:18:12, Mark Brown wrote:
+> On Wed, Jan 23, 2013 at 12:39:35PM +0000, Hebbar, Gururaja wrote:
+> > On Fri, Jan 04, 2013 at 17:56:12, Mark Brown wrote:
+> 
+> > > The CODEC driver biases should be changed over to be supplies, this
+> > > makes the above much more natural - the routing there is a hack for
+> > > older versions of ASoc.  Otherwise this looks fine.
+> 
+> > ON TLV320AIC3x Codec, MIC Bias power on/off share the same register bits
+> > with Bias voltage output.
+> 
+> So you need to use an event to write the actual enable bit.
 
-add OF support for the tvp514x driver.
+Yes. Bias Enable/Disable is possible using SND_SOC_DAPM_SUPPLY. However the 
+actual Bias voltage should be user selectable.
 
-Signed-off-by: Lad, Prabhakar <prabhakar.lad@ti.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
----
- This patch is on top of following patches:
- 1: https://patchwork.kernel.org/patch/1930941/
- 2: http://patchwork.linuxtv.org/patch/16193/
- 3: https://patchwork.kernel.org/patch/1944901/
+> 
+> > SGTL5000 --> Single register for MIC BIAS enable & output impedance of MIC
+> > Bias. The driver uses SND_SOC_DAPM_POST_PMU & SND_SOC_DAPM_PRE_PMD macro to
+> > handle the MIC Bias enable & disable event.
+> 
+> This is the way these things should be handled.
 
- .../devicetree/bindings/media/i2c/tvp514x.txt      |   30 ++++++++++
- drivers/media/i2c/tvp514x.c                        |   60 ++++++++++++++++++--
- 2 files changed, 85 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+However, as mentioned before, TLV320AIC3x Codec there is no separate 
+enable/disable bit. It is mixed with Bias Voltage settings.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-new file mode 100644
-index 0000000..3cce323
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-@@ -0,0 +1,30 @@
-+* Texas Instruments TVP514x video decoder
-+
-+The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
-+digital video decoder that digitizes and decodes all popular baseband analog
-+video formats into digital video component. The tvp514x decoder supports analog-
-+to-digital (A/D) conversion of component RGB and YPbPr signals as well as A/D
-+conversion and decoding of NTSC, PAL and SECAM composite and S-video into
-+component YCbCr.
-+
-+Required Properties :
-+- compatible: Must be "ti,tvp514x-decoder"
-+- hsync-active: HSYNC Polarity configuration for current interface.
-+- vsync-active: VSYNC Polarity configuration for current interface.
-+- data-active: Clock polarity of the current interface.
-+
-+Example:
-+
-+i2c0@1c22000 {
-+	...
-+	...
-+
-+	tvp514x@5c {
-+		compatible = "ti,tvp514x-decoder";
-+		reg = <0x5c>;
-+		hsync-active = <1>;	/* Active low (Defaults to 0) */
-+		hsync-active = <1>;	/* Active low (Defaults to 0) */
-+		data-active = <0>;	/* Active low (Defaults to 0) */
-+	};
-+	...
-+};
-diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
-index a4f0a70..0e2b15c 100644
---- a/drivers/media/i2c/tvp514x.c
-+++ b/drivers/media/i2c/tvp514x.c
-@@ -12,6 +12,7 @@
-  *     Hardik Shah <hardik.shah@ti.com>
-  *     Manjunath Hadli <mrh@ti.com>
-  *     Karicheri Muralidharan <m-karicheri2@ti.com>
-+ *     Prabhakar Lad <prabhakar.lad@ti.com>
-  *
-  * This package is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -930,6 +931,50 @@ static struct tvp514x_decoder tvp514x_dev = {
+So it is either 
+	a. Bias is disabled 
+	b. Bias is enabled with some voltage. This voltage should be user 
+         configurable.
+
+So, by just using the SND_SOC_DAPM_POST_PMU & SND_SOC_DAPM_PRE_PMD I can mask 
+& handle one particular voltage. 
+
+Now I am not able understand how to make this user configurable using
+SND_SOC_DAPM_xx macro.
+
+
+I believe the below code change [1] should work in this situation. What is your opinion?
+
+
+
+Thanks & Regards
+Gururaja
+
+diff --git a/sound/soc/codecs/tlv320aic3x.c b/sound/soc/codecs/tlv320aic3x.c
+index 5708a97..2c17e46 100644
+--- a/sound/soc/codecs/tlv320aic3x.c
++++ b/sound/soc/codecs/tlv320aic3x.c
+@@ -268,6 +268,11 @@ static DECLARE_TLV_DB_SCALE(adc_tlv, 0, 50, 0);
+  */
+ static DECLARE_TLV_DB_SCALE(output_stage_tlv, -5900, 50, 1);
  
++static const char *mic_bias_level_txt[] = { "off", "2V", "2.5V", "AVDD" };
++
++static const struct soc_enum mic_bias_level =
++SOC_ENUM_SINGLE(MICBIAS_CTRL, 6, 4, mic_bias_level_txt);
++
+ static const struct snd_kcontrol_new aic3x_snd_controls[] = {
+ 	/* Output */
+ 	SOC_DOUBLE_R_TLV("PCM Playback Volume",
+@@ -391,6 +396,9 @@ static const struct snd_kcontrol_new aic3x_snd_controls[] = {
+ 	SOC_DOUBLE_R("PGA Capture Switch", LADC_VOL, RADC_VOL, 7, 0x01, 1),
+ 
+ 	SOC_ENUM("ADC HPF Cut-off", aic3x_enum[ADC_HPF_ENUM]),
++
++	/* Mic Bias Level */
++	SOC_ENUM("Mic Bias Level", mic_bias_level),
  };
  
-+#if defined(CONFIG_OF)
-+static const struct of_device_id tvp514x_of_match[] = {
-+	{.compatible = "ti,tvp514x-decoder", },
-+	{},
-+}
-+MODULE_DEVICE_TABLE(of, tvp514x_of_match);
-+
-+static struct tvp514x_platform_data
-+	*tvp514x_get_pdata(struct i2c_client *client)
-+{
-+	if (!client->dev.platform_data && client->dev.of_node) {
-+		struct tvp514x_platform_data *pdata;
-+		u32 prop;
-+
-+		pdata = devm_kzalloc(&client->dev,
-+				sizeof(struct tvp514x_platform_data),
-+				GFP_KERNEL);
-+		client->dev.platform_data = pdata;
-+		if (!pdata)
-+			return NULL;
-+		if (!of_property_read_u32(client->dev.of_node,
-+			"data-active", &prop))
-+			pdata->clk_polarity = prop;
-+		if (!of_property_read_u32(client->dev.of_node,
-+			"hsync-active", &prop))
-+			pdata->hs_polarity = prop;
-+		if (!of_property_read_u32(client->dev.of_node,
-+			"vsync-active", &prop))
-+			pdata->vs_polarity = prop;
-+
-+	}
-+
-+	return client->dev.platform_data;
-+}
-+#else
-+#define tvp514x_of_match NULL
-+
-+static struct tvp514x_platform_data
-+	*tvp514x_get_pdata(struct i2c_client *client)
-+{
-+	return client->dev.platform_data;
-+}
-+#endif
-+
- /**
-  * tvp514x_probe() - decoder driver i2c probe handler
-  * @client: i2c driver client device structure
-@@ -941,6 +986,7 @@ static struct tvp514x_decoder tvp514x_dev = {
- static int
- tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
- {
-+	struct tvp514x_platform_data *pdata;
- 	struct tvp514x_decoder *decoder;
- 	struct v4l2_subdev *sd;
- 	int ret;
-@@ -949,22 +995,25 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
- 		return -EIO;
+ /*
+@@ -596,12 +604,7 @@ static const struct snd_soc_dapm_widget aic3x_dapm_widgets[] = {
+ 			 AIC3X_ASD_INTF_CTRLA, 0, 3, 3, 0),
  
-+	pdata = tvp514x_get_pdata(client);
-+	if (!pdata) {
-+		v4l2_err(client, "No platform data!!\n");
-+		return -EPROBE_DEFER;
-+	}
-+
- 	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
- 	if (!decoder)
- 		return -ENOMEM;
+ 	/* Mic Bias */
+-	SND_SOC_DAPM_REG(snd_soc_dapm_micbias, "Mic Bias 2V",
+-			 MICBIAS_CTRL, 6, 3, 1, 0),
+-	SND_SOC_DAPM_REG(snd_soc_dapm_micbias, "Mic Bias 2.5V",
+-			 MICBIAS_CTRL, 6, 3, 2, 0),
+-	SND_SOC_DAPM_REG(snd_soc_dapm_micbias, "Mic Bias AVDD",
+-			 MICBIAS_CTRL, 6, 3, 3, 0),
++	SND_SOC_DAPM_SUPPLY("Mic Bias", MICBIAS_CTRL, 6, 0, NULL, 0),
  
- 	/* Initialize the tvp514x_decoder with default configuration */
- 	*decoder = tvp514x_dev;
--	if (!client->dev.platform_data) {
--		v4l2_err(client, "No platform data!!\n");
--		return -EPROBE_DEFER;
--	}
-+
- 	/* Copy default register configuration */
- 	memcpy(decoder->tvp514x_regs, tvp514x_reg_list_default,
- 			sizeof(tvp514x_reg_list_default));
+ 	/* Output mixers */
+ 	SND_SOC_DAPM_MIXER("Left Line Mixer", SND_SOC_NOPM, 0, 0,
+diff --git a/sound/soc/davinci/davinci-evm.c b/sound/soc/davinci/davinci-evm.c
+index 82d29a5..37b8e78 100644
+--- a/sound/soc/davinci/davinci-evm.c
++++ b/sound/soc/davinci/davinci-evm.c
+@@ -128,9 +128,9 @@ static const struct snd_soc_dapm_route audio_map[] = {
+ 	{"Line Out", NULL, "RLOUT"},
  
- 	/* Copy board specific information here */
--	decoder->pdata = client->dev.platform_data;
-+	decoder->pdata = pdata;
+ 	/* Mic connected to (MIC3L | MIC3R) */
+-	{"MIC3L", NULL, "Mic Bias 2V"},
+-	{"MIC3R", NULL, "Mic Bias 2V"},
+-	{"Mic Bias 2V", NULL, "Mic Jack"},
++	{"MIC3L", NULL, "Mic Bias"},
++	{"MIC3R", NULL, "Mic Bias"},
++	{"Mic Bias", NULL, "Mic Jack"},
  
- 	/**
- 	 * Fetch platform specific data, and configure the
-@@ -1096,6 +1145,7 @@ MODULE_DEVICE_TABLE(i2c, tvp514x_id);
- 
- static struct i2c_driver tvp514x_driver = {
- 	.driver = {
-+		.of_match_table = tvp514x_of_match,
- 		.owner = THIS_MODULE,
- 		.name = TVP514X_MODULE_NAME,
- 	},
--- 
-1.7.4.1
+ 	/* Line In connected to (LINE1L | LINE2L), (LINE1R | LINE2R) */
+ 	{"LINE1L", NULL, "Line In"},
+
+
+
+
