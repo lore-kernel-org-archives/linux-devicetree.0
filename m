@@ -1,44 +1,66 @@
-From: "Mohammed, Afzal" <afzal@ti.com>
-Subject: RE: [PATCH v16 RESEND 0/7] of: add display helper
-Date: Thu, 24 Jan 2013 08:47:02 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA928F9@DBDE01.ent.ti.com>
-References: <1358766482-6275-1-git-send-email-s.trumtrar@pengutronix.de>
- <CAF6AEGvFNA1gc_5XWqL_baEnn8DTn0R-xqui034rg3Eo-V_6Qw@mail.gmail.com>
- <20130123091202.GA11828@pengutronix.de>
- <CAL1wa8d6wXdxgVJ=c2ma2Adm-RkF3S5ga219dSrh1fFo0L9X8w@mail.gmail.com>
- <20130124081958.GA28406@pengutronix.de>
+From: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+Subject: Re: [PATCH] mtd: physmap_of: fix cmdline partition method w/o
+ linux,mtd-name
+Date: Thu, 24 Jan 2013 11:05:47 +0200
+Message-ID: <20130124090547.GB7697@sapphire.tkos.co.il>
+References: <df9da712b775781366ae23aac28ed20849b4e4d3.1356260943.git.baruch@tkos.co.il>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <20130124081958.GA28406@pengutronix.de>
-Content-Language: en-US
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>
-Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, David Airlie <airlied@linux.ie>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <df9da712b775781366ae23aac28ed20849b4e4d3.1356260943.git.baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Artem Bityutskiy <artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3RlZmZlbiwNCg0KT24gVGh1LCBKYW4gMjQsIDIwMTMgYXQgMTM6NDk6NTgsIFN0ZWZmZW4g
-VHJ1bXRyYXIgd3JvdGU6DQoNCj4gVGhhbmtzLiBJJ2xsIHVzZSB0aGF0IG9wcG9ydHVuaXR5IGZv
-ciBhIHYxNyB0aGF0IGlzIHJlYmFzZWQgb250byAzLjgtcmM0Lg0KDQpBcyB5b3UgYXJlIGdvaW5n
-IHRvIGhhdmUgYSB2MTcsIGlmIHlvdSBjYW4gZm9sZCB0aGUgZGlmZlsxXQ0KKHRoYXQgSSBtZW50
-aW9uZWQgZWFybGllcikgaW50byB0aGUgcGF0Y2gsDQoiZmJtb246IGFkZCBvZl92aWRlb21vZGUg
-aGVscGVycyIsIGl0IHdvdWxkIGJlIGhlbHBmdWwuIA0KDQpSZWdhcmRzDQpBZnphbA0KDQpbMV0N
-Cg0KZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvZmIuaCBiL2luY2x1ZGUvbGludXgvZmIuaA0K
-aW5kZXggNThiOTg2MC4uMGNlMzBkMSAxMDA2NDQNCi0tLSBhL2luY2x1ZGUvbGludXgvZmIuaA0K
-KysrIGIvaW5jbHVkZS9saW51eC9mYi5oDQpAQCAtNzE2LDkgKzcxNiwxOSBAQCBleHRlcm4gdm9p
-ZCBmYl9kZXN0cm95X21vZGVkYihzdHJ1Y3QgZmJfdmlkZW9tb2RlICptb2RlZGIpOw0KIGV4dGVy
-biBpbnQgZmJfZmluZF9tb2RlX2N2dChzdHJ1Y3QgZmJfdmlkZW9tb2RlICptb2RlLCBpbnQgbWFy
-Z2lucywgaW50IHJiKTsNCiBleHRlcm4gdW5zaWduZWQgY2hhciAqZmJfZGRjX3JlYWQoc3RydWN0
-IGkyY19hZGFwdGVyICphZGFwdGVyKTsNCiANCisjaWYgZGVmaW5lZChDT05GSUdfT0ZfVklERU9N
-T0RFKSAmJiBkZWZpbmVkKENPTkZJR19GQl9NT0RFX0hFTFBFUlMpDQogZXh0ZXJuIGludCBvZl9n
-ZXRfZmJfdmlkZW9tb2RlKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsDQogICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgc3RydWN0IGZiX3ZpZGVvbW9kZSAqZmIsDQogICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgaW50IGluZGV4KTsNCisjZWxzZQ0KK3N0YXRpYyBpbmxpbmUgaW50IG9m
-X2dldF9mYl92aWRlb21vZGUoc3RydWN0IGRldmljZV9ub2RlICpucCwNCisgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGZiX3ZpZGVvbW9kZSAqZmIsDQorICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludCBpbmRleCkNCit7DQorICAgICAgIHJl
-dHVybiAtRUlOVkFMOw0KK30NCisjZW5kaWYNCisNCiBleHRlcm4gaW50IGZiX3ZpZGVvbW9kZV9m
-cm9tX3ZpZGVvbW9kZShjb25zdCBzdHJ1Y3QgdmlkZW9tb2RlICp2bSwNCiAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBmYl92aWRlb21vZGUgKmZibW9kZSk7DQoN
-Cg==
+Hi linux-mtd, Artem, David,
+
+Ping?
+
+It's been a month, and this is a simple uninitialized pointer dereference bug 
+fix.
+
+baruch
+
+On Sun, Dec 23, 2012 at 01:10:50PM +0200, Baruch Siach wrote:
+> Commit d68cbdd4fb (mtd: physmap_of: allow to specify the mtd name for retro
+> compatiblity) broke cmdline partitioning using dev_name() in the kernel command
+> line.  of_property_read_string() does not touch mtd_name when linux,mtd-name is
+> not present in the device tree, which causes map.name to be set to a random
+> value.  Fix this by initializing mtd_name to NULL.
+> 
+> Cc: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Baruch Siach <baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org>
+> ---
+>  drivers/mtd/maps/physmap_of.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/maps/physmap_of.c b/drivers/mtd/maps/physmap_of.c
+> index 37cdc20..6fb2bd8 100644
+> --- a/drivers/mtd/maps/physmap_of.c
+> +++ b/drivers/mtd/maps/physmap_of.c
+> @@ -170,7 +170,7 @@ static int of_flash_probe(struct platform_device *dev)
+>  	resource_size_t res_size;
+>  	struct mtd_part_parser_data ppdata;
+>  	bool map_indirect;
+> -	const char *mtd_name;
+> +	const char *mtd_name = NULL;
+>  
+>  	match = of_match_device(of_flash_match, &dev->dev);
+>  	if (!match)
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch-NswTu9S1W3P6gbPvEgmw2w@public.gmane.org - tel: +972.2.679.5364, http://www.tkos.co.il -
