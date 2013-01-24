@@ -1,199 +1,53 @@
-From: Leela Krishna Amudala <leelakrishna.a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v16 RESEND 0/7] of: add display helper
-Date: Thu, 24 Jan 2013 10:44:50 +0530
-Message-ID: <CAL1wa8d6wXdxgVJ=c2ma2Adm-RkF3S5ga219dSrh1fFo0L9X8w@mail.gmail.com>
-References: <1358766482-6275-1-git-send-email-s.trumtrar@pengutronix.de>
- <CAF6AEGvFNA1gc_5XWqL_baEnn8DTn0R-xqui034rg3Eo-V_6Qw@mail.gmail.com>
- <20130123091202.GA11828@pengutronix.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V6 01/10] ASoC: Samsung: Rename samsung i2s secondary
+ device name
+Date: Thu, 24 Jan 2013 14:41:12 +0800
+Message-ID: <20130124064111.GC4955@opensource.wolfsonmicro.com>
+References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
+ <1358509629-20471-2-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130123091202.GA11828-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="O5XBE6gyVG5Rl6Rj"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1358509629-20471-2-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-Steffen,
 
-You can add my tested-by for this series.. :)
-I have been using them for Exynos: smdk5250 board.
+--O5XBE6gyVG5Rl6Rj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Wed, Jan 23, 2013 at 2:42 PM, Steffen Trumtrar
-<s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Tue, Jan 22, 2013 at 03:50:48PM -0600, Rob Clark wrote:
->> On Mon, Jan 21, 2013 at 5:07 AM, Steffen Trumtrar
->> <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
->> > Hi!
->> >
->> > There was still no maintainer, that commented, ack'd, nack'd, apply'd the
->> > series. So, this is just a resend.
->> > The patches were tested with:
->> >
->> >         - v15 on Tegra by Thierry
->> >         - sh-mobile-lcdcfb by Laurent
->> >         - MX53QSB by Marek
->> >         - Exynos: smdk5250 by Leela
->> >         - AM335X EVM & AM335X EVM-SK by Afzal
->> >         - imx6q: sabrelite, sabresd by Philipp and me
->> >         - imx53: tqma53/mba53 by me
->>
->>
->> btw, you can add my tested-by for this series..  I've been using them
->> for the tilcdc lcd-panel output driver support.
->>
->
-> Thanks. The more drivers the merrier ;-)
->
-> Steffen
->
->> >
->> >
->> > Changes since v15:
->> >         - move include/linux/{videomode,display_timing}.h to include/video
->> >         - move include/linux/of_{videomode,display_timing}.h to include/video
->> >         - reimplement flags: add VESA flags and data flags
->> >         - let pixelclock in struct videomode be unsigned long
->> >         - rename of_display_timings_exists to of_display_timings_exist
->> >         - revise logging/error messages: replace __func__ with np->full_name
->> >         - rename pixelclk-inverted to pixelclk-active
->> >         - revise comments in code
->> >
->> > Changes since v14:
->> >         - fix "const struct *" warning
->> >                 (reported by: Leela Krishna Amudala <l.krishna-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>)
->> >         - return -EINVAL when htotal or vtotal are zero
->> >         - remove unreachable code in of_get_display_timings
->> >         - include headers in .c files and not implicit in .h
->> >         - sort includes alphabetically
->> >         - fix lower/uppercase in binding documentation
->> >         - rebase onto v3.7-rc7
->> >
->> > Changes since v13:
->> >         - fix "const struct *" warning
->> >                 (reported by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>)
->> >         - prevent division by zero in fb_videomode_from_videomode
->> >
->> > Changes since v12:
->> >         - rename struct display_timing to via_display_timing in via subsystem
->> >         - fix refreshrate calculation
->> >         - fix "const struct *" warnings
->> >                 (reported by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>)
->> >         - some CodingStyle fixes
->> >         - rewrite parts of commit messages and display-timings.txt
->> >         - let display_timing_get_value get all values instead of just typical
->> >
->> > Changes since v11:
->> >         - make pointers const where applicable
->> >         - add reviewed-by Laurent Pinchart
->> >
->> > Changes since v10:
->> >         - fix function name (drm_)display_mode_from_videomode
->> >         - add acked-by, reviewed-by, tested-by
->> >
->> > Changes since v9:
->> >         - don't leak memory when previous timings were correct
->> >         - CodingStyle fixes
->> >         - move blank lines around
->> >
->> > Changes since v8:
->> >         - fix memory leaks
->> >         - change API to be more consistent (foo_from_bar(struct bar, struct foo))
->> >         - include headers were necessary
->> >         - misc minor bugfixes
->> >
->> > Changes since v7:
->> >         - move of_xxx to drivers/video
->> >         - remove non-binding documentation from display-timings.txt
->> >         - squash display_timings and videomode in one patch
->> >         - misc minor fixes
->> >
->> > Changes since v6:
->> >         - get rid of some empty lines etc.
->> >         - move functions to their subsystems
->> >         - split of_ from non-of_ functions
->> >         - add at least some kerneldoc to some functions
->> >
->> > Changes since v5:
->> >         - removed all display stuff and just describe timings
->> >
->> > Changes since v4:
->> >         - refactored functions
->> >
->> > Changes since v3:
->> >         - print error messages
->> >         - free alloced memory
->> >         - general cleanup
->> >
->> > Changes since v2:
->> >         - use hardware-near property-names
->> >         - provide a videomode structure
->> >         - allow ranges for all properties (<min,typ,max>)
->> >         - functions to get display_mode or fb_videomode
->> >
->> >
->> > Regards,
->> > Steffen
->> >
->> >
->> > Steffen Trumtrar (7):
->> >   viafb: rename display_timing to via_display_timing
->> >   video: add display_timing and videomode
->> >   video: add of helper for display timings/videomode
->> >   fbmon: add videomode helpers
->> >   fbmon: add of_videomode helpers
->> >   drm_modes: add videomode helpers
->> >   drm_modes: add of_videomode helpers
->> >
->> >  .../devicetree/bindings/video/display-timing.txt   |  109 +++++++++
->> >  drivers/gpu/drm/drm_modes.c                        |   70 ++++++
->> >  drivers/video/Kconfig                              |   21 ++
->> >  drivers/video/Makefile                             |    4 +
->> >  drivers/video/display_timing.c                     |   24 ++
->> >  drivers/video/fbmon.c                              |   94 ++++++++
->> >  drivers/video/of_display_timing.c                  |  239 ++++++++++++++++++++
->> >  drivers/video/of_videomode.c                       |   54 +++++
->> >  drivers/video/via/hw.c                             |    6 +-
->> >  drivers/video/via/hw.h                             |    2 +-
->> >  drivers/video/via/lcd.c                            |    2 +-
->> >  drivers/video/via/share.h                          |    2 +-
->> >  drivers/video/via/via_modesetting.c                |    8 +-
->> >  drivers/video/via/via_modesetting.h                |    6 +-
->> >  drivers/video/videomode.c                          |   39 ++++
->> >  include/drm/drmP.h                                 |    9 +
->> >  include/linux/fb.h                                 |    8 +
->> >  include/video/display_timing.h                     |  124 ++++++++++
->> >  include/video/of_display_timing.h                  |   20 ++
->> >  include/video/of_videomode.h                       |   18 ++
->> >  include/video/videomode.h                          |   48 ++++
->> >  21 files changed, 894 insertions(+), 13 deletions(-)
->> >  create mode 100644 Documentation/devicetree/bindings/video/display-timing.txt
->> >  create mode 100644 drivers/video/display_timing.c
->> >  create mode 100644 drivers/video/of_display_timing.c
->> >  create mode 100644 drivers/video/of_videomode.c
->> >  create mode 100644 drivers/video/videomode.c
->> >  create mode 100644 include/video/display_timing.h
->> >  create mode 100644 include/video/of_display_timing.h
->> >  create mode 100644 include/video/of_videomode.h
->> >  create mode 100644 include/video/videomode.h
->> >
->> > --
->> > 1.7.10.4
->> >
->>
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+On Fri, Jan 18, 2013 at 05:17:00PM +0530, Padmavathi Venna wrote:
+> All Samsung SoCs has max 3 i2s controllers. So the i2s secondary fifo
+> interface device id was named as samsung-i2s.4. Renaming this to
+> "samsung-i2s-sec" to support device tree in i2s driver.
+
+Applied, thanks.
+
+--O5XBE6gyVG5Rl6Rj
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRANeAAAoJELSic+t+oim9ndQP/ima1hyyIS6X1SLkrMFm14t+
+W5/vP87orHdz/7MHaBfPO+syHV5uzsuN5MUfrJsIzGt7UemIVDEtkz+1wB8VB5oy
+mUwoeh8uKDzbHHD+Lc7PKuQOma/rgNX9WGVNap+MFqnL5fPwuRCeTaDBjfnbqtTE
+JvRZexCTKCKCkR2zMaJ4a6YXM4UwIyB9G7CMhodt479daraHJKqswuIVx8sU0C9Q
+MTIE93fF4fznteriRXBUfQsdbxLCgSj37/0kLEN6qek6K61oFnj0jBG9khGxNwaI
+Bio6fUaneH5Z2zkbviTl2wVMFFgH3Vff7gv0TI4lk6XB6zP6HN6b42aT1APRiwFc
+75S4Qlx8HVbluS2N+cFO//vtjtGg0niFxTZHnOD/Z5ojeC8yChJCowljqshEkt5+
+oMSien9dRMgi1Po0YF6uMd2p80eKF2glWZNVcDL0+06SeSurC8AULi6EDPxVNtCk
+jEFqH5CqDIipBUFOPxcwwMmbOj8UToIrv6uY539n/durXDtlHQt6oBR3pN11gvgU
+LIV7GjPAk9RvYkfIb9HcG8jOtIXS9QJu6KDMYEy0renkIwiD+Nts1t9I1Tl60SAo
+PKC+tyTF7Owu22aoU+IqAvRbKzz2qzexY1wiPWZ+rus5i3atkkKJJMfqpXEvGlqI
+rKpC4pS1jWi84VqxNE5g
+=twyB
+-----END PGP SIGNATURE-----
+
+--O5XBE6gyVG5Rl6Rj--
