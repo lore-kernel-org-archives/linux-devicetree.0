@@ -1,89 +1,68 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration
- implementation
-Date: Thu, 24 Jan 2013 19:18:47 +0800
-Message-ID: <20130124111845.GO4955@opensource.wolfsonmicro.com>
-References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com>
- <1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
- <50CB4E99.9060506@wwwdotorg.org>
- <20121215142135.GB22033@opensource.wolfsonmicro.com>
- <20130124111329.GC12933@pengutronix.de>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/8] sh-pfc: Add OF support
+Date: Thu, 24 Jan 2013 12:28:19 +0100
+Message-ID: <13196828.FzACPZxly1@avalon>
+References: <1357693395-1653-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1357693395-1653-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <Pine.LNX.4.64.1301121745320.14443@axis700.grange>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2700028684666482072=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130124111329.GC12933-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, naveen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1301121745320.14443@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-sh@vger.kernel.org
+Cc: Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Linus Walleij <linus.walleij@linaro.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Phil Edworthy <phil.edworthy@renesas.com>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Guennadi,
 
---===============2700028684666482072==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qse+WBH4guesipZ+"
-Content-Disposition: inline
+On Saturday 12 January 2013 18:18:54 Guennadi Liakhovetski wrote:
+> On Wed, 9 Jan 2013, Laurent Pinchart wrote:
+> > Support device instantiation through the device tree. The compatible
+> > property is used to select the SoC pinmux information.
+> > 
+> > Set the gpio_chip device field to the PFC device to enable automatic
+> > GPIO OF support.
+> > 
+> > Signed-off-by: Laurent Pinchart
+> > <laurent.pinchart+renesas@ideasonboard.com>
+> > Cc: devicetree-discuss@lists.ozlabs.org
+> 
+> This whole pinctrl mega-series is a very welcome improvement to the
+> sh-/r-mobile GPIO framework, and is very well done IMHO! But,
+> unfortunately, as discussed with you privately yesterday, there is still a
+> problem with pinctrl DT support on sh73a0, which will, probably, enforce
+> an update to one or several of patches from this lot. To explain to other
+> readers, on sh73a0 pin numbers are not contiguous, they are sparse.
+> When pins are referred to from C code, macro names are used, which are
+> then correctly decoded to respective positions in pin descriptor tables.
+> Whereas with DT, pins are referred to from .dts files using their physical
+> numbers, which then refer to either wrong or missing entries in those
+> tables.
+> 
+> I do not know where this problem should be solved best - either in
+> descriptor tables, or in DT handling code, so, I don't know which patches
+> would be affected. Don't think you'll want to keep the one-to-one
+> index-to-pin mapping by also making pin-descriptor arrays sparse, so, so
+> far I only see one possibility to fix this - by using the .enum_id field
+> from struct sh_pfc_pin instead of just the index - both in  C and in DT
+> case, and those .enum_id values will have to provide physical pin numbers
+> instead of plane indices.
 
+I was thinking about something similar as well. I will use physical pin 
+numbers, but I then need to find a way to number the pins, as they're not 
+numbered in the documentation. Opinions on possible numbering schemes from 
+anyone familiar with several SoCs both in SH Mobile and SuperH will be 
+appreciated.
 
---qse+WBH4guesipZ+
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> That way you'd have to update at least drivers/pinctrl/sh-pfc/pfc-sh73a0.c
+> and the sh_pfc_map_gpios() function in drivers/pinctrl/sh-pfc/pinctrl.c.
+> 
+> Anyway, I'm sure you'll find a suitable solution of this problem and for
+> now I'll let Simon decide which patches he wants to apply and which ones
+> he'd prefer to hold back;-)
 
-On Thu, Jan 24, 2013 at 12:13:29PM +0100, Wolfram Sang wrote:
-> On Sat, Dec 15, 2012 at 11:21:36PM +0900, Mark Brown wrote:
+-- 
+Regards,
 
-> > also get things like read operations which appear as multiple
-> > transactions on the I2C bus so require something higher level than what
-> > multi-master provides.
+Laurent Pinchart
 
-> I don't get what you mean here. Can you elaborate?
-
-A read is typically implemented as a write of the register address
-followed by a read of the value, usually with the ability to free the
-bus in between.  If two devices attempt to access the register map
-simultaneously this results in the address going wrong.
-
---qse+WBH4guesipZ+
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRARh8AAoJELSic+t+oim9WcYP+wWmw33S4AKN/3CeMXNRjY+s
-CgiNqBwux+fQ1JfAqcTyJOp4pQLJVNewFZIZClvUN3t+7ZkgNnIImo2fEIc2vcol
-AugQkOwVEkeBYKmY5S1R9bYymFyvv7CjdaMNv2w06hjOpwhHHcIpXIOlMi5efIXh
-j58Kdl5VB6YJvyCUJGxywbiHYDTV4rb90fZWLfy7qwm81QoXhIsjc2GF+UX7iHXq
-SSbI1F9r3KazOrxf+pA3Zl76qili06T61TUSrSVpLaYhhPjUwM84qBn4p0724DFT
-tx3Ky5ZXBHYzrnZQpJ7ZERIqECOVd1AvSrwnhPS3l6S3MOxXjWZzG3BBA4H6GfRB
-I01wMCFVZfuiXtcVC6zY5kTqN5aYIVyfX2JR8dKVSHEoi+e7Q2bbjxK0t0CU+s82
-0zGRq+ZqT7KIeePHRTXkR7H3fFUZSgY/6O4BKa+gvoxzXUskmqwKhPYFyvAFrcKm
-0k/4XfXmfXpXri7aiZudwDmH6NhGNJfsIodwY6QyoQBXZulmEGuSzXcSbt0IHTXa
-1guFvK0Dja9GB7Oy6Vi7199qMYgbpOJ27Hu8+MTd6QiVsiVOEmguqWZ2DpM16Cic
-WpZbaKwb3uiqbKo/OpanYHi6rcaJdkdghnWBDnCZXv0N12NHUgQaUpcbX8KORATa
-nEas6DvWliPzPlCjPrNB
-=MQZP
------END PGP SIGNATURE-----
-
---qse+WBH4guesipZ+--
-
---===============2700028684666482072==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2700028684666482072==--
