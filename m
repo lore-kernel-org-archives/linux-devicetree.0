@@ -1,52 +1,33 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 5/6] ARM: regulator: add tps6507x device tree data
-Date: Thu, 24 Jan 2013 20:00:51 +0800
-Message-ID: <20130124120050.GP4955@opensource.wolfsonmicro.com>
-References: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
- <1359024920-32190-6-git-send-email-manishv.b@ti.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [PATCH 0/2] ARM: dts: omap3-overo: Add pwm-leds and audio support
+Date: Thu, 24 Jan 2013 13:21:14 +0100
+Message-ID: <5101273A.9090800@ti.com>
+References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IYV9cRr2u6rjcP4B"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1359024920-32190-6-git-send-email-manishv.b@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, anilkumar@ti.com, tony@atomide.com, hs@denx.de, lrg@ti.com, sameo@linux.intel.com, khilman@ti.com, linux@arm.linux.org.uk, rob@landley.net, rob.herring@calxeda.com, grant.likely@secretlab.ca
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-omap-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@epfl.ch>, "Ujfalusi, Peter" <peter.ujfalusi@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
++ Peter who did the original PWM
 
---IYV9cRr2u6rjcP4B
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Hi Florian,
 
-On Thu, Jan 24, 2013 at 04:25:19PM +0530, Vishwanathrao Badarkhe, Manish wrote:
+On 01/23/2013 06:56 PM, Florian Vaussard wrote:
+> Hello Benoit,
+> 
+> This patchset adds some new DT supports to the Overo products.
+> The first patch converts the PMIC LEDB output to use the pwm-leds,
+> newly merged in your branch for_3.9/dts. The second patch
+> adds the audio support.
 
-> ---
->  arch/arm/boot/dts/tps6507x.dtsi |   47 +++++++++++++++++++++++++++++++++++++++
+Excellent, that looks very good to me, but I'd like to get the feedback
+from Peter before merging it.
 
-Why are you putting this in arch/arm?
+Thanks,
+Benoit
 
---IYV9cRr2u6rjcP4B
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRASHyAAoJELSic+t+oim9XVcP/i8d2OXORqtJb2RwAGdUtzVA
-QvsP5eABuMJNDLrIzcbVm+aHKhjXUnBk0Z6wCWLgOzGwsn5uUAaMzAKK15mbXQeg
-C6o0NMA+lGsRUM8k2GNkeIFwrkX/+ly9c1+KVUo20hpqoPeOrVW0bMVpPip4y/Ry
-5V2nP5K6YW22iPkZUBOpbIo1V2mJcH2qy0USGkjJO4CdjfYb01wg5D4hotdz/mfg
-scJp2NBwm35yg0ShLm0hwUGEHSbF3uhrQask6HD0A8BK+4YwuRXUGRllV7lL/ZpL
-wqrot4SZgSu0MjLX+zGYZwMx+5Tmc50abpxkA5322QlBJFeqEdYOY3RND1w/avKH
-cDsHi+se8CVxW8+AVvzOCAHx+7kRPXz+ITNlz8dTQoQZsinJVCUV0RXtYiPs5NY4
-QR7vqvnIdQraLp1piBUMAzNpavR8twJH1z4QR5+ugYElJ2cZ+OUOG5X8ElYRe+FQ
-hNA07QP18xIdj+jlZa91PbyxXRXK1VaC9CJlVYNim5VNuwwpmLlFwSgXp337tW6J
-ZmYW7ieCohbFqlbUtWEzk7pOpDlG7kRyAg7taqXc1SVHoy3kXZFatYWJxrf22de6
-Mysb06hWn652ux7QpXTZkSX3ejPVX61reQjprDoAYmNqYJpCZL1ozy0yKnhEVHei
-TVTNhNSfsdMMfsF6TkdC
-=vriK
------END PGP SIGNATURE-----
-
---IYV9cRr2u6rjcP4B--
