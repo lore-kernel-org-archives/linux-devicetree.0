@@ -1,66 +1,64 @@
-From: "Mohammed, Afzal" <afzal@ti.com>
-Subject: RE: [PATCH v4 12/12] video: da8xx-fb: CCF clock divider handling
-Date: Thu, 24 Jan 2013 11:36:02 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA92ADF@DBDE01.ent.ti.com>
-References: <cover.1358937685.git.afzal@ti.com>
- <fa8dab522507e087d5a94bac13dda71544911707.1358937685.git.afzal@ti.com>
- <20130123202204.9205.66575@quantum>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration
+ implementation
+Date: Thu, 24 Jan 2013 12:39:48 +0100
+Message-ID: <20130124113948.GD12933@pengutronix.de>
+References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com>
+ <1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
+ <50CB4E99.9060506@wwwdotorg.org>
+ <20121215142135.GB22033@opensource.wolfsonmicro.com>
+ <20130124111329.GC12933@pengutronix.de>
+ <20130124111845.GO4955@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130123202204.9205.66575@quantum>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="a2FkP9tdjPU2nyhF"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130124111845.GO4955-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, naveen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlrZSwNCg0KT24gVGh1LCBKYW4gMjQsIDIwMTMgYXQgMDE6NTI6MDQsIE1pa2UgVHVycXVl
-dHRlIHdyb3RlOg0KPiBRdW90aW5nIEFmemFsIE1vaGFtbWVkICgyMDEzLTAxLTIzIDAzOjQ4OjU2
-KQ0KDQo+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBkYTh4eF9mYl9jbGtjX2VuYWJsZSh2b2lkKQ0K
-PiA+ICt7DQo+ID4gICAgICAgICBpZiAobGNkX3JldmlzaW9uID09IExDRF9WRVJTSU9OXzIpDQo+
-ID4gICAgICAgICAgICAgICAgIGxjZGNfd3JpdGUoTENEX1YyX0RNQV9DTEtfRU4gfCBMQ0RfVjJf
-TElERF9DTEtfRU4gfA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTENEX1Yy
-X0NPUkVfQ0xLX0VOLCBMQ0RfQ0xLX0VOQUJMRV9SRUcpOw0KDQo+ID4gK3N0YXRpYyBpbmxpbmUg
-aW50IGRhOHh4X2ZiX2NhbGNfY29uZmlnX2Nsa19kaXZpZGVyKHN0cnVjdCBkYTh4eF9mYl9wYXIg
-KnBhciwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgc3RydWN0IGZiX3ZpZGVvbW9kZSAqbW9kZSkNCj4gPiArew0KDQo+ID4gKyAgICAgICBy
-ZXQgPSBjbGtfc2V0X3JhdGUocGFyLT5jaGlsZF9jbGssIFBJQ09TMktIWihtb2RlLT5waXhjbG9j
-aykgKiAxMDAwKTsNCj4gPiArICAgICAgIGlmIChJU19FUlJfVkFMVUUocmV0KSkgew0KPiA+ICsg
-ICAgICAgICAgICAgICBkZXZfZXJyKHBhci0+ZGV2LCAidW5hYmxlIHRvIHNldHVwIHBpeGVsIGNs
-b2NrIG9mICV1IHBzIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBtb2RlLT5waXhjbG9j
-ayk7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKyAgICAgICB9DQo+ID4g
-KyAgICAgICBkYTh4eF9mYl9jbGtjX2VuYWJsZSgpOw0KDQo+IEl0IGxvb2tzIGxpa2UgeW91IGFy
-ZSB1c2luZyB0aGUgbGVnYWN5IG1ldGhvZCB0byBlbmFibGUvZGlzYWJsZSB0aGUNCj4gY2xvY2sg
-YW5kIHVzaW5nIHRoZSBDQ0YgYmFzaWMgZGl2aWRlciB0byBzZXQgdGhlIHJhdGUuICBUaGlzIGZl
-ZWxzIGEgYml0DQo+IGhhY2t5IHRvIG1lLiAgSWYgeW91IHdhbnQgdG8gbW9kZWwgeW91ciBjbG9j
-ayBpbiBDQ0YgdGhlbiB5b3Ugc2hvdWxkDQo+IHByb2JhYmx5IG1vZGVsIHRoZSB3aG9sZSBjbG9j
-aywgbm90IGp1c3QgdGhlIHJhdGUtY2hhbmdlIGFzcGVjdHMgb2YgaXQuDQoNCkluaXRpYWxseSBJ
-IHRob3VnaHQgYWJvdXQgaXQsIGJ1dCBzZWVpbmcgcmVxdWlyZW1lbnQgb2YgMyBnYXRlIGNsb2Nr
-cw0KKGR1ZSB0byAzIGJpdHMgbWVhbnQgZm9yIGRpZmZlcmVudCBwdXJwb3NlcyAtIERNQSwgTElE
-RCBhbmQgQ09SRQ0KZnVuY3Rpb25hbGl0aWVzKSwgZmVsdCB0aGF0IGhhdmluZyA0IGNsb2NrcyAo
-MyBnYXRlICsgMSBkaXZpZGVyKSBpbg0KZHJpdmVyIHdvdWxkIGJlIGFuIG92ZXJkZXNpZ24gW2xl
-YXZpbmcgYSBicmFuY2ggaW5zdGVhZCBvZiBhIGxlYWYgb2YNCnRoZSB0cmVlIGluIGRyaXZlciA7
-KV0uDQoNCj4gSGF2ZSB5b3UgbG9va2VkIGF0IHRoZSBjb21wb3NpdGUgY2xvY2sgcGF0Y2hlcyBm
-cm9tIFByYXNoYW50PyAgVGhvc2UNCj4gbWlnaHQgZ2l2ZSB5b3UgdGhlIGRpdmlkZXIrZ2F0ZSBw
-cm9wZXJ0aWVzIHRoYXQgeW91IGFyZSBsb29raW5nIGZvcjoNCj4gaHR0cDovL2FydGljbGUuZ21h
-bmUub3JnL2dtYW5lLmxpbnV4Lmtlcm5lbC8xNDE2Njk3DQoNClRoYW5rcyBmb3IgdGhlIHBvaW50
-ZXIsDQoNCk5vdyB3aXRoIHRoZSBjb21wb3NpdGUgY2xvY2sgaW4gbWluZCwgaXQgd2FzIHRyaWVk
-IHRvIHJlbGF0ZSB0byB3aGF0DQp3YXMgcmVxdWlyZWQgZm9yIHRoZSBwcmVzZW50IHNjZW5hcmlv
-Lg0KDQpTbyB0aGVyZSBhcmUgMyAtIExJREQgaXMgYWN0dWFsbHkgbm90IGZvciBwcmVzZW50IHVz
-ZSBjYXNlLCBDT1JFIGNvdWxkDQpiZSBjbHViYmVkIHdpdGggdGhlIGRpdmlkZXIgdG8gaGF2ZSBh
-IGNvbXBvc2l0ZSBjbG9jay4gQW5kIENPUkUgaXMNCmluIGZ1bmN0aW9uYWwgY2xvY2sgcGF0aCBh
-bmQgbG9naWNhbGx5IGl0J3MgcGVyZmVjdGx5IGFscmlnaHQgdG8gaGF2ZQ0KdGhlIGNvbXBvc2l0
-ZSBjbG9jay4NCg0KQW5kIG5vdyB3ZSBhcmUgbGVmdCB3aXRoIERNQSwgdGhpcyBpcyBhY3R1YWxs
-eSBpbiB0aGUgaW50ZXJmYWNlIGNsb2NrDQpwYXRoIHdoaWNoIGRyaXZlciBpbiB1bmF3YXJlLiBB
-biBvcHRpb24gd291bGQgYmUgdG8gaGF2ZSBETUEgY2xvY2sNCmFzIGNoaWxkIG9mIENPUkUgcGx1
-cyBkaXZpZGVyIGNvbXBvc2l0ZSBjbG9jaywgZXZlbiB0aG91Z2ggbG9naWNhbGx5DQpETUEgY2Fu
-J3QgYmUgY29uc2lkZXJlZCBpbiB0aGUgc2FtZSBwYXRoLg0KDQpBbHNvIHRyaWVkIG5vdCBlbmFi
-bGluZyBETUEgY2xvY2ssIGJ1dCBkcml2ZXIgaXMgYWJsZSB0byBwcm92aWRlDQpkaXNwbGF5IHdp
-dGhvdXQgYW55IGlzc3Vlcywgc28gd2FzIHRoaW5raW5nIHdoZXRoZXIgdG8gYXZvaWQNCmluc3Rh
-bnRpYXRpbmcgRE1BIGNsb2NrIGF0IGFsbCBhbmQgaGVuY2UgdG8gaGF2ZSBhIHNpbXBsZSBzaW5n
-bGUNCmNvbXBvc2l0ZSBjbG9jay4gVHJ5aW5nIHRvIGdldCBpbmZvcm1hdGlvbiBpbnRlcm5hbGx5
-IG9uIHdoZXRoZXINCm5vdCBzZXR0aW5nIERNQSBjbG9jayBiaXRzIHdvdWxkIGFjdHVhbGx5IG1h
-a2UgYSBkaWZmZXJlbmNlLg0KDQpJZiB5b3UgaGF2ZSBhbnkgb3BpbmlvbiBvbiBob3cgdG8gZGVh
-bCBoZXJlLCBsZXQgbWUga25vdy4NCg0KUmVnYXJkcw0KQWZ6YWwNCg0KDQo=
+
+--a2FkP9tdjPU2nyhF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jan 24, 2013 at 07:18:47PM +0800, Mark Brown wrote:
+> On Thu, Jan 24, 2013 at 12:13:29PM +0100, Wolfram Sang wrote:
+> > On Sat, Dec 15, 2012 at 11:21:36PM +0900, Mark Brown wrote:
+>=20
+> > > also get things like read operations which appear as multiple
+> > > transactions on the I2C bus so require something higher level than wh=
+at
+> > > multi-master provides.
+>=20
+> > I don't get what you mean here. Can you elaborate?
+>=20
+> A read is typically implemented as a write of the register address
+> followed by a read of the value, usually with the ability to free the
+> bus in between.  If two devices attempt to access the register map
+> simultaneously this results in the address going wrong.
+
+Could happen. But in what situations will one not use repeated start
+here? Especially when designing a multi-master bus?
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--a2FkP9tdjPU2nyhF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlEBHYQACgkQD27XaX1/VRsAdQCdHPM40PqJBYznKnHAljriBDlU
+XOsAnAkqEGcQ6Y34Ge9EqF0qt6/HfHEQ
+=pzuW
+-----END PGP SIGNATURE-----
+
+--a2FkP9tdjPU2nyhF--
