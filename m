@@ -1,270 +1,78 @@
-From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Subject: [PATCH 4/6] davinci: regulator: tps6507x: add device tree support.
-Date: Thu, 24 Jan 2013 16:25:18 +0530
-Message-ID: <1359024920-32190-5-git-send-email-manishv.b@ti.com>
-References: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration
+ implementation
+Date: Thu, 24 Jan 2013 12:13:29 +0100
+Message-ID: <20130124111329.GC12933@pengutronix.de>
+References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com>
+ <1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
+ <50CB4E99.9060506@wwwdotorg.org>
+ <20121215142135.GB22033@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com
-Cc: khilman@ti.com, manishv.b@ti.com, linux@arm.linux.org.uk, sameo@linux.intel.com, tony@atomide.com, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, rob@landley.net, anilkumar@ti.com, hs@denx.de, lrg@ti.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6zdv2QT/q3FMhpsV"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20121215142135.GB22033-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, naveen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree based initialization support for
-TI's tps6507x regulators.
-Add device tree binding document for TI's tps6507x
-using datasheet:
-http://www.ti.com/lit/ds/symlink/tps65070.pdf
 
-Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
----
- Documentation/devicetree/bindings/mfd/tps6507x.txt |   91 +++++++++++++++++++
- drivers/regulator/tps6507x-regulator.c             |   92 ++++++++++++++++++++
- 2 files changed, 183 insertions(+), 0 deletions(-)
- create mode 100755 Documentation/devicetree/bindings/mfd/tps6507x.txt
+--6zdv2QT/q3FMhpsV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/mfd/tps6507x.txt b/Documentation/devicetree/bindings/mfd/tps6507x.txt
-new file mode 100755
-index 0000000..8fffa3c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/tps6507x.txt
-@@ -0,0 +1,91 @@
-+TPS6507x Power Management Integrated Circuit
-+
-+Required properties:
-+- compatible: "ti,tps6507x"
-+- reg: I2C slave address
-+- regulators: This is the list of child nodes that specify the regulator
-+  initialization data for defined regulators. Not all regulators for the
-+  given device need to be present. The definition for each of these nodes
-+  is defined using the standard binding for regulators found at
-+  Documentation/devicetree/bindings/regulator/regulator.txt.
-+  The regulator is matched with the regulator-compatible.
-+
-+  The valid regulator-compatible values are:
-+  tps6507x: vdcdc1, vdcdc2, vdcdc3, vldo1, vldo2
-+- xxx-supply: Input voltage supply regulator.
-+  These entries are required if regulators are enabled for a device.
-+  Missing of these properties can cause the regulator registration
-+  fails.
-+  If some of input supply is powered through battery or always-on
-+  supply then also it is require to have these parameters with proper
-+  node handle of always on power supply.
-+  tps6507x:
-+       vindcdc1_2-supply: VDCDC1 and VDCDC2 input.
-+       vindcdc3-supply  : VDCDC3 input.
-+       vldo1_2-supply   : VLDO1 and VLDO2 input.
-+
-+Regulator Optional properties:
-+- defdcdc_default: It's property of DCDC2 and DCDC3 regulators.
-+			0: If defdcdc pin of DCDC2/DCDC3 is pulled to GND.
-+			1: If defdcdc pin of DCDC2/DCDC3 is driven HIGH.
-+  If this property is not defined, it defaults to 0 (not enabled).
-+
-+Example:
-+
-+	pmu: tps6507x@48 {
-+		compatible = "ti,tps6507x";
-+		reg = <0x48>;
-+
-+		vindcdc1_2-supply = <&vbat>;
-+		vindcdc3-supply = <...>;
-+		vinldo1_2-supply = <...>;
-+
-+		regulators {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			vdcdc1_reg: regulator@0 {
-+				regulator-compatible = "VDCDC1";
-+				reg = <0>;
-+				regulator-min-microvolt = <3150000>;
-+				regulator-max-microvolt = <3450000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			vdcdc2_reg: regulator@1 {
-+				regulator-compatible = "VDCDC2";
-+				reg = <1>;
-+				regulator-min-microvolt = <1710000>;
-+				regulator-max-microvolt = <3450000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+				defdcdc_default = <1>;
-+			};
-+			vdcdc3_reg: regulator@2 {
-+				regulator-compatible = "VDCDC3";
-+				reg = <2>;
-+				regulator-min-microvolt = <950000>
-+				regulator-max-microvolt = <1350000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+				defdcdc_default = <1>;
-+			};
-+			ldo1_reg: regulator@3 {
-+				regulator-compatible = "LDO1";
-+				reg = <3>;
-+				regulator-min-microvolt = <1710000>;
-+				regulator-max-microvolt = <1890000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			ldo2_reg: regulator@4 {
-+				regulator-compatible = "LDO2";
-+				reg = <4>;
-+				regulator-min-microvolt = <1140000>;
-+				regulator-max-microvolt = <1320000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+		};
-+
-+	};
-diff --git a/drivers/regulator/tps6507x-regulator.c b/drivers/regulator/tps6507x-regulator.c
-index 0233cfb..afdeb65 100644
---- a/drivers/regulator/tps6507x-regulator.c
-+++ b/drivers/regulator/tps6507x-regulator.c
-@@ -23,8 +23,10 @@
- #include <linux/regulator/driver.h>
- #include <linux/regulator/machine.h>
- #include <linux/regulator/tps6507x.h>
-+#include <linux/of.h>
- #include <linux/slab.h>
- #include <linux/mfd/tps6507x.h>
-+#include <linux/regulator/of_regulator.h>
- 
- /* DCDC's */
- #define TPS6507X_DCDC_1				0
-@@ -356,6 +358,80 @@ static struct regulator_ops tps6507x_pmic_ops = {
- 	.list_voltage = regulator_list_voltage_table,
- };
- 
-+#ifdef CONFIG_OF
-+static struct of_regulator_match tps6507x_matches[] = {
-+	{ .name = "VDCDC1"},
-+	{ .name = "VDCDC2"},
-+	{ .name = "VDCDC3"},
-+	{ .name = "LDO1"},
-+	{ .name = "LDO2"},
-+};
-+
-+static struct tps6507x_board *tps6507x_parse_dt_reg_data(
-+		struct platform_device *pdev,
-+		struct of_regulator_match **tps6507x_reg_matches)
-+{
-+	struct tps6507x_board *tps_board;
-+	struct device_node *np = pdev->dev.parent->of_node;
-+	struct device_node *regulators;
-+	struct of_regulator_match *matches;
-+	static struct regulator_init_data *reg_data;
-+	int idx = 0, count, ret;
-+
-+	tps_board = devm_kzalloc(&pdev->dev, sizeof(*tps_board),
-+					GFP_KERNEL);
-+	if (!tps_board) {
-+		dev_err(&pdev->dev, "Failure to alloc pdata for regulators.\n");
-+		return NULL;
-+	}
-+
-+	regulators = of_find_node_by_name(np, "regulators");
-+	if (!regulators) {
-+		dev_err(&pdev->dev, "regulator node not found\n");
-+		return NULL;
-+	}
-+
-+	count = ARRAY_SIZE(tps6507x_matches);
-+	matches = tps6507x_matches;
-+
-+	ret = of_regulator_match(pdev->dev.parent, regulators, matches, count);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Error parsing regulator init data: %d\n",
-+			ret);
-+		return NULL;
-+	}
-+
-+	*tps6507x_reg_matches = matches;
-+
-+	reg_data = devm_kzalloc(&pdev->dev, (sizeof(struct regulator_init_data)
-+					* TPS6507X_NUM_REGULATOR), GFP_KERNEL);
-+	if (!reg_data) {
-+		dev_err(&pdev->dev, "Failure to alloc init data for regulators.\n");
-+		return NULL;
-+	}
-+
-+	tps_board->tps6507x_pmic_init_data = reg_data;
-+
-+	for (idx = 0; idx < count; idx++) {
-+		if (!matches[idx].init_data || !matches[idx].of_node)
-+			continue;
-+
-+		memcpy(&reg_data[idx], matches[idx].init_data,
-+				sizeof(struct regulator_init_data));
-+
-+	}
-+
-+	return tps_board;
-+}
-+#else
-+static inline struct tps6507x_board *tps6507x_parse_dt_reg_data(
-+			struct platform_device *pdev,
-+			struct of_regulator_match **tps6507x_reg_matches)
-+{
-+	*tps6507x_reg_matches = NULL;
-+	return NULL;
-+}
-+#endif
- static int tps6507x_pmic_probe(struct platform_device *pdev)
- {
- 	struct tps6507x_dev *tps6507x_dev = dev_get_drvdata(pdev->dev.parent);
-@@ -365,8 +441,10 @@ static int tps6507x_pmic_probe(struct platform_device *pdev)
- 	struct regulator_dev *rdev;
- 	struct tps6507x_pmic *tps;
- 	struct tps6507x_board *tps_board;
-+	struct of_regulator_match *tps6507x_reg_matches = NULL;
- 	int i;
- 	int error;
-+	unsigned int prop;
- 
- 	/**
- 	 * tps_board points to pmic related constants
-@@ -374,6 +452,9 @@ static int tps6507x_pmic_probe(struct platform_device *pdev)
- 	 */
- 
- 	tps_board = dev_get_platdata(tps6507x_dev->dev);
-+	if (!tps_board && tps6507x_dev->dev->of_node)
-+		tps_board = tps6507x_parse_dt_reg_data(pdev,
-+						&tps6507x_reg_matches);
- 	if (!tps_board)
- 		return -EINVAL;
- 
-@@ -415,6 +496,17 @@ static int tps6507x_pmic_probe(struct platform_device *pdev)
- 		config.init_data = init_data;
- 		config.driver_data = tps;
- 
-+		if (tps6507x_reg_matches) {
-+			error = of_property_read_u32(
-+				tps6507x_reg_matches[i].of_node,
-+					"ti,defdcdc_default", &prop);
-+
-+			if (!error)
-+				tps->info[i]->defdcdc_default = prop;
-+
-+			config.of_node = tps6507x_reg_matches[i].of_node;
-+		}
-+
- 		rdev = regulator_register(&tps->desc[i], &config);
- 		if (IS_ERR(rdev)) {
- 			dev_err(tps6507x_dev->dev,
--- 
-1.7.4.1
+Hi,
+
+On Sat, Dec 15, 2012 at 11:21:36PM +0900, Mark Brown wrote:
+> On Fri, Dec 14, 2012 at 09:06:49AM -0700, Stephen Warren wrote:
+> > On 12/13/2012 10:50 PM, Naveen Krishna Chatradhi wrote:
+>=20
+> > > +The first should be an output, and is used to claim the I2C bus,
+> > > +the second should be an input, and signals that the other side (Clie=
+nt)
+> > > +wants to claim the bus. This allows two masters to share the same I2=
+C bus.
+>=20
+> > I'm confused why this is even needed; the I2C protocol itself defines
+> > how multi-master is supposed to work, just using the regular SCL/SDA li=
+nes.
+>=20
+> Practically speaking essentially no systems actually do that - mostly
+> Linux will treat failure to get the bus as an error for example.
+
+It is true that Linux currently does not have proper multi-master
+support. It is worth a look what is missing and how far we can get with
+the I2C specified arbitration IMO.
+
+> also get things like read operations which appear as multiple
+> transactions on the I2C bus so require something higher level than what
+> multi-master provides.
+
+I don't get what you mean here. Can you elaborate?
+
+That being said. Grant's design was the most promising one.
+
+Thanks,
+
+   Wolfram
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--6zdv2QT/q3FMhpsV
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlEBF1kACgkQD27XaX1/VRullQCePgYzSfFOMBAK94oXjHZnLFtt
+TYIAoMQogd0XfDbXQpVnMGySY0AW5KEI
+=Zzsm
+-----END PGP SIGNATURE-----
+
+--6zdv2QT/q3FMhpsV--
