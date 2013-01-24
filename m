@@ -1,13 +1,11 @@
 From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Subject: [PATCH 3/6] davinci: mfd: tps6507x: add device-tree support.
-Date: Thu, 24 Jan 2013 16:25:17 +0530
-Message-ID: <1359024920-32190-4-git-send-email-manishv.b@ti.com>
-References: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
+Subject: [PATCH 0/6] davinci: support for i2c0 and tps6507x
+Date: Thu, 24 Jan 2013 16:25:14 +0530
+Message-ID: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,45 +19,45 @@ To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel
 Cc: khilman@ti.com, manishv.b@ti.com, linux@arm.linux.org.uk, sameo@linux.intel.com, tony@atomide.com, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, rob@landley.net, anilkumar@ti.com, hs@denx.de, lrg@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add device tree based initialization support for TI's
-tps6507x mfd device.
+This patch series enables device tree support for I2C0 and
+for regulator via tps6507x mfd device on da850-evm.
 
-Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
----
- drivers/mfd/tps6507x.c |    9 +++++++++
- 1 files changed, 9 insertions(+), 0 deletions(-)
+Applies on top of v3.8-rc4 of linus tree.
 
-diff --git a/drivers/mfd/tps6507x.c b/drivers/mfd/tps6507x.c
-index 409afa2..5ad4b77 100644
---- a/drivers/mfd/tps6507x.c
-+++ b/drivers/mfd/tps6507x.c
-@@ -19,6 +19,7 @@
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/i2c.h>
-+#include <linux/of_device.h>
- #include <linux/mfd/core.h>
- #include <linux/mfd/tps6507x.h>
- 
-@@ -116,11 +117,19 @@ static const struct i2c_device_id tps6507x_i2c_id[] = {
- };
- MODULE_DEVICE_TABLE(i2c, tps6507x_i2c_id);
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id tps6507x_of_match[] = {
-+	{.compatible = "ti,tps6507x", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tps6507x_of_match);
-+#endif
- 
- static struct i2c_driver tps6507x_i2c_driver = {
- 	.driver = {
- 		   .name = "tps6507x",
- 		   .owner = THIS_MODULE,
-+		   .of_match_table = of_match_ptr(tps6507x_of_match),
- 	},
- 	.probe = tps6507x_i2c_probe,
- 	.remove = tps6507x_i2c_remove,
+Tested on da850-evm device.
+
+Test procedure followed as below:
+Once device boots up, issue command as:
+
+$for reg in /sys/class/regulator/*; do echo $reg `cat $reg/name`
+`cat $reg/state` `cat $reg/microvolts`; done
+
+This command will print all available regulators with its name,
+status (enabled/disabled) and voltages(in microvolts) like as below:
+/sys/class/regulator/regulator.1 VDCDC1_3.3V enabled 3300000
+/sys/class/regulator/regulator.2 VDCDC2_3.3V enabled 3300000
+/sys/class/regulator/regulator.3 VDCDC3_1.2V enabled 1200000
+/sys/class/regulator/regulator.4 LDO1_1.8V enabled 1800000
+/sys/class/regulator/regulator.5 LDO2_1.2V enabled 1200000
+
+Vishwanathrao Badarkhe, Manish (6):
+  ARM: davinci: da850: add OF_DEV_AUXDATA entry for I2C0
+  ARM: davinci: da850: add DT node for I2C0
+  davinci: mfd: tps6507x: add device-tree support.
+  davinci: regulator: tps6507x: add device tree support.
+  ARM: regulator: add tps6507x device tree data
+  ARM: davinci: da850: add tps6507x regulator DT data
+
+ Documentation/devicetree/bindings/mfd/tps6507x.txt |   91 +++++++++++++++++++
+ arch/arm/boot/dts/da850-evm.dts                    |   79 +++++++++++++++++
+ arch/arm/boot/dts/da850.dtsi                       |   10 ++
+ arch/arm/boot/dts/tps6507x.dtsi                    |   47 ++++++++++
+ arch/arm/mach-davinci/da8xx-dt.c                   |    8 ++-
+ drivers/mfd/tps6507x.c                             |    9 ++
+ drivers/regulator/tps6507x-regulator.c             |   92 ++++++++++++++++++++
+ 7 files changed, 335 insertions(+), 1 deletions(-)
+ create mode 100755 Documentation/devicetree/bindings/mfd/tps6507x.txt
+ create mode 100644 arch/arm/boot/dts/tps6507x.dtsi
+
 -- 
 1.7.4.1
