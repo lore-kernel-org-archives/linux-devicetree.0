@@ -1,119 +1,67 @@
-From: Marek Belisko <marek.belisko@open-nandra.com>
-Subject: [PATCH] arm/dts: Add basic support for gta04 (Openmoko next generation) board.
-Date: Thu, 24 Jan 2013 19:34:05 +0100
-Message-ID: <1359052445-18560-1-git-send-email-marek.belisko@open-nandra.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: b-cousson@ti.com, tony@atomide.com
-Cc: linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Marek Belisko <marek.belisko@open-nandra.com>
+From: kishon <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v1 4/6] drivers: usb: musb: omap: make use of the new
+ PHY lib APIs
+Date: Fri, 25 Jan 2013 00:28:43 +0530
+Message-ID: <51018463.4040908@ti.com>
+References: <1358848694-20145-1-git-send-email-kishon@ti.com> <1358848694-20145-5-git-send-email-kishon@ti.com> <50FE9DA6.4030507@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50FE9DA6.4030507-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
----
- arch/arm/boot/dts/omap3-gta04.dts |   94 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 94 insertions(+)
- create mode 100644 arch/arm/boot/dts/omap3-gta04.dts
+Hi,
 
-diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
-new file mode 100644
-index 0000000..9e7e3ec
---- /dev/null
-+++ b/arch/arm/boot/dts/omap3-gta04.dts
-@@ -0,0 +1,94 @@
-+/*
-+ * Copyright (C) 2013 Marek Belisko <marek.belisko@open-nandra.com>
-+ *
-+ * Based on omap3-beagle-xm.dts
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+/include/ "omap3.dtsi"
-+
-+/ {
-+	model = "OMAP3 GTA04";
-+	compatible = "ti,omap3-gta04", "ti,omap3";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x80000000 0x20000000>; /* 512 MB */
-+	};
-+
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		aux-button {
-+			label = "AUX";
-+			linux,code = <169>;
-+			gpios = <&gpio1 7 1>;
-+			gpio-key,wakeup;
-+		};
-+	};
-+};
-+
-+&i2c1 {
-+	clock-frequency = <2600000>;
-+
-+	twl: twl@48 {
-+		reg = <0x48>;
-+		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-+		interrupt-parent = <&intc>;
-+	};
-+};
-+
-+/include/ "twl4030.dtsi"
-+
-+&i2c2 {
-+	clock-frequency = <400000>;
-+	/* Pressure Sensor */
-+	bmp085@77 {
-+		compatible = "bosch,bmp085";
-+		reg = <0x77>;
-+	};
-+
-+	/* leds */
-+	tca6507@45 {
-+		compatible = "ti,tca6507";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reg = <0x45>;
-+
-+		gta04_led0: red_aux@0 {
-+			label = "gta04:red:aux";
-+			reg = <0x0>;
-+		};
-+
-+		gta04_led1: green_aux@1 {
-+			label = "gta04:green:aux";
-+			reg = <0x1>;
-+		};
-+
-+		gta04_led3: red_power@3 {
-+			label = "gta04:red:power";
-+			reg = <0x3>;
-+			linux,default-trigger = "default-on";
-+		};
-+
-+		gta04_led4: green_power@4 {
-+			label = "gta04:green:power";
-+			reg = <0x4>;
-+		};
-+	};
-+};
-+
-+&i2c3 {
-+	clock-frequency = <100000>;
-+};
-+
-+&mmc1 {
-+	vmmc-supply = <&vmmc1>;
-+	bus-width = <4>;
-+};
-+
--- 
-1.7.10.4
+On Tuesday 22 January 2013 07:39 PM, Roger Quadros wrote:
+> On 01/22/2013 11:58 AM, Kishon Vijay Abraham I wrote:
+>> New PHY lib APIs like usb_add_phy_dev() and devm_usb_get_phy_dev() are
+>> used in MUSB (OMAP), in order to make use of the binding information
+>> provided in the board file (of OMAP platforms).
+>> All the platforms should be modified similar to this to add and get the
+>> PHY.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   drivers/usb/musb/omap2430.c   |    2 +-
+>>   drivers/usb/otg/twl4030-usb.c |    3 ++-
+>>   drivers/usb/phy/omap-usb2.c   |    3 ++-
+>>   3 files changed, 5 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
+>> index bf6cfe0..1a8cf6d 100644
+>> --- a/drivers/usb/musb/omap2430.c
+>> +++ b/drivers/usb/musb/omap2430.c
+>> @@ -345,7 +345,7 @@ static int omap2430_musb_init(struct musb *musb)
+>>   	 * up through ULPI.  TWL4030-family PMICs include one,
+>>   	 * which needs a driver, drivers aren't always needed.
+>>   	 */
+>> -	musb->xceiv = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
+>> +	musb->xceiv = devm_usb_get_phy_dev(dev, 0);
+>>   	if (IS_ERR_OR_NULL(musb->xceiv)) {
+>>   		pr_err("HS USB OTG: no transceiver configured\n");
+>>   		return -ENODEV;
+>> diff --git a/drivers/usb/otg/twl4030-usb.c b/drivers/usb/otg/twl4030-usb.c
+>> index 0a70193..a994715 100644
+>> --- a/drivers/usb/otg/twl4030-usb.c
+>> +++ b/drivers/usb/otg/twl4030-usb.c
+>> @@ -610,6 +610,7 @@ static int twl4030_usb_probe(struct platform_device *pdev)
+>>   	twl->phy.dev		= twl->dev;
+>>   	twl->phy.label		= "twl4030";
+>>   	twl->phy.otg		= otg;
+>> +	twl->phy.type		= USB_PHY_TYPE_USB2;
+>
+> What is the need to set phy.type? I think this should be deprecated along with the old API.
 
+The *type* field as such is not deprecated. Adding and getting a PHY 
+using *type* is deprecated.
+
+Thanks
+Kishon
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
