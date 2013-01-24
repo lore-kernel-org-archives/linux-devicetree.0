@@ -1,38 +1,71 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] USB: misc: usb3503: add dt support
-Date: Thu, 24 Jan 2013 14:03:03 -0800
-Message-ID: <20130124220303.GA30869@kroah.com>
-References: <1358963242-2596-1-git-send-email-tobetter@gmail.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v2 2/2] usb: dwc3-exynos: Fix compatible strings for the
+ device
+Date: Fri, 25 Jan 2013 00:32:21 +0200
+Message-ID: <20130124223221.GA14320@arwen.pp.htv.fi>
+References: <1359035130-22667-1-git-send-email-gautam.vivek@samsung.com>
+ <1359035130-22667-3-git-send-email-gautam.vivek@samsung.com>
+ <20130124213213.GA21329@kroah.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="mP3DRpeJDSE+ciuQ"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1358963242-2596-1-git-send-email-tobetter@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dongjin Kim <tobetter@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Fengguang Wu <fengguang.wu@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+In-Reply-To: <20130124213213.GA21329@kroah.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, balbi@ti.com, stern@rowland.harvard.edu, kgene.kim@samsung.com, thomas.abraham@linaro.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, sylvester.nawrocki@gmail.com, dianders@chromium.org, jg1.han@samsung.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2013 at 02:47:10AM +0900, Dongjin Kim wrote:
-> Added device tree support for usb3503 driver and add new document wit=
-h device tree binding information.
+--mP3DRpeJDSE+ciuQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu, Jan 24, 2013 at 01:32:13PM -0800, Greg KH wrote:
+> On Thu, Jan 24, 2013 at 07:15:30PM +0530, Vivek Gautam wrote:
+> > Using specific chip in compatible strings. Newer SOCs can claim
+> > device by using older string in the compatible list.
+> >=20
+> > Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> > Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> > Reviewed-by: Doug Anderson <dianders@chromium.org>
+> > ---
+> >  drivers/usb/dwc3/dwc3-exynos.c |    2 +-
+> >  1 files changed, 1 insertions(+), 1 deletions(-)
 >=20
-> Signed-off-by: Dongjin Kim <tobetter@gmail.com>
-> ---
->  Documentation/devicetree/bindings/usb/usb3503.txt |   20 +++++++++++=
-++
->  drivers/usb/misc/usb3503.c                        |   31 +++++++++++=
-++++++----
->  2 files changed, 46 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/usb3503.txt
+> Felipe, want me to take this one, or will you?
 
-I've applied this, but now we have the compiler warning:
-drivers/usb/misc/usb3503.c: In function =E2=80=98usb3503_probe=E2=80=99=
-:
-drivers/usb/misc/usb3503.c:215:13: warning: =E2=80=98mode=E2=80=99 may =
-be used uninitialized in this function [-Wuninitialized]
+I'll take in few hours after sleeping ;-)
 
-Please send a follow-on patch to fix this up.
+cheers
 
-greg k-h
+--=20
+balbi
+
+--mP3DRpeJDSE+ciuQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRAbZ1AAoJEIaOsuA1yqRELIoP+wVoZaBNk79FI2uUGNPu0gp6
+Yw1FVUvwvwNAzQtkjaOHm85TDVlxPMMu3KCFXeOLtdad+5oOPkO4jznmgbIFj0gq
+H4Y0Bjgybhh88tep0aYOwgmP2ygw3/l1I12Yqr0DxnKkTawa+divVuYH/+fPfuNR
+kSUCe9pu6eLMCQ+tlthDOOUvdr/M0aX5aHgEpsRFfUdgG5fJ1HQVOTZIbz+2BbQb
+6XWhYvVnNWi8W+o8mkiFWtdm1IDDzI24EbzGUmPc4EvP0vcYdQS0luDba7fcgOZU
+nf+cx1lTAbRSf0tET1l8jUkfS/AF/0V1M7cbtGVZEKug8j3ESfMe75Bu69dHBR5W
+oKhwxX8wZIeKA8RVsxbcEhWgCadx7CdGKq/IKh9jALYQvCHwq01lV0GUeM9rl1pN
+78AaqAGRnGDvsH1AJAYwYhmVLP3IWrU5n08SwgIvIbNwO59SrU9f/0ji+C696QIA
+OFHLuXTdYoayS2fkiv9xOpzXBScV/QDLPSc9svDYu84ft5/xJrogWghZ/hsqfPs1
+/YM/WZqO609htbHZ7OXA+Qocbti8m+ttPH+XzbkwnyokNGhXM8hQDpcdysePi4d6
+eagvLNlWRXFp2CvvOkqN5ify8a5NDQ6DzVPwz5qQTevyOBgKNa9NFKKeic3jMJZM
+amV/Om328v5V8xOSDwu2
+=nFz6
+-----END PGP SIGNATURE-----
+
+--mP3DRpeJDSE+ciuQ--
