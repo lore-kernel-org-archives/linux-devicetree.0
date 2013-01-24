@@ -1,91 +1,40 @@
 From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH/RFC 2/3] ethernet: add a PHY reset GPIO DT binding to sh_eth
-Date: Thu, 24 Jan 2013 17:07:32 +0100
-Message-ID: <1359043653-11374-3-git-send-email-g.liakhovetski@gmx.de>
-References: <1359043653-11374-1-git-send-email-g.liakhovetski@gmx.de>
+Subject: [PATCH] DT: add vendor prefixes for Renesas and Toshiba
+Date: Thu, 24 Jan 2013 17:09:45 +0100 (CET)
+Message-ID: <Pine.LNX.4.64.1301241708360.7826@axis700.grange>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1359043653-11374-1-git-send-email-g.liakhovetski@gmx.de>
 Sender: linux-sh-owner@vger.kernel.org
-To: linux-sh@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-If an ethernet PHY can be reset by a GPIO, it can be specified in DT. Add
-a binding and code to parse it, request the GPIO and take the PHY out of
-reset.
-
 Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: netdev@vger.kernel.org
 ---
- Documentation/devicetree/bindings/net/sh_ether.txt |    2 ++
- drivers/net/ethernet/renesas/sh_eth.c              |    9 ++++++++-
- 2 files changed, 10 insertions(+), 1 deletions(-)
+ .../devicetree/bindings/vendor-prefixes.txt        |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/sh_ether.txt b/Documentation/devicetree/bindings/net/sh_ether.txt
-index c11e45d..edaf683 100644
---- a/Documentation/devicetree/bindings/net/sh_ether.txt
-+++ b/Documentation/devicetree/bindings/net/sh_ether.txt
-@@ -12,6 +12,7 @@ Required properties:
- - interrupts:                   Interrupt mapping for the sh_eth interrupt
-                                 sources (vector id).
- - phy-mode:              String, operation mode of the PHY interface.
-+- phy-reset-gpios:              PHY reset GPIO tuple
- - sh-eth,edmac-endian:          String, endian of sh_eth dmac.
- - sh-eth,register-type:         String, register type of sh_eth.
-                                 Please select "gigabit", "fast-sh4" or
-@@ -37,6 +38,7 @@ Example (armadillo800eva):
- 		reg = <0xe9a00000 0x800>, <0xe9a01800 0x800>;
- 		interrupts = <0x500>;
- 		phy-mode = "mii";
-+		phy-reset-gpios = <&gpio 18 0>;
- 		sh-eth,edmac-endian = "little";
- 		sh-eth,register-type = "gigabit";
- 		sh-eth,phy-id = <0>;
-diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
-index 1f64848..06035a2 100644
---- a/drivers/net/ethernet/renesas/sh_eth.c
-+++ b/drivers/net/ethernet/renesas/sh_eth.c
-@@ -20,6 +20,7 @@
-  *  the file called "COPYING".
-  */
- 
-+#include <linux/gpio.h>
- #include <linux/init.h>
- #include <linux/module.h>
- #include <linux/kernel.h>
-@@ -33,6 +34,7 @@
- #include <linux/netdevice.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- #include <linux/of_platform.h>
- #include <linux/of_address.h>
- #include <linux/of_irq.h>
-@@ -2376,10 +2378,11 @@ sh_eth_of_get_register_type(struct device_node *np)
- static struct sh_eth_plat_data *
- sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
- {
--	int ret;
-+	int ret, gpio;
- 	const char *of_str;
- 	struct device_node *np = dev->of_node;
- 	struct sh_eth_plat_data *pdata;
-+	enum of_gpio_flags flags;
- 
- 	pdata = devm_kzalloc(dev, sizeof(struct sh_eth_plat_data),
- 					GFP_KERNEL);
-@@ -2420,6 +2423,10 @@ sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
- 	else
- 		pdata->needs_init = 0;
- 
-+	gpio = of_get_named_gpio_flags(np, "phy-reset-gpios", 0, &flags);
-+	if (gpio_is_valid(gpio) && !devm_gpio_request(dev, gpio, NULL))
-+		gpio_direction_output(gpio, !!(flags & OF_GPIO_ACTIVE_LOW));
-+
- #ifdef CONFIG_OF_NET
- 	if (!is_valid_ether_addr(ndev->dev_addr)) {
- 		const char *macaddr = of_get_mac_address(np);
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 902b1b1..5d811b2 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -42,6 +42,7 @@ powervr	PowerVR (deprecated, use img)
+ qcom	Qualcomm, Inc.
+ ramtron	Ramtron International
+ realtek Realtek Semiconductor Corp.
++renesas	Renesas Electronics Corporation
+ samsung	Samsung Semiconductor
+ sbs	Smart Battery System
+ schindler	Schindler
+@@ -52,6 +53,7 @@ snps 	Synopsys, Inc.
+ st	STMicroelectronics
+ stericsson	ST-Ericsson
+ ti	Texas Instruments
++toshiba	Toshiba Corporation
+ via	VIA Technologies, Inc.
+ wlf	Wolfson Microelectronics
+ wm	Wondermedia Technologies, Inc.
 -- 
 1.7.2.5
 
