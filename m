@@ -1,44 +1,45 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2] hwmon: Driver for Texas Instruments INA209
-Date: Wed, 23 Jan 2013 15:14:57 -0800
-Message-ID: <20130123231457.GA20993@roeck-us.net>
-References: <1358915321-30200-1-git-send-email-linux@roeck-us.net>
- <20130123180222.GA25880@ovro.caltech.edu>
+From: Dave Airlie <airlied@gmail.com>
+Subject: Re: [PATCH v16 RESEND 0/7] of: add display helper
+Date: Thu, 24 Jan 2013 10:15:54 +1000
+Message-ID: <CAPM=9txadRcm4j7_GryvxgosEhF8S3-1rGxqR_bw8UXMaoVWug@mail.gmail.com>
+References: <1358766482-6275-1-git-send-email-s.trumtrar@pengutronix.de>
+	<CAF6AEGvFNA1gc_5XWqL_baEnn8DTn0R-xqui034rg3Eo-V_6Qw@mail.gmail.com>
+	<20130123091202.GA11828@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130123180222.GA25880@ovro.caltech.edu>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Ira W. Snyder" <iws@ovro.caltech.edu>
-Cc: lm-sensors@lm-sensors.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jean Delvare <khali@linux-fr.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, Paul Hays <haysp@magma.net>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20130123091202.GA11828@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Rob Clark <robdclark@gmail.com>, devicetree-discuss@lists.ozlabs.org, David Airlie <airlied@linux.ie>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "Mohammed, Afzal" <afzal@ti.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 23, 2013 at 10:02:22AM -0800, Ira W. Snyder wrote:
-> On Tue, Jan 22, 2013 at 08:28:41PM -0800, Guenter Roeck wrote:
-> > Add support for the TI / Burr-Brown INA209 voltage / current / power
-> > monitor.
-> > 
-> > Cc: Paul Hays <haysp@magma.net>
-> > Cc: Ira W. Snyder <iws@ovro.caltech.edu>
-> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-> > ---
-> > v2:
-> > - Updated Paul Hays' e-mail address and added as driver author
-> > - ina290_init_client -> ina209_init_client
-> > - Added devicetree support
-> > - Simplified chip initialization code
-> > 
-> 
-> Hi Guenter,
-> 
-> I tested this on a PowerPC using the new devicetree support. It sets the
-> calibration registers correctly based on the devicetree values.
-> 
-> Tested-by: Ira W. Snyder <iws@ovro.caltech.edu>
-> 
-> Thanks for the work on this!
+>> > Hi!
+>> >
+>> > There was still no maintainer, that commented, ack'd, nack'd, apply'd the
+>> > series. So, this is just a resend.
+>> > The patches were tested with:
+>> >
+>> >         - v15 on Tegra by Thierry
+>> >         - sh-mobile-lcdcfb by Laurent
+>> >         - MX53QSB by Marek
+>> >         - Exynos: smdk5250 by Leela
+>> >         - AM335X EVM & AM335X EVM-SK by Afzal
+>> >         - imx6q: sabrelite, sabresd by Philipp and me
+>> >         - imx53: tqma53/mba53 by me
+>>
+>>
+>> btw, you can add my tested-by for this series..  I've been using them
+>> for the tilcdc lcd-panel output driver support.
+>>
+>
+> Thanks. The more drivers the merrier ;-)
+>
 
-Thanks for testing!
+I'll probably merge these via my tree for lack of anyone else doing
+it. I just don't want to end up as the fbdev maintainer by default,
+maybe if we move the console stuff out of drivers/video to somewhere
+else I'd be willing to look after it, but the thought of maintaining
+fbdev drivers would drive me to a liver transplant.
 
-Guenter
+Dave.
