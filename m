@@ -1,44 +1,50 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH v2 0/2] usb: exynos: Fix compatible strings used for device
-Date: Thu, 24 Jan 2013 19:31:40 +0530
-Message-ID: <CAFp+6iFcn9G2jvdOUduCn-hE1hC-dqg=t0akO94VECFvCM7ZfA@mail.gmail.com>
-References: <1359035130-22667-1-git-send-email-gautam.vivek@samsung.com>
+From: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] of: Add vendor prefix for Cirrus Logic
+Date: Thu, 24 Jan 2013 08:21:59 -0600
+Message-ID: <51014387.2080101@calxeda.com>
+References: <1359001115-24466-1-git-send-email-shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1359035130-22667-1-git-send-email-gautam.vivek@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-usb@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, stern@rowland.harvard.edu, kgene.kim@samsung.com, thomas.abraham@linaro.org, rob.herring@calxeda.com, grant.likely@secretlab.ca, sylvester.nawrocki@gmail.com, dianders@chromium.org, jg1.han@samsung.com, cpgs@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359001115-24466-1-git-send-email-shc_work-JGs/UdohzUI@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2013 at 7:15 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
-> Using chip specific compatible string as it should be.
-> So fixing this for ehci-s5p, ohci-exynos and dwc3-exynos
-> which till now used a generic 'exynos' in their compatible strings.
->
-> Changes from v1:
->         - Changing compatible string from "samsung,exynos5250-dwc3" to
->           "samsung,exynos5250-dwusb3" as per discussion happened in thread:
->           [PATCH 0/2] usb: exynos: Fix compatible strings used for device.
->
+On 01/23/2013 10:18 PM, Alexander Shiyan wrote:
+> This patch adds a device tree vendor prefix for Cirrus Logic, Inc.
+> 
+> Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+> ---
 
-Based on 'usb-next' branch.
+Applied. Thanks.
 
-> Vivek Gautam (2):
->   usb: ehci-s5p/ohci-exynos: Fix compatible strings for the device
->   usb: dwc3-exynos: Fix compatible strings for the device
->
->  drivers/usb/dwc3/dwc3-exynos.c |    2 +-
->  drivers/usb/host/ehci-s5p.c    |    2 +-
->  drivers/usb/host/ohci-exynos.c |    2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
->
-> --
-> 1.7.6.5
->
+Rob
 
-
--- 
-Thanks & Regards
-Vivek
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 1532137..f2d6515 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -14,6 +14,7 @@ bosch	Bosch Sensortec GmbH
+>  brcm	Broadcom Corporation
+>  cavium	Cavium, Inc.
+>  chrp	Common Hardware Reference Platform
+> +cirrus	Cirrus Logic, Inc.
+>  cortina	Cortina Systems, Inc.
+>  dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
+>  denx	Denx Software Engineering
+> 
