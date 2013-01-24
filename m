@@ -1,61 +1,50 @@
-From: Vakul Garg <vakul@freescale.com>
-Subject: [PATCHv2] crypto: caam - Added property fsl,sec-era in SEC4.0 device tree binding.
-Date: Thu, 24 Jan 2013 12:13:46 +0530
-Message-ID: <1359009826-32483-1-git-send-email-vakul@freescale.com>
+From: Philip Avinash <avinashphilip@ti.com>
+Subject: [PATCH] mtd: devices: elm: Removes <xx> literals in elm DT node
+Date: Thu, 24 Jan 2013 12:23:30 +0530
+Message-ID: <9580c5839ea64e09ddd61610ce922d7cd1adc861.1359010256.git.avinashphilip@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
 Sender: linux-doc-owner@vger.kernel.org
-To: linux-crypto@vger.kernel.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Boyd <sboyd@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, Vakul Garg <vakul@freescale.com>, Herbert Xu <herbert@gondor.hengli.com.au>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: dwmw2@infradead.org, artem.bityutskiy@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net
+Cc: linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, hvaibhav@ti.com, Philip Avinash <avinashphilip@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This new property defines the era of the particular SEC version.
-The compatible property in device tree "crypto" node has been updated
-not to contain SEC era numbers.
+As part of removing generalized dependency, replace <xx> literal fields
+in DT compatible field with <52> for am335x platforms.
 
-Signed-off-by: Vakul Garg <vakul@freescale.com>
+Signed-off-by: Philip Avinash <avinashphilip@ti.com>
 ---
-Changes in v1:
-	1. Marked fsl,sec-era as 'optional'.
+ Documentation/devicetree/bindings/mtd/elm.txt |    2 +-
+ drivers/mtd/devices/elm.c                     |    2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Changes in v2:
-	1. Changed 'fsl,sec-era' in example from hex to decimal.
-
- .../devicetree/bindings/crypto/fsl-sec4.txt        |   12 +++++++++---
- 1 files changed, 9 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-index fc9ce6f..dc40055 100644
---- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-+++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
-@@ -54,8 +54,13 @@ PROPERTIES
-    - compatible
-       Usage: required
-       Value type: <string>
--      Definition: Must include "fsl,sec-v4.0". Also includes SEC
--           ERA versions (optional) with which the device is compatible.
-+      Definition: Must include "fsl,sec-v4.0"
-+
-+   - fsl,sec-era
-+      Usage: optional
-+      Value type: <u32>
-+      Definition: A standard property. Define the 'ERA' of the SEC
-+          device.
+diff --git a/Documentation/devicetree/bindings/mtd/elm.txt b/Documentation/devicetree/bindings/mtd/elm.txt
+index e43c668..8c1528c 100644
+--- a/Documentation/devicetree/bindings/mtd/elm.txt
++++ b/Documentation/devicetree/bindings/mtd/elm.txt
+@@ -10,7 +10,7 @@ Optional properties:
  
-    - #address-cells
-        Usage: required
-@@ -107,7 +112,8 @@ PROPERTIES
+ Example:
+ elm: elm@0 {
+-	compatible	= "ti,am33xx-elm";
++	compatible = "ti,am3352-elm";
+ 	reg = <0x48080000 0x2000>;
+ 	interrupts = <4>;
+ };
+diff --git a/drivers/mtd/devices/elm.c b/drivers/mtd/devices/elm.c
+index f78f43f..f034239 100644
+--- a/drivers/mtd/devices/elm.c
++++ b/drivers/mtd/devices/elm.c
+@@ -381,7 +381,7 @@ static int elm_remove(struct platform_device *pdev)
  
- EXAMPLE
- 	crypto@300000 {
--		compatible = "fsl,sec-v4.0", "fsl,sec-era-v2.0";
-+		compatible = "fsl,sec-v4.0";
-+		fsl,sec-era = <2>;
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		reg = <0x300000 0x10000>;
+ #ifdef CONFIG_OF
+ static const struct of_device_id elm_of_match[] = {
+-	{ .compatible = "ti,am33xx-elm" },
++	{ .compatible = "ti,am3352-elm" },
+ 	{},
+ };
+ MODULE_DEVICE_TABLE(of, elm_of_match);
 -- 
-1.7.7.6
-
+1.7.9.5
 
