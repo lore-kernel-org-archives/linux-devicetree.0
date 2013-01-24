@@ -1,57 +1,44 @@
-From: "Kumar, Anil" <anilkumar.v-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 2/2] ARM: davinci: da850: add wdt OF_DEV_AUXDATA entry
-Date: Thu, 24 Jan 2013 14:08:15 +0530
-Message-ID: <1359016695-10362-3-git-send-email-anilkumar.v@ti.com>
-References: <1359016695-10362-1-git-send-email-anilkumar.v@ti.com>
+From: "Mohammed, Afzal" <afzal@ti.com>
+Subject: RE: [PATCH v16 RESEND 0/7] of: add display helper
+Date: Thu, 24 Jan 2013 08:47:02 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA928F9@DBDE01.ent.ti.com>
+References: <1358766482-6275-1-git-send-email-s.trumtrar@pengutronix.de>
+ <CAF6AEGvFNA1gc_5XWqL_baEnn8DTn0R-xqui034rg3Eo-V_6Qw@mail.gmail.com>
+ <20130123091202.GA11828@pengutronix.de>
+ <CAL1wa8d6wXdxgVJ=c2ma2Adm-RkF3S5ga219dSrh1fFo0L9X8w@mail.gmail.com>
+ <20130124081958.GA28406@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1359016695-10362-1-git-send-email-anilkumar.v-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20130124081958.GA28406@pengutronix.de>
+Content-Language: en-US
+Sender: linux-media-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>
+Cc: "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, David Airlie <airlied@linux.ie>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add OF_DEV_AUXDATA for wdt driver in da850 board dt
-file to use wdt clock.
-
-Signed-off-by: Kumar, Anil <anilkumar.v-l0cyMroinI0@public.gmane.org>
----
-:100644 100644 37c27af... 1b295d2... M	arch/arm/mach-davinci/da8xx-dt.c
- arch/arm/mach-davinci/da8xx-dt.c |    8 +++++++-
- 1 files changed, 7 insertions(+), 1 deletions(-)
-
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-index 37c27af..1b295d2 100644
---- a/arch/arm/mach-davinci/da8xx-dt.c
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -37,11 +37,17 @@ static void __init da8xx_init_irq(void)
- 	of_irq_init(da8xx_irq_match);
- }
- 
-+struct of_dev_auxdata da850_evm_auxdata_lookup[] __initdata = {
-+	OF_DEV_AUXDATA("ti,davinci-wdt", 0x1c21000, "watchdog", NULL),
-+	{}
-+};
-+
- #ifdef CONFIG_ARCH_DAVINCI_DA850
- 
- static void __init da850_init_machine(void)
- {
--	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-+	of_platform_populate(NULL, of_default_bus_match_table,
-+			da850_evm_auxdata_lookup, NULL);
- 
- 	da8xx_uart_clk_enable();
- }
--- 
-1.7.4.1
+SGkgU3RlZmZlbiwNCg0KT24gVGh1LCBKYW4gMjQsIDIwMTMgYXQgMTM6NDk6NTgsIFN0ZWZmZW4g
+VHJ1bXRyYXIgd3JvdGU6DQoNCj4gVGhhbmtzLiBJJ2xsIHVzZSB0aGF0IG9wcG9ydHVuaXR5IGZv
+ciBhIHYxNyB0aGF0IGlzIHJlYmFzZWQgb250byAzLjgtcmM0Lg0KDQpBcyB5b3UgYXJlIGdvaW5n
+IHRvIGhhdmUgYSB2MTcsIGlmIHlvdSBjYW4gZm9sZCB0aGUgZGlmZlsxXQ0KKHRoYXQgSSBtZW50
+aW9uZWQgZWFybGllcikgaW50byB0aGUgcGF0Y2gsDQoiZmJtb246IGFkZCBvZl92aWRlb21vZGUg
+aGVscGVycyIsIGl0IHdvdWxkIGJlIGhlbHBmdWwuIA0KDQpSZWdhcmRzDQpBZnphbA0KDQpbMV0N
+Cg0KZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvZmIuaCBiL2luY2x1ZGUvbGludXgvZmIuaA0K
+aW5kZXggNThiOTg2MC4uMGNlMzBkMSAxMDA2NDQNCi0tLSBhL2luY2x1ZGUvbGludXgvZmIuaA0K
+KysrIGIvaW5jbHVkZS9saW51eC9mYi5oDQpAQCAtNzE2LDkgKzcxNiwxOSBAQCBleHRlcm4gdm9p
+ZCBmYl9kZXN0cm95X21vZGVkYihzdHJ1Y3QgZmJfdmlkZW9tb2RlICptb2RlZGIpOw0KIGV4dGVy
+biBpbnQgZmJfZmluZF9tb2RlX2N2dChzdHJ1Y3QgZmJfdmlkZW9tb2RlICptb2RlLCBpbnQgbWFy
+Z2lucywgaW50IHJiKTsNCiBleHRlcm4gdW5zaWduZWQgY2hhciAqZmJfZGRjX3JlYWQoc3RydWN0
+IGkyY19hZGFwdGVyICphZGFwdGVyKTsNCiANCisjaWYgZGVmaW5lZChDT05GSUdfT0ZfVklERU9N
+T0RFKSAmJiBkZWZpbmVkKENPTkZJR19GQl9NT0RFX0hFTFBFUlMpDQogZXh0ZXJuIGludCBvZl9n
+ZXRfZmJfdmlkZW9tb2RlKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAsDQogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgc3RydWN0IGZiX3ZpZGVvbW9kZSAqZmIsDQogICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgaW50IGluZGV4KTsNCisjZWxzZQ0KK3N0YXRpYyBpbmxpbmUgaW50IG9m
+X2dldF9mYl92aWRlb21vZGUoc3RydWN0IGRldmljZV9ub2RlICpucCwNCisgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgc3RydWN0IGZiX3ZpZGVvbW9kZSAqZmIsDQorICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGludCBpbmRleCkNCit7DQorICAgICAgIHJl
+dHVybiAtRUlOVkFMOw0KK30NCisjZW5kaWYNCisNCiBleHRlcm4gaW50IGZiX3ZpZGVvbW9kZV9m
+cm9tX3ZpZGVvbW9kZShjb25zdCBzdHJ1Y3QgdmlkZW9tb2RlICp2bSwNCiAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIHN0cnVjdCBmYl92aWRlb21vZGUgKmZibW9kZSk7DQoN
+Cg==
