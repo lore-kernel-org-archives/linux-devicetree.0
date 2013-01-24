@@ -1,74 +1,194 @@
-From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
-Subject: RE: [alsa-devel] [PATCH V2 2/2] ASoC: Davinci: machine: Add device
- tree binding
-Date: Thu, 24 Jan 2013 10:24:21 +0000
-Message-ID: <1BAFE6F6C881BF42822005164F1491C33EB5312F@DBDE01.ent.ti.com>
-References: <1357293277-25543-1-git-send-email-gururaja.hebbar@ti.com>
- <1357293277-25543-3-git-send-email-gururaja.hebbar@ti.com>
- <20130104122612.GM4627@opensource.wolfsonmicro.com>
- <1BAFE6F6C881BF42822005164F1491C33EB50DCF@DBDE01.ent.ti.com>
- <20130123154804.GB4565@opensource.wolfsonmicro.com>
- <1BAFE6F6C881BF42822005164F1491C33EB52FD9@DBDE01.ent.ti.com>
- <20130124100252.GE4955@opensource.wolfsonmicro.com>
- <1BAFE6F6C881BF42822005164F1491C33EB530BB@DBDE01.ent.ti.com>
- <20130124101301.GG4955@opensource.wolfsonmicro.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH RFC] media: tvp514x: add OF support
+Date: Thu, 24 Jan 2013 11:47:30 +0100
+Message-ID: <23844927.kqVXuK0AjF@avalon>
+References: <1359018740-6399-1-git-send-email-prabhakar.lad@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=Windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130124101301.GG4955@opensource.wolfsonmicro.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "rob@landley.net" <rob@landley.net>, "Girdwood, Liam" <lrg@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1359018740-6399-1-git-send-email-prabhakar.lad@ti.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree-discuss@lists.ozlabs.org, LDOC <linux-doc@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2013 at 15:43:03, Mark Brown wrote:
-> On Thu, Jan 24, 2013 at 10:06:42AM +0000, Hebbar, Gururaja wrote:
->=20
-> > What I meant was that by using this macro (SND_SOC_DAPM_POST_PMU &
-> > SND_SOC_DAPM_PRE_PMD) I can just save and restore existing voltage =
-values inside
-> > the event. They will not be user configurable (available to user th=
-rough some widget).
->=20
-> Well, you *could* add separate register control for that=20
+Hi Prabhakar,
 
-That=92s what I am doing using a different register control
+Thank you for the patch.
 
+Sylwester and Guennadi have posted a DT bindings proposal for V4L2 devices. 
+Shouldn't you base this patch on those bindings ?
 
-	+static const char *mic_bias_level_txt[] =3D { "off", "2V", "2.5V", "A=
-VDD" };
-	+
-	+static const struct soc_enum mic_bias_level =3D
-	+SOC_ENUM_SINGLE(MICBIAS_CTRL, 6, 4, mic_bias_level_txt);
-	+
-	 static const struct snd_kcontrol_new aic3x_snd_controls[] =3D {
-		/* Output */
-		SOC_DOUBLE_R_TLV("PCM Playback Volume",
-	@@ -391,6 +396,9 @@ static const struct snd_kcontrol_new aic3x_snd_con=
-trols[] =3D {
-		SOC_DOUBLE_R("PGA Capture Switch", LADC_VOL, RADC_VOL, 7, 0x01, 1),
-	=20
-		SOC_ENUM("ADC HPF Cut-off", aic3x_enum[ADC_HPF_ENUM]),
-	+
-	+	/* Mic Bias Level */
-	+	SOC_ENUM("Mic Bias Level", mic_bias_level),
+On Thursday 24 January 2013 14:42:20 Prabhakar Lad wrote:
+> From: Lad, Prabhakar <prabhakar.lad@ti.com>
+> 
+> add OF support for the tvp514x driver.
+> 
+> Signed-off-by: Lad, Prabhakar <prabhakar.lad@ti.com>
+> Cc: Hans Verkuil <hans.verkuil@cisco.com>
+> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> ---
+>  This patch is on top of following patches:
+>  1: https://patchwork.kernel.org/patch/1930941/
+>  2: http://patchwork.linuxtv.org/patch/16193/
+>  3: https://patchwork.kernel.org/patch/1944901/
+> 
+>  .../devicetree/bindings/media/i2c/tvp514x.txt      |   30 ++++++++++
+>  drivers/media/i2c/tvp514x.c                        |   60 +++++++++++++++--
+>  2 files changed, 85 insertions(+), 5 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+> b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt new file mode
+> 100644
+> index 0000000..3cce323
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+> @@ -0,0 +1,30 @@
+> +* Texas Instruments TVP514x video decoder
+> +
+> +The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
+> +digital video decoder that digitizes and decodes all popular baseband
+> analog +video formats into digital video component. The tvp514x decoder
+> supports analog- +to-digital (A/D) conversion of component RGB and YPbPr
+> signals as well as A/D +conversion and decoding of NTSC, PAL and SECAM
+> composite and S-video into +component YCbCr.
+> +
+> +Required Properties :
+> +- compatible: Must be "ti,tvp514x-decoder"
+> +- hsync-active: HSYNC Polarity configuration for current interface.
+> +- vsync-active: VSYNC Polarity configuration for current interface.
+> +- data-active: Clock polarity of the current interface.
+> +
+> +Example:
+> +
+> +i2c0@1c22000 {
+> +	...
+> +	...
+> +
+> +	tvp514x@5c {
+> +		compatible = "ti,tvp514x-decoder";
+> +		reg = <0x5c>;
+> +		hsync-active = <1>;	/* Active low (Defaults to 0) */
+> +		hsync-active = <1>;	/* Active low (Defaults to 0) */
+> +		data-active = <0>;	/* Active low (Defaults to 0) */
+> +	};
+> +	...
+> +};
+> diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
+> index a4f0a70..0e2b15c 100644
+> --- a/drivers/media/i2c/tvp514x.c
+> +++ b/drivers/media/i2c/tvp514x.c
+> @@ -12,6 +12,7 @@
+>   *     Hardik Shah <hardik.shah@ti.com>
+>   *     Manjunath Hadli <mrh@ti.com>
+>   *     Karicheri Muralidharan <m-karicheri2@ti.com>
+> + *     Prabhakar Lad <prabhakar.lad@ti.com>
+>   *
+>   * This package is free software; you can redistribute it and/or modify
+>   * it under the terms of the GNU General Public License version 2 as
+> @@ -930,6 +931,50 @@ static struct tvp514x_decoder tvp514x_dev = {
+> 
+>  };
+> 
+> +#if defined(CONFIG_OF)
+> +static const struct of_device_id tvp514x_of_match[] = {
+> +	{.compatible = "ti,tvp514x-decoder", },
+> +	{},
+> +}
+> +MODULE_DEVICE_TABLE(of, tvp514x_of_match);
+> +
+> +static struct tvp514x_platform_data
+> +	*tvp514x_get_pdata(struct i2c_client *client)
+> +{
+> +	if (!client->dev.platform_data && client->dev.of_node) {
+> +		struct tvp514x_platform_data *pdata;
+> +		u32 prop;
+> +
+> +		pdata = devm_kzalloc(&client->dev,
+> +				sizeof(struct tvp514x_platform_data),
+> +				GFP_KERNEL);
+> +		client->dev.platform_data = pdata;
+> +		if (!pdata)
+> +			return NULL;
+> +		if (!of_property_read_u32(client->dev.of_node,
+> +			"data-active", &prop))
+> +			pdata->clk_polarity = prop;
+> +		if (!of_property_read_u32(client->dev.of_node,
+> +			"hsync-active", &prop))
+> +			pdata->hs_polarity = prop;
+> +		if (!of_property_read_u32(client->dev.of_node,
+> +			"vsync-active", &prop))
+> +			pdata->vs_polarity = prop;
+> +
+> +	}
+> +
+> +	return client->dev.platform_data;
+> +}
+> +#else
+> +#define tvp514x_of_match NULL
+> +
+> +static struct tvp514x_platform_data
+> +	*tvp514x_get_pdata(struct i2c_client *client)
+> +{
+> +	return client->dev.platform_data;
+> +}
+> +#endif
+> +
+>  /**
+>   * tvp514x_probe() - decoder driver i2c probe handler
+>   * @client: i2c driver client device structure
+> @@ -941,6 +986,7 @@ static struct tvp514x_decoder tvp514x_dev = {
+>  static int
+>  tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+>  {
+> +	struct tvp514x_platform_data *pdata;
+>  	struct tvp514x_decoder *decoder;
+>  	struct v4l2_subdev *sd;
+>  	int ret;
+> @@ -949,22 +995,25 @@ tvp514x_probe(struct i2c_client *client, const struct
+> i2c_device_id *id) if (!i2c_check_functionality(client->adapter,
+> I2C_FUNC_SMBUS_BYTE_DATA)) return -EIO;
+> 
+> +	pdata = tvp514x_get_pdata(client);
+> +	if (!pdata) {
+> +		v4l2_err(client, "No platform data!!\n");
+> +		return -EPROBE_DEFER;
+> +	}
+> +
+>  	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
+>  	if (!decoder)
+>  		return -ENOMEM;
+> 
+>  	/* Initialize the tvp514x_decoder with default configuration */
+>  	*decoder = tvp514x_dev;
+> -	if (!client->dev.platform_data) {
+> -		v4l2_err(client, "No platform data!!\n");
+> -		return -EPROBE_DEFER;
+> -	}
+> +
+>  	/* Copy default register configuration */
+>  	memcpy(decoder->tvp514x_regs, tvp514x_reg_list_default,
+>  			sizeof(tvp514x_reg_list_default));
+> 
+>  	/* Copy board specific information here */
+> -	decoder->pdata = client->dev.platform_data;
+> +	decoder->pdata = pdata;
+> 
+>  	/**
+>  	 * Fetch platform specific data, and configure the
+> @@ -1096,6 +1145,7 @@ MODULE_DEVICE_TABLE(i2c, tvp514x_id);
+> 
+>  static struct i2c_driver tvp514x_driver = {
+>  	.driver = {
+> +		.of_match_table = tvp514x_of_match,
+>  		.owner = THIS_MODULE,
+>  		.name = TVP514X_MODULE_NAME,
+>  	},
+-- 
+Regards,
 
-
-
-> but it's not
-> really something that should obviously be exposed to users; usually
-> that'd be something that is fixed by the platform via platform data.
-
-Will look into this angle.
-
->=20
-
-Going by the way of using extra register control, will my method (code =
-change
-attached in prev mail) be sufficient?
-
-
-Regards,=20
-Gururaja
+Laurent Pinchart
