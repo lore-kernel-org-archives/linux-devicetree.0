@@ -1,46 +1,52 @@
-From: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v1 0/6] USB: Add support for multiple PHYs of same type
-Date: Thu, 24 Jan 2013 11:51:45 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA92B0B@DBDE01.ent.ti.com>
-References: <1358848694-20145-1-git-send-email-kishon@ti.com>
- <2D906ABA-71F2-4843-9DBE-F82527A1240A@dominion.thruhere.net>
- <50FEB3FD.3050001@ti.com> <50FEBB61.9000707@ti.com>
- <B9531499-0746-44DA-BDBB-999D4CA31E63@dominion.thruhere.net>
- <C8443D0743D26F4388EA172BF4E2A7A93EA922F5@DBDE01.ent.ti.com>
- <50FFF31D.2070908@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 5/6] ARM: regulator: add tps6507x device tree data
+Date: Thu, 24 Jan 2013 20:00:51 +0800
+Message-ID: <20130124120050.GP4955@opensource.wolfsonmicro.com>
+References: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
+ <1359024920-32190-6-git-send-email-manishv.b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50FFF31D.2070908-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi,
- Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org" <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org List" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IYV9cRr2u6rjcP4B"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1359024920-32190-6-git-send-email-manishv.b@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, anilkumar@ti.com, tony@atomide.com, hs@denx.de, lrg@ti.com, sameo@linux.intel.com, khilman@ti.com, linux@arm.linux.org.uk, rob@landley.net, rob.herring@calxeda.com, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
 
-On Wed, Jan 23, 2013 at 19:56:37, ABRAHAM, KISHON VIJAY wrote:
-> On Wednesday 23 January 2013 07:28 PM, Mohammed, Afzal wrote:
+--IYV9cRr2u6rjcP4B
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> > USB first instance of am335x works in mainline as of now.
+On Thu, Jan 24, 2013 at 04:25:19PM +0530, Vishwanathrao Badarkhe, Manish wrote:
 
-> Can you check if this series indeed breaks am335x?
-> 
-> Thanks for your help.
+> ---
+>  arch/arm/boot/dts/tps6507x.dtsi |   47 +++++++++++++++++++++++++++++++++++++++
 
-Do you have a tree having these changes, it would be easier for me.
+Why are you putting this in arch/arm?
 
-Regards
-Afzal
+--IYV9cRr2u6rjcP4B
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRASHyAAoJELSic+t+oim9XVcP/i8d2OXORqtJb2RwAGdUtzVA
+QvsP5eABuMJNDLrIzcbVm+aHKhjXUnBk0Z6wCWLgOzGwsn5uUAaMzAKK15mbXQeg
+C6o0NMA+lGsRUM8k2GNkeIFwrkX/+ly9c1+KVUo20hpqoPeOrVW0bMVpPip4y/Ry
+5V2nP5K6YW22iPkZUBOpbIo1V2mJcH2qy0USGkjJO4CdjfYb01wg5D4hotdz/mfg
+scJp2NBwm35yg0ShLm0hwUGEHSbF3uhrQask6HD0A8BK+4YwuRXUGRllV7lL/ZpL
+wqrot4SZgSu0MjLX+zGYZwMx+5Tmc50abpxkA5322QlBJFeqEdYOY3RND1w/avKH
+cDsHi+se8CVxW8+AVvzOCAHx+7kRPXz+ITNlz8dTQoQZsinJVCUV0RXtYiPs5NY4
+QR7vqvnIdQraLp1piBUMAzNpavR8twJH1z4QR5+ugYElJ2cZ+OUOG5X8ElYRe+FQ
+hNA07QP18xIdj+jlZa91PbyxXRXK1VaC9CJlVYNim5VNuwwpmLlFwSgXp337tW6J
+ZmYW7ieCohbFqlbUtWEzk7pOpDlG7kRyAg7taqXc1SVHoy3kXZFatYWJxrf22de6
+Mysb06hWn652ux7QpXTZkSX3ejPVX61reQjprDoAYmNqYJpCZL1ozy0yKnhEVHei
+TVTNhNSfsdMMfsF6TkdC
+=vriK
+-----END PGP SIGNATURE-----
+
+--IYV9cRr2u6rjcP4B--
