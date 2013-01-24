@@ -1,68 +1,72 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/8] sh-pfc: Add OF support
-Date: Thu, 24 Jan 2013 12:28:19 +0100
-Message-ID: <13196828.FzACPZxly1@avalon>
-References: <1357693395-1653-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1357693395-1653-2-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <Pine.LNX.4.64.1301121745320.14443@axis700.grange>
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Subject: [PATCH 2/6] ARM: davinci: da850: add DT node for I2C0
+Date: Thu, 24 Jan 2013 17:05:24 +0530
+Message-ID: <1359027324-14534-1-git-send-email-manishv.b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1301121745320.14443@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-sh@vger.kernel.org
-Cc: Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Linus Walleij <linus.walleij@linaro.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Phil Edworthy <phil.edworthy@renesas.com>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com
+Cc: anilkumar@ti.com, tony@atomide.com, hs@denx.de, broonie@opensource.wolfsonmicro.com, lrg@ti.com, sameo@linux.intel.com, khilman@ti.com, linux@arm.linux.org.uk, rob@landley.net, rob.herring@calxeda.com, grant.likely@secretlab.ca, manishv.b@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
+Add I2C0 device tree node information to da850-evm.
+Also, add I2C0 pin muxing information in da850-evm.
 
-On Saturday 12 January 2013 18:18:54 Guennadi Liakhovetski wrote:
-> On Wed, 9 Jan 2013, Laurent Pinchart wrote:
-> > Support device instantiation through the device tree. The compatible
-> > property is used to select the SoC pinmux information.
-> > 
-> > Set the gpio_chip device field to the PFC device to enable automatic
-> > GPIO OF support.
-> > 
-> > Signed-off-by: Laurent Pinchart
-> > <laurent.pinchart+renesas@ideasonboard.com>
-> > Cc: devicetree-discuss@lists.ozlabs.org
-> 
-> This whole pinctrl mega-series is a very welcome improvement to the
-> sh-/r-mobile GPIO framework, and is very well done IMHO! But,
-> unfortunately, as discussed with you privately yesterday, there is still a
-> problem with pinctrl DT support on sh73a0, which will, probably, enforce
-> an update to one or several of patches from this lot. To explain to other
-> readers, on sh73a0 pin numbers are not contiguous, they are sparse.
-> When pins are referred to from C code, macro names are used, which are
-> then correctly decoded to respective positions in pin descriptor tables.
-> Whereas with DT, pins are referred to from .dts files using their physical
-> numbers, which then refer to either wrong or missing entries in those
-> tables.
-> 
-> I do not know where this problem should be solved best - either in
-> descriptor tables, or in DT handling code, so, I don't know which patches
-> would be affected. Don't think you'll want to keep the one-to-one
-> index-to-pin mapping by also making pin-descriptor arrays sparse, so, so
-> far I only see one possibility to fix this - by using the .enum_id field
-> from struct sh_pfc_pin instead of just the index - both in  C and in DT
-> case, and those .enum_id values will have to provide physical pin numbers
-> instead of plane indices.
+Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
+---
+Depends on patch 
+http://comments.gmane.org/gmane.linux.davinci/25993
 
-I was thinking about something similar as well. I will use physical pin 
-numbers, but I then need to find a way to number the pins, as they're not 
-numbered in the documentation. Opinions on possible numbering schemes from 
-anyone familiar with several SoCs both in SH Mobile and SuperH will be 
-appreciated.
+ arch/arm/boot/dts/da850-evm.dts |   15 +++++++++++++++
+ arch/arm/boot/dts/da850.dtsi    |   10 ++++++++++
+ 2 files changed, 25 insertions(+), 0 deletions(-)
 
-> That way you'd have to update at least drivers/pinctrl/sh-pfc/pfc-sh73a0.c
-> and the sh_pfc_map_gpios() function in drivers/pinctrl/sh-pfc/pinctrl.c.
-> 
-> Anyway, I'm sure you'll find a suitable solution of this problem and for
-> now I'll let Simon decide which patches he wants to apply and which ones
-> he'd prefer to hold back;-)
-
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index 8cac9d2..3d8290a 100755
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -27,5 +27,20 @@
+ 		serial2: serial@1d0d000 {
+ 			status = "okay";
+ 		};
++		i2c0@1c22000 {
++			status = "okay";
++		};
++	};
++};
++&pmx_core {
++	pinctrl-names = "default";
++	pinctrl-0 = <
++		&i2c0_pins
++	>;
++
++	i2c0_pins: pinmux_i2c0_pins{
++		pinctrl-single,bits = <
++			0x10 0x00002200 0x0000ff00	/* I2C0_SDA,I2C0_SCL */
++		>;
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 1e6d090..f5ee811 100755
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -66,5 +66,15 @@
+ 			interrupt-parent = <&intc>;
+ 			status = "disabled";
+ 		};
++		i2c0@1c22000 {
++			compatible = "ti,davinci-i2c";
++			reg = <0x22000 0x1000>;
++			clock-frequency = <100000>;
++			interrupts = <15>;
++			interrupt-parent = <&intc>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++			status = "disabled";
++		};
+ 	};
+ };
 -- 
-Regards,
-
-Laurent Pinchart
+1.7.4.1
 
