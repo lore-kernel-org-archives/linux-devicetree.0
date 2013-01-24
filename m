@@ -1,203 +1,66 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH RFC] media: tvp514x: add OF support
-Date: Thu, 24 Jan 2013 17:04:51 +0530
-Message-ID: <CA+V-a8vDPyb-6Q2yuUyNODB=DxSs_TJaJKxpLP24BwH+vdrG8A@mail.gmail.com>
-References: <1359018740-6399-1-git-send-email-prabhakar.lad@ti.com> <23844927.kqVXuK0AjF@avalon>
+From: "Mohammed, Afzal" <afzal@ti.com>
+Subject: RE: [PATCH v4 12/12] video: da8xx-fb: CCF clock divider handling
+Date: Thu, 24 Jan 2013 11:36:02 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA92ADF@DBDE01.ent.ti.com>
+References: <cover.1358937685.git.afzal@ti.com>
+ <fa8dab522507e087d5a94bac13dda71544911707.1358937685.git.afzal@ti.com>
+ <20130123202204.9205.66575@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <23844927.kqVXuK0AjF@avalon>
+In-Reply-To: <20130123202204.9205.66575@quantum>
+Content-Language: en-US
 Sender: linux-doc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: LMML <linux-media@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Hans Verkuil <hans.verkuil@cisco.com>, devicetree-discuss@lists.ozlabs.org, LDOC <linux-doc@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+To: Mike Turquette <mturquette@linaro.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Thu, Jan 24, 2013 at 4:17 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> Hi Prabhakar,
->
-> Thank you for the patch.
->
-> Sylwester and Guennadi have posted a DT bindings proposal for V4L2 devices.
-> Shouldn't you base this patch on those bindings ?
->
-Yes I'll base on it and post a v2.
-
-Regards,
---Prabhakar
-
-> On Thursday 24 January 2013 14:42:20 Prabhakar Lad wrote:
->> From: Lad, Prabhakar <prabhakar.lad@ti.com>
->>
->> add OF support for the tvp514x driver.
->>
->> Signed-off-by: Lad, Prabhakar <prabhakar.lad@ti.com>
->> Cc: Hans Verkuil <hans.verkuil@cisco.com>
->> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
->> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
->> ---
->>  This patch is on top of following patches:
->>  1: https://patchwork.kernel.org/patch/1930941/
->>  2: http://patchwork.linuxtv.org/patch/16193/
->>  3: https://patchwork.kernel.org/patch/1944901/
->>
->>  .../devicetree/bindings/media/i2c/tvp514x.txt      |   30 ++++++++++
->>  drivers/media/i2c/tvp514x.c                        |   60 +++++++++++++++--
->>  2 files changed, 85 insertions(+), 5 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
->> b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt new file mode
->> 100644
->> index 0000000..3cce323
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
->> @@ -0,0 +1,30 @@
->> +* Texas Instruments TVP514x video decoder
->> +
->> +The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
->> +digital video decoder that digitizes and decodes all popular baseband
->> analog +video formats into digital video component. The tvp514x decoder
->> supports analog- +to-digital (A/D) conversion of component RGB and YPbPr
->> signals as well as A/D +conversion and decoding of NTSC, PAL and SECAM
->> composite and S-video into +component YCbCr.
->> +
->> +Required Properties :
->> +- compatible: Must be "ti,tvp514x-decoder"
->> +- hsync-active: HSYNC Polarity configuration for current interface.
->> +- vsync-active: VSYNC Polarity configuration for current interface.
->> +- data-active: Clock polarity of the current interface.
->> +
->> +Example:
->> +
->> +i2c0@1c22000 {
->> +     ...
->> +     ...
->> +
->> +     tvp514x@5c {
->> +             compatible = "ti,tvp514x-decoder";
->> +             reg = <0x5c>;
->> +             hsync-active = <1>;     /* Active low (Defaults to 0) */
->> +             hsync-active = <1>;     /* Active low (Defaults to 0) */
->> +             data-active = <0>;      /* Active low (Defaults to 0) */
->> +     };
->> +     ...
->> +};
->> diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
->> index a4f0a70..0e2b15c 100644
->> --- a/drivers/media/i2c/tvp514x.c
->> +++ b/drivers/media/i2c/tvp514x.c
->> @@ -12,6 +12,7 @@
->>   *     Hardik Shah <hardik.shah@ti.com>
->>   *     Manjunath Hadli <mrh@ti.com>
->>   *     Karicheri Muralidharan <m-karicheri2@ti.com>
->> + *     Prabhakar Lad <prabhakar.lad@ti.com>
->>   *
->>   * This package is free software; you can redistribute it and/or modify
->>   * it under the terms of the GNU General Public License version 2 as
->> @@ -930,6 +931,50 @@ static struct tvp514x_decoder tvp514x_dev = {
->>
->>  };
->>
->> +#if defined(CONFIG_OF)
->> +static const struct of_device_id tvp514x_of_match[] = {
->> +     {.compatible = "ti,tvp514x-decoder", },
->> +     {},
->> +}
->> +MODULE_DEVICE_TABLE(of, tvp514x_of_match);
->> +
->> +static struct tvp514x_platform_data
->> +     *tvp514x_get_pdata(struct i2c_client *client)
->> +{
->> +     if (!client->dev.platform_data && client->dev.of_node) {
->> +             struct tvp514x_platform_data *pdata;
->> +             u32 prop;
->> +
->> +             pdata = devm_kzalloc(&client->dev,
->> +                             sizeof(struct tvp514x_platform_data),
->> +                             GFP_KERNEL);
->> +             client->dev.platform_data = pdata;
->> +             if (!pdata)
->> +                     return NULL;
->> +             if (!of_property_read_u32(client->dev.of_node,
->> +                     "data-active", &prop))
->> +                     pdata->clk_polarity = prop;
->> +             if (!of_property_read_u32(client->dev.of_node,
->> +                     "hsync-active", &prop))
->> +                     pdata->hs_polarity = prop;
->> +             if (!of_property_read_u32(client->dev.of_node,
->> +                     "vsync-active", &prop))
->> +                     pdata->vs_polarity = prop;
->> +
->> +     }
->> +
->> +     return client->dev.platform_data;
->> +}
->> +#else
->> +#define tvp514x_of_match NULL
->> +
->> +static struct tvp514x_platform_data
->> +     *tvp514x_get_pdata(struct i2c_client *client)
->> +{
->> +     return client->dev.platform_data;
->> +}
->> +#endif
->> +
->>  /**
->>   * tvp514x_probe() - decoder driver i2c probe handler
->>   * @client: i2c driver client device structure
->> @@ -941,6 +986,7 @@ static struct tvp514x_decoder tvp514x_dev = {
->>  static int
->>  tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
->>  {
->> +     struct tvp514x_platform_data *pdata;
->>       struct tvp514x_decoder *decoder;
->>       struct v4l2_subdev *sd;
->>       int ret;
->> @@ -949,22 +995,25 @@ tvp514x_probe(struct i2c_client *client, const struct
->> i2c_device_id *id) if (!i2c_check_functionality(client->adapter,
->> I2C_FUNC_SMBUS_BYTE_DATA)) return -EIO;
->>
->> +     pdata = tvp514x_get_pdata(client);
->> +     if (!pdata) {
->> +             v4l2_err(client, "No platform data!!\n");
->> +             return -EPROBE_DEFER;
->> +     }
->> +
->>       decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
->>       if (!decoder)
->>               return -ENOMEM;
->>
->>       /* Initialize the tvp514x_decoder with default configuration */
->>       *decoder = tvp514x_dev;
->> -     if (!client->dev.platform_data) {
->> -             v4l2_err(client, "No platform data!!\n");
->> -             return -EPROBE_DEFER;
->> -     }
->> +
->>       /* Copy default register configuration */
->>       memcpy(decoder->tvp514x_regs, tvp514x_reg_list_default,
->>                       sizeof(tvp514x_reg_list_default));
->>
->>       /* Copy board specific information here */
->> -     decoder->pdata = client->dev.platform_data;
->> +     decoder->pdata = pdata;
->>
->>       /**
->>        * Fetch platform specific data, and configure the
->> @@ -1096,6 +1145,7 @@ MODULE_DEVICE_TABLE(i2c, tvp514x_id);
->>
->>  static struct i2c_driver tvp514x_driver = {
->>       .driver = {
->> +             .of_match_table = tvp514x_of_match,
->>               .owner = THIS_MODULE,
->>               .name = TVP514X_MODULE_NAME,
->>       },
-> --
-> Regards,
->
-> Laurent Pinchart
->
+SGkgTWlrZSwNCg0KT24gVGh1LCBKYW4gMjQsIDIwMTMgYXQgMDE6NTI6MDQsIE1pa2UgVHVycXVl
+dHRlIHdyb3RlOg0KPiBRdW90aW5nIEFmemFsIE1vaGFtbWVkICgyMDEzLTAxLTIzIDAzOjQ4OjU2
+KQ0KDQo+ID4gK3N0YXRpYyBpbmxpbmUgdm9pZCBkYTh4eF9mYl9jbGtjX2VuYWJsZSh2b2lkKQ0K
+PiA+ICt7DQo+ID4gICAgICAgICBpZiAobGNkX3JldmlzaW9uID09IExDRF9WRVJTSU9OXzIpDQo+
+ID4gICAgICAgICAgICAgICAgIGxjZGNfd3JpdGUoTENEX1YyX0RNQV9DTEtfRU4gfCBMQ0RfVjJf
+TElERF9DTEtfRU4gfA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgTENEX1Yy
+X0NPUkVfQ0xLX0VOLCBMQ0RfQ0xLX0VOQUJMRV9SRUcpOw0KDQo+ID4gK3N0YXRpYyBpbmxpbmUg
+aW50IGRhOHh4X2ZiX2NhbGNfY29uZmlnX2Nsa19kaXZpZGVyKHN0cnVjdCBkYTh4eF9mYl9wYXIg
+KnBhciwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgc3RydWN0IGZiX3ZpZGVvbW9kZSAqbW9kZSkNCj4gPiArew0KDQo+ID4gKyAgICAgICBy
+ZXQgPSBjbGtfc2V0X3JhdGUocGFyLT5jaGlsZF9jbGssIFBJQ09TMktIWihtb2RlLT5waXhjbG9j
+aykgKiAxMDAwKTsNCj4gPiArICAgICAgIGlmIChJU19FUlJfVkFMVUUocmV0KSkgew0KPiA+ICsg
+ICAgICAgICAgICAgICBkZXZfZXJyKHBhci0+ZGV2LCAidW5hYmxlIHRvIHNldHVwIHBpeGVsIGNs
+b2NrIG9mICV1IHBzIiwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBtb2RlLT5waXhjbG9j
+ayk7DQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiByZXQ7DQo+ID4gKyAgICAgICB9DQo+ID4g
+KyAgICAgICBkYTh4eF9mYl9jbGtjX2VuYWJsZSgpOw0KDQo+IEl0IGxvb2tzIGxpa2UgeW91IGFy
+ZSB1c2luZyB0aGUgbGVnYWN5IG1ldGhvZCB0byBlbmFibGUvZGlzYWJsZSB0aGUNCj4gY2xvY2sg
+YW5kIHVzaW5nIHRoZSBDQ0YgYmFzaWMgZGl2aWRlciB0byBzZXQgdGhlIHJhdGUuICBUaGlzIGZl
+ZWxzIGEgYml0DQo+IGhhY2t5IHRvIG1lLiAgSWYgeW91IHdhbnQgdG8gbW9kZWwgeW91ciBjbG9j
+ayBpbiBDQ0YgdGhlbiB5b3Ugc2hvdWxkDQo+IHByb2JhYmx5IG1vZGVsIHRoZSB3aG9sZSBjbG9j
+aywgbm90IGp1c3QgdGhlIHJhdGUtY2hhbmdlIGFzcGVjdHMgb2YgaXQuDQoNCkluaXRpYWxseSBJ
+IHRob3VnaHQgYWJvdXQgaXQsIGJ1dCBzZWVpbmcgcmVxdWlyZW1lbnQgb2YgMyBnYXRlIGNsb2Nr
+cw0KKGR1ZSB0byAzIGJpdHMgbWVhbnQgZm9yIGRpZmZlcmVudCBwdXJwb3NlcyAtIERNQSwgTElE
+RCBhbmQgQ09SRQ0KZnVuY3Rpb25hbGl0aWVzKSwgZmVsdCB0aGF0IGhhdmluZyA0IGNsb2NrcyAo
+MyBnYXRlICsgMSBkaXZpZGVyKSBpbg0KZHJpdmVyIHdvdWxkIGJlIGFuIG92ZXJkZXNpZ24gW2xl
+YXZpbmcgYSBicmFuY2ggaW5zdGVhZCBvZiBhIGxlYWYgb2YNCnRoZSB0cmVlIGluIGRyaXZlciA7
+KV0uDQoNCj4gSGF2ZSB5b3UgbG9va2VkIGF0IHRoZSBjb21wb3NpdGUgY2xvY2sgcGF0Y2hlcyBm
+cm9tIFByYXNoYW50PyAgVGhvc2UNCj4gbWlnaHQgZ2l2ZSB5b3UgdGhlIGRpdmlkZXIrZ2F0ZSBw
+cm9wZXJ0aWVzIHRoYXQgeW91IGFyZSBsb29raW5nIGZvcjoNCj4gaHR0cDovL2FydGljbGUuZ21h
+bmUub3JnL2dtYW5lLmxpbnV4Lmtlcm5lbC8xNDE2Njk3DQoNClRoYW5rcyBmb3IgdGhlIHBvaW50
+ZXIsDQoNCk5vdyB3aXRoIHRoZSBjb21wb3NpdGUgY2xvY2sgaW4gbWluZCwgaXQgd2FzIHRyaWVk
+IHRvIHJlbGF0ZSB0byB3aGF0DQp3YXMgcmVxdWlyZWQgZm9yIHRoZSBwcmVzZW50IHNjZW5hcmlv
+Lg0KDQpTbyB0aGVyZSBhcmUgMyAtIExJREQgaXMgYWN0dWFsbHkgbm90IGZvciBwcmVzZW50IHVz
+ZSBjYXNlLCBDT1JFIGNvdWxkDQpiZSBjbHViYmVkIHdpdGggdGhlIGRpdmlkZXIgdG8gaGF2ZSBh
+IGNvbXBvc2l0ZSBjbG9jay4gQW5kIENPUkUgaXMNCmluIGZ1bmN0aW9uYWwgY2xvY2sgcGF0aCBh
+bmQgbG9naWNhbGx5IGl0J3MgcGVyZmVjdGx5IGFscmlnaHQgdG8gaGF2ZQ0KdGhlIGNvbXBvc2l0
+ZSBjbG9jay4NCg0KQW5kIG5vdyB3ZSBhcmUgbGVmdCB3aXRoIERNQSwgdGhpcyBpcyBhY3R1YWxs
+eSBpbiB0aGUgaW50ZXJmYWNlIGNsb2NrDQpwYXRoIHdoaWNoIGRyaXZlciBpbiB1bmF3YXJlLiBB
+biBvcHRpb24gd291bGQgYmUgdG8gaGF2ZSBETUEgY2xvY2sNCmFzIGNoaWxkIG9mIENPUkUgcGx1
+cyBkaXZpZGVyIGNvbXBvc2l0ZSBjbG9jaywgZXZlbiB0aG91Z2ggbG9naWNhbGx5DQpETUEgY2Fu
+J3QgYmUgY29uc2lkZXJlZCBpbiB0aGUgc2FtZSBwYXRoLg0KDQpBbHNvIHRyaWVkIG5vdCBlbmFi
+bGluZyBETUEgY2xvY2ssIGJ1dCBkcml2ZXIgaXMgYWJsZSB0byBwcm92aWRlDQpkaXNwbGF5IHdp
+dGhvdXQgYW55IGlzc3Vlcywgc28gd2FzIHRoaW5raW5nIHdoZXRoZXIgdG8gYXZvaWQNCmluc3Rh
+bnRpYXRpbmcgRE1BIGNsb2NrIGF0IGFsbCBhbmQgaGVuY2UgdG8gaGF2ZSBhIHNpbXBsZSBzaW5n
+bGUNCmNvbXBvc2l0ZSBjbG9jay4gVHJ5aW5nIHRvIGdldCBpbmZvcm1hdGlvbiBpbnRlcm5hbGx5
+IG9uIHdoZXRoZXINCm5vdCBzZXR0aW5nIERNQSBjbG9jayBiaXRzIHdvdWxkIGFjdHVhbGx5IG1h
+a2UgYSBkaWZmZXJlbmNlLg0KDQpJZiB5b3UgaGF2ZSBhbnkgb3BpbmlvbiBvbiBob3cgdG8gZGVh
+bCBoZXJlLCBsZXQgbWUga25vdy4NCg0KUmVnYXJkcw0KQWZ6YWwNCg0KDQo=
