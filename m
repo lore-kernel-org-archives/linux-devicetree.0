@@ -1,89 +1,83 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH RFC] media: tvp514x: add OF support
-Date: Thu, 24 Jan 2013 15:38:49 +0530
-Message-ID: <CA+V-a8uq++Fi80eTTXpDmYG_mpWr0HbTJhH1vSnHPCyAbgVB3A@mail.gmail.com>
-References: <1359018740-6399-1-git-send-email-prabhakar.lad@ti.com> <5101144B.1090600@denx.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V2 2/2] ASoC: Davinci: machine: Add device
+ tree binding
+Date: Thu, 24 Jan 2013 18:13:03 +0800
+Message-ID: <20130124101301.GG4955@opensource.wolfsonmicro.com>
+References: <1357293277-25543-1-git-send-email-gururaja.hebbar@ti.com>
+ <1357293277-25543-3-git-send-email-gururaja.hebbar@ti.com>
+ <20130104122612.GM4627@opensource.wolfsonmicro.com>
+ <1BAFE6F6C881BF42822005164F1491C33EB50DCF@DBDE01.ent.ti.com>
+ <20130123154804.GB4565@opensource.wolfsonmicro.com>
+ <1BAFE6F6C881BF42822005164F1491C33EB52FD9@DBDE01.ent.ti.com>
+ <20130124100252.GE4955@opensource.wolfsonmicro.com>
+ <1BAFE6F6C881BF42822005164F1491C33EB530BB@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5101144B.1090600@denx.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>
-Cc: LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, LDOC <linux-doc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Content-Type: multipart/mixed; boundary="===============4518372647672506581=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1BAFE6F6C881BF42822005164F1491C33EB530BB@DBDE01.ent.ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob@landley.net" <rob@landley.net>, "Girdwood, Liam" <lrg@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
 
-On Thu, Jan 24, 2013 at 4:30 PM, Heiko Schocher <hs@denx.de> wrote:
-> Hello Prabhakar,
->
-> On 24.01.2013 10:12, Prabhakar Lad wrote:
->> From: Lad, Prabhakar <prabhakar.lad@ti.com>
->>
->> add OF support for the tvp514x driver.
->>
->> Signed-off-by: Lad, Prabhakar <prabhakar.lad@ti.com>
->> Cc: Hans Verkuil <hans.verkuil@cisco.com>
->> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
->> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
->> ---
->>  This patch is on top of following patches:
->>  1: https://patchwork.kernel.org/patch/1930941/
->>  2: http://patchwork.linuxtv.org/patch/16193/
->>  3: https://patchwork.kernel.org/patch/1944901/
->>
->>  .../devicetree/bindings/media/i2c/tvp514x.txt      |   30 ++++++++++
->>  drivers/media/i2c/tvp514x.c                        |   60 ++++++++++++++++++--
->>  2 files changed, 85 insertions(+), 5 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
->> new file mode 100644
->> index 0000000..3cce323
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
->> @@ -0,0 +1,30 @@
->
-> [...]
->> diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
->> index a4f0a70..0e2b15c 100644
->> --- a/drivers/media/i2c/tvp514x.c
->> +++ b/drivers/media/i2c/tvp514x.c
->> @@ -12,6 +12,7 @@
->>   *     Hardik Shah <hardik.shah@ti.com>
->>   *     Manjunath Hadli <mrh@ti.com>
->>   *     Karicheri Muralidharan <m-karicheri2@ti.com>
->> + *     Prabhakar Lad <prabhakar.lad@ti.com>
->>   *
->>   * This package is free software; you can redistribute it and/or modify
->>   * it under the terms of the GNU General Public License version 2 as
->> @@ -930,6 +931,50 @@ static struct tvp514x_decoder tvp514x_dev = {
->>
->>  };
->>
->> +#if defined(CONFIG_OF)
->> +static const struct of_device_id tvp514x_of_match[] = {
->> +     {.compatible = "ti,tvp514x-decoder", },
->> +     {},
->> +}
->
-> Missing semicolon here. Without, gcc throws here an error
-> when compiling this driver as a module.
->
-Thanks for the catch, i had built it along with the kernel, I remember
-similar issue with one of your patch missed it to apply here :).
-I'll fix it in v2 version.
+--===============4518372647672506581==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4ndw/alBWmZEhfcZ"
+Content-Disposition: inline
 
-Regards,
---Prabhakar
 
->> +MODULE_DEVICE_TABLE(of, tvp514x_of_match);
->> +
-> [...]
->
-> bye,
-> Heiko
-> --
-> DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-> HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+--4ndw/alBWmZEhfcZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Jan 24, 2013 at 10:06:42AM +0000, Hebbar, Gururaja wrote:
+
+> What I meant was that by using this macro (SND_SOC_DAPM_POST_PMU &
+> SND_SOC_DAPM_PRE_PMD) I can just save and restore existing voltage values inside
+> the event. They will not be user configurable (available to user through some widget).
+
+Well, you *could* add separate register control for that but it's not
+really something that should obviously be exposed to users; usually
+that'd be something that is fixed by the platform via platform data.
+
+--4ndw/alBWmZEhfcZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRAQicAAoJELSic+t+oim99coQAISOEaBbeJohOtAbx00ftRKE
+2ro34bN6HTKuKR6tUmi95TcMSFziOpCotNN+UFhGNpTZ43PtxNh300C+Ei1bK7Tq
+ZHgEcHBy0092h20xN7nHOQHqGhmtdHBEnW6yEoLhECgxymg+B87ueJArZ+SQgsnt
+5XYiZ5fqC++xl1pNsvkQo1kkT4E/0yfqKKVri8d+d14w+DbXxPvWk33xu1/G5eFY
+acuvbOfD/WBeEHQhUjDmliK4O5ImWfLwkuoJ7R8VEfp3s/fo58iTBNhCIqJHLihF
+oo9S1mYeWb4cfnyilTOR90GLkRWHV1CC3dgbfa8h/xUr8Nwn8VqYbtHWWJ8489C8
+Us2iKt7OFUVgsKLjHNYdUcicZfFQUCmXB7+UM25J7bpBsjVTOa71B+YDPC+DETI/
+7uwnBqosG5QmhgzMrOl5t1Onu26tDSwLsV8/IW7gYmhlDHbA4c7X5AMI5ezxv/Sk
+CulM6sVbBeRLSaotVujPBLr39QLJUIgpq6J+fFAvWyfFekLEFucktgaT44SHSNCm
+ROBhJc2U3PDwkhadhcIdkuqvx0s15Mv48QUII+IeiaKx/5fzbR+yRsr7Jc3i4Ad9
+HTjep//j3xgFPBjdRVGxt+z9qG9h1ZYmme2AZ3Z9+ezCJMEDkz29LWaEAsev4VBu
+EJa7NVKLnAY6SuJwgw25
+=iqdj
+-----END PGP SIGNATURE-----
+
+--4ndw/alBWmZEhfcZ--
+
+--===============4518372647672506581==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============4518372647672506581==--
