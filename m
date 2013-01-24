@@ -1,80 +1,59 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: Re: [PATCH RFC] media: tvp514x: add OF support
-Date: Thu, 24 Jan 2013 12:00:27 +0100
-Message-ID: <5101144B.1090600@denx.de>
-References: <1359018740-6399-1-git-send-email-prabhakar.lad@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [alsa-devel] [PATCH V2 2/2] ASoC: Davinci: machine: Add device
+ tree binding
+Date: Thu, 24 Jan 2013 18:02:55 +0800
+Message-ID: <20130124100252.GE4955@opensource.wolfsonmicro.com>
+References: <1357293277-25543-1-git-send-email-gururaja.hebbar@ti.com>
+ <1357293277-25543-3-git-send-email-gururaja.hebbar@ti.com>
+ <20130104122612.GM4627@opensource.wolfsonmicro.com>
+ <1BAFE6F6C881BF42822005164F1491C33EB50DCF@DBDE01.ent.ti.com>
+ <20130123154804.GB4565@opensource.wolfsonmicro.com>
+ <1BAFE6F6C881BF42822005164F1491C33EB52FD9@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="0H629O+sVkh21xTi"
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1359018740-6399-1-git-send-email-prabhakar.lad@ti.com>
+Content-Disposition: inline
+In-Reply-To: <1BAFE6F6C881BF42822005164F1491C33EB52FD9@DBDE01.ent.ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, LDOC <linux-doc@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, LKML <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+To: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
+Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "rob@landley.net" <rob@landley.net>, "Girdwood, Liam" <lrg@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Prabhakar,
 
-On 24.01.2013 10:12, Prabhakar Lad wrote:
-> From: Lad, Prabhakar <prabhakar.lad@ti.com>
-> 
-> add OF support for the tvp514x driver.
-> 
-> Signed-off-by: Lad, Prabhakar <prabhakar.lad@ti.com>
-> Cc: Hans Verkuil <hans.verkuil@cisco.com>
-> Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> ---
->  This patch is on top of following patches:
->  1: https://patchwork.kernel.org/patch/1930941/
->  2: http://patchwork.linuxtv.org/patch/16193/
->  3: https://patchwork.kernel.org/patch/1944901/
-> 
->  .../devicetree/bindings/media/i2c/tvp514x.txt      |   30 ++++++++++
->  drivers/media/i2c/tvp514x.c                        |   60 ++++++++++++++++++--
->  2 files changed, 85 insertions(+), 5 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-> new file mode 100644
-> index 0000000..3cce323
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-> @@ -0,0 +1,30 @@
+--0H629O+sVkh21xTi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-[...]
-> diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
-> index a4f0a70..0e2b15c 100644
-> --- a/drivers/media/i2c/tvp514x.c
-> +++ b/drivers/media/i2c/tvp514x.c
-> @@ -12,6 +12,7 @@
->   *     Hardik Shah <hardik.shah@ti.com>
->   *     Manjunath Hadli <mrh@ti.com>
->   *     Karicheri Muralidharan <m-karicheri2@ti.com>
-> + *     Prabhakar Lad <prabhakar.lad@ti.com>
->   *
->   * This package is free software; you can redistribute it and/or modify
->   * it under the terms of the GNU General Public License version 2 as
-> @@ -930,6 +931,50 @@ static struct tvp514x_decoder tvp514x_dev = {
->  
->  };
->  
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id tvp514x_of_match[] = {
-> +	{.compatible = "ti,tvp514x-decoder", },
-> +	{},
-> +}
+On Thu, Jan 24, 2013 at 09:33:34AM +0000, Hebbar, Gururaja wrote:
 
-Missing semicolon here. Without, gcc throws here an error
-when compiling this driver as a module.
+> So, by just using the SND_SOC_DAPM_POST_PMU & SND_SOC_DAPM_PRE_PMD I can =
+mask=20
+> & handle one particular voltage.=20
 
-> +MODULE_DEVICE_TABLE(of, tvp514x_of_match);
-> +
-[...]
+What makes you say that?  That is just not true.
 
-bye,
-Heiko
--- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+--0H629O+sVkh21xTi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRAQaiAAoJELSic+t+oim989gP/3s05LPnDp1GYNt6NHZKILPC
+BWHP9plRUyXYc6ErgL67ohO3tPMQKRLo8Flp5F93BPXDLRVRurQXk6Nw+Ctk7IOF
+5i0UMFxDYOpZ9WllQf57FPsqcL1L4LUpZWsX9SCVg/VEqurk8uxtG/e3Pty/jmIl
+O+dQH/PygFQx/TDiQqGBpv7SLv1vW2QCyLLy1KXUb4EWEUV93xLHwmbcA8TM3/cJ
+FE0hBvGELoIFvQIJSeN83wE29qMw/Ccr9+hDSH0ZFHbzSlNcIFHFcGu4Rn5nn5Ch
+T96ZMXKPwqfefN7Kbpn2AYKXGl4HdhwnWJ3D7JWEUe/fGlwDk2r8oaxPYb7dNTPJ
+3uZ2ww+HDNBsKv/LpMoSJIH+fgtG4LNdhRaO0mYfDsYkq3osUWuo07E8lhUbM6ig
+wj5JoydLuH10auhobokeCTeJQydLokvFHF3NXH71B3FrOT8g5c/SjEDeybi+JO/B
+5viN+UL7eSaFajyAbwthCTn3aBP2KzDLd8waI6gptEEiiKzu7hunuKuK49z3h/7q
+FKUXl48Zb4lBKDMlVtLo6xK9V9fCkhvoROXxKCYigX2IQCMUxRDBNnClgXDQxx1M
+zOJTstQgwHyK7FjDzwAD7ZsA+4p4hcUfpyMPCga2WBkRznef4jLHRg6iBis6NCQ8
+mhfFO0iGMzhUgptP6ISv
+=UMWh
+-----END PGP SIGNATURE-----
+
+--0H629O+sVkh21xTi--
