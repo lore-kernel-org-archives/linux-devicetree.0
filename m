@@ -1,67 +1,54 @@
-From: kishon <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v1 4/6] drivers: usb: musb: omap: make use of the new
- PHY lib APIs
-Date: Fri, 25 Jan 2013 00:28:43 +0530
-Message-ID: <51018463.4040908@ti.com>
-References: <1358848694-20145-1-git-send-email-kishon@ti.com> <1358848694-20145-5-git-send-email-kishon@ti.com> <50FE9DA6.4030507@ti.com>
+From: Matt Porter <mporter@ti.com>
+Subject: Re: [PATCH v5 00/14] DMA Engine support for AM33XX
+Date: Thu, 24 Jan 2013 15:42:03 -0500
+Message-ID: <20130124204203.GD5256@beef>
+References: <1358281974-8411-1-git-send-email-mporter@ti.com>
+ <50FEB6B2.5020303@ti.com>
+ <20130123022133.GA5727@opensource.wolfsonmicro.com>
+ <20130123213736.GC5256@beef>
+ <d07dbfd50690423b903803720152c0dc@DLEE74.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <50FE9DA6.4030507-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, eballetbo-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <d07dbfd50690423b903803720152c0dc@DLEE74.ent.ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Nori, Sekhar" <nsekhar@ti.com>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "Cousson, Benoit" <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jan 24, 2013 at 05:14:13AM +0000, Sekhar Nori wrote:
+> Matt,
+> 
+> On 1/24/2013 3:07 AM, Matt Porter wrote:
+> > On Wed, Jan 23, 2013 at 10:21:42AM +0800, Mark Brown wrote:
+> >> On Tue, Jan 22, 2013 at 09:26:34PM +0530, Sekhar Nori wrote:
+> >>> On 1/16/2013 2:02 AM, Matt Porter wrote:
+> >>
+> >>>> This series adds DMA Engine support for AM33xx, which uses
+> >>>> an EDMA DMAC. The EDMA DMAC has been previously supported by only
+> >>>> a private API implementation (much like the situation with OMAP
+> >>>> DMA) found on the DaVinci family of SoCs.
+> >>
+> >>> Will you take this series through the OMAP tree? Only 1/14 touches
+> >>> mach-davinci and I am mostly okay with it except some changes I just
+> >>> requested Matt to make in another thread.
+> >>
+> >> Is this series somewhere near actually getting merged then? It seemed
+> >> like there was lots of stuff going on.
+> > 
+> > The issues raised by Sekhar and Santosh were reasonably minor and will
+> > be addressed. My major concern is that the dependency on some api to
+> > fetch dmaengine driver SG limitations is not resolved. That's being
+> > discussed in https://lkml.org/lkml/2013/1/10/432
+> 
+> It might be worth posting the patches which don't have dependencies and
+> are ready for acceptance as a separate series. That way at least some of
+> these patches have a good chance of getting into v3.9 if not the entire
+> series.
 
-On Tuesday 22 January 2013 07:39 PM, Roger Quadros wrote:
-> On 01/22/2013 11:58 AM, Kishon Vijay Abraham I wrote:
->> New PHY lib APIs like usb_add_phy_dev() and devm_usb_get_phy_dev() are
->> used in MUSB (OMAP), in order to make use of the binding information
->> provided in the board file (of OMAP platforms).
->> All the platforms should be modified similar to this to add and get the
->> PHY.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
->> ---
->>   drivers/usb/musb/omap2430.c   |    2 +-
->>   drivers/usb/otg/twl4030-usb.c |    3 ++-
->>   drivers/usb/phy/omap-usb2.c   |    3 ++-
->>   3 files changed, 5 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/usb/musb/omap2430.c b/drivers/usb/musb/omap2430.c
->> index bf6cfe0..1a8cf6d 100644
->> --- a/drivers/usb/musb/omap2430.c
->> +++ b/drivers/usb/musb/omap2430.c
->> @@ -345,7 +345,7 @@ static int omap2430_musb_init(struct musb *musb)
->>   	 * up through ULPI.  TWL4030-family PMICs include one,
->>   	 * which needs a driver, drivers aren't always needed.
->>   	 */
->> -	musb->xceiv = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
->> +	musb->xceiv = devm_usb_get_phy_dev(dev, 0);
->>   	if (IS_ERR_OR_NULL(musb->xceiv)) {
->>   		pr_err("HS USB OTG: no transceiver configured\n");
->>   		return -ENODEV;
->> diff --git a/drivers/usb/otg/twl4030-usb.c b/drivers/usb/otg/twl4030-usb.c
->> index 0a70193..a994715 100644
->> --- a/drivers/usb/otg/twl4030-usb.c
->> +++ b/drivers/usb/otg/twl4030-usb.c
->> @@ -610,6 +610,7 @@ static int twl4030_usb_probe(struct platform_device *pdev)
->>   	twl->phy.dev		= twl->dev;
->>   	twl->phy.label		= "twl4030";
->>   	twl->phy.otg		= otg;
->> +	twl->phy.type		= USB_PHY_TYPE_USB2;
->
-> What is the need to set phy.type? I think this should be deprecated along with the old API.
+Yes a good idea and seems to be the best option. I've dropped the mmc
+support from the series for the next version. I'll repost the separately
+when we have an api to support it.
 
-The *type* field as such is not deprecated. Adding and getting a PHY 
-using *type* is deprecated.
-
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-Matt
