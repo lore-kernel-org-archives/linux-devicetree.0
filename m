@@ -1,53 +1,61 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V6 01/10] ASoC: Samsung: Rename samsung i2s secondary
- device name
-Date: Thu, 24 Jan 2013 14:41:12 +0800
-Message-ID: <20130124064111.GC4955@opensource.wolfsonmicro.com>
-References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
- <1358509629-20471-2-git-send-email-padma.v@samsung.com>
+From: Vakul Garg <vakul@freescale.com>
+Subject: [PATCHv2] crypto: caam - Added property fsl,sec-era in SEC4.0 device tree binding.
+Date: Thu, 24 Jan 2013 12:13:46 +0530
+Message-ID: <1359009826-32483-1-git-send-email-vakul@freescale.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="O5XBE6gyVG5Rl6Rj"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1358509629-20471-2-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-crypto@vger.kernel.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Boyd <sboyd@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, Vakul Garg <vakul@freescale.com>, Herbert Xu <herbert@gondor.hengli.com.au>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This new property defines the era of the particular SEC version.
+The compatible property in device tree "crypto" node has been updated
+not to contain SEC era numbers.
 
---O5XBE6gyVG5Rl6Rj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Vakul Garg <vakul@freescale.com>
+---
+Changes in v1:
+	1. Marked fsl,sec-era as 'optional'.
 
-On Fri, Jan 18, 2013 at 05:17:00PM +0530, Padmavathi Venna wrote:
-> All Samsung SoCs has max 3 i2s controllers. So the i2s secondary fifo
-> interface device id was named as samsung-i2s.4. Renaming this to
-> "samsung-i2s-sec" to support device tree in i2s driver.
+Changes in v2:
+	1. Changed 'fsl,sec-era' in example from hex to decimal.
 
-Applied, thanks.
+ .../devicetree/bindings/crypto/fsl-sec4.txt        |   12 +++++++++---
+ 1 files changed, 9 insertions(+), 3 deletions(-)
 
---O5XBE6gyVG5Rl6Rj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+diff --git a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+index fc9ce6f..dc40055 100644
+--- a/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
++++ b/Documentation/devicetree/bindings/crypto/fsl-sec4.txt
+@@ -54,8 +54,13 @@ PROPERTIES
+    - compatible
+       Usage: required
+       Value type: <string>
+-      Definition: Must include "fsl,sec-v4.0". Also includes SEC
+-           ERA versions (optional) with which the device is compatible.
++      Definition: Must include "fsl,sec-v4.0"
++
++   - fsl,sec-era
++      Usage: optional
++      Value type: <u32>
++      Definition: A standard property. Define the 'ERA' of the SEC
++          device.
+ 
+    - #address-cells
+        Usage: required
+@@ -107,7 +112,8 @@ PROPERTIES
+ 
+ EXAMPLE
+ 	crypto@300000 {
+-		compatible = "fsl,sec-v4.0", "fsl,sec-era-v2.0";
++		compatible = "fsl,sec-v4.0";
++		fsl,sec-era = <2>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		reg = <0x300000 0x10000>;
+-- 
+1.7.7.6
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRANeAAAoJELSic+t+oim9ndQP/ima1hyyIS6X1SLkrMFm14t+
-W5/vP87orHdz/7MHaBfPO+syHV5uzsuN5MUfrJsIzGt7UemIVDEtkz+1wB8VB5oy
-mUwoeh8uKDzbHHD+Lc7PKuQOma/rgNX9WGVNap+MFqnL5fPwuRCeTaDBjfnbqtTE
-JvRZexCTKCKCkR2zMaJ4a6YXM4UwIyB9G7CMhodt479daraHJKqswuIVx8sU0C9Q
-MTIE93fF4fznteriRXBUfQsdbxLCgSj37/0kLEN6qek6K61oFnj0jBG9khGxNwaI
-Bio6fUaneH5Z2zkbviTl2wVMFFgH3Vff7gv0TI4lk6XB6zP6HN6b42aT1APRiwFc
-75S4Qlx8HVbluS2N+cFO//vtjtGg0niFxTZHnOD/Z5ojeC8yChJCowljqshEkt5+
-oMSien9dRMgi1Po0YF6uMd2p80eKF2glWZNVcDL0+06SeSurC8AULi6EDPxVNtCk
-jEFqH5CqDIipBUFOPxcwwMmbOj8UToIrv6uY539n/durXDtlHQt6oBR3pN11gvgU
-LIV7GjPAk9RvYkfIb9HcG8jOtIXS9QJu6KDMYEy0renkIwiD+Nts1t9I1Tl60SAo
-PKC+tyTF7Owu22aoU+IqAvRbKzz2qzexY1wiPWZ+rus5i3atkkKJJMfqpXEvGlqI
-rKpC4pS1jWi84VqxNE5g
-=twyB
------END PGP SIGNATURE-----
-
---O5XBE6gyVG5Rl6Rj--
