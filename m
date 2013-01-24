@@ -1,65 +1,47 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v16 RESEND 0/7] of: add display helper
-Date: Thu, 24 Jan 2013 08:56:45 +0100
-Message-ID: <20130124075645.GA12862@pengutronix.de>
-References: <1358766482-6275-1-git-send-email-s.trumtrar@pengutronix.de>
- <CAF6AEGvFNA1gc_5XWqL_baEnn8DTn0R-xqui034rg3Eo-V_6Qw@mail.gmail.com>
- <20130123091202.GA11828@pengutronix.de>
- <CAPM=9txadRcm4j7_GryvxgosEhF8S3-1rGxqR_bw8UXMaoVWug@mail.gmail.com>
+From: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/3] Add device tree support for NAND flash in am335x-evm
+Date: Thu, 24 Jan 2013 13:32:26 +0530
+Message-ID: <cover.1359007746.git.avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPM=9txadRcm4j7_GryvxgosEhF8S3-1rGxqR_bw8UXMaoVWug@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Dave Airlie <airlied@gmail.com>
-Cc: Rob Clark <robdclark@gmail.com>, devicetree-discuss@lists.ozlabs.org, David Airlie <airlied@linux.ie>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "Mohammed, Afzal" <afzal@ti.com>, kernel@pengutronix.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: b-cousson-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org, Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2013 at 10:15:54AM +1000, Dave Airlie wrote:
-> >> > Hi!
-> >> >
-> >> > There was still no maintainer, that commented, ack'd, nack'd, apply'd the
-> >> > series. So, this is just a resend.
-> >> > The patches were tested with:
-> >> >
-> >> >         - v15 on Tegra by Thierry
-> >> >         - sh-mobile-lcdcfb by Laurent
-> >> >         - MX53QSB by Marek
-> >> >         - Exynos: smdk5250 by Leela
-> >> >         - AM335X EVM & AM335X EVM-SK by Afzal
-> >> >         - imx6q: sabrelite, sabresd by Philipp and me
-> >> >         - imx53: tqma53/mba53 by me
-> >>
-> >>
-> >> btw, you can add my tested-by for this series..  I've been using them
-> >> for the tilcdc lcd-panel output driver support.
-> >>
-> >
-> > Thanks. The more drivers the merrier ;-)
-> >
-> 
-> I'll probably merge these via my tree for lack of anyone else doing
-> it. I just don't want to end up as the fbdev maintainer by default,
+This patch series adds device tree support for NAND flash in am335x-evm.
+Also ELM node is populated in device tree and been used for BCH error
+correction in NAND flash part. Also this patch series ensures RBL ecc
+layout maintained in Linux kernel with BCH8 ecc scheme.
 
-\o/ very good to hear. Thanks.
+This patch series based on [1] and depends on [2].
 
-> maybe if we move the console stuff out of drivers/video to somewhere
+1. http://git.kernel.org/?p=linux/kernel/git/bcousson/linux-omap-dt.git;a=tree;h=refs/heads/for_3.9/dts;hb=refs/heads/for_3.9/dts
 
-Okay. That confused me for a second, but it doesn't seem to be directed at
-me *phew*.
+2.mtd: devices: elm: Removes <xx> literals in elm DT node
+  https://lkml.org/lkml/2013/1/24/30
 
-> else I'd be willing to look after it, but the thought of maintaining
-> fbdev drivers would drive me to a liver transplant.
-> 
-> Dave.
-> 
+Philip Avinash (1):
+  ARM: dts: AM33XX: Add NAND flash device tree data to am335x-evm
 
-Regards,
-Steffen
+Philip, Avinash (2):
+  ARM: dts: AM33XX: Add ELM node
+  ARM: dts: AM33XX: Add GPMC node
+
+ arch/arm/boot/dts/am335x-evm.dts |   98 +++++++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/am33xx.dtsi    |   20 ++++++++
+ 2 files changed, 117 insertions(+), 1 deletion(-)
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.9.5
