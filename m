@@ -1,14 +1,17 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH v2 1/8] sh-pfc: Add OF support
-Date: Thu, 24 Jan 2013 12:17:32 +0100
-Message-ID: <1361419.Aenl5VCGHZ@avalon>
-References: <1357693395-1653-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <20130115011019.GA13304@verge.net.au> <20130121003828.GD19062@verge.net.au>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration
+ implementation
+Date: Thu, 24 Jan 2013 19:18:47 +0800
+Message-ID: <20130124111845.GO4955@opensource.wolfsonmicro.com>
+References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com>
+ <1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
+ <50CB4E99.9060506@wwwdotorg.org>
+ <20121215142135.GB22033@opensource.wolfsonmicro.com>
+ <20130124111329.GC12933@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============2700028684666482072=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130121003828.GD19062-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+In-Reply-To: <20130124111329.GC12933-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,150 +22,68 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Cc: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Paul Mundt <lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, naveen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
 
-On Monday 21 January 2013 09:38:28 Simon Horman wrote:
-> On Tue, Jan 15, 2013 at 10:10:19AM +0900, Simon Horman wrote:
-> > On Sat, Jan 12, 2013 at 06:18:54PM +0100, Guennadi Liakhovetski wrote:
-> > > On Wed, 9 Jan 2013, Laurent Pinchart wrote:
-> > > > Support device instantiation through the device tree. The compatible
-> > > > property is used to select the SoC pinmux information.
-> > > > 
-> > > > Set the gpio_chip device field to the PFC device to enable automatic
-> > > > GPIO OF support.
-> > > > 
-> > > > Signed-off-by: Laurent Pinchart
-> > > > <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > > > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> > > 
-> > > This whole pinctrl mega-series is a very welcome improvement to the
-> > > sh-/r-mobile GPIO framework, and is very well done IMHO! But,
-> > > unfortunately, as discussed with you privately yesterday, there is still
-> > > a problem with pinctrl DT support on sh73a0, which will, probably,
-> > > enforce an update to one or several of patches from this lot. To explain
-> > > to other readers, on sh73a0 pin numbers are not contiguous, they are
-> > > sparse. When pins are referred to from C code, macro names are used,
-> > > which are then correctly decoded to respective positions in pin
-> > > descriptor tables. Whereas with DT, pins are referred to from .dts files
-> > > using their physical numbers, which then refer to either wrong or
-> > > missing entries in those tables.
-> > > 
-> > > I do not know where this problem should be solved best - either in
-> > > descriptor tables, or in DT handling code, so, I don't know which
-> > > patches would be affected. Don't think you'll want to keep the one-to-
-> > > one index-to-pin mapping by also making pin-descriptor arrays sparse,
-> > > so, so far I only see one possibility to fix this - by using the
-> > > .enum_id field from struct sh_pfc_pin instead of just the index - both
-> > > in  C and in DT case, and those .enum_id values will have to provide
-> > > physical pin numbers instead of plane indices. That way you'd have to
-> > > update at least drivers/pinctrl/sh-pfc/pfc-sh73a0.c and the
-> > > sh_pfc_map_gpios() function in drivers/pinctrl/sh-pfc/pinctrl.c.
-> > > 
-> > > Anyway, I'm sure you'll find a suitable solution of this problem and for
-> > > now I'll let Simon decide which patches he wants to apply and which ones
-> > > he'd prefer to hold back;-)
-> > 
-> > Actually, I'd appreciate some guidance from Laurent on this.
-> > It seems that the problems you raise go quite far back into the
-> > mega-series.
-> > 
-> > I was intending to send pull requests for the following branches soon.
-> > But I am now concerned that at least the sh73a0 patches may need
-> > reworking.
-> 
-> I have concluded that the changes below are safe and have
-> proceeded with sending them to arm-soc. However, I am still awaiting
-> a response from arm-soc.
+--===============2700028684666482072==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qse+WBH4guesipZ+"
+Content-Disposition: inline
 
-Sorry for the late reply. The below changes are indeed safe, what I need to 
-rework are the pinctrl API and DT series.
 
-> > pfc2: (based on a merge of sh-soc2 and pfc)
-> > sh-pfc: Add shx3 pinmux support
-> > sh-pfc: Add sh7786 pinmux support
-> > sh-pfc: Add sh7785 pinmux support
-> > sh-pfc: Add sh7757 pinmux support
-> > sh-pfc: Add sh7734 pinmux support
-> > sh-pfc: Add sh7724 pinmux support
-> > sh-pfc: Add sh7723 pinmux support
-> > sh-pfc: Add sh7722 pinmux support
-> > sh-pfc: Add sh7720 pinmux support
-> > sh-pfc: Add sh7269 pinmux support
-> > sh-pfc: Add sh7264 pinmux support
-> > sh-pfc: Add sh7203 pinmux support
-> > sh-pfc: Add sh73a0 pinmux support
-> > sh-pfc: Add sh7372 pinmux support
-> > sh-pfc: Add r8a7779 pinmux support
-> > sh-pfc: Add r8a7740 pinmux support
-> > sh-pfc: Support pinmux info in driver data instead of platform data
-> > sh-pfc: Move driver from drivers/sh/ to drivers/pinctrl/
-> > sh-pfc: Remove unused resource and num_resources platform data fields
-> > sh-pfc: Remove platform device registration
-> > 
-> > sh-soc2: (based on pfc)
-> > sh: shx3: Register PFC platform device
-> > sh: sh7786: Register PFC platform device
-> > sh: sh7785: Register PFC platform device
-> > sh: sh7757: Register PFC platform device
-> > sh: sh7734: Register PFC platform device
-> > sh: sh7724: Register PFC platform device
-> > sh: sh7723: Register PFC platform device
-> > sh: sh7722: Register PFC platform device
-> > sh: sh7720: Register PFC platform device
-> > sh: sh7269: Register PFC platform device
-> > sh: sh7264: Register PFC platform device
-> > sh: sh7203: Register PFC platform device
-> > sh: Add PFC platform device registration helper function
-> > 
-> > 
-> > soc: (based on sh-soc)
-> > ARM: shmobile: sh73a0: Add pin control resources
-> > ARM: shmobile: sh7372: Add pin control resources
-> > ARM: shmobile: r8a7740: Add pin control resources
-> > ARM: shmobile: sh73a0: Register PFC platform device
-> > ARM: shmobile: sh7372: Register PFC platform device
-> > ARM: shmobile: r8a7779: Register PFC platform device
-> > ARM: shmobile: r8a7740: Register PFC platform device
-> > ARM: shmobile: Select PINCTRL
-> > ARM: shmobile: add function declarations for sh7372 DT helper functions
-> > ARM: sh7372: fix cache clean / invalidate order
-> > ARM: sh7372: add clock lookup entries for DT-based devices
-> > ARM: mach-shmobile: sh73a0 external IRQ wake update
-> > ARM: shmobile: sh73a0: fixup div4_clks bitmap
-> > ARM: shmobile: r8a7740: add TMU timer support
-> > ARM: shmobile: Remove duplicate inclusion of dma-mapping.h in
-> > setup-r8a7740.c
-> > 
-> > pfc: (based on sh-soc)
-> > sh-pfc: Support passing resources through platform device
-> > sh-pfc: Split platform device and platform driver registration
-> > sh-pfc: Use sh_pfc_ namespace prefix through the whole driver
-> > sh-pfc: Sort headers alphabetically
-> > sh-pfc: Remove check for impossible error condition
-> > sh-pfc: Let the compiler decide whether to inline functions
-> > sh-pfc: Use devm_ioremap_nocache()
-> > sh-pfc: Use devm_kzalloc()
-> > sh-pfc: Move platform device and driver to the core
-> > sh-pfc: Merge PFC core and gpio
-> > sh-pfc: Merge PFC core and pinctrl
-> > sh-pfc: Move private definitions and declarations to private header
-> > sh-pfc: Split platform data from the sh_pfc structure
-> > sh-pfc: Remove all use of __devinit/__devexit
-> > 
-> > sh-soc:
-> > sh: shx3: Fix last GPIO index
-> > sh: sh7786: Fix last GPIO index
-> > sh: sh7786: Fix port E, G and J GPIOs
-> > sh: sh7757: Fix GPIO_FN_ET0_MDIO and GPIO_FN_ET1_MDIO GPIO entries
-> > sh: sh7723: Rename GPIO_FN_SIUOSPD to GPIO_FN_SIUAOSPD
-> > sh: sh7269: Rename CRX0CRX1(CRX2) marks to match GPIO names
-> > sh: sh7264: Rename CRX0CRX1 mark to match GPIO names
+--qse+WBH4guesipZ+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Regards,
+On Thu, Jan 24, 2013 at 12:13:29PM +0100, Wolfram Sang wrote:
+> On Sat, Dec 15, 2012 at 11:21:36PM +0900, Mark Brown wrote:
 
-Laurent Pinchart
+> > also get things like read operations which appear as multiple
+> > transactions on the I2C bus so require something higher level than what
+> > multi-master provides.
+
+> I don't get what you mean here. Can you elaborate?
+
+A read is typically implemented as a write of the register address
+followed by a read of the value, usually with the ability to free the
+bus in between.  If two devices attempt to access the register map
+simultaneously this results in the address going wrong.
+
+--qse+WBH4guesipZ+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRARh8AAoJELSic+t+oim9WcYP+wWmw33S4AKN/3CeMXNRjY+s
+CgiNqBwux+fQ1JfAqcTyJOp4pQLJVNewFZIZClvUN3t+7ZkgNnIImo2fEIc2vcol
+AugQkOwVEkeBYKmY5S1R9bYymFyvv7CjdaMNv2w06hjOpwhHHcIpXIOlMi5efIXh
+j58Kdl5VB6YJvyCUJGxywbiHYDTV4rb90fZWLfy7qwm81QoXhIsjc2GF+UX7iHXq
+SSbI1F9r3KazOrxf+pA3Zl76qili06T61TUSrSVpLaYhhPjUwM84qBn4p0724DFT
+tx3Ky5ZXBHYzrnZQpJ7ZERIqECOVd1AvSrwnhPS3l6S3MOxXjWZzG3BBA4H6GfRB
+I01wMCFVZfuiXtcVC6zY5kTqN5aYIVyfX2JR8dKVSHEoi+e7Q2bbjxK0t0CU+s82
+0zGRq+ZqT7KIeePHRTXkR7H3fFUZSgY/6O4BKa+gvoxzXUskmqwKhPYFyvAFrcKm
+0k/4XfXmfXpXri7aiZudwDmH6NhGNJfsIodwY6QyoQBXZulmEGuSzXcSbt0IHTXa
+1guFvK0Dja9GB7Oy6Vi7199qMYgbpOJ27Hu8+MTd6QiVsiVOEmguqWZ2DpM16Cic
+WpZbaKwb3uiqbKo/OpanYHi6rcaJdkdghnWBDnCZXv0N12NHUgQaUpcbX8KORATa
+nEas6DvWliPzPlCjPrNB
+=MQZP
+-----END PGP SIGNATURE-----
+
+--qse+WBH4guesipZ+--
+
+--===============2700028684666482072==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2700028684666482072==--
