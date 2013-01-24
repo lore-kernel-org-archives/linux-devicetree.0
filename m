@@ -1,159 +1,209 @@
-From: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2 3/3] ARM: dts: AM33XX: Add NAND flash device tree data to
- am335x-evm
-Date: Thu, 24 Jan 2013 13:32:29 +0530
-Message-ID: <ebfab3e9123b3e50b9a9678c1480191addd86d59.1359007746.git.avinashphilip@ti.com>
-References: <cover.1359007746.git.avinashphilip@ti.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCH v16 RESEND 0/7] of: add display helper
+Date: Thu, 24 Jan 2013 09:19:58 +0100
+Message-ID: <20130124081958.GA28406@pengutronix.de>
+References: <1358766482-6275-1-git-send-email-s.trumtrar@pengutronix.de>
+ <CAF6AEGvFNA1gc_5XWqL_baEnn8DTn0R-xqui034rg3Eo-V_6Qw@mail.gmail.com>
+ <20130123091202.GA11828@pengutronix.de>
+ <CAL1wa8d6wXdxgVJ=c2ma2Adm-RkF3S5ga219dSrh1fFo0L9X8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <cover.1359007746.git.avinashphilip-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: b-cousson-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gururaja.hebbar-l0cyMroinI0@public.gmane.org, Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL1wa8d6wXdxgVJ=c2ma2Adm-RkF3S5ga219dSrh1fFo0L9X8w@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Leela Krishna Amudala <leelakrishna.a@gmail.com>
+Cc: linux-fbdev@vger.kernel.org, "Mohammed, Afzal" <afzal@ti.com>, David Airlie <airlied@linux.ie>, devicetree-discuss@lists.ozlabs.org, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, dri-devel@lists.freedesktop.org, Rob Clark <robdclark@gmail.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-NAND flash connected in am335x-evm on GPMC controller. This patch adds
-device tree node in am3355-evm with GPMC contoller timing for NAND flash
-interface, NAND partition table, ECC scheme, elm handle id.
+On Thu, Jan 24, 2013 at 10:44:50AM +0530, Leela Krishna Amudala wrote:
+> Steffen,
+> 
+> You can add my tested-by for this series.. :)
+> I have been using them for Exynos: smdk5250 board.
+> 
 
-Signed-off-by: Philip Avinash <avinashphilip-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am335x-evm.dts |   98 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 97 insertions(+), 1 deletion(-)
+Thanks. I'll use that opportunity for a v17 that is rebased onto 3.8-rc4.
 
-diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
-index 0423298..1c2fd89 100644
---- a/arch/arm/boot/dts/am335x-evm.dts
-+++ b/arch/arm/boot/dts/am335x-evm.dts
-@@ -26,7 +26,8 @@
- 
- 	am33xx_pinmux: pinmux@44e10800 {
- 		pinctrl-names = "default";
--		pinctrl-0 = <&matrix_keypad_s0 &volume_keys_s0>;
-+		pinctrl-0 = <&matrix_keypad_s0 &volume_keys_s0
-+			&nandflash_pins_s0>;
- 
- 		matrix_keypad_s0: matrix_keypad_s0 {
- 			pinctrl-single,pins = <
-@@ -44,6 +45,26 @@
- 				0x154 0x27	/* spi0_d0.gpio0_3, INPUT | MODE7 */
- 			>;
- 		};
-+
-+		nandflash_pins_s0: nandflash_pins_s0 {
-+			pinctrl-single,pins = <
-+				0x0 0x30	/* gpmc_ad0.gpmc_ad0, INPUT | PULLUP | MODE0 */
-+				0x4 0x30	/* gpmc_ad1.gpmc_ad1, INPUT | PULLUP | MODE0 */
-+				0x8 0x30	/* gpmc_ad2.gpmc_ad2, INPUT | PULLUP | MODE0 */
-+				0xc 0x30	/* gpmc_ad3.gpmc_ad3, INPUT | PULLUP | MODE0 */
-+				0x10 0x30	/* gpmc_ad4.gpmc_ad4, INPUT | PULLUP | MODE0 */
-+				0x14 0x30	/* gpmc_ad5.gpmc_ad5, INPUT | PULLUP | MODE0 */
-+				0x18 0x30	/* gpmc_ad6.gpmc_ad6, INPUT | PULLUP | MODE0 */
-+				0x1c 0x30	/* gpmc_ad7.gpmc_ad7, INPUT | PULLUP | MODE0 */
-+				0x70 0x30	/* gpmc_wait0.gpmc_wait0, INPUT | PULLUP | MODE0 */
-+				0x74 0x37	/* gpmc_wpn.gpio0_30, INPUT | PULLUP | MODE7 */
-+				0x7c 0x8	/* gpmc_csn0.gpmc_csn0,  PULL DISA */
-+				0x90 0x8	/* gpmc_advn_ale.gpmc_advn_ale, PULL DISA */
-+				0x94 0x8	/* gpmc_oen_ren.gpmc_oen_ren, PULL DISA */
-+				0x98 0x8	/* gpmc_wen.gpmc_wen, PULL DISA */
-+				0x9c 0x8	/* gpmc_be0n_cle.gpmc_be0n_cle, PULL DISA */
-+			>;
-+		};
- 	};
- 
- 	ocp {
-@@ -102,6 +123,81 @@
- 				reg = <0x48>;
- 			};
- 		};
-+
-+		elm: elm@48080000 {
-+			status = "okay";
-+		};
-+
-+		gpmc: gpmc@50000000 {
-+			status = "okay";
-+			ranges = <0 0 0x08000000 0x10000000>;	/* CS0: NAND */
-+
-+			nand@0,0 {
-+				reg = <0 0 0>; /* CS0, offset 0 */
-+				nand-bus-width = <8>;
-+				ti,nand-ecc-opt = "bch8";
-+
-+				gpmc,sync-clk = <0>;
-+				gpmc,cs-on = <0>;
-+				gpmc,cs-rd-off = <44>;
-+				gpmc,cs-wr-off = <44>;
-+				gpmc,adv-on = <6>;
-+				gpmc,adv-rd-off = <34>;
-+				gpmc,adv-wr-off = <44>;
-+				gpmc,we-off = <40>;
-+				gpmc,oe-off = <54>;
-+				gpmc,access = <64>;
-+				gpmc,rd-cycle = <82>;
-+				gpmc,wr-cycle = <82>;
-+				gpmc,wr-access = <40>;
-+				gpmc,wr-data-mux-bus = <0>;
-+
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				elm_id = <&elm>;
-+
-+				/* MTD partition table */
-+				partition@0 {
-+					label = "SPL1";
-+					reg = <0x00000000 0x000020000>;
-+				};
-+
-+				partition@1 {
-+					label = "SPL2";
-+					reg = <0x00020000 0x00020000>;
-+				};
-+
-+				partition@2 {
-+					label = "SPL3";
-+					reg = <0x00040000 0x00020000>;
-+				};
-+
-+				partition@3 {
-+					label = "SPL4";
-+					reg = <0x00060000 0x00020000>;
-+				};
-+
-+				partition@4 {
-+					label = "U-boot";
-+					reg = <0x00080000 0x001e0000>;
-+				};
-+
-+				partition@5 {
-+					label = "environment";
-+					reg = <0x00260000 0x00020000>;
-+				};
-+
-+				partition@6 {
-+					label = "Kernel";
-+					reg = <0x00280000 0x00500000>;
-+				};
-+
-+				partition@7 {
-+					label = "File-System";
-+					reg = <0x00780000 0x0F880000>;
-+				};
-+			};
-+		};
- 	};
- 
- 	vbat: fixedregulator@0 {
+Regards,
+Steffen
+
+> On Wed, Jan 23, 2013 at 2:42 PM, Steffen Trumtrar
+> <s.trumtrar@pengutronix.de> wrote:
+> > On Tue, Jan 22, 2013 at 03:50:48PM -0600, Rob Clark wrote:
+> >> On Mon, Jan 21, 2013 at 5:07 AM, Steffen Trumtrar
+> >> <s.trumtrar@pengutronix.de> wrote:
+> >> > Hi!
+> >> >
+> >> > There was still no maintainer, that commented, ack'd, nack'd, apply'd the
+> >> > series. So, this is just a resend.
+> >> > The patches were tested with:
+> >> >
+> >> >         - v15 on Tegra by Thierry
+> >> >         - sh-mobile-lcdcfb by Laurent
+> >> >         - MX53QSB by Marek
+> >> >         - Exynos: smdk5250 by Leela
+> >> >         - AM335X EVM & AM335X EVM-SK by Afzal
+> >> >         - imx6q: sabrelite, sabresd by Philipp and me
+> >> >         - imx53: tqma53/mba53 by me
+> >>
+> >>
+> >> btw, you can add my tested-by for this series..  I've been using them
+> >> for the tilcdc lcd-panel output driver support.
+> >>
+> >
+> > Thanks. The more drivers the merrier ;-)
+> >
+> > Steffen
+> >
+> >> >
+> >> >
+> >> > Changes since v15:
+> >> >         - move include/linux/{videomode,display_timing}.h to include/video
+> >> >         - move include/linux/of_{videomode,display_timing}.h to include/video
+> >> >         - reimplement flags: add VESA flags and data flags
+> >> >         - let pixelclock in struct videomode be unsigned long
+> >> >         - rename of_display_timings_exists to of_display_timings_exist
+> >> >         - revise logging/error messages: replace __func__ with np->full_name
+> >> >         - rename pixelclk-inverted to pixelclk-active
+> >> >         - revise comments in code
+> >> >
+> >> > Changes since v14:
+> >> >         - fix "const struct *" warning
+> >> >                 (reported by: Leela Krishna Amudala <l.krishna@samsung.com>)
+> >> >         - return -EINVAL when htotal or vtotal are zero
+> >> >         - remove unreachable code in of_get_display_timings
+> >> >         - include headers in .c files and not implicit in .h
+> >> >         - sort includes alphabetically
+> >> >         - fix lower/uppercase in binding documentation
+> >> >         - rebase onto v3.7-rc7
+> >> >
+> >> > Changes since v13:
+> >> >         - fix "const struct *" warning
+> >> >                 (reported by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>)
+> >> >         - prevent division by zero in fb_videomode_from_videomode
+> >> >
+> >> > Changes since v12:
+> >> >         - rename struct display_timing to via_display_timing in via subsystem
+> >> >         - fix refreshrate calculation
+> >> >         - fix "const struct *" warnings
+> >> >                 (reported by: Manjunathappa, Prakash <prakash.pm@ti.com>)
+> >> >         - some CodingStyle fixes
+> >> >         - rewrite parts of commit messages and display-timings.txt
+> >> >         - let display_timing_get_value get all values instead of just typical
+> >> >
+> >> > Changes since v11:
+> >> >         - make pointers const where applicable
+> >> >         - add reviewed-by Laurent Pinchart
+> >> >
+> >> > Changes since v10:
+> >> >         - fix function name (drm_)display_mode_from_videomode
+> >> >         - add acked-by, reviewed-by, tested-by
+> >> >
+> >> > Changes since v9:
+> >> >         - don't leak memory when previous timings were correct
+> >> >         - CodingStyle fixes
+> >> >         - move blank lines around
+> >> >
+> >> > Changes since v8:
+> >> >         - fix memory leaks
+> >> >         - change API to be more consistent (foo_from_bar(struct bar, struct foo))
+> >> >         - include headers were necessary
+> >> >         - misc minor bugfixes
+> >> >
+> >> > Changes since v7:
+> >> >         - move of_xxx to drivers/video
+> >> >         - remove non-binding documentation from display-timings.txt
+> >> >         - squash display_timings and videomode in one patch
+> >> >         - misc minor fixes
+> >> >
+> >> > Changes since v6:
+> >> >         - get rid of some empty lines etc.
+> >> >         - move functions to their subsystems
+> >> >         - split of_ from non-of_ functions
+> >> >         - add at least some kerneldoc to some functions
+> >> >
+> >> > Changes since v5:
+> >> >         - removed all display stuff and just describe timings
+> >> >
+> >> > Changes since v4:
+> >> >         - refactored functions
+> >> >
+> >> > Changes since v3:
+> >> >         - print error messages
+> >> >         - free alloced memory
+> >> >         - general cleanup
+> >> >
+> >> > Changes since v2:
+> >> >         - use hardware-near property-names
+> >> >         - provide a videomode structure
+> >> >         - allow ranges for all properties (<min,typ,max>)
+> >> >         - functions to get display_mode or fb_videomode
+> >> >
+> >> >
+> >> > Regards,
+> >> > Steffen
+> >> >
+> >> >
+> >> > Steffen Trumtrar (7):
+> >> >   viafb: rename display_timing to via_display_timing
+> >> >   video: add display_timing and videomode
+> >> >   video: add of helper for display timings/videomode
+> >> >   fbmon: add videomode helpers
+> >> >   fbmon: add of_videomode helpers
+> >> >   drm_modes: add videomode helpers
+> >> >   drm_modes: add of_videomode helpers
+> >> >
+> >> >  .../devicetree/bindings/video/display-timing.txt   |  109 +++++++++
+> >> >  drivers/gpu/drm/drm_modes.c                        |   70 ++++++
+> >> >  drivers/video/Kconfig                              |   21 ++
+> >> >  drivers/video/Makefile                             |    4 +
+> >> >  drivers/video/display_timing.c                     |   24 ++
+> >> >  drivers/video/fbmon.c                              |   94 ++++++++
+> >> >  drivers/video/of_display_timing.c                  |  239 ++++++++++++++++++++
+> >> >  drivers/video/of_videomode.c                       |   54 +++++
+> >> >  drivers/video/via/hw.c                             |    6 +-
+> >> >  drivers/video/via/hw.h                             |    2 +-
+> >> >  drivers/video/via/lcd.c                            |    2 +-
+> >> >  drivers/video/via/share.h                          |    2 +-
+> >> >  drivers/video/via/via_modesetting.c                |    8 +-
+> >> >  drivers/video/via/via_modesetting.h                |    6 +-
+> >> >  drivers/video/videomode.c                          |   39 ++++
+> >> >  include/drm/drmP.h                                 |    9 +
+> >> >  include/linux/fb.h                                 |    8 +
+> >> >  include/video/display_timing.h                     |  124 ++++++++++
+> >> >  include/video/of_display_timing.h                  |   20 ++
+> >> >  include/video/of_videomode.h                       |   18 ++
+> >> >  include/video/videomode.h                          |   48 ++++
+> >> >  21 files changed, 894 insertions(+), 13 deletions(-)
+> >> >  create mode 100644 Documentation/devicetree/bindings/video/display-timing.txt
+> >> >  create mode 100644 drivers/video/display_timing.c
+> >> >  create mode 100644 drivers/video/of_display_timing.c
+> >> >  create mode 100644 drivers/video/of_videomode.c
+> >> >  create mode 100644 drivers/video/videomode.c
+> >> >  create mode 100644 include/video/display_timing.h
+> >> >  create mode 100644 include/video/of_display_timing.h
+> >> >  create mode 100644 include/video/of_videomode.h
+> >> >  create mode 100644 include/video/videomode.h
+> >> >
+> >> > --
+> >> > 1.7.10.4
+> >> >
+> >>
+> >
+> > --
+> > Pengutronix e.K.                           |                             |
+> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
+
 -- 
-1.7.9.5
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
