@@ -1,49 +1,67 @@
 From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 4/5] arm: mvebu: update DT to support local timers
-Date: Fri, 25 Jan 2013 18:32:44 +0100
-Message-ID: <1359135165-32108-5-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v2 5/5] clocksource: update and move armada-370-xp-timer documentation to timer directory
+Date: Fri, 25 Jan 2013 18:32:45 +0100
+Message-ID: <1359135165-32108-6-git-send-email-gregory.clement@free-electrons.com>
 References: <1359135165-32108-1-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1359135165-32108-1-git-send-email-gregory.clement@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>
-Cc: Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.org, Maen Suleiman <maen@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Olof Johansson <olof@lixom.net>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Nicolas Pitre <nico@fluxnic.net>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ike Pan <ike.pan@canonical.com>, Jani Monoses <jani.monoses@canonical.com>, Chris Van Hoof <vanhoof@canonical.com>, Dan Frazier <dann.frazier@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Jon Masters <jcm@redhat.com>, David Marlin <dmarlin@redhat.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Now that the time-armada-370-xp support local timers, updated the
-device tree to take it into account.
+Timer driver for Armada 370 and Armada XP have gained local timers
+support. So it needs new resources information regarding the IRQs
+and the registers.
+
+Also move the documentation in the new and more accurate directory
 
 Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 ---
- arch/arm/boot/dts/armada-370-xp.dtsi |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../bindings/arm/armada-370-xp-timer.txt           |   12 ------------
+ .../bindings/timer/marvell,armada-370-xp-timer.txt |   15 +++++++++++++++
+ 2 files changed, 15 insertions(+), 12 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/arm/armada-370-xp-timer.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
 
-diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
-index 4c0abe8..aa6a187 100644
---- a/arch/arm/boot/dts/armada-370-xp.dtsi
-+++ b/arch/arm/boot/dts/armada-370-xp.dtsi
-@@ -68,8 +68,9 @@
- 
- 		timer@d0020300 {
- 			       compatible = "marvell,armada-370-xp-timer";
--			       reg = <0xd0020300 0x30>;
--			       interrupts = <37>, <38>, <39>, <40>;
-+			       reg = <0xd0020300 0x30>,
-+			       <0xd0021040 0x30>;
-+			       interrupts = <37>, <38>, <39>, <40>, <5>, <6>;
- 			       clocks = <&coreclk 2>;
- 		};
- 
+diff --git a/Documentation/devicetree/bindings/arm/armada-370-xp-timer.txt b/Documentation/devicetree/bindings/arm/armada-370-xp-timer.txt
+deleted file mode 100644
+index 6483011..0000000
+--- a/Documentation/devicetree/bindings/arm/armada-370-xp-timer.txt
++++ /dev/null
+@@ -1,12 +0,0 @@
+-Marvell Armada 370 and Armada XP Global Timers
+-----------------------------------------------
+-
+-Required properties:
+-- compatible: Should be "marvell,armada-370-xp-timer"
+-- interrupts: Should contain the list of Global Timer interrupts
+-- reg: Should contain the base address of the Global Timer registers
+-- clocks: clock driving the timer hardware
+-
+-Optional properties:
+-- marvell,timer-25Mhz: Tells whether the Global timer supports the 25
+-  Mhz fixed mode (available on Armada XP and not on Armada 370)
+diff --git a/Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt b/Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
+new file mode 100644
+index 0000000..3638112
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
+@@ -0,0 +1,15 @@
++Marvell Armada 370 and Armada XP Timers
++---------------------------------------
++
++Required properties:
++- compatible: Should be "marvell,armada-370-xp-timer"
++- interrupts: Should contain the list of Global Timer interrupts and
++  then local timer interrupts
++- reg: Should contain location and length for timers register. First
++  pair for the Global Timer registers, second pair for the
++  local/private timers.
++- clocks: clock driving the timer hardware
++
++Optional properties:
++- marvell,timer-25Mhz: Tells whether the Global timer supports the 25
++  Mhz fixed mode (available on Armada XP and not on Armada 370)
 -- 
 1.7.9.5
