@@ -1,43 +1,64 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 1/2] ARM: dts: omap3-overo: Add support for pwm-leds
-Date: Fri, 25 Jan 2013 13:30:09 +0100
-Message-ID: <51027AD1.60107@ti.com>
-References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch> <1358963812-19947-2-git-send-email-florian.vaussard@epfl.ch> <5101510C.9050407@ti.com> <51015663.8080109@epfl.ch> <5101570A.1030303@ti.com> <5101663C.7020301@epfl.ch> <51016A84.20703@ti.com> <5101A43D.7080108@epfl.ch> <51024254.40208@ti.com> <5102756A.9040901@ti.com> <510278B8.40809@epfl.ch>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] DT: add vendor prefixes for Renesas and Toshiba
+Date: Fri, 25 Jan 2013 08:31:12 -0600
+Message-ID: <51029730.8050107@gmail.com>
+References: <Pine.LNX.4.64.1301241708360.7826@axis700.grange> <20130125041206.GK13691@verge.net.au>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <510278B8.40809@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: florian.vaussard@epfl.ch
-Cc: Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Benoit Cousson <b-cousson@ti.com>, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20130125041206.GK13691@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/25/2013 01:21 PM, Florian Vaussard wrote:
->>>
->>> We have two drivers at the moment: pwm-twl and pwm-twl-led. However=
- new out of
->>> SoC PWM drivers might come (for example for palmas). So it worth ta=
-ke a look
->>> at some generic implementation.
->>
->> OK. So I have the series. I need to add few more things but pwm-leds=
- on
->> BeagleBoard works fine when I put the default_trigger for the pmusta=
-t LED to
->> be mmc0. It is blinking happily ;)
->> I'll CC you with the patches when I send them.
->>
->=20
-> I sent a patchset 2 hours ago with you in CC, you haven't received th=
-em?
+On 01/24/2013 10:12 PM, Simon Horman wrote:
+> On Thu, Jan 24, 2013 at 05:09:45PM +0100, Guennadi Liakhovetski wrote:
+>> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> 
+> I'm curious to know who would ack and or pick-up this patch.
 
-I have not noticed them. Going through them right now.
+I have applied it. You would know if get_maintainers.pl had been used.
 
---=20
-P=E9ter
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Rob
+
+> 
+>> ---
+>>  .../devicetree/bindings/vendor-prefixes.txt        |    2 ++
+>>  1 files changed, 2 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> index 902b1b1..5d811b2 100644
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -42,6 +42,7 @@ powervr	PowerVR (deprecated, use img)
+>>  qcom	Qualcomm, Inc.
+>>  ramtron	Ramtron International
+>>  realtek Realtek Semiconductor Corp.
+>> +renesas	Renesas Electronics Corporation
+>>  samsung	Samsung Semiconductor
+>>  sbs	Smart Battery System
+>>  schindler	Schindler
+>> @@ -52,6 +53,7 @@ snps 	Synopsys, Inc.
+>>  st	STMicroelectronics
+>>  stericsson	ST-Ericsson
+>>  ti	Texas Instruments
+>> +toshiba	Toshiba Corporation
+>>  via	VIA Technologies, Inc.
+>>  wlf	Wolfson Microelectronics
+>>  wm	Wondermedia Technologies, Inc.
+>> -- 
+>> 1.7.2.5
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
+
