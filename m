@@ -1,67 +1,88 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/6] ARM: davinci: da850: add DT node for I2C0
-Date: Fri, 25 Jan 2013 16:20:13 +0530
-Message-ID: <51026365.1020402@ti.com>
-References: <1359027324-14534-1-git-send-email-manishv.b@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v4 2/2] usb: phy: omap-usb2: enable 960Mhz clock for omap5
+Date: Fri, 25 Jan 2013 16:29:34 +0530
+Message-ID: <1359111574-6613-3-git-send-email-kishon@ti.com>
+References: <1359111574-6613-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1359027324-14534-1-git-send-email-manishv.b@ti.com>
+In-Reply-To: <1359111574-6613-1-git-send-email-kishon@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, Kevin Hilman <khilman@deeprootsystems.com>, linux@arm.linux.org.uk, sameo@linux.intel.com, tony@atomide.com, broonie@opensource.wolfsonmicro.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, rob@landley.net, anilkumar@ti.com, hs@denx.de
+To: rob.herring@calxeda.com, rob@landley.net, balbi@ti.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 1/24/2013 5:05 PM, Vishwanathrao Badarkhe, Manish wrote:
-> Add I2C0 device tree node information to da850-evm.
-> Also, add I2C0 pin muxing information in da850-evm.
-> 
-> Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
-> ---
-> Depends on patch 
-> http://comments.gmane.org/gmane.linux.davinci/25993
-> 
->  arch/arm/boot/dts/da850-evm.dts |   15 +++++++++++++++
->  arch/arm/boot/dts/da850.dtsi    |   10 ++++++++++
->  2 files changed, 25 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index 8cac9d2..3d8290a 100755
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -27,5 +27,20 @@
->  		serial2: serial@1d0d000 {
->  			status = "okay";
->  		};
-> +		i2c0@1c22000 {
+"usb_otg_ss_refclk960m" is needed for usb2 phy present in omap5. For
+omap4, the clk_get of this clock will fail since it does not have this
+clock.
 
-This should be
-		i2c0: i2c@1c22000
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ drivers/usb/phy/omap-usb2.c |   28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-to follow the convention elsewhere in file.
+diff --git a/drivers/usb/phy/omap-usb2.c b/drivers/usb/phy/omap-usb2.c
+index 0cd88ac..844ab68 100644
+--- a/drivers/usb/phy/omap-usb2.c
++++ b/drivers/usb/phy/omap-usb2.c
+@@ -166,6 +166,12 @@ static int omap_usb2_probe(struct platform_device *pdev)
+ 	}
+ 	clk_prepare(phy->wkupclk);
+ 
++	phy->optclk = devm_clk_get(phy->dev, "usb_otg_ss_refclk960m");
++	if (IS_ERR(phy->optclk))
++		dev_vdbg(&pdev->dev, "unable to get refclk960m\n");
++	else
++		clk_prepare(phy->optclk);
++
+ 	usb_add_phy_dev(&phy->phy);
+ 
+ 	platform_set_drvdata(pdev, phy);
+@@ -180,6 +186,8 @@ static int omap_usb2_remove(struct platform_device *pdev)
+ 	struct omap_usb	*phy = platform_get_drvdata(pdev);
+ 
+ 	clk_unprepare(phy->wkupclk);
++	if (!IS_ERR(phy->optclk))
++		clk_unprepare(phy->optclk);
+ 	usb_remove_phy(&phy->phy);
+ 
+ 	return 0;
+@@ -193,6 +201,8 @@ static int omap_usb2_runtime_suspend(struct device *dev)
+ 	struct omap_usb	*phy = platform_get_drvdata(pdev);
+ 
+ 	clk_disable(phy->wkupclk);
++	if (!IS_ERR(phy->optclk))
++		clk_disable(phy->optclk);
+ 
+ 	return 0;
+ }
+@@ -204,9 +214,25 @@ static int omap_usb2_runtime_resume(struct device *dev)
+ 	struct omap_usb	*phy = platform_get_drvdata(pdev);
+ 
+ 	ret = clk_enable(phy->wkupclk);
+-	if (ret < 0)
++	if (ret < 0) {
+ 		dev_err(phy->dev, "Failed to enable wkupclk %d\n", ret);
++		goto err0;
++	}
++
++	if (!IS_ERR(phy->optclk)) {
++		ret = clk_enable(phy->optclk);
++		if (ret < 0) {
++			dev_err(phy->dev, "Failed to enable optclk %d\n", ret);
++			goto err1;
++		}
++	}
++
++	return 0;
++
++err1:
++	clk_disable(phy->wkupclk);
+ 
++err0:
+ 	return ret;
+ }
+ 
+-- 
+1.7.9.5
 
-> +			status = "okay";
-> +		};
-> +	};
-> +};
-> +&pmx_core {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <
-> +		&i2c0_pins
-> +	>;
-> +
-> +	i2c0_pins: pinmux_i2c0_pins{
-> +		pinctrl-single,bits = <
-> +			0x10 0x00002200 0x0000ff00	/* I2C0_SDA,I2C0_SCL */
-> +		>;
-
-This should go into the dtsi file. See the discussion on NAND DT support
-submitted by Anil Kumar.
-
-Thanks,
-Sekhar
-
-PS: You are using an old address for Kevin Hilman. The MAINTAINERS file
-has been updated for a long time now. Liam's address is also wrong but I
-don't have his updated e-mail.
