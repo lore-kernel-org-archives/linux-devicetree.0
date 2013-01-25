@@ -1,112 +1,32 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 0/6] ARM: dts: omap: add dt data for dwc3
-Date: Fri, 25 Jan 2013 14:18:38 +0200
-Message-ID: <20130125121838.GC27148@arwen.pp.htv.fi>
-References: <1359112312-6918-1-git-send-email-kishon@ti.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCH 1/2] ARM: dts: omap3-overo: Add support for pwm-leds
+Date: Fri, 25 Jan 2013 13:21:12 +0100
+Message-ID: <510278B8.40809@epfl.ch>
+References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch> <1358963812-19947-2-git-send-email-florian.vaussard@epfl.ch> <5101510C.9050407@ti.com> <51015663.8080109@epfl.ch> <5101570A.1030303@ti.com> <5101663C.7020301@epfl.ch> <51016A84.20703@ti.com> <5101A43D.7080108@epfl.ch> <51024254.40208@ti.com> <5102756A.9040901@ti.com>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4785671081492359806=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359112312-6918-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, s-guiriec-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5102756A.9040901@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Benoit Cousson <b-cousson@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============4785671081492359806==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ABTtc+pdwF7KHXCz"
-Content-Disposition: inline
+>>
+>> We have two drivers at the moment: pwm-twl and pwm-twl-led. However new out of
+>> SoC PWM drivers might come (for example for palmas). So it worth take a look
+>> at some generic implementation.
+>
+> OK. So I have the series. I need to add few more things but pwm-leds on
+> BeagleBoard works fine when I put the default_trigger for the pmustat LED to
+> be mmc0. It is blinking happily ;)
+> I'll CC you with the patches when I send them.
+>
 
---ABTtc+pdwF7KHXCz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I sent a patchset 2 hours ago with you in CC, you haven't received them?
 
-Hi,
+Cheers,
 
-On Fri, Jan 25, 2013 at 04:41:46PM +0530, Kishon Vijay Abraham I wrote:
-> This patch series adds dt data to get dwc3 working in omap5.
->=20
-> Changes from v1:
-> * rename "ctrl_module" to "ctrl-module" and "usb_phy" to "usb-phy"
->=20
-> This patch series is developed on
-> git://github.com/rrnayak/linux.git omap5-3.8-rc4-base-palmas
->=20
-> This is the last series of the series of patches.
-> I've kept everything in a single branch
-> git://gitorious.org/linux-usb/linux-usb.git omap5-with-palmas
-> (changes up to 23b4dfa2ab7052569cd88acc6383c4b1a8e8a482)
->=20
-> Did enumeration testing on omap5 evm.
-
-I have gone quickly through this series and it looks already to me:
-
-Reviewied-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-
-> Kishon Vijay Abraham I (6):
->   ARM: dts: omap5: Add omap control usb data
->   ARM: dts: omap5: Add ocp2scp data
->   ARM: dts: omap5: Add omap-usb3 and omap-usb2 dt data
->   ARM: dts: omap5: add dwc3 omap dt data
->   ARM: dts: omap5: add dwc3 core dt data
->   ARM: dts: palmas: update dt data for palmas-usb
->=20
->  arch/arm/boot/dts/omap5.dtsi  |   48 +++++++++++++++++++++++++++++++++++=
-++++++
->  arch/arm/boot/dts/palmas.dtsi |    4 ++--
->  2 files changed, 50 insertions(+), 2 deletions(-)
->=20
-> --=20
-> 1.7.9.5
->=20
-
---=20
-balbi
-
---ABTtc+pdwF7KHXCz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRAngeAAoJEIaOsuA1yqREol0P/3akqoDidmGfhZ4q3ktajHMc
-v7I77xgpLGd1XlN0iiqp4N4SgH7Ue2w4DDVeN0YYT5LS01B82nLhCM0UQ/oD1NvE
-tsF+HPEPmb2piXudHx+ZMRI41XZoiTmuKjwx3Vk1N4pcI72tGzzfITgU+Mbx8cyt
-+cy9BNtLBTYRhMshEAIHyKgYxLS9PmGoIP7mc8QBAtf5U2gistIaw5lz/cK8ILEG
-vnFIWFcefsDCW4snUDqrbbKvkYhkBueaKqcbKS0lNx6iuNt38OMAvggDikvY57mM
-J0k5nzQEJtnO+FVt9UHXl2esHPQ3FfZpXfixI+XqpvjLFmrJk5xUI4jbTdMJCH5q
-hR5AX6dMSNs6eK2rPsnF+moF6D/Rql0hb3uZUVDREt9EMNrKFvUNPRgnhSFf95MK
-p5YUaDIj7DuaEitmjavWle/JcqZcgfoh2GN7CA9atzI5N7cxrd3xGG63WXiM/GXI
-6ko/iYhN25uHPxq4gq77RshnjpJDmX9gPwqRJyPToqnUE1Z9kTYuZB+nFDszScAc
-vgkEroKqE2SacO24gefSHs56QnCmj3hwFk0syR6kguOhmXEq/1y3Gf8Pic/uissV
-XQ1OsfS+Vsj4hpit+z+o/L9ZM5m5g7KEziioNUjOtAmJ9KbG8X85vGsKzsZCRBJc
-qsnueGNO/NkOdZ5FXrQ8
-=dCWo
------END PGP SIGNATURE-----
-
---ABTtc+pdwF7KHXCz--
-
---===============4785671081492359806==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4785671081492359806==--
+Florian
