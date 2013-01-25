@@ -1,51 +1,115 @@
-From: "Katepallewar, Mrugesh" <mrugesh.mk@ti.com>
-Subject: RE: [PATCH] ARM: davinci: da850: add RTC driver DT entries
-Date: Fri, 25 Jan 2013 11:04:32 +0000
-Message-ID: <4232EB8829679242B82E712C3DB3149D4233E9@DBDE01.ent.ti.com>
-References: <1359094430-14724-1-git-send-email-mrugesh.mk@ti.com>
- <51025FAE.3060503@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v4 09/11] usb: dwc3: core: add dt support for dwc3 core
+Date: Fri, 25 Jan 2013 16:36:53 +0530
+Message-ID: <1359112013-6758-1-git-send-email-kishon@ti.com>
+References: <1359082855-7404-10-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51025FAE.3060503@ti.com>
-Content-Language: en-US
+In-Reply-To: <1359082855-7404-10-git-send-email-kishon@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: "Nori, Sekhar" <nsekhar@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "hs@denx.de" <hs@denx.de>
+To: rob.herring@calxeda.com, rob@landley.net, balbi@ti.com, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMjUsIDIwMTMgYXQgMTY6MDQ6MjIsIE5vcmksIFNla2hhciB3cm90ZToNCj4g
-T24gMS8yNS8yMDEzIDExOjQzIEFNLCBNcnVnZXNoIEthdGVwYWxsZXdhciB3cm90ZToNCj4gPiBB
-ZGQgUlRDIERUIGVudHJpZXMgaW4gZGE4NTAgZHRzIGZpbGUuDQo+ID4gDQo+ID4gU2lnbmVkLW9m
-Zi1ieTogTXJ1Z2VzaCBLYXRlcGFsbGV3YXIgPG1ydWdlc2gubWtAdGkuY29tPg0KPiA+IC0tLQ0K
-PiA+IEFwcGxpZXMgb24gdG9wIG9mIHYzLjgtcmM0IG9mIGxpbnVzIHRyZWUuDQo+ID4gDQo+ID4g
-VGVzdGVkIG9uIGRhODUwLWV2bSBkZXZpY2UuDQo+ID4gDQo+ID4gVGVzdCBQcm9jZWR1cmU6DQo+
-ID4gZGF0ZSBbWVlZWS5dTU0uREQtaGg6bW1bOnNzXQ0KPiA+IGh3Y2xvY2sgLXcNCj4gPiByZXNl
-dCBib2FyZCBhbmQgY2hlY2sgc3lzdGVtIHRpbWUuDQo+ID4gDQo+ID4gOjEwMDY0NCAxMDA2NDQg
-MzdkYzVhMy4uLiBiMTZlZmQ0Li4uIE0JYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cw0K
-PiA+IDoxMDA2NDQgMTAwNjQ0IDY0MGFiNzUuLi4gYThlYjFiMS4uLiBNCWFyY2gvYXJtL2Jvb3Qv
-ZHRzL2RhODUwLmR0c2kNCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cyB8ICAg
-IDMgKysrDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kgICAgfCAgICA4ICsrKysr
-KysrDQo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKQ0KPiA+IA0KPiA+IGRp
-ZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1ldm0uZHRzIA0KPiA+IGIvYXJjaC9h
-cm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cyBpbmRleCAzN2RjNWEzLi5iMTZlZmQ0IDEwMDY0NA0K
-PiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWV2bS5kdHMNCj4gPiArKysgYi9hcmNo
-L2FybS9ib290L2R0cy9kYTg1MC1ldm0uZHRzDQo+ID4gQEAgLTI0LDUgKzI0LDggQEANCj4gPiAg
-CQlzZXJpYWwyOiBzZXJpYWxAMWQwZDAwMCB7DQo+ID4gIAkJCXN0YXR1cyA9ICJva2F5IjsNCj4g
-PiAgCQl9Ow0KPiA+ICsJCXJ0Y0AxYzIzMDAwIHsNCj4gPiArCQkJc3RhdHVzID0gIm9rYXkiOw0K
-PiA+ICsJCX07DQo+ID4gIAl9Ow0KPiA+ICB9Ow0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9i
-b290L2R0cy9kYTg1MC5kdHNpIA0KPiA+IGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaSBp
-bmRleCA2NDBhYjc1Li5hOGViMWIxIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2RhODUwLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpDQo+ID4g
-QEAgLTU2LDUgKzU2LDEzIEBADQo+ID4gIAkJCWludGVycnVwdC1wYXJlbnQgPSA8JmludGM+Ow0K
-PiA+ICAJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOw0KPiA+ICAJCX07DQo+ID4gKwkJcnRjQDFjMjMw
-MDAgew0KPiA+ICsJCQljb21wYXRpYmxlID0gInRpLGRhODMwLXJ0YyI7DQo+ID4gKwkJCXJlZyA9
-IDwweDIzMDAwIDB4MTAwMD47DQo+ID4gKwkJCWludGVycnVwdHMgPSA8MTkNCj4gPiArCQkJCSAg
-ICAgIDE5PjsNCj4gDQo+IFdoeSB0d28gaW50ZXJydXB0cyBvZiB0aGUgc2FtZSBudW1iZXI/IElm
-IHRoZXJlIGlzIG9ubHkgb25lIGludGVycnVwdCBsaW5lIHRoZW4gb25seSBvbmUgc2hvdWxkIGJl
-IHNwZWNpZmllZCwgbm8/DQpXZSBhcmUgdXNpbmcgY29tbW9uIE9NQVAgUlRDIGRyaXZlciBmb3Ig
-ZGE4NTAgYW5kIG90aGVyIHRpIFNvQydzIChlLmcuYW0zM3h4KS4gSSBoYXZlIHNlZW4gaW4gYW0z
-M3h4LmR0c2kgcnRjIHRpbWVyDQphbmQgYWxhcm0gaW50ZXJydXB0cyBhcmUgZGlmZmVyZW50LiBT
-bywgdHdvIGludGVycnVwdCBudW1iZXJzIGFyZSBleHBlY3RlZCBmcm9tIFJUQyBEVCBub2RlLg0K
-PiANCj4gVGhhbmtzLA0KPiBTZWtoYXINCj4gDQoNCg0KUmVnYXJkcywgDQpNcnVnZXNoDQo=
+Added dt support for dwc3 core and update the documentation with
+device tree binding information. Getting a PHY is now done using
+devm_usb_get_phy_by_phandle() for dt boot.
+
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ Documentation/devicetree/bindings/usb/dwc3.txt |   22 ++++++++++++++++++++++
+ drivers/usb/dwc3/core.c                        |   24 ++++++++++++++++++++----
+ 2 files changed, 42 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/dwc3.txt
+
+diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+new file mode 100644
+index 0000000..5e68eb6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+@@ -0,0 +1,22 @@
++synopsys DWC3 CORE
++
++DWC3- USB3 CONTROLLER
++
++Required properties:
++ - compatible: must be "synopsys,dwc3"
++ - reg : Address and length of the register set for the device
++ - interrupts: Interrupts used by the dwc3 controller.
++ - usb-phy : array of phandle for the PHY device
++
++Optional properties:
++ - tx-fifo-resize: determines if the FIFO *has* to be reallocated.
++
++This is usually a subnode to DWC3 glue to which it is connected.
++
++dwc3@4a030000 {
++	compatible = "synopsys,dwc3";
++	reg = <0x4a030000 0xcfff>;
++	interrupts = <0 92 4>
++	usb-phy = <&usb2_phy>, <&usb3,phy>;
++	tx-fifo-resize;
++};
+diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+index 3a4004a..c1fb6d2 100644
+--- a/drivers/usb/dwc3/core.c
++++ b/drivers/usb/dwc3/core.c
+@@ -420,13 +420,19 @@ static int dwc3_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
+-	dwc->usb2_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
++	if (node) {
++		dwc->usb2_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 0);
++		dwc->usb3_phy = devm_usb_get_phy_by_phandle(dev, "usb-phy", 1);
++	} else {
++		dwc->usb2_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB2);
++		dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
++	}
++
+ 	if (IS_ERR_OR_NULL(dwc->usb2_phy)) {
+ 		dev_err(dev, "no usb2 phy configured\n");
+ 		return -EPROBE_DEFER;
+ 	}
+ 
+-	dwc->usb3_phy = devm_usb_get_phy(dev, USB_PHY_TYPE_USB3);
+ 	if (IS_ERR_OR_NULL(dwc->usb3_phy)) {
+ 		dev_err(dev, "no usb3 phy configured\n");
+ 		return -EPROBE_DEFER;
+@@ -450,8 +456,7 @@ static int dwc3_probe(struct platform_device *pdev)
+ 	else
+ 		dwc->maximum_speed = DWC3_DCFG_SUPERSPEED;
+ 
+-	if (of_get_property(node, "tx-fifo-resize", NULL))
+-		dwc->needs_fifo_resize = true;
++	dwc->needs_fifo_resize = of_property_read_bool(node, "tx-fifo-resize");
+ 
+ 	pm_runtime_enable(dev);
+ 	pm_runtime_get_sync(dev);
+@@ -580,11 +585,22 @@ static int dwc3_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id of_dwc3_match[] = {
++	{
++		.compatible = "synopsys,dwc3"
++	},
++	{ },
++};
++MODULE_DEVICE_TABLE(of, of_dwc3_match);
++#endif
++
+ static struct platform_driver dwc3_driver = {
+ 	.probe		= dwc3_probe,
+ 	.remove		= dwc3_remove,
+ 	.driver		= {
+ 		.name	= "dwc3",
++		.of_match_table	= of_match_ptr(of_dwc3_match),
+ 	},
+ };
+ 
+-- 
+1.7.9.5
+
