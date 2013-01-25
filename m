@@ -1,226 +1,80 @@
-From: David Gibson <david@gibson.dropbear.id.au>
-Subject: Re: [PATCH 6/6] OF: Introduce DT overlay support.
-Date: Fri, 25 Jan 2013 13:34:30 +1100
-Message-ID: <20130125023430.GB25924@truffula.fritz.box>
-References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com>
- <1357327870-13615-7-git-send-email-panto@antoniou-consulting.com>
- <20130122035056.GF23500@truffula.fritz.box>
- <9768253B-92ED-4298-8BE4-6FAB091DF062@antoniou-consulting.com>
- <20130123051207.GA2228@truffula.fritz.box>
- <EAB57031-78DC-4150-B1A9-F6A19A60293F@antoniou-consulting.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 1/8] sh-pfc: Add OF support
+Date: Fri, 25 Jan 2013 11:32:16 +0900
+Message-ID: <20130125023216.GB620@verge.net.au>
+References: <1357693395-1653-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+ <20130115011019.GA13304@verge.net.au>
+ <20130121003828.GD19062@verge.net.au>
+ <1361419.Aenl5VCGHZ@avalon>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dTy3Mrz/UPE2dbVg"
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <EAB57031-78DC-4150-B1A9-F6A19A60293F@antoniou-consulting.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jon Loeliger <jdl@jdl.com>, Tony Lindgren <tony@atomide.com>, Stephen Warren <swarren@wwwdotorg.org>, Benoit Cousson <b-cousson@ti.com>, Mitch Bradley <wmb@firmworks.com>, Alan Tull <atull@altera.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Matt Porter <mporter@ti.com>, Russ Dill <Russ.Dill@ti.com>, Koen Kooi <koen@dominion.thruhere.net>, Joel A Fernandes <agnel.joel@gmail.com>, Rob Clark <robdclark@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, Matt Ranostay <mranostay@gmail.com>
+In-Reply-To: <1361419.Aenl5VCGHZ@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, Paul Mundt <lethal@linux-sh.org>, Magnus Damm <magnus.damm@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Phil Edworthy <phil.edworthy@renesas.com>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 24, 2013 at 12:17:32PM +0100, Laurent Pinchart wrote:
+> Hi Simon,
+> 
+> On Monday 21 January 2013 09:38:28 Simon Horman wrote:
+> > On Tue, Jan 15, 2013 at 10:10:19AM +0900, Simon Horman wrote:
+> > > On Sat, Jan 12, 2013 at 06:18:54PM +0100, Guennadi Liakhovetski wrote:
+> > > > On Wed, 9 Jan 2013, Laurent Pinchart wrote:
+> > > > > Support device instantiation through the device tree. The compatible
+> > > > > property is used to select the SoC pinmux information.
+> > > > > 
+> > > > > Set the gpio_chip device field to the PFC device to enable automatic
+> > > > > GPIO OF support.
+> > > > > 
+> > > > > Signed-off-by: Laurent Pinchart
+> > > > > <laurent.pinchart+renesas@ideasonboard.com>
+> > > > > Cc: devicetree-discuss@lists.ozlabs.org
+> > > > 
+> > > > This whole pinctrl mega-series is a very welcome improvement to the
+> > > > sh-/r-mobile GPIO framework, and is very well done IMHO! But,
+> > > > unfortunately, as discussed with you privately yesterday, there is still
+> > > > a problem with pinctrl DT support on sh73a0, which will, probably,
+> > > > enforce an update to one or several of patches from this lot. To explain
+> > > > to other readers, on sh73a0 pin numbers are not contiguous, they are
+> > > > sparse. When pins are referred to from C code, macro names are used,
+> > > > which are then correctly decoded to respective positions in pin
+> > > > descriptor tables. Whereas with DT, pins are referred to from .dts files
+> > > > using their physical numbers, which then refer to either wrong or
+> > > > missing entries in those tables.
+> > > > 
+> > > > I do not know where this problem should be solved best - either in
+> > > > descriptor tables, or in DT handling code, so, I don't know which
+> > > > patches would be affected. Don't think you'll want to keep the one-to-
+> > > > one index-to-pin mapping by also making pin-descriptor arrays sparse,
+> > > > so, so far I only see one possibility to fix this - by using the
+> > > > .enum_id field from struct sh_pfc_pin instead of just the index - both
+> > > > in  C and in DT case, and those .enum_id values will have to provide
+> > > > physical pin numbers instead of plane indices. That way you'd have to
+> > > > update at least drivers/pinctrl/sh-pfc/pfc-sh73a0.c and the
+> > > > sh_pfc_map_gpios() function in drivers/pinctrl/sh-pfc/pinctrl.c.
+> > > > 
+> > > > Anyway, I'm sure you'll find a suitable solution of this problem and for
+> > > > now I'll let Simon decide which patches he wants to apply and which ones
+> > > > he'd prefer to hold back;-)
+> > > 
+> > > Actually, I'd appreciate some guidance from Laurent on this.
+> > > It seems that the problems you raise go quite far back into the
+> > > mega-series.
+> > > 
+> > > I was intending to send pull requests for the following branches soon.
+> > > But I am now concerned that at least the sh73a0 patches may need
+> > > reworking.
+> > 
+> > I have concluded that the changes below are safe and have
+> > proceeded with sending them to arm-soc. However, I am still awaiting
+> > a response from arm-soc.
+> 
+> Sorry for the late reply. The below changes are indeed safe, what I need to 
+> rework are the pinctrl API and DT series.
 
---dTy3Mrz/UPE2dbVg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jan 23, 2013 at 01:01:58PM +0200, Pantelis Antoniou wrote:
-> On Jan 23, 2013, at 7:12 AM, David Gibson wrote:
-> > On Tue, Jan 22, 2013 at 01:08:04PM +0200, Pantelis Antoniou wrote:
-> >> Hi
-> >>=20
-> >> On Jan 22, 2013, at 5:50 AM, David Gibson wrote:
-> >>=20
-> >>> On Fri, Jan 04, 2013 at 09:31:10PM +0200, Pantelis Antoniou wrote:
-> >>>> Introduce DT overlay support.
-> >>>> Using this functionality it is possible to dynamically overlay a par=
-t of
-> >>>> the kernel's tree with another tree that's been dynamically loaded.
-> >>>> It is also possible to remove node and properties.
-> >>>>=20
-> >>>> Signed-off-by: Pantelis Antoniou <panto@antoniou-consulting.com>
-> >>>> ---
-> >>>> Documentation/devicetree/overlay-notes.txt | 179 +++++++
-> >>>> drivers/of/Kconfig                         |  10 +
-> >>>> drivers/of/Makefile                        |   1 +
-> >>>> drivers/of/overlay.c                       | 831 +++++++++++++++++++=
-++++++++++
-> >>>> include/linux/of.h                         | 107 ++++
-> >>>> 5 files changed, 1128 insertions(+)
-> >>>> create mode 100644 Documentation/devicetree/overlay-notes.txt
-> >>>> create mode 100644 drivers/of/overlay.c
-> >>>>=20
-> >>>> diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentat=
-ion/devicetree/overlay-notes.txt
-> >>>> new file mode 100644
-> >>>> index 0000000..5289cbb
-> >>>> --- /dev/null
-> >>>> +++ b/Documentation/devicetree/overlay-notes.txt
-> >>>> @@ -0,0 +1,179 @@
-> >>>> +Device Tree Overlay Notes
-> >>>> +-------------------------
-> >>>> +
-> >>>> +This document describes the implementation of the in-kernel
-> >>>> +device tree overlay functionality residing in drivers/of/overlay.c =
-and is a
-> >>>> +companion document to Documentation/devicetree/dt-object-internal.t=
-xt[1] &
-> >>>> +Documentation/devicetree/dynamic-resolution-notes.txt[2]
-> >>>> +
-> >>>> +How overlays work
-> >>>> +-----------------
-> >>>> +
-> >>>> +A Device Tree's overlay purpose is to modify the kernel's live tree=
-, and
-> >>>> +have the modification affecting the state of the the kernel in a wa=
-y that
-> >>>> +is reflecting the changes.
-> >>>=20
-> >>> Um.. I'm having a great deal of trouble parsing that sentence.
-> >>>=20
-> >>>> +Since the kernel mainly deals with devices, any new device node tha=
-t result
-> >>>> +in an active device should have it created while if the device node=
- is either
-> >>>> +disabled or removed all together, the affected device should be der=
-egistered.
-> >>>> +
-> >>>> +Lets take an example where we have a foo board with the following b=
-ase tree
-> >>>> +which is taken from [1].
-> >>>> +
-> >>>> +---- foo.dts ------------------------------------------------------=
------------
-> >>>> +	/* FOO platform */
-> >>>> +	/ {
-> >>>> +		compatible =3D "corp,foo";
-> >>>> +
-> >>>> +		/* shared resources */
-> >>>> +		res: res {
-> >>>> +		};
-> >>>> +
-> >>>> +		/* On chip peripherals */
-> >>>> +		ocp: ocp {
-> >>>> +			/* peripherals that are always instantiated */
-> >>>> +			peripheral1 { ... };
-> >>>> +		}
-> >>>> +	};
-> >>>> +---- foo.dts ------------------------------------------------------=
------------
-> >>>> +
-> >>>> +The overlay bar.dts, when loaded (and resolved as described in [2])=
- should
-> >>>> +
-> >>>> +---- bar.dts ------------------------------------------------------=
------------
-> >>>> +/plugin/;	/* allow undefined label references and record them */
-> >>>> +/ {
-> >>>> +	....	/* various properties for loader use; i.e. part id etc. */
-> >>>> +	fragment@0 {
-> >>>> +		target =3D <&ocp>;
-> >>>> +		__overlay__ {
-> >>>> +			/* bar peripheral */
-> >>>> +			bar {
-> >>>> +				compatible =3D "corp,bar";
-> >>>> +				... /* various properties and child nodes */
-> >>>> +			}
-> >>>> +		};
-> >>>> +	};
-> >>>> +};
-> >>>> +---- bar.dts ------------------------------------------------------=
------------
-> >>>> +
-> >>>> +result in foo+bar.dts
-> >>>> +
-> >>>> +---- foo+bar.dts --------------------------------------------------=
------------
-> >>>> +	/* FOO platform + bar peripheral */
-> >>>> +	/ {
-> >>>> +		compatible =3D "corp,foo";
-> >>>> +
-> >>>> +		/* shared resources */
-> >>>> +		res: res {
-> >>>> +		};
-> >>>> +
-> >>>> +		/* On chip peripherals */
-> >>>> +		ocp: ocp {
-> >>>> +			/* peripherals that are always instantiated */
-> >>>> +			peripheral1 { ... };
-> >>>> +
-> >>>> +			/* bar peripheral */
-> >>>> +			bar {
-> >>>> +				compatible =3D "corp,bar";
-> >>>> +				... /* various properties and child nodes */
-> >>>> +			}
-> >>>> +		}
-> >>>> +	};
-> >>>> +---- foo+bar.dts --------------------------------------------------=
------------
-> >>>> +
-> >>>> +As a result of the the overlay, a new device node (bar) has been cr=
-eated
-> >>>> +so a bar platform device will be registered and if a matching devic=
-e driver
-> >>>> +is loaded the device will be created as expected.
-> >>>=20
-> >>> Hrm.  This all seems rather complicated.  Maybe it needs to be, but
-> >>> I'm not entirely convinced yet.
-> >>>=20
-> >>> One other point - both of these patches are assuming that the overlay
-> >>> is in the "live tree" format, but it still needs a bunch of extra
-> >>> mangling.  Would it simplify things to just go straight from the
-> >>> overlay in flat tree form to modifications to the system-wide live
-> >>> tree.
-> >>=20
-> >> Sorry, I can't parse this. You mean apply the overlay without converti=
-ng
-> >> to live tree format?
-> >=20
-> > Yes.
-> >=20
->=20
-> The gymnastics required when operating on the flat tree will make grown, =
-tough as nails
-> s/w developers cry.
-
-It's really not that bad.  In particular it's only tricky if you want
-to make alterations to the flat tree, which you shouldn't need to
-here.
-
-> In essence you will have to replicate the unflattening functionality agai=
-n, create a
-> similar tree structure as the live tree, do your work, and then
-> discard it.
->=20
-> A bit excessive don't you think?
-
-It would be, if you actually needed to do that.  But what you can
-actually do is:
-	1. parse the information you need out of the base tree
-	2. use the flat tree functions to retrieve the
-__local_fixups__ and __fixups__ information from the overlay, parsing
-just those into a temporary data structure
-	3. Perform a single pass over the flat tree overlay, inserting
-each node and and property into the live tree, applying fixups as you
-go.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---dTy3Mrz/UPE2dbVg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlEB7zYACgkQaILKxv3ab8ZDLQCdEOHSntFXELbK89ZYNYifaTY7
-ErAAoI+h3EzYDZdoFFeiuU03Riya2Gms
-=ClkM
------END PGP SIGNATURE-----
-
---dTy3Mrz/UPE2dbVg--
+Thanks. After some discussions with arm-soc I have finally sent a
+pull-request for these changes which now live in the pfc branch of
+my renesas tree.
