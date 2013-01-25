@@ -1,72 +1,113 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v1 1/8] usb: otg: palmas-usb: make palmas-usb as a
- comparator driver
-Date: Fri, 25 Jan 2013 10:59:34 +0200
-Message-ID: <20130125085934.GJ15886@arwen.pp.htv.fi>
-References: <1359083551-8524-1-git-send-email-kishon@ti.com>
- <1359083551-8524-2-git-send-email-kishon@ti.com>
- <20130125074339.GD15886@arwen.pp.htv.fi>
- <510245D7.4090008@ti.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="3MHXEHrrXKLGx71o"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <510245D7.4090008-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon <kishon-l0cyMroinI0@public.gmane.org>
-Cc: balbi-l0cyMroinI0@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, s-guiriec-l0cyMroinI0@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: [PATCH v17 5/7] fbmon: add of_videomode helpers
+Date: Fri, 25 Jan 2013 10:01:53 +0100
+Message-ID: <1359104515-8907-6-git-send-email-s.trumtrar@pengutronix.de>
+References: <1359104515-8907-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1359104515-8907-1-git-send-email-s.trumtrar@pengutronix.de>
+Sender: linux-media-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, Dave Airlie <airlied@linux.ie>
+Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Rob Clark <robdclark@gmail.com>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "Mohammed, Afzal" <afzal@ti.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
---3MHXEHrrXKLGx71o
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Add helper to get fb_videomode from devicetree.
 
-On Fri, Jan 25, 2013 at 02:14:07PM +0530, kishon wrote:
-> On Friday 25 January 2013 01:13 PM, Felipe Balbi wrote:
-> >Hi,
-> >
-> >On Fri, Jan 25, 2013 at 08:42:24AM +0530, Kishon Vijay Abraham I wrote:
-> >>palmas-usb is made as a comparator driver to omap usb2 phy, so that
-> >>omap usb can make use of palmas for srp and also to set vbus.
-> >>
-> >>Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> >
-> >doesn't apply. palmas-usb isn't in mainline
-> >
-> Yes. We'll ask Rajendra Nayak to pick this up in his tree?
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Tested-by: Afzal Mohammed <Afzal@ti.com>
+Tested-by: Rob Clark <robclark@gmail.com>
+Tested-by: Leela Krishna Amudala <leelakrishna.a@gmail.com>
+---
+ drivers/video/fbmon.c |   42 ++++++++++++++++++++++++++++++++++++++++++
+ include/linux/fb.h    |    4 ++++
+ 2 files changed, 46 insertions(+)
 
-Eventually the final version needs to go upstream, though.
-
---=20
-balbi
-
---3MHXEHrrXKLGx71o
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRAkl2AAoJEIaOsuA1yqRECbQQAJvHmPUbs4xx896cRy66Vz6J
-46Q6v5R4CtIXGt7nCTWd8Cnpla9YsfGiXg9igm8xHIvmFS8KuPvzBNEwR5Xq9enI
-ostktytTV81kKt/rtU7qEpct9VwFI8YQnQl8AN7pUqyJNMmVTe5t7bLCRdp1rfP0
-zEo2bOzodkgvEXjNYzjN3XheSqeq+fyHWvKe1RN9A72z49hpDatW/6G2Ijs8i/qg
-RDTfLaJkL5h6f1i6lTC2Yb3LUsDo6qcCMXaCGL3V7Nrg9ElaVHJMgrvP2n6SsY6T
-CklW4dBg9WMvt/m9ABcZPI22hO+6CkmnK/DeGbF3poubNLNjFyH384Ta3J25hvE0
-lfVcB46swosjo7SyVDuaWvS2Z9Bre0P50WLv3ej2Fsno1GMKveqsPt5ot1SsZ4FQ
-KJvWa3Ga6zYJZrFy4oDliy9q8tRlG4lwg5slQpZ8PcVQYfn3uX8gOaHHb1OWeSDT
-53y1KMi/mYOeJS7mFEeury4E2E7QoPN1Sg9Yn6YmA+XYo++pN/KAXGa+OOHUyXnv
-4MRvO7EzvUl126dAC91Wey/aFo9UU2gUcCaC1akrSLmO+3UQb6XjNvEKRBOBcw2q
-2/pzK94VD6nDEBYbLALd3cJNOQisr9EH7bUje3XS1QzL1Amnp+dgRTU4GTEUVwKU
-VtCcghvDiArFoeOBkd36
-=NTLP
------END PGP SIGNATURE-----
-
---3MHXEHrrXKLGx71o--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+index 17ce135..94ad0f7 100644
+--- a/drivers/video/fbmon.c
++++ b/drivers/video/fbmon.c
+@@ -31,6 +31,7 @@
+ #include <linux/pci.h>
+ #include <linux/slab.h>
+ #include <video/edid.h>
++#include <video/of_videomode.h>
+ #include <video/videomode.h>
+ #ifdef CONFIG_PPC_OF
+ #include <asm/prom.h>
+@@ -1425,6 +1426,47 @@ int fb_videomode_from_videomode(const struct videomode *vm,
+ EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
+ #endif
+ 
++#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
++static inline void dump_fb_videomode(const struct fb_videomode *m)
++{
++	pr_debug("fb_videomode = %ux%u@%uHz (%ukHz) %u %u %u %u %u %u %u %u %u\n",
++		 m->xres, m->yres, m->refresh, m->pixclock, m->left_margin,
++		 m->right_margin, m->upper_margin, m->lower_margin,
++		 m->hsync_len, m->vsync_len, m->sync, m->vmode, m->flag);
++}
++
++/**
++ * of_get_fb_videomode - get a fb_videomode from devicetree
++ * @np: device_node with the timing specification
++ * @fb: will be set to the return value
++ * @index: index into the list of display timings in devicetree
++ *
++ * DESCRIPTION:
++ * This function is expensive and should only be used, if only one mode is to be
++ * read from DT. To get multiple modes start with of_get_display_timings ond
++ * work with that instead.
++ */
++int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb,
++			int index)
++{
++	struct videomode vm;
++	int ret;
++
++	ret = of_get_videomode(np, &vm, index);
++	if (ret)
++		return ret;
++
++	fb_videomode_from_videomode(&vm, fb);
++
++	pr_debug("%s: got %dx%d display mode from %s\n",
++		of_node_full_name(np), vm.hactive, vm.vactive, np->name);
++	dump_fb_videomode(fb);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_get_fb_videomode);
++#endif
++
+ #else
+ int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
+ {
+diff --git a/include/linux/fb.h b/include/linux/fb.h
+index 100a176..58b9860 100644
+--- a/include/linux/fb.h
++++ b/include/linux/fb.h
+@@ -20,6 +20,7 @@ struct fb_info;
+ struct device;
+ struct file;
+ struct videomode;
++struct device_node;
+ 
+ /* Definitions below are used in the parsed monitor specs */
+ #define FB_DPMS_ACTIVE_OFF	1
+@@ -715,6 +716,9 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
+ extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
+ extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
+ 
++extern int of_get_fb_videomode(struct device_node *np,
++			       struct fb_videomode *fb,
++			       int index);
+ extern int fb_videomode_from_videomode(const struct videomode *vm,
+ 				       struct fb_videomode *fbmode);
+ 
+-- 
+1.7.10.4
