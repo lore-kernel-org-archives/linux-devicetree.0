@@ -1,94 +1,68 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v4 1/4] drivers: usb: phy: add a new driver for usb
- part of control module
-Date: Fri, 25 Jan 2013 17:08:45 +0000
-Message-ID: <20130125170845.GE16795@e106331-lin.cambridge.arm.com>
-References: <1359109440-2195-1-git-send-email-kishon@ti.com>
- <1359109440-2195-2-git-send-email-kishon@ti.com>
- <20130125110141.GK3075@e106331-lin.cambridge.arm.com>
- <20130125111120.GP15886@arwen.pp.htv.fi>
- <20130125122943.GB16795@e106331-lin.cambridge.arm.com>
- <20130125145928.GC28379@arwen.pp.htv.fi>
- <20130125161401.GD16795@e106331-lin.cambridge.arm.com>
- <20130125162346.GM28379@arwen.pp.htv.fi>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 1/5] arm: mvebu: Add support for local interrupt
+Date: Fri, 25 Jan 2013 18:32:41 +0100
+Message-ID: <1359135165-32108-2-git-send-email-gregory.clement@free-electrons.com>
+References: <1359135165-32108-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130125162346.GM28379@arwen.pp.htv.fi>
-Content-Disposition: inline
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "tony@atomide.com" <tony@atomide.com>, "b-cousson@ti.com" <b-cousson@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359135165-32108-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2013 at 04:23:46PM +0000, Felipe Balbi wrote:
-> Hi,
-> 
-> On Fri, Jan 25, 2013 at 04:14:02PM +0000, Mark Rutland wrote:
-> > On Fri, Jan 25, 2013 at 02:59:28PM +0000, Felipe Balbi wrote:
-> > > Hi,
-> > > 
-> > > On Fri, Jan 25, 2013 at 12:29:43PM +0000, Mark Rutland wrote:
-> > > > > > > +   depending upon omap4 or omap5.
-> > > > > > > + - reg-names: The names of the register addresses corresponding to the registers
-> > > > > > > +   filled in "reg".
-> > > > > > > + - ti,type: This is used to differentiate whether the control module has
-> > > > > > > +   usb mailbox or usb3 phy power. omap4 has usb mailbox in control module to
-> > > > > > > +   notify events to the musb core and omap5 has usb3 phy power register to
-> > > > > > > +   power on usb3 phy. Should be "1" if it has mailbox and "2" if it has usb3
-> > > > > > > +   phy power.
-> > > > > > 
-> > > > > > Why not make this a string property, perhaps values "mailbox" or "register"?
-> > > > > 
-> > > > > NAK.
-> > > > 
-> > > > Can I ask what your objection to using a string property is?
-> > > > 
-> > > > As far as I can see, "ti,type" is only used by this driver, so there's no
-> > > > common convention to stick to. Using a string makes the binding easier for
-> > > > humans to read, and thus harder to mess up in a dts, and it decouples the
-> > > > binding from kernel-side constants.
-> > > 
-> > > IIRC there is some work going on to add #define-like support for DT,
-> > > which would allow us to match against integers while still having
-> > > meaningful symbolic representations.
-> > 
-> > I was under the impression that the motivation for using the preprocessor on
-> > the DT was to allow symbolic names for device/soc-specific values like
-> > addresses, rather than what amounts to ABI values for the binding.
-> > 
-> > I don't see the point in building a binding that depends on future
-> > functionality to be legible, especially as we can make it more readable,
-> > robust, and just as extensible today, with a simple change to the proposed
-> > binding.
-> > 
-> > Even ignoring the above, the driver isn't doing appropriate sanity checking.
-> > If you use a string property, this sanity check is implicit in the parsing --
-> > you've either matched a value you can handle or you haven't.
-> 
-> Even IRQs use numbers (not talking about the IRQ number, but the IRQ
-> flags), why would we depend on string comparisson ? It doesn't make
-> sense.
+MPIC allows the use of private interrupt for each CPUs. The 28th first
+interrupts are per-cpu. This patch adds support to use them.
 
-When describing interrupts, the flags are associated with the interrupt number,
-and don't really make sense on their own. devicetree does not allow you to mix
-strings and integers in a value, so you'd never be able to encode irq flags
-with strings without completely breaking away from the way ePAPR describes how
-to encode interrupts.
+Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/mach-mvebu/irq-armada-370-xp.c |   15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-By using a string property, the binding is self-describing and easy for humans
-to read and verify. It doesn't add a large overhead to either the driver or the
-dts, and is no worse (possibly better) for future extension of bindings to
-support new device variants while retaining backwards compatibility.
-
-See the standard "status" property, which is string encoded. This would still
-work were it an integer-encoded enumeration. Having it as a string makes the
-meaning clear to a reader of the dts, and it's trivial for code to deal with.
-
-I don't understand why you think encoding a more legible value in the dt does
-not make sense.
-
-Thanks,
-Mark.
-
+diff --git a/arch/arm/mach-mvebu/irq-armada-370-xp.c b/arch/arm/mach-mvebu/irq-armada-370-xp.c
+index f99a4a2..274ff58 100644
+--- a/arch/arm/mach-mvebu/irq-armada-370-xp.c
++++ b/arch/arm/mach-mvebu/irq-armada-370-xp.c
+@@ -145,10 +145,17 @@ static int armada_370_xp_mpic_irq_map(struct irq_domain *h,
+ {
+ 	armada_370_xp_irq_mask(irq_get_irq_data(virq));
+ 	writel(hw, main_int_base + ARMADA_370_XP_INT_SET_ENABLE_OFFS);
+-
+-	irq_set_chip_and_handler(virq, &armada_370_xp_irq_chip,
+-				 handle_level_irq);
+ 	irq_set_status_flags(virq, IRQ_LEVEL);
++
++	if (hw < ARMADA_370_XP_MAX_PER_CPU_IRQS) {
++		irq_set_percpu_devid(virq);
++		irq_set_chip_and_handler(virq, &armada_370_xp_irq_chip,
++					handle_percpu_devid_irq);
++
++	} else {
++		irq_set_chip_and_handler(virq, &armada_370_xp_irq_chip,
++					handle_level_irq);
++	}
+ 	set_irq_flags(virq, IRQF_VALID | IRQF_PROBE);
+ 
+ 	return 0;
+@@ -245,7 +252,7 @@ asmlinkage void __exception_irq_entry armada_370_xp_handle_irq(struct pt_regs
+ 		if (irqnr > 1022)
+ 			break;
+ 
+-		if (irqnr >= 8) {
++		if (irqnr > 0) {
+ 			irqnr =	irq_find_mapping(armada_370_xp_mpic_domain,
+ 					irqnr);
+ 			handle_IRQ(irqnr, regs);
+-- 
+1.7.9.5
