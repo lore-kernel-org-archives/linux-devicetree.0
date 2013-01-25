@@ -1,79 +1,109 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH 4/4] ARM: dts: add support for hdmi-phy to exynos4412
-Date: Fri, 25 Jan 2013 05:39:44 -0500
-Message-ID: <1359110384-28402-5-git-send-email-rahul.sharma@samsung.com>
-References: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC 2/3] ethernet: add a PHY reset GPIO DT binding to sh_eth
+Date: Fri, 25 Jan 2013 11:21:12 +0100
+Message-ID: <7921225.sfO3PIeLVS@avalon>
+References: <1359043653-11374-1-git-send-email-g.liakhovetski@gmx.de> <1359043653-11374-3-git-send-email-g.liakhovetski@gmx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1359043653-11374-3-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
- arch/arm/boot/dts/exynos4.dtsi         |  8 ++++++++
- arch/arm/boot/dts/exynos4412.dtsi      | 11 +++++++++++
- arch/arm/mach-exynos/mach-exynos4-dt.c |  2 ++
- 3 files changed, 21 insertions(+)
- mode change 100644 => 100755 arch/arm/boot/dts/exynos4.dtsi
- mode change 100755 => 100644 arch/arm/boot/dts/exynos4412.dtsi
+Hi Guennadi,
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-old mode 100644
-new mode 100755
-index a75e2f5..b0b13c9
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -230,6 +230,14 @@
- 		status = "disabled";
- 	};
- 
-+	i2c_8: i2c@138E0000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "samsung,s3c2440-hdmiphy-i2c";
-+		reg = <0x138E0000 0x100>;
-+		interrupts = <0 93 0>;
-+	};
-+
- 	spi_0: spi@13920000 {
- 		compatible = "samsung,exynos4210-spi";
- 		reg = <0x13920000 0x100>;
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-old mode 100755
-new mode 100644
-index d7dfe31..f4f6ce7
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -25,4 +25,15 @@
- 	gic:interrupt-controller@10490000 {
- 		cpu-offset = <0x4000>;
- 	};
-+
-+	i2c_8: i2c@138E0000 {
-+		samsung,i2c-sda-delay = <100>;
-+		samsung,i2c-max-bus-freq = <100000>;
-+		samsung,i2c-slave-addr = <16>;
-+
-+		hdmiphy@38 {
-+			compatible = "samsung,exynos4-hdmiphy";
-+			reg = <0x38>;
-+		};
-+	};
- };
-diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c b/arch/arm/mach-exynos/mach-exynos4-dt.c
-index f3b85b64..796957e 100644
---- a/arch/arm/mach-exynos/mach-exynos4-dt.c
-+++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
-@@ -69,6 +69,8 @@ static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
- 				"s3c2440-i2c.6", NULL),
- 	OF_DEV_AUXDATA("samsung,s3c2440-i2c", EXYNOS4_PA_IIC(7),
- 				"s3c2440-i2c.7", NULL),
-+	OF_DEV_AUXDATA("samsung,s3c2440-hdmiphy-i2c", EXYNOS4_PA_IIC_HDMIPHY,
-+				"s3c2440-hdmiphy-i2c", NULL),
- 	OF_DEV_AUXDATA("samsung,exynos4210-spi", EXYNOS4_PA_SPI0,
- 				"exynos4210-spi.0", NULL),
- 	OF_DEV_AUXDATA("samsung,exynos4210-spi", EXYNOS4_PA_SPI1,
+On Thursday 24 January 2013 17:07:32 Guennadi Liakhovetski wrote:
+> If an ethernet PHY can be reset by a GPIO, it can be specified in DT. Add
+> a binding and code to parse it, request the GPIO and take the PHY out of
+> reset.
+> 
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: netdev@vger.kernel.org
+> ---
+>  Documentation/devicetree/bindings/net/sh_ether.txt |    2 ++
+>  drivers/net/ethernet/renesas/sh_eth.c              |    9 ++++++++-
+>  2 files changed, 10 insertions(+), 1 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/sh_ether.txt
+> b/Documentation/devicetree/bindings/net/sh_ether.txt index c11e45d..edaf683
+> 100644
+> --- a/Documentation/devicetree/bindings/net/sh_ether.txt
+> +++ b/Documentation/devicetree/bindings/net/sh_ether.txt
+> @@ -12,6 +12,7 @@ Required properties:
+>  - interrupts:                   Interrupt mapping for the sh_eth interrupt
+>                                  sources (vector id).
+>  - phy-mode:              String, operation mode of the PHY interface.
+> +- phy-reset-gpios:              PHY reset GPIO tuple
+
+If you can't have more than one GPIO here, what about calling it phy-reset-
+gpio ?
+
+>  - sh-eth,edmac-endian:          String, endian of sh_eth dmac.
+>  - sh-eth,register-type:         String, register type of sh_eth.
+>                                  Please select "gigabit", "fast-sh4" or
+> @@ -37,6 +38,7 @@ Example (armadillo800eva):
+>  		reg = <0xe9a00000 0x800>, <0xe9a01800 0x800>;
+>  		interrupts = <0x500>;
+>  		phy-mode = "mii";
+> +		phy-reset-gpios = <&gpio 18 0>;
+>  		sh-eth,edmac-endian = "little";
+>  		sh-eth,register-type = "gigabit";
+>  		sh-eth,phy-id = <0>;
+> diff --git a/drivers/net/ethernet/renesas/sh_eth.c
+> b/drivers/net/ethernet/renesas/sh_eth.c index 1f64848..06035a2 100644
+> --- a/drivers/net/ethernet/renesas/sh_eth.c
+> +++ b/drivers/net/ethernet/renesas/sh_eth.c
+> @@ -20,6 +20,7 @@
+>   *  the file called "COPYING".
+>   */
+> 
+> +#include <linux/gpio.h>
+>  #include <linux/init.h>
+>  #include <linux/module.h>
+>  #include <linux/kernel.h>
+> @@ -33,6 +34,7 @@
+>  #include <linux/netdevice.h>
+>  #include <linux/of.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_irq.h>
+> @@ -2376,10 +2378,11 @@ sh_eth_of_get_register_type(struct device_node *np)
+>  static struct sh_eth_plat_data *
+>  sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
+>  {
+> -	int ret;
+> +	int ret, gpio;
+>  	const char *of_str;
+>  	struct device_node *np = dev->of_node;
+>  	struct sh_eth_plat_data *pdata;
+> +	enum of_gpio_flags flags;
+> 
+>  	pdata = devm_kzalloc(dev, sizeof(struct sh_eth_plat_data),
+>  					GFP_KERNEL);
+> @@ -2420,6 +2423,10 @@ sh_eth_parse_dt(struct device *dev, struct net_device
+> *ndev) else
+>  		pdata->needs_init = 0;
+> 
+> +	gpio = of_get_named_gpio_flags(np, "phy-reset-gpios", 0, &flags);
+> +	if (gpio_is_valid(gpio) && !devm_gpio_request(dev, gpio, NULL))
+> +		gpio_direction_output(gpio, !!(flags & OF_GPIO_ACTIVE_LOW));
+
+You could use devm_gpio_request_one() here.
+
+Is there no need to reset the phy at runtime ?
+
+> +
+>  #ifdef CONFIG_OF_NET
+>  	if (!is_valid_ether_addr(ndev->dev_addr)) {
+>  		const char *macaddr = of_get_mac_address(np);
 -- 
-1.8.0
+Regards,
+
+Laurent Pinchart
+
