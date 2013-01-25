@@ -1,44 +1,52 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH v2 1/6] ARM: dts: omap5: Add omap control usb data
-Date: Fri, 25 Jan 2013 16:41:47 +0530
-Message-ID: <1359112312-6918-2-git-send-email-kishon@ti.com>
+From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 2/6] ARM: dts: omap5: Add ocp2scp data
+Date: Fri, 25 Jan 2013 16:41:48 +0530
+Message-ID: <1359112312-6918-3-git-send-email-kishon@ti.com>
 References: <1359112312-6918-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1359112312-6918-1-git-send-email-kishon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: kishon@ti.com, balbi@ti.com, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, s-guiriec@ti.com, gg@slimlogic.co.uk, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359112312-6918-1-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: kishon-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, s-guiriec-l0cyMroinI0@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add omap control usb data in omap5 device tree file. This will have the
-register address of registers to power on the USB2 PHY and USB3 PHY. The
-information for the node added here is available in
-Documentation/devicetree/bindings/usb/omap-usb.txt
+Add ocp2scp data node in omap5 device tree file. The information for
+the node added here can be found @
+Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
 ---
  arch/arm/boot/dts/omap5.dtsi |    8 ++++++++
  1 file changed, 8 insertions(+)
 
 diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 7a78d1b..edc7464 100644
+index edc7464..d149330 100644
 --- a/arch/arm/boot/dts/omap5.dtsi
 +++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -504,5 +504,13 @@
- 			hw-caps-ll-interface;
- 			hw-caps-temp-alert;
+@@ -512,5 +512,13 @@
+ 			reg-names = "control_dev_conf", "phy_power_usb";
+ 			ti,type = <2>;
  		};
 +
-+		omap_control_usb: omap-control-usb@4a002300 {
-+			compatible = "ti,omap-control-usb";
-+			reg = <0x4a002300 0x4>,
-+			      <0x4a002370 0x4>;
-+			reg-names = "control_dev_conf", "phy_power_usb";
-+			ti,type = <2>;
++		ocp2scp {
++			compatible = "ti,omap-ocp2scp";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			ti,hwmods = "ocp2scp1";
 +		};
  	};
  };
 -- 
 1.7.9.5
-
