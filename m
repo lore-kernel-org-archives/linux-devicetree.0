@@ -1,51 +1,37 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH 2/2] ARM: davinci: da850: add OF_DEV_AUXDATA entry for
- eth0.
-Date: Fri, 25 Jan 2013 11:55:43 +0530
-Message-ID: <51022567.7050700@ti.com>
-References: <1358749759-20517-1-git-send-email-prabhakar.lad@ti.com> <1358749759-20517-3-git-send-email-prabhakar.lad@ti.com>
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Subject: RE: [PATCH 5/6] ARM: regulator: add tps6507x device tree data
+Date: Fri, 25 Jan 2013 06:29:49 +0000
+Message-ID: <A4887BF146CD57468F700B415D2F4701581621@DBDE01.ent.ti.com>
+References: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
+ <1359024920-32190-6-git-send-email-manishv.b@ti.com>
+ <20130124120050.GP4955@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1358749759-20517-3-git-send-email-prabhakar.lad@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: LAK <linux-arm-kernel@lists.infradead.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Heiko Schocher <hs@denx.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130124120050.GP4955@opensource.wolfsonmicro.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "tony@atomide.com" <tony@atomide.com>, "hs@denx.de" <hs@denx.de>, "Girdwood, Liam" <lrg@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "Hilman, Kevin" <khilman@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mark,
 
-
-On 1/21/2013 11:59 AM, Prabhakar Lad wrote:
-> From: Lad, Prabhakar <prabhakar.lad@ti.com>
+On Thu, Jan 24, 2013 at 17:30:51, Mark Brown wrote:
+> On Thu, Jan 24, 2013 at 04:25:19PM +0530, Vishwanathrao Badarkhe, Manish wrote:
 > 
-> Add OF_DEV_AUXDATA for eth0  driver in da850 board dt
-> file to use emac clock.
+> > ---
+> >  arch/arm/boot/dts/tps6507x.dtsi |   47 +++++++++++++++++++++++++++++++++++++++
 > 
-> Signed-off-by: Lad, Prabhakar <prabhakar.lad@ti.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: davinci-linux-open-source@linux.davincidsp.com
-> Cc: netdev@vger.kernel.org
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: Heiko Schocher <hs@denx.de>
-> ---
->  arch/arm/mach-davinci/da8xx-dt.c |    9 ++++++++-
->  1 files changed, 8 insertions(+), 1 deletions(-)
+> Why are you putting this in arch/arm?
 > 
-> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-> index 37c27af..d548a38 100644
-> --- a/arch/arm/mach-davinci/da8xx-dt.c
-> +++ b/arch/arm/mach-davinci/da8xx-dt.c
-> @@ -37,11 +37,18 @@ static void __init da8xx_init_irq(void)
->  	of_irq_init(da8xx_irq_match);
->  }
->  
-> +struct of_dev_auxdata da850_evm_auxdata_lookup[] __initdata = {
 
-This is specific to da850 and not da850_evm so it should be named so.
-You can call it da8xx_auxdata keeping with the file naming.
+I too doubt that whether it should be in architecture specific folder,
+My code is in reference to below patch:
+arm/dts: regulator: Add tps65910 device tree data(d5d08e2e1672da627d7c9d34a9dc1089c653e23a)
 
-Thanks,
-Sekhar
+Could you please suggest me if it can be moved somewhere else?
+
+Regards, 
+Manish
