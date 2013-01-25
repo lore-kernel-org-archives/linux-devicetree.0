@@ -1,46 +1,86 @@
-From: "Mohammed, Afzal" <afzal@ti.com>
-Subject: RE: [PATCH v1 0/6] USB: Add support for multiple PHYs of same type
-Date: Fri, 25 Jan 2013 14:46:09 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA93ACE@DBDE01.ent.ti.com>
-References: <1358848694-20145-1-git-send-email-kishon@ti.com>
- <2D906ABA-71F2-4843-9DBE-F82527A1240A@dominion.thruhere.net>
- <50FEB3FD.3050001@ti.com> <50FEBB61.9000707@ti.com>
- <B9531499-0746-44DA-BDBB-999D4CA31E63@dominion.thruhere.net>
- <C8443D0743D26F4388EA172BF4E2A7A93EA922F5@DBDE01.ent.ti.com>
- <50FFF31D.2070908@ti.com>
- <C8443D0743D26F4388EA172BF4E2A7A93EA92B0B@DBDE01.ent.ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v4 1/4] drivers: usb: phy: add a new driver for usb part
+ of control module
+Date: Fri, 25 Jan 2013 16:59:28 +0200
+Message-ID: <20130125145928.GC28379@arwen.pp.htv.fi>
+References: <1359109440-2195-1-git-send-email-kishon@ti.com>
+ <1359109440-2195-2-git-send-email-kishon@ti.com>
+ <20130125110141.GK3075@e106331-lin.cambridge.arm.com>
+ <20130125111120.GP15886@arwen.pp.htv.fi>
+ <20130125122943.GB16795@e106331-lin.cambridge.arm.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EA92B0B@DBDE01.ent.ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Cc: Koen Kooi <koen@dominion.thruhere.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tony@atomide.com" <tony@atomide.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Balbi, Felipe" <balbi@ti.com>, "eballetbo@gmail.com" <eballetbo@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, "javier@dowhile0.org" <javier@dowhile0.org>, "linux-omap@vger.kernel.org List" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uh9ZiVrAOUUm9fzH"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130125122943.GB16795@e106331-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Felipe Balbi <balbi@ti.com>, Kishon Vijay Abraham I <kishon@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "tony@atomide.com" <tony@atomide.com>, "b-cousson@ti.com" <b-cousson@ti.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+--uh9ZiVrAOUUm9fzH
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jan 24, 2013 at 17:21:45, Mohammed, Afzal wrote:
-> On Wed, Jan 23, 2013 at 19:56:37, ABRAHAM, KISHON VIJAY wrote:
-> > On Wednesday 23 January 2013 07:28 PM, Mohammed, Afzal wrote:
+Hi,
 
-> > > USB first instance of am335x works in mainline as of now.
-> 
-> > Can you check if this series indeed breaks am335x?
-> > 
-> > Thanks for your help.
-> 
-> Do you have a tree having these changes, it would be easier for me.
+On Fri, Jan 25, 2013 at 12:29:43PM +0000, Mark Rutland wrote:
+> > > > +   depending upon omap4 or omap5.
+> > > > + - reg-names: The names of the register addresses corresponding to=
+ the registers
+> > > > +   filled in "reg".
+> > > > + - ti,type: This is used to differentiate whether the control modu=
+le has
+> > > > +   usb mailbox or usb3 phy power. omap4 has usb mailbox in control=
+ module to
+> > > > +   notify events to the musb core and omap5 has usb3 phy power reg=
+ister to
+> > > > +   power on usb3 phy. Should be "1" if it has mailbox and "2" if i=
+t has usb3
+> > > > +   phy power.
+> > >=20
+> > > Why not make this a string property, perhaps values "mailbox" or "reg=
+ister"?
+> >=20
+> > NAK.
+>=20
+> Can I ask what your objection to using a string property is?
+>=20
+> As far as I can see, "ti,type" is only used by this driver, so there's no
+> common convention to stick to. Using a string makes the binding easier for
+> humans to read, and thus harder to mess up in a dts, and it decouples the
+> binding from kernel-side constants.
 
-I tried with your "omap5-with-palmas" branch that was mentioned in
-the cover letter of your latest series (but couldn't find the commit
-that you mentioned in the cover letter, HEAD of that branch that I
-tested was "2c29519 ARM: dts: palmas: update dt data for palmas-usb")
+IIRC there is some work going on to add #define-like support for DT,
+which would allow us to match against integers while still having
+meaningful symbolic representations.
 
-usb first instance of am335x works as earlier.
+--=20
+balbi
 
-Regards
-Afzal
+--uh9ZiVrAOUUm9fzH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRAp3QAAoJEIaOsuA1yqREH0UP/ReIIcy0pLxMRcsSYakc45nk
+vrqi7QpGU6moc2RIyqjpJXaxEG5HjMt+PXG/RXb1QDly/mXhlxKblHsME5ets4wP
+NAh+uSb1oMMyPhCsHFA0B1kgfbzbF3yKWXBI0YkyhP1aOkeUcSd5tXSKW3YIb3gp
+HoHRWvt7Er+MRMQxLklH7Si05eVD4Kf4WiMMq9fSbJjfV/DZOzF/gLyrlqBA36rh
+ui7bA6kZze04+Buj1LLqzrN6eBMT7YfhGIYgvkbNut7QsZzaEInF1k13sfWjfCSH
+rF4nHeKX6tADeJVqNVOFf1HzfPa3mwPznuKzgWrpxyR2Z8axWnHPbuW9WCjNURNh
+C1dyCmW7a2BIxLtRlBIJ8GtEB9He8/henfvfhct7jvoCLgaj2GeEb0+gidTUTnK2
+LPsHvkce+0HJ3quCPJLuIEVYN+FwMW+o5KTWmvSIYA2m2wVNhhuibuXJQZaRKDdA
+kUKDmloWANpxl8YpNorSOAywdUoiyB1pukfjECH5ZbZmrZnhglYUtvm8ElYFajKZ
+Djp+8cd9nJarDdOlmow45Q2XHTDMiOzpkKznpE9KGa6c0JiYH3ELPvnMsady+fEM
+V5H6k9t2V7r7HGbJ++gIuT1wKdmX0C131kr8RxU71HnyWPvBAhOU7mgSDoUqYymo
+QwIaG0K6Eh2s1OlB4u1s
+=YVg8
+-----END PGP SIGNATURE-----
+
+--uh9ZiVrAOUUm9fzH--
