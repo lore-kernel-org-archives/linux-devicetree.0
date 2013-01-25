@@ -1,71 +1,45 @@
-From: "Mohammed, Afzal" <afzal@ti.com>
-Subject: RE: RE: [PATCH v4 12/12] video: da8xx-fb: CCF clock divider handling
-Date: Fri, 25 Jan 2013 12:05:44 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA9383E@DBDE01.ent.ti.com>
-References: <cover.1358937685.git.afzal@ti.com>
- <fa8dab522507e087d5a94bac13dda71544911707.1358937685.git.afzal@ti.com>
- <20130123202204.9205.66575@quantum>
- <C8443D0743D26F4388EA172BF4E2A7A93EA92ADF@DBDE01.ent.ti.com>
- <20130124170044.10623.45314@quantum>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 1/2] ARM: dts: omap3-overo: Add support for pwm-leds
+Date: Fri, 25 Jan 2013 13:07:06 +0100
+Message-ID: <5102756A.9040901@ti.com>
+References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch> <1358963812-19947-2-git-send-email-florian.vaussard@epfl.ch> <5101510C.9050407@ti.com> <51015663.8080109@epfl.ch> <5101570A.1030303@ti.com> <5101663C.7020301@epfl.ch> <51016A84.20703@ti.com> <5101A43D.7080108@epfl.ch> <51024254.40208@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130124170044.10623.45314@quantum>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51024254.40208@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: florian.vaussard@epfl.ch
+Cc: Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Benoit Cousson <b-cousson@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlrZSwNCg0KT24gVGh1LCBKYW4gMjQsIDIwMTMgYXQgMjI6MzA6NDQsIE1pa2UgVHVycXVl
-dHRlIHdyb3RlOg0KPiBRdW90aW5nIE1vaGFtbWVkLCBBZnphbCAoMjAxMy0wMS0yNCAwMzozNjow
-MikNCg0KPiA+IFNvIHRoZXJlIGFyZSAzIC0gTElERCBpcyBhY3R1YWxseSBub3QgZm9yIHByZXNl
-bnQgdXNlIGNhc2UsIENPUkUgY291bGQNCj4gPiBiZSBjbHViYmVkIHdpdGggdGhlIGRpdmlkZXIg
-dG8gaGF2ZSBhIGNvbXBvc2l0ZSBjbG9jay4gQW5kIENPUkUgaXMNCj4gPiBpbiBmdW5jdGlvbmFs
-IGNsb2NrIHBhdGggYW5kIGxvZ2ljYWxseSBpdCdzIHBlcmZlY3RseSBhbHJpZ2h0IHRvIGhhdmUN
-Cj4gPiB0aGUgY29tcG9zaXRlIGNsb2NrLg0KDQo+IFNvbWUgb2YgdGhlIGNsb2NrIG5hbWVzIGFy
-ZSBhIGJpdCBnZW5lcmljLCBzbyBhIHF1ZXN0aW9uIHRoYXQgSSdtIGdvaW5nDQo+IHRvIHJlcGVh
-dCB0aHJvdWdob3V0IG15IHJlc3BvbnNlOiAiaXMgdGhpcyBjbG9jayBvbmx5IGluc2lkZSBvZiB5
-b3VyDQo+IHZpZGVvIElQID8iDQoNClllcyB0aGVzZSB0aHJlZSBjbG9ja3MgYXJlIGluc2lkZSBM
-Q0RDIElQLg0KDQo+IFJlZ2FyZGluZyB0aGUgQ09SRSBjbG9jaywgaXMgdGhpcyBvbmx5IGluc2lk
-ZSBvZiB5b3VyIElQIG9yIGFyZSB5b3UNCj4gcmVmZXJyaW5nIHRvIHRoZSBTb0MgQ09SRSBjbG9j
-ayB3aGljaCBpcyBkcml2ZW4gYnkgYSBEUExMIGFuZCBjbG9ja3MNCj4gRERSIGFuZCBtYW55IG90
-aGVyIHBlcmlwaGVyYWxzIChvZnRlbiBNTUMsIFVBUlQsIGV0Yyk/DQoNClNvcnJ5IGZvciB0aGUg
-Y29uZnVzaW9uLCBoZXJlIENPUkUgcmVmZXJzIHRvIGNsb2NrIGluc2lkZSBMQ0RDIElQLiBUaGlz
-DQpDT1JFIHNob3VsZCBub3QgYmUgY29uZnVzZWQgd2l0aCBDT1JFIFBMTC4gQWN0dWFsbHkgSSB1
-c2VkIENPUkUgc28gdGhhdA0KaXQgY29ycmVzcG9uZHMgdG8gdGhlIG5vbWVuY2xhdHVyZSBpbiBM
-Q0RDIHNlY3Rpb24gb2YgVFJNLg0KDQo+IE5vdGUgdGhhdCB0aGlzIGlzIGZyb20gbXkgcGFzdCBl
-eHBlcmllbmNlIHdpdGggT01BUCwgYW5kIEknbSBtYWtpbmcgYW4NCj4gYXNzdW1wdGlvbiB0aGF0
-IHRoZSBjbG9jayBzY2hlbWUgYmV0d2VlbiBPTUFQIGFuZCBEYSBWaW5jaS9BTTMzNXggcGFydHMN
-Cj4gaXNuJ3QgdmVyeSBkaWZmZXJlbnQuDQoNCkFkZGl0aW9uYWwgZGV0YWlsOiBEYVZpbmNpIGRv
-ZXNuJ3QgaGF2ZSB0aGVzZSAzIGNsb2NrcyBjb250cm9scyBhdmFpbGFibGUsDQpzbyB0aGVzZSB0
-aHJlZSBhcmUgcmVxdWlyZWQgb25seSBvbiBBTTMzNXggKHdoaWNoIGhhcyBJUCB2ZXJzaW9uIDIg
-KQ0KDQo+IElzIHRoZXJlIGEgcHVibGljIFRSTSBJIGNhbiBsb29rIGF0PyAgSXQgd291bGQgaGVs
-cCBtZSB1bmRlcnN0YW5kIHRoaXMNCj4gd2l0aG91dCBoYXZpbmcgdG8gYXNrIHlvdSBzbyBtYW55
-IGFubm95aW5nIHF1ZXN0aW9ucyA7KQ0KDQpObyBwcm9ibGVtLCBodHRwOi8vd3d3LnRpLmNvbS9w
-cm9kdWN0L2FtMzM1OQ0KDQoNCj4gPiBBbmQgbm93IHdlIGFyZSBsZWZ0IHdpdGggRE1BLCB0aGlz
-IGlzIGFjdHVhbGx5IGluIHRoZSBpbnRlcmZhY2UgY2xvY2sNCj4gPiBwYXRoIHdoaWNoIGRyaXZl
-ciBpbiB1bmF3YXJlLiBBbiBvcHRpb24gd291bGQgYmUgdG8gaGF2ZSBETUEgY2xvY2sNCj4gPiBh
-cyBjaGlsZCBvZiBDT1JFIHBsdXMgZGl2aWRlciBjb21wb3NpdGUgY2xvY2ssIGV2ZW4gdGhvdWdo
-IGxvZ2ljYWxseQ0KPiA+IERNQSBjYW4ndCBiZSBjb25zaWRlcmVkIGluIHRoZSBzYW1lIHBhdGgu
-DQoNCj4gV2h5IGlzIHRoZSBkcml2ZXIgdW5hd2FyZSBvZiB0aGUgaW50ZXJmYWNlIGNsaz8gIEZv
-ciBpbnN0YW5jZSBPTUFQMyBoYWQNCj4gc2VwYXJhdGUgZmNsayBhbmQgaWNsayBmb3IgSVBzIGFu
-ZCBkcml2ZXJzIHdvdWxkIGNhbGwgY2xrX2VuYWJsZSBvbg0KPiBib3RoLiAgT3IgYW0gSSBtaXN1
-bmRlcnN0YW5kaW5nIHNvbWV0aGluZz8NCg0KSFdNT0QgaGFuZGxlcyBlbmFibGluZyB0aG9zZSB1
-cG9uIHBtX3J1bnRpbWUgY2FsbHMsIEhXTU9EIG1ha2VzIGFuIGFsaWFzDQpmb3IgbWFpbiBjbG9j
-ayB3aXRoICJmY2siLCBidXQgbm90IGZvciAiaWNrIiwgc28gY3VycmVudGx5ICJpY2siIGlzDQp1
-bmF2YWlsYWJsZSBmb3IgdGhlIGRyaXZlciwgY29udGludWVkIGJlbG93IC4uDQoNCj4gSW4gZ2Vu
-ZXJhbCBJIGRvbid0IHRoaW5rIHRoZSBjbG9jayBzdWJ0cmVlIHNob3VsZCBiZSBtb2RlbGVkIGlu
-IGEgd2F5DQo+IHRoYXQgaXMgY29udmVuaWVudCBmb3Igc29mdHdhcmUsIGJ1dCBpbnN0ZWFkIG1v
-ZGVsIHRoZSBhY3R1YWwgaGFyZHdhcmUuDQo+IFRydXN0IG1lLCBpZiB5b3UgZG9uJ3QgbW9kZWwg
-dGhlIGFjdHVhbCBoYXJkd2FyZSB0aGVuIHlvdSB3aWxsIGJlIHZlcnkNCj4gY29uZnVzZWQgd2hl
-biB5b3UgY29tZSBiYWNrIGFuZCByZXZpc2l0IHRoaXMgY29kZSBpbiA2IG1vbnRocyBhbmQgY2Fu
-J3QNCj4gcmVtZW1iZXIgd2h5IHRoaW5ncyBhcmUgc28gd2VpcmQgbG9va2luZy4NCg0KT2ssIHRo
-ZW4gaXQgc2VlbXMgYW4gb21hcCBjbG9jayBlbnRyeSBmb3IgY29uLWlkICJpY2siIHNob3VsZCBi
-ZSBjcmVhdGVkDQphcyBmb2xsb3dzIChkcGxsX2NvcmVfbTRfY2sgc3VwcGxpZXMgaW50ZXJmYWNl
-IGNsb2NrKSwNCg0KQ0xLKCI0ODMwZTAwMC5sY2RjIiwgICAgImljayIsICAgICAgICAgICZkcGxs
-X2NvcmVfbTRfY2ssICAgICAgIENLX0FNMzNYWCkNCg0KQW5kIHRoZW4gaW4gdGhlIGRyaXZlciwg
-RE1BIGdhdGUgY2xvY2sgc2hvdWxkIGJlIG1hZGUgYSBjaGlsZCBvZiB0aGlzIGNsb2NrDQoob2J0
-YWluZWQgd2l0aCBjb24taWQgImljayIpLg0KDQpMZXQgbWUga25vdyB5b3VyIG9waW5pb24gb24g
-dGhpcy4NCg0KUmVnYXJkcw0KQWZ6YWwNCg0KDQoNCg==
+On 01/25/2013 09:29 AM, Peter Ujfalusi wrote:
+> On 01/24/2013 10:14 PM, Florian Vaussard wrote:
+>> You are right. But then the pwm core must provide a way to know if t=
+he pwm
+>> access function are callable
+>> from atomic context or not (the gpio framework provides gpio_canslee=
+p()).
+>> This implies a good amount of changes to the pwm framework, and curr=
+ently we
+>> are the only driver using non-atomic access.
+>=20
+> We have two drivers at the moment: pwm-twl and pwm-twl-led. However n=
+ew out of
+> SoC PWM drivers might come (for example for palmas). So it worth take=
+ a look
+> at some generic implementation.
+
+OK. So I have the series. I need to add few more things but pwm-leds on
+BeagleBoard works fine when I put the default_trigger for the pmustat L=
+ED to
+be mmc0. It is blinking happily ;)
+I'll CC you with the patches when I send them.
+
+--=20
+P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
