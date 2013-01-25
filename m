@@ -1,79 +1,38 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCH v16 RESEND 0/7] of: add display helper
-Date: Fri, 25 Jan 2013 09:04:26 +0100
-Message-ID: <20130125080426.GA6937@pengutronix.de>
-References: <1358766482-6275-1-git-send-email-s.trumtrar@pengutronix.de>
- <CAF6AEGvFNA1gc_5XWqL_baEnn8DTn0R-xqui034rg3Eo-V_6Qw@mail.gmail.com>
- <20130123091202.GA11828@pengutronix.de>
- <CAL1wa8d6wXdxgVJ=c2ma2Adm-RkF3S5ga219dSrh1fFo0L9X8w@mail.gmail.com>
- <20130124081958.GA28406@pengutronix.de>
- <C8443D0743D26F4388EA172BF4E2A7A93EA928F9@DBDE01.ent.ti.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 1/2] ARM: dts: omap3-overo: Add support for pwm-leds
+Date: Fri, 25 Jan 2013 09:29:08 +0100
+Message-ID: <51024254.40208@ti.com>
+References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch> <1358963812-19947-2-git-send-email-florian.vaussard@epfl.ch> <5101510C.9050407@ti.com> <51015663.8080109@epfl.ch> <5101570A.1030303@ti.com> <5101663C.7020301@epfl.ch> <51016A84.20703@ti.com> <5101A43D.7080108@epfl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EA928F9@DBDE01.ent.ti.com>
-Sender: linux-media-owner@vger.kernel.org
-To: "Mohammed, Afzal" <afzal@ti.com>
-Cc: Leela Krishna Amudala <leelakrishna.a@gmail.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, David Airlie <airlied@linux.ie>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Clark <robdclark@gmail.com>, "Valkeinen, Tomi" <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5101A43D.7080108@epfl.ch>
+Sender: linux-omap-owner@vger.kernel.org
+To: florian.vaussard@epfl.ch
+Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Afzal,
+On 01/24/2013 10:14 PM, Florian Vaussard wrote:
+> You are right. But then the pwm core must provide a way to know if th=
+e pwm
+> access function are callable
+> from atomic context or not (the gpio framework provides gpio_cansleep=
+()).
+> This implies a good amount of changes to the pwm framework, and curre=
+ntly we
+> are the only driver using non-atomic access.
 
-On Thu, Jan 24, 2013 at 08:47:02AM +0000, Mohammed, Afzal wrote:
-> Hi Steffen,
-> 
-> On Thu, Jan 24, 2013 at 13:49:58, Steffen Trumtrar wrote:
-> 
-> > Thanks. I'll use that opportunity for a v17 that is rebased onto 3.8-rc4.
-> 
-> As you are going to have a v17, if you can fold the diff[1]
-> (that I mentioned earlier) into the patch,
-> "fbmon: add of_videomode helpers", it would be helpful. 
-> 
+We have two drivers at the moment: pwm-twl and pwm-twl-led. However new=
+ out of
+SoC PWM drivers might come (for example for palmas). So it worth take a=
+ look
+at some generic implementation.
 
-I thought about it and I will not include that patch. Sorry.
-In one of the previous versions of the series I had something like that and
-it was suggested to remove it. If I leave it like it is, one gets a compile
-time error like you do. And that is correct, because you shouldn't use the
-function if you do not have of_videomode enabled. You should use one of the
-underlying functions that are non-DT and called by of_get_fb_videomode.
-
-Regards,
-Steffen
-
-> Regards
-> Afzal
-> 
-> [1]
-> 
-> diff --git a/include/linux/fb.h b/include/linux/fb.h
-> index 58b9860..0ce30d1 100644
-> --- a/include/linux/fb.h
-> +++ b/include/linux/fb.h
-> @@ -716,9 +716,19 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
->  extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
->  extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
->  
-> +#if defined(CONFIG_OF_VIDEOMODE) && defined(CONFIG_FB_MODE_HELPERS)
->  extern int of_get_fb_videomode(struct device_node *np,
->                                struct fb_videomode *fb,
->                                int index);
-> +#else
-> +static inline int of_get_fb_videomode(struct device_node *np,
-> +                                     struct fb_videomode *fb,
-> +                                     int index)
-> +{
-> +       return -EINVAL;
-> +}
-> +#endif
-> +
->  extern int fb_videomode_from_videomode(const struct videomode *vm,
->                                        struct fb_videomode *fbmode);
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--=20
+P=E9ter
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
