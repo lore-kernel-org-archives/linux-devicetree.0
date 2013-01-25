@@ -1,67 +1,79 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2 5/5] clocksource: update and move armada-370-xp-timer documentation to timer directory
-Date: Fri, 25 Jan 2013 18:32:45 +0100
-Message-ID: <1359135165-32108-6-git-send-email-gregory.clement@free-electrons.com>
-References: <1359135165-32108-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359135165-32108-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@arm.linux.org.uk>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, Nicolas Pitre <nico@fluxnic.net>, Lior Amsalem <alior@marvell.com>, Maen Suleiman <maen@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Eran Ben-Avi <benavi@marvell.com>, Yehuda Yitschak <yehuday@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Ike Pan <ike.pan@canonical.com>, Jani Monoses <jani.monoses@canonical.com>, Chris Van Hoof <vanhoof@canonical.com>, Dan Frazier <dann.frazier@canonical.com>, Leif Lindholm <leif.lindholm@arm.com>, Jon Masters <jcm@redhat.com>, David Marlin <dmarlin@redhat.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+From: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/4] ARM: dts: add support for hdmi to exynos4
+Date: Fri, 25 Jan 2013 09:40:51 -0800
+Message-ID: <CAJuYYwSHDoc40obSnPZwvS3LFxZEbrhHx6-Vd-yLKPGOnXxmoQ@mail.gmail.com>
+References: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com>
+ <1359110384-28402-2-git-send-email-rahul.sharma@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359110384-28402-2-git-send-email-rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Timer driver for Armada 370 and Armada XP have gained local timers
-support. So it needs new resources information regarding the IRQs
-and the registers.
+On 25 January 2013 02:39, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>
+> Conflicts:
+>         arch/arm/mach-exynos/mach-exynos4-dt.c
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi         | 7 +++++++
+>  arch/arm/mach-exynos/mach-exynos4-dt.c | 2 ++
+>  2 files changed, 9 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> index e1347fc..6c2c79d 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -289,4 +289,11 @@
+>                         interrupts = <0 34 0>;
+>                 };
+>         };
+> +
+> +       hdmi {
+> +               compatible = "samsung,exynos4-hdmi14";
+> +               reg = <0x12D00000 0x70000>;
+> +               interrupts = <0 95 0>;
+> +               hpd-gpio = <&gpx3 7 0xf 1 3>;
 
-Also move the documentation in the new and more accurate directory
+This is using the older gpio dt bindings but exynos4 has started using
+the pinctrl bindings. So this is not sufficient to do the
+pinmux/pinconfig settings on Exynos4.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
----
- .../bindings/arm/armada-370-xp-timer.txt           |   12 ------------
- .../bindings/timer/marvell,armada-370-xp-timer.txt |   15 +++++++++++++++
- 2 files changed, 15 insertions(+), 12 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/arm/armada-370-xp-timer.txt
- create mode 100644 Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
+Thanks,
+Thomas.
 
-diff --git a/Documentation/devicetree/bindings/arm/armada-370-xp-timer.txt b/Documentation/devicetree/bindings/arm/armada-370-xp-timer.txt
-deleted file mode 100644
-index 6483011..0000000
---- a/Documentation/devicetree/bindings/arm/armada-370-xp-timer.txt
-+++ /dev/null
-@@ -1,12 +0,0 @@
--Marvell Armada 370 and Armada XP Global Timers
------------------------------------------------
--
--Required properties:
--- compatible: Should be "marvell,armada-370-xp-timer"
--- interrupts: Should contain the list of Global Timer interrupts
--- reg: Should contain the base address of the Global Timer registers
--- clocks: clock driving the timer hardware
--
--Optional properties:
--- marvell,timer-25Mhz: Tells whether the Global timer supports the 25
--  Mhz fixed mode (available on Armada XP and not on Armada 370)
-diff --git a/Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt b/Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
-new file mode 100644
-index 0000000..3638112
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
-@@ -0,0 +1,15 @@
-+Marvell Armada 370 and Armada XP Timers
-+---------------------------------------
-+
-+Required properties:
-+- compatible: Should be "marvell,armada-370-xp-timer"
-+- interrupts: Should contain the list of Global Timer interrupts and
-+  then local timer interrupts
-+- reg: Should contain location and length for timers register. First
-+  pair for the Global Timer registers, second pair for the
-+  local/private timers.
-+- clocks: clock driving the timer hardware
-+
-+Optional properties:
-+- marvell,timer-25Mhz: Tells whether the Global timer supports the 25
-+  Mhz fixed mode (available on Armada XP and not on Armada 370)
--- 
-1.7.9.5
+> +       };
+>  };
+> diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c b/arch/arm/mach-exynos/mach-exynos4-dt.c
+> index ab1dacc..24f72a5 100644
+> --- a/arch/arm/mach-exynos/mach-exynos4-dt.c
+> +++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
+> @@ -80,6 +80,8 @@ static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
+>         OF_DEV_AUXDATA("arm,pl330", EXYNOS4_PA_MDMA1, "dma-pl330.2", NULL),
+>         OF_DEV_AUXDATA("samsung,exynos4210-tmu", EXYNOS4_PA_TMU,
+>                                 "exynos-tmu", NULL),
+> +       OF_DEV_AUXDATA("samsung,exynos4-hdmi14", EXYNOS4_PA_HDMI,
+> +                               "exynos4-hdmi", NULL),
+>         {},
+>  };
+>
+> --
+> 1.8.0
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
