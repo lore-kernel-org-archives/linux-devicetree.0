@@ -1,69 +1,99 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 0/6] Initial Device Tree support for S3C64xx
-Date: Fri, 25 Jan 2013 11:25:12 -0800
-Message-ID: <017001cdfb31$b44bd3d0$1ce37b70$@samsung.com>
-References: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com>
- <1689405.9Ne2g34LZt@flatron>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: RE: RE: [PATCH v4 12/12] video: da8xx-fb: CCF clock divider handling
+Date: Fri, 25 Jan 2013 14:44:53 -0800
+Message-ID: <20130125224453.10623.74434@quantum>
+References: <cover.1358937685.git.afzal@ti.com>
+ <fa8dab522507e087d5a94bac13dda71544911707.1358937685.git.afzal@ti.com>
+ <20130123202204.9205.66575@quantum>
+ <C8443D0743D26F4388EA172BF4E2A7A93EA92ADF@DBDE01.ent.ti.com>
+ <20130124170044.10623.45314@quantum>
+ <C8443D0743D26F4388EA172BF4E2A7A93EA9383E@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1689405.9Ne2g34LZt@flatron>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Tomasz Figa' <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EA9383E@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Mohammed, Afzal" <afzal@ti.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, paul@pwsan.com, rnayak@ti.com, b-cousson@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Tomasz Figa wrote:
+Quoting Mohammed, Afzal (2013-01-25 04:05:44)
+> Hi Mike,
 > 
-> On Sunday 13 of January 2013 02:10:52 Tomasz Figa wrote:
-> > This series is adds Device Tree support for Samsung S3C64xx SoC series.
-> >
-> > It fixes several problems preventing from booting an S3C64xx-based
-> > system using Device Tree, adds all the infrastructure for Device
-> > Tree-based board support, including mach-s3c64xx-dt and dts include
-> > files for S3C64xx SoCs, and (very) basic device tree source for
-> > FriendlyARM Mini6410 board.
-> >
-> > Current support is very limited and allows only basic bootup with UART
-> > and SDHCI, but should be fine as a start and will be extended in
-> > future, hopefully with help of S3C64xx board maintainers.
-> >
-> > Tomasz Figa (6):
-> >   ARM: common: vic: Parse interrupt and resume masks from device tree
-> >   ARM: common: vic: Fix invalid first IRQ number in OF-based
-> >     registration
-> >   ARM: s3c64xx: Add support for OF-based VIC initialization
-> >   ARM: s3c64xx: Add board file for boot using Device Tree
-> >   ARM: dts: Add basic dts include files for Samsung S3C64xx SoCs
-> >   ARM: dts: Add dts file for S3C6410-based Mini6410 board
-> >
-> >  Documentation/devicetree/bindings/arm/vic.txt |  6 ++
-> >  arch/arm/boot/dts/Makefile                    |  1 +
-> >  arch/arm/boot/dts/s3c6400.dtsi                | 33 +++++++++
-> >  arch/arm/boot/dts/s3c6410-mini6410.dts        | 50 ++++++++++++++
-> >  arch/arm/boot/dts/s3c6410.dtsi                | 33 +++++++++
-> >  arch/arm/boot/dts/s3c64xx.dtsi                | 97
-> > +++++++++++++++++++++++++++ arch/arm/common/vic.c
-> >   |  9 ++-
-> >  arch/arm/mach-s3c64xx/Kconfig                 | 13 ++++
-> >  arch/arm/mach-s3c64xx/Makefile                |  1 +
-> >  arch/arm/mach-s3c64xx/common.c                | 16 +++++
-> >  arch/arm/mach-s3c64xx/common.h                |  4 ++
-> >  arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c       | 84
-> > +++++++++++++++++++++++ 12 files changed, 345 insertions(+), 2
-> > deletions(-)
-> >  create mode 100644 arch/arm/boot/dts/s3c6400.dtsi
-> >  create mode 100644 arch/arm/boot/dts/s3c6410-mini6410.dts
-> >  create mode 100644 arch/arm/boot/dts/s3c6410.dtsi
-> >  create mode 100644 arch/arm/boot/dts/s3c64xx.dtsi
-> >  create mode 100644 arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
+> On Thu, Jan 24, 2013 at 22:30:44, Mike Turquette wrote:
+> > Quoting Mohammed, Afzal (2013-01-24 03:36:02)
 > 
-> Any other comments on this series?
+> > > So there are 3 - LIDD is actually not for present use case, CORE could
+> > > be clubbed with the divider to have a composite clock. And CORE is
+> > > in functional clock path and logically it's perfectly alright to have
+> > > the composite clock.
 > 
-Looks good to me. But would be better if the vic changes could get ack ;-)
+> > Some of the clock names are a bit generic, so a question that I'm going
+> > to repeat throughout my response: "is this clock only inside of your
+> > video IP ?"
+> 
+> Yes these three clocks are inside LCDC IP.
+> 
+> > Regarding the CORE clock, is this only inside of your IP or are you
+> > referring to the SoC CORE clock which is driven by a DPLL and clocks
+> > DDR and many other peripherals (often MMC, UART, etc)?
+> 
+> Sorry for the confusion, here CORE refers to clock inside LCDC IP. This
+> CORE should not be confused with CORE PLL. Actually I used CORE so that
+> it corresponds to the nomenclature in LCDC section of TRM.
+> 
+> > Note that this is from my past experience with OMAP, and I'm making an
+> > assumption that the clock scheme between OMAP and Da Vinci/AM335x parts
+> > isn't very different.
+> 
+> Additional detail: DaVinci doesn't have these 3 clocks controls available,
+> so these three are required only on AM335x (which has IP version 2 )
+> 
+> > Is there a public TRM I can look at?  It would help me understand this
+> > without having to ask you so many annoying questions ;)
+> 
+> No problem, http://www.ti.com/product/am3359
+> 
+> 
+> > > And now we are left with DMA, this is actually in the interface clock
+> > > path which driver in unaware. An option would be to have DMA clock
+> > > as child of CORE plus divider composite clock, even though logically
+> > > DMA can't be considered in the same path.
+> 
+> > Why is the driver unaware of the interface clk?  For instance OMAP3 had
+> > separate fclk and iclk for IPs and drivers would call clk_enable on
+> > both.  Or am I misunderstanding something?
+> 
+> HWMOD handles enabling those upon pm_runtime calls, HWMOD makes an alias
+> for main clock with "fck", but not for "ick", so currently "ick" is
+> unavailable for the driver, continued below ..
+> 
+> > In general I don't think the clock subtree should be modeled in a way
+> > that is convenient for software, but instead model the actual hardware.
+> > Trust me, if you don't model the actual hardware then you will be very
+> > confused when you come back and revisit this code in 6 months and can't
+> > remember why things are so weird looking.
+> 
+> Ok, then it seems an omap clock entry for con-id "ick" should be created
+> as follows (dpll_core_m4_ck supplies interface clock),
+> 
+> CLK("4830e000.lcdc",    "ick",          &dpll_core_m4_ck,       CK_AM33XX)
+> 
+> And then in the driver, DMA gate clock should be made a child of this clock
+> (obtained with con-id "ick").
+> 
+> Let me know your opinion on this.
+> 
 
-Thanks.
+I think Paul W. or someone on the TI side should weigh in on your clkdev
+entries.  My main point is that the actual tree should be modeled and
+clocks shouldn't be globbed together unnecessarily.  As mentioned in the
+other mail thread you might be better off making a divider for your LCDC
+IP block and modeling each node individually.
 
-- Kukjin
+Regards,
+Mike
+
+> Regards
+> Afzal
