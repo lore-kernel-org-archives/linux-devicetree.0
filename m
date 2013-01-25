@@ -1,214 +1,119 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: [PATCH] OF: Fixup resursive locking code paths
-Date: Fri, 25 Jan 2013 13:21:47 -0500
-Message-ID: <1359138107-14159-1-git-send-email-paul.gortmaker@windriver.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Paul Gortmaker <paul.gortmaker@windriver.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 5/6] ARM: dts: Add basic dts include files for Samsung S3C64xx SoCs
+Date: Fri, 25 Jan 2013 11:08:01 -0800 (PST)
+Message-ID: <3747315.IyCCRDXgbD@flatron>
+References: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com> <20130114150531.GE21142@e102568-lin.cambridge.arm.com> <20130116105957.GA1963@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130116105957.GA1963@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Dave Martin <dave.martin@linaro.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "kwangwoo.lee@gmail.com" <kwangwoo.lee@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "mcuelenaere@gmail.com" <mcuelenaere@gmail.com>, "augulis.darius@gmail.com" <augulis.darius@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Gleixner <tglx@linutronix.de>
+Hi,
 
-There is no real reason to use a rwlock for devtree_lock. It even
-could be a mutex, but unfortunately it's locked from cpu hotplug
-paths which can't schedule :(
+On Wednesday 16 of January 2013 10:59:57 Dave Martin wrote:
+> On Mon, Jan 14, 2013 at 03:05:32PM +0000, Lorenzo Pieralisi wrote:
+> > On Mon, Jan 14, 2013 at 02:48:41PM +0000, Mark Rutland wrote:
+> > > Hello,
+> > > 
+> > > This all looks good. I just have a couple of comments about the cpus
+> > > node.> > 
+> > > On Sun, Jan 13, 2013 at 01:10:57AM +0000, Tomasz Figa wrote:
+> > > > This patch adds basic device tree definitions for Samsung S3C64xx
+> > > > SoCs.
+> > > > 
+> > > > Since all the SoCs in the series are very similar, the files are
+> > > > created hierarchically - one file for the whole series and then
+> > > > separate files for particular SoCs including the common one.
+> > > > 
+> > > > Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
+> > > 
+> > > [...]
+> > > 
+> > > > diff --git a/arch/arm/boot/dts/s3c64xx.dtsi
+> > > > b/arch/arm/boot/dts/s3c64xx.dtsi new file mode 100644
+> > > > index 0000000..55d6e08
+> > > > --- /dev/null
+> > > > +++ b/arch/arm/boot/dts/s3c64xx.dtsi
+> > > > @@ -0,0 +1,97 @@
+> > > > +/*
+> > > > + * Samsung's S3C64xx SoC series common device tree source
+> > > > + *
+> > > > + * Copyright (c) 2013 Tomasz Figa <tomasz.figa@gmail.com>
+> > > > + *
+> > > > + * Samsung's S3C64xx SoC series device nodes are listed in this
+> > > > file.
+> > > > + * Particular SoCs from S3C64xx series can include this file and
+> > > > provide + * values for SoCs specfic bindings.
+> > > > + *
+> > > > + * Note: This file does not include device nodes for all the
+> > > > controllers in + * S3C64xx SoCs. As device tree coverage for
+> > > > S3C64xx increases, additional + * nodes can be added to this
+> > > > file.
+> > > > + *
+> > > > + * This program is free software; you can redistribute it and/or
+> > > > modify + * it under the terms of the GNU General Public License
+> > > > version 2 as + * published by the Free Software Foundation.
+> > > > + */
+> > > > +
+> > > > +/include/ "skeleton.dtsi"
+> > > > +
+> > > > +/ {
+> > > > +	cpus {
+> > > > +		cpu@0 {
+> > > > +			compatible = "arm,arm1176jzf-s";
+> > > > +		};
+> > > > +	};
+> > > 
+> > > You can drop the unit address from the cpu node - it's meant to be
+> > > there to differentiate multiple nodes (and is supposed to match the
+> > > reg property, which the 1176jzf-s can't have, as it doesn't have an
+> > > MPIDR).
+> > 
+> > Well, this is a point that I should consider since the kernel docs I
+> > wrote are misleading, they require the reg property that can not be
+> > there on UP. True, MPIDR does not exist in this case, but I have to
+> > document this in the bindings since it is unclear.
+> > 
+> > > Also, "arm,arm1176jzf-s" isn't listed in the binding doc. There was
+> > > a question about how to maintain this list [1], but I can't seem to
+> > > find a conclusion, if any were reached.  It might be worth
+> > > appending "arm,arm1176" to the compatible list for the cpu node in
+> > > case we want to enable something via dt for all 1176 variations.
+> > > 
+> > > Dave, Lorenzo, any thoughts?
+> > 
+> > Eh, frankly I do not know how to handle this. Either we add a
+> > compatible string to the bindings anytime a DT gets merged in the
+> > kernel but how to maintain it, it has to be defined. Happy to hear
+> > some feedback on this.
+> 
+> Well, the number of CPU types does not grow rapidly.  It will be much
+> less than one per SoC -- so keeping the list up to date shouldn't be
+> that much effort.
+> 
+> For ARM1176JZF-S, it could make sense for the comatible list to be
+> 
+> 	"arm,arm1176jzf-s", "arm,arm1176"
+> 
+> ...since the differences between 1176 variants are software probeable
+> (i.e., whether there is an FPU or not).  AFAIK the J, Z apply to all
+> ARM1176, and the -S (synthesisable RTL) is nothing to do with software.
+> The kernel probably only really needs to know "arm,arm1176".
 
-So it needs to become a raw lock on rt as well.  The devtree_lock would
-be the only user of a raw_rw_lock, so we are better off cleaning up the
-recursive locking paths which allows us to convert devtree_lock to a
-read_lock.
+OK. So the conclusion is that I should change the cpus node to following:
 
-Here we do the standard thing of introducing __foo() as the "raw"
-version of foo(), so that we can take better control of the locking.
-The "raw" versions are not exported and are for internal use within
-the file itself.
+       cpus {
+               cpu {
+                       compatible = "arm,arm1176jzf-s", "arm,arm1176";
+               };
+       };
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
----
+Am I right?
 
-[This has been living in the RT tree for several releases, and I've
- put it on top of 3.8-rc4 mainline and tested it independently there
- on a ppc sbc8548 board as well.  So it would be nice to get this in 3.9]
-
- drivers/of/base.c | 91 ++++++++++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 70 insertions(+), 21 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 2390ddb..21195a1 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -164,16 +164,14 @@ void of_node_put(struct device_node *node)
- EXPORT_SYMBOL(of_node_put);
- #endif /* CONFIG_OF_DYNAMIC */
- 
--struct property *of_find_property(const struct device_node *np,
--				  const char *name,
--				  int *lenp)
-+static struct property *__of_find_property(const struct device_node *np,
-+					   const char *name, int *lenp)
- {
- 	struct property *pp;
- 
- 	if (!np)
- 		return NULL;
- 
--	read_lock(&devtree_lock);
- 	for (pp = np->properties; pp; pp = pp->next) {
- 		if (of_prop_cmp(pp->name, name) == 0) {
- 			if (lenp)
-@@ -181,6 +179,18 @@ struct property *of_find_property(const struct device_node *np,
- 			break;
- 		}
- 	}
-+
-+	return pp;
-+}
-+
-+struct property *of_find_property(const struct device_node *np,
-+				  const char *name,
-+				  int *lenp)
-+{
-+	struct property *pp;
-+
-+	read_lock(&devtree_lock);
-+	pp = __of_find_property(np, name, lenp);
- 	read_unlock(&devtree_lock);
- 
- 	return pp;
-@@ -214,8 +224,20 @@ EXPORT_SYMBOL(of_find_all_nodes);
-  * Find a property with a given name for a given node
-  * and return the value.
-  */
-+static const void *__of_get_property(const struct device_node *np,
-+				     const char *name, int *lenp)
-+{
-+	struct property *pp = __of_find_property(np, name, lenp);
-+
-+	return pp ? pp->value : NULL;
-+}
-+
-+/*
-+ * Find a property with a given name for a given node
-+ * and return the value.
-+ */
- const void *of_get_property(const struct device_node *np, const char *name,
--			 int *lenp)
-+			    int *lenp)
- {
- 	struct property *pp = of_find_property(np, name, lenp);
- 
-@@ -226,13 +248,13 @@ EXPORT_SYMBOL(of_get_property);
- /** Checks if the given "compat" string matches one of the strings in
-  * the device's "compatible" property
-  */
--int of_device_is_compatible(const struct device_node *device,
--		const char *compat)
-+static int __of_device_is_compatible(const struct device_node *device,
-+				     const char *compat)
- {
- 	const char* cp;
- 	int cplen, l;
- 
--	cp = of_get_property(device, "compatible", &cplen);
-+	cp = __of_get_property(device, "compatible", &cplen);
- 	if (cp == NULL)
- 		return 0;
- 	while (cplen > 0) {
-@@ -245,6 +267,20 @@ int of_device_is_compatible(const struct device_node *device,
- 
- 	return 0;
- }
-+
-+/** Checks if the given "compat" string matches one of the strings in
-+ * the device's "compatible" property
-+ */
-+int of_device_is_compatible(const struct device_node *device,
-+		const char *compat)
-+{
-+	int res;
-+
-+	read_lock(&devtree_lock);
-+	res = __of_device_is_compatible(device, compat);
-+	read_unlock(&devtree_lock);
-+	return res;
-+}
- EXPORT_SYMBOL(of_device_is_compatible);
- 
- /**
-@@ -518,7 +554,8 @@ struct device_node *of_find_compatible_node(struct device_node *from,
- 		if (type
- 		    && !(np->type && (of_node_cmp(np->type, type) == 0)))
- 			continue;
--		if (of_device_is_compatible(np, compatible) && of_node_get(np))
-+		if (__of_device_is_compatible(np, compatible) &&
-+		    of_node_get(np))
- 			break;
- 	}
- 	of_node_put(from);
-@@ -562,15 +599,9 @@ out:
- }
- EXPORT_SYMBOL(of_find_node_with_property);
- 
--/**
-- * of_match_node - Tell if an device_node has a matching of_match structure
-- *	@matches:	array of of device match structures to search in
-- *	@node:		the of device structure to match against
-- *
-- *	Low level utility function used by device matching.
-- */
--const struct of_device_id *of_match_node(const struct of_device_id *matches,
--					 const struct device_node *node)
-+static
-+const struct of_device_id *__of_match_node(const struct of_device_id *matches,
-+					   const struct device_node *node)
- {
- 	if (!matches)
- 		return NULL;
-@@ -584,14 +615,32 @@ const struct of_device_id *of_match_node(const struct of_device_id *matches,
- 			match &= node->type
- 				&& !strcmp(matches->type, node->type);
- 		if (matches->compatible[0])
--			match &= of_device_is_compatible(node,
--						matches->compatible);
-+			match &= __of_device_is_compatible(node,
-+							   matches->compatible);
- 		if (match)
- 			return matches;
- 		matches++;
- 	}
- 	return NULL;
- }
-+
-+/**
-+ * of_match_node - Tell if an device_node has a matching of_match structure
-+ *	@matches:	array of of device match structures to search in
-+ *	@node:		the of device structure to match against
-+ *
-+ *	Low level utility function used by device matching.
-+ */
-+const struct of_device_id *of_match_node(const struct of_device_id *matches,
-+					 const struct device_node *node)
-+{
-+	const struct of_device_id *match;
-+
-+	read_lock(&devtree_lock);
-+	match = __of_match_node(matches, node);
-+	read_unlock(&devtree_lock);
-+	return match;
-+}
- EXPORT_SYMBOL(of_match_node);
- 
- /**
-@@ -619,7 +668,7 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
- 	read_lock(&devtree_lock);
- 	np = from ? from->allnext : of_allnodes;
- 	for (; np; np = np->allnext) {
--		if (of_match_node(matches, np) && of_node_get(np)) {
-+		if (__of_match_node(matches, np) && of_node_get(np)) {
- 			if (match)
- 				*match = matches;
- 			break;
--- 
-1.8.1
+Best regards,
+Tomasz
