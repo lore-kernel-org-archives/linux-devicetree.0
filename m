@@ -1,11 +1,12 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH] of: Add vendor prefix for Cirrus Logic
-Date: Thu, 24 Jan 2013 08:18:35 +0400
-Message-ID: <1359001115-24466-1-git-send-email-shc_work@mail.ru>
+From: "Saridakis, Dean   (US SSA)" <dean.saridakis-IHqVjY1oUdQxoycv7ERPSQ@public.gmane.org>
+Subject: DTs, Linux drivers & PCI Devices
+Date: Fri, 25 Jan 2013 16:30:32 +0000
+Message-ID: <B98BBFB67D89184E8E876F332BDBC3E0A0C06D@GLDMS85001.goldlnk.rootlnka.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,28 +17,25 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a device tree vendor prefix for Cirrus Logic, Inc.
+I've been diving into Linux kernel drivers & device trees for a new project & am looking for some help. 
 
-Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+First, is it reasonable/possible to define a PCI (PCIe) device in a device tree? Seems like you'd have to reference a BAR#s to do this (& still have addresses mapped by enumeration).  A couple reasons I'm interested in doing this:
+- The PCI device logic will be migrated to a system bus
+- DT properties provide a nice way to pass in driver configuration data 
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 1532137..f2d6515 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -14,6 +14,7 @@ bosch	Bosch Sensortec GmbH
- brcm	Broadcom Corporation
- cavium	Cavium, Inc.
- chrp	Common Hardware Reference Platform
-+cirrus	Cirrus Logic, Inc.
- cortina	Cortina Systems, Inc.
- dallas	Maxim Integrated Products (formerly Dallas Semiconductor)
- denx	Denx Software Engineering
--- 
-1.7.12.4
+It's not clear to me how the linux kernel interprets/processes the device tree. I'm working w/ powerpc (fsl QorIQ). E.g., shouldn't everything from the DT show up in /sys/bus/platform/devices ? I noticed that not everything is there, e.g., only 2 of the 4 PCIe RCs. (Noticed this after trying to add my own simple dummy entry to a reserved reg space as an experiment).
+
+Ultimately I'd like to use the DT to describe a set of logic cores on a subordinate bus. There is also a subordinate interrupt controller, which I think I can figure out how to describe, but am not sure how kernel glue works -- somehow I'd need to bind that controller to routing code I provide. 
+
+Documentation I've been reading includes:
+- ePAPR
+- DT wiki
+- kernel doc (driver-model, devicetree)
+- Linux DDs v3 (no coverage of platform drivers)
+Any other recommended docs?
+
+Thanks,
+Dean 
