@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCH v17 5/7] fbmon: add of_videomode helpers
-Date: Fri, 25 Jan 2013 10:01:53 +0100
-Message-ID: <1359104515-8907-6-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH v17 7/7] drm_modes: add of_videomode helpers
+Date: Fri, 25 Jan 2013 10:01:55 +0100
+Message-ID: <1359104515-8907-8-git-send-email-s.trumtrar@pengutronix.de>
 References: <1359104515-8907-1-git-send-email-s.trumtrar@pengutronix.de>
 Return-path: <linux-media-owner@vger.kernel.org>
 In-Reply-To: <1359104515-8907-1-git-send-email-s.trumtrar@pengutronix.de>
@@ -10,7 +10,7 @@ To: devicetree-discuss@lists.ozlabs.org, Dave Airlie <airlied@linux.ie>
 Cc: Steffen Trumtrar <s.trumtrar@pengutronix.de>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Rob Clark <robdclark@gmail.com>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "Mohammed, Afzal" <afzal@ti.com>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Add helper to get fb_videomode from devicetree.
+Add helper to get drm_display_mode from devicetree.
 
 Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
@@ -23,48 +23,39 @@ Tested-by: Afzal Mohammed <Afzal@ti.com>
 Tested-by: Rob Clark <robclark@gmail.com>
 Tested-by: Leela Krishna Amudala <leelakrishna.a@gmail.com>
 ---
- drivers/video/fbmon.c |   42 ++++++++++++++++++++++++++++++++++++++++++
- include/linux/fb.h    |    4 ++++
- 2 files changed, 46 insertions(+)
+ drivers/gpu/drm/drm_modes.c |   33 +++++++++++++++++++++++++++++++++
+ include/drm/drmP.h          |    4 ++++
+ 2 files changed, 37 insertions(+)
 
-diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
-index 17ce135..94ad0f7 100644
---- a/drivers/video/fbmon.c
-+++ b/drivers/video/fbmon.c
-@@ -31,6 +31,7 @@
- #include <linux/pci.h>
- #include <linux/slab.h>
- #include <video/edid.h>
+diff --git a/drivers/gpu/drm/drm_modes.c b/drivers/gpu/drm/drm_modes.c
+index 9f3f20b..04fa6f1 100644
+--- a/drivers/gpu/drm/drm_modes.c
++++ b/drivers/gpu/drm/drm_modes.c
+@@ -35,6 +35,7 @@
+ #include <linux/export.h>
+ #include <drm/drmP.h>
+ #include <drm/drm_crtc.h>
 +#include <video/of_videomode.h>
  #include <video/videomode.h>
- #ifdef CONFIG_PPC_OF
- #include <asm/prom.h>
-@@ -1425,6 +1426,47 @@ int fb_videomode_from_videomode(const struct videomode *vm,
- EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
+ 
+ /**
+@@ -541,6 +542,38 @@ int drm_display_mode_from_videomode(const struct videomode *vm,
+ EXPORT_SYMBOL_GPL(drm_display_mode_from_videomode);
  #endif
  
 +#if IS_ENABLED(CONFIG_OF_VIDEOMODE)
-+static inline void dump_fb_videomode(const struct fb_videomode *m)
-+{
-+	pr_debug("fb_videomode = %ux%u@%uHz (%ukHz) %u %u %u %u %u %u %u %u %u\n",
-+		 m->xres, m->yres, m->refresh, m->pixclock, m->left_margin,
-+		 m->right_margin, m->upper_margin, m->lower_margin,
-+		 m->hsync_len, m->vsync_len, m->sync, m->vmode, m->flag);
-+}
-+
 +/**
-+ * of_get_fb_videomode - get a fb_videomode from devicetree
++ * of_get_drm_display_mode - get a drm_display_mode from devicetree
 + * @np: device_node with the timing specification
-+ * @fb: will be set to the return value
++ * @dmode: will be set to the return value
 + * @index: index into the list of display timings in devicetree
 + *
-+ * DESCRIPTION:
 + * This function is expensive and should only be used, if only one mode is to be
-+ * read from DT. To get multiple modes start with of_get_display_timings ond
++ * read from DT. To get multiple modes start with of_get_display_timings and
 + * work with that instead.
 + */
-+int of_get_fb_videomode(struct device_node *np, struct fb_videomode *fb,
-+			int index)
++int of_get_drm_display_mode(struct device_node *np,
++			    struct drm_display_mode *dmode, int index)
 +{
 +	struct videomode vm;
 +	int ret;
@@ -73,41 +64,41 @@ index 17ce135..94ad0f7 100644
 +	if (ret)
 +		return ret;
 +
-+	fb_videomode_from_videomode(&vm, fb);
++	drm_display_mode_from_videomode(&vm, dmode);
 +
 +	pr_debug("%s: got %dx%d display mode from %s\n",
 +		of_node_full_name(np), vm.hactive, vm.vactive, np->name);
-+	dump_fb_videomode(fb);
++	drm_mode_debug_printmodeline(dmode);
 +
 +	return 0;
 +}
-+EXPORT_SYMBOL_GPL(of_get_fb_videomode);
++EXPORT_SYMBOL_GPL(of_get_drm_display_mode);
 +#endif
 +
- #else
- int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
- {
-diff --git a/include/linux/fb.h b/include/linux/fb.h
-index 100a176..58b9860 100644
---- a/include/linux/fb.h
-+++ b/include/linux/fb.h
-@@ -20,6 +20,7 @@ struct fb_info;
- struct device;
- struct file;
- struct videomode;
+ /**
+  * drm_mode_set_name - set the name on a mode
+  * @mode: name will be set in this mode
+diff --git a/include/drm/drmP.h b/include/drm/drmP.h
+index d5c06ff..fcc9d23 100644
+--- a/include/drm/drmP.h
++++ b/include/drm/drmP.h
+@@ -85,6 +85,7 @@ struct module;
+ struct drm_file;
+ struct drm_device;
+ 
 +struct device_node;
+ struct videomode;
  
- /* Definitions below are used in the parsed monitor specs */
- #define FB_DPMS_ACTIVE_OFF	1
-@@ -715,6 +716,9 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
- extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
- extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
+ #include <drm/drm_os_linux.h>
+@@ -1460,6 +1461,9 @@ drm_mode_create_from_cmdline_mode(struct drm_device *dev,
  
-+extern int of_get_fb_videomode(struct device_node *np,
-+			       struct fb_videomode *fb,
-+			       int index);
- extern int fb_videomode_from_videomode(const struct videomode *vm,
- 				       struct fb_videomode *fbmode);
+ extern int drm_display_mode_from_videomode(const struct videomode *vm,
+ 					   struct drm_display_mode *dmode);
++extern int of_get_drm_display_mode(struct device_node *np,
++				   struct drm_display_mode *dmode,
++				   int index);
  
+ /* Modesetting support */
+ extern void drm_vblank_pre_modeset(struct drm_device *dev, int crtc);
 -- 
 1.7.10.4
