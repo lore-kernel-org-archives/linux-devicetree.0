@@ -1,89 +1,48 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] ARM: davinci: da850: add RTC driver DT entries
-Date: Fri, 25 Jan 2013 16:52:18 +0530
-Message-ID: <51026AEA.5050503@ti.com>
-References: <1359094430-14724-1-git-send-email-mrugesh.mk@ti.com> <51025FAE.3060503@ti.com> <4232EB8829679242B82E712C3DB3149D4233E9@DBDE01.ent.ti.com>
+From: kishon <kishon-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 4/4] drivers: usb: start using the control module driver
+Date: Fri, 25 Jan 2013 17:15:53 +0530
+Message-ID: <51027071.4060101@ti.com>
+References: <1359109440-2195-1-git-send-email-kishon@ti.com>
+ <1359109440-2195-5-git-send-email-kishon@ti.com>
+ <20130125102700.GO15886@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <4232EB8829679242B82E712C3DB3149D4233E9@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Katepallewar, Mrugesh" <mrugesh.mk@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "hs@denx.de" <hs@denx.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130125102700.GO15886-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/25/2013 4:34 PM, Katepallewar, Mrugesh wrote:
-> On Fri, Jan 25, 2013 at 16:04:22, Nori, Sekhar wrote:
->> On 1/25/2013 11:43 AM, Mrugesh Katepallewar wrote:
->>> Add RTC DT entries in da850 dts file.
->>>
->>> Signed-off-by: Mrugesh Katepallewar <mrugesh.mk@ti.com>
->>> ---
->>> Applies on top of v3.8-rc4 of linus tree.
->>>
->>> Tested on da850-evm device.
->>>
->>> Test Procedure:
->>> date [YYYY.]MM.DD-hh:mm[:ss]
->>> hwclock -w
->>> reset board and check system time.
->>>
->>> :100644 100644 37dc5a3... b16efd4... M	arch/arm/boot/dts/da850-evm.dts
->>> :100644 100644 640ab75... a8eb1b1... M	arch/arm/boot/dts/da850.dtsi
->>>  arch/arm/boot/dts/da850-evm.dts |    3 +++
->>>  arch/arm/boot/dts/da850.dtsi    |    8 ++++++++
->>>  2 files changed, 11 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/da850-evm.dts 
->>> b/arch/arm/boot/dts/da850-evm.dts index 37dc5a3..b16efd4 100644
->>> --- a/arch/arm/boot/dts/da850-evm.dts
->>> +++ b/arch/arm/boot/dts/da850-evm.dts
->>> @@ -24,5 +24,8 @@
->>>  		serial2: serial@1d0d000 {
->>>  			status = "okay";
->>>  		};
->>> +		rtc@1c23000 {
-
-I did not mention this last time, but this should be:
-
-		rtc0: rtc@1c23000 {
-
-to be consistent with rest of the file.
-
->>> +			status = "okay";
->>> +		};
->>>  	};
->>>  };
->>> diff --git a/arch/arm/boot/dts/da850.dtsi 
->>> b/arch/arm/boot/dts/da850.dtsi index 640ab75..a8eb1b1 100644
->>> --- a/arch/arm/boot/dts/da850.dtsi
->>> +++ b/arch/arm/boot/dts/da850.dtsi
->>> @@ -56,5 +56,13 @@
->>>  			interrupt-parent = <&intc>;
->>>  			status = "disabled";
->>>  		};
->>> +		rtc@1c23000 {
-
-Here too.
-
->>> +			compatible = "ti,da830-rtc";
->>> +			reg = <0x23000 0x1000>;
->>> +			interrupts = <19
->>> +				      19>;
+On Friday 25 January 2013 03:57 PM, Felipe Balbi wrote:
+> Hi,
+>
+> On Fri, Jan 25, 2013 at 03:54:00PM +0530, Kishon Vijay Abraham I wrote:
+>> Start using the control module driver for powering on the PHY and for
+>> writing to the mailbox instead of writing to the control module
+>> registers on their own.
 >>
->> Why two interrupts of the same number? If there is only one interrupt line then only one should be specified, no?
-> We are using common OMAP RTC driver for da850 and other ti SoC's (e.g.am33xx). I have seen in am33xx.dtsi rtc timer
-> and alarm interrupts are different. So, two interrupt numbers are expected from RTC DT node.
+>> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   Documentation/devicetree/bindings/usb/omap-usb.txt |    4 ++
+>>   Documentation/devicetree/bindings/usb/usb-phy.txt  |    7 +-
+>>   arch/arm/mach-omap2/omap_hwmod_44xx_data.c         |   13 ----
+>
+> I'm taking this patch but I'm leaving out the omap_hwmod_44xx_data.c
+> change just to kill dependency. Can you send that single change as a
+> separate patch which Tony can queue ?
+>
+Sure.
 
-Okay. Looking at the OMAP-L138 TRM, I see that the IP on that SoC
-supports both alarm and timer events and both arrive on the same
-interrupt number (as opposed to am335x where they supposedly arrive on
-different interrupt lines). What you have looks fine to me considering
-this.
-
-Also, the interrupt-parent setting needs to be removed. See the patch
-Prabhakar just submitted.
-
-Thanks,
-Sekhar
+Thanks
+Kishon
