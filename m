@@ -1,68 +1,58 @@
 From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 1/2] [media] s5p-g2d: Add DT based discovery support
-Date: Fri, 25 Jan 2013 15:25:21 +0530
-Message-ID: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
+Subject: [PATCH 2/2] drm/exynos: Add device tree based discovery support for G2D
+Date: Fri, 25 Jan 2013 15:25:22 +0530
+Message-ID: <1359107722-9974-2-git-send-email-sachin.kamat@linaro.org>
+References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
 Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
 Sender: linux-media-owner@vger.kernel.org
 To: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org
 Cc: k.debski@samsung.com, inki.dae@samsung.com, sachin.kamat@linaro.org, ajaykumar.rs@samsung.com, patches@linaro.org, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree based discovery support to G2D driver
+From: Ajay Kumar <ajaykumar.rs@samsung.com>
 
+This patch adds device tree match table for Exynos G2D controller.
+
+Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
 Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 ---
- drivers/media/platform/s5p-g2d/g2d.c |   17 ++++++++++++++++-
- 1 files changed, 16 insertions(+), 1 deletions(-)
+ drivers/gpu/drm/exynos/exynos_drm_g2d.c |   10 ++++++++++
+ 1 files changed, 10 insertions(+), 0 deletions(-)
 
-diff --git a/drivers/media/platform/s5p-g2d/g2d.c b/drivers/media/platform/s5p-g2d/g2d.c
-index 7e41529..210e142 100644
---- a/drivers/media/platform/s5p-g2d/g2d.c
-+++ b/drivers/media/platform/s5p-g2d/g2d.c
-@@ -18,6 +18,7 @@
- #include <linux/slab.h>
- #include <linux/clk.h>
- #include <linux/interrupt.h>
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_g2d.c b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
+index ddcfb5d..d24b170 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_g2d.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
+@@ -19,6 +19,7 @@
+ #include <linux/workqueue.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/dma-attrs.h>
 +#include <linux/of.h>
  
- #include <linux/platform_device.h>
- #include <media/v4l2-mem2mem.h>
-@@ -796,7 +797,8 @@ static int g2d_probe(struct platform_device *pdev)
- 	}
+ #include <drm/drmP.h>
+ #include <drm/exynos_drm.h>
+@@ -1240,6 +1241,14 @@ static int g2d_resume(struct device *dev)
  
- 	def_frame.stride = (def_frame.width * def_frame.fmt->depth) >> 3;
--	dev->variant = g2d_get_drv_data(pdev);
-+	if (!pdev->dev.of_node)
-+		dev->variant = g2d_get_drv_data(pdev);
+ static SIMPLE_DEV_PM_OPS(g2d_pm_ops, g2d_suspend, g2d_resume);
  
- 	return 0;
- 
-@@ -844,6 +846,18 @@ static struct g2d_variant g2d_drvdata_v4x = {
- 	.hw_rev = TYPE_G2D_4X, /* Revision 4.1 for Exynos4X12 and Exynos5 */
- };
- 
++#ifdef CONFIG_OF
 +static const struct of_device_id exynos_g2d_match[] = {
-+	{
-+		.compatible = "samsung,g2d-v3",
-+		.data = &g2d_drvdata_v3x,
-+	}, {
-+		.compatible = "samsung,g2d-v41",
-+		.data = &g2d_drvdata_v4x,
-+	},
++	{ .compatible = "samsung,g2d-v41" },
 +	{},
 +};
 +MODULE_DEVICE_TABLE(of, exynos_g2d_match);
++#endif
 +
- static struct platform_device_id g2d_driver_ids[] = {
- 	{
- 		.name = "s5p-g2d",
-@@ -863,6 +877,7 @@ static struct platform_driver g2d_pdrv = {
- 	.driver		= {
- 		.name = G2D_NAME,
- 		.owner = THIS_MODULE,
+ struct platform_driver g2d_driver = {
+ 	.probe		= g2d_probe,
+ 	.remove		= g2d_remove,
+@@ -1247,5 +1256,6 @@ struct platform_driver g2d_driver = {
+ 		.name	= "s5p-g2d",
+ 		.owner	= THIS_MODULE,
+ 		.pm	= &g2d_pm_ops,
 +		.of_match_table = of_match_ptr(exynos_g2d_match),
  	},
  };
- 
 -- 
 1.7.4.1
