@@ -1,64 +1,46 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] DT: add vendor prefixes for Renesas and Toshiba
-Date: Fri, 25 Jan 2013 08:31:12 -0600
-Message-ID: <51029730.8050107@gmail.com>
-References: <Pine.LNX.4.64.1301241708360.7826@axis700.grange> <20130125041206.GK13691@verge.net.au>
+From: "Mohammed, Afzal" <afzal@ti.com>
+Subject: RE: [PATCH v1 0/6] USB: Add support for multiple PHYs of same type
+Date: Fri, 25 Jan 2013 14:46:09 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA93ACE@DBDE01.ent.ti.com>
+References: <1358848694-20145-1-git-send-email-kishon@ti.com>
+ <2D906ABA-71F2-4843-9DBE-F82527A1240A@dominion.thruhere.net>
+ <50FEB3FD.3050001@ti.com> <50FEBB61.9000707@ti.com>
+ <B9531499-0746-44DA-BDBB-999D4CA31E63@dominion.thruhere.net>
+ <C8443D0743D26F4388EA172BF4E2A7A93EA922F5@DBDE01.ent.ti.com>
+ <50FFF31D.2070908@ti.com>
+ <C8443D0743D26F4388EA172BF4E2A7A93EA92B0B@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130125041206.GK13691@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EA92B0B@DBDE01.ent.ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
+Cc: Koen Kooi <koen@dominion.thruhere.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "tony@atomide.com" <tony@atomide.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Balbi, Felipe" <balbi@ti.com>, "eballetbo@gmail.com" <eballetbo@gmail.com>, Jason Kridner <jkridner@beagleboard.org>, "javier@dowhile0.org" <javier@dowhile0.org>, "linux-omap@vger.kernel.org List" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/24/2013 10:12 PM, Simon Horman wrote:
-> On Thu, Jan 24, 2013 at 05:09:45PM +0100, Guennadi Liakhovetski wrote:
->> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> 
-> I'm curious to know who would ack and or pick-up this patch.
+Hi Kishon,
 
-I have applied it. You would know if get_maintainers.pl had been used.
+On Thu, Jan 24, 2013 at 17:21:45, Mohammed, Afzal wrote:
+> On Wed, Jan 23, 2013 at 19:56:37, ABRAHAM, KISHON VIJAY wrote:
+> > On Wednesday 23 January 2013 07:28 PM, Mohammed, Afzal wrote:
 
-Rob
+> > > USB first instance of am335x works in mainline as of now.
+> 
+> > Can you check if this series indeed breaks am335x?
+> > 
+> > Thanks for your help.
+> 
+> Do you have a tree having these changes, it would be easier for me.
 
-> 
->> ---
->>  .../devicetree/bindings/vendor-prefixes.txt        |    2 ++
->>  1 files changed, 2 insertions(+), 0 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> index 902b1b1..5d811b2 100644
->> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
->> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
->> @@ -42,6 +42,7 @@ powervr	PowerVR (deprecated, use img)
->>  qcom	Qualcomm, Inc.
->>  ramtron	Ramtron International
->>  realtek Realtek Semiconductor Corp.
->> +renesas	Renesas Electronics Corporation
->>  samsung	Samsung Semiconductor
->>  sbs	Smart Battery System
->>  schindler	Schindler
->> @@ -52,6 +53,7 @@ snps 	Synopsys, Inc.
->>  st	STMicroelectronics
->>  stericsson	ST-Ericsson
->>  ti	Texas Instruments
->> +toshiba	Toshiba Corporation
->>  via	VIA Technologies, Inc.
->>  wlf	Wolfson Microelectronics
->>  wm	Wondermedia Technologies, Inc.
->> -- 
->> 1.7.2.5
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+I tried with your "omap5-with-palmas" branch that was mentioned in
+the cover letter of your latest series (but couldn't find the commit
+that you mentioned in the cover letter, HEAD of that branch that I
+tested was "2c29519 ARM: dts: palmas: update dt data for palmas-usb")
+
+usb first instance of am335x works as earlier.
+
+Regards
+Afzal
 
