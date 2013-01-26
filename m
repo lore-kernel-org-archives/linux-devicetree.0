@@ -1,61 +1,96 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 5/6] ARM: regulator: add tps6507x device tree data
-Date: Sat, 26 Jan 2013 13:12:08 +0800
-Message-ID: <20130126051206.GE10580@opensource.wolfsonmicro.com>
-References: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
- <1359024920-32190-6-git-send-email-manishv.b@ti.com>
- <20130124120050.GP4955@opensource.wolfsonmicro.com>
- <A4887BF146CD57468F700B415D2F4701581621@DBDE01.ent.ti.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH] arm: dts: Add uart1 and uart2 to igep boards.
+Date: Sat, 26 Jan 2013 16:16:45 +0100
+Message-ID: <CABuKBeJsHCq98Pe-BwPajbQ+2OLQpwrbtVTJe=j9thPDQCCBrg@mail.gmail.com>
+References: <1355326422-12357-1-git-send-email-matthias.bgg@gmail.com>
+	<50C8AC3C.9020908@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6e7ZaeXHKrTJCxdu"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <A4887BF146CD57468F700B415D2F4701581621@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "tony@atomide.com" <tony@atomide.com>, "hs@denx.de" <hs@denx.de>, "Girdwood, Liam" <lrg@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "Hilman, Kevin" <khilman@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <50C8AC3C.9020908@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: tony@atomide.com, grant.likely@secretlab.ca, eballetbo@gmail.com, elezegarcia@gmail.com, ebutera@gmail.com, javier.martinez@collabora.co.uk, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Benoit,
 
---6e7ZaeXHKrTJCxdu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+2012/12/12 Benoit Cousson <b-cousson@ti.com>:
+> Hi Matthias,
+>
+> On 12/12/2012 04:33 PM, Matthias Brugger wrote:
+>> This patch is a follow-up patch for Javier Martinez effort adding initial
+>> device tree support to IGEP technology devices. [1]
+>>
+>> It adds uart1 and uart2 bindings to the generic dtsi for the IGEP boards.
+>>
+>> [1] http://www.spinics.net/lists/linux-omap/msg83409.html
+>>
+>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>> ---
+>>  arch/arm/boot/dts/omap3-igep.dtsi |   24 ++++++++++++++++++++++++
+>>  1 file changed, 24 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/omap3-igep.dtsi b/arch/arm/boot/dts/omap3-igep.dtsi
+>> index 125fe00..c02e3c0 100644
+>> --- a/arch/arm/boot/dts/omap3-igep.dtsi
+>> +++ b/arch/arm/boot/dts/omap3-igep.dtsi
+>> @@ -27,6 +27,20 @@
+>>  };
+>>
+>>  &omap3_pmx_core {
+>> +     uart1_pins: pinmux_uart1_pins {
+>> +             pinctrl-single,pins = <
+>> +                     0x152 0x100     /* uart1_rx.uart1_rx INPUT | MODE0 */
+>> +                     0x14c 0         /* uart1_tx.uart1_tx OUTPUT | MODE0 */
+>> +             >;
+>> +     };
+>> +
+>> +     uart2_pins: pinmux_uart2_pins {
+>> +             pinctrl-single,pins = <
+>> +                     0x14a 0x100     /* uart2_rx.uart2_rx INPUT | MODE0 */
+>> +                     0x148 0         /* uart2_tx.uart2_tx OUTPUT | MODE0 */
+>> +             >;
+>> +     };
+>> +
+>>       uart3_pins: pinmux_uart3_pins {
+>>               pinctrl-single,pins = <
+>>                       0x16e 0x100     /* uart3_rx.uart3_rx INPUT | MODE0 */
+>> @@ -77,6 +91,16 @@
+>>       status = "disabled";
+>>  };
+>>
+>> +&uart1 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&uart1_pins>;
+>> +};
+>> +
+>> +&uart2 {
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&uart2_pins>;
+>> +};
+>> +
+>>  &uart3 {
+>>         pinctrl-names = "default";
+>>         pinctrl-0 = <&uart3_pins>;
+>>
+>
+> That looks good to me. I'll apply it on top of javier's series for 3.9.
 
-On Fri, Jan 25, 2013 at 06:29:49AM +0000, Vishwanathrao Badarkhe, Manish wrote:
-> On Thu, Jan 24, 2013 at 17:30:51, Mark Brown wrote:
+Can you pin-point me to the repository where this patches are in right
+now? I tried to figure it out these days, but didn't found where to
+clone the repository from.
 
-> I too doubt that whether it should be in architecture specific folder,
+Thanks,
+Matthias
 
-> My code is in reference to below patch:
-> arm/dts: regulator: Add tps65910 device tree data(d5d08e2e1672da627d7c9d34a9dc1089c653e23a)
+>
+> Thanks,
+> Benoit
+>
 
-> Could you please suggest me if it can be moved somewhere else?
 
-We should have somewhere to put this sort of generic stuff, yes.  Not
-sure where, possibly under drivers/of or some non-drivers part of the
-tree.
 
---6e7ZaeXHKrTJCxdu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRA2UjAAoJELSic+t+oim9o/gP/1BPLvsiR63xW9H97PpzypHs
-7UrZPlMwP5rysc6GRf+/JJHwl2VFfzReIGcej5MGZ11NVozDj4lbVttSau7m4ry8
-VWU41uhe4hIoIeJu+m/AnC0iiVo2iR8+T48VPDZWv8RxeX8EATWKxm3rZBbz0L//
-zDBHrzwjlHcMLgkNUuA3AhYiZUcRmu5CwnB8CcSbiPKdiNFSGpwaLaeA+IDkm1Et
-PfT54TgC6umrwPPEmwo1aaresvqPOhMTer0QS2belSma6FQwWXXly+tUy6HjVZMs
-aobUgmHFIKmCZNj4gwCRUVNaocZAnfJ/RSHWII3/y4PJHn9u7/UjZvrDbR4n+jxi
-vMBR/Ak2LryBsZAV18r6Di84ojk2Q/8ZJqCA+1PKthb6nXnNB2SrC+bHbwowrVvK
-415NNFwALR8HxO26yfW5P3qfMzPQOQmABMvtllSKkyR6dQAQjNqJUgvc7/PmkQED
-yBXWzIzIKJZDQ0zrAa5bgukrVgicfUlDbSuOxUBrVD7N7rjSgdvEyNswfLKtg3mG
-wI9jJmhLGJFO5KKZolGXCwgl2R372b7Cx2u0szJgUxe1LQCwOuAHlPtr8p2s0zcJ
-qquWs0jwrkEafwuxwP+SpXHPEacODd/jp91a5m2AKrSc28tQSK/eJ4VAjWBfvtPj
-RBpd56ge/PUUIi1DqhZi
-=R9iq
------END PGP SIGNATURE-----
-
---6e7ZaeXHKrTJCxdu--
+-- 
+---
+motzblog.wordpress.com
