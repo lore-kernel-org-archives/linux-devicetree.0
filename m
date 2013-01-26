@@ -1,99 +1,69 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: RE: RE: [PATCH v4 12/12] video: da8xx-fb: CCF clock divider handling
-Date: Fri, 25 Jan 2013 14:44:53 -0800
-Message-ID: <20130125224453.10623.74434@quantum>
-References: <cover.1358937685.git.afzal@ti.com>
- <fa8dab522507e087d5a94bac13dda71544911707.1358937685.git.afzal@ti.com>
- <20130123202204.9205.66575@quantum>
- <C8443D0743D26F4388EA172BF4E2A7A93EA92ADF@DBDE01.ent.ti.com>
- <20130124170044.10623.45314@quantum>
- <C8443D0743D26F4388EA172BF4E2A7A93EA9383E@DBDE01.ent.ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH/RFC 2/3] ethernet: add a PHY reset GPIO DT binding to sh_eth
+Date: Sat, 26 Jan 2013 02:04:13 +0100
+Message-ID: <3496361.USCGuib0gY@avalon>
+References: <1359043653-11374-1-git-send-email-g.liakhovetski@gmx.de> <7921225.sfO3PIeLVS@avalon> <Pine.LNX.4.64.1301251127460.17518@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EA9383E@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Mohammed, Afzal" <afzal@ti.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, paul@pwsan.com, rnayak@ti.com, b-cousson@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1301251127460.17518@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Mohammed, Afzal (2013-01-25 04:05:44)
-> Hi Mike,
-> 
-> On Thu, Jan 24, 2013 at 22:30:44, Mike Turquette wrote:
-> > Quoting Mohammed, Afzal (2013-01-24 03:36:02)
-> 
-> > > So there are 3 - LIDD is actually not for present use case, CORE could
-> > > be clubbed with the divider to have a composite clock. And CORE is
-> > > in functional clock path and logically it's perfectly alright to have
-> > > the composite clock.
-> 
-> > Some of the clock names are a bit generic, so a question that I'm going
-> > to repeat throughout my response: "is this clock only inside of your
-> > video IP ?"
-> 
-> Yes these three clocks are inside LCDC IP.
-> 
-> > Regarding the CORE clock, is this only inside of your IP or are you
-> > referring to the SoC CORE clock which is driven by a DPLL and clocks
-> > DDR and many other peripherals (often MMC, UART, etc)?
-> 
-> Sorry for the confusion, here CORE refers to clock inside LCDC IP. This
-> CORE should not be confused with CORE PLL. Actually I used CORE so that
-> it corresponds to the nomenclature in LCDC section of TRM.
-> 
-> > Note that this is from my past experience with OMAP, and I'm making an
-> > assumption that the clock scheme between OMAP and Da Vinci/AM335x parts
-> > isn't very different.
-> 
-> Additional detail: DaVinci doesn't have these 3 clocks controls available,
-> so these three are required only on AM335x (which has IP version 2 )
-> 
-> > Is there a public TRM I can look at?  It would help me understand this
-> > without having to ask you so many annoying questions ;)
-> 
-> No problem, http://www.ti.com/product/am3359
-> 
-> 
-> > > And now we are left with DMA, this is actually in the interface clock
-> > > path which driver in unaware. An option would be to have DMA clock
-> > > as child of CORE plus divider composite clock, even though logically
-> > > DMA can't be considered in the same path.
-> 
-> > Why is the driver unaware of the interface clk?  For instance OMAP3 had
-> > separate fclk and iclk for IPs and drivers would call clk_enable on
-> > both.  Or am I misunderstanding something?
-> 
-> HWMOD handles enabling those upon pm_runtime calls, HWMOD makes an alias
-> for main clock with "fck", but not for "ick", so currently "ick" is
-> unavailable for the driver, continued below ..
-> 
-> > In general I don't think the clock subtree should be modeled in a way
-> > that is convenient for software, but instead model the actual hardware.
-> > Trust me, if you don't model the actual hardware then you will be very
-> > confused when you come back and revisit this code in 6 months and can't
-> > remember why things are so weird looking.
-> 
-> Ok, then it seems an omap clock entry for con-id "ick" should be created
-> as follows (dpll_core_m4_ck supplies interface clock),
-> 
-> CLK("4830e000.lcdc",    "ick",          &dpll_core_m4_ck,       CK_AM33XX)
-> 
-> And then in the driver, DMA gate clock should be made a child of this clock
-> (obtained with con-id "ick").
-> 
-> Let me know your opinion on this.
-> 
+Hi Guennadi,
 
-I think Paul W. or someone on the TI side should weigh in on your clkdev
-entries.  My main point is that the actual tree should be modeled and
-clocks shouldn't be globbed together unnecessarily.  As mentioned in the
-other mail thread you might be better off making a divider for your LCDC
-IP block and modeling each node individually.
+On Friday 25 January 2013 11:34:55 Guennadi Liakhovetski wrote:
+> On Fri, 25 Jan 2013, Laurent Pinchart wrote:
+> > On Thursday 24 January 2013 17:07:32 Guennadi Liakhovetski wrote:
+> > > If an ethernet PHY can be reset by a GPIO, it can be specified in DT.
+> > > Add a binding and code to parse it, request the GPIO and take the PHY
+> > > out of reset.
+> > > 
+> > > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > > Cc: devicetree-discuss@lists.ozlabs.org
+> > > Cc: netdev@vger.kernel.org
+> > > ---
+> > > 
+> > >  Documentation/devicetree/bindings/net/sh_ether.txt |    2 ++
+> > >  drivers/net/ethernet/renesas/sh_eth.c              |    9 ++++++++-
+> > >  2 files changed, 10 insertions(+), 1 deletions(-)
 
+[snip]
+
+> > > diff --git a/drivers/net/ethernet/renesas/sh_eth.c
+> > > b/drivers/net/ethernet/renesas/sh_eth.c index 1f64848..06035a2 100644
+> > > --- a/drivers/net/ethernet/renesas/sh_eth.c
+> > > +++ b/drivers/net/ethernet/renesas/sh_eth.c
+
+[snip]
+
+> > > @@ -2420,6 +2423,10 @@ sh_eth_parse_dt(struct device *dev, struct
+> > > net_device *ndev) else
+> > > 
+> > >  		pdata->needs_init = 0;
+> > > 
+> > > +	gpio = of_get_named_gpio_flags(np, "phy-reset-gpios", 0, &flags);
+> > > +	if (gpio_is_valid(gpio) && !devm_gpio_request(dev, gpio, NULL))
+> > > +		gpio_direction_output(gpio, !!(flags & OF_GPIO_ACTIVE_LOW));
+> > 
+> > You could use devm_gpio_request_one() here.
+> 
+> Yes, but then the flag would look uglier, something like
+> 
+> 		devm_gpio_request_one(dev, gpio, flags &
+> 			OF_GPIO_ACTIVE_LOW ? GPIOF_OUT_INIT_HIGH :
+> 			GPIOF_OUT_INIT_LOW);
+> 
+> Does it really look like an improvement? :)
+
+It's one less function call, so to me it does :-) Feel free to ignore that 
+though.
+
+-- 
 Regards,
-Mike
 
-> Regards
-> Afzal
+Laurent Pinchart
+
