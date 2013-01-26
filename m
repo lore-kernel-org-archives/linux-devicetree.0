@@ -1,69 +1,66 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH/RFC 2/3] ethernet: add a PHY reset GPIO DT binding to sh_eth
-Date: Sat, 26 Jan 2013 02:04:13 +0100
-Message-ID: <3496361.USCGuib0gY@avalon>
-References: <1359043653-11374-1-git-send-email-g.liakhovetski@gmx.de> <7921225.sfO3PIeLVS@avalon> <Pine.LNX.4.64.1301251127460.17518@axis700.grange>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration
+ implementation
+Date: Sat, 26 Jan 2013 13:00:06 +0800
+Message-ID: <20130126050004.GC10580@opensource.wolfsonmicro.com>
+References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com>
+ <1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
+ <50CB4E99.9060506@wwwdotorg.org>
+ <20121215142135.GB22033@opensource.wolfsonmicro.com>
+ <20130124111329.GC12933@pengutronix.de>
+ <20130124111845.GO4955@opensource.wolfsonmicro.com>
+ <20130124113948.GD12933@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1301251127460.17518@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, netdev@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="rQ2U398070+RC21q"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130124113948.GD12933-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, naveen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
 
-On Friday 25 January 2013 11:34:55 Guennadi Liakhovetski wrote:
-> On Fri, 25 Jan 2013, Laurent Pinchart wrote:
-> > On Thursday 24 January 2013 17:07:32 Guennadi Liakhovetski wrote:
-> > > If an ethernet PHY can be reset by a GPIO, it can be specified in DT.
-> > > Add a binding and code to parse it, request the GPIO and take the PHY
-> > > out of reset.
-> > > 
-> > > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > > Cc: devicetree-discuss@lists.ozlabs.org
-> > > Cc: netdev@vger.kernel.org
-> > > ---
-> > > 
-> > >  Documentation/devicetree/bindings/net/sh_ether.txt |    2 ++
-> > >  drivers/net/ethernet/renesas/sh_eth.c              |    9 ++++++++-
-> > >  2 files changed, 10 insertions(+), 1 deletions(-)
+--rQ2U398070+RC21q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[snip]
+On Thu, Jan 24, 2013 at 12:39:48PM +0100, Wolfram Sang wrote:
+> On Thu, Jan 24, 2013 at 07:18:47PM +0800, Mark Brown wrote:
 
-> > > diff --git a/drivers/net/ethernet/renesas/sh_eth.c
-> > > b/drivers/net/ethernet/renesas/sh_eth.c index 1f64848..06035a2 100644
-> > > --- a/drivers/net/ethernet/renesas/sh_eth.c
-> > > +++ b/drivers/net/ethernet/renesas/sh_eth.c
+> > A read is typically implemented as a write of the register address
+> > followed by a read of the value, usually with the ability to free the
+> > bus in between.  If two devices attempt to access the register map
+> > simultaneously this results in the address going wrong.
 
-[snip]
+> Could happen. But in what situations will one not use repeated start
+> here? Especially when designing a multi-master bus?
 
-> > > @@ -2420,6 +2423,10 @@ sh_eth_parse_dt(struct device *dev, struct
-> > > net_device *ndev) else
-> > > 
-> > >  		pdata->needs_init = 0;
-> > > 
-> > > +	gpio = of_get_named_gpio_flags(np, "phy-reset-gpios", 0, &flags);
-> > > +	if (gpio_is_valid(gpio) && !devm_gpio_request(dev, gpio, NULL))
-> > > +		gpio_direction_output(gpio, !!(flags & OF_GPIO_ACTIVE_LOW));
-> > 
-> > You could use devm_gpio_request_one() here.
-> 
-> Yes, but then the flag would look uglier, something like
-> 
-> 		devm_gpio_request_one(dev, gpio, flags &
-> 			OF_GPIO_ACTIVE_LOW ? GPIOF_OUT_INIT_HIGH :
-> 			GPIOF_OUT_INIT_LOW);
-> 
-> Does it really look like an improvement? :)
+Well, you're depending on the specific drivers doing things that way and
+it's actually quite rare for the controller drivers in Linux to support
+I2C_M_NOSTART which discourages this.
 
-It's one less function call, so to me it does :-) Feel free to ignore that 
-though.
+--rQ2U398070+RC21q
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- 
-Regards,
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-Laurent Pinchart
+iQIcBAEBAgAGBQJRA2LNAAoJELSic+t+oim9Rm8P/RraYYLd7Gsa34rGslUs9cvB
+NKcRmKMf3Mq0Z/rUVJKnKp6E8M9qyL8qDgx6Xw5QVnxO8qrP8UOAvxJEAG55OYl0
+6kAkYqTg0f536N8kWv4X5NtdHp5lFUWSj6+llHtJTUsSQ+UhSxON79UBk1phZi9v
+DTq8UE2Z1SyoOtCRpwb1403qOX7k4eqM9/yCUuNfbGEM0k/woRSGS475VoFGtU//
+b5xpxqQ/pF3JJpdXRWkgI62LAcmfiYQU8TiiJWMI0CBdIyzhQfVsQyvkf/nysFOn
+VzAEFMnc0xbWCQtBjULPgkiNgemAtYWAsAtlT7TqsfTXAKfXp4a/ZRWNGt9UcRYg
+z8mTP1N0oKGYrgbOdIjKUyrv8ROFG95iYCgOlW2MQqZ+fQ496oTtjsZdndrhAkrg
+q6qXpn7Pi7xNb1hvGCmEK3pwaIpOLfHAHyYxUk83G2vBra+SCwQkHztLAaciY/8M
+OG0EUvOlRHLerJm/O1ced/VgqANhhXRFj6VYyIrnFODaAcITKMTBaOx+bpoTZP7X
+3836BW18nxAGFG616zG5n0O+gsxXywFKYUSXWEjHL2MiIKXN20Pt80uIkfzPxORZ
+B1xD51YgYsMsGuZ8gttQlLcAjavxH42AV6Oiuu5V1MxS3pLKpYfK2AIsutL3rcXk
++IfvjVaLvFstxEA6k4tD
+=A9mH
+-----END PGP SIGNATURE-----
 
+--rQ2U398070+RC21q--
