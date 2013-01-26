@@ -1,66 +1,61 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH 1/2] i2c-core: Add gpio based bus arbitration
- implementation
-Date: Sat, 26 Jan 2013 13:00:06 +0800
-Message-ID: <20130126050004.GC10580@opensource.wolfsonmicro.com>
-References: <1355464254-12768-1-git-send-email-ch.naveen@samsung.com>
- <1355464254-12768-2-git-send-email-ch.naveen@samsung.com>
- <50CB4E99.9060506@wwwdotorg.org>
- <20121215142135.GB22033@opensource.wolfsonmicro.com>
- <20130124111329.GC12933@pengutronix.de>
- <20130124111845.GO4955@opensource.wolfsonmicro.com>
- <20130124113948.GD12933@pengutronix.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 5/6] ARM: regulator: add tps6507x device tree data
+Date: Sat, 26 Jan 2013 13:12:08 +0800
+Message-ID: <20130126051206.GE10580@opensource.wolfsonmicro.com>
+References: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
+ <1359024920-32190-6-git-send-email-manishv.b@ti.com>
+ <20130124120050.GP4955@opensource.wolfsonmicro.com>
+ <A4887BF146CD57468F700B415D2F4701581621@DBDE01.ent.ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="rQ2U398070+RC21q"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6e7ZaeXHKrTJCxdu"
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130124113948.GD12933-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, naveen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+In-Reply-To: <A4887BF146CD57468F700B415D2F4701581621@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "tony@atomide.com" <tony@atomide.com>, "hs@denx.de" <hs@denx.de>, "Girdwood, Liam" <lrg@ti.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "Hilman, Kevin" <khilman@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
 
---rQ2U398070+RC21q
+--6e7ZaeXHKrTJCxdu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jan 24, 2013 at 12:39:48PM +0100, Wolfram Sang wrote:
-> On Thu, Jan 24, 2013 at 07:18:47PM +0800, Mark Brown wrote:
+On Fri, Jan 25, 2013 at 06:29:49AM +0000, Vishwanathrao Badarkhe, Manish wrote:
+> On Thu, Jan 24, 2013 at 17:30:51, Mark Brown wrote:
 
-> > A read is typically implemented as a write of the register address
-> > followed by a read of the value, usually with the ability to free the
-> > bus in between.  If two devices attempt to access the register map
-> > simultaneously this results in the address going wrong.
+> I too doubt that whether it should be in architecture specific folder,
 
-> Could happen. But in what situations will one not use repeated start
-> here? Especially when designing a multi-master bus?
+> My code is in reference to below patch:
+> arm/dts: regulator: Add tps65910 device tree data(d5d08e2e1672da627d7c9d34a9dc1089c653e23a)
 
-Well, you're depending on the specific drivers doing things that way and
-it's actually quite rare for the controller drivers in Linux to support
-I2C_M_NOSTART which discourages this.
+> Could you please suggest me if it can be moved somewhere else?
 
---rQ2U398070+RC21q
+We should have somewhere to put this sort of generic stuff, yes.  Not
+sure where, possibly under drivers/of or some non-drivers part of the
+tree.
+
+--6e7ZaeXHKrTJCxdu
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRA2LNAAoJELSic+t+oim9Rm8P/RraYYLd7Gsa34rGslUs9cvB
-NKcRmKMf3Mq0Z/rUVJKnKp6E8M9qyL8qDgx6Xw5QVnxO8qrP8UOAvxJEAG55OYl0
-6kAkYqTg0f536N8kWv4X5NtdHp5lFUWSj6+llHtJTUsSQ+UhSxON79UBk1phZi9v
-DTq8UE2Z1SyoOtCRpwb1403qOX7k4eqM9/yCUuNfbGEM0k/woRSGS475VoFGtU//
-b5xpxqQ/pF3JJpdXRWkgI62LAcmfiYQU8TiiJWMI0CBdIyzhQfVsQyvkf/nysFOn
-VzAEFMnc0xbWCQtBjULPgkiNgemAtYWAsAtlT7TqsfTXAKfXp4a/ZRWNGt9UcRYg
-z8mTP1N0oKGYrgbOdIjKUyrv8ROFG95iYCgOlW2MQqZ+fQ496oTtjsZdndrhAkrg
-q6qXpn7Pi7xNb1hvGCmEK3pwaIpOLfHAHyYxUk83G2vBra+SCwQkHztLAaciY/8M
-OG0EUvOlRHLerJm/O1ced/VgqANhhXRFj6VYyIrnFODaAcITKMTBaOx+bpoTZP7X
-3836BW18nxAGFG616zG5n0O+gsxXywFKYUSXWEjHL2MiIKXN20Pt80uIkfzPxORZ
-B1xD51YgYsMsGuZ8gttQlLcAjavxH42AV6Oiuu5V1MxS3pLKpYfK2AIsutL3rcXk
-+IfvjVaLvFstxEA6k4tD
-=A9mH
+iQIcBAEBAgAGBQJRA2UjAAoJELSic+t+oim9o/gP/1BPLvsiR63xW9H97PpzypHs
+7UrZPlMwP5rysc6GRf+/JJHwl2VFfzReIGcej5MGZ11NVozDj4lbVttSau7m4ry8
+VWU41uhe4hIoIeJu+m/AnC0iiVo2iR8+T48VPDZWv8RxeX8EATWKxm3rZBbz0L//
+zDBHrzwjlHcMLgkNUuA3AhYiZUcRmu5CwnB8CcSbiPKdiNFSGpwaLaeA+IDkm1Et
+PfT54TgC6umrwPPEmwo1aaresvqPOhMTer0QS2belSma6FQwWXXly+tUy6HjVZMs
+aobUgmHFIKmCZNj4gwCRUVNaocZAnfJ/RSHWII3/y4PJHn9u7/UjZvrDbR4n+jxi
+vMBR/Ak2LryBsZAV18r6Di84ojk2Q/8ZJqCA+1PKthb6nXnNB2SrC+bHbwowrVvK
+415NNFwALR8HxO26yfW5P3qfMzPQOQmABMvtllSKkyR6dQAQjNqJUgvc7/PmkQED
+yBXWzIzIKJZDQ0zrAa5bgukrVgicfUlDbSuOxUBrVD7N7rjSgdvEyNswfLKtg3mG
+wI9jJmhLGJFO5KKZolGXCwgl2R372b7Cx2u0szJgUxe1LQCwOuAHlPtr8p2s0zcJ
+qquWs0jwrkEafwuxwP+SpXHPEacODd/jp91a5m2AKrSc28tQSK/eJ4VAjWBfvtPj
+RBpd56ge/PUUIi1DqhZi
+=R9iq
 -----END PGP SIGNATURE-----
 
---rQ2U398070+RC21q--
+--6e7ZaeXHKrTJCxdu--
