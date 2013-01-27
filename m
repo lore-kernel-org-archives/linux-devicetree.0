@@ -1,53 +1,51 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 4/6] davinci: regulator: tps6507x: add device tree
- support.
-Date: Sun, 27 Jan 2013 11:19:42 +0800
-Message-ID: <20130127031939.GE4650@opensource.wolfsonmicro.com>
-References: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
- <1359024920-32190-5-git-send-email-manishv.b@ti.com>
+Subject: Re: [PATCH V6 10/10] dmaengine: Fix compilation error in non-DT case
+Date: Sun, 27 Jan 2013 11:39:31 +0800
+Message-ID: <20130127033929.GH4650@opensource.wolfsonmicro.com>
+References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
+ <1358509629-20471-11-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kA1LkgxZ0NN7Mz3A"
-Return-path: <linux-doc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="pfTAc8Cvt8L6I27a"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1359024920-32190-5-git-send-email-manishv.b@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, anilkumar@ti.com, tony@atomide.com, hs@denx.de, lrg@ti.com, sameo@linux.intel.com, khilman@ti.com, linux@arm.linux.org.uk, rob@landley.net, rob.herring@calxeda.com, grant.likely@secretlab.ca
+In-Reply-To: <1358509629-20471-11-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
 
---kA1LkgxZ0NN7Mz3A
+--pfTAc8Cvt8L6I27a
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jan 24, 2013 at 04:25:18PM +0530, Vishwanathrao Badarkhe, Manish wrote:
-> Add device tree based initialization support for
-> TI's tps6507x regulators.
+On Fri, Jan 18, 2013 at 05:17:09PM +0530, Padmavathi Venna wrote:
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
 
-Applied, thanks.  Please always use subject lines appropriate for the
-subsystem you are submitting against - this is not a DaVinci change.
+This should be sent separately to Vinod for merge into v3.8, it's not
+obviously related to the rest of the series and is a bug fix.
 
---kA1LkgxZ0NN7Mz3A
+--pfTAc8Cvt8L6I27a
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRBJzFAAoJELSic+t+oim96WwQAJB8HnZ8Rv+Uf7+0fqlbErUR
-+fbTAmGjTWLIVzmy7VPsyonvcKb7KvsTEpZoqXJluiLQjD3gvSqB8U5ZJ8QrocRd
-QVk/DZG52fug+b8lC8TTf++kxBuk7y8KdFfNifLip29C2t9Raq2Vu2dprVEBZvXY
-GemGNyHRb7FgmogaDjDxGeJDQHeDe7xzpGWDjmlyIvrzhk36RrLNSgh/LuCXarS4
-HUB/NWHOM92OD/O32dSsJU+uW+SUJQxygGzYry5jMxhICizE1cZyjglhqtRpD30U
-bFGUSqXUYh/6SvJlOJ7Kjal0YONBdzipz/v8LIWO8A4exl0nm27nSLtmvp7MY9KR
-UQxfHcu3wAcRmPzFKW5bMvorz9xXhk9cLDqWtQ9xCDKUgkddSB82iynhuV2yerl2
-abDPy3HuhhVnIJKHXwfGRBHZnfphwlgO3RryC7UfFyYSrIJbqNUwDM6FtlV+XLjw
-gtIvlhi07O3aqjPVnsP3g56vLeBntrr5GcTwZ1qipFEBo3EtF+gcAcIQ455ThtfJ
-+PjN5vu0cP6QLaLk/lHQ7GJs0H1n8mbKJuCF73+32Jwf5/mN0RwkQbKfMx/ao3Hu
-2FGM5YqcY/qX56EIa4UrJouQHw/lL/DX9apsOMkSNPwkrKDD0mmlp7BDQyra2WY2
-pC0W+SgVoMAe+m7TvRXh
-=nVEc
+iQIcBAEBAgAGBQJRBKFqAAoJELSic+t+oim9TSEP/iq5gmQgg6rdn6kuy5M6vBJL
+qUjbUMe8eZ2Bmtd8tXQLD1VjEixOmHCdX9GrLYsITFkNCQ7uyTM6ZapNh9Hbp4Qr
+UIAGrsLg2oDP0p39ThwBIgHYV58h/zCgNdLTWOidq9KESWtqlivfA4d+IwNaQolr
+sVZAY5FOoyg69i3oQafI7knJ7cySL4G1FBwJ2i6nKTsDOw0iSzCsj7zYrIdTY9pl
+x/NIpN+jUcht/1RWRXfwNqitiq/hClOKOSy+wobVKNvPCO7sGZH82PpRBm3ekeBw
+RXIN8cA6ZDQQOU/MbBus0zg+nuoh9UZYy96mC0wgWxz8h9WMF3rkJF2Juub+jLjR
+g87fW/a6VX7jKFw3wtdpMGsCdNTHW1A1zfuRWYTIaL/6+1eM/2V9NUvvG99BkRPW
+8NMSSoFBm4hfHs0G/om4dkKi2y6EHIU3mR4B1x2P6eqGa2jHy8YW8YEnPMs+Dlwp
+MY8BpdORaLTAQN/y09nf2d3d1k/G+qeiUoWS8eI+6IW7UPqJTGYUjPOpIkLxtucr
+fa03uvqM6pW1uqF8sfJCKngzrzb79BCLJ5+IvOhRx0AsDKJfXqnu80EJ2WZR4okd
+zZ+BcINTHntQTdD4Vme52Xjrp/aZm16rxKRBZvRakf7rdwsO05/7TW571+E6q5hx
+CA1+OXWGO7L2HXSWI+W+
+=y9Cg
 -----END PGP SIGNATURE-----
 
---kA1LkgxZ0NN7Mz3A--
+--pfTAc8Cvt8L6I27a--
