@@ -1,44 +1,38 @@
-From: Hauke Mehrtens <hauke@hauke-m.de>
-Subject: [PATCH] w1-gpio: fix section mismatch
-Date: Sun, 27 Jan 2013 21:07:57 +0100
-Message-ID: <1359317277-29161-1-git-send-email-hauke@hauke-m.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: zbr@ioremap.net, panto@antoniou-consulting.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Hauke Mehrtens <hauke@hauke-m.de>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] Adjust util_is_printable_string() comment and fix
+ test
+Date: Sun, 27 Jan 2013 14:29:38 -0600
+Message-ID: <E1TzYrC-00084g-L2@jdl.com>
+References: <1359313999-17142-2-git-send-email-sjg@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1359313999-17142-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This fixes the following section mismatch:
+> This commit which changed the behaviour of this function broke one
+> of the tests. Also the comment should be updated to reflect its new
+> behaviour.
+> 
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+> Changes in v2:
+> - Add new test to check byte output of a string list property
 
-WARNING: drivers/w1/masters/w1-gpio.o(.data+0x188): Section mismatch in
-reference from the variable w1_gpio_driver to the function
-.init.text:w1_gpio_probe()
-The variable w1_gpio_driver references
-the function __init w1_gpio_probe()
-If the reference is valid then annotate the
-variable with __init* or __refdata (see linux/init.h) or name the variable:
-*_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console
+Applied.
 
-Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
----
-
-This patch is based on 3.8-rc5.
-
- drivers/w1/masters/w1-gpio.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/w1/masters/w1-gpio.c b/drivers/w1/masters/w1-gpio.c
-index 85b363a..d39dfa4 100644
---- a/drivers/w1/masters/w1-gpio.c
-+++ b/drivers/w1/masters/w1-gpio.c
-@@ -72,7 +72,7 @@ static int w1_gpio_probe_dt(struct platform_device *pdev)
- 	return 0;
- }
- 
--static int __init w1_gpio_probe(struct platform_device *pdev)
-+static int w1_gpio_probe(struct platform_device *pdev)
- {
- 	struct w1_bus_master *master;
- 	struct w1_gpio_platform_data *pdata;
--- 
-1.7.10.4
+Thanks,
+jdl
