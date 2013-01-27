@@ -1,33 +1,82 @@
-From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH 4/8] Export fdt_stringlist_contains()
-Date: Sun, 27 Jan 2013 14:31:28 -0600
-Message-ID: <E1TzYsy-00085v-EK@jdl.com>
-References: <1358801962-21707-1-git-send-email-sjg@chromium.org>
- <1358801962-21707-5-git-send-email-sjg@chromium.org>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 3/4] ARM: dts: add support for hdmi-ddc to exynos4412-origen
+Date: Sun, 27 Jan 2013 21:37:07 +0100
+Message-ID: <51058FF3.6070408@gmail.com>
+References: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com> <1359110384-28402-4-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1358801962-21707-5-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1359110384-28402-4-git-send-email-rahul.sharma@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-> This function is useful outside libfdt, so export it.
-> 
-> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Hi,
 
-Applied.
+On 01/25/2013 11:39 AM, Rahul Sharma wrote:
+> Signed-off-by: Rahul Sharma<rahul.sharma@samsung.com>
+
+Please explain why this patch is needed, in more detail...
+
+> ---
+>   arch/arm/boot/dts/exynos4.dtsi          |  1 -
+>   arch/arm/boot/dts/exynos4412-origen.dts | 13 +++++++++++++
+>   2 files changed, 13 insertions(+), 1 deletion(-)
+>   mode change 100644 =>  100755 arch/arm/boot/dts/exynos4412.dtsi
+>
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> index 07cb7d4..a75e2f5 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -219,7 +219,6 @@
+>   		compatible = "samsung,s3c2440-i2c";
+>   		reg =<0x138C0000 0x100>;
+>   		interrupts =<0 64 0>;
+> -		status = "disabled";
+
+No, it's not how it is supposed to be done. If you want to enable
+this specific I2C controller on your board, just add status = "okay";
+line in its node in the board-specific dts file. Please see below.
+
+>   	};
+>
+>   	i2c_7: i2c@138D0000 {
+> diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+> index 4eba374..6299f1b 100644
+> --- a/arch/arm/boot/dts/exynos4412-origen.dts
+> +++ b/arch/arm/boot/dts/exynos4412-origen.dts
+> @@ -59,4 +59,17 @@
+>   	serial@13830000 {
+>   		status = "okay";
+>   	};
+> +
+> +	i2c_6: i2c@138C0000 {
+> +		samsung,i2c-sda-delay =<100>;
+> +		samsung,i2c-max-bus-freq =<66000>;
+> +
+> +		pinctrl-0 =<&i2c6_bus>;
+> +		pinctrl-names = "default";
+
+		status = "okay";
+
+> +		hdmiddc@50 {
+> +			compatible = "samsung,exynos4-hdmiddc";
+> +			reg =<0x50>;
+> +		};
+> +	};
+>   };
+> diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+> old mode 100644
+> new mode 100755
+
+Are you sure you need to add all these execute permissions ?
+Do you think these values are more sane than the previous ones ?
+I'm afraid there is something going wrong with the file permissions
+in your environment...
+
+--
 
 Thanks,
-jdl
+Sylwester
