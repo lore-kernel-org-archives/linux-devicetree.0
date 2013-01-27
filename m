@@ -1,14 +1,14 @@
 From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
-Subject: Re: [PATCH v2 1/8] Adjust util_is_printable_string() comment and fix
- test
-Date: Sun, 27 Jan 2013 14:29:38 -0600
-Message-ID: <E1TzYrC-00084g-L2@jdl.com>
-References: <1359313999-17142-2-git-send-email-sjg@chromium.org>
+Subject: Re: [PATCH 2/8] Move property-printing into util
+Date: Sun, 27 Jan 2013 14:30:25 -0600
+Message-ID: <E1TzYrx-000855-Gv@jdl.com>
+References: <1358801962-21707-1-git-send-email-sjg@chromium.org>
+ <1358801962-21707-3-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1359313999-17142-2-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+In-reply-to: <1358801962-21707-3-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -23,14 +23,10 @@ To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> This commit which changed the behaviour of this function broke one
-> of the tests. Also the comment should be updated to reflect its new
-> behaviour.
+> The function that prints a property can be useful to other programs,
+> so move it into util.
 > 
 > Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-> Changes in v2:
-> - Add new test to check byte output of a string list property
 
 Applied.
 
