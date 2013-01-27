@@ -1,42 +1,53 @@
-From: Sergei Shtylyov <sshtylyov@mvista.com>
-Subject: Re: [PATCH v2 5/6] ARM: dts: omap5: add dwc3 core dt data
-Date: Sat, 26 Jan 2013 23:49:07 +0400
-Message-ID: <51043333.6030208@mvista.com>
-References: <1359112312-6918-1-git-send-email-kishon@ti.com> <1359112312-6918-6-git-send-email-kishon@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 4/6] davinci: regulator: tps6507x: add device tree
+ support.
+Date: Sun, 27 Jan 2013 11:19:42 +0800
+Message-ID: <20130127031939.GE4650@opensource.wolfsonmicro.com>
+References: <1359024920-32190-1-git-send-email-manishv.b@ti.com>
+ <1359024920-32190-5-git-send-email-manishv.b@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1359112312-6918-6-git-send-email-kishon@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: balbi@ti.com, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, s-guiriec@ti.com, gg@slimlogic.co.uk, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kA1LkgxZ0NN7Mz3A"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1359024920-32190-5-git-send-email-manishv.b@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, anilkumar@ti.com, tony@atomide.com, hs@denx.de, lrg@ti.com, sameo@linux.intel.com, khilman@ti.com, linux@arm.linux.org.uk, rob@landley.net, rob.herring@calxeda.com, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-On 25-01-2013 15:11, Kishon Vijay Abraham I wrote:
 
-> Add dwc3 core dt data as a subnode to dwc3 omap glue data in omap5 dt
-> data file. The information for the entered data node is available @
-> Documentation/devicetree/bindings/usb/dwc3.txt
+--kA1LkgxZ0NN7Mz3A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->   arch/arm/boot/dts/omap5.dtsi |    7 +++++++
->   1 file changed, 7 insertions(+)
+On Thu, Jan 24, 2013 at 04:25:18PM +0530, Vishwanathrao Badarkhe, Manish wrote:
+> Add device tree based initialization support for
+> TI's tps6507x regulators.
 
-> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-> index 1703a72..58118c4 100644
-> --- a/arch/arm/boot/dts/omap5.dtsi
-> +++ b/arch/arm/boot/dts/omap5.dtsi
-> @@ -522,6 +522,13 @@
->   			#size-cells = <1>;
->   			utmi-mode = <2>;
->   			ranges;
-> +			dwc3@4a030000 {
-> +				compatible = "synopsys,dwc3";
-> +				reg = <0x4a030000 0xcfff>;
+Applied, thanks.  Please always use subject lines appropriate for the
+subsystem you are submitting against - this is not a DaVinci change.
 
-    Same question here.
+--kA1LkgxZ0NN7Mz3A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-WBR, Sergei
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
+iQIcBAEBAgAGBQJRBJzFAAoJELSic+t+oim96WwQAJB8HnZ8Rv+Uf7+0fqlbErUR
++fbTAmGjTWLIVzmy7VPsyonvcKb7KvsTEpZoqXJluiLQjD3gvSqB8U5ZJ8QrocRd
+QVk/DZG52fug+b8lC8TTf++kxBuk7y8KdFfNifLip29C2t9Raq2Vu2dprVEBZvXY
+GemGNyHRb7FgmogaDjDxGeJDQHeDe7xzpGWDjmlyIvrzhk36RrLNSgh/LuCXarS4
+HUB/NWHOM92OD/O32dSsJU+uW+SUJQxygGzYry5jMxhICizE1cZyjglhqtRpD30U
+bFGUSqXUYh/6SvJlOJ7Kjal0YONBdzipz/v8LIWO8A4exl0nm27nSLtmvp7MY9KR
+UQxfHcu3wAcRmPzFKW5bMvorz9xXhk9cLDqWtQ9xCDKUgkddSB82iynhuV2yerl2
+abDPy3HuhhVnIJKHXwfGRBHZnfphwlgO3RryC7UfFyYSrIJbqNUwDM6FtlV+XLjw
+gtIvlhi07O3aqjPVnsP3g56vLeBntrr5GcTwZ1qipFEBo3EtF+gcAcIQ455ThtfJ
++PjN5vu0cP6QLaLk/lHQ7GJs0H1n8mbKJuCF73+32Jwf5/mN0RwkQbKfMx/ao3Hu
+2FGM5YqcY/qX56EIa4UrJouQHw/lL/DX9apsOMkSNPwkrKDD0mmlp7BDQyra2WY2
+pC0W+SgVoMAe+m7TvRXh
+=nVEc
+-----END PGP SIGNATURE-----
+
+--kA1LkgxZ0NN7Mz3A--
