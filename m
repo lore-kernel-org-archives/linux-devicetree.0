@@ -1,108 +1,173 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [PATCH] arm: dts: omap4-sdp: Add I2c pinctrl data
-Date: Mon, 28 Jan 2013 16:47:45 +0530
-Message-ID: <1359371865-27907-1-git-send-email-sourav.poddar@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v3 3/3] arm: omap2: gpmc: add DT bindings for OneNAND
+Date: Mon, 28 Jan 2013 11:53:39 +0000
+Message-ID: <20130128115339.GD7754@e106331-lin.cambridge.arm.com>
+References: <1359116591-32730-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1359116591-32730-3-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130125155633.GC16795@e106331-lin.cambridge.arm.com>
+ <CALF0-+X2qsF5OETerRSVsJbjkC-JdVXsZhyw1sxQYR+PWX6LHA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: b-cousson@ti.com, tony@atomide.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbi@ti.com, santosh.shilimkar@ti.com
-Cc: Sourav Poddar <sourav.poddar@ti.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CALF0-+X2qsF5OETerRSVsJbjkC-JdVXsZhyw1sxQYR+PWX6LHA@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-omap-owner@vger.kernel.org
+To: Ezequiel Garcia <elezegarcia@gmail.com>
+Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "zonque@gmail.com" <zonque@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "matthias.bgg@googlemail.com" <matthias.bgg@googlemail.com>, Javier Martinez Canillas <martinez.javier@gmail.com>, Enric Balletbo Serra <eballetbo@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "b-cousson@ti.com" <b-cousson@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "jon-hunter@ti.com" <jon-hunter@ti.com>, Artem Bityutskiy <dedekind1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Booting 3.8-rc4 om omap 4430sdp results in the following error
+On Fri, Jan 25, 2013 at 06:11:28PM +0000, Ezequiel Garcia wrote:
+> Hi Mark,
+> 
+> First of all: thanks for reviewing.
+> 
+> On Fri, Jan 25, 2013 at 12:56 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> > Hi,
+> >
+> > I have a couple more comments after looking though this a bit more thoroughly.
+> >
+> > On Fri, Jan 25, 2013 at 12:23:11PM +0000, Ezequiel Garcia wrote:
+> >> This patch adds device tree bindings for OMAP OneNAND devices.
+> >> Tested on an OMAP3 3430 IGEPv2 board.
+> >>
+> >> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+> >> ---
+> >> Changes from v2:
+> >>  * Remove unneeded of_node_put() as reported by Mark Rutland
+> >>
+> >> Changes from v1:
+> >>  * Fix typo in Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
+> >>
+> >>  .../devicetree/bindings/mtd/gpmc-onenand.txt       |   43 +++++++++++++++++++
+> >>  arch/arm/mach-omap2/gpmc.c                         |   45 ++++++++++++++++++++
+> >>  2 files changed, 88 insertions(+), 0 deletions(-)
+> >>  create mode 100644 Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
+> >> new file mode 100644
+> >> index 0000000..deec9da
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mtd/gpmc-onenand.txt
+> >> @@ -0,0 +1,43 @@
+> >> +Device tree bindings for GPMC connected OneNANDs
+> >> +
+> >> +GPMC connected OneNAND (found on OMAP boards) are represented as child nodes of
+> >> +the GPMC controller with a name of "onenand".
+> >> +
+> >> +All timing relevant properties as well as generic gpmc child properties are
+> >> +explained in a separate documents - please refer to
+> >> +Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> >
+> > Which tree can I find this in?
+> >
+> 
+> GPMC binding was posted by Daniel Mack a while ago.
+> Tony has recently pushed it to his master branch here:
+> git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git
 
-omap_i2c 48070000.i2c: did not get pins for i2c error: -19
-[    1.024261] omap_i2c 48070000.i2c: bus 0 rev0.12 at 100 kHz
-[    1.030181] omap_i2c 48072000.i2c: did not get pins for i2c error: -19
-[    1.037384] omap_i2c 48072000.i2c: bus 1 rev0.12 at 400 kHz
-[    1.043762] omap_i2c 48060000.i2c: did not get pins for i2c error: -19
-[    1.050964] omap_i2c 48060000.i2c: bus 2 rev0.12 at 100 kHz
-[    1.056823] omap_i2c 4807a000.i2c: did not get pins for i2c error: -19
-[    1.064025] omap_i2c 4807a000.i2c: bus 3 rev0.12 at 400 kHz
+Aha. Thanks, it's far easier to understand with the gpmc doc!
 
-This happens because omap4 dts file is not adapted to use i2c through pinctrl
-framework. Populating i2c pinctrl data to get rid of the error.
+> 
+> >> +
+> >> +Required properties:
+> >> +
+> >> + - reg:                      The CS line the peripheral is connected to
+> >> +
+> >> +Optional properties:
+> >> +
+> >> + - dma-channel:              DMA Channel index
+> >> +
+> >> +For inline partiton table parsing (optional):
+> >> +
+> >> + - #address-cells: should be set to 1
+> >> + - #size-cells: should be set to 1
+> >> +
+> >> +Example for an OMAP3430 board:
+> >> +
+> >> +     gpmc: gpmc@6e000000 {
+> >> +             compatible = "ti,omap3430-gpmc";
+> >> +             ti,hwmods = "gpmc";
+> >> +             reg = <0x6e000000 0x1000000>;
+> >> +             interrupts = <20>;
+> >> +             gpmc,num-cs = <8>;
+> >> +             gpmc,num-waitpins = <4>;
+> >> +             #address-cells = <2>;
+> >> +             #size-cells = <1>;
+> >> +
+> >> +             onenand@0 {
+> >> +                     reg = <0 0 0>; /* CS0, offset 0 */
+> >> +
+> >> +                     #address-cells = <1>;
+> >> +                     #size-cells = <1>;
+> >> +
+> >> +                     /* partitions go here */
+> >> +             };
+> >> +     };
+> >> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+> >> index c6255f7..0636d0a 100644
+> >> --- a/arch/arm/mach-omap2/gpmc.c
+> >> +++ b/arch/arm/mach-omap2/gpmc.c
+> >> @@ -39,6 +39,7 @@
+> >>  #include "omap_device.h"
+> >>  #include "gpmc.h"
+> >>  #include "gpmc-nand.h"
+> >> +#include "gpmc-onenand.h"
+> >>
+> >>  #define      DEVICE_NAME             "omap-gpmc"
+> >>
+> >> @@ -1259,6 +1260,43 @@ static int gpmc_probe_nand_child(struct platform_device *pdev,
+> >>  }
+> >>  #endif
+> >>
+> >> +#ifdef CONFIG_MTD_ONENAND
+> >> +static int gpmc_probe_onenand_child(struct platform_device *pdev,
+> >> +                              struct device_node *child)
+> >> +{
+> >> +     u32 val;
+> >> +     struct omap_onenand_platform_data *gpmc_onenand_data;
+> >> +
+> >> +     if (of_property_read_u32(child, "reg", &val) < 0) {
+> >> +             dev_err(&pdev->dev, "%s has no 'reg' property\n",
+> >> +                     child->full_name);
+> >> +             return -ENODEV;
+> >> +     }
+> >
+> > I don't understand the format of the reg property, but it seems odd that you
+> > only need to read one cell from it. Are the remaining address cell and size
+> > cell used anywhere?
+> >
+> 
+> Okey, I'll give a shot and try to explain this myself:
+> 
+> As you can see by Daniel's first patch [1]
+> the reg property originally contained the chip select only, and
+> after some discussion in that same thread, and in this one [2]
+> It was decided to use a reg property that would also describe
+> the base address and size of the gpmc sub-device,
+> and use ranges for the address translation.
+> This was reflected in Daniel's changelog when he submitted
+> the v2 patch series [3].
+> 
+> [1] http://www.spinics.net/lists/arm-kernel/msg202169.html
+> [2] http://web.archiveorange.com/archive/v/vEQ2yFI0tmpQJdigvAog
+> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2012-November/129426.html
 
-Tested on omap4430 sdp with 3.8-rc4 kernel.
+So if I've understood correctly, the first address cell is the CS, and the
+second the offset within this (as the comment in the onenand@0 node hints)?
 
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
-Reported-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
----
- arch/arm/boot/dts/omap4-sdp.dts |   40 +++++++++++++++++++++++++++++++++++++++
- 1 files changed, 40 insertions(+), 0 deletions(-)
+If so, the code now makes sense to me :)
 
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index 43e5258..40a04c9 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -212,9 +212,40 @@
- 			0x58 0x10b	/* hdmi_hpd.gpio_63 INPUT PULLDOWN | MODE3 */
- 		>;
- 	};
-+
-+	i2c1_pins: pinmux_i2c1_pins {
-+		pinctrl-single,pins = <
-+			0xe2 0x118        /* i2c1_scl PULLUP | INPUTENABLE | MODE0 */
-+			0xe4 0x118       /* i2c1_sda PULLUP | INPUTENABLE | MODE0 */
-+		>;
-+	};
-+
-+	i2c2_pins: pinmux_i2c2_pins {
-+		pinctrl-single,pins = <
-+                        0xe6 0x118        /* i2c2_scl PULLUP | INPUTENABLE | MODE0 */
-+                        0xe8 0x118        /* i2c2_sda PULLUP | INPUTENABLE | MODE0 */
-+		>;
-+	};
-+
-+	i2c3_pins: pinmux_i2c3_pins {
-+		pinctrl-single,pins = <
-+			0xea 0x118        /* i2c3_scl PULLUP | INPUTENABLE | MODE0 */
-+			0xec 0x118     /* i2c3_sda PULLUP | INPUTENABLE | MODE0 */
-+		>;
-+	};
-+
-+	i2c4_pins: pinmux_i2c4_pins {
-+		pinctrl-single,pins = <
-+			0xee 0x118        /* i2c4_scl PULLUP | INPUTENABLE | MODE0 */
-+			0xf0 0x118     /* i2c4_sda PULLUP | INPUTENABLE | MODE0 */
-+		>;
-+	};
- };
- 
- &i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+
- 	clock-frequency = <400000>;
- 
- 	twl: twl@48 {
-@@ -253,10 +284,16 @@
- /include/ "twl6030.dtsi"
- 
- &i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
- 	clock-frequency = <400000>;
- };
- 
- &i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c3_pins>;
-+
- 	clock-frequency = <400000>;
- 
- 	/*
-@@ -279,6 +316,9 @@
- };
- 
- &i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c4_pins>;
-+
- 	clock-frequency = <400000>;
- 
- 	/*
--- 
-1.7.1
+I was having difficulty seeing where the base address of the child got
+translated via ranges, but I see in [3] that this doesn't currently happen.
+That answers my question about the remaining cells.
+
+Might it be worth sanity checking the runtime calculated address with the one
+translated from dt? That way we can print a warning if the two don't match,
+which would help to discover broken dts (or invalid runtime calculation if
+future hardware breaks it somewhow).
+
+Thanks,
+Mark.
+
+
