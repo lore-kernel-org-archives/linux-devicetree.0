@@ -1,8 +1,7 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: [PATCH 3/5] serial: pl011: use generic DMA slave configuration if
- possible
-Date: Mon, 28 Jan 2013 21:58:18 +0000
-Message-ID: <1359410300-26113-4-git-send-email-arnd@arndb.de>
+Subject: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
+Date: Mon, 28 Jan 2013 21:58:16 +0000
+Message-ID: <1359410300-26113-2-git-send-email-arnd@arndb.de>
 References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
  <1359410300-26113-1-git-send-email-arnd@arndb.de>
 Mime-Version: 1.0
@@ -21,231 +20,394 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With the new OF DMA binding, it is possible to completely avoid the
-need for platform_data for configuring a DMA channel. In cases where the
-platform has already been converted, calling dma_request_slave_channel
-should get all the necessary information from the device tree.
+The original device tree binding for this driver, from Viresh Kumar
+unfortunately conflicted with the generic DMA binding, and did not allow
+to completely seperate slave device configuration from the controller.
 
-This also adds a binding document specific to the pl011 controller,
-and extends the generic primecell binding to mention "dmas" and other
-common properties.
+This is an attempt to replace it with an implementation of the generic
+binding, but it is currently completely untested, because I do not have
+any hardware with this particular controller.
 
-Like the patch that converts the dw_dma controller, this is completely
-untested and is looking for someone to try it out.
+The patch applies on top of linux-next, which contains both the base
+support for the generic DMA binding, as well as the earlier attempt from
+Viresh. Both of these are currently not merged upstream however.
+
+There are a couple of TODO items that are left remaining and are open
+for ideas from other people.
 
 Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 ---
- .../devicetree/bindings/arm/primecell.txt          | 19 ++++++-
- Documentation/devicetree/bindings/serial/pl011.txt | 17 ++++++
- drivers/tty/serial/amba-pl011.c                    | 62 +++++++++++++---------
- 3 files changed, 72 insertions(+), 26 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/serial/pl011.txt
+ Documentation/devicetree/bindings/dma/snps-dma.txt |  71 ++++++-----
+ drivers/dma/dw_dmac.c                              | 137 ++++++++++-----------
+ drivers/dma/dw_dmac_regs.h                         |   4 -
+ include/linux/dw_dmac.h                            |   5 -
+ 4 files changed, 102 insertions(+), 115 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/primecell.txt b/Documentation/devicetree/bindings/arm/primecell.txt
-index 64fc82b..0df6aca 100644
---- a/Documentation/devicetree/bindings/arm/primecell.txt
-+++ b/Documentation/devicetree/bindings/arm/primecell.txt
-@@ -16,14 +16,31 @@ Optional properties:
- - clocks : From common clock binding. First clock is phandle to clock for apb
- 	pclk. Additional clocks are optional and specific to those peripherals.
- - clock-names : From common clock binding. Shall be "apb_pclk" for first clock.
-+- dmas : From common DMA binding. If present, refers to one or more dma channels.
-+- dma-names : From common DMA binding, needs to match the 'dmas' property.
-+              Devices with exactly one receive and transmit channel shall name
-+              these "rx" and "tx", respectively.
-+- pinctrl-<n> : Pinctrl states as described in bindings/pinctrl/pinctrl-bindings.txt
-+- pinctrl-names : Names corresponding to the numbered pinctrl states
-+- interrupts : one or more interrupt specifiers
-+- interrupt-names : names corresponding to the interrupts properties
+diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
+index 5bb3dfb..212d387 100644
+--- a/Documentation/devicetree/bindings/dma/snps-dma.txt
++++ b/Documentation/devicetree/bindings/dma/snps-dma.txt
+@@ -3,59 +3,62 @@
+ Required properties:
+ - compatible: "snps,dma-spear1340"
+ - reg: Address range of the DMAC registers
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupt: Should contain the DMAC interrupt number
+-- nr_channels: Number of channels supported by hardware
+-- is_private: The device channels should be marked as private and not for by the
+-  general purpose DMA channel allocator. False if not passed.
++- dma-channels: Number of channels supported by hardware
++- dma-requests: Number of DMA request lines supported
++- dma-masters: Number of AHB masters supported by the controller
++- #dma-cells: must be <3>
+ - chan_allocation_order: order of allocation of channel, 0 (default): ascending,
+   1: descending
+ - chan_priority: priority of channels. 0 (default): increase from chan 0->n, 1:
+   increase from chan n->0
+ - block_size: Maximum block size supported by the controller
+-- nr_masters: Number of AHB masters supported by the controller
+ - data_width: Maximum data width supported by hardware per AHB master
+   (0 - 8bits, 1 - 16bits, ..., 5 - 256bits)
+-- slave_info:
+-	- bus_id: name of this device channel, not just a device name since
+-	  devices may have more than one channel e.g. "foo_tx". For using the
+-	  dw_generic_filter(), slave drivers must pass exactly this string as
+-	  param to filter function.
+-	- cfg_hi: Platform-specific initializer for the CFG_HI register
+-	- cfg_lo: Platform-specific initializer for the CFG_LO register
+-	- src_master: src master for transfers on allocated channel.
+-	- dst_master: dest master for transfers on allocated channel.
++
++
++Optional properties:
++- interrupt-parent: Should be the phandle for the interrupt controller
++  that services interrupts for this device
++- is_private: The device channels should be marked as private and not for by the
++  general purpose DMA channel allocator. False if not passed.
  
  Example:
  
- serial@fff36000 {
- 	compatible = "arm,pl011", "arm,primecell";
- 	arm,primecell-periphid = <0x00341011>;
-+
- 	clocks = <&pclk>;
- 	clock-names = "apb_pclk";
--	
-+
-+	dmas = <&dma-controller 4>, <&dma-controller 5>;
-+	dma-names = "rx", "tx";	
-+
-+	pinctrl-0 = <&uart0_default_mux>, <&uart0_default_mode>;
-+	pinctrl-1 = <&uart0_sleep_mode>;
-+	pinctrl-names = "default","sleep";
-+
-+	interrupts = <0 11 0x4>;
- };
+-	dma@fc000000 {
++	dmahost: dma@fc000000 {
+ 		compatible = "snps,dma-spear1340";
+ 		reg = <0xfc000000 0x1000>;
+ 		interrupt-parent = <&vic1>;
+ 		interrupts = <12>;
  
-diff --git a/Documentation/devicetree/bindings/serial/pl011.txt b/Documentation/devicetree/bindings/serial/pl011.txt
-new file mode 100644
-index 0000000..5d2e840
---- /dev/null
-+++ b/Documentation/devicetree/bindings/serial/pl011.txt
-@@ -0,0 +1,17 @@
-+* ARM AMBA Primecell PL011 serial UART
+-		nr_channels = <8>;
++		dma-channels = <8>;
++		dma-requests = <32>;
++		dma-masters = <2>;
++		#dma-cells = <3>;
+ 		chan_allocation_order = <1>;
+ 		chan_priority = <1>;
+ 		block_size = <0xfff>;
+-		nr_masters = <2>;
+ 		data_width = <3 3 0 0>;
++	};
+ 
+-		slave_info {
+-			uart0-tx {
+-				bus_id = "uart0-tx";
+-				cfg_hi = <0x4000>;	/* 0x8 << 11 */
+-				cfg_lo = <0>;
+-				src_master = <0>;
+-				dst_master = <1>;
+-			};
+-			spi0-tx {
+-				bus_id = "spi0-tx";
+-				cfg_hi = <0x2000>;	/* 0x4 << 11 */
+-				cfg_lo = <0>;
+-				src_master = <0>;
+-				dst_master = <0>;
+-			};
+-		};
++DMA clients connected to the Designware DMA controller must use the format
++described in the dma.txt file, using a five-cell specifier for each channel.
++The five cells in order are:
 +
-+Required properties:
-+- compatible: must be "arm,primecell", "arm,pl011"
-+- reg: exactly one register range with length 0x1000
-+- interrupts: exactly one interrupt specifier
++1. A phandle pointing to the DMA controller
++2. The value for the cfg_hi register.
++3. The value for the cfg_lo register.
++4. Source master for transfers on allocated channel.
++5. Destination master for transfers on allocated channel.
 +
-+Optional properties:
-+- pinctrl: When present, must have one state named "sleep"
-+	   and one state named "default"
-+- clocks:  When present, must refer to exactly one clock named
-+	   "apb_pclk"
-+- dmas:	   When present, may have one or two dma channels.
-+	   The first one must be named "rx", the second one
-+	   must be named "tx".
-+
-+See also bindings/arm/primecell.txt
-diff --git a/drivers/tty/serial/amba-pl011.c b/drivers/tty/serial/amba-pl011.c
-index 7fca402..f9af04d 100644
---- a/drivers/tty/serial/amba-pl011.c
-+++ b/drivers/tty/serial/amba-pl011.c
-@@ -245,7 +245,7 @@ static void pl011_sgbuf_free(struct dma_chan *chan, struct pl011_sgbuf *sg,
- 	}
++Example:
++	
++	serial@e0000000 {
++		compatible = "arm,pl011", "arm,primecell";
++		reg = <0xe0000000 0x1000>;
++		interrupts = <0 35 0x4>;
++		status = "disabled";
++		dmas = <&dmahost 0x6000 0 0 1>,
++			<&dmahost 0x680 0 1 0>;
++		dma-names = "rx", "rx";
+ 	};
+diff --git a/drivers/dma/dw_dmac.c b/drivers/dma/dw_dmac.c
+index 8cfaaf8..88504c2 100644
+--- a/drivers/dma/dw_dmac.c
++++ b/drivers/dma/dw_dmac.c
+@@ -18,6 +18,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
++#include <linux/of_dma.h>
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+@@ -1179,49 +1180,69 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
+ 	dev_vdbg(chan2dev(chan), "%s: done\n", __func__);
  }
  
--static void pl011_dma_probe_initcall(struct uart_amba_port *uap)
-+static void pl011_dma_probe_initcall(struct device *dev, struct uart_amba_port *uap)
+-bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
++/* forward declaration used in filter */
++static struct platform_driver dw_driver;
++
++struct dw_dma_filter_args {
++	struct dw_dma *dw;
++	u32 cfg_lo;
++	u32 cfg_hi;
++	unsigned src;
++	unsigned dst;
++};
++
++static bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
  {
- 	/* DMA is the sole user of the platform data right now */
- 	struct amba_pl011_data *plat = uap->port.dev->platform_data;
-@@ -259,20 +259,25 @@ static void pl011_dma_probe_initcall(struct uart_amba_port *uap)
- 	struct dma_chan *chan;
- 	dma_cap_mask_t mask;
+ 	struct dw_dma *dw = to_dw_dma(chan->device);
+-	static struct dw_dma *last_dw;
+-	static char *last_bus_id;
+-	int i = -1;
++	struct dw_dma_filter_args *fargs = param;
++	struct dw_dma_slave *sd;
  
--	/* We need platform data */
--	if (!plat || !plat->dma_filter) {
--		dev_info(uap->port.dev, "no DMA platform data\n");
--		return;
--	}
-+	chan = dma_request_slave_channel(dev, "tx");
+-	/*
+-	 * dmaengine framework calls this routine for all channels of all dma
+-	 * controller, until true is returned. If 'param' bus_id is not
+-	 * registered with a dma controller (dw), then there is no need of
+-	 * running below function for all channels of dw.
+-	 *
+-	 * This block of code does this by saving the parameters of last
+-	 * failure. If dw and param are same, i.e. trying on same dw with
+-	 * different channel, return false.
+-	 */
+-	if ((last_dw == dw) && (last_bus_id == param))
++	/* both the driver and the device must match */
++        if (chan->device->dev->driver != &dw_driver.driver)
++                return false;
++	if (dw != fargs->dw)
+ 		return false;
+-	/*
+-	 * Return true:
+-	 * - If dw_dma's platform data is not filled with slave info, then all
+-	 *   dma controllers are fine for transfer.
+-	 * - Or if param is NULL
+-	 */
+-	if (!dw->sd || !param)
+-		return true;
  
--	/* Try to acquire a generic DMA engine slave TX channel */
--	dma_cap_zero(mask);
--	dma_cap_set(DMA_SLAVE, mask);
--
--	chan = dma_request_channel(mask, plat->dma_filter, plat->dma_tx_param);
- 	if (!chan) {
--		dev_err(uap->port.dev, "no TX DMA channel!\n");
--		return;
-+		/* We need platform data */
-+		if (!plat || !plat->dma_filter) {
-+			dev_info(uap->port.dev, "no DMA platform data\n");
-+			return;
-+		}
-+
-+		/* Try to acquire a generic DMA engine slave TX channel */
-+		dma_cap_zero(mask);
-+		dma_cap_set(DMA_SLAVE, mask);
-+
-+		chan = dma_request_channel(mask, plat->dma_filter,
-+						plat->dma_tx_param);
-+		if (!chan) {
-+			dev_err(uap->port.dev, "no TX DMA channel!\n");
-+			return;
-+		}
- 	}
+-	while (++i < dw->sd_count) {
+-		if (!strcmp(dw->sd[i].bus_id, param)) {
+-			chan->private = &dw->sd[i];
+-			last_dw = NULL;
+-			last_bus_id = NULL;
++	/* FIXME: memory leak! could we put this into dw_dma_chan? */
++	sd = devm_kzalloc(dw->dma.dev, sizeof (*sd), GFP_KERNEL);
++	if (!sd)
++		return false;
  
- 	dmaengine_slave_config(chan, &tx_conf);
-@@ -282,7 +287,18 @@ static void pl011_dma_probe_initcall(struct uart_amba_port *uap)
- 		 dma_chan_name(uap->dmatx.chan));
- 
- 	/* Optionally make use of an RX channel as well */
--	if (plat->dma_rx_param) {
-+	chan = dma_request_slave_channel(dev, "rx");
-+	
-+	if (!chan && plat->dma_rx_param) {
-+		chan = dma_request_channel(mask, plat->dma_filter, plat->dma_rx_param);
-+
-+		if (!chan) {
-+			dev_err(uap->port.dev, "no RX DMA channel!\n");
-+			return;
-+		}
-+	}
-+
-+	if (chan) {
- 		struct dma_slave_config rx_conf = {
- 			.src_addr = uap->port.mapbase + UART01x_DR,
- 			.src_addr_width = DMA_SLAVE_BUSWIDTH_1_BYTE,
-@@ -291,12 +307,6 @@ static void pl011_dma_probe_initcall(struct uart_amba_port *uap)
- 			.device_fc = false,
- 		};
- 
--		chan = dma_request_channel(mask, plat->dma_filter, plat->dma_rx_param);
--		if (!chan) {
--			dev_err(uap->port.dev, "no RX DMA channel!\n");
--			return;
+-			return true;
 -		}
--
- 		dmaengine_slave_config(chan, &rx_conf);
- 		uap->dmarx.chan = chan;
+-	}
++	sd->dma_dev	= dw->dma.dev;
++	sd->cfg_hi	= fargs->cfg_hi;
++	sd->cfg_lo	= fargs->cfg_lo;
++	sd->src_master	= fargs->src;
++	sd->dst_master	= fargs->dst;
++
++	chan->private = sd;
  
-@@ -315,6 +325,7 @@ static void pl011_dma_probe_initcall(struct uart_amba_port *uap)
- struct dma_uap {
- 	struct list_head node;
- 	struct uart_amba_port *uap;
-+	struct device *dev;
- };
+-	last_dw = dw;
+-	last_bus_id = param;
+-	return false;
++	return true;
++}
++
++static struct dma_chan *dw_dma_xlate(struct of_phandle_args *dma_spec,
++					 struct of_dma *ofdma)
++{
++	struct dw_dma *dw = ofdma->of_dma_data;
++	struct dw_dma_filter_args fargs = {
++		.dw = dw,
++	};
++	dma_cap_mask_t cap;
++
++	if (dma_spec->args_count != 4)
++		return NULL;
++
++	/* FIXME: This binding is rather clumsy. Can't we use the
++	   request line numbers here instead? */
++	fargs.cfg_lo = be32_to_cpup(dma_spec->args+0);
++	fargs.cfg_hi = be32_to_cpup(dma_spec->args+1);
++	fargs.src = be32_to_cpup(dma_spec->args+2);
++	fargs.dst = be32_to_cpup(dma_spec->args+3);
++
++	dma_cap_zero(cap);
++	dma_cap_set(DMA_SLAVE, cap);
++	/* FIXME: there should be a simpler way to do this */
++	return dma_request_channel(cap, dw_dma_generic_filter, &dma_spec->args[0]);
+ }
+-EXPORT_SYMBOL(dw_dma_generic_filter);
  
- static LIST_HEAD(pl011_dma_uarts);
-@@ -325,7 +336,7 @@ static int __init pl011_dma_initcall(void)
+ /* --------------------- Cyclic DMA API extensions -------------------- */
  
- 	list_for_each_safe(node, tmp, &pl011_dma_uarts) {
- 		struct dma_uap *dmau = list_entry(node, struct dma_uap, node);
--		pl011_dma_probe_initcall(dmau->uap);
-+		pl011_dma_probe_initcall(dmau->dev, dmau->uap);
- 		list_del(node);
- 		kfree(dmau);
- 	}
-@@ -334,18 +345,19 @@ static int __init pl011_dma_initcall(void)
- 
- device_initcall(pl011_dma_initcall);
- 
--static void pl011_dma_probe(struct uart_amba_port *uap)
-+static void pl011_dma_probe(struct device *dev, struct uart_amba_port *uap)
+@@ -1510,9 +1531,8 @@ static void dw_dma_off(struct dw_dma *dw)
+ static struct dw_dma_platform_data *
+ dw_dma_parse_dt(struct platform_device *pdev)
  {
- 	struct dma_uap *dmau = kzalloc(sizeof(struct dma_uap), GFP_KERNEL);
- 	if (dmau) {
- 		dmau->uap = uap;
-+		dmau->dev = dev;
- 		list_add_tail(&dmau->node, &pl011_dma_uarts);
- 	}
+-	struct device_node *sn, *cn, *np = pdev->dev.of_node;
++	struct device_node *np = pdev->dev.of_node;
+ 	struct dw_dma_platform_data *pdata;
+-	struct dw_dma_slave *sd;
+ 	u32 tmp, arr[4];
+ 
+ 	if (!np) {
+@@ -1524,7 +1544,7 @@ dw_dma_parse_dt(struct platform_device *pdev)
+ 	if (!pdata)
+ 		return NULL;
+ 
+-	if (of_property_read_u32(np, "nr_channels", &pdata->nr_channels))
++	if (of_property_read_u32(np, "dma-channels", &pdata->nr_channels))
+ 		return NULL;
+ 
+ 	if (of_property_read_bool(np, "is_private"))
+@@ -1539,7 +1559,7 @@ dw_dma_parse_dt(struct platform_device *pdev)
+ 	if (!of_property_read_u32(np, "block_size", &tmp))
+ 		pdata->block_size = tmp;
+ 
+-	if (!of_property_read_u32(np, "nr_masters", &tmp)) {
++	if (!of_property_read_u32(np, "dma-masters", &tmp)) {
+ 		if (tmp > 4)
+ 			return NULL;
+ 
+@@ -1551,36 +1571,6 @@ dw_dma_parse_dt(struct platform_device *pdev)
+ 		for (tmp = 0; tmp < pdata->nr_masters; tmp++)
+ 			pdata->data_width[tmp] = arr[tmp];
+ 
+-	/* parse slave data */
+-	sn = of_find_node_by_name(np, "slave_info");
+-	if (!sn)
+-		return pdata;
+-
+-	/* calculate number of slaves */
+-	tmp = of_get_child_count(sn);
+-	if (!tmp)
+-		return NULL;
+-
+-	sd = devm_kzalloc(&pdev->dev, sizeof(*sd) * tmp, GFP_KERNEL);
+-	if (!sd)
+-		return NULL;
+-
+-	pdata->sd = sd;
+-	pdata->sd_count = tmp;
+-
+-	for_each_child_of_node(sn, cn) {
+-		sd->dma_dev = &pdev->dev;
+-		of_property_read_string(cn, "bus_id", &sd->bus_id);
+-		of_property_read_u32(cn, "cfg_hi", &sd->cfg_hi);
+-		of_property_read_u32(cn, "cfg_lo", &sd->cfg_lo);
+-		if (!of_property_read_u32(cn, "src_master", &tmp))
+-			sd->src_master = tmp;
+-
+-		if (!of_property_read_u32(cn, "dst_master", &tmp))
+-			sd->dst_master = tmp;
+-		sd++;
+-	}
+-
+ 	return pdata;
  }
  #else
--static void pl011_dma_probe(struct uart_amba_port *uap)
-+static void pl011_dma_probe(struct device *dev, struct uart_amba_port *uap)
- {
--	pl011_dma_probe_initcall(uap);
-+	pl011_dma_probe_initcall(dev, uap);
+@@ -1644,8 +1634,6 @@ static int dw_probe(struct platform_device *pdev)
+ 	clk_prepare_enable(dw->clk);
+ 
+ 	dw->regs = regs;
+-	dw->sd = pdata->sd;
+-	dw->sd_count = pdata->sd_count;
+ 
+ 	/* get hardware configuration parameters */
+ 	if (autocfg) {
+@@ -1765,7 +1753,11 @@ static int dw_probe(struct platform_device *pdev)
+ 
+ 	dma_async_device_register(&dw->dma);
+ 
+-	return 0;
++	err = of_dma_controller_register(pdev->dev.of_node, dw_dma_xlate, dw);
++	if (err)
++		dma_async_device_unregister(&dw->dma);
++
++	return err;
  }
- #endif
  
-@@ -2023,7 +2035,7 @@ static int pl011_probe(struct amba_device *dev, const struct amba_id *id)
- 	uap->port.ops = &amba_pl011_pops;
- 	uap->port.flags = UPF_BOOT_AUTOCONF;
- 	uap->port.line = i;
--	pl011_dma_probe(uap);
-+	pl011_dma_probe(&dev->dev, uap);
+ static int dw_remove(struct platform_device *pdev)
+@@ -1773,6 +1765,7 @@ static int dw_remove(struct platform_device *pdev)
+ 	struct dw_dma		*dw = platform_get_drvdata(pdev);
+ 	struct dw_dma_chan	*dwc, *_dwc;
  
- 	/* Ensure interrupts from this UART are masked and cleared */
- 	writew(0, uap->port.membase + UART011_IMSC);
++	of_dma_controller_free(pdev->dev.of_node);
+ 	dw_dma_off(dw);
+ 	dma_async_device_unregister(&dw->dma);
+ 
+diff --git a/drivers/dma/dw_dmac_regs.h b/drivers/dma/dw_dmac_regs.h
+index 88a069f..8896559 100644
+--- a/drivers/dma/dw_dmac_regs.h
++++ b/drivers/dma/dw_dmac_regs.h
+@@ -239,10 +239,6 @@ struct dw_dma {
+ 	struct tasklet_struct	tasklet;
+ 	struct clk		*clk;
+ 
+-	/* slave information */
+-	struct dw_dma_slave	*sd;
+-	unsigned int		sd_count;
+-
+ 	u8			all_chan_mask;
+ 
+ 	/* hardware configuration */
+diff --git a/include/linux/dw_dmac.h b/include/linux/dw_dmac.h
+index 41766de..481ab23 100644
+--- a/include/linux/dw_dmac.h
++++ b/include/linux/dw_dmac.h
+@@ -27,7 +27,6 @@
+  */
+ struct dw_dma_slave {
+ 	struct device		*dma_dev;
+-	const char		*bus_id;
+ 	u32			cfg_hi;
+ 	u32			cfg_lo;
+ 	u8			src_master;
+@@ -60,9 +59,6 @@ struct dw_dma_platform_data {
+ 	unsigned short	block_size;
+ 	unsigned char	nr_masters;
+ 	unsigned char	data_width[4];
+-
+-	struct dw_dma_slave *sd;
+-	unsigned int sd_count;
+ };
+ 
+ /* bursts size */
+@@ -114,6 +110,5 @@ void dw_dma_cyclic_stop(struct dma_chan *chan);
+ dma_addr_t dw_dma_get_src_addr(struct dma_chan *chan);
+ 
+ dma_addr_t dw_dma_get_dst_addr(struct dma_chan *chan);
+-bool dw_dma_generic_filter(struct dma_chan *chan, void *param);
+ 
+ #endif /* DW_DMAC_H */
 -- 
 1.8.0
