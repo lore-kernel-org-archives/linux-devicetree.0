@@ -1,37 +1,40 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH V6 10/10] dmaengine: Fix compilation error in non-DT
- case
-Date: Mon, 28 Jan 2013 05:47:26 -0800
-Message-ID: <20130128134726.GV26562@intel.com>
-References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
- <1358509629-20471-11-git-send-email-padma.v@samsung.com>
+From: "Saridakis, Dean   (US SSA)" <dean.saridakis-IHqVjY1oUdQxoycv7ERPSQ@public.gmane.org>
+Subject: DTs, Linux drivers & PCI Devices
+Date: Mon, 28 Jan 2013 14:39:54 +0000
+Message-ID: <B98BBFB67D89184E8E876F332BDBC3E0A0C372@GLDMS85001.goldlnk.rootlnka.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1358509629-20471-11-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 18, 2013 at 05:17:09PM +0530, Padmavathi Venna wrote:
-> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
-> ---
->  include/linux/dmaengine.h |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index 8cd0e25..c88f302 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -992,7 +992,7 @@ static inline struct dma_chan *__dma_request_channel(dma_cap_mask_t *mask,
->  static inline struct dma_chan *dma_request_slave_channel(struct device *dev,
->  							 char *name)
->  {
-> -	return NULL
-> +	return NULL;
-what tree was this generated against? this was fixed by 678bd8
+I've been diving into Linux kernel drivers & device trees for a new project & am looking for some help. 
 
---
-~Vinod
+First, is it reasonable/possible to define a PCI (PCIe) device in a device tree? Seems like you'd have to reference a BAR#s to do this (& still have addresses mapped by enumeration).  A couple reasons I'm interested in doing this:
+- The PCI device logic will be migrated to a system bus
+- DT properties provide a nice way to pass in driver configuration data 
+
+It's not clear to me how the linux kernel interprets/processes the device tree. I'm working w/ powerpc (fsl QorIQ). E.g., shouldn't everything from the DT show up in /sys/bus/platform/devices ? I noticed that not everything is there, e.g., only 2 of the 4 PCIe RCs. (Noticed this after trying to add my own simple dummy entry to a reserved reg space as an experiment).
+
+Ultimately I'd like to use the DT to describe a set of logic cores on a subordinate bus. There is also a subordinate interrupt controller, which I think I can figure out how to describe, but am not sure how kernel glue works -- somehow I'd need to bind that controller to routing code I provide. 
+
+Documentation I've been reading includes:
+- ePAPR
+- DT wiki
+- kernel doc (driver-model, devicetree)
+- Linux DDs v3 (no coverage of platform drivers) Any other recommended docs?
+
+Thanks,
+Dean 
