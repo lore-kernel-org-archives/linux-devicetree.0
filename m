@@ -1,66 +1,81 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 1/4] pwm_backlight: Fix PWM levels support in non DT case
-Date: Mon, 28 Jan 2013 22:01:23 +0100
-Message-ID: <20130128210123.GA24673@avionic-0098.mockup.avionic-design.de>
-References: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com>
- <1358861996-27194-2-git-send-email-peter.ujfalusi@ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC][PATCH 2/2 v2] ASoC: simple-card: add Device Tree support
+Date: Mon, 28 Jan 2013 14:11:38 -0700
+Message-ID: <5106E98A.6070103@wwwdotorg.org>
+References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
+ <87sj6t484z.wl%kuninori.morimoto.gx@renesas.com>
+ <50E71618.8090302@wwwdotorg.org>
+ <20130104193712.GN4627@opensource.wolfsonmicro.com>
+ <87y5fvyy18.wl%kuninori.morimoto.gx@renesas.com>
+ <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1358861996-27194-2-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <87vcazyxr1.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 01/14/2013 07:40 PM, Kuninori Morimoto wrote:
+> Support for loading the simple-card module via devicetree.
+> It requests cpu/codec/platform information for probing.
 
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+> diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
 
-On Tue, Jan 22, 2013 at 02:39:53PM +0100, Peter Ujfalusi wrote:
-> It is expected that board files would have:
-> static unsigned int bl_levels[] =3D { 0, 50, 100, 150, 200, 250, };
->=20
-> static struct platform_pwm_backlight_data bl_data =3D {
-> 	.levels =3D bl_levels,
-> 	.max_brightness =3D ARRAY_SIZE(bl_levels),
-> 	.dft_brightness =3D 4,
-> 	.pwm_period_ns =3D 7812500,
-> };
->=20
-> In this case the max_brightness would be out of range in the levels array.
-> Decrement the received max_brightness in every case (DT or non DT) when t=
-he
-> levels has been provided.
+> +Required properties:
+> +
+> +- compatible					: "simple-audio"
+> +- simple-audio,card-name			: simple-audio card name
+> +
+> +- simple-audio,platform,controller		: phandle for platform
 
-What's wrong with specifying .max_brightness =3D ARRAY_SIZE(bl_levels) - 1
-instead?
+Rename that simple-audio,dma-controller perhaps? "platform" is a word
+specific to ASoC, and the bindings really should be generic across OSs.
 
-Thierry
+But I wonder why you'd even need the ASoC platform to be specified in
+DT; instead, the following seem better:
 
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature
+a) Have the CPU DAI's driver register the platform itself. Tegra does this.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
+b) Assume the ASoC "platform" device simply does DMA via a standard
+dmaengine driber, and instead refer to the DMA controller using DMA
+engine DT bindings.
 
-iQIcBAEBAgAGBQJRBucjAAoJEN0jrNd/PrOhEuQP/2BwJc9TCZOAU1uXwodzIzR7
-hAfK8+XXT7oWiUIajw+XrRumNEVItqkT13LrxVGYRoWBpOJLvuVs7LmDOwg7hfu4
-cNLoXeVslmZWdZL8NjRPF2RcZL/M5Hv1nFf9vQiDzw67MhrpMwpICYY/52UrhJcE
-N4y9wmoF8btANoVEHpQFnkXVjBfUYPoQLUt9veMNs6VQlnMkCE4E0IMocoiokCfo
-oxpseZFtJz7srEgGLkBYWfcmw36wO8cWF03hW+YugPYq48y7B5HKp7o/VDuc2QHR
-bISVXAWN1qKLKNgPWPd393wBG8BE0/18lmennd632++ng3wYSRuh3N6sBhqug6yZ
-ERqjh8EnVQh1dipcA2zSl1Y3sDRrOZLnEQrNH50OhkpIWGbGAipmbEHCPhQkS/Qn
-ROCt0dEAKd1yY64AS0dQgWpuptWTghcQ9gxZuTyiubt6IviV8KT0abO/1aFmuGVK
-fiHMK7yyocLyWEXRad2WaPgR2jdXDDN817d/8mzp2WRkBFXs+8HIB7Bazh0G9buV
-ATspIkc0b81eEu18AwnGlAHpFNPiTbA2mjHZ8goGSTnstmnWaOGDfTrUcGbwlmcx
-Mowqt2SlkAli4Pl8FwmmXi5GELcnpNL9CdXimsrVMkdy8P89pOPmrXUtOKZrYNRB
-6fBuAxeQtvU66j1tuVjx
-=0Jdp
------END PGP SIGNATURE-----
+> +- simple-audio,platform,name			: simple-audio platform name
 
---tThc/1wpZn/ma/RB--
+Can you explain why you'd need the platform name in the DT? Doesn't the
+phandle always uniquely identify it? The example doesn't use this property.
+
+> +- simple-audio,cpu,controller			: phandle for CPU DAI
+> +- simple-audio,cpu,dai,name			: simple-audio CPU DAI name
+
+It'd be a bit more typical of device-tree to have a single property that
+defines both the controller and any properties of the controller at
+once, e.g. something like:
+
+simple-audio,cpu-interface = <&codec_phandle AK4648_I2S_ITF_A>;
+
+where we assume something like:
+
+#define AK4648_I2S_ITF_A 0 // Interface A's ID
+
+That would remove the need to put string names into the DT.
+
+> +simple-audio,xxx,dai,clock-gating
+> +	"continuous"
+> +	"gated"
+
+Don't you need to use the common clock bindings to define which clock to
+gate? Or, is the I2S/... node's binding supposed to provide that
+information?
