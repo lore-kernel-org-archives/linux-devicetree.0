@@ -1,43 +1,41 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: [PATCH 1/2] ARM: dts: OMAP3: Add GPMC controller
-Date: Mon, 28 Jan 2013 18:54:07 +0100
-Message-ID: <1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch>
-References: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Daniel Mack <zonque@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH 2/4] DMA: PL330: Register the DMA controller with the
+ generic DMA helpers
+Date: Mon, 28 Jan 2013 11:54:36 -0600
+Message-ID: <5106BB5C.1010302@ti.com>
+References: <1358508824-20352-1-git-send-email-padma.v@samsung.com> <1358508824-20352-3-git-send-email-padma.v@samsung.com> <201301281451.00364.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <201301281451.00364.arnd@arndb.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree-discuss@lists.ozlabs.org, boojin.kim@samsung.com, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, swarren@nvidia.com, Padmavathi Venna <padma.v@samsung.com>, sbkim73@samsung.com, jassisinghbrar@gmail.com, vinod.koul@intel.com, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-Add device-tree support for the GPMC controller on the OMAP3.
 
-Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
----
- arch/arm/boot/dts/omap3.dtsi |   11 +++++++++++
- 1 files changed, 11 insertions(+), 0 deletions(-)
+On 01/28/2013 08:51 AM, Arnd Bergmann wrote:
+> On Friday 18 January 2013, Padmavathi Venna wrote:
+>> +       pfi = devm_kzalloc(&adev->dev, sizeof(*pfi), GFP_KERNEL);
+>> +       if (!pfi) {
+>> +               dev_err(&adev->dev, "unable to allocate mem\n");
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       pfi->dma_cap = pd->cap_mask;
+>> +       pfi->filter_fn = pl330_filter;
+>> +
+>> +       ret = of_dma_controller_register(adev->dev.of_node,
+>> +                                        of_dma_pl330_xlate, pfi);
+> 
+> Why do you pass a 'struct of_dma_filter_info' here? I would
+> expect that you pass the pdmac object as the third argument.
 
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 6c63118..2ddae38 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -403,5 +403,16 @@
- 			ti,timer-alwon;
- 			ti,timer-secure;
- 		};
-+
-+		gpmc: gpmc@6e000000 {
-+			compatible = "ti,omap3430-gpmc";
-+			ti,hwmods = "gpmc";
-+			reg = <0x6e000000 0x1000000>;
-+			interrupts = <20>;
-+			gpmc,num-cs = <8>;
-+			gpmc,num-waitpins = <4>;
-+			#address-cells = <2>;
-+			#size-cells = <1>;
-+		};
- 	};
- };
--- 
-1.7.5.4
+I believe it is because that is the data that the xlate function is
+using. Are you suggesting the data should be stored in the pdmac object
+and extracted from there? That could be done too given that this
+controller has its own xlate.
 
+Cheers
+Jon
