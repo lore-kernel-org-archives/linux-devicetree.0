@@ -1,56 +1,85 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: dma: protect list write operation by spin_lock
-Date: Mon, 28 Jan 2013 09:52:00 -0600
-Message-ID: <51069EA0.4040004@gmail.com>
-References: <1359386694-20548-1-git-send-email-andriy.shevchenko@linux.intel.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH RESEND 1/4] mfd: tps65090: add DT support for tps65090
+Date: Mon, 28 Jan 2013 08:52:29 -0700
+Message-ID: <51069EBD.7060104@wwwdotorg.org>
+References: <1359277035-16854-1-git-send-email-ldewangan@nvidia.com> <1359277035-16854-2-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359386694-20548-1-git-send-email-andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1359277035-16854-2-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: sameo@linux.intel.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/28/2013 09:24 AM, Andy Shevchenko wrote:
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> ---
->  drivers/of/dma.c |    2 ++
->  1 file changed, 2 insertions(+)
-
-You need to cc whomever has this file in their tree which is Vinod.
-
-Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
-Vinod, it's probably better to move drivers/of/dma.c to drivers/dma.
-That's been the direction we've been taking with new OF binding code. I
-must have missed that in the review.
-
-Rob
-
+On 01/27/2013 01:57 AM, Laxman Dewangan wrote:
+> Add device tree support for the TI PMIC TPS65090.
+> The device can be registered through platform or DT.
 > 
-> diff --git a/drivers/of/dma.c b/drivers/of/dma.c
-> index 59631b2..1ae6120 100644
-> --- a/drivers/of/dma.c
-> +++ b/drivers/of/dma.c
-> @@ -117,7 +117,9 @@ int of_dma_controller_register(struct device_node *np,
->  	ofdma->use_count = 0;
+> Add device tree binding document for this device.
+
+> diff --git a/Documentation/devicetree/bindings/regulator/tps65090.txt b/Documentation/devicetree/bindings/regulator/tps65090.txt
+
+> +Required properties:
+> +- compatible: "ti,tps65090"
+> +- reg: I2C slave address
+> +- interrupts: the interrupt outputs of the controller
+> +- regulators: A node that houses a sub-node for each regulator within the
+> +  device. Each sub-node is identified using the node's name (or the deprecated
+> +  regulator-compatible property if present), with valid values listed below.
+
+It may not be worth mentioning deprecated stuff in a new binding doc.
+
+> +  The content of each sub-node is defined by the standard binding for
+> +  regulators; see regulator.txt.
+> +  dcdc[1-3], fet[1-7] and ldo[1-2] respectively.
+> +- vsys[1-3]-supply: The input supply for DCDC[1-3] respectively.
+> +- infet[1-7]-supply: The input supply for FET[1-7] respectively.
+> +- vsys_l[1-2]-supply: The input supply for LDO[1-2] respectively.
+
+_ in a DT property name is unusual; perhaps use - instead?
+
+> +Optional properties:
+> +- ti,enable-ext-control: This is applicable for DCDC1, DCDC2 and DCDC3.
+> +  If DCDCs are externally controlled then this property should be there.
+> +- gpio: This is applicable for DCDC1, DCDC2 and DCDC3. If DCDCs are
+> +  extrenally controlled and if it is from GPIO then gpio number should
+
+s/extrenally/externally/
+
+GPIO should always be capitalized it text.
+
+"gpio" is a rather generic property name. "dcdc-gpios" or
+"dcdc-ext-control-gpios" might be better?
+
+> diff --git a/drivers/mfd/tps65090.c b/drivers/mfd/tps65090.c
+
+> @@ -155,9 +188,22 @@ static int tps65090_i2c_probe(struct i2c_client *client,
+>  	struct tps65090 *tps65090;
+>  	int ret;
 >  
->  	/* Now queue of_dma controller structure in list */
-> +	spin_lock(&of_dma_lock);
->  	list_add_tail(&ofdma->of_dma_controllers, &of_dma_list);
-> +	spin_unlock(&of_dma_lock);
->  
->  	return 0;
->  }
-> 
+> -	if (!pdata) {
+> +	if (client->dev.of_node) {
+> +		const struct of_device_id *match;
+> +
+> +		match = of_match_device(of_match_ptr(tps65090_of_match),
+> +				&client->dev);
+> +		if (!match) {
+> +			dev_err(&client->dev, "No match device found\n");
+> +			return -ENODEV;
+> +		}
+
+Is that useful; "match" doesn't seem to be used anywhere, and this
+driver won't be instantiated through DT unless the driver/I2C core found
+a matching entry in tps65090_of_match already.
+
+> +	if (!pdata && client->dev.of_node)
+> +		pdata = of_get_tps65090_platform_data(&client->dev);
+> +	if (IS_ERR_OR_NULL(pdata)) {
+>  		dev_err(&client->dev, "tps65090 requires platform data\n");
+> -		return -EINVAL;
+> +		return (pdata) ? PTR_ERR(pdata) : -EINVAL;
+>  	}
+
+Does the driver really /require/ pdata?
