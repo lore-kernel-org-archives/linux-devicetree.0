@@ -1,83 +1,69 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH 1/4] ARM: dts: add support for hdmi to exynos4
-Date: Mon, 28 Jan 2013 12:25:27 +0530
-Message-ID: <CAPdUM4Mx=Wq1pRshWBF-L=+AUbhBOL-N+0VU4QjUkxuZcLYf5Q@mail.gmail.com>
-References: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com>
-	<1359110384-28402-2-git-send-email-rahul.sharma@samsung.com>
-	<CAJuYYwSHDoc40obSnPZwvS3LFxZEbrhHx6-Vd-yLKPGOnXxmoQ@mail.gmail.com>
+From: "Katepallewar, Mrugesh" <mrugesh.mk@ti.com>
+Subject: RE: [PATCH] ARM: davinci: da850: add RTC driver DT entries
+Date: Mon, 28 Jan 2013 07:00:19 +0000
+Message-ID: <4232EB8829679242B82E712C3DB3149D42346E@DBDE01.ent.ti.com>
+References: <1359094430-14724-1-git-send-email-mrugesh.mk@ti.com>
+ <51025FAE.3060503@ti.com>
+ <4232EB8829679242B82E712C3DB3149D4233E9@DBDE01.ent.ti.com>
+ <51026AEA.5050503@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwSHDoc40obSnPZwvS3LFxZEbrhHx6-Vd-yLKPGOnXxmoQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51026AEA.5050503@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Nori, Sekhar" <nsekhar@ti.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "hs@denx.de" <hs@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Thomas,
-
-On Fri, Jan 25, 2013 at 11:10 PM, Thomas Abraham
-<thomas.abraham@linaro.org> wrote:
-> On 25 January 2013 02:39, Rahul Sharma <rahul.sharma@samsung.com> wrote:
->> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
->>
->> Conflicts:
->>         arch/arm/mach-exynos/mach-exynos4-dt.c
->> ---
->>  arch/arm/boot/dts/exynos4.dtsi         | 7 +++++++
->>  arch/arm/mach-exynos/mach-exynos4-dt.c | 2 ++
->>  2 files changed, 9 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
->> index e1347fc..6c2c79d 100644
->> --- a/arch/arm/boot/dts/exynos4.dtsi
->> +++ b/arch/arm/boot/dts/exynos4.dtsi
->> @@ -289,4 +289,11 @@
->>                         interrupts = <0 34 0>;
->>                 };
->>         };
->> +
->> +       hdmi {
->> +               compatible = "samsung,exynos4-hdmi14";
->> +               reg = <0x12D00000 0x70000>;
->> +               interrupts = <0 95 0>;
->> +               hpd-gpio = <&gpx3 7 0xf 1 3>;
->
-> This is using the older gpio dt bindings but exynos4 has started using
-> the pinctrl bindings. So this is not sufficient to do the
-> pinmux/pinconfig settings on Exynos4.
->
-> Thanks,
-> Thomas.
->
-
-I have chosen this as exynos5 DT using it in same way and parsed by common code
-in driver for exy4 and 5. Secondly, one-time initial configuration is
-sufficient for
-hdmi hpd-gpio. Please share your opinion.
-
-regards,
-Rahul Sharma.
-
->> +       };
->>  };
->> diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c b/arch/arm/mach-exynos/mach-exynos4-dt.c
->> index ab1dacc..24f72a5 100644
->> --- a/arch/arm/mach-exynos/mach-exynos4-dt.c
->> +++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
->> @@ -80,6 +80,8 @@ static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
->>         OF_DEV_AUXDATA("arm,pl330", EXYNOS4_PA_MDMA1, "dma-pl330.2", NULL),
->>         OF_DEV_AUXDATA("samsung,exynos4210-tmu", EXYNOS4_PA_TMU,
->>                                 "exynos-tmu", NULL),
->> +       OF_DEV_AUXDATA("samsung,exynos4-hdmi14", EXYNOS4_PA_HDMI,
->> +                               "exynos4-hdmi", NULL),
->>         {},
->>  };
->>
->> --
->> 1.8.0
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gRnJpLCBKYW4gMjUsIDIwMTMgYXQgMTY6NTI6MTgsIE5vcmksIFNla2hhciB3cm90ZToNCj4g
+T24gMS8yNS8yMDEzIDQ6MzQgUE0sIEthdGVwYWxsZXdhciwgTXJ1Z2VzaCB3cm90ZToNCj4gPiBP
+biBGcmksIEphbiAyNSwgMjAxMyBhdCAxNjowNDoyMiwgTm9yaSwgU2VraGFyIHdyb3RlOg0KPiA+
+PiBPbiAxLzI1LzIwMTMgMTE6NDMgQU0sIE1ydWdlc2ggS2F0ZXBhbGxld2FyIHdyb3RlOg0KPiA+
+Pj4gQWRkIFJUQyBEVCBlbnRyaWVzIGluIGRhODUwIGR0cyBmaWxlLg0KPiA+Pj4NCj4gPj4+IFNp
+Z25lZC1vZmYtYnk6IE1ydWdlc2ggS2F0ZXBhbGxld2FyIDxtcnVnZXNoLm1rQHRpLmNvbT4NCj4g
+Pj4+IC0tLQ0KPiA+Pj4gQXBwbGllcyBvbiB0b3Agb2YgdjMuOC1yYzQgb2YgbGludXMgdHJlZS4N
+Cj4gPj4+DQo+ID4+PiBUZXN0ZWQgb24gZGE4NTAtZXZtIGRldmljZS4NCj4gPj4+DQo+ID4+PiBU
+ZXN0IFByb2NlZHVyZToNCj4gPj4+IGRhdGUgW1lZWVkuXU1NLkRELWhoOm1tWzpzc10NCj4gPj4+
+IGh3Y2xvY2sgLXcNCj4gPj4+IHJlc2V0IGJvYXJkIGFuZCBjaGVjayBzeXN0ZW0gdGltZS4NCj4g
+Pj4+DQo+ID4+PiA6MTAwNjQ0IDEwMDY0NCAzN2RjNWEzLi4uIGIxNmVmZDQuLi4gTQlhcmNoL2Fy
+bS9ib290L2R0cy9kYTg1MC1ldm0uZHRzDQo+ID4+PiA6MTAwNjQ0IDEwMDY0NCA2NDBhYjc1Li4u
+IGE4ZWIxYjEuLi4gTQlhcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpDQo+ID4+PiAgYXJjaC9h
+cm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cyB8ICAgIDMgKysrDQo+ID4+PiAgYXJjaC9hcm0vYm9v
+dC9kdHMvZGE4NTAuZHRzaSAgICB8ICAgIDggKysrKysrKysNCj4gPj4+ICAyIGZpbGVzIGNoYW5n
+ZWQsIDExIGluc2VydGlvbnMoKykNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
+Ym9vdC9kdHMvZGE4NTAtZXZtLmR0cyANCj4gPj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAt
+ZXZtLmR0cyBpbmRleCAzN2RjNWEzLi5iMTZlZmQ0IDEwMDY0NA0KPiA+Pj4gLS0tIGEvYXJjaC9h
+cm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cw0KPiA+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
+ZGE4NTAtZXZtLmR0cw0KPiA+Pj4gQEAgLTI0LDUgKzI0LDggQEANCj4gPj4+ICAJCXNlcmlhbDI6
+IHNlcmlhbEAxZDBkMDAwIHsNCj4gPj4+ICAJCQlzdGF0dXMgPSAib2theSI7DQo+ID4+PiAgCQl9
+Ow0KPiA+Pj4gKwkJcnRjQDFjMjMwMDAgew0KPiANCj4gSSBkaWQgbm90IG1lbnRpb24gdGhpcyBs
+YXN0IHRpbWUsIGJ1dCB0aGlzIHNob3VsZCBiZToNCj4gDQo+IAkJcnRjMDogcnRjQDFjMjMwMDAg
+ew0KPiANCj4gdG8gYmUgY29uc2lzdGVudCB3aXRoIHJlc3Qgb2YgdGhlIGZpbGUuDQoNCk9rYXku
+IEkgd2lsbCBzZW5kIHRoaXMgaW4gbmV4dCB2ZXJzaW9uLg0KPiANCj4gPj4+ICsJCQlzdGF0dXMg
+PSAib2theSI7DQo+ID4+PiArCQl9Ow0KPiA+Pj4gIAl9Ow0KPiA+Pj4gIH07DQo+ID4+PiBkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaSANCj4gPj4+IGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvZGE4NTAuZHRzaSBpbmRleCA2NDBhYjc1Li5hOGViMWIxIDEwMDY0NA0KPiA+Pj4g
+LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQ0KPiA+Pj4gKysrIGIvYXJjaC9hcm0v
+Ym9vdC9kdHMvZGE4NTAuZHRzaQ0KPiA+Pj4gQEAgLTU2LDUgKzU2LDEzIEBADQo+ID4+PiAgCQkJ
+aW50ZXJydXB0LXBhcmVudCA9IDwmaW50Yz47DQo+ID4+PiAgCQkJc3RhdHVzID0gImRpc2FibGVk
+IjsNCj4gPj4+ICAJCX07DQo+ID4+PiArCQlydGNAMWMyMzAwMCB7DQo+IA0KPiBIZXJlIHRvby4N
+Cj4gDQpPa2F5LiBJIHdpbGwgc2VuZCB0aGlzIGluIG5leHQgdmVyc2lvbi4NCg0KPiA+Pj4gKwkJ
+CWNvbXBhdGlibGUgPSAidGksZGE4MzAtcnRjIjsNCj4gPj4+ICsJCQlyZWcgPSA8MHgyMzAwMCAw
+eDEwMDA+Ow0KPiA+Pj4gKwkJCWludGVycnVwdHMgPSA8MTkNCj4gPj4+ICsJCQkJICAgICAgMTk+
+Ow0KPiA+Pg0KPiA+PiBXaHkgdHdvIGludGVycnVwdHMgb2YgdGhlIHNhbWUgbnVtYmVyPyBJZiB0
+aGVyZSBpcyBvbmx5IG9uZSBpbnRlcnJ1cHQgbGluZSB0aGVuIG9ubHkgb25lIHNob3VsZCBiZSBz
+cGVjaWZpZWQsIG5vPw0KPiA+IFdlIGFyZSB1c2luZyBjb21tb24gT01BUCBSVEMgZHJpdmVyIGZv
+ciBkYTg1MCBhbmQgb3RoZXIgdGkgU29DJ3MgDQo+ID4gKGUuZy5hbTMzeHgpLiBJIGhhdmUgc2Vl
+biBpbiBhbTMzeHguZHRzaSBydGMgdGltZXIgYW5kIGFsYXJtIGludGVycnVwdHMgYXJlIGRpZmZl
+cmVudC4gU28sIHR3byBpbnRlcnJ1cHQgbnVtYmVycyBhcmUgZXhwZWN0ZWQgZnJvbSBSVEMgRFQg
+bm9kZS4NCj4gDQo+IE9rYXkuIExvb2tpbmcgYXQgdGhlIE9NQVAtTDEzOCBUUk0sIEkgc2VlIHRo
+YXQgdGhlIElQIG9uIHRoYXQgU29DIHN1cHBvcnRzIGJvdGggYWxhcm0gYW5kIHRpbWVyIGV2ZW50
+cyBhbmQgYm90aCBhcnJpdmUgb24gdGhlIHNhbWUgaW50ZXJydXB0IG51bWJlciAoYXMgb3Bwb3Nl
+ZCB0byBhbTMzNXggd2hlcmUgdGhleSBzdXBwb3NlZGx5IGFycml2ZSBvbiBkaWZmZXJlbnQgaW50
+ZXJydXB0IGxpbmVzKS4gV2hhdCB5b3UgaGF2ZSBsb29rcyBmaW5lIHRvIG1lIGNvbnNpZGVyaW5n
+IHRoaXMuDQo+IA0KPiBBbHNvLCB0aGUgaW50ZXJydXB0LXBhcmVudCBzZXR0aW5nIG5lZWRzIHRv
+IGJlIHJlbW92ZWQuIFNlZSB0aGUgcGF0Y2ggUHJhYmhha2FyIGp1c3Qgc3VibWl0dGVkLg0KDQpP
+a2F5LiBJIHdpbGwgc2VuZCB0aGlzIGluIG5leHQgdmVyc2lvbi4NCg0KPiANCj4gVGhhbmtzLA0K
+PiBTZWtoYXINCj4gDQoNClJlZ2FyZHMsIA0KTXJ1Z2VzaA0K
