@@ -1,67 +1,58 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 5/6] ARM: dts: Add basic dts include files for Samsung
- S3C64xx SoCs
-Date: Mon, 28 Jan 2013 09:02:40 +0000
-Message-ID: <20130128090240.GA7754@e106331-lin.cambridge.arm.com>
-References: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com>
- <20130114150531.GE21142@e102568-lin.cambridge.arm.com>
- <20130116105957.GA1963@linaro.org>
- <3747315.IyCCRDXgbD@flatron>
- <016c01cdfb30$64f80430$2ee80c90$@samsung.com>
+From: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>
+Subject: RE: RE: RE: [PATCH v4 12/12] video: da8xx-fb: CCF clock divider
+ handling
+Date: Mon, 28 Jan 2013 09:17:19 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA943E9@DBDE01.ent.ti.com>
+References: <cover.1358937685.git.afzal@ti.com>
+ <fa8dab522507e087d5a94bac13dda71544911707.1358937685.git.afzal@ti.com>
+ <20130123202204.9205.66575@quantum>
+ <C8443D0743D26F4388EA172BF4E2A7A93EA92ADF@DBDE01.ent.ti.com>
+ <20130124170044.10623.45314@quantum>
+ <C8443D0743D26F4388EA172BF4E2A7A93EA9383E@DBDE01.ent.ti.com>
+ <20130125224453.10623.74434@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <016c01cdfb30$64f80430$2ee80c90$@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130125224453.10623.74434@quantum>
 Content-Language: en-US
-Content-Disposition: inline
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Dave Martin' <dave.martin@linaro.org>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "kwangwoo.lee@gmail.com" <kwangwoo.lee@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "mcuelenaere@gmail.com" <mcuelenaere@gmail.com>, "augulis.darius@gmail.com" <augulis.darius@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "Valkeinen,
+ Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2013 at 07:15:48PM +0000, Kukjin Kim wrote:
-> Tomasz Figa wrote:
-> 
-> [...]
-> 
-> > > Well, the number of CPU types does not grow rapidly.  It will be much
-> > > less than one per SoC -- so keeping the list up to date shouldn't be
-> > > that much effort.
-> > >
-> > > For ARM1176JZF-S, it could make sense for the comatible list to be
-> > >
-> > > 	"arm,arm1176jzf-s", "arm,arm1176"
-> > >
-> > > ...since the differences between 1176 variants are software probeable
-> > > (i.e., whether there is an FPU or not).  AFAIK the J, Z apply to all
-> > > ARM1176, and the -S (synthesisable RTL) is nothing to do with software.
-> > > The kernel probably only really needs to know "arm,arm1176".
-> > 
-> > OK. So the conclusion is that I should change the cpus node to following:
-> > 
-> >        cpus {
-> >                cpu {
-> 
-> cpu@0 { ?
+Hi Mike,
 
-As the CPU has no MPIDR, and thus doesn't have a reg property, there's no reason
-to have a unit address. Just "cpu" should be fine.
+On Sat, Jan 26, 2013 at 04:14:53, Mike Turquette wrote:
 
-> 
-> >                        compatible = "arm,arm1176jzf-s", "arm,arm1176";
-> >                };
-> >        };
-> > 
-> > Am I right?
-> > 
-> I think so :-)
-> 
-> - Kukjin
-> 
+> I think Paul W. or someone on the TI side should weigh in on your clkdev
+> entries.  My main point is that the actual tree should be modeled and
+> clocks shouldn't be globbed together unnecessarily.  As mentioned in the
+> other mail thread you might be better off making a divider for your LCDC
+> IP block and modeling each node individually.
 
-As Dave pointed out, the "jzf-s" portion might be superfluous. It's worth
-having the "arm,arm1176", though.
+It seems complexity of driver would increase by creating a new inherited
+divider clock and having a total 3-4 clock nodes. The advantage going
+with it would be higher configurable resolution for pixel clock.
+Current use cases work without higher pixel clock resolution.
 
-Thanks,
-Mark.
+And drm driver posted for the same IP is without CCF modeling.
+
+So I will presently not model clock nodes in LCDC IP, later if use cases
+badly require, this can be done (and if it happens, hopefully by that
+DaVinci would be CCF'ed and it would be more clean to implement it).
+
+Thanks for sharing your ideas.
+
+Regards
+Afzal
