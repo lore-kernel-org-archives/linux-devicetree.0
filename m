@@ -1,28 +1,66 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v4 3/7] ARM: Exynos: add device tree support for MCT controller
- driver
-Date: Mon, 28 Jan 2013 13:59:22 -0700
-Message-ID: <5106E6AA.3080801@wwwdotorg.org>
-References: <1358762542-19008-1-git-send-email-thomas.abraham@linaro.org> <1358762542-19008-4-git-send-email-thomas.abraham@linaro.org>
+From: Thierry Reding <thierry.reding@avionic-design.de>
+Subject: Re: [PATCH 1/4] pwm_backlight: Fix PWM levels support in non DT case
+Date: Mon, 28 Jan 2013 22:01:23 +0100
+Message-ID: <20130128210123.GA24673@avionic-0098.mockup.avionic-design.de>
+References: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com>
+ <1358861996-27194-2-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1358762542-19008-4-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, swarren@nvidia.com, sylvester.nawrocki@gmail.com, chaos.youn@samsung.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1358861996-27194-2-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/21/2013 03:02 AM, Thomas Abraham wrote:
-> Allow the MCT controller base address and interrupts to be obtained from
-> device tree and remove unused static definitions of these. The non-dt support
-> for Exynos5250 is removed but retained for Exynos4210 based platforms.
 
-Patches 3 and later in this series, fairly quickly,
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
+--tThc/1wpZn/ma/RB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Sorry for the slow review.
+On Tue, Jan 22, 2013 at 02:39:53PM +0100, Peter Ujfalusi wrote:
+> It is expected that board files would have:
+> static unsigned int bl_levels[] =3D { 0, 50, 100, 150, 200, 250, };
+>=20
+> static struct platform_pwm_backlight_data bl_data =3D {
+> 	.levels =3D bl_levels,
+> 	.max_brightness =3D ARRAY_SIZE(bl_levels),
+> 	.dft_brightness =3D 4,
+> 	.pwm_period_ns =3D 7812500,
+> };
+>=20
+> In this case the max_brightness would be out of range in the levels array.
+> Decrement the received max_brightness in every case (DT or non DT) when t=
+he
+> levels has been provided.
 
-I'm not 100% sure if I like Mark's #global-interrupts suggestion or not,
-but I'd be fine with the binding either way, so choose as you see fit.
+What's wrong with specifying .max_brightness =3D ARRAY_SIZE(bl_levels) - 1
+instead?
+
+Thierry
+
+--tThc/1wpZn/ma/RB
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRBucjAAoJEN0jrNd/PrOhEuQP/2BwJc9TCZOAU1uXwodzIzR7
+hAfK8+XXT7oWiUIajw+XrRumNEVItqkT13LrxVGYRoWBpOJLvuVs7LmDOwg7hfu4
+cNLoXeVslmZWdZL8NjRPF2RcZL/M5Hv1nFf9vQiDzw67MhrpMwpICYY/52UrhJcE
+N4y9wmoF8btANoVEHpQFnkXVjBfUYPoQLUt9veMNs6VQlnMkCE4E0IMocoiokCfo
+oxpseZFtJz7srEgGLkBYWfcmw36wO8cWF03hW+YugPYq48y7B5HKp7o/VDuc2QHR
+bISVXAWN1qKLKNgPWPd393wBG8BE0/18lmennd632++ng3wYSRuh3N6sBhqug6yZ
+ERqjh8EnVQh1dipcA2zSl1Y3sDRrOZLnEQrNH50OhkpIWGbGAipmbEHCPhQkS/Qn
+ROCt0dEAKd1yY64AS0dQgWpuptWTghcQ9gxZuTyiubt6IviV8KT0abO/1aFmuGVK
+fiHMK7yyocLyWEXRad2WaPgR2jdXDDN817d/8mzp2WRkBFXs+8HIB7Bazh0G9buV
+ATspIkc0b81eEu18AwnGlAHpFNPiTbA2mjHZ8goGSTnstmnWaOGDfTrUcGbwlmcx
+Mowqt2SlkAli4Pl8FwmmXi5GELcnpNL9CdXimsrVMkdy8P89pOPmrXUtOKZrYNRB
+6fBuAxeQtvU66j1tuVjx
+=0Jdp
+-----END PGP SIGNATURE-----
+
+--tThc/1wpZn/ma/RB--
