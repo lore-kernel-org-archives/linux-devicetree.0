@@ -1,39 +1,56 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH] ARM: davinci: da850: add interrupt-parent property in
- soc node
-Date: Mon, 28 Jan 2013 21:03:14 +0530
-Message-ID: <51069A3A.8090404@ti.com>
-References: <1359112724-1217-1-git-send-email-prabhakar.lad@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: dma: protect list write operation by spin_lock
+Date: Mon, 28 Jan 2013 09:52:00 -0600
+Message-ID: <51069EA0.4040004@gmail.com>
+References: <1359386694-20548-1-git-send-email-andriy.shevchenko@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359112724-1217-1-git-send-email-prabhakar.lad@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Cc: LAK <linux-arm-kernel@lists.infradead.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, LKML <linux-kernel@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, devicetree-discuss@lists.ozlabs.org, Heiko Schocher <hs@denx.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359386694-20548-1-git-send-email-andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/25/2013 4:48 PM, Prabhakar Lad wrote:
-> From: Lad, Prabhakar <prabhakar.lad@ti.com>
-> 
-> This patch adds 'interrupt-parent' property in soc node, so that
-> the child inherits this property, this avoids adding 'interrupt-parent'
-> to each node.
-> 
-> Signed-off-by: Lad, Prabhakar <prabhakar.lad@ti.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: davinci-linux-open-source@linux.davincidsp.com
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: Heiko Schocher <hs@denx.de>
+On 01/28/2013 09:24 AM, Andy Shevchenko wrote:
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 > ---
+>  drivers/of/dma.c |    2 ++
+>  1 file changed, 2 insertions(+)
 
-Looks good to me. Queuing for v3.9. BTW, we are moving the interrupt
-parent property to soc node rather than adding it. So, I think a better
-headline is "move interrupt-parent property to soc node". I change the
-headline while committing.
+You need to cc whomever has this file in their tree which is Vinod.
 
-Thanks,
-Sekhar
+Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+
+Vinod, it's probably better to move drivers/of/dma.c to drivers/dma.
+That's been the direction we've been taking with new OF binding code. I
+must have missed that in the review.
+
+Rob
+
+> 
+> diff --git a/drivers/of/dma.c b/drivers/of/dma.c
+> index 59631b2..1ae6120 100644
+> --- a/drivers/of/dma.c
+> +++ b/drivers/of/dma.c
+> @@ -117,7 +117,9 @@ int of_dma_controller_register(struct device_node *np,
+>  	ofdma->use_count = 0;
+>  
+>  	/* Now queue of_dma controller structure in list */
+> +	spin_lock(&of_dma_lock);
+>  	list_add_tail(&ofdma->of_dma_controllers, &of_dma_list);
+> +	spin_unlock(&of_dma_lock);
+>  
+>  	return 0;
+>  }
+> 
