@@ -1,206 +1,175 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: [PATCH 4/5] ata: arasan: remove the need for platform_data
-Date: Mon, 28 Jan 2013 21:58:19 +0000
-Message-ID: <1359410300-26113-5-git-send-email-arnd@arndb.de>
+Subject: [PATCH 2/5] spi: pl022: use generic DMA slave configuration if
+	possible
+Date: Mon, 28 Jan 2013 21:58:17 +0000
+Message-ID: <1359410300-26113-3-git-send-email-arnd@arndb.de>
 References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <1359410300-26113-1-git-send-email-arnd@arndb.de>
+	<1359410300-26113-1-git-send-email-arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 In-Reply-To: <1359410300-26113-1-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jeff Garzik <jgarzik-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a complete DT binding for the arasan device driver. There is
-currently only one user, which is the spear13xx platform, so we don't
-actually have to parse all the properties until another user comes in,
-but this does use the generic DMA binding to find the DMA channel.
+With the new OF DMA binding, it is possible to completely avoid the
+need for platform_data for configuring a DMA channel. In cases where the
+platform has already been converted, calling dma_request_slave_channel
+should get all the necessary information from the device tree.
 
-The patch is untested so far and is part of a series to convert
-the spear platform over to use the generic DMA binding, so it
-should stay with the rest of the series.
+Like the patch that converts the dw_dma controller, this is completely
+untested and is looking for someone to try it out.
 
 Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Jeff Garzik <jgarzik-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 ---
- .../devicetree/bindings/ata/pata-arasan.txt        | 22 +++++++++++++
- drivers/ata/pata_arasan_cf.c                       | 37 +++++++++++-----------
- include/linux/pata_arasan_cf_data.h                |  2 --
- 3 files changed, 41 insertions(+), 20 deletions(-)
+ .../devicetree/bindings/spi/spi_pl022.txt          | 36 ++++++++++++++++++
+ drivers/spi/spi-pl022.c                            | 43 +++++++++++++++++++++-
+ 2 files changed, 77 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/ata/pata-arasan.txt b/Documentation/devicetree/bindings/ata/pata-arasan.txt
-index 95ec7f8..2aff154 100644
---- a/Documentation/devicetree/bindings/ata/pata-arasan.txt
-+++ b/Documentation/devicetree/bindings/ata/pata-arasan.txt
-@@ -6,6 +6,26 @@ Required properties:
- - interrupt-parent: Should be the phandle for the interrupt controller
-   that services interrupts for this device
- - interrupt: Should contain the CF interrupt number
-+- clock-frequency: Interface clock rate, in Hz, one of
-+       25000000
-+       33000000
-+       40000000
-+       50000000
-+       66000000
-+       75000000
-+      100000000
-+      125000000
-+      150000000
-+      166000000
-+      200000000
+diff --git a/Documentation/devicetree/bindings/spi/spi_pl022.txt b/Documentation/devicetree/bindings/spi/spi_pl022.txt
+index f158fd3..22ed679 100644
+--- a/Documentation/devicetree/bindings/spi/spi_pl022.txt
++++ b/Documentation/devicetree/bindings/spi/spi_pl022.txt
+@@ -16,6 +16,11 @@ Optional properties:
+                             device will be suspended immediately
+ - pl022,rt : indicates the controller should run the message pump with realtime
+              priority to minimise the transfer latency on the bus (boolean)
++- dmas : Two or more DMA channel specifiers following the convention outlined
++         in bindings/dma/dma.txt
++- dma-names: Names for the dma channels, if present. There must be at
++	     least one channel named "tx" for transmit and named "rx" for
++             receive.
+ 
+ 
+ SPI slave nodes must be children of the SPI master node and can
+@@ -32,3 +37,34 @@ contain the following properties.
+ - pl022,wait-state : Microwire interface: Wait state
+ - pl022,duplex : Microwire interface: Full/Half duplex
+ 
 +
-+Optional properties:
-+- arasan,broken-udma: if present, UDMA mode is unusable
-+- arasan,broken-mwdma: if present, MWDMA mode is unusable
-+- arasan,broken-pio: if present, PIO mode is unusable
-+- dmas: one DMA channel, as described in bindings/dma/dma.txt
-+  required unless both UDMA and MWDMA mode are broken
-+- dma-names: the corresponding channel name, must be "data"
- 
- Example:
- 
-@@ -14,4 +34,6 @@ Example:
- 		reg = <0xfc000000 0x1000>;
- 		interrupt-parent = <&vic1>;
- 		interrupts = <12>;
-+		dmas = <&dma-controller 23>;
-+		dma-names = "data";
- 	};
-diff --git a/drivers/ata/pata_arasan_cf.c b/drivers/ata/pata_arasan_cf.c
-index 405022d..7638121 100644
---- a/drivers/ata/pata_arasan_cf.c
-+++ b/drivers/ata/pata_arasan_cf.c
-@@ -209,8 +209,6 @@ struct arasan_cf_dev {
- 	struct dma_chan *dma_chan;
- 	/* Mask for DMA transfers */
- 	dma_cap_mask_t mask;
--	/* dma channel private data */
--	void *dma_priv;
- 	/* DMA transfer work */
- 	struct work_struct work;
- 	/* DMA delayed finish work */
-@@ -308,6 +306,7 @@ static void cf_card_detect(struct arasan_cf_dev *acdev, bool hotplugged)
- static int cf_init(struct arasan_cf_dev *acdev)
- {
- 	struct arasan_cf_pdata *pdata = dev_get_platdata(acdev->host->dev);
-+	unsigned int if_clk;
- 	unsigned long flags;
- 	int ret = 0;
- 
-@@ -325,8 +324,12 @@ static int cf_init(struct arasan_cf_dev *acdev)
- 
- 	spin_lock_irqsave(&acdev->host->lock, flags);
- 	/* configure CF interface clock */
--	writel((pdata->cf_if_clk <= CF_IF_CLK_200M) ? pdata->cf_if_clk :
--			CF_IF_CLK_166M, acdev->vbase + CLK_CFG);
-+	/* TODO: read from device tree */
-+	if_clk = CF_IF_CLK_166M;
-+	if (pdata && pdata->cf_if_clk <= CF_IF_CLK_200M)
-+		if_clk = pdata->cf_if_clk;
++Example:
 +
-+	writel(if_clk, acdev->vbase + CLK_CFG);
- 
- 	writel(TRUE_IDE_MODE | CFHOST_ENB, acdev->vbase + OP_MODE);
- 	cf_interrupt_enable(acdev, CARD_DETECT_IRQ, 1);
-@@ -357,12 +360,6 @@ static void dma_callback(void *dev)
- 	complete(&acdev->dma_completion);
++	spi@e0100000 {
++		compatible = "arm,pl022", "arm,primecell";
++		reg = <0xe0100000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interrupts = <0 31 0x4>;
++		dmas = <&dma-controller 23 1>,
++			<&dma-controller 24 0>;
++		dma-names = "rx", "tx";
++
++		m25p80@1 {
++			compatible = "st,m25p80";
++			reg = <1>;
++			spi-max-frequency = <12000000>;
++			spi-cpol;
++			spi-cpha;
++			pl022,hierarchy = <0>;
++			pl022,interface = <0>;
++			pl022,slave-tx-disable;
++			pl022,com-mode = <0x2>;
++			pl022,rx-level-trig = <0>;
++			pl022,tx-level-trig = <0>;
++			pl022,ctrl-len = <0x11>;
++			pl022,wait-state = <0>;
++			pl022,duplex = <0>;
++		};
++	};
++	
+diff --git a/drivers/spi/spi-pl022.c b/drivers/spi/spi-pl022.c
+index b0fe393..371cc66f 100644
+--- a/drivers/spi/spi-pl022.c
++++ b/drivers/spi/spi-pl022.c
+@@ -1139,6 +1139,35 @@ err_no_rxchan:
+ 	return -ENODEV;
  }
  
--static bool filter(struct dma_chan *chan, void *slave)
--{
--	chan->private = slave;
--	return true;
--}
--
- static inline void dma_complete(struct arasan_cf_dev *acdev)
- {
- 	struct ata_queued_cmd *qc = acdev->qc;
-@@ -530,8 +527,7 @@ static void data_xfer(struct work_struct *work)
- 
- 	/* request dma channels */
- 	/* dma_request_channel may sleep, so calling from process context */
--	acdev->dma_chan = dma_request_channel(acdev->mask, filter,
--			acdev->dma_priv);
-+	acdev->dma_chan = dma_request_slave_channel(acdev->host->dev, "data");
- 	if (!acdev->dma_chan) {
- 		dev_err(acdev->host->dev, "Unable to get dma_chan\n");
- 		goto chan_request_fail;
-@@ -798,6 +794,7 @@ static int arasan_cf_probe(struct platform_device *pdev)
- 	struct ata_host *host;
- 	struct ata_port *ap;
- 	struct resource *res;
-+	u32 quirk;
- 	irq_handler_t irq_handler = NULL;
- 	int ret = 0;
- 
-@@ -817,12 +814,17 @@ static int arasan_cf_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	}
- 
-+	if (pdata)
-+		quirk = pdata->quirk;
-+	else
-+		quirk = CF_BROKEN_UDMA; /* as it is on spear1340 */
++static int pl022_dma_autoprobe(struct pl022 *pl022)
++{
++	struct device *dev = &pl022->adev->dev;
 +
- 	/* if irq is 0, support only PIO */
- 	acdev->irq = platform_get_irq(pdev, 0);
- 	if (acdev->irq)
- 		irq_handler = arasan_cf_interrupt;
- 	else
--		pdata->quirk |= CF_BROKEN_MWDMA | CF_BROKEN_UDMA;
-+		quirk |= CF_BROKEN_MWDMA | CF_BROKEN_UDMA;
++	/* automatically configure DMA channels from platform, normally using DT */
++	pl022->dma_rx_channel = dma_request_slave_channel(dev, "rx");
++	if (!pl022->dma_rx_channel)
++		goto err_no_rxchan;
++
++	pl022->dma_tx_channel = dma_request_slave_channel(dev, "tx");
++	if (!pl022->dma_tx_channel)
++		goto err_no_txchan;
++
++	pl022->dummypage = kmalloc(PAGE_SIZE, GFP_KERNEL);
++	if (!pl022->dummypage)
++		goto err_no_dummypage;
++
++	return 0;
++
++err_no_dummypage:
++	dma_release_channel(pl022->dma_tx_channel);
++	pl022->dma_tx_channel = NULL;
++err_no_txchan:
++	dma_release_channel(pl022->dma_rx_channel);
++	pl022->dma_rx_channel = NULL;
++err_no_rxchan:
++	return -ENODEV;
++}
++		
+ static void terminate_dma(struct pl022 *pl022)
+ {
+ 	struct dma_chan *rxchan = pl022->dma_rx_channel;
+@@ -1167,6 +1196,11 @@ static inline int configure_dma(struct pl022 *pl022)
+ 	return -ENODEV;
+ }
  
- 	acdev->pbase = res->start;
- 	acdev->vbase = devm_ioremap_nocache(&pdev->dev, res->start,
-@@ -859,17 +861,16 @@ static int arasan_cf_probe(struct platform_device *pdev)
- 	INIT_WORK(&acdev->work, data_xfer);
- 	INIT_DELAYED_WORK(&acdev->dwork, delayed_finish);
- 	dma_cap_set(DMA_MEMCPY, acdev->mask);
--	acdev->dma_priv = pdata->dma_priv;
- 
- 	/* Handle platform specific quirks */
--	if (pdata->quirk) {
--		if (pdata->quirk & CF_BROKEN_PIO) {
-+	if (quirk) {
-+		if (quirk & CF_BROKEN_PIO) {
- 			ap->ops->set_piomode = NULL;
- 			ap->pio_mask = 0;
- 		}
--		if (pdata->quirk & CF_BROKEN_MWDMA)
-+		if (quirk & CF_BROKEN_MWDMA)
- 			ap->mwdma_mask = 0;
--		if (pdata->quirk & CF_BROKEN_UDMA)
-+		if (quirk & CF_BROKEN_UDMA)
- 			ap->udma_mask = 0;
++static inline int pl022_dma_autoprobe(struct pl022 *pl022)
++{
++	return 0;
++}
++
+ static inline int pl022_dma_probe(struct pl022 *pl022)
+ {
+ 	return 0;
+@@ -2226,8 +2260,13 @@ static int pl022_probe(struct amba_device *adev, const struct amba_id *id)
+ 		goto err_no_irq;
  	}
- 	ap->flags |= ATA_FLAG_PIO_POLLING | ATA_FLAG_NO_ATAPI;
-diff --git a/include/linux/pata_arasan_cf_data.h b/include/linux/pata_arasan_cf_data.h
-index a7b4fc3..3cc21c9 100644
---- a/include/linux/pata_arasan_cf_data.h
-+++ b/include/linux/pata_arasan_cf_data.h
-@@ -37,8 +37,6 @@ struct arasan_cf_pdata {
- 	#define CF_BROKEN_PIO			(1)
- 	#define CF_BROKEN_MWDMA			(1 << 1)
- 	#define CF_BROKEN_UDMA			(1 << 2)
--	/* This is platform specific data for the DMA controller */
--	void *dma_priv;
- };
  
- static inline void
+-	/* Get DMA channels */
+-	if (platform_info->enable_dma) {
++	/* Get DMA channels, try autoconfiguration first */
++	status = pl022_dma_autoprobe(pl022);
++
++	/* If that failed, use channels from platform_info */
++	if (status == 0)
++		platform_info->enable_dma = 1;
++	else if (platform_info->enable_dma) {
+ 		status = pl022_dma_probe(pl022);
+ 		if (status != 0)
+ 			platform_info->enable_dma = 0;
 -- 
 1.8.0
+
+
+------------------------------------------------------------------------------
+Master Visual Studio, SharePoint, SQL, ASP.NET, C# 2012, HTML5, CSS,
+MVC, Windows 8 Apps, JavaScript and much more. Keep your skills current
+with LearnDevNow - 3,200 step-by-step video tutorials by Microsoft
+MVPs and experts. ON SALE this month only -- learn more at:
+http://p.sf.net/sfu/learnnow-d2d
