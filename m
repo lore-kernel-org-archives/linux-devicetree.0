@@ -1,176 +1,103 @@
-From: Afzal Mohammed <afzal@ti.com>
-Subject: [PATCH v5 12/12] video: da8xx-fb: set upstream clock rate (if reqd)
-Date: Mon, 28 Jan 2013 14:51:48 +0530
-Message-ID: <060154576fc5c5ae012fcc8a2c4e691bc5bf267f.1359356015.git.afzal@ti.com>
-References: <cover.1359356015.git.afzal@ti.com>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH 1/4] ARM: dts: add support for hdmi to exynos4
+Date: Mon, 28 Jan 2013 14:53:10 +0530
+Message-ID: <CAPdUM4N0r0p5BOvtZ2urShkafiavdE-1jxbNZGCtEkecBDTGvg@mail.gmail.com>
+References: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com>
+	<CAJuYYwSHDoc40obSnPZwvS3LFxZEbrhHx6-Vd-yLKPGOnXxmoQ@mail.gmail.com>
+	<CAPdUM4Mx=Wq1pRshWBF-L=+AUbhBOL-N+0VU4QjUkxuZcLYf5Q@mail.gmail.com>
+	<2444735.ZYdaJLrTT3@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <cover.1359356015.git.afzal@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-fbdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <2444735.ZYdaJLrTT3@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Thomas Abraham <thomas.abraham@linaro.org>, Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-LCDC IP has a clock divider to adjust pixel clock, this limits pixel
-clock range to fck/255 - fck/2(fck - rate of input clock to LCDC IP).
-In the case of AM335x, where this IP is present, default fck is not
-sufficient to provide normal pixel clock rates, hence rendering this
-driver unusable on AM335x.
+Hi Tomasz,
 
-If input clock too is configurable, allowable range of pixel clock
-would increase. Here initially it is checked whether with present fck,
-divider in IP could be configured to obtain required rate, if not,
-fck is adjusted. This makes it usable on AM335x.
+On Mon, Jan 28, 2013 at 2:14 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+> Hi Rahul,
+>
+> On Monday 28 of January 2013 12:25:27 Rahul Sharma wrote:
+>> Hi Thomas,
+>>
+>> On Fri, Jan 25, 2013 at 11:10 PM, Thomas Abraham
+>>
+>> <thomas.abraham@linaro.org> wrote:
+>> > On 25 January 2013 02:39, Rahul Sharma <rahul.sharma@samsung.com>
+> wrote:
+>> >> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+>> >>
+>> >> Conflicts:
+>> >>         arch/arm/mach-exynos/mach-exynos4-dt.c
+>> >>
+>> >> ---
+>> >>
+>> >>  arch/arm/boot/dts/exynos4.dtsi         | 7 +++++++
+>> >>  arch/arm/mach-exynos/mach-exynos4-dt.c | 2 ++
+>> >>  2 files changed, 9 insertions(+)
+>> >>
+>> >> diff --git a/arch/arm/boot/dts/exynos4.dtsi
+>> >> b/arch/arm/boot/dts/exynos4.dtsi index e1347fc..6c2c79d 100644
+>> >> --- a/arch/arm/boot/dts/exynos4.dtsi
+>> >> +++ b/arch/arm/boot/dts/exynos4.dtsi
+>> >> @@ -289,4 +289,11 @@
+>> >>
+>> >>                         interrupts = <0 34 0>;
+>> >>
+>> >>                 };
+>> >>
+>> >>         };
+>> >>
+>> >> +
+>> >> +       hdmi {
+>> >> +               compatible = "samsung,exynos4-hdmi14";
+>> >> +               reg = <0x12D00000 0x70000>;
+>> >> +               interrupts = <0 95 0>;
+>> >> +               hpd-gpio = <&gpx3 7 0xf 1 3>;
+>> >
+>> > This is using the older gpio dt bindings but exynos4 has started using
+>> > the pinctrl bindings. So this is not sufficient to do the
+>> > pinmux/pinconfig settings on Exynos4.
+>> >
+>> > Thanks,
+>> > Thomas.
+>>
+>> I have chosen this as exynos5 DT using it in same way and parsed by
+>> common code in driver for exy4 and 5. Secondly, one-time initial
+>> configuration is sufficient for
+>> hdmi hpd-gpio. Please share your opinion.
+>
+> Exynos4 SoCs use pin control for pin mux configuration, which implies
+> different GPIO specifiers than what you used. On Exynos4 generic GPIO
+> specifiers are used:
+>
+> <&gpio-controller pin flags>
+>
+> As you can see, it does not contain pin mux configuration, which must be
+> configured if special function is to be used. In case of EINTs and
+> input/output functions, they are configured automatically, respectively by
+> request_irq (with appropriate interrupt trigger flag) and gpio_direction_*.
+>
+> Keep in mind that Exynos5 will be eventually moved to pin control as well
+> and its old GPIO bindings will be dropped as they are only temporary.
+>
+> Best regards,
+> Tomasz
+>
 
-Note:
-Another solution would be to model an inherited basic clock divider of
-CCF, an advantage would be a better possible resolution for pixel clk.
-And trying to instantiate a CCF clock would mean that to be consistent,
-3 bits being turned on to enable clocks of LCDC IP would have to be
-modeled as gate clocks. Now that would bring in a total of 4 clocks,
-including necessity to create a new inherited divider clock, and that
-mean a branch of clock tree would be present in LCDC driver. This
-would add complexity to LCDC driver bringing in considerable amount
-of clock handling code, and this would not bring in much advantage
-for existing use cases other than providing a higher resolution of
-pixel clock. And existing use cases work without relying on clock
-modeling. Another fact is that out of the two platform's using this
-driver DaVinci is not yet converted to CCF. In future if higher
-resolution of pixel clock is required, and probably after DaVinci is
-CCF'ed, modeling clock nodes inside driver may be considered.
+Since Exynos5 pinctrl is not yet merged, either I need to add "hpd-
+gpio" in non-pinctrl way and keep the parsing code (in driver) same
+for exynos4 and 5, as I have done in posted patch. This is same for
+exynos5.
+Or, I need to parse gpio information in a two different manners for
+the two SoC series.
 
-Signed-off-by: Afzal Mohammed <afzal@ti.com>
----
+It will remain as a special case till we have exynos5 pinctrl driver. IMO,
+above code looks better till I can provide same solution for both,
+exynos4 & exynos5.
 
-v5: use v2 method of configuring pixel clock rate instead of modeling
-    CCF clock nodes in driver, i.e. set divider if rate is within
-    the range that is configurable with existing input clock rate,
-    else change input clock rate as required.
-v4: use new registration for clock divider having minimum divider
-    requirement and have ifdef'ery in a better way
-v3: model CCF clock divider with parent propogation if CCF selected
-v2: new patch
-
- drivers/video/da8xx-fb.c | 76 ++++++++++++++++++++++++++++++++++++------------
- 1 file changed, 58 insertions(+), 18 deletions(-)
-
-diff --git a/drivers/video/da8xx-fb.c b/drivers/video/da8xx-fb.c
-index 5455682..09dfa12 100644
---- a/drivers/video/da8xx-fb.c
-+++ b/drivers/video/da8xx-fb.c
-@@ -133,6 +133,9 @@
- #define WSI_TIMEOUT	50
- #define PALETTE_SIZE	256
- 
-+#define	CLK_MIN_DIV	2
-+#define	CLK_MAX_DIV	255
-+
- static void __iomem *da8xx_fb_reg_base;
- static struct resource *lcdc_regs;
- static unsigned int lcd_revision;
-@@ -683,23 +686,21 @@ static void da8xx_fb_lcd_reset(void)
- 	}
- }
- 
--static inline unsigned da8xx_fb_calc_clk_divider(struct da8xx_fb_par *par,
--						 unsigned pixclock)
--{
--	return par->lcd_fck_rate / (PICOS2KHZ(pixclock) * 1000);
--}
--
--static inline unsigned da8xx_fb_round_clk(struct da8xx_fb_par *par,
--					  unsigned pixclock)
-+static int da8xx_fb_config_clk_divider(struct da8xx_fb_par *par,
-+					      unsigned div, unsigned rate)
- {
--	unsigned div;
-+	int ret;
- 
--	div = da8xx_fb_calc_clk_divider(par, pixclock);
--	return KHZ2PICOS(par->lcd_fck_rate / (1000 * div));
--}
-+	if (par->lcd_fck_rate != rate) {
-+		ret = clk_set_rate(par->lcdc_clk, rate);
-+		if (IS_ERR_VALUE(ret)) {
-+			dev_err(par->dev,
-+				"unable to set clock rate at %u\n", rate);
-+			return ret;
-+		}
-+		par->lcd_fck_rate = clk_get_rate(par->lcdc_clk);
-+	}
- 
--static inline void da8xx_fb_config_clk_divider(unsigned div)
--{
- 	/* Configure the LCD clock divisor. */
- 	lcdc_write(LCD_CLK_DIVISOR(div) |
- 			(LCD_RASTER_MODE & 0x1), LCD_CTRL_REG);
-@@ -707,14 +708,49 @@ static inline void da8xx_fb_config_clk_divider(unsigned div)
- 	if (lcd_revision == LCD_VERSION_2)
- 		lcdc_write(LCD_V2_DMA_CLK_EN | LCD_V2_LIDD_CLK_EN |
- 				LCD_V2_CORE_CLK_EN, LCD_CLK_ENABLE_REG);
-+
-+	return 0;
-+}
-+
-+static unsigned int da8xx_fb_calc_clk_divider(struct da8xx_fb_par *par,
-+					      unsigned pixclock,
-+					      unsigned *rate)
-+{
-+	unsigned div;
-+
-+	pixclock = PICOS2KHZ(pixclock) * 1000;
-+
-+	*rate = par->lcd_fck_rate;
-+
-+	if (pixclock < (*rate / CLK_MAX_DIV)) {
-+		*rate = clk_round_rate(par->lcdc_clk, pixclock * CLK_MAX_DIV);
-+		div = CLK_MAX_DIV;
-+	} else if (pixclock > (*rate / CLK_MIN_DIV)) {
-+		*rate = clk_round_rate(par->lcdc_clk, pixclock * CLK_MIN_DIV);
-+		div = CLK_MIN_DIV;
-+	} else {
-+		div = *rate / pixclock;
-+	}
-+
-+	return div;
- }
- 
--static inline void da8xx_fb_calc_config_clk_divider(struct da8xx_fb_par *par,
-+static inline int da8xx_fb_calc_config_clk_divider(struct da8xx_fb_par *par,
- 						    struct fb_videomode *mode)
- {
--	unsigned div = da8xx_fb_calc_clk_divider(par, mode->pixclock);
-+	unsigned rate;
-+	unsigned div = da8xx_fb_calc_clk_divider(par, mode->pixclock, &rate);
- 
--	da8xx_fb_config_clk_divider(div);
-+	return da8xx_fb_config_clk_divider(par, div, rate);
-+}
-+
-+static inline unsigned da8xx_fb_round_clk(struct da8xx_fb_par *par,
-+					  unsigned pixclock)
-+{
-+	unsigned div, rate;
-+
-+	div = da8xx_fb_calc_clk_divider(par, pixclock, &rate);
-+	return KHZ2PICOS(rate / (1000 * div));
- }
- 
- static int lcd_init(struct da8xx_fb_par *par, const struct lcd_ctrl_config *cfg,
-@@ -723,7 +759,11 @@ static int lcd_init(struct da8xx_fb_par *par, const struct lcd_ctrl_config *cfg,
- 	u32 bpp;
- 	int ret = 0;
- 
--	da8xx_fb_calc_config_clk_divider(par, panel);
-+	ret = da8xx_fb_calc_config_clk_divider(par, panel);
-+	if (IS_ERR_VALUE(ret)) {
-+		dev_err(par->dev, "unable to configure clock\n");
-+		return ret;
-+	}
- 
- 	if (panel->sync & FB_SYNC_CLK_INVERT)
- 		lcdc_write((lcdc_read(LCD_RASTER_TIMING_2_REG) |
--- 
-1.7.12
-
+regards,
+Rahul Sharma.
