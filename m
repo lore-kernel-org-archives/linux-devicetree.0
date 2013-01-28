@@ -1,72 +1,48 @@
-From: Mrugesh Katepallewar <mrugesh.mk@ti.com>
-Subject: [PATCH V2] ARM: davinci: da850: add RTC DT entries
-Date: Mon, 28 Jan 2013 13:17:48 +0530
-Message-ID: <1359359268-9781-1-git-send-email-mrugesh.mk@ti.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 2/4] ARM: dts: add support for mixer to exynos4
+Date: Mon, 28 Jan 2013 09:38:55 +0100
+Message-ID: <1461207.5d9zQy0FHx@flatron>
+References: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com> <5105965F.9050402@gmail.com> <CAPdUM4P_jf0w+B22p1hmso8uhmTXs=fLdF8WrzDWL8cPyLeTCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, davinci-linux-open-source@linux.davincidsp.com, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, nsekhar@ti.com, hs@denx.de
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAPdUM4P_jf0w+B22p1hmso8uhmTXs=fLdF8WrzDWL8cPyLeTCw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <r.sh.open@gmail.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Add RTC DT entries in da850 dts file.
+Hi Rahul, Sylwester,
 
-Signed-off-by: Mrugesh Katepallewar <mrugesh.mk@ti.com>
----
-Applies on top of v3.8-rc4 of linus tree.
+On Monday 28 of January 2013 12:14:38 Rahul Sharma wrote:
+> On Mon, Jan 28, 2013 at 2:34 AM, Sylwester Nawrocki
+> 
+> <sylvester.nawrocki@gmail.com> wrote:
+> > On 01/25/2013 11:39 AM, Rahul Sharma wrote:
+> >> diff --git a/arch/arm/boot/dts/exynos4.dtsi
+> >> b/arch/arm/boot/dts/exynos4.dtsi
+> >> index 6c2c79d..07cb7d4 100644
+> >> --- a/arch/arm/boot/dts/exynos4.dtsi
+> >> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> >> @@ -296,4 +296,12 @@
+> >> 
+> >>                 interrupts =<0 95 0>;
+> >>                 hpd-gpio =<&gpx3 7 0xf 1 3>;
+> >>         
+> >>         };
+> >> 
+> >> +
+> >> +       mixer: mixer {
+> >> +               compatible = "samsung,exynos4-mixer";
+> > 
+> > I'm afraid this compatible property it too generic. Is the video mixer
+> > IP really identical an all the Exynos4 series SoCs ?
+> 
+> It is same in Exynos4210, 4212 and 4412.
 
-This patch is depending on 
-"ARM: davinci: da850: add interrupt-parent property in soc node"
-https://patchwork.kernel.org/patch/2044101/
+The convention is to use the name of SoC on which this IP version appeared 
+first. In this case it would be samsung,exynos4210-mixer.
 
-Tested on da850-evm device.
-
-Test Procedure:
-date 2013.01.28-10:00:00 (usage: date[YYYY.]MM.DD-hh:mm[:ss])
-hwclock -w
-reset board and check system time.
-
-Changes Since V1:
-Remove interrupt-parent property from RTC node.
-Change RTC node name in dts and dtsi file.
-
-:100644 100644 37dc5a3... af4b7cc... M	arch/arm/boot/dts/da850-evm.dts
-:100644 100644 640ab75... 90be701... M	arch/arm/boot/dts/da850.dtsi
- arch/arm/boot/dts/da850-evm.dts |    3 +++
- arch/arm/boot/dts/da850.dtsi    |    7 +++++++
- 2 files changed, 10 insertions(+)
-
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index 37dc5a3..af4b7cc 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -24,5 +24,8 @@
- 		serial2: serial@1d0d000 {
- 			status = "okay";
- 		};
-+		rtc0: rtc@1c23000 {
-+			status = "okay";
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-index 640ab75..90be701 100644
---- a/arch/arm/boot/dts/da850.dtsi
-+++ b/arch/arm/boot/dts/da850.dtsi
-@@ -56,5 +56,12 @@
- 			interrupt-parent = <&intc>;
- 			status = "disabled";
- 		};
-+		rtc0: rtc@1c23000 {
-+			compatible = "ti,da830-rtc";
-+			reg = <0x23000 0x1000>;
-+			interrupts = <19
-+				      19>;
-+			status = "disabled";
-+		};
- 	};
- };
--- 
-1.7.9.5
-
+Best regards,
+Tomasz
