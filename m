@@ -1,98 +1,133 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: [PATCH v3 32/71] ARC: [DeviceTree] Basic support
-Date: Mon, 28 Jan 2013 10:21:50 +0000
-Message-ID: <5106513E.4010205@imgtec.com>
-References: <1359024639-21915-1-git-send-email-vgupta@synopsys.com> <1359024639-21915-15-git-send-email-vgupta@synopsys.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCH] arm: dts: omap5-evm: Add I2c pinctrl data
+Date: Mon, 28 Jan 2013 16:47:25 +0530
+Message-ID: <1359371845-27876-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arch-owner@vger.kernel.org>
-In-Reply-To: <1359024639-21915-15-git-send-email-vgupta@synopsys.com>
-Sender: linux-arch-owner@vger.kernel.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: b-cousson@ti.com, tony@atomide.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbi@ti.com, santosh.shilimkar@ti.com
+Cc: Sourav Poddar <sourav.poddar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vineet,
+Booting 3.8-rc4 om omap 5430evm results in the following error
 
-On 24/01/13 10:50, Vineet Gupta wrote:
-> diff --git a/arch/arc/Makefile b/arch/arc/Makefile
-> index 4d52a3b..90570f9 100644
-> --- a/arch/arc/Makefile
-> +++ b/arch/arc/Makefile
-> @@ -83,6 +83,9 @@ head-y		:= arch/arc/kernel/head.o
->  # See arch/arc/Kbuild for content of core part of the kernel
->  core-y		+= arch/arc/
->  
-> +# w/o this dtb won't embed into kernel binary
-> +core-y		+= arch/arc/boot/dts/
-> +
->  # w/o this ifneq, make ARCH=arc clean was crapping out
->  ifneq ($(platform-y),)
->  core-y		+= arch/arc/plat-$(PLATFORM)/
-> @@ -101,6 +104,12 @@ bootpImage: vmlinux
->  uImage: vmlinux
->  	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
->  
-> +%.dtb %.dtb.S %.dtb.o:
-> +	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
+omap_i2c 48070000.i2c: did not get pins for i2c error: -19
+[    1.024261] omap_i2c 48070000.i2c: bus 0 rev0.12 at 100 kHz
+[    1.030181] omap_i2c 48072000.i2c: did not get pins for i2c error: -19
+[    1.037384] omap_i2c 48072000.i2c: bus 1 rev0.12 at 400 kHz
+[    1.043762] omap_i2c 48060000.i2c: did not get pins for i2c error: -19
+[    1.050964] omap_i2c 48060000.i2c: bus 2 rev0.12 at 100 kHz
+[    1.056823] omap_i2c 4807a000.i2c: did not get pins for i2c error: -19
+[    1.064025] omap_i2c 4807a000.i2c: bus 3 rev0.12 at 400 kHz
 
-arm64 also depends on scripts here, presumably for a reason. I've copied
-this in metag too.
+This happens because omap5 dts file is not adapted to use i2c through pinctrl
+framework. Populating i2c pinctrl data to get rid of the error.
 
-> +
-> +dtbs:
-> +	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
+Tested on omap5430 evm with 3.8-rc4 kernel.
 
-arm64 does this like below which I think is slightly nicer than how
-metag did it:
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+Reported-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+---
+ arch/arm/boot/dts/omap5-evm.dts |   62 +++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 62 insertions(+), 0 deletions(-)
 
-dtbs: scripts
-	$(Q)$(MAKE) $(build)=$(boot)/dts dtbs
+diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-evm.dts
+index 8722c15..a96acc0 100644
+--- a/arch/arm/boot/dts/omap5-evm.dts
++++ b/arch/arm/boot/dts/omap5-evm.dts
+@@ -80,6 +80,41 @@
+ 			0x15a 0x100	/* abemcbsp2_clkx.abemcbsp2_clkx INPUT | MODE0 */
+ 		>;
+ 	};
++
++        i2c1_pins: pinmux_i2c1_pins {
++                pinctrl-single,pins = <
++                        0x1b2 0x118        /* i2c2_scl PULLUP | INPUTENABLE | MODE0 */
++                        0x1b4 0x118        /* i2c2_sda PULLUP | INPUTENABLE | MODE0 */
++                >;
++        };
++
++	i2c2_pins: pinmux_i2c2_pins {
++		pinctrl-single,pins = <
++			0x178 0x100        /* i2c2_scl INPUTENABLE | MODE0 */
++			0x17a 0x100        /* i2c2_sda INPUTENABLE | MODE0 */
++		>;
++	};
++
++	i2c3_pins: pinmux_i2c3_pins {
++		pinctrl-single,pins = <
++			0x13a 0x100        /* i2c3_scl INPUTENABLE | MODE0 */
++			0x13c 0x100     /* i2c3_sda INPUTENABLE | MODE0 */
++		>;
++	};
++
++	i2c4_pins: pinmux_i2c4_pins {
++		pinctrl-single,pins = <
++			0xb8 0x100        /* i2c4_scl INPUTENABLE | MODE0 */
++			0xba 0x100     /* i2c4_sda INPUTENABLE | MODE0 */
++		>;
++	};
++
++	i2c5_pins: pinmux_i2c5_pins {
++		pinctrl-single,pins = <
++			0x184 0x100        /* i2c4_scl INPUTENABLE | MODE0 */
++			0x186 0x100     /* i2c4_sda INPUTENABLE | MODE0 */
++		>;
++	};
+ };
+ 
+ &mmc1 {
+@@ -106,7 +141,17 @@
+ 	status = "disabled";
+ };
+ 
++&i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++
++	clock-frequency = <400000>;
++};
++
+ &i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
++
+ 	clock-frequency = <400000>;
+ 
+ 	/* Pressure Sensor */
+@@ -116,7 +161,17 @@
+ 	};
+ };
+ 
++&i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c3_pins>;
++
++	clock-frequency = <400000>;
++};
++
+ &i2c4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c4_pins>;
++
+ 	clock-frequency = <400000>;
+ 
+ 	/* Temperature Sensor */
+@@ -126,6 +181,13 @@
+ 	};
+ };
+ 
++&i2c5 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c5_pins>;
++
++	clock-frequency = <400000>;
++};
++
+ &keypad {
+ 	keypad,num-rows = <8>;
+ 	keypad,num-columns = <8>;
+-- 
+1.7.1
 
-> +
->  archclean:
->  	$(Q)$(MAKE) $(clean)=$(boot)
->  
-> diff --git a/arch/arc/boot/dts/Makefile b/arch/arc/boot/dts/Makefile
-> new file mode 100644
-> index 0000000..4a972a3
-> --- /dev/null
-> +++ b/arch/arc/boot/dts/Makefile
-> @@ -0,0 +1,14 @@
-> +ifeq ($(CONFIG_OF),y)
-> +
-> +# Built-in dtb
-> +builtindtb-y		:= skeleton
-> +
-> +ifneq ($(CONFIG_ARC_BUILTIN_DTB_NAME),"")
-> +	builtindtb-y	:= $(CONFIG_ARC_BUILTIN_DTB_NAME)
-> +endif
-> +
-> +obj-y	+= $(patsubst "%",%,$(builtindtb-y)).dtb.o
-> +
-> +clean-files := *.dtb
-
-You don't seem to have a rule for dtbs, but still redirect it in the
-main Makefile. I suppose dtbs may want adding to your archhelp if you
-use it.
-
-arm64 also adds dtbs and $(dtb-y) to targets (at least in linux-next). I
-think this makes sure that they don't get rebuilt unless they've
-actually changed. I've also copied this for metag.
-
-
-> --- a/arch/arc/kernel/Makefile
-> +++ b/arch/arc/kernel/Makefile
-> @@ -8,6 +8,8 @@
->  obj-y	:= arcksyms.o setup.o irq.o time.o reset.o ptrace.o entry.o process.o
->  obj-y	+= signal.o traps.o sys.o troubleshoot.o stacktrace.o clk.o
->  
-> +obj-$(CONFIG_OF)			+= devtree.o
-> +
-
-You always select CONFIG_OF, so this could be obj-y. I'm not sure this
-particularly matters though.
-
-Cheers
-James
