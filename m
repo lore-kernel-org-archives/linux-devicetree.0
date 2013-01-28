@@ -1,38 +1,80 @@
-From: Bard Shen <bard.shen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [alsa-devel] [RFC][PATCH 1/2] ASoC: add snd_soc_of_parse_daifmt()
- for DeviceTree
-Date: Mon, 28 Jan 2013 20:57:35 +0800
-Message-ID: <510675BF.2000300@gmail.com>
-References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
- <87sj6t484z.wl%kuninori.morimoto.gx@renesas.com>
- <50E71618.8090302@wwwdotorg.org>
- <20130104193712.GN4627@opensource.wolfsonmicro.com>
- <87y5fvyy18.wl%kuninori.morimoto.gx@renesas.com>
- <87wqvfyxym.wl%kuninori.morimoto.gx@renesas.com>
+From: Dave Martin <dave.martin@linaro.org>
+Subject: Re: [PATCH 5/6] ARM: dts: Add basic dts include files for Samsung
+ S3C64xx SoCs
+Date: Mon, 28 Jan 2013 13:04:34 +0000
+Message-ID: <20130128130434.GB2027@linaro.org>
+References: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com>
+ <20130114150531.GE21142@e102568-lin.cambridge.arm.com>
+ <20130116105957.GA1963@linaro.org>
+ <3747315.IyCCRDXgbD@flatron>
+ <016c01cdfb30$64f80430$2ee80c90$@samsung.com>
+ <20130128090240.GA7754@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <87wqvfyxym.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130128090240.GA7754@e106331-lin.cambridge.arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, 'Tomasz Figa' <tomasz.figa@gmail.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "kwangwoo.lee@gmail.com" <kwangwoo.lee@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "mcuelenaere@gmail.com" <mcuelenaere@gmail.com>, "augulis.darius@gmail.com" <augulis.darius@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgS3VuaW5vcmkgTW9yaW1vdG8KCuS6jiAyMDEzLzEvMTUgMTA6MzYsIEt1bmlub3JpIE1vcmlt
-b3RvIOWGmemBkzoKPiBUaGlzIHBhdGNoIGFkZHMgc25kX3NvY19vZl9wYXJzZV9kYWlmbXQoKSBh
-bmQgc3VwcG9ydHMgYmVsb3cgc3R5bGUgb24gRFQuCj4KPiAgICAgICAgICBbcHJlZml4XWZvcm1h
-dCA9ICJpMmMiOwoKSSB0aGluayB0aGVyZSBzaG91bGQgYmUgImkycyIuCgpCZXN0IFJlZ2FyZHMK
-Qm8gU2hlbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
-ZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5v
-emxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRp
-c2N1c3MK
+On Mon, Jan 28, 2013 at 09:02:40AM +0000, Mark Rutland wrote:
+> On Fri, Jan 25, 2013 at 07:15:48PM +0000, Kukjin Kim wrote:
+> > Tomasz Figa wrote:
+> > 
+> > [...]
+> > 
+> > > > Well, the number of CPU types does not grow rapidly.  It will be much
+> > > > less than one per SoC -- so keeping the list up to date shouldn't be
+> > > > that much effort.
+> > > >
+> > > > For ARM1176JZF-S, it could make sense for the comatible list to be
+> > > >
+> > > > 	"arm,arm1176jzf-s", "arm,arm1176"
+> > > >
+> > > > ...since the differences between 1176 variants are software probeable
+> > > > (i.e., whether there is an FPU or not).  AFAIK the J, Z apply to all
+> > > > ARM1176, and the -S (synthesisable RTL) is nothing to do with software.
+> > > > The kernel probably only really needs to know "arm,arm1176".
+> > > 
+> > > OK. So the conclusion is that I should change the cpus node to following:
+> > > 
+> > >        cpus {
+> > >                cpu {
+> > 
+> > cpu@0 { ?
+> 
+> As the CPU has no MPIDR, and thus doesn't have a reg property, there's no reason
+> to have a unit address. Just "cpu" should be fine.
+> 
+> > 
+> > >                        compatible = "arm,arm1176jzf-s", "arm,arm1176";
+> > >                };
+> > >        };
+> > > 
+> > > Am I right?
+> > > 
+> > I think so :-)
+> > 
+> > - Kukjin
+> > 
+> 
+> As Dave pointed out, the "jzf-s" portion might be superfluous. It's worth
+> having the "arm,arm1176", though.
+
+I think we should always have a fully-qualified part name as the first
+compatible entry, following general devicetree policy.  It's better to
+have this and not need it than to discover later that we want it and
+incompatibly backport it in.
+
+Before deciding, do we follow a consistent policy for other CPUs, such
+as arm1136?
+
+
+The issues there are similar: the only software-visible difference between
+arm1136j-s and arm1136jf-s should be the absence/presence of VFP, and it
+looks like the code in vfpmodule.c should be able to probe it.
+
+Cheers
+---Dave
