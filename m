@@ -1,43 +1,36 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: [PATCH] of: dma: protect list write operation by spin_lock
-Date: Mon, 28 Jan 2013 17:24:54 +0200
-Message-ID: <1359386694-20548-1-git-send-email-andriy.shevchenko@linux.intel.com>
+From: Evgeniy Polyakov <zbr@ioremap.net>
+Subject: Re: [PATCH] w1-gpio: fix section mismatch
+Date: Mon, 28 Jan 2013 19:31:56 +0400
+Message-ID: <20130128153156.GB9089@ioremap.net>
+References: <1359317277-29161-1-git-send-email-hauke@hauke-m.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1359317277-29161-1-git-send-email-hauke@hauke-m.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hauke Mehrtens <hauke@hauke-m.de>
+Cc: gregkh@linuxfoundation.org, panto@antoniou-consulting.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
----
- drivers/of/dma.c |    2 ++
- 1 file changed, 2 insertions(+)
+Hi
 
-diff --git a/drivers/of/dma.c b/drivers/of/dma.c
-index 59631b2..1ae6120 100644
---- a/drivers/of/dma.c
-+++ b/drivers/of/dma.c
-@@ -117,7 +117,9 @@ int of_dma_controller_register(struct device_node *np,
- 	ofdma->use_count = 0;
- 
- 	/* Now queue of_dma controller structure in list */
-+	spin_lock(&of_dma_lock);
- 	list_add_tail(&ofdma->of_dma_controllers, &of_dma_list);
-+	spin_unlock(&of_dma_lock);
- 
- 	return 0;
- }
+On Sun, Jan 27, 2013 at 09:07:57PM +0100, Hauke Mehrtens (hauke@hauke-m.de) wrote:
+> This fixes the following section mismatch:
+> 
+> WARNING: drivers/w1/masters/w1-gpio.o(.data+0x188): Section mismatch in
+> reference from the variable w1_gpio_driver to the function
+> .init.text:w1_gpio_probe()
+> The variable w1_gpio_driver references
+> the function __init w1_gpio_probe()
+> If the reference is valid then annotate the
+> variable with __init* or __refdata (see linux/init.h) or name the variable:
+> *_template, *_timer, *_sht, *_ops, *_probe, *_probe_one, *_console
+> 
+> Signed-off-by: Hauke Mehrtens <hauke@hauke-m.de>
+
+Looks good to me
+Acked-by: Evgeniy Polyakov <zbr@ioremap.net>
+
 -- 
-1.7.10.4
+	Evgeniy Polyakov
