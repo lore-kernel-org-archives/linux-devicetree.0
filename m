@@ -1,68 +1,167 @@
-From: Alexander Sverdlin <asv-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
-Subject: Is registration of IRQ resources dependent on nodes order?
-Date: Mon, 28 Jan 2013 19:50:00 +0100
-Message-ID: <5106C858.6090308@sysgo.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH] media: rc: gpio-ir-recv: add support for device tree parsing
+Date: Mon, 28 Jan 2013 20:07:03 +0100
+Message-ID: <1359400023-25804-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mauro Carvalho Chehab <mchehab@redhat.com>, Benoit Thebaudeau <benoit.thebaudeau@advansee.com>, David Hardeman <david@hardeman.nu>, Trilok Soni <tsoni@codeaurora.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+This patch adds device tree parsing for gpio_ir_recv platform_data and
+the mandatory binding documentation. It basically follows what we already
+have for e.g. gpio_keys. All required device tree properties are OS
+independent but optional properties allow linux specific support for rc
+protocols and maps.
 
-In our custom MIPS64 based project we are experiencing a problem with of_platform_populate() and in
-particular, how IRQ resources are added to the populated devices. In our device tree we have a chain of
-cascaded interrupt-controllers. Following Linux device-driver model we are trying to pair a driver of
-interrupt-controller with a platform_device that should be registered in of_platform_populate().
-This works fine, but unfortunately interrupt-generating devices that have this controller as
-interrupt-parent do not properly receive their IRQ resources in corresponding platform_device structures.
+There was a similar patch sent by Matus Ujhelyi but that discussion
+died after the first reviews.
 
-The unsuccessful sequence is as following:
-of_platform_populate() ->
-...
-of_device_alloc() ->
-of_irq_to_resource_table() ->
-of_irq_to_resource() ->
-irq_of_parse_and_map() ->
-of_irq_map_one() -- this one seems to be ok, because operate only on device-tree, but the next one is
-irq_create_of_mapping(), which does the following:
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Benoit Thebaudeau <benoit.thebaudeau@advansee.com>
+Cc: David Hardeman <david@hardeman.nu>
+Cc: Trilok Soni <tsoni@codeaurora.org>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+---
+ .../devicetree/bindings/media/gpio-ir-receiver.txt |   20 ++++++
+ drivers/media/rc/gpio-ir-recv.c                    |   68 +++++++++++++++++++-
+ 2 files changed, 86 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
 
-	domain = controller ? irq_find_host(controller) : irq_default_domain;
-	if (!domain) {
-		...
-
-It might be (and in our case it is so), that there is no domain registered yet at this point, it was not
-populated yet by of_platform_populate() and therefore controller driver probe() function was not called.
-
-Both ePAPR 1.1 and "Open Firmware Recommended Practice: Interrupt Mapping" do not specify the order
-how IRQ controller and those nodes that have it as interrupt-parent should follow each other.
-
-DTB unflattening code can be changed and the order how nodes appear in the lists can change.
-of_platform_populate() must not depend on this order.
-
-Am I missing something there? Or this is really a flaw in current irq_domains - of_* coupling code?
-Any ideas on the possible patch?
-Should irq_of_parse_and_map() or of_irq_map_one() first check if the corresponding controller node is
-already populated as platform_device and if not, do it?
-
-Why it works for some existing code in Linux (everything abowe and below is from Linux 3.7):
-- some IRQ controller drivers register their irq_domain not in the probe function of the drivers, but
-in some platform init code (before device tree is populated)
-- many .dts files within Linux source tree have IRQ generating devices described before the controller
-thanks to some internal dtb-processing code properties, they appear in reverse order in resulting
-unflattened device tree, so that controller is populated before it's users
-
---
-Best regards,
-Alexander.
+diff --git a/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
+new file mode 100644
+index 0000000..937760c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
+@@ -0,0 +1,20 @@
++Device-Tree bindings for GPIO IR receiver
++
++Required properties:
++	- compatible = "gpio-ir-receiver";
++	- gpios: OF device-tree gpio specification.
++
++Optional properties:
++	- linux,allowed-rc-protocols: Linux specific u64 bitmask of allowed
++	    rc protocols.
++	- linux,rc-map-name: Linux specific remote control map name.
++
++Example node:
++
++	ir: ir-receiver {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpio0 19 1>;
++		/* allow rc protocols 1-4 */
++		linux,allowed-rc-protocols = <0x00000000 0x0000001e>;
++		linux,rc-map-name = "rc-rc6-mce";
++	};
+diff --git a/drivers/media/rc/gpio-ir-recv.c b/drivers/media/rc/gpio-ir-recv.c
+index 4f71a7d..25e09fa 100644
+--- a/drivers/media/rc/gpio-ir-recv.c
++++ b/drivers/media/rc/gpio-ir-recv.c
+@@ -16,6 +16,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/gpio.h>
+ #include <linux/slab.h>
++#include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
+ #include <linux/irq.h>
+ #include <media/rc-core.h>
+@@ -30,6 +31,63 @@ struct gpio_rc_dev {
+ 	bool active_low;
+ };
+ 
++#ifdef CONFIG_OF
++/*
++ * Translate OpenFirmware node properties into platform_data
++ */
++static struct gpio_ir_recv_platform_data *
++gpio_ir_recv_get_devtree_pdata(struct device *dev)
++{
++	struct device_node *np = dev->of_node;
++	struct gpio_ir_recv_platform_data *pdata;
++	enum of_gpio_flags flags;
++	int gpio;
++
++	if (!np)
++		return ERR_PTR(-ENODEV);
++
++	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata)
++		return ERR_PTR(-ENOMEM);
++
++	if (!of_find_property(np, "gpios", NULL)) {
++		dev_err(dev, "Found gpio-ir-receiver without gpios\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	gpio = of_get_gpio_flags(np, 0, &flags);
++	if (gpio < 0) {
++		if (gpio != -EPROBE_DEFER)
++			dev_err(dev, "Failed to get gpio flags, error: %d\n",
++				gpio);
++		return ERR_PTR(gpio);
++	}
++
++	pdata->gpio_nr = gpio;
++	pdata->active_low = (flags & OF_GPIO_ACTIVE_LOW) ? true : false;
++	pdata->map_name = of_get_property(np, "linux,rc-map-name", NULL);
++	of_property_read_u64(np, "linux,allowed-rc-protocols",
++			     &pdata->allowed_protos);
++
++	return pdata;
++}
++
++static struct of_device_id gpio_ir_recv_of_match[] = {
++	{ .compatible = "gpio-ir-receiver", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, gpio_ir_recv_of_match);
++
++#else /* !CONFIG_OF */
++
++static inline struct gpio_ir_recv_platform_data *
++gpio_ir_recv_get_devtree_pdata(struct device *dev)
++{
++	return ERR_PTR(-ENODEV);
++}
++
++#endif
++
+ static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
+ {
+ 	struct gpio_rc_dev *gpio_dev = dev_id;
+@@ -66,8 +124,11 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
+ 					pdev->dev.platform_data;
+ 	int rc;
+ 
+-	if (!pdata)
+-		return -EINVAL;
++	if (!pdata) {
++		pdata = gpio_ir_recv_get_devtree_pdata(&pdev->dev);
++		if (IS_ERR(pdata))
++			return PTR_ERR(pdata);
++	}
+ 
+ 	if (pdata->gpio_nr < 0)
+ 		return -EINVAL;
+@@ -195,6 +256,9 @@ static struct platform_driver gpio_ir_recv_driver = {
+ #ifdef CONFIG_PM
+ 		.pm	= &gpio_ir_recv_pm_ops,
+ #endif
++#ifdef CONFIG_OF
++		.of_match_table = of_match_ptr(gpio_ir_recv_of_match),
++#endif
+ 	},
+ };
+ module_platform_driver(gpio_ir_recv_driver);
+-- 
+1.7.10.4
