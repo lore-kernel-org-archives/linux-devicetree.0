@@ -1,58 +1,91 @@
-From: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>
-Subject: RE: RE: RE: [PATCH v4 12/12] video: da8xx-fb: CCF clock divider
- handling
-Date: Mon, 28 Jan 2013 09:17:19 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EA943E9@DBDE01.ent.ti.com>
-References: <cover.1358937685.git.afzal@ti.com>
- <fa8dab522507e087d5a94bac13dda71544911707.1358937685.git.afzal@ti.com>
- <20130123202204.9205.66575@quantum>
- <C8443D0743D26F4388EA172BF4E2A7A93EA92ADF@DBDE01.ent.ti.com>
- <20130124170044.10623.45314@quantum>
- <C8443D0743D26F4388EA172BF4E2A7A93EA9383E@DBDE01.ent.ti.com>
- <20130125224453.10623.74434@quantum>
+From: Afzal Mohammed <afzal@ti.com>
+Subject: [PATCH v5 00/12] video: da8xx-fb: am335x DT support
+Date: Mon, 28 Jan 2013 14:50:22 +0530
+Message-ID: <cover.1359356015.git.afzal@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130125224453.10623.74434@quantum>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "Valkeinen,
- Tomi" <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-fbdev@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mike Turquette <mturquette@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
+Hi,
 
-On Sat, Jan 26, 2013 at 04:14:53, Mike Turquette wrote:
+This series adds DT support to da8xx-fb driver (device found on
+DaVinci and AM335x SoC's). It does certain cleanup's in the process.
 
-> I think Paul W. or someone on the TI side should weigh in on your clkdev
-> entries.  My main point is that the actual tree should be modeled and
-> clocks shouldn't be globbed together unnecessarily.  As mentioned in the
-> other mail thread you might be better off making a divider for your LCDC
-> IP block and modeling each node individually.
+This series as compared to previous version goes back to v2 way of
+configuring pixel clock rate. i.e. set divider if rate is within
+the range that is configurable with existing input clock rate, else
+change input clock rate as required instead of modeling CCF clock
+nodes in the driver (more details in 12/12)
 
-It seems complexity of driver would increase by creating a new inherited
-divider clock and having a total 3-4 clock nodes. The advantage going
-with it would be higher configurable resolution for pixel clock.
-Current use cases work without higher pixel clock resolution.
+This makes use of Steffen Trumtrar's v17 of display timing DT support.
 
-And drm driver posted for the same IP is without CCF modeling.
+Testing has been done on AM335x SoC based boards like AM335x EVM. It
+has also been verified that display on DA850 EVM (non-DT boot) works
+as earlier.
 
-So I will presently not model clock nodes in LCDC IP, later if use cases
-badly require, this can be done (and if it happens, hopefully by that
-DaVinci would be CCF'ed and it would be more clean to implement it).
+This series is based on v3.8-rc3,
+ and is dependent on,
+1. Series v17 "of: add display helper" by,
+        Steffen Trumtrar <s.trumtrar@pengutronix.de>
+2. Patch "da8xx: Allow use by am33xx based devices" by,
+        Pantelis Antoniou <panto@antoniou-consulting.com>
+3. Series v3 "video: da8xx-fb: runtime timing configuration" by,
+        me (Afzal Mohammed <afzal@ti.com>)
 
-Thanks for sharing your ideas.
+To test this series on AM335x based boards,
+1. Series "HWMOD fixes for AM33xx PWM submodules and device tree nodes" by,
+        Philip, Avinash <avinashphilip@ti.com>
+as well as following,
+2. Series v2 "ARM: dts: AM33XX: lcdc support",
+3. Patch v2 "ARM: OMAP2+: dpll: am335x - avoid freqsel",
+4. Patch v2 "ARM: OMAP2+: clock: DEFINE_STRUCT_CLK_FLAGS helper",
+5. Patch v2 "ARM: AM33XX: clock: SET_RATE_PARENT in lcd path" by,
+	me (Afzal Mohammed <afzal@ti.com>)
+would be needed.
+
+All above dependencies along with those required for testing is available
+@ git://gitorious.org/x0148406-public/linux-kernel.git tags/da8xx-fb-dt-v5
 
 Regards
 Afzal
+
+v5: use v2 method of configuring pixel clock rate instead of modeling
+    CCF clock nodes in driver, i.e. set divider if rate is within
+    the range that is configurable with existing input clock rate,
+    else change input clock rate as required.
+v4: use new registration for clock divider having minimum divider
+    requirement and have ifdef'ery in a better way
+v3: model CCF clock divider with parent propogation if CCF selected
+v2: 2 new patches - one to configure clock rate properly (12/12)and
+    other to make io operations safe (1/12)
+
+
+
+Afzal Mohammed (11):
+  video: da8xx-fb: make io operations safe
+  video: da8xx-fb: enable sync lost intr for v2 ip
+  video: da8xx-fb: use devres
+  video: da8xx-fb: ensure non-null cfg in pdata
+  video: da8xx-fb: reorganize panel detection
+  video: da8xx-fb: minimal dt support
+  video: da8xx-fb: invoke platform callback safely
+  video: da8xx-fb: obtain fb_videomode info from dt
+  video: da8xx-fb: ensure pdata only for non-dt
+  video: da8xx-fb: setup struct lcd_ctrl_config for dt
+  video: da8xx-fb: set upstream clock rate (if reqd)
+
+Manjunathappa, Prakash (1):
+  video: da8xx-fb: fix 24bpp raster configuration
+
+ .../devicetree/bindings/video/fb-da8xx.txt         |  37 ++++
+ drivers/video/da8xx-fb.c                           | 226 ++++++++++++++-------
+ 2 files changed, 194 insertions(+), 69 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/video/fb-da8xx.txt
+
+-- 
+1.7.12
+
