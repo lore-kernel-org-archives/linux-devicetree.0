@@ -1,40 +1,51 @@
-From: "Saridakis, Dean   (US SSA)" <dean.saridakis-IHqVjY1oUdQxoycv7ERPSQ@public.gmane.org>
-Subject: DTs, Linux drivers & PCI Devices
-Date: Mon, 28 Jan 2013 14:39:54 +0000
-Message-ID: <B98BBFB67D89184E8E876F332BDBC3E0A0C372@GLDMS85001.goldlnk.rootlnka.net>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/4] ARM: dts: Add #dma-cells for generic dma binding support
+Date: Mon, 28 Jan 2013 14:47:33 +0000
+Message-ID: <201301281447.33633.arnd@arndb.de>
+References: <1358508824-20352-1-git-send-email-padma.v@samsung.com> <1358508824-20352-4-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1358508824-20352-4-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Padmavathi Venna <padma.v@samsung.com>, padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, jassisinghbrar@gmail.com, kgene.kim@samsung.com, swarren@nvidia.com, boojin.kim@samsung.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, vinod.koul@intel.com
 List-Id: devicetree@vger.kernel.org
 
-I've been diving into Linux kernel drivers & device trees for a new project & am looking for some help. 
+On Friday 18 January 2013, Padmavathi Venna wrote:
+> diff --git a/Documentation/devicetree/bindings/dma/arm-pl330.txt b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+> index 36e27d5..457a233 100644
+> --- a/Documentation/devicetree/bindings/dma/arm-pl330.txt
+> +++ b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+> @@ -8,6 +8,8 @@ Required properties:
+>    - reg: physical base address of the controller and length of memory mapped
+>      region.
+>    - interrupts: interrupt number to the cpu.
+> +  - #dma-cells: must be at least 1. used to represent the number of integer
+> +    cells in the dmas property of client device.
 
-First, is it reasonable/possible to define a PCI (PCIe) device in a device tree? Seems like you'd have to reference a BAR#s to do this (& still have addresses mapped by enumeration).  A couple reasons I'm interested in doing this:
-- The PCI device logic will be migrated to a system bus
-- DT properties provide a nice way to pass in driver configuration data 
+The wording 'at least' seems wrong here: that is what we use in the
+generic DMA binding, but in the part that is specific to one
+driver, I would expect to see
 
-It's not clear to me how the linux kernel interprets/processes the device tree. I'm working w/ powerpc (fsl QorIQ). E.g., shouldn't everything from the DT show up in /sys/bus/platform/devices ? I noticed that not everything is there, e.g., only 2 of the 4 PCIe RCs. (Noticed this after trying to add my own simple dummy entry to a reserved reg space as an experiment).
+	- #dma-cells: must be <1>
 
-Ultimately I'd like to use the DT to describe a set of logic cores on a subordinate bus. There is also a subordinate interrupt controller, which I think I can figure out how to describe, but am not sure how kernel glue works -- somehow I'd need to bind that controller to routing code I provide. 
+Since that is what this particular driver requires.
 
-Documentation I've been reading includes:
-- ePAPR
-- DT wiki
-- kernel doc (driver-model, devicetree)
-- Linux DDs v3 (no coverage of platform drivers) Any other recommended docs?
+>  Client drivers (device nodes requiring dma transfers from dev-to-mem or
+> @@ -27,7 +30,7 @@ as shown below.
+>    [property name]  = <[phandle of the dma controller] [dma request id]>;
+>  
+>        where 'dma request id' is the dma request number which is connected
+> -      to the client controller. The 'property name' is recommended to be
+> -      of the form <name>-dma-channel.
+> +      to the client controller. The 'property name' is 'dmas' as recommended
+> +      by the generic dma device tree binding helpers.
 
-Thanks,
-Dean 
+s/recommended/required/
+
+Also, the "dma-names" property is required as well.
+
+	Arnd
