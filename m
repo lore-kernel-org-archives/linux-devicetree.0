@@ -1,85 +1,56 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH RESEND 1/4] mfd: tps65090: add DT support for tps65090
-Date: Mon, 28 Jan 2013 08:52:29 -0700
-Message-ID: <51069EBD.7060104@wwwdotorg.org>
-References: <1359277035-16854-1-git-send-email-ldewangan@nvidia.com> <1359277035-16854-2-git-send-email-ldewangan@nvidia.com>
+Subject: Re: [PATCH RESEND 2/4] regulator: tps65090: add DT support
+Date: Mon, 28 Jan 2013 08:58:26 -0700
+Message-ID: <5106A022.9040909@wwwdotorg.org>
+References: <1359277035-16854-1-git-send-email-ldewangan@nvidia.com> <1359277035-16854-3-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1359277035-16854-2-git-send-email-ldewangan@nvidia.com>
+In-Reply-To: <1359277035-16854-3-git-send-email-ldewangan@nvidia.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: Laxman Dewangan <ldewangan@nvidia.com>
 Cc: sameo@linux.intel.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
 On 01/27/2013 01:57 AM, Laxman Dewangan wrote:
-> Add device tree support for the TI PMIC TPS65090.
-> The device can be registered through platform or DT.
+> Add DT support for TI PMIC tps65090 regulator driver. The DT of this
+> device have node regulator and all regulator's node of this device is
+> added under this node.
 > 
-> Add device tree binding document for this device.
+> The device tree binding document has the required information for
+> adding this device on DTS file.
+> 
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Reviewed-by: Mark Brown <broonie@opensource.wolfsonmicro.com>
 
-> diff --git a/Documentation/devicetree/bindings/regulator/tps65090.txt b/Documentation/devicetree/bindings/regulator/tps65090.txt
+> diff --git a/drivers/regulator/tps65090-regulator.c b/drivers/regulator/tps65090-regulator.c
 
-> +Required properties:
-> +- compatible: "ti,tps65090"
-> +- reg: I2C slave address
-> +- interrupts: the interrupt outputs of the controller
-> +- regulators: A node that houses a sub-node for each regulator within the
-> +  device. Each sub-node is identified using the node's name (or the deprecated
-> +  regulator-compatible property if present), with valid values listed below.
-
-It may not be worth mentioning deprecated stuff in a new binding doc.
-
-> +  The content of each sub-node is defined by the standard binding for
-> +  regulators; see regulator.txt.
-> +  dcdc[1-3], fet[1-7] and ldo[1-2] respectively.
-> +- vsys[1-3]-supply: The input supply for DCDC[1-3] respectively.
-> +- infet[1-7]-supply: The input supply for FET[1-7] respectively.
-> +- vsys_l[1-2]-supply: The input supply for LDO[1-2] respectively.
-
-_ in a DT property name is unusual; perhaps use - instead?
-
-> +Optional properties:
-> +- ti,enable-ext-control: This is applicable for DCDC1, DCDC2 and DCDC3.
-> +  If DCDCs are externally controlled then this property should be there.
-> +- gpio: This is applicable for DCDC1, DCDC2 and DCDC3. If DCDCs are
-> +  extrenally controlled and if it is from GPIO then gpio number should
-
-s/extrenally/externally/
-
-GPIO should always be capitalized it text.
-
-"gpio" is a rather generic property name. "dcdc-gpios" or
-"dcdc-ext-control-gpios" might be better?
-
-> diff --git a/drivers/mfd/tps65090.c b/drivers/mfd/tps65090.c
-
-> @@ -155,9 +188,22 @@ static int tps65090_i2c_probe(struct i2c_client *client,
->  	struct tps65090 *tps65090;
+> @@ -147,15 +228,20 @@ static int tps65090_regulator_probe(struct platform_device *pdev)
+>  	struct tps65090_regulator_plat_data *tps_pdata;
+>  	struct tps65090_regulator *pmic;
+>  	struct tps65090_platform_data *tps65090_pdata;
+> +	struct of_regulator_match *tps65090_reg_matches = NULL;
+>  	int num;
 >  	int ret;
 >  
-> -	if (!pdata) {
-> +	if (client->dev.of_node) {
-> +		const struct of_device_id *match;
-> +
-> +		match = of_match_device(of_match_ptr(tps65090_of_match),
-> +				&client->dev);
-> +		if (!match) {
-> +			dev_err(&client->dev, "No match device found\n");
-> +			return -ENODEV;
-> +		}
+>  	dev_dbg(&pdev->dev, "Probing regulator\n");
+>  
+>  	tps65090_pdata = dev_get_platdata(pdev->dev.parent);
+> -	if (!tps65090_pdata) {
+> +	if (!tps65090_pdata && tps65090_mfd->pdata &&
+> +			tps65090_mfd->dev->of_node)
+> +		tps65090_pdata = tps65090_parse_dt_reg_data(pdev,
+> +					&tps65090_reg_matches);
 
-Is that useful; "match" doesn't seem to be used anywhere, and this
-driver won't be instantiated through DT unless the driver/I2C core found
-a matching entry in tps65090_of_match already.
+Why check "&& tps65090_mfd->pdata" here; why not always parse DT if
+(!tps65090_pdata && tps65090_mfd->dev->of_node)? In that condition, the
+parent MFD driver will always have allocated tps65090_mfd->pdata.
 
-> +	if (!pdata && client->dev.of_node)
-> +		pdata = of_get_tps65090_platform_data(&client->dev);
-> +	if (IS_ERR_OR_NULL(pdata)) {
->  		dev_err(&client->dev, "tps65090 requires platform data\n");
+
+> +	if (IS_ERR_OR_NULL(tps65090_pdata)) {
+>  		dev_err(&pdev->dev, "Platform data missing\n");
 > -		return -EINVAL;
-> +		return (pdata) ? PTR_ERR(pdata) : -EINVAL;
->  	}
+> +		return (tps65090_pdata) ? PTR_ERR(tps65090_pdata) : -EINVAL;
 
-Does the driver really /require/ pdata?
+No need for () there.
