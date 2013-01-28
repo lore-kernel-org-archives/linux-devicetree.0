@@ -1,224 +1,199 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] OF: Fixup resursive locking code paths
-Date: Sun, 27 Jan 2013 20:12:02 -0600
-Message-ID: <5105DE72.6000109@gmail.com>
-References: <1359138107-14159-1-git-send-email-paul.gortmaker@windriver.com>
+From: Gerald Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] Use the libfdt.h include as the interface definition
+Date: Sun, 27 Jan 2013 21:35:22 -0500
+Message-ID: <5105E3EA.2070306@cideas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359138107-14159-1-git-send-email-paul.gortmaker@windriver.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/25/2013 12:21 PM, Paul Gortmaker wrote:
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> There is no real reason to use a rwlock for devtree_lock. It even
-> could be a mutex, but unfortunately it's locked from cpu hotplug
-> paths which can't schedule :(
-> 
-> So it needs to become a raw lock on rt as well.  The devtree_lock would
-> be the only user of a raw_rw_lock, so we are better off cleaning up the
-> recursive locking paths which allows us to convert devtree_lock to a
-> read_lock.
-> 
-> Here we do the standard thing of introducing __foo() as the "raw"
-> version of foo(), so that we can take better control of the locking.
-> The "raw" versions are not exported and are for internal use within
-> the file itself.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
-> ---
+libfdt.h is the libfdt interface definition.  It includes fdt.h and
+libfdt_env.h, so there is no reason to include those in the general code.
 
-Applied for 3.9.
+Signed-off-by: Gerald Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
+---
 
-Rob
+No code changes, just cleaning up the #include situation WRT libfdt.h,
+fdt.h, and libfdt_env.h (the later two being redundant).
 
-> 
-> [This has been living in the RT tree for several releases, and I've
->  put it on top of 3.8-rc4 mainline and tested it independently there
->  on a ppc sbc8548 board as well.  So it would be nice to get this in 3.9]
-> 
->  drivers/of/base.c | 91 ++++++++++++++++++++++++++++++++++++++++++-------------
->  1 file changed, 70 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 2390ddb..21195a1 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -164,16 +164,14 @@ void of_node_put(struct device_node *node)
->  EXPORT_SYMBOL(of_node_put);
->  #endif /* CONFIG_OF_DYNAMIC */
->  
-> -struct property *of_find_property(const struct device_node *np,
-> -				  const char *name,
-> -				  int *lenp)
-> +static struct property *__of_find_property(const struct device_node *np,
-> +					   const char *name, int *lenp)
->  {
->  	struct property *pp;
->  
->  	if (!np)
->  		return NULL;
->  
-> -	read_lock(&devtree_lock);
->  	for (pp = np->properties; pp; pp = pp->next) {
->  		if (of_prop_cmp(pp->name, name) == 0) {
->  			if (lenp)
-> @@ -181,6 +179,18 @@ struct property *of_find_property(const struct device_node *np,
->  			break;
->  		}
->  	}
-> +
-> +	return pp;
-> +}
-> +
-> +struct property *of_find_property(const struct device_node *np,
-> +				  const char *name,
-> +				  int *lenp)
-> +{
-> +	struct property *pp;
-> +
-> +	read_lock(&devtree_lock);
-> +	pp = __of_find_property(np, name, lenp);
->  	read_unlock(&devtree_lock);
->  
->  	return pp;
-> @@ -214,8 +224,20 @@ EXPORT_SYMBOL(of_find_all_nodes);
->   * Find a property with a given name for a given node
->   * and return the value.
->   */
-> +static const void *__of_get_property(const struct device_node *np,
-> +				     const char *name, int *lenp)
-> +{
-> +	struct property *pp = __of_find_property(np, name, lenp);
-> +
-> +	return pp ? pp->value : NULL;
-> +}
-> +
-> +/*
-> + * Find a property with a given name for a given node
-> + * and return the value.
-> + */
->  const void *of_get_property(const struct device_node *np, const char *name,
-> -			 int *lenp)
-> +			    int *lenp)
->  {
->  	struct property *pp = of_find_property(np, name, lenp);
->  
-> @@ -226,13 +248,13 @@ EXPORT_SYMBOL(of_get_property);
->  /** Checks if the given "compat" string matches one of the strings in
->   * the device's "compatible" property
->   */
-> -int of_device_is_compatible(const struct device_node *device,
-> -		const char *compat)
-> +static int __of_device_is_compatible(const struct device_node *device,
-> +				     const char *compat)
->  {
->  	const char* cp;
->  	int cplen, l;
->  
-> -	cp = of_get_property(device, "compatible", &cplen);
-> +	cp = __of_get_property(device, "compatible", &cplen);
->  	if (cp == NULL)
->  		return 0;
->  	while (cplen > 0) {
-> @@ -245,6 +267,20 @@ int of_device_is_compatible(const struct device_node *device,
->  
->  	return 0;
->  }
-> +
-> +/** Checks if the given "compat" string matches one of the strings in
-> + * the device's "compatible" property
-> + */
-> +int of_device_is_compatible(const struct device_node *device,
-> +		const char *compat)
-> +{
-> +	int res;
-> +
-> +	read_lock(&devtree_lock);
-> +	res = __of_device_is_compatible(device, compat);
-> +	read_unlock(&devtree_lock);
-> +	return res;
-> +}
->  EXPORT_SYMBOL(of_device_is_compatible);
->  
->  /**
-> @@ -518,7 +554,8 @@ struct device_node *of_find_compatible_node(struct device_node *from,
->  		if (type
->  		    && !(np->type && (of_node_cmp(np->type, type) == 0)))
->  			continue;
-> -		if (of_device_is_compatible(np, compatible) && of_node_get(np))
-> +		if (__of_device_is_compatible(np, compatible) &&
-> +		    of_node_get(np))
->  			break;
->  	}
->  	of_node_put(from);
-> @@ -562,15 +599,9 @@ out:
->  }
->  EXPORT_SYMBOL(of_find_node_with_property);
->  
-> -/**
-> - * of_match_node - Tell if an device_node has a matching of_match structure
-> - *	@matches:	array of of device match structures to search in
-> - *	@node:		the of device structure to match against
-> - *
-> - *	Low level utility function used by device matching.
-> - */
-> -const struct of_device_id *of_match_node(const struct of_device_id *matches,
-> -					 const struct device_node *node)
-> +static
-> +const struct of_device_id *__of_match_node(const struct of_device_id *matches,
-> +					   const struct device_node *node)
->  {
->  	if (!matches)
->  		return NULL;
-> @@ -584,14 +615,32 @@ const struct of_device_id *of_match_node(const struct of_device_id *matches,
->  			match &= node->type
->  				&& !strcmp(matches->type, node->type);
->  		if (matches->compatible[0])
-> -			match &= of_device_is_compatible(node,
-> -						matches->compatible);
-> +			match &= __of_device_is_compatible(node,
-> +							   matches->compatible);
->  		if (match)
->  			return matches;
->  		matches++;
->  	}
->  	return NULL;
->  }
-> +
-> +/**
-> + * of_match_node - Tell if an device_node has a matching of_match structure
-> + *	@matches:	array of of device match structures to search in
-> + *	@node:		the of device structure to match against
-> + *
-> + *	Low level utility function used by device matching.
-> + */
-> +const struct of_device_id *of_match_node(const struct of_device_id *matches,
-> +					 const struct device_node *node)
-> +{
-> +	const struct of_device_id *match;
-> +
-> +	read_lock(&devtree_lock);
-> +	match = __of_match_node(matches, node);
-> +	read_unlock(&devtree_lock);
-> +	return match;
-> +}
->  EXPORT_SYMBOL(of_match_node);
->  
->  /**
-> @@ -619,7 +668,7 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
->  	read_lock(&devtree_lock);
->  	np = from ? from->allnext : of_allnodes;
->  	for (; np; np = np->allnext) {
-> -		if (of_match_node(matches, np) && of_node_get(np)) {
-> +		if (__of_match_node(matches, np) && of_node_get(np)) {
->  			if (match)
->  				*match = matches;
->  			break;
-> 
+I looked at moving the fdt64_t, fdt32_t, fdt16_t definitions from
+libfdt_env.h to fdt.h.  I'm not sure this is a Good Thing[tm], but will
+send a separate patch for consideration and discussion.
+
+ dtc.h                    |    3 +--
+ fdtdump.c                |    3 +--
+ libfdt/fdt.c             |    3 ---
+ libfdt/fdt_empty_tree.c  |    3 ---
+ libfdt/fdt_ro.c          |    3 ---
+ libfdt/fdt_rw.c          |    3 ---
+ libfdt/fdt_strerror.c    |    3 ---
+ libfdt/fdt_sw.c          |    3 ---
+ libfdt/fdt_wip.c         |    3 ---
+ libfdt/libfdt_internal.h |    1 -
+ 10 files changed, 2 insertions(+), 26 deletions(-)
+
+diff --git a/dtc.h b/dtc.h
+index 3e42a07..a032645 100644
+--- a/dtc.h
++++ b/dtc.h
+@@ -32,8 +32,7 @@
+ #include <errno.h>
+ #include <unistd.h>
+
+-#include <libfdt_env.h>
+-#include <fdt.h>
++#include <libfdt.h>
+
+ #include "util.h"
+
+diff --git a/fdtdump.c b/fdtdump.c
+index b2c5b37..3919490 100644
+--- a/fdtdump.c
++++ b/fdtdump.c
+@@ -8,8 +8,7 @@
+ #include <string.h>
+ #include <ctype.h>
+
+-#include <libfdt_env.h>
+-#include <fdt.h>
++#include <libfdt.h>
+
+ #include "util.h"
+
+diff --git a/libfdt/fdt.c b/libfdt/fdt.c
+index 57faba3..19b9043 100644
+--- a/libfdt/fdt.c
++++ b/libfdt/fdt.c
+@@ -48,11 +48,8 @@
+  *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-#include "libfdt_env.h"
+
+-#include <fdt.h>
+ #include <libfdt.h>
+-
+ #include "libfdt_internal.h"
+
+ int fdt_check_header(const void *fdt)
+diff --git a/libfdt/fdt_empty_tree.c b/libfdt/fdt_empty_tree.c
+index f72d13b..30c5525 100644
+--- a/libfdt/fdt_empty_tree.c
++++ b/libfdt/fdt_empty_tree.c
+@@ -48,11 +48,8 @@
+  *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-#include "libfdt_env.h"
+
+-#include <fdt.h>
+ #include <libfdt.h>
+-
+ #include "libfdt_internal.h"
+
+ int fdt_create_empty_tree(void *buf, int bufsize)
+diff --git a/libfdt/fdt_ro.c b/libfdt/fdt_ro.c
+index 42da2bd..53c61ed 100644
+--- a/libfdt/fdt_ro.c
++++ b/libfdt/fdt_ro.c
+@@ -48,11 +48,8 @@
+  *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-#include "libfdt_env.h"
+
+-#include <fdt.h>
+ #include <libfdt.h>
+-
+ #include "libfdt_internal.h"
+
+ static int _fdt_nodename_eq(const void *fdt, int offset,
+diff --git a/libfdt/fdt_rw.c b/libfdt/fdt_rw.c
+index fdba618..b6a8815 100644
+--- a/libfdt/fdt_rw.c
++++ b/libfdt/fdt_rw.c
+@@ -48,11 +48,8 @@
+  *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-#include "libfdt_env.h"
+
+-#include <fdt.h>
+ #include <libfdt.h>
+-
+ #include "libfdt_internal.h"
+
+ static int _fdt_blocks_misordered(const void *fdt,
+diff --git a/libfdt/fdt_strerror.c b/libfdt/fdt_strerror.c
+--- a/libfdt/fdt_strerror.c
++++ b/libfdt/fdt_strerror.c
+@@ -48,11 +48,8 @@
+  *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-#include "libfdt_env.h"
+
+-#include <fdt.h>
+ #include <libfdt.h>
+-
+ #include "libfdt_internal.h"
+
+ struct fdt_errtabent {
+diff --git a/libfdt/fdt_sw.c b/libfdt/fdt_sw.c
+index f422754..85aaedf 100644
+--- a/libfdt/fdt_sw.c
++++ b/libfdt/fdt_sw.c
+@@ -48,11 +48,8 @@
+  *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-#include "libfdt_env.h"
+
+-#include <fdt.h>
+ #include <libfdt.h>
+-
+ #include "libfdt_internal.h"
+
+ static int _fdt_sw_check_header(void *fdt)
+diff --git a/libfdt/fdt_wip.c b/libfdt/fdt_wip.c
+index c5bbb68..67fa7ca 100644
+--- a/libfdt/fdt_wip.c
++++ b/libfdt/fdt_wip.c
+@@ -48,11 +48,8 @@
+  *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-#include "libfdt_env.h"
+
+-#include <fdt.h>
+ #include <libfdt.h>
+-
+ #include "libfdt_internal.h"
+
+ int fdt_setprop_inplace(void *fdt, int nodeoffset, const char *name,
+diff --git a/libfdt/libfdt_internal.h b/libfdt/libfdt_internal.h
+index 381133b..a8b36f4 100644
+--- a/libfdt/libfdt_internal.h
++++ b/libfdt/libfdt_internal.h
+@@ -50,7 +50,6 @@
+  *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+  *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+  */
+-#include <fdt.h>
+
+ #define FDT_ALIGN(x, a)		(((x) + (a) - 1) & ~((a) - 1))
+ #define FDT_TAGALIGN(x)		(FDT_ALIGN((x), FDT_TAGSIZE))
+-- 
+1.7.9.5
