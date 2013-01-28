@@ -1,80 +1,47 @@
-From: Dave Martin <dave.martin@linaro.org>
-Subject: Re: [PATCH 5/6] ARM: dts: Add basic dts include files for Samsung
- S3C64xx SoCs
-Date: Mon, 28 Jan 2013 13:04:34 +0000
-Message-ID: <20130128130434.GB2027@linaro.org>
-References: <1358039458-31960-1-git-send-email-tomasz.figa@gmail.com>
- <20130114150531.GE21142@e102568-lin.cambridge.arm.com>
- <20130116105957.GA1963@linaro.org>
- <3747315.IyCCRDXgbD@flatron>
- <016c01cdfb30$64f80430$2ee80c90$@samsung.com>
- <20130128090240.GA7754@e106331-lin.cambridge.arm.com>
+From: Jerry Van Baren <vanbaren-He//nVnquyzQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] Move the fdt*_t type definitions to fdt.h
+Date: Mon, 28 Jan 2013 08:29:03 -0500
+Message-ID: <51067D1F.1000306@cideas.com>
+References: <5105E615.30102@cideas.com>
+ <20130128045233.GA4107@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130128090240.GA7754@e106331-lin.cambridge.arm.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, 'Tomasz Figa' <tomasz.figa@gmail.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "kwangwoo.lee@gmail.com" <kwangwoo.lee@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "mcuelenaere@gmail.com" <mcuelenaere@gmail.com>, "augulis.darius@gmail.com" <augulis.darius@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130128045233.GA4107-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 28, 2013 at 09:02:40AM +0000, Mark Rutland wrote:
-> On Fri, Jan 25, 2013 at 07:15:48PM +0000, Kukjin Kim wrote:
-> > Tomasz Figa wrote:
-> > 
-> > [...]
-> > 
-> > > > Well, the number of CPU types does not grow rapidly.  It will be much
-> > > > less than one per SoC -- so keeping the list up to date shouldn't be
-> > > > that much effort.
-> > > >
-> > > > For ARM1176JZF-S, it could make sense for the comatible list to be
-> > > >
-> > > > 	"arm,arm1176jzf-s", "arm,arm1176"
-> > > >
-> > > > ...since the differences between 1176 variants are software probeable
-> > > > (i.e., whether there is an FPU or not).  AFAIK the J, Z apply to all
-> > > > ARM1176, and the -S (synthesisable RTL) is nothing to do with software.
-> > > > The kernel probably only really needs to know "arm,arm1176".
-> > > 
-> > > OK. So the conclusion is that I should change the cpus node to following:
-> > > 
-> > >        cpus {
-> > >                cpu {
-> > 
-> > cpu@0 { ?
-> 
-> As the CPU has no MPIDR, and thus doesn't have a reg property, there's no reason
-> to have a unit address. Just "cpu" should be fine.
-> 
-> > 
-> > >                        compatible = "arm,arm1176jzf-s", "arm,arm1176";
-> > >                };
-> > >        };
-> > > 
-> > > Am I right?
-> > > 
-> > I think so :-)
-> > 
-> > - Kukjin
-> > 
-> 
-> As Dave pointed out, the "jzf-s" portion might be superfluous. It's worth
-> having the "arm,arm1176", though.
+On 01/27/2013 11:52 PM, David Gibson wrote:
+> On Sun, Jan 27, 2013 at 09:44:37PM -0500, Gerald Van Baren wrote:
+>> Arguably they belong there since they are fundamental to the fdt.
+>> As a side effect, I had to flip the order of #includes of fdt.h and
+>> libfdt_env.h in libfdt.h since libfdt_env.h needs the fdt*_t definitions.
+>>
+>> Signed-off-by: Gerald Van Baren <gvb-LFPmMGy0VdYAvxtiuMwx3w@public.gmane.org>
+>> ---
+>>
+>> I'm not sure I like this, but submit it for your consideration.  If, for
+>> some reason, libfdt_env.h needed to (re)define something in fdt.h, it
+>> would be unable to do so. :-/
+>
+> Sorry, nack on this one.  fdt.h is supposed to be as independent as we
+> can make it from the environment in which its being compiled.  That
+> means I don't want it to include *any* system headers, even stdint.h.
 
-I think we should always have a fully-qualified part name as the first
-compatible entry, following general devicetree policy.  It's better to
-have this and not need it than to discover later that we want it and
-incompatibly backport it in.
+No problem, it didn't feel right to me either.  Thank you for your 
+consideration. :-)
 
-Before deciding, do we follow a consistent policy for other CPUs, such
-as arm1136?
-
-
-The issues there are similar: the only software-visible difference between
-arm1136j-s and arm1136jf-s should be the absence/presence of VFP, and it
-looks like the code in vfpmodule.c should be able to probe it.
-
-Cheers
----Dave
+Best regards,
+gvb
