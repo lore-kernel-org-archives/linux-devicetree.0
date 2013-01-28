@@ -1,69 +1,72 @@
-From: "Katepallewar, Mrugesh" <mrugesh.mk@ti.com>
-Subject: RE: [PATCH] ARM: davinci: da850: add RTC driver DT entries
-Date: Mon, 28 Jan 2013 07:00:19 +0000
-Message-ID: <4232EB8829679242B82E712C3DB3149D42346E@DBDE01.ent.ti.com>
-References: <1359094430-14724-1-git-send-email-mrugesh.mk@ti.com>
- <51025FAE.3060503@ti.com>
- <4232EB8829679242B82E712C3DB3149D4233E9@DBDE01.ent.ti.com>
- <51026AEA.5050503@ti.com>
+From: Mrugesh Katepallewar <mrugesh.mk@ti.com>
+Subject: [PATCH V2] ARM: davinci: da850: add RTC DT entries
+Date: Mon, 28 Jan 2013 13:17:48 +0530
+Message-ID: <1359359268-9781-1-git-send-email-mrugesh.mk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51026AEA.5050503@ti.com>
-Content-Language: en-US
 Sender: linux-doc-owner@vger.kernel.org
-To: "Nori, Sekhar" <nsekhar@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "hs@denx.de" <hs@denx.de>
+To: devicetree-discuss@lists.ozlabs.org, davinci-linux-open-source@linux.davincidsp.com, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, nsekhar@ti.com, hs@denx.de
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMjUsIDIwMTMgYXQgMTY6NTI6MTgsIE5vcmksIFNla2hhciB3cm90ZToNCj4g
-T24gMS8yNS8yMDEzIDQ6MzQgUE0sIEthdGVwYWxsZXdhciwgTXJ1Z2VzaCB3cm90ZToNCj4gPiBP
-biBGcmksIEphbiAyNSwgMjAxMyBhdCAxNjowNDoyMiwgTm9yaSwgU2VraGFyIHdyb3RlOg0KPiA+
-PiBPbiAxLzI1LzIwMTMgMTE6NDMgQU0sIE1ydWdlc2ggS2F0ZXBhbGxld2FyIHdyb3RlOg0KPiA+
-Pj4gQWRkIFJUQyBEVCBlbnRyaWVzIGluIGRhODUwIGR0cyBmaWxlLg0KPiA+Pj4NCj4gPj4+IFNp
-Z25lZC1vZmYtYnk6IE1ydWdlc2ggS2F0ZXBhbGxld2FyIDxtcnVnZXNoLm1rQHRpLmNvbT4NCj4g
-Pj4+IC0tLQ0KPiA+Pj4gQXBwbGllcyBvbiB0b3Agb2YgdjMuOC1yYzQgb2YgbGludXMgdHJlZS4N
-Cj4gPj4+DQo+ID4+PiBUZXN0ZWQgb24gZGE4NTAtZXZtIGRldmljZS4NCj4gPj4+DQo+ID4+PiBU
-ZXN0IFByb2NlZHVyZToNCj4gPj4+IGRhdGUgW1lZWVkuXU1NLkRELWhoOm1tWzpzc10NCj4gPj4+
-IGh3Y2xvY2sgLXcNCj4gPj4+IHJlc2V0IGJvYXJkIGFuZCBjaGVjayBzeXN0ZW0gdGltZS4NCj4g
-Pj4+DQo+ID4+PiA6MTAwNjQ0IDEwMDY0NCAzN2RjNWEzLi4uIGIxNmVmZDQuLi4gTQlhcmNoL2Fy
-bS9ib290L2R0cy9kYTg1MC1ldm0uZHRzDQo+ID4+PiA6MTAwNjQ0IDEwMDY0NCA2NDBhYjc1Li4u
-IGE4ZWIxYjEuLi4gTQlhcmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpDQo+ID4+PiAgYXJjaC9h
-cm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cyB8ICAgIDMgKysrDQo+ID4+PiAgYXJjaC9hcm0vYm9v
-dC9kdHMvZGE4NTAuZHRzaSAgICB8ICAgIDggKysrKysrKysNCj4gPj4+ICAyIGZpbGVzIGNoYW5n
-ZWQsIDExIGluc2VydGlvbnMoKykNCj4gPj4+DQo+ID4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0v
-Ym9vdC9kdHMvZGE4NTAtZXZtLmR0cyANCj4gPj4+IGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAt
-ZXZtLmR0cyBpbmRleCAzN2RjNWEzLi5iMTZlZmQ0IDEwMDY0NA0KPiA+Pj4gLS0tIGEvYXJjaC9h
-cm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cw0KPiA+Pj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-ZGE4NTAtZXZtLmR0cw0KPiA+Pj4gQEAgLTI0LDUgKzI0LDggQEANCj4gPj4+ICAJCXNlcmlhbDI6
-IHNlcmlhbEAxZDBkMDAwIHsNCj4gPj4+ICAJCQlzdGF0dXMgPSAib2theSI7DQo+ID4+PiAgCQl9
-Ow0KPiA+Pj4gKwkJcnRjQDFjMjMwMDAgew0KPiANCj4gSSBkaWQgbm90IG1lbnRpb24gdGhpcyBs
-YXN0IHRpbWUsIGJ1dCB0aGlzIHNob3VsZCBiZToNCj4gDQo+IAkJcnRjMDogcnRjQDFjMjMwMDAg
-ew0KPiANCj4gdG8gYmUgY29uc2lzdGVudCB3aXRoIHJlc3Qgb2YgdGhlIGZpbGUuDQoNCk9rYXku
-IEkgd2lsbCBzZW5kIHRoaXMgaW4gbmV4dCB2ZXJzaW9uLg0KPiANCj4gPj4+ICsJCQlzdGF0dXMg
-PSAib2theSI7DQo+ID4+PiArCQl9Ow0KPiA+Pj4gIAl9Ow0KPiA+Pj4gIH07DQo+ID4+PiBkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaSANCj4gPj4+IGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvZGE4NTAuZHRzaSBpbmRleCA2NDBhYjc1Li5hOGViMWIxIDEwMDY0NA0KPiA+Pj4g
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQ0KPiA+Pj4gKysrIGIvYXJjaC9hcm0v
-Ym9vdC9kdHMvZGE4NTAuZHRzaQ0KPiA+Pj4gQEAgLTU2LDUgKzU2LDEzIEBADQo+ID4+PiAgCQkJ
-aW50ZXJydXB0LXBhcmVudCA9IDwmaW50Yz47DQo+ID4+PiAgCQkJc3RhdHVzID0gImRpc2FibGVk
-IjsNCj4gPj4+ICAJCX07DQo+ID4+PiArCQlydGNAMWMyMzAwMCB7DQo+IA0KPiBIZXJlIHRvby4N
-Cj4gDQpPa2F5LiBJIHdpbGwgc2VuZCB0aGlzIGluIG5leHQgdmVyc2lvbi4NCg0KPiA+Pj4gKwkJ
-CWNvbXBhdGlibGUgPSAidGksZGE4MzAtcnRjIjsNCj4gPj4+ICsJCQlyZWcgPSA8MHgyMzAwMCAw
-eDEwMDA+Ow0KPiA+Pj4gKwkJCWludGVycnVwdHMgPSA8MTkNCj4gPj4+ICsJCQkJICAgICAgMTk+
-Ow0KPiA+Pg0KPiA+PiBXaHkgdHdvIGludGVycnVwdHMgb2YgdGhlIHNhbWUgbnVtYmVyPyBJZiB0
-aGVyZSBpcyBvbmx5IG9uZSBpbnRlcnJ1cHQgbGluZSB0aGVuIG9ubHkgb25lIHNob3VsZCBiZSBz
-cGVjaWZpZWQsIG5vPw0KPiA+IFdlIGFyZSB1c2luZyBjb21tb24gT01BUCBSVEMgZHJpdmVyIGZv
-ciBkYTg1MCBhbmQgb3RoZXIgdGkgU29DJ3MgDQo+ID4gKGUuZy5hbTMzeHgpLiBJIGhhdmUgc2Vl
-biBpbiBhbTMzeHguZHRzaSBydGMgdGltZXIgYW5kIGFsYXJtIGludGVycnVwdHMgYXJlIGRpZmZl
-cmVudC4gU28sIHR3byBpbnRlcnJ1cHQgbnVtYmVycyBhcmUgZXhwZWN0ZWQgZnJvbSBSVEMgRFQg
-bm9kZS4NCj4gDQo+IE9rYXkuIExvb2tpbmcgYXQgdGhlIE9NQVAtTDEzOCBUUk0sIEkgc2VlIHRo
-YXQgdGhlIElQIG9uIHRoYXQgU29DIHN1cHBvcnRzIGJvdGggYWxhcm0gYW5kIHRpbWVyIGV2ZW50
-cyBhbmQgYm90aCBhcnJpdmUgb24gdGhlIHNhbWUgaW50ZXJydXB0IG51bWJlciAoYXMgb3Bwb3Nl
-ZCB0byBhbTMzNXggd2hlcmUgdGhleSBzdXBwb3NlZGx5IGFycml2ZSBvbiBkaWZmZXJlbnQgaW50
-ZXJydXB0IGxpbmVzKS4gV2hhdCB5b3UgaGF2ZSBsb29rcyBmaW5lIHRvIG1lIGNvbnNpZGVyaW5n
-IHRoaXMuDQo+IA0KPiBBbHNvLCB0aGUgaW50ZXJydXB0LXBhcmVudCBzZXR0aW5nIG5lZWRzIHRv
-IGJlIHJlbW92ZWQuIFNlZSB0aGUgcGF0Y2ggUHJhYmhha2FyIGp1c3Qgc3VibWl0dGVkLg0KDQpP
-a2F5LiBJIHdpbGwgc2VuZCB0aGlzIGluIG5leHQgdmVyc2lvbi4NCg0KPiANCj4gVGhhbmtzLA0K
-PiBTZWtoYXINCj4gDQoNClJlZ2FyZHMsIA0KTXJ1Z2VzaA0K
+Add RTC DT entries in da850 dts file.
+
+Signed-off-by: Mrugesh Katepallewar <mrugesh.mk@ti.com>
+---
+Applies on top of v3.8-rc4 of linus tree.
+
+This patch is depending on 
+"ARM: davinci: da850: add interrupt-parent property in soc node"
+https://patchwork.kernel.org/patch/2044101/
+
+Tested on da850-evm device.
+
+Test Procedure:
+date 2013.01.28-10:00:00 (usage: date[YYYY.]MM.DD-hh:mm[:ss])
+hwclock -w
+reset board and check system time.
+
+Changes Since V1:
+Remove interrupt-parent property from RTC node.
+Change RTC node name in dts and dtsi file.
+
+:100644 100644 37dc5a3... af4b7cc... M	arch/arm/boot/dts/da850-evm.dts
+:100644 100644 640ab75... 90be701... M	arch/arm/boot/dts/da850.dtsi
+ arch/arm/boot/dts/da850-evm.dts |    3 +++
+ arch/arm/boot/dts/da850.dtsi    |    7 +++++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index 37dc5a3..af4b7cc 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -24,5 +24,8 @@
+ 		serial2: serial@1d0d000 {
+ 			status = "okay";
+ 		};
++		rtc0: rtc@1c23000 {
++			status = "okay";
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 640ab75..90be701 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -56,5 +56,12 @@
+ 			interrupt-parent = <&intc>;
+ 			status = "disabled";
+ 		};
++		rtc0: rtc@1c23000 {
++			compatible = "ti,da830-rtc";
++			reg = <0x23000 0x1000>;
++			interrupts = <19
++				      19>;
++			status = "disabled";
++		};
+ 	};
+ };
+-- 
+1.7.9.5
+
