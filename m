@@ -1,53 +1,56 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V2 2/4] regulator: tps65090: add DT support
-Date: Tue, 29 Jan 2013 19:09:36 +0800
-Message-ID: <20130129110933.GE32597@opensource.wolfsonmicro.com>
-References: <1359450318-24912-1-git-send-email-ldewangan@nvidia.com>
- <1359450318-24912-3-git-send-email-ldewangan@nvidia.com>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
+Date: Tue, 29 Jan 2013 13:14:24 +0200
+Message-ID: <1359458064.31148.38.camel@smile>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <1359410300-26113-2-git-send-email-arnd@arndb.de>
+ <CAKohpomO6tYNYLdMOaJYgqGecXj5KMQprdb=gExi+QuGrtLTzw@mail.gmail.com>
+ <201301291035.30265.arnd@arndb.de>
+ <CAKohpo=rD9=dEaPkKYcj55K4_ebdnU7qjv2TZBUwqHAB+Kk+aw@mail.gmail.com>
+ <1359456886.31148.37.camel@smile>
+ <CAKohpokZfQZ17PmQjS2ntN9js7=SxNkiwWpX2aD8cZcM9L0ydw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="PMULwz+zIGJzpDN9"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1359450318-24912-3-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAKohpokZfQZ17PmQjS2ntN9js7=SxNkiwWpX2aD8cZcM9L0ydw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 2013-01-29 at 16:27 +0530, Viresh Kumar wrote: 
+> On 29 January 2013 16:24, Andy Shevchenko
+> <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org> wrote:
+> > On Tue, 2013-01-29 at 16:19 +0530, Viresh Kumar wrote:
+> >> if (DMA_TO_DEV)
+> >>        // dest is periph
+> >>        fargs.cfg_hi = be32_to_cpup(dma_spec->args+0) << 11;
+> >> else if (DEV_TO_DMA)
+> >>        // src is periph
+> >>        fargs.cfg_hi = be32_to_cpup(dma_spec->args+0) << 7;
+> >
+> > We have macros for such shifts.
+> >
+> > drivers/dma/dw_dmac.c:187:   cfghi = DWC_CFGH_DST_PER(...
+> > drivers/dma/dw_dmac.c:189:   cfghi = DWC_CFGH_SRC_PER(...
+> 
+> I am getting older now, bad memory :)
+> I grepped into drivers/dma/dw_dmac_regs.h and left include/linux/dw_dmac.h :(
 
---PMULwz+zIGJzpDN9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Moreover the excerpt I showed from dw_dmac.c is the same piece of code
+you wrote above as a sample.
 
-On Tue, Jan 29, 2013 at 02:35:16PM +0530, Laxman Dewangan wrote:
-> Add DT support for TI PMIC tps65090 regulator driver. The DT of this
-> device have node regulator and all regulator's node of this device is
-> added under this node.
 
-There doesn't seem to be any dependency on the rest of the series so I
-went ahead and applied this, thanks.
-
---PMULwz+zIGJzpDN9
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRB63mAAoJELSic+t+oim9X8wP/2SKw9HkjewSFmcUEdc1S7Xt
-7GvzfgR8MEOIAU6t7kHehtSRtQEzc6/KTssx4m6OTVLqjXkdXXRU2EbvmpKy4j8y
-FAzKVq78am7YXGka+Pcb9aM/0KX1I9aAJfSF12E0PygBfmJTCYPrzwqqOLgY+rk4
-AhVqgph9UfhV8KAXCQ4LAQ2wUdAyWcJ8iOIkIPQmpm/ZRXaJgSck16LIa+H8zDi7
-vCe0IBA/KqFULAzfPtdn4Ikb6NdZQIIb44eJ4bwZLgZQ+vz1iUmcZHEZOM9v/bZ7
-kgrxJQHacq8O3aXQk0ZA8Qmr7zvbN5G20bdAXebYah1gsWD/lpxj2/IEMKt00jVG
-JikYlcDpt4Sy3GVuCl7PgqnmVrhfMZEPhq6SjcO4XcNcIWFi2n8pR4oRkLWDtcMD
-6cc7qolW/J+mE6Jqml8vpqdxrd5OEUCyeV6dJgmUrlxdalFQPDFvbsrV6HIrUfXm
-PzhesUY4fuhMdqwjMszdl1GURcvPktN13EynTxM54wZXBIB65aoasMqquNoznDdq
-Mo5Dv6n6dNFw1c0EB7/dk7NUDs2rbLEvKCOStEeUWPvzm+xO+h/xOv19zsGRDJVy
-BP6KGfP2xEwhSVw748QNFMoTaVMNf6P/sOaBZL9u1KtZqnBXt6RZ6uCvDHVUxjzG
-jQHLhfHYVtNAu/7CVe84
-=e6N6
------END PGP SIGNATURE-----
-
---PMULwz+zIGJzpDN9--
+-- 
+Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Intel Finland Oy
