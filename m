@@ -1,14 +1,17 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: dma: protect list write operation by spin_lock
-Date: Tue, 29 Jan 2013 09:36:45 -0600
-Message-ID: <5107EC8D.5070001@gmail.com>
-References: <1359386694-20548-1-git-send-email-andriy.shevchenko@linux.intel.com>
- <51069EA0.4040004@gmail.com> <20130128160757.GA6396@intel.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
+Date: Tue, 29 Jan 2013 15:44:09 +0000
+Message-ID: <20130129154409.GA23505@n2100.arm.linux.org.uk>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <201301291344.11066.arnd@arndb.de>
+ <20130129142434.GW23505@n2100.arm.linux.org.uk>
+ <201301291455.49347.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130128160757.GA6396-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201301291455.49347.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,28 +22,87 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andy Shevchenko <andriy.shevchenko-b5Z7lJ3WibVrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/28/2013 10:07 AM, Vinod Koul wrote:
-> On Mon, Jan 28, 2013 at 09:52:00AM -0600, Rob Herring wrote:
->> On 01/28/2013 09:24 AM, Andy Shevchenko wrote:
->>> Signed-off-by: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
->>> ---
->>>  drivers/of/dma.c |    2 ++
->>>  1 file changed, 2 insertions(+)
->>
->> You need to cc whomever has this file in their tree which is Vinod.
->>
->> Acked-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
->>
->> Vinod, it's probably better to move drivers/of/dma.c to drivers/dma.
->> That's been the direction we've been taking with new OF binding code. I
->> must have missed that in the review.
-> ok, do you have any patches on your tree for this if not then I can update my tree
-> for this change and then we can apply changes thru slave-dma tree.
+On Tue, Jan 29, 2013 at 02:55:49PM +0000, Arnd Bergmann wrote:
+> On Tuesday 29 January 2013, Russell King - ARM Linux wrote:
+> > No, that's not what I mean.  I mean the situation we find on Versatile
+> > platforms:
+> > 
+> >             8     3                   >3
+> > PL080 DMA --/--+--/------> FPGA Mux --/--> {bunch of off-CPU peripherals}
+> >                |  5
+> >                `--/------> {On-CPU peripherals}
+> > 
+> > This is something that I've been raising _every time_ I've been involved
+> > with DMA engine discussions when it comes to the matching stuff, so this
+> > is nothing new, and it's not unknown about.
+> 
+> Ok, I see. I have not actually been involved with the DMA engine API
+> much, so for me it's the first time /I/ see this being explained.
+> 
+> From the DT binding perspective, doing this should be no problem. I guess
+> you would model the MUX as a trivial dma engine device that forwards to
+> another one, just like we do for nested interrupt controllers:
+> 
+> 	pl080: dma-engine@10000000 {
+> 		compatible ="arm,pl080", "arm,primecell";
+> 		reg = <0x10000000 0x1000>;
+> 		dma-requests = <8>;
+> 		dma-channels = <4>;
+> 		#dma-cells = <2>;
+> 	};
+> 
+> 	fpga {
+> 		mux: dma-mux@f0008000 {
+> 			reg = <0xf0008000 100>;
+> 			compatible = "arm,versatile-fpga-dmamux";
+> 			dma-requests = <7>;
+> 			dma-channels = <3>;
+> 			#dma-cells = <1>;
+> 			dmas = <&pl080 5 0>, <&pl080 6 0> <&pl080 7 0>;
+> 			dma-names = "mux5", "mux6", "mux7";
+> 		};
+> 		...
+> 
+> 		some-device@f000a000 {
+> 			compatible = "foo,using-muxed-dma";
+> 			dmas = <&mux 3>, <&mux 4>;
+> 			dma-names = "rx", "tx";
+> 		};
+> 	};
+> 
+> The driver for foo,using-muxed-dma just requests a slave channel for its
+> lines, which ends up calling the xlate function of the driver for the mux.
+> That driver still needs to get written, of course, but it should be able
+> to recursively call dma_request_slave_channel on the pl080 device.
+> The arm,versatile-fpga-dmamux driver would not be registered to the dmaengine
+> layer, but it would register as an of_dma_controller.
 
-No, I don't have one prepared.
+That's a good way to represent it but it fails in a very big way:
+You're stuffing N peripherals down to 3 request lines to the DMA
+engine, and you may want more than 3 of those peripherals to be
+making use of the DMA engine at any one time.
 
-Rob
+Before anyone says "you shouldn't be doing this" consider this:
+your typical DMA slave engine already has this structure:
+
+N DMA channels <---> M DMA requests <---> M peripherals
+
+where N < M.  In other words, there is _already_ a MUX between the
+peripherals and the DMA engine channels themselves (what do you think
+the "request index" which you have to program into DMA channel control
+registers is doing...
+
+We support this external mux today in the PL080 driver - and we do that
+by having the PL080 driver do the scheduling of virtual DMA channels on
+the actual hardware itself.  The PL080 driver has knowledge that there
+may be some sort of additional muxing layer between it and the
+peripheral.
+
+As the APIs stand today, you just can't do this without having the
+DMA engine driver itself intimately involved because a layer above
+doesn't really have much clue as to what's going on, and the DMA
+engine stuff itself doesn't layer particularly well.
