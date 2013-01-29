@@ -1,207 +1,48 @@
-From: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining dr_mode and phy_type
-Date: Tue, 29 Jan 2013 13:55:04 +0200
-Message-ID: <87pq0omcfb.fsf@ashishki-desk.ger.corp.intel.com>
-References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Subject: RE: [PATCH V2 1/6] pinctrl: pinctrl-single: use arch_initcall and
+ module_exit
+Date: Tue, 29 Jan 2013 12:02:54 +0000
+Message-ID: <A4887BF146CD57468F700B415D2F4701581AE9@DBDE01.ent.ti.com>
+References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
+	<1359445134-13323-2-git-send-email-manishv.b@ti.com>
+ <CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1359458548-25071-1-git-send-email-s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "tony@atomide.com" <tony@atomide.com>, "hs@denx.de" <hs@denx.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "khilman@deeprootsystems.com" <khilman@deeprootsystems.com>, "Nori, Sekhar" <nsekhar@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <gr>
 List-Id: devicetree@vger.kernel.org
 
-Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+Hi Linus,
 
-> From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->
-> This adds two little devicetree helper functions for determining the
-> dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
-> the devicetree.
->
-> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> ---
->
-> The properties and their values have been taken from the fsl-mph-dr driver.
-> This binding is also documented (though currently not used) for the tegra
-> ehci driver (Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt).
-> This is a first attempt to parse these bindings at a common place so that
-> others can make use of it.
->
-> Basically I want to know whether this binding is recommended for new drivers
-> since normally the devicetree uses '-' instead of '_', and maybe there are
-> other problems with it.
->
-> I need this binding for the chipidea driver. I suspect that the fsl-mph-dr
-> driver also really handles a chipidea core.
+On Tue, Jan 29, 2013 at 16:29:54, Linus Walleij wrote:
+> On Tue, Jan 29, 2013 at 8:38 AM, Vishwanathrao Badarkhe, Manish <manishv.b@ti.com> wrote:
+> 
+> > Currently, I2C driver gets probed before pinctrl driver.
+> > To achieve I2C pin muxing via pinctrl driver before I2C probe get 
+> > called, register pinctrl driver in arch_initcall.
+> > Also, add module_exit to unregister pinctrl driver.
+> >
+> > Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
+> 
+> So your I2C driver is not returning -EPROBE_DEFER if it cannot find its pins?
+Yes. In Davinci I2C driver, it's not implemented to return -EPROBE_DEFER if it 
+can't find its pins.
 
-As far as I know, it is a chipidea core. Adding Peter to Cc list, he can
-probably confirm.
+Please see below discussion for more details: 
+https://patchwork2.kernel.org/patch/2031321/
+ 
+> 
+> Hm, well I can live with this, if Tony ACKs it.
+> 
+> Yours,
+> Linus Walleij
+> 
 
-> Should we agree on this I would convert the fsl-mph-dr driver to use these
-> helpers.
->
-> Sascha
->
->  drivers/usb/core/Makefile |    1 +
->  drivers/usb/core/of.c     |   76 +++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/usb/of.h    |   22 +++++++++++++
->  include/linux/usb/phy.h   |    9 ++++++
->  4 files changed, 108 insertions(+)
->  create mode 100644 drivers/usb/core/of.c
->  create mode 100644 include/linux/usb/of.h
->
-> diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
-> index 26059b9..5378add 100644
-> --- a/drivers/usb/core/Makefile
-> +++ b/drivers/usb/core/Makefile
-> @@ -10,5 +10,6 @@ usbcore-y += devio.o notify.o generic.o quirks.o devices.o
->  
->  usbcore-$(CONFIG_PCI)		+= hcd-pci.o
->  usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
-> +usbcore-$(CONFIG_OF)		+= of.o
->  
->  obj-$(CONFIG_USB)		+= usbcore.o
-> diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
-> new file mode 100644
-> index 0000000..d000d9f
-> --- /dev/null
-> +++ b/drivers/usb/core/of.c
-> @@ -0,0 +1,76 @@
-> +/*
-> + * OF helpers for usb devices.
-> + *
-> + * This file is released under the GPLv2
-> + *
-> + * Initially copied out of drivers/of/of_net.c
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/of.h>
-> +#include <linux/usb/of.h>
-> +#include <linux/usb/phy.h>
-> +#include <linux/export.h>
-> +
-> +static const char *usbphy_modes[] = {
-> +	[USBPHY_INTERFACE_MODE_NA]	= "",
-> +	[USBPHY_INTERFACE_MODE_UTMI]	= "utmi",
-> +	[USBPHY_INTERFACE_MODE_UTMIW]	= "utmi_wide",
-> +	[USBPHY_INTERFACE_MODE_ULPI]	= "ulpi",
-> +	[USBPHY_INTERFACE_MODE_SERIAL]	= "serial",
-> +	[USBPHY_INTERFACE_MODE_HSIC]	= "hsic",
-> +};
-> +
-> +/**
-> + * of_get_usbphy_mode - Get phy mode for given device_node
-> + * @np:	Pointer to the given device_node
-> + *
-> + * The function gets phy interface string from property 'phy_type',
-> + * and returns the correspondig enum usb_phy_interface
-> + */
-> +enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np)
-> +{
-> +	const char *phy_type;
-> +	int err, i;
-> +
-> +	err = of_property_read_string(np, "phy_type", &phy_type);
-> +	if (err < 0)
-> +		return USBPHY_INTERFACE_MODE_NA;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(usbphy_modes); i++)
-> +		if (!strcasecmp(phy_type, usbphy_modes[i]))
-> +			return i;
-> +
-> +	return USBPHY_INTERFACE_MODE_NA;
-> +}
-> +EXPORT_SYMBOL_GPL(of_usb_get_phy_mode);
-> +
-> +static const char *usb_dr_modes[] = {
-> +	[USB_DR_MODE_UNKNOWN]		= "",
-> +	[USB_DR_MODE_HOST]		= "host",
-> +	[USB_DR_MODE_PERIPHERAL]	= "peripheral",
-> +	[USB_DR_MODE_OTG]		= "otg",
-> +};
-> +
-> +/**
-> + * of_usb_get_dr_mode - Get dual role mode for given device_node
-> + * @np:	Pointer to the given device_node
-> + *
-> + * The function gets phy interface string from property 'dr_mode',
-> + * and returns the correspondig enum usb_phy_dr_mode
-> + */
-> +enum usb_phy_dr_mode of_usb_get_dr_mode(struct device_node *np)
-> +{
-> +	const char *dr_mode;
-> +	int err, i;
-> +
-> +	err = of_property_read_string(np, "dr_mode", &dr_mode);
-> +	if (err < 0)
-> +		return USB_DR_MODE_UNKNOWN;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(usb_dr_modes); i++)
-> +		if (!strcasecmp(dr_mode, usb_dr_modes[i]))
-> +			return i;
-> +
-> +	return USB_DR_MODE_UNKNOWN;
-> +}
-> +EXPORT_SYMBOL_GPL(of_usb_get_dr_mode);
-> diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-> new file mode 100644
-> index 0000000..582ba96
-> --- /dev/null
-> +++ b/include/linux/usb/of.h
-> @@ -0,0 +1,22 @@
-> +/*
-> + * OF helpers for usb devices.
-> + *
-> + * This file is released under the GPLv2
-> + */
-> +
-> +#ifndef __LINUX_USB_OF_H
-> +#define __LINUX_USB_OF_H
-> +
-> +#include <linux/usb/phy.h>
-> +
-> +enum usb_phy_dr_mode {
-> +	USB_DR_MODE_UNKNOWN,
-> +	USB_DR_MODE_HOST,
-> +	USB_DR_MODE_PERIPHERAL,
-> +	USB_DR_MODE_OTG,
-> +};
-> +
-> +enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np);
-> +enum usb_phy_dr_mode of_usb_get_dr_mode(struct device_node *np);
-> +
-> +#endif /* __LINUX_USB_OF_H */
-> diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
-> index a29ae1e..c5154cf 100644
-> --- a/include/linux/usb/phy.h
-> +++ b/include/linux/usb/phy.h
-> @@ -12,6 +12,15 @@
->  #include <linux/notifier.h>
->  #include <linux/usb.h>
->  
-> +enum usb_phy_interface {
-> +	USBPHY_INTERFACE_MODE_NA,
-> +	USBPHY_INTERFACE_MODE_UTMI,
-> +	USBPHY_INTERFACE_MODE_UTMIW,
-> +	USBPHY_INTERFACE_MODE_ULPI,
-> +	USBPHY_INTERFACE_MODE_SERIAL,
-> +	USBPHY_INTERFACE_MODE_HSIC,
-> +};
-> +
->  enum usb_phy_events {
->  	USB_EVENT_NONE,         /* no events or cable disconnected */
->  	USB_EVENT_VBUS,         /* vbus valid event */
-> -- 
-> 1.7.10.4
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Regards, 
+Manish
