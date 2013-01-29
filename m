@@ -1,217 +1,62 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: [PATCH RFC v2] media: tvp514x: add OF support
-Date: Tue, 29 Jan 2013 18:37:11 +0530
-Message-ID: <1359464832-8875-1-git-send-email-prabhakar.lad@ti.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: LMML <linux-media@vger.kernel.org>
-Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/5] spi: pl022: use generic DMA slave configuration if
+	possible
+Date: Tue, 29 Jan 2013 13:13:03 +0000
+Message-ID: <201301291313.03511.arnd@arndb.de>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+	<1359410300-26113-3-git-send-email-arnd@arndb.de>
+	<1359445794.31148.34.camel@smile>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1359445794.31148.34.camel@smile>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lad, Prabhakar <prabhakar.lad@ti.com>
+On Tuesday 29 January 2013, Andy Shevchenko wrote:
 
-add OF support for the tvp514x driver.
+> > +static int pl022_dma_autoprobe(struct pl022 *pl022)
+> > +{
+> > +	struct device *dev = &pl022->adev->dev;
+> > +
+> > +	/* automatically configure DMA channels from platform, normally using DT */
+> > +	pl022->dma_rx_channel = dma_request_slave_channel(dev, "rx");
+> > +	if (!pl022->dma_rx_channel)
+> > +		goto err_no_rxchan;
+> > +
+> > +	pl022->dma_tx_channel = dma_request_slave_channel(dev, "tx");
+> > +	if (!pl022->dma_tx_channel)
+> > +		goto err_no_txchan;
+> > +
+> > +	pl022->dummypage = kmalloc(PAGE_SIZE, GFP_KERNEL);
+> 
+> Where this memory will be freed?
+> In dependence of the answer could you consider to use
+> devm_kmalloc or __get_free_page?
 
-Signed-off-by: Lad, Prabhakar <prabhakar.lad@ti.com>
-Cc: Hans Verkuil <hans.verkuil@cisco.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- Changes for v2:
-  1: Fixed review comment pointed by Heiko.
-  2: Fixed review comment pointed by Laurent.
+There is another function like this called pl022_dma_probe()
+that has the same allocation, and it gets freed in the same place.
 
- This patch is on top of following patches:
-  1: https://patchwork.kernel.org/patch/1930941/
-  2: http://patchwork.linuxtv.org/patch/16193/
-  3: https://patchwork.kernel.org/patch/1944901
+It's probably worth changing this into something different, but
+I felt that it didn't belong into this patch. I was also not
+sure if the best option would be dmam_alloc_coherent, dev_kzalloc,
+or __get_free_page.
 
- .../devicetree/bindings/media/i2c/tvp514x.txt      |   38 +++++++++++
- drivers/media/i2c/tvp514x.c                        |   70 ++++++++++++++++++--
- 2 files changed, 103 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+	Arnd
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-new file mode 100644
-index 0000000..55d3ffd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
-@@ -0,0 +1,38 @@
-+* Texas Instruments TVP514x video decoder
-+
-+The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
-+digital video decoder that digitizes and decodes all popular baseband analog
-+video formats into digital video component. The tvp514x decoder supports analog-
-+to-digital (A/D) conversion of component RGB and YPbPr signals as well as A/D
-+conversion and decoding of NTSC, PAL and SECAM composite and S-video into
-+component YCbCr.
-+
-+Required Properties :
-+- compatible: Must be "ti,tvp514x-decoder"
-+- hsync-active: HSYNC Polarity configuration for current interface.
-+- vsync-active: VSYNC Polarity configuration for current interface.
-+- data-active: Clock polarity of the current interface.
-+
-+Example:
-+
-+i2c0@1c22000 {
-+	...
-+	...
-+
-+	tvp514x@5c {
-+		compatible = "ti,tvp514x-decoder";
-+		reg = <0x5c>;
-+
-+		port {
-+			tvp514x_1: endpoint {
-+				/* Active high (Defaults to 0) */
-+				hsync-active = <1>;
-+				/* Active high (Defaults to 0) */
-+				hsync-active = <1>;
-+				/* Active low (Defaults to 0) */
-+				data-active = <0>;
-+			};
-+		};
-+	};
-+	...
-+};
-diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
-index a4f0a70..24ce759 100644
---- a/drivers/media/i2c/tvp514x.c
-+++ b/drivers/media/i2c/tvp514x.c
-@@ -12,6 +12,7 @@
-  *     Hardik Shah <hardik.shah@ti.com>
-  *     Manjunath Hadli <mrh@ti.com>
-  *     Karicheri Muralidharan <m-karicheri2@ti.com>
-+ *     Prabhakar Lad <prabhakar.lad@ti.com>
-  *
-  * This package is free software; you can redistribute it and/or modify
-  * it under the terms of the GNU General Public License version 2 as
-@@ -33,7 +34,9 @@
- #include <linux/delay.h>
- #include <linux/videodev2.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
- 
-+#include <media/v4l2-of.h>
- #include <media/v4l2-async.h>
- #include <media/v4l2-device.h>
- #include <media/v4l2-common.h>
-@@ -930,6 +933,58 @@ static struct tvp514x_decoder tvp514x_dev = {
- 
- };
- 
-+#if defined(CONFIG_OF)
-+static const struct of_device_id tvp514x_of_match[] = {
-+	{.compatible = "ti,tvp514x-decoder", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tvp514x_of_match);
-+
-+static struct tvp514x_platform_data
-+	*tvp514x_get_pdata(struct i2c_client *client)
-+{
-+	if (!client->dev.platform_data && client->dev.of_node) {
-+		struct tvp514x_platform_data *pdata;
-+		struct v4l2_of_endpoint bus_cfg;
-+		struct device_node *endpoint;
-+
-+		pdata = devm_kzalloc(&client->dev,
-+				sizeof(struct tvp514x_platform_data),
-+				GFP_KERNEL);
-+		client->dev.platform_data = pdata;
-+		if (!pdata)
-+			return NULL;
-+
-+		endpoint = of_get_child_by_name(client->dev.of_node, "port");
-+		if (endpoint)
-+			endpoint = of_get_child_by_name(endpoint, "endpoint");
-+
-+		if (!endpoint) {
-+			v4l2_info(client, "Using default data!!\n");
-+		} else {
-+			v4l2_of_parse_parallel_bus(endpoint, &bus_cfg);
-+
-+			if (bus_cfg.mbus_flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
-+				pdata->hs_polarity = 1;
-+			if (bus_cfg.mbus_flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
-+				pdata->vs_polarity = 1;
-+			if (bus_cfg.mbus_flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
-+				pdata->clk_polarity = 1;
-+		}
-+	}
-+
-+	return client->dev.platform_data;
-+}
-+#else
-+#define tvp514x_of_match NULL
-+
-+static struct tvp514x_platform_data
-+	*tvp514x_get_pdata(struct i2c_client *client)
-+{
-+	return client->dev.platform_data;
-+}
-+#endif
-+
- /**
-  * tvp514x_probe() - decoder driver i2c probe handler
-  * @client: i2c driver client device structure
-@@ -941,6 +996,7 @@ static struct tvp514x_decoder tvp514x_dev = {
- static int
- tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
- {
-+	struct tvp514x_platform_data *pdata;
- 	struct tvp514x_decoder *decoder;
- 	struct v4l2_subdev *sd;
- 	int ret;
-@@ -949,22 +1005,25 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
- 		return -EIO;
- 
-+	pdata = tvp514x_get_pdata(client);
-+	if (!pdata) {
-+		v4l2_err(client, "No platform data!!\n");
-+		return -EPROBE_DEFER;
-+	}
-+
- 	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
- 	if (!decoder)
- 		return -ENOMEM;
- 
- 	/* Initialize the tvp514x_decoder with default configuration */
- 	*decoder = tvp514x_dev;
--	if (!client->dev.platform_data) {
--		v4l2_err(client, "No platform data!!\n");
--		return -EPROBE_DEFER;
--	}
-+
- 	/* Copy default register configuration */
- 	memcpy(decoder->tvp514x_regs, tvp514x_reg_list_default,
- 			sizeof(tvp514x_reg_list_default));
- 
- 	/* Copy board specific information here */
--	decoder->pdata = client->dev.platform_data;
-+	decoder->pdata = pdata;
- 
- 	/**
- 	 * Fetch platform specific data, and configure the
-@@ -1096,6 +1155,7 @@ MODULE_DEVICE_TABLE(i2c, tvp514x_id);
- 
- static struct i2c_driver tvp514x_driver = {
- 	.driver = {
-+		.of_match_table = tvp514x_of_match,
- 		.owner = THIS_MODULE,
- 		.name = TVP514X_MODULE_NAME,
- 	},
--- 
-1.7.4.1
-
+------------------------------------------------------------------------------
+Master Visual Studio, SharePoint, SQL, ASP.NET, C# 2012, HTML5, CSS,
+MVC, Windows 8 Apps, JavaScript and much more. Keep your skills current
+with LearnDevNow - 3,200 step-by-step video tutorials by Microsoft
+MVPs and experts. ON SALE this month only -- learn more at:
+http://p.sf.net/sfu/learnnow-d2d
