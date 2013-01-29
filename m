@@ -1,59 +1,35 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH 1/4] DMA: PL330: Add xlate function
-Date: Tue, 29 Jan 2013 14:33:29 +0530
-Message-ID: <CAAgF-BcxqNyf8VQcndJbRnQYEcZyRayTYq-hqkB73Jd+FVTaYg@mail.gmail.com>
-References: <1358508824-20352-1-git-send-email-padma.v@samsung.com>
-	<1358508824-20352-2-git-send-email-padma.v@samsung.com>
-	<201301281458.15219.arnd@arndb.de>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH V2 0/4] mfd/regulator: tps65090: add DT support and suspend/resume cleanups
+Date: Tue, 29 Jan 2013 14:35:14 +0530
+Message-ID: <1359450318-24912-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <201301281458.15219.arnd@arndb.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, jassisinghbrar@gmail.com, kgene.kim@samsung.com, swarren@nvidia.com, boojin.kim@samsung.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, vinod.koul@intel.com
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: sameo@linux.intel.com
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, broonie@opensource.wolfsonmicro.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The patch series add DT support on TPS65090 device.
 
-On Mon, Jan 28, 2013 at 8:28 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 18 January 2013, Padmavathi Venna wrote:
->> +struct dma_chan *of_dma_pl330_xlate(struct of_phandle_args *dma_spec,
->> +                                               struct of_dma *ofdma)
->> +{
->> +       int count = dma_spec->args_count;
->> +       struct of_dma_filter_info *info = ofdma->of_dma_data;
->> +
->> +       if (!info || !info->filter_fn)
->> +               return NULL;
->> +
->> +       if (count != 1)
->> +               return NULL;
->> +
->> +       return dma_request_channel(info->dma_cap, info->filter_fn, dma_spec);
->> +}
->> +EXPORT_SYMBOL_GPL(of_dma_pl330_xlate);
->
-> It seems a little sad that we still have to use dma_request_channel()
-> to implement this, when that function will go off searching all channels
-> and pass them tino the filter, which then has to look for the device node
-> and match it with each channel. We already know the controller and should
-> just be able to get a channel for it, although I don't exactly know how
-> that is done.
->
-> Further, your function is almost identical to the of_dma_simple_xlate
-> function. Can't you use that one instead?
+Also remove the suspend/resume implementation as it duplicates with
+irq_suspend/irq_resume().
 
-of_dma_simple_xlate is just passing the dma channel number to the
-filter function. But I also need
-to compare against device node as my requested channel can belong to
-any of the available dma controller
-on SoC. So I implemented a xlate which passes the whole dma_spec.
+Changes from V1:
+- Remove non-required code from the change for checking the match.
+- Remove pdata allocation on mfd driver.
+- renames some of the property as suggested by Stephen.
+- Rebased the changes on 20130128.
 
-Thanks for reviewing the patches.
+Laxman Dewangan (4):
+  mfd: tps65090: add DT support for tps65090
+  regulator: tps65090: add DT support
+  mfd: tps65090: Pass irq domain when adding mfd sub devices
+  mfd: tps65090: remove suspend/resume callbacks
 
-Regards
-Padma
+ .../devicetree/bindings/regulator/tps65090.txt     |  122 ++++++++++++++++++++
+ drivers/mfd/tps65090.c                             |   47 +++-----
+ drivers/regulator/tps65090-regulator.c             |  106 ++++++++++++++++-
+ 3 files changed, 243 insertions(+), 32 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/regulator/tps65090.txt
 
->
->         Arnd
