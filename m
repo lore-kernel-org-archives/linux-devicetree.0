@@ -1,83 +1,37 @@
-From: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH V2 4/4] mfd: tps65090: remove suspend/resume callbacks
-Date: Tue, 29 Jan 2013 14:35:18 +0530
-Message-ID: <1359450318-24912-5-git-send-email-ldewangan@nvidia.com>
-References: <1359450318-24912-1-git-send-email-ldewangan@nvidia.com>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V6 03/10] ARM: SAMSUNG: Make dma request compatible to
+ generic dma bindings.
+Date: Tue, 29 Jan 2013 15:00:25 +0530
+Message-ID: <CAAgF-BfUfvhgSwQwx9-YyFi_KYZnmR97n7a734JUh4X9WaV1Gg@mail.gmail.com>
+References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
+	<1358509629-20471-4-git-send-email-padma.v@samsung.com>
+	<20130129061958.GF6878@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359450318-24912-1-git-send-email-ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130129061958.GF6878@opensource.wolfsonmicro.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, tiwai@suse.de, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-The tps65090 mfd driver implement the suspend/resume callbacks
-which just disable and enable irqs in suspend/resume respectively.
+On Tue, Jan 29, 2013 at 11:50 AM, Mark Brown
+<broonie@opensource.wolfsonmicro.com> wrote:
+> On Fri, Jan 18, 2013 at 05:17:02PM +0530, Padmavathi Venna wrote:
+>> This patch make the dma dev request operation compatible for both
+>> DT and non-DT cases. It takes the all the arguments required for
+>> dma_request_slave_channel and dma_request_channel. If the driver
+>> is initiated via DT or non-DT the corresponding call will be made.
+>
+> OK, so this is where the SPI change came from - the API has been changed
+> incompatibly and SPI needs updating.  For bisection this API update
+> ought to be done in a single commit, otherwise there will be steps in
+> the bisection where nothing will work.
+>
+> Anyway, I'll go ahead and apply this, the SPI and the ASoC ones but this
+> is something to bear in mind for the future.
 
-This operation is already done in irq suspend and irq_resume and
-hence it is not require to implement the same in the driver.
+OK. Thanks for applying the patch.
 
-Remove this non-require code.
-
-Signed-off-by: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Changes from V1: 
-- No change.
-
- drivers/mfd/tps65090.c |   23 -----------------------
- 1 files changed, 0 insertions(+), 23 deletions(-)
-
-diff --git a/drivers/mfd/tps65090.c b/drivers/mfd/tps65090.c
-index 2ad0a15..98edb5b 100644
---- a/drivers/mfd/tps65090.c
-+++ b/drivers/mfd/tps65090.c
-@@ -230,28 +230,6 @@ static int tps65090_i2c_remove(struct i2c_client *client)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM_SLEEP
--static int tps65090_suspend(struct device *dev)
--{
--	struct i2c_client *client = to_i2c_client(dev);
--	if (client->irq)
--		disable_irq(client->irq);
--	return 0;
--}
--
--static int tps65090_resume(struct device *dev)
--{
--	struct i2c_client *client = to_i2c_client(dev);
--	if (client->irq)
--		enable_irq(client->irq);
--	return 0;
--}
--#endif
--
--static const struct dev_pm_ops tps65090_pm_ops = {
--	SET_SYSTEM_SLEEP_PM_OPS(tps65090_suspend, tps65090_resume)
--};
--
- static const struct i2c_device_id tps65090_id_table[] = {
- 	{ "tps65090", 0 },
- 	{ },
-@@ -263,7 +241,6 @@ static struct i2c_driver tps65090_driver = {
- 		.name	= "tps65090",
- 		.owner	= THIS_MODULE,
- 		.of_match_table = of_match_ptr(tps65090_of_match),
--		.pm	= &tps65090_pm_ops,
- 	},
- 	.probe		= tps65090_i2c_probe,
- 	.remove		= tps65090_i2c_remove,
--- 
-1.7.1.1
+Regards
+Padma
