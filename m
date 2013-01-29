@@ -1,15 +1,16 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
-Date: Tue, 29 Jan 2013 10:35:30 +0000
-Message-ID: <201301291035.30265.arnd@arndb.de>
+Date: Tue, 29 Jan 2013 16:19:14 +0530
+Message-ID: <CAKohpo=rD9=dEaPkKYcj55K4_ebdnU7qjv2TZBUwqHAB+Kk+aw@mail.gmail.com>
 References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
  <1359410300-26113-2-git-send-email-arnd@arndb.de>
  <CAKohpomO6tYNYLdMOaJYgqGecXj5KMQprdb=gExi+QuGrtLTzw@mail.gmail.com>
+ <201301291035.30265.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKohpomO6tYNYLdMOaJYgqGecXj5KMQprdb=gExi+QuGrtLTzw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <201301291035.30265.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,120 +21,63 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 January 2013, Viresh Kumar wrote:
-> > diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
-> > index 5bb3dfb..212d387 100644
-> > --- a/Documentation/devicetree/bindings/dma/snps-dma.txt
-> > +++ b/Documentation/devicetree/bindings/dma/snps-dma.txt
-> > @@ -3,59 +3,62 @@
-> >  Required properties:
-> >  - compatible: "snps,dma-spear1340"
-> >  - reg: Address range of the DMAC registers
-> > -- interrupt-parent: Should be the phandle for the interrupt controller
-> > -  that services interrupts for this device
-> >  - interrupt: Should contain the DMAC interrupt number
-> > -- nr_channels: Number of channels supported by hardware
-> > -- is_private: The device channels should be marked as private and not for by the
-> > -  general purpose DMA channel allocator. False if not passed.
-> > +- dma-channels: Number of channels supported by hardware
-> > +- dma-requests: Number of DMA request lines supported
-> > +- dma-masters: Number of AHB masters supported by the controller
-> > +- #dma-cells: must be <3>
-> 
-> Shouldn't this be 4? Would be better to mention what fields are these,
-> right here. I have seen them below though.
+On 29 January 2013 16:05, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Tuesday 29 January 2013, Viresh Kumar wrote:
 
-Correct. I changed these a couple of times while trying to understand
-what the fields are, and I missed this instance. I'm still not sure
-whether we actually need all four fields, or what the simplest format
-for them would be. This just mirrors what you had in your binding.
+>> Shouldn't this be 4? Would be better to mention what fields are these,
+>> right here. I have seen them below though.
+>
+> Correct. I changed these a couple of times while trying to understand
+> what the fields are, and I missed this instance. I'm still not sure
+> whether we actually need all four fields, or what the simplest format
+> for them would be. This just mirrors what you had in your binding.
 
-> > -bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
-> > +/* forward declaration used in filter */
-> > +static struct platform_driver dw_driver;
-> 
-> extern? This is not a declaration but definition.
+You can add request_line number and leave first two fields, cfghi and lo.
 
-No. You can have multiple declarations for a static symbol like this,
-but only one of them with an initilizer. I usually recommend against
-doing this myself, because it's confusing and somewhat bad style, but
-it is correct C.
+>> > +       /* FIXME: memory leak! could we put this into dw_dma_chan? */
+>> > +       sd = devm_kzalloc(dw->dma.dev, sizeof (*sd), GFP_KERNEL);
+>>
+>> Yes.
+>
+> Yes it can be in dw_dma_chan or yes it is a memory leak?
 
-> > -       /*
-> > -        * dmaengine framework calls this routine for all channels of all dma
-> > -        * controller, until true is returned. If 'param' bus_id is not
-> > -        * registered with a dma controller (dw), then there is no need of
-> > -        * running below function for all channels of dw.
-> > -        *
-> > -        * This block of code does this by saving the parameters of last
-> > -        * failure. If dw and param are same, i.e. trying on same dw with
-> > -        * different channel, return false.
-> > -        */
-> > -       if ((last_dw == dw) && (last_bus_id == param))
-> > +       /* both the driver and the device must match */
-> > +        if (chan->device->dev->driver != &dw_driver.driver)
-> > +                return false;
-> 
-> Can this ever happen? Isn't it the case that this routine would be called
-> only for dw_dmac?
+Yes it can be in dw_dma_chan :)
 
-I think not. AFAIK the filter function will be called for each channel
-on each DMA engine until one of them matches.
+>> > +       if (dma_spec->args_count != 4)
+>>
+>> args_count contains count of all params leaving the phandle?
+>
+> That was my interpretation from reading the code, but I have not tried it.
 
-> > -       while (++i < dw->sd_count) {
-> > -               if (!strcmp(dw->sd[i].bus_id, param)) {
-> > -                       chan->private = &dw->sd[i];
-> > -                       last_dw = NULL;
-> > -                       last_bus_id = NULL;
-> > +       /* FIXME: memory leak! could we put this into dw_dma_chan? */
-> > +       sd = devm_kzalloc(dw->dma.dev, sizeof (*sd), GFP_KERNEL);
-> 
-> Yes.
+Okay, it was just a question from my side :)
 
-Yes it can be in dw_dma_chan or yes it is a memory leak?
+>> > +       /* FIXME: This binding is rather clumsy. Can't we use the
+>> > +          request line numbers here instead? */
+>>
+>> yes.
+>
+> Ok, Very good. What is the encoding of the registers then?
 
-> > +static struct dma_chan *dw_dma_xlate(struct of_phandle_args *dma_spec,
-> > +                                        struct of_dma *ofdma)
-> > +{
-> > +       struct dw_dma *dw = ofdma->of_dma_data;
-> > +       struct dw_dma_filter_args fargs = {
-> > +               .dw = dw,
-> > +       };
-> > +       dma_cap_mask_t cap;
-> > +
-> > +       if (dma_spec->args_count != 4)
-> 
-> args_count contains count of all params leaving the phandle?
+You can still keep fargs as is and just fill them as:
 
-That was my interpretation from reading the code, but I have not tried it.
+       fargs.cfg_lo = 0;
 
-> > +       /* FIXME: This binding is rather clumsy. Can't we use the
-> > +          request line numbers here instead? */
-> 
-> yes.
+if (DMA_TO_DEV)
+       // dest is periph
+       fargs.cfg_hi = be32_to_cpup(dma_spec->args+0) << 11;
+else if (DEV_TO_DMA)
+       // src is periph
+       fargs.cfg_hi = be32_to_cpup(dma_spec->args+0) << 7;
 
-Ok, Very good. What is the encoding of the registers then?
+The field size is 4 bits.
 
-> > +       fargs.cfg_lo = be32_to_cpup(dma_spec->args+0);
-> > +       fargs.cfg_hi = be32_to_cpup(dma_spec->args+1);
-> > +       fargs.src = be32_to_cpup(dma_spec->args+2);
-> > +       fargs.dst = be32_to_cpup(dma_spec->args+3);
-> > +
-> > +       dma_cap_zero(cap);
-> > +       dma_cap_set(DMA_SLAVE, cap);
-> > +       /* FIXME: there should be a simpler way to do this */
-> > +       return dma_request_channel(cap, dw_dma_generic_filter, &dma_spec->args[0]);
-> 
-> don't you need to send &fargs as the last argument?
+> Thanks a lot for the input. When I fix the above, are actually able
+> to test the changes, or have you lost access to the hardware when
+> leaving ST?
 
-Right, my mistake.
-
-Thanks a lot for the input. When I fix the above, are actually able
-to test the changes, or have you lost access to the hardware when
-leaving ST?
-
-	Arnd
+I don't have any sort of access for testing these :(
+But, Vipul might try these at his end.
