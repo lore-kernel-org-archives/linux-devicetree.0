@@ -1,74 +1,79 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
-Date: Tue, 29 Jan 2013 13:31:40 +0000
-Message-ID: <20130129133140.GA24193@arm.com>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
- <20130115154038.GA11241@arm.com>
- <20130115211441.GA13139@avionic-0098.adnet.avionic-design.de>
- <201301161400.26587.arnd@arndb.de>
- <20130116161716.GA10630@arm.com>
- <20130116183101.GA28660@avionic-0098.adnet.avionic-design.de>
- <20130117154236.GA25943@arm.com>
- <20130117160501.GC2186@avionic-0098.adnet.avionic-design.de>
- <20130117162218.GA29016@arm.com>
- <20130122192901.GE30647@obsidianresearch.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
+Date: Tue, 29 Jan 2013 13:31:48 +0000
+Message-ID: <201301291331.48427.arnd@arndb.de>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <201301291035.30265.arnd@arndb.de>
+ <CAKohpo=rD9=dEaPkKYcj55K4_ebdnU7qjv2TZBUwqHAB+Kk+aw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130122192901.GE30647@obsidianresearch.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAKohpo=rD9=dEaPkKYcj55K4_ebdnU7qjv2TZBUwqHAB+Kk+aw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2013 at 07:29:01PM +0000, Jason Gunthorpe wrote:
-> On Thu, Jan 17, 2013 at 04:22:18PM +0000, Andrew Murray wrote:
+On Tuesday 29 January 2013, Viresh Kumar wrote:
+> You can still keep fargs as is and just fill them as:
 > 
-> > > In either of those cases, does it make sense to use the MSI support
-> > > outside the scope of the PCI infrastructure? That is, would devices
-> > > other than PCI devices be able to generate an MSI?
-> > 
-> > I've come around to your way of thinking. Your approach sounds good for
-> > registration of MSI ops - let the RC host driver do it (it probably has its
-> > own), or use a helper for following a phandle to get ops that are not part
-> > of the driver. MSIs won't be used outside of PCI devices.
+>        fargs.cfg_lo = 0;
 > 
-> Here is a bit of additional info on some MSI stuff..
+> if (DMA_TO_DEV)
+>        // dest is periph
+>        fargs.cfg_hi = be32_to_cpup(dma_spec->args+0) << 11;
+> else if (DEV_TO_DMA)
+>        // src is periph
+>        fargs.cfg_hi = be32_to_cpup(dma_spec->args+0) << 7;
 > 
-> This can be pretty complex. For instance on hyper transport systems
-> the PCI to HT bridge has an MSI controller that maps between PCI and
-> HT MSI formats, that mapping is configurable, so technically each
-> brige could be considered a MSI controller. Typically the mapping
-> controllers are all setup the same so there is not much problem with
-> this. However *native* HT devices can (which are super rare) can use a
-> different MSI format than PCI devices. From a linux perspective HT is
-> just a variant of PCI.
->  
-> On x86 the MSI is delivered to the CPU APIC complex which converts it
-> into a vectored interrupt - part of the value of MSI is that the MSI
-> data can vector the interrupt to a specific CPU, or group of CPUs or
-> whatever.
-> 
-> Presumably SMP ARMs will evolve similar MSI based interrupt vectoring
-> capabilities, and presumably on-chip, non-PCI peripherals will evolve
-> options to use MSI as well (ie multi-queue ethernet). So it might be
-> worth giving some thought to how things could migrate in that
-> direction someday.
-> 
-> I have a bit hacky MSI driver for Kirkwood, this work you have to
-> generalize the interface could let me actually upstream it :) The MSI
-> is built using the Host2CPU doorbell registers, so it is entirely
-> unrelated to the PCI-E RC driver.
-> 
-> However, my use of the MSI driver on kirkwood is to assign MSIs to a
-> PCI-E device via non-standard registers, more like an on chip
-> peripheral. This is because the Host2CPU doorbell doesn't fit 100%
-> perfectly with the standard PCI MSI stuff, and the hardware has funny
-> needs.. So an 'allocate a MSI interrupt' API would be snazzy too :)
+> The field size is 4 bits.
 
-Thanks for this. I believe Thierry may be working on improving the MSI
-API - so perhaps we can see where that takes us.
+Ah, good. So I guess the "dma-requests" property should actually
+be "16" then.
 
-Andrew Murray
+Does this mean that an implicit zero request line means memory?
+
+Could we have device-to-device DMAs with this controller, and if
+we can, should we have both 'src' and 'dst' fields? Are the
+two number ranges sharing the same address space, i.e. is
+request '7' as the destination guaranteed to be the same device
+as request '7' in the source?
+
+If we need two lines, we could interleave them with the bus
+master numbers:
+
+dmas = <&dwdma0 // controller
+	7   // source request 7
+	1   // source master 1
+	0   // dest   request 0
+	0>, // dest   master 1
+       <&dwdma0
+	0   // source request 0
+	0   // source master 0
+	8   // dest   request 8
+	1>; // dest   master 1
+
+In theory, we could use bit-stuffing to put them all into
+a single 32 bit word I guess, but generally people don't
+seem to like that for new bindings.
+
+> > Thanks a lot for the input. When I fix the above, are actually able
+> > to test the changes, or have you lost access to the hardware when
+> > leaving ST?
+> 
+> I don't have any sort of access for testing these :(
+> But, Vipul might try these at his end.
+
+Ok, I see.
+
+	Arnd
