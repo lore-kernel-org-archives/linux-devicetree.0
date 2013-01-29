@@ -1,32 +1,53 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V2 1/6] pinctrl: pinctrl-single: use arch_initcall and module_exit
-Date: Tue, 29 Jan 2013 11:59:54 +0100
-Message-ID: <CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com>
-References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
-	<1359445134-13323-2-git-send-email-manishv.b@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V2 2/4] regulator: tps65090: add DT support
+Date: Tue, 29 Jan 2013 19:09:36 +0800
+Message-ID: <20130129110933.GE32597@opensource.wolfsonmicro.com>
+References: <1359450318-24912-1-git-send-email-ldewangan@nvidia.com>
+ <1359450318-24912-3-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359445134-13323-2-git-send-email-manishv.b@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, anilkumar@ti.com, tony@atomide.com, hs@denx.de, broonie@opensource.wolfsonmicro.com, sameo@linux.intel.com, khilman@deeprootsystems.com, nsekhar@ti.com, linux@arm.linux.org.uk, rob@landley.net, rob.herring@calxeda.com, grant.likely@secretlab.ca
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="PMULwz+zIGJzpDN9"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1359450318-24912-3-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: sameo@linux.intel.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2013 at 8:38 AM, Vishwanathrao Badarkhe, Manish
-<manishv.b@ti.com> wrote:
 
-> Currently, I2C driver gets probed before pinctrl driver.
-> To achieve I2C pin muxing via pinctrl driver before I2C
-> probe get called, register pinctrl driver in arch_initcall.
-> Also, add module_exit to unregister pinctrl driver.
->
-> Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
+--PMULwz+zIGJzpDN9
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-So your I2C driver is not returning -EPROBE_DEFER
-if it cannot find its pins?
+On Tue, Jan 29, 2013 at 02:35:16PM +0530, Laxman Dewangan wrote:
+> Add DT support for TI PMIC tps65090 regulator driver. The DT of this
+> device have node regulator and all regulator's node of this device is
+> added under this node.
 
-Hm, well I can live with this, if Tony ACKs it.
+There doesn't seem to be any dependency on the rest of the series so I
+went ahead and applied this, thanks.
 
-Yours,
-Linus Walleij
+--PMULwz+zIGJzpDN9
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRB63mAAoJELSic+t+oim9X8wP/2SKw9HkjewSFmcUEdc1S7Xt
+7GvzfgR8MEOIAU6t7kHehtSRtQEzc6/KTssx4m6OTVLqjXkdXXRU2EbvmpKy4j8y
+FAzKVq78am7YXGka+Pcb9aM/0KX1I9aAJfSF12E0PygBfmJTCYPrzwqqOLgY+rk4
+AhVqgph9UfhV8KAXCQ4LAQ2wUdAyWcJ8iOIkIPQmpm/ZRXaJgSck16LIa+H8zDi7
+vCe0IBA/KqFULAzfPtdn4Ikb6NdZQIIb44eJ4bwZLgZQ+vz1iUmcZHEZOM9v/bZ7
+kgrxJQHacq8O3aXQk0ZA8Qmr7zvbN5G20bdAXebYah1gsWD/lpxj2/IEMKt00jVG
+JikYlcDpt4Sy3GVuCl7PgqnmVrhfMZEPhq6SjcO4XcNcIWFi2n8pR4oRkLWDtcMD
+6cc7qolW/J+mE6Jqml8vpqdxrd5OEUCyeV6dJgmUrlxdalFQPDFvbsrV6HIrUfXm
+PzhesUY4fuhMdqwjMszdl1GURcvPktN13EynTxM54wZXBIB65aoasMqquNoznDdq
+Mo5Dv6n6dNFw1c0EB7/dk7NUDs2rbLEvKCOStEeUWPvzm+xO+h/xOv19zsGRDJVy
+BP6KGfP2xEwhSVw748QNFMoTaVMNf6P/sOaBZL9u1KtZqnBXt6RZ6uCvDHVUxjzG
+jQHLhfHYVtNAu/7CVe84
+=e6N6
+-----END PGP SIGNATURE-----
+
+--PMULwz+zIGJzpDN9--
