@@ -1,62 +1,39 @@
 From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 2/5] spi: pl022: use generic DMA slave configuration if
-	possible
-Date: Tue, 29 Jan 2013 13:13:03 +0000
-Message-ID: <201301291313.03511.arnd@arndb.de>
+Subject: Re: [PATCH 5/5] ARM: SPEAr13xx: Pass generic DW DMAC platform data
+ from DT
+Date: Tue, 29 Jan 2013 13:21:30 +0000
+Message-ID: <201301291321.30726.arnd@arndb.de>
 References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
-	<1359410300-26113-3-git-send-email-arnd@arndb.de>
-	<1359445794.31148.34.camel@smile>
+ <1359410300-26113-6-git-send-email-arnd@arndb.de>
+ <CAKohpokrvYDaMgB-5HV+bJh01YNU4H5UrSUnzxa_NpvE1qQqiA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1359445794.31148.34.camel@smile>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAKohpokrvYDaMgB-5HV+bJh01YNU4H5UrSUnzxa_NpvE1qQqiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 January 2013, Andy Shevchenko wrote:
+On Tuesday 29 January 2013, Viresh Kumar wrote:
+> You forgot spear-devel for this series.
 
-> > +static int pl022_dma_autoprobe(struct pl022 *pl022)
-> > +{
-> > +	struct device *dev = &pl022->adev->dev;
-> > +
-> > +	/* automatically configure DMA channels from platform, normally using DT */
-> > +	pl022->dma_rx_channel = dma_request_slave_channel(dev, "rx");
-> > +	if (!pl022->dma_rx_channel)
-> > +		goto err_no_rxchan;
-> > +
-> > +	pl022->dma_tx_channel = dma_request_slave_channel(dev, "tx");
-> > +	if (!pl022->dma_tx_channel)
-> > +		goto err_no_txchan;
-> > +
-> > +	pl022->dummypage = kmalloc(PAGE_SIZE, GFP_KERNEL);
-> 
-> Where this memory will be freed?
-> In dependence of the answer could you consider to use
-> devm_kmalloc or __get_free_page?
+Ok, thanks for adding it.
 
-There is another function like this called pl022_dma_probe()
-that has the same allocation, and it gets freed in the same place.
+> > +                       dma-channels = <8>;
+> > +                       #dma-cells = <3>;
 
-It's probably worth changing this into something different, but
-I felt that it didn't belong into this patch. I was also not
-sure if the best option would be dmam_alloc_coherent, dev_kzalloc,
-or __get_free_page.
+Yep, my mistake again. It was correct in v1 of the patch and then
+I changed it so it had to be 4.
 
 	Arnd
-
-------------------------------------------------------------------------------
-Master Visual Studio, SharePoint, SQL, ASP.NET, C# 2012, HTML5, CSS,
-MVC, Windows 8 Apps, JavaScript and much more. Keep your skills current
-with LearnDevNow - 3,200 step-by-step video tutorials by Microsoft
-MVPs and experts. ON SALE this month only -- learn more at:
-http://p.sf.net/sfu/learnnow-d2d
