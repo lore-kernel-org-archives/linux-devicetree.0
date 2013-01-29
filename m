@@ -1,15 +1,15 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
-Date: Tue, 29 Jan 2013 11:10:28 -0500
-Message-ID: <CAOw6vbK_wJupFt0CG6Bw5y0=Wq4qAJ0HvMSATgyOt+fK+tqR6w@mail.gmail.com>
-References: <50EC5EDE.3030208@firmworks.com>
- <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
- <50ECA400.50007@wwwdotorg.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
+Date: Tue, 29 Jan 2013 16:21:59 +0000
+Message-ID: <201301291621.59425.arnd@arndb.de>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <201301291331.48427.arnd@arndb.de>
+ <CAKohpoms+WC_XJnH2b6uoycRKkF-yxZUg2J+8NrYJP8fnDNLtg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <50ECA400.50007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <CAKohpoms+WC_XJnH2b6uoycRKkF-yxZUg2J+8NrYJP8fnDNLtg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,23 +20,60 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, InKi Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Lucas Stach <dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 8, 2013 at 5:56 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 01/08/2013 01:16 PM, Sean Paul wrote:
->> Add a property to the hdmi node so we can specify the HDMI version in
->> the device tree instead of just defaulting to v1.4 with the existence of
->> the dt node.
->
-> I guess this seems OK to me if required, although I'd certainly like to
-> see someone familiar with the Exynos HW confirm whether this should be
-> driven purely by DT compatible value for the HDMI IP block instead though.
+On Tuesday 29 January 2013, Viresh Kumar wrote:
+> On 29 January 2013 19:01, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > Ah, good. So I guess the "dma-requests" property should actually
+> > be "16" then.
+> 
+> yes, even i was checking on that separately :)
 
-+inki
+Actually, I just discovered something odd in the
+arch/arm/mach-spear/spear13xx-dma.h file that gets removed
+in the last patch: there, we define request numbers up to
+32, e.g.
 
-Inki, does this seem reasonable to you?
+-       SPEAR1310_DMA_REQ_UART2_RX = 14,
+-       SPEAR1310_DMA_REQ_UART2_TX = 15,
+-       SPEAR1310_DMA_REQ_UART5_RX = 16,
+-       SPEAR1310_DMA_REQ_UART5_TX = 17,
 
+What is the meaning of this, if the maximum request number is 15?
+ 
+> > Could we have device-to-device DMAs with this controller, and if
+> > we can, should we have both 'src' and 'dst' fields? Are the
+> > two number ranges sharing the same address space, i.e. is
+> > request '7' as the destination guaranteed to be the same device
+> > as request '7' in the source?
+> 
+> Request lines are per master... So, for a master single request line
+> is independent of direction. Many DMA controllers have capability of
+> doing dev-to-dev transfers but DMAENGINE doesn't have any support
+> for it, even we don't have a usecase too :)
+> 
+> > If we need two lines, we could interleave them with the bus
+> > master numbers:
+> 
+> not required.
 
-Sean
+Ok. Would it be enough to have only one master and one request
+field in the DT dma descriptor then, and have the code figure
+whether to use it as source or destination, based on the
+configuration? Which one should come first? Since you have
+multiple masters per controller, and multiple requests per
+master, it sounds like the cleanest descriptor form would
+be 
+
+	<controller master request>;
+
+Or possibly
+
+	<controller master request direction>;
+
+if the direction needs to be known at the time the channel
+is requested.
+
+	Arnd
