@@ -1,91 +1,95 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH, RFC] usb: add devicetree helpers for determining dr_mode
- and phy_type
-Date: Tue, 29 Jan 2013 18:16:02 +0100
-Message-ID: <510803D2.4080603@pengutronix.de>
-References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de> <510802C3.7090803@wwwdotorg.org>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
+Date: Tue, 29 Jan 2013 17:45:46 +0000
+Message-ID: <20130129174546.GE23505@n2100.arm.linux.org.uk>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <201301291455.49347.arnd@arndb.de>
+ <20130129154409.GA23505@n2100.arm.linux.org.uk>
+ <201301291636.38773.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2CLSWHDDJTSSBDQKFDLWF"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <510802C3.7090803-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201301291636.38773.arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2CLSWHDDJTSSBDQKFDLWF
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jan 29, 2013 at 04:36:38PM +0000, Arnd Bergmann wrote:
+> If the pl080 driver already has code for the mux in it, then it should
+> handle both of_dma_controller instances in my example. It would
+> not change anything regarding the binding, which just describes the
+> way that the hardware is connected. I have not looked at the implementation
+> of the pl080 driver, but I'd assume we could get away with just having
+> two separate xlate() functions.
 
-On 01/29/2013 06:11 PM, Stephen Warren wrote:
-> On 01/29/2013 04:22 AM, Sascha Hauer wrote:
->> From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->>
->> This adds two little devicetree helper functions for determining the
->> dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
->> the devicetree.
->>
->> Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->> ---
->>
->> The properties and their values have been taken from the fsl-mph-dr dr=
-iver.
->> This binding is also documented (though currently not used) for the te=
-gra
->> ehci driver (Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci=
-=2Etxt).
->> This is a first attempt to parse these bindings at a common place so t=
-hat
->> others can make use of it.
->>
->> Basically I want to know whether this binding is recommended for new d=
-rivers
->> since normally the devicetree uses '-' instead of '_', and maybe there=
- are
->> other problems with it.
->=20
-> It's certainly typical to use - not _ for freshly defined properties.
-> However, since this property already exists and is in-use, I don't thin=
-k
-> there's any choice but to maintain its current definition.
->=20
-> The code looked fine to me.
+Well, how it all works in the PL08x driver at present is:
 
-The code for phy_type is lifted from the ethernet guys and adopted to
-the usb phy types.
+- the platform code passes into the PL08x driver a description of the
+  virtual channels, eg:
 
-"dr_mode" is, as Sascha pointed out, only used in
-drivers/usb/host/fsl-mph-dr-of.c
+        [1] = {
+                /* Muxed on channel 0-3 */
+                .bus_id = "aacirx",
+                .min_signal = 0,
+                .max_signal = 2,
+                .muxval = 0x01,
+                .periph_buses = PL08X_AHB1 | PL08X_AHB2,
+        },
 
-Marc
+- the virtual channels include:
+  - the minimum and maximum index of the DMA request signals into the
+    PL08x that can be used with this peripheral.
+  - the the register value for the external mux, if any.
+  - other PL08x specific data to do with this DMA peripheral
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+- when a virtual channel is requested by a DMA client, it claims just
+  the virtual channel.  No actual hardware resources are assigned,
+  and no mappings are setup.
 
+- when a transfer is prepared on a virtual channel, part of the
+  preparation is to locate the request signal to be used - and
+  platform code is requested to supply that from the description
+  associated with the channel (such as the above fragment.)
 
-------enig2CLSWHDDJTSSBDQKFDLWF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+- the versatile PL08x code looks at min_signal/max_signal, and walks
+  this space looking for an unassigned request signal.  If there is
+  an external mux associated with this request signal, the mux is
+  appropriately programmed.  If a request signal is currently assigned
+  the next request signal will be tried until there are no further
+  possibilities, when failure occurs.  In that case, the prepare
+  function also fails.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+- the PL08x driver then knows which request signal is associated with
+  the peripheral, and sets up the descriptors to be dependent on this
+  request signal.  This mapping must not change until the transfer
+  has completed.
 
-iEYEARECAAYFAlEIA9wACgkQjTAFq1RaXHP3FQCfexnz7mX1WNtwYWmfHHkqu8OK
-e/kAnjXXvNhlNit+MQjqGujErDOtqU6O
-=hxEw
------END PGP SIGNATURE-----
+- when the descriptor is completed - and freed, the muxing is released
+  and the DMA request signal becomes available for other users to make
+  use of.
 
-------enig2CLSWHDDJTSSBDQKFDLWF--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Practically, what this means is that:
+
+(a) we've ensured that all drivers using PL08x do _not_ expect that
+descriptors can always be prepared; they must continue to work correctly
+when the prepare function returns NULL.
+
+(b) several devices end up sharing the first three request signals
+and they're used on an opportunistic basis.  Theoretically, if you have
+one of these boards where AACI DMA works, you can be using one of these
+DMA requests for audio playback, another for record, and the remaining
+one can be used on an opportunistic basis between the second MMCI
+interface (should that also work - which I've proven is an impossiblity!)
+and the 3rd UART... or the USB if there was a driver for that device.
