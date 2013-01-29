@@ -1,94 +1,119 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: Re: [PATCH 2/2] ARM: davinci: da850: configure CS2(aemif) for norflash
-Date: Tue, 29 Jan 2013 09:02:07 +0100
-Message-ID: <510781FF.7030400@denx.de>
-References: <1359436796-25135-1-git-send-email-anilkumar.v@ti.com> <1359436796-25135-3-git-send-email-anilkumar.v@ti.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH v4 3/4] ARM: Exynos5250: Add clock information for dwc3-exynos
+Date: Tue, 29 Jan 2013 12:37:02 +0530
+Message-ID: <CAFp+6iEJAtizR1qZ6-To=LMRM99+TNQXhb1Wt=ojLpqGVOi8cw@mail.gmail.com>
+References: <1358257112-19595-1-git-send-email-gautam.vivek@samsung.com>
+	<1358257112-19595-4-git-send-email-gautam.vivek@samsung.com>
+	<3963234.Gb249i4a6U@flatron>
+	<CAFp+6iHd66_dvj_M5zOpJZ7sEy-pYa-CdWKUZBYc3Dfn3JHtfg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359436796-25135-3-git-send-email-anilkumar.v@ti.com>
+In-Reply-To: <CAFp+6iHd66_dvj_M5zOpJZ7sEy-pYa-CdWKUZBYc3Dfn3JHtfg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Kumar, Anil" <anilkumar.v@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, b-cousson@ti.com, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux@arm.linux.org.uk, nsekhar@ti.com, khilman@deeprootsystems.com, Wolfgang Denk <wd@denx.de>
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Vivek Gautam <gautam.vivek@samsung.com>, jg1.han@samsung.com, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Kumar,
+Hi Tomasz,
 
-On 29.01.2013 06:19, Kumar, Anil wrote:
-> Configure 16 bit data bus width for CS2(aemif) to use the norflash on
-> DA850.
-> 
-> Signed-off-by: Kumar, Anil <anilkumar.v@ti.com>
-> ---
-> :100644 100644 37c27af... 540e284... M	arch/arm/mach-davinci/da8xx-dt.c
->  arch/arm/mach-davinci/da8xx-dt.c |   17 +++++++++++++++++
->  1 files changed, 17 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-> index 37c27af..540e284 100644
-> --- a/arch/arm/mach-davinci/da8xx-dt.c
-> +++ b/arch/arm/mach-davinci/da8xx-dt.c
-> @@ -38,12 +38,29 @@ static void __init da8xx_init_irq(void)
->  }
->  
->  #ifdef CONFIG_ARCH_DAVINCI_DA850
-> +#define DA8XX_AEMIF_CE2CFG_OFFSET       0x10
-> +#define DA8XX_AEMIF_ASIZE_16BIT         0x1
 
-Hmm... I am not really happy with such defines, because different
-boards need maybe different settings, and this should be catched
-by the device tree ...  Couldn't we add this infos in the
-device tree? I tried such an approach here:
+On Wed, Jan 16, 2013 at 8:35 PM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
+> Hi Tomasz,
+>
+>
+> On Wed, Jan 16, 2013 at 1:19 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
+>> Hi Vivek,
+>>
+>> Don't you need also some clkdev lookup entry to make the clock available
+>> in the driver?
+>>
+>
+> This clock source we added with a motive of completion, however it's
+> not being used as of now.
+> As far as i could see the lookup structure contains clocks for devices
+> having multiple instances.
+> Do you feel that i should be adding an entry in clk_lookup structure ?
+> May be i am missing here something. Can you please elaborate on the
+> use-case of clk_lookup
+> entries.
+>
 
-First post and some discussion:
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2011-December/010030.html
+As indicated above "sclk_usbdrd30" is added with a motive of
+completion, however it's
+not being used as of now.
+And "usbdrd30" is the actual device clock used, where 'drd30' is just
+an indicative of
+'dual role device and usb 3.0'. So the clock name 'usbdrd30' is the
+usb 3.0 clock for drd.
 
-Nori suggested here
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2011-December/011330.html
-to move such an driver out of arch/arm and IIRC it was
-suggested to move it into the mfd framework. I currently
-not know, if there was such a sort of patches, to get this
-in the mfd subsystem, but I think, this CS settings should be
-done like the pinmux settings ...
+Am i missing something that you wanted to convey here ?
 
-My last posted version of this patch:
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-March/013036.html
+>>
+>> On Tuesday 15 of January 2013 19:08:31 Vivek Gautam wrote:
+>>> Adding necessary device clock to exynos5 needed for
+>>> the DWC3 controller.
+>>>
+>>> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+>>> ---
+>>>  arch/arm/mach-exynos/clock-exynos5.c |   24 ++++++++++++++++++++++++
+>>>  1 files changed, 24 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/arm/mach-exynos/clock-exynos5.c
+>>> b/arch/arm/mach-exynos/clock-exynos5.c index 0208c3a..13af020 100644
+>>> --- a/arch/arm/mach-exynos/clock-exynos5.c
+>>> +++ b/arch/arm/mach-exynos/clock-exynos5.c
+>>> @@ -757,6 +757,11 @@ static struct clk exynos5_init_clocks_off[] = {
+>>>               .enable         = exynos5_clk_ip_fsys_ctrl ,
+>>>               .ctrlbit        = (1 << 18),
+>>>       }, {
+>>> +             .name           = "usbdrd30",
+>>> +             .parent         = &exynos5_clk_aclk_200.clk,
+>>> +             .enable         = exynos5_clk_ip_fsys_ctrl,
+>>> +             .ctrlbit        = (1 << 19),
+>>> +     }, {
+>>>               .name           = "usbotg",
+>>>               .enable         = exynos5_clk_ip_fsys_ctrl,
+>>>               .ctrlbit        = (1 << 7),
+>>> @@ -1035,6 +1040,16 @@ static struct clksrc_sources exynos5_clkset_group
+>>> = { .nr_sources       = ARRAY_SIZE(exynos5_clkset_group_list),
+>>>  };
+>>>
+>>> +struct clk *exynos5_clkset_usbdrd30_list[] = {
+>>> +     [0] = &exynos5_clk_mout_mpll.clk,
+>>> +     [1] = &exynos5_clk_mout_cpll.clk,
+>>> +};
+>>> +
+>>> +struct clksrc_sources exynos5_clkset_usbdrd30 = {
+>>> +     .sources        = exynos5_clkset_usbdrd30_list,
+>>> +     .nr_sources     = ARRAY_SIZE(exynos5_clkset_usbdrd30_list),
+>>> +};
+>>> +
+>>>  /* Possible clock sources for aclk_266_gscl_sub Mux */
+>>>  static struct clk *clk_src_gscl_266_list[] = {
+>>>       [0] = &clk_ext_xtal_mux,
+>>> @@ -1329,6 +1344,15 @@ static struct clksrc_clk exynos5_clksrcs[] = {
+>>>                       .parent         = &exynos5_clk_mout_cpll.clk,
+>>>               },
+>>>               .reg_div = { .reg = EXYNOS5_CLKDIV_GEN, .shift = 4, .size = 3
+>> },
+>>> +     }, {
+>>> +             .clk    = {
+>>> +                     .name           = "sclk_usbdrd30",
+>>> +                     .enable         = exynos5_clksrc_mask_fsys_ctrl,
+>>> +                     .ctrlbit        = (1 << 28),
+>>> +             },
+>>> +             .sources = &exynos5_clkset_usbdrd30,
+>>> +             .reg_src = { .reg = EXYNOS5_CLKSRC_FSYS, .shift = 28, .size =
+>> 1 },
+>>> +             .reg_div = { .reg = EXYNOS5_CLKDIV_FSYS0, .shift = 24, .size =
+>> 4 },
+>>>       },
+>>>  };
+>
+>
 
-Maybe it is worth to discuss this again?
 
-> +
-> +static void __init da8xx_init_nor(void)
-> +{
-> +	void __iomem *aemif_addr;
-> +
-> +	aemif_addr = ioremap(DA8XX_AEMIF_CTL_BASE, SZ_32K);
-> +
-> +	/* Configure data bus width of CS2 to 16 bit */
-> +	writel(readl(aemif_addr + DA8XX_AEMIF_CE2CFG_OFFSET) |
-> +			DA8XX_AEMIF_ASIZE_16BIT,
-> +			aemif_addr + DA8XX_AEMIF_CE2CFG_OFFSET);
-
-I vote for avoiding such board specific code in a generic
-approach ...
-
-> +
-> +	iounmap(aemif_addr);
-> +}
->  
->  static void __init da850_init_machine(void)
->  {
->  	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
->  
->  	da8xx_uart_clk_enable();
-> +	da8xx_init_nor();
->  }
->  
->  static const char *da850_boards_compat[] __initdata = {
-> 
-
-bye,
-Heiko
 -- 
-DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Thanks & Regards
+Vivek
