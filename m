@@ -1,95 +1,50 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
-Date: Tue, 29 Jan 2013 17:45:46 +0000
-Message-ID: <20130129174546.GE23505@n2100.arm.linux.org.uk>
-References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <201301291455.49347.arnd@arndb.de>
- <20130129154409.GA23505@n2100.arm.linux.org.uk>
- <201301291636.38773.arnd@arndb.de>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH 4/5] net: mvmdio: allow Device Tree and platform device
+ to coexist
+Date: Tue, 29 Jan 2013 10:59:12 -0700
+Message-ID: <20130129175912.GE25646@obsidianresearch.com>
+References: <1359473048-26551-1-git-send-email-florian@openwrt.org>
+ <1359473048-26551-5-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201301291636.38773.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1359473048-26551-5-git-send-email-florian@openwrt.org>
+Sender: netdev-owner@vger.kernel.org
+To: Florian Fainelli <florian@openwrt.org>
+Cc: davem@davemloft.net, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, netdev@vger.kernel.org, Paul Mackerras <paulus@samba.org>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org, Lennert Buytenhek <buytenh@wantstofly.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2013 at 04:36:38PM +0000, Arnd Bergmann wrote:
-> If the pl080 driver already has code for the mux in it, then it should
-> handle both of_dma_controller instances in my example. It would
-> not change anything regarding the binding, which just describes the
-> way that the hardware is connected. I have not looked at the implementation
-> of the pl080 driver, but I'd assume we could get away with just having
-> two separate xlate() functions.
+On Tue, Jan 29, 2013 at 04:24:07PM +0100, Florian Fainelli wrote:
+  
+> -	dev->err_interrupt = irq_of_parse_and_map(pdev->dev.of_node, 0);
+> +	if (pdev->dev.of_node) {
+> +		dev->regs = of_iomap(pdev->dev.of_node, 0);
+> +		if (!dev->regs) {
+> +			dev_err(&pdev->dev, "No SMI register address given in DT\n");
+> +			ret = -ENODEV;
+> +			goto out_free;
+> +		}
+> +
+> +		dev->err_interrupt = irq_of_parse_and_map(pdev->dev.of_node, 0);
+> +	} else {
+> +		r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +
+> +		dev->regs = ioremap(r->start, resource_size(r));
+> +		if (!dev->regs) {
+> +			dev_err(&pdev->dev, "No SMI register address given\n");
+> +			ret = -ENODEV;
+> +			goto out_free;
+> +		}
+> +
+> +		dev->err_interrupt = platform_get_irq(pdev, 0);
+> +	}
 
-Well, how it all works in the PL08x driver at present is:
+Why do you have these different paths for OF and platform? AFAIK these
+days when a OF device is automatically converted into a platform
+device all the struct resources are created too, so you can't you just
+use platform_get_resource and devm_request_and_ioremap for both flows?
 
-- the platform code passes into the PL08x driver a description of the
-  virtual channels, eg:
+Ditto for the interrupt - platform_get_irq should work in both cases?
 
-        [1] = {
-                /* Muxed on channel 0-3 */
-                .bus_id = "aacirx",
-                .min_signal = 0,
-                .max_signal = 2,
-                .muxval = 0x01,
-                .periph_buses = PL08X_AHB1 | PL08X_AHB2,
-        },
-
-- the virtual channels include:
-  - the minimum and maximum index of the DMA request signals into the
-    PL08x that can be used with this peripheral.
-  - the the register value for the external mux, if any.
-  - other PL08x specific data to do with this DMA peripheral
-
-- when a virtual channel is requested by a DMA client, it claims just
-  the virtual channel.  No actual hardware resources are assigned,
-  and no mappings are setup.
-
-- when a transfer is prepared on a virtual channel, part of the
-  preparation is to locate the request signal to be used - and
-  platform code is requested to supply that from the description
-  associated with the channel (such as the above fragment.)
-
-- the versatile PL08x code looks at min_signal/max_signal, and walks
-  this space looking for an unassigned request signal.  If there is
-  an external mux associated with this request signal, the mux is
-  appropriately programmed.  If a request signal is currently assigned
-  the next request signal will be tried until there are no further
-  possibilities, when failure occurs.  In that case, the prepare
-  function also fails.
-
-- the PL08x driver then knows which request signal is associated with
-  the peripheral, and sets up the descriptors to be dependent on this
-  request signal.  This mapping must not change until the transfer
-  has completed.
-
-- when the descriptor is completed - and freed, the muxing is released
-  and the DMA request signal becomes available for other users to make
-  use of.
-
-Practically, what this means is that:
-
-(a) we've ensured that all drivers using PL08x do _not_ expect that
-descriptors can always be prepared; they must continue to work correctly
-when the prepare function returns NULL.
-
-(b) several devices end up sharing the first three request signals
-and they're used on an opportunistic basis.  Theoretically, if you have
-one of these boards where AACI DMA works, you can be using one of these
-DMA requests for audio playback, another for record, and the remaining
-one can be used on an opportunistic basis between the second MMCI
-interface (should that also work - which I've proven is an impossiblity!)
-and the 3rd UART... or the USB if there was a driver for that device.
+Jason
