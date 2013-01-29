@@ -1,52 +1,126 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V6 09/10] ASoC: Samsung: Update Kconfig for I2S,SPDIF and
- PCM audio
-Date: Tue, 29 Jan 2013 15:40:27 +0800
-Message-ID: <20130129074025.GB32597@opensource.wolfsonmicro.com>
-References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
- <1358509629-20471-10-git-send-email-padma.v@samsung.com>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 2/5] spi: pl022: use generic DMA slave configuration if
+ possible
+Date: Tue, 29 Jan 2013 09:49:54 +0200
+Message-ID: <1359445794.31148.34.camel@smile>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <1359410300-26113-1-git-send-email-arnd@arndb.de>
+ <1359410300-26113-3-git-send-email-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5I6of5zJg18YgZEa"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1358509629-20471-10-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359410300-26113-3-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 2013-01-28 at 21:58 +0000, Arnd Bergmann wrote: 
+> With the new OF DMA binding, it is possible to completely avoid the
+> need for platform_data for configuring a DMA channel. In cases where the
+> platform has already been converted, calling dma_request_slave_channel
+> should get all the necessary information from the device tree.
+> 
+> Like the patch that converts the dw_dma controller, this is completely
+> untested and is looking for someone to try it out.
+> 
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+> Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+> Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+> Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> ---
+>  .../devicetree/bindings/spi/spi_pl022.txt          | 36 ++++++++++++++++++
+>  drivers/spi/spi-pl022.c                            | 43 +++++++++++++++++++++-
+>  2 files changed, 77 insertions(+), 2 deletions(-)
+> 
 
---5I6of5zJg18YgZEa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> --- a/drivers/spi/spi-pl022.c
+> +++ b/drivers/spi/spi-pl022.c
+> @@ -1139,6 +1139,35 @@ err_no_rxchan:
+>  	return -ENODEV;
+>  }
+>  
+> +static int pl022_dma_autoprobe(struct pl022 *pl022)
+> +{
+> +	struct device *dev = &pl022->adev->dev;
+> +
+> +	/* automatically configure DMA channels from platform, normally using DT */
+> +	pl022->dma_rx_channel = dma_request_slave_channel(dev, "rx");
+> +	if (!pl022->dma_rx_channel)
+> +		goto err_no_rxchan;
+> +
+> +	pl022->dma_tx_channel = dma_request_slave_channel(dev, "tx");
+> +	if (!pl022->dma_tx_channel)
+> +		goto err_no_txchan;
+> +
+> +	pl022->dummypage = kmalloc(PAGE_SIZE, GFP_KERNEL);
 
-On Fri, Jan 18, 2013 at 05:17:08PM +0530, Padmavathi Venna wrote:
-> Update Kconfig file to enable I2S,PCM audio for wm8994 and spdif on all
-> samsung platforms.
+Where this memory will be freed?
+In dependence of the answer could you consider to use
+devm_kmalloc or __get_free_page?
 
-Applied, thanks.
+> +	if (!pl022->dummypage)
+> +		goto err_no_dummypage;
+> +
+> +	return 0;
+> +
+> +err_no_dummypage:
+> +	dma_release_channel(pl022->dma_tx_channel);
+> +	pl022->dma_tx_channel = NULL;
+> +err_no_txchan:
+> +	dma_release_channel(pl022->dma_rx_channel);
+> +	pl022->dma_rx_channel = NULL;
+> +err_no_rxchan:
+> +	return -ENODEV;
+> +}
+> +		
+>  static void terminate_dma(struct pl022 *pl022)
+>  {
+>  	struct dma_chan *rxchan = pl022->dma_rx_channel;
+> @@ -1167,6 +1196,11 @@ static inline int configure_dma(struct pl022 *pl022)
+>  	return -ENODEV;
+>  }
+>  
+> +static inline int pl022_dma_autoprobe(struct pl022 *pl022)
+> +{
+> +	return 0;
+> +}
+> +
+>  static inline int pl022_dma_probe(struct pl022 *pl022)
+>  {
+>  	return 0;
+> @@ -2226,8 +2260,13 @@ static int pl022_probe(struct amba_device *adev, const struct amba_id *id)
+>  		goto err_no_irq;
+>  	}
+>  
+> -	/* Get DMA channels */
+> -	if (platform_info->enable_dma) {
+> +	/* Get DMA channels, try autoconfiguration first */
+> +	status = pl022_dma_autoprobe(pl022);
+> +
+> +	/* If that failed, use channels from platform_info */
+> +	if (status == 0)
+> +		platform_info->enable_dma = 1;
+> +	else if (platform_info->enable_dma) {
+>  		status = pl022_dma_probe(pl022);
+>  		if (status != 0)
+>  			platform_info->enable_dma = 0;
 
---5I6of5zJg18YgZEa
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRB3zLAAoJELSic+t+oim9iAgP/iWQQmsX1NQIGtPVUqskyNbA
-rWSIX8IgNW39O6DqKIA/AInPFKdZZVv8Rs6DQv5/ZrjYxAtTM2K4U0p+zUqA4Xur
-FZbZhooCL7vHPitjEhUHgWqnVRMY76T7ansphOQ0tt1SOZsiID/FMrlRENvjsnjz
-ZRaI48RnSD0axBq4FNy+vAxgqcgQIzIUeqXdkVEQOCCuJs6sWsyj+LyYJe0hjaH6
-d2aYEdVOP3N4Zu9Yy8reRUoImdoJbwJRwdw7XmuxMTvtaQLLLkiPBrzI9vqegcgd
-WDu1FXR1CvPRxyx2sjaaxjUv+t97eJ9P24AiHu9u33sz6q3kfkTA598fXmxOUaTG
-oGIQG0fYES4wvsL6wJhAMnE6LEu3IAZKilfZytvW885/3BNTOYmVMtqRWtYmfjFn
-6zbxghOduzClSTKaZ30mI54VyjpgIqH+rAD5s/zHsmil0M9m/8K2zKf8qUCBdO9m
-PtKEDCl/TqZds2m65351SExQuA6nxNtxuH7qD1JW8L58yYxxpF90n9rR0Gv2g6FB
-UK/dMB//RMj2RoDH6bGr7aqUwkDrguVWAYfqD+hvnyj9XkmTHpBr9qQac8xNrvfk
-AVFGkGtdHs4GqI8MANtv59WWXnAJfDdBIy91FYNSLrqTJYmXsWIcqFOWrq+aNc/J
-2WAdQ4VLJRoGzj7rsLar
-=gaPS
------END PGP SIGNATURE-----
-
---5I6of5zJg18YgZEa--
+-- 
+Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Intel Finland Oy
