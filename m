@@ -1,60 +1,89 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH 2/4] ARM: dts: add support for mixer to exynos4
-Date: Tue, 29 Jan 2013 21:24:53 +0100
-Message-ID: <51083015.2030403@gmail.com>
-References: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com> <1359110384-28402-3-git-send-email-rahul.sharma@samsung.com> <5105965F.9050402@gmail.com> <CAPdUM4P_jf0w+B22p1hmso8uhmTXs=fLdF8WrzDWL8cPyLeTCw@mail.gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining dr_mode
+ and phy_type
+Date: Tue, 29 Jan 2013 21:30:50 +0100
+Message-ID: <20130129203050.GT1906@pengutronix.de>
+References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
+ <5107D253.5030400@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAPdUM4P_jf0w+B22p1hmso8uhmTXs=fLdF8WrzDWL8cPyLeTCw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <r.sh.open@gmail.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5107D253.5030400-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jan 29, 2013 at 07:14:51PM +0530, kishon wrote:
+> Hi,
+> 
+> On Tuesday 29 January 2013 04:52 PM, Sascha Hauer wrote:
+> >From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >
+> >This adds two little devicetree helper functions for determining the
+> >dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
+> >the devicetree.
+> >
+> >Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >---
+> >
+> >The properties and their values have been taken from the fsl-mph-dr driver.
+> >This binding is also documented (though currently not used) for the tegra
+> >ehci driver (Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt).
+> >This is a first attempt to parse these bindings at a common place so that
+> >others can make use of it.
+> >
+> >Basically I want to know whether this binding is recommended for new drivers
+> >since normally the devicetree uses '-' instead of '_', and maybe there are
+> >other problems with it.
+> >
+> >I need this binding for the chipidea driver. I suspect that the fsl-mph-dr
+> >driver also really handles a chipidea core.
+> >
+> >Should we agree on this I would convert the fsl-mph-dr driver to use these
+> >helpers.
+> >
+> >Sascha
+> >
+> >  drivers/usb/core/Makefile |    1 +
+> >  drivers/usb/core/of.c     |   76 +++++++++++++++++++++++++++++++++++++++++++++
+> 
+> This file should ideally go into drivers/usb/phy/.
 
-On 01/28/2013 07:44 AM, Rahul Sharma wrote:
->>> +
->>> +       mixer: mixer {
->>> +               compatible = "samsung,exynos4-mixer";
->>
->>
->> I'm afraid this compatible property it too generic. Is the video mixer IP
->> really identical an all the Exynos4 series SoCs ?
->>
->
-> It is same in Exynos4210, 4212 and 4412.
->
->>
->>> +               reg =<0x12c10000 0x10000>,
->>> +<0x12c00000 0x10000>;
->>> +               interrupts =<0 91 0>;
->>> +               samsung,power-domain =<&pd_tv>;
->>> +       };
->>>    };
->>
->>
->> Is there documentation for these new bindings available somewhere ?
->>
->
-> it is there at Documentation/devicetree/bindings/drm/exynos/mixer.txt.
-> Probably I need to add details for power domain node property.
+I originally wanted to do that, but the host/peripheral/otg property is
+not phy specific. DO you still want to move it there?
 
-Sorry, I can't see anything for Exynos4 there, it's only for exynos5 SoCs.
-I think the need for the 'samsung,power-domain' property (I guess that
-should be optional) needs to be documented for completeness.
+> >  include/linux/usb/of.h    |   22 +++++++++++++
+> >  include/linux/usb/phy.h   |    9 ++++++
+> >  4 files changed, 108 insertions(+)
+> >  create mode 100644 drivers/usb/core/of.c
+> >  create mode 100644 include/linux/usb/of.h
+> >
+> >diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
+> >index 26059b9..5378add 100644
+> >--- a/drivers/usb/core/Makefile
+> >+++ b/drivers/usb/core/Makefile
+> >@@ -10,5 +10,6 @@ usbcore-y += devio.o notify.o generic.o quirks.o devices.o
+> >
+> >  usbcore-$(CONFIG_PCI)		+= hcd-pci.o
+> >  usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
+> >+usbcore-$(CONFIG_OF)		+= of.o
+> 
+> No Kconfig? Shouldn't this file be compiled only when some one is
+> going to use the PHY?
 
-Getting back to the bindings documentation,
-Documentation/devicetree/bindings/drm/exynos/ seems not exactly right
-place for me, but that's a minor issue. There is also a V4L2 driver
-for the HDMI and TV output devices in drivers/media/platform/s5p-tv.
-So Documentation/devicetree/bindings/video or
-Documentation/devicetree/bindings/media might be a better home for that
-bindings documentation. These IPs are not specific to DRM at all.
+Yes. Just skipped that for the first shot.
 
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 --
-
-Thanks,
-Sylwester
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
