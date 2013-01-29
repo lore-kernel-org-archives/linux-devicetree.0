@@ -1,13 +1,17 @@
-From: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v4 19/43] metag: Device tree
-Date: Tue, 29 Jan 2013 14:15:11 +0000
-Message-ID: <1359468915-8760-2-git-send-email-james.hogan@imgtec.com>
-References: <1359468915-8760-1-git-send-email-james.hogan@imgtec.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
+Date: Tue, 29 Jan 2013 14:24:34 +0000
+Message-ID: <20130129142434.GW23505@n2100.arm.linux.org.uk>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <201301291050.23743.arnd@arndb.de>
+ <20130129111850.GR23505@n2100.arm.linux.org.uk>
+ <201301291344.11066.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359468915-8760-1-git-send-email-james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <201301291344.11066.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,222 +22,41 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree files to arch/metag.
+On Tue, Jan 29, 2013 at 01:44:10PM +0000, Arnd Bergmann wrote:
+> Can you give an example for this? We were careful to make sure it
+> works with platforms that connect a slave to multiple dma engines,
+> out of which any could be used for a given transfer. In the device
+> tree binding, you specify all possible controllers and give the
+> alternatives the same name, for example:
+> 
+> 	serial@10000000 {
+> 		compatible = "arm,pl011", "arm,primecell";
+> 		dmas = <dwdma0 7 0>, <dwdma0 8 1>, <&pl330 17>, <&pl330 15>;
+> 		dma-names = "rx", "tx", "rx", "tx;
+> 		...
+> 	};
 
-Signed-off-by: James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>
----
-v4:
-  * move dtb directory into dts and use common dtb rules (Rob Herring)
+No, that's not what I mean.  I mean the situation we find on Versatile
+platforms:
 
- arch/metag/boot/dts/Makefile      |   16 ++++++
- arch/metag/boot/dts/skeleton.dts  |   10 ++++
- arch/metag/boot/dts/skeleton.dtsi |   14 +++++
- arch/metag/include/asm/prom.h     |   23 +++++++++
- arch/metag/kernel/devtree.c       |   97 +++++++++++++++++++++++++++++++++++++
- 5 files changed, 160 insertions(+), 0 deletions(-)
- create mode 100644 arch/metag/boot/dts/Makefile
- create mode 100644 arch/metag/boot/dts/skeleton.dts
- create mode 100644 arch/metag/boot/dts/skeleton.dtsi
- create mode 100644 arch/metag/include/asm/prom.h
- create mode 100644 arch/metag/kernel/devtree.c
+            8     3                   >3
+PL080 DMA --/--+--/------> FPGA Mux --/--> {bunch of off-CPU peripherals}
+               |  5
+               `--/------> {On-CPU peripherals}
 
-diff --git a/arch/metag/boot/dts/Makefile b/arch/metag/boot/dts/Makefile
-new file mode 100644
-index 0000000..e0b5afd
---- /dev/null
-+++ b/arch/metag/boot/dts/Makefile
-@@ -0,0 +1,16 @@
-+dtb-y	+= skeleton.dtb
-+
-+# Built-in dtb
-+builtindtb-y				:= skeleton
-+
-+ifneq ($(CONFIG_METAG_BUILTIN_DTB_NAME),"")
-+	builtindtb-y			:= $(CONFIG_METAG_BUILTIN_DTB_NAME)
-+endif
-+obj-$(CONFIG_METAG_BUILTIN_DTB)	+= $(patsubst "%",%,$(builtindtb-y)).dtb.o
-+
-+targets	+= dtbs
-+targets	+= $(dtb-y)
-+
-+dtbs: $(addprefix $(obj)/, $(dtb-y))
-+
-+clean-files += *.dtb
-diff --git a/arch/metag/boot/dts/skeleton.dts b/arch/metag/boot/dts/skeleton.dts
-new file mode 100644
-index 0000000..7244d1f
---- /dev/null
-+++ b/arch/metag/boot/dts/skeleton.dts
-@@ -0,0 +1,10 @@
-+/*
-+ * Copyright (C) 2012 Imagination Technologies Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+/dts-v1/;
-+
-+/include/ "skeleton.dtsi"
-diff --git a/arch/metag/boot/dts/skeleton.dtsi b/arch/metag/boot/dts/skeleton.dtsi
-new file mode 100644
-index 0000000..78229ea
---- /dev/null
-+++ b/arch/metag/boot/dts/skeleton.dtsi
-@@ -0,0 +1,14 @@
-+/*
-+ * Skeleton device tree; the bare minimum needed to boot; just include and
-+ * add a compatible value.  The bootloader will typically populate the memory
-+ * node.
-+ */
-+
-+/ {
-+	compatible = "img,meta";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	chosen { };
-+	aliases { };
-+	memory { device_type = "memory"; reg = <0 0>; };
-+};
-diff --git a/arch/metag/include/asm/prom.h b/arch/metag/include/asm/prom.h
-new file mode 100644
-index 0000000..d881396
---- /dev/null
-+++ b/arch/metag/include/asm/prom.h
-@@ -0,0 +1,23 @@
-+/*
-+ *  arch/metag/include/asm/prom.h
-+ *
-+ *  Copyright (C) 2012 Imagination Technologies Ltd.
-+ *
-+ *  Based on ARM version:
-+ *  Copyright (C) 2009 Canonical Ltd. <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ */
-+#ifndef __ASM_METAG_PROM_H
-+#define __ASM_METAG_PROM_H
-+
-+#include <asm/setup.h>
-+#define HAVE_ARCH_DEVTREE_FIXUPS
-+
-+extern struct machine_desc *setup_machine_fdt(void *dt);
-+extern void metag_dt_memblock_reserve(void);
-+
-+#endif /* __ASM_METAG_PROM_H */
-diff --git a/arch/metag/kernel/devtree.c b/arch/metag/kernel/devtree.c
-new file mode 100644
-index 0000000..5b6b1d85
---- /dev/null
-+++ b/arch/metag/kernel/devtree.c
-@@ -0,0 +1,97 @@
-+/*
-+ *  linux/arch/metag/kernel/devtree.c
-+ *
-+ *  Copyright (C) 2012 Imagination Technologies Ltd.
-+ *
-+ *  Based on ARM version:
-+ *  Copyright (C) 2009 Canonical Ltd. <jeremy.kerr-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/export.h>
-+#include <linux/types.h>
-+#include <linux/bootmem.h>
-+#include <linux/memblock.h>
-+#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+
-+#include <asm/setup.h>
-+#include <asm/page.h>
-+#include <asm/mach/arch.h>
-+
-+void __init early_init_dt_add_memory_arch(u64 base, u64 size)
-+{
-+	pr_err("%s(%llx, %llx)\n",
-+	       __func__, base, size);
-+}
-+
-+void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
-+{
-+	return alloc_bootmem_align(size, align);
-+}
-+
-+/**
-+ * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
-+ * @dt:		virtual address pointer to dt blob
-+ *
-+ * If a dtb was passed to the kernel, then use it to choose the correct
-+ * machine_desc and to setup the system.
-+ */
-+struct machine_desc * __init setup_machine_fdt(void *dt)
-+{
-+	struct boot_param_header *devtree = dt;
-+	struct machine_desc *mdesc, *mdesc_best = NULL;
-+	unsigned int score, mdesc_score = ~1;
-+	unsigned long dt_root;
-+	const char *model;
-+
-+	/* check device tree validity */
-+	if (be32_to_cpu(devtree->magic) != OF_DT_HEADER)
-+		return NULL;
-+
-+	/* Search the mdescs for the 'best' compatible value match */
-+	initial_boot_params = devtree;
-+	dt_root = of_get_flat_dt_root();
-+
-+	for_each_machine_desc(mdesc) {
-+		score = of_flat_dt_match(dt_root, mdesc->dt_compat);
-+		if (score > 0 && score < mdesc_score) {
-+			mdesc_best = mdesc;
-+			mdesc_score = score;
-+		}
-+	}
-+	if (!mdesc_best) {
-+		const char *prop;
-+		long size;
-+
-+		pr_err("\nError: unrecognized/unsupported device tree compatible list:\n[ ");
-+
-+		prop = of_get_flat_dt_prop(dt_root, "compatible", &size);
-+		if (prop) {
-+			while (size > 0) {
-+				printk("'%s' ", prop);
-+				size -= strlen(prop) + 1;
-+				prop += strlen(prop) + 1;
-+			}
-+		}
-+		printk("]\n\n");
-+
-+		dump_machine_table(); /* does not return */
-+	}
-+
-+	model = of_get_flat_dt_prop(dt_root, "model", NULL);
-+	if (!model)
-+		model = of_get_flat_dt_prop(dt_root, "compatible", NULL);
-+	if (!model)
-+		model = "<unknown>";
-+	pr_info("Machine: %s, model: %s\n", mdesc_best->name, model);
-+
-+	/* Retrieve various information from the /chosen node */
-+	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
-+
-+	return mdesc_best;
-+}
--- 
-1.7.7.6
+This is something that I've been raising _every time_ I've been involved
+with DMA engine discussions when it comes to the matching stuff, so this
+is nothing new, and it's not unknown about.
+
+What is different this time around is that I've been purposely omitted
+from the discussions (like what seems to be happening more and more - I
+notice that I'm no longer copied on PL011 patches despite being the
+driver author, or GIC patches, or VIC patches) so this stuff doesn't
+get properly considered.
+
+But it doesn't matter anymore; I'm soo out of the loop on stuff like DT
+and the like that my input would be more of a hinderence now.
