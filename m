@@ -1,79 +1,63 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
-Date: Tue, 29 Jan 2013 16:21:59 +0000
-Message-ID: <201301291621.59425.arnd@arndb.de>
-References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <201301291331.48427.arnd@arndb.de>
- <CAKohpoms+WC_XJnH2b6uoycRKkF-yxZUg2J+8NrYJP8fnDNLtg@mail.gmail.com>
+From: Florian Fainelli <florian@openwrt.org>
+Subject: Re: [PATCH 5/5] mv643xx_eth: convert to use the Marvell Orion MDIO
+ driver
+Date: Tue, 29 Jan 2013 17:27:56 +0100
+Message-ID: <5107F88C.8030002@openwrt.org>
+References: <1359473048-26551-1-git-send-email-florian@openwrt.org> <1359473048-26551-6-git-send-email-florian@openwrt.org> <20130129170131.7964a110@skate>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKohpoms+WC_XJnH2b6uoycRKkF-yxZUg2J+8NrYJP8fnDNLtg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130129170131.7964a110@skate>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Cc: davem@davemloft.net, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Lennert Buytenhek <buytenh@wantstofly.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 January 2013, Viresh Kumar wrote:
-> On 29 January 2013 19:01, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > Ah, good. So I guess the "dma-requests" property should actually
-> > be "16" then.
-> 
-> yes, even i was checking on that separately :)
+On 01/29/2013 05:01 PM, Thomas Petazzoni wrote:
+> Dear Florian Fainelli,
+>
+> On Tue, 29 Jan 2013 16:24:08 +0100, Florian Fainelli wrote:
+>> This patch converts the Marvell MV643XX ethernet driver to use the
+>> Marvell Orion MDIO driver. As a result, PowerPC and ARM platforms
+>> registering the Marvell MV643XX ethernet driver are also updated to
+>> register a Marvell Orion MDIO driver. This driver voluntarily overlaps
+>> with the Marvell Ethernet shared registers because it will use a subset
+>> of this shared register (shared_base + 0x4 - shared_base + 0x84). The
+>> Ethernet driver is also updated to look up for a PHY device using the
+>> Orion MDIO bus driver.
+>>
+>> Signed-off-by: Florian Fainelli <florian@openwrt.org>
+>> ---
+>>   arch/arm/plat-orion/common.c               |   84 +++++++++++--
+> In this file, there was one "MV643XX_ETH_SHARED_NAME" platform_device
+> registered for each network interface. Why? If the driver is shared,
+> isn't the whole idea to register it only once?
+It looks like I introduced two redundant mvmdio instances as ge01 refers 
+to the ge00 smi bus (the same applies to ge11 and ge10). Thanks for 
+spotting this.
 
-Actually, I just discovered something odd in the
-arch/arm/mach-spear/spear13xx-dma.h file that gets removed
-in the last patch: there, we define request numbers up to
-32, e.g.
+>
+> In any case, one of the idea of separating the mvmdio driver from the
+> mvneta driver in the first place is that there should be only one
+> instance of the mvmdio device, even if there are multiple network
+> interfaces. The reason is that from a HW point of the view, the MDIO
+> unit is shared between the network interfaces. If you look at
+> armada-370-xp.dtsi, there is only one mvmdio device registered, and two
+> network interfaces (using the mvneta driver) that are registered (and
+> actually up to four network interfaces can exist, they are added by
+> some other .dtsi files depending on the specific SoC).
+>
+> So I don't think there should be one instance of the mvmdio per network
+> interface.
+>
+> Also, I am wondering what's left in this MV643XX_ETH_SHARED_NAME driver
+> once the MDIO stuff has been pulled out in a separate driver? I think
+> the whole point of this work should be to get rid of this
+> MV643XX_ETH_SHARED_NAME driver, no?
 
--       SPEAR1310_DMA_REQ_UART2_RX = 14,
--       SPEAR1310_DMA_REQ_UART2_TX = 15,
--       SPEAR1310_DMA_REQ_UART5_RX = 16,
--       SPEAR1310_DMA_REQ_UART5_TX = 17,
-
-What is the meaning of this, if the maximum request number is 15?
- 
-> > Could we have device-to-device DMAs with this controller, and if
-> > we can, should we have both 'src' and 'dst' fields? Are the
-> > two number ranges sharing the same address space, i.e. is
-> > request '7' as the destination guaranteed to be the same device
-> > as request '7' in the source?
-> 
-> Request lines are per master... So, for a master single request line
-> is independent of direction. Many DMA controllers have capability of
-> doing dev-to-dev transfers but DMAENGINE doesn't have any support
-> for it, even we don't have a usecase too :)
-> 
-> > If we need two lines, we could interleave them with the bus
-> > master numbers:
-> 
-> not required.
-
-Ok. Would it be enough to have only one master and one request
-field in the DT dma descriptor then, and have the code figure
-whether to use it as source or destination, based on the
-configuration? Which one should come first? Since you have
-multiple masters per controller, and multiple requests per
-master, it sounds like the cleanest descriptor form would
-be 
-
-	<controller master request>;
-
-Or possibly
-
-	<controller master request direction>;
-
-if the direction needs to be known at the time the channel
-is requested.
-
-	Arnd
+If you take a closer look at mv643xx_eth you will see that the "shared" 
+driver still handles the mconf bus window configuration, which is not 
+abstracted yet. Besides that, I would rather do it step by step.
+--
+Florian
