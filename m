@@ -1,61 +1,211 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V6 07/10] ASoC: SMDK: WM8994: Add device tree support for
- machine file
-Date: Tue, 29 Jan 2013 15:12:41 +0800
-Message-ID: <20130129071231.GG6878@opensource.wolfsonmicro.com>
-References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
- <1358509629-20471-8-git-send-email-padma.v@samsung.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
+Date: Tue, 29 Jan 2013 12:54:11 +0530
+Message-ID: <CAKohpomO6tYNYLdMOaJYgqGecXj5KMQprdb=gExi+QuGrtLTzw@mail.gmail.com>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <1359410300-26113-1-git-send-email-arnd@arndb.de>
+ <1359410300-26113-2-git-send-email-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="VACxsDaSTfeluoxK"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1358509629-20471-8-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359410300-26113-2-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 29 January 2013 03:28, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> The original device tree binding for this driver, from Viresh Kumar
+> unfortunately conflicted with the generic DMA binding, and did not allow
+> to completely seperate slave device configuration from the controller.
+>
+> This is an attempt to replace it with an implementation of the generic
+> binding, but it is currently completely untested, because I do not have
+> any hardware with this particular controller.
+>
+> The patch applies on top of linux-next, which contains both the base
+> support for the generic DMA binding, as well as the earlier attempt from
+> Viresh. Both of these are currently not merged upstream however.
 
---VACxsDaSTfeluoxK
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This was really my work and i am feeling bad that i couldn't allocate any time
+for it. Thanks for starting it.
 
-On Fri, Jan 18, 2013 at 05:17:06PM +0530, Padmavathi Venna wrote:
+> diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
+> index 5bb3dfb..212d387 100644
+> --- a/Documentation/devicetree/bindings/dma/snps-dma.txt
+> +++ b/Documentation/devicetree/bindings/dma/snps-dma.txt
+> @@ -3,59 +3,62 @@
+>  Required properties:
+>  - compatible: "snps,dma-spear1340"
+>  - reg: Address range of the DMAC registers
+> -- interrupt-parent: Should be the phandle for the interrupt controller
+> -  that services interrupts for this device
+>  - interrupt: Should contain the DMAC interrupt number
+> -- nr_channels: Number of channels supported by hardware
+> -- is_private: The device channels should be marked as private and not for by the
+> -  general purpose DMA channel allocator. False if not passed.
+> +- dma-channels: Number of channels supported by hardware
+> +- dma-requests: Number of DMA request lines supported
+> +- dma-masters: Number of AHB masters supported by the controller
+> +- #dma-cells: must be <3>
 
-> +Samsung SMDK audio complex
+Shouldn't this be 4? Would be better to mention what fields are these,
+right here.
+I have seen them below though.
 
-This is just for SMDKs with WM8994.  I'll apply but please send a
-followup patch to clarify this - it'll be a different binding for others
-like the older boards using WM8580 and WM9713.
+> +DMA clients connected to the Designware DMA controller must use the format
+> +described in the dma.txt file, using a five-cell specifier for each channel.
+> +The five cells in order are:
+> +
+> +1. A phandle pointing to the DMA controller
+> +2. The value for the cfg_hi register.
+> +3. The value for the cfg_lo register.
+> +4. Source master for transfers on allocated channel.
+> +5. Destination master for transfers on allocated channel.
 
-> +		samsung,i2s-controller = <&i2s0>;
-> +		samsung,audio-codec = <&wm8994>;
+> diff --git a/drivers/dma/dw_dmac.c b/drivers/dma/dw_dmac.c
+> index 8cfaaf8..88504c2 100644
+> --- a/drivers/dma/dw_dmac.c
+> +++ b/drivers/dma/dw_dmac.c
+> @@ -18,6 +18,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/of.h>
+> +#include <linux/of_dma.h>
+>  #include <linux/mm.h>
+>  #include <linux/module.h>
+>  #include <linux/platform_device.h>
+> @@ -1179,49 +1180,69 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
+>         dev_vdbg(chan2dev(chan), "%s: done\n", __func__);
+>  }
+>
+> -bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
+> +/* forward declaration used in filter */
+> +static struct platform_driver dw_driver;
 
-I was thinking this should really point at the DAI but since it's
-specific to the SMDKs I don't think it particularly matters - they all
-use AIF1 anyway.
+extern? This is not a declaration but definition.
 
---VACxsDaSTfeluoxK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +
+> +struct dw_dma_filter_args {
+> +       struct dw_dma *dw;
+> +       u32 cfg_lo;
+> +       u32 cfg_hi;
+> +       unsigned src;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Currently named as sms
 
-iQIcBAEBAgAGBQJRB3WlAAoJELSic+t+oim99M8P/1ip3oe2f5jXA9OapyY7nH5Y
-dXREkRc8mmtFW7WgIEQvlLaaDhUzS7Soz/pbvl6A0Q3KILc3vuSMbLQA6PlWmyGU
-AjYEOLxO6ZnmkULSgxgFCJC/biJafs3Czkw9KsqlPZmvVpSfCg/K9JL+jbzinsw6
-fE9xd8GznkOu7dg1pLjClNdpvJvwR6QeD1Rr1yl4atuH2jMIEbo93pCzrocIhk20
-Fcnb5DTEHYp0yw6lAB2xJspWLSgx5B5W0b9jeHjm6BbVcJLzfAr1B+EYTCfqiMrH
-UHrBiN9TehyOSCH6vysCJwyjRijSvS+7w99DF2hg7bsHu5RkNZrf3vMg5S2o5tfL
-IFl8lzNIWPvxUy7u3VyaaXUrlpIjdCLKtHfDVucuYDNGCTfC+xcdqy4qHe3bpLvi
-mRME4MKRXnbZMXsrS/FCNV2/R3PhAbM8Hs6SQFKIHQS+yoVfrYjioy9wcpnRpY9R
-uygB4XK4UMTXgyHRwbc5L3eofS4xCnN6qOsCO7na8yq6ahcMXyqIR8BkE5kHfM5/
-Lx4z8FXYBrx+HKG+XJVMcH8zsaSmVv27ZInCtiRA7Ez8DrPkp7dLQqL8eFeJk5Xw
-3W+s9XObNsgnKkAM6xvcaO2KYQWbaWXp/oD+3m9vVDDIGgD1yP/eV/ERcL4+5lPc
-7d/wx1Vrw4zApY2c3ZhN
-=DqlG
------END PGP SIGNATURE-----
+> +       unsigned dst;
 
---VACxsDaSTfeluoxK--
+dms
+
+> +};
+> +
+> +static bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
+>  {
+>         struct dw_dma *dw = to_dw_dma(chan->device);
+> -       static struct dw_dma *last_dw;
+> -       static char *last_bus_id;
+> -       int i = -1;
+> +       struct dw_dma_filter_args *fargs = param;
+> +       struct dw_dma_slave *sd;
+>
+> -       /*
+> -        * dmaengine framework calls this routine for all channels of all dma
+> -        * controller, until true is returned. If 'param' bus_id is not
+> -        * registered with a dma controller (dw), then there is no need of
+> -        * running below function for all channels of dw.
+> -        *
+> -        * This block of code does this by saving the parameters of last
+> -        * failure. If dw and param are same, i.e. trying on same dw with
+> -        * different channel, return false.
+> -        */
+> -       if ((last_dw == dw) && (last_bus_id == param))
+> +       /* both the driver and the device must match */
+> +        if (chan->device->dev->driver != &dw_driver.driver)
+> +                return false;
+
+Can this ever happen? Isn't it the case that this routine would be called
+only for dw_dmac?
+
+> +       if (dw != fargs->dw)
+>                 return false;
+> -       /*
+> -        * Return true:
+> -        * - If dw_dma's platform data is not filled with slave info, then all
+> -        *   dma controllers are fine for transfer.
+> -        * - Or if param is NULL
+> -        */
+> -       if (!dw->sd || !param)
+> -               return true;
+>
+> -       while (++i < dw->sd_count) {
+> -               if (!strcmp(dw->sd[i].bus_id, param)) {
+> -                       chan->private = &dw->sd[i];
+> -                       last_dw = NULL;
+> -                       last_bus_id = NULL;
+> +       /* FIXME: memory leak! could we put this into dw_dma_chan? */
+> +       sd = devm_kzalloc(dw->dma.dev, sizeof (*sd), GFP_KERNEL);
+
+Yes.
+
+> +       if (!sd)
+> +               return false;
+>
+> -                       return true;
+> -               }
+> -       }
+> +       sd->dma_dev     = dw->dma.dev;
+> +       sd->cfg_hi      = fargs->cfg_hi;
+> +       sd->cfg_lo      = fargs->cfg_lo;
+> +       sd->src_master  = fargs->src;
+> +       sd->dst_master  = fargs->dst;
+> +
+> +       chan->private = sd;
+>
+> -       last_dw = dw;
+> -       last_bus_id = param;
+> -       return false;
+> +       return true;
+> +}
+> +
+> +static struct dma_chan *dw_dma_xlate(struct of_phandle_args *dma_spec,
+> +                                        struct of_dma *ofdma)
+> +{
+> +       struct dw_dma *dw = ofdma->of_dma_data;
+> +       struct dw_dma_filter_args fargs = {
+> +               .dw = dw,
+> +       };
+> +       dma_cap_mask_t cap;
+> +
+> +       if (dma_spec->args_count != 4)
+
+args_count contains count of all params leaving the phandle?
+
+> +               return NULL;
+> +
+> +       /* FIXME: This binding is rather clumsy. Can't we use the
+> +          request line numbers here instead? */
+
+yes.
+
+> +       fargs.cfg_lo = be32_to_cpup(dma_spec->args+0);
+> +       fargs.cfg_hi = be32_to_cpup(dma_spec->args+1);
+> +       fargs.src = be32_to_cpup(dma_spec->args+2);
+> +       fargs.dst = be32_to_cpup(dma_spec->args+3);
+> +
+> +       dma_cap_zero(cap);
+> +       dma_cap_set(DMA_SLAVE, cap);
+> +       /* FIXME: there should be a simpler way to do this */
+> +       return dma_request_channel(cap, dw_dma_generic_filter, &dma_spec->args[0]);
+
+don't you need to send &fargs as the last argument?
