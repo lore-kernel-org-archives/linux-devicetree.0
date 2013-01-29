@@ -1,16 +1,15 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
-Date: Tue, 29 Jan 2013 16:19:14 +0530
-Message-ID: <CAKohpo=rD9=dEaPkKYcj55K4_ebdnU7qjv2TZBUwqHAB+Kk+aw@mail.gmail.com>
+Date: Tue, 29 Jan 2013 10:50:23 +0000
+Message-ID: <201301291050.23743.arnd@arndb.de>
 References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
  <1359410300-26113-2-git-send-email-arnd@arndb.de>
- <CAKohpomO6tYNYLdMOaJYgqGecXj5KMQprdb=gExi+QuGrtLTzw@mail.gmail.com>
- <201301291035.30265.arnd@arndb.de>
+ <1359445171.31148.30.camel@smile>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201301291035.30265.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <1359445171.31148.30.camel@smile>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,63 +20,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 29 January 2013 16:05, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 29 January 2013, Viresh Kumar wrote:
+(putting back the Cc list, I assumed you dropped them accidentally)
 
->> Shouldn't this be 4? Would be better to mention what fields are these,
->> right here. I have seen them below though.
->
-> Correct. I changed these a couple of times while trying to understand
-> what the fields are, and I missed this instance. I'm still not sure
-> whether we actually need all four fields, or what the simplest format
-> for them would be. This just mirrors what you had in your binding.
+On Tuesday 29 January 2013, Andy Shevchenko wrote:
+> On Mon, 2013-01-28 at 21:58 +0000, Arnd Bergmann wrote: 
+> > -	if ((last_dw == dw) && (last_bus_id == param))
+> > +	/* both the driver and the device must match */
+> > +        if (chan->device->dev->driver != &dw_driver.driver)
+> 
+> Could we somehow pass the &.driver to the generic filter function (via
+> *_dma_controller_register() ? ) and do this to each DMA driver?
 
-You can add request_line number and leave first two fields, cfghi and lo.
+My hope is still that we can avoid using filter functions entirely
+when we use xlate() logic, and instead just go through the channels
+of the dma engine we know we are looking at.
 
->> > +       /* FIXME: memory leak! could we put this into dw_dma_chan? */
->> > +       sd = devm_kzalloc(dw->dma.dev, sizeof (*sd), GFP_KERNEL);
->>
->> Yes.
->
-> Yes it can be in dw_dma_chan or yes it is a memory leak?
+I would also assume that the argument passed to *_dma_controller_register
+normally holds a pointer to the dma device. Now that I think about it,
+the check 'if (dw != fargs->dw)' already implies that we are looking
+at the correct driver, but it feels dirty to cast a random dma_device
+pointer to a driver specific one before we know which driver it is
+for.
 
-Yes it can be in dw_dma_chan :)
+However, since we have a valid pointer to a dw_dma object, we can
+extract the driver from there:
 
->> > +       if (dma_spec->args_count != 4)
->>
->> args_count contains count of all params leaving the phandle?
->
-> That was my interpretation from reading the code, but I have not tried it.
+	struct dw_dma_filter_args *fargs = param;
+	struct dma_device *ddev = &fargs->dw->dma;
+	if (dma != chan->device)
+		return -EINVAL;
 
-Okay, it was just a question from my side :)
+which is simpler and cleaner that what I had.
 
->> > +       /* FIXME: This binding is rather clumsy. Can't we use the
->> > +          request line numbers here instead? */
->>
->> yes.
->
-> Ok, Very good. What is the encoding of the registers then?
+> > +	sd->dma_dev	= dw->dma.dev;
+> > +	sd->cfg_hi	= fargs->cfg_hi;
+> > +	sd->cfg_lo	= fargs->cfg_lo;
+> > +	sd->src_master	= fargs->src;
+> > +	sd->dst_master	= fargs->dst;
+> 
+> Could we use fargs structure directly?
 
-You can still keep fargs as is and just fill them as:
+We could probably have no fargs but use the dw_dma_slave structure
+directly to pass the data, if cannot figure out a way to avoid
+the need for a filter function.  I thought about doing that, but
+intermediate versions of my patch had a different layout here.
 
-       fargs.cfg_lo = 0;
-
-if (DMA_TO_DEV)
-       // dest is periph
-       fargs.cfg_hi = be32_to_cpup(dma_spec->args+0) << 11;
-else if (DEV_TO_DMA)
-       // src is periph
-       fargs.cfg_hi = be32_to_cpup(dma_spec->args+0) << 7;
-
-The field size is 4 bits.
-
-> Thanks a lot for the input. When I fix the above, are actually able
-> to test the changes, or have you lost access to the hardware when
-> leaving ST?
-
-I don't have any sort of access for testing these :(
-But, Vipul might try these at his end.
+	Arnd
