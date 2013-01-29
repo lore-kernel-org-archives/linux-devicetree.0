@@ -1,78 +1,70 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] arm: mvebu: Add support for USB host
- controllers in Armada 370/XP
-Date: Tue, 29 Jan 2013 14:03:15 -0500
-Message-ID: <20130129190315.GF7717@titan.lakedaemon.net>
-References: <1358954792-16160-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <CALF0-+W8dVLHF66VKni+5ZsQpFd=cGDXE0TD=dRc1B=ptrAMUg@mail.gmail.com>
- <20130123174025.GV1758@titan.lakedaemon.net>
- <CALF0-+Vg1WZA3m9G7mLU92BBuDpGLG-pmMM=XHtGm2UwnXXLUw@mail.gmail.com>
+From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
+Date: Tue, 29 Jan 2013 21:04:58 +0100
+Message-ID: <51082B6A.1010406@gmail.com>
+References: <50EC5EDE.3030208@firmworks.com>
+ <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
+ <50ECA400.50007@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CALF0-+Vg1WZA3m9G7mLU92BBuDpGLG-pmMM=XHtGm2UwnXXLUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <50ECA400.50007-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, dev-8ppwABl0HbeELgA04lAiVw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, 'Rahul Sharma' <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2013 at 03:56:20PM -0300, Ezequiel Garcia wrote:
-> Hi Jason,
-> 
-> On Wed, Jan 23, 2013 at 2:40 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> > On Wed, Jan 23, 2013 at 02:06:12PM -0300, Ezequiel Garcia wrote:
-> >> Jason,
-> >>
-> >> On Wed, Jan 23, 2013 at 12:26 PM, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> >> > The Armada 370 and Armada XP SoC has an Orion EHCI USB controller.
-> >> > This patch adds support for this controller in Armada 370
-> >> > and Armada XP SoC common device tree files.
-> >> >
-> >> > Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-> >> > Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >> > Tested-by: Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>
-> >> > Tested-by: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-> >> > Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >> > ---
-> >> > Changes from v1:
-> >> >  * Remove uneeded USB_ARCH_HAS_EHCI selection as noted by Florian.
-> >> >
-> >> >  arch/arm/boot/dts/armada-370-xp.dtsi |   15 +++++++++++++++
-> >> >  arch/arm/boot/dts/armada-370.dtsi    |    9 +++++++++
-> >> >  arch/arm/boot/dts/armada-xp.dtsi     |   17 +++++++++++++++++
-> >> >  3 files changed, 41 insertions(+), 0 deletions(-)
-> >>
-> >> Do you think we're still in time to get this series into v3.9 (given
-> >> we decide soon on the OpenBlocks issue)?
-> >
-> > That shouldn't be a problem.
-> >
-> 
-> Do you think we can take this series for v3.9 as it is?
+Hi,
 
-I'm working though a few other issues first.  I'll take a closer look
-when I get up to this series.
+On 01/08/2013 11:56 PM, Stephen Warren wrote:
+> On 01/08/2013 01:16 PM, Sean Paul wrote:
+>> Add a property to the hdmi node so we can specify the HDMI version in
+>> the device tree instead of just defaulting to v1.4 with the existence of
+>> the dt node.
+>
+> I guess this seems OK to me if required, although I'd certainly like to
+> see someone familiar with the Exynos HW confirm whether this should be
+> driven purely by DT compatible value for the HDMI IP block instead though.
 
-> I have no problems making any changes if they are needed
-> but I can't move forward with the OpenBlocks issue since
-> I don't have access to the hardware.
+I think the supported HDMI standard is something that could well be derived
+from the compatible property. The IP supporting v1.3 and v1.4 will be
+significantly different, so this would anyway already need to be reflected
+in the compatible property. The only issue I see here is that people tend
+to make the compatible string overly generic, so it is hardly usable for
+anything but matching an IP with its driver. For instance for exynos5 we
+have now (Documentation/devicetree/bindings/drm/exynos/hdmi.txt):
 
-understood.
+	compatible = "samsung,exynos5-hdmi";
 
-> I think we can sanely merge this as it is, since it has been tested in
-> every platform.
-> If there's anything to change we can do it later, when I have more
-> information about the
-> OpenBlocks hardware.
+For Exynos4 series there were already some patches proposed [1], but I 
+believe
+this isn't a clean solution. Instead of things like:
 
-As long that that will be clean, there shouldn't be a problem.
+compatible = "samsung,exynos4-hdmi13";
+compatible = "samsung,exynos4-hdmi14";
 
-thx,
+I would much more like to see the SoC version embedded in the compatible
+string, e.g.
 
-Jason.
+compatible = "samsung,exynos4210-hdmi"; /* among others it carries an
+					  information this IP supports
+					  HDMI v1.3 */	
+
+compatible = "samsung,exynos4212-hdmi"; /* HDMI v1.4, IIRC */
+
+[1] http://www.spinics.net/lists/linux-samsung-soc/msg15289.html
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Thanks,
+Sylwester
