@@ -1,69 +1,61 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
-Date: Tue, 29 Jan 2013 15:45:40 +0200
-Message-ID: <1359467140.31148.41.camel@smile>
-References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <201301291035.30265.arnd@arndb.de>
- <CAKohpo=rD9=dEaPkKYcj55K4_ebdnU7qjv2TZBUwqHAB+Kk+aw@mail.gmail.com>
- <201301291331.48427.arnd@arndb.de>
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining
+ dr_mode and phy_type
+Date: Tue, 29 Jan 2013 14:53:36 +0100
+Message-ID: <20130129135336.GA3323@pengutronix.de>
+References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
+ <5107D253.5030400@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <201301291331.48427.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BXVAT5kNtrzKuDFl"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5107D253.5030400-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon <kishon-l0cyMroinI0@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2013-01-29 at 13:31 +0000, Arnd Bergmann wrote: 
-> On Tuesday 29 January 2013, Viresh Kumar wrote:
-> > You can still keep fargs as is and just fill them as:
-> > 
-> >        fargs.cfg_lo = 0;
-> > 
-> > if (DMA_TO_DEV)
-> >        // dest is periph
-> >        fargs.cfg_hi = be32_to_cpup(dma_spec->args+0) << 11;
-> > else if (DEV_TO_DMA)
-> >        // src is periph
-> >        fargs.cfg_hi = be32_to_cpup(dma_spec->args+0) << 7;
-> > 
-> > The field size is 4 bits.
-> 
-> Ah, good. So I guess the "dma-requests" property should actually
-> be "16" then.
-> 
-> Does this mean that an implicit zero request line means memory?
 
-No, it doesn't.
-When dma is doing mem2mem transfers the request line field is ignored by
-the hw.
-
-> Could we have device-to-device DMAs with this controller, and if
-> we can, should we have both 'src' and 'dst' fields?
-
-As far as I know there is no driver under dmaengine that supports
-per2per transfers.
-
->  Are the
-> two number ranges sharing the same address space, i.e. is
-> request '7' as the destination guaranteed to be the same device
-> as request '7' in the source?
-
-Request line should be unique. It means a real wire from slave hw to the
-dmac.
+--BXVAT5kNtrzKuDFl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 
--- 
-Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Intel Finland Oy
+> >+	err =3D of_property_read_string(np, "phy_type", &phy_type);
+> >+	if (err < 0)
+> >+		return USBPHY_INTERFACE_MODE_NA;
+>=20
+> Why don't we use a u32 property type for the *phy-type*? IMHO we
+> should use string property only when the property should be
+> absolutely unambiguous (e.g., compatible property should be string).
+
+If we would use u32-numbers in the compatible entry, this would also be
+unambiguous, no? 0xd00dfeed would be the at24-driver. Pretty specific.
+
+I don't mind having readable devicetrees. And we have it for ethernet
+phys already with strings, so it would be consistent.
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--BXVAT5kNtrzKuDFl
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlEH1F8ACgkQD27XaX1/VRs41wCgwvmADunNm/ChKB4eb/n0JYQY
+9NsAn0ZCVwmG9qm8hoou4G4m9Umrhefe
+=PEAG
+-----END PGP SIGNATURE-----
+
+--BXVAT5kNtrzKuDFl--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
