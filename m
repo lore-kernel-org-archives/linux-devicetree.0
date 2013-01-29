@@ -1,104 +1,93 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 2/6] ARM: dts: Add MFC codec support for Exynos4 DT machines
-Date: Tue, 29 Jan 2013 14:36:47 +0100
-Message-ID: <5107D06F.4000002@samsung.com>
-References: <1359432822-23846-1-git-send-email-sachin.kamat@linaro.org>
- <1359432822-23846-3-git-send-email-sachin.kamat@linaro.org>
+From: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v3 32/71] ARC: [DeviceTree] Basic support
+Date: Tue, 29 Jan 2013 19:09:16 +0530
+Message-ID: <5107D104.5050304@synopsys.com>
+References: <1359024639-21915-1-git-send-email-vgupta@synopsys.com>
+ <1359024639-21915-15-git-send-email-vgupta@synopsys.com>
+ <5107CDD3.3050502@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1359432822-23846-3-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, patches@linaro.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5107CDD3.3050502-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 01/29/2013 05:13 AM, Sachin Kamat wrote:
-> This patch adds MFC codec support for Exynos4 DT machines.
-> 
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> ---
->  arch/arm/boot/dts/exynos4.dtsi         |    7 +++++++
->  arch/arm/mach-exynos/mach-exynos4-dt.c |   17 +++++++++++++++++
->  2 files changed, 24 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-> index e1347fc..1122fb1 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
-> @@ -289,4 +289,11 @@
->  			interrupts = <0 34 0>;
->  		};
->  	};
-> +
-> +	mfc: codec@13400000 {
-> +		compatible = "samsung,mfc-v5";
-> +		reg = <0x13400000 0x10000>;
-> +		interrupts = <0 94 0>;
-> +		samsung,power-domain = <&pd_mfc>;
+On Tuesday 29 January 2013 06:55 PM, Rob Herring wrote:
+> On 01/24/2013 04:50 AM, Vineet Gupta wrote:
+>> This is minimal infrastructure needed for devicetree work.
+>> It uses an a sample "skeleton" devicetree - embedded in kernel image -
+>> to print the board, manufacturer by parsing the top-level "compatible"
+>> string.
+>>
+>> As of now we don't need any additional "board" specific "machine_desc".
+>>
+>> TODO: support interpreting the command line as boot-loader passed dtb
+>>
+>> Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> One minor thing below, otherwise:
+>
+> Reviewed-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+>
+>
+>> diff --git a/arch/arc/kernel/devtree.c b/arch/arc/kernel/devtree.c
+>> new file mode 100644
+>> index 0000000..229f78e
+>> --- /dev/null
+>> +++ b/arch/arc/kernel/devtree.c
+>> @@ -0,0 +1,69 @@
+>> +/*
+>> + * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
+>> + *
+>> + * Based on highly stipped down version of METAG
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +
+>> +#include <linux/init.h>
+>> +#include <linux/export.h>
+>> +#include <linux/errno.h>
+> Is this include needed?
 
-Please add:
-		status = "disabled";
+Nope - removed.
 
-> +	};
->  };
-> diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c b/arch/arm/mach-exynos/mach-exynos4-dt.c
-> index ab1dacc..8ae8da1 100644
-> --- a/arch/arm/mach-exynos/mach-exynos4-dt.c
-> +++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
-> @@ -12,7 +12,9 @@
->  */
->  
->  #include <linux/of_platform.h>
-> +#include <linux/of_fdt.h>
->  #include <linux/serial_core.h>
-> +#include <linux/memblock.h>
->  
->  #include <asm/mach/arch.h>
->  #include <asm/hardware/gic.h>
-> @@ -20,6 +22,7 @@
->  
->  #include <plat/cpu.h>
->  #include <plat/regs-serial.h>
-> +#include <plat/mfc.h>
->  
->  #include "common.h"
->  
-> @@ -80,6 +83,7 @@ static const struct of_dev_auxdata exynos4_auxdata_lookup[] __initconst = {
->  	OF_DEV_AUXDATA("arm,pl330", EXYNOS4_PA_MDMA1, "dma-pl330.2", NULL),
->  	OF_DEV_AUXDATA("samsung,exynos4210-tmu", EXYNOS4_PA_TMU,
->  				"exynos-tmu", NULL),
-> +	OF_DEV_AUXDATA("samsung,mfc-v5", 0x13400000, "s5p-mfc", NULL),
->  	{},
->  };
->  
-> @@ -102,6 +106,18 @@ static char const *exynos4_dt_compat[] __initdata = {
->  	NULL
->  };
->  
-> +static void __init exynos4_reserve(void)
-> +{
-> +#ifdef CONFIG_S5P_DEV_MFC
+>
+>> +#include <linux/types.h>
+>> +#include <linux/reboot.h>
+> And this?
 
-Where is this symbol supposed to be enabled ?
+reboot.h is needed for the machine_halt() prototype.
 
-Don't you need a change like this as a part of this patch ?
+>
+>> +#include <linux/memblock.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_fdt.h>
+>> +#include <linux/of_irq.h>
+> And this?
+>
+>> +#include <linux/of_platform.h>
+> And this?
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 1d9312a..1ae72d9 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -413,6 +413,7 @@ config MACH_EXYNOS4_DT
-        select USE_OF
-        select EXYNOS4_SETUP_USB_PHY
-        select ARM_DMA_USE_IOMMU if EXYNOS_IOMMU
-+       select S5P_DEV_MFC
-        help
-          Machine support for Samsung Exynos4 machine with device tree enabled.
-          Select this if a fdt blob is available for the Exynos4 SoC based board.
+Both of the above removed.
 
---
-
-Thanks,
-Sylwester
+I'll send a revised patch which also addresses James' review comments as well -
+(namely broken dtbs rule, adding dependency on scripts ...)
+See https://lkml.org/lkml/2013/1/28/138 for reference.
