@@ -1,210 +1,74 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 32/71] ARC: [DeviceTree] Basic support
-Date: Tue, 29 Jan 2013 07:25:39 -0600
-Message-ID: <5107CDD3.3050502@gmail.com>
-References: <1359024639-21915-1-git-send-email-vgupta@synopsys.com>
- <1359024639-21915-15-git-send-email-vgupta@synopsys.com>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Tue, 29 Jan 2013 13:31:40 +0000
+Message-ID: <20130129133140.GA24193@arm.com>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+ <20130115154038.GA11241@arm.com>
+ <20130115211441.GA13139@avionic-0098.adnet.avionic-design.de>
+ <201301161400.26587.arnd@arndb.de>
+ <20130116161716.GA10630@arm.com>
+ <20130116183101.GA28660@avionic-0098.adnet.avionic-design.de>
+ <20130117154236.GA25943@arm.com>
+ <20130117160501.GC2186@avionic-0098.adnet.avionic-design.de>
+ <20130117162218.GA29016@arm.com>
+ <20130122192901.GE30647@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359024639-21915-15-git-send-email-vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Cc: linux-arch-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130122192901.GE30647@obsidianresearch.com>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/24/2013 04:50 AM, Vineet Gupta wrote:
-> This is minimal infrastructure needed for devicetree work.
-> It uses an a sample "skeleton" devicetree - embedded in kernel image -
-> to print the board, manufacturer by parsing the top-level "compatible"
-> string.
+On Tue, Jan 22, 2013 at 07:29:01PM +0000, Jason Gunthorpe wrote:
+> On Thu, Jan 17, 2013 at 04:22:18PM +0000, Andrew Murray wrote:
 > 
-> As of now we don't need any additional "board" specific "machine_desc".
+> > > In either of those cases, does it make sense to use the MSI support
+> > > outside the scope of the PCI infrastructure? That is, would devices
+> > > other than PCI devices be able to generate an MSI?
+> > 
+> > I've come around to your way of thinking. Your approach sounds good for
+> > registration of MSI ops - let the RC host driver do it (it probably has its
+> > own), or use a helper for following a phandle to get ops that are not part
+> > of the driver. MSIs won't be used outside of PCI devices.
 > 
-> TODO: support interpreting the command line as boot-loader passed dtb
+> Here is a bit of additional info on some MSI stuff..
 > 
-> Signed-off-by: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
-One minor thing below, otherwise:
-
-Reviewed-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-
-
-> diff --git a/arch/arc/kernel/devtree.c b/arch/arc/kernel/devtree.c
-> new file mode 100644
-> index 0000000..229f78e
-> --- /dev/null
-> +++ b/arch/arc/kernel/devtree.c
-> @@ -0,0 +1,69 @@
-> +/*
-> + * Copyright (C) 2012 Synopsys, Inc. (www.synopsys.com)
-> + *
-> + * Based on highly stipped down version of METAG
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +
-> +#include <linux/init.h>
-> +#include <linux/export.h>
-> +#include <linux/errno.h>
-
-Is this include needed?
-
-> +#include <linux/types.h>
-> +#include <linux/reboot.h>
-
-And this?
-
-> +#include <linux/memblock.h>
-> +#include <linux/of.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/of_irq.h>
-
-And this?
-
-> +#include <linux/of_platform.h>
-
-And this?
-
-> +#include <asm/prom.h>
-> +
-> +/* called from unflatten_device_tree() to bootstrap devicetree itself */
-> +void * __init early_init_dt_alloc_memory_arch(u64 size, u64 align)
-> +{
-> +	return __va(memblock_alloc(size, align));
-> +}
-> +
-> +/**
-> + * setup_machine_fdt - Machine setup when an dtb was passed to the kernel
-> + * @dt:		virtual address pointer to dt blob
-> + *
-> + * If a dtb was passed to the kernel, then use it to choose the correct
-> + * machine_desc and to setup the system.
-> + */
-> +int __init setup_machine_fdt(void *dt)
-> +{
-> +	struct boot_param_header *devtree = dt;
-> +	unsigned long dt_root;
-> +	char *model, *compat;
-> +	char manufacturer[16];
-> +
-> +	/* check device tree validity */
-> +	if (be32_to_cpu(devtree->magic) != OF_DT_HEADER)
-> +		return 1;
-> +
-> +	/* Search the mdescs for the 'best' compatible value match */
-> +	initial_boot_params = devtree;
-> +	dt_root = of_get_flat_dt_root();
-> +
-> +	/* compat = "<manufacturer>,<model>" */
-> +	compat = of_get_flat_dt_prop(dt_root, "compatible", NULL);
-> +	if (!compat)
-> +		compat = "<unknown>";
-> +
-> +	model = strchr(compat, ',');
-> +	if (model)
-> +		model++;
-> +
-> +	strlcpy(manufacturer, compat, model ? model - compat : strlen(compat));
-> +
-> +	pr_info("Board \"%s\" from %s (Manufacturer)\n", model, manufacturer);
-> +
-> +	/* Retrieve various information from the /chosen node */
-> +	of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
-> +
-> +	return 0;
-> +}
-> diff --git a/arch/arc/kernel/setup.c b/arch/arc/kernel/setup.c
-> index 82ac206..27aebd6 100644
-> --- a/arch/arc/kernel/setup.c
-> +++ b/arch/arc/kernel/setup.c
-> @@ -13,6 +13,8 @@
->  #include <linux/console.h>
->  #include <linux/module.h>
->  #include <linux/cpu.h>
-> +#include <linux/of_fdt.h>
-> +#include <asm/sections.h>
->  #include <asm/arcregs.h>
->  #include <asm/tlb.h>
->  #include <asm/cache.h>
-> @@ -20,6 +22,7 @@
->  #include <asm/page.h>
->  #include <asm/irq.h>
->  #include <asm/arcregs.h>
-> +#include <asm/prom.h>
+> This can be pretty complex. For instance on hyper transport systems
+> the PCI to HT bridge has an MSI controller that maps between PCI and
+> HT MSI formats, that mapping is configurable, so technically each
+> brige could be considered a MSI controller. Typically the mapping
+> controllers are all setup the same so there is not much problem with
+> this. However *native* HT devices can (which are super rare) can use a
+> different MSI format than PCI devices. From a linux perspective HT is
+> just a variant of PCI.
 >  
->  #define FIX_PTR(x)  __asm__ __volatile__(";" : "+r"(x))
->  
-> @@ -57,6 +60,8 @@ void __init __attribute__((weak)) arc_platform_early_init(void)
->  
->  void __init setup_arch(char **cmdline_p)
->  {
-> +	int rc;
-> +
->  #ifdef CONFIG_CMDLINE_UBOOT
->  	/* Make sure that a whitespace is inserted before */
->  	strlcat(command_line, " ", sizeof(command_line));
-> @@ -71,6 +76,8 @@ void __init setup_arch(char **cmdline_p)
->  	strlcpy(boot_command_line, command_line, COMMAND_LINE_SIZE);
->  	*cmdline_p = command_line;
->  
-> +	rc = setup_machine_fdt(__dtb_start);
-> +
->  	/* To force early parsing of things like mem=xxx */
->  	parse_early_param();
->  
-> @@ -81,6 +88,8 @@ void __init setup_arch(char **cmdline_p)
->  
->  	setup_arch_memory();
->  
-> +	unflatten_device_tree();
-> +
->  	/* Can be issue if someone passes cmd line arg "ro"
->  	 * But that is unlikely so keeping it as it is
->  	 */
-> diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-> index 63da347..682cf57 100644
-> --- a/arch/arc/mm/init.c
-> +++ b/arch/arc/mm/init.c
-> @@ -39,6 +39,11 @@ static int __init setup_mem_sz(char *str)
->  }
->  early_param("mem", setup_mem_sz);
->  
-> +void __init early_init_dt_add_memory_arch(u64 base, u64 size)
-> +{
-> +	pr_err("%s(%llx, %llx)\n", __func__, base, size);
-> +}
-> +
->  /*
->   * First memory setup routine called from setup_arch()
->   * 1. setup swapper's mm @init_mm
-> @@ -169,3 +174,11 @@ void __init free_initrd_mem(unsigned long start, unsigned long end)
->  	free_init_pages("initrd memory", start, end);
->  }
->  #endif
-> +
-> +#ifdef CONFIG_OF_FLATTREE
-> +void __init early_init_dt_setup_initrd_arch(unsigned long start,
-> +					    unsigned long end)
-> +{
-> +	pr_err("%s(%lx, %lx)\n", __func__, start, end);
-> +}
-> +#endif /* CONFIG_OF_FLATTREE */
+> On x86 the MSI is delivered to the CPU APIC complex which converts it
+> into a vectored interrupt - part of the value of MSI is that the MSI
+> data can vector the interrupt to a specific CPU, or group of CPUs or
+> whatever.
 > 
+> Presumably SMP ARMs will evolve similar MSI based interrupt vectoring
+> capabilities, and presumably on-chip, non-PCI peripherals will evolve
+> options to use MSI as well (ie multi-queue ethernet). So it might be
+> worth giving some thought to how things could migrate in that
+> direction someday.
+> 
+> I have a bit hacky MSI driver for Kirkwood, this work you have to
+> generalize the interface could let me actually upstream it :) The MSI
+> is built using the Host2CPU doorbell registers, so it is entirely
+> unrelated to the PCI-E RC driver.
+> 
+> However, my use of the MSI driver on kirkwood is to assign MSIs to a
+> PCI-E device via non-standard registers, more like an on chip
+> peripheral. This is because the Host2CPU doorbell doesn't fit 100%
+> perfectly with the standard PCI MSI stuff, and the hardware has funny
+> needs.. So an 'allocate a MSI interrupt' API would be snazzy too :)
+
+Thanks for this. I believe Thierry may be working on improving the MSI
+API - so perhaps we can see where that takes us.
+
+Andrew Murray
