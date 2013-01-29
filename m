@@ -1,60 +1,94 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V6 03/10] ARM: SAMSUNG: Make dma request compatible to
- generic dma bindings.
-Date: Tue, 29 Jan 2013 14:20:11 +0800
-Message-ID: <20130129061958.GF6878@opensource.wolfsonmicro.com>
-References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
- <1358509629-20471-4-git-send-email-padma.v@samsung.com>
+From: Heiko Schocher <hs@denx.de>
+Subject: Re: [PATCH 2/2] ARM: davinci: da850: configure CS2(aemif) for norflash
+Date: Tue, 29 Jan 2013 09:02:07 +0100
+Message-ID: <510781FF.7030400@denx.de>
+References: <1359436796-25135-1-git-send-email-anilkumar.v@ti.com> <1359436796-25135-3-git-send-email-anilkumar.v@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1Y7d0dPL928TPQbc"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1358509629-20471-4-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1359436796-25135-3-git-send-email-anilkumar.v@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Kumar, Anil" <anilkumar.v@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, b-cousson@ti.com, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux@arm.linux.org.uk, nsekhar@ti.com, khilman@deeprootsystems.com, Wolfgang Denk <wd@denx.de>
 List-Id: devicetree@vger.kernel.org
 
+Hello Kumar,
 
---1Y7d0dPL928TPQbc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 29.01.2013 06:19, Kumar, Anil wrote:
+> Configure 16 bit data bus width for CS2(aemif) to use the norflash on
+> DA850.
+> 
+> Signed-off-by: Kumar, Anil <anilkumar.v@ti.com>
+> ---
+> :100644 100644 37c27af... 540e284... M	arch/arm/mach-davinci/da8xx-dt.c
+>  arch/arm/mach-davinci/da8xx-dt.c |   17 +++++++++++++++++
+>  1 files changed, 17 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+> index 37c27af..540e284 100644
+> --- a/arch/arm/mach-davinci/da8xx-dt.c
+> +++ b/arch/arm/mach-davinci/da8xx-dt.c
+> @@ -38,12 +38,29 @@ static void __init da8xx_init_irq(void)
+>  }
+>  
+>  #ifdef CONFIG_ARCH_DAVINCI_DA850
+> +#define DA8XX_AEMIF_CE2CFG_OFFSET       0x10
+> +#define DA8XX_AEMIF_ASIZE_16BIT         0x1
 
-On Fri, Jan 18, 2013 at 05:17:02PM +0530, Padmavathi Venna wrote:
-> This patch make the dma dev request operation compatible for both
-> DT and non-DT cases. It takes the all the arguments required for
-> dma_request_slave_channel and dma_request_channel. If the driver
-> is initiated via DT or non-DT the corresponding call will be made.
+Hmm... I am not really happy with such defines, because different
+boards need maybe different settings, and this should be catched
+by the device tree ...  Couldn't we add this infos in the
+device tree? I tried such an approach here:
 
-OK, so this is where the SPI change came from - the API has been changed
-incompatibly and SPI needs updating.  For bisection this API update
-ought to be done in a single commit, otherwise there will be steps in
-the bisection where nothing will work.
+First post and some discussion:
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2011-December/010030.html
 
-Anyway, I'll go ahead and apply this, the SPI and the ASoC ones but this
-is something to bear in mind for the future.
+Nori suggested here
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2011-December/011330.html
+to move such an driver out of arch/arm and IIRC it was
+suggested to move it into the mfd framework. I currently
+not know, if there was such a sort of patches, to get this
+in the mfd subsystem, but I think, this CS settings should be
+done like the pinmux settings ...
 
---1Y7d0dPL928TPQbc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+My last posted version of this patch:
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2012-March/013036.html
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Maybe it is worth to discuss this again?
 
-iQIcBAEBAgAGBQJRB2n8AAoJELSic+t+oim9GgUP/2aPCUUCEzzZ84pZU/YE0x7k
-P6yNjLxF9nCd3VnQ1skcw4Avmc/Z9oWAoBzqrWtSO2j9HrvHNw26shCZ/vcUY85q
-9B7SmXO+Ig7kao9bjguCD4ofQ6NKU5ijo4j8oGg7+ASZqfi29Kjvc1Y48ay4Xgad
-mnFrBrapuF+FeHJ793emSX1l6m54vMcxUu6cR4aTJStCHwogGiT218n4n5Tbfb9K
-SLCuJxkoUdiZR4kH6IipOp/jb3zJUoKXRnVDB56CHslF+EAYAL5andk8zxUb3S5+
-8cwpuVIn9tKEdvHvnEn0NN6I+QGM9YdQX3KkhcgRLJjXs/HIAhx98UZdXm1R8Xl+
-KkQlyTP8vkZhh7lV6SSYe2rjJtP5yyfPPHNjJMxCjr47pF9HkHzfAS1UNz95Z0en
-PAo4z/WPOl6xbbV3a37LD1YSuw7/TxxHObveIp+VHjYhFaD3fGJbseGem+qc8Lfm
-kqk9nTNBHyKneLhl2BZyr4ZIrg55zru2/Utz56yQWW3Uv6wcwXLMPzq+FJz4KQpG
-vNlYSa1laVeD9wnvPBGubx9f9cLoWVCTaheb7nEo0b/dIoCS8www11kU8WmYdnWM
-s6i2cIag/5eti5YjNK22viZEp2OcsZT00NhRF65b1EP89DSxHPzLOk/aftHEfCoJ
-YJlm0eElFpXJBl923UJa
-=gZTf
------END PGP SIGNATURE-----
+> +
+> +static void __init da8xx_init_nor(void)
+> +{
+> +	void __iomem *aemif_addr;
+> +
+> +	aemif_addr = ioremap(DA8XX_AEMIF_CTL_BASE, SZ_32K);
+> +
+> +	/* Configure data bus width of CS2 to 16 bit */
+> +	writel(readl(aemif_addr + DA8XX_AEMIF_CE2CFG_OFFSET) |
+> +			DA8XX_AEMIF_ASIZE_16BIT,
+> +			aemif_addr + DA8XX_AEMIF_CE2CFG_OFFSET);
 
---1Y7d0dPL928TPQbc--
+I vote for avoiding such board specific code in a generic
+approach ...
+
+> +
+> +	iounmap(aemif_addr);
+> +}
+>  
+>  static void __init da850_init_machine(void)
+>  {
+>  	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+>  
+>  	da8xx_uart_clk_enable();
+> +	da8xx_init_nor();
+>  }
+>  
+>  static const char *da850_boards_compat[] __initdata = {
+> 
+
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
