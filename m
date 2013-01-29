@@ -1,89 +1,52 @@
-From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Subject: [PATCH V2 5/6] ARM: regulator: add tps6507x device tree data
-Date: Tue, 29 Jan 2013 13:08:53 +0530
-Message-ID: <1359445134-13323-6-git-send-email-manishv.b@ti.com>
-References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V6 08/10] ARM: dts: Modify SPI nodes according generic
+ DMA DT bindings
+Date: Tue, 29 Jan 2013 15:39:38 +0800
+Message-ID: <20130129073936.GA32597@opensource.wolfsonmicro.com>
+References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
+ <1358509629-20471-9-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com
-Cc: anilkumar@ti.com, tony@atomide.com, hs@denx.de, broonie@opensource.wolfsonmicro.com, sameo@linux.intel.com, khilman@deeprootsystems.com, nsekhar@ti.com, linus.walleij@linaro.org, linux@arm.linux.org.uk, rob@landley.net, rob.herring@calxeda.com, grant.likely@secretlab.ca, manishv.b@ti.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DocE+STaALJfprDB"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1358509629-20471-9-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-Add device tree data for tps6507x regulator by adding
-all tps6507x regulator nodes. Regulators are initialized
-based on compatible name provided in tps6507x DT file.
 
-All tps6507x PMIC regulator device tree nodes are placed
-in a separate device tree include file (tps6507x.dtsi).
-tps6507x.dtsi file is created using datasheet
-http://www.ti.com/lit/ds/symlink/tps65070.pdf
+--DocE+STaALJfprDB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Tested on da850-evm.
+On Fri, Jan 18, 2013 at 05:17:07PM +0530, Padmavathi Venna wrote:
+> This patch removes custom way of adding spi dma channels and
+> adds according to new generic DMA DT bindings.
 
-Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
----
-Changes since V1:
- - Updated Copyright information.
+Applied, thanks.
 
-:000000 100644 0000000... 4c326e5... A	arch/arm/boot/dts/tps6507x.dtsi
- arch/arm/boot/dts/tps6507x.dtsi |   47 +++++++++++++++++++++++++++++++++++++++
- 1 files changed, 47 insertions(+), 0 deletions(-)
+--DocE+STaALJfprDB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-diff --git a/arch/arm/boot/dts/tps6507x.dtsi b/arch/arm/boot/dts/tps6507x.dtsi
-new file mode 100644
-index 0000000..4c326e5
---- /dev/null
-+++ b/arch/arm/boot/dts/tps6507x.dtsi
-@@ -0,0 +1,47 @@
-+/*
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+/*
-+ * Integrated Power Management Chip
-+ * http://www.ti.com/lit/ds/symlink/tps65070.pdf
-+ */
-+
-+&tps {
-+	compatible = "ti,tps6507x";
-+
-+	regulators {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vdcdc1_reg: regulator@0 {
-+			reg = <0>;
-+			regulator-compatible = "VDCDC1";
-+		};
-+
-+		vdcdc2_reg: regulator@1 {
-+			reg = <1>;
-+			regulator-compatible = "VDCDC2";
-+		};
-+
-+		vdcdc3_reg: regulator@2 {
-+			reg = <2>;
-+			regulator-compatible = "VDCDC3";
-+		};
-+
-+		ldo1_reg: regulator@3 {
-+			reg = <3>;
-+			regulator-compatible = "LDO1";
-+		};
-+
-+		ldo2_reg: regulator@4 {
-+			reg = <4>;
-+			regulator-compatible = "LDO2";
-+		};
-+
-+	};
-+};
--- 
-1.7.4.1
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRB3wNAAoJELSic+t+oim9U5YP/3RQVs5jcPpelUP+qAXHcZkB
+OPOhByBgHNmogdXK/0YQR4w/FvorTUDn+A38rbWiHFe3zJQYMp5ohVJ7xBG38xc+
+oSEyoenJr7GydkPUB97L8+vtxV3DVBmhxWqeGa06XR0Hq85m5cjqOf5VA9ayY0Ku
+p6QFOAMTwmBhnNYzDJ3NUFaLK5cxC9BZnAXmRMORWyHD+WEkUv8eepiAnLrH0liV
+Ol6LouQB7P8fbc6lj9wP/xg0R5m3QfGrZhZ/FDfjx3hmrWt7LZJpLYgBZPBnW6hU
+slTy3euDRPVWzf7jkGhq+Ef0GYBJ26UA3S/YrfOvjHwcVA9bUhhGVUX83kSkpD/f
+KPHg58w+B4MB7IHYLbE8GrtQsbB7kzqFcesd8sXdS29l9en0O6IJzGWmbzFufO6B
+87RY5txULE9Za6nb8Mzhzgn3JoyDSqqQkmlWwyVwGSTcTPBPZuMbMyQUaLpLYu9q
+envGAr7Q9CczJwbAROhB2qi8GPRGfLH+6INOk0ICycl2rgqnWNqjyHPDAkzUT4UF
+dCvZ1aZt6rDES4igsfOsusB63A8wz6pBCJcjfeJ9Y7SsuPkM4svynpYWwGZfsz1E
+HgVF8QITMztlW+/JLMwoXDWFnATczJBX7CqXlzh4fj8cxUX17JOoXaQaS5O+Xokp
+P6DwlSSWDk9szXEJKsZ4
+=pbXw
+-----END PGP SIGNATURE-----
+
+--DocE+STaALJfprDB--
