@@ -1,66 +1,40 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
-Date: Tue, 29 Jan 2013 15:28:41 +0000
-Message-ID: <201301291528.42176.arnd@arndb.de>
-References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <201301291331.48427.arnd@arndb.de> <1359467140.31148.41.camel@smile>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 1/5] net: mvmdio: unmap base register address at driver
+ removal
+Date: Tue, 29 Jan 2013 16:32:42 +0100
+Message-ID: <20130129163242.1df2caf5@skate>
+References: <1359473048-26551-1-git-send-email-florian@openwrt.org>
+	<1359473048-26551-2-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359467140.31148.41.camel@smile>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1359473048-26551-2-git-send-email-florian@openwrt.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Florian Fainelli <florian@openwrt.org>
+Cc: davem@davemloft.net, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Lennert Buytenhek <buytenh@wantstofly.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 29 January 2013, Andy Shevchenko wrote:
-> On Tue, 2013-01-29 at 13:31 +0000, Arnd Bergmann wrote: 
-> > On Tuesday 29 January 2013, Viresh Kumar wrote:
-> > Ah, good. So I guess the "dma-requests" property should actually
-> > be "16" then.
-> > 
-> > Does this mean that an implicit zero request line means memory?
+Dear Florian Fainelli,
+
+On Tue, 29 Jan 2013 16:24:04 +0100, Florian Fainelli wrote:
+> Fix the driver remove callback to unmap the base register address and
+> not leak this mapping after the driver has been removed.
 > 
-> No, it doesn't.
-> When dma is doing mem2mem transfers the request line field is ignored by
-> the hw.
+> Signed-off-by: Florian Fainelli <florian@openwrt.org>
 
-Ok.
+What about using devm_request_and_ioremap() instead, in order to get
+automatic unmap on error and in the ->remove() path?
 
-> > Could we have device-to-device DMAs with this controller, and if
-> > we can, should we have both 'src' and 'dst' fields?
-> 
-> As far as I know there is no driver under dmaengine that supports
-> per2per transfers.
+But maybe it won't work because this memory range is claimed both by
+the MDIO driver and the Ethernet driver itself. In that case, you could
+use devm_ioremap().
 
-Well, I'm asking because we need to describe the hardware properly,
-even if drivers today don't do this does not mean that it is not
-possible. We can always change the Linux implementation, but we
-cannot as easily change an established DT binding, just like
-we don't change user space interfaces.
+Best regards,
 
-Of course, if that is a thing we don't expect anyone to do,
-we don't have to describe it, or we could make a compatible
-extension to the binding later.
-
-> >  Are the
-> > two number ranges sharing the same address space, i.e. is
-> > request '7' as the destination guaranteed to be the same device
-> > as request '7' in the source?
-> 
-> Request line should be unique. It means a real wire from slave
-> hw to the dmac.
-
-Ok, good.
-
-	Arnd
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
