@@ -1,108 +1,67 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
-Date: Tue, 29 Jan 2013 15:44:09 +0000
-Message-ID: <20130129154409.GA23505@n2100.arm.linux.org.uk>
-References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <201301291344.11066.arnd@arndb.de>
- <20130129142434.GW23505@n2100.arm.linux.org.uk>
- <201301291455.49347.arnd@arndb.de>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 4/5] net: mvmdio: allow Device Tree and platform device
+ to coexist
+Date: Tue, 29 Jan 2013 16:48:57 +0100
+Message-ID: <20130129164857.0ddcddf4@skate>
+References: <1359473048-26551-1-git-send-email-florian@openwrt.org>
+	<1359473048-26551-5-git-send-email-florian@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201301291455.49347.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1359473048-26551-5-git-send-email-florian@openwrt.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Florian Fainelli <florian@openwrt.org>
+Cc: davem@davemloft.net, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Lennert Buytenhek <buytenh@wantstofly.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2013 at 02:55:49PM +0000, Arnd Bergmann wrote:
-> On Tuesday 29 January 2013, Russell King - ARM Linux wrote:
-> > No, that's not what I mean.  I mean the situation we find on Versatile
-> > platforms:
-> > 
-> >             8     3                   >3
-> > PL080 DMA --/--+--/------> FPGA Mux --/--> {bunch of off-CPU peripherals}
-> >                |  5
-> >                `--/------> {On-CPU peripherals}
-> > 
-> > This is something that I've been raising _every time_ I've been involved
-> > with DMA engine discussions when it comes to the matching stuff, so this
-> > is nothing new, and it's not unknown about.
-> 
-> Ok, I see. I have not actually been involved with the DMA engine API
-> much, so for me it's the first time /I/ see this being explained.
-> 
-> From the DT binding perspective, doing this should be no problem. I guess
-> you would model the MUX as a trivial dma engine device that forwards to
-> another one, just like we do for nested interrupt controllers:
-> 
-> 	pl080: dma-engine@10000000 {
-> 		compatible ="arm,pl080", "arm,primecell";
-> 		reg = <0x10000000 0x1000>;
-> 		dma-requests = <8>;
-> 		dma-channels = <4>;
-> 		#dma-cells = <2>;
-> 	};
-> 
-> 	fpga {
-> 		mux: dma-mux@f0008000 {
-> 			reg = <0xf0008000 100>;
-> 			compatible = "arm,versatile-fpga-dmamux";
-> 			dma-requests = <7>;
-> 			dma-channels = <3>;
-> 			#dma-cells = <1>;
-> 			dmas = <&pl080 5 0>, <&pl080 6 0> <&pl080 7 0>;
-> 			dma-names = "mux5", "mux6", "mux7";
-> 		};
-> 		...
-> 
-> 		some-device@f000a000 {
-> 			compatible = "foo,using-muxed-dma";
-> 			dmas = <&mux 3>, <&mux 4>;
-> 			dma-names = "rx", "tx";
-> 		};
-> 	};
-> 
-> The driver for foo,using-muxed-dma just requests a slave channel for its
-> lines, which ends up calling the xlate function of the driver for the mux.
-> That driver still needs to get written, of course, but it should be able
-> to recursively call dma_request_slave_channel on the pl080 device.
-> The arm,versatile-fpga-dmamux driver would not be registered to the dmaengine
-> layer, but it would register as an of_dma_controller.
+Dear Florian Fainelli,
 
-That's a good way to represent it but it fails in a very big way:
-You're stuffing N peripherals down to 3 request lines to the DMA
-engine, and you may want more than 3 of those peripherals to be
-making use of the DMA engine at any one time.
+On Tue, 29 Jan 2013 16:24:07 +0100, Florian Fainelli wrote:
+> This patch changes the Marvell MDIO driver to be registered by using
+> both Device Tree and platform device methods. The driver voluntarily
+> does not use devm_ioremap() to share the same error path for Device Tree
+> and non-Device Tree cases.
 
-Before anyone says "you shouldn't be doing this" consider this:
-your typical DMA slave engine already has this structure:
+Not sure why you think devm_ioremap() can't be used here. Maybe I'm
+missing something, but could you explain? If you use devm_ioremap(),
+then basically you don't need to do anything in the error path
+regarding to the I/O mapping... since it's the whole purpose of the
+devm_*() stuff to automagically undo things in the error case, and in
+the ->remove() code.
 
-N DMA channels <---> M DMA requests <---> M peripherals
+> -	dev->err_interrupt = irq_of_parse_and_map(pdev->dev.of_node, 0);
+> +	if (pdev->dev.of_node) {
+> +		dev->regs = of_iomap(pdev->dev.of_node, 0);
+> +		if (!dev->regs) {
+> +			dev_err(&pdev->dev, "No SMI register address given in DT\n");
+> +			ret = -ENODEV;
+> +			goto out_free;
+> +		}
+> +
+> +		dev->err_interrupt = irq_of_parse_and_map(pdev->dev.of_node, 0);
+> +	} else {
+> +		r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +
+> +		dev->regs = ioremap(r->start, resource_size(r));
+> +		if (!dev->regs) {
+> +			dev_err(&pdev->dev, "No SMI register address given\n");
+> +			ret = -ENODEV;
+> +			goto out_free;
+> +		}
+> +
+> +		dev->err_interrupt = platform_get_irq(pdev, 0);
+> +	}
 
-where N < M.  In other words, there is _already_ a MUX between the
-peripherals and the DMA engine channels themselves (what do you think
-the "request index" which you have to program into DMA channel control
-registers is doing...
+I think you can do a devm_ioremap() and a platform_get_irq() in both
+cases here, and therefore keep the code common between the DT case and
+the !DT case.
 
-We support this external mux today in the PL080 driver - and we do that
-by having the PL080 driver do the scheduling of virtual DMA channels on
-the actual hardware itself.  The PL080 driver has knowledge that there
-may be some sort of additional muxing layer between it and the
-peripheral.
+Thanks,
 
-As the APIs stand today, you just can't do this without having the
-DMA engine driver itself intimately involved because a layer above
-doesn't really have much clue as to what's going on, and the DMA
-engine stuff itself doesn't layer particularly well.
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
