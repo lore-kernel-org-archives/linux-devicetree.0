@@ -1,126 +1,58 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 2/5] spi: pl022: use generic DMA slave configuration if
- possible
-Date: Tue, 29 Jan 2013 09:49:54 +0200
-Message-ID: <1359445794.31148.34.camel@smile>
-References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <1359410300-26113-1-git-send-email-arnd@arndb.de>
- <1359410300-26113-3-git-send-email-arnd@arndb.de>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH V2] ARM: davinci: da850: add RTC DT entries
+Date: Tue, 29 Jan 2013 13:31:23 +0530
+Message-ID: <510781D3.4070807@ti.com>
+References: <1359359268-9781-1-git-send-email-mrugesh.mk@ti.com> <5106A105.6030004@ti.com> <4232EB8829679242B82E712C3DB3149D42355C@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359410300-26113-3-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <4232EB8829679242B82E712C3DB3149D42355C@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Katepallewar, Mrugesh" <mrugesh.mk@ti.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "hs@denx.de" <hs@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-01-28 at 21:58 +0000, Arnd Bergmann wrote: 
-> With the new OF DMA binding, it is possible to completely avoid the
-> need for platform_data for configuring a DMA channel. In cases where the
-> platform has already been converted, calling dma_request_slave_channel
-> should get all the necessary information from the device tree.
+On 1/29/2013 1:05 PM, Katepallewar, Mrugesh wrote:
+> On Mon, Jan 28, 2013 at 21:32:13, Nori, Sekhar wrote:
+>> Hi Mrugesh,
+>>
+>> On 1/28/2013 1:17 PM, Mrugesh Katepallewar wrote:
+>>> Add RTC DT entries in da850 dts file.
+>>>
+>>> Signed-off-by: Mrugesh Katepallewar <mrugesh.mk@ti.com>
+>>> ---
+>>> Applies on top of v3.8-rc4 of linus tree.
+>>>
+>>> This patch is depending on
+>>> "ARM: davinci: da850: add interrupt-parent property in soc node"
+>>> https://patchwork.kernel.org/patch/2044101/
+>>
+>>> Tested on da850-evm device.
+>>>
+>>> Test Procedure:
+>>> date 2013.01.28-10:00:00 (usage: date[YYYY.]MM.DD-hh:mm[:ss]) hwclock 
+>>> -w reset board and check system time.
+>>
+>> Queuing this for v3.9. The testing information above is useful and should be part of the changelog. I moved it there while committing.
+>>
+>> It will be nice to check the alarm functionality as well. Can you check that and let me know that works as well?
 > 
-> Like the patch that converts the dw_dma controller, this is completely
-> untested and is looking for someone to try it out.
-> 
-> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-> Cc: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-> Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> ---
->  .../devicetree/bindings/spi/spi_pl022.txt          | 36 ++++++++++++++++++
->  drivers/spi/spi-pl022.c                            | 43 +++++++++++++++++++++-
->  2 files changed, 77 insertions(+), 2 deletions(-)
-> 
+> I tried to test RTC alarm using "rtcwake" command, however it is not working and returning following error 
+> "rtcwake: /dev/rtc0 not enabled for wakeup events"
+> This is coming because we have not registered RTC device as a wakeup source yet.
 
-> --- a/drivers/spi/spi-pl022.c
-> +++ b/drivers/spi/spi-pl022.c
-> @@ -1139,6 +1139,35 @@ err_no_rxchan:
->  	return -ENODEV;
->  }
->  
-> +static int pl022_dma_autoprobe(struct pl022 *pl022)
-> +{
-> +	struct device *dev = &pl022->adev->dev;
-> +
-> +	/* automatically configure DMA channels from platform, normally using DT */
-> +	pl022->dma_rx_channel = dma_request_slave_channel(dev, "rx");
-> +	if (!pl022->dma_rx_channel)
-> +		goto err_no_rxchan;
-> +
-> +	pl022->dma_tx_channel = dma_request_slave_channel(dev, "tx");
-> +	if (!pl022->dma_tx_channel)
-> +		goto err_no_txchan;
-> +
-> +	pl022->dummypage = kmalloc(PAGE_SIZE, GFP_KERNEL);
+rtcwake is too much to use if the purpose is just to test the alarm
+functionality.
 
-Where this memory will be freed?
-In dependence of the answer could you consider to use
-devm_kmalloc or __get_free_page?
+> For checking RTC alarm interrupt, I developed one simple program which opens RTC device, set alarm and exits.
+> Then by entering "cat /proc/interrupts" checked RTC interrupt count.
 
-> +	if (!pl022->dummypage)
-> +		goto err_no_dummypage;
-> +
-> +	return 0;
-> +
-> +err_no_dummypage:
-> +	dma_release_channel(pl022->dma_tx_channel);
-> +	pl022->dma_tx_channel = NULL;
-> +err_no_txchan:
-> +	dma_release_channel(pl022->dma_rx_channel);
-> +	pl022->dma_rx_channel = NULL;
-> +err_no_rxchan:
-> +	return -ENODEV;
-> +}
-> +		
->  static void terminate_dma(struct pl022 *pl022)
->  {
->  	struct dma_chan *rxchan = pl022->dma_rx_channel;
-> @@ -1167,6 +1196,11 @@ static inline int configure_dma(struct pl022 *pl022)
->  	return -ENODEV;
->  }
->  
-> +static inline int pl022_dma_autoprobe(struct pl022 *pl022)
-> +{
-> +	return 0;
-> +}
-> +
->  static inline int pl022_dma_probe(struct pl022 *pl022)
->  {
->  	return 0;
-> @@ -2226,8 +2260,13 @@ static int pl022_probe(struct amba_device *adev, const struct amba_id *id)
->  		goto err_no_irq;
->  	}
->  
-> -	/* Get DMA channels */
-> -	if (platform_info->enable_dma) {
-> +	/* Get DMA channels, try autoconfiguration first */
-> +	status = pl022_dma_autoprobe(pl022);
-> +
-> +	/* If that failed, use channels from platform_info */
-> +	if (status == 0)
-> +		platform_info->enable_dma = 1;
-> +	else if (platform_info->enable_dma) {
->  		status = pl022_dma_probe(pl022);
->  		if (status != 0)
->  			platform_info->enable_dma = 0;
+No need of writing your own. Simply use the one in Documentation/rtc.txt
 
--- 
-Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Intel Finland Oy
+> Using above test it confirms that RTC alarm functionality is working fine. 
+
+Okay. Thanks for confirming.
+
+Regards,
+Sekhar
