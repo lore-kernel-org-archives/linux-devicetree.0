@@ -1,48 +1,46 @@
-From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Subject: RE: [PATCH V2 1/6] pinctrl: pinctrl-single: use arch_initcall and
- module_exit
-Date: Tue, 29 Jan 2013 12:02:54 +0000
-Message-ID: <A4887BF146CD57468F700B415D2F4701581AE9@DBDE01.ent.ti.com>
-References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
-	<1359445134-13323-2-git-send-email-manishv.b@ti.com>
- <CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com>
+From: Vivek Gautam <gautamvivek1987@gmail.com>
+Subject: Re: [PATCH v2 0/2] ARM: Exynos5250: Enabling samsung usb phy
+Date: Tue, 29 Jan 2013 17:40:28 +0530
+Message-ID: <CAFp+6iGJLV2rnHESX_Qmp+uL63mM7i=2tmFxaj=dK+SqCeg29A@mail.gmail.com>
+References: <1358868680-5757-1-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "tony@atomide.com" <tony@atomide.com>, "hs@denx.de" <hs@denx.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "khilman@deeprootsystems.com" <khilman@deeprootsystems.com>, "Nori, Sekhar" <nsekhar@ti.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "grant.likely@secretlab.ca" <gr>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1358868680-5757-1-git-send-email-gautam.vivek@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, kgene.kim@samsung.com, grant.likely@secretlab.ca, dianders@chromium.org, balbi@ti.com, thomas.abraham@linaro.org, sylvester.nawrocki@gmail.com, tomasz.figa@gmail.com, Vivek Gautam <gautam.vivek@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Tue, Jan 22, 2013 at 9:01 PM, Vivek Gautam <gautam.vivek@samsung.com> wrote:
+> Changes from v1:
+>  - Putting separate device nodes for usb 2.0 phy and usb 3.0 phy
+>    based on separate driver for samsung usb 3.0 phy and
+>    samsung usb 2.0 phy:
+>    [PATCH v3 0/2] Adding USB 3.0 DRD-phy support for exynos5250
+>    [PATCH v8 0/4] Adding usb2.0 host-phy support for exynos5250
+>  - Aligning as per the patch:
+>    usb: phy: samsung: Add support to set pmu isolation
+>  - Replaced phy-handle approach for PHY CONTROL registers
+>    to child nodes.
+>  - Removing AUX data entry from exynos5250 dt file.
+>
+> Vivek Gautam (2):
+>   ARM: Exynos5250: Enabling samsung-usbphy driver
+>   ARM: Exynos5250: Enabling samsung-usb3-phy driver
+>
 
-On Tue, Jan 29, 2013 at 16:29:54, Linus Walleij wrote:
-> On Tue, Jan 29, 2013 at 8:38 AM, Vishwanathrao Badarkhe, Manish <manishv.b@ti.com> wrote:
-> 
-> > Currently, I2C driver gets probed before pinctrl driver.
-> > To achieve I2C pin muxing via pinctrl driver before I2C probe get 
-> > called, register pinctrl driver in arch_initcall.
-> > Also, add module_exit to unregister pinctrl driver.
-> >
-> > Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
-> 
-> So your I2C driver is not returning -EPROBE_DEFER if it cannot find its pins?
-Yes. In Davinci I2C driver, it's not implemented to return -EPROBE_DEFER if it 
-can't find its pins.
+any comments on this patch-series please ?
 
-Please see below discussion for more details: 
-https://patchwork2.kernel.org/patch/2031321/
- 
-> 
-> Hm, well I can live with this, if Tony ACKs it.
-> 
-> Yours,
-> Linus Walleij
-> 
+>  arch/arm/boot/dts/exynos5250.dtsi |   28 ++++++++++++++++++++++++++++
+>  1 files changed, 28 insertions(+), 0 deletions(-)
+>
+> --
+> 1.7.6.5
+>
 
 
-Regards, 
-Manish
+
+-- 
+Thanks & Regards
+Vivek
