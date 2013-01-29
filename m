@@ -1,175 +1,217 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 1/4] pwm_backlight: Fix PWM levels support in non DT case
-Date: Tue, 29 Jan 2013 13:30:25 +0100
-Message-ID: <20130129123025.GA20166@avionic-0098.mockup.avionic-design.de>
-References: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com>
- <1358861996-27194-2-git-send-email-peter.ujfalusi@ti.com>
- <20130128210123.GA24673@avionic-0098.mockup.avionic-design.de>
- <51078580.2000808@ti.com>
- <20130129101709.GC16746@avionic-0098.mockup.avionic-design.de>
- <5107BC2B.5080400@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
+From: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Subject: [PATCH RFC v2] media: tvp514x: add OF support
+Date: Tue, 29 Jan 2013 18:37:11 +0530
+Message-ID: <1359464832-8875-1-git-send-email-prabhakar.lad@ti.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5107BC2B.5080400@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+To: LMML <linux-media@vger.kernel.org>
+Cc: DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Lad, Prabhakar <prabhakar.lad@ti.com>
 
---gKMricLos+KVdGMg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+add OF support for the tvp514x driver.
 
-On Tue, Jan 29, 2013 at 01:10:19PM +0100, Peter Ujfalusi wrote:
-> On 01/29/2013 11:17 AM, Thierry Reding wrote:
-> > On Tue, Jan 29, 2013 at 09:17:04AM +0100, Peter Ujfalusi wrote:
-> >> On 01/28/2013 10:01 PM, Thierry Reding wrote:
-> >>> On Tue, Jan 22, 2013 at 02:39:53PM +0100, Peter Ujfalusi wrote:
-> >>>> It is expected that board files would have:
-> >>>> static unsigned int bl_levels[] =3D { 0, 50, 100, 150, 200, 250, };
-> >>>>
-> >>>> static struct platform_pwm_backlight_data bl_data =3D {
-> >>>> 	.levels =3D bl_levels,
-> >>>> 	.max_brightness =3D ARRAY_SIZE(bl_levels),
-> >>>> 	.dft_brightness =3D 4,
-> >>>> 	.pwm_period_ns =3D 7812500,
-> >>>> };
-> >>>>
-> >>>> In this case the max_brightness would be out of range in the levels =
-array.
-> >>>> Decrement the received max_brightness in every case (DT or non DT) w=
-hen the
-> >>>> levels has been provided.
-> >>>
-> >>> What's wrong with specifying .max_brightness =3D ARRAY_SIZE(bl_levels=
-) - 1
-> >>> instead?
-> >>
-> >> There is nothing wrong with that either but IMHO it is more natural fo=
-r board
-> >> files to use just ARRAY_SIZE(bl_levels). In this way the handling of
-> >> data->max_brightness among non DT and DT booted kernel is more uniform=
- in the
-> >> driver itself.
-> >=20
-> > The .max_brightness field is defined to be the maximum value that you
-> > can set the brightness to. If you use .levels and set .max_brightness to
-> > ARRAY_SIZE() then that's no longer true because the maximum value for
-> > the brightness will actually be ARRAY_SIZE() - 1.
->=20
-> Yes, in conjunction with .levels it would be better to have .nr_levels in=
-stead
-> reusing the max_brightness.
->=20
-> > The reason why in the DT case we decrement .max_brightness is that it is
-> > used as a temporary variable to keep the number of levels, which
-> > corresponds to ARRAY_SIZE() in your example, and adjust it later on to
-> > match the definition. That's an implementation detail.
-> >=20
-> > Platform data content should be encoded properly without knowledge of
-> > the internal implementation.
-> >=20
-> >> Right now all board files are using only the .max_brightness to specif=
-y the
-> >> maximum value, I could not find any users of .levels in the kernel.
-> >=20
-> > Yes. But this is the legacy mode which should be considered deprecated.
-> > The reason why the concept of brightness-levels was introduced back when
-> > the DT bindings were created was that pretty much no hardware in
-> > existence actually works that way. This was a topic of discussion at the
-> > time when I first proposed these changes, see for example:
-> >=20
-> > 	http://www.mail-archive.com/devicetree-discuss@lists.ozlabs.org/msg094=
-72.html
->=20
-> Right. Now I know the background.
-> However I do not agree with the conclusion. Probably it is fine in some c=
-ases
-> to limit the number of configurable duty cycles to have only distinct ste=
-ps.
-> To not go too far, on my laptop I have:
-> # cat /sys/class/backlight/acpi_video0/max_brightness
-> 15
-> # cat /sys/class/backlight/intel_backlight/max_brightness
-> 93
+Signed-off-by: Lad, Prabhakar <prabhakar.lad@ti.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>
+Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+---
+ Changes for v2:
+  1: Fixed review comment pointed by Heiko.
+  2: Fixed review comment pointed by Laurent.
 
-FWIW, I have hardware with an Intel chipset that has max_brightness
-13666. That doesn't mean all of these are necessarily valid or useful.
+ This patch is on top of following patches:
+  1: https://patchwork.kernel.org/patch/1930941/
+  2: http://patchwork.linuxtv.org/patch/16193/
+  3: https://patchwork.kernel.org/patch/1944901
 
-> In this case I would be more happier if the user space would use the
-> intel_backlight than the acpi_video0. I'm fine if user space decides to a=
-llow
-> me only 15 distinct steps on the intel_backlight but I would expect it to=
- do
-> so in a way when I change the brightness in the UI it would step down or =
-up to
-> the next user configurable level. Right now it uses the acpi_video0 to co=
-ntrol
-> the levels which means that I have (ugly) jumps in the backlight every ti=
-me I
-> adjust it.
->=20
-> In my phone and tablet all transitions between backlight levels are smoot=
-h.
-> This is not a case in my laptop (with exception when the backlight is set=
- to
-> auto, FW controlled).
->=20
-> The perceived brightness change depends on the surrounding environment, y=
-ou
-> can not say that in high level you would need less steps or you need to h=
-ave
-> less steps in low brightness. If you in a dark room the low changes can be
-> observed, while the same change when you are outside in a sunny day would=
- not
-> reflect the same.
->=20
-> Sure we could do the ramps in driver, but what are the parameters? how ma=
-ny
-> step between the two level? What is the time between the steps?
->=20
-> If you are about to make a product you will end up specifying all the pos=
-sible
-> steps to provide the best user experience. So if the PWM have 127 duty cy=
-cle
-> you will have levels from 0, 1, 2, 3, ...., 125, 126, 127.
+ .../devicetree/bindings/media/i2c/tvp514x.txt      |   38 +++++++++++
+ drivers/media/i2c/tvp514x.c                        |   70 ++++++++++++++++++--
+ 2 files changed, 103 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/tvp514x.txt
 
-That's not true. The duty-cycle merely defines a percentage of how long
-the PWM signal will be high. You can choose an arbitrary number of
-subdivisions.
+diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+new file mode 100644
+index 0000000..55d3ffd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+@@ -0,0 +1,38 @@
++* Texas Instruments TVP514x video decoder
++
++The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality, single-chip
++digital video decoder that digitizes and decodes all popular baseband analog
++video formats into digital video component. The tvp514x decoder supports analog-
++to-digital (A/D) conversion of component RGB and YPbPr signals as well as A/D
++conversion and decoding of NTSC, PAL and SECAM composite and S-video into
++component YCbCr.
++
++Required Properties :
++- compatible: Must be "ti,tvp514x-decoder"
++- hsync-active: HSYNC Polarity configuration for current interface.
++- vsync-active: VSYNC Polarity configuration for current interface.
++- data-active: Clock polarity of the current interface.
++
++Example:
++
++i2c0@1c22000 {
++	...
++	...
++
++	tvp514x@5c {
++		compatible = "ti,tvp514x-decoder";
++		reg = <0x5c>;
++
++		port {
++			tvp514x_1: endpoint {
++				/* Active high (Defaults to 0) */
++				hsync-active = <1>;
++				/* Active high (Defaults to 0) */
++				hsync-active = <1>;
++				/* Active low (Defaults to 0) */
++				data-active = <0>;
++			};
++		};
++	};
++	...
++};
+diff --git a/drivers/media/i2c/tvp514x.c b/drivers/media/i2c/tvp514x.c
+index a4f0a70..24ce759 100644
+--- a/drivers/media/i2c/tvp514x.c
++++ b/drivers/media/i2c/tvp514x.c
+@@ -12,6 +12,7 @@
+  *     Hardik Shah <hardik.shah@ti.com>
+  *     Manjunath Hadli <mrh@ti.com>
+  *     Karicheri Muralidharan <m-karicheri2@ti.com>
++ *     Prabhakar Lad <prabhakar.lad@ti.com>
+  *
+  * This package is free software; you can redistribute it and/or modify
+  * it under the terms of the GNU General Public License version 2 as
+@@ -33,7 +34,9 @@
+ #include <linux/delay.h>
+ #include <linux/videodev2.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ 
++#include <media/v4l2-of.h>
+ #include <media/v4l2-async.h>
+ #include <media/v4l2-device.h>
+ #include <media/v4l2-common.h>
+@@ -930,6 +933,58 @@ static struct tvp514x_decoder tvp514x_dev = {
+ 
+ };
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id tvp514x_of_match[] = {
++	{.compatible = "ti,tvp514x-decoder", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, tvp514x_of_match);
++
++static struct tvp514x_platform_data
++	*tvp514x_get_pdata(struct i2c_client *client)
++{
++	if (!client->dev.platform_data && client->dev.of_node) {
++		struct tvp514x_platform_data *pdata;
++		struct v4l2_of_endpoint bus_cfg;
++		struct device_node *endpoint;
++
++		pdata = devm_kzalloc(&client->dev,
++				sizeof(struct tvp514x_platform_data),
++				GFP_KERNEL);
++		client->dev.platform_data = pdata;
++		if (!pdata)
++			return NULL;
++
++		endpoint = of_get_child_by_name(client->dev.of_node, "port");
++		if (endpoint)
++			endpoint = of_get_child_by_name(endpoint, "endpoint");
++
++		if (!endpoint) {
++			v4l2_info(client, "Using default data!!\n");
++		} else {
++			v4l2_of_parse_parallel_bus(endpoint, &bus_cfg);
++
++			if (bus_cfg.mbus_flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++				pdata->hs_polarity = 1;
++			if (bus_cfg.mbus_flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++				pdata->vs_polarity = 1;
++			if (bus_cfg.mbus_flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
++				pdata->clk_polarity = 1;
++		}
++	}
++
++	return client->dev.platform_data;
++}
++#else
++#define tvp514x_of_match NULL
++
++static struct tvp514x_platform_data
++	*tvp514x_get_pdata(struct i2c_client *client)
++{
++	return client->dev.platform_data;
++}
++#endif
++
+ /**
+  * tvp514x_probe() - decoder driver i2c probe handler
+  * @client: i2c driver client device structure
+@@ -941,6 +996,7 @@ static struct tvp514x_decoder tvp514x_dev = {
+ static int
+ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ {
++	struct tvp514x_platform_data *pdata;
+ 	struct tvp514x_decoder *decoder;
+ 	struct v4l2_subdev *sd;
+ 	int ret;
+@@ -949,22 +1005,25 @@ tvp514x_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 	if (!i2c_check_functionality(client->adapter, I2C_FUNC_SMBUS_BYTE_DATA))
+ 		return -EIO;
+ 
++	pdata = tvp514x_get_pdata(client);
++	if (!pdata) {
++		v4l2_err(client, "No platform data!!\n");
++		return -EPROBE_DEFER;
++	}
++
+ 	decoder = devm_kzalloc(&client->dev, sizeof(*decoder), GFP_KERNEL);
+ 	if (!decoder)
+ 		return -ENOMEM;
+ 
+ 	/* Initialize the tvp514x_decoder with default configuration */
+ 	*decoder = tvp514x_dev;
+-	if (!client->dev.platform_data) {
+-		v4l2_err(client, "No platform data!!\n");
+-		return -EPROBE_DEFER;
+-	}
++
+ 	/* Copy default register configuration */
+ 	memcpy(decoder->tvp514x_regs, tvp514x_reg_list_default,
+ 			sizeof(tvp514x_reg_list_default));
+ 
+ 	/* Copy board specific information here */
+-	decoder->pdata = client->dev.platform_data;
++	decoder->pdata = pdata;
+ 
+ 	/**
+ 	 * Fetch platform specific data, and configure the
+@@ -1096,6 +1155,7 @@ MODULE_DEVICE_TABLE(i2c, tvp514x_id);
+ 
+ static struct i2c_driver tvp514x_driver = {
+ 	.driver = {
++		.of_match_table = tvp514x_of_match,
+ 		.owner = THIS_MODULE,
+ 		.name = TVP514X_MODULE_NAME,
+ 	},
+-- 
+1.7.4.1
 
-Since the brightness of a display isn't linearly proportional to the
-duty cycle of the PWM driving it, representing that brightness by a
-linear range is misleading. Furthermore some panels have regions where
-the backlight isn't lit at all or where changes in the PWM duty-cycle
-don't make any difference.
-
-Thierry
-
---gKMricLos+KVdGMg
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRB8DhAAoJEN0jrNd/PrOhDEQQALpWPJVCsDca1hzeNeIOWmBp
-EYEWovDmtcRI1qHR8O8tsALmB4sLPF+GE7GEKQhSKlH0G4l1WSW+lez28XB3rZTX
-pDP9k1bNCCnqH54YXhKmZYnSU+ZL+ueNwGYU0uZdLkSpSKv4Ed+dqM0shHNTkE3+
-obRHhCzMsXo98us5E8dKCxL2xfd/NrFoWnX/pjr/y5mSnuVJim1aGZoG8ngy607o
-Rj3C/tOwryvwDlZwn3gs2AngOooiyEK/qoQdHBxuD5NwvUnJ6AipZ/3ZGKlPT0+F
-AI335AZVkbFwok9E2rD2qq8tFaUiGjOA1D+fDSpUUKOTU4+CVT9yIIukUUy/PHA0
-Qa7v+Lw4VhuINrmputUyQLDZ3EVaHc1Z4dlbPh7Suz90y2+BNXCPA9tQOW4DdfdH
-6b4yG6v+PWiAh2/FigrjF9PYBLJONJGxnAcFqG9MnW0weom2N3Pw44lJPcD2T9bV
-WGXgkwbaqmUMwmSdWKAmd9hgzUmOrESxNAA+pwzgD04UcQHPJa3bhy0uXVFkEM7w
-EuO+uyF/Y4Vgr/KqT6FOkKCGOwG6cnOgHGZuIL2gA/cHsdbGoT+tnN5cW6V6euLX
-+y23M0NZGyNGSHMbvhzVtSCMyKdXgf6aqP9WjXmy07t136rG5AA7FYC6mjO90KNj
-L7YhbdZl8Xx+tcE4uyzB
-=Vn3S
------END PGP SIGNATURE-----
-
---gKMricLos+KVdGMg--
