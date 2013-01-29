@@ -1,58 +1,72 @@
-From: Florian Fainelli <florian@openwrt.org>
-Subject: Re: [PATCH 4/5] net: mvmdio: allow Device Tree and platform device to coexist
-Date: Tue, 29 Jan 2013 21:41:45 +0100
-Message-ID: <201301292141.45931.florian@openwrt.org>
-References: <1359473048-26551-1-git-send-email-florian@openwrt.org> <1359473048-26551-5-git-send-email-florian@openwrt.org> <20130129175912.GE25646@obsidianresearch.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 1/4] ARM: dts: add support for hdmi to exynos4
+Date: Tue, 29 Jan 2013 21:42:53 +0100
+Message-ID: <5108344D.4090202@gmail.com>
+References: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com> <1359110384-28402-2-git-send-email-rahul.sharma@samsung.com> <51059402.2030405@gmail.com> <CAPdUM4Py3dbV_tFnZ6GOxSm-6Sq8FBZu00JH3UDq_PV2U8yq_A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130129175912.GE25646@obsidianresearch.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: davem@davemloft.net, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, linux-doc@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, netdev@vger.kernel.org, Paul Mackerras <paulus@samba.org>, linux-arm-kernel@lists.infradead.org, Rob Landley <rob@landley.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linuxppc-dev@lists.ozlabs.org, Lennert Buytenhek <buytenh@wantstofly.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAPdUM4Py3dbV_tFnZ6GOxSm-6Sq8FBZu00JH3UDq_PV2U8yq_A@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <r.sh.open@gmail.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, Tomasz Stanislawski <t.stanislaws@samsung.com>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Le mardi 29 janvier 2013 18:59:12, Jason Gunthorpe a =E9crit :
-> On Tue, Jan 29, 2013 at 04:24:07PM +0100, Florian Fainelli wrote:
-> > -	dev->err_interrupt =3D irq_of_parse_and_map(pdev->dev.of_node, 0)=
-;
-> > +	if (pdev->dev.of_node) {
-> > +		dev->regs =3D of_iomap(pdev->dev.of_node, 0);
-> > +		if (!dev->regs) {
-> > +			dev_err(&pdev->dev, "No SMI register address given in=20
-DT\n");
-> > +			ret =3D -ENODEV;
-> > +			goto out_free;
-> > +		}
-> > +
-> > +		dev->err_interrupt =3D irq_of_parse_and_map(pdev->dev.of_node, 0=
-);
-> > +	} else {
-> > +		r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +
-> > +		dev->regs =3D ioremap(r->start, resource_size(r));
-> > +		if (!dev->regs) {
-> > +			dev_err(&pdev->dev, "No SMI register address given\n");
-> > +			ret =3D -ENODEV;
-> > +			goto out_free;
-> > +		}
-> > +
-> > +		dev->err_interrupt =3D platform_get_irq(pdev, 0);
-> > +	}
->=20
-> Why do you have these different paths for OF and platform? AFAIK thes=
-e
-> days when a OF device is automatically converted into a platform
-> device all the struct resources are created too, so you can't you jus=
-t
-> use platform_get_resource and devm_request_and_ioremap for both flows=
-?
->=20
-> Ditto for the interrupt - platform_get_irq should work in both cases?
+Hi Rahul,
 
-There was no particular reason and I updated the patchset to do that pr=
-ecisely=20
-in version 2.
---=20
-=46lorian
+On 01/28/2013 07:19 AM, Rahul Sharma wrote:
+>>> --- a/arch/arm/boot/dts/exynos4.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos4.dtsi
+>>> @@ -289,4 +289,11 @@
+>>>                          interrupts =<0 34 0>;
+>>>                  };
+>>>          };
+>>> +
+>>> +       hdmi {
+>>> +               compatible = "samsung,exynos4-hdmi14";
+>>
+>>
+>> What "-hdmi14" signifies here ? And to which Exynos4 SoC revisions this
+>> compatible property is supposed to apply ?
+>>
+>
+> -hdmi14 signifies 1.4 compliant Hdmi IP like in Exynos4412, while
+> Exynos4210 has 1.3
+> compliant HDMI block. I have done a mistake here. I should have kept
+> it in 4412.dtsi. OR
+> I can move it to 4x12.dtsi but not sure whether all 4x12 socs have 1.4 hdmi.
+
+Exynos4210 also have the HDMI IP. I'm not sure how much common those 
+IP's are
+among Exynos4 series SoCs. I suppose it makes sense to create a hdmi node in
+exynos4.dtsi and override what's required either in exynos4x12.dtsi or
+exynos4412.dtsi file.
+
+What is worring me is that you're trying to just append the supported
+HDMI standard version to the string, and there might be more differences
+in the IPs across all Exynos4 SoC series. What if there are two different
+SoCs that support e.g. HDMI v1.4 but there are some differences in the
+HDMI IPs ? You would likely need to invent new properties and pass them
+to the driver. Appending specific SoC name to the compatible string looks
+like a better alternative to me.
+
+>>> +               reg =<0x12D00000 0x70000>;
+>>> +               interrupts =<0 95 0>;
+>>> +               hpd-gpio =<&gpx3 7 0xf 1 3>;
+>>> +       };
+>>
+>>
+>> New bindings need to be documented in Documentation/devicetree/bindings/.
+>>
+> It is present at Documentation/devicetree/bindings/drm/exynos/hdmi.txt.
+
+Thanks. Sorry, I've missed that. But it seems to be only for exynos5 SoCs ?
+Also the location is a bit unexpected to me, if we want to have Exynos4 and
+Exynos5 specific IP documented in this file. As I mentioned in previous
+e-mail this IP is not only handled by the DRM API.
+
+--
+
+Regards,
+Sylwester
