@@ -1,97 +1,71 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining dr_mode
- and phy_type
-Date: Tue, 29 Jan 2013 16:33:02 +0200
-Message-ID: <20130129143302.GF2046@arwen.pp.htv.fi>
-References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
- <5107D253.5030400@ti.com>
- <20130129135336.GA3323@pengutronix.de>
- <5107D84F.80401@ti.com>
-Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
+From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v2 0/6] of, of_gpio,
+	of_spi: Bugfix and improve of_parse_phandle_with_args,
+	of_gpio_named_count and of_spi_register_master
+Date: Tue, 29 Jan 2013 15:53:37 +0100
+Message-ID: <1359471223-4794-1-git-send-email-andreas@gaisler.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gvF4niNJ+uBMJnEh"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5107D84F.80401-l0cyMroinI0@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: kishon <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---gvF4niNJ+uBMJnEh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch series fixes a bug where of_gpio_named count relied upon a return
+value that was no longer returned from of_parse_phandle_with_args and adds the
+possibility for of_gpio_named_count to return error values.
 
-Hi,
+In addition, for of_spi_register_master it fixes a bug, adds documentation,
+adds fetching of gpio flags and initializes gpio values to be consistent with
+return values from of_parse_phandle_with_args.
 
-On Tue, Jan 29, 2013 at 07:40:23PM +0530, kishon wrote:
-> On Tuesday 29 January 2013 07:23 PM, Wolfram Sang wrote:
-> >>>+	err =3D of_property_read_string(np, "phy_type", &phy_type);
-> >>>+	if (err < 0)
-> >>>+		return USBPHY_INTERFACE_MODE_NA;
-> >>
-> >>Why don't we use a u32 property type for the *phy-type*? IMHO we
-> >>should use string property only when the property should be
-> >>absolutely unambiguous (e.g., compatible property should be string).
-> >
-> >If we would use u32-numbers in the compatible entry, this would also be
-> >unambiguous, no? 0xd00dfeed would be the at24-driver. Pretty specific.
->=20
-> hehe... But we don't have a corresponding *enum* representing the
-> drivers :-)
-> >
-> >I don't mind having readable devicetrees. And we have it for ethernet
-> >phys already with strings, so it would be consistent.
->=20
-> Ok. Fine with it then :-)
+Tested on sparc (excluding the changes to drivers gpio-fan, i2c-mux-gpio,
+matrix_keypad, mdio-mux-gpio, spi-mpc52xx, spi-oc-tiny, spi-ppc4xx, selftest). 
+Compile tested on x86, arm and ppc (all changed source files, when appropriate
+for platform)
 
-I prefer u32 here, because we have the matching enum. Otherwise we end
-up with:
+Changes since v1:
+- PATCH 2/6: Handle error return values from calls to of_gpio_count
 
-of_property_read_string(...,&type);
+Andreas Larsson (6):
+  of: Return -EEXIST from of_parse_phandle_with_args for holes in
+    phandle list
+  of: Return -ENXIO from of_parse_phandle_with_args for too large index
+    and return errors from of_gpio_named_count
+  of_spi: Initialize cs_gpios properly
+  of_spi: Document cs_gpios and cs_gpio in kernel-doc
+  of_spi: Add fetching of of_gpio flags to of_spi_register_master
+  of_spi: Initialize cs_gpios and cs_gpio with -EEXIST
 
-if (!strcmp(type, "ulpi"))
-	foo();
-else if (!strcmp(type, "utmi"))
-	bar();
-else if (!strcmp(type, "pipe3"))
-	baz();
-else
-	BUG();
+ Documentation/devicetree/bindings/spi/spi-bus.txt |    3 +-
+ drivers/gpio/gpiolib-of.c                         |    8 +++--
+ drivers/hwmon/gpio-fan.c                          |    6 ++--
+ drivers/i2c/muxes/i2c-mux-gpio.c                  |    3 +-
+ drivers/input/keyboard/matrix_keypad.c            |    2 +-
+ drivers/net/phy/mdio-mux-gpio.c                   |    2 +-
+ drivers/of/base.c                                 |    9 +++--
+ drivers/of/selftest.c                             |    2 +-
+ drivers/spi/spi-fsl-spi.c                         |    4 ++-
+ drivers/spi/spi-mpc52xx.c                         |    5 +++
+ drivers/spi/spi-oc-tiny.c                         |    4 ++-
+ drivers/spi/spi-ppc4xx.c                          |    6 +++-
+ drivers/spi/spi.c                                 |   40 ++++++++++++++++-----
+ include/linux/spi/spi.h                           |   10 +++++
+ 14 files changed, 78 insertions(+), 26 deletions(-)
 
-and I don't like that, it's ugly and error prone. Also looks awful when
-someone needs to change that, the diff looks messy. A u32 followed by a
-switch statement looks nicer.
 
---=20
-balbi
-
---gvF4niNJ+uBMJnEh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRB92eAAoJEIaOsuA1yqREapYP/A+mFVVik+SklC26N5ds2ChZ
-YERuNKQDZQqsh3RHd+74Dx+jsjeaNToANIjQ+uVPR71xNHrBLRcun700HPZIs1D1
-eMS5ijkrikj8P34jKIXHCu2Jxwb+Etz37eKw0s7feMXe8WgEMXjgvkOm/T7vufaq
-fwxc8PDJaXf+vPqm5hLSUaNAjYofhptDbFK9svusvekjy+eotF8o3TosLwutusuP
-lojVR4TNUduWS1qg3mIzytL+JdxHtwqw2leEFW+LiSkJHtXWMtFGDwtgX7giLDIO
-GvPjdfkwB7A1iUXbZ/LtDYQoJ9+gEZ5J8s2P9h2lz3L1p29nHKlOTJLy1CUg9MkO
-hs/ZqgaZtzySA9qjTjIFUNQPbgyAbIAwJy+geBRQB3Q9fXyI12BWhZvdZQzvcJU5
-/2zv3PWCDaxTgi98oNu+ONv5X9GUKf1MJyoQFyH3Ypi2+TZL/7CbpaKyHbtHlnP/
-7bb6UTIcd971MFd6zISnZHODST8G1taI+o0sbkz871xQORwLu6s6+2+oWGAC/osR
-NwBHTNszpYsY5mx/eFItoD987plB32KEqizFqQLJewxkc3To9HsmXiyG/EIfTgRy
-qihQklKb8IceLBM88ZH6m92mV4hKIDlT5Mz+Zy9V6GxM5OzIhb+aKcIsiL1pQy2B
-wlqlF9hs6YAFrMi4qce2
-=/06o
------END PGP SIGNATURE-----
-
---gvF4niNJ+uBMJnEh--
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------------------------------------------------------------------------------
+Master Visual Studio, SharePoint, SQL, ASP.NET, C# 2012, HTML5, CSS,
+MVC, Windows 8 Apps, JavaScript and much more. Keep your skills current
+with LearnDevNow - 3,200 step-by-step video tutorials by Microsoft
+MVPs and experts. ON SALE this month only -- learn more at:
+http://p.sf.net/sfu/learnnow-d2d
