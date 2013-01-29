@@ -1,44 +1,71 @@
-From: "Kumar, Anil" <anilkumar.v-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH 0/2] DaVinci: da850: Add NOR flash DT node support
-Date: Tue, 29 Jan 2013 10:49:54 +0530
-Message-ID: <1359436796-25135-1-git-send-email-anilkumar.v@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V6 04/10] spi: s3c64xx: Modify SPI driver to use generic
+ DMA DT support
+Date: Tue, 29 Jan 2013 13:19:46 +0800
+Message-ID: <20130129051943.GE6878@opensource.wolfsonmicro.com>
+References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
+ <1358509629-20471-5-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Rgf3q3z9SdmXC6oT"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1358509629-20471-5-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-Add NOR flash DT node support for DA850 EVM and related pin mux.
-Configure 16 bit data bus width for CS2(aemif) to use the norflash on
-DA850.
 
-This series is based on top of 3.8-rc4 and the following patches.
+--Rgf3q3z9SdmXC6oT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
- -drivers/pinctrl: grab default handles from device core
-  https://patchwork.kernel.org/patch/1862231/
- -ARM: davinci: da850: add pinctrl driver DT entries
+On Fri, Jan 18, 2013 at 05:17:03PM +0530, Padmavathi Venna wrote:
+> This patch modifies the SPI driver to use generic dma dt bindings
+> support. This passes all the required arguments to dma dev request
+> functon which in turn calls the dma_request_slave_channel or dma__
+> request_channel based on DT or non-DT respectively.
 
-Tested on DA850 EVM.
+This loooks OK and I'm actually applying SPI patches so I could apply it
+but I'm not sure I see the relevance of this patch to the rest of the
+series (which is about ASoC).  Is there some reason why it's included in
+this patch series or can it be applied to the SPI tree?  The SMDKs use
+I2C for their CODEC control rather than SPI.
 
-Kumar, Anil (2):
-  ARM: davinci: da850 evm: add norflash DT node
-  ARM: davinci: da850: configure CS2(aemif) for norflash
+Also is there a binding document update or device tree file update to go
+with this?
 
- arch/arm/boot/dts/da850-evm.dts  |   25 +++++++++++++++++++++++
- arch/arm/boot/dts/da850.dtsi     |   41 ++++++++++++++++++++++++++++++++++++++
- arch/arm/mach-davinci/da8xx-dt.c |   17 +++++++++++++++
- 3 files changed, 83 insertions(+), 0 deletions(-)
+> +	if (!sdd->pdev->dev.of_node) {
+> +		res = platform_get_resource(pdev, IORESOURCE_DMA,  0);
+> +		if (!res) {
+> +			dev_err(&pdev->dev, "Unable to get SPI tx dma "
+> +					"resource\n");
 
--- 
-1.7.4.1
+I appreciate that this is cut'n'paste from the code you're refactoring
+but please don't split error messages over lines, it makes it hard to
+grep for them in the kernel source.
+
+--Rgf3q3z9SdmXC6oT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRB1vTAAoJELSic+t+oim9b2UP/RWygjy50b9hux8CIRbD7Iv8
+TgraLNnL4RdJwBL3AKDGdRAa28A3zN5ssSlU21bj9hUsPuw/FR6j0xBE32VS2ERw
+y0J0Zk6fab/QWP0FeNLyZHPaIRFmfMfSfFoXAhLnoDb67w3IGxr00awKgMqlr6Dt
+DBWKQ2fP+IZAq41ejf7J1QtPJyv6Tj8T1zKdSPOmrxECJBolY9YCUD3mExxWHzvK
+Tc28/hO6K7qFstHYK2LvDeLT7AGxoCfpeJZYlKXphH5tY7xp11WJjmj14JXbJfGc
++kVFcjuOGeaBKlgfchYY96a2kZlIuZ3Tqy/aD9fxH7YuctFCi/C3UiGZgn+aBpFu
+akn+S5dMMVcU8rSMIfNUQl1RjYnDQdBWDtmrOxlNaatlj7iFB24tSM/nwMQBL7zQ
+Q9L4XXB+QrwRvzKAr19stbgBSR30yoBn4bxjyjFi51ZUunRyLo+yXA2vL01IWrUA
+fokRTGvtO+oqe5C5Vft6sdCixtNukwOIZVR0b9YvsVlFzDa94Rn4eATmyi0rwnT3
+NzOaG599ZYXEPwbt+ZO1BHTb5QFqaWh80KQ33XvGzTZWzAXMWBW4WNgaJBTy1r3n
+jaO0fIqF1BPwZfH7sSZzbq/YX7dpLM3sGYJmIzJlF5kC2HzIwavCe+3+gmwsaCyT
+rVe55qCv9Hp7EfQrc/TZ
+=YEaM
+-----END PGP SIGNATURE-----
+
+--Rgf3q3z9SdmXC6oT--
