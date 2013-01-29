@@ -1,72 +1,112 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH 1/4] ARM: dts: add support for hdmi to exynos4
-Date: Tue, 29 Jan 2013 21:42:53 +0100
-Message-ID: <5108344D.4090202@gmail.com>
-References: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com> <1359110384-28402-2-git-send-email-rahul.sharma@samsung.com> <51059402.2030405@gmail.com> <CAPdUM4Py3dbV_tFnZ6GOxSm-6Sq8FBZu00JH3UDq_PV2U8yq_A@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
+Date: Tue, 29 Jan 2013 22:59:58 +0100
+Message-ID: <CACRpkdbC56TaCzxcYpLxz5WWdfbB7vQSmRtHd64TZsTXbLEy=w@mail.gmail.com>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <201301291636.38773.arnd@arndb.de>
+ <20130129174546.GE23505@n2100.arm.linux.org.uk>
+ <201301292040.50143.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAPdUM4Py3dbV_tFnZ6GOxSm-6Sq8FBZu00JH3UDq_PV2U8yq_A@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <r.sh.open@gmail.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, Tomasz Stanislawski <t.stanislaws@samsung.com>, Tomasz Figa <t.figa@samsung.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201301292040.50143.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Vinod Koul <vinod.koul@linux.intel.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@stericsson.com>, Viresh Kumar <viresh.kumar@linaro.org>, devicetree-discuss@lists.ozlabs.org, spear-devel <spear-devel@list.st.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+On Tue, Jan 29, 2013 at 9:40 PM, Arnd Bergmann <arnd@arndb.de> wrote:
 
-On 01/28/2013 07:19 AM, Rahul Sharma wrote:
->>> --- a/arch/arm/boot/dts/exynos4.dtsi
->>> +++ b/arch/arm/boot/dts/exynos4.dtsi
->>> @@ -289,4 +289,11 @@
->>>                          interrupts =<0 34 0>;
->>>                  };
->>>          };
->>> +
->>> +       hdmi {
->>> +               compatible = "samsung,exynos4-hdmi14";
->>
->>
->> What "-hdmi14" signifies here ? And to which Exynos4 SoC revisions this
->> compatible property is supposed to apply ?
->>
+> the patches were certainly on the mailing list
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2010-June/017818.html
 >
-> -hdmi14 signifies 1.4 compliant Hdmi IP like in Exynos4412, while
-> Exynos4210 has 1.3
-> compliant HDMI block. I have done a mistake here. I should have kept
-> it in 4412.dtsi. OR
-> I can move it to 4x12.dtsi but not sure whether all 4x12 socs have 1.4 hdmi.
+> Do you (or Linus) know what happened to the patch series?
 
-Exynos4210 also have the HDMI IP. I'm not sure how much common those 
-IP's are
-among Exynos4 series SoCs. I suppose it makes sense to create a hdmi node in
-exynos4.dtsi and override what's required either in exynos4x12.dtsi or
-exynos4412.dtsi file.
+Just stalled. My fault probably, and IIRC Russell sent a
+modified version of this patch at one time.
 
-What is worring me is that you're trying to just append the supported
-HDMI standard version to the string, and there might be more differences
-in the IPs across all Exynos4 SoC series. What if there are two different
-SoCs that support e.g. HDMI v1.4 but there are some differences in the
-HDMI IPs ? You would likely need to invent new properties and pass them
-to the driver. Appending specific SoC name to the compatible string looks
-like a better alternative to me.
+> Based on your description, it sounds all doable, but the split
+> between platform specific code and device driver code would be
+> different: While the muxing that you describe all takes place
+> in the get_signal/put_signal functions in platform code, doing
+> a proper DT binding for the mux would imply moving that into the
+> pl080 driver itself, at least as a compile-time option for the
+> driver. Do you think that would be acceptable?
 
->>> +               reg =<0x12D00000 0x70000>;
->>> +               interrupts =<0 95 0>;
->>> +               hpd-gpio =<&gpx3 7 0xf 1 3>;
->>> +       };
->>
->>
->> New bindings need to be documented in Documentation/devicetree/bindings/.
->>
-> It is present at Documentation/devicetree/bindings/drm/exynos/hdmi.txt.
+This is the pushing-to-driver paradigm, and for the legacy
+support it will be troublesome as it needs to supply the
+base address of the mux etc through the platform data,
+and then with an ampersand reference to the syscon
+in the dma node.
 
-Thanks. Sorry, I've missed that. But it seems to be only for exynos5 SoCs ?
-Also the location is a bit unexpected to me, if we want to have Exynos4 and
-Exynos5 specific IP documented in this file. As I mentioned in previous
-e-mail this IP is not only handled by the DRM API.
+> While I guess we could still keep the get_signal/put_signal
+> callbacks in mach-versatile but drop them for platforms
+> without a mux, I'm not sure if that would make the overall
+> driver better or worse.
 
---
+I think that is not the big issue though.
 
-Regards,
-Sylwester
+I think the most important thing is to come up
+with a OS-neutral description of channels vs
+muxes and signals.
+
+Basically all DMA hardware has a mux, but in
+many cases it is fused with the DMA controller
+itself, and sometimes even hidden from software,
+i.e. it seems there is one channel per peripheral,
+but if you try to use them all at the same time
+something like round-robin bursts can be expected
+(in best case).
+
+For each channel, you need to be able to specify
+a number of applicable request lines, with an
+optional mux component inbetween. And I think
+the bindings should be generic, because the problem
+is generic.
+
+I tried to express this in DT syntax but failed, I
+just don't know how to do that, DT seems to be
+very much not about muxes and things that take
+optional paths, more about describing how static
+electronics are set up.
+
+The basic assumption of a 1:1 mapping between
+a peripheral and a channel is bogus - this is true on
+some hardware (like the COH901318), but certainly
+not all, the Versatile and RealView being the most
+problematic examples to date with the separate mux
+and all.
+
+Maybe stupid analogy:
+http://en.wikipedia.org/wiki/File:JT_Switchboard_770x540.jpg
+The actual channels are the cords.
+The the sockets are the devices.
+The telephonist is the mux.
+
+So looking up a DMA channel for RX for the PL011
+can be like trying to find a blue cord to put in the
+PL011 socket when the red light goes on for RX
+DMA. If no blue cord is available the telephonist can
+plug in the handset and say "sorry, failed to find a
+free line".
+
+Conversely to TX DMA you may need a red
+cord. Having a blue cord at hand will not help
+you.
+
+Coding it down in the device tree like in the
+example is like plugging the cords in to some
+holes at boot time and let the telephonist go
+home.
+
+Yours,
+Linus Walleij
