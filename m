@@ -1,34 +1,45 @@
-From: Michal Marek <mmarek@suse.cz>
-Subject: Re: [PATCH V7 REPOST] kbuild: create a rule to run the pre-processor
- on *.dts files
-Date: Tue, 29 Jan 2013 09:50:59 +0100
-Message-ID: <51078D73.9010409@suse.cz>
-References: <1359419600-7967-1-git-send-email-swarren@wwwdotorg.org>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V6 10/10] dmaengine: Fix compilation error in non-DT case
+Date: Tue, 29 Jan 2013 14:23:05 +0530
+Message-ID: <CAAgF-BddMcNZs-99Jw=ZhRs9CCO_-eev=b5TW5BR2DS9gM_2Qw@mail.gmail.com>
+References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
+	<1358509629-20471-11-git-send-email-padma.v@samsung.com>
+	<20130128134726.GV26562@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-2
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359419600-7967-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Grant Likely <glikely@secretlab.ca>, Sam Ravnborg <sam@ravnborg.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130128134726.GV26562@intel.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-On 29.1.2013 01:33, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
-> 
-> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
-> passing them to dtc for final compilation. This allows the use of #define
-> and #include within the .dts file.
-> 
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> Acked-by: Simon Glass <sjg@chromium.org>
-> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-> ---
-> Grant, back in mid-November, you said you'd make a decision on this in
-> the next couple of days, but I think this got overlooked.
+Hi,
 
-You can add Acked-by: Michal Marek <mmarek@suse.cz>. Or I can add it to
-the kbuild tree if Grant is OK with the patch.
+On Mon, Jan 28, 2013 at 7:17 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> On Fri, Jan 18, 2013 at 05:17:09PM +0530, Padmavathi Venna wrote:
+>> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+>> ---
+>>  include/linux/dmaengine.h |    2 +-
+>>  1 files changed, 1 insertions(+), 1 deletions(-)
+>>
+>> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+>> index 8cd0e25..c88f302 100644
+>> --- a/include/linux/dmaengine.h
+>> +++ b/include/linux/dmaengine.h
+>> @@ -992,7 +992,7 @@ static inline struct dma_chan *__dma_request_channel(dma_cap_mask_t *mask,
+>>  static inline struct dma_chan *dma_request_slave_channel(struct device *dev,
+>>                                                        char *name)
+>>  {
+>> -     return NULL
+>> +     return NULL;
+> what tree was this generated against? this was fixed by 678bd8
 
-Michal
+I generated against Kukjin for-next branch. I just noticed that it's
+fixed in your next branch. I will drop this patch.
+
+Thanks
+Padma
+>
+> --
+> ~Vinod
