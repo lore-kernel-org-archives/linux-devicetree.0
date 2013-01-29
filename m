@@ -1,138 +1,75 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: [PATCH v2 5/6] of_spi: Add fetching of of_gpio flags to of_spi_register_master
-Date: Tue, 29 Jan 2013 15:53:42 +0100
-Message-ID: <1359471223-4794-6-git-send-email-andreas@gaisler.com>
-References: <1359471223-4794-1-git-send-email-andreas@gaisler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359471223-4794-1-git-send-email-andreas@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net, linux-kernel@vger.kernel.org, software@gaisler.com
+From: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining
+ dr_mode and phy_type
+Date: Tue, 29 Jan 2013 15:55:00 +0100
+Message-ID: <20130129145500.GB3323@pengutronix.de>
+References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
+ <5107D253.5030400@ti.com>
+ <20130129135336.GA3323@pengutronix.de>
+ <5107D84F.80401@ti.com>
+ <20130129143302.GF2046@arwen.pp.htv.fi>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="WYTEVAkct0FjGQmd"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130129143302.GF2046-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: kishon <kishon-l0cyMroinI0@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-When using a gpio chip select with a OF_GPIO_ACTIVE_LOW flag, this needs to be
-known to the controller driver.
 
-Signed-off-by: Andreas Larsson <andreas@gaisler.com>
----
- Documentation/devicetree/bindings/spi/spi-bus.txt |    3 +-
- drivers/spi/spi.c                                 |   24 ++++++++++++++++++--
- include/linux/spi/spi.h                           |    5 ++++
- 3 files changed, 28 insertions(+), 4 deletions(-)
+--WYTEVAkct0FjGQmd
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-index 296015e..a4950a6 100644
---- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-@@ -57,7 +57,8 @@ contain the following properties.
-     		    3-wire mode.
- 
- If a gpio chipselect is used for the SPI slave the gpio number will be passed
--via the cs_gpio
-+via the cs_gpio and the corresponding of_gpio_flags will be passed via
-+cs_gpio_flags.
- 
- SPI example for an MPC5200 SPI bus:
- 	spi@f00 {
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index a4baa0a..6f1b717 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -385,8 +385,10 @@ int spi_add_device(struct spi_device *spi)
- 		goto done;
- 	}
- 
--	if (master->cs_gpios)
-+	if (master->cs_gpios) {
- 		spi->cs_gpio = master->cs_gpios[spi->chip_select];
-+		spi->cs_gpio_flags = master->cs_gpio_flags[spi->chip_select];
-+	}
- 
- 	/* Drivers may modify this initial i/o setup, but will
- 	 * normally rely on the device being setup.  Devices
-@@ -1060,7 +1062,8 @@ EXPORT_SYMBOL_GPL(spi_alloc_master);
- static int of_spi_register_master(struct spi_master *master)
- {
- 	int nb;
--	int i, *cs;
-+	int ret, i, *cs;
-+	enum of_gpio_flags *flags;
- 	struct device_node *np = master->dev.of_node;
- 
- 	if (!np)
-@@ -1083,13 +1086,28 @@ static int of_spi_register_master(struct spi_master *master)
- 	if (!master->cs_gpios)
- 		return -ENOMEM;
- 
-+	flags = devm_kzalloc(&master->dev,
-+			     sizeof(*flags) * master->num_chipselect,
-+			     GFP_KERNEL);
-+	master->cs_gpio_flags = flags;
-+
-+	if (!master->cs_gpio_flags) {
-+		ret = -ENOMEM;
-+		goto err_alloc_flags;
-+	}
-+
- 	for (i = 0; i < master->num_chipselect; i++)
- 		cs[i] = -EINVAL;
- 
- 	for (i = 0; i < nb; i++)
--		cs[i] = of_get_named_gpio(np, "cs-gpios", i);
-+		cs[i] = of_get_named_gpio_flags(np, "cs-gpios", i, &flags[i]);
- 
- 	return 0;
-+
-+err_alloc_flags:
-+	devm_kfree(&master->dev, master->cs_gpios);
-+	master->cs_gpios = NULL;
-+	return ret;
- }
- #else
- static int of_spi_register_master(struct spi_master *master)
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 88a669c..96b1055 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -23,6 +23,7 @@
- #include <linux/mod_devicetable.h>
- #include <linux/slab.h>
- #include <linux/kthread.h>
-+#include <linux/of_gpio.h>
- 
- /*
-  * INTERFACES between SPI master-side drivers and SPI infrastructure.
-@@ -58,6 +59,7 @@ extern struct bus_type spi_bus_type;
-  *	for that name.  This appears in the sysfs "modalias" attribute
-  *	for driver coldplugging, and in uevents used for hotplugging
-  * @cs_gpio: Negative or gpio for chip select.
-+ * @cs_gpio_flags: of_gpio_flags corresponding to cs_gpio
-  *
-  * A @spi_device is used to interchange data between an SPI slave
-  * (usually a discrete chip) and CPU memory.
-@@ -92,6 +94,7 @@ struct spi_device {
- 	void			*controller_data;
- 	char			modalias[SPI_NAME_SIZE];
- 	int			cs_gpio;	/* chip select gpio */
-+	enum of_gpio_flags	cs_gpio_flags;	/* chip select of_gpio_flags */
- 
- 	/*
- 	 * likely need more hooks for more protocol options affecting how
-@@ -260,6 +263,7 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
-  *	queue so the subsystem notifies the driver that it may relax the
-  *	hardware by issuing this call
-  * @cs_gpios: possible array of negative values or gpios for chip selects
-+ * @cs_gpio_flags: possible array of of_gpio_flags corresponding to cs_gpios
-  *
-  * Each SPI master controller can communicate with one or more @spi_device
-  * children.  These make a small bus, sharing MOSI, MISO and SCK signals
-@@ -367,6 +371,7 @@ struct spi_master {
- 	int (*unprepare_transfer_hardware)(struct spi_master *master);
- 	/* gpio chip select */
- 	int			*cs_gpios;
-+	enum of_gpio_flags	*cs_gpio_flags;
- };
- 
- static inline void *spi_master_get_devdata(struct spi_master *master)
--- 
-1.7.0.4
+
+> I prefer u32 here, because we have the matching enum. Otherwise we end
+> up with:
+>=20
+> of_property_read_string(...,&type);
+>=20
+> if (!strcmp(type, "ulpi"))
+> 	foo();
+> else if (!strcmp(type, "utmi"))
+> 	bar();
+> else if (!strcmp(type, "pipe3"))
+> 	baz();
+> else
+> 	BUG();
+>=20
+> and I don't like that, it's ugly and error prone.
+
+Error prone? I guess my mileage varies. Especially compared to the
+probability devicetree creators pick the wrong number.
+
+It also removes the (probably implicit) rule that the enum mustn't be
+modified since it is exported to users.
+
+Also, you could map the strings to the enum first and then switch-case
+over it to make the code nicer.
+
+--=20
+Pengutronix e.K.                           | Wolfram Sang                |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+
+--WYTEVAkct0FjGQmd
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+Content-Disposition: inline
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+
+iEYEARECAAYFAlEH4sQACgkQD27XaX1/VRt4AQCgl4jbHrXb+ToUI9KfgyP3LsUe
+qKQAoKpjFgIgsEuV4UdYC0dXE1d1PDhO
+=HVND
+-----END PGP SIGNATURE-----
+
+--WYTEVAkct0FjGQmd--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
