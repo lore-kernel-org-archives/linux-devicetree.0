@@ -1,39 +1,116 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH V6 07/10] ASoC: SMDK: WM8994: Add device tree support for
- machine file
-Date: Tue, 29 Jan 2013 15:09:06 +0530
-Message-ID: <CAAgF-Be_E8Hxmo08OH-zzGrqP_4BmX2dAYMnh2zxvXSMTM2jEg@mail.gmail.com>
-References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
-	<1358509629-20471-8-git-send-email-padma.v@samsung.com>
-	<20130129071231.GG6878@opensource.wolfsonmicro.com>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: Re: [PATCH v3 32/71] ARC: [DeviceTree] Basic support
+Date: Tue, 29 Jan 2013 15:23:09 +0530
+Message-ID: <51079C05.7040308@synopsys.com>
+References: <1359024639-21915-1-git-send-email-vgupta@synopsys.com> <1359024639-21915-15-git-send-email-vgupta@synopsys.com> <5106513E.4010205@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130129071231.GG6878@opensource.wolfsonmicro.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, tiwai@suse.de, ben-linux@fluff.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5106513E.4010205@imgtec.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: linux-arch@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2013 at 12:42 PM, Mark Brown
-<broonie@opensource.wolfsonmicro.com> wrote:
-> On Fri, Jan 18, 2013 at 05:17:06PM +0530, Padmavathi Venna wrote:
->
->> +Samsung SMDK audio complex
->
-> This is just for SMDKs with WM8994.  I'll apply but please send a
-> followup patch to clarify this - it'll be a different binding for others
-> like the older boards using WM8580 and WM9713.
+Hi James,
 
-OK. I will send.
+On Monday 28 January 2013 03:51 PM, James Hogan wrote:
+> Hi Vineet,
+> 
+> On 24/01/13 10:50, Vineet Gupta wrote:
+>> diff --git a/arch/arc/Makefile b/arch/arc/Makefile
+>> index 4d52a3b..90570f9 100644
+>> --- a/arch/arc/Makefile
+>> +++ b/arch/arc/Makefile
+>> @@ -83,6 +83,9 @@ head-y		:= arch/arc/kernel/head.o
+>>  # See arch/arc/Kbuild for content of core part of the kernel
+>>  core-y		+= arch/arc/
+>>  
+>> +# w/o this dtb won't embed into kernel binary
+>> +core-y		+= arch/arc/boot/dts/
+>> +
+>>  # w/o this ifneq, make ARCH=arc clean was crapping out
+>>  ifneq ($(platform-y),)
+>>  core-y		+= arch/arc/plat-$(PLATFORM)/
+>> @@ -101,6 +104,12 @@ bootpImage: vmlinux
+>>  uImage: vmlinux
+>>  	$(Q)$(MAKE) $(build)=$(boot) $(boot)/$@
+>>  
+>> +%.dtb %.dtb.S %.dtb.o:
+>> +	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
+> 
+> arm64 also depends on scripts here, presumably for a reason. I've copied
+> this in metag too.
 
->
->> +             samsung,i2s-controller = <&i2s0>;
->> +             samsung,audio-codec = <&wm8994>;
->
-> I was thinking this should really point at the DAI but since it's
-> specific to the SMDKs I don't think it particularly matters - they all
-> use AIF1 anyway.
+It probably has to do with forcing rebuild of DTs, in case scripts/dtc/dtc changes.
 
-Thanks
-Padma
+I'll add that as well.
+
+
+>> +
+>> +dtbs:
+>> +	$(Q)$(MAKE) $(build)=$(boot)/dts $(boot)/dts/$@
+> 
+> arm64 does this like below which I think is slightly nicer than how
+> metag did it:
+> 
+> dtbs: scripts
+> 	$(Q)$(MAKE) $(build)=$(boot)/dts dtbs
+
+OK !
+
+>> +
+>>  archclean:
+>>  	$(Q)$(MAKE) $(clean)=$(boot)
+>>  
+>> diff --git a/arch/arc/boot/dts/Makefile b/arch/arc/boot/dts/Makefile
+>> new file mode 100644
+>> index 0000000..4a972a3
+>> --- /dev/null
+>> +++ b/arch/arc/boot/dts/Makefile
+>> @@ -0,0 +1,14 @@
+>> +ifeq ($(CONFIG_OF),y)
+>> +
+>> +# Built-in dtb
+>> +builtindtb-y		:= skeleton
+>> +
+>> +ifneq ($(CONFIG_ARC_BUILTIN_DTB_NAME),"")
+>> +	builtindtb-y	:= $(CONFIG_ARC_BUILTIN_DTB_NAME)
+>> +endif
+>> +
+>> +obj-y	+= $(patsubst "%",%,$(builtindtb-y)).dtb.o
+>> +
+>> +clean-files := *.dtb
+> 
+> You don't seem to have a rule for dtbs, but still redirect it in the
+> main Makefile. I suppose dtbs may want adding to your archhelp if you
+> use it.
+
+The dtbs rule doesn't seem to be working for me here. I'll need to investigate a bit.
+
+> 
+> arm64 also adds dtbs and $(dtb-y) to targets (at least in linux-next). I
+> think this makes sure that they don't get rebuilt unless they've
+> actually changed. I've also copied this for metag.
+
+Did you verify that it makes a difference - at least at my end it's not - the
+default dtb is getting rebuilt everytime. I need to debug this some more.
+
+
+>> --- a/arch/arc/kernel/Makefile
+>> +++ b/arch/arc/kernel/Makefile
+>> @@ -8,6 +8,8 @@
+>>  obj-y	:= arcksyms.o setup.o irq.o time.o reset.o ptrace.o entry.o process.o
+>>  obj-y	+= signal.o traps.o sys.o troubleshoot.o stacktrace.o clk.o
+>>  
+>> +obj-$(CONFIG_OF)			+= devtree.o
+>> +
+> 
+> You always select CONFIG_OF, so this could be obj-y. I'm not sure this
+> particularly matters though.
+
+Right, for consistency we might add this unconditionally.
+
+Thanks for your review
+-Vineet
