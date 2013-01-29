@@ -1,56 +1,118 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 5/5] mv643xx_eth: convert to use the Marvell Orion MDIO
- driver
-Date: Tue, 29 Jan 2013 17:46:09 +0100
-Message-ID: <20130129174609.6ff6fe03@skate>
-References: <1359473048-26551-1-git-send-email-florian@openwrt.org>
-	<1359473048-26551-6-git-send-email-florian@openwrt.org>
-	<20130129170131.7964a110@skate>
-	<5107F88C.8030002@openwrt.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC][PATCH 2/2 v2] ASoC: simple-card: add Device
+	Tree support
+Date: Tue, 29 Jan 2013 09:53:12 -0700
+Message-ID: <5107FE78.6030001@wwwdotorg.org>
+References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
+ <87sj6t484z.wl%kuninori.morimoto.gx@renesas.com>
+ <50E71618.8090302@wwwdotorg.org>
+ <20130104193712.GN4627@opensource.wolfsonmicro.com>
+ <87y5fvyy18.wl%kuninori.morimoto.gx@renesas.com>
+ <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
+ <5106E98A.6070103@wwwdotorg.org>
+ <87txq03fcb.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <5107F88C.8030002@openwrt.org>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <florian@openwrt.org>
-Cc: davem@davemloft.net, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Russell King <linux@arm.linux.org.uk>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Lennert Buytenhek <buytenh@wantstofly.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <87txq03fcb.wl%kuninori.morimoto.gx@renesas.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Linux-ALSA <alsa-devel@alsa-project.org>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>, Simon <horms@verge.net.au>, Liam Girdwood <lrg@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Florian Fainelli,
+On 01/28/2013 07:14 PM, Kuninori Morimoto wrote:
+> 
+> Hi Stephen
+> 
+> Thank you for checking path
+> 
+>>> +Required properties:
+>>> +
+>>> +- compatible					: "simple-audio"
+>>> +- simple-audio,card-name			: simple-audio card name
+>>> +
+>>> +- simple-audio,platform,controller		: phandle for platform
+>>
+>> Rename that simple-audio,dma-controller perhaps? "platform" is a word
+>> specific to ASoC, and the bindings really should be generic across OSs.
+>>
+>> But I wonder why you'd even need the ASoC platform to be specified in
+>> DT; instead, the following seem better:
+>>
+>> a) Have the CPU DAI's driver register the platform itself. Tegra does this.
+>>
+>> b) Assume the ASoC "platform" device simply does DMA via a standard
+>> dmaengine driber, and instead refer to the DMA controller using DMA
+>> engine DT bindings.
+> 
+> This is the feature of this "simple-audio" driver.
+> "simple-audio" produces board/SoC specific relationship between codec/cpu.
+> 
+> For example, we are using FSI for cpu, and AK4642/WM8978/DA7210 for codec.
+> In our old style, we created fsi-ak4642, fsi-wm8978, fsi-da7210...
+> This means that new fsi-xxx driver is required whenever new boards were created.
+> This simple-audio was created to avoid it
 
-On Tue, 29 Jan 2013 17:27:56 +0100, Florian Fainelli wrote:
+I still don't understand why the ASoC platform has to be exposed in
+device tree; it seems like something completely internal to the ASoC
+driver. Take a look at the Tegra ASoC DT bindings; the platform isn't in
+DT at all there.
 
-> It looks like I introduced two redundant mvmdio instances as ge01
-> refers to the ge00 smi bus (the same applies to ge11 and ge10).
-> Thanks for spotting this.
+>>> +- simple-audio,platform,name			: simple-audio platform name
+>>
+>> Can you explain why you'd need the platform name in the DT? Doesn't the
+>> phandle always uniquely identify it? The example doesn't use this property.
+> 
+> Ahh yes, this simple-audio supports both phandle and name matching for compatibility.
+> example showed phandle matching only.
 
-Ok, good.
+I think the DT binding should only support phandle-based resolution.
+Name-based resolution would be quite odd for a device tree binding.
 
-> If you take a closer look at mv643xx_eth you will see that the
-> "shared" driver still handles the mconf bus window configuration,
-> which is not abstracted yet.
+>>> +- simple-audio,cpu,controller			: phandle for CPU DAI
+>>> +- simple-audio,cpu,dai,name			: simple-audio CPU DAI name
+>>
+>> It'd be a bit more typical of device-tree to have a single property that
+>> defines both the controller and any properties of the controller at
+>> once, e.g. something like:
+>>
+>> simple-audio,cpu-interface = <&codec_phandle AK4648_I2S_ITF_A>;
+>>
+>> where we assume something like:
+>>
+>> #define AK4648_I2S_ITF_A 0 // Interface A's ID
+>>
+>> That would remove the need to put string names into the DT.
+> 
+> Hmm... this "name" is required on ASoC matching...
+> Especially, "codec dai name" is must item.
+> 
+> Should I modify ASoC itself ?
 
-Indeed, I've seen that. But I don't understand why it's done in the
-mv643xx_eth_shared_probe(). The mbus window configuration registers are
-per-network interface, so this call to mv643xx_eth_conf_mbus_windows()
-could presumably be done in mv643xx_eth_probe().
+When I was thinking about a more generic DT binding for audio, quite a
+while ago, I certainly was planning to have each CODEC expose some kind
+of "of_xlate" function that could prase the integer interface ID in
+device tree, and convert it to a string name for internal use by ASoC.
 
-At least in mvneta, we have the same registers, and we do their
-initialization in the driver normal (and only) ->probe() routine.
+>>> +simple-audio,xxx,dai,clock-gating
+>>> +	"continuous"
+>>> +	"gated"
+>>
+>> Don't you need to use the common clock bindings to define which clock to
+>> gate? Or, is the I2S/... node's binding supposed to provide that
+>> information?
+> 
+> I guess it is dependent on SoC/board.
+> No ?
 
-> Besides that, I would rather do it step by step.
-
-Yes, agreed. But I think it would be good to have followed patches that
-progressively get rid of the shared driver thing, as it will help in
-bringing a proper DT binding in the mv643xx_eth driver. But it
-certainly doesn't need to be part of this specific patch.
-
-Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+OK, I guess if this is I2S bus clock rather than I2S module clock, then
+this is fine as-is. Not all I2S controllers can implement this though.
