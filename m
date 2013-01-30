@@ -1,112 +1,103 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
-Date: Tue, 29 Jan 2013 22:59:58 +0100
-Message-ID: <CACRpkdbC56TaCzxcYpLxz5WWdfbB7vQSmRtHd64TZsTXbLEy=w@mail.gmail.com>
-References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <201301291636.38773.arnd@arndb.de>
- <20130129174546.GE23505@n2100.arm.linux.org.uk>
- <201301292040.50143.arnd@arndb.de>
+From: "Saridakis, Dean   (US SSA)" <dean.saridakis-IHqVjY1oUdQxoycv7ERPSQ@public.gmane.org>
+Subject: RE: DTs, Linux drivers & PCI Devices
+Date: Wed, 30 Jan 2013 00:58:59 +0000
+Message-ID: <20130130005944.AE5612C00DA@ozlabs.org>
+References: <20130129051244.GH16729@truffula.fritz.box>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201301292040.50143.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vinod Koul <vinod.koul@linux.intel.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@stericsson.com>, Viresh Kumar <viresh.kumar@linaro.org>, devicetree-discuss@lists.ozlabs.org, spear-devel <spear-devel@list.st.com>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130129051244.GH16729-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2013 at 9:40 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> > I've been diving into Linux kernel drivers & device trees for a new project &
+> am looking for some help.
+> >
+> > First, is it reasonable/possible to define a PCI (PCIe) device in a
+> > device tree? Seems like you'd have to reference a BAR#s to do this (&
+> > still have addresses mapped by enumeration).  A couple reasons I'm
+> > interested in doing this:
+> > - The PCI device logic will be migrated to a system bus
+> > - DT properties provide a nice way to pass in driver configuration
+> > data
+> 
+> It's certainly possible.  On traditional OF systems, PCI devices are always
+> shown in the device tree (and only OF, not the OS does the PCI probing).
+> Only including the host bridges in flattened trees is essentially a relaxation of
+> the usual rules, because it's usually not necessary and can be awkward for a
+> flat tree system.
+> 
 
-> the patches were certainly on the mailing list
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2010-June/017818.html
->
-> Do you (or Linus) know what happened to the patch series?
+I'm learning as I go here, thanks for your patience:
+- I'm using U-boot & just discovered it modifies the device tree
+- From what I read in the spec's you referenced, seems like the assigned-addresses (assigned-address?) property would be the how the BAR window addresses would be passed to the OS.
 
-Just stalled. My fault probably, and IIRC Russell sent a
-modified version of this patch at one time.
+So not sure if U-boot boardsetup can be convinced to create or fill in PCI device nodes in the DT. Looks like it's based on your libfdt (thank you!), but details are "left as an excercise for the reader." 
 
-> Based on your description, it sounds all doable, but the split
-> between platform specific code and device driver code would be
-> different: While the muxing that you describe all takes place
-> in the get_signal/put_signal functions in platform code, doing
-> a proper DT binding for the mux would imply moving that into the
-> pl080 driver itself, at least as a compile-time option for the
-> driver. Do you think that would be acceptable?
+And if I could get U-boot to fill things in, it's not clear if/how linux kernel init would handle it. 
+(Saw a reference to "PCI OF bindings" in booting-without-of.txt, but wasn't sure what that was referencing...)
 
-This is the pushing-to-driver paradigm, and for the legacy
-support it will be troublesome as it needs to supply the
-base address of the mux etc through the platform data,
-and then with an ampersand reference to the syscon
-in the dma node.
+If that were to all come together, I'd also like to define child nodes under a PCI device BAR node. (That'd be the most elegant approach.) Since "reg" is used to define the child register offsets within the BAR address space, but the BAR address is established w/ assigned-addresses, not sure how those dots would connect. 
+I guess an example of how a traditional OF system would represent a PCI device would clear up some of my confusion - any pointers?
 
-> While I guess we could still keep the get_signal/put_signal
-> callbacks in mach-versatile but drop them for platforms
-> without a mux, I'm not sure if that would make the overall
-> driver better or worse.
+> > It's not clear to me how the linux kernel interprets/processes the
+> > device tree. I'm working w/ powerpc (fsl QorIQ). E.g., shouldn't
+> > everything from the DT show up in /sys/bus/platform/devices ?
+> 
+> Not necessarily, no.  platform devices are sort of a last-resort place for things
+> that aren't on a well defined bus.  That usually includes top level devices from
+> an fdt, and often includes things further down the fdt for platform specific
+> buses.  But things like PCI devices, or i2c devices or what have you will still
+> appear under the appropriate bus types.
+> 
+> > I
+> > noticed that not everything is there, e.g., only 2 of the 4 PCIe RCs.
+> > (Noticed this after trying to add my own simple dummy entry to a
+> > reserved reg space as an experiment).
+> 
+> Hrm.  Not showing all the RCs is a bit odd, though.
 
-I think that is not the big issue though.
+Looks like U-boot boardsetup filtered these out.
 
-I think the most important thing is to come up
-with a OS-neutral description of channels vs
-muxes and signals.
+> 
+> > Ultimately I'd like to use the DT to describe a set of logic cores on
+> > a subordinate bus. There is also a subordinate interrupt controller,
+> > which I think I can figure out how to describe, but am not sure how
+> > kernel glue works -- somehow I'd need to bind that controller to
+> > routing code I provide.
+> >
+> > Documentation I've been reading includes:
+> > - ePAPR
+> > - DT wiki
+> > - kernel doc (driver-model, devicetree)
+> > - Linux DDs v3 (no coverage of platform drivers) Any other recommended
+> docs?
+> 
+> Although large parts of it won't be terribly relevant to you, you should
+> probably look at the original OF spec - IEEE 1275, and also the PCI Bus binding
+> document for IEEE 1275.
+> 
+> http://www.complang.tuwien.ac.at/forth/1275.ps.gz
+> 
+> http://www.openfirmware.org/ofwg/bindings/pci/pci2_1.pdf
+> 
+> --
+> David Gibson			| I'll have my music baroque, and my code
+> david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+> 				| _way_ _around_!
+> http://www.ozlabs.org/~dgibson
 
-Basically all DMA hardware has a mux, but in
-many cases it is fused with the DMA controller
-itself, and sometimes even hidden from software,
-i.e. it seems there is one channel per peripheral,
-but if you try to use them all at the same time
-something like round-robin bursts can be expected
-(in best case).
-
-For each channel, you need to be able to specify
-a number of applicable request lines, with an
-optional mux component inbetween. And I think
-the bindings should be generic, because the problem
-is generic.
-
-I tried to express this in DT syntax but failed, I
-just don't know how to do that, DT seems to be
-very much not about muxes and things that take
-optional paths, more about describing how static
-electronics are set up.
-
-The basic assumption of a 1:1 mapping between
-a peripheral and a channel is bogus - this is true on
-some hardware (like the COH901318), but certainly
-not all, the Versatile and RealView being the most
-problematic examples to date with the separate mux
-and all.
-
-Maybe stupid analogy:
-http://en.wikipedia.org/wiki/File:JT_Switchboard_770x540.jpg
-The actual channels are the cords.
-The the sockets are the devices.
-The telephonist is the mux.
-
-So looking up a DMA channel for RX for the PL011
-can be like trying to find a blue cord to put in the
-PL011 socket when the red light goes on for RX
-DMA. If no blue cord is available the telephonist can
-plug in the handset and say "sorry, failed to find a
-free line".
-
-Conversely to TX DMA you may need a red
-cord. Having a blue cord at hand will not help
-you.
-
-Coding it down in the device tree like in the
-example is like plugging the cords in to some
-holes at boot time and let the telephonist go
-home.
-
-Yours,
-Linus Walleij
+Hope I didn't ramble too much -- getting tired...
