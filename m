@@ -1,71 +1,126 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH] arm: mvebu: support for the new Armada XP evaluation
- board(DB-MV784MP-GP)
-Date: Wed, 30 Jan 2013 13:10:35 -0500
-Message-ID: <20130130181035.GP7717@titan.lakedaemon.net>
-References: <1359566774-27669-1-git-send-email-gregory.clement@free-electrons.com>
- <1359566774-27669-2-git-send-email-gregory.clement@free-electrons.com>
- <20130130173306.GO7717@titan.lakedaemon.net>
- <510959D5.1010305@free-electrons.com>
+From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining dr_mode
+ and phy_type
+Date: Wed, 30 Jan 2013 13:33:35 -0600
+Message-ID: <CAKGA1bmQCSHxy=hLh9XYkt9vSzdO=vO9XGhJX1cZFBSL=jZHvw@mail.gmail.com>
+References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
+ <5107D253.5030400@ti.com> <20130129135336.GA3323@pengutronix.de>
+ <5107D84F.80401@ti.com> <20130129143302.GF2046@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <510959D5.1010305@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Simon Guinot <simon.guinot@sequanux.org>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, Florian Fainelli <florian@openwrt.org>, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, Maen Suleiman <maen@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Olof
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130129143302.GF2046-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: kishon <kishon-l0cyMroinI0@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 29, 2013 at 8:33 AM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> Hi,
+>
+> On Tue, Jan 29, 2013 at 07:40:23PM +0530, kishon wrote:
+>> On Tuesday 29 January 2013 07:23 PM, Wolfram Sang wrote:
+>> >>>+  err = of_property_read_string(np, "phy_type", &phy_type);
+>> >>>+  if (err < 0)
+>> >>>+          return USBPHY_INTERFACE_MODE_NA;
+>> >>
+>> >>Why don't we use a u32 property type for the *phy-type*? IMHO we
+>> >>should use string property only when the property should be
+>> >>absolutely unambiguous (e.g., compatible property should be string).
+>> >
+>> >If we would use u32-numbers in the compatible entry, this would also be
+>> >unambiguous, no? 0xd00dfeed would be the at24-driver. Pretty specific.
+>>
+>> hehe... But we don't have a corresponding *enum* representing the
+>> drivers :-)
+>> >
+>> >I don't mind having readable devicetrees. And we have it for ethernet
+>> >phys already with strings, so it would be consistent.
+>>
+>> Ok. Fine with it then :-)
+>
+> I prefer u32 here, because we have the matching enum. Otherwise we end
+> up with:
+>
+> of_property_read_string(...,&type);
+>
+> if (!strcmp(type, "ulpi"))
+>         foo();
+> else if (!strcmp(type, "utmi"))
+>         bar();
+> else if (!strcmp(type, "pipe3"))
+>         baz();
+> else
+>         BUG();
+>
+> and I don't like that, it's ugly and error prone. Also looks awful when
+> someone needs to change that, the diff looks messy. A u32 followed by a
+> switch statement looks nicer.
 
-Gregory,
+I wholeheartedly and vehemently disagree.
 
-Adding devicetree-discuss.
+Device trees don't exist to make Linux look prettier, *OR* clean up
+your source code of string comparisons when you think comparing an
+integer looks or feels cleaner. They exist to provide a hardware
+description. phy-type 0x3 does not describe anything except that you
+have to go look up what 0x3 means, and means device trees cannot be
+internally consistent within themselves or publically existing
+documentation (it is certain that there is no USB PHY specification
+that defines 0x3 as anything, which means the value is entirely Linux
+specific).
 
-Guys, how do you prefer to handle plug-in RAM modules?  describe the
-soldered-in amount, or?
+Matching an enum or magic number encoded into a u32 in some external
+source code to define a type that wasn't just an index is not
+something that anyone has ever reasonably done in any traditional
+IEEE1275 device tree or OpenFirmware-committee binding, and we
+shouldn't just be subverting the existing standard to make Linux code
+"look prettier".
 
-On Wed, Jan 30, 2013 at 06:35:17PM +0100, Gregory CLEMENT wrote:
-> On 01/30/2013 06:33 PM, Jason Cooper wrote:
-> > On Wed, Jan 30, 2013 at 06:26:14PM +0100, Gregory CLEMENT wrote:
-> >> This is the new Armada XP evaluation board from Marvell. It comes with
-> >> a RS232 port over USB, a SATA link, an internal SSD, 4 Ethernet
-> >> Gigabit links.
-> >>
-> >> Support for USB (Host and device), SDIO, PCIe will be added as drivers
-> >> when they become available for Armada XP in mainline.
-> >>
-> >> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> >> ---
-> >>  arch/arm/boot/dts/Makefile         |    1 +
-> >>  arch/arm/boot/dts/armada-xp-gp.dts |   94 ++++++++++++++++++++++++++++++++++++
-> >>  2 files changed, 95 insertions(+)
-> >>  create mode 100644 arch/arm/boot/dts/armada-xp-gp.dts
-> >>
-...
-> >> +	memory {
-> >> +		device_type = "memory";
-> >> +		reg = <0x00000000 0xC0000000>; /* 3 GB */
-> > 
-> > Is this the soldered on the board amount, or the amount with an
-> > expandable slot filled?
-> 
-> It is not soldered, so you can change the amount of memory
+Please consider other operating systems, which would need to copy the
+definition of the enum which may not be possible when thinking of
+Linux vs. FreeBSD or so, and in general the readability of the device
+tree - phy-type 0x3 is going to require a comment in the device tree
+source to remind people what that means, or a cross-reference to a
+binding which is more work than most developers want to do to make
+sure they specified the correct PHY type. A string is completely and
+unavoidably correct - a typo in the phy-type means a match against
+valid bindings is impossible and an instant bug. A mistaken u32 value
+means the wrong phy-type is defined which has increased potential to
+provide misconfigured phy with the wrong type and less warning than a
+string literal not being absolutely identical. I think that means more
+buggy device trees will get past where it doesn't actually work
+properly, and more time will be spent working out WHY it doesn't
+actually work properly.
 
-Well, there's something we don't encounter too much in the embedded
-world.  ;-)  I'm inclined to think the entry here should be the soldered
-on amount, and the bootloader would (hypothetically) change the DT to
-the probed amount.  But I haven't seen a precedent set yet...
+It is much better to be totally unambiguous in the device tree as per
+the type and a string is the best way. If you really want effective,
+less error-prone code, define all the existing or useful types as
+preprocessor defines (#define PHY_TYPE_UTMI_WIDE "utmiw") and use
+those to match the binding. I wouldn't hand-code a property string
+inline even if you offered me a million dollars to do so. Matching the
+dr_mode property is already done in a drivers/of or of_phy.h include
+so just move the potential match code to there and return the correct
+enum (which is arguably Linux-specific) from the string and give a big
+fat error from the match function if none of the valid bindings
+matches up.
 
-thx,
+BTW I disagree with the use of underscores in device trees as well, I
+wouldn't use an underscore for a new property. But in the case of
+dr_mode it is well used already especially for Freescale controllers
+on PPC where there are a significant handful of DTS (or real OF) that
+implement it. It might not be a bad idea, though, to update the
+binding deprecating dr_mode in favor of something that is much less
+ambiguous and descriptive itself - "dr-mode" is an acceptable fix but
+a "role" property or "dual-role-mode" is much more descriptive. Moving
+the matching to some common code since more than one controller uses
+it and then adding a new, better property name with dr_mode as an
+acceptable but unrecommended fallback means this can be left to
+history.
 
-Jason.
+--
+Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Product Development Analyst, Genesi USA, Inc.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
