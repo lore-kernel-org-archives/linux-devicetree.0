@@ -1,86 +1,68 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [PATCH 2/2] arm: dts: omap5-evm: Add mcspi data
-Date: Wed, 30 Jan 2013 19:19:43 +0530
-Message-ID: <1359553783-12129-1-git-send-email-sourav.poddar@ti.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining dr_mode
+ and phy_type
+Date: Wed, 30 Jan 2013 15:00:15 +0100
+Message-ID: <20130130140015.GZ1906@pengutronix.de>
+References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
+ <87pq0omcfb.fsf@ashishki-desk.ger.corp.intel.com>
+ <20130130020627.GA699@nchen-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: b-cousson@ti.com, tony@atomide.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbi@ti.com, santosh.shilimkar@ti.com
-Cc: Sourav Poddar <sourav.poddar@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130130020627.GA699@nchen-desktop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add mcspi node and pinmux data for omap5 mcspi controller.
+On Wed, Jan 30, 2013 at 10:06:28AM +0800, Peter Chen wrote:
+> On Tue, Jan 29, 2013 at 01:55:04PM +0200, Alexander Shishkin wrote:
+> > Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+> > 
+> > > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > >
+> > > This adds two little devicetree helper functions for determining the
+> > > dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
+> > > the devicetree.
+> > >
+> > > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > ---
+> > >
+> > > The properties and their values have been taken from the fsl-mph-dr driver.
+> > > This binding is also documented (though currently not used) for the tegra
+> > > ehci driver (Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt).
+> > > This is a first attempt to parse these bindings at a common place so that
+> > > others can make use of it.
+> > >
+> > > Basically I want to know whether this binding is recommended for new drivers
+> > > since normally the devicetree uses '-' instead of '_', and maybe there are
+> > > other problems with it.
+> > >
+> > > I need this binding for the chipidea driver. I suspect that the fsl-mph-dr
+> > > driver also really handles a chipidea core.
+> > 
+> > As far as I know, it is a chipidea core. Adding Peter to Cc list, he can
+> > probably confirm.
+> 
+> The fsl-mph-dr can't be used for chipdiea as it handles three platform
+> drivers for three roles (peripheral , host, otg). But chipidea only has
+> two platform drivers, one is the chipidea core, the other is related
+> controller wrapper.
 
-Tested on omap5430 evm with 3.8-rc4 custom kernel.
+What do you mean by 'three platform drivers'? That's only how the driver
+is built, no? I was talking about the hardware the fsl-mph-dr driver
+handles which definitely smells like chipidea.
 
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
----
-Develops this on the patch[1] submitted in mainline
-[1]: http://www.spinics.net/lists/kernel/msg1473163.html
- arch/arm/boot/dts/omap5-evm.dts |   46 +++++++++++++++++++++++++++++++++++++++
- 1 files changed, 46 insertions(+), 0 deletions(-)
+Sascha
 
-diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-evm.dts
-index a96acc0..252edda 100644
---- a/arch/arm/boot/dts/omap5-evm.dts
-+++ b/arch/arm/boot/dts/omap5-evm.dts
-@@ -115,6 +115,33 @@
- 			0x186 0x100     /* i2c4_sda INPUTENABLE | MODE0 */
- 		>;
- 	};
-+
-+	mcspi2_pins: pinmux_mcspi2_pins {
-+		pinctrl-single,pins = <
-+			0xbc 0x100
-+			0xbe 0x100
-+			0xc0 0x118
-+			0xc2 0x0
-+		>;
-+	};
-+
-+	mcspi3_pins: pinmux_mcspi3_pins {
-+		pinctrl-single,pins = <
-+			0x78 0x101
-+			0x7a 0x101
-+			0x7c 0x101
-+			0x7e 0x101
-+		>;
-+	};
-+
-+	mcspi4_pins: pinmux_mcspi4_pins {
-+		pinctrl-single,pins = <
-+			0x164 0x101
-+			0x168 0x101
-+			0x16a 0x101
-+			0x16c 0x101
-+		>;
-+	};
- };
- 
- &mmc1 {
-@@ -213,3 +240,22 @@
- 	cs1-used;
- 	device-handle = <&samsung_K3PE0E000B>;
- };
-+
-+&mcspi1 {
-+
-+};
-+
-+&mcspi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c5_pins>;
-+};
-+
-+&mcspi3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c5_pins>;
-+};
-+
-+&mcspi4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c5_pins>;
-+};
 -- 
-1.7.1
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
