@@ -1,66 +1,100 @@
-From: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v6 10/10] ARM: dts: add AM33XX SPI DMA support
-Date: Wed, 30 Jan 2013 02:00:29 -0500
-Message-ID: <1359529229-22207-11-git-send-email-mporter@ti.com>
-References: <1359529229-22207-1-git-send-email-mporter@ti.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH] ARM: dts: specify all the per-cpu interrupts of arch
+ timer for exynos5440
+Date: Wed, 30 Jan 2013 12:50:41 +0530
+Message-ID: <5108C9C9.4010409@ti.com>
+References: <1358818887-16870-1-git-send-email-kgene.kim@samsung.com> <20130122101554.GA18876@e106331-lin.cambridge.arm.com> <063f01cdf8ec$926cda30$b7468e90$@samsung.com> <20130123103614.GD32237@e106331-lin.cambridge.arm.com> <50FFC1B0.8000601@ti.com> <51012C4B.5080300@ti.com> <51013432.3080903@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1359529229-22207-1-git-send-email-mporter-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <51013432.3080903@arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Kukjin Kim <kgene.kim@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, 'Tony Lindgren' <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, 'Thomas Abraham' <thomas.ab@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds DMA resources to the AM33XX SPI nodes.
+Benoit,
 
-Signed-off-by: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
----
- arch/arm/boot/dts/am33xx.dtsi |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+On Thursday 24 January 2013 06:46 PM, Marc Zyngier wrote:
+> Hi Benoit,
+>
+> On 24/01/13 12:42, Benoit Cousson wrote:
+>> Hi Santosh,
+>>
+>> On 01/23/2013 11:55 AM, Santosh Shilimkar wrote:
+>>> Looping Marc, Benoit
+>>>
+>>> On Wednesday 23 January 2013 04:06 PM, Mark Rutland wrote:
+>>>> On Tue, Jan 22, 2013 at 10:05:18PM +0000, Kukjin Kim wrote:
+>>>>> Mark Rutland wrote:
+>>>>>>
+>>>>> + devicetree-discuss, Grant Likely, Rob Herring and Tony Lindgren
+>>>>>
+>>>>>> On Tue, Jan 22, 2013 at 01:41:27AM +0000, Kukjin Kim wrote:
+>>>>>>> From: Thomas Abraham <thomas.ab@samsung.com>
+>>>>>>>
+>>>>>>> Need to be changed requirements in the 'cpus' node for exynos5440
+>>>>>>> to specify all the per-cpu interrupts of arch timer.
+>>>>>>
+>>>>>> The node(s) for the arch timer should not be in the cpus/cpu@N nodes.
+>>>>>> Instead, there should be one node (in the root of the tree).
+>>>>>>
+>>>>> Well, I don't think so. As per my understanding, the local timers are
+>>>>> attached to every ARM cores (cpus) and it generates certain interrupt
+>>>>> to the
+>>>>> GIC. So the correct representation for this in device tree is to
+>>>>> include the
+>>>>> interrupts in the cpu nodes in dts file. Your comments  refer to a
+>>>>> limitation in the Linux kernel implementation of the arch_timer and it
+>>>>> should not result in representing the hardware details incorrectly in
+>>>>> the
+>>>>> dts file.
+>>>>
+>>>> I disagree. The "correct representation" is whatever the devicetree
+>>>> binding
+>>>> documentation describes. It does not describe placing timer nodes in
+>>>> the cpu
+>>>> nodes.
+>>>>
+>>> This seems to be exact same topic what is getting discussed here [1]
+>>> Technically DT is suppose to represent how the hardware is rather than
+>>> how the bindings are done.
+>>>
+>>> But as Marc pointed out, the approach taken currently is to not
+>>> duplicate the banked information. The thread [1] isn't concluded
+>>> yet but looks like we might want to avoid duplicating the information
+>>> considering, more of such duplication needs to follow. e.g gic i/f
+>>>
+>>> Am still waiting on what Benoit has to say ?
+>>
+>> I agree with you :-)
+>>
+>> I'm not sure the binding was properly done to reflect the HW accurately.
+>>
+>> A local timer for my point of view should be located in the cpu node
+>> like a L1 cache. Or at least referenced in each cpu by a phandle.
+>>
+>> What was the rational to put it in the root?
+>
+> The rational was to follow what we already do for most (all?) banked
+> resources. We already have TWD, GIC and PMU that have a root node,
+> avoiding duplicated resources. I think consistency is an important thing
+> to have.
+>
+> If we decide to move everything into CPU nodes and duplicate all the
+> banked resources, fine. But that has impacts that reach far beyond the
+> simple case of the timer.
+>
+> In particular, good luck with the GIC distributor interface, where the
+> 32 first interrupts are per CPU. This would also mandate a redesign of
+> the way we specify a PPI, as the CPU mask in the third field doesn't
+> mean a thing anymore.
+>
+> If you insist on having a phandle to a timer node, fine by me.
+>
+Can you please comment on it so that we can conclude this thread ?
+I would like to update my patches and hence the push.
 
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index e711ffb..ddf702a 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -328,6 +328,11 @@
- 			interrupt = <65>;
- 			ti,spi-num-cs = <2>;
- 			ti,hwmods = "spi0";
-+			dmas = <&edma 16
-+				&edma 17
-+				&edma 18
-+				&edma 19>;
-+			dma-names = "tx0", "rx0", "tx1", "rx1";
- 			status = "disabled";
- 		};
- 
-@@ -339,6 +344,11 @@
- 			interrupt = <125>;
- 			ti,spi-num-cs = <2>;
- 			ti,hwmods = "spi1";
-+			dmas = <&edma 42
-+				&edma 43
-+				&edma 44
-+				&edma 45>;
-+			dma-names = "tx0", "rx0", "tx1", "rx1";
- 			status = "disabled";
- 		};
- 
--- 
-1.7.9.5
-
-
-------------------------------------------------------------------------------
-Everyone hates slow websites. So do we.
-Make your web apps faster with AppDynamics
-Download AppDynamics Lite for free today:
-http://p.sf.net/sfu/appdyn_d2d_jan
+Regards,
+Santosh
