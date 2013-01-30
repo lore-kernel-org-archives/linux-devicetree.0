@@ -1,82 +1,42 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [RFC][PATCH 2/2 v3] ASoC: simple-card: add Device
-	Tree support
-Date: Wed, 30 Jan 2013 13:14:07 -0700
-Message-ID: <51097F0F.2030501@wwwdotorg.org>
-References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
- <87sj6t484z.wl%kuninori.morimoto.gx@renesas.com>
- <50E71618.8090302@wwwdotorg.org>
- <20130104193712.GN4627@opensource.wolfsonmicro.com>
- <87y5fvyy18.wl%kuninori.morimoto.gx@renesas.com>
- <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
- <20130127035943.GJ4650@opensource.wolfsonmicro.com>
- <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
- <20130129014808.GC4748@opensource.wolfsonmicro.com>
- <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
- <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
- <5107FF97.1070601@wwwdotorg.org>
- <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery support
+ for G2D
+Date: Wed, 30 Jan 2013 21:51:01 +0100
+Message-ID: <510987B5.6090509@gmail.com>
+References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org> <1359107722-9974-2-git-send-email-sachin.kamat@linaro.org> <CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Linux-ALSA <alsa-devel@alsa-project.org>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Sachin Kamat <sachin.kamat@linaro.org>, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/30/2013 02:09 AM, Kuninori Morimoto wrote:
-> Support for loading the simple-card module via devicetree.
-> It requests cpu/codec information for probing.
+On 01/30/2013 09:50 AM, Inki Dae wrote:
+>> +static const struct of_device_id exynos_g2d_match[] = {
+>> +       { .compatible = "samsung,g2d-v41" },
+>
+> not only Exynos5 and also Exyno4 has the g2d gpu and drm-based g2d
+> driver shoud support for all Exynos SoCs. How about using
+> "samsung,exynos5-g2d" instead and adding a new property 'version' to
+> identify ip version more surely? With this, we could know which SoC
+> and its g2d ip version. The version property could have '0x14' or
+> others. And please add descriptions to dt document.
 
-> diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
+Err no. Are you suggesting using "samsung,exynos5-g2d" compatible string
+for Exynos4 specific IPs ? This would not be correct, and you still can
+match the driver with multiple different revisions of the IP and associate
+any required driver's private data with each corresponding compatible
+property.
 
-> +Simple-Card:
-> +
-> +Required properties:
-> +
-> +- compatible			: "simple-audio"
-> +- simple-audio,card-name	: simple-audio card name
-> +- simple-audio,format		: see below
-> +
-> +Optional properties:
-> +
-> +- simple-audio,bitclock-inversion
-> +- simple-audio,frame-inversion
-> +
-> +CPU / CODEC DAI is represented as a sub-node.
-> +Then, sub-node name should be "simple-audio,cpu" or "simple-audio,codec".
+Perhaps it would make more sense to include the SoCs name in the compatible
+string, e.g. "samsung,exynos-g2d-v41", but appending revision of the IP
+seems acceptable to me. The revisions appear to be well documented and it's
+more or less clear which one corresponds to which SoC.
 
-Why require sub-nodes? it seem over-complex.
+--
 
-> +Required subnode properties:
-> +- simple-audio,dev		: phandle for CPU/CODEC
-> +
-> +Optional subnode properties:
-> +
-> +- simple-audio,dai-name			: simple-audio CPU/CODEC DAI name
-
-OK, I see those two are CPU-/CODEC-specific. However, you could easily
-just have different property names for the two.
-
-I assume you didn't like my idea of not putting the DAI names into the
-DT, but using extra arguments after the phandles instead? Doing so would
-be more alike most existing DT bindings.
-
-> +- simple-audio,system-clock-frequency	: system clock rate
-> +- simple-audio,frame-master
-> +- simple-audio,bitclock-master
-
-Aren't those a property of the CPU<->CODEC link, hence the clock
-frequency is identical, and the two "master" properties are the inverse
-of each-other in between CPU and CODEC. Specifying these right in the
-top-level node seems simpler.
+Thanks,
+Sylwester
