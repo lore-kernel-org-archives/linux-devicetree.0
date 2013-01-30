@@ -1,62 +1,88 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
-Date: Wed, 30 Jan 2013 10:08:30 +0000
-Message-ID: <201301301008.31196.arnd@arndb.de>
-References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <201301300941.35886.arnd@arndb.de>
- <CAOh2x==WZePgfTWwL0vPdE693n44vW05OS=DSqbnDCs2xzHXuw@mail.gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining dr_mode
+ and phy_type
+Date: Wed, 30 Jan 2013 11:11:02 +0100
+Message-ID: <20130130101102.GV1906@pengutronix.de>
+References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
+ <5107D253.5030400@ti.com>
+ <20130129203050.GT1906@pengutronix.de>
+ <5108B4E7.4020505@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAOh2x==WZePgfTWwL0vPdE693n44vW05OS=DSqbnDCs2xzHXuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5108B4E7.4020505-l0cyMroinI0@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kishon <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 30 January 2013, Viresh Kumar wrote:
-> On Wed, Jan 30, 2013 at 3:11 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > On Wednesday 30 January 2013, Viresh Kumar wrote:
-> >> I knew you will come to this :)
-> >> So, the hardware is like: there are 16 request line slots per master, a
-> >> platform can choose to connect same or separate devices to these.
+On Wed, Jan 30, 2013 at 11:21:35AM +0530, kishon wrote:
+> On Wednesday 30 January 2013 02:00 AM, Sascha Hauer wrote:
+> >On Tue, Jan 29, 2013 at 07:14:51PM +0530, kishon wrote:
+> >>Hi,
 > >>
-> >> So, these are really 16 per master.
+> >>On Tuesday 29 January 2013 04:52 PM, Sascha Hauer wrote:
+> >>>From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >>>
+> >>>This adds two little devicetree helper functions for determining the
+> >>>dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
+> >>>the devicetree.
+> >>>
+> >>>Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >>>Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> >>>---
+> >>>
+> >>>The properties and their values have been taken from the fsl-mph-dr driver.
+> >>>This binding is also documented (though currently not used) for the tegra
+> >>>ehci driver (Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt).
+> >>>This is a first attempt to parse these bindings at a common place so that
+> >>>others can make use of it.
+> >>>
+> >>>Basically I want to know whether this binding is recommended for new drivers
+> >>>since normally the devicetree uses '-' instead of '_', and maybe there are
+> >>>other problems with it.
+> >>>
+> >>>I need this binding for the chipidea driver. I suspect that the fsl-mph-dr
+> >>>driver also really handles a chipidea core.
+> >>>
+> >>>Should we agree on this I would convert the fsl-mph-dr driver to use these
+> >>>helpers.
+> >>>
+> >>>Sascha
+> >>>
+> >>>  drivers/usb/core/Makefile |    1 +
+> >>>  drivers/usb/core/of.c     |   76 +++++++++++++++++++++++++++++++++++++++++++++
+> >>
+> >>This file should ideally go into drivers/usb/phy/.
 > >
-> > Ok, I see. Do you know how these are numbered in the data sheet?
-> >
-> > If the convention is to have subsequent numbers for these in the
-> > hardware description, we should probably just have that single
-> > request number in the binding, too, and calculate the master number
-> > from that. If it lists pairs of request/master number, we should
-> > use pairs in the binding as well, in the same order.
+> >I originally wanted to do that, but the host/peripheral/otg property is
+> >not phy specific. DO you still want to move it there?
 > 
-> Actually what would be better to have is:
-> - have this range from 0-15 only
-> - together with the master we want to use for peripheral
->
-> this should be enough.
+> I think then you can just move of_usb_get_phy_mode() to phy/of.c.
+> Then we can also move some functions defined in otg.c (specific to
+> PHY and dt) to phy/of.c.
 
-Ok.
- 
-> Datasheet of dw_dmac doesn't tell much about it.. just four bits for programming
-> it and so values are from 0-15 :)
+The phy specific stuff in otg.c can't easily be moved as all functions
+operate on a static list and spinlock. Also nothing in otg/otg.c is
+currently of specific.
 
-I meant the spear13xx data sheet, which has to list the request lines
-for its integrated components. There may be other SoCs using the
-same dw_dmac, but this is the main one that is upstream now, and it's
-probably as good as any other one. I just wouldn't want to establish
-a binding that doesn't match any of the known implementations in the
-way it expresses request lines.
+What about the dr_mode helper? Moving it to otg/ would mean that all
+users which want to use it would have to select USB_OTG_UTILS. At least
+the fsl mph driver currently does not need USB_OTG_UTILS.
 
-	Arnd
+ATM I'm feeling like killing USB_OTG_UTILS completely, that would make
+things easier.
+
+Sascha
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
