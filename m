@@ -1,90 +1,82 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH v2 0/5] arm: mvebu: add support for local timer for
- Armada 370/XP
-Date: Wed, 30 Jan 2013 14:52:36 -0500
-Message-ID: <20130130195236.GS7717@titan.lakedaemon.net>
-References: <1359135165-32108-1-git-send-email-gregory.clement@free-electrons.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [RFC][PATCH 2/2 v3] ASoC: simple-card: add Device
+	Tree support
+Date: Wed, 30 Jan 2013 13:14:07 -0700
+Message-ID: <51097F0F.2030501@wwwdotorg.org>
+References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
+ <87sj6t484z.wl%kuninori.morimoto.gx@renesas.com>
+ <50E71618.8090302@wwwdotorg.org>
+ <20130104193712.GN4627@opensource.wolfsonmicro.com>
+ <87y5fvyy18.wl%kuninori.morimoto.gx@renesas.com>
+ <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
+ <20130127035943.GJ4650@opensource.wolfsonmicro.com>
+ <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
+ <20130129014808.GC4748@opensource.wolfsonmicro.com>
+ <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
+ <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
+ <5107FF97.1070601@wwwdotorg.org>
+ <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1359135165-32108-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, John Stultz <johnstul@us.ibm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrew Lunn <andrew@lunn.ch>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Lior Amsalem <alior@marvell.com>, Ike Pan <ike.pan@canonical.com>, Nadav Haklai <nadavh@marvell.com>, David Marlin <dmarlin@redhat.com>, Yehuda Yitschak <yehuday@marvell.com>, Jani Monoses <jani.monoses@canonical.com>, Tawfik Bayouk <tawfik@marvell.com>, Dan Frazier <dann.frazier@canonical.com>, Eran Ben-Avi <benavi@marvell.com>, Leif Lindholm <leif.lindholm@arm.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jon Masters <jcm@redhat.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Chris Van Hoof <vanhoof@canonical.com>, Nicolas Pitre <nico@fluxnic.net>, linux-kernel@vger.kernel.orgM
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Linux-ALSA <alsa-devel@alsa-project.org>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Thomas Gleixner, John Stultz,
+On 01/30/2013 02:09 AM, Kuninori Morimoto wrote:
+> Support for loading the simple-card module via devicetree.
+> It requests cpu/codec information for probing.
 
-I'm getting close to pulling this series in through arm-soc.  Would you
-prefer to take the clocksource patches through your tree, or provide an
-Acked-by and I can take them through mvebu/arm-soc?
+> diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
 
-I'm comfortable with either, if you decide to take them, please let me
-know which tree and branch you put them in so I can properly depend on
-them.
+> +Simple-Card:
+> +
+> +Required properties:
+> +
+> +- compatible			: "simple-audio"
+> +- simple-audio,card-name	: simple-audio card name
+> +- simple-audio,format		: see below
+> +
+> +Optional properties:
+> +
+> +- simple-audio,bitclock-inversion
+> +- simple-audio,frame-inversion
+> +
+> +CPU / CODEC DAI is represented as a sub-node.
+> +Then, sub-node name should be "simple-audio,cpu" or "simple-audio,codec".
 
-thx,
+Why require sub-nodes? it seem over-complex.
 
-Jason.
+> +Required subnode properties:
+> +- simple-audio,dev		: phandle for CPU/CODEC
+> +
+> +Optional subnode properties:
+> +
+> +- simple-audio,dai-name			: simple-audio CPU/CODEC DAI name
 
-On Fri, Jan 25, 2013 at 06:32:40PM +0100, Gregory CLEMENT wrote:
-> Hello,
-> 
-> The Armada XP SoCs comes with private timers. This allows us to use
-> local timers through CONFIG_LOCAL_TIMERS and as stated in the kconfig
-> help, it prevents a "thundering herd" at every timer tick.
-> 
-> Armada 370 also have these private timers, and even if it comes only
-> with a single CPU, the feature is also enabled for this SoC to keep
-> the code generic.
-> 
-> In order to be able to use the local timer, I also had to add the
-> support for the per-CPU interrupts.
-> 
-> There are not many changes since the first version (see the changelog
-> below), I hope it means that everybody is happy with this patch
-> set. If it is, so please could you give your acked-by. I especially
-> expect the acked-by from John Stultz then I will feel more comfortable
-> to ask Jason to pull it.
-> 
-> This patch set is based on 3.8-rc4 and is obviously 3.9 material. The
-> git branch called local_timer is available at:
-> https://github.com/MISL-EBU-System-SW/mainline-public.git.
-> 
-> Thanks,
-> 
-> Changelog:
-> V1->V2:
->  - Fixed unneeded empty line and wrong indentation.
->  - Made percpu_armada_370_xp_evt a static variable
->  - Removed the patch "arm: kconfig: don't select TWD with local timer
->    for Armada 370/XP" from the series. There is still some improvement
->    possible in this area, but this patch set not depends on it.
-> 
-> Gregory CLEMENT (5):
->   arm: mvebu: Add support for local interrupt
->   clocksource: time-armada-370-xp: add local timer support
->   arm: mvebu: update defconfig with local timer support
->   arm: mvebu: update DT to support local timers
->   clocksource: update and move armada-370-xp-timer documentation to
->     timer directory
-> 
->  .../bindings/arm/armada-370-xp-timer.txt           |   12 --
->  .../bindings/timer/marvell,armada-370-xp-timer.txt |   15 ++
->  arch/arm/boot/dts/armada-370-xp.dtsi               |    5 +-
->  arch/arm/configs/mvebu_defconfig                   |    1 -
->  arch/arm/mach-mvebu/irq-armada-370-xp.c            |   15 +-
->  drivers/clocksource/time-armada-370-xp.c           |  150 +++++++++++++++-----
->  6 files changed, 141 insertions(+), 57 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/armada-370-xp-timer.txt
->  create mode 100644 Documentation/devicetree/bindings/timer/marvell,armada-370-xp-timer.txt
-> 
-> -- 
-> 1.7.9.5
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+OK, I see those two are CPU-/CODEC-specific. However, you could easily
+just have different property names for the two.
+
+I assume you didn't like my idea of not putting the DAI names into the
+DT, but using extra arguments after the phandles instead? Doing so would
+be more alike most existing DT bindings.
+
+> +- simple-audio,system-clock-frequency	: system clock rate
+> +- simple-audio,frame-master
+> +- simple-audio,bitclock-master
+
+Aren't those a property of the CPU<->CODEC link, hence the clock
+frequency is identical, and the two "master" properties are the inverse
+of each-other in between CPU and CODEC. Specifying these right in the
+top-level node seems simpler.
