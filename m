@@ -1,113 +1,68 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4 2/2] usb: phy: samsung: Add PHY support for USB 3.0
- controller
-Date: Wed, 30 Jan 2013 10:20:34 +0200
-Message-ID: <20130130082034.GF15258@arwen.pp.htv.fi>
-References: <1358168377-22919-3-git-send-email-gautam.vivek@samsung.com>
- <1359368782-30224-1-git-send-email-gautam.vivek@samsung.com>
- <077f01cdfeaf$4f7b8780$ee729680$@samsung.com>
-Reply-To: <balbi@ti.com>
+From: "Kumar, Anil" <anilkumar.v-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH] arm: dts: omap4-sdp: Add I2c pinctrl data
+Date: Wed, 30 Jan 2013 08:43:46 +0000
+Message-ID: <F3DBB1B3EF102E4994C89758CFCA32412C16DD@DBDE01.ent.ti.com>
+References: <1359371865-27907-1-git-send-email-sourav.poddar@ti.com>
+ <1359527158.14894.37.camel@cumari.coelho.fi> <5108C052.3070604@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="H4SyuGOnfnj3aJqJ"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <077f01cdfeaf$4f7b8780$ee729680$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Vivek Gautam' <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, balbi@ti.com, grant.likely@secretlab.ca, sylvester.nawrocki@gmail.com, tomasz.figa@gmail.com, av.tikhomirov@samsung.com, dianders@chromium.org, p.paneri@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5108C052.3070604-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Poddar, Sourav" <sourav.poddar-l0cyMroinI0@public.gmane.org>, "Coelho, Luciano" <coelho-l0cyMroinI0@public.gmane.org>
+Cc: "Vishwanathrao Badarkhe, Manish" <manishv.b-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi,
+ Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "Shilimkar, Santosh" <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---H4SyuGOnfnj3aJqJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Sourav,
 
-On Tue, Jan 29, 2013 at 10:01:52PM -0800, Kukjin Kim wrote:
-> Vivek Gautam wrote:
-> >=20
-> > Adding PHY driver support for USB 3.0 controller for Samsung's
-> > SoCs.
-> >=20
-> > Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
-> > ---
-> >=20
-> > Changes from v3:
-> >  - Making SAMSUNG_USB3PHY dependent on SAMSUNG_USBPHY.
-> >  - Adding USB_DWC3 to dependencies of SAMSUNG_USB2PHY since
-> >    dwc3 controller also looks for USB2 type PHY.
-> >=20
-> >  drivers/usb/phy/Kconfig          |   11 +-
-> >  drivers/usb/phy/Makefile         |    1 +
-> >  drivers/usb/phy/samsung-usb3.c   |  349
-> > ++++++++++++++++++++++++++++++++++++++
-> >  drivers/usb/phy/samsung-usbphy.h |   81 +++++++++
-> >  4 files changed, 441 insertions(+), 1 deletions(-)
-> >  create mode 100644 drivers/usb/phy/samsung-usb3.c
-> >=20
-> > diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
-> > index cc0d230..9325a95 100644
-> > --- a/drivers/usb/phy/Kconfig
-> > +++ b/drivers/usb/phy/Kconfig
-> > @@ -52,14 +52,23 @@ config SAMSUNG_USBPHY
-> >  	help
-> >  	  Enable this to support Samsung USB phy controllers for Samsung
-> >  	  SoCs.
-> > +	  Further enable USB 2.0 type PHY or USB 3.0 type PHY as required
-> > +	  for USB controllers in use.
-> >=20
-> >  if SAMSUNG_USBPHY
-> >=20
-> >  config SAMSUNG_USB2PHY
-> >  	bool "Samsung USB 2.0 PHY controller Driver"
-> > -	depends on USB_S3C_HSOTG || USB_EHCI_S5P ||
-> > USB_OHCI_EXYNOS
-> > +	depends on USB_S3C_HSOTG || USB_EHCI_S5P ||
-> > USB_OHCI_EXYNOS || USB_DWC3
-> >  	help
-> >  	  Enable this to support Samsung USB 2.0 (High Speed) phy controller
-> >  	  for Samsung SoCs.
-> >=20
-> > +config SAMSUNG_USB3PHY
-> > +	bool "Samsung USB 3.0 PHY controller Driver"
-> > +	depends on USB_DWC3
-> > +	help
-> > +	  Enable this to support Samsung USB 3.0 (Super Speed) phy
-> > controller
-> > +	  for samsung SoCs.
-> > +
-> >  endif
->=20
-> It mean, when USB_DWC3 is selected, we can select only one USB2PHY or
-> USB3PHY?
+On Wed, Jan 30, 2013 at 12:10:18, Poddar, Sourav wrote:
+> Hi Luciano,
+> On Wednesday 30 January 2013 11:55 AM, Luciano Coelho wrote:
+> > Hi Sourav,
+> >
+> > On Mon, 2013-01-28 at 16:47 +0530, Sourav Poddar wrote:
+> >> Booting 3.8-rc4 om omap 4430sdp results in the following error
+> >>
+> >> omap_i2c 48070000.i2c: did not get pins for i2c error: -19
+> >> [    1.024261] omap_i2c 48070000.i2c: bus 0 rev0.12 at 100 kHz
+> >> [    1.030181] omap_i2c 48072000.i2c: did not get pins for i2c error: -19
+> >> [    1.037384] omap_i2c 48072000.i2c: bus 1 rev0.12 at 400 kHz
+> >> [    1.043762] omap_i2c 48060000.i2c: did not get pins for i2c error: -19
+> >> [    1.050964] omap_i2c 48060000.i2c: bus 2 rev0.12 at 100 kHz
+> >> [    1.056823] omap_i2c 4807a000.i2c: did not get pins for i2c error: -19
+> >> [    1.064025] omap_i2c 4807a000.i2c: bus 3 rev0.12 at 400 kHz
+> >>
+> >> This happens because omap4 dts file is not adapted to use i2c through pinctrl
+> >> framework. Populating i2c pinctrl data to get rid of the error.
+> >>
+> >> Tested on omap4430 sdp with 3.8-rc4 kernel.
+> >>
+> >> Signed-off-by: Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>
+> >> Reported-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+> >> ---
+> > Could you do the same thing for panda? I'm getting the same kind of
+> > errors with it:
 
-right, not sure that's a wise idea. It makes enabling USB support
-trickier than it needs to be. How about just dropping all dependencies
-if it compiles cleanly on all arches ?
+omap4 uses pinctrl-single driver for pinmux with DT. Currently
+pinctrl-single driver is getting up after I2C driver. So I2c cannot
+use pinctrl. The below patch solve this issue     
 
---=20
-balbi
+http://www.gossamer-threads.com/lists/linux/kernel/1669067
 
---H4SyuGOnfnj3aJqJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Can you try with this ? it may solve it.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRCNfSAAoJEIaOsuA1yqREkSkP/0wapvF8o3GEmWHLcfm1QNYk
-lX6n7FGi1uG3h+83gbGJdsgC1jFyXZ9A0r6N5SfQylH3Biyi2mODABXAD/JwkOea
-mwR1a+FStGDpu1hYo34ed6YFcClUojRUBWosB4iLrWiQJyC5iYDAHMiZH7j2jD6X
-uSo4Ju2AF0tS5JU02RQGpEStftBitkAy/xYbvCkhDsRzJCtEMs2mPwFto/zTEPxe
-7u/iaol3SxTRP3XUUTDIhCrPVIN2I8WmM2a8Ih4dWosu2WMEwUKNf/p2JYg6G15g
-vQpovf9Gpclfrr4zb1g4t0eO+Vf1sJsWRaGbtR82rQlM09BCt7a/xi8v8V6lDqTO
-4lnH2V442uEzrBfnUZNX2+DJ3NVFESGD/V9DFAM420Dadu/hfKLWRuGxvH2cyGZF
-pKdprlexirvZ8jWBSehyLp90Vs6tYE7Cu/IoXv7C1EQEtaFzr+MTLUDKd1J3YBAQ
-KjDDwIHroTFGhLKTCzwDdmZ2C6xXBPkfAjIXV5g8Yxn8fod7BKICdc3sL9f+YNus
-eEjiJ0JH5WCMTKSNXbleqzIeJW1M8Xxp73S1tYdWxqcmqk7XZ5iCLCsr1MgbxVo6
-QnJbrbPcb6FrvLWTn29BuFXSpxRzB+0NnZPnTM+2g9NNMrzkqvnI98aZkWHctOea
-x2Q6nbtMNHAm5WinW02q
-=dydY
------END PGP SIGNATURE-----
-
---H4SyuGOnfnj3aJqJ--
+Thanks,
+Anil
+[...]
