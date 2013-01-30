@@ -1,143 +1,62 @@
-From: Anson Huang <b20788@freescale.com>
-Subject: [PATCH] regulators: anatop: add set_voltage_time_sel interface
-Date: Wed, 30 Jan 2013 17:50:14 -0500
-Message-ID: <1359586214-11876-1-git-send-email-b20788@freescale.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
+Date: Wed, 30 Jan 2013 10:08:30 +0000
+Message-ID: <201301301008.31196.arnd@arndb.de>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <201301300941.35886.arnd@arndb.de>
+ <CAOh2x==WZePgfTWwL0vPdE693n44vW05OS=DSqbnDCs2xzHXuw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: broonie@opensource.wolfsonmicro.com, lrg@ti.com, paul.liu@linaro.org, rob@landley.net, rob.herring@calxeda.com, grant.likely@secretlab.ca, shawn.guo@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAOh2x==WZePgfTWwL0vPdE693n44vW05OS=DSqbnDCs2xzHXuw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spear-devel <spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-some of anatop's regulators(vppcpu, vddpu and vddsoc) have
-register settings about LDO's step time, which will impact
-the LDO ramp up speed, need to use set_voltage_time_sel
-interface to add necessary delay everytime LDOs' voltage
-is increased.
+On Wednesday 30 January 2013, Viresh Kumar wrote:
+> On Wed, Jan 30, 2013 at 3:11 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > On Wednesday 30 January 2013, Viresh Kumar wrote:
+> >> I knew you will come to this :)
+> >> So, the hardware is like: there are 16 request line slots per master, a
+> >> platform can choose to connect same or separate devices to these.
+> >>
+> >> So, these are really 16 per master.
+> >
+> > Ok, I see. Do you know how these are numbered in the data sheet?
+> >
+> > If the convention is to have subsequent numbers for these in the
+> > hardware description, we should probably just have that single
+> > request number in the binding, too, and calculate the master number
+> > from that. If it lists pairs of request/master number, we should
+> > use pairs in the binding as well, in the same order.
+> 
+> Actually what would be better to have is:
+> - have this range from 0-15 only
+> - together with the master we want to use for peripheral
+>
+> this should be enough.
 
-offset 0x170:
-bit [24-25]: vddcpu
-bit [26-27]: vddpu
-bit [28-29]: vddsoc
-
-field definition:
-0'b00: 64 cycles of 24M clock;
-0'b01: 128 cycles of 24M clock;
-0'b02: 256 cycles of 24M clock;
-0'b03: 512 cycles of 24M clock;
-
-Signed-off-by: Anson Huang <b20788@freescale.com>
----
- .../bindings/regulator/anatop-regulator.txt        |    6 +++
- drivers/regulator/anatop-regulator.c               |   42 ++++++++++++++++++++
- 2 files changed, 48 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-index 357758c..b3a08f8 100644
---- a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-@@ -5,6 +5,9 @@ Required properties:
- - anatop-reg-offset: Anatop MFD register offset
- - anatop-vol-bit-shift: Bit shift for the register
- - anatop-vol-bit-width: Number of bits used in the register
-+- anatop-delay-reg-offset: Anatop MFD step time register offset
-+- anatop-delay-bit-shift: Bit shift for the step time register
-+- anatop-delay-bit-width: Number of bits used in the step time register
- - anatop-min-bit-val: Minimum value of this register
- - anatop-min-voltage: Minimum voltage of this regulator
- - anatop-max-voltage: Maximum voltage of this regulator
-@@ -23,6 +26,9 @@ Example:
- 		anatop-reg-offset = <0x140>;
- 		anatop-vol-bit-shift = <9>;
- 		anatop-vol-bit-width = <5>;
-+		anatop-delay-reg-offset = <0x170>;
-+		anatop-delay-bit-shift = <24>;
-+		anatop-delay-bit-width = <2>;
- 		anatop-min-bit-val = <1>;
- 		anatop-min-voltage = <725000>;
- 		anatop-max-voltage = <1300000>;
-diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
-index 8f39cac..a857b9c 100644
---- a/drivers/regulator/anatop-regulator.c
-+++ b/drivers/regulator/anatop-regulator.c
-@@ -31,12 +31,18 @@
- #include <linux/regulator/driver.h>
- #include <linux/regulator/of_regulator.h>
+Ok.
  
-+#define LDO_RAMP_UP_UNIT_IN_CYCLES      64 /* 64 cycles per step */
-+#define LDO_RAMP_UP_FREQ_IN_MHZ         24 /* cycle based on 24M OSC */
-+
- struct anatop_regulator {
- 	const char *name;
- 	u32 control_reg;
- 	struct regmap *anatop;
- 	int vol_bit_shift;
- 	int vol_bit_width;
-+	u32 delay_reg;
-+	int delay_bit_shift;
-+	int delay_bit_width;
- 	int min_bit_val;
- 	int min_voltage;
- 	int max_voltage;
-@@ -55,6 +61,33 @@ static int anatop_regmap_set_voltage_sel(struct regulator_dev *reg,
- 	return regulator_set_voltage_sel_regmap(reg, selector);
- }
- 
-+static int anatop_regmap_set_voltage_time_sel(struct regulator_dev *reg,
-+	unsigned int old_sel,
-+	unsigned int new_sel)
-+{
-+	struct anatop_regulator *anatop_reg = rdev_get_drvdata(reg);
-+	u32 val;
-+	int ret = 0;
-+
-+	/* check whether need to care about LDO ramp up speed */
-+	if (anatop_reg->delay_reg) {
-+		/*
-+		 * the delay for LDO ramp up time is
-+		 * based on the register setting, we need
-+		 * to calculate how many steps LDO need to
-+		 * ramp up, and how much delay needed. (us)
-+		 */
-+		regmap_read(anatop_reg->anatop, anatop_reg->delay_reg, &val);
-+		val = (val >> anatop_reg->delay_bit_shift) &
-+			((1 << anatop_reg->delay_bit_width) - 1);
-+		ret = new_sel > old_sel ? (new_sel - old_sel) *
-+			((LDO_RAMP_UP_UNIT_IN_CYCLES << val) /
-+			LDO_RAMP_UP_FREQ_IN_MHZ + 1) : 0;
-+	}
-+
-+	return ret;
-+}
-+
- static int anatop_regmap_get_voltage_sel(struct regulator_dev *reg)
- {
- 	struct anatop_regulator *anatop_reg = rdev_get_drvdata(reg);
-@@ -67,6 +100,7 @@ static int anatop_regmap_get_voltage_sel(struct regulator_dev *reg)
- 
- static struct regulator_ops anatop_rops = {
- 	.set_voltage_sel = anatop_regmap_set_voltage_sel,
-+	.set_voltage_time_sel = anatop_regmap_set_voltage_time_sel,
- 	.get_voltage_sel = anatop_regmap_get_voltage_sel,
- 	.list_voltage = regulator_list_voltage_linear,
- 	.map_voltage = regulator_map_voltage_linear,
-@@ -143,6 +177,14 @@ static int anatop_regulator_probe(struct platform_device *pdev)
- 		goto anatop_probe_end;
- 	}
- 
-+	/* read LDO ramp up setting, only for core reg */
-+	of_property_read_u32(np, "anatop-delay-reg-offset",
-+			     &sreg->delay_reg);
-+	of_property_read_u32(np, "anatop-delay-bit-width",
-+			     &sreg->delay_bit_width);
-+	of_property_read_u32(np, "anatop-delay-bit-shift",
-+			     &sreg->delay_bit_shift);
-+
- 	rdesc->n_voltages = (sreg->max_voltage - sreg->min_voltage) / 25000 + 1
- 			    + sreg->min_bit_val;
- 	rdesc->min_uV = sreg->min_voltage;
--- 
-1.7.9.5
+> Datasheet of dw_dmac doesn't tell much about it.. just four bits for programming
+> it and so values are from 0-15 :)
 
+I meant the spear13xx data sheet, which has to list the request lines
+for its integrated components. There may be other SoCs using the
+same dw_dmac, but this is the main one that is upstream now, and it's
+probably as good as any other one. I just wouldn't want to establish
+a binding that doesn't match any of the known implementations in the
+way it expresses request lines.
 
+	Arnd
