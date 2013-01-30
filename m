@@ -1,93 +1,82 @@
 From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH 1/2] [media] s5p-g2d: Add DT based discovery support
-Date: Wed, 30 Jan 2013 22:38:32 +0100
-Message-ID: <510992D8.9030800@gmail.com>
-References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
+Subject: Re: [PATCH RFC v4 01/14] [media] Add common video interfaces OF bindings
+ documentation
+Date: Wed, 30 Jan 2013 23:35:06 +0100
+Message-ID: <5109A01A.3020102@gmail.com>
+References: <1358969489-20420-1-git-send-email-s.nawrocki@samsung.com> <1525960.fMnIjkZnjX@avalon> <51017DB2.5050905@samsung.com> <453041220.G3D9E6yQdS@avalon> <510914D0.6050404@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
+In-Reply-To: <510914D0.6050404@samsung.com>
 Sender: linux-media-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, k.debski@samsung.com, inki.dae@samsung.com, ajaykumar.rs@samsung.com, patches@linaro.org, s.nawrocki@samsung.com
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, hverkuil@xs4all.nl, g.liakhovetski@gmx.de, kyungmin.park@samsung.com, kgene.kim@samsung.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, myungjoo.ham@samsung.com, sw0312.kim@samsung.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sachin,
+Hi,
 
-On 01/25/2013 10:55 AM, Sachin Kamat wrote:
-> This patch adds device tree based discovery support to G2D driver
->
-> Signed-off-by: Sachin Kamat<sachin.kamat@linaro.org>
-> ---
->   drivers/media/platform/s5p-g2d/g2d.c |   17 ++++++++++++++++-
->   1 files changed, 16 insertions(+), 1 deletions(-)
->
-> diff --git a/drivers/media/platform/s5p-g2d/g2d.c b/drivers/media/platform/s5p-g2d/g2d.c
-> index 7e41529..210e142 100644
-> --- a/drivers/media/platform/s5p-g2d/g2d.c
-> +++ b/drivers/media/platform/s5p-g2d/g2d.c
-> @@ -18,6 +18,7 @@
->   #include<linux/slab.h>
->   #include<linux/clk.h>
->   #include<linux/interrupt.h>
-> +#include<linux/of.h>
->
->   #include<linux/platform_device.h>
->   #include<media/v4l2-mem2mem.h>
-> @@ -796,7 +797,8 @@ static int g2d_probe(struct platform_device *pdev)
->   	}
->
->   	def_frame.stride = (def_frame.width * def_frame.fmt->depth)>>  3;
-> -	dev->variant = g2d_get_drv_data(pdev);
-> +	if (!pdev->dev.of_node)
-> +		dev->variant = g2d_get_drv_data(pdev);
+On 01/30/2013 01:40 PM, Sylwester Nawrocki wrote:
+> On 01/25/2013 02:52 AM, Laurent Pinchart wrote:
+>>>>> +Data interfaces on all video devices are described by their child 'port'
+>>>>> +nodes. Configuration of a port depends on other devices participating in
+>>>>> +the data transfer and is described by 'endpoint' subnodes.
+>>>>> +
+>>>>> +dev {
+>>>>> +	#address-cells =<1>;
+>>>>> +	#size-cells =<0>;
+>>>>> +	port@0 {
+>>>>> +		endpoint@0 { ... };
+>>>>> +		endpoint@1 { ... };
+>>>>> +	};
+>>>>> +	port@1 { ... };
+>>>>> +};
+>>>>> +
+>>>>> +If a port can be configured to work with more than one other device on
+>>>>> +the same bus, an 'endpoint' child node must be provided for each of
+>>>>> +them. If more than one port is present in a device node or there is more
+>>>>> +than one endpoint at a port, a common scheme, using '#address-cells',
+>>>>> +'#size-cells' and 'reg' properties is used.
+>>>>
+>>>> Wouldn't this cause problems if the device has both video ports and a
+>>>> child bus ? Using #address-cells and #size-cells for the video ports would
+>>>> prevent the child bus from being handled in the usual way.
+>>>
+>>> Indeed, it looks like a serious issue in these bindings.
+>>>
+>>>> A possible solution would be to number ports with a dash instead of a @,
+>>>> as done in pinctrl for instance. We would then get
+>>>>
+>>>> 	port-0 {
+>>>> 		endpoint-0 { ... };
+>>>> 		endpoint-1 { ... };
+>>>> 	};
+>>>> 	port-1 { ... };
 
-Don' you need something like:
+Another possible solution could be putting the port nodes under
+a ports node, for these cases where a device has a child bus.
+Where there is no conflict, the ports node could be omitted for
+simplicity. Does it sound reasonable ?
 
-	else {
-		of_id = of_match_node(exynos_g2d_match, pdev->dev.of_node);
-		if (!of_id)
-			return -ENODEV;
-		dev->variant = (struct g2d_variant *)of_id->data;
-	}
-?
+device {
+	ports {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		port@0 {	
+			endpoint@0 {
+				reg = <0>;
+			};
+			endpoint@1 { ... };
+		};
+		port@1 { ... };
+	};
+};
 
-Otherwise dev->variant is left uninitialized...?
-
->   	return 0;
->
-> @@ -844,6 +846,18 @@ static struct g2d_variant g2d_drvdata_v4x = {
->   	.hw_rev = TYPE_G2D_4X, /* Revision 4.1 for Exynos4X12 and Exynos5 */
->   };
->
-> +static const struct of_device_id exynos_g2d_match[] = {
-> +	{
-> +		.compatible = "samsung,g2d-v3",
-> +		.data =&g2d_drvdata_v3x,
-> +	}, {
-> +		.compatible = "samsung,g2d-v41",
-> +		.data =&g2d_drvdata_v4x,
-
-Didn't you consider adding "exynos" to these compatible strings ?
-I'm afraid g2d may be too generic.
-
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, exynos_g2d_match);
-> +
->   static struct platform_device_id g2d_driver_ids[] = {
->   	{
->   		.name = "s5p-g2d",
-> @@ -863,6 +877,7 @@ static struct platform_driver g2d_pdrv = {
->   	.driver		= {
->   		.name = G2D_NAME,
->   		.owner = THIS_MODULE,
-> +		.of_match_table = of_match_ptr(exynos_g2d_match),
-
-of_match_ptr() could be dropped, since exynos_g2d_match[] is
-always compiled in.
+> One problem here is that index of the port or the endpoint node can have
+> random value and don't need to start with 0, which is the case for the pinctrl
+> properties. It makes iterating over those nodes more difficult, instead
+> of using standard functions like of_node_cmp() we would need to search for
+> sub-strings in the node name.
 
 --
 
