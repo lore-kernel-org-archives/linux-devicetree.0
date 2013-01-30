@@ -1,38 +1,81 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 3/6] ARM: dts: Add MFC codec support to SMDKV310 DT
-Date: Wed, 30 Jan 2013 12:41:26 +0530
-Message-ID: <1359529889-26318-4-git-send-email-sachin.kamat@linaro.org>
-References: <1359529889-26318-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1359529889-26318-1-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, patches@linaro.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH 1/4] pwm_backlight: Fix PWM levels support in non DT case
+Date: Wed, 30 Jan 2013 08:34:39 +0100
+Message-ID: <5108CD0F.3000404@ti.com>
+References: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com> <1358861996-27194-2-git-send-email-peter.ujfalusi@ti.com> <20130128210123.GA24673@avionic-0098.mockup.avionic-design.de> <51078580.2000808@ti.com> <20130129101709.GC16746@avionic-0098.mockup.avionic-design.de> <5107BC2B.5080400@ti.com> <20130129123025.GA20166@avionic-0098.mockup.avionic-design.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130129123025.GA20166@avionic-0098.mockup.avionic-design.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Added MFC codec support to SMDKV310 DT file.
+On 01/29/2013 01:30 PM, Thierry Reding wrote:
+>> Right. Now I know the background.
+>> However I do not agree with the conclusion. Probably it is fine in s=
+ome cases
+>> to limit the number of configurable duty cycles to have only distinc=
+t steps.
+>> To not go too far, on my laptop I have:
+>> # cat /sys/class/backlight/acpi_video0/max_brightness
+>> 15
+>> # cat /sys/class/backlight/intel_backlight/max_brightness
+>> 93
+>=20
+> FWIW, I have hardware with an Intel chipset that has max_brightness
+> 13666. That doesn't mean all of these are necessarily valid or useful=
+=2E
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
- arch/arm/boot/dts/exynos4210-smdkv310.dts |    6 ++++++
- 1 files changed, 6 insertions(+), 0 deletions(-)
+=46or sure this range is overkill, but if you reduce it to let's say 15=
+ would it
+be better? I don't think. It is up to the userspace to decide how to us=
+e it.
+User should have full control over the HW in hand. In this particular c=
+ase I
+would expect userspace to give you around 20 steps to change brightness=
+ and
+when you change it would step between those so you will have nice, smoo=
+th
+changes and not big jumps.
 
-diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-index f634907..2b1e03a 100644
---- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
-+++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-@@ -43,6 +43,12 @@
- 		status = "okay";
- 	};
- 
-+	codec@13400000 {
-+		samsung,mfc-r = <0x43000000 0x800000>;
-+		samsung,mfc-l = <0x51000000 0x800000>;
-+		status = "okay";
-+	};
-+
- 	serial@13800000 {
- 		status = "okay";
- 	};
--- 
-1.7.4.1
+> That's not true. The duty-cycle merely defines a percentage of how lo=
+ng
+> the PWM signal will be high. You can choose an arbitrary number of
+> subdivisions.
+
+Sure all HW has limitation. The HW I have either have 127 or 255 time s=
+lots.
+Probably the best thing way to deal with the backlight is to have a ran=
+ge of 0
+- 100% Nothing else.
+We should have an API to PWMs so user drivers could get the duty cycle =
+from
+the HW drivers. In this way backlight would only expose percentage and =
+the
+backlight driver would get the number of time slots from the PWM core t=
+o
+calculate the actual value for the selected percentage.
+
+> Since the brightness of a display isn't linearly proportional to the
+> duty cycle of the PWM driving it, representing that brightness by a
+> linear range is misleading. Furthermore some panels have regions wher=
+e
+> the backlight isn't lit at all or where changes in the PWM duty-cycle
+> don't make any difference.
+
+and all of this also depend on the surrounding light conditions as well=
+=2E If
+the same device is used in low light condition you care about the lower=
+ light
+ranges more compared to when the same device is used in bright environm=
+ent. In
+these case the user space has to be adopted to the conditions and one s=
+hould
+not need to recompile the kernel/dtb just because the device is used in
+different environment.
+
+--=20
+P=E9ter
