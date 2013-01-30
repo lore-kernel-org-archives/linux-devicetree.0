@@ -1,61 +1,76 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH] arm: dts: omap4-sdp: Add I2c pinctrl data
-Date: Wed, 30 Jan 2013 14:18:31 +0530
-Message-ID: <5108DE5F.5090803@ti.com>
-References: <1359371865-27907-1-git-send-email-sourav.poddar@ti.com> <1359527158.14894.37.camel@cumari.coelho.fi> <5108C052.3070604@ti.com> <F3DBB1B3EF102E4994C89758CFCA32412C16DD@DBDE01.ent.ti.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery support
+ for G2D
+Date: Wed, 30 Jan 2013 17:50:43 +0900
+Message-ID: <CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com>
+References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
+	<1359107722-9974-2-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <F3DBB1B3EF102E4994C89758CFCA32412C16DD@DBDE01.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Kumar, Anil" <anilkumar.v@ti.com>
-Cc: "Poddar, Sourav" <sourav.poddar@ti.com>, "Coelho, Luciano" <coelho@ti.com>, "Cousson, Benoit" <b-cousson@ti.com>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Balbi, Felipe" <balbi@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1359107722-9974-2-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-media-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 30 January 2013 02:13 PM, Kumar, Anil wrote:
-> Hi Sourav,
+2013/1/25 Sachin Kamat <sachin.kamat@linaro.org>:
+> From: Ajay Kumar <ajaykumar.rs@samsung.com>
 >
-> On Wed, Jan 30, 2013 at 12:10:18, Poddar, Sourav wrote:
->> Hi Luciano,
->> On Wednesday 30 January 2013 11:55 AM, Luciano Coelho wrote:
->>> Hi Sourav,
->>>
->>> On Mon, 2013-01-28 at 16:47 +0530, Sourav Poddar wrote:
->>>> Booting 3.8-rc4 om omap 4430sdp results in the following error
->>>>
->>>> omap_i2c 48070000.i2c: did not get pins for i2c error: -19
->>>> [    1.024261] omap_i2c 48070000.i2c: bus 0 rev0.12 at 100 kHz
->>>> [    1.030181] omap_i2c 48072000.i2c: did not get pins for i2c error: -19
->>>> [    1.037384] omap_i2c 48072000.i2c: bus 1 rev0.12 at 400 kHz
->>>> [    1.043762] omap_i2c 48060000.i2c: did not get pins for i2c error: -19
->>>> [    1.050964] omap_i2c 48060000.i2c: bus 2 rev0.12 at 100 kHz
->>>> [    1.056823] omap_i2c 4807a000.i2c: did not get pins for i2c error: -19
->>>> [    1.064025] omap_i2c 4807a000.i2c: bus 3 rev0.12 at 400 kHz
->>>>
->>>> This happens because omap4 dts file is not adapted to use i2c through pinctrl
->>>> framework. Populating i2c pinctrl data to get rid of the error.
->>>>
->>>> Tested on omap4430 sdp with 3.8-rc4 kernel.
->>>>
->>>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
->>>> Reported-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
->>>> ---
->>> Could you do the same thing for panda? I'm getting the same kind of
->>> errors with it:
+> This patch adds device tree match table for Exynos G2D controller.
 >
-> omap4 uses pinctrl-single driver for pinmux with DT. Currently
-> pinctrl-single driver is getting up after I2C driver. So I2c cannot
-> use pinctrl. The below patch solve this issue
+> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_g2d.c |   10 ++++++++++
+>  1 files changed, 10 insertions(+), 0 deletions(-)
 >
-> http://www.gossamer-threads.com/lists/linux/kernel/1669067
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_g2d.c b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
+> index ddcfb5d..d24b170 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_g2d.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/workqueue.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/dma-attrs.h>
+> +#include <linux/of.h>
 >
-> Can you try with this ? it may solve it.
+>  #include <drm/drmP.h>
+>  #include <drm/exynos_drm.h>
+> @@ -1240,6 +1241,14 @@ static int g2d_resume(struct device *dev)
 >
-OMAP i2c driver already takes care of -EPROBE_DEFER. The issue
-as you see from the log is not probe failure but missing the
-pin information in DT blob. And thats what patch does.
+>  static SIMPLE_DEV_PM_OPS(g2d_pm_ops, g2d_suspend, g2d_resume);
+>
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id exynos_g2d_match[] = {
+> +       { .compatible = "samsung,g2d-v41" },
 
-Regards
-santosh
+not only Exynos5 and also Exyno4 has the g2d gpu and drm-based g2d
+driver shoud support for all Exynos SoCs. How about using
+"samsung,exynos5-g2d" instead and adding a new property 'version' to
+identify ip version more surely? With this, we could know which SoC
+and its g2d ip version. The version property could have '0x14' or
+others. And please add descriptions to dt document.
 
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, exynos_g2d_match);
+> +#endif
+> +
+>  struct platform_driver g2d_driver = {
+>         .probe          = g2d_probe,
+>         .remove         = g2d_remove,
+> @@ -1247,5 +1256,6 @@ struct platform_driver g2d_driver = {
+>                 .name   = "s5p-g2d",
+>                 .owner  = THIS_MODULE,
+>                 .pm     = &g2d_pm_ops,
+> +               .of_match_table = of_match_ptr(exynos_g2d_match),
+>         },
+>  };
+> --
+> 1.7.4.1
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
