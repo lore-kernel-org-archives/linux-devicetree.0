@@ -1,50 +1,38 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH] clocksource: always define CLOCKSOURCE_OF_DECLARE
-Date: Wed, 30 Jan 2013 10:49:30 -0700
-Message-ID: <1359568170-26479-1-git-send-email-swarren@wwwdotorg.org>
+Subject: Re: [PATCH v4 4/7] ARM: Exynos: allow dt based discovery of mct controller
+ using clocksource_of_init
+Date: Wed, 30 Jan 2013 10:50:15 -0700
+Message-ID: <51095D57.5080103@wwwdotorg.org>
+References: <1358762542-19008-1-git-send-email-thomas.abraham@linaro.org> <1358762542-19008-5-git-send-email-thomas.abraham@linaro.org> <5106E645.70807@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: arm@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, kgene.kim@samsung.com, Stephen Warren <swarren@nvidia.com>, johnstul@us.ibm.com, devicetree-discuss@lists.ozlabs.org, rob.herring@calxeda.com, Thomas Abraham <thomas.abraham@linaro.org>, tglx@linutronix.de, chaos.youn@samsung.com, sylvester.nawrocki@gmail.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5106E645.70807@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, swarren@nvidia.com, sylvester.nawrocki@gmail.com, chaos.youn@samsung.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+On 01/28/2013 01:57 PM, Stephen Warren wrote:
+> On 01/21/2013 03:02 AM, Thomas Abraham wrote:
+>> Add entries to __clksrc_of_table so that Exynos MCT controller is discoverable
+>> using call to clocksource_of_init. With this change, it would be appropriate to
+>> rename the function 'exynos4_timer_init' as 'mct_init' since it aptly describes
+>> this function. Additionally, the 'init_time' callback of all machine descriptors
+>> for exynos platforms that were previously set to 'exynos4_timer_init' are now
+>> set to either 'mct_init' or 'clocksource_of_init'.
+> 
+>> diff --git a/arch/arm/mach-exynos/mct.c b/arch/arm/mach-exynos/mct.c
+> 
+>> +#ifdef CONFIG_CLKSRC_OF
+>> +CLOCKSOURCE_OF_DECLARE(exynos4210, "samsung,exynos4210-mct", mct_init)
+>> +CLOCKSOURCE_OF_DECLARE(exynos4412, "samsung,exynos4412-mct", mct_init)
+>> +#endif
+> 
+> I suggested in another review (IIRC for a different SoC) that
+> CLOCKSOURCE_OF_DECLARE() should always be declared so you don't need
+> that ifdef. Would you care to send a patch to add to arm-soc's
+> timer/cleanup branch to do that? If not, let me know and I can.
 
-This allows clocksource drivers that support both DT and non-DT to
-always invoke macro CLOCKSOURCE_OF_DECLARE(), rather than wrapping
-it in a #ifdef CONFIG_CLKSRC_OF, which simplifies their code.
-
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
-Olof, Arnd, this is based on arm-soc's timer/cleanup branch, which is
-probably the best place for this patch.
-
- include/linux/clocksource.h |    2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/include/linux/clocksource.h b/include/linux/clocksource.h
-index 7944f14..27cfda4 100644
---- a/include/linux/clocksource.h
-+++ b/include/linux/clocksource.h
-@@ -339,6 +339,8 @@ extern void clocksource_of_init(void);
- 	static const struct of_device_id __clksrc_of_table_##name	\
- 		__used __section(__clksrc_of_table)			\
- 		 = { .compatible = compat, .data = fn };
-+#else
-+#define CLOCKSOURCE_OF_DECLARE(name, compat, fn)
- #endif
- 
- #endif /* _LINUX_CLOCKSOURCE_H */
--- 
-1.7.10.4
+I just sent a patch for this.
