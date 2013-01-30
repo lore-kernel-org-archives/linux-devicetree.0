@@ -1,230 +1,63 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining
- dr_mode and phy_type
-Date: Wed, 30 Jan 2013 10:06:28 +0800
-Message-ID: <20130130020627.GA699@nchen-desktop>
-References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
- <87pq0omcfb.fsf@ashishki-desk.ger.corp.intel.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v2 1/2] ARM: Exynos5250: Enabling samsung-usbphy driver
+Date: Tue, 29 Jan 2013 21:06:22 -0800
+Message-ID: <076f01cdfea7$8e752d90$ab5f88b0$@samsung.com>
+References: <1358868680-5757-1-git-send-email-gautam.vivek@samsung.com>
+ <1358868680-5757-2-git-send-email-gautam.vivek@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87pq0omcfb.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1358868680-5757-2-git-send-email-gautam.vivek@samsung.com>
+Content-language: en-us
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Vivek Gautam' <gautam.vivek@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, grant.likely@secretlab.ca, dianders@chromium.org, balbi@ti.com, thomas.abraham@linaro.org, sylvester.nawrocki@gmail.com, tomasz.figa@gmail.com, p.paneri@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2013 at 01:55:04PM +0200, Alexander Shishkin wrote:
-> Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+Vivek Gautam wrote:
 > 
-> > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> >
-> > This adds two little devicetree helper functions for determining the
-> > dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
-> > the devicetree.
-> >
-> > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > ---
-> >
-> > The properties and their values have been taken from the fsl-mph-dr driver.
-> > This binding is also documented (though currently not used) for the tegra
-> > ehci driver (Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt).
-> > This is a first attempt to parse these bindings at a common place so that
-> > others can make use of it.
-> >
-> > Basically I want to know whether this binding is recommended for new drivers
-> > since normally the devicetree uses '-' instead of '_', and maybe there are
-> > other problems with it.
-> >
-> > I need this binding for the chipidea driver. I suspect that the fsl-mph-dr
-> > driver also really handles a chipidea core.
+> Adding usbphy node for Exynos5250 along with the
+> necessary device data to be parsed.
 > 
-> As far as I know, it is a chipidea core. Adding Peter to Cc list, he can
-> probably confirm.
-
-The fsl-mph-dr can't be used for chipdiea as it handles three platform
-drivers for three roles (peripheral , host, otg). But chipidea only has
-two platform drivers, one is the chipidea core, the other is related
-controller wrapper.
-
-However, two common helpers are useful, dr_mode can override controller
-capability, and using user defined controller operation mode.
-phy_type can be used at controller initialization to set phy's type at
-controller's register, eg, for chipidea code, there is a PTS
-(Parallel Transceiver Select) domain at portsc to set phy's type.
-
+> Signed-off-by: Vivek Gautam <gautam.vivek@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5250.dtsi |   15 +++++++++++++++
+>  1 files changed, 15 insertions(+), 0 deletions(-)
 > 
-> > Should we agree on this I would convert the fsl-mph-dr driver to use these
-> > helpers.
-> >
-> > Sascha
-> >
-> >  drivers/usb/core/Makefile |    1 +
-> >  drivers/usb/core/of.c     |   76 +++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/usb/of.h    |   22 +++++++++++++
-> >  include/linux/usb/phy.h   |    9 ++++++
-> >  4 files changed, 108 insertions(+)
-> >  create mode 100644 drivers/usb/core/of.c
-> >  create mode 100644 include/linux/usb/of.h
-> >
-> > diff --git a/drivers/usb/core/Makefile b/drivers/usb/core/Makefile
-> > index 26059b9..5378add 100644
-> > --- a/drivers/usb/core/Makefile
-> > +++ b/drivers/usb/core/Makefile
-> > @@ -10,5 +10,6 @@ usbcore-y += devio.o notify.o generic.o quirks.o devices.o
-> >  
-> >  usbcore-$(CONFIG_PCI)		+= hcd-pci.o
-> >  usbcore-$(CONFIG_ACPI)		+= usb-acpi.o
-> > +usbcore-$(CONFIG_OF)		+= of.o
-> >  
-> >  obj-$(CONFIG_USB)		+= usbcore.o
-> > diff --git a/drivers/usb/core/of.c b/drivers/usb/core/of.c
-> > new file mode 100644
-> > index 0000000..d000d9f
-> > --- /dev/null
-> > +++ b/drivers/usb/core/of.c
-> > @@ -0,0 +1,76 @@
-> > +/*
-> > + * OF helpers for usb devices.
-> > + *
-> > + * This file is released under the GPLv2
-> > + *
-> > + * Initially copied out of drivers/of/of_net.c
-> > + */
-> > +#include <linux/kernel.h>
-> > +#include <linux/of.h>
-> > +#include <linux/usb/of.h>
-> > +#include <linux/usb/phy.h>
-> > +#include <linux/export.h>
-> > +
-> > +static const char *usbphy_modes[] = {
-> > +	[USBPHY_INTERFACE_MODE_NA]	= "",
-> > +	[USBPHY_INTERFACE_MODE_UTMI]	= "utmi",
-> > +	[USBPHY_INTERFACE_MODE_UTMIW]	= "utmi_wide",
-> > +	[USBPHY_INTERFACE_MODE_ULPI]	= "ulpi",
-> > +	[USBPHY_INTERFACE_MODE_SERIAL]	= "serial",
-> > +	[USBPHY_INTERFACE_MODE_HSIC]	= "hsic",
-> > +};
-> > +
-> > +/**
-> > + * of_get_usbphy_mode - Get phy mode for given device_node
-> > + * @np:	Pointer to the given device_node
-> > + *
-> > + * The function gets phy interface string from property 'phy_type',
-> > + * and returns the correspondig enum usb_phy_interface
-> > + */
-> > +enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np)
-> > +{
-> > +	const char *phy_type;
-> > +	int err, i;
-> > +
-> > +	err = of_property_read_string(np, "phy_type", &phy_type);
-> > +	if (err < 0)
-> > +		return USBPHY_INTERFACE_MODE_NA;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(usbphy_modes); i++)
-> > +		if (!strcasecmp(phy_type, usbphy_modes[i]))
-> > +			return i;
-> > +
-> > +	return USBPHY_INTERFACE_MODE_NA;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_usb_get_phy_mode);
-> > +
-> > +static const char *usb_dr_modes[] = {
-> > +	[USB_DR_MODE_UNKNOWN]		= "",
-> > +	[USB_DR_MODE_HOST]		= "host",
-> > +	[USB_DR_MODE_PERIPHERAL]	= "peripheral",
-> > +	[USB_DR_MODE_OTG]		= "otg",
-> > +};
-> > +
-> > +/**
-> > + * of_usb_get_dr_mode - Get dual role mode for given device_node
-> > + * @np:	Pointer to the given device_node
-> > + *
-> > + * The function gets phy interface string from property 'dr_mode',
-> > + * and returns the correspondig enum usb_phy_dr_mode
-> > + */
-> > +enum usb_phy_dr_mode of_usb_get_dr_mode(struct device_node *np)
-> > +{
-> > +	const char *dr_mode;
-> > +	int err, i;
-> > +
-> > +	err = of_property_read_string(np, "dr_mode", &dr_mode);
-> > +	if (err < 0)
-> > +		return USB_DR_MODE_UNKNOWN;
-> > +
-> > +	for (i = 0; i < ARRAY_SIZE(usb_dr_modes); i++)
-> > +		if (!strcasecmp(dr_mode, usb_dr_modes[i]))
-> > +			return i;
-> > +
-> > +	return USB_DR_MODE_UNKNOWN;
-> > +}
-> > +EXPORT_SYMBOL_GPL(of_usb_get_dr_mode);
-> > diff --git a/include/linux/usb/of.h b/include/linux/usb/of.h
-> > new file mode 100644
-> > index 0000000..582ba96
-> > --- /dev/null
-> > +++ b/include/linux/usb/of.h
-> > @@ -0,0 +1,22 @@
-> > +/*
-> > + * OF helpers for usb devices.
-> > + *
-> > + * This file is released under the GPLv2
-> > + */
-> > +
-> > +#ifndef __LINUX_USB_OF_H
-> > +#define __LINUX_USB_OF_H
-> > +
-> > +#include <linux/usb/phy.h>
-> > +
-> > +enum usb_phy_dr_mode {
-> > +	USB_DR_MODE_UNKNOWN,
-> > +	USB_DR_MODE_HOST,
-> > +	USB_DR_MODE_PERIPHERAL,
-> > +	USB_DR_MODE_OTG,
-> > +};
-> > +
-> > +enum usb_phy_interface of_usb_get_phy_mode(struct device_node *np);
-> > +enum usb_phy_dr_mode of_usb_get_dr_mode(struct device_node *np);
-> > +
-> > +#endif /* __LINUX_USB_OF_H */
-> > diff --git a/include/linux/usb/phy.h b/include/linux/usb/phy.h
-> > index a29ae1e..c5154cf 100644
-> > --- a/include/linux/usb/phy.h
-> > +++ b/include/linux/usb/phy.h
-> > @@ -12,6 +12,15 @@
-> >  #include <linux/notifier.h>
-> >  #include <linux/usb.h>
-> >  
-> > +enum usb_phy_interface {
-> > +	USBPHY_INTERFACE_MODE_NA,
-> > +	USBPHY_INTERFACE_MODE_UTMI,
-> > +	USBPHY_INTERFACE_MODE_UTMIW,
-> > +	USBPHY_INTERFACE_MODE_ULPI,
-> > +	USBPHY_INTERFACE_MODE_SERIAL,
-> > +	USBPHY_INTERFACE_MODE_HSIC,
-> > +};
-> > +
-> >  enum usb_phy_events {
-> >  	USB_EVENT_NONE,         /* no events or cable disconnected */
-> >  	USB_EVENT_VBUS,         /* vbus valid event */
-> > -- 
-> > 1.7.10.4
-> >
-> > --
-> > To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-> > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi
+> b/arch/arm/boot/dts/exynos5250.dtsi
+> index 30485de..610e338 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -275,6 +275,21 @@
+>  		#size-cells = <0>;
+>  	};
 > 
+> +	usbphy@12130000 {
 
--- 
+Please put above node by order of address.
 
-Best Regards,
-Peter Chen
+> +		compatible = "samsung,exynos5250-usbphy";
+> +		reg = <0x12130000 0x100>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		usbphy-sys {
+> +			      /* USB device and host PHY_CONTROL registers
+*/
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Please add the binding documentation instead of comment here.
+
+> +			reg = <0x10040704 0x8>,
+> +			      /* USB2.0 PHY configuration register */
+> +			      <0x10050230 0x4>;
+> +		};
+> +	};
+> +
+>  	amba {
+>  		#address-cells = <1>;
+>  		#size-cells = <1>;
+> --
+> 1.7.6.5
