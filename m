@@ -1,37 +1,109 @@
-From: Shawn Guo <shawn.guo@linaro.org>
-Subject: Re: [PATCH V3] regulators: anatop: add set_voltage_time_sel interface
-Date: Thu, 31 Jan 2013 14:12:50 +0800
-Message-ID: <20130131061248.GF2765@S2101-09.ap.freescale.net>
-References: <1359649433-3691-1-git-send-email-b20788@freescale.com>
+From: Sourav Poddar <sourav.poddar@ti.com>
+Subject: [PATCH] arm: dts: omap4-panda: Add I2c pinctrl data
+Date: Thu, 31 Jan 2013 11:53:21 +0530
+Message-ID: <1359613401-29133-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1359649433-3691-1-git-send-email-b20788@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Anson Huang <b20788@freescale.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, broonie@opensource.wolfsonmicro.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, b-cousson@ti.com, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbi@ti.com, santosh.shilimkar@ti.com, coelho@ti.com
+Cc: Sourav Poddar <sourav.poddar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2013 at 11:23:53AM -0500, Anson Huang wrote:
-> some of anatop's regulators(cpu, vddpu and vddsoc) have
-> register settings about LDO's step time, which will impact
-> the LDO ramp up speed, need to use set_voltage_time_sel
-> interface to add necessary delay everytime LDOs' voltage
-> is increased.
-> 
-> offset 0x170:
-> bit [24-25]: cpu
-> bit [26-27]: vddpu
-> bit [28-29]: vddsoc
-> 
-> field definition:
-> 0'b00: 64 cycles of 24M clock;
-> 0'b01: 128 cycles of 24M clock;
-> 0'b02: 256 cycles of 24M clock;
-> 0'b03: 512 cycles of 24M clock;
-> 
-> Signed-off-by: Anson Huang <b20788@freescale.com>
+Booting 3.8-rc4 on omap4 panda results in the following error
 
-Acked-by: Shawn Guo <shawn.guo@linaro.org>
+[    0.444427] omap_i2c 48070000.i2c: did not get pins for i2c error: -19
+[    0.445770] omap_i2c 48070000.i2c: bus 0 rev0.11 at 400 kHz
+[    0.473937] omap_i2c 48072000.i2c: did not get pins for i2c error: -19
+[    0.474670] omap_i2c 48072000.i2c: bus 1 rev0.11 at 400 kHz
+[    0.474822] omap_i2c 48060000.i2c: did not get pins for i2c error: -19
+[    0.476379] omap_i2c 48060000.i2c: bus 2 rev0.11 at 100 kHz
+[    0.477294] omap_i2c 48350000.i2c: did not get pins for i2c error: -19
+[    0.477996] omap_i2c 48350000.i2c: bus 3 rev0.11 at 400 kHz
+[    0.483398] Switching to clocksource 32k_counter
 
+This happens because omap4 panda dts file is not adapted to use i2c through
+pinctrl framework. Populating i2c pinctrl data to get rid of the error.
+
+Tested on omap4460 panda with 3.8-rc4 kernel.
+
+Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+Reported-by: Luciano Coelho <coelho@ti.com>
+---
+ arch/arm/boot/dts/omap4-panda.dts |   40 +++++++++++++++++++++++++++++++++++++
+ 1 files changed, 40 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
+index 4122efe..f951e6b 100644
+--- a/arch/arm/boot/dts/omap4-panda.dts
++++ b/arch/arm/boot/dts/omap4-panda.dts
+@@ -110,9 +110,40 @@
+ 			0x58 0x10b	/* hdmi_hpd.gpio_63 INPUT PULLDOWN | MODE3 */
+ 		>;
+ 	};
++
++	i2c1_pins: pinmux_i2c1_pins {
++		pinctrl-single,pins = <
++			0xe2 0x118        /* i2c1_scl PULLUP | INPUTENABLE | MODE0 */
++			0xe4 0x118        /* i2c1_sda PULLUP | INPUTENABLE | MODE0 */
++		>;
++	};
++
++	i2c2_pins: pinmux_i2c2_pins {
++		pinctrl-single,pins = <
++			0xe6 0x118        /* i2c2_scl PULLUP | INPUTENABLE | MODE0 */
++			0xe8 0x118        /* i2c2_sda PULLUP | INPUTENABLE | MODE0 */
++		>;
++	};
++
++	i2c3_pins: pinmux_i2c3_pins {
++		pinctrl-single,pins = <
++			0xea 0x118        /* i2c3_scl PULLUP | INPUTENABLE | MODE0 */
++			0xec 0x118     /* i2c3_sda PULLUP | INPUTENABLE | MODE0 */
++		>;
++	};
++
++	i2c4_pins: pinmux_i2c4_pins {
++		pinctrl-single,pins = <
++			0xee 0x118        /* i2c4_scl PULLUP | INPUTENABLE | MODE0 */
++			0xf0 0x118     /* i2c4_sda PULLUP | INPUTENABLE | MODE0 */
++		>;
++	};
+ };
+ 
+ &i2c1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++
+ 	clock-frequency = <400000>;
+ 
+ 	twl: twl@48 {
+@@ -139,10 +170,16 @@
+ /include/ "twl6030.dtsi"
+ 
+ &i2c2 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
++
+ 	clock-frequency = <400000>;
+ };
+ 
+ &i2c3 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c3_pins>;
++
+ 	clock-frequency = <100000>;
+ 
+ 	/*
+@@ -156,6 +193,9 @@
+ };
+ 
+ &i2c4 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c4_pins>;
++
+ 	clock-frequency = <400000>;
+ };
+ 
+-- 
+1.7.1
