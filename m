@@ -1,14 +1,17 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v3] arm: mvebu: support for the new Armada XP development
- board(DB-MV784MP-GP)
-Date: Thu, 31 Jan 2013 15:50:12 +0100
-Message-ID: <1359643812-32654-2-git-send-email-gregory.clement@free-electrons.com>
-References: <1359643812-32654-1-git-send-email-gregory.clement@free-electrons.com>
+From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
+Date: Thu, 31 Jan 2013 10:04:21 -0500
+Message-ID: <CAOw6vbJtUQdDLNkhg3ZL10KaPK=wQRDxkVUUUqO_=W84sYHgzg@mail.gmail.com>
+References: <50EC5EDE.3030208@firmworks.com>
+ <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
+ <50ECA400.50007@wwwdotorg.org> <51082B6A.1010406@gmail.com>
+ <CAAQKjZNR8EJ+UFRO3vgYLH9So_gHn0a8gAf1JKu250shGiJ4qQ@mail.gmail.com>
+ <5109DF18.6010202@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359643812-32654-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <5109DF18.6010202-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,144 +22,126 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is the new Armada XP evaluation board from Marvell. It comes with
-a RS232 port over USB, a SATA link, an internal SSD, 4 Ethernet
-Gigabit links.
+On Wed, Jan 30, 2013 at 10:03 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 01/30/2013 06:16 PM, Inki Dae wrote:
+>> 2013/1/30 Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>>> Hi,
+>>>
+>>>
+>>> On 01/08/2013 11:56 PM, Stephen Warren wrote:
+>>>>
+>>>> On 01/08/2013 01:16 PM, Sean Paul wrote:
+>>>>>
+>>>>> Add a property to the hdmi node so we can specify the HDMI version in
+>>>>> the device tree instead of just defaulting to v1.4 with the existence of
+>>>>> the dt node.
+>>>>
+>>>>
+>>>> I guess this seems OK to me if required, although I'd certainly like to
+>>>> see someone familiar with the Exynos HW confirm whether this should be
+>>>> driven purely by DT compatible value for the HDMI IP block instead though.
+>>>
+>>>
+>>> I think the supported HDMI standard is something that could well be derived
+>>> from the compatible property. The IP supporting v1.3 and v1.4 will be
+>>> significantly different, so this would anyway already need to be reflected
+>>> in the compatible property. The only issue I see here is that people tend
+>>> to make the compatible string overly generic, so it is hardly usable for
+>>> anything but matching an IP with its driver. For instance for exynos5 we
+>>> have now (Documentation/devicetree/bindings/drm/exynos/hdmi.txt):
+>>>
+>>>         compatible = "samsung,exynos5-hdmi";
+>>>
+>>> For Exynos4 series there were already some patches proposed [1], but I
+>>> believe
+>>> this isn't a clean solution. Instead of things like:
+>>>
+>>> compatible = "samsung,exynos4-hdmi13";
+>>> compatible = "samsung,exynos4-hdmi14";
+>>>
+>>> I would much more like to see the SoC version embedded in the compatible
+>>> string, e.g.
+>>>
+>>
+>> Hi Sylwester. long time no see.
+>>
+>> I think that if we use the SoC version embedded in the compatible
+>> string then each driver shoud aware of the ip version to the SoC to
+>
+> The driver only needs to be aware of one SoC version for each IP version.
+>
+> So with Sylwester's proposal:
+>
+>>> compatible = "samsung,exynos4210-hdmi"; /* among others it carries an
+>>>                                           information this IP supports
+>>>                                           HDMI v1.3 */
+>>>
+>>> compatible = "samsung,exynos4212-hdmi"; /* HDMI v1.4, IIRC */
+>
+> The driver woulud only ever have to know about those two compatible
+> values (unless further incompatible HW revisions exist); any other SoC
+> would be listed as being compatible with one of those two strings (but
+> in addition to the specific value for the specific SoC, e.g. compatible
+> = "samsung,exynox5xxx-hdmi", "samsung,exynos4212-hdmi").
+>
 
-Support for USB (Host and device), SDIO, PCIe will be added as drivers
-when they become available for Armada XP in mainline.
+I think if we take a step back, we're really not discussing HDMI
+version 1.3 vs. 1.4, we're really talking about the HDMI IP block
+version. The blocks just happen to implement different versions of the
+HDMI spec. The initial naming in the driver is unfortunate.
 
-Tested-by: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
-Tested-by: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/Makefile         |    1 +
- arch/arm/boot/dts/armada-xp-gp.dts |  101 ++++++++++++++++++++++++++++++++++++
- 2 files changed, 102 insertions(+)
- create mode 100644 arch/arm/boot/dts/armada-xp-gp.dts
+That said, I think the above solution is fine, but it's a little
+misleading.  I'd much rather encode the version of the IP block
+instead of the SoC that contains it. Something like:
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 5ebb44f..51aab4b 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -78,6 +78,7 @@ dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
- dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
- 	armada-370-mirabox.dtb \
- 	armada-xp-db.dtb \
-+	armada-xp-gp.dtb \
- 	armada-xp-openblocks-ax3-4.dtb
- dtb-$(CONFIG_ARCH_MXC) += imx51-babbage.dtb \
- 	imx53-ard.dtb \
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-new file mode 100644
-index 0000000..3eea531
---- /dev/null
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -0,0 +1,101 @@
-+/*
-+ * Device Tree file for Marvell Armada XP development board
-+ * (DB-MV784MP-GP)
-+ *
-+ * Copyright (C) 2013 Marvell
-+ *
-+ * Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-+ * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-+ *
-+ * This file is licensed under the terms of the GNU General Public
-+ * License version 2.  This program is licensed "as is" without any
-+ * warranty of any kind, whether express or implied.
-+ */
-+
-+/dts-v1/;
-+/include/ "armada-xp-mv78460.dtsi"
-+
-+/ {
-+	model = "Marvell Armada XP Development Board DB-MV784MP-GP";
-+	compatible = "marvell,axp-gp", "marvell,armadaxp-mv78460", "marvell,armadaxp", "marvell,armada-370-xp";
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200 earlyprintk";
-+	};
-+
-+	memory {
-+		device_type = "memory";
-+
-+		/*
-+		 * 4 GB of plug-in RAM modules by default but only 3GB
-+		 * are visible, the amount of memory available can be
-+		 * changed by the bootloader according the size of the
-+		 * module actually plugged
-+		 */
-+		reg = <0x00000000 0xC0000000>;
-+	};
-+
-+	soc {
-+		serial@d0012000 {
-+			clock-frequency = <250000000>;
-+			status = "okay";
-+		};
-+		serial@d0012100 {
-+			clock-frequency = <250000000>;
-+			status = "okay";
-+		};
-+		serial@d0012200 {
-+			clock-frequency = <250000000>;
-+			status = "okay";
-+		};
-+		serial@d0012300 {
-+			clock-frequency = <250000000>;
-+			status = "okay";
-+		};
-+
-+		sata@d00a0000 {
-+			nr-ports = <2>;
-+			status = "okay";
-+		};
-+
-+		mdio {
-+			phy0: ethernet-phy@0 {
-+				reg = <16>;
-+			};
-+
-+			phy1: ethernet-phy@1 {
-+				reg = <17>;
-+			};
-+
-+			phy2: ethernet-phy@2 {
-+				reg = <18>;
-+			};
-+
-+			phy3: ethernet-phy@3 {
-+				reg = <19>;
-+			};
-+		};
-+
-+		ethernet@d0070000 {
-+			status = "okay";
-+			phy = <&phy0>;
-+			phy-mode = "rgmii-id";
-+		};
-+		ethernet@d0074000 {
-+			status = "okay";
-+			phy = <&phy1>;
-+			phy-mode = "rgmii-id";
-+		};
-+		ethernet@d0030000 {
-+			status = "okay";
-+			phy = <&phy2>;
-+			phy-mode = "rgmii-id";
-+		};
-+		ethernet@d0034000 {
-+			status = "okay";
-+			phy = <&phy3>;
-+			phy-mode = "rgmii-id";
-+		};
-+	};
-+};
--- 
-1.7.9.5
+compatible = "samsung,exynos-hdmiXXX"
+
+In this case, XXX is just some integer in the bindings that maps to an
+SoC. For example,
+
++----------------------+-------------+
+| HDMI IP version      | Exynos SoC  |
++----------------------+-------------+
+| samsung,exynos-hdmi1 | 4210        |
+| samsung,exynos-hdmi2 | 4212, 5250  |
++----------------------+-------------+
+
+The reason I like this better is that it's clear which value to use
+when gating features in the driver. Using the scheme above, it might
+be tempting to gate a feature/fix on exynos5xxx-hdmi when it really
+works with both 4212 && 5xxx.
+
+Sean
+
+
+
+>> use version specific feature so I think it's better to use it without
+>> the SoC version embedded in the compatible string like this,
+>> compatible = "samsung,exynos4-hdmi"
+>> version = "0x104" or "0x103"
+>
+> That would be quite non-typical.
+>
+>> With this, all each driver to do  is to check version property and set
+>> version specific feature properly. And we have some dtsi file to can
+>> be used commonly.
+>>
+>> For example,
+>> exynos4.dtsi : have all Exynos4 series SoCs common properties and also
+>> use common compatible string.
+>> exynos4412.dtsi, exynos4212.dtsi and so on: have Exynos42xx specific
+>> properties. So the hdmi version string could be used here as "version
+>> = "0x104" or "0x103"
+>> exynos4412-board.dts: have board specific properties.
+>>
+>> compatible = "samsung,exynos5-hdmi" is reasonable to me.
+>> any opinions?
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
