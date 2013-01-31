@@ -1,244 +1,56 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/3] mmc: davinci_mmc: add DT support
-Date: Thu, 31 Jan 2013 11:23:03 +0000
-Message-ID: <20130131112303.GA7235@e106331-lin.cambridge.arm.com>
-References: <1359628387-14437-1-git-send-email-prakash.pm@ti.com>
- <1359628387-14437-3-git-send-email-prakash.pm@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v3 1/4] ASoC: tlv320aic3x: Convert mic bias to a supply
+ widget
+Date: Thu, 31 Jan 2013 19:24:16 +0800
+Message-ID: <20130131112414.GE11078@opensource.wolfsonmicro.com>
+References: <1359631394-9511-1-git-send-email-gururaja.hebbar@ti.com>
+ <1359631394-9511-2-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1359628387-14437-3-git-send-email-prakash.pm@ti.com>
-Content-Language: en-US
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EY/WZ/HvNxOox07X"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-doc-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "mporter@ti.com" <mporter@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "cjb@laptop.org" <cjb@laptop.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "hs@denx.de" <hs@denx.de>, "ido@wizery.com" <ido@wizery.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1359631394-9511-2-git-send-email-gururaja.hebbar@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Hebbar Gururaja <gururaja.hebbar@ti.com>
+Cc: alsa-devel@alsa-project.org, davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lgirdwood@gmail.com, perex@perex.cz, nsekhar@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, rob@landley.net, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-I have a few comments on the devicetree binding and the way it's parsed.
+--EY/WZ/HvNxOox07X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On Thu, Jan 31, 2013 at 10:33:06AM +0000, Manjunathappa, Prakash wrote:
-> Adds device tree support for davinci_mmc. Also add
-> binding documentation.
-> Tested with non-dma PIO mode and without GPIO
-> card_detect/write_protect option because of
-> dependencies on EDMA and GPIO modules DT support.
-> 
-> Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
-> Cc: linux-mmc@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: davinci-linux-open-source@linux.davincidsp.com
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: cjb@laptop.org
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: mporter@ti.com
-> ---
->  .../devicetree/bindings/mmc/davinci_mmc.txt        |   23 +++++++
->  drivers/mmc/host/davinci_mmc.c                     |   69 +++++++++++++++++++-
->  2 files changed, 91 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/davinci_mmc.txt b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> new file mode 100644
-> index 0000000..144bee6
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> @@ -0,0 +1,23 @@
-> +* TI Highspeed MMC host controller for DaVinci
-> +
-> +The Highspeed MMC Host Controller on TI DaVinci family
-> +provides an interface for MMC, SD and SDIO types of memory cards.
-> +
-> +This file documents differences between the core properties described
-> +by mmc.txt and the properties used by the davinci_mmc driver.
-> +
-> +Required properties:
-> +- compatible:
-> + Should be "ti,davinci_mmc", for davinci controllers
+On Thu, Jan 31, 2013 at 04:53:10PM +0530, Hebbar Gururaja wrote:
 
-"ti,davinci-mmc" (with '-' rather than '_') would be preferable.
+> :100644 100644 e7b98f4... f47c3f5... M	Documentation/devicetree/bindings/sound/tlv320aic3x.txt
+> :100644 100644 ffd9bc7... 9407fd0... M	include/sound/tlv320aic3x.h
+> :100644 100644 4989143... 65d09d6... M	sound/soc/codecs/tlv320aic3x.c
+> :100644 100644 6db3c41... e521ac3... M	sound/soc/codecs/tlv320aic3x.h
 
-> +
-> +Optional properties:
-> +- bus-width: Number of data lines, can be <1>, <4>, or <8>, default <1>
-> +- max-frequency: maximum operating clock frequency.
+As mentioned when you posted this before this patch needs to update the
+machine drivers using the device too.
 
-You said you only described differences from mmc.txt, but this is listed in
-mmc.txt.
+--EY/WZ/HvNxOox07X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> +- caps: Check for Host capabilities in <linux/mmc/host.h>
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-Is this a set of binary flags? Also, is this Linux-specific?
+iQIcBAEBAgAGBQJRClRUAAoJELSic+t+oim9L+UP/0MbgirGaZ56JZ2U+2NYlmqN
+4fR8DtqAPVA90eVqULe7BncuBv8t+b+8RiQBqXB14d9QnicuxZuzBp0zI3M60spG
+eJ+i+ckBt1kZPcfn2Abs/y/BSmwmRUei1+RMSwR4Trc3JMl2xZM8h1M4Tu/Dla8w
+kAnNUvpkc85IhsXjBScAtJOLKhagVjRGMOzc8GMRvptMwl2ShQkXLIpCN6f9Wt8T
+4tAPU0chhofamLyoCuLCYhDu1M4ekpnHqaa3FJzXhZM9XjeSYVTQGBv+lWefgH6T
+HSW+KbtkxxbwlN6FvIoIs2RrQcEcYFNPRcb+4aUOeTRGDZS/JriE+2KqYfgRHqlL
+0rqsQXIZhL/oDCP2F12PNFVNRsBArpaHPqFNCmft6HYpgr1wumyXuEgLZc8eLptM
+6ycD9ee67qWh1M6UYThulTbs7DucGWllqipEA8UfAHsEYVzkhvAL9cxHFWrIfI5J
+DnuGl/ykx0N2iirat/vvlsmoZnoVqr4uSEkUGz6Avmy9JCx9rnM6vE1Syjwl3E91
+/ihYR51BaSSLDh+aKDqW3BrGpciI/vfT0KI5hv/v0beHbouFOWGRNYistyl7wIxi
+bIk0//GeUYJRC8U+xVTDm815zvTP68J2APwVvQbK17M+NHvvZ2M38UofnUvcIF9H
+cWfbtdcVTa5t760oMrG+
+=uL6c
+-----END PGP SIGNATURE-----
 
-I really don't think this should be in the devicetree binding. Why do you need
-this?
-
-> +- version: version of controller.
-
-This should be encoded as part of the compatible string.
-
-> +Example:
-> +	mmc1: mmc@0x4809c000 {
-> +		compatible = "ti,omap4-hsmmc";
-> +		reg = <0x4809c000 0x400>;
-> +		bus-width = <4>;
-> +	};
-
-It would be nice if the example referred to this binding rather than another.
-
-> diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
-> index 382b79d..ce6730d 100644
-> --- a/drivers/mmc/host/davinci_mmc.c
-> +++ b/drivers/mmc/host/davinci_mmc.c
-> @@ -34,6 +34,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/edma.h>
->  #include <linux/mmc/mmc.h>
-> +#include <linux/of.h>
->  
->  #include <linux/platform_data/mmc-davinci.h>
->  
-> @@ -1156,16 +1157,75 @@ static void __init init_mmcsd_host(struct mmc_davinci_host *host)
->  
->  	mmc_davinci_reset_ctrl(host, 0);
->  }
-> +#ifdef CONFIG_OF
-> +static struct davinci_mmc_config
-> +	*mmc_of_get_pdata(struct platform_device *pdev)
-> +{
-> +	struct device_node *np;
-> +	struct davinci_mmc_config *pdata = NULL;
-> +	u32 data;
-> +	int ret;
-> +
-> +	pdata = pdev->dev.platform_data;
-> +	if (!pdata) {
-> +		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +		if (!pdata) {
-> +			dev_err(&pdev->dev, "Failed to allocate memory for struct davinci_mmc_config\n");
-> +			goto nodata;
-> +		}
-> +	}
-
-Why do you need to conditionally allocate this? This only seems to be called
-once.
-
-> +
-> +	np = pdev->dev.of_node;
-> +	if (!np)
-> +		goto nodata;
-
-Why not just return immediately here? You do nothing special at nodata.
-
-> +
-> +	ret = of_property_read_u32(np, "bus-width", &data);
-> +	if (ret)
-> +		dev_info(&pdev->dev, "wires not specified, defaulting to 4 bit mode\n");
-> +	pdata->wires = data;
-
-That dev_info doesn't seem to match up with what the next line is doing (data
-might not have been initialised). Also, unless I've misunderstood, it doesn't
-match up with the default of 1 mentioned in the binding doc.
-
-> +
-> +	ret = of_property_read_u32(np, "max-frequency", &data);
-> +	if (ret)
-> +		dev_info(&pdev->dev, "max-frequency not specified, defaulting to 25MHz\n");
-> +	pdata->max_freq = data;
-
-Again, the dev_info doesn't match up with the line below it. I notice
-the default's not one specified in the binding. Is this frequency chosen
-from the hardware docs, or is it an arbitrary choice. If not arbitrary,
-it might be worth specifying in the binding.
-
-
-> +
-> +	ret = of_property_read_u32(np, "caps", &data);
-> +	if (ret)
-> +		dev_info(&pdev->dev, "card capability not specified\n");
-> +	pdata->caps = data;
-
-Again, you may be using garbage data.
-
-> +
-> +	ret = of_property_read_u32(np, "version", &data);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "version not specified\n");
-> +	pdata->version = data;
-
-And again, though I'd prefer to see this property go entirely.
-
-> +
-> +nodata:
-> +	return pdata;
-> +}
-> +
-> +#else
-> +static struct davinci_mmc_config
-> +	*mmc_of_get_pdata(struct platform_device *pdev)
-> +{
-> +	return pdev->dev.platform_data;
-> +}
-> +#endif
-
-This is poorly named if it's required for !CONFIG_OF.
-
-Why not change this to something like mmc_parse_pdata, returning an
-error code. For !CONFIG_OF, it can simply return 0, which should be less
-surprising for anyone else reading this code.
-
->  
->  static int __init davinci_mmcsd_probe(struct platform_device *pdev)
->  {
-> -	struct davinci_mmc_config *pdata = pdev->dev.platform_data;
-> +	struct davinci_mmc_config *pdata = NULL;
->  	struct mmc_davinci_host *host = NULL;
->  	struct mmc_host *mmc = NULL;
->  	struct resource *r, *mem = NULL;
->  	int ret = 0, irq = 0;
->  	size_t mem_size;
->  
-> +	pdata = mmc_of_get_pdata(pdev);
-> +	if (pdata == NULL) {
-> +		dev_err(&pdev->dev, "Can not get platform data\n");
-> +		return -ENOENT;
-> +	}
-> +
->  	/* REVISIT:  when we're fully converted, fail if pdata is NULL */
->  
->  	ret = -ENODEV;
-> @@ -1403,11 +1463,18 @@ static const struct dev_pm_ops davinci_mmcsd_pm = {
->  #define davinci_mmcsd_pm_ops NULL
->  #endif
->  
-> +static const struct of_device_id davinci_mmc_of_match[] = {
-> +	{.compatible = "ti,davinci_mmc", },
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, davinci_mmc_of_match);
-
-For supporting multiple versions, you could either use some auxdata
-here, or check each one in davince_mmcsd_probe.
-
-> +
->  static struct platform_driver davinci_mmcsd_driver = {
->  	.driver		= {
->  		.name	= "davinci_mmc",
->  		.owner	= THIS_MODULE,
->  		.pm	= davinci_mmcsd_pm_ops,
-> +		.of_match_table = of_match_ptr(davinci_mmc_of_match),
->  	},
->  	.remove		= __exit_p(davinci_mmcsd_remove),
->  };
-
-Where does davinci_mmcsd_probe get called from, and how is the
-of_match_table used? Should it not be set as .probe on the driver?
-
-Thanks,
-Mark.
-
-
+--EY/WZ/HvNxOox07X--
