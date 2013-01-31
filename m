@@ -1,35 +1,131 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH RFC v5 1/2] [media] Add common video interfaces OF bindings
- documentation
-Date: Thu, 31 Jan 2013 18:51:39 +0100
-Message-ID: <510AAF2B.8060008@samsung.com>
-References: <1359652738-1544-1-git-send-email-s.nawrocki@samsung.com>
- <1359652738-1544-2-git-send-email-s.nawrocki@samsung.com>
- <2299160.YVaS9PguWs@avalon>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
+Date: Thu, 31 Jan 2013 10:25:38 -0800
+Message-ID: <CAOesGMi-EGXqGYuik5Uxhpg_Who2r38okLX-SZLmKM4LOjpL0g@mail.gmail.com>
+References: <50EC5EDE.3030208@firmworks.com>
+ <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
+ <50ECA400.50007@wwwdotorg.org> <51082B6A.1010406@gmail.com>
+ <CAAQKjZNR8EJ+UFRO3vgYLH9So_gHn0a8gAf1JKu250shGiJ4qQ@mail.gmail.com>
+ <5109DF18.6010202@wwwdotorg.org>
+ <CAOw6vbJtUQdDLNkhg3ZL10KaPK=wQRDxkVUUUqO_=W84sYHgzg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <2299160.YVaS9PguWs@avalon>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: g.liakhovetski@gmx.de, linux-media@vger.kernel.org, hverkuil@xs4all.nl, kyungmin.park@samsung.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, myungjoo.ham@samsung.com, sw0312.kim@samsung.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAOw6vbJtUQdDLNkhg3ZL10KaPK=wQRDxkVUUUqO_=W84sYHgzg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+On Thu, Jan 31, 2013 at 7:04 AM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> On Wed, Jan 30, 2013 at 10:03 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 01/30/2013 06:16 PM, Inki Dae wrote:
+>>> 2013/1/30 Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+>>>> Hi,
+>>>>
+>>>>
+>>>> On 01/08/2013 11:56 PM, Stephen Warren wrote:
+>>>>>
+>>>>> On 01/08/2013 01:16 PM, Sean Paul wrote:
+>>>>>>
+>>>>>> Add a property to the hdmi node so we can specify the HDMI version in
+>>>>>> the device tree instead of just defaulting to v1.4 with the existence of
+>>>>>> the dt node.
+>>>>>
+>>>>>
+>>>>> I guess this seems OK to me if required, although I'd certainly like to
+>>>>> see someone familiar with the Exynos HW confirm whether this should be
+>>>>> driven purely by DT compatible value for the HDMI IP block instead though.
+>>>>
+>>>>
+>>>> I think the supported HDMI standard is something that could well be derived
+>>>> from the compatible property. The IP supporting v1.3 and v1.4 will be
+>>>> significantly different, so this would anyway already need to be reflected
+>>>> in the compatible property. The only issue I see here is that people tend
+>>>> to make the compatible string overly generic, so it is hardly usable for
+>>>> anything but matching an IP with its driver. For instance for exynos5 we
+>>>> have now (Documentation/devicetree/bindings/drm/exynos/hdmi.txt):
+>>>>
+>>>>         compatible = "samsung,exynos5-hdmi";
+>>>>
+>>>> For Exynos4 series there were already some patches proposed [1], but I
+>>>> believe
+>>>> this isn't a clean solution. Instead of things like:
+>>>>
+>>>> compatible = "samsung,exynos4-hdmi13";
+>>>> compatible = "samsung,exynos4-hdmi14";
+>>>>
+>>>> I would much more like to see the SoC version embedded in the compatible
+>>>> string, e.g.
+>>>>
+>>>
+>>> Hi Sylwester. long time no see.
+>>>
+>>> I think that if we use the SoC version embedded in the compatible
+>>> string then each driver shoud aware of the ip version to the SoC to
+>>
+>> The driver only needs to be aware of one SoC version for each IP version.
+>>
+>> So with Sylwester's proposal:
+>>
+>>>> compatible = "samsung,exynos4210-hdmi"; /* among others it carries an
+>>>>                                           information this IP supports
+>>>>                                           HDMI v1.3 */
+>>>>
+>>>> compatible = "samsung,exynos4212-hdmi"; /* HDMI v1.4, IIRC */
+>>
+>> The driver woulud only ever have to know about those two compatible
+>> values (unless further incompatible HW revisions exist); any other SoC
+>> would be listed as being compatible with one of those two strings (but
+>> in addition to the specific value for the specific SoC, e.g. compatible
+>> = "samsung,exynox5xxx-hdmi", "samsung,exynos4212-hdmi").
+>>
+>
+> I think if we take a step back, we're really not discussing HDMI
+> version 1.3 vs. 1.4, we're really talking about the HDMI IP block
+> version. The blocks just happen to implement different versions of the
+> HDMI spec. The initial naming in the driver is unfortunate.
+>
+> That said, I think the above solution is fine, but it's a little
+> misleading.  I'd much rather encode the version of the IP block
+> instead of the SoC that contains it. Something like:
+>
+> compatible = "samsung,exynos-hdmiXXX"
+>
+> In this case, XXX is just some integer in the bindings that maps to an
+> SoC. For example,
+>
+> +----------------------+-------------+
+> | HDMI IP version      | Exynos SoC  |
+> +----------------------+-------------+
+> | samsung,exynos-hdmi1 | 4210        |
+> | samsung,exynos-hdmi2 | 4212, 5250  |
+> +----------------------+-------------+
+>
+> The reason I like this better is that it's clear which value to use
+> when gating features in the driver. Using the scheme above, it might
+> be tempting to gate a feature/fix on exynos5xxx-hdmi when it really
+> works with both 4212 && 5xxx.
 
-On 01/31/2013 06:33 PM, Laurent Pinchart wrote:
->> Changes since v4:
->>  - added note that multiple endpoints at a port can be active at any time,
->>  - introduced optional 'ports' node aggregating 'port' nodes if required
->>    to avoid conflicts with any child bus of a device,
-> 
-> The 'ports' node seems to be missing from the documentation.
+If you instead use the first SoC when the corresponding IP showed up,
+you could, in the 5250 dts, have compatible =
+"samsung,exynos5250-hdmi", "samsung,exynos4212-hdmi",
+"samsung,exynos4-hdmi".
 
-Ouch, indeed. I must have lost it somewhere during rebase :-/
-I'll re-create it and resend.
+The HDMI driver would only know about the 4212 vs 4210 case, but the
+device tree specifies the more specific value if needed in the future
+(don't fall in the trap thinking you _need_ to have all of them in the
+driver, as long as it only cares about 4210 vs 4212).
 
---
 
-Regards,
-Sylwester
+-Olof
