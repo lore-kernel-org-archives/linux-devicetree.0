@@ -1,17 +1,18 @@
-From: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
-Date: Thu, 31 Jan 2013 10:04:21 -0500
-Message-ID: <CAOw6vbJtUQdDLNkhg3ZL10KaPK=wQRDxkVUUUqO_=W84sYHgzg@mail.gmail.com>
-References: <50EC5EDE.3030208@firmworks.com>
- <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
- <50ECA400.50007@wwwdotorg.org> <51082B6A.1010406@gmail.com>
- <CAAQKjZNR8EJ+UFRO3vgYLH9So_gHn0a8gAf1JKu250shGiJ4qQ@mail.gmail.com>
- <5109DF18.6010202@wwwdotorg.org>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH RFC] usb: dwc3: Get PHY from platform specific dwc3 dt
+ node.
+Date: Thu, 31 Jan 2013 17:38:36 +0200
+Message-ID: <20130131153836.GF4064@arwen.pp.htv.fi>
+References: <1359631232-7107-1-git-send-email-gautam.vivek@samsung.com>
+ <510A56BF.3040804@ti.com>
+ <CAFp+6iFkb=U0CJA=3zmQvd5XfMwbROuRJjXoJG7zvvq4_upzNw@mail.gmail.com>
+ <20130131152527.GE4064@arwen.pp.htv.fi>
+ <CAFp+6iHvKYiF_neANRq5roAEJwhvcaLk7pAd7Dy94Z5XiDkhgA@mail.gmail.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============6076041516058911706=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5109DF18.6010202-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <CAFp+6iHvKYiF_neANRq5roAEJwhvcaLk7pAd7Dy94Z5XiDkhgA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,126 +23,98 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kishon <kishon-l0cyMroinI0@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2013 at 10:03 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 01/30/2013 06:16 PM, Inki Dae wrote:
->> 2013/1/30 Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->>> Hi,
->>>
->>>
->>> On 01/08/2013 11:56 PM, Stephen Warren wrote:
->>>>
->>>> On 01/08/2013 01:16 PM, Sean Paul wrote:
->>>>>
->>>>> Add a property to the hdmi node so we can specify the HDMI version in
->>>>> the device tree instead of just defaulting to v1.4 with the existence of
->>>>> the dt node.
->>>>
->>>>
->>>> I guess this seems OK to me if required, although I'd certainly like to
->>>> see someone familiar with the Exynos HW confirm whether this should be
->>>> driven purely by DT compatible value for the HDMI IP block instead though.
->>>
->>>
->>> I think the supported HDMI standard is something that could well be derived
->>> from the compatible property. The IP supporting v1.3 and v1.4 will be
->>> significantly different, so this would anyway already need to be reflected
->>> in the compatible property. The only issue I see here is that people tend
->>> to make the compatible string overly generic, so it is hardly usable for
->>> anything but matching an IP with its driver. For instance for exynos5 we
->>> have now (Documentation/devicetree/bindings/drm/exynos/hdmi.txt):
->>>
->>>         compatible = "samsung,exynos5-hdmi";
->>>
->>> For Exynos4 series there were already some patches proposed [1], but I
->>> believe
->>> this isn't a clean solution. Instead of things like:
->>>
->>> compatible = "samsung,exynos4-hdmi13";
->>> compatible = "samsung,exynos4-hdmi14";
->>>
->>> I would much more like to see the SoC version embedded in the compatible
->>> string, e.g.
->>>
->>
->> Hi Sylwester. long time no see.
->>
->> I think that if we use the SoC version embedded in the compatible
->> string then each driver shoud aware of the ip version to the SoC to
->
-> The driver only needs to be aware of one SoC version for each IP version.
->
-> So with Sylwester's proposal:
->
->>> compatible = "samsung,exynos4210-hdmi"; /* among others it carries an
->>>                                           information this IP supports
->>>                                           HDMI v1.3 */
->>>
->>> compatible = "samsung,exynos4212-hdmi"; /* HDMI v1.4, IIRC */
->
-> The driver woulud only ever have to know about those two compatible
-> values (unless further incompatible HW revisions exist); any other SoC
-> would be listed as being compatible with one of those two strings (but
-> in addition to the specific value for the specific SoC, e.g. compatible
-> = "samsung,exynox5xxx-hdmi", "samsung,exynos4212-hdmi").
->
+--===============6076041516058911706==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Wb5NtZlyOqqy58h0"
+Content-Disposition: inline
 
-I think if we take a step back, we're really not discussing HDMI
-version 1.3 vs. 1.4, we're really talking about the HDMI IP block
-version. The blocks just happen to implement different versions of the
-HDMI spec. The initial naming in the driver is unfortunate.
+--Wb5NtZlyOqqy58h0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-That said, I think the above solution is fine, but it's a little
-misleading.  I'd much rather encode the version of the IP block
-instead of the SoC that contains it. Something like:
+On Thu, Jan 31, 2013 at 09:00:37PM +0530, Vivek Gautam wrote:
+> Hi Felipe,
+>=20
+>=20
+> On Thu, Jan 31, 2013 at 8:55 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> > Hi,
+> >
+> > On Thu, Jan 31, 2013 at 08:53:27PM +0530, Vivek Gautam wrote:
+> >> >> Moreover, SoCs having multiple dwc3 controllers will have multiple
+> >> >> PHYs, which eventually be added using usb_add_phy_dev(), and not
+> >> >> using usb_add_phy(). So each dwc3 controller won't be able to
+> >> >> get PHYs by simply calling devm_usb_get_phy() also.
+> >> >
+> >> > No. We have added usb_get_phy_dev() for that purpose in the case of =
+non-dt.
+> >> > I think, instead you can have a patch to use devm_usb_get_phy_dev() =
+here and
+> >> > in exynos platform specific code use usb_bind_phy() to bind the phy =
+and
+> >> > controller till you change it to dt.
+> >> >
+> >>
+> >> We have dt support for dwc3-exynos, in such case we should go ahead wi=
+th
+> >> of_platform_populate(), right ?
+> >> But if when i use of_platform_populate() i will not be able to set
+> >> dma_mask to dwc3->dev. :-(
+> >
+> > do you have a special need for dma_mask because OF already sets it.
+> >
+> If i am not wrong of_platform_device_create_pdata() will set
+> "dev->dev.coherent_dma_mask =3D DMA_BIT_MASK(32)"
+> and not dma_mask.
+> I fact we had some discussion sometime back when we needed the same
+> for dwc3-exynos in the thread:
+> [PATCH v2 1/2] USB: dwc3-exynos: Add support for device tree
+>=20
+> But couldn't get final node on it.
+> So suggestions here please. :-)
 
-compatible = "samsung,exynos-hdmiXXX"
+hmm.. you're right there. Grant, Rob ? Any hints ?
 
-In this case, XXX is just some integer in the bindings that maps to an
-SoC. For example,
+--=20
+balbi
 
-+----------------------+-------------+
-| HDMI IP version      | Exynos SoC  |
-+----------------------+-------------+
-| samsung,exynos-hdmi1 | 4210        |
-| samsung,exynos-hdmi2 | 4212, 5250  |
-+----------------------+-------------+
+--Wb5NtZlyOqqy58h0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The reason I like this better is that it's clear which value to use
-when gating features in the driver. Using the scheme above, it might
-be tempting to gate a feature/fix on exynos5xxx-hdmi when it really
-works with both 4212 && 5xxx.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-Sean
+iQIcBAEBAgAGBQJRCo/8AAoJEIaOsuA1yqREvg4P/itRRSrXkp2YjvxVzI+1iSCa
+/AZ2ojmw5JnBQiSd9kANnWwhTbuE5iSPjPEZA2N/i9AxdicJDM8lGEml4EMe6oNj
+XRU/5SAxjTNvIAVOue+jtBNCpzWQcriKqBnvHMMkAbMPBM83ie6xmvppWXU5Wyz6
+DrmREzEq1GWDfN84/AEhb4ClXvGsJMY4V6OM24yihSPaI5N/fsIYjpYAegqOth9V
+6H7egg+Z0/nEKihmm8Vbt1/iBh1ElVVKKDaScWvbjqXZxrRlvYxesUzAPUOQxi9Q
+gZNyRw1Axn6xv2UGjqLVhukWg0UbeATLp1MSgZqoPkGB1ybxjPsBdAdSfmBF8RrB
+9qJbxvhJJXSCaiJ6uDvxdHqLIVWtG36kWIEEpeAvQMpOQ/fNdV8sF8hL8fmxoYMu
+6SHCHY+hR7P6Egw0OkuERW4KoiTWoFXHA6kN7pXVtMScUTlItUvlSoy4Z7gPhVSm
+k5papQ93O1BgSjxH1Ff12rr9hinrFeAqh75enUGuWToBJnsG7UzJ/Lktd2HUZ+oT
+/fIjBb3Nj5XmUIxrXbQoTa4vhj+WGoWuu8RngX9Sti+JVWwleR/pC8QVdbglwmQo
+ccfhBNJdHQTifLOVNs0dKBtyy+BnIbHJKzPX7NLcGMQnPqzr6UxBggn6QrGSAUdW
+a/YDP1RkMqEGLfV+0wDQ
+=RShY
+-----END PGP SIGNATURE-----
 
+--Wb5NtZlyOqqy58h0--
 
+--===============6076041516058911706==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
->> use version specific feature so I think it's better to use it without
->> the SoC version embedded in the compatible string like this,
->> compatible = "samsung,exynos4-hdmi"
->> version = "0x104" or "0x103"
->
-> That would be quite non-typical.
->
->> With this, all each driver to do  is to check version property and set
->> version specific feature properly. And we have some dtsi file to can
->> be used commonly.
->>
->> For example,
->> exynos4.dtsi : have all Exynos4 series SoCs common properties and also
->> use common compatible string.
->> exynos4412.dtsi, exynos4212.dtsi and so on: have Exynos42xx specific
->> properties. So the hdmi version string could be used here as "version
->> = "0x104" or "0x103"
->> exynos4412-board.dts: have board specific properties.
->>
->> compatible = "samsung,exynos5-hdmi" is reasonable to me.
->> any opinions?
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6076041516058911706==--
