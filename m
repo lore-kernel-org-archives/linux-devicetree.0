@@ -1,54 +1,41 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC][PATCH 2/2 v3] ASoC: simple-card: add Device Tree support
-Date: Thu, 31 Jan 2013 10:17:20 -0700
-Message-ID: <510AA720.9000904@wwwdotorg.org>
-References: <20130127035943.GJ4650@opensource.wolfsonmicro.com>
- <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
- <20130129014808.GC4748@opensource.wolfsonmicro.com>
- <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
- <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
- <5107FF97.1070601@wwwdotorg.org>
- <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
- <51097F0F.2030501@wwwdotorg.org>
- <20130131013500.GA4759@opensource.wolfsonmicro.com>
- <510AA551.30400@wwwdotorg.org>
- <20130131171158.GA15376@opensource.wolfsonmicro.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130131171158.GA15376-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: [PATCH RFC v5 0/2] V4L device tree bindings and OF helpers
+Date: Thu, 31 Jan 2013 18:18:56 +0100
+Message-ID: <1359652738-1544-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: g.liakhovetski@gmx.de, linux-media@vger.kernel.org
+Cc: hverkuil@xs4all.nl, laurent.pinchart@ideasonboard.com, kyungmin.park@samsung.com, swarren@wwwdotorg.org, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, myungjoo.ham@samsung.com, sw0312.kim@samsung.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 01/31/2013 10:11 AM, Mark Brown wrote:
-> On Thu, Jan 31, 2013 at 10:09:37AM -0700, Stephen Warren wrote:
->> On 01/30/2013 06:35 PM, Mark Brown wrote:
-> 
->>> I suggested this because it seemed more legible to repeat the 
->>> properties by having a named structure for each property
->>> rather than by repeating them all with slightly different
->>> names.
-> 
->> So the only need to repeat them at all was if the two DAIs
->> needed different values for some of the properties rather than
->> being identical (e.g. signal polarity) or precise inversions
->> (e.g. which end is master), right?
-> 
-> There's more attributes that we might want to configure on the
-> devices than just the actual DAI link.  Clocks for example.
+This iteration mostly addresses comments from Laurent, regarding the
+bindings documentation. It introduces a common 'ports' node grouping
+all 'port' nodes, which could be used to resolve node addressing
+conflict when a device has a bus with corresponding children nodes.
 
-Sure, but this binding is *simple*-audio, right. If the intent is to
-create some more general/all-encompassing binding structure, I'd want
-to think about it and review it in a different way.
+The changes in second patch are not significant, mostly rewrite
+of v4l2_of_get_remote_parent() function.
+
+Guennadi, I've added Samsung copyright notice in the parser code.
+Please let me know if it is OK with you or not. If required I could
+extract my changes into a separate patch.
+
+I have also dropped the Reviewed-by/Acked-by tags, as the changes
+this time were not trivial. If those still apply please reply and
+I'll re-add them.
+
+Guennadi Liakhovetski (2):
+  [media] Add common video interfaces OF bindings documentation
+  [media] Add a V4L2 OF parser
+
+ .../devicetree/bindings/media/video-interfaces.txt |  216 +++++++++++++++++
+ drivers/media/v4l2-core/Makefile                   |    3 +
+ drivers/media/v4l2-core/v4l2-of.c                  |  251 ++++++++++++++++++++
+ include/media/v4l2-of.h                            |   98 ++++++++
+ 4 files changed, 568 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/video-interfaces.txt
+ create mode 100644 drivers/media/v4l2-core/v4l2-of.c
+ create mode 100644 include/media/v4l2-of.h
+
+--
+1.7.9.5
