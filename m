@@ -1,19 +1,19 @@
-From: "Hebbar, Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v3 1/4] ASoC: tlv320aic3x: Convert mic bias to a supply
- widget
-Date: Thu, 31 Jan 2013 11:49:29 +0000
-Message-ID: <1BAFE6F6C881BF42822005164F1491C33EB5A52E@DBDE01.ent.ti.com>
-References: <1359631394-9511-1-git-send-email-gururaja.hebbar@ti.com>
- <1359631394-9511-2-git-send-email-gururaja.hebbar@ti.com>
- <20130131112414.GE11078@opensource.wolfsonmicro.com>
- <1BAFE6F6C881BF42822005164F1491C33EB5A48E@DBDE01.ent.ti.com>
- <20130131113035.GF11078@opensource.wolfsonmicro.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] arm: mvebu: support for the new Armada XP evaluation
+ board(DB-MV784MP-GP)
+Date: Thu, 31 Jan 2013 13:02:00 +0100
+Message-ID: <510A5D38.9040608@free-electrons.com>
+References: <1359566774-27669-1-git-send-email-gregory.clement@free-electrons.com>
+ <1359566774-27669-2-git-send-email-gregory.clement@free-electrons.com>
+ <20130130173306.GO7717@titan.lakedaemon.net>
+ <510959D5.1010305@free-electrons.com>
+ <20130130181035.GP7717@titan.lakedaemon.net> <20130131095025.GC20242@lunn.ch>
+ <20130131110716.50b7340b@skate>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130131113035.GF11078-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Content-Language: en-US
+In-Reply-To: <20130131110716.50b7340b@skate>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -24,29 +24,52 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Nori,
- Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "perex-/Fr2/VpizcU@public.gmane.org" <perex-/Fr2/VpizcU@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2013 at 17:00:38, Mark Brown wrote:
-> On Thu, Jan 31, 2013 at 11:27:07AM +0000, Hebbar, Gururaja wrote:
-> > On Thu, Jan 31, 2013 at 16:54:16, Mark Brown wrote:
+On 01/31/2013 11:07 AM, Thomas Petazzoni wrote:
+> Dear Andrew Lunn,
 > 
-> > > As mentioned when you posted this before this patch needs to update the
-> > > machine drivers using the device too.
+> On Thu, 31 Jan 2013 10:50:25 +0100, Andrew Lunn wrote:
 > 
-> > The patch-set 2/4 does the same thing. Since I have da850-evm at my end, I 
-> > have modified that machine driver and sent-it as 2/4.
+>> We have the same issue with OpenBox AX3. All the devices we have in
+>> our hands have 1GB soldered down, plus 2GB on expansion. The DT
+>> currently has the full 3GB.
+>>
+>> However, there has been discussion of reducing this down to 1GB since
+>> both Thomas and Gregory have unstable systems with the full 3GB, but
+>> mine box is stable with the full 3GB. So i don't know how strong a
+>> precedent that sets....
 > 
-> Two problems here.  One is that the update should be done in the same
-> patch and the other is that you need to update *all* the machine drivers
-> using the device, not just one of them.
+> It seems that if we have CONFIG_ARM_ATAG_DTB_COMPAT, then the code in
+> arch/arm/boot/compressed/atags_to_fdt.c will update the DT memory node
+> according to the ATAG_MEM passed by the bootloader.
+> 
 
-Ok, I will send the updated version now.
+>From my point of view these dts file are just given as reference, and the
+bootloader should be able to modify them on the fly according the hardware
+configuration of the board.
 
+And for old bootloader then we can use the CONFIG_ARM_ATAG_DTB_COMPAT as
+pointed by Thomas.
+
+So I am not sure that the amount of memory is very important.
+
+However I think that having a value by default is useful, so unless
+there is a strong argument against it, I would like to keep it, maybe with
+a comment in the dts to emphasize that it is just a default value and the
+amount of memory can be changed.
+
+
+> Best regards,
+> 
+> Thomas
 > 
 
 
-Regards, 
-Gururaja
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
