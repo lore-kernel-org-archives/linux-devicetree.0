@@ -1,93 +1,61 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 1/2] [media] s5p-g2d: Add DT based discovery support
-Date: Thu, 31 Jan 2013 11:59:10 +0530
-Message-ID: <CAK9yfHzHOY4D_QW3BU0ihUcvrJ96vN7mQwEXQD0ezcjesbKwuw@mail.gmail.com>
-References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
-	<510992D8.9030800@gmail.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH V3] regulators: anatop: add set_voltage_time_sel interface
+Date: Thu, 31 Jan 2013 14:40:42 +0800
+Message-ID: <20130131064038.GA7663@opensource.wolfsonmicro.com>
+References: <1359649433-3691-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <510992D8.9030800@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, k.debski@samsung.com, inki.dae@samsung.com, ajaykumar.rs@samsung.com, patches@linaro.org, s.nawrocki@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1359649433-3691-1-git-send-email-b20788@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Anson Huang <b20788@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, shawn.guo@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester.
 
-Thank you for the review.
+--NzB8fVQJ5HfG6fxh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 31 January 2013 03:08, Sylwester Nawrocki
-<sylvester.nawrocki@gmail.com> wrote:
-> Hi Sachin,
->
->
-> On 01/25/2013 10:55 AM, Sachin Kamat wrote:
->>
->> This patch adds device tree based discovery support to G2D driver
->>
->> Signed-off-by: Sachin Kamat<sachin.kamat@linaro.org>
->> ---
->
-> Don' you need something like:
->
->         else {
->                 of_id = of_match_node(exynos_g2d_match, pdev->dev.of_node);
->                 if (!of_id)
->                         return -ENODEV;
->                 dev->variant = (struct g2d_variant *)of_id->data;
->         }
-> ?
->
-> Otherwise dev->variant is left uninitialized...?
+On Thu, Jan 31, 2013 at 11:23:53AM -0500, Anson Huang wrote:
+> some of anatop's regulators(cpu, vddpu and vddsoc) have
+> register settings about LDO's step time, which will impact
+> the LDO ramp up speed, need to use set_voltage_time_sel
+> interface to add necessary delay everytime LDOs' voltage
+> is increased.
 
-Exactly. The above code is very much required. Not sure how I missed it :(
+Applied, thanks.  It does seem like...
 
->
->
->>         return 0;
->>
->> @@ -844,6 +846,18 @@ static struct g2d_variant g2d_drvdata_v4x = {
->>         .hw_rev = TYPE_G2D_4X, /* Revision 4.1 for Exynos4X12 and Exynos5
->> */
->>   };
->>
->> +static const struct of_device_id exynos_g2d_match[] = {
->> +       {
->> +               .compatible = "samsung,g2d-v3",
->> +               .data =&g2d_drvdata_v3x,
->> +       }, {
->> +               .compatible = "samsung,g2d-v41",
->> +               .data =&g2d_drvdata_v4x,
->
->
-> Didn't you consider adding "exynos" to these compatible strings ?
-> I'm afraid g2d may be too generic.
+> +#define LDO_RAMP_UP_UNIT_IN_CYCLES      64 /* 64 cycles per step */
+> +#define LDO_RAMP_UP_FREQ_IN_MHZ         24 /* cycle based on 24M OSC */
 
-Choosing the right compatible string seems to be the biggest challenge :)
-I did consider adding "exynos" to the compatible strings, but then MFC
-used it as "mfc-v5" and I followed the same example. Prepending exynos
-makes it more specific and should be added (even to MFC) IMO too.
-We need to arrive at a consensus about the bindings (right now for
-g2d) as they would be common irrespective of DRM or V4L2 framework.
-Please let me know your opinion about Inki's suggestion to use version
-property instead.
+...this ought to go into device tree too (at least the oscillator
+frequency).
 
->
->
->> +       },
->> +       {},
->> +               .of_match_table = of_match_ptr(exynos_g2d_match),
->
->
-> of_match_ptr() could be dropped, since exynos_g2d_match[] is
-> always compiled in.
+Please do also use subject lines appropriate to the subsystem.
 
-OK.
+--NzB8fVQJ5HfG6fxh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Once I get confirmation about the compatible strings, I will resend
-this patch with other suggested updates.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
--- 
-With warm regards,
-Sachin
+iQIcBAEBAgAGBQJRChHcAAoJELSic+t+oim98JwP+wQTOZs3SvX4yvG3pCvTT285
+bX1XtD/ySNqagIc6dS4XNa4DS7JuQ5p2BsFVmfoUzqBKIJW02h+TLMXm3iWkwdh2
+p8ZeR5qU3UPlPEEjGqR3bo52T3XI2cV15QYqSe5KdgvUWdBlaimuXxY7NT6AttqM
+wPGNAZ05dHVl8Ry7RTUkMmpAP8/0tO/O9aqNizJcq++M5/woxIqU5wg0+d/EG+tJ
+moR5LyCHHfP+NhwsQlBEQPdM1D8K1CGRGlJAXt6Ipgb3QytC+N3EsLrF5EZri8t7
+05D6+0iRerSso8MDMh5G62yestwwsnSQca3XjG9UiQp/cZoRtWVRMd6WQ7hJTYpP
+pv011Kidavz711z1ZXx26E+3VOuZrmWU8jdzsg1Xqpp7hnJtVc24iX5h/c7ETshf
+gGRvSCYVceZNyVenauC+AOc3KYFR+pKypyPxYKZwA8hzcgIwwdBmPy50b40PcMAP
+ZzobGqpJG5atpYX7iHbwdt1dTpKkBTjSEq9x4VWQ2x3UxUEbAreNf91M8vwggZ94
+ShcytaBT830F/+vO4iFU4xs25EaGuYVR4P7LSPxcrbr0xvLpWEAiOkNSo1FWnH66
+GYiw6w/SANoijX7owEsBN7TAqPfC+UUu+T74BXykkjdMWNTsemHt3alauBhknNef
+kTA0D0rBCbMU2I3PWlzn
+=ewN3
+-----END PGP SIGNATURE-----
+
+--NzB8fVQJ5HfG6fxh--
