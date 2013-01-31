@@ -1,7 +1,7 @@
 From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: [RFC 08/11] iio: Update iio_channel_get_all and iio_channel_get_all_cb API
-Date: Thu, 31 Jan 2013 13:43:05 -0800
-Message-ID: <1359668588-13678-9-git-send-email-linux@roeck-us.net>
+Subject: [PATCH 04/11] iio/adc: (lp8788) Provide OF node information to iio device
+Date: Thu, 31 Jan 2013 13:43:01 -0800
+Message-ID: <1359668588-13678-5-git-send-email-linux@roeck-us.net>
 References: <1359668588-13678-1-git-send-email-linux@roeck-us.net>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1359668588-13678-1-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
@@ -10,129 +10,22 @@ To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-D
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Pass device pointer instead of device name as parameter to iio_channel_get_all
-and iio_channel_get_all_cb. This will enable us to use OF information to
-retrieve consumer channel information.
-
 Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 ---
- drivers/iio/buffer_cb.c         |    4 ++--
- drivers/iio/inkern.c            |    6 ++++--
- drivers/staging/iio/iio_hwmon.c |   10 +++++++---
- include/linux/iio/consumer.h    |    8 ++++----
- 4 files changed, 17 insertions(+), 11 deletions(-)
+ drivers/iio/adc/lp8788_adc.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/iio/buffer_cb.c b/drivers/iio/buffer_cb.c
-index 4d40e24..9201022 100644
---- a/drivers/iio/buffer_cb.c
-+++ b/drivers/iio/buffer_cb.c
-@@ -25,7 +25,7 @@ static struct iio_buffer_access_funcs iio_cb_access = {
- 	.store_to = &iio_buffer_cb_store_to,
- };
+diff --git a/drivers/iio/adc/lp8788_adc.c b/drivers/iio/adc/lp8788_adc.c
+index 72955e4..e5293d0 100644
+--- a/drivers/iio/adc/lp8788_adc.c
++++ b/drivers/iio/adc/lp8788_adc.c
+@@ -208,6 +208,7 @@ static int lp8788_adc_probe(struct platform_device *pdev)
+ 	adc->lp = lp;
+ 	platform_set_drvdata(pdev, indio_dev);
  
--struct iio_cb_buffer *iio_channel_get_all_cb(const char *name,
-+struct iio_cb_buffer *iio_channel_get_all_cb(struct device *dev,
- 					     int (*cb)(u8 *data,
- 						       void *private),
- 					     void *private)
-@@ -46,7 +46,7 @@ struct iio_cb_buffer *iio_channel_get_all_cb(const char *name,
- 	cb_buff->buffer.access = &iio_cb_access;
- 	INIT_LIST_HEAD(&cb_buff->buffer.demux_list);
- 
--	cb_buff->channels = iio_channel_get_all(name);
-+	cb_buff->channels = iio_channel_get_all(dev);
- 	if (IS_ERR(cb_buff->channels)) {
- 		ret = PTR_ERR(cb_buff->channels);
- 		goto error_free_cb_buff;
-diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-index d55e98f..58d0ffe 100644
---- a/drivers/iio/inkern.c
-+++ b/drivers/iio/inkern.c
-@@ -167,16 +167,18 @@ void iio_channel_release(struct iio_channel *channel)
- }
- EXPORT_SYMBOL_GPL(iio_channel_release);
- 
--struct iio_channel *iio_channel_get_all(const char *name)
-+struct iio_channel *iio_channel_get_all(struct device *dev)
- {
-+	const char *name;
- 	struct iio_channel *chans;
- 	struct iio_map_internal *c = NULL;
- 	int nummaps = 0;
- 	int mapind = 0;
- 	int i, ret;
- 
--	if (name == NULL)
-+	if (dev == NULL)
- 		return ERR_PTR(-EINVAL);
-+	name = dev_name(dev);
- 
- 	mutex_lock(&iio_map_list_lock);
- 	/* first count the matching maps */
-diff --git a/drivers/staging/iio/iio_hwmon.c b/drivers/staging/iio/iio_hwmon.c
-index 6a5bc5f..a4fce64 100644
---- a/drivers/staging/iio/iio_hwmon.c
-+++ b/drivers/staging/iio/iio_hwmon.c
-@@ -71,14 +71,18 @@ static int iio_hwmon_probe(struct platform_device *pdev)
- 	int ret, i;
- 	int in_i = 1, temp_i = 1, curr_i = 1;
- 	enum iio_chan_type type;
-+	struct iio_channel *channels;
-+	const __be32 *list;
-+
-+	channels = iio_channel_get_all(dev);
-+	if (IS_ERR(channels))
-+		return PTR_ERR(channels);
- 
- 	st = devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
- 	if (st == NULL)
- 		return -ENOMEM;
- 
--	st->channels = iio_channel_get_all(dev_name(dev));
--	if (IS_ERR(st->channels))
--		return PTR_ERR(st->channels);
-+	st->channels = channels;
- 
- 	/* count how many attributes we have */
- 	while (st->channels[st->num_channels].indio_dev)
-diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-index 16c35ac..6c44167 100644
---- a/include/linux/iio/consumer.h
-+++ b/include/linux/iio/consumer.h
-@@ -48,14 +48,14 @@ void iio_channel_release(struct iio_channel *chan);
- 
- /**
-  * iio_channel_get_all() - get all channels associated with a client
-- * @name:		name of consumer device.
-+ * @dev:		Pointer to consumer device.
-  *
-  * Returns an array of iio_channel structures terminated with one with
-  * null iio_dev pointer.
-  * This function is used by fairly generic consumers to get all the
-  * channels registered as having this consumer.
-  */
--struct iio_channel *iio_channel_get_all(const char *name);
-+struct iio_channel *iio_channel_get_all(struct device *dev);
- 
- /**
-  * iio_channel_release_all() - reverse iio_channel_get_all
-@@ -66,7 +66,7 @@ void iio_channel_release_all(struct iio_channel *chan);
- struct iio_cb_buffer;
- /**
-  * iio_channel_get_all_cb() - register callback for triggered capture
-- * @name:		Name of client device.
-+ * @dev:		Pointer to client device.
-  * @cb:			Callback function.
-  * @private:		Private data passed to callback.
-  *
-@@ -74,7 +74,7 @@ struct iio_cb_buffer;
-  * So if the channels requested come from different devices this will
-  * fail.
-  */
--struct iio_cb_buffer *iio_channel_get_all_cb(const char *name,
-+struct iio_cb_buffer *iio_channel_get_all_cb(struct device *dev,
- 					     int (*cb)(u8 *data,
- 						       void *private),
- 					     void *private);
++	indio_dev->dev.of_node = pdev->dev.of_node;
+ 	ret = lp8788_iio_map_register(indio_dev, lp->pdata, adc);
+ 	if (ret)
+ 		goto err_iio_map;
 -- 
 1.7.9.7
