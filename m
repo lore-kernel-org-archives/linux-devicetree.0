@@ -1,106 +1,85 @@
-From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
-Date: Thu, 31 Jan 2013 10:16:51 +0900
-Message-ID: <CAAQKjZNR8EJ+UFRO3vgYLH9So_gHn0a8gAf1JKu250shGiJ4qQ@mail.gmail.com>
-References: <50EC5EDE.3030208@firmworks.com>
- <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
- <50ECA400.50007@wwwdotorg.org> <51082B6A.1010406@gmail.com>
+From: Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] arm: mvebu: Add support for USB host controllers
+ in Armada 370/XP
+Date: Thu, 31 Jan 2013 10:19:44 +0900
+Message-ID: <CABMQnVKxiDwXvweLa7jdAw5q2bH9cj-HDfPoijadVkren52JNg@mail.gmail.com>
+References: <1358954792-16160-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <CALF0-+W8dVLHF66VKni+5ZsQpFd=cGDXE0TD=dRc1B=ptrAMUg@mail.gmail.com>
+ <20130123174025.GV1758@titan.lakedaemon.net> <CALF0-+Vg1WZA3m9G7mLU92BBuDpGLG-pmMM=XHtGm2UwnXXLUw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51082B6A.1010406-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CALF0-+Vg1WZA3m9G7mLU92BBuDpGLG-pmMM=XHtGm2UwnXXLUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2013/1/30 Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> Hi,
+Hi, Ezequiel.
+
+I checked with your first patch, that is no ploblem.
+you dont need to change patch.
+sorry for my noise.
+
+best regards,
+  Nobuhiro
+
+On Wed, Jan 30, 2013 at 3:56 AM, Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Hi Jason,
 >
->
-> On 01/08/2013 11:56 PM, Stephen Warren wrote:
->>
->> On 01/08/2013 01:16 PM, Sean Paul wrote:
+> On Wed, Jan 23, 2013 at 2:40 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+>> On Wed, Jan 23, 2013 at 02:06:12PM -0300, Ezequiel Garcia wrote:
+>>> Jason,
 >>>
->>> Add a property to the hdmi node so we can specify the HDMI version in
->>> the device tree instead of just defaulting to v1.4 with the existence of
->>> the dt node.
+>>> On Wed, Jan 23, 2013 at 12:26 PM, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>>> > The Armada 370 and Armada XP SoC has an Orion EHCI USB controller.
+>>> > This patch adds support for this controller in Armada 370
+>>> > and Armada XP SoC common device tree files.
+>>> >
+>>> > Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+>>> > Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> > Tested-by: Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>
+>>> > Tested-by: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+>>> > Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> > ---
+>>> > Changes from v1:
+>>> >  * Remove uneeded USB_ARCH_HAS_EHCI selection as noted by Florian.
+>>> >
+>>> >  arch/arm/boot/dts/armada-370-xp.dtsi |   15 +++++++++++++++
+>>> >  arch/arm/boot/dts/armada-370.dtsi    |    9 +++++++++
+>>> >  arch/arm/boot/dts/armada-xp.dtsi     |   17 +++++++++++++++++
+>>> >  3 files changed, 41 insertions(+), 0 deletions(-)
+>>>
+>>> Do you think we're still in time to get this series into v3.9 (given
+>>> we decide soon on the OpenBlocks issue)?
 >>
+>> That shouldn't be a problem.
 >>
->> I guess this seems OK to me if required, although I'd certainly like to
->> see someone familiar with the Exynos HW confirm whether this should be
->> driven purely by DT compatible value for the HDMI IP block instead though.
 >
+> Do you think we can take this series for v3.9 as it is?
+> I have no problems making any changes if they are needed
+> but I can't move forward with the OpenBlocks issue since
+> I don't have access to the hardware.
 >
-> I think the supported HDMI standard is something that could well be derived
-> from the compatible property. The IP supporting v1.3 and v1.4 will be
-> significantly different, so this would anyway already need to be reflected
-> in the compatible property. The only issue I see here is that people tend
-> to make the compatible string overly generic, so it is hardly usable for
-> anything but matching an IP with its driver. For instance for exynos5 we
-> have now (Documentation/devicetree/bindings/drm/exynos/hdmi.txt):
->
->         compatible = "samsung,exynos5-hdmi";
->
-> For Exynos4 series there were already some patches proposed [1], but I
-> believe
-> this isn't a clean solution. Instead of things like:
->
-> compatible = "samsung,exynos4-hdmi13";
-> compatible = "samsung,exynos4-hdmi14";
->
-> I would much more like to see the SoC version embedded in the compatible
-> string, e.g.
->
-
-Hi Sylwester. long time no see.
-
-I think that if we use the SoC version embedded in the compatible
-string then each driver shoud aware of the ip version to the SoC to
-use version specific feature so I think it's better to use it without
-the SoC version embedded in the compatible string like this,
-compatible = "samsung,exynos4-hdmi"
-version = "0x104" or "0x103"
-
-With this, all each driver to do  is to check version property and set
-version specific feature properly. And we have some dtsi file to can
-be used commonly.
-
-For example,
-exynos4.dtsi : have all Exynos4 series SoCs common properties and also
-use common compatible string.
-exynos4412.dtsi, exynos4212.dtsi and so on: have Exynos42xx specific
-properties. So the hdmi version string could be used here as "version
-= "0x104" or "0x103"
-exynos4412-board.dts: have board specific properties.
-
-compatible = "samsung,exynos5-hdmi" is reasonable to me.
-any opinions?
-
-> compatible = "samsung,exynos4210-hdmi"; /* among others it carries an
->                                           information this IP supports
->                                           HDMI v1.3 */
->
-> compatible = "samsung,exynos4212-hdmi"; /* HDMI v1.4, IIRC */
->
-> [1] http://www.spinics.net/lists/linux-samsung-soc/msg15289.html
->
-> --
+> I think we can sanely merge this as it is, since it has been tested in
+> every platform.
+> If there's anything to change we can do it later, when I have more
+> information about the
+> OpenBlocks hardware.
 >
 > Thanks,
-> Sylwester
 >
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+> --
+>     Ezequiel
+
+
+
+-- 
+Nobuhiro Iwamatsu
+   iwamatsu at {nigauri.org / debian.org}
+   GPG ID: 40AD1FA6
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
