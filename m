@@ -1,70 +1,80 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [PATCH v6 07/10] dmaengine: add
- dma_request_slave_channel_compat()
-Date: Wed, 30 Jan 2013 20:38:23 -0500
-Message-ID: <20130131013823.GG2244@beef>
-References: <1359529229-22207-1-git-send-email-mporter@ti.com>
- <1359529229-22207-8-git-send-email-mporter@ti.com>
- <ee89773ba46d44da945eee7b07ab1dc4@DFLE73.ent.ti.com>
+From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining
+ dr_mode and phy_type
+Date: Thu, 31 Jan 2013 10:05:44 +0800
+Message-ID: <20130131020542.GD9777@nchen-desktop>
+References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
+ <87pq0omcfb.fsf@ashishki-desk.ger.corp.intel.com>
+ <20130130020627.GA699@nchen-desktop>
+ <20130130140015.GZ1906@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <ee89773ba46d44da945eee7b07ab1dc4@DFLE73.ent.ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Tony Lindgren <tony@atomide.com>, "Nori, Sekhar" <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, "Cousson, Benoit" <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Dan Williams <djbw@fb.com>, Rob Herring <rob.herring@calxeda.com>
+In-Reply-To: <20130130140015.GZ1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2013 at 09:27:18AM +0000, Arnd Bergmann wrote:
-> On Wednesday 30 January 2013, Matt Porter wrote:
-> > Adds a dma_request_slave_channel_compat() wrapper which accepts
-> > both the arguments from dma_request_channel() and
-> > dma_request_slave_channel(). Based on whether the driver is
-> > instantiated via DT, the appropriate channel request call will be
-> > made.
+On Wed, Jan 30, 2013 at 03:00:15PM +0100, Sascha Hauer wrote:
+> On Wed, Jan 30, 2013 at 10:06:28AM +0800, Peter Chen wrote:
+> > On Tue, Jan 29, 2013 at 01:55:04PM +0200, Alexander Shishkin wrote:
+> > > Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+> > > 
+> > > > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > >
+> > > > This adds two little devicetree helper functions for determining the
+> > > > dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
+> > > > the devicetree.
+> > > >
+> > > > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > > ---
+> > > >
+> > > > The properties and their values have been taken from the fsl-mph-dr driver.
+> > > > This binding is also documented (though currently not used) for the tegra
+> > > > ehci driver (Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt).
+> > > > This is a first attempt to parse these bindings at a common place so that
+> > > > others can make use of it.
+> > > >
+> > > > Basically I want to know whether this binding is recommended for new drivers
+> > > > since normally the devicetree uses '-' instead of '_', and maybe there are
+> > > > other problems with it.
+> > > >
+> > > > I need this binding for the chipidea driver. I suspect that the fsl-mph-dr
+> > > > driver also really handles a chipidea core.
+> > > 
+> > > As far as I know, it is a chipidea core. Adding Peter to Cc list, he can
+> > > probably confirm.
 > > 
-> > This allows for a much cleaner migration of drivers to the
-> > dmaengine DT API as platforms continue to be mixed between those
-> > that boot using DT and those that do not.
-> > 
-> > Suggested-by: Tony Lindgren <tony@atomide.com>
-> > Signed-off-by: Matt Porter <mporter@ti.com>
-> > Acked-by: Tony Lindgren <tony@atomide.com>
+> > The fsl-mph-dr can't be used for chipdiea as it handles three platform
+> > drivers for three roles (peripheral , host, otg). But chipidea only has
+> > two platform drivers, one is the chipidea core, the other is related
+> > controller wrapper.
 > 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> 
-> > @@ -1001,6 +1001,22 @@ void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
-> >  struct dma_chan *dma_find_channel(enum dma_transaction_type tx_type);
-> >  struct dma_chan *net_dma_find_channel(void);
-> >  #define dma_request_channel(mask, x, y) __dma_request_channel(&(mask), x, y)
-> > +#define dma_request_slave_channel_compat(mask, x, y, dev, name) \
-> > +	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
-> > +
-> > +static inline struct dma_chan
-> > +*__dma_request_slave_channel_compat(dma_cap_mask_t *mask, dma_filter_fn fn,
-> > +				  void *fn_param, struct device *dev,
-> > +				  char *name)
-> > +{
-> > +	struct dma_chan *chan;
-> > +
-> > +	chan = dma_request_slave_channel(dev, name);
-> > +	if (chan)
-> > +		return chan;
-> > +
-> > +	return __dma_request_channel(mask, fn, fn_param);
-> > +}
-> 
-> After I have spent some more time with implementing the code for dw_dma,
-> I think the mask is actually unnecessary here, the helper could just
-> always set it to DMA_SLAVE before calling __dma_request_channel.
-> 
-> It's not a bug to do it this way though, and it may help convert drivers
-> a little easier if there is less to change.
+> What do you mean by 'three platform drivers'? That's only how the driver
+> is built, no? I was talking about the hardware the fsl-mph-dr driver
+> handles which definitely smells like chipidea.
 
-Agreed.
-
--Matt
-
+It creates host/device/otg platform device according to dr_mode from
+the device tree.
 > 
-> 	Arnd
+> Sascha
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+
+-- 
+
+Best Regards,
+Peter Chen
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
