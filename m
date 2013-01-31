@@ -1,7 +1,8 @@
-From: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] Added license header to dtc/libfdt/fdt.h and libfdt_env.h
-Date: Wed, 30 Jan 2013 16:51:26 -0500
-Message-ID: <1359582686-32755-1-git-send-email-jsobota@ti.com>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH V2] ENGR00242223-2 Need to add delay to regulator based on
+ register setting
+Date: Thu, 31 Jan 2013 11:32:00 -0500
+Message-ID: <1359649920-22050-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -16,140 +17,124 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: jdl-CYoMK+44s/E@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, b38343-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, LNXREVLI-z7JfP6tgrtWcPGwCZ8RIIdkmqwFzkYv6@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
----
- libfdt/fdt.h        |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
- libfdt/libfdt_env.h |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 100 insertions(+)
- mode change 100644 => 100755 libfdt/fdt.h
- mode change 100644 => 100755 libfdt/libfdt_env.h
+When LDO is set to voltage up, need to do enough waiting before
+it ramps up to the new voltage, and this ramp up time should be
+based on the register setting.
 
-diff --git a/libfdt/fdt.h b/libfdt/fdt.h
-old mode 100644
-new mode 100755
-index 45dd134..4f28b55
---- a/libfdt/fdt.h
-+++ b/libfdt/fdt.h
-@@ -1,5 +1,55 @@
- #ifndef _FDT_H
- #define _FDT_H
-+/*
-+ * libfdt - Flat Device Tree manipulation
-+ * Copyright (C) 2006 David Gibson, IBM Corporation.
-+ *
-+ * libfdt is dual licensed: you can use it either under the terms of
-+ * the GPL, or the BSD license, at your option.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this library; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Alternatively,
-+ *
-+ *  b) Redistribution and use in source and binary forms, with or
-+ *     without modification, are permitted provided that the following
-+ *     conditions are met:
-+ *
-+ *     1. Redistributions of source code must retain the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer.
-+ *     2. Redistributions in binary form must reproduce the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer in the documentation and/or other materials
-+ *        provided with the distribution.
-+ *
-+ *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
-+ *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-+ *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-+ *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-+ *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-+ *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-+ *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-+ *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-+ *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-+ *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
+Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ .../bindings/regulator/anatop-regulator.txt        |    8 ++++
+ drivers/regulator/anatop-regulator.c               |   41 +++++++++++++++++++-
+ 2 files changed, 48 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
+index 357758c..758eae2 100644
+--- a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
+@@ -9,6 +9,11 @@ Required properties:
+ - anatop-min-voltage: Minimum voltage of this regulator
+ - anatop-max-voltage: Maximum voltage of this regulator
  
- #ifndef __ASSEMBLY__
++Optional properties:
++- anatop-delay-reg-offset: Anatop MFD step time register offset
++- anatop-delay-bit-shift: Bit shift for the step time register
++- anatop-delay-bit-width: Number of bits used in the step time register
++
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
  
-diff --git a/libfdt/libfdt_env.h b/libfdt/libfdt_env.h
-old mode 100644
-new mode 100755
-index 956b4ae..18de839
---- a/libfdt/libfdt_env.h
-+++ b/libfdt/libfdt_env.h
-@@ -1,5 +1,55 @@
- #ifndef _LIBFDT_ENV_H
- #define _LIBFDT_ENV_H
-+/*
-+ * libfdt - Flat Device Tree manipulation
-+ * Copyright (C) 2006 David Gibson, IBM Corporation.
-+ *
-+ * libfdt is dual licensed: you can use it either under the terms of
-+ * the GPL, or the BSD license, at your option.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this library; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Alternatively,
-+ *
-+ *  b) Redistribution and use in source and binary forms, with or
-+ *     without modification, are permitted provided that the following
-+ *     conditions are met:
-+ *
-+ *     1. Redistributions of source code must retain the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer.
-+ *     2. Redistributions in binary form must reproduce the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer in the documentation and/or other materials
-+ *        provided with the distribution.
-+ *
-+ *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
-+ *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-+ *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-+ *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-+ *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-+ *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-+ *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-+ *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-+ *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-+ *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
+@@ -23,6 +28,9 @@ Example:
+ 		anatop-reg-offset = <0x140>;
+ 		anatop-vol-bit-shift = <9>;
+ 		anatop-vol-bit-width = <5>;
++		anatop-delay-reg-offset = <0x170>;
++		anatop-delay-bit-shift = <24>;
++		anatop-delay-bit-width = <2>;
+ 		anatop-min-bit-val = <1>;
+ 		anatop-min-voltage = <725000>;
+ 		anatop-max-voltage = <1300000>;
+diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
+index 1af9768..f4ed04f 100644
+--- a/drivers/regulator/anatop-regulator.c
++++ b/drivers/regulator/anatop-regulator.c
+@@ -1,5 +1,5 @@
+ /*
+- * Copyright (C) 2011 Freescale Semiconductor, Inc. All Rights Reserved.
++ * Copyright (C) 2011-2013 Freescale Semiconductor, Inc. All Rights Reserved.
+  */
  
- #include <stddef.h>
- #include <stdint.h>
+ /*
+@@ -31,12 +31,18 @@
+ #include <linux/regulator/driver.h>
+ #include <linux/regulator/of_regulator.h>
+ 
++#define LDO_RAMP_UP_UNIT_IN_CYCLES      64 /* 64 cycles per step */
++#define LDO_RAMP_UP_FREQ_IN_MHZ         24 /* time base on 24M OSC */
++
+ struct anatop_regulator {
+ 	const char *name;
+ 	u32 control_reg;
+ 	struct regmap *anatop;
+ 	int vol_bit_shift;
+ 	int vol_bit_width;
++	u32 delay_reg;
++	int delay_bit_shift;
++	int delay_bit_width;
+ 	int min_bit_val;
+ 	int min_voltage;
+ 	int max_voltage;
+@@ -80,8 +86,34 @@ static int anatop_regmap_get_voltage_sel(struct regulator_dev *reg)
+ 	return val - anatop_reg->min_bit_val;
+ }
+ 
++static int anatop_regmap_set_voltage_time_sel(struct regulator_dev *reg,
++	unsigned int old_sel,
++	unsigned int new_sel)
++{
++	struct anatop_regulator *anatop_reg = rdev_get_drvdata(reg);
++	u32 val;
++	int ret = 0;
++
++	if (anatop_reg->delay_bit_width && new_sel > old_sel) {
++		/*
++		 * the delay time for LDO ramp up time is
++		 * based on the register setting, we need
++		 * to calculate how many steps LDO need to
++		 * ramp up, and how much delay needed. (us)
++		 */
++		regmap_read(anatop_reg->anatop, anatop_reg->delay_reg, &val);
++		val = (val >> anatop_reg->delay_bit_shift) &
++			((1 << anatop_reg->delay_bit_width) - 1);
++		ret = (new_sel - old_sel) * ((LDO_RAMP_UP_UNIT_IN_CYCLES <<
++			val) / LDO_RAMP_UP_FREQ_IN_MHZ + 1);
++	}
++
++	return ret;
++}
++
+ static struct regulator_ops anatop_rops = {
+ 	.set_voltage_sel = anatop_regmap_set_voltage_sel,
++	.set_voltage_time_sel = anatop_regmap_set_voltage_time_sel,
+ 	.get_voltage_sel = anatop_regmap_get_voltage_sel,
+ 	.list_voltage = regulator_list_voltage_linear,
+ 	.map_voltage = regulator_map_voltage_linear,
+@@ -157,6 +189,13 @@ static int __devinit anatop_regulator_probe(struct platform_device *pdev)
+ 		dev_err(dev, "no anatop-max-voltage property set\n");
+ 		goto anatop_probe_end;
+ 	}
++	/* read LDO ramp up setting, only for core reg */
++	of_property_read_u32(np, "anatop-delay-reg-offset",
++			     &sreg->delay_reg);
++	of_property_read_u32(np, "anatop-delay-bit-width",
++			     &sreg->delay_bit_width);
++	of_property_read_u32(np, "anatop-delay-bit-shift",
++			     &sreg->delay_bit_shift);
+ 
+ 	rdesc->n_voltages = (sreg->max_voltage - sreg->min_voltage)
+ 		/ 25000 + 1;
 -- 
 1.7.9.5
