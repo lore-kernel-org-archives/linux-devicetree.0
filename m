@@ -1,61 +1,95 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V3] regulators: anatop: add set_voltage_time_sel interface
-Date: Thu, 31 Jan 2013 14:40:42 +0800
-Message-ID: <20130131064038.GA7663@opensource.wolfsonmicro.com>
-References: <1359649433-3691-1-git-send-email-b20788@freescale.com>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH 1/4] ARM: dts: add support for hdmi to exynos4
+Date: Thu, 31 Jan 2013 13:39:27 +0530
+Message-ID: <CAPdUM4NxRkE_g36yPPjhFO8jHYdBwQ6cNk+pndyO+h9fcwn-8w@mail.gmail.com>
+References: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com>
+	<1359110384-28402-2-git-send-email-rahul.sharma@samsung.com>
+	<51059402.2030405@gmail.com>
+	<CAPdUM4Py3dbV_tFnZ6GOxSm-6Sq8FBZu00JH3UDq_PV2U8yq_A@mail.gmail.com>
+	<5108344D.4090202@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1359649433-3691-1-git-send-email-b20788@freescale.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Anson Huang <b20788@freescale.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, shawn.guo@linaro.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5108344D.4090202@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, Tomasz Stanislawski <t.stanislaws@samsung.com>, Tomasz Figa <t.figa@samsung.com>, thomas.ab@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+Thanks Sylwester,
 
---NzB8fVQJ5HfG6fxh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, Jan 30, 2013 at 2:12 AM, Sylwester Nawrocki
+<sylvester.nawrocki@gmail.com> wrote:
+> Hi Rahul,
+>
+>
+> On 01/28/2013 07:19 AM, Rahul Sharma wrote:
+>>>>
+>>>> --- a/arch/arm/boot/dts/exynos4.dtsi
+>>>> +++ b/arch/arm/boot/dts/exynos4.dtsi
+>>>> @@ -289,4 +289,11 @@
+>>>>                          interrupts =<0 34 0>;
+>>>>                  };
+>>>>          };
+>>>> +
+>>>> +       hdmi {
+>>>> +               compatible = "samsung,exynos4-hdmi14";
+>>>
+>>>
+>>>
+>>> What "-hdmi14" signifies here ? And to which Exynos4 SoC revisions this
+>>> compatible property is supposed to apply ?
+>>>
+>>
+>> -hdmi14 signifies 1.4 compliant Hdmi IP like in Exynos4412, while
+>> Exynos4210 has 1.3
+>> compliant HDMI block. I have done a mistake here. I should have kept
+>> it in 4412.dtsi. OR
+>> I can move it to 4x12.dtsi but not sure whether all 4x12 socs have 1.4
+>> hdmi.
+>
+>
+> Exynos4210 also have the HDMI IP. I'm not sure how much common those IP's
+> are
+> among Exynos4 series SoCs. I suppose it makes sense to create a hdmi node in
+> exynos4.dtsi and override what's required either in exynos4x12.dtsi or
+> exynos4412.dtsi file.
+>
+> What is worring me is that you're trying to just append the supported
+> HDMI standard version to the string, and there might be more differences
+> in the IPs across all Exynos4 SoC series. What if there are two different
+> SoCs that support e.g. HDMI v1.4 but there are some differences in the
+> HDMI IPs ? You would likely need to invent new properties and pass them
+> to the driver. Appending specific SoC name to the compatible string looks
+> like a better alternative to me.
+>
 
-On Thu, Jan 31, 2013 at 11:23:53AM -0500, Anson Huang wrote:
-> some of anatop's regulators(cpu, vddpu and vddsoc) have
-> register settings about LDO's step time, which will impact
-> the LDO ramp up speed, need to use set_voltage_time_sel
-> interface to add necessary delay everytime LDOs' voltage
-> is increased.
+I agree to it. Putting compatible string with first soc having the IP,
+is a better
+approach altogether. I will incorporate the change in next version.
 
-Applied, thanks.  It does seem like...
+regards,
+Rahul Sharma.
 
-> +#define LDO_RAMP_UP_UNIT_IN_CYCLES      64 /* 64 cycles per step */
-> +#define LDO_RAMP_UP_FREQ_IN_MHZ         24 /* cycle based on 24M OSC */
-
-...this ought to go into device tree too (at least the oscillator
-frequency).
-
-Please do also use subject lines appropriate to the subsystem.
-
---NzB8fVQJ5HfG6fxh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRChHcAAoJELSic+t+oim98JwP+wQTOZs3SvX4yvG3pCvTT285
-bX1XtD/ySNqagIc6dS4XNa4DS7JuQ5p2BsFVmfoUzqBKIJW02h+TLMXm3iWkwdh2
-p8ZeR5qU3UPlPEEjGqR3bo52T3XI2cV15QYqSe5KdgvUWdBlaimuXxY7NT6AttqM
-wPGNAZ05dHVl8Ry7RTUkMmpAP8/0tO/O9aqNizJcq++M5/woxIqU5wg0+d/EG+tJ
-moR5LyCHHfP+NhwsQlBEQPdM1D8K1CGRGlJAXt6Ipgb3QytC+N3EsLrF5EZri8t7
-05D6+0iRerSso8MDMh5G62yestwwsnSQca3XjG9UiQp/cZoRtWVRMd6WQ7hJTYpP
-pv011Kidavz711z1ZXx26E+3VOuZrmWU8jdzsg1Xqpp7hnJtVc24iX5h/c7ETshf
-gGRvSCYVceZNyVenauC+AOc3KYFR+pKypyPxYKZwA8hzcgIwwdBmPy50b40PcMAP
-ZzobGqpJG5atpYX7iHbwdt1dTpKkBTjSEq9x4VWQ2x3UxUEbAreNf91M8vwggZ94
-ShcytaBT830F/+vO4iFU4xs25EaGuYVR4P7LSPxcrbr0xvLpWEAiOkNSo1FWnH66
-GYiw6w/SANoijX7owEsBN7TAqPfC+UUu+T74BXykkjdMWNTsemHt3alauBhknNef
-kTA0D0rBCbMU2I3PWlzn
-=ewN3
------END PGP SIGNATURE-----
-
---NzB8fVQJ5HfG6fxh--
+>
+>>>> +               reg =<0x12D00000 0x70000>;
+>>>> +               interrupts =<0 95 0>;
+>>>> +               hpd-gpio =<&gpx3 7 0xf 1 3>;
+>>>> +       };
+>>>
+>>>
+>>>
+>>> New bindings need to be documented in Documentation/devicetree/bindings/.
+>>>
+>> It is present at Documentation/devicetree/bindings/drm/exynos/hdmi.txt.
+>
+>
+> Thanks. Sorry, I've missed that. But it seems to be only for exynos5 SoCs ?
+> Also the location is a bit unexpected to me, if we want to have Exynos4 and
+> Exynos5 specific IP documented in this file. As I mentioned in previous
+> e-mail this IP is not only handled by the DRM API.
+>
+> --
+>
+> Regards,
+> Sylwester
