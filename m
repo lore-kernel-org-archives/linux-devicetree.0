@@ -1,131 +1,42 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
-Date: Thu, 31 Jan 2013 10:25:38 -0800
-Message-ID: <CAOesGMi-EGXqGYuik5Uxhpg_Who2r38okLX-SZLmKM4LOjpL0g@mail.gmail.com>
-References: <50EC5EDE.3030208@firmworks.com>
- <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
- <50ECA400.50007@wwwdotorg.org> <51082B6A.1010406@gmail.com>
- <CAAQKjZNR8EJ+UFRO3vgYLH9So_gHn0a8gAf1JKu250shGiJ4qQ@mail.gmail.com>
- <5109DF18.6010202@wwwdotorg.org>
- <CAOw6vbJtUQdDLNkhg3ZL10KaPK=wQRDxkVUUUqO_=W84sYHgzg@mail.gmail.com>
+From: Matt Porter <mporter@ti.com>
+Subject: Re: [PATCH v6 03/10] ARM: edma: add AM33XX support to the private
+ EDMA API
+Date: Thu, 31 Jan 2013 13:32:55 -0500
+Message-ID: <20130131183255.GI2244@beef>
+References: <1359529229-22207-1-git-send-email-mporter@ti.com>
+ <1359529229-22207-4-git-send-email-mporter@ti.com>
+ <201301300932.58732.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAOw6vbJtUQdDLNkhg3ZL10KaPK=wQRDxkVUUUqO_=W84sYHgzg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201301300932.58732.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Padma Venkat <padma.kvr@gmail.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2013 at 7:04 AM, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> On Wed, Jan 30, 2013 at 10:03 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 01/30/2013 06:16 PM, Inki Dae wrote:
->>> 2013/1/30 Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->>>> Hi,
->>>>
->>>>
->>>> On 01/08/2013 11:56 PM, Stephen Warren wrote:
->>>>>
->>>>> On 01/08/2013 01:16 PM, Sean Paul wrote:
->>>>>>
->>>>>> Add a property to the hdmi node so we can specify the HDMI version in
->>>>>> the device tree instead of just defaulting to v1.4 with the existence of
->>>>>> the dt node.
->>>>>
->>>>>
->>>>> I guess this seems OK to me if required, although I'd certainly like to
->>>>> see someone familiar with the Exynos HW confirm whether this should be
->>>>> driven purely by DT compatible value for the HDMI IP block instead though.
->>>>
->>>>
->>>> I think the supported HDMI standard is something that could well be derived
->>>> from the compatible property. The IP supporting v1.3 and v1.4 will be
->>>> significantly different, so this would anyway already need to be reflected
->>>> in the compatible property. The only issue I see here is that people tend
->>>> to make the compatible string overly generic, so it is hardly usable for
->>>> anything but matching an IP with its driver. For instance for exynos5 we
->>>> have now (Documentation/devicetree/bindings/drm/exynos/hdmi.txt):
->>>>
->>>>         compatible = "samsung,exynos5-hdmi";
->>>>
->>>> For Exynos4 series there were already some patches proposed [1], but I
->>>> believe
->>>> this isn't a clean solution. Instead of things like:
->>>>
->>>> compatible = "samsung,exynos4-hdmi13";
->>>> compatible = "samsung,exynos4-hdmi14";
->>>>
->>>> I would much more like to see the SoC version embedded in the compatible
->>>> string, e.g.
->>>>
->>>
->>> Hi Sylwester. long time no see.
->>>
->>> I think that if we use the SoC version embedded in the compatible
->>> string then each driver shoud aware of the ip version to the SoC to
->>
->> The driver only needs to be aware of one SoC version for each IP version.
->>
->> So with Sylwester's proposal:
->>
->>>> compatible = "samsung,exynos4210-hdmi"; /* among others it carries an
->>>>                                           information this IP supports
->>>>                                           HDMI v1.3 */
->>>>
->>>> compatible = "samsung,exynos4212-hdmi"; /* HDMI v1.4, IIRC */
->>
->> The driver woulud only ever have to know about those two compatible
->> values (unless further incompatible HW revisions exist); any other SoC
->> would be listed as being compatible with one of those two strings (but
->> in addition to the specific value for the specific SoC, e.g. compatible
->> = "samsung,exynox5xxx-hdmi", "samsung,exynos4212-hdmi").
->>
->
-> I think if we take a step back, we're really not discussing HDMI
-> version 1.3 vs. 1.4, we're really talking about the HDMI IP block
-> version. The blocks just happen to implement different versions of the
-> HDMI spec. The initial naming in the driver is unfortunate.
->
-> That said, I think the above solution is fine, but it's a little
-> misleading.  I'd much rather encode the version of the IP block
-> instead of the SoC that contains it. Something like:
->
-> compatible = "samsung,exynos-hdmiXXX"
->
-> In this case, XXX is just some integer in the bindings that maps to an
-> SoC. For example,
->
-> +----------------------+-------------+
-> | HDMI IP version      | Exynos SoC  |
-> +----------------------+-------------+
-> | samsung,exynos-hdmi1 | 4210        |
-> | samsung,exynos-hdmi2 | 4212, 5250  |
-> +----------------------+-------------+
->
-> The reason I like this better is that it's clear which value to use
-> when gating features in the driver. Using the scheme above, it might
-> be tempting to gate a feature/fix on exynos5xxx-hdmi when it really
-> works with both 4212 && 5xxx.
+On Wed, Jan 30, 2013 at 09:32:58AM +0000, Arnd Bergmann wrote:
+> On Wednesday 30 January 2013, Matt Porter wrote:
+> > +               dma_cap_set(DMA_SLAVE, edma_filter_info.dma_cap);
+> > +               of_dma_controller_register(dev->of_node,
+> > +                                          of_dma_simple_xlate,
+> > +                                          &edma_filter_info);
+> > +       }
+> 
+> How do you actually deal with the problem mentioned by Padma, that
+> the filter function does not know which edma instance it is looking
+> at? If you assume that there can only be a single edma instance in
+> the system, that is probably a limitation that should be documented
+> somewhere, and ideally the probe() function should check for that.
 
-If you instead use the first SoC when the corresponding IP showed up,
-you could, in the 5250 dts, have compatible =
-"samsung,exynos5250-hdmi", "samsung,exynos4212-hdmi",
-"samsung,exynos4-hdmi".
+I make an assumption of one edma instance in the system in the case of
+DT being populated. This is always true right now as the only SoC with
+two EDMA controllers in existence is Davinci DA850. Until recently,
+Davinci had no DT support. Given the steady work being done today on DT
+support for DA850, it'll probably be something needed in 3.10.
 
-The HDMI driver would only know about the 4212 vs 4210 case, but the
-device tree specifies the more specific value if needed in the future
-(don't fall in the trap thinking you _need_ to have all of them in the
-driver, as long as it only cares about 4210 vs 4212).
+I will add a comment and check in probe() to capture this assumption
+and then plan to update separately to support DA850 booting from DT.
 
-
--Olof
+-Matt
