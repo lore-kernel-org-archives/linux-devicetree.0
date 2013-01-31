@@ -1,144 +1,41 @@
-From: Anson Huang <b20788@freescale.com>
-Subject: [PATCH V3] regulators: anatop: add set_voltage_time_sel interface
-Date: Thu, 31 Jan 2013 11:23:53 -0500
-Message-ID: <1359649433-3691-1-git-send-email-b20788@freescale.com>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH] mtd: devices: elm: Removes <xx> literals in elm DT node
+Date: Thu, 31 Jan 2013 03:58:04 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3EA6870C@DBDE01.ent.ti.com>
+References: <9580c5839ea64e09ddd61610ce922d7cd1adc861.1359010256.git.avinashphilip@ti.com>
+ <8738xr2dap.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <8738xr2dap.fsf@dell.be.48ers.dk>
+Content-Language: en-US
 Sender: linux-doc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, broonie@opensource.wolfsonmicro.com, shawn.guo@linaro.org, Anson Huang <b20788@freescale.com>
+To: "artem.bityutskiy@linux.intel.com" <artem.bityutskiy@linux.intel.com>, Peter Korsgaard <jacmet@sunsite.dk>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-some of anatop's regulators(cpu, vddpu and vddsoc) have
-register settings about LDO's step time, which will impact
-the LDO ramp up speed, need to use set_voltage_time_sel
-interface to add necessary delay everytime LDOs' voltage
-is increased.
+Hi Artem,
 
-offset 0x170:
-bit [24-25]: cpu
-bit [26-27]: vddpu
-bit [28-29]: vddsoc
+On Thu, Jan 24, 2013 at 14:00:38, Peter Korsgaard wrote:
+> >>>>> "Philip" == Philip Avinash <avinashphilip@ti.com> writes:
+> 
+>  Philip> As part of removing generalized dependency, replace <xx>
+>  Philip> literal fields in DT compatible field with <52> for am335x
+>  Philip> platforms.
+> 
+> Acked-by: Peter Korsgaard <jacmet@sunsite.dk>
 
-field definition:
-0'b00: 64 cycles of 24M clock;
-0'b01: 128 cycles of 24M clock;
-0'b02: 256 cycles of 24M clock;
-0'b03: 512 cycles of 24M clock;
+Can you please accept this patch for am3352 compatibility in ELM node.
 
-Signed-off-by: Anson Huang <b20788@freescale.com>
----
- .../bindings/regulator/anatop-regulator.txt        |    8 ++++
- drivers/regulator/anatop-regulator.c               |   41 ++++++++++++++++++++
- 2 files changed, 49 insertions(+)
+Peter,
+Thanks for ack.
 
-diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-index 357758c..758eae2 100644
---- a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
-@@ -9,6 +9,11 @@ Required properties:
- - anatop-min-voltage: Minimum voltage of this regulator
- - anatop-max-voltage: Maximum voltage of this regulator
- 
-+Optional properties:
-+- anatop-delay-reg-offset: Anatop MFD step time register offset
-+- anatop-delay-bit-shift: Bit shift for the step time register
-+- anatop-delay-bit-width: Number of bits used in the step time register
-+
- Any property defined as part of the core regulator
- binding, defined in regulator.txt, can also be used.
- 
-@@ -23,6 +28,9 @@ Example:
- 		anatop-reg-offset = <0x140>;
- 		anatop-vol-bit-shift = <9>;
- 		anatop-vol-bit-width = <5>;
-+		anatop-delay-reg-offset = <0x170>;
-+		anatop-delay-bit-shift = <24>;
-+		anatop-delay-bit-width = <2>;
- 		anatop-min-bit-val = <1>;
- 		anatop-min-voltage = <725000>;
- 		anatop-max-voltage = <1300000>;
-diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
-index 8f39cac..0df9c6a 100644
---- a/drivers/regulator/anatop-regulator.c
-+++ b/drivers/regulator/anatop-regulator.c
-@@ -31,12 +31,18 @@
- #include <linux/regulator/driver.h>
- #include <linux/regulator/of_regulator.h>
- 
-+#define LDO_RAMP_UP_UNIT_IN_CYCLES      64 /* 64 cycles per step */
-+#define LDO_RAMP_UP_FREQ_IN_MHZ         24 /* cycle based on 24M OSC */
-+
- struct anatop_regulator {
- 	const char *name;
- 	u32 control_reg;
- 	struct regmap *anatop;
- 	int vol_bit_shift;
- 	int vol_bit_width;
-+	u32 delay_reg;
-+	int delay_bit_shift;
-+	int delay_bit_width;
- 	int min_bit_val;
- 	int min_voltage;
- 	int max_voltage;
-@@ -55,6 +61,32 @@ static int anatop_regmap_set_voltage_sel(struct regulator_dev *reg,
- 	return regulator_set_voltage_sel_regmap(reg, selector);
- }
- 
-+static int anatop_regmap_set_voltage_time_sel(struct regulator_dev *reg,
-+	unsigned int old_sel,
-+	unsigned int new_sel)
-+{
-+	struct anatop_regulator *anatop_reg = rdev_get_drvdata(reg);
-+	u32 val;
-+	int ret = 0;
-+
-+	/* check whether need to care about LDO ramp up speed */
-+	if (anatop_reg->delay_bit_width && new_sel > old_sel) {
-+		/*
-+		 * the delay for LDO ramp up time is
-+		 * based on the register setting, we need
-+		 * to calculate how many steps LDO need to
-+		 * ramp up, and how much delay needed. (us)
-+		 */
-+		regmap_read(anatop_reg->anatop, anatop_reg->delay_reg, &val);
-+		val = (val >> anatop_reg->delay_bit_shift) &
-+			((1 << anatop_reg->delay_bit_width) - 1);
-+		ret = (new_sel - old_sel) * ((LDO_RAMP_UP_UNIT_IN_CYCLES <<
-+			val) / LDO_RAMP_UP_FREQ_IN_MHZ + 1);
-+	}
-+
-+	return ret;
-+}
-+
- static int anatop_regmap_get_voltage_sel(struct regulator_dev *reg)
- {
- 	struct anatop_regulator *anatop_reg = rdev_get_drvdata(reg);
-@@ -67,6 +99,7 @@ static int anatop_regmap_get_voltage_sel(struct regulator_dev *reg)
- 
- static struct regulator_ops anatop_rops = {
- 	.set_voltage_sel = anatop_regmap_set_voltage_sel,
-+	.set_voltage_time_sel = anatop_regmap_set_voltage_time_sel,
- 	.get_voltage_sel = anatop_regmap_get_voltage_sel,
- 	.list_voltage = regulator_list_voltage_linear,
- 	.map_voltage = regulator_map_voltage_linear,
-@@ -143,6 +176,14 @@ static int anatop_regulator_probe(struct platform_device *pdev)
- 		goto anatop_probe_end;
- 	}
- 
-+	/* read LDO ramp up setting, only for core reg */
-+	of_property_read_u32(np, "anatop-delay-reg-offset",
-+			     &sreg->delay_reg);
-+	of_property_read_u32(np, "anatop-delay-bit-width",
-+			     &sreg->delay_bit_width);
-+	of_property_read_u32(np, "anatop-delay-bit-shift",
-+			     &sreg->delay_bit_shift);
-+
- 	rdesc->n_voltages = (sreg->max_voltage - sreg->min_voltage) / 25000 + 1
- 			    + sreg->min_bit_val;
- 	rdesc->min_uV = sreg->min_voltage;
--- 
-1.7.9.5
+Thanks
+Avinash
 
+> 
+> -- 
+> Bye, Peter Korsgaard
+> 
 
