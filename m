@@ -1,34 +1,86 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [PATCH v6 09/10] spi: omap2-mcspi: add generic DMA request
- support to the DT binding
-Date: Wed, 30 Jan 2013 20:32:15 -0500
-Message-ID: <20130131013215.GF2244@beef>
-References: <1359529229-22207-1-git-send-email-mporter@ti.com>
- <1359529229-22207-10-git-send-email-mporter@ti.com>
- <201301300924.00508.arnd@arndb.de>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [RFC][PATCH 2/2 v3] ASoC: simple-card: add Device
+	Tree support
+Date: Thu, 31 Jan 2013 09:35:02 +0800
+Message-ID: <20130131013500.GA4759@opensource.wolfsonmicro.com>
+References: <87y5fvyy18.wl%kuninori.morimoto.gx@renesas.com>
+ <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
+ <20130127035943.GJ4650@opensource.wolfsonmicro.com>
+ <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
+ <20130129014808.GC4748@opensource.wolfsonmicro.com>
+ <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
+ <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
+ <5107FF97.1070601@wwwdotorg.org>
+ <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
+ <51097F0F.2030501@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201301300924.00508.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============2206422297862230303=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <51097F0F.2030501@wwwdotorg.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linux-ALSA <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2013 at 09:24:00AM +0000, Arnd Bergmann wrote:
-> On Wednesday 30 January 2013, Matt Porter wrote:
-> > +Optional properties:
-> > +- dmas: List of DMA controller phandle and DMA request ordered
-> > +       pairs. One tx and one rx pair is required for each chip
-> > +       select.
-> 
-> The binding looks ok, but the wording is slightly incorrect here:
-> strictly speaking, it's not a pair of controller phandle and request
-> line number, but a DMA descriptor as specified in bindings/dma/dma.txt
-> with a format specific to the dma engine being used. That can
-> require more than just a single integer request number.
 
-Correct. I will update accordingly.
+--===============2206422297862230303==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="J2SCkAp4GZ/dPZZf"
+Content-Disposition: inline
 
--Matt
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Jan 30, 2013 at 01:14:07PM -0700, Stephen Warren wrote:
+
+> > +CPU / CODEC DAI is represented as a sub-node.
+> > +Then, sub-node name should be "simple-audio,cpu" or "simple-audio,codec".
+
+> Why require sub-nodes? it seem over-complex.
+
+I suggested this because it seemed more legible to repeat the properties
+by having a named structure for each property rather than by repeating
+them all with slightly different names.
+
+--J2SCkAp4GZ/dPZZf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRCco9AAoJELSic+t+oim983IP/RjRLT1qppfCvXILB0oBVk0k
+/H+UTHEURUpACVItD+MNG3L9PCZOEd1tMffrV7rBIqXqposwPvfSOp0Wvq6DA/Ze
+MbQYWR0R2Qg9K0ARBokcz5WLvejlEebMBXFTfzSnlWaiqPfIJnKNSndW9a8akEkj
+aS+6Z/6ifW3M+lHB3rfi2eNO57Cluf0Su8SKJH8pOpIPf3Bs8zhyzjK+T+2dS6rz
+2b1WiaG6ZB12KS8Bt4Vf6JvjMY1uR6HANdPCr829vYt9ee8B+kR6N4GaANPHSIVf
+23kllsGcsrXgtcNli/ML/LnjCZrCZLwLR7SsgnQMGoDzKz8E9i91EGNfT/D4MdOo
+fu8n3P3W7M6te6M9Ccv3KG1KgX1vDxPsyLvPYTQ97Jgdi0Svh13mfD+jCgMnjzTR
+Ndxu6LKBPPvYdqUZ5UWaLWAp82VpYkX+FKfPpo+8GxBJVAPHcN51znmgO3jFXfdy
+fwb1DoiFcUNf6uNbO8/Z+MrB+uy63sP3AjxYMGw+lL5DqKmBGYRQs4yu8sIi/mNT
+nYWJ5fHRxM9Jog6Sc7QI8yNwp8RarX22ewq7DeT4dobKK+3FUfiixJLAt/pQwSOX
+mVyeb1j56pmV7o6jBKPX8LhiZ6gTb3tALLmKuh3tDHXNBOtwqWrVUvHnT9cUgpij
+lI1QZGkLJZBE1FpV2f4s
+=vCAk
+-----END PGP SIGNATURE-----
+
+--J2SCkAp4GZ/dPZZf--
+
+--===============2206422297862230303==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============2206422297862230303==--
