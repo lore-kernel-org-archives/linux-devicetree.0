@@ -1,59 +1,73 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [PATCH v6 03/10] ARM: edma: add AM33XX support to the private
- EDMA API
-Date: Thu, 31 Jan 2013 16:42:41 -0500
-Message-ID: <20130131214241.GJ2244@beef>
-References: <1359529229-22207-1-git-send-email-mporter@ti.com>
- <201301300932.58732.arnd@arndb.de>
- <20130131183255.GI2244@beef>
- <6932828d68394f71ba6df8e6bf608635@DFLE72.ent.ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6932828d68394f71ba6df8e6bf608635@DFLE72.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "Cousson, Benoit" <b-cousson@ti.com>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Padma Venkat <padma.kvr@gmail.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: [RFC 00/11] staging/iio: Devicetree support
+Date: Thu, 31 Jan 2013 13:42:57 -0800
+Message-ID: <1359668588-13678-1-git-send-email-linux@roeck-us.net>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2013 at 08:58:39PM +0000, Arnd Bergmann wrote:
-> On Thursday 31 January 2013, Matt Porter wrote:
-> > On Wed, Jan 30, 2013 at 09:32:58AM +0000, Arnd Bergmann wrote:
-> > > On Wednesday 30 January 2013, Matt Porter wrote:
-> > > > +               dma_cap_set(DMA_SLAVE, edma_filter_info.dma_cap);
-> > > > +               of_dma_controller_register(dev->of_node,
-> > > > +                                          of_dma_simple_xlate,
-> > > > +                                          &edma_filter_info);
-> > > > +       }
-> > > 
-> > > How do you actually deal with the problem mentioned by Padma, that
-> > > the filter function does not know which edma instance it is looking
-> > > at? If you assume that there can only be a single edma instance in
-> > > the system, that is probably a limitation that should be documented
-> > > somewhere, and ideally the probe() function should check for that.
-> > 
-> > I make an assumption of one edma instance in the system in the case of
-> > DT being populated. This is always true right now as the only SoC with
-> > two EDMA controllers in existence is Davinci DA850. Until recently,
-> > Davinci had no DT support. Given the steady work being done today on DT
-> > support for DA850, it'll probably be something needed in 3.10.
-> > 
-> > I will add a comment and check in probe() to capture this assumption
-> > and then plan to update separately to support DA850 booting from DT.
-> 
-> Ok, sounds good. Hopefully by then we will already have a nicer
-> way to write an xlate function that does not rely on a filter
-> function.
+This patch set adds basic device tree support to the IIO subsystem. It is the
+result of the [1] and [2] discussions. The patch set is based on v3.8-rc5.
 
-Yes, it would be nice to avoid what Padma had to do. I should have
-mentioned also that the second EDMA on DA850 has no DMA events of
-immediate use on it anyway. All the in-kernel users use events on the
-first controller, except for the second MMC instance. That's only used
-for a wl12xx module on the EVM and that driver has no DT support so it
-doesn't matter yet in the DT case. Because of this, DA850 can actually
-add EDMA DT support immediately (on top of this series) and add DMA
-support to the DT support already posted for the Davinci SPI and MMC
-client drivers.
+Patches 1 to 7 are either bug fixes or cleanup patches and can at least in
+theory be applied immediately, per the subsystem maintainer's choice.
 
--Matt
+Patch 8 and 9 modify the parameters to iio_channel_get_all_cb(),
+iio_channel_get_all(), and iio_map_array_unregister() to prepare for the
+subsequent patches. If and how those changes are acceptable is TBD.
+Obviously the changes make sense to me, but if anyone has a better solution
+please let me know.
+
+Patch 10 adds basic OF support to the IIO subsystem. Support is modeled after
+the clock subsystem. Obviously this will need some cleanup, and we'll have to
+decide if the approach is acceptable and which OF specific functions will be
+required. But it is at least a starting point for the discussion.
+
+Patch 11 adds basic device-tree configuration to the MAX1363 driver;
+I needed that for my target system which uses an external reference voltage.
+
+For reference, here is a real dts file snippet:
+
+	max1139: voltage-sensor@35 {
+        	compatible = "maxim,max1139";
+		reg = <0x35>;
+		vref = <3300>;
+		#io-channel-cells = <1>;
+	};
+	...
+	iio_hwmon {
+		compatible = "iio-hwmon";
+		io-channels = <&max1139 0>, <&max1139 1>, <&max1139 2>,
+			<&max1139 3>, <&max1139 4>, <&max1139 5>,
+			<&max1139 6>, <&max1139 7>, <&max1139 8>,
+			<&max1139 9>, <&max1139 10>, <&max1139 11>;
+	};
+
+This is the resulting output from the "sensors" command:
+
+iio_hwmon-isa-000a
+Adapter: ISA adapter
+in1:          +0.00 V
+in2:          +3.12 V
+in3:          +1.64 V
+in4:          +2.50 V
+in5:          +3.29 V
+in6:          +1.51 V
+in7:          +3.30 V
+in8:          +3.30 V
+in9:          +1.05 V
+in10:         +3.30 V
+in11:         +1.65 V
+in12:         +1.65 V
+
+Probe deferral works quite nicely:
+
+[   17.267086] platform iio_hwmon.10: Driver iio_hwmon requests probe deferral
+
+Guenter
+
+---
+[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
+[2] http://marc.info/?l=lm-sensors&m=135375101529918&w=1
