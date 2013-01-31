@@ -1,56 +1,122 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v3 1/4] ASoC: tlv320aic3x: Convert mic bias to a supply
- widget
-Date: Thu, 31 Jan 2013 19:24:16 +0800
-Message-ID: <20130131112414.GE11078@opensource.wolfsonmicro.com>
-References: <1359631394-9511-1-git-send-email-gururaja.hebbar@ti.com>
- <1359631394-9511-2-git-send-email-gururaja.hebbar@ti.com>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 0/6] watchdog: dt: add support for the timeout-sec dt
+ property
+Date: Thu, 31 Jan 2013 12:24:46 +0100
+Message-ID: <CAHkwnC-mLG9mehc8eRwEZGf1o8S7x16abtjoZLZTCmJ+UZYgMw@mail.gmail.com>
+References: <1357639455-21935-1-git-send-email-fabio.porcedda@gmail.com>
+ <20130108153447.GC7360@game.jcrosoft.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EY/WZ/HvNxOox07X"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1359631394-9511-2-git-send-email-gururaja.hebbar@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hebbar Gururaja <gururaja.hebbar@ti.com>
-Cc: alsa-devel@alsa-project.org, davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lgirdwood@gmail.com, perex@perex.cz, nsekhar@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, rob@landley.net, grant.likely@secretlab.ca
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130108153447.GC7360-RQcB7r2h9QmfDR2tN2SG5Ni2O/JbrIOy@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 8, 2013 at 4:34 PM, Jean-Christophe PLAGNIOL-VILLARD
+<plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org> wrote:
+> On 11:04 Tue 08 Jan     , Fabio Porcedda wrote:
+>> Hi all,
+>> this patchset add the timeout-sec property to the watchdog core,
+>> to the at91sam9_wdt driver and on all framework enabled watchdog driver
+>> with dt support.
+>> The at91sam9_wdt is tested on evk-pr3,
+>> the other drivers are compile tested only.
+>>
+>
+> I'll prefer a macro to abstract the string in every driver
 
---EY/WZ/HvNxOox07X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I know but Rob Herring dislikes that macro/function. I had to remove that part.
 
-On Thu, Jan 31, 2013 at 04:53:10PM +0530, Hebbar Gururaja wrote:
+> except this fine by me
 
-> :100644 100644 e7b98f4... f47c3f5... M	Documentation/devicetree/bindings/sound/tlv320aic3x.txt
-> :100644 100644 ffd9bc7... 9407fd0... M	include/sound/tlv320aic3x.h
-> :100644 100644 4989143... 65d09d6... M	sound/soc/codecs/tlv320aic3x.c
-> :100644 100644 6db3c41... e521ac3... M	sound/soc/codecs/tlv320aic3x.h
+On Fri, Dec 21, 2012 at 12:32 PM, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org> wrote:
+>> Ping.
+>>
+>> The dependency is already merged.
+>
+> Will not be for this merge window. Will review next week.
 
-As mentioned when you posted this before this patch needs to update the
-machine drivers using the device too.
+Hi Wim,
 
---EY/WZ/HvNxOox07X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Ping.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Best regards
+Fabio Porcedda
 
-iQIcBAEBAgAGBQJRClRUAAoJELSic+t+oim9L+UP/0MbgirGaZ56JZ2U+2NYlmqN
-4fR8DtqAPVA90eVqULe7BncuBv8t+b+8RiQBqXB14d9QnicuxZuzBp0zI3M60spG
-eJ+i+ckBt1kZPcfn2Abs/y/BSmwmRUei1+RMSwR4Trc3JMl2xZM8h1M4Tu/Dla8w
-kAnNUvpkc85IhsXjBScAtJOLKhagVjRGMOzc8GMRvptMwl2ShQkXLIpCN6f9Wt8T
-4tAPU0chhofamLyoCuLCYhDu1M4ekpnHqaa3FJzXhZM9XjeSYVTQGBv+lWefgH6T
-HSW+KbtkxxbwlN6FvIoIs2RrQcEcYFNPRcb+4aUOeTRGDZS/JriE+2KqYfgRHqlL
-0rqsQXIZhL/oDCP2F12PNFVNRsBArpaHPqFNCmft6HYpgr1wumyXuEgLZc8eLptM
-6ycD9ee67qWh1M6UYThulTbs7DucGWllqipEA8UfAHsEYVzkhvAL9cxHFWrIfI5J
-DnuGl/ykx0N2iirat/vvlsmoZnoVqr4uSEkUGz6Avmy9JCx9rnM6vE1Syjwl3E91
-/ihYR51BaSSLDh+aKDqW3BrGpciI/vfT0KI5hv/v0beHbouFOWGRNYistyl7wIxi
-bIk0//GeUYJRC8U+xVTDm815zvTP68J2APwVvQbK17M+NHvvZ2M38UofnUvcIF9H
-cWfbtdcVTa5t760oMrG+
-=uL6c
------END PGP SIGNATURE-----
+> Best Regards,
+> J.
+>
+>> Best regards
+>> Fabio Porcedda
+>>
+>> changes:
+>> v7:
+>>   - rebase over v3.8-rc2
+>>   - remove the patch already merged
+>> v6:
+>>   - remove patch for function of_get_timeout_sec as aked by Rob Herring
+>>   - add Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+>>   - add Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+>> v5:
+>>   - fix codestyle for compilance ti checkpatch.pl about
+>>     "ERROR: do not initialise statics to 0 or NULL"
+>>     for s3c2410_wdt.c:56 and at91sam9_wdt.c:63
+>> v4:
+>>   - add of_get_timeout_sec
+>>   - add s3c2410_wdt driver
+>>   - split driver patch
+>>   - fixed watchdog_init_timeout handling of min_timeout and max_timeout
+>> v3:
+>>   - rename watchdog_probe_dt_timeout ->  watchdog_init_timeout
+>>   - move the watchdog_init_timeout function from inline to watchdog_core.c
+>>   - add timeout parameter handling code to watchdog_init_timeout
+>>   - add timeout-sec property to the pnx4008-wdt driver
+>>   - add two small commit for fixup and cleanup
+>> v2:
+>>   - change "timeout" to "timeout-sec" as asked by Jean-Christophe
+>>   - at91sam9_wdt: use the new helper function
+>>   - at91sam9_wdt: add bounds checking
+>>   - watchdog.h: add bounds checking
+>>
+>> Fabio Porcedda (6):
+>>   watchdog: core: dt: add support for the timeout-sec dt property
+>>   watchdog: orion_wdt: add timeout-sec property binding
+>>   watchdog: pnx4008: add timeout-sec property binding
+>>   watchdog: s3c2410_wdt: add timeout-sec property binding
+>>   watchdog: at91sam9_wdt: add timeout-sec property binding
+>>   watchdog: orion_wdt: move the min_timeout initialization
+>>
+>>  .../devicetree/bindings/watchdog/atmel-wdt.txt     |  4 +++
+>>  .../devicetree/bindings/watchdog/marvel.txt        |  5 +++
+>>  .../devicetree/bindings/watchdog/pnx4008-wdt.txt   |  4 +++
+>>  .../devicetree/bindings/watchdog/samsung-wdt.txt   |  3 ++
+>>  Documentation/watchdog/watchdog-kernel-api.txt     | 10 ++++++
+>>  drivers/watchdog/Kconfig                           |  1 +
+>>  drivers/watchdog/at91sam9_wdt.c                    | 16 ++++++++--
+>>  drivers/watchdog/orion_wdt.c                       | 10 +++---
+>>  drivers/watchdog/pnx4008_wdt.c                     |  7 ++--
+>>  drivers/watchdog/s3c2410_wdt.c                     |  6 ++--
+>>  drivers/watchdog/watchdog_core.c                   | 37 ++++++++++++++++++++++
+>>  include/linux/watchdog.h                           |  3 ++
+>>  12 files changed, 91 insertions(+), 15 deletions(-)
+>>
+>> --
+>> 1.8.0.3
+>>
 
---EY/WZ/HvNxOox07X--
+
+
+--
+Fabio Porcedda
