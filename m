@@ -1,78 +1,65 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH 2/4] ARM: dts: add support for mixer to exynos4
-Date: Thu, 31 Jan 2013 14:03:33 +0530
-Message-ID: <CAPdUM4OD2Ju7s9wGr3r4hT=XhTv0N2fsNhmOJrGUHzhJSLzP4g@mail.gmail.com>
-References: <1359110384-28402-1-git-send-email-rahul.sharma@samsung.com>
-	<1359110384-28402-3-git-send-email-rahul.sharma@samsung.com>
-	<5105965F.9050402@gmail.com>
-	<CAPdUM4P_jf0w+B22p1hmso8uhmTXs=fLdF8WrzDWL8cPyLeTCw@mail.gmail.com>
-	<51083015.2030403@gmail.com>
+From: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v2 0/3] Add device tree support for NAND flash in
+ am335x-evm
+Date: Thu, 31 Jan 2013 09:36:10 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3EA68A6D@DBDE01.ent.ti.com>
+References: <cover.1359007746.git.avinashphilip@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51083015.2030403@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <cover.1359007746.git.avinashphilip-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Hebbar,
+ Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 30, 2013 at 1:54 AM, Sylwester Nawrocki
-<sylvester.nawrocki@gmail.com> wrote:
-> Hi,
->
->
-> On 01/28/2013 07:44 AM, Rahul Sharma wrote:
->>>>
->>>> +
->>>> +       mixer: mixer {
->>>> +               compatible = "samsung,exynos4-mixer";
->>>
->>>
->>>
->>> I'm afraid this compatible property it too generic. Is the video mixer IP
->>> really identical an all the Exynos4 series SoCs ?
->>>
->>
->> It is same in Exynos4210, 4212 and 4412.
->>
->>>
->>>> +               reg =<0x12c10000 0x10000>,
->>>> +<0x12c00000 0x10000>;
->>>> +               interrupts =<0 91 0>;
->>>> +               samsung,power-domain =<&pd_tv>;
->>>> +       };
->>>>    };
->>>
->>>
->>>
->>> Is there documentation for these new bindings available somewhere ?
->>>
->>
->> it is there at Documentation/devicetree/bindings/drm/exynos/mixer.txt.
->> Probably I need to add details for power domain node property.
->
->
-> Sorry, I can't see anything for Exynos4 there, it's only for exynos5 SoCs.
-> I think the need for the 'samsung,power-domain' property (I guess that
-> should be optional) needs to be documented for completeness.
->
-> Getting back to the bindings documentation,
-> Documentation/devicetree/bindings/drm/exynos/ seems not exactly right
-> place for me, but that's a minor issue. There is also a V4L2 driver
-> for the HDMI and TV output devices in drivers/media/platform/s5p-tv.
-> So Documentation/devicetree/bindings/video or
-> Documentation/devicetree/bindings/media might be a better home for that
-> bindings documentation. These IPs are not specific to DRM at all.
->
+Benoit,
 
-Make sense. I will move the documentation file to Documentation/
-devicetree/ bindings/video and add exynos4 compatible types in next
-version.
+On Thu, Jan 24, 2013 at 13:32:26, Philip, Avinash wrote:
+> This patch series adds device tree support for NAND flash in am335x-evm.
+> Also ELM node is populated in device tree and been used for BCH error
+> correction in NAND flash part. Also this patch series ensures RBL ecc
+> layout maintained in Linux kernel with BCH8 ecc scheme.
+> 
+> This patch series based on [1] and depends on [2].
+> 
+> 1. http://git.kernel.org/?p=linux/kernel/git/bcousson/linux-omap-dt.git;a=tree;h=refs/heads/for_3.9/dts;hb=refs/heads/for_3.9/dts
+> 
+> 2.mtd: devices: elm: Removes <xx> literals in elm DT node
+>   https://lkml.org/lkml/2013/1/24/30
+> 
 
-regards,
-Rahul Sharma.
+Can you accept this patch series so that NAND flash with BCH support
+for am335x-evm available in 3.9.
 
-> --
->
-> Thanks,
-> Sylwester
+Thanks
+Avinash
+
+
+> Philip Avinash (1):
+>   ARM: dts: AM33XX: Add NAND flash device tree data to am335x-evm
+> 
+> Philip, Avinash (2):
+>   ARM: dts: AM33XX: Add ELM node
+>   ARM: dts: AM33XX: Add GPMC node
+> 
+>  arch/arm/boot/dts/am335x-evm.dts |   98 +++++++++++++++++++++++++++++++++++++-
+>  arch/arm/boot/dts/am33xx.dtsi    |   20 ++++++++
+>  2 files changed, 117 insertions(+), 1 deletion(-)
+> 
+> -- 
+> 1.7.9.5
+> 
+> 
