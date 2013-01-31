@@ -1,79 +1,91 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining dr_mode
- and phy_type
-Date: Thu, 31 Jan 2013 11:29:13 +0100
-Message-ID: <20130131102913.GA6937@pengutronix.de>
-References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
- <87pq0omcfb.fsf@ashishki-desk.ger.corp.intel.com>
- <20130130020627.GA699@nchen-desktop>
- <20130130140015.GZ1906@pengutronix.de>
- <20130131020542.GD9777@nchen-desktop>
+From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Subject: [PATCH 3/3] ARM: davinci: da850: add mmc DT entries
+Date: Thu, 31 Jan 2013 16:03:07 +0530
+Message-ID: <1359628387-14437-4-git-send-email-prakash.pm@ti.com>
+References: <1359628387-14437-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130131020542.GD9777@nchen-desktop>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1359628387-14437-1-git-send-email-prakash.pm@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, nsekhar@ti.com, hs@denx.de, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, davinci-linux-open-source@linux.davincidsp.com, mporter@ti.com, ido@wizery.com, gregkh@linuxfoundation.org, "Manjunathappa, Prakash" <prakash.pm@ti.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2013 at 10:05:44AM +0800, Peter Chen wrote:
-> On Wed, Jan 30, 2013 at 03:00:15PM +0100, Sascha Hauer wrote:
-> > On Wed, Jan 30, 2013 at 10:06:28AM +0800, Peter Chen wrote:
-> > > On Tue, Jan 29, 2013 at 01:55:04PM +0200, Alexander Shishkin wrote:
-> > > > Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> > > > 
-> > > > > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > > >
-> > > > > This adds two little devicetree helper functions for determining the
-> > > > > dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
-> > > > > the devicetree.
-> > > > >
-> > > > > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > > > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > > > ---
-> > > > >
-> > > > > The properties and their values have been taken from the fsl-mph-dr driver.
-> > > > > This binding is also documented (though currently not used) for the tegra
-> > > > > ehci driver (Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt).
-> > > > > This is a first attempt to parse these bindings at a common place so that
-> > > > > others can make use of it.
-> > > > >
-> > > > > Basically I want to know whether this binding is recommended for new drivers
-> > > > > since normally the devicetree uses '-' instead of '_', and maybe there are
-> > > > > other problems with it.
-> > > > >
-> > > > > I need this binding for the chipidea driver. I suspect that the fsl-mph-dr
-> > > > > driver also really handles a chipidea core.
-> > > > 
-> > > > As far as I know, it is a chipidea core. Adding Peter to Cc list, he can
-> > > > probably confirm.
-> > > 
-> > > The fsl-mph-dr can't be used for chipdiea as it handles three platform
-> > > drivers for three roles (peripheral , host, otg). But chipidea only has
-> > > two platform drivers, one is the chipidea core, the other is related
-> > > controller wrapper.
-> > 
-> > What do you mean by 'three platform drivers'? That's only how the driver
-> > is built, no? I was talking about the hardware the fsl-mph-dr driver
-> > handles which definitely smells like chipidea.
-> 
-> It creates host/device/otg platform device according to dr_mode from
-> the device tree.
+Add DT entry for MMC. Also add entry for pinmux information.
+Tested on da850-evm without card detect and EDMA support as
+DT support for GPIO and EDMA are yet come.
 
-Again, that's software specific. What I'd like to know is whether the
-*hardware* could be handled by the chipidea driver.
+Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
+Cc: linux-mmc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: davinci-linux-open-source@linux.davincidsp.com
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: cjb@laptop.org
+Cc: Sekhar Nori <nsekhar@ti.com>
+---
+ arch/arm/boot/dts/da850-evm.dts |   13 +++++++++++++
+ arch/arm/boot/dts/da850.dtsi    |   15 +++++++++++++++
+ 2 files changed, 28 insertions(+), 0 deletions(-)
 
-Sascha
-
-
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index fa04152..51c87e7 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -30,6 +30,19 @@
+ 		rtc0: rtc@1c23000 {
+ 			status = "okay";
+ 		};
++		mmc0: mmc@1c40000 {
++			status = "okay";
++			bus-width = <4>;
++			max-frequency = <50000000>;
++			/*
++			 * BIT(1) MMC_CAP_MMC_HIGHSPEED
++			 * BIT(2) MMC_CAP_SD_HIGHSPEED
++			 */
++			caps = <6>;
++			version = <1>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&mmc0_pins>;
++		};
+ 	};
+ 	nand_cs3@62000000 {
+ 		status = "okay";
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 099c81e..5978a83 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -56,6 +56,15 @@
+ 					0x30 0x01100000  0x0ff00000
+ 				>;
+ 			};
++			mmc0_pins: pinmux_mmc_pins {
++				pinctrl-single,bits = <
++					/* MMCSD0_DAT[3] MMCSD0_DAT[2]
++					 * MMCSD0_DAT[1] MMCSD0_DAT[0]
++					 * MMCSD0_CMD    MMCSD0_CLK
++					 */
++					0x28 0x00222222  0x00ffffff
++				>;
++			};
+ 		};
+ 		serial0: serial@1c42000 {
+ 			compatible = "ns16550a";
+@@ -88,6 +97,12 @@
+ 				      19>;
+ 			status = "disabled";
+ 		};
++		mmc0: mmc@1c40000 {
++			compatible = "ti,davinci_mmc";
++			reg = <0x40000 0x1000>;
++			interrupts = <16>;
++			status = "disabled";
++		};
+ 	};
+ 	nand_cs3@62000000 {
+ 		compatible = "ti,davinci-nand";
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.4.1
+
