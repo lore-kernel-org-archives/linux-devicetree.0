@@ -1,106 +1,52 @@
-From: John Crispin <blogic@openwrt.org>
-Subject: [PATCH 2/3] MIPS: add irqdomain support for the CPU IRQ controller
-Date: Thu, 31 Jan 2013 14:20:43 +0100
-Message-ID: <1359638444-8891-2-git-send-email-blogic@openwrt.org>
-References: <1359638444-8891-1-git-send-email-blogic@openwrt.org>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1359638444-8891-1-git-send-email-blogic@openwrt.org>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: Ralf Baechle <ralf@linux-mips.org>
-Cc: linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Gabor Juhos <juhosg@openwrt.org>, John Crispin <blogic@openwrt.org>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2] Adding support for the new Armada XP development board
+ from Marvell
+Date: Thu, 31 Jan 2013 15:08:05 +0100
+Message-ID: <1359641286-18182-1-git-send-email-gregory.clement@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Gabor Juhos <juhosg@openwrt.org>
+Hello,
 
-Add code to load a irq_domain for the MIPS IRQ controller from a devicetree
-file.
+This is the second version of a single patch to add the dts support
+for new Armada XP development board from Marvell called
+DB-MV784MP-GP.
 
-Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
-Signed-off-by: John Crispin <blogic@openwrt.org>
----
- arch/mips/include/asm/irq_cpu.h |    6 ++++++
- arch/mips/kernel/irq_cpu.c      |   42 +++++++++++++++++++++++++++++++++++++++
- 2 files changed, 48 insertions(+)
+Simon Guinot and Florian Fainelli tested it successfully the issue I
+get with Ethernet so it should be hardware related.
 
-diff --git a/arch/mips/include/asm/irq_cpu.h b/arch/mips/include/asm/irq_cpu.h
-index ef6a07c..3f11fdb 100644
---- a/arch/mips/include/asm/irq_cpu.h
-+++ b/arch/mips/include/asm/irq_cpu.h
-@@ -17,4 +17,10 @@ extern void mips_cpu_irq_init(void);
- extern void rm7k_cpu_irq_init(void);
- extern void rm9k_cpu_irq_init(void);
- 
-+#ifdef CONFIG_IRQ_DOMAIN
-+struct device_node;
-+extern int mips_cpu_intc_init(struct device_node *of_node,
-+			      struct device_node *parent);
-+#endif
-+
- #endif /* _ASM_IRQ_CPU_H */
-diff --git a/arch/mips/kernel/irq_cpu.c b/arch/mips/kernel/irq_cpu.c
-index 972263b..49bc9ca 100644
---- a/arch/mips/kernel/irq_cpu.c
-+++ b/arch/mips/kernel/irq_cpu.c
-@@ -31,6 +31,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/irq.h>
-+#include <linux/irqdomain.h>
- 
- #include <asm/irq_cpu.h>
- #include <asm/mipsregs.h>
-@@ -113,3 +114,44 @@ void __init mips_cpu_irq_init(void)
- 		irq_set_chip_and_handler(i, &mips_cpu_irq_controller,
- 					 handle_percpu_irq);
- }
-+
-+#ifdef CONFIG_IRQ_DOMAIN
-+static int mips_cpu_intc_map(struct irq_domain *d, unsigned int irq,
-+			     irq_hw_number_t hw)
-+{
-+	static struct irq_chip *chip;
-+
-+	if (hw < 2 && cpu_has_mipsmt) {
-+		/* Software interrupts are used for MT/CMT IPI */
-+		chip = &mips_mt_cpu_irq_controller;
-+	} else {
-+		chip = &mips_cpu_irq_controller;
-+	}
-+
-+	irq_set_chip_and_handler(irq, chip, handle_percpu_irq);
-+
-+	return 0;
-+}
-+
-+static const struct irq_domain_ops mips_cpu_intc_irq_domain_ops = {
-+	.map = mips_cpu_intc_map,
-+	.xlate = irq_domain_xlate_onecell,
-+};
-+
-+int __init mips_cpu_intc_init(struct device_node *of_node,
-+			      struct device_node *parent)
-+{
-+	struct irq_domain *domain;
-+
-+	/* Mask interrupts. */
-+	clear_c0_status(ST0_IM);
-+	clear_c0_cause(CAUSEF_IP);
-+
-+	domain = irq_domain_add_legacy(of_node, 8, MIPS_CPU_IRQ_BASE, 0,
-+				       &mips_cpu_intc_irq_domain_ops, NULL);
-+	if (!domain)
-+		panic("Failed to add irqdomain for MIPS CPU\n");
-+
-+	return 0;
-+}
-+#endif /* CONFIG_IRQ_DOMAIN */
+Since the first version, beside adding the tested-by flag, I also
+fixed the name for the board. The name of this board start by DB for
+development board so let's use it!
+
+The other change was about the memory node: I had some comments to
+emphasize that the amount of memory may change.
+
+Thanks,
+
+Gregory CLEMENT (1):
+  arm: mvebu: support for the new Armada XP development
+    board(DB-MV784MP-GP)
+
+ arch/arm/boot/dts/Makefile         |    1 +
+ arch/arm/boot/dts/armada-xp-gp.dts |  101 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 102 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-xp-gp.dts
+
 -- 
-1.7.10.4
+1.7.9.5
