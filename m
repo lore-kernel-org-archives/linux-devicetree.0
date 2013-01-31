@@ -1,109 +1,149 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [PATCH] arm: dts: omap4-panda: Add I2c pinctrl data
-Date: Thu, 31 Jan 2013 11:53:21 +0530
-Message-ID: <1359613401-29133-1-git-send-email-sourav.poddar@ti.com>
+From: Rahul Sharma <r.sh.open@gmail.com>
+Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
+Date: Thu, 31 Jan 2013 11:52:29 +0530
+Message-ID: <CAPdUM4OpeYxL=WNMnMzrZSf6LwvLzAsEdWVR2=gbR30dJwJhAw@mail.gmail.com>
+References: <50EC5EDE.3030208@firmworks.com>
+	<1357676181-16728-1-git-send-email-seanpaul@chromium.org>
+	<50ECA400.50007@wwwdotorg.org> <51082B6A.1010406@gmail.com>
+	<CAAQKjZNR8EJ+UFRO3vgYLH9So_gHn0a8gAf1JKu250shGiJ4qQ@mail.gmail.com>
+	<5109DF18.6010202@wwwdotorg.org>
+	<CAAQKjZOa0qkAiQBhuXypiKWP8Hi8zYrO_kDH5BnqSpNwAKwqkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, b-cousson@ti.com, linux@arm.linux.org.uk, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, balbi@ti.com, santosh.shilimkar@ti.com, coelho@ti.com
-Cc: Sourav Poddar <sourav.poddar@ti.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-Reply-To: <CAAQKjZOa0qkAiQBhuXypiKWP8Hi8zYrO_kDH5BnqSpNwAKwqkQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, joshi@samsung.com, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, olofj@chromium.org, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Booting 3.8-rc4 on omap4 panda results in the following error
+On Thu, Jan 31, 2013 at 10:22 AM, Inki Dae <inki.dae@samsung.com> wrote:
+> 2013/1/31 Stephen Warren <swarren@wwwdotorg.org>:
+>> On 01/30/2013 06:16 PM, Inki Dae wrote:
+>>> 2013/1/30 Sylwester Nawrocki <sylvester.nawrocki@gmail.com>:
+>>>> Hi,
+>>>>
+>>>>
+>>>> On 01/08/2013 11:56 PM, Stephen Warren wrote:
+>>>>>
+>>>>> On 01/08/2013 01:16 PM, Sean Paul wrote:
+>>>>>>
+>>>>>> Add a property to the hdmi node so we can specify the HDMI version in
+>>>>>> the device tree instead of just defaulting to v1.4 with the existence of
+>>>>>> the dt node.
+>>>>>
+>>>>>
+>>>>> I guess this seems OK to me if required, although I'd certainly like to
+>>>>> see someone familiar with the Exynos HW confirm whether this should be
+>>>>> driven purely by DT compatible value for the HDMI IP block instead though.
+>>>>
+>>>>
+>>>> I think the supported HDMI standard is something that could well be derived
+>>>> from the compatible property. The IP supporting v1.3 and v1.4 will be
+>>>> significantly different, so this would anyway already need to be reflected
+>>>> in the compatible property. The only issue I see here is that people tend
+>>>> to make the compatible string overly generic, so it is hardly usable for
+>>>> anything but matching an IP with its driver. For instance for exynos5 we
+>>>> have now (Documentation/devicetree/bindings/drm/exynos/hdmi.txt):
+>>>>
+>>>>         compatible = "samsung,exynos5-hdmi";
+>>>>
+>>>> For Exynos4 series there were already some patches proposed [1], but I
+>>>> believe
+>>>> this isn't a clean solution. Instead of things like:
+>>>>
+>>>> compatible = "samsung,exynos4-hdmi13";
+>>>> compatible = "samsung,exynos4-hdmi14";
+>>>>
+>>>> I would much more like to see the SoC version embedded in the compatible
+>>>> string, e.g.
+>>>>
+>>>
+>>> Hi Sylwester. long time no see.
+>>>
+>>> I think that if we use the SoC version embedded in the compatible
+>>> string then each driver shoud aware of the ip version to the SoC to
+>>
+>> The driver only needs to be aware of one SoC version for each IP version.
+>>
+>
+> I know that device tree describes hw information and the information
+> includes ip version also. So shouldn't the driver aware of the ip
+> version itself and should the driver only aware of it through device
+> tree? So I thought using the version property is proper way.
+>
 
-[    0.444427] omap_i2c 48070000.i2c: did not get pins for i2c error: -19
-[    0.445770] omap_i2c 48070000.i2c: bus 0 rev0.11 at 400 kHz
-[    0.473937] omap_i2c 48072000.i2c: did not get pins for i2c error: -19
-[    0.474670] omap_i2c 48072000.i2c: bus 1 rev0.11 at 400 kHz
-[    0.474822] omap_i2c 48060000.i2c: did not get pins for i2c error: -19
-[    0.476379] omap_i2c 48060000.i2c: bus 2 rev0.11 at 100 kHz
-[    0.477294] omap_i2c 48350000.i2c: did not get pins for i2c error: -19
-[    0.477996] omap_i2c 48350000.i2c: bus 3 rev0.11 at 400 kHz
-[    0.483398] Switching to clocksource 32k_counter
+I want to second Sylwester's proposal. Compatibility information
+should be carried in compatible string. 'version' property is diluting
+its purpose. With this implementation, all compatible strings :
+"exynos-hdmi", "exynos4-hdmi", "exynos4x12-hdmi",
+"exynos5-hdmi" ... have same relevance.
 
-This happens because omap4 panda dts file is not adapted to use i2c through
-pinctrl framework. Populating i2c pinctrl data to get rid of the error.
+IMO, it make sense with compatible strings specifying the
+first Soc with same IP version:
+compatible = "samsung,exynos4210-hdmi";
+compatible = "samsung,exynos4212-hdmi";
 
-Tested on omap4460 panda with 3.8-rc4 kernel.
+compatible = "samsung,exynos-hdmi-1.3" and
+compatible = "samsung,exynos-hdmi-1.4" will also do the needful.
 
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
-Reported-by: Luciano Coelho <coelho@ti.com>
----
- arch/arm/boot/dts/omap4-panda.dts |   40 +++++++++++++++++++++++++++++++++++++
- 1 files changed, 40 insertions(+), 0 deletions(-)
+While representing hdmi version information we should consider
+the possibility of intermediate releases like 1.3ab, 1.4a etc.
 
-diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-index 4122efe..f951e6b 100644
---- a/arch/arm/boot/dts/omap4-panda.dts
-+++ b/arch/arm/boot/dts/omap4-panda.dts
-@@ -110,9 +110,40 @@
- 			0x58 0x10b	/* hdmi_hpd.gpio_63 INPUT PULLDOWN | MODE3 */
- 		>;
- 	};
-+
-+	i2c1_pins: pinmux_i2c1_pins {
-+		pinctrl-single,pins = <
-+			0xe2 0x118        /* i2c1_scl PULLUP | INPUTENABLE | MODE0 */
-+			0xe4 0x118        /* i2c1_sda PULLUP | INPUTENABLE | MODE0 */
-+		>;
-+	};
-+
-+	i2c2_pins: pinmux_i2c2_pins {
-+		pinctrl-single,pins = <
-+			0xe6 0x118        /* i2c2_scl PULLUP | INPUTENABLE | MODE0 */
-+			0xe8 0x118        /* i2c2_sda PULLUP | INPUTENABLE | MODE0 */
-+		>;
-+	};
-+
-+	i2c3_pins: pinmux_i2c3_pins {
-+		pinctrl-single,pins = <
-+			0xea 0x118        /* i2c3_scl PULLUP | INPUTENABLE | MODE0 */
-+			0xec 0x118     /* i2c3_sda PULLUP | INPUTENABLE | MODE0 */
-+		>;
-+	};
-+
-+	i2c4_pins: pinmux_i2c4_pins {
-+		pinctrl-single,pins = <
-+			0xee 0x118        /* i2c4_scl PULLUP | INPUTENABLE | MODE0 */
-+			0xf0 0x118     /* i2c4_sda PULLUP | INPUTENABLE | MODE0 */
-+		>;
-+	};
- };
- 
- &i2c1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+
- 	clock-frequency = <400000>;
- 
- 	twl: twl@48 {
-@@ -139,10 +170,16 @@
- /include/ "twl6030.dtsi"
- 
- &i2c2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
- 	clock-frequency = <400000>;
- };
- 
- &i2c3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c3_pins>;
-+
- 	clock-frequency = <100000>;
- 
- 	/*
-@@ -156,6 +193,9 @@
- };
- 
- &i2c4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c4_pins>;
-+
- 	clock-frequency = <400000>;
- };
- 
--- 
-1.7.1
+regards,
+Rahul Sharma.
+
+>
+>> So with Sylwester's proposal:
+>>
+>>>> compatible = "samsung,exynos4210-hdmi"; /* among others it carries an
+>>>>                                           information this IP supports
+>>>>                                           HDMI v1.3 */
+>>>>
+>>>> compatible = "samsung,exynos4212-hdmi"; /* HDMI v1.4, IIRC */
+>>
+>> The driver woulud only ever have to know about those two compatible
+>> values (unless further incompatible HW revisions exist); any other SoC
+>> would be listed as being compatible with one of those two strings (but
+>> in addition to the specific value for the specific SoC, e.g. compatible
+>> = "samsung,exynox5xxx-hdmi", "samsung,exynos4212-hdmi").
+>>
+>>> use version specific feature so I think it's better to use it without
+>>> the SoC version embedded in the compatible string like this,
+>>> compatible = "samsung,exynos4-hdmi"
+>>> version = "0x104" or "0x103"
+>>
+>> That would be quite non-typical.
+>>
+>>> With this, all each driver to do  is to check version property and set
+>>> version specific feature properly. And we have some dtsi file to can
+>>> be used commonly.
+>>>
+>>> For example,
+>>> exynos4.dtsi : have all Exynos4 series SoCs common properties and also
+>>> use common compatible string.
+>>> exynos4412.dtsi, exynos4212.dtsi and so on: have Exynos42xx specific
+>>> properties. So the hdmi version string could be used here as "version
+>>> = "0x104" or "0x103"
+>>> exynos4412-board.dts: have board specific properties.
+>>>
+>>> compatible = "samsung,exynos5-hdmi" is reasonable to me.
+>>> any opinions?
+>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
