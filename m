@@ -1,84 +1,87 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH RFC v4 01/14] [media] Add common video interfaces OF bindings
- documentation
-Date: Wed, 30 Jan 2013 23:35:06 +0100
-Message-ID: <5109A01A.3020102@gmail.com>
-References: <1358969489-20420-1-git-send-email-s.nawrocki@samsung.com> <1525960.fMnIjkZnjX@avalon> <51017DB2.5050905@samsung.com> <453041220.G3D9E6yQdS@avalon> <510914D0.6050404@samsung.com>
+From: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH RFC 1/2] Implementation of pci_fixup_irqs for descendants
+ of a specified bus
+Date: Wed, 30 Jan 2013 17:24:14 -0700
+Message-ID: <CAErSpo7Oyx41Qy80YcZNpSe7CatzLZ4Lai0--YRGJ0NZ1zQTRA@mail.gmail.com>
+References: <20130118113742.GA9006@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <510914D0.6050404@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, hverkuil@xs4all.nl, g.liakhovetski@gmx.de, kyungmin.park@samsung.com, kgene.kim@samsung.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, thomas.abraham@linaro.org, t.figa@samsung.com, myungjoo.ham@samsung.com, sw0312.kim@samsung.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130118113742.GA9006-5wv7dgnIgG8@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Murray <Andrew.Murray-5wv7dgnIgG8@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, Jan 18, 2013 at 4:37 AM, Andrew Murray <Andrew.Murray-5wv7dgnIgG8@public.gmane.org> wrote:
+> Continuing from discussion with Thierry (lkml.org/lkml/2013/1/18/107) perhaps
+> this will be useful to fold into your patchset.
+> ---
+> This patch provides pci_bus_fixup_irqs which performs the same
+> function as pci_fixup_irqs but only to descendants of the specified
+> bus.
 
-On 01/30/2013 01:40 PM, Sylwester Nawrocki wrote:
-> On 01/25/2013 02:52 AM, Laurent Pinchart wrote:
->>>>> +Data interfaces on all video devices are described by their child 'port'
->>>>> +nodes. Configuration of a port depends on other devices participating in
->>>>> +the data transfer and is described by 'endpoint' subnodes.
->>>>> +
->>>>> +dev {
->>>>> +	#address-cells =<1>;
->>>>> +	#size-cells =<0>;
->>>>> +	port@0 {
->>>>> +		endpoint@0 { ... };
->>>>> +		endpoint@1 { ... };
->>>>> +	};
->>>>> +	port@1 { ... };
->>>>> +};
->>>>> +
->>>>> +If a port can be configured to work with more than one other device on
->>>>> +the same bus, an 'endpoint' child node must be provided for each of
->>>>> +them. If more than one port is present in a device node or there is more
->>>>> +than one endpoint at a port, a common scheme, using '#address-cells',
->>>>> +'#size-cells' and 'reg' properties is used.
->>>>
->>>> Wouldn't this cause problems if the device has both video ports and a
->>>> child bus ? Using #address-cells and #size-cells for the video ports would
->>>> prevent the child bus from being handled in the usual way.
->>>
->>> Indeed, it looks like a serious issue in these bindings.
->>>
->>>> A possible solution would be to number ports with a dash instead of a @,
->>>> as done in pinctrl for instance. We would then get
->>>>
->>>> 	port-0 {
->>>> 		endpoint-0 { ... };
->>>> 		endpoint-1 { ... };
->>>> 	};
->>>> 	port-1 { ... };
+I think pci_fixup_irqs() is a broken design to begin with because it
+is only called once at boot-time and it iterates over all the devices
+we've found so far.  Any hot-added devices never get the fixups.
 
-Another possible solution could be putting the port nodes under
-a ports node, for these cases where a device has a child bus.
-Where there is no conflict, the ports node could be omitted for
-simplicity. Does it sound reasonable ?
+Adding pci_bus_fixup_irqs() addresses part of that, by adding a way to
+fixup a subset of devices, e.g., maybe it could be done for hot-added
+things.
 
-device {
-	ports {
-		#address-cells = <1>;
-		#size-cells = <0>;
-		port@0 {	
-			endpoint@0 {
-				reg = <0>;
-			};
-			endpoint@1 { ... };
-		};
-		port@1 { ... };
-	};
-};
+But I think it would be better to do a more extensive refactoring and
+do the IRQ fixups directly somewhere in the pci_device_add() path.
+That way we can do it a device at a time, for every device (present at
+boot and hot-added later), and before any drivers claim the device.
 
-> One problem here is that index of the port or the endpoint node can have
-> random value and don't need to start with 0, which is the case for the pinctrl
-> properties. It makes iterating over those nodes more difficult, instead
-> of using standard functions like of_node_cmp() we would need to search for
-> sub-strings in the node name.
-
---
-
-Thanks,
-Sylwester
+> This can reduce unnecessary fixing up of device irqs when new buses
+> are added.
+>
+> Signed-off-by: Andrew Murray <Andrew.Murray-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  drivers/pci/setup-irq.c |   15 +++++++++++++++
+>  include/linux/pci.h     |    3 +++
+>  2 files changed, 18 insertions(+), 0 deletions(-)
+>
+> diff --git a/drivers/pci/setup-irq.c b/drivers/pci/setup-irq.c
+> index eb219a1..ea91874 100644
+> --- a/drivers/pci/setup-irq.c
+> +++ b/drivers/pci/setup-irq.c
+> @@ -62,3 +62,18 @@ pci_fixup_irqs(u8 (*swizzle)(struct pci_dev *, u8 *),
+>         for_each_pci_dev(dev)
+>                 pdev_fixup_irq(dev, swizzle, map_irq);
+>  }
+> +
+> +void __init
+> +pci_bus_fixup_irqs(struct pci_bus *bus,
+> +               u8 (*swizzle)(struct pci_dev *, u8 *),
+> +               int (*map_irq)(const struct pci_dev *, u8, u8))
+> +{
+> +       struct pci_dev *dev;
+> +
+> +       list_for_each_entry(dev, &bus->devices, bus_list) {
+> +               pdev_fixup_irq(dev, swizzle, map_irq);
+> +
+> +               if (dev->subordinate)
+> +                       pci_bus_fixup_irqs(dev->subordinate, swizzle, map_irq);
+> +       }
+> +}
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 5faa831..1b3c2eb 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -953,6 +953,9 @@ void pdev_enable_device(struct pci_dev *);
+>  int pci_enable_resources(struct pci_dev *, int mask);
+>  void pci_fixup_irqs(u8 (*)(struct pci_dev *, u8 *),
+>                     int (*)(const struct pci_dev *, u8, u8));
+> +void pci_bus_fixup_irqs(struct pci_bus *bus,
+> +               u8 (*swizzle)(struct pci_dev *, u8 *),
+> +               int (*map_irq)(const struct pci_dev *, u8, u8));
+>  #define HAVE_PCI_REQ_REGIONS   2
+>  int __must_check pci_request_regions(struct pci_dev *, const char *);
+>  int __must_check pci_request_regions_exclusive(struct pci_dev *, const char *);
+> --
+> 1.7.0.4
+>
+>
