@@ -1,109 +1,157 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
-Date: Wed, 30 Jan 2013 20:03:52 -0700
-Message-ID: <5109DF18.6010202@wwwdotorg.org>
-References: <50EC5EDE.3030208@firmworks.com>
- <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
- <50ECA400.50007@wwwdotorg.org> <51082B6A.1010406@gmail.com>
- <CAAQKjZNR8EJ+UFRO3vgYLH9So_gHn0a8gAf1JKu250shGiJ4qQ@mail.gmail.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH V2] regulators: anatop: add set_voltage_time_sel interface
+Date: Thu, 31 Jan 2013 11:07:12 +0800
+Message-ID: <20130131030710.GE2765@S2101-09.ap.freescale.net>
+References: <1359647826-26239-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAAQKjZNR8EJ+UFRO3vgYLH9So_gHn0a8gAf1JKu250shGiJ4qQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1359647826-26239-1-git-send-email-b20788@freescale.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Anson Huang <b20788@freescale.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, broonie@opensource.wolfsonmicro.com
 List-Id: devicetree@vger.kernel.org
 
-On 01/30/2013 06:16 PM, Inki Dae wrote:
-> 2013/1/30 Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->> Hi,
->>
->>
->> On 01/08/2013 11:56 PM, Stephen Warren wrote:
->>>
->>> On 01/08/2013 01:16 PM, Sean Paul wrote:
->>>>
->>>> Add a property to the hdmi node so we can specify the HDMI version in
->>>> the device tree instead of just defaulting to v1.4 with the existence of
->>>> the dt node.
->>>
->>>
->>> I guess this seems OK to me if required, although I'd certainly like to
->>> see someone familiar with the Exynos HW confirm whether this should be
->>> driven purely by DT compatible value for the HDMI IP block instead though.
->>
->>
->> I think the supported HDMI standard is something that could well be derived
->> from the compatible property. The IP supporting v1.3 and v1.4 will be
->> significantly different, so this would anyway already need to be reflected
->> in the compatible property. The only issue I see here is that people tend
->> to make the compatible string overly generic, so it is hardly usable for
->> anything but matching an IP with its driver. For instance for exynos5 we
->> have now (Documentation/devicetree/bindings/drm/exynos/hdmi.txt):
->>
->>         compatible = "samsung,exynos5-hdmi";
->>
->> For Exynos4 series there were already some patches proposed [1], but I
->> believe
->> this isn't a clean solution. Instead of things like:
->>
->> compatible = "samsung,exynos4-hdmi13";
->> compatible = "samsung,exynos4-hdmi14";
->>
->> I would much more like to see the SoC version embedded in the compatible
->> string, e.g.
->>
+On Thu, Jan 31, 2013 at 10:57:06AM -0500, Anson Huang wrote:
+> some of anatop's regulators(cpu, vddpu and vddsoc) have
+> register settings about LDO's step time, which will impact
+> the LDO ramp up speed, need to use set_voltage_time_sel
+> interface to add necessary delay everytime LDOs' voltage
+> is increased.
 > 
-> Hi Sylwester. long time no see.
+> offset 0x170:
+> bit [24-25]: cpu
+> bit [26-27]: vddpu
+> bit [28-29]: vddsoc
 > 
-> I think that if we use the SoC version embedded in the compatible
-> string then each driver shoud aware of the ip version to the SoC to
-
-The driver only needs to be aware of one SoC version for each IP version.
-
-So with Sylwester's proposal:
-
->> compatible = "samsung,exynos4210-hdmi"; /* among others it carries an
->>                                           information this IP supports
->>                                           HDMI v1.3 */
->>
->> compatible = "samsung,exynos4212-hdmi"; /* HDMI v1.4, IIRC */
-
-The driver woulud only ever have to know about those two compatible
-values (unless further incompatible HW revisions exist); any other SoC
-would be listed as being compatible with one of those two strings (but
-in addition to the specific value for the specific SoC, e.g. compatible
-= "samsung,exynox5xxx-hdmi", "samsung,exynos4212-hdmi").
-
-> use version specific feature so I think it's better to use it without
-> the SoC version embedded in the compatible string like this,
-> compatible = "samsung,exynos4-hdmi"
-> version = "0x104" or "0x103"
-
-That would be quite non-typical.
-
-> With this, all each driver to do  is to check version property and set
-> version specific feature properly. And we have some dtsi file to can
-> be used commonly.
+> field definition:
+> 0'b00: 64 cycles of 24M clock;
+> 0'b01: 128 cycles of 24M clock;
+> 0'b02: 256 cycles of 24M clock;
+> 0'b03: 512 cycles of 24M clock;
 > 
-> For example,
-> exynos4.dtsi : have all Exynos4 series SoCs common properties and also
-> use common compatible string.
-> exynos4412.dtsi, exynos4212.dtsi and so on: have Exynos42xx specific
-> properties. So the hdmi version string could be used here as "version
-> = "0x104" or "0x103"
-> exynos4412-board.dts: have board specific properties.
+> Signed-off-by: Anson Huang <b20788@freescale.com>
+> ---
+>  .../bindings/regulator/anatop-regulator.txt        |    8 ++++
+>  drivers/regulator/anatop-regulator.c               |   42 ++++++++++++++++++++
+>  2 files changed, 50 insertions(+)
 > 
-> compatible = "samsung,exynos5-hdmi" is reasonable to me.
-> any opinions?
+> diff --git a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
+> index 357758c..758eae2 100644
+> --- a/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
+> +++ b/Documentation/devicetree/bindings/regulator/anatop-regulator.txt
+> @@ -9,6 +9,11 @@ Required properties:
+>  - anatop-min-voltage: Minimum voltage of this regulator
+>  - anatop-max-voltage: Maximum voltage of this regulator
+>  
+> +Optional properties:
+> +- anatop-delay-reg-offset: Anatop MFD step time register offset
+> +- anatop-delay-bit-shift: Bit shift for the step time register
+> +- anatop-delay-bit-width: Number of bits used in the step time register
+> +
+>  Any property defined as part of the core regulator
+>  binding, defined in regulator.txt, can also be used.
+>  
+> @@ -23,6 +28,9 @@ Example:
+>  		anatop-reg-offset = <0x140>;
+>  		anatop-vol-bit-shift = <9>;
+>  		anatop-vol-bit-width = <5>;
+> +		anatop-delay-reg-offset = <0x170>;
+> +		anatop-delay-bit-shift = <24>;
+> +		anatop-delay-bit-width = <2>;
+>  		anatop-min-bit-val = <1>;
+>  		anatop-min-voltage = <725000>;
+>  		anatop-max-voltage = <1300000>;
+> diff --git a/drivers/regulator/anatop-regulator.c b/drivers/regulator/anatop-regulator.c
+> index 8f39cac..fe79d24 100644
+> --- a/drivers/regulator/anatop-regulator.c
+> +++ b/drivers/regulator/anatop-regulator.c
+> @@ -31,12 +31,18 @@
+>  #include <linux/regulator/driver.h>
+>  #include <linux/regulator/of_regulator.h>
+>  
+> +#define LDO_RAMP_UP_UNIT_IN_CYCLES      64 /* 64 cycles per step */
+> +#define LDO_RAMP_UP_FREQ_IN_MHZ         24 /* cycle based on 24M OSC */
+> +
+>  struct anatop_regulator {
+>  	const char *name;
+>  	u32 control_reg;
+>  	struct regmap *anatop;
+>  	int vol_bit_shift;
+>  	int vol_bit_width;
+> +	u32 delay_reg;
+> +	int delay_bit_shift;
+> +	int delay_bit_width;
+>  	int min_bit_val;
+>  	int min_voltage;
+>  	int max_voltage;
+> @@ -55,6 +61,33 @@ static int anatop_regmap_set_voltage_sel(struct regulator_dev *reg,
+>  	return regulator_set_voltage_sel_regmap(reg, selector);
+>  }
+>  
+> +static int anatop_regmap_set_voltage_time_sel(struct regulator_dev *reg,
+> +	unsigned int old_sel,
+> +	unsigned int new_sel)
+> +{
+> +	struct anatop_regulator *anatop_reg = rdev_get_drvdata(reg);
+> +	u32 val;
+> +	int ret = 0;
+> +
+> +	/* check whether need to care about LDO ramp up speed */
+> +	if (anatop_reg->delay_bit_width) {
+
+I would agree with Troy Kisky that the check of (new_sel > old_sel)
+could be done in "if" statement,  as the whole "if" block is only
+needed in case that we are increasing the voltage.
+
+Shawn
+
+> +		/*
+> +		 * the delay for LDO ramp up time is
+> +		 * based on the register setting, we need
+> +		 * to calculate how many steps LDO need to
+> +		 * ramp up, and how much delay needed. (us)
+> +		 */
+> +		regmap_read(anatop_reg->anatop, anatop_reg->delay_reg, &val);
+> +		val = (val >> anatop_reg->delay_bit_shift) &
+> +			((1 << anatop_reg->delay_bit_width) - 1);
+> +		ret = new_sel > old_sel ? (new_sel - old_sel) *
+> +			((LDO_RAMP_UP_UNIT_IN_CYCLES << val) /
+> +			LDO_RAMP_UP_FREQ_IN_MHZ + 1) : 0;
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static int anatop_regmap_get_voltage_sel(struct regulator_dev *reg)
+>  {
+>  	struct anatop_regulator *anatop_reg = rdev_get_drvdata(reg);
+> @@ -67,6 +100,7 @@ static int anatop_regmap_get_voltage_sel(struct regulator_dev *reg)
+>  
+>  static struct regulator_ops anatop_rops = {
+>  	.set_voltage_sel = anatop_regmap_set_voltage_sel,
+> +	.set_voltage_time_sel = anatop_regmap_set_voltage_time_sel,
+>  	.get_voltage_sel = anatop_regmap_get_voltage_sel,
+>  	.list_voltage = regulator_list_voltage_linear,
+>  	.map_voltage = regulator_map_voltage_linear,
+> @@ -143,6 +177,14 @@ static int anatop_regulator_probe(struct platform_device *pdev)
+>  		goto anatop_probe_end;
+>  	}
+>  
+> +	/* read LDO ramp up setting, only for core reg */
+> +	of_property_read_u32(np, "anatop-delay-reg-offset",
+> +			     &sreg->delay_reg);
+> +	of_property_read_u32(np, "anatop-delay-bit-width",
+> +			     &sreg->delay_bit_width);
+> +	of_property_read_u32(np, "anatop-delay-bit-shift",
+> +			     &sreg->delay_bit_shift);
+> +
+>  	rdesc->n_voltages = (sreg->max_voltage - sreg->min_voltage) / 25000 + 1
+>  			    + sreg->min_bit_val;
+>  	rdesc->min_uV = sreg->min_voltage;
+> -- 
+> 1.7.9.5
+> 
+> 
+
