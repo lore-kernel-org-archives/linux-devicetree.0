@@ -1,7 +1,7 @@
 From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: [RFC 10/11] iio: Add OF support
-Date: Thu, 31 Jan 2013 13:43:07 -0800
-Message-ID: <1359668588-13678-11-git-send-email-linux@roeck-us.net>
+Subject: [RFC 08/11] iio: Update iio_channel_get_all and iio_channel_get_all_cb API
+Date: Thu, 31 Jan 2013 13:43:05 -0800
+Message-ID: <1359668588-13678-9-git-send-email-linux@roeck-us.net>
 References: <1359668588-13678-1-git-send-email-linux@roeck-us.net>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1359668588-13678-1-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
@@ -10,453 +10,129 @@ To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-D
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Provide bindings, new API access functions, and parse OF data
-during initialization.
+Pass device pointer instead of device name as parameter to iio_channel_get_all
+and iio_channel_get_all_cb. This will enable us to use OF information to
+retrieve consumer channel information.
 
 Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 ---
- .../devicetree/bindings/iio/iio-bindings.txt       |   97 ++++++++
- drivers/iio/inkern.c                               |  241 ++++++++++++++++----
- include/linux/iio/consumer.h                       |    8 +
- 3 files changed, 299 insertions(+), 47 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/iio-bindings.txt
+ drivers/iio/buffer_cb.c         |    4 ++--
+ drivers/iio/inkern.c            |    6 ++++--
+ drivers/staging/iio/iio_hwmon.c |   10 +++++++---
+ include/linux/iio/consumer.h    |    8 ++++----
+ 4 files changed, 17 insertions(+), 11 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-new file mode 100644
-index 0000000..0f51c95
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-@@ -0,0 +1,97 @@
-+This binding is a work-in-progress, and are based on clock bindings and
-+suggestions from Lars-Peter Clausen [1].
-+
-+Sources of IIO channels can be represented by any node in the device
-+tree.  Those nodes are designated as IIO providers.  IIO consumer
-+nodes use a phandle and IIO specifier pair to connect IIO provider
-+outputs to IIO inputs.  Similar to the gpio specifiers, an IIO
-+specifier is an array of one more more cells identifying the IIO
-+output on a device.  The length of an IIO specifier is defined by the
-+value of a #io-channel-cells property in the clock provider node.
-+
-+[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
-+
-+==IIO providers==
-+
-+Required properties:
-+#io-channel-cells: Number of cells in an IIO specifier; Typically 0 for nodes
-+		   with a single IIO output and 1 for nodes with multiple
-+		   IIO outputs.
-+
-+Optional properties:
-+io-channel-output-names:
-+		    Recommended to be a list of strings of IIO output signal
-+		    names indexed by the first cell in the IIO specifier.
-+		    However, the meaning of io-channel-output-names is domain
-+		    specific to the IIO provider, and is only provided to
-+		    encourage using the same meaning for the majority of IIO
-+		    providers.  This format may not work for IIO providers
-+		    using a complex IIO specifier format.  In those cases it
-+		    is recommended to omit this property and create a binding
-+		    specific names property.
-+
-+		    IIO consumer nodes must never directly reference
-+		    the provider's io-channel-output-names property.
-+
-+For example:
-+
-+    adc: adc@35 {
-+	compatible = "maxim,max1139";
-+	reg = <0x35>;
-+        #io-channel-cells = <1>;
-+        io-channel-output-names = "adc1", "adc2";
-+    };
-+
-+- this node defines a device with two named IIO outputs, the first named
-+  "adc1" and the second named "adc2".  Consumer nodes always reference
-+  IIO channels by index. The names should reflect the IIO output signal
-+  names for the device.
-+
-+==IIO consumers==
-+
-+Required properties:
-+io-channels:	List of phandle and IIO specifier pairs, one pair
-+		for each IIO input to the device.  Note: if the
-+		IIO provider specifies '0' for #clock-cells, then
-+		only the phandle portion of the pair will appear.
-+
-+Optional properties:
-+io-channel-names:
-+		List of IIO input name strings sorted in the same
-+		order as the io-channels property.  Consumers drivers
-+		will use io-channel-names to match IIO input names
-+		with IIO specifiers.
-+io-channel-ranges:
-+		Empty property indicating that child nodes can inherit named
-+		IIO channels from this node. Useful for bus nodes to provide
-+		and IIO channel to their children.
-+
-+For example:
-+
-+    device {
-+        io-channels = <&adc 1>, <&ref 0>;
-+        io-channel-names = "vcc", "vdd";
-+    };
-+
-+This represents a device with two IIO inputs, named "vcc" and "vdd".
-+The vcc channel is connected to output 1 of the &adc device, and the
-+vdd channel is connected to output 0 of the &ref device.
-+
-+==Example==
-+
-+	adc: max1139@35 {
-+		compatible = "maxim,max1139";
-+		reg = <0x35>;
-+		#io-channel-cells = <1>;
-+	};
-+
-+	...
-+
-+	iio_hwmon {
-+		compatible = "iio-hwmon";
-+		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
-+			<&adc 3>, <&adc 4>, <&adc 5>,
-+			<&adc 6>, <&adc 7>, <&adc 8>,
-+			<&adc 9>, <&adc 10>, <&adc 11>;
-+		io-channel-names = "vcc", "vdd", "vref", "1.2V";
-+	};
+diff --git a/drivers/iio/buffer_cb.c b/drivers/iio/buffer_cb.c
+index 4d40e24..9201022 100644
+--- a/drivers/iio/buffer_cb.c
++++ b/drivers/iio/buffer_cb.c
+@@ -25,7 +25,7 @@ static struct iio_buffer_access_funcs iio_cb_access = {
+ 	.store_to = &iio_buffer_cb_store_to,
+ };
+ 
+-struct iio_cb_buffer *iio_channel_get_all_cb(const char *name,
++struct iio_cb_buffer *iio_channel_get_all_cb(struct device *dev,
+ 					     int (*cb)(u8 *data,
+ 						       void *private),
+ 					     void *private)
+@@ -46,7 +46,7 @@ struct iio_cb_buffer *iio_channel_get_all_cb(const char *name,
+ 	cb_buff->buffer.access = &iio_cb_access;
+ 	INIT_LIST_HEAD(&cb_buff->buffer.demux_list);
+ 
+-	cb_buff->channels = iio_channel_get_all(name);
++	cb_buff->channels = iio_channel_get_all(dev);
+ 	if (IS_ERR(cb_buff->channels)) {
+ 		ret = PTR_ERR(cb_buff->channels);
+ 		goto error_free_cb_buff;
 diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-index c42aba6..af80a18 100644
+index d55e98f..58d0ffe 100644
 --- a/drivers/iio/inkern.c
 +++ b/drivers/iio/inkern.c
-@@ -10,6 +10,7 @@
- #include <linux/export.h>
- #include <linux/slab.h>
- #include <linux/mutex.h>
-+#include <linux/of.h>
- 
- #include <linux/iio/iio.h>
- #include "iio_core.h"
-@@ -26,13 +27,55 @@ struct iio_map_internal {
- static LIST_HEAD(iio_map_list);
- static DEFINE_MUTEX(iio_map_list_lock);
- 
-+static struct iio_map *iio_map_of_init(struct iio_dev *idev)
-+{
-+	struct device_node *np = idev->dev.of_node;
-+	struct iio_map *maps;
-+	u32 cells, channels = 1;
-+	int names, i, ret;
-+
-+	ret = of_property_read_u32(np, "#io-channel-cells", &cells);
-+	if (ret < 0 || cells > 1)
-+		return ERR_PTR(-EINVAL);
-+
-+	names = of_property_count_strings(np, "io-channel-output-names");
-+	if (names < 0)
-+		names = 0;
-+
-+	if (channels < names)
-+		channels = names;
-+
-+	maps = devm_kzalloc(&idev->dev, sizeof(*maps) * (channels + 1),
-+			    GFP_KERNEL);
-+	if (maps == NULL)
-+		return ERR_PTR(-ENOMEM);
-+
-+	for (i = 0; i < channels; i++) {
-+		if (i < names) {
-+			ret = of_property_read_string_index(np,
-+				    "io-channel-output-names", i,
-+				    &maps[i].consumer_channel);
-+			if (ret < 0)
-+				return ERR_PTR(ret);
-+		}
-+		/* Use dummy for consumer device names */
-+		maps[i].consumer_dev_name = "of";
-+	}
-+	return maps;
-+}
-+
- int iio_map_array_register(struct iio_dev *indio_dev, struct iio_map *maps)
- {
- 	int i = 0, ret = 0;
- 	struct iio_map_internal *mapi;
- 
--	if (maps == NULL)
--		return 0;
-+	if (maps == NULL) {
-+		maps = iio_map_of_init(indio_dev);
-+		if (IS_ERR(maps))
-+			return PTR_ERR(maps);
-+		if (maps == NULL)
-+			return 0;
-+	}
- 
- 	mutex_lock(&iio_map_list_lock);
- 	while (maps[i].consumer_dev_name != NULL) {
-@@ -92,30 +135,14 @@ static const struct iio_chan_spec
- 	return chan;
+@@ -167,16 +167,18 @@ void iio_channel_release(struct iio_channel *channel)
  }
+ EXPORT_SYMBOL_GPL(iio_channel_release);
  
--
--struct iio_channel *iio_channel_get(const char *name, const char *channel_name)
-+struct iio_channel *iio_channel_get_common(struct iio_map_internal *c,
-+					   int index)
+-struct iio_channel *iio_channel_get_all(const char *name)
++struct iio_channel *iio_channel_get_all(struct device *dev)
  {
--	struct iio_map_internal *c_i = NULL, *c = NULL;
- 	struct iio_channel *channel;
- 	int err;
- 
--	if (name == NULL && channel_name == NULL)
--		return ERR_PTR(-ENODEV);
--
--	/* first find matching entry the channel map */
--	mutex_lock(&iio_map_list_lock);
--	list_for_each_entry(c_i, &iio_map_list, l) {
--		if ((name && strcmp(name, c_i->map->consumer_dev_name) != 0) ||
--		    (channel_name &&
--		     strcmp(channel_name, c_i->map->consumer_channel) != 0))
--			continue;
--		c = c_i;
--		iio_device_get(c->indio_dev);
--		break;
--	}
--	mutex_unlock(&iio_map_list_lock);
- 	if (c == NULL)
--		return ERR_PTR(-ENODEV);
-+		return ERR_PTR(-EPROBE_DEFER);
- 
- 	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
- 	if (channel == NULL) {
-@@ -125,7 +152,13 @@ struct iio_channel *iio_channel_get(const char *name, const char *channel_name)
- 
- 	channel->indio_dev = c->indio_dev;
- 
--	if (c->map->adc_channel_label) {
-+	if (index >= 0) {
-+		if (index >= c->indio_dev->num_channels) {
-+			err = -EINVAL;
-+			goto error_no_chan;
-+		}
-+		channel->channel = &c->indio_dev->channels[index];
-+	} else if (c->map->adc_channel_label) {
- 		channel->channel =
- 			iio_chan_spec_from_name(channel->indio_dev,
- 						c->map->adc_channel_label);
-@@ -144,6 +177,60 @@ error_no_mem:
- 	iio_device_put(c->indio_dev);
- 	return ERR_PTR(err);
- }
-+
-+struct iio_channel *of_iio_channel_get(struct device_node *np, int index)
-+{
-+	struct iio_map_internal *c_i, *c = NULL;
-+	int err, map_index;
-+	struct of_phandle_args iiospec;
-+
-+	if (index < 0)
-+		return ERR_PTR(-EINVAL);
-+
-+	err = of_parse_phandle_with_args(np, "io-channels",
-+					 "#io-channel-cells",
-+					 index, &iiospec);
-+	if (err)
-+		return ERR_PTR(err);
-+
-+	map_index = iiospec.args_count ? iiospec.args[0] : 0;
-+
-+	mutex_lock(&iio_map_list_lock);
-+	list_for_each_entry(c_i, &iio_map_list, l) {
-+		if (iiospec.np == c_i->indio_dev->dev.of_node) {
-+			c = c_i;
-+			iio_device_get(c->indio_dev);
-+			break;
-+		}
-+	}
-+	of_node_put(iiospec.np);
-+	mutex_unlock(&iio_map_list_lock);
-+	return iio_channel_get_common(c, index);
-+}
-+EXPORT_SYMBOL_GPL(of_iio_channel_get);
-+
-+struct iio_channel *iio_channel_get(const char *name,
-+				    const char *channel_name)
-+{
-+	struct iio_map_internal *c_i = NULL, *c = NULL;
-+
-+	if (name == NULL && channel_name == NULL)
-+		return ERR_PTR(-ENODEV);
-+
-+	/* first find matching entry the channel map */
-+	mutex_lock(&iio_map_list_lock);
-+	list_for_each_entry(c_i, &iio_map_list, l) {
-+		if ((name && strcmp(name, c_i->map->consumer_dev_name) != 0) ||
-+		    (channel_name && strcmp(channel_name,
-+					    c_i->map->consumer_channel) != 0))
-+			continue;
-+		c = c_i;
-+		iio_device_get(c->indio_dev);
-+		break;
-+	}
-+	mutex_unlock(&iio_map_list_lock);
-+	return iio_channel_get_common(c, -1);
-+}
- EXPORT_SYMBOL_GPL(iio_channel_get);
- 
- void iio_channel_release(struct iio_channel *channel)
-@@ -159,24 +246,43 @@ struct iio_channel *iio_channel_get_all(struct device *dev)
++	const char *name;
  	struct iio_channel *chans;
  	struct iio_map_internal *c = NULL;
  	int nummaps = 0;
--	int mapind = 0;
-+	int mapind;
+ 	int mapind = 0;
  	int i, ret;
  
- 	if (dev == NULL)
+-	if (name == NULL)
++	if (dev == NULL)
  		return ERR_PTR(-EINVAL);
-+
- 	name = dev_name(dev);
++	name = dev_name(dev);
  
  	mutex_lock(&iio_map_list_lock);
  	/* first count the matching maps */
--	list_for_each_entry(c, &iio_map_list, l)
--		if (name && strcmp(name, c->map->consumer_dev_name) != 0)
--			continue;
--		else
--			nummaps++;
--
--	if (nummaps == 0) {
--		ret = -ENODEV;
--		goto error_ret;
-+	if (dev->of_node) {
-+		nummaps = 0;
-+		do {
-+			int ret;
+diff --git a/drivers/staging/iio/iio_hwmon.c b/drivers/staging/iio/iio_hwmon.c
+index 6a5bc5f..a4fce64 100644
+--- a/drivers/staging/iio/iio_hwmon.c
++++ b/drivers/staging/iio/iio_hwmon.c
+@@ -71,14 +71,18 @@ static int iio_hwmon_probe(struct platform_device *pdev)
+ 	int ret, i;
+ 	int in_i = 1, temp_i = 1, curr_i = 1;
+ 	enum iio_chan_type type;
++	struct iio_channel *channels;
++	const __be32 *list;
 +
-+			ret = of_parse_phandle_with_args(dev->of_node,
-+							 "io-channels",
-+							 "#io-channel-cells",
-+							 nummaps, NULL);
-+			if (ret < 0)
-+				break;
-+		} while (++nummaps);
-+
-+		if (nummaps == 0) {
-+			ret = -ENODEV;
-+			goto error_ret;
-+		}
-+	} else {
-+		list_for_each_entry(c, &iio_map_list, l)
-+			if (strcmp(name, c->map->consumer_dev_name) != 0)
-+				continue;
-+			else
-+				nummaps++;
-+		if (nummaps == 0) {
-+			ret = -EPROBE_DEFER;
-+			goto error_ret;
-+		}
- 	}
++	channels = iio_channel_get_all(dev);
++	if (IS_ERR(channels))
++		return PTR_ERR(channels);
  
- 	/* NULL terminated array to save passing size */
-@@ -187,24 +293,65 @@ struct iio_channel *iio_channel_get_all(struct device *dev)
- 	}
+ 	st = devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
+ 	if (st == NULL)
+ 		return -ENOMEM;
  
- 	/* for each map fill in the chans element */
--	list_for_each_entry(c, &iio_map_list, l) {
--		if (name && strcmp(name, c->map->consumer_dev_name) != 0)
--			continue;
--		chans[mapind].indio_dev = c->indio_dev;
--		chans[mapind].data = c->map->consumer_data;
--		chans[mapind].channel =
--			iio_chan_spec_from_name(chans[mapind].indio_dev,
-+	if (dev->of_node) {
-+		/*
-+		 * Device-tree based mapping, search for OF matches.
-+		 */
-+		for (mapind = 0; mapind < nummaps; mapind++) {
-+			int channel;
-+			struct of_phandle_args iiospec;
-+
-+			ret = of_parse_phandle_with_args(dev->of_node,
-+							 "io-channels",
-+							 "#io-channel-cells",
-+							 mapind, &iiospec);
-+			if (ret)
-+				goto error_free_chans;
-+			channel = iiospec.args_count ? iiospec.args[0] : 0;
-+			ret = -EPROBE_DEFER;
-+			list_for_each_entry(c, &iio_map_list, l) {
-+				if (iiospec.np == c->indio_dev->dev.of_node) {
-+					ret = 0;
-+					break;
-+				}
-+			}
-+			if (ret)
-+				goto error_free_chans;
-+			if (channel >= c->indio_dev->num_channels) {
-+				ret = -EINVAL;
-+				goto error_free_chans;
-+			}
-+			chans[mapind].indio_dev = c->indio_dev;
-+			chans[mapind].data = c->map->consumer_data;
-+			chans[mapind].channel =
-+			  &c->indio_dev->channels[channel];
-+			iio_device_get(c->indio_dev);
-+		}
-+	} else {
-+		/*
-+		 * Platform data based mapping, search for consumer
-+		 * device name.
-+		 */
-+		mapind = 0;
-+		list_for_each_entry(c, &iio_map_list, l) {
-+			if (strcmp(name, c->map->consumer_dev_name) != 0)
-+				continue;
-+			chans[mapind].indio_dev = c->indio_dev;
-+			chans[mapind].data = c->map->consumer_data;
-+			chans[mapind].channel =
-+				iio_chan_spec_from_name(c->indio_dev,
- 						c->map->adc_channel_label);
--		if (chans[mapind].channel == NULL) {
--			ret = -EINVAL;
-+			if (chans[mapind].channel == NULL) {
-+				ret = -EINVAL;
-+				goto error_free_chans;
-+			}
-+			iio_device_get(c->indio_dev);
-+			mapind++;
-+		}
-+		if (mapind < nummaps) {
-+			ret = -EPROBE_DEFER;
- 			goto error_free_chans;
- 		}
--		iio_device_get(chans[mapind].indio_dev);
--		mapind++;
--	}
--	if (mapind == 0) {
--		ret = -ENODEV;
--		goto error_free_chans;
- 	}
- 	mutex_unlock(&iio_map_list_lock);
+-	st->channels = iio_channel_get_all(dev_name(dev));
+-	if (IS_ERR(st->channels))
+-		return PTR_ERR(st->channels);
++	st->channels = channels;
  
+ 	/* count how many attributes we have */
+ 	while (st->channels[st->num_channels].indio_dev)
 diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-index 6c44167..a347c15 100644
+index 16c35ac..6c44167 100644
 --- a/include/linux/iio/consumer.h
 +++ b/include/linux/iio/consumer.h
-@@ -41,6 +41,14 @@ struct iio_channel *iio_channel_get(const char *name,
- 				    const char *consumer_channel);
+@@ -48,14 +48,14 @@ void iio_channel_release(struct iio_channel *chan);
  
  /**
-+ * of_iio_channel_get() - get description of all that is needed to access
-+ *			channel from OF node pointer.
-+ * @np:			Consumer's OF node pointer.
-+ * @index:		Index pointing to the io-channels entry in np.
-+ */
-+struct iio_channel *of_iio_channel_get(struct device_node *np, int index);
-+
-+/**
-  * iio_channel_release() - release channels obtained via iio_channel_get
-  * @chan:		The channel to be released.
+  * iio_channel_get_all() - get all channels associated with a client
+- * @name:		name of consumer device.
++ * @dev:		Pointer to consumer device.
+  *
+  * Returns an array of iio_channel structures terminated with one with
+  * null iio_dev pointer.
+  * This function is used by fairly generic consumers to get all the
+  * channels registered as having this consumer.
   */
+-struct iio_channel *iio_channel_get_all(const char *name);
++struct iio_channel *iio_channel_get_all(struct device *dev);
+ 
+ /**
+  * iio_channel_release_all() - reverse iio_channel_get_all
+@@ -66,7 +66,7 @@ void iio_channel_release_all(struct iio_channel *chan);
+ struct iio_cb_buffer;
+ /**
+  * iio_channel_get_all_cb() - register callback for triggered capture
+- * @name:		Name of client device.
++ * @dev:		Pointer to client device.
+  * @cb:			Callback function.
+  * @private:		Private data passed to callback.
+  *
+@@ -74,7 +74,7 @@ struct iio_cb_buffer;
+  * So if the channels requested come from different devices this will
+  * fail.
+  */
+-struct iio_cb_buffer *iio_channel_get_all_cb(const char *name,
++struct iio_cb_buffer *iio_channel_get_all_cb(struct device *dev,
+ 					     int (*cb)(u8 *data,
+ 						       void *private),
+ 					     void *private);
 -- 
 1.7.9.7
