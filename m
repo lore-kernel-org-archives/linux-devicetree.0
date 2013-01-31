@@ -1,54 +1,117 @@
-From: Prashant Gaikwad <pgaikwad@nvidia.com>
-Subject: Re: [PATCH v5 10/10] clk: tegra: devicetree match for nvidia,tegra114-car
-Date: Mon, 4 Feb 2013 12:40:47 +0530
-Message-ID: <510F5EF7.9030201@nvidia.com>
-References: <1359713962-16822-1-git-send-email-pdeschrijver@nvidia.com> <1359713962-16822-11-git-send-email-pdeschrijver@nvidia.com>
+From: Huang Yongcai-B20788 <B20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH V2] ENGR00242223-2 Need to add delay to regulator based
+ on register setting
+Date: Thu, 31 Jan 2013 03:36:07 +0000
+Message-ID: <F0D11DBEB504444BA6C8DA07A395A35A0B109C99@039-SN2MPN1-011.039d.mgd.msft.net>
+References: <1359649920-22050-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359713962-16822-11-git-send-email-pdeschrijver@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, Simon Glass <sjg@chromium.org>, Mike Turquette <mturquette@linaro.org>, Joseph Lo <josephl@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359649920-22050-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 01 February 2013 03:48 PM, Peter De Schrijver wrote:
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> ---
-
-Reviewed-by: Prashant Gaikwad <pgaikwad@nvidia.com>
-
->   drivers/clk/tegra/clk.c |    1 +
->   drivers/clk/tegra/clk.h |    7 +++++++
->   2 files changed, 8 insertions(+), 0 deletions(-)
->
-> diff --git a/drivers/clk/tegra/clk.c b/drivers/clk/tegra/clk.c
-> index a603b9a..a328365 100644
-> --- a/drivers/clk/tegra/clk.c
-> +++ b/drivers/clk/tegra/clk.c
-> @@ -76,6 +76,7 @@ void __init tegra_init_from_table(struct tegra_clk_init_table *tbl,
->   static const struct of_device_id tegra_dt_clk_match[] = {
->   	{ .compatible = "nvidia,tegra20-car", .data = tegra20_clock_init },
->   	{ .compatible = "nvidia,tegra30-car", .data = tegra30_clock_init },
-> +	{ .compatible = "nvidia,tegra114-car", .data = tegra114_clock_init },
->   	{ }
->   };
->   
-> diff --git a/drivers/clk/tegra/clk.h b/drivers/clk/tegra/clk.h
-> index 8756d9f..8097850 100644
-> --- a/drivers/clk/tegra/clk.h
-> +++ b/drivers/clk/tegra/clk.h
-> @@ -576,4 +576,11 @@ void tegra30_clock_init(struct device_node *np);
->   static inline void tegra30_clock_init(struct device_node *np) {}
->   #endif /* CONFIG_ARCH_TEGRA_3x_SOC */
->   
-> +#ifdef CONFIG_ARCH_TEGRA_114_SOC
-> +void tegra114_clock_init(struct device_node *np);
-> +#else
-> +static inline void tegra114_clock_init(struct device_node *np) {}
-> +#endif /* CONFIG_ARCH_TEGRA114_SOC */
-> +
-> +
->   #endif /* TEGRA_CLK_H */
->
+U29ycnksIHNlbnQgdG8gdGhlIGRldmljZXRyZWUtZGlzY3VzcyBsaXN0IGJ5IG1pc3Rha2UsIGFu
+eW9uZSB3aG8gaXMgaW4gZGV2aWNldHJlZS1kaXNjdXNzIGxpc3QgcGxlYXNlIGlnbm9yZSBpdC4N
+Cg0KQmVzdCBSZWdhcmRzLg0KQW5zb24gaHVhbmcg6buE5YuH5omNDQrCoA0KRnJlZXNjYWxlIFNl
+bWljb25kdWN0b3IgU2hhbmdoYWkNCuS4iua1t+a1puS4nOaWsOWMuuS6ruaZr+i3rzE5MuWPt0Hl
+uqcy5qW8DQoyMDEyMDMNClRlbDowMjEtMjg5MzcwNTgNCg0KDQokLS0tLS1PcmlnaW5hbCBNZXNz
+YWdlLS0tLS0NCiRGcm9tOiBIdWFuZyBZb25nY2FpLUIyMDc4OA0KJFNlbnQ6IEZyaWRheSwgRmVi
+cnVhcnkgMDEsIDIwMTMgMTI6MzIgQU0NCiRUbzogZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96
+bGFicy5vcmc7IEdvbmcgWWliaW4tQjM4MzQzDQokQ2M6IExOWFJFVkxJQGludGVybmFsLmZyZWVz
+Y2FsZS5jb207IEh1YW5nIFlvbmdjYWktQjIwNzg4DQokU3ViamVjdDogW1BBVENIIFYyXSBFTkdS
+MDAyNDIyMjMtMiBOZWVkIHRvIGFkZCBkZWxheSB0byByZWd1bGF0b3IgYmFzZWQgb24NCiRyZWdp
+c3RlciBzZXR0aW5nDQokDQokV2hlbiBMRE8gaXMgc2V0IHRvIHZvbHRhZ2UgdXAsIG5lZWQgdG8g
+ZG8gZW5vdWdoIHdhaXRpbmcgYmVmb3JlIGl0IHJhbXBzIHVwIHRvDQokdGhlIG5ldyB2b2x0YWdl
+LCBhbmQgdGhpcyByYW1wIHVwIHRpbWUgc2hvdWxkIGJlIGJhc2VkIG9uIHRoZSByZWdpc3RlciBz
+ZXR0aW5nLg0KJA0KJFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1YW5nIDxiMjA3ODhAZnJlZXNjYWxl
+LmNvbT4NCiQtLS0NCiQgLi4uL2JpbmRpbmdzL3JlZ3VsYXRvci9hbmF0b3AtcmVndWxhdG9yLnR4
+dCAgICAgICAgfCAgICA4ICsrKysNCiQgZHJpdmVycy9yZWd1bGF0b3IvYW5hdG9wLXJlZ3VsYXRv
+ci5jICAgICAgICAgICAgICAgfCAgIDQxDQokKysrKysrKysrKysrKysrKysrKy0NCiQgMiBmaWxl
+cyBjaGFuZ2VkLCA0OCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pDQokDQokZGlmZiAtLWdp
+dCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvYW5hdG9wLXJl
+Z3VsYXRvci50eHQNCiRiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0
+b3IvYW5hdG9wLXJlZ3VsYXRvci50eHQNCiRpbmRleCAzNTc3NThjLi43NThlYWUyIDEwMDY0NA0K
+JC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9yZWd1bGF0b3IvYW5hdG9w
+LXJlZ3VsYXRvci50eHQNCiQrKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+cmVndWxhdG9yL2FuYXRvcC1yZWd1bGF0b3IudHh0DQokQEAgLTksNiArOSwxMSBAQCBSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOg0KJCAtIGFuYXRvcC1taW4tdm9sdGFnZTogTWluaW11bSB2b2x0YWdlIG9m
+IHRoaXMgcmVndWxhdG9yDQokIC0gYW5hdG9wLW1heC12b2x0YWdlOiBNYXhpbXVtIHZvbHRhZ2Ug
+b2YgdGhpcyByZWd1bGF0b3INCiQNCiQrT3B0aW9uYWwgcHJvcGVydGllczoNCiQrLSBhbmF0b3At
+ZGVsYXktcmVnLW9mZnNldDogQW5hdG9wIE1GRCBzdGVwIHRpbWUgcmVnaXN0ZXIgb2Zmc2V0DQok
+Ky0gYW5hdG9wLWRlbGF5LWJpdC1zaGlmdDogQml0IHNoaWZ0IGZvciB0aGUgc3RlcCB0aW1lIHJl
+Z2lzdGVyDQokKy0gYW5hdG9wLWRlbGF5LWJpdC13aWR0aDogTnVtYmVyIG9mIGJpdHMgdXNlZCBp
+biB0aGUgc3RlcCB0aW1lIHJlZ2lzdGVyDQokKw0KJCBBbnkgcHJvcGVydHkgZGVmaW5lZCBhcyBw
+YXJ0IG9mIHRoZSBjb3JlIHJlZ3VsYXRvciAgYmluZGluZywgZGVmaW5lZCBpbg0KJHJlZ3VsYXRv
+ci50eHQsIGNhbiBhbHNvIGJlIHVzZWQuDQokDQokQEAgLTIzLDYgKzI4LDkgQEAgRXhhbXBsZToN
+CiQgCQlhbmF0b3AtcmVnLW9mZnNldCA9IDwweDE0MD47DQokIAkJYW5hdG9wLXZvbC1iaXQtc2hp
+ZnQgPSA8OT47DQokIAkJYW5hdG9wLXZvbC1iaXQtd2lkdGggPSA8NT47DQokKwkJYW5hdG9wLWRl
+bGF5LXJlZy1vZmZzZXQgPSA8MHgxNzA+Ow0KJCsJCWFuYXRvcC1kZWxheS1iaXQtc2hpZnQgPSA8
+MjQ+Ow0KJCsJCWFuYXRvcC1kZWxheS1iaXQtd2lkdGggPSA8Mj47DQokIAkJYW5hdG9wLW1pbi1i
+aXQtdmFsID0gPDE+Ow0KJCAJCWFuYXRvcC1taW4tdm9sdGFnZSA9IDw3MjUwMDA+Ow0KJCAJCWFu
+YXRvcC1tYXgtdm9sdGFnZSA9IDwxMzAwMDAwPjsNCiRkaWZmIC0tZ2l0IGEvZHJpdmVycy9yZWd1
+bGF0b3IvYW5hdG9wLXJlZ3VsYXRvci5jIGIvZHJpdmVycy9yZWd1bGF0b3IvYW5hdG9wLQ0KJHJl
+Z3VsYXRvci5jDQokaW5kZXggMWFmOTc2OC4uZjRlZDA0ZiAxMDA2NDQNCiQtLS0gYS9kcml2ZXJz
+L3JlZ3VsYXRvci9hbmF0b3AtcmVndWxhdG9yLmMNCiQrKysgYi9kcml2ZXJzL3JlZ3VsYXRvci9h
+bmF0b3AtcmVndWxhdG9yLmMNCiRAQCAtMSw1ICsxLDUgQEANCiQgLyoNCiQtICogQ29weXJpZ2h0
+IChDKSAyMDExIEZyZWVzY2FsZSBTZW1pY29uZHVjdG9yLCBJbmMuIEFsbCBSaWdodHMgUmVzZXJ2
+ZWQuDQokKyAqIENvcHlyaWdodCAoQykgMjAxMS0yMDEzIEZyZWVzY2FsZSBTZW1pY29uZHVjdG9y
+LCBJbmMuIEFsbCBSaWdodHMgUmVzZXJ2ZWQuDQokICAqLw0KJA0KJCAvKg0KJEBAIC0zMSwxMiAr
+MzEsMTggQEANCiQgI2luY2x1ZGUgPGxpbnV4L3JlZ3VsYXRvci9kcml2ZXIuaD4NCiQgI2luY2x1
+ZGUgPGxpbnV4L3JlZ3VsYXRvci9vZl9yZWd1bGF0b3IuaD4NCiQNCiQrI2RlZmluZSBMRE9fUkFN
+UF9VUF9VTklUX0lOX0NZQ0xFUyAgICAgIDY0IC8qIDY0IGN5Y2xlcyBwZXIgc3RlcCAqLw0KJCsj
+ZGVmaW5lIExET19SQU1QX1VQX0ZSRVFfSU5fTUhaICAgICAgICAgMjQgLyogdGltZSBiYXNlIG9u
+IDI0TSBPU0MgKi8NCiQrDQokIHN0cnVjdCBhbmF0b3BfcmVndWxhdG9yIHsNCiQgCWNvbnN0IGNo
+YXIgKm5hbWU7DQokIAl1MzIgY29udHJvbF9yZWc7DQokIAlzdHJ1Y3QgcmVnbWFwICphbmF0b3A7
+DQokIAlpbnQgdm9sX2JpdF9zaGlmdDsNCiQgCWludCB2b2xfYml0X3dpZHRoOw0KJCsJdTMyIGRl
+bGF5X3JlZzsNCiQrCWludCBkZWxheV9iaXRfc2hpZnQ7DQokKwlpbnQgZGVsYXlfYml0X3dpZHRo
+Ow0KJCAJaW50IG1pbl9iaXRfdmFsOw0KJCAJaW50IG1pbl92b2x0YWdlOw0KJCAJaW50IG1heF92
+b2x0YWdlOw0KJEBAIC04MCw4ICs4NiwzNCBAQCBzdGF0aWMgaW50IGFuYXRvcF9yZWdtYXBfZ2V0
+X3ZvbHRhZ2Vfc2VsKHN0cnVjdA0KJHJlZ3VsYXRvcl9kZXYgKnJlZykNCiQgCXJldHVybiB2YWwg
+LSBhbmF0b3BfcmVnLT5taW5fYml0X3ZhbDsNCiQgfQ0KJA0KJCtzdGF0aWMgaW50IGFuYXRvcF9y
+ZWdtYXBfc2V0X3ZvbHRhZ2VfdGltZV9zZWwoc3RydWN0IHJlZ3VsYXRvcl9kZXYgKnJlZywNCiQr
+CXVuc2lnbmVkIGludCBvbGRfc2VsLA0KJCsJdW5zaWduZWQgaW50IG5ld19zZWwpDQokK3sNCiQr
+CXN0cnVjdCBhbmF0b3BfcmVndWxhdG9yICphbmF0b3BfcmVnID0gcmRldl9nZXRfZHJ2ZGF0YShy
+ZWcpOw0KJCsJdTMyIHZhbDsNCiQrCWludCByZXQgPSAwOw0KJCsNCiQrCWlmIChhbmF0b3BfcmVn
+LT5kZWxheV9iaXRfd2lkdGggJiYgbmV3X3NlbCA+IG9sZF9zZWwpIHsNCiQrCQkvKg0KJCsJCSAq
+IHRoZSBkZWxheSB0aW1lIGZvciBMRE8gcmFtcCB1cCB0aW1lIGlzDQokKwkJICogYmFzZWQgb24g
+dGhlIHJlZ2lzdGVyIHNldHRpbmcsIHdlIG5lZWQNCiQrCQkgKiB0byBjYWxjdWxhdGUgaG93IG1h
+bnkgc3RlcHMgTERPIG5lZWQgdG8NCiQrCQkgKiByYW1wIHVwLCBhbmQgaG93IG11Y2ggZGVsYXkg
+bmVlZGVkLiAodXMpDQokKwkJICovDQokKwkJcmVnbWFwX3JlYWQoYW5hdG9wX3JlZy0+YW5hdG9w
+LCBhbmF0b3BfcmVnLT5kZWxheV9yZWcsICZ2YWwpOw0KJCsJCXZhbCA9ICh2YWwgPj4gYW5hdG9w
+X3JlZy0+ZGVsYXlfYml0X3NoaWZ0KSAmDQokKwkJCSgoMSA8PCBhbmF0b3BfcmVnLT5kZWxheV9i
+aXRfd2lkdGgpIC0gMSk7DQokKwkJcmV0ID0gKG5ld19zZWwgLSBvbGRfc2VsKSAqICgoTERPX1JB
+TVBfVVBfVU5JVF9JTl9DWUNMRVMgPDwNCiQrCQkJdmFsKSAvIExET19SQU1QX1VQX0ZSRVFfSU5f
+TUhaICsgMSk7DQokKwl9DQokKw0KJCsJcmV0dXJuIHJldDsNCiQrfQ0KJCsNCiQgc3RhdGljIHN0
+cnVjdCByZWd1bGF0b3Jfb3BzIGFuYXRvcF9yb3BzID0gew0KJCAJLnNldF92b2x0YWdlX3NlbCA9
+IGFuYXRvcF9yZWdtYXBfc2V0X3ZvbHRhZ2Vfc2VsLA0KJCsJLnNldF92b2x0YWdlX3RpbWVfc2Vs
+ID0gYW5hdG9wX3JlZ21hcF9zZXRfdm9sdGFnZV90aW1lX3NlbCwNCiQgCS5nZXRfdm9sdGFnZV9z
+ZWwgPSBhbmF0b3BfcmVnbWFwX2dldF92b2x0YWdlX3NlbCwNCiQgCS5saXN0X3ZvbHRhZ2UgPSBy
+ZWd1bGF0b3JfbGlzdF92b2x0YWdlX2xpbmVhciwNCiQgCS5tYXBfdm9sdGFnZSA9IHJlZ3VsYXRv
+cl9tYXBfdm9sdGFnZV9saW5lYXIsIEBAIC0xNTcsNiArMTg5LDEzIEBAIHN0YXRpYw0KJGludCBf
+X2RldmluaXQgYW5hdG9wX3JlZ3VsYXRvcl9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpw
+ZGV2KQ0KJCAJCWRldl9lcnIoZGV2LCAibm8gYW5hdG9wLW1heC12b2x0YWdlIHByb3BlcnR5IHNl
+dFxuIik7DQokIAkJZ290byBhbmF0b3BfcHJvYmVfZW5kOw0KJCAJfQ0KJCsJLyogcmVhZCBMRE8g
+cmFtcCB1cCBzZXR0aW5nLCBvbmx5IGZvciBjb3JlIHJlZyAqLw0KJCsJb2ZfcHJvcGVydHlfcmVh
+ZF91MzIobnAsICJhbmF0b3AtZGVsYXktcmVnLW9mZnNldCIsDQokKwkJCSAgICAgJnNyZWctPmRl
+bGF5X3JlZyk7DQokKwlvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgImFuYXRvcC1kZWxheS1iaXQt
+d2lkdGgiLA0KJCsJCQkgICAgICZzcmVnLT5kZWxheV9iaXRfd2lkdGgpOw0KJCsJb2ZfcHJvcGVy
+dHlfcmVhZF91MzIobnAsICJhbmF0b3AtZGVsYXktYml0LXNoaWZ0IiwNCiQrCQkJICAgICAmc3Jl
+Zy0+ZGVsYXlfYml0X3NoaWZ0KTsNCiQNCiQgCXJkZXNjLT5uX3ZvbHRhZ2VzID0gKHNyZWctPm1h
+eF92b2x0YWdlIC0gc3JlZy0+bWluX3ZvbHRhZ2UpDQokIAkJLyAyNTAwMCArIDE7DQokLS0NCiQx
+LjcuOS41DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QKZGV2aWNldHJlZS1kaXNjdXNzQGxpc3Rz
+Lm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2RldmljZXRyZWUt
+ZGlzY3Vzcwo=
