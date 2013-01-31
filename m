@@ -1,17 +1,17 @@
-From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
-Date: Thu, 31 Jan 2013 13:52:32 +0900
-Message-ID: <CAAQKjZOa0qkAiQBhuXypiKWP8Hi8zYrO_kDH5BnqSpNwAKwqkQ@mail.gmail.com>
-References: <50EC5EDE.3030208@firmworks.com>
- <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
- <50ECA400.50007@wwwdotorg.org> <51082B6A.1010406@gmail.com>
- <CAAQKjZNR8EJ+UFRO3vgYLH9So_gHn0a8gAf1JKu250shGiJ4qQ@mail.gmail.com>
- <5109DF18.6010202@wwwdotorg.org>
+From: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH v4 5/8] MFD: ti_am335x_tscadc: Add DT support
+Date: Thu, 31 Jan 2013 05:02:04 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A83EBEFAE8@DBDE01.ent.ti.com>
+References: <1358999112-31192-1-git-send-email-rachna@ti.com>
+ <1358999112-31192-6-git-send-email-rachna@ti.com>
+ <A9839AA2-ABCD-4642-9766-D56824AC27AD@dominion.thruhere.net>
+ <4CE347531D4CA947960AF71FF095B9323E9B1EE9@DBDE01.ent.ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5109DF18.6010202-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <4CE347531D4CA947960AF71FF095B9323E9B1EE9-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+Content-Language: en-US
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,102 +22,107 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: "Patil, Rachna" <rachna-l0cyMroinI0@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "Hebbar,
+ Gururaja" <gururaja.hebbar-l0cyMroinI0@public.gmane.org>, Jonathan Cameron <jic23-KWPb1pKIrIJaa/9Udqfwiw@public.gmane.org>, "linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2013/1/31 Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>:
-> On 01/30/2013 06:16 PM, Inki Dae wrote:
->> 2013/1/30 Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
->>> Hi,
->>>
->>>
->>> On 01/08/2013 11:56 PM, Stephen Warren wrote:
->>>>
->>>> On 01/08/2013 01:16 PM, Sean Paul wrote:
->>>>>
->>>>> Add a property to the hdmi node so we can specify the HDMI version in
->>>>> the device tree instead of just defaulting to v1.4 with the existence of
->>>>> the dt node.
->>>>
->>>>
->>>> I guess this seems OK to me if required, although I'd certainly like to
->>>> see someone familiar with the Exynos HW confirm whether this should be
->>>> driven purely by DT compatible value for the HDMI IP block instead though.
->>>
->>>
->>> I think the supported HDMI standard is something that could well be derived
->>> from the compatible property. The IP supporting v1.3 and v1.4 will be
->>> significantly different, so this would anyway already need to be reflected
->>> in the compatible property. The only issue I see here is that people tend
->>> to make the compatible string overly generic, so it is hardly usable for
->>> anything but matching an IP with its driver. For instance for exynos5 we
->>> have now (Documentation/devicetree/bindings/drm/exynos/hdmi.txt):
->>>
->>>         compatible = "samsung,exynos5-hdmi";
->>>
->>> For Exynos4 series there were already some patches proposed [1], but I
->>> believe
->>> this isn't a clean solution. Instead of things like:
->>>
->>> compatible = "samsung,exynos4-hdmi13";
->>> compatible = "samsung,exynos4-hdmi14";
->>>
->>> I would much more like to see the SoC version embedded in the compatible
->>> string, e.g.
->>>
->>
->> Hi Sylwester. long time no see.
->>
->> I think that if we use the SoC version embedded in the compatible
->> string then each driver shoud aware of the ip version to the SoC to
->
-> The driver only needs to be aware of one SoC version for each IP version.
->
+On Thu, Jan 31, 2013 at 09:41:11, Patil, Rachna wrote:
+> On Wed, Jan 30, 2013 at 16:10:09, Koen Kooi wrote:
+> > 
+> > Op 24 jan. 2013, om 04:45 heeft "Patil, Rachna" <rachna-l0cyMroinI0@public.gmane.org> het volgende geschreven:
+> > 
+> > > From: "Patil, Rachna" <rachna-l0cyMroinI0@public.gmane.org>
+> > > 
+> > > Make changes to add DT support in the MFD core driver.
+> > > 
+> > > Signed-off-by: Patil, Rachna <rachna-l0cyMroinI0@public.gmane.org>
+> > > ---
+> > > Changes in v4:
+> > > 	Non-standard properties prefixed with vendor name.
+> > > 
+> > > drivers/mfd/ti_am335x_tscadc.c |   28 +++++++++++++++++++++++-----
+> > > 1 file changed, 23 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/mfd/ti_am335x_tscadc.c 
+> > > b/drivers/mfd/ti_am335x_tscadc.c index e9f3fb5..87b446b 100644
+> > > --- a/drivers/mfd/ti_am335x_tscadc.c
+> > > +++ b/drivers/mfd/ti_am335x_tscadc.c
+> > > @@ -22,6 +22,8 @@
+> > > #include <linux/regmap.h>
+> > > #include <linux/mfd/core.h>
+> > > #include <linux/pm_runtime.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/of_device.h>
+> > > 
+> > > #include <linux/mfd/ti_am335x_tscadc.h> #include 
+> > > <linux/input/ti_am335x_tsc.h>
+> > > @@ -64,20 +66,31 @@ static	int ti_tscadc_probe(struct platform_device *pdev)
+> > > 	struct resource		*res;
+> > > 	struct clk		*clk;
+> > > 	struct mfd_tscadc_board	*pdata = pdev->dev.platform_data;
+> > > +	struct device_node	*node = pdev->dev.of_node;
+> > > 	struct mfd_cell		*cell;
+> > > 	int			err, ctrl;
+> > > 	int			clk_value, clock_rate;
+> > > -	int			tsc_wires, adc_channels = 0, total_channels;
+> > > +	int			tsc_wires = 0, adc_channels = 0, total_channels;
+> > > 
+> > > -	if (!pdata) {
+> > > +	if (!pdata && !pdev->dev.of_node) {
+> > > 		dev_err(&pdev->dev, "Could not find platform data\n");
+> > > 		return -EINVAL;
+> > > 	}
+> > > 
+> > > -	if (pdata->adc_init)
+> > > -		adc_channels = pdata->adc_init->adc_channels;
+> > > +	if (pdev->dev.platform_data) {
+> > > +		if (pdata->tsc_init)
+> > > +			tsc_wires = pdata->tsc_init->wires;
+> > > +
+> > > +		if (pdata->adc_init)
+> > > +			adc_channels = pdata->adc_init->adc_channels;
+> > > +	} else {
+> > > +		node = of_find_node_by_name(pdev->dev.of_node, "tsc");
+> > > +		of_property_read_u32(node, "ti,wires", &tsc_wires);
+> > > +
+> > > +		node = of_find_node_by_name(pdev->dev.of_node, "adc");
+> > > +		of_property_read_u32(node, "ti,adc-channels", &adc_channels);
+> > > +	}
+> > 
+> > Since AM335x is DT only, why is there a platform data codepath and why is it the first branch it tries? And I guess the next question is related to the first: why doesn't it work when used with DT? When I copy over the nodes from the evm.dts to my board I get "tsc tsc: Missing platform data" in dmesg.
+> 
+> This IP came up 1st on AM335x, but it is not platform dependent. The driver can be used on other platforms where-in DT is not supported.
+> According to the maintainers platform data takes precedence over DT. Hence the order.
+> 
 
-I know that device tree describes hw information and the information
-includes ip version also. So shouldn't the driver aware of the ip
-version itself and should the driver only aware of it through device
-tree? So I thought using the version property is proper way.
+Rachana,
+
+I see no point adding support for platform_data when you know that none of 
+older platforms are going to use this driver and all future platforms _must_ 
+follow device-tree model.
+
+So I agree that you should remove board file dependency from the driver.
 
 
-> So with Sylwester's proposal:
->
->>> compatible = "samsung,exynos4210-hdmi"; /* among others it carries an
->>>                                           information this IP supports
->>>                                           HDMI v1.3 */
->>>
->>> compatible = "samsung,exynos4212-hdmi"; /* HDMI v1.4, IIRC */
->
-> The driver woulud only ever have to know about those two compatible
-> values (unless further incompatible HW revisions exist); any other SoC
-> would be listed as being compatible with one of those two strings (but
-> in addition to the specific value for the specific SoC, e.g. compatible
-> = "samsung,exynox5xxx-hdmi", "samsung,exynos4212-hdmi").
->
->> use version specific feature so I think it's better to use it without
->> the SoC version embedded in the compatible string like this,
->> compatible = "samsung,exynos4-hdmi"
->> version = "0x104" or "0x103"
->
-> That would be quite non-typical.
->
->> With this, all each driver to do  is to check version property and set
->> version specific feature properly. And we have some dtsi file to can
->> be used commonly.
->>
->> For example,
->> exynos4.dtsi : have all Exynos4 series SoCs common properties and also
->> use common compatible string.
->> exynos4412.dtsi, exynos4212.dtsi and so on: have Exynos42xx specific
->> properties. So the hdmi version string could be used here as "version
->> = "0x104" or "0x103"
->> exynos4412-board.dts: have board specific properties.
->>
->> compatible = "samsung,exynos5-hdmi" is reasonable to me.
->> any opinions?
->
+> I do not see "Missing platform data" error msg in the latest driver. I am not able to trace from where this got populated.
+> 
+
+Can you share the branch which you have tested?
+
+Thanks,
+Vaibhav
+
+> > 
+> > What are the chances this driver will work when applied on top of 3.8-rcX? Has it even been tested with that? Has it been tested at all?
+> 
+> This driver has been tested on top of v3.8-rc3 on a AM335x EVM.
+> 
+> Regards,
+> Rachna
+> 
 > _______________________________________________
-> dri-devel mailing list
-> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
