@@ -1,71 +1,98 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 2/4] pwm_backlight: Validate dft_brightness in main probe
- function
-Date: Thu, 31 Jan 2013 13:58:46 +0100
-Message-ID: <20130131125846.GA11205@avionic-0098.mockup.avionic-design.de>
-References: <1358861996-27194-1-git-send-email-peter.ujfalusi@ti.com>
- <1358861996-27194-3-git-send-email-peter.ujfalusi@ti.com>
- <510A65BA.6090208@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="bp/iNruPH9dso1Pn"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <510A65BA.6090208@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Richard Purdie <rpurdie@rpsys.net>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Andrew Morton <akpm@linux-foundation.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org
+From: John Crispin <blogic@openwrt.org>
+Subject: [PATCH 3/3] MIPS: ralink: add CPU interrupt controller to of_irq_ids
+Date: Thu, 31 Jan 2013 14:20:44 +0100
+Message-ID: <1359638444-8891-3-git-send-email-blogic@openwrt.org>
+References: <1359638444-8891-1-git-send-email-blogic@openwrt.org>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1359638444-8891-1-git-send-email-blogic@openwrt.org>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: Ralf Baechle <ralf@linux-mips.org>
+Cc: linux-mips@linux-mips.org, devicetree-discuss@lists.ozlabs.org, Gabor Juhos <juhosg@openwrt.org>, John Crispin <blogic@openwrt.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Gabor Juhos <juhosg@openwrt.org>
 
---bp/iNruPH9dso1Pn
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Convert the ralink IRQ code to make use of the new MIPS IRQ controller OF
+mappings.
 
-On Thu, Jan 31, 2013 at 01:38:18PM +0100, Peter Ujfalusi wrote:
-> Hi Thierry,
->=20
-> On 01/22/2013 02:39 PM, Peter Ujfalusi wrote:
-> > Move the dft_brightness validity check from the DT parsing function to =
-the
-> > main probe. In this way we can validate it in case we are booting with =
-or
-> > without DT.
->=20
-> Based on the discussion the rest of the series is going to be dropped, but
-> what about this single patch?
-> I think it is still addresses a valid issue, which is that in non DT boot=
- we
-> do not check if the dft_brightness is within valid range.
->=20
-> I can resend this patch alone since it is not going to apply on mainline =
-as it is.
+Signed-off-by: Gabor Juhos <juhosg@openwrt.org>
+Signed-off-by: John Crispin <blogic@openwrt.org>
+---
+ arch/mips/ralink/dts/rt305x.dts |   10 ++++++++++
+ arch/mips/ralink/irq.c          |   10 +++++++---
+ 2 files changed, 17 insertions(+), 3 deletions(-)
 
-No that's okay. I've gone ahead and applied in manually.
-
-Thanks,
-Thierry
-
---bp/iNruPH9dso1Pn
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRCmqGAAoJEN0jrNd/PrOhILEQALojqlnX8GbLmpn2xiCRyvD4
-q3arHtnnNxqhJqXDNemH6rV/6ZjVhSzKR5ACsE3TSkJpv0dWZY3/y3kEyc8A2zQC
-+VoaktoGDEi82c/fDMJxhfEKps0IDH4qWPwcXStBhQIpWr1LivZ3DJEtlfUfMrUD
-JcbmmOzuoqe7a5orHJC8HiqC4MeNax6Q6V3pGjPRwqdJHAqz5pmZeVusFsaaLIjf
-MkJXwmNmMTx5DesUk4mRJknMBH/hQYwqoFP/fngcCV5REeZHGgcT6ZEQ2JG7pmCq
-7K1tReEFDMSC6WDZIKPJkBvCQy4ED0P8pDkshl8WC3IOms4RQxY7KW7OF9Vr4IVu
-w+Qcz99ay4v5jr97yQZZoKwOODIh0h4QbIMu8yWOhPrwTxZOkfVdjI3kei1GRg7i
-DabKKVfebmAzWksmE1lRv5wwZjNV17V/VQNNnZsJQ+OSct/oW5IvRl0bkCKUzyW9
-sdcR80oXnsf7cUl+9/yIwxu9edo4v4A16Bz7UoZjvAJQIKTk6rjs1xgKCSo2/Uj1
-aRxtB3OIQX41fYkRFDRVwIOzT1MFL550xQRnE478PrRkEwJZR2gvQmRMXzqnI6Zw
-hQ1rHH6BlVQyPB4fBfXkiidOQLZM/ndGaN9y384m83xqjcvlMeHks3bDLIm3lVzl
-f4uG/08NTFpTa4n3Ru1K
-=iaGg
------END PGP SIGNATURE-----
-
---bp/iNruPH9dso1Pn--
+diff --git a/arch/mips/ralink/dts/rt305x.dts b/arch/mips/ralink/dts/rt305x.dts
+index c7298f3..a9acdb2 100644
+--- a/arch/mips/ralink/dts/rt305x.dts
++++ b/arch/mips/ralink/dts/rt305x.dts
+@@ -11,6 +11,13 @@
+ 		};
+ 	};
+ 
++	cpuintc: cpuintc@0 {
++		#address-cells = <0>;
++		#interrupt-cells = <1>;
++		interrupt-controller;
++		compatible = "mti,cpu-interrupt-controller";
++	};
++
+ 	memory@0 {
+ 		reg = <0x0 0x2000000>;
+ 	};
+@@ -47,6 +54,9 @@
+ 
+ 			interrupt-controller;
+ 			#interrupt-cells = <1>;
++
++			interrupt-parent = <&cpuintc>;
++			interrupts = <2>;
+ 		};
+ 
+ 		memc@300 {
+diff --git a/arch/mips/ralink/irq.c b/arch/mips/ralink/irq.c
+index e62c975..6d054c5 100644
+--- a/arch/mips/ralink/irq.c
++++ b/arch/mips/ralink/irq.c
+@@ -128,8 +128,11 @@ static int __init intc_of_init(struct device_node *node,
+ {
+ 	struct resource res;
+ 	struct irq_domain *domain;
++	int irq;
+ 
+-	mips_cpu_irq_init();
++	irq = irq_of_parse_and_map(node, 0);
++	if (!irq)
++		panic("Failed to get INTC IRQ");
+ 
+ 	if (of_address_to_resource(node, 0, &res))
+ 		panic("Failed to get intc memory range");
+@@ -156,8 +159,8 @@ static int __init intc_of_init(struct device_node *node,
+ 
+ 	rt_intc_w32(INTC_INT_GLOBAL, INTC_REG_ENABLE);
+ 
+-	irq_set_chained_handler(RALINK_CPU_IRQ_INTC, ralink_intc_irq_handler);
+-	irq_set_handler_data(RALINK_CPU_IRQ_INTC, domain);
++	irq_set_chained_handler(irq, ralink_intc_irq_handler);
++	irq_set_handler_data(irq, domain);
+ 
+ 	cp0_perfcount_irq = irq_create_mapping(domain, 9);
+ 
+@@ -165,6 +168,7 @@ static int __init intc_of_init(struct device_node *node,
+ }
+ 
+ static struct of_device_id __initdata of_irq_ids[] = {
++	{ .compatible = "mti,cpu-interrupt-controller", .data = mips_cpu_intc_init },
+ 	{ .compatible = "ralink,rt2880-intc", .data = intc_of_init },
+ 	{},
+ };
+-- 
+1.7.10.4
