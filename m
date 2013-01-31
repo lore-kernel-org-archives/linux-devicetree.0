@@ -1,85 +1,69 @@
-From: Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] arm: mvebu: Add support for USB host controllers
- in Armada 370/XP
-Date: Thu, 31 Jan 2013 10:19:44 +0900
-Message-ID: <CABMQnVKxiDwXvweLa7jdAw5q2bH9cj-HDfPoijadVkren52JNg@mail.gmail.com>
-References: <1358954792-16160-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <CALF0-+W8dVLHF66VKni+5ZsQpFd=cGDXE0TD=dRc1B=ptrAMUg@mail.gmail.com>
- <20130123174025.GV1758@titan.lakedaemon.net> <CALF0-+Vg1WZA3m9G7mLU92BBuDpGLG-pmMM=XHtGm2UwnXXLUw@mail.gmail.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: RE: [PATCH 2/2] drm/exynos: Add device tree based discovery support
+ for G2D
+Date: Thu, 31 Jan 2013 10:30:14 +0900
+Message-ID: <050101cdff52$86df3a70$949daf50$%dae@samsung.com>
+References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
+ <1359107722-9974-2-git-send-email-sachin.kamat@linaro.org>
+ <CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com>
+ <510987B5.6090509@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CALF0-+Vg1WZA3m9G7mLU92BBuDpGLG-pmMM=XHtGm2UwnXXLUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Michael Opdenacker <michael.opdenacker-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <510987B5.6090509@gmail.com>
+Content-language: ko
+Sender: linux-media-owner@vger.kernel.org
+To: 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>
+Cc: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Hi, Ezequiel.
 
-I checked with your first patch, that is no ploblem.
-you dont need to change patch.
-sorry for my noise.
 
-best regards,
-  Nobuhiro
+> -----Original Message-----
+> From: Sylwester Nawrocki [mailto:sylvester.nawrocki@gmail.com]
+> Sent: Thursday, January 31, 2013 5:51 AM
+> To: Inki Dae
+> Cc: Sachin Kamat; linux-media@vger.kernel.org; dri-
+> devel@lists.freedesktop.org; devicetree-discuss@lists.ozlabs.org;
+> patches@linaro.org; s.nawrocki@samsung.com
+> Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery
+> support for G2D
+> 
+> On 01/30/2013 09:50 AM, Inki Dae wrote:
+> >> +static const struct of_device_id exynos_g2d_match[] = {
+> >> +       { .compatible = "samsung,g2d-v41" },
+> >
+> > not only Exynos5 and also Exyno4 has the g2d gpu and drm-based g2d
+> > driver shoud support for all Exynos SoCs. How about using
+> > "samsung,exynos5-g2d" instead and adding a new property 'version' to
+> > identify ip version more surely? With this, we could know which SoC
+> > and its g2d ip version. The version property could have '0x14' or
+> > others. And please add descriptions to dt document.
+> 
+> Err no. Are you suggesting using "samsung,exynos5-g2d" compatible string
+> for Exynos4 specific IPs ? This would not be correct, and you still can
 
-On Wed, Jan 30, 2013 at 3:56 AM, Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Jason,
->
-> On Wed, Jan 23, 2013 at 2:40 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
->> On Wed, Jan 23, 2013 at 02:06:12PM -0300, Ezequiel Garcia wrote:
->>> Jason,
->>>
->>> On Wed, Jan 23, 2013 at 12:26 PM, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->>> > The Armada 370 and Armada XP SoC has an Orion EHCI USB controller.
->>> > This patch adds support for this controller in Armada 370
->>> > and Armada XP SoC common device tree files.
->>> >
->>> > Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
->>> > Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> > Tested-by: Nobuhiro Iwamatsu <iwamatsu-+mkmVskJBflAfugRpC6u6w@public.gmane.org>
->>> > Tested-by: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
->>> > Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> > ---
->>> > Changes from v1:
->>> >  * Remove uneeded USB_ARCH_HAS_EHCI selection as noted by Florian.
->>> >
->>> >  arch/arm/boot/dts/armada-370-xp.dtsi |   15 +++++++++++++++
->>> >  arch/arm/boot/dts/armada-370.dtsi    |    9 +++++++++
->>> >  arch/arm/boot/dts/armada-xp.dtsi     |   17 +++++++++++++++++
->>> >  3 files changed, 41 insertions(+), 0 deletions(-)
->>>
->>> Do you think we're still in time to get this series into v3.9 (given
->>> we decide soon on the OpenBlocks issue)?
->>
->> That shouldn't be a problem.
->>
->
-> Do you think we can take this series for v3.9 as it is?
-> I have no problems making any changes if they are needed
-> but I can't move forward with the OpenBlocks issue since
-> I don't have access to the hardware.
->
-> I think we can sanely merge this as it is, since it has been tested in
-> every platform.
-> If there's anything to change we can do it later, when I have more
-> information about the
-> OpenBlocks hardware.
->
-> Thanks,
->
+I assumed the version 'v41' is the ip for Exynos5 SoC. So if this version
+means Exynos4 SoC then it should be "samsung,exynos4-g2d".
+
+> match the driver with multiple different revisions of the IP and associate
+> any required driver's private data with each corresponding compatible
+> property.
+> 
+
+Right, and for why I prefer to use version property instead of embedded
+version string, you can refer to the my comment I replied already to the
+"drm/exynos: Get HDMI version from device tree" email thread.
+
+> Perhaps it would make more sense to include the SoCs name in the
+> compatible
+> string, e.g. "samsung,exynos-g2d-v41", but appending revision of the IP
+> seems acceptable to me. The revisions appear to be well documented and
+> it's
+> more or less clear which one corresponds to which SoC.
+> 
 > --
->     Ezequiel
-
-
-
--- 
-Nobuhiro Iwamatsu
-   iwamatsu at {nigauri.org / debian.org}
-   GPG ID: 40AD1FA6
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> Thanks,
+> Sylwester
