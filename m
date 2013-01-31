@@ -1,66 +1,68 @@
-From: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH v4 2/4] ARM: Exynos5250: Enabling ohci-exynos driver
-Date: Thu, 31 Jan 2013 14:26:51 -0800
-Message-ID: <0b0001ce0002$12ecda90$38c68fb0$@samsung.com>
-References: <1358257112-19595-1-git-send-email-gautam.vivek@samsung.com>
- <1358257112-19595-3-git-send-email-gautam.vivek@samsung.com>
- <2542030.a14I18dBkO@flatron>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery support
+ for G2D
+Date: Fri, 01 Feb 2013 00:47:55 +0100
+Message-ID: <510B02AB.4080908@gmail.com>
+References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org> <1359107722-9974-2-git-send-email-sachin.kamat@linaro.org> <CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com> <510987B5.6090509@gmail.com> <050101cdff52$86df3a70$949daf50$%dae@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <2542030.a14I18dBkO@flatron>
-Content-language: en-us
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: 'Tomasz Figa' <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Vivek Gautam' <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <050101cdff52$86df3a70$949daf50$%dae@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Tomasz Figa wrote:
-> 
-> Hi Vivek,
+Hi Inki,
 
-[...]
+On 01/31/2013 02:30 AM, Inki Dae wrote:
+>> -----Original Message-----
+>> From: Sylwester Nawrocki [mailto:sylvester.nawrocki@gmail.com]
+>> Sent: Thursday, January 31, 2013 5:51 AM
+>> To: Inki Dae
+>> Cc: Sachin Kamat; linux-media@vger.kernel.org; dri-
+>> devel@lists.freedesktop.org; devicetree-discuss@lists.ozlabs.org;
+>> patches@linaro.org; s.nawrocki@samsung.com
+>> Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery
+>> support for G2D
+>>
+>> On 01/30/2013 09:50 AM, Inki Dae wrote:
+>>>> +static const struct of_device_id exynos_g2d_match[] = {
+>>>> +       { .compatible = "samsung,g2d-v41" },
+>>>
+>>> not only Exynos5 and also Exyno4 has the g2d gpu and drm-based g2d
+>>> driver shoud support for all Exynos SoCs. How about using
+>>> "samsung,exynos5-g2d" instead and adding a new property 'version' to
+>>> identify ip version more surely? With this, we could know which SoC
+>>> and its g2d ip version. The version property could have '0x14' or
+>>> others. And please add descriptions to dt document.
+>>
+>> Err no. Are you suggesting using "samsung,exynos5-g2d" compatible string
+>> for Exynos4 specific IPs ? This would not be correct, and you still can
+>
+> I assumed the version 'v41' is the ip for Exynos5 SoC. So if this version
+> means Exynos4 SoC then it should be "samsung,exynos4-g2d".
 
-> > +	usb@12120000 {
-> > +		compatible = "samsung,exynos4210-ohci";
-> > +		reg = <0x12120000 0x100>;
-> > +		interrupts = <0 71 0>;
-> 
-> For Samsung platforms we decided per board enabling of nodes and so this
-> node should also contain:
-> 
-> 		status = "disabled";
-> 
-> while in dts file of board using ohci there would be an overriding entry:
-> 
-> 	usb@12120000 {
-> 		status = "okay";
-> 	};
-> 
-> I know that Exynos5250 has not been yet converted into this convention,
-> but using it when adding new devices will simplify the process.
-> 
-Well, I have another opinion on this...
+Yes, v3.0 is implemented in the S5PC110 (Exynos3110) SoCs and Exynos4210,
+V4.1 can be found in Exynos4212 and Exynos4412, if I'm not mistaken.
 
-Let's see, yeah, we are using following method in EXYNOS4 DT...
-- disabling IPs in SoC DT source and enabling IPs in board DT source
+So we could have:
 
-But as I said, in EXYNOS5440 DT, I want to use following, because most of
-them should be enabled/used.
-- enabling IPs in SoC DT source and no need enabling in board DT source.
+compatible = "samsung,exynos-g2d-3.0" /* for Exynos3110, Exynos4210 */
+compatible = "samsung,exynos-g2d-4.1" /* for Exynos4212, Exynos4412 */
 
-I mean, it depends on each SoC's situation.
+or alternatively
 
-Thanks.
+compatible = "samsung,exynos3110-g2d" /* for Exynos3110, Exynos4210 */
+compatible = "samsung,exynos4212-g2d" /* for Exynos4212, Exynos4412 */
 
-- Kukjin
+I don't see a need to use an additional redundant property to identify
+the device. These IPs across Exynos SoC do differ and specifying
+a general property like "samsung,exynos4-g2d" for them would simply be
+a violation of existing conventions.
+
+--
+
+Thanks,
+Sylwester
