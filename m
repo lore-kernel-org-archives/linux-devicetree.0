@@ -1,149 +1,93 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
-Date: Thu, 31 Jan 2013 11:52:29 +0530
-Message-ID: <CAPdUM4OpeYxL=WNMnMzrZSf6LwvLzAsEdWVR2=gbR30dJwJhAw@mail.gmail.com>
-References: <50EC5EDE.3030208@firmworks.com>
-	<1357676181-16728-1-git-send-email-seanpaul@chromium.org>
-	<50ECA400.50007@wwwdotorg.org> <51082B6A.1010406@gmail.com>
-	<CAAQKjZNR8EJ+UFRO3vgYLH9So_gHn0a8gAf1JKu250shGiJ4qQ@mail.gmail.com>
-	<5109DF18.6010202@wwwdotorg.org>
-	<CAAQKjZOa0qkAiQBhuXypiKWP8Hi8zYrO_kDH5BnqSpNwAKwqkQ@mail.gmail.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: Re: [PATCH 1/2] [media] s5p-g2d: Add DT based discovery support
+Date: Thu, 31 Jan 2013 11:59:10 +0530
+Message-ID: <CAK9yfHzHOY4D_QW3BU0ihUcvrJ96vN7mQwEXQD0ezcjesbKwuw@mail.gmail.com>
+References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
+	<510992D8.9030800@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
-In-Reply-To: <CAAQKjZOa0qkAiQBhuXypiKWP8Hi8zYrO_kDH5BnqSpNwAKwqkQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Tomasz Stanislawski <t.stanislaws@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Tomasz Figa <tomasz.figa@gmail.com>, dri-devel@lists.freedesktop.org, joshi@samsung.com, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, olofj@chromium.org, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <510992D8.9030800@gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, k.debski@samsung.com, inki.dae@samsung.com, ajaykumar.rs@samsung.com, patches@linaro.org, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2013 at 10:22 AM, Inki Dae <inki.dae@samsung.com> wrote:
-> 2013/1/31 Stephen Warren <swarren@wwwdotorg.org>:
->> On 01/30/2013 06:16 PM, Inki Dae wrote:
->>> 2013/1/30 Sylwester Nawrocki <sylvester.nawrocki@gmail.com>:
->>>> Hi,
->>>>
->>>>
->>>> On 01/08/2013 11:56 PM, Stephen Warren wrote:
->>>>>
->>>>> On 01/08/2013 01:16 PM, Sean Paul wrote:
->>>>>>
->>>>>> Add a property to the hdmi node so we can specify the HDMI version in
->>>>>> the device tree instead of just defaulting to v1.4 with the existence of
->>>>>> the dt node.
->>>>>
->>>>>
->>>>> I guess this seems OK to me if required, although I'd certainly like to
->>>>> see someone familiar with the Exynos HW confirm whether this should be
->>>>> driven purely by DT compatible value for the HDMI IP block instead though.
->>>>
->>>>
->>>> I think the supported HDMI standard is something that could well be derived
->>>> from the compatible property. The IP supporting v1.3 and v1.4 will be
->>>> significantly different, so this would anyway already need to be reflected
->>>> in the compatible property. The only issue I see here is that people tend
->>>> to make the compatible string overly generic, so it is hardly usable for
->>>> anything but matching an IP with its driver. For instance for exynos5 we
->>>> have now (Documentation/devicetree/bindings/drm/exynos/hdmi.txt):
->>>>
->>>>         compatible = "samsung,exynos5-hdmi";
->>>>
->>>> For Exynos4 series there were already some patches proposed [1], but I
->>>> believe
->>>> this isn't a clean solution. Instead of things like:
->>>>
->>>> compatible = "samsung,exynos4-hdmi13";
->>>> compatible = "samsung,exynos4-hdmi14";
->>>>
->>>> I would much more like to see the SoC version embedded in the compatible
->>>> string, e.g.
->>>>
->>>
->>> Hi Sylwester. long time no see.
->>>
->>> I think that if we use the SoC version embedded in the compatible
->>> string then each driver shoud aware of the ip version to the SoC to
->>
->> The driver only needs to be aware of one SoC version for each IP version.
->>
+Hi Sylwester.
+
+Thank you for the review.
+
+On 31 January 2013 03:08, Sylwester Nawrocki
+<sylvester.nawrocki@gmail.com> wrote:
+> Hi Sachin,
 >
-> I know that device tree describes hw information and the information
-> includes ip version also. So shouldn't the driver aware of the ip
-> version itself and should the driver only aware of it through device
-> tree? So I thought using the version property is proper way.
 >
+> On 01/25/2013 10:55 AM, Sachin Kamat wrote:
+>>
+>> This patch adds device tree based discovery support to G2D driver
+>>
+>> Signed-off-by: Sachin Kamat<sachin.kamat@linaro.org>
+>> ---
+>
+> Don' you need something like:
+>
+>         else {
+>                 of_id = of_match_node(exynos_g2d_match, pdev->dev.of_node);
+>                 if (!of_id)
+>                         return -ENODEV;
+>                 dev->variant = (struct g2d_variant *)of_id->data;
+>         }
+> ?
+>
+> Otherwise dev->variant is left uninitialized...?
 
-I want to second Sylwester's proposal. Compatibility information
-should be carried in compatible string. 'version' property is diluting
-its purpose. With this implementation, all compatible strings :
-"exynos-hdmi", "exynos4-hdmi", "exynos4x12-hdmi",
-"exynos5-hdmi" ... have same relevance.
-
-IMO, it make sense with compatible strings specifying the
-first Soc with same IP version:
-compatible = "samsung,exynos4210-hdmi";
-compatible = "samsung,exynos4212-hdmi";
-
-compatible = "samsung,exynos-hdmi-1.3" and
-compatible = "samsung,exynos-hdmi-1.4" will also do the needful.
-
-While representing hdmi version information we should consider
-the possibility of intermediate releases like 1.3ab, 1.4a etc.
-
-regards,
-Rahul Sharma.
+Exactly. The above code is very much required. Not sure how I missed it :(
 
 >
->> So with Sylwester's proposal:
+>
+>>         return 0;
 >>
->>>> compatible = "samsung,exynos4210-hdmi"; /* among others it carries an
->>>>                                           information this IP supports
->>>>                                           HDMI v1.3 */
->>>>
->>>> compatible = "samsung,exynos4212-hdmi"; /* HDMI v1.4, IIRC */
+>> @@ -844,6 +846,18 @@ static struct g2d_variant g2d_drvdata_v4x = {
+>>         .hw_rev = TYPE_G2D_4X, /* Revision 4.1 for Exynos4X12 and Exynos5
+>> */
+>>   };
 >>
->> The driver woulud only ever have to know about those two compatible
->> values (unless further incompatible HW revisions exist); any other SoC
->> would be listed as being compatible with one of those two strings (but
->> in addition to the specific value for the specific SoC, e.g. compatible
->> = "samsung,exynox5xxx-hdmi", "samsung,exynos4212-hdmi").
->>
->>> use version specific feature so I think it's better to use it without
->>> the SoC version embedded in the compatible string like this,
->>> compatible = "samsung,exynos4-hdmi"
->>> version = "0x104" or "0x103"
->>
->> That would be quite non-typical.
->>
->>> With this, all each driver to do  is to check version property and set
->>> version specific feature properly. And we have some dtsi file to can
->>> be used commonly.
->>>
->>> For example,
->>> exynos4.dtsi : have all Exynos4 series SoCs common properties and also
->>> use common compatible string.
->>> exynos4412.dtsi, exynos4212.dtsi and so on: have Exynos42xx specific
->>> properties. So the hdmi version string could be used here as "version
->>> = "0x104" or "0x103"
->>> exynos4412-board.dts: have board specific properties.
->>>
->>> compatible = "samsung,exynos5-hdmi" is reasonable to me.
->>> any opinions?
->>
->> _______________________________________________
->> dri-devel mailing list
->> dri-devel@lists.freedesktop.org
->> http://lists.freedesktop.org/mailman/listinfo/dri-devel
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>> +static const struct of_device_id exynos_g2d_match[] = {
+>> +       {
+>> +               .compatible = "samsung,g2d-v3",
+>> +               .data =&g2d_drvdata_v3x,
+>> +       }, {
+>> +               .compatible = "samsung,g2d-v41",
+>> +               .data =&g2d_drvdata_v4x,
+>
+>
+> Didn't you consider adding "exynos" to these compatible strings ?
+> I'm afraid g2d may be too generic.
+
+Choosing the right compatible string seems to be the biggest challenge :)
+I did consider adding "exynos" to the compatible strings, but then MFC
+used it as "mfc-v5" and I followed the same example. Prepending exynos
+makes it more specific and should be added (even to MFC) IMO too.
+We need to arrive at a consensus about the bindings (right now for
+g2d) as they would be common irrespective of DRM or V4L2 framework.
+Please let me know your opinion about Inki's suggestion to use version
+property instead.
+
+>
+>
+>> +       },
+>> +       {},
+>> +               .of_match_table = of_match_ptr(exynos_g2d_match),
+>
+>
+> of_match_ptr() could be dropped, since exynos_g2d_match[] is
+> always compiled in.
+
+OK.
+
+Once I get confirmation about the compatible strings, I will resend
+this patch with other suggested updates.
+
+-- 
+With warm regards,
+Sachin
