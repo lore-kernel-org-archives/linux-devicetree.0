@@ -1,59 +1,73 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to
-	arm/common
-Date: Fri, 1 Feb 2013 21:30:03 +0000
-Message-ID: <20130201213003.GW2637@n2100.arm.linux.org.uk>
-References: <1359742975-10421-1-git-send-email-mporter@ti.com> <1359742975-10421-2-git-send-email-mporter@ti.com> <5022f635a527470dbd0be932063e9cd2@DFLE72.ent.ti.com> <20130201184915.GP2244@beef> <510C1D0E.6030401@mvista.com> <20130201185820.GE29898@arwen.pp.htv.fi> <510C2A47.1090607@mvista.com> <20130201205600.GA31762@arwen.pp.htv.fi>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: OMAP: gpmc: Add device tree documentation for elm
+ handle
+Date: Fri, 1 Feb 2013 13:58:54 -0800
+Message-ID: <20130201215854.GW22517@atomide.com>
+References: <1358485066-27495-1-git-send-email-avinashphilip@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130201205600.GA31762@arwen.pp.htv.fi>
+In-Reply-To: <1358485066-27495-1-git-send-email-avinashphilip@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Sergei Shtylyov <sshtylyov@mvista.com>, Matt Porter <mporter@ti.com>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Chris Ball <cjb@laptop.org>, "Cousson, Benoit" <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.i>
+To: Philip Avinash <avinashphilip@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, artem.bityutskiy@linux.intel.com, zonque@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 01, 2013 at 10:56:00PM +0200, Felipe Balbi wrote:
-> hi,
+* Philip Avinash <avinashphilip@ti.com> [130117 21:00]:
+> In case ELM module available, omap2 NAND driver can opt for hardware
+> correction method for bit flip errors in NAND flash with BCH. Hence the
+> detection of ELM module is done through devicetree population of elm_id.
+> This patch update device tree documentation for gpmc-nand for elm-id
+> data population.
 > 
-> On Fri, Feb 01, 2013 at 11:49:11PM +0300, Sergei Shtylyov wrote:
-> > > good point, do you wanna send some patches ?
-> > 
-> >    I have already sent them countless times and even stuck CPPI 4.1 support (in
-> > arch/arm/common/cppi41.c) in Russell's patch system. TI requested to remove the
-> > patch. :-(
+> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
+> ---
+> This patch based [1] and depends on [2]. As Artem suggested, this patch can
+> go in omap_tree due to the dependency on [3].
+> Discussion can found at [4]
 > 
-> sticking into arch/arm/common/ wasn't a nice move. But then again, so
-> wasn't asking for the patch to be removed :-s
+> Tony,
+>   Can you accept this patch.
 
-Err, patches don't get removed, they get moved to 'discarded'.
+Thanks applying into omap-for-v3.9/gpmc.
 
-> > > I guess to make the MUSB side simpler we would need musb-dma-engine glue
-> > > to map dmaengine to the private MUSB API. Then we would have some
-> > > starting point to also move inventra (and anybody else) to dmaengine
-> > > API.
-> > 
-> >    Why? Inventra is a dedicated device's private DMA controller, why make
-> > universal DMA driver for it?
+Regards,
+
+Tony
+ 
+> 1. http://git.kernel.org/?p=linux/kernel/git/tmlind/linux-omap.git;a=shortlog;h=refs/heads/omap-for-v3.9/gpmc
+> 2. mtd: nand: omap2: Support for hardware BCH error correction
+>    http://git.infradead.org/users/dedekind/l2-mtd-2.6.git/commit/576daed18c3f27bb5d0e57e1df11e8f7b493dce8
+> 3. ARM: OMAP: gpmc: add DT bindings for GPMC timings and NAND
+>    http://git.kernel.org/?p=linux/kernel/git/tmlind/linux-omap.git;a=commit;h=bc6b1e7b86f5d8e4a6fc1c0189e64bba4077efe0
+> 4. https://lkml.org/lkml/2013/1/17/167   
 > 
-> because it doesn't make sense to support multiple DMA APIs. We can check
-> from MUSB's registers if it was configured with Inventra DMA support and
-> based on that we can register MUSB's own DMA Engine to dmaengine API.
-
-Hang on.  This is one of the DMA implementations which is closely
-coupled with the USB and only the USB?  If it is...
-
-I thought this had been discussed _extensively_ before.  I thought the
-resolution on it was:
-1. It would not use the DMA engine API.
-2. It would not live in arch/arm.
-3. It would be placed nearby the USB driver it's associated with.
-
-(1) because we don't use APIs just for the hell of it - think.  Do we
-use the DMA engine API for PCI bus mastering ethernet controllers?  No.
-Do we use it for PCI bus mastering SCSI controllers?  No.  Because the
-DMA is integral to the rest of the device.
-
-The DMA engine API only makes sense if the DMA engine is a shared
-system resource.
+>  .../devicetree/bindings/mtd/gpmc-nand.txt          |    4 ++++
+>  1 file changed, 4 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> index 9f464f9..e7f8d7e 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> @@ -29,6 +29,9 @@ Optional properties:
+>  		"bch4"		4-bit BCH ecc code
+>  		"bch8"		8-bit BCH ecc code
+>  
+> + - elm_id:	Specifies elm device node. This is required to support BCH
+> + 		error correction using ELM module.
+> +
+>  For inline partiton table parsing (optional):
+>  
+>   - #address-cells: should be set to 1
+> @@ -46,6 +49,7 @@ Example for an AM33xx board:
+>  		#address-cells = <2>;
+>  		#size-cells = <1>;
+>  		ranges = <0 0 0x08000000 0x2000>;	/* CS0: NAND */
+> +		elm_id = <&elm>;
+>  
+>  		nand@0,0 {
+>  			reg = <0 0 0>; /* CS0, offset 0 */
+> -- 
+> 1.7.9.5
+> 
