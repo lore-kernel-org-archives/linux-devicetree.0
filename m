@@ -1,47 +1,140 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery support
- for G2D
-Date: Fri, 1 Feb 2013 14:03:33 +0530
-Message-ID: <CAK9yfHxqqumg-oqH_Ku8Zkf8biWVknF91Su0VkWJJXjvWQ3Jhw@mail.gmail.com>
-References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
-	<1359107722-9974-2-git-send-email-sachin.kamat@linaro.org>
-	<CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com>
-	<510987B5.6090509@gmail.com>
-	<050101cdff52$86df3a70$949daf50$%dae@samsung.com>
-	<510B02AB.4080908@gmail.com>
-	<0b7501ce0011$3df65180$b9e2f480$@samsung.com>
-	<00fd01ce001b$5215a3f0$f640ebd0$%dae@samsung.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH RFC] usb: dwc3: Get PHY from platform specific dwc3 dt
+ node.
+Date: Fri, 1 Feb 2013 10:50:53 +0200
+Message-ID: <20130201085053.GG8060@arwen.pp.htv.fi>
+References: <1359631232-7107-1-git-send-email-gautam.vivek@samsung.com>
+ <510A56BF.3040804@ti.com>
+ <CAFp+6iFkb=U0CJA=3zmQvd5XfMwbROuRJjXoJG7zvvq4_upzNw@mail.gmail.com>
+ <20130131152527.GE4064@arwen.pp.htv.fi>
+ <CAFp+6iHvKYiF_neANRq5roAEJwhvcaLk7pAd7Dy94Z5XiDkhgA@mail.gmail.com>
+ <20130131153836.GF4064@arwen.pp.htv.fi>
+ <510B50DA.6010201@ti.com>
+ <CAFp+6iF2HMmiMVR4YyEG7bmpCZ4KdwBT7q2Jy-P1SMVtoVBn6g@mail.gmail.com>
+ <CAFp+6iGZU29nt4yBjkyeeS+s_D1=AamgGTOsJq1xo_5z2O-sDg@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <00fd01ce001b$5215a3f0$f640ebd0$%dae@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, s.nawrocki@samsung.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="xHbokkKX1kTiQeDC"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iGZU29nt4yBjkyeeS+s_D1=AamgGTOsJq1xo_5z2O-sDg@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: balbi@ti.com, kishon <kishon@ti.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 February 2013 06:57, Inki Dae <inki.dae@samsung.com> wrote:
->
-> For example,
-> If compatible = "samsung,g2d-3.0" is added to exynos4210.dtsi, it'd be
-> reasonable. But what if that compatible string is added to exynos4.dtsi?.
-> This case isn't considered for exynos4412 SoC with v4.1.
+--xHbokkKX1kTiQeDC
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-In case of Exynos4 series the base address of G2D ip is different
-across series. Hence we cannot define it in exynos4.dtsi and need to
-define the nodes in exynos4xxx.dtsi or specific board files. Thus we
-can use the version appended compatible string.
+On Fri, Feb 01, 2013 at 11:54:01AM +0530, Vivek Gautam wrote:
+> Hi Balbi,
+>=20
+>=20
+> On Fri, Feb 1, 2013 at 11:52 AM, Vivek Gautam <gautamvivek1987@gmail.com>=
+ wrote:
+> > Hi Kishon,
+> >
+> >
+> > On Fri, Feb 1, 2013 at 10:51 AM, kishon <kishon@ti.com> wrote:
+> >> Hi,
+> >>
+> >>
+> >> On Thursday 31 January 2013 09:08 PM, Felipe Balbi wrote:
+> >>>
+> >>> On Thu, Jan 31, 2013 at 09:00:37PM +0530, Vivek Gautam wrote:
+> >>>>
+> >>>> Hi Felipe,
+> >>>>
+> >>>>
+> >>>> On Thu, Jan 31, 2013 at 8:55 PM, Felipe Balbi <balbi@ti.com> wrote:
+> >>>>>
+> >>>>> Hi,
+> >>>>>
+> >>>>> On Thu, Jan 31, 2013 at 08:53:27PM +0530, Vivek Gautam wrote:
+> >>>>>>>>
+> >>>>>>>> Moreover, SoCs having multiple dwc3 controllers will have multip=
+le
+> >>>>>>>> PHYs, which eventually be added using usb_add_phy_dev(), and not
+> >>>>>>>> using usb_add_phy(). So each dwc3 controller won't be able to
+> >>>>>>>> get PHYs by simply calling devm_usb_get_phy() also.
+> >>>>>>>
+> >>>>>>>
+> >>>>>>> No. We have added usb_get_phy_dev() for that purpose in the case =
+of
+> >>>>>>> non-dt.
+> >>>>>>> I think, instead you can have a patch to use devm_usb_get_phy_dev=
+()
+> >>>>>>> here and
+> >>>>>>> in exynos platform specific code use usb_bind_phy() to bind the p=
+hy
+> >>>>>>> and
+> >>>>>>> controller till you change it to dt.
+> >>>>>>>
+> >>>>>>
+> >>>>>> We have dt support for dwc3-exynos, in such case we should go ahead
+> >>>>>> with
+> >>>>>> of_platform_populate(), right ?
+> >>>>>> But if when i use of_platform_populate() i will not be able to set
+> >>>>>> dma_mask to dwc3->dev. :-(
+> >>
+> >>
+> >> You can do something like this
+> >>
+> >> static u64 dwc3_exynos_dma_mask =3D DMA_BIT_MASK(32);
+> >>
+> >> static int dwc3_exynos_set_dmamask(struct device *dev, void *c)
+> >> {
+> >>         dev->dma_mask =3D &dwc3_exynos_dma_mask;
+> >>
+> >>         return 0;
+> >> }
+> >>
+> >> And in your probe after of_platform_populate, you can add
+> >>
+> >> device_for_each_child(&pdev->dev, NULL, dwc3_exynos_set_dmamask);
+> >>
+> >> Here pdev is the platform device of dwc3-exynos. By this way all the
+> >> children of dwc3-exynos will have dma_mask set to the required value.
+> >>
+> >
+> > Nice idea, thanks :-)
+> > hmm.. so i can patch this now, and get things working ;-)
+> >
+>=20
+> If this is fine with you shall i go ahead and post a patch for the same ?=
+ ;-)
 
-However even the second option suggested by Sylwester is OK with me or
-to be even more specific we could go for both SoC as well as version
-option something like this.
+should be fine, but we can wait a bit to see if DeviceTree folks reply,
+your patch will only go on v3.10 anyway.
 
-compatible = "samsung,exynos3110-g2d-3.0" /* for Exynos3110, Exynos4210 */
-compatible = "samsung,exynos4212-g2d-4.1" /* for Exynos4212, Exynos4412 */
+cheers
 
-In any case please let me know the final preferred one so that I can
-update the code send the revised patches.
+--=20
+balbi
 
--- 
-With warm regards,
-Sachin
+--xHbokkKX1kTiQeDC
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRC4HtAAoJEIaOsuA1yqRE93QP+gKvRYC+g4evMbmz3jxgxtug
+RWPlL5K3sKlPK9Frc4SM9cXIdJCodmD1NiI8whuTII5ancFlil8k9baro3CtoPSp
+PkziXIucCzx0Zt2TH2T8EOKVZhZ2g+KpFDfqJLsuK8/N+qnbh65ETcOLuI9WzaAB
+E+uwUkhgF/IYQB2n+waNGOojXWD0Uq8H6q0esnPQyPkChvzDfv00EohtD0/TMQMn
+SV7xV5QYh6VRuzELwtRpzmfskdA2c+ndt+7EdxSq5CVzLdWzNBttJqNshFOsYDJt
+0T3+gGtHwNvFYfmTAQZSlkxOzdit8IgZTC7isz26PA+QOZ/jDrmQUA+GsffwSN4F
+vIS6XhPY3yc9lFFPyJj57vU+5qJUveU7RdkX4J/yhmgmS1zFr1Kn1kGTGDeQ7kd6
+AXqTFYvO4qpRyTBGYonAHHM9gTtDn+/VZkxTWK+WhXBBHP0jctpTKX+XTg6QRTpM
+w3jd9bXdObbhaIrY5UV5CRFA82JyPw2U1NsvJR7I4x3v0VhVKWbOWkZxM8EewBSt
+9bSNbYfMPNDf1EDNSLL8nNliIMZZ+S995M31nez5ZO4HW5GkLRxBGHoWdvSCjMhf
+N6lUVbr52NewoHK3IzahvCQi7GJ3a4aRt6OlQnz/mkIuWbYE5jHazaJjlF4vkmt4
+KqzJLb8PZTkqz41nhv4j
+=Iymc
+-----END PGP SIGNATURE-----
+
+--xHbokkKX1kTiQeDC--
