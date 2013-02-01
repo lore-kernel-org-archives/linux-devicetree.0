@@ -1,118 +1,144 @@
-From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC] usb: dwc3: Get PHY from platform specific dwc3 dt
- node.
-Date: Fri, 1 Feb 2013 14:23:28 +0530
-Message-ID: <CAFp+6iFBL8LOh=dw=mvHaUHjKvmLr0of83dmC6wf4zHog8xubw@mail.gmail.com>
-References: <1359631232-7107-1-git-send-email-gautam.vivek@samsung.com>
- <510A56BF.3040804@ti.com>
- <CAFp+6iFkb=U0CJA=3zmQvd5XfMwbROuRJjXoJG7zvvq4_upzNw@mail.gmail.com>
- <20130131152527.GE4064@arwen.pp.htv.fi>
- <CAFp+6iHvKYiF_neANRq5roAEJwhvcaLk7pAd7Dy94Z5XiDkhgA@mail.gmail.com>
- <20130131153836.GF4064@arwen.pp.htv.fi> <510B50DA.6010201@ti.com>
- <CAFp+6iF2HMmiMVR4YyEG7bmpCZ4KdwBT7q2Jy-P1SMVtoVBn6g@mail.gmail.com>
- <CAFp+6iGZU29nt4yBjkyeeS+s_D1=AamgGTOsJq1xo_5z2O-sDg@mail.gmail.com>
- <20130201085053.GG8060@arwen.pp.htv.fi>
+From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
+Subject: Re: [PATCH V7] kbuild: create a rule to run the pre-processor on
+ *.dts files
+Date: Fri, 01 Feb 2013 09:01:52 +0000
+Message-ID: <510B8480.7000507@st.com>
+References: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org>
+Reply-To: srinivas.kandagatla@st.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130201085053.GG8060-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, kishon <kishon-l0cyMroinI0@public.gmane.org>, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Grant Likely <glikely@secretlab.ca>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, Sam Ravnborg <sam@ravnborg.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 1, 2013 at 2:20 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
-> On Fri, Feb 01, 2013 at 11:54:01AM +0530, Vivek Gautam wrote:
->> Hi Balbi,
->>
->>
->> On Fri, Feb 1, 2013 at 11:52 AM, Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> > Hi Kishon,
->> >
->> >
->> > On Fri, Feb 1, 2013 at 10:51 AM, kishon <kishon-l0cyMroinI0@public.gmane.org> wrote:
->> >> Hi,
->> >>
->> >>
->> >> On Thursday 31 January 2013 09:08 PM, Felipe Balbi wrote:
->> >>>
->> >>> On Thu, Jan 31, 2013 at 09:00:37PM +0530, Vivek Gautam wrote:
->> >>>>
->> >>>> Hi Felipe,
->> >>>>
->> >>>>
->> >>>> On Thu, Jan 31, 2013 at 8:55 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
->> >>>>>
->> >>>>> Hi,
->> >>>>>
->> >>>>> On Thu, Jan 31, 2013 at 08:53:27PM +0530, Vivek Gautam wrote:
->> >>>>>>>>
->> >>>>>>>> Moreover, SoCs having multiple dwc3 controllers will have multiple
->> >>>>>>>> PHYs, which eventually be added using usb_add_phy_dev(), and not
->> >>>>>>>> using usb_add_phy(). So each dwc3 controller won't be able to
->> >>>>>>>> get PHYs by simply calling devm_usb_get_phy() also.
->> >>>>>>>
->> >>>>>>>
->> >>>>>>> No. We have added usb_get_phy_dev() for that purpose in the case of
->> >>>>>>> non-dt.
->> >>>>>>> I think, instead you can have a patch to use devm_usb_get_phy_dev()
->> >>>>>>> here and
->> >>>>>>> in exynos platform specific code use usb_bind_phy() to bind the phy
->> >>>>>>> and
->> >>>>>>> controller till you change it to dt.
->> >>>>>>>
->> >>>>>>
->> >>>>>> We have dt support for dwc3-exynos, in such case we should go ahead
->> >>>>>> with
->> >>>>>> of_platform_populate(), right ?
->> >>>>>> But if when i use of_platform_populate() i will not be able to set
->> >>>>>> dma_mask to dwc3->dev. :-(
->> >>
->> >>
->> >> You can do something like this
->> >>
->> >> static u64 dwc3_exynos_dma_mask = DMA_BIT_MASK(32);
->> >>
->> >> static int dwc3_exynos_set_dmamask(struct device *dev, void *c)
->> >> {
->> >>         dev->dma_mask = &dwc3_exynos_dma_mask;
->> >>
->> >>         return 0;
->> >> }
->> >>
->> >> And in your probe after of_platform_populate, you can add
->> >>
->> >> device_for_each_child(&pdev->dev, NULL, dwc3_exynos_set_dmamask);
->> >>
->> >> Here pdev is the platform device of dwc3-exynos. By this way all the
->> >> children of dwc3-exynos will have dma_mask set to the required value.
->> >>
->> >
->> > Nice idea, thanks :-)
->> > hmm.. so i can patch this now, and get things working ;-)
->> >
->>
->> If this is fine with you shall i go ahead and post a patch for the same ? ;-)
+Hi Stephen,
+Not sure if you have already noticed this but,
+I did try this patch on my 3.8, and it looks like the intermediate dts
+file replaces all instances of linux with 1 because of predefined macros
+in gcc.
+As a result
+    linux,stdout-path = "/soc/stm-asc2";
+is changed to.
+    1,stdout-path = "/soc/stm-asc2";
+
+On my version of compiler(gcc version 4.6.3) I have
+
+armv7-linux-gcc -E -dM - < /dev/null | grep -v _
+#define unix 1
+#define linux 1
+
+Which might be true with most compiler versions aswell.
+As we are using linux as prefix for some device tree properties it makes
+sense to undef the linux gcc define.
+Adding -Ulinux to cmd_dtc_cpp should fix it.
+
+-cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__ -x assembler-with-cpp -o
+$(dtc-tmp) $< ; \
++cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__  -Ulinux -x
+assembler-with-cpp -o $(dtc-tmp) $< ; \
+    $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
+
+
+Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+
+
+
+Thanks,
+srini
+
+
+
+On 02/01/13 18:43, Stephen Warren wrote:
+> From: Stephen Warren <swarren@nvidia.com>
 >
-> should be fine, but we can wait a bit to see if DeviceTree folks reply,
-> your patch will only go on v3.10 anyway.
+> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
+> passing them to dtc for final compilation. This allows the use of #define
+> and #include within the .dts file.
 >
-
-Yeah, sure. No problem at all.
-For the time being i will continue to use this change for my other
-development work too. :-)
-
-
--- 
-Thanks & Regards
-Vivek
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> ---
+> Grant, back in mid-November, you said you'd make a decision on this in
+> the next couple of days, but I think this got overlooked.
+>
+> v7: Build *.dtb from *.dts not src/*.dts.
+> v6: No change.
+> v5:
+> * Update Documentation/kbuild for the new command and rule.
+> v4:
+> * Use -x assembler-with-cpp so pre-defined macros are set up so that
+>   #included header files know to only use cpp syntax, not C syntax.
+> * Define __DTS__ for similar reasons.
+> * use $(CPP) not $(CC) -E, and use $(cpp_flags).
+> * Save the pre-processed results so they can be easily inspected when
+>   debugging build issues.
+> * The use of -x assembler-with-cpp causes cpp to recognize directives in
+>   column 1 only. Hence, there's no need to escape property names that
+>   begin with #. Hence, there's no need for separate skeleton.dtsi and
+>   skeleton.dtsip. Maintain a separate file extension and build rule so that
+>   CPP-usage is opt-in. In particular, when using CPP, #include must be used
+>   rather than /include/ so that dependencies work.
+> v3: Pass "-x c" not "-xc" to cpp.
+> v2: Place make %.dtb: %.dtsp rule into Makefile.lib.
+> ---
+>  Documentation/kbuild/makefiles.txt |   23 +++++++++++++++++++++++
+>  scripts/Makefile.lib               |    9 +++++++++
+>  2 files changed, 32 insertions(+)
+>
+> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
+> index 14c3f4f..5198b74 100644
+> --- a/Documentation/kbuild/makefiles.txt
+> +++ b/Documentation/kbuild/makefiles.txt
+> @@ -1186,6 +1186,29 @@ When kbuild executes, the following steps are followed (roughly):
+>  		clean-files += *.dtb
+>  		DTC_FLAGS ?= -p 1024
+>  
+> +    dtc_cpp
+> +	This is just like dtc as describe above, except that the C pre-
+> +	processor is invoked upon the .dtsp file before compiling the result
+> +	with dtc.
+> +
+> +	In order for build dependencies to work, all files compiled using
+> +	dtc_cpp must use the C pre-processor's #include functionality and not
+> +	dtc's /include/ functionality.
+> +
+> +	Using the C pre-processor allows use of #define to create named
+> +	constants. In turn, the #defines will typically appear in a header
+> +	file, which may be shared with regular C code. Since the dtc language
+> +	represents a data structure rather than code in C syntax, similar
+> +	restrictions are placed on a header file included by a device tree
+> +	file as for a header file included by an assembly language file.
+> +	In particular, the C pre-processor is passed -x assembler-with-cpp,
+> +	which sets macro __ASSEMBLY__. __DTS__ is also set. These allow header
+> +	files to restrict their content to that compatible with device tree
+> +	source.
+> +
+> +	A central rule exists to create $(obj)/%.dtb from $(src)/%.dtsp;
+> +	architecture Makefiles do no need to explicitly write out that rule.
+> +
+>  --- 6.8 Custom kbuild commands
+>  
+>  	When kbuild is executing with KBUILD_VERBOSE=0, then only a shorthand
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index bdf42fd..2c2a302 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -269,6 +269,15 @@ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile
+>  $(obj)/%.dtb: $(src)/%.dts FORCE
+>  	$(call if_changed_dep,dtc)
+>  
+> +dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
+> +
+> +quiet_cmd_dtc_cpp = DTC+CPP $@
+> +cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__ -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+> +	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
+> +
+> +$(obj)/%.dtb: $(src)/%.dtsp FORCE
+> +	$(call if_changed_dep,dtc_cpp)
+> +
+>  # Bzip2
+>  # ---------------------------------------------------------------------------
+>  
