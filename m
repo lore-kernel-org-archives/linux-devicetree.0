@@ -1,51 +1,55 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH V2 1/6] pinctrl: pinctrl-single: use arch_initcall and
- module_exit
-Date: Fri, 1 Feb 2013 09:11:24 -0800
-Message-ID: <20130201171124.GF22517@atomide.com>
-References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
- <1359445134-13323-2-git-send-email-manishv.b@ti.com>
- <CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com>
- <20130201170906.GE22517@atomide.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V7] kbuild: create a rule to run the pre-processor on
+ *.dts files
+Date: Fri, 01 Feb 2013 10:27:30 -0700
+Message-ID: <510BFB02.6000002@wwwdotorg.org>
+References: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org> <510B8480.7000507@st.com> <510BF281.1080309@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130201170906.GE22517@atomide.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>, davinci-linux-open-source@linux.davincidsp.com, linux@arm.linux.org.uk, sameo@linux.intel.com, linux-doc@vger.kernel.org, khilman@deeprootsystems.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, hs@denx.de, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <510BF281.1080309@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: srinivas.kandagatla@st.com, Grant Likely <glikely@secretlab.ca>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, Sam Ravnborg <sam@ravnborg.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Scott Wood <scottwood@freescale.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [130201 09:12]:
-> * Linus Walleij <linus.walleij@linaro.org> [130129 03:03]:
-> > On Tue, Jan 29, 2013 at 8:38 AM, Vishwanathrao Badarkhe, Manish
-> > <manishv.b@ti.com> wrote:
-> > 
-> > > Currently, I2C driver gets probed before pinctrl driver.
-> > > To achieve I2C pin muxing via pinctrl driver before I2C
-> > > probe get called, register pinctrl driver in arch_initcall.
-> > > Also, add module_exit to unregister pinctrl driver.
-> > >
-> > > Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
-> > 
-> > So your I2C driver is not returning -EPROBE_DEFER
-> > if it cannot find its pins?
-> > 
-> > Hm, well I can live with this, if Tony ACKs it.
+On 02/01/2013 09:51 AM, Rob Herring wrote:
+> On 02/01/2013 03:01 AM, Srinivas KANDAGATLA wrote:
+>> Hi Stephen,
+>> Not sure if you have already noticed this but,
+>> I did try this patch on my 3.8, and it looks like the intermediate dts
+>> file replaces all instances of linux with 1 because of predefined macros
+>> in gcc.
+>> As a result
+>>     linux,stdout-path = "/soc/stm-asc2";
+>> is changed to.
+>>     1,stdout-path = "/soc/stm-asc2";
+>>
+>> On my version of compiler(gcc version 4.6.3) I have
+>>
+>> armv7-linux-gcc -E -dM - < /dev/null | grep -v _
+>> #define unix 1
+>> #define linux 1
+>>
+>> Which might be true with most compiler versions aswell.
+>> As we are using linux as prefix for some device tree properties it makes
+>> sense to undef the linux gcc define.
+>> Adding -Ulinux to cmd_dtc_cpp should fix it.
+>>
+>> -cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__ -x assembler-with-cpp -o
+>> $(dtc-tmp) $< ; \
+>> +cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__  -Ulinux -x
+>> assembler-with-cpp -o $(dtc-tmp) $< ; \
+>>     $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
 > 
-> Hmm pinctrl is before i2c in drivers/Makefile.
-> Making initcalls happen earlier and earlier is usually the
-> wrong way to go. Sounds like there's some other issue here
-> that needs to be fixed instead.
+> That's a hackish solution that seems fragile as well. Is there no way to
+> turn off all built-in defines?
 
-Let me guess: The i2c driver is wrongly set to run with
-arch_initcall?
- 
-> Regards,
-> 
-> Tony
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+I'm pretty sure there is; I'll go find it.
+
+But we do want to keep some of the built-in defines. for example, -x
+assembler-with-cpp turns on __ASSEMBLY__ or similar, which headers can
+use to determine whether to only set up #defines, or also C-oriented
+stuff like types/prototypes. So, at least that one would need to be
+explicitly re-defined.
