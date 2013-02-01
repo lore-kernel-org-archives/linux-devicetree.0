@@ -1,73 +1,32 @@
 From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH] ARM: OMAP: gpmc: Add device tree documentation for elm
- handle
-Date: Fri, 1 Feb 2013 13:58:54 -0800
-Message-ID: <20130201215854.GW22517@atomide.com>
-References: <1358485066-27495-1-git-send-email-avinashphilip@ti.com>
+Subject: Re: [PATCH v3 3/3] arm: omap2: gpmc: add DT bindings for OneNAND
+Date: Fri, 1 Feb 2013 14:12:10 -0800
+Message-ID: <20130201221209.GA22517@atomide.com>
+References: <1359116591-32730-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1359116591-32730-3-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130125155633.GC16795@e106331-lin.cambridge.arm.com>
+ <CALF0-+X2qsF5OETerRSVsJbjkC-JdVXsZhyw1sxQYR+PWX6LHA@mail.gmail.com>
+ <20130128115339.GD7754@e106331-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1358485066-27495-1-git-send-email-avinashphilip@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Philip Avinash <avinashphilip@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, artem.bityutskiy@linux.intel.com, zonque@gmail.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, nsekhar@ti.com, gururaja.hebbar@ti.com
+In-Reply-To: <20130128115339.GD7754@e106331-lin.cambridge.arm.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Ezequiel Garcia <elezegarcia@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "zonque@gmail.com" <zonque@gmail.com>, "matthias.bgg@googlemail.com" <matthias.bgg@googlemail.com>, Javier Martinez Canillas <martinez.javier@gmail.com>, Enric Balletbo Serra <eballetbo@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "b-cousson@ti.com" <b-cousson@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "jon-hunter@ti.com" <jon-hunter@ti.com>, Artem Bityutskiy <dedekind1@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-* Philip Avinash <avinashphilip@ti.com> [130117 21:00]:
-> In case ELM module available, omap2 NAND driver can opt for hardware
-> correction method for bit flip errors in NAND flash with BCH. Hence the
-> detection of ELM module is done through devicetree population of elm_id.
-> This patch update device tree documentation for gpmc-nand for elm-id
-> data population.
+* Mark Rutland <mark.rutland@arm.com> [130128 03:57]:
 > 
-> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
-> ---
-> This patch based [1] and depends on [2]. As Artem suggested, this patch can
-> go in omap_tree due to the dependency on [3].
-> Discussion can found at [4]
+> So if I've understood correctly, the first address cell is the CS, and the
+> second the offset within this (as the comment in the onenand@0 node hints)?
 > 
-> Tony,
->   Can you accept this patch.
+> If so, the code now makes sense to me :)
 
-Thanks applying into omap-for-v3.9/gpmc.
+Sounds like further checking can be added as needed, so applying this
+series into omap-for-v3.9/gpmc.
 
 Regards,
 
 Tony
- 
-> 1. http://git.kernel.org/?p=linux/kernel/git/tmlind/linux-omap.git;a=shortlog;h=refs/heads/omap-for-v3.9/gpmc
-> 2. mtd: nand: omap2: Support for hardware BCH error correction
->    http://git.infradead.org/users/dedekind/l2-mtd-2.6.git/commit/576daed18c3f27bb5d0e57e1df11e8f7b493dce8
-> 3. ARM: OMAP: gpmc: add DT bindings for GPMC timings and NAND
->    http://git.kernel.org/?p=linux/kernel/git/tmlind/linux-omap.git;a=commit;h=bc6b1e7b86f5d8e4a6fc1c0189e64bba4077efe0
-> 4. https://lkml.org/lkml/2013/1/17/167   
-> 
->  .../devicetree/bindings/mtd/gpmc-nand.txt          |    4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> index 9f464f9..e7f8d7e 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> @@ -29,6 +29,9 @@ Optional properties:
->  		"bch4"		4-bit BCH ecc code
->  		"bch8"		8-bit BCH ecc code
->  
-> + - elm_id:	Specifies elm device node. This is required to support BCH
-> + 		error correction using ELM module.
-> +
->  For inline partiton table parsing (optional):
->  
->   - #address-cells: should be set to 1
-> @@ -46,6 +49,7 @@ Example for an AM33xx board:
->  		#address-cells = <2>;
->  		#size-cells = <1>;
->  		ranges = <0 0 0x08000000 0x2000>;	/* CS0: NAND */
-> +		elm_id = <&elm>;
->  
->  		nand@0,0 {
->  			reg = <0 0 0>; /* CS0, offset 0 */
-> -- 
-> 1.7.9.5
-> 
