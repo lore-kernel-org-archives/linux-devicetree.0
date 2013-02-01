@@ -1,98 +1,88 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery support
- for G2D
-Date: Thu, 31 Jan 2013 19:26:07 -0700
-Message-ID: <510B27BF.6030203@wwwdotorg.org>
-References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org> <1359107722-9974-2-git-send-email-sachin.kamat@linaro.org> <CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com> <510987B5.6090509@gmail.com> <050101cdff52$86df3a70$949daf50$%dae@samsung.com> <510B02AB.4080908@gmail.com> <0b7501ce0011$3df65180$b9e2f480$@samsung.com> <00fd01ce001b$5215a3f0$f640ebd0$%dae@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2] drm/exynos: Get HDMI version from device tree
+Date: Thu, 31 Jan 2013 19:30:11 -0700
+Message-ID: <510B28B3.8030404@wwwdotorg.org>
+References: <50EC5EDE.3030208@firmworks.com>
+ <1357676181-16728-1-git-send-email-seanpaul@chromium.org>
+ <50ECA400.50007@wwwdotorg.org> <51082B6A.1010406@gmail.com>
+ <CAAQKjZNR8EJ+UFRO3vgYLH9So_gHn0a8gAf1JKu250shGiJ4qQ@mail.gmail.com>
+ <5109DF18.6010202@wwwdotorg.org>
+ <CAOw6vbJtUQdDLNkhg3ZL10KaPK=wQRDxkVUUUqO_=W84sYHgzg@mail.gmail.com>
+ <510AAB94.6030406@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <00fd01ce001b$5215a3f0$f640ebd0$%dae@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, patches@linaro.org, 'Sachin Kamat' <sachin.kamat@linaro.org>, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, s.nawrocki@samsung.com, linux-media@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <510AAB94.6030406-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Tomasz Stanislawski <t.stanislaws-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 01/31/2013 06:27 PM, Inki Dae wrote:
-> Hi Kukjin,
+On 01/31/2013 10:36 AM, Stephen Warren wrote:
+> On 01/31/2013 08:04 AM, Sean Paul wrote:
+> ...
+>> I think if we take a step back, we're really not discussing HDMI
+>> version 1.3 vs. 1.4, we're really talking about the HDMI IP block
+>> version.
 > 
->> -----Original Message-----
->> From: linux-media-owner@vger.kernel.org [mailto:linux-media-
->> owner@vger.kernel.org] On Behalf Of Kukjin Kim
->> Sent: Friday, February 01, 2013 9:15 AM
->> To: 'Sylwester Nawrocki'; 'Inki Dae'
->> Cc: 'Sachin Kamat'; linux-media@vger.kernel.org; dri-
->> devel@lists.freedesktop.org; devicetree-discuss@lists.ozlabs.org;
->> patches@linaro.org; s.nawrocki@samsung.com
->> Subject: RE: [PATCH 2/2] drm/exynos: Add device tree based discovery
->> support for G2D
->>
->> Sylwester Nawrocki wrote:
->>>
->>> Hi Inki,
->>>
->> Hi Sylwester and Inki,
->>
->>> On 01/31/2013 02:30 AM, Inki Dae wrote:
->>>>> -----Original Message-----
->>>>> From: Sylwester Nawrocki [mailto:sylvester.nawrocki@gmail.com]
->>>>> Sent: Thursday, January 31, 2013 5:51 AM
->>>>> To: Inki Dae
->>>>> Cc: Sachin Kamat; linux-media@vger.kernel.org; dri-
->>>>> devel@lists.freedesktop.org; devicetree-discuss@lists.ozlabs.org;
->>>>> patches@linaro.org; s.nawrocki@samsung.com
->>>>> Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery
->>>>> support for G2D
->>>>>
->>>>> On 01/30/2013 09:50 AM, Inki Dae wrote:
->>>>>>> +static const struct of_device_id exynos_g2d_match[] = {
->>>>>>> +       { .compatible = "samsung,g2d-v41" },
->>>>>>
->>>>>> not only Exynos5 and also Exyno4 has the g2d gpu and drm-based g2d
->>>>>> driver shoud support for all Exynos SoCs. How about using
->>>>>> "samsung,exynos5-g2d" instead and adding a new property 'version' to
->>>>>> identify ip version more surely? With this, we could know which SoC
->>>>>> and its g2d ip version. The version property could have '0x14' or
->>>>>> others. And please add descriptions to dt document.
->>>>>
->>>>> Err no. Are you suggesting using "samsung,exynos5-g2d" compatible
->>> string
->>>>> for Exynos4 specific IPs ? This would not be correct, and you still
->> can
->>>>
->>>> I assumed the version 'v41' is the ip for Exynos5 SoC. So if this
->> version
->>>> means Exynos4 SoC then it should be "samsung,exynos4-g2d".
->>>
->>> Yes, v3.0 is implemented in the S5PC110 (Exynos3110) SoCs and
-> Exynos4210,
->>> V4.1 can be found in Exynos4212 and Exynos4412, if I'm not mistaken.
->>>
->>> So we could have:
->>>
->>> compatible = "samsung,exynos-g2d-3.0" /* for Exynos3110, Exynos4210 */
->>> compatible = "samsung,exynos-g2d-4.1" /* for Exynos4212, Exynos4412 */
->>>
->> In my opinion, this is better than later. Because as I said, when we can
->> use
->> IP version to identify, it is more clear and can be used
->>
->> One more, how about following?
->>
->> compatible = "samsung,g2d-3.0"
->> compatible = "samsung,g2d-4.1"
->>
+> Absolutely.
 > 
-> I think compatible string should be considered case by case.
+>> The blocks just happen to implement different versions of the
+>> HDMI spec.
 > 
-> For example,
-> If compatible = "samsung,g2d-3.0" is added to exynos4210.dtsi, it'd be
-> reasonable. But what if that compatible string is added to exynos4.dtsi?.
-> This case isn't considered for exynos4412 SoC with v4.1. 
+> Yes.
+> 
+>> The initial naming in the driver is unfortunate.
+>>
+>> That said, I think the above solution is fine, but it's a little
+>> misleading.  I'd much rather encode the version of the IP block
+>> instead of the SoC that contains it. Something like:
+>>
+>> compatible = "samsung,exynos-hdmiXXX"
+>>
+>> In this case, XXX is just some integer in the bindings that maps to an
+>> SoC. For example,
+>>
+>> +----------------------+-------------+
+>> | HDMI IP version      | Exynos SoC  |
+>> +----------------------+-------------+
+>> | samsung,exynos-hdmi1 | 4210        |
+>> | samsung,exynos-hdmi2 | 4212, 5250  |
+>> +----------------------+-------------+
+> 
+> That seems reasonable to me. (But, does the documentation for these IP
+> blocks specify the version in the format "1" and "2"? It'd be best if
+> the compatible value encoded the same version scheme as the IP block
+> documentation).
 
-You can always add the most common value for the compatible property
-into exynos4.dtsi, and then override it in exyons4210.dtsi, or other files.
+The thing I forgot here is:
 
-Still, the idea of including the SoC version in the compatible value is
-a good idea.
+Even if the IP block is identical between two different SoCs, it's quite
+possible it was tweaked just a tiny bit between the two SoCs, or
+something about the environment into which the IP block was placed
+differs. Either of those conditions could mean that the same IP block
+instantiated into two different SoCs could end up requiring different
+workarounds/bugfixes/... that the driver needs to know about. As such,
+encoding the exact SoC into the compatible value, and then deriving the
+IP block version from the SoC-specific compatible value, makes the most
+sense.
+
+This is really just what Olof was saying rephrased. I'm just following
+up to change my mind on my assertion that the table above appears
+reasonable.
+
+And of course as Olof cares, the compatible value can contain multiple
+values; the most specific first, and then progressively more generic
+values, and if the driver doesn't care (yet?) about the differences
+between some specific values, it can always /just/ match on the more
+generic values until some specific WAR/bugfix is needed.
