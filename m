@@ -1,47 +1,155 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3] arm: mvebu: support for the new Armada XP development
- board(DB-MV784MP-GP)
-Date: Fri, 1 Feb 2013 06:09:44 -0300
-Message-ID: <20130201090943.GB10987@localhost>
-References: <1359643812-32654-1-git-send-email-gregory.clement@free-electrons.com>
- <1359643812-32654-2-git-send-email-gregory.clement@free-electrons.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: RE: [PATCH v17 4/7] fbmon: add videomode helpers
+Date: Fri, 01 Feb 2013 18:29:50 +0900
+Message-ID: <003401ce005e$af665c50$0e3314f0$%han@samsung.com>
+References: <1359104515-8907-1-git-send-email-s.trumtrar@pengutronix.de>
+	<1359104515-8907-5-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1359643812-32654-2-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
+In-reply-to: <1359104515-8907-5-git-send-email-s.trumtrar@pengutronix.de>
+Content-language: ko
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
+To: 'Steffen Trumtrar' <s.trumtrar@pengutronix.de>
+Cc: "'Mohammed, Afzal'" <afzal@ti.com>, 'Florian Tobias Schandinat' <FlorianSchandinat@gmx.de>, devicetree-discuss@lists.ozlabs.org, 'Stephen Warren' <swarren@wwwdotorg.org>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 'Tomi Valkeinen' <tomi.valkeinen@ti.com>, 'Rob Herring' <robherring2@gmail.com>, 'Laurent Pinchart' <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, 'Guennady Liakhovetski' <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKYW4gMzEsIDIwMTMgYXQgMDM6NTA6MTJQTSArMDEwMCwgR3JlZ29yeSBDTEVNRU5U
-IHdyb3RlOgo+IFRoaXMgaXMgdGhlIG5ldyBBcm1hZGEgWFAgZXZhbHVhdGlvbiBib2FyZCBmcm9t
-IE1hcnZlbGwuIEl0IGNvbWVzIHdpdGgKPiBhIFJTMjMyIHBvcnQgb3ZlciBVU0IsIGEgU0FUQSBs
-aW5rLCBhbiBpbnRlcm5hbCBTU0QsIDQgRXRoZXJuZXQKPiBHaWdhYml0IGxpbmtzLgo+IAo+IFN1
-cHBvcnQgZm9yIFVTQiAoSG9zdCBhbmQgZGV2aWNlKSwgU0RJTywgUENJZSB3aWxsIGJlIGFkZGVk
-IGFzIGRyaXZlcnMKPiB3aGVuIHRoZXkgYmVjb21lIGF2YWlsYWJsZSBmb3IgQXJtYWRhIFhQIGlu
-IG1haW5saW5lLgo+IAo+IFRlc3RlZC1ieTogU2ltb24gR3Vpbm90IDxzaW1vbi5ndWlub3RAc2Vx
-dWFudXgub3JnPgo+IFRlc3RlZC1ieTogRmxvcmlhbiBGYWluZWxsaSA8ZmxvcmlhbkBvcGVud3J0
-Lm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBHcmVnb3J5IENMRU1FTlQgPGdyZWdvcnkuY2xlbWVudEBm
-cmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlICAg
-ICAgICAgfCAgICAxICsKPiAgYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLXhwLWdwLmR0cyB8ICAx
-MDEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDIgZmlsZXMgY2hhbmdl
-ZCwgMTAyIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3Qv
-ZHRzL2FybWFkYS14cC1ncC5kdHMKPiAKClRlc3RlZC1ieTogRXplcXVpZWwgR2FyY2lhIDxlemVx
-dWllbC5nYXJjaWFAZnJlZS1lbGVjdHJvbnMuY29tPgoKUmVnYXJkcywKCi0tIApFemVxdWllbCBH
-YXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBBbmRyb2lk
-IEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcg
-bGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96
-bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+On Friday, January 25, 2013 6:02 PM, Steffen Trumtrar wrote
+> 
+> Add a function to convert from the generic videomode to a fb_videomode.
+> 
+> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+> Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
+> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> Tested-by: Afzal Mohammed <Afzal@ti.com>
+> Tested-by: Rob Clark <robclark@gmail.com>
+> Tested-by: Leela Krishna Amudala <leelakrishna.a@gmail.com>
+> ---
+>  drivers/video/fbmon.c |   52 +++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/fb.h    |    4 ++++
+>  2 files changed, 56 insertions(+)
+> 
+> diff --git a/drivers/video/fbmon.c b/drivers/video/fbmon.c
+> index cef6557..17ce135 100644
+> --- a/drivers/video/fbmon.c
+> +++ b/drivers/video/fbmon.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/pci.h>
+>  #include <linux/slab.h>
+>  #include <video/edid.h>
+> +#include <video/videomode.h>
+>  #ifdef CONFIG_PPC_OF
+>  #include <asm/prom.h>
+>  #include <asm/pci-bridge.h>
+> @@ -1373,6 +1374,57 @@ int fb_get_mode(int flags, u32 val, struct fb_var_screeninfo *var, struct fb_inf
+>  	kfree(timings);
+>  	return err;
+>  }
+> +
+> +#if IS_ENABLED(CONFIG_VIDEOMODE)
+> +int fb_videomode_from_videomode(const struct videomode *vm,
+> +				struct fb_videomode *fbmode)
+> +{
+> +	unsigned int htotal, vtotal;
+> +
+> +	fbmode->xres = vm->hactive;
+> +	fbmode->left_margin = vm->hback_porch;
+> +	fbmode->right_margin = vm->hfront_porch;
+> +	fbmode->hsync_len = vm->hsync_len;
+> +
+> +	fbmode->yres = vm->vactive;
+> +	fbmode->upper_margin = vm->vback_porch;
+> +	fbmode->lower_margin = vm->vfront_porch;
+> +	fbmode->vsync_len = vm->vsync_len;
+> +
+> +	/* prevent division by zero in KHZ2PICOS macro */
+> +	fbmode->pixclock = vm->pixelclock ?
+> +			KHZ2PICOS(vm->pixelclock / 1000) : 0;
+> +
+> +	fbmode->sync = 0;
+> +	fbmode->vmode = 0;
+> +	if (vm->dmt_flags & VESA_DMT_HSYNC_HIGH)
+> +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
+> +	if (vm->dmt_flags & VESA_DMT_HSYNC_HIGH)
+
+Hi Steffen Trumtrar,
+
+Um, it seems to be a type. 'H'SYNC -> 'V'SYNC
+Thus, it would be changed as below:
+
+    VESA_DMT_HSYNC_HIGH -> VESA_DMT_VSYNC_HIGH
+
+
+Best regards,
+Jingoo Han
+
+> +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
+> +	if (vm->data_flags & DISPLAY_FLAGS_INTERLACED)
+> +		fbmode->vmode |= FB_VMODE_INTERLACED;
+> +	if (vm->data_flags & DISPLAY_FLAGS_DOUBLESCAN)
+> +		fbmode->vmode |= FB_VMODE_DOUBLE;
+> +	fbmode->flag = 0;
+> +
+> +	htotal = vm->hactive + vm->hfront_porch + vm->hback_porch +
+> +		 vm->hsync_len;
+> +	vtotal = vm->vactive + vm->vfront_porch + vm->vback_porch +
+> +		 vm->vsync_len;
+> +	/* prevent division by zero */
+> +	if (htotal && vtotal) {
+> +		fbmode->refresh = vm->pixelclock / (htotal * vtotal);
+> +	/* a mode must have htotal and vtotal != 0 or it is invalid */
+> +	} else {
+> +		fbmode->refresh = 0;
+> +		return -EINVAL;
+> +	}
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(fb_videomode_from_videomode);
+> +#endif
+> +
+>  #else
+>  int fb_parse_edid(unsigned char *edid, struct fb_var_screeninfo *var)
+>  {
+> diff --git a/include/linux/fb.h b/include/linux/fb.h
+> index c7a9571..100a176 100644
+> --- a/include/linux/fb.h
+> +++ b/include/linux/fb.h
+> @@ -19,6 +19,7 @@ struct vm_area_struct;
+>  struct fb_info;
+>  struct device;
+>  struct file;
+> +struct videomode;
+> 
+>  /* Definitions below are used in the parsed monitor specs */
+>  #define FB_DPMS_ACTIVE_OFF	1
+> @@ -714,6 +715,9 @@ extern void fb_destroy_modedb(struct fb_videomode *modedb);
+>  extern int fb_find_mode_cvt(struct fb_videomode *mode, int margins, int rb);
+>  extern unsigned char *fb_ddc_read(struct i2c_adapter *adapter);
+> 
+> +extern int fb_videomode_from_videomode(const struct videomode *vm,
+> +				       struct fb_videomode *fbmode);
+> +
+>  /* drivers/video/modedb.c */
+>  #define VESA_MODEDB_SIZE 34
+>  extern void fb_var_to_videomode(struct fb_videomode *mode,
+> --
+> 1.7.10.4
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
