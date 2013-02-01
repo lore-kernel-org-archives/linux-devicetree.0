@@ -1,64 +1,76 @@
-From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 04/10] clk: tegra: Add new fields and PLL types for
- Tegra114
-Date: Fri, 1 Feb 2013 14:40:30 -0500
-Message-ID: <510C1A2E.5010408@nvidia.com>
-References: <1359713962-16822-1-git-send-email-pdeschrijver@nvidia.com>
- <1359713962-16822-5-git-send-email-pdeschrijver@nvidia.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [RFC 10/11] iio: Add OF support
+Date: Fri, 1 Feb 2013 11:42:13 -0800
+Message-ID: <20130201194213.GA17968@roeck-us.net>
+References: <1359668588-13678-1-git-send-email-linux@roeck-us.net>
+ <1359668588-13678-11-git-send-email-linux@roeck-us.net>
+ <510BADCA.1030407@metafoo.de>
+ <20130201143307.GB20767@roeck-us.net>
+ <510BD845.1010200@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359713962-16822-5-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <510BD845.1010200-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2/1/2013 5:18 AM, Peter De Schrijver wrote:
-> Tegra114 introduces new PLL types. This requires new clocktypes as well
-> as some new fields in the pll structure.
->
-> Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->   drivers/clk/tegra/clk-pll.c |  719 +++++++++++++++++++++++++++++++++++++++++++
->   drivers/clk/tegra/clk.h     |   47 +++
->   2 files changed, 766 insertions(+), 0 deletions(-)
->
-> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
-> index 87d2f34..50114b7 100644
-> --- a/drivers/clk/tegra/clk-pll.c
-> +++ b/drivers/clk/tegra/clk-pll.c
-> [snip]
-> +struct clk *tegra_clk_register_pllxc(const char *name, const char *parent_name,
-> +                         void __iomem *clk_base, void __iomem *pmc,
-> +                         unsigned long flags, unsigned long fixed_rate,
-> +                         struct tegra_clk_pll_params *pll_params,
-> +                         u32 pll_flags,
-> +                         struct tegra_clk_pll_freq_table *freq_table,
-> +                         spinlock_t *lock)
-> +{
-> +       if (!pll_params->pdiv_tohw)
-> +               return -EINVAL;
-> +
-This will cause the following warning:
-warning: return makes pointer from integer without a cast
+On Fri, Feb 01, 2013 at 03:59:17PM +0100, Lars-Peter Clausen wrote:
+> On 02/01/2013 03:33 PM, Guenter Roeck wrote:
+> > On Fri, Feb 01, 2013 at 12:58:02PM +0100, Lars-Peter Clausen wrote:
+> >> 013 10:43 PM, Guenter Roeck wrote:
+> >>> Provide bindings, new API access functions, and parse OF data
+> >>> during initialization.
+> >>>
+> >>
+> >> Hi Guenter,
+> >>
+> >> Thanks for taking care of this.
+> >>
+> >> I'd prefer to have only one iio_get_channel which handles both the dt and the
+> >> non-dt case. Otherwise we'll soon have constructs like
+> >>
+> >> if (dev->of_node)
+> >> 	chan = of_iio_get_channel(dev->of_node, 1);
+> >> else
+> >> 	chan = iio_get_channel(dev_name(dev), "vcc");
+> >>
 
-Same with occurrences in tegra_clk_register_pllm and 
-tegra_clk_register_pllc.
+Clock code has of_clk_get_by_name(node *, name), clk_get(dev, name), and
+of_clk_get(node *, index). Right now of_iio_get_channel matches of_clk_get,
+and iio_get_channel matches clk_get.
 
-Should this instead be returning NULL?
+Question is really how we want to API to look like. I am open to suggestions.
 
--rhyland
+> >> appearing all over the place in drivers code. I'd keep the actual
+> >> implementation pretty close to what the clk framework does. E.g. take a look at
+> >> of_clk_get_by_name() and clk_get() in clkdev.c. And don't take a detour via the
+> >> iio_map lookup for the devicetree case, just loop over all IIO devices and
+> >> match by of_node. This should allow us to simplify the code quite a bit.
+> >>
+> > Yes, I just could not figure out how to loop over the list of iio devices. That
+> > is why I hijacked iio_map which does provide a list.
+> > 
+> > Any hints ?
+> 
+> Yes, use bus_find_device on iio_bus_type. A nice example how to use this to
+> lookup device by of node is of_find_i2c_device_by_node. For IIO you also need
+> to make sure that dev->type is iio_dev_type, since both devices and triggers
+> are registered on the same bus.
+> 
+Great, that works nicely, and, yes, the code is now much simpler.
 
--- 
-nvpublic
+> >>> +static struct iio_map *iio_map_of_init(struct iio_dev *idev)
+> >>> +{
+> >>
+> >> To be honest I find this whole function a bit confusing. If we are using
+> >> devicetree, we shouldn't need to register iio_map. Maybe just skip over
+> >> io-channel-output-names for now, until we figure out if we really need this and
+> >> what for.
+> >>
+Correct, I don't need this anymore after implementing the above.
+
+Thanks,
+Guenter
