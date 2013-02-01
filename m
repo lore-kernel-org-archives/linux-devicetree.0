@@ -1,144 +1,47 @@
-From: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>
-Subject: Re: [PATCH V7] kbuild: create a rule to run the pre-processor on
- *.dts files
-Date: Fri, 01 Feb 2013 09:01:52 +0000
-Message-ID: <510B8480.7000507@st.com>
-References: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org>
-Reply-To: srinivas.kandagatla@st.com
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3] arm: mvebu: support for the new Armada XP development
+ board(DB-MV784MP-GP)
+Date: Fri, 1 Feb 2013 06:09:44 -0300
+Message-ID: <20130201090943.GB10987@localhost>
+References: <1359643812-32654-1-git-send-email-gregory.clement@free-electrons.com>
+ <1359643812-32654-2-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1357152215-5845-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Grant Likely <glikely@secretlab.ca>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, Sam Ravnborg <sam@ravnborg.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Scott Wood <scottwood@freescale.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1359643812-32654-2-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-Not sure if you have already noticed this but,
-I did try this patch on my 3.8, and it looks like the intermediate dts
-file replaces all instances of linux with 1 because of predefined macros
-in gcc.
-As a result
-    linux,stdout-path = "/soc/stm-asc2";
-is changed to.
-    1,stdout-path = "/soc/stm-asc2";
-
-On my version of compiler(gcc version 4.6.3) I have
-
-armv7-linux-gcc -E -dM - < /dev/null | grep -v _
-#define unix 1
-#define linux 1
-
-Which might be true with most compiler versions aswell.
-As we are using linux as prefix for some device tree properties it makes
-sense to undef the linux gcc define.
-Adding -Ulinux to cmd_dtc_cpp should fix it.
-
--cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__ -x assembler-with-cpp -o
-$(dtc-tmp) $< ; \
-+cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__  -Ulinux -x
-assembler-with-cpp -o $(dtc-tmp) $< ; \
-    $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
-
-
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-
-
-
-Thanks,
-srini
-
-
-
-On 02/01/13 18:43, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
->
-> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
-> passing them to dtc for final compilation. This allows the use of #define
-> and #include within the .dts file.
->
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
-> ---
-> Grant, back in mid-November, you said you'd make a decision on this in
-> the next couple of days, but I think this got overlooked.
->
-> v7: Build *.dtb from *.dts not src/*.dts.
-> v6: No change.
-> v5:
-> * Update Documentation/kbuild for the new command and rule.
-> v4:
-> * Use -x assembler-with-cpp so pre-defined macros are set up so that
->   #included header files know to only use cpp syntax, not C syntax.
-> * Define __DTS__ for similar reasons.
-> * use $(CPP) not $(CC) -E, and use $(cpp_flags).
-> * Save the pre-processed results so they can be easily inspected when
->   debugging build issues.
-> * The use of -x assembler-with-cpp causes cpp to recognize directives in
->   column 1 only. Hence, there's no need to escape property names that
->   begin with #. Hence, there's no need for separate skeleton.dtsi and
->   skeleton.dtsip. Maintain a separate file extension and build rule so that
->   CPP-usage is opt-in. In particular, when using CPP, #include must be used
->   rather than /include/ so that dependencies work.
-> v3: Pass "-x c" not "-xc" to cpp.
-> v2: Place make %.dtb: %.dtsp rule into Makefile.lib.
-> ---
->  Documentation/kbuild/makefiles.txt |   23 +++++++++++++++++++++++
->  scripts/Makefile.lib               |    9 +++++++++
->  2 files changed, 32 insertions(+)
->
-> diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-> index 14c3f4f..5198b74 100644
-> --- a/Documentation/kbuild/makefiles.txt
-> +++ b/Documentation/kbuild/makefiles.txt
-> @@ -1186,6 +1186,29 @@ When kbuild executes, the following steps are followed (roughly):
->  		clean-files += *.dtb
->  		DTC_FLAGS ?= -p 1024
->  
-> +    dtc_cpp
-> +	This is just like dtc as describe above, except that the C pre-
-> +	processor is invoked upon the .dtsp file before compiling the result
-> +	with dtc.
-> +
-> +	In order for build dependencies to work, all files compiled using
-> +	dtc_cpp must use the C pre-processor's #include functionality and not
-> +	dtc's /include/ functionality.
-> +
-> +	Using the C pre-processor allows use of #define to create named
-> +	constants. In turn, the #defines will typically appear in a header
-> +	file, which may be shared with regular C code. Since the dtc language
-> +	represents a data structure rather than code in C syntax, similar
-> +	restrictions are placed on a header file included by a device tree
-> +	file as for a header file included by an assembly language file.
-> +	In particular, the C pre-processor is passed -x assembler-with-cpp,
-> +	which sets macro __ASSEMBLY__. __DTS__ is also set. These allow header
-> +	files to restrict their content to that compatible with device tree
-> +	source.
-> +
-> +	A central rule exists to create $(obj)/%.dtb from $(src)/%.dtsp;
-> +	architecture Makefiles do no need to explicitly write out that rule.
-> +
->  --- 6.8 Custom kbuild commands
->  
->  	When kbuild is executing with KBUILD_VERBOSE=0, then only a shorthand
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index bdf42fd..2c2a302 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -269,6 +269,15 @@ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile
->  $(obj)/%.dtb: $(src)/%.dts FORCE
->  	$(call if_changed_dep,dtc)
->  
-> +dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
-> +
-> +quiet_cmd_dtc_cpp = DTC+CPP $@
-> +cmd_dtc_cpp = $(CPP) $(cpp_flags) -D__DTS__ -x assembler-with-cpp -o $(dtc-tmp) $< ; \
-> +	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
-> +
-> +$(obj)/%.dtb: $(src)/%.dtsp FORCE
-> +	$(call if_changed_dep,dtc_cpp)
-> +
->  # Bzip2
->  # ---------------------------------------------------------------------------
->  
+T24gVGh1LCBKYW4gMzEsIDIwMTMgYXQgMDM6NTA6MTJQTSArMDEwMCwgR3JlZ29yeSBDTEVNRU5U
+IHdyb3RlOgo+IFRoaXMgaXMgdGhlIG5ldyBBcm1hZGEgWFAgZXZhbHVhdGlvbiBib2FyZCBmcm9t
+IE1hcnZlbGwuIEl0IGNvbWVzIHdpdGgKPiBhIFJTMjMyIHBvcnQgb3ZlciBVU0IsIGEgU0FUQSBs
+aW5rLCBhbiBpbnRlcm5hbCBTU0QsIDQgRXRoZXJuZXQKPiBHaWdhYml0IGxpbmtzLgo+IAo+IFN1
+cHBvcnQgZm9yIFVTQiAoSG9zdCBhbmQgZGV2aWNlKSwgU0RJTywgUENJZSB3aWxsIGJlIGFkZGVk
+IGFzIGRyaXZlcnMKPiB3aGVuIHRoZXkgYmVjb21lIGF2YWlsYWJsZSBmb3IgQXJtYWRhIFhQIGlu
+IG1haW5saW5lLgo+IAo+IFRlc3RlZC1ieTogU2ltb24gR3Vpbm90IDxzaW1vbi5ndWlub3RAc2Vx
+dWFudXgub3JnPgo+IFRlc3RlZC1ieTogRmxvcmlhbiBGYWluZWxsaSA8ZmxvcmlhbkBvcGVud3J0
+Lm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBHcmVnb3J5IENMRU1FTlQgPGdyZWdvcnkuY2xlbWVudEBm
+cmVlLWVsZWN0cm9ucy5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL01ha2VmaWxlICAg
+ICAgICAgfCAgICAxICsKPiAgYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLXhwLWdwLmR0cyB8ICAx
+MDEgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDIgZmlsZXMgY2hhbmdl
+ZCwgMTAyIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3Qv
+ZHRzL2FybWFkYS14cC1ncC5kdHMKPiAKClRlc3RlZC1ieTogRXplcXVpZWwgR2FyY2lhIDxlemVx
+dWllbC5nYXJjaWFAZnJlZS1lbGVjdHJvbnMuY29tPgoKUmVnYXJkcywKCi0tIApFemVxdWllbCBH
+YXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCwgS2VybmVsIGFuZCBBbmRyb2lk
+IEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20KX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNzIG1haWxpbmcg
+bGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3RzLm96
+bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
