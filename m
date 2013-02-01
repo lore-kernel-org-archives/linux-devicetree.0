@@ -1,114 +1,37 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining
- dr_mode and phy_type
-Date: Fri, 1 Feb 2013 20:21:58 +0800
-Message-ID: <20130201122156.GA22173@nchen-desktop>
-References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
- <87pq0omcfb.fsf@ashishki-desk.ger.corp.intel.com>
- <20130130020627.GA699@nchen-desktop>
- <20130130140015.GZ1906@pengutronix.de>
- <20130131020542.GD9777@nchen-desktop>
- <20130131102913.GA6937@pengutronix.de>
- <20130201011153.GE14629@nchen-desktop>
- <20130201065833.GV1906@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130201065833.GV1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH V2 0/4] Add generic DMA DT binding support
+Date: Fri, 01 Feb 2013 18:21:52 +0530
+Message-ID: <1359723116-18173-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.v@samsung.com, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, arnd@arndb.de, vinod.koul@intel.com, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 01, 2013 at 07:58:34AM +0100, Sascha Hauer wrote:
-> On Fri, Feb 01, 2013 at 09:11:54AM +0800, Peter Chen wrote:
-> > On Thu, Jan 31, 2013 at 11:29:13AM +0100, Sascha Hauer wrote:
-> > > On Thu, Jan 31, 2013 at 10:05:44AM +0800, Peter Chen wrote:
-> > > > On Wed, Jan 30, 2013 at 03:00:15PM +0100, Sascha Hauer wrote:
-> > > > > On Wed, Jan 30, 2013 at 10:06:28AM +0800, Peter Chen wrote:
-> > > > > > On Tue, Jan 29, 2013 at 01:55:04PM +0200, Alexander Shishkin wrote:
-> > > > > > > Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> > > > > > > 
-> > > > > > > > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > > > > > >
-> > > > > > > > This adds two little devicetree helper functions for determining the
-> > > > > > > > dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
-> > > > > > > > the devicetree.
-> > > > > > > >
-> > > > > > > > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > > > > > > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > > > > > > ---
-> > > > > > > >
-> > > > > > > > The properties and their values have been taken from the fsl-mph-dr driver.
-> > > > > > > > This binding is also documented (though currently not used) for the tegra
-> > > > > > > > ehci driver (Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt).
-> > > > > > > > This is a first attempt to parse these bindings at a common place so that
-> > > > > > > > others can make use of it.
-> > > > > > > >
-> > > > > > > > Basically I want to know whether this binding is recommended for new drivers
-> > > > > > > > since normally the devicetree uses '-' instead of '_', and maybe there are
-> > > > > > > > other problems with it.
-> > > > > > > >
-> > > > > > > > I need this binding for the chipidea driver. I suspect that the fsl-mph-dr
-> > > > > > > > driver also really handles a chipidea core.
-> > > > > > > 
-> > > > > > > As far as I know, it is a chipidea core. Adding Peter to Cc list, he can
-> > > > > > > probably confirm.
-> > > > > > 
-> > > > > > The fsl-mph-dr can't be used for chipdiea as it handles three platform
-> > > > > > drivers for three roles (peripheral , host, otg). But chipidea only has
-> > > > > > two platform drivers, one is the chipidea core, the other is related
-> > > > > > controller wrapper.
-> > > > > 
-> > > > > What do you mean by 'three platform drivers'? That's only how the driver
-> > > > > is built, no? I was talking about the hardware the fsl-mph-dr driver
-> > > > > handles which definitely smells like chipidea.
-> > > > 
-> > > > It creates host/device/otg platform device according to dr_mode from
-> > > > the device tree.
-> > > 
-> > > Again, that's software specific. What I'd like to know is whether the
-> > > *hardware* could be handled by the chipidea driver.
-> > not understand u, you mean the DT information at there? Those DT information
-> > may not be used for i.mx hardware.
-> 
-> The original question was:
-> 
-> There is a driver in the tree called fsl-mph-dr-of.c. Does this driver
-> handle a hardware which is compatible to the hardware the chipidea
-> driver handles?
-> 
-> I think the answer is yes, because said driver registers a ehci device,
-> or fsl-usb2-udc device (the same we used on i.MX). This hardware also
-> has a PORTSC register. All this seems to suggest that
-> 
-> drivers/usb/host/fsl-mph-dr-of.c
-> drivers/usb/host/ehci-fsl.c
-> drivers/usb/otg/fsl_otg.c
-> drivers/usb/gadget/fsl_usb2_udc.h
-> drivers/usb/gadget/fsl_udc_core.c
-> 
-> Could be replaced by the chipidea driver.
+Changes since V1:
+        - Address the review comments by Arnd Bergmann as below
+        - Wording of the properties.
+        - Pass pdmac as third parameter to of_dma_controller_register
+        - Filter the dma channel based on channel number and dma_device
 
-Yes, after creating a PowerPC's glue driver, like ci13xxx_ppc, or whatever.
-> 
-> Sascha
-> 
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
+This patch set adds support for generic dma device tree bindings for
+Samsung platforms and is dependent on the following patches from
+Vinod Koul next branch
+1)of: Add generic device tree DMA helpers
+2)dmaengine: add helper function to request a slave DMA channel
+
+This patch set is made based Mark Brown next branch
+
+Padmavathi Venna (4):
+  DMA: PL330: Add xlate function
+  DMA: PL330: Register the DMA controller with the generic DMA helpers
+  ARM: dts: Add #dma-cells for generic dma binding support
+  DMA: PL330: Modify pl330 filter based on new generic dma dt bindings.
+
+ .../devicetree/bindings/dma/arm-pl330.txt          |   15 ++++--
+ arch/arm/boot/dts/exynos5250.dtsi                  |    4 ++
+ drivers/dma/pl330.c                                |   56 ++++++++++++++++---
+ 3 files changed, 62 insertions(+), 13 deletions(-)
 
 -- 
-
-Best Regards,
-Peter Chen
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.4.4
