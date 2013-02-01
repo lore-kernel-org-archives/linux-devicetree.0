@@ -1,90 +1,127 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining
- dr_mode and phy_type
-Date: Fri, 1 Feb 2013 09:11:54 +0800
-Message-ID: <20130201011153.GE14629@nchen-desktop>
-References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
- <87pq0omcfb.fsf@ashishki-desk.ger.corp.intel.com>
- <20130130020627.GA699@nchen-desktop>
- <20130130140015.GZ1906@pengutronix.de>
- <20130131020542.GD9777@nchen-desktop>
- <20130131102913.GA6937@pengutronix.de>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: RE: [PATCH 2/2] drm/exynos: Add device tree based discovery support
+ for G2D
+Date: Fri, 01 Feb 2013 10:27:37 +0900
+Message-ID: <00fd01ce001b$5215a3f0$f640ebd0$%dae@samsung.com>
+References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
+ <1359107722-9974-2-git-send-email-sachin.kamat@linaro.org>
+ <CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com>
+ <510987B5.6090509@gmail.com> <050101cdff52$86df3a70$949daf50$%dae@samsung.com>
+ <510B02AB.4080908@gmail.com> <0b7501ce0011$3df65180$b9e2f480$@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130131102913.GA6937-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <0b7501ce0011$3df65180$b9e2f480$@samsung.com>
+Content-language: ko
+Sender: linux-media-owner@vger.kernel.org
+To: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>
+Cc: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, s.nawrocki@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 31, 2013 at 11:29:13AM +0100, Sascha Hauer wrote:
-> On Thu, Jan 31, 2013 at 10:05:44AM +0800, Peter Chen wrote:
-> > On Wed, Jan 30, 2013 at 03:00:15PM +0100, Sascha Hauer wrote:
-> > > On Wed, Jan 30, 2013 at 10:06:28AM +0800, Peter Chen wrote:
-> > > > On Tue, Jan 29, 2013 at 01:55:04PM +0200, Alexander Shishkin wrote:
-> > > > > Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
-> > > > > 
-> > > > > > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > > > >
-> > > > > > This adds two little devicetree helper functions for determining the
-> > > > > > dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
-> > > > > > the devicetree.
-> > > > > >
-> > > > > > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > > > > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > > > > > ---
-> > > > > >
-> > > > > > The properties and their values have been taken from the fsl-mph-dr driver.
-> > > > > > This binding is also documented (though currently not used) for the tegra
-> > > > > > ehci driver (Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt).
-> > > > > > This is a first attempt to parse these bindings at a common place so that
-> > > > > > others can make use of it.
-> > > > > >
-> > > > > > Basically I want to know whether this binding is recommended for new drivers
-> > > > > > since normally the devicetree uses '-' instead of '_', and maybe there are
-> > > > > > other problems with it.
-> > > > > >
-> > > > > > I need this binding for the chipidea driver. I suspect that the fsl-mph-dr
-> > > > > > driver also really handles a chipidea core.
-> > > > > 
-> > > > > As far as I know, it is a chipidea core. Adding Peter to Cc list, he can
-> > > > > probably confirm.
-> > > > 
-> > > > The fsl-mph-dr can't be used for chipdiea as it handles three platform
-> > > > drivers for three roles (peripheral , host, otg). But chipidea only has
-> > > > two platform drivers, one is the chipidea core, the other is related
-> > > > controller wrapper.
-> > > 
-> > > What do you mean by 'three platform drivers'? That's only how the driver
-> > > is built, no? I was talking about the hardware the fsl-mph-dr driver
-> > > handles which definitely smells like chipidea.
-> > 
-> > It creates host/device/otg platform device according to dr_mode from
-> > the device tree.
+Hi Kukjin,
+
+> -----Original Message-----
+> From: linux-media-owner@vger.kernel.org [mailto:linux-media-
+> owner@vger.kernel.org] On Behalf Of Kukjin Kim
+> Sent: Friday, February 01, 2013 9:15 AM
+> To: 'Sylwester Nawrocki'; 'Inki Dae'
+> Cc: 'Sachin Kamat'; linux-media@vger.kernel.org; dri-
+> devel@lists.freedesktop.org; devicetree-discuss@lists.ozlabs.org;
+> patches@linaro.org; s.nawrocki@samsung.com
+> Subject: RE: [PATCH 2/2] drm/exynos: Add device tree based discovery
+> support for G2D
 > 
-> Again, that's software specific. What I'd like to know is whether the
-> *hardware* could be handled by the chipidea driver.
-not understand u, you mean the DT information at there? Those DT information
-may not be used for i.mx hardware.
+> Sylwester Nawrocki wrote:
+> >
+> > Hi Inki,
+> >
+> Hi Sylwester and Inki,
 > 
-> Sascha
+> > On 01/31/2013 02:30 AM, Inki Dae wrote:
+> > >> -----Original Message-----
+> > >> From: Sylwester Nawrocki [mailto:sylvester.nawrocki@gmail.com]
+> > >> Sent: Thursday, January 31, 2013 5:51 AM
+> > >> To: Inki Dae
+> > >> Cc: Sachin Kamat; linux-media@vger.kernel.org; dri-
+> > >> devel@lists.freedesktop.org; devicetree-discuss@lists.ozlabs.org;
+> > >> patches@linaro.org; s.nawrocki@samsung.com
+> > >> Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery
+> > >> support for G2D
+> > >>
+> > >> On 01/30/2013 09:50 AM, Inki Dae wrote:
+> > >>>> +static const struct of_device_id exynos_g2d_match[] = {
+> > >>>> +       { .compatible = "samsung,g2d-v41" },
+> > >>>
+> > >>> not only Exynos5 and also Exyno4 has the g2d gpu and drm-based g2d
+> > >>> driver shoud support for all Exynos SoCs. How about using
+> > >>> "samsung,exynos5-g2d" instead and adding a new property 'version' to
+> > >>> identify ip version more surely? With this, we could know which SoC
+> > >>> and its g2d ip version. The version property could have '0x14' or
+> > >>> others. And please add descriptions to dt document.
+> > >>
+> > >> Err no. Are you suggesting using "samsung,exynos5-g2d" compatible
+> > string
+> > >> for Exynos4 specific IPs ? This would not be correct, and you still
+> can
+> > >
+> > > I assumed the version 'v41' is the ip for Exynos5 SoC. So if this
+> version
+> > > means Exynos4 SoC then it should be "samsung,exynos4-g2d".
+> >
+> > Yes, v3.0 is implemented in the S5PC110 (Exynos3110) SoCs and
+Exynos4210,
+> > V4.1 can be found in Exynos4212 and Exynos4412, if I'm not mistaken.
+> >
+> > So we could have:
+> >
+> > compatible = "samsung,exynos-g2d-3.0" /* for Exynos3110, Exynos4210 */
+> > compatible = "samsung,exynos-g2d-4.1" /* for Exynos4212, Exynos4412 */
+> >
+> In my opinion, this is better than later. Because as I said, when we can
+> use
+> IP version to identify, it is more clear and can be used
 > 
+> One more, how about following?
 > 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> compatible = "samsung,g2d-3.0"
+> compatible = "samsung,g2d-4.1"
 > 
 
--- 
+I think compatible string should be considered case by case.
 
-Best Regards,
-Peter Chen
+For example,
+If compatible = "samsung,g2d-3.0" is added to exynos4210.dtsi, it'd be
+reasonable. But what if that compatible string is added to exynos4.dtsi?.
+This case isn't considered for exynos4412 SoC with v4.1. 
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So at least shouldn't that compatible string include SoC version so that
+that can be added to proper dtsi file? And I'm not sure how the ip version
+should be dealt with as of now:( Really enough to know the ip version
+implicitly(ie. exynos4412 string means implicitly that its g2d ip version is
+v4.1 so its device driver refers to the necessary data through
+of_device_id's data)?
+
+
+> I think, just g2d is enough. For example, we are using it for mfc like
+> following: compatible = "samsung.mfc-v6"
+> 
+> > or alternatively
+> >
+> > compatible = "samsung,exynos3110-g2d" /* for Exynos3110, Exynos4210 */
+> > compatible = "samsung,exynos4212-g2d" /* for Exynos4212, Exynos4412 */
+> >
+
+So, IMO, I think this is better than first one.
+
+Thanks,
+Inki Dae
+
+> Thanks.
+> 
+> - Kukjin
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-media" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
