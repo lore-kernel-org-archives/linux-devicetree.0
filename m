@@ -1,42 +1,41 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: RE: [PATCH v17 4/7] fbmon: add videomode helpers
-Date: Fri, 01 Feb 2013 18:29:50 +0900
-Message-ID: <003401ce005e$af665c50$0e3314f0$%han@samsung.com>
-References: <1359104515-8907-1-git-send-email-s.trumtrar@pengutronix.de>
-	<1359104515-8907-5-git-send-email-s.trumtrar@pengutronix.de>
+From: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v17 4/7] fbmon: add videomode helpers
+Date: Fri, 01 Feb 2013 09:33:08 +0000 (GMT)
+Message-ID: <7561610.793881359711187327.JavaMail.weblogic@epml02>
+Reply-To: jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org>
-In-reply-to: <1359104515-8907-5-git-send-email-s.trumtrar@pengutronix.de>
-Content-language: ko
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
-	<mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Sender: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-Errors-To: dri-devel-bounces+sf-dri-devel=m.gmane.org@lists.freedesktop.org
-To: 'Steffen Trumtrar' <s.trumtrar@pengutronix.de>
-Cc: "'Mohammed, Afzal'" <afzal@ti.com>, 'Florian Tobias Schandinat' <FlorianSchandinat@gmx.de>, devicetree-discuss@lists.ozlabs.org, 'Stephen Warren' <swarren@wwwdotorg.org>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, 'Tomi Valkeinen' <tomi.valkeinen@ti.com>, 'Rob Herring' <robherring2@gmail.com>, 'Laurent Pinchart' <laurent.pinchart@ideasonboard.com>, kernel@pengutronix.de, 'Guennady Liakhovetski' <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+MIME-version: 1.0
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On Friday, January 25, 2013 6:02 PM, Steffen Trumtrar wrote
 > 
 > Add a function to convert from the generic videomode to a fb_videomode.
 > 
-> Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-> Reviewed-by: Thierry Reding <thierry.reding@avionic-design.de>
-> Acked-by: Thierry Reding <thierry.reding@avionic-design.de>
-> Tested-by: Thierry Reding <thierry.reding@avionic-design.de>
-> Tested-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> Tested-by: Afzal Mohammed <Afzal@ti.com>
-> Tested-by: Rob Clark <robclark@gmail.com>
-> Tested-by: Leela Krishna Amudala <leelakrishna.a@gmail.com>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Reviewed-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> Acked-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> Tested-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+> Tested-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Reviewed-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Acked-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+> Tested-by: Afzal Mohammed <Afzal-l0cyMroinI0@public.gmane.org>
+> Tested-by: Rob Clark <robclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Tested-by: Leela Krishna Amudala <leelakrishna.a-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 > ---
 >  drivers/video/fbmon.c |   52 +++++++++++++++++++++++++++++++++++++++++++++++++
 >  include/linux/fb.h    |    4 ++++
@@ -151,5 +150,5 @@ Jingoo Han
 > 
 > _______________________________________________
 > dri-devel mailing list
-> dri-devel@lists.freedesktop.org
+> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 > http://lists.freedesktop.org/mailman/listinfo/dri-devel
