@@ -1,61 +1,83 @@
-From: Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH V2 4/4] DMA: PL330: Modify pl330 filter based on new generic
- dma dt bindings.
-Date: Fri, 01 Feb 2013 18:21:56 +0530
-Message-ID: <1359723116-18173-5-git-send-email-padma.v@samsung.com>
-References: <1359723116-18173-1-git-send-email-padma.v@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1359723116-18173-1-git-send-email-padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, padma.kvr-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, boojin.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+From: Inki Dae <daeinki@gmail.com>
+Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery support for G2D
+Date: Fri, 1 Feb 2013 21:58:05 +0900
+Message-ID: <E382E0B5-2695-4293-B264-FB4C54FE4F9D@gmail.com>
+References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org> <1359107722-9974-2-git-send-email-sachin.kamat@linaro.org> <CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com> <510987B5.6090509@gmail.com> <050101cdff52$86df3a70$949daf50$%dae@samsung.com> <510B02AB.4080908@gmail.com> <0b7501ce0011$3df65180$b9e2f480$@samsung.com> <00fd01ce001b$5215a3f0$f640ebd0$%dae@samsung.com> <CAK9yfHxqqumg-oqH_Ku8Zkf8biWVknF91Su0VkWJJXjvWQ3Jhw@mail.gmail.com> <510B9EC8.6020102@samsung.com> <CAK9yfHw+aTgiLwGVJt=J9-ie4-2JAaF4Nh3n4tjcHp6w2JHamg@mail.gmail.com> <014401ce006f$c7dd1dd0$57975970$%dae@samsung.com> <CAK9yfHyEdd_nr5eqT9WZ4+J9LHczL4U5VAUEwzzjbH1H0xgjUQ@mail.gmail.com> <014501ce0072$9eca1a80$dc5e4f80$%dae@samsung.com>
+Mime-Version: 1.0 (1.0)
+Content-Type: text/plain; charset=euc-kr
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <014501ce0072$9eca1a80$dc5e4f80$%dae@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Sachin Kamat <sachin.kamat@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "patches@linaro.org" <patches@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch modify the filter function to filter the required channel
-based on new filter params.
 
-Signed-off-by: Padmavathi Venna <padma.v-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/dma/pl330.c |   15 ++++++---------
- 1 files changed, 6 insertions(+), 9 deletions(-)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index ddf4dd0..14d84a4 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -2392,15 +2392,12 @@ bool pl330_filter(struct dma_chan *chan, void *param)
- 
- #ifdef CONFIG_OF
- 	if (chan->device->dev->of_node) {
--		const __be32 *prop_value;
--		phandle phandle;
--		struct device_node *node;
--
--		prop_value = ((struct property *)param)->value;
--		phandle = be32_to_cpup(prop_value++);
--		node = of_find_node_by_phandle(phandle);
--		return ((chan->private == node) &&
--				(chan->chan_id == be32_to_cpup(prop_value)));
-+		struct dma_pl330_filter_args *fargs = param;
-+
-+		if (chan->device != &fargs->pdmac->ddma)
-+			return false;
-+
-+		return (chan->chan_id == fargs->chan_id);
- 	}
- #endif
- 
--- 
-1.7.4.4
+
+
+2013. 2. 1. =BF=C0=C8=C4 8:52 Inki Dae <inki.dae@samsung.com> =C0=DB=BC=
+=BA:
+
+>=20
+>=20
+>> -----Original Message-----
+>> From: linux-media-owner@vger.kernel.org [mailto:linux-media-
+>> owner@vger.kernel.org] On Behalf Of Sachin Kamat
+>> Sent: Friday, February 01, 2013 8:40 PM
+>> To: Inki Dae
+>> Cc: Sylwester Nawrocki; Kukjin Kim; Sylwester Nawrocki; linux-
+>> media@vger.kernel.org; dri-devel@lists.freedesktop.org; devicetree-
+>> discuss@lists.ozlabs.org; patches@linaro.org
+>> Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery
+>> support for G2D
+>>=20
+>> On 1 February 2013 17:02, Inki Dae <inki.dae@samsung.com> wrote:
+>>>=20
+>>> How about using like below?
+>>>        Compatible =3D ""samsung,exynos4x12-fimg-2d" /* for Exynos42=
+12,
+>>> Exynos4412  */
+>>> It looks odd to use "samsung,exynos4212-fimg-2d" saying that this i=
+p is
+>> for
+>>> exynos4212 and exynos4412.
+>>=20
+>> AFAIK, compatible strings are not supposed to have any wildcard
+> characters.
+>> Compatible string should suggest the first SoC that contained this I=
+P.
+>> Hence IMO 4212 is OK.
+>>=20
+
+Oops, one more thing. AFAIK Exynos4210 also has fimg-2d ip. In this cas=
+e, we should use "samsung,exynos4210-fimg-2d" as comparible string and =
+add it to exynos4210.dtsi?
+And please check if exynos4212 and 4412 SoCs have same fimg-2d ip. If i=
+t's different, we might need to add ip version property or compatible s=
+tring to each dtsi file to identify the ip version.
+
+Sorry but give me your opinions.
+
+Thanks,
+Inki Dae
+
+
+>=20
+> Got it. Please post it again.
+>=20
+>>=20
+>> --
+>> With warm regards,
+>> Sachin
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-medi=
+a" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
