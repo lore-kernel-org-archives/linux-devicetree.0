@@ -1,103 +1,103 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH RFC] usb: dwc3: Get PHY from platform specific dwc3 dt node.
-Date: Fri, 1 Feb 2013 11:54:01 +0530
-Message-ID: <CAFp+6iGZU29nt4yBjkyeeS+s_D1=AamgGTOsJq1xo_5z2O-sDg@mail.gmail.com>
-References: <1359631232-7107-1-git-send-email-gautam.vivek@samsung.com>
-	<510A56BF.3040804@ti.com>
-	<CAFp+6iFkb=U0CJA=3zmQvd5XfMwbROuRJjXoJG7zvvq4_upzNw@mail.gmail.com>
-	<20130131152527.GE4064@arwen.pp.htv.fi>
-	<CAFp+6iHvKYiF_neANRq5roAEJwhvcaLk7pAd7Dy94Z5XiDkhgA@mail.gmail.com>
-	<20130131153836.GF4064@arwen.pp.htv.fi>
-	<510B50DA.6010201@ti.com>
-	<CAFp+6iF2HMmiMVR4YyEG7bmpCZ4KdwBT7q2Jy-P1SMVtoVBn6g@mail.gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH,RFC] usb: add devicetree helpers for determining dr_mode
+ and phy_type
+Date: Fri, 1 Feb 2013 07:58:34 +0100
+Message-ID: <20130201065833.GV1906@pengutronix.de>
+References: <1359458548-25071-1-git-send-email-s.hauer@pengutronix.de>
+ <87pq0omcfb.fsf@ashishki-desk.ger.corp.intel.com>
+ <20130130020627.GA699@nchen-desktop>
+ <20130130140015.GZ1906@pengutronix.de>
+ <20130131020542.GD9777@nchen-desktop>
+ <20130131102913.GA6937@pengutronix.de>
+ <20130201011153.GE14629@nchen-desktop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iF2HMmiMVR4YyEG7bmpCZ4KdwBT7q2Jy-P1SMVtoVBn6g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: kishon <kishon@ti.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130201011153.GE14629@nchen-desktop>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Balbi,
+On Fri, Feb 01, 2013 at 09:11:54AM +0800, Peter Chen wrote:
+> On Thu, Jan 31, 2013 at 11:29:13AM +0100, Sascha Hauer wrote:
+> > On Thu, Jan 31, 2013 at 10:05:44AM +0800, Peter Chen wrote:
+> > > On Wed, Jan 30, 2013 at 03:00:15PM +0100, Sascha Hauer wrote:
+> > > > On Wed, Jan 30, 2013 at 10:06:28AM +0800, Peter Chen wrote:
+> > > > > On Tue, Jan 29, 2013 at 01:55:04PM +0200, Alexander Shishkin wrote:
+> > > > > > Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> writes:
+> > > > > > 
+> > > > > > > From: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > > > > >
+> > > > > > > This adds two little devicetree helper functions for determining the
+> > > > > > > dr_mode (host, peripheral, otg) and phy_type (utmi, ulpi,...) from
+> > > > > > > the devicetree.
+> > > > > > >
+> > > > > > > Signed-off-by: Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > > > > > Signed-off-by: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > > > > > > ---
+> > > > > > >
+> > > > > > > The properties and their values have been taken from the fsl-mph-dr driver.
+> > > > > > > This binding is also documented (though currently not used) for the tegra
+> > > > > > > ehci driver (Documentation/devicetree/bindings/usb/nvidia,tegra20-ehci.txt).
+> > > > > > > This is a first attempt to parse these bindings at a common place so that
+> > > > > > > others can make use of it.
+> > > > > > >
+> > > > > > > Basically I want to know whether this binding is recommended for new drivers
+> > > > > > > since normally the devicetree uses '-' instead of '_', and maybe there are
+> > > > > > > other problems with it.
+> > > > > > >
+> > > > > > > I need this binding for the chipidea driver. I suspect that the fsl-mph-dr
+> > > > > > > driver also really handles a chipidea core.
+> > > > > > 
+> > > > > > As far as I know, it is a chipidea core. Adding Peter to Cc list, he can
+> > > > > > probably confirm.
+> > > > > 
+> > > > > The fsl-mph-dr can't be used for chipdiea as it handles three platform
+> > > > > drivers for three roles (peripheral , host, otg). But chipidea only has
+> > > > > two platform drivers, one is the chipidea core, the other is related
+> > > > > controller wrapper.
+> > > > 
+> > > > What do you mean by 'three platform drivers'? That's only how the driver
+> > > > is built, no? I was talking about the hardware the fsl-mph-dr driver
+> > > > handles which definitely smells like chipidea.
+> > > 
+> > > It creates host/device/otg platform device according to dr_mode from
+> > > the device tree.
+> > 
+> > Again, that's software specific. What I'd like to know is whether the
+> > *hardware* could be handled by the chipidea driver.
+> not understand u, you mean the DT information at there? Those DT information
+> may not be used for i.mx hardware.
 
+The original question was:
 
-On Fri, Feb 1, 2013 at 11:52 AM, Vivek Gautam <gautamvivek1987@gmail.com> wrote:
-> Hi Kishon,
->
->
-> On Fri, Feb 1, 2013 at 10:51 AM, kishon <kishon@ti.com> wrote:
->> Hi,
->>
->>
->> On Thursday 31 January 2013 09:08 PM, Felipe Balbi wrote:
->>>
->>> On Thu, Jan 31, 2013 at 09:00:37PM +0530, Vivek Gautam wrote:
->>>>
->>>> Hi Felipe,
->>>>
->>>>
->>>> On Thu, Jan 31, 2013 at 8:55 PM, Felipe Balbi <balbi@ti.com> wrote:
->>>>>
->>>>> Hi,
->>>>>
->>>>> On Thu, Jan 31, 2013 at 08:53:27PM +0530, Vivek Gautam wrote:
->>>>>>>>
->>>>>>>> Moreover, SoCs having multiple dwc3 controllers will have multiple
->>>>>>>> PHYs, which eventually be added using usb_add_phy_dev(), and not
->>>>>>>> using usb_add_phy(). So each dwc3 controller won't be able to
->>>>>>>> get PHYs by simply calling devm_usb_get_phy() also.
->>>>>>>
->>>>>>>
->>>>>>> No. We have added usb_get_phy_dev() for that purpose in the case of
->>>>>>> non-dt.
->>>>>>> I think, instead you can have a patch to use devm_usb_get_phy_dev()
->>>>>>> here and
->>>>>>> in exynos platform specific code use usb_bind_phy() to bind the phy
->>>>>>> and
->>>>>>> controller till you change it to dt.
->>>>>>>
->>>>>>
->>>>>> We have dt support for dwc3-exynos, in such case we should go ahead
->>>>>> with
->>>>>> of_platform_populate(), right ?
->>>>>> But if when i use of_platform_populate() i will not be able to set
->>>>>> dma_mask to dwc3->dev. :-(
->>
->>
->> You can do something like this
->>
->> static u64 dwc3_exynos_dma_mask = DMA_BIT_MASK(32);
->>
->> static int dwc3_exynos_set_dmamask(struct device *dev, void *c)
->> {
->>         dev->dma_mask = &dwc3_exynos_dma_mask;
->>
->>         return 0;
->> }
->>
->> And in your probe after of_platform_populate, you can add
->>
->> device_for_each_child(&pdev->dev, NULL, dwc3_exynos_set_dmamask);
->>
->> Here pdev is the platform device of dwc3-exynos. By this way all the
->> children of dwc3-exynos will have dma_mask set to the required value.
->>
->
-> Nice idea, thanks :-)
-> hmm.. so i can patch this now, and get things working ;-)
->
+There is a driver in the tree called fsl-mph-dr-of.c. Does this driver
+handle a hardware which is compatible to the hardware the chipidea
+driver handles?
 
-If this is fine with you shall i go ahead and post a patch for the same ? ;-)
+I think the answer is yes, because said driver registers a ehci device,
+or fsl-usb2-udc device (the same we used on i.MX). This hardware also
+has a PORTSC register. All this seems to suggest that
 
+drivers/usb/host/fsl-mph-dr-of.c
+drivers/usb/host/ehci-fsl.c
+drivers/usb/otg/fsl_otg.c
+drivers/usb/gadget/fsl_usb2_udc.h
+drivers/usb/gadget/fsl_udc_core.c
 
->> I'm not sure if there is any other better way to achieve the same (without
->> patching of.c ;-))
->>
->
+Could be replaced by the chipidea driver.
 
+Sascha
 
 
 -- 
-Thanks & Regards
-Vivek
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
