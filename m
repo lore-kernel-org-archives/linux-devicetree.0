@@ -1,129 +1,79 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH RFC] usb: dwc3: Get PHY from platform specific dwc3 dt
- node.
-Date: Fri, 1 Feb 2013 11:43:27 +0200
-Message-ID: <20130201094326.GK8060@arwen.pp.htv.fi>
-References: <510A56BF.3040804@ti.com>
- <CAFp+6iFkb=U0CJA=3zmQvd5XfMwbROuRJjXoJG7zvvq4_upzNw@mail.gmail.com>
- <20130131152527.GE4064@arwen.pp.htv.fi>
- <CAFp+6iHvKYiF_neANRq5roAEJwhvcaLk7pAd7Dy94Z5XiDkhgA@mail.gmail.com>
- <20130131153836.GF4064@arwen.pp.htv.fi>
- <510B50DA.6010201@ti.com>
- <CAFp+6iF2HMmiMVR4YyEG7bmpCZ4KdwBT7q2Jy-P1SMVtoVBn6g@mail.gmail.com>
- <CAFp+6iGZU29nt4yBjkyeeS+s_D1=AamgGTOsJq1xo_5z2O-sDg@mail.gmail.com>
- <20130201085053.GG8060@arwen.pp.htv.fi>
- <CAFp+6iFBL8LOh=dw=mvHaUHjKvmLr0of83dmC6wf4zHog8xubw@mail.gmail.com>
-Reply-To: <balbi@ti.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [PATCH v5 00/10] Tegra114 clockframework
+Date: Fri, 1 Feb 2013 12:16:42 +0200
+Message-ID: <1359713860-16631-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yQDbd2FCF2Yhw41T"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAFp+6iFBL8LOh=dw=mvHaUHjKvmLr0of83dmC6wf4zHog8xubw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Vivek Gautam <gautamvivek1987@gmail.com>
-Cc: balbi@ti.com, kishon <kishon@ti.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: pdeschrijver@nvidia.com
+Cc: "moderated list:OPEN FIRMWARE AND..." <devicetree-discuss@lists.ozlabs.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:TEGRA SUPPORT" <linux-tegra@vger.kernel.org>, "moderated list:ARM PORT" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---yQDbd2FCF2Yhw41T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is the fifth version of the Tegra114 clockframework. It is based on the
+for-next branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/swarren/linux-tegra.git and
+http://www.spinics.net/lists/arm-kernel/msg220452.html.
 
-Hi,
+It has been boottested on Pluto.
 
-On Fri, Feb 01, 2013 at 02:23:28PM +0530, Vivek Gautam wrote:
-> >> >>>>> On Thu, Jan 31, 2013 at 08:53:27PM +0530, Vivek Gautam wrote:
-> >> >>>>>>>>
-> >> >>>>>>>> Moreover, SoCs having multiple dwc3 controllers will have mul=
-tiple
-> >> >>>>>>>> PHYs, which eventually be added using usb_add_phy_dev(), and =
-not
-> >> >>>>>>>> using usb_add_phy(). So each dwc3 controller won't be able to
-> >> >>>>>>>> get PHYs by simply calling devm_usb_get_phy() also.
-> >> >>>>>>>
-> >> >>>>>>>
-> >> >>>>>>> No. We have added usb_get_phy_dev() for that purpose in the ca=
-se of
-> >> >>>>>>> non-dt.
-> >> >>>>>>> I think, instead you can have a patch to use devm_usb_get_phy_=
-dev()
-> >> >>>>>>> here and
-> >> >>>>>>> in exynos platform specific code use usb_bind_phy() to bind th=
-e phy
-> >> >>>>>>> and
-> >> >>>>>>> controller till you change it to dt.
-> >> >>>>>>>
-> >> >>>>>>
-> >> >>>>>> We have dt support for dwc3-exynos, in such case we should go a=
-head
-> >> >>>>>> with
-> >> >>>>>> of_platform_populate(), right ?
-> >> >>>>>> But if when i use of_platform_populate() i will not be able to =
-set
-> >> >>>>>> dma_mask to dwc3->dev. :-(
-> >> >>
-> >> >>
-> >> >> You can do something like this
-> >> >>
-> >> >> static u64 dwc3_exynos_dma_mask =3D DMA_BIT_MASK(32);
-> >> >>
-> >> >> static int dwc3_exynos_set_dmamask(struct device *dev, void *c)
-> >> >> {
-> >> >>         dev->dma_mask =3D &dwc3_exynos_dma_mask;
-> >> >>
-> >> >>         return 0;
-> >> >> }
-> >> >>
-> >> >> And in your probe after of_platform_populate, you can add
-> >> >>
-> >> >> device_for_each_child(&pdev->dev, NULL, dwc3_exynos_set_dmamask);
-> >> >>
-> >> >> Here pdev is the platform device of dwc3-exynos. By this way all the
-> >> >> children of dwc3-exynos will have dma_mask set to the required valu=
-e.
-> >> >>
-> >> >
-> >> > Nice idea, thanks :-)
-> >> > hmm.. so i can patch this now, and get things working ;-)
-> >> >
-> >>
-> >> If this is fine with you shall i go ahead and post a patch for the sam=
-e ? ;-)
-> >
-> > should be fine, but we can wait a bit to see if DeviceTree folks reply,
-> > your patch will only go on v3.10 anyway.
-> >
->=20
-> Yeah, sure. No problem at all.
-> For the time being i will continue to use this change for my other
-> development work too. :-)
+Changes from v4:
 
-Sure, makes sense ;-)
+* Split the new PLL types patch into smaller patches
+* Fix some bugs in the PLL patches
 
---=20
-balbi
+Changes from v3:
 
---yQDbd2FCF2Yhw41T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+* Merge with for-next branch
+* Provide empty tegra_cpu_car_ops to make SMP boot not crash
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Changes from v2:
 
-iQIcBAEBAgAGBQJRC44+AAoJEIaOsuA1yqRE9k4P/Rt3DdOUHTa0eTsJxbqvMD3r
-Ksg4aa8fb3gcrp5kM0m1+pDWLHVTQaWqjDZtl1C2k9iBkv+LMhmmVbI2s9cWuQ/l
-VG93Y2hHNDJqI0d1sWHoNVc+TTw0BugPgk1cbXydYKKQqJ7lmCluK99NyuvwnamB
-LvT4ioe7Ku6eKn/VWntpwvD+squnSnTa+o1ss2juJyDAbqfO/ZiNjkgrOBj3L9Xv
-y+SYLz60ghS9pgavULC55jQGEhd0ATzPiV7hORqrMcvoaD0DujRol7z1DfHILbWW
-ATyikvCF7+znFt1BMiGpcsvjXrP13YEuhSpT4eg9/BOfI0Wx2lzExoFqDZd7AU3i
-apA97D681z1wOhqNdKKKbvvS/B+dVzwsvgw/+NSU1pqARqLqN69lqni6RDZvjjAo
-+slII1EjLyp3z1d4rzUXbjxm0WpnsGPoeCOk5Fvfki4Kzbmyo3X46K12lWyoXfcl
-FwzPaQJPc9+gmqjUg2hKIjyeXkkkIO8Kw90tI45pQbeabeurq2HXAXlD3zNA0HyY
-SJ67/Ov9Q1Ha6bC/VvpgQzNsw7l1dzT17VGqAzkAG2PjM/bE6Dxz/qSofUAuYBnl
-YdyEsrj++PjfEv4fC+UbgQIFJkfpvMCTgQ7gVd+MFsQW4A2RkAFOlA5+wnxwlBSc
-6/8elnnoWyMQNDTGaXVs
-=1AQM
------END PGP SIGNATURE-----
+* Added missing PLLs
+* Added bindings to tegra114.dtsi
+* Moved the table patch for clk-mux.c to 'clk: add table lookup to mux'
+* Bugfixes
 
---yQDbd2FCF2Yhw41T--
+Changes from v1:
+
+* Remove SATA and PCIe clocks. They don't appear in the internal TRM, so I
+  assume they don't exist.
+* Rebase on top of Hiroshi's latest Tegra114 patches
+* More generic mux code. This is necessary for the AHUB and DAM clocks.
+
+TODO:
+
+* Remove clk_register_clkdev() where possible
+* PLL clock init functions are incomplete and/or need refactoring
+* Superclocks are missing
+* The audio clocks are almost the same then Tegra30. Refactor the code to
+  avoid duplication.
+* Should blink and blink_override be clocks?
+
+Peter De Schrijver (10):
+  clk: tegra: Refactor PLL programming code
+  clk: tegra: Add TEGRA_PLL_BYPASS flag
+  clk: tegra: Add PLL post divider table
+  clk: tegra: Add new fields and PLL types for Tegra114
+  clk: tegra: Add flags to tegra_clk_periph()
+  clk: tegra: Workaround for Tegra114 MSENC problem
+  ARM: tegra: Define Tegra114 CAR binding
+  ARM: dt: Add references to tegra_car clocks
+  clk: tegra: Implement clocks for Tegra114
+  clk: tegra: devicetree match for nvidia,tegra114-car
+
+ .../bindings/clock/nvidia,tegra114-car.txt         |  311 +++
+ arch/arm/boot/dts/tegra114.dtsi                    |    7 +-
+ drivers/clk/tegra/Makefile                         |    1 +
+ drivers/clk/tegra/clk-periph-gate.c                |    9 +
+ drivers/clk/tegra/clk-periph.c                     |   11 +-
+ drivers/clk/tegra/clk-pll.c                        |  940 +++++++++-
+ drivers/clk/tegra/clk-tegra114.c                   | 2002 ++++++++++++++++++++
+ drivers/clk/tegra/clk-tegra20.c                    |  153 +-
+ drivers/clk/tegra/clk-tegra30.c                    |  243 ++--
+ drivers/clk/tegra/clk.c                            |    1 +
+ drivers/clk/tegra/clk.h                            |   85 +-
+ 11 files changed, 3481 insertions(+), 282 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegra114-car.txt
+ create mode 100644 drivers/clk/tegra/clk-tegra114.c
+
