@@ -1,111 +1,164 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 2/2] drm/exynos: Add device tree based discovery support
- for G2D
-Date: Fri, 01 Feb 2013 10:06:18 -0800
-Message-ID: <0c6e01ce00a6$d78bd640$86a382c0$@samsung.com>
-References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
- <1359107722-9974-2-git-send-email-sachin.kamat@linaro.org>
- <CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com>
- <510987B5.6090509@gmail.com> <050101cdff52$86df3a70$949daf50$%dae@samsung.com>
- <510B02AB.4080908@gmail.com> <0b7501ce0011$3df65180$b9e2f480$@samsung.com>
- <00fd01ce001b$5215a3f0$f640ebd0$%dae@samsung.com>
- <CAK9yfHxqqumg-oqH_Ku8Zkf8biWVknF91Su0VkWJJXjvWQ3Jhw@mail.gmail.com>
- <510B9EC8.6020102@samsung.com>
+From: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v7 00/10] DMA Engine support for AM33XX
+Date: Fri,  1 Feb 2013 13:22:45 -0500
+Message-ID: <1359742975-10421-1-git-send-email-mporter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: 
-Content-language: en-us
-Sender: linux-media-owner@vger.kernel.org
-To: 'Sylwester Nawrocki' <s.nawrocki@samsung.com>, 'Sachin Kamat' <sachin.kamat@linaro.org>
-Cc: 'Inki Dae' <inki.dae@samsung.com>, 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Cc: Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Kukjin Kim wrote:
-> 
-Oops, I'm re-sending due to my e-mail client problem :-(
+Changes since v6:
+	- Converted edma_of_read_*() to wrappers around of_property_read_*()
+	- Fixed wording on the omap-spi generic DMA properties
+	- Added comment/check to clarify that the driver only supports
+	  a single EDMA instance when booting from DT
 
-> Sylwester Nawrocki wrote:
-> >
-> > On 02/01/2013 09:33 AM, Sachin Kamat wrote:
-> > > On 1 February 2013 06:57, Inki Dae <inki.dae@samsung.com> wrote:
-> > >>
-> > >> For example,
-> > >> If compatible = "samsung,g2d-3.0" is added to exynos4210.dtsi, it'd be
-> > >> reasonable. But what if that compatible string is added to exynos4.dtsi?.
-> > >> This case isn't considered for exynos4412 SoC with v4.1.
-> > >
-> > > In case of Exynos4 series the base address of G2D ip is different
-> > > across series. Hence we cannot define it in exynos4.dtsi and need to
-> > > define the nodes in exynos4xxx.dtsi or specific board files. Thus we
-> > > can use the version appended compatible string.
-> > >
-> > > However even the second option suggested by Sylwester is OK with me
-> or
-> > > to be even more specific we could go for both SoC as well as version
-> > > option something like this.
-> > >
-> > > compatible = "samsung,exynos3110-g2d-3.0" /* for Exynos3110,
-> > Exynos4210 */
-> > > compatible = "samsung,exynos4212-g2d-4.1" /* for Exynos4212,
-> > Exynos4412 */
-> > >
-> > > In any case please let me know the final preferred one so that I can
-> > > update the code send the revised patches.
-> >
-> > The version with SoC name embedded in it seems most reliable and correct
-> > to me.
-> >
-> > compatible = "samsung,exynos3110-fimg-2d" /* for Exynos3110 (S5PC110,
-> > S5PV210),
-> >                                              Exynos4210 */
-> 
-> If this convention will be used, I hope, the known name, S5PV210 can be
-> used. Why don't you use same SoC name with using in arch/arm/?
-> 
-> > compatible = "samsung,exynos4212-fimg-2d" /* for Exynos4212,
-> Exynos4412
-> > */
-> >
-> > FIMG stands for Fully Interactive Mobile Graphics, and other multimedia
-> > IPs follow this naming convention, e.g. FIMG-3D, FIMD (Display Controller),
-> > FIMC (Camera), etc.
-> >
-> How about MFC?
-> 
-> > This is just my opinion though, and it seems this is a most common scheme
-> > from greping the device tree bindings documentation.
-> >
-> IMO, you can grep '$ git grep  compatible.*samsung'...or IP name.
-> 
-> > As Stephen pointed out, and I also did in some other mail thread in the
-> > past, not only an IP revision might be required, but also its integration
-> > details, specific to an SoC type are important. This actually happens
-> > to be the case with FIMC, where same version of one instance of the IP
-> > has more data interfaces routed to other SoC subsystems on one SoC type
-> > than on other one.
-> >
-> Well, I don't think so. As you know Samsung makes many EXYNOS SoCs and
-> nowadays the EXYNOS SoCs include many Samsung own IPs such as
-> multimedia. And the IPs are reused on across Samsung SoCs, and I hope on
-> other SoC vendor's SoC. It means Samsung is no longer just SoC vendor and
-> can be called IP vendor. So let's see other IP vendors, ARM, Synopsys and so
-> on. How are their IPs implemented in kernel? Why should Samsung use the
-> SoC name for their IP? And why should we use old SoC name in futre? For
-> example, see the s3c2410-xxx for i2c, wdt, rtc, i2s and so on. Unfortunately,
-> no one didn't know Samsung should prepare some brand name or  future at
-> that time...Just I don't want to undergo trial and error again. I'm still saying
-> why Samsung own IPs cannot be used as IP vendors' ones...
-> 
-> > I think it won't be possible to use a scheme like "samsung-exynos-g2d-3.0"
-> 
-> Hmm...I think, the name, 'EXYNOS' is not a brand name for IP...
-> 
-> > for all IPs. And I would much more like to see a uniform naming convention
-> > used, rather than living with a chaotic set of compatible properties, that
-> > has a potential to become even more chaotic in the future.
-> 
-Thanks.
+Changes since v5:
+	- Dropped mmc portion and moved it to a separate series
+	- Incorporate corrected version of dma_request_slave_channel_compat()
+	- Fix #defines and enablement of TI_PRIV_EDMA option
 
-- Kukjin
+Changes since v4:
+	- Fixed debug section mismatch in private edma api [01/14]
+	- Respun format-patch to catch the platform_data/edma.h rename [01/14]
+	- Removed address/size-cells from the EDMA binding [05/14]
+
+Changes since v3:
+	- Rebased on 3.8-rc3
+	- No longer an RFC
+	- Fixed bugs in DT/pdata parsing reported by Vaibhav Bedia
+	- Restored all the Davinci pdata to const
+	- Removed max_segs hack in favor of using dma_get_channel_caps()
+	- Fixed extra parens, __raw_* accessors and, ioremap error checks
+	  in xbar handling
+	- Removed excess license info in platform_data/edma.h
+	- Removed unneeded reserved channels data for AM33xx
+	- Removed test-specific pinmuxing from dts files
+	- Adjusted mmc1 node to be disabled by default in the dtsi
+
+Changes since v2:
+	- Rebased on 3.7-rc1
+	- Fixed bug in DT/pdata parsing first found by Gururaja
+	  that turned out to be masked by some toolchains
+	- Dropped unused mach-omap2/devices.c hsmmc patch
+	- Added AM33XX crossbar DMA event mux support
+	- Added am335x-evm support
+
+Changes since v1:
+	- Rebased on top of mainline from 12250d8
+	- Dropped the feature removal schedule patch
+	- Implemented dma_request_slave_channel_compat() and
+	  converted the mmc and spi drivers to use it
+	- Dropped unneeded #address-cells and #size-cells from
+	  EDMA DT support
+	- Moved private EDMA header to linux/platform_data/ and
+	  removed some unneeded definitions
+	- Fixed parsing of optional properties
+
+This series adds DMA Engine support for AM33xx, which uses
+an EDMA DMAC. The EDMA DMAC has been previously supported by only
+a private API implementation (much like the situation with OMAP
+DMA) found on the DaVinci family of SoCs.
+
+The series applies on top of 3.8-rc5 and the following patches:
+
+	- dmaengine DT support and edma dmaengine driver fix from 
+	  the git://git.infradead.org/users/vkoul/slave-dma.git next
+	  branch
+
+The approach taken is similar to how OMAP DMA is being converted to
+DMA Engine support. With the functional EDMA private API already
+existing in mach-davinci/dma.c, we first move that to an ARM common
+area so it can be shared. Adding DT and runtime PM support to the
+private EDMA API implementation allows it to run on AM33xx. AM33xx
+*only* boots using DT so we leverage Jon's generic DT DMA helpers to
+register EDMA DMAC with the of_dma framework and then add support
+for calling the dma_request_slave_channel() API to both the mmc
+and spi drivers.
+
+With this series both BeagleBone and the AM335x EVM have working
+SPI DMA support (and MMC support with the separate MMC series).
+
+This is tested on BeagleBone with a SPI framebuffer driver and MMC
+rootfs. A trivial gpio DMA event misc driver was used to test the
+crossbar DMA event support. It is also tested on the AM335x EVM
+with the onboard SPI flash and MMC rootfs. The branch at
+https://github.com/ohporter/linux/tree/edma-dmaengine-am33xx-v7
+has the complete series, dependencies, and some test
+drivers/defconfigs. Note that MMC can only be tested with a
+separate MMC dmaengine/DT series applied.
+
+Regression testing was done on AM180x-EVM (which also makes use
+of the EDMA dmaengine driver and the EDMA private API) using SD,
+SPI flash, and the onboard audio supported by the ASoC Davinci
+driver. Regression testing was also done on a BeagleBoard xM
+booting from the legacy board file using MMC rootfs.
+
+
+Matt Porter (10):
+  ARM: davinci: move private EDMA API to arm/common
+  ARM: edma: remove unused transfer controller handlers
+  ARM: edma: add AM33XX support to the private EDMA API
+  dmaengine: edma: enable build for AM33XX
+  dmaengine: edma: Add TI EDMA device tree binding
+  ARM: dts: add AM33XX EDMA support
+  dmaengine: add dma_request_slave_channel_compat()
+  spi: omap2-mcspi: convert to dma_request_slave_channel_compat()
+  spi: omap2-mcspi: add generic DMA request support to the DT binding
+  ARM: dts: add AM33XX SPI DMA support
+
+ Documentation/devicetree/bindings/dma/ti-edma.txt  |   49 +++
+ Documentation/devicetree/bindings/spi/omap-spi.txt |   27 +-
+ arch/arm/Kconfig                                   |    1 +
+ arch/arm/boot/dts/am33xx.dtsi                      |   30 ++
+ arch/arm/common/Kconfig                            |    3 +
+ arch/arm/common/Makefile                           |    1 +
+ arch/arm/{mach-davinci/dma.c => common/edma.c}     |  342 +++++++++++++++++---
+ arch/arm/mach-davinci/Makefile                     |    2 +-
+ arch/arm/mach-davinci/board-tnetv107x-evm.c        |    2 +-
+ arch/arm/mach-davinci/davinci.h                    |    2 +-
+ arch/arm/mach-davinci/devices-tnetv107x.c          |    2 +-
+ arch/arm/mach-davinci/devices.c                    |    6 +-
+ arch/arm/mach-davinci/dm355.c                      |    2 +-
+ arch/arm/mach-davinci/dm365.c                      |    2 +-
+ arch/arm/mach-davinci/dm644x.c                     |    2 +-
+ arch/arm/mach-davinci/dm646x.c                     |    2 +-
+ arch/arm/mach-davinci/include/mach/da8xx.h         |    2 +-
+ arch/arm/plat-omap/Kconfig                         |    1 +
+ drivers/dma/Kconfig                                |    2 +-
+ drivers/dma/edma.c                                 |    2 +-
+ drivers/mmc/host/davinci_mmc.c                     |    1 +
+ drivers/spi/spi-omap2-mcspi.c                      |   65 ++--
+ include/linux/dmaengine.h                          |   16 +
+ include/linux/mfd/davinci_voicecodec.h             |    3 +-
+ .../mach => include/linux/platform_data}/edma.h    |   90 +-----
+ include/linux/platform_data/spi-davinci.h          |    2 +-
+ sound/soc/davinci/davinci-evm.c                    |    1 +
+ sound/soc/davinci/davinci-pcm.c                    |    1 +
+ sound/soc/davinci/davinci-pcm.h                    |    2 +-
+ sound/soc/davinci/davinci-sffsdr.c                 |    7 +-
+ 30 files changed, 496 insertions(+), 174 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/ti-edma.txt
+ rename arch/arm/{mach-davinci/dma.c => common/edma.c} (86%)
+ rename {arch/arm/mach-davinci/include/mach => include/linux/platform_data}/edma.h (59%)
+
+-- 
+1.7.9.5
+
+
+------------------------------------------------------------------------------
+Everyone hates slow websites. So do we.
+Make your web apps faster with AppDynamics
+Download AppDynamics Lite for free today:
+http://p.sf.net/sfu/appdyn_d2d_jan
