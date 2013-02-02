@@ -1,214 +1,193 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 11/11] iio/adc: (max1363) Add basic OF bindings and external
- vref support
-Date: Sat, 02 Feb 2013 10:33:12 +0000
-Message-ID: <510CEB68.5000205@kernel.org>
-References: <1359668588-13678-1-git-send-email-linux@roeck-us.net> <1359668588-13678-12-git-send-email-linux@roeck-us.net>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to
+	arm/common
+Date: Sat, 2 Feb 2013 12:17:38 +0000
+Message-ID: <20130202121738.GZ2637@n2100.arm.linux.org.uk>
+References: <20130201184915.GP2244@beef> <510C1D0E.6030401@mvista.com> <20130201185820.GE29898@arwen.pp.htv.fi> <510C2A47.1090607@mvista.com> <20130201205600.GA31762@arwen.pp.htv.fi> <20130201213003.GW2637@n2100.arm.linux.org.uk> <510C58DF.3010103@mvista.com> <20130202004455.GX2637@n2100.arm.linux.org.uk> <510C7554.3060800@mvista.com> <20130202101851.GY2637@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1359668588-13678-12-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130202101851.GY2637@n2100.arm.linux.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sergei Shtylyov <sshtylyov@mvista.com>
+Cc: Matt Porter <mporter@ti.com>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.or>
 List-Id: devicetree@vger.kernel.org
 
-On 01/31/2013 09:43 PM, Guenter Roeck wrote:
-> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Mostly fine.  Comments below are on the fact I'd prefer
-a reference voltage coming from a regulator than being
-a bit of platform data.
-> ---
->  Documentation/devicetree/bindings/iio/max1363.txt |   54 +++++++++++++++++++++
->  drivers/iio/adc/max1363.c                         |   54 ++++++++++++++++-----
->  2 files changed, 95 insertions(+), 13 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/max1363.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/iio/max1363.txt b/Documentation/devicetree/bindings/iio/max1363.txt
-> new file mode 100644
-> index 0000000..6d22861
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/max1363.txt
-> @@ -0,0 +1,54 @@
-> +Device Tree bindings for MAX1363 and compatible ADC controllers
-> +
-> +This binding uses the common IIO binding[1].
-> +
-> +[1] Documentation/devicetree/bindings/iio/iio-bindings.txt
-> +
-> +Required properties:
-> +
-> +- compatible, shall be one of the following:
-> +	"maxim,max1361"
-> +	"maxim,max1362"
-> +	"maxim,max1363"
-> +	"maxim,max1364"
-> +	"maxim,max1036"
-> +	"maxim,max1037"
-> +	"maxim,max1038"
-> +	"maxim,max1039"
-> +	"maxim,max1136"
-> +	"maxim,max1137"
-> +	"maxim,max1138"
-> +	"maxim,max1139"
-> +	"maxim,max1236"
-> +	"maxim,max1237"
-> +	"maxim,max1238"
-> +	"maxim,max1239"
-> +	"maxim,max11600"
-> +	"maxim,max11601"
-> +	"maxim,max11602"
-> +	"maxim,max11603"
-> +	"maxim,max11604"
-> +	"maxim,max11605"
-> +	"maxim,max11606"
-> +	"maxim,max11607"
-> +	"maxim,max11608"
-> +	"maxim,max11609"
-> +	"maxim,max11610"
-> +	"maxim,max11611"
-> +	"maxim,max11612"
-> +	"maxim,max11613"
-> +	"maxim,max11614"
-> +	"maxim,max11615"
-> +	"maxim,max11616"
-> +	"maxim,max11617"
-> +
-> +- reg: shall be the I2C device address
-> +
-> +Required properties for IIO bindings:
-> +- #io-channel-cells: from common IIO bindings; shall be set to 1.
-> +
-> +Optional properties:
-> +- vref: Reference voltage in mV. If the provided reference voltage matches
-> +	the internal reference voltage, the internal reference voltage is used.
-> +	Otherwise it is assumed that an external reference voltage is used,
-> +	and the chip is programmed accordingly.
+On Sat, Feb 02, 2013 at 10:18:51AM +0000, Russell King - ARM Linux wrote:
+> On Sat, Feb 02, 2013 at 06:09:24AM +0400, Sergei Shtylyov wrote:
+> > Hello.
+> >
+> > On 02-02-2013 4:44, Russell King - ARM Linux wrote:
+> >
+> >>>>> On Fri, Feb 01, 2013 at 11:49:11PM +0300, Sergei Shtylyov wrote:
+> >>>>>>> good point, do you wanna send some patches ?
+> >
+> >>>>>>      I have already sent them countless times and even stuck CPPI 4.1 support (in
+> >>>>>> arch/arm/common/cppi41.c) in Russell's patch system. TI requested to remove the
+> >>>>>> patch. :-(
+> >
+> >>>>> sticking into arch/arm/common/ wasn't a nice move. But then again, so
+> >>>>> wasn't asking for the patch to be removed :-s
+> >
+> >>>> Err, patches don't get removed, they get moved to 'discarded'.
+> >
+> >>>     Any chance to bring it back to life? :-)
+> >>>     Although... drivers/usb/musb/cppi41.c would need to be somewhat
+> >>> reworked for at least AM35x and I don't have time. But that may change,
+> >>> of course.
+> >
+> >> Right, I've just looked back at the various meeting minutes from December
+> >> 2010 when the CPPI stuff was discussed.  Yes, I archive these things and
+> >> all email discussions for referencing in cases like this.
+> >
+> >    Thanks.
+> >
+> >> Unfortunately, they do not contain any useful information other than the
+> >> topic having been brought up.  At that point, the CPPI stuff was in
+> >> mach-davinci, and I had suggested moving it into drivers/dma.
+> >
+> >    I don't remember that, probably was out of the loop again.
 
-Why not use a regulator? It has a nice device tree map and if it's just a fixed
-voltage, we have the fixed regulator driver for them.  This is pretty common
-throughout IIO (unsuprisingly) and we've been generally getting with platform
-data that does this in favour of regulators.  Back when we started out, the
-regulators framework was new so providing an alternative was pretty much
-required.  Now it's pretty universal.
+Here you go - this goes back even _further_ - November 2009 - on the
+mailing list.  The entire thread:
 
+http://lists.arm.linux.org.uk/lurker/thread/20091102.105759.a54cf3f5.en.html
 
-> diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-> index 51165d6..cf49a20 100644
-> --- a/drivers/iio/adc/max1363.c
-> +++ b/drivers/iio/adc/max1363.c
-> @@ -31,6 +31,7 @@
->  #include <linux/slab.h>
->  #include <linux/err.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
->  
->  #include <linux/iio/iio.h>
->  #include <linux/iio/sysfs.h>
-> @@ -162,6 +163,7 @@ struct max1363_chip_info {
->   * @mask_low:		bitmask for enabled low thresholds
->   * @thresh_high:	high threshold values
->   * @thresh_low:		low threshold values
-> + * @vref_mv:		Actual (external or internal) reference voltage
->   */
->  struct max1363_state {
->  	struct i2c_client		*client;
-> @@ -181,6 +183,7 @@ struct max1363_state {
->  	/* 4x unipolar first then the fours bipolar ones */
->  	s16				thresh_high[8];
->  	s16				thresh_low[8];
-> +	u16				vref_mv;
->  };
->  
->  #define MAX1363_MODE_SINGLE(_num, _mask) {				\
-> @@ -392,6 +395,8 @@ static int max1363_read_raw(struct iio_dev *indio_dev,
->  {
->  	struct max1363_state *st = iio_priv(indio_dev);
->  	int ret;
-> +	unsigned long scale_uv;
-> +
->  	switch (m) {
->  	case IIO_CHAN_INFO_RAW:
->  		ret = max1363_read_single_chan(indio_dev, chan, val, m);
-> @@ -399,16 +404,10 @@ static int max1363_read_raw(struct iio_dev *indio_dev,
->  			return ret;
->  		return IIO_VAL_INT;
->  	case IIO_CHAN_INFO_SCALE:
-> -		if ((1 << (st->chip_info->bits + 1)) >
-> -		    st->chip_info->int_vref_mv) {
-> -			*val = 0;
-> -			*val2 = 500000;
-> -			return IIO_VAL_INT_PLUS_MICRO;
-> -		} else {
-> -			*val = (st->chip_info->int_vref_mv)
-> -				>> st->chip_info->bits;
-> -			return IIO_VAL_INT;
-> -		}
-> +		scale_uv = (st->vref_mv * 1000) >> st->chip_info->bits;
-> +		*val = scale_uv / 1000;
-> +		*val2 = (scale_uv % 1000) * 1000;
-> +		return IIO_VAL_INT_PLUS_MICRO;
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -1389,12 +1388,16 @@ static const struct max1363_chip_info max1363_chip_info_tbl[] = {
->  
->  static int max1363_initial_setup(struct max1363_state *st)
->  {
-> -	st->setupbyte = MAX1363_SETUP_AIN3_IS_AIN3_REF_IS_VDD
-> -		| MAX1363_SETUP_POWER_UP_INT_REF
-> -		| MAX1363_SETUP_INT_CLOCK
-> +	st->setupbyte = MAX1363_SETUP_INT_CLOCK
->  		| MAX1363_SETUP_UNIPOLAR
->  		| MAX1363_SETUP_NORESET;
->  
-> +	if (st->vref_mv != st->chip_info->int_vref_mv)
-> +		st->setupbyte |= MAX1363_SETUP_AIN3_IS_REF_EXT_TO_REF;
-> +	else
-> +		st->setupbyte |= MAX1363_SETUP_POWER_UP_INT_REF
-> +		  | MAX1363_SETUP_AIN3_IS_AIN3_REF_IS_INT;
-> +
->  	/* Set scan mode writes the config anyway so wait until then*/
->  	st->setupbyte = MAX1363_SETUP_BYTE(st->setupbyte);
->  	st->current_mode = &max1363_mode_table[st->chip_info->default_mode];
-> @@ -1526,6 +1529,26 @@ static void max1363_buffer_cleanup(struct iio_dev *indio_dev)
->  	iio_kfifo_free(indio_dev->buffer);
->  }
->  
-> +#ifdef CONFIG_OF
-> +static int max1363_parse_of(struct device *dev, struct max1363_state *st)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	u32 vref_mv;
-> +
-> +	if (!of_property_read_u32(np, "vref", &vref_mv)) {
-> +		if (vref_mv == 0 || vref_mv > USHRT_MAX)
-> +			return -EINVAL;
-> +		st->vref_mv = vref_mv;
-> +	}
-> +	return 0;
-> +}
-> +#else
-> +static int max1363_parse_of(struct device *dev, struct max1363_state *st)
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
->  static int max1363_probe(struct i2c_client *client,
->  			 const struct i2c_device_id *id)
->  {
-> @@ -1562,6 +1585,11 @@ static int max1363_probe(struct i2c_client *client,
->  	st->chip_info = &max1363_chip_info_tbl[id->driver_data];
->  	st->client = client;
->  
-> +	st->vref_mv = st->chip_info->int_vref_mv;
-> +	ret = max1363_parse_of(&client->dev, st);
-> +	if (ret)
-> +		goto error_disable_reg;
-> +
->  	ret = max1363_alloc_scan_masks(indio_dev);
->  	if (ret)
->  		goto error_disable_reg;
-> 
+And selected emails from it:
+
+http://lists.arm.linux.org.uk/lurker/message/20091102.103706.38c029b5.en.html
+On Mon, Nov 02, 2009 at 10:37:06AM +0000, I wrote:
+| On Mon, Nov 02, 2009 at 04:27:59PM +0530, Gupta, Ajay Kumar wrote:
+| > Another option is to create arch/arm/ti-common to place all TI platform's
+| > common software, such as CPPI4.1 used both in DA8xx and AM3517.
+| 
+| No thanks.  I really don't see why we should allow TI to have yet more
+| directories scattered throughout the tree that are out of place with
+| existing conventions.
+| 
+| And what is this CPPI thing anyway?
+| 
+| http://acronyms.thefreedictionary.com/CPPI
+| 
+| "Communications Port Programming Interface" seems to be about the best
+| applicable one from that list!
+| 
+| If it's a USB DMA device (from the patches I can find, that seems to be
+| the case) then why can't it live in drivers/usb or drivers/dma ?
+
+And again:
+
+http://lists.arm.linux.org.uk/lurker/message/20091102.115458.61cde450.en.html
+On Mon, Nov 02, 2009 at 11:54:58AM +0000, I wrote:
+| On Mon, Nov 02, 2009 at 04:27:59PM +0530, Gupta, Ajay Kumar wrote:
+| > CPPI4.1 DMA engine can be used either by USB or by Ethernet interface though
+| > currently only USB is using it but in future even Ethernet devices may use it.
+| 
+| drivers/dma does seem to be the right place for this.
+
+http://lists.arm.linux.org.uk/lurker/message/20091102.110217.adec3ca7.en.html
+Even Felipe Balbi said so:
+| you might want to provide support for it via drivers/dma and for the
+| musb stuff, you just add the wrappers musb uses. See how tusb6010_omap.c
+| uses OMAP's system dma which is also used by any other driver which
+| requests a dma channel.
+
+And it seems that _YOU_ did get the message - see your quoted text in:
+http://lists.arm.linux.org.uk/lurker/message/20091230.132240.ecd56b3d.en.html
+> We're currently having it there but the matter is it should be shred
+> between different platforms, so arch/arm/common/ seems like the right
+> place (which Russell didn't like, suggesting ill suited for that
+> drivers/dma/ instead).
+
+See - you acknowledge here that I don't like it.  So you _KNOW_ my views
+on it in December 2009, contary to what you're saying in this thread.
+
+Yet, you persisted with putting it in arch/arm/common:
+
+http://lists.arm.linux.org.uk/lurker/message/20100515.181453.472c7c10.en.html
+| Changes since the previous version:
+| - moved everything from arch/arm/mach-davinci/ to arch/arm/common/;
+| - s/CONFIG_CPPI41/CONFIG_TI_CPPI41/, made that option invisible;
+| - added #include <linux/slab.h> for kzalloc();
+| - switched alloc_queue() and cppi41_queue_free() to using bit operations;
+| - replaced 'static' linking_ram[] by local variable in cppi41_queue_mgr_init();
+| - fixed pr_debug() in cppi41_dma_ctrlr_init() to print the real queue manager #.
+
+So, see, I had already objected to it being in arch/arm well before
+you stuck your patch into the patch system.  And somehow you think
+that ignoring my previous comments and doing it anyway will result in
+progress?
+
+So, let's recap.  The timeline behind this is:
+
++ 2 Nov 2009: Question asked about putting it in arch/arm/ti-common
+  + I responded saying a clear no to that, suggesting other locations
+    all of which were outside arch/arm.
+  + I responded again saying an hour or two later saying the same thing.
+  + Felipe Balbi agreed with drivers/dma.
++ 15 May 2010: v5 posted with it in arch/arm/common
++ 06 Aug 2010: put into patch system sa 6305/1
++ 06 Dec 2010: TI meeting.
+  + Pre-meeting notes show that my views on this are known:
+    + I'll quote this from it: "Russell suggested to move the driver at
+      drivers/dma/".
+    + Raises concern that DMA engine API may not fit.
+  + I respond to that concern as work has been done on the DMA engine API
+    to improve the slave mode support recently as a result of Linus Walleij's
+    work on AMBA PL08x DMA support.
+    (I would _not_ have done so if I had changed my view about it being
+     under drivers/dma/).
++ 07 Dec 2010: emails talking about moving MUSB over to DMA engine API
+  so that MUSB should not care about its DMA backend (that being CPPI
+  or some other one.)
+  + Email with "Let's see if I can get it all done by 2.6.39."
++ 08 Dec 2010: patch 6305/1 discarded from the patch system as there now
+  seems to be concensus on the issue.
++ 03 Jan 2011: you ask me why it was discarded
+  http://lists.arm.linux.org.uk/lurker/thread/20110103.160610.8cbe8e7d.en.html
+  + I respond "It may have been that it's inventing its own API rather
+    than using something like the DMA engine API."
+  + Ajay said: "This issue was discussed recently at TI and proposal was
+    to place it to drivers/dma folder. Moreover, even Felipe also seems
+    to move other musb DMAs (Inventra, CPPI3.0, TUSB) to drivers/dma."
+
+Oh, and then we come to this interesting email from Felipe to you, in
+response to your reluctance to put it in drivers/dma.
+| Do I really have to spell it out ? Really ?
+| 
+| You don't need to physically move the part of the code to drivers/dma,
+| but it has to use the API. The mentor DMA is internal to MUSB.
+| tusb6010_omap.c isn't.
+| 
+| Where it makes sense to move the code under drivers/dma, it will be
+| done, where it doesn't, it won't be done, but it will use the same API.
+| That's all.
+| 
+| The end goal is just to drop all these ad-hoc "APIs" for accessing DMA
+| on musb code.
+
+See the common theme here?  I don't like it under arch/arm.  I've been
+pretty _consistent_ in suggesting drivers/dma/ all through that...
+Others have said it.  People even acknowledge that's what I've been
+saying, people who were not in the original discussion.
+
+What I think is this: it is _YOU_ who don't want to hear that message,
+so _YOU_ are intentionally ignoring it, and _YOU_ are looking for
+someone to blame for it.  You've decided I'm to blame because _YOU_
+aren't listening.
+
+The reason there hasn't been any progress on this is _NOT_ down to me.
+I've provided my feedback, and promptly been ignored.  Others have told
+you the same thing, and promptly been ignored.  Sorry, this is not my
+problem.  This is entirely YOUR problem, one of your own making.
+
+But whatever.  We are NOT going to put CPPI under arch/arm.  Not now that
+during the last merge window Linus complained to Arnd about the amount of
+code coming through for arch/arm _AGAIN_.  Not after last time Linus
+complained about TI OMAP which prompted the creation of arm-soc.  AND THAT
+IS *FINAL*.  CPPI DMA SUPPORT IS *NOT* GOING UNDER ARCH/ARM.  PERIOD.  NOT
+GOING TO HAPPEN.
+
+Is this clear enough yet, or how many more years of emails do you need
+yet more emails to get this message through?
