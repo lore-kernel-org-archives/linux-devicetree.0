@@ -1,80 +1,88 @@
-From: Prashant Gaikwad <pgaikwad@nvidia.com>
-Subject: Re: [PATCH v5 08/10] ARM: dt: Add references to tegra_car clocks
-Date: Mon, 4 Feb 2013 12:15:14 +0530
-Message-ID: <510F58FA.5000101@nvidia.com>
-References: <1359713962-16822-1-git-send-email-pdeschrijver@nvidia.com> <1359713962-16822-9-git-send-email-pdeschrijver@nvidia.com>
+From: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Subject: [PATCH] watchdog: ath79_wdt: add device tree matching
+Date: Sat,  2 Feb 2013 10:34:54 +0100
+Message-ID: <1359797694-29958-1-git-send-email-juhosg@openwrt.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1359713962-16822-9-git-send-email-pdeschrijver@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, Simon Glass <sjg@chromium.org>, Mike Turquette <mturquette@linaro.org>, Joseph Lo <josephl@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 01 February 2013 03:48 PM, Peter De Schrijver wrote:
-> Add references to tegra_car clocks for the basic device nodes.
->
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> ---
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Signed-off-by: Gabor Juhos <juhosg-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+---
+ .../devicetree/bindings/watchdog/qca-ar7130-wdt.txt       |   13 +++++++++++++
+ drivers/watchdog/ath79_wdt.c                              |   11 +++++++++++
+ 2 files changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/watchdog/qca-ar7130-wdt.txt
 
-Reviewed-by: Prashant Gaikwad <pgaikwad@nvidia.com>
-
->   arch/arm/boot/dts/tegra114.dtsi |    7 ++++++-
->   1 files changed, 6 insertions(+), 1 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
-> index 96a8235..1dec620 100644
-> --- a/arch/arm/boot/dts/tegra114.dtsi
-> +++ b/arch/arm/boot/dts/tegra114.dtsi
-> @@ -27,7 +27,7 @@
->   	};
->   
->   	tegra_car: clock {
-> -		compatible = "nvidia,tegra114-car, nvidia,tegra30-car";
-> +		compatible = "nvidia,tegra114-car";
->   		reg = <0x60006000 0x1000>;
->   		#clock-cells = <1>;
->   	};
-> @@ -43,6 +43,7 @@
->   		reg-shift = <2>;
->   		interrupts = <0 36 0x04>;
->   		status = "disabled";
-> +		clocks = <&tegra_car 6>;
->   	};
->   
->   	serial@70006040 {
-> @@ -51,6 +52,7 @@
->   		reg-shift = <2>;
->   		interrupts = <0 37 0x04>;
->   		status = "disabled";
-> +		clocks = <&tegra_car 192>;
->   	};
->   
->   	serial@70006200 {
-> @@ -59,6 +61,7 @@
->   		reg-shift = <2>;
->   		interrupts = <0 46 0x04>;
->   		status = "disabled";
-> +		clocks = <&tegra_car 55>;
->   	};
->   
->   	serial@70006300 {
-> @@ -67,12 +70,14 @@
->   		reg-shift = <2>;
->   		interrupts = <0 90 0x04>;
->   		status = "disabled";
-> +		clocks = <&tegra_car 65>;
->   	};
->   
->   	rtc {
->   		compatible = "nvidia,tegra114-rtc", "nvidia,tegra20-rtc";
->   		reg = <0x7000e000 0x100>;
->   		interrupts = <0 2 0x04>;
-> +		clocks = <&tegra_car 4>;
->   	};
->   
->   	pmc {
->
-
+diff --git a/Documentation/devicetree/bindings/watchdog/qca-ar7130-wdt.txt b/Documentation/devicetree/bindings/watchdog/qca-ar7130-wdt.txt
+new file mode 100644
+index 0000000..7a89e5f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/watchdog/qca-ar7130-wdt.txt
+@@ -0,0 +1,13 @@
++* Qualcomm Atheros AR7130 Watchdog Timer (WDT) Controller
++
++Required properties:
++- compatible: must be "qca,ar7130-wdt"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++
++Example:
++
++wdt@18060008 {
++	compatible = "qca,ar9330-wdt", "qca,ar7130-wdt";
++	reg = <0x18060008 0x8>;
++};
+diff --git a/drivers/watchdog/ath79_wdt.c b/drivers/watchdog/ath79_wdt.c
+index e786f64..8987990 100644
+--- a/drivers/watchdog/ath79_wdt.c
++++ b/drivers/watchdog/ath79_wdt.c
+@@ -33,6 +33,8 @@
+ #include <linux/watchdog.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
+ 
+ #define DRIVER_NAME	"ath79-wdt"
+ 
+@@ -308,6 +310,14 @@ static void ath97_wdt_shutdown(struct platform_device *pdev)
+ 	ath79_wdt_disable();
+ }
+ 
++#ifdef CONFIG_OF
++static const struct of_device_id ath79_wdt_match[] = {
++	{ .compatible = "qca,ar7130-wdt" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, ath79_wdt_match);
++#endif
++
+ static struct platform_driver ath79_wdt_driver = {
+ 	.probe		= ath79_wdt_probe,
+ 	.remove		= ath79_wdt_remove,
+@@ -315,6 +325,7 @@ static struct platform_driver ath79_wdt_driver = {
+ 	.driver		= {
+ 		.name	= DRIVER_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = of_match_ptr(ath79_wdt_match),
+ 	},
+ };
+ 
+-- 
+1.7.10
