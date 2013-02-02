@@ -1,54 +1,51 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to
- arm/common
-Date: Sat, 2 Feb 2013 09:44:10 -0500
-Message-ID: <20130202144409.GR2244@beef>
-References: <1359742975-10421-1-git-send-email-mporter@ti.com>
- <1359742975-10421-2-git-send-email-mporter@ti.com>
- <20130201184107.GM22517@atomide.com>
- <20130202124906.GB2637@n2100.arm.linux.org.uk>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V2 4/4] DMA: PL330: Modify pl330 filter based on new generic dma dt bindings.
+Date: Sat, 02 Feb 2013 16:09:55 +0100
+Message-ID: <1692358.6BmDsJsb25@wuerfel>
+References: <1359723116-18173-1-git-send-email-padma.v@samsung.com> <201302011523.25771.arnd@arndb.de> <CAAgF-Bf55eN2WOgU5nQa=nF76fHvBHR7NdmvoBpF-n4ke6rd1g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130202124906.GB2637@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <djbw@fb.com>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAAgF-Bf55eN2WOgU5nQa=nF76fHvBHR7NdmvoBpF-n4ke6rd1g@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Padma Venkat <padma.kvr@gmail.com>, boojin.kim@samsung.com, jassisinghbrar@gmail.com, linux-samsung-soc@vger.kernel.org, Padmavathi Venna <padma.v@samsung.com>, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, jon-hunter@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 02, 2013 at 12:49:06PM +0000, Russell King wrote:
-> On Fri, Feb 01, 2013 at 10:41:08AM -0800, Tony Lindgren wrote:
-> > * Matt Porter <mporter@ti.com> [130201 10:25]:
-> > > Move mach-davinci/dma.c to common/edma.c so it can be used
-> > > by OMAP (specifically AM33xx) as well.
-> > 
-> > I think this should rather go to drivers/dma/?
-> 
-> Yes, it should, but just like OMAP, there's a conversion effort that needs
-> to be gone through.  It has one point - and only one point - which allows
-> its continued existence under arch/arm, and that is it already exists
-> there.
-> 
-> If it was new code, the answer would be a definite NACK, but it isn't.
-> It's pre-existing code which is already in mainline.  It's merely being
-> moved.
-> 
-> Another plus point for it is that there does seem to be a DMA engine
-> driver for it, so hopefully we'll see it killed off in arch/arm soon.
+On Saturday 02 February 2013 08:00:54 Padma Venkat wrote:
 
-That's definitely the plan. I was able to start this effort
-independently by converting the Davinci mmc and spi drivers to dmaengine
-before I took this step. I've got the next micro-step of addressing
-omap_hsmmc in process (pending on agreement on a dmaengine api change
-with Vinod), cleaning up the mcasp driver is also pending this series so
-that it can also be converted to dmaengine. Once mcasp (or "davinci
-audio") is converted, we're rid of all the in-kernel users of the
-private API and can get rid of this...which also is helping clean up
-mach-davinci, of course.
+> > The result of this looks good, but I fear that changing the filter function
+> > like this wil break all drivers that currently use the plat-samsung/dma-ops.c
+> > code. For migration purposes, I think the best way is to change
+> > samsung_dmadev_request() to match the new filter_param format.
+> >
+> > After that is done, you can migrate all the drivers using samsung_dma_get_ops
+> > over to the new dma_request_slave_channel interface without breaking
+> > anything when only part of the series is applied.
+> >
+> >         Arnd
+> 
+> Please check the below link where I made the dma request compatible to
+> both DT and non-DT
+> 
+> http://git.kernel.org/?p=linux/kernel/git/broonie/sound.git;a=commit;h=e7ba5f1d0f6292e1b99c63cc4bb74c70232e9065
+> http://git.kernel.org/?p=linux/kernel/git/broonie/sound.git;a=commit;h=b5be04d35dbb2e00ab27a97bfd26e17019e857ef
+> 
+> Please let me know if any changes required.
+> 
 
-If I can get your ack on this patch that should move things along to
-these next steps.
+Those two changes by themselves still look ok, I think but you
+still break the non-DT case in this 4/4 patch by changing the
+pl330_filter function in an incompatible way. You will still
+have to either change the filter_param argument in the
+samsung_dmadev_request() function, or provide separate filter
+functions, one to be used by samsung_dmadev_request and
+one for the pl330_xlate function.
 
-Thanks,
-Matt
+In the long run, I think it would be better to move the slave
+drivers away from the samsung_dma wrappers and use
+dma_request_slave_channel directly, but that is an independent
+discussion.
+
+	Arnd
