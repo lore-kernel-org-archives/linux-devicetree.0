@@ -1,123 +1,491 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to
-	arm/common
-Date: Sat, 2 Feb 2013 10:18:51 +0000
-Message-ID: <20130202101851.GY2637@n2100.arm.linux.org.uk>
-References: <5022f635a527470dbd0be932063e9cd2@DFLE72.ent.ti.com> <20130201184915.GP2244@beef> <510C1D0E.6030401@mvista.com> <20130201185820.GE29898@arwen.pp.htv.fi> <510C2A47.1090607@mvista.com> <20130201205600.GA31762@arwen.pp.htv.fi> <20130201213003.GW2637@n2100.arm.linux.org.uk> <510C58DF.3010103@mvista.com> <20130202004455.GX2637@n2100.arm.linux.org.uk> <510C7554.3060800@mvista.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 10/11] iio: Add OF support
+Date: Sat, 02 Feb 2013 10:29:02 +0000
+Message-ID: <510CEA6E.9010708@kernel.org>
+References: <1359668588-13678-1-git-send-email-linux@roeck-us.net> <1359668588-13678-11-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <510C7554.3060800@mvista.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sshtylyov@mvista.com>
-Cc: Felipe Balbi <balbi@ti.com>, Matt Porter <mporter@ti.com>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Chris Ball <cjb@laptop.org>, "Cousson, Benoit" <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1359668588-13678-11-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 02, 2013 at 06:09:24AM +0400, Sergei Shtylyov wrote:
-> Hello.
->
-> On 02-02-2013 4:44, Russell King - ARM Linux wrote:
->
->>>>> On Fri, Feb 01, 2013 at 11:49:11PM +0300, Sergei Shtylyov wrote:
->>>>>>> good point, do you wanna send some patches ?
->
->>>>>>      I have already sent them countless times and even stuck CPPI 4.1 support (in
->>>>>> arch/arm/common/cppi41.c) in Russell's patch system. TI requested to remove the
->>>>>> patch. :-(
->
->>>>> sticking into arch/arm/common/ wasn't a nice move. But then again, so
->>>>> wasn't asking for the patch to be removed :-s
->
->>>> Err, patches don't get removed, they get moved to 'discarded'.
->
->>>     Any chance to bring it back to life? :-)
->>>     Although... drivers/usb/musb/cppi41.c would need to be somewhat
->>> reworked for at least AM35x and I don't have time. But that may change,
->>> of course.
->
->> Right, I've just looked back at the various meeting minutes from December
->> 2010 when the CPPI stuff was discussed.  Yes, I archive these things and
->> all email discussions for referencing in cases like this.
->
->    Thanks.
->
->> Unfortunately, they do not contain any useful information other than the
->> topic having been brought up.  At that point, the CPPI stuff was in
->> mach-davinci, and I had suggested moving it into drivers/dma.
->
->    I don't remember that, probably was out of the loop again.
->
->> The result of that was to say that it doesn't fit the DMA engine APIs.
->
->    I remember this as a discussion happening post me sending the patch to 
-> the patch system and it being discarded...
->
->> So someone came up with the idea of putting it in arch/arm/common - which
->
->    Probably was me. There was also idea of putting it into 
-> drivers/usb/musb/ -- which TI indeed followed in its Arago prject. I 
-> firmly denied that suggestion.
->
->> I frankly ignored by email (how long have we been saying "no drivers in
->> arch/arm" ?)
->
->    But there *are* drivers there! And look at edma.c which is about to be 
-> moved there... Anyway, I haven't seen such warnings, probably was too 
-> late in the game.
+On 01/31/2013 09:43 PM, Guenter Roeck wrote:
+> Provide bindings, new API access functions, and parse OF data
+> during initialization.
+> 
+Firstly thanks for working on this Guenter, it's been a big hole
+for a while largely because non of our largest developers were
+actually using development platforms with device tree support.
 
-I've already objected about the header moving to some random place in
-arch/arm/include.  Really, edma.c needs to find another home too - but
-there's a difference here.  edma.c is already present under arch/arm.
-CPPI is _not_.  CPPI is new code appearing under arch/arm (you can see
-that for yourself by looking at the diffstat of 6305/1... it doesn't
-move files, it adds new code.)
+Given my knowledge of device tree is based on the odd article
+and looking at similar sets of bindings this morning, my comments
+are likely to be somewhat superficial and uninformed ;)
 
->> Now, it would've been discussed in that meeting, but unfortunately no
->> record exists of that.  What does follow that meeting is a discussion
->> trail.  From what I can see there, but it looks to me like the decision
->> was taken to move it to the DMA engine API, and work on sorting out MUSB
->> was going to commence.
->
->> The last email in that says "I'll get to that soon"... and that is also
->> the final email I have on this topic.  I guess if nothing has happened...
->> Shrug, that's someone elses problem.
->
->    Well, as usual... :-(
->
->> Anyway, the answer for putting it in arch/arm/common hasn't changed,
->> and really, where we are now, post Linus having a moan about the size
->> of arch/arm, that answer is even more concrete in the negative.  It's
->> 54K of code which should not be under arch/arm at all.
->
->> Anyway, if you need to look at the patch, it's 6305/1.  Typing into the
->> summary search box 'cppi' found it in one go.
->
->    Thanks, I remember this variant was under arch/arm/common/.
->    Now however, I see what happened to that variant in somewhat different 
-> light. Looks like it was entirely your decision to discard the patch, 
-> without TI's request...
+Mostly on this one I'll take a back seat and let those who
+know this stuff better come to a consensus.
 
-Firstly, it is *my* perogative to say no to anything in arch/arm, and I
-really don't have to give reasons for it if I choose to.
+Jonathan
 
-Secondly, it *was* discussed with TI, and the following thread of
-discussion (threaded to the minutes email) shows that *something* was
-going to happen _as a result of that meeting_ to address the problem of
-it being under arch/arm.  And *therefore* it was discarded from the patch
-system - because there was expectation that it was going to get fixed.
+> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/iio/iio-bindings.txt       |   97 ++++++++
+>  drivers/iio/inkern.c                               |  241 ++++++++++++++++----
+>  include/linux/iio/consumer.h                       |    8 +
+>  3 files changed, 299 insertions(+), 47 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/iio-bindings.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> new file mode 100644
+> index 0000000..0f51c95
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> @@ -0,0 +1,97 @@
+> +This binding is a work-in-progress, and are based on clock bindings and
+> +suggestions from Lars-Peter Clausen [1].
+> +
+> +Sources of IIO channels can be represented by any node in the device
+> +tree.  Those nodes are designated as IIO providers.  IIO consumer
+> +nodes use a phandle and IIO specifier pair to connect IIO provider
+> +outputs to IIO inputs.  Similar to the gpio specifiers, an IIO
+> +specifier is an array of one more more cells identifying the IIO
+> +output on a device.  The length of an IIO specifier is defined by the
+> +value of a #io-channel-cells property in the clock provider node.
+> +
+> +[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
+> +
+> +==IIO providers==
+> +
+> +Required properties:
+> +#io-channel-cells: Number of cells in an IIO specifier; Typically 0 for nodes
+> +		   with a single IIO output and 1 for nodes with multiple
+> +		   IIO outputs.
+> +
+> +Optional properties:
+> +io-channel-output-names:
+> +		    Recommended to be a list of strings of IIO output signal
+> +		    names indexed by the first cell in the IIO specifier.
+> +		    However, the meaning of io-channel-output-names is domain
+> +		    specific to the IIO provider, and is only provided to
+> +		    encourage using the same meaning for the majority of IIO
+> +		    providers.  This format may not work for IIO providers
+> +		    using a complex IIO specifier format.  In those cases it
+> +		    is recommended to omit this property and create a binding
+> +		    specific names property.
+> +
+> +		    IIO consumer nodes must never directly reference
+> +		    the provider's io-channel-output-names property.
+> +
+> +For example:
+> +
+> +    adc: adc@35 {
+> +	compatible = "maxim,max1139";
+> +	reg = <0x35>;
+> +        #io-channel-cells = <1>;
+> +        io-channel-output-names = "adc1", "adc2";
+> +    };
+> +
+> +- this node defines a device with two named IIO outputs, the first named
+> +  "adc1" and the second named "adc2".  Consumer nodes always reference
+> +  IIO channels by index. The names should reflect the IIO output signal
+> +  names for the device.
+> +
+> +==IIO consumers==
+> +
+> +Required properties:
+> +io-channels:	List of phandle and IIO specifier pairs, one pair
+> +		for each IIO input to the device.  Note: if the
+> +		IIO provider specifies '0' for #clock-cells, then
+> +		only the phandle portion of the pair will appear.
+> +
+> +Optional properties:
+> +io-channel-names:
+> +		List of IIO input name strings sorted in the same
+> +		order as the io-channels property.  Consumers drivers
+> +		will use io-channel-names to match IIO input names
+> +		with IIO specifiers.
+> +io-channel-ranges:
+> +		Empty property indicating that child nodes can inherit named
+> +		IIO channels from this node. Useful for bus nodes to provide
+> +		and IIO channel to their children.
+> +
+> +For example:
+> +
+> +    device {
+> +        io-channels = <&adc 1>, <&ref 0>;
+> +        io-channel-names = "vcc", "vdd";
+> +    };
+> +
+> +This represents a device with two IIO inputs, named "vcc" and "vdd".
+> +The vcc channel is connected to output 1 of the &adc device, and the
+> +vdd channel is connected to output 0 of the &ref device.
+> +
+> +==Example==
+> +
+> +	adc: max1139@35 {
+> +		compatible = "maxim,max1139";
+> +		reg = <0x35>;
+> +		#io-channel-cells = <1>;
+> +	};
+> +
+> +	...
+> +
+> +	iio_hwmon {
+> +		compatible = "iio-hwmon";
+> +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
+> +			<&adc 3>, <&adc 4>, <&adc 5>,
+> +			<&adc 6>, <&adc 7>, <&adc 8>,
+> +			<&adc 9>, <&adc 10>, <&adc 11>;
+> +		io-channel-names = "vcc", "vdd", "vref", "1.2V";
+Having different numbers of channels and channel names seems
+unusual... Deliberate or you got bored making up channel names?
 
-For christ sake, someone even agreed to do it.  Even a target was mentioned,
-of 2.6.39.  That was mentioned on 7th December 2010.  And 6305/1 was
-discarded on 8th December 2010.  Cause and effect.
+Why use indexed values for <&adc 0> etc rather than the output
+channel names on adc?  For the iio_map stuff we initialy used
+indexes but got a lot of responses that it was a silly idea and
+naming was much more consistent and easy to follow.
 
-And yes, *you* were not part of that discussion.  You work for Montavista
-which contracts with TI to provide this support.  It is up to TI to pass
-stuff like this on to their contractors.
+Is there a fundamental reason for it here?
 
-There are two people on this thread CC list who were also involved or
-CC'd on the mails from the thread in 2010...  Tony and Felipe.
-Unfortunately, the person who agreed to do the work is no longer in the
-land of the living.  Yes I know it's inconvenient for people to die
-when they've still got lots of important work to do but that's what can
-happen...
+(note I don't mind either way as this seems more compact and cleaner
+in some ways)
+
+> +	};
+> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+> index c42aba6..af80a18 100644
+> --- a/drivers/iio/inkern.c
+> +++ b/drivers/iio/inkern.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/export.h>
+>  #include <linux/slab.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
+>  
+>  #include <linux/iio/iio.h>
+>  #include "iio_core.h"
+> @@ -26,13 +27,55 @@ struct iio_map_internal {
+>  static LIST_HEAD(iio_map_list);
+>  static DEFINE_MUTEX(iio_map_list_lock);
+>  
+> +static struct iio_map *iio_map_of_init(struct iio_dev *idev)
+> +{
+> +	struct device_node *np = idev->dev.of_node;
+> +	struct iio_map *maps;
+> +	u32 cells, channels = 1;
+> +	int names, i, ret;
+> +
+> +	ret = of_property_read_u32(np, "#io-channel-cells", &cells);
+> +	if (ret < 0 || cells > 1)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	names = of_property_count_strings(np, "io-channel-output-names");
+> +	if (names < 0)
+> +		names = 0;
+> +
+> +	if (channels < names)
+> +		channels = names;
+> +
+> +	maps = devm_kzalloc(&idev->dev, sizeof(*maps) * (channels + 1),
+> +			    GFP_KERNEL);
+> +	if (maps == NULL)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	for (i = 0; i < channels; i++) {
+> +		if (i < names) {
+> +			ret = of_property_read_string_index(np,
+> +				    "io-channel-output-names", i,
+> +				    &maps[i].consumer_channel);
+> +			if (ret < 0)
+> +				return ERR_PTR(ret);
+> +		}
+> +		/* Use dummy for consumer device names */
+> +		maps[i].consumer_dev_name = "of";
+> +	}
+> +	return maps;
+> +}
+> +
+>  int iio_map_array_register(struct iio_dev *indio_dev, struct iio_map *maps)
+>  {
+>  	int i = 0, ret = 0;
+>  	struct iio_map_internal *mapi;
+>  
+> -	if (maps == NULL)
+> -		return 0;
+> +	if (maps == NULL) {
+> +		maps = iio_map_of_init(indio_dev);
+> +		if (IS_ERR(maps))
+> +			return PTR_ERR(maps);
+> +		if (maps == NULL)
+> +			return 0;
+> +	}
+>  
+>  	mutex_lock(&iio_map_list_lock);
+>  	while (maps[i].consumer_dev_name != NULL) {
+> @@ -92,30 +135,14 @@ static const struct iio_chan_spec
+>  	return chan;
+>  }
+>  
+> -
+> -struct iio_channel *iio_channel_get(const char *name, const char *channel_name)
+> +struct iio_channel *iio_channel_get_common(struct iio_map_internal *c,
+> +					   int index)
+>  {
+> -	struct iio_map_internal *c_i = NULL, *c = NULL;
+>  	struct iio_channel *channel;
+>  	int err;
+>  
+> -	if (name == NULL && channel_name == NULL)
+> -		return ERR_PTR(-ENODEV);
+> -
+> -	/* first find matching entry the channel map */
+> -	mutex_lock(&iio_map_list_lock);
+> -	list_for_each_entry(c_i, &iio_map_list, l) {
+> -		if ((name && strcmp(name, c_i->map->consumer_dev_name) != 0) ||
+> -		    (channel_name &&
+> -		     strcmp(channel_name, c_i->map->consumer_channel) != 0))
+> -			continue;
+> -		c = c_i;
+> -		iio_device_get(c->indio_dev);
+> -		break;
+> -	}
+> -	mutex_unlock(&iio_map_list_lock);
+>  	if (c == NULL)
+> -		return ERR_PTR(-ENODEV);
+> +		return ERR_PTR(-EPROBE_DEFER);
+>  
+>  	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
+>  	if (channel == NULL) {
+> @@ -125,7 +152,13 @@ struct iio_channel *iio_channel_get(const char *name, const char *channel_name)
+>  
+>  	channel->indio_dev = c->indio_dev;
+>  
+> -	if (c->map->adc_channel_label) {
+> +	if (index >= 0) {
+> +		if (index >= c->indio_dev->num_channels) {
+> +			err = -EINVAL;
+> +			goto error_no_chan;
+> +		}
+> +		channel->channel = &c->indio_dev->channels[index];
+> +	} else if (c->map->adc_channel_label) {
+>  		channel->channel =
+>  			iio_chan_spec_from_name(channel->indio_dev,
+>  						c->map->adc_channel_label);
+> @@ -144,6 +177,60 @@ error_no_mem:
+>  	iio_device_put(c->indio_dev);
+>  	return ERR_PTR(err);
+>  }
+> +
+> +struct iio_channel *of_iio_channel_get(struct device_node *np, int index)
+> +{
+> +	struct iio_map_internal *c_i, *c = NULL;
+> +	int err, map_index;
+> +	struct of_phandle_args iiospec;
+> +
+> +	if (index < 0)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	err = of_parse_phandle_with_args(np, "io-channels",
+> +					 "#io-channel-cells",
+> +					 index, &iiospec);
+> +	if (err)
+> +		return ERR_PTR(err);
+> +
+> +	map_index = iiospec.args_count ? iiospec.args[0] : 0;
+> +
+> +	mutex_lock(&iio_map_list_lock);
+> +	list_for_each_entry(c_i, &iio_map_list, l) {
+> +		if (iiospec.np == c_i->indio_dev->dev.of_node) {
+> +			c = c_i;
+> +			iio_device_get(c->indio_dev);
+> +			break;
+> +		}
+> +	}
+> +	of_node_put(iiospec.np);
+> +	mutex_unlock(&iio_map_list_lock);
+> +	return iio_channel_get_common(c, index);
+> +}
+> +EXPORT_SYMBOL_GPL(of_iio_channel_get);
+> +
+> +struct iio_channel *iio_channel_get(const char *name,
+> +				    const char *channel_name)
+> +{
+> +	struct iio_map_internal *c_i = NULL, *c = NULL;
+> +
+> +	if (name == NULL && channel_name == NULL)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	/* first find matching entry the channel map */
+> +	mutex_lock(&iio_map_list_lock);
+> +	list_for_each_entry(c_i, &iio_map_list, l) {
+> +		if ((name && strcmp(name, c_i->map->consumer_dev_name) != 0) ||
+> +		    (channel_name && strcmp(channel_name,
+> +					    c_i->map->consumer_channel) != 0))
+> +			continue;
+> +		c = c_i;
+> +		iio_device_get(c->indio_dev);
+> +		break;
+> +	}
+> +	mutex_unlock(&iio_map_list_lock);
+> +	return iio_channel_get_common(c, -1);
+> +}
+>  EXPORT_SYMBOL_GPL(iio_channel_get);
+>  
+>  void iio_channel_release(struct iio_channel *channel)
+> @@ -159,24 +246,43 @@ struct iio_channel *iio_channel_get_all(struct device *dev)
+>  	struct iio_channel *chans;
+>  	struct iio_map_internal *c = NULL;
+>  	int nummaps = 0;
+> -	int mapind = 0;
+> +	int mapind;
+>  	int i, ret;
+>  
+>  	if (dev == NULL)
+>  		return ERR_PTR(-EINVAL);
+> +
+>  	name = dev_name(dev);
+>  
+>  	mutex_lock(&iio_map_list_lock);
+>  	/* first count the matching maps */
+> -	list_for_each_entry(c, &iio_map_list, l)
+> -		if (name && strcmp(name, c->map->consumer_dev_name) != 0)
+> -			continue;
+> -		else
+> -			nummaps++;
+> -
+> -	if (nummaps == 0) {
+> -		ret = -ENODEV;
+> -		goto error_ret;
+> +	if (dev->of_node) {
+> +		nummaps = 0;
+> +		do {
+> +			int ret;
+> +
+> +			ret = of_parse_phandle_with_args(dev->of_node,
+> +							 "io-channels",
+> +							 "#io-channel-cells",
+> +							 nummaps, NULL);
+> +			if (ret < 0)
+> +				break;
+> +		} while (++nummaps);
+> +
+> +		if (nummaps == 0) {
+> +			ret = -ENODEV;
+> +			goto error_ret;
+> +		}
+> +	} else {
+> +		list_for_each_entry(c, &iio_map_list, l)
+> +			if (strcmp(name, c->map->consumer_dev_name) != 0)
+> +				continue;
+> +			else
+> +				nummaps++;
+> +		if (nummaps == 0) {
+> +			ret = -EPROBE_DEFER;
+> +			goto error_ret;
+> +		}
+>  	}
+>  
+>  	/* NULL terminated array to save passing size */
+> @@ -187,24 +293,65 @@ struct iio_channel *iio_channel_get_all(struct device *dev)
+>  	}
+>  
+>  	/* for each map fill in the chans element */
+> -	list_for_each_entry(c, &iio_map_list, l) {
+> -		if (name && strcmp(name, c->map->consumer_dev_name) != 0)
+> -			continue;
+> -		chans[mapind].indio_dev = c->indio_dev;
+> -		chans[mapind].data = c->map->consumer_data;
+> -		chans[mapind].channel =
+> -			iio_chan_spec_from_name(chans[mapind].indio_dev,
+> +	if (dev->of_node) {
+> +		/*
+> +		 * Device-tree based mapping, search for OF matches.
+> +		 */
+> +		for (mapind = 0; mapind < nummaps; mapind++) {
+> +			int channel;
+> +			struct of_phandle_args iiospec;
+> +
+> +			ret = of_parse_phandle_with_args(dev->of_node,
+> +							 "io-channels",
+> +							 "#io-channel-cells",
+> +							 mapind, &iiospec);
+> +			if (ret)
+> +				goto error_free_chans;
+> +			channel = iiospec.args_count ? iiospec.args[0] : 0;
+> +			ret = -EPROBE_DEFER;
+> +			list_for_each_entry(c, &iio_map_list, l) {
+> +				if (iiospec.np == c->indio_dev->dev.of_node) {
+> +					ret = 0;
+> +					break;
+> +				}
+> +			}
+> +			if (ret)
+> +				goto error_free_chans;
+> +			if (channel >= c->indio_dev->num_channels) {
+> +				ret = -EINVAL;
+> +				goto error_free_chans;
+> +			}
+> +			chans[mapind].indio_dev = c->indio_dev;
+> +			chans[mapind].data = c->map->consumer_data;
+> +			chans[mapind].channel =
+> +			  &c->indio_dev->channels[channel];
+> +			iio_device_get(c->indio_dev);
+> +		}
+> +	} else {
+> +		/*
+> +		 * Platform data based mapping, search for consumer
+> +		 * device name.
+> +		 */
+> +		mapind = 0;
+> +		list_for_each_entry(c, &iio_map_list, l) {
+> +			if (strcmp(name, c->map->consumer_dev_name) != 0)
+> +				continue;
+> +			chans[mapind].indio_dev = c->indio_dev;
+> +			chans[mapind].data = c->map->consumer_data;
+> +			chans[mapind].channel =
+> +				iio_chan_spec_from_name(c->indio_dev,
+>  						c->map->adc_channel_label);
+> -		if (chans[mapind].channel == NULL) {
+> -			ret = -EINVAL;
+> +			if (chans[mapind].channel == NULL) {
+> +				ret = -EINVAL;
+> +				goto error_free_chans;
+> +			}
+> +			iio_device_get(c->indio_dev);
+> +			mapind++;
+> +		}
+> +		if (mapind < nummaps) {
+> +			ret = -EPROBE_DEFER;
+>  			goto error_free_chans;
+>  		}
+> -		iio_device_get(chans[mapind].indio_dev);
+> -		mapind++;
+> -	}
+> -	if (mapind == 0) {
+> -		ret = -ENODEV;
+> -		goto error_free_chans;
+>  	}
+>  	mutex_unlock(&iio_map_list_lock);
+>  
+> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+> index 6c44167..a347c15 100644
+> --- a/include/linux/iio/consumer.h
+> +++ b/include/linux/iio/consumer.h
+> @@ -41,6 +41,14 @@ struct iio_channel *iio_channel_get(const char *name,
+>  				    const char *consumer_channel);
+>  
+>  /**
+> + * of_iio_channel_get() - get description of all that is needed to access
+> + *			channel from OF node pointer.
+> + * @np:			Consumer's OF node pointer.
+> + * @index:		Index pointing to the io-channels entry in np.
+> + */
+> +struct iio_channel *of_iio_channel_get(struct device_node *np, int index);
+> +
+> +/**
+>   * iio_channel_release() - release channels obtained via iio_channel_get
+>   * @chan:		The channel to be released.
+>   */
+> 
