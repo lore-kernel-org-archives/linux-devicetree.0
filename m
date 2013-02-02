@@ -1,86 +1,54 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [RFC 10/11] iio: Add OF support
-Date: Sat, 02 Feb 2013 15:37:46 +0100
-Message-ID: <510D24BA.5000300@metafoo.de>
-References: <1359668588-13678-1-git-send-email-linux@roeck-us.net> <1359668588-13678-11-git-send-email-linux@roeck-us.net> <510BADCA.1030407@metafoo.de> <20130201143307.GB20767@roeck-us.net> <510BD845.1010200@metafoo.de> <20130201194213.GA17968@roeck-us.net>
+From: Matt Porter <mporter@ti.com>
+Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to
+ arm/common
+Date: Sat, 2 Feb 2013 09:44:10 -0500
+Message-ID: <20130202144409.GR2244@beef>
+References: <1359742975-10421-1-git-send-email-mporter@ti.com>
+ <1359742975-10421-2-git-send-email-mporter@ti.com>
+ <20130201184107.GM22517@atomide.com>
+ <20130202124906.GB2637@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130201194213.GA17968-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130202124906.GB2637@n2100.arm.linux.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <djbw@fb.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/01/2013 08:42 PM, Guenter Roeck wrote:
-> On Fri, Feb 01, 2013 at 03:59:17PM +0100, Lars-Peter Clausen wrote:
->> On 02/01/2013 03:33 PM, Guenter Roeck wrote:
->>> On Fri, Feb 01, 2013 at 12:58:02PM +0100, Lars-Peter Clausen wrote:
->>>> 013 10:43 PM, Guenter Roeck wrote:
->>>>> Provide bindings, new API access functions, and parse OF data
->>>>> during initialization.
->>>>>
->>>>
->>>> Hi Guenter,
->>>>
->>>> Thanks for taking care of this.
->>>>
->>>> I'd prefer to have only one iio_get_channel which handles both the dt and the
->>>> non-dt case. Otherwise we'll soon have constructs like
->>>>
->>>> if (dev->of_node)
->>>> 	chan = of_iio_get_channel(dev->of_node, 1);
->>>> else
->>>> 	chan = iio_get_channel(dev_name(dev), "vcc");
->>>>
->
-> Clock code has of_clk_get_by_name(node *, name), clk_get(dev, name), and
-> of_clk_get(node *, index). Right now of_iio_get_channel matches of_clk_get,
-> and iio_get_channel matches clk_get.
->
-> Question is really how we want to API to look like. I am open to suggestions.
+On Sat, Feb 02, 2013 at 12:49:06PM +0000, Russell King wrote:
+> On Fri, Feb 01, 2013 at 10:41:08AM -0800, Tony Lindgren wrote:
+> > * Matt Porter <mporter@ti.com> [130201 10:25]:
+> > > Move mach-davinci/dma.c to common/edma.c so it can be used
+> > > by OMAP (specifically AM33xx) as well.
+> > 
+> > I think this should rather go to drivers/dma/?
+> 
+> Yes, it should, but just like OMAP, there's a conversion effort that needs
+> to be gone through.  It has one point - and only one point - which allows
+> its continued existence under arch/arm, and that is it already exists
+> there.
+> 
+> If it was new code, the answer would be a definite NACK, but it isn't.
+> It's pre-existing code which is already in mainline.  It's merely being
+> moved.
+> 
+> Another plus point for it is that there does seem to be a DMA engine
+> driver for it, so hopefully we'll see it killed off in arch/arm soon.
 
-I'm not necessarily against having a separate of_iio_get_channe function, but
-I'm not sure if we really need it, maybe use it internally as a helper and if
-we really need it in some driver make it public and export it. clk_get first
-calls of_clk_get_by_name, and only if didn't find a clk it falls back to the
-map based lookup. I think iio_get_channel should behave the similar. of_clk_get
-is kind of just a helper function for of_clk_get_by_name, not sure if we need
-it as a separate function in IIO. If we find out we need it we can probably
-still add it later.
+That's definitely the plan. I was able to start this effort
+independently by converting the Davinci mmc and spi drivers to dmaengine
+before I took this step. I've got the next micro-step of addressing
+omap_hsmmc in process (pending on agreement on a dmaengine api change
+with Vinod), cleaning up the mcasp driver is also pending this series so
+that it can also be converted to dmaengine. Once mcasp (or "davinci
+audio") is converted, we're rid of all the in-kernel users of the
+private API and can get rid of this...which also is helping clean up
+mach-davinci, of course.
 
-- Lars
+If I can get your ack on this patch that should move things along to
+these next steps.
 
->
->>>> appearing all over the place in drivers code. I'd keep the actual
->>>> implementation pretty close to what the clk framework does. E.g. take a
-look at
->>>> of_clk_get_by_name() and clk_get() in clkdev.c. And don't take a detour
-via the
->>>> iio_map lookup for the devicetree case, just loop over all IIO devices and
->>>> match by of_node. This should allow us to simplify the code quite a bit.
->>>>
->>> Yes, I just could not figure out how to loop over the list of iio devices. That
->>> is why I hijacked iio_map which does provide a list.
->>>
->>> Any hints ?
->>
->> Yes, use bus_find_device on iio_bus_type. A nice example how to use this to
->> lookup device by of node is of_find_i2c_device_by_node. For IIO you also need
->> to make sure that dev->type is iio_dev_type, since both devices and triggers
->> are registered on the same bus.
->>
-> Great, that works nicely, and, yes, the code is now much simpler.
->
->>>>> +static struct iio_map *iio_map_of_init(struct iio_dev *idev)
->>>>> +{
->>>>
->>>> To be honest I find this whole function a bit confusing. If we are using
->>>> devicetree, we shouldn't need to register iio_map. Maybe just skip over
->>>> io-channel-output-names for now, until we figure out if we really need
-this and
->>>> what for.
->>>>
-> Correct, I don't need this anymore after implementing the above.
->
+Thanks,
+Matt
