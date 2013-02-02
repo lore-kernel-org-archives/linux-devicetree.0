@@ -1,102 +1,65 @@
 From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [RFC 11/11] iio/adc: (max1363) Add basic OF bindings and
- external vref support
-Date: Sat, 2 Feb 2013 08:13:05 -0800
-Message-ID: <20130202161305.GC10386@roeck-us.net>
+Subject: Re: [RFC 10/11] iio: Add OF support
+Date: Sat, 2 Feb 2013 08:14:48 -0800
+Message-ID: <20130202161448.GD10386@roeck-us.net>
 References: <1359668588-13678-1-git-send-email-linux@roeck-us.net>
- <1359668588-13678-12-git-send-email-linux@roeck-us.net>
- <510CEB68.5000205@kernel.org>
+ <1359668588-13678-11-git-send-email-linux@roeck-us.net>
+ <510BADCA.1030407@metafoo.de>
+ <20130201143307.GB20767@roeck-us.net>
+ <510BD845.1010200@metafoo.de>
+ <20130201194213.GA17968@roeck-us.net>
+ <510D24BA.5000300@metafoo.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <510CEB68.5000205-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <510D24BA.5000300-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 02, 2013 at 10:33:12AM +0000, Jonathan Cameron wrote:
-> On 01/31/2013 09:43 PM, Guenter Roeck wrote:
-> > Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Mostly fine.  Comments below are on the fact I'd prefer
-> a reference voltage coming from a regulator than being
-> a bit of platform data.
-> > ---
-> >  Documentation/devicetree/bindings/iio/max1363.txt |   54 +++++++++++++++++++++
-> >  drivers/iio/adc/max1363.c                         |   54 ++++++++++++++++-----
-> >  2 files changed, 95 insertions(+), 13 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/max1363.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/iio/max1363.txt b/Documentation/devicetree/bindings/iio/max1363.txt
-> > new file mode 100644
-> > index 0000000..6d22861
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/iio/max1363.txt
-> > @@ -0,0 +1,54 @@
-> > +Device Tree bindings for MAX1363 and compatible ADC controllers
-> > +
-> > +This binding uses the common IIO binding[1].
-> > +
-> > +[1] Documentation/devicetree/bindings/iio/iio-bindings.txt
-> > +
-> > +Required properties:
-> > +
-> > +- compatible, shall be one of the following:
-> > +	"maxim,max1361"
-> > +	"maxim,max1362"
-> > +	"maxim,max1363"
-> > +	"maxim,max1364"
-> > +	"maxim,max1036"
-> > +	"maxim,max1037"
-> > +	"maxim,max1038"
-> > +	"maxim,max1039"
-> > +	"maxim,max1136"
-> > +	"maxim,max1137"
-> > +	"maxim,max1138"
-> > +	"maxim,max1139"
-> > +	"maxim,max1236"
-> > +	"maxim,max1237"
-> > +	"maxim,max1238"
-> > +	"maxim,max1239"
-> > +	"maxim,max11600"
-> > +	"maxim,max11601"
-> > +	"maxim,max11602"
-> > +	"maxim,max11603"
-> > +	"maxim,max11604"
-> > +	"maxim,max11605"
-> > +	"maxim,max11606"
-> > +	"maxim,max11607"
-> > +	"maxim,max11608"
-> > +	"maxim,max11609"
-> > +	"maxim,max11610"
-> > +	"maxim,max11611"
-> > +	"maxim,max11612"
-> > +	"maxim,max11613"
-> > +	"maxim,max11614"
-> > +	"maxim,max11615"
-> > +	"maxim,max11616"
-> > +	"maxim,max11617"
-> > +
-> > +- reg: shall be the I2C device address
-> > +
-> > +Required properties for IIO bindings:
-> > +- #io-channel-cells: from common IIO bindings; shall be set to 1.
-> > +
-> > +Optional properties:
-> > +- vref: Reference voltage in mV. If the provided reference voltage matches
-> > +	the internal reference voltage, the internal reference voltage is used.
-> > +	Otherwise it is assumed that an external reference voltage is used,
-> > +	and the chip is programmed accordingly.
+On Sat, Feb 02, 2013 at 03:37:46PM +0100, Lars-Peter Clausen wrote:
+> On 02/01/2013 08:42 PM, Guenter Roeck wrote:
+> > On Fri, Feb 01, 2013 at 03:59:17PM +0100, Lars-Peter Clausen wrote:
+> >> On 02/01/2013 03:33 PM, Guenter Roeck wrote:
+> >>> On Fri, Feb 01, 2013 at 12:58:02PM +0100, Lars-Peter Clausen wrote:
+> >>>> 013 10:43 PM, Guenter Roeck wrote:
+> >>>>> Provide bindings, new API access functions, and parse OF data
+> >>>>> during initialization.
+> >>>>>
+> >>>>
+> >>>> Hi Guenter,
+> >>>>
+> >>>> Thanks for taking care of this.
+> >>>>
+> >>>> I'd prefer to have only one iio_get_channel which handles both the dt and the
+> >>>> non-dt case. Otherwise we'll soon have constructs like
+> >>>>
+> >>>> if (dev->of_node)
+> >>>> 	chan = of_iio_get_channel(dev->of_node, 1);
+> >>>> else
+> >>>> 	chan = iio_get_channel(dev_name(dev), "vcc");
+> >>>>
+> >
+> > Clock code has of_clk_get_by_name(node *, name), clk_get(dev, name), and
+> > of_clk_get(node *, index). Right now of_iio_get_channel matches of_clk_get,
+> > and iio_get_channel matches clk_get.
+> >
+> > Question is really how we want to API to look like. I am open to suggestions.
 > 
-> Why not use a regulator? It has a nice device tree map and if it's just a fixed
-> voltage, we have the fixed regulator driver for them.  This is pretty common
-> throughout IIO (unsuprisingly) and we've been generally getting with platform
-> data that does this in favour of regulators.  Back when we started out, the
-> regulators framework was new so providing an alternative was pretty much
-> required.  Now it's pretty universal.
+> I'm not necessarily against having a separate of_iio_get_channe function, but
+> I'm not sure if we really need it, maybe use it internally as a helper and if
+> we really need it in some driver make it public and export it. clk_get first
+> calls of_clk_get_by_name, and only if didn't find a clk it falls back to the
+> map based lookup. I think iio_get_channel should behave the similar. of_clk_get
+> is kind of just a helper function for of_clk_get_by_name, not sure if we need
+> it as a separate function in IIO. If we find out we need it we can probably
+> still add it later.
 > 
-Makes sense' I'll look into it.
+You are right. If I modify iio_get_channel to take the device pointer as
+argument, it should work for both OF and non-OF with the approach you outlined
+above.
 
 Thanks,
 Guenter
