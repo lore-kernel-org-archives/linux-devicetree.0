@@ -1,143 +1,172 @@
 From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 08/11] iio: Update iio_channel_get_all and iio_channel_get_all_cb
- API
-Date: Sat, 02 Feb 2013 10:14:34 +0000
-Message-ID: <510CE70A.60002@kernel.org>
-References: <1359668588-13678-1-git-send-email-linux@roeck-us.net> <1359668588-13678-9-git-send-email-linux@roeck-us.net>
+Subject: Re: [RFC 09/11] iio: Simplify iio_map_array_unregister API
+Date: Sat, 02 Feb 2013 10:16:55 +0000
+Message-ID: <510CE797.3040201@kernel.org>
+References: <1359668588-13678-1-git-send-email-linux@roeck-us.net> <1359668588-13678-10-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1359668588-13678-9-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+In-Reply-To: <1359668588-13678-10-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 On 01/31/2013 09:43 PM, Guenter Roeck wrote:
-> Pass device pointer instead of device name as parameter to iio_channel_get_all
-> and iio_channel_get_all_cb. This will enable us to use OF information to
-> retrieve consumer channel information.
+> Instead of requiring the map to unregister, simply unregister all map entries
+> associated with the given iio device. This simplifies map removal and also works
+> for maps generated through devicetree.
 > 
 > Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Applied with unused 'lists' variable dropped.
+Sensible change. No idea why this never occured to me at the time ;)
+
+Applied to togreg branch of iio.git.
+
+Thanks,
+
+Jonathan
 > ---
->  drivers/iio/buffer_cb.c         |    4 ++--
->  drivers/iio/inkern.c            |    6 ++++--
->  drivers/staging/iio/iio_hwmon.c |   10 +++++++---
->  include/linux/iio/consumer.h    |    8 ++++----
->  4 files changed, 17 insertions(+), 11 deletions(-)
+>  drivers/iio/adc/lp8788_adc.c |   11 ++---------
+>  drivers/iio/adc/max1363.c    |    4 ++--
+>  drivers/iio/inkern.c         |   36 +++++++++++-------------------------
+>  include/linux/iio/driver.h   |    9 +++------
+>  4 files changed, 18 insertions(+), 42 deletions(-)
 > 
-> diff --git a/drivers/iio/buffer_cb.c b/drivers/iio/buffer_cb.c
-> index 4d40e24..9201022 100644
-> --- a/drivers/iio/buffer_cb.c
-> +++ b/drivers/iio/buffer_cb.c
-> @@ -25,7 +25,7 @@ static struct iio_buffer_access_funcs iio_cb_access = {
->  	.store_to = &iio_buffer_cb_store_to,
->  };
+> diff --git a/drivers/iio/adc/lp8788_adc.c b/drivers/iio/adc/lp8788_adc.c
+> index e5293d0..d6d509b 100644
+> --- a/drivers/iio/adc/lp8788_adc.c
+> +++ b/drivers/iio/adc/lp8788_adc.c
+> @@ -187,12 +187,6 @@ static int lp8788_iio_map_register(struct iio_dev *indio_dev,
+>  	return 0;
+>  }
 >  
-> -struct iio_cb_buffer *iio_channel_get_all_cb(const char *name,
-> +struct iio_cb_buffer *iio_channel_get_all_cb(struct device *dev,
->  					     int (*cb)(u8 *data,
->  						       void *private),
->  					     void *private)
-> @@ -46,7 +46,7 @@ struct iio_cb_buffer *iio_channel_get_all_cb(const char *name,
->  	cb_buff->buffer.access = &iio_cb_access;
->  	INIT_LIST_HEAD(&cb_buff->buffer.demux_list);
+> -static inline void lp8788_iio_map_unregister(struct iio_dev *indio_dev,
+> -				struct lp8788_adc *adc)
+> -{
+> -	iio_map_array_unregister(indio_dev, adc->map);
+> -}
+> -
+>  static int lp8788_adc_probe(struct platform_device *pdev)
+>  {
+>  	struct lp8788 *lp = dev_get_drvdata(pdev->dev.parent);
+> @@ -231,7 +225,7 @@ static int lp8788_adc_probe(struct platform_device *pdev)
+>  	return 0;
 >  
-> -	cb_buff->channels = iio_channel_get_all(name);
-> +	cb_buff->channels = iio_channel_get_all(dev);
->  	if (IS_ERR(cb_buff->channels)) {
->  		ret = PTR_ERR(cb_buff->channels);
->  		goto error_free_cb_buff;
+>  err_iio_device:
+> -	lp8788_iio_map_unregister(indio_dev, adc);
+> +	iio_map_array_unregister(indio_dev);
+>  err_iio_map:
+>  	iio_device_free(indio_dev);
+>  	return ret;
+> @@ -240,10 +234,9 @@ err_iio_map:
+>  static int lp8788_adc_remove(struct platform_device *pdev)
+>  {
+>  	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> -	struct lp8788_adc *adc = iio_priv(indio_dev);
+>  
+>  	iio_device_unregister(indio_dev);
+> -	lp8788_iio_map_unregister(indio_dev, adc);
+> +	iio_map_array_unregister(indio_dev);
+>  	iio_device_free(indio_dev);
+>  
+>  	return 0;
+> diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
+> index fdc8be9..51165d6 100644
+> --- a/drivers/iio/adc/max1363.c
+> +++ b/drivers/iio/adc/max1363.c
+> @@ -1618,7 +1618,7 @@ error_disable_reg:
+>  error_put_reg:
+>  	regulator_put(st->reg);
+>  error_unregister_map:
+> -	iio_map_array_unregister(indio_dev, client->dev.platform_data);
+> +	iio_map_array_unregister(indio_dev);
+>  error_free_device:
+>  	iio_device_free(indio_dev);
+>  error_out:
+> @@ -1638,7 +1638,7 @@ static int max1363_remove(struct i2c_client *client)
+>  	kfree(indio_dev->available_scan_masks);
+>  	regulator_disable(st->reg);
+>  	regulator_put(st->reg);
+> -	iio_map_array_unregister(indio_dev, client->dev.platform_data);
+> +	iio_map_array_unregister(indio_dev);
+>  	iio_device_free(indio_dev);
+>  
+>  	return 0;
 > diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> index d55e98f..58d0ffe 100644
+> index 58d0ffe..c42aba6 100644
 > --- a/drivers/iio/inkern.c
 > +++ b/drivers/iio/inkern.c
-> @@ -167,16 +167,18 @@ void iio_channel_release(struct iio_channel *channel)
->  }
->  EXPORT_SYMBOL_GPL(iio_channel_release);
+> @@ -54,39 +54,25 @@ error_ret:
+>  EXPORT_SYMBOL_GPL(iio_map_array_register);
 >  
-> -struct iio_channel *iio_channel_get_all(const char *name)
-> +struct iio_channel *iio_channel_get_all(struct device *dev)
+>  
+> -/* Assumes the exact same array (e.g. memory locations)
+> - * used at unregistration as used at registration rather than
+> - * more complex checking of contents.
+> +/*
+> + * Remove all map entries associated with the given iio device
+>   */
+> -int iio_map_array_unregister(struct iio_dev *indio_dev,
+> -			     struct iio_map *maps)
+> +int iio_map_array_unregister(struct iio_dev *indio_dev)
 >  {
-> +	const char *name;
->  	struct iio_channel *chans;
->  	struct iio_map_internal *c = NULL;
->  	int nummaps = 0;
->  	int mapind = 0;
->  	int i, ret;
->  
-> -	if (name == NULL)
-> +	if (dev == NULL)
->  		return ERR_PTR(-EINVAL);
-> +	name = dev_name(dev);
+> -	int i = 0, ret = 0;
+> -	bool found_it;
+> +	int ret = -ENODEV;
+>  	struct iio_map_internal *mapi;
+> -
+> -	if (maps == NULL)
+> -		return 0;
+> +	struct list_head *pos, *tmp;
 >  
 >  	mutex_lock(&iio_map_list_lock);
->  	/* first count the matching maps */
-> diff --git a/drivers/staging/iio/iio_hwmon.c b/drivers/staging/iio/iio_hwmon.c
-> index 6a5bc5f..a4fce64 100644
-> --- a/drivers/staging/iio/iio_hwmon.c
-> +++ b/drivers/staging/iio/iio_hwmon.c
-> @@ -71,14 +71,18 @@ static int iio_hwmon_probe(struct platform_device *pdev)
->  	int ret, i;
->  	int in_i = 1, temp_i = 1, curr_i = 1;
->  	enum iio_chan_type type;
-> +	struct iio_channel *channels;
-> +	const __be32 *list;
-> +
-> +	channels = iio_channel_get_all(dev);
-> +	if (IS_ERR(channels))
-> +		return PTR_ERR(channels);
->  
->  	st = devm_kzalloc(dev, sizeof(*st), GFP_KERNEL);
->  	if (st == NULL)
->  		return -ENOMEM;
->  
-> -	st->channels = iio_channel_get_all(dev_name(dev));
-> -	if (IS_ERR(st->channels))
-> -		return PTR_ERR(st->channels);
-> +	st->channels = channels;
->  
->  	/* count how many attributes we have */
->  	while (st->channels[st->num_channels].indio_dev)
-> diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-> index 16c35ac..6c44167 100644
-> --- a/include/linux/iio/consumer.h
-> +++ b/include/linux/iio/consumer.h
-> @@ -48,14 +48,14 @@ void iio_channel_release(struct iio_channel *chan);
+> -	while (maps[i].consumer_dev_name != NULL) {
+> -		found_it = false;
+> -		list_for_each_entry(mapi, &iio_map_list, l)
+> -			if (&maps[i] == mapi->map) {
+> -				list_del(&mapi->l);
+> -				kfree(mapi);
+> -				found_it = true;
+> -				break;
+> -			}
+> -		if (!found_it) {
+> -			ret = -ENODEV;
+> -			goto error_ret;
+> +	list_for_each_safe(pos, tmp, &iio_map_list) {
+> +		mapi = list_entry(pos, struct iio_map_internal, l);
+> +		if (indio_dev == mapi->indio_dev) {
+> +			list_del(&mapi->l);
+> +			kfree(mapi);
+> +			ret = 0;
+>  		}
+> -		i++;
+>  	}
+> -error_ret:
+>  	mutex_unlock(&iio_map_list_lock);
+> -
+>  	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(iio_map_array_unregister);
+> diff --git a/include/linux/iio/driver.h b/include/linux/iio/driver.h
+> index a4f8b2e..7dfb10e 100644
+> --- a/include/linux/iio/driver.h
+> +++ b/include/linux/iio/driver.h
+> @@ -22,13 +22,10 @@ int iio_map_array_register(struct iio_dev *indio_dev,
+>  			   struct iio_map *map);
 >  
 >  /**
->   * iio_channel_get_all() - get all channels associated with a client
-> - * @name:		name of consumer device.
-> + * @dev:		Pointer to consumer device.
->   *
->   * Returns an array of iio_channel structures terminated with one with
->   * null iio_dev pointer.
->   * This function is used by fairly generic consumers to get all the
->   * channels registered as having this consumer.
+> - * iio_map_array_unregister() - tell the core to remove consumer mappings
+> + * iio_map_array_unregister() - tell the core to remove consumer mappings for
+> + *				the given provider device
+>   * @indio_dev:	provider device
+> - * @map:	array of mappings to remove. Note these must have same memory
+> - *		addresses as those originally added not just equal parameter
+> - *		values.
 >   */
-> -struct iio_channel *iio_channel_get_all(const char *name);
-> +struct iio_channel *iio_channel_get_all(struct device *dev);
+> -int iio_map_array_unregister(struct iio_dev *indio_dev,
+> -			     struct iio_map *map);
+> +int iio_map_array_unregister(struct iio_dev *indio_dev);
 >  
->  /**
->   * iio_channel_release_all() - reverse iio_channel_get_all
-> @@ -66,7 +66,7 @@ void iio_channel_release_all(struct iio_channel *chan);
->  struct iio_cb_buffer;
->  /**
->   * iio_channel_get_all_cb() - register callback for triggered capture
-> - * @name:		Name of client device.
-> + * @dev:		Pointer to client device.
->   * @cb:			Callback function.
->   * @private:		Private data passed to callback.
->   *
-> @@ -74,7 +74,7 @@ struct iio_cb_buffer;
->   * So if the channels requested come from different devices this will
->   * fail.
->   */
-> -struct iio_cb_buffer *iio_channel_get_all_cb(const char *name,
-> +struct iio_cb_buffer *iio_channel_get_all_cb(struct device *dev,
->  					     int (*cb)(u8 *data,
->  						       void *private),
->  					     void *private);
+>  #endif
 > 
