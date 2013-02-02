@@ -1,51 +1,84 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH V2 4/4] DMA: PL330: Modify pl330 filter based on new generic dma dt bindings.
-Date: Sat, 02 Feb 2013 16:09:55 +0100
-Message-ID: <1692358.6BmDsJsb25@wuerfel>
-References: <1359723116-18173-1-git-send-email-padma.v@samsung.com> <201302011523.25771.arnd@arndb.de> <CAAgF-Bf55eN2WOgU5nQa=nF76fHvBHR7NdmvoBpF-n4ke6rd1g@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] gpio: Add device driver for GRGPIO cores
+Date: Sat, 2 Feb 2013 16:16:06 +0100
+Message-ID: <CACRpkdbAS05dVOrE2E5Uu6qfzfgcoz_KqQmqZxz5Pne9BbCt-g@mail.gmail.com>
+References: <1359548921-14925-1-git-send-email-andreas@gaisler.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAAgF-Bf55eN2WOgU5nQa=nF76fHvBHR7NdmvoBpF-n4ke6rd1g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Padma Venkat <padma.kvr@gmail.com>, boojin.kim@samsung.com, jassisinghbrar@gmail.com, linux-samsung-soc@vger.kernel.org, Padmavathi Venna <padma.v@samsung.com>, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, jon-hunter@ti.com
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359548921-14925-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 02 February 2013 08:00:54 Padma Venkat wrote:
+On Wed, Jan 30, 2013 at 1:28 PM, Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> wrote:
 
-> > The result of this looks good, but I fear that changing the filter function
-> > like this wil break all drivers that currently use the plat-samsung/dma-ops.c
-> > code. For migration purposes, I think the best way is to change
-> > samsung_dmadev_request() to match the new filter_param format.
-> >
-> > After that is done, you can migrate all the drivers using samsung_dma_get_ops
-> > over to the new dma_request_slave_channel interface without breaking
-> > anything when only part of the series is applied.
-> >
-> >         Arnd
-> 
-> Please check the below link where I made the dma request compatible to
-> both DT and non-DT
-> 
-> http://git.kernel.org/?p=linux/kernel/git/broonie/sound.git;a=commit;h=e7ba5f1d0f6292e1b99c63cc4bb74c70232e9065
-> http://git.kernel.org/?p=linux/kernel/git/broonie/sound.git;a=commit;h=b5be04d35dbb2e00ab27a97bfd26e17019e857ef
-> 
-> Please let me know if any changes required.
-> 
+> This driver supports GRGPIO gpio cores available in the GRLIB VHDL IP core
+> library.
+>
+> Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
 
-Those two changes by themselves still look ok, I think but you
-still break the non-DT case in this 4/4 patch by changing the
-pl330_filter function in an incompatible way. You will still
-have to either change the filter_param argument in the
-samsung_dmadev_request() function, or provide separate filter
-functions, one to be used by samsung_dmadev_request and
-one for the pl330_xlate function.
+OK...
 
-In the long run, I think it would be better to move the slave
-drivers away from the samsung_dma wrappers and use
-dma_request_slave_channel directly, but that is an independent
-discussion.
+> +#if defined(__BIG_ENDIAN)
+> +static inline u32 grgpio_read_reg(u32 __iomem *reg)
+> +{
+> +       return ioread32be(reg);
+> +}
+> +
+> +static inline void grgpio_write_reg(u32 __iomem *reg, u32 val)
+> +{
+> +       iowrite32be(val, reg);
+> +}
+> +#else
+> +static inline u32 grgpio_read_reg(u32 __iomem *reg)
+> +{
+> +       return ioread32(reg);
+> +}
+> +
+> +static inline void grgpio_write_reg(u32 __iomem *reg, u32 val)
+> +{
+> +       iowrite32(val, reg);
+> +}
+> +#endif
 
-	Arnd
+Where is this __BIG_ENDIAN flag coming from?
+
+And do you really have and test this regularly on both LE and BE hardware?
+I am worrying a bit about maintenance...
+
+> +static void grgpio_set_sbit(struct grgpio_priv *priv, u32 __iomem *reg,
+> +                          unsigned offset, int val, u32 *shadow)
+> +{
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&priv->lock, flags);
+> +
+> +       if (val)
+> +               *shadow |= (1 << offset);
+> +       else
+> +               *shadow &= ~(1 << offset);
+> +       grgpio_write_reg(reg, *shadow);
+> +
+> +       spin_unlock_irqrestore(&priv->lock, flags);
+> +}
+
+This is all very basic stuff. Please make a best effort to reuse or
+augment and reuse this:
+drivers/gpio/gpio-generic.c
+
+IIRC this one also handles endianness issues, but I could be wrong.
+
+Yours,
+Linus Walleij
