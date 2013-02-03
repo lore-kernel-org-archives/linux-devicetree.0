@@ -1,91 +1,78 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH V2 3/6] ARM: davinci: da850: add DT node for I2C0
-Date: Sun, 3 Feb 2013 18:19:05 +0530
-Message-ID: <510E5CC1.8050801@ti.com>
-References: <1359445134-13323-1-git-send-email-manishv.b@ti.com> <1359445134-13323-4-git-send-email-manishv.b@ti.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH RFC v2] media: tvp514x: add OF support
+Date: Sun, 3 Feb 2013 18:40:15 +0530
+Message-ID: <510E61B7.6030904@ti.com>
+References: <1359464832-8875-1-git-send-email-prabhakar.lad@ti.com>
+ <510C43A0.7090906@gmail.com>
+ <CA+V-a8u6VADw_HfbBN4ESGUXTSMKfVyKZaEf1bhVGACof6qZ8A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1359445134-13323-4-git-send-email-manishv.b@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, anilkumar@ti.com, tony@atomide.com, hs@denx.de, broonie@opensource.wolfsonmicro.com, sameo@linux.intel.com, khilman@deeprootsystems.com, linus.walleij@linaro.org, linux@arm.linux.org.uk, rob@landley.net, rob.herring@calxeda.com, grant.likely@secretlab.ca
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CA+V-a8u6VADw_HfbBN4ESGUXTSMKfVyKZaEf1bhVGACof6qZ8A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: DLOS <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Sakari Ailus <sakari.ailus-X3B1VOXEql0@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, LMML <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 1/29/2013 1:08 PM, Vishwanathrao Badarkhe, Manish wrote:
-> Add I2C0 device tree node information to da850-evm.
-> Also, add I2C0 pin muxing information in da850-evm.
+On 2/3/2013 3:43 PM, Prabhakar Lad wrote:
+> Hi Sylwester,
 > 
-> Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
-> ---
-> Changes since V1:
->  - Updated i2c0 node names in dts and dtsi file.
->  - Removed interrupt parent from i2c0 node.
->  - Handled i2c0 pin mux inside i2c0 node.
+> Thanks for the review.
 > 
-> :100644 100644 433027f... c9ed683... M	arch/arm/boot/dts/da850-evm.dts
-> :100644 100644 5e0eb5c... 245ab9a... M	arch/arm/boot/dts/da850.dtsi
->  arch/arm/boot/dts/da850-evm.dts |    5 +++++
->  arch/arm/boot/dts/da850.dtsi    |   15 +++++++++++++++
->  2 files changed, 20 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index 433027f..c9ed683 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -27,6 +27,11 @@
->  		serial2: serial@1d0d000 {
->  			status = "okay";
->  		};
-> +		i2c0: i2c0@1c22000 {
+> On Sat, Feb 2, 2013 at 4:07 AM, Sylwester Nawrocki
+> <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> Hi Prabhakar,
+>>
+>> On 01/29/2013 02:07 PM, Prabhakar Lad wrote:
+>> [...]
+>>
+>>> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+>>> b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+>>> new file mode 100644
+>>> index 0000000..55d3ffd
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
+>>> @@ -0,0 +1,38 @@
+>>> +* Texas Instruments TVP514x video decoder
+>>> +
+>>> +The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality,
+>>> single-chip
+>>> +digital video decoder that digitizes and decodes all popular baseband
+>>> analog
+>>> +video formats into digital video component. The tvp514x decoder supports
+>>> analog-
+>>> +to-digital (A/D) conversion of component RGB and YPbPr signals as well as
+>>> A/D
+>>> +conversion and decoding of NTSC, PAL and SECAM composite and S-video into
+>>> +component YCbCr.
+>>> +
+>>> +Required Properties :
+>>> +- compatible: Must be "ti,tvp514x-decoder"
+>>
+>>
+>> There are no significant differences among TVP514* devices as listed above,
+>> you would like to handle above ?
+>>
+>> I'm just wondering if you don't need ,for instance, two separate compatible
+>> properties, e.g. "ti,tvp5146-decoder" and "ti,tvp5147-decoder" ?
+>>
+> There are few differences in init/power sequence tough, I would still
+> like to have
+> single compatible property "ti,tvp514x-decoder", If you feel we need separate
+> property I will change it please let me know on this.
 
-This should be:
-
-i2c0: i2c@1c22000
-
-inline with what has been done in rest of this file.
-
-> +			status = "okay";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2c0_pins>;
-> +		};
->  	};
->  	nand_cs3@62000000 {
->  		status = "okay";
-> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> index 5e0eb5c..245ab9a 100644
-> --- a/arch/arm/boot/dts/da850.dtsi
-> +++ b/arch/arm/boot/dts/da850.dtsi
-> @@ -56,6 +56,12 @@
->  					0x30 0x01100000  0x0ff00000
->  				>;
->  			};
-> +			i2c0_pins: pinmux_i2c0_pins {
-> +				pinctrl-single,bits = <
-> +					/* I2C0_SDA,I2C0_SCL */
-> +					0x10 0x00002200 0x0000ff00
-> +				>;
-> +			};
->  		};
->  		serial0: serial@1c42000 {
->  			compatible = "ns16550a";
-> @@ -81,6 +87,15 @@
->  			interrupts = <61>;
->  			status = "disabled";
->  		};
-> +		i2c0: i2c0@1c22000 {
-> +			compatible = "ti,davinci-i2c";
-> +			reg = <0x22000 0x1000>;
-> +			clock-frequency = <100000>;
-
-The clock frequency is board specific. This should come from da850-evm.dts.
-
-Also, I think you can merge the auxdata addition with this patch. Can
-you post the i2c0 support separate from this series, so it can be taken
-independently? Looks like other patches have some dependencies/acks needed.
+Compatible properties should not use generic part numbers. See one past
+discussion here: http://en.usenet.digipedia.org/thread/18472/20788/
 
 Thanks,
 Sekhar
