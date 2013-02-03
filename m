@@ -1,7 +1,7 @@
 From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: [PATCH RFC 3/4] iio: Update iio_channel_get API to use consumer device pointer as argument
-Date: Sat,  2 Feb 2013 16:59:39 -0800
-Message-ID: <1359853180-5664-4-git-send-email-linux@roeck-us.net>
+Subject: [PATCH v2 2/4] iio/adc: (max1363) Add support for external reference voltage
+Date: Sat,  2 Feb 2013 16:59:38 -0800
+Message-ID: <1359853180-5664-3-git-send-email-linux@roeck-us.net>
 References: <1359853180-5664-1-git-send-email-linux@roeck-us.net>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1359853180-5664-1-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
@@ -10,133 +10,140 @@ To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-D
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For iio_channel_get to work with OF based configurations, it needs the
-consumer device pointer instead of the consumer device name as argument.
+Implement external reference voltage as regulator named "vref".
 
 Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 ---
- drivers/extcon/extcon-adc-jack.c    |    3 +--
- drivers/iio/inkern.c                |   11 ++++++++++-
- drivers/power/generic-adc-battery.c |    4 ++--
- drivers/power/lp8788-charger.c      |    8 ++++----
- include/linux/iio/consumer.h        |    5 +++--
- 5 files changed, 20 insertions(+), 11 deletions(-)
+v2: Use regulator API to specify vref instead of creating new devicetree
+    bindings.
+    Keep reference voltage internally in uV, as this is the scale provided
+    by the regulator subsystem. We need the value in uV anyway, so that does
+    make some sense.
 
-diff --git a/drivers/extcon/extcon-adc-jack.c b/drivers/extcon/extcon-adc-jack.c
-index eda2a1a..d0233cd 100644
---- a/drivers/extcon/extcon-adc-jack.c
-+++ b/drivers/extcon/extcon-adc-jack.c
-@@ -135,8 +135,7 @@ static int adc_jack_probe(struct platform_device *pdev)
- 		;
- 	data->num_conditions = i;
- 
--	data->chan = iio_channel_get(dev_name(&pdev->dev),
--			pdata->consumer_channel);
-+	data->chan = iio_channel_get(&pdev->dev, pdata->consumer_channel);
- 	if (IS_ERR(data->chan)) {
- 		err = PTR_ERR(data->chan);
- 		goto out;
-diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-index c42aba6..b289915 100644
---- a/drivers/iio/inkern.c
-+++ b/drivers/iio/inkern.c
-@@ -93,7 +93,8 @@ static const struct iio_chan_spec
- }
- 
- 
--struct iio_channel *iio_channel_get(const char *name, const char *channel_name)
-+static struct iio_channel *iio_channel_get_sys(const char *name,
-+					       const char *channel_name)
- {
- 	struct iio_map_internal *c_i = NULL, *c = NULL;
- 	struct iio_channel *channel;
-@@ -144,6 +145,14 @@ error_no_mem:
- 	iio_device_put(c->indio_dev);
- 	return ERR_PTR(err);
- }
-+
-+struct iio_channel *iio_channel_get(struct device *dev,
-+				    const char *channel_name)
-+{
-+	const char *name = dev ? dev_name(dev) : NULL;
-+
-+	return iio_channel_get_sys(name, channel_name);
-+}
- EXPORT_SYMBOL_GPL(iio_channel_get);
- 
- void iio_channel_release(struct iio_channel *channel)
-diff --git a/drivers/power/generic-adc-battery.c b/drivers/power/generic-adc-battery.c
-index 32ce17e..42733c4 100644
---- a/drivers/power/generic-adc-battery.c
-+++ b/drivers/power/generic-adc-battery.c
-@@ -287,8 +287,8 @@ static int gab_probe(struct platform_device *pdev)
- 	 * based on the channel supported by consumer device.
- 	 */
- 	for (chan = 0; chan < ARRAY_SIZE(gab_chan_name); chan++) {
--		adc_bat->channel[chan] = iio_channel_get(dev_name(&pdev->dev),
--						gab_chan_name[chan]);
-+		adc_bat->channel[chan] = iio_channel_get(&pdev->dev,
-+							 gab_chan_name[chan]);
- 		if (IS_ERR(adc_bat->channel[chan])) {
- 			ret = PTR_ERR(adc_bat->channel[chan]);
- 		} else {
-diff --git a/drivers/power/lp8788-charger.c b/drivers/power/lp8788-charger.c
-index 22b6407c..2788908 100644
---- a/drivers/power/lp8788-charger.c
-+++ b/drivers/power/lp8788-charger.c
-@@ -580,7 +580,7 @@ static void lp8788_irq_unregister(struct platform_device *pdev,
- 	}
- }
- 
--static void lp8788_setup_adc_channel(const char *consumer_name,
-+static void lp8788_setup_adc_channel(struct device *dev,
- 				struct lp8788_charger *pchg)
- {
- 	struct lp8788_charger_platform_data *pdata = pchg->pdata;
-@@ -590,11 +590,11 @@ static void lp8788_setup_adc_channel(const char *consumer_name,
- 		return;
- 
- 	/* ADC channel for battery voltage */
--	chan = iio_channel_get(consumer_name, pdata->adc_vbatt);
-+	chan = iio_channel_get(dev, pdata->adc_vbatt);
- 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
- 
- 	/* ADC channel for battery temperature */
--	chan = iio_channel_get(consumer_name, pdata->adc_batt_temp);
-+	chan = iio_channel_get(dev, pdata->adc_batt_temp);
- 	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
- }
- 
-@@ -704,7 +704,7 @@ static int lp8788_charger_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
--	lp8788_setup_adc_channel(pdev->name, pchg);
-+	lp8788_setup_adc_channel(&pdev->dev, pchg);
- 
- 	ret = lp8788_psy_register(pdev, pchg);
- 	if (ret)
-diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
-index a85787a..833926c 100644
---- a/include/linux/iio/consumer.h
-+++ b/include/linux/iio/consumer.h
-@@ -31,14 +31,15 @@ struct iio_channel {
- 
- /**
-  * iio_channel_get() - get description of all that is needed to access channel.
-- * @name:		Unique name of the device as provided in the iio_map
-+ * @dev:		Pointer to consumer device. Device name must match
-+ *			the name of the device as provided in the iio_map
-  *			with which the desired provider to consumer mapping
-  *			was registered.
-  * @consumer_channel:	Unique name to identify the channel on the consumer
-  *			side. This typically describes the channels use within
-  *			the consumer. E.g. 'battery_voltage'
+ drivers/iio/adc/max1363.c |   52 +++++++++++++++++++++++++++++++++------------
+ 1 file changed, 39 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
+index 1353fda..cac73d7 100644
+--- a/drivers/iio/adc/max1363.c
++++ b/drivers/iio/adc/max1363.c
+@@ -163,6 +163,8 @@ struct max1363_chip_info {
+  * @mask_low:		bitmask for enabled low thresholds
+  * @thresh_high:	high threshold values
+  * @thresh_low:		low threshold values
++ * @vref:		Reference voltage regulator
++ * @vref_uv:		Actual (external or internal) reference voltage
   */
--struct iio_channel *iio_channel_get(const char *name,
-+struct iio_channel *iio_channel_get(struct device *dev,
- 				    const char *consumer_channel);
+ struct max1363_state {
+ 	struct i2c_client		*client;
+@@ -182,6 +184,8 @@ struct max1363_state {
+ 	/* 4x unipolar first then the fours bipolar ones */
+ 	s16				thresh_high[8];
+ 	s16				thresh_low[8];
++	struct regulator		*vref;
++	u32				vref_uv;
+ };
  
- /**
+ #define MAX1363_MODE_SINGLE(_num, _mask) {				\
+@@ -393,6 +397,8 @@ static int max1363_read_raw(struct iio_dev *indio_dev,
+ {
+ 	struct max1363_state *st = iio_priv(indio_dev);
+ 	int ret;
++	unsigned long scale_uv;
++
+ 	switch (m) {
+ 	case IIO_CHAN_INFO_RAW:
+ 		ret = max1363_read_single_chan(indio_dev, chan, val, m);
+@@ -400,16 +406,10 @@ static int max1363_read_raw(struct iio_dev *indio_dev,
+ 			return ret;
+ 		return IIO_VAL_INT;
+ 	case IIO_CHAN_INFO_SCALE:
+-		if ((1 << (st->chip_info->bits + 1)) >
+-		    st->chip_info->int_vref_mv) {
+-			*val = 0;
+-			*val2 = 500000;
+-			return IIO_VAL_INT_PLUS_MICRO;
+-		} else {
+-			*val = (st->chip_info->int_vref_mv)
+-				>> st->chip_info->bits;
+-			return IIO_VAL_INT;
+-		}
++		scale_uv = st->vref_uv >> st->chip_info->bits;
++		*val = scale_uv / 1000;
++		*val2 = (scale_uv % 1000) * 1000;
++		return IIO_VAL_INT_PLUS_MICRO;
+ 	default:
+ 		return -EINVAL;
+ 	}
+@@ -1390,12 +1390,16 @@ static const struct max1363_chip_info max1363_chip_info_tbl[] = {
+ 
+ static int max1363_initial_setup(struct max1363_state *st)
+ {
+-	st->setupbyte = MAX1363_SETUP_AIN3_IS_AIN3_REF_IS_VDD
+-		| MAX1363_SETUP_POWER_UP_INT_REF
+-		| MAX1363_SETUP_INT_CLOCK
++	st->setupbyte = MAX1363_SETUP_INT_CLOCK
+ 		| MAX1363_SETUP_UNIPOLAR
+ 		| MAX1363_SETUP_NORESET;
+ 
++	if (st->vref)
++		st->setupbyte |= MAX1363_SETUP_AIN3_IS_REF_EXT_TO_REF;
++	else
++		st->setupbyte |= MAX1363_SETUP_POWER_UP_INT_REF
++		  | MAX1363_SETUP_AIN3_IS_AIN3_REF_IS_INT;
++
+ 	/* Set scan mode writes the config anyway so wait until then */
+ 	st->setupbyte = MAX1363_SETUP_BYTE(st->setupbyte);
+ 	st->current_mode = &max1363_mode_table[st->chip_info->default_mode];
+@@ -1533,6 +1537,7 @@ static int max1363_probe(struct i2c_client *client,
+ 	int ret;
+ 	struct max1363_state *st;
+ 	struct iio_dev *indio_dev;
++	struct regulator *vref;
+ 
+ 	indio_dev = iio_device_alloc(sizeof(struct max1363_state));
+ 	if (indio_dev == NULL) {
+@@ -1563,6 +1568,23 @@ static int max1363_probe(struct i2c_client *client,
+ 	st->chip_info = &max1363_chip_info_tbl[id->driver_data];
+ 	st->client = client;
+ 
++	st->vref_uv = st->chip_info->int_vref_mv * 1000;
++	vref = devm_regulator_get(&client->dev, "vref");
++	if (!IS_ERR(vref)) {
++		int vref_uv;
++
++		ret = regulator_enable(vref);
++		if (ret)
++			goto error_disable_reg;
++		st->vref = vref;
++		vref_uv = regulator_get_voltage(vref);
++		if (vref_uv <= 0) {
++			ret = -EINVAL;
++			goto error_disable_reg;
++		}
++		st->vref_uv = vref_uv;
++	}
++
+ 	ret = max1363_alloc_scan_masks(indio_dev);
+ 	if (ret)
+ 		goto error_disable_reg;
+@@ -1604,6 +1626,8 @@ static int max1363_probe(struct i2c_client *client,
+ error_uninit_buffer:
+ 	iio_triggered_buffer_cleanup(indio_dev);
+ error_disable_reg:
++	if (st->vref)
++		regulator_disable(st->vref);
+ 	regulator_disable(st->reg);
+ error_unregister_map:
+ 	iio_map_array_unregister(indio_dev);
+@@ -1620,6 +1644,8 @@ static int max1363_remove(struct i2c_client *client)
+ 
+ 	iio_device_unregister(indio_dev);
+ 	iio_triggered_buffer_cleanup(indio_dev);
++	if (st->vref)
++		regulator_disable(st->vref);
+ 	regulator_disable(st->reg);
+ 	iio_map_array_unregister(indio_dev);
+ 	iio_device_free(indio_dev);
 -- 
 1.7.9.7
