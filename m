@@ -1,31 +1,108 @@
 From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: [RFC v2 0/4] iio: Devicetree support
-Date: Sat,  2 Feb 2013 16:59:36 -0800
-Message-ID: <1359853180-5664-1-git-send-email-linux@roeck-us.net>
+Subject: [PATCH 1/4] iio: max1363: Use devm_ functions whereever possible to allocate resources
+Date: Sat,  2 Feb 2013 16:59:37 -0800
+Message-ID: <1359853180-5664-2-git-send-email-linux@roeck-us.net>
+References: <1359853180-5664-1-git-send-email-linux@roeck-us.net>
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1359853180-5664-1-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds basic device tree support to the IIO subsystem. It is the
-result of the [1] and [2] discussions.
-
-The first two patches are actually updates to the MAX1363 driver. The first
-patch updates the driver to use devm_ functions, and the second patch adds
-support for an external reference voltage.
-
-Patch 3 changes the first parameter to iio_channel_get() to be the pointer to
-the consumer device instead of the consumer device name.
-
-Patch 4 adds basic OF support to the IIO subsystem. Support is modeled after
-the clock subsystem.
-
-The patches are now based on the to togreg branch of iio kernel repository.
-Several patches were already applied and are no longer part of the patch set.
-
-Guenter
-
+Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 ---
-[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
-[2] http://marc.info/?l=lm-sensors&m=135375101529918&w=1
+ drivers/iio/adc/max1363.c |   29 ++++++++++-------------------
+ 1 file changed, 10 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
+index ef868c9..1353fda 100644
+--- a/drivers/iio/adc/max1363.c
++++ b/drivers/iio/adc/max1363.c
+@@ -1410,8 +1410,9 @@ static int max1363_alloc_scan_masks(struct iio_dev *indio_dev)
+ 	unsigned long *masks;
+ 	int i;
+ 
+-	masks = kzalloc(BITS_TO_LONGS(MAX1363_MAX_CHANNELS)*sizeof(long)*
+-			  (st->chip_info->num_modes + 1), GFP_KERNEL);
++	masks = devm_kzalloc(&indio_dev->dev,
++			BITS_TO_LONGS(MAX1363_MAX_CHANNELS) * sizeof(long) *
++			(st->chip_info->num_modes + 1), GFP_KERNEL);
+ 	if (!masks)
+ 		return -ENOMEM;
+ 
+@@ -1546,7 +1547,7 @@ static int max1363_probe(struct i2c_client *client,
+ 
+ 	st = iio_priv(indio_dev);
+ 
+-	st->reg = regulator_get(&client->dev, "vcc");
++	st->reg = devm_regulator_get(&client->dev, "vcc");
+ 	if (IS_ERR(st->reg)) {
+ 		ret = PTR_ERR(st->reg);
+ 		goto error_unregister_map;
+@@ -1554,7 +1555,7 @@ static int max1363_probe(struct i2c_client *client,
+ 
+ 	ret = regulator_enable(st->reg);
+ 	if (ret)
+-		goto error_put_reg;
++		goto error_unregister_map;
+ 
+ 	/* this is only used for device removal purposes */
+ 	i2c_set_clientdata(client, indio_dev);
+@@ -1575,15 +1576,15 @@ static int max1363_probe(struct i2c_client *client,
+ 	indio_dev->modes = INDIO_DIRECT_MODE;
+ 	ret = max1363_initial_setup(st);
+ 	if (ret < 0)
+-		goto error_free_available_scan_masks;
++		goto error_disable_reg;
+ 
+ 	ret = iio_triggered_buffer_setup(indio_dev, NULL,
+ 		&max1363_trigger_handler, &max1363_buffered_setup_ops);
+ 	if (ret)
+-		goto error_free_available_scan_masks;
++		goto error_disable_reg;
+ 
+ 	if (client->irq) {
+-		ret = request_threaded_irq(st->client->irq,
++		ret = devm_request_threaded_irq(&client->dev, st->client->irq,
+ 					   NULL,
+ 					   &max1363_event_handler,
+ 					   IRQF_TRIGGER_RISING | IRQF_ONESHOT,
+@@ -1596,20 +1597,14 @@ static int max1363_probe(struct i2c_client *client,
+ 
+ 	ret = iio_device_register(indio_dev);
+ 	if (ret < 0)
+-		goto error_free_irq;
++		goto error_uninit_buffer;
+ 
+ 	return 0;
+-error_free_irq:
+-	if (client->irq)
+-		free_irq(st->client->irq, indio_dev);
++
+ error_uninit_buffer:
+ 	iio_triggered_buffer_cleanup(indio_dev);
+-error_free_available_scan_masks:
+-	kfree(indio_dev->available_scan_masks);
+ error_disable_reg:
+ 	regulator_disable(st->reg);
+-error_put_reg:
+-	regulator_put(st->reg);
+ error_unregister_map:
+ 	iio_map_array_unregister(indio_dev);
+ error_free_device:
+@@ -1624,12 +1619,8 @@ static int max1363_remove(struct i2c_client *client)
+ 	struct max1363_state *st = iio_priv(indio_dev);
+ 
+ 	iio_device_unregister(indio_dev);
+-	if (client->irq)
+-		free_irq(st->client->irq, indio_dev);
+ 	iio_triggered_buffer_cleanup(indio_dev);
+-	kfree(indio_dev->available_scan_masks);
+ 	regulator_disable(st->reg);
+-	regulator_put(st->reg);
+ 	iio_map_array_unregister(indio_dev);
+ 	iio_device_free(indio_dev);
+ 
+-- 
+1.7.9.7
