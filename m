@@ -1,34 +1,56 @@
-From: Samuel Ortiz <sameo@linux.intel.com>
-Subject: Re: [PATCH V2 4/6] mfd: tps6507x: add device-tree support.
-Date: Sun, 3 Feb 2013 23:31:18 +0100
-Message-ID: <20130203223118.GU8476@sortiz-mobl>
-References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
- <1359445134-13323-5-git-send-email-manishv.b@ti.com>
+From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH 0/4] mfd/regulator: tps65090: add DT support and
+ suspend/resume cleanups
+Date: Sun, 3 Feb 2013 23:33:04 +0100
+Message-ID: <20130203223304.GB24304@sortiz-mobl>
+References: <1356686981-4152-1-git-send-email-ldewangan@nvidia.com>
+ <20130203141931.GA8476@sortiz-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1359445134-13323-5-git-send-email-manishv.b@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, anilkumar@ti.com, tony@atomide.com, hs@denx.de, broonie@opensource.wolfsonmicro.com, khilman@deeprootsystems.com, nsekhar@ti.com, linus.walleij@linaro.org, linux@arm.linux.org.uk, rob@landley.net, rob.herring@calxeda.com, grant.likely@secretlab.ca
+In-Reply-To: <20130203141931.GA8476@sortiz-mobl>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, lrg-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Manish,
+Hi Laxman,
 
-On Tue, Jan 29, 2013 at 01:08:52PM +0530, Vishwanathrao Badarkhe, Manish wrote:
-> Add device tree based initialization support for TI's
-> tps6507x mfd device.
+On Sun, Feb 03, 2013 at 03:19:31PM +0100, Samuel Ortiz wrote:
+> Hi Laxman,
 > 
-> Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b@ti.com>
-> ---
-> Changes since V1:
->  - updated subject line for commit.
-> 
-> :100644 100644 409afa2... 5ad4b77... M	drivers/mfd/tps6507x.c
->  drivers/mfd/tps6507x.c |    9 +++++++++
->  1 files changed, 9 insertions(+), 0 deletions(-)
-Applied, thanks.
+> On Fri, Dec 28, 2012 at 02:59:37PM +0530, Laxman Dewangan wrote:
+> > The patch series add DT support on TPS65090 device.
+> > 
+> > Also remove the suspend/resume implementation as it duplicates with
+> > irq_suspend/irq_resume().
+> > 
+> > Laxman Dewangan (4):
+> >   mfd: tps65090: add DT support for tps65090
+> >   regulator: tps65090: add DT support
+> >   mfd: tps65090: Pass irq domain when adding mfd sub devices
+> >   mfd: tps65090: remove suspend/resume callbacks
+> > 
+> >  .../devicetree/bindings/regulator/tps65090.txt     |  121 ++++++++++++++++++++
+> >  drivers/mfd/tps65090.c                             |   77 ++++++++----
+> >  drivers/regulator/tps65090-regulator.c             |   96 +++++++++++++++-
+> >  include/linux/mfd/tps65090.h                       |    1 +
+> >  4 files changed, 266 insertions(+), 29 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/regulator/tps65090.txt
+> All 4 patches applied to my for-next branch, thanks.
+Sorry for the confusion: I took v2 of your patchset, skipping the regulator
+patch who will go through Mark's tree.
 
 Cheers,
 Samuel.
