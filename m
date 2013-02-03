@@ -1,81 +1,233 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 1/6] ARM: davinci: da850: fix clock lookup for mdio
- device
-Date: Sun, 3 Feb 2013 16:44:37 +0530
-Message-ID: <510E469D.9020807@ti.com>
-References: <1359380879-26306-1-git-send-email-prabhakar.lad@ti.com>
- <1359380879-26306-2-git-send-email-prabhakar.lad@ti.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] iio: Add OF support
+Date: Sun, 03 Feb 2013 12:29:23 +0100
+Message-ID: <510E4A13.3080800@metafoo.de>
+References: <1359853180-5664-1-git-send-email-linux@roeck-us.net> <1359853180-5664-5-git-send-email-linux@roeck-us.net> <5442549.pHUaeXTGsN@flatron> <20130203020651.GA7655@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359380879-26306-2-git-send-email-prabhakar.lad-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Lad,
- Prabhakar" <prabhakar.lad-l0cyMroinI0@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130203020651.GA7655-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/28/2013 7:17 PM, Prabhakar Lad wrote:
-> From: Lad, Prabhakar <prabhakar.lad-l0cyMroinI0@public.gmane.org>
+On 02/03/2013 03:06 AM, Guenter Roeck wrote:
+> On Sun, Feb 03, 2013 at 02:30:24AM +0100, Tomasz Figa wrote:
+>> Hi Guenter,
+>>
+>> Some comments inline.
+>>
+>> On Saturday 02 of February 2013 16:59:40 Guenter Roeck wrote:
+>>> Provide bindings and parse OF data during initialization.
+>>>
+>>> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>>> ---
+>>> - Documentation update per feedback
+>>> - Dropped io-channel-output-names from the bindings document. The
+>>> property is not used in the code, and it is not entirely clear what it
+>>> would be used for. If there is a need for it, we can add it back in
+>>> later on.
+>>> - Don't export OF specific API calls
+>>> - For OF support, no longer depend on iio_map
+>>> - Add #ifdef CONFIG_OF where appropriate, and ensure that the code still
+>>> builds if it is not selected.
+>>> - Change iio_channel_get to take device pointer as argument instead of
+>>> device name. Retain old API as of_iio_channel_get_sys.
+>>> - iio_channel_get now works for both OF and non-OF configurations.
+>>>
+>>>  .../devicetree/bindings/iio/iio-bindings.txt       |   76 ++++++++
+>>>  drivers/iio/inkern.c                               |  186
+>>> ++++++++++++++++++++ 2 files changed, 262 insertions(+)
+>>>  create mode 100644
+>>> Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>> b/Documentation/devicetree/bindings/iio/iio-bindings.txt new file mode
+>>> 100644
+>>> index 0000000..58df5f6
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>> @@ -0,0 +1,76 @@
+>>> +This binding is a work-in-progress. It is derived from clock bindings,
+>>> +and based on suggestions from Lars-Peter Clausen [1].
+>>> +
+>>> +Sources of IIO channels can be represented by any node in the device
+>>> +tree.  Those nodes are designated as IIO providers.  IIO consumer
+>>> +nodes use a phandle and IIO specifier pair to connect IIO provider
+>>> +outputs to IIO inputs.  Similar to the gpio specifiers, an IIO
+>>> +specifier is an array of one or more cells identifying the IIO
+>>> +output on a device.  The length of an IIO specifier is defined by the
+>>> +value of a #io-channel-cells property in the clock provider node.
+>>> +
+>>> +[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
+>>> +
+>>> +==IIO providers==
+>>> +
+>>> +Required properties:
+>>> +#io-channel-cells: Number of cells in an IIO specifier; Typically 0 for
+>>> nodes +		   with a single IIO output and 1 for nodes with multiple
+>>> +		   IIO outputs.
+>>> +
+>>> +For example:
+>>> +
+>>> +    adc: adc@35 {
+>>> +	compatible = "maxim,max1139";
+>>> +	reg = <0x35>;
+>>> +        #io-channel-cells = <1>;
+>>> +    };
+>>> +
+>>> +==IIO consumers==
+>>> +
+>>> +Required properties:
+>>> +io-channels:	List of phandle and IIO specifier pairs, one pair
+>>> +		for each IIO input to the device.  Note: if the
+>>> +		IIO provider specifies '0' for #clock-cells, then
+>>> +		only the phandle portion of the pair will appear.
+>>> +
+>>> +Optional properties:
+>>> +io-channel-names:
+>>> +		List of IIO input name strings sorted in the same
+>>> +		order as the io-channels property.  Consumers drivers
+>>> +		will use io-channel-names to match IIO input names
+>>> +		with IIO specifiers.
+>>> +io-channel-ranges:
+>>> +		Empty property indicating that child nodes can inherit named
+>>> +		IIO channels from this node. Useful for bus nodes to provide
+>>> +		and IIO channel to their children.
+>>> +
+>>> +For example:
+>>> +
+>>> +    device {
+>>> +        io-channels = <&adc 1>, <&ref 0>;
+>>> +        io-channel-names = "vcc", "vdd";
+>>> +    };
+>>> +
+>>> +This represents a device with two IIO inputs, named "vcc" and "vdd".
+>>> +The vcc channel is connected to output 1 of the &adc device, and the
+>>> +vdd channel is connected to output 0 of the &ref device.
+>>> +
+>>> +==Example==
+>>> +
+>>> +	adc: max1139@35 {
+>>> +		compatible = "maxim,max1139";
+>>> +		reg = <0x35>;
+>>> +		#io-channel-cells = <1>;
+>>> +	};
+>>> +
+>>> +	...
+>>> +
+>>> +	iio_hwmon {
+>>> +		compatible = "iio-hwmon";
+>>> +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
+>>> +			<&adc 3>, <&adc 4>, <&adc 5>,
+>>> +			<&adc 6>, <&adc 7>, <&adc 8>,
+>>> +			<&adc 9>, <&adc 10>, <&adc 11>;
+>>> +		io-channel-names = "vcc", "vdd", "vref", "1.2V";
+>>> +	};
+>>> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+>>> index b289915..d48f2a8 100644
+>>> --- a/drivers/iio/inkern.c
+>>> +++ b/drivers/iio/inkern.c
+>>> @@ -10,6 +10,7 @@
+>>>  #include <linux/export.h>
+>>>  #include <linux/slab.h>
+>>>  #include <linux/mutex.h>
+>>> +#include <linux/of.h>
+>>>
+>>>  #include <linux/iio/iio.h>
+>>>  #include "iio_core.h"
+>>> @@ -92,6 +93,179 @@ static const struct iio_chan_spec
+>>>  	return chan;
+>>>  }
+>>>
+>>> +#ifdef CONFIG_OF
+>>> +
+>>> +static int iio_dev_node_match(struct device *dev, void *data)
+>>> +{
+>>> +	return !strcmp(dev->type->name, "iio_device") && dev->of_node == 
+>> data;
+>>
+>> Hmm, do you need to check type name here? One device node should rather 
+>> represent only one device, making node an unique identifier.
+>>
+>> It this is meant to be a sanity check, it could be done one time after 
+>> finding the device.
+>>
+> Hi Tomasz,
 > 
-> This patch removes the clock alias for mdio device and adds a entry
-> in clock lookup table, this entry can now be used by both DT and NON
-> DT case.
+> This is what Lars had suggested earlier:
 > 
-> Signed-off-by: Lad, Prabhakar <prabhakar.lad-l0cyMroinI0@public.gmane.org>
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-> ---
->  arch/arm/mach-davinci/da850.c         |    1 +
->  arch/arm/mach-davinci/devices-da8xx.c |    8 ++------
->  2 files changed, 3 insertions(+), 6 deletions(-)
+>> Yes, use bus_find_device on iio_bus_type. A nice example how to use this to
+>> lookup device by of node is of_find_i2c_device_by_node. For IIO you also need
+>> to make sure that dev->type is iio_dev_type, since both devices and triggers
+>> are registered on the same bus.
 > 
-> diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
-> index 86056ca..f74bfb6 100644
-> --- a/arch/arm/mach-davinci/da850.c
-> +++ b/arch/arm/mach-davinci/da850.c
-> @@ -402,6 +402,7 @@ static struct clk_lookup da850_clks[] = {
->  	CLK(NULL,		"arm",		&arm_clk),
->  	CLK(NULL,		"rmii",		&rmii_clk),
->  	CLK("davinci_emac.1",	NULL,		&emac_clk),
-> +	CLK("davinci_mdio.0",	"fck",		&emac_clk),
->  	CLK("davinci-mcasp.0",	NULL,		&mcasp_clk),
->  	CLK("da8xx_lcdc.0",	"fck",		&lcdc_clk),
->  	CLK("davinci_mmc.0",	NULL,		&mmcsd0_clk),
-> diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-> index 2d5502d..52faa05 100644
-> --- a/arch/arm/mach-davinci/devices-da8xx.c
-> +++ b/arch/arm/mach-davinci/devices-da8xx.c
-> @@ -444,12 +444,8 @@ int __init da8xx_register_emac(void)
->  	ret = platform_device_register(&da8xx_mdio_device);
->  	if (ret < 0)
->  		return ret;
-> -	ret = platform_device_register(&da8xx_emac_device);
-> -	if (ret < 0)
-> -		return ret;
-> -	ret = clk_add_alias(NULL, dev_name(&da8xx_mdio_device.dev),
-> -			    NULL, &da8xx_emac_device.dev);
-> -	return ret;
-> +
-> +	return platform_device_register(&da8xx_emac_device);
+> Is it really needed, or in other words would it be sufficient to check if
+> of_node and data match each other ? Your reasoning makes sense to me, and I had
+> thought about it as well, but I don't really know, and I don't know how I could
+> test it and guarantee correctness either. I'll be happy to take the strcmp() out
+> if someone tells me that it is definitely not needed ...
 
-You added the look-up only for DA850 which means after this patch da830
-network will be broken. Did you test on DA830?
+A IIO trigger and a IIO device may have the same of_node, e.g. if they both
+belong to the same physical device. But you don't need to do the strcmp just
+compare dev->type to iio_dev_type i.e. dev->type == &iio_dev_type. Although it
+doesn't really matter in practice first check for the of_node then check for
+the type, since the of_node will only match for a few devices at most, the type
+will match for quite a few.
 
-Thanks,
-Sekhar
+
+> 
+>>> +}
+>>> +
+>>> +static struct iio_channel *of_iio_channel_get(struct device_node *np,
+>>> int index) +{
+>>> +	struct iio_channel *channel;
+>>> +	struct device *idev;
+>>> +	struct iio_dev *indio_dev;
+>>> +	int err;
+>>> +	struct of_phandle_args iiospec;
+>>> +
+>>> +	if (index < 0)
+>>> +		return ERR_PTR(-EINVAL);
+>>> +
+>>> +	err = of_parse_phandle_with_args(np, "io-channels",
+>>> +					 "#io-channel-cells",
+>>> +					 index, &iiospec);
+>>> +	if (err)
+>>> +		return ERR_PTR(err);
+>>> +
+>>> +	idev = bus_find_device(&iio_bus_type, NULL, iiospec.np,
+>>> +			       iio_dev_node_match);
+>>> +	of_node_put(iiospec.np);
+>>> +	if (idev == NULL)
+>>> +		return ERR_PTR(-EPROBE_DEFER);
+>>> +
+>>> +	indio_dev = dev_to_iio_dev(idev);
+>>> +
+>>> +	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
+>>> +	if (channel == NULL) {
+>>> +		err = -ENOMEM;
+>>> +		goto err_no_mem;
+>>> +	}
+>>> +
+>>> +	channel->indio_dev = indio_dev;
+>>> +	index = iiospec.args_count ? iiospec.args[0] : 0;
+>>
+>> What happens here with remaining phandle arguments?
+>>
+>> I'm not sure if such use case is needed for iio, but other subsystems give 
+>> the possibility of specifying custom xlate callback translating from a 
+>> custom specifier into channel number. (e.g. drivers/gpio/gpiolib-of.c)
+>>
+> I don't have a use case, and I hesitate to implement something that may
+> never be used (and I can not really test it either). And without a use
+> case we would not even know if the implementation makes sense or not.
+> 
+> It should be possible to add additional functionality later if needed.
+> 
+
+Agreed, if it turns out somebody needs it, we can easily add it later on.
+
+- Lars
