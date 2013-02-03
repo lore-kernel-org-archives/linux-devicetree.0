@@ -1,85 +1,336 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to
- arm/common
-Date: Sat, 2 Feb 2013 13:02:51 -0800
-Message-ID: <20130202210251.GE577@atomide.com>
-References: <1359742975-10421-1-git-send-email-mporter@ti.com>
- <1359742975-10421-2-git-send-email-mporter@ti.com>
- <5022f635a527470dbd0be932063e9cd2@DFLE72.ent.ti.com>
- <20130201184915.GP2244@beef>
- <2077c13e12314dc3adc8e5b653855da0@DFLE72.ent.ti.com>
- <20130201185959.GQ2244@beef>
- <e9be6668da8b4372a04687847daa1d8c@DFLE72.ent.ti.com>
- <20130202180747.GS2244@beef>
- <20130202181643.GD577@atomide.com>
- <20130202194853.GT2244@beef>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130202194853.GT2244@beef>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Matt Porter <mporter@ti.com>
-Cc: Sergei Shtylyov <sshtylyov@mvista.com>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "Cousson, Benoit" <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Vinod Koul <vinod.koul@intel.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: [PATCH v2 4/4] iio: Add OF support
+Date: Sat,  2 Feb 2013 16:59:40 -0800
+Message-ID: <1359853180-5664-5-git-send-email-linux@roeck-us.net>
+References: <1359853180-5664-1-git-send-email-linux@roeck-us.net>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1359853180-5664-1-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Matt Porter <mporter@ti.com> [130202 11:51]:
-> On Sat, Feb 02, 2013 at 10:16:43AM -0800, Tony Lindgren wrote:
-> > * Matt Porter <mporter@ti.com> [130202 10:10]:
-> > > If it doesn't work, work with Vinod to fix the api. It's expected,
-> > > I'm working on dmaengine API changes right now to deal with a
-> > > limitation of EDMA that needs to be abstracted.
-> > 
-> > Regarding the DMA API limitations, I'm only aware of lack of capability
-> > to configure autoincrement at the device end. And that keeps us from
-> > converting all GPMC related devices using omap SDMA to use the DMA API.
-> > 
-> > Are there other limitations currently known with the DMA API?
-> 
-> Yes, I called one out when this was first posted as an RFC and was
-> working it in parallel with this support. This one blocks AM33XX support
-> in mmc and is the reason I split all of the mmc support out of the base
-> edma dmaengine for am33xx series. Independent of the blockage, whatever
-> we finally settle on to address this API need will also cleanup the use
-> of magic values in the davinci mmc driver (that's part of the second
-> thread below).
-> 
-> RFC posting:
-> https://patchwork.kernel.org/patch/1583531/
-> Posting with initial attempt at a caps api:
-> http://www.spinics.net/lists/linux-mmc/msg18351.html
+Provide bindings and parse OF data during initialization.
 
-OK thanks for the links, good to hear at least some work is happening
-on it.
+Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+---
+- Documentation update per feedback
+- Dropped io-channel-output-names from the bindings document. The property is
+  not used in the code, and it is not entirely clear what it would be used for.
+  If there is a need for it, we can add it back in later on.
+- Don't export OF specific API calls
+- For OF support, no longer depend on iio_map
+- Add #ifdef CONFIG_OF where appropriate, and ensure that the code still builds
+  if it is not selected.
+- Change iio_channel_get to take device pointer as argument instead of device
+  name. Retain old API as of_iio_channel_get_sys.
+- iio_channel_get now works for both OF and non-OF configurations.
 
-> Also, I haven't fully vetted the situation with cyclic transfers and
-> EDMA, however, I'm pretty sure that we'll need some API changes there.
-> The reason is that some Davinci platforms have no FIFO on their McASP
-> implementation (that was a new feature added on DA8xx and also AM33xx).
-> As such they have audio support implemented using ping-pong buffering
-> via an SRAM buffer. There's been a number of patches ahead of all this
-> that myself and others have worked upstream to get the SRAM stuff to be
-> Davinci-independent (genalloc). But, at the end of all of this, there's
-> no notion in a cyclic transfer of doing synchronized ping-pong buffering
-> using two chain channels. This is how it is implemented (and documented
-> in EDMA docs going back to the DSPs this IP first showed up on) using
-> the private API. I'll be looking at this soon, but, I'm more interested
-> in 1) getting the base support in 2) then the mmc stuff blocking DT
-> populated platforms using omap_hsmmc (split out and posted) 3) v3 of the
-> caps api w/ vinod's concerns address (working it not)
-> 
-> Normally, I'm not going to bring up the cyclic transfer issue until I
-> have some code to show or reference for discussion...but it's worth
-> being aware. But, in any case, I'm confident that will gate having the
-> mcasp driver that am33xx also uses converted to dmaengine.  Except for
-> the gpmc limitation you menationed, that's the last in kernel user of
-> the privat edma api needed to be converted such that we can kill off
-> arch/arm/common/edma.c once it's taken in.
+ .../devicetree/bindings/iio/iio-bindings.txt       |   76 ++++++++
+ drivers/iio/inkern.c                               |  186 ++++++++++++++++++++
+ 2 files changed, 262 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/iio-bindings.txt
 
-And then there's the case of device-to-device DMA that we're not
-currently doing luckily. And I don't think I've even seen that being
-used so we probably don't need to worry about that one right now.
-
-Regards,
-
-Tony
+diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+new file mode 100644
+index 0000000..58df5f6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+@@ -0,0 +1,76 @@
++This binding is a work-in-progress. It is derived from clock bindings,
++and based on suggestions from Lars-Peter Clausen [1].
++
++Sources of IIO channels can be represented by any node in the device
++tree.  Those nodes are designated as IIO providers.  IIO consumer
++nodes use a phandle and IIO specifier pair to connect IIO provider
++outputs to IIO inputs.  Similar to the gpio specifiers, an IIO
++specifier is an array of one or more cells identifying the IIO
++output on a device.  The length of an IIO specifier is defined by the
++value of a #io-channel-cells property in the clock provider node.
++
++[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
++
++==IIO providers==
++
++Required properties:
++#io-channel-cells: Number of cells in an IIO specifier; Typically 0 for nodes
++		   with a single IIO output and 1 for nodes with multiple
++		   IIO outputs.
++
++For example:
++
++    adc: adc@35 {
++	compatible = "maxim,max1139";
++	reg = <0x35>;
++        #io-channel-cells = <1>;
++    };
++
++==IIO consumers==
++
++Required properties:
++io-channels:	List of phandle and IIO specifier pairs, one pair
++		for each IIO input to the device.  Note: if the
++		IIO provider specifies '0' for #clock-cells, then
++		only the phandle portion of the pair will appear.
++
++Optional properties:
++io-channel-names:
++		List of IIO input name strings sorted in the same
++		order as the io-channels property.  Consumers drivers
++		will use io-channel-names to match IIO input names
++		with IIO specifiers.
++io-channel-ranges:
++		Empty property indicating that child nodes can inherit named
++		IIO channels from this node. Useful for bus nodes to provide
++		and IIO channel to their children.
++
++For example:
++
++    device {
++        io-channels = <&adc 1>, <&ref 0>;
++        io-channel-names = "vcc", "vdd";
++    };
++
++This represents a device with two IIO inputs, named "vcc" and "vdd".
++The vcc channel is connected to output 1 of the &adc device, and the
++vdd channel is connected to output 0 of the &ref device.
++
++==Example==
++
++	adc: max1139@35 {
++		compatible = "maxim,max1139";
++		reg = <0x35>;
++		#io-channel-cells = <1>;
++	};
++
++	...
++
++	iio_hwmon {
++		compatible = "iio-hwmon";
++		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
++			<&adc 3>, <&adc 4>, <&adc 5>,
++			<&adc 6>, <&adc 7>, <&adc 8>,
++			<&adc 9>, <&adc 10>, <&adc 11>;
++		io-channel-names = "vcc", "vdd", "vref", "1.2V";
++	};
+diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+index b289915..d48f2a8 100644
+--- a/drivers/iio/inkern.c
++++ b/drivers/iio/inkern.c
+@@ -10,6 +10,7 @@
+ #include <linux/export.h>
+ #include <linux/slab.h>
+ #include <linux/mutex.h>
++#include <linux/of.h>
+ 
+ #include <linux/iio/iio.h>
+ #include "iio_core.h"
+@@ -92,6 +93,179 @@ static const struct iio_chan_spec
+ 	return chan;
+ }
+ 
++#ifdef CONFIG_OF
++
++static int iio_dev_node_match(struct device *dev, void *data)
++{
++	return !strcmp(dev->type->name, "iio_device") && dev->of_node == data;
++}
++
++static struct iio_channel *of_iio_channel_get(struct device_node *np, int index)
++{
++	struct iio_channel *channel;
++	struct device *idev;
++	struct iio_dev *indio_dev;
++	int err;
++	struct of_phandle_args iiospec;
++
++	if (index < 0)
++		return ERR_PTR(-EINVAL);
++
++	err = of_parse_phandle_with_args(np, "io-channels",
++					 "#io-channel-cells",
++					 index, &iiospec);
++	if (err)
++		return ERR_PTR(err);
++
++	idev = bus_find_device(&iio_bus_type, NULL, iiospec.np,
++			       iio_dev_node_match);
++	of_node_put(iiospec.np);
++	if (idev == NULL)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	indio_dev = dev_to_iio_dev(idev);
++
++	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
++	if (channel == NULL) {
++		err = -ENOMEM;
++		goto err_no_mem;
++	}
++
++	channel->indio_dev = indio_dev;
++	index = iiospec.args_count ? iiospec.args[0] : 0;
++	if (index >= indio_dev->num_channels) {
++		err = -EINVAL;
++		goto err_no_channel;
++	}
++	channel->channel = &indio_dev->channels[index];
++
++	return channel;
++
++err_no_channel:
++	kfree(channel);
++err_no_mem:
++	iio_device_put(indio_dev);
++	return ERR_PTR(err);
++}
++
++static struct iio_channel *of_iio_channel_get_by_name(struct device_node *np,
++						      const char *name)
++{
++	struct iio_channel *chan = ERR_PTR(-ENOENT);
++
++	/* Walk up the tree of devices looking for a matching iio channel */
++	while (np) {
++		int index = 0;
++
++		/*
++		 * For named iio channels, first look up the name in the
++		 * "io-channel-names" property.  If it cannot be found, the
++		 * index will be an error code, and of_iio_channel_get()
++		 * will fail.
++		 */
++		if (name)
++			index = of_property_match_string(np, "io-channel-names",
++							 name);
++		chan = of_iio_channel_get(np, index);
++		if (!IS_ERR(chan))
++			break;
++		else if (name && index >= 0) {
++			pr_err("ERROR: could not get IIO channel %s:%s(%i)\n",
++				np->full_name, name ? name : "", index);
++			return chan;
++		}
++
++		/*
++		 * No matching IIO channel found on this node.
++		 * If the parent node has a "io-channel-ranges" property,
++		 * then we can try one of its channels.
++		 */
++		np = np->parent;
++		if (np && !of_get_property(np, "io-channel-ranges", NULL))
++			break;
++	}
++	return chan;
++}
++
++static struct iio_channel *of_iio_channel_get_all(struct device *dev)
++{
++	struct iio_channel *chans;
++	int i, mapind, nummaps = 0;
++	int ret;
++
++	do {
++		ret = of_parse_phandle_with_args(dev->of_node,
++						 "io-channels",
++						 "#io-channel-cells",
++						 nummaps, NULL);
++		if (ret < 0)
++			break;
++	} while (++nummaps);
++
++	if (nummaps == 0)	/* no error, return NULL to search map table */
++		return NULL;
++
++	/* NULL terminated array to save passing size */
++	chans = kzalloc(sizeof(*chans)*(nummaps + 1), GFP_KERNEL);
++	if (chans == NULL) {
++		ret = -ENOMEM;
++		goto error;
++	}
++
++	/* Search for OF matches */
++	for (mapind = 0; mapind < nummaps; mapind++) {
++		struct device *idev;
++		struct iio_dev *indio_dev;
++		int channel;
++		struct of_phandle_args iiospec;
++
++		ret = of_parse_phandle_with_args(dev->of_node,
++						 "io-channels",
++						 "#io-channel-cells",
++						 mapind, &iiospec);
++		if (ret)
++			goto error_free_chans;
++
++		idev = bus_find_device(&iio_bus_type, NULL, iiospec.np,
++				       iio_dev_node_match);
++		of_node_put(iiospec.np);
++		if (idev == NULL) {
++			ret = -EPROBE_DEFER;
++			goto error_free_chans;
++		}
++		indio_dev = dev_to_iio_dev(idev);
++		channel = iiospec.args_count ? iiospec.args[0] : 0;
++		if (channel >= indio_dev->num_channels) {
++			ret = -EINVAL;
++			goto error_free_chans;
++		}
++		chans[mapind].indio_dev = indio_dev;
++		chans[mapind].channel = &indio_dev->channels[channel];
++	}
++	return chans;
++
++error_free_chans:
++	for (i = 0; i < mapind; i++)
++		iio_device_put(chans[i].indio_dev);
++	kfree(chans);
++error:
++	return ERR_PTR(ret);
++}
++
++#else /* CONFIG_OF */
++
++static inline struct iio_channel *
++of_iio_channel_get_by_name(struct device_node *np, const char *name)
++{
++	return ERR_PTR(-ENOENT);
++}
++
++static inline struct iio_channel *of_iio_channel_get_all(struct device *dev)
++{
++	return NULL;
++}
++
++#endif /* CONFIG_OF */
+ 
+ static struct iio_channel *iio_channel_get_sys(const char *name,
+ 					       const char *channel_name)
+@@ -150,7 +324,14 @@ struct iio_channel *iio_channel_get(struct device *dev,
+ 				    const char *channel_name)
+ {
+ 	const char *name = dev ? dev_name(dev) : NULL;
++	struct iio_channel *channel;
+ 
++	if (dev) {
++		channel = of_iio_channel_get_by_name(dev->of_node,
++						     channel_name);
++		if (!IS_ERR(channel))
++			return channel;
++	}
+ 	return iio_channel_get_sys(name, channel_name);
+ }
+ EXPORT_SYMBOL_GPL(iio_channel_get);
+@@ -173,6 +354,11 @@ struct iio_channel *iio_channel_get_all(struct device *dev)
+ 
+ 	if (dev == NULL)
+ 		return ERR_PTR(-EINVAL);
++
++	chans = of_iio_channel_get_all(dev);
++	if (chans)
++		return chans;
++
+ 	name = dev_name(dev);
+ 
+ 	mutex_lock(&iio_map_list_lock);
+-- 
+1.7.9.7
