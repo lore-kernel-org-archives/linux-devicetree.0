@@ -1,230 +1,117 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] iio: Add OF support
-Date: Sun, 03 Feb 2013 13:22:44 +0100
-Message-ID: <510E5694.3000304@metafoo.de>
-References: <1359853180-5664-1-git-send-email-linux@roeck-us.net> <20130203020651.GA7655@roeck-us.net> <510E4A13.3080800@metafoo.de> <1915802.t7OItgMRJy@flatron>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] ARM: davinci: da850: configure system configuration
+ chip(CFGCHIP3) for emac
+Date: Sun, 3 Feb 2013 18:15:03 +0530
+Message-ID: <510E5BCF.9080006@ti.com>
+References: <1359380879-26306-1-git-send-email-prabhakar.lad@ti.com>
+ <1359380879-26306-7-git-send-email-prabhakar.lad@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1915802.t7OItgMRJy@flatron>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359380879-26306-7-git-send-email-prabhakar.lad-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Lad,
+ Prabhakar" <prabhakar.lad-l0cyMroinI0@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2013 12:52 PM, Tomasz Figa wrote:
-> On Sunday 03 of February 2013 12:29:23 Lars-Peter Clausen wrote:
->> On 02/03/2013 03:06 AM, Guenter Roeck wrote:
->>> On Sun, Feb 03, 2013 at 02:30:24AM +0100, Tomasz Figa wrote:
->>>> Hi Guenter,
->>>>
->>>> Some comments inline.
->>>>
->>>> On Saturday 02 of February 2013 16:59:40 Guenter Roeck wrote:
->>>>> Provide bindings and parse OF data during initialization.
->>>>>
->>>>> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->>>>> ---
->>>>> - Documentation update per feedback
->>>>> - Dropped io-channel-output-names from the bindings document. The
->>>>> property is not used in the code, and it is not entirely clear what
->>>>> it
->>>>> would be used for. If there is a need for it, we can add it back in
->>>>> later on.
->>>>> - Don't export OF specific API calls
->>>>> - For OF support, no longer depend on iio_map
->>>>> - Add #ifdef CONFIG_OF where appropriate, and ensure that the code
->>>>> still builds if it is not selected.
->>>>> - Change iio_channel_get to take device pointer as argument instead
->>>>> of
->>>>> device name. Retain old API as of_iio_channel_get_sys.
->>>>> - iio_channel_get now works for both OF and non-OF configurations.
->>>>>
->>>>>  .../devicetree/bindings/iio/iio-bindings.txt       |   76 ++++++++
->>>>>  drivers/iio/inkern.c                               |  186
->>>>>
->>>>> ++++++++++++++++++++ 2 files changed, 262 insertions(+)
->>>>>
->>>>>  create mode 100644
->>>>>
->>>>> Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>> b/Documentation/devicetree/bindings/iio/iio-bindings.txt new file
->>>>> mode
->>>>> 100644
->>>>> index 0000000..58df5f6
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>> @@ -0,0 +1,76 @@
->>>>> +This binding is a work-in-progress. It is derived from clock
->>>>> bindings,
->>>>> +and based on suggestions from Lars-Peter Clausen [1].
->>>>> +
->>>>> +Sources of IIO channels can be represented by any node in the
->>>>> device
->>>>> +tree.  Those nodes are designated as IIO providers.  IIO consumer
->>>>> +nodes use a phandle and IIO specifier pair to connect IIO provider
->>>>> +outputs to IIO inputs.  Similar to the gpio specifiers, an IIO
->>>>> +specifier is an array of one or more cells identifying the IIO
->>>>> +output on a device.  The length of an IIO specifier is defined by
->>>>> the
->>>>> +value of a #io-channel-cells property in the clock provider node.
->>>>> +
->>>>> +[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
->>>>> +
->>>>> +==IIO providers==
->>>>> +
->>>>> +Required properties:
->>>>> +#io-channel-cells: Number of cells in an IIO specifier; Typically 0
->>>>> for nodes +		   with a single IIO output and 1 for nodes with
->>>>> multiple +		   IIO outputs.
->>>>> +
->>>>> +For example:
->>>>> +
->>>>> +    adc: adc@35 {
->>>>> +	compatible = "maxim,max1139";
->>>>> +	reg = <0x35>;
->>>>> +        #io-channel-cells = <1>;
->>>>> +    };
->>>>> +
->>>>> +==IIO consumers==
->>>>> +
->>>>> +Required properties:
->>>>> +io-channels:	List of phandle and IIO specifier pairs, one pair
->>>>> +		for each IIO input to the device.  Note: if the
->>>>> +		IIO provider specifies '0' for #clock-cells, then
->>>>> +		only the phandle portion of the pair will appear.
->>>>> +
->>>>> +Optional properties:
->>>>> +io-channel-names:
->>>>> +		List of IIO input name strings sorted in the same
->>>>> +		order as the io-channels property.  Consumers drivers
->>>>> +		will use io-channel-names to match IIO input names
->>>>> +		with IIO specifiers.
->>>>> +io-channel-ranges:
->>>>> +		Empty property indicating that child nodes can inherit 
-> named
->>>>> +		IIO channels from this node. Useful for bus nodes to 
-> provide
->>>>> +		and IIO channel to their children.
->>>>> +
->>>>> +For example:
->>>>> +
->>>>> +    device {
->>>>> +        io-channels = <&adc 1>, <&ref 0>;
->>>>> +        io-channel-names = "vcc", "vdd";
->>>>> +    };
->>>>> +
->>>>> +This represents a device with two IIO inputs, named "vcc" and
->>>>> "vdd".
->>>>> +The vcc channel is connected to output 1 of the &adc device, and
->>>>> the
->>>>> +vdd channel is connected to output 0 of the &ref device.
->>>>> +
->>>>> +==Example==
->>>>> +
->>>>> +	adc: max1139@35 {
->>>>> +		compatible = "maxim,max1139";
->>>>> +		reg = <0x35>;
->>>>> +		#io-channel-cells = <1>;
->>>>> +	};
->>>>> +
->>>>> +	...
->>>>> +
->>>>> +	iio_hwmon {
->>>>> +		compatible = "iio-hwmon";
->>>>> +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
->>>>> +			<&adc 3>, <&adc 4>, <&adc 5>,
->>>>> +			<&adc 6>, <&adc 7>, <&adc 8>,
->>>>> +			<&adc 9>, <&adc 10>, <&adc 11>;
->>>>> +		io-channel-names = "vcc", "vdd", "vref", "1.2V";
->>>>> +	};
->>>>> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
->>>>> index b289915..d48f2a8 100644
->>>>> --- a/drivers/iio/inkern.c
->>>>> +++ b/drivers/iio/inkern.c
->>>>> @@ -10,6 +10,7 @@
->>>>>
->>>>>  #include <linux/export.h>
->>>>>  #include <linux/slab.h>
->>>>>  #include <linux/mutex.h>
->>>>>
->>>>> +#include <linux/of.h>
->>>>>
->>>>>  #include <linux/iio/iio.h>
->>>>>  #include "iio_core.h"
->>>>>
->>>>> @@ -92,6 +93,179 @@ static const struct iio_chan_spec
->>>>>
->>>>>  	return chan;
->>>>>  
->>>>>  }
->>>>>
->>>>> +#ifdef CONFIG_OF
->>>>> +
->>>>> +static int iio_dev_node_match(struct device *dev, void *data)
->>>>> +{
->>>>> +	return !strcmp(dev->type->name, "iio_device") && dev->of_node 
-> ==
->>>>
->>>> data;
->>>>
->>>> Hmm, do you need to check type name here? One device node should
->>>> rather
->>>> represent only one device, making node an unique identifier.
->>>>
->>>> It this is meant to be a sanity check, it could be done one time
->>>> after
->>>> finding the device.
->>>
->>> Hi Tomasz,
->>>
->>> This is what Lars had suggested earlier:
->>>> Yes, use bus_find_device on iio_bus_type. A nice example how to use
->>>> this to lookup device by of node is of_find_i2c_device_by_node. For
->>>> IIO you also need to make sure that dev->type is iio_dev_type, since
->>>> both devices and triggers are registered on the same bus.
->>>
->>> Is it really needed, or in other words would it be sufficient to check
->>> if of_node and data match each other ? Your reasoning makes sense to
->>> me, and I had thought about it as well, but I don't really know, and
->>> I don't know how I could test it and guarantee correctness either.
->>> I'll be happy to take the strcmp() out if someone tells me that it is
->>> definitely not needed ...
->>
->> A IIO trigger and a IIO device may have the same of_node, e.g. if they
->> both belong to the same physical device. But you don't need to do the
->> strcmp just compare dev->type to iio_dev_type i.e. dev->type ==
->> &iio_dev_type. Although it doesn't really matter in practice first
->> check for the of_node then check for the type, since the of_node will
->> only match for a few devices at most, the type will match for quite a
->> few.
+On 1/28/2013 7:17 PM, Prabhakar Lad wrote:
+> From: Lad, Prabhakar <prabhakar.lad-l0cyMroinI0@public.gmane.org>
 > 
-> I must disagree.
+> The system configuration chip CFGCHIP3, controls the emac module.
+> This patch appropriately configures this register for emac and
+> sets DA850_MII_MDIO_CLKEN_PIN GPIO pin appropriately.
 > 
-> If you have two IIO devices provided by one physical device, then in 
-> device tree they should be represented as follows:
+> Signed-off-by: Lad, Prabhakar <prabhakar.lad-l0cyMroinI0@public.gmane.org>
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+> Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+> ---
+>  arch/arm/mach-davinci/da8xx-dt.c |   28 ++++++++++++++++++++++++++++
+>  1 files changed, 28 insertions(+), 0 deletions(-)
 > 
-> 	phys-dev@12345678 {
-> 		compatible = "some-physical-device";
-> 		/* ... */
-> 
-> 		my_trig: iio-trigger {
-> 			/* ... */
-> 		};
-> 
-> 		my_dev: iio-device {
-> 			/* ... */
-> 		};
-> 	};
-> 
-> Notice that phys-dev works here as an IIO bus on which its IIO devices are 
-> available. This is related to the convention that single OF device node 
-> represents single device, which would be violated otherwise.
+> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+> index e533a0a..4a096e3 100644
+> --- a/arch/arm/mach-davinci/da8xx-dt.c
+> +++ b/arch/arm/mach-davinci/da8xx-dt.c
+> @@ -8,6 +8,7 @@
+>   * published by the Free Software Foundation.
+>   */
+>  #include <linux/io.h>
+> +#include <linux/gpio.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/irqdomain.h>
+> @@ -39,6 +40,32 @@ static void __init da8xx_init_irq(void)
+>  
+>  #ifdef CONFIG_ARCH_DAVINCI_DA850
+>  
+> +static void __init da8xx_config_emac(void)
+> +{
+> +#define DA850_MII_MDIO_CLKEN_PIN	GPIO_TO_PIN(2, 6)
+> +#define DA850_EMAC_MODE_SELECT		BIT(8)
+> +	void __iomem *cfg_chip3_base;
+> +	int ret;
+> +	u32 val;
+> +
+> +	cfg_chip3_base = DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG);
+> +
+> +	val = __raw_readl(cfg_chip3_base);
+> +	val &= ~DA850_EMAC_MODE_SELECT;
+> +	/* configure the CFGCHIP3 register for MII */
+> +	__raw_writel(val, cfg_chip3_base);
 
-But we do some_dev->of_node = some_other_dev->of_node, all over the place. How
-is that different?
+Use readl/writel instead.
 
-- Lars
+> +	pr_info("EMAC: MII PHY configured\n");
+> +
+> +	ret = gpio_request(DA850_MII_MDIO_CLKEN_PIN, "mdio_clk_en");
+> +	if (ret) {
+> +		pr_warn("Cannot open GPIO %d\n",
+> +					DA850_MII_MDIO_CLKEN_PIN);
+> +		return;
+> +	}
+> +	/* Enable/Disable MII MDIO clock */
+> +	gpio_direction_output(DA850_MII_MDIO_CLKEN_PIN, 0);
+> +}
+> +
+>  struct of_dev_auxdata da8xx_auxdata[] __initdata = {
+>  	OF_DEV_AUXDATA("ti,davinci_mdio", 0x01e24000, "davinci_mdio.0", NULL),
+>  	OF_DEV_AUXDATA("ti,davinci-dm6467-emac", 0x01e20000, "davinci_emac.1",
+> @@ -52,6 +79,7 @@ static void __init da850_init_machine(void)
+>  			     da8xx_auxdata, NULL);
+>  
+>  	da8xx_uart_clk_enable();
+> +	da8xx_config_emac();
+
+There are couple of issues with this implementation.
+
+1) da8xx_config_emac() is specific to DA850 EVM, but masquerades as
+   generic for da8xx. Looks like you need two functions, one for soc
+   specific configuration and one board specific.
+2) da8xx_config_emac() goes through all the time, whether the
+   particular board has emac module or not. Shouldn't
+   da8xx_config_emac() check if emac is actually enabled in the passed
+   dtb and only the do the configuration?
+3) The function assumes mii is used always, you can use the rmii_en dt
+   property to check if rmii/mii is enabled and configure the soc/board
+   accordingly.
+4) If the same function can work both for da850 and da830, then it can
+   be implemented outside of CONFIG_ARCH_DAVINCI_DA850.
+
+Thanks,
+Sekhar
