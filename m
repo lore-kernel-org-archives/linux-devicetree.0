@@ -1,167 +1,97 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] iio/adc: (max1363) Add support for external reference
- voltage
-Date: Sun, 03 Feb 2013 12:12:45 +0000
-Message-ID: <510E543D.50201@kernel.org>
-References: <1359853180-5664-1-git-send-email-linux@roeck-us.net> <1359853180-5664-3-git-send-email-linux@roeck-us.net>
+From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/6] ARM: davinci: da850: add DT node for mdio device
+Date: Sun, 3 Feb 2013 17:47:53 +0530
+Message-ID: <CA+V-a8uMeG-=hTgTSOMRJ-Cr9mXwidu4mQaT5eQ+U7wiWj8MuQ@mail.gmail.com>
+References: <1359380879-26306-1-git-send-email-prabhakar.lad@ti.com>
+ <1359380879-26306-3-git-send-email-prabhakar.lad@ti.com>
+ <510E4FB8.4050705@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1359853180-5664-3-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <510E4FB8.4050705-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Lad,
+ Prabhakar" <prabhakar.lad-l0cyMroinI0@public.gmane.org>, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/03/2013 12:59 AM, Guenter Roeck wrote:
-> Implement external reference voltage as regulator named "vref".
-> 
-> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Applied to togreg branch of iio.git.
-Thanks,
+Sekhar,
 
-The remaining two patches will have sit a while.
-Patch 3 effects stuff outside IIO so I'll wait to see if anyone
-screams that it is going to cause merge nightmares!
+On Sun, Feb 3, 2013 at 5:23 PM, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> wrote:
+> On 1/28/2013 7:17 PM, Prabhakar Lad wrote:
+>> From: Lad, Prabhakar <prabhakar.lad-l0cyMroinI0@public.gmane.org>
+>>
+>> Add mdio device tree node information to da850 by
+>> providing register details and bus frequency of mdio.
+>>
+>> Signed-off-by: Lad, Prabhakar <prabhakar.lad-l0cyMroinI0@public.gmane.org>
+>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+>> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>> Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/da850-evm.dts |    3 +++
+>>  arch/arm/boot/dts/da850.dtsi    |    7 +++++++
+>>  2 files changed, 10 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+>> index 98c1a48..a319491 100644
+>> --- a/arch/arm/boot/dts/da850-evm.dts
+>> +++ b/arch/arm/boot/dts/da850-evm.dts
+>> @@ -27,6 +27,9 @@
+>>               serial2: serial@1d0d000 {
+>>                       status = "okay";
+>>               };
+>> +             mdio: davinci_mdio@1e24000 {
+>
+> This should just be:
+>
+> mdio: mdio@1e24000
+>
+> inline with how we avoid adding davinci prefix to each node name.
+>
+Ok
 
-Patch 4 is clearly still under discussion though a consensus seems
-to have more or less been reached.
+>> +                     status = "okay";
+>> +             };
+>>       };
+>>       nand_cs3@62000000 {
+>>               status = "okay";
+>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+>> index 7c84822..ba28f2d 100644
+>> --- a/arch/arm/boot/dts/da850.dtsi
+>> +++ b/arch/arm/boot/dts/da850.dtsi
+>> @@ -81,6 +81,13 @@
+>>                       interrupts = <61>;
+>>                       status = "disabled";
+>>               };
+>> +             mdio: davinci_mdio@1e24000 {
+>> +                     compatible = "ti,davinci_mdio";
+>> +                     #address-cells = <1>;
+>> +                     #size-cells = <0>;
+>> +                     reg = <0x224000 0x1000>;
+>> +                     bus_freq = <2200000>;
+>
+> The bus frequency is board specific and it is better this is defined in
+> da850-evm.dts
+>
+Ok I'll move this to dts file.
 
-Thanks again for this work Guenter. I like the way one of my oldest
-drivers is getting cleaned up along the way without me having to
-do anything much ;)
+Regards,
+--Prabhakar
 
-> ---
-> v2: Use regulator API to specify vref instead of creating new devicetree
->     bindings.
->     Keep reference voltage internally in uV, as this is the scale provided
->     by the regulator subsystem. We need the value in uV anyway, so that does
->     make some sense.
-> 
->  drivers/iio/adc/max1363.c |   52 +++++++++++++++++++++++++++++++++------------
->  1 file changed, 39 insertions(+), 13 deletions(-)
-> 
-> diff --git a/drivers/iio/adc/max1363.c b/drivers/iio/adc/max1363.c
-> index 1353fda..cac73d7 100644
-> --- a/drivers/iio/adc/max1363.c
-> +++ b/drivers/iio/adc/max1363.c
-> @@ -163,6 +163,8 @@ struct max1363_chip_info {
->   * @mask_low:		bitmask for enabled low thresholds
->   * @thresh_high:	high threshold values
->   * @thresh_low:		low threshold values
-> + * @vref:		Reference voltage regulator
-> + * @vref_uv:		Actual (external or internal) reference voltage
->   */
->  struct max1363_state {
->  	struct i2c_client		*client;
-> @@ -182,6 +184,8 @@ struct max1363_state {
->  	/* 4x unipolar first then the fours bipolar ones */
->  	s16				thresh_high[8];
->  	s16				thresh_low[8];
-> +	struct regulator		*vref;
-> +	u32				vref_uv;
->  };
->  
->  #define MAX1363_MODE_SINGLE(_num, _mask) {				\
-> @@ -393,6 +397,8 @@ static int max1363_read_raw(struct iio_dev *indio_dev,
->  {
->  	struct max1363_state *st = iio_priv(indio_dev);
->  	int ret;
-> +	unsigned long scale_uv;
-> +
->  	switch (m) {
->  	case IIO_CHAN_INFO_RAW:
->  		ret = max1363_read_single_chan(indio_dev, chan, val, m);
-> @@ -400,16 +406,10 @@ static int max1363_read_raw(struct iio_dev *indio_dev,
->  			return ret;
->  		return IIO_VAL_INT;
->  	case IIO_CHAN_INFO_SCALE:
-> -		if ((1 << (st->chip_info->bits + 1)) >
-> -		    st->chip_info->int_vref_mv) {
-> -			*val = 0;
-> -			*val2 = 500000;
-> -			return IIO_VAL_INT_PLUS_MICRO;
-> -		} else {
-> -			*val = (st->chip_info->int_vref_mv)
-> -				>> st->chip_info->bits;
-> -			return IIO_VAL_INT;
-> -		}
-> +		scale_uv = st->vref_uv >> st->chip_info->bits;
-> +		*val = scale_uv / 1000;
-> +		*val2 = (scale_uv % 1000) * 1000;
-> +		return IIO_VAL_INT_PLUS_MICRO;
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -1390,12 +1390,16 @@ static const struct max1363_chip_info max1363_chip_info_tbl[] = {
->  
->  static int max1363_initial_setup(struct max1363_state *st)
->  {
-> -	st->setupbyte = MAX1363_SETUP_AIN3_IS_AIN3_REF_IS_VDD
-> -		| MAX1363_SETUP_POWER_UP_INT_REF
-> -		| MAX1363_SETUP_INT_CLOCK
-> +	st->setupbyte = MAX1363_SETUP_INT_CLOCK
->  		| MAX1363_SETUP_UNIPOLAR
->  		| MAX1363_SETUP_NORESET;
->  
-> +	if (st->vref)
-> +		st->setupbyte |= MAX1363_SETUP_AIN3_IS_REF_EXT_TO_REF;
-> +	else
-> +		st->setupbyte |= MAX1363_SETUP_POWER_UP_INT_REF
-> +		  | MAX1363_SETUP_AIN3_IS_AIN3_REF_IS_INT;
-> +
->  	/* Set scan mode writes the config anyway so wait until then */
->  	st->setupbyte = MAX1363_SETUP_BYTE(st->setupbyte);
->  	st->current_mode = &max1363_mode_table[st->chip_info->default_mode];
-> @@ -1533,6 +1537,7 @@ static int max1363_probe(struct i2c_client *client,
->  	int ret;
->  	struct max1363_state *st;
->  	struct iio_dev *indio_dev;
-> +	struct regulator *vref;
->  
->  	indio_dev = iio_device_alloc(sizeof(struct max1363_state));
->  	if (indio_dev == NULL) {
-> @@ -1563,6 +1568,23 @@ static int max1363_probe(struct i2c_client *client,
->  	st->chip_info = &max1363_chip_info_tbl[id->driver_data];
->  	st->client = client;
->  
-> +	st->vref_uv = st->chip_info->int_vref_mv * 1000;
-> +	vref = devm_regulator_get(&client->dev, "vref");
-> +	if (!IS_ERR(vref)) {
-> +		int vref_uv;
-> +
-> +		ret = regulator_enable(vref);
-> +		if (ret)
-> +			goto error_disable_reg;
-> +		st->vref = vref;
-> +		vref_uv = regulator_get_voltage(vref);
-> +		if (vref_uv <= 0) {
-> +			ret = -EINVAL;
-> +			goto error_disable_reg;
-> +		}
-> +		st->vref_uv = vref_uv;
-> +	}
-> +
->  	ret = max1363_alloc_scan_masks(indio_dev);
->  	if (ret)
->  		goto error_disable_reg;
-> @@ -1604,6 +1626,8 @@ static int max1363_probe(struct i2c_client *client,
->  error_uninit_buffer:
->  	iio_triggered_buffer_cleanup(indio_dev);
->  error_disable_reg:
-> +	if (st->vref)
-> +		regulator_disable(st->vref);
->  	regulator_disable(st->reg);
->  error_unregister_map:
->  	iio_map_array_unregister(indio_dev);
-> @@ -1620,6 +1644,8 @@ static int max1363_remove(struct i2c_client *client)
->  
->  	iio_device_unregister(indio_dev);
->  	iio_triggered_buffer_cleanup(indio_dev);
-> +	if (st->vref)
-> +		regulator_disable(st->vref);
->  	regulator_disable(st->reg);
->  	iio_map_array_unregister(indio_dev);
->  	iio_device_free(indio_dev);
-> 
+> Thanks,
+> Sekhar
