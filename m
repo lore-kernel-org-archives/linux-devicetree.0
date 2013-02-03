@@ -1,161 +1,199 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH RFC v2] media: tvp514x: add OF support
-Date: Sun, 3 Feb 2013 21:48:22 +0530
-Message-ID: <CA+V-a8u+QTS7imU2sG02EGff_zgmfZPwEYiJvjciusV5jd0KDA@mail.gmail.com>
-References: <1359464832-8875-1-git-send-email-prabhakar.lad@ti.com>
- <510C43A0.7090906@gmail.com> <CA+V-a8u6VADw_HfbBN4ESGUXTSMKfVyKZaEf1bhVGACof6qZ8A@mail.gmail.com>
- <510E65B3.10901@gmail.com>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] iio: Add OF support
+Date: Sun, 3 Feb 2013 08:22:13 -0800
+Message-ID: <20130203162213.GA21576@roeck-us.net>
+References: <1359853180-5664-1-git-send-email-linux@roeck-us.net>
+ <1359853180-5664-5-git-send-email-linux@roeck-us.net>
+ <510E7195.4070803@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <510E65B3.10901@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <510E7195.4070803-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+On Sun, Feb 03, 2013 at 03:17:57PM +0100, Lars-Peter Clausen wrote:
+> On 02/03/2013 01:59 AM, Guenter Roeck wrote:
+> > Provide bindings and parse OF data during initialization.
+> > 
+> > Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+> > ---
+> > - Documentation update per feedback
+> > - Dropped io-channel-output-names from the bindings document. The property is
+> >   not used in the code, and it is not entirely clear what it would be used for.
+> >   If there is a need for it, we can add it back in later on.
+> > - Don't export OF specific API calls
+> > - For OF support, no longer depend on iio_map
+> > - Add #ifdef CONFIG_OF where appropriate, and ensure that the code still builds
+> >   if it is not selected.
+> > - Change iio_channel_get to take device pointer as argument instead of device
+> >   name. Retain old API as of_iio_channel_get_sys.
+> > - iio_channel_get now works for both OF and non-OF configurations.
+> > 
+> 
+> From my point of view this looks good in general now, Just a few comments.
+> 
+> >  .../devicetree/bindings/iio/iio-bindings.txt       |   76 ++++++++
+> >  drivers/iio/inkern.c                               |  186 ++++++++++++++++++++
+> >  2 files changed, 262 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/iio-bindings.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> > new file mode 100644
+> > index 0000000..58df5f6
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> > @@ -0,0 +1,76 @@
+> > +This binding is a work-in-progress. It is derived from clock bindings,
+> > +and based on suggestions from Lars-Peter Clausen [1].
+> > +
+> > +Sources of IIO channels can be represented by any node in the device
+> > +tree.  Those nodes are designated as IIO providers.  IIO consumer
+> > +nodes use a phandle and IIO specifier pair to connect IIO provider
+> > +outputs to IIO inputs.  Similar to the gpio specifiers, an IIO
+> > +specifier is an array of one or more cells identifying the IIO
+> > +output on a device.  The length of an IIO specifier is defined by the
+> > +value of a #io-channel-cells property in the clock provider node.
+> > +
+> 
+> Is the extra space at the begining of each sentence on purpose?
+> 
+Copied from clock code, and used throughout documentation here or there.
+Not my style, really, and I'll likely forget to do it if/when I add text myself,
+so I'll change it.
 
-On Sun, Feb 3, 2013 at 6:57 PM, Sylwester Nawrocki
-<sylvester.nawrocki@gmail.com> wrote:
-> Hi Prabhakar,
->
-> On 02/03/2013 11:13 AM, Prabhakar Lad wrote:
+[ ... ]
+
+> > +	iio_hwmon {
+> > +		compatible = "iio-hwmon";
+> > +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
+> > +			<&adc 3>, <&adc 4>, <&adc 5>,
+> > +			<&adc 6>, <&adc 7>, <&adc 8>,
+> > +			<&adc 9>, <&adc 10>, <&adc 11>;
+> 
+> I'm not sure how much sense this example makes, since you can only request
+> those channels which have a name.
+> 
+It does - of_iio_channel_get_all() returns all channels even if there are no names.
+
 > [...]
->
->>>> +Required Properties :
->>>> +- compatible: Must be "ti,tvp514x-decoder"
->>>
->>>
->>>
->>> There are no significant differences among TVP514* devices as listed
->>> above,
->>> you would like to handle above ?
->
->
-> Sorry for the mangled sentence, I intended to write "in the driver" instead
-> of the last "above".
->
->
-Not a problem I got what you intended :)
+> 
+> +
+> > +static struct iio_channel *of_iio_channel_get_all(struct device *dev)
+> > +{
+> > +	struct iio_channel *chans;
+> > +	int i, mapind, nummaps = 0;
+> > +	int ret;
+> > +
+> > +	do {
+> > +		ret = of_parse_phandle_with_args(dev->of_node,
+> > +						 "io-channels",
+> > +						 "#io-channel-cells",
+> > +						 nummaps, NULL);
+> > +		if (ret < 0)
+> > +			break;
+> > +	} while (++nummaps);
+> > +
+> > +	if (nummaps == 0)	/* no error, return NULL to search map table */
+> > +		return NULL;
+> > +
+> > +	/* NULL terminated array to save passing size */
+> > +	chans = kzalloc(sizeof(*chans)*(nummaps + 1), GFP_KERNEL);
+> 
+> I think using kcalloc makes sense here.
+> 
+that would leave chan->data uninitialized, and I would have to initialize it
+explicitly. also, if additional fields are ever added, we would risk having
+uninitialized fields. Using kzalloc avoids a potential future error case, so I
+would prefer to keep it.
 
->>> I'm just wondering if you don't need ,for instance, two separate
->>> compatible
->>> properties, e.g. "ti,tvp5146-decoder" and "ti,tvp5147-decoder" ?
->>>
->> There are few differences in init/power sequence tough, I would still
->> like to have
->> single compatible property "ti,tvp514x-decoder", If you feel we need
->> separate
->> property I will change it please let me know on this.
->
->
-> As Sekhar already mentioned, wildcards in the compatible property should
-> not be used. You could just use exact part names in the compatible
-> properties and list them all in the tvp514x_of_match[] array. Even though
-> this driver doesn't care about the differences between various tvp514?
-> chips, there might be others that do.
->
-> [...]
->
-Ok, I'll have separate compatible properties.
+> > +	if (chans == NULL) {
+> > +		ret = -ENOMEM;
+> > +		goto error;
+> > +	}
+> > +
+> > +	/* Search for OF matches */
+> > +	for (mapind = 0; mapind < nummaps; mapind++) {
+> > +		struct device *idev;
+> > +		struct iio_dev *indio_dev;
+> > +		int channel;
+> > +		struct of_phandle_args iiospec;
+> > +
+> > +		ret = of_parse_phandle_with_args(dev->of_node,
+> > +						 "io-channels",
+> > +						 "#io-channel-cells",
+> > +						 mapind, &iiospec);
+> > +		if (ret)
+> > +			goto error_free_chans;
+> > +
+> > +		idev = bus_find_device(&iio_bus_type, NULL, iiospec.np,
+> > +				       iio_dev_node_match);
+> > +		of_node_put(iiospec.np);
+> > +		if (idev == NULL) {
+> > +			ret = -EPROBE_DEFER;
+> > +			goto error_free_chans;
+> > +		}
+> > +		indio_dev = dev_to_iio_dev(idev);
+> > +		channel = iiospec.args_count ? iiospec.args[0] : 0;
+> > +		if (channel >= indio_dev->num_channels) {
+> > +			ret = -EINVAL;
+> > +			goto error_free_chans;
+> > +		}
+> 
+> Hm, I wonder if we can share some code with of_iio_get_channel here, since it
+> is pretty much the same code. Maybe put the whole parse_phandle and device
+> lookup in a heler function.
+> 
+Done; introduced __of_iio_get_channel to be called by both functions.
 
->>>> +#if defined(CONFIG_OF)
->>>> +static const struct of_device_id tvp514x_of_match[] = {
->>>> +       {.compatible = "ti,tvp514x-decoder", },
->>>> +       {},
->>>> +};
->>>> +MODULE_DEVICE_TABLE(of, tvp514x_of_match);
->>>> +
->>>> +static struct tvp514x_platform_data
->>>> +       *tvp514x_get_pdata(struct i2c_client *client)
->>>> +{
->>>> +       if (!client->dev.platform_data&&   client->dev.of_node) {
->>>>
->>>> +               struct tvp514x_platform_data *pdata;
->>>> +               struct v4l2_of_endpoint bus_cfg;
->>>> +               struct device_node *endpoint;
->>>> +
->>>> +               pdata = devm_kzalloc(&client->dev,
->>>> +                               sizeof(struct tvp514x_platform_data),
->>>> +                               GFP_KERNEL);
->>>> +               client->dev.platform_data = pdata;
->>>
->>>
->>>
->>> Do you really need to set client->dev.platform_data this way ?
->>> What about passing struct tvp514x_decoder pointer to this function
->>> and initializing struct tvp514x_decoder::pdata instead ?
->>>
->>>
->> Yes that can work too, I'll do the same.
->
->
-> Ok, thanks.
->
->
->>>> +               if (!pdata)
->>>> +                       return NULL;
->>>> +
->>>> +               endpoint = of_get_child_by_name(client->dev.of_node,
->>>> "port");
->>>> +               if (endpoint)
->>>> +                       endpoint = of_get_child_by_name(endpoint,
->>>> "endpoint");
->>>
->>>
->>>
->>> I think you could replace these two calls above with
->>>
->>>                  endpoint =
->>> v4l2_of_get_next_endpoint(client->dev.of_node);
->>>
->> Ok
->>
->>> Now I see I should have modified this function to ensure it works also
->>> when
->>> 'port' nodes are grouped in a 'ports' node.
->>>
->> So V5 series of V4l OF parser doesn't have this fix ?
->
->
-> No, it doesn't. I think we need something along the lines of:
->
-> diff --git a/drivers/media/v4l2-core/v4l2-of.c
-> b/drivers/media/v4l2-core/v4l2-of.c
-> index e1f570b..8a286f1 100644
-> --- a/drivers/media/v4l2-core/v4l2-of.c
-> +++ b/drivers/media/v4l2-core/v4l2-of.c
-> @@ -185,10 +185,15 @@ struct device_node *v4l2_of_get_next_endpoint(const
-> struct device_node *parent,
->                  * This is the first call, we have to find a port within
->                  * this node.
->                  */
-> -               for_each_child_of_node(parent, port) {
-> +               while (port = of_get_next_child(parent, port)) {
->                         if (!of_node_cmp(port->name, "port"))
->                                 break;
-> -               }
-> +                       if (!of_node_cmp(port->name, "ports")) {
-> +                               parent = port;
-> +                               of_node_put(port);
-> +                               port = NULL:
-> +                       }
-> +               };
->                 if (port) {
->                         /* Found a port, get an endpoint. */
->                         endpoint = of_get_next_child(port, NULL);
->
-> However this shouldn't affect you, as you don't use the 'ports' node...
-> I will likely post v6 including this fix tomorrow.
->
-yes I don't need it, Just asked so that I can test my driver on latest
-version :)
-
-Regards,
---Prabhakar
-
-> --
->
-> Regards,
-> Sylwester
+> > +		chans[mapind].indio_dev = indio_dev;
+> > +		chans[mapind].channel = &indio_dev->channels[channel];
+> > +	}
+> > +	return chans;
+> > +
+> > +error_free_chans:
+> > +	for (i = 0; i < mapind; i++)
+> > +		iio_device_put(chans[i].indio_dev);
+> > +	kfree(chans);
+> > +error:
+> > +	return ERR_PTR(ret);
+> > +}
+> > +
+> > +#else /* CONFIG_OF */
+> > +
+> > +static inline struct iio_channel *
+> > +of_iio_channel_get_by_name(struct device_node *np, const char *name)
+> > +{
+> > +	return ERR_PTR(-ENOENT);
+> > +}
+> > +
+> > +static inline struct iio_channel *of_iio_channel_get_all(struct device *dev)
+> > +{
+> > +	return NULL;
+> > +}
+> > +
+> > +#endif /* CONFIG_OF */
+> >  
+> >  static struct iio_channel *iio_channel_get_sys(const char *name,
+> >  					       const char *channel_name)
+> > @@ -150,7 +324,14 @@ struct iio_channel *iio_channel_get(struct device *dev,
+> >  				    const char *channel_name)
+> >  {
+> >  	const char *name = dev ? dev_name(dev) : NULL;
+> > +	struct iio_channel *channel;
+> >  
+> > +	if (dev) {
+> > +		channel = of_iio_channel_get_by_name(dev->of_node,
+> > +						     channel_name);
+> > +		if (!IS_ERR(channel))
+> 
+> Hm, I wonder if we should use the same semantics as for of_iio_channel_get_all
+> here. NULL means there is no channel use the map lookup and error code means
+> there is a channel, but there was an error requesting it. As it is right now
+> for probe deferral won't work, since EPROBE_DEFER is not passed on.
+> 
+Yes, you are right. I'll try, and also write some test code to actually test it
+to make sure that it works as intended.
