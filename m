@@ -1,72 +1,161 @@
 From: Prabhakar Lad <prabhakar.csengg@gmail.com>
 Subject: Re: [PATCH RFC v2] media: tvp514x: add OF support
-Date: Sun, 3 Feb 2013 21:42:14 +0530
-Message-ID: <CA+V-a8vocaoA=zTkSGX7Mi5QdjhzZPCAd3SThFv3uKQxwSTpsA@mail.gmail.com>
+Date: Sun, 3 Feb 2013 21:48:22 +0530
+Message-ID: <CA+V-a8u+QTS7imU2sG02EGff_zgmfZPwEYiJvjciusV5jd0KDA@mail.gmail.com>
 References: <1359464832-8875-1-git-send-email-prabhakar.lad@ti.com>
  <510C43A0.7090906@gmail.com> <CA+V-a8u6VADw_HfbBN4ESGUXTSMKfVyKZaEf1bhVGACof6qZ8A@mail.gmail.com>
- <1832736.hCOhBbmy4r@avalon>
+ <510E65B3.10901@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1832736.hCOhBbmy4r@avalon>
+In-Reply-To: <510E65B3.10901@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, Hans Verkuil <hans.verkuil@cisco.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: LMML <linux-media@vger.kernel.org>, DLOS <davinci-linux-open-source@linux.davincidsp.com>, "Lad, Prabhakar" <prabhakar.lad@ti.com>, Hans Verkuil <hans.verkuil@cisco.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Mauro Carvalho Chehab <mchehab@redhat.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sakari Ailus <sakari.ailus@iki.fi>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Sylwester,
 
-On Sun, Feb 3, 2013 at 6:44 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
+On Sun, Feb 3, 2013 at 6:57 PM, Sylwester Nawrocki
+<sylvester.nawrocki@gmail.com> wrote:
 > Hi Prabhakar,
 >
-> On Sunday 03 February 2013 15:43:49 Prabhakar Lad wrote:
->> On Sat, Feb 2, 2013 at 4:07 AM, Sylwester Nawrocki wrote:
->> > On 01/29/2013 02:07 PM, Prabhakar Lad wrote:
->> > [...]
->> >
->> >> diff --git a/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
->> >> b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
->> >> new file mode 100644
->> >> index 0000000..55d3ffd
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/media/i2c/tvp514x.txt
->> >> @@ -0,0 +1,38 @@
->> >> +* Texas Instruments TVP514x video decoder
->> >> +
->> >> +The TVP5146/TVP5146m2/TVP5147/TVP5147m1 device is high quality,
->> >> +single-chip digital video decoder that digitizes and decodes all popular
->> >> +baseband analog video formats into digital video component. The tvp514x
->> >> +decoder supports analog-to-digital (A/D) conversion of component RGB and
->> >> +YPbPr signals as well as A/D conversion and decoding of NTSC, PAL and
->> >> +SECAM composite and S-video into component YCbCr.
->> >> +
->> >> +Required Properties :
->> >> +- compatible: Must be "ti,tvp514x-decoder"
->> >
->> > There are no significant differences among TVP514* devices as listed
->> > above, you would like to handle above ?
->> >
->> > I'm just wondering if you don't need, for instance, two separate
->> > compatible properties, e.g. "ti,tvp5146-decoder" and "ti,tvp5147-decoder"
->> > ?
->>
+> On 02/03/2013 11:13 AM, Prabhakar Lad wrote:
+> [...]
+>
+>>>> +Required Properties :
+>>>> +- compatible: Must be "ti,tvp514x-decoder"
+>>>
+>>>
+>>>
+>>> There are no significant differences among TVP514* devices as listed
+>>> above,
+>>> you would like to handle above ?
+>
+>
+> Sorry for the mangled sentence, I intended to write "in the driver" instead
+> of the last "above".
+>
+>
+Not a problem I got what you intended :)
+
+>>> I'm just wondering if you don't need ,for instance, two separate
+>>> compatible
+>>> properties, e.g. "ti,tvp5146-decoder" and "ti,tvp5147-decoder" ?
+>>>
 >> There are few differences in init/power sequence tough, I would still
->> like to have single compatible property "ti,tvp514x-decoder", If you feel we
->> need separate property I will change it please let me know on this.
+>> like to have
+>> single compatible property "ti,tvp514x-decoder", If you feel we need
+>> separate
+>> property I will change it please let me know on this.
 >
-> If there's any difference between the chips that need to be handled in the
-> driver, using two compatible properties is a good practice. Your driver will
-> then be able to easily differentiate between the two chips, and there's no
-> real drawback in doing so.
 >
-Ok I'll will have separate compatible properties.
+> As Sekhar already mentioned, wildcards in the compatible property should
+> not be used. You could just use exact part names in the compatible
+> properties and list them all in the tvp514x_of_match[] array. Even though
+> this driver doesn't care about the differences between various tvp514?
+> chips, there might be others that do.
+>
+> [...]
+>
+Ok, I'll have separate compatible properties.
+
+>>>> +#if defined(CONFIG_OF)
+>>>> +static const struct of_device_id tvp514x_of_match[] = {
+>>>> +       {.compatible = "ti,tvp514x-decoder", },
+>>>> +       {},
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(of, tvp514x_of_match);
+>>>> +
+>>>> +static struct tvp514x_platform_data
+>>>> +       *tvp514x_get_pdata(struct i2c_client *client)
+>>>> +{
+>>>> +       if (!client->dev.platform_data&&   client->dev.of_node) {
+>>>>
+>>>> +               struct tvp514x_platform_data *pdata;
+>>>> +               struct v4l2_of_endpoint bus_cfg;
+>>>> +               struct device_node *endpoint;
+>>>> +
+>>>> +               pdata = devm_kzalloc(&client->dev,
+>>>> +                               sizeof(struct tvp514x_platform_data),
+>>>> +                               GFP_KERNEL);
+>>>> +               client->dev.platform_data = pdata;
+>>>
+>>>
+>>>
+>>> Do you really need to set client->dev.platform_data this way ?
+>>> What about passing struct tvp514x_decoder pointer to this function
+>>> and initializing struct tvp514x_decoder::pdata instead ?
+>>>
+>>>
+>> Yes that can work too, I'll do the same.
+>
+>
+> Ok, thanks.
+>
+>
+>>>> +               if (!pdata)
+>>>> +                       return NULL;
+>>>> +
+>>>> +               endpoint = of_get_child_by_name(client->dev.of_node,
+>>>> "port");
+>>>> +               if (endpoint)
+>>>> +                       endpoint = of_get_child_by_name(endpoint,
+>>>> "endpoint");
+>>>
+>>>
+>>>
+>>> I think you could replace these two calls above with
+>>>
+>>>                  endpoint =
+>>> v4l2_of_get_next_endpoint(client->dev.of_node);
+>>>
+>> Ok
+>>
+>>> Now I see I should have modified this function to ensure it works also
+>>> when
+>>> 'port' nodes are grouped in a 'ports' node.
+>>>
+>> So V5 series of V4l OF parser doesn't have this fix ?
+>
+>
+> No, it doesn't. I think we need something along the lines of:
+>
+> diff --git a/drivers/media/v4l2-core/v4l2-of.c
+> b/drivers/media/v4l2-core/v4l2-of.c
+> index e1f570b..8a286f1 100644
+> --- a/drivers/media/v4l2-core/v4l2-of.c
+> +++ b/drivers/media/v4l2-core/v4l2-of.c
+> @@ -185,10 +185,15 @@ struct device_node *v4l2_of_get_next_endpoint(const
+> struct device_node *parent,
+>                  * This is the first call, we have to find a port within
+>                  * this node.
+>                  */
+> -               for_each_child_of_node(parent, port) {
+> +               while (port = of_get_next_child(parent, port)) {
+>                         if (!of_node_cmp(port->name, "port"))
+>                                 break;
+> -               }
+> +                       if (!of_node_cmp(port->name, "ports")) {
+> +                               parent = port;
+> +                               of_node_put(port);
+> +                               port = NULL:
+> +                       }
+> +               };
+>                 if (port) {
+>                         /* Found a port, get an endpoint. */
+>                         endpoint = of_get_next_child(port, NULL);
+>
+> However this shouldn't affect you, as you don't use the 'ports' node...
+> I will likely post v6 including this fix tomorrow.
+>
+yes I don't need it, Just asked so that I can test my driver on latest
+version :)
 
 Regards,
 --Prabhakar
 
 > --
+>
 > Regards,
->
-> Laurent Pinchart
->
+> Sylwester
