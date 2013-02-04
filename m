@@ -1,56 +1,56 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v4 1/3] ASoC: tlv320aic3x: Convert mic bias to a supply
- widget
-Date: Mon, 4 Feb 2013 18:35:42 +0000
-Message-ID: <20130204183542.GS4720@opensource.wolfsonmicro.com>
-References: <1359636786-7056-1-git-send-email-gururaja.hebbar@ti.com>
- <1359636786-7056-2-git-send-email-gururaja.hebbar@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 0/2] ARM: mvebu: Add support for SPI controller in
+	Armada 370/XP
+Date: Mon, 4 Feb 2013 13:37:33 -0500
+Message-ID: <20130204183733.GM14746@titan.lakedaemon.net>
+References: <1359995888-2385-1-git-send-email-ezequiel.garcia@free-electrons.com>
+	<20130204165119.GA2440@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QHhm1I6mwQR20oIa"
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1359636786-7056-2-git-send-email-gururaja.hebbar@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Hebbar Gururaja <gururaja.hebbar@ti.com>
-Cc: alsa-devel@alsa-project.org, davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lgirdwood@gmail.com, perex@perex.cz, nsekhar@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, rob@landley.net, grant.likely@secretlab.ca
+In-Reply-To: <20130204165119.GA2440@localhost>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Ezequiel,
 
---QHhm1I6mwQR20oIa
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This series looks good.  just a few comments:
 
-On Thu, Jan 31, 2013 at 06:23:04PM +0530, Hebbar Gururaja wrote:
-> Convert MicBias widgets to supply widget.
->=20
-> On tlv320aic3x, Mic bias power on/off shares the same register bits
-> with output mic bias voltage.  So, when power on mic bias, we need
-> reclaim it to voltage value.
+On Mon, Feb 04, 2013 at 01:51:20PM -0300, Ezequiel Garcia wrote:
+> Hi,
+> 
+> This patchset adds support for the SPI controller
+> available in Armada 370 and Armada XP SoC.
+> 
+> The patches are based in Jason Cooper's mvebu/dt branch.
 
-Applied, thanks.
+It probably doesn't matter for this series (I haven't tried to apply it
+yet), but please base future work off of a mainline tag (eg v3.8-rc6).
+It makes merge conflicts easier to resolve.
 
---QHhm1I6mwQR20oIa
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Feel free to test-merge against the mvebu/ branches and let me know of
+any conflicts.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Also, your patch series appears to be out of order, did you use git
+send-email once per file?
 
-iQIcBAEBAgAGBQJRD/92AAoJELSic+t+oim918AP/3bN7+tsV2XR+Vsun5TsEEVO
-3TJNYN4+rp6GmK+6zrvRaeRG/DueKGcLyPKx5N/SdWtncb1Cb708/lyYobz6RjmU
-APSI0h4v7xCJXYrSACzM5g06EkAgpnlRD/BoS8um5jc25BDlfmtwLKO1ztE03ml2
-vcTIEqfw9GLnYIse6P+3aiHeKYujQxZ9OY05MFAU1546/wzkCBxWdcePC9aGNFt/
-fyxGMF1n3T5GlB9K45Ns42TFUKO/nTC0NbIV4gpEiMzXSgaz7/JQCXB//MJ+e9QM
-NyiWhJEUGlh163S9de24WjR1XZfZ4qjxnocifnqssykQ6kmN0utUe5QAZzi04Ee4
-tOYOLCJAZaz8/a7WlO4F9vIFOuWE5vHl4nytDq2ah7bL03ZwyIT74H/N+YaEBB1f
-Uf6dwQRUCLgSyV+qWDdquatuCSME9JN8FH9JNE4+m5k+7T0yaIaCVjujqg34JZvJ
-C0YFVxWYrDaJ+xPzCfTfq869+Xg8mCPypjeMUNvdbawUA0lxLWFETBuHgVm48txo
-OEo3pmSJjMSprcwIyZPs4KgupjQGAbK5hFOVtxTtbOn847nga3FbbncHaZU36x6N
-5xHKCYORQ3k4izByWTeMlJfV2C/YI1/ileBegt7M0+lPYZx9bBE1WTwOrmsBL9yi
-H6JUyE1nwofq0of77aVq
-=Ko0U
------END PGP SIGNATURE-----
+thx,
 
---QHhm1I6mwQR20oIa--
+Jason.
+
+------------------------------------------------------------------------------
+Everyone hates slow websites. So do we.
+Make your web apps faster with AppDynamics
+Download AppDynamics Lite for free today:
+http://p.sf.net/sfu/appdyn_d2d_jan
