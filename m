@@ -1,61 +1,69 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH] gpio: Add device driver for GRGPIO cores
-Date: Mon, 04 Feb 2013 11:27:33 +0100
-Message-ID: <510F8D15.30804@gaisler.com>
-References: <1359548921-14925-1-git-send-email-andreas@gaisler.com> <CACRpkdbAS05dVOrE2E5Uu6qfzfgcoz_KqQmqZxz5Pne9BbCt-g@mail.gmail.com> <510F6CF8.3000700@gaisler.com> <CACRpkdYbJiBT5u0qJz+Krpky7W0WNqtSsO6Jo2TYZ2LRcyassA@mail.gmail.com>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCH 1/2] ARM: dts: OMAP3: Add GPMC controller
+Date: Mon, 04 Feb 2013 11:36:57 +0100
+Message-ID: <510F8F49.9020800@epfl.ch>
+References: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch> <1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch> <CABxcv=k_gwB3ExQYUeappDZ6FE4L7x8Acer4ZQpDH09BL6LG0Q@mail.gmail.com>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYbJiBT5u0qJz+Krpky7W0WNqtSsO6Jo2TYZ2LRcyassA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Anton Vorontsov <anton.vorontsov@linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=k_gwB3ExQYUeappDZ6FE4L7x8Acer4ZQpDH09BL6LG0Q@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2013-02-04 10:24, Linus Walleij wrote:
->>> And do you really have and test this regularly on both LE and BE hardware?
->>> I am worrying a bit about maintenance...
+Hi Javier,
+
+On 02/04/2013 10:27 AM, Javier Martinez Canillas wrote:
+> Hi Florian,
+>
+> On Mon, Jan 28, 2013 at 6:54 PM, Florian Vaussard
+> <florian.vaussard@epfl.ch> wrote:
+>> Add device-tree support for the GPMC controller on the OMAP3.
 >>
->> I am more than happy to drop that. I will most probably never test this on
->> LE hardware.
+>> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+>> ---
+>>   arch/arm/boot/dts/omap3.dtsi |   11 +++++++++++
+>>   1 files changed, 11 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+>> index 6c63118..2ddae38 100644
+>> --- a/arch/arm/boot/dts/omap3.dtsi
+>> +++ b/arch/arm/boot/dts/omap3.dtsi
+>> @@ -403,5 +403,16 @@
+>>                          ti,timer-alwon;
+>>                          ti,timer-secure;
+>>                  };
+>> +
+>> +               gpmc: gpmc@6e000000 {
+>> +                       compatible = "ti,omap3430-gpmc";
+>> +                       ti,hwmods = "gpmc";
+>> +                       reg = <0x6e000000 0x1000000>;
+>> +                       interrupts = <20>;
+>> +                       gpmc,num-cs = <8>;
+>> +                       gpmc,num-waitpins = <4>;
+>> +                       #address-cells = <2>;
+>> +                       #size-cells = <1>;
+>> +               };
+>>          };
+>>   };
 >
-> Will someone else? I'm more thinking whether it is customary in
-> the SPARC drivers to do things like this, then we should follow
-> that pattern of course.
-
-It is definitely not customary in SPARC drivers. The module is marked 
-"depends on OF" in Kconfig though and there seems to be no way to depend 
-on an endianness. Unless someone instantiates the core in a LE system 
-there is no reason for it.
-
-
->> 2) The grgpio_to_irq function is very hardware specific, and there is of
->> course no gpio_to_irq support in gpio-generic.
+> I had the same patch on a tree I was working on to add DT support for
+> gpmc-smsc911x on an OMAP3 board but I was waiting for Daniel's patches
+> to hit mainline before sending the RFC. So please feel free to add:
 >
-> Well, the idea about gpio-generic is to use the pieces you need
-> IIRC. You may override.
-
-Ah, I see, bgpio_init is exported, so I might be able use that from my 
-driver to get rid of some functions. There is support for BE I saw now. 
-It seems broken to me (flips bits, not bytes), but that can be fixed.
-
-
->> 3) Running on SPARC, I get Open Firmware information from prom, so there is
->> no platform data to access in the probe function. Of course general Open
->> Firmware support could be added to gpio-generic, but in addition my probe
->> needs to set up very hardware specific things for gpio_to_irq.
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 >
-> We should probably add some way to handle generic GPIO
-> with compatible strings etc, but that's way outside my competence
-> so OK. Maybe Rob or Grant can say something.
 
-Might be a good idea. However, by just using bgpio_init in a separate 
-driver (like most other users of bgpio_init), that would not be required 
-or used by me anyhow.
+Great, the smsc911x was on my TODO list, I can cross it out :) BTW,
+do you have a public git for this, so I can test your work on my setup?
 
+For the GPMC support, I will have to make a few more more as discussed with
+Tony, and as I will be away for more than 2 weeks, feel free to go ahead
+before me. This patchset was only at an RFC stage.
 
-I'll look into using bgpio_init from my driver.
+Regards,
 
-Cheers,
-Andreas Larsson
+Florian
