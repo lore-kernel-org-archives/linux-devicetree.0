@@ -1,540 +1,136 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] iio: Add OF support
-Date: Mon, 4 Feb 2013 10:09:32 -0800
-Message-ID: <20130204180932.GA19655@roeck-us.net>
-References: <1359853180-5664-1-git-send-email-linux@roeck-us.net>
- <20130204171214.GA23170@roeck-us.net>
- <20130204175134.GA17776@roeck-us.net>
- <1425676.koqAVBLNAe@amdc1227>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 1/2] ARM: dts: OMAP3: Add GPMC controller
+Date: Mon, 4 Feb 2013 19:15:41 +0100
+Message-ID: <CABxcv=nmTwVcG+ucYeMrtU8YgyYYQz3vYF+bKpQ__KDTwXhY=g@mail.gmail.com>
+References: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch>
+	<1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch>
+	<CABxcv=k_gwB3ExQYUeappDZ6FE4L7x8Acer4ZQpDH09BL6LG0Q@mail.gmail.com>
+	<510F8F49.9020800@epfl.ch>
+	<CABxcv==7KiBbkTyr7VLVw82F=9vVWRftpbyZWub_CVp3pQW0tQ@mail.gmail.com>
+	<20130204173252.GN22517@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1425676.koqAVBLNAe@amdc1227>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130204173252.GN22517@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: florian.vaussard@epfl.ch, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 04, 2013 at 07:00:55PM +0100, Tomasz Figa wrote:
-> On Monday 04 of February 2013 09:51:34 Guenter Roeck wrote:
-> > On Mon, Feb 04, 2013 at 09:12:14AM -0800, Guenter Roeck wrote:
-> > > On Mon, Feb 04, 2013 at 12:14:52AM +0100, Tomasz Figa wrote:
-> > > > On Sunday 03 of February 2013 19:55:47 Lars-Peter Clausen wrote:
-> > > > > On 02/03/2013 06:30 PM, Tomasz Figa wrote:
-> > > > > > On Sunday 03 of February 2013 09:01:07 Guenter Roeck wrote:
-> > > > > >> On Sun, Feb 03, 2013 at 12:52:40PM +0100, Tomasz Figa wrote:
-> > > > > >>> On Sunday 03 of February 2013 12:29:23 Lars-Peter Clausen 
-> wrote:
-> > > > > >>>> On 02/03/2013 03:06 AM, Guenter Roeck wrote:
-> > > > > >>>>> On Sun, Feb 03, 2013 at 02:30:24AM +0100, Tomasz Figa wrote:
-> > > > > >>>>>> Hi Guenter,
-> > > > > >>>>>> 
-> > > > > >>>>>> Some comments inline.
-> > > > > >>>>>> 
-> > > > > >>>>>> On Saturday 02 of February 2013 16:59:40 Guenter Roeck 
-> wrote:
-> > > > > >>>>>>> Provide bindings and parse OF data during initialization.
-> > > > > >>>>>>> 
-> > > > > >>>>>>> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> > > > > >>>>>>> ---
-> > > > > >>>>>>> - Documentation update per feedback
-> > > > > >>>>>>> - Dropped io-channel-output-names from the bindings
-> > > > > >>>>>>> document.
-> > > > > >>>>>>> The
-> > > > > >>>>>>> property is not used in the code, and it is not entirely
-> > > > > >>>>>>> clear
-> > > > > >>>>>>> what
-> > > > > >>>>>>> it
-> > > > > >>>>>>> would be used for. If there is a need for it, we can add
-> > > > > >>>>>>> it back
-> > > > > >>>>>>> in
-> > > > > >>>>>>> later on.
-> > > > > >>>>>>> - Don't export OF specific API calls
-> > > > > >>>>>>> - For OF support, no longer depend on iio_map
-> > > > > >>>>>>> - Add #ifdef CONFIG_OF where appropriate, and ensure that
-> > > > > >>>>>>> the
-> > > > > >>>>>>> code
-> > > > > >>>>>>> still builds if it is not selected.
-> > > > > >>>>>>> - Change iio_channel_get to take device pointer as
-> > > > > >>>>>>> argument
-> > > > > >>>>>>> instead
-> > > > > >>>>>>> of
-> > > > > >>>>>>> device name. Retain old API as of_iio_channel_get_sys.
-> > > > > >>>>>>> - iio_channel_get now works for both OF and non-OF
-> > > > > >>>>>>> configurations.
-> > > > > >>>>>>> 
-> > > > > >>>>>>>  .../devicetree/bindings/iio/iio-bindings.txt       |   76
-> > > > > >>>>>>>  ++++++++
-> > > > > >>>>>>>  drivers/iio/inkern.c                               |  186
-> > > > > >>>>>>> 
-> > > > > >>>>>>> ++++++++++++++++++++ 2 files changed, 262 insertions(+)
-> > > > > >>>>>>> 
-> > > > > >>>>>>>  create mode 100644
-> > > > > >>>>>>> 
-> > > > > >>>>>>> Documentation/devicetree/bindings/iio/iio-bindings.txt
-> > > > > >>>>>>> 
-> > > > > >>>>>>> diff --git
-> > > > > >>>>>>> a/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> > > > > >>>>>>> b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> > > > > >>>>>>> new
-> > > > > >>>>>>> file
-> > > > > >>>>>>> mode
-> > > > > >>>>>>> 100644
-> > > > > >>>>>>> index 0000000..58df5f6
-> > > > > >>>>>>> --- /dev/null
-> > > > > >>>>>>> +++
-> > > > > >>>>>>> b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> > > > > >>>>>>> @@ -0,0 +1,76 @@
-> > > > > >>>>>>> +This binding is a work-in-progress. It is derived from
-> > > > > >>>>>>> clock
-> > > > > >>>>>>> bindings,
-> > > > > >>>>>>> +and based on suggestions from Lars-Peter Clausen [1].
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +Sources of IIO channels can be represented by any node in
-> > > > > >>>>>>> the
-> > > > > >>>>>>> device
-> > > > > >>>>>>> +tree.  Those nodes are designated as IIO providers.  IIO
-> > > > > >>>>>>> consumer
-> > > > > >>>>>>> +nodes use a phandle and IIO specifier pair to connect IIO
-> > > > > >>>>>>> provider
-> > > > > >>>>>>> +outputs to IIO inputs.  Similar to the gpio specifiers,
-> > > > > >>>>>>> an IIO
-> > > > > >>>>>>> +specifier is an array of one or more cells identifying
-> > > > > >>>>>>> the IIO
-> > > > > >>>>>>> +output on a device.  The length of an IIO specifier is
-> > > > > >>>>>>> defined
-> > > > > >>>>>>> by
-> > > > > >>>>>>> the
-> > > > > >>>>>>> +value of a #io-channel-cells property in the clock
-> > > > > >>>>>>> provider
-> > > > > >>>>>>> node.
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +==IIO providers==
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +Required properties:
-> > > > > >>>>>>> +#io-channel-cells: Number of cells in an IIO specifier;
-> > > > > >>>>>>> Typically 0
-> > > > > >>>>>>> for nodes +		   with a single IIO output and 1 for 
-> nodes
-> > > > > > 
-> > > > > > with
-> > > > > > 
-> > > > > >>>>>>> multiple +		   IIO outputs.
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +For example:
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +    adc: adc@35 {
-> > > > > >>>>>>> +	compatible = "maxim,max1139";
-> > > > > >>>>>>> +	reg = <0x35>;
-> > > > > >>>>>>> +        #io-channel-cells = <1>;
-> > > > > >>>>>>> +    };
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +==IIO consumers==
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +Required properties:
-> > > > > >>>>>>> +io-channels:	List of phandle and IIO specifier pairs, 
-> one
-> > > > > > 
-> > > > > > pair
-> > > > > > 
-> > > > > >>>>>>> +		for each IIO input to the device.  Note: if the
-> > > > > >>>>>>> +		IIO provider specifies '0' for #clock-cells, then
-> > > > > >>>>>>> +		only the phandle portion of the pair will appear.
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +Optional properties:
-> > > > > >>>>>>> +io-channel-names:
-> > > > > >>>>>>> +		List of IIO input name strings sorted in the same
-> > > > > >>>>>>> +		order as the io-channels property.  Consumers
-> > > > 
-> > > > drivers
-> > > > 
-> > > > > >>>>>>> +		will use io-channel-names to match IIO input names
-> > > > > >>>>>>> +		with IIO specifiers.
-> > > > > >>>>>>> +io-channel-ranges:
-> > > > > >>>>>>> +		Empty property indicating that child nodes can
-> > > > 
-> > > > inherit
-> > > > 
-> > > > > >>> named
-> > > > > >>> 
-> > > > > >>>>>>> +		IIO channels from this node. Useful for bus nodes
-> > > > 
-> > > > to
-> > > > 
-> > > > > >>> provide
-> > > > > >>> 
-> > > > > >>>>>>> +		and IIO channel to their children.
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +For example:
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +    device {
-> > > > > >>>>>>> +        io-channels = <&adc 1>, <&ref 0>;
-> > > > > >>>>>>> +        io-channel-names = "vcc", "vdd";
-> > > > > >>>>>>> +    };
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +This represents a device with two IIO inputs, named "vcc"
-> > > > > >>>>>>> and
-> > > > > >>>>>>> "vdd".
-> > > > > >>>>>>> +The vcc channel is connected to output 1 of the &adc
-> > > > > >>>>>>> device,
-> > > > > >>>>>>> and
-> > > > > >>>>>>> the
-> > > > > >>>>>>> +vdd channel is connected to output 0 of the &ref device.
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +==Example==
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +	adc: max1139@35 {
-> > > > > >>>>>>> +		compatible = "maxim,max1139";
-> > > > > >>>>>>> +		reg = <0x35>;
-> > > > > >>>>>>> +		#io-channel-cells = <1>;
-> > > > > >>>>>>> +	};
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +	...
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +	iio_hwmon {
-> > > > > >>>>>>> +		compatible = "iio-hwmon";
-> > > > > >>>>>>> +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
-> > > > > >>>>>>> +			<&adc 3>, <&adc 4>, <&adc 5>,
-> > > > > >>>>>>> +			<&adc 6>, <&adc 7>, <&adc 8>,
-> > > > > >>>>>>> +			<&adc 9>, <&adc 10>, <&adc 11>;
-> > > > > >>>>>>> +		io-channel-names = "vcc", "vdd", "vref", "1.2V";
-> > > > > >>>>>>> +	};
-> > > > > >>>>>>> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> > > > > >>>>>>> index b289915..d48f2a8 100644
-> > > > > >>>>>>> --- a/drivers/iio/inkern.c
-> > > > > >>>>>>> +++ b/drivers/iio/inkern.c
-> > > > > >>>>>>> @@ -10,6 +10,7 @@
-> > > > > >>>>>>> 
-> > > > > >>>>>>>  #include <linux/export.h>
-> > > > > >>>>>>>  #include <linux/slab.h>
-> > > > > >>>>>>>  #include <linux/mutex.h>
-> > > > > >>>>>>> 
-> > > > > >>>>>>> +#include <linux/of.h>
-> > > > > >>>>>>> 
-> > > > > >>>>>>>  #include <linux/iio/iio.h>
-> > > > > >>>>>>>  #include "iio_core.h"
-> > > > > >>>>>>> 
-> > > > > >>>>>>> @@ -92,6 +93,179 @@ static const struct iio_chan_spec
-> > > > > >>>>>>> 
-> > > > > >>>>>>>  	return chan;
-> > > > > >>>>>>>  
-> > > > > >>>>>>>  }
-> > > > > >>>>>>> 
-> > > > > >>>>>>> +#ifdef CONFIG_OF
-> > > > > >>>>>>> +
-> > > > > >>>>>>> +static int iio_dev_node_match(struct device *dev, void
-> > > > > >>>>>>> *data)
-> > > > > >>>>>>> +{
-> > > > > >>>>>>> +	return !strcmp(dev->type->name, "iio_device") && dev-
-> > > > >
-> > > > >of_node
-> > > > >
-> > > > > >>> ==
-> > > > > >>> 
-> > > > > >>>>>> data;
-> > > > > >>>>>> 
-> > > > > >>>>>> Hmm, do you need to check type name here? One device node
-> > > > > >>>>>> should
-> > > > > >>>>>> rather
-> > > > > >>>>>> represent only one device, making node an unique
-> > > > > >>>>>> identifier.
-> > > > > >>>>>> 
-> > > > > >>>>>> It this is meant to be a sanity check, it could be done one
-> > > > > >>>>>> time
-> > > > > >>>>>> after
-> > > > > >>>>>> finding the device.
-> > > > > >>>>> 
-> > > > > >>>>> Hi Tomasz,
-> > > > > >>>>> 
-> > > > > >>>>> This is what Lars had suggested earlier:
-> > > > > >>>>>> Yes, use bus_find_device on iio_bus_type. A nice example
-> > > > > >>>>>> how to
-> > > > > >>>>>> use
-> > > > > >>>>>> this to lookup device by of node is
-> > > > > >>>>>> of_find_i2c_device_by_node.
-> > > > > >>>>>> For
-> > > > > >>>>>> IIO you also need to make sure that dev->type is
-> > > > > >>>>>> iio_dev_type,
-> > > > > >>>>>> since
-> > > > > >>>>>> both devices and triggers are registered on the same bus.
-> > > > > >>>>> 
-> > > > > >>>>> Is it really needed, or in other words would it be
-> > > > > >>>>> sufficient to
-> > > > > >>>>> check
-> > > > > >>>>> if of_node and data match each other ? Your reasoning makes
-> > > > > >>>>> sense
-> > > > > >>>>> to
-> > > > > >>>>> me, and I had thought about it as well, but I don't really
-> > > > > >>>>> know,
-> > > > > >>>>> and
-> > > > > >>>>> I don't know how I could test it and guarantee correctness
-> > > > > >>>>> either.
-> > > > > >>>>> I'll be happy to take the strcmp() out if someone tells me
-> > > > > >>>>> that it
-> > > > > >>>>> is
-> > > > > >>>>> definitely not needed ...
-> > > > > >>>> 
-> > > > > >>>> A IIO trigger and a IIO device may have the same of_node,
-> > > > > >>>> e.g. if
-> > > > > >>>> they
-> > > > > >>>> both belong to the same physical device. But you don't need
-> > > > > >>>> to do
-> > > > > >>>> the
-> > > > > >>>> strcmp just compare dev->type to iio_dev_type i.e. dev->type
-> > > > > >>>> ==
-> > > > > >>>> &iio_dev_type. Although it doesn't really matter in practice
-> > > > > >>>> first
-> > > > > >>>> check for the of_node then check for the type, since the
-> > > > > >>>> of_node
-> > > > > >>>> will
-> > > > > >>>> only match for a few devices at most, the type will match for
-> > > > > >>>> quite
-> > > > > >>>> a
-> > > > > >>>> few.
-> > > > > >>> 
-> > > > > >>> I must disagree.
-> > > > > >>> 
-> > > > > >>> If you have two IIO devices provided by one physical device,
-> > > > > >>> then in
-> > > > > >>> 
-> > > > > >>> device tree they should be represented as follows:
-> > > > > >>> 	phys-dev@12345678 {
-> > > > > >>> 	
-> > > > > >>> 		compatible = "some-physical-device";
-> > > > > >>> 		/* ... */
-> > > > > >>> 		
-> > > > > >>> 		my_trig: iio-trigger {
-> > > > > >>> 		
-> > > > > >>> 			/* ... */
-> > > > > >>> 		
-> > > > > >>> 		};
-> > > > > >>> 		
-> > > > > >>> 		my_dev: iio-device {
-> > > > > >>> 		
-> > > > > >>> 			/* ... */
-> > > > > >>> 		
-> > > > > >>> 		};
-> > > > > >>> 	
-> > > > > >>> 	};
-> > > > > >>> 
-> > > > > >>> Notice that phys-dev works here as an IIO bus on which its IIO
-> > > > > >>> devices
-> > > > > >>> are available. This is related to the convention that single
-> > > > > >>> OF
-> > > > > >>> device node represents single device, which would be violated
-> > > > > >>> otherwise.
-> > > > > >> 
-> > > > > >> Right now the iio device is a child of the physical device, and
-> > > > > >> I am
-> > > > > >> simply passing of_node on to it. guess you are saying that is
-> > > > > >> not
-> > > > > >> correct ?
-> > > > > >> 
-> > > > > >> If so, what would be the correct approach ? Something like the
-> > > > > >> following ?
-> > > > > >> 
-> > > > > >> 	voltage-sensor@35 {
-> > > > > >> 	
-> > > > > >> 		compatible = "maxim,max1139";
-> > > > > >> 		reg = <0x35>;
-> > > > > >> 		vcc-supply = <&reg_3p3v>;
-> > > > > >> 		vref-supply = <&reg_3p3v>;
-> > > > > >> 		
-> > > > > >> 		max1139-iio: iio-device {
-> > > > > >> 		
-> > > > > >> 			device_type = "iio_device";
-> > > > > >> 			#io-channel-cells = <1>;
-> > > > > >> 		
-> > > > > >> 		};
-> > > > > >> 	
-> > > > > >> 	};
-> > > > > >> 
-> > > > > >> and in the driver probe function:
-> > > > > >> 	if (parent->of_node)
-> > > > > >> 	
-> > > > > >> 		iio_dev->dev.of_node = of_find_node_by_type(parent-
-> > > > >
-> > > > >of_node,
-> > > > >
-> > > > > >> "iio_device");
-> > > > > >> 
-> > > > > >> Another option would be to use of_find_compatible_node() and
-> > > > > >> something
-> > > > > >> like compatible = "iio-device";
-> > > > > >> in the iio-device node.
-> > > > > > 
-> > > > > > A device node is defined as a node having compatible property.
-> > > > > > Other
-> > > > > > nodes should be seen as helper nodes, which do not represent
-> > > > > > devices
-> > > > > > (although they all have struct device_node in Linux).
-> > > > > > 
-> > > > > > Also, AFAIK, device_type is a deprecated property used by some
-> > > > > > legacy
-> > > > > > PowerPC machines and for current machines only compatible should
-> > > > > > be
-> > > > > > used.
-> > > > > > 
-> > > > > > So I guess the approach with compatible would be appropriate
-> > > > > > here.
-> > > > > > 
-> > > > > > However for physical devices providing only a single IIO device
-> > > > > > it
-> > > > > > might>
-> > > > > > 
-> > > > > > be better to allow simpler specification, like:
-> > > > > >  	max1139-iio: voltage-sensor@35 {
-> > > > > >  	
-> > > > > >  		compatible = "maxim,max1139", "iio_device";
-> > > > > 
-> > > > > I don't think this makes a lot of sense. First of all iio_device
-> > > > > an
-> > > > > artificial Linux term, while the device tree should describe the
-> > > > > hardware.
-> > > > 
-> > > > Well, if you look at an iio_device as a subdevice of a physical
-> > > > device
-> > > > then it should make a bit more sense. (See nodes of GPIO/pinctrl pin
-> > > > banks or regulators of a PMIC chip.)
-> > > > 
-> > > > > Secondly there is no generic iio driver which could match on
-> > > > > a node with a "iio_device" compability string and stuff would just
-> > > > > work. I mean we don't do
-> > > > > 
-> > > > > compatible = "atmel,at91sam9260-i2c", "i2c-master";
-> > > > > 
-> > > > > or similar either.
-> > > > 
-> > > > Right. We don't need the other compatible for simple devices with
-> > > > single subdevice. This is implied by the driver registering a
-> > > > single IIO driver using the node of physical device.
-> > > > 
-> > > > > >  		reg = <0x35>;
-> > > > > >  		vcc-supply = <&reg_3p3v>;
-> > > > > >  		vref-supply = <&reg_3p3v>;
-> > > > > > 		
-> > > > > > 		device_type = "iio_device";
-> > > > 
-> > > > Also we don't need this device_type. Basically we don't need to
-> > > > specify
-> > > > whether given node is an iio_device or an iio_trigger. It's up to
-> > > > the
-> > > > driver to register the node as a device or a trigger by setting
-> > > > dev.of_node field properly.
-> > > > 
-> > > > So my suggestion would be to make the bindings as following. For
-> > > > single
-> > > > 
-> > > > subdevice:
-> > > > 	voltage-sensor@35 {
-> > > > 	
-> > > > 		compatible = "maxim,max1139";
-> > > > 		reg = <0x35>;
-> > > > 		vcc-supply = <&reg_3p3v>;
-> > > > 		vref-supply = <&reg_3p3v>;
-> > > > 		#io-channel-cells = <1>;
-> > > > 	
-> > > > 	};
-> > > > 
-> > > > For multiple subdevices:
-> > > > 	voltage-sensor@35 {
-> > > > 	
-> > > > 		compatible = "maxim,max1139";
-> > > > 		reg = <0x35>;
-> > > > 		vcc-supply = <&reg_3p3v>;
-> > > > 		vref-supply = <&reg_3p3v>;
-> > > > 		
-> > > > 		subdevice1 {
-> > > > 		
-> > > > 			/* Subdevice specific data */
-> > > > 			#io-channel-cells = <1>;
-> > > > 		
-> > > > 		};
-> > > > 		
-> > > > 		subdevice2 {
-> > > > 		
-> > > > 			/* Subdevice specific data */
-> > > > 			#io-channel-cells = <1>;
-> > > > 		
-> > > > 		}
-> > > 
-> > > Please provide an example how to parse that. Obviously now I can not
-> > > look for "compatible" anymore. Sure, I can use of_get_child_by_name,
-> > > but that means the sub-device names would have to be well defined. Or
-> > > I could use of_find_node_by_name, but then I would need something
-> > > like
-> > > 
-> > >  	voltage-sensor@35 {
-> > >  	
-> > >  		compatible = "maxim,max1139";
-> > > 		
-> > > 		iio-device;
-> > > 		
-> > >  		reg = <0x35>;
-> > >  		vcc-supply = <&reg_3p3v>;
-> > >  		vref-supply = <&reg_3p3v>;
-> > >  		#io-channel-cells = <1>;
-> > >  	
-> > >  	};
-> > 
-> > Never mind. My brain is really too flu-foggy to do anything.
-> > 
-> > Looks like I can use of_find_node_by_name if subdevice1 and subdevice2
-> > have well defined names such as iio-device or iio-trigger. It might
-> > even be possible to encode multiple iio subdevices in names such as
-> > iio-device@0 and iio-device@1. But that would (or not ?) mean that the
-> > names should be something like the following for consistency.
-> > 
-> > 	iio-device@35 {
-> > 		compatible = "maxim,max1139";
-> > 		reg = <0x35>;
-> > 		vcc-supply = <&reg_3p3v>;
-> > 		vref-supply = <&reg_3p3v>;
-> > 		#io-channel-cells = <1>;
-> > 	};
-> > 
-> > For multiple subdevices:
-> > 
-> > 	voltage-sensor@35 {
-> > 		compatible = "maxim,max1139";
-> > 		reg = <0x35>;
-> > 		vcc-supply = <&reg_3p3v>;
-> > 		vref-supply = <&reg_3p3v>;
-> > 
-> > 		iio-device {
-> > 			/* Subdevice specific data */
-> > 			#io-channel-cells = <1>;
-> > 		};
-> > 
-> > 		iio-trigger {
-> > 			/* Subdevice specific data */
-> > 			#io-channel-cells = <1>;
-> > 		}
-> > 
-> > Does that make sense ?
-> 
-> Do you need to parse this from generic code at all?
-> 
-> A particular IIO device driver gets a pointer to voltage-sensor@35 node in 
-> its dev.of_node. In case of a simple device without multiple subdevices, 
-> the driver will set the of_node field of iio_device.dev (or 
-> iio_trigger.dev) field and register the iio_device using 
-> iio_device_register() (or iio_trigger_register()).
-> 
-> In case of multiple subdevices, the driver (not generic code) will iterate 
-> over its child nodes and registers iio_devices and/or iio_triggers with 
-> appropriate nodes set in iio_device/iio_trigger structs.
-> 
-> All the generic code should do is parsing the phandles in client nodes, 
-> looking up to which devices they belong and translating phandle arguments 
-> to channel numbers.
-> 
-Ok, I think now I understand (or at least a bit better). That would also solve
-the problem mentioned by Jonathan, where a driver for a single chip registers
-multiple IIO devices.
+On Mon, Feb 4, 2013 at 6:32 PM, Tony Lindgren <tony@atomide.com> wrote:
+> * Javier Martinez Canillas <javier@dowhile0.org> [130204 04:00]:
+>> On Mon, Feb 4, 2013 at 11:36 AM, Florian Vaussard
+>> > Great, the smsc911x was on my TODO list, I can cross it out :) BTW,
+>> > do you have a public git for this, so I can test your work on my setup?
+>> >
+>>
+>> Yes, it is the gpmc-smsc911x-wip branch on my github linux tree [1]
+>>
+>> That branch is Linus master tree + linux-omap/omap-for-v3.9/gpmc +
+>> linux-omap-dt/for_3.9/dts
+>>
+>> plus these patches:
+>>
+>> Javier Martinez Canillas (4):
+>>       ARM: OMAP: gpmc-smsc911x: add DT dev node init function
+>>       ARM: OMAP: gpmc: add support for gpmc-smsc911x child nodes
+>>       ARM: dts: OMAP: Add an GPMC node for OMAP3
+>>       ARM: dts: omap3-igep0020: Add SMSC911x LAN chip support
+>>
+>> You can browse these patches here [2].
+>>
+>> With these patches I have ethernet working on my IGEPv2 but this board
+>> uses an OMAP GPIO pin as the smsc911x IRQ line, so it needs to set a
+>> mux pin (mcspi1_cs2.gpio_176 INPUT | MODE4) or it will fallback on
+>> poll mode.
+>
+> Great, that's good news :)
+>
 
-Thanks,
-Guenter
+it's a start at least :-)
+
+>> For some reasons I still couldn't figure out (I'm still learning about
+>> Device Trees) adding:
+>>
+>>        pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
+>>
+>> to the gpmc-smsc911x child node parse function (gpmc_smsc911x_init_dt)
+>> didn't have a functional effect and I had to initialize the defined
+>> pinctrl-single pins for the smsc911x in the omap3_pmx_core device node
+>> instead of pmc_smsc911x@0 as I do for other devices (mmc, uarts, etc).
+>
+> Maybe this is related to the initcall ordering..
+>
+
+I don't think so since I added the gpmc@6e000000 device node as the
+last child node for ocp in omap3.dtsi. So, is way after omap3_pmx_core
+child node is defined.
+
+Btw, there is a way to specify the initialization order or the
+dependencies between device nodes (e.g: gpmc depends on
+omap3_pmx_core) or is just because of the position inside the DT?
+
+>> So I just removed the devm_pinctrl_get_select_default() call in
+>> gpmc_smsc911x_init_dt() in for this RFC.
+>>
+>> I don't know if this is because arch/arm/mach-omap2/gpmc-smsc911x.c is
+>> not a real platform driver (is just a wrapper/helper function) and
+>> doesn't have a probe function.
+>
+> ..that function just initializes the pdata for smsc911x driver, and
+> should not be a driver. You need to add devm_pinctrl_get_select_default()
+> to the probe of smsc911x or the GPMC probe.
+>
+
+Yes, that's what I meant. In that case I would have something like
+this on my board dts:
+
+&gpmc {
+	pinctrl-names = "default";
+	pinctrl-0 = <&smsc911x_pins>;
+	gpmc_smsc911x@0 {
+		gpmc,cs = <5>; /* IGEP2_SMSC911X_CS */
+		gpmc,gpio_irq = <176>; /* IGEP2_SMSC911X_GPIO */
+		gpmc,flags = <18>; /* SMSC911X_USE_32BIT | SMSC911X_SAVE_MAC_ADDRESS */
+		vmmc-supply = <&vddvario>;
+		vmmc_aux-supply = <&vdd33a>;
+      };
+};
+
+Are you ok with tha approach?
+
+Certainly is better than initializing in omap3_pmx_core node but still
+is not consistent with other devices where the pinctrl pins are
+defined inside the node of the device that requires them.
+
+>> Which brings me to the question if my approach of adding a binding for
+>> gpmc-smsc911x is correct or if we should extend/use the binding that
+>> already exist for smsc911x
+>> (Documentation/devicetree/bindings/net/smsc911x.txt).
+>
+> We should use the existing smsc911x binding, then have a separate GPMC
+> binding for the GPMC driver.
+>
+
+You mean a binding for GPMC or a binding for gpmc-smsc911x?
+
+I don't think that we can use the smsc911x binding directly since
+gpmc_smsc911x_init() not only initializes the platform data but also
+does some setup such as requesting a memory range for a specific chip
+select (gpmc_cs_request), claiming a GPIO and configuring as input
+(gpio_request_one), etc.
+
+You can't just calculate the I/O space address for the GPMC cs your
+peripheral is connected to and set it on the reg property of the
+current smsc911x binding, right?. The same can be said for the nic
+IRQ.
+
+Or did I get wrong?
+
+> Regards,
+>
+> Tony
+>
+
+Thanks a lot and best regards,
+Javier
