@@ -1,7 +1,7 @@
 From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: [PATCH 5/6] mfd: max8925: add dts
-Date: Mon,  4 Feb 2013 23:40:46 +0800
-Message-ID: <1359992448-22229-5-git-send-email-haojian.zhuang@linaro.org>
+Subject: [PATCH 4/6] mfd: max8925: support dt for backlight
+Date: Mon,  4 Feb 2013 23:40:45 +0800
+Message-ID: <1359992448-22229-4-git-send-email-haojian.zhuang@linaro.org>
 References: <1359992448-22229-1-git-send-email-haojian.zhuang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1359992448-22229-1-git-send-email-haojian.zhuang@linaro.org>
@@ -12,205 +12,69 @@ List-Id: devicetree@vger.kernel.org
 
 From: Qing Xu <qingx@marvell.com>
 
-Add max8925 dts support into mmp2 brownstone platform
+Add device tree support in max8925 backlight.
 
 Signed-off-by: Qing Xu <qingx@marvell.com>
 Signed-off-by: Haojian Zhuang <haojian.zhuang@gmail.com>
 ---
- arch/arm/boot/dts/mmp2-brownstone.dts |  158 +++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/mmp2.dtsi           |    4 +-
- 2 files changed, 161 insertions(+), 1 deletion(-)
+ drivers/video/backlight/max8925_bl.c |   31 ++++++++++++++++++++++++++++++-
+ 1 file changed, 30 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/mmp2-brownstone.dts b/arch/arm/boot/dts/mmp2-brownstone.dts
-index c9b4f27..7f70a39 100644
---- a/arch/arm/boot/dts/mmp2-brownstone.dts
-+++ b/arch/arm/boot/dts/mmp2-brownstone.dts
-@@ -29,6 +29,164 @@
- 			};
- 			twsi1: i2c@d4011000 {
- 				status = "okay";
-+				pmic: max8925@3c {
-+					compatible = "maxium,max8925";
-+					reg = <0x3c>;
-+					interrupts = <1>;
-+					interrupt-parent = <&intcmux4>;
-+					interrupt-controller;
-+					#interrupt-cells = <1>;
-+					maxim,tsc-irq = <0>;
-+
-+					regulators {
-+						SDV1 {
-+							regulator-min-microvolt = <637500>;
-+							regulator-max-microvolt = <1425000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						SDV2 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2225000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						SDV3 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO1 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO2 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO3 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO4 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO5 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO6 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO7 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO8 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO9 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO10 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+						};
-+						LDO11 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO12 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO13 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO14 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO15 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO16 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO17 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO18 {
-+							regulator-min-microvolt = <650000>;
-+							regulator-max-microvolt = <2250000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO19 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+						LDO20 {
-+							regulator-min-microvolt = <750000>;
-+							regulator-max-microvolt = <3900000>;
-+							regulator-boot-on;
-+							regulator-always-on;
-+						};
-+					};
-+					backlight {
-+						maxim,max8925-dual-string = <0>;
-+					};
-+					charger {
-+						batt-detect = <0>;
-+						topoff-threshold = <1>;
-+						fast-charge = <7>;
-+						no-temp-support = <0>;
-+						no-insert-detect = <0>;
-+					};
-+				};
- 			};
- 			rtc: rtc@d4010000 {
- 				status = "okay";
-diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
-index 0514fb4..1429ac0 100644
---- a/arch/arm/boot/dts/mmp2.dtsi
-+++ b/arch/arm/boot/dts/mmp2.dtsi
-@@ -46,7 +46,7 @@
- 				mrvl,intc-nr-irqs = <64>;
- 			};
+diff --git a/drivers/video/backlight/max8925_bl.c b/drivers/video/backlight/max8925_bl.c
+index 2c9bce0..5ca11b0 100644
+--- a/drivers/video/backlight/max8925_bl.c
++++ b/drivers/video/backlight/max8925_bl.c
+@@ -101,6 +101,29 @@ static const struct backlight_ops max8925_backlight_ops = {
+ 	.get_brightness	= max8925_backlight_get_brightness,
+ };
  
--			intcmux4@d4282150 {
-+			intcmux4: interrupt-controller@d4282150 {
- 				compatible = "mrvl,mmp2-mux-intc";
- 				interrupts = <4>;
- 				interrupt-controller;
-@@ -201,6 +201,8 @@
- 				compatible = "mrvl,mmp-twsi";
- 				reg = <0xd4011000 0x1000>;
- 				interrupts = <7>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
- 				mrvl,i2c-fast-mode;
- 				status = "disabled";
- 			};
++#ifdef CONFIG_OF
++static int max8925_backlight_dt_init(struct platform_device *pdev,
++			      struct max8925_backlight_pdata *pdata)
++{
++	struct device_node *nproot = pdev->dev.parent->of_node, *np;
++	int dual_string;
++
++	if (!nproot)
++		return -ENODEV;
++	np = of_find_node_by_name(nproot, "backlight");
++	if (!np) {
++		dev_err(&pdev->dev, "failed to find backlight node\n");
++		return -ENODEV;
++	}
++
++	of_property_read_u32(np, "maxim,max8925-dual-string", &dual_string);
++	pdata->dual_string = dual_string;
++	return 0;
++}
++#else
++#define max8925_backlight_dt_init(x, y)	(-1)
++#endif
++
+ static int max8925_backlight_probe(struct platform_device *pdev)
+ {
+ 	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
+@@ -147,6 +170,13 @@ static int max8925_backlight_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, bl);
+ 
+ 	value = 0;
++	if (pdev->dev.parent->of_node && !pdata) {
++		pdata = devm_kzalloc(&pdev->dev,
++				     sizeof(struct max8925_backlight_pdata),
++				     GFP_KERNEL);
++		max8925_backlight_dt_init(pdev, pdata);
++	}
++
+ 	if (pdata) {
+ 		if (pdata->lxw_scl)
+ 			value |= (1 << 7);
+@@ -158,7 +188,6 @@ static int max8925_backlight_probe(struct platform_device *pdev)
+ 	ret = max8925_set_bits(chip->i2c, data->reg_mode_cntl, 0xfe, value);
+ 	if (ret < 0)
+ 		goto out_brt;
+-
+ 	backlight_update_status(bl);
+ 	return 0;
+ out_brt:
 -- 
 1.7.10.4
