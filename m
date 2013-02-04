@@ -1,8 +1,8 @@
 From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 1/2] arm: mvebu: update defconfig with ATAG support when
- using DT
-Date: Mon,  4 Feb 2013 18:21:07 +0100
-Message-ID: <1359998469-28133-2-git-send-email-gregory.clement@free-electrons.com>
+Subject: [PATCH v4 2/2] arm: mvebu: support for the new Armada XP development
+ board(DB-MV784MP-GP)
+Date: Mon,  4 Feb 2013 18:21:08 +0100
+Message-ID: <1359998469-28133-3-git-send-email-gregory.clement@free-electrons.com>
 References: <1359998469-28133-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,27 +23,140 @@ To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <a
 Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some of the mvebu boards (mainly the development board) come with
-plug-in RAM modules. This patch allows to let the bootloaders which
-have no support for DTS to give the real amount of memory available on
-the board.
+This is the new Armada XP evaluation board from Marvell. It comes with
+a RS232 port over USB, a SATA link, an internal SSD, 4 Ethernet
+Gigabit links.
 
+Support for USB (Host and device), SDIO, PCIe will be added as drivers
+when they become available for Armada XP in mainline.
+
+Tested-by: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+Tested-by: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/configs/mvebu_defconfig |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/boot/dts/Makefile         |    1 +
+ arch/arm/boot/dts/armada-xp-gp.dts |  101 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 102 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-xp-gp.dts
 
-diff --git a/arch/arm/configs/mvebu_defconfig b/arch/arm/configs/mvebu_defconfig
-index b5bc96c..8ec2217 100644
---- a/arch/arm/configs/mvebu_defconfig
-+++ b/arch/arm/configs/mvebu_defconfig
-@@ -21,6 +21,7 @@ CONFIG_HIGHMEM=y
- CONFIG_ZBOOT_ROM_TEXT=0x0
- CONFIG_ZBOOT_ROM_BSS=0x0
- CONFIG_ARM_APPENDED_DTB=y
-+CONFIG_ARM_ATAG_DTB_COMPAT=y
- CONFIG_VFP=y
- CONFIG_NET=y
- CONFIG_INET=y
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 5ebb44f..51aab4b 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -78,6 +78,7 @@ dtb-$(CONFIG_ARCH_MSM) += msm8660-surf.dtb \
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-370-db.dtb \
+ 	armada-370-mirabox.dtb \
+ 	armada-xp-db.dtb \
++	armada-xp-gp.dtb \
+ 	armada-xp-openblocks-ax3-4.dtb
+ dtb-$(CONFIG_ARCH_MXC) += imx51-babbage.dtb \
+ 	imx53-ard.dtb \
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+new file mode 100644
+index 0000000..872ed04
+--- /dev/null
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -0,0 +1,101 @@
++/*
++ * Device Tree file for Marvell Armada XP development board
++ * (DB-MV784MP-GP)
++ *
++ * Copyright (C) 2013 Marvell
++ *
++ * Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
++ * Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ * Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2.  This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++/dts-v1/;
++/include/ "armada-xp-mv78460.dtsi"
++
++/ {
++	model = "Marvell Armada XP Development Board DB-MV784MP-GP";
++	compatible = "marvell,axp-gp", "marvell,armadaxp-mv78460", "marvell,armadaxp", "marvell,armada-370-xp";
++
++	chosen {
++		bootargs = "console=ttyS0,115200 earlyprintk";
++	};
++
++	memory {
++		device_type = "memory";
++
++		/*
++		 * 4 GB of plug-in RAM modules by default.The amount
++		 * of memory available can be changed by the
++		 * bootloader according the size of the module
++		 * actually plugged
++		 */
++		reg = <0x00000000 0xD0000000>;
++	};
++
++	soc {
++		serial@d0012000 {
++			clock-frequency = <250000000>;
++			status = "okay";
++		};
++		serial@d0012100 {
++			clock-frequency = <250000000>;
++			status = "okay";
++		};
++		serial@d0012200 {
++			clock-frequency = <250000000>;
++			status = "okay";
++		};
++		serial@d0012300 {
++			clock-frequency = <250000000>;
++			status = "okay";
++		};
++
++		sata@d00a0000 {
++			nr-ports = <2>;
++			status = "okay";
++		};
++
++		mdio {
++			phy0: ethernet-phy@0 {
++				reg = <16>;
++			};
++
++			phy1: ethernet-phy@1 {
++				reg = <17>;
++			};
++
++			phy2: ethernet-phy@2 {
++				reg = <18>;
++			};
++
++			phy3: ethernet-phy@3 {
++				reg = <19>;
++			};
++		};
++
++		ethernet@d0070000 {
++			status = "okay";
++			phy = <&phy0>;
++			phy-mode = "rgmii-id";
++		};
++		ethernet@d0074000 {
++			status = "okay";
++			phy = <&phy1>;
++			phy-mode = "rgmii-id";
++		};
++		ethernet@d0030000 {
++			status = "okay";
++			phy = <&phy2>;
++			phy-mode = "rgmii-id";
++		};
++		ethernet@d0034000 {
++			status = "okay";
++			phy = <&phy3>;
++			phy-mode = "rgmii-id";
++		};
++	};
++};
 -- 
 1.7.9.5
