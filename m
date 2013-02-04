@@ -1,33 +1,85 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH] OF: Fixup resursive locking code paths
-Date: Mon, 4 Feb 2013 11:48:24 +0100 (CET)
-Message-ID: <alpine.LFD.2.02.1302041147420.11905@ionos>
-References: <1359138107-14159-1-git-send-email-paul.gortmaker@windriver.com>
+From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 2/4] ARM: Exynos5250: Enabling ohci-exynos driver
+Date: Mon, 4 Feb 2013 16:45:03 +0530
+Message-ID: <CAFp+6iEEtq=ncTb9pWQSMpvW2S-eRpSPBBYM2SnUmmvVaA=Zvg@mail.gmail.com>
+References: <1358257112-19595-1-git-send-email-gautam.vivek@samsung.com>
+ <1358257112-19595-3-git-send-email-gautam.vivek@samsung.com>
+ <2542030.a14I18dBkO@flatron>
+ <0b0001ce0002$12ecda90$38c68fb0$@samsung.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359138107-14159-1-git-send-email-paul.gortmaker@windriver.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Gortmaker <paul.gortmaker@windriver.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <0b0001ce0002$12ecda90$38c68fb0$@samsung.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Jan 2013, Paul Gortmaker wrote:
+Hi Kukjin,
 
-> From: Thomas Gleixner <tglx@linutronix.de>
-> 
-> There is no real reason to use a rwlock for devtree_lock. It even
-> could be a mutex, but unfortunately it's locked from cpu hotplug
-> paths which can't schedule :(
-> 
-> So it needs to become a raw lock on rt as well.  The devtree_lock would
-> be the only user of a raw_rw_lock, so we are better off cleaning up the
-> recursive locking paths which allows us to convert devtree_lock to a
-> read_lock.
 
-Hmm. It's already a rw_lock. For RT we want to change that thing to a
-raw_spinlock.
+On Fri, Feb 1, 2013 at 3:56 AM, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Tomasz Figa wrote:
+>>
+>> Hi Vivek,
+>
+> [...]
+>
+>> > +   usb@12120000 {
+>> > +           compatible = "samsung,exynos4210-ohci";
+>> > +           reg = <0x12120000 0x100>;
+>> > +           interrupts = <0 71 0>;
+>>
+>> For Samsung platforms we decided per board enabling of nodes and so this
+>> node should also contain:
+>>
+>>               status = "disabled";
+>>
+>> while in dts file of board using ohci there would be an overriding entry:
+>>
+>>       usb@12120000 {
+>>               status = "okay";
+>>       };
+>>
+>> I know that Exynos5250 has not been yet converted into this convention,
+>> but using it when adding new devices will simplify the process.
+>>
+> Well, I have another opinion on this...
+>
+> Let's see, yeah, we are using following method in EXYNOS4 DT...
+> - disabling IPs in SoC DT source and enabling IPs in board DT source
+>
+> But as I said, in EXYNOS5440 DT, I want to use following, because most of
+> them should be enabled/used.
+> - enabling IPs in SoC DT source and no need enabling in board DT source.
+>
+> I mean, it depends on each SoC's situation.
+>
 
-Thanks,
+So, since USB 2.0 (EHCI/OHCI) shall be always enabled on almost all the boards,
+so we shall keep it enabled in SOC DT source.
 
-	tglx
+In that case following patches can be picked for a merge:
+[PATCH v5 1/4] ARM: Exynos5250: Enabling ehci-s5p driver
+http://www.mail-archive.com/linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg12330.html
+
+[PATCH v4 2/4] ARM: Exynos5250: Enabling ohci-exynos driver
+http://www.mail-archive.com/linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg12266.html
+
+These will enable EHCI and OHCI support on exynos5250.
+Please let me know if you want me to resend them. ;-)
+
+
+-- 
+Thanks & Regards
+Vivek
