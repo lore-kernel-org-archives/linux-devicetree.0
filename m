@@ -1,42 +1,38 @@
-From: Paul Gortmaker <paul.gortmaker@windriver.com>
-Subject: Re: [PATCH] OF: Fixup resursive locking code paths
-Date: Mon, 4 Feb 2013 11:10:35 -0500
-Message-ID: <510FDD7B.7060903@windriver.com>
-References: <1359138107-14159-1-git-send-email-paul.gortmaker@windriver.com> <alpine.LFD.2.02.1302041147420.11905@ionos>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] iio: Add OF support
+Date: Mon, 4 Feb 2013 08:37:04 -0800
+Message-ID: <20130204163704.GA18187@roeck-us.net>
+References: <1359853180-5664-1-git-send-email-linux@roeck-us.net>
+ <1359853180-5664-5-git-send-email-linux@roeck-us.net>
+ <510E7195.4070803@metafoo.de>
+ <20130203162213.GA21576@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.LFD.2.02.1302041147420.11905@ionos>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130203162213.GA21576-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13-02-04 05:48 AM, Thomas Gleixner wrote:
-> On Fri, 25 Jan 2013, Paul Gortmaker wrote:
-> 
->> From: Thomas Gleixner <tglx@linutronix.de>
->>
->> There is no real reason to use a rwlock for devtree_lock. It even
->> could be a mutex, but unfortunately it's locked from cpu hotplug
->> paths which can't schedule :(
->>
->> So it needs to become a raw lock on rt as well.  The devtree_lock would
->> be the only user of a raw_rw_lock, so we are better off cleaning up the
->> recursive locking paths which allows us to convert devtree_lock to a
->> read_lock.
-> 
-> Hmm. It's already a rw_lock. For RT we want to change that thing to a
-> raw_spinlock.
+On Sun, Feb 03, 2013 at 08:22:13AM -0800, Guenter Roeck wrote:
+[ ... ]
 
-Thanks for the reminder.  Part 2 sent now that the cleanup got OK'd.
+> > > +
+> > > +	/* NULL terminated array to save passing size */
+> > > +	chans = kzalloc(sizeof(*chans)*(nummaps + 1), GFP_KERNEL);
+> > 
+> > I think using kcalloc makes sense here.
+> > 
+> that would leave chan->data uninitialized, and I would have to initialize it
+> explicitly. also, if additional fields are ever added, we would risk having
+> uninitialized fields. Using kzalloc avoids a potential future error case, so I
+> would prefer to keep it.
+> 
+Please ignore this one.
 
-Paul.
---
+Looks like my brain was too flu-foggy to realize that kcalloc does clear the
+memory.
 
-> 
-> Thanks,
-> 
-> 	tglx
-> 
+Guenter
