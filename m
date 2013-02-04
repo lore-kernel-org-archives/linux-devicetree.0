@@ -1,82 +1,28 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery support
- for G2D
-Date: Mon, 4 Feb 2013 17:34:26 +0530
-Message-ID: <CAK9yfHx7FOE1xTqDH=1L5r+hZFY7U-W=Q49qErgjs-i1HU4j4w@mail.gmail.com>
-References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
- <1359107722-9974-2-git-send-email-sachin.kamat@linaro.org>
- <CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com>
- <510987B5.6090509@gmail.com>
- <050101cdff52$86df3a70$949daf50$%dae@samsung.com>
- <510B02AB.4080908@gmail.com>
- <0b7501ce0011$3df65180$b9e2f480$@samsung.com>
- <00fd01ce001b$5215a3f0$f640ebd0$%dae@samsung.com>
- <CAK9yfHxqqumg-oqH_Ku8Zkf8biWVknF91Su0VkWJJXjvWQ3Jhw@mail.gmail.com>
- <510B9EC8.6020102@samsung.com>
- <CAK9yfHw+aTgiLwGVJt=J9-ie4-2JAaF4Nh3n4tjcHp6w2JHamg@mail.gmail.com>
- <014401ce006f$c7dd1dd0$57975970$%dae@samsung.com>
- <CAK9yfHyEdd_nr5eqT9WZ4+J9LHczL4U5VAUEwzzjbH1H0xgjUQ@mail.gmail.com>
- <014501ce0072$9eca1a80$dc5e4f80$%dae@samsung.com>
- <E382E0B5-2695-4293-B264-FB4C54FE4F9D@gmail.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCHv2] crypto: caam - Added property fsl,sec-era in SEC4.0
+ device tree binding.
+Date: Mon, 4 Feb 2013 21:21:57 +0800
+Message-ID: <20130204132156.GC21627@gondor.apana.org.au>
+References: <1359009826-32483-1-git-send-email-vakul@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="euc-kr"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <E382E0B5-2695-4293-B264-FB4C54FE4F9D-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Inki Dae <daeinki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1359009826-32483-1-git-send-email-vakul@freescale.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Vakul Garg <vakul@freescale.com>
+Cc: linux-crypto@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Boyd <sboyd@codeaurora.org>, Andrew Morton <akpm@linux-foundation.org>, Shawn Guo <shawn.guo@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMSBGZWJydWFyeSAyMDEzIDE4OjI4LCBJbmtpIERhZSA8ZGFlaW5raUBnbWFpbC5jb20+IHdy
-b3RlOgo+Cj4KPgo+Cj4gMjAxMy4gMi4gMS4gv8DIxCA4OjUyIElua2kgRGFlIDxpbmtpLmRhZUBz
-YW1zdW5nLmNvbT4gwNu8ujoKPgo+Pgo+Pgo+Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0K
-Pj4+IEZyb206IGxpbnV4LW1lZGlhLW93bmVyQHZnZXIua2VybmVsLm9yZyBbbWFpbHRvOmxpbnV4
-LW1lZGlhLQo+Pj4gb3duZXJAdmdlci5rZXJuZWwub3JnXSBPbiBCZWhhbGYgT2YgU2FjaGluIEth
-bWF0Cj4+PiBTZW50OiBGcmlkYXksIEZlYnJ1YXJ5IDAxLCAyMDEzIDg6NDAgUE0KPj4+IFRvOiBJ
-bmtpIERhZQo+Pj4gQ2M6IFN5bHdlc3RlciBOYXdyb2NraTsgS3VramluIEtpbTsgU3lsd2VzdGVy
-IE5hd3JvY2tpOyBsaW51eC0KPj4+IG1lZGlhQHZnZXIua2VybmVsLm9yZzsgZHJpLWRldmVsQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZzsgZGV2aWNldHJlZS0KPj4+IGRpc2N1c3NAbGlzdHMub3psYWJz
-Lm9yZzsgcGF0Y2hlc0BsaW5hcm8ub3JnCj4+PiBTdWJqZWN0OiBSZTogW1BBVENIIDIvMl0gZHJt
-L2V4eW5vczogQWRkIGRldmljZSB0cmVlIGJhc2VkIGRpc2NvdmVyeQo+Pj4gc3VwcG9ydCBmb3Ig
-RzJECj4+Pgo+Pj4gT24gMSBGZWJydWFyeSAyMDEzIDE3OjAyLCBJbmtpIERhZSA8aW5raS5kYWVA
-c2Ftc3VuZy5jb20+IHdyb3RlOgo+Pj4+Cj4+Pj4gSG93IGFib3V0IHVzaW5nIGxpa2UgYmVsb3c/
-Cj4+Pj4gICAgICAgIENvbXBhdGlibGUgPSAiInNhbXN1bmcsZXh5bm9zNHgxMi1maW1nLTJkIiAv
-KiBmb3IgRXh5bm9zNDIxMiwKPj4+PiBFeHlub3M0NDEyICAqLwo+Pj4+IEl0IGxvb2tzIG9kZCB0
-byB1c2UgInNhbXN1bmcsZXh5bm9zNDIxMi1maW1nLTJkIiBzYXlpbmcgdGhhdCB0aGlzIGlwIGlz
-Cj4+PiBmb3IKPj4+PiBleHlub3M0MjEyIGFuZCBleHlub3M0NDEyLgo+Pj4KPj4+IEFGQUlLLCBj
-b21wYXRpYmxlIHN0cmluZ3MgYXJlIG5vdCBzdXBwb3NlZCB0byBoYXZlIGFueSB3aWxkY2FyZAo+
-PiBjaGFyYWN0ZXJzLgo+Pj4gQ29tcGF0aWJsZSBzdHJpbmcgc2hvdWxkIHN1Z2dlc3QgdGhlIGZp
-cnN0IFNvQyB0aGF0IGNvbnRhaW5lZCB0aGlzIElQLgo+Pj4gSGVuY2UgSU1PIDQyMTIgaXMgT0su
-Cj4+Pgo+Cj4gT29wcywgb25lIG1vcmUgdGhpbmcuIEFGQUlLIEV4eW5vczQyMTAgYWxzbyBoYXMg
-ZmltZy0yZCBpcC4gSW4gdGhpcyBjYXNlLCB3ZSBzaG91bGQgdXNlICJzYW1zdW5nLGV4eW5vczQy
-MTAtZmltZy0yZCIgYXMgY29tcGFyaWJsZSBzdHJpbmcgYW5kIGFkZCBpdCB0byBleHlub3M0MjEw
-LmR0c2k/CgpFeHlub3M0MjEwIGhhcyBzYW1lIGcyZCBJUCAodjMuMCkgYXMgQzExMCBvciBWMjEw
-OyBzbyB0aGUgc2FtZQpjb21wdGlibGUgc3RyaW5nIHdpbGwgYmUgdXNlZCBmb3IgdGhpcyBvbmUg
-dG9vLgoKPiBBbmQgcGxlYXNlIGNoZWNrIGlmIGV4eW5vczQyMTIgYW5kIDQ0MTIgU29DcyBoYXZl
-IHNhbWUgZmltZy0yZCBpcC4gSWYgaXQncyBkaWZmZXJlbnQsIHdlIG1pZ2h0IG5lZWQgdG8gYWRk
-IGlwIHZlcnNpb24gcHJvcGVydHkgb3IgY29tcGF0aWJsZSBzdHJpbmcgdG8gZWFjaCBkdHNpIGZp
-bGUgdG8gaWRlbnRpZnkgdGhlIGlwIHZlcnNpb24uCgpBRkFJSywgdGhleSBib3RoIGhhdmUgdGhl
-IHNhbWUgSVAgKHY0LjEpLgoKPgo+IFNvcnJ5IGJ1dCBnaXZlIG1lIHlvdXIgb3BpbmlvbnMuCj4K
-PiBUaGFua3MsCj4gSW5raSBEYWUKPgo+Cj4+Cj4+IEdvdCBpdC4gUGxlYXNlIHBvc3QgaXQgYWdh
-aW4uCj4+Cj4+Pgo+Pj4gLS0KPj4+IFdpdGggd2FybSByZWdhcmRzLAo+Pj4gU2FjaGluCj4+PiAt
-LQo+Pj4gVG8gdW5zdWJzY3JpYmUgZnJvbSB0aGlzIGxpc3Q6IHNlbmQgdGhlIGxpbmUgInVuc3Vi
-c2NyaWJlIGxpbnV4LW1lZGlhIiBpbgo+Pj4gdGhlIGJvZHkgb2YgYSBtZXNzYWdlIHRvIG1ham9y
-ZG9tb0B2Z2VyLmtlcm5lbC5vcmcKPj4+IE1vcmUgbWFqb3Jkb21vIGluZm8gYXQgIGh0dHA6Ly92
-Z2VyLmtlcm5lbC5vcmcvbWFqb3Jkb21vLWluZm8uaHRtbAo+Pgo+PiBfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+PiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-Cj4+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPj4gaHR0cDovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAoKCgotLSAKV2l0aCB3YXJtIHJl
-Z2FyZHMsClNhY2hpbgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0Bs
-aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0
-cmVlLWRpc2N1c3MK
+On Thu, Jan 24, 2013 at 12:13:46PM +0530, Vakul Garg wrote:
+> This new property defines the era of the particular SEC version.
+> The compatible property in device tree "crypto" node has been updated
+> not to contain SEC era numbers.
+> 
+> Signed-off-by: Vakul Garg <vakul@freescale.com>
+
+Patch applied.  Thanks!
+-- 
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
