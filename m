@@ -1,61 +1,70 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 09/10] clk: tegra: Implement clocks for Tegra114
-Date: Mon, 4 Feb 2013 16:07:55 +0200
-Message-ID: <20130204140755.GU2364@tbergstrom-lnx.Nvidia.com>
-References: <1359713962-16822-1-git-send-email-pdeschrijver@nvidia.com>
- <1359713962-16822-10-git-send-email-pdeschrijver@nvidia.com>
- <510F5E87.90801@nvidia.com>
- <20130204104531.GQ2364@tbergstrom-lnx.Nvidia.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to arm/common
+Date: Mon, 04 Feb 2013 15:27:09 +0100
+Message-ID: <7655522.SvRnLo3eyU@wuerfel>
+References: <1359742975-10421-1-git-send-email-mporter@ti.com>
+ <20130201213003.GW2637@n2100.arm.linux.org.uk> <510C58DF.3010103@mvista.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130204104531.GQ2364-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <510C58DF.3010103-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 04, 2013 at 11:45:31AM +0100, Peter De Schrijver wrote:
-> On Mon, Feb 04, 2013 at 08:08:55AM +0100, Prashant Gaikwad wrote:
+On Saturday 02 February 2013 04:07:59 Sergei Shtylyov wrote:
+> On 02-02-2013 1:30, Russell King - ARM Linux wrote:
 
-...
-
-> > > +
-> > > +       /* dsia */
-> > > +       clk = clk_register_mux(NULL, "dsia_mux", mux_plld_out0_plld2_out0,
-> > > +                              ARRAY_SIZE(mux_plld_out0_plld2_out0), 0,
-> > > +                              clk_base + PLLD_BASE, 25, 1, 0, &pll_d_lock);
-> > > +       clks[dsia_mux] = clk;
-> > > +       clk = tegra_clk_register_periph_gate("dsia", "dsia_mux", 0, clk_base,
-> > > +                                   0, 48, &periph_h_regs,
-> > > +                                   periph_clk_enb_refcnt);
-> > > +       clk_register_clkdev(clk, "dsia", "tegradc.0");
-> > > +       clks[dsia] = clk;
-> > > +
-> > > +       /* dsib */
-> > > +       clk = clk_register_mux(NULL, "dsib_mux", mux_plld_out0_plld2_out0,
-> > > +                              ARRAY_SIZE(mux_plld_out0_plld2_out0), 0,
-> > > +                              clk_base + PLLD2_BASE, 25, 1, 0, &pll_d2_lock);
-> > > +       clks[dsib_mux] = clk;
-> > > +       clk = tegra_clk_register_periph_gate("dsib", "dsib_mux", 0, clk_base,
-> > > +                                   0, 82, &periph_u_regs,
-> > > +                                   periph_clk_enb_refcnt);
-> > > +       clk_register_clkdev(clk, "dsib", "tegradc.1");
-> > > +       clks[dsib] = clk;
-> > > +
-> > 
-> > Can we use periph no div clock here for dsia and dsib?
-> > 
+> >> because it doesn't make sense to support multiple DMA APIs. We can check
+> >> from MUSB's registers if it was configured with Inventra DMA support and
+> >> based on that we can register MUSB's own DMA Engine to dmaengine API.
 > 
-> Will check.
+> > Hang on.  This is one of the DMA implementations which is closely
+> > coupled with the USB and only the USB?  If it is...
 > 
+> > I thought this had been discussed _extensively_ before.  I thought the
+> > resolution on it was:
+> > 1. It would not use the DMA engine API.
+> > 2. It would not live in arch/arm.
+> > 3. It would be placed nearby the USB driver it's associated with.
+> 
+> > (1) because we don't use APIs just for the hell of it - think.  Do we
+> > use the DMA engine API for PCI bus mastering ethernet controllers?  No.
+> > Do we use it for PCI bus mastering SCSI controllers?  No.  Because the
+> > DMA is integral to the rest of the device.
+> 
+> > The DMA engine API only makes sense if the DMA engine is a shared
+> > system resource.
+> 
+>     Thanks for such extensive wording in the support of my point. 
 
-Not as such. As you can see the muxes need a lock to protect access to the
-PLLD_BASE and PLLD2_BASE registers respectively. The periph no div clock
-doesn't provide for these locks though. Do you think it makes sense to add
-the lock support for these 2 clocks?
+Actually there is another problem with the musb driver, which is that
+you can only have one DMA controller configured at build time, and
+that currently prevents us from building a kernel that supports both
+the Inventra and TUSB variants together. With multiplatform coming
+up for both ux500 and omap2, we will also have to make a decision
+about ux500 vs omap being supported in DMA mode.
 
-Cheers,
+I can see two ways out of this: either we extend the musb driver to
+have run-time registration of the DMA controller, which duplicates
+infrastructure that already exists in the dmaengine API, or we
+make the dmaengine back-end for musb the default and require all
+platforms to use that if they want to coexist with other platforms
+and also use DMA support in musb.
 
-Peter.
+Note that the ux500_dma code in musb already uses dmaengine. It could
+probably be extended to support any platform that has a dmaengine
+driver for the DMA controller used in MUSB.
+
+	Arnd
