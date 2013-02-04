@@ -1,411 +1,65 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] iio: Add OF support
-Date: Mon, 4 Feb 2013 09:12:14 -0800
-Message-ID: <20130204171214.GA23170@roeck-us.net>
-References: <1359853180-5664-1-git-send-email-linux@roeck-us.net>
- <2327792.dx5ptVD6je@flatron>
- <510EB2B3.7090503@metafoo.de>
- <226658056.N7afTOqvFB@flatron>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/2] Adding support for the new Armada XP development board
+ from Marvell
+Date: Mon,  4 Feb 2013 18:21:06 +0100
+Message-ID: <1359998469-28133-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <226658056.N7afTOqvFB@flatron>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 04, 2013 at 12:14:52AM +0100, Tomasz Figa wrote:
-> On Sunday 03 of February 2013 19:55:47 Lars-Peter Clausen wrote:
-> > On 02/03/2013 06:30 PM, Tomasz Figa wrote:
-> > > On Sunday 03 of February 2013 09:01:07 Guenter Roeck wrote:
-> > >> On Sun, Feb 03, 2013 at 12:52:40PM +0100, Tomasz Figa wrote:
-> > >>> On Sunday 03 of February 2013 12:29:23 Lars-Peter Clausen wrote:
-> > >>>> On 02/03/2013 03:06 AM, Guenter Roeck wrote:
-> > >>>>> On Sun, Feb 03, 2013 at 02:30:24AM +0100, Tomasz Figa wrote:
-> > >>>>>> Hi Guenter,
-> > >>>>>> 
-> > >>>>>> Some comments inline.
-> > >>>>>> 
-> > >>>>>> On Saturday 02 of February 2013 16:59:40 Guenter Roeck wrote:
-> > >>>>>>> Provide bindings and parse OF data during initialization.
-> > >>>>>>> 
-> > >>>>>>> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> > >>>>>>> ---
-> > >>>>>>> - Documentation update per feedback
-> > >>>>>>> - Dropped io-channel-output-names from the bindings document.
-> > >>>>>>> The
-> > >>>>>>> property is not used in the code, and it is not entirely clear
-> > >>>>>>> what
-> > >>>>>>> it
-> > >>>>>>> would be used for. If there is a need for it, we can add it back
-> > >>>>>>> in
-> > >>>>>>> later on.
-> > >>>>>>> - Don't export OF specific API calls
-> > >>>>>>> - For OF support, no longer depend on iio_map
-> > >>>>>>> - Add #ifdef CONFIG_OF where appropriate, and ensure that the
-> > >>>>>>> code
-> > >>>>>>> still builds if it is not selected.
-> > >>>>>>> - Change iio_channel_get to take device pointer as argument
-> > >>>>>>> instead
-> > >>>>>>> of
-> > >>>>>>> device name. Retain old API as of_iio_channel_get_sys.
-> > >>>>>>> - iio_channel_get now works for both OF and non-OF
-> > >>>>>>> configurations.
-> > >>>>>>> 
-> > >>>>>>>  .../devicetree/bindings/iio/iio-bindings.txt       |   76
-> > >>>>>>>  ++++++++
-> > >>>>>>>  drivers/iio/inkern.c                               |  186
-> > >>>>>>> 
-> > >>>>>>> ++++++++++++++++++++ 2 files changed, 262 insertions(+)
-> > >>>>>>> 
-> > >>>>>>>  create mode 100644
-> > >>>>>>> 
-> > >>>>>>> Documentation/devicetree/bindings/iio/iio-bindings.txt
-> > >>>>>>> 
-> > >>>>>>> diff --git
-> > >>>>>>> a/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> > >>>>>>> b/Documentation/devicetree/bindings/iio/iio-bindings.txt new
-> > >>>>>>> file
-> > >>>>>>> mode
-> > >>>>>>> 100644
-> > >>>>>>> index 0000000..58df5f6
-> > >>>>>>> --- /dev/null
-> > >>>>>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> > >>>>>>> @@ -0,0 +1,76 @@
-> > >>>>>>> +This binding is a work-in-progress. It is derived from clock
-> > >>>>>>> bindings,
-> > >>>>>>> +and based on suggestions from Lars-Peter Clausen [1].
-> > >>>>>>> +
-> > >>>>>>> +Sources of IIO channels can be represented by any node in the
-> > >>>>>>> device
-> > >>>>>>> +tree.  Those nodes are designated as IIO providers.  IIO
-> > >>>>>>> consumer
-> > >>>>>>> +nodes use a phandle and IIO specifier pair to connect IIO
-> > >>>>>>> provider
-> > >>>>>>> +outputs to IIO inputs.  Similar to the gpio specifiers, an IIO
-> > >>>>>>> +specifier is an array of one or more cells identifying the IIO
-> > >>>>>>> +output on a device.  The length of an IIO specifier is defined
-> > >>>>>>> by
-> > >>>>>>> the
-> > >>>>>>> +value of a #io-channel-cells property in the clock provider
-> > >>>>>>> node.
-> > >>>>>>> +
-> > >>>>>>> +[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
-> > >>>>>>> +
-> > >>>>>>> +==IIO providers==
-> > >>>>>>> +
-> > >>>>>>> +Required properties:
-> > >>>>>>> +#io-channel-cells: Number of cells in an IIO specifier;
-> > >>>>>>> Typically 0
-> > >>>>>>> for nodes +		   with a single IIO output and 1 for nodes
-> > > 
-> > > with
-> > > 
-> > >>>>>>> multiple +		   IIO outputs.
-> > >>>>>>> +
-> > >>>>>>> +For example:
-> > >>>>>>> +
-> > >>>>>>> +    adc: adc@35 {
-> > >>>>>>> +	compatible = "maxim,max1139";
-> > >>>>>>> +	reg = <0x35>;
-> > >>>>>>> +        #io-channel-cells = <1>;
-> > >>>>>>> +    };
-> > >>>>>>> +
-> > >>>>>>> +==IIO consumers==
-> > >>>>>>> +
-> > >>>>>>> +Required properties:
-> > >>>>>>> +io-channels:	List of phandle and IIO specifier pairs, one
-> > > 
-> > > pair
-> > > 
-> > >>>>>>> +		for each IIO input to the device.  Note: if the
-> > >>>>>>> +		IIO provider specifies '0' for #clock-cells, then
-> > >>>>>>> +		only the phandle portion of the pair will appear.
-> > >>>>>>> +
-> > >>>>>>> +Optional properties:
-> > >>>>>>> +io-channel-names:
-> > >>>>>>> +		List of IIO input name strings sorted in the same
-> > >>>>>>> +		order as the io-channels property.  Consumers 
-> drivers
-> > >>>>>>> +		will use io-channel-names to match IIO input names
-> > >>>>>>> +		with IIO specifiers.
-> > >>>>>>> +io-channel-ranges:
-> > >>>>>>> +		Empty property indicating that child nodes can 
-> inherit
-> > >>> 
-> > >>> named
-> > >>> 
-> > >>>>>>> +		IIO channels from this node. Useful for bus nodes 
-> to
-> > >>> 
-> > >>> provide
-> > >>> 
-> > >>>>>>> +		and IIO channel to their children.
-> > >>>>>>> +
-> > >>>>>>> +For example:
-> > >>>>>>> +
-> > >>>>>>> +    device {
-> > >>>>>>> +        io-channels = <&adc 1>, <&ref 0>;
-> > >>>>>>> +        io-channel-names = "vcc", "vdd";
-> > >>>>>>> +    };
-> > >>>>>>> +
-> > >>>>>>> +This represents a device with two IIO inputs, named "vcc" and
-> > >>>>>>> "vdd".
-> > >>>>>>> +The vcc channel is connected to output 1 of the &adc device,
-> > >>>>>>> and
-> > >>>>>>> the
-> > >>>>>>> +vdd channel is connected to output 0 of the &ref device.
-> > >>>>>>> +
-> > >>>>>>> +==Example==
-> > >>>>>>> +
-> > >>>>>>> +	adc: max1139@35 {
-> > >>>>>>> +		compatible = "maxim,max1139";
-> > >>>>>>> +		reg = <0x35>;
-> > >>>>>>> +		#io-channel-cells = <1>;
-> > >>>>>>> +	};
-> > >>>>>>> +
-> > >>>>>>> +	...
-> > >>>>>>> +
-> > >>>>>>> +	iio_hwmon {
-> > >>>>>>> +		compatible = "iio-hwmon";
-> > >>>>>>> +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
-> > >>>>>>> +			<&adc 3>, <&adc 4>, <&adc 5>,
-> > >>>>>>> +			<&adc 6>, <&adc 7>, <&adc 8>,
-> > >>>>>>> +			<&adc 9>, <&adc 10>, <&adc 11>;
-> > >>>>>>> +		io-channel-names = "vcc", "vdd", "vref", "1.2V";
-> > >>>>>>> +	};
-> > >>>>>>> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> > >>>>>>> index b289915..d48f2a8 100644
-> > >>>>>>> --- a/drivers/iio/inkern.c
-> > >>>>>>> +++ b/drivers/iio/inkern.c
-> > >>>>>>> @@ -10,6 +10,7 @@
-> > >>>>>>> 
-> > >>>>>>>  #include <linux/export.h>
-> > >>>>>>>  #include <linux/slab.h>
-> > >>>>>>>  #include <linux/mutex.h>
-> > >>>>>>> 
-> > >>>>>>> +#include <linux/of.h>
-> > >>>>>>> 
-> > >>>>>>>  #include <linux/iio/iio.h>
-> > >>>>>>>  #include "iio_core.h"
-> > >>>>>>> 
-> > >>>>>>> @@ -92,6 +93,179 @@ static const struct iio_chan_spec
-> > >>>>>>> 
-> > >>>>>>>  	return chan;
-> > >>>>>>>  
-> > >>>>>>>  }
-> > >>>>>>> 
-> > >>>>>>> +#ifdef CONFIG_OF
-> > >>>>>>> +
-> > >>>>>>> +static int iio_dev_node_match(struct device *dev, void *data)
-> > >>>>>>> +{
-> > >>>>>>> +	return !strcmp(dev->type->name, "iio_device") && dev-
-> >of_node
-> > >>> 
-> > >>> ==
-> > >>> 
-> > >>>>>> data;
-> > >>>>>> 
-> > >>>>>> Hmm, do you need to check type name here? One device node should
-> > >>>>>> rather
-> > >>>>>> represent only one device, making node an unique identifier.
-> > >>>>>> 
-> > >>>>>> It this is meant to be a sanity check, it could be done one time
-> > >>>>>> after
-> > >>>>>> finding the device.
-> > >>>>> 
-> > >>>>> Hi Tomasz,
-> > >>>>> 
-> > >>>>> This is what Lars had suggested earlier:
-> > >>>>>> Yes, use bus_find_device on iio_bus_type. A nice example how to
-> > >>>>>> use
-> > >>>>>> this to lookup device by of node is of_find_i2c_device_by_node.
-> > >>>>>> For
-> > >>>>>> IIO you also need to make sure that dev->type is iio_dev_type,
-> > >>>>>> since
-> > >>>>>> both devices and triggers are registered on the same bus.
-> > >>>>> 
-> > >>>>> Is it really needed, or in other words would it be sufficient to
-> > >>>>> check
-> > >>>>> if of_node and data match each other ? Your reasoning makes sense
-> > >>>>> to
-> > >>>>> me, and I had thought about it as well, but I don't really know,
-> > >>>>> and
-> > >>>>> I don't know how I could test it and guarantee correctness either.
-> > >>>>> I'll be happy to take the strcmp() out if someone tells me that it
-> > >>>>> is
-> > >>>>> definitely not needed ...
-> > >>>> 
-> > >>>> A IIO trigger and a IIO device may have the same of_node, e.g. if
-> > >>>> they
-> > >>>> both belong to the same physical device. But you don't need to do
-> > >>>> the
-> > >>>> strcmp just compare dev->type to iio_dev_type i.e. dev->type ==
-> > >>>> &iio_dev_type. Although it doesn't really matter in practice first
-> > >>>> check for the of_node then check for the type, since the of_node
-> > >>>> will
-> > >>>> only match for a few devices at most, the type will match for quite
-> > >>>> a
-> > >>>> few.
-> > >>> 
-> > >>> I must disagree.
-> > >>> 
-> > >>> If you have two IIO devices provided by one physical device, then in
-> > >>> 
-> > >>> device tree they should be represented as follows:
-> > >>> 	phys-dev@12345678 {
-> > >>> 	
-> > >>> 		compatible = "some-physical-device";
-> > >>> 		/* ... */
-> > >>> 		
-> > >>> 		my_trig: iio-trigger {
-> > >>> 		
-> > >>> 			/* ... */
-> > >>> 		
-> > >>> 		};
-> > >>> 		
-> > >>> 		my_dev: iio-device {
-> > >>> 		
-> > >>> 			/* ... */
-> > >>> 		
-> > >>> 		};
-> > >>> 	
-> > >>> 	};
-> > >>> 
-> > >>> Notice that phys-dev works here as an IIO bus on which its IIO
-> > >>> devices
-> > >>> are available. This is related to the convention that single OF
-> > >>> device node represents single device, which would be violated
-> > >>> otherwise.
-> > >> 
-> > >> Right now the iio device is a child of the physical device, and I am
-> > >> simply passing of_node on to it. guess you are saying that is not
-> > >> correct ?
-> > >> 
-> > >> If so, what would be the correct approach ? Something like the
-> > >> following ?
-> > >> 
-> > >> 	voltage-sensor@35 {
-> > >> 	
-> > >> 		compatible = "maxim,max1139";
-> > >> 		reg = <0x35>;
-> > >> 		vcc-supply = <&reg_3p3v>;
-> > >> 		vref-supply = <&reg_3p3v>;
-> > >> 		
-> > >> 		max1139-iio: iio-device {
-> > >> 		
-> > >> 			device_type = "iio_device";
-> > >> 			#io-channel-cells = <1>;
-> > >> 		
-> > >> 		};
-> > >> 	
-> > >> 	};
-> > >> 
-> > >> and in the driver probe function:
-> > >> 	if (parent->of_node)
-> > >> 	
-> > >> 		iio_dev->dev.of_node = of_find_node_by_type(parent-
-> >of_node,
-> > >> 
-> > >> "iio_device");
-> > >> 
-> > >> Another option would be to use of_find_compatible_node() and
-> > >> something
-> > >> like compatible = "iio-device";
-> > >> in the iio-device node.
-> > > 
-> > > A device node is defined as a node having compatible property. Other
-> > > nodes should be seen as helper nodes, which do not represent devices
-> > > (although they all have struct device_node in Linux).
-> > > 
-> > > Also, AFAIK, device_type is a deprecated property used by some legacy
-> > > PowerPC machines and for current machines only compatible should be
-> > > used.
-> > > 
-> > > So I guess the approach with compatible would be appropriate here.
-> > > 
-> > > However for physical devices providing only a single IIO device it
-> > > might> 
-> > > be better to allow simpler specification, like:
-> > >  	max1139-iio: voltage-sensor@35 {
-> > >  	
-> > >  		compatible = "maxim,max1139", "iio_device";
-> > 
-> > I don't think this makes a lot of sense. First of all iio_device an
-> > artificial Linux term, while the device tree should describe the
-> > hardware.
-> 
-> Well, if you look at an iio_device as a subdevice of a physical device 
-> then it should make a bit more sense. (See nodes of GPIO/pinctrl pin banks 
-> or regulators of a PMIC chip.)
-> 
-> > Secondly there is no generic iio driver which could match on
-> > a node with a "iio_device" compability string and stuff would just
-> > work. I mean we don't do
-> > 
-> > compatible = "atmel,at91sam9260-i2c", "i2c-master";
-> > 
-> > or similar either.
-> 
-> Right. We don't need the other compatible for simple devices with single 
-> subdevice. This is implied by the driver registering a single IIO driver 
-> using the node of physical device.
-> 
-> > >  		reg = <0x35>;
-> > >  		vcc-supply = <&reg_3p3v>;
-> > >  		vref-supply = <&reg_3p3v>;
-> > > 		
-> > > 		device_type = "iio_device";
-> 
-> Also we don't need this device_type. Basically we don't need to specify 
-> whether given node is an iio_device or an iio_trigger. It's up to the 
-> driver to register the node as a device or a trigger by setting dev.of_node 
-> field properly.
-> 
-> So my suggestion would be to make the bindings as following. For single 
-> subdevice:
-> 
-> 	voltage-sensor@35 {
-> 		compatible = "maxim,max1139";
-> 		reg = <0x35>;
-> 		vcc-supply = <&reg_3p3v>;
-> 		vref-supply = <&reg_3p3v>;
-> 		#io-channel-cells = <1>;
-> 	};
-> 
-> For multiple subdevices:
-> 
-> 	voltage-sensor@35 {
-> 		compatible = "maxim,max1139";
-> 		reg = <0x35>;
-> 		vcc-supply = <&reg_3p3v>;
-> 		vref-supply = <&reg_3p3v>;
-> 
-> 		subdevice1 {
-> 			/* Subdevice specific data */
-> 			#io-channel-cells = <1>;
-> 		};
-> 
-> 		subdevice2 {
-> 			/* Subdevice specific data */
-> 			#io-channel-cells = <1>;
-> 		}
+Hello,
 
-Please provide an example how to parse that. Obviously now I can not look for
-"compatible" anymore. Sure, I can use of_get_child_by_name, but that means
-the sub-device names would have to be well defined. Or I could use
-of_find_node_by_name, but then I would need something like 
+This is the forth version (the third was not the last one finally) of
+a patch set to add the dts support for new Armada XP development
+board from Marvell called DB-MV784MP-GP.
 
- 	voltage-sensor@35 {
- 		compatible = "maxim,max1139";
-		iio-device;
- 		reg = <0x35>;
- 		vcc-supply = <&reg_3p3v>;
- 		vref-supply = <&reg_3p3v>;
- 		#io-channel-cells = <1>;
- 	};
+The branch GP-board is available at
+https://github.com/MISL-EBU-System-SW/mainline-public.git
 
-Thanks,
-Guenter
+Changelog:
+v3->v4:
+- change the amount of memory in DTS to indicate the size actually
+  present on the board
+- add a patch which allow the kernel to receive the amount of memory
+  available on the board using ATAG (for legacy bootloader such as the
+  one currently used on Marvell boards).
+
+V2->v3
+- fixed typos in comments
+- fixed the compatible string for the board and use marvell,axp-gp
+  instead of marvell,axp-db which was already used by an other board
+- fixed the model name by remove the colon
+
+v2->v1:
+- added tested-by from Simon Guinot and Florian Fainelli
+- added some comments to emphasize that the amount of memory may
+  change.
+- named the board ``development board''
+
+Gregory CLEMENT (2):
+  arm: mvebu: update defconfig with ATAG support when using DT
+  arm: mvebu: support for the new Armada XP development
+    board(DB-MV784MP-GP)
+
+ arch/arm/boot/dts/Makefile         |    1 +
+ arch/arm/boot/dts/armada-xp-gp.dts |  101 ++++++++++++++++++++++++++++++++++++
+ arch/arm/configs/mvebu_defconfig   |    1 +
+ 3 files changed, 103 insertions(+)
+ create mode 100644 arch/arm/boot/dts/armada-xp-gp.dts
+
+-- 
+1.7.9.5
