@@ -1,7 +1,7 @@
 From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: [PATCH 6/6] Documentation: add docs for max8925 dt
-Date: Mon,  4 Feb 2013 23:40:47 +0800
-Message-ID: <1359992448-22229-6-git-send-email-haojian.zhuang@linaro.org>
+Subject: [PATCH 5/6] mfd: max8925: add dts
+Date: Mon,  4 Feb 2013 23:40:46 +0800
+Message-ID: <1359992448-22229-5-git-send-email-haojian.zhuang@linaro.org>
 References: <1359992448-22229-1-git-send-email-haojian.zhuang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1359992448-22229-1-git-send-email-haojian.zhuang@linaro.org>
@@ -12,129 +12,205 @@ List-Id: devicetree@vger.kernel.org
 
 From: Qing Xu <qingx@marvell.com>
 
-add docs for dt of max8925-mfd, max8925-backlight, and
-max8925-battery
+Add max8925 dts support into mmp2 brownstone platform
 
 Signed-off-by: Qing Xu <qingx@marvell.com>
 Signed-off-by: Haojian Zhuang <haojian.zhuang@gmail.com>
 ---
- Documentation/devicetree/bindings/mfd/max8925.txt  |   64 ++++++++++++++++++++
- .../bindings/power_supply/max8925_batter.txt       |   18 ++++++
- .../bindings/video/backlight/max8925-backlight.txt |   10 +++
- 3 files changed, 92 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/max8925.txt
- create mode 100644 Documentation/devicetree/bindings/power_supply/max8925_batter.txt
- create mode 100644 Documentation/devicetree/bindings/video/backlight/max8925-backlight.txt
+ arch/arm/boot/dts/mmp2-brownstone.dts |  158 +++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/mmp2.dtsi           |    4 +-
+ 2 files changed, 161 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/mfd/max8925.txt b/Documentation/devicetree/bindings/mfd/max8925.txt
-new file mode 100644
-index 0000000..4f0dc66
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/max8925.txt
-@@ -0,0 +1,64 @@
-+* Maxim max8925 Power Management IC
+diff --git a/arch/arm/boot/dts/mmp2-brownstone.dts b/arch/arm/boot/dts/mmp2-brownstone.dts
+index c9b4f27..7f70a39 100644
+--- a/arch/arm/boot/dts/mmp2-brownstone.dts
++++ b/arch/arm/boot/dts/mmp2-brownstone.dts
+@@ -29,6 +29,164 @@
+ 			};
+ 			twsi1: i2c@d4011000 {
+ 				status = "okay";
++				pmic: max8925@3c {
++					compatible = "maxium,max8925";
++					reg = <0x3c>;
++					interrupts = <1>;
++					interrupt-parent = <&intcmux4>;
++					interrupt-controller;
++					#interrupt-cells = <1>;
++					maxim,tsc-irq = <0>;
 +
-+Required parent device properties:
-+- compatible : "maxim,max8925"
-+- reg : the I2C slave address for the max8925 chip
-+- interrupts : IRQ line for the max8925 chip
-+- interrupt-controller: describes the max8925 as an interrupt
-+  controller (has its own domain)
-+- #interrupt-cells : should be 1.
-+	- The cell is the max8925 local IRQ number
-+
-+Optional parent device properties:
-+- maxim,tsc-irq: there are 2 IRQ lines for max8925, one is indicated in
-+  interrupts property, the other is indicated here.
-+
-+max8925 consists of a large and varied group of sub-devices:
-+
-+Device			 Supply Names	 Description
-+------			 ------------	 -----------
-+max8925-onkey		:		: On key
-+max8925-rtc		:		: RTC
-+max8925-regulator	:		: Regulators
-+max8925-backlight	:		: Backlight
-+max8925-touch		:		: Touchscreen
-+max8925-power		:		: Charger
-+
-+Example:
-+
-+	pmic: max8925@3c {
-+		compatible = "maxim,max8925";
-+		reg = <0x3c>;
-+		interrupts = <1>;
-+		interrupt-parent = <&intcmux4>;
-+		interrupt-controller;
-+		#interrupt-cells = <1>;
-+		maxim,tsc-irq = <0>;
-+
-+		regulators {
-+			SDV1 {
-+				regulator-min-microvolt = <637500>;
-+				regulator-max-microvolt = <1425000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+			LDO1 {
-+				regulator-min-microvolt = <750000>;
-+				regulator-max-microvolt = <3900000>;
-+				regulator-boot-on;
-+				regulator-always-on;
-+			};
-+
-+		};
-+		backlight {
-+			maxim,max8925-dual-string = <0>;
-+		};
-+		charger {
-+			batt-detect = <0>;
-+			topoff-threshold = <1>;
-+			fast-charge = <7>;
-+			no-temp-support = <0>;
-+			no-insert-detect = <0>;
-+		};
-+	};
-diff --git a/Documentation/devicetree/bindings/power_supply/max8925_batter.txt b/Documentation/devicetree/bindings/power_supply/max8925_batter.txt
-new file mode 100644
-index 0000000..d7e3e0c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power_supply/max8925_batter.txt
-@@ -0,0 +1,18 @@
-+max8925-battery bindings
-+~~~~~~~~~~~~~~~~
-+
-+Optional properties :
-+ - batt-detect: whether support battery detect
-+ - topoff-threshold: set charging current in topoff mode
-+ - fast-charge: set charging current in fast mode
-+ - no-temp-support: whether support temperature protection detect
-+ - no-insert-detect: whether support insert detect
-+
-+Example:
-+	charger {
-+		batt-detect = <0>;
-+		topoff-threshold = <1>;
-+		fast-charge = <7>;
-+		no-temp-support = <0>;
-+		no-insert-detect = <0>;
-+	};
-diff --git a/Documentation/devicetree/bindings/video/backlight/max8925-backlight.txt b/Documentation/devicetree/bindings/video/backlight/max8925-backlight.txt
-new file mode 100644
-index 0000000..b4cffda
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/max8925-backlight.txt
-@@ -0,0 +1,10 @@
-+88pm860x-backlight bindings
-+
-+Optional properties:
-+  - maxim,max8925-dual-string: whether support dual string
-+
-+Example:
-+
-+	backlights {
-+		maxim,max8925-dual-string = <0>;
-+	};
++					regulators {
++						SDV1 {
++							regulator-min-microvolt = <637500>;
++							regulator-max-microvolt = <1425000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						SDV2 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2225000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						SDV3 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO1 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO2 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO3 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO4 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO5 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO6 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO7 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO8 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO9 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO10 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++						};
++						LDO11 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO12 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO13 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO14 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO15 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO16 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO17 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO18 {
++							regulator-min-microvolt = <650000>;
++							regulator-max-microvolt = <2250000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO19 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++						LDO20 {
++							regulator-min-microvolt = <750000>;
++							regulator-max-microvolt = <3900000>;
++							regulator-boot-on;
++							regulator-always-on;
++						};
++					};
++					backlight {
++						maxim,max8925-dual-string = <0>;
++					};
++					charger {
++						batt-detect = <0>;
++						topoff-threshold = <1>;
++						fast-charge = <7>;
++						no-temp-support = <0>;
++						no-insert-detect = <0>;
++					};
++				};
+ 			};
+ 			rtc: rtc@d4010000 {
+ 				status = "okay";
+diff --git a/arch/arm/boot/dts/mmp2.dtsi b/arch/arm/boot/dts/mmp2.dtsi
+index 0514fb4..1429ac0 100644
+--- a/arch/arm/boot/dts/mmp2.dtsi
++++ b/arch/arm/boot/dts/mmp2.dtsi
+@@ -46,7 +46,7 @@
+ 				mrvl,intc-nr-irqs = <64>;
+ 			};
+ 
+-			intcmux4@d4282150 {
++			intcmux4: interrupt-controller@d4282150 {
+ 				compatible = "mrvl,mmp2-mux-intc";
+ 				interrupts = <4>;
+ 				interrupt-controller;
+@@ -201,6 +201,8 @@
+ 				compatible = "mrvl,mmp-twsi";
+ 				reg = <0xd4011000 0x1000>;
+ 				interrupts = <7>;
++				#address-cells = <1>;
++				#size-cells = <0>;
+ 				mrvl,i2c-fast-mode;
+ 				status = "disabled";
+ 			};
 -- 
 1.7.10.4
