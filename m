@@ -1,69 +1,73 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCH 1/2] ARM: dts: OMAP3: Add GPMC controller
-Date: Mon, 04 Feb 2013 11:36:57 +0100
-Message-ID: <510F8F49.9020800@epfl.ch>
-References: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch> <1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch> <CABxcv=k_gwB3ExQYUeappDZ6FE4L7x8Acer4ZQpDH09BL6LG0Q@mail.gmail.com>
-Reply-To: florian.vaussard@epfl.ch
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 04/10] clk: tegra: Add new fields and PLL types for
+ Tegra114
+Date: Mon, 4 Feb 2013 12:37:56 +0200
+Message-ID: <20130204103756.GP2364@tbergstrom-lnx.Nvidia.com>
+References: <1359713962-16822-1-git-send-email-pdeschrijver@nvidia.com>
+ <1359713962-16822-5-git-send-email-pdeschrijver@nvidia.com>
+ <510C1A2E.5010408@nvidia.com> <510F56B1.5060409@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=k_gwB3ExQYUeappDZ6FE4L7x8Acer4ZQpDH09BL6LG0Q@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <510F56B1.5060409-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+On Mon, Feb 04, 2013 at 07:35:29AM +0100, Prashant Gaikwad wrote:
+> On Saturday 02 February 2013 01:10 AM, Rhyland Klein wrote:
+> > On 2/1/2013 5:18 AM, Peter De Schrijver wrote:
+> >> Tegra114 introduces new PLL types. This requires new clocktypes as well
+> >> as some new fields in the pll structure.
+> >>
+> >> Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >> ---
+> >>    drivers/clk/tegra/clk-pll.c |  719 +++++++++++++++++++++++++++++++++++++++++++
+> >>    drivers/clk/tegra/clk.h     |   47 +++
+> >>    2 files changed, 766 insertions(+), 0 deletions(-)
+> >>
+> >> diff --git a/drivers/clk/tegra/clk-pll.c b/drivers/clk/tegra/clk-pll.c
+> >> index 87d2f34..50114b7 100644
+> >> --- a/drivers/clk/tegra/clk-pll.c
+> >> +++ b/drivers/clk/tegra/clk-pll.c
+> >> [snip]
+> >> +struct clk *tegra_clk_register_pllxc(const char *name, const char *parent_name,
+> >> +                         void __iomem *clk_base, void __iomem *pmc,
+> >> +                         unsigned long flags, unsigned long fixed_rate,
+> >> +                         struct tegra_clk_pll_params *pll_params,
+> >> +                         u32 pll_flags,
+> >> +                         struct tegra_clk_pll_freq_table *freq_table,
+> >> +                         spinlock_t *lock)
+> >> +{
+> >> +       if (!pll_params->pdiv_tohw)
+> >> +               return -EINVAL;
+> >> +
+> > This will cause the following warning:
+> > warning: return makes pointer from integer without a cast
+> >
+> > Same with occurrences in tegra_clk_register_pllm and
+> > tegra_clk_register_pllc.
+> >
+> > Should this instead be returning NULL?
+> 
+> return ERR_PTR(-EINVAL)
+> 
 
-On 02/04/2013 10:27 AM, Javier Martinez Canillas wrote:
-> Hi Florian,
->
-> On Mon, Jan 28, 2013 at 6:54 PM, Florian Vaussard
-> <florian.vaussard@epfl.ch> wrote:
->> Add device-tree support for the GPMC controller on the OMAP3.
->>
->> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
->> ---
->>   arch/arm/boot/dts/omap3.dtsi |   11 +++++++++++
->>   1 files changed, 11 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
->> index 6c63118..2ddae38 100644
->> --- a/arch/arm/boot/dts/omap3.dtsi
->> +++ b/arch/arm/boot/dts/omap3.dtsi
->> @@ -403,5 +403,16 @@
->>                          ti,timer-alwon;
->>                          ti,timer-secure;
->>                  };
->> +
->> +               gpmc: gpmc@6e000000 {
->> +                       compatible = "ti,omap3430-gpmc";
->> +                       ti,hwmods = "gpmc";
->> +                       reg = <0x6e000000 0x1000000>;
->> +                       interrupts = <20>;
->> +                       gpmc,num-cs = <8>;
->> +                       gpmc,num-waitpins = <4>;
->> +                       #address-cells = <2>;
->> +                       #size-cells = <1>;
->> +               };
->>          };
->>   };
->
-> I had the same patch on a tree I was working on to add DT support for
-> gpmc-smsc911x on an OMAP3 board but I was waiting for Daniel's patches
-> to hit mainline before sending the RFC. So please feel free to add:
->
-> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->
+Indeed. I noticed that only after I sent this patchset. Already fixed in
+my own tree.
 
-Great, the smsc911x was on my TODO list, I can cross it out :) BTW,
-do you have a public git for this, so I can test your work on my setup?
+Cheers,
 
-For the GPMC support, I will have to make a few more more as discussed with
-Tony, and as I will be away for more than 2 weeks, feel free to go ahead
-before me. This patchset was only at an RFC stage.
-
-Regards,
-
-Florian
+Peter.
