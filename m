@@ -1,127 +1,62 @@
-From: Prabhakar Lad <prabhakar.csengg@gmail.com>
-Subject: Re: [PATCH v2 4/6] ARM: davinci: da850: add DT node for eth0.
-Date: Mon, 4 Feb 2013 10:37:32 +0530
-Message-ID: <CA+V-a8uT-iF_TdWQwvnc1PfcQ9z3WBuZ2MYS1X_u3wO0_p=T0w@mail.gmail.com>
-References: <1359380879-26306-1-git-send-email-prabhakar.lad@ti.com>
- <1359380879-26306-5-git-send-email-prabhakar.lad@ti.com> <510E51FF.8090005@ti.com>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V2 4/4] DMA: PL330: Modify pl330 filter based on new
+ generic dma dt bindings.
+Date: Mon, 4 Feb 2013 10:51:29 +0530
+Message-ID: <CAAgF-BdfwpOSyrGccs+xepZqMix4q1GRLSAgDnx2NxNTq+MNxA@mail.gmail.com>
+References: <1359723116-18173-1-git-send-email-padma.v@samsung.com>
+	<201302011523.25771.arnd@arndb.de>
+	<CAAgF-Bf55eN2WOgU5nQa=nF76fHvBHR7NdmvoBpF-n4ke6rd1g@mail.gmail.com>
+	<1692358.6BmDsJsb25@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <510E51FF.8090005@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Heiko Schocher <hs@denx.de>, "Lad, Prabhakar" <prabhakar.lad@ti.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1692358.6BmDsJsb25@wuerfel>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, boojin.kim@samsung.com, jassisinghbrar@gmail.com, linux-samsung-soc@vger.kernel.org, Padmavathi Venna <padma.v@samsung.com>, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, jon-hunter@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Sekhar ,
-
-On Sun, Feb 3, 2013 at 5:33 PM, Sekhar Nori <nsekhar@ti.com> wrote:
-> On 1/28/2013 7:17 PM, Prabhakar Lad wrote:
->> From: Lad, Prabhakar <prabhakar.lad@ti.com>
+On Sat, Feb 2, 2013 at 8:39 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Saturday 02 February 2013 08:00:54 Padma Venkat wrote:
+>
+>> > The result of this looks good, but I fear that changing the filter function
+>> > like this wil break all drivers that currently use the plat-samsung/dma-ops.c
+>> > code. For migration purposes, I think the best way is to change
+>> > samsung_dmadev_request() to match the new filter_param format.
+>> >
+>> > After that is done, you can migrate all the drivers using samsung_dma_get_ops
+>> > over to the new dma_request_slave_channel interface without breaking
+>> > anything when only part of the series is applied.
+>> >
+>> >         Arnd
 >>
->> Add eth0 device tree node information and pinmux for mii to da850 by
->> providing interrupt details and local mac address of eth0.
+>> Please check the below link where I made the dma request compatible to
+>> both DT and non-DT
 >>
->> Signed-off-by: Lad, Prabhakar <prabhakar.lad@ti.com>
->> Cc: linux-arm-kernel@lists.infradead.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: davinci-linux-open-source@linux.davincidsp.com
->> Cc: netdev@vger.kernel.org
->> Cc: devicetree-discuss@lists.ozlabs.org
->> Cc: Sekhar Nori <nsekhar@ti.com>
->> Cc: Heiko Schocher <hs@denx.de>
->> ---
->>  arch/arm/boot/dts/da850-evm.dts |    5 +++++
->>  arch/arm/boot/dts/da850.dtsi    |   35 +++++++++++++++++++++++++++++++++++
->>  2 files changed, 40 insertions(+), 0 deletions(-)
+>> http://git.kernel.org/?p=linux/kernel/git/broonie/sound.git;a=commit;h=e7ba5f1d0f6292e1b99c63cc4bb74c70232e9065
+>> http://git.kernel.org/?p=linux/kernel/git/broonie/sound.git;a=commit;h=b5be04d35dbb2e00ab27a97bfd26e17019e857ef
 >>
->> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
->> index a319491..19aa2b3 100644
->> --- a/arch/arm/boot/dts/da850-evm.dts
->> +++ b/arch/arm/boot/dts/da850-evm.dts
->> @@ -30,6 +30,11 @@
->>               mdio: davinci_mdio@1e24000 {
->>                       status = "okay";
->>               };
->> +             eth0: emac@1e20000 {
->> +                     status = "okay";
->> +                     pinctrl-names = "default";
->> +                     pinctrl-0 = <&mii_pins>;
->> +             };
->>       };
->>       nand_cs3@62000000 {
->>               status = "okay";
->> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
->> index ba28f2d..76905f3 100644
->> --- a/arch/arm/boot/dts/da850.dtsi
->> +++ b/arch/arm/boot/dts/da850.dtsi
->> @@ -56,6 +56,26 @@
->>                                       0x30 0x01100000  0x0ff00000
->>                               >;
->>                       };
->> +                     mii_pins: pinmux_mii_pins {
->> +                             pinctrl-single,bits = <
->> +                                     /*
->> +                                      * MII_TXEN, MII_TXCLK, MII_COL
->> +                                      * MII_TXD_3, MII_TXD_2, MII_TXD_1
->> +                                      * MII_TXD_0
->> +                                      */
->> +                                     0x8 0x88888880 0xfffffff0
->> +                                     /*
->> +                                      * MII_RXER, MII_CRS, MII_RXCLK
->> +                                      * MII_RXDV, MII_RXD_3, MII_RXD_2
->> +                                      * MII_RXD_1, MII_RXD_0
->> +                                      */
->> +                                     0xc 0x88888888 0xffffffff
->> +                                     /* MDIO_CLK, MDIO_D */
+>> Please let me know if any changes required.
+>>
 >
-> You call this mii_pins, but include mdio pins in there as well. Can you
-> separate them out? Then some board which uses rmii can simply reuse the
-> entry.
->
-Ok makes sense.
+> Those two changes by themselves still look ok, I think but you
+> still break the non-DT case in this 4/4 patch by changing the
+> pl330_filter function in an incompatible way. You will still
+> have to either change the filter_param argument in the
+> samsung_dmadev_request() function, or provide separate filter
+> functions, one to be used by samsung_dmadev_request and
+> one for the pl330_xlate function.
 
->> +                                     0x10 0x00222288 0x00ffffff
->> +                                     /* GPIO2_6 */
->> +                                     0x18 0x00000080 0x000000f0
->
-> This is SoC specific pin list. Such board specific pins should not make
-> it here.
->
-Ok, so this should be set up using GPIO API's ?
+I missed out to delete this part. Thanks for your point. I will send
+another patch.
 
->> +                             >;
->> +                     };
->>               };
->>               serial0: serial@1c42000 {
->>                       compatible = "ns16550a";
->> @@ -88,6 +108,21 @@
->>                       reg = <0x224000 0x1000>;
->>                       bus_freq = <2200000>;
->>               };
->> +             eth0: emac@1e20000 {
->> +                     compatible = "ti,davinci-dm6467-emac";
->> +                     reg = <0x220000 0x4000>;
->> +                     ti,davinci-ctrl-reg-offset = <0x3000>;
->> +                     ti,davinci-ctrl-mod-reg-offset = <0x2000>;
->> +                     ti,davinci-ctrl-ram-offset = <0>;
->> +                     ti,davinci-ctrl-ram-size = <0x2000>;
->> +                     local-mac-address = [ 00 00 00 00 00 00 ];
->> +                     interrupts = <33
->> +                                     34
->> +                                     35
->> +                                     36
->> +                                     >;
->> +                     phy-handle = <&mdio>;
 >
-> I doubt this is required. This property is to pass a handle to the phy,
-> not mdio bus.
+> In the long run, I think it would be better to move the slave
+> drivers away from the samsung_dma wrappers and use
+> dma_request_slave_channel directly, but that is an independent
+> discussion.
 >
-Ok I'll check on this.
+>         Arnd
 
-Regards,
---Prabhakar
-
-
-> Thanks,
-> Sekhar
+Regards
+Padma
