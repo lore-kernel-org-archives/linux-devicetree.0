@@ -1,93 +1,142 @@
-From: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/2] ARM: mvebu: Add support for SPI controller in Armada
-	370/XP
-Date: Mon, 4 Feb 2013 17:01:45 -0300
-Message-ID: <CALF0-+XPDLeSYBFO6sQ2M24F1f5pgz8tSNMm0VX8BEeda3ym+g@mail.gmail.com>
-References: <1359995888-2385-1-git-send-email-ezequiel.garcia@free-electrons.com>
-	<20130204165119.GA2440@localhost>
-	<20130204183733.GM14746@titan.lakedaemon.net>
-	<20130204192914.GA2456@localhost>
-	<20130204194714.GN14746@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <20130204194714.GN14746-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: [PATCH 1/2] iio: Update iio_channel_get API to use consumer device pointer as argument
+Date: Mon,  4 Feb 2013 12:26:05 -0800
+Message-ID: <1360009566-26347-2-git-send-email-linux@roeck-us.net>
+References: <1360009566-26347-1-git-send-email-linux@roeck-us.net>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1360009566-26347-1-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Jason,
+For iio_channel_get to work with OF based configurations, it needs the
+consumer device pointer instead of the consumer device name as argument.
 
-On Mon, Feb 4, 2013 at 4:47 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> Ezequiel,
->
-> On Mon, Feb 04, 2013 at 04:29:15PM -0300, Ezequiel Garcia wrote:
->> On Mon, Feb 04, 2013 at 01:37:33PM -0500, Jason Cooper wrote:
->> > On Mon, Feb 04, 2013 at 01:51:20PM -0300, Ezequiel Garcia wrote:
->> > > The patches are based in Jason Cooper's mvebu/dt branch.
->> >
->> > It probably doesn't matter for this series (I haven't tried to apply it
->> > yet), but please base future work off of a mainline tag (eg v3.8-rc6).
->> > It makes merge conflicts easier to resolve.
->> >
->> > Feel free to test-merge against the mvebu/ branches and let me know of
->> > any conflicts.
->> >
->>
->> Ah, I see.
->>
->> I was mistakenly assuming you wanted against that branch;
->> I'll base the patches on mainline in the future.
->
-> Nope, the branches are organized that way to sanely merge in with all
-> the other arm-soc code.  While I make every effort to keep them stable
-> (ie, not rebased), they may change at anytime if I need to fix things.
->
-> tags are stable, and if all patches are based on tags, then merge
-> conflicts follow a predictable pattern.  Anything else devolves into
-> chaos.
->
-
-Ah=E1... this explains why I was seeing your branches rebased! ;-)
-
->> > Also, your patch series appears to be out of order, did you use git
->> > send-email once per file?
->>
->> I always send the cover letter manually. This time I did it after the pa=
-tches.
->> I'm in the process of automating this in my workflow,
->> but feel free to make a suggestion.
->
-> if format-patch is called properly (I know from experience how to call
-> it improperly ;-) ), you can just do
->
-> $ git send-email ... /path/to/patches/*.patch
->
-> and it'll get the order correct.  It will also ask for confirmation
-> before sending each email.
->
-> Dry-run sending a series just to yourself lets you see how it will
-> appear once it goes out to the list.
->
-
-Okey, great. Thanks for the advices!
-
--- =
-
-    Ezequiel
-
----------------------------------------------------------------------------=
+Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 ---
-Everyone hates slow websites. So do we.
-Make your web apps faster with AppDynamics
-Download AppDynamics Lite for free today:
-http://p.sf.net/sfu/appdyn_d2d_jan
+ drivers/extcon/extcon-adc-jack.c    |    3 +--
+ drivers/iio/inkern.c                |   11 ++++++++++-
+ drivers/power/generic-adc-battery.c |    4 ++--
+ drivers/power/lp8788-charger.c      |    8 ++++----
+ include/linux/iio/consumer.h        |    5 +++--
+ 5 files changed, 20 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/extcon/extcon-adc-jack.c b/drivers/extcon/extcon-adc-jack.c
+index eda2a1a..d0233cd 100644
+--- a/drivers/extcon/extcon-adc-jack.c
++++ b/drivers/extcon/extcon-adc-jack.c
+@@ -135,8 +135,7 @@ static int adc_jack_probe(struct platform_device *pdev)
+ 		;
+ 	data->num_conditions = i;
+ 
+-	data->chan = iio_channel_get(dev_name(&pdev->dev),
+-			pdata->consumer_channel);
++	data->chan = iio_channel_get(&pdev->dev, pdata->consumer_channel);
+ 	if (IS_ERR(data->chan)) {
+ 		err = PTR_ERR(data->chan);
+ 		goto out;
+diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+index c42aba6..b289915 100644
+--- a/drivers/iio/inkern.c
++++ b/drivers/iio/inkern.c
+@@ -93,7 +93,8 @@ static const struct iio_chan_spec
+ }
+ 
+ 
+-struct iio_channel *iio_channel_get(const char *name, const char *channel_name)
++static struct iio_channel *iio_channel_get_sys(const char *name,
++					       const char *channel_name)
+ {
+ 	struct iio_map_internal *c_i = NULL, *c = NULL;
+ 	struct iio_channel *channel;
+@@ -144,6 +145,14 @@ error_no_mem:
+ 	iio_device_put(c->indio_dev);
+ 	return ERR_PTR(err);
+ }
++
++struct iio_channel *iio_channel_get(struct device *dev,
++				    const char *channel_name)
++{
++	const char *name = dev ? dev_name(dev) : NULL;
++
++	return iio_channel_get_sys(name, channel_name);
++}
+ EXPORT_SYMBOL_GPL(iio_channel_get);
+ 
+ void iio_channel_release(struct iio_channel *channel)
+diff --git a/drivers/power/generic-adc-battery.c b/drivers/power/generic-adc-battery.c
+index 32ce17e..42733c4 100644
+--- a/drivers/power/generic-adc-battery.c
++++ b/drivers/power/generic-adc-battery.c
+@@ -287,8 +287,8 @@ static int gab_probe(struct platform_device *pdev)
+ 	 * based on the channel supported by consumer device.
+ 	 */
+ 	for (chan = 0; chan < ARRAY_SIZE(gab_chan_name); chan++) {
+-		adc_bat->channel[chan] = iio_channel_get(dev_name(&pdev->dev),
+-						gab_chan_name[chan]);
++		adc_bat->channel[chan] = iio_channel_get(&pdev->dev,
++							 gab_chan_name[chan]);
+ 		if (IS_ERR(adc_bat->channel[chan])) {
+ 			ret = PTR_ERR(adc_bat->channel[chan]);
+ 		} else {
+diff --git a/drivers/power/lp8788-charger.c b/drivers/power/lp8788-charger.c
+index 22b6407c..2788908 100644
+--- a/drivers/power/lp8788-charger.c
++++ b/drivers/power/lp8788-charger.c
+@@ -580,7 +580,7 @@ static void lp8788_irq_unregister(struct platform_device *pdev,
+ 	}
+ }
+ 
+-static void lp8788_setup_adc_channel(const char *consumer_name,
++static void lp8788_setup_adc_channel(struct device *dev,
+ 				struct lp8788_charger *pchg)
+ {
+ 	struct lp8788_charger_platform_data *pdata = pchg->pdata;
+@@ -590,11 +590,11 @@ static void lp8788_setup_adc_channel(const char *consumer_name,
+ 		return;
+ 
+ 	/* ADC channel for battery voltage */
+-	chan = iio_channel_get(consumer_name, pdata->adc_vbatt);
++	chan = iio_channel_get(dev, pdata->adc_vbatt);
+ 	pchg->chan[LP8788_VBATT] = IS_ERR(chan) ? NULL : chan;
+ 
+ 	/* ADC channel for battery temperature */
+-	chan = iio_channel_get(consumer_name, pdata->adc_batt_temp);
++	chan = iio_channel_get(dev, pdata->adc_batt_temp);
+ 	pchg->chan[LP8788_BATT_TEMP] = IS_ERR(chan) ? NULL : chan;
+ }
+ 
+@@ -704,7 +704,7 @@ static int lp8788_charger_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	lp8788_setup_adc_channel(pdev->name, pchg);
++	lp8788_setup_adc_channel(&pdev->dev, pchg);
+ 
+ 	ret = lp8788_psy_register(pdev, pchg);
+ 	if (ret)
+diff --git a/include/linux/iio/consumer.h b/include/linux/iio/consumer.h
+index a85787a..833926c 100644
+--- a/include/linux/iio/consumer.h
++++ b/include/linux/iio/consumer.h
+@@ -31,14 +31,15 @@ struct iio_channel {
+ 
+ /**
+  * iio_channel_get() - get description of all that is needed to access channel.
+- * @name:		Unique name of the device as provided in the iio_map
++ * @dev:		Pointer to consumer device. Device name must match
++ *			the name of the device as provided in the iio_map
+  *			with which the desired provider to consumer mapping
+  *			was registered.
+  * @consumer_channel:	Unique name to identify the channel on the consumer
+  *			side. This typically describes the channels use within
+  *			the consumer. E.g. 'battery_voltage'
+  */
+-struct iio_channel *iio_channel_get(const char *name,
++struct iio_channel *iio_channel_get(struct device *dev,
+ 				    const char *consumer_channel);
+ 
+ /**
+-- 
+1.7.9.7
