@@ -1,44 +1,204 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCH 0/2] ARM: dts: omap3-overo: Add pwm-leds and audio support
-Date: Mon, 04 Feb 2013 10:14:19 +0100
-Message-ID: <510F7BEB.1020408@epfl.ch>
-References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch> <5101273A.9090800@ti.com>
-Reply-To: florian.vaussard@epfl.ch
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] Added license header to dtc/libfdt/fdt.h and libfdt_env.h
+Date: Mon, 4 Feb 2013 20:19:54 +1100
+Message-ID: <20130204091954.GD5535@truffula.fritz.box>
+References: <1359582686-32755-1-git-send-email-jsobota@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5101273A.9090800@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============4378706137342593006=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359582686-32755-1-git-send-email-jsobota-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Benoit,
 
-On 01/24/2013 01:21 PM, Benoit Cousson wrote:
-> + Peter who did the original PWM
->
-> Hi Florian,
->
-> On 01/23/2013 06:56 PM, Florian Vaussard wrote:
->> Hello Benoit,
->>
->> This patchset adds some new DT supports to the Overo products. The
->> first patch converts the PMIC LEDB output to use the pwm-leds,
->> newly merged in your branch for_3.9/dts. The second patch adds the
->> audio support.
->
-> Excellent, that looks very good to me, but I'd like to get the
-> feedback from Peter before merging it.
->
+--===============4378706137342593006==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="EY/WZ/HvNxOox07X"
+Content-Disposition: inline
 
-So a patch is being merged to handle triggers in the case of pwm leds [1].
-When done, we will be able to add back the default trigger. Do you want
-to wait on it to merge this series?
 
-Regards,
+--EY/WZ/HvNxOox07X
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Florian
+Needs a commit message and a signed-off-by.  Otherwise looks fine.
 
-[1] https://patchwork.kernel.org/patch/2056191/
+On Wed, Jan 30, 2013 at 04:51:26PM -0500, Justin Sobota wrote:
+> ---
+>  libfdt/fdt.h        |   50 +++++++++++++++++++++++++++++++++++++++++++++=
++++++
+>  libfdt/libfdt_env.h |   50 +++++++++++++++++++++++++++++++++++++++++++++=
++++++
+>  2 files changed, 100 insertions(+)
+>  mode change 100644 =3D> 100755 libfdt/fdt.h
+>  mode change 100644 =3D> 100755 libfdt/libfdt_env.h
+>=20
+> diff --git a/libfdt/fdt.h b/libfdt/fdt.h
+> old mode 100644
+> new mode 100755
+> index 45dd134..4f28b55
+> --- a/libfdt/fdt.h
+> +++ b/libfdt/fdt.h
+> @@ -1,5 +1,55 @@
+>  #ifndef _FDT_H
+>  #define _FDT_H
+> +/*
+> + * libfdt - Flat Device Tree manipulation
+> + * Copyright (C) 2006 David Gibson, IBM Corporation.
+> + *
+> + * libfdt is dual licensed: you can use it either under the terms of
+> + * the GPL, or the BSD license, at your option.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + *     You should have received a copy of the GNU General Public
+> + *     License along with this library; if not, write to the Free
+> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+> + *     MA 02110-1301 USA
+> + *
+> + * Alternatively,
+> + *
+> + *  b) Redistribution and use in source and binary forms, with or
+> + *     without modification, are permitted provided that the following
+> + *     conditions are met:
+> + *
+> + *     1. Redistributions of source code must retain the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer.
+> + *     2. Redistributions in binary form must reproduce the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer in the documentation and/or other materials
+> + *        provided with the distribution.
+> + *
+> + *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+> + *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+> + *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+> + *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+> + *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+> + *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+> + *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+> + *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+> + *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+> + *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> =20
+>  #ifndef __ASSEMBLY__
+> =20
+> diff --git a/libfdt/libfdt_env.h b/libfdt/libfdt_env.h
+> old mode 100644
+> new mode 100755
+> index 956b4ae..18de839
+> --- a/libfdt/libfdt_env.h
+> +++ b/libfdt/libfdt_env.h
+> @@ -1,5 +1,55 @@
+>  #ifndef _LIBFDT_ENV_H
+>  #define _LIBFDT_ENV_H
+> +/*
+> + * libfdt - Flat Device Tree manipulation
+> + * Copyright (C) 2006 David Gibson, IBM Corporation.
+> + *
+> + * libfdt is dual licensed: you can use it either under the terms of
+> + * the GPL, or the BSD license, at your option.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + *     You should have received a copy of the GNU General Public
+> + *     License along with this library; if not, write to the Free
+> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+> + *     MA 02110-1301 USA
+> + *
+> + * Alternatively,
+> + *
+> + *  b) Redistribution and use in source and binary forms, with or
+> + *     without modification, are permitted provided that the following
+> + *     conditions are met:
+> + *
+> + *     1. Redistributions of source code must retain the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer.
+> + *     2. Redistributions in binary form must reproduce the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer in the documentation and/or other materials
+> + *        provided with the distribution.
+> + *
+> + *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+> + *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+> + *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+> + *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+> + *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+> + *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+> + *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+> + *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+> + *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+> + *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> =20
+>  #include <stddef.h>
+>  #include <stdint.h>
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--EY/WZ/HvNxOox07X
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlEPfToACgkQaILKxv3ab8avWACfYfbCFpj0JmgjFX8zGas8kk1T
+IJIAniYQoJO+OqlhfdoXAUhyAdVGhCSK
+=rBvP
+-----END PGP SIGNATURE-----
+
+--EY/WZ/HvNxOox07X--
+
+--===============4378706137342593006==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4378706137342593006==--
