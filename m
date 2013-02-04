@@ -1,42 +1,81 @@
-From: Paul Mundt <lethal@linux-sh.org>
-Subject: Re: [PATCH v8 2/4] misc: Generic on-chip SRAM allocation driver
-Date: Tue, 5 Feb 2013 00:53:45 +0900
-Message-ID: <20130204155344.GA14171@linux-sh.org>
-References: <1359977538-5859-1-git-send-email-p.zabel@pengutronix.de>
- <1359977538-5859-3-git-send-email-p.zabel@pengutronix.de>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH 00/13] Device tree support for OMAP HS USB Host
+Date: Mon, 4 Feb 2013 17:58:47 +0200
+Message-ID: <1359993540-20780-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1359977538-5859-3-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org
+Cc: b-cousson-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rogerq-l0cyMroinI0@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 04, 2013 at 12:32:16PM +0100, Philipp Zabel wrote:
-> This driver requests and remaps a memory region as configured in the
-> device tree. It serves memory from this region via the genalloc API.
-> It optionally enables the SRAM clock.
-> 
-> Other drivers can retrieve the genalloc pool from a phandle pointing
-> to this drivers' device node in the device tree.
-> 
-> The allocation granularity is hard-coded to 32 bytes for now,
-> to make the SRAM driver useful for the 6502 remoteproc driver.
-> There is overhead for bigger SRAMs, where only a much coarser
-> allocation granularity is needed: At 32 bytes minimum allocation
-> size, a 256 KiB SRAM needs a 1 KiB bitmap to track allocations.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+Hi,
 
-How exactly is this "generic" if you have randomly hard-coded an
-allocation granularity that is larger than half of the in-tree SRAM pool
-users today can even support? Did you even bother to look at in-tree SRAM
-pool users other than the one you are working on?
+This patchset adds device tree support for OMAP's High Speed USB Host
+subsystem. Board adaptation for Panda and Beagleboard is also provided.
 
-There also doesn't seem to be any real reason for the hard-coding either,
-this information could easily be fetched via platform data or the device
-tree, and the driver in question would simply need to be able to
-determine whether the size is suitable for it or not.
+Tested on Beagleboard.
+
+Will only work with Panda if we provide a reference to the PHY clock
+generator in the device tree in PATCH 11. I do not know how to do that
+as there is no way to provide a phandle to any of the OMAP generated clocks
+in the device tree. Suggestions welcome :).
+
+Based on linux-next:next-20130204
+
+Depends on "USB: omap-ehci: Move PHY management to PHY driver"
+	git-9UaJU3cA/F/QT0dZR+AlfA@public.gmane.org:rogerq/linux.git next-usbhost16
+
+The following changes since commit 8c00470e1308d08df1f2b2c7e9a561d868ec0526:
+
+  USB: ehci-omap: Select NOP USB transceiver driver (2013-02-04 16:36:06 +0200)
+
+are available in the git repository at:
+  git-9UaJU3cA/F/QT0dZR+AlfA@public.gmane.org:rogerq/linux.git next-usbhost16-dt
+
+Roger Quadros (13):
+  usb: phy: nop: Add device tree support and binding information
+  USB: phy: nop: Defer probe if device needs VCC/RESET
+  mfd: omap-usb-tll: move configuration code to omap_tll_init()
+  mfd: omap-usb-tll: Add device tree support
+  USB: ehci-omap: Get platform resources by index rather than by name
+  USB: ohci-omap3: Get platform resources by index rather than by name
+  USB: ohci-omap3: Add device tree support and binding information
+  USB: ehci-omap: Add device tree support and binding information
+  mfd: omap-usb-host: Add device tree support and binding information
+  ARM: dts: OMAP4: Add HS USB Host IP nodes
+  ARM: dts: omap4-panda: Add USB Host support
+  ARM: dts: OMAP3: Add HS USB Host IP nodes
+  ARM: dts: omap3-beagle: Add USB Host support
+
+ .../devicetree/bindings/mfd/omap-usb-host.txt      |   68 +++++++
+ .../devicetree/bindings/mfd/omap-usb-tll.txt       |   17 ++
+ .../devicetree/bindings/usb/omap-ehci.txt          |   34 +++
+ .../devicetree/bindings/usb/omap3-ohci.txt         |   17 ++
+ .../devicetree/bindings/usb/usb-nop-xceiv.txt      |   34 +++
+ arch/arm/boot/dts/omap3-beagle.dts                 |   71 +++++++
+ arch/arm/boot/dts/omap3.dtsi                       |   31 +++
+ arch/arm/boot/dts/omap4-panda.dts                  |   55 +++++
+ arch/arm/boot/dts/omap4.dtsi                       |   30 +++
+ drivers/mfd/omap-usb-host.c                        |   90 ++++++++-
+ drivers/mfd/omap-usb-tll.c                         |  213 ++++++++++----------
+ drivers/mfd/omap-usb.h                             |    5 +-
+ drivers/usb/host/ehci-omap.c                       |   41 ++++-
+ drivers/usb/host/ohci-omap3.c                      |   24 ++-
+ drivers/usb/otg/nop-usb-xceiv.c                    |   39 ++++
+ include/linux/usb/nop-usb-xceiv.h                  |    4 +
+ 16 files changed, 651 insertions(+), 122 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/omap-usb-host.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/omap-usb-tll.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/omap-ehci.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/omap3-ohci.txt
+ create mode 100644 Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
+
+-- 
+1.7.4.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
