@@ -1,62 +1,44 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH V2 4/4] DMA: PL330: Modify pl330 filter based on new
- generic dma dt bindings.
-Date: Mon, 4 Feb 2013 10:51:29 +0530
-Message-ID: <CAAgF-BdfwpOSyrGccs+xepZqMix4q1GRLSAgDnx2NxNTq+MNxA@mail.gmail.com>
-References: <1359723116-18173-1-git-send-email-padma.v@samsung.com>
-	<201302011523.25771.arnd@arndb.de>
-	<CAAgF-Bf55eN2WOgU5nQa=nF76fHvBHR7NdmvoBpF-n4ke6rd1g@mail.gmail.com>
-	<1692358.6BmDsJsb25@wuerfel>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 6/6] ARM: davinci: da850: configure system configuration
+ chip(CFGCHIP3) for emac
+Date: Mon, 4 Feb 2013 10:58:46 +0530
+Message-ID: <510F470E.5040205@ti.com>
+References: <1359380879-26306-1-git-send-email-prabhakar.lad@ti.com> <1359380879-26306-7-git-send-email-prabhakar.lad@ti.com> <510E5BCF.9080006@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1692358.6BmDsJsb25@wuerfel>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, boojin.kim@samsung.com, jassisinghbrar@gmail.com, linux-samsung-soc@vger.kernel.org, Padmavathi Venna <padma.v@samsung.com>, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, kgene.kim@samsung.com, thomas.abraham@linaro.org, jon-hunter@ti.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <510E5BCF.9080006@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Prabhakar Lad <prabhakar.csengg@gmail.com>, davinci-linux-open-source@linux.davincidsp.com, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Heiko Schocher <hs@denx.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 2, 2013 at 8:39 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Saturday 02 February 2013 08:00:54 Padma Venkat wrote:
->
->> > The result of this looks good, but I fear that changing the filter function
->> > like this wil break all drivers that currently use the plat-samsung/dma-ops.c
->> > code. For migration purposes, I think the best way is to change
->> > samsung_dmadev_request() to match the new filter_param format.
->> >
->> > After that is done, you can migrate all the drivers using samsung_dma_get_ops
->> > over to the new dma_request_slave_channel interface without breaking
->> > anything when only part of the series is applied.
->> >
->> >         Arnd
->>
->> Please check the below link where I made the dma request compatible to
->> both DT and non-DT
->>
->> http://git.kernel.org/?p=linux/kernel/git/broonie/sound.git;a=commit;h=e7ba5f1d0f6292e1b99c63cc4bb74c70232e9065
->> http://git.kernel.org/?p=linux/kernel/git/broonie/sound.git;a=commit;h=b5be04d35dbb2e00ab27a97bfd26e17019e857ef
->>
->> Please let me know if any changes required.
->>
->
-> Those two changes by themselves still look ok, I think but you
-> still break the non-DT case in this 4/4 patch by changing the
-> pl330_filter function in an incompatible way. You will still
-> have to either change the filter_param argument in the
-> samsung_dmadev_request() function, or provide separate filter
-> functions, one to be used by samsung_dmadev_request and
-> one for the pl330_xlate function.
+On 2/3/2013 6:15 PM, Sekhar Nori wrote:
+> On 1/28/2013 7:17 PM, Prabhakar Lad wrote:
+>> From: Lad, Prabhakar <prabhakar.lad@ti.com>
 
-I missed out to delete this part. Thanks for your point. I will send
-another patch.
+> There are couple of issues with this implementation.
+> 
+> 1) da8xx_config_emac() is specific to DA850 EVM, but masquerades as
+>    generic for da8xx. Looks like you need two functions, one for soc
+>    specific configuration and one board specific.
+> 2) da8xx_config_emac() goes through all the time, whether the
+>    particular board has emac module or not. Shouldn't
+>    da8xx_config_emac() check if emac is actually enabled in the passed
+>    dtb and only the do the configuration?
+> 3) The function assumes mii is used always, you can use the rmii_en dt
+>    property to check if rmii/mii is enabled and configure the soc/board
+>    accordingly.
+> 4) If the same function can work both for da850 and da830, then it can
+>    be implemented outside of CONFIG_ARCH_DAVINCI_DA850.
 
->
-> In the long run, I think it would be better to move the slave
-> drivers away from the samsung_dma wrappers and use
-> dma_request_slave_channel directly, but that is an independent
-> discussion.
->
->         Arnd
+Another thing I forgot to mention:
 
-Regards
-Padma
+5) This patch replicates a lot of code form board-da850-evm.c. This
+needs to be avoided. May be create function to configure emac in
+da850.c. This can then be called in board-da850-evm.c as well as in the
+dt case.
+
+Thanks,
+Sekhar
