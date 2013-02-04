@@ -1,81 +1,108 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH] gpio: Add device driver for GRGPIO cores
-Date: Mon, 04 Feb 2013 09:10:32 +0100
-Message-ID: <510F6CF8.3000700@gaisler.com>
-References: <1359548921-14925-1-git-send-email-andreas@gaisler.com> <CACRpkdbAS05dVOrE2E5Uu6qfzfgcoz_KqQmqZxz5Pne9BbCt-g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbAS05dVOrE2E5Uu6qfzfgcoz_KqQmqZxz5Pne9BbCt-g@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH] ARM: SAMSUNG: dma: Remove unnecessary code
+Date: Mon, 04 Feb 2013 14:17:55 +0530
+Message-ID: <1359967675-624-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.v@samsung.com, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, arnd@arndb.de, vinod.koul@intel.com, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 2013-02-02 16:16, Linus Walleij wrote:
->> +#if defined(__BIG_ENDIAN)
->> +static inline u32 grgpio_read_reg(u32 __iomem *reg)
->> +{
->> +       return ioread32be(reg);
->> +}
->> +
->> +static inline void grgpio_write_reg(u32 __iomem *reg, u32 val)
->> +{
->> +       iowrite32be(val, reg);
->> +}
->> +#else
->> [...]
->
-> Where is this __BIG_ENDIAN flag coming from?
->
-> And do you really have and test this regularly on both LE and BE hardware?
-> I am worrying a bit about maintenance...
+This patch removes the usage of DMACH_DT_PROP and dt_dmach_prop
+from dma code as the new generic dma dt binding support has been
+added.
 
-I am more than happy to drop that. I will most probably never test this 
-on LE hardware.
+Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+---
 
+The functionality of this patch is dependent on following patches in the link.
+http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg15402.html
 
->> +static void grgpio_set_sbit(struct grgpio_priv *priv, u32 __iomem *reg,
->> +                          unsigned offset, int val, u32 *shadow)
->> +{
->> +       unsigned long flags;
->> +
->> +       spin_lock_irqsave(&priv->lock, flags);
->> +
->> +       if (val)
->> +               *shadow |= (1 << offset);
->> +       else
->> +               *shadow &= ~(1 << offset);
->> +       grgpio_write_reg(reg, *shadow);
->> +
->> +       spin_unlock_irqrestore(&priv->lock, flags);
->> +}
->
-> This is all very basic stuff. Please make a best effort to reuse or
-> augment and reuse this:
-> drivers/gpio/gpio-generic.c
->
-> IIRC this one also handles endianness issues, but I could be wrong.
+This patch is made based on Mark Brown next branch.
 
-Sure, many of the initial functions do small basic tasks and resembles 
-functions in gpio-generic. But that does not make the hardware itself a 
-good candidate to use gpio-generic IMHO:
+ arch/arm/mach-s3c24xx/include/mach/dma.h       |    1 -
+ arch/arm/mach-s3c64xx/include/mach/dma.h       |    1 -
+ arch/arm/plat-samsung/dma-ops.c                |   10 +---------
+ arch/arm/plat-samsung/include/plat/dma-ops.h   |    1 -
+ arch/arm/plat-samsung/include/plat/dma-pl330.h |    1 -
+ 5 files changed, 1 insertions(+), 13 deletions(-)
 
-1) This core is generally running on SPARC, that is BE, but even on 
-SPARC, readl and writel (that would be used in gprio-generic) deals with 
-LE accesses and my registers are BE.
-
-2) The grgpio_to_irq function is very hardware specific, and there is of 
-course no gpio_to_irq support in gpio-generic.
-
-3) Running on SPARC, I get Open Firmware information from prom, so there 
-is no platform data to access in the probe function. Of course general 
-Open Firmware support could be added to gpio-generic, but in addition my 
-probe needs to set up very hardware specific things for gpio_to_irq.
-
-
-Thank you for the feedback!
-
-Cheers,
-Andreas Larsson
+diff --git a/arch/arm/mach-s3c24xx/include/mach/dma.h b/arch/arm/mach-s3c24xx/include/mach/dma.h
+index 6b72d5a..b55da1d 100644
+--- a/arch/arm/mach-s3c24xx/include/mach/dma.h
++++ b/arch/arm/mach-s3c24xx/include/mach/dma.h
+@@ -24,7 +24,6 @@
+ */
+ 
+ enum dma_ch {
+-	DMACH_DT_PROP = -1,	/* not yet supported, do not use */
+ 	DMACH_XD0 = 0,
+ 	DMACH_XD1,
+ 	DMACH_SDI,
+diff --git a/arch/arm/mach-s3c64xx/include/mach/dma.h b/arch/arm/mach-s3c64xx/include/mach/dma.h
+index 57b1ff4..fe1a98c 100644
+--- a/arch/arm/mach-s3c64xx/include/mach/dma.h
++++ b/arch/arm/mach-s3c64xx/include/mach/dma.h
+@@ -21,7 +21,6 @@
+  */
+ enum dma_ch {
+ 	/* DMA0/SDMA0 */
+-	DMACH_DT_PROP = -1, /* not yet supported, do not use */
+ 	DMACH_UART0 = 0,
+ 	DMACH_UART0_SRC2,
+ 	DMACH_UART1,
+diff --git a/arch/arm/plat-samsung/dma-ops.c b/arch/arm/plat-samsung/dma-ops.c
+index 71d58dd..ec0d731 100644
+--- a/arch/arm/plat-samsung/dma-ops.c
++++ b/arch/arm/plat-samsung/dma-ops.c
+@@ -23,23 +23,15 @@ static unsigned samsung_dmadev_request(enum dma_ch dma_ch,
+ 				struct device *dev, char *ch_name)
+ {
+ 	dma_cap_mask_t mask;
+-	void *filter_param;
+ 
+ 	dma_cap_zero(mask);
+ 	dma_cap_set(param->cap, mask);
+ 
+-	/*
+-	 * If a dma channel property of a device node from device tree is
+-	 * specified, use that as the fliter parameter.
+-	 */
+-	filter_param = (dma_ch == DMACH_DT_PROP) ?
+-		(void *)param->dt_dmach_prop : (void *)dma_ch;
+-
+ 	if (dev->of_node)
+ 		return (unsigned)dma_request_slave_channel(dev, ch_name);
+ 	else
+ 		return (unsigned)dma_request_channel(mask, pl330_filter,
+-							filter_param);
++							(void *)dma_ch);
+ }
+ 
+ static int samsung_dmadev_release(unsigned ch, void *param)
+diff --git a/arch/arm/plat-samsung/include/plat/dma-ops.h b/arch/arm/plat-samsung/include/plat/dma-ops.h
+index 1141782..ce6d763 100644
+--- a/arch/arm/plat-samsung/include/plat/dma-ops.h
++++ b/arch/arm/plat-samsung/include/plat/dma-ops.h
+@@ -18,7 +18,6 @@
+ 
+ struct samsung_dma_req {
+ 	enum dma_transaction_type cap;
+-	struct property *dt_dmach_prop;
+ 	struct s3c2410_dma_client *client;
+ };
+ 
+diff --git a/arch/arm/plat-samsung/include/plat/dma-pl330.h b/arch/arm/plat-samsung/include/plat/dma-pl330.h
+index d384a80..abe07fa 100644
+--- a/arch/arm/plat-samsung/include/plat/dma-pl330.h
++++ b/arch/arm/plat-samsung/include/plat/dma-pl330.h
+@@ -21,7 +21,6 @@
+  * use these just as IDs.
+  */
+ enum dma_ch {
+-	DMACH_DT_PROP = -1,
+ 	DMACH_UART0_RX = 0,
+ 	DMACH_UART0_TX,
+ 	DMACH_UART1_RX,
+-- 
+1.7.4.4
