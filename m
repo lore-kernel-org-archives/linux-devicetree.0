@@ -1,13 +1,13 @@
 From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH 05/13] USB: ehci-omap: Get platform resources by index
+Subject: Re: [PATCH 06/13] USB: ohci-omap3: Get platform resources by index
  rather than by name
-Date: Mon, 4 Feb 2013 16:12:31 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1302041612150.1756-100000@iolanthe.rowland.org>
-References: <1359993540-20780-6-git-send-email-rogerq@ti.com>
+Date: Mon, 4 Feb 2013 16:12:55 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1302041612380.1756-100000@iolanthe.rowland.org>
+References: <1359993540-20780-7-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1359993540-20780-6-git-send-email-rogerq@ti.com>
+In-Reply-To: <1359993540-20780-7-git-send-email-rogerq@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: Roger Quadros <rogerq@ti.com>
 Cc: tony@atomide.com, b-cousson@ti.com, balbi@ti.com, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, paul@pwsan.com
@@ -22,4 +22,5 @@ On Mon, 4 Feb 2013, Roger Quadros wrote:
 > Signed-off-by: Roger Quadros <rogerq@ti.com>
 
 Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
 
