@@ -1,62 +1,130 @@
-From: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v8 2/4] misc: Generic on-chip SRAM allocation driver
-Date: Mon, 4 Feb 2013 12:02:04 -0500
-Message-ID: <20130204170204.GX2244@beef>
-References: <1359977538-5859-1-git-send-email-p.zabel@pengutronix.de>
- <1359977538-5859-3-git-send-email-p.zabel@pengutronix.de>
- <20130204155344.GA14171@linux-sh.org>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to arm/common
+Date: Mon, 4 Feb 2013 19:02:16 +0200
+Message-ID: <20130204170216.GC4269@arwen.pp.htv.fi>
+References: <20130201184915.GP2244@beef> <510C1D0E.6030401@mvista.com>
+	<20130201185820.GE29898@arwen.pp.htv.fi>
+	<510C2A47.1090607@mvista.com>
+	<20130201205600.GA31762@arwen.pp.htv.fi>
+	<20130201213003.GW2637@n2100.arm.linux.org.uk>
+	<20130204154153.GA18237@arwen.pp.htv.fi> <510FF1A6.403@mvista.com>
+	<20130204164712.GB4269@arwen.pp.htv.fi>
+	<510FF5C9.3030600@mvista.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130204155344.GA14171-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Paul Mundt <lethal-M7jkjyW5wf5g9hUCZPvPmw@public.gmane.org>
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Javier Martin <javier.martin-N4RbWZIug12MkV8/HQOAswC/G2K4zDHf@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============1844909107=="
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <510FF5C9.3030600-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
+Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "Cousson,  Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>Li
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 05, 2013 at 12:53:45AM +0900, Paul Mundt wrote:
-> On Mon, Feb 04, 2013 at 12:32:16PM +0100, Philipp Zabel wrote:
-> > This driver requests and remaps a memory region as configured in the
-> > device tree. It serves memory from this region via the genalloc API.
-> > It optionally enables the SRAM clock.
-> > 
-> > Other drivers can retrieve the genalloc pool from a phandle pointing
-> > to this drivers' device node in the device tree.
-> > 
-> > The allocation granularity is hard-coded to 32 bytes for now,
-> > to make the SRAM driver useful for the 6502 remoteproc driver.
-> > There is overhead for bigger SRAMs, where only a much coarser
-> > allocation granularity is needed: At 32 bytes minimum allocation
-> > size, a 256 KiB SRAM needs a 1 KiB bitmap to track allocations.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Reviewed-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> 
-> How exactly is this "generic" if you have randomly hard-coded an
-> allocation granularity that is larger than half of the in-tree SRAM pool
-> users today can even support? Did you even bother to look at in-tree SRAM
-> pool users other than the one you are working on?
->
-> There also doesn't seem to be any real reason for the hard-coding either,
-> this information could easily be fetched via platform data or the device
-> tree, and the driver in question would simply need to be able to
-> determine whether the size is suitable for it or not.
+--===============1844909107==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VywGB/WGlW4DM4P8"
+Content-Disposition: inline
 
-Please see http://thread.gmane.org/gmane.linux.kernel/1377702 for the
-original discussion on my patch for configurable allocation granularity.
-I believe there was an implied agreement from Grant that it was ok if we
-went with a more descriptive name even though it hits the grey area of
-not describing hardware.
+--VywGB/WGlW4DM4P8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--Matt
+Hi,
+
+On Mon, Feb 04, 2013 at 08:54:17PM +0300, Sergei Shtylyov wrote:
+> > On Mon, Feb 04, 2013 at 08:36:38PM +0300, Sergei Shtylyov wrote:
+> >>> opted out of it. From the top of my head we have CPPI 3.x, CPPI 4.1,
+> >>> Inventra DMA, OMAP sDMA and ux500 DMA engines supported by the driver.
+>=20
+> >>> Granted, CPPI 4.1 makes some assumptions about the fact that it's
+> >>> handling USB tranfers,
+>=20
+> >>    What CPPI 4.1 code makes this assumptions? MUSB DMA driver? Then it=
+'s just
+>=20
+> > HW makes the asumptions
+>=20
+>    Not true at all. There is a separate set of registers (at offset 0) wh=
+ich
+> copes with USB specifics, but CPPI 4.1 itself doesn't know about USB anyt=
+hing.
+
+CPPI 4.1 was made for USB transfers.
+
+> It's just the way the driver was written that it used both sets of regist=
+ers but
+> this needs to be changed into more abstacted accesses to the USB-specific=
+ part,
+> to cope with it being different on different platfroms, like AM35x. The d=
+river
+> as it was last posted, just needs rework now.
+
+are you saying you will do the work ?
+
+> >>    Don't know, I was quite content with the abstraction when writing C=
+PPI 4.1
+> >> driver for MUSB...
+>=20
+> > look closer. The whole:
+>=20
+> > if (is_cppi())
+> > 	foo();
+> > else if (is_inventra())
+> > 	bar();
+> > else if (is_omap_sdma())
+> > 	baz();
+>=20
+> > is bogus.
+>=20
+>    That part -- yes. There were attempt to get rid of this, but without c=
+hanging
+> the DMA API. It was left halfway done after my only critical comment, IIR=
+C. Will
+> we ever see the continuation of this effort?
+
+patches are welcome
+
+--=20
+balbi
+
+--VywGB/WGlW4DM4P8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRD+mYAAoJEIaOsuA1yqREYRYP/3EKttosWR93nRGgtWaJhy1X
+3YAOwIxCTY96/vju2F32NVPkEzM86iQ5bGy7iUf+YSeq7zHE/jxI9WqXYQNVVOsU
+MikYsqHQqZH1xy0Th4l8Un/tRTxG9y5fWDLXSsCyajmD9M0g5RfCHOz1glZLcVRD
+Jnu1oHwFG7ls0Nsldeg6mCoR+33jl2w2KdvRMmDEm/rsqbXCg2OugWXOCEZMv7Jc
+XISYbyaz2t3uatXFRKMxnpw+r1ziYzuQIqGYI7CKhowYOD7I9eokpiDRfSYzzAF2
+ck4ZVAOKG+FI1lTRC3Wd9DQDgkiVxWC0QFXfHaUO8ukX0zk6Twlvf6ZLkhAHLE73
+DSFwV1YElY6acAGC8UG1HFPEN0BPf2kyVZdq9jXXxCyA/ZvzEPNuaBjp5UscE7Iw
+Of3VM3bpOiMer859VsZZ16z6fPTAhrTzui3icVEoeop9WaQ2wKZvVW1pAYdDjgem
+Si/ywEtjIe724KjjTR8VMp2CEyziXNapbPDJ860s84EveCEFjeyOtTNH0kIP09s6
+kPFmE31yi28lFSPAqc7ohO3jqDR7z+qqF2DvOh+miSKUll7TCSpnXN2wT4UJ5HGm
+YLJLRe9wxrHBvb3tz02qtt0PyQAIfHAIGs8Llas+/ki2eFeise0fFWP54zjIe9eR
+AEDTciWKFntvCb+P2OYt
+=nSAz
+-----END PGP SIGNATURE-----
+
+--VywGB/WGlW4DM4P8--
+
+--===============1844909107==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1844909107==--
