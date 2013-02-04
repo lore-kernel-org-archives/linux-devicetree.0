@@ -1,58 +1,81 @@
-From: Artem Bityutskiy <artem.bityutskiy@linux.intel.com>
-Subject: Re: [PATCH] mtd: devices: elm: Removes <xx> literals in elm DT node
-Date: Mon, 04 Feb 2013 10:08:00 +0200
-Message-ID: <1359965280.13791.12.camel@sauron.fi.intel.com>
-References: <9580c5839ea64e09ddd61610ce922d7cd1adc861.1359010256.git.avinashphilip@ti.com>
-Reply-To: artem.bityutskiy@linux.intel.com
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: Re: [PATCH] gpio: Add device driver for GRGPIO cores
+Date: Mon, 04 Feb 2013 09:10:32 +0100
+Message-ID: <510F6CF8.3000700@gaisler.com>
+References: <1359548921-14925-1-git-send-email-andreas@gaisler.com> <CACRpkdbAS05dVOrE2E5Uu6qfzfgcoz_KqQmqZxz5Pne9BbCt-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha1"; protocol="application/pgp-signature";
-	boundary="=-xwUgq7gi4ffNHM1Nna01"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <9580c5839ea64e09ddd61610ce922d7cd1adc861.1359010256.git.avinashphilip@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Philip Avinash <avinashphilip@ti.com>
-Cc: dwmw2@infradead.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, nsekhar@ti.com, gururaja.hebbar@ti.com, hvaibhav@ti.com
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdbAS05dVOrE2E5Uu6qfzfgcoz_KqQmqZxz5Pne9BbCt-g@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
+On 2013-02-02 16:16, Linus Walleij wrote:
+>> +#if defined(__BIG_ENDIAN)
+>> +static inline u32 grgpio_read_reg(u32 __iomem *reg)
+>> +{
+>> +       return ioread32be(reg);
+>> +}
+>> +
+>> +static inline void grgpio_write_reg(u32 __iomem *reg, u32 val)
+>> +{
+>> +       iowrite32be(val, reg);
+>> +}
+>> +#else
+>> [...]
+>
+> Where is this __BIG_ENDIAN flag coming from?
+>
+> And do you really have and test this regularly on both LE and BE hardware?
+> I am worrying a bit about maintenance...
 
---=-xwUgq7gi4ffNHM1Nna01
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+I am more than happy to drop that. I will most probably never test this 
+on LE hardware.
 
-On Thu, 2013-01-24 at 12:23 +0530, Philip Avinash wrote:
-> As part of removing generalized dependency, replace <xx> literal fields
-> in DT compatible field with <52> for am335x platforms.
->=20
-> Signed-off-by: Philip Avinash <avinashphilip@ti.com>
 
-Pushed to l2-mtd.git, thanks!
+>> +static void grgpio_set_sbit(struct grgpio_priv *priv, u32 __iomem *reg,
+>> +                          unsigned offset, int val, u32 *shadow)
+>> +{
+>> +       unsigned long flags;
+>> +
+>> +       spin_lock_irqsave(&priv->lock, flags);
+>> +
+>> +       if (val)
+>> +               *shadow |= (1 << offset);
+>> +       else
+>> +               *shadow &= ~(1 << offset);
+>> +       grgpio_write_reg(reg, *shadow);
+>> +
+>> +       spin_unlock_irqrestore(&priv->lock, flags);
+>> +}
+>
+> This is all very basic stuff. Please make a best effort to reuse or
+> augment and reuse this:
+> drivers/gpio/gpio-generic.c
+>
+> IIRC this one also handles endianness issues, but I could be wrong.
 
---=20
-Best Regards,
-Artem Bityutskiy
+Sure, many of the initial functions do small basic tasks and resembles 
+functions in gpio-generic. But that does not make the hardware itself a 
+good candidate to use gpio-generic IMHO:
 
---=-xwUgq7gi4ffNHM1Nna01
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+1) This core is generally running on SPARC, that is BE, but even on 
+SPARC, readl and writel (that would be used in gprio-generic) deals with 
+LE accesses and my registers are BE.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.13 (GNU/Linux)
+2) The grgpio_to_irq function is very hardware specific, and there is of 
+course no gpio_to_irq support in gpio-generic.
 
-iQIcBAABAgAGBQJRD2xgAAoJECmIfjd9wqK013EQAICi9n36zs4RoRxN98qurA+K
-r7blCtPgWEi4TpxKXD9TYAGlMtEgkT7zhD7RfH+k7TC42mo2pWmSLcMPwmmkSOX0
-SbWcgqEy+N498K+Id25W6yNX51qLlrQ/GWvLWtMw9seOiYz3Lt6jr+cCGTZI3ZO6
-ZO6gOD+7jlqs1R1aGUGQR5NOqdGQcqARCmbm138p0AJzL1+qatLxUV8i+xaHUldB
-TQzr0tR7uH/mH1PFAsxs0LVWjJS1REXQGQKY980hnUVNcGwPEiURXbSUFyn1p4ai
-2DHCihDX3p2oKOH1gVLDUQp2amTtZvhoUyJSiqGAO9auDOTSP0No2iP4F1tlTRJo
-43Drn+GNZgYRs4zuXGBQI4S9tt0nUlgc3/Q0eBDjA79X5CH46U4aVxw6kDKfFeUV
-g9IkYIvq2MKqd4Ka3gZ4mdb8OmWSEEuTLP8FKLkmc5cwCLdXnRr2yevTi4YgbqiA
-LDdFic6BoMDeJ2MDm+m2J0xZsMKgkj3RNOYnh3QsV4/onOWmoMD4Bv3IOP1vVF5L
-yR26vRMq/zBUpEQb1hrSQM03L0P7AgDJnDOz6Rj8KLnLrUaUz5oEG1yiuvkcuvu+
-D2cAPqkMG+IvuX+tBVYIb8vW1cEyxzvb8uru1i99IgpSHckoN/ppr/rQxYWrK4GS
-sI/PtrEftGSUjTtxIhRn
-=7p52
------END PGP SIGNATURE-----
+3) Running on SPARC, I get Open Firmware information from prom, so there 
+is no platform data to access in the probe function. Of course general 
+Open Firmware support could be added to gpio-generic, but in addition my 
+probe needs to set up very hardware specific things for gpio_to_irq.
 
---=-xwUgq7gi4ffNHM1Nna01--
 
+Thank you for the feedback!
+
+Cheers,
+Andreas Larsson
