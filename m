@@ -1,67 +1,48 @@
-From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Subject: RE: [PATCH V2 3/6] ARM: davinci: da850: add DT node for I2C0
-Date: Mon, 4 Feb 2013 03:07:59 +0000
-Message-ID: <A4887BF146CD57468F700B415D2F4701582771@DBDE01.ent.ti.com>
-References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
- <1359445134-13323-4-git-send-email-manishv.b@ti.com>
- <510E5CC1.8050801@ti.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 0/4] mfd/regulator: tps65090: add DT support and suspend/resume
+ cleanups
+Date: Mon, 4 Feb 2013 09:10:51 +0530
+Message-ID: <510F2DC3.2060803@nvidia.com>
+References: <1356686981-4152-1-git-send-email-ldewangan@nvidia.com> <20130203141931.GA8476@sortiz-mobl> <20130203223304.GB24304@sortiz-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <510E5CC1.8050801@ti.com>
-Content-Language: en-US
+In-Reply-To: <20130203223304.GB24304@sortiz-mobl>
 Sender: linux-doc-owner@vger.kernel.org
-To: "Nori, Sekhar" <nsekhar@ti.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "tony@atomide.com" <tony@atomide.com>, "hs@denx.de" <hs@denx.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "khilman@deeprootsystems.com" <khilman@deeprootsystems.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, grant.li
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "lrg@ti.com" <lrg@ti.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBGZWIgMDMsIDIwMTMgYXQgMTg6MTk6MDUsIE5vcmksIFNla2hhciB3cm90ZToNCj4g
-DQo+IA0KPiBPbiAxLzI5LzIwMTMgMTowOCBQTSwgVmlzaHdhbmF0aHJhbyBCYWRhcmtoZSwgTWFu
-aXNoIHdyb3RlOg0KPiA+IEFkZCBJMkMwIGRldmljZSB0cmVlIG5vZGUgaW5mb3JtYXRpb24gdG8g
-ZGE4NTAtZXZtLg0KPiA+IEFsc28sIGFkZCBJMkMwIHBpbiBtdXhpbmcgaW5mb3JtYXRpb24gaW4g
-ZGE4NTAtZXZtLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFZpc2h3YW5hdGhyYW8gQmFkYXJr
-aGUsIE1hbmlzaCA8bWFuaXNodi5iQHRpLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNpbmNl
-IFYxOg0KPiA+ICAtIFVwZGF0ZWQgaTJjMCBub2RlIG5hbWVzIGluIGR0cyBhbmQgZHRzaSBmaWxl
-Lg0KPiA+ICAtIFJlbW92ZWQgaW50ZXJydXB0IHBhcmVudCBmcm9tIGkyYzAgbm9kZS4NCj4gPiAg
-LSBIYW5kbGVkIGkyYzAgcGluIG11eCBpbnNpZGUgaTJjMCBub2RlLg0KPiA+IA0KPiA+IDoxMDA2
-NDQgMTAwNjQ0IDQzMzAyN2YuLi4gYzllZDY4My4uLiBNCWFyY2gvYXJtL2Jvb3QvZHRzL2RhODUw
-LWV2bS5kdHMNCj4gPiA6MTAwNjQ0IDEwMDY0NCA1ZTBlYjVjLi4uIDI0NWFiOWEuLi4gTQlhcmNo
-L2FybS9ib290L2R0cy9kYTg1MC5kdHNpDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWV2
-bS5kdHMgfCAgICA1ICsrKysrDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kgICAg
-fCAgIDE1ICsrKysrKysrKysrKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlv
-bnMoKyksIDAgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
-b3QvZHRzL2RhODUwLWV2bS5kdHMgDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1ldm0u
-ZHRzIGluZGV4IDQzMzAyN2YuLmM5ZWQ2ODMgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9v
-dC9kdHMvZGE4NTAtZXZtLmR0cw0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWV2
-bS5kdHMNCj4gPiBAQCAtMjcsNiArMjcsMTEgQEANCj4gPiAgCQlzZXJpYWwyOiBzZXJpYWxAMWQw
-ZDAwMCB7DQo+ID4gIAkJCXN0YXR1cyA9ICJva2F5IjsNCj4gPiAgCQl9Ow0KPiA+ICsJCWkyYzA6
-IGkyYzBAMWMyMjAwMCB7DQo+IA0KPiBUaGlzIHNob3VsZCBiZToNCj4gDQo+IGkyYzA6IGkyY0Ax
-YzIyMDAwDQo+IA0KPiBpbmxpbmUgd2l0aCB3aGF0IGhhcyBiZWVuIGRvbmUgaW4gcmVzdCBvZiB0
-aGlzIGZpbGUuDQoNCk9rLCBJIHdpbGwgdXBkYXRlIHRoaXMgbmFtZSBldmVyeXdoZXJlLg0KDQo+
-IA0KPiA+ICsJCQlzdGF0dXMgPSAib2theSI7DQo+ID4gKwkJCXBpbmN0cmwtbmFtZXMgPSAiZGVm
-YXVsdCI7DQo+ID4gKwkJCXBpbmN0cmwtMCA9IDwmaTJjMF9waW5zPjsNCj4gPiArCQl9Ow0KPiA+
-ICAJfTsNCj4gPiAgCW5hbmRfY3MzQDYyMDAwMDAwIHsNCj4gPiAgCQlzdGF0dXMgPSAib2theSI7
-DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kgDQo+ID4gYi9h
-cmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpIGluZGV4IDVlMGViNWMuLjI0NWFiOWEgMTAwNjQ0
-DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQ0KPiA+ICsrKyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kNCj4gPiBAQCAtNTYsNiArNTYsMTIgQEANCj4gPiAgCQkJ
-CQkweDMwIDB4MDExMDAwMDAgIDB4MGZmMDAwMDANCj4gPiAgCQkJCT47DQo+ID4gIAkJCX07DQo+
-ID4gKwkJCWkyYzBfcGluczogcGlubXV4X2kyYzBfcGlucyB7DQo+ID4gKwkJCQlwaW5jdHJsLXNp
-bmdsZSxiaXRzID0gPA0KPiA+ICsJCQkJCS8qIEkyQzBfU0RBLEkyQzBfU0NMICovDQo+ID4gKwkJ
-CQkJMHgxMCAweDAwMDAyMjAwIDB4MDAwMGZmMDANCj4gPiArCQkJCT47DQo+ID4gKwkJCX07DQo+
-ID4gIAkJfTsNCj4gPiAgCQlzZXJpYWwwOiBzZXJpYWxAMWM0MjAwMCB7DQo+ID4gIAkJCWNvbXBh
-dGlibGUgPSAibnMxNjU1MGEiOw0KPiA+IEBAIC04MSw2ICs4NywxNSBAQA0KPiA+ICAJCQlpbnRl
-cnJ1cHRzID0gPDYxPjsNCj4gPiAgCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiAgCQl9Ow0K
-PiA+ICsJCWkyYzA6IGkyYzBAMWMyMjAwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAidGksZGF2
-aW5jaS1pMmMiOw0KPiA+ICsJCQlyZWcgPSA8MHgyMjAwMCAweDEwMDA+Ow0KPiA+ICsJCQljbG9j
-ay1mcmVxdWVuY3kgPSA8MTAwMDAwPjsNCj4gDQo+IFRoZSBjbG9jayBmcmVxdWVuY3kgaXMgYm9h
-cmQgc3BlY2lmaWMuIFRoaXMgc2hvdWxkIGNvbWUgZnJvbSBkYTg1MC1ldm0uZHRzLg0KDQpPaywg
-SSB3aWxsIGFkZCB0aGlzIGJvYXJkIHNwZWNpZmljIGluZm9ybWF0aW9uIGluIGRhODUwLWV2bS5k
-dHMuDQoNCj4gDQo+IEFsc28sIEkgdGhpbmsgeW91IGNhbiBtZXJnZSB0aGUgYXV4ZGF0YSBhZGRp
-dGlvbiB3aXRoIHRoaXMgcGF0Y2guIENhbiB5b3UgcG9zdCB0aGUgaTJjMCBzdXBwb3J0IHNlcGFy
-YXRlIGZyb20gdGhpcyBzZXJpZXMsIHNvIGl0IGNhbiBiZSB0YWtlbiBpbmRlcGVuZGVudGx5PyBM
-b29rcyBsaWtlIG90aGVyIHBhdGNoZXMgaGF2ZSBzb21lIGRlcGVuZGVuY2llcy9hY2tzIG5lZWRl
-ZC4NCg0KU3VyZSwgSSB3aWxsIG1lcmdlIGF1eGRhdGEgYWRkaXRpb24gd2l0aCB0aGlzIHBhdGNo
-IGFuZCBwb3N0IHRoaXMgcGF0Y2ggaW5kZXBlbmRlbnRseSBmcm9tIHRoaXMgc2VyaWVzLg0KDQo+
-IA0KPiBUaGFua3MsDQo+IFNla2hhcg0KPiANCg0KDQpSZWdhcmRzLCANCk1hbmlzaA0K
+On Monday 04 February 2013 04:03 AM, Samuel Ortiz wrote:
+> Hi Laxman,
+>
+> On Sun, Feb 03, 2013 at 03:19:31PM +0100, Samuel Ortiz wrote:
+>> Hi Laxman,
+>>
+>> On Fri, Dec 28, 2012 at 02:59:37PM +0530, Laxman Dewangan wrote:
+>>> The patch series add DT support on TPS65090 device.
+>>>
+>>> Also remove the suspend/resume implementation as it duplicates with
+>>> irq_suspend/irq_resume().
+>>>
+>>> Laxman Dewangan (4):
+>>>    mfd: tps65090: add DT support for tps65090
+>>>    regulator: tps65090: add DT support
+>>>    mfd: tps65090: Pass irq domain when adding mfd sub devices
+>>>    mfd: tps65090: remove suspend/resume callbacks
+>>>
+>>>   .../devicetree/bindings/regulator/tps65090.txt     |  121 ++++++++++++++++++++
+>>>   drivers/mfd/tps65090.c                             |   77 ++++++++----
+>>>   drivers/regulator/tps65090-regulator.c             |   96 +++++++++++++++-
+>>>   include/linux/mfd/tps65090.h                       |    1 +
+>>>   4 files changed, 266 insertions(+), 29 deletions(-)
+>>>   create mode 100644 Documentation/devicetree/bindings/regulator/tps65090.txt
+>> All 4 patches applied to my for-next branch, thanks.
+> Sorry for the confusion: I took v2 of your patchset, skipping the regulator
+> patch who will go through Mark's tree.
+
+Thank you very much. The regulator patch is already applied in Mark's tree.
+
+Thanks,
+Laxman
