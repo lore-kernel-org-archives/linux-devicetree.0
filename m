@@ -1,85 +1,67 @@
-From: Haojian Zhuang <haojian.zhuang@gmail.com>
-Subject: Re: [PATCH 0/7] mfd: update on max8925 for DT support
-Date: Mon, 4 Feb 2013 09:05:09 +0800
-Message-ID: <CAN1soZycHE97uAFcJYxxkUXc_66JJgKUFRxed1sii9VswTdXDQ@mail.gmail.com>
-References: <1352187305-9660-1-git-send-email-qingx@marvell.com>
-	<CAN1soZzAZ9Od_5jC0ZFdw03c5P9Q+gJQswTwp0M1YWM_ti+9xw@mail.gmail.com>
-	<50B6F8AC.6050307@marvell.com>
-	<CAN1soZzTYjU9nEe1hQWAwz2R0GRfvaQ7HyaMZ3uNxtBV0X14uA@mail.gmail.com>
-	<50C8228B.7040702@marvell.com>
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Subject: RE: [PATCH V2 3/6] ARM: davinci: da850: add DT node for I2C0
+Date: Mon, 4 Feb 2013 03:07:59 +0000
+Message-ID: <A4887BF146CD57468F700B415D2F4701582771@DBDE01.ent.ti.com>
+References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
+ <1359445134-13323-4-git-send-email-manishv.b@ti.com>
+ <510E5CC1.8050801@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <50C8228B.7040702@marvell.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Qing Xu <qingx@marvell.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <510E5CC1.8050801@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Nori, Sekhar" <nsekhar@ti.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "AnilKumar, Chimata" <anilkumar@ti.com>, "tony@atomide.com" <tony@atomide.com>, "hs@denx.de" <hs@denx.de>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "khilman@deeprootsystems.com" <khilman@deeprootsystems.com>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "rob@landley.net" <rob@landley.net>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, grant.li
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2012 at 2:22 PM, Qing Xu <qingx@marvell.com> wrote:
-> On 12/04/2012 03:11 PM, Haojian Zhuang wrote:
->>
->> On Thu, Nov 29, 2012 at 1:54 PM, Qing Xu <qingx@marvell.com> wrote:
->>>
->>> On 11/23/2012 05:09 PM, Haojian Zhuang wrote:
->>>>
->>>> On Tue, Nov 6, 2012 at 3:35 PM, Qing Xu <qingx@marvell.com> wrote:
->>>>>
->>>>> From: Qing Xu <qingx@marvell.com>
->>>>>
->>>>> 1. add irqdomain for max8925, it is necessary for dt support
->>>>> 2. bug fix in max8925 mfd devices'irq base and device registry failure
->>>>> 3. support DT for max8925 mfd devices
->>>>>
->>>>> Qing Xu (7):
->>>>>     mfd: max8925: add irqdomain for dt
->>>>>     mfd: max8925: fix mfd device register failure
->>>>>     mfd: max8925: fix onkey driver irq base
->>>>>     mfd: max8925: support dt for power supply
->>>>>     mfd: max8925: support dt for regulator
->>>>>     mfd: max8925: support dt for backlight
->>>>>     mfd: max8925: add dts
->>>>>
->>>>>    arch/arm/boot/dts/mmp2-brownstone.dts |  166
->>>>> +++++++++++++++++++++++++++++++++
->>>>>    arch/arm/boot/dts/mmp2.dtsi           |    4 +-
->>>>>    drivers/input/misc/max8925_onkey.c    |    3 -
->>>>>    drivers/mfd/max8925-core.c            |  107 +++++++++++++--------
->>>>>    drivers/mfd/max8925-i2c.c             |   32 ++++++-
->>>>>    drivers/power/max8925_power.c         |   57 ++++++++++-
->>>>>    drivers/regulator/max8925-regulator.c |   35 +++++++-
->>>>>    drivers/video/backlight/max8925_bl.c  |   31 ++++++-
->>>>>    include/linux/mfd/max8925.h           |   12 ++-
->>>>>    9 files changed, 389 insertions(+), 58 deletions(-)
->>>>>
->>>> No document on devicetree binding?
->>>
->>> I added a new patch of "Documentation: add docs for max8925 dt",
->>> please help to review, thanks a lot!
->>
->> Acked.
->>
->> Samuel,
->> How do you think about this patch series? From my view, it's ok.
->>
->> Best Regards
->> Haojian
->
->
->
->
-> Samuel,
->
-> Do you have any comments on these patches? Could they be merged?
->
-> Thanks a lot!
-> Qing
->
->
-
-Hi Samuel,
-
-Are they merged into your git tree?
-
-Best Regards
-Haojian
+T24gU3VuLCBGZWIgMDMsIDIwMTMgYXQgMTg6MTk6MDUsIE5vcmksIFNla2hhciB3cm90ZToNCj4g
+DQo+IA0KPiBPbiAxLzI5LzIwMTMgMTowOCBQTSwgVmlzaHdhbmF0aHJhbyBCYWRhcmtoZSwgTWFu
+aXNoIHdyb3RlOg0KPiA+IEFkZCBJMkMwIGRldmljZSB0cmVlIG5vZGUgaW5mb3JtYXRpb24gdG8g
+ZGE4NTAtZXZtLg0KPiA+IEFsc28sIGFkZCBJMkMwIHBpbiBtdXhpbmcgaW5mb3JtYXRpb24gaW4g
+ZGE4NTAtZXZtLg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFZpc2h3YW5hdGhyYW8gQmFkYXJr
+aGUsIE1hbmlzaCA8bWFuaXNodi5iQHRpLmNvbT4NCj4gPiAtLS0NCj4gPiBDaGFuZ2VzIHNpbmNl
+IFYxOg0KPiA+ICAtIFVwZGF0ZWQgaTJjMCBub2RlIG5hbWVzIGluIGR0cyBhbmQgZHRzaSBmaWxl
+Lg0KPiA+ICAtIFJlbW92ZWQgaW50ZXJydXB0IHBhcmVudCBmcm9tIGkyYzAgbm9kZS4NCj4gPiAg
+LSBIYW5kbGVkIGkyYzAgcGluIG11eCBpbnNpZGUgaTJjMCBub2RlLg0KPiA+IA0KPiA+IDoxMDA2
+NDQgMTAwNjQ0IDQzMzAyN2YuLi4gYzllZDY4My4uLiBNCWFyY2gvYXJtL2Jvb3QvZHRzL2RhODUw
+LWV2bS5kdHMNCj4gPiA6MTAwNjQ0IDEwMDY0NCA1ZTBlYjVjLi4uIDI0NWFiOWEuLi4gTQlhcmNo
+L2FybS9ib290L2R0cy9kYTg1MC5kdHNpDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWV2
+bS5kdHMgfCAgICA1ICsrKysrDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kgICAg
+fCAgIDE1ICsrKysrKysrKysrKysrKw0KPiA+ICAyIGZpbGVzIGNoYW5nZWQsIDIwIGluc2VydGlv
+bnMoKyksIDAgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jv
+b3QvZHRzL2RhODUwLWV2bS5kdHMgDQo+ID4gYi9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1ldm0u
+ZHRzIGluZGV4IDQzMzAyN2YuLmM5ZWQ2ODMgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9v
+dC9kdHMvZGE4NTAtZXZtLmR0cw0KPiA+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLWV2
+bS5kdHMNCj4gPiBAQCAtMjcsNiArMjcsMTEgQEANCj4gPiAgCQlzZXJpYWwyOiBzZXJpYWxAMWQw
+ZDAwMCB7DQo+ID4gIAkJCXN0YXR1cyA9ICJva2F5IjsNCj4gPiAgCQl9Ow0KPiA+ICsJCWkyYzA6
+IGkyYzBAMWMyMjAwMCB7DQo+IA0KPiBUaGlzIHNob3VsZCBiZToNCj4gDQo+IGkyYzA6IGkyY0Ax
+YzIyMDAwDQo+IA0KPiBpbmxpbmUgd2l0aCB3aGF0IGhhcyBiZWVuIGRvbmUgaW4gcmVzdCBvZiB0
+aGlzIGZpbGUuDQoNCk9rLCBJIHdpbGwgdXBkYXRlIHRoaXMgbmFtZSBldmVyeXdoZXJlLg0KDQo+
+IA0KPiA+ICsJCQlzdGF0dXMgPSAib2theSI7DQo+ID4gKwkJCXBpbmN0cmwtbmFtZXMgPSAiZGVm
+YXVsdCI7DQo+ID4gKwkJCXBpbmN0cmwtMCA9IDwmaTJjMF9waW5zPjsNCj4gPiArCQl9Ow0KPiA+
+ICAJfTsNCj4gPiAgCW5hbmRfY3MzQDYyMDAwMDAwIHsNCj4gPiAgCQlzdGF0dXMgPSAib2theSI7
+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kgDQo+ID4gYi9h
+cmNoL2FybS9ib290L2R0cy9kYTg1MC5kdHNpIGluZGV4IDVlMGViNWMuLjI0NWFiOWEgMTAwNjQ0
+DQo+ID4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAuZHRzaQ0KPiA+ICsrKyBiL2FyY2gv
+YXJtL2Jvb3QvZHRzL2RhODUwLmR0c2kNCj4gPiBAQCAtNTYsNiArNTYsMTIgQEANCj4gPiAgCQkJ
+CQkweDMwIDB4MDExMDAwMDAgIDB4MGZmMDAwMDANCj4gPiAgCQkJCT47DQo+ID4gIAkJCX07DQo+
+ID4gKwkJCWkyYzBfcGluczogcGlubXV4X2kyYzBfcGlucyB7DQo+ID4gKwkJCQlwaW5jdHJsLXNp
+bmdsZSxiaXRzID0gPA0KPiA+ICsJCQkJCS8qIEkyQzBfU0RBLEkyQzBfU0NMICovDQo+ID4gKwkJ
+CQkJMHgxMCAweDAwMDAyMjAwIDB4MDAwMGZmMDANCj4gPiArCQkJCT47DQo+ID4gKwkJCX07DQo+
+ID4gIAkJfTsNCj4gPiAgCQlzZXJpYWwwOiBzZXJpYWxAMWM0MjAwMCB7DQo+ID4gIAkJCWNvbXBh
+dGlibGUgPSAibnMxNjU1MGEiOw0KPiA+IEBAIC04MSw2ICs4NywxNSBAQA0KPiA+ICAJCQlpbnRl
+cnJ1cHRzID0gPDYxPjsNCj4gPiAgCQkJc3RhdHVzID0gImRpc2FibGVkIjsNCj4gPiAgCQl9Ow0K
+PiA+ICsJCWkyYzA6IGkyYzBAMWMyMjAwMCB7DQo+ID4gKwkJCWNvbXBhdGlibGUgPSAidGksZGF2
+aW5jaS1pMmMiOw0KPiA+ICsJCQlyZWcgPSA8MHgyMjAwMCAweDEwMDA+Ow0KPiA+ICsJCQljbG9j
+ay1mcmVxdWVuY3kgPSA8MTAwMDAwPjsNCj4gDQo+IFRoZSBjbG9jayBmcmVxdWVuY3kgaXMgYm9h
+cmQgc3BlY2lmaWMuIFRoaXMgc2hvdWxkIGNvbWUgZnJvbSBkYTg1MC1ldm0uZHRzLg0KDQpPaywg
+SSB3aWxsIGFkZCB0aGlzIGJvYXJkIHNwZWNpZmljIGluZm9ybWF0aW9uIGluIGRhODUwLWV2bS5k
+dHMuDQoNCj4gDQo+IEFsc28sIEkgdGhpbmsgeW91IGNhbiBtZXJnZSB0aGUgYXV4ZGF0YSBhZGRp
+dGlvbiB3aXRoIHRoaXMgcGF0Y2guIENhbiB5b3UgcG9zdCB0aGUgaTJjMCBzdXBwb3J0IHNlcGFy
+YXRlIGZyb20gdGhpcyBzZXJpZXMsIHNvIGl0IGNhbiBiZSB0YWtlbiBpbmRlcGVuZGVudGx5PyBM
+b29rcyBsaWtlIG90aGVyIHBhdGNoZXMgaGF2ZSBzb21lIGRlcGVuZGVuY2llcy9hY2tzIG5lZWRl
+ZC4NCg0KU3VyZSwgSSB3aWxsIG1lcmdlIGF1eGRhdGEgYWRkaXRpb24gd2l0aCB0aGlzIHBhdGNo
+IGFuZCBwb3N0IHRoaXMgcGF0Y2ggaW5kZXBlbmRlbnRseSBmcm9tIHRoaXMgc2VyaWVzLg0KDQo+
+IA0KPiBUaGFua3MsDQo+IFNla2hhcg0KPiANCg0KDQpSZWdhcmRzLCANCk1hbmlzaA0K
