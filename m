@@ -1,42 +1,36 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v5 09/10] clk: tegra: Implement clocks for Tegra114
-Date: Mon, 4 Feb 2013 16:34:01 +0200
-Message-ID: <20130204143401.GW2364@tbergstrom-lnx.Nvidia.com>
-References: <1359713962-16822-1-git-send-email-pdeschrijver@nvidia.com>
- <1359713962-16822-10-git-send-email-pdeschrijver@nvidia.com>
- <510F5E87.90801@nvidia.com>
+From: Haojian Zhuang <haojian.zhuang@gmail.com>
+Subject: Re: [PATCH 0/7] mfd: update on max8925 for DT support
+Date: Mon, 4 Feb 2013 23:41:21 +0800
+Message-ID: <CAN1soZxqJQxg2K5FkTEs-y+Fuhk922ZHpQHwt2Dxhgb24eLdpw@mail.gmail.com>
+References: <1352187305-9660-1-git-send-email-qingx@marvell.com>
+	<CAN1soZzAZ9Od_5jC0ZFdw03c5P9Q+gJQswTwp0M1YWM_ti+9xw@mail.gmail.com>
+	<50B6F8AC.6050307@marvell.com>
+	<CAN1soZzTYjU9nEe1hQWAwz2R0GRfvaQ7HyaMZ3uNxtBV0X14uA@mail.gmail.com>
+	<50C8228B.7040702@marvell.com>
+	<CAN1soZycHE97uAFcJYxxkUXc_66JJgKUFRxed1sii9VswTdXDQ@mail.gmail.com>
+	<20130204113254.GC8476@sortiz-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <510F5E87.90801@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Prashant Gaikwad <pgaikwad@nvidia.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@wwwdotorg.org>, Russell King <linux@arm.linux.org.uk>, Simon Glass <sjg@chromium.org>, Mike Turquette <mturquette@linaro.org>, Joseph Lo <josephl@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130204113254.GC8476@sortiz-mobl>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>
+Cc: Qing Xu <qingx@marvell.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 04, 2013 at 08:08:55AM +0100, Prashant Gaikwad wrote:
-> On Friday 01 February 2013 03:48 PM, Peter De Schrijver wrote:
+On Mon, Feb 4, 2013 at 7:32 PM, Samuel Ortiz <sameo@linux.intel.com> wrote:
+> Hi Haojian,
+>
+> On Mon, Feb 04, 2013 at 09:05:09AM +0800, Haojian Zhuang wrote:
+>> Hi Samuel,
+>>
+>> Are they merged into your git tree?
+> No, they're not. Qing sent several versions for many of the patches in this
+> patchset: Could you please send a rebased patchset (on top of for-next) with
+> the latest versions of each patch ?
+>
 
-...
+No problem. Now I send them out.
 
-> > +       /* xusb_hs_src */
-> > +       val = readl(clk_base + CLK_SOURCE_XUSB_SS_SRC);
-> > +       val |= BIT(25); /* always select PLLU_60M */
-> > +       writel(val, clk_base + CLK_SOURCE_XUSB_SS_SRC);
-> > +
-> > +       clk = clk_register_fixed_factor(NULL, "xusb_hs_src", "pll_u_60M", 0,
-> > +                                       1, 1);
-> > +       clks[xusb_hs_src] = clk;
-> > +
-> 
-> With device tree we can directly use pll_u_60M, no need to register 
-> clock with fixed factor 1.
-> Same comment for dis1-fixed, dsi2-fixed and mipi-cal-fast clocks.
-> 
-
-Does it make sense to have separate DT IDs at all then?
-
-Cheers,
-
-Peter.
+Best Regards
+Haojian
