@@ -1,49 +1,98 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] ARM: SAMSUNG: dma: Remove unnecessary code
-Date: Mon, 4 Feb 2013 17:43:54 +0000
-Message-ID: <201302041743.55029.arnd@arndb.de>
-References: <1359967675-624-1-git-send-email-padma.v@samsung.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v2 4/6] ARM: davinci: da850: add DT node for eth0.
+Date: Mon, 4 Feb 2013 23:20:00 +0530
+Message-ID: <510FF4C8.7000706@ti.com>
+References: <1359380879-26306-1-git-send-email-prabhakar.lad@ti.com> <1359380879-26306-5-git-send-email-prabhakar.lad@ti.com> <510E51FF.8090005@ti.com> <CA+V-a8uT-iF_TdWQwvnc1PfcQ9z3WBuZ2MYS1X_u3wO0_p=T0w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1359967675-624-1-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, vinod.koul@intel.com, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+V-a8uT-iF_TdWQwvnc1PfcQ9z3WBuZ2MYS1X_u3wO0_p=T0w@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Prabhakar Lad <prabhakar.csengg@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, davinci-linux-open-source@linux.davincidsp.com, linux-kernel@vger.kernel.org, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Heiko Schocher <hs@denx.de>, "Lad, Prabhakar" <prabhakar.lad@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 04 February 2013, Padmavathi Venna wrote:
-> diff --git a/arch/arm/plat-samsung/dma-ops.c b/arch/arm/plat-samsung/dma-ops.c
-> index 71d58dd..ec0d731 100644
-> --- a/arch/arm/plat-samsung/dma-ops.c
-> +++ b/arch/arm/plat-samsung/dma-ops.c
-> @@ -23,23 +23,15 @@ static unsigned samsung_dmadev_request(enum dma_ch dma_ch,
->  				struct device *dev, char *ch_name)
->  {
->  	dma_cap_mask_t mask;
-> -	void *filter_param;
->  
->  	dma_cap_zero(mask);
->  	dma_cap_set(param->cap, mask);
->  
-> -	/*
-> -	 * If a dma channel property of a device node from device tree is
-> -	 * specified, use that as the fliter parameter.
-> -	 */
-> -	filter_param = (dma_ch == DMACH_DT_PROP) ?
-> -		(void *)param->dt_dmach_prop : (void *)dma_ch;
-> -
->  	if (dev->of_node)
->  		return (unsigned)dma_request_slave_channel(dev, ch_name);
->  	else
->  		return (unsigned)dma_request_channel(mask, pl330_filter,
-> -							filter_param);
-> +							(void *)dma_ch);
->  }
+On 2/4/2013 10:37 AM, Prabhakar Lad wrote:
+> Sekhar ,
+> 
+> On Sun, Feb 3, 2013 at 5:33 PM, Sekhar Nori <nsekhar@ti.com> wrote:
+>> On 1/28/2013 7:17 PM, Prabhakar Lad wrote:
+>>> From: Lad, Prabhakar <prabhakar.lad@ti.com>
+>>>
+>>> Add eth0 device tree node information and pinmux for mii to da850 by
+>>> providing interrupt details and local mac address of eth0.
+>>>
+>>> Signed-off-by: Lad, Prabhakar <prabhakar.lad@ti.com>
+>>> Cc: linux-arm-kernel@lists.infradead.org
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Cc: davinci-linux-open-source@linux.davincidsp.com
+>>> Cc: netdev@vger.kernel.org
+>>> Cc: devicetree-discuss@lists.ozlabs.org
+>>> Cc: Sekhar Nori <nsekhar@ti.com>
+>>> Cc: Heiko Schocher <hs@denx.de>
+>>> ---
+>>>  arch/arm/boot/dts/da850-evm.dts |    5 +++++
+>>>  arch/arm/boot/dts/da850.dtsi    |   35 +++++++++++++++++++++++++++++++++++
+>>>  2 files changed, 40 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+>>> index a319491..19aa2b3 100644
+>>> --- a/arch/arm/boot/dts/da850-evm.dts
+>>> +++ b/arch/arm/boot/dts/da850-evm.dts
+>>> @@ -30,6 +30,11 @@
+>>>               mdio: davinci_mdio@1e24000 {
+>>>                       status = "okay";
+>>>               };
+>>> +             eth0: emac@1e20000 {
+>>> +                     status = "okay";
+>>> +                     pinctrl-names = "default";
+>>> +                     pinctrl-0 = <&mii_pins>;
+>>> +             };
+>>>       };
+>>>       nand_cs3@62000000 {
+>>>               status = "okay";
+>>> diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+>>> index ba28f2d..76905f3 100644
+>>> --- a/arch/arm/boot/dts/da850.dtsi
+>>> +++ b/arch/arm/boot/dts/da850.dtsi
+>>> @@ -56,6 +56,26 @@
+>>>                                       0x30 0x01100000  0x0ff00000
+>>>                               >;
+>>>                       };
+>>> +                     mii_pins: pinmux_mii_pins {
+>>> +                             pinctrl-single,bits = <
+>>> +                                     /*
+>>> +                                      * MII_TXEN, MII_TXCLK, MII_COL
+>>> +                                      * MII_TXD_3, MII_TXD_2, MII_TXD_1
+>>> +                                      * MII_TXD_0
+>>> +                                      */
+>>> +                                     0x8 0x88888880 0xfffffff0
+>>> +                                     /*
+>>> +                                      * MII_RXER, MII_CRS, MII_RXCLK
+>>> +                                      * MII_RXDV, MII_RXD_3, MII_RXD_2
+>>> +                                      * MII_RXD_1, MII_RXD_0
+>>> +                                      */
+>>> +                                     0xc 0x88888888 0xffffffff
+>>> +                                     /* MDIO_CLK, MDIO_D */
+>>
+>> You call this mii_pins, but include mdio pins in there as well. Can you
+>> separate them out? Then some board which uses rmii can simply reuse the
+>> entry.
+>>
+> Ok makes sense.
+> 
+>>> +                                     0x10 0x00222288 0x00ffffff
+>>> +                                     /* GPIO2_6 */
+>>> +                                     0x18 0x00000080 0x000000f0
+>>
+>> This is SoC specific pin list. Such board specific pins should not make
+>> it here.
+>>
+> Ok, so this should be set up using GPIO API's ?
 
-This still looks wrong to me, because the pl330_filter function now tkes
-a struct dma_pl330_filter_args pointer argument, not dma_ch name.
+Yes, the pins ultimately will be controlled by gpiolib APIs, but the
+pins should be defined under the eth node in .dts
 
-	Arnd
+Thanks,
+Sekhar
