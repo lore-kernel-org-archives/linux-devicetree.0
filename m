@@ -1,12 +1,15 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH] Added license header to dtc/libfdt/fdt.h and libfdt_env.h
-Date: Mon, 4 Feb 2013 20:19:54 +1100
-Message-ID: <20130204091954.GD5535@truffula.fritz.box>
-References: <1359582686-32755-1-git-send-email-jsobota@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] gpio: Add device driver for GRGPIO cores
+Date: Mon, 4 Feb 2013 10:24:50 +0100
+Message-ID: <CACRpkdYbJiBT5u0qJz+Krpky7W0WNqtSsO6Jo2TYZ2LRcyassA@mail.gmail.com>
+References: <1359548921-14925-1-git-send-email-andreas@gaisler.com>
+ <CACRpkdbAS05dVOrE2E5Uu6qfzfgcoz_KqQmqZxz5Pne9BbCt-g@mail.gmail.com>
+ <510F6CF8.3000700@gaisler.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4378706137342593006=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359582686-32755-1-git-send-email-jsobota-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <510F6CF8.3000700-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -17,188 +20,93 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+(CC:ing Anton who wrote the generic GPIO. I might be wrong.)
 
---===============4378706137342593006==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="EY/WZ/HvNxOox07X"
-Content-Disposition: inline
+On Mon, Feb 4, 2013 at 9:10 AM, Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> wrote:
+> On 2013-02-02 16:16, Linus Walleij wrote:
+>>>
+>>> +#if defined(__BIG_ENDIAN)
+>>> +static inline u32 grgpio_read_reg(u32 __iomem *reg)
+>>> +{
+>>> +       return ioread32be(reg);
+>>> +}
+>>> +
+>>> +static inline void grgpio_write_reg(u32 __iomem *reg, u32 val)
+>>> +{
+>>> +       iowrite32be(val, reg);
+>>> +}
+>>> +#else
+>>> [...]
+>>
+>>
+>> Where is this __BIG_ENDIAN flag coming from?
+>>
+>> And do you really have and test this regularly on both LE and BE hardware?
+>> I am worrying a bit about maintenance...
+>
+> I am more than happy to drop that. I will most probably never test this on
+> LE hardware.
 
+Will someone else? I'm more thinking whether it is customary in
+the SPARC drivers to do things like this, then we should follow
+that pattern of course.
 
---EY/WZ/HvNxOox07X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>>> +static void grgpio_set_sbit(struct grgpio_priv *priv, u32 __iomem *reg,
+>>> +                          unsigned offset, int val, u32 *shadow)
+>>> +{
+>>> +       unsigned long flags;
+>>> +
+>>> +       spin_lock_irqsave(&priv->lock, flags);
+>>> +
+>>> +       if (val)
+>>> +               *shadow |= (1 << offset);
+>>> +       else
+>>> +               *shadow &= ~(1 << offset);
+>>> +       grgpio_write_reg(reg, *shadow);
+>>> +
+>>> +       spin_unlock_irqrestore(&priv->lock, flags);
+>>> +}
+>>
+>>
+>> This is all very basic stuff. Please make a best effort to reuse or
+>> augment and reuse this:
+>> drivers/gpio/gpio-generic.c
+>>
+>> IIRC this one also handles endianness issues, but I could be wrong.
+>
+> Sure, many of the initial functions do small basic tasks and resembles
+> functions in gpio-generic. But that does not make the hardware itself a good
+> candidate to use gpio-generic IMHO:
+>
+> 1) This core is generally running on SPARC, that is BE, but even on SPARC,
+> readl and writel (that would be used in gprio-generic) deals with LE
+> accesses and my registers are BE.
 
-Needs a commit message and a signed-off-by.  Otherwise looks fine.
+Yeah that's true. :-(
 
-On Wed, Jan 30, 2013 at 04:51:26PM -0500, Justin Sobota wrote:
-> ---
->  libfdt/fdt.h        |   50 +++++++++++++++++++++++++++++++++++++++++++++=
-+++++
->  libfdt/libfdt_env.h |   50 +++++++++++++++++++++++++++++++++++++++++++++=
-+++++
->  2 files changed, 100 insertions(+)
->  mode change 100644 =3D> 100755 libfdt/fdt.h
->  mode change 100644 =3D> 100755 libfdt/libfdt_env.h
->=20
-> diff --git a/libfdt/fdt.h b/libfdt/fdt.h
-> old mode 100644
-> new mode 100755
-> index 45dd134..4f28b55
-> --- a/libfdt/fdt.h
-> +++ b/libfdt/fdt.h
-> @@ -1,5 +1,55 @@
->  #ifndef _FDT_H
->  #define _FDT_H
-> +/*
-> + * libfdt - Flat Device Tree manipulation
-> + * Copyright (C) 2006 David Gibson, IBM Corporation.
-> + *
-> + * libfdt is dual licensed: you can use it either under the terms of
-> + * the GPL, or the BSD license, at your option.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + *     You should have received a copy of the GNU General Public
-> + *     License along with this library; if not, write to the Free
-> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-> + *     MA 02110-1301 USA
-> + *
-> + * Alternatively,
-> + *
-> + *  b) Redistribution and use in source and binary forms, with or
-> + *     without modification, are permitted provided that the following
-> + *     conditions are met:
-> + *
-> + *     1. Redistributions of source code must retain the above
-> + *        copyright notice, this list of conditions and the following
-> + *        disclaimer.
-> + *     2. Redistributions in binary form must reproduce the above
-> + *        copyright notice, this list of conditions and the following
-> + *        disclaimer in the documentation and/or other materials
-> + *        provided with the distribution.
-> + *
-> + *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
-> + *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-> + *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-> + *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-> + *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-> + *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-> + *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-> + *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-> + *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-> + *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-> + *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-> + *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-> =20
->  #ifndef __ASSEMBLY__
-> =20
-> diff --git a/libfdt/libfdt_env.h b/libfdt/libfdt_env.h
-> old mode 100644
-> new mode 100755
-> index 956b4ae..18de839
-> --- a/libfdt/libfdt_env.h
-> +++ b/libfdt/libfdt_env.h
-> @@ -1,5 +1,55 @@
->  #ifndef _LIBFDT_ENV_H
->  #define _LIBFDT_ENV_H
-> +/*
-> + * libfdt - Flat Device Tree manipulation
-> + * Copyright (C) 2006 David Gibson, IBM Corporation.
-> + *
-> + * libfdt is dual licensed: you can use it either under the terms of
-> + * the GPL, or the BSD license, at your option.
-> + *
-> + *  a) This library is free software; you can redistribute it and/or
-> + *     modify it under the terms of the GNU General Public License as
-> + *     published by the Free Software Foundation; either version 2 of the
-> + *     License, or (at your option) any later version.
-> + *
-> + *     This library is distributed in the hope that it will be useful,
-> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + *     GNU General Public License for more details.
-> + *
-> + *     You should have received a copy of the GNU General Public
-> + *     License along with this library; if not, write to the Free
-> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-> + *     MA 02110-1301 USA
-> + *
-> + * Alternatively,
-> + *
-> + *  b) Redistribution and use in source and binary forms, with or
-> + *     without modification, are permitted provided that the following
-> + *     conditions are met:
-> + *
-> + *     1. Redistributions of source code must retain the above
-> + *        copyright notice, this list of conditions and the following
-> + *        disclaimer.
-> + *     2. Redistributions in binary form must reproduce the above
-> + *        copyright notice, this list of conditions and the following
-> + *        disclaimer in the documentation and/or other materials
-> + *        provided with the distribution.
-> + *
-> + *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
-> + *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-> + *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-> + *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-> + *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-> + *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-> + *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-> + *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-> + *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-> + *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-> + *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-> + *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-> + *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-> + */
-> =20
->  #include <stddef.h>
->  #include <stdint.h>
+I think it's because read[lwb]/write[lwb] comes out of PCI and PCI
+is LE.
 
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
+Didn't think of this...
 
---EY/WZ/HvNxOox07X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> 2) The grgpio_to_irq function is very hardware specific, and there is of
+> course no gpio_to_irq support in gpio-generic.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Well, the idea about gpio-generic is to use the pieces you need
+IIRC. You may override.
 
-iEYEARECAAYFAlEPfToACgkQaILKxv3ab8avWACfYfbCFpj0JmgjFX8zGas8kk1T
-IJIAniYQoJO+OqlhfdoXAUhyAdVGhCSK
-=rBvP
------END PGP SIGNATURE-----
+> 3) Running on SPARC, I get Open Firmware information from prom, so there is
+> no platform data to access in the probe function. Of course general Open
+> Firmware support could be added to gpio-generic, but in addition my probe
+> needs to set up very hardware specific things for gpio_to_irq.
 
---EY/WZ/HvNxOox07X--
+We should probably add some way to handle generic GPIO
+with compatible strings etc, but that's way outside my competence
+so OK. Maybe Rob or Grant can say something.
 
---===============4378706137342593006==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============4378706137342593006==--
+Yours,
+Linus Walleij
