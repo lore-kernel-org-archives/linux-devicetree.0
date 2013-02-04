@@ -1,32 +1,44 @@
 From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCH 0/2] ARM: dts: OMAP3: Add GPMC controller and NAND memory
- to Overo
-Date: Mon, 04 Feb 2013 09:58:33 +0100
-Message-ID: <510F7839.9040603@epfl.ch>
-References: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch> <20130201221618.GB22517@atomide.com>
+Subject: Re: [PATCH 0/2] ARM: dts: omap3-overo: Add pwm-leds and audio support
+Date: Mon, 04 Feb 2013 10:14:19 +0100
+Message-ID: <510F7BEB.1020408@epfl.ch>
+References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch> <5101273A.9090800@ti.com>
 Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130201221618.GB22517@atomide.com>
+In-Reply-To: <5101273A.9090800@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, Daniel Mack <zonque@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
->>
->> So how should we handle such case? Having several dtsi depending
->> on the Overo's revision would be a mess to my sense, considering
->> the non-conditional include inside the expansion boards' dts.
->> Or would it make sense to extend the DT binding for partitions?
+Hello Benoit,
+
+On 01/24/2013 01:21 PM, Benoit Cousson wrote:
+> + Peter who did the original PWM
 >
-> Yes makes sense to extend the binding to use the full flash memory
-> if the size can be probed.
+> Hi Florian,
+>
+> On 01/23/2013 06:56 PM, Florian Vaussard wrote:
+>> Hello Benoit,
+>>
+>> This patchset adds some new DT supports to the Overo products. The
+>> first patch converts the PMIC LEDB output to use the pwm-leds,
+>> newly merged in your branch for_3.9/dts. The second patch adds the
+>> audio support.
+>
+> Excellent, that looks very good to me, but I'd like to get the
+> feedback from Peter before merging it.
 >
 
-Ok, I will see for a patch soon (i.e. in the coming weeks).
+So a patch is being merged to handle triggers in the case of pwm leds [1].
+When done, we will be able to add back the default trigger. Do you want
+to wait on it to merge this series?
 
 Regards,
 
 Florian
+
+[1] https://patchwork.kernel.org/patch/2056191/
