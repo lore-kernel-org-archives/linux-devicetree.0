@@ -1,80 +1,58 @@
-From: Haojian Zhuang <haojian.zhuang@linaro.org>
-Subject: [PATCH 4/6] mfd: max8925: support dt for backlight
-Date: Mon,  4 Feb 2013 23:40:45 +0800
-Message-ID: <1359992448-22229-4-git-send-email-haojian.zhuang@linaro.org>
-References: <1359992448-22229-1-git-send-email-haojian.zhuang@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359992448-22229-1-git-send-email-haojian.zhuang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sameo@linux.intel.com, qingx@marvell.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: patches@linaro.org, Haojian Zhuang <haojian.zhuang@gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to
+	arm/common
+Date: Mon, 4 Feb 2013 15:45:02 +0000
+Message-ID: <20130204154502.GD2637@n2100.arm.linux.org.uk>
+References: <1359742975-10421-1-git-send-email-mporter@ti.com> <1359742975-10421-2-git-send-email-mporter@ti.com> <5022f635a527470dbd0be932063e9cd2@DFLE72.ent.ti.com> <20130201184915.GP2244@beef> <510C1D0E.6030401@mvista.com> <20130201185820.GE29898@arwen.pp.htv.fi> <510C2A47.1090607@mvista.com> <20130201205600.GA31762@arwen.pp.htv.fi> <20130201213003.GW2637@n2100.arm.linux.org.uk> <20130204154153.GA18237@arwen.pp.htv.fi>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130204154153.GA18237@arwen.pp.htv.fi>
+Sender: linux-doc-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Sergei Shtylyov <sshtylyov@mvista.com>, Matt Porter <mporter@ti.com>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Chris Ball <cjb@laptop.org>, "Cousson, Benoit" <b-cousson@ti.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Rob Landley <rob@landley.net>, Dan Williams <djbw@fb.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.i>
 List-Id: devicetree@vger.kernel.org
 
-From: Qing Xu <qingx@marvell.com>
+On Mon, Feb 04, 2013 at 05:41:53PM +0200, Felipe Balbi wrote:
+> Hi,
+> 
+> On Fri, Feb 01, 2013 at 09:30:03PM +0000, Russell King - ARM Linux wrote:
+> > > > > I guess to make the MUSB side simpler we would need musb-dma-engine glue
+> > > > > to map dmaengine to the private MUSB API. Then we would have some
+> > > > > starting point to also move inventra (and anybody else) to dmaengine
+> > > > > API.
+> > > > 
+> > > >    Why? Inventra is a dedicated device's private DMA controller, why make
+> > > > universal DMA driver for it?
+> > > 
+> > > because it doesn't make sense to support multiple DMA APIs. We can check
+> > > from MUSB's registers if it was configured with Inventra DMA support and
+> > > based on that we can register MUSB's own DMA Engine to dmaengine API.
+> > 
+> > Hang on.  This is one of the DMA implementations which is closely
+> > coupled with the USB and only the USB?  If it is...
+> > 
+> > I thought this had been discussed _extensively_ before.  I thought the
+> > resolution on it was:
+> > 1. It would not use the DMA engine API.
+> > 2. It would not live in arch/arm.
+> > 3. It would be placed nearby the USB driver it's associated with.
+> > 
+> > (1) because we don't use APIs just for the hell of it - think.  Do we
+> > use the DMA engine API for PCI bus mastering ethernet controllers?  No.
+> > Do we use it for PCI bus mastering SCSI controllers?  No.  Because the
+> > DMA is integral to the rest of the device.
+> 
+> that's not really a fair comparison, however. MUSB is used with several
+> DMA engines.
 
-Add device tree support in max8925 backlight.
+I only mentioned it because it _was_ brought up as an argument against
+using the DMA engine API in the previous discussions.  I'm just reminding
+people what was discussed.
 
-Signed-off-by: Qing Xu <qingx@marvell.com>
-Signed-off-by: Haojian Zhuang <haojian.zhuang@gmail.com>
----
- drivers/video/backlight/max8925_bl.c |   31 ++++++++++++++++++++++++++++++-
- 1 file changed, 30 insertions(+), 1 deletion(-)
+> Considering all of the above, it's far better to use DMA engine and get
+> rid of all the mess.
 
-diff --git a/drivers/video/backlight/max8925_bl.c b/drivers/video/backlight/max8925_bl.c
-index 2c9bce0..5ca11b0 100644
---- a/drivers/video/backlight/max8925_bl.c
-+++ b/drivers/video/backlight/max8925_bl.c
-@@ -101,6 +101,29 @@ static const struct backlight_ops max8925_backlight_ops = {
- 	.get_brightness	= max8925_backlight_get_brightness,
- };
- 
-+#ifdef CONFIG_OF
-+static int max8925_backlight_dt_init(struct platform_device *pdev,
-+			      struct max8925_backlight_pdata *pdata)
-+{
-+	struct device_node *nproot = pdev->dev.parent->of_node, *np;
-+	int dual_string;
-+
-+	if (!nproot)
-+		return -ENODEV;
-+	np = of_find_node_by_name(nproot, "backlight");
-+	if (!np) {
-+		dev_err(&pdev->dev, "failed to find backlight node\n");
-+		return -ENODEV;
-+	}
-+
-+	of_property_read_u32(np, "maxim,max8925-dual-string", &dual_string);
-+	pdata->dual_string = dual_string;
-+	return 0;
-+}
-+#else
-+#define max8925_backlight_dt_init(x, y)	(-1)
-+#endif
-+
- static int max8925_backlight_probe(struct platform_device *pdev)
- {
- 	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
-@@ -147,6 +170,13 @@ static int max8925_backlight_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, bl);
- 
- 	value = 0;
-+	if (pdev->dev.parent->of_node && !pdata) {
-+		pdata = devm_kzalloc(&pdev->dev,
-+				     sizeof(struct max8925_backlight_pdata),
-+				     GFP_KERNEL);
-+		max8925_backlight_dt_init(pdev, pdata);
-+	}
-+
- 	if (pdata) {
- 		if (pdata->lxw_scl)
- 			value |= (1 << 7);
-@@ -158,7 +188,6 @@ static int max8925_backlight_probe(struct platform_device *pdev)
- 	ret = max8925_set_bits(chip->i2c, data->reg_mode_cntl, 0xfe, value);
- 	if (ret < 0)
- 		goto out_brt;
--
- 	backlight_update_status(bl);
- 	return 0;
- out_brt:
--- 
-1.7.10.4
+Which is what both you and I have been saying for the last 3 or so years
+on this subject...
