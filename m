@@ -1,136 +1,56 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 1/2] ARM: dts: OMAP3: Add GPMC controller
-Date: Mon, 4 Feb 2013 19:15:41 +0100
-Message-ID: <CABxcv=nmTwVcG+ucYeMrtU8YgyYYQz3vYF+bKpQ__KDTwXhY=g@mail.gmail.com>
-References: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch>
-	<1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch>
-	<CABxcv=k_gwB3ExQYUeappDZ6FE4L7x8Acer4ZQpDH09BL6LG0Q@mail.gmail.com>
-	<510F8F49.9020800@epfl.ch>
-	<CABxcv==7KiBbkTyr7VLVw82F=9vVWRftpbyZWub_CVp3pQW0tQ@mail.gmail.com>
-	<20130204173252.GN22517@atomide.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH v4 1/3] ASoC: tlv320aic3x: Convert mic bias to a supply
+ widget
+Date: Mon, 4 Feb 2013 18:35:42 +0000
+Message-ID: <20130204183542.GS4720@opensource.wolfsonmicro.com>
+References: <1359636786-7056-1-git-send-email-gururaja.hebbar@ti.com>
+ <1359636786-7056-2-git-send-email-gururaja.hebbar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130204173252.GN22517@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: florian.vaussard@epfl.ch, Benoit Cousson <b-cousson@ti.com>, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QHhm1I6mwQR20oIa"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1359636786-7056-2-git-send-email-gururaja.hebbar@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Hebbar Gururaja <gururaja.hebbar@ti.com>
+Cc: alsa-devel@alsa-project.org, davinci-linux-open-source@linux.davincidsp.com, linux-arm-kernel@lists.infradead.org, tony@atomide.com, lgirdwood@gmail.com, perex@perex.cz, nsekhar@ti.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, rob@landley.net, grant.likely@secretlab.ca
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 4, 2013 at 6:32 PM, Tony Lindgren <tony@atomide.com> wrote:
-> * Javier Martinez Canillas <javier@dowhile0.org> [130204 04:00]:
->> On Mon, Feb 4, 2013 at 11:36 AM, Florian Vaussard
->> > Great, the smsc911x was on my TODO list, I can cross it out :) BTW,
->> > do you have a public git for this, so I can test your work on my setup?
->> >
->>
->> Yes, it is the gpmc-smsc911x-wip branch on my github linux tree [1]
->>
->> That branch is Linus master tree + linux-omap/omap-for-v3.9/gpmc +
->> linux-omap-dt/for_3.9/dts
->>
->> plus these patches:
->>
->> Javier Martinez Canillas (4):
->>       ARM: OMAP: gpmc-smsc911x: add DT dev node init function
->>       ARM: OMAP: gpmc: add support for gpmc-smsc911x child nodes
->>       ARM: dts: OMAP: Add an GPMC node for OMAP3
->>       ARM: dts: omap3-igep0020: Add SMSC911x LAN chip support
->>
->> You can browse these patches here [2].
->>
->> With these patches I have ethernet working on my IGEPv2 but this board
->> uses an OMAP GPIO pin as the smsc911x IRQ line, so it needs to set a
->> mux pin (mcspi1_cs2.gpio_176 INPUT | MODE4) or it will fallback on
->> poll mode.
->
-> Great, that's good news :)
->
 
-it's a start at least :-)
+--QHhm1I6mwQR20oIa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> For some reasons I still couldn't figure out (I'm still learning about
->> Device Trees) adding:
->>
->>        pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
->>
->> to the gpmc-smsc911x child node parse function (gpmc_smsc911x_init_dt)
->> didn't have a functional effect and I had to initialize the defined
->> pinctrl-single pins for the smsc911x in the omap3_pmx_core device node
->> instead of pmc_smsc911x@0 as I do for other devices (mmc, uarts, etc).
->
-> Maybe this is related to the initcall ordering..
->
+On Thu, Jan 31, 2013 at 06:23:04PM +0530, Hebbar Gururaja wrote:
+> Convert MicBias widgets to supply widget.
+>=20
+> On tlv320aic3x, Mic bias power on/off shares the same register bits
+> with output mic bias voltage.  So, when power on mic bias, we need
+> reclaim it to voltage value.
 
-I don't think so since I added the gpmc@6e000000 device node as the
-last child node for ocp in omap3.dtsi. So, is way after omap3_pmx_core
-child node is defined.
+Applied, thanks.
 
-Btw, there is a way to specify the initialization order or the
-dependencies between device nodes (e.g: gpmc depends on
-omap3_pmx_core) or is just because of the position inside the DT?
+--QHhm1I6mwQR20oIa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->> So I just removed the devm_pinctrl_get_select_default() call in
->> gpmc_smsc911x_init_dt() in for this RFC.
->>
->> I don't know if this is because arch/arm/mach-omap2/gpmc-smsc911x.c is
->> not a real platform driver (is just a wrapper/helper function) and
->> doesn't have a probe function.
->
-> ..that function just initializes the pdata for smsc911x driver, and
-> should not be a driver. You need to add devm_pinctrl_get_select_default()
-> to the probe of smsc911x or the GPMC probe.
->
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-Yes, that's what I meant. In that case I would have something like
-this on my board dts:
+iQIcBAEBAgAGBQJRD/92AAoJELSic+t+oim918AP/3bN7+tsV2XR+Vsun5TsEEVO
+3TJNYN4+rp6GmK+6zrvRaeRG/DueKGcLyPKx5N/SdWtncb1Cb708/lyYobz6RjmU
+APSI0h4v7xCJXYrSACzM5g06EkAgpnlRD/BoS8um5jc25BDlfmtwLKO1ztE03ml2
+vcTIEqfw9GLnYIse6P+3aiHeKYujQxZ9OY05MFAU1546/wzkCBxWdcePC9aGNFt/
+fyxGMF1n3T5GlB9K45Ns42TFUKO/nTC0NbIV4gpEiMzXSgaz7/JQCXB//MJ+e9QM
+NyiWhJEUGlh163S9de24WjR1XZfZ4qjxnocifnqssykQ6kmN0utUe5QAZzi04Ee4
+tOYOLCJAZaz8/a7WlO4F9vIFOuWE5vHl4nytDq2ah7bL03ZwyIT74H/N+YaEBB1f
+Uf6dwQRUCLgSyV+qWDdquatuCSME9JN8FH9JNE4+m5k+7T0yaIaCVjujqg34JZvJ
+C0YFVxWYrDaJ+xPzCfTfq869+Xg8mCPypjeMUNvdbawUA0lxLWFETBuHgVm48txo
+OEo3pmSJjMSprcwIyZPs4KgupjQGAbK5hFOVtxTtbOn847nga3FbbncHaZU36x6N
+5xHKCYORQ3k4izByWTeMlJfV2C/YI1/ileBegt7M0+lPYZx9bBE1WTwOrmsBL9yi
+H6JUyE1nwofq0of77aVq
+=Ko0U
+-----END PGP SIGNATURE-----
 
-&gpmc {
-	pinctrl-names = "default";
-	pinctrl-0 = <&smsc911x_pins>;
-	gpmc_smsc911x@0 {
-		gpmc,cs = <5>; /* IGEP2_SMSC911X_CS */
-		gpmc,gpio_irq = <176>; /* IGEP2_SMSC911X_GPIO */
-		gpmc,flags = <18>; /* SMSC911X_USE_32BIT | SMSC911X_SAVE_MAC_ADDRESS */
-		vmmc-supply = <&vddvario>;
-		vmmc_aux-supply = <&vdd33a>;
-      };
-};
-
-Are you ok with tha approach?
-
-Certainly is better than initializing in omap3_pmx_core node but still
-is not consistent with other devices where the pinctrl pins are
-defined inside the node of the device that requires them.
-
->> Which brings me to the question if my approach of adding a binding for
->> gpmc-smsc911x is correct or if we should extend/use the binding that
->> already exist for smsc911x
->> (Documentation/devicetree/bindings/net/smsc911x.txt).
->
-> We should use the existing smsc911x binding, then have a separate GPMC
-> binding for the GPMC driver.
->
-
-You mean a binding for GPMC or a binding for gpmc-smsc911x?
-
-I don't think that we can use the smsc911x binding directly since
-gpmc_smsc911x_init() not only initializes the platform data but also
-does some setup such as requesting a memory range for a specific chip
-select (gpmc_cs_request), claiming a GPIO and configuring as input
-(gpio_request_one), etc.
-
-You can't just calculate the I/O space address for the GPMC cs your
-peripheral is connected to and set it on the reg property of the
-current smsc911x binding, right?. The same can be said for the nic
-IRQ.
-
-Or did I get wrong?
-
-> Regards,
->
-> Tony
->
-
-Thanks a lot and best regards,
-Javier
+--QHhm1I6mwQR20oIa--
