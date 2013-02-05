@@ -1,126 +1,135 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 01/13] usb: phy: nop: Add device tree support and binding
- information
-Date: Tue, 5 Feb 2013 10:30:49 +0200
-Message-ID: <5110C339.7080109@ti.com>
-References: <1359993540-20780-1-git-send-email-rogerq@ti.com> <1359993540-20780-2-git-send-email-rogerq@ti.com> <20130205072637.GA32118@arwen.pp.htv.fi>
+From: Joonyoung Shim <jy0922.shim@samsung.com>
+Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery support
+ for G2D
+Date: Tue, 05 Feb 2013 17:32:44 +0900
+Message-ID: <5110C3AC.6000309@samsung.com>
+References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
+ <1359107722-9974-2-git-send-email-sachin.kamat@linaro.org>
+ <CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com>
+ <510987B5.6090509@gmail.com> <050101cdff52$86df3a70$949daf50$%dae@samsung.com>
+ <510B02AB.4080908@gmail.com> <0b7501ce0011$3df65180$b9e2f480$@samsung.com>
+ <00fd01ce001b$5215a3f0$f640ebd0$%dae@samsung.com>
+ <CAK9yfHxqqumg-oqH_Ku8Zkf8biWVknF91Su0VkWJJXjvWQ3Jhw@mail.gmail.com>
+ <510B9EC8.6020102@samsung.com>
+ <CAK9yfHw+aTgiLwGVJt=J9-ie4-2JAaF4Nh3n4tjcHp6w2JHamg@mail.gmail.com>
+ <014401ce006f$c7dd1dd0$57975970$%dae@samsung.com>
+ <CAK9yfHyEdd_nr5eqT9WZ4+J9LHczL4U5VAUEwzzjbH1H0xgjUQ@mail.gmail.com>
+ <014501ce0072$9eca1a80$dc5e4f80$%dae@samsung.com>
+ <E382E0B5-2695-4293-B264-FB4C54FE4F9D@gmail.com>
+ <CAK9yfHx7FOE1xTqDH=1L5r+hZFY7U-W=Q49qErgjs-i1HU4j4w@mail.gmail.com>
+ <CAAQKjZNLTZSJ8Y0tt2aZPKFESbLGxQ1Z92zkhV_u8nvSXekgtw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130205072637.GA32118@arwen.pp.htv.fi>
-Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: tony@atomide.com, b-cousson@ti.com, stern@rowland.harvard.edu, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, paul@pwsan.com
+Content-Type: text/plain; charset=EUC-KR
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <CAAQKjZNLTZSJ8Y0tt2aZPKFESbLGxQ1Z92zkhV_u8nvSXekgtw@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Inki Dae <inki.dae@samsung.com>
+Cc: Sachin Kamat <sachin.kamat@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "patches@linaro.org" <patches@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2013 09:26 AM, Felipe Balbi wrote:
-> Hi,
-> 
-> On Mon, Feb 04, 2013 at 05:58:48PM +0200, Roger Quadros wrote:
->> The PHY clock, clock rate, VCC regulator and RESET regulator
->> can now be provided via device tree.
+On 02/05/2013 12:03 PM, Inki Dae wrote:
+> 2013/2/4 Sachin Kamat <sachin.kamat@linaro.org>:
+>> On 1 February 2013 18:28, Inki Dae <daeinki@gmail.com> wrote:
+>>>
+>>>
+>>>
+>>> 2013. 2. 1. =BF=C0=C8=C4 8:52 Inki Dae <inki.dae@samsung.com> =C0=DB=
+=BC=BA:
+>>>
+>>>>
+>>>>> -----Original Message-----
+>>>>> From: linux-media-owner@vger.kernel.org [mailto:linux-media-
+>>>>> owner@vger.kernel.org] On Behalf Of Sachin Kamat
+>>>>> Sent: Friday, February 01, 2013 8:40 PM
+>>>>> To: Inki Dae
+>>>>> Cc: Sylwester Nawrocki; Kukjin Kim; Sylwester Nawrocki; linux-
+>>>>> media@vger.kernel.org; dri-devel@lists.freedesktop.org; devicetre=
+e-
+>>>>> discuss@lists.ozlabs.org; patches@linaro.org
+>>>>> Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discov=
+ery
+>>>>> support for G2D
+>>>>>
+>>>>> On 1 February 2013 17:02, Inki Dae <inki.dae@samsung.com> wrote:
+>>>>>> How about using like below?
+>>>>>>        Compatible =3D ""samsung,exynos4x12-fimg-2d" /* for Exyno=
+s4212,
+>>>>>> Exynos4412  */
+>>>>>> It looks odd to use "samsung,exynos4212-fimg-2d" saying that thi=
+s ip is
+>>>>> for
+>>>>>> exynos4212 and exynos4412.
+>>>>> AFAIK, compatible strings are not supposed to have any wildcard
+>>>> characters.
+>>>>> Compatible string should suggest the first SoC that contained thi=
+s IP.
+>>>>> Hence IMO 4212 is OK.
+>>>>>
+>>> Oops, one more thing. AFAIK Exynos4210 also has fimg-2d ip. In this=
+ case, we should use "samsung,exynos4210-fimg-2d" as comparible string =
+and add it to exynos4210.dtsi?
+>> Exynos4210 has same g2d IP (v3.0) as C110 or V210; so the same
+>> comptible string will be used for this one too.
 >>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
->> ---
->>  .../devicetree/bindings/usb/usb-nop-xceiv.txt      |   34 ++++++++++++++++++++
->>  drivers/usb/otg/nop-usb-xceiv.c                    |   31 ++++++++++++++++++
->>  2 files changed, 65 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
+>>> And please check if exynos4212 and 4412 SoCs have same fimg-2d ip. =
+If it's different, we might need to add ip version property or compatib=
+le string to each dtsi file to identify the ip version.
+>> AFAIK, they both have the same IP (v4.1).
 >>
->> diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
->> new file mode 100644
->> index 0000000..d7e2726
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
->> @@ -0,0 +1,34 @@
->> +USB NOP PHY
->> +
->> +Required properties:
->> +- compatible: should be usb-nop-xceiv
->> +
->> +Optional properties:
->> +- clocks: phandle to the PHY clock. Use as per Documentation/devicetree
->> +  /bindings/clock/clock-bindings.txt
->> +  This property is required if clock-frequency is specified.
->> +
->> +- clock-names: Should be "main_clk"
->> +
->> +- clock-frequency: the clock frequency (in Hz) that the PHY clock must
->> +  be configured to.
->> +
->> +- vcc-supply: phandle to the regulator that provides RESET to the PHY.
->> +
->> +- reset-supply: phandle to the regulator that provides power to the PHY.
->> +
->> +Example:
->> +
->> +	hsusb1_phy {
->> +		compatible = "usb-nop-xceiv";
->> +		clock-frequency = <19200000>;
->> +		clocks = <&osc 0>;
->> +		clock-names = "main_clk";
->> +		vcc-supply = <&hsusb1_vcc_regulator>;
->> +		reset-supply = <&hsusb1_reset_regulator>;
->> +	};
->> +
->> +hsusb1_phy is a NOP USB PHY device that gets its clock from an oscillator
->> +and expects that clock to be configured to 19.2MHz by the NOP PHY driver.
->> +hsusb1_vcc_regulator provides power to the PHY and hsusb1_reset_regulator
->> +controls RESET.
->> diff --git a/drivers/usb/otg/nop-usb-xceiv.c b/drivers/usb/otg/nop-usb-xceiv.c
->> index ac027a1..adbb7ab 100644
->> --- a/drivers/usb/otg/nop-usb-xceiv.c
->> +++ b/drivers/usb/otg/nop-usb-xceiv.c
->> @@ -34,6 +34,7 @@
->>  #include <linux/slab.h>
->>  #include <linux/clk.h>
->>  #include <linux/regulator/consumer.h>
->> +#include <linux/of.h>
->>  
->>  struct nop_usb_xceiv {
->>  	struct usb_phy		phy;
->> @@ -138,8 +139,19 @@ static int nop_set_host(struct usb_otg *otg, struct usb_bus *host)
->>  	return 0;
->>  }
->>  
->> +static void nop_xeiv_get_dt_pdata(struct device *dev,
-> 
-> asking to remove, but xeiv != xceiv :-)
-> 
->> +				struct nop_usb_xceiv_platform_data *pdata)
->> +{
->> +	struct device_node *node = dev->of_node;
->> +	u32 clk_rate;
->> +
->> +	if (!of_property_read_u32(node, "clock-frequency", &clk_rate))
->> +		pdata->clk_rate = clk_rate;
->> +}
->> +
->>  static int nop_usb_xceiv_probe(struct platform_device *pdev)
->>  {
->> +	struct device *dev = &pdev->dev;
->>  	struct nop_usb_xceiv_platform_data *pdata = pdev->dev.platform_data;
->>  	struct nop_usb_xceiv	*nop;
->>  	enum usb_phy_type	type = USB_PHY_TYPE_USB2;
->> @@ -153,6 +165,17 @@ static int nop_usb_xceiv_probe(struct platform_device *pdev)
->>  	if (!nop->phy.otg)
->>  		return -ENOMEM;
->>  
->> +	if (dev->of_node) {
->> +		pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
->> +		if (!pdata) {
->> +			dev_err(dev, "Memory allocation failure\n");
->> +			return -ENOMEM;
->> +		}
->> +		nop_xeiv_get_dt_pdata(dev, pdata);
-> 
-> actually, I would prefer to not create pdata at all. I mean, ideally
-> pdata would be used to initialize fields in your own structure, so first
-> move clk_rate to your own private structure, copy pdata's clk_rate value
-> to that, then you don't need this hackery when using DT.
-> 
-OK, got it. Will revise.
+> Ok, let's use the below,
+>
+> For exynos4210 SoC,
+> compatible =3D "samsung,exynos4210-g2d"
+>
+> For exynos4x12 SoCs,
+> compatible =3D "samsung,exynos4212-g2d"
+>
+> For exynos5250, 5410 (In case of Exynos5440, I'm not sure that the So=
+C
+> has same ip)
+> compatible =3D "samsung,exynos5250-g2d"
+>
+> To other guys,
+> The device tree is used by not only v4l2 side but also drm side so we
+> should reach an arrangement. So please give me ack if you agree to my
+> opinion. Otherwise please, give me your opinions.
 
-cheers,
--roger
+I like this compatible, also we can use rule like this to HDMI of
+drm/exynos.
+
+>
+> Thanks,
+> Inki Dae
+>
+>
+>>> Sorry but give me your opinions.
+>>>
+>>> Thanks,
+>>> Inki Dae
+>>>
+>>>
+>>>> Got it. Please post it again.
+>>>>
+>>>>> --
+>>>>> With warm regards,
+>>>>> Sachin
+>>>>> --
+>>>>> To unsubscribe from this list: send the line "unsubscribe linux-m=
+edia" in
+>>>>> the body of a message to majordomo@vger.kernel.org
+>>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.htm=
+l
+>>>> _______________________________________________
+>>>> dri-devel mailing list
+>>>> dri-devel@lists.freedesktop.org
+>>>> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>>
+>>
+>> --
+>> With warm regards,
+>> Sachin
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
