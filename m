@@ -1,45 +1,37 @@
-From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v5 0/2] Adding USB 3.0 DRD-phy support for exynos5250
-Date: Tue, 05 Feb 2013 18:14:14 +0530
-Message-ID: <1360068256-19602-1-git-send-email-gautam.vivek@samsung.com>
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] arm: mvebu: Add SPI flash on Armada XP-GP board
+Date: Tue, 5 Feb 2013 13:38:27 +0100
+Message-ID: <20130205123827.GG20242@lunn.ch>
+References: <1360063473-26176-1-git-send-email-ezequiel.garcia@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1360063473-26176-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Based on 'usb-next'
+> And don't forget to compile the SPI flash driver, CONFIG_MTD_M25P80=y
 
-Changes from v4:
- - Modifying function names and driver names to follow a common
-   naming convention.
-        "usb2phy" for samsung-usb2phy driver
-        "usb3phy" for samsung-usb3phy driver
- - Changing file names "samsung-usb2.c" to "samsung-usb2phy.c" and,
-   "samsung-usb3.c" to "samsung-usb3phy.c"
- - Removing dependencies for SAMSUNG_USB2PHY and SAMSUNG_USB3PHY.
- - Arranging SAMSUNG_USB2PHY and SAMSUNG_USB3PHY to select SAMSUNG_USBPHY,
-   which is the usb-phy helper driver.
+Hi Ezequiel
 
-Vivek Gautam (2):
-  usb: phy: samsung: Common out the generic stuff
-  usb: phy: samsung: Add PHY support for USB 3.0 controller
+Maybe it makes sense to provide a patch to mvebu_defconfig to add 
+CONFIG_MTD_M25P80=y ?
 
- drivers/usb/phy/Kconfig           |   25 +-
- drivers/usb/phy/Makefile          |    2 +
- drivers/usb/phy/samsung-usb2phy.c |  511 ++++++++++++++++++++++++++
- drivers/usb/phy/samsung-usb3phy.c |  349 ++++++++++++++++++
- drivers/usb/phy/samsung-usbphy.c  |  717 +------------------------------------
- drivers/usb/phy/samsung-usbphy.h  |  328 +++++++++++++++++
- 6 files changed, 1219 insertions(+), 713 deletions(-)
- create mode 100644 drivers/usb/phy/samsung-usb2phy.c
- create mode 100644 drivers/usb/phy/samsung-usb3phy.c
- create mode 100644 drivers/usb/phy/samsung-usbphy.h
+	Andrew
 
--- 
-1.7.6.5
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------------------------------------------------------------------------------
+Free Next-Gen Firewall Hardware Offer
+Buy your Sophos next-gen firewall before the end March 2013 
+and get the hardware for free! Learn more.
+http://p.sf.net/sfu/sophos-d2d-feb
