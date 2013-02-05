@@ -1,59 +1,45 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 08/13] USB: ehci-omap: Add device tree support and
- binding information
-Date: Tue, 5 Feb 2013 12:33:46 +0000
-Message-ID: <20130205123346.GB26842@e106331-lin.cambridge.arm.com>
-References: <1359993540-20780-1-git-send-email-rogerq@ti.com>
- <1359993540-20780-9-git-send-email-rogerq@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1359993540-20780-9-git-send-email-rogerq@ti.com>
-Content-Disposition: inline
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: "tony@atomide.com" <tony@atomide.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "balbi@ti.com" <balbi@ti.com>, "stern@rowland.harvard.edu" <stern@rowland.harvard.edu>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 0/2] Adding USB 3.0 DRD-phy support for exynos5250
+Date: Tue, 05 Feb 2013 18:14:14 +0530
+Message-ID: <1360068256-19602-1-git-send-email-gautam.vivek@samsung.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 04, 2013 at 03:58:55PM +0000, Roger Quadros wrote:
-> Allows the OMAP EHCI controller to be specified via device tree.
-> 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  .../devicetree/bindings/usb/omap-ehci.txt          |   34 ++++++++++++++++++
->  drivers/usb/host/ehci-omap.c                       |   36 +++++++++++++++++++-
->  2 files changed, 69 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/omap-ehci.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/omap-ehci.txt b/Documentation/devicetree/bindings/usb/omap-ehci.txt
-> new file mode 100644
-> index 0000000..90e6e3a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/omap-ehci.txt
-> @@ -0,0 +1,34 @@
-> +OMAP HS USB EHCI controller
-> +
-> +This device is usually the child of the omap-usb-host
-> +Documentation/devicetree/bindings/mfd/omap-usb-host.txt
-> +
-> +Required properties:
-> +
-> +- compatible: should be "ti,omap-ehci"
-> +- reg: should contain one register range i.e. start and length
-> +- interrupt-parent: phandle to the interrupt controller
-> +- interrupts: description of the interrupt line
-> +
-> +Optional properties:
-> +
-> +- phy: list of phandles to PHY nodes.
-> +  This property is required if at least one of the ports are in
-> +  PHY mode i.e. OMAP_EHCI_PORT_MODE_PHY
+Based on 'usb-next'
 
-Any reason for not calling this "phys", given it's a list?
+Changes from v4:
+ - Modifying function names and driver names to follow a common
+   naming convention.
+        "usb2phy" for samsung-usb2phy driver
+        "usb3phy" for samsung-usb3phy driver
+ - Changing file names "samsung-usb2.c" to "samsung-usb2phy.c" and,
+   "samsung-usb3.c" to "samsung-usb3phy.c"
+ - Removing dependencies for SAMSUNG_USB2PHY and SAMSUNG_USB3PHY.
+ - Arranging SAMSUNG_USB2PHY and SAMSUNG_USB3PHY to select SAMSUNG_USBPHY,
+   which is the usb-phy helper driver.
 
-[...]
+Vivek Gautam (2):
+  usb: phy: samsung: Common out the generic stuff
+  usb: phy: samsung: Add PHY support for USB 3.0 controller
 
-Thanks,
-Mark.
+ drivers/usb/phy/Kconfig           |   25 +-
+ drivers/usb/phy/Makefile          |    2 +
+ drivers/usb/phy/samsung-usb2phy.c |  511 ++++++++++++++++++++++++++
+ drivers/usb/phy/samsung-usb3phy.c |  349 ++++++++++++++++++
+ drivers/usb/phy/samsung-usbphy.c  |  717 +------------------------------------
+ drivers/usb/phy/samsung-usbphy.h  |  328 +++++++++++++++++
+ 6 files changed, 1219 insertions(+), 713 deletions(-)
+ create mode 100644 drivers/usb/phy/samsung-usb2phy.c
+ create mode 100644 drivers/usb/phy/samsung-usb3phy.c
+ create mode 100644 drivers/usb/phy/samsung-usbphy.h
 
+-- 
+1.7.6.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
