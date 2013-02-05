@@ -1,105 +1,96 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 1/2] ARM: dts: OMAP3: Add GPMC controller
-Date: Tue, 5 Feb 2013 20:40:58 +0100
-Message-ID: <CABxcv=ms0DOHL8ooktLi+_gQGvGOiKpNgx7gKnU5BUX1pWkAJQ@mail.gmail.com>
-References: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch>
-	<1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch>
-	<CABxcv=k_gwB3ExQYUeappDZ6FE4L7x8Acer4ZQpDH09BL6LG0Q@mail.gmail.com>
-	<510F8F49.9020800@epfl.ch>
-	<CABxcv==7KiBbkTyr7VLVw82F=9vVWRftpbyZWub_CVp3pQW0tQ@mail.gmail.com>
-	<51114003.9070405@epfl.ch>
+From: Cyril Chemparathy <cyril-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to arm/common
+Date: Tue, 5 Feb 2013 14:45:25 -0500
+Message-ID: <51116155.3080609@ti.com>
+References: <20130201213003.GW2637@n2100.arm.linux.org.uk>
+ <20130204154153.GA18237@arwen.pp.htv.fi> <510FF1A6.403@mvista.com>
+ <20130204164712.GB4269@arwen.pp.htv.fi> <510FF5C9.3030600@mvista.com>
+ <20130204170216.GC4269@arwen.pp.htv.fi> <51100A72.6030909@ti.com>
+ <CACRpkdZihnp3_Df==QRWxQupgi7W_YXZxc-MxkusVH6J+Vx56A@mail.gmail.com>
+ <5110369B.9060901@ti.com>
+ <CACRpkda8xBB35CwuBH76xXcC341TeRs1ZuwzDD0LtuXc4ifQTw@mail.gmail.com>
+ <20130205164705.GG4720@opensource.wolfsonmicro.com>
+ <CACRpkdbeoMO1rjPiWDAuVL0uYwMGF+9-vCxqoMiMd1uAgZm=RQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51114003.9070405@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: florian.vaussard@epfl.ch
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdbeoMO1rjPiWDAuVL0uYwMGF+9-vCxqoMiMd1uAgZm=RQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Nair,
+ Sandeep" <sandeep_n-l0cyMroinI0@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, rusty-8n+1lVoiYb80n/F98K4Iww@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 5, 2013 at 6:23 PM, Florian Vaussard
-<florian.vaussard@epfl.ch> wrote:
-> Hi Javier,
->
-
-Hi Florian,
-
-> On 02/04/2013 12:57 PM, Javier Martinez Canillas wrote:
->
-> [...]
->
->
+On 02/05/2013 01:29 PM, Linus Walleij wrote:
+> On Tue, Feb 5, 2013 at 5:47 PM, Mark Brown
+> <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org> wrote:
+>> On Tue, Feb 05, 2013 at 05:21:48PM +0100, Linus Walleij wrote:
 >>
->> Yes, I saw on the list that Tony asked you too extend the GPMC DT
->> support. Flash support is on my TODO list too but I don't know if I'm
->> going to have time to work on this in the next few weeks.
+>>> For IRQ mode, use the completion callback to push each cookie
+>>> to NAPI, and thus let the IRQ drive the traffic.
 >>
->> Since you are thinking to change the binding, there is something I
->> want to discuss with you.
->>
->> We have two different version for each IGEP board, one that uses NAND
->> memory and another that has OneNAND.
->>
->> With board files this is easy because the flash memory type is
->> hardcoded (in hardware) using sysboot pins [3]. So we check the
->> sysboot value and call board_nand_init() or board_onenand_init()
->> accordingly and pass the same static struct mtd_partition
->> igep_flash_partitions[] in both cases.
->>
->> But with DT this is a little bit trickier since you have to define
->> either a nand@0 or onenand@0 child node for the gpmc device node. So,
->> we will have to create lots of dts and dtsi to handle each combination
->> (IGEPv2 + NAND, IGEPv2 + OneNAND, IGEP COM + NAND, etc).
->>
->> I wonder if we could just have a generic gpmc-flash binding and maybe
->> use a "gpmc, flash_type" property or something like that to decide if
->> gpmc_onenand_init() or gpmc_nand_init() has to be called.
->>
+>> The whole purpose of NAPI is to avoid taking interrupts for completion
+>> of transfers.  Anything that generates interrupts when NAPI is in
+>> polling mode is defeating the point.
 >
-> This boils down to the problem where you have an "if" statement in
-> your board file, and I think no general solution exists.
+> So what I was trying to get across is that when you're in polling
+> mode you do not set DMA_PREP_INTERRUPT on your transfers,
+> just throw the obtained struct dma_async_tx_descriptor on some
+> list and then when polling use dma_async_is_tx_complete()
+> on the channel and the cookie inside the descriptor.
+>
+> I was trying to describe that you can move from
+> IRQ mode to polling mode and back again by selectively
+> choosing to set/not set the DMA_PREP_INTERRUPT flag.
 >
 
-Yes, this is a general issue since DT uses a declarative paradigm.
+This does not work.  At prep/submit time, the network driver does not 
+know if a particular packet buffer needs an interrupt or not.  It queues 
+up a whole bunch of receive buffers upfront.  These buffers simply sit 
+on the hardware queue/ring until the NIC receives traffic.  The driver 
+throttles the receive processing rate by dynamically switching between 
+interrupt and poll behaviors on the completion side, not on the 
+submission side.
 
-I was just pointing out that I found that particular issue with the flash
-memory type on IGEP boards.
-
-> In your suggestion, having a property will force you anyway to write
-> distinct DT files to account for the two versions, so it won't really
-> help if I understand correctly. We would need conditional
-> section inside device trees, at least to test for simple parameters.
-> Or a way to generate several DT blobs based on a single DT source file.
+> If polling is all you want you never set it.
 >
 
-Well you will still need a different dtb for each <board,flash type> combination
-but it could make your device trees smaller and simpler since you can define
-your GPMC flash child node on a dtsi where you set all the partition and sizes
-and export that device node to your boards dts that only set the
-"gpmc, flash_type"
-property to nand or onenand (assuming both your NAND and OneNAND version
-have the same partition layout and sizes).
+Another point here is that it is not simply a polling vs. interrupt 
+problem.  The system needs to dynamically switch between the two 
+behaviors depending on offered load conditions.  This dynamic switching 
+is key to balancing latency (under low load) and throughput (at high 
+rates).  It cannot be one or the other, it must be both.
 
-Otherwise you would have to define the complete onenand or nand child node
-on your board dts having duplicated definition for your flash partition layouts.
 
-> Another hackish solution would be to write a meta component, whose
-> probe section would do your test. But this is just a stripped down version
-> of the board file, far from being generic...
->
+Once again, I'm fairly sure that suitably reworking or extending the 
+dma-engine interfaces will allow network DMAs to fit in nicely.
 
-Yes, and that doesn't fit on the DT model too well. I still don't know what's
-the best way to do it.
+However, I'd also appreciate inputs on the alternative approach of using 
+virtio devices as an interface to packet oriented DMA hardware.  From my 
+perspective this offers the following advantages, some of which I've 
+already mentioned in earlier postings:
 
-> I will think on it during my holidays :)
->
+1. The virtqueue interface is nice and clean, it fits very well with 
+networking concepts such as NAPI.  In comparison, the dma-engine API 
+will need extensions and/or rework to fit network DMAs.
 
-great, I hope you enjoy your holidays :-)
+2. Advantages from leveraging the virtio infrastructure.  For example, 
+if a DMA pipe to a remote processor is exposed as a virtio device, 
+something like rpmsg could very naturally fit on top of this without any 
+other added glue.
 
-> Regards,
->
-> Florian
->
+3. Advantages from leveraging the driver model for binding dma clients 
+to dma hardware, instead of resorting to name lookups and such.
 
-Thanks a lot and best regards,
-Javier
+Thanks
+-- Cyril.
