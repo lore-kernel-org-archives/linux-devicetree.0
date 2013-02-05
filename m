@@ -1,53 +1,49 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v2 0/6] ARM: dts: Add MFC support for Exynos4
-Date: Mon, 04 Feb 2013 22:01:32 -0800
-Message-ID: <126001ce0366$40f3f380$c2dbda80$@samsung.com>
-References: <1359529889-26318-1-git-send-email-sachin.kamat@linaro.org>
- <5108E110.3040503@samsung.com>
- <CAK9yfHxer-nsWS1_a0-5UJMOBkO1TUC6Ada4xfMSP0BYGbsTdQ@mail.gmail.com>
+From: kishon <kishon@ti.com>
+Subject: Re: [PATCH 04/13] mfd: omap-usb-tll: Add device tree support
+Date: Tue, 5 Feb 2013 11:34:15 +0530
+Message-ID: <5110A0DF.7050609@ti.com>
+References: <1359993540-20780-1-git-send-email-rogerq@ti.com> <1359993540-20780-5-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAK9yfHxer-nsWS1_a0-5UJMOBkO1TUC6Ada4xfMSP0BYGbsTdQ@mail.gmail.com>
-Content-language: en-us
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Sachin Kamat' <sachin.kamat@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, 'Sylwester Nawrocki' <s.nawrocki@samsung.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1359993540-20780-5-git-send-email-rogerq@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, b-cousson@ti.com, balbi@ti.com, stern@rowland.harvard.edu, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, paul@pwsan.com, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Sachin Kamat wrote:
-> 
-> Hi Kukjin,
-> 
-> On 30 January 2013 14:30, Sylwester Nawrocki <s.nawrocki@samsung.com>
-> wrote:
-> > On 01/30/2013 08:11 AM, Sachin Kamat wrote:
-> >> Changes since v1:
-> >> Addressed comments from Sylwester
-> >>   - Updated documentation
-> >>   - Added 'status' to the nodes
-> >>   - Updated Kconfig entry
-> >>
-> >> This series is based on for-next branch of Kukjin Kim's tree.
-> >> git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
-> >> Sachin Kamat (6):
-> >>   ARM: dts: Update MFC DT binding documentation
-> >>   ARM: dts: Add MFC codec support for Exynos4 DT machines
-> >>   ARM: dts: Add MFC codec support to SMDKV310 DT
-> >>   ARM: dts: Add MFC codec support to Origen DT
-> >>   ARM: dts: Add MFC codec entry to exynos4412-origen DT file
-> >>   ARM: dts: Add MFC codec entry to exynos4412-smdk4412 DT file
-> >
-> > Thanks Sachin. For the whole series:
-> >
-> > Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-> >
-> 
-> Can you please review/add this patch series?
-> 
-Looks good to me, applied.
+On Monday 04 February 2013 09:28 PM, Roger Quadros wrote:
+> Enable this driver to probe in device tree boot.
+>
+> CC: Samuel Ortiz <sameo@linux.intel.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>   .../devicetree/bindings/mfd/omap-usb-tll.txt       |   17 +++++++++++++++++
+>   drivers/mfd/omap-usb-tll.c                         |    9 +++++++++
+>   2 files changed, 26 insertions(+), 0 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/mfd/omap-usb-tll.txt
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/omap-usb-tll.txt b/Documentation/devicetree/bindings/mfd/omap-usb-tll.txt
+> new file mode 100644
+> index 0000000..835cf4f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/omap-usb-tll.txt
+> @@ -0,0 +1,17 @@
+> +OMAP HS USB Host TLL (Transceiver-Less Interface)
+> +
+> +Required properties:
+> +
+> +- compatible : should be "ti,usbhs-tll"
+> +- reg : should contain one register range i.e. start and length
+> +- interrupts : should contain the TLL module's interrupt
+> +- ti,hwmod : must contain "usb_tll_hs"
+> +
+> +Example:
+> +
+> +	usbhstll: usbhstll@0x4a062000 {
+The node name shouldn't have 0x. This comment applies to all your 
+patches adding device tree support.
 
-Thanks.
-
-- Kukjin
+Thanks
+Kishon
