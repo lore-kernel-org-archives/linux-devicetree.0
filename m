@@ -1,308 +1,245 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: [PATCH 2/2] gpio: Add device driver for GRGPIO cores
-Date: Tue,  5 Feb 2013 11:33:03 +0100
-Message-ID: <1360060383-16880-3-git-send-email-andreas@gaisler.com>
-References: <1360060383-16880-1-git-send-email-andreas@gaisler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360060383-16880-1-git-send-email-andreas@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 09/13] mfd: omap-usb-host: Add device tree support and
+ binding information
+Date: Tue, 5 Feb 2013 12:58:12 +0200
+Message-ID: <5110E5C4.1000501@ti.com>
+References: <1359993540-20780-1-git-send-email-rogerq@ti.com>
+ <1359993540-20780-10-git-send-email-rogerq@ti.com> <5110A3C6.6040808@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5110A3C6.6040808-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: kishon <kishon-l0cyMroinI0@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver supports GRGPIO gpio cores available in the GRLIB VHDL IP core
-library.
+On 02/05/2013 08:16 AM, kishon wrote:
+> On Monday 04 February 2013 09:28 PM, Roger Quadros wrote:
+>> Allows the OMAP HS USB host controller to be specified
+>> via device tree.
+>>
+>> CC: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+>> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/mfd/omap-usb-host.txt      |   68 ++++++++++++++++
+>>   drivers/mfd/omap-usb-host.c                        |   83 ++++++++++++++++++--
+>>   2 files changed, 145 insertions(+), 6 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/mfd/omap-usb-host.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/mfd/omap-usb-host.txt b/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
+>> new file mode 100644
+>> index 0000000..2196893
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/mfd/omap-usb-host.txt
+>> @@ -0,0 +1,68 @@
+>> +OMAP HS USB Host
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: should be "ti,usbhs-host"
+>> +- reg: should contain one register range i.e. start and length
+>> +- ti,hwmods: must contain "usb_host_hs"
+>> +
+>> +Optional properties:
+>> +
+>> +- nports: number of USB ports. Usually this is automatically detected
+>> +  from the IP's revision register but can be overridden by specifying
+>> +  this property.
+>> +
+>> +- portN_mode: Integer specifying the port mode for port N, where N can be
+>> +  from 1 to nports. The port mode must be as per enum usbhs_omap_port_mode
+>> +  in include/linux/platform_data/usb-omap.h
+>> +  If the port mode is not specified, that port is treated as unused.
+>> +
+>> +- single_ulpi_bypass: Must be present if the controller contains a single
+>> +  ULPI bypass control bit. e.g. OMAP3 silicon <= ES2.1
+>> +
+>> +Required properties if child node exists:
+>> +
+>> +- #address-cells: Must be 1
+>> +- #size-cells: Must be 1
+>> +- ranges: must be present
+>> +
+>> +Properties for children:
+>> +
+>> +The OMAP HS USB Host subsystem contains EHCI and OHCI controllers.
+>> +See Documentation/devicetree/bindings/usb/omap-ehci.txt and
+>> +omap3-ohci.txt
+>> +
+>> +Example for OMAP4:
+>> +
+>> +usbhshost: usbhshost@0x4a064000 {
+>> +    compatible = "ti,usbhs-host";
+>> +    reg = <0x4a064000 0x800>;
+>> +    ti,hwmods = "usb_host_hs";
+>> +    #address-cells = <1>;
+>> +    #size-cells = <1>;
+>> +    ranges;
+>> +
+>> +    usbhsohci: ohci@0x4a064800 {
+>> +        compatible = "ti,omap3-ohci", "usb-ohci";
+>> +        reg = <0x4a064800 0x400>;
+>> +        interrupt-parent = <&gic>;
+>> +        interrupts = <0 76 0x4>;
+>> +    };
+>> +
+>> +    usbhsehci: ehci@0x4a064c00 {
+>> +        compatible = "ti,omap-ehci", "usb-ehci";
+>> +        reg = <0x4a064c00 0x400>;
+>> +        interrupt-parent = <&gic>;
+>> +        interrupts = <0 77 0x4>;
+>> +    };
+>> +};
+>> +
+>> +&usbhshost {
+>> +    port1_mode = <1>; /* OMAP_EHCI_PORT_MODE_PHY */
+>> +    port2_mode = <2>; /* OMAP_EHCI_PORT_MODE_TLL */
+>> +    port3_mode = <1>; /* OMAP_EHCI_PORT_MODE_PHY */
+>> +};
+>> +
+>> +&usbhsehci {
+>> +    phy = <&hsusb1_phy 0 &hsusb3_phy>;
+>> +};
+>> diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
+>> index f8ed08e..0f67856 100644
+>> --- a/drivers/mfd/omap-usb-host.c
+>> +++ b/drivers/mfd/omap-usb-host.c
+>> @@ -1,8 +1,9 @@
+>>   /**
+>>    * omap-usb-host.c - The USBHS core driver for OMAP EHCI & OHCI
+>>    *
+>> - * Copyright (C) 2011 Texas Instruments Incorporated - http://www.ti.com
+>> + * Copyright (C) 2011-2013 Texas Instruments Incorporated - http://www.ti.com
+>>    * Author: Keshava Munegowda <keshava_mgowda-l0cyMroinI0@public.gmane.org>
+>> + * Author: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+>>    *
+>>    * This program is free software: you can redistribute it and/or modify
+>>    * it under the terms of the GNU General Public License version 2  of
+>> @@ -27,6 +28,8 @@
+>>   #include <linux/platform_device.h>
+>>   #include <linux/platform_data/usb-omap.h>
+>>   #include <linux/pm_runtime.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_platform.h>
+>>
+>>   #include "omap-usb.h"
+>>
+>> @@ -464,6 +467,37 @@ static void omap_usbhs_init(struct device *dev)
+>>       pm_runtime_put_sync(dev);
+>>   }
+>>
+>> +static int usbhs_omap_get_dt_pdata(struct device_node *node,
+>> +                    struct usbhs_omap_platform_data *pdata)
+>> +{
+>> +    int ret, i;
+>> +
+>> +    ret = of_property_read_u32(node, "nports", &pdata->nports);
+>> +    if (ret)
+>> +        pdata->nports = 0;
+>> +
+>> +    /* get port modes */
+>> +    for (i = 0; i < OMAP3_HS_USB_PORTS; i++) {
+>> +        char prop[11];
+>> +
+>> +        snprintf(prop, sizeof(prop), "port%d_mode", i + 1);
+>> +        ret = of_property_read_u32(node, prop, &pdata->port_mode[i]);
+>> +        if (ret)
+>> +            pdata->port_mode[i] = OMAP_USBHS_PORT_MODE_UNUSED;
+>> +    }
+>> +
+>> +    /* get flags */
+>> +    pdata->single_ulpi_bypass = of_property_read_bool(node,
+>> +                        "single_ulpi_bypass");
+>> +    return 0;
+>> +}
+>> +
+>> +static struct of_device_id usbhs_child_match_table[] __initdata = {
+>> +    { .compatible = "ti,omap-ehci", },
+>> +    { .compatible = "ti,omap-ohci", },
+>> +    { }
+>> +};
+>> +
+>>   /**
+>>    * usbhs_omap_probe - initialize TI-based HCDs
+>>    *
+>> @@ -479,6 +513,21 @@ static int usbhs_omap_probe(struct platform_device *pdev)
+>>       int                i;
+>>       bool                need_logic_fck;
+>>
+>> +    if (dev->of_node) {
+>> +        /* For DT boot we populate platform data from OF node */
+>> +        pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+>> +        if (!pdata)
+>> +            return -ENOMEM;
+>> +
+>> +        if (usbhs_omap_get_dt_pdata(dev->of_node, pdata)) {
+>> +            dev_err(dev,
+>> +                "Error getting platform data from DT node\n");
+>> +            return -ENODEV;
+>> +        }
+>> +
+>> +        dev->platform_data = pdata;
+>> +    }
+>> +
+>>       if (!pdata) {
+>>           dev_err(dev, "Missing platform data\n");
+>>           return -ENODEV;
+>> @@ -490,7 +539,7 @@ static int usbhs_omap_probe(struct platform_device *pdev)
+>>           return -ENOMEM;
+>>       }
+>>
+>> -    res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "uhh");
+>> +    res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>       omap->uhh_base = devm_request_and_ioremap(dev, res);
+>>       if (!omap->uhh_base) {
+>>           dev_err(dev, "Resource request/ioremap failed\n");
+>> @@ -661,10 +710,23 @@ static int usbhs_omap_probe(struct platform_device *pdev)
+>>       }
+>>
+>>       omap_usbhs_init(dev);
+>> -    ret = omap_usbhs_alloc_children(pdev);
+>> -    if (ret) {
+>> -        dev_err(dev, "omap_usbhs_alloc_children failed\n");
+>> -        goto err_alloc;
+>> +
+>> +    if (dev->of_node) {
+>> +        ret = of_platform_populate(dev->of_node,
+>> +                usbhs_child_match_table, NULL, dev);
+>> +
+>> +        if (ret) {
+>> +            dev_err(dev, "Failed to create DT children: %d\n", ret);
+>> +            goto err_alloc;
+>> +        }
+>> +
+>> +    } else {
+>> +        ret = omap_usbhs_alloc_children(pdev);
+>> +        if (ret) {
+>> +            dev_err(dev, "omap_usbhs_alloc_children failed: %d\n",
+>> +                        ret);
+>> +            goto err_alloc;
+>> +        }
+> These child devices should be destroyed on driver remove..no?
+> 
+I could not find a function that does the opposite of of_platform_populate() or
+of_platform_device_create_pdata(). It seems that platform devices created via
+device tree are never meant to be destroyed.
 
-Signed-off-by: Andreas Larsson <andreas@gaisler.com>
----
-v2 of the eariler single GRGPIO patch
+It kind of makes sense for EHCI/OHCI, cause the devices are always present
+on the SoC. Also, this driver can't be built as a module so it can never be removed.
 
- drivers/gpio/Kconfig       |    8 ++
- drivers/gpio/Makefile      |    1 +
- drivers/gpio/gpio-grgpio.c |  244 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 253 insertions(+), 0 deletions(-)
- create mode 100644 drivers/gpio/gpio-grgpio.c
+So let's leave this patch the way it is except removing 0x from the device name
+in the example.
 
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 682de75..8437ab7 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -298,6 +298,14 @@ config GPIO_GE_FPGA
- 	  and write pin state) for GPIO implemented in a number of GE single
- 	  board computers.
- 
-+config GPIO_GRGPIO
-+	tristate "Aeroflex Gaisler GRGPIO support"
-+	depends on OF
-+	select GPIO_GENERIC
-+	help
-+	  Select this to support Aeroflex Gaisler GRGPIO cores from the GRLIB
-+	  VHDL IP core library.
-+
- comment "I2C GPIO expanders:"
- 
- config GPIO_ARIZONA
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index c5aebd0..ca5d7a3 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -25,6 +25,7 @@ obj-$(CONFIG_ARCH_DAVINCI)	+= gpio-davinci.o
- obj-$(CONFIG_GPIO_EM)		+= gpio-em.o
- obj-$(CONFIG_GPIO_EP93XX)	+= gpio-ep93xx.o
- obj-$(CONFIG_GPIO_GE_FPGA)	+= gpio-ge.o
-+obj-$(CONFIG_GPIO_GRGPIO)	+= gpio-grgpio.o
- obj-$(CONFIG_GPIO_ICH)		+= gpio-ich.o
- obj-$(CONFIG_GPIO_IT8761E)	+= gpio-it8761e.o
- obj-$(CONFIG_GPIO_JANZ_TTL)	+= gpio-janz-ttl.o
-diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
-new file mode 100644
-index 0000000..87eca73
---- /dev/null
-+++ b/drivers/gpio/gpio-grgpio.c
-@@ -0,0 +1,244 @@
-+/*
-+ * Driver for Aeroflex Gaisler GRGPIO General Purpose I/O cores.
-+ *
-+ * 2013 (c) Aeroflex Gaisler AB
-+ *
-+ * This driver supports the GRGPIO GPIO core available in the GRLIB VHDL IP core
-+ * library.
-+ *
-+ * Full documentation of the GRGPIO core can be found here:
-+ * http://www.gaisler.com/products/grlib/grip.pdf
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms of the GNU General Public License as published by the
-+ * Free Software Foundation; either version 2 of the License, or (at your
-+ * option) any later version.
-+ *
-+ * Contributors: Andreas Larsson <andreas@gaisler.com>
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/init.h>
-+#include <linux/spinlock.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_irq.h>
-+#include <linux/gpio.h>
-+#include <linux/slab.h>
-+#include <linux/irq.h>
-+#include <linux/basic_mmio_gpio.h>
-+
-+#define DRV_NAME	"grgpio"
-+
-+#define GRGPIO_MAX_NGPIO 32
-+
-+struct grgpio_regs {
-+	u32 data;	/* 0x00 */
-+	u32 output;	/* 0x04 */
-+	u32 dir;	/* 0x08 */
-+	u32 imask;	/* 0x0c */
-+	u32 ipol;	/* 0x10  */
-+	u32 iedge;	/* 0x14 */
-+	u32 bypass;	/* 0x18 */
-+	u32 __reserved;	/* 0x1c */
-+	u32 imap[8];	/* 0x20-0x3c */
-+};
-+
-+struct grgpio_priv {
-+	struct bgpio_chip bgc;
-+	struct grgpio_regs __iomem *regs;
-+
-+	u32 imask;	/* irq mask shadow register */
-+	s32 *irqmap;	/* maps offset to irq or -1 if no irq */
-+};
-+
-+static inline struct grgpio_priv *grgpio_gc_to_priv(struct gpio_chip *gc)
-+{
-+	struct bgpio_chip *bgc = to_bgpio_chip(gc);
-+	return container_of(bgc, struct grgpio_priv, bgc);
-+}
-+
-+static void grgpio_set_imask(struct grgpio_priv *priv, unsigned int offset,
-+			     int val)
-+{
-+	struct bgpio_chip *bgc = &priv->bgc;
-+	unsigned long mask = bgc->pin2mask(bgc, offset);
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&bgc->lock, flags);
-+
-+	if (val)
-+		priv->imask |= mask;
-+	else
-+		priv->imask &= ~mask;
-+	bgc->write_reg(&priv->regs->imask, priv->imask);
-+
-+	spin_unlock_irqrestore(&bgc->lock, flags);
-+}
-+
-+static int grgpio_to_irq(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct grgpio_priv *priv = grgpio_gc_to_priv(gc);
-+	int index, irq;
-+
-+	if (!priv->irqmap || offset > gc->ngpio)
-+		return -ENXIO;
-+
-+	index = priv->irqmap[offset];
-+	if (index < 0)
-+		return -ENXIO;
-+
-+	irq = irq_of_parse_and_map(priv->bgc.gc.dev->of_node, index);
-+	if (irq) {
-+		/* Enable interrupt and return irq */
-+		grgpio_set_imask(priv, offset, 1);
-+		return irq;
-+	} else {
-+		return -ENXIO;
-+	}
-+}
-+
-+static void grgpio_free(struct gpio_chip *gc, unsigned offset)
-+{
-+	struct grgpio_priv *priv = grgpio_gc_to_priv(gc);
-+	struct bgpio_chip *bgc = &priv->bgc;
-+	unsigned long mask = bgc->pin2mask(bgc, offset);
-+
-+	if (unlikely(priv->imask & mask))
-+		grgpio_set_imask(priv, offset, 0);
-+}
-+
-+static int grgpio_probe(struct platform_device *ofdev)
-+{
-+	struct device_node *np = ofdev->dev.of_node;
-+	struct grgpio_regs __iomem *regs;
-+	struct gpio_chip *gc;
-+	struct bgpio_chip *bgc;
-+	struct grgpio_priv *priv;
-+	struct resource *res;
-+	int err, i, size;
-+	u32 prop;
-+	s32 *irqmap;
-+	char *label;
-+
-+	priv = devm_kzalloc(&ofdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv) {
-+		dev_err(&ofdev->dev, "Could not allocate priv\n");
-+		return -ENOMEM;
-+	}
-+
-+	res = platform_get_resource(ofdev, IORESOURCE_MEM, 0);
-+	regs = devm_request_and_ioremap(&ofdev->dev, res);
-+	if (!regs) {
-+		dev_err(&ofdev->dev, "Couldn't map registers\n");
-+		return -EADDRNOTAVAIL;
-+	}
-+
-+	bgc = &priv->bgc;
-+	err = bgpio_init(bgc, &ofdev->dev, 4, &regs->data, &regs->output, NULL,
-+			 &regs->dir, NULL, BGPIOF_BIG_ENDIAN);
-+	if (err) {
-+		dev_err(&ofdev->dev, "bgpio_init() failed\n");
-+		return err;
-+	}
-+
-+	priv->regs = regs;
-+	priv->imask = bgc->read_reg(&regs->imask);
-+
-+	gc = &bgc->gc;
-+	gc->of_node = np;
-+	gc->owner = THIS_MODULE;
-+	gc->to_irq = grgpio_to_irq;
-+	gc->free = grgpio_free;
-+
-+	err = of_property_read_u32(np, "base", &prop);
-+	if (err) {
-+		dev_dbg(&ofdev->dev, "No base property: use dynamic base\n");
-+		gc->base = -1;
-+	} else {
-+		gc->base = prop;
-+	}
-+
-+	err = of_property_read_u32(np, "nbits", &prop);
-+	if (err || prop <= 0 || prop > GRGPIO_MAX_NGPIO) {
-+		gc->ngpio = GRGPIO_MAX_NGPIO;
-+		dev_dbg(&ofdev->dev,
-+			"No or invalid nbits property: assume %d\n", gc->ngpio);
-+	} else {
-+		gc->ngpio = prop;
-+	}
-+
-+	irqmap = (s32 *)of_get_property(np, "irqmap", &size);
-+	if (irqmap) {
-+		if (size < gc->ngpio) {
-+			dev_err(&ofdev->dev,
-+				"irqmap shorter than ngpio (%d < %d)\n",
-+				size, gc->ngpio);
-+			return -EINVAL;
-+		}
-+
-+		priv->irqmap = devm_kzalloc(&ofdev->dev,
-+					    gc->ngpio * sizeof(s32),
-+					    GFP_KERNEL);
-+		if (!priv->irqmap) {
-+			dev_err(&ofdev->dev,
-+				"Could not allocate memory for irqmap\n");
-+			return -ENOMEM;
-+		}
-+		for (i = 0; i < gc->ngpio; i++)
-+			priv->irqmap[i] = irqmap[i];
-+	} else {
-+		dev_dbg(&ofdev->dev, "No irqmap\n");
-+	}
-+
-+	label = kstrdup(np->full_name, GFP_KERNEL);
-+	if (label)
-+		gc->label = label;
-+
-+	platform_set_drvdata(ofdev, priv);
-+
-+	err = gpiochip_add(gc);
-+	if (err) {
-+		dev_err(&ofdev->dev, "Couldn't add gpiochip\n");
-+		return err;
-+	}
-+
-+	dev_info(&ofdev->dev, "regs=0x%p, base=%d, npgio=%d\n",
-+		 priv->regs, gc->base, gc->ngpio);
-+
-+	return 0;
-+}
-+
-+static int grgpio_remove(struct platform_device *ofdev)
-+{
-+	dev_set_drvdata(&ofdev->dev, NULL);
-+
-+	return 0;
-+}
-+
-+static struct of_device_id grgpio_match[] = {
-+	{.name = "GAISLER_GPIO"},
-+	{.name = "01_01a"},
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, grgpio_match);
-+
-+static struct platform_driver grgpio_driver = {
-+	.driver = {
-+		.name = DRV_NAME,
-+		.owner = THIS_MODULE,
-+		.of_match_table = grgpio_match,
-+	},
-+	.probe = grgpio_probe,
-+	.remove = grgpio_remove,
-+};
-+
-+module_platform_driver(grgpio_driver);
-+
-+MODULE_AUTHOR("Aeroflex Gaisler AB.");
-+MODULE_DESCRIPTION("Driver for Aeroflex Gaisler GRGPIO");
-+MODULE_LICENSE("GPL");
--- 
-1.7.0.4
+cheers,
+-roger
