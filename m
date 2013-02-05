@@ -1,41 +1,136 @@
-From: Cyril Chemparathy <cyril-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to arm/common
-Date: Tue, 5 Feb 2013 10:42:21 -0500
-Message-ID: <5111285D.3030503@ti.com>
-References: <20130204154153.GA18237@arwen.pp.htv.fi> <510FF1A6.403@mvista.com>
- <20130204164712.GB4269@arwen.pp.htv.fi> <510FF5C9.3030600@mvista.com>
- <20130204170216.GC4269@arwen.pp.htv.fi> <51100A72.6030909@ti.com>
- <CACRpkdZihnp3_Df==QRWxQupgi7W_YXZxc-MxkusVH6J+Vx56A@mail.gmail.com>
- <20130204203358.GX4720@opensource.wolfsonmicro.com>
- <CACRpkdbPyZt8=pLhz-5qcaSSAk6VBn61dPTNp6teU9HksBwN2w@mail.gmail.com>
- <51102E25.8040107@ti.com> <20130205124120.GC17852@n2100.arm.linux.org.uk>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH] ARM: SAMSUNG: dma: Remove unnecessary code
+Date: Tue, 5 Feb 2013 21:24:55 +0530
+Message-ID: <CAAgF-Bf4Jhv1AKFdkNMHtrPojHgt2a2L2bg=dJvfsEq=cmbFkg@mail.gmail.com>
+References: <1359967675-624-1-git-send-email-padma.v@samsung.com>
+	<201302041743.55029.arnd@arndb.de>
+	<CAAgF-BfaYo7FoYyFHo1eW-bUGOYdvcfskf7_7UhmCOzASoreYg@mail.gmail.com>
+	<201302051113.22720.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130205124120.GC17852-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, Linux Documentation List <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Nair,
- Sandeep" <sandeep_n-l0cyMroinI0@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux DaVinci Kernel List <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, balbi-l0cyMroinI0@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux SPI Devel List <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <201302051113.22720.arnd@arndb.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, vinod.koul@intel.com, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2013 07:41 AM, Russell King - ARM Linux wrote:
-> On Mon, Feb 04, 2013 at 04:54:45PM -0500, Cyril Chemparathy wrote:
->> You're assuming that cookies complete in order.  That is not necessarily
->> true.
->
-> Under what circumstances is that not true?
->
+Hi Arnd,
 
-Notably when hardware can prioritize certain classes of traffic over 
-others, for instance with data center bridging mechanisms.
+On Tue, Feb 5, 2013 at 4:43 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 05 February 2013, Padma Venkat wrote:
+>> On Mon, Feb 4, 2013 at 11:13 PM, Arnd Bergmann <arnd@arndb.de> wrote=
+:
+>> > On Monday 04 February 2013, Padmavathi Venna wrote:
+>> >> diff --git a/arch/arm/plat-samsung/dma-ops.c b/arch/arm/plat-sams=
+ung/dma-ops.c
+>> >> index 71d58dd..ec0d731 100644
+>> >> --- a/arch/arm/plat-samsung/dma-ops.c
+>> >> +++ b/arch/arm/plat-samsung/dma-ops.c
+>> >> @@ -23,23 +23,15 @@ static unsigned samsung_dmadev_request(enum d=
+ma_ch dma_ch,
+>> >>                               struct device *dev, char *ch_name)
+>> >>  {
+>> >>       dma_cap_mask_t mask;
+>> >> -     void *filter_param;
+>> >>
+>> >>       dma_cap_zero(mask);
+>> >>       dma_cap_set(param->cap, mask);
+>> >>
+>> >> -     /*
+>> >> -      * If a dma channel property of a device node from device t=
+ree is
+>> >> -      * specified, use that as the fliter parameter.
+>> >> -      */
+>> >> -     filter_param =3D (dma_ch =3D=3D DMACH_DT_PROP) ?
+>> >> -             (void *)param->dt_dmach_prop : (void *)dma_ch;
+>> >> -
+>> >>       if (dev->of_node)
+>> >>               return (unsigned)dma_request_slave_channel(dev, ch_=
+name);
+>> >>       else
+>> >>               return (unsigned)dma_request_channel(mask, pl330_fi=
+lter,
+>> >> -                                                     filter_para=
+m);
+>> >> +                                                     (void *)dma=
+_ch);
+>> >>  }
+>> >
+>> > This still looks wrong to me, because the pl330_filter function no=
+w tkes
+>> > a struct dma_pl330_filter_args pointer argument, not dma_ch name.
+>>
+>> Below is my understanding about generic dma and our discussion on
+>> previous versions of my patches.
+>>
+>> I can=92t pass single dma channel number(may be not dma_ch name in y=
+our
+>> comment above) as void* argument to pl330_filter.  Because I also ne=
+ed
+>> to compare against the dma controller device node, as my requested
+>> channel can belong to any of the available dma controller on SoC.  S=
+o
+>> I either need to pass pointer to dma_spec as void* argument which
+>> holds the dma controller node and required channel number or I can
+>> pass pointer to dma_pl330_filter_args as per your dw_dmac patches.
+>
+> Right.
+>
+>> If I pass pointer to dma_spec I can have a check like below in my
+>> filter function
+>> return ((chan->private =3D=3D dma_spec->np) && (chan->chan_id =3D=3D=
+ dma_spec->args[0]))
+>>
+>> Or if I pass dma_pl330_filter_args I can have a check like below.
+>> return ((chan->device =3D=3D &fargs->pdmac->ddma) && (chan->chan_id =
+=3D=3D
+>> fargs->chan_id));
+>>
+>> I modified  the pl330_filter function based on your dw_dmac patches.
+>> Indeed I don=92t need to pass pointer to pdmac object as 3rd arg in
+>> of_dma_controller_register .  Even I pass NULL here works for me.
+>> Can I pass NULL here as the third argument in of_dma_controller_regi=
+ster?
+>
+> These are all not the issues I am referring to in my comment above.
+> I think it works either way, even if you pass NULL to
+> of_dma_controller_register, although using it for the pdmac object
+> seems cleaner to me.
+>
+>> Please clarify me which is best way of doing this and correct me if =
+my
+>> understanding is wrong.
+>
+> My point was that in the samsung_dmadev_request quoted above, you
+> refer to the same pl330_filter filter function, but the argument ther=
+e
+> is a pointer to 'enum dma_ch', which is not compatible with any of
+> the methods you list, neither the dma_pl330_filter_args nor the
+> raw property.
+>
+> Also, if you change the calling conventions for the pl330_filter
+> function, you should change both the caller and the function in the
+> same patch.
+
+In none of my patches I have changed the pl330_filter args.  This
+function always takes the same argument void*. In non-DT case 'enum
+dma_ch' was typecasted to void* and in DT case I am passing a pointer
+to dma_pl330_filter_args and in pl330_filter function they are
+converted back. In both cases it finally comes down to
+dma_request_channel which takes them as void* which in turn calls the
+pl330_filter.
+
+I think this is what you are pointing to. Please let me know if I am
+still wrong :( .
+
+>
+>         Arnd
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsu=
+ng-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Padma
