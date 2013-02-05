@@ -1,145 +1,103 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: how to specify an OMAP clock in device tree?
-Date: Tue, 5 Feb 2013 15:46:51 +0200
-Message-ID: <51110D4B.50904@ti.com>
-References: <1359993540-20780-1-git-send-email-rogerq@ti.com> <1359993540-20780-12-git-send-email-rogerq@ti.com> <5110D229.1000808@ti.com> <5110E9C4.9000301@ti.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: mvebu: Add support for SPI controller in Armada
+	370/XP
+Date: Tue, 05 Feb 2013 14:57:02 +0100
+Message-ID: <51110FAE.4070700@free-electrons.com>
+References: <1359995888-2385-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <5110E9C4.9000301@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@ti.com>
-Cc: tony@atomide.com, b-cousson@ti.com, balbi@ti.com, stern@rowland.harvard.edu, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, paul@pwsan.com
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1359995888-2385-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2013 01:15 PM, Rajendra Nayak wrote:
-> On Tuesday 05 February 2013 03:04 PM, Roger Quadros wrote:
->> Hi Rajendra,
->>
->> On 02/04/2013 05:58 PM, Roger Quadros wrote:
->>> Provide the RESET and Power regulators for the USB PHY,
->>> the USB Host port mode and the PHY device.
->>>
->>> Also provide pin multiplexer information for the USB host
->>> pins.
->>>
->>> Signed-off-by: Roger Quadros <rogerq@ti.com>
->>> ---
->>>   arch/arm/boot/dts/omap4-panda.dts |   55 +++++++++++++++++++++++++++++++++++++
->>>   1 files changed, 55 insertions(+), 0 deletions(-)
->>>
->>> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
->>> index 4122efe..fe2d3d4 100644
->>> --- a/arch/arm/boot/dts/omap4-panda.dts
->>> +++ b/arch/arm/boot/dts/omap4-panda.dts
->>> @@ -57,6 +57,35 @@
->>>               "AFML", "Line In",
->>>               "AFMR", "Line In";
->>>       };
->>> +
->>> +    /* HS USB Port 1 RESET */
->>> +    hsusb1_reset: hsusb1_reset_reg {
->>> +        compatible = "regulator-fixed";
->>> +        regulator-name = "hsusb1_reset";
->>> +        regulator-min-microvolt = <3300000>;
->>> +        regulator-max-microvolt = <3300000>;
->>> +        gpio = <&gpio2 30 0>;    /* gpio_62 */
->>> +        startup-delay-us = <70000>;
->>> +        enable-active-high;
->>> +    };
->>> +
->>> +    /* HS USB Port 1 Power */
->>> +    hsusb1_power: hsusb1_power_reg {
->>> +        compatible = "regulator-fixed";
->>> +        regulator-name = "hsusb1_vbus";
->>> +        regulator-min-microvolt = <3300000>;
->>> +        regulator-max-microvolt = <3300000>;
->>> +        gpio = <&gpio1 1 0>;    /* gpio_1 */
->>> +        startup-delay-us = <70000>;
->>> +        enable-active-high;
->>> +    };
->>> +
->>> +    /* HS USB Host PHY on PORT 1 */
->>> +    hsusb1_phy: hsusb1_phy {
->>> +        compatible = "usb-nop-xceiv";
->>> +        reset-supply = <&hsusb1_reset>;
->>> +        vcc-supply = <&hsusb1_power>;
->>> +    };
->>
->> This is the patch I was discussing with you about before.
->>
->> Let me explain the problem again.
->>
->> The Pandaboard has a USB PHY whose reference clock is provided by
->> FREF_CLK3 pin which is a clock generated by the OMAP.
->> The PHY driver expects a reference to this clock in the PHY device node.
+Hi Ezequiel,
+
+On 02/04/2013 05:38 PM, Ezequiel Garcia wrote:
+> The Armada 370 and Armada XP SoC has an SPI controller.
+> This patch adds support for this controller in Armada 370
+> and Armada XP SoC common device tree files.
 > 
-> Well, the driver just does a clk_get(dev, "main_clk"); and clk_get() is
-> then able to either pick the reference from the PHY dt node or from a
-> clkdev entry.
+> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-370-xp.dtsi |   22 ++++++++++++++++++++++
+>  1 files changed, 22 insertions(+), 0 deletions(-)
 > 
-> The problem here seems to be that you are not able to add a clkdev entry
-> because the device name wouldn't be fixed, since you have a node in
-> the form of 'node: node {'. All other onchip OMAP devices don't have
-> this issue because they have an entry in the form of 'node: node@addr'
-> and hence have a fixed device name and hence can add a clkdev entry for
-> the clocks they want to control.
+> diff --git a/arch/arm/boot/dts/armada-370-xp.dtsi b/arch/arm/boot/dts/armada-370-xp.dtsi
+> index 28276fe..22340d5 100644
+> --- a/arch/arm/boot/dts/armada-370-xp.dtsi
+> +++ b/arch/arm/boot/dts/armada-370-xp.dtsi
+> @@ -145,6 +145,28 @@
+>  			clocks = <&gateclk 17>;
+>  			status = "disabled";
+>  		};
+> +
+> +		spi0: spi@d0010600 {
+> +			compatible = "marvell,orion-spi";
+> +			reg = <0xd0010600 0x50>;
+
+Currently the driver only use the 5th first register. All of the other
+mvebu platform declare the last register at offset 0x28. The Armada
+370 SoC have also the last register at offset 0x28. Only for the
+Armada XP SoC there are more registers and we have a the last register
+at offset 0x50. Obviously the driver won't use these extra register.
+
+So I think that the best for now is to declare:
+			reg = <0xd0010600 0x28>;
+
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			cell-index = <0>;
+> +			interrupts = <30>;
+> +			clocks = <&coreclk 0>;
+> +			status = "disabled";
+> +		};
+> +
+> +		spi1: spi@d0010680 {
+> +			compatible = "marvell,orion-spi";
+> +			reg = <0xd0010680 0x50>;
+and here:
+			reg = <0xd0010680 0x28>;
+
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			cell-index = <1>;
+> +			interrupts = <92>;
+> +			clocks = <&coreclk 0>;
+> +			status = "disabled";
+> +		};
+>  	};
+>  };
+>  
 > 
-> I don't know if there is any good way to define the DT node for the
-> on board PHY in such a way that the device name is always fixed, in
-> which case you can then add a clkdev entry for 'dev, main_clk' mapping
-> to the onchip clock that provides the clock, but if there is one, then
-> that should fix your problem.
 
-Fixing the device name doesn't really solve the problem.
-Not all OMAP boards will use the same clock for the external device.
-So you can't provide this information in some common clock data file.
+Once it will be fixed, for this patch you can add my
 
-The data has to come from a board specific location, which in the DT boot
-case is the board's dts file.
+Acked-by: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-I think all we need to do is register a clock provider using of_clk_add_provider()
-and provide a clk_src_get() hook that can get the right clock.
 
-usage e.g.
+Regards,
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 
-/* provider */
-clks: omapclocks {
-        compatible = "ti,omapclocks";
-        #clock-cells = <1>;
-};
-
-/* consumer */
-hsusb1_phy: hsusb1_phy {
-	compatible = "usb-nop-xceiv";
-	clocks = <&clks "auxclk3_ck">;	/* FREF_CLK3 */
-	clock-names = "main-clk";
-};
-
-The only problem I see is that the argument to the clks phandle
-cannot be a string. It needs to be u32.
-
-In that case we need to map all clocks into a u32 index.
-
-If we can do that only for auxclks, my problem is solved for panda.
-
-The usage e.g then changes to
-
-/* provider */
-aux_clks: omap_aux_clocks {
-        compatible = "ti,omap_aux_clocks";
-        #clock-cells = <1>;
-};
-
-/* consumer */
-hsusb1_phy: hsusb1_phy {
-	compatible = "usb-nop-xceiv";
-	clocks = <&aux_clks 3>;	/* FREF_CLK3 */
-	clock-names = "main-clk";
-};
-
-Does this idea sound reasonable?
-
-regards,
--roger
+------------------------------------------------------------------------------
+Free Next-Gen Firewall Hardware Offer
+Buy your Sophos next-gen firewall before the end March 2013 
+and get the hardware for free! Learn more.
+http://p.sf.net/sfu/sophos-d2d-feb
