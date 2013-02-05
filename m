@@ -1,50 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V2 1/6] pinctrl: pinctrl-single: use arch_initcall and module_exit
-Date: Tue, 5 Feb 2013 14:00:48 +0100
-Message-ID: <CACRpkdYUBGkRRF_nDbn5tGmtZC_Wucqxz_PjWo0xX_KbnQJ5cw@mail.gmail.com>
-References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
-	<1359445134-13323-2-git-send-email-manishv.b@ti.com>
-	<CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com>
-	<20130201170906.GE22517@atomide.com>
-	<20130201171124.GF22517@atomide.com>
-	<A4887BF146CD57468F700B415D2F47015828C7@DBDE01.ent.ti.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v5 01/10] clk: tegra: Refactor PLL programming code
+Date: Tue, 5 Feb 2013 15:23:55 +0200
+Message-ID: <20130205132355.GD3073@tbergstrom-lnx.Nvidia.com>
+References: <1359713962-16822-1-git-send-email-pdeschrijver@nvidia.com>
+ <1359713962-16822-2-git-send-email-pdeschrijver@nvidia.com>
+ <510F4FF7.3050502@nvidia.com>
+ <20130204143233.GV2364@tbergstrom-lnx.Nvidia.com>
+ <51109BB3.8000706@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <A4887BF146CD57468F700B415D2F47015828C7@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "khilman@deeprootsystems.com" <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <51109BB3.8000706-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 5, 2013 at 7:36 AM, Vishwanathrao Badarkhe, Manish
-<manishv.b@ti.com> wrote:
+On Tue, Feb 05, 2013 at 06:42:11AM +0100, Prashant Gaikwad wrote:
+> On Monday 04 February 2013 08:02 PM, Peter De Schrijver wrote:
+> > On Mon, Feb 04, 2013 at 07:06:47AM +0100, Prashant Gaikwad wrote:
+> >> On Friday 01 February 2013 03:48 PM, Peter De Schrijver wrote:
+> > ...
+> >
+> >>> -static int clk_pll_wait_for_lock(struct tegra_clk_pll *pll,
+> >>> -                                void __iomem *lock_addr, u32 lock_bit_idx)
+> >>> +static int clk_pll_wait_for_lock(struct tegra_clk_pll *pll)
+> >>>    {
+> >>>           int i;
+> >>> -       u32 val;
+> >>> +       u32 val, lock_bit;
+> >>> +       void __iomem *lock_addr;
+> >>>
+> >>>           if (!(pll->flags & TEGRA_PLL_USE_LOCK)) {
+> >>>                   udelay(pll->params->lock_delay);
+> >>>                   return 0;
+> >>>           }
+> >>>
+> >>> +       lock_addr = pll->clk_base + pll->params->base_reg;
+> >> This will not work for PLLE. Lock bit for PLLE is in misc register.
+> >>
+> >>> +       lock_bit = BIT(pll->params->lock_bit_idx);
+> >>> +
+> >>>           for (i = 0; i < pll->params->lock_delay; i++) {
+> >>>                   val = readl_relaxed(lock_addr);
+> >>> -               if (val & BIT(lock_bit_idx)) {
+> >>> +               if (val & lock_bit) {
+> >> Need to change the lock bit idx parameter for Tegra20 and Tegra30 PLLs
+> >> else this patch will break those.
+> >>
+> > Looking at commit 37c26a906527b8a6a252614ca83d21ad318c4e84 and commit
+> > b08e8c0ecc42afa3a2e1019851af741980dd5a6b, these fields seem correctly
+> > initialized for both Tegra20 and Tegra30? Or am I missing something?
+> 
+> Ohh, I missed to read
+> 
+> lock_bit = BIT(pll->params->lock_bit_idx);
+> 
+> 
+> Am I missing something about PLLE lock_addr also?
+> 
 
-> I made following changes, in order to update "dip->p" pointer with
-> correct value:
->
-> -       if (!dpi->p) {
-> +       if (IS_ERR_OR_NULL(dpi->p)) {
->                 dpi->p = devm_pinctrl_get(dev);
-> -               if (IS_ERR_OR_NULL(dpi->p)) {
-> -                       int ret = PTR_ERR(dpi->p);
-> -
-> -                       dev_dbg(dev, "no pinctrl handle\n");
-> -                       /* Only return deferrals */
-> -                       if (ret == -EPROBE_DEFER)
-> -                               return ret;
-> -                       return 0;
-> -               }
-> +               ret = PTR_ERR(dpi->p);
-> +               dev_dbg(dev, "no pinctrl handle\n");
-> +               /* Only return deferrals */
-> +               if (ret == -EPROBE_DEFER)
-> +                       return ret;
-> +               return 0;
+Ah no indeed... my bad. So we need a lock_addr field.
 
-This is based on some old code that I wrote ages ago. Check the
-pinctrl tree or linux-next for the latest core pin grabbing code.
-Use that instead.
+Cheers,
 
-Yours,
-Linus Walleij
+Peter.
