@@ -1,149 +1,183 @@
-From: Kyungmin Park <kmpark@infradead.org>
-Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery support
- for G2D
-Date: Tue, 5 Feb 2013 13:21:41 +0900
-Message-ID: <CAH9JG2UYGGrP5+VpcZXN9rq3YaeAOo=-7qBDQ4JTU3geEY-1mQ@mail.gmail.com>
-References: <1359107722-9974-1-git-send-email-sachin.kamat@linaro.org>
-	<1359107722-9974-2-git-send-email-sachin.kamat@linaro.org>
-	<CAAQKjZNc0xFaoaqtKsLC=Evn60XA5UChtoMLAcgsWqyLNa7ejQ@mail.gmail.com>
-	<510987B5.6090509@gmail.com>
-	<050101cdff52$86df3a70$949daf50$%dae@samsung.com>
-	<510B02AB.4080908@gmail.com>
-	<0b7501ce0011$3df65180$b9e2f480$@samsung.com>
-	<00fd01ce001b$5215a3f0$f640ebd0$%dae@samsung.com>
-	<CAK9yfHxqqumg-oqH_Ku8Zkf8biWVknF91Su0VkWJJXjvWQ3Jhw@mail.gmail.com>
-	<510B9EC8.6020102@samsung.com>
-	<CAK9yfHw+aTgiLwGVJt=J9-ie4-2JAaF4Nh3n4tjcHp6w2JHamg@mail.gmail.com>
-	<014401ce006f$c7dd1dd0$57975970$%dae@samsung.com>
-	<CAK9yfHyEdd_nr5eqT9WZ4+J9LHczL4U5VAUEwzzjbH1H0xgjUQ@mail.gmail.com>
-	<014501ce0072$9eca1a80$dc5e4f80$%dae@samsung.com>
-	<E382E0B5-2695-4293-B264-FB4C54FE4F9D@gmail.com>
-	<CAK9yfHx7FOE1xTqDH=1L5r+hZFY7U-W=Q49qErgjs-i1HU4j4w@mail.gmail.com>
-	<CAAQKjZNLTZSJ8Y0tt2aZPKFESbLGxQ1Z92zkhV_u8nvSXekgtw@mail.gmail.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: DTs, Linux drivers & PCI Devices
+Date: Tue, 5 Feb 2013 15:28:09 +1100
+Message-ID: <20130205042809.GJ821@truffula.fritz.box>
+References: <20130129051244.GH16729@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=EUC-KR
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAAQKjZNLTZSJ8Y0tt2aZPKFESbLGxQ1Z92zkhV_u8nvSXekgtw@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Sachin Kamat <sachin.kamat@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "patches@linaro.org" <patches@linaro.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="===============0851692985468032567=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Saridakis, Dean   (US SSA)" <dean.saridakis-IHqVjY1oUdQxoycv7ERPSQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 5, 2013 at 12:03 PM, Inki Dae <inki.dae@samsung.com> wrote:
-> 2013/2/4 Sachin Kamat <sachin.kamat@linaro.org>:
->> On 1 February 2013 18:28, Inki Dae <daeinki@gmail.com> wrote:
->>>
->>>
->>>
->>>
->>> 2013. 2. 1. =BF=C0=C8=C4 8:52 Inki Dae <inki.dae@samsung.com> =C0=DB=
-=BC=BA:
->>>
->>>>
->>>>
->>>>> -----Original Message-----
->>>>> From: linux-media-owner@vger.kernel.org [mailto:linux-media-
->>>>> owner@vger.kernel.org] On Behalf Of Sachin Kamat
->>>>> Sent: Friday, February 01, 2013 8:40 PM
->>>>> To: Inki Dae
->>>>> Cc: Sylwester Nawrocki; Kukjin Kim; Sylwester Nawrocki; linux-
->>>>> media@vger.kernel.org; dri-devel@lists.freedesktop.org; devicetre=
-e-
->>>>> discuss@lists.ozlabs.org; patches@linaro.org
->>>>> Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discov=
-ery
->>>>> support for G2D
->>>>>
->>>>> On 1 February 2013 17:02, Inki Dae <inki.dae@samsung.com> wrote:
->>>>>>
->>>>>> How about using like below?
->>>>>>        Compatible =3D ""samsung,exynos4x12-fimg-2d" /* for Exyno=
-s4212,
->>>>>> Exynos4412  */
->>>>>> It looks odd to use "samsung,exynos4212-fimg-2d" saying that thi=
-s ip is
->>>>> for
->>>>>> exynos4212 and exynos4412.
->>>>>
->>>>> AFAIK, compatible strings are not supposed to have any wildcard
->>>> characters.
->>>>> Compatible string should suggest the first SoC that contained thi=
-s IP.
->>>>> Hence IMO 4212 is OK.
->>>>>
->>>
->>> Oops, one more thing. AFAIK Exynos4210 also has fimg-2d ip. In this=
- case, we should use "samsung,exynos4210-fimg-2d" as comparible string =
-and add it to exynos4210.dtsi?
->>
->> Exynos4210 has same g2d IP (v3.0) as C110 or V210; so the same
->> comptible string will be used for this one too.
->>
->>> And please check if exynos4212 and 4412 SoCs have same fimg-2d ip. =
-If it's different, we might need to add ip version property or compatib=
-le string to each dtsi file to identify the ip version.
->>
->> AFAIK, they both have the same IP (v4.1).
->>
->
-> Ok, let's use the below,
->
-> For exynos4210 SoC,
-> compatible =3D "samsung,exynos4210-g2d"
->
-> For exynos4x12 SoCs,
-> compatible =3D "samsung,exynos4212-g2d"
-Even though 4212 is exist, I can't see 4212 board support at mainline.
-so I prefer exynos4412-g2d instead of 4212-g2d.
->
-> For exynos5250, 5410 (In case of Exynos5440, I'm not sure that the So=
-C
-> has same ip)
-> compatible =3D "samsung,exynos5250-g2d"
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->
-> To other guys,
-> The device tree is used by not only v4l2 side but also drm side so we
-> should reach an arrangement. So please give me ack if you agree to my
-> opinion. Otherwise please, give me your opinions.
->
-> Thanks,
-> Inki Dae
->
->
->>>
->>> Sorry but give me your opinions.
->>>
->>> Thanks,
->>> Inki Dae
->>>
->>>
->>>>
->>>> Got it. Please post it again.
->>>>
->>>>>
->>>>> --
->>>>> With warm regards,
->>>>> Sachin
->>>>> --
->>>>> To unsubscribe from this list: send the line "unsubscribe linux-m=
-edia" in
->>>>> the body of a message to majordomo@vger.kernel.org
->>>>> More majordomo info at  http://vger.kernel.org/majordomo-info.htm=
-l
->>>>
->>>> _______________________________________________
->>>> dri-devel mailing list
->>>> dri-devel@lists.freedesktop.org
->>>> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->>
->>
->>
->> --
->> With warm regards,
->> Sachin
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0851692985468032567==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="1y6imfT/xHuCvpN0"
+Content-Disposition: inline
+
+
+--1y6imfT/xHuCvpN0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Jan 30, 2013 at 12:58:59AM +0000, Saridakis, Dean   (US SSA) wrote:
+> > > I've been diving into Linux kernel drivers & device trees for a new p=
+roject &
+> > am looking for some help.
+> > >
+> > > First, is it reasonable/possible to define a PCI (PCIe) device in a
+> > > device tree? Seems like you'd have to reference a BAR#s to do this (&
+> > > still have addresses mapped by enumeration).  A couple reasons I'm
+> > > interested in doing this:
+> > > - The PCI device logic will be migrated to a system bus
+> > > - DT properties provide a nice way to pass in driver configuration
+> > > data
+> >=20
+> > It's certainly possible.  On traditional OF systems, PCI devices are al=
+ways
+> > shown in the device tree (and only OF, not the OS does the PCI probing).
+> > Only including the host bridges in flattened trees is essentially a rel=
+axation of
+> > the usual rules, because it's usually not necessary and can be awkward =
+for a
+> > flat tree system.
+> >=20
+>=20
+> I'm learning as I go here, thanks for your patience:
+
+> - I'm using U-boot & just discovered it modifies the device tree
+
+> - From what I read in the spec's you referenced, seems like the
+> assigned-addresses (assigned-address?) property would be the how the
+> BAR window addresses would be passed to the OS.
+
+That's right, IIRC.  That's assuming that the firmware does actually
+assign BARs.  That would always be the case in traditional OF, but not
+necessarily in the flat tree world.  In that case I think a firmware
+that did not assign BARs could just leave assigned-addresses missing.
+
+> So not sure if U-boot boardsetup can be convinced to create or fill
+> in PCI device nodes in the DT. Looks like it's based on your libfdt
+> (thank you!), but details are "left as an excercise for the reader."
+>=20
+> And if I could get U-boot to fill things in, it's not clear if/how
+> linux kernel init would handle it.
+
+On ARM, I don't know.  On powerpc I know our PCI code can deal with
+PCI device nodes being either present or absent, but I think the
+platform code usually tells it which to expect.
+
+> (Saw a reference to "PCI OF bindings" in booting-without-of.txt, but
+> wasn't sure what that was referencing...)
+>=20
+> If that were to all come together, I'd also like to define child
+> nodes under a PCI device BAR node. (That'd be the most elegant
+> approach.) Since "reg" is used to define the child register offsets
+> within the BAR address space, but the BAR address is established w/
+> assigned-addresses, not sure how those dots would connect.=20
+
+Child nodes under a BAR?  Um.. I really have no idea what you're
+looking for here.
+
+
+> I guess an example of how a traditional OF system would represent a
+> PCI device would clear up some of my confusion - any pointers?
+
+The device tree on any server class powerpc machine or a sparc machine
+with a PCI bus should show you that.  Where to get access to such a
+machine is less obvious, sorry.
+
+> > > It's not clear to me how the linux kernel interprets/processes the
+> > > device tree. I'm working w/ powerpc (fsl QorIQ). E.g., shouldn't
+> > > everything from the DT show up in /sys/bus/platform/devices ?
+> >=20
+> > Not necessarily, no.  platform devices are sort of a last-resort place =
+for things
+> > that aren't on a well defined bus.  That usually includes top level dev=
+ices from
+> > an fdt, and often includes things further down the fdt for platform spe=
+cific
+> > buses.  But things like PCI devices, or i2c devices or what have you wi=
+ll still
+> > appear under the appropriate bus types.
+> >=20
+> > > I
+> > > noticed that not everything is there, e.g., only 2 of the 4 PCIe RCs.
+> > > (Noticed this after trying to add my own simple dummy entry to a
+> > > reserved reg space as an experiment).
+> >=20
+> > Hrm.  Not showing all the RCs is a bit odd, though.
+>=20
+> Looks like U-boot boardsetup filtered these out.
+>=20
+> >=20
+> > > Ultimately I'd like to use the DT to describe a set of logic cores on
+> > > a subordinate bus. There is also a subordinate interrupt controller,
+> > > which I think I can figure out how to describe, but am not sure how
+> > > kernel glue works -- somehow I'd need to bind that controller to
+> > > routing code I provide.
+> > >
+> > > Documentation I've been reading includes:
+> > > - ePAPR
+> > > - DT wiki
+> > > - kernel doc (driver-model, devicetree)
+> > > - Linux DDs v3 (no coverage of platform drivers) Any other recommended
+> > docs?
+> >=20
+> > Although large parts of it won't be terribly relevant to you, you should
+> > probably look at the original OF spec - IEEE 1275, and also the PCI Bus=
+ binding
+> > document for IEEE 1275.
+> >=20
+> > http://www.complang.tuwien.ac.at/forth/1275.ps.gz
+> >=20
+> > http://www.openfirmware.org/ofwg/bindings/pci/pci2_1.pdf
+> >=20
+>=20
+> Hope I didn't ramble too much -- getting tired...
+>=20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--1y6imfT/xHuCvpN0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlEQilkACgkQaILKxv3ab8bLMACdFjSM+AEiu8r1AFapJvvnn3hw
+2WoAnjksC0N4VXw5KY3FOl3zF/1RqIhB
+=JgR2
+-----END PGP SIGNATURE-----
+
+--1y6imfT/xHuCvpN0--
+
+--===============0851692985468032567==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============0851692985468032567==--
