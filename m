@@ -1,80 +1,162 @@
-From: "Kumar, Anil" <anilkumar.v-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 2/2] ARM: davinci: da850: add wdt OF_DEV_AUXDATA entry
-Date: Tue, 5 Feb 2013 06:39:20 +0000
-Message-ID: <F3DBB1B3EF102E4994C89758CFCA32412C41F0@DBDE01.ent.ti.com>
-References: <1359016695-10362-1-git-send-email-anilkumar.v@ti.com>
- <1359016695-10362-3-git-send-email-anilkumar.v@ti.com>
- <510FA09F.7030604@ti.com> <510FA2D4.7090807@mvista.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 01/13] usb: phy: nop: Add device tree support and binding
+ information
+Date: Tue, 5 Feb 2013 09:26:37 +0200
+Message-ID: <20130205072637.GA32118@arwen.pp.htv.fi>
+References: <1359993540-20780-1-git-send-email-rogerq@ti.com>
+ <1359993540-20780-2-git-send-email-rogerq@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <510FA2D4.7090807-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1359993540-20780-2-git-send-email-rogerq@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, b-cousson@ti.com, balbi@ti.com, stern@rowland.harvard.edu, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Serqei,
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 04, 2013 at 17:30:20, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 04-02-2013 15:50, Sekhar Nori wrote:
-> 
-> > Auxdata is not evm specific. This can instead be called da850_auxdata_lookup[].
-> 
-> > Also, I dont think it is necessary to add auxdata in a separate patch
-> > from dt nodes. So, I fixed these issues and came up with below patch. I
-> > tested basic wdt reboot. reboot command is still broken (with or
-> > without this patch). Can you please look at that?
-> 
-> > Thanks,
-> > Sekhar
-> 
-> > ----8<----
-> > From: "Kumar, Anil" <anilkumar.v-l0cyMroinI0@public.gmane.org>
-> > Date: Thu, 24 Jan 2013 14:08:14 +0530
-> > Subject: [PATCH 1/1] ARM: davinci: da850: add wdt DT node
-> 
-> > Add da850 wdt DT node.
-> 
-> > Signed-off-by: Kumar, Anil <anilkumar.v-l0cyMroinI0@public.gmane.org>
-> > Signed-off-by: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-> [...]
-> 
-> > diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
-> > index 8dd15c0..2800090 100644
-> > --- a/arch/arm/boot/dts/da850.dtsi
-> > +++ b/arch/arm/boot/dts/da850.dtsi
-> > @@ -88,6 +88,11 @@
-> >   				      19>;
-> >   			status = "disabled";
-> >   		};
-> > +		wdt: wdt@1c21000 {
-> > +			compatible = "ti,davinci-wdt";
-> > +			reg = <0x21000 0xfff>;
-> 
->     Not 0x1000? This is region size, not upper limit.
+Hi,
 
-Oh, you are right. It should be 0x1000. Thanks for correcting. 
+On Mon, Feb 04, 2013 at 05:58:48PM +0200, Roger Quadros wrote:
+> The PHY clock, clock rate, VCC regulator and RESET regulator
+> can now be provided via device tree.
+>=20
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> ---
+>  .../devicetree/bindings/usb/usb-nop-xceiv.txt      |   34 ++++++++++++++=
+++++++
+>  drivers/usb/otg/nop-usb-xceiv.c                    |   31 ++++++++++++++=
+++++
+>  2 files changed, 65 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/usb-nop-xceiv.t=
+xt
+>=20
+> diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt b/Do=
+cumentation/devicetree/bindings/usb/usb-nop-xceiv.txt
+> new file mode 100644
+> index 0000000..d7e2726
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
+> @@ -0,0 +1,34 @@
+> +USB NOP PHY
+> +
+> +Required properties:
+> +- compatible: should be usb-nop-xceiv
+> +
+> +Optional properties:
+> +- clocks: phandle to the PHY clock. Use as per Documentation/devicetree
+> +  /bindings/clock/clock-bindings.txt
+> +  This property is required if clock-frequency is specified.
+> +
+> +- clock-names: Should be "main_clk"
+> +
+> +- clock-frequency: the clock frequency (in Hz) that the PHY clock must
+> +  be configured to.
+> +
+> +- vcc-supply: phandle to the regulator that provides RESET to the PHY.
+> +
+> +- reset-supply: phandle to the regulator that provides power to the PHY.
+> +
+> +Example:
+> +
+> +	hsusb1_phy {
+> +		compatible =3D "usb-nop-xceiv";
+> +		clock-frequency =3D <19200000>;
+> +		clocks =3D <&osc 0>;
+> +		clock-names =3D "main_clk";
+> +		vcc-supply =3D <&hsusb1_vcc_regulator>;
+> +		reset-supply =3D <&hsusb1_reset_regulator>;
+> +	};
+> +
+> +hsusb1_phy is a NOP USB PHY device that gets its clock from an oscillator
+> +and expects that clock to be configured to 19.2MHz by the NOP PHY driver.
+> +hsusb1_vcc_regulator provides power to the PHY and hsusb1_reset_regulator
+> +controls RESET.
+> diff --git a/drivers/usb/otg/nop-usb-xceiv.c b/drivers/usb/otg/nop-usb-xc=
+eiv.c
+> index ac027a1..adbb7ab 100644
+> --- a/drivers/usb/otg/nop-usb-xceiv.c
+> +++ b/drivers/usb/otg/nop-usb-xceiv.c
+> @@ -34,6 +34,7 @@
+>  #include <linux/slab.h>
+>  #include <linux/clk.h>
+>  #include <linux/regulator/consumer.h>
+> +#include <linux/of.h>
+> =20
+>  struct nop_usb_xceiv {
+>  	struct usb_phy		phy;
+> @@ -138,8 +139,19 @@ static int nop_set_host(struct usb_otg *otg, struct =
+usb_bus *host)
+>  	return 0;
+>  }
+> =20
+> +static void nop_xeiv_get_dt_pdata(struct device *dev,
 
-In da850 timer1 is used as wdt and according to da850 data sheet.
+asking to remove, but xeiv !=3D xceiv :-)
 
-Timer1 start address is 0x01C21000
-Timer1 end address is   0x01C21FFF 
+> +				struct nop_usb_xceiv_platform_data *pdata)
+> +{
+> +	struct device_node *node =3D dev->of_node;
+> +	u32 clk_rate;
+> +
+> +	if (!of_property_read_u32(node, "clock-frequency", &clk_rate))
+> +		pdata->clk_rate =3D clk_rate;
+> +}
+> +
+>  static int nop_usb_xceiv_probe(struct platform_device *pdev)
+>  {
+> +	struct device *dev =3D &pdev->dev;
+>  	struct nop_usb_xceiv_platform_data *pdata =3D pdev->dev.platform_data;
+>  	struct nop_usb_xceiv	*nop;
+>  	enum usb_phy_type	type =3D USB_PHY_TYPE_USB2;
+> @@ -153,6 +165,17 @@ static int nop_usb_xceiv_probe(struct platform_devic=
+e *pdev)
+>  	if (!nop->phy.otg)
+>  		return -ENOMEM;
+> =20
+> +	if (dev->of_node) {
+> +		pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +		if (!pdata) {
+> +			dev_err(dev, "Memory allocation failure\n");
+> +			return -ENOMEM;
+> +		}
+> +		nop_xeiv_get_dt_pdata(dev, pdata);
 
-I had wrongly calculated upper limit. I will fix it. 
+actually, I would prefer to not create pdata at all. I mean, ideally
+pdata would be used to initialize fields in your own structure, so first
+move clk_rate to your own private structure, copy pdata's clk_rate value
+to that, then you don't need this hackery when using DT.
 
-Thanks,
-Anil
+--=20
+balbi
+
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRELQtAAoJEIaOsuA1yqRE4aUP/AiNF/nAIIabOysgjOfU2gxA
+qMKNO3RebVwbzKPXY5PmXeBAkaLPpAObP0zv0/GHrO+0ormL8Hy/YjD+MyRsRyqY
+QpLJi2xMbZYu2IwBgphTCDMZY6OeoyZOaKQAlzYy1VLuLKocNtAQ7FsvSyDu+30K
+73ZAJ/bak+dxB+otGpZCpUs5YQGb4DQtN5a7zYc7qM4QZALXL/fMd9pCkAcsksKd
+frnqB8KPzQe5n8fvbxOCh8o2RhuL5JRuN1QrJPNkZe2Z1ZLXUl3umHZE5qhquBSj
+STrsYFa+aAUmxtQdsgThSNq0ZAAjq0ptPei6V9AHh1pO+FxzZDjklS2zurrR4D79
+yVh4MMLzefKh8HUMTkCPllFKFGWIviNRDBeJhaNGWAuifMEgYH/o1qL9awrLfjXl
+1VzVpF0A7winjLLhLkd9yaImHKBmHDK7wx3GZbbymHyloLWLLZwDeU1jEZIzR/Vm
+blBK93WgeERaGFT7nULPKy9nv4PfUrMn2QkxifQPmFCAEegKZuUIvXk7ZDghvpa7
+3NUUPsa2pfk29KT1n4LnUrR5UTVa0z/D0m4bHKiEp2bVS+rrCApknl1gPG2STlog
+18tpEahd0O8Chq0Vlht6mOvMYIS1YjNZ7Nk0v3l3Kp+aaQ9rBLKrBaML/MRxNwem
+lNhwsw+kiRQ9hlL+qlQf
+=WGWf
+-----END PGP SIGNATURE-----
+
+--Q68bSM7Ycu6FN28Q--
