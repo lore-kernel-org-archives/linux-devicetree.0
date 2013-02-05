@@ -1,183 +1,407 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: DTs, Linux drivers & PCI Devices
-Date: Tue, 5 Feb 2013 15:28:09 +1100
-Message-ID: <20130205042809.GJ821@truffula.fritz.box>
-References: <20130129051244.GH16729@truffula.fritz.box>
+From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] iio: Add OF support
+Date: Mon, 4 Feb 2013 21:20:17 -0800
+Message-ID: <20130205052017.GA18178@roeck-us.net>
+References: <1360009566-26347-1-git-send-email-linux@roeck-us.net>
+ <1360009566-26347-3-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0851692985468032567=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Saridakis, Dean   (US SSA)" <dean.saridakis-IHqVjY1oUdQxoycv7ERPSQ@public.gmane.org>
-Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1360009566-26347-3-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Feb 04, 2013 at 12:26:06PM -0800, Guenter Roeck wrote:
+> Provide bindings and parse OF data during initialization.
+> 
+> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 
---===============0851692985468032567==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="1y6imfT/xHuCvpN0"
-Content-Disposition: inline
+Note: One of the parameters to the dummy function of_iio_channel_get_by_name()
+used when CONFIG_OF is undefined is wrong. I'll fix that in the next version of
+the patch.
 
-
---1y6imfT/xHuCvpN0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Jan 30, 2013 at 12:58:59AM +0000, Saridakis, Dean   (US SSA) wrote:
-> > > I've been diving into Linux kernel drivers & device trees for a new p=
-roject &
-> > am looking for some help.
-> > >
-> > > First, is it reasonable/possible to define a PCI (PCIe) device in a
-> > > device tree? Seems like you'd have to reference a BAR#s to do this (&
-> > > still have addresses mapped by enumeration).  A couple reasons I'm
-> > > interested in doing this:
-> > > - The PCI device logic will be migrated to a system bus
-> > > - DT properties provide a nice way to pass in driver configuration
-> > > data
-> >=20
-> > It's certainly possible.  On traditional OF systems, PCI devices are al=
-ways
-> > shown in the device tree (and only OF, not the OS does the PCI probing).
-> > Only including the host bridges in flattened trees is essentially a rel=
-axation of
-> > the usual rules, because it's usually not necessary and can be awkward =
-for a
-> > flat tree system.
-> >=20
->=20
-> I'm learning as I go here, thanks for your patience:
-
-> - I'm using U-boot & just discovered it modifies the device tree
-
-> - From what I read in the spec's you referenced, seems like the
-> assigned-addresses (assigned-address?) property would be the how the
-> BAR window addresses would be passed to the OS.
-
-That's right, IIRC.  That's assuming that the firmware does actually
-assign BARs.  That would always be the case in traditional OF, but not
-necessarily in the flat tree world.  In that case I think a firmware
-that did not assign BARs could just leave assigned-addresses missing.
-
-> So not sure if U-boot boardsetup can be convinced to create or fill
-> in PCI device nodes in the DT. Looks like it's based on your libfdt
-> (thank you!), but details are "left as an excercise for the reader."
->=20
-> And if I could get U-boot to fill things in, it's not clear if/how
-> linux kernel init would handle it.
-
-On ARM, I don't know.  On powerpc I know our PCI code can deal with
-PCI device nodes being either present or absent, but I think the
-platform code usually tells it which to expect.
-
-> (Saw a reference to "PCI OF bindings" in booting-without-of.txt, but
-> wasn't sure what that was referencing...)
->=20
-> If that were to all come together, I'd also like to define child
-> nodes under a PCI device BAR node. (That'd be the most elegant
-> approach.) Since "reg" is used to define the child register offsets
-> within the BAR address space, but the BAR address is established w/
-> assigned-addresses, not sure how those dots would connect.=20
-
-Child nodes under a BAR?  Um.. I really have no idea what you're
-looking for here.
-
-
-> I guess an example of how a traditional OF system would represent a
-> PCI device would clear up some of my confusion - any pointers?
-
-The device tree on any server class powerpc machine or a sparc machine
-with a PCI bus should show you that.  Where to get access to such a
-machine is less obvious, sorry.
-
-> > > It's not clear to me how the linux kernel interprets/processes the
-> > > device tree. I'm working w/ powerpc (fsl QorIQ). E.g., shouldn't
-> > > everything from the DT show up in /sys/bus/platform/devices ?
-> >=20
-> > Not necessarily, no.  platform devices are sort of a last-resort place =
-for things
-> > that aren't on a well defined bus.  That usually includes top level dev=
-ices from
-> > an fdt, and often includes things further down the fdt for platform spe=
-cific
-> > buses.  But things like PCI devices, or i2c devices or what have you wi=
-ll still
-> > appear under the appropriate bus types.
-> >=20
-> > > I
-> > > noticed that not everything is there, e.g., only 2 of the 4 PCIe RCs.
-> > > (Noticed this after trying to add my own simple dummy entry to a
-> > > reserved reg space as an experiment).
-> >=20
-> > Hrm.  Not showing all the RCs is a bit odd, though.
->=20
-> Looks like U-boot boardsetup filtered these out.
->=20
-> >=20
-> > > Ultimately I'd like to use the DT to describe a set of logic cores on
-> > > a subordinate bus. There is also a subordinate interrupt controller,
-> > > which I think I can figure out how to describe, but am not sure how
-> > > kernel glue works -- somehow I'd need to bind that controller to
-> > > routing code I provide.
-> > >
-> > > Documentation I've been reading includes:
-> > > - ePAPR
-> > > - DT wiki
-> > > - kernel doc (driver-model, devicetree)
-> > > - Linux DDs v3 (no coverage of platform drivers) Any other recommended
-> > docs?
-> >=20
-> > Although large parts of it won't be terribly relevant to you, you should
-> > probably look at the original OF spec - IEEE 1275, and also the PCI Bus=
- binding
-> > document for IEEE 1275.
-> >=20
-> > http://www.complang.tuwien.ac.at/forth/1275.ps.gz
-> >=20
-> > http://www.openfirmware.org/ofwg/bindings/pci/pci2_1.pdf
-> >=20
->=20
-> Hope I didn't ramble too much -- getting tired...
->=20
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---1y6imfT/xHuCvpN0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlEQilkACgkQaILKxv3ab8bLMACdFjSM+AEiu8r1AFapJvvnn3hw
-2WoAnjksC0N4VXw5KY3FOl3zF/1RqIhB
-=JgR2
------END PGP SIGNATURE-----
-
---1y6imfT/xHuCvpN0--
-
---===============0851692985468032567==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============0851692985468032567==--
+> ---
+> One open question is how to assign of_node to the iio device. We can either do it
+> in each driver (which turns out to be a huge patchset), or add something like the
+> following to iio_device_register.
+> 
+> 	if (!indio_dev->dev.of_node && indio_dev->dev.parent)
+> 		indio_dev->dev.of_node = indio_dev->dev.parent->of_node;
+> 
+> v3:
+> - Cleaned up documentation (formatting, left-over clock references)
+> - Updated bindings description to permit sub-devices
+> - When searching for iio devices, use the pointer to the iio device type instead
+>   of strcmp. Rename iio_dev_type to iio_device_type (to match other device
+>   types) and make it global for that purpose. Check the OF node first, then the
+>   device type, as the node is less likely to match.
+> - Move the common code in of_iio_channel_get and of_iio_channel_get_all to
+>   __of_iio_channel_get.
+> - Return NULL from of_iio_channel_get_by_name if nothing is found, or
+>   an error if there is a problem with consistency or if the provider device is
+>   not yet available.
+> - In iio_channel_get, return if of_iio_channel_get_by_name() returns a channel
+>   or an error, and continue otherwise.
+> v2:
+> - Rebased to iio/togreg
+> - Documentation update per feedback
+> - Dropped io-channel-output-names from the bindings document. The property is
+>   not used in the code, and it is not entirely clear what it would be used for.
+>   If there is a need for it, we can add it back in later on.
+> - Don't export OF specific API calls
+> - For OF support, no longer depend on iio_map
+> - Add #ifdef CONFIG_OF where appropriate, and ensure that the code still builds
+>   if it is not selected.
+> - Change iio_channel_get to take device pointer as argument instead of device
+>   name. Retain old API as of_iio_channel_get_sys.
+> - iio_channel_get now works for both OF and non-OF configurations
+> - Use regulator to get vref for max1363 driver.
+> 
+>  .../devicetree/bindings/iio/iio-bindings.txt       |   90 +++++++++++
+>  drivers/iio/iio_core.h                             |    1 +
+>  drivers/iio/industrialio-core.c                    |    4 +-
+>  drivers/iio/inkern.c                               |  171 ++++++++++++++++++++
+>  4 files changed, 264 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/iio-bindings.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> new file mode 100644
+> index 0000000..2475c2e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> @@ -0,0 +1,90 @@
+> +This binding is a work-in-progress. It is derived from clock bindings,
+> +and based on suggestions from Lars-Peter Clausen [1].
+> +
+> +Sources of IIO channels can be represented by any node in the device
+> +tree. Those nodes are designated as IIO providers. IIO consumer
+> +nodes use a phandle and IIO specifier pair to connect IIO provider
+> +outputs to IIO inputs. Similar to the gpio specifiers, an IIO
+> +specifier is an array of one or more cells identifying the IIO
+> +output on a device. The length of an IIO specifier is defined by the
+> +value of a #io-channel-cells property in the IIO provider node.
+> +
+> +[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
+> +
+> +==IIO providers==
+> +
+> +Required properties:
+> +#io-channel-cells: Number of cells in an IIO specifier; Typically 0 for nodes
+> +		   with a single IIO output and 1 for nodes with multiple
+> +		   IIO outputs.
+> +
+> +Example for a simple configuration with no trigger:
+> +
+> +	adc: voltage-sensor@35 {
+> +		compatible = "maxim,max1139";
+> +		reg = <0x35>;
+> +		#io-channel-cells = <1>;
+> +	};
+> +
+> +Example for a configuration with trigger:
+> +
+> +	adc@35 {
+> +		compatible = "maxim,max1139";
+> +		reg = <0x35>;
+> +
+> +		adc: iio-device {
+> +			#io-channel-cells = <1>;
+> +		};
+> +		trigger: iio-trigger {
+> +			#io-channel-cells = <1>;
+> +		};
+> +	};
+> +
+> +==IIO consumers==
+> +
+> +Required properties:
+> +io-channels:	List of phandle and IIO specifier pairs, one pair
+> +		for each IIO input to the device. Note: if the
+> +		IIO provider specifies '0' for #io-channel-cells,
+> +		then only the phandle portion of the pair will appear.
+> +
+> +Optional properties:
+> +io-channel-names:
+> +		List of IIO input name strings sorted in the same
+> +		order as the io-channels property. Consumers drivers
+> +		will use io-channel-names to match IIO input names
+> +		with IIO specifiers.
+> +io-channel-ranges:
+> +		Empty property indicating that child nodes can inherit named
+> +		IIO channels from this node. Useful for bus nodes to provide
+> +		and IIO channel to their children.
+> +
+> +For example:
+> +
+> +	device {
+> +		io-channels = <&adc 1>, <&ref 0>;
+> +		io-channel-names = "vcc", "vdd";
+> +	};
+> +
+> +This represents a device with two IIO inputs, named "vcc" and "vdd".
+> +The vcc channel is connected to output 1 of the &adc device, and the
+> +vdd channel is connected to output 0 of the &ref device.
+> +
+> +==Example==
+> +
+> +	adc: max1139@35 {
+> +		compatible = "maxim,max1139";
+> +		reg = <0x35>;
+> +		#io-channel-cells = <1>;
+> +	};
+> +
+> +	...
+> +
+> +	iio_hwmon {
+> +		compatible = "iio-hwmon";
+> +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
+> +			<&adc 3>, <&adc 4>, <&adc 5>,
+> +			<&adc 6>, <&adc 7>, <&adc 8>,
+> +			<&adc 9>, <&adc 10>, <&adc 11>;
+> +		io-channel-names = "vcc", "vdd", "vref", "1.2V";
+> +	};
+> diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
+> index f652e6a..05c1b74 100644
+> --- a/drivers/iio/iio_core.h
+> +++ b/drivers/iio/iio_core.h
+> @@ -18,6 +18,7 @@
+>  struct iio_chan_spec;
+>  struct iio_dev;
+>  
+> +extern struct device_type iio_device_type;
+>  
+>  int __iio_add_chan_devattr(const char *postfix,
+>  			   struct iio_chan_spec const *chan,
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 8848f16..81e3594 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -847,7 +847,7 @@ static void iio_dev_release(struct device *device)
+>  	kfree(indio_dev);
+>  }
+>  
+> -static struct device_type iio_dev_type = {
+> +struct device_type iio_device_type = {
+>  	.name = "iio_device",
+>  	.release = iio_dev_release,
+>  };
+> @@ -869,7 +869,7 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+>  
+>  	if (dev) {
+>  		dev->dev.groups = dev->groups;
+> -		dev->dev.type = &iio_dev_type;
+> +		dev->dev.type = &iio_device_type;
+>  		dev->dev.bus = &iio_bus_type;
+>  		device_initialize(&dev->dev);
+>  		dev_set_drvdata(&dev->dev, (void *)dev);
+> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+> index b289915..913428e 100644
+> --- a/drivers/iio/inkern.c
+> +++ b/drivers/iio/inkern.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/export.h>
+>  #include <linux/slab.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
+>  
+>  #include <linux/iio/iio.h>
+>  #include "iio_core.h"
+> @@ -92,6 +93,164 @@ static const struct iio_chan_spec
+>  	return chan;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +
+> +static int iio_dev_node_match(struct device *dev, void *data)
+> +{
+> +	return dev->of_node == data && dev->type == &iio_device_type;
+> +}
+> +
+> +static int __of_iio_channel_get(struct iio_channel *channel,
+> +				struct device_node *np, int index)
+> +{
+> +	struct device *idev;
+> +	struct iio_dev *indio_dev;
+> +	int err;
+> +	struct of_phandle_args iiospec;
+> +
+> +	err = of_parse_phandle_with_args(np, "io-channels",
+> +					 "#io-channel-cells",
+> +					 index, &iiospec);
+> +	if (err)
+> +		return err;
+> +
+> +	idev = bus_find_device(&iio_bus_type, NULL, iiospec.np,
+> +			       iio_dev_node_match);
+> +	of_node_put(iiospec.np);
+> +	if (idev == NULL)
+> +		return -EPROBE_DEFER;
+> +
+> +	indio_dev = dev_to_iio_dev(idev);
+> +	channel->indio_dev = indio_dev;
+> +	index = iiospec.args_count ? iiospec.args[0] : 0;
+> +	if (index >= indio_dev->num_channels) {
+> +		return -EINVAL;
+> +		goto err_put;
+> +	}
+> +	channel->channel = &indio_dev->channels[index];
+> +
+> +	return 0;
+> +
+> +err_put:
+> +	iio_device_put(indio_dev);
+> +	return err;
+> +}
+> +
+> +static struct iio_channel *of_iio_channel_get(struct device_node *np, int index)
+> +{
+> +	struct iio_channel *channel;
+> +	int err;
+> +
+> +	if (index < 0)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
+> +	if (channel == NULL)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	err = __of_iio_channel_get(channel, np, index);
+> +	if (err)
+> +		goto err_free_channel;
+> +
+> +	return channel;
+> +
+> +err_free_channel:
+> +	kfree(channel);
+> +	return ERR_PTR(err);
+> +}
+> +
+> +static struct iio_channel *of_iio_channel_get_by_name(struct device_node *np,
+> +						      const char *name)
+> +{
+> +	struct iio_channel *chan = NULL;
+> +
+> +	/* Walk up the tree of devices looking for a matching iio channel */
+> +	while (np) {
+> +		int index = 0;
+> +
+> +		/*
+> +		 * For named iio channels, first look up the name in the
+> +		 * "io-channel-names" property.  If it cannot be found, the
+> +		 * index will be an error code, and of_iio_channel_get()
+> +		 * will fail.
+> +		 */
+> +		if (name)
+> +			index = of_property_match_string(np, "io-channel-names",
+> +							 name);
+> +		chan = of_iio_channel_get(np, index);
+> +		if (!IS_ERR(chan))
+> +			break;
+> +		else if (name && index >= 0) {
+> +			pr_err("ERROR: could not get IIO channel %s:%s(%i)\n",
+> +				np->full_name, name ? name : "", index);
+> +			return chan;
+> +		}
+> +
+> +		/*
+> +		 * No matching IIO channel found on this node.
+> +		 * If the parent node has a "io-channel-ranges" property,
+> +		 * then we can try one of its channels.
+> +		 */
+> +		np = np->parent;
+> +		if (np && !of_get_property(np, "io-channel-ranges", NULL))
+> +			break;
+> +	}
+> +	return chan;
+> +}
+> +
+> +static struct iio_channel *of_iio_channel_get_all(struct device *dev)
+> +{
+> +	struct iio_channel *chans;
+> +	int i, mapind, nummaps = 0;
+> +	int ret;
+> +
+> +	do {
+> +		ret = of_parse_phandle_with_args(dev->of_node,
+> +						 "io-channels",
+> +						 "#io-channel-cells",
+> +						 nummaps, NULL);
+> +		if (ret < 0)
+> +			break;
+> +	} while (++nummaps);
+> +
+> +	if (nummaps == 0)	/* no error, return NULL to search map table */
+> +		return NULL;
+> +
+> +	/* NULL terminated array to save passing size */
+> +	chans = kcalloc(nummaps + 1, sizeof(*chans), GFP_KERNEL);
+> +	if (chans == NULL)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	/* Search for OF matches */
+> +	for (mapind = 0; mapind < nummaps; mapind++) {
+> +		ret = __of_iio_channel_get(&chans[mapind], dev->of_node,
+> +					   mapind);
+> +		if (ret)
+> +			goto error_free_chans;
+> +	}
+> +	return chans;
+> +
+> +error_free_chans:
+> +	for (i = 0; i < mapind; i++)
+> +		iio_device_put(chans[i].indio_dev);
+> +	kfree(chans);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +#else /* CONFIG_OF */
+> +
+> +static inline struct iio_channel *
+> +of_iio_channel_get_by_name(struct device *dev, const char *name)
+> +{
+> +	return ERR_PTR(-ENOENT);
+> +}
+> +
+> +static inline struct iio_channel *of_iio_channel_get_all(struct device *dev)
+> +{
+> +	return NULL;
+> +}
+> +
+> +#endif /* CONFIG_OF */
+>  
+>  static struct iio_channel *iio_channel_get_sys(const char *name,
+>  					       const char *channel_name)
+> @@ -150,7 +309,14 @@ struct iio_channel *iio_channel_get(struct device *dev,
+>  				    const char *channel_name)
+>  {
+>  	const char *name = dev ? dev_name(dev) : NULL;
+> +	struct iio_channel *channel;
+>  
+> +	if (dev) {
+> +		channel = of_iio_channel_get_by_name(dev->of_node,
+> +						     channel_name);
+> +		if (channel != NULL)
+> +			return channel;
+> +	}
+>  	return iio_channel_get_sys(name, channel_name);
+>  }
+>  EXPORT_SYMBOL_GPL(iio_channel_get);
+> @@ -173,6 +339,11 @@ struct iio_channel *iio_channel_get_all(struct device *dev)
+>  
+>  	if (dev == NULL)
+>  		return ERR_PTR(-EINVAL);
+> +
+> +	chans = of_iio_channel_get_all(dev);
+> +	if (chans)
+> +		return chans;
+> +
+>  	name = dev_name(dev);
+>  
+>  	mutex_lock(&iio_map_list_lock);
+> -- 
+> 1.7.9.7
+> 
+> 
