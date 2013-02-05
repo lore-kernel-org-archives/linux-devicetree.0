@@ -1,88 +1,85 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [RFC][PATCH 2/2 v3] ASoC: simple-card: add Device
-	Tree support
-Date: Tue, 5 Feb 2013 15:23:45 +0000
-Message-ID: <20130205152344.GE4720@opensource.wolfsonmicro.com>
-References: <5107FF97.1070601@wwwdotorg.org>
- <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
- <51097F0F.2030501@wwwdotorg.org>
- <20130131013500.GA4759@opensource.wolfsonmicro.com>
- <510AA551.30400@wwwdotorg.org>
- <20130131171158.GA15376@opensource.wolfsonmicro.com>
- <510AA720.9000904@wwwdotorg.org>
- <20130131172150.GC15376@opensource.wolfsonmicro.com>
- <87fw1g7q8g.wl%kuninori.morimoto.gx@renesas.com>
- <511034F5.3070809@wwwdotorg.org>
+From: kishon <kishon@ti.com>
+Subject: [GIT PULL] ARM part of USB patches
+Date: Tue, 5 Feb 2013 20:54:08 +0530
+Message-ID: <51112418.5020000@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1842838136300170143=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <511034F5.3070809@wwwdotorg.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Linux-ALSA <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Tony Lindgren <tony@atomide.com>
+Cc: Felipe Balbi <balbi@ti.com>, KISHON@ti.com, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
+Hi Tony,
 
---===============1842838136300170143==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jk/5KjyVsvxWSMIA"
-Content-Disposition: inline
+As discussed, I'm sending a pull request for the arch/arm part of my USB 
+patches. These patches are necessary to get MUSB functional in both dt 
+and non-dt boot. Also added dt data for dwc3 present in OMAP. This patch 
+series *depends* on some of the patches which are merged in usb-next.
 
+Thanks
+Kishon
 
---jk/5KjyVsvxWSMIA
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The following changes since commit 88b62b915b0b7e25870eb0604ed9a92ba4bfc9f7:
 
-On Mon, Feb 04, 2013 at 03:23:49PM -0700, Stephen Warren wrote:
+   Linux 3.8-rc6 (2013-02-01 12:08:14 +1100)
 
-> It seems extremely odd to me that the data delay would just happen to
-> end up meaning that inverting the clock works out to magically make
-> everything work.
+are available in the git repository at:
 
-> Still, if there really is a use-case for this in otherwise simple audio
-> systems, then I guess specifying all the DAI properties in sub-nodes is
-> indeed to simplest/most-flexible way to go.
+   git://gitorious.org/linux-usb/linux-usb.git arm-usb-dt
 
-I've heard of this before when things get routed through an inverter for
-buffering (or sometimes a FPGA for something more fancy).
+for you to fetch changes up to 09084a48903c6056e20e27ae5054902958a10275:
 
---jk/5KjyVsvxWSMIA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+   ARM: dts: omap5: add dwc3 core dt data (2013-02-05 20:11:46 +0530)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+----------------------------------------------------------------
+Kishon Vijay Abraham I (12):
+       ARM: OMAP4: remove control module address space from PHY and OTG
+       ARM: OMAP: devices: create device for usb part of control module
+       ARM: OMAP2: MUSB: Specify omap4 has mailbox
+       ARM: dts: omap: Add omap control usb data
+       ARM: dts: omap: Add omap-usb2 dt data
+       ARM: dts: omap: Add usb_otg and glue data
+       ARM: OMAP: USB: Add phy binding information
+       ARM: dts: omap5: Add omap control usb data
+       ARM: dts: omap5: Add ocp2scp data
+       ARM: dts: omap5: Add omap-usb3 and omap-usb2 dt data
+       ARM: dts: omap5: add dwc3 omap dt data
+       ARM: dts: omap5: add dwc3 core dt data
 
-iQIcBAEBAgAGBQJRESPsAAoJELSic+t+oim9gJQP/iNARiAqqyh5AT0X+bPPAomF
-2pkmZN86eFhm01qjK9QBONAmISkHFqbwQv2TwUY0ZQ53m+bZFsb9baU53j9Nk7+M
-AgJcsYROcwkp/13wHoURL4bvk6zPBqSn/W/4y5c35RS0nJvZZ8JpuU4iVRvngetB
-wCn53P5EFLpYWvWsEFMtzPOKOI0IutgvCbdbTa+WlXUlnSsgJDxLSaTOlBPHCI3y
-3wSJXxl8dGYKlm9opG4PpGaTo7KwStHZzKKmsWnWV081lfwybvI6Ms6LSDCFXkPL
-utpV5xb91/Z6TcS9whVTIRi06C5BFg2dlSY3ZQEcPWqvkSEbVAKat6XUqkdCfgbS
-6w19ro3TItW9EXS5eyahdPOfTYMULButBdNlfkW10Oe4LrNA88/e6BMT/DpA1GEm
-ThhCtQRaGH9kCMuyc8Iufkak0VWlKzs1fCa/Tq2j/EG22wlNaWcmIJL0XtGCqpfg
-6QCVWAwx2YQaceT5z8aqZKuQoxMPdnd8urExPVmRWSgbqohE93TFvlZGNXmfRowG
-KODNmrCIEDGjPUyA7cG6LRYadllrL3kxCZwJLe2gAWUMqrmjvTkbI+JiMVcJXaMV
-p7Rp9R+fsPX02+oBH8pVzmCiqHLTlTqu2tMvBH/kPZtme9LxORMmxyHFAvFUE0s9
-6jg2m6gSG3+XLhy6Y+iF
-=iVKv
------END PGP SIGNATURE-----
-
---jk/5KjyVsvxWSMIA--
-
---===============1842838136300170143==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1842838136300170143==--
+  Documentation/devicetree/bindings/usb/omap-usb.txt |    1 +
+  arch/arm/boot/dts/omap3-beagle-xm.dts              |    6 ++++++
+  arch/arm/boot/dts/omap3-evm.dts                    |    6 ++++++
+  arch/arm/boot/dts/omap3-overo.dtsi                 |    6 ++++++
+  arch/arm/boot/dts/omap3.dtsi                       |   12 ++++++++++++
+  arch/arm/boot/dts/omap4-panda.dts                  |    6 ++++++
+  arch/arm/boot/dts/omap4-sdp.dts                    |    6 ++++++
+  arch/arm/boot/dts/omap4.dtsi                       |   26 
+++++++++++++++++++++++++++
+  arch/arm/boot/dts/omap5.dtsi                       |   48 
+++++++++++++++++++++++++++++++++++++++++++++++++
+  arch/arm/boot/dts/twl4030.dtsi                     |    2 +-
+  arch/arm/mach-omap2/board-2430sdp.c                |    2 ++
+  arch/arm/mach-omap2/board-3430sdp.c                |    2 ++
+  arch/arm/mach-omap2/board-4430sdp.c                |    2 ++
+  arch/arm/mach-omap2/board-cm-t35.c                 |    2 ++
+  arch/arm/mach-omap2/board-devkit8000.c             |    2 ++
+  arch/arm/mach-omap2/board-igep0020.c               |    2 ++
+  arch/arm/mach-omap2/board-ldp.c                    |    2 ++
+  arch/arm/mach-omap2/board-omap3beagle.c            |    2 ++
+  arch/arm/mach-omap2/board-omap3evm.c               |    2 ++
+  arch/arm/mach-omap2/board-omap3logic.c             |    2 ++
+  arch/arm/mach-omap2/board-omap3pandora.c           |    2 ++
+  arch/arm/mach-omap2/board-omap3stalker.c           |    2 ++
+  arch/arm/mach-omap2/board-omap3touchbook.c         |    2 ++
+  arch/arm/mach-omap2/board-omap4panda.c             |    2 ++
+  arch/arm/mach-omap2/board-overo.c                  |    2 ++
+  arch/arm/mach-omap2/board-rm680.c                  |    2 ++
+  arch/arm/mach-omap2/board-zoom-peripherals.c       |    2 ++
+  arch/arm/mach-omap2/devices.c                      |   45 
++++++++++++++++++++++++++++++++++++++++++++++
+  arch/arm/mach-omap2/omap_hwmod_44xx_data.c         |   13 -------------
+  arch/arm/mach-omap2/usb-musb.c                     |    3 +++
+  include/linux/usb/musb.h                           |    2 ++
+  31 files changed, 202 insertions(+), 14 deletions(-)
