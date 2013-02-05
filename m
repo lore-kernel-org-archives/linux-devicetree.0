@@ -1,30 +1,44 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 00/13] Device tree support for OMAP HS USB Host
-Date: Tue, 5 Feb 2013 16:55:01 +0530
-Message-ID: <5110EC0D.40609@ti.com>
-References: <1359993540-20780-1-git-send-email-rogerq@ti.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH V2 1/6] pinctrl: pinctrl-single: use arch_initcall and
+	module_exit
+Date: Tue, 5 Feb 2013 11:27:31 +0000
+Message-ID: <20130205112731.GK17786@n2100.arm.linux.org.uk>
+References: <1359445134-13323-1-git-send-email-manishv.b@ti.com> <1359445134-13323-2-git-send-email-manishv.b@ti.com> <CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com> <20130201170906.GE22517@atomide.com> <20130201171124.GF22517@atomide.com> <A4887BF146CD57468F700B415D2F47015828C7@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1359993540-20780-1-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: tony@atomide.com, b-cousson@ti.com, balbi@ti.com, stern@rowland.harvard.edu, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, paul@pwsan.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <A4887BF146CD57468F700B415D2F47015828C7@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "khilman@deeprootsystems.com" <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 04 February 2013 09:28 PM, Roger Quadros wrote:
-> This patchset adds device tree support for OMAP's High Speed USB Host
-> subsystem. Board adaptation for Panda and Beagleboard is also provided.
->
-> Tested on Beagleboard.
->
-> Will only work with Panda if we provide a reference to the PHY clock
+On Tue, Feb 05, 2013 at 06:36:34AM +0000, Vishwanathrao Badarkhe, Manish wrote:
+> I made following changes, in order to update "dip->p" pointer with 
+> correct value:
+> 
+> -       if (!dpi->p) {
+> +       if (IS_ERR_OR_NULL(dpi->p)) {
+>                 dpi->p = devm_pinctrl_get(dev);
+> -               if (IS_ERR_OR_NULL(dpi->p)) {
+> -                       int ret = PTR_ERR(dpi->p);
+> -
+> -                       dev_dbg(dev, "no pinctrl handle\n");
+> -                       /* Only return deferrals */
+> -                       if (ret == -EPROBE_DEFER)
+> -                               return ret;
+> -                       return 0;
+> -               }
+> +               ret = PTR_ERR(dpi->p);
+> +               dev_dbg(dev, "no pinctrl handle\n");
+> +               /* Only return deferrals */
+> +               if (ret == -EPROBE_DEFER)
+> +                       return ret;
+> +               return 0;
+> 
+> Is this intended change?
 
-But there is no reference provided even for Beagle. Does it work because
-the default clk speed is 192Mhz?
+The above looks totally broken to me.
 
-> generator in the device tree in PATCH 11. I do not know how to do that
-> as there is no way to provide a phandle to any of the OMAP generated clocks
-> in the device tree. Suggestions welcome:).
-
+Oh, it's using IS_ERR_OR_NULL(), so it's bound to be broken.
