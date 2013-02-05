@@ -1,46 +1,75 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] arm: mvebu: Add SPI flash on Armada XP-GP board
-Date: Tue, 5 Feb 2013 13:09:00 -0500
-Message-ID: <20130205180900.GY14746@titan.lakedaemon.net>
-References: <1360063473-26176-1-git-send-email-ezequiel.garcia@free-electrons.com>
-	<20130205123827.GG20242@lunn.ch>
-	<20130205124833.GS14746@titan.lakedaemon.net>
-	<20130205142720.GB2481@localhost>
-	<20130205153135.GU14746@titan.lakedaemon.net>
-	<20130205171701.4fcb1304@skate>
-	<51113132.6000500@free-electrons.com>
-	<20130205180705.5231effd@skate>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [GIT PULL] ARM part of USB patches
+Date: Tue, 5 Feb 2013 10:19:47 -0800
+Message-ID: <20130205181947.GI25185@atomide.com>
+References: <51112418.5020000@ti.com> <51112495.4060908@ti.com>
+ <20130205172724.GA1601@kroah.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130205180705.5231effd@skate>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20130205172724.GA1601-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, kishon <kishon-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 05, 2013 at 06:07:05PM +0100, Thomas Petazzoni wrote:
-> Of course, it doesn't make sense to have drivers for pluggable devices
-> like PCIe devices that are not soldered, USB devices and things like
-> that. But for all the rest, I would say it should be in the defconfig.
+* gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> [130205 09:28]:
+> On Tue, Feb 05, 2013 at 08:56:13PM +0530, kishon wrote:
+> > Hi Tony, Greg,
+> > 
+> > On Tuesday 05 February 2013 08:54 PM, kishon wrote:
+> > >Hi Tony,
+> > >
+> > >As discussed, I'm sending a pull request for the arch/arm part of my USB
+> > >patches. These patches are necessary to get MUSB functional in both dt
+> > >and non-dt boot. Also added dt data for dwc3 present in OMAP. This patch
+> > >series *depends* on some of the patches which are merged in usb-next.
+> > 
+> > This patch series should go in only after USB. Or else it will break
+> > compilation.
+> 
+> Then it probably should go through the USB tree, right?  We don't want
+> to break bisectability.
 
-hmmm, so for the new devboard we should set CONFIG_RAM=n? ;-)
+Looks like this branch needs to be based on at least 01658f0f (usb: phy:
+add a new driver for usb part of control module) to compile. Probably
+needs other USB patches too to make sense.
 
-thx,
+This branch has a high likelihood of conflicting with .dts files, so
+Kishon, I suggest you do two branches:
 
-Jason.
+1. A branch for Greg based on top of the USB changes
 
-------------------------------------------------------------------------------
-Free Next-Gen Firewall Hardware Offer
-Buy your Sophos next-gen firewall before the end March 2013 
-and get the hardware for free! Learn more.
-http://p.sf.net/sfu/sophos-d2d-feb
+   This branch should contain:
+
+   ARM: OMAP4: remove control module address space from PHY and OTG
+   ARM: OMAP: devices: create device for usb part of control module
+   ARM: OMAP2: MUSB: Specify omap4 has mailbox
+   ARM: OMAP: USB: Add phy binding information
+
+   Naturally please make sure they compile and boot on their own.
+   Looks like this will only cause few trivial include merge conflicts
+   with what I have queued up.
+
+   You can add my Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> for those.
+
+2. A branch for Benoit based on v3.8-rc6
+
+   That branch should contain all the .dts changes as those will
+   most likely cause nasty merge conflicts otherwise with what
+   Benoit has queued up.
+
+Regards,
+
+Tony
