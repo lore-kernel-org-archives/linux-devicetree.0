@@ -1,68 +1,145 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v5 01/10] clk: tegra: Refactor PLL programming code
-Date: Tue, 5 Feb 2013 15:23:55 +0200
-Message-ID: <20130205132355.GD3073@tbergstrom-lnx.Nvidia.com>
-References: <1359713962-16822-1-git-send-email-pdeschrijver@nvidia.com>
- <1359713962-16822-2-git-send-email-pdeschrijver@nvidia.com>
- <510F4FF7.3050502@nvidia.com>
- <20130204143233.GV2364@tbergstrom-lnx.Nvidia.com>
- <51109BB3.8000706@nvidia.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: how to specify an OMAP clock in device tree?
+Date: Tue, 5 Feb 2013 15:46:51 +0200
+Message-ID: <51110D4B.50904@ti.com>
+References: <1359993540-20780-1-git-send-email-rogerq@ti.com> <1359993540-20780-12-git-send-email-rogerq@ti.com> <5110D229.1000808@ti.com> <5110E9C4.9000301@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51109BB3.8000706-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5110E9C4.9000301@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Rajendra Nayak <rnayak@ti.com>
+Cc: tony@atomide.com, b-cousson@ti.com, balbi@ti.com, stern@rowland.harvard.edu, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 05, 2013 at 06:42:11AM +0100, Prashant Gaikwad wrote:
-> On Monday 04 February 2013 08:02 PM, Peter De Schrijver wrote:
-> > On Mon, Feb 04, 2013 at 07:06:47AM +0100, Prashant Gaikwad wrote:
-> >> On Friday 01 February 2013 03:48 PM, Peter De Schrijver wrote:
-> > ...
-> >
-> >>> -static int clk_pll_wait_for_lock(struct tegra_clk_pll *pll,
-> >>> -                                void __iomem *lock_addr, u32 lock_bit_idx)
-> >>> +static int clk_pll_wait_for_lock(struct tegra_clk_pll *pll)
-> >>>    {
-> >>>           int i;
-> >>> -       u32 val;
-> >>> +       u32 val, lock_bit;
-> >>> +       void __iomem *lock_addr;
-> >>>
-> >>>           if (!(pll->flags & TEGRA_PLL_USE_LOCK)) {
-> >>>                   udelay(pll->params->lock_delay);
-> >>>                   return 0;
-> >>>           }
-> >>>
-> >>> +       lock_addr = pll->clk_base + pll->params->base_reg;
-> >> This will not work for PLLE. Lock bit for PLLE is in misc register.
-> >>
-> >>> +       lock_bit = BIT(pll->params->lock_bit_idx);
-> >>> +
-> >>>           for (i = 0; i < pll->params->lock_delay; i++) {
-> >>>                   val = readl_relaxed(lock_addr);
-> >>> -               if (val & BIT(lock_bit_idx)) {
-> >>> +               if (val & lock_bit) {
-> >> Need to change the lock bit idx parameter for Tegra20 and Tegra30 PLLs
-> >> else this patch will break those.
-> >>
-> > Looking at commit 37c26a906527b8a6a252614ca83d21ad318c4e84 and commit
-> > b08e8c0ecc42afa3a2e1019851af741980dd5a6b, these fields seem correctly
-> > initialized for both Tegra20 and Tegra30? Or am I missing something?
+On 02/05/2013 01:15 PM, Rajendra Nayak wrote:
+> On Tuesday 05 February 2013 03:04 PM, Roger Quadros wrote:
+>> Hi Rajendra,
+>>
+>> On 02/04/2013 05:58 PM, Roger Quadros wrote:
+>>> Provide the RESET and Power regulators for the USB PHY,
+>>> the USB Host port mode and the PHY device.
+>>>
+>>> Also provide pin multiplexer information for the USB host
+>>> pins.
+>>>
+>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>>> ---
+>>>   arch/arm/boot/dts/omap4-panda.dts |   55 +++++++++++++++++++++++++++++++++++++
+>>>   1 files changed, 55 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
+>>> index 4122efe..fe2d3d4 100644
+>>> --- a/arch/arm/boot/dts/omap4-panda.dts
+>>> +++ b/arch/arm/boot/dts/omap4-panda.dts
+>>> @@ -57,6 +57,35 @@
+>>>               "AFML", "Line In",
+>>>               "AFMR", "Line In";
+>>>       };
+>>> +
+>>> +    /* HS USB Port 1 RESET */
+>>> +    hsusb1_reset: hsusb1_reset_reg {
+>>> +        compatible = "regulator-fixed";
+>>> +        regulator-name = "hsusb1_reset";
+>>> +        regulator-min-microvolt = <3300000>;
+>>> +        regulator-max-microvolt = <3300000>;
+>>> +        gpio = <&gpio2 30 0>;    /* gpio_62 */
+>>> +        startup-delay-us = <70000>;
+>>> +        enable-active-high;
+>>> +    };
+>>> +
+>>> +    /* HS USB Port 1 Power */
+>>> +    hsusb1_power: hsusb1_power_reg {
+>>> +        compatible = "regulator-fixed";
+>>> +        regulator-name = "hsusb1_vbus";
+>>> +        regulator-min-microvolt = <3300000>;
+>>> +        regulator-max-microvolt = <3300000>;
+>>> +        gpio = <&gpio1 1 0>;    /* gpio_1 */
+>>> +        startup-delay-us = <70000>;
+>>> +        enable-active-high;
+>>> +    };
+>>> +
+>>> +    /* HS USB Host PHY on PORT 1 */
+>>> +    hsusb1_phy: hsusb1_phy {
+>>> +        compatible = "usb-nop-xceiv";
+>>> +        reset-supply = <&hsusb1_reset>;
+>>> +        vcc-supply = <&hsusb1_power>;
+>>> +    };
+>>
+>> This is the patch I was discussing with you about before.
+>>
+>> Let me explain the problem again.
+>>
+>> The Pandaboard has a USB PHY whose reference clock is provided by
+>> FREF_CLK3 pin which is a clock generated by the OMAP.
+>> The PHY driver expects a reference to this clock in the PHY device node.
 > 
-> Ohh, I missed to read
+> Well, the driver just does a clk_get(dev, "main_clk"); and clk_get() is
+> then able to either pick the reference from the PHY dt node or from a
+> clkdev entry.
 > 
-> lock_bit = BIT(pll->params->lock_bit_idx);
+> The problem here seems to be that you are not able to add a clkdev entry
+> because the device name wouldn't be fixed, since you have a node in
+> the form of 'node: node {'. All other onchip OMAP devices don't have
+> this issue because they have an entry in the form of 'node: node@addr'
+> and hence have a fixed device name and hence can add a clkdev entry for
+> the clocks they want to control.
 > 
-> 
-> Am I missing something about PLLE lock_addr also?
-> 
+> I don't know if there is any good way to define the DT node for the
+> on board PHY in such a way that the device name is always fixed, in
+> which case you can then add a clkdev entry for 'dev, main_clk' mapping
+> to the onchip clock that provides the clock, but if there is one, then
+> that should fix your problem.
 
-Ah no indeed... my bad. So we need a lock_addr field.
+Fixing the device name doesn't really solve the problem.
+Not all OMAP boards will use the same clock for the external device.
+So you can't provide this information in some common clock data file.
 
-Cheers,
+The data has to come from a board specific location, which in the DT boot
+case is the board's dts file.
 
-Peter.
+I think all we need to do is register a clock provider using of_clk_add_provider()
+and provide a clk_src_get() hook that can get the right clock.
+
+usage e.g.
+
+/* provider */
+clks: omapclocks {
+        compatible = "ti,omapclocks";
+        #clock-cells = <1>;
+};
+
+/* consumer */
+hsusb1_phy: hsusb1_phy {
+	compatible = "usb-nop-xceiv";
+	clocks = <&clks "auxclk3_ck">;	/* FREF_CLK3 */
+	clock-names = "main-clk";
+};
+
+The only problem I see is that the argument to the clks phandle
+cannot be a string. It needs to be u32.
+
+In that case we need to map all clocks into a u32 index.
+
+If we can do that only for auxclks, my problem is solved for panda.
+
+The usage e.g then changes to
+
+/* provider */
+aux_clks: omap_aux_clocks {
+        compatible = "ti,omap_aux_clocks";
+        #clock-cells = <1>;
+};
+
+/* consumer */
+hsusb1_phy: hsusb1_phy {
+	compatible = "usb-nop-xceiv";
+	clocks = <&aux_clks 3>;	/* FREF_CLK3 */
+	clock-names = "main-clk";
+};
+
+Does this idea sound reasonable?
+
+regards,
+-roger
