@@ -1,67 +1,63 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v7 01/10] ARM: davinci: move private EDMA API to arm/common
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v17 4/7] fbmon: add videomode helpers
 Date: Tue, 5 Feb 2013 19:29:53 +0100
-Message-ID: <CACRpkdbeoMO1rjPiWDAuVL0uYwMGF+9-vCxqoMiMd1uAgZm=RQ@mail.gmail.com>
-References: <20130201213003.GW2637@n2100.arm.linux.org.uk>
-	<20130204154153.GA18237@arwen.pp.htv.fi>
-	<510FF1A6.403@mvista.com>
-	<20130204164712.GB4269@arwen.pp.htv.fi>
-	<510FF5C9.3030600@mvista.com>
-	<20130204170216.GC4269@arwen.pp.htv.fi>
-	<51100A72.6030909@ti.com>
-	<CACRpkdZihnp3_Df==QRWxQupgi7W_YXZxc-MxkusVH6J+Vx56A@mail.gmail.com>
-	<5110369B.9060901@ti.com>
-	<CACRpkda8xBB35CwuBH76xXcC341TeRs1ZuwzDD0LtuXc4ifQTw@mail.gmail.com>
-	<20130205164705.GG4720@opensource.wolfsonmicro.com>
+Message-ID: <20130205182953.GC27438@pengutronix.de>
+References: <1359104515-8907-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1359104515-8907-5-git-send-email-s.trumtrar@pengutronix.de>
+ <003401ce005e$af665c50$0e3314f0$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130205164705.GG4720@opensource.wolfsonmicro.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Cyril Chemparathy <cyril@ti.com>, balbi@ti.com, Sergei Shtylyov <sshtylyov@mvista.com>, Linux Documentation List <linux-doc@vger.kernel.org>, Lindgren <tony@atomide.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Vinod Koul <vinod.koul@intel.com>, "Nair, Sandeep" <sandeep_n@ti.com>, Chris Ball <cjb@laptop.org>, Matt Porter <mporter@ti.com>, Arnd Bergmann <arnd@arndb.de>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Linux OMAP List <linux-omap@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, "Cousson, Benoit" <b-cousson@ti.com>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Landley <rob@landley.net>, Dan Williams <djbw@fb.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <003401ce005e$af665c50$0e3314f0$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "'Mohammed, Afzal'" <afzal-l0cyMroinI0@public.gmane.org>, 'Florian Tobias Schandinat' <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, 'Dave Airlie' <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, 'Tomi Valkeinen' <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, 'Laurent Pinchart' <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, 'Guennady Liakhovetski' <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 5, 2013 at 5:47 PM, Mark Brown
-<broonie@opensource.wolfsonmicro.com> wrote:
-> On Tue, Feb 05, 2013 at 05:21:48PM +0100, Linus Walleij wrote:
->
->> For IRQ mode, use the completion callback to push each cookie
->> to NAPI, and thus let the IRQ drive the traffic.
->
-> The whole purpose of NAPI is to avoid taking interrupts for completion
-> of transfers.  Anything that generates interrupts when NAPI is in
-> polling mode is defeating the point.
+Hi!
 
-So what I was trying to get across is that when you're in polling
-mode you do not set DMA_PREP_INTERRUPT on your transfers,
-just throw the obtained struct dma_async_tx_descriptor on some
-list and then when polling use dma_async_is_tx_complete()
-on the channel and the cookie inside the descriptor.
+On Fri, Feb 01, 2013 at 06:29:50PM +0900, Jingoo Han wrote:
+> On Friday, January 25, 2013 6:02 PM, Steffen Trumtrar wrote
+> > 
+> > +	fbmode->sync = 0;
+> > +	fbmode->vmode = 0;
+> > +	if (vm->dmt_flags & VESA_DMT_HSYNC_HIGH)
+> > +		fbmode->sync |= FB_SYNC_HOR_HIGH_ACT;
+> > +	if (vm->dmt_flags & VESA_DMT_HSYNC_HIGH)
+> 
+> Um, it seems to be a type. 'H'SYNC -> 'V'SYNC
+> Thus, it would be changed as below:
+> 
+>     VESA_DMT_HSYNC_HIGH -> VESA_DMT_VSYNC_HIGH
 
-I was trying to describe that you can move from
-IRQ mode to polling mode and back again by selectively
-choosing to set/not set the DMA_PREP_INTERRUPT flag.
+Damn. You are right, that is a typo. But I guess some maintainer (Dave) really,
+really wants to take the series now and this can wait for an -rc. No?!  ;-)
 
-If polling is all you want you never set it.
+Thanks,
+Steffen
 
-Then there is the fact that the transfer needs to have
-been flagged complete and it is indeed something that needs
-to be set in some bytes somewhere. By something. But it
-doesn't have to be an interrupt from the DMA controller.
+> 
+> > +		fbmode->sync |= FB_SYNC_VERT_HIGH_ACT;
+> > +	if (vm->data_flags & DISPLAY_FLAGS_INTERLACED)
+> > +		fbmode->vmode |= FB_VMODE_INTERLACED;
+> > +	if (vm->data_flags & DISPLAY_FLAGS_DOUBLESCAN)
+> > +		fbmode->vmode |= FB_VMODE_DOUBLE;
+> > +	fbmode->flag = 0;
+> > +
 
-In such cases we use dma_async_is_tx_complete() with
-channel and cookies as parameter. This will call down into the
-driver chan->device->device_tx_status() and there we can
-actually poll the hardware to see if the transfer happens to
-be complete, and if it is flag it complete.
-
-Which is likely what we want.
-
-No interrupts, only function calls as far as I can see.
-
-(I bet Russell will poke a hole in my reasoning, but it's worth
-a try.)
-
-Yours,
-Linus Walleij
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
