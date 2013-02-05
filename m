@@ -1,68 +1,64 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v8 2/4] misc: Generic on-chip SRAM allocation driver
-Date: Tue, 05 Feb 2013 09:57:14 +0100
-Message-ID: <1360054634.4612.37.camel@pizza.hi.pengutronix.de>
-References: <1359977538-5859-1-git-send-email-p.zabel@pengutronix.de>
-	 <1359977538-5859-3-git-send-email-p.zabel@pengutronix.de>
-	 <20130204155344.GA14171@linux-sh.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 10/13] ARM: dts: OMAP4: Add HS USB Host IP nodes
+Date: Tue, 5 Feb 2013 10:57:58 +0200
+Message-ID: <5110C996.6020208@ti.com>
+References: <1359993540-20780-1-git-send-email-rogerq@ti.com> <1359993540-20780-11-git-send-email-rogerq@ti.com> <20130205074141.GB32118@arwen.pp.htv.fi>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130204155344.GA14171@linux-sh.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Mundt <lethal@linux-sh.org>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130205074141.GB32118@arwen.pp.htv.fi>
+Sender: linux-omap-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: tony@atomide.com, b-cousson@ti.com, stern@rowland.harvard.edu, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 05.02.2013, 00:53 +0900 schrieb Paul Mundt:
-> On Mon, Feb 04, 2013 at 12:32:16PM +0100, Philipp Zabel wrote:
-> > This driver requests and remaps a memory region as configured in the
-> > device tree. It serves memory from this region via the genalloc API.
-> > It optionally enables the SRAM clock.
-> > 
-> > Other drivers can retrieve the genalloc pool from a phandle pointing
-> > to this drivers' device node in the device tree.
-> > 
-> > The allocation granularity is hard-coded to 32 bytes for now,
-> > to make the SRAM driver useful for the 6502 remoteproc driver.
-> > There is overhead for bigger SRAMs, where only a much coarser
-> > allocation granularity is needed: At 32 bytes minimum allocation
-> > size, a 256 KiB SRAM needs a 1 KiB bitmap to track allocations.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+On 02/05/2013 09:41 AM, Felipe Balbi wrote:
+> On Mon, Feb 04, 2013 at 05:58:57PM +0200, Roger Quadros wrote:
+>> Adds device nodes for HS USB Host module, TLL module,
+>> OHCI and EHCI controllers.
+>>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
+>> ---
+>>  arch/arm/boot/dts/omap4.dtsi |   30 ++++++++++++++++++++++++++++++
+>>  1 files changed, 30 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+>> index 739bb79..3429280 100644
+>> --- a/arch/arm/boot/dts/omap4.dtsi
+>> +++ b/arch/arm/boot/dts/omap4.dtsi
+>> @@ -529,5 +529,35 @@
+>>  			ti,hwmods = "timer11";
+>>  			ti,timer-pwm;
+>>  		};
+>> +
+>> +		usbhstll: usbhstll@0x4a062000 {
+>> +			compatible = "ti,usbhs-tll";
+>> +			reg = <0x4a062000 0x1000>;
+>> +			interrupts = <0 78 0x4>;
+>> +			ti,hwmods = "usb_tll_hs";
+>> +		};
+>> +
+>> +		usbhshost: usbhshost@0x4a064000 {
+>> +			compatible = "ti,usbhs-host";
+>> +			reg = <0x4a064000 0x800>;
+>> +			ti,hwmods = "usb_host_hs";
+>> +			#address-cells = <1>;
+>> +			#size-cells = <1>;
+>> +			ranges;
+>> +
+>> +			usbhsohci: ohci@0x4a064800 {
 > 
-> How exactly is this "generic" if you have randomly hard-coded an
-> allocation granularity that is larger than half of the in-tree SRAM pool
-> users today can even support? Did you even bother to look at in-tree SRAM
-> pool users other than the one you are working on?
+> usbhsohci is a bit misleading :-)
+> 
+> How about we stick to ohci and ehci for these nodes ? :-)
+> 
+Was just thinking of a unique label that will point to the OHCI/EHCI
+controller in the HS USB subsystem. We need the label to provide
+PHY information in the board DT.
 
-I agree it should be configurable. As stated in the thread pointed out
-by Matt, I'd just like to separate the discussion about the device tree
-bindings for the allocation granularity from this patchset.
+If we are sure we won't have another OHCI/EHCI controller then I can
+just use ehci/ohci.
 
-About the "generic" labeling, I had a look around for users of
-gen_pool_create() - I admit to overlooking arch/sh/mm/sram.c, and most
-of the others (except arch/arm/kernel/tcm.c drivers/acpi/apei/ghes.c,
-both of which I didn't consider potential users of the sram driver) seem
-to use a granularity significantly larger than 32 bytes.
-
-> There also doesn't seem to be any real reason for the hard-coding either,
-> this information could easily be fetched via platform data or the device
-> tree,
-
-True. Although the device tree is supposed to describe the hardware. The
-allocation granularity is an implementation detail of the gen_pool
-allocator (or possibly kind of a hardware detail of the gen_pool user,
-if there are alignment requirements). That is why I didn't want to press
-on with the device tree granularity configuration part yet.
-
-> and the driver in question would simply need to be able to
-> determine whether the size is suitable for it or not.
-
-Sounds sensible to me. I'd like to follow up with Matt's patch and
-something like this in a second step.
-
-regards
-Philipp
+cheers,
+-roger
