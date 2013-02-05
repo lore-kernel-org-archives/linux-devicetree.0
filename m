@@ -1,136 +1,75 @@
-From: Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>
-Subject: Re: how to specify an OMAP clock in device tree?
-Date: Tue, 5 Feb 2013 16:45:16 +0530
-Message-ID: <5110E9C4.9000301@ti.com>
-References: <1359993540-20780-1-git-send-email-rogerq@ti.com>
- <1359993540-20780-12-git-send-email-rogerq@ti.com> <5110D229.1000808@ti.com>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH] arm: mvebu: Add SPI flash on Armada XP-GP board
+Date: Tue,  5 Feb 2013 08:24:33 -0300
+Message-ID: <1360063473-26176-1-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5110D229.1000808-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 05 February 2013 03:04 PM, Roger Quadros wrote:
-> Hi Rajendra,
->
-> On 02/04/2013 05:58 PM, Roger Quadros wrote:
->> Provide the RESET and Power regulators for the USB PHY,
->> the USB Host port mode and the PHY device.
->>
->> Also provide pin multiplexer information for the USB host
->> pins.
->>
->> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->> ---
->>   arch/arm/boot/dts/omap4-panda.dts |   55 +++++++++++++++++++++++++++++++++++++
->>   1 files changed, 55 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
->> index 4122efe..fe2d3d4 100644
->> --- a/arch/arm/boot/dts/omap4-panda.dts
->> +++ b/arch/arm/boot/dts/omap4-panda.dts
->> @@ -57,6 +57,35 @@
->>   			"AFML", "Line In",
->>   			"AFMR", "Line In";
->>   	};
->> +
->> +	/* HS USB Port 1 RESET */
->> +	hsusb1_reset: hsusb1_reset_reg {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "hsusb1_reset";
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +		gpio = <&gpio2 30 0>;	/* gpio_62 */
->> +		startup-delay-us = <70000>;
->> +		enable-active-high;
->> +	};
->> +
->> +	/* HS USB Port 1 Power */
->> +	hsusb1_power: hsusb1_power_reg {
->> +		compatible = "regulator-fixed";
->> +		regulator-name = "hsusb1_vbus";
->> +		regulator-min-microvolt = <3300000>;
->> +		regulator-max-microvolt = <3300000>;
->> +		gpio = <&gpio1 1 0>;	/* gpio_1 */
->> +		startup-delay-us = <70000>;
->> +		enable-active-high;
->> +	};
->> +
->> +	/* HS USB Host PHY on PORT 1 */
->> +	hsusb1_phy: hsusb1_phy {
->> +		compatible = "usb-nop-xceiv";
->> +		reset-supply = <&hsusb1_reset>;
->> +		vcc-supply = <&hsusb1_power>;
->> +	};
->
-> This is the patch I was discussing with you about before.
->
-> Let me explain the problem again.
->
-> The Pandaboard has a USB PHY whose reference clock is provided by
-> FREF_CLK3 pin which is a clock generated by the OMAP.
-> The PHY driver expects a reference to this clock in the PHY device node.
+This patch adds an SPI master device node for Armada XP-GP board.
+This master node is an SPI flash controller 'n25q128a13'.
 
-Well, the driver just does a clk_get(dev, "main_clk"); and clk_get() is
-then able to either pick the reference from the PHY dt node or from a
-clkdev entry.
+Since there is no 'partitions' node declared, one full sized
+partition named as the device will be created.
 
-The problem here seems to be that you are not able to add a clkdev entry
-because the device name wouldn't be fixed, since you have a node in
-the form of 'node: node {'. All other onchip OMAP devices don't have
-this issue because they have an entry in the form of 'node: node@addr'
-and hence have a fixed device name and hence can add a clkdev entry for
-the clocks they want to control.
+Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+This patch depends on:
 
-I don't know if there is any good way to define the DT node for the
-on board PHY in such a way that the device name is always fixed, in
-which case you can then add a clkdev entry for 'dev, main_clk' mapping
-to the onchip clock that provides the clock, but if there is one, then
-that should fix your problem.
+ 1. Gregory's patch for Armada XP GP board:
+      arm: mvebu: support for the new Armada XP development board(DB-MV784MP-GP)
 
-> See the above node hsusb1_phy. we would need something like
-> 	hsusb1_phy {
-> 		...
-> 		clocks = <&fref_clk3>;
-> 		clock-names = "main_clk";
-> 		...
-> 	};
->
-> Currently on OMAP, there is no way to provide a phandle to this clock.
->
-> Is it practical to provide device tree based implementation of at least
-> the externally accessible OMAP clocks?
->
-> cheers,
-> -roger
->
->>   };
->>
->>   &omap4_pmx_core {
->> @@ -67,6 +96,7 @@
->>   			&mcbsp1_pins
->>   			&dss_hdmi_pins
->>   			&tpd12s015_pins
->> +			&hsusbb1_pins
->>   	>;
->>
->>   	twl6040_pins: pinmux_twl6040_pins {
->> @@ -110,6 +140,23 @@
->>   			0x58 0x10b	/* hdmi_hpd.gpio_63 INPUT PULLDOWN | MODE3 */
->>   		>;
->>   	};
->
->
+ 2. My previous patch for SPI on Armada 370/XP:
+      arm: mvebu: Add support for SPI controller in Armada 370/XP
+
+And don't forget to compile the SPI flash driver, CONFIG_MTD_M25P80=y
+
+ arch/arm/boot/dts/armada-xp-gp.dts |   12 ++++++++++++
+ 1 files changed, 12 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
+index 3eea531..1c8afe2 100644
+--- a/arch/arm/boot/dts/armada-xp-gp.dts
++++ b/arch/arm/boot/dts/armada-xp-gp.dts
+@@ -97,5 +97,17 @@
+ 			phy = <&phy3>;
+ 			phy-mode = "rgmii-id";
+ 		};
++
++		spi0: spi@d0010600 {
++			status = "okay";
++
++			spi-flash@0 {
++				#address-cells = <1>;
++				#size-cells = <1>;
++				compatible = "n25q128a13";
++				reg = <0>; /* Chip select 0 */
++				spi-max-frequency = <108000000>;
++			};
++		};
+ 	};
+ };
+-- 
+1.7.8.6
+
+
+------------------------------------------------------------------------------
+Free Next-Gen Firewall Hardware Offer
+Buy your Sophos next-gen firewall before the end March 2013 
+and get the hardware for free! Learn more.
+http://p.sf.net/sfu/sophos-d2d-feb
