@@ -1,108 +1,105 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH V8] kbuild: create a rule to run the pre-processor on *.dts files
-Date: Tue,  5 Feb 2013 12:06:28 -0700
-Message-ID: <1360091188-24063-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Rob Herring <robherring2@gmail.com>
-Cc: Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Scott Wood <scottwood@freescale.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 1/2] ARM: dts: OMAP3: Add GPMC controller
+Date: Tue, 5 Feb 2013 20:40:58 +0100
+Message-ID: <CABxcv=ms0DOHL8ooktLi+_gQGvGOiKpNgx7gKnU5BUX1pWkAJQ@mail.gmail.com>
+References: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch>
+	<1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch>
+	<CABxcv=k_gwB3ExQYUeappDZ6FE4L7x8Acer4ZQpDH09BL6LG0Q@mail.gmail.com>
+	<510F8F49.9020800@epfl.ch>
+	<CABxcv==7KiBbkTyr7VLVw82F=9vVWRftpbyZWub_CVp3pQW0tQ@mail.gmail.com>
+	<51114003.9070405@epfl.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51114003.9070405@epfl.ch>
+Sender: linux-omap-owner@vger.kernel.org
+To: florian.vaussard@epfl.ch
+Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren@nvidia.com>
+On Tue, Feb 5, 2013 at 6:23 PM, Florian Vaussard
+<florian.vaussard@epfl.ch> wrote:
+> Hi Javier,
+>
 
-Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
-passing them to dtc for final compilation. This allows the use of #define
-and #include within the .dts file.
+Hi Florian,
 
-Acked-by: Simon Glass <sjg@chromium.org>
-Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
-Acked-by: Michal Marek <mmarek@suse.cz>
-Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
-Signed-off-by: Stephen Warren <swarren@nvidia.com>
----
-Grant, back in mid-November, you said you'd make a decision on this in
-the next couple of days, but I think this got overlooked.
+> On 02/04/2013 12:57 PM, Javier Martinez Canillas wrote:
+>
+> [...]
+>
+>
+>>
+>> Yes, I saw on the list that Tony asked you too extend the GPMC DT
+>> support. Flash support is on my TODO list too but I don't know if I'm
+>> going to have time to work on this in the next few weeks.
+>>
+>> Since you are thinking to change the binding, there is something I
+>> want to discuss with you.
+>>
+>> We have two different version for each IGEP board, one that uses NAND
+>> memory and another that has OneNAND.
+>>
+>> With board files this is easy because the flash memory type is
+>> hardcoded (in hardware) using sysboot pins [3]. So we check the
+>> sysboot value and call board_nand_init() or board_onenand_init()
+>> accordingly and pass the same static struct mtd_partition
+>> igep_flash_partitions[] in both cases.
+>>
+>> But with DT this is a little bit trickier since you have to define
+>> either a nand@0 or onenand@0 child node for the gpmc device node. So,
+>> we will have to create lots of dts and dtsi to handle each combination
+>> (IGEPv2 + NAND, IGEPv2 + OneNAND, IGEP COM + NAND, etc).
+>>
+>> I wonder if we could just have a generic gpmc-flash binding and maybe
+>> use a "gpmc, flash_type" property or something like that to decide if
+>> gpmc_onenand_init() or gpmc_nand_init() has to be called.
+>>
+>
+> This boils down to the problem where you have an "if" statement in
+> your board file, and I think no general solution exists.
+>
 
-v8: Add -undef to the cpp command-line, to prevent e.g. "linux" and "unix"
-    being defined; symbols which can appear in the device tree.
-v7: Build *.dtb from *.dts not src/*.dts.
-v6: No change.
-v5:
-* Update Documentation/kbuild for the new command and rule.
-v4:
-* Use -x assembler-with-cpp so pre-defined macros are set up so that
-  #included header files know to only use cpp syntax, not C syntax.
-* Define __DTS__ for similar reasons.
-* use $(CPP) not $(CC) -E, and use $(cpp_flags).
-* Save the pre-processed results so they can be easily inspected when
-  debugging build issues.
-* The use of -x assembler-with-cpp causes cpp to recognize directives in
-  column 1 only. Hence, there's no need to escape property names that
-  begin with #. Hence, there's no need for separate skeleton.dtsi and
-  skeleton.dtsip. Maintain a separate file extension and build rule so that
-  CPP-usage is opt-in. In particular, when using CPP, #include must be used
-  rather than /include/ so that dependencies work.
-v3: Pass "-x c" not "-xc" to cpp.
-v2: Place make %.dtb: %.dtsp rule into Makefile.lib.
----
- Documentation/kbuild/makefiles.txt |   23 +++++++++++++++++++++++
- scripts/Makefile.lib               |   10 ++++++++++
- 2 files changed, 33 insertions(+)
+Yes, this is a general issue since DT uses a declarative paradigm.
 
-diff --git a/Documentation/kbuild/makefiles.txt b/Documentation/kbuild/makefiles.txt
-index 14c3f4f..5198b74 100644
---- a/Documentation/kbuild/makefiles.txt
-+++ b/Documentation/kbuild/makefiles.txt
-@@ -1186,6 +1186,29 @@ When kbuild executes, the following steps are followed (roughly):
- 		clean-files += *.dtb
- 		DTC_FLAGS ?= -p 1024
- 
-+    dtc_cpp
-+	This is just like dtc as describe above, except that the C pre-
-+	processor is invoked upon the .dtsp file before compiling the result
-+	with dtc.
-+
-+	In order for build dependencies to work, all files compiled using
-+	dtc_cpp must use the C pre-processor's #include functionality and not
-+	dtc's /include/ functionality.
-+
-+	Using the C pre-processor allows use of #define to create named
-+	constants. In turn, the #defines will typically appear in a header
-+	file, which may be shared with regular C code. Since the dtc language
-+	represents a data structure rather than code in C syntax, similar
-+	restrictions are placed on a header file included by a device tree
-+	file as for a header file included by an assembly language file.
-+	In particular, the C pre-processor is passed -x assembler-with-cpp,
-+	which sets macro __ASSEMBLY__. __DTS__ is also set. These allow header
-+	files to restrict their content to that compatible with device tree
-+	source.
-+
-+	A central rule exists to create $(obj)/%.dtb from $(src)/%.dtsp;
-+	architecture Makefiles do no need to explicitly write out that rule.
-+
- --- 6.8 Custom kbuild commands
- 
- 	When kbuild is executing with KBUILD_VERBOSE=0, then only a shorthand
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index bdf42fd..7910229 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -269,6 +269,16 @@ cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile
- $(obj)/%.dtb: $(src)/%.dts FORCE
- 	$(call if_changed_dep,dtc)
- 
-+dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
-+
-+quiet_cmd_dtc_cpp = DTC+CPP $@
-+cmd_dtc_cpp = $(CPP) $(cpp_flags) -x assembler-with-cpp -undef -D__DTS__  \
-+			-o $(dtc-tmp) $< ; \
-+	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
-+
-+$(obj)/%.dtb: $(src)/%.dtsp FORCE
-+	$(call if_changed_dep,dtc_cpp)
-+
- # Bzip2
- # ---------------------------------------------------------------------------
- 
--- 
-1.7.10.4
+I was just pointing out that I found that particular issue with the flash
+memory type on IGEP boards.
+
+> In your suggestion, having a property will force you anyway to write
+> distinct DT files to account for the two versions, so it won't really
+> help if I understand correctly. We would need conditional
+> section inside device trees, at least to test for simple parameters.
+> Or a way to generate several DT blobs based on a single DT source file.
+>
+
+Well you will still need a different dtb for each <board,flash type> combination
+but it could make your device trees smaller and simpler since you can define
+your GPMC flash child node on a dtsi where you set all the partition and sizes
+and export that device node to your boards dts that only set the
+"gpmc, flash_type"
+property to nand or onenand (assuming both your NAND and OneNAND version
+have the same partition layout and sizes).
+
+Otherwise you would have to define the complete onenand or nand child node
+on your board dts having duplicated definition for your flash partition layouts.
+
+> Another hackish solution would be to write a meta component, whose
+> probe section would do your test. But this is just a stripped down version
+> of the board file, far from being generic...
+>
+
+Yes, and that doesn't fit on the DT model too well. I still don't know what's
+the best way to do it.
+
+> I will think on it during my holidays :)
+>
+
+great, I hope you enjoy your holidays :-)
+
+> Regards,
+>
+> Florian
+>
+
+Thanks a lot and best regards,
+Javier
