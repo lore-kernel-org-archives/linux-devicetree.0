@@ -1,43 +1,48 @@
-From: Qing Xu <qingx@marvell.com>
-Subject: Re: [PATCH 1/6] mfd: max8925: add irqdomain for dt
-Date: Tue, 05 Feb 2013 16:21:06 +0800
-Message-ID: <5110C0F2.1080108@marvell.com>
-References: <1359992448-22229-1-git-send-email-haojian.zhuang@linaro.org> <20130205081924.GM8476@sortiz-mobl>
+From: kishon <kishon@ti.com>
+Subject: Re: [PATCH v2 4/6] ARM: dts: omap5: add dwc3 omap dt data
+Date: Tue, 5 Feb 2013 13:59:26 +0530
+Message-ID: <5110C2E6.30504@ti.com>
+References: <1359112312-6918-1-git-send-email-kishon@ti.com> <1359112312-6918-5-git-send-email-kishon@ti.com> <510432BF.80808@mvista.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130205081924.GM8476@sortiz-mobl>
+In-Reply-To: <510432BF.80808@mvista.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Haojian Zhuang <haojian.zhuang@linaro.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Chao Xie <cxie4@marvell.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "patches@linaro.org" <patches@linaro.org>, Haojian Zhuang <haojian.zhuang@gmail.com>
+To: Sergei Shtylyov <sshtylyov@mvista.com>
+Cc: balbi@ti.com, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, s-guiriec@ti.com, gg@slimlogic.co.uk, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2013 04:19 PM, Samuel Ortiz wrote:
-> Hi Haojian,
+On Sunday 27 January 2013 01:17 AM, Sergei Shtylyov wrote:
+> Hello.
 >
-> On Mon, Feb 04, 2013 at 11:40:42PM +0800, Haojian Zhuang wrote:
->> From: Qing Xu <qingx@marvell.com>
->>
->> Add irqdomains for max8925's main irq, wrap irq register operations
->> into irqdomain's map func. it is necessary for dt support.
->>
->> Also, add dt support for max8925 driver.
->>
->> Signed-off-by: Qing Xu <qingx@marvell.com>
->> Signed-off-by: Haojian Zhuang <haojian.zhuang@gmail.com>
+> On 25-01-2013 15:11, Kishon Vijay Abraham I wrote:
+>
+>> Add dwc3 omap glue data to the omap5 dt data file. The information about
+>> the dt node added here is available @
+>> Documentation/devicetree/bindings/usb/omap-usb.txt
+>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 >> ---
->>   drivers/mfd/max8925-core.c  |   73 +++++++++++++++++++++++++------------------
->>   drivers/mfd/max8925-i2c.c   |   36 +++++++++++++++++++--
->>   include/linux/mfd/max8925.h |    3 +-
->>   3 files changed, 78 insertions(+), 34 deletions(-)
-> This and the next 5 patches applied, thanks for the heads up.
+>>   arch/arm/boot/dts/omap5.dtsi |   11 +++++++++++
+>>   1 file changed, 11 insertions(+)
 >
-> Cheers,
-> Samuel.
+>> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+>> index 5f59bf2..1703a72 100644
+>> --- a/arch/arm/boot/dts/omap5.dtsi
+>> +++ b/arch/arm/boot/dts/omap5.dtsi
+>> @@ -513,6 +513,17 @@
+>>               ti,type = <2>;
+>>           };
+>>
+>> +        omap_dwc3@4a020000 {
+>> +            compatible = "ti,dwc3";
+>> +            ti,hwmods = "usb_otg_ss";
+>> +            reg = <0x4a020000 0x1ff>;
 >
-Hi Samuel, Haojian,
+>     Shoudn't the "reg" length be 0x200 here? It's length, not limit.
 
-Thank you very much!
+I think 0x1ff is correct. I got the data from hwmod data.
 
--Qing
+Thanks
+Kishon
