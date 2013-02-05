@@ -1,62 +1,45 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 08/13] USB: ehci-omap: Add device tree support and binding
- information
-Date: Tue, 5 Feb 2013 14:46:40 +0200
-Message-ID: <5110FF30.5050705@ti.com>
-References: <1359993540-20780-1-git-send-email-rogerq@ti.com> <1359993540-20780-9-git-send-email-rogerq@ti.com> <20130205123346.GB26842@e106331-lin.cambridge.arm.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH] arm: mvebu: Add SPI flash on Armada XP-GP board
+Date: Tue, 5 Feb 2013 07:48:33 -0500
+Message-ID: <20130205124833.GS14746@titan.lakedaemon.net>
+References: <1360063473-26176-1-git-send-email-ezequiel.garcia@free-electrons.com>
+	<20130205123827.GG20242@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130205123346.GB26842-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130205123827.GG20242-g2DYL2Zd6BY@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2013 02:33 PM, Mark Rutland wrote:
-> On Mon, Feb 04, 2013 at 03:58:55PM +0000, Roger Quadros wrote:
->> Allows the OMAP EHCI controller to be specified via device tree.
->>
->> Signed-off-by: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
->> ---
->>  .../devicetree/bindings/usb/omap-ehci.txt          |   34 ++++++++++++++++++
->>  drivers/usb/host/ehci-omap.c                       |   36 +++++++++++++++++++-
->>  2 files changed, 69 insertions(+), 1 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/usb/omap-ehci.txt
->>
->> diff --git a/Documentation/devicetree/bindings/usb/omap-ehci.txt b/Documentation/devicetree/bindings/usb/omap-ehci.txt
->> new file mode 100644
->> index 0000000..90e6e3a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/omap-ehci.txt
->> @@ -0,0 +1,34 @@
->> +OMAP HS USB EHCI controller
->> +
->> +This device is usually the child of the omap-usb-host
->> +Documentation/devicetree/bindings/mfd/omap-usb-host.txt
->> +
->> +Required properties:
->> +
->> +- compatible: should be "ti,omap-ehci"
->> +- reg: should contain one register range i.e. start and length
->> +- interrupt-parent: phandle to the interrupt controller
->> +- interrupts: description of the interrupt line
->> +
->> +Optional properties:
->> +
->> +- phy: list of phandles to PHY nodes.
->> +  This property is required if at least one of the ports are in
->> +  PHY mode i.e. OMAP_EHCI_PORT_MODE_PHY
+Morning-ish Andrew,
+
+On Tue, Feb 05, 2013 at 01:38:27PM +0100, Andrew Lunn wrote:
+> > And don't forget to compile the SPI flash driver, CONFIG_MTD_M25P80=y
 > 
-> Any reason for not calling this "phys", given it's a list?
->
+> Maybe it makes sense to provide a patch to mvebu_defconfig to add 
+> CONFIG_MTD_M25P80=y ?
 
-No good reason. "phys" seems more appropriate. Thanks.
+I thought this as well, then reconsidered when he said there was nothing
+on it.  So it's not really needed to boot.  I don't have a strong
+opinion on it though, so =y, =m, or =n.
 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thx,
+
+Jason.
+
+------------------------------------------------------------------------------
+Free Next-Gen Firewall Hardware Offer
+Buy your Sophos next-gen firewall before the end March 2013 
+and get the hardware for free! Learn more.
+http://p.sf.net/sfu/sophos-d2d-feb
