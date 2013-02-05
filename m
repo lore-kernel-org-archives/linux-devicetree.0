@@ -1,46 +1,134 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 02/13] USB: phy: nop: Defer probe if device needs VCC/RESET
-Date: Tue, 5 Feb 2013 11:43:54 +0200
-Message-ID: <5110D45A.3040007@ti.com>
-References: <1359993540-20780-1-git-send-email-rogerq@ti.com> <1359993540-20780-3-git-send-email-rogerq@ti.com> <51109E95.3000307@ti.com> <5110C655.3060305@ti.com> <20130205090920.GH32118@arwen.pp.htv.fi>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 4/6] ARM: dts: omap5: add dwc3 omap dt data
+Date: Tue, 5 Feb 2013 11:46:51 +0200
+Message-ID: <20130205094650.GO32118@arwen.pp.htv.fi>
+References: <1359112312-6918-1-git-send-email-kishon@ti.com>
+ <1359112312-6918-5-git-send-email-kishon@ti.com>
+ <510432BF.80808@mvista.com> <5110C2E6.30504@ti.com>
+ <20130205083828.GE32118@arwen.pp.htv.fi> <5110C6EC.6050606@ti.com>
+ <5110CBB9.5080307@ti.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130205090920.GH32118@arwen.pp.htv.fi>
-Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: kishon <kishon@ti.com>, tony@atomide.com, b-cousson@ti.com, stern@rowland.harvard.edu, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, paul@pwsan.com
+Content-Type: multipart/mixed; boundary="===============2154298070667640374=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5110CBB9.5080307-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Sergei Shtylyov <sshtylyov-Igf4POYTYCDQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kishon <kishon-l0cyMroinI0@public.gmane.org>, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, s-guiriec-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2013 11:09 AM, Felipe Balbi wrote:
-> On Tue, Feb 05, 2013 at 10:44:05AM +0200, Roger Quadros wrote:
->>>> diff --git a/include/linux/usb/nop-usb-xceiv.h b/include/linux/usb/nop-usb-xceiv.h
->>>> index 3265b61..148d351 100644
->>>> --- a/include/linux/usb/nop-usb-xceiv.h
->>>> +++ b/include/linux/usb/nop-usb-xceiv.h
->>>> @@ -6,6 +6,10 @@
->>>>   struct nop_usb_xceiv_platform_data {
->>>>       enum usb_phy_type type;
->>>>       unsigned long clk_rate;
->>>> +
->>>> +    /* if set fails with -EPROBE_DEFER if can't get regulator */
->>>> +    unsigned int needs_vcc:1;
->>>> +    unsigned int needs_reset:1;
->>>
->>> how about u8 here?
->>
->> Not sure. Bitfields are usually defined as unsigned int.
-> 
-> IIRC the benefit is that compiler can try to optimize those flags. I
-> mean, if you have 32 1-bit flags, compiler will combine those in a
-> single u32. Someone correct me if I'm wrong.
-> 
+--===============2154298070667640374==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="G23JYFG0d77Z6i/3"
+Content-Disposition: inline
 
-Yes you are right. Kishon was asking me to use u8 instead of unsigned int, which
-I don't think is necessary. AFAIK, it is a norm to use unsigned int when defining
-a bitfield. Compilers are known to behave funny with bitfields. I don't mind
-using bool for each.
+--G23JYFG0d77Z6i/3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-cheers,
--roger
+On Tue, Feb 05, 2013 at 02:37:05PM +0530, Santosh Shilimkar wrote:
+> On Tuesday 05 February 2013 02:16 PM, kishon wrote:
+> >Hi,
+> >
+> >On Tuesday 05 February 2013 02:08 PM, Felipe Balbi wrote:
+> >>On Tue, Feb 05, 2013 at 01:59:26PM +0530, kishon wrote:
+> >>>On Sunday 27 January 2013 01:17 AM, Sergei Shtylyov wrote:
+> >>>>Hello.
+> >>>>
+> >>>>On 25-01-2013 15:11, Kishon Vijay Abraham I wrote:
+> >>>>
+> >>>>>Add dwc3 omap glue data to the omap5 dt data file. The information
+> >>>>>about
+> >>>>>the dt node added here is available @
+> >>>>>Documentation/devicetree/bindings/usb/omap-usb.txt
+> >>>>
+> >>>>>Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> >>>>>---
+> >>>>>  arch/arm/boot/dts/omap5.dtsi |   11 +++++++++++
+> >>>>>  1 file changed, 11 insertions(+)
+> >>>>
+> >>>>>diff --git a/arch/arm/boot/dts/omap5.dtsi
+> >>>>>b/arch/arm/boot/dts/omap5.dtsi
+> >>>>>index 5f59bf2..1703a72 100644
+> >>>>>--- a/arch/arm/boot/dts/omap5.dtsi
+> >>>>>+++ b/arch/arm/boot/dts/omap5.dtsi
+> >>>>>@@ -513,6 +513,17 @@
+> >>>>>              ti,type =3D <2>;
+> >>>>>          };
+> >>>>>
+> >>>>>+        omap_dwc3@4a020000 {
+> >>>>>+            compatible =3D "ti,dwc3";
+> >>>>>+            ti,hwmods =3D "usb_otg_ss";
+> >>>>>+            reg =3D <0x4a020000 0x1ff>;
+> >>>>
+> >>>>    Shoudn't the "reg" length be 0x200 here? It's length, not limit.
+> >>>
+> >>>I think 0x1ff is correct. I got the data from hwmod data.
+> >>
+> >>hwmod is utterly wrong. Looking at TRM, it says the size here is 64KiB
+> >>(0x10000), so is the size for dwc3 itself. Please don't blindly trust
+> >>hwmod, make sure you read data from TRM ;-)
+> >
+> >hmm..ok. But it has only 17 registers :-D
+> >
+> As Felipe said, it should be 0x200. And if you are
+> interested in lesser space, there is no need to map entire 64 KB
+> address space if it isn't being used.
+
+We get really close to using all of it. For DWC3, the last address is at
+0xcc10 (a 32-bit register).
+
+For dwc3-wrapper, then it's correct, we don't use it, I would still map
+the whole thing to make it future proof.
+
+Any draw-backs from mapping all 64K ?
+
+--=20
+balbi
+
+--G23JYFG0d77Z6i/3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRENUKAAoJEIaOsuA1yqREm5kQAKHEtm1CcMceK3bB2JTyaxDe
+P+cMlkSXLNo67MR0fnLketFIwy/ELQIwARg1uBTj/wIwRTa2YmW/AGmos1vG7wO/
+nA6tDD8Pbp+apdtkyLBudq6IDk5aEIGcFv9pl6fDTyV2mQB9m+HiYDRfsJhoPPGy
+K1rEDzvKkNJc7TMr0ZwYgzcJmNabezjpyXMsfPrKisncaz5zKHOAHVzfAMcsuwZO
+1M8ja/fpLfXRW9zgs1rCMz3jyyvWKrs0fmAiAzkqFJfRxV7kZJoT9j2nPPX/milZ
+oTj2UPNAYjcugZcB4ABBzLb64FzjV040pF8PMKulZ0/fjHBfFdRjBkii8psYE2nU
+yoIRV3HguGXJhbBY4mkAIDyO5XeYj6euosC39C6HAIuwQJ6dOg1NtiJgfcn0ojK0
+Duh7I6GATPwTg3YISvpV3vMaZ0dJPpyyWot2sfAAocnWc9uduLkocn+n35YhgwXQ
+Nppn1X5OddfJ40jmCuqe9qj3D46+YdnfMO23X5iCsuu0sxFwuxFS/JQd4bQUmI1a
+6fICTd2n9t6c7RVfDUXl5uHthg5mVMPO6VDiJ7XBn9/X5HH9kGHKq1sUx4fS8Mqo
+jQ0fBIWhz9fJkIRRkEhsRun48T+slWDUQ4lTs9xfQgZmhpjHM+Uh/zMrwD20OI7m
+AAIW8fQLotUotP8VVL6q
+=yRok
+-----END PGP SIGNATURE-----
+
+--G23JYFG0d77Z6i/3--
+
+--===============2154298070667640374==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2154298070667640374==--
