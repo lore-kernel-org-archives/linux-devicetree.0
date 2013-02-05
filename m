@@ -1,143 +1,121 @@
-From: Vivek Gautam <gautamvivek1987-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] usb: phy: samsung: Add PHY support for USB 3.0 controller
-Date: Tue, 5 Feb 2013 12:06:57 +0530
-Message-ID: <CAFp+6iHOT0Ge4KGn_Nw=4N3ipCeSuMQBy4+cRoH4ODR0Ct2cWQ@mail.gmail.com>
-References: <1358168377-22919-3-git-send-email-gautam.vivek@samsung.com>
-	<1359368782-30224-1-git-send-email-gautam.vivek@samsung.com>
-	<077f01cdfeaf$4f7b8780$ee729680$@samsung.com>
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH V2 1/6] pinctrl: pinctrl-single: use arch_initcall and
+ module_exit
+Date: Tue, 5 Feb 2013 06:36:34 +0000
+Message-ID: <A4887BF146CD57468F700B415D2F47015828C7@DBDE01.ent.ti.com>
+References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
+ <1359445134-13323-2-git-send-email-manishv.b@ti.com>
+ <CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com>
+ <20130201170906.GE22517@atomide.com> <20130201171124.GF22517@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <077f01cdfeaf$4f7b8780$ee729680$@samsung.com>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, av.tikhomirov-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, p.paneri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130201171124.GF22517-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org" <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org" <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kukjin,
+On Fri, Feb 01, 2013 at 22:41:24, Tony Lindgren wrote:
+> * Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> [130201 09:12]:
+> > * Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> [130129 03:03]:
+> > > On Tue, Jan 29, 2013 at 8:38 AM, Vishwanathrao Badarkhe, Manish 
+> > > <manishv.b-l0cyMroinI0@public.gmane.org> wrote:
+> > > 
+> > > > Currently, I2C driver gets probed before pinctrl driver.
+> > > > To achieve I2C pin muxing via pinctrl driver before I2C probe get 
+> > > > called, register pinctrl driver in arch_initcall.
+> > > > Also, add module_exit to unregister pinctrl driver.
+> > > >
+> > > > Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b-l0cyMroinI0@public.gmane.org>
+> > > 
+> > > So your I2C driver is not returning -EPROBE_DEFER if it cannot find 
+> > > its pins?
+> > > 
+> > > Hm, well I can live with this, if Tony ACKs it.
+> > 
+> > Hmm pinctrl is before i2c in drivers/Makefile.
+> > Making initcalls happen earlier and earlier is usually the wrong way 
+> > to go. Sounds like there's some other issue here that needs to be 
+> > fixed instead.
+> 
+> Let me guess: The i2c driver is wrongly set to run with arch_initcall?
+>  
+
+Hi Tony
+
+No, Currently i2c driver is set to subsys_initcall. I have seen some
+problem while using pin control grab functionality. Please see detailed
+explanation as below.
+
+Hi Linus
+
+I am using auto grab pin control facility to do pin muxing of I2C0 
+pins and seen problem as below:
+
+Currently, probe of I2C0 driver gets called before pin control driver. 
+Hence, while calling I2C0 probe because of unavailability of  
+pin control node information, its probe get deferred giving following 
+messages:
+
+"i2c_davinci i2c_davinci.1: could not find pctldev for node /soc/pinmux@1c14120
+/pinmux_i2c0_pins, deferring probe"
+
+As I2C0 is in deferred list (as auto grab patch handle this), its probe 
+get called once again, During this second time probe of I2C0, I have 
+observed following crash:
+
+"Unable to handle kernel paging request at virtual address fffffe07"
+
+As per code analysis of auto grab functionality, I have seen in 
+"pinctrl_bind_pin" function, pin control handle (dpi->p) is returned by 
+"devm_pinctrl_get" function.
+
+Pin control handle is assigned with error pointer during 1st time probing of 
+I2C0 (as pin control information is not available at this time). 
+During 2nd time probing (deferred probe) of I2C0, same pin control handle 
+(which was get assigned during 1st probe) is getting used instead of getting 
+updated to correct pin control handle which leads to system crash.
+
+I made following changes, in order to update "dip->p" pointer with 
+correct value:
+
+-       if (!dpi->p) {
++       if (IS_ERR_OR_NULL(dpi->p)) {
+                dpi->p = devm_pinctrl_get(dev);
+-               if (IS_ERR_OR_NULL(dpi->p)) {
+-                       int ret = PTR_ERR(dpi->p);
+-
+-                       dev_dbg(dev, "no pinctrl handle\n");
+-                       /* Only return deferrals */
+-                       if (ret == -EPROBE_DEFER)
+-                               return ret;
+-                       return 0;
+-               }
++               ret = PTR_ERR(dpi->p);
++               dev_dbg(dev, "no pinctrl handle\n");
++               /* Only return deferrals */
++               if (ret == -EPROBE_DEFER)
++                       return ret;
++               return 0;
+
+Is this intended change? or am I missing something in order to use this auto grab
+functionality?
+
+With the above change, now deferred probing is working fine and there is no need
+to register pin control driver in arch_initcall.
 
 
-On Wed, Jan 30, 2013 at 11:31 AM, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Vivek Gautam wrote:
->>
->> Adding PHY driver support for USB 3.0 controller for Samsung's
->> SoCs.
->>
->> Signed-off-by: Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->>
->> Changes from v3:
->>  - Making SAMSUNG_USB3PHY dependent on SAMSUNG_USBPHY.
->>  - Adding USB_DWC3 to dependencies of SAMSUNG_USB2PHY since
->>    dwc3 controller also looks for USB2 type PHY.
->>
->>  drivers/usb/phy/Kconfig          |   11 +-
->>  drivers/usb/phy/Makefile         |    1 +
->>  drivers/usb/phy/samsung-usb3.c   |  349
->> ++++++++++++++++++++++++++++++++++++++
->>  drivers/usb/phy/samsung-usbphy.h |   81 +++++++++
->>  4 files changed, 441 insertions(+), 1 deletions(-)
->>  create mode 100644 drivers/usb/phy/samsung-usb3.c
->>
->> diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
->> index cc0d230..9325a95 100644
->> --- a/drivers/usb/phy/Kconfig
->> +++ b/drivers/usb/phy/Kconfig
->> @@ -52,14 +52,23 @@ config SAMSUNG_USBPHY
->>       help
->>         Enable this to support Samsung USB phy controllers for Samsung
->>         SoCs.
->> +       Further enable USB 2.0 type PHY or USB 3.0 type PHY as required
->> +       for USB controllers in use.
->>
->>  if SAMSUNG_USBPHY
->>
->>  config SAMSUNG_USB2PHY
->>       bool "Samsung USB 2.0 PHY controller Driver"
->> -     depends on USB_S3C_HSOTG || USB_EHCI_S5P ||
->> USB_OHCI_EXYNOS
->> +     depends on USB_S3C_HSOTG || USB_EHCI_S5P ||
->> USB_OHCI_EXYNOS || USB_DWC3
->>       help
->>         Enable this to support Samsung USB 2.0 (High Speed) phy controller
->>         for Samsung SoCs.
->>
->> +config SAMSUNG_USB3PHY
->> +     bool "Samsung USB 3.0 PHY controller Driver"
->> +     depends on USB_DWC3
->> +     help
->> +       Enable this to support Samsung USB 3.0 (Super Speed) phy
->> controller
->> +       for samsung SoCs.
->> +
->>  endif
->
-> It mean, when USB_DWC3 is selected, we can select only one USB2PHY or
-> USB3PHY?
->
-
-Actually, DWC3 expects both USB2PHY and USB3PHY, so went this way.
-But this seems bad :-(
-Will remove these dependencies as suggested by Felipe also.
-
-> [...]
->
->> +#ifdef CONFIG_OF
->> +static const struct of_device_id samsung_usbphy_dt_match[] = {
->> +     {
->> +             .compatible = "samsung,exynos5250-usb3-phy",
->> +             .data = &usb3_phy_exynos5
->> +     },
->> +     {},
->> +};
->> +MODULE_DEVICE_TABLE(of, samsung_usbphy_dt_match);
->> +#endif
->> +
->> +static struct platform_device_id samsung_usbphy_driver_ids[] = {
->> +     {
->> +             .name           = "exynos5250-usb3-phy",
->
-> According to the name of file, exynos5250-usb3phy? Just it is imho...
->
-
-Ok, sure will amend this.
-
->> +             .driver_data    = (unsigned long)&usb3_phy_exynos5,
->> +     },
->> +     {},
->> +};
->> +
->> +MODULE_DEVICE_TABLE(platform, samsung_usbphy_driver_ids);
->> +
->> +static struct platform_driver samsung_usb3_phy_driver = {
->> +     .probe          = samsung_usb3_phy_probe,
->> +     .remove         = samsung_usb3_phy_remove,
->> +     .id_table       = samsung_usbphy_driver_ids,
->> +     .driver         = {
->> +             .name   = "samsung-usb3-phy",
->> +             .owner  = THIS_MODULE,
->> +             .of_match_table =
->> of_match_ptr(samsung_usbphy_dt_match),
->> +     },
->> +};
->> +
->> +module_platform_driver(samsung_usb3_phy_driver);
->> +
->> +MODULE_DESCRIPTION("Samsung USB 3.0 phy controller");
->> +MODULE_AUTHOR("Vivek Gautam <gautam.vivek-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
->> +MODULE_LICENSE("GPL");
->> +MODULE_ALIAS("platform:samsung-usb3-phy");
->
-> I want you to use same naming rule.
->
-
-Sure.
-
-
--- 
-Thanks & Regards
-Vivek
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards, 
+Manish
