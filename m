@@ -1,65 +1,46 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 2/2] dmaengine: OMAP: Register SDMA controller with Device
- Tree DMA driver
-Date: Wed, 6 Feb 2013 15:14:55 -0600
-Message-ID: <5112C7CF.7010606@ti.com>
-References: <1360184596-1603-1-git-send-email-jon-hunter@ti.com> <1360184596-1603-3-git-send-email-jon-hunter@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH/RFC] mmc: add DT bindings for more MMC capability flags
+Date: Wed, 6 Feb 2013 22:00:35 +0000
+Message-ID: <201302062200.35499.arnd@arndb.de>
+References: <Pine.LNX.4.64.1301231743190.26301@axis700.grange> <1923973.xHEn0Jh3IU@wuerfel> <Pine.LNX.4.64.1302061817120.13474@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1360184596-1603-3-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Vinod Koul <vinod.koul@intel.com>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Matt Porter <mporter@ti.com>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Balaji T K <balajitk@ti.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1302061817120.13474@axis700.grange>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Chris Ball <cjb@laptop.org>, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 02/06/2013 03:03 PM, Jon Hunter wrote:
-> If the device-tree blob is present during boot, then register the SDMA
-> controller with the device-tree DMA driver so that we can use device-tree
-> to look-up DMA client information.
+On Wednesday 06 February 2013, Guennadi Liakhovetski wrote:
 > 
-> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
-> ---
->  drivers/dma/omap-dma.c |   31 ++++++++++++++++++++++++++++++-
->  1 file changed, 30 insertions(+), 1 deletion(-)
+> On Thu, 7 Feb 2013, Arnd Bergmann wrote:
 > 
-> diff --git a/drivers/dma/omap-dma.c b/drivers/dma/omap-dma.c
-> index 5a31264..a32d81b 100644
-> --- a/drivers/dma/omap-dma.c
-> +++ b/drivers/dma/omap-dma.c
-> @@ -16,6 +16,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
-> +#include <linux/of_dma.h>
-> +#include <linux/of_device.h>
->  
->  #include "virt-dma.h"
->  
-> @@ -67,6 +69,8 @@ static const unsigned es_bytes[] = {
->  	[OMAP_DMA_DATA_TYPE_S32] = 4,
->  };
->  
-> +static struct of_dma_filter_info info;
-> +
->  static inline struct omap_dmadev *to_omap_dma_dev(struct dma_device *d)
->  {
->  	return container_of(d, struct omap_dmadev, ddev);
-> @@ -621,10 +625,25 @@ static int omap_dma_probe(struct platform_device *pdev)
->  		pr_warn("OMAP-DMA: failed to register slave DMA engine device: %d\n",
->  			rc);
->  		omap_dma_free(od);
-> +		return rc;
->  	} else {
->  		platform_set_drvdata(pdev, od);
->  	}
+> > On Wednesday 06 February 2013 17:25:42 Guennadi Liakhovetski wrote:
+> > > 
+> > > Thank for pointing me out at that thread. However, I don't think 
+> > > MMC_CAP_POWER_OFF_CARD has anything to do with compatibility or hardware 
+> > > revisions. At least I haven't yet come across any sd/mmc hosts, that also 
+> > > supply card power. You could "derive" this flag from the presence of a 
+> > > regulator, capable of changing its status (switching on / off), but even 
+> > > then you're not guaranteed, that you actually can (and want to) power the 
+> > > card off at run-time - the regulator can be shared etc. So, an explicit 
+> > > flag is needed.
+> > 
+> > It sounds like something that should be handled in a controller specific
+> > way I think. E.g. on SDHCI, there seems to always be a method to power
+> > down the card using the SDHCI_POWER_CONTROL register, even without
+> > any external regulators.
+> 
+> If I understand correctly, that register only controls card bus power. 
+> Further sdhci.c uses regulators (host->vmmc) to power up and down the 
+> card.
 
-I realise now that I could get rid of the else here and just call
-platform_set_drvdata(), if we don't return.
+Ok, that may be true. So a device that can only power down the bus
+but not the card itself should not set MMC_CAP_POWER_OFF_CARD
+then? I only saw that it is set unconditionally for the PCI
+case, which does not use regulators.
 
-Anyway, I will wait for other comments before changing.
-
-Cheers
-Jon
+	Arnd
