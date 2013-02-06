@@ -1,65 +1,61 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH v2 2/2] drm/exynos: Add device tree based discovery support for G2D
-Date: Wed,  6 Feb 2013 10:59:44 +0530
-Message-ID: <1360128584-23167-2-git-send-email-sachin.kamat@linaro.org>
-References: <1360128584-23167-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1360128584-23167-1-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org
-Cc: k.debski@samsung.com, sachin.kamat@linaro.org, inki.dae@samsung.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, patches@linaro.org, Ajay Kumar <ajaykumar.rs@samsung.com>
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
+Subject: RE: [PATCH V2 1/6] pinctrl: pinctrl-single: use arch_initcall and
+	module_exit
+Date: Wed, 6 Feb 2013 06:04:22 +0000
+Message-ID: <A4887BF146CD57468F700B415D2F4701583209@DBDE01.ent.ti.com>
+References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
+ <1359445134-13323-2-git-send-email-manishv.b@ti.com>
+ <CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com>
+ <20130201170906.GE22517@atomide.com> <20130201171124.GF22517@atomide.com>
+ <A4887BF146CD57468F700B415D2F47015828C7@DBDE01.ent.ti.com>
+ <20130205112731.GK17786@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130205112731.GK17786@n2100.arm.linux.org.uk>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "khilman@deeprootsystems.com" <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Ajay Kumar <ajaykumar.rs@samsung.com>
+Hi Russell,
 
-This patch adds device tree match table for Exynos G2D controller.
+On Tue, Feb 05, 2013 at 16:57:31, Russell King - ARM Linux wrote:
+> On Tue, Feb 05, 2013 at 06:36:34AM +0000, Vishwanathrao Badarkhe, Manish wrote:
+> > I made following changes, in order to update "dip->p" pointer with 
+> > correct value:
+> > 
+> > -       if (!dpi->p) {
+> > +       if (IS_ERR_OR_NULL(dpi->p)) {
+> >                 dpi->p = devm_pinctrl_get(dev);
+> > -               if (IS_ERR_OR_NULL(dpi->p)) {
+> > -                       int ret = PTR_ERR(dpi->p);
+> > -
+> > -                       dev_dbg(dev, "no pinctrl handle\n");
+> > -                       /* Only return deferrals */
+> > -                       if (ret == -EPROBE_DEFER)
+> > -                               return ret;
+> > -                       return 0;
+> > -               }
+> > +               ret = PTR_ERR(dpi->p);
+> > +               dev_dbg(dev, "no pinctrl handle\n");
+> > +               /* Only return deferrals */
+> > +               if (ret == -EPROBE_DEFER)
+> > +                       return ret;
+> > +               return 0;
+> > 
+> > Is this intended change?
+> 
+> The above looks totally broken to me.
+> 
+> Oh, it's using IS_ERR_OR_NULL(), so it's bound to be broken.
+> 
 
-Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
----
-Patch based on exynos-drm-fixes branch of Inki Dae's tree:
-git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git
+I went through discussion in community on usage of "IS_ERR_OR_NULL".
+https://patchwork.kernel.org/patch/1953271/
+Will take care not use this in future.
 
-Changes since v1:
-Modified the compatible string as per the discussions at [1].
-[1] https://patchwork1.kernel.org/patch/2045821/
----
- drivers/gpu/drm/exynos/exynos_drm_g2d.c |   10 ++++++++++
- 1 files changed, 10 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_g2d.c b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
-index ddcfb5d..0fcfbe4 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_g2d.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_g2d.c
-@@ -19,6 +19,7 @@
- #include <linux/workqueue.h>
- #include <linux/dma-mapping.h>
- #include <linux/dma-attrs.h>
-+#include <linux/of.h>
- 
- #include <drm/drmP.h>
- #include <drm/exynos_drm.h>
-@@ -1240,6 +1241,14 @@ static int g2d_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(g2d_pm_ops, g2d_suspend, g2d_resume);
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id exynos_g2d_match[] = {
-+	{ .compatible = "samsung,exynos5250-g2d" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, exynos_g2d_match);
-+#endif
-+
- struct platform_driver g2d_driver = {
- 	.probe		= g2d_probe,
- 	.remove		= g2d_remove,
-@@ -1247,5 +1256,6 @@ struct platform_driver g2d_driver = {
- 		.name	= "s5p-g2d",
- 		.owner	= THIS_MODULE,
- 		.pm	= &g2d_pm_ops,
-+		.of_match_table = of_match_ptr(exynos_g2d_match),
- 	},
- };
--- 
-1.7.4.1
+Thanks,
+Manish
