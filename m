@@ -1,76 +1,101 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] ARM: mvebu: Add support for SPI flash devices
-	in Armada 370/XP
-Date: Wed, 06 Feb 2013 14:16:54 +0100
-Message-ID: <511257C6.2070604@free-electrons.com>
-References: <1360155984-15397-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Matt Porter <mporter@ti.com>
+Subject: Re: [PATCH 0/3] omap_hsmmc DT DMA Client support
+Date: Wed, 6 Feb 2013 08:23:22 -0500
+Message-ID: <20130206132322.GY2244@beef>
+References: <1359752479-29427-1-git-send-email-mporter@ti.com>
+ <201302061341.06964.poeschel@lemonage.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1360155984-15397-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201302061341.06964.poeschel@lemonage.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Chris Ball <cjb@laptop.org>, Vinod Koul <vinod.koul@intel.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Linux OMAP List <linux-omap@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Dan Williams <djbw@fb.com>, Venkatraman S <svenkatr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2013 02:06 PM, Ezequiel Garcia wrote:
-> This is second version of the SPI patchset for Armada 370/XP.
+On Wed, Feb 06, 2013 at 01:41:06PM +0100, Lars Poeschel wrote:
+> Hi Matt!
 > 
-> This series first adds support for the SPI controller
-> and then adds the SPI flash for the Armada XP GP board.
+> At first thanks for you efforts on DMA Engine on AM33XX.
 > 
-> This series is based on 3.8-rc5 plus:
->  * "arm: mvebu: support for the new Armada XP development board(DB-MV784MP-GP)"
->  * "arm: mvebu: i2c come back in defconfig"
+> On Friday 01 February 2013 at 22:01:17, Matt Porter wrote:
+> > This series adds DT DMA Engine Client support to the omap_hsmmc.
+> > It leverages the generic DMA OF helpers in -next and the
+> > dma_request_slave_channel_compat() wrapper introduced in the
+> > AM33XX DMA Engine series to support DMA in omap_hsmmc on platforms
+> > booting via DT. These platforms include omap2/3/4/5 and am33xx.
+> > 
+> > These patches were split out from the v5 version of the AM33XX DMA
+> > series and split from the EDMA-specific omap_hsmmc changes.
+> > 
+> > The series depends on the following patches:
+> > 
+> > 	- dmaengine DT support and edma dmaengine driver fix from
+> > 	  the git://git.infradead.org/users/vkoul/slave-dma.git next
+> > 	  branch
+> > 	- dma_request_slave_channel_compat() support
+> > 	  https://patchwork.kernel.org/patch/2081671/
+> > 
+> > The series with all dependencies can be found at
+> > https://github.com/ohporter/linux/tree/omap-hsmmc-dt-dmaengine-v1
 > 
-> Feel free to test or provide any feedback!
+> I cloned your github repository and did short testing with it. I get the 
+> following error when the kernel mounts my sd-card:
 > 
-Ezequiel,
+> Starting udev
+> [    5.884738] udevd[72]: starting version 182
+> [    8.879651] edma-dma-engine edma-dma-engine.0: Exceeded max SG segments 33 
 
-I reviewed the patches, I have nothing more to say, I can add my:
+Hi Lars,
 
-Acked-by: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+I left it somewhat ambiguous as to what this series claims to support,
+sorry about that. This series, by itself, supports only platforms using
+SDMA (omap 2/3/4/5 assuming you add the appropriate DMA dts bits). This
+is only part of what am33xx requires for working mmc support. I've also
+posted v3 of dmaengine slave sg caps series at
+https://lkml.org/lkml/2013/2/4/561
 
-on the patch that didn't have yet.
+I have to rebase the am33xx specific bits for omap_hsmmc on top of that
+and post. That was previously all contained in one series but I didn't
+want to block omap2/3/4/5 from working DMA on DT support until the api
+change is resolved for am33xx.
 
-Jason,
-could you add this series in your incoming pull request?
+-Matt
 
-Thanks,
-
-> Ezequiel Garcia (4):
->   arm: mvebu: Add support for SPI controller in Armada 370/XP
->   ARM: mvebu: Update defconfig to select SPI support
->   arm: mvebu: Add SPI flash on Armada XP-GP board
->   ARM: mvebu: Update defconfig to select SPI flash and MTD support
+> [    8.887377] omap_hsmmc mmc.3: prep_slave_sg() failed
+> [    8.892588] omap_hsmmc mmc.3: MMC start dma failure
+> [    8.897725] mmcblk0: unknown error -1 sending read/write command, card 
+> status 0x900
+> [    8.905889] end_request: I/O error, dev mmcblk0, sector 17039
+> [    8.911926] end_request: I/O error, dev mmcblk0, sector 17047
+> [    8.917934] end_request: I/O error, dev mmcblk0, sector 17055
+> [    8.923960] end_request: I/O error, dev mmcblk0, sector 17063
+> [    8.929967] end_request: I/O error, dev mmcblk0, sector 17071
+> [    8.935988] end_request: I/O error, dev mmcblk0, sector 17079
+> [    8.942010] end_request: I/O error, dev mmcblk0, sector 17087
+> [    8.948016] end_request: I/O error, dev mmcblk0, sector 17095
+> [    8.954037] end_request: I/O error, dev mmcblk0, sector 17103
+> [    8.960043] end_request: I/O error, dev mmcblk0, sector 17111
+> [    9.020919] EXT4-fs error (device mmcblk0p2): __ext4_get_inode_loc:3764: 
+> inode #8: block 239: comm mount: unable to read itable block
+> [    9.033514] EXT4-fs (mmcblk0p2): no journal found
+> [    9.043799] kjournald starting.  Commit interval 5 seconds
+> [    9.049589] EXT3-fs (mmcblk0p2): warning: mounting fs with errors, running 
+> e2fsck is recommended
+> [    9.060940] EXT3-fs (mmcblk0p2): using internal journal
+> [    9.066437] EXT3-fs (mmcblk0p2): recovery complete
+> [    9.071460] EXT3-fs (mmcblk0p2): mounted filesystem with ordered data mode
 > 
->  arch/arm/boot/dts/armada-370-xp.dtsi |   22 ++++++++++++++++++++++
->  arch/arm/boot/dts/armada-xp-gp.dts   |   12 ++++++++++++
->  arch/arm/configs/mvebu_defconfig     |    5 +++++
->  3 files changed, 39 insertions(+), 0 deletions(-)
+> After that the filesystem on the sd-card has an error that I have to fix with 
+> e2fsck. As rootfs I use a nfsroot.
+> In my quick tests, same setup, I don't get any error on edma-dmaengine-
+> am33xx-v5 branch of your repository.
+> If you need any further information, let me now.
 > 
-> Thanks,
-> 
->     Ezequiel
-> 
-
-
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
-
-------------------------------------------------------------------------------
-Free Next-Gen Firewall Hardware Offer
-Buy your Sophos next-gen firewall before the end March 2013 
-and get the hardware for free! Learn more.
-http://p.sf.net/sfu/sophos-d2d-feb
+> Regards,
+> Lars
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
