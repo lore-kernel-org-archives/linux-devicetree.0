@@ -1,70 +1,38 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 3/4] arm: mvebu: Add SPI flash on Armada XP-GP board
-Date: Wed,  6 Feb 2013 10:06:23 -0300
-Message-ID: <1360155984-15397-4-git-send-email-ezequiel.garcia@free-electrons.com>
-References: <1360155984-15397-1-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Heads up on a device tree change
+Date: Wed, 6 Feb 2013 13:11:56 +0000
+Message-ID: <CACxGe6sCBCGfLDAGVRgP3cnmE+oyXBDdPeVXVCqrsvCh13yPiw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1360155984-15397-1-git-send-email-ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-next-owner@vger.kernel.org>
+Sender: linux-next-owner@vger.kernel.org
+To: linux-next <linux-next@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds an SPI master device node for Armada XP-GP board.
-This master node is an SPI flash controller 'n25q128a13'.
+Hi Stephen,
 
-Since there is no 'partitions' node declared, one full sized
-partition named as the device will be created.
+I've just pushed out a change which cleans up platform device
+registration to use the same path whether or not the device tree is
+used. It should be safe, but there is a risk of breakage on powerpc
+platforms.
 
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Tested-by: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
-Depends on Gregory's patch for Armada XP GP board:
-"arm: mvebu: support for the new Armada XP development board(DB-MV784MP-GP)"
+The patch has two effects of note:
+- DT generated platform devices move from /sys/devices to under
+/sys/devices/platform. Userspace *should* be okay with this, but if
+there are any problems then I can post a workaround patch that keeps
+DT generiated platform_devices in the current location.
+- Resources on platform_devices get registered so they appear in
+/proc/iomem and /proc/ioports and so that device drivers get the added
+protection of request_region. This will cause breakage on device trees
+nodes with partially overlapping memory regions. (ie. 0x100..0x1ff and
+0x180..0x27f). I also have a workaround for this, but I doubt that it
+will be necessary.
 
- arch/arm/boot/dts/armada-xp-gp.dts |   12 ++++++++++++
- 1 files changed, 12 insertions(+), 0 deletions(-)
+I'm not worried about it, but it is a sufficiently visible change that
+I want you to be aware that it is there.
 
-diff --git a/arch/arm/boot/dts/armada-xp-gp.dts b/arch/arm/boot/dts/armada-xp-gp.dts
-index 872ed04..b1aa952 100644
---- a/arch/arm/boot/dts/armada-xp-gp.dts
-+++ b/arch/arm/boot/dts/armada-xp-gp.dts
-@@ -97,5 +97,17 @@
- 			phy = <&phy3>;
- 			phy-mode = "rgmii-id";
- 		};
-+
-+		spi0: spi@d0010600 {
-+			status = "okay";
-+
-+			spi-flash@0 {
-+				#address-cells = <1>;
-+				#size-cells = <1>;
-+				compatible = "n25q128a13";
-+				reg = <0>; /* Chip select 0 */
-+				spi-max-frequency = <108000000>;
-+			};
-+		};
- 	};
- };
--- 
-1.7.8.6
+g.
 
-
-------------------------------------------------------------------------------
-Free Next-Gen Firewall Hardware Offer
-Buy your Sophos next-gen firewall before the end March 2013 
-and get the hardware for free! Learn more.
-http://p.sf.net/sfu/sophos-d2d-feb
+--
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
