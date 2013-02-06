@@ -1,41 +1,25 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 09/13] mfd: omap-usb-host: Add device tree support and
- binding information
-Date: Wed, 6 Feb 2013 10:56:39 +0200
-Message-ID: <51121AC7.6070107@ti.com>
-References: <1359993540-20780-1-git-send-email-rogerq@ti.com> <1359993540-20780-10-git-send-email-rogerq@ti.com> <20130205142049.GC26842@e106331-lin.cambridge.arm.com> <51111A41.4050607@ti.com> <20130205161141.GD26842@e106331-lin.cambridge.arm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH V3 1/5] DMA: PL330: Add new pl330 filter for DT case.
+Date: Wed, 6 Feb 2013 09:00:26 +0000
+Message-ID: <201302060900.26986.arnd@arndb.de>
+References: <1360131529-2847-1-git-send-email-padma.v@samsung.com> <1360131529-2847-2-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130205161141.GD26842-NuALmloUBlrZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org" <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1360131529-2847-2-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, vinod.koul@intel.com, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/05/2013 06:11 PM, Mark Rutland wrote:
-> [...]
+On Wednesday 06 February 2013, Padmavathi Venna wrote:
 > 
->>>> +
->>>> +- single_ulpi_bypass: Must be present if the controller contains a single
->>>> +  ULPI bypass control bit. e.g. OMAP3 silicon <= ES2.1
->>>
->>> Again it would be nicer to have '-' rather than '_' here. It might be worth
->>> prefixing this "ti,".
->>
->> Is prefixing with "ti" really required? how does it better?
+> This patch adds a new pl330_dt_filter for DT case to filter the
+> required channel based on the new filter params and modifies the
+> old filter only for non-DT case as suggested by Arnd Bergmann.
 > 
-> I thought single-ulpi-bypass sounded rather generic, but it probably is
-> specific enough as-is. I don't know enough about USB hardware to have strong
-> feelings either way.
-> 
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
 
-Yes, it is specific to the TI silicon. I'll leave it as it is then.
-
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Acked-by: Arnd Bergmann <arnd@arndb.de>
