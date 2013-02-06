@@ -1,68 +1,211 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: Heads up on a device tree change
-Date: Wed, 6 Feb 2013 14:28:13 +0000
-Message-ID: <CACxGe6vuZ2H-G7xamS6SAiX_aCbjpO+vKavqCK77ek8tTdOmdA@mail.gmail.com>
-References: <CACxGe6sCBCGfLDAGVRgP3cnmE+oyXBDdPeVXVCqrsvCh13yPiw@mail.gmail.com>
- <51125B56.9050407@imgtec.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-next-owner@vger.kernel.org>
-In-Reply-To: <51125B56.9050407@imgtec.com>
-Sender: linux-next-owner@vger.kernel.org
-To: James Hogan <james.hogan@imgtec.com>
-Cc: linux-next <linux-next@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH] ARM: dts: moving dt binding documents for video devices to
+ common place
+Date: Wed, 06 Feb 2013 09:51:39 -0500
+Message-ID: <1360162299-8893-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, s.nawrocki@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 6, 2013 at 1:32 PM, James Hogan <james.hogan@imgtec.com> wrote:
-> On 06/02/13 13:11, Grant Likely wrote:
->> Hi Stephen,
->>
->> I've just pushed out a change which cleans up platform device
->> registration to use the same path whether or not the device tree is
->> used. It should be safe, but there is a risk of breakage on powerpc
->> platforms.
->>
->> The patch has two effects of note:
->> - DT generated platform devices move from /sys/devices to under
->> /sys/devices/platform. Userspace *should* be okay with this, but if
->> there are any problems then I can post a workaround patch that keeps
->> DT generiated platform_devices in the current location.
->> - Resources on platform_devices get registered so they appear in
->> /proc/iomem and /proc/ioports and so that device drivers get the added
->> protection of request_region. This will cause breakage on device trees
->> nodes with partially overlapping memory regions. (ie. 0x100..0x1ff and
->> 0x180..0x27f). I also have a workaround for this, but I doubt that it
->> will be necessary.
->
-> Hi Grant,
->
-> If I understand you correctly, the non-overlapping memory regions thing
-> could be a problem for me. We have a Meta based SoC that has various SoC
-> registers grouped together for doing GPIOs and Pin control things. I'm
-> still in the process of converting it to device tree, but the way I've
-> been handling it is to provide overlapping registers to both the gpio
-> and pinctl DT nodes. Each GPIO bank's registers are also interleaved
-> with the others, so I've been providing overlapping register ranges
-> (offset by 4 for each bank) to the DT node for each gpio bank too, so
-> each bank can function independently and the driver doesn't have to
-> worry about multiple banks. Does that sound like a reasonable use case?
->
-> I guess I could cheat with the length, or specify each register in it's
-> own memory resource, but it seems like overkill.
+Binding Documents for drm-devices are placed in
+Documentation/devicetree/bindings/drm/*. But these devices are common
+for v4l framework, hence moved to a common place at
+Documentation/devicetree/bindings/video/. 'exynos_' prefix is added to
+associate them with exynos soc series.
 
-Note that overlapping regions are fine /provided/ that they are the
-same size or one fits nicely inside another. It's partial overlap that
-is a problem
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+---
+It is base on for-next branch of
+git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+ .../devicetree/bindings/drm/exynos/hdmi.txt        | 22 ----------------------
+ .../devicetree/bindings/drm/exynos/hdmiddc.txt     | 12 ------------
+ .../devicetree/bindings/drm/exynos/hdmiphy.txt     | 12 ------------
+ .../devicetree/bindings/drm/exynos/mixer.txt       | 15 ---------------
+ .../devicetree/bindings/video/exynos_hdmi.txt      | 22 ++++++++++++++++++++++
+ .../devicetree/bindings/video/exynos_hdmiddc.txt   | 12 ++++++++++++
+ .../devicetree/bindings/video/exynos_hdmiphy.txt   | 12 ++++++++++++
+ .../devicetree/bindings/video/exynos_mixer.txt     | 15 +++++++++++++++
+ 8 files changed, 61 insertions(+), 61 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+ delete mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmiddc.txt
+ delete mode 100644 Documentation/devicetree/bindings/drm/exynos/hdmiphy.txt
+ delete mode 100644 Documentation/devicetree/bindings/drm/exynos/mixer.txt
+ create mode 100644 Documentation/devicetree/bindings/video/exynos_hdmi.txt
+ create mode 100644 Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
+ create mode 100644 Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
+ create mode 100644 Documentation/devicetree/bindings/video/exynos_mixer.txt
 
-I've been thinking about your exact problem though and I think the
-best way to handle it is for the gpio driver to understand multiple
-banks. Most memory mapped GPIO controllers should be drivable by the
-generic gpio driver anyway, so it is a matter of crafting the binding
-so a single node can describe multiple banks. I still need to review
-the patch that adds a DT binding for the generic gpio driver.
-
-g.
-
---
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+diff --git a/Documentation/devicetree/bindings/drm/exynos/hdmi.txt b/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
+deleted file mode 100644
+index 589edee..0000000
+--- a/Documentation/devicetree/bindings/drm/exynos/hdmi.txt
++++ /dev/null
+@@ -1,22 +0,0 @@
+-Device-Tree bindings for drm hdmi driver
+-
+-Required properties:
+-- compatible: value should be "samsung,exynos5-hdmi".
+-- reg: physical base address of the hdmi and length of memory mapped
+-	region.
+-- interrupts: interrupt number to the cpu.
+-- hpd-gpio: following information about the hotplug gpio pin.
+-	a) phandle of the gpio controller node.
+-	b) pin number within the gpio controller.
+-	c) pin function mode.
+-	d) optional flags and pull up/down.
+-	e) drive strength.
+-
+-Example:
+-
+-	hdmi {
+-		compatible = "samsung,exynos5-hdmi";
+-		reg = <0x14530000 0x100000>;
+-		interrupts = <0 95 0>;
+-		hpd-gpio = <&gpx3 7 0xf 1 3>;
+-	};
+diff --git a/Documentation/devicetree/bindings/drm/exynos/hdmiddc.txt b/Documentation/devicetree/bindings/drm/exynos/hdmiddc.txt
+deleted file mode 100644
+index fa166d9..0000000
+--- a/Documentation/devicetree/bindings/drm/exynos/hdmiddc.txt
++++ /dev/null
+@@ -1,12 +0,0 @@
+-Device-Tree bindings for hdmiddc driver
+-
+-Required properties:
+-- compatible: value should be "samsung,exynos5-hdmiddc".
+-- reg: I2C address of the hdmiddc device.
+-
+-Example:
+-
+-	hdmiddc {
+-		compatible = "samsung,exynos5-hdmiddc";
+-		reg = <0x50>;
+-	};
+diff --git a/Documentation/devicetree/bindings/drm/exynos/hdmiphy.txt b/Documentation/devicetree/bindings/drm/exynos/hdmiphy.txt
+deleted file mode 100644
+index 858f4f9..0000000
+--- a/Documentation/devicetree/bindings/drm/exynos/hdmiphy.txt
++++ /dev/null
+@@ -1,12 +0,0 @@
+-Device-Tree bindings for hdmiphy driver
+-
+-Required properties:
+-- compatible: value should be "samsung,exynos5-hdmiphy".
+-- reg: I2C address of the hdmiphy device.
+-
+-Example:
+-
+-	hdmiphy {
+-		compatible = "samsung,exynos5-hdmiphy";
+-		reg = <0x38>;
+-	};
+diff --git a/Documentation/devicetree/bindings/drm/exynos/mixer.txt b/Documentation/devicetree/bindings/drm/exynos/mixer.txt
+deleted file mode 100644
+index 9b2ea03..0000000
+--- a/Documentation/devicetree/bindings/drm/exynos/mixer.txt
++++ /dev/null
+@@ -1,15 +0,0 @@
+-Device-Tree bindings for mixer driver
+-
+-Required properties:
+-- compatible: value should be "samsung,exynos5-mixer".
+-- reg: physical base address of the mixer and length of memory mapped
+-	region.
+-- interrupts: interrupt number to the cpu.
+-
+-Example:
+-
+-	mixer {
+-		compatible = "samsung,exynos5-mixer";
+-		reg = <0x14450000 0x10000>;
+-		interrupts = <0 94 0>;
+-	};
+diff --git a/Documentation/devicetree/bindings/video/exynos_hdmi.txt b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+new file mode 100644
+index 0000000..589edee
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/exynos_hdmi.txt
+@@ -0,0 +1,22 @@
++Device-Tree bindings for drm hdmi driver
++
++Required properties:
++- compatible: value should be "samsung,exynos5-hdmi".
++- reg: physical base address of the hdmi and length of memory mapped
++	region.
++- interrupts: interrupt number to the cpu.
++- hpd-gpio: following information about the hotplug gpio pin.
++	a) phandle of the gpio controller node.
++	b) pin number within the gpio controller.
++	c) pin function mode.
++	d) optional flags and pull up/down.
++	e) drive strength.
++
++Example:
++
++	hdmi {
++		compatible = "samsung,exynos5-hdmi";
++		reg = <0x14530000 0x100000>;
++		interrupts = <0 95 0>;
++		hpd-gpio = <&gpx3 7 0xf 1 3>;
++	};
+diff --git a/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt b/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
+new file mode 100644
+index 0000000..fa166d9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/exynos_hdmiddc.txt
+@@ -0,0 +1,12 @@
++Device-Tree bindings for hdmiddc driver
++
++Required properties:
++- compatible: value should be "samsung,exynos5-hdmiddc".
++- reg: I2C address of the hdmiddc device.
++
++Example:
++
++	hdmiddc {
++		compatible = "samsung,exynos5-hdmiddc";
++		reg = <0x50>;
++	};
+diff --git a/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
+new file mode 100644
+index 0000000..858f4f9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/exynos_hdmiphy.txt
+@@ -0,0 +1,12 @@
++Device-Tree bindings for hdmiphy driver
++
++Required properties:
++- compatible: value should be "samsung,exynos5-hdmiphy".
++- reg: I2C address of the hdmiphy device.
++
++Example:
++
++	hdmiphy {
++		compatible = "samsung,exynos5-hdmiphy";
++		reg = <0x38>;
++	};
+diff --git a/Documentation/devicetree/bindings/video/exynos_mixer.txt b/Documentation/devicetree/bindings/video/exynos_mixer.txt
+new file mode 100644
+index 0000000..9b2ea03
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/exynos_mixer.txt
+@@ -0,0 +1,15 @@
++Device-Tree bindings for mixer driver
++
++Required properties:
++- compatible: value should be "samsung,exynos5-mixer".
++- reg: physical base address of the mixer and length of memory mapped
++	region.
++- interrupts: interrupt number to the cpu.
++
++Example:
++
++	mixer {
++		compatible = "samsung,exynos5-mixer";
++		reg = <0x14450000 0x10000>;
++		interrupts = <0 94 0>;
++	};
+-- 
+1.8.0
