@@ -1,67 +1,68 @@
-From: =?ISO-8859-1?Q?Philippe_R=E9tornaz?= <philippe.retornaz@epfl.ch>
-Subject: Re: [PATCH 0/2] ARM: dts: omap3-overo: Add pwm-leds and audio support
-Date: Wed, 06 Feb 2013 15:26:43 +0100
-Message-ID: <51126823.6070605@epfl.ch>
-References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch>
- <5101273A.9090800@ti.com> <510F7BEB.1020408@epfl.ch> <51125AFC.10704@ti.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: Heads up on a device tree change
+Date: Wed, 6 Feb 2013 14:28:13 +0000
+Message-ID: <CACxGe6vuZ2H-G7xamS6SAiX_aCbjpO+vKavqCK77ek8tTdOmdA@mail.gmail.com>
+References: <CACxGe6sCBCGfLDAGVRgP3cnmE+oyXBDdPeVXVCqrsvCh13yPiw@mail.gmail.com>
+ <51125B56.9050407@imgtec.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <51125AFC.10704@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, florian.vaussard@epfl.ch, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <51125B56.9050407@imgtec.com>
+Sender: linux-next-owner@vger.kernel.org
+To: James Hogan <james.hogan@imgtec.com>
+Cc: linux-next <linux-next@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all !
-
-Le 06/02/2013 14:30, Benoit Cousson a =E9crit :
-> Salut Florian,
->
-> On 02/04/2013 10:14 AM, Florian Vaussard wrote:
->> Hello Benoit,
+On Wed, Feb 6, 2013 at 1:32 PM, James Hogan <james.hogan@imgtec.com> wrote:
+> On 06/02/13 13:11, Grant Likely wrote:
+>> Hi Stephen,
 >>
->> On 01/24/2013 01:21 PM, Benoit Cousson wrote:
->>> + Peter who did the original PWM
->>>
->>> Hi Florian,
->>>
->>> On 01/23/2013 06:56 PM, Florian Vaussard wrote:
->>>> Hello Benoit,
->>>>
->>>> This patchset adds some new DT supports to the Overo products.
->>>> The first patch converts the PMIC LEDB output to use the
->>>> pwm-leds, newly merged in your branch for_3.9/dts. The second
->>>> patch adds the audio support.
->>>
->>> Excellent, that looks very good to me, but I'd like to get the
->>> feedback from Peter before merging it.
->>>
+>> I've just pushed out a change which cleans up platform device
+>> registration to use the same path whether or not the device tree is
+>> used. It should be safe, but there is a risk of breakage on powerpc
+>> platforms.
 >>
->> So a patch is being merged to handle triggers in the case of pwm
->> leds [1]. When done, we will be able to add back the default
->> trigger. Do you want to wait on it to merge this series?
+>> The patch has two effects of note:
+>> - DT generated platform devices move from /sys/devices to under
+>> /sys/devices/platform. Userspace *should* be okay with this, but if
+>> there are any problems then I can post a workaround patch that keeps
+>> DT generiated platform_devices in the current location.
+>> - Resources on platform_devices get registered so they appear in
+>> /proc/iomem and /proc/ioports and so that device drivers get the added
+>> protection of request_region. This will cause breakage on device trees
+>> nodes with partially overlapping memory regions. (ie. 0x100..0x1ff and
+>> 0x180..0x27f). I also have a workaround for this, but I doubt that it
+>> will be necessary.
 >
-> What kind of dependency do we have between these two series? I mean
-> what will happen if the DTS is merged before the pwm subsystem?
+> Hi Grant,
 >
-> If that does not generate any regression / crash, then it is OK, if
-> not, we should take care of the order.
+> If I understand you correctly, the non-overlapping memory regions thing
+> could be a problem for me. We have a Meta based SoC that has various SoC
+> registers grouped together for doing GPIOs and Pin control things. I'm
+> still in the process of converting it to device tree, but the way I've
+> been handling it is to provide overlapping registers to both the gpio
+> and pinctl DT nodes. Each GPIO bank's registers are also interleaved
+> with the others, so I've been providing overlapping register ranges
+> (offset by 4 for each bank) to the DT node for each gpio bank too, so
+> each bank can function independently and the driver doesn't have to
+> worry about multiple banks. Does that sound like a reasonable use case?
+>
+> I guess I could cheat with the length, or specify each register in it's
+> own memory resource, but it seems like overkill.
 
-Florian is on holiday the next two weeks.
+Note that overlapping regions are fine /provided/ that they are the
+same size or one fits nicely inside another. It's partial overlap that
+is a problem
 
-AFAIK if the PWM/leds subsystem patches are not merged before this one
-then the kernel will panic if a trigger is used to change the led status.
+I've been thinking about your exact problem though and I think the
+best way to handle it is for the gpio driver to understand multiple
+banks. Most memory mapped GPIO controllers should be drivable by the
+generic gpio driver anyway, so it is a matter of crafting the binding
+so a single node can describe multiple banks. I still need to review
+the patch that adds a DT binding for the generic gpio driver.
 
-Regards,
+g.
 
-Philippe
+--
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
