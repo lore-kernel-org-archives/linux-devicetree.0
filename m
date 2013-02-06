@@ -1,86 +1,108 @@
-From: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
-Subject: RE: [GIT PULL] ARM part of USB patches
-Date: Wed, 6 Feb 2013 05:16:55 +0000
-Message-ID: <79CD15C6BA57404B839C016229A409A83EC04FF8@DBDE01.ent.ti.com>
-References: <51112418.5020000@ti.com> <51112495.4060908@ti.com>
- <20130205172724.GA1601@kroah.com> <20130205181947.GI25185@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130205181947.GI25185-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Content-Language: en-US
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH v2 1/2] [media] s5p-g2d: Add DT based discovery support
+Date: Wed,  6 Feb 2013 10:59:43 +0530
+Message-ID: <1360128584-23167-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org
+Cc: k.debski@samsung.com, sachin.kamat@linaro.org, inki.dae@samsung.com, s.nawrocki@samsung.com, kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 05, 2013 at 23:49:47, Tony Lindgren wrote:
-> * gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> [130205 09:28]:
-> > On Tue, Feb 05, 2013 at 08:56:13PM +0530, kishon wrote:
-> > > Hi Tony, Greg,
-> > > 
-> > > On Tuesday 05 February 2013 08:54 PM, kishon wrote:
-> > > >Hi Tony,
-> > > >
-> > > >As discussed, I'm sending a pull request for the arch/arm part of my USB
-> > > >patches. These patches are necessary to get MUSB functional in both dt
-> > > >and non-dt boot. Also added dt data for dwc3 present in OMAP. This patch
-> > > >series *depends* on some of the patches which are merged in usb-next.
-> > > 
-> > > This patch series should go in only after USB. Or else it will break
-> > > compilation.
-> > 
-> > Then it probably should go through the USB tree, right?  We don't want
-> > to break bisectability.
-> 
-> Looks like this branch needs to be based on at least 01658f0f (usb: phy:
-> add a new driver for usb part of control module) to compile. Probably
-> needs other USB patches too to make sense.
-> 
-> This branch has a high likelihood of conflicting with .dts files, so
-> Kishon, I suggest you do two branches:
-> 
-> 1. A branch for Greg based on top of the USB changes
-> 
->    This branch should contain:
-> 
->    ARM: OMAP4: remove control module address space from PHY and OTG
->    ARM: OMAP: devices: create device for usb part of control module
->    ARM: OMAP2: MUSB: Specify omap4 has mailbox
->    ARM: OMAP: USB: Add phy binding information
-> 
->    Naturally please make sure they compile and boot on their own.
->    Looks like this will only cause few trivial include merge conflicts
->    with what I have queued up.
-> 
->    You can add my Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> for those.
-> 
-> 2. A branch for Benoit based on v3.8-rc6
-> 
->    That branch should contain all the .dts changes as those will
->    most likely cause nasty merge conflicts otherwise with what
->    Benoit has queued up.
-> 
+This patch adds device tree based discovery support to G2D driver
 
-Tony/Benoit,
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+---
+Based on for_v3.9 branch of below tree:
+git://linuxtv.org/snawrocki/samsung.git
 
-There are few AM33xx DTS patches pending from long time, how do you want to 
-take it forward? You want me to put it into one branch and share? OR just 
-provide the list of all patches to you?
+Changes since v1:
+* Addressed review comments from Sylwester <s.nawrocki@samsung.com>.
+* Modified the compatible string as per the discussions at [1].
+[1] https://patchwork1.kernel.org/patch/2045821/
+---
+ drivers/media/platform/s5p-g2d/g2d.c |   31 +++++++++++++++++++++++++++++--
+ 1 files changed, 29 insertions(+), 2 deletions(-)
 
-Thanks,
-Vaibhav
-> Regards,
-> 
-> Tony
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/media/platform/s5p-g2d/g2d.c b/drivers/media/platform/s5p-g2d/g2d.c
+index 7e41529..6923be2 100644
+--- a/drivers/media/platform/s5p-g2d/g2d.c
++++ b/drivers/media/platform/s5p-g2d/g2d.c
+@@ -18,6 +18,7 @@
+ #include <linux/slab.h>
+ #include <linux/clk.h>
+ #include <linux/interrupt.h>
++#include <linux/of.h>
+ 
+ #include <linux/platform_device.h>
+ #include <media/v4l2-mem2mem.h>
+@@ -695,11 +696,14 @@ static struct v4l2_m2m_ops g2d_m2m_ops = {
+ 	.unlock		= g2d_unlock,
+ };
+ 
++static const struct of_device_id exynos_g2d_match[];
++
+ static int g2d_probe(struct platform_device *pdev)
+ {
+ 	struct g2d_dev *dev;
+ 	struct video_device *vfd;
+ 	struct resource *res;
++	const struct of_device_id *of_id;
+ 	int ret = 0;
+ 
+ 	dev = devm_kzalloc(&pdev->dev, sizeof(*dev), GFP_KERNEL);
+@@ -796,7 +800,17 @@ static int g2d_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	def_frame.stride = (def_frame.width * def_frame.fmt->depth) >> 3;
+-	dev->variant = g2d_get_drv_data(pdev);
++
++	if (!pdev->dev.of_node) {
++		dev->variant = g2d_get_drv_data(pdev);
++	} else {
++		of_id = of_match_node(exynos_g2d_match, pdev->dev.of_node);
++		if (!of_id) {
++			ret = -ENODEV;
++			goto unreg_video_dev;
++		}
++		dev->variant = (struct g2d_variant *)of_id->data;
++	}
+ 
+ 	return 0;
+ 
+@@ -837,13 +851,25 @@ static int g2d_remove(struct platform_device *pdev)
+ }
+ 
+ static struct g2d_variant g2d_drvdata_v3x = {
+-	.hw_rev = TYPE_G2D_3X,
++	.hw_rev = TYPE_G2D_3X, /* Revision 3.0 for S5PV210 and Exynos4210 */
+ };
+ 
+ static struct g2d_variant g2d_drvdata_v4x = {
+ 	.hw_rev = TYPE_G2D_4X, /* Revision 4.1 for Exynos4X12 and Exynos5 */
+ };
+ 
++static const struct of_device_id exynos_g2d_match[] = {
++	{
++		.compatible = "samsung,s5pv210-g2d",
++		.data = &g2d_drvdata_v3x,
++	}, {
++		.compatible = "samsung,exynos4212-g2d",
++		.data = &g2d_drvdata_v4x,
++	},
++	{},
++};
++MODULE_DEVICE_TABLE(of, exynos_g2d_match);
++
+ static struct platform_device_id g2d_driver_ids[] = {
+ 	{
+ 		.name = "s5p-g2d",
+@@ -863,6 +889,7 @@ static struct platform_driver g2d_pdrv = {
+ 	.driver		= {
+ 		.name = G2D_NAME,
+ 		.owner = THIS_MODULE,
++		.of_match_table = exynos_g2d_match,
+ 	},
+ };
+ 
+-- 
+1.7.4.1
