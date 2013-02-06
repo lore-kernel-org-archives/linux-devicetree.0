@@ -1,58 +1,86 @@
-From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Subject: RE: [PATCH V2 1/6] pinctrl: pinctrl-single: use arch_initcall and
- module_exit
-Date: Wed, 6 Feb 2013 04:57:25 +0000
-Message-ID: <A4887BF146CD57468F700B415D2F47015831F0@DBDE01.ent.ti.com>
-References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
-	<1359445134-13323-2-git-send-email-manishv.b@ti.com>
-	<CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com>
-	<20130201170906.GE22517@atomide.com>	<20130201171124.GF22517@atomide.com>
-	<A4887BF146CD57468F700B415D2F47015828C7@DBDE01.ent.ti.com>
- <CACRpkdYUBGkRRF_nDbn5tGmtZC_Wucqxz_PjWo0xX_KbnQJ5cw@mail.gmail.com>
+From: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
+Subject: RE: [GIT PULL] ARM part of USB patches
+Date: Wed, 6 Feb 2013 05:16:55 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A83EC04FF8@DBDE01.ent.ti.com>
+References: <51112418.5020000@ti.com> <51112495.4060908@ti.com>
+ <20130205172724.GA1601@kroah.com> <20130205181947.GI25185@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYUBGkRRF_nDbn5tGmtZC_Wucqxz_PjWo0xX_KbnQJ5cw@mail.gmail.com>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130205181947.GI25185-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tony Lindgren <tony@atomide.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "khilman@deeprootsystems.com" <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>
+Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi, Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus
-
-On Tue, Feb 05, 2013 at 18:30:48, Linus Walleij wrote:
-> On Tue, Feb 5, 2013 at 7:36 AM, Vishwanathrao Badarkhe, Manish <manishv.b@ti.com> wrote:
+On Tue, Feb 05, 2013 at 23:49:47, Tony Lindgren wrote:
+> * gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org> [130205 09:28]:
+> > On Tue, Feb 05, 2013 at 08:56:13PM +0530, kishon wrote:
+> > > Hi Tony, Greg,
+> > > 
+> > > On Tuesday 05 February 2013 08:54 PM, kishon wrote:
+> > > >Hi Tony,
+> > > >
+> > > >As discussed, I'm sending a pull request for the arch/arm part of my USB
+> > > >patches. These patches are necessary to get MUSB functional in both dt
+> > > >and non-dt boot. Also added dt data for dwc3 present in OMAP. This patch
+> > > >series *depends* on some of the patches which are merged in usb-next.
+> > > 
+> > > This patch series should go in only after USB. Or else it will break
+> > > compilation.
+> > 
+> > Then it probably should go through the USB tree, right?  We don't want
+> > to break bisectability.
 > 
-> > I made following changes, in order to update "dip->p" pointer with 
-> > correct value:
-> >
-> > -       if (!dpi->p) {
-> > +       if (IS_ERR_OR_NULL(dpi->p)) {
-> >                 dpi->p = devm_pinctrl_get(dev);
-> > -               if (IS_ERR_OR_NULL(dpi->p)) {
-> > -                       int ret = PTR_ERR(dpi->p);
-> > -
-> > -                       dev_dbg(dev, "no pinctrl handle\n");
-> > -                       /* Only return deferrals */
-> > -                       if (ret == -EPROBE_DEFER)
-> > -                               return ret;
-> > -                       return 0;
-> > -               }
-> > +               ret = PTR_ERR(dpi->p);
-> > +               dev_dbg(dev, "no pinctrl handle\n");
-> > +               /* Only return deferrals */
-> > +               if (ret == -EPROBE_DEFER)
-> > +                       return ret;
-> > +               return 0;
+> Looks like this branch needs to be based on at least 01658f0f (usb: phy:
+> add a new driver for usb part of control module) to compile. Probably
+> needs other USB patches too to make sense.
 > 
-> This is based on some old code that I wrote ages ago. Check the pinctrl tree or linux-next for the latest core pin grabbing code.
-> Use that instead.
+> This branch has a high likelihood of conflicting with .dts files, so
+> Kishon, I suggest you do two branches:
+> 
+> 1. A branch for Greg based on top of the USB changes
+> 
+>    This branch should contain:
+> 
+>    ARM: OMAP4: remove control module address space from PHY and OTG
+>    ARM: OMAP: devices: create device for usb part of control module
+>    ARM: OMAP2: MUSB: Specify omap4 has mailbox
+>    ARM: OMAP: USB: Add phy binding information
+> 
+>    Naturally please make sure they compile and boot on their own.
+>    Looks like this will only cause few trivial include merge conflicts
+>    with what I have queued up.
+> 
+>    You can add my Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org> for those.
+> 
+> 2. A branch for Benoit based on v3.8-rc6
+> 
+>    That branch should contain all the .dts changes as those will
+>    most likely cause nasty merge conflicts otherwise with what
+>    Benoit has queued up.
+> 
 
-Thanks for your reply.
-I have checked with your latest changes regarding pinctrl 
-in linux-next tree and these changes are working fine for me.
+Tony/Benoit,
 
-Regards
-Manish Badarkhe
+There are few AM33xx DTS patches pending from long time, how do you want to 
+take it forward? You want me to put it into one branch and share? OR just 
+provide the list of all patches to you?
+
+Thanks,
+Vaibhav
+> Regards,
+> 
+> Tony
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
