@@ -1,51 +1,84 @@
-From: "Kumar, Anil" <anilkumar.v-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH V2 0/2] ARM: davinci: da850: add wdt DT node
-Date: Wed, 6 Feb 2013 09:30:02 +0530
-Message-ID: <1360123204-9978-1-git-send-email-anilkumar.v@ti.com>
+From: "Kumar, Anil" <anilkumar.v@ti.com>
+Subject: [PATCH V2 1/2] ARM: davinci: da850: add wdt DT node
+Date: Wed, 6 Feb 2013 09:30:03 +0530
+Message-ID: <1360123204-9978-2-git-send-email-anilkumar.v@ti.com>
+References: <1360123204-9978-1-git-send-email-anilkumar.v@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: mporter-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1360123204-9978-1-git-send-email-anilkumar.v@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com
+Cc: linux@arm.linux.org.uk, nsekhar@ti.com, khilman@deeprootsystems.com, hs@denx.de, mporter@ti.com, broonie@opensource.wolfsonmicro.com, mchehab@redhat.com, vaibhav.bedia@ti.com, b-cousson@ti.com, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, anilkumar.v@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add wdt DT node and OF_DEV_AUXDATA for wdt driver in
-da850 board dt file to use wdt clock.
+Add da850 wdt DT node.
+Add OF_DEV_AUXDATA for wdt driver to use wdt clock.
 
-This is tested on da850 EVM.
+Signed-off-by: Kumar, Anil <anilkumar.v@ti.com>
+---
+Changes for V2:
 
-Test Procedure:
+ -Make single patch for wdt DT node and its OF_DEV_AUXDATA entry changes.
 
-$watchdog -F /dev/watchdog (Device should not reboot)
- After wdt heartbeat timeout(DEFAULT_HEARTBEAT is 60 sec)
-$ctr + c   (Device should reboot after heartbeat timeout)
+:100644 100644 37dc5a3... 4666ce9... M	arch/arm/boot/dts/da850-evm.dts
+:100644 100644 640ab75... ffba00f... M	arch/arm/boot/dts/da850.dtsi
+:100644 100644 37c27af... 01521ed... M	arch/arm/mach-davinci/da8xx-dt.c
+ arch/arm/boot/dts/da850-evm.dts  |    3 +++
+ arch/arm/boot/dts/da850.dtsi     |    5 +++++
+ arch/arm/mach-davinci/da8xx-dt.c |    8 +++++++-
+ 3 files changed, 15 insertions(+), 1 deletions(-)
 
-Changes since V1:
-
- - Rebase changes on top of v3.8-rc6.
- - Make single patch for wdt DT node and its OF_DEV_AUXDATA entry changes.
- - Fix wdt to machine restart with DT.
-
-Kumar, Anil (2):
-  ARM: davinci: da850: add wdt DT node
-  ARM: davinci: restart: fix wdt to machine restart with DT
-
- arch/arm/boot/dts/da850-evm.dts            |    3 +++
- arch/arm/boot/dts/da850.dtsi               |    5 +++++
- arch/arm/mach-davinci/da8xx-dt.c           |    8 +++++++-
- arch/arm/mach-davinci/devices-da8xx.c      |   14 ++++++++++++--
- arch/arm/mach-davinci/include/mach/da8xx.h |    1 -
- 5 files changed, 27 insertions(+), 4 deletions(-)
-
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index 37dc5a3..4666ce9 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -24,5 +24,8 @@
+ 		serial2: serial@1d0d000 {
+ 			status = "okay";
+ 		};
++		wdt: wdt@1c21000 {
++			status = "okay";
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/da850.dtsi b/arch/arm/boot/dts/da850.dtsi
+index 640ab75..ffba00f 100644
+--- a/arch/arm/boot/dts/da850.dtsi
++++ b/arch/arm/boot/dts/da850.dtsi
+@@ -56,5 +56,10 @@
+ 			interrupt-parent = <&intc>;
+ 			status = "disabled";
+ 		};
++		wdt: wdt@1c21000 {
++			compatible = "ti,davinci-wdt";
++			reg = <0x21000 0x1000>;
++			status = "disabled";
++		};
+ 	};
+ };
+diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+index 37c27af..01521ed 100644
+--- a/arch/arm/mach-davinci/da8xx-dt.c
++++ b/arch/arm/mach-davinci/da8xx-dt.c
+@@ -37,11 +37,17 @@ static void __init da8xx_init_irq(void)
+ 	of_irq_init(da8xx_irq_match);
+ }
+ 
++struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
++	OF_DEV_AUXDATA("ti,davinci-wdt", 0x01c21000, "watchdog", NULL),
++	{}
++};
++
+ #ifdef CONFIG_ARCH_DAVINCI_DA850
+ 
+ static void __init da850_init_machine(void)
+ {
+-	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++	of_platform_populate(NULL, of_default_bus_match_table,
++			da850_auxdata_lookup, NULL);
+ 
+ 	da8xx_uart_clk_enable();
+ }
 -- 
 1.7.4.1
