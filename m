@@ -1,61 +1,49 @@
-From: "Vishwanathrao Badarkhe, Manish" <manishv.b@ti.com>
-Subject: RE: [PATCH V2 1/6] pinctrl: pinctrl-single: use arch_initcall and
-	module_exit
-Date: Wed, 6 Feb 2013 06:04:22 +0000
-Message-ID: <A4887BF146CD57468F700B415D2F4701583209@DBDE01.ent.ti.com>
-References: <1359445134-13323-1-git-send-email-manishv.b@ti.com>
- <1359445134-13323-2-git-send-email-manishv.b@ti.com>
- <CACRpkdbf7TwrjfT2rhqQFGc3yh_Nt117RtzQO2y6g5Ddx5Ay_w@mail.gmail.com>
- <20130201170906.GE22517@atomide.com> <20130201171124.GF22517@atomide.com>
- <A4887BF146CD57468F700B415D2F47015828C7@DBDE01.ent.ti.com>
- <20130205112731.GK17786@n2100.arm.linux.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130205112731.GK17786@n2100.arm.linux.org.uk>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Tony Lindgren <tony@atomide.com>, Linus Walleij <linus.walleij@linaro.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "khilman@deeprootsystems.com" <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH V3 0/5] Add generic DMA DT binding support
+Date: Wed, 06 Feb 2013 11:48:44 +0530
+Message-ID: <1360131529-2847-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.v@samsung.com, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, arnd@arndb.de, vinod.koul@intel.com, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+Changes since V2:
+	- Add new filter function for DT case as suggested by Arnd
+	- Add xlate as static function
+	- Use newly added filter function in xlate.
+	- Add Acked-by for some of the patches
 
-On Tue, Feb 05, 2013 at 16:57:31, Russell King - ARM Linux wrote:
-> On Tue, Feb 05, 2013 at 06:36:34AM +0000, Vishwanathrao Badarkhe, Manish wrote:
-> > I made following changes, in order to update "dip->p" pointer with 
-> > correct value:
-> > 
-> > -       if (!dpi->p) {
-> > +       if (IS_ERR_OR_NULL(dpi->p)) {
-> >                 dpi->p = devm_pinctrl_get(dev);
-> > -               if (IS_ERR_OR_NULL(dpi->p)) {
-> > -                       int ret = PTR_ERR(dpi->p);
-> > -
-> > -                       dev_dbg(dev, "no pinctrl handle\n");
-> > -                       /* Only return deferrals */
-> > -                       if (ret == -EPROBE_DEFER)
-> > -                               return ret;
-> > -                       return 0;
-> > -               }
-> > +               ret = PTR_ERR(dpi->p);
-> > +               dev_dbg(dev, "no pinctrl handle\n");
-> > +               /* Only return deferrals */
-> > +               if (ret == -EPROBE_DEFER)
-> > +                       return ret;
-> > +               return 0;
-> > 
-> > Is this intended change?
-> 
-> The above looks totally broken to me.
-> 
-> Oh, it's using IS_ERR_OR_NULL(), so it's bound to be broken.
-> 
+Changes since V1:
+        - Address the review comments by Arnd Bergmann as below
+        - Wording of the properties.
+        - Pass pdmac as third parameter to of_dma_controller_register
+        - Filter the dma channel based on channel number and dma_device
 
-I went through discussion in community on usage of "IS_ERR_OR_NULL".
-https://patchwork.kernel.org/patch/1953271/
-Will take care not use this in future.
+This patch set adds support for generic dma device tree bindings for
+Samsung platforms and is dependent on the following patches from
+Vinod Koul next branch
+1)of: Add generic device tree DMA helpers
+2)dmaengine: add helper function to request a slave DMA channel
 
-Thanks,
-Manish
+This patch set is made based Mark Brown next branch
+
+Padmavathi Venna (5):
+  DMA: PL330: Add new pl330 filter for DT case.
+  DMA: PL330: Add xlate function
+  DMA: PL330: Register the DMA controller with the generic DMA helpers
+  ARM: dts: Add #dma-cells for generic dma binding support
+  ARM: SAMSUNG: dma: Remove unnecessary code
+
+ .../devicetree/bindings/dma/arm-pl330.txt          |   15 ++++-
+ arch/arm/boot/dts/exynos5250.dtsi                  |    4 +
+ arch/arm/mach-s3c24xx/include/mach/dma.h           |    1 -
+ arch/arm/mach-s3c64xx/include/mach/dma.h           |    1 -
+ arch/arm/plat-samsung/dma-ops.c                    |   10 +---
+ arch/arm/plat-samsung/include/plat/dma-ops.h       |    1 -
+ arch/arm/plat-samsung/include/plat/dma-pl330.h     |    1 -
+ drivers/dma/pl330.c                                |   64 +++++++++++++++----
+ 8 files changed, 66 insertions(+), 31 deletions(-)
+
+-- 
+1.7.4.4
