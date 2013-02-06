@@ -1,50 +1,97 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 6/8] ARM: dts: omap5: Add omap-usb3 and omap-usb2 dt data
-Date: Wed, 6 Feb 2013 20:26:42 +0530
-Message-ID: <1360162604-14320-7-git-send-email-kishon@ti.com>
-References: <1360162604-14320-1-git-send-email-kishon@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH/RFC] mmc: add DT bindings for more MMC capability flags
+Date: Wed, 6 Feb 2013 15:15:49 +0000
+Message-ID: <20130206151549.GA11609@e106331-lin.cambridge.arm.com>
+References: <Pine.LNX.4.64.1301231743190.26301@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360162604-14320-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, rob.herring@calxeda.com, rob@landley.net, balbi@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
-Cc: grant.likely@secretlab.ca, gregkh@linuxfoundation.org, kishon@ti.com
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1301231743190.26301@axis700.grange>
+Content-Language: en-US
+Content-Disposition: inline
+Sender: linux-mmc-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Chris Ball <cjb@laptop.org>, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-Add omap-usb3 and omap-usb2 data node in omap5 device tree file.
-The information for the node added here is available @
-Documentation/devicetree/bindings/usb/usb-phy.txt
+Hi,
 
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/omap5.dtsi |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+On Wed, Jan 23, 2013 at 04:45:11PM +0000, Guennadi Liakhovetski wrote:
+> Many MMC capability flags are platform-dependent and are traditionally set
+> in platform data. With DT often each such capability requires a special
+> binding. Add bindings for MMC_CAP_SD_HIGHSPEED, MMC_CAP_MMC_HIGHSPEED and
+> MMC_CAP_POWER_OFF_CARD capabilities. Also add code to DT parser to look
+> up "keep-power-in-suspend" and "enable-sdio-wakeup" bindings and set
+> MMC_PM_KEEP_POWER and MMC_PM_WAKE_SDIO_IRQ respectively, if found.
+> 
 
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 230b779..bd73257 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -511,6 +511,20 @@
- 			#size-cells = <1>;
- 			ranges;
- 			ti,hwmods = "ocp2scp1";
-+			usb2_phy: usb2phy@4a084000 {
-+				compatible = "ti,omap-usb2";
-+				reg = <0x4a084000 0x7c>;
-+				ctrl-module = <&omap_control_usb>;
-+			};
-+
-+			usb3_phy: usb3phy@4a084400 {
-+				compatible = "ti,omap-usb3";
-+				reg = <0x4a084400 0x80>,
-+				      <0x4a084800 0x64>,
-+				      <0x4a084c00 0x40>;
-+				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
-+				ctrl-module = <&omap_control_usb>;
-+			};
- 		};
- 	};
- };
--- 
-1.7.10.4
+I've Cc'd Arnd, who had some related comments a while back:
+
+https://lkml.org/lkml/2012/10/15/231
+
+MMC_CAP_POWER_OFF_CARD sounds like something that can be selected in the driver
+by checking the compatible string or probing the hardware revision, and not
+something that should be taken directly from the dts where it could be
+completely invalid for the hardware.
+
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> ---
+> 
+> Attention: contains new DT bindings, please, comment!
+> 
+>  Documentation/devicetree/bindings/mmc/mmc.txt |    5 ++++-
+>  drivers/mmc/core/host.c                       |   11 +++++++++++
+>  2 files changed, 15 insertions(+), 1 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index e180892..92ec534c 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -25,8 +25,11 @@ Optional properties:
+>  - max-frequency: maximum operating clock frequency
+>  - no-1-8-v: when present, denotes that 1.8v card voltage is not supported on
+>    this system, even if the controller claims it is.
+> +- cap-sd-highspeed: SD high-speed timing is supported
+> +- cap-mmc-highspeed: MMC high-speed timing is supported
+> +- cap-power-off-card: powering off the card is safe
+>  
+> -cd-inverted and wp-inverted properties are deprecated ans shouldn't be used,
+> +cd-inverted and wp-inverted properties are deprecated and shouldn't be used,
+>  instead pleaseuse the OF_GPIO_ACTIVE_LOW flag in respective GPIO bindings. Note,
+>  that the default (as defined by the SDHCI standard) CD and WP polarity is
+>  active-low, so, OF_GPIO_ACTIVE_LOW should normally be set, and only be left
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index e4c1cbd..f3ea268 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -372,6 +372,17 @@ void mmc_of_parse(struct mmc_host *host)
+>  			dev_err(host->parent,
+>  				"Failed to request WP GPIO: %d!\n", ret);
+>  	}
+> +
+> +	if (of_find_property(np, "cap-sd-highspeed", &len))
+> +		host->caps |= MMC_CAP_SD_HIGHSPEED;
+> +	if (of_find_property(np, "cap-mmc-highspeed", &len))
+> +		host->caps |= MMC_CAP_MMC_HIGHSPEED;
+> +	if (of_find_property(np, "cap-power-off-card", &len))
+> +		host->caps |= MMC_CAP_POWER_OFF_CARD;
+> +	if (of_find_property(np, "keep-power-in-suspend", &len))
+> +		host->pm_caps |= MMC_PM_KEEP_POWER;
+> +	if (of_find_property(np, "enable-sdio-wakeup", &len))
+> +		host->pm_caps |= MMC_PM_WAKE_SDIO_IRQ;
+>  }
+>  
+>  EXPORT_SYMBOL(mmc_of_parse);
+> -- 
+> 1.7.2.5
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
+
+Thanks,
+Mark.
+
