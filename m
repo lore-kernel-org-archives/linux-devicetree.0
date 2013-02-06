@@ -1,49 +1,70 @@
-From: Lior Amsalem <alior@marvell.com>
-Subject: RE: [PATCH] arm: mvebu: Add SPI flash on Armada XP-GP board
-Date: Wed, 6 Feb 2013 10:10:48 +0200
-Message-ID: <EE71107DF0D1F24FA2D95041E64AB9E801A56C3AE316@IL-MB01.marvell.com>
-References: <1360063473-26176-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <20130205123827.GG20242@lunn.ch>
- <20130205124833.GS14746@titan.lakedaemon.net>
- <20130205142720.GB2481@localhost>
- <20130205153135.GU14746@titan.lakedaemon.net>
- <20130205171701.4fcb1304@skate> <51113132.6000500@free-electrons.com>
- <20130205180705.5231effd@skate> <20130205180900.GY14746@titan.lakedaemon.net>
+From: Magnus Damm <magnus.damm@gmail.com>
+Subject: Re: [PATCH] net: sh_eth: Add support of device tree probe
+Date: Wed, 6 Feb 2013 17:26:19 +0900
+Message-ID: <CANqRtoQm1X=g6jfu36=tucFkwsvQ3LNmZyiVO5yZWhbZFhjmeQ@mail.gmail.com>
+References: <1360116019-8870-1-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130205180900.GY14746@titan.lakedaemon.net>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Cc: Andrew Lunn <andrew@lunn.ch>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>, "spi-devel-general@lists.sourceforge.net" <spi-devel-general@lists.sourceforge.net>, Florian Fainelli <florian@openwrt.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1360116019-8870-1-git-send-email-horms+renesas@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms+renesas@verge.net.au>
+Cc: netdev@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-> From: Jason Cooper [mailto:jason@lakedaemon.net]
-> Sent: Tuesday, February 05, 2013 8:09 PM
-> 
-> On Tue, Feb 05, 2013 at 06:07:05PM +0100, Thomas Petazzoni wrote:
-> > Of course, it doesn't make sense to have drivers for pluggable devices
-> > like PCIe devices that are not soldered, USB devices and things like
-> > that. But for all the rest, I would say it should be in the defconfig.
-> 
-> hmmm, so for the new devboard we should set CONFIG_RAM=n? ;-)
+Hey Simon, Iwamatsu-san,
 
-I think something like CONFIG_RAM=m suit better :)
+On Wed, Feb 6, 2013 at 11:00 AM, Simon Horman
+<horms+renesas@verge.net.au> wrote:
+> From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+>
+> This adds support of device tree probe for Renesas sh-ether driver.
+>
+> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
 
-> 
-> thx,
-> 
-> Jason.
+Thanks for your work on this
 
-Regards,
-Lior Amsalem
+> +++ b/Documentation/devicetree/bindings/net/sh_ether.txt
+> @@ -0,0 +1,43 @@
+> +* Renesas Electronics SuperH EMAC
+> +
+> +This file provides information, what the device node
+> +for the sh_eth interface contains.
+> +
+> +Required properties:
+> +- compatible:                   "renesas,sh-eth";
+> +- interrupt-parent:             The phandle for the interrupt controller that
+> +                                services interrupts for this device.
+> +- reg:                          Offset and length of the register set for the
+> +                                device.
+> +- interrupts:                   Interrupt mapping for the sh_eth interrupt
+> +                                sources (vector id).
+> +- phy-mode:              String, operation mode of the PHY interface.
+> +- sh-eth,edmac-endian:          String, endian of sh_eth dmac.
+> +- sh-eth,register-type:         String, register type of sh_eth.
+> +                                Please select "gigabit", "fast-sh4" or
+> +                                "fast-sh3-sh2".
+> +                                Please select "little" or "big".
+> +- sh-eth,endian:                String, endian of sh_eth dmac.
+> +- sh-eth,phy-id:                PHY id.
+> +
+> +Optional properties:
+> +- local-mac-address : 6 bytes, mac address
+
+
+> +- sh-eth,no-ether-link:         set link control by software. When device does
+> +                                not support ether-link, set.
+> +- sh-etn,ether-link-active-low: set link check method.
+> +                                When detection of link is treated as active-low,
+> +                                set.
+> +- sh-etn,needs-init:            Initialization flag.
+> +                                When initialize device in probing device, set.
+
+I believe there is a spelling mistake here with "sh-etn" instead of "sh-eth".
+
+Also, I am happy when DT is used to describe hardware information, but
+in the case of "needs-init" it more looks like software policy.
+
+Thanks,
+
+/ magnus
