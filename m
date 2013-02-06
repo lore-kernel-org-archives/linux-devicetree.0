@@ -1,22 +1,20 @@
-From: Kyungmin Park <kmpark@infradead.org>
+From: Sean Paul <seanpaul@chromium.org>
 Subject: Re: [PATCH v3 1/3] drm/exynos: Get HDMI version from device tree
-Date: Wed, 6 Feb 2013 09:47:49 +0900
-Message-ID: <CAH9JG2UzCQiMdcx1BeBCAPwT8YnDO2pDD9aA-L1XKasOgNr3wg@mail.gmail.com>
+Date: Tue, 5 Feb 2013 16:56:31 -0800
+Message-ID: <CAOw6vbKhsWp7VnqgvECd-P4e5okX6dwKn3P8+phfpG29rA+h7g@mail.gmail.com>
 References: <1360107777-17490-1-git-send-email-seanpaul@chromium.org>
-	<1360107777-17490-2-git-send-email-seanpaul@chromium.org>
-	<5111A23F.50300@wwwdotorg.org>
-	<CAOw6vb+W3phFDJXp3gCx7y0N7mF4o2DpEfTGuNT1pGdKqiCGTg@mail.gmail.com>
-	<5111A6D9.7090700@wwwdotorg.org>
+ <1360107777-17490-2-git-send-email-seanpaul@chromium.org> <5111A23F.50300@wwwdotorg.org>
+ <CAOw6vb+W3phFDJXp3gCx7y0N7mF4o2DpEfTGuNT1pGdKqiCGTg@mail.gmail.com> <5111A6D9.7090700@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 In-Reply-To: <5111A6D9.7090700@wwwdotorg.org>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Sean Paul <seanpaul@chromium.org>, Tomasz Stanislawski <t.stanislaws@samsung.com>, "kgene.kim" <kgene.kim@samsung.com>, devicetree-discuss@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, dri-devel@lists.freedesktop.org, Tomasz Figa <tomasz.figa@gmail.com>, InKi Dae <inki.dae@samsung.com>, linux-samsung-soc@vger.kernel.org, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Olof Johansson <olofj@chromium.org>, linux-arm-kernel@lists.infradead.org, RAHUL SHARMA <rahul.sharma@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, Tomasz Stanislawski <t.stanislaws@samsung.com>, "kgene.kim" <kgene.kim@samsung.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, InKi Dae <inki.dae@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Olof Johansson <olofj@chromium.org>, RAHUL SHARMA <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 6, 2013 at 9:42 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+On Tue, Feb 5, 2013 at 4:42 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
 > On 02/05/2013 05:37 PM, Sean Paul wrote:
 >> On Tue, Feb 5, 2013 at 4:22 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
 >>> n 02/05/2013 04:42 PM, Sean Paul wrote:
@@ -51,13 +49,6 @@ On Wed, Feb 6, 2013 at 9:42 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
 >> it provides the base for the current driver. The driver uses 4210 and
 >> 4212 to differentiate between different register addresses and
 >> features, but most things are just exynos4-hdmi compatible.
-I would like to distinguish between 4210 and 4x12. since it has
-different features. e.g., HDMI v1.3 and v1.4.
-and I also want to use 4412 instead of 4212. there's no board to use
-4212 at mainline until this time.
-
-Thank you,
-Kyungmin Park
 >
 > The DT nodes should include only the compatible values that the HW is
 > actually compatible with. If the HW isn't compatible with exynos4-hdmi,
@@ -65,6 +56,10 @@ Kyungmin Park
 > the "base" value that the HW really is compatible with. The driver can
 > support multiple "base" compatible values from this table.
 >
+
+All devices that use this driver are compatible, at some level, with
+exynos4-hdmi, so I think its usage is correct here.
+
 >>>> @@ -2218,17 +2217,18 @@ static int hdmi_probe(struct platform_device *pdev)
 >>>
 >>>> +
@@ -96,8 +91,27 @@ Kyungmin Park
 > entry in the compatible property, etc. In practice, I think it's still
 > not implemented quite correctly for this, but you can make it work by
 > putting the newest compatible value first in the match table.
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+I think the only way that works is if you hardcode the compatible
+versions in the driver, like this:
+
+static struct of_device_id hdmi_match_types[] = {
+        {
+                .compatible = "samsung,exynos5250-hdmi",
+                .data = (void *)(HDMI_VER_EXYNOS5250 | HDMI_VER_EXYNOS4212);
+        }, {
+                .compatible = "samsung,exynos4212-hdmi",
+                .data = (void *)HDMI_VER_EXYNOS4212;
+        }, {
+                .compatible = "samsung,exynos4210-hdmi",
+                .data = (void *)HDMI_VER_EXYNOS4210;
+        }, {
+                /* end node */
+        }
+};
+
+In that case, it eliminates the benefit of using device tree to
+determine the compatible bits. I hope I'm just being thick and missing
+something.
+
+Sean
