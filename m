@@ -1,34 +1,43 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH] ARM: dts: moving dt binding documents for video devices to
- common place
-Date: Wed, 06 Feb 2013 15:50:15 +0100
-Message-ID: <51126DA7.2040309@samsung.com>
-References: <1360162668-29677-1-git-send-email-rahul.sharma@samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 5/8] ARM: dts: omap5: Add ocp2scp data
+Date: Wed, 6 Feb 2013 20:26:41 +0530
+Message-ID: <1360162604-14320-6-git-send-email-kishon@ti.com>
+References: <1360162604-14320-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1360162668-29677-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1360162604-14320-1-git-send-email-kishon@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, rob.herring@calxeda.com, rob@landley.net, balbi@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: grant.likely@secretlab.ca, gregkh@linuxfoundation.org, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+Add ocp2scp data node in omap5 device tree file. The information for
+the node added here can be found @
+Documentation/devicetree/bindings/bus/omap-ocp2scp.txt
 
-On 02/06/2013 03:57 PM, Rahul Sharma wrote:
-> Binding Documents for drm-devices are placed in
-> Documentation/devicetree/bindings/drm/*. But these devices are common
-> for v4l framework, hence moved to a common place
-> Documentation/devicetree/bindings/video/. 'exynos_' prefix is added to
-> associate them with exynos soc series.
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/boot/dts/omap5.dtsi |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-It looks good to me, I would just use 'exynos-' prefix instead,
-this seems to be more common across existing files. Sorry for
-the nitpicking..
-
-I suppose you should address the patch to and base on the tree of
-the device tree maintainers.
-
-Thanks,
-Sylwester
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index c937500..230b779 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -504,5 +504,13 @@
+ 			reg-names = "control_dev_conf", "phy_power_usb";
+ 			ti,type = <2>;
+ 		};
++
++		ocp2scp {
++			compatible = "ti,omap-ocp2scp";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++			ti,hwmods = "ocp2scp1";
++		};
+ 	};
+ };
+-- 
+1.7.10.4
