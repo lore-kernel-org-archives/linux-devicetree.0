@@ -1,244 +1,52 @@
-From: Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>
-Subject: [PATCH 2/2] gpio: mcp23s08: convert driver to DT
-Date: Wed,  6 Feb 2013 18:01:58 +0100
-Message-ID: <1360170118-11937-3-git-send-email-larsi@wh2.tu-dresden.de>
-References: <1360170118-11937-1-git-send-email-larsi@wh2.tu-dresden.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 06/14] ARM: pci: Keep pci_common_init() around after init
+Date: Wed, 6 Feb 2013 18:07:53 +0100
+Message-ID: <CACRpkdYGgdMTi0ZeMeCk5UmrndD451Pyz8L_XE=y9SPXfGGdew@mail.gmail.com>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+	<1357764194-12677-7-git-send-email-thierry.reding@avionic-design.de>
+	<CACRpkdYV5w6BksUjXvXs=88BovUyXgRt-vXSD0twjRpzbZcvFQ@mail.gmail.com>
+	<9348609.HjKCmL9u9S@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <1360170118-11937-1-git-send-email-larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-Cc: w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <9348609.HjKCmL9u9S@wuerfel>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
+On Thu, Feb 7, 2013 at 1:54 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Wednesday 06 February 2013 17:38:20 Linus Walleij wrote:
+>> On Wed, Jan 9, 2013 at 9:43 PM, Thierry Reding
+>> <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org> wrote:
+>>
+>> > When using deferred driver probing, PCI host controller drivers may
+>> > actually require this function after the init stage.
+>> >
+>> > Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+>>
+>> There seem to be a proliferation of these patches now.
+>>
+>> Isn't this just papering over the real problem? The discarding
+>> of __init sections need to happen *after* all deferred probes
+>> are complete, lest we have to remove *all* __init sections from
+>> *all* drivers in the kernel, don't we?
+>
+> No, I think it's not quite that bad. I think the rule is still
+> just that .probe() functions and anything called from them must
+> not be __init. They used to be __devinit, which would cause
+> problems with deferred probing on !HOTPLUG systems but that's
+> gone in 3.9.
+>
+> Thierry's patch is just necessary because pci_common_init used
+> to be called only from actual __init functions, and not it
+> gets called from a .probe() function for the first time.
 
-This converts the mcp23s08 driver to be able to be used with device
-tree.
-There is a special "mcp,chips" property, that correspond to the chips
-member of the struct mcp23s08_platform_data. It can be used for
-multiple mcp23s08/mc23s17 on the same spi chipselect.
+Aha OK, then it feels much better now.
 
-Signed-off-by: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
----
- .../devicetree/bindings/gpio/gpio-mcp23s08.txt     |   36 ++++++++
- drivers/gpio/gpio-mcp23s08.c                       |   91 +++++++++++++++++++-
- include/linux/spi/mcp23s08.h                       |    1 +
- 3 files changed, 124 insertions(+), 4 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
+However it leaves the question of how much __init, __initdata
+and __initconst we have littering around. Oh, well, we'll see
+I guess.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-new file mode 100644
-index 0000000..17eb669
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mcp23s08.txt
-@@ -0,0 +1,36 @@
-+Microchip MCP2308/MCP23S08/MCP23017/MCP23S17 driver for
-+8-/16-bit I/O expander with serial interface (I2C/SPI)
-+
-+Required properties:
-+- compatible : Should be
-+    - "mcp,mcp23s08" for  8 GPIO SPI version
-+    - "mcp,mcp23s17" for 16 GPIO SPI version
-+    - "mcp,mcp23008" for  8 GPIO I2C version or
-+    - "mcp,mcp23017" for 16 GPIO I2C version of the chip
-+- #gpio-cells : Should be two.
-+  - first cell is the pin number
-+  - second cell is used to specify optional parameters (currently unused)
-+- gpio-controller : Marks the device node as a GPIO controller.
-+- reg : For an address on its bus
-+
-+Optional device specific properties:
-+- mcp,chips : This is a table with 2 columns and up to 8 entries. The first column
-+	is a is_present flag, that makes only sense for SPI chips. Multiple
-+	chips can share the same chipselect. This flag can be 0 or 1 depending
-+	if there is a chip at this address or not.
-+	The second column is written to the GPPU register, selecting a 100k
-+	pullup resistor or not. Setting a 1 is activating the pullup.
-+	For I2C chips only the first line in this table is used. Further chips
-+	are registered at different addresses at the I2C bus.
-+
-+Example:
-+gpiom1: gpio@20 {
-+        compatible = "mcp,mcp23017";
-+        gpio-controller;
-+        #gpio-cells = <2>;
-+        reg = <0x20>;
-+	chips = <
-+	/* is_present  pullups */
-+		1	0x07	/* chip address 0 */
-+	>;
-+};
-diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
-index 2afb828..9c9bc1a 100644
---- a/drivers/gpio/gpio-mcp23s08.c
-+++ b/drivers/gpio/gpio-mcp23s08.c
-@@ -12,6 +12,8 @@
- #include <linux/spi/mcp23s08.h>
- #include <linux/slab.h>
- #include <asm/byteorder.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- 
- /**
-  * MCP types supported by driver
-@@ -473,16 +475,87 @@ fail:
- 
- /*----------------------------------------------------------------------*/
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id mcp23s08_of_match[] = {
-+#ifdef CONFIG_SPI_MASTER
-+	{
-+		.compatible = "mcp,mcp23s08",
-+	},
-+	{
-+		.compatible = "mcp,mcp23s17",
-+	},
-+#endif
-+#if IS_ENABLED(CONFIG_I2C)
-+	{
-+		.compatible = "mcp,mcp23008",
-+	},
-+	{
-+		.compatible = "mcp,mcp23017",
-+	},
-+#endif
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, mcp23s08_of_match);
-+
-+static struct mcp23s08_platform_data *
-+		of_get_mcp23s08_pdata(struct device *dev)
-+{
-+	struct mcp23s08_platform_data *pdata;
-+	struct device_node *np = dev->of_node;
-+	u32 chips[sizeof(pdata->chip)];
-+	int ret, i, j;
-+
-+	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-+	if (!pdata)
-+		return NULL;
-+
-+	pdata->base = -1;
-+
-+	for (i = ARRAY_SIZE(pdata->chip) * MCP23S08_CHIP_INFO_MEMBERS;
-+				i > 0; i -= MCP23S08_CHIP_INFO_MEMBERS) {
-+		ret = of_property_read_u32_array(np, "mcp,chips", chips, i);
-+		if (ret == -EOVERFLOW)
-+			continue;
-+		break;
-+	}
-+	if (!ret) {
-+		for (j = 0; j < i / MCP23S08_CHIP_INFO_MEMBERS ; j++) {
-+			pdata->chip[j].is_present =
-+				chips[j * MCP23S08_CHIP_INFO_MEMBERS];
-+			pdata->chip[j].pullups =
-+				chips[j * MCP23S08_CHIP_INFO_MEMBERS + 1];
-+		}
-+	}
-+
-+	return pdata;
-+}
-+#else
-+static struct mcp23s08_platform_data *
-+		of_get_mcp23s08_pdata(struct i2c_client *client, int *chip_id)
-+{
-+	return NULL;
-+}
-+#endif /* CONFIG_OF */
-+
-+
- #if IS_ENABLED(CONFIG_I2C)
- 
- static int mcp230xx_probe(struct i2c_client *client,
- 				    const struct i2c_device_id *id)
- {
--	struct mcp23s08_platform_data *pdata;
-+	struct mcp23s08_platform_data *pdata = NULL;
- 	struct mcp23s08 *mcp;
- 	int status;
-+	const struct of_device_id *match;
-+
-+	match = of_match_device(of_match_ptr(mcp23s08_of_match), &client->dev);
-+	if (match)
-+		pdata = of_get_mcp23s08_pdata(&client->dev);
-+
-+	/* if there was no pdata in DT, take it the legacy way */
-+	if (!pdata)
-+		pdata = client->dev.platform_data;
- 
--	pdata = client->dev.platform_data;
- 	if ((!pdata || !gpio_is_valid(pdata->base)) && pdata->base != -1) {
- 		dev_dbg(&client->dev, "invalid or missing platform data\n");
- 		return -EINVAL;
-@@ -531,6 +604,7 @@ static struct i2c_driver mcp230xx_driver = {
- 	.driver = {
- 		.name	= "mcp230xx",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = mcp23s08_of_match,
- 	},
- 	.probe		= mcp230xx_probe,
- 	.remove		= mcp230xx_remove,
-@@ -560,16 +634,24 @@ static void mcp23s08_i2c_exit(void) { }
- 
- static int mcp23s08_probe(struct spi_device *spi)
- {
--	struct mcp23s08_platform_data	*pdata;
-+	struct mcp23s08_platform_data	*pdata = NULL;
- 	unsigned			addr;
- 	unsigned			chips = 0;
- 	struct mcp23s08_driver_data	*data;
- 	int				status, type;
- 	unsigned			base;
-+	const struct			of_device_id *match;
- 
- 	type = spi_get_device_id(spi)->driver_data;
- 
--	pdata = spi->dev.platform_data;
-+	match = of_match_device(of_match_ptr(mcp23s08_of_match), &spi->dev);
-+	if (match)
-+		pdata = of_get_mcp23s08_pdata(&spi->dev);
-+
-+	/* if there was no pdata in DT, take it the legacy way */
-+	if (!pdata)
-+		pdata = spi->dev.platform_data;
-+
- 	if ((!pdata || !gpio_is_valid(pdata->base)) && pdata->base != -1) {
- 		dev_dbg(&spi->dev, "invalid or missing platform data\n");
- 		return -EINVAL;
-@@ -668,6 +750,7 @@ static struct spi_driver mcp23s08_driver = {
- 	.driver = {
- 		.name	= "mcp23s08",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = mcp23s08_of_match,
- 	},
- };
- 
-diff --git a/include/linux/spi/mcp23s08.h b/include/linux/spi/mcp23s08.h
-index 2d676d5..3969e12 100644
---- a/include/linux/spi/mcp23s08.h
-+++ b/include/linux/spi/mcp23s08.h
-@@ -1,3 +1,4 @@
-+#define MCP23S08_CHIP_INFO_MEMBERS	2
- 
- /* FIXME driver should be able to handle IRQs...  */
- 
--- 
-1.7.10.4
-
-
-------------------------------------------------------------------------------
-Free Next-Gen Firewall Hardware Offer
-Buy your Sophos next-gen firewall before the end March 2013 
-and get the hardware for free! Learn more.
-http://p.sf.net/sfu/sophos-d2d-feb
+Thanks,
+Linus Walleij
