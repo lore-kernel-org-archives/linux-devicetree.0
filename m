@@ -1,320 +1,462 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 2/2] iio: Add OF support
-Date: Wed, 06 Feb 2013 21:12:02 +0100
-Message-ID: <3127740.ceD4TONkpv@flatron>
-References: <1360009566-26347-1-git-send-email-linux@roeck-us.net>
- <5112B101.7040709@kernel.org> <20130206200513.GA18135@roeck-us.net>
+From: Paul Gortmaker <paul.gortmaker@windriver.com>
+Subject: [PATCH next v2] OF: convert devtree lock from rw_lock to raw spinlock
+Date: Wed, 6 Feb 2013 15:30:56 -0500
+Message-ID: <1360182656-15898-1-git-send-email-paul.gortmaker@windriver.com>
+References: <1359993921-18145-1-git-send-email-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130206200513.GA18135-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-rt-users-owner@vger.kernel.org>
+In-Reply-To: <1359993921-18145-1-git-send-email-paul.gortmaker@windriver.com>
+Sender: linux-rt-users-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Sam Ravnborg <sam@ravnborg.org>, devicetree-discuss@lists.ozlabs.org, sparclinux@vger.kernel.org, linux-rt-users@vger.kernel.org, linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Paul Gortmaker <paul.gortmaker@windriver.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 of February 2013 12:05:13 Guenter Roeck wrote:
-> On Wed, Feb 06, 2013 at 07:37:37PM +0000, Jonathan Cameron wrote:
-> > On 02/06/2013 06:29 PM, Guenter Roeck wrote:
-> > > Provide bindings and parse OF data during initialization.
-> > > 
-> > > Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> > 
-> > looks good to me.  Couple of little queries inline.
-> > 
-> > > ---
-> > > v4:
-> > > - Fixed wrong parameter to dummy of_iio_channel_get_by_name if
-> > > CONFIG_OF is> > 
-> > >   undefined, and wrong return value.
-> > > 
-> > > - Initialize indio_dev->of_node in iio_device_register if the
-> > > calling driver> > 
-> > >   neglected to do it.
-> > > 
-> > > v3:
-> > > - Cleaned up documentation (formatting, left-over clock references)
-> > > - Updated bindings description to permit sub-devices
-> > > - When searching for iio devices, use the pointer to the iio device
-> > > type instead> > 
-> > >   of strcmp. Rename iio_dev_type to iio_device_type (to match other
-> > >   device types) and make it global for that purpose. Check the OF
-> > >   node first, then the device type, as the node is less likely to
-> > >   match.
-> > > 
-> > > - Move the common code in of_iio_channel_get and
-> > > of_iio_channel_get_all to> > 
-> > >   __of_iio_channel_get.
-> > > 
-> > > - Return NULL from of_iio_channel_get_by_name if nothing is found,
-> > > or
-> > > 
-> > >   an error if there is a problem with consistency or if the provider
-> > >   device is not yet available.
-> > > 
-> > > - In iio_channel_get, return if of_iio_channel_get_by_name() returns
-> > > a channel> > 
-> > >   or an error, and continue otherwise.
-> > > 
-> > > v2:
-> > > - Rebased to iio/togreg
-> > > - Documentation update per feedback
-> > > - Dropped io-channel-output-names from the bindings document. The
-> > > property is> > 
-> > >   not used in the code, and it is not entirely clear what it would
-> > >   be used for. If there is a need for it, we can add it back in
-> > >   later on.
-> > > 
-> > > - Don't export OF specific API calls
-> > > - For OF support, no longer depend on iio_map
-> > > - Add #ifdef CONFIG_OF where appropriate, and ensure that the code
-> > > still builds> > 
-> > >   if it is not selected.
-> > > 
-> > > - Change iio_channel_get to take device pointer as argument instead
-> > > of device> > 
-> > >   name. Retain old API as of_iio_channel_get_sys.
-> > > 
-> > > - iio_channel_get now works for both OF and non-OF configurations
-> > > - Use regulator to get vref for max1363 driver.
-> > > 
-> > >  drivers/iio/iio_core.h                             |    1 +
-> > >  drivers/iio/industrialio-core.c                    |    8 +-
-> > >  drivers/iio/inkern.c                               |  171
-> > >  ++++++++++++++++++++ 4 files changed, 268 insertions(+), 2
-> > >  deletions(-)
-> > >  create mode 100644
-> > >  Documentation/devicetree/bindings/iio/iio-bindings.txt> > 
-> > > diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> > > b/Documentation/devicetree/bindings/iio/iio-bindings.txt new file
-> > > mode 100644
-> > > index 0000000..2475c2e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> > > @@ -0,0 +1,90 @@
-> > > +This binding is a work-in-progress. It is derived from clock
-> > > bindings,
-> > > +and based on suggestions from Lars-Peter Clausen [1].
-> > > +
-> > > +Sources of IIO channels can be represented by any node in the
-> > > device
-> > > +tree. Those nodes are designated as IIO providers. IIO consumer
-> > > +nodes use a phandle and IIO specifier pair to connect IIO provider
-> > > +outputs to IIO inputs. Similar to the gpio specifiers, an IIO
-> > > +specifier is an array of one or more cells identifying the IIO
-> > > +output on a device. The length of an IIO specifier is defined by
-> > > the
-> > > +value of a #io-channel-cells property in the IIO provider node.
-> > > +
-> > > +[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
-> > > +
-> > > +==IIO providers==
-> > > +
-> > > +Required properties:
-> > > +#io-channel-cells: Number of cells in an IIO specifier; Typically 0
-> > > for nodes +		   with a single IIO output and 1 for nodes with
-> > > multiple
-> > > +		   IIO outputs.
-> > > +
-> > > +Example for a simple configuration with no trigger:
-> > > +
-> > > +	adc: voltage-sensor@35 {
-> > > +		compatible = "maxim,max1139";
-> > > +		reg = <0x35>;
-> > > +		#io-channel-cells = <1>;
-> > > +	};
-> > > +
-> > > +Example for a configuration with trigger:
-> > > +
-> > > +	adc@35 {
-> > > +		compatible = "maxim,max1139";
-> > > +		reg = <0x35>;
-> > > +
-> > > +		adc: iio-device {
-> > > +			#io-channel-cells = <1>;
-> > > +		};
-> > > +		trigger: iio-trigger {
-> > > +			#io-channel-cells = <1>;
-> > 
-> > Why would the trigger have channel-cells?
-> > So far we don't have any device tree stuff for the triggers.
-> 
-> This comes from one of the examples passed around earlier.
-> 
-> Presumably, when triggers are supported through devicetree, you would
-> have more than one per device, meaning you need the same logic as for
-> devices.
-> 
-> Though on the other side that isn't supported yet - I don't have
-> hardware to test, so I can not implement - or, rather, test -
-> devicetree based trigger support. I can take the entire thing out if
-> you prefer - I don't really have a strong opinion.
-> 
-> > > +		};
-> > > +	};
-> > > +
-> > > +==IIO consumers==
-> > > +
-> > > +Required properties:
-> > > +io-channels:	List of phandle and IIO specifier pairs, one pair
-> > > +		for each IIO input to the device. Note: if the
-> > > +		IIO provider specifies '0' for #io-channel-cells,
-> > > +		then only the phandle portion of the pair will appear.
-> > > +
-> > > +Optional properties:
-> > > +io-channel-names:
-> > > +		List of IIO input name strings sorted in the same
-> > > +		order as the io-channels property. Consumers drivers
-> > > +		will use io-channel-names to match IIO input names
-> > > +		with IIO specifiers.
-> > > +io-channel-ranges:
-> > > +		Empty property indicating that child nodes can inherit 
-named
-> > > +		IIO channels from this node. Useful for bus nodes to 
-provide
-> > > +		and IIO channel to their children.
-> > > +
-> > > +For example:
-> > > +
-> > > +	device {
-> > > +		io-channels = <&adc 1>, <&ref 0>;
-> > > +		io-channel-names = "vcc", "vdd";
-> > > +	};
-> > > +
-> > > +This represents a device with two IIO inputs, named "vcc" and
-> > > "vdd".
-> > > +The vcc channel is connected to output 1 of the &adc device, and
-> > > the
-> > > +vdd channel is connected to output 0 of the &ref device.
-> > > +
-> > > +==Example==
-> > > +
-> > > +	adc: max1139@35 {
-> > > +		compatible = "maxim,max1139";
-> > > +		reg = <0x35>;
-> > > +		#io-channel-cells = <1>;
-> > > +	};
-> > > +
-> > > +	...
-> > > +
-> > > +	iio_hwmon {
-> > > +		compatible = "iio-hwmon";
-> > > +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
-> > > +			<&adc 3>, <&adc 4>, <&adc 5>,
-> > > +			<&adc 6>, <&adc 7>, <&adc 8>,
-> > > +			<&adc 9>, <&adc 10>, <&adc 11>;
-> > > +		io-channel-names = "vcc", "vdd", "vref", "1.2V";
-> > 
-> > This example still seems a little odd. Why give one where there are
-> > more channels than names?
-> 
-> I just didn't have a better idea. Do you know of another iio consumer I
-> could use as example, one which doesn't use the get_all API ?
-> 
-> > > +	};
-> > > diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
-> > > index f652e6a..05c1b74 100644
-> > > --- a/drivers/iio/iio_core.h
-> > > +++ b/drivers/iio/iio_core.h
-> > > @@ -18,6 +18,7 @@
-> > > 
-> > >  struct iio_chan_spec;
-> > >  struct iio_dev;
-> > > 
-> > > +extern struct device_type iio_device_type;
-> > > 
-> > >  int __iio_add_chan_devattr(const char *postfix,
-> > >  
-> > >  			   struct iio_chan_spec const *chan,
-> > > 
-> > > diff --git a/drivers/iio/industrialio-core.c
-> > > b/drivers/iio/industrialio-core.c index 8848f16..6d8b027 100644
-> > > --- a/drivers/iio/industrialio-core.c
-> > > +++ b/drivers/iio/industrialio-core.c
-> > > @@ -847,7 +847,7 @@ static void iio_dev_release(struct device
-> > > *device)
-> > > 
-> > >  	kfree(indio_dev);
-> > >  
-> > >  }
-> > > 
-> > > -static struct device_type iio_dev_type = {
-> > > +struct device_type iio_device_type = {
-> > > 
-> > >  	.name = "iio_device",
-> > >  	.release = iio_dev_release,
-> > >  
-> > >  };
-> > > 
-> > > @@ -869,7 +869,7 @@ struct iio_dev *iio_device_alloc(int
-> > > sizeof_priv)
-> > > 
-> > >  	if (dev) {
-> > >  	
-> > >  		dev->dev.groups = dev->groups;
-> > > 
-> > > -		dev->dev.type = &iio_dev_type;
-> > > +		dev->dev.type = &iio_device_type;
-> > > 
-> > >  		dev->dev.bus = &iio_bus_type;
-> > >  		device_initialize(&dev->dev);
-> > >  		dev_set_drvdata(&dev->dev, (void *)dev);
-> > > 
-> > > @@ -960,6 +960,10 @@ int iio_device_register(struct iio_dev
-> > > *indio_dev)
-> > > 
-> > >  {
-> > >  
-> > >  	int ret;
-> > > 
-> > > +	/* If the calling driver did not initialize of_node, do it here 
-*/
-> > > +	if (!indio_dev->dev.of_node && indio_dev->dev.parent)
-> > > +		indio_dev->dev.of_node = indio_dev->dev.parent->of_node;
-> > > +
-> > 
-> > I guess that's sensible, though I'd be inclined to check it and throw
-> > a wobbly if it isn't defined.  That way we have one 'right' place to
-> > do it.
-> I had to look that one up :). "throw a wobbly" = "reached the end of
-> rational thought and action" or "to become suddenly very agitated or
-> angry". Is that about right ?
-> 
-> I assume you mean the case where indio_dev->dev.of_node is NULL ?
-> Problem is that this can hapen anytime (and always if CONFIG_OF is
-> undefined). I'd be more concerned if indio_dev->dev.parent is NULL,
-> which happens with a couple of drivers if I interpret the code
-> correctly. Otherwise it only matters if the node should really point to
-> a sub-node and not to the parent's node itself - but presumably
-> programmers should detect that while writing the driver.
-> 
-> Alternative would be to set of_node in all calling drivers.
-> Unfortunately, there are about one hundred callers, so that would be a
-> substantial effort.
-> 
-> Not sure myself what the right approach is here - that is why I asked
-> for feedback about it in v3. I am open to suggestions.
+From: Thomas Gleixner <tglx@linutronix.de>
 
-I'm not sure if I understand the point, so following might be just some 
-random thoughts:
+With the locking cleanup in place (from "OF: Fixup resursive
+locking code paths"), we can now do the conversion from the
+rw_lock to a raw spinlock as required for preempt-rt.
 
-There is no need to check for of_node. Case where there is no of_node 
-attached to the device is fine, as lots of systems are being booted 
-without device tree support.
+The previous cleanup and this conversion were originally
+separate since they predated when mainline got raw spinlock (in
+commit c2f21ce2e31286a "locking: Implement new raw_spinlock").
 
-Getting of_node from parent device seems reasonable to me, as this will 
-automatically handle all the simple cases where iio_device node would be 
-equal to physical device node.
+So, at that point in time, the cleanup was considered plausible
+for mainline, but not this conversion.  In any case, we've kept
+them separate as it makes for easier review and better bisection.
 
-Best regards,
-Tomasz
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+[PG: taken from preempt-rt, update subject & add a commit log]
+Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+---
+
+[v2: recent commit e81b329 ("powerpc+of: Add /proc device tree
+ updating to of node add/remove") added two more instances of
+ write_unlock that also needed converting to raw_spin_unlock.
+ Retested (boot) on sbc8548, defconfig builds on arm/sparc; no
+ new warnings observed.]
+
+ arch/sparc/kernel/prom_common.c |   4 +-
+ drivers/of/base.c               | 100 ++++++++++++++++++++++------------------
+ include/linux/of.h              |   2 +-
+ 3 files changed, 59 insertions(+), 47 deletions(-)
+
+diff --git a/arch/sparc/kernel/prom_common.c b/arch/sparc/kernel/prom_common.c
+index 1303021..9f20566 100644
+--- a/arch/sparc/kernel/prom_common.c
++++ b/arch/sparc/kernel/prom_common.c
+@@ -64,7 +64,7 @@ int of_set_property(struct device_node *dp, const char *name, void *val, int len
+ 	err = -ENODEV;
+ 
+ 	mutex_lock(&of_set_property_mutex);
+-	write_lock(&devtree_lock);
++	raw_spin_lock(&devtree_lock);
+ 	prevp = &dp->properties;
+ 	while (*prevp) {
+ 		struct property *prop = *prevp;
+@@ -91,7 +91,7 @@ int of_set_property(struct device_node *dp, const char *name, void *val, int len
+ 		}
+ 		prevp = &(*prevp)->next;
+ 	}
+-	write_unlock(&devtree_lock);
++	raw_spin_unlock(&devtree_lock);
+ 	mutex_unlock(&of_set_property_mutex);
+ 
+ 	/* XXX Upate procfs if necessary... */
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 16ee7a0..f86be55 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -55,7 +55,7 @@ static DEFINE_MUTEX(of_aliases_mutex);
+ /* use when traversing tree through the allnext, child, sibling,
+  * or parent members of struct device_node.
+  */
+-DEFINE_RWLOCK(devtree_lock);
++DEFINE_RAW_SPINLOCK(devtree_lock);
+ 
+ int of_n_addr_cells(struct device_node *np)
+ {
+@@ -188,10 +188,11 @@ struct property *of_find_property(const struct device_node *np,
+ 				  int *lenp)
+ {
+ 	struct property *pp;
++	unsigned long flags;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	pp = __of_find_property(np, name, lenp);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 
+ 	return pp;
+ }
+@@ -209,13 +210,13 @@ struct device_node *of_find_all_nodes(struct device_node *prev)
+ {
+ 	struct device_node *np;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock(&devtree_lock);
+ 	np = prev ? prev->allnext : of_allnodes;
+ 	for (; np != NULL; np = np->allnext)
+ 		if (of_node_get(np))
+ 			break;
+ 	of_node_put(prev);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock(&devtree_lock);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_all_nodes);
+@@ -274,11 +275,12 @@ static int __of_device_is_compatible(const struct device_node *device,
+ int of_device_is_compatible(const struct device_node *device,
+ 		const char *compat)
+ {
++	unsigned long flags;
+ 	int res;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	res = __of_device_is_compatible(device, compat);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return res;
+ }
+ EXPORT_SYMBOL(of_device_is_compatible);
+@@ -340,13 +342,14 @@ EXPORT_SYMBOL(of_device_is_available);
+ struct device_node *of_get_parent(const struct device_node *node)
+ {
+ 	struct device_node *np;
++	unsigned long flags;
+ 
+ 	if (!node)
+ 		return NULL;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	np = of_node_get(node->parent);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_get_parent);
+@@ -365,14 +368,15 @@ EXPORT_SYMBOL(of_get_parent);
+ struct device_node *of_get_next_parent(struct device_node *node)
+ {
+ 	struct device_node *parent;
++	unsigned long flags;
+ 
+ 	if (!node)
+ 		return NULL;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	parent = of_node_get(node->parent);
+ 	of_node_put(node);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return parent;
+ }
+ 
+@@ -388,14 +392,15 @@ struct device_node *of_get_next_child(const struct device_node *node,
+ 	struct device_node *prev)
+ {
+ 	struct device_node *next;
++	unsigned long flags;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	next = prev ? prev->sibling : node->child;
+ 	for (; next; next = next->sibling)
+ 		if (of_node_get(next))
+ 			break;
+ 	of_node_put(prev);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return next;
+ }
+ EXPORT_SYMBOL(of_get_next_child);
+@@ -413,7 +418,7 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+ {
+ 	struct device_node *next;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock(&devtree_lock);
+ 	next = prev ? prev->sibling : node->child;
+ 	for (; next; next = next->sibling) {
+ 		if (!of_device_is_available(next))
+@@ -422,7 +427,7 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+ 			break;
+ 	}
+ 	of_node_put(prev);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock(&devtree_lock);
+ 	return next;
+ }
+ EXPORT_SYMBOL(of_get_next_available_child);
+@@ -460,14 +465,15 @@ EXPORT_SYMBOL(of_get_child_by_name);
+ struct device_node *of_find_node_by_path(const char *path)
+ {
+ 	struct device_node *np = of_allnodes;
++	unsigned long flags;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	for (; np; np = np->allnext) {
+ 		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
+ 		    && of_node_get(np))
+ 			break;
+ 	}
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_node_by_path);
+@@ -487,15 +493,16 @@ struct device_node *of_find_node_by_name(struct device_node *from,
+ 	const char *name)
+ {
+ 	struct device_node *np;
++	unsigned long flags;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	np = from ? from->allnext : of_allnodes;
+ 	for (; np; np = np->allnext)
+ 		if (np->name && (of_node_cmp(np->name, name) == 0)
+ 		    && of_node_get(np))
+ 			break;
+ 	of_node_put(from);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_node_by_name);
+@@ -516,15 +523,16 @@ struct device_node *of_find_node_by_type(struct device_node *from,
+ 	const char *type)
+ {
+ 	struct device_node *np;
++	unsigned long flags;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	np = from ? from->allnext : of_allnodes;
+ 	for (; np; np = np->allnext)
+ 		if (np->type && (of_node_cmp(np->type, type) == 0)
+ 		    && of_node_get(np))
+ 			break;
+ 	of_node_put(from);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_node_by_type);
+@@ -547,8 +555,9 @@ struct device_node *of_find_compatible_node(struct device_node *from,
+ 	const char *type, const char *compatible)
+ {
+ 	struct device_node *np;
++	unsigned long flags;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	np = from ? from->allnext : of_allnodes;
+ 	for (; np; np = np->allnext) {
+ 		if (type
+@@ -559,7 +568,7 @@ struct device_node *of_find_compatible_node(struct device_node *from,
+ 			break;
+ 	}
+ 	of_node_put(from);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_compatible_node);
+@@ -581,8 +590,9 @@ struct device_node *of_find_node_with_property(struct device_node *from,
+ {
+ 	struct device_node *np;
+ 	struct property *pp;
++	unsigned long flags;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	np = from ? from->allnext : of_allnodes;
+ 	for (; np; np = np->allnext) {
+ 		for (pp = np->properties; pp; pp = pp->next) {
+@@ -594,7 +604,7 @@ struct device_node *of_find_node_with_property(struct device_node *from,
+ 	}
+ out:
+ 	of_node_put(from);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_node_with_property);
+@@ -635,10 +645,11 @@ const struct of_device_id *of_match_node(const struct of_device_id *matches,
+ 					 const struct device_node *node)
+ {
+ 	const struct of_device_id *match;
++	unsigned long flags;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	match = __of_match_node(matches, node);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return match;
+ }
+ EXPORT_SYMBOL(of_match_node);
+@@ -662,11 +673,12 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
+ {
+ 	struct device_node *np;
+ 	const struct of_device_id *m;
++	unsigned long flags;
+ 
+ 	if (match)
+ 		*match = NULL;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	np = from ? from->allnext : of_allnodes;
+ 	for (; np; np = np->allnext) {
+ 		m = __of_match_node(matches, np);
+@@ -677,7 +689,7 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
+ 		}
+ 	}
+ 	of_node_put(from);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_matching_node_and_match);
+@@ -720,12 +732,12 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+ {
+ 	struct device_node *np;
+ 
+-	read_lock(&devtree_lock);
++	raw_spin_lock(&devtree_lock);
+ 	for (np = of_allnodes; np; np = np->allnext)
+ 		if (np->phandle == handle)
+ 			break;
+ 	of_node_get(np);
+-	read_unlock(&devtree_lock);
++	raw_spin_unlock(&devtree_lock);
+ 	return np;
+ }
+ EXPORT_SYMBOL(of_find_node_by_phandle);
+@@ -1197,18 +1209,18 @@ int of_add_property(struct device_node *np, struct property *prop)
+ 		return rc;
+ 
+ 	prop->next = NULL;
+-	write_lock_irqsave(&devtree_lock, flags);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	next = &np->properties;
+ 	while (*next) {
+ 		if (strcmp(prop->name, (*next)->name) == 0) {
+ 			/* duplicate ! don't insert it */
+-			write_unlock_irqrestore(&devtree_lock, flags);
++			raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 			return -1;
+ 		}
+ 		next = &(*next)->next;
+ 	}
+ 	*next = prop;
+-	write_unlock_irqrestore(&devtree_lock, flags);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 
+ #ifdef CONFIG_PROC_DEVICETREE
+ 	/* try to add to proc as well if it was initialized */
+@@ -1238,7 +1250,7 @@ int of_remove_property(struct device_node *np, struct property *prop)
+ 	if (rc)
+ 		return rc;
+ 
+-	write_lock_irqsave(&devtree_lock, flags);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	next = &np->properties;
+ 	while (*next) {
+ 		if (*next == prop) {
+@@ -1251,7 +1263,7 @@ int of_remove_property(struct device_node *np, struct property *prop)
+ 		}
+ 		next = &(*next)->next;
+ 	}
+-	write_unlock_irqrestore(&devtree_lock, flags);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 
+ 	if (!found)
+ 		return -ENODEV;
+@@ -1291,7 +1303,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
+ 	if (!oldprop)
+ 		return of_add_property(np, newprop);
+ 
+-	write_lock_irqsave(&devtree_lock, flags);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	next = &np->properties;
+ 	while (*next) {
+ 		if (*next == oldprop) {
+@@ -1305,7 +1317,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
+ 		}
+ 		next = &(*next)->next;
+ 	}
+-	write_unlock_irqrestore(&devtree_lock, flags);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 
+ 	if (!found)
+ 		return -ENODEV;
+@@ -1378,12 +1390,12 @@ int of_attach_node(struct device_node *np)
+ 	if (rc)
+ 		return rc;
+ 
+-	write_lock_irqsave(&devtree_lock, flags);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	np->sibling = np->parent->child;
+ 	np->allnext = of_allnodes;
+ 	np->parent->child = np;
+ 	of_allnodes = np;
+-	write_unlock_irqrestore(&devtree_lock, flags);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 
+ 	of_add_proc_dt_entry(np);
+ 	return 0;
+@@ -1426,17 +1438,17 @@ int of_detach_node(struct device_node *np)
+ 	if (rc)
+ 		return rc;
+ 
+-	write_lock_irqsave(&devtree_lock, flags);
++	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 
+ 	if (of_node_check_flag(np, OF_DETACHED)) {
+ 		/* someone already detached it */
+-		write_unlock_irqrestore(&devtree_lock, flags);
++		raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 		return rc;
+ 	}
+ 
+ 	parent = np->parent;
+ 	if (!parent) {
+-		write_unlock_irqrestore(&devtree_lock, flags);
++		raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 		return rc;
+ 	}
+ 
+@@ -1463,7 +1475,7 @@ int of_detach_node(struct device_node *np)
+ 	}
+ 
+ 	of_node_set_flag(np, OF_DETACHED);
+-	write_unlock_irqrestore(&devtree_lock, flags);
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 
+ 	of_remove_proc_dt_entry(np);
+ 	return rc;
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 5ebcc5c..bb35c42 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -92,7 +92,7 @@ static inline void of_node_put(struct device_node *node) { }
+ extern struct device_node *of_allnodes;
+ extern struct device_node *of_chosen;
+ extern struct device_node *of_aliases;
+-extern rwlock_t devtree_lock;
++extern raw_spinlock_t devtree_lock;
+ 
+ static inline bool of_have_populated_dt(void)
+ {
+-- 
+1.8.1.2
+
