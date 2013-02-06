@@ -1,101 +1,77 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm: mvebu: Add SPI flash on Armada XP-GP board
-Date: Wed, 6 Feb 2013 07:54:32 -0300
-Message-ID: <20130206105431.GA21764@localhost>
-References: <1360063473-26176-1-git-send-email-ezequiel.garcia@free-electrons.com>
-	<5111331F.7090900@free-electrons.com>
-	<511168BE.1000803@free-electrons.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH 7/8] Remove fdtdump and use fdtgrep instead
+Date: Wed, 6 Feb 2013 18:16:06 +1100
+Message-ID: <20130206071606.GR821@truffula.fritz.box>
+References: <1358801962-21707-1-git-send-email-sjg@chromium.org>
+ <1358801962-21707-8-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <511168BE.1000803-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============8702140748175168703=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1358801962-21707-8-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3JlZ29yeSwKCk9uIFR1ZSwgRmViIDA1LCAyMDEzIGF0IDA5OjE3OjAyUE0gKzAxMDAsIEdy
-ZWdvcnkgQ0xFTUVOVCB3cm90ZToKPiBPbiAwMi8wNS8yMDEzIDA1OjI4IFBNLCBHcmVnb3J5IENM
-RU1FTlQgd3JvdGU6Cj4gPiBIaSBFemVxdWllbCwKPiA+IAo+ID4gT24gMDIvMDUvMjAxMyAxMjoy
-NCBQTSwgRXplcXVpZWwgR2FyY2lhIHdyb3RlOgo+ID4+IFRoaXMgcGF0Y2ggYWRkcyBhbiBTUEkg
-bWFzdGVyIGRldmljZSBub2RlIGZvciBBcm1hZGEgWFAtR1AgYm9hcmQuCj4gPj4gVGhpcyBtYXN0
-ZXIgbm9kZSBpcyBhbiBTUEkgZmxhc2ggY29udHJvbGxlciAnbjI1cTEyOGExMycuCj4gPj4KPiA+
-PiBTaW5jZSB0aGVyZSBpcyBubyAncGFydGl0aW9ucycgbm9kZSBkZWNsYXJlZCwgb25lIGZ1bGwg
-c2l6ZWQKPiA+PiBwYXJ0aXRpb24gbmFtZWQgYXMgdGhlIGRldmljZSB3aWxsIGJlIGNyZWF0ZWQu
-Cj4gPj4KPiA+PiBDYzogR3JlZ29yeSBDbGVtZW50IDxncmVnb3J5LmNsZW1lbnRAZnJlZS1lbGVj
-dHJvbnMuY29tPgo+ID4+IENjOiBUaG9tYXMgUGV0YXp6b25pIDx0aG9tYXMucGV0YXp6b25pQGZy
-ZWUtZWxlY3Ryb25zLmNvbT4KPiA+PiBDYzogTGlvciBBbXNhbGVtIDxhbGlvckBtYXJ2ZWxsLmNv
-bT4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBFemVxdWllbCBHYXJjaWEgPGV6ZXF1aWVsLmdhcmNpYUBm
-cmVlLWVsZWN0cm9ucy5jb20+Cj4gPj4gLS0tCj4gPj4gVGhpcyBwYXRjaCBkZXBlbmRzIG9uOgo+
-ID4+Cj4gPj4gIDEuIEdyZWdvcnkncyBwYXRjaCBmb3IgQXJtYWRhIFhQIEdQIGJvYXJkOgo+ID4+
-ICAgICAgIGFybTogbXZlYnU6IHN1cHBvcnQgZm9yIHRoZSBuZXcgQXJtYWRhIFhQIGRldmVsb3Bt
-ZW50IGJvYXJkKERCLU1WNzg0TVAtR1ApCj4gPj4KPiA+PiAgMi4gTXkgcHJldmlvdXMgcGF0Y2gg
-Zm9yIFNQSSBvbiBBcm1hZGEgMzcwL1hQOgo+ID4+ICAgICAgIGFybTogbXZlYnU6IEFkZCBzdXBw
-b3J0IGZvciBTUEkgY29udHJvbGxlciBpbiBBcm1hZGEgMzcwL1hQCj4gPj4KPiA+PiBBbmQgZG9u
-J3QgZm9yZ2V0IHRvIGNvbXBpbGUgdGhlIFNQSSBmbGFzaCBkcml2ZXIsIENPTkZJR19NVERfTTI1
-UDgwPXkKPiA+Pgo+ID4+ICBhcmNoL2FybS9ib290L2R0cy9hcm1hZGEteHAtZ3AuZHRzIHwgICAx
-MiArKysrKysrKysrKysKPiA+PiAgMSBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAw
-IGRlbGV0aW9ucygtKQo+ID4+Cj4gPj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2Fy
-bWFkYS14cC1ncC5kdHMgYi9hcmNoL2FybS9ib290L2R0cy9hcm1hZGEteHAtZ3AuZHRzCj4gPj4g
-aW5kZXggM2VlYTUzMS4uMWM4YWZlMiAxMDA2NDQKPiA+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0
-cy9hcm1hZGEteHAtZ3AuZHRzCj4gPj4gKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLXhw
-LWdwLmR0cwo+ID4+IEBAIC05Nyw1ICs5NywxNyBAQAo+ID4+ICAJCQlwaHkgPSA8JnBoeTM+Owo+
-ID4+ICAJCQlwaHktbW9kZSA9ICJyZ21paS1pZCI7Cj4gPj4gIAkJfTsKPiA+PiArCj4gPj4gKwkJ
-c3BpMDogc3BpQGQwMDEwNjAwIHsKPiA+PiArCQkJc3RhdHVzID0gIm9rYXkiOwo+ID4+ICsKPiA+
-PiArCQkJc3BpLWZsYXNoQDAgewo+ID4+ICsJCQkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gPj4g
-KwkJCQkjc2l6ZS1jZWxscyA9IDwxPjsKPiA+PiArCQkJCWNvbXBhdGlibGUgPSAibjI1cTEyOGEx
-MyI7Cj4gPj4gKwkJCQlyZWcgPSA8MD47IC8qIENoaXAgc2VsZWN0IDAgKi8KPiA+PiArCQkJCXNw
-aS1tYXgtZnJlcXVlbmN5ID0gPDEwODAwMDAwMD47Cj4gCj4gSSBoYWQgYSByZW1hcmsgYWJvdXQg
-aXQsIGFjY29yZGluZyB0byB0aGUgZGF0YXNoZWV0LCAxMDhNSHogaXMgdGhlCj4gbWF4aW11bSBm
-cmVxdWVuY3kgZm9yIHRoZSBhbGwgdGhlIGluc3RydWN0aW9ucyBidXQgdGhlIFJFQUQKPiBpbnN0
-cnVjdGlvbi4gRm9yIHRoZSBSRUFEIHRoZSBtYXhpbXVtIGZyZXF1ZW5jeSBpcyA1NE1Iei4gU28g
-SSB3b25kZXIKPiBpZiB3ZSBzaG91bGRuJ3QgdXNlIDU0MDAwMDAwIGhlcmUuCj4gCgpNbW0uLi4g
-bmljZSBjYXRjaC4KClRoZSBtdGQgZHJpdmVyIGZvciB0aGUgc3BpIGZsYXNoIChtMjVwODApIHdp
-bGwgdXNlIEZBU1RfUkVBRCBvcGNvZGUKaWYgQ09ORklHX00yNVBYWF9VU0VfRkFTVF9SRUFEIGlz
-IHNlbGVjdGVkLCBhbmQgdGhpcyBvcHRpb24KaXMgc2VsZWN0ZWQgYnkgZGVmYXVsdC4KSG93ZXZl
-ciB3ZSBjYW5ub3QgY291bnQgb24gdGhpcyBvcHRpb24gYmVpbmcgc2VsZWN0ZWQsIG9mIGNvdXJz
-ZS4KCk9uIHRoZSBvdGhlciBzaWRlLCBhZnRlciBzb21lIHRlc3Rpbmcgd2l0aCBzcGktbWF4LWZy
-ZXF1ZW5jeSA9IDUwIE1IegphbmQgYWxzbyB3aXRoIHNwaS1tYXgtZnJlcXVlbmN5ID0gMTA4IE1I
-eiBJJ20gc2VlaW5nIHRoZSBmbGFzaCBvZnRlbgoobm90IGFsd2F5cykgc3RhbGxzIHdoZW4gdHJ5
-aW5nIHRvIHJlYWQgdGhlIGZ1bGwgZGV2aWNlIHRocm91Z2ggZGQ6CgovICMgZGQgaWY9L2Rldi9t
-dGQwcm8gb2Y9L2Rldi9udWxsCgpUaGlzIGhhcHBlbnMgcmVnYXJkbGVzcyBvZiBDT05GSUdfTTI1
-UFhYX1VTRV9GQVNUX1JFQUQsIGFuZCByZWdhcmRsZXNzCm9mIHNwaS1tYXgtZnJlcXVlbmN5ID0g
-NTAgTUh6IG9yIDU0IE1IeiBvciAxMDggTUh6LgoKTm90ZSB0aGF0IHNldHRpbmcgMTA4IE1IeiBp
-cyB1c2VsZXNzIGluIG91ciBjYXNlLCBiZWNhdXNlIHRoZXJlJ3MKYW4gdXBwZXIgbGltaXQgb2Yg
-NjIuNSBNSHogc2V0IGJ5IHRoZSBjb3JlIGNsb2NrIG9mIHRoZSBTb0MuCgpVc2luZyBhIHJlYWQg
-YmxvY2sgc2l6ZSBvZiAxTSwgdGhlIHJlYWQgY29tcGxldGVzIE9LIC0tIGFsd2F5czoKCi8gIyBk
-ZCBpZj0vZGV2L210ZDAgb2Y9L2Rldi9udWxsIGJzPTFNCjE2KzAgcmVjb3JkcyBpbgoxNiswIHJl
-Y29yZHMgb3V0CjE2Nzc3MjE2IGJ5dGVzICgxNi4wTUIpIGNvcGllZCwgMjcuMzA2MDQ4IHNlY29u
-ZHMsIDYwMC4wS0IvcwoKTW9yZW92ZXIsIHdoZW4gdGhlIHJlYWQgY29tcGxldGVzLCB0aGUgYWNo
-aWV2ZWQgYmFuZHdpZHRoCmlzIHRoZSBzYW1lIGZvciA0MCwgNTAsIDU0LCBvciAxMDggTUh6LgoK
-SWYgd2Ugc2V0IHNwaS1tYXgtZnJlcXVlbmN5IHRvIDI3IE1IeiAoMTA4IE1IeiAvIDQpLCBpdCBs
-b29rcyBsaWtlIHRoZSBzdGFsbGluZwpkaXNhcHBlYXIgYW5kIHRoZSByZWFkIGFsd2F5cyBjb21w
-bGV0ZXMgT0ssIGF0IGFsbW9zdCBoYWxmIHRoZSBzcGVlZDoKCi8gIyBkZCBpZj0vZGV2L210ZDBy
-byBvZj0vZGV2L251bGwKMzI3NjgrMCByZWNvcmRzIGluCjMyNzY4KzAgcmVjb3JkcyBvdXQKMTY3
-NzcyMTYgYnl0ZXMgKDE2LjBNQikgY29waWVkLCA0OS4wMDUxMjIgc2Vjb25kcywgMzM0LjNLQi9z
-CgpTbyBhY2NvcmRpbmcgdG8gdGhpcyBhbmFseXNpcywgd2Ugd2hvdWxkIHNldCAyNyBNSHogYXMg
-dGhlIG1heApmcmVxdWVuY3ksIGJhc2VkIG9uIG5vdGhpbmcgYnV0IGluIHRoZXNlIHRlc3RzLgoK
-SSdtIG5vdCBzdXJlIHRoZSBzdGFsbGluZyBpcyBkdWUgdG8gdGhlIGNsb2NraW5nIG9yIGR1ZSB0
-bwpzb21lIGRyaXZlciBidWcgKEkgZG9uJ3QgbGlrZSB0aGUgdHJpY2tzIHB1bGxlZCBieSB0aGUg
-YnVzeSBsb29wCmluIG9yaW9uX3NwaV93YWl0X3RpbGxfcmVhZHkoKSBidXQgcHJvYmFibHkgdGhp
-cyBpcyBjb21wbGV0ZWx5IHVucmVsYXRlZCkuCgpBZGRpbmcgc29tZSBTUEkgcGVvcGxlIGluIENj
-LCBob3BpbmcgdGhleSBjYW4gc2hlZCBhIGxpZ2h0IG9uIHRoaXMuCgpXaGF0IGRvIHlvdSB0aGlu
-az8KCi0tIApFemVxdWllbCBHYXJjw61hLCBGcmVlIEVsZWN0cm9ucwpFbWJlZGRlZCBMaW51eCwg
-S2VybmVsIGFuZCBBbmRyb2lkIEVuZ2luZWVyaW5nCmh0dHA6Ly9mcmVlLWVsZWN0cm9ucy5jb20K
-Ci0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQpGcmVlIE5leHQtR2VuIEZpcmV3YWxsIEhhcmR3YXJlIE9m
-ZmVyCkJ1eSB5b3VyIFNvcGhvcyBuZXh0LWdlbiBmaXJld2FsbCBiZWZvcmUgdGhlIGVuZCBNYXJj
-aCAyMDEzIAphbmQgZ2V0IHRoZSBoYXJkd2FyZSBmb3IgZnJlZSEgTGVhcm4gbW9yZS4KaHR0cDov
-L3Auc2YubmV0L3NmdS9zb3Bob3MtZDJkLWZlYgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpzcGktZGV2ZWwtZ2VuZXJhbCBtYWlsaW5nIGxpc3QKc3BpLWRl
-dmVsLWdlbmVyYWxAbGlzdHMuc291cmNlZm9yZ2UubmV0Cmh0dHBzOi8vbGlzdHMuc291cmNlZm9y
-Z2UubmV0L2xpc3RzL2xpc3RpbmZvL3NwaS1kZXZlbC1nZW5lcmFsCg==
+
+--===============8702140748175168703==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4NNqsQ/a67jpuySk"
+Content-Disposition: inline
+
+
+--4NNqsQ/a67jpuySk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Jan 21, 2013 at 12:59:21PM -0800, Simon Glass wrote:
+> Since fdtgrep does everything that fdtdump does now, perhaps we should
+> replace it with a symlink.
+
+Nack.  The point of fdtdump is not simply to be a tool for dumping
+device trees - dtc -I dtb -O dts will do that already.  The point is
+to be a really simple, independent implementation of dumping the tree,
+which can be used for analyzing bugs in the more complex tools.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--4NNqsQ/a67jpuySk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlESAzYACgkQaILKxv3ab8ZM+ACgjCC2dHV6F9qXgZy5GXkOl3Of
+2VIAoIj/MyTeKfCi/xSM+P1KWH6YGuGw
+=VOB8
+-----END PGP SIGNATURE-----
+
+--4NNqsQ/a67jpuySk--
+
+--===============8702140748175168703==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============8702140748175168703==--
