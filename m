@@ -1,77 +1,51 @@
-From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Subject: Re: [PATCH 7/8] Remove fdtdump and use fdtgrep instead
-Date: Wed, 6 Feb 2013 18:16:06 +1100
-Message-ID: <20130206071606.GR821@truffula.fritz.box>
-References: <1358801962-21707-1-git-send-email-sjg@chromium.org>
- <1358801962-21707-8-git-send-email-sjg@chromium.org>
+From: "Patil, Rachna" <rachna@ti.com>
+Subject: RE: [PATCH v4 5/8] MFD: ti_am335x_tscadc: Add DT support
+Date: Wed, 6 Feb 2013 11:17:23 +0000
+Message-ID: <4CE347531D4CA947960AF71FF095B9323E9B44E9@DBDE01.ent.ti.com>
+References: <1358999112-31192-1-git-send-email-rachna@ti.com>
+ <1358999112-31192-6-git-send-email-rachna@ti.com>
+ <A9839AA2-ABCD-4642-9766-D56824AC27AD@dominion.thruhere.net>
+ <4CE347531D4CA947960AF71FF095B9323E9B1EE9@DBDE01.ent.ti.com>
+ <79CD15C6BA57404B839C016229A409A83EBEFAE8@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8702140748175168703=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1358801962-21707-8-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Koen Kooi <koen@dominion.thruhere.net>
+Cc: Russell King <linux@arm.linux.org.uk>, Samuel Ortiz <sameo@linux.intel.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Dmitry Torokhov <dtor@mail.ru>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, "Hebbar, Gururaja" <gururaja.hebbar@ti.com>, Jonathan Cameron <jic23@cam.ac.uk>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Koen,
 
---===============8702140748175168703==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4NNqsQ/a67jpuySk"
-Content-Disposition: inline
+> <SNIP>
+> > > > Since AM335x is DT only, why is there a platform data codepath and why is it the first branch it tries? And I guess the next question is related to the first: why doesn't it work when used with DT? When I copy over the nodes from the evm.dts to my board I get "tsc tsc: Missing platform data" in dmesg.
+> > > 
+> > > This IP came up 1st on AM335x, but it is not platform dependent. The driver can be used on other platforms where-in DT is not supported.
+> > > According to the maintainers platform data takes precedence over DT. Hence the order.
+> > > 
+> > 
+> > Rachana,
+> > 
+> > I see no point adding support for platform_data when you know that none of older platforms are going to use this driver and all future platforms _must_ follow device-tree model.
+> > 
+> > So I agree that you should remove board file dependency from the driver.
+> 
+> Ok. I will remove support for platform data in the next version of patches.
+> 
+> > 
+> > 
+> > > I do not see "Missing platform data" error msg in the latest driver. I am not able to trace from where this got populated.
+> > > 
+> > 
+> > Can you share the branch which you have tested?
+> 
+> https://github.com/patilrachna/linux/tree/v3.8_rc3_MFD_TSCADC_DT-v2
 
+Did you get a chance to test this branch?
+And can you also share your branch, on which you observed the issue.
 
---4NNqsQ/a67jpuySk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Regards,
+Rachna
 
-On Mon, Jan 21, 2013 at 12:59:21PM -0800, Simon Glass wrote:
-> Since fdtgrep does everything that fdtdump does now, perhaps we should
-> replace it with a symlink.
-
-Nack.  The point of fdtdump is not simply to be a tool for dumping
-device trees - dtc -I dtb -O dts will do that already.  The point is
-to be a really simple, independent implementation of dumping the tree,
-which can be used for analyzing bugs in the more complex tools.
-
---=20
-David Gibson			| I'll have my music baroque, and my code
-david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
-				| _way_ _around_!
-http://www.ozlabs.org/~dgibson
-
---4NNqsQ/a67jpuySk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iEYEARECAAYFAlESAzYACgkQaILKxv3ab8ZM+ACgjCC2dHV6F9qXgZy5GXkOl3Of
-2VIAoIj/MyTeKfCi/xSM+P1KWH6YGuGw
-=VOB8
------END PGP SIGNATURE-----
-
---4NNqsQ/a67jpuySk--
-
---===============8702140748175168703==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8702140748175168703==--
