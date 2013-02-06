@@ -1,103 +1,40 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: RE: [PATCH v2 2/2] drm/exynos: Add device tree based discovery support
- for G2D
-Date: Wed, 06 Feb 2013 20:47:52 +0900
-Message-ID: <02f801ce045f$cbb9f8d0$632dea70$%dae@samsung.com>
-References: <1360128584-23167-1-git-send-email-sachin.kamat@linaro.org>
- <1360128584-23167-2-git-send-email-sachin.kamat@linaro.org>
- <02a301ce043c$1b12d150$513873f0$%dae@samsung.com>
- <CAK9yfHyZrwdJV-Ct8Fby0uX1htHpAmJvCnX3VRYJSsey=L5HFA@mail.gmail.com>
- <02af01ce0447$37c26940$a7473bc0$%dae@samsung.com>
- <51123D34.5020404@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <51123D34.5020404@samsung.com>
-Content-language: ko
-Sender: linux-media-owner@vger.kernel.org
-To: 'Sylwester Nawrocki' <s.nawrocki@samsung.com>
-Cc: 'Sachin Kamat' <sachin.kamat@linaro.org>, linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree-discuss@lists.ozlabs.org, k.debski@samsung.com, kgene.kim@samsung.com, patches@linaro.org, 'Ajay Kumar' <ajaykumar.rs@samsung.com>, kyungmin.park@samsung.com, sw0312.kim@samsung.com, jy0922.shim@samsung.com, 'Rahul Sharma' <rahul.sharma@samsung.com>
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 1/7] ARM: dts: Add G2D node to exynos4210.dtsi
+Date: Wed,  6 Feb 2013 17:21:11 +0530
+Message-ID: <1360151477-26460-2-git-send-email-sachin.kamat@linaro.org>
+References: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, s.nawrocki@samsung.com, inki.dae@samsung.com, sachin.kamat@linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+Added G2D DT node to Exynos4210.
 
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+---
+ arch/arm/boot/dts/exynos4210.dtsi |    8 ++++++++
+ 1 files changed, 8 insertions(+), 0 deletions(-)
 
-> -----Original Message-----
-> From: linux-media-owner@vger.kernel.org [mailto:linux-media-
-> owner@vger.kernel.org] On Behalf Of Sylwester Nawrocki
-> Sent: Wednesday, February 06, 2013 8:24 PM
-> To: Inki Dae
-> Cc: 'Sachin Kamat'; linux-media@vger.kernel.org; dri-
-> devel@lists.freedesktop.org; devicetree-discuss@lists.ozlabs.org;
-> k.debski@samsung.com; kgene.kim@samsung.com; patches@linaro.org; 'Ajay
-> Kumar'; kyungmin.park@samsung.com; sw0312.kim@samsung.com;
-> jy0922.shim@samsung.com
-> Subject: Re: [PATCH v2 2/2] drm/exynos: Add device tree based discovery
-> support for G2D
-> 
-> On 02/06/2013 09:51 AM, Inki Dae wrote:
-> [...]
-> > I think that it's better to go to gpu than media and we can divide
-> Exynos
-> > IPs into the bellow categories,
-> >
-> > Media : mfc
-> > GPU : g2d, g3d, fimc, gsc
-> 
-> Heh, nice try! :) GPU and FIMC ? FIMC is a camera subsystem (hence 'C'
-> in the acronym), so what it has really to do with GPU ? All right, this IP
-> has really two functions: camera capture and video post-processing
-> (colorspace conversion, scaling), but the main feature is camera capture
-> (fimc-lite is a camera capture interface IP only).
-> 
-> Also, Exynos5 GScaler is used as a DMA engine for camera capture data
-> pipelines, so it will be used by a camera capture driver as well. It
-> really belongs to "Media" and "GPU", as this is a multifunctional
-> device (similarly to FIMC).
-> 
-> So I propose following classification, which seems less inaccurate:
-> 
-> GPU:   g2d, g3d
-> Media: mfc, fimc, fimc-lite, fimc-is, mipi-csis, gsc
-> Video: fimd, hdmi, eDP, mipi-dsim
-> 
-
-Ok, it seems that your propose is better. :)
-
-To Sachin,
-Please add g2d document to .../bindings/gpu
-
-To Rahul,
-Could you please move .../drm/exynos/* to .../bindings/video? Probably you
-need to rename the files there to exynos*.txt
-
-If there are no other opinions, let's start  :)
-
-Thanks,
-Inki Dae
-
-> I have already a DT bindings description prepared for fimc [1].
-> (probably it needs to be rephrased a bit not to refer to the linux
-> device model). I put it in Documentation/devicetree/bindings/media/soc,
-> but likely there is no need for the 'soc' subdirectory...
-> 
-> > Video : fimd, hdmi, eDP, MIPI-DSI
-> >
-> > And I think that the device-tree describes hardware so possibly, all
-> > documents in .../bindings/drm/exynos/* should be moved to proper place
-> also.
-> > Please give  me any opinions.
-> 
-> Yes, I agree. If possible, it would be nice to have some Linux API
-> agnostic locations.
-> 
-> [1] goo.gl/eTGOl
-> 
-> --
-> 
-> Thanks,
-> Sylwester
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-media" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/boot/dts/exynos4210.dtsi b/arch/arm/boot/dts/exynos4210.dtsi
+index 79ba247..3410d5f 100644
+--- a/arch/arm/boot/dts/exynos4210.dtsi
++++ b/arch/arm/boot/dts/exynos4210.dtsi
+@@ -47,6 +47,14 @@
+ 			     <0 12 0>, <0 13 0>, <0 14 0>, <0 15 0>;
+ 	};
+ 
++	g2d@12800000 {
++		compatible = "samsung,s5pv210-g2d";
++		reg = <0x12800000 0x1000>;
++		interrupts = <0 89 0>;
++		samsung,power-domain = <&pd_lcd0>;
++		status = "disabled";
++	};
++
+ 	pmu {
+ 		compatible = "arm,cortex-a9-pmu";
+ 		interrupt-parent = <&combiner>;
+-- 
+1.7.4.1
