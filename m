@@ -1,7 +1,7 @@
 From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 3/7] ARM: dts: Add G2D node to exynos4210-origen
-Date: Wed,  6 Feb 2013 17:21:13 +0530
-Message-ID: <1360151477-26460-4-git-send-email-sachin.kamat@linaro.org>
+Subject: [PATCH 5/7] ARM: dts: Add G2D node to SMDK4412
+Date: Wed,  6 Feb 2013 17:21:15 +0530
+Message-ID: <1360151477-26460-6-git-send-email-sachin.kamat@linaro.org>
 References: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 In-Reply-To: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org>
@@ -10,27 +10,30 @@ To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 Cc: kgene.kim@samsung.com, s.nawrocki@samsung.com, inki.dae@samsung.com, sachin.kamat@linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Added G2D DT node to Origen4210 board.
+Added G2D DT node to SMDK4412 board.
 
 Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 ---
- arch/arm/boot/dts/exynos4210-origen.dts |    4 ++++
+This patch is added on top of below patch:
+http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg15148.html
+---
+ arch/arm/boot/dts/exynos4412-smdk4412.dts |    4 ++++
  1 files changed, 4 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
-index 052606b..e081d89 100644
---- a/arch/arm/boot/dts/exynos4210-origen.dts
-+++ b/arch/arm/boot/dts/exynos4210-origen.dts
-@@ -57,6 +57,10 @@
- 		status = "okay";
+diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts b/arch/arm/boot/dts/exynos4412-smdk4412.dts
+index 6ae4276..bba53a8 100644
+--- a/arch/arm/boot/dts/exynos4412-smdk4412.dts
++++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
+@@ -27,6 +27,10 @@
+ 		bootargs ="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc";
  	};
  
-+	g2d@12800000 {
++	g2d@10800000 {
 +		status = "okay";
 +	};
 +
- 	codec@13400000 {
- 		samsung,mfc-r = <0x43000000 0x800000>;
- 		samsung,mfc-l = <0x51000000 0x800000>;
+ 	sdhci@12530000 {
+ 		bus-width = <4>;
+ 		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4 &sd2_cd>;
 -- 
 1.7.4.1
