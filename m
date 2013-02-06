@@ -1,37 +1,31 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH RFC 1/1] gpio: mcp23s08: convert driver to DT
-Date: Wed, 6 Feb 2013 10:37:41 +0100
-Message-ID: <CACRpkdawOE4WfUcCGpVSR9n5ZR9j1gFnMQ-EAOWOixcpM7uDUg@mail.gmail.com>
-References: <1359647903-15801-1-git-send-email-larsi@wh2.tu-dresden.de>
-	<CACRpkda_HjzWNMD1H_a_fsWtbRWuTDsutS8kndb9jY31qf7Yyg@mail.gmail.com>
-	<20130205142909.4F5B83E1265@localhost>
-	<201302061031.04264.poeschel@lemonage.de>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: how to specify an OMAP clock in device tree?
+Date: Wed, 6 Feb 2013 15:51:52 +0530
+Message-ID: <51122EC0.3040804@ti.com>
+References: <1359993540-20780-1-git-send-email-rogerq@ti.com> <1359993540-20780-12-git-send-email-rogerq@ti.com> <5110D229.1000808@ti.com> <5110E9C4.9000301@ti.com> <51110D4B.50904@ti.com> <51111371.6050502@ti.com> <511114C1.4050809@ti.com> <5111157D.7040803@ti.com> <51111739.2050805@ti.com> <511118FE.7020405@ti.com> <51111CC4.1060004@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201302061031.04264.poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51111CC4.1060004@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, b-cousson@ti.com, balbi@ti.com, stern@rowland.harvard.edu, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 6, 2013 at 10:31 AM, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org> wrote:
+On Tuesday 05 February 2013 08:22 PM, Roger Quadros wrote:
+> Doesn't look very elegant to me, but I wouldn't mind if there is no better option.
+> Even then, we can't rely on the device name as its index can change based on where it is
 
-> The thing that confused me was, that the platform_data for the chip has a
-> mandatory "base" member, that sets the linux global gpio number at which the
-> chip should appear.
+Well, thats what I said in the first mail, that *if* you are able to
+fix the device name, *then* we could use clkdev the way its used in
+non-DT case. But then you came back saying 'Fixing the device name
+doesn't really solve the problem.' :)
 
-Yes this is common. I think you should look at other drivers
-under drivers/gpio using device tree, and how they work around
-this.
+> located in the dts file. e.g. in the beginning it may be named phy.8, and if a device
+> node is added before it, it will get changed to phy.9
 
-As stated, as a last resort you can use AUXDATA to anyway assign
-a piece of platform data per instance.
-
-In the Nomadik driver, we use the block instance ID and multiply
-by a factor of the numbers of GPIOs on each instance.
-And luckily the base is zero. Not elegant maybe, but the
-global GPIO numberspace is not elegant by nature.
-
-Yours,
-Linus Walleij
+If you provide a phandle to the PHY node in the board node, for which
+you need to add the clk alias, you can always extract the device (using
+of_find_device_by_node() ) and hence its name, so it doesn't matter if
+its phy.8 or phy.9.
