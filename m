@@ -1,50 +1,53 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [PATCH 0/2] ARM: dts: omap3-overo: Add pwm-leds and audio support
-Date: Wed, 6 Feb 2013 14:30:36 +0100
-Message-ID: <51125AFC.10704@ti.com>
-References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch> <5101273A.9090800@ti.com> <510F7BEB.1020408@epfl.ch>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: Heads up on a device tree change
+Date: Wed, 6 Feb 2013 13:32:06 +0000
+Message-ID: <51125B56.9050407@imgtec.com>
+References: <CACxGe6sCBCGfLDAGVRgP3cnmE+oyXBDdPeVXVCqrsvCh13yPiw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <510F7BEB.1020408@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: florian.vaussard@epfl.ch
-Cc: "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6sCBCGfLDAGVRgP3cnmE+oyXBDdPeVXVCqrsvCh13yPiw@mail.gmail.com>
+Sender: linux-next-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-next <linux-next@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Salut Florian,
-
-On 02/04/2013 10:14 AM, Florian Vaussard wrote:
-> Hello Benoit,
+On 06/02/13 13:11, Grant Likely wrote:
+> Hi Stephen,
 > 
-> On 01/24/2013 01:21 PM, Benoit Cousson wrote:
->> + Peter who did the original PWM
->>
->> Hi Florian,
->>
->> On 01/23/2013 06:56 PM, Florian Vaussard wrote:
->>> Hello Benoit,
->>>
->>> This patchset adds some new DT supports to the Overo products. The
->>> first patch converts the PMIC LEDB output to use the pwm-leds,
->>> newly merged in your branch for_3.9/dts. The second patch adds the
->>> audio support.
->>
->> Excellent, that looks very good to me, but I'd like to get the
->> feedback from Peter before merging it.
->>
+> I've just pushed out a change which cleans up platform device
+> registration to use the same path whether or not the device tree is
+> used. It should be safe, but there is a risk of breakage on powerpc
+> platforms.
 > 
-> So a patch is being merged to handle triggers in the case of pwm leds [1].
-> When done, we will be able to add back the default trigger. Do you want
-> to wait on it to merge this series?
+> The patch has two effects of note:
+> - DT generated platform devices move from /sys/devices to under
+> /sys/devices/platform. Userspace *should* be okay with this, but if
+> there are any problems then I can post a workaround patch that keeps
+> DT generiated platform_devices in the current location.
+> - Resources on platform_devices get registered so they appear in
+> /proc/iomem and /proc/ioports and so that device drivers get the added
+> protection of request_region. This will cause breakage on device trees
+> nodes with partially overlapping memory regions. (ie. 0x100..0x1ff and
+> 0x180..0x27f). I also have a workaround for this, but I doubt that it
+> will be necessary.
 
-What kind of dependency do we have between these two series? I mean what
-will happen if the DTS is merged before the pwm subsystem?
+Hi Grant,
 
-If that does not generate any regression / crash, then it is OK, if not,
-we should take care of the order.
+If I understand you correctly, the non-overlapping memory regions thing
+could be a problem for me. We have a Meta based SoC that has various SoC
+registers grouped together for doing GPIOs and Pin control things. I'm
+still in the process of converting it to device tree, but the way I've
+been handling it is to provide overlapping registers to both the gpio
+and pinctl DT nodes. Each GPIO bank's registers are also interleaved
+with the others, so I've been providing overlapping register ranges
+(offset by 4 for each bank) to the DT node for each gpio bank too, so
+each bank can function independently and the driver doesn't have to
+worry about multiple banks. Does that sound like a reasonable use case?
 
-Thanks,
-Benoit
+I guess I could cheat with the length, or specify each register in it's
+own memory resource, but it seems like overkill.
 
+Cheers
+James
