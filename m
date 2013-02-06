@@ -1,7 +1,7 @@
 From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 5/7] ARM: dts: Add G2D node to SMDK4412
-Date: Wed,  6 Feb 2013 17:21:15 +0530
-Message-ID: <1360151477-26460-6-git-send-email-sachin.kamat@linaro.org>
+Subject: [PATCH 4/7] ARM: dts: Add G2D node to exynos4x12.dtsi
+Date: Wed,  6 Feb 2013 17:21:14 +0530
+Message-ID: <1360151477-26460-5-git-send-email-sachin.kamat@linaro.org>
 References: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 In-Reply-To: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org>
@@ -10,30 +10,30 @@ To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 Cc: kgene.kim@samsung.com, s.nawrocki@samsung.com, inki.dae@samsung.com, sachin.kamat@linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Added G2D DT node to SMDK4412 board.
+Added G2D DT node to exynos4x12.dtsi file.
 
 Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 ---
-This patch is added on top of below patch:
-http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg15148.html
----
- arch/arm/boot/dts/exynos4412-smdk4412.dts |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/exynos4x12.dtsi |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts b/arch/arm/boot/dts/exynos4412-smdk4412.dts
-index 6ae4276..bba53a8 100644
---- a/arch/arm/boot/dts/exynos4412-smdk4412.dts
-+++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
-@@ -27,6 +27,10 @@
- 		bootargs ="root=/dev/ram0 rw ramdisk=8192 initrd=0x41000000,8M console=ttySAC1,115200 init=/linuxrc";
+diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+index 022a839..f9247b9 100644
+--- a/arch/arm/boot/dts/exynos4x12.dtsi
++++ b/arch/arm/boot/dts/exynos4x12.dtsi
+@@ -36,6 +36,13 @@
+ 			     <0 16 0>, <0 17 0>, <0 18 0>, <0 19 0>;
  	};
  
 +	g2d@10800000 {
-+		status = "okay";
++		compatible = "samsung,exynos4212-g2d";
++		reg = <0x10800000 0x1000>;
++		interrupts = <0 89 0>;
++		status = "disabled";
 +	};
 +
- 	sdhci@12530000 {
- 		bus-width = <4>;
- 		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4 &sd2_cd>;
+ 	pinctrl_0: pinctrl@11400000 {
+ 		compatible = "samsung,exynos4x12-pinctrl";
+ 		reg = <0x11400000 0x1000>;
 -- 
 1.7.4.1
