@@ -1,99 +1,454 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] arm: mvebu: Add SPI flash on Armada XP-GP board
-Date: Wed, 6 Feb 2013 12:32:07 -0300
-Message-ID: <20130206153206.GA4618@localhost>
-References: <1360063473-26176-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <5111331F.7090900@free-electrons.com>
- <511168BE.1000803@free-electrons.com>
- <20130206105431.GA21764@localhost>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH next] OF: convert devtree lock from rw_lock to raw spinlock
+Date: Wed, 06 Feb 2013 10:04:14 -0600
+Message-ID: <51127EFE.4030209@gmail.com>
+References: <1359993921-18145-1-git-send-email-paul.gortmaker@windriver.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130206105431.GA21764@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <1359993921-18145-1-git-send-email-paul.gortmaker@windriver.com>
+Sender: sparclinux-owner@vger.kernel.org
+To: Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, linux-rt-users@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-KEFkZGluZyBtdGQgaW4gQ2MpCgpPbiBXZWQsIEZlYiAwNiwgMjAxMyBhdCAwNzo1NDozMUFNIC0w
-MzAwLCBFemVxdWllbCBHYXJjaWEgd3JvdGU6Cj4gSGkgR3JlZ29yeSwKPiAKPiBPbiBUdWUsIEZl
-YiAwNSwgMjAxMyBhdCAwOToxNzowMlBNICswMTAwLCBHcmVnb3J5IENMRU1FTlQgd3JvdGU6Cj4g
-PiBPbiAwMi8wNS8yMDEzIDA1OjI4IFBNLCBHcmVnb3J5IENMRU1FTlQgd3JvdGU6Cj4gPiA+IEhp
-IEV6ZXF1aWVsLAo+ID4gPiAKPiA+ID4gT24gMDIvMDUvMjAxMyAxMjoyNCBQTSwgRXplcXVpZWwg
-R2FyY2lhIHdyb3RlOgo+ID4gPj4gVGhpcyBwYXRjaCBhZGRzIGFuIFNQSSBtYXN0ZXIgZGV2aWNl
-IG5vZGUgZm9yIEFybWFkYSBYUC1HUCBib2FyZC4KPiA+ID4+IFRoaXMgbWFzdGVyIG5vZGUgaXMg
-YW4gU1BJIGZsYXNoIGNvbnRyb2xsZXIgJ24yNXExMjhhMTMnLgo+ID4gPj4KPiA+ID4+IFNpbmNl
-IHRoZXJlIGlzIG5vICdwYXJ0aXRpb25zJyBub2RlIGRlY2xhcmVkLCBvbmUgZnVsbCBzaXplZAo+
-ID4gPj4gcGFydGl0aW9uIG5hbWVkIGFzIHRoZSBkZXZpY2Ugd2lsbCBiZSBjcmVhdGVkLgo+ID4g
-Pj4KPiA+ID4+IENjOiBHcmVnb3J5IENsZW1lbnQgPGdyZWdvcnkuY2xlbWVudEBmcmVlLWVsZWN0
-cm9ucy5jb20+Cj4gPiA+PiBDYzogVGhvbWFzIFBldGF6em9uaSA8dGhvbWFzLnBldGF6em9uaUBm
-cmVlLWVsZWN0cm9ucy5jb20+Cj4gPiA+PiBDYzogTGlvciBBbXNhbGVtIDxhbGlvckBtYXJ2ZWxs
-LmNvbT4KPiA+ID4+IFNpZ25lZC1vZmYtYnk6IEV6ZXF1aWVsIEdhcmNpYSA8ZXplcXVpZWwuZ2Fy
-Y2lhQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+ID4+IC0tLQo+ID4gPj4gVGhpcyBwYXRjaCBkZXBl
-bmRzIG9uOgo+ID4gPj4KPiA+ID4+ICAxLiBHcmVnb3J5J3MgcGF0Y2ggZm9yIEFybWFkYSBYUCBH
-UCBib2FyZDoKPiA+ID4+ICAgICAgIGFybTogbXZlYnU6IHN1cHBvcnQgZm9yIHRoZSBuZXcgQXJt
-YWRhIFhQIGRldmVsb3BtZW50IGJvYXJkKERCLU1WNzg0TVAtR1ApCj4gPiA+Pgo+ID4gPj4gIDIu
-IE15IHByZXZpb3VzIHBhdGNoIGZvciBTUEkgb24gQXJtYWRhIDM3MC9YUDoKPiA+ID4+ICAgICAg
-IGFybTogbXZlYnU6IEFkZCBzdXBwb3J0IGZvciBTUEkgY29udHJvbGxlciBpbiBBcm1hZGEgMzcw
-L1hQCj4gPiA+Pgo+ID4gPj4gQW5kIGRvbid0IGZvcmdldCB0byBjb21waWxlIHRoZSBTUEkgZmxh
-c2ggZHJpdmVyLCBDT05GSUdfTVREX00yNVA4MD15Cj4gPiA+Pgo+ID4gPj4gIGFyY2gvYXJtL2Jv
-b3QvZHRzL2FybWFkYS14cC1ncC5kdHMgfCAgIDEyICsrKysrKysrKysrKwo+ID4gPj4gIDEgZmls
-ZXMgY2hhbmdlZCwgMTIgaW5zZXJ0aW9ucygrKSwgMCBkZWxldGlvbnMoLSkKPiA+ID4+Cj4gPiA+
-PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXJtYWRhLXhwLWdwLmR0cyBiL2FyY2gv
-YXJtL2Jvb3QvZHRzL2FybWFkYS14cC1ncC5kdHMKPiA+ID4+IGluZGV4IDNlZWE1MzEuLjFjOGFm
-ZTIgMTAwNjQ0Cj4gPiA+PiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hcm1hZGEteHAtZ3AuZHRz
-Cj4gPiA+PiArKysgYi9hcmNoL2FybS9ib290L2R0cy9hcm1hZGEteHAtZ3AuZHRzCj4gPiA+PiBA
-QCAtOTcsNSArOTcsMTcgQEAKPiA+ID4+ICAJCQlwaHkgPSA8JnBoeTM+Owo+ID4gPj4gIAkJCXBo
-eS1tb2RlID0gInJnbWlpLWlkIjsKPiA+ID4+ICAJCX07Cj4gPiA+PiArCj4gPiA+PiArCQlzcGkw
-OiBzcGlAZDAwMTA2MDAgewo+ID4gPj4gKwkJCXN0YXR1cyA9ICJva2F5IjsKPiA+ID4+ICsKPiA+
-ID4+ICsJCQlzcGktZmxhc2hAMCB7Cj4gPiA+PiArCQkJCSNhZGRyZXNzLWNlbGxzID0gPDE+Owo+
-ID4gPj4gKwkJCQkjc2l6ZS1jZWxscyA9IDwxPjsKPiA+ID4+ICsJCQkJY29tcGF0aWJsZSA9ICJu
-MjVxMTI4YTEzIjsKPiA+ID4+ICsJCQkJcmVnID0gPDA+OyAvKiBDaGlwIHNlbGVjdCAwICovCj4g
-PiA+PiArCQkJCXNwaS1tYXgtZnJlcXVlbmN5ID0gPDEwODAwMDAwMD47Cj4gPiAKPiA+IEkgaGFk
-IGEgcmVtYXJrIGFib3V0IGl0LCBhY2NvcmRpbmcgdG8gdGhlIGRhdGFzaGVldCwgMTA4TUh6IGlz
-IHRoZQo+ID4gbWF4aW11bSBmcmVxdWVuY3kgZm9yIHRoZSBhbGwgdGhlIGluc3RydWN0aW9ucyBi
-dXQgdGhlIFJFQUQKPiA+IGluc3RydWN0aW9uLiBGb3IgdGhlIFJFQUQgdGhlIG1heGltdW0gZnJl
-cXVlbmN5IGlzIDU0TUh6LiBTbyBJIHdvbmRlcgo+ID4gaWYgd2Ugc2hvdWxkbid0IHVzZSA1NDAw
-MDAwMCBoZXJlLgo+ID4gCj4gCj4gTW1tLi4uIG5pY2UgY2F0Y2guCj4gCj4gVGhlIG10ZCBkcml2
-ZXIgZm9yIHRoZSBzcGkgZmxhc2ggKG0yNXA4MCkgd2lsbCB1c2UgRkFTVF9SRUFEIG9wY29kZQo+
-IGlmIENPTkZJR19NMjVQWFhfVVNFX0ZBU1RfUkVBRCBpcyBzZWxlY3RlZCwgYW5kIHRoaXMgb3B0
-aW9uCj4gaXMgc2VsZWN0ZWQgYnkgZGVmYXVsdC4KPiBIb3dldmVyIHdlIGNhbm5vdCBjb3VudCBv
-biB0aGlzIG9wdGlvbiBiZWluZyBzZWxlY3RlZCwgb2YgY291cnNlLgo+IAo+IE9uIHRoZSBvdGhl
-ciBzaWRlLCBhZnRlciBzb21lIHRlc3Rpbmcgd2l0aCBzcGktbWF4LWZyZXF1ZW5jeSA9IDUwIE1I
-ego+IGFuZCBhbHNvIHdpdGggc3BpLW1heC1mcmVxdWVuY3kgPSAxMDggTUh6IEknbSBzZWVpbmcg
-dGhlIGZsYXNoIG9mdGVuCj4gKG5vdCBhbHdheXMpIHN0YWxscyB3aGVuIHRyeWluZyB0byByZWFk
-IHRoZSBmdWxsIGRldmljZSB0aHJvdWdoIGRkOgo+IAo+IC8gIyBkZCBpZj0vZGV2L210ZDBybyBv
-Zj0vZGV2L251bGwKPiAKCkZXSVcsIHVzaW5nIENPTkZJR19ERVRFQ1RfSFVOR19UQVNLIHdlIGNh
-biBzZWUgdGhlIGh1bmcgaGFwcGVucyBpbnNpZGUgc3BpX3N5bmMoKS4KSXQgc2VlbXMgdGhlIGNv
-bXBsZXRpb24gaGFuZGxlciBpcyBuZXZlciBjYWxsZWQsCnRob3VnaCBJIHN0aWxsIGRvbid0IHVu
-ZGVyc3RhbmQgdW5kZXIgd2hhdCBjaXJjdW1zdGFuY2VzIHRoYXQgY2FuIGhhcHBlbi4KCmRkICAg
-ICAgICAgICAgICBEIGMwMmQ3OWM4ICAgICAwICAgOTY0ICAgIDk2MSAweDAwMDAwMDAwCls8YzAy
-ZDc5Yzg+XSAoX19zY2hlZHVsZSsweDFjOC8weDUwNCkgZnJvbSBbPGMwMmQ2MWQwPl0gKHNjaGVk
-dWxlX3RpbWVvdXQrMHgxNTgvMHgyMDApCls8YzAyZDYxZDA+XSAoc2NoZWR1bGVfdGltZW91dCsw
-eDE1OC8weDIwMCkgZnJvbSBbPGMwMmQ3NTA0Pl0gKHdhaXRfZm9yX2NvbW1vbisweGUwLzB4MTk0
-KQpbPGMwMmQ3NTA0Pl0gKHdhaXRfZm9yX2NvbW1vbisweGUwLzB4MTk0KSBmcm9tIFs8YzAyMTVi
-NDQ+XSAoc3BpX3N5bmMrMHg3NC8weDkwKQpbPGMwMjE1YjQ0Pl0gKHNwaV9zeW5jKzB4NzQvMHg5
-MCkgZnJvbSBbPGMwMjE0YzgwPl0gKG0yNXA4MF9yZWFkKzB4MTAwLzB4MTdjKQpbPGMwMjE0Yzgw
-Pl0gKG0yNXA4MF9yZWFkKzB4MTAwLzB4MTdjKSBmcm9tIFs8YzAyMGVkYWM+XSAobXRkX3JlYWQr
-MHg4Yy8weGMwKQpbPGMwMjBlZGFjPl0gKG10ZF9yZWFkKzB4OGMvMHhjMCkgZnJvbSBbPGMwMjE0
-MDRjPl0gKG10ZGNoYXJfcmVhZCsweGUwLzB4MjI0KQpbPGMwMjE0MDRjPl0gKG10ZGNoYXJfcmVh
-ZCsweGUwLzB4MjI0KSBmcm9tIFs8YzAwYzc1N2M+XSAodmZzX3JlYWQrMHhhNC8weDE0OCkKWzxj
-MDBjNzU3Yz5dICh2ZnNfcmVhZCsweGE0LzB4MTQ4KSBmcm9tIFs8YzAwYzc2NjQ+XSAoc3lzX3Jl
-YWQrMHg0NC8weDc4KQpbPGMwMGM3NjY0Pl0gKHN5c19yZWFkKzB4NDQvMHg3OCkgZnJvbSBbPGMw
-MDBlZGUwPl0gKHJldF9mYXN0X3N5c2NhbGwrMHgwLzB4MzApCgotLSAKRXplcXVpZWwgR2FyY8Ot
-YSwgRnJlZSBFbGVjdHJvbnMKRW1iZWRkZWQgTGludXgsIEtlcm5lbCBhbmQgQW5kcm9pZCBFbmdp
-bmVlcmluZwpodHRwOi8vZnJlZS1lbGVjdHJvbnMuY29tCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRldmljZXRyZWUtZGlzY3VzcyBtYWlsaW5nIGxpc3QK
-ZGV2aWNldHJlZS1kaXNjdXNzQGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMu
-b3JnL2xpc3RpbmZvL2RldmljZXRyZWUtZGlzY3Vzcwo=
+On 02/04/2013 10:05 AM, Paul Gortmaker wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> With the locking cleanup in place (from "OF: Fixup resursive
+> locking code paths"), we can now do the conversion from the
+> rw_lock to a raw spinlock as required for preempt-rt.
+> 
+> The previous cleanup and the this conversion were originally
+> separate since they predated when mainline got raw spinlock (in
+> commit c2f21ce2e31286a "locking: Implement new raw_spinlock").
+> 
+> So, at that point in time, the cleanup was considered plausible
+> for mainline, but not this conversion.  In any case, we've kept
+> them separate as it makes for easier review and better bisection.
+> 
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> [PG: taken from preempt-rt, update subject & add a commit log]
+> Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+> ---
+> 
+> [ Patch against linux-next of Feb4, where the recursive
+>   locking cleanup currently is.  Boot tested on ppc 8548,
+>   compile tested for sparc and arm defconfigs ]
+> 
+
+Applied.
+
+Rob
+
+>  arch/sparc/kernel/prom_common.c |  4 +-
+>  drivers/of/base.c               | 96 +++++++++++++++++++++++------------------
+>  include/linux/of.h              |  2 +-
+>  3 files changed, 57 insertions(+), 45 deletions(-)
+> 
+> diff --git a/arch/sparc/kernel/prom_common.c b/arch/sparc/kernel/prom_common.c
+> index 1303021..9f20566 100644
+> --- a/arch/sparc/kernel/prom_common.c
+> +++ b/arch/sparc/kernel/prom_common.c
+> @@ -64,7 +64,7 @@ int of_set_property(struct device_node *dp, const char *name, void *val, int len
+>  	err = -ENODEV;
+>  
+>  	mutex_lock(&of_set_property_mutex);
+> -	write_lock(&devtree_lock);
+> +	raw_spin_lock(&devtree_lock);
+>  	prevp = &dp->properties;
+>  	while (*prevp) {
+>  		struct property *prop = *prevp;
+> @@ -91,7 +91,7 @@ int of_set_property(struct device_node *dp, const char *name, void *val, int len
+>  		}
+>  		prevp = &(*prevp)->next;
+>  	}
+> -	write_unlock(&devtree_lock);
+> +	raw_spin_unlock(&devtree_lock);
+>  	mutex_unlock(&of_set_property_mutex);
+>  
+>  	/* XXX Upate procfs if necessary... */
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 16ee7a0..4a2f58b 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -55,7 +55,7 @@ static DEFINE_MUTEX(of_aliases_mutex);
+>  /* use when traversing tree through the allnext, child, sibling,
+>   * or parent members of struct device_node.
+>   */
+> -DEFINE_RWLOCK(devtree_lock);
+> +DEFINE_RAW_SPINLOCK(devtree_lock);
+>  
+>  int of_n_addr_cells(struct device_node *np)
+>  {
+> @@ -188,10 +188,11 @@ struct property *of_find_property(const struct device_node *np,
+>  				  int *lenp)
+>  {
+>  	struct property *pp;
+> +	unsigned long flags;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	pp = __of_find_property(np, name, lenp);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  
+>  	return pp;
+>  }
+> @@ -209,13 +210,13 @@ struct device_node *of_find_all_nodes(struct device_node *prev)
+>  {
+>  	struct device_node *np;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock(&devtree_lock);
+>  	np = prev ? prev->allnext : of_allnodes;
+>  	for (; np != NULL; np = np->allnext)
+>  		if (of_node_get(np))
+>  			break;
+>  	of_node_put(prev);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock(&devtree_lock);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_all_nodes);
+> @@ -274,11 +275,12 @@ static int __of_device_is_compatible(const struct device_node *device,
+>  int of_device_is_compatible(const struct device_node *device,
+>  		const char *compat)
+>  {
+> +	unsigned long flags;
+>  	int res;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	res = __of_device_is_compatible(device, compat);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return res;
+>  }
+>  EXPORT_SYMBOL(of_device_is_compatible);
+> @@ -340,13 +342,14 @@ EXPORT_SYMBOL(of_device_is_available);
+>  struct device_node *of_get_parent(const struct device_node *node)
+>  {
+>  	struct device_node *np;
+> +	unsigned long flags;
+>  
+>  	if (!node)
+>  		return NULL;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	np = of_node_get(node->parent);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_get_parent);
+> @@ -365,14 +368,15 @@ EXPORT_SYMBOL(of_get_parent);
+>  struct device_node *of_get_next_parent(struct device_node *node)
+>  {
+>  	struct device_node *parent;
+> +	unsigned long flags;
+>  
+>  	if (!node)
+>  		return NULL;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	parent = of_node_get(node->parent);
+>  	of_node_put(node);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return parent;
+>  }
+>  
+> @@ -388,14 +392,15 @@ struct device_node *of_get_next_child(const struct device_node *node,
+>  	struct device_node *prev)
+>  {
+>  	struct device_node *next;
+> +	unsigned long flags;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	next = prev ? prev->sibling : node->child;
+>  	for (; next; next = next->sibling)
+>  		if (of_node_get(next))
+>  			break;
+>  	of_node_put(prev);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return next;
+>  }
+>  EXPORT_SYMBOL(of_get_next_child);
+> @@ -413,7 +418,7 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+>  {
+>  	struct device_node *next;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock(&devtree_lock);
+>  	next = prev ? prev->sibling : node->child;
+>  	for (; next; next = next->sibling) {
+>  		if (!of_device_is_available(next))
+> @@ -422,7 +427,7 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+>  			break;
+>  	}
+>  	of_node_put(prev);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock(&devtree_lock);
+>  	return next;
+>  }
+>  EXPORT_SYMBOL(of_get_next_available_child);
+> @@ -460,14 +465,15 @@ EXPORT_SYMBOL(of_get_child_by_name);
+>  struct device_node *of_find_node_by_path(const char *path)
+>  {
+>  	struct device_node *np = of_allnodes;
+> +	unsigned long flags;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	for (; np; np = np->allnext) {
+>  		if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
+>  		    && of_node_get(np))
+>  			break;
+>  	}
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_node_by_path);
+> @@ -487,15 +493,16 @@ struct device_node *of_find_node_by_name(struct device_node *from,
+>  	const char *name)
+>  {
+>  	struct device_node *np;
+> +	unsigned long flags;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	np = from ? from->allnext : of_allnodes;
+>  	for (; np; np = np->allnext)
+>  		if (np->name && (of_node_cmp(np->name, name) == 0)
+>  		    && of_node_get(np))
+>  			break;
+>  	of_node_put(from);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_node_by_name);
+> @@ -516,15 +523,16 @@ struct device_node *of_find_node_by_type(struct device_node *from,
+>  	const char *type)
+>  {
+>  	struct device_node *np;
+> +	unsigned long flags;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	np = from ? from->allnext : of_allnodes;
+>  	for (; np; np = np->allnext)
+>  		if (np->type && (of_node_cmp(np->type, type) == 0)
+>  		    && of_node_get(np))
+>  			break;
+>  	of_node_put(from);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_node_by_type);
+> @@ -547,8 +555,9 @@ struct device_node *of_find_compatible_node(struct device_node *from,
+>  	const char *type, const char *compatible)
+>  {
+>  	struct device_node *np;
+> +	unsigned long flags;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	np = from ? from->allnext : of_allnodes;
+>  	for (; np; np = np->allnext) {
+>  		if (type
+> @@ -559,7 +568,7 @@ struct device_node *of_find_compatible_node(struct device_node *from,
+>  			break;
+>  	}
+>  	of_node_put(from);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_compatible_node);
+> @@ -581,8 +590,9 @@ struct device_node *of_find_node_with_property(struct device_node *from,
+>  {
+>  	struct device_node *np;
+>  	struct property *pp;
+> +	unsigned long flags;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	np = from ? from->allnext : of_allnodes;
+>  	for (; np; np = np->allnext) {
+>  		for (pp = np->properties; pp; pp = pp->next) {
+> @@ -594,7 +604,7 @@ struct device_node *of_find_node_with_property(struct device_node *from,
+>  	}
+>  out:
+>  	of_node_put(from);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_node_with_property);
+> @@ -635,10 +645,11 @@ const struct of_device_id *of_match_node(const struct of_device_id *matches,
+>  					 const struct device_node *node)
+>  {
+>  	const struct of_device_id *match;
+> +	unsigned long flags;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	match = __of_match_node(matches, node);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return match;
+>  }
+>  EXPORT_SYMBOL(of_match_node);
+> @@ -662,11 +673,12 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
+>  {
+>  	struct device_node *np;
+>  	const struct of_device_id *m;
+> +	unsigned long flags;
+>  
+>  	if (match)
+>  		*match = NULL;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	np = from ? from->allnext : of_allnodes;
+>  	for (; np; np = np->allnext) {
+>  		m = __of_match_node(matches, np);
+> @@ -677,7 +689,7 @@ struct device_node *of_find_matching_node_and_match(struct device_node *from,
+>  		}
+>  	}
+>  	of_node_put(from);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_matching_node_and_match);
+> @@ -720,12 +732,12 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+>  {
+>  	struct device_node *np;
+>  
+> -	read_lock(&devtree_lock);
+> +	raw_spin_lock(&devtree_lock);
+>  	for (np = of_allnodes; np; np = np->allnext)
+>  		if (np->phandle == handle)
+>  			break;
+>  	of_node_get(np);
+> -	read_unlock(&devtree_lock);
+> +	raw_spin_unlock(&devtree_lock);
+>  	return np;
+>  }
+>  EXPORT_SYMBOL(of_find_node_by_phandle);
+> @@ -1197,18 +1209,18 @@ int of_add_property(struct device_node *np, struct property *prop)
+>  		return rc;
+>  
+>  	prop->next = NULL;
+> -	write_lock_irqsave(&devtree_lock, flags);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	next = &np->properties;
+>  	while (*next) {
+>  		if (strcmp(prop->name, (*next)->name) == 0) {
+>  			/* duplicate ! don't insert it */
+> -			write_unlock_irqrestore(&devtree_lock, flags);
+> +			raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  			return -1;
+>  		}
+>  		next = &(*next)->next;
+>  	}
+>  	*next = prop;
+> -	write_unlock_irqrestore(&devtree_lock, flags);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  
+>  #ifdef CONFIG_PROC_DEVICETREE
+>  	/* try to add to proc as well if it was initialized */
+> @@ -1238,7 +1250,7 @@ int of_remove_property(struct device_node *np, struct property *prop)
+>  	if (rc)
+>  		return rc;
+>  
+> -	write_lock_irqsave(&devtree_lock, flags);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	next = &np->properties;
+>  	while (*next) {
+>  		if (*next == prop) {
+> @@ -1251,7 +1263,7 @@ int of_remove_property(struct device_node *np, struct property *prop)
+>  		}
+>  		next = &(*next)->next;
+>  	}
+> -	write_unlock_irqrestore(&devtree_lock, flags);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  
+>  	if (!found)
+>  		return -ENODEV;
+> @@ -1291,7 +1303,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
+>  	if (!oldprop)
+>  		return of_add_property(np, newprop);
+>  
+> -	write_lock_irqsave(&devtree_lock, flags);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	next = &np->properties;
+>  	while (*next) {
+>  		if (*next == oldprop) {
+> @@ -1305,7 +1317,7 @@ int of_update_property(struct device_node *np, struct property *newprop)
+>  		}
+>  		next = &(*next)->next;
+>  	}
+> -	write_unlock_irqrestore(&devtree_lock, flags);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  
+>  	if (!found)
+>  		return -ENODEV;
+> @@ -1378,12 +1390,12 @@ int of_attach_node(struct device_node *np)
+>  	if (rc)
+>  		return rc;
+>  
+> -	write_lock_irqsave(&devtree_lock, flags);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	np->sibling = np->parent->child;
+>  	np->allnext = of_allnodes;
+>  	np->parent->child = np;
+>  	of_allnodes = np;
+> -	write_unlock_irqrestore(&devtree_lock, flags);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  
+>  	of_add_proc_dt_entry(np);
+>  	return 0;
+> @@ -1426,7 +1438,7 @@ int of_detach_node(struct device_node *np)
+>  	if (rc)
+>  		return rc;
+>  
+> -	write_lock_irqsave(&devtree_lock, flags);
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  
+>  	if (of_node_check_flag(np, OF_DETACHED)) {
+>  		/* someone already detached it */
+> @@ -1463,7 +1475,7 @@ int of_detach_node(struct device_node *np)
+>  	}
+>  
+>  	of_node_set_flag(np, OF_DETACHED);
+> -	write_unlock_irqrestore(&devtree_lock, flags);
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  
+>  	of_remove_proc_dt_entry(np);
+>  	return rc;
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 5ebcc5c..bb35c42 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -92,7 +92,7 @@ static inline void of_node_put(struct device_node *node) { }
+>  extern struct device_node *of_allnodes;
+>  extern struct device_node *of_chosen;
+>  extern struct device_node *of_aliases;
+> -extern rwlock_t devtree_lock;
+> +extern raw_spinlock_t devtree_lock;
+>  
+>  static inline bool of_have_populated_dt(void)
+>  {
+> 
+
