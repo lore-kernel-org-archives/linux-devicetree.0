@@ -1,200 +1,67 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH RESEND] media: rc: gpio-ir-recv: add support for device
- tree parsing
-Date: Wed, 06 Feb 2013 14:48:52 +0100
-Message-ID: <51125F44.3050603@samsung.com>
-References: <1359400023-25804-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <1360137832-13086-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: =?ISO-8859-1?Q?Philippe_R=E9tornaz?= <philippe.retornaz@epfl.ch>
+Subject: Re: [PATCH 0/2] ARM: dts: omap3-overo: Add pwm-leds and audio support
+Date: Wed, 06 Feb 2013 15:26:43 +0100
+Message-ID: <51126823.6070605@epfl.ch>
+References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch>
+ <5101273A.9090800@ti.com> <510F7BEB.1020408@epfl.ch> <51125AFC.10704@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1360137832-13086-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mauro Carvalho Chehab <mchehab@redhat.com>, Benoit Thebaudeau <benoit.thebaudeau@advansee.com>, David Hardeman <david@hardeman.nu>, Trilok Soni <tsoni@codeaurora.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <51125AFC.10704@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, florian.vaussard@epfl.ch, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi all !
 
-On 02/06/2013 09:03 AM, Sebastian Hesselbarth wrote:
-> This patch adds device tree parsing for gpio_ir_recv platform_data and
-> the mandatory binding documentation. It basically follows what we already
-> have for e.g. gpio_keys. All required device tree properties are OS
-> independent but optional properties allow linux specific support for rc
-> protocols and maps.
-> 
-> There was a similar patch sent by Matus Ujhelyi but that discussion
-> died after the first reviews.
-> 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-> ---
-...
-> diff --git a/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
-> new file mode 100644
-> index 0000000..937760c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
-> @@ -0,0 +1,20 @@
-> +Device-Tree bindings for GPIO IR receiver
-> +
-> +Required properties:
-> +	- compatible = "gpio-ir-receiver";
-> +	- gpios: OF device-tree gpio specification.
-> +
-> +Optional properties:
-> +	- linux,allowed-rc-protocols: Linux specific u64 bitmask of allowed
-> +	    rc protocols.
+Le 06/02/2013 14:30, Benoit Cousson a =E9crit :
+> Salut Florian,
+>
+> On 02/04/2013 10:14 AM, Florian Vaussard wrote:
+>> Hello Benoit,
+>>
+>> On 01/24/2013 01:21 PM, Benoit Cousson wrote:
+>>> + Peter who did the original PWM
+>>>
+>>> Hi Florian,
+>>>
+>>> On 01/23/2013 06:56 PM, Florian Vaussard wrote:
+>>>> Hello Benoit,
+>>>>
+>>>> This patchset adds some new DT supports to the Overo products.
+>>>> The first patch converts the PMIC LEDB output to use the
+>>>> pwm-leds, newly merged in your branch for_3.9/dts. The second
+>>>> patch adds the audio support.
+>>>
+>>> Excellent, that looks very good to me, but I'd like to get the
+>>> feedback from Peter before merging it.
+>>>
+>>
+>> So a patch is being merged to handle triggers in the case of pwm
+>> leds [1]. When done, we will be able to add back the default
+>> trigger. Do you want to wait on it to merge this series?
+>
+> What kind of dependency do we have between these two series? I mean
+> what will happen if the DTS is merged before the pwm subsystem?
+>
+> If that does not generate any regression / crash, then it is OK, if
+> not, we should take care of the order.
 
-You likely need to specify in these bindings documentation which bit 
-corresponds to which RC protocol.
+Florian is on holiday the next two weeks.
 
-I'm not very familiar with the RC internals, but why it has to be
-specified statically in the device tree, when decoding seems to be
-mostly software defined ? I might be missing something though..
+AFAIK if the PWM/leds subsystem patches are not merged before this one
+then the kernel will panic if a trigger is used to change the led status.
 
-Couldn't this be configured at run time, with all protocols allowed
-as the default ?
+Regards,
 
-> +	- linux,rc-map-name: Linux specific remote control map name.
-> +
-> +Example node:
-> +
-> +	ir: ir-receiver {
-> +		compatible = "gpio-ir-receiver";
-> +		gpios = <&gpio0 19 1>;
-> +		/* allow rc protocols 1-4 */
-> +		linux,allowed-rc-protocols = <0x00000000 0x0000001e>;
-> +		linux,rc-map-name = "rc-rc6-mce";
-> +	};
-> diff --git a/drivers/media/rc/gpio-ir-recv.c b/drivers/media/rc/gpio-ir-recv.c
-> index 4f71a7d..25e09fa 100644
-> --- a/drivers/media/rc/gpio-ir-recv.c
-> +++ b/drivers/media/rc/gpio-ir-recv.c
-> @@ -16,6 +16,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/gpio.h>
->  #include <linux/slab.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/platform_device.h>
->  #include <linux/irq.h>
->  #include <media/rc-core.h>
-> @@ -30,6 +31,63 @@ struct gpio_rc_dev {
->  	bool active_low;
->  };
->  
-> +#ifdef CONFIG_OF
-> +/*
-> + * Translate OpenFirmware node properties into platform_data
-> + */
-> +static struct gpio_ir_recv_platform_data *
-> +gpio_ir_recv_get_devtree_pdata(struct device *dev)
-> +{
-> +	struct device_node *np = dev->of_node;
-> +	struct gpio_ir_recv_platform_data *pdata;
-> +	enum of_gpio_flags flags;
-> +	int gpio;
-> +
-> +	if (!np)
-> +		return ERR_PTR(-ENODEV);
-> +
-> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	if (!of_find_property(np, "gpios", NULL)) {
-
-Why do you need this ? Isn't of_get_gpio_flags() sufficient ?
-
-> +		dev_err(dev, "Found gpio-ir-receiver without gpios\n");
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	gpio = of_get_gpio_flags(np, 0, &flags);
-> +	if (gpio < 0) {
-> +		if (gpio != -EPROBE_DEFER)
-> +			dev_err(dev, "Failed to get gpio flags, error: %d\n",
-> +				gpio);
-> +		return ERR_PTR(gpio);
-> +	}
-> +
-> +	pdata->gpio_nr = gpio;
-> +	pdata->active_low = (flags & OF_GPIO_ACTIVE_LOW) ? true : false;
-> +	pdata->map_name = of_get_property(np, "linux,rc-map-name", NULL);
-> +	of_property_read_u64(np, "linux,allowed-rc-protocols",
-> +			     &pdata->allowed_protos);
-> +
-> +	return pdata;
-> +}
-> +
-> +static struct of_device_id gpio_ir_recv_of_match[] = {
-> +	{ .compatible = "gpio-ir-receiver", },
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, gpio_ir_recv_of_match);
-> +
-> +#else /* !CONFIG_OF */
-> +
-> +static inline struct gpio_ir_recv_platform_data *
-> +gpio_ir_recv_get_devtree_pdata(struct device *dev)
-> +{
-> +	return ERR_PTR(-ENODEV);
-> +}
-> +
-> +#endif
-> +
->  static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
->  {
->  	struct gpio_rc_dev *gpio_dev = dev_id;
-> @@ -66,8 +124,11 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
->  					pdev->dev.platform_data;
->  	int rc;
->  
-> -	if (!pdata)
-> -		return -EINVAL;
-> +	if (!pdata) {
-> +		pdata = gpio_ir_recv_get_devtree_pdata(&pdev->dev);
-
-Could assigning to pdev->dev.platform_data be avoided here ?
-
-platform_data is only referenced in probe(), so maybe something like
-this would be better:
-
-	const struct gpio_ir_recv_platform_data *pdata = NULL;
-
-	if (pdev->dev.of_node) {
-		ret = gpio_ir_recv_parse_dt(&pdev->dev, &pdata);
-		if (ret < 0)
-			return ret;
-	} else {
-		pdata = pdev->dev.platform_data;
-	}
-	if (!pdata)
-		return -EINVAL;
-
-> +		if (IS_ERR(pdata))
-> +			return PTR_ERR(pdata);
-> +	}
->  
->  	if (pdata->gpio_nr < 0)
->  		return -EINVAL;
-> @@ -195,6 +256,9 @@ static struct platform_driver gpio_ir_recv_driver = {
->  #ifdef CONFIG_PM
->  		.pm	= &gpio_ir_recv_pm_ops,
->  #endif
-> +#ifdef CONFIG_OF
-> +		.of_match_table = of_match_ptr(gpio_ir_recv_of_match),
-> +#endif
-
-There is not need for #ifdef here, of_match_ptr() macro was introduced
-just to allow to omit #ifdefs.
-
->  	},
->  };
->  module_platform_driver(gpio_ir_recv_driver);
-> 
-
---
-
-Thanks,
-Sylwester
+Philippe
