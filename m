@@ -1,38 +1,32 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 02/13] mmc: detailed definition of CD and WP MMC line polarities in DT
-Date: Wed, 6 Feb 2013 22:30:43 +0000
-Message-ID: <201302062230.43680.arnd@arndb.de>
-References: <1360180020-18555-1-git-send-email-g.liakhovetski@gmx.de> <1360180020-18555-3-git-send-email-g.liakhovetski@gmx.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v4 01/10] s5p-csis: Add device tree support
+Date: Wed, 06 Feb 2013 16:36:39 -0700
+Message-ID: <5112E907.4080100@wwwdotorg.org>
+References: <1359745771-23684-1-git-send-email-s.nawrocki@samsung.com> <1359745771-23684-2-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1360180020-18555-3-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1359745771-23684-2-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: linux-media@vger.kernel.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, rob.herring@calxeda.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 February 2013, Guennadi Liakhovetski wrote:
-> +*NOTE* on CD and WP polarity. As of 3.8, SD/MMC drivers parse their DT nodes
-> +each in its own way, including calculation of CD and WP polarities. Our goal is
-> +to implement a common MMC DT parser and convert all drivers to using it. For
-> +this we also have to fix the meaning of the "normal" and "inverted" line levels.
-> +We choose to follow the SDHCI standard, which specifies both those lines as
-> +"active low." To deliver line polarity to drivers the parser will set
-> +MMC_CAP2_CD_ACTIVE_HIGH and / or MMC_CAP2_RO_ACTIVE_HIGH capabilities.
+On 02/01/2013 12:09 PM, Sylwester Nawrocki wrote:
+> s5p-csis is platform device driver for MIPI-CSI frontend to the FIMC
+> device. This patch support for binding the driver to the MIPI-CSIS
+> devices instantiated from device tree and for parsing all SoC and
+> board specific properties.
 
-As mentioned in my other comment, please leave out references to the
-Linux implementation. The long-term goal is to split out the
-bindings from the Linux kernel, because they are used by other
-projects as well. We also cannot easily change bindings that are
-already established, so referring to a specific version here is not
-helpful.
+> diff --git a/Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt b/Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt
 
-Your descriptions all make sense and I think we should put them
-somewhere, but for the binding, we need a more neutral text
-that just describes the interface to someone writing a device
-tree file.
-	
-	Arnd
+> +Optional properties:
+> +
+> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
+> +		    value when this property is not specified is 166 MHz;
+
+Shouldn't this be a "clocks" property, so that the driver can call
+clk_get(), clk_prepare_enable(), clk_get_rate(), etc. on it?
+
+Other than that this binding seems fine to me at a quick glance.
