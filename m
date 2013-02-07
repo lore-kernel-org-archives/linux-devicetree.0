@@ -1,32 +1,42 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH/RFC] mmc: add DT bindings for more MMC capability flags
-Date: Thu, 07 Feb 2013 01:44:22 +0100
-Message-ID: <1923973.xHEn0Jh3IU@wuerfel>
-References: <Pine.LNX.4.64.1301231743190.26301@axis700.grange> <20130206151549.GA11609@e106331-lin.cambridge.arm.com> <Pine.LNX.4.64.1302061720390.13474@axis700.grange>
+Subject: Re: [PATCH 06/14] ARM: pci: Keep pci_common_init() around after init
+Date: Thu, 07 Feb 2013 01:54:22 +0100
+Message-ID: <9348609.HjKCmL9u9S@wuerfel>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de> <1357764194-12677-7-git-send-email-thierry.reding@avionic-design.de> <CACRpkdYV5w6BksUjXvXs=88BovUyXgRt-vXSD0twjRpzbZcvFQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1302061720390.13474@axis700.grange>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Chris Ball <cjb@laptop.org>, Magnus Damm <magnus.damm@gmail.com>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYV5w6BksUjXvXs=88BovUyXgRt-vXSD0twjRpzbZcvFQ@mail.gmail.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, Greg KH <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-tegra@vger.kernel.org, Andrew Murray <andrew.murray@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 February 2013 17:25:42 Guennadi Liakhovetski wrote:
+On Wednesday 06 February 2013 17:38:20 Linus Walleij wrote:
+> On Wed, Jan 9, 2013 at 9:43 PM, Thierry Reding
+> <thierry.reding@avionic-design.de> wrote:
 > 
-> Thank for pointing me out at that thread. However, I don't think 
-> MMC_CAP_POWER_OFF_CARD has anything to do with compatibility or hardware 
-> revisions. At least I haven't yet come across any sd/mmc hosts, that also 
-> supply card power. You could "derive" this flag from the presence of a 
-> regulator, capable of changing its status (switching on / off), but even 
-> then you're not guaranteed, that you actually can (and want to) power the 
-> card off at run-time - the regulator can be shared etc. So, an explicit 
-> flag is needed.
+> > When using deferred driver probing, PCI host controller drivers may
+> > actually require this function after the init stage.
+> >
+> > Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+> 
+> There seem to be a proliferation of these patches now.
+> 
+> Isn't this just papering over the real problem? The discarding
+> of __init sections need to happen *after* all deferred probes
+> are complete, lest we have to remove *all* __init sections from
+> *all* drivers in the kernel, don't we?
 
-It sounds like something that should be handled in a controller specific
-way I think. E.g. on SDHCI, there seems to always be a method to power
-down the card using the SDHCI_POWER_CONTROL register, even without
-any external regulators.
+No, I think it's not quite that bad. I think the rule is still
+just that .probe() functions and anything called from them must
+not be __init. They used to be __devinit, which would cause
+problems with deferred probing on !HOTPLUG systems but that's
+gone in 3.9.
+
+Thierry's patch is just necessary because pci_common_init used
+to be called only from actual __init functions, and not it
+gets called from a .probe() function for the first time.
 
 	Arnd
