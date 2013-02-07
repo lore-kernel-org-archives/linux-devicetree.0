@@ -1,164 +1,53 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH 3/8] ARM: dts: omap: Add usb_otg and glue data
-Date: Thu, 7 Feb 2013 11:51:28 +0530
-Message-ID: <511347E8.2030604@ti.com>
-References: <1360162604-14320-1-git-send-email-kishon@ti.com> <1360162604-14320-4-git-send-email-kishon@ti.com>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: Re: [PATCH 1/5] ARM: dts: exynos5250-arndale: Add node entry for
+ gpio-buttons
+Date: Thu, 07 Feb 2013 11:56:15 +0530
+Message-ID: <51134907.1050803@linaro.org>
+References: <1360214129-4096-1-git-send-email-tushar.behera@linaro.org> <F3DBB1B3EF102E4994C89758CFCA32412C4E1A@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1360162604-14320-4-git-send-email-kishon@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, rob.herring@calxeda.com, rob@landley.net, balbi@ti.com, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, gregkh@linuxfoundation.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <F3DBB1B3EF102E4994C89758CFCA32412C4E1A@DBDE01.ent.ti.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: "Kumar, Anil" <anilkumar.v@ti.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "patches@linaro.org" <patches@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-[]...
+On 02/07/2013 11:47 AM, Kumar, Anil wrote:
+> On Thu, Feb 07, 2013 at 10:45:25, Tushar Behera wrote:
+>> Added GPIO buttons DT node to Arndale board file.
+>>
+>> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+>> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+>> ---
+>> This series is based on for-next branch of Kukjin Kim's tree
+>> and added on top of the below patch:
+>> https://patchwork.kernel.org/patch/2042451/
+>> ---
+>>  arch/arm/boot/dts/exynos5250-arndale.dts |   48 ++++++++++++++++++++++++++++++
+>>  1 files changed, 48 insertions(+), 0 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+>> index 63572f9..9ce40df 100644
+>> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
+>> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+>> @@ -119,4 +119,52 @@
+>>  	spi_2: spi@12d40000 {
+>>  		status = "disabled";
+>>  	};
+>> +
+>> +	gpio_keys {
+>> +		compatible = "gpio-keys";
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+> 
+> Just want to understand why these properties are here?  
+> As these properties are for child dt node. But have not seen
+> anyone is using here.
+> 
 
->
-> diff --git a/Documentation/devicetree/bindings/usb/omap-usb.txt b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> index 29a043e..4688265 100644
-> --- a/Documentation/devicetree/bindings/usb/omap-usb.txt
-> +++ b/Documentation/devicetree/bindings/usb/omap-usb.txt
-> @@ -15,6 +15,7 @@ OMAP MUSB GLUE
->      represents PERIPHERAL.
->    - power : Should be "50". This signifies the controller can supply upto
->      100mA when operating in host mode.
-> + - usb-phy : the phandle for the PHY device
->
->   SOC specific device node entry
->   usb_otg_hs: usb_otg_hs@4a0ab000 {
-> diff --git a/arch/arm/boot/dts/omap3-beagle-xm.dts b/arch/arm/boot/dts/omap3-beagle-xm.dts
-> index 3705a81..cb07583 100644
-> --- a/arch/arm/boot/dts/omap3-beagle-xm.dts
-> +++ b/arch/arm/boot/dts/omap3-beagle-xm.dts
-> @@ -107,3 +107,9 @@
->   	 */
->   	ti,pulldowns = <0x03a1c4>;
->   };
-> +
-> +&usb_otg_hs {
-> +	interface_type = <0>;
-> +	mode = <3>;
-> +	power = <50>;
-> +};
-> diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-evm.dts
-> index e8ba1c2..afb9ba9 100644
-> --- a/arch/arm/boot/dts/omap3-evm.dts
-> +++ b/arch/arm/boot/dts/omap3-evm.dts
-> @@ -59,3 +59,9 @@
->   &twl_gpio {
->   	ti,use-leds;
->   };
-> +
-> +&usb_otg_hs {
-> +	interface_type = <0>;
-> +	mode = <3>;
-> +	power = <50>;
-> +};
-> diff --git a/arch/arm/boot/dts/omap3-overo.dtsi b/arch/arm/boot/dts/omap3-overo.dtsi
-> index 89808ce..4b3d157 100644
-> --- a/arch/arm/boot/dts/omap3-overo.dtsi
-> +++ b/arch/arm/boot/dts/omap3-overo.dtsi
-> @@ -55,3 +55,9 @@
->   &twl_gpio {
->   	ti,use-leds;
->   };
-> +
-> +&usb_otg_hs {
-> +	interface_type = <0>;
-> +	mode = <3>;
-> +	power = <50>;
-> +};
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index 1acc261..b6472f7 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -397,5 +397,17 @@
->   			ti,timer-alwon;
->   			ti,timer-secure;
->   		};
-> +
-> +		usb_otg_hs: usb_otg_hs@480ab000 {
-> +			compatible = "ti,omap3-musb";
-> +			reg = <0x480ab000 0x1000>;
-> +			interrupts = <0 92 0x4>, <0 93 0x4>;
-> +			interrupt-names = "mc", "dma";
-> +			ti,hwmods = "usb_otg_hs";
-> +			usb-phy = <&usb2_phy>;
-> +			multipoint = <1>;
-> +			num_eps = <16>;
-> +			ram_bits = <12>;
+That is how gpio_keys node entries are defined in other .dts files.
 
-Where are these bindings documented? The general convention is to use
-a '-' for property names and not '_'
-
-> +		};
->   	};
->   };
-> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-> index 4122efe..612c9bb 100644
-> --- a/arch/arm/boot/dts/omap4-panda.dts
-> +++ b/arch/arm/boot/dts/omap4-panda.dts
-> @@ -206,3 +206,9 @@
->   &twl_usb_comparator {
->   	usb-supply = <&vusb>;
->   };
-> +
-> +&usb_otg_hs {
-> +	interface_type = <1>;
-> +	mode = <3>;
-> +	power = <50>;
-> +};
-> diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-> index 43e5258..582d7ee 100644
-> --- a/arch/arm/boot/dts/omap4-sdp.dts
-> +++ b/arch/arm/boot/dts/omap4-sdp.dts
-> @@ -428,3 +428,9 @@
->   &twl_usb_comparator {
->   	usb-supply = <&vusb>;
->   };
-> +
-> +&usb_otg_hs {
-> +	interface_type = <1>;
-> +	mode = <3>;
-> +	power = <50>;
-> +};
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index c829d7e..5171739 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -542,5 +542,18 @@
->   			reg-names = "control_dev_conf", "otghs_control";
->   			ti,type = <1>;
->   		};
-> +
-> +		usb_otg_hs: usb_otg_hs@4a0ab000 {
-> +			compatible = "ti,omap4-musb";
-> +			reg = <0x4a0ab000 0x7ff>;
-> +			interrupts = <0 92 0x4>, <0 93 0x4>;
-> +			interrupt-names = "mc", "dma";
-> +			ti,hwmods = "usb_otg_hs";
-> +			usb-phy = <&usb2_phy>;
-> +			multipoint = <1>;
-> +			num_eps = <16>;
-> +			ram_bits = <12>;
-> +			ti,has-mailbox;
-> +		};
->   	};
->   };
-> diff --git a/arch/arm/boot/dts/twl4030.dtsi b/arch/arm/boot/dts/twl4030.dtsi
-> index ed0bc95..398d2c3 100644
-> --- a/arch/arm/boot/dts/twl4030.dtsi
-> +++ b/arch/arm/boot/dts/twl4030.dtsi
-> @@ -67,7 +67,7 @@
->   		#interrupt-cells = <1>;
->   	};
->
-> -	twl4030-usb {
-> +	usb2_phy: twl4030-usb {
->   		compatible = "ti,twl4030-usb";
->   		interrupts = <10>, <4>;
->   		usb1v5-supply = <&vusb1v5>;
->
-
+-- 
+Tushar Behera
