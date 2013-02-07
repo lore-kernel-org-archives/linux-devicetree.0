@@ -1,49 +1,49 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH 0/2] ARM: dts: omap3-overo: Add pwm-leds and audio support
-Date: Thu, 7 Feb 2013 08:58:36 +0100
-Message-ID: <51135EAC.7010406@ti.com>
-References: <1358963812-19947-1-git-send-email-florian.vaussard@epfl.ch> <5101273A.9090800@ti.com> <510F7BEB.1020408@epfl.ch> <51125AFC.10704@ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3 06/13] mmc: tmio-mmc: define device-tree bindings
+Date: Thu, 7 Feb 2013 08:27:29 +0000
+Message-ID: <201302070827.29355.arnd@arndb.de>
+References: <1360180020-18555-1-git-send-email-g.liakhovetski@gmx.de> <201302062224.20549.arnd@arndb.de> <20130207005957.GB9775@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <51125AFC.10704@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Benoit Cousson <b-cousson@ti.com>
-Cc: florian.vaussard@epfl.ch, Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20130207005957.GB9775@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thursday 07 February 2013, Simon Horman wrote:
+> > Please write the binding in a way that does not refer to a specific
+> > implementation in Linux: The binding should describe the hardware
+> > independent of details in the driver. In particular, I think you
+> > should not refer to the TMIO_MMC_BLKSZ_2BYTES etc macros but describe
+> > in text what the flags are about.
+> > 
+> > Regarding the toshiba,mmc-wrprotect-disable property, would it be
+> > enough to just check the presence of the wp-gpios property?
+> > 
+> > TMIO_MMC_BLKSZ_2BYTES seems to be set unconditionally in
+> > sh_mobile_sdhi_probe and nowhere else, so I'd assume we don't
+> > actually need to provide this here, but can keep that knowledge
+> > implicit based on whether we're talking to sh_mobile_sdhi
+> > or another tmio_mmc variant.
+> > 
+> > For the other last one, is that actually board specific, or just
+> > a feature of a given chip? If we can tell by the SoC, then I'd
+> > suggest using separate "compatible" properties instead, and
+> > put a bitmask of features into the .data field of the of match
+> > table. For all I can tell, SH7372 does not set it, while SH73A0,
+> > R8A7740 and R8A7779 always do.
+> 
+> My understanding is that TMIO_MMC_HAS_IDLE_WAIT can be set based
+> on the SoC in use.
 
-On 02/06/2013 02:30 PM, Benoit Cousson wrote:
->> So a patch is being merged to handle triggers in the case of pwm led=
-s [1].
->> When done, we will be able to add back the default trigger. Do you w=
-ant
->> to wait on it to merge this series?
->=20
-> What kind of dependency do we have between these two series? I mean w=
-hat
-> will happen if the DTS is merged before the pwm subsystem?
->=20
-> If that does not generate any regression / crash, then it is OK, if n=
-ot,
-> we should take care of the order.
+Ok, thanks for the confirmation. Just to be clear: Either way (compatible
+or separate property) works fine and can be used here. I tend to prefer
+basing these things on the "compatible" string in order to keep
+specific knowledge of the device internals out of the device tree
+binding though.
 
-In this series the 'linux,default-trigger' property is not added to the
-pwm-leds node, so it is safe to take this series.
-I'm sure Florian will send the update to add this flag back for 3.10 or=
- for
-3.9-rc (the needed patches for PWM and leds-pwm will be in 3.9).
-
-I'm also waiting for 3.9-rc1 so I can finish up some of the pending thi=
-ngs
-regarding to PWMs.
-
---=20
-P=E9ter
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
