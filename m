@@ -1,101 +1,46 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 1/5] ARM: dts: exynos5250-arndale: Add node entry for
- gpio-buttons
-Date: Thu, 07 Feb 2013 12:25:25 +0100
-Message-ID: <18141670.7lKVRsjORY@amdc1227>
-References: <1360214129-4096-1-git-send-email-tushar.behera@linaro.org>
- <CAKrE-Ke1WZt-PqVReGdNwcD+R_-4iHKPhgkgtgS-LQAPbx34mQ@mail.gmail.com>
- <5113768B.90102@linaro.org>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/1] documentation/devicetree: Fix a typo in exynos-dw-mshc.txt
+Date: Thu,  7 Feb 2013 17:14:35 +0530
+Message-ID: <1360237475-25259-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <5113768B.90102@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Tushar Behera <tushar.behera@linaro.org>, Girish KS <girishks2000@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "patches@linaro.org" <patches@linaro.org>, dtor@mail.ru, Manish Badarkhe <badarkhe.manish@gmail.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, david@protonic.nl, "Kumar, Anil" <anilkumar.v@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 07 of February 2013 15:10:27 Tushar Behera wrote:
-> +CC: David Jander <david@protonic.nl>
-> +CC: Dmitry Torokhov <dtor@mail.ru>
-> 
-> On 02/07/2013 01:13 PM, Girish KS wrote:
-> >>>>>> +
-> >>>>>> +    gpio_keys {
-> >>>>>> +            compatible = "gpio-keys";
-> >>>>>> +            #address-cells = <1>;
-> >>>>>> +            #size-cells = <0>;
-> >>>>> 
-> >>>>> Just want to understand why these properties are here?
-> >>>>> As these properties are for child dt node. But have not seen
-> >>>>> anyone is using here.
-> >>>> 
-> >>>> That is how gpio_keys node entries are defined in other .dts files.
-> >>> 
-> >>> I have gone through example for address-cells and size-cells in
-> >>> following link:
-> >>> http://devicetree.org/mediawiki/index.php?title=Device_Tree_Usage&s
-> >>> table=1#CPU_addressing
-> >>> 
-> >>> which indicates that these fields are for child "reg".
-> >>> I think, here in child node there is no "reg". so there is no use
-> >>> of address-cells and size-cells propeties.
-> >> 
-> >> Please check Documentation/devicetree/bindings/gpio/gpio_keys.txt
-> >> 
-> >> And whether these properties are required or not, I will let device
-> >> tree experts to comment on that.
-> >> 
-> >> As such, currently all node entries for gpio_keys use these
-> >> properties.
-> > 
-> > you can just verify by a simple test.
-> > delete the 2 lines. address-cells and size cells.
-> > this will have no affect.
-> > now with these 2 lines deleted lines add a dummy reg property with
-> > address and cell. dtb compiler will warn.
-> > So I think what manish reffered is right.
-> > There is also a reference of smdk4210 for kepads.
-> 
-> Right. Compilation is ok even after removing the address-cell and
-> size-cell properties.
-> 
-> But since this is used across all the instances, I would like to know
-> the view of the authors on this.
-> 
-> David, Dimitry,
-> 
-> Can you please let us know your opinion on this? If these properties are
-> not required, then we can remove them from the documentation and from
-> node entries in several other dts files.
+Fixed a typo in referenced file name.
 
-The #address-cells and #size-cells are used only together with reg 
-properties of sub nodes. They define how many cells in reg specifier are 
-used for registers address and length.
+Cc: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
 
-So, if you have #address-cells = <1> and #size-cells = <0>, then your reg 
-specifier will be simply <addr>. You can get more complex specifiers using 
-more address cells and size cells, like:
-
-#address-cells = <3>;
-#size-cells = <1>;
-
-subdev@1,2,3 {
-	reg = <1 2 3 0x1000>;
-	/* ... */
-};
-
-If you don't intend to use reg property for child device addressing then 
-you don't define #address-cells and #size-cells properties.
-
-I think that the documentation of gpio_keys binding should be corrected 
-and possibly also moved to bindings/input instead of bindings/gpio, as 
-this directory is intended to be used for GPIO controllers, not GPIO 
-consumers.
-
-Best regards,
+diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+index 898b222..6d1c098 100644
+--- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
++++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+@@ -4,7 +4,7 @@
+ The Synopsis designware mobile storage host controller is used to interface
+ a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
+ differences between the core Synopsis dw mshc controller properties described
+-by synposis-dw-mshc.txt and the properties used by the Samsung Exynos specific
++by synopsis-dw-mshc.txt and the properties used by the Samsung Exynos specific
+ extensions to the Synopsis Designware Mobile Storage Host Controller.
+ 
+ Required Properties:
 -- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Linux Platform
+1.7.4.1
