@@ -1,106 +1,95 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 1/5] ARM: dts: exynos5250-arndale: Add node entry for
- gpio-buttons
-Date: Thu, 07 Feb 2013 11:30:49 +0100
-Message-ID: <8299289.2GSO3WcaG5@amdc1227>
-References: <1360214129-4096-1-git-send-email-tushar.behera@linaro.org>
+From: James Hogan <james.hogan@imgtec.com>
+Subject: Re: Heads up on a device tree change
+Date: Thu, 7 Feb 2013 10:32:13 +0000
+Message-ID: <511382AD.7030804@imgtec.com>
+References: <CACxGe6sCBCGfLDAGVRgP3cnmE+oyXBDdPeVXVCqrsvCh13yPiw@mail.gmail.com> <51125B56.9050407@imgtec.com> <CACxGe6vuZ2H-G7xamS6SAiX_aCbjpO+vKavqCK77ek8tTdOmdA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1360214129-4096-1-git-send-email-tushar.behera@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tushar Behera <tushar.behera@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, patches@linaro.org, Thomas Abraham <thomas.abraham@linaro.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACxGe6vuZ2H-G7xamS6SAiX_aCbjpO+vKavqCK77ek8tTdOmdA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-next <linux-next@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-I'm wondering why Exynos5250 has not been migrated to use pinctrl yet.
-
-Support for it in pinctrl-samsung driver has been already merged, but I 
-don't see any pinctrl nodes in exynos5250.dtsi.
-
-This is important because the legacy gpio-samsung support is going to be 
-dropped, as it already happened in case of Exynos 4.
-
-CC'ing Thomas Abraham as he might know something.
-
-Best regards,
--- 
-Tomasz Figa
-Samsung Poland R&D Center
-SW Solution Development, Linux Platform
-
-On Thursday 07 of February 2013 10:45:25 Tushar Behera wrote:
-> Added GPIO buttons DT node to Arndale board file.
+On 06/02/13 14:28, Grant Likely wrote:
+> On Wed, Feb 6, 2013 at 1:32 PM, James Hogan <james.hogan@imgtec.com> wrote:
+>> On 06/02/13 13:11, Grant Likely wrote:
+>>> - Resources on platform_devices get registered so they appear in
+>>> /proc/iomem and /proc/ioports and so that device drivers get the added
+>>> protection of request_region. This will cause breakage on device trees
+>>> nodes with partially overlapping memory regions. (ie. 0x100..0x1ff and
+>>> 0x180..0x27f). I also have a workaround for this, but I doubt that it
+>>> will be necessary.
+>>
+>> Hi Grant,
+>>
+>> If I understand you correctly, the non-overlapping memory regions thing
+>> could be a problem for me. We have a Meta based SoC that has various SoC
+>> registers grouped together for doing GPIOs and Pin control things. I'm
+>> still in the process of converting it to device tree, but the way I've
+>> been handling it is to provide overlapping registers to both the gpio
+>> and pinctl DT nodes. Each GPIO bank's registers are also interleaved
+>> with the others, so I've been providing overlapping register ranges
+>> (offset by 4 for each bank) to the DT node for each gpio bank too, so
+>> each bank can function independently and the driver doesn't have to
+>> worry about multiple banks. Does that sound like a reasonable use case?
+>>
+>> I guess I could cheat with the length, or specify each register in it's
+>> own memory resource, but it seems like overkill.
 > 
-> Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
-> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> ---
-> This series is based on for-next branch of Kukjin Kim's tree
-> and added on top of the below patch:
-> https://patchwork.kernel.org/patch/2042451/
-> ---
->  arch/arm/boot/dts/exynos5250-arndale.dts |   48
-> ++++++++++++++++++++++++++++++ 1 files changed, 48 insertions(+), 0
-> deletions(-)
+> Note that overlapping regions are fine /provided/ that they are the
+> same size or one fits nicely inside another. It's partial overlap that
+> is a problem
+
+It still feels a bit artificial to impose that limitation on something
+that is supposed to be implementation independent. Having said that it
+doesn't particularly bother me having to work around it.
+
 > 
-> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts
-> b/arch/arm/boot/dts/exynos5250-arndale.dts index 63572f9..9ce40df
-> 100644
-> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
-> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-> @@ -119,4 +119,52 @@
->  	spi_2: spi@12d40000 {
->  		status = "disabled";
->  	};
-> +
-> +	gpio_keys {
-> +		compatible = "gpio-keys";
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		menu {
-> +			label = "SW-TACT2";
-> +			gpios = <&gpx1 4 0 0x10000 2>;
-> +			linux,code = <139>;
-> +			gpio-key,wakeup;
-> +		};
-> +
-> +		home {
-> +			label = "SW-TACT3";
-> +			gpios = <&gpx1 5 0 0x10000 2>;
-> +			linux,code = <102>;
-> +			gpio-key,wakeup;
-> +		};
-> +
-> +		up {
-> +			label = "SW-TACT4";
-> +			gpios = <&gpx1 6 0 0x10000 2>;
-> +			linux,code = <103>;
-> +			gpio-key,wakeup;
-> +		};
-> +
-> +		down {
-> +			label = "SW-TACT5";
-> +			gpios = <&gpx1 7 0 0x10000 2>;
-> +			linux,code = <108>;
-> +			gpio-key,wakeup;
-> +		};
-> +
-> +		back {
-> +			label = "SW-TACT6";
-> +			gpios = <&gpx2 0 0 0x10000 2>;
-> +			linux,code = <158>;
-> +			gpio-key,wakeup;
-> +		};
-> +
-> +		wakeup {
-> +			label = "SW-TACT7";
-> +			gpios = <&gpx2 1 0 0x10000 2>;
-> +			linux,code = <143>;
-> +			gpio-key,wakeup;
-> +		};
-> +	};
->  };
+> I've been thinking about your exact problem though and I think the
+> best way to handle it is for the gpio driver to understand multiple
+> banks.
+
+Something like this works quite nicely for me and keeps the driver code
+nice and simple (iterates over children a bit like I2C, no need for
+gpio-cells=3). I'd welcome comments:
+
+		gpios: gpios@02005800 {
+			#address-cells = <1>;
+			#size-cells = <0>;
+			compatible = "img,tz1090-gpio";
+			reg = <0x02005800 0x90>;
+
+			gpios0: bank@0 {
+				#gpio-cells = <2>;
+				#interrupt-cells = <2>;
+				reg = <0>;
+				interrupts = <13 4 /* level */>;
+				gpio-controller;
+				gpio-ranges = <&pinctrl 0 30>;
+				interrupt-controller;
+			};
+			gpios1: bank@1 {
+				#gpio-cells = <2>;
+				#interrupt-cells = <2>;
+				reg = <1>;
+				interrupts = <14 4 /* level */>;
+				gpio-controller;
+				gpio-ranges = <&pinctrl 30 30>;
+				interrupt-controller;
+			};
+			gpios2: bank@2 {
+				#gpio-cells = <2>;
+				#interrupt-cells = <2>;
+				reg = <2>;
+				interrupts = <15 4 /* level */>;
+				gpio-controller;
+				gpio-ranges = <&pinctrl 60 30>;
+				interrupt-controller;
+			};
+		};
+
+Cheers
+James
