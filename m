@@ -1,47 +1,63 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Move NS2 LEDs binding into LEDs directory
-Date: Thu, 7 Feb 2013 08:21:18 -0500
-Message-ID: <20130207132118.GE14746@titan.lakedaemon.net>
-References: <1360239776-14889-1-git-send-email-grant.likely@secretlab.ca>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 0/2] ARM: dts: Add DT bindings for OMAP SDMA
+Date: Thu, 07 Feb 2013 15:01:18 +0100
+Message-ID: <1896741.qGDZiL1IcG@wuerfel>
+References: <1360184596-1603-1-git-send-email-jon-hunter@ti.com> <5113A98D.1000209@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1360239776-14889-1-git-send-email-grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <5113A98D.1000209@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Jon Hunter <jon-hunter@ti.com>, Matt Porter <mporter@ti.com>, Lars-Peter Clausen <lars@metafoo.de>, Russell King <linux@arm.linux.org.uk>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Balaji T K <balajitk@ti.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 07, 2013 at 12:22:56PM +0000, Grant Likely wrote:
-> leds-ns2.txt is a binding for LEDs, not GPIOs. Move the documentation in
-> with the rest of the LEDs bindings.
+On Thursday 07 February 2013 14:18:05 Peter Ujfalusi wrote:
+> I looked briefly around in the mentioned code and I wonder how this is going
+> to work with audio (ASoC).
+> When we boot with DT it looks like we are _not_ creating the DMA resources for
+> the device as it is done for the IRQ and IO/MEM. So this means that we can not
+> use get_resource*() for DMA anymore when we move to DT.
+
+Yes, this is very much intentional. The use of DMA resources is not
+really possible across platforms, and I would like to kill it off
+entirely, as it is not clearly defined what they actually mean.
+In many cases, a single number cannot express the configuration
+for a DMA channel, e.g. when you have multiple DMA engines in the
+system, or you have one that can drive multiple masters for instance.
+
+While we could in theory extend the infrastructure around DMA resources
+to behave like IRQ resources, which can deal with all of that, this
+would require a lot of code, and go against the trend: in case of
+GPIO numbers and IRQ numbers, people are generally trying to
+find ways to get rid of a flat number space and use a more structured
+interface.
+
+> This might be OK for (OMAP)mmc, (OMAP)spi, etc. But in audio we have a common
+> library used by all platforms to deal with the dmaengine.
+>
+> I don't think we can switch to use dma_request_slave_channel_compat() in
+> soc-dmaengine-pcm.c. We need to pass the dma channel number to the lib from
+> the ASoC platform drivers. Or we need to synchronize the order of the dmas and
+> the dma-names around all SOCs in existence?
 > 
-> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Cc: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> ---
->  .../devicetree/bindings/gpio/leds-ns2.txt          |   26 --------------------
->  .../devicetree/bindings/leds/leds-ns2.txt          |   26 ++++++++++++++++++++
->  2 files changed, 26 insertions(+), 26 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/gpio/leds-ns2.txt
->  create mode 100644 Documentation/devicetree/bindings/leds/leds-ns2.txt
+> Has anyone thought about this?
 
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+It's the first time I look at the sounds specific portion of this,
+but it seems straightforward:
 
-or, if you want, I can queue it up.  Just let me know.
+snd_dmaengine_pcm_open is a wrapper around dma_request_channel
+and requires a filter function plus data as arguments. We don't
+want to use filter functions here any more because they don't
+do what we need, so the logical conclusion is to add a similar
+wrapper around dma_request_slave_channel, and port drivers to
+use that instead.
 
-thx,
+I see no connection in ASoC between the use of IORESOURCE_DMA
+and snd_dmaengine_pcm_open. About half of the drivers calling
+that function get the argument from a dma resource, while the
+other ones don't. Similarly, not all ASoC drivers using DMA
+resources pass the contents of that into snd_dmaengine_pcm_open.
 
-Jason.
+	Arnd
