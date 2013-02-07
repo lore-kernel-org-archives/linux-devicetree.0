@@ -1,77 +1,47 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH V2 2/2] ARM: davinci: restart: fix wdt to machine restart
- with DT
-Date: Thu, 7 Feb 2013 23:45:53 +0530
-Message-ID: <5113EF59.80508@ti.com>
-References: <1360123204-9978-1-git-send-email-anilkumar.v@ti.com> <1360123204-9978-3-git-send-email-anilkumar.v@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] spi: pl022: use generic DMA slave configuration if
+	possible
+Date: Thu, 7 Feb 2013 19:27:32 +0100
+Message-ID: <CACRpkdYUeM=QviqgAg6WVrKGtrX8=6C_LkEYQ92TuGZuPiDr=w@mail.gmail.com>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+	<1359395857-1235-3-git-send-email-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360123204-9978-3-git-send-email-anilkumar.v@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Kumar, Anil" <anilkumar.v@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, linux@arm.linux.org.uk, khilman@deeprootsystems.com, hs@denx.de, mporter@ti.com, broonie@opensource.wolfsonmicro.com, mchehab@redhat.com, vaibhav.bedia@ti.com, b-cousson@ti.com, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <1359395857-1235-3-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 28, 2013 at 6:57 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
 
-On 2/6/2013 9:30 AM, Kumar, Anil wrote:
-> In non DT case da8xx_register_watchdog() is called to register platform device
-> "da8xx_wdt_device" by board file. But in DT case it is not called and wdt
-> device get registered via wdt DT node.
-> 
-> Currently code is passing platform device "da8xx_wdt_device" in
-> "davinci_watchdog_reset" function in both DT and non DT case and that
-> leads to crash in DT boot.
-> 
-> Update restart function to make it generic DaVinci machine restart
+> With the new OF DMA binding, it is possible to completely avoid the
+> need for platform_data for configuring a DMA channel. In cases where the
+> platform has already been converted, calling dma_request_slave_channel
+> should get all the necessary information from the device tree.
+>
+> Like the patch that converts the dw_dma controller, this is completely
+> untested and is looking for someone to try it out.
+>
+> Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 
-s/DaVinci/da8xx. Also, subject can simply be "ARM: davinci: da850 DT:
-add support for machine reboot" since reboot never worked with DT
-before, "fix" isn't really appropriate.
+This looks correct to me atleast:
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-> in case of DT and non DT boot.
-> 
-> Signed-off-by: Kumar, Anil <anilkumar.v@ti.com>
-> ---
-> :100644 100644 2d5502d... 1df68fd... M	arch/arm/mach-davinci/devices-da8xx.c
-> :100644 100644 700d311... ef9f70e... M	arch/arm/mach-davinci/include/mach/da8xx.h
->  arch/arm/mach-davinci/devices-da8xx.c      |   14 ++++++++++++--
->  arch/arm/mach-davinci/include/mach/da8xx.h |    1 -
->  2 files changed, 12 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-> index 2d5502d..1df68fd 100644
-> --- a/arch/arm/mach-davinci/devices-da8xx.c
-> +++ b/arch/arm/mach-davinci/devices-da8xx.c
-> @@ -359,7 +359,7 @@ static struct resource da8xx_watchdog_resources[] = {
->  	},
->  };
->  
-> -struct platform_device da8xx_wdt_device = {
-> +static struct platform_device da8xx_wdt_device = {
+Yours,
+Linus Walleij
 
-Making of da8xx_wdt_device static should find a mention in description.
-
->  	.name		= "watchdog",
->  	.id		= -1,
->  	.num_resources	= ARRAY_SIZE(da8xx_watchdog_resources),
-> @@ -368,7 +368,17 @@ struct platform_device da8xx_wdt_device = {
->  
->  void da8xx_restart(char mode, const char *cmd)
->  {
-> -	davinci_watchdog_reset(&da8xx_wdt_device);
-> +	struct device *dev = NULL;
-> +	struct platform_device *wdt_device = NULL;
-
-No need to initialize these variables here.
-
-> +
-> +	dev = bus_find_device_by_name(&platform_bus_type, NULL, "watchdog");
-> +	if (!dev) {
-> +		pr_err("wdt device not found to machine reboot\n");
-
-Rather: "%s: failed to find watchdog device", __func__
-
-Thanks,
-Sekhar
+------------------------------------------------------------------------------
+Free Next-Gen Firewall Hardware Offer
+Buy your Sophos next-gen firewall before the end March 2013 
+and get the hardware for free! Learn more.
+http://p.sf.net/sfu/sophos-d2d-feb
