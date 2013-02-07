@@ -1,55 +1,77 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2 1/2] ARM: davinci: da850: add wdt DT node
-Date: Thu, 7 Feb 2013 23:36:59 +0530
-Message-ID: <5113ED43.1060609@ti.com>
-References: <1360123204-9978-1-git-send-email-anilkumar.v@ti.com>
-	<1360123204-9978-2-git-send-email-anilkumar.v@ti.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH V2 2/2] ARM: davinci: restart: fix wdt to machine restart
+ with DT
+Date: Thu, 7 Feb 2013 23:45:53 +0530
+Message-ID: <5113EF59.80508@ti.com>
+References: <1360123204-9978-1-git-send-email-anilkumar.v@ti.com> <1360123204-9978-3-git-send-email-anilkumar.v@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1360123204-9978-2-git-send-email-anilkumar.v-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "Kumar, Anil" <anilkumar.v-l0cyMroinI0@public.gmane.org>
-Cc: mporter-l0cyMroinI0@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1360123204-9978-3-git-send-email-anilkumar.v@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Kumar, Anil" <anilkumar.v@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, davinci-linux-open-source@linux.davincidsp.com, linux@arm.linux.org.uk, khilman@deeprootsystems.com, hs@denx.de, mporter@ti.com, broonie@opensource.wolfsonmicro.com, mchehab@redhat.com, vaibhav.bedia@ti.com, b-cousson@ti.com, tony@atomide.com, grant.likely@secretlab.ca, rob.herring@calxeda.com
 List-Id: devicetree@vger.kernel.org
 
+
 On 2/6/2013 9:30 AM, Kumar, Anil wrote:
-> Add da850 wdt DT node.
-> Add OF_DEV_AUXDATA for wdt driver to use wdt clock.
+> In non DT case da8xx_register_watchdog() is called to register platform device
+> "da8xx_wdt_device" by board file. But in DT case it is not called and wdt
+> device get registered via wdt DT node.
 > 
-> Signed-off-by: Kumar, Anil <anilkumar.v-l0cyMroinI0@public.gmane.org>
+> Currently code is passing platform device "da8xx_wdt_device" in
+> "davinci_watchdog_reset" function in both DT and non DT case and that
+> leads to crash in DT boot.
+> 
+> Update restart function to make it generic DaVinci machine restart
 
-> --- a/arch/arm/mach-davinci/da8xx-dt.c
-> +++ b/arch/arm/mach-davinci/da8xx-dt.c
-> @@ -37,11 +37,17 @@ static void __init da8xx_init_irq(void)
->  	of_irq_init(da8xx_irq_match);
->  }
+s/DaVinci/da8xx. Also, subject can simply be "ARM: davinci: da850 DT:
+add support for machine reboot" since reboot never worked with DT
+before, "fix" isn't really appropriate.
+
+> in case of DT and non DT boot.
+> 
+> Signed-off-by: Kumar, Anil <anilkumar.v@ti.com>
+> ---
+> :100644 100644 2d5502d... 1df68fd... M	arch/arm/mach-davinci/devices-da8xx.c
+> :100644 100644 700d311... ef9f70e... M	arch/arm/mach-davinci/include/mach/da8xx.h
+>  arch/arm/mach-davinci/devices-da8xx.c      |   14 ++++++++++++--
+>  arch/arm/mach-davinci/include/mach/da8xx.h |    1 -
+>  2 files changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
+> index 2d5502d..1df68fd 100644
+> --- a/arch/arm/mach-davinci/devices-da8xx.c
+> +++ b/arch/arm/mach-davinci/devices-da8xx.c
+> @@ -359,7 +359,7 @@ static struct resource da8xx_watchdog_resources[] = {
+>  	},
+>  };
 >  
-> +struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
-> +	OF_DEV_AUXDATA("ti,davinci-wdt", 0x01c21000, "watchdog", NULL),
-> +	{}
-> +};
-> +
->  #ifdef CONFIG_ARCH_DAVINCI_DA850
+> -struct platform_device da8xx_wdt_device = {
+> +static struct platform_device da8xx_wdt_device = {
+
+Making of da8xx_wdt_device static should find a mention in description.
+
+>  	.name		= "watchdog",
+>  	.id		= -1,
+>  	.num_resources	= ARRAY_SIZE(da8xx_watchdog_resources),
+> @@ -368,7 +368,17 @@ struct platform_device da8xx_wdt_device = {
 >  
->  static void __init da850_init_machine(void)
+>  void da8xx_restart(char mode, const char *cmd)
 >  {
-> -	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
-> +	of_platform_populate(NULL, of_default_bus_match_table,
-> +			da850_auxdata_lookup, NULL);
+> -	davinci_watchdog_reset(&da8xx_wdt_device);
+> +	struct device *dev = NULL;
+> +	struct platform_device *wdt_device = NULL;
 
-These hunks clashed with Manish's I2C0 node addition. I resolved it
-locally. I pushed the commit to v3.9/dt-2 branch of my gitorious tree.
-Please use this as the baseline for further DT patches.
+No need to initialize these variables here.
+
+> +
+> +	dev = bus_find_device_by_name(&platform_bus_type, NULL, "watchdog");
+> +	if (!dev) {
+> +		pr_err("wdt device not found to machine reboot\n");
+
+Rather: "%s: failed to find watchdog device", __func__
 
 Thanks,
 Sekhar
