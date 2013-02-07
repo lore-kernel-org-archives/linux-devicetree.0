@@ -1,152 +1,101 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/3] mmc: davinci_mmc: add DT support
-Date: Thu, 7 Feb 2013 10:46:56 +0000
-Message-ID: <20130207104656.GE16987@e106331-lin.cambridge.arm.com>
-References: <1360223825-23929-1-git-send-email-prakash.pm@ti.com>
- <1360223825-23929-3-git-send-email-prakash.pm@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 1/5] ARM: dts: exynos5250-arndale: Add node entry for
+ gpio-buttons
+Date: Thu, 07 Feb 2013 12:25:25 +0100
+Message-ID: <18141670.7lKVRsjORY@amdc1227>
+References: <1360214129-4096-1-git-send-email-tushar.behera@linaro.org>
+ <CAKrE-Ke1WZt-PqVReGdNwcD+R_-4iHKPhgkgtgS-LQAPbx34mQ@mail.gmail.com>
+ <5113768B.90102@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1360223825-23929-3-git-send-email-prakash.pm@ti.com>
-Content-Disposition: inline
-Sender: linux-doc-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "mporter@ti.com" <mporter@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "cjb@laptop.org" <cjb@laptop.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5113768B.90102@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org
+Cc: Tushar Behera <tushar.behera@linaro.org>, Girish KS <girishks2000@gmail.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "patches@linaro.org" <patches@linaro.org>, dtor@mail.ru, Manish Badarkhe <badarkhe.manish@gmail.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, david@protonic.nl, "Kumar, Anil" <anilkumar.v@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-I have a couple of comments on the dt bindings and the way it's parsed.
-
-On Thu, Feb 07, 2013 at 07:57:04AM +0000, Manjunathappa, Prakash wrote:
-> Adds device tree support for davinci_mmc. Also add binding documentation.
-> Tested in non-dma PIO mode and without GPIO card_detect/write_protect
-> option because of dependencies on EDMA and GPIO module DT support.
+On Thursday 07 of February 2013 15:10:27 Tushar Behera wrote:
+> +CC: David Jander <david@protonic.nl>
+> +CC: Dmitry Torokhov <dtor@mail.ru>
 > 
-> Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
-> Cc: linux-mmc@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: davinci-linux-open-source@linux.davincidsp.com
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: cjb@laptop.org
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: mporter@ti.com
-> ---
-> Since v1:
-> Modified DT parse function to take default values and accomodate controller
-> version in compatible field.
+> On 02/07/2013 01:13 PM, Girish KS wrote:
+> >>>>>> +
+> >>>>>> +    gpio_keys {
+> >>>>>> +            compatible = "gpio-keys";
+> >>>>>> +            #address-cells = <1>;
+> >>>>>> +            #size-cells = <0>;
+> >>>>> 
+> >>>>> Just want to understand why these properties are here?
+> >>>>> As these properties are for child dt node. But have not seen
+> >>>>> anyone is using here.
+> >>>> 
+> >>>> That is how gpio_keys node entries are defined in other .dts files.
+> >>> 
+> >>> I have gone through example for address-cells and size-cells in
+> >>> following link:
+> >>> http://devicetree.org/mediawiki/index.php?title=Device_Tree_Usage&s
+> >>> table=1#CPU_addressing
+> >>> 
+> >>> which indicates that these fields are for child "reg".
+> >>> I think, here in child node there is no "reg". so there is no use
+> >>> of address-cells and size-cells propeties.
+> >> 
+> >> Please check Documentation/devicetree/bindings/gpio/gpio_keys.txt
+> >> 
+> >> And whether these properties are required or not, I will let device
+> >> tree experts to comment on that.
+> >> 
+> >> As such, currently all node entries for gpio_keys use these
+> >> properties.
+> > 
+> > you can just verify by a simple test.
+> > delete the 2 lines. address-cells and size cells.
+> > this will have no affect.
+> > now with these 2 lines deleted lines add a dummy reg property with
+> > address and cell. dtb compiler will warn.
+> > So I think what manish reffered is right.
+> > There is also a reference of smdk4210 for kepads.
 > 
->  .../devicetree/bindings/mmc/davinci_mmc.txt        |   30 ++++++++
->  drivers/mmc/host/davinci_mmc.c                     |   70 +++++++++++++++++++-
->  2 files changed, 99 insertions(+), 1 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/davinci_mmc.txt
+> Right. Compilation is ok even after removing the address-cell and
+> size-cell properties.
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/davinci_mmc.txt b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> new file mode 100644
-> index 0000000..6717ab1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> @@ -0,0 +1,30 @@
-> +* TI Highspeed MMC host controller for DaVinci
-> +
-> +The Highspeed MMC Host Controller on TI DaVinci family
-> +provides an interface for MMC, SD and SDIO types of memory cards.
-> +
-> +This file documents the properties used by the davinci_mmc driver.
-> +
-> +Required properties:
-> +- compatible:
-> + Should be "ti,davinci-mmc-da830": for da830, da850, dm365
-> + Should be "ti,davinci-mmc-dm355": for dm355, dm644x
-> +
-> +Optional properties:
-> +- bus-width: Number of data lines, can be <4>, or <8>, default <1>
-> +- max-frequency: Maximum operating clock frequency, default 25MHz.
-> +- mmc-cap-mmc-highspeed: Indicates support for MMC in high speed mode
-> +- mmc-cap-sd-highspeed: Indicates support for SD in high speed mode
+> But since this is used across all the instances, I would like to know
+> the view of the authors on this.
+> 
+> David, Dimitry,
+> 
+> Can you please let us know your opinion on this? If these properties are
+> not required, then we can remove them from the documentation and from
+> node entries in several other dts files.
 
-I thought the last two were derivable from max-frequency?
+The #address-cells and #size-cells are used only together with reg 
+properties of sub nodes. They define how many cells in reg specifier are 
+used for registers address and length.
 
-https://lkml.org/lkml/2012/10/15/231
+So, if you have #address-cells = <1> and #size-cells = <0>, then your reg 
+specifier will be simply <addr>. You can get more complex specifiers using 
+more address cells and size cells, like:
 
-[...]
+#address-cells = <3>;
+#size-cells = <1>;
 
-> +static struct davinci_mmc_config
-> +	*mmc_parse_pdata(struct platform_device *pdev)
->  {
-> +	struct device_node *np;
->  	struct davinci_mmc_config *pdata = pdev->dev.platform_data;
-> +	const struct of_device_id *match =
-> +		of_match_device(of_match_ptr(davinci_mmc_dt_ids), &pdev->dev);
-> +	u32 data;
-> +
-> +	np = pdev->dev.of_node;
-> +	if (!np)
-> +		return pdata;
-> +
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata) {
-> +		dev_err(&pdev->dev, "Failed to allocate memory for struct davinci_mmc_config\n");
-> +		goto nodata;
-> +	}
-> +
-> +	if (match->data)
-> +		pdata->version = (u8)((int)match->data);
-> +
-> +	of_property_read_u32(np, "max-frequency", &pdata->max_freq);
-> +	if (!pdata->max_freq)
-> +		dev_info(&pdev->dev, "'max-frequency' property not specified, defaulting to 25MHz\n");
-> +
-> +	if (of_get_property(np, "mmc-cap-mmc-highspeed", NULL))
-> +		pdata->caps |= MMC_CAP_MMC_HIGHSPEED;
-> +	if (of_get_property(np, "mmc-cap-sd-highspeed", NULL))
-> +		pdata->caps |= MMC_CAP_SD_HIGHSPEED;
+subdev@1,2,3 {
+	reg = <1 2 3 0x1000>;
+	/* ... */
+};
 
-If these aren't derivable from max-frequency, you could use
-of_property_read_bool to make this clearer.
+If you don't intend to use reg property for child device addressing then 
+you don't define #address-cells and #size-cells properties.
 
-> +
-> +	of_property_read_u32(np, "bus-width", &data);
-> +	switch (data) {
-> +	case 0:
+I think that the documentation of gpio_keys binding should be corrected 
+and possibly also moved to bindings/input instead of bindings/gpio, as 
+this directory is intended to be used for GPIO controllers, not GPIO 
+consumers.
 
-Judging by the binding doc, should this be 1 rather than 0?
-
-> +	case 4:
-> +	case 8:
-> +		pdata->wires = data;
-> +		break;
-> +	default:
-> +		pdata->wires = 1;
-> +		dev_info(&pdev->dev, "Unsupported buswidth, defaulting to 1 bit\n");
-> +	}
-> +nodata:
-> +	return pdata;
-> +}
-> +
-> +static int __init davinci_mmcsd_probe(struct platform_device *pdev)
-> +{
-> +	struct davinci_mmc_config *pdata = NULL;
->  	struct mmc_davinci_host *host = NULL;
->  	struct mmc_host *mmc = NULL;
->  	struct resource *r, *mem = NULL;
->  	int ret = 0, irq = 0;
->  	size_t mem_size;
->  
-> +	pdata = mmc_parse_pdata(pdev);
-> +	if (pdata == NULL) {
-> +		dev_err(&pdev->dev, "Can not get platform data\n");
-> +		return -ENOENT;
-> +	}
-> +
->  	/* REVISIT:  when we're fully converted, fail if pdata is NULL */
-
-This comment can presumably disappear judging by the lines above?
-
-[...]
-
-Thanks,
-Mark.
-
+Best regards,
+-- 
+Tomasz Figa
+Samsung Poland R&D Center
+SW Solution Development, Linux Platform
