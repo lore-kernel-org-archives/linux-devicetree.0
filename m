@@ -1,57 +1,73 @@
-From: Rahul Sharma <r.sh.open@gmail.com>
-Subject: Re: [PATCH] ARM: dts: moving dt binding documents for video devices
- to common place
-Date: Thu, 7 Feb 2013 08:40:16 +0530
-Message-ID: <CAPdUM4NCb9nepsditz7PpEgJ-YQvsdsp1uujMggiiv4pzhxM=Q@mail.gmail.com>
-References: <1360162668-29677-1-git-send-email-rahul.sharma@samsung.com>
-	<51126DA7.2040309@samsung.com>
+From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Subject: Re: [PATCH] net: sh_eth: Add support of device tree probe
+Date: Thu, 7 Feb 2013 13:48:44 +0900
+Message-ID: <CABMQnVJ3jOYa2qi_cN1qzP=KQ+groCWWpbPndmisgWKR7=tvVQ@mail.gmail.com>
+References: <1360116019-8870-1-git-send-email-horms+renesas@verge.net.au>
+ <87pq0dg7ot.wl%kuninori.morimoto.gx@renesas.com> <CABMQnVLr9WqMWC6z3BuYyBvNSXM491VwrZ+DcKd3qGu0UN-G3Q@mail.gmail.com>
+ <87wqukzyps.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51126DA7.2040309@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, dri-devel@lists.freedesktop.org, kgene.kim@samsung.com, sw0312.kim@samsung.com, inki.dae@samsung.com, joshi@samsung.com
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <87wqukzyps.wl%kuninori.morimoto.gx@renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Simon Horman <horms+renesas@verge.net.au>, netdev@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sylwester,
+Hi,
 
-On Wed, Feb 6, 2013 at 8:20 PM, Sylwester Nawrocki
-<s.nawrocki@samsung.com> wrote:
-> Hi Rahul,
+On Thu, Feb 7, 2013 at 10:42 AM, Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
 >
-> On 02/06/2013 03:57 PM, Rahul Sharma wrote:
->> Binding Documents for drm-devices are placed in
->> Documentation/devicetree/bindings/drm/*. But these devices are common
->> for v4l framework, hence moved to a common place
->> Documentation/devicetree/bindings/video/. 'exynos_' prefix is added to
->> associate them with exynos soc series.
+> Hi Iwamatsu-san
 >
-> It looks good to me, I would just use 'exynos-' prefix instead,
-> this seems to be more common across existing files. Sorry for
-> the nitpicking..
+>> >> +Required properties:
+>> >> +- compatible:                   "renesas,sh-eth";
+>> >> +- interrupt-parent:             The phandle for the interrupt controller that
+>> >> +                                services interrupts for this device.
+>> >> +- reg:                          Offset and length of the register set for the
+>> >> +                                device.
+>> >> +- interrupts:                   Interrupt mapping for the sh_eth interrupt
+>> >> +                                sources (vector id).
+>> >> +- phy-mode:              String, operation mode of the PHY interface.
+>> >> +- sh-eth,edmac-endian:          String, endian of sh_eth dmac.
+>> >
+>> > I believe endian is only little/big.
+>> > It can be "bool" settings, not "string" ?
+>> >
+>>
+>> If we use bool , we may use this as "sh-eth,edmac-endian-big" or
+>> sh-eth,edmac-endian-little.
+>> Or we define big-endian, and when using big-endian, we specify this.
+>> Either way is okay.
 >
-> I suppose you should address the patch to and base on the tree of
-> the device tree maintainers.
+> Sorry, if it means
 >
-> Thanks,
-> Sylwester
+> "we define big-endian as default settings,
+> and user can select little-endian by using sh-eth,edmac-little-endian"
+>
+> then, it is nice.
+> Then, it can be "Option" properties.
 
-I mentioned it in the patch. Please let me know if it needs to be re-based
-to some other tree.
+OK, I will update.
 
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
-> It is base on for-next branch of
-> git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
 >
->  .../devicetree/bindings/drm/exynos/hdmi.txt        | 22 ----------------------
->  .../devicetree/bindings/drm/exynos/hdmiddc.txt     | 12 ------------
->  .../devicetree/bindings/drm/exynos/hdmiphy.txt     | 12 ------------
+>> >> +- sh-eth,endian:                String, endian of sh_eth dmac.
+>> >
+>> > Is this really used it in this driver ?
+>> >
+>>
+>> Yes. In many cases, this uses little-endian, but user may specify
+>> big-endian, I think.
 >
-> --
+> I meant that I could find "sh-eth,edmac-endian" operation,
+> but, couldn't find "sh-eth,endian" operation on sh_eth_parse_dt()
+> and on Example either.
+>
 
-Regards,
-Rahul Sharma,
-email to: rahul.sharma@samsung.com
-Samsung India.
+OK,I will remove this sentence.
+
+Thanks,
+  Nobuhiro
+-- 
+Nobuhiro Iwamatsu
