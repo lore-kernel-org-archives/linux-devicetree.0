@@ -1,95 +1,152 @@
-From: James Hogan <james.hogan@imgtec.com>
-Subject: Re: Heads up on a device tree change
-Date: Thu, 7 Feb 2013 10:32:13 +0000
-Message-ID: <511382AD.7030804@imgtec.com>
-References: <CACxGe6sCBCGfLDAGVRgP3cnmE+oyXBDdPeVXVCqrsvCh13yPiw@mail.gmail.com> <51125B56.9050407@imgtec.com> <CACxGe6vuZ2H-G7xamS6SAiX_aCbjpO+vKavqCK77ek8tTdOmdA@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 2/3] mmc: davinci_mmc: add DT support
+Date: Thu, 7 Feb 2013 10:46:56 +0000
+Message-ID: <20130207104656.GE16987@e106331-lin.cambridge.arm.com>
+References: <1360223825-23929-1-git-send-email-prakash.pm@ti.com>
+ <1360223825-23929-3-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6vuZ2H-G7xamS6SAiX_aCbjpO+vKavqCK77ek8tTdOmdA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-next <linux-next@vger.kernel.org>, Stephen Rothwell <sfr@canb.auug.org.au>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1360223825-23929-3-git-send-email-prakash.pm@ti.com>
+Content-Disposition: inline
+Sender: linux-doc-owner@vger.kernel.org
+To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "mporter@ti.com" <mporter@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "cjb@laptop.org" <cjb@laptop.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/13 14:28, Grant Likely wrote:
-> On Wed, Feb 6, 2013 at 1:32 PM, James Hogan <james.hogan@imgtec.com> wrote:
->> On 06/02/13 13:11, Grant Likely wrote:
->>> - Resources on platform_devices get registered so they appear in
->>> /proc/iomem and /proc/ioports and so that device drivers get the added
->>> protection of request_region. This will cause breakage on device trees
->>> nodes with partially overlapping memory regions. (ie. 0x100..0x1ff and
->>> 0x180..0x27f). I also have a workaround for this, but I doubt that it
->>> will be necessary.
->>
->> Hi Grant,
->>
->> If I understand you correctly, the non-overlapping memory regions thing
->> could be a problem for me. We have a Meta based SoC that has various SoC
->> registers grouped together for doing GPIOs and Pin control things. I'm
->> still in the process of converting it to device tree, but the way I've
->> been handling it is to provide overlapping registers to both the gpio
->> and pinctl DT nodes. Each GPIO bank's registers are also interleaved
->> with the others, so I've been providing overlapping register ranges
->> (offset by 4 for each bank) to the DT node for each gpio bank too, so
->> each bank can function independently and the driver doesn't have to
->> worry about multiple banks. Does that sound like a reasonable use case?
->>
->> I guess I could cheat with the length, or specify each register in it's
->> own memory resource, but it seems like overkill.
+Hello,
+
+I have a couple of comments on the dt bindings and the way it's parsed.
+
+On Thu, Feb 07, 2013 at 07:57:04AM +0000, Manjunathappa, Prakash wrote:
+> Adds device tree support for davinci_mmc. Also add binding documentation.
+> Tested in non-dma PIO mode and without GPIO card_detect/write_protect
+> option because of dependencies on EDMA and GPIO module DT support.
 > 
-> Note that overlapping regions are fine /provided/ that they are the
-> same size or one fits nicely inside another. It's partial overlap that
-> is a problem
-
-It still feels a bit artificial to impose that limitation on something
-that is supposed to be implementation independent. Having said that it
-doesn't particularly bother me having to work around it.
-
+> Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
+> Cc: linux-mmc@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: davinci-linux-open-source@linux.davincidsp.com
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: cjb@laptop.org
+> Cc: Sekhar Nori <nsekhar@ti.com>
+> Cc: mporter@ti.com
+> ---
+> Since v1:
+> Modified DT parse function to take default values and accomodate controller
+> version in compatible field.
 > 
-> I've been thinking about your exact problem though and I think the
-> best way to handle it is for the gpio driver to understand multiple
-> banks.
+>  .../devicetree/bindings/mmc/davinci_mmc.txt        |   30 ++++++++
+>  drivers/mmc/host/davinci_mmc.c                     |   70 +++++++++++++++++++-
+>  2 files changed, 99 insertions(+), 1 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mmc/davinci_mmc.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/davinci_mmc.txt b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
+> new file mode 100644
+> index 0000000..6717ab1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
+> @@ -0,0 +1,30 @@
+> +* TI Highspeed MMC host controller for DaVinci
+> +
+> +The Highspeed MMC Host Controller on TI DaVinci family
+> +provides an interface for MMC, SD and SDIO types of memory cards.
+> +
+> +This file documents the properties used by the davinci_mmc driver.
+> +
+> +Required properties:
+> +- compatible:
+> + Should be "ti,davinci-mmc-da830": for da830, da850, dm365
+> + Should be "ti,davinci-mmc-dm355": for dm355, dm644x
+> +
+> +Optional properties:
+> +- bus-width: Number of data lines, can be <4>, or <8>, default <1>
+> +- max-frequency: Maximum operating clock frequency, default 25MHz.
+> +- mmc-cap-mmc-highspeed: Indicates support for MMC in high speed mode
+> +- mmc-cap-sd-highspeed: Indicates support for SD in high speed mode
 
-Something like this works quite nicely for me and keeps the driver code
-nice and simple (iterates over children a bit like I2C, no need for
-gpio-cells=3). I'd welcome comments:
+I thought the last two were derivable from max-frequency?
 
-		gpios: gpios@02005800 {
-			#address-cells = <1>;
-			#size-cells = <0>;
-			compatible = "img,tz1090-gpio";
-			reg = <0x02005800 0x90>;
+https://lkml.org/lkml/2012/10/15/231
 
-			gpios0: bank@0 {
-				#gpio-cells = <2>;
-				#interrupt-cells = <2>;
-				reg = <0>;
-				interrupts = <13 4 /* level */>;
-				gpio-controller;
-				gpio-ranges = <&pinctrl 0 30>;
-				interrupt-controller;
-			};
-			gpios1: bank@1 {
-				#gpio-cells = <2>;
-				#interrupt-cells = <2>;
-				reg = <1>;
-				interrupts = <14 4 /* level */>;
-				gpio-controller;
-				gpio-ranges = <&pinctrl 30 30>;
-				interrupt-controller;
-			};
-			gpios2: bank@2 {
-				#gpio-cells = <2>;
-				#interrupt-cells = <2>;
-				reg = <2>;
-				interrupts = <15 4 /* level */>;
-				gpio-controller;
-				gpio-ranges = <&pinctrl 60 30>;
-				interrupt-controller;
-			};
-		};
+[...]
 
-Cheers
-James
+> +static struct davinci_mmc_config
+> +	*mmc_parse_pdata(struct platform_device *pdev)
+>  {
+> +	struct device_node *np;
+>  	struct davinci_mmc_config *pdata = pdev->dev.platform_data;
+> +	const struct of_device_id *match =
+> +		of_match_device(of_match_ptr(davinci_mmc_dt_ids), &pdev->dev);
+> +	u32 data;
+> +
+> +	np = pdev->dev.of_node;
+> +	if (!np)
+> +		return pdata;
+> +
+> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata) {
+> +		dev_err(&pdev->dev, "Failed to allocate memory for struct davinci_mmc_config\n");
+> +		goto nodata;
+> +	}
+> +
+> +	if (match->data)
+> +		pdata->version = (u8)((int)match->data);
+> +
+> +	of_property_read_u32(np, "max-frequency", &pdata->max_freq);
+> +	if (!pdata->max_freq)
+> +		dev_info(&pdev->dev, "'max-frequency' property not specified, defaulting to 25MHz\n");
+> +
+> +	if (of_get_property(np, "mmc-cap-mmc-highspeed", NULL))
+> +		pdata->caps |= MMC_CAP_MMC_HIGHSPEED;
+> +	if (of_get_property(np, "mmc-cap-sd-highspeed", NULL))
+> +		pdata->caps |= MMC_CAP_SD_HIGHSPEED;
+
+If these aren't derivable from max-frequency, you could use
+of_property_read_bool to make this clearer.
+
+> +
+> +	of_property_read_u32(np, "bus-width", &data);
+> +	switch (data) {
+> +	case 0:
+
+Judging by the binding doc, should this be 1 rather than 0?
+
+> +	case 4:
+> +	case 8:
+> +		pdata->wires = data;
+> +		break;
+> +	default:
+> +		pdata->wires = 1;
+> +		dev_info(&pdev->dev, "Unsupported buswidth, defaulting to 1 bit\n");
+> +	}
+> +nodata:
+> +	return pdata;
+> +}
+> +
+> +static int __init davinci_mmcsd_probe(struct platform_device *pdev)
+> +{
+> +	struct davinci_mmc_config *pdata = NULL;
+>  	struct mmc_davinci_host *host = NULL;
+>  	struct mmc_host *mmc = NULL;
+>  	struct resource *r, *mem = NULL;
+>  	int ret = 0, irq = 0;
+>  	size_t mem_size;
+>  
+> +	pdata = mmc_parse_pdata(pdev);
+> +	if (pdata == NULL) {
+> +		dev_err(&pdev->dev, "Can not get platform data\n");
+> +		return -ENOENT;
+> +	}
+> +
+>  	/* REVISIT:  when we're fully converted, fail if pdata is NULL */
+
+This comment can presumably disappear judging by the lines above?
+
+[...]
+
+Thanks,
+Mark.
+
