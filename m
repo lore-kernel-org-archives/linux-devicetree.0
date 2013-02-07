@@ -1,49 +1,65 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v3 06/13] mmc: tmio-mmc: define device-tree bindings
-Date: Thu, 7 Feb 2013 08:27:29 +0000
-Message-ID: <201302070827.29355.arnd@arndb.de>
-References: <1360180020-18555-1-git-send-email-g.liakhovetski@gmx.de> <201302062224.20549.arnd@arndb.de> <20130207005957.GB9775@verge.net.au>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 0/2] ARM: dts: Add DT bindings for OMAP SDMA
+Date: Thu, 7 Feb 2013 10:39:46 +0200
+Message-ID: <20130207083946.GB15462@arwen.pp.htv.fi>
+References: <1360184596-1603-1-git-send-email-jon-hunter@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130207005957.GB9775@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1360184596-1603-1-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Vinod Koul <vinod.koul@intel.com>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Matt Porter <mporter@ti.com>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Balaji T K <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 07 February 2013, Simon Horman wrote:
-> > Please write the binding in a way that does not refer to a specific
-> > implementation in Linux: The binding should describe the hardware
-> > independent of details in the driver. In particular, I think you
-> > should not refer to the TMIO_MMC_BLKSZ_2BYTES etc macros but describe
-> > in text what the flags are about.
-> > 
-> > Regarding the toshiba,mmc-wrprotect-disable property, would it be
-> > enough to just check the presence of the wp-gpios property?
-> > 
-> > TMIO_MMC_BLKSZ_2BYTES seems to be set unconditionally in
-> > sh_mobile_sdhi_probe and nowhere else, so I'd assume we don't
-> > actually need to provide this here, but can keep that knowledge
-> > implicit based on whether we're talking to sh_mobile_sdhi
-> > or another tmio_mmc variant.
-> > 
-> > For the other last one, is that actually board specific, or just
-> > a feature of a given chip? If we can tell by the SoC, then I'd
-> > suggest using separate "compatible" properties instead, and
-> > put a bitmask of features into the .data field of the of match
-> > table. For all I can tell, SH7372 does not set it, while SH73A0,
-> > R8A7740 and R8A7779 always do.
-> 
-> My understanding is that TMIO_MMC_HAS_IDLE_WAIT can be set based
-> on the SoC in use.
+--E39vaYmALEf/7YXx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok, thanks for the confirmation. Just to be clear: Either way (compatible
-or separate property) works fine and can be used here. I tend to prefer
-basing these things on the "compatible" string in order to keep
-specific knowledge of the device internals out of the device tree
-binding though.
+On Wed, Feb 06, 2013 at 03:03:14PM -0600, Jon Hunter wrote:
+> Adds device-tree bindings from SDMA on OMAP2+ devices. DMA client
+> bindings are also added for devices that have SPI and MMC bindings
+> populated. Client binding data is based upon existing HWMOD data for
+> OMAP and has been checked against OMAP documentation.
+>=20
+> Testing includes ...
+> 1. Boot tested on OMAP3430 Beagle board, OMAP4430 Panda board and
+>    OMAP4460 Panda board with and without device-tree present.
+> 2. Testing of MMC1 with SD card on OMAP3430 Beagle board, OMAP4430
+>    Panda board and OMAP4460 Panda board with and without device-tree
+>    present.
 
-	Arnd
+looks alright to me:
+
+Reviewed-by: Felipe Balbi <balbi@ti.com>
+
+--=20
+balbi
+
+--E39vaYmALEf/7YXx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRE2hSAAoJEIaOsuA1yqRE5l4P/270iwZl3A+j1gTlOAD/1OC8
+7DoCio7lJTmZM4L76zWyzTYFn5Vn0akDWSdFhXD7fQZf9zhoQsqAcdqwEXRoOwBT
++ouONpCKtPYAplLIupE1aXkCsBAsV0AlybTEa/OotRPtQOAvzOavHpQF8C1KWOHS
+6ATzcWNlgDaUaDNgwVAD4+V1bs3Zdke5sret6AFLJlBgPXrQvKERNJ4edA9aXyFa
+pij6yOGttWVHXZDMSUgmyb2+gmbf24en35vNm66hpT3sVilZ9CpTH0d7JL43j1q0
+SBPRCeuReXPisaozy3chao6L6Gv6cozbCLsIIXCbbVcZaT7dVWndWrAqNwb6GwHk
+VxxQZ619g2KgMw/X6lvawO8j9eEd8L4Uj7YEviPap/tlNgwMxGjduNQP3h2oam0C
+uFgXrLpS6pjcatbAMAl3wDhAtu+ubSgyD+5BRfL44w/+dp/M0emdJ42S2hF23nO4
+aO0+50lWF42tWJ4zxj3K7Y03ZN9spumNWlVkrpF8jJSVbsq8fGeAQ1c6dTXKWZoV
+WOcX0yqu4lBuWVRzQQ1Pl8DZTh1R7GV/T4Eeg+hGom/r74CBbmbLUE/GjJGCacJF
+VBCDQrX607c7EObCIGYaQFBZNF3otDkh/0aopNyGN+DU4ur8QoKtBwy4OT3bIi6G
+bdga2RX3mJhJflB1utXH
+=NEuJ
+-----END PGP SIGNATURE-----
+
+--E39vaYmALEf/7YXx--
