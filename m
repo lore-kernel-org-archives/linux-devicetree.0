@@ -1,73 +1,81 @@
-From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
-Subject: Re: [PATCH] net: sh_eth: Add support of device tree probe
-Date: Thu, 7 Feb 2013 13:48:44 +0900
-Message-ID: <CABMQnVJ3jOYa2qi_cN1qzP=KQ+groCWWpbPndmisgWKR7=tvVQ@mail.gmail.com>
-References: <1360116019-8870-1-git-send-email-horms+renesas@verge.net.au>
- <87pq0dg7ot.wl%kuninori.morimoto.gx@renesas.com> <CABMQnVLr9WqMWC6z3BuYyBvNSXM491VwrZ+DcKd3qGu0UN-G3Q@mail.gmail.com>
- <87wqukzyps.wl%kuninori.morimoto.gx@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <87wqukzyps.wl%kuninori.morimoto.gx@renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>, netdev@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>
+From: Tushar Behera <tushar.behera@linaro.org>
+Subject: [PATCH 1/5] ARM: dts: exynos5250-arndale: Add node entry for gpio-buttons
+Date: Thu,  7 Feb 2013 10:45:25 +0530
+Message-ID: <1360214129-4096-1-git-send-email-tushar.behera@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Added GPIO buttons DT node to Arndale board file.
 
-On Thu, Feb 7, 2013 at 10:42 AM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->
-> Hi Iwamatsu-san
->
->> >> +Required properties:
->> >> +- compatible:                   "renesas,sh-eth";
->> >> +- interrupt-parent:             The phandle for the interrupt controller that
->> >> +                                services interrupts for this device.
->> >> +- reg:                          Offset and length of the register set for the
->> >> +                                device.
->> >> +- interrupts:                   Interrupt mapping for the sh_eth interrupt
->> >> +                                sources (vector id).
->> >> +- phy-mode:              String, operation mode of the PHY interface.
->> >> +- sh-eth,edmac-endian:          String, endian of sh_eth dmac.
->> >
->> > I believe endian is only little/big.
->> > It can be "bool" settings, not "string" ?
->> >
->>
->> If we use bool , we may use this as "sh-eth,edmac-endian-big" or
->> sh-eth,edmac-endian-little.
->> Or we define big-endian, and when using big-endian, we specify this.
->> Either way is okay.
->
-> Sorry, if it means
->
-> "we define big-endian as default settings,
-> and user can select little-endian by using sh-eth,edmac-little-endian"
->
-> then, it is nice.
-> Then, it can be "Option" properties.
+Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+---
+This series is based on for-next branch of Kukjin Kim's tree
+and added on top of the below patch:
+https://patchwork.kernel.org/patch/2042451/
+---
+ arch/arm/boot/dts/exynos5250-arndale.dts |   48 ++++++++++++++++++++++++++++++
+ 1 files changed, 48 insertions(+), 0 deletions(-)
 
-OK, I will update.
-
->
->> >> +- sh-eth,endian:                String, endian of sh_eth dmac.
->> >
->> > Is this really used it in this driver ?
->> >
->>
->> Yes. In many cases, this uses little-endian, but user may specify
->> big-endian, I think.
->
-> I meant that I could find "sh-eth,edmac-endian" operation,
-> but, couldn't find "sh-eth,endian" operation on sh_eth_parse_dt()
-> and on Example either.
->
-
-OK,I will remove this sentence.
-
-Thanks,
-  Nobuhiro
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index 63572f9..9ce40df 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -119,4 +119,52 @@
+ 	spi_2: spi@12d40000 {
+ 		status = "disabled";
+ 	};
++
++	gpio_keys {
++		compatible = "gpio-keys";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		menu {
++			label = "SW-TACT2";
++			gpios = <&gpx1 4 0 0x10000 2>;
++			linux,code = <139>;
++			gpio-key,wakeup;
++		};
++
++		home {
++			label = "SW-TACT3";
++			gpios = <&gpx1 5 0 0x10000 2>;
++			linux,code = <102>;
++			gpio-key,wakeup;
++		};
++
++		up {
++			label = "SW-TACT4";
++			gpios = <&gpx1 6 0 0x10000 2>;
++			linux,code = <103>;
++			gpio-key,wakeup;
++		};
++
++		down {
++			label = "SW-TACT5";
++			gpios = <&gpx1 7 0 0x10000 2>;
++			linux,code = <108>;
++			gpio-key,wakeup;
++		};
++
++		back {
++			label = "SW-TACT6";
++			gpios = <&gpx2 0 0 0x10000 2>;
++			linux,code = <158>;
++			gpio-key,wakeup;
++		};
++
++		wakeup {
++			label = "SW-TACT7";
++			gpios = <&gpx2 1 0 0x10000 2>;
++			linux,code = <143>;
++			gpio-key,wakeup;
++		};
++	};
+ };
 -- 
-Nobuhiro Iwamatsu
+1.7.4.1
