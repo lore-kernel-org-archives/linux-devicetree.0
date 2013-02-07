@@ -1,71 +1,55 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] ARM: dts: add minimal DT support for DevKit8000
-Date: Thu, 7 Feb 2013 17:39:49 +0000
-Message-ID: <20130207173949.GA21723@e106331-lin.cambridge.arm.com>
-References: <1360246297-5500-1-git-send-email-anilk4.v@gmail.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V2 1/2] ARM: davinci: da850: add wdt DT node
+Date: Thu, 7 Feb 2013 23:36:59 +0530
+Message-ID: <5113ED43.1060609@ti.com>
+References: <1360123204-9978-1-git-send-email-anilkumar.v@ti.com>
+	<1360123204-9978-2-git-send-email-anilkumar.v@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1360246297-5500-1-git-send-email-anilk4.v@gmail.com>
-Content-Language: en-US
-Content-Disposition: inline
-Sender: linux-omap-owner@vger.kernel.org
-To: Anil Kumar <anilk4.v@gmail.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "b-cousson@ti.com" <b-cousson@ti.com>, "tony@atomide.com" <tony@atomide.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "thomas@tomweber.eu" <thomas@tomweber.eu>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1360123204-9978-2-git-send-email-anilkumar.v-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces+gld-davinci-linux-open-source=gmane.org-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: "Kumar, Anil" <anilkumar.v-l0cyMroinI0@public.gmane.org>
+Cc: mporter-l0cyMroinI0@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, b-cousson-l0cyMroinI0@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 2/6/2013 9:30 AM, Kumar, Anil wrote:
+> Add da850 wdt DT node.
+> Add OF_DEV_AUXDATA for wdt driver to use wdt clock.
+> 
+> Signed-off-by: Kumar, Anil <anilkumar.v-l0cyMroinI0@public.gmane.org>
 
-I have a couple of minor comments.
-
-On Thu, Feb 07, 2013 at 02:11:37PM +0000, Anil Kumar wrote:
-> DevKit8000 is a beagle board clone from Timll, sold by
-> armkits.com. The DevKit8000 has RS232 serial port, LCD, DVI-D,
-> S-Video, Ethernet, SD/MMC, keyboard, camera, SPI, I2C, USB and
-> JTAG interface.
-> 
-> This patch adds the basic DT support for devkit8000. At this time, Information
-> of twl4030, MMC1, I2C1, leds and there pim mux information are added.
-> 
-> Signed-off-by: Anil Kumar <anilk4.v@gmail.com>
-> Tested-by: Thomas Weber <thomas@tomweber.eu>
-> ---
-> 
->  -This patch is based on top of kernel 3.8-rc5.
-> 
->  -Tested on Devkit8000.
-> 
-
-[...]
-
-> diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
-> new file mode 100644
-> index 0000000..9864fd7
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-devkit8000.dts
-> @@ -0,0 +1,125 @@
-> +/*
-> + * Anil Kumar <anilk4.v@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +/dts-v1/;
+> --- a/arch/arm/mach-davinci/da8xx-dt.c
+> +++ b/arch/arm/mach-davinci/da8xx-dt.c
+> @@ -37,11 +37,17 @@ static void __init da8xx_init_irq(void)
+>  	of_irq_init(da8xx_irq_match);
+>  }
+>  
+> +struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
+> +	OF_DEV_AUXDATA("ti,davinci-wdt", 0x01c21000, "watchdog", NULL),
+> +	{}
+> +};
 > +
-> +/include/ "omap3.dtsi"
-> +/ {
-> +	model = "TI OMAP3 Devkit8000";
+>  #ifdef CONFIG_ARCH_DAVINCI_DA850
+>  
+>  static void __init da850_init_machine(void)
+>  {
+> -	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
+> +	of_platform_populate(NULL, of_default_bus_match_table,
+> +			da850_auxdata_lookup, NULL);
 
-Should this not be "TimLL Devkit8000" ?
-
-> +	compatible = "ti,omap3-devkit8000", "ti,omap3";
-
-"timll,devkit8000" ?
-
-[...]
+These hunks clashed with Manish's I2C0 node addition. I resolved it
+locally. I pushed the commit to v3.9/dt-2 branch of my gitorious tree.
+Please use this as the baseline for further DT patches.
 
 Thanks,
-Mark.
-
+Sekhar
