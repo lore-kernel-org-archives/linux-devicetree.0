@@ -1,108 +1,62 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 4/4] serial/arc-uart: switch to devicetree based probing
-Date: Fri, 08 Feb 2013 23:01:27 +0000
-Message-ID: <20130208230127.5F3063E2C27@localhost>
-References: <1357885223-19243-1-git-send-email-vgupta@synopsys.com> <1357885223-19243-5-git-send-email-vgupta@synopsys.com>
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1357885223-19243-5-git-send-email-vgupta@synopsys.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
+Subject: Re: [PATCH 6/6] mmc: dt: bus-width can be an optional property
+Date: Fri, 08 Feb 2013 23:02:58 +0000
+Message-ID: <20130208230259.05F933E2C27@localhost>
+References: <1358766149-9534-1-git-send-email-shawn.guo@linaro.org> <1358766149-9534-7-git-send-email-shawn.guo@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1358766149-9534-7-git-send-email-shawn.guo@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>, linux-mmc@vger.kernel.org
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <cjb@laptop.org>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Jan 2013 11:50:23 +0530, Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
-> * DT binding for arc-uart
-> * With alll the bits in place we can now use DT probing.
+On Mon, 21 Jan 2013 19:02:29 +0800, Shawn Guo <shawn.guo@linaro.org> wrote:
+> None of mmc drivers implements bus-width as a required device tree
+> property.  Instead, some drivers like atmel-mci, dw_mmc, sdhci-s3c
+> implement it as an optional one, and will force bus width to be 1
+> when the property is absent.  Let's change the common binding to
+> reflect what the drivers are usually doing.
 > 
-> Note that there's a bit of kludge right now because earlyprintk portion
-> of driver can't use the DT infrastrcuture to get resoures/plat_data.
-> This requires some infrastructre changes to of_flat_ framework
-> 
-> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-> Cc: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Cc: linux-serial@vger.kernel.org
-> Cc: Alan Cox <alan@linux.intel.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
 > Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Rob Landley <rob@landley.net>
-> Cc: linux-serial@vger.kernel.org
+
+Acked-by: Grant Likely <grant.likely@secretlab.ca>
+
 > ---
->  .../devicetree/bindings/tty/serial/arc-uart.txt    |   26 ++++++++++++
->  drivers/tty/serial/arc_uart.c                      |   43 ++++++++++++++++++-
->  2 files changed, 66 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/tty/serial/arc-uart.txt
+>  Documentation/devicetree/bindings/mmc/mmc.txt |    5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/tty/serial/arc-uart.txt b/Documentation/devicetree/bindings/tty/serial/arc-uart.txt
-> new file mode 100644
-> index 0000000..c3bd8f9
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/tty/serial/arc-uart.txt
-> @@ -0,0 +1,26 @@
-> +* Synopsys ARC UART : Non standard UART used in some of the ARC FPGA boards
-> +
-> +Required properties:
-> +- compatible		: "snps,arc-uart"
-> +- reg			: offset and length of the register set for the device.
-> +- interrupts		: device interrupt
-> +- clock-frequency	: the input clock frequency for the UART
-> +- baud			: baud rate for UART
-
-change 'baud' to 'current-speed'. There is already precedence for this
-with other serial devices.
-
-g.
-
-> @@ -673,8 +693,18 @@ static int __init arc_serial_probe_earlyprintk(struct platform_device *pdev)
->  static int arc_serial_probe(struct platform_device *pdev)
->  {
->  	int rc, dev_id;
-> +	struct device_node *np = pdev->dev.of_node;
-> +
-> +	/* no device tree device */
-> +	if (!np)
-> +		return -ENODEV;
-
-This breaks non-DT users. Is this what you intend? It creates a flag day
-where users have to switch from non-DT to DT cold-turkey.
-
-> +	dev_id = of_alias_get_id(np, "serial");
-> +	if (dev_id < 0) {
-> +		dev_err(&pdev->dev, "failed to get alias id: %d\n", dev_id);
-> +		return dev_id;
-> +	}
-
-Don't fail on this. If you can't get an id then choose one dynamically.
-
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index a591c67..cef217d 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -6,9 +6,6 @@ Interpreted by the OF core:
+>  - reg: Registers location and length.
+>  - interrupts: Interrupts used by the MMC controller.
 >  
-> -	dev_id = pdev->id < 0 ? 0 : pdev->id;
->  	rc = arc_uart_init_one(pdev, dev_id);
->  	if (rc)
->  		return rc;
-> @@ -689,12 +719,19 @@ static int arc_serial_remove(struct platform_device *pdev)
->  	return 0;
->  }
+> -Required properties:
+> -- bus-width: Number of data lines, can be <1>, <4>, or <8>
+> -
+>  Card detection:
+>  If no property below is supplied, standard SDHCI card detect is used.
+>  Only one of the properties in this section should be supplied:
+> @@ -17,6 +14,8 @@ Only one of the properties in this section should be supplied:
+>    - non-removable: non-removable slot (like eMMC); assume always present.
 >  
-> +static const struct of_device_id arc_uart_dt_ids[] = {
-> +	{ .compatible = "snps,arc-uart" },
-> +	{ /* Sentinel */ }
-> +};
-> +MODULE_DEVICE_TABLE(of, arc_uart_dt_ids);
-> +
->  static struct platform_driver arc_platform_driver = {
->  	.probe = arc_serial_probe,
->  	.remove = arc_serial_remove,
->  	.driver = {
->  		.name = DRIVER_NAME,
->  		.owner = THIS_MODULE,
-> +		.of_match_table  = arc_uart_dt_ids,
->  	 },
->  };
->  
+>  Optional properties:
+> +- bus-width: Number of data lines, can be <1>, <4>, or <8>.  The default
+> +  will be <1> if the property is absent.
+>  - wp-gpios: Specify GPIOs for write protection, see gpio binding
+>  - cd-inverted: when present, polarity on the cd gpio line is inverted
+>  - wp-inverted: when present, polarity on the wp gpio line is inverted
 > -- 
-> 1.7.4.1
+> 1.7.9.5
 > 
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
 
 -- 
 Grant Likely, B.Sc, P.Eng.
