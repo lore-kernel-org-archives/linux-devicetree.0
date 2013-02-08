@@ -1,222 +1,48 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v2] media: rc: gpio-ir-recv: add support for device tree
- parsing
-Date: Fri, 08 Feb 2013 22:36:11 +0100
-Message-ID: <51156FCB.6020401@gmail.com>
-References: <1360137832-13086-1-git-send-email-sebastian.hesselbarth@gmail.com> <1360355887-19973-1-git-send-email-sebastian.hesselbarth@gmail.com> <51156DA3.2080006@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <51156DA3.2080006@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mauro Carvalho Chehab <mchehab@redhat.com>, Benoit Thebaudeau <benoit.thebaudeau@advansee.com>, David Hardeman <david@hardeman.nu>, Trilok Soni <tsoni@codeaurora.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Matus Ujhelyi <ujhelyi.m@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: DT: tegra: Add Tegra30 Beaver board support
+Date: Fri, 08 Feb 2013 21:40:24 +0000
+Message-ID: <20130208214024.9467E3E2C27@localhost>
+References: <1356032489-27619-1-git-send-email-pengw@nvidia.com> <50DDC743.2080606@gmail.com> <50DE3146.6090001@nvidia.com> <CAOesGMgW890K4Wo2-SFE4YFn5f8T950BTZ82rkCQfwpV+bsRyQ@mail.gmail.com> <50E478AF.2040406@nvidia.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <50E478AF.2040406-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peng Wu <pengw-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2013 10:26 PM, Sylwester Nawrocki wrote:
-> On 02/08/2013 09:38 PM, Sebastian Hesselbarth wrote:
->> This patch adds device tree parsing for gpio_ir_recv platform_data and
->> the mandatory binding documentation. It basically follows what we already
->> have for e.g. gpio_keys. All required device tree properties are OS
->> independent but an optional property allow linux specific support for rc
->> maps.
->>
->> There was a similar patch sent by Matus Ujhelyi but that discussion
->> died after the first reviews.
->>
->> Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
->> ---
->> Changelog
->>
->> v1->v2:
->> - get rid of ptr returned by _get_devtree_pdata()
->> - check for of_node instead for NULL pdata
->> - remove unneccessary double check for gpios property
->> - remove unneccessary #ifdef CONFIG_OF around match table
->>
->> Cc: Grant Likely<grant.likely@secretlab.ca>
->> Cc: Rob Herring<rob.herring@calxeda.com>
->> Cc: Rob Landley<rob@landley.net>
->> Cc: Mauro Carvalho Chehab<mchehab@redhat.com>
->> Cc: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
->> Cc: Benoit Thebaudeau<benoit.thebaudeau@advansee.com>
->> Cc: David Hardeman<david@hardeman.nu>
->> Cc: Trilok Soni<tsoni@codeaurora.org>
->> Cc: Sylwester Nawrocki<s.nawrocki@samsung.com>
->> Cc: Matus Ujhelyi<ujhelyi.m@gmail.com>
->> Cc: devicetree-discuss@lists.ozlabs.org
->> Cc: linux-doc@vger.kernel.org
->> Cc: linux-kernel@vger.kernel.org
->> Cc: linux-media@vger.kernel.org
->> ---
->> .../devicetree/bindings/media/gpio-ir-receiver.txt | 16 ++++++
->> drivers/media/rc/gpio-ir-recv.c | 57 ++++++++++++++++++++
->> 2 files changed, 73 insertions(+)
->> create mode 100644 Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
->>
->> diff --git a/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
->> b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
->> new file mode 100644
->> index 0000000..8589f30
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
->> @@ -0,0 +1,16 @@
->> +Device-Tree bindings for GPIO IR receiver
->> +
->> +Required properties:
->> + - compatible = "gpio-ir-receiver";
->> + - gpios: OF device-tree gpio specification.
->
-> Perhaps:
-> - compatible: should be "gpio-ir-receiver";
-> - gpios: specifies GPIO used for IR signal reception.
-> ?
+On Wed, 2 Jan 2013 10:13:03 -0800, Peng Wu <pengw-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> On 12/28/2012 08:43 PM, Olof Johansson wrote:
+> > On Fri, Dec 28, 2012 at 3:54 PM, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
+> >> On 12/28/2012 09:22 AM, Rob Herring wrote:
+> >>> On 12/20/2012 01:41 PM, Bryan Wu wrote:
+> >>>> This patch adds support for Tegra30 Beaver board in upstream kernel.
+> >>>> diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dts
+> >>>> +/ {
+> >>>> +    model = "NVIDIA Tegra30 Beaver evaluation board";
+> >>>> +    compatible = "nvidia,beaver", "nvidia,tegra30";
+> >>> nvidia,beaver needs to be documented.
+> >> Hmmm. I guess we've managed not to document /any/ of the Tegra
+> >> board-level compatible values. Bryan, could you make a separate patch to
+> >> add all the existing board compatible values to
+> >> Documentation/devicetree/bindings/arm/tegra.txt. The Beaver addition to
+> >> that file can still be part of the Beaver-specific patch though.
+> > Does it need to be documented? Then the "support a new platform only
+> > through DTS update" is no longer true. :)
+> >
+> > In the past, I don't think we've strictly documented all derivative
+> > platform compatible values, just some of the reference ones?
+> >
+> >
+> > -Olof
+> 
+> Actually in every Tegra board dts file, there is a model string to 
+> describe this machine as well as a compatible board string, just like 
+> the "nvidia,beaver". So do we still need put this duplicated information 
+> in a document file? Or if this is the requirement of DeviceTree. I will 
+> do that. I think we have 12 boards need to add such document currently.
 
-Ok, i'll change that.
+The model string is intended to be human-friendly, where as compatible
+is primarily the matching mechanism.
 
->> +
->> +Optional properties:
->> + - linux,rc-map-name: Linux specific remote control map name.
->> +
->> +Example node:
->> +
->> + ir: ir-receiver {
->> + compatible = "gpio-ir-receiver";
->> + gpios =<&gpio0 19 1>;
->> + linux,rc-map-name = "rc-rc6-mce";
->> + };
->> diff --git a/drivers/media/rc/gpio-ir-recv.c b/drivers/media/rc/gpio-ir-recv.c
->> index 4f71a7d..3c62006 100644
->> --- a/drivers/media/rc/gpio-ir-recv.c
->> +++ b/drivers/media/rc/gpio-ir-recv.c
->> @@ -16,6 +16,7 @@
->> #include<linux/interrupt.h>
->> #include<linux/gpio.h>
->> #include<linux/slab.h>
->> +#include<linux/of_gpio.h>
->> #include<linux/platform_device.h>
->> #include<linux/irq.h>
->> #include<media/rc-core.h>
->> @@ -30,6 +31,50 @@ struct gpio_rc_dev {
->> bool active_low;
->> };
->>
->> +#ifdef CONFIG_OF
->> +/*
->> + * Translate OpenFirmware node properties into platform_data
->> + */
->> +static int gpio_ir_recv_get_devtree_pdata(struct device *dev,
->> + struct gpio_ir_recv_platform_data *pdata)
->> +{
->> + struct device_node *np = dev->of_node;
->> + enum of_gpio_flags flags;
->> + int gpio;
->> +
->> + gpio = of_get_gpio_flags(np, 0,&flags);
->> + if (gpio< 0) {
->> + if (gpio != -EPROBE_DEFER)
->> + dev_err(dev, "Failed to get gpio flags, error: %d\n",
->> + gpio);
->
-> dev_err(dev, "Failed to get gpio flags (%d)\n", gpio);
-> ?
-
-Ack.
-
->> + return gpio;
->> + }
->> +
->> + pdata->gpio_nr = gpio;
->> + pdata->active_low = (flags& OF_GPIO_ACTIVE_LOW) ? true : false;
->
-> This could be simplified to:
->
-> pdata->active_low = (flags & OF_GPIO_ACTIVE_LOW);
-
-Ack.
-
->> + /* probe() takes care of map_name == NULL or allowed_protos == 0 */
->> + pdata->map_name = of_get_property(np, "linux,rc-map-name", NULL);
->> + pdata->allowed_protos = 0;
->> +
->> + return 0;
->> +}
->> +
->> +static struct of_device_id gpio_ir_recv_of_match[] = {
->> + { .compatible = "gpio-ir-receiver", },
->> + { },
->> +};
->> +MODULE_DEVICE_TABLE(of, gpio_ir_recv_of_match);
->> +
->> +#else /* !CONFIG_OF */
->> +
->> +static inline struct gpio_ir_recv_platform_data *
->> +gpio_ir_recv_get_devtree_pdata(struct device *dev)
->
-> Please check how it compiles with CONFIG_OF disabled ;)
-
-Grrrml ;) I'll fix that of course...
-
-> You could also make it:
->
-> #define gpio_ir_recv_get_devtree_pdata (-ENOSYS)
-
-Hmm, does that also play with parameter passing of the
-CONFIG_OF gpio_ir_recv_get_devtree_pdata() ?
-
->> +{
->> + return ERR_PTR(-ENODEV);
->> +}
->> +
->> +#endif
->> +
->> static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
->> {
->> struct gpio_rc_dev *gpio_dev = dev_id;
->> @@ -66,6 +111,17 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
->> pdev->dev.platform_data;
->> int rc;
->>
->> + if (pdev->dev.of_node) {
->> + struct gpio_ir_recv_platform_data *dtpdata =
->
-> I think you could use pdata here instead, as previously. But I'm fine with
-> as it is now as well.
-
-Yeah, but pdata is const and I will change it within _get_devtree_pdata().
-I could cast the const away when passing it to gpio_ir_recv_get_devtree_pdata()
-but it is almost the same amount of code.. and it is cleaner this way.
-
->
->> + devm_kzalloc(&pdev->dev, sizeof(*dtpdata), GFP_KERNEL);
->> + if (!dtpdata)
->> + return -ENOMEM;
->> + rc = gpio_ir_recv_get_devtree_pdata(&pdev->dev, dtpdata);
->> + if (rc)
->> + return rc;
->> + pdata = dtpdata;
->> + }
->> +
->> if (!pdata)
->> return -EINVAL;
->>
->> @@ -192,6 +248,7 @@ static struct platform_driver gpio_ir_recv_driver = {
->> .driver = {
->> .name = GPIO_IR_DRIVER_NAME,
->> .owner = THIS_MODULE,
->> + .of_match_table = of_match_ptr(gpio_ir_recv_of_match),
->> #ifdef CONFIG_PM
->> .pm =&gpio_ir_recv_pm_ops,
->> #endif
->
-> The patch looks good to me in general, after fixing the empty function
-> declaration please feel free to add:
->
-> Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-
-Thanks for the review (again),
-
-I'll push a v3 with your remarks today or tomorrow.
-
-Sebastian
+I don't think it is stricly necessary to document top level compatible
+strings unless there is something quirky that begs to be documented.
