@@ -1,32 +1,37 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 2/2] dmaengine: OMAP: Register SDMA controller with Device
- Tree DMA driver
-Date: Fri, 8 Feb 2013 09:23:24 -0600
-Message-ID: <5115186C.2070406@ti.com>
-References: <1360184596-1603-1-git-send-email-jon-hunter@ti.com> <1360184596-1603-3-git-send-email-jon-hunter@ti.com> <201302071439.13720.arnd@arndb.de>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 2/5] spi: pl022: use generic DMA slave configuration if
+ possible
+Date: Fri, 8 Feb 2013 16:20:31 +0000
+Message-ID: <20130208162031.GX17833@n2100.arm.linux.org.uk>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <1359410300-26113-3-git-send-email-arnd@arndb.de>
+ <1359445794.31148.34.camel@smile> <201301291313.03511.arnd@arndb.de>
+ <CACRpkdZNpCJwp-uaH6feTcaPesNouwpHt-hO-M9v52G=Ux+Hqw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <201302071439.13720.arnd@arndb.de>
-Sender: linux-omap-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Vinod Koul <vinod.koul@intel.com>, Russell King <linux@arm.linux.org.uk>, Matt Porter <mporter@ti.com>, Balaji T K <balajitk@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Felipe Balbi <balbi@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, linux-omap <linux-omap@vger.kernel.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CACRpkdZNpCJwp-uaH6feTcaPesNouwpHt-hO-M9v52G=Ux+Hqw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 07, 2013 at 07:29:17PM +0100, Linus Walleij wrote:
+> Actually I once read about a feature where the kernel provides
+> a static page full of zeroes or something like this, that would be
+> ideal to use in cases like this, then all of this dummy page
+> allocation and freeing can be deleted.
 
-On 02/07/2013 08:39 AM, Arnd Bergmann wrote:
-> On Wednesday 06 February 2013, Jon Hunter wrote:
->> +static struct of_dma_filter_info info;
-> 
-> Both members of this structure are constant, so you can just initialize it here,
-> and it would be nice to give it a more descriptive name, such as omap_dmadev_info.
-
-No problem. By the way, I see the dma_cap_mask_t is defined as follows ...
-
-typedef struct { DECLARE_BITMAP(bits, DMA_TX_TYPE_END); } dma_cap_mask_t;
-
-Is there a good way to statically initialise this?
-
-Cheers
-Jon
+I think you're thinking of empty_zero_page which is used to provide the
+initial BSS pages for user apps.
