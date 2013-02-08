@@ -1,37 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 2/5] spi: pl022: use generic DMA slave configuration if
- possible
-Date: Fri, 08 Feb 2013 17:28:29 +0100
-Message-ID: <11938235.WbhQmuClDR@wuerfel>
-References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <3752726.iyKukyN6sF@wuerfel> <20130208162248.GY17833@n2100.arm.linux.org.uk>
+From: "John W. Linville" <linville@tuxdriver.com>
+Subject: Re: [PATCH] drivers: net: Remove remaining alloc/OOM messages
+Date: Fri, 8 Feb 2013 11:19:19 -0500
+Message-ID: <20130208161918.GD2116@tuxdriver.com>
+References: <1360273587.27863.15.camel@joe-AO722>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20130208162248.GY17833@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Vinod Koul <vinod.koul@linux.intel.com>, Viresh Kumar <viresh.kumar@linaro.org>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Jon Hunter <jon-hunter@ti.com>, spi-devel-general@lists.sourceforge.net, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1360273587.27863.15.camel@joe-AO722>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: netdev <netdev@vger.kernel.org>, linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, e1000-devel@lists.sourceforge.net, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, ath9k-devel@venema.h4ckr.net, wil6210@qca.qualcomm.com, brcm80211-dev-list@broadcom.com, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 08 February 2013 16:22:48 Russell King - ARM Linux wrote:
-> If it's DMA _to_ a device, then we will only ever clean the lines prior to
-> a transfer, never invalidate them.  So that's not really a concern.  (There
-> better not be any dirty cache lines associated with the empty zero page
-> either.)
+On Thu, Feb 07, 2013 at 01:46:27PM -0800, Joe Perches wrote:
+> alloc failures already get standardized OOM
+> messages and a dump_stack.
+> 
+> For the affected mallocs around these OOM messages:
+> 
+> Converted kmallocs with multiplies to kmalloc_array.
+> Converted a kmalloc/memcpy to kmemdup.
+> Removed now unused stack variables.
+> Removed unnecessary parentheses.
+> Neatened alignment.
+> 
+> Signed-off-by: Joe Perches <joe@perches.com>
 
-Right, makes sense. I thought I had read about a CPU that
-could not flush a cache line without also invalidating
-it, but that must have been something other than ARM,
-or maybe I'm misremembering it.
+No objection...
 
-	Arnd
+Acked-by: John W. Linville <linville@tuxdriver.com>
+
+-- 
+John W. Linville		Someday the world will need a hero, and you
+linville@tuxdriver.com			might be all we have.  Be ready.
