@@ -1,36 +1,51 @@
-From: "John W. Linville" <linville@tuxdriver.com>
-Subject: Re: [PATCH] drivers: net: Remove remaining alloc/OOM messages
-Date: Fri, 8 Feb 2013 11:19:19 -0500
-Message-ID: <20130208161918.GD2116@tuxdriver.com>
-References: <1360273587.27863.15.camel@joe-AO722>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V8] kbuild: create a rule to run the pre-processor on
+ *.dts files
+Date: Fri, 08 Feb 2013 10:18:29 -0700
+Message-ID: <51153365.5010109@wwwdotorg.org>
+References: <1360091188-24063-1-git-send-email-swarren@wwwdotorg.org> <20130208144527.0D8DD3E2C01@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1360273587.27863.15.camel@joe-AO722>
+In-Reply-To: <20130208144527.0D8DD3E2C01@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: netdev <netdev@vger.kernel.org>, linux-can@vger.kernel.org, linux-kernel@vger.kernel.org, e1000-devel@lists.sourceforge.net, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, ath9k-devel@venema.h4ckr.net, wil6210@qca.qualcomm.com, brcm80211-dev-list@broadcom.com, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Scott Wood <scottwood@freescale.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 07, 2013 at 01:46:27PM -0800, Joe Perches wrote:
-> alloc failures already get standardized OOM
-> messages and a dump_stack.
+On 02/08/2013 07:45 AM, Grant Likely wrote:
+> On Tue,  5 Feb 2013 12:06:28 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> From: Stephen Warren <swarren@nvidia.com>
+>>
+>> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
+>> passing them to dtc for final compilation. This allows the use of #define
+>> and #include within the .dts file.
+>>
+>> Acked-by: Simon Glass <sjg@chromium.org>
+>> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+>> Acked-by: Michal Marek <mmarek@suse.cz>
+>> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>> Signed-off-by: Stephen Warren <swarren@nvidia.com>
 > 
-> For the affected mallocs around these OOM messages:
+> I've applied this and was going to push it out, but I've just thought of
+> a problem that could be a show stopper. Once a dtsp file includes a C
+> header, the contents of that header become part of the Device Tree ABI.
+> If someone changes that file (ie. to renumber a series of #defines) then
+> that will break the binding. We need a way to protect against that.
+> Someone changing a .h file may make the assumption that it is only
+> kernel internal and won't realize that it has external implications.
 > 
-> Converted kmallocs with multiplies to kmalloc_array.
-> Converted a kmalloc/memcpy to kmemdup.
-> Removed now unused stack variables.
-> Removed unnecessary parentheses.
-> Neatened alignment.
-> 
-> Signed-off-by: Joe Perches <joe@perches.com>
+> I'm thinking that any dts includes need to be treated in the same way as
+> userspace headers. We could put them into include/uapi and piggy back on
+> the protection already afforded by that directory, or come up with
+> something new. Any thoughts?
 
-No objection...
+Yes, that's true.
 
-Acked-by: John W. Linville <linville@tuxdriver.com>
+What protection is provided by include/uapi - something programmatic or
+simply stricter review?
 
--- 
-John W. Linville		Someday the world will need a hero, and you
-linville@tuxdriver.com			might be all we have.  Be ready.
+I wondered if we shouldn't put the headers into the .dts directory, then
+update the kernel to include them too. That would also make it obvious
+they were part of the DT ABI.
