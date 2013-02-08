@@ -1,120 +1,76 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] mfd: stmpe: Pull IRQ GPIO number from DT during DT-based
- probe
-Date: Fri, 08 Feb 2013 22:51:51 +0000
-Message-ID: <20130208225151.4BF8C3E2C27@localhost>
-References: <1357568989-16237-1-git-send-email-marex@denx.de>
- <20130108094134.GA21994@gmail.com> <201301081044.14876.marex@denx.de>
- <201301081048.38149.marex@denx.de>
- <CAKohpo=YnLJN4_xA1WTiJaZeb-Oyc=RypYUyaSibmn6G4X9m4A@mail.gmail.com>
- <20130108111104.GF21994@gmail.com>
- <CAKohpomiS+UFzgiJaQbm8aZVPY0jeYhm1k7Yndk50z8=K4LvGQ@mail.gmail.com>
- <CACRpkdZWi4M3HmO_rq1O9aGTKYR0iMLXJo+nos3hYu3C_DFRHQ@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: RFC: Static memory controller node description
+Date: Fri, 08 Feb 2013 22:55:03 +0000
+Message-ID: <20130208225503.E93763E2C27@localhost>
+References: <CAHTX3dJ+ii9dP7w860Or80NWOAPoYZt8ftUwNfAe6WkEoeQJXQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CACRpkdZWi4M3HmO_rq1O9aGTKYR0iMLXJo+nos3hYu3C_DFRHQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Linus Walleij <linus.walleij@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>
-Cc: devicetree-discuss@lists.ozlabs.org, vipul kumar samar <vipulkumar.samar@st.com>, Samuel Ortiz <sameo@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAHTX3dJ+ii9dP7w860Or80NWOAPoYZt8ftUwNfAe6WkEoeQJXQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Jan 2013 12:42:53 +0100, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Tue, Jan 8, 2013 at 12:14 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> > On 8 January 2013 16:41, Lee Jones <lee.jones@linaro.org> wrote:
-> >>> Hmm.. I tried a bit, but couldn't find any such call :(
-> >>> Probably an assumption is taken here. GPIO pins which are going to be used as
-> >>> interrupt lines, wouldn't be getting set in output mode at all. So,
-> >>> once they are put
-> >>> in input mode in beginning, nobody would change it ever.
-> >>>
-> >>> Much of gpio controllers configure gpio pins in input mode in their probe().
-> >>>
-> >>> Maybe, there is something else :)
-> >>
-> >> Pinctrl?
-> >
-> > I don't think pinctrl is playing with it. I searched for
-> > "direction_input" string and
-> > pinctrl routine also had similar name. I couldn't fine use of
-> > direction_input anywhere
-> > in kernel, for setting them as irqs for OF cases.
+On Thu, 10 Jan 2013 16:40:09 +0100, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
+> Hi guys,
 > 
-> pinctrl has pinctrl_gpio_direction_input() and
-> pinctrl_gpio_direction_output() which are supposed to
-> be called *only* by GPIOlib frontends using pinctrl
-> as backend to control the pins.
+> we want to add static memory controller driver for xilinx zynq to the
+> linux kernel. (It will go to drivers/memory/ folder)
+> Just need to clear dts fragment which describe it.
 > 
-> But if it's a pinctrl driver using standard pinconfig from
-> include/linux/pinctrl/pinconf-generic.h
-> I'm all for adding a PIN_CONFIG_INPUT_ENABLE
-> to these definintions so it can be set up as input
-> at boot from the device tree using hogs or something,
-> that make things easy when using GPIOs as IRQ
-> providers only.
+> It is compatible with pl353 with 2 interfaces when only one interface
+> can be used.
+> Nand, nor and sram memories are supported. Driver will do additional
+> setup for NAND and power management.
 > 
-> So the alternative is to just set up the IRQ using the
-> gpiolib functions for this: of_get_gpio() if you need the
-> number from DT, then gpio_request() and
-> gpio_direction_input() as on any GPIO. This can be
-> done in the device driver or board code depending
-> on use case.
+> I am using extended compatible property based on
+> Documentation/devicetree/bindings/arm/primecell.txt. Is it correct?
 > 
-> In the Nomadik I did this (maybe ugly) hack for a
-> similar case:
+> Nand case (we have special driver for nand) - interrupts are used only
+> in connection with nand.
 > 
-> +/*
-> + * The SMSC911x IRQ is connected to a GPIO pin, but the driver expects
-> + * to simply request an IRQ passed as a resource. So the GPIO pin needs
-> + * to be requested by this hog and set as input.
-> + */
-> +static int __init cpu8815_eth_init(void)
-> +{
-> +       struct device_node *eth;
-> +       int gpio, irq, err;
-> +
-> +       eth = of_find_node_by_path("/external-bus@34000000/ethernet@300");
-> +       if (!eth) {
-> +               pr_info("could not find any ethernet controller\n");
-> +               return 0;
-> +       }
-> +       gpio = of_get_gpio(eth, 0);
-> +       err = gpio_request(gpio, "eth_irq");
-> +       if (err) {
-> +               pr_info("failed to request ethernet GPIO\n");
-> +               return -ENODEV;
-> +       }
-> +       err = gpio_direction_input(gpio);
-> +       if (err) {
-> +               pr_info("failed to set ehernet GPIO as input\n");
-> +               return -ENODEV;
-> +       }
-> +       irq = gpio_to_irq(gpio);
-> +       pr_info("enabled ethernet GPIO %d, IRQ %d\n", gpio, irq);
-> +       return 0;
-> +}
-> +device_initcall(cpu8815_eth_init);
+> smc@0xe000e000 {
+> 	#address-cells = <1>;
+> 	#size-cells = <1>;
+> 	compatible = "xlnx,ps7-smc", "arm,pl353", "arm,primecell";
+> 	reg = <0xe000e000 0x1000>;
+> 	interrupts = <0 18 4>;
+> 	interrupt-parent = <&ps7_scugic_0>;
+> 	ranges;
+> 	nand@e1000000 {
+> 		compatible = "xlnx,ps7-nand-1.00.a";
+> 		reg = <0xe1000000 0x1000000>;
+> 		xlnx,nand-width = <16>;
+> 	}
+> }
 > 
-> I haven't read review comments on that patch.
+> or this one for NOR
 > 
-> Maybe it's not such a good idea to add the GPIO to the device itself
-> when it's being hogged by board code like this. It's a bit of a grey area
-> so I'm a bit confused here.
+> smc@0xe000e000 {
+> 	#address-cells = <1>;
+> 	#size-cells = <1>;
+> 	compatible = "xlnx,ps7-smc", "arm,pl353", "arm,primecell";
+> 	reg = <0xe000e000 0x1000>;
+> 	ranges;
+> 	nor: nor@e2000000 {
+> 		compatible = "cfi-flash";
+> 		reg = <0xE2000000 0x2000000>;
+> 		bank-width = <1>;
+> 	}
+> }
 > 
-> Maybe the GPIO lib actually needs a "hog" mechanism that can
-> request and set GPIO pins as input/output on boot and then
-> forget about them.
+> Can you see any problem with these dts fragments?
 
-That would be reasonable. Probably as properties in the gpio controller
-node that specify how to set the inital state.
+Looks fine to me.
 
 g.
