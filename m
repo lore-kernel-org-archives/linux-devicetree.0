@@ -1,87 +1,131 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] mmc: omap_hsmmc: Enable SDIO IRQ using a GPIO in idle mode.
-Date: Fri, 08 Feb 2013 13:05:20 +0000
-Message-ID: <20130208130520.4B1203E2B73@localhost>
-References: <20121220220444.GA350@blumentopf> <1356041532-919-1-git-send-email-andreas.fenkart@streamunlimited.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1356041532-919-1-git-send-email-andreas.fenkart@streamunlimited.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: tony@atomide.com
-Cc: linux-omap@vger.kernel.org, Andreas Fenkart <andreas.fenkart@streamunlimited.com>, devicetree-discuss@lists.ozlabs.org, linux-mmc@vger.kernel.org, santosh.shilimkar@ti.com, cjb@laptop.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH V3 4/5] ARM: dts: Add #dma-cells for generic dma binding
+ support
+Date: Fri, 08 Feb 2013 07:12:22 -0600
+Message-ID: <5114F9B6.2080800@gmail.com>
+References: <1360131529-2847-1-git-send-email-padma.v@samsung.com> <1360131529-2847-5-git-send-email-padma.v@samsung.com> <511275AA.1070006@gmail.com> <CAAgF-BeEyXUCUrPcA87bmkHAjUtW0jE7pT0XE6voG4dav2rgSg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAAgF-BeEyXUCUrPcA87bmkHAjUtW0jE7pT0XE6voG4dav2rgSg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padma Venkat <padma.kvr@gmail.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, jassisinghbrar@gmail.com, kgene.kim@samsung.com, arnd@arndb.de, boojin.kim@samsung.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, thomas.abraham@linaro.org, jon-hunter@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 20 Dec 2012 23:12:12 +0100, Andreas Fenkart <andreas.fenkart@streamunlimited.com> wrote:
-> Without functional clock the omap_hsmmc module can't forward
-> SDIO IRQs to the system. This patch reconfigures dat1 line
-> as a gpio while the fclk is off. And uses SDIO IRQ detection of
-> the module, while fclk is present.
+On 02/07/2013 10:20 PM, Padma Venkat wrote:
+> Hi Rob,
 > 
-> Signed-off-by: Andreas Fenkart <andreas.fenkart@streamunlimited.com>
-> ---
->  .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   42 ++++
->  arch/arm/plat-omap/include/plat/mmc.h              |    4 +
->  drivers/mmc/host/omap_hsmmc.c                      |  219 ++++++++++++++++++--
->  3 files changed, 247 insertions(+), 18 deletions(-)
+> On Wed, Feb 6, 2013 at 8:54 PM, Rob Herring <robherring2@gmail.com> wrote:
+>> On 02/06/2013 12:18 AM, Padmavathi Venna wrote:
+>>> This patch adds #dma-cells property to PL330 DMA controller
+>>> nodes for supporting generic dma dt bindings on samsung
+>>> exynos5250 platform.
+>>
+>> The subject doesn't reflect this is for pl330.
+> OK. I will fix this.
+>>
+>>>
+>>> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+>>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>>> ---
+>>>  .../devicetree/bindings/dma/arm-pl330.txt          |   15 +++++++++++----
+>>>  arch/arm/boot/dts/exynos5250.dtsi                  |    4 ++++
+>>>  2 files changed, 15 insertions(+), 4 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/dma/arm-pl330.txt b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+>>> index 36e27d5..1fdbff6 100644
+>>> --- a/Documentation/devicetree/bindings/dma/arm-pl330.txt
+>>> +++ b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+>>> @@ -8,6 +8,8 @@ Required properties:
+>>>    - reg: physical base address of the controller and length of memory mapped
+>>>      region.
+>>>    - interrupts: interrupt number to the cpu.
+>>> +  - #dma-cells: must be <1>. used to represent the number of integer
+>>> +    cells in the dmas property of client device.
+>>
+>> This should be optional in the case of platforms supporting only memory
+>> to memory xfers.
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> index d1b8932..4d57637 100644
-> --- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-> @@ -24,6 +24,29 @@ One tx and one rx pair is required.
->  dma-names: DMA request names. These strings correspond 1:1 with
->  the ordered pairs in dmas. The RX request must be "rx" and the
->  TX request must be "tx".
-> +ti,cirq-gpio: When omap_hsmmc module is suspended, its functional
-> +clock is turned off. Without fclk it can't forward SDIO IRQs to the
-> +system. For that to happen, it needs to tell the PRCM to restore
-> +its fclk, which is done through the swakeup line.
-> +
-> +                   ------
-> +                  | PRCM |
-> +                   ------
-> +                    | ^
-> +               fclk | | swakeup
-> +                    v |
-> +                  -------               ------
-> +      <-- IRQ -- | hsmmc | <-- CIRQ -- | card |
-> +                  -------               ------
-> +
-> +The problem is, that on the AM335x family the swakeup line is
-> +missing, it has not been routed from the module to the PRCM.
-> +The way to work around this, is to reconfigure the dat1 line as a
-> +GPIO upon suspend. Beyond this option you also need to set named
-> +states "default" and "idle "in the .dts file for the pins, using
-> +pinctrl-single.c. The MMC driver will then then toggle between
-> +default and idle during the runtime.
-> +
->  
->  Examples:
->  
-> @@ -53,3 +76,22 @@ Examples:
->  			&edma 25>;
->  		dma-names = "tx", "rx";
->  	};
-> +
-> +[am335x with with gpio for sdio irq]
-> +
-> +	mmc1_cirq_pin: pinmux_cirq_pin {
-> +		pinctrl-single,pins = <
-> +			0x0f8 0x3f	/* MMC0_DAT1 as GPIO2_28 */
-> +		>;
-> +	};
-> +
-> +	mmc1: mmc@48060000 {
-> +		pinctrl-names = "default", "idle";
-> +		pinctrl-0 = <&mmc1_pins>;
-> +		pinctrl-1 = <&mmc1_cirq_pin>;
-> +		ti,cirq-gpio = <&gpio3 28 0>;
-> +		ti,non-removable;
-> +		bus-width = <4>;
-> +		vmmc-supply = <&ldo2_reg>;
-> +		vmmc_aux-supply = <&vmmc>;
-> +	};
+> In Exynos we have support for both peripheral to peripheral and memory
+> to memory.
+> So I made it as required property. Should I make this as optional?
 
-Binding looks reasonable.
+I believe that is what I said. Highbank has the pl330 and only supports
+mem to mem transfers.
 
-Reviewed-by: Grant Likely <grant.likely@secretlab.ca>
+Rob
 
+> 
+>>
+>> Rob
+>>
+>>>
+>>>  Optional properties:
+>>>  - dma-coherent      : Present if dma operations are coherent
+>>> @@ -18,16 +20,21 @@ Example:
+>>>               compatible = "arm,pl330", "arm,primecell";
+>>>               reg = <0x12680000 0x1000>;
+>>>               interrupts = <99>;
+>>> +             #dma-cells = <1>;
+>>>       };
+>>>
+>>>  Client drivers (device nodes requiring dma transfers from dev-to-mem or
+>>> -mem-to-dev) should specify the DMA channel numbers using a two-value pair
+>>> +mem-to-dev) should specify the DMA channel numbers and dma channel names
+>>>  as shown below.
+>>>
+>>>    [property name]  = <[phandle of the dma controller] [dma request id]>;
+>>> +  [property name]  = <[dma channel name]>
+>>>
+>>>        where 'dma request id' is the dma request number which is connected
+>>> -      to the client controller. The 'property name' is recommended to be
+>>> -      of the form <name>-dma-channel.
+>>> +      to the client controller. The 'property name' 'dmas' and 'dma-names'
+>>> +      as required by the generic dma device tree binding helpers. The dma
+>>> +      names correspond 1:1 with the dma request ids in the dmas property.
+>>>
+>>> -  Example:  tx-dma-channel = <&pdma0 12>;
+>>> +  Example:  dmas = <&pdma0 12
+>>> +                 &pdma1 11>;
+>>> +         dma-names = "tx", "rx";
+>>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+>>> index f50b4e8..724f5bd 100644
+>>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>>> @@ -312,24 +312,28 @@
+>>>                       compatible = "arm,pl330", "arm,primecell";
+>>>                       reg = <0x121A0000 0x1000>;
+>>>                       interrupts = <0 34 0>;
+>>> +                     #dma-cells = <1>;
+>>>               };
+>>>
+>>>               pdma1: pdma@121B0000 {
+>>>                       compatible = "arm,pl330", "arm,primecell";
+>>>                       reg = <0x121B0000 0x1000>;
+>>>                       interrupts = <0 35 0>;
+>>> +                     #dma-cells = <1>;
+>>>               };
+>>>
+>>>               mdma0: mdma@10800000 {
+>>>                       compatible = "arm,pl330", "arm,primecell";
+>>>                       reg = <0x10800000 0x1000>;
+>>>                       interrupts = <0 33 0>;
+>>> +                     #dma-cells = <1>;
+>>>               };
+>>>
+>>>               mdma1: mdma@11C10000 {
+>>>                       compatible = "arm,pl330", "arm,primecell";
+>>>                       reg = <0x11C10000 0x1000>;
+>>>                       interrupts = <0 124 0>;
+>>> +                     #dma-cells = <1>;
+>>>               };
+>>>       };
+>>>
+>>>
+>>
+> 
+> Thanks
+> Padma
+> 
