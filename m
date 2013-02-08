@@ -1,76 +1,109 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: RFC: Static memory controller node description
-Date: Fri, 08 Feb 2013 22:55:03 +0000
-Message-ID: <20130208225503.E93763E2C27@localhost>
-References: <CAHTX3dJ+ii9dP7w860Or80NWOAPoYZt8ftUwNfAe6WkEoeQJXQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAHTX3dJ+ii9dP7w860Or80NWOAPoYZt8ftUwNfAe6WkEoeQJXQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 4/4] serial/arc-uart: switch to devicetree based probing
+Date: Fri, 08 Feb 2013 23:01:27 +0000
+Message-ID: <20130208230127.5F3063E2C27@localhost>
+References: <1357885223-19243-1-git-send-email-vgupta@synopsys.com> <1357885223-19243-5-git-send-email-vgupta@synopsys.com>
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1357885223-19243-5-git-send-email-vgupta@synopsys.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Vineet Gupta <Vineet.Gupta1@synopsys.com>, Arnd Bergmann <arnd@arndb.de>, Alan Cox <alan@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Jan 2013 16:40:09 +0100, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org> wrote:
-> Hi guys,
+On Fri, 11 Jan 2013 11:50:23 +0530, Vineet Gupta <Vineet.Gupta1@synopsys.com> wrote:
+> * DT binding for arc-uart
+> * With alll the bits in place we can now use DT probing.
 > 
-> we want to add static memory controller driver for xilinx zynq to the
-> linux kernel. (It will go to drivers/memory/ folder)
-> Just need to clear dts fragment which describe it.
+> Note that there's a bit of kludge right now because earlyprintk portion
+> of driver can't use the DT infrastrcuture to get resoures/plat_data.
+> This requires some infrastructre changes to of_flat_ framework
 > 
-> It is compatible with pl353 with 2 interfaces when only one interface
-> can be used.
-> Nand, nor and sram memories are supported. Driver will do additional
-> setup for NAND and power management.
+> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Arnd Bergmann <arnd@arndb.de>
+> Cc: linux-serial@vger.kernel.org
+> Cc: Alan Cox <alan@linux.intel.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: linux-serial@vger.kernel.org
+> ---
+>  .../devicetree/bindings/tty/serial/arc-uart.txt    |   26 ++++++++++++
+>  drivers/tty/serial/arc_uart.c                      |   43 ++++++++++++++++++-
+>  2 files changed, 66 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/tty/serial/arc-uart.txt
 > 
-> I am using extended compatible property based on
-> Documentation/devicetree/bindings/arm/primecell.txt. Is it correct?
-> 
-> Nand case (we have special driver for nand) - interrupts are used only
-> in connection with nand.
-> 
-> smc@0xe000e000 {
-> 	#address-cells = <1>;
-> 	#size-cells = <1>;
-> 	compatible = "xlnx,ps7-smc", "arm,pl353", "arm,primecell";
-> 	reg = <0xe000e000 0x1000>;
-> 	interrupts = <0 18 4>;
-> 	interrupt-parent = <&ps7_scugic_0>;
-> 	ranges;
-> 	nand@e1000000 {
-> 		compatible = "xlnx,ps7-nand-1.00.a";
-> 		reg = <0xe1000000 0x1000000>;
-> 		xlnx,nand-width = <16>;
-> 	}
-> }
-> 
-> or this one for NOR
-> 
-> smc@0xe000e000 {
-> 	#address-cells = <1>;
-> 	#size-cells = <1>;
-> 	compatible = "xlnx,ps7-smc", "arm,pl353", "arm,primecell";
-> 	reg = <0xe000e000 0x1000>;
-> 	ranges;
-> 	nor: nor@e2000000 {
-> 		compatible = "cfi-flash";
-> 		reg = <0xE2000000 0x2000000>;
-> 		bank-width = <1>;
-> 	}
-> }
-> 
-> Can you see any problem with these dts fragments?
+> diff --git a/Documentation/devicetree/bindings/tty/serial/arc-uart.txt b/Documentation/devicetree/bindings/tty/serial/arc-uart.txt
+> new file mode 100644
+> index 0000000..c3bd8f9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/tty/serial/arc-uart.txt
+> @@ -0,0 +1,26 @@
+> +* Synopsys ARC UART : Non standard UART used in some of the ARC FPGA boards
+> +
+> +Required properties:
+> +- compatible		: "snps,arc-uart"
+> +- reg			: offset and length of the register set for the device.
+> +- interrupts		: device interrupt
+> +- clock-frequency	: the input clock frequency for the UART
+> +- baud			: baud rate for UART
 
-Looks fine to me.
+change 'baud' to 'current-speed'. There is already precedence for this
+with other serial devices.
 
 g.
+
+> @@ -673,8 +693,18 @@ static int __init arc_serial_probe_earlyprintk(struct platform_device *pdev)
+>  static int arc_serial_probe(struct platform_device *pdev)
+>  {
+>  	int rc, dev_id;
+> +	struct device_node *np = pdev->dev.of_node;
+> +
+> +	/* no device tree device */
+> +	if (!np)
+> +		return -ENODEV;
+
+This breaks non-DT users. Is this what you intend? It creates a flag day
+where users have to switch from non-DT to DT cold-turkey.
+
+> +	dev_id = of_alias_get_id(np, "serial");
+> +	if (dev_id < 0) {
+> +		dev_err(&pdev->dev, "failed to get alias id: %d\n", dev_id);
+> +		return dev_id;
+> +	}
+
+Don't fail on this. If you can't get an id then choose one dynamically.
+
+>  
+> -	dev_id = pdev->id < 0 ? 0 : pdev->id;
+>  	rc = arc_uart_init_one(pdev, dev_id);
+>  	if (rc)
+>  		return rc;
+> @@ -689,12 +719,19 @@ static int arc_serial_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id arc_uart_dt_ids[] = {
+> +	{ .compatible = "snps,arc-uart" },
+> +	{ /* Sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, arc_uart_dt_ids);
+> +
+>  static struct platform_driver arc_platform_driver = {
+>  	.probe = arc_serial_probe,
+>  	.remove = arc_serial_remove,
+>  	.driver = {
+>  		.name = DRIVER_NAME,
+>  		.owner = THIS_MODULE,
+> +		.of_match_table  = arc_uart_dt_ids,
+>  	 },
+>  };
+>  
+> -- 
+> 1.7.4.1
+> 
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
