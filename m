@@ -1,14 +1,16 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH V8] kbuild: create a rule to run the pre-processor on
- *.dts files
-Date: Fri, 08 Feb 2013 14:45:26 +0000
-Message-ID: <20130208144527.0D8DD3E2C01@localhost>
-References: <1360091188-24063-1-git-send-email-swarren@wwwdotorg.org>
+From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V2 2/2] dmaengine: OMAP: Register SDMA controller with
+ Device Tree DMA driver
+Date: Fri, 8 Feb 2013 09:05:28 -0600
+Message-ID: <51151438.2000108@ti.com>
+References: <1360285506-22354-1-git-send-email-jon-hunter@ti.com>
+ <1360285506-22354-3-git-send-email-jon-hunter@ti.com>
+ <20130208075552.GD21879@arwen.pp.htv.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360091188-24063-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+In-Reply-To: <20130208075552.GD21879-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,34 +21,76 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>
+To: balbi-l0cyMroinI0@public.gmane.org
+Cc: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Sourav Poddar <sourav.poddar-l0cyMroinI0@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  5 Feb 2013 12:06:28 -0700, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+On 02/08/2013 01:55 AM, Felipe Balbi wrote:
+> Hi,
 > 
-> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
-> passing them to dtc for final compilation. This allows the use of #define
-> and #include within the .dts file.
+> On Thu, Feb 07, 2013 at 07:05:06PM -0600, Jon Hunter wrote:
+>> If the device-tree blob is present during boot, then register the SDMA
+>> controller with the device-tree DMA driver so that we can use device-tree
+>> to look-up DMA client information.
+>>
+>> Signed-off-by: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
 > 
-> Acked-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>
-> Acked-by: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>
-> Acked-by: Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> single comment below, other than that:
+> 
+> Reviewed-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> 
+>> ---
+>>  arch/arm/mach-omap2/dma.c |    4 ++++
+>>  drivers/dma/omap-dma.c    |   37 +++++++++++++++++++++++++++++++++++--
+>>  2 files changed, 39 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/mach-omap2/dma.c b/arch/arm/mach-omap2/dma.c
+>> index 5cd8d76..71dadff 100644
+>> --- a/arch/arm/mach-omap2/dma.c
+>> +++ b/arch/arm/mach-omap2/dma.c
+>> @@ -28,6 +28,7 @@
+>>  #include <linux/init.h>
+>>  #include <linux/device.h>
+>>  #include <linux/dma-mapping.h>
+>> +#include <linux/of.h>
+>>  #include <linux/omap-dma.h>
+>>  
+>>  #include "soc.h"
+>> @@ -304,6 +305,9 @@ static int __init omap2_system_dma_init(void)
+>>  	if (res)
+>>  		return res;
+>>  
+>> +	if (of_have_populated_dt())
+>> +		return res;
+>> +
+>>  	pdev = platform_device_register_full(&omap_dma_dev_info);
+>>  	if (IS_ERR(pdev))
+>>  		return PTR_ERR(pdev);
+>> diff --git a/drivers/dma/omap-dma.c b/drivers/dma/omap-dma.c
+>> index c4b4fd2..0067bd0 100644
+>> --- a/drivers/dma/omap-dma.c
+>> +++ b/drivers/dma/omap-dma.c
+>> @@ -16,6 +16,8 @@
+>>  #include <linux/platform_device.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/spinlock.h>
+>> +#include <linux/of_dma.h>
+>> +#include <linux/of_device.h>
+>>  
+>>  #include "virt-dma.h"
+>>  
+>> @@ -67,6 +69,8 @@ static const unsigned es_bytes[] = {
+>>  	[OMAP_DMA_DATA_TYPE_S32] = 4,
+>>  };
+>>  
+>> +static struct of_dma_filter_info info;
+> 
+> Arnd also mentioned that since all fields belonging to this are
+> constant, you could statically initialize them here. He also mentioned
+> you should call this by a more descriptive name:
 
-I've applied this and was going to push it out, but I've just thought of
-a problem that could be a show stopper. Once a dtsp file includes a C
-header, the contents of that header become part of the Device Tree ABI.
-If someone changes that file (ie. to renumber a series of #defines) then
-that will break the binding. We need a way to protect against that.
-Someone changing a .h file may make the assumption that it is only
-kernel internal and won't realize that it has external implications.
+Oops sorry missed that comment. Will fix up and re-send.
 
-I'm thinking that any dts includes need to be treated in the same way as
-userspace headers. We could put them into include/uapi and piggy back on
-the protection already afforded by that directory, or come up with
-something new. Any thoughts?
-
-g.
+Cheers
+Jon
