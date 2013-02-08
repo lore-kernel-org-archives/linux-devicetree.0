@@ -1,32 +1,58 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] exynos_g2d: Add Bindings for exynos G2D driver
-Date: Fri, 08 Feb 2013 21:50:06 +0000
-Message-ID: <20130208215006.605183E2C27@localhost>
-References: <1357218214-3706-1-git-send-email-ajaykumar.rs@samsung.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v2] media: rc: gpio-ir-recv: add support for device tree
+ parsing
+Date: Fri, 08 Feb 2013 22:52:32 +0100
+Message-ID: <511573A0.1030502@gmail.com>
+References: <1360137832-13086-1-git-send-email-sebastian.hesselbarth@gmail.com> <1360355887-19973-1-git-send-email-sebastian.hesselbarth@gmail.com> <51156DA3.2080006@gmail.com> <51156FCB.6020401@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1357218214-3706-1-git-send-email-ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <51156FCB.6020401@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mauro Carvalho Chehab <mchehab@redhat.com>, Benoit Thebaudeau <benoit.thebaudeau@advansee.com>, David Hardeman <david@hardeman.nu>, Trilok Soni <tsoni@codeaurora.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Matus Ujhelyi <ujhelyi.m@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 03 Jan 2013 08:03:34 -0500, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Add documentation for the DT bindings in exynos G2D driver.
-> 
-> Signed-off-by: Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On 02/08/2013 10:36 PM, Sebastian Hesselbarth wrote:
+>> You could also make it:
+>>
+>> #define gpio_ir_recv_get_devtree_pdata (-ENOSYS)
+>
+> Hmm, does that also play with parameter passing of the
+> CONFIG_OF gpio_ir_recv_get_devtree_pdata() ?
 
-Applied, thanks.
+Oops, should have been:
 
-g.
+#define gpio_ir_recv_get_devtree_pdata(dev, pd) (-ENOSYS)
+
+>> #define gpio_ir_recv_get_devtree_pdata (-ENOSYS)
+>>> +{
+>>> + return ERR_PTR(-ENODEV);
+>>> +}
+>>> +
+>>> +#endif
+>>> +
+>>> static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
+>>> {
+>>> struct gpio_rc_dev *gpio_dev = dev_id;
+>>> @@ -66,6 +111,17 @@ static int gpio_ir_recv_probe(struct
+>>> platform_device *pdev)
+>>> pdev->dev.platform_data;
+>>> int rc;
+>>>
+>>> + if (pdev->dev.of_node) {
+>>> + struct gpio_ir_recv_platform_data *dtpdata =
+>>
+>> I think you could use pdata here instead, as previously. But I'm fine
+>> with
+>> as it is now as well.
+>
+> Yeah, but pdata is const and I will change it within _get_devtree_pdata().
+> I could cast the const away when passing it to
+> gpio_ir_recv_get_devtree_pdata()
+> but it is almost the same amount of code.. and it is cleaner this way.
+
+True, let's leave it intact then.
+
+S.
