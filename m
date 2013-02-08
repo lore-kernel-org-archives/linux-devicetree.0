@@ -1,53 +1,53 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/5] spi: pl022: use generic DMA slave configuration if
- possible
-Date: Fri, 8 Feb 2013 23:10:02 +0100
-Message-ID: <CACRpkdYOB=XX+Ogs8SVrrwVdMw+xZ9u3BBwwhsKYJKu4tTdDOg@mail.gmail.com>
-References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <3752726.iyKukyN6sF@wuerfel>
- <20130208162248.GY17833@n2100.arm.linux.org.uk>
- <11938235.WbhQmuClDR@wuerfel>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v4 01/10] s5p-csis: Add device tree support
+Date: Fri, 08 Feb 2013 23:29:10 +0100
+Message-ID: <51157C36.6030505@gmail.com>
+References: <1359745771-23684-1-git-send-email-s.nawrocki@samsung.com> <1359745771-23684-2-git-send-email-s.nawrocki@samsung.com> <5112E907.4080100@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <11938235.WbhQmuClDR@wuerfel>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5112E907.4080100@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, rob.herring@calxeda.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 8, 2013 at 5:28 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 08 February 2013 16:22:48 Russell King - ARM Linux wrote:
->> If it's DMA _to_ a device, then we will only ever clean the lines prior to
->> a transfer, never invalidate them.  So that's not really a concern.  (There
->> better not be any dirty cache lines associated with the empty zero page
->> either.)
+On 02/07/2013 12:36 AM, Stephen Warren wrote:
+> On 02/01/2013 12:09 PM, Sylwester Nawrocki wrote:
+>> s5p-csis is platform device driver for MIPI-CSI frontend to the FIMC
+>> device. This patch support for binding the driver to the MIPI-CSIS
+>> devices instantiated from device tree and for parsing all SoC and
+>> board specific properties.
 >
-> Right, makes sense. I thought I had read about a CPU that
-> could not flush a cache line without also invalidating
-> it, but that must have been something other than ARM,
-> or maybe I'm misremembering it.
+>> diff --git a/Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt
+>b/Documentation/devicetree/bindings/media/soc/samsung-mipi-csis.txt
+>
+>> +Optional properties:
+>> +
+>> +- clock-frequency : The IP's main (system bus) clock frequency in Hz, default
+>> +		    value when this property is not specified is 166 MHz;
+>
+> Shouldn't this be a "clocks" property, so that the driver can call
+> clk_get(), clk_prepare_enable(), clk_get_rate(), etc. on it?
 
-I don't think it matters one bit. The page can contain a bitmap
-of Donald Duck or zero FWIW. It's just that the DMA
-controller just neeeds to read *something* that does not cause
-a bus stall.
+Hi Stephen,
 
-It's due to the syncronous nature of the SPI protocol, to get
-something out you need to put something in. So when reading,
-this is a way to feed in some junk.
+Thanks for your review!
 
-So this goes on my TODO...
+I also use "clocks" and "clock-names" property, but didn't specify
+it here, because the Exynos SoCs clocks driver is not in the mainline yet.
 
-Yours,
-Linus Walleij
+There are two clocks the driver needs to be aware of. One of them needs
+to have a specific parent clock set and the frequency set properly,
+so when it is put into a data pipeline with other IPs there is no overflows
+of their input/output FIFOs.
+
+devfreq may change those frequencies if enabled, however its another topic.
+I wanted to ensure the device has initially correct local clock frequency
+set, with which it can operate.
+
+--
+
+Thanks,
+Sylwester
