@@ -1,51 +1,96 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V8] kbuild: create a rule to run the pre-processor on
- *.dts files
-Date: Fri, 08 Feb 2013 10:18:29 -0700
-Message-ID: <51153365.5010109@wwwdotorg.org>
-References: <1360091188-24063-1-git-send-email-swarren@wwwdotorg.org> <20130208144527.0D8DD3E2C01@localhost>
+From: Mauro Carvalho Chehab <mchehab@redhat.com>
+Subject: Re: [PATCH RESEND] media: rc: gpio-ir-recv: add support for device
+ tree parsing
+Date: Fri, 8 Feb 2013 15:57:07 -0200
+Message-ID: <20130208155707.65a0fbab@redhat.com>
+References: <1359400023-25804-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1360137832-13086-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<51125F44.3050603@samsung.com>
+	<5112905E.3020400@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130208144527.0D8DD3E2C01@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Scott Wood <scottwood@freescale.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5112905E.3020400@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Benoit Thebaudeau <benoit.thebaudeau@advansee.com>, David Hardeman <david@hardeman.nu>, Trilok Soni <tsoni@codeaurora.org>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2013 07:45 AM, Grant Likely wrote:
-> On Tue,  5 Feb 2013 12:06:28 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> From: Stephen Warren <swarren@nvidia.com>
->>
->> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
->> passing them to dtc for final compilation. This allows the use of #define
->> and #include within the .dts file.
->>
->> Acked-by: Simon Glass <sjg@chromium.org>
->> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
->> Acked-by: Michal Marek <mmarek@suse.cz>
->> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
->> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+Em Wed, 06 Feb 2013 18:18:22 +0100
+Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> escreveu:
+
+> On 02/06/2013 02:48 PM, Sylwester Nawrocki wrote:
+> > On 02/06/2013 09:03 AM, Sebastian Hesselbarth wrote:
+> >> This patch adds device tree parsing for gpio_ir_recv platform_data and
+> >> the mandatory binding documentation. It basically follows what we already
+> >> have for e.g. gpio_keys. All required device tree properties are OS
+> >> independent but optional properties allow linux specific support for rc
+> >> protocols and maps.
+> >>
+> >> There was a similar patch sent by Matus Ujhelyi but that discussion
+> >> died after the first reviews.
+> >>
+> >> Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
+> >> ---
+> > ...
+> >> diff --git a/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
+> >> new file mode 100644
+> >> index 0000000..937760c
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
+> >> @@ -0,0 +1,20 @@
+> >> +Device-Tree bindings for GPIO IR receiver
+> >> +
+> >> +Required properties:
+> >> +	- compatible = "gpio-ir-receiver";
+> >> +	- gpios: OF device-tree gpio specification.
+> >> +
+> >> +Optional properties:
+> >> +	- linux,allowed-rc-protocols: Linux specific u64 bitmask of allowed
+> >> +	    rc protocols.
+> >
+> > You likely need to specify in these bindings documentation which bit
+> > corresponds to which RC protocol.
+> >
+> > I'm not very familiar with the RC internals, but why it has to be
+> > specified statically in the device tree, when decoding seems to be
+> > mostly software defined ? I might be missing something though..
 > 
-> I've applied this and was going to push it out, but I've just thought of
-> a problem that could be a show stopper. Once a dtsp file includes a C
-> header, the contents of that header become part of the Device Tree ABI.
-> If someone changes that file (ie. to renumber a series of #defines) then
-> that will break the binding. We need a way to protect against that.
-> Someone changing a .h file may make the assumption that it is only
-> kernel internal and won't realize that it has external implications.
+> Sylwester,
 > 
-> I'm thinking that any dts includes need to be treated in the same way as
-> userspace headers. We could put them into include/uapi and piggy back on
-> the protection already afforded by that directory, or come up with
-> something new. Any thoughts?
+> I am not familiar with RC internals either. Maybe somebody with more
+> insight in media/rc can clarify the specific needs for the rc subsystem.
+> I was just transferring the DT support approach taken by gpio_keys to
+> gpio_ir_recv as I will be using it on mach-dove/cubox soon.
 
-Yes, that's true.
+The allowed rc protocol field are there for devices with hardware IR
+support, where only a limited set of remote protocols can be decoded.
 
-What protection is provided by include/uapi - something programmatic or
-simply stricter review?
+For software decoders RC_BIT_ALL is the proper setup. Users of course
+can change it via sysfs at runtime, or a software decoder may be
+disabled at compilation time by not selecting its CONFIG_* var.
 
-I wondered if we shouldn't put the headers into the .dts directory, then
-update the kernel to include them too. That would also make it obvious
-they were part of the DT ABI.
+> > Couldn't this be configured at run time, with all protocols allowed
+> > as the default ?
+> 
+> Actually, this is how the internal rc code works. If there is nothing
+> defined for allowed_protocols it assumes that all protocols are supported.
+> That is why above node properties are optional.
+> 
+> About the binding documentation of allowed_protocols, rc_map, or the
+> default behavior of current linux code, I don't think they will stay
+> in-sync for long. 
+
+Why not? The rc_map name is used either by Kernelspace or by Userspace,
+in order to provide the IR keycode name that matches a given keytable.
+
+There's no plans to change it, even in the long term.
+
+Regards,
+Mauro.
+
+-- 
+
+Cheers,
+Mauro
