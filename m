@@ -1,145 +1,117 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/3] mmc: davinci_mmc: add DT support
-Date: Fri, 8 Feb 2013 09:37:54 +0000
-Message-ID: <20130208093754.GA27859@e106331-lin.cambridge.arm.com>
-References: <1360223825-23929-1-git-send-email-prakash.pm@ti.com>
- <1360223825-23929-3-git-send-email-prakash.pm@ti.com>
- <20130207104656.GE16987@e106331-lin.cambridge.arm.com>
- <A73F36158E33644199EB82C5EC81C7BC3EA465FE@DBDE01.ent.ti.com>
+From: sl reddy <slreddyforneobux@gmail.com>
+Subject: Re: Wifi basics documents
+Date: Fri, 8 Feb 2013 15:23:17 +0530
+Message-ID: <CAGmqTTSovcse3k4kv5o=+K6adAb672O5nJ=nXfZmc=d36gMSJw@mail.gmail.com>
+References: <CAHT=_ri0JBrbPfWJrzjYR4eNDDW9ygMkJSDU4vJXEfh_STLK9g@mail.gmail.com>
+	<5114B881.9000100@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3EA465FE@DBDE01.ent.ti.com>
-Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "Porter, Matt" <mporter@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "cjb@laptop.org" <cjb@laptop.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============7141140055359322760=="
+Return-path: <e1000-devel-bounces@lists.sourceforge.net>
+In-Reply-To: <5114B881.9000100@broadcom.com>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/e1000-devel>,
+	<mailto:e1000-devel-request@lists.sourceforge.net?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=e1000-devel>
+List-Post: <mailto:e1000-devel@lists.sourceforge.net>
+List-Help: <mailto:e1000-devel-request@lists.sourceforge.net?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/e1000-devel>,
+	<mailto:e1000-devel-request@lists.sourceforge.net?subject=subscribe>
+Errors-To: e1000-devel-bounces@lists.sourceforge.net
+To: Arend van Spriel <arend@broadcom.com>
+Cc: brcm80211-dev-list@broadcom.com, Onteddu Slreddy <slreddy88@gmail.com>, e1000-devel@lists.sourceforge.net, netdev <netdev@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, linux-usb@vger.kernel.org, linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, wil6210@qca.qualcomm.com, ath9k-devel@lists.ath9k.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+--===============7141140055359322760==
+Content-Type: multipart/alternative; boundary=047d7bdc1a865f785104d5338747
 
-[...]
+--047d7bdc1a865f785104d5338747
+Content-Type: text/plain; charset=ISO-8859-1
 
-> > > diff --git a/Documentation/devicetree/bindings/mmc/davinci_mmc.txt b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> > > new file mode 100644
-> > > index 0000000..6717ab1
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> > > @@ -0,0 +1,30 @@
-> > > +* TI Highspeed MMC host controller for DaVinci
-> > > +
-> > > +The Highspeed MMC Host Controller on TI DaVinci family
-> > > +provides an interface for MMC, SD and SDIO types of memory cards.
-> > > +
-> > > +This file documents the properties used by the davinci_mmc driver.
-> > > +
-> > > +Required properties:
-> > > +- compatible:
-> > > + Should be "ti,davinci-mmc-da830": for da830, da850, dm365
-> > > + Should be "ti,davinci-mmc-dm355": for dm355, dm644x
-> > > +
-> > > +Optional properties:
-> > > +- bus-width: Number of data lines, can be <4>, or <8>, default <1>
-> > > +- max-frequency: Maximum operating clock frequency, default 25MHz.
-> > > +- mmc-cap-mmc-highspeed: Indicates support for MMC in high speed mode
-> > > +- mmc-cap-sd-highspeed: Indicates support for SD in high speed mode
-
-[...]
+Hi
 
 
-> > > +static struct davinci_mmc_config
-> > > +	*mmc_parse_pdata(struct platform_device *pdev)
-> > >  {
-> > > +	struct device_node *np;
-> > >  	struct davinci_mmc_config *pdata = pdev->dev.platform_data;
-> > > +	const struct of_device_id *match =
-> > > +		of_match_device(of_match_ptr(davinci_mmc_dt_ids), &pdev->dev);
-> > > +	u32 data;
-> > > +
-> > > +	np = pdev->dev.of_node;
-> > > +	if (!np)
-> > > +		return pdata;
-> > > +
-> > > +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> > > +	if (!pdata) {
-> > > +		dev_err(&pdev->dev, "Failed to allocate memory for struct davinci_mmc_config\n");
-> > > +		goto nodata;
-> > > +	}
-> > > +
-> > > +	if (match->data)
-> > > +		pdata->version = (u8)((int)match->data);
-> > > +
-> > > +	of_property_read_u32(np, "max-frequency", &pdata->max_freq);
-> > > +	if (!pdata->max_freq)
-> > > +		dev_info(&pdev->dev, "'max-frequency' property not specified, defaulting to 25MHz\n");
-> > > +
-> > > +	if (of_get_property(np, "mmc-cap-mmc-highspeed", NULL))
-> > > +		pdata->caps |= MMC_CAP_MMC_HIGHSPEED;
-> > > +	if (of_get_property(np, "mmc-cap-sd-highspeed", NULL))
-> > > +		pdata->caps |= MMC_CAP_SD_HIGHSPEED;
-> > 
-> > If these aren't derivable from max-frequency, you could use
-> > of_property_read_bool to make this clearer.
-> > 
-> 
-> Correct, I will decide these based on max-frequency.
-> 
-> > > +
-> > > +	of_property_read_u32(np, "bus-width", &data);
-> > > +	switch (data) {
-> > > +	case 0:
-> > 
-> > Judging by the binding doc, should this be 1 rather than 0?
-> > 
-> 
-> By default driver comes up in 4 bit mode when bus-width is not specified.
-> Bus-width is set to 1 bit for invalid bus-widths. Below are the cases
-> when bus-width 0 or 4, bus-width is set to 4bit mode
-> When bus-width is 8, bus-width is set to 8 bit mode
+Thanks for reply i referred  that site (wireless.kernel.org) as you said
+there is   lot of information
+but i am bit confused in getting right information because i am not
+interested much about hardware architecture as of now
+I need clear picture of software architecture
+but in the website there is lot of information so bit confused where to
+start
 
-Why is 0 a special value that means 4? Why not just use 4?
+any successions will be helpful for me
 
-Here you just assign 0 to pdata->wires.
 
-I see the current version of the driver handles this specially in
-davinci_mmcsd_probe, but I don't see why this should leak into the binding.
+Thanks & Regards
 
-What I was originally trying to get at is that the binding says 8, 4, and 1 are
-acceptable values, but you check the cases 8, 4, or 0. So you're accepting
-something not documented, and producing a warning in a valid case (1).
+O S L Reddy
+slreddy88@gmail.com
 
-> 
-> I thought that if somebody specifies bus-width as 2, 3, 5, 6, 7..., then
-> it should be defaulted to 1 bit mode, so I specified it as 1 bit in binding doc.
 
-If they specify something invalid, falling back to a sane value with a warning
-sounds good.
+On Fri, Feb 8, 2013 at 2:04 PM, Arend van Spriel <arend@broadcom.com> wrote:
 
-> But I feel that a person who is editing dts file will not make such a mistake.
-> I will change binding document to default as 4 bit mode.
+> On 02/08/2013 07:55 AM, Onteddu Slreddy wrote:
+> > Hello All,
+> >
+> >
+> > I recently joined this group the group.
+> >
+> > Can anybody suggest me places where I can get Documents which will
+> explain
+> > wifi  Architecture in brief i would like to know details like
+> >
+> > In Linux for embedded systems:
+> >         What is the software architecture for wifi
+> >         What are each folders in kernel/net and kernel/drivers/net refer
+> to
+> >         What is wpa_supplicant how to know which version I have to use
+> >         How to get  familiar with words like nl802.11, mac802.11, wext,
+> > copat-wireless, compatwireless-openmac
+> >         If I have to add a new chip driver what are the checklist points
+> i
+> > have to see
+> >
+> > My Quesitions may be basic kindly bare with me
+> > If any body have self prepared documents that will be great help for me
+>
+> 802.11 is a IEEE standard that is freely available for download.
+> Regarding Linux architecture and infrastructure there is a lot of
+> information to be found on wireless.kernel.org.
+>
+> Regards,
+> Arend
+>
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-wireless"
+> in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
 
-There have been and inevitably will be plenty of errors in dts files. I think
-it'd be good to provide a warning and either use a value that's guaranteed to
-work, or bail out if that can't be done.
+--047d7bdc1a865f785104d5338747--
 
-If it's always valid to use 1 data line even if the hardware has more, I think
-falling back to 1 makes more sense, as it'd be guaranteed to work.
 
-> 
-> > > +	case 4:
-> > > +	case 8:
-> > > +		pdata->wires = data;
-> > > +		break;
-> > > +	default:
-> > > +		pdata->wires = 1;
-> > > +		dev_info(&pdev->dev, "Unsupported buswidth, defaulting to 1 bit\n");
-> > > +	}
-> > > +nodata:
-> > > +	return pdata;
-> > > +}
+--===============7141140055359322760==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-With the first case changed to "case 1:", this block makes sense to me.
+------------------------------------------------------------------------------
+Free Next-Gen Firewall Hardware Offer
+Buy your Sophos next-gen firewall before the end March 2013 
+and get the hardware for free! Learn more.
+http://p.sf.net/sfu/sophos-d2d-feb
+--===============7141140055359322760==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-Thanks,
-Mark.
+_______________________________________________
+E1000-devel mailing list
+E1000-devel@lists.sourceforge.net
+https://lists.sourceforge.net/lists/listinfo/e1000-devel
+To learn more about Intel&#174; Ethernet, visit http://communities.intel.com/community/wired
+
+--===============7141140055359322760==--
