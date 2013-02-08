@@ -1,109 +1,123 @@
-From: "Kumar, Anil" <anilkumar.v-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH V2 2/2] ARM: davinci: restart: fix wdt to machine
- restart with DT
-Date: Fri, 8 Feb 2013 03:04:08 +0000
-Message-ID: <F3DBB1B3EF102E4994C89758CFCA32412C59EA@DBDE01.ent.ti.com>
-References: <1360123204-9978-1-git-send-email-anilkumar.v@ti.com>
- <1360123204-9978-3-git-send-email-anilkumar.v@ti.com> <5113EF59.80508@ti.com>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V3 4/5] ARM: dts: Add #dma-cells for generic dma binding support
+Date: Fri, 8 Feb 2013 09:50:54 +0530
+Message-ID: <CAAgF-BeEyXUCUrPcA87bmkHAjUtW0jE7pT0XE6voG4dav2rgSg@mail.gmail.com>
+References: <1360131529-2847-1-git-send-email-padma.v@samsung.com>
+	<1360131529-2847-5-git-send-email-padma.v@samsung.com>
+	<511275AA.1070006@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5113EF59.80508-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: "Porter, Matt" <mporter-l0cyMroinI0@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <mchehab-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org" <khilman-1D3HCaltpLuhEniVeURVKkEOCMrvLtNR@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Bedia,
- Vaibhav" <vaibhav.bedia-l0cyMroinI0@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <511275AA.1070006@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, jassisinghbrar@gmail.com, kgene.kim@samsung.com, arnd@arndb.de, boojin.kim@samsung.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, thomas.abraham@linaro.org, jon-hunter@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Sekhar,
+Hi Rob,
 
-Thanks for the review.
+On Wed, Feb 6, 2013 at 8:54 PM, Rob Herring <robherring2@gmail.com> wrote:
+> On 02/06/2013 12:18 AM, Padmavathi Venna wrote:
+>> This patch adds #dma-cells property to PL330 DMA controller
+>> nodes for supporting generic dma dt bindings on samsung
+>> exynos5250 platform.
+>
+> The subject doesn't reflect this is for pl330.
+OK. I will fix this.
+>
+>>
+>> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+>> Acked-by: Arnd Bergmann <arnd@arndb.de>
+>> ---
+>>  .../devicetree/bindings/dma/arm-pl330.txt          |   15 +++++++++++----
+>>  arch/arm/boot/dts/exynos5250.dtsi                  |    4 ++++
+>>  2 files changed, 15 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/dma/arm-pl330.txt b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+>> index 36e27d5..1fdbff6 100644
+>> --- a/Documentation/devicetree/bindings/dma/arm-pl330.txt
+>> +++ b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+>> @@ -8,6 +8,8 @@ Required properties:
+>>    - reg: physical base address of the controller and length of memory mapped
+>>      region.
+>>    - interrupts: interrupt number to the cpu.
+>> +  - #dma-cells: must be <1>. used to represent the number of integer
+>> +    cells in the dmas property of client device.
+>
+> This should be optional in the case of platforms supporting only memory
+> to memory xfers.
 
-On Thu, Feb 07, 2013 at 23:45:53, Nori, Sekhar wrote:
-> 
-> On 2/6/2013 9:30 AM, Kumar, Anil wrote:
-> > In non DT case da8xx_register_watchdog() is called to register platform device
-> > "da8xx_wdt_device" by board file. But in DT case it is not called and wdt
-> > device get registered via wdt DT node.
-> > 
-> > Currently code is passing platform device "da8xx_wdt_device" in
-> > "davinci_watchdog_reset" function in both DT and non DT case and that
-> > leads to crash in DT boot.
-> > 
-> > Update restart function to make it generic DaVinci machine restart
-> 
-> s/DaVinci/da8xx. Also, subject can simply be "ARM: davinci: da850 DT:
-> add support for machine reboot" since reboot never worked with DT
-> before, "fix" isn't really appropriate.
+In Exynos we have support for both peripheral to peripheral and memory
+to memory.
+So I made it as required property. Should I make this as optional?
 
-ok
+>
+> Rob
+>
+>>
+>>  Optional properties:
+>>  - dma-coherent      : Present if dma operations are coherent
+>> @@ -18,16 +20,21 @@ Example:
+>>               compatible = "arm,pl330", "arm,primecell";
+>>               reg = <0x12680000 0x1000>;
+>>               interrupts = <99>;
+>> +             #dma-cells = <1>;
+>>       };
+>>
+>>  Client drivers (device nodes requiring dma transfers from dev-to-mem or
+>> -mem-to-dev) should specify the DMA channel numbers using a two-value pair
+>> +mem-to-dev) should specify the DMA channel numbers and dma channel names
+>>  as shown below.
+>>
+>>    [property name]  = <[phandle of the dma controller] [dma request id]>;
+>> +  [property name]  = <[dma channel name]>
+>>
+>>        where 'dma request id' is the dma request number which is connected
+>> -      to the client controller. The 'property name' is recommended to be
+>> -      of the form <name>-dma-channel.
+>> +      to the client controller. The 'property name' 'dmas' and 'dma-names'
+>> +      as required by the generic dma device tree binding helpers. The dma
+>> +      names correspond 1:1 with the dma request ids in the dmas property.
+>>
+>> -  Example:  tx-dma-channel = <&pdma0 12>;
+>> +  Example:  dmas = <&pdma0 12
+>> +                 &pdma1 11>;
+>> +         dma-names = "tx", "rx";
+>> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+>> index f50b4e8..724f5bd 100644
+>> --- a/arch/arm/boot/dts/exynos5250.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+>> @@ -312,24 +312,28 @@
+>>                       compatible = "arm,pl330", "arm,primecell";
+>>                       reg = <0x121A0000 0x1000>;
+>>                       interrupts = <0 34 0>;
+>> +                     #dma-cells = <1>;
+>>               };
+>>
+>>               pdma1: pdma@121B0000 {
+>>                       compatible = "arm,pl330", "arm,primecell";
+>>                       reg = <0x121B0000 0x1000>;
+>>                       interrupts = <0 35 0>;
+>> +                     #dma-cells = <1>;
+>>               };
+>>
+>>               mdma0: mdma@10800000 {
+>>                       compatible = "arm,pl330", "arm,primecell";
+>>                       reg = <0x10800000 0x1000>;
+>>                       interrupts = <0 33 0>;
+>> +                     #dma-cells = <1>;
+>>               };
+>>
+>>               mdma1: mdma@11C10000 {
+>>                       compatible = "arm,pl330", "arm,primecell";
+>>                       reg = <0x11C10000 0x1000>;
+>>                       interrupts = <0 124 0>;
+>> +                     #dma-cells = <1>;
+>>               };
+>>       };
+>>
+>>
+>
 
-> 
-> > in case of DT and non DT boot.
-> > 
-> > Signed-off-by: Kumar, Anil <anilkumar.v-l0cyMroinI0@public.gmane.org>
-> > ---
-> > :100644 100644 2d5502d... 1df68fd... M	arch/arm/mach-davinci/devices-da8xx.c
-> > :100644 100644 700d311... ef9f70e... M	arch/arm/mach-davinci/include/mach/da8xx.h
-> >  arch/arm/mach-davinci/devices-da8xx.c      |   14 ++++++++++++--
-> >  arch/arm/mach-davinci/include/mach/da8xx.h |    1 -
-> >  2 files changed, 12 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/arch/arm/mach-davinci/devices-da8xx.c b/arch/arm/mach-davinci/devices-da8xx.c
-> > index 2d5502d..1df68fd 100644
-> > --- a/arch/arm/mach-davinci/devices-da8xx.c
-> > +++ b/arch/arm/mach-davinci/devices-da8xx.c
-> > @@ -359,7 +359,7 @@ static struct resource da8xx_watchdog_resources[] = {
-> >  	},
-> >  };
-> >  
-> > -struct platform_device da8xx_wdt_device = {
-> > +static struct platform_device da8xx_wdt_device = {
-> 
-> Making of da8xx_wdt_device static should find a mention in description.
-
-Ok, 
-I made da8xx_wdt_device structure static as it is used only
-in file. I will update description for this.
-
-> 
-> >  	.name		= "watchdog",
-> >  	.id		= -1,
-> >  	.num_resources	= ARRAY_SIZE(da8xx_watchdog_resources),
-> > @@ -368,7 +368,17 @@ struct platform_device da8xx_wdt_device = {
-> >  
-> >  void da8xx_restart(char mode, const char *cmd)
-> >  {
-> > -	davinci_watchdog_reset(&da8xx_wdt_device);
-> > +	struct device *dev = NULL;
-> > +	struct platform_device *wdt_device = NULL;
-> 
-> No need to initialize these variables here.
-
-Ok,
-I think no need to define wdt_device, can be used as
-
-davinci_watchdog_reset(to_platform_device(dev));
-
-> 
-> > +
-> > +	dev = bus_find_device_by_name(&platform_bus_type, NULL, "watchdog");
-> > +	if (!dev) {
-> > +		pr_err("wdt device not found to machine reboot\n");
-> 
-> Rather: "%s: failed to find watchdog device", __func__
-
-ok
-Thanks,
-Anil
+Thanks
+Padma
