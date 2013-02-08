@@ -1,113 +1,146 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH V2 2/2] dmaengine: OMAP: Register SDMA controller with
- Device Tree DMA driver
-Date: Fri, 8 Feb 2013 09:55:52 +0200
-Message-ID: <20130208075552.GD21879@arwen.pp.htv.fi>
-References: <1360285506-22354-1-git-send-email-jon-hunter@ti.com>
- <1360285506-22354-3-git-send-email-jon-hunter@ti.com>
-Reply-To: <balbi@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="d9ADC0YsG2v16Js0"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1360285506-22354-3-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Vinod Koul <vinod.koul@intel.com>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Matt Porter <mporter@ti.com>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Balaji T K <balajitk@ti.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [PATCH 1/2] powerpc/5200: Add Lite5200 on-board LEDs as devices
+Date: Fri,  8 Feb 2013 08:02:50 +0000
+Message-ID: <1360310571-31494-1-git-send-email-grant.likely@secretlab.ca>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linuxppc-dev@list.ozlabs.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: Grant Likely <grant.likely@secretlab.ca>, Anatolij Gustschin <agust@denx.de>
 List-Id: devicetree@vger.kernel.org
 
---d9ADC0YsG2v16Js0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The Lite5200 evaluation board has a number of debug LEDs that Linux
+doesn't know about yet. This change adds a gpio-leds stanza to the
+lite5200 device tree so that the correct driver can get hooked up.
 
-Hi,
+Also, make use of the dtc labels feature to reduce the number of source
+lines required to add the gpio-controller property to the general
+purpose timer nodes. In addition, the required #gpio-cells properties
+are added to the common mpc5200b dtsi include file so that each board
+doesn't need to add them explicitly. This still doesn't enable gpio
+mode, 'gpio-controller' is required for that, but it means less work
+needs to be done by board ports.
 
-On Thu, Feb 07, 2013 at 07:05:06PM -0600, Jon Hunter wrote:
-> If the device-tree blob is present during boot, then register the SDMA
-> controller with the device-tree DMA driver so that we can use device-tree
-> to look-up DMA client information.
->=20
-> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+Cc: Anatolij Gustschin <agust@denx.de>
+Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
+---
+ arch/powerpc/boot/dts/lite5200b.dts |   23 +++++++++++++++++++----
+ arch/powerpc/boot/dts/mpc5200b.dtsi |   25 +++++++++++++++++--------
+ 2 files changed, 36 insertions(+), 12 deletions(-)
 
-single comment below, other than that:
-
-Reviewed-by: Felipe Balbi <balbi@ti.com>
-
-> ---
->  arch/arm/mach-omap2/dma.c |    4 ++++
->  drivers/dma/omap-dma.c    |   37 +++++++++++++++++++++++++++++++++++--
->  2 files changed, 39 insertions(+), 2 deletions(-)
->=20
-> diff --git a/arch/arm/mach-omap2/dma.c b/arch/arm/mach-omap2/dma.c
-> index 5cd8d76..71dadff 100644
-> --- a/arch/arm/mach-omap2/dma.c
-> +++ b/arch/arm/mach-omap2/dma.c
-> @@ -28,6 +28,7 @@
->  #include <linux/init.h>
->  #include <linux/device.h>
->  #include <linux/dma-mapping.h>
-> +#include <linux/of.h>
->  #include <linux/omap-dma.h>
-> =20
->  #include "soc.h"
-> @@ -304,6 +305,9 @@ static int __init omap2_system_dma_init(void)
->  	if (res)
->  		return res;
-> =20
-> +	if (of_have_populated_dt())
-> +		return res;
-> +
->  	pdev =3D platform_device_register_full(&omap_dma_dev_info);
->  	if (IS_ERR(pdev))
->  		return PTR_ERR(pdev);
-> diff --git a/drivers/dma/omap-dma.c b/drivers/dma/omap-dma.c
-> index c4b4fd2..0067bd0 100644
-> --- a/drivers/dma/omap-dma.c
-> +++ b/drivers/dma/omap-dma.c
-> @@ -16,6 +16,8 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/spinlock.h>
-> +#include <linux/of_dma.h>
-> +#include <linux/of_device.h>
-> =20
->  #include "virt-dma.h"
-> =20
-> @@ -67,6 +69,8 @@ static const unsigned es_bytes[] =3D {
->  	[OMAP_DMA_DATA_TYPE_S32] =3D 4,
->  };
-> =20
-> +static struct of_dma_filter_info info;
-
-Arnd also mentioned that since all fields belonging to this are
-constant, you could statically initialize them here. He also mentioned
-you should call this by a more descriptive name:
-
---=20
-balbi
-
---d9ADC0YsG2v16Js0
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRFK+IAAoJEIaOsuA1yqREgNgP/Rb2Ypsn1F2ziMvjxwtKrAw3
-pWAGkYgoWtPOjH70i2VsGsnFPdn2S+uen19QfFI9MbOWiaNCpu62suUYDnSULXXX
-efGgYfCEIFyyBa3cncoy0UGUtyzw4iuuvVSumOCS60ef5mobVvxBOkzbcIcvcmLG
-BcpmX+y7MDRDxG6G2SsE1IEtOqErlMT/OszNP/uDH1S2pKyCmEhv+y7aQ04HgxFq
-HRhMEj4/P0vPwepCbiS11OVqu9X6qZQMGxK3w6lEzP6vGhH3zaGsB/huej9KhtRD
-Oa/ENbPSVoMvNk4dEvP9S5h8iLTLAGGoXqecUI/OlmDqOLXhHqrOpVWqce9J0nPc
-qS91Qr/yTl493DG3sFSAfU9UQZgppehdNv5iXdTJiik8zOraR5rh+IrS+lgsvxqu
-r4eD12DlaiLXkbGMstQ48/3RNJ6cTQBoAeBsBt9vBflwgV+9L21Tn6RwAShNCUwt
-1IM8/SYd10Mda8s+Siry5X1KQFW+eXq/yLkII382mvPXPJ8NSX2pEhBrRia1JvPX
-EB/0RRi2ZbAceP365Y8YshCFZKjN+qzLv09kcwG8SuVI1Ptq2IJtoF0ZBr4KOxw4
-gRJHSqOOWSVuh8D1/T6k/wKqmVHOrEr8DuiVcBQt111Yxl0OjrppkOrRhhkjcMaR
-G1ODYG7CceAqLUVszaYd
-=knve
------END PGP SIGNATURE-----
-
---d9ADC0YsG2v16Js0--
+diff --git a/arch/powerpc/boot/dts/lite5200b.dts b/arch/powerpc/boot/dts/lite5200b.dts
+index fb288bb..5abb46c 100644
+--- a/arch/powerpc/boot/dts/lite5200b.dts
++++ b/arch/powerpc/boot/dts/lite5200b.dts
+@@ -12,19 +12,34 @@
+ 
+ /include/ "mpc5200b.dtsi"
+ 
++&gpt0 { fsl,has-wdt; };
++&gpt2 { gpio-controller; };
++&gpt3 { gpio-controller; };
++
+ / {
+ 	model = "fsl,lite5200b";
+ 	compatible = "fsl,lite5200b";
+ 
++	leds {
++		compatible = "gpio-leds";
++		tmr2 {
++			gpios = <&gpt2 0 1>;
++		};
++		tmr3 {
++			gpios = <&gpt3 0 1>;
++			linux,default-trigger = "heartbeat";
++		};
++		led1 { gpios = <&gpio_wkup 2 1>; };
++		led2 { gpios = <&gpio_simple 3 1>; };
++		led3 { gpios = <&gpio_wkup 3 1>; };
++		led4 { gpios = <&gpio_simple 2 1>; };
++	};
++
+ 	memory {
+ 		reg = <0x00000000 0x10000000>;	// 256MB
+ 	};
+ 
+ 	soc5200@f0000000 {
+-		timer@600 {	// General Purpose Timer
+-			fsl,has-wdt;
+-		};
+-
+ 		psc@2000 {		// PSC1
+ 			compatible = "fsl,mpc5200b-psc-uart","fsl,mpc5200-psc-uart";
+ 			cell-index = <0>;
+diff --git a/arch/powerpc/boot/dts/mpc5200b.dtsi b/arch/powerpc/boot/dts/mpc5200b.dtsi
+index 39ed65a..969b220 100644
+--- a/arch/powerpc/boot/dts/mpc5200b.dtsi
++++ b/arch/powerpc/boot/dts/mpc5200b.dtsi
+@@ -64,50 +64,59 @@
+ 			reg = <0x500 0x80>;
+ 		};
+ 
+-		timer@600 {	// General Purpose Timer
++		gpt0: timer@600 {	// General Purpose Timer
+ 			compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
++			#gpio-cells = <2>;  // Add 'gpio-controller;' to enable gpio mode
+ 			reg = <0x600 0x10>;
+ 			interrupts = <1 9 0>;
++			// add 'fsl,has-wdt' to enable watchdog
+ 		};
+ 
+-		timer@610 {	// General Purpose Timer
++		gpt1: timer@610 {	// General Purpose Timer
+ 			compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
++			#gpio-cells = <2>;  // Add 'gpio-controller;' to enable gpio mode
+ 			reg = <0x610 0x10>;
+ 			interrupts = <1 10 0>;
+ 		};
+ 
+-		timer@620 {	// General Purpose Timer
++		gpt2: timer@620 {	// General Purpose Timer
+ 			compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
++			#gpio-cells = <2>;  // Add 'gpio-controller;' to enable gpio mode
+ 			reg = <0x620 0x10>;
+ 			interrupts = <1 11 0>;
+ 		};
+ 
+-		timer@630 {	// General Purpose Timer
++		gpt3: timer@630 {	// General Purpose Timer
+ 			compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
++			#gpio-cells = <2>;  // Add 'gpio-controller;' to enable gpio mode
+ 			reg = <0x630 0x10>;
+ 			interrupts = <1 12 0>;
+ 		};
+ 
+-		timer@640 {	// General Purpose Timer
++		gpt4: timer@640 {	// General Purpose Timer
+ 			compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
++			#gpio-cells = <2>;  // Add 'gpio-controller;' to enable gpio mode
+ 			reg = <0x640 0x10>;
+ 			interrupts = <1 13 0>;
+ 		};
+ 
+-		timer@650 {	// General Purpose Timer
++		gpt5: timer@650 {	// General Purpose Timer
+ 			compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
++			#gpio-cells = <2>;  // Add 'gpio-controller;' to enable gpio mode
+ 			reg = <0x650 0x10>;
+ 			interrupts = <1 14 0>;
+ 		};
+ 
+-		timer@660 {	// General Purpose Timer
++		gpt6: timer@660 {	// General Purpose Timer
+ 			compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
++			#gpio-cells = <2>;  // Add 'gpio-controller;' to enable gpio mode
+ 			reg = <0x660 0x10>;
+ 			interrupts = <1 15 0>;
+ 		};
+ 
+-		timer@670 {	// General Purpose Timer
++		gpt7: timer@670 {	// General Purpose Timer
+ 			compatible = "fsl,mpc5200b-gpt","fsl,mpc5200-gpt";
++			#gpio-cells = <2>;  // Add 'gpio-controller;' to enable gpio mode
+ 			reg = <0x670 0x10>;
+ 			interrupts = <1 16 0>;
+ 		};
+-- 
+1.7.10.4
