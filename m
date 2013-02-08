@@ -1,166 +1,120 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v3] media: rc: gpio-ir-recv: add support for device tree parsing
-Date: Fri,  8 Feb 2013 23:47:30 +0100
-Message-ID: <1360363651-30814-1-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1360355887-19973-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360355887-19973-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mauro Carvalho Chehab <mchehab@redhat.com>, Benoit Thebaudeau <benoit.thebaudeau@advansee.com>, David Hardeman <david@hardeman.nu>, Trilok Soni <tsoni@codeaurora.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Matus Ujhelyi <ujhelyi.m@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] mfd: stmpe: Pull IRQ GPIO number from DT during DT-based
+ probe
+Date: Fri, 08 Feb 2013 22:51:51 +0000
+Message-ID: <20130208225151.4BF8C3E2C27@localhost>
+References: <1357568989-16237-1-git-send-email-marex@denx.de>
+ <20130108094134.GA21994@gmail.com> <201301081044.14876.marex@denx.de>
+ <201301081048.38149.marex@denx.de>
+ <CAKohpo=YnLJN4_xA1WTiJaZeb-Oyc=RypYUyaSibmn6G4X9m4A@mail.gmail.com>
+ <20130108111104.GF21994@gmail.com>
+ <CAKohpomiS+UFzgiJaQbm8aZVPY0jeYhm1k7Yndk50z8=K4LvGQ@mail.gmail.com>
+ <CACRpkdZWi4M3HmO_rq1O9aGTKYR0iMLXJo+nos3hYu3C_DFRHQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZWi4M3HmO_rq1O9aGTKYR0iMLXJo+nos3hYu3C_DFRHQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, vipul kumar samar <vipulkumar.samar@st.com>, Samuel Ortiz <sameo@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree parsing for gpio_ir_recv platform_data and
-the mandatory binding documentation. It basically follows what we already
-have for e.g. gpio_keys. All required device tree properties are OS
-independent but an optional property allows linux specific support for rc
-maps.
+On Thu, 10 Jan 2013 12:42:53 +0100, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Tue, Jan 8, 2013 at 12:14 PM, Viresh Kumar <viresh.kumar@linaro.org> wrote:
+> > On 8 January 2013 16:41, Lee Jones <lee.jones@linaro.org> wrote:
+> >>> Hmm.. I tried a bit, but couldn't find any such call :(
+> >>> Probably an assumption is taken here. GPIO pins which are going to be used as
+> >>> interrupt lines, wouldn't be getting set in output mode at all. So,
+> >>> once they are put
+> >>> in input mode in beginning, nobody would change it ever.
+> >>>
+> >>> Much of gpio controllers configure gpio pins in input mode in their probe().
+> >>>
+> >>> Maybe, there is something else :)
+> >>
+> >> Pinctrl?
+> >
+> > I don't think pinctrl is playing with it. I searched for
+> > "direction_input" string and
+> > pinctrl routine also had similar name. I couldn't fine use of
+> > direction_input anywhere
+> > in kernel, for setting them as irqs for OF cases.
+> 
+> pinctrl has pinctrl_gpio_direction_input() and
+> pinctrl_gpio_direction_output() which are supposed to
+> be called *only* by GPIOlib frontends using pinctrl
+> as backend to control the pins.
+> 
+> But if it's a pinctrl driver using standard pinconfig from
+> include/linux/pinctrl/pinconf-generic.h
+> I'm all for adding a PIN_CONFIG_INPUT_ENABLE
+> to these definintions so it can be set up as input
+> at boot from the device tree using hogs or something,
+> that make things easy when using GPIOs as IRQ
+> providers only.
+> 
+> So the alternative is to just set up the IRQ using the
+> gpiolib functions for this: of_get_gpio() if you need the
+> number from DT, then gpio_request() and
+> gpio_direction_input() as on any GPIO. This can be
+> done in the device driver or board code depending
+> on use case.
+> 
+> In the Nomadik I did this (maybe ugly) hack for a
+> similar case:
+> 
+> +/*
+> + * The SMSC911x IRQ is connected to a GPIO pin, but the driver expects
+> + * to simply request an IRQ passed as a resource. So the GPIO pin needs
+> + * to be requested by this hog and set as input.
+> + */
+> +static int __init cpu8815_eth_init(void)
+> +{
+> +       struct device_node *eth;
+> +       int gpio, irq, err;
+> +
+> +       eth = of_find_node_by_path("/external-bus@34000000/ethernet@300");
+> +       if (!eth) {
+> +               pr_info("could not find any ethernet controller\n");
+> +               return 0;
+> +       }
+> +       gpio = of_get_gpio(eth, 0);
+> +       err = gpio_request(gpio, "eth_irq");
+> +       if (err) {
+> +               pr_info("failed to request ethernet GPIO\n");
+> +               return -ENODEV;
+> +       }
+> +       err = gpio_direction_input(gpio);
+> +       if (err) {
+> +               pr_info("failed to set ehernet GPIO as input\n");
+> +               return -ENODEV;
+> +       }
+> +       irq = gpio_to_irq(gpio);
+> +       pr_info("enabled ethernet GPIO %d, IRQ %d\n", gpio, irq);
+> +       return 0;
+> +}
+> +device_initcall(cpu8815_eth_init);
+> 
+> I haven't read review comments on that patch.
+> 
+> Maybe it's not such a good idea to add the GPIO to the device itself
+> when it's being hogged by board code like this. It's a bit of a grey area
+> so I'm a bit confused here.
+> 
+> Maybe the GPIO lib actually needs a "hog" mechanism that can
+> request and set GPIO pins as input/output on boot and then
+> forget about them.
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
----
-There was a similar patch sent by Matus Ujhelyi but that discussion
-died after the first reviews.
+That would be reasonable. Probably as properties in the gpio controller
+node that specify how to set the inital state.
 
-Changelog
-
-v1->v2:
-- get rid of ptr returned by _get_devtree_pdata()
-- check for of_node instead for NULL pdata
-- remove unneccessary double check for gpios property
-- remove unneccessary #ifdef CONFIG_OF around match table
-
-v2->v3:
-- use define for !OF_CONFIG _get_devtree_pdata()
-- simplify flags test and of_get_gpio_flags error msg
-- fix some typos in binding documentation
-- move note about previous patch submission to non-commit area
- 
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Benoit Thebaudeau <benoit.thebaudeau@advansee.com>
-Cc: David Hardeman <david@hardeman.nu>
-Cc: Trilok Soni <tsoni@codeaurora.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Matus Ujhelyi <ujhelyi.m@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-media@vger.kernel.org
----
- .../devicetree/bindings/media/gpio-ir-receiver.txt |   16 ++++++
- drivers/media/rc/gpio-ir-recv.c                    |   52 ++++++++++++++++++++
- 2 files changed, 68 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
-
-diff --git a/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
-new file mode 100644
-index 0000000..56e726e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
-@@ -0,0 +1,16 @@
-+Device-Tree bindings for GPIO IR receiver
-+
-+Required properties:
-+	- compatible: should be "gpio-ir-receiver".
-+	- gpios: specifies GPIO used for IR signal reception.
-+
-+Optional properties:
-+	- linux,rc-map-name: Linux specific remote control map name.
-+
-+Example node:
-+
-+	ir: ir-receiver {
-+		compatible = "gpio-ir-receiver";
-+		gpios = <&gpio0 19 1>;
-+		linux,rc-map-name = "rc-rc6-mce";
-+	};
-diff --git a/drivers/media/rc/gpio-ir-recv.c b/drivers/media/rc/gpio-ir-recv.c
-index 4f71a7d..b5cfb44 100644
---- a/drivers/media/rc/gpio-ir-recv.c
-+++ b/drivers/media/rc/gpio-ir-recv.c
-@@ -16,6 +16,7 @@
- #include <linux/interrupt.h>
- #include <linux/gpio.h>
- #include <linux/slab.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/irq.h>
- #include <media/rc-core.h>
-@@ -30,6 +31,45 @@ struct gpio_rc_dev {
- 	bool active_low;
- };
- 
-+#ifdef CONFIG_OF
-+/*
-+ * Translate OpenFirmware node properties into platform_data
-+ */
-+static int gpio_ir_recv_get_devtree_pdata(struct device *dev,
-+				  struct gpio_ir_recv_platform_data *pdata)
-+{
-+	struct device_node *np = dev->of_node;
-+	enum of_gpio_flags flags;
-+	int gpio;
-+
-+	gpio = of_get_gpio_flags(np, 0, &flags);
-+	if (gpio < 0) {
-+		if (gpio != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get gpio flags (%d)\n", gpio);
-+		return gpio;
-+	}
-+
-+	pdata->gpio_nr = gpio;
-+	pdata->active_low = (flags & OF_GPIO_ACTIVE_LOW);
-+	/* probe() takes care of map_name == NULL or allowed_protos == 0 */
-+	pdata->map_name = of_get_property(np, "linux,rc-map-name", NULL);
-+	pdata->allowed_protos = 0;
-+
-+	return 0;
-+}
-+
-+static struct of_device_id gpio_ir_recv_of_match[] = {
-+	{ .compatible = "gpio-ir-receiver", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, gpio_ir_recv_of_match);
-+
-+#else /* !CONFIG_OF */
-+
-+#define gpio_ir_recv_get_devtree_pdata(dev, pdata)	(-ENOSYS)
-+
-+#endif
-+
- static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
- {
- 	struct gpio_rc_dev *gpio_dev = dev_id;
-@@ -66,6 +106,17 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
- 					pdev->dev.platform_data;
- 	int rc;
- 
-+	if (pdev->dev.of_node) {
-+		struct gpio_ir_recv_platform_data *dtpdata =
-+			devm_kzalloc(&pdev->dev, sizeof(*dtpdata), GFP_KERNEL);
-+		if (!dtpdata)
-+			return -ENOMEM;
-+		rc = gpio_ir_recv_get_devtree_pdata(&pdev->dev, dtpdata);
-+		if (rc)
-+			return rc;
-+		pdata = dtpdata;
-+	}
-+
- 	if (!pdata)
- 		return -EINVAL;
- 
-@@ -192,6 +243,7 @@ static struct platform_driver gpio_ir_recv_driver = {
- 	.driver = {
- 		.name   = GPIO_IR_DRIVER_NAME,
- 		.owner  = THIS_MODULE,
-+		.of_match_table = of_match_ptr(gpio_ir_recv_of_match),
- #ifdef CONFIG_PM
- 		.pm	= &gpio_ir_recv_pm_ops,
- #endif
--- 
-1.7.10.4
+g.
