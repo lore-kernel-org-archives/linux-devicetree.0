@@ -1,57 +1,36 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V8] kbuild: create a rule to run the pre-processor on
- *.dts files
-Date: Fri, 08 Feb 2013 15:42:45 -0700
-Message-ID: <51157F65.2050309@wwwdotorg.org>
-References: <1360091188-24063-1-git-send-email-swarren@wwwdotorg.org> <20130208144527.0D8DD3E2C01@localhost> <51156D09.7060401@gmail.com> <20130208220448.EDA773E2C27@localhost>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH] drivers: net: Remove remaining alloc/OOM messages
+Date: Fri, 08 Feb 2013 17:45:00 -0500 (EST)
+Message-ID: <20130208.174500.1518593039138341685.davem@davemloft.net>
+References: <1360273587.27863.15.camel@joe-AO722>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130208220448.EDA773E2C27@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Scott Wood <scottwood@freescale.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1360273587.27863.15.camel@joe-AO722>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, e1000-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, wil6210-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, brcm80211-dev-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2013 03:04 PM, Grant Likely wrote:
-> On Fri, 08 Feb 2013 15:24:25 -0600, Rob Herring <robherring2@gmail.com> wrote:
->> On 02/08/2013 08:45 AM, Grant Likely wrote:
->>> On Tue,  5 Feb 2013 12:06:28 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>>> From: Stephen Warren <swarren@nvidia.com>
->>>>
->>>> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
->>>> passing them to dtc for final compilation. This allows the use of #define
->>>> and #include within the .dts file.
->>>>
->>>> Acked-by: Simon Glass <sjg@chromium.org>
->>>> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
->>>> Acked-by: Michal Marek <mmarek@suse.cz>
->>>> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
->>>> Signed-off-by: Stephen Warren <swarren@nvidia.com>
->>>
->>> I've applied this and was going to push it out, but I've just thought of
->>> a problem that could be a show stopper. Once a dtsp file includes a C
->>> header, the contents of that header become part of the Device Tree ABI.
->>> If someone changes that file (ie. to renumber a series of #defines) then
->>> that will break the binding. We need a way to protect against that.
->>> Someone changing a .h file may make the assumption that it is only
->>> kernel internal and won't realize that it has external implications.
->>>
->>> I'm thinking that any dts includes need to be treated in the same way as
->>> userspace headers. We could put them into include/uapi and piggy back on
->>> the protection already afforded by that directory, or come up with
->>> something new. Any thoughts?
->>
->> Also, we would never be able to separate the dts files from the kernel
->> tree without some separation.
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Date: Thu, 07 Feb 2013 13:46:27 -0800
+
+> alloc failures already get standardized OOM
+> messages and a dump_stack.
 > 
-> Good point. They better be in a completely separate directory then.
+> For the affected mallocs around these OOM messages:
+> 
+> Converted kmallocs with multiplies to kmalloc_array.
+> Converted a kmalloc/memcpy to kmemdup.
+> Removed now unused stack variables.
+> Removed unnecessary parentheses.
+> Neatened alignment.
+> 
+> Signed-off-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
 
-How about arch/*/include/dts/.
-
-Both *.dts and kernel code will need to include those headers (so that
-the kernel can parse the DTB using the same values), so putting the
-headers right into arch/*/boot/dts/ or arch/*/boot/dts/include/ might
-not make sense, since then that directory would still have to exist even
-if/when the .dts files are separated from the kernel.
+Applied, thanks Joe.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
