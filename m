@@ -1,437 +1,72 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [PATCH V2 1/2] ARM: dts: OMAP2+: Add SDMA controller bindings and nodes
-Date: Thu, 7 Feb 2013 19:05:05 -0600
-Message-ID: <1360285506-22354-2-git-send-email-jon-hunter@ti.com>
-References: <1360285506-22354-1-git-send-email-jon-hunter@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 2/2] dmaengine: OMAP: Register SDMA controller with
+ Device Tree DMA driver
+Date: Thu, 7 Feb 2013 17:44:02 -0800
+Message-ID: <20130208014402.GA7556@atomide.com>
+References: <1360184596-1603-1-git-send-email-jon-hunter@ti.com>
+ <201302071439.13720.arnd@arndb.de>
+ <5113CD6F.3060108@ti.com>
+ <10081370.NaeII8M1Pj@wuerfel>
+ <51144C3E.7070603@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1360285506-22354-1-git-send-email-jon-hunter@ti.com>
+Content-Disposition: inline
+In-Reply-To: <51144C3E.7070603@ti.com>
 Sender: linux-omap-owner@vger.kernel.org
-To: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Vinod Koul <vinod.koul@intel.com>, Russell King <linux@arm.linux.org.uk>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Matt Porter <mporter@ti.com>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Balaji T K <balajitk@ti.com>, Jon Hunter <jon-hunter@ti.com>
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "Ujfalusi, Peter" <peter.ujfalusi@ti.com>, linux-arm-kernel@lists.infradead.org, Matt Porter <mporter@ti.com>, Russell King <linux@arm.linux.org.uk>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Vinod Koul <vinod.koul@intel.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, linux-omap <linux-omap@vger.kernel.org>, Balaji T K <balajitk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add SDMA controller binding for OMAP2+ devices and populate DMA client
-information for SPI and MMC periperhal on OMAP3+ devices. Please note
-that OMAP24xx devices do not have SPI and MMC bindings available yet and
-so DMA client information is not populated.
+* Jon Hunter <jon-hunter@ti.com> [130207 16:55]:
+> 
+> Ugh, looks like linux-next is broken for omap2+ boards at the moment
+> and is panic'ing in the twl i2c code ... some else to look into ...
+> 
+> Peter have you seen this on linux-next? I am seeing this on omap2-4 boards.
 
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
----
- .../devicetree/bindings/dma/omap-sdma.txt          |   51 ++++++++++++++++++++
- arch/arm/boot/dts/omap2.dtsi                       |   12 +++++
- arch/arm/boot/dts/omap3.dtsi                       |   40 +++++++++++++++
- arch/arm/boot/dts/omap4.dtsi                       |   41 ++++++++++++++++
- arch/arm/boot/dts/omap5.dtsi                       |   41 ++++++++++++++++
- 5 files changed, 185 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/omap-sdma.txt
+Does not happen with arm-soc/for-next, probably related to the
+drivers/mfd/*twl* changes?
 
-diff --git a/Documentation/devicetree/bindings/dma/omap-sdma.txt b/Documentation/devicetree/bindings/dma/omap-sdma.txt
-new file mode 100644
-index 0000000..22aab28
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/omap-sdma.txt
-@@ -0,0 +1,51 @@
-+* TI OMAP SDMA controller
-+
-+Required properties:
-+- compatible:		Should be set to one of the following:
-+
-+			ti,omap2420-sdma (omap2420)
-+			ti,omap2430-sdma (omap2430)
-+			ti,omap3430-sdma (omap3430)
-+			ti,omap3630-sdma (omap3630)
-+			ti,omap4430-sdma (omap4430 & omap4460 & omap543x)
-+
-+- reg: 			Contains DMA registers location and length.
-+- interrupts: 		Contains DMA interrupt information.
-+- #dma-cells: 		Must be 1.
-+- #dma-channels:	Contains total number of programmable DMA channels.
-+- #dma-requests:	Contains total number of DMA requests.
-+
-+Example:
-+
-+	sdma: dma-controller@4A056000 {
-+		compatible = "ti,omap-sdma";
-+		reg = <0x4A056000 0x1000>;
-+		interrupts = <0 12 0x4>,
-+			     <0 13 0x4>,
-+			     <0 14 0x4>,
-+			     <0 15 0x4>;
-+		#dma-cells = <1>;
-+		#dma-channels = <32>;
-+		#dma-requests = <127>;
-+	};
-+
-+
-+* TI OMAP SDMA clients
-+
-+Required properties:
-+- dmas:			List of one or more DMA specifiers, each consisting of
-+			- A phandle pointing to DMA controller node
-+			- The DMA request number associated with client device
-+- dma-names: 		Contains one identifier string for each dma specifier in
-+			the dmas property. The specific strings that can be used
-+			are defined in the binding of the DMA client device.
-+
-+Example:
-+
-+	mmc1: mmc@4809c000 {
-+		...
-+		dmas = <&sdma 61>,	/* TX channel */
-+		       <&sdma 62>;	/* RX channel */
-+		dma-names = "tx", "rx";
-+		...
-+	};
-diff --git a/arch/arm/boot/dts/omap2.dtsi b/arch/arm/boot/dts/omap2.dtsi
-index 761c4b6..22dffa0 100644
---- a/arch/arm/boot/dts/omap2.dtsi
-+++ b/arch/arm/boot/dts/omap2.dtsi
-@@ -49,6 +49,18 @@
- 			reg = <0x480FE000 0x1000>;
- 		};
+Tony
  
-+		sdma: dma-controller@48056000 {
-+			compatible = "ti,omap2430-sdma", "ti,omap2420-sdma";
-+			reg = <0x48056000 0x1000>;
-+			interrupts = <12>,
-+				     <13>,
-+				     <14>,
-+				     <15>;
-+			#dma-cells = <1>;
-+			#dma-channels = <32>;
-+			#dma-requests = <64>;
-+		};
-+
- 		uart1: serial@4806a000 {
- 			compatible = "ti,omap2-uart";
- 			ti,hwmods = "uart1";
-diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-index 1acc261..4e7acb6 100644
---- a/arch/arm/boot/dts/omap3.dtsi
-+++ b/arch/arm/boot/dts/omap3.dtsi
-@@ -75,6 +75,18 @@
- 			reg = <0x48200000 0x1000>;
- 		};
- 
-+		sdma: dma-controller@48056000 {
-+			compatible = "ti,omap3630-sdma", "ti,omap3430-sdma";
-+			reg = <0x48056000 0x1000>;
-+			interrupts = <12>,
-+				     <13>,
-+				     <14>,
-+				     <15>;
-+			#dma-cells = <1>;
-+			#dma-channels = <32>;
-+			#dma-requests = <96>;
-+		};
-+
- 		omap3_pmx_core: pinmux@48002030 {
- 			compatible = "ti,omap3-padconf", "pinctrl-single";
- 			reg = <0x48002030 0x05cc>;
-@@ -192,6 +204,16 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi1";
- 			ti,spi-num-cs = <4>;
-+			dmas = <&sdma 35>,
-+			       <&sdma 36>,
-+			       <&sdma 37>,
-+			       <&sdma 38>,
-+			       <&sdma 39>,
-+			       <&sdma 40>,
-+			       <&sdma 41>,
-+			       <&sdma 42>;
-+			dma-names = "tx0", "rx0", "tx1", "rx1",
-+				    "tx2", "rx2", "tx3", "rx3";
- 		};
- 
- 		mcspi2: spi@4809a000 {
-@@ -200,6 +222,11 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi2";
- 			ti,spi-num-cs = <2>;
-+			dmas = <&sdma 43>,
-+			       <&sdma 44>,
-+			       <&sdma 45>,
-+			       <&sdma 46>;
-+			dma-names = "tx0", "rx0", "tx1", "rx1";
- 		};
- 
- 		mcspi3: spi@480b8000 {
-@@ -208,6 +235,11 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi3";
- 			ti,spi-num-cs = <2>;
-+			dmas = <&sdma 15>,
-+			       <&sdma 16>,
-+			       <&sdma 23>,
-+			       <&sdma 24>;
-+			dma-names = "tx0", "rx0", "tx1", "rx1";
- 		};
- 
- 		mcspi4: spi@480ba000 {
-@@ -216,22 +248,30 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi4";
- 			ti,spi-num-cs = <1>;
-+			dmas = <&sdma 70>, <&sdma 71>;
-+			dma-names = "tx0", "rx0";
- 		};
- 
- 		mmc1: mmc@4809c000 {
- 			compatible = "ti,omap3-hsmmc";
- 			ti,hwmods = "mmc1";
- 			ti,dual-volt;
-+			dmas = <&sdma 61>, <&sdma 62>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		mmc2: mmc@480b4000 {
- 			compatible = "ti,omap3-hsmmc";
- 			ti,hwmods = "mmc2";
-+			dmas = <&sdma 47>, <&sdma 48>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		mmc3: mmc@480ad000 {
- 			compatible = "ti,omap3-hsmmc";
- 			ti,hwmods = "mmc3";
-+			dmas = <&sdma 77>, <&sdma 78>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		wdt2: wdt@48314000 {
-diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-index 739bb79..827f6f3 100644
---- a/arch/arm/boot/dts/omap4.dtsi
-+++ b/arch/arm/boot/dts/omap4.dtsi
-@@ -118,6 +118,18 @@
- 			pinctrl-single,function-mask = <0x7fff>;
- 		};
- 
-+		sdma: dma-controller@4A056000 {
-+			compatible = "ti,omap4430-sdma";
-+			reg = <0x4A056000 0x1000>;
-+			interrupts = <0 12 0x4>,
-+				     <0 13 0x4>,
-+				     <0 14 0x4>,
-+				     <0 15 0x4>;
-+			#dma-cells = <1>;
-+			#dma-channels = <32>;
-+			#dma-requests = <127>;
-+		};
-+
- 		gpio1: gpio@4a310000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x4a310000 0x200>;
-@@ -260,6 +272,16 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi1";
- 			ti,spi-num-cs = <4>;
-+			dmas = <&sdma 35>,
-+			       <&sdma 36>,
-+			       <&sdma 37>,
-+			       <&sdma 38>,
-+			       <&sdma 39>,
-+			       <&sdma 40>,
-+			       <&sdma 41>,
-+			       <&sdma 42>;
-+			dma-names = "tx0", "rx0", "tx1", "rx1",
-+				    "tx2", "rx2", "tx3", "rx3";
- 		};
- 
- 		mcspi2: spi@4809a000 {
-@@ -270,6 +292,11 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi2";
- 			ti,spi-num-cs = <2>;
-+			dmas = <&sdma 43>,
-+			       <&sdma 44>,
-+			       <&sdma 45>,
-+			       <&sdma 46>;
-+			dma-names = "tx0", "rx0", "tx1", "rx1";
- 		};
- 
- 		mcspi3: spi@480b8000 {
-@@ -280,6 +307,8 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi3";
- 			ti,spi-num-cs = <2>;
-+			dmas = <&sdma 15>, <&sdma 16>;
-+			dma-names = "tx0", "rx0";
- 		};
- 
- 		mcspi4: spi@480ba000 {
-@@ -290,6 +319,8 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi4";
- 			ti,spi-num-cs = <1>;
-+			dmas = <&sdma 70>, <&sdma 71>;
-+			dma-names = "tx0", "rx0";
- 		};
- 
- 		mmc1: mmc@4809c000 {
-@@ -299,6 +330,8 @@
- 			ti,hwmods = "mmc1";
- 			ti,dual-volt;
- 			ti,needs-special-reset;
-+			dmas = <&sdma 61>, <&sdma 62>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		mmc2: mmc@480b4000 {
-@@ -307,6 +340,8 @@
- 			interrupts = <0 86 0x4>;
- 			ti,hwmods = "mmc2";
- 			ti,needs-special-reset;
-+			dmas = <&sdma 47>, <&sdma 48>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		mmc3: mmc@480ad000 {
-@@ -315,6 +350,8 @@
- 			interrupts = <0 94 0x4>;
- 			ti,hwmods = "mmc3";
- 			ti,needs-special-reset;
-+			dmas = <&sdma 77>, <&sdma 78>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		mmc4: mmc@480d1000 {
-@@ -323,6 +360,8 @@
- 			interrupts = <0 96 0x4>;
- 			ti,hwmods = "mmc4";
- 			ti,needs-special-reset;
-+			dmas = <&sdma 57>, <&sdma 58>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		mmc5: mmc@480d5000 {
-@@ -331,6 +370,8 @@
- 			interrupts = <0 59 0x4>;
- 			ti,hwmods = "mmc5";
- 			ti,needs-special-reset;
-+			dmas = <&sdma 59>, <&sdma 60>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		wdt2: wdt@4a314000 {
-diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
-index 9e182a9..06d21d6 100644
---- a/arch/arm/boot/dts/omap5.dtsi
-+++ b/arch/arm/boot/dts/omap5.dtsi
-@@ -108,6 +108,18 @@
- 			      <0x48212000 0x1000>;
- 		};
- 
-+		sdma: dma-controller@4A056000 {
-+			compatible = "ti,omap4430-sdma";
-+			reg = <0x4A056000 0x1000>;
-+			interrupts = <0 12 0x4>,
-+				     <0 13 0x4>,
-+				     <0 14 0x4>,
-+				     <0 15 0x4>;
-+			#dma-cells = <1>;
-+			#dma-channels = <32>;
-+			#dma-requests = <127>;
-+		};
-+
- 		gpio1: gpio@4ae10000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x4ae10000 0x200>;
-@@ -249,6 +261,16 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi1";
- 			ti,spi-num-cs = <4>;
-+			dmas = <&sdma 35>,
-+			       <&sdma 36>,
-+			       <&sdma 37>,
-+			       <&sdma 38>,
-+			       <&sdma 39>,
-+			       <&sdma 40>,
-+			       <&sdma 41>,
-+			       <&sdma 42>;
-+			dma-names = "tx0", "rx0", "tx1", "rx1",
-+				    "tx2", "rx2", "tx3", "rx3";
- 		};
- 
- 		mcspi2: spi@4809a000 {
-@@ -259,6 +281,11 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi2";
- 			ti,spi-num-cs = <2>;
-+			dmas = <&sdma 43>,
-+			       <&sdma 44>,
-+			       <&sdma 45>,
-+			       <&sdma 46>;
-+			dma-names = "tx0", "rx0", "tx1", "rx1";
- 		};
- 
- 		mcspi3: spi@480b8000 {
-@@ -269,6 +296,8 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi3";
- 			ti,spi-num-cs = <2>;
-+			dmas = <&sdma 15>, <&sdma 16>;
-+			dma-names = "tx0", "rx0";
- 		};
- 
- 		mcspi4: spi@480ba000 {
-@@ -279,6 +308,8 @@
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi4";
- 			ti,spi-num-cs = <1>;
-+			dmas = <&sdma 70>, <&sdma 71>;
-+			dma-names = "tx0", "rx0";
- 		};
- 
- 		uart1: serial@4806a000 {
-@@ -336,6 +367,8 @@
- 			ti,hwmods = "mmc1";
- 			ti,dual-volt;
- 			ti,needs-special-reset;
-+			dmas = <&sdma 61>, <&sdma 62>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		mmc2: mmc@480b4000 {
-@@ -344,6 +377,8 @@
- 			interrupts = <0 86 0x4>;
- 			ti,hwmods = "mmc2";
- 			ti,needs-special-reset;
-+			dmas = <&sdma 47>, <&sdma 48>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		mmc3: mmc@480ad000 {
-@@ -352,6 +387,8 @@
- 			interrupts = <0 94 0x4>;
- 			ti,hwmods = "mmc3";
- 			ti,needs-special-reset;
-+			dmas = <&sdma 77>, <&sdma 78>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		mmc4: mmc@480d1000 {
-@@ -360,6 +397,8 @@
- 			interrupts = <0 96 0x4>;
- 			ti,hwmods = "mmc4";
- 			ti,needs-special-reset;
-+			dmas = <&sdma 57>, <&sdma 58>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		mmc5: mmc@480d5000 {
-@@ -368,6 +407,8 @@
- 			interrupts = <0 59 0x4>;
- 			ti,hwmods = "mmc5";
- 			ti,needs-special-reset;
-+			dmas = <&sdma 59>, <&sdma 60>;
-+			dma-names = "tx", "rx";
- 		};
- 
- 		keypad: keypad@4ae1c000 {
--- 
-1.7.10.4
-
+> [    2.286132] Unable to handle kernel NULL pointer dereference at virtual address 00000000
+> [    2.294738] pgd = c0004000
+> [    2.297576] [00000000] *pgd=00000000
+> [    2.301361] Internal error: Oops: 5 [#1] SMP ARM
+> [    2.306243] Modules linked in:
+> [    2.309448] CPU: 0    Not tainted  (3.8.0-rc6-next-20130207-00016-g735c237 #35)
+> [    2.317169] PC is at twl_i2c_read+0x3c/0xec
+> [    2.321563] LR is at twl_i2c_read+0x1c/0xec
+> [    2.325988] pc : [<c0333950>]    lr : [<c0333930>]    psr: 80000153
+> [    2.325988] sp : c702fed0  ip : 00000000  fp : 00000000
+> [    2.338043] r10: c702e000  r9 : c06e84e8  r8 : c06e51c8
+> [    2.343536] r7 : 00000001  r6 : 00000006  r5 : c702fef6  r4 : 00000004
+> [    2.350402] r3 : c129508c  r2 : 00000006  r1 : c702fef6  r0 : 0000000e
+> [    2.357269] Flags: Nzcv  IRQs on  FIQs off  Mode SVC_32  ISA ARM  Segment kernel
+> [    2.365051] Control: 10c5387d  Table: 80004019  DAC: 00000017
+> [    2.371093] Process swapper/0 (pid: 1, stack limit = 0xc702e240)
+> [    2.377410] Stack: (0xc702fed0 to 0xc7030000)
+> [    2.382019] fec0:                                     c0d42180 c0d429d0 c70a7640 c07354c4
+> [    2.390624] fee0: 00000001 c0719798 c0d42180 c06f2cc0 c04e76cc c06ee1ac 00000000 c07354c4
+> [    2.399230] ff00: 00000007 c06f2d64 00000017 c06fb308 00000000 c06f07a4 c0cb8580 c06edee0
+> [    2.407836] ff20: c06eded4 c06e8504 c0d42180 c0008768 0000009e c00611b4 00000001 00000000
+> [    2.416442] ff40: c061994c c06b7548 00000007 00000007 00000000 c07354c4 00000007 c0719798
+> [    2.425048] ff60: c0d42180 c06e51c8 c07197a0 0000009e 00000000 c06e590c 00000007 00000007
+> [    2.433654] ff80: c06e51c8 00000000 00000000 c04d26ec 00000000 00000000 00000000 00000000
+> [    2.442260] ffa0: 00000000 c04d26f4 00000000 c00137b0 00000000 00000000 00000000 00000000
+> [    2.450866] ffc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> [    2.459472] ffe0: 00000000 00000000 00000000 00000000 00000013 00000000 80fb6c10 71bbcd20
+> [    2.468078] [<c0333950>] (twl_i2c_read+0x3c/0xec) from [<c06f2cc0>] (omap3_twl_set_sr_bit+0x3c/0xb4)
+> [    2.477722] [<c06f2cc0>] (omap3_twl_set_sr_bit+0x3c/0xb4) from [<c06f2d64>] (omap3_twl_init+0x2c/0x70)
+> [    2.487518] [<c06f2d64>] (omap3_twl_init+0x2c/0x70) from [<c06fb308>] (omap_pmic_late_init+0x18/0x24)
+> [    2.497222] [<c06fb308>] (omap_pmic_late_init+0x18/0x24) from [<c06f07a4>] (omap2_common_pm_late_init+0x18/0xd0)
+> [    2.507934] [<c06f07a4>] (omap2_common_pm_late_init+0x18/0xd0) from [<c06edee0>] (omap3_init_late+0xc/0x18)
+> [    2.518188] [<c06edee0>] (omap3_init_late+0xc/0x18) from [<c06e8504>] (init_machine_late+0x1c/0x28)
+> [    2.527740] [<c06e8504>] (init_machine_late+0x1c/0x28) from [<c0008768>] (do_one_initcall+0x100/0x16c)
+> [    2.537536] [<c0008768>] (do_one_initcall+0x100/0x16c) from [<c06e590c>] (kernel_init_freeable+0xfc/0x1c8)
+> [    2.547698] [<c06e590c>] (kernel_init_freeable+0xfc/0x1c8) from [<c04d26f4>] (kernel_init+0x8/0xe4)
+> [    2.557250] [<c04d26f4>] (kernel_init+0x8/0xe4) from [<c00137b0>] (ret_from_fork+0x14/0x24)
+> 
+> Cheers
+> Jon
