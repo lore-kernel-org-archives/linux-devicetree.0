@@ -1,36 +1,53 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] devicetree: Move NS2 LEDs binding into LEDs directory
-Date: Fri, 08 Feb 2013 22:05:41 +0000
-Message-ID: <20130208220541.5DDDD3E2C27@localhost>
-References: <1360239776-14889-1-git-send-email-grant.likely@secretlab.ca> <20130207132118.GE14746@titan.lakedaemon.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130207132118.GE14746@titan.lakedaemon.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Andrew Lunn <andrew@lunn.ch>, Simon Guinot <simon.guinot@sequanux.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/5] spi: pl022: use generic DMA slave configuration if
+ possible
+Date: Fri, 8 Feb 2013 23:10:02 +0100
+Message-ID: <CACRpkdYOB=XX+Ogs8SVrrwVdMw+xZ9u3BBwwhsKYJKu4tTdDOg@mail.gmail.com>
+References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
+ <3752726.iyKukyN6sF@wuerfel>
+ <20130208162248.GY17833@n2100.arm.linux.org.uk>
+ <11938235.WbhQmuClDR@wuerfel>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <11938235.WbhQmuClDR@wuerfel>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 7 Feb 2013 08:21:18 -0500, Jason Cooper <jason@lakedaemon.net> wrote:
-> On Thu, Feb 07, 2013 at 12:22:56PM +0000, Grant Likely wrote:
-> > leds-ns2.txt is a binding for LEDs, not GPIOs. Move the documentation in
-> > with the rest of the LEDs bindings.
-> > 
-> > Cc: Andrew Lunn <andrew@lunn.ch>
-> > Cc: Simon Guinot <simon.guinot@sequanux.org>
-> > Cc: Jason Cooper <jason@lakedaemon.net>
-> > Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> > ---
-> >  .../devicetree/bindings/gpio/leds-ns2.txt          |   26 --------------------
-> >  .../devicetree/bindings/leds/leds-ns2.txt          |   26 ++++++++++++++++++++
-> >  2 files changed, 26 insertions(+), 26 deletions(-)
-> >  delete mode 100644 Documentation/devicetree/bindings/gpio/leds-ns2.txt
-> >  create mode 100644 Documentation/devicetree/bindings/leds/leds-ns2.txt
-> 
-> Acked-by: Jason Cooper <jason@lakedaemon.net>
-> 
-> or, if you want, I can queue it up.  Just let me know.
+On Fri, Feb 8, 2013 at 5:28 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Friday 08 February 2013 16:22:48 Russell King - ARM Linux wrote:
+>> If it's DMA _to_ a device, then we will only ever clean the lines prior to
+>> a transfer, never invalidate them.  So that's not really a concern.  (There
+>> better not be any dirty cache lines associated with the empty zero page
+>> either.)
+>
+> Right, makes sense. I thought I had read about a CPU that
+> could not flush a cache line without also invalidating
+> it, but that must have been something other than ARM,
+> or maybe I'm misremembering it.
 
-No, I got it. It was trivial so I committed it directly without waiting
-for review comments.
+I don't think it matters one bit. The page can contain a bitmap
+of Donald Duck or zero FWIW. It's just that the DMA
+controller just neeeds to read *something* that does not cause
+a bus stall.
 
-g.
+It's due to the syncronous nature of the SPI protocol, to get
+something out you need to put something in. So when reading,
+this is a way to feed in some junk.
+
+So this goes on my TODO...
+
+Yours,
+Linus Walleij
