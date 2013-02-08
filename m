@@ -1,54 +1,57 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 3.9 3/3] arm: mvebu: add the 7-segment display DT
- informations to Armada XP DB
-Date: Fri, 08 Feb 2013 22:39:45 +0000
-Message-ID: <20130208223945.D316E3E2C27@localhost>
-References: <1357576928-29133-1-git-send-email-thomas.petazzoni@free-electrons.com>
- <1357576928-29133-4-git-send-email-thomas.petazzoni@free-electrons.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V8] kbuild: create a rule to run the pre-processor on
+ *.dts files
+Date: Fri, 08 Feb 2013 15:42:45 -0700
+Message-ID: <51157F65.2050309@wwwdotorg.org>
+References: <1360091188-24063-1-git-send-email-swarren@wwwdotorg.org> <20130208144527.0D8DD3E2C01@localhost> <51156D09.7060401@gmail.com> <20130208220448.EDA773E2C27@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1357576928-29133-4-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130208220448.EDA773E2C27@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <robherring2@gmail.com>, Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Scott Wood <scottwood@freescale.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon,  7 Jan 2013 17:42:08 +0100, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> Now that we have a 7-segment display driver in the kernel, use it on
-> the Marvell Armada XP DB evaluation board.
+On 02/08/2013 03:04 PM, Grant Likely wrote:
+> On Fri, 08 Feb 2013 15:24:25 -0600, Rob Herring <robherring2@gmail.com> wrote:
+>> On 02/08/2013 08:45 AM, Grant Likely wrote:
+>>> On Tue,  5 Feb 2013 12:06:28 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>>> From: Stephen Warren <swarren@nvidia.com>
+>>>>
+>>>> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
+>>>> passing them to dtc for final compilation. This allows the use of #define
+>>>> and #include within the .dts file.
+>>>>
+>>>> Acked-by: Simon Glass <sjg@chromium.org>
+>>>> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+>>>> Acked-by: Michal Marek <mmarek@suse.cz>
+>>>> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>>>> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+>>>
+>>> I've applied this and was going to push it out, but I've just thought of
+>>> a problem that could be a show stopper. Once a dtsp file includes a C
+>>> header, the contents of that header become part of the Device Tree ABI.
+>>> If someone changes that file (ie. to renumber a series of #defines) then
+>>> that will break the binding. We need a way to protect against that.
+>>> Someone changing a .h file may make the assumption that it is only
+>>> kernel internal and won't realize that it has external implications.
+>>>
+>>> I'm thinking that any dts includes need to be treated in the same way as
+>>> userspace headers. We could put them into include/uapi and piggy back on
+>>> the protection already afforded by that directory, or come up with
+>>> something new. Any thoughts?
+>>
+>> Also, we would never be able to separate the dts files from the kernel
+>> tree without some separation.
 > 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  arch/arm/boot/dts/armada-xp-db.dts |    5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/armada-xp-db.dts b/arch/arm/boot/dts/armada-xp-db.dts
-> index 8e53b25..8654c1b 100644
-> --- a/arch/arm/boot/dts/armada-xp-db.dts
-> +++ b/arch/arm/boot/dts/armada-xp-db.dts
-> @@ -90,5 +90,10 @@
->  			phy = <&phy3>;
->  			phy-mode = "sgmii";
->  		};
-> +		gpio-7seg@0 {
-> +			compatible = "generic,gpio-7seg";
-> +			status = "okay";
-> +			gpios = <&gpio0 26 0 &gpio0 27 0 &gpio1 16 0>;
-> +		};
+> Good point. They better be in a completely separate directory then.
 
-Nit: The node probably belongs at the base of the tree. A direct child
-of the root node because it really doen't make sense as a child of
-anything else. It's more of a system level device.
+How about arch/*/include/dts/.
 
-g.
+Both *.dts and kernel code will need to include those headers (so that
+the kernel can parse the DTB using the same values), so putting the
+headers right into arch/*/boot/dts/ or arch/*/boot/dts/include/ might
+not make sense, since then that directory would still have to exist even
+if/when the .dts files are separated from the kernel.
