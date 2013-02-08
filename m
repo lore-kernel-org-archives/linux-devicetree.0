@@ -1,45 +1,46 @@
-From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] exynos_g2d: Add Bindings for exynos G2D driver
-Date: Fri, 08 Feb 2013 23:02:58 +0100
-Message-ID: <51157612.2020707@gmail.com>
-References: <1357218214-3706-1-git-send-email-ajaykumar.rs@samsung.com>
- <20130208215006.605183E2C27@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130208215006.605183E2C27@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V8] kbuild: create a rule to run the pre-processor on *.dts files
+Date: Fri, 08 Feb 2013 22:04:48 +0000
+Message-ID: <20130208220448.EDA773E2C27@localhost>
+References: <1360091188-24063-1-git-send-email-swarren@wwwdotorg.org> <20130208144527.0D8DD3E2C01@localhost> <51156D09.7060401@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51156D09.7060401@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Scott Wood <scottwood@freescale.com>, Sam Ravnborg <sam@ravnborg.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2013 10:50 PM, Grant Likely wrote:
-> On Thu, 03 Jan 2013 08:03:34 -0500, Ajay Kumar<ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>  wrote:
->> Add documentation for the DT bindings in exynos G2D driver.
->>
->> Signed-off-by: Ajay Kumar<ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
-> Applied, thanks.
+On Fri, 08 Feb 2013 15:24:25 -0600, Rob Herring <robherring2@gmail.com> wrote:
+> On 02/08/2013 08:45 AM, Grant Likely wrote:
+> > On Tue,  5 Feb 2013 12:06:28 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> >> From: Stephen Warren <swarren@nvidia.com>
+> >>
+> >> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
+> >> passing them to dtc for final compilation. This allows the use of #define
+> >> and #include within the .dts file.
+> >>
+> >> Acked-by: Simon Glass <sjg@chromium.org>
+> >> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+> >> Acked-by: Michal Marek <mmarek@suse.cz>
+> >> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+> >> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> > 
+> > I've applied this and was going to push it out, but I've just thought of
+> > a problem that could be a show stopper. Once a dtsp file includes a C
+> > header, the contents of that header become part of the Device Tree ABI.
+> > If someone changes that file (ie. to renumber a series of #defines) then
+> > that will break the binding. We need a way to protect against that.
+> > Someone changing a .h file may make the assumption that it is only
+> > kernel internal and won't realize that it has external implications.
+> > 
+> > I'm thinking that any dts includes need to be treated in the same way as
+> > userspace headers. We could put them into include/uapi and piggy back on
+> > the protection already afforded by that directory, or come up with
+> > something new. Any thoughts?
+> 
+> Also, we would never be able to separate the dts files from the kernel
+> tree without some separation.
 
-Hi Grant,
+Good point. They better be in a completely separate directory then.
 
-I believe this patch should not be applied. The compatible property has
-changed. Here is relevant patch series for the drivers [1], but I couldn't
-find a new version of the documentation patch.
-
-[1] http://www.spinics.net/lists/linux-media/msg59701.html
-
---
-
-Thanks,
-Sylwester
+g.
