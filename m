@@ -1,54 +1,66 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/1] documentation/devicetree: Fix a typo in
- exynos-dw-mshc.txt
-Date: Fri, 08 Feb 2013 17:09:35 -0600
-Message-ID: <511585AF.2040706@gmail.com>
-References: <1360237475-25259-1-git-send-email-sachin.kamat@linaro.org>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v4 02/10] s5p-fimc: Add device tree support for FIMC devices
+Date: Sat, 09 Feb 2013 00:16:26 +0100
+Message-ID: <5115874A.6050406@gmail.com>
+References: <1359745771-23684-1-git-send-email-s.nawrocki@samsung.com> <1359745771-23684-3-git-send-email-s.nawrocki@samsung.com> <5112E9EF.8090908@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360237475-25259-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5112E9EF.8090908@wwwdotorg.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, rob.herring@calxeda.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/2013 05:44 AM, Sachin Kamat wrote:
-> Fixed a typo in referenced file name.
-> 
-> Cc: Thomas Abraham <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
+On 02/07/2013 12:40 AM, Stephen Warren wrote:
+>> diff --git a/Documentation/devicetree/bindings/media/soc/samsung-fimc.txt b/Documentation/devicetree/bindings/media/soc/samsung-fimc.txt
+>
+>> +Samsung S5P/EXYNOS SoC Camera Subsystem (FIMC)
+>> +----------------------------------------------
+>> +
+>> +The Exynos Camera subsystem comprises of multiple sub-devices that are
+>> +represented by separate platform devices. Some of the IPs come in different
+>
+> "platform devices" is a rather Linux-centric term, and DT bindings
+> should be OS-agnostic. Perhaps use "device tree nodes" here?
 
-Applied.
+Indeed, thank you for the suggestion, I'll change it.
 
-Rob
+>> +variants across the SoC revisions (FIMC) and some remain mostly unchanged
+>> +(MIPI CSIS, FIMC-LITE).
+>> +
+>> +All those sub-subdevices are defined as parent nodes of the common device
+>
+> s/parent nodes/child node/ I think?
 
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> index 898b222..6d1c098 100644
-> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> @@ -4,7 +4,7 @@
->  The Synopsis designware mobile storage host controller is used to interface
->  a SoC with storage medium such as eMMC or SD/MMC cards. This file documents
->  differences between the core Synopsis dw mshc controller properties described
-> -by synposis-dw-mshc.txt and the properties used by the Samsung Exynos specific
-> +by synopsis-dw-mshc.txt and the properties used by the Samsung Exynos specific
->  extensions to the Synopsis Designware Mobile Storage Host Controller.
->  
->  Required Properties:
-> 
+Yeah, 'parent nodes' doesn't really make sense. Thanks for catching it.
+
+>> +For every fimc node a numbered alias should be present in the aliases node.
+>> +Aliases are of the form fimc<n>, where<n>  is an integer (0...N) specifying
+>> +the IP's instance index.
+>
+> Why? Isn't it up to the DT author whether they care if each fimc node is
+> assigned a specific identification v.s. whether identification is
+> assigned automatically?
+
+There are at least three different kinds of IPs that come in multiple
+instances in an SoC. To activate data links between them each instance
+needs to be clearly identified. There are also differences between
+instances of same device. Hence it's important these aliases don't have
+random values.
+
+Some more details about the SoC can be found at [1]. The aliases are
+also already used in the Exynos5 GScaler bindings [2] in a similar way.
+
+>> +Optional properties
+>> +
+>> + - clock-frequency - maximum FIMC local clock (LCLK) frequency
+>
+> Again, I'd expect a clocks property here instead.
+
+Please see my comment to patch 01/10. Analogously, I needed this clock
+frequency to ensure reliable video data pipeline operation.
+
+[1] http://tinyurl.com/anw9udm
+[2] http://www.spinics.net/lists/arm-kernel/msg200036.html
