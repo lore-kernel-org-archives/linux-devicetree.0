@@ -1,36 +1,166 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH] drivers: net: Remove remaining alloc/OOM messages
-Date: Fri, 08 Feb 2013 17:45:00 -0500 (EST)
-Message-ID: <20130208.174500.1518593039138341685.davem@davemloft.net>
-References: <1360273587.27863.15.camel@joe-AO722>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1360273587.27863.15.camel@joe-AO722>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, e1000-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ath9k-devel-xDcbHBWguxHbcTqmT+pZeQ@public.gmane.org, wil6210-A+ZNKFmMK5xy9aJCnZT0Uw@public.gmane.org, brcm80211-dev-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH v3] media: rc: gpio-ir-recv: add support for device tree parsing
+Date: Fri,  8 Feb 2013 23:47:30 +0100
+Message-ID: <1360363651-30814-1-git-send-email-sebastian.hesselbarth@gmail.com>
+References: <1360355887-19973-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1360355887-19973-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mauro Carvalho Chehab <mchehab@redhat.com>, Benoit Thebaudeau <benoit.thebaudeau@advansee.com>, David Hardeman <david@hardeman.nu>, Trilok Soni <tsoni@codeaurora.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Matus Ujhelyi <ujhelyi.m@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Date: Thu, 07 Feb 2013 13:46:27 -0800
+This patch adds device tree parsing for gpio_ir_recv platform_data and
+the mandatory binding documentation. It basically follows what we already
+have for e.g. gpio_keys. All required device tree properties are OS
+independent but an optional property allows linux specific support for rc
+maps.
 
-> alloc failures already get standardized OOM
-> messages and a dump_stack.
-> 
-> For the affected mallocs around these OOM messages:
-> 
-> Converted kmallocs with multiplies to kmalloc_array.
-> Converted a kmalloc/memcpy to kmemdup.
-> Removed now unused stack variables.
-> Removed unnecessary parentheses.
-> Neatened alignment.
-> 
-> Signed-off-by: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
+---
+There was a similar patch sent by Matus Ujhelyi but that discussion
+died after the first reviews.
 
-Applied, thanks Joe.
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changelog
+
+v1->v2:
+- get rid of ptr returned by _get_devtree_pdata()
+- check for of_node instead for NULL pdata
+- remove unneccessary double check for gpios property
+- remove unneccessary #ifdef CONFIG_OF around match table
+
+v2->v3:
+- use define for !OF_CONFIG _get_devtree_pdata()
+- simplify flags test and of_get_gpio_flags error msg
+- fix some typos in binding documentation
+- move note about previous patch submission to non-commit area
+ 
+Cc: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>
+Cc: Rob Landley <rob@landley.net>
+Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Benoit Thebaudeau <benoit.thebaudeau@advansee.com>
+Cc: David Hardeman <david@hardeman.nu>
+Cc: Trilok Soni <tsoni@codeaurora.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Matus Ujhelyi <ujhelyi.m@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org
+Cc: linux-doc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-media@vger.kernel.org
+---
+ .../devicetree/bindings/media/gpio-ir-receiver.txt |   16 ++++++
+ drivers/media/rc/gpio-ir-recv.c                    |   52 ++++++++++++++++++++
+ 2 files changed, 68 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
+
+diff --git a/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
+new file mode 100644
+index 0000000..56e726e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
+@@ -0,0 +1,16 @@
++Device-Tree bindings for GPIO IR receiver
++
++Required properties:
++	- compatible: should be "gpio-ir-receiver".
++	- gpios: specifies GPIO used for IR signal reception.
++
++Optional properties:
++	- linux,rc-map-name: Linux specific remote control map name.
++
++Example node:
++
++	ir: ir-receiver {
++		compatible = "gpio-ir-receiver";
++		gpios = <&gpio0 19 1>;
++		linux,rc-map-name = "rc-rc6-mce";
++	};
+diff --git a/drivers/media/rc/gpio-ir-recv.c b/drivers/media/rc/gpio-ir-recv.c
+index 4f71a7d..b5cfb44 100644
+--- a/drivers/media/rc/gpio-ir-recv.c
++++ b/drivers/media/rc/gpio-ir-recv.c
+@@ -16,6 +16,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/gpio.h>
+ #include <linux/slab.h>
++#include <linux/of_gpio.h>
+ #include <linux/platform_device.h>
+ #include <linux/irq.h>
+ #include <media/rc-core.h>
+@@ -30,6 +31,45 @@ struct gpio_rc_dev {
+ 	bool active_low;
+ };
+ 
++#ifdef CONFIG_OF
++/*
++ * Translate OpenFirmware node properties into platform_data
++ */
++static int gpio_ir_recv_get_devtree_pdata(struct device *dev,
++				  struct gpio_ir_recv_platform_data *pdata)
++{
++	struct device_node *np = dev->of_node;
++	enum of_gpio_flags flags;
++	int gpio;
++
++	gpio = of_get_gpio_flags(np, 0, &flags);
++	if (gpio < 0) {
++		if (gpio != -EPROBE_DEFER)
++			dev_err(dev, "Failed to get gpio flags (%d)\n", gpio);
++		return gpio;
++	}
++
++	pdata->gpio_nr = gpio;
++	pdata->active_low = (flags & OF_GPIO_ACTIVE_LOW);
++	/* probe() takes care of map_name == NULL or allowed_protos == 0 */
++	pdata->map_name = of_get_property(np, "linux,rc-map-name", NULL);
++	pdata->allowed_protos = 0;
++
++	return 0;
++}
++
++static struct of_device_id gpio_ir_recv_of_match[] = {
++	{ .compatible = "gpio-ir-receiver", },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, gpio_ir_recv_of_match);
++
++#else /* !CONFIG_OF */
++
++#define gpio_ir_recv_get_devtree_pdata(dev, pdata)	(-ENOSYS)
++
++#endif
++
+ static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
+ {
+ 	struct gpio_rc_dev *gpio_dev = dev_id;
+@@ -66,6 +106,17 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
+ 					pdev->dev.platform_data;
+ 	int rc;
+ 
++	if (pdev->dev.of_node) {
++		struct gpio_ir_recv_platform_data *dtpdata =
++			devm_kzalloc(&pdev->dev, sizeof(*dtpdata), GFP_KERNEL);
++		if (!dtpdata)
++			return -ENOMEM;
++		rc = gpio_ir_recv_get_devtree_pdata(&pdev->dev, dtpdata);
++		if (rc)
++			return rc;
++		pdata = dtpdata;
++	}
++
+ 	if (!pdata)
+ 		return -EINVAL;
+ 
+@@ -192,6 +243,7 @@ static struct platform_driver gpio_ir_recv_driver = {
+ 	.driver = {
+ 		.name   = GPIO_IR_DRIVER_NAME,
+ 		.owner  = THIS_MODULE,
++		.of_match_table = of_match_ptr(gpio_ir_recv_of_match),
+ #ifdef CONFIG_PM
+ 		.pm	= &gpio_ir_recv_pm_ops,
+ #endif
+-- 
+1.7.10.4
