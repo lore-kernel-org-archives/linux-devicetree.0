@@ -1,73 +1,145 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH V2 0/2] ARM: dts: Add DT bindings for OMAP SDMA
-Date: Fri, 8 Feb 2013 14:58:18 +0530
-Message-ID: <5114C532.1050506@ti.com>
-References: <1360285506-22354-1-git-send-email-jon-hunter@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 2/3] mmc: davinci_mmc: add DT support
+Date: Fri, 8 Feb 2013 09:37:54 +0000
+Message-ID: <20130208093754.GA27859@e106331-lin.cambridge.arm.com>
+References: <1360223825-23929-1-git-send-email-prakash.pm@ti.com>
+ <1360223825-23929-3-git-send-email-prakash.pm@ti.com>
+ <20130207104656.GE16987@e106331-lin.cambridge.arm.com>
+ <A73F36158E33644199EB82C5EC81C7BC3EA465FE@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1360285506-22354-1-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, Vinod Koul <vinod.koul@intel.com>, Russell King <linux@arm.linux.org.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Matt Porter <mporter@ti.com>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Balaji T K <balajitk@ti.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3EA465FE@DBDE01.ent.ti.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "Porter, Matt" <mporter@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "cjb@laptop.org" <cjb@laptop.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 08 February 2013 06:35 AM, Jon Hunter wrote:
-> Adds device-tree bindings from SDMA on OMAP2+ devices. DMA client
-> bindings are also added for devices that have SPI and MMC bindings
-> populated. Client binding data is based upon existing HWMOD data for
-> OMAP and has been checked against OMAP documentation.
->
-> Please note that the underlying (legacy) OMAP SDMA driver has not been
-> ported over to DT and this still needs to be done. However, this allows
-> DMA clients to look-up the DMA resource information via device-tree.
->
-> Testing includes ...
-> 1. Boot tested on OMAP3430 Beagle board, OMAP4430 Panda board and
->     OMAP4460 Panda board with and without device-tree present.
-> 2. Testing of MMC1 with SD card on OMAP3430 Beagle board, OMAP4430
->     Panda board and OMAP4460 Panda board with and without device-tree
->     present.
->
-> Testing branch available here [1].
->
-> Series is based upon Tony Lindgren's omap-for-v3.9/multiplatform-v2
-> branch [2] on top of the following ...
-> - Vinod's topic/dmaengine_dt branch [3]
-> - Matt Porter's series "DMA Engine support for AM33XX" [4]
-> - Matt Porter's series "omap_hsmmc DT DMA Client support" [5]
-> - Sourav Poddar's series "add omap mcspi device tree data" [6]
->
-> V2 changes:
-> - Updated to Tony's omap-for-v3.9/multiplatform-v2 branch to pull in
->    DMA changes for v3.9
-> - Added comma to omap_dma_driver structure as pointed out by Arnd.
-> - Updated OMAP SDMA DT binding compatible strings to indicate which
->    devices are bit compatible with each other with respect to the SDMA
->    controller. Grant had mentioned in the past that he wants the
->    compatible string to be based upon a particular device and not
->    something generic like "ti,omap-sdma".
->
-> [1] https://github.com/jonhunter/linux/commits/dev-dt-dma
-> [2] git://git.kernel.org/pub/scm/linux/kernel/git/tmlind/linux-omap.git omap-for-v3.9/multiplatform-v2
-> [3] http://git.infradead.org/users/vkoul/slave-dma.git/shortlog/refs/heads/topic/dmaengine_dt
-> [4] http://permalink.gmane.org/gmane.linux.kernel.spi.devel/12508
-> [5] http://permalink.gmane.org/gmane.linux.ports.arm.omap/93165
-> [6] http://permalink.gmane.org/gmane.linux.kernel/1435002
->
-> Jon Hunter (2):
->    ARM: dts: OMAP2+: Add SDMA controller bindings and nodes
->    dmaengine: OMAP: Register SDMA controller with Device Tree DMA driver
->
->   .../devicetree/bindings/dma/omap-sdma.txt          |   51 ++++++++++++++++++++
->   arch/arm/boot/dts/omap2.dtsi                       |   12 +++++
->   arch/arm/boot/dts/omap3.dtsi                       |   40 +++++++++++++++
->   arch/arm/boot/dts/omap4.dtsi                       |   41 ++++++++++++++++
->   arch/arm/boot/dts/omap5.dtsi                       |   41 ++++++++++++++++
->   arch/arm/mach-omap2/dma.c                          |    4 ++
->   drivers/dma/omap-dma.c                             |   37 +++++++++++++-
->   7 files changed, 224 insertions(+), 2 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/dma/omap-sdma.txt
->
-Acked-Tested-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Hi,
+
+[...]
+
+> > > diff --git a/Documentation/devicetree/bindings/mmc/davinci_mmc.txt b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
+> > > new file mode 100644
+> > > index 0000000..6717ab1
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
+> > > @@ -0,0 +1,30 @@
+> > > +* TI Highspeed MMC host controller for DaVinci
+> > > +
+> > > +The Highspeed MMC Host Controller on TI DaVinci family
+> > > +provides an interface for MMC, SD and SDIO types of memory cards.
+> > > +
+> > > +This file documents the properties used by the davinci_mmc driver.
+> > > +
+> > > +Required properties:
+> > > +- compatible:
+> > > + Should be "ti,davinci-mmc-da830": for da830, da850, dm365
+> > > + Should be "ti,davinci-mmc-dm355": for dm355, dm644x
+> > > +
+> > > +Optional properties:
+> > > +- bus-width: Number of data lines, can be <4>, or <8>, default <1>
+> > > +- max-frequency: Maximum operating clock frequency, default 25MHz.
+> > > +- mmc-cap-mmc-highspeed: Indicates support for MMC in high speed mode
+> > > +- mmc-cap-sd-highspeed: Indicates support for SD in high speed mode
+
+[...]
+
+
+> > > +static struct davinci_mmc_config
+> > > +	*mmc_parse_pdata(struct platform_device *pdev)
+> > >  {
+> > > +	struct device_node *np;
+> > >  	struct davinci_mmc_config *pdata = pdev->dev.platform_data;
+> > > +	const struct of_device_id *match =
+> > > +		of_match_device(of_match_ptr(davinci_mmc_dt_ids), &pdev->dev);
+> > > +	u32 data;
+> > > +
+> > > +	np = pdev->dev.of_node;
+> > > +	if (!np)
+> > > +		return pdata;
+> > > +
+> > > +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
+> > > +	if (!pdata) {
+> > > +		dev_err(&pdev->dev, "Failed to allocate memory for struct davinci_mmc_config\n");
+> > > +		goto nodata;
+> > > +	}
+> > > +
+> > > +	if (match->data)
+> > > +		pdata->version = (u8)((int)match->data);
+> > > +
+> > > +	of_property_read_u32(np, "max-frequency", &pdata->max_freq);
+> > > +	if (!pdata->max_freq)
+> > > +		dev_info(&pdev->dev, "'max-frequency' property not specified, defaulting to 25MHz\n");
+> > > +
+> > > +	if (of_get_property(np, "mmc-cap-mmc-highspeed", NULL))
+> > > +		pdata->caps |= MMC_CAP_MMC_HIGHSPEED;
+> > > +	if (of_get_property(np, "mmc-cap-sd-highspeed", NULL))
+> > > +		pdata->caps |= MMC_CAP_SD_HIGHSPEED;
+> > 
+> > If these aren't derivable from max-frequency, you could use
+> > of_property_read_bool to make this clearer.
+> > 
+> 
+> Correct, I will decide these based on max-frequency.
+> 
+> > > +
+> > > +	of_property_read_u32(np, "bus-width", &data);
+> > > +	switch (data) {
+> > > +	case 0:
+> > 
+> > Judging by the binding doc, should this be 1 rather than 0?
+> > 
+> 
+> By default driver comes up in 4 bit mode when bus-width is not specified.
+> Bus-width is set to 1 bit for invalid bus-widths. Below are the cases
+> when bus-width 0 or 4, bus-width is set to 4bit mode
+> When bus-width is 8, bus-width is set to 8 bit mode
+
+Why is 0 a special value that means 4? Why not just use 4?
+
+Here you just assign 0 to pdata->wires.
+
+I see the current version of the driver handles this specially in
+davinci_mmcsd_probe, but I don't see why this should leak into the binding.
+
+What I was originally trying to get at is that the binding says 8, 4, and 1 are
+acceptable values, but you check the cases 8, 4, or 0. So you're accepting
+something not documented, and producing a warning in a valid case (1).
+
+> 
+> I thought that if somebody specifies bus-width as 2, 3, 5, 6, 7..., then
+> it should be defaulted to 1 bit mode, so I specified it as 1 bit in binding doc.
+
+If they specify something invalid, falling back to a sane value with a warning
+sounds good.
+
+> But I feel that a person who is editing dts file will not make such a mistake.
+> I will change binding document to default as 4 bit mode.
+
+There have been and inevitably will be plenty of errors in dts files. I think
+it'd be good to provide a warning and either use a value that's guaranteed to
+work, or bail out if that can't be done.
+
+If it's always valid to use 1 data line even if the hardware has more, I think
+falling back to 1 makes more sense, as it'd be guaranteed to work.
+
+> 
+> > > +	case 4:
+> > > +	case 8:
+> > > +		pdata->wires = data;
+> > > +		break;
+> > > +	default:
+> > > +		pdata->wires = 1;
+> > > +		dev_info(&pdev->dev, "Unsupported buswidth, defaulting to 1 bit\n");
+> > > +	}
+> > > +nodata:
+> > > +	return pdata;
+> > > +}
+
+With the first case changed to "case 1:", this block makes sense to me.
+
+Thanks,
+Mark.
