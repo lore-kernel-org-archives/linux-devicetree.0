@@ -1,165 +1,66 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH v2] media: rc: gpio-ir-recv: add support for device tree parsing
-Date: Fri,  8 Feb 2013 21:38:07 +0100
-Message-ID: <1360355887-19973-1-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1360137832-13086-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1360137832-13086-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Mauro Carvalho Chehab <mchehab@redhat.com>, Benoit Thebaudeau <benoit.thebaudeau@advansee.com>, David Hardeman <david@hardeman.nu>, Trilok Soni <tsoni@codeaurora.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Matus Ujhelyi <ujhelyi.m@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH V8] kbuild: create a rule to run the pre-processor on
+ *.dts files
+Date: Fri, 8 Feb 2013 20:50:47 +0000
+Message-ID: <CACxGe6t=Bi=4ZiZFyye9iSGBe4k-pa7h2c39iruGhKi3oJjzWA@mail.gmail.com>
+References: <1360091188-24063-1-git-send-email-swarren@wwwdotorg.org>
+ <20130208144527.0D8DD3E2C01@localhost> <51153365.5010109@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <51153365.5010109@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Michal Marek <mmarek@suse.cz>, Rob Herring <robherring2@gmail.com>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Scott Wood <scottwood@freescale.com>, Sam Ravnborg <sam@ravnborg.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds device tree parsing for gpio_ir_recv platform_data and
-the mandatory binding documentation. It basically follows what we already
-have for e.g. gpio_keys. All required device tree properties are OS
-independent but an optional property allow linux specific support for rc
-maps.
+On Fri, Feb 8, 2013 at 5:18 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 02/08/2013 07:45 AM, Grant Likely wrote:
+>> On Tue,  5 Feb 2013 12:06:28 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>>> From: Stephen Warren <swarren@nvidia.com>
+>>>
+>>> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
+>>> passing them to dtc for final compilation. This allows the use of #define
+>>> and #include within the .dts file.
+>>>
+>>> Acked-by: Simon Glass <sjg@chromium.org>
+>>> Acked-by: Jean-Christophe PLAGNIOL-VILLARD <plagnioj@jcrosoft.com>
+>>> Acked-by: Michal Marek <mmarek@suse.cz>
+>>> Acked-by: Srinivas Kandagatla <srinivas.kandagatla@st.com>
+>>> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+>>
+>> I've applied this and was going to push it out, but I've just thought of
+>> a problem that could be a show stopper. Once a dtsp file includes a C
+>> header, the contents of that header become part of the Device Tree ABI.
+>> If someone changes that file (ie. to renumber a series of #defines) then
+>> that will break the binding. We need a way to protect against that.
+>> Someone changing a .h file may make the assumption that it is only
+>> kernel internal and won't realize that it has external implications.
+>>
+>> I'm thinking that any dts includes need to be treated in the same way as
+>> userspace headers. We could put them into include/uapi and piggy back on
+>> the protection already afforded by that directory, or come up with
+>> something new. Any thoughts?
+>
+> Yes, that's true.
+>
+> What protection is provided by include/uapi - something programmatic or
+> simply stricter review?
 
-There was a similar patch sent by Matus Ujhelyi but that discussion
-died after the first reviews.
+I believe there are tools that parse the userspace ABI and flag
+incompatibilities, but also stricter review.
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
----
-Changelog
+> I wondered if we shouldn't put the headers into the .dts directory, then
+> update the kernel to include them too. That would also make it obvious
+> they were part of the DT ABI.
 
-v1->v2:
-- get rid of ptr returned by _get_devtree_pdata()
-- check for of_node instead for NULL pdata
-- remove unneccessary double check for gpios property
-- remove unneccessary #ifdef CONFIG_OF around match table
+That would also help be good. In either case the CPP options need to
+only include the ABI headers. No normal headers allowed.
 
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Benoit Thebaudeau <benoit.thebaudeau@advansee.com>
-Cc: David Hardeman <david@hardeman.nu>
-Cc: Trilok Soni <tsoni@codeaurora.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Matus Ujhelyi <ujhelyi.m@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: linux-doc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-media@vger.kernel.org
----
- .../devicetree/bindings/media/gpio-ir-receiver.txt |   16 ++++++
- drivers/media/rc/gpio-ir-recv.c                    |   57 ++++++++++++++++++++
- 2 files changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
+g.
 
-diff --git a/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
-new file mode 100644
-index 0000000..8589f30
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
-@@ -0,0 +1,16 @@
-+Device-Tree bindings for GPIO IR receiver
-+
-+Required properties:
-+	- compatible = "gpio-ir-receiver";
-+	- gpios: OF device-tree gpio specification.
-+
-+Optional properties:
-+	- linux,rc-map-name: Linux specific remote control map name.
-+
-+Example node:
-+
-+	ir: ir-receiver {
-+		compatible = "gpio-ir-receiver";
-+		gpios = <&gpio0 19 1>;
-+		linux,rc-map-name = "rc-rc6-mce";
-+	};
-diff --git a/drivers/media/rc/gpio-ir-recv.c b/drivers/media/rc/gpio-ir-recv.c
-index 4f71a7d..3c62006 100644
---- a/drivers/media/rc/gpio-ir-recv.c
-+++ b/drivers/media/rc/gpio-ir-recv.c
-@@ -16,6 +16,7 @@
- #include <linux/interrupt.h>
- #include <linux/gpio.h>
- #include <linux/slab.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/irq.h>
- #include <media/rc-core.h>
-@@ -30,6 +31,50 @@ struct gpio_rc_dev {
- 	bool active_low;
- };
- 
-+#ifdef CONFIG_OF
-+/*
-+ * Translate OpenFirmware node properties into platform_data
-+ */
-+static int gpio_ir_recv_get_devtree_pdata(struct device *dev,
-+				  struct gpio_ir_recv_platform_data *pdata)
-+{
-+	struct device_node *np = dev->of_node;
-+	enum of_gpio_flags flags;
-+	int gpio;
-+
-+	gpio = of_get_gpio_flags(np, 0, &flags);
-+	if (gpio < 0) {
-+		if (gpio != -EPROBE_DEFER)
-+			dev_err(dev, "Failed to get gpio flags, error: %d\n",
-+				gpio);
-+		return gpio;
-+	}
-+
-+	pdata->gpio_nr = gpio;
-+	pdata->active_low = (flags & OF_GPIO_ACTIVE_LOW) ? true : false;
-+	/* probe() takes care of map_name == NULL or allowed_protos == 0 */
-+	pdata->map_name = of_get_property(np, "linux,rc-map-name", NULL);
-+	pdata->allowed_protos = 0;
-+
-+	return 0;
-+}
-+
-+static struct of_device_id gpio_ir_recv_of_match[] = {
-+	{ .compatible = "gpio-ir-receiver", },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, gpio_ir_recv_of_match);
-+
-+#else /* !CONFIG_OF */
-+
-+static inline struct gpio_ir_recv_platform_data *
-+gpio_ir_recv_get_devtree_pdata(struct device *dev)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
-+
-+#endif
-+
- static irqreturn_t gpio_ir_recv_irq(int irq, void *dev_id)
- {
- 	struct gpio_rc_dev *gpio_dev = dev_id;
-@@ -66,6 +111,17 @@ static int gpio_ir_recv_probe(struct platform_device *pdev)
- 					pdev->dev.platform_data;
- 	int rc;
- 
-+	if (pdev->dev.of_node) {
-+		struct gpio_ir_recv_platform_data *dtpdata =
-+			devm_kzalloc(&pdev->dev, sizeof(*dtpdata), GFP_KERNEL);
-+		if (!dtpdata)
-+			return -ENOMEM;
-+		rc = gpio_ir_recv_get_devtree_pdata(&pdev->dev, dtpdata);
-+		if (rc)
-+			return rc;
-+		pdata = dtpdata;
-+	}
-+
- 	if (!pdata)
- 		return -EINVAL;
- 
-@@ -192,6 +248,7 @@ static struct platform_driver gpio_ir_recv_driver = {
- 	.driver = {
- 		.name   = GPIO_IR_DRIVER_NAME,
- 		.owner  = THIS_MODULE,
-+		.of_match_table = of_match_ptr(gpio_ir_recv_of_match),
- #ifdef CONFIG_PM
- 		.pm	= &gpio_ir_recv_pm_ops,
- #endif
+
+
 -- 
-1.7.10.4
-
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
