@@ -1,29 +1,35 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 2/2] gpio: mcp23s08: convert driver to DT
-Date: Sat, 09 Feb 2013 14:31:20 +0000
-Message-ID: <20130209143120.AA32B3E30EC@localhost>
-References: <1360170118-11937-1-git-send-email-larsi@wh2.tu-dresden.de> <1360170118-11937-3-git-send-email-larsi@wh2.tu-dresden.de>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1360170118-11937-3-git-send-email-larsi@wh2.tu-dresden.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lars Poeschel <larsi@wh2.tu-dresden.de>, poeschel@lemonage.de, rob.herring@calxeda.com, rob@landley.net, linus.walleij@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net
-Cc: w.sang@pengutronix.de, ben-linux@fluff.org, linux-i2c@vger.kernel.org
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] gpio: Add device driver for GRGPIO cores
+Date: Sat, 09 Feb 2013 14:52:01 +0000
+Message-ID: <20130209145201.B06703E328E@localhost>
+References: <1359548921-14925-1-git-send-email-andreas@gaisler.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1359548921-14925-1-git-send-email-andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  6 Feb 2013 18:01:58 +0100, Lars Poeschel <larsi@wh2.tu-dresden.de> wrote:
-> From: Lars Poeschel <poeschel@lemonage.de>
+On Wed, 30 Jan 2013 13:28:41 +0100, Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> wrote:
+> This driver supports GRGPIO gpio cores available in the GRLIB VHDL IP core
+> library.
 > 
-> This converts the mcp23s08 driver to be able to be used with device
-> tree.
-> There is a special "mcp,chips" property, that correspond to the chips
-> member of the struct mcp23s08_platform_data. It can be used for
-> multiple mcp23s08/mc23s17 on the same spi chipselect.
-> 
-> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+> Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
 
-Ah, ignore my previous email. You did convert the driver. I've applied
-the two patches. Actually I squashed them together since they really
-were one logical change.
+Have you looked at drivers/gpio/gpio-generic.c? This looks to me like
+yet another memory mapped gpio controller than could be handled with the
+generic driver.
 
 g.
-
