@@ -1,45 +1,102 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v4 06/10] s5p-fimc: Use pinctrl API for camera ports configuration
-Date: Sat, 09 Feb 2013 00:30:54 +0100
-Message-ID: <51158AAE.7050003@gmail.com>
-References: <1359745771-23684-1-git-send-email-s.nawrocki@samsung.com> <1359745771-23684-7-git-send-email-s.nawrocki@samsung.com> <5112EAF6.1040408@wwwdotorg.org>
+From: Mauro Carvalho Chehab <mchehab@redhat.com>
+Subject: Re: [PATCH v2] media: rc: gpio-ir-recv: add support for device tree
+ parsing
+Date: Fri, 8 Feb 2013 22:03:57 -0200
+Message-ID: <20130208220357.198c313c@redhat.com>
+References: <1360137832-13086-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1360355887-19973-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5112EAF6.1040408@wwwdotorg.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, rob.herring@calxeda.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1360355887-19973-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Benoit Thebaudeau <benoit.thebaudeau@advansee.com>, David Hardeman <david@hardeman.nu>, Trilok Soni <tsoni@codeaurora.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Matus Ujhelyi <ujhelyi.m@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/07/2013 12:44 AM, Stephen Warren wrote:
-> On 02/01/2013 12:09 PM, Sylwester Nawrocki wrote:
->> Before the camera ports can be used the pinmux needs to be configured
->> properly. This patch adds a function to set the camera ports pinctrl
->> to a default state within the media driver's probe().
->> The camera port(s) are then configured for the video bus operation.
->
->> diff --git a/Documentation/devicetree/bindings/media/soc/samsung-fimc.txt b/Documentation/devicetree/bindings/media/soc/samsung-fimc.txt
->
->> +- pinctrl-names    : pinctrl names for camera port pinmux control, at least
->> +		     "default" needs to be specified.
->> +- pinctrl-0...N	   : pinctrl properties corresponding to pinctrl-names
->> +
->
-> A reference to the binding document describing the pin control bindings
-> would be appropriate here. Given that reference, I'm not sure if
-> spelling out the property names makes sense since it feels a little like
-> duplication; an alternative might be simply:
->
-> The pinctrl bindings defined in ../../../pinctrl/pinctrl-bindings.txt
-> must be used to define a pinctrl state named "default".
+Em Fri,  8 Feb 2013 21:38:07 +0100
+Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com> escreveu:
 
-OK, I will add a reference to the pinctrl bindings instead.
+> This patch adds device tree parsing for gpio_ir_recv platform_data and
+> the mandatory binding documentation. It basically follows what we already
+> have for e.g. gpio_keys. All required device tree properties are OS
+> independent but an optional property allow linux specific support for rc
+> maps.
+> 
+> There was a similar patch sent by Matus Ujhelyi but that discussion
+> died after the first reviews.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> ---
+> Changelog
+> 
+> v1->v2:
+> - get rid of ptr returned by _get_devtree_pdata()
+> - check for of_node instead for NULL pdata
+> - remove unneccessary double check for gpios property
+> - remove unneccessary #ifdef CONFIG_OF around match table
+> 
+> Cc: Grant Likely <grant.likely@secretlab.ca>
+> Cc: Rob Herring <rob.herring@calxeda.com>
+> Cc: Rob Landley <rob@landley.net>
+> Cc: Mauro Carvalho Chehab <mchehab@redhat.com>
+> Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> Cc: Benoit Thebaudeau <benoit.thebaudeau@advansee.com>
+> Cc: David Hardeman <david@hardeman.nu>
+> Cc: Trilok Soni <tsoni@codeaurora.org>
+> Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>
+> Cc: Matus Ujhelyi <ujhelyi.m@gmail.com>
+> Cc: devicetree-discuss@lists.ozlabs.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-media@vger.kernel.org
+> ---
+>  .../devicetree/bindings/media/gpio-ir-receiver.txt |   16 ++++++
+>  drivers/media/rc/gpio-ir-recv.c                    |   57 ++++++++++++++++++++
+>  2 files changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
+> new file mode 100644
+> index 0000000..8589f30
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/gpio-ir-receiver.txt
+> @@ -0,0 +1,16 @@
+> +Device-Tree bindings for GPIO IR receiver
+> +
+> +Required properties:
+> +	- compatible = "gpio-ir-receiver";
+> +	- gpios: OF device-tree gpio specification.
+> +
+> +Optional properties:
+> +	- linux,rc-map-name: Linux specific remote control map name.
+> +
+> +Example node:
+> +
+> +	ir: ir-receiver {
+> +		compatible = "gpio-ir-receiver";
+> +		gpios = <&gpio0 19 1>;
+> +		linux,rc-map-name = "rc-rc6-mce";
 
-> However, this isn't a big deal; it's fine either way.
+Please change this to:
+		linux,rc-map-name = RC_MAP_RC6_MCE;
 
---
+(as defined at include/media/rc-map.h).
 
-Thanks.
-Sylwester
+The idea of having those strings defined at the same header file is to:
+
+	- make sure that the same keyboard is spelled at the same way on
+all places;
+
+	- avoid people to duplicate IR keytables, using different names;
+
+	- help userspace to get the right table. In the future, the
+plan is to remove all keytables from kernelspace, keeping there just the
+name of the keytable. The existing userspace code (ir-keytables, part
+of v4l-utils) use the keytable name to dynamically load the right table
+in runtime and to switch the IR core to only handle the protocol that
+it is associated with the loaded keytable.
+
+Regards,
+Mauro
