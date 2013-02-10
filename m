@@ -1,117 +1,200 @@
 From: Anil Kumar <anilk4.v@gmail.com>
-Subject: Sound record on Devkit8000 with DT boot issue
-Date: Sun, 10 Feb 2013 20:51:57 +0530
-Message-ID: <CABYxbz5ECxoWZtkfL3UbZ=R4LVoNeMVxjYbPdZoarstCod-gQw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org
-Cc: tony@atomide.com, thomas@tomweber.eu, perex@perex.cz, tiwai@suse.de, lrg@ti.com, Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH V2] ARM: dts: add minimal DT support for DevKit8000
+Date: Sun, 10 Feb 2013 21:35:53 +0530
+Message-ID: <1360512354-3804-1-git-send-email-anilk4.v@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, grant.likely@secretlab.ca, weber@corscience.de, anilk4.v@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+DevKit8000 is a beagle board clone from Timll, sold by
+armkits.com. The DevKit8000 has RS232 serial port, LCD, DVI-D,
+S-Video, Ethernet, SD/MMC, keyboard, camera, SPI, I2C, USB and
+JTAG interface.
 
-I am working on Devkit8000 and adding DT support for that. I am trying
-to add sound DT node support for this boards.
-I have nearly done with this but facing issue on record. I do not have
-much knowledge of twl4030 audio codec but with
-small Hack[1] (as MainMic connected to the input jack)  i am able to
-record sound on Devkit8000.
-I do not know that MICBIAS1_EN can be enable by amixer commands.
-Could you please help me to get out of this ?
+This patch adds the basic DT support for devkit8000. At this time, Information
+of twl4030, MMC1, I2C1, leds and there pim mux information are added.
 
+Signed-off-by: Anil Kumar <anilk4.v@gmail.com>
+Tested-by: Thomas Weber <thomas@tomweber.eu>
+---
 
-1) Hack [1]
+ -This patch is based on top of kernel 3.8-rc5.
 
-diff --git a/sound/soc/codecs/twl4030.c b/sound/soc/codecs/twl4030.c
-index 63b280b..6780681 100644
---- a/sound/soc/codecs/twl4030.c
-+++ b/sound/soc/codecs/twl4030.c
-@@ -1473,7 +1473,7 @@ static const struct snd_soc_dapm_widget
-twl4030_dapm_widgets[] = {
-        SND_SOC_DAPM_SUPPLY("micbias2 select", TWL4030_REG_MICBIAS_CTL, 6, 0,
-                            NULL, 0),
+ -Tested on Devkit8000.
 
--       SND_SOC_DAPM_MICBIAS("Mic Bias 1", TWL4030_REG_MICBIAS_CTL, 0, 0),
-+       SND_SOC_DAPM_MICBIAS("Mic Bias 1", TWL4030_REG_MICBIAS_CTL, 0, 1),
-        SND_SOC_DAPM_MICBIAS("Mic Bias 2", TWL4030_REG_MICBIAS_CTL, 1, 0),
-        SND_SOC_DAPM_MICBIAS("Headset Mic Bias", TWL4030_REG_MICBIAS_CTL, 2, 0),
+For V2:
 
+ -Change model name as "TimLL OMAP3 Devkit8000"
+ -Change compatible as "timll,omap3-devkit8000"
+ -Doing i2c1 pinmux default with pinctrl-single driver instead of i2c1
+  driver probe time.
 
-2) Sound DT node patch for Devkit8000
+:100644 100644 5ebb44f... 22ebc76... M	arch/arm/boot/dts/Makefile
+:000000 100644 0000000... dc59272... A	arch/arm/boot/dts/omap3-devkit8000.dts
+:100644 100644 53cb380b.. ccecb76... M	arch/arm/mach-omap2/board-generic.c
+ arch/arm/boot/dts/Makefile             |    1 +
+ arch/arm/boot/dts/omap3-devkit8000.dts |  126 ++++++++++++++++++++++++++++++++
+ arch/arm/mach-omap2/board-generic.c    |    1 +
+ 3 files changed, 128 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap3-
-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
-index dc59272..5f3eec0 100644
---- a/arch/arm/boot/dts/omap3-devkit8000.dts
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 5ebb44f..22ebc76 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -102,6 +102,7 @@ dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
+ 	imx28-tx28.dtb
+ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+ 	omap3-beagle.dtb \
++	omap3-devkit8000.dtb \
+ 	omap3-beagle-xm.dtb \
+ 	omap3-evm.dtb \
+ 	omap3-tobi.dtb \
+diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
+new file mode 100644
+index 0000000..dc59272
+--- /dev/null
 +++ b/arch/arm/boot/dts/omap3-devkit8000.dts
-@@ -44,11 +44,22 @@
-                 };
-
-        };
+@@ -0,0 +1,126 @@
++/*
++ * Author: Anil Kumar <anilk4.v@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++/dts-v1/;
 +
-+       sound {
-+               compatible = "ti,omap-twl4030";
-+               ti,model = "devkit8000";
++/include/ "omap3.dtsi"
++/ {
++	model = "TimLL OMAP3 Devkit8000";
++	compatible = "timll,omap3-devkit8000", "ti,omap3";
 +
-+               ti,mcbsp = <&mcbsp2>;
-+               ti,codec = <&twl_audio>;
-+       };
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x10000000>;	/* 256 MB */
++	};
++
++	leds {
++		compatible = "gpio-leds";
++		pinctrl-names = "default";
++		pinctrl-0 = <&leds_pins>;
++
++		heartbeat {
++			label = "devkit8000::led1";
++			gpios = <&gpio6 26 0>;	/* 186 -> LED1 */
++			default-state = "on";
++			linux,default-trigger = "heartbeat";
++		};
++
++		mmc {
++			label = "devkit8000::led2";
++			gpios = <&gpio6 3 0>;	/* 163 -> LED2 */
++			default-state = "on";
++			linux,default-trigger = "none";
++		};
++
++		usr {
++			label = "devkit8000::led3";
++			gpios = <&gpio6 4 0>;	/* 164 -> LED3 */
++			default-state = "on";
++			linux,default-trigger = "usr";
++                };
++
++	};
++};
++
++&omap3_pmx_core {
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++
++	leds_pins: pinmux_led_pins {
++		pinctrl-single,pins = <
++			0x168 0x4	/* GPIO_163 */
++			0x16c 0x4	/* GPIO_164 */
++			0x1b0 0x4	/* GPIO_186 */
++
++		>;
++	};
++
++	i2c1_pins: pinmux_i2c1_pins {
++		pinctrl-single,pins = <
++			0x188 0x118	/* I2C1_SCL */
++			0x18c 0x118	/* I2C1_SDA */
++                >;
++	};
++};
++
++&i2c1 {
++	clock-frequency = <2600000>;
++
++	twl: twl@48 {
++		reg = <0x48>;
++		interrupts = <7>;	/* SYS_NIRQ cascaded to intc */
++		interrupt-parent = <&intc>;
++	};
++};
++
++&i2c2 {
++	status = "disabled";
++};
++
++&i2c3 {
++	status = "disabled";
++};
++
++/include/ "twl4030.dtsi"
++
++&mmc1 {
++	vmmc-supply = <&vmmc1>;
++	vmmc_aux-supply = <&vsim>;
++	bus-width = <8>;
++};
++
++&mmc2 {
++	status = "disabled";
++};
++
++&mmc3 {
++	status = "disabled";
++};
++
++&wdt2 {
++	status = "disabled";
++};
++
++&mcbsp1 {
++	status = "disabled";
++};
++
++&mcbsp2 {
++	status = "disabled";
++};
++
++&mcbsp3 {
++	status = "disabled";
++};
++
++&mcbsp4 {
++	status = "disabled";
++};
++
++&mcbsp5 {
++	status = "disabled";
++};
+diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+index 53cb380..ccecb76 100644
+--- a/arch/arm/mach-omap2/board-generic.c
++++ b/arch/arm/mach-omap2/board-generic.c
+@@ -110,6 +110,7 @@ MACHINE_END
+ 
+ static const char *omap3_gp_boards_compat[] __initdata = {
+ 	"ti,omap3-beagle",
++	"timll,omap3-devkit8000",
+ 	NULL,
  };
+ 
+-- 
+1.7.0.4
 
- &omap3_pmx_core {
-        pinctrl-names = "default";
--       pinctrl-0 = <&i2c1_pins>;
-+       pinctrl-0 = <
-+                       &i2c1_pins
-+                       &mcbsp2_pins
-+               >;
-
-        leds_pins: pinmux_led_pins {
-                pinctrl-single,pins = <
-@@ -65,6 +76,21 @@
-                        0x18c 0x118     /* I2C1_SDA */
-                 >;
-        };
-+
-+       mcbsp2_pins: pinmux_mcbsp2_pins {
-+                pinctrl-single,pins = <
-+                       /*
-+                        * MCBSP2_FSX, OMAP_MUX_MODE0 | OMAP_PIN_INPUT,
-+                        * MCBSP2_CLKX, OMAP_MUX_MODE0 | OMAP_PIN_INPUT
-+                        */
-+                       0x10c 0x01000100
-+                       /*
-+                        * MCBSP2_DR, OMAP_MUX_MODE0 | OMAP_PIN_INPUT,
-+                        * MCBSP2_DX, OMAP_MUX_MODE0 | OMAP_PIN_OUTPUT
-+                        */
-+                       0x110 0x00000100
-+               >;
-+       };
- };
-
- &i2c1 {
-@@ -74,6 +100,14 @@
-                reg = <0x48>;
-                interrupts = <7>;       /* SYS_NIRQ cascaded to intc */
-                interrupt-parent = <&intc>;
-+
-+               twl_audio: audio {
-+                       compatible = "ti,twl4030-audio";
-+                       codec {
-+                               ti,ramp_delay_value = <3>;
-+                               ti,offset_cncl_path = <0x31>;
-+                       };
-+               };
-        };
- };
-
-3) Playback amixer commands
-   amixer set 'PredriveR Mixer AudioR2' on
-   amixer set 'PredriveL Mixer AudioL2' on
-   amixer set PreDriv 100 unmute
-   amixer set 'DAC2 Digital Fine' 100
-
-Thanks,
-Anil
