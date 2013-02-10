@@ -1,52 +1,35 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH] cpuidle: kirkwood: Move out of mach directory, add DT.
-Date: Sun, 10 Feb 2013 19:58:12 +0100
-Message-ID: <20130210185812.GI20212@lunn.ch>
-References: <1356698844-4220-1-git-send-email-andrew@lunn.ch>
- <20130208213441.014343E2C27@localhost>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130208213441.014343E2C27@localhost>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v2 2/6] of: Return -ENXIO from of_parse_phandle_with_args for too large index and return errors from of_gpio_named_count
+Date: Sun, 10 Feb 2013 23:56:31 +0000
+Message-ID: <20130210235631.DD54D3E0C13@localhost>
+References: <1359471223-4794-1-git-send-email-andreas@gaisler.com> <1359471223-4794-3-git-send-email-andreas@gaisler.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1359471223-4794-3-git-send-email-andreas@gaisler.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Larsson <andreas@gaisler.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net, linux-kernel@vger.kernel.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-> > +* QNAP Power Off
-> > +
-> > +QNAP NAS devices have a microcontroller controlling the main power
-> > +supply. This microcontroller is connected to UART1 of the Kirkwood and
-> > +Orion5x SoCs. Sending the charactor 'A', at 19200 baud, tells the
-> > +microcontroller to turn the power off. This driver adds a handler to
-> > +pm_power_off which is called to turn the power off.
-> > +
-> > +Required Properties:
-> > +- compatibile: Should be "qnap,power-off"
+On Tue, 29 Jan 2013 15:53:39 +0100, Andreas Larsson <andreas@gaisler.com> wrote:
+> This lets of_gpio_named_count return an errno on errors by being able to
+> distinguish between reaching the end of the phandle list and getting some other
+> error from of_parse_phandle_with_args.
 > 
-> It would do well to have the model number embedded into this compatible
-> string since it is unlikely that every single QNAP device will use the
-> same controller interface.
+> Return error from of_spi_register_master when there is an "cs-gpios" list for
+> which gp_gpio_named_count fails.
+> 
+> Adjust various drivers cope with error return from of_gpio_named_count,
+> including via of_gpio_count.
+> 
+> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
 
-Hi Grant
+Actually, I'd been meaning to fix of_gpio_count for quite a while now.
+The current code uses a stupid algorithm to parse each specifier one at
+a time and count how many iterations it takes before getting an error.
+BLECH! A pox on me for being so lazy when I wrote it.
 
-All QNAP devices known to mainline use this same controller interface.
+Anyway, your patch here spurred me on to fix it. I've just done so and
+will post the patch in a few minutes. Please test and let me know if it
+works for you.
 
-So that would be ts109, ts209, ts409, ts119, ts219, ts419, plus a few
-other models which we don't differentiate, like ts219P and ts219P+.
-
-Any suggestions what to use in the compatible string?
-
-    Thanks
-	Andrew
+g.
