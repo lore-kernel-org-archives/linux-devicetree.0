@@ -1,29 +1,33 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v4 02/10] s5p-fimc: Add device tree support for FIMC devices
-Date: Sat, 09 Feb 2013 23:52:03 +0100
-Message-ID: <5116D313.8000603@gmail.com>
-References: <1359745771-23684-1-git-send-email-s.nawrocki@samsung.com> <1359745771-23684-3-git-send-email-s.nawrocki@samsung.com> <5112E9EF.8090908@wwwdotorg.org> <5115874A.6050406@gmail.com> <51158873.3060508@wwwdotorg.org> <511592B4.5050406@gmail.com> <5115991E.7050009@wwwdotorg.org> <5116CDBB.4080807@gmail.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH RFC 1/7] platform: add a device node
+Date: Sat, 9 Feb 2013 17:02:46 -0800
+Message-ID: <20130210010246.GA1455@kroah.com>
+References: <1360442671-15216-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1360442671-15216-2-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <5116CDBB.4080807@gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, rob.herring@calxeda.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1360442671-15216-2-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Tony Lindgren <tony@atomide.com>, =?iso-8859-1?Q?Beno=EEt?= Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/09/2013 11:29 PM, Sylwester Nawrocki wrote:
->
->> After all, what happens in some later SoC where you have two different
->> types of module that feed into the common module, such that type A
->> sources have IDs 0..3 in the common module, and type B sources have IDs
->> 4..7 in the common module - you wouldn't want to require alias ISs 4..7
->> for the type B DT nodes.
+On Sat, Feb 09, 2013 at 09:44:25PM +0100, Javier Martinez Canillas wrote:
+> When using Device Trees, it is necessary to associate a
+> device node with a platform device.
+> 
+> Usually this device node has to used in the device probe
+> function (e.g: to initizalize the pinctrl pads assocaited
+> with the device).
+> 
+> So, platform code needs to pass a device node as a platform
+> device info to the platform device registration function.
 
-I forgot to add, any ID remapping could happen in the common module, if
-it requires it. Type A and type B sources could have indexes 0...3 and
-the common module could derive its configuration from the source ID *and*
-the source type. The idea behind aliases was to identify each instance,
-rather than providing an exact configuration data that the common module
-could use.
+Really?  We don't already have enough other pointers in the platform
+device structure that we need another one?
+
+I don't buy it, sorry.  Any reason you didn't run this by Grant as well?
+
+greg k-h
