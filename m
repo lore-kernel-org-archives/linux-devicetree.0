@@ -1,92 +1,117 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: [PATCH v2 4/4] ARM: dts: Add dts file for S3C6410-based Mini6410 board
-Date: Sun, 10 Feb 2013 14:54:43 +0100
-Message-ID: <1360504483-3465-5-git-send-email-tomasz.figa@gmail.com>
-References: <1360504483-3465-1-git-send-email-tomasz.figa@gmail.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1360504483-3465-1-git-send-email-tomasz.figa@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>
+From: Anil Kumar <anilk4.v@gmail.com>
+Subject: Sound record on Devkit8000 with DT boot issue
+Date: Sun, 10 Feb 2013 20:51:57 +0530
+Message-ID: <CABYxbz5ECxoWZtkfL3UbZ=R4LVoNeMVxjYbPdZoarstCod-gQw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org
+Cc: tony@atomide.com, thomas@tomweber.eu, perex@perex.cz, tiwai@suse.de, lrg@ti.com, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic device tree sources for FriendlyARM Mini6410 board
-based on Samsung S3C6410 SoC.
+Hi All,
 
-Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
----
- arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/s3c6410-mini6410.dts | 50 ++++++++++++++++++++++++++++++++++
- 2 files changed, 51 insertions(+)
- create mode 100644 arch/arm/boot/dts/s3c6410-mini6410.dts
+I am working on Devkit8000 and adding DT support for that. I am trying
+to add sound DT node support for this boards.
+I have nearly done with this but facing issue on record. I do not have
+much knowledge of twl4030 audio codec but with
+small Hack[1] (as MainMic connected to the input jack)  i am able to
+record sound on Devkit8000.
+I do not know that MICBIAS1_EN can be enable by amixer commands.
+Could you please help me to get out of this ?
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index de00f15..b3e5448 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -122,6 +122,7 @@ dtb-$(CONFIG_ARCH_U8500) += snowball.dtb \
- 	hrefprev60.dtb \
- 	hrefv60plus.dtb \
- 	ccu9540.dtb
-+dtb-$(CONFIG_ARCH_S3C64XX) += s3c6410-mini6410.dtb
- dtb-$(CONFIG_ARCH_SHMOBILE) += emev2-kzm9d.dtb \
- 	r8a7740-armadillo800eva.dtb \
- 	sh73a0-kzm9g.dtb \
-diff --git a/arch/arm/boot/dts/s3c6410-mini6410.dts b/arch/arm/boot/dts/s3c6410-mini6410.dts
-new file mode 100644
-index 0000000..9ac82c2
---- /dev/null
-+++ b/arch/arm/boot/dts/s3c6410-mini6410.dts
-@@ -0,0 +1,50 @@
-+/*
-+ * Samsung's S3C6410 based Mini6410 board device tree source
-+ *
-+ * Copyright (c) 2013 Tomasz Figa <tomasz.figa@gmail.com>
-+ *
-+ * Device tree source file for FriendlyARM Mini6410 board which is based on
-+ * Samsung's S3C6410 SoC.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
+
+1) Hack [1]
+
+diff --git a/sound/soc/codecs/twl4030.c b/sound/soc/codecs/twl4030.c
+index 63b280b..6780681 100644
+--- a/sound/soc/codecs/twl4030.c
++++ b/sound/soc/codecs/twl4030.c
+@@ -1473,7 +1473,7 @@ static const struct snd_soc_dapm_widget
+twl4030_dapm_widgets[] = {
+        SND_SOC_DAPM_SUPPLY("micbias2 select", TWL4030_REG_MICBIAS_CTL, 6, 0,
+                            NULL, 0),
+
+-       SND_SOC_DAPM_MICBIAS("Mic Bias 1", TWL4030_REG_MICBIAS_CTL, 0, 0),
++       SND_SOC_DAPM_MICBIAS("Mic Bias 1", TWL4030_REG_MICBIAS_CTL, 0, 1),
+        SND_SOC_DAPM_MICBIAS("Mic Bias 2", TWL4030_REG_MICBIAS_CTL, 1, 0),
+        SND_SOC_DAPM_MICBIAS("Headset Mic Bias", TWL4030_REG_MICBIAS_CTL, 2, 0),
+
+
+2) Sound DT node patch for Devkit8000
+
+diff --git a/arch/arm/boot/dts/omap3-
+devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
+index dc59272..5f3eec0 100644
+--- a/arch/arm/boot/dts/omap3-devkit8000.dts
++++ b/arch/arm/boot/dts/omap3-devkit8000.dts
+@@ -44,11 +44,22 @@
+                 };
+
+        };
 +
-+/dts-v1/;
-+/include/ "s3c6410.dtsi"
++       sound {
++               compatible = "ti,omap-twl4030";
++               ti,model = "devkit8000";
 +
-+/ {
-+	model = "FriendlyARM Mini6410 board based on S3C6410";
-+	compatible = "friendlyarm,mini6410", "samsung,s3c6410";
++               ti,mcbsp = <&mcbsp2>;
++               ti,codec = <&twl_audio>;
++       };
+ };
+
+ &omap3_pmx_core {
+        pinctrl-names = "default";
+-       pinctrl-0 = <&i2c1_pins>;
++       pinctrl-0 = <
++                       &i2c1_pins
++                       &mcbsp2_pins
++               >;
+
+        leds_pins: pinmux_led_pins {
+                pinctrl-single,pins = <
+@@ -65,6 +76,21 @@
+                        0x18c 0x118     /* I2C1_SDA */
+                 >;
+        };
 +
-+	memory {
-+		reg = <0x50000000 0x10000000>;
-+	};
++       mcbsp2_pins: pinmux_mcbsp2_pins {
++                pinctrl-single,pins = <
++                       /*
++                        * MCBSP2_FSX, OMAP_MUX_MODE0 | OMAP_PIN_INPUT,
++                        * MCBSP2_CLKX, OMAP_MUX_MODE0 | OMAP_PIN_INPUT
++                        */
++                       0x10c 0x01000100
++                       /*
++                        * MCBSP2_DR, OMAP_MUX_MODE0 | OMAP_PIN_INPUT,
++                        * MCBSP2_DX, OMAP_MUX_MODE0 | OMAP_PIN_OUTPUT
++                        */
++                       0x110 0x00000100
++               >;
++       };
+ };
+
+ &i2c1 {
+@@ -74,6 +100,14 @@
+                reg = <0x48>;
+                interrupts = <7>;       /* SYS_NIRQ cascaded to intc */
+                interrupt-parent = <&intc>;
 +
-+	chosen {
-+		bootargs = "console=ttySAC0,115200n8 earlyprintk rootwait root=/dev/mmcblk0p1";
-+	};
-+
-+	serial@7f005000 {
-+		status = "okay";
-+	};
-+
-+	serial@7f005400 {
-+		status = "okay";
-+	};
-+
-+	serial@7f005800 {
-+		status = "okay";
-+	};
-+
-+	serial@7f005c00 {
-+		status = "okay";
-+	};
-+
-+	sdhci@7c200000 {
-+		bus-width = <4>;
-+		non-removable;
-+		status = "okay";
-+	};
-+};
--- 
-1.8.1.2
++               twl_audio: audio {
++                       compatible = "ti,twl4030-audio";
++                       codec {
++                               ti,ramp_delay_value = <3>;
++                               ti,offset_cncl_path = <0x31>;
++                       };
++               };
+        };
+ };
+
+3) Playback amixer commands
+   amixer set 'PredriveR Mixer AudioR2' on
+   amixer set 'PredriveL Mixer AudioL2' on
+   amixer set PreDriv 100 unmute
+   amixer set 'DAC2 Digital Fine' 100
+
+Thanks,
+Anil
