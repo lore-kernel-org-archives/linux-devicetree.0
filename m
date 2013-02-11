@@ -1,83 +1,84 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: Sound record on Devkit8000 with DT boot issue
-Date: Mon, 11 Feb 2013 19:14:05 +0100
-Message-ID: <511934ED.2020104@ti.com>
-References: <CABYxbz5ECxoWZtkfL3UbZ=R4LVoNeMVxjYbPdZoarstCod-gQw@mail.gmail.com>
- <5118EF75.30107@ti.com>
- <CABYxbz7HcZTK+y20mtDR+1coRUbUMgNHNDdJ3O7Ln7U7d0LEzA@mail.gmail.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v8 2/4] misc: Generic on-chip SRAM allocation driver
+Date: Mon, 11 Feb 2013 19:15:24 +0100
+Message-ID: <1360606524.4954.46.camel@pizza.hi.pengutronix.de>
+References: <1359977538-5859-1-git-send-email-p.zabel@pengutronix.de>
+	 <1359977538-5859-3-git-send-email-p.zabel@pengutronix.de>
+	 <20130208201634.B94C83E2C02@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <CABYxbz7HcZTK+y20mtDR+1coRUbUMgNHNDdJ3O7Ln7U7d0LEzA@mail.gmail.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Anil Kumar <anilk4.v@gmail.com>
-Cc: alsa-devel@alsa-project.org, tony@atomide.com, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Liam Girdwood <liam.r.girdwood@linux.intel.com>, tiwai@suse.de, thomas@tomweber.eu
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130208201634.B94C83E2C02@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Grant,
 
-On 02/11/2013 06:58 PM, Anil Kumar wrote:
->> Here you should have something like:
->> ti,audio-routing =3D
->>         "Ext Spk", "PREDRIVEL",
->>         "Ext Spk", "PREDRIVER",
->>         "MAINMIC", "Main Mic",
->>         "Main Mic", "Mic Bias 1";
->>
->> So you connect the MicBias1 to Main Mic. When you start playback MicBias=
-1 will
->> be turned on for you.
-> =
+Am Freitag, den 08.02.2013, 20:16 +0000 schrieb Grant Likely:
+> On Mon,  4 Feb 2013 12:32:16 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> > This driver requests and remaps a memory region as configured in the
+> > device tree. It serves memory from this region via the genalloc API.
+> > It optionally enables the SRAM clock.
+> > 
+> > Other drivers can retrieve the genalloc pool from a phandle pointing
+> > to this drivers' device node in the device tree.
+> > 
+> > The allocation granularity is hard-coded to 32 bytes for now,
+> > to make the SRAM driver useful for the 6502 remoteproc driver.
+> > There is overhead for bigger SRAMs, where only a much coarser
+> > allocation granularity is needed: At 32 bytes minimum allocation
+> > size, a 256 KiB SRAM needs a 1 KiB bitmap to track allocations.
+> > 
+> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> > Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+> > ---
+> > Changes since v7:
+> >  - Removed obsolete __devinit/__devexit/__devexit_p
+> > ---
+> >  Documentation/devicetree/bindings/misc/sram.txt |   17 ++++
+> >  drivers/misc/Kconfig                            |    9 ++
+> >  drivers/misc/Makefile                           |    1 +
+> >  drivers/misc/sram.c                             |  121 +++++++++++++++++++++++
+> >  4 files changed, 148 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/misc/sram.txt
+> >  create mode 100644 drivers/misc/sram.c
+> > 
+> > diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
+> > new file mode 100644
+> > index 0000000..b64136c
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/misc/sram.txt
+> > @@ -0,0 +1,17 @@
+> > +Generic on-chip SRAM
+> > +
+> > +Simple IO memory regions to be managed by the genalloc API.
+> > +
+> > +Required properties:
+> > +
+> > +- compatible : sram
+> 
+> I'm a little concerned that 'sram' is just too generic for a compatible
+> value and we may end up needing a blacklist of systems where the sram
+> device should not be driven with this driver. If you can think of
+> a more descriptive name here then I would use it.
 
-> I tried with this routing (next-20130211 tag kernel). But it is not
-> working for me.
-> So i have gone through other board and found snd_soc_dapm_route for
-> =
+various SoC vendors call this (variations of) "on-chip" or "internal"
+SRAM/memory. "on-chip-sram" or "internal-sram" are still plenty generic,
+though. How about "mmio-sram", as opposed to an SRAM that needs more
+than the simple mmio region handled by this driver?
 
-> 1) zoom2.c
->        {"MAINMIC", NULL, "Mic Bias 1"},
->        {"Mic Bias 1", NULL, "Ext Mic"},
-> =
+An alternative would be to use the vendor specific names and grow a
+compatible list in the driver ("fsl,ocram", "ti,ocm", ...).
 
-> 2) omap3pandora.c
->         {"MAINMIC", NULL, "Mic Bias 1"},
->         {"Mic Bias 1", NULL, "Mic (internal)"},
-> =
+> However, I'm not worried about it enough to nak it and the rest of the
+> series looks fine.
+> 
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
 
-> But for omap-twl4030.c it is
->         {"MAINMIC", NULL, "Main Mic"},
->         {"Main Mic", NULL, "Mic Bias 1"},
-> =
+Thank you.
 
->  It Should will be as ?
->         {"MAINMIC", NULL, "Mic Bias 1"},
->         {"Mic Bias 1", NULL, "Main Mic"},
-> =
-
-> Because with this i am able to get audio on Devkit8000 as
->              ti,audio-routing =3D
->                         "Ext Spk", "PREDRIVEL",
->                         "Ext Spk", "PREDRIVER",
->                         "MAINMIC", "Mic Bias 1",
->                         "Mic Bias 1", "Main Mic";
-
-In 3.9 this should not work...
-
-linux-next should not have zoom2 at least and I converted the machine drive=
-rs
-as well in regards to micbias handling:
-e04d6e5 ASoC: twl4030: Convert MICBIAS to SUPPLY widget
-57d61b9 ASoC: OMAP: Remove obsolete machine drivers for Zoom2 and SDP3430
-
--- =
-
-P=E9ter
+regards
+Philipp
