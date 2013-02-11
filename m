@@ -1,186 +1,68 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/4] of/pci: Provide support for parsing PCI DT ranges
- property
-Date: Mon, 11 Feb 2013 13:43:03 -0600
-Message-ID: <511949C7.7070604@gmail.com>
-References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
- <1360570940-17086-2-git-send-email-thierry.reding@avionic-design.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH next v2] OF: convert devtree lock from rw_lock to raw
+ spinlock
+Date: Mon, 11 Feb 2013 13:54:29 -0600
+Message-ID: <51194C75.5040302@gmail.com>
+References: <1359993921-18145-1-git-send-email-paul.gortmaker@windriver.com> <1360182656-15898-1-git-send-email-paul.gortmaker@windriver.com> <511585A9.9090008@gmail.com> <51194685.5010904@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360570940-17086-2-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <sparclinux-owner@vger.kernel.org>
+In-Reply-To: <51194685.5010904@wwwdotorg.org>
+Sender: sparclinux-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Paul Gortmaker <paul.gortmaker@windriver.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, linux-rt-users@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>, "linux-next@vger.kernel.org" <linux-next@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/2013 02:22 AM, Thierry Reding wrote:
-> From: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>
+On 02/11/2013 01:29 PM, Stephen Warren wrote:
+> On 02/08/2013 04:09 PM, Rob Herring wrote:
+>> On 02/06/2013 02:30 PM, Paul Gortmaker wrote:
+>>> From: Thomas Gleixner <tglx@linutronix.de>
+>>>
+>>> With the locking cleanup in place (from "OF: Fixup resursive
+>>> locking code paths"), we can now do the conversion from the
+>>> rw_lock to a raw spinlock as required for preempt-rt.
+>>>
+>>> The previous cleanup and this conversion were originally
+>>> separate since they predated when mainline got raw spinlock (in
+>>> commit c2f21ce2e31286a "locking: Implement new raw_spinlock").
+>>>
+>>> So, at that point in time, the cleanup was considered plausible
+>>> for mainline, but not this conversion.  In any case, we've kept
+>>> them separate as it makes for easier review and better bisection.
+>>>
+>>> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+>>> [PG: taken from preempt-rt, update subject & add a commit log]
+>>> Signed-off-by: Paul Gortmaker <paul.gortmaker@windriver.com>
+>>> ---
+>>>
+>>> [v2: recent commit e81b329 ("powerpc+of: Add /proc device tree
+>>>  updating to of node add/remove") added two more instances of
+>>>  write_unlock that also needed converting to raw_spin_unlock.
+>>>  Retested (boot) on sbc8548, defconfig builds on arm/sparc; no
+>>>  new warnings observed.]
+>>>
+>>>  arch/sparc/kernel/prom_common.c |   4 +-
+>>>  drivers/of/base.c               | 100 ++++++++++++++++++++++------------------
+>>>  include/linux/of.h              |   2 +-
+>>>  3 files changed, 59 insertions(+), 47 deletions(-)
+>>
+>> Applied.
 > 
-> DT bindings for PCI host bridges often use the ranges property to describe
-> memory and IO ranges - this binding tends to be the same across architectures
-> yet several parsing implementations exist, e.g. arch/mips/pci/pci.c,
-> arch/powerpc/kernel/pci-common.c, arch/sparc/kernel/pci.c and
-> arch/microblaze/pci/pci-common.c (clone of PPC). Some of these duplicate
-> functionality provided by drivers/of/address.c.
+> This commit is present in next-20130211, and causes a boot failure
+> (hang) early while booting on Tegra. Reverting just this one commit
+> solves the issue.
 > 
-> This patch provides a common iterator-based parser for the ranges property, it
-> is hoped this will reduce DT representation differences between architectures
-> and that architectures will migrate in part to this new parser.
+> I'll see if I can track down where the issue is. Given the commit
+> description, I assume there's some new recursive lock issue that snuck
+> in between the previous fix for them and this commit? Any hints welcome.
 > 
-> It is also hoped (and the motativation for the patch) that this patch will
-> reduce duplication of code when writing host bridge drivers that are supported
-> by multiple architectures.
-> 
-> This patch provides struct resources from a device tree node, e.g.:
-> 
-> 	u32 *last = NULL;
-> 	struct resource res;
-> 	while ((last = of_pci_process_ranges(np, res, last))) {
-> 		//do something with res
-> 	}
-> 
-> Platforms with quirks can then do what they like with the resource or migrate
-> common quirk handling to the parser. In an ideal world drivers can just request
-> the obtained resources and pass them on (e.g. pci_add_resource_offset).
-> 
-> Signed-off-by: Andrew Murray <Andrew.Murray-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-> ---
->  drivers/of/address.c       | 63 ++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/of_address.h |  9 +++++++
->  2 files changed, 72 insertions(+)
-> 
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index 04da786..f607008 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -13,6 +13,7 @@
->  #define OF_CHECK_COUNTS(na, ns)	(OF_CHECK_ADDR_COUNT(na) && (ns) > 0)
->  
->  static struct of_bus *of_match_bus(struct device_node *np);
-> +static struct of_bus *of_find_bus(const char *name);
+> One thing I wonder looking at the patch: Most paths use
+> raw_spin_lock_irqsave() but a few use just raw_spin_lock(). I wonder how
+> that decision was made?
 
-Can you move this function up to avoid the forward declaration.
+I found the problem. of_get_next_available_child ->
+of_device_is_available -> of_get_property -> of_get_property. An
+unlocked version of of_device_is_available is needed here.
 
->  static int __of_address_to_resource(struct device_node *dev,
->  		const __be32 *addrp, u64 size, unsigned int flags,
->  		const char *name, struct resource *r);
-> @@ -227,6 +228,57 @@ int of_pci_address_to_resource(struct device_node *dev, int bar,
->  	return __of_address_to_resource(dev, addrp, size, flags, NULL, r);
->  }
->  EXPORT_SYMBOL_GPL(of_pci_address_to_resource);
-> +
-> +const __be32 *of_pci_process_ranges(struct device_node *node,
-> +				    struct resource *res, const __be32 *from)
-> +{
-> +	const __be32 *start, *end;
-> +	int na, ns, np, pna;
-> +	int rlen;
-> +	struct of_bus *bus;
-> +
-> +	WARN_ON(!res);
-> +
-> +	bus = of_find_bus("pci");
-> +	bus->count_cells(node, &na, &ns);
-> +	if (!OF_CHECK_COUNTS(na, ns)) {
-> +		pr_err("Bad cell count for %s\n", node->full_name);
-> +		return NULL;
-> +	}
-> +
-> +	pna = of_n_addr_cells(node);
-> +	np = pna + na + ns;
-> +
-> +	start = of_get_property(node, "ranges", &rlen);
-> +	if (start == NULL)
-> +		return NULL;
-> +
-> +	end = start + rlen / sizeof(__be32);
-> +
-> +	if (!from)
-> +		from = start;
-> +
-> +	while (from + np <= end) {
-> +		u64 cpu_addr, size;
-> +
-> +		cpu_addr = of_translate_address(node, from + na);
-> +		size = of_read_number(from + na + pna, ns);
-> +		res->flags = bus->get_flags(from);
-> +		from += np;
-> +
-> +		if (cpu_addr == OF_BAD_ADDR || size == 0)
-> +			continue;
-> +
-> +		res->name = node->full_name;
-> +		res->start = cpu_addr;
-> +		res->end = res->start + size - 1;
-> +		res->parent = res->child = res->sibling = NULL;
-> +		return from;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(of_pci_process_ranges);
->  #endif /* CONFIG_PCI */
->  
->  /*
-> @@ -337,6 +389,17 @@ static struct of_bus *of_match_bus(struct device_node *np)
->  	return NULL;
->  }
->  
-> +static struct of_bus *of_find_bus(const char *name)
-> +{
-> +	unsigned int i;
-> +
-> +	for (i = 0; i < ARRAY_SIZE(of_busses); i++)
-> +		if (strcmp(name, of_busses[i].name) == 0)
-                                              ^
-space needed.
-
-> +			return &of_busses[i];
-> +
-> +	return NULL;
-> +}
-> +
->  static int of_translate_one(struct device_node *parent, struct of_bus *bus,
->  			    struct of_bus *pbus, __be32 *addr,
->  			    int na, int ns, int pna, const char *rprop)
-> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> index 0506eb5..751e889 100644
-> --- a/include/linux/of_address.h
-> +++ b/include/linux/of_address.h
-> @@ -27,6 +27,8 @@ static inline unsigned long pci_address_to_pio(phys_addr_t addr) { return -1; }
->  #define pci_address_to_pio pci_address_to_pio
->  #endif
->  
-> +const __be32 *of_pci_process_ranges(struct device_node *node,
-> +				    struct resource *res, const __be32 *from);
->  #else /* CONFIG_OF_ADDRESS */
->  #ifndef of_address_to_resource
->  static inline int of_address_to_resource(struct device_node *dev, int index,
-> @@ -53,6 +55,13 @@ static inline const __be32 *of_get_address(struct device_node *dev, int index,
->  {
->  	return NULL;
->  }
-> +
-> +static inline const __be32 *of_pci_process_ranges(struct device_node *node,
-> +						  struct resource *res,
-> +						  const __be32 *from)
-> +{
-> +	return NULL;
-> +}
->  #endif /* CONFIG_OF_ADDRESS */
->  
->  
-> 
+Rob
