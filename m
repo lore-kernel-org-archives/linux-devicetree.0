@@ -1,56 +1,161 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH RFC 2/7] net: smsc911x: add pinctrl support
-Date: Mon, 11 Feb 2013 15:29:33 +0100
-Message-ID: <CAAwP0s2V6x7d_8V037JrBSA1UsPa9W14Kp_1z05BhFCW=XFy4Q@mail.gmail.com>
-References: <1360442671-15216-1-git-send-email-javier.martinez@collabora.co.uk>
- <1360442671-15216-3-git-send-email-javier.martinez@collabora.co.uk> <CACRpkdY8FBoMCO1hjEOhCir=5mNJpiY7sG3PMvKeXJ-hHXXmjQ@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH 1/2] ARM: OMAP2+: Allow clock alias provision from device tree
+Date: Mon, 11 Feb 2013 17:44:23 +0200
+Message-ID: <1360597464-8491-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdY8FBoMCO1hjEOhCir=5mNJpiY7sG3PMvKeXJ-hHXXmjQ@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com
+Cc: b-cousson@ti.com, balbi@ti.com, rogerq@ti.com, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Russell King <linux@arm.linux.org.uk>, Rajendra Nayak <rnayak@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2013 at 3:23 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Sat, Feb 9, 2013 at 9:44 PM, Javier Martinez Canillas
-> <javier.martinez@collabora.co.uk> wrote:
->
->> If no pinctrl is available just report a warning since
->> it may not needed in some cases (e.g: non-DT kernels).
->>
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> (...)
->> +       struct pinctrl *pinctrl;
-> (...)
->> +       pinctrl = devm_pinctrl_get_select_default(&pdev->dev);
->> +       if (IS_ERR(pinctrl)) {
->> +               retval = PTR_ERR(pinctrl);
->> +               if (retval == -EPROBE_DEFER)
->> +                       goto out_0;
->> +
->> +               dev_warn(&pdev->dev, "No pinctrl provided\n");
->> +       }
->
-> NACK.
->
-> This will be handled from the device core after the v3.9 merge
-> window.
->
-> See:
-> http://marc.info/?l=linux-kernel&m=135887740715083&w=2
->
+Currently on OMAP, it is not possible to specify a clock consumer
+to any of the OMAP generated clocks using the device tree. This can pose
+a problem for external devices that run off an OMAP clock as we
+can't reliably provide a reference to the clock in the device tree.
 
-Great, I also wondered why it couldn't be part of the device core
-since we basically duplicate this in all the DT aware drivers and
-pinctrl was not used anywhere after setting to its default state.
+This patch allows device trees to provide a node that contains the
+clock identifier, clock alias and the device phandle. The board
+initialization code then creates a clock alias to this clock id,
+and associates it with the device whose phandle was supplied.
 
-This is a nice improvement.
+Discussion
+http://www.spinics.net/lists/linux-omap/msg86241.html
 
-> Yours,
-> Linus Walleij
-> --
+CC: Russell King <linux@arm.linux.org.uk>
+CC: Rajendra Nayak <rnayak@ti.com>
+CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
 
-Thanks a lot and best regards,
-Javier
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ .../devicetree/bindings/clock/ti-clock-alias.txt   |   26 ++++++++
+ arch/arm/mach-omap2/board-generic.c                |   67 ++++++++++++++++++++
+ 2 files changed, 93 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/ti-clock-alias.txt
+
+diff --git a/Documentation/devicetree/bindings/clock/ti-clock-alias.txt b/Documentation/devicetree/bindings/clock/ti-clock-alias.txt
+new file mode 100644
+index 0000000..87ef4c3
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/ti-clock-alias.txt
+@@ -0,0 +1,26 @@
++* Clock alias provision for TI OMAP2+ boards
++
++This binding allows the board's device tree file to specify a clock name,
++device phandle and clock alias so that that clock can be associated
++to the device with the alias.
++
++This is required in cases where an external device is clocked by an
++OMAP generated clock and needs to be assocated to it.
++
++NOTE: The node's name should be clock_alias
++
++Required properties
++- clock-name: The clock identifier string. Should be one of the
++  clock ids defined in OMAP common clock data.
++- clock-alias: A string specifying the alias that must be created to the clock.
++- device: A phandle to the device this clock should be associated to.
++
++e.g. On the OMAP4 Panda board, the USB PHY device is clocked by the
++FREF_CLK3 (auxclk3_ck) from the OMAP. The PHY driver expexts the clock to
++be named "main_clk". This binding can be provided like so
++
++clock_alias {
++	clock-name = "auxclk3_ck";
++	clock-alias = "main_clk";
++	device = <&hsusb1_phy>;
++};
+diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+index 53cb380b..a4b8813 100644
+--- a/arch/arm/mach-omap2/board-generic.c
++++ b/arch/arm/mach-omap2/board-generic.c
+@@ -15,6 +15,9 @@
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
+ #include <linux/irqdomain.h>
++#include <linux/clk.h>
++#include <linux/string.h>
++#include <linux/slab.h>
+ 
+ #include <asm/hardware/gic.h>
+ #include <asm/mach/arch.h>
+@@ -36,12 +39,76 @@ static struct of_device_id omap_dt_match_table[] __initdata = {
+ 	{ }
+ };
+ 
++static int __init omap_create_clk_alias(struct device_node *np)
++{
++	int ret = 0;
++	const char *s, *alias;
++	char *clk_id;
++	struct device_node *dev_np;
++	struct platform_device *pdev;
++
++	of_property_read_string(np, "clock-name", &s);
++	if (!s) {
++		pr_err("%s: couldn't find clock-name property in node %s\n",
++				__func__, np->name);
++		return -ENODEV;
++	}
++
++	clk_id = kstrdup(s, GFP_KERNEL);
++	if (!clk_id)
++		return -ENOMEM;
++
++	dev_np = of_parse_phandle(np, "device", 0);
++	if (!dev_np) {
++		pr_err("%s: couldn't find device phandle for \'%s\'\n",
++				__func__, clk_id);
++		ret = -ENODEV;
++		goto exit;
++	}
++
++	pdev = of_find_device_by_node(dev_np);
++	if (!pdev) {
++		pr_err("%s: couldn't find device for clock \'%s\'\n",
++				__func__, clk_id);
++		ret = -ENODEV;
++		goto exit;
++	}
++
++	ret = of_property_read_string(np, "clock-alias", &alias);
++	if (ret) {
++		pr_err("%s: couldn't find alias for clock \'%s\'\n",
++				__func__, clk_id);
++		ret = -ENODEV;
++		goto exit;
++	}
++
++	ret = clk_add_alias(alias, dev_name(&pdev->dev), clk_id, NULL);
++	if (ret) {
++		pr_err("%s: couldn't add alias \'%s\' to clock \'%s\'\n",
++				__func__, alias, clk_id);
++		ret = -ENODEV;
++		goto exit;
++	}
++
++exit:
++	kfree(clk_id);
++	return ret;
++}
++
+ static void __init omap_generic_init(void)
+ {
++	struct device_node *np;
++
+ 	omap_sdrc_init(NULL, NULL);
+ 
+ 	of_platform_populate(NULL, omap_dt_match_table, NULL, NULL);
+ 
++	/* create clock aliases based on 'clock_alias' nodes */
++	for_each_node_by_name(np, "clock_alias") {
++		omap_create_clk_alias(np);
++		of_node_put(np);
++	}
++
+ 	/*
+ 	 * HACK: call display setup code for selected boards to enable omapdss.
+ 	 * This will be removed when omapdss supports DT.
+-- 
+1.7.4.1
