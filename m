@@ -1,104 +1,70 @@
-From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Subject: RE: [PATCH v2 2/3] mmc: davinci_mmc: add DT support
-Date: Mon, 11 Feb 2013 05:31:47 +0000
-Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA46794@DBDE01.ent.ti.com>
-References: <1360223825-23929-1-git-send-email-prakash.pm@ti.com>
-	<1360223825-23929-3-git-send-email-prakash.pm@ti.com>
-	<20130207104656.GE16987@e106331-lin.cambridge.arm.com>
- <A73F36158E33644199EB82C5EC81C7BC3EA465FE@DBDE01.ent.ti.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH] clk: add si5351 i2c common clock driver
+Date: Sun, 10 Feb 2013 21:46:32 -0800
+Message-ID: <20130211054632.11471.24295@quantum>
+References: <1360414772-12232-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3EA465FE@DBDE01.ent.ti.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>, Mark Rutland <mark.rutland@arm.com>
-Cc: "Porter, Matt" <mporter@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "hs@denx.de" <hs@denx.de>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "cjb@laptop.org" <cjb@laptop.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1360414772-12232-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
+Quoting Sebastian Hesselbarth (2013-02-09 04:59:32)
+> This patch adds a common clock driver for Silicon Labs Si5351a/b/c
+> i2c programmable clock generators. Currently, the driver supports
+> DT kernels only and VXCO feature of si5351b is not implemented. DT
+> bindings selectively allow to overwrite stored Si5351 configuration
+> which is very helpful for clock generators with empty eeprom
+> configuration. Corresponding device tree binding documentation is
+> also added.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> ---
+> Notes:
+> - During development I used a debugfs clock consumer that I can also
+>   post if there is interest in it.
 
-On Fri, Feb 08, 2013 at 11:55:09, Manjunathappa, Prakash wrote:
-> Hi Mark,
-> 
-> On Thu, Feb 07, 2013 at 16:16:56, Mark Rutland wrote:
-> > Hello,
-> > 
-> > I have a couple of comments on the dt bindings and the way it's parsed.
-> > 
-> 
-> Thanks for your review comments.
-> 
-> > On Thu, Feb 07, 2013 at 07:57:04AM +0000, Manjunathappa, Prakash wrote:
-> > > Adds device tree support for davinci_mmc. Also add binding documentation.
-> > > Tested in non-dma PIO mode and without GPIO card_detect/write_protect
-> > > option because of dependencies on EDMA and GPIO module DT support.
-> > > 
-> > > Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
-> > > Cc: linux-mmc@vger.kernel.org
-> > > Cc: linux-arm-kernel@lists.infradead.org
-> > > Cc: linux-kernel@vger.kernel.org
-> > > Cc: davinci-linux-open-source@linux.davincidsp.com
-> > > Cc: devicetree-discuss@lists.ozlabs.org
-> > > Cc: cjb@laptop.org
-> > > Cc: Sekhar Nori <nsekhar@ti.com>
-> > > Cc: mporter@ti.com
-> > > ---
-> > > Since v1:
-> > > Modified DT parse function to take default values and accomodate controller
-> > > version in compatible field.
-> > > 
-> > >  .../devicetree/bindings/mmc/davinci_mmc.txt        |   30 ++++++++
-> > >  drivers/mmc/host/davinci_mmc.c                     |   70 +++++++++++++++++++-
-> > >  2 files changed, 99 insertions(+), 1 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> > > 
-> > > diff --git a/Documentation/devicetree/bindings/mmc/davinci_mmc.txt b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> > > new file mode 100644
-> > > index 0000000..6717ab1
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> > > @@ -0,0 +1,30 @@
-> > > +* TI Highspeed MMC host controller for DaVinci
-> > > +
-> > > +The Highspeed MMC Host Controller on TI DaVinci family
-> > > +provides an interface for MMC, SD and SDIO types of memory cards.
-> > > +
-> > > +This file documents the properties used by the davinci_mmc driver.
-> > > +
-> > > +Required properties:
-> > > +- compatible:
-> > > + Should be "ti,davinci-mmc-da830": for da830, da850, dm365
-> > > + Should be "ti,davinci-mmc-dm355": for dm355, dm644x
-> > > +
-> > > +Optional properties:
-> > > +- bus-width: Number of data lines, can be <4>, or <8>, default <1>
-> > > +- max-frequency: Maximum operating clock frequency, default 25MHz.
-> > > +- mmc-cap-mmc-highspeed: Indicates support for MMC in high speed mode
-> > > +- mmc-cap-sd-highspeed: Indicates support for SD in high speed mode
-> > 
-> > I thought the last two were derivable from max-frequency?
-> > 
-> 
-> Yes, but I see below comment that it doesnot support MMC/SD.
-> arch/arm/mach-davinci/devices.c: davinci_setup_mmc
-> 	   "
->          * FIXME dm6441 (no MMC/SD), dm357 (one), and dm335 (two) are
->          * not handled right here ...
->          */"
-> I was wondering how do we support such platforms, so I thought it is necessary
-> to have these. But I see that on da850-evm even on skipping above flags EVM is able
-> to detect card, does it mean there is no way to specify "no SD/MMC" capability?
-> I will remove these and decide highspeed capability based on max-frequency.
-> 
+Please do.  I have a set of patches that implement a fake clock subtree
+for testing the core framework.  I've been thinking of pushing this to
+the list once it is more presentable and your work might fit into that
+nicely.
 
-Since this comment also applies for existing non-DT driver, I will plan to take
-up activity later. For now I will submit next version of DT support patch
-excluding highspeed card capability.
+> - With current (3.8-rc6) common clock framework there is two (minor)
+>   issues:
+>   * although clocks are registered with devm_clk_register they are not
+>     removed from the clock tree on unloading. That makes reloading of
+>     clk-si5351 as module impossible.
+
+This is a known issue.  clk_unregister is a NOP and defining it has
+always been deferred until the day that someone needed it.  Care to
+take a crack at it?
+
+>   * potentially there could be more than one different external si5351
+>     generators but clocks are registered with names that do not refer
+>     to e.g. the device name. Maybe common clock framework should
+>     prepend the device name for each registered clock, i.e. 0-0060.clk0.
+>     That would also avoid name collisions with same clock names from
+>     different drivers (clk0 is likely to be used by others ;))
+
+More unfinished work, just like clk_unregister above.  I'm sure you are
+aware that clk_register takes struct device *dev as input, but does
+nothing with it.  It wouldn't take much to concatenate the device name
+and clock name if dev is present.  However a complication here is that
+the registration code takes a parent string name to match parents up for
+discrete subtrees; how could statically defined data know about the
+device name ahead of time?
+
+The above design decision took place before the big DT push we have
+today and was short-sighted.  It would be better to change the framework
+to rely less on string name lookups and DT is one way out of that.
+
+3.8-rc7 is already out and I don't plan to take anything that hasn't
+already been submitted for 3.9 now.  Can you resubmit this after 3.9-rc1
+comes out?
 
 Thanks,
-Prakash
-
-[...]
-
+Mike
