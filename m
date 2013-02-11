@@ -1,57 +1,97 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH V4 3/4] input: keyboard: tegra: add support for rows/cols configuration from dt
-Date: Mon, 11 Feb 2013 21:36:16 +0000
-Message-ID: <20130211213616.862453E3530@localhost>
-References: <1357470900-12619-1-git-send-email-ldewangan@nvidia.com> <1357470900-12619-4-git-send-email-ldewangan@nvidia.com>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1357470900-12619-4-git-send-email-ldewangan@nvidia.com>
-Sender: linux-input-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: rob.herring@calxeda.com, swarren@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-input@vger.kernel.org, linux-tegra@vger.kernel.org, Laxman Dewangan <ldewangan@nvidia.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 3/3 v5] ASoC: simple-card: add Device Tree support
+Date: Mon, 11 Feb 2013 14:40:17 -0700
+Message-ID: <51196541.8010207@wwwdotorg.org>
+References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
+ <87sj6t484z.wl%kuninori.morimoto.gx@renesas.com>
+ <50E71618.8090302@wwwdotorg.org>
+ <20130104193712.GN4627@opensource.wolfsonmicro.com>
+ <87y5fvyy18.wl%kuninori.morimoto.gx@renesas.com>
+ <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
+ <20130127035943.GJ4650@opensource.wolfsonmicro.com>
+ <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
+ <20130129014808.GC4748@opensource.wolfsonmicro.com>
+ <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
+ <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
+ <5107FF97.1070601@wwwdotorg.org>
+ <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
+ <51097F0F.2030501@wwwdotorg.org>
+ <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
+ <5110349D.3050308@wwwdotorg.org>
+ <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
+ <87a9rjrrwt.wl%kuninori.morimoto.gx@renesas.com>
+ <87zjzhymbs.wl%kuninori.morimoto.gx@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <87zjzhymbs.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 6 Jan 2013 16:44:59 +0530, Laxman Dewangan <ldewangan@nvidia.com> wrote:
-> The NVIDIA's Tegra KBC has maximum 24 pins to make matrix keypad.
-> Any pin can be configured as row or column. The maximum column pin
-> can be 8 and maximum row pin can be 16.
-> 
-> Remove the assumption that all first 16 pins will be used as row
-> and remaining as columns and Add the property for configuring pins
-> to either row or column from DT. Update the devicetree binding
-> document accordingly.
-> 
-> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-> ---
-> Changes from V1:
-> - renames the rows and pins property array.
-> - nit cleanups.
-> Changes from V2/V3:
->  None
-> 
->  .../bindings/input/nvidia,tegra20-kbc.txt          |   22 ++++++
->  drivers/input/keyboard/tegra-kbc.c                 |   74 +++++++++++++++-----
->  2 files changed, 79 insertions(+), 17 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/input/nvidia,tegra20-kbc.txt b/Documentation/devicetree/bindings/input/nvidia,tegra20-kbc.txt
-> index 72683be..2995fae 100644
-> --- a/Documentation/devicetree/bindings/input/nvidia,tegra20-kbc.txt
-> +++ b/Documentation/devicetree/bindings/input/nvidia,tegra20-kbc.txt
-> @@ -1,7 +1,18 @@
->  * Tegra keyboard controller
-> +The key controller has maximum 24 pins to make matrix keypad. Any pin
-> +can be configured as row or column. The maximum column pin can be 8
-> +and maximum row pins can be 16 for Tegra20/Tegra30.
->  
->  Required properties:
->  - compatible: "nvidia,tegra20-kbc"
-> +- reg: Register base address of KBC.
-> +- interrupts: Interrupt number for the KBC.
-> +- nvidia,kbc-row-pins: The KBC pins which are configured as row. This is an
-> +  array of pin numbers which is used as rows.
-> +- nvidia,kbc-col-pins: The KBC pins which are configured as column. This is an
-> +  array of pin numbers which is used as column.
-> +- linux,keymap: The keymap for keys as described in the binding document
-> +  devicetree/bindings/input/matrix-keymap.txt.
+On 02/06/2013 05:55 PM, Kuninori Morimoto wrote:
+> Support for loading the simple-card module via devicetree.
+> It requests cpu/codec information for probing.
 
-For the binding:
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+
+> +Simple-Card:
+> +
+> +Required properties:
+> +
+> + [prefix] means cpu/codec here
+> +
+> +- compatible					: "simple-audio"
+> +- simple-audio,card-name			: simple-audio card name
+> +- simple-audio,format				: see below
+
+> +- simple-audio,[prefix],dai			: phandle and port for CPU/CODEC
+> +- simple-audio,[prefix],frame-master		: frame master
+> +- simple-audio,[prefix],bitclock-master		: bitclock master
+> +
+> +Optional properties:
+> +
+> +- simple-audio,system-clock-frequency		: system clock rate if it is connected to both CPU/CODEC
+> +- simple-audio,bitclock-inversion		: bit clock inversion for both CPU/CODEC
+> +- simple-audio,frame-inversion			: frame inversion for both CPU/CODEC
+> +
+> +- simple-audio,[prefix],bitclock-inversion	: if CPU/CODEC needs clock inversion
+> +- simple-audio,[prefix],frame-inversion		: if CPU/CODEC needs frame inversion
+> +- simple-audio,[prefix],system-clock-frequency	: system clock rate for each CPU/CODEC
+
+I know Mark had a preference to store DAI-specific data in sub-nodes
+rather than using this "[prefix]" thing... If that doesn't end up
+happening though, rather than "[prefix],", I think it'd be more typical
+to use "[prefix]-" since I've never seen a DT property name with two
+","; "-" is typically used as the word separator in DT property names.
+
+> +sound {
+> +	compatible = "simple-audio";
+...
+> +	simple-audio,codec,dai = <&ak4648 0>;
+...
+> +sh_fsi2: sh_fsi2@0xec230000 {
+> +	compatible = "renesas,sh_fsi2";
+> +	reg = <0xec230000 0x400>;
+> +	interrupt-parent = <&gic>;
+> +	interrupts = <0 146 0x4>;
+> +};
+
+Note that the DT binding documentation for renesas,sh_fsi2 needs to define:
+
+a) The value of the #sound-dai-cells property that's missing from the
+sh_fsi2 node.
+
+b) The legal values for the "0" in the "simple-audio,codec,dai" property
+in the "sound" node above, and which DAI on the device each value
+represents.
