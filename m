@@ -1,89 +1,156 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH] clk: add si5351 i2c common clock driver
-Date: Mon, 11 Feb 2013 10:52:10 +0100
-Message-ID: <5118BF4A.1060608@gmail.com>
-References: <1360414772-12232-1-git-send-email-sebastian.hesselbarth@gmail.com> <20130211054632.11471.24295@quantum>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH RFC 3/7] ARM: OMAP: gpmc-smsc911x: add DT dev node init
+ function
+Date: Mon, 11 Feb 2013 10:30:51 +0000
+Message-ID: <20130211103051.GA32455@e106331-lin.cambridge.arm.com>
+References: <1360442671-15216-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1360442671-15216-4-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130211054632.11471.24295@quantum>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1360442671-15216-4-git-send-email-javier.martinez@collabora.co.uk>
+Content-Disposition: inline
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, =?utf-8?Q?Beno=C3=AEt?= Cousson <b-cousson@ti.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/2013 06:46 AM, Mike Turquette wrote:
-> Quoting Sebastian Hesselbarth (2013-02-09 04:59:32)
->> This patch adds a common clock driver for Silicon Labs Si5351a/b/c
->> i2c programmable clock generators. Currently, the driver supports
->> DT kernels only and VXCO feature of si5351b is not implemented. DT
->> bindings selectively allow to overwrite stored Si5351 configuration
->> which is very helpful for clock generators with empty eeprom
->> configuration. Corresponding device tree binding documentation is
->> also added.
->>
->> Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
->> ---
->> Notes:
->> - During development I used a debugfs clock consumer that I can also
->>    post if there is interest in it.
->
-> Please do.  I have a set of patches that implement a fake clock subtree
-> for testing the core framework.  I've been thinking of pushing this to
-> the list once it is more presentable and your work might fit into that
-> nicely.
+Hi,
 
-Mike,
+I have a few comments on the binding and the way it's parsed.
 
-then I will clean the debugfs driver and post it together with this
-patch for 3.9-rc1 as an individual patch.
+On Sat, Feb 09, 2013 at 08:44:27PM +0000, Javier Martinez Canillas wrote:
+> This patch adds a helper function to parse a device node that
+> contains all the properties needed to initialize an smsc911x
+> device connected to an OMAP processor through OMAP's GPMC.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> ---
+>  .../devicetree/bindings/net/gpmc-smsc911x.txt      |   39 ++++++++++++++++++++
+>  arch/arm/mach-omap2/gpmc-smsc911x.c                |   29 +++++++++++++++
+>  arch/arm/mach-omap2/gpmc-smsc911x.h                |    6 +++
+>  3 files changed, 74 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/gpmc-smsc911x.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/net/gpmc-smsc911x.txt b/Documentation/devicetree/bindings/net/gpmc-smsc911x.txt
+> new file mode 100644
+> index 0000000..8bb0df2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/gpmc-smsc911x.txt
+> @@ -0,0 +1,39 @@
+> +* GPMC connected Smart Mixed-Signal Connectivity (SMSC) LAN911x/912x Controller
+> +
+> +GPMC connected SMSC LAN911x/912x Controllers are represented as child nodes
+> +of the OMAP General-Purpose Memory Controller with a name of "gpmc_smsc911x".
+> +
+> +All timing relevant properties as well as generic gpmc child properties are
+> +explained in a separate documents - please refer to
+> +Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> +
+> +Required properties:
+> +- gpmc,cs : The chip select line the pheripheral is connected to
+> +- gpmc,gpio_irq : The GPIO pin that is connected to the SMSC LAN IRQ line
 
->> - With current (3.8-rc6) common clock framework there is two (minor)
->>    issues:
->>    * although clocks are registered with devm_clk_register they are not
->>      removed from the clock tree on unloading. That makes reloading of
->>      clk-si5351 as module impossible.
->
-> This is a known issue.  clk_unregister is a NOP and defining it has
-> always been deferred until the day that someone needed it.  Care to
-> take a crack at it?
+In devicetree land, we use '-' in preference of '_' in property names.
 
-Ok. I can have a look at it and propose a patch but that will take a
-while as other stuff came in between. But IMHO, preparing/enabling
-clocks by clock consumers should increase reference count so referenced
-modules cannot be unloaded.. but that I have never had a look at, yet ;)
+So this should be "gpio-irq"
 
->>    * potentially there could be more than one different external si5351
->>      generators but clocks are registered with names that do not refer
->>      to e.g. the device name. Maybe common clock framework should
->>      prepend the device name for each registered clock, i.e. 0-0060.clk0.
->>      That would also avoid name collisions with same clock names from
->>      different drivers (clk0 is likely to be used by others ;))
->
-> More unfinished work, just like clk_unregister above.  I'm sure you are
-> aware that clk_register takes struct device *dev as input, but does
-> nothing with it.  It wouldn't take much to concatenate the device name
-> and clock name if dev is present.  However a complication here is that
-> the registration code takes a parent string name to match parents up for
-> discrete subtrees; how could statically defined data know about the
-> device name ahead of time?
+> +
+> +Optional properties:
+> +- gpmc,flags : SMSC LAN flags - please refer to include/linux/smsc911x.h
 
-I see. Wrt the above comment about spare time, would prepending DT
-clocks be sufficient? Or/And use a fallback mechanism that first tries
-a full match, full match with own device name, and relaxed match for
-clock name as it is now?
+Please don't do this. It should only be necessary to read binding documents and
+hardware datasheets to write a dts. Referring to Linux internals creates a
+flaky ABI that's only going to break when things get renamed/moved/modified.
 
-> The above design decision took place before the big DT push we have
-> today and was short-sighted.  It would be better to change the framework
-> to rely less on string name lookups and DT is one way out of that.
->
-> 3.8-rc7 is already out and I don't plan to take anything that hasn't
-> already been submitted for 3.9 now.  Can you resubmit this after 3.9-rc1
-> comes out?
+The flags variable used internally by the driver don't have to have a 1-1
+correspondence with a single property in the binding. You can have boolean
+properties (named, but without a value) in the dt specifying each flag
+individually. That way the dts is easier to read, is less tied to linux
+internals (and every property is *fully* documented), and it's far easier to
+add new flags in future if necessary.
 
-Sure, but I'll be not available next 2 weeks or so. If 3.8 falls
-within that time, I will re-post it later. It is ok for me, if it has
-to go in after 3.9 also.
+> +- gpmc,gpio_reset : The GPIO pin connected to the SMSC LAN reset line
 
-Sebastian
+Preferably: "gpio-reset".
+
+> +
+> +Note: Besides these properties, the gpmc_smsc911x device node could need
+> +aditional setup such as pin/pad mux settings and voltage regulators. This
+> +depend on how the pheripheral is wired and his board specific.
+> +
+> +Example (for an OMAP3 board):
+> +
+> +gpmc@6e000000 {
+> +	      compatible = "ti,omap3430-gpmc";
+> +	      ti,hwmods = "gpmc";
+> +	      reg = <0x6e000000 0x1000000>;
+> +	      interrupts = <20>;
+> +	      gpmc,num-cs = <8>;
+> +	      gpmc,num-waitpins = <4>;
+> +	      #address-cells = <2>;
+> +	      #size-cells = <1>;
+> +
+> +	      gpmc_smsc911x@0 {
+> +			      gpmc,cs = <5>;
+> +			      gpmc,gpio_irq = <176>;
+> +			      gpmc,flags = <4>; /* SMSC911X_USE_32BIT */
+
+Here you could have a boolean property "gpmc,use-32bit" (or possibly
+"gpmc,use-bits", which can either be 32 or 16).
+
+> +	      };
+> +};
+> diff --git a/arch/arm/mach-omap2/gpmc-smsc911x.c b/arch/arm/mach-omap2/gpmc-smsc911x.c
+> index 5ce00ad2..59a2ee4 100644
+> --- a/arch/arm/mach-omap2/gpmc-smsc911x.c
+> +++ b/arch/arm/mach-omap2/gpmc-smsc911x.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/smsc911x.h>
+> +#include <linux/of.h>
+>  
+>  #include "gpmc.h"
+>  #include "gpmc-smsc911x.h"
+> @@ -98,3 +99,31 @@ free1:
+>  
+>  	pr_err("Could not initialize smsc911x device\n");
+>  }
+> +
+> +int gpmc_smsc911x_init_dt(struct device_node *node)
+> +{
+> +	struct omap_smsc911x_platform_data gpmc_cfg;
+> +
+> +	if (WARN_ON(!node))
+> +		return -ENODEV;
+> +
+> +	if (of_property_read_u32(node, "gpmc,cs", &gpmc_cfg.cs)) {
+> +		pr_err("Unable to get GPMC smsc911x chip select\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_u32(node, "gpmc,gpio_irq", &gpmc_cfg.gpio_irq)) {
+> +		pr_err("Unable to get GPMC smsc911x GPIO IRQ\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	if (of_property_read_u32(node, "gpmc,gpio_reset", &gpmc_cfg.gpio_reset))
+> +		gpmc_cfg.gpio_reset = -EINVAL;
+> +
+> +	if (of_property_read_u32(node, "gpmc,flags", &gpmc_cfg.flags))
+> +		gpmc_cfg.flags = 0;
+
+Is no sanity checking required for any of the above properties?
+
+To handle separate flags here, you can use something like:
+
+if (of_property_read_bool(node, "gpmc,use-32bit")
+	flags |= SMSC911X_USE_32BIT;
+
+[...]
+
+Thanks,
+Mark.
+
