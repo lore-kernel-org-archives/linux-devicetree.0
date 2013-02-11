@@ -1,56 +1,32 @@
 From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: Fix locking when calling of_get_next_available_child()
-Date: Mon, 11 Feb 2013 22:30:49 +0000
-Message-ID: <CACxGe6uv-DZ2u1eqnvo11mONuu95oPCnUZU_5JhqDz1-DXwkfQ@mail.gmail.com>
-References: <1360621157-23570-1-git-send-email-grant.likely@secretlab.ca> <5119706F.1080902@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5119706F.1080902@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] of: fix recursive locking in of_get_next_available_child()
+Date: Mon, 11 Feb 2013 22:39:07 +0000
+Message-ID: <20130211223907.271653E3530@localhost>
+References: <1360617332-2738-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-next-owner@vger.kernel.org>
+In-Reply-To: <1360617332-2738-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-next-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <rob.herring@calxeda.com>
+Cc: Paul Gortmaker <paul.gortmaker@windriver.com>, Thomas Gleixner <tglx@linutronix.de>, linux-rt-users@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>, linux-next@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2013 at 10:27 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On 02/11/2013 04:19 PM, Grant Likely wrote:
->> of_get_next_available_child() obtains the devtree_lock and then calls
->> of_device_is_available() which also attempts to claim the lock. This is
->> obviously incorrect and causes a deadlock on boot. Fix issue by adding
->> an variant of of_device_is_available() which doesn't obtain the lock.
->>
->> Cc: Stephen Warren <swarren@wwwdotorg.org>
->> Cc: Rob Herring <robherring2@gmail.com>
->> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
->> ---
->>  drivers/of/base.c |   15 +++++++++++++--
->>  1 file changed, 13 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index e8d65af..4af74b7 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -297,7 +297,7 @@ EXPORT_SYMBOL(of_machine_is_compatible);
->>   *  Returns 1 if the status property is absent or set to "okay" or "ok",
->>   *  0 otherwise
->>   */
->> -int of_device_is_available(const struct device_node *device)
->> +int __of_device_is_available(const struct device_node *device)
->>  {
->>       const char *status;
->>       int statlen;
->> @@ -313,6 +313,17 @@ int of_device_is_available(const struct device_node *device)
->>
->>       return 0;
->>  }
->> +
->> +int of_device_is_available(const struct device_node *device)
->
-> Stephen's version wins because he preserved the documentation. :)
+On Mon, 11 Feb 2013 14:15:32 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> From: Stephen Warren <swarren@nvidia.com>
+> 
+> of_get_next_available_child() acquires devtree_lock, then calls
+> of_device_is_available() which calls of_get_property() which calls
+> of_find_property() which tries to re-acquire devtree_lock, thus causing
+> deadlock.
+> 
+> To avoid this, create a new __of_device_is_available() which calls
+> __of_get_property() instead, which calls __of_find_property(), which
+> does not take the lock,. Update of_get_next_available_child() to call
+> the new __of_device_is_available() since it already owns the lock.
+> 
+> Signed-off-by: Stephen Warren <swarren@nvidia.com>
 
-Pish. He just cut and paste the documentation so now we have 2 copies.
-My version wins because it is already in my tree. So ptfff!
-
-:-)
+Thanks for looking at this Stephen. I ended up applying my version of
+this patch though just because it was more convenient to do so. It was
+pretty much identical anyway.
 
 g.
