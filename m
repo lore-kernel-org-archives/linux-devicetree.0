@@ -1,235 +1,106 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 12/12] clocksource: samsung-time: Add Device Tree support
-Date: Mon, 11 Feb 2013 11:00:56 +0000
-Message-ID: <20130211110056.GC32455@e106331-lin.cambridge.arm.com>
-References: <1360502423-2246-1-git-send-email-tomasz.figa@gmail.com>
- <1360502423-2246-13-git-send-email-tomasz.figa@gmail.com>
+From: Sascha Hauer <s.hauer@pengutronix.de>
+Subject: Re: [PATCH RFC 1/7] platform: add a device node
+Date: Mon, 11 Feb 2013 12:24:59 +0100
+Message-ID: <20130211112459.GA1906@pengutronix.de>
+References: <1360442671-15216-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1360442671-15216-2-git-send-email-javier.martinez@collabora.co.uk>
+ <20130210010246.GA1455@kroah.com>
+ <5116FCA1.40703@collabora.co.uk>
+ <20130210093708.GL17852@n2100.arm.linux.org.uk>
+ <CAAwP0s0fCJmUfTJweGhXj5bXsQ0Gov9JbUJtqYMwL7duNLZv_Q@mail.gmail.com>
+ <20130211081632.GI1906@pengutronix.de>
+ <CAAwP0s0_HivRRDuBAEi4TJMB6DnbicDy1FiT7G3NcNs996V7qA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360502423-2246-13-git-send-email-tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "arhuaco-pI7LgTZv5U2z2LnJBvBa6V6hYfS7NtTn@public.gmane.org" <arhuaco-pI7LgTZv5U2z2LnJBvBa6V6hYfS7NtTn@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "kwangwoo.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kwangwoo.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "guillaume.gourat-SG84m9Bk/uxjrEqMGRc/AA@public.gmane.org" <guillaume.gourat-SG84m9Bk/uxjrEqMGRc/AA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "mcuelenaere-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcuelenaere-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "jekhor-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jekhor-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "danders-/aE0K3SWWjcAvxtiuMwx3w@public.gmane.org" <danders-/aE0K3SWWjcAvxtiuMwx3w@public.gmane.org>, "kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhmin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <bhmin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "augulis.darius-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <augulis.darius-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org" <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>, "linux-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org" <linux-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>"ghcstop-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <g>
+In-Reply-To: <CAAwP0s0_HivRRDuBAEi4TJMB6DnbicDy1FiT7G3NcNs996V7qA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <martinez.javier@gmail.com>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, Enric Balletbo i Serra <eballetbo@gmail.com>, linux-omap@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 10, 2013 at 01:20:23PM +0000, Tomasz Figa wrote:
-> This patch adds support for parsing all platform-specific data from
-> Device Tree and instantiation using clocksource_of_init to samsung-time
-> clocksource driver.
+On Mon, Feb 11, 2013 at 11:33:19AM +0100, Javier Martinez Canillas wrote:
+> On Mon, Feb 11, 2013 at 9:16 AM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> > On Sun, Feb 10, 2013 at 12:35:43PM +0100, Javier Martinez Canillas wrote:
+> >> On Sun, Feb 10, 2013 at 10:37 AM, Russell King - ARM Linux
+> >> <linux@arm.linux.org.uk> wrote:
+> >> > On Sun, Feb 10, 2013 at 02:49:21AM +0100, Javier Martinez Canillas wrote:
+> >> >> I knew this would be controversial and that's why I didn't mean it to be a patch
+> >> >> but a RFC :)
+> >> >>
+> >> >> The problem basically is that you have to associate the platform device with its
+> >> >> corresponding DT device node because it can be used in the driver probe function.
+> >> >
+> >> > When DT is being used, doesn't DT create the platform devices for you,
+> >> > with the device node already set correctly?
+> >> >
+> >>
+> >> Well they usually do but not always just like usually you have a
+> >> platform_device in your board code and call platform_device_register().
+> >>
+> >> But in some configurations you can't just define the platform_device
+> >> required resources (I/O memory, IRQ, etc) as static platform data.
+> >> In some cases you need a level of indirection.
+> >>
+> >> In this particular case a SMSC ethernet chip is connected to an
+> >> OMAP3 processor through its General-Purpose Memory Controller.
+> >>
+> >> You can't just define the I/O memory used by the device since you first
+> >> need to request that address to the GPMC. The same happens with the
+> >> IRQ line since a OMAP GPIO pin is used so you have to first configure
+> >> the GPIO line as input.
+> >
+> > For the gpio interrupt you can use, example taken from omap4-var-som.dts:
+> >
+> >         interrupt-parent = <&gpio6>;
+> >         interrupts = <11>; /* gpio line 171 */
+> >
+> > Other architectures allow to specify the edge/level hi/low active
+> > parameters from the devicetree aswell. The gpio direction should be
+> > handled by the gpio driver as necessary, at least that's what done on
+> > other architectures.
+> >
+> > If the SMSC hangs on the GPMC then the SMSC should be a child node of
+> > the GPMC. The GPMC would then act as a bus driver and configure the
+> > chipselects and timings for its children automatically, maybe based
+> > on timing information from the devicetree. I've never tried this before,
+> > but I think that's the way things should be.
+> >
 > 
-> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> Signed-off-by: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/arm/samsung-timer.txt      |  32 +++++++
->  drivers/clocksource/samsung-time.c                 | 102 ++++++++++++++++++++-
->  2 files changed, 131 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/samsung-timer.txt
+> Hi Sasha,
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/samsung-timer.txt b/Documentation/devicetree/bindings/arm/samsung-timer.txt
-> new file mode 100644
-> index 0000000..8eb7030
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/samsung-timer.txt
-> @@ -0,0 +1,32 @@
-> +* Samsung PWM timer
-> +
-> +Samsung SoCs contain PWM timer blocks which can be used for system clock source
-> +and clock event timers.
-> +
-> +Be aware that this configuration is supported only on uniprocessor platforms.
-> +For SMP SoCs, SMP-aware timers should be used, like MCT.
-> +
-> +Required properties:
-> +- compatible : should be one of following:
-> +    samsung,s3c24xx-pwm-timer - for 16-bit timers present on S3C24xx
-> +    samsung,s3c64xx-pwm-timer - for 32-bit timers present on S3C64xx and newer
-> +- reg: base address and size of register area
-> +- interrupts: interrupt list for all five PWM timers.
+> The SMSC is already a child node of the GPMC in the device tree but instead
+> using the generic SMSC binding I added a GPMC-specific SMSC binding.
+> 
+> Since the SMSC binding doesn't have a chip select property and it expects
+> the I/O memory address to be explicitly defined in the reg property while
+> the GPMC needs to request this memory according to the chip select used.
 
-Is this a set of combined interrupts, or one per timer?
+So you probably have this:
 
-Which order are they in?
+	gpmc {
+		compatible = "ti,gpmc", "simple-bus";
+		ranges;
 
-Assuming they're one per timer, in order, how about something like:
+		smsc911x {
+			compatible = "smsc,91x";
+		}
+	}
 
-"- interrupts: one interrupt per timer, starting at timer 0".
+If you remove the simple-bus property the gpmc devices would not be
+probed. If then you add a driver which matches "ti,gpmc" you can
+configure the chip selects in its probe callback. After this you
+can call of_platform_populate() starting from the gpmc device node
+to instantiate the gpmc child devices.
 
-> +- samsung,source-timer: index of timer to be used as clocksource
-> +- samsung,event-timer: index of timer to be used as clock event
+Please somebody interrupt me if I'm talking total rubbish here. I never
+tried this and only assume it should work like this.
 
-Is there any reason this needs to be specified in the dt?
+Sascha
 
-Can the driver not just select two arbitrary timers from the hardware?
-
-> +
-> +Optional properties:
-> +- samsung,prescale: PWM prescaler divisor (from 1 to 256)
-
-It might be better to have this named "samsung,prescale-divisor" to make it
-clear to the average reader that its a divisor value rather than a
-multiplier value.
-
-> +- samsung,divisor: PWM main divider divisor (1, 2, 4, 8 or 16)
-> +
-> +Example:
-> +	timer@7f006000 {
-> +		compatible = "samsung,s3c64xx-pwm-timer";
-> +		reg = <0x7f006000 0x1000>;
-> +		interrupt-parent = <&vic0>;
-> +		interrupts = <23>, <24>, <25>, <27>, <28>;
-> +		samsung,source-timer = <4>;
-> +		samsung,event-timer = <3>;
-> +		samsung,prescale = <2>;
-> +		samsung,divisor = <1>;
-> +	};
-> diff --git a/drivers/clocksource/samsung-time.c b/drivers/clocksource/samsung-time.c
-> index 19a1c8a..63d2992 100644
-> --- a/drivers/clocksource/samsung-time.c
-> +++ b/drivers/clocksource/samsung-time.c
-> @@ -14,6 +14,9 @@
->  #include <linux/err.h>
->  #include <linux/clk.h>
->  #include <linux/clockchips.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
->  #include <linux/platform_device.h>
->  #include <linux/samsung-time.h>
->  
-> @@ -479,9 +482,11 @@ static void __init samsung_timer_resources(void)
->  	unsigned long source_id = timer_source.source_id;
->  	char devname[15];
->  
-> -	timer_base = ioremap_nocache(timer_variant.reg_base, SZ_4K);
-> -	if (!timer_base)
-> -		panic("failed to map timer registers");
-> +	if (!timer_base) {
-> +		timer_base = ioremap_nocache(timer_variant.reg_base, SZ_4K);
-> +		if (!timer_base)
-> +			panic("failed to map timer registers");
-> +	}
-
-You map 4K here, but the binding didn't mention that 4K is always the expected
-size of the reg.
-
->  
->  	timerclk = clk_get(NULL, "timers");
->  	if (IS_ERR(timerclk))
-> @@ -514,8 +519,92 @@ static void __init samsung_timer_resources(void)
->  	clk_enable(tin_source);
->  }
->  
-> +enum {
-> +	TYPE_S3C24XX,
-> +	TYPE_S3C64XX,
-> +};
-> +
-> +#ifdef CONFIG_OF
-> +static const struct of_device_id samsung_timer_ids[] = {
-> +	{ .compatible = "samsung,s3c24xx-pwm-timer",
-> +					.data = (void *)TYPE_S3C24XX, },
-> +	{ .compatible = "samsung,s3c64xx-pwm-timer",
-> +					.data = (void *)TYPE_S3C64XX, },
-> +	{},
-> +};
-> +
-> +static void samsung_timer_parse_dt(struct device_node *np,
-> +					const struct of_device_id *match)
-> +{
-> +	int i;
-> +	u32 val;
-> +
-> +	if (of_property_read_u32(np, "samsung,source-timer", &val))
-> +		panic("no samsung,source-timer property provided");
-> +	if (val > ARRAY_SIZE(timer_variant.irqs))
-> +		panic("samsung,source-timer property out of range");
-
-This check doesn't tell you if you actually had an irq in the dt for the timer
-at that index.
-
-Do you really need to panic here? Can you not just warn?
-
-What if a future platform has another timer driver that can at least get the
-board to boot?
-
-> +	timer_source.source_id = val;
-> +
-> +	if (of_property_read_u32(np, "samsung,event-timer", &val))
-> +		panic("no samsung,event-timer property provided");
-> +	if (val > ARRAY_SIZE(timer_variant.irqs))
-> +		panic("samsung,event-timer property out of range");
-> +	timer_source.event_id = val;
-
-I have the same problems here as with the source-timer block above.
-
-> +
-> +	timer_base = of_iomap(np, 0);
-> +	if (!timer_base)
-> +		panic("failed to map timer registers");
-
-Similarly here and every other place that panics: I think warning might be a
-better bet.
-
-> +
-> +	for (i = 0; i < ARRAY_SIZE(timer_variant.irqs); ++i)
-> +		timer_variant.irqs[i] = irq_of_parse_and_map(np, i);
-> +
-> +	if (!timer_variant.irqs[timer_source.event_id])
-> +		panic("no clock event irq provided");
-> +
-> +	switch ((unsigned int)match->data) {
-> +	case TYPE_S3C24XX:
-> +		timer_variant.bits = 16;
-> +		timer_variant.prescale = 25;
-> +		timer_variant.prescale = 50;
-> +		timer_variant.has_tint_cstat = false;
-> +		break;
-> +	case TYPE_S3C64XX:
-> +		timer_variant.bits = 32;
-> +		timer_variant.prescale = 2;
-> +		timer_variant.divisor = 2;
-> +		timer_variant.has_tint_cstat = true;
-> +		break;
-> +	}
-> +
-> +	if (!of_property_read_u32(np, "samsung,prescale", &val)) {
-> +		if (val < 1 || val > 256)
-> +			panic("prescale must be from 1 to 256 range");
-> +		timer_variant.prescale = val;
-> +	}
-> +
-> +	if (!of_property_read_u32(np, "samsung,divisor", &val)) {
-> +		if (val > 16 || (1 << (fls(val) - 1)) != val)
-> +			panic("divsor must be 1, 2, 4, 8 or 16");
-> +		timer_variant.divisor = timer_variant.prescale * val;
-
-Maybe it's just me, but I find this somewhat difficult to read.
-
-How about something like:
-
-switch (val) {
-case 1:
-case 2:
-case 4:
-case 8:
-case 16:
-	timer_variant.divisor = timer_variant.prescale * val;
-	break;
-default:
-	warn("no divisor specified");
-};
-
-Thanks,
-Mark.
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
