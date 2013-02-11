@@ -1,85 +1,302 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 6/6] of_spi: Initialize cs_gpios and cs_gpio with -EEXIST
-Date: Mon, 11 Feb 2013 00:23:20 +0000
-Message-ID: <20130211002320.824593E0C13@localhost>
-References: <1359471223-4794-1-git-send-email-andreas@gaisler.com> <1359471223-4794-7-git-send-email-andreas@gaisler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359471223-4794-7-git-send-email-andreas@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net, linux-kernel@vger.kernel.org, software@gaisler.com
+From: Amit Daniel Kachhap <amit.daniel@samsung.com>
+Subject: [PATCH V2] ARM: dts: exynos5250-arndale: Add PMIC node entry
+Date: Sun, 10 Feb 2013 16:36:24 -0800
+Message-ID: <1360542984-31552-1-git-send-email-amit.daniel@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: amit.kachhap@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Tushar Behera <tushar.behera@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 29 Jan 2013 15:53:43 +0100, Andreas Larsson <andreas@gaisler.com> wrote:
-> Holes in the cs-gpios DT phandle list is supposed to mark that native
-> chipselects is to be used. The value returned from of_get_named_gpio_flags in
-> this case is -EEXIST. By initializing cs_gpios and cs_gpio with -EEXIST, this
-> and only this errno will indicate to a spi controller driver that a native
-> chipselect is to be used.
-> 
-> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+Added S5M8767 PMIC DT nodes for Arndale board. Only the used
+LDO's/BUCK are defined here. Also the nodes describe the default/reset
+state LDO's and no power mangement tuning is implemented. The usage
+desription can be found in s5m8767 device tree binding documentation.
 
-I've left this one off for now. Take a look at the patch I posted and
-let me know if you think this one should still be applied.
+Cc: Tushar Behera <tushar.behera@linaro.org>
+Signed-off-by: Amit Daniel Kachhap <amit.daniel@samsung.com>
+---
+This patch is based on Samsung kernel maintainer's for-next tree.
+git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git for-next
 
-g.
+The s5m8767 DT support is already accepted by regulator's maintainer and is
+present in the tree,
+git://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-next
 
-> ---
->  drivers/spi/spi.c       |    4 ++--
->  include/linux/spi/spi.h |    7 +++++--
->  2 files changed, 7 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index 6f1b717..7494bad 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -334,7 +334,7 @@ struct spi_device *spi_alloc_device(struct spi_master *master)
->  	spi->dev.parent = &master->dev;
->  	spi->dev.bus = &spi_bus_type;
->  	spi->dev.release = spidev_release;
-> -	spi->cs_gpio = -EINVAL;
-> +	spi->cs_gpio = -EEXIST;
->  	device_initialize(&spi->dev);
->  	return spi;
->  }
-> @@ -1097,7 +1097,7 @@ static int of_spi_register_master(struct spi_master *master)
->  	}
->  
->  	for (i = 0; i < master->num_chipselect; i++)
-> -		cs[i] = -EINVAL;
-> +		cs[i] = -EEXIST;
->  
->  	for (i = 0; i < nb; i++)
->  		cs[i] = of_get_named_gpio_flags(np, "cs-gpios", i, &flags[i]);
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 96b1055..0701882 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -58,7 +58,8 @@ extern struct bus_type spi_bus_type;
->   * @modalias: Name of the driver to use with this device, or an alias
->   *	for that name.  This appears in the sysfs "modalias" attribute
->   *	for driver coldplugging, and in uevents used for hotplugging
-> - * @cs_gpio: Negative or gpio for chip select.
-> + * @cs_gpio: Negative or gpio for chip select.  Set to -EEXIST when chipselect
-> + *	should be handled natively by the controller driver
->   * @cs_gpio_flags: of_gpio_flags corresponding to cs_gpio
->   *
->   * A @spi_device is used to interchange data between an SPI slave
-> @@ -262,7 +263,9 @@ static inline void spi_unregister_driver(struct spi_driver *sdrv)
->   * @unprepare_transfer_hardware: there are currently no more messages on the
->   *	queue so the subsystem notifies the driver that it may relax the
->   *	hardware by issuing this call
-> - * @cs_gpios: possible array of negative values or gpios for chip selects
-> + * @cs_gpios: possible array of negative values or gpios for chip selects.  A
-> + *	chipselect that should be handled natively by the controller driver is
-> + *	set to -EEXIST.
->   * @cs_gpio_flags: possible array of of_gpio_flags corresponding to cs_gpios
->   *
->   * Each SPI master controller can communicate with one or more @spi_device
-> -- 
-> 1.7.0.4
-> 
+Changes since V1:
+* Removed un-necessary status field settings.
+* Added entries for LDO's 22,23,25,26 and BUCK9  
+ 
+ arch/arm/boot/dts/exynos5250-arndale.dts |  257 +++++++++++++++++++++++++++++-
+ 1 files changed, 256 insertions(+), 1 deletions(-)
 
+diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+index 63572f9..f50f09c 100644
+--- a/arch/arm/boot/dts/exynos5250-arndale.dts
++++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+@@ -25,7 +25,262 @@
+ 	};
+ 
+ 	i2c@12C60000 {
+-		status = "disabled";
++		samsung,i2c-sda-delay = <100>;
++		samsung,i2c-max-bus-freq = <20000>;
++		samsung,i2c-slave-addr = <0x66>;
++		gpios = <&gpb3 0 2 3 0>,
++			<&gpb3 1 2 3 0>;
++
++		s5m8767_pmic@66 {
++			compatible = "samsung,s5m8767-pmic";
++			reg = <0x66>;
++
++			s5m8767,pmic-buck2-dvs-voltage = <1300000>;
++			s5m8767,pmic-buck3-dvs-voltage = <1100000>;
++			s5m8767,pmic-buck4-dvs-voltage = <1200000>;
++			s5m8767,pmic-buck-dvs-gpios = <&gpd1 0 1 0 0>,
++							<&gpd1 1 1 0 0>,
++							<&gpd1 2 1 0 0>;
++			s5m8767,pmic-buck-ds-gpios = <&gpx2 3 1 0 0>,
++							<&gpx2 4 1 0 0>,
++							<&gpx2 5 1 0 0>;
++			regulators {
++				ldo1_reg: LDO1 {
++					regulator-name = "VDD_ALIVE_1.0V";
++					regulator-min-microvolt = <1100000>;
++					regulator-max-microvolt = <1100000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo2_reg: LDO2 {
++					regulator-name = "VDD_28IO_DP_1.35V";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo3_reg: LDO3 {
++					regulator-name = "VDD_COMMON1_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo4_reg: LDO4 {
++					regulator-name = "VDD_IOPERI_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					op_mode = <1>;
++				};
++
++				ldo5_reg: LDO5 {
++					regulator-name = "VDD_EXT_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo6_reg: LDO6 {
++					regulator-name = "VDD_MPLL_1.1V";
++					regulator-min-microvolt = <1100000>;
++					regulator-max-microvolt = <1100000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo7_reg: LDO7 {
++					regulator-name = "VDD_XPLL_1.1V";
++					regulator-min-microvolt = <1100000>;
++					regulator-max-microvolt = <1100000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo8_reg: LDO8 {
++					regulator-name = "VDD_COMMON2_1.0V";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo9_reg: LDO9 {
++					regulator-name = "VDD_33ON_3.0V";
++					regulator-min-microvolt = <3000000>;
++					regulator-max-microvolt = <3000000>;
++					op_mode = <1>;
++				};
++
++				ldo10_reg: LDO10 {
++					regulator-name = "VDD_COMMON3_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo11_reg: LDO11 {
++					regulator-name = "VDD_ABB2_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo12_reg: LDO12 {
++					regulator-name = "VDD_USB_3.0V";
++					regulator-min-microvolt = <3000000>;
++					regulator-max-microvolt = <3000000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo13_reg: LDO13 {
++					regulator-name = "VDDQ_C2C_W_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo14_reg: LDO14 {
++					regulator-name = "VDD18_ABB0_3_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo15_reg: LDO15 {
++					regulator-name = "VDD10_COMMON4_1.0V";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo16_reg: LDO16 {
++					regulator-name = "VDD18_HSIC_1.8V";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo17_reg: LDO17 {
++					regulator-name = "VDDQ_MMC2_3_2.8V";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				ldo18_reg: LDO18 {
++					regulator-name = "VDD_33ON_2.8V";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					op_mode = <1>;
++				};
++
++				ldo22_reg: LDO22 {
++					regulator-name = "EXT_33_OFF";
++					regulator-min-microvolt = <3300000>;
++					regulator-max-microvolt = <3300000>;
++					op_mode = <1>;
++				};
++
++				ldo23_reg: LDO23 {
++					regulator-name = "EXT_28_OFF";
++					regulator-min-microvolt = <2800000>;
++					regulator-max-microvolt = <2800000>;
++					op_mode = <1>;
++				};
++
++				ldo25_reg: LDO25 {
++					regulator-name = "PVDD_LDO25";
++					regulator-min-microvolt = <1200000>;
++					regulator-max-microvolt = <1200000>;
++					op_mode = <1>;
++				};
++
++				ldo26_reg: LDO26 {
++					regulator-name = "EXT_18_OFF";
++					regulator-min-microvolt = <1800000>;
++					regulator-max-microvolt = <1800000>;
++					op_mode = <1>;
++				};
++
++				buck1_reg: BUCK1 {
++					regulator-name = "vdd_mif";
++					regulator-min-microvolt = <950000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				buck2_reg: BUCK2 {
++					regulator-name = "vdd_arm";
++					regulator-min-microvolt = <925000>;
++					regulator-max-microvolt = <1300000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				buck3_reg: BUCK3 {
++					regulator-name = "vdd_int";
++					regulator-min-microvolt = <900000>;
++					regulator-max-microvolt = <1200000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				buck4_reg: BUCK4 {
++					regulator-name = "vdd_g3d";
++					regulator-min-microvolt = <1000000>;
++					regulator-max-microvolt = <1000000>;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				buck5_reg: BUCK5 {
++					regulator-name = "VDD_MEM_1.35V";
++					regulator-min-microvolt = <750000>;
++					regulator-max-microvolt = <1355000>;
++					regulator-always-on;
++					regulator-boot-on;
++					op_mode = <1>;
++				};
++
++				buck9_reg: BUCK9 {
++					regulator-name = "VDD_33_OFF_EXT1";
++					regulator-min-microvolt = <750000>;
++					regulator-max-microvolt = <3000000>;
++					op_mode = <1>;
++				};
++			};
++		};
+ 	};
+ 
+ 	i2c@12C70000 {
 -- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+1.7.5.4
