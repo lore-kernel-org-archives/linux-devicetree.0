@@ -1,31 +1,72 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V8] kbuild: create a rule to run the pre-processor on
- *.dts files
-Date: Mon, 11 Feb 2013 12:11:22 -0700
-Message-ID: <5119425A.1090802@wwwdotorg.org>
-References: <1360091188-24063-1-git-send-email-swarren@wwwdotorg.org> <20130208144527.0D8DD3E2C01@localhost> <51156D09.7060401@gmail.com> <20130208220448.EDA773E2C27@localhost> <51157F65.2050309@wwwdotorg.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH next v2] OF: convert devtree lock from rw_lock to raw
+ spinlock
+Date: Mon, 11 Feb 2013 12:29:09 -0700
+Message-ID: <51194685.5010904@wwwdotorg.org>
+References: <1359993921-18145-1-git-send-email-paul.gortmaker@windriver.com>
+ <1360182656-15898-1-git-send-email-paul.gortmaker@windriver.com>
+ <511585A9.9090008@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51157F65.2050309@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Scott Wood <scottwood@freescale.com>, Stephen Warren <swarren@nvidia.com>, Sam Ravnborg <sam@ravnborg.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <511585A9.9090008-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Cc: linux-rt-users-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, "linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-next-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/08/2013 08:45 AM, Grant Likely wrote:
-> On Tue,  5 Feb 2013 12:06:28 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
->> passing them to dtc for final compilation. This allows the use of #define
->> and #include within the .dts file.
-...
-> I've applied this and was going to push it out, but I've just thought of
-> a problem that could be a show stopper. ...
+On 02/08/2013 04:09 PM, Rob Herring wrote:
+> On 02/06/2013 02:30 PM, Paul Gortmaker wrote:
+>> From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+>>
+>> With the locking cleanup in place (from "OF: Fixup resursive
+>> locking code paths"), we can now do the conversion from the
+>> rw_lock to a raw spinlock as required for preempt-rt.
+>>
+>> The previous cleanup and this conversion were originally
+>> separate since they predated when mainline got raw spinlock (in
+>> commit c2f21ce2e31286a "locking: Implement new raw_spinlock").
+>>
+>> So, at that point in time, the cleanup was considered plausible
+>> for mainline, but not this conversion.  In any case, we've kept
+>> them separate as it makes for easier review and better bisection.
+>>
+>> Signed-off-by: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+>> [PG: taken from preempt-rt, update subject & add a commit log]
+>> Signed-off-by: Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>
+>> ---
+>>
+>> [v2: recent commit e81b329 ("powerpc+of: Add /proc device tree
+>>  updating to of node add/remove") added two more instances of
+>>  write_unlock that also needed converting to raw_spin_unlock.
+>>  Retested (boot) on sbc8548, defconfig builds on arm/sparc; no
+>>  new warnings observed.]
+>>
+>>  arch/sparc/kernel/prom_common.c |   4 +-
+>>  drivers/of/base.c               | 100 ++++++++++++++++++++++------------------
+>>  include/linux/of.h              |   2 +-
+>>  3 files changed, 59 insertions(+), 47 deletions(-)
+> 
+> Applied.
 
-Grant, I notice this showed up in next-20130211 as:
+This commit is present in next-20130211, and causes a boot failure
+(hang) early while booting on Tegra. Reverting just this one commit
+solves the issue.
 
-22435f3 kbuild: create a rule to run the pre-processor on *.dts files
+I'll see if I can track down where the issue is. Given the commit
+description, I assume there's some new recursive lock issue that snuck
+in between the previous fix for them and this commit? Any hints welcome.
 
-Was that intentional? I assumed you wanted me to rework this before
-you'd apply it, rather than sending an incremental patch.
+One thing I wonder looking at the patch: Most paths use
+raw_spin_lock_irqsave() but a few use just raw_spin_lock(). I wonder how
+that decision was made?
