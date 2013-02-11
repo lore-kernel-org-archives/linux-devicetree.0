@@ -1,97 +1,106 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3 v5] ASoC: simple-card: add Device Tree support
-Date: Mon, 11 Feb 2013 14:40:17 -0700
-Message-ID: <51196541.8010207@wwwdotorg.org>
-References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
- <87sj6t484z.wl%kuninori.morimoto.gx@renesas.com>
- <50E71618.8090302@wwwdotorg.org>
- <20130104193712.GN4627@opensource.wolfsonmicro.com>
- <87y5fvyy18.wl%kuninori.morimoto.gx@renesas.com>
- <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
- <20130127035943.GJ4650@opensource.wolfsonmicro.com>
- <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
- <20130129014808.GC4748@opensource.wolfsonmicro.com>
- <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
- <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
- <5107FF97.1070601@wwwdotorg.org>
- <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
- <51097F0F.2030501@wwwdotorg.org>
- <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
- <5110349D.3050308@wwwdotorg.org>
- <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
- <87a9rjrrwt.wl%kuninori.morimoto.gx@renesas.com>
- <87zjzhymbs.wl%kuninori.morimoto.gx@renesas.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v4 02/10] s5p-fimc: Add device tree support for FIMC devices
+Date: Mon, 11 Feb 2013 14:50:36 -0700
+Message-ID: <511967AC.7030909@wwwdotorg.org>
+References: <1359745771-23684-1-git-send-email-s.nawrocki@samsung.com> <1359745771-23684-3-git-send-email-s.nawrocki@samsung.com> <5112E9EF.8090908@wwwdotorg.org> <5115874A.6050406@gmail.com> <51158873.3060508@wwwdotorg.org> <511592B4.5050406@gmail.com> <5115991E.7050009@wwwdotorg.org> <5116CDBB.4080807@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <87zjzhymbs.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5116CDBB.4080807@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, rob.herring@calxeda.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2013 05:55 PM, Kuninori Morimoto wrote:
-> Support for loading the simple-card module via devicetree.
-> It requests cpu/codec information for probing.
-
-
-> +Simple-Card:
-> +
-> +Required properties:
-> +
-> + [prefix] means cpu/codec here
-> +
-> +- compatible					: "simple-audio"
-> +- simple-audio,card-name			: simple-audio card name
-> +- simple-audio,format				: see below
-
-> +- simple-audio,[prefix],dai			: phandle and port for CPU/CODEC
-> +- simple-audio,[prefix],frame-master		: frame master
-> +- simple-audio,[prefix],bitclock-master		: bitclock master
-> +
-> +Optional properties:
-> +
-> +- simple-audio,system-clock-frequency		: system clock rate if it is connected to both CPU/CODEC
-> +- simple-audio,bitclock-inversion		: bit clock inversion for both CPU/CODEC
-> +- simple-audio,frame-inversion			: frame inversion for both CPU/CODEC
-> +
-> +- simple-audio,[prefix],bitclock-inversion	: if CPU/CODEC needs clock inversion
-> +- simple-audio,[prefix],frame-inversion		: if CPU/CODEC needs frame inversion
-> +- simple-audio,[prefix],system-clock-frequency	: system clock rate for each CPU/CODEC
-
-I know Mark had a preference to store DAI-specific data in sub-nodes
-rather than using this "[prefix]" thing... If that doesn't end up
-happening though, rather than "[prefix],", I think it'd be more typical
-to use "[prefix]-" since I've never seen a DT property name with two
-","; "-" is typically used as the word separator in DT property names.
-
-> +sound {
-> +	compatible = "simple-audio";
+On 02/09/2013 03:29 PM, Sylwester Nawrocki wrote:
+> On 02/09/2013 01:32 AM, Stephen Warren wrote:
+>> On 02/08/2013 05:05 PM, Sylwester Nawrocki wrote:
+>>> On 02/09/2013 12:21 AM, Stephen Warren wrote:
+>>>> On 02/08/2013 04:16 PM, Sylwester Nawrocki wrote:
+>>>>> On 02/07/2013 12:40 AM, Stephen Warren wrote:
+>>>>>>> diff --git
+>>>>>>> a/Documentation/devicetree/bindings/media/soc/samsung-fimc.txt
+>>>>>>> b/Documentation/devicetree/bindings/media/soc/samsung-fimc.txt
+>>>>>>
+>>>>>>> +Samsung S5P/EXYNOS SoC Camera Subsystem (FIMC)
+>>>>>>> +----------------------------------------------
+>>>> ...
+>>>>>>> +For every fimc node a numbered alias should be present in the
+>>>>>>> aliases node.
+>>>>>>> +Aliases are of the form fimc<n>, where<n>    is an integer (0...N)
+>>>>>>> specifying
+>>>>>>> +the IP's instance index.
 ...
-> +	simple-audio,codec,dai = <&ak4648 0>;
+>>> Different compatible values might not work, when for example there
+>>> are 3 IPs out of 4 of one type and the fourth one of another type.
+>>> It wouldn't even by really different types, just quirks/little
+>>> differences between them, e.g. no data path routed to one of other IPs.
+>>
+>> I was thinking of using feature-/quirk-oriented properties. For example,
+>> if there's a port on 3 of the 4 devices to connect to some other IP
+>> block, simply include a boolean property to indicate whether that port
+>> is present. It would be in 3 of the nodes but not the 4th.
+> 
+> Yes, I could add several properties corresponding to all members of this
+> [3] data structure. But still it is needed to clearly identify the IP
+> block in a set of the hardware instances.
+
+Why? What decisions will be made based on the identify of the IP block
+instance that wouldn't be covered by DT properties that describe which
+features/bugs/... the IP block instance has?
+
+>>> Then to connect e.g. MIPI-CSIS.0 to FIMC.2 at run time an index of the
+>>> MIPI-CSIS needs to be written to the FIMC.2 data input control register.
+>>> Even though MIPI-CSIS.N are same in terms of hardware structure they
+>>> still
+>>> need to be distinguished as separate instances.
+>>
+>> Oh, so you're using the alias ID as the value to write into the FIMC.2
+>> register for that. I'm not 100% familiar with aliases, but they seem
+>> like a more user-oriented naming thing to me, whereas values for hooking
+>> up intra-SoC routing are an unrelated namespace semantically, even if
+>> the values happen to line up right now. Perhaps rather than a Boolean
+>> property I mentioned above, use a custom property to indicate the ID
+>> that the FIMC.2 object knows the MIPI-CSIS.0 object as? While this seems
+> 
+> That could be 'reg' property in the MIPI-CSIS.0 'port' subnode that
+> links it to the image sensor node ([4], line 165). Because MIPI-CSIS IP
+> blocks are immutably connected to the SoC camera physical MIPI CSI-2
+> interfaces, and the physical camera ports have fixed assignment to the
+> MIPI-CSIS devices..  This way we could drop alias ID for the MIPI-CSIS
+> nodes. And their instance index that is required for the top level
+> driver which exposes topology and the routing capabilities to user space
+> could be restored from the reg property value by subtracting a fixed
+> offset.
+
+I suppose that would work. It feels a little indirect, and I think means
+that the driver needs to go find some child node defining its end of
+some link, then find the node representing the other end of the link,
+then read properties out of that other node to find the value. That
+seems a little unusual, but I guess it would work. I'm not sure of the
+long-term implications of doing that kind of thing. You'd want to run
+the idea past some DT maintainers/experts.
+
 ...
-> +sh_fsi2: sh_fsi2@0xec230000 {
-> +	compatible = "renesas,sh_fsi2";
-> +	reg = <0xec230000 0x400>;
-> +	interrupt-parent = <&gic>;
-> +	interrupts = <0 146 0x4>;
-> +};
+> I can see aliases used in bindings of multiple devices: uart, spi, sound
+> interfaces, gpio, ... And all bindings seem to impose some rules on how
+> their aliases are created.
 
-Note that the DT binding documentation for renesas,sh_fsi2 needs to define:
+Do you have specific examples? I really don't think the bindings should
+be dictating the alias values.
 
-a) The value of the #sound-dai-cells property that's missing from the
-sh_fsi2 node.
+>> After all, what happens in some later SoC where you have two different
+>> types of module that feed into the common module, such that type A
+>> sources have IDs 0..3 in the common module, and type B sources have IDs
+>> 4..7 in the common module - you wouldn't want to require alias ISs 4..7
+>> for the type B DT nodes.
+> 
+> There is no need to write alias ID directly into registers, and actually
+> it doesn't really happen. But we need to know that, for example camera A
+> is connected to physical MIPI CSI-2 channel 0 and to capture video with
+> DMA engine of FIMC.2 we need to set FIMC.2 input register to link it to
+> MIPI-CSIS 0.
 
-b) The legal values for the "0" in the "simple-audio,codec,dai" property
-in the "sound" node above, and which DAI on the device each value
-represents.
+OK, so the IDs are selecting which register to write, or which mux
+settings to access. That's pretty much semantically the same thing.
