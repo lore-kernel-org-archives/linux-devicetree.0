@@ -1,79 +1,55 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: [PATCH 3/4] of/pci: Add of_pci_get_bus() function
-Date: Mon, 11 Feb 2013 09:22:19 +0100
-Message-ID: <1360570940-17086-4-git-send-email-thierry.reding@avionic-design.de>
-References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360570940-17086-1-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH V4 0/5] Add generic DMA DT binding support
+Date: Mon, 11 Feb 2013 14:08:20 +0530
+Message-ID: <1360571905-15285-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.v@samsung.com, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, arnd@arndb.de, vinod.koul@intel.com, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This function can be used to parse the number of a device's parent PCI
-bus from a standard 5-cell PCI resource.
+Changes since V3:
+	- Make dma-cells property optional as suggested by Rob Herring
+	- Add dma-requests and dma-channels properties to DMA controller
+	  as suggested by Arnd for future-proof
+	- Add Acked-by for some of the patches
 
-Signed-off-by: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
----
- drivers/of/of_pci.c    | 21 +++++++++++++++++++++
- include/linux/of_pci.h |  1 +
- 2 files changed, 22 insertions(+)
+Changes since V2:
+        - Add new filter function for DT case as suggested by Arnd
+        - Add xlate as static function
+        - Use newly added filter function in xlate.
+        - Add Acked-by for some of the patches
 
-diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-index 4dd7b9b..d6e6de5 100644
---- a/drivers/of/of_pci.c
-+++ b/drivers/of/of_pci.c
-@@ -43,6 +43,27 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
- EXPORT_SYMBOL_GPL(of_pci_find_child_device);
- 
- /**
-+ * of_pci_get_bus() - Get bus number for a device node
-+ * @np: device node
-+ *
-+ * Parses a standard 5-cell PCI resource and returns the 8-bit bus number of
-+ * the device's parent PCI bus. On error a negative error code is returned.
-+ */
-+int of_pci_get_bus(struct device_node *np)
-+{
-+	unsigned int size;
-+	const __be32 *reg;
-+
-+	reg = of_get_property(np, "reg", &size);
-+
-+	if (!reg || size < 5 * sizeof(__be32))
-+		return -EINVAL;
-+
-+	return (be32_to_cpup(reg) >> 16) & 0xff;
-+}
-+EXPORT_SYMBOL_GPL(of_pci_get_bus);
-+
-+/**
-  * of_pci_get_devfn() - Get device and function numbers for a device node
-  * @np: device node
-  *
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index 91ec484..9118321 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -10,6 +10,7 @@ int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
- struct device_node;
- struct device_node *of_pci_find_child_device(struct device_node *parent,
- 					     unsigned int devfn);
-+int of_pci_get_bus(struct device_node *np);
- int of_pci_get_devfn(struct device_node *np);
- 
- #endif
+Changes since V1:
+        - Address the review comments by Arnd Bergmann as below
+        - Wording of the properties.
+        - Pass pdmac as third parameter to of_dma_controller_register
+        - Filter the dma channel based on channel number and dma_device
+
+This patch set adds support for generic dma device tree bindings for
+Samsung platforms and is dependent on the following patches from
+Vinod Koul next branch
+1)of: Add generic device tree DMA helpers
+2)dmaengine: add helper function to request a slave DMA channel
+
+This patch set is made based Mark Brown next branch
+
+Padmavathi Venna (5):
+  DMA: PL330: Add new pl330 filter for DT case.
+  DMA: PL330: Add xlate function
+  DMA: PL330: Register the DMA controller with the generic DMA helpers
+  ARM: dts: pl330: Add #dma-cells for generic dma binding support
+  ARM: SAMSUNG: dma: Remove unnecessary code
+
+ .../devicetree/bindings/dma/arm-pl330.txt          |   21 +++++--
+ arch/arm/boot/dts/exynos5250.dtsi                  |   12 ++++
+ arch/arm/mach-s3c24xx/include/mach/dma.h           |    1 -
+ arch/arm/mach-s3c64xx/include/mach/dma.h           |    1 -
+ arch/arm/plat-samsung/dma-ops.c                    |   10 +---
+ arch/arm/plat-samsung/include/plat/dma-ops.h       |    1 -
+ arch/arm/plat-samsung/include/plat/dma-pl330.h     |    1 -
+ drivers/dma/pl330.c                                |   64 +++++++++++++++----
+ 8 files changed, 79 insertions(+), 32 deletions(-)
+
 -- 
-1.8.1.2
+1.7.4.4
