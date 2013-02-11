@@ -1,85 +1,89 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH] serial/arc-uart: Miscll DT related updates (Grant's review comments)
-Date: Mon, 11 Feb 2013 14:11:41 +0530
-Message-ID: <1360572101-12744-2-git-send-email-vgupta@synopsys.com>
-References: <201302090928.43929.arnd@arndb.de>
- <1360572101-12744-1-git-send-email-vgupta@synopsys.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH] clk: add si5351 i2c common clock driver
+Date: Mon, 11 Feb 2013 10:52:10 +0100
+Message-ID: <5118BF4A.1060608@gmail.com>
+References: <1360414772-12232-1-git-send-email-sebastian.hesselbarth@gmail.com> <20130211054632.11471.24295@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1360572101-12744-1-git-send-email-vgupta@synopsys.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Arnd Bergmann <arnd@arndb.de>, linux-serial@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130211054632.11471.24295@quantum>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <thierry.reding@avionic-design.de>, Dom Cobley <popcornmix@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Arnd Bergmann <arnd@arndb.de>, Andrew Morton <akpm@linux-foundation.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rabeeh Khoury <rabeeh@solid-run.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
--replace "baud" with "current-speed"
--if uart alias doesn't exist in DT, don't abort, pick 0
+On 02/11/2013 06:46 AM, Mike Turquette wrote:
+> Quoting Sebastian Hesselbarth (2013-02-09 04:59:32)
+>> This patch adds a common clock driver for Silicon Labs Si5351a/b/c
+>> i2c programmable clock generators. Currently, the driver supports
+>> DT kernels only and VXCO feature of si5351b is not implemented. DT
+>> bindings selectively allow to overwrite stored Si5351 configuration
+>> which is very helpful for clock generators with empty eeprom
+>> configuration. Corresponding device tree binding documentation is
+>> also added.
+>>
+>> Signed-off-by: Sebastian Hesselbarth<sebastian.hesselbarth@gmail.com>
+>> ---
+>> Notes:
+>> - During development I used a debugfs clock consumer that I can also
+>>    post if there is interest in it.
+>
+> Please do.  I have a set of patches that implement a fake clock subtree
+> for testing the core framework.  I've been thinking of pushing this to
+> the list once it is more presentable and your work might fit into that
+> nicely.
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: devicetree-discuss@lists.ozlabs.org
-Cc: Rob Herring <rob.herring@calxeda.com>
-Cc: Rob Landley <rob@landley.net>
-Cc: linux-serial@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
----
- .../devicetree/bindings/tty/serial/arc-uart.txt    |    4 ++--
- drivers/tty/serial/arc_uart.c                      |   10 ++++------
- 2 files changed, 6 insertions(+), 8 deletions(-)
+Mike,
 
-diff --git a/Documentation/devicetree/bindings/tty/serial/arc-uart.txt b/Documentation/devicetree/bindings/tty/serial/arc-uart.txt
-index c3bd8f9..5cae2eb 100644
---- a/Documentation/devicetree/bindings/tty/serial/arc-uart.txt
-+++ b/Documentation/devicetree/bindings/tty/serial/arc-uart.txt
-@@ -5,7 +5,7 @@ Required properties:
- - reg			: offset and length of the register set for the device.
- - interrupts		: device interrupt
- - clock-frequency	: the input clock frequency for the UART
--- baud			: baud rate for UART
-+- current-speed		: baud rate for UART
- 
- e.g.
- 
-@@ -14,7 +14,7 @@ arcuart0: serial@c0fc1000 {
- 	reg = <0xc0fc1000 0x100>;
- 	interrupts = <5>;
- 	clock-frequency = <80000000>;
--	baud = <115200>;
-+	current-speed = <115200>;
- 	status = "okay";
- };
- 
-diff --git a/drivers/tty/serial/arc_uart.c b/drivers/tty/serial/arc_uart.c
-index 6f7eadc..d97e194 100644
---- a/drivers/tty/serial/arc_uart.c
-+++ b/drivers/tty/serial/arc_uart.c
-@@ -547,8 +547,8 @@ arc_uart_init_one(struct platform_device *pdev, int dev_id)
- 		}
- 		uart->port.uartclk = val;
- 
--		if (of_property_read_u32(np, "baud", &val)) {
--			dev_err(&pdev->dev, "baud property NOT set\n");
-+		if (of_property_read_u32(np, "current-speed", &val)) {
-+			dev_err(&pdev->dev, "current-speed property NOT set\n");
- 			return -EINVAL;
- 		}
- 		uart->baud = val;
-@@ -694,10 +694,8 @@ static int arc_serial_probe(struct platform_device *pdev)
- 		return -ENODEV;
- 
- 	dev_id = of_alias_get_id(np, "serial");
--	if (dev_id < 0) {
--		dev_err(&pdev->dev, "failed to get alias id: %d\n", dev_id);
--		return dev_id;
--	}
-+	if (dev_id < 0)
-+		dev_id = 0;
- 
- 	rc = arc_uart_init_one(pdev, dev_id);
- 	if (rc)
--- 
-1.7.4.1
+then I will clean the debugfs driver and post it together with this
+patch for 3.9-rc1 as an individual patch.
 
+>> - With current (3.8-rc6) common clock framework there is two (minor)
+>>    issues:
+>>    * although clocks are registered with devm_clk_register they are not
+>>      removed from the clock tree on unloading. That makes reloading of
+>>      clk-si5351 as module impossible.
+>
+> This is a known issue.  clk_unregister is a NOP and defining it has
+> always been deferred until the day that someone needed it.  Care to
+> take a crack at it?
+
+Ok. I can have a look at it and propose a patch but that will take a
+while as other stuff came in between. But IMHO, preparing/enabling
+clocks by clock consumers should increase reference count so referenced
+modules cannot be unloaded.. but that I have never had a look at, yet ;)
+
+>>    * potentially there could be more than one different external si5351
+>>      generators but clocks are registered with names that do not refer
+>>      to e.g. the device name. Maybe common clock framework should
+>>      prepend the device name for each registered clock, i.e. 0-0060.clk0.
+>>      That would also avoid name collisions with same clock names from
+>>      different drivers (clk0 is likely to be used by others ;))
+>
+> More unfinished work, just like clk_unregister above.  I'm sure you are
+> aware that clk_register takes struct device *dev as input, but does
+> nothing with it.  It wouldn't take much to concatenate the device name
+> and clock name if dev is present.  However a complication here is that
+> the registration code takes a parent string name to match parents up for
+> discrete subtrees; how could statically defined data know about the
+> device name ahead of time?
+
+I see. Wrt the above comment about spare time, would prepending DT
+clocks be sufficient? Or/And use a fallback mechanism that first tries
+a full match, full match with own device name, and relaxed match for
+clock name as it is now?
+
+> The above design decision took place before the big DT push we have
+> today and was short-sighted.  It would be better to change the framework
+> to rely less on string name lookups and DT is one way out of that.
+>
+> 3.8-rc7 is already out and I don't plan to take anything that hasn't
+> already been submitted for 3.9 now.  Can you resubmit this after 3.9-rc1
+> comes out?
+
+Sure, but I'll be not available next 2 weeks or so. If 3.8 falls
+within that time, I will re-post it later. It is ok for me, if it has
+to go in after 3.9 also.
+
+Sebastian
