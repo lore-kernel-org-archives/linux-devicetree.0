@@ -1,33 +1,122 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH 0/3] omap_hsmmc DT DMA Client support
-Date: Mon, 11 Feb 2013 12:34:15 -0500
-Message-ID: <87y5eupxew.fsf@octavius.laptop.org>
-References: <1359752479-29427-1-git-send-email-mporter@ti.com>
+From: Anil Kumar <anilk4.v@gmail.com>
+Subject: Re: Sound record on Devkit8000 with DT boot issue
+Date: Mon, 11 Feb 2013 23:28:04 +0530
+Message-ID: <CABYxbz7HcZTK+y20mtDR+1coRUbUMgNHNDdJ3O7Ln7U7d0LEzA@mail.gmail.com>
+References: <CABYxbz5ECxoWZtkfL3UbZ=R4LVoNeMVxjYbPdZoarstCod-gQw@mail.gmail.com>
+	<5118EF75.30107@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359752479-29427-1-git-send-email-mporter@ti.com> (Matt Porter's
-	message of "Fri, 1 Feb 2013 16:01:16 -0500")
+In-Reply-To: <5118EF75.30107@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@ti.com>
-Cc: Venkatraman S <svenkatr@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Tony Lindgren <tony@atomide.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <djbw@fb.com>, Jon Hunter <jon-hunter@ti.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, alsa-devel@alsa-project.org, tony@atomide.com, thomas@tomweber.eu, perex@perex.cz, tiwai@suse.de, Liam Girdwood <liam.r.girdwood@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Matt,
+Hi Peter,
 
-On Fri, Feb 01 2013, Matt Porter wrote:
-> This series adds DT DMA Engine Client support to the omap_hsmmc.
-> It leverages the generic DMA OF helpers in -next and the
-> dma_request_slave_channel_compat() wrapper introduced in the
-> AM33XX DMA Engine series to support DMA in omap_hsmmc on platforms
-> booting via DT. These platforms include omap2/3/4/5 and am33xx.
+Thanks for helping me. please see my comment inline
+
+On Mon, Feb 11, 2013 at 6:47 PM, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
+> On 02/10/2013 04:21 PM, Anil Kumar wrote:
+>> Hi All,
+>>
+>> I am working on Devkit8000 and adding DT support for that. I am trying
+>> to add sound DT node support for this boards.
+>> I have nearly done with this but facing issue on record. I do not have
+>> much knowledge of twl4030 audio codec but with
+>> small Hack[1] (as MainMic connected to the input jack)  i am able to
+>> record sound on Devkit8000.
+>> I do not know that MICBIAS1_EN can be enable by amixer commands.
+>> Could you please help me to get out of this ?
 >
-> These patches were split out from the v5 version of the AM33XX DMA
-> series and split from the EDMA-specific omap_hsmmc changes.
+> You need to pass the routing information via DT for Devkit8000. This is not
+> done for the BeagleBoard since it works without it (no need for MICBIAS for
+> example)
+>
+>>
+>>
+>> 1) Hack [1]
+>>
+>> diff --git a/sound/soc/codecs/twl4030.c b/sound/soc/codecs/twl4030.c
+>> index 63b280b..6780681 100644
+>> --- a/sound/soc/codecs/twl4030.c
+>> +++ b/sound/soc/codecs/twl4030.c
+>> @@ -1473,7 +1473,7 @@ static const struct snd_soc_dapm_widget
+>> twl4030_dapm_widgets[] = {
+>>         SND_SOC_DAPM_SUPPLY("micbias2 select", TWL4030_REG_MICBIAS_CTL, 6, 0,
+>>                             NULL, 0),
+>>
+>> -       SND_SOC_DAPM_MICBIAS("Mic Bias 1", TWL4030_REG_MICBIAS_CTL, 0, 0),
+>> +       SND_SOC_DAPM_MICBIAS("Mic Bias 1", TWL4030_REG_MICBIAS_CTL, 0, 1),
+>
+> Yes, this is HACK and it is wrong at the same time.
 
-Thanks, pushed to mmc-next for 3.9.
+Agree
 
-- Chris.
--- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+>
+>>         SND_SOC_DAPM_MICBIAS("Mic Bias 2", TWL4030_REG_MICBIAS_CTL, 1, 0),
+>>         SND_SOC_DAPM_MICBIAS("Headset Mic Bias", TWL4030_REG_MICBIAS_CTL, 2, 0),
+>>
+>>
+>> 2) Sound DT node patch for Devkit8000
+>>
+>> diff --git a/arch/arm/boot/dts/omap3-
+>> devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
+>> index dc59272..5f3eec0 100644
+>> --- a/arch/arm/boot/dts/omap3-devkit8000.dts
+>> +++ b/arch/arm/boot/dts/omap3-devkit8000.dts
+>> @@ -44,11 +44,22 @@
+>>                  };
+>>
+>>         };
+>> +
+>> +       sound {
+>> +               compatible = "ti,omap-twl4030";
+>> +               ti,model = "devkit8000";
+>> +
+>> +               ti,mcbsp = <&mcbsp2>;
+>> +               ti,codec = <&twl_audio>;
+>
+> Here you should have something like:
+> ti,audio-routing =
+>         "Ext Spk", "PREDRIVEL",
+>         "Ext Spk", "PREDRIVER",
+>         "MAINMIC", "Main Mic",
+>         "Main Mic", "Mic Bias 1";
+>
+> So you connect the MicBias1 to Main Mic. When you start playback MicBias1 will
+> be turned on for you.
+
+I tried with this routing (next-20130211 tag kernel). But it is not
+working for me.
+So i have gone through other board and found snd_soc_dapm_route for
+
+1) zoom2.c
+       {"MAINMIC", NULL, "Mic Bias 1"},
+       {"Mic Bias 1", NULL, "Ext Mic"},
+
+2) omap3pandora.c
+        {"MAINMIC", NULL, "Mic Bias 1"},
+        {"Mic Bias 1", NULL, "Mic (internal)"},
+
+But for omap-twl4030.c it is
+        {"MAINMIC", NULL, "Main Mic"},
+        {"Main Mic", NULL, "Mic Bias 1"},
+
+ It Should will be as ?
+        {"MAINMIC", NULL, "Mic Bias 1"},
+        {"Mic Bias 1", NULL, "Main Mic"},
+
+Because with this i am able to get audio on Devkit8000 as
+             ti,audio-routing =
+                        "Ext Spk", "PREDRIVEL",
+                        "Ext Spk", "PREDRIVER",
+                        "MAINMIC", "Mic Bias 1",
+                        "Mic Bias 1", "Main Mic";
+
+Sorry if i am saying nonsense.
+
+Thanks,
+Anil
+[...]
