@@ -1,84 +1,31 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v8 2/4] misc: Generic on-chip SRAM allocation driver
-Date: Mon, 11 Feb 2013 19:15:24 +0100
-Message-ID: <1360606524.4954.46.camel@pizza.hi.pengutronix.de>
-References: <1359977538-5859-1-git-send-email-p.zabel@pengutronix.de>
-	 <1359977538-5859-3-git-send-email-p.zabel@pengutronix.de>
-	 <20130208201634.B94C83E2C02@localhost>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V8] kbuild: create a rule to run the pre-processor on
+ *.dts files
+Date: Mon, 11 Feb 2013 12:11:22 -0700
+Message-ID: <5119425A.1090802@wwwdotorg.org>
+References: <1360091188-24063-1-git-send-email-swarren@wwwdotorg.org> <20130208144527.0D8DD3E2C01@localhost> <51156D09.7060401@gmail.com> <20130208220448.EDA773E2C27@localhost> <51157F65.2050309@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130208201634.B94C83E2C02@localhost>
+In-Reply-To: <51157F65.2050309@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
+Cc: Michal Marek <mmarek@suse.cz>, Grant Likely <glikely@secretlab.ca>, Srinivas KANDAGATLA <srinivas.kandagatla@st.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-kernel@vger.kernel.org, Scott Wood <scottwood@freescale.com>, Stephen Warren <swarren@nvidia.com>, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+On 02/08/2013 08:45 AM, Grant Likely wrote:
+> On Tue,  5 Feb 2013 12:06:28 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
+>> passing them to dtc for final compilation. This allows the use of #define
+>> and #include within the .dts file.
+...
+> I've applied this and was going to push it out, but I've just thought of
+> a problem that could be a show stopper. ...
 
-Am Freitag, den 08.02.2013, 20:16 +0000 schrieb Grant Likely:
-> On Mon,  4 Feb 2013 12:32:16 +0100, Philipp Zabel <p.zabel@pengutronix.de> wrote:
-> > This driver requests and remaps a memory region as configured in the
-> > device tree. It serves memory from this region via the genalloc API.
-> > It optionally enables the SRAM clock.
-> > 
-> > Other drivers can retrieve the genalloc pool from a phandle pointing
-> > to this drivers' device node in the device tree.
-> > 
-> > The allocation granularity is hard-coded to 32 bytes for now,
-> > to make the SRAM driver useful for the 6502 remoteproc driver.
-> > There is overhead for bigger SRAMs, where only a much coarser
-> > allocation granularity is needed: At 32 bytes minimum allocation
-> > size, a 256 KiB SRAM needs a 1 KiB bitmap to track allocations.
-> > 
-> > Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> > Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
-> > ---
-> > Changes since v7:
-> >  - Removed obsolete __devinit/__devexit/__devexit_p
-> > ---
-> >  Documentation/devicetree/bindings/misc/sram.txt |   17 ++++
-> >  drivers/misc/Kconfig                            |    9 ++
-> >  drivers/misc/Makefile                           |    1 +
-> >  drivers/misc/sram.c                             |  121 +++++++++++++++++++++++
-> >  4 files changed, 148 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/sram.txt
-> >  create mode 100644 drivers/misc/sram.c
-> > 
-> > diff --git a/Documentation/devicetree/bindings/misc/sram.txt b/Documentation/devicetree/bindings/misc/sram.txt
-> > new file mode 100644
-> > index 0000000..b64136c
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/sram.txt
-> > @@ -0,0 +1,17 @@
-> > +Generic on-chip SRAM
-> > +
-> > +Simple IO memory regions to be managed by the genalloc API.
-> > +
-> > +Required properties:
-> > +
-> > +- compatible : sram
-> 
-> I'm a little concerned that 'sram' is just too generic for a compatible
-> value and we may end up needing a blacklist of systems where the sram
-> device should not be driven with this driver. If you can think of
-> a more descriptive name here then I would use it.
+Grant, I notice this showed up in next-20130211 as:
 
-various SoC vendors call this (variations of) "on-chip" or "internal"
-SRAM/memory. "on-chip-sram" or "internal-sram" are still plenty generic,
-though. How about "mmio-sram", as opposed to an SRAM that needs more
-than the simple mmio region handled by this driver?
+22435f3 kbuild: create a rule to run the pre-processor on *.dts files
 
-An alternative would be to use the vendor specific names and grow a
-compatible list in the driver ("fsl,ocram", "ti,ocm", ...).
-
-> However, I'm not worried about it enough to nak it and the rest of the
-> series looks fine.
-> 
-> Acked-by: Grant Likely <grant.likely@secretlab.ca>
-
-Thank you.
-
-regards
-Philipp
+Was that intentional? I assumed you wanted me to rework this before
+you'd apply it, rather than sending an incremental patch.
