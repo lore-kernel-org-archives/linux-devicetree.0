@@ -1,168 +1,235 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH RFC 3/7] ARM: OMAP: gpmc-smsc911x: add DT dev node init function
-Date: Mon, 11 Feb 2013 11:40:08 +0100
-Message-ID: <CAAwP0s0gO-FEv=RKUw+HWS3PyovaDP8_sV8n3AOC1xuRpY9xvg@mail.gmail.com>
-References: <1360442671-15216-1-git-send-email-javier.martinez@collabora.co.uk>
- <1360442671-15216-4-git-send-email-javier.martinez@collabora.co.uk> <20130211103051.GA32455@e106331-lin.cambridge.arm.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 12/12] clocksource: samsung-time: Add Device Tree support
+Date: Mon, 11 Feb 2013 11:00:56 +0000
+Message-ID: <20130211110056.GC32455@e106331-lin.cambridge.arm.com>
+References: <1360502423-2246-1-git-send-email-tomasz.figa@gmail.com>
+ <1360502423-2246-13-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130211103051.GA32455@e106331-lin.cambridge.arm.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <b-cousson@ti.com>, Enric Balletbo i Serra <eballetbo@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1360502423-2246-13-git-send-email-tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "arhuaco-pI7LgTZv5U2z2LnJBvBa6V6hYfS7NtTn@public.gmane.org" <arhuaco-pI7LgTZv5U2z2LnJBvBa6V6hYfS7NtTn@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "kwangwoo.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <kwangwoo.lee-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "guillaume.gourat-SG84m9Bk/uxjrEqMGRc/AA@public.gmane.org" <guillaume.gourat-SG84m9Bk/uxjrEqMGRc/AA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org" <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "mcuelenaere-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <mcuelenaere-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "jekhor-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jekhor-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "danders-/aE0K3SWWjcAvxtiuMwx3w@public.gmane.org" <danders-/aE0K3SWWjcAvxtiuMwx3w@public.gmane.org>, "kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bhmin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <bhmin-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "augulis.darius-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <augulis.darius-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org" <christer-rKHMIqA5R6gwFerOooGFRg@public.gmane.org>, "linux-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org" <linux-Y5A6D6n0/KfQXOPxS62xeg@public.gmane.org>"ghcstop-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <g>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2013 at 11:30 AM, Mark Rutland <mark.rutland@arm.com> wrote:
-> Hi,
->
-> I have a few comments on the binding and the way it's parsed.
->
-> On Sat, Feb 09, 2013 at 08:44:27PM +0000, Javier Martinez Canillas wrote:
->> This patch adds a helper function to parse a device node that
->> contains all the properties needed to initialize an smsc911x
->> device connected to an OMAP processor through OMAP's GPMC.
->>
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> ---
->>  .../devicetree/bindings/net/gpmc-smsc911x.txt      |   39 ++++++++++++++++++++
->>  arch/arm/mach-omap2/gpmc-smsc911x.c                |   29 +++++++++++++++
->>  arch/arm/mach-omap2/gpmc-smsc911x.h                |    6 +++
->>  3 files changed, 74 insertions(+), 0 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/net/gpmc-smsc911x.txt
->>
->> diff --git a/Documentation/devicetree/bindings/net/gpmc-smsc911x.txt b/Documentation/devicetree/bindings/net/gpmc-smsc911x.txt
->> new file mode 100644
->> index 0000000..8bb0df2
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/net/gpmc-smsc911x.txt
->> @@ -0,0 +1,39 @@
->> +* GPMC connected Smart Mixed-Signal Connectivity (SMSC) LAN911x/912x Controller
->> +
->> +GPMC connected SMSC LAN911x/912x Controllers are represented as child nodes
->> +of the OMAP General-Purpose Memory Controller with a name of "gpmc_smsc911x".
->> +
->> +All timing relevant properties as well as generic gpmc child properties are
->> +explained in a separate documents - please refer to
->> +Documentation/devicetree/bindings/bus/ti-gpmc.txt
->> +
->> +Required properties:
->> +- gpmc,cs : The chip select line the pheripheral is connected to
->> +- gpmc,gpio_irq : The GPIO pin that is connected to the SMSC LAN IRQ line
->
-> In devicetree land, we use '-' in preference of '_' in property names.
->
-> So this should be "gpio-irq"
->
->> +
->> +Optional properties:
->> +- gpmc,flags : SMSC LAN flags - please refer to include/linux/smsc911x.h
->
-> Please don't do this. It should only be necessary to read binding documents and
-> hardware datasheets to write a dts. Referring to Linux internals creates a
-> flaky ABI that's only going to break when things get renamed/moved/modified.
->
-> The flags variable used internally by the driver don't have to have a 1-1
-> correspondence with a single property in the binding. You can have boolean
-> properties (named, but without a value) in the dt specifying each flag
-> individually. That way the dts is easier to read, is less tied to linux
-> internals (and every property is *fully* documented), and it's far easier to
-> add new flags in future if necessary.
->
->> +- gpmc,gpio_reset : The GPIO pin connected to the SMSC LAN reset line
->
-> Preferably: "gpio-reset".
->
->> +
->> +Note: Besides these properties, the gpmc_smsc911x device node could need
->> +aditional setup such as pin/pad mux settings and voltage regulators. This
->> +depend on how the pheripheral is wired and his board specific.
->> +
->> +Example (for an OMAP3 board):
->> +
->> +gpmc@6e000000 {
->> +           compatible = "ti,omap3430-gpmc";
->> +           ti,hwmods = "gpmc";
->> +           reg = <0x6e000000 0x1000000>;
->> +           interrupts = <20>;
->> +           gpmc,num-cs = <8>;
->> +           gpmc,num-waitpins = <4>;
->> +           #address-cells = <2>;
->> +           #size-cells = <1>;
->> +
->> +           gpmc_smsc911x@0 {
->> +                           gpmc,cs = <5>;
->> +                           gpmc,gpio_irq = <176>;
->> +                           gpmc,flags = <4>; /* SMSC911X_USE_32BIT */
->
-> Here you could have a boolean property "gpmc,use-32bit" (or possibly
-> "gpmc,use-bits", which can either be 32 or 16).
->
->> +           };
->> +};
->> diff --git a/arch/arm/mach-omap2/gpmc-smsc911x.c b/arch/arm/mach-omap2/gpmc-smsc911x.c
->> index 5ce00ad2..59a2ee4 100644
->> --- a/arch/arm/mach-omap2/gpmc-smsc911x.c
->> +++ b/arch/arm/mach-omap2/gpmc-smsc911x.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/interrupt.h>
->>  #include <linux/io.h>
->>  #include <linux/smsc911x.h>
->> +#include <linux/of.h>
->>
->>  #include "gpmc.h"
->>  #include "gpmc-smsc911x.h"
->> @@ -98,3 +99,31 @@ free1:
->>
->>       pr_err("Could not initialize smsc911x device\n");
->>  }
->> +
->> +int gpmc_smsc911x_init_dt(struct device_node *node)
->> +{
->> +     struct omap_smsc911x_platform_data gpmc_cfg;
->> +
->> +     if (WARN_ON(!node))
->> +             return -ENODEV;
->> +
->> +     if (of_property_read_u32(node, "gpmc,cs", &gpmc_cfg.cs)) {
->> +             pr_err("Unable to get GPMC smsc911x chip select\n");
->> +             return -EINVAL;
->> +     }
->> +
->> +     if (of_property_read_u32(node, "gpmc,gpio_irq", &gpmc_cfg.gpio_irq)) {
->> +             pr_err("Unable to get GPMC smsc911x GPIO IRQ\n");
->> +             return -EINVAL;
->> +     }
->> +
->> +     if (of_property_read_u32(node, "gpmc,gpio_reset", &gpmc_cfg.gpio_reset))
->> +             gpmc_cfg.gpio_reset = -EINVAL;
->> +
->> +     if (of_property_read_u32(node, "gpmc,flags", &gpmc_cfg.flags))
->> +             gpmc_cfg.flags = 0;
->
-> Is no sanity checking required for any of the above properties?
->
-> To handle separate flags here, you can use something like:
->
-> if (of_property_read_bool(node, "gpmc,use-32bit")
->         flags |= SMSC911X_USE_32BIT;
->
-> [...]
->
-> Thanks,
-> Mark.
->
+On Sun, Feb 10, 2013 at 01:20:23PM +0000, Tomasz Figa wrote:
+> This patch adds support for parsing all platform-specific data from
+> Device Tree and instantiation using clocksource_of_init to samsung-time
+> clocksource driver.
+> 
+> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> Signed-off-by: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/samsung-timer.txt      |  32 +++++++
+>  drivers/clocksource/samsung-time.c                 | 102 ++++++++++++++++++++-
+>  2 files changed, 131 insertions(+), 3 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/arm/samsung-timer.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/samsung-timer.txt b/Documentation/devicetree/bindings/arm/samsung-timer.txt
+> new file mode 100644
+> index 0000000..8eb7030
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/samsung-timer.txt
+> @@ -0,0 +1,32 @@
+> +* Samsung PWM timer
+> +
+> +Samsung SoCs contain PWM timer blocks which can be used for system clock source
+> +and clock event timers.
+> +
+> +Be aware that this configuration is supported only on uniprocessor platforms.
+> +For SMP SoCs, SMP-aware timers should be used, like MCT.
+> +
+> +Required properties:
+> +- compatible : should be one of following:
+> +    samsung,s3c24xx-pwm-timer - for 16-bit timers present on S3C24xx
+> +    samsung,s3c64xx-pwm-timer - for 32-bit timers present on S3C64xx and newer
+> +- reg: base address and size of register area
+> +- interrupts: interrupt list for all five PWM timers.
 
-Hello Mark,
+Is this a set of combined interrupts, or one per timer?
 
-I really appreciate your feedback.
+Which order are they in?
 
-I'll drop this binding anyways and try to reuse the generic SMSC LAN binding
-so it won't be necessary to manually asign the device node to the platform
-device.
+Assuming they're one per timer, in order, how about something like:
 
-But I'll keep in mind your comments for the next time I need to write
-a DT binding
+"- interrupts: one interrupt per timer, starting at timer 0".
 
-Thanks a lot and best regards,
-Javier
+> +- samsung,source-timer: index of timer to be used as clocksource
+> +- samsung,event-timer: index of timer to be used as clock event
+
+Is there any reason this needs to be specified in the dt?
+
+Can the driver not just select two arbitrary timers from the hardware?
+
+> +
+> +Optional properties:
+> +- samsung,prescale: PWM prescaler divisor (from 1 to 256)
+
+It might be better to have this named "samsung,prescale-divisor" to make it
+clear to the average reader that its a divisor value rather than a
+multiplier value.
+
+> +- samsung,divisor: PWM main divider divisor (1, 2, 4, 8 or 16)
+> +
+> +Example:
+> +	timer@7f006000 {
+> +		compatible = "samsung,s3c64xx-pwm-timer";
+> +		reg = <0x7f006000 0x1000>;
+> +		interrupt-parent = <&vic0>;
+> +		interrupts = <23>, <24>, <25>, <27>, <28>;
+> +		samsung,source-timer = <4>;
+> +		samsung,event-timer = <3>;
+> +		samsung,prescale = <2>;
+> +		samsung,divisor = <1>;
+> +	};
+> diff --git a/drivers/clocksource/samsung-time.c b/drivers/clocksource/samsung-time.c
+> index 19a1c8a..63d2992 100644
+> --- a/drivers/clocksource/samsung-time.c
+> +++ b/drivers/clocksource/samsung-time.c
+> @@ -14,6 +14,9 @@
+>  #include <linux/err.h>
+>  #include <linux/clk.h>
+>  #include <linux/clockchips.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/samsung-time.h>
+>  
+> @@ -479,9 +482,11 @@ static void __init samsung_timer_resources(void)
+>  	unsigned long source_id = timer_source.source_id;
+>  	char devname[15];
+>  
+> -	timer_base = ioremap_nocache(timer_variant.reg_base, SZ_4K);
+> -	if (!timer_base)
+> -		panic("failed to map timer registers");
+> +	if (!timer_base) {
+> +		timer_base = ioremap_nocache(timer_variant.reg_base, SZ_4K);
+> +		if (!timer_base)
+> +			panic("failed to map timer registers");
+> +	}
+
+You map 4K here, but the binding didn't mention that 4K is always the expected
+size of the reg.
+
+>  
+>  	timerclk = clk_get(NULL, "timers");
+>  	if (IS_ERR(timerclk))
+> @@ -514,8 +519,92 @@ static void __init samsung_timer_resources(void)
+>  	clk_enable(tin_source);
+>  }
+>  
+> +enum {
+> +	TYPE_S3C24XX,
+> +	TYPE_S3C64XX,
+> +};
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id samsung_timer_ids[] = {
+> +	{ .compatible = "samsung,s3c24xx-pwm-timer",
+> +					.data = (void *)TYPE_S3C24XX, },
+> +	{ .compatible = "samsung,s3c64xx-pwm-timer",
+> +					.data = (void *)TYPE_S3C64XX, },
+> +	{},
+> +};
+> +
+> +static void samsung_timer_parse_dt(struct device_node *np,
+> +					const struct of_device_id *match)
+> +{
+> +	int i;
+> +	u32 val;
+> +
+> +	if (of_property_read_u32(np, "samsung,source-timer", &val))
+> +		panic("no samsung,source-timer property provided");
+> +	if (val > ARRAY_SIZE(timer_variant.irqs))
+> +		panic("samsung,source-timer property out of range");
+
+This check doesn't tell you if you actually had an irq in the dt for the timer
+at that index.
+
+Do you really need to panic here? Can you not just warn?
+
+What if a future platform has another timer driver that can at least get the
+board to boot?
+
+> +	timer_source.source_id = val;
+> +
+> +	if (of_property_read_u32(np, "samsung,event-timer", &val))
+> +		panic("no samsung,event-timer property provided");
+> +	if (val > ARRAY_SIZE(timer_variant.irqs))
+> +		panic("samsung,event-timer property out of range");
+> +	timer_source.event_id = val;
+
+I have the same problems here as with the source-timer block above.
+
+> +
+> +	timer_base = of_iomap(np, 0);
+> +	if (!timer_base)
+> +		panic("failed to map timer registers");
+
+Similarly here and every other place that panics: I think warning might be a
+better bet.
+
+> +
+> +	for (i = 0; i < ARRAY_SIZE(timer_variant.irqs); ++i)
+> +		timer_variant.irqs[i] = irq_of_parse_and_map(np, i);
+> +
+> +	if (!timer_variant.irqs[timer_source.event_id])
+> +		panic("no clock event irq provided");
+> +
+> +	switch ((unsigned int)match->data) {
+> +	case TYPE_S3C24XX:
+> +		timer_variant.bits = 16;
+> +		timer_variant.prescale = 25;
+> +		timer_variant.prescale = 50;
+> +		timer_variant.has_tint_cstat = false;
+> +		break;
+> +	case TYPE_S3C64XX:
+> +		timer_variant.bits = 32;
+> +		timer_variant.prescale = 2;
+> +		timer_variant.divisor = 2;
+> +		timer_variant.has_tint_cstat = true;
+> +		break;
+> +	}
+> +
+> +	if (!of_property_read_u32(np, "samsung,prescale", &val)) {
+> +		if (val < 1 || val > 256)
+> +			panic("prescale must be from 1 to 256 range");
+> +		timer_variant.prescale = val;
+> +	}
+> +
+> +	if (!of_property_read_u32(np, "samsung,divisor", &val)) {
+> +		if (val > 16 || (1 << (fls(val) - 1)) != val)
+> +			panic("divsor must be 1, 2, 4, 8 or 16");
+> +		timer_variant.divisor = timer_variant.prescale * val;
+
+Maybe it's just me, but I find this somewhat difficult to read.
+
+How about something like:
+
+switch (val) {
+case 1:
+case 2:
+case 4:
+case 8:
+case 16:
+	timer_variant.divisor = timer_variant.prescale * val;
+	break;
+default:
+	warn("no divisor specified");
+};
+
+Thanks,
+Mark.
