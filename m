@@ -1,161 +1,111 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH] of: Create function for counting number of phandles in
- a property
-Date: Mon, 11 Feb 2013 12:26:15 +0100
-Message-ID: <5118D557.5050606@gaisler.com>
-References: <1360540701-23439-1-git-send-email-grant.likely@secretlab.ca>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH RFC 1/7] platform: add a device node
+Date: Mon, 11 Feb 2013 12:38:52 +0100
+Message-ID: <CAAwP0s36pGczk6EsXApBD_O5fmJf63CwcVPABbgcGiD3Yx6JpA@mail.gmail.com>
+References: <1360442671-15216-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1360442671-15216-2-git-send-email-javier.martinez@collabora.co.uk>
+ <20130210010246.GA1455@kroah.com> <5116FCA1.40703@collabora.co.uk>
+ <20130210093708.GL17852@n2100.arm.linux.org.uk> <CAAwP0s0fCJmUfTJweGhXj5bXsQ0Gov9JbUJtqYMwL7duNLZv_Q@mail.gmail.com>
+ <20130211081632.GI1906@pengutronix.de> <CAAwP0s0_HivRRDuBAEi4TJMB6DnbicDy1FiT7G3NcNs996V7qA@mail.gmail.com>
+ <20130211112459.GA1906@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360540701-23439-1-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20130211112459.GA1906@pengutronix.de>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, Enric Balletbo i Serra <eballetbo@gmail.com>, linux-omap@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 2013-02-11 00:58, Grant Likely wrote:
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 2390ddb..e1120a2 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1025,12 +1025,13 @@ EXPORT_SYMBOL(of_parse_phandle);
->    * To get a device_node of the `node2' node you may call this:
->    * of_parse_phandle_with_args(node3, "list", "#list-cells", 1, &args);
->    */
-> -int of_parse_phandle_with_args(const struct device_node *np, const char *list_name,
-> -				const char *cells_name, int index,
-> -				struct of_phandle_args *out_args)
-> +static int __of_parse_phandle_with_args(const struct device_node *np,
-> +					const char *list_name,
-> +					const char *cells_name, int index,
-> +					struct of_phandle_args *out_args)
->   {
->   	const __be32 *list, *list_end;
-> -	int size, cur_index = 0;
-> +	int rc = 0, size, cur_index = 0;
->   	uint32_t count = 0;
->   	struct device_node *node = NULL;
->   	phandle phandle;
-> @@ -1059,12 +1060,14 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
->   			if (!node) {
->   				pr_err("%s: could not find phandle\n",
->   					 np->full_name);
-> +				rc = -EINVAL;
->   				break;
->   			}
->   			if (of_property_read_u32(node, cells_name, &count)) {
->   				pr_err("%s: could not get %s for %s\n",
->   					 np->full_name, cells_name,
->   					 node->full_name);
-> +				rc = -EINVAL;
->   				break;
->   			}
+On Mon, Feb 11, 2013 at 12:24 PM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> On Mon, Feb 11, 2013 at 11:33:19AM +0100, Javier Martinez Canillas wrote:
+>> On Mon, Feb 11, 2013 at 9:16 AM, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+>> > On Sun, Feb 10, 2013 at 12:35:43PM +0100, Javier Martinez Canillas wrote:
+>> >> On Sun, Feb 10, 2013 at 10:37 AM, Russell King - ARM Linux
+>> >> <linux@arm.linux.org.uk> wrote:
+>> >> > On Sun, Feb 10, 2013 at 02:49:21AM +0100, Javier Martinez Canillas wrote:
+>> >> >> I knew this would be controversial and that's why I didn't mean it to be a patch
+>> >> >> but a RFC :)
+>> >> >>
+>> >> >> The problem basically is that you have to associate the platform device with its
+>> >> >> corresponding DT device node because it can be used in the driver probe function.
+>> >> >
+>> >> > When DT is being used, doesn't DT create the platform devices for you,
+>> >> > with the device node already set correctly?
+>> >> >
+>> >>
+>> >> Well they usually do but not always just like usually you have a
+>> >> platform_device in your board code and call platform_device_register().
+>> >>
+>> >> But in some configurations you can't just define the platform_device
+>> >> required resources (I/O memory, IRQ, etc) as static platform data.
+>> >> In some cases you need a level of indirection.
+>> >>
+>> >> In this particular case a SMSC ethernet chip is connected to an
+>> >> OMAP3 processor through its General-Purpose Memory Controller.
+>> >>
+>> >> You can't just define the I/O memory used by the device since you first
+>> >> need to request that address to the GPMC. The same happens with the
+>> >> IRQ line since a OMAP GPIO pin is used so you have to first configure
+>> >> the GPIO line as input.
+>> >
+>> > For the gpio interrupt you can use, example taken from omap4-var-som.dts:
+>> >
+>> >         interrupt-parent = <&gpio6>;
+>> >         interrupts = <11>; /* gpio line 171 */
+>> >
+>> > Other architectures allow to specify the edge/level hi/low active
+>> > parameters from the devicetree aswell. The gpio direction should be
+>> > handled by the gpio driver as necessary, at least that's what done on
+>> > other architectures.
+>> >
+>> > If the SMSC hangs on the GPMC then the SMSC should be a child node of
+>> > the GPMC. The GPMC would then act as a bus driver and configure the
+>> > chipselects and timings for its children automatically, maybe based
+>> > on timing information from the devicetree. I've never tried this before,
+>> > but I think that's the way things should be.
+>> >
+>>
+>> Hi Sasha,
+>>
+>> The SMSC is already a child node of the GPMC in the device tree but instead
+>> using the generic SMSC binding I added a GPMC-specific SMSC binding.
+>>
+>> Since the SMSC binding doesn't have a chip select property and it expects
+>> the I/O memory address to be explicitly defined in the reg property while
+>> the GPMC needs to request this memory according to the chip select used.
 >
-> @@ -1075,6 +1078,7 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
->   			if (list + count > list_end) {
->   				pr_err("%s: arguments longer than property\n",
->   					 np->full_name);
-> +				rc = -EINVAL;
->   				break;
->   			}
->   		}
-> @@ -1086,8 +1090,10 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
->   		 * or return -ENOENT for an empty entry.
->   		 */
->   		if (cur_index == index) {
-> -			if (!phandle)
-> -				return -ENOENT;
-> +			if (!phandle) {
-> +				rc = -ENOENT;
-> +				break;
-> +			}
+> So you probably have this:
 >
->   			if (out_args) {
->   				int i;
-> @@ -1098,22 +1104,54 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
->   				for (i = 0; i < count; i++)
->   					out_args->args[i] = be32_to_cpup(list++);
->   			}
-> -			return 0;
-> +
-> +			rc = 0;
-> +			break;
->   		}
+>         gpmc {
+>                 compatible = "ti,gpmc", "simple-bus";
+>                 ranges;
 >
->   		of_node_put(node);
->   		node = NULL;
->   		list += count;
->   		cur_index++;
-> +		rc = cur_index;
->   	}
+>                 smsc911x {
+>                         compatible = "smsc,91x";
+>                 }
+>         }
 >
->   	/* Loop exited without finding a valid entry; return an error */
->   	if (node)
->   		of_node_put(node);
-> -	return -EINVAL;
-> +	return rc;
-> +}
-> +
-> +int of_parse_phandle_with_args(const struct device_node *np, const char *list_name,
-> +				const char *cells_name, int index,
-> +				struct of_phandle_args *out_args)
-> +{
-> +	return __of_parse_phandle_with_args(np, list_name, cells_name, index, out_args);
->   }
->   EXPORT_SYMBOL(of_parse_phandle_with_args);
 
-Will this not result in a situation where a call to 
-of_parse_phandle_with_args with an out of bounds index returns the 
-number of tuples instead of an error code and possibly some caller that 
-uses the this count as a phandle instead of handling an error?
+Yes
 
-Of course of_count_phandle_with_args can be used to make sure that no 
-such call is made in the first place, but that is another story.
-
-Related to this is that Case 7 in of_selftest_parse_phandle_with_args 
-never gets exercised as far as I can see.
-
-
-> diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-> index c454f57..bdbe0f3 100644
-> --- a/include/linux/of_gpio.h
-> +++ b/include/linux/of_gpio.h
-> @@ -50,8 +50,28 @@ static inline struct of_mm_gpio_chip *to_of_mm_gpio_chip(struct gpio_chip *gc)
->   extern int of_get_named_gpio_flags(struct device_node *np,
->   		const char *list_name, int index, enum of_gpio_flags *flags);
+> If you remove the simple-bus property the gpmc devices would not be
+> probed. If then you add a driver which matches "ti,gpmc" you can
+> configure the chip selects in its probe callback. After this you
+> can call of_platform_populate() starting from the gpmc device node
+> to instantiate the gpmc child devices.
 >
-> -extern unsigned int of_gpio_named_count(struct device_node *np,
-> -					const char* propname);
-> +/**
-> + * of_gpio_named_count - Count GPIOs for a device
-> + * @np:		device node to count GPIOs for
-> + * @propname:	property name containing gpio specifier(s)
-> + *
-> + * The function returns the count of GPIOs specified for a node.
-> + *
-> + * Note that the empty GPIO specifiers counts too. For example,
-> + *
-> + * gpios = <0
-> + *          &pio1 1 2
-> + *          0
-> + *          &pio2 3 4>;
-> + *
-> + * defines four GPIOs (so this function will return 4), two of which
-> + * are not specified. Returns -EINVAL for an incorrectly formed gpios
-> + * property.
-> + */
-> +static int of_gpio_named_count(struct device_node *np, const char* propname)
-> +{
-> +	return of_count_phandle_with_args(np, propname, "#gpio-cells");
-> +}
+> Please somebody interrupt me if I'm talking total rubbish here. I never
+> tried this and only assume it should work like this.
+>
 
-Should this be static inline int?
+Nice, I haven't thought about that and I don't see why it shouldn't work.
 
-I think it would be good to also document that it also returns -ENOENT 
-when the propname property is missing, which might be an important case 
-to distinguish from the -EINVAL case.
+I won't have time to work on this for at least the next 3 weeks but I'll try
+once I have more free time and post another RFC if I got things working.
 
+> Sascha
+>
 
-Cheers,
-Andreas Larsson
+Thanks a lot and best regards,
+Javier
