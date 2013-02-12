@@ -1,72 +1,37 @@
-From: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
-Subject: Re: Devicetree node to turn off LCD when backlight is 'disabled'
-Date: Tue, 12 Feb 2013 21:26:34 +1300
-Message-ID: <1360657594.3878.4.camel@gitbox>
-References: <1360563905.4130.6.camel@gitbox>
- <20130212070418.GC28850@avionic-0098.mockup.avionic-design.de>
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: Re: [PATCH] of: Create function for counting number of phandles in
+ a property
+Date: Tue, 12 Feb 2013 10:18:10 +0100
+Message-ID: <511A08D2.6010104@gaisler.com>
+References: <1360540701-23439-1-git-send-email-grant.likely@secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130212070418.GC28850-RM9K5IK7kjIQXX3q8xo1gnVAuStQJXxyR5q1nwbD4aMs9pC9oP6+/A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: Devicetree Mailing List <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arm Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1360540701-23439-1-git-send-email-grant.likely@secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2013-02-12 at 08:04 +0100, Thierry Reding wrote:
-> On Mon, Feb 11, 2013 at 07:25:05PM +1300, Tony Prisk wrote:
-> > I was just wondering if the following would be an acceptable way to turn
-> > off an lcd backlight when the pwm-backlight driver is set to level 0.
-> > The LCD backlight is 'powered' by the gpio.
-> > 
-> > leds {
-> > 	compatible = "gpio-leds";
-> > 	backlight {
-> > 		label = "lcd-power";
-> > 		gpios = <&gpio 0 0 0>;  /* bank pin active_low */
-> > 		linux,default-trigger = "backlight";
-> > 		default-state = "on";
-> > 	};
-> > };
-> > 
-> > The method has been tested by an end-user and confirmed as working - I
-> > just wanted to check whether it is the 'accepted' way of doing it.
-> 
-> I don't quite see how this is related to pwm-backlight. Maybe you can
-> post a more complete example? Representing the backlight power as a GPIO
-> controlled LED seems somewhat kludgy.
-> 
-> That said, there is currently no "accepted" way to use a GPIO to control
-> the power to the backlight in pwm-backlight. There was some work by Alex
-> (Cc'ed) to integrate this using generic power-sequences, but there was
-> some pushback on that. Your best bet currently would seem to integrate
-> this with the CDF (Common Display Framework). Unfortunately that'd mean
-> you'd need to write a whole new driver to abstract the panel. Even in
-> CDF there are ongoing discussions about how to hook it up with the
-> backlight framework. I know this doesn't give you a solution right away
-> but I think it's the best way to represent the actual hardware and it
-> takes into account a number of other aspect about displays as well.
-> 
-> Thierry
+On 2013-02-11 00:58, Grant Likely wrote:
+> This patch creates of_count_phandle_with_args(), a new function for
+> counting the number of phandle+argument tuples in a given property. This
+> is better than the existing method of parsing each phandle individually
+> until parsing fails which is a horribly slow way to do the count.
+>
+> It also converts of_gpio_named_count() to use the new function instead
+> of using the above described horrible method.
+>
+> This also requires the return value of of_gpio_count() &
+> of_gpio_named_count() from 'unsigned int' to 'int' so that it can return
+> an error code. All the users of that function are fixed up to correctly
+> handle a negative return value.
 
+One more thing: In of_spi_register_master() in drivers/spi.c the error 
+code is put in the unsigned variable nb, leading to a huge nb and 
+master->num_chipselect with following problems when of_gpio_named_count 
+returns an error code.
 
-Just to clarify - I'm not looking for a way to do it immediately.
-
-The small snippet was sent as a patch to me by an end-user and although
-it worked, it just didn't 'feel' right so I thought I'd get a bit of
-feedback on it.
-
-Thanks for your thoughts.
-
-Regards
-Tony P
+Cheers,
+Andreas Larsson
