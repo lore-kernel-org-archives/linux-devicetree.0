@@ -1,16 +1,17 @@
-From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: RFC: Static memory controller node description
-Date: Tue, 12 Feb 2013 10:52:11 -0300
-Message-ID: <20130212135210.GA3144@localhost>
-References: <CAHTX3dJ+ii9dP7w860Or80NWOAPoYZt8ftUwNfAe6WkEoeQJXQ@mail.gmail.com>
- <CALF0-+V8iJZGW1riVSEXv0PGThOHxRh7P6JZb_ESb9C=+OyPOQ@mail.gmail.com>
- <CAHTX3dJT40OC1vf-KYLshhiDNigZRKOBh6ieH8qPgbyCMcjwPA@mail.gmail.com>
+From: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] drm/exynos: Add device tree based discovery
+ support for G2D
+Date: Tue, 12 Feb 2013 22:57:41 +0900
+Message-ID: <CAAQKjZMcmhb7djsSgRHFvVujq6TDTwDgkH=SzVVYOdegKa-tMQ@mail.gmail.com>
+References: <1360128584-23167-1-git-send-email-sachin.kamat@linaro.org>
+ <1360128584-23167-2-git-send-email-sachin.kamat@linaro.org>
+ <CAAQKjZNmUVZnDcy3fbWkairnneOK7dooJT2gn=9++tzS=uhhzA@mail.gmail.com>
+ <511A4442.6000402@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAHTX3dJT40OC1vf-KYLshhiDNigZRKOBh6ieH8qPgbyCMcjwPA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <511A4442.6000402-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,30 +22,66 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Cc: Josh Cartwright <josh.cartwright-acOepvfBmUk@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBGZWIgMTIsIDIwMTMgYXQgMDI6NDg6NDdQTSArMDEwMCwgTWljaGFsIFNpbWVrIHdy
-b3RlOgo+IDIwMTMvMi8xMiBFemVxdWllbCBHYXJjaWEgPGVsZXplZ2FyY2lhQGdtYWlsLmNvbT46
-Cj4gPiBIaSBNaWNoYWwsCj4gPgo+ID4gT24gVGh1LCBKYW4gMTAsIDIwMTMgYXQgMTI6NDAgUE0s
-IE1pY2hhbCBTaW1layA8bW9uc3RyQG1vbnN0ci5ldT4gd3JvdGU6Cj4gPj4gSGkgZ3V5cywKPiA+
-Pgo+ID4+IHdlIHdhbnQgdG8gYWRkIHN0YXRpYyBtZW1vcnkgY29udHJvbGxlciBkcml2ZXIgZm9y
-IHhpbGlueCB6eW5xIHRvIHRoZQo+ID4+IGxpbnV4IGtlcm5lbC4gKEl0IHdpbGwgZ28gdG8gZHJp
-dmVycy9tZW1vcnkvIGZvbGRlcikKPiA+PiBKdXN0IG5lZWQgdG8gY2xlYXIgZHRzIGZyYWdtZW50
-IHdoaWNoIGRlc2NyaWJlIGl0Lgo+ID4+Cj4gPgo+ID4gSSdtIHdvcmtpbmcgb24gYSAocGVyaGFw
-cykgc2ltaWxhciBtZW1vcnkgY29udHJvbGxlciBhbmQgSSdtCj4gPiBpbnRlcmVzdGVkIGluIHNl
-ZWluZwo+ID4gaG93IHlvdSB3aWxsIGltcGxlbWVudCB0aGlzIG9uZS4KPiA+Cj4gPiBEbyB5b3Ug
-aGF2ZSBzb21lIHBhdGNoZXMgKG5vIG1hdHRlciB0aGV5IGFyZSBwcmVsaW1pbmFyeSkgZm9yIG1l
-IHRvIGxvb2sgYXQ/Cj4gCj4gaHR0cDovL2dpdC54aWxpbnguY29tLz9wPWxpbnV4LXhsbnguZ2l0
-O2E9c2hvcnRsb2c7aD1yZWZzL2hlYWRzL21hc3Rlci1uZXh0Cj4gCj4gbG9vayBmb3I6IG1lbW9y
-eTogQWRkIGRyaXZlciBmb3IgWnlucSBTTUMKPiAKPiA+IEFsc28sIHdoaWNoIFNvQyBpcyB0aGlz
-PyBEb2VzIGl0IGhhdmUgYSBwdWJsaWMgbWFudWFsPwo+IAo+IEl0IGlzIHhpbGlueCB6eW5xLiAt
-IGFybSBjb3J0ZXggYTkgZHVhbCBjb3JlLgo+IGh0dHA6Ly93d3cueGlsaW54LmNvbS9zdXBwb3J0
-L2RvY3VtZW50YXRpb24vdXNlcl9ndWlkZXMvdWc1ODUtWnlucS03MDAwLVRSTS5wZGYKPiAKCkdy
-ZWF0IQoKVGhhbmtzIGEgbG90LAoKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxlY3Ryb25z
-CkVtYmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0cDovL2Zy
-ZWUtZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vz
-c0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZp
-Y2V0cmVlLWRpc2N1c3MK
+2013/2/12 Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
+> On 02/12/2013 02:17 PM, Inki Dae wrote:
+>> Applied and will go to -next.
+>> And please post the document(in
+>> Documentation/devicetree/bindings/gpu/) for it later.
+>
+> There is already some old patch applied in the devicetree/next tree:
+>
+> http://git.secretlab.ca/?p=linux.git;a=commitdiff;h=09495dda6a62c74b13412a63528093910ef80edd
+>
+> I guess there is now an incremental patch needed for this.
+>
+
+I think that this patch should be reverted because the compatible
+string of this document isn't generic and also the document file
+should be moved into proper place(.../bindings/gpu/).
+
+So Mr. Grant, could you please revert the below patch?
+        "of/exynos_g2d: Add Bindings for exynos G2D driver"
+        commit: 09495dda6a62c74b13412a63528093910ef80edd
+
+This document should be modifed correctly and re-posted. For this, we
+have already reached an arrangement with other Exynos maintainters.
+
+Thanks,
+Inki Dae
+
+>
+> Regards,
+> Sylwester
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
