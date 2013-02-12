@@ -1,32 +1,31 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: tegra: remove clock-frequency properties from serial
- nodes
-Date: Tue, 12 Feb 2013 10:47:33 -0700
-Message-ID: <511A8035.6080808@wwwdotorg.org>
-References: <1360691025-8393-1-git-send-email-swarren@wwwdotorg.org>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH] of: dma.c: fix memory leakage
+Date: Tue, 12 Feb 2013 09:40:25 -0800
+Message-ID: <20130212174025.GB17659@intel.com>
+References: <1358600805-20193-1-git-send-email-dinggnu@gmail.com>
+ <50FC6EB1.4050704@gmail.com>
+ <20130122101053.GA2427@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1360691025-8393-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130122101053.GA2427@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Cong Ding <dinggnu@gmail.com>
+Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/2013 10:43 AM, Stephen Warren wrote:
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> Currently, the serial nodes define both a clock-frequency and a clocks
-> property. We should not provide both, since they might conflict.
-> 
-> In practice, this also causes problems since the of_serial driver uses
-> the clock-frequency property in preference to the clocks property, and
-> hence doesn't clk_prepare_enable() the clock, which may then leave it
-> with no known users, and hence the common clock framework will disable
-> it, thus breaking the port, which is usually the console.
+On Tue, Jan 22, 2013 at 10:10:53AM +0000, Cong Ding wrote:
+> On Sun, Jan 20, 2013 at 04:24:49PM -0600, Rob Herring wrote:
+> > On 01/19/2013 07:06 AM, Cong Ding wrote:
+> > > The memory allocated to ofdma might be a leakage when error occurs.
+> > > 
+> > > Signed-off-by: Cong Ding <dinggnu@gmail.com>
+> > 
+> > You need to send this to whomever is working on DMA bindings.
+> Thank you bob, I added Vinod the the receiver list.
+I have moved the of/dma.c to dma/of-dma.c, can you regenerate this patch and
+resend to me
 
-I've applied this to Tegra's for-3.9/soc-ccf-fixes branch, although I'll
-hold off on pushing it out a little while in case anyone has comments on
-it. That said, I hope to include it in an arm-soc pull request tomorrow
-at the latest.
+--
+~Vinod
