@@ -1,191 +1,139 @@
 From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v3 1/3] mmc: davinci_mmc: add DT support
-Date: Tue, 12 Feb 2013 11:00:48 +0000
-Message-ID: <20130212110048.GB826@e106331-lin.cambridge.arm.com>
-References: <1360651058-5255-1-git-send-email-prakash.pm@ti.com>
- <1360651058-5255-2-git-send-email-prakash.pm@ti.com>
+Subject: Re: [PATCH 12/12] clocksource: samsung-time: Add Device Tree
+ support
+Date: Tue, 12 Feb 2013 11:06:45 +0000
+Message-ID: <20130212110645.GC826@e106331-lin.cambridge.arm.com>
+References: <1360502423-2246-1-git-send-email-tomasz.figa@gmail.com>
+ <1360502423-2246-13-git-send-email-tomasz.figa@gmail.com>
+ <20130211110056.GC32455@e106331-lin.cambridge.arm.com>
+ <3641123.j8hijCHc7L@flatron>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1360651058-5255-2-git-send-email-prakash.pm@ti.com>
-Content-Language: en-US
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <3641123.j8hijCHc7L@flatron>
 Content-Disposition: inline
-Sender: linux-mmc-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "mporter@ti.com" <mporter@ti.com>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "cjb@laptop.org" <cjb@laptop.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "nsekhar@ti.com" <nsekhar@ti.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "hs@denx.de" <hs@denx.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "kwangwoo.lee@gmail.com" <kwangwoo.lee@gmail.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "mcuelenaere@gmail.com" <mcuelenaere@gmail.com>, "christer@weinigel.se" <christer@weinigel.se>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "buserror@gmail.com" <buserror@gmail.com>, "augulis.darius@gmail.com" <augulis.darius@gmail.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "ghcstop@gmail.com" <ghcstop@gmail.com>, "linux@simtec.co.uk" <linux@simtec.co.uk>, "jekhor@gmail.com" <jekhor@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Prakash,
+Hi Tomasz,
 
-I think this looks pretty good now :)
+[...]
 
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
+> > > +Required properties:
+> > > +- compatible : should be one of following:
+> > > +    samsung,s3c24xx-pwm-timer - for 16-bit timers present on S3C24xx
+> > > +    samsung,s3c64xx-pwm-timer - for 32-bit timers present on S3C64xx
+> > > and newer +- reg: base address and size of register area
+> > > +- interrupts: interrupt list for all five PWM timers.
+> > 
+> > Is this a set of combined interrupts, or one per timer?
+> 
+> It is one per timer, however the node represents a single PWM timer block 
+> that contains several timers (usually 5).
+> 
+> > Which order are they in?
+> > 
+> > Assuming they're one per timer, in order, how about something like:
+> > 
+> > "- interrupts: one interrupt per timer, starting at timer 0".
+> 
+> Sounds fine to me. I will modify the description in next version.
+
+Great.
+
+> > > +- samsung,source-timer: index of timer to be used as clocksource
+> > > +- samsung,event-timer: index of timer to be used as clock event
+> > 
+> > Is there any reason this needs to be specified in the dt?
+> 
+> Yes. On some SoCs selected channels of PWM block can be used as PWM 
+> outputs and so thsoe cannot be used for system timers. This property makes 
+> it possible to specify channels used as system timers on particular 
+> platform (board).
+> 
+> > Can the driver not just select two arbitrary timers from the hardware?
+> 
+> In most cases I could statically choose channel 3 and 4 as it was done 
+> before my patches on S3C24xx and S3C64xx. I can make those channels 
+> default if others are not specified in properties.
+
+That would be nice, it would mean we could have some less verbose dts :)
+
+[...]
+
+> > > -	timer_base = ioremap_nocache(timer_variant.reg_base, SZ_4K);
+> > > -	if (!timer_base)
+> > > -		panic("failed to map timer registers");
+> > > +	if (!timer_base) {
+> > > +		timer_base = ioremap_nocache(timer_variant.reg_base, SZ_4K);
+> > > +		if (!timer_base)
+> > > +			panic("failed to map timer registers");
+> > > +	}
+> > 
+> > You map 4K here, but the binding didn't mention that 4K is always the
+> > expected size of the reg.
+> 
+> This is a compatibility mapping for legacy (non-DT) platforms that will be 
+> removed once all platforms get moved to DT.
+
+Sounds reasonable.
+
+[...]
+
+> > > +	if (of_property_read_u32(np, "samsung,source-timer", &val))
+> > > +		panic("no samsung,source-timer property provided");
+> > > +	if (val > ARRAY_SIZE(timer_variant.irqs))
+> > > +		panic("samsung,source-timer property out of range");
+> > 
+> > This check doesn't tell you if you actually had an irq in the dt for the
+> > timer at that index.
+> 
+> Hmm, this line is probably a bit confusing. I will add a define with 
+> maximum number of channels and use it here. This is only a check whether 
+> the index given is not out of range.
+
+Ok.
+
+> > Do you really need to panic here? Can you not just warn?
+> > 
+> > What if a future platform has another timer driver that can at least get
+> > the board to boot?
+> 
+> It's rather unlikely that new platforms using samsung-time will show up. 
+> This clocksource is used only for non-SMP platforms based on S3C and S5P 
+> SoCs, where it is the only possible supported clocksource.
+
+Ok.
+
+[...]
+
+> > > +	if (!of_property_read_u32(np, "samsung,divisor", &val)) {
+> > > +		if (val > 16 || (1 << (fls(val) - 1)) != val)
+> > > +			panic("divsor must be 1, 2, 4, 8 or 16");
+> > > +		timer_variant.divisor = timer_variant.prescale * val;
+> > 
+> > Maybe it's just me, but I find this somewhat difficult to read.
+> > 
+> > How about something like:
+> > 
+> > switch (val) {
+> > case 1:
+> > case 2:
+> > case 4:
+> > case 8:
+> > case 16:
+> > 	timer_variant.divisor = timer_variant.prescale * val;
+> > 	break;
+> > default:
+> > 	warn("no divisor specified");
+> > };
+> 
+> It looks better indeed. I will change this part in next version.
+
+Great.
 
 Thanks,
 Mark.
-
-On Tue, Feb 12, 2013 at 06:37:36AM +0000, Manjunathappa, Prakash wrote:
-> Adds device tree support for davinci_mmc. Also add binding documentation.
-> As of now in non-dma PIO mode and without GPIO card_detect/write_protect
-> option because of dependencies on EDMA and GPIO module DT support.
-> 
-> Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
-> Cc: linux-mmc@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: davinci-linux-open-source@linux.davincidsp.com
-> Cc: devicetree-discuss@lists.ozlabs.org
-> Cc: cjb@laptop.org
-> Cc: Sekhar Nori <nsekhar@ti.com>
-> Cc: mporter@ti.com
-> ---
-> Since v2:
-> Modified the default value for bus-width and removed the support for
-> highspeed card capabilties for now.
-> Since v1:
-> Modified DT parse function to take default values and accomodate controller
-> version in compatible field.
-> 
->  .../devicetree/bindings/mmc/davinci_mmc.txt        |   25 ++++++++
->  drivers/mmc/host/davinci_mmc.c                     |   65 +++++++++++++++++++-
->  2 files changed, 88 insertions(+), 2 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/davinci_mmc.txt b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> new file mode 100644
-> index 0000000..247be0f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/davinci_mmc.txt
-> @@ -0,0 +1,25 @@
-> +* TI Highspeed MMC host controller for DaVinci
-> +
-> +The Highspeed MMC Host Controller on TI DaVinci family
-> +provides an interface for MMC, SD and SDIO types of memory cards.
-> +
-> +This file documents the properties used by the davinci_mmc driver.
-> +
-> +Required properties:
-> +- compatible:
-> + Should be "ti,davinci-mmc-da830": for da830, da850, dm365
-> + Should be "ti,davinci-mmc-dm355": for dm355, dm644x
-> +
-> +Optional properties:
-> +- bus-width: Number of data lines, can be <1>, <4>, or <8>, default <1>
-> +- max-frequency: Maximum operating clock frequency, default 25MHz.
-> +
-> +Example:
-> +	mmc0: mmc@1c40000 {
-> +		compatible = "ti,davinci-mmc-da830",
-> +		reg = <0x40000 0x1000>;
-> +		interrupts = <16>;
-> +		status = "okay";
-> +		bus-width = <4>;
-> +		max-frequency = <50000000>;
-> +	};
-> diff --git a/drivers/mmc/host/davinci_mmc.c b/drivers/mmc/host/davinci_mmc.c
-> index 27123f8..66ca6bf 100644
-> --- a/drivers/mmc/host/davinci_mmc.c
-> +++ b/drivers/mmc/host/davinci_mmc.c
-> @@ -34,6 +34,8 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/edma.h>
->  #include <linux/mmc/mmc.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
->  
->  #include <linux/platform_data/mmc-davinci.h>
->  
-> @@ -1157,16 +1159,74 @@ static void __init init_mmcsd_host(struct mmc_davinci_host *host)
->  	mmc_davinci_reset_ctrl(host, 0);
->  }
->  
-> -static int __init davinci_mmcsd_probe(struct platform_device *pdev)
-> +static const struct of_device_id davinci_mmc_dt_ids[] = {
-> +	{
-> +		.compatible = "ti,davinci-mmc-dm355",
-> +		.data = (void *)MMC_CTLR_VERSION_1,
-> +	},
-> +	{
-> +		.compatible = "ti,davinci-mmc-da830",
-> +		.data = (void *)MMC_CTLR_VERSION_2,
-> +	},
-> +	{},
-> +};
-> +MODULE_DEVICE_TABLE(of, davinci_mmc_dt_ids);
-> +
-> +static struct davinci_mmc_config
-> +	*mmc_parse_pdata(struct platform_device *pdev)
->  {
-> +	struct device_node *np;
->  	struct davinci_mmc_config *pdata = pdev->dev.platform_data;
-> +	const struct of_device_id *match =
-> +		of_match_device(of_match_ptr(davinci_mmc_dt_ids), &pdev->dev);
-> +	u32 data;
-> +
-> +	np = pdev->dev.of_node;
-> +	if (!np)
-> +		return pdata;
-> +
-> +	pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-> +	if (!pdata) {
-> +		dev_err(&pdev->dev, "Failed to allocate memory for struct davinci_mmc_config\n");
-> +		goto nodata;
-> +	}
-> +
-> +	if (match->data)
-> +		pdata->version = (u8)((int)match->data);
-> +
-> +	of_property_read_u32(np, "max-frequency", &pdata->max_freq);
-> +	if (!pdata->max_freq)
-> +		dev_info(&pdev->dev, "'max-frequency' property not specified, defaulting to 25MHz\n");
-> +
-> +	of_property_read_u32(np, "bus-width", &data);
-> +	switch (data) {
-> +	case 1:
-> +	case 4:
-> +	case 8:
-> +		pdata->wires = data;
-> +		break;
-> +	default:
-> +		pdata->wires = 1;
-> +		dev_info(&pdev->dev, "Unsupported buswidth, defaulting to 1 bit\n");
-> +	}
-> +nodata:
-> +	return pdata;
-> +}
-> +
-> +static int __init davinci_mmcsd_probe(struct platform_device *pdev)
-> +{
-> +	struct davinci_mmc_config *pdata = NULL;
->  	struct mmc_davinci_host *host = NULL;
->  	struct mmc_host *mmc = NULL;
->  	struct resource *r, *mem = NULL;
->  	int ret = 0, irq = 0;
->  	size_t mem_size;
->  
-> -	/* REVISIT:  when we're fully converted, fail if pdata is NULL */
-> +	pdata = mmc_parse_pdata(pdev);
-> +	if (pdata == NULL) {
-> +		dev_err(&pdev->dev, "Can not get platform data\n");
-> +		return -ENOENT;
-> +	}
->  
->  	ret = -ENODEV;
->  	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> @@ -1408,6 +1468,7 @@ static struct platform_driver davinci_mmcsd_driver = {
->  		.name	= "davinci_mmc",
->  		.owner	= THIS_MODULE,
->  		.pm	= davinci_mmcsd_pm_ops,
-> +		.of_match_table = of_match_ptr(davinci_mmc_dt_ids),
->  	},
->  	.remove		= __exit_p(davinci_mmcsd_remove),
->  };
-> -- 
-> 1.7.4.1
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
-
