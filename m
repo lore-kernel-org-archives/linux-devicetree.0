@@ -1,48 +1,35 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: [PATCH V2 1/3] of/selftest: Fix GPIOs selftest to cover the 7th case
-Date: Tue, 12 Feb 2013 17:59:39 +0000
-Message-ID: <1360691981-21837-1-git-send-email-grant.likely@secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] of: Create function for counting number of phandles in a property
+Date: Tue, 12 Feb 2013 17:28:07 +0000
+Message-ID: <20130212172807.AAF993E0B53@localhost>
+References: <1360540701-23439-1-git-send-email-grant.likely@secretlab.ca> <511A08D2.6010104@gaisler.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <511A08D2.6010104@gaisler.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Larsson <andreas@gaisler.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-The of_gpio_named_count() self test doesn't hit the out-of-range
-condition even though it is coded. Fix the bug by increasing the for
-loop range by one.
+On Tue, 12 Feb 2013 10:18:10 +0100, Andreas Larsson <andreas@gaisler.com> wrote:
+> On 2013-02-11 00:58, Grant Likely wrote:
+> > This patch creates of_count_phandle_with_args(), a new function for
+> > counting the number of phandle+argument tuples in a given property. This
+> > is better than the existing method of parsing each phandle individually
+> > until parsing fails which is a horribly slow way to do the count.
+> >
+> > It also converts of_gpio_named_count() to use the new function instead
+> > of using the above described horrible method.
+> >
+> > This also requires the return value of of_gpio_count() &
+> > of_gpio_named_count() from 'unsigned int' to 'int' so that it can return
+> > an error code. All the users of that function are fixed up to correctly
+> > handle a negative return value.
+> 
+> One more thing: In of_spi_register_master() in drivers/spi.c the error 
+> code is put in the unsigned variable nb, leading to a huge nb and 
+> master->num_chipselect with following problems when of_gpio_named_count 
+> returns an error code.
 
-Reported-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
- drivers/of/selftest.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Also a good catch. Fixed.
 
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index f24ffd7..9f62eb5 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -35,7 +35,7 @@ static void __init of_selftest_parse_phandle_with_args(void)
- 		return;
- 	}
- 
--	for (i = 0; i < 7; i++) {
-+	for (i = 0; i < 8; i++) {
- 		bool passed = true;
- 		rc = of_parse_phandle_with_args(np, "phandle-list",
- 						"#phandle-cells", i, &args);
--- 
-1.7.10.4
+g.
