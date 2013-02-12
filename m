@@ -1,68 +1,69 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH v7 07/10] dmaengine: add
- dma_request_slave_channel_compat()
-Date: Tue, 12 Feb 2013 08:38:38 -0800
-Message-ID: <20130212163838.GR3789@intel.com>
-References: <1359742975-10421-1-git-send-email-mporter@ti.com>
- <1359742975-10421-8-git-send-email-mporter@ti.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] drm/exynos: Add device tree based discovery support
+ for G2D
+Date: Tue, 12 Feb 2013 22:52:05 +0530
+Message-ID: <CAK9yfHxBUUWV7ybYwZxNqBo7AzVPN9oWKj7c1vBnGFtVQwBD6Q@mail.gmail.com>
+References: <1360128584-23167-1-git-send-email-sachin.kamat@linaro.org>
+ <1360128584-23167-2-git-send-email-sachin.kamat@linaro.org>
+ <CAAQKjZNmUVZnDcy3fbWkairnneOK7dooJT2gn=9++tzS=uhhzA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1359742975-10421-8-git-send-email-mporter@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <djbw@fb.com>, Rob Herring <rob.herring@calxeda.com>
+Content-Type: multipart/mixed; boundary="===============7765307226473728388=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAAQKjZNmUVZnDcy3fbWkairnneOK7dooJT2gn=9++tzS=uhhzA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 01, 2013 at 01:22:52PM -0500, Matt Porter wrote:
-> Adds a dma_request_slave_channel_compat() wrapper which accepts
-> both the arguments from dma_request_channel() and
-> dma_request_slave_channel(). Based on whether the driver is
-> instantiated via DT, the appropriate channel request call will be
-> made.
-> 
-> This allows for a much cleaner migration of drivers to the
-> dmaengine DT API as platforms continue to be mixed between those
-> that boot using DT and those that do not.
-> 
-> Suggested-by: Tony Lindgren <tony@atomide.com>
-> Signed-off-by: Matt Porter <mporter@ti.com>
-> Acked-by: Tony Lindgren <tony@atomide.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Vinod Koul <vinod.koul@intel.com>
+--===============7765307226473728388==
+Content-Type: multipart/alternative; boundary=f46d043c8026bf20c904d58a4336
 
-> ---
->  include/linux/dmaengine.h |   16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
-> index bfcdecb..17d8ffd 100644
-> --- a/include/linux/dmaengine.h
-> +++ b/include/linux/dmaengine.h
-> @@ -1001,6 +1001,22 @@ void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
->  struct dma_chan *dma_find_channel(enum dma_transaction_type tx_type);
->  struct dma_chan *net_dma_find_channel(void);
->  #define dma_request_channel(mask, x, y) __dma_request_channel(&(mask), x, y)
-> +#define dma_request_slave_channel_compat(mask, x, y, dev, name) \
-> +	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
-> +
-> +static inline struct dma_chan
-> +*__dma_request_slave_channel_compat(dma_cap_mask_t *mask, dma_filter_fn fn,
-> +				  void *fn_param, struct device *dev,
-> +				  char *name)
-> +{
-> +	struct dma_chan *chan;
-> +
-> +	chan = dma_request_slave_channel(dev, name);
-> +	if (chan)
-> +		return chan;
-> +
-> +	return __dma_request_channel(mask, fn, fn_param);
-> +}
->  
->  /* --- Helper iov-locking functions --- */
->  
-> -- 
-> 1.7.9.5
-> 
+--f46d043c8026bf20c904d58a4336
+Content-Type: text/plain; charset=ISO-8859-1
+
+On Tuesday, 12 February 2013, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Applied and will go to -next.
+
+Thanks.
+
+> And please post the document(in
+> Documentation/devicetree/bindings/gpu/) for it later
+
+Already posted (1).
+
+(1) http://patches.linaro.org/14640/
+
+-- 
+With warm regards,
+Sachin
+
+--f46d043c8026bf20c904d58a4336
+Content-Type: text/html; charset=ISO-8859-1
+
+<br><br>On Tuesday, 12 February 2013, Inki Dae &lt;<a href="mailto:inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org">inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org</a>&gt; wrote:<br>&gt; Applied and will go to -next.<br><br>Thanks. <br><br>&gt; And please post the document(in<br>
+&gt; Documentation/devicetree/bindings/gpu/) for it later<br><br>Already posted (1).<br><br>(1) <a href="http://patches.linaro.org/14640/">http://patches.linaro.org/14640/</a><br><br>-- <br><div>With warm regards,</div>
+<div>Sachin</div><br>
+
+--f46d043c8026bf20c904d58a4336--
+
+--===============7765307226473728388==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============7765307226473728388==--
