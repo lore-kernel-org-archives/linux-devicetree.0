@@ -1,35 +1,68 @@
-From: Kumar Gala <galak@kernel.crashing.org>
-Subject: Re: [PATCHv1] crypto: caam - Added property fsl, sec-era in SEC4.0 device tree binding.
-Date: Tue, 12 Feb 2013 14:04:49 -0600
-Message-ID: <8E12AE5C-7927-458A-B563-F7FC39143DEF@kernel.crashing.org>
-References: <1358925668-10330-1-git-send-email-vakul@freescale.com>
-Mime-Version: 1.0 (Apple Message framework v1278)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <1358925668-10330-1-git-send-email-vakul@freescale.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Vakul Garg <vakul@freescale.com>
-Cc: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-crypto@vger.kernel.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH] kbuild: limit dtc+cpp include path
+Date: Tue, 12 Feb 2013 15:03:37 -0700
+Message-ID: <1360706617-20276-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: devicetree-discuss@lists.ozlabs.org, Michal Marek <mmarek@suse.cz>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Stephen Warren <swarren@nvidia.com>
 
-On Jan 23, 2013, at 1:21 AM, Vakul Garg wrote:
+Device tree source files may now include header files. The intent is
+that those header files define/name constants used as part of the DT
+bindings. Currently this feature is open to abuse, since any kernel
+header file at all can be included, This could allow device tree files
+to become dependant on kernel headers files, and thus make them no
+longer OS-independent. This would also prevent separating the device
+tree source files from the kernel repository.
 
-> This new property defines the era of the particular SEC version.
-> The compatible property in device tree "crypto" node has been updated
-> not to contain SEC era numbers.
-> 
-> Signed-off-by: Vakul Garg <vakul@freescale.com>
-> ---
-> Changelog:
-> 	1. Marked fsl,sec-era as 'optional'.
-> 
-> .../devicetree/bindings/crypto/fsl-sec4.txt        |   12 +++++++++---
-> 1 files changed, 9 insertions(+), 3 deletions(-)
+Solve this by limiting the cpp include path for device tree files to
+separate directories.
 
-applied to next.
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+Here, I allow header files in the .dts source directory, or in a per-arch
+include directory. Perhaps rather than:
 
-I assume this supersedes http://patchwork.ozlabs.org/patch/204431/
+-I$(srctree)/arch/$(SRCARCH)/include/dts
 
-- k
+The following might be better?:
+
+-I$(srctree)/Documentation/devicetree/bindings
+
+i.e. is there a need to separate binding-related headers per arch?
+
+ scripts/Makefile.lib |    8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 7910229..07125e6 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -156,6 +156,11 @@ cpp_flags      = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(LINUXINCLUDE)     \
+ 
+ ld_flags       = $(LDFLAGS) $(ldflags-y)
+ 
++dtc_cpp_flags  = -Wp,-MD,$(depfile) -nostdinc                            \
++		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
++		 -I$(srctree)/arch/$(SRCARCH)/include/dts                \
++		 -undef -D__DTS__
++
+ # Finds the multi-part object the current object will be linked into
+ modname-multi = $(sort $(foreach m,$(multi-used),\
+ 		$(if $(filter $(subst $(obj)/,,$*.o), $($(m:.o=-objs)) $($(m:.o=-y))),$(m:.o=))))
+@@ -272,8 +277,7 @@ $(obj)/%.dtb: $(src)/%.dts FORCE
+ dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
+ 
+ quiet_cmd_dtc_cpp = DTC+CPP $@
+-cmd_dtc_cpp = $(CPP) $(cpp_flags) -x assembler-with-cpp -undef -D__DTS__  \
+-			-o $(dtc-tmp) $< ; \
++cmd_dtc_cpp = $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+ 	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
+ 
+ $(obj)/%.dtb: $(src)/%.dtsp FORCE
+-- 
+1.7.10.4
+
