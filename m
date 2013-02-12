@@ -1,30 +1,35 @@
 From: Kumar Gala <galak@kernel.crashing.org>
-Subject: Re: [PATCH -next] powerpc/85xx: use for_each_compatible_node() macro
-Date: Tue, 12 Feb 2013 14:02:01 -0600
-Message-ID: <1C757F9C-FD71-44C5-B018-DF0F38571BC8@kernel.crashing.org>
-References: <CAPgLHd_esknTwVv4EeehwSJz6ee5eFJ+zf6xntH-vaNwdxkrvg@mail.gmail.com>
+Subject: Re: [PATCHv1] crypto: caam - Added property fsl, sec-era in SEC4.0 device tree binding.
+Date: Tue, 12 Feb 2013 14:04:49 -0600
+Message-ID: <8E12AE5C-7927-458A-B563-F7FC39143DEF@kernel.crashing.org>
+References: <1358925668-10330-1-git-send-email-vakul@freescale.com>
 Mime-Version: 1.0 (Apple Message framework v1278)
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPgLHd_esknTwVv4EeehwSJz6ee5eFJ+zf6xntH-vaNwdxkrvg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Yongjun <weiyj.lk@gmail.com>
-Cc: benh@kernel.crashing.org, paulus@samba.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, yongjun_wei@trendmicro.com.cn, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <1358925668-10330-1-git-send-email-vakul@freescale.com>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Vakul Garg <vakul@freescale.com>
+Cc: linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
-On Dec 3, 2012, at 7:36 AM, Wei Yongjun wrote:
+On Jan 23, 2013, at 1:21 AM, Vakul Garg wrote:
 
-> From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> This new property defines the era of the particular SEC version.
+> The compatible property in device tree "crypto" node has been updated
+> not to contain SEC era numbers.
 > 
-> Use for_each_compatible_node() macro instead of open coding it.
-> 
-> Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+> Signed-off-by: Vakul Garg <vakul@freescale.com>
 > ---
-> arch/powerpc/platforms/85xx/mpc85xx_mds.c | 4 +---
-> 1 file changed, 1 insertion(+), 3 deletions(-)
+> Changelog:
+> 	1. Marked fsl,sec-era as 'optional'.
+> 
+> .../devicetree/bindings/crypto/fsl-sec4.txt        |   12 +++++++++---
+> 1 files changed, 9 insertions(+), 3 deletions(-)
 
-applied to next
+applied to next.
+
+I assume this supersedes http://patchwork.ozlabs.org/patch/204431/
 
 - k
