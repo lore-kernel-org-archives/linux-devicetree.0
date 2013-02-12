@@ -1,187 +1,56 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: Create function for counting number of phandles in a property
-Date: Tue, 12 Feb 2013 17:25:16 +0000
-Message-ID: <20130212172516.7CC993E08D7@localhost>
-References: <1360540701-23439-1-git-send-email-grant.likely@secretlab.ca> <5118D557.5050606@gaisler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5118D557.5050606@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH V8] kbuild: create a rule to run the pre-processor on
+ *.dts files
+Date: Tue, 12 Feb 2013 18:08:05 +0000
+Message-ID: <20130212180805.556C93E1202@localhost>
+References: <1360091188-24063-1-git-send-email-swarren@wwwdotorg.org>
+ <20130208144527.0D8DD3E2C01@localhost> <51156D09.7060401@gmail.com>
+ <20130208220448.EDA773E2C27@localhost> <51157F65.2050309@wwwdotorg.org>
+ <5119425A.1090802@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5119425A.1090802-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Grant Likely <glikely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Srinivas KANDAGATLA <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Sam Ravnborg <sam-uyr5N9Q2VtJg9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Feb 2013 12:26:15 +0100, Andreas Larsson <andreas@gaisler.com> wrote:
-> On 2013-02-11 00:58, Grant Likely wrote:
-> > diff --git a/drivers/of/base.c b/drivers/of/base.c
-> > index 2390ddb..e1120a2 100644
-> > --- a/drivers/of/base.c
-> > +++ b/drivers/of/base.c
-> > @@ -1025,12 +1025,13 @@ EXPORT_SYMBOL(of_parse_phandle);
-> >    * To get a device_node of the `node2' node you may call this:
-> >    * of_parse_phandle_with_args(node3, "list", "#list-cells", 1, &args);
-> >    */
-> > -int of_parse_phandle_with_args(const struct device_node *np, const char *list_name,
-> > -				const char *cells_name, int index,
-> > -				struct of_phandle_args *out_args)
-> > +static int __of_parse_phandle_with_args(const struct device_node *np,
-> > +					const char *list_name,
-> > +					const char *cells_name, int index,
-> > +					struct of_phandle_args *out_args)
-> >   {
-> >   	const __be32 *list, *list_end;
-> > -	int size, cur_index = 0;
-> > +	int rc = 0, size, cur_index = 0;
-> >   	uint32_t count = 0;
-> >   	struct device_node *node = NULL;
-> >   	phandle phandle;
-> > @@ -1059,12 +1060,14 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
-> >   			if (!node) {
-> >   				pr_err("%s: could not find phandle\n",
-> >   					 np->full_name);
-> > +				rc = -EINVAL;
-> >   				break;
-> >   			}
-> >   			if (of_property_read_u32(node, cells_name, &count)) {
-> >   				pr_err("%s: could not get %s for %s\n",
-> >   					 np->full_name, cells_name,
-> >   					 node->full_name);
-> > +				rc = -EINVAL;
-> >   				break;
-> >   			}
-> >
-> > @@ -1075,6 +1078,7 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
-> >   			if (list + count > list_end) {
-> >   				pr_err("%s: arguments longer than property\n",
-> >   					 np->full_name);
-> > +				rc = -EINVAL;
-> >   				break;
-> >   			}
-> >   		}
-> > @@ -1086,8 +1090,10 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
-> >   		 * or return -ENOENT for an empty entry.
-> >   		 */
-> >   		if (cur_index == index) {
-> > -			if (!phandle)
-> > -				return -ENOENT;
-> > +			if (!phandle) {
-> > +				rc = -ENOENT;
-> > +				break;
-> > +			}
-> >
-> >   			if (out_args) {
-> >   				int i;
-> > @@ -1098,22 +1104,54 @@ int of_parse_phandle_with_args(const struct device_node *np, const char *list_na
-> >   				for (i = 0; i < count; i++)
-> >   					out_args->args[i] = be32_to_cpup(list++);
-> >   			}
-> > -			return 0;
-> > +
-> > +			rc = 0;
-> > +			break;
-> >   		}
-> >
-> >   		of_node_put(node);
-> >   		node = NULL;
-> >   		list += count;
-> >   		cur_index++;
-> > +		rc = cur_index;
-> >   	}
-> >
-> >   	/* Loop exited without finding a valid entry; return an error */
-> >   	if (node)
-> >   		of_node_put(node);
-> > -	return -EINVAL;
-> > +	return rc;
-> > +}
-> > +
-> > +int of_parse_phandle_with_args(const struct device_node *np, const char *list_name,
-> > +				const char *cells_name, int index,
-> > +				struct of_phandle_args *out_args)
-> > +{
-> > +	return __of_parse_phandle_with_args(np, list_name, cells_name, index, out_args);
-> >   }
-> >   EXPORT_SYMBOL(of_parse_phandle_with_args);
+On Mon, 11 Feb 2013 12:11:22 -0700, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 02/08/2013 08:45 AM, Grant Likely wrote:
+> > On Tue,  5 Feb 2013 12:06:28 -0700, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> >> Create cmd_dtc_cpp to run the C pre-processor on *.dts file before
+> >> passing them to dtc for final compilation. This allows the use of #define
+> >> and #include within the .dts file.
+> ...
+> > I've applied this and was going to push it out, but I've just thought of
+> > a problem that could be a show stopper. ...
 > 
-> Will this not result in a situation where a call to 
-> of_parse_phandle_with_args with an out of bounds index returns the 
-> number of tuples instead of an error code and possibly some caller that 
-> uses the this count as a phandle instead of handling an error?
-
-Yes, you are right about the out of bounds index. I had meant to write
-the following in __of_parse_phandle_with_args:
-
-	return (index < 0) ? rc : -ENOENT;
-
-Which should solve that problem.
-
+> Grant, I notice this showed up in next-20130211 as:
 > 
-> Of course of_count_phandle_with_args can be used to make sure that no 
-> such call is made in the first place, but that is another story.
-
-Not really, the __ function still has to test for a negative index.
-However, it can at least make sure the index passed is not negative so
-you can't get count behaviour when calling for a parse. How about:
-
-int of_parse_phandle_with_args(const struct device_node *np, const char *list_name,
-				const char *cells_name, int index,
-				struct of_phandle_args *out_args)
-{
-	if (index < 0)
-		return -EINVAL;
-	return __of_parse_phandle_with_args(np, list_name, cells_name, index, out_args);
-}
-
-
+> 22435f3 kbuild: create a rule to run the pre-processor on *.dts files
 > 
-> Related to this is that Case 7 in of_selftest_parse_phandle_with_args 
-> never gets exercised as far as I can see.
+> Was that intentional? I assumed you wanted me to rework this before
+> you'd apply it, rather than sending an incremental patch.
 
-You're right. Also a bug. Fixed now.
-
-> 
-> 
-> > diff --git a/include/linux/of_gpio.h b/include/linux/of_gpio.h
-> > index c454f57..bdbe0f3 100644
-> > --- a/include/linux/of_gpio.h
-> > +++ b/include/linux/of_gpio.h
-> > @@ -50,8 +50,28 @@ static inline struct of_mm_gpio_chip *to_of_mm_gpio_chip(struct gpio_chip *gc)
-> >   extern int of_get_named_gpio_flags(struct device_node *np,
-> >   		const char *list_name, int index, enum of_gpio_flags *flags);
-> >
-> > -extern unsigned int of_gpio_named_count(struct device_node *np,
-> > -					const char* propname);
-> > +/**
-> > + * of_gpio_named_count - Count GPIOs for a device
-> > + * @np:		device node to count GPIOs for
-> > + * @propname:	property name containing gpio specifier(s)
-> > + *
-> > + * The function returns the count of GPIOs specified for a node.
-> > + *
-> > + * Note that the empty GPIO specifiers counts too. For example,
-> > + *
-> > + * gpios = <0
-> > + *          &pio1 1 2
-> > + *          0
-> > + *          &pio2 3 4>;
-> > + *
-> > + * defines four GPIOs (so this function will return 4), two of which
-> > + * are not specified. Returns -EINVAL for an incorrectly formed gpios
-> > + * property.
-> > + */
-> > +static int of_gpio_named_count(struct device_node *np, const char* propname)
-> > +{
-> > +	return of_count_phandle_with_args(np, propname, "#gpio-cells");
-> > +}
-> 
-> Should this be static inline int?
-
-Yes.
-
-> 
-> I think it would be good to also document that it also returns -ENOENT 
-> when the propname property is missing, which might be an important case 
-> to distinguish from the -EINVAL case.
-
-Done. I'll post a new version shortly.
+Yes it was intentional. I sat on my hands w.r.t. this patch for long
+enough that I didn't want to delay it any longer. However, I still want
+a solution to the problem discussed above before it becomes a
+maintenance disaster.
 
 g.
+
+
+-- 
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
