@@ -1,55 +1,41 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH V4 0/5] Add generic DMA DT binding support
-Date: Tue, 12 Feb 2013 06:49:50 -0800
-Message-ID: <20130212144950.GJ3789@intel.com>
-References: <1360571905-15285-1-git-send-email-padma.v@samsung.com>
+From: Anil Kumar <anilk4.v-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Reg:Trying to get the ADC working on the Beaglebone with 3.8
+ kernel
+Date: Tue, 12 Feb 2013 20:20:24 +0530
+Message-ID: <CABYxbz4vjmp-Kb8ZoqqZV9PDkGZX3g=U45A+1nUMq-0M_7xxNA@mail.gmail.com>
+References: <000001ce0923$9d97f510$ad0fa8c0@mistral.in>
+ <CABYxbz4tnBM2v_QHKANV1bBCEWpyi_oS1DZA5X=2WdJjUFNATw@mail.gmail.com>
+ <001501ce092a$453264d0$ad0fa8c0@mistral.in>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1360571905-15285-1-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, arnd@arndb.de, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org, robherring2@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <001501ce092a$453264d0$ad0fa8c0-HrUwqZBnLO6f0DUV/oxz1A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Vijay S <vijay-EvXpCiN+lbve9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 11, 2013 at 02:08:20PM +0530, Padmavathi Venna wrote:
+Vijay,
 
-This looks fine, I have only question. The code seems to assume that pl330 dma
-controller always uses DT. But I dont see that as dependency for pl330.
+On Tue, Feb 12, 2013 at 7:37 PM, Vijay S <vijay-EvXpCiN+lbve9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+> Hi Anil,
+> Thanks for the reply. The pins AIN0 to AIN7 are signals right? Do they have
+> pin mux? I'm sorry if this question is very vague.
+>
 
-Something tells me withot OF the driver may not build, have you checked it?
+I have gone through the TRM but it looks they do not have pin mux(not sure).
+In general, pin has multifunction feature and need pin mux.
 
-> This patch set adds support for generic dma device tree bindings for
-> Samsung platforms and is dependent on the following patches from
-> Vinod Koul next branch
-> 1)of: Add generic device tree DMA helpers
-> 2)dmaengine: add helper function to request a slave DMA channel
-> 
-> This patch set is made based Mark Brown next branch
-Is this targetted for ASoC tree, if so why? It would fail to build if applied
-there
-
---
-~Vinod
-> 
-> Padmavathi Venna (5):
->   DMA: PL330: Add new pl330 filter for DT case.
->   DMA: PL330: Add xlate function
->   DMA: PL330: Register the DMA controller with the generic DMA helpers
->   ARM: dts: pl330: Add #dma-cells for generic dma binding support
->   ARM: SAMSUNG: dma: Remove unnecessary code
-> 
->  .../devicetree/bindings/dma/arm-pl330.txt          |   21 +++++--
->  arch/arm/boot/dts/exynos5250.dtsi                  |   12 ++++
->  arch/arm/mach-s3c24xx/include/mach/dma.h           |    1 -
->  arch/arm/mach-s3c64xx/include/mach/dma.h           |    1 -
->  arch/arm/plat-samsung/dma-ops.c                    |   10 +---
->  arch/arm/plat-samsung/include/plat/dma-ops.h       |    1 -
->  arch/arm/plat-samsung/include/plat/dma-pl330.h     |    1 -
->  drivers/dma/pl330.c                                |   64 +++++++++++++++----
->  8 files changed, 79 insertions(+), 32 deletions(-)
-> 
-> -- 
-> 1.7.4.4
-> 
+Thanks,
+Anil
+[...]
