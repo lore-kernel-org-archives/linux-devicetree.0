@@ -1,87 +1,117 @@
-From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] [media] s5p-g2d: Add DT based discovery support
-Date: Tue, 12 Feb 2013 23:00:30 +0530
-Message-ID: <CAK9yfHzaDDD0XEywdv+P6gEapjHwxKEfwHzKKQuXWEPHeAFgCw@mail.gmail.com>
-References: <1360128584-23167-1-git-send-email-sachin.kamat@linaro.org>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============6331449050168879626=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360128584-23167-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Cc: "k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH] ARM: tegra: remove clock-frequency properties from serial nodes
+Date: Tue, 12 Feb 2013 10:43:45 -0700
+Message-ID: <1360691025-8393-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============6331449050168879626==
-Content-Type: multipart/alternative; boundary=e89a8f83ae1bd68b2a04d58a61a2
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
---e89a8f83ae1bd68b2a04d58a61a2
-Content-Type: text/plain; charset=ISO-8859-1
+Currently, the serial nodes define both a clock-frequency and a clocks
+property. We should not provide both, since they might conflict.
 
-Hi Sylwester,
+In practice, this also causes problems since the of_serial driver uses
+the clock-frequency property in preference to the clocks property, and
+hence doesn't clk_prepare_enable() the clock, which may then leave it
+with no known users, and hence the common clock framework will disable
+it, thus breaking the port, which is usually the console.
 
-On Wednesday, 6 February 2013, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> This patch adds device tree based discovery support to G2D driver
->
-> Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
-> Based on for_v3.9 branch of below tree:
-> git://linuxtv.org/snawrocki/samsung.git
->
-> Changes since v1:
-> * Addressed review comments from Sylwester <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>.
-> * Modified the compatible string as per the discussions at [1].
-> [1] https://patchwork1.kernel.org/patch/2045821/
->
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/tegra20.dtsi |    5 -----
+ arch/arm/boot/dts/tegra30.dtsi |    5 -----
+ 2 files changed, 10 deletions(-)
 
-Does this patch look good?
-
-
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index cdb8da0..9a42893 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -247,7 +247,6 @@
+ 		reg = <0x70006000 0x40>;
+ 		reg-shift = <2>;
+ 		interrupts = <0 36 0x04>;
+-		clock-frequency = <216000000>;
+ 		nvidia,dma-request-selector = <&apbdma 8>;
+ 		clocks = <&tegra_car 6>;
+ 		status = "disabled";
+@@ -258,7 +257,6 @@
+ 		reg = <0x70006040 0x40>;
+ 		reg-shift = <2>;
+ 		interrupts = <0 37 0x04>;
+-		clock-frequency = <216000000>;
+ 		nvidia,dma-request-selector = <&apbdma 9>;
+ 		clocks = <&tegra_car 96>;
+ 		status = "disabled";
+@@ -269,7 +267,6 @@
+ 		reg = <0x70006200 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <0 46 0x04>;
+-		clock-frequency = <216000000>;
+ 		nvidia,dma-request-selector = <&apbdma 10>;
+ 		clocks = <&tegra_car 55>;
+ 		status = "disabled";
+@@ -280,7 +277,6 @@
+ 		reg = <0x70006300 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <0 90 0x04>;
+-		clock-frequency = <216000000>;
+ 		nvidia,dma-request-selector = <&apbdma 19>;
+ 		clocks = <&tegra_car 65>;
+ 		status = "disabled";
+@@ -291,7 +287,6 @@
+ 		reg = <0x70006400 0x100>;
+ 		reg-shift = <2>;
+ 		interrupts = <0 91 0x04>;
+-		clock-frequency = <216000000>;
+ 		nvidia,dma-request-selector = <&apbdma 20>;
+ 		clocks = <&tegra_car 66>;
+ 		status = "disabled";
+diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
+index 572a45b..767803e 100644
+--- a/arch/arm/boot/dts/tegra30.dtsi
++++ b/arch/arm/boot/dts/tegra30.dtsi
+@@ -234,7 +234,6 @@
+ 		reg = <0x70006000 0x40>;
+ 		reg-shift = <2>;
+ 		interrupts = <0 36 0x04>;
+-		clock-frequency = <408000000>;
+ 		nvidia,dma-request-selector = <&apbdma 8>;
+ 		clocks = <&tegra_car 6>;
+ 		status = "disabled";
+@@ -244,7 +243,6 @@
+ 		compatible = "nvidia,tegra30-uart", "nvidia,tegra20-uart";
+ 		reg = <0x70006040 0x40>;
+ 		reg-shift = <2>;
+-		clock-frequency = <408000000>;
+ 		interrupts = <0 37 0x04>;
+ 		nvidia,dma-request-selector = <&apbdma 9>;
+ 		clocks = <&tegra_car 160>;
+@@ -255,7 +253,6 @@
+ 		compatible = "nvidia,tegra30-uart", "nvidia,tegra20-uart";
+ 		reg = <0x70006200 0x100>;
+ 		reg-shift = <2>;
+-		clock-frequency = <408000000>;
+ 		interrupts = <0 46 0x04>;
+ 		nvidia,dma-request-selector = <&apbdma 10>;
+ 		clocks = <&tegra_car 55>;
+@@ -266,7 +263,6 @@
+ 		compatible = "nvidia,tegra30-uart", "nvidia,tegra20-uart";
+ 		reg = <0x70006300 0x100>;
+ 		reg-shift = <2>;
+-		clock-frequency = <408000000>;
+ 		interrupts = <0 90 0x04>;
+ 		nvidia,dma-request-selector = <&apbdma 19>;
+ 		clocks = <&tegra_car 65>;
+@@ -277,7 +273,6 @@
+ 		compatible = "nvidia,tegra30-uart", "nvidia,tegra20-uart";
+ 		reg = <0x70006400 0x100>;
+ 		reg-shift = <2>;
+-		clock-frequency = <408000000>;
+ 		interrupts = <0 91 0x04>;
+ 		nvidia,dma-request-selector = <&apbdma 20>;
+ 		clocks = <&tegra_car 66>;
 -- 
-With warm regards,
-Sachin
-
---e89a8f83ae1bd68b2a04d58a61a2
-Content-Type: text/html; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-
-<br>Hi Sylwester, <br><br>On Wednesday, 6 February 2013, Sachin Kamat &lt;<=
-a href=3D"mailto:sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org">sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&gt; w=
-rote:<br>&gt; This patch adds device tree based discovery support to G2D dr=
-iver<br>
-&gt;<br>&gt; Signed-off-by: Sachin Kamat &lt;<a href=3D"mailto:sachin.kamat=
-@linaro.org">sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&gt;<br>&gt; ---<br>&gt; Based on f=
-or_v3.9 branch of below tree:<br>&gt; git://<a href=3D"http://linuxtv.org/s=
-nawrocki/samsung.git">linuxtv.org/snawrocki/samsung.git</a><br>
-&gt;<br>&gt; Changes since v1:<br>&gt; * Addressed review comments from Syl=
-wester &lt;<a href=3D"mailto:s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org">s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org=
-</a>&gt;.<br>&gt; * Modified the compatible string as per the discussions a=
-t [1].<br>
-&gt; [1] <a href=3D"https://patchwork1.kernel.org/patch/2045821/">https://p=
-atchwork1.kernel.org/patch/2045821/</a><br>&gt; <br><br>Does this patch loo=
-k good?<br><br><br>-- <br><div>With warm regards,</div>
-<div>Sachin</div><br>
-
---e89a8f83ae1bd68b2a04d58a61a2--
-
---===============6331449050168879626==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============6331449050168879626==--
+1.7.10.4
