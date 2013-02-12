@@ -1,16 +1,12 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] of: dma: protect list write operation by spin_lock
-Date: Tue, 12 Feb 2013 09:20:27 -0800
-Message-ID: <20130212172027.GT3789@intel.com>
-References: <1359386694-20548-1-git-send-email-andriy.shevchenko@linux.intel.com>
- <51069EA0.4040004@gmail.com> <20130128160757.GA6396@intel.com>
- <5107EC8D.5070001@gmail.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/7] ARM: dts: Add G2D DT nodes to Exynos4 machines
+Date: Tue, 12 Feb 2013 23:17:10 +0530
+Message-ID: <CAK9yfHzb5+vaA2+4WOmzzsVEvuftTVN=M11K0nzfQmMNF01yLw@mail.gmail.com>
+References: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============6545391479824743142=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5107EC8D.5070001-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1360151477-26460-1-git-send-email-sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,42 +17,102 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andy Shevchenko <andriy.shevchenko-b5Z7lJ3WibVrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
+To: "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Cc: "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 29, 2013 at 09:36:45AM -0600, Rob Herring wrote:
-> >> Vinod, it's probably better to move drivers/of/dma.c to drivers/dma.
-> >> That's been the direction we've been taking with new OF binding code. I
-> >> must have missed that in the review.
-> > ok, do you have any patches on your tree for this if not then I can update my tree
-> > for this change and then we can apply changes thru slave-dma tree.
-> 
-> No, I don't have one prepared.
-Okay, I have committed and pushed drivers/of/dma.c to be moved to
-drivers/dma/of-dma.c
+--===============6545391479824743142==
+Content-Type: multipart/alternative; boundary=e89a8ff1ce247580e704d58a9d4a
 
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Date: Tue, 12 Feb 2013 09:15:02 -0800
-Subject: [PATCH] dmaengine: move drivers/of/dma.c -> drivers/dma/of-dma.c
+--e89a8ff1ce247580e704d58a9d4a
+Content-Type: text/plain; charset=ISO-8859-1
 
-as requested by Rob
+Ping...
 
-Suggested-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
----
- drivers/{of/dma.c => dma/of-dma.c} |    0
- 1 files changed, 0 insertions(+), 0 deletions(-)
- rename drivers/{of/dma.c => dma/of-dma.c} (100%)
+On Wednesday, 6 February 2013, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> This patch series is based on for-next branch of Kukjin Kim's tree
+> git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
+>
+> Patches added on top of MFC DT series which has been accepted by Kukjin.
+> http://www.spinics.net/lists/linux-samsung-soc/msg15419.html
+>
+> Sachin Kamat (7):
+>   ARM: dts: Add G2D node to exynos4210.dtsi
+>   ARM: dts: Add G2D node to SMDKV310
+>   ARM: dts: Add G2D node to exynos4210-origen
+>   ARM: dts: Add G2D node to exynos4x12.dtsi
+>   ARM: dts: Add G2D node to SMDK4412
+>   ARM: dts: Add G2D node to exynos4412-origen
+>   ARM: dts: Add Samsung G2D DT bindings documentation
+>
+>  .../devicetree/bindings/gpu/samsung-g2d.txt        |   30
+++++++++++++++++++++
+>  arch/arm/boot/dts/exynos4210-origen.dts            |    4 ++
+>  arch/arm/boot/dts/exynos4210-smdkv310.dts          |    4 ++
+>  arch/arm/boot/dts/exynos4210.dtsi                  |    8 +++++
+>  arch/arm/boot/dts/exynos4412-origen.dts            |    4 ++
+>  arch/arm/boot/dts/exynos4412-smdk4412.dts          |    4 ++
+>  arch/arm/boot/dts/exynos4x12.dtsi                  |    7 ++++
+>  7 files changed, 61 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+>
+> --
+> 1.7.4.1
+>
+>
 
-diff --git a/drivers/of/dma.c b/drivers/dma/of-dma.c
-similarity index 100%
-rename from drivers/of/dma.c
-rename to drivers/dma/of-dma.c
---
-1.7.0.4
+-- 
+With warm regards,
+Sachin
 
-Anyone cares to Ack?
+--e89a8ff1ce247580e704d58a9d4a
+Content-Type: text/html; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
---
-~Vinod
+<br>Ping...<br><br>On Wednesday, 6 February 2013, Sachin Kamat &lt;<a href=
+=3D"mailto:sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org">sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&gt; wrote:<=
+br>&gt; This patch series is based on for-next branch of Kukjin Kim&#39;s t=
+ree<br>
+&gt; git://<a href=3D"http://git.kernel.org/pub/scm/linux/kernel/git/kgene/=
+linux-samsung.git">git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-sams=
+ung.git</a><br>&gt;<br>&gt; Patches added on top of MFC DT series which has=
+ been accepted by Kukjin.<br>
+&gt; <a href=3D"http://www.spinics.net/lists/linux-samsung-soc/msg15419.htm=
+l">http://www.spinics.net/lists/linux-samsung-soc/msg15419.html</a><br>&gt;=
+<br>&gt; Sachin Kamat (7):<br>&gt; =A0 ARM: dts: Add G2D node to exynos4210=
+.dtsi<br>
+&gt; =A0 ARM: dts: Add G2D node to SMDKV310<br>&gt; =A0 ARM: dts: Add G2D n=
+ode to exynos4210-origen<br>&gt; =A0 ARM: dts: Add G2D node to exynos4x12.d=
+tsi<br>&gt; =A0 ARM: dts: Add G2D node to SMDK4412<br>&gt; =A0 ARM: dts: Ad=
+d G2D node to exynos4412-origen<br>
+&gt; =A0 ARM: dts: Add Samsung G2D DT bindings documentation<br>&gt;<br>&gt=
+; =A0.../devicetree/bindings/gpu/samsung-g2d.txt =A0 =A0 =A0 =A0| =A0 30 ++=
+++++++++++++++++++<br>&gt; =A0arch/arm/boot/dts/exynos4210-origen.dts =A0 =
+=A0 =A0 =A0 =A0 =A0| =A0 =A04 ++<br>
+&gt; =A0arch/arm/boot/dts/exynos4210-smdkv310.dts =A0 =A0 =A0 =A0 =A0| =A0 =
+=A04 ++<br>&gt; =A0arch/arm/boot/dts/exynos4210.dtsi =A0 =A0 =A0 =A0 =A0 =
+=A0 =A0 =A0 =A0| =A0 =A08 +++++<br>&gt; =A0arch/arm/boot/dts/exynos4412-ori=
+gen.dts =A0 =A0 =A0 =A0 =A0 =A0| =A0 =A04 ++<br>&gt; =A0arch/arm/boot/dts/e=
+xynos4412-smdk4412.dts =A0 =A0 =A0 =A0 =A0| =A0 =A04 ++<br>
+&gt; =A0arch/arm/boot/dts/exynos4x12.dtsi =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =
+=A0| =A0 =A07 ++++<br>&gt; =A07 files changed, 61 insertions(+), 0 deletion=
+s(-)<br>&gt; =A0create mode 100644 Documentation/devicetree/bindings/gpu/sa=
+msung-g2d.txt<br>&gt;<br>
+&gt; --<br>&gt; 1.7.4.1<br>&gt;<br>&gt;<br><br>-- <br><div>With warm regard=
+s,</div>
+<div>Sachin</div><br>
+
+--e89a8ff1ce247580e704d58a9d4a--
+
+--===============6545391479824743142==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============6545391479824743142==--
