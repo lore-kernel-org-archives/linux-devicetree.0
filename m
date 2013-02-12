@@ -1,37 +1,49 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH] of: Create function for counting number of phandles in
- a property
-Date: Tue, 12 Feb 2013 10:18:10 +0100
-Message-ID: <511A08D2.6010104@gaisler.com>
-References: <1360540701-23439-1-git-send-email-grant.likely@secretlab.ca>
+From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 5/6] of_spi: Add fetching of of_gpio flags to
+	of_spi_register_master
+Date: Tue, 12 Feb 2013 10:39:02 +0100
+Message-ID: <511A0DB6.1080702@gaisler.com>
+References: <1359471223-4794-1-git-send-email-andreas@gaisler.com>
+	<1359471223-4794-6-git-send-email-andreas@gaisler.com>
+	<20130211002220.AFCA83E0C13@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360540701-23439-1-git-send-email-grant.likely@secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20130211002220.AFCA83E0C13@localhost>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 2013-02-11 00:58, Grant Likely wrote:
-> This patch creates of_count_phandle_with_args(), a new function for
-> counting the number of phandle+argument tuples in a given property. This
-> is better than the existing method of parsing each phandle individually
-> until parsing fails which is a horribly slow way to do the count.
+On 2013-02-11 01:22, Grant Likely wrote:
+> On Tue, 29 Jan 2013 15:53:42 +0100, Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> wrote:
+>> When using a gpio chip select with a OF_GPIO_ACTIVE_LOW flag, this needs to be
+>> known to the controller driver.
+>>
+>> Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
 >
-> It also converts of_gpio_named_count() to use the new function instead
-> of using the above described horrible method.
->
-> This also requires the return value of of_gpio_count() &
-> of_gpio_named_count() from 'unsigned int' to 'int' so that it can return
-> an error code. All the users of that function are fixed up to correctly
-> handle a negative return value.
+> Out of curiosity, what do you need the flags for? Polarity of the CS
+> signal? I think it is long past time to revisit baking polarity control
+> into core of gpiolib. Would you mind investigating doing that instead of
+> having to manage it manually in each and every driver?
 
-One more thing: In of_spi_register_master() in drivers/spi.c the error 
-code is put in the unsigned variable nb, leading to a huge nb and 
-master->num_chipselect with following problems when of_gpio_named_count 
-returns an error code.
+I don't even need it on my hardware. It seemed like a good thing to have 
+via of_spi_register_master. I am OK with just dropping this.
 
 Cheers,
-Andreas Larsson
+Andreas
+
+
+------------------------------------------------------------------------------
+Free Next-Gen Firewall Hardware Offer
+Buy your Sophos next-gen firewall before the end March 2013 
+and get the hardware for free! Learn more.
+http://p.sf.net/sfu/sophos-d2d-feb
