@@ -1,84 +1,68 @@
-From: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Subject: Re: I2C and devicetrees
-Date: Tue, 12 Feb 2013 17:34:46 +0100
-Message-ID: <511A6F26.20801@keymile.com>
-References: <201212052336.24233.PeterHuewe@gmx.de> <CAOesGMhUVwB4+kuCA8hSmfhoVzkznNbjj6hjngDMaQkB83WqjQ@mail.gmail.com> <50C79DE8.2090201@wwwdotorg.org>
-	 <20121214203845.5D7ED3E0BDD@localhost>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v7 07/10] dmaengine: add
+ dma_request_slave_channel_compat()
+Date: Tue, 12 Feb 2013 08:38:38 -0800
+Message-ID: <20130212163838.GR3789@intel.com>
+References: <1359742975-10421-1-git-send-email-mporter@ti.com>
+ <1359742975-10421-8-git-send-email-mporter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
-	charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20121214203845.5D7ED3E0BDD@localhost>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <public-grant.likely-s3s/WqlpOiPyB63q8FvJNQ-wOFGN7rlS/M9smdsby/KFg@public.gmane.org>
-Cc: Stephen Warren <public-swarren-3lzwWm7+Weoh9ZMKESR00Q-wOFGN7rlS/M9smdsby/KFg@public.gmane.org>, Olof Johansson <public-olof-nZhT3qVonbNeoWH0uzbU5w-wOFGN7rlS/M9smdsby/KFg@public.gmane.org>, Peter Huewe <public-PeterHuewe-Mmb7MZpHnFY-wOFGN7rlS/M9smdsby/KFg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1359742975-10421-8-git-send-email-mporter@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Benoit Cousson <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Chris Ball <cjb@laptop.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux Documentation List <linux-doc@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Arnd Bergmann <arnd@arndb.de>, Dan Williams <djbw@fb.com>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+On Fri, Feb 01, 2013 at 01:22:52PM -0500, Matt Porter wrote:
+> Adds a dma_request_slave_channel_compat() wrapper which accepts
+> both the arguments from dma_request_channel() and
+> dma_request_slave_channel(). Based on whether the driver is
+> instantiated via DT, the appropriate channel request call will be
+> made.
+> 
+> This allows for a much cleaner migration of drivers to the
+> dmaengine DT API as platforms continue to be mixed between those
+> that boot using DT and those that do not.
+> 
+> Suggested-by: Tony Lindgren <tony@atomide.com>
+> Signed-off-by: Matt Porter <mporter@ti.com>
+> Acked-by: Tony Lindgren <tony@atomide.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Vinod Koul <vinod.koul@intel.com>
 
-I have a similar question.
-I'd like to "name" i2c devices so that a userspace application can 
-somehow identify those devices with the same function across different 
-boards (which may have different addresses or be connected to a 
-different i2c bus, or be a physically different chip).
-
-For instance "hwmon" devices get instantiated within sysfs under
-/sys/class/hwmon/hwmonX
-
-# cat /sys/class/hwmon/hwmon0/device/name
-lm75
-
-which I would like to be identified by the name "switch" (as in "switch 
-temperature"). I was thinking about instantiating it as something like 
-"lm75:switch" within i2c_board_info.type. For device-tree-less 
-architectures, a trivial change within i2c_match_id() so to ignore the 
-part following ":" seems to do the trick. Don't know about devicetree 
-but I guess a similar approach could be imagined.
-
-Another example would be given by EEPROMs: all boards are equipped with 
-an EEPROM containing inventory management, which I would like to 
-identify as "ivm". So something like "24c08:ivm".
-After all, I'd like to be able to achive something like "named MTD 
-partitions" which you can identify by looking at "/proc/mtd".
-
-Maybe some other symbol could be used instead of ":", but anyhow, does 
-the above make any sense at all to you?
-
-Thanks a lot!
-Gerlando
-
-On 12/14/2012 09:38 PM, Grant Likely wrote:
-> On Tue, 11 Dec 2012 13:56:08 -0700, Stephen Warren<swarren-3lzwWm7+Weoh9ZMKESR00Q-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org>  wrote:
->> On 12/11/2012 01:21 PM, Olof Johansson wrote:
->>> [+devicetree-discuss]
->>>
->>> On Wed, Dec 5, 2012 at 2:36 PM, Peter Huewe<PeterHuewe-Mmb7MZpHnFY-XMD5yJDbdMReXY1tMh2IBg@public.gmane.org>  wrote:
->>>> Hi,
->>>>
->>>> I have a short question about the relations between i2c and devicetrees.
->>>>
->>>> I was wondering
->>>> is the device part of the compatible string of a (trivial) i2c device
->>>> instanciated via devicetree _always_ identical to name in i2c_client.name ?
->>>> Or can it be somehow different?
->>>
->>> It can be different, but the driver will then need to add a OF table
->>> that matches the probing. By default the i2c/dt core code will strip
->>> off the vendor prefix (before ",") and try probing with the rest of
->>> the device name. If that doesn't match the client name, that is when
->>> you need the additional table.
->>
->> While relying on the prefix stripping works, I think I recall Grant
->> mentioning that people shouldn't rely on it - namely that any I2C device
->> that gets instantiated from DT should contain the OF match table
->> explicitly. I CC'd Grant in case I'm mis-quoting him.
->
-> I'm not quite that strict about it. The behaviour described above is
-> based merely on a heuristic but for a lot of drivers that don't do
-> anything special it works just fine. The moment you need to identify a
-> specific device it becomes better to use an of match table.
->
-> g.
->
+> ---
+>  include/linux/dmaengine.h |   16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+> index bfcdecb..17d8ffd 100644
+> --- a/include/linux/dmaengine.h
+> +++ b/include/linux/dmaengine.h
+> @@ -1001,6 +1001,22 @@ void dma_run_dependencies(struct dma_async_tx_descriptor *tx);
+>  struct dma_chan *dma_find_channel(enum dma_transaction_type tx_type);
+>  struct dma_chan *net_dma_find_channel(void);
+>  #define dma_request_channel(mask, x, y) __dma_request_channel(&(mask), x, y)
+> +#define dma_request_slave_channel_compat(mask, x, y, dev, name) \
+> +	__dma_request_slave_channel_compat(&(mask), x, y, dev, name)
+> +
+> +static inline struct dma_chan
+> +*__dma_request_slave_channel_compat(dma_cap_mask_t *mask, dma_filter_fn fn,
+> +				  void *fn_param, struct device *dev,
+> +				  char *name)
+> +{
+> +	struct dma_chan *chan;
+> +
+> +	chan = dma_request_slave_channel(dev, name);
+> +	if (chan)
+> +		return chan;
+> +
+> +	return __dma_request_channel(mask, fn, fn_param);
+> +}
+>  
+>  /* --- Helper iov-locking functions --- */
+>  
+> -- 
+> 1.7.9.5
+> 
