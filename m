@@ -1,117 +1,62 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH] ARM: tegra: remove clock-frequency properties from serial nodes
-Date: Tue, 12 Feb 2013 10:43:45 -0700
-Message-ID: <1360691025-8393-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] of: dma: protect list write operation by spin_lock
+Date: Tue, 12 Feb 2013 09:20:27 -0800
+Message-ID: <20130212172027.GT3789@intel.com>
+References: <1359386694-20548-1-git-send-email-andriy.shevchenko@linux.intel.com>
+ <51069EA0.4040004@gmail.com> <20130128160757.GA6396@intel.com>
+ <5107EC8D.5070001@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5107EC8D.5070001-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andy Shevchenko <andriy.shevchenko-b5Z7lJ3WibVrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Tue, Jan 29, 2013 at 09:36:45AM -0600, Rob Herring wrote:
+> >> Vinod, it's probably better to move drivers/of/dma.c to drivers/dma.
+> >> That's been the direction we've been taking with new OF binding code. I
+> >> must have missed that in the review.
+> > ok, do you have any patches on your tree for this if not then I can update my tree
+> > for this change and then we can apply changes thru slave-dma tree.
+> 
+> No, I don't have one prepared.
+Okay, I have committed and pushed drivers/of/dma.c to be moved to
+drivers/dma/of-dma.c
 
-Currently, the serial nodes define both a clock-frequency and a clocks
-property. We should not provide both, since they might conflict.
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Date: Tue, 12 Feb 2013 09:15:02 -0800
+Subject: [PATCH] dmaengine: move drivers/of/dma.c -> drivers/dma/of-dma.c
 
-In practice, this also causes problems since the of_serial driver uses
-the clock-frequency property in preference to the clocks property, and
-hence doesn't clk_prepare_enable() the clock, which may then leave it
-with no known users, and hence the common clock framework will disable
-it, thus breaking the port, which is usually the console.
+as requested by Rob
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Suggested-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 ---
- arch/arm/boot/dts/tegra20.dtsi |    5 -----
- arch/arm/boot/dts/tegra30.dtsi |    5 -----
- 2 files changed, 10 deletions(-)
+ drivers/{of/dma.c => dma/of-dma.c} |    0
+ 1 files changed, 0 insertions(+), 0 deletions(-)
+ rename drivers/{of/dma.c => dma/of-dma.c} (100%)
 
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index cdb8da0..9a42893 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -247,7 +247,6 @@
- 		reg = <0x70006000 0x40>;
- 		reg-shift = <2>;
- 		interrupts = <0 36 0x04>;
--		clock-frequency = <216000000>;
- 		nvidia,dma-request-selector = <&apbdma 8>;
- 		clocks = <&tegra_car 6>;
- 		status = "disabled";
-@@ -258,7 +257,6 @@
- 		reg = <0x70006040 0x40>;
- 		reg-shift = <2>;
- 		interrupts = <0 37 0x04>;
--		clock-frequency = <216000000>;
- 		nvidia,dma-request-selector = <&apbdma 9>;
- 		clocks = <&tegra_car 96>;
- 		status = "disabled";
-@@ -269,7 +267,6 @@
- 		reg = <0x70006200 0x100>;
- 		reg-shift = <2>;
- 		interrupts = <0 46 0x04>;
--		clock-frequency = <216000000>;
- 		nvidia,dma-request-selector = <&apbdma 10>;
- 		clocks = <&tegra_car 55>;
- 		status = "disabled";
-@@ -280,7 +277,6 @@
- 		reg = <0x70006300 0x100>;
- 		reg-shift = <2>;
- 		interrupts = <0 90 0x04>;
--		clock-frequency = <216000000>;
- 		nvidia,dma-request-selector = <&apbdma 19>;
- 		clocks = <&tegra_car 65>;
- 		status = "disabled";
-@@ -291,7 +287,6 @@
- 		reg = <0x70006400 0x100>;
- 		reg-shift = <2>;
- 		interrupts = <0 91 0x04>;
--		clock-frequency = <216000000>;
- 		nvidia,dma-request-selector = <&apbdma 20>;
- 		clocks = <&tegra_car 66>;
- 		status = "disabled";
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index 572a45b..767803e 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -234,7 +234,6 @@
- 		reg = <0x70006000 0x40>;
- 		reg-shift = <2>;
- 		interrupts = <0 36 0x04>;
--		clock-frequency = <408000000>;
- 		nvidia,dma-request-selector = <&apbdma 8>;
- 		clocks = <&tegra_car 6>;
- 		status = "disabled";
-@@ -244,7 +243,6 @@
- 		compatible = "nvidia,tegra30-uart", "nvidia,tegra20-uart";
- 		reg = <0x70006040 0x40>;
- 		reg-shift = <2>;
--		clock-frequency = <408000000>;
- 		interrupts = <0 37 0x04>;
- 		nvidia,dma-request-selector = <&apbdma 9>;
- 		clocks = <&tegra_car 160>;
-@@ -255,7 +253,6 @@
- 		compatible = "nvidia,tegra30-uart", "nvidia,tegra20-uart";
- 		reg = <0x70006200 0x100>;
- 		reg-shift = <2>;
--		clock-frequency = <408000000>;
- 		interrupts = <0 46 0x04>;
- 		nvidia,dma-request-selector = <&apbdma 10>;
- 		clocks = <&tegra_car 55>;
-@@ -266,7 +263,6 @@
- 		compatible = "nvidia,tegra30-uart", "nvidia,tegra20-uart";
- 		reg = <0x70006300 0x100>;
- 		reg-shift = <2>;
--		clock-frequency = <408000000>;
- 		interrupts = <0 90 0x04>;
- 		nvidia,dma-request-selector = <&apbdma 19>;
- 		clocks = <&tegra_car 65>;
-@@ -277,7 +273,6 @@
- 		compatible = "nvidia,tegra30-uart", "nvidia,tegra20-uart";
- 		reg = <0x70006400 0x100>;
- 		reg-shift = <2>;
--		clock-frequency = <408000000>;
- 		interrupts = <0 91 0x04>;
- 		nvidia,dma-request-selector = <&apbdma 20>;
- 		clocks = <&tegra_car 66>;
--- 
-1.7.10.4
+diff --git a/drivers/of/dma.c b/drivers/dma/of-dma.c
+similarity index 100%
+rename from drivers/of/dma.c
+rename to drivers/dma/of-dma.c
+--
+1.7.0.4
+
+Anyone cares to Ack?
+
+--
+~Vinod
