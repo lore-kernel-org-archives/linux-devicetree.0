@@ -1,125 +1,105 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 1/4] of/pci: Provide support for parsing PCI DT ranges
- property
-Date: Tue, 12 Feb 2013 07:45:23 +0100
-Message-ID: <20130212064523.GA28850@avionic-0098.mockup.avionic-design.de>
-References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
- <1360570940-17086-2-git-send-email-thierry.reding@avionic-design.de>
- <511949C7.7070604@gmail.com>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: Devicetree node to turn off LCD when backlight is 'disabled'
+Date: Tue, 12 Feb 2013 08:04:18 +0100
+Message-ID: <20130212070418.GC28850@avionic-0098.mockup.avionic-design.de>
+References: <1360563905.4130.6.camel@gitbox>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <511949C7.7070604@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Andrew Murray <andrew.murray@arm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============3171350012637744902=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1360563905.4130.6.camel@gitbox>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Prisk <linux-ci5G2KO2hbZ+pU9mqzGVBQ@public.gmane.org>
+Cc: Devicetree Mailing List <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Arm Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---IS0zKkzwUGydFO0o
+--===============3171350012637744902==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="VywGB/WGlW4DM4P8"
+Content-Disposition: inline
+
+
+--VywGB/WGlW4DM4P8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Mon, Feb 11, 2013 at 01:43:03PM -0600, Rob Herring wrote:
-> On 02/11/2013 02:22 AM, Thierry Reding wrote:
-> > From: Andrew Murray <andrew.murray@arm.com>
-> >=20
-> > DT bindings for PCI host bridges often use the ranges property to descr=
-ibe
-> > memory and IO ranges - this binding tends to be the same across archite=
-ctures
-> > yet several parsing implementations exist, e.g. arch/mips/pci/pci.c,
-> > arch/powerpc/kernel/pci-common.c, arch/sparc/kernel/pci.c and
-> > arch/microblaze/pci/pci-common.c (clone of PPC). Some of these duplicate
-> > functionality provided by drivers/of/address.c.
-> >=20
-> > This patch provides a common iterator-based parser for the ranges prope=
-rty, it
-> > is hoped this will reduce DT representation differences between archite=
-ctures
-> > and that architectures will migrate in part to this new parser.
-> >=20
-> > It is also hoped (and the motativation for the patch) that this patch w=
-ill
-> > reduce duplication of code when writing host bridge drivers that are su=
-pported
-> > by multiple architectures.
-> >=20
-> > This patch provides struct resources from a device tree node, e.g.:
-> >=20
-> > 	u32 *last =3D NULL;
-> > 	struct resource res;
-> > 	while ((last =3D of_pci_process_ranges(np, res, last))) {
-> > 		//do something with res
-> > 	}
-> >=20
-> > Platforms with quirks can then do what they like with the resource or m=
-igrate
-> > common quirk handling to the parser. In an ideal world drivers can just=
- request
-> > the obtained resources and pass them on (e.g. pci_add_resource_offset).
-> >=20
-> > Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
-> > ---
-> >  drivers/of/address.c       | 63 ++++++++++++++++++++++++++++++++++++++=
-++++++++
-> >  include/linux/of_address.h |  9 +++++++
-> >  2 files changed, 72 insertions(+)
-> >=20
-> > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > index 04da786..f607008 100644
-> > --- a/drivers/of/address.c
-> > +++ b/drivers/of/address.c
-> > @@ -13,6 +13,7 @@
-> >  #define OF_CHECK_COUNTS(na, ns)	(OF_CHECK_ADDR_COUNT(na) && (ns) > 0)
-> > =20
-> >  static struct of_bus *of_match_bus(struct device_node *np);
-> > +static struct of_bus *of_find_bus(const char *name);
+On Mon, Feb 11, 2013 at 07:25:05PM +1300, Tony Prisk wrote:
+> I was just wondering if the following would be an acceptable way to turn
+> off an lcd backlight when the pwm-backlight driver is set to level 0.
+> The LCD backlight is 'powered' by the gpio.
 >=20
-> Can you move this function up to avoid the forward declaration.
+> leds {
+> 	compatible =3D "gpio-leds";
+> 	backlight {
+> 		label =3D "lcd-power";
+> 		gpios =3D <&gpio 0 0 0>;  /* bank pin active_low */
+> 		linux,default-trigger =3D "backlight";
+> 		default-state =3D "on";
+> 	};
+> };
+>=20
+> The method has been tested by an end-user and confirmed as working - I
+> just wanted to check whether it is the 'accepted' way of doing it.
 
-It needs to be defined after the of_busses structure, which is defined
-below the CONFIG_PCI block where of_pci_process_ranges() is defined. I'd
-have to move that one as well and add another #ifdef CONFIG_PCI section.
-If you prefer that I can do that.
+I don't quite see how this is related to pwm-backlight. Maybe you can
+post a more complete example? Representing the backlight power as a GPIO
+controlled LED seems somewhat kludgy.
 
-> > +static struct of_bus *of_find_bus(const char *name)
-> > +{
-> > +	unsigned int i;
-> > +
-> > +	for (i =3D 0; i < ARRAY_SIZE(of_busses); i++)
-> > +		if (strcmp(name, of_busses[i].name) =3D=3D 0)
->                                               ^
-> space needed.
-
-I don't understand. Do you want the space to go between '.' and "name"?
+That said, there is currently no "accepted" way to use a GPIO to control
+the power to the backlight in pwm-backlight. There was some work by Alex
+(Cc'ed) to integrate this using generic power-sequences, but there was
+some pushback on that. Your best bet currently would seem to integrate
+this with the CDF (Common Display Framework). Unfortunately that'd mean
+you'd need to write a whole new driver to abstract the panel. Even in
+CDF there are ongoing discussions about how to hook it up with the
+backlight framework. I know this doesn't give you a solution right away
+but I think it's the best way to represent the actual hardware and it
+takes into account a number of other aspect about displays as well.
 
 Thierry
 
---IS0zKkzwUGydFO0o
+--VywGB/WGlW4DM4P8
 Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.19 (GNU/Linux)
 
-iQIbBAEBAgAGBQJRGeUDAAoJEN0jrNd/PrOhu1kP+JqVxpOVGiFcy/c9Q75qLy/p
-q3asNUW9YcQ0qGN36L/8MBpPAsWDSebgpFQ8h6EUk20osc/EYGuhf5LuUtJIj3kO
-IKG1TjzxP4muOx1o9QG0ufg22CizpexCFDBOh7pNj+KCBlriKnIxusnQTDJmeAvw
-0hwJuUkpRyhKyrs/C5ZUDdy158ehHTRv1Evrks1UmjScxRqzq1qGo6wGg5gBWBr3
-Vecq2mkle3VJomC7rg/Z/SUfpwPEnKTIFtQJb5z39H0ZQPzc/AD8tpOCnCGK9riS
-+kZdMHYL+XDeY3VTlkZRfaqm5DTgclwyiIWLr6rPJHzJIuU33Tl+J3Ikr5K8kdYq
-TqoXOrsyJb1Qzzu6bZvNAl5O1amZz6gHbiRWi8hu70igh4SBoEhCLK0BCYPq+XKK
-OV5fH1UQmzSTZIP4mCwa+wI9OGn58OBZKfh7nsCLh4aXSNs09HQY/LyoAAZFF5zl
-zeGMFmsvSvGhzzZCKmrpG+1tPEIhxZWqyzqdF1Y94AVlhPDwTJg+PMYUyuCVBU9Z
-O+kUtnkrSVR4+HyNt0GbBivPhwEniczd/WOteWKMnuM9q2ITRJPRYTJv6214gBD0
-0L6ibU2hBFa0oyVqrAYqaiQ3QBOlffjBsYc2EOtGlNKxdTZe70N8AMwSv0YRdSm6
-zWOcbvO/E/2JYzBZIkE=
-=CaJX
+iQIcBAEBAgAGBQJRGelyAAoJEN0jrNd/PrOhUt0QAKKqA9+xDSSgUsPF1D3NAutW
+RrvxRGSgcy8XtePUw5qsicNGLm6dGzciZ/Sgl0j2VRD/Vb0vlK3b/YKBCiE/aK3D
+gj0Rwk4bEc0aBH34Vctk9raiMJgEv003niYrVJHeLoJSj9YnFZ7DswoqzAUO+7jy
+mNXQ009EYElSSNVQNnHedeYluCRq9PObvcWuc7blLoKG02X+jG7idcR0nFnIO4IW
+nt2KkvD1IOQ7rvTe6wKn4IqPylurBJbAYZVjXa5LdVOmmFL3p0++xkRUGyIDPsjA
+yeY44JYUW8G8dRRdaXVZrOKIIECy4ANl79o4V7tgAsXZjRtuyd5IU7qtGHFCLA/l
+bOe9LrKTUcaU9sxIGQJK5EsLlJYz0i998dAmF18jlRBrUBg46qzsD0vKzzJpu6aF
+19+SvfD6RNyMhUyg9sv+yWane+niLTlbCa9kOOIfepjVG/LVaN6r8dpGfgFKtRia
+AfBaetguzZJPJjjGGMW75l4rKpzdjlXzzee7CxsdX5bEtg9ufE0cVWOnvW2D+X1d
+w2jCY1Ukf+1vun8O+hglvkAXR9435pGR6AiNouWmh51W7JjN+BbmJbOrpLwDmbh1
+qmLsghd2ZtKm2lu8JeVzYi9XOtj5tyVQPIw3DD+o08tzuiuDrDtGUw/KwfC33Akg
+opRwB1TiWTbhZ11tl6wU
+=3NpJ
 -----END PGP SIGNATURE-----
 
---IS0zKkzwUGydFO0o--
+--VywGB/WGlW4DM4P8--
+
+--===============3171350012637744902==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============3171350012637744902==--
