@@ -1,31 +1,38 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH] of: dma.c: fix memory leakage
-Date: Tue, 12 Feb 2013 09:40:25 -0800
-Message-ID: <20130212174025.GB17659@intel.com>
-References: <1358600805-20193-1-git-send-email-dinggnu@gmail.com>
- <50FC6EB1.4050704@gmail.com>
- <20130122101053.GA2427@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v2 6/6] of_spi: Initialize cs_gpios and cs_gpio with -EEXIST
+Date: Tue, 12 Feb 2013 18:01:43 +0000
+Message-ID: <20130212180143.F15523E0FDC@localhost>
+References: <1359471223-4794-1-git-send-email-andreas@gaisler.com> <1359471223-4794-7-git-send-email-andreas@gaisler.com> <20130211002320.824593E0C13@localhost> <511A0F73.50008@gaisler.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130122101053.GA2427@gmail.com>
+In-Reply-To: <511A0F73.50008@gaisler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Cong Ding <dinggnu@gmail.com>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Andreas Larsson <andreas@gaisler.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net, linux-kernel@vger.kernel.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2013 at 10:10:53AM +0000, Cong Ding wrote:
-> On Sun, Jan 20, 2013 at 04:24:49PM -0600, Rob Herring wrote:
-> > On 01/19/2013 07:06 AM, Cong Ding wrote:
-> > > The memory allocated to ofdma might be a leakage when error occurs.
-> > > 
-> > > Signed-off-by: Cong Ding <dinggnu@gmail.com>
-> > 
-> > You need to send this to whomever is working on DMA bindings.
-> Thank you bob, I added Vinod the the receiver list.
-I have moved the of/dma.c to dma/of-dma.c, can you regenerate this patch and
-resend to me
+On Tue, 12 Feb 2013 10:46:27 +0100, Andreas Larsson <andreas@gaisler.com> wrote:
+> On 2013-02-11 01:23, Grant Likely wrote:
+> > On Tue, 29 Jan 2013 15:53:43 +0100, Andreas Larsson <andreas@gaisler.com> wrote:
+> >> Holes in the cs-gpios DT phandle list is supposed to mark that native
+> >> chipselects is to be used. The value returned from of_get_named_gpio_flags in
+> >> this case is -EEXIST. By initializing cs_gpios and cs_gpio with -EEXIST, this
+> >> and only this errno will indicate to a spi controller driver that a native
+> >> chipselect is to be used.
+> >>
+> >> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+> >
+> > I've left this one off for now. Take a look at the patch I posted and
+> > let me know if you think this one should still be applied.
+> 
+> I think that of_spi_register_master should return an error when the 
+> cs-gpios property is broken (part of patch 2) and that cs_gpios and 
+> cs_gpio should be initialized to the same value as a hole in the plist.
+> 
+> This patch does not work without 1 and 2, so I'll submit a modified 
+> patch once "of: Create function for counting number of phandles in a 
+> property" has stabilized. Would it have to go through the gpio branch then?
 
---
-~Vinod
+I'll put it through the DT branch since that is where I'll put the
+of_count_phandle patch (assuming it is ready for the 3.9 merge window).
+
+g.
