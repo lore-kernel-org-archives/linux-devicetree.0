@@ -1,37 +1,48 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 5/6] of_spi: Add fetching of of_gpio flags to of_spi_register_master
-Date: Tue, 12 Feb 2013 17:09:48 +0000
-Message-ID: <20130212170948.C5BA63E07C5@localhost>
-References: <1359471223-4794-1-git-send-email-andreas@gaisler.com> <1359471223-4794-6-git-send-email-andreas@gaisler.com> <20130211002220.AFCA83E0C13@localhost> <511A0DB6.1080702@gaisler.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <511A0DB6.1080702@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree-discuss@lists.ozlabs.org, spi-devel-general@lists.sourceforge.net, linux-kernel@vger.kernel.org, software@gaisler.com
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: [PATCH V2 1/3] of/selftest: Fix GPIOs selftest to cover the 7th case
+Date: Tue, 12 Feb 2013 17:59:39 +0000
+Message-ID: <1360691981-21837-1-git-send-email-grant.likely@secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 12 Feb 2013 10:39:02 +0100, Andreas Larsson <andreas@gaisler.com> wrote:
-> On 2013-02-11 01:22, Grant Likely wrote:
-> > On Tue, 29 Jan 2013 15:53:42 +0100, Andreas Larsson <andreas@gaisler.com> wrote:
-> >> When using a gpio chip select with a OF_GPIO_ACTIVE_LOW flag, this needs to be
-> >> known to the controller driver.
-> >>
-> >> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
-> >
-> > Out of curiosity, what do you need the flags for? Polarity of the CS
-> > signal? I think it is long past time to revisit baking polarity control
-> > into core of gpiolib. Would you mind investigating doing that instead of
-> > having to manage it manually in each and every driver?
-> 
-> I don't even need it on my hardware. It seemed like a good thing to have 
-> via of_spi_register_master. I am OK with just dropping this.
+The of_gpio_named_count() self test doesn't hit the out-of-range
+condition even though it is coded. Fix the bug by increasing the for
+loop range by one.
 
-Hahaha. Okay, let's leave it for now until someone does need it. I can
-however see the need for the polarity flag, so the request still stands
-for someone to put that feature into the core.  :-)
+Reported-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+---
+ drivers/of/selftest.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-g.
-
+diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+index f24ffd7..9f62eb5 100644
+--- a/drivers/of/selftest.c
++++ b/drivers/of/selftest.c
+@@ -35,7 +35,7 @@ static void __init of_selftest_parse_phandle_with_args(void)
+ 		return;
+ 	}
+ 
+-	for (i = 0; i < 7; i++) {
++	for (i = 0; i < 8; i++) {
+ 		bool passed = true;
+ 		rc = of_parse_phandle_with_args(np, "phandle-list",
+ 						"#phandle-cells", i, &args);
 -- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+1.7.10.4
