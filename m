@@ -1,127 +1,140 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v1 1/4] i2c: mux: Add i2c-arbitrator 'mux' driver
-Date: Wed, 13 Feb 2013 14:02:47 -0700
-Message-ID: <511BFF77.2090202@wwwdotorg.org>
-References: <1360778532-7480-1-git-send-email-dianders@chromium.org>
+From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: Re: [PATCH 1/4] of/pci: Provide support for parsing PCI DT ranges
+ property
+Date: Wed, 13 Feb 2013 22:29:51 +0100
+Message-ID: <20130213212951.GA27849@avionic-0098.mockup.avionic-design.de>
+References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
+ <1360570940-17086-2-git-send-email-thierry.reding@avionic-design.de>
+ <511949C7.7070604@gmail.com>
+ <20130212064523.GA28850@avionic-0098.mockup.avionic-design.de>
+ <511BA1E0.9000404@gmail.com>
+ <20130213142521.GA6223@avionic-0098.mockup.avionic-design.de>
+ <511BEF8D.7060506@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1360778532-7480-1-git-send-email-dianders@chromium.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Wolfram Sang <w.sang@pengutronix.de>, Simon Glass <sjg@chromium.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Yuvaraj Kumar <yuvaraj.cd@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, u.kleine-koenig@pengutronix.de, Mark Brown <broonie@opensource.wolfsonmicro.com>, Girish Shivananjappa <girish.shivananjappa@linaro.org>, bhushan.r@samsung.com, sreekumar.c@samsung.com, Prashanth G <prashanth.g@samsung.com>, Olof Johansson <olof@lixom.net>, Daniel Kurtz <djkurtz@chromium.org>, Grant Grundler <grundler@chromium.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Jean Delvare <khali@linux-fr.org>, Peter Korsgaard <peter.korsgaard@barco.com>, Stephen Warren <swarren@nvidia.com>, Guenter Roeck <guenter.roeck@ericsson.com>, devicetree-dis
+Content-Type: multipart/mixed; boundary="===============1897221276746301240=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <511BEF8D.7060506-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/13/2013 11:02 AM, Doug Anderson wrote:
-> The i2c-arbitrator driver implements the arbitration scheme that the
-> Embedded Controller (EC) on the ARM Chromebook expects to use for bus
-> multimastering.  This i2c-arbitrator driver could also be used in
-> other places where standard i2c bus arbitration can't be used and two
-> extra GPIOs are available for arbitration.
-> 
-> This driver is based on code that Simon Glass added to the i2c-s3c2410
-> driver in the Chrome OS kernel 3.4 tree.  The current incarnation as a
-> mux driver is as suggested by Grant Likely.  See
-> <https://patchwork.kernel.org/patch/1877311/> for some history.
 
-> diff --git a/Documentation/devicetree/bindings/i2c/i2c-arbitrator.txt b/Documentation/devicetree/bindings/i2c/i2c-arbitrator.txt
+--===============1897221276746301240==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Content-Disposition: inline
 
-> +This mechanism is used instead of standard i2c multimaster to avoid some of the
-> +subtle driver and silicon bugs that are often present with i2c multimaster.
 
-Being really pick here, but I2C should be capitalized in free-form text.
-There are a few other places where the comment applies.
+--XsQoSWH+UP9D9v3l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> +Required properties:
-> +- compatible: i2c-arbitrator
+On Wed, Feb 13, 2013 at 01:54:53PM -0600, Rob Herring wrote:
+> On 02/13/2013 08:25 AM, Thierry Reding wrote:
+> > On Wed, Feb 13, 2013 at 08:23:28AM -0600, Rob Herring wrote:
+> >> On 02/12/2013 12:45 AM, Thierry Reding wrote:
+> >>> On Mon, Feb 11, 2013 at 01:43:03PM -0600, Rob Herring wrote:
+> >>>> On 02/11/2013 02:22 AM, Thierry Reding wrote:
+> >>>>> From: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>
+> >>
+> >>>>> @@ -13,6 +13,7 @@
+> >>>>>  #define OF_CHECK_COUNTS(na, ns)	(OF_CHECK_ADDR_COUNT(na) && (ns) >=
+ 0)
+> >>>>> =20
+> >>>>>  static struct of_bus *of_match_bus(struct device_node *np);
+> >>>>> +static struct of_bus *of_find_bus(const char *name);
+> >>>>
+> >>>> Can you move this function up to avoid the forward declaration.
+> >>>
+> >>> It needs to be defined after the of_busses structure, which is defined
+> >>> below the CONFIG_PCI block where of_pci_process_ranges() is defined. =
+I'd
+> >>> have to move that one as well and add another #ifdef CONFIG_PCI secti=
+on.
+> >>> If you prefer that I can do that.
+> >>
+> >> Okay, it's fine as is.
+> >>
+> >>>>> +static struct of_bus *of_find_bus(const char *name)
+> >>>>> +{
+> >>>>> +	unsigned int i;
+> >>>>> +
+> >>>>> +	for (i =3D 0; i < ARRAY_SIZE(of_busses); i++)
+> >>>>> +		if (strcmp(name, of_busses[i].name) =3D=3D 0)
+> >>>>                                               ^
+> >>>> space needed.
+> >>>
+> >>> I don't understand. Do you want the space to go between '.' and "name=
+"?
+> >>
+> >> Must have been some dirt on my screen... Never mind.
+> >>
+> >> I'll apply these for 3.9.
+> >=20
+> > Great, thanks!
+>=20
+> Grant vetoed merging. We need to see the other architectures using these
+> functions rather than add yet another copy.
 
-That seems pretty generic. What if there are other arbitration schemes?
+I think I've said this before, but converting the other architectures
+isn't very trivial, mostly because each has a specific way of storing
+the values read from these properties.
 
-> +- bus-arbitration-gpios: Two GPIOs to use with the GPIO-based bus
-> +    arbitration protocol.  The first should be an output, and is used to
-> +    claim the I2C bus for us (AP_CLAIM).  The second should be an input and
-> +    signals that the other side wants to claim the bus (EC_CLAIM).
+So unless we want to block any new drivers from being merged, the only
+alternatives are to either merge these patches or include a copy of the
+same code in each new driver that needs the functionality (or open-code
+the functions in each driver).
 
-Is it worth using two separate properties here, so they each get a
-unique name. That way, nobody has the remember which order the two GPIOs
-come in.
+There is quite a bit of rework required to unify the architecture
+specific PCI frameworks and I think Bjorn and others have been making
+quite a bit of progress in that direction. I think that these patches
+can help refactor some of those parts.
 
-> diff --git a/drivers/i2c/muxes/i2c-arbitrator.c b/drivers/i2c/muxes/i2c-arbitrator.c
+Thierry
 
-> +enum {
-> +	I2C_ARB_GPIO_AP,		/* AP claims i2c bus */
-> +	I2C_ARB_GPIO_EC,		/* EC claims i2c bus */
-> +
-> +	I2C_ARB_GPIO_COUNT,
-> +};
+--XsQoSWH+UP9D9v3l
+Content-Type: application/pgp-signature
 
-Oh, I see from later code that those are indices into the
-bus-arbitration-gpios DT property. I thought they were states in some
-state machine at first. A comment might help here, if you continue to
-use one property.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.19 (GNU/Linux)
 
-> +static int i2c_arbitrator_select(struct i2c_adapter *adap, void *data, u32 chan)
-> +{
-> +	const struct i2c_arbitrator_data *arb = data;
-> +	unsigned long stop_retry, stop_time;
-> +
-> +	/* Start a round of trying to claim the bus */
-> +	stop_time = jiffies + usecs_to_jiffies(arb->wait_free_us) + 1;
-> +	do {
-> +		/* Indicate that we want to claim the bus */
-> +		gpio_set_value(arb->ap_gpio, 0);
+iQIcBAEBAgAGBQJRHAXPAAoJEN0jrNd/PrOhISoP/1xbkU3WM8NJdgOR+FSoQNRK
+bFcXkAGOITvYV5pr4yexW7vJsAAZhy6RvmrmVvLIBDkdmJKy2BF4SkntUYXm5IMM
+k+isXT5ti2PuUgnbFo9kCIwIPXVAuTHj4mYUJCyyon2cSDB2ju6+6jnQBdfd7e2l
+U3MZnSrEaXjkGy3+X4stoTLlCDHeW5yIRRKLUH0Z+E1pf//A35l8S0/o5mZlurqY
+uX/vvnX9YxRE1m9EwLRR23jxFNOkHKjZkQWag2BGWt0s+J7vlhdrmG/HH5J8fLBi
+XwzCK0DY+SBT6jf1BffHvDJhALunCQlVPkdzjzhU0L8n6Xw2fPKie3tDy9GgOdlu
+2idjqDh9rkrlVlPi0S9RRp/k4cMXqCSTNx57JxMsi6tLb6ogbW8JrPygBkeJBR//
+yyK/0GeDyadqYGT9t6MLfzV7dVny1hopL3gDFrWxJGACnleovonRjM3RmsAR//Or
+hp2j25+i2xp/L9NL7hFT3zavfI3mfbmc+gxJE3OpbmXsCFn5M60fOZ+BPT7wmPWy
+DXFNbkJALrwFq7CJQ0A/PUZH90XnnvSinWnPDNkGER922WhAxkskOmn12gge6x9Z
+MlL+SeuQ3WayM+jQPOcsi0iELXz9gDIF7ULzVaW+HHOUjVhtyfGX/bJoFWW4/Nqb
+9P9RZ6XATAeSpUtyMg94
+=9ntJ
+-----END PGP SIGNATURE-----
 
-The GPIO signals appear to be active low in the code. Instead, I think
-it'd make more sense to extract the polarity of the GPIO from DT, using
-of_get_named_gpio_flags().
+--XsQoSWH+UP9D9v3l--
 
-> +static int i2c_arbitrator_probe(struct platform_device *pdev)
+--===============1897221276746301240==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
 
-> +	/* Request GPIOs */
-> +	ret = of_get_named_gpio(np, "bus-arbitration-gpios", I2C_ARB_GPIO_AP);
-> +	if (gpio_is_valid(ret)) {
-> +		arb->ap_gpio = ret;
-> +		ret = gpio_request_one(arb->ap_gpio, GPIOF_OUT_INIT_HIGH,
-> +				       "bus-arbitration-ap");
-> +	}
-> +	if (WARN_ON(ret))
-> +		goto ap_request_failed;
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
 
-you could use devm_gpio_request_one() and save some cleanup logic.
-
-> +	/* Arbitration parameters */
-> +	if (of_property_read_u32(np, "bus-arbitration-slew-delay-us",
-> +				 &arb->slew_delay_us))
-> +		arb->slew_delay_us = 10;
-
-The DT binding document says that property is required. Either the code
-should error out here, or the document updated to indicate that the
-properties are optional, and specify what the defaults are.
-
-> +static int i2c_arbitrator_remove(struct platform_device *pdev)
-
-> +	platform_set_drvdata(pdev, NULL);
-
-You shouldn't have to do that; nothing should care what the pdata value
-is while the device isn't probed anyway.
-
-> +static int __init i2c_arbitrator_init(void)
-> +{
-> +	return platform_driver_register(&i2c_arbitrator_driver);
-> +}
-> +subsys_initcall(i2c_arbitrator_init);
-> +
-> +static void __exit i2c_arbitrator_exit(void)
-> +{
-> +	platform_driver_unregister(&i2c_arbitrator_driver);
-> +}
-> +module_exit(i2c_arbitrator_exit);
-
-You should be able to replace all that with:
-
-module_platform_driver(&i2c_arbitrator_driver);
-
-> +MODULE_LICENSE("GPL");
-
-The header says GPL v2 only, so "GPL v2".
+--===============1897221276746301240==--
