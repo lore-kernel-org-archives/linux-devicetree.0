@@ -1,33 +1,63 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: Fix locking when calling of_get_next_available_child()
-Date: Wed, 13 Feb 2013 10:08:51 +0000
-Message-ID: <20130213100851.7620A3E23F1@localhost>
-References: <1360621157-23570-1-git-send-email-grant.likely@secretlab.ca> <51197E36.8080704@wwwdotorg.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51197E36.8080704@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robherring2@gmail.com>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v7 1/6] watchdog: core: dt: add support for the
+ timeout-sec dt property
+Date: Wed, 13 Feb 2013 11:32:52 +0100
+Message-ID: <CAHkwnC8rA9FZL2MK_qQ8yrvK-T3nxvRqxrDACeaV6v8VpMPkxQ@mail.gmail.com>
+References: <1357639455-21935-1-git-send-email-fabio.porcedda@gmail.com>
+ <1357639455-21935-2-git-send-email-fabio.porcedda@gmail.com>
+ <20130212230303.GA7867@spo001.leaseweb.com>
+ <CAHkwnC_XdgHSo8Vkz5Ae=DQ48BBhLPVx_hXTzLTcw+xZJaEi5A@mail.gmail.com>
+ <20130213094401.GB7867@spo001.leaseweb.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130213094401.GB7867-1F/o1hAF34+bEvaWgpTR7kEOCMrvLtNR@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Feb 2013 16:26:46 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 02/11/2013 03:19 PM, Grant Likely wrote:
-> > of_get_next_available_child() obtains the devtree_lock and then calls
-> > of_device_is_available() which also attempts to claim the lock. This is
-> > obviously incorrect and causes a deadlock on boot. Fix issue by adding
-> > an variant of of_device_is_available() which doesn't obtain the lock.
-> 
-> This patch forgets to update __of_device_is_available() to call
-> __of_get_property() rather than of_get_property() and hence doesn't
-> actually solve the problem.
-> 
-> You might want to make __of_device_is_available() static too.
+On Wed, Feb 13, 2013 at 10:44 AM, Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org> wrote:
+> Hi Fabio,
+>
+>> > I must admit that the different iterations of this patch only made it better.
+>> > I like the idea that you are proposing here (put the default timeout in the
+>> > watchdog_device struct and use a helper function to set the timeout parameter
+>> > value or the timeout-sec dt value). To be able to use other mechanism in the
+>> > future also, I think it make more sense to pass the device instead of the
+>> > device_node.
+>>
+>> If i understand correctly you want to use "struct platform_device"
+>> instead of "struct device_node",
+>> in the function watchdog_init_timeout?
+>
+> No struct device instead of struct device_node.
+>
+>> > I also detailed your documentation a bit more and incorporated above changes
+>> > in an adjusted patch. Can you have a look at it and if OK for you I will put
+>> > it in linux-watchdog-next as your v10 :-).
+>>
+>> That's good for sure :)
+>
+> Will add it to the linux-watchdog-next tree today.
+>
 
-Okay, I've dropped this patch and replaced it with your version since
-you're actually doing better testing that I it would appear. I had to
-respin my tree anyway because I messed up a merge of Rob's branch. :-(
-Sorry for the noise.
+In a few minutes I will send the v8 patch set.
 
-New version of the tree is pushed out.
+Best regards
+--
+Fabio Porcedda
 
-g.
+> Kind regards,
+> Wim.
+>
