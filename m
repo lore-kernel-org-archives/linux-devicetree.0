@@ -1,371 +1,234 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH 6/9] ARM: tegra: use pre-processor for all device trees
-Date: Wed, 13 Feb 2013 15:21:11 -0700
-Message-ID: <1360794071-29629-1-git-send-email-swarren@wwwdotorg.org>
-References: <1360791198-29462-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1360791198-29462-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/4] of/pci: Provide support for parsing PCI DT ranges property
+Date: Wed, 13 Feb 2013 22:53:11 +0000
+Message-ID: <20130213225311.37FFB3E3557@localhost>
+References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de> <1360570940-17086-2-git-send-email-thierry.reding@avionic-design.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1360570940-17086-2-git-send-email-thierry.reding@avionic-design.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Rob Herring <rob.herring@calxeda.com>, Andrew Murray <andrew.murray@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Mon, 11 Feb 2013 09:22:17 +0100, Thierry Reding <thierry.reding@avionic-design.de> wrote:
+> From: Andrew Murray <andrew.murray@arm.com>
+> 
+> DT bindings for PCI host bridges often use the ranges property to describe
+> memory and IO ranges - this binding tends to be the same across architectures
+> yet several parsing implementations exist, e.g. arch/mips/pci/pci.c,
+> arch/powerpc/kernel/pci-common.c, arch/sparc/kernel/pci.c and
+> arch/microblaze/pci/pci-common.c (clone of PPC). Some of these duplicate
+> functionality provided by drivers/of/address.c.
 
-This enables a C pre-processor pass on all Tegra device trees. This
-allows future use of #defines and header files in order to define names
-for various constants, such as the IDs and flags in GPIO specifiers.
-Use of those features will increase the readability of the device tree
-files.
+Hi Thierry,
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/{tegra114-dalmore.dts => tegra114-dalmore.dtsp}    |    2 +-
- arch/arm/boot/dts/{tegra114-pluto.dts => tegra114-pluto.dtsp}        |    2 +-
- arch/arm/boot/dts/{tegra114.dtsi => tegra114.dtsip}                  |    2 +-
- .../boot/dts/{tegra20-colibri-512.dtsi => tegra20-colibri-512.dtsip} |    2 +-
- arch/arm/boot/dts/{tegra20-harmony.dts => tegra20-harmony.dtsp}      |    2 +-
- arch/arm/boot/dts/{tegra20-iris-512.dts => tegra20-iris-512.dtsp}    |    2 +-
- .../boot/dts/{tegra20-medcom-wide.dts => tegra20-medcom-wide.dtsp}   |    2 +-
- arch/arm/boot/dts/{tegra20-paz00.dts => tegra20-paz00.dtsp}          |    2 +-
- arch/arm/boot/dts/{tegra20-plutux.dts => tegra20-plutux.dtsp}        |    2 +-
- arch/arm/boot/dts/{tegra20-seaboard.dts => tegra20-seaboard.dtsp}    |    2 +-
- arch/arm/boot/dts/{tegra20-tamonten.dtsi => tegra20-tamonten.dtsip}  |    2 +-
- arch/arm/boot/dts/{tegra20-tec.dts => tegra20-tec.dtsp}              |    2 +-
- arch/arm/boot/dts/{tegra20-trimslice.dts => tegra20-trimslice.dtsp}  |    2 +-
- arch/arm/boot/dts/{tegra20-ventana.dts => tegra20-ventana.dtsp}      |    2 +-
- arch/arm/boot/dts/{tegra20-whistler.dts => tegra20-whistler.dtsp}    |    2 +-
- arch/arm/boot/dts/{tegra20.dtsi => tegra20.dtsip}                    |    2 +-
- arch/arm/boot/dts/{tegra30-beaver.dts => tegra30-beaver.dtsp}        |    2 +-
- .../arm/boot/dts/{tegra30-cardhu-a02.dts => tegra30-cardhu-a02.dtsp} |    2 +-
- .../arm/boot/dts/{tegra30-cardhu-a04.dts => tegra30-cardhu-a04.dtsp} |    2 +-
- arch/arm/boot/dts/{tegra30-cardhu.dtsi => tegra30-cardhu.dtsip}      |    2 +-
- arch/arm/boot/dts/{tegra30.dtsi => tegra30.dtsip}                    |    2 +-
- 21 files changed, 21 insertions(+), 21 deletions(-)
- rename arch/arm/boot/dts/{tegra114-dalmore.dts => tegra114-dalmore.dtsp} (91%)
- rename arch/arm/boot/dts/{tegra114-pluto.dts => tegra114-pluto.dtsp} (91%)
- rename arch/arm/boot/dts/{tegra114.dtsi => tegra114.dtsip} (99%)
- rename arch/arm/boot/dts/{tegra20-colibri-512.dtsi => tegra20-colibri-512.dtsip} (99%)
- rename arch/arm/boot/dts/{tegra20-harmony.dts => tegra20-harmony.dtsp} (99%)
- rename arch/arm/boot/dts/{tegra20-iris-512.dts => tegra20-iris-512.dtsp} (97%)
- rename arch/arm/boot/dts/{tegra20-medcom-wide.dts => tegra20-medcom-wide.dtsp} (97%)
- rename arch/arm/boot/dts/{tegra20-paz00.dts => tegra20-paz00.dtsp} (99%)
- rename arch/arm/boot/dts/{tegra20-plutux.dts => tegra20-plutux.dtsp} (96%)
- rename arch/arm/boot/dts/{tegra20-seaboard.dts => tegra20-seaboard.dtsp} (99%)
- rename arch/arm/boot/dts/{tegra20-tamonten.dtsi => tegra20-tamonten.dtsip} (99%)
- rename arch/arm/boot/dts/{tegra20-tec.dts => tegra20-tec.dtsp} (96%)
- rename arch/arm/boot/dts/{tegra20-trimslice.dts => tegra20-trimslice.dtsp} (99%)
- rename arch/arm/boot/dts/{tegra20-ventana.dts => tegra20-ventana.dtsp} (99%)
- rename arch/arm/boot/dts/{tegra20-whistler.dts => tegra20-whistler.dtsp} (99%)
- rename arch/arm/boot/dts/{tegra20.dtsi => tegra20.dtsip} (99%)
- rename arch/arm/boot/dts/{tegra30-beaver.dts => tegra30-beaver.dtsp} (99%)
- rename arch/arm/boot/dts/{tegra30-cardhu-a02.dts => tegra30-cardhu-a02.dtsp} (98%)
- rename arch/arm/boot/dts/{tegra30-cardhu-a04.dts => tegra30-cardhu-a04.dtsp} (98%)
- rename arch/arm/boot/dts/{tegra30-cardhu.dtsi => tegra30-cardhu.dtsip} (99%)
- rename arch/arm/boot/dts/{tegra30.dtsi => tegra30.dtsip} (99%)
+Following from my comments on not merging these patches, here are my
+comments on this patch...
 
-diff --git a/arch/arm/boot/dts/tegra114-dalmore.dts b/arch/arm/boot/dts/tegra114-dalmore.dtsp
-similarity index 91%
-rename from arch/arm/boot/dts/tegra114-dalmore.dts
-rename to arch/arm/boot/dts/tegra114-dalmore.dtsp
-index a30aca6..51f67cd 100644
---- a/arch/arm/boot/dts/tegra114-dalmore.dts
-+++ b/arch/arm/boot/dts/tegra114-dalmore.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra114.dtsi"
-+#include "tegra114.dtsip"
- 
- / {
- 	model = "NVIDIA Tegra114 Dalmore evaluation board";
-diff --git a/arch/arm/boot/dts/tegra114-pluto.dts b/arch/arm/boot/dts/tegra114-pluto.dtsp
-similarity index 91%
-rename from arch/arm/boot/dts/tegra114-pluto.dts
-rename to arch/arm/boot/dts/tegra114-pluto.dtsp
-index 9bea8f5..40a88d1 100644
---- a/arch/arm/boot/dts/tegra114-pluto.dts
-+++ b/arch/arm/boot/dts/tegra114-pluto.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra114.dtsi"
-+#include "tegra114.dtsip"
- 
- / {
- 	model = "NVIDIA Tegra114 Pluto evaluation board";
-diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsip
-similarity index 99%
-rename from arch/arm/boot/dts/tegra114.dtsi
-rename to arch/arm/boot/dts/tegra114.dtsip
-index 1dfaf28..d2150f0 100644
---- a/arch/arm/boot/dts/tegra114.dtsi
-+++ b/arch/arm/boot/dts/tegra114.dtsip
-@@ -1,4 +1,4 @@
--/include/ "skeleton.dtsi"
-+#include "skeleton.dtsi"
- 
- / {
- 	compatible = "nvidia,tegra114";
-diff --git a/arch/arm/boot/dts/tegra20-colibri-512.dtsi b/arch/arm/boot/dts/tegra20-colibri-512.dtsip
-similarity index 99%
-rename from arch/arm/boot/dts/tegra20-colibri-512.dtsi
-rename to arch/arm/boot/dts/tegra20-colibri-512.dtsip
-index 4441620..bf8865b 100644
---- a/arch/arm/boot/dts/tegra20-colibri-512.dtsi
-+++ b/arch/arm/boot/dts/tegra20-colibri-512.dtsip
-@@ -1,4 +1,4 @@
--/include/ "tegra20.dtsi"
-+#include "tegra20.dtsip"
- 
- / {
- 	model = "Toradex Colibri T20 512MB";
-diff --git a/arch/arm/boot/dts/tegra20-harmony.dts b/arch/arm/boot/dts/tegra20-harmony.dtsp
-similarity index 99%
-rename from arch/arm/boot/dts/tegra20-harmony.dts
-rename to arch/arm/boot/dts/tegra20-harmony.dtsp
-index 61d027f..3fe66c1 100644
---- a/arch/arm/boot/dts/tegra20-harmony.dts
-+++ b/arch/arm/boot/dts/tegra20-harmony.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra20.dtsi"
-+#include "tegra20.dtsip"
- 
- / {
- 	model = "NVIDIA Tegra20 Harmony evaluation board";
-diff --git a/arch/arm/boot/dts/tegra20-iris-512.dts b/arch/arm/boot/dts/tegra20-iris-512.dtsp
-similarity index 97%
-rename from arch/arm/boot/dts/tegra20-iris-512.dts
-rename to arch/arm/boot/dts/tegra20-iris-512.dtsp
-index 52f1103..a0ba0b0 100644
---- a/arch/arm/boot/dts/tegra20-iris-512.dts
-+++ b/arch/arm/boot/dts/tegra20-iris-512.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra20-colibri-512.dtsi"
-+#include "tegra20-colibri-512.dtsip"
- 
- / {
- 	model = "Toradex Colibri T20 512MB on Iris";
-diff --git a/arch/arm/boot/dts/tegra20-medcom-wide.dts b/arch/arm/boot/dts/tegra20-medcom-wide.dtsp
-similarity index 97%
-rename from arch/arm/boot/dts/tegra20-medcom-wide.dts
-rename to arch/arm/boot/dts/tegra20-medcom-wide.dtsp
-index a2d6d65..6125604 100644
---- a/arch/arm/boot/dts/tegra20-medcom-wide.dts
-+++ b/arch/arm/boot/dts/tegra20-medcom-wide.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra20-tamonten.dtsi"
-+#include "tegra20-tamonten.dtsip"
- 
- / {
- 	model = "Avionic Design Medcom-Wide board";
-diff --git a/arch/arm/boot/dts/tegra20-paz00.dts b/arch/arm/boot/dts/tegra20-paz00.dtsp
-similarity index 99%
-rename from arch/arm/boot/dts/tegra20-paz00.dts
-rename to arch/arm/boot/dts/tegra20-paz00.dtsp
-index 54d6fce..e40d7ee 100644
---- a/arch/arm/boot/dts/tegra20-paz00.dts
-+++ b/arch/arm/boot/dts/tegra20-paz00.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra20.dtsi"
-+#include "tegra20.dtsip"
- 
- / {
- 	model = "Toshiba AC100 / Dynabook AZ";
-diff --git a/arch/arm/boot/dts/tegra20-plutux.dts b/arch/arm/boot/dts/tegra20-plutux.dtsp
-similarity index 96%
-rename from arch/arm/boot/dts/tegra20-plutux.dts
-rename to arch/arm/boot/dts/tegra20-plutux.dtsp
-index 2894800..08401b9 100644
---- a/arch/arm/boot/dts/tegra20-plutux.dts
-+++ b/arch/arm/boot/dts/tegra20-plutux.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra20-tamonten.dtsi"
-+#include "tegra20-tamonten.dtsip"
- 
- / {
- 	model = "Avionic Design Plutux board";
-diff --git a/arch/arm/boot/dts/tegra20-seaboard.dts b/arch/arm/boot/dts/tegra20-seaboard.dtsp
-similarity index 99%
-rename from arch/arm/boot/dts/tegra20-seaboard.dts
-rename to arch/arm/boot/dts/tegra20-seaboard.dtsp
-index 37b3a57..6534a61 100644
---- a/arch/arm/boot/dts/tegra20-seaboard.dts
-+++ b/arch/arm/boot/dts/tegra20-seaboard.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra20.dtsi"
-+#include "tegra20.dtsip"
- 
- / {
- 	model = "NVIDIA Seaboard";
-diff --git a/arch/arm/boot/dts/tegra20-tamonten.dtsi b/arch/arm/boot/dts/tegra20-tamonten.dtsip
-similarity index 99%
-rename from arch/arm/boot/dts/tegra20-tamonten.dtsi
-rename to arch/arm/boot/dts/tegra20-tamonten.dtsip
-index 4766aba..089bbec 100644
---- a/arch/arm/boot/dts/tegra20-tamonten.dtsi
-+++ b/arch/arm/boot/dts/tegra20-tamonten.dtsip
-@@ -1,4 +1,4 @@
--/include/ "tegra20.dtsi"
-+#include "tegra20.dtsip"
- 
- / {
- 	model = "Avionic Design Tamonten SOM";
-diff --git a/arch/arm/boot/dts/tegra20-tec.dts b/arch/arm/boot/dts/tegra20-tec.dtsp
-similarity index 96%
-rename from arch/arm/boot/dts/tegra20-tec.dts
-rename to arch/arm/boot/dts/tegra20-tec.dtsp
-index 402b210..331c81a 100644
---- a/arch/arm/boot/dts/tegra20-tec.dts
-+++ b/arch/arm/boot/dts/tegra20-tec.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra20-tamonten.dtsi"
-+#include "tegra20-tamonten.dtsip"
- 
- / {
- 	model = "Avionic Design Tamonten Evaluation Carrier";
-diff --git a/arch/arm/boot/dts/tegra20-trimslice.dts b/arch/arm/boot/dts/tegra20-trimslice.dtsp
-similarity index 99%
-rename from arch/arm/boot/dts/tegra20-trimslice.dts
-rename to arch/arm/boot/dts/tegra20-trimslice.dtsp
-index 5d79e4f..1f6cd20 100644
---- a/arch/arm/boot/dts/tegra20-trimslice.dts
-+++ b/arch/arm/boot/dts/tegra20-trimslice.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra20.dtsi"
-+#include "tegra20.dtsip"
- 
- / {
- 	model = "Compulab TrimSlice board";
-diff --git a/arch/arm/boot/dts/tegra20-ventana.dts b/arch/arm/boot/dts/tegra20-ventana.dtsp
-similarity index 99%
-rename from arch/arm/boot/dts/tegra20-ventana.dts
-rename to arch/arm/boot/dts/tegra20-ventana.dtsp
-index 425c890..a5ae217 100644
---- a/arch/arm/boot/dts/tegra20-ventana.dts
-+++ b/arch/arm/boot/dts/tegra20-ventana.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra20.dtsi"
-+#include "tegra20.dtsip"
- 
- / {
- 	model = "NVIDIA Tegra20 Ventana evaluation board";
-diff --git a/arch/arm/boot/dts/tegra20-whistler.dts b/arch/arm/boot/dts/tegra20-whistler.dtsp
-similarity index 99%
-rename from arch/arm/boot/dts/tegra20-whistler.dts
-rename to arch/arm/boot/dts/tegra20-whistler.dtsp
-index ea57c0f..ee24daa 100644
---- a/arch/arm/boot/dts/tegra20-whistler.dts
-+++ b/arch/arm/boot/dts/tegra20-whistler.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra20.dtsi"
-+#include "tegra20.dtsip"
- 
- / {
- 	model = "NVIDIA Tegra20 Whistler evaluation board";
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsip
-similarity index 99%
-rename from arch/arm/boot/dts/tegra20.dtsi
-rename to arch/arm/boot/dts/tegra20.dtsip
-index 5916c93..917edd4 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsip
-@@ -1,4 +1,4 @@
--/include/ "skeleton.dtsi"
-+#include "skeleton.dtsi"
- 
- / {
- 	compatible = "nvidia,tegra20";
-diff --git a/arch/arm/boot/dts/tegra30-beaver.dts b/arch/arm/boot/dts/tegra30-beaver.dtsp
-similarity index 99%
-rename from arch/arm/boot/dts/tegra30-beaver.dts
-rename to arch/arm/boot/dts/tegra30-beaver.dtsp
-index 8ff2ff2..af23c94 100644
---- a/arch/arm/boot/dts/tegra30-beaver.dts
-+++ b/arch/arm/boot/dts/tegra30-beaver.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra30.dtsi"
-+#include "tegra30.dtsip"
- 
- / {
- 	model = "NVIDIA Tegra30 Beaver evaluation board";
-diff --git a/arch/arm/boot/dts/tegra30-cardhu-a02.dts b/arch/arm/boot/dts/tegra30-cardhu-a02.dtsp
-similarity index 98%
-rename from arch/arm/boot/dts/tegra30-cardhu-a02.dts
-rename to arch/arm/boot/dts/tegra30-cardhu-a02.dtsp
-index adc88aa..64b7184 100644
---- a/arch/arm/boot/dts/tegra30-cardhu-a02.dts
-+++ b/arch/arm/boot/dts/tegra30-cardhu-a02.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra30-cardhu.dtsi"
-+#include "tegra30-cardhu.dtsip"
- 
- /* This dts file support the cardhu A02 version of board */
- 
-diff --git a/arch/arm/boot/dts/tegra30-cardhu-a04.dts b/arch/arm/boot/dts/tegra30-cardhu-a04.dtsp
-similarity index 98%
-rename from arch/arm/boot/dts/tegra30-cardhu-a04.dts
-rename to arch/arm/boot/dts/tegra30-cardhu-a04.dtsp
-index 08163e1..fc0d771 100644
---- a/arch/arm/boot/dts/tegra30-cardhu-a04.dts
-+++ b/arch/arm/boot/dts/tegra30-cardhu-a04.dtsp
-@@ -1,6 +1,6 @@
- /dts-v1/;
- 
--/include/ "tegra30-cardhu.dtsi"
-+#include "tegra30-cardhu.dtsip"
- 
- /* This dts file support the cardhu A04 and later versions of board */
- 
-diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsip
-similarity index 99%
-rename from arch/arm/boot/dts/tegra30-cardhu.dtsi
-rename to arch/arm/boot/dts/tegra30-cardhu.dtsip
-index 1749927..75ff544 100644
---- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
-+++ b/arch/arm/boot/dts/tegra30-cardhu.dtsip
-@@ -1,4 +1,4 @@
--/include/ "tegra30.dtsi"
-+#include "tegra30.dtsip"
- 
- /**
-  * This file contains common DT entry for all fab version of Cardhu.
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsip
-similarity index 99%
-rename from arch/arm/boot/dts/tegra30.dtsi
-rename to arch/arm/boot/dts/tegra30.dtsip
-index 572a45b..d25975e 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsip
-@@ -1,4 +1,4 @@
--/include/ "skeleton.dtsi"
-+#include "skeleton.dtsi"
- 
- / {
- 	compatible = "nvidia,tegra30";
--- 
-1.7.10.4
+> This patch provides a common iterator-based parser for the ranges property, it
+> is hoped this will reduce DT representation differences between architectures
+> and that architectures will migrate in part to this new parser.
+> 
+> It is also hoped (and the motativation for the patch) that this patch will
+> reduce duplication of code when writing host bridge drivers that are supported
+> by multiple architectures.
+> 
+> This patch provides struct resources from a device tree node, e.g.:
+> 
+> 	u32 *last = NULL;
+> 	struct resource res;
+> 	while ((last = of_pci_process_ranges(np, res, last))) {
+> 		//do something with res
+> 	}
+
+The approach seems reasonable, but it isn't optimal. For one, the setup
+code ends up getting run every time of_pci_process_ranges() gets called.
+It would also be more user-friendly to wrap it up in a
+"for_each_of_pci_range()" macro.
+
+> Platforms with quirks can then do what they like with the resource or migrate
+> common quirk handling to the parser. In an ideal world drivers can just request
+> the obtained resources and pass them on (e.g. pci_add_resource_offset).
+> 
+> Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+> ---
+>  drivers/of/address.c       | 63 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of_address.h |  9 +++++++
+>  2 files changed, 72 insertions(+)
+> 
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index 04da786..f607008 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -13,6 +13,7 @@
+>  #define OF_CHECK_COUNTS(na, ns)	(OF_CHECK_ADDR_COUNT(na) && (ns) > 0)
+>  
+>  static struct of_bus *of_match_bus(struct device_node *np);
+> +static struct of_bus *of_find_bus(const char *name);
+>  static int __of_address_to_resource(struct device_node *dev,
+>  		const __be32 *addrp, u64 size, unsigned int flags,
+>  		const char *name, struct resource *r);
+> @@ -227,6 +228,57 @@ int of_pci_address_to_resource(struct device_node *dev, int bar,
+>  	return __of_address_to_resource(dev, addrp, size, flags, NULL, r);
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_address_to_resource);
+> +
+> +const __be32 *of_pci_process_ranges(struct device_node *node,
+> +				    struct resource *res, const __be32 *from)
+> +{
+> +	const __be32 *start, *end;
+> +	int na, ns, np, pna;
+> +	int rlen;
+> +	struct of_bus *bus;
+> +
+> +	WARN_ON(!res);
+> +
+> +	bus = of_find_bus("pci");
+> +	bus->count_cells(node, &na, &ns);
+> +	if (!OF_CHECK_COUNTS(na, ns)) {
+> +		pr_err("Bad cell count for %s\n", node->full_name);
+> +		return NULL;
+> +	}
+
+Looking up the pci of_bus structure isn't really warrented here. This
+function will only ever be used on PCI busses, and na/ns for PCI is
+always 3/2. Just use those numbers here. You could however validate that
+the node has the correct values in #address-cells and #size-cells
+
+> +
+> +	pna = of_n_addr_cells(node);
+> +	np = pna + na + ns;
+> +
+> +	start = of_get_property(node, "ranges", &rlen);
+> +	if (start == NULL)
+> +		return NULL;
+> +
+> +	end = start + rlen / sizeof(__be32);
+
+The above structure means that the ranges property has to be looked up
+each and every time this function is called. It would be better to have
+a state structure that can look it up once and then keep track of the
+iteration.
+
+> +
+> +	if (!from)
+> +		from = start;
+> +
+> +	while (from + np <= end) {
+> +		u64 cpu_addr, size;
+> +
+> +		cpu_addr = of_translate_address(node, from + na);
+> +		size = of_read_number(from + na + pna, ns);
+> +		res->flags = bus->get_flags(from);
+> +		from += np;
+> +
+> +		if (cpu_addr == OF_BAD_ADDR || size == 0)
+> +			continue;
+> +
+> +		res->name = node->full_name;
+> +		res->start = cpu_addr;
+> +		res->end = res->start + size - 1;
+> +		res->parent = res->child = res->sibling = NULL;
+> +		return from;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(of_pci_process_ranges);
+
+All of the above can be directly factored out of the PCI implementation.
+You don't even need to touch most of the powerpc code. Create your
+iterator helper functions in the same patch that makes PowerPC and
+Microblaze use them, and then improve/modify the behaviour in seperate
+patches. The delta to ppc/microblaze really will be very small with this
+approach.  Here are the relevant PPC lines:
+
+void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+				  struct device_node *dev, int primary)
+{
+	const u32 *ranges;
+	int rlen;
+	int pna = of_n_addr_cells(dev);
+	int np = pna + 5;
+	int memno = 0, isa_hole = -1;
+	u32 pci_space;
+	unsigned long long pci_addr, cpu_addr, pci_next, cpu_next, size;
+	unsigned long long isa_mb = 0;
+	struct resource *res;
+
+	printk(KERN_INFO "PCI host bridge %s %s ranges:\n",
+	       dev->full_name, primary ? "(primary)" : "");
+
+	/* Get ranges property */
+	ranges = of_get_property(dev, "ranges", &rlen);
+	if (ranges == NULL)
+		return;
+
+	/* Parse it */
+	while ((rlen -= np * 4) >= 0) {
+		/* Read next ranges element */
+		pci_space = ranges[0];
+		pci_addr = of_read_number(ranges + 1, 2);
+		cpu_addr = of_translate_address(dev, ranges + 3);
+		size = of_read_number(ranges + pna + 3, 2);
+		ranges += np;
+
+		/* If we failed translation or got a zero-sized region
+		 * (some FW try to feed us with non sensical zero sized regions
+		 * such as power3 which look like some kind of attempt at exposing
+		 * the VGA memory hole)
+		 */
+		if (cpu_addr == OF_BAD_ADDR || size == 0)
+			continue;
+
+		/* Now consume following elements while they are contiguous */
+		for (; rlen >= np * sizeof(u32);
+		     ranges += np, rlen -= np * 4) {
+			if (ranges[0] != pci_space)
+				break;
+			pci_next = of_read_number(ranges + 1, 2);
+			cpu_next = of_translate_address(dev, ranges + 3);
+			if (pci_next != pci_addr + size ||
+			    cpu_next != cpu_addr + size)
+				break;
+			size += of_read_number(ranges + pna + 3, 2);
+		}
+
+After factoring out the bits you want to use it will probably look like
+this:
+
+void pci_process_bridge_OF_ranges(struct pci_controller *hose,
+				  struct device_node *dev, int primary)
+{
+	const u32 *ranges;
+	int memno = 0, isa_hole = -1;
+	unsigned long long isa_mb = 0;
+	struct resource *res;
+	struct of_pci_range_iter iter;
+
+	printk(KERN_INFO "PCI host bridge %s %s ranges:\n",
+	       dev->full_name, primary ? "(primary)" : "");
+
+	for_each_of_pci_range(iter, np) {
+		/* Read next ranges element */
+		u32 pci_space = iter->pci_space;
+		unsigned long long pci_addr = iter->pci_addr;
+		unsigned long long cpu_addr = iter->cpu_addr;
+		unsigned long long size = iter->size;
+		int pna = iter->pna;
+		/* or the remainder of the body of this function could
+		 * have 'iter->' prefixed to each reference, which is
+		 * better, but also a bit more invasive */
+
+here really shouldn't be any further changes the the rest of the
+function. I don't think that is unreasonable to ask, and I can help with
+putting this together if you need it. Plus it will /reduce/ the number
+of lines in the kernel instead of adding to them. That is something I
+always want more of. :-)
+
+Actually, a lot of the powerpc behaviour should still be
+relevant to all architectures, but I haven't dug that deep yet.
+
+g.
