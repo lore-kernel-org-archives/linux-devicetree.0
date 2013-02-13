@@ -1,41 +1,33 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [RFC 1/1] ARM: omap2: gpmc: Move binding documentation to memory-controller
-Date: Wed, 13 Feb 2013 09:13:27 -0600
-Message-ID: <511BAD97.5050602@ti.com>
-References: <1360754003-3988-1-git-send-email-ezequiel.garcia@free-electrons.com> <1360754003-3988-2-git-send-email-ezequiel.garcia@free-electrons.com>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Making a Release
+Date: Wed, 13 Feb 2013 09:36:22 -0600
+Message-ID: <E1U5eNi-0007Z0-FU@jdl.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1360754003-3988-2-git-send-email-ezequiel.garcia@free-electrons.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>, Tony Lindgren <tony@atomide.com>, Afzal Mohammed <afzal@ti.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, device-tree <devicetree-discuss@lists.ozlabs.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Folks,
 
-On 02/13/2013 05:13 AM, Ezequiel Garcia wrote:
-> GPMC stands for General Purpose Memory Controller, and it's primarily
-> used to handle memories such as NOR, NAND, SRAM.
-> Note that this controller is also used to handle network controllers
-> such as smsc911x.
-> 
-> This patch moves the documentation binding to memory-controllers,
-> where it belongs.
-> 
-> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-> ---
->  .../ti-gpmc.txt => memory-controllers/ti/gpmc.txt} |    0
->  1 files changed, 0 insertions(+), 0 deletions(-)
->  rename Documentation/devicetree/bindings/{bus/ti-gpmc.txt => memory-controllers/ti/gpmc.txt} (100%)
-> 
-> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/memory-controllers/ti/gpmc.txt
-> similarity index 100%
-> rename from Documentation/devicetree/bindings/bus/ti-gpmc.txt
-> rename to Documentation/devicetree/bindings/memory-controllers/ti/gpmc.txt
+I'd like to tag an official release of the DTC soon.
+To that end, here is a call for any last minute patches
+that are desired for this release!
 
-I am fine with that. However, make sure you CC the device-tree mailing list.
+I am still waiting on a spin of a patch that adds
+copyright headers (with signoffs!) to a few libfdt files.
 
-Cheers
-Jon
+Others?
 
+jdl
