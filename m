@@ -1,53 +1,73 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v2 2/6] mfd: Add ChromeOS EC implementation
-Date: Tue, 12 Feb 2013 19:35:46 -0800
-Message-ID: <1360726546.2220.6.camel@joe-AO722>
-References: <1360723347-28701-1-git-send-email-sjg@chromium.org>
-	 <1360723347-28701-3-git-send-email-sjg@chromium.org>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V4 0/5] Add generic DMA DT binding support
+Date: Wed, 13 Feb 2013 09:52:30 +0530
+Message-ID: <CAAgF-Be1w-8yjuyXT+d8sUO8dee1x7oYFJLXHCmcJSf17eXWyw@mail.gmail.com>
+References: <1360571905-15285-1-git-send-email-padma.v@samsung.com>
+	<20130212144950.GJ3789@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1360723347-28701-3-git-send-email-sjg@chromium.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Simon Glass <sjg@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Che-Liang Chiou <clchiou@chromium.org>, Jonathan Kliegman <kliegs@chromium.org>, Luigi Semenzato <semenzato@chromium.org>, Olof Johansson <olofj@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130212144950.GJ3789@intel.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vinod Koul <vinod.koul@intel.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, arnd@arndb.de, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2013-02-12 at 18:42 -0800, Simon Glass wrote:
-> This is the base EC implementation, which provides a high level
-> interface to the EC for use by the rest of the kernel. The actual
-> communcations is dealt with by a separate protocol driver which
-> registers itself with this interface.
+Hi Vinod,
 
-trivial logging message comments...
+On Tue, Feb 12, 2013 at 8:19 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> On Mon, Feb 11, 2013 at 02:08:20PM +0530, Padmavathi Venna wrote:
+>
+> This looks fine, I have only question. The code seems to assume that pl330 dma
+> controller always uses DT. But I dont see that as dependency for pl330.
+>
+> Something tells me withot OF the driver may not build, have you checked it?
+>
+>> This patch set adds support for generic dma device tree bindings for
+>> Samsung platforms and is dependent on the following patches from
+>> Vinod Koul next branch
+>> 1)of: Add generic device tree DMA helpers
+>> 2)dmaengine: add helper function to request a slave DMA channel
+>>
+>> This patch set is made based Mark Brown next branch
+> Is this targetted for ASoC tree, if so why? It would fail to build if applied
+> there
 
-> diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
-[]
-> +struct cros_ec_device *cros_ec_alloc(const char *name)
-> +{
-> +	struct cros_ec_device *ec_dev;
-> +
-> +	ec_dev = kzalloc(sizeof(*ec_dev), GFP_KERNEL);
-> +	if (ec_dev == NULL) {
-> +		dev_err(ec_dev->dev, "cannot allocate\n");
+I have done this for my testing purpose (I expected all will directly
+apply in your branch). But 3rd patch is not applied directly. I will
+resend the patches after re-basing on your tree. 5th patch has to go
+in ASoC tree because it has dependency on "ARM: SAMSUNG: Make dma
+request compatible to generic dma bindings" which is there in ASoC
+tree.
 
-allocation OOM messages aren't useful as there's
-a standard one on all allocs without __GFP_WARN
+Hi Mark,
 
-> +int cros_ec_register(struct cros_ec_device *ec_dev)
-> +{
-[]
-> +		ec_dev->din = kmalloc(ec_dev->din_size, GFP_KERNEL);
-> +		if (!ec_dev->din) {
-> +			err = -ENOMEM;
-> +			dev_err(dev, "cannot allocate din\n");
+Can you please take the 5th patch in your tree(if there is no issue)
+or should I resend it as a separate patch?
 
-etc...
-
-> +	if (err) {
-> +		dev_err(dev, "failed to add mfd devices");
-
-missing terminating newline
-
-
+>
+> --
+> ~Vinod
+>>
+>> Padmavathi Venna (5):
+>>   DMA: PL330: Add new pl330 filter for DT case.
+>>   DMA: PL330: Add xlate function
+>>   DMA: PL330: Register the DMA controller with the generic DMA helpers
+>>   ARM: dts: pl330: Add #dma-cells for generic dma binding support
+>>   ARM: SAMSUNG: dma: Remove unnecessary code
+>>
+>>  .../devicetree/bindings/dma/arm-pl330.txt          |   21 +++++--
+>>  arch/arm/boot/dts/exynos5250.dtsi                  |   12 ++++
+>>  arch/arm/mach-s3c24xx/include/mach/dma.h           |    1 -
+>>  arch/arm/mach-s3c64xx/include/mach/dma.h           |    1 -
+>>  arch/arm/plat-samsung/dma-ops.c                    |   10 +---
+>>  arch/arm/plat-samsung/include/plat/dma-ops.h       |    1 -
+>>  arch/arm/plat-samsung/include/plat/dma-pl330.h     |    1 -
+>>  drivers/dma/pl330.c                                |   64 +++++++++++++++----
+>>  8 files changed, 79 insertions(+), 32 deletions(-)
+>>
+>> --
+>> 1.7.4.4
+>>
+Thanks
+Padma
