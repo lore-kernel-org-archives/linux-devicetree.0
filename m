@@ -1,159 +1,159 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 2/6] mfd: Add ChromeOS EC implementation
-Date: Tue, 12 Feb 2013 18:42:22 -0800
-Message-ID: <1360723347-28701-3-git-send-email-sjg@chromium.org>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH v2 6/6] Input: Add ChromeOS EC keyboard driver
+Date: Tue, 12 Feb 2013 18:42:26 -0800
+Message-ID: <1360723347-28701-7-git-send-email-sjg@chromium.org>
 References: <1360723347-28701-1-git-send-email-sjg@chromium.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360723347-28701-1-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Luigi Semenzato <semenzato-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jonathan Kliegman <kliegs-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Che-Liang Chiou <clchiou-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1360723347-28701-1-git-send-email-sjg@chromium.org>
+Sender: linux-input-owner@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Simon Glass <sjg@chromium.org>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Mike A. Chan" <mikechan@google.com>, Jun Nakajima <jun.nakajima@intel.com>, Tom Keel <thomas.keel@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is the base EC implementation, which provides a high level
-interface to the EC for use by the rest of the kernel. The actual
-communcations is dealt with by a separate protocol driver which
-registers itself with this interface.
+Use the key-matrix layer to interpret key scan information from the EC
+and inject input based on the FDT-supplied key map. This driver registers
+itself with the ChromeOS EC driver to perform communications.
 
-Interrupts are passed on through a notifier. The driver supports
-resume notification also, in case drivers wish to perform some
-action there.
+Additional FDT bindings are provided to specify rows/columns and the
+auto-repeat information.
 
-A simple message structure is used to pass messages to the
-protocol driver.
-Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Che-Liang Chiou <clchiou-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Jonathan Kliegman <kliegs-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Luigi Semenzato <semenzato-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Signed-off-by: Vincent Palatin <vpalatin-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Simon Glass <sjg@chromium.org>
+Signed-off-by: Luigi Semenzato <semenzato@chromium.org>
+Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
 ---
 Changes in v2:
 - Remove use of __devinit/__devexit
+- Use function to read matrix-keypad parameters from DT
+- Remove key autorepeat parameters from DT binding and driver
+- Use unsigned int for rows/cols
 
- Documentation/devicetree/bindings/mfd/cros-ec.txt |  56 ++++++
- drivers/mfd/Kconfig                               |   8 +
- drivers/mfd/Makefile                              |   1 +
- drivers/mfd/cros_ec.c                             | 219 ++++++++++++++++++++++
- include/linux/mfd/cros_ec.h                       | 190 +++++++++++++++++++
- 5 files changed, 474 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
- create mode 100644 drivers/mfd/cros_ec.c
- create mode 100644 include/linux/mfd/cros_ec.h
+ .../devicetree/bindings/input/cros-ec-keyb.txt     |  72 ++++
+ drivers/input/keyboard/Kconfig                     |  12 +
+ drivers/input/keyboard/Makefile                    |   1 +
+ drivers/input/keyboard/cros_ec_keyb.c              | 394 +++++++++++++++++++++
+ 4 files changed, 479 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+ create mode 100644 drivers/input/keyboard/cros_ec_keyb.c
 
-diff --git a/Documentation/devicetree/bindings/mfd/cros-ec.txt b/Documentation/devicetree/bindings/mfd/cros-ec.txt
+diff --git a/Documentation/devicetree/bindings/input/cros-ec-keyb.txt b/Documentation/devicetree/bindings/input/cros-ec-keyb.txt
 new file mode 100644
-index 0000000..e0e59c5
+index 0000000..0f6355c
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/cros-ec.txt
-@@ -0,0 +1,56 @@
-+ChromeOS Embedded Controller
++++ b/Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+@@ -0,0 +1,72 @@
++ChromeOS EC Keyboard
 +
-+Google's ChromeOS EC is a Cortex-M device which talks to the AP and
-+implements various function such as keyboard and battery charging.
++Google's ChromeOS EC Keyboard is a simple matrix keyboard implemented on
++a separate EC (Embedded Controller) device. It provides a message for reading
++key scans from the EC. These are then converted into keycodes for processing
++by the kernel.
 +
-+The EC can be connect through various means (I2C, SPI, LPC) and the
-+compatible string used depends on the inteface. Each connection method has
-+its own driver which connects to the top level interface-agnostic EC driver.
-+Other Linux driver (such as cros-ec-keyb for the matrix keyboard) connect to
-+the top-level driver.
++This binding is based on matrix-keymap.txt and extends/modifies it as follows:
 +
-+Required properties (I2C):
-+- compatible: "google,cros-ec-i2c"
-+- reg: I2C slave address
++Required properties:
++- compatible: "google,cros-ec-keyb"
 +
-+Required properties (SPI):
-+- compatible: "google,cros-ec-spi"
-+- reg: SPI chip select
-+
-+Required properties (LPC):
-+- compatible: "google,cros-ec-lpc"
-+- reg: List of (IO address, size) pairs defining the interface uses
++Optional properties:
++- google,needs-ghost-filter: True to enable a ghost filter for the matrix
++keyboard. This is recommended if the EC does not have its own logic or
++hardware for this.
 +
 +
-+Example for I2C:
++Example:
 +
-+i2c@12CA0000 {
-+	cros-ec@1e {
-+		reg = <0x1e>;
-+		compatible = "google,cros-ec-i2c";
-+		interrupts = <14 0>;
-+		interrupt-parent = <&wakeup_eint>;
-+		wakeup-source;
-+	};
-+
-+
-+Example for SPI:
-+
-+spi@131b0000 {
-+	ec@0 {
-+		compatible = "google,cros-ec-spi";
-+		reg = <0x0>;
-+		interrupts = <14 0>;
-+		interrupt-parent = <&wakeup_eint>;
-+		wakeup-source;
-+		spi-max-frequency = <5000000>;
-+		controller-data {
-+		cs-gpio = <&gpf0 3 4 3 0>;
-+		samsung,spi-cs;
-+		samsung,spi-feedback-delay = <2>;
-+		};
-+	};
++cros-ec-keyb {
++	compatible = "google,cros-ec-keyb";
++	keypad,num-rows = <8>;
++	keypad,num-columns = <13>;
++	google,needs-ghost-filter;
++	/*
++	 * Keymap entries take the form of 0xRRCCKKKK where
++	 * RR=Row CC=Column KKKK=Key Code
++	 * The values below are for a US keyboard layout and
++	 * are taken from the Linux driver. Note that the
++	 * 102ND key is not used for US keyboards.
++	 */
++	linux,keymap = <
++		/* CAPSLCK F1         B          F10     */
++		0x0001003a 0x0002003b 0x00030030 0x00040044
++		/* N       =          R_ALT      ESC     */
++		0x00060031 0x0008000d 0x000a0064 0x01010001
++		/* F4      G          F7         H       */
++		0x0102003e 0x01030022 0x01040041 0x01060023
++		/* '       F9         BKSPACE    L_CTRL  */
++		0x01080028 0x01090043 0x010b000e 0x0200001d
++		/* TAB     F3         T          F6      */
++		0x0201000f 0x0202003d 0x02030014 0x02040040
++		/* ]       Y          102ND      [       */
++		0x0205001b 0x02060015 0x02070056 0x0208001a
++		/* F8      GRAVE      F2         5       */
++		0x02090042 0x03010029 0x0302003c 0x03030006
++		/* F5      6          -          \       */
++		0x0304003f 0x03060007 0x0308000c 0x030b002b
++		/* R_CTRL  A          D          F       */
++		0x04000061 0x0401001e 0x04020020 0x04030021
++		/* S       K          J          ;       */
++		0x0404001f 0x04050025 0x04060024 0x04080027
++		/* L       ENTER      Z          C       */
++		0x04090026 0x040b001c 0x0501002c 0x0502002e
++		/* V       X          ,          M       */
++		0x0503002f 0x0504002d 0x05050033 0x05060032
++		/* L_SHIFT /          .          SPACE   */
++		0x0507002a 0x05080035 0x05090034 0x050B0039
++		/* 1       3          4          2       */
++		0x06010002 0x06020004 0x06030005 0x06040003
++		/* 8       7          0          9       */
++		0x06050009 0x06060008 0x0608000b 0x0609000a
++		/* L_ALT   DOWN       RIGHT      Q       */
++		0x060a0038 0x060b006c 0x060c006a 0x07010010
++		/* E       R          W          I       */
++		0x07020012 0x07030013 0x07040011 0x07050017
++		/* U       R_SHIFT    P          O       */
++		0x07060016 0x07070036 0x07080019 0x07090018
++		/* UP      LEFT    */
++		0x070b0067 0x070c0069>;
 +};
-+
-+
-+Example for LPC is not supplied as it is not yet implemented.
-diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-index 671f5b1..837a16b 100644
---- a/drivers/mfd/Kconfig
-+++ b/drivers/mfd/Kconfig
-@@ -21,6 +21,14 @@ config MFD_88PM860X
- 	  select individual components like voltage regulators, RTC and
- 	  battery-charger under the corresponding menus.
+diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
+index 078305e..3a70be7 100644
+--- a/drivers/input/keyboard/Kconfig
++++ b/drivers/input/keyboard/Kconfig
+@@ -628,4 +628,16 @@ config KEYBOARD_W90P910
+ 	  To compile this driver as a module, choose M here: the
+ 	  module will be called w90p910_keypad.
  
-+config MFD_CROS_EC
-+	bool "Support ChromeOS Embedded Controller"
++config KEYBOARD_CROS_EC
++	tristate "ChromeOS EC keyboard"
++	select INPUT_MATRIXKMAP
++	select MFD_CROS_EC
 +	help
-+	  If you say yes here you get support for the ChromeOS Embedded
-+	  Controller (EC) providing keyboard, battery and power services.
-+	  You also ned to enable the driver for the bus you are using. The
-+	  protocol for talking to the EC is defined by the bus driver.
++	  Say Y here to enable the matrix keyboard used by ChromeOS devices
++	  and implemented on the ChromeOS EC. You must enable one bus option
++	  (MFD_CROS_EC_I2C or MFD_CROS_EC_SPI) to use this.
 +
- config MFD_88PM800
- 	tristate "Support Marvell 88PM800"
- 	depends on I2C=y && GENERIC_HARDIRQS
-diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
-index b90409c..967767d 100644
---- a/drivers/mfd/Makefile
-+++ b/drivers/mfd/Makefile
-@@ -8,6 +8,7 @@ obj-$(CONFIG_MFD_88PM800)	+= 88pm800.o 88pm80x.o
- obj-$(CONFIG_MFD_88PM805)	+= 88pm805.o 88pm80x.o
- obj-$(CONFIG_MFD_SM501)		+= sm501.o
- obj-$(CONFIG_MFD_ASIC3)		+= asic3.o tmio_core.o
-+obj-$(CONFIG_MFD_CROS_EC)	+= cros_ec.o
- 
- rtsx_pci-objs			:= rtsx_pcr.o rts5209.o rts5229.o rtl8411.o rts5227.o
- obj-$(CONFIG_MFD_RTSX_PCI)	+= rtsx_pci.o
-diff --git a/drivers/mfd/cros_ec.c b/drivers/mfd/cros_ec.c
++	  To compile this driver as a module, choose M here: the
++	  module will be called cros_ec_keyb.
++
+ endif
+diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
+index 49b1645..0c43e8c 100644
+--- a/drivers/input/keyboard/Makefile
++++ b/drivers/input/keyboard/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_KEYBOARD_AMIGA)		+= amikbd.o
+ obj-$(CONFIG_KEYBOARD_ATARI)		+= atakbd.o
+ obj-$(CONFIG_KEYBOARD_ATKBD)		+= atkbd.o
+ obj-$(CONFIG_KEYBOARD_BFIN)		+= bf54x-keys.o
++obj-$(CONFIG_KEYBOARD_CROS_EC)		+= cros_ec_keyb.o
+ obj-$(CONFIG_KEYBOARD_DAVINCI)		+= davinci_keyscan.o
+ obj-$(CONFIG_KEYBOARD_EP93XX)		+= ep93xx_keypad.o
+ obj-$(CONFIG_KEYBOARD_GOLDFISH_EVENTS)	+= goldfish_events.o
+diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
 new file mode 100644
-index 0000000..fc7fce3
+index 0000000..43e5be2
 --- /dev/null
-+++ b/drivers/mfd/cros_ec.c
-@@ -0,0 +1,219 @@
++++ b/drivers/input/keyboard/cros_ec_keyb.c
+@@ -0,0 +1,394 @@
 +/*
-+ * ChromeOS EC multi-function device
++ * ChromeOS EC keyboard driver
 + *
 + * Copyright (C) 2012 Google, Inc
 + *
@@ -166,406 +166,386 @@ index 0000000..fc7fce3
 + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 + * GNU General Public License for more details.
 + *
-+ * The ChromeOS EC multi function device is used to mux all the requests
-+ * to the EC device for its multiple features: keyboard controller,
-+ * battery charging and regulator control, firmware update.
++ * This driver uses the Chrome OS EC byte-level message-based protocol for
++ * communicating the keyboard state (which keys are pressed) from a keyboard EC
++ * to the AP over some bus (such as i2c, lpc, spi).  The EC does debouncing,
++ * but everything else (including deghosting) is done here.  The main
++ * motivation for this is to keep the EC firmware as simple as possible, since
++ * it cannot be easily upgraded and EC flash/IRAM space is relatively
++ * expensive.
 + */
 +
-+#include <linux/interrupt.h>
++#include <linux/module.h>
++#include <linux/i2c.h>
++#include <linux/input.h>
++#include <linux/kernel.h>
++#include <linux/notifier.h>
++#include <linux/platform_device.h>
 +#include <linux/slab.h>
-+#include <linux/mfd/core.h>
++#include <linux/input/matrix_keypad.h>
 +#include <linux/mfd/cros_ec.h>
 +#include <linux/mfd/cros_ec_commands.h>
 +
-+int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
-+		       struct cros_ec_msg *msg)
-+{
-+	uint8_t *out;
-+	int csum, i;
-+
-+	BUG_ON(msg->out_len > EC_HOST_PARAM_SIZE);
-+	out = ec_dev->dout;
-+	out[0] = EC_CMD_VERSION0 + msg->version;
-+	out[1] = msg->cmd;
-+	out[2] = msg->out_len;
-+	csum = out[0] + out[1] + out[2];
-+	for (i = 0; i < msg->out_len; i++)
-+		csum += out[EC_MSG_TX_HEADER_BYTES + i] = msg->out_buf[i];
-+	out[EC_MSG_TX_HEADER_BYTES + msg->out_len] = (uint8_t)(csum & 0xff);
-+
-+	return EC_MSG_TX_PROTO_BYTES + msg->out_len;
-+}
-+
-+static int cros_ec_command_sendrecv(struct cros_ec_device *ec_dev,
-+		uint16_t cmd, void *out_buf, int out_len,
-+		void *in_buf, int in_len)
-+{
-+	struct cros_ec_msg msg;
-+
-+	msg.version = cmd >> 8;
-+	msg.cmd = cmd & 0xff;
-+	msg.out_buf = out_buf;
-+	msg.out_len = out_len;
-+	msg.in_buf = in_buf;
-+	msg.in_len = in_len;
-+
-+	return ec_dev->command_xfer(ec_dev, &msg);
-+}
-+
-+static int cros_ec_command_recv(struct cros_ec_device *ec_dev,
-+		uint16_t cmd, void *buf, int buf_len)
-+{
-+	return cros_ec_command_sendrecv(ec_dev, cmd, NULL, 0, buf, buf_len);
-+}
-+
-+static int cros_ec_command_send(struct cros_ec_device *ec_dev,
-+		uint16_t cmd, void *buf, int buf_len)
-+{
-+	return cros_ec_command_sendrecv(ec_dev, cmd, buf, buf_len, NULL, 0);
-+}
-+
-+struct cros_ec_device *cros_ec_alloc(const char *name)
-+{
-+	struct cros_ec_device *ec_dev;
-+
-+	ec_dev = kzalloc(sizeof(*ec_dev), GFP_KERNEL);
-+	if (ec_dev == NULL) {
-+		dev_err(ec_dev->dev, "cannot allocate\n");
-+		return NULL;
-+	}
-+	ec_dev->name = name;
-+
-+	return ec_dev;
-+}
-+
-+void cros_ec_free(struct cros_ec_device *ec)
-+{
-+	kfree(ec);
-+}
-+
-+static irqreturn_t ec_irq_thread(int irq, void *data)
-+{
-+	struct cros_ec_device *ec_dev = data;
-+
-+	if (device_may_wakeup(ec_dev->dev))
-+		pm_wakeup_event(ec_dev->dev, 0);
-+
-+	blocking_notifier_call_chain(&ec_dev->event_notifier, 1, ec_dev);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static struct mfd_cell cros_devs[] = {
-+	{
-+		.name = "cros-ec-keyb",
-+		.id = 1,
-+	},
-+};
-+
-+int cros_ec_register(struct cros_ec_device *ec_dev)
-+{
-+	struct device *dev = ec_dev->dev;
-+	int err = 0;
-+
-+	BLOCKING_INIT_NOTIFIER_HEAD(&ec_dev->event_notifier);
-+	BLOCKING_INIT_NOTIFIER_HEAD(&ec_dev->wake_notifier);
-+
-+	ec_dev->command_send = cros_ec_command_send;
-+	ec_dev->command_recv = cros_ec_command_recv;
-+	ec_dev->command_sendrecv = cros_ec_command_sendrecv;
-+
-+	if (ec_dev->din_size) {
-+		ec_dev->din = kmalloc(ec_dev->din_size, GFP_KERNEL);
-+		if (!ec_dev->din) {
-+			err = -ENOMEM;
-+			dev_err(dev, "cannot allocate din\n");
-+			goto fail_din;
-+		}
-+	}
-+	if (ec_dev->dout_size) {
-+		ec_dev->dout = kmalloc(ec_dev->dout_size, GFP_KERNEL);
-+		if (!ec_dev->dout) {
-+			err = -ENOMEM;
-+			dev_err(dev, "cannot allocate dout\n");
-+			goto fail_dout;
-+		}
-+	}
-+
-+	if (!ec_dev->irq) {
-+		dev_dbg(dev, "no valid IRQ: %d\n", ec_dev->irq);
-+		goto fail_irq;
-+	}
-+
-+	err = request_threaded_irq(ec_dev->irq, NULL, ec_irq_thread,
-+				   IRQF_TRIGGER_LOW | IRQF_ONESHOT,
-+				   "chromeos-ec", ec_dev);
-+	if (err) {
-+		dev_err(dev, "request irq %d: error %d\n", ec_dev->irq, err);
-+		goto fail_irq;
-+	}
-+
-+	err = mfd_add_devices(dev, 0, cros_devs,
-+			      ARRAY_SIZE(cros_devs),
-+			      NULL, ec_dev->irq, NULL);
-+	if (err) {
-+		dev_err(dev, "failed to add mfd devices");
-+		goto fail_mfd;
-+	}
-+
-+	dev_info(dev, "Chrome EC (%s)\n", ec_dev->name);
-+
-+	return 0;
-+
-+fail_mfd:
-+	free_irq(ec_dev->irq, ec_dev);
-+fail_irq:
-+	kfree(ec_dev->dout);
-+fail_dout:
-+	kfree(ec_dev->din);
-+fail_din:
-+	return err;
-+}
-+
-+int cros_ec_remove(struct cros_ec_device *ec_dev)
-+{
-+	mfd_remove_devices(ec_dev->dev);
-+	free_irq(ec_dev->irq, ec_dev);
-+	kfree(ec_dev->dout);
-+	kfree(ec_dev->din);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+int cros_ec_suspend(struct cros_ec_device *ec_dev)
-+{
-+	struct device *dev = ec_dev->dev;
-+
-+	if (device_may_wakeup(dev))
-+		ec_dev->wake_enabled = !enable_irq_wake(ec_dev->irq);
-+
-+	disable_irq(ec_dev->irq);
-+
-+	return 0;
-+}
-+
-+int cros_ec_resume(struct cros_ec_device *ec_dev)
-+{
-+	/*
-+	 * When the EC is not a wake source, then it could not have caused the
-+	 * resume, so we should do the resume processing. This may clear the
-+	 * EC's key scan buffer, for example. If the EC is a wake source (e.g.
-+	 * the lid is open and the user might press a key to wake) then we
-+	 * don't want to do resume processing (key scan buffer should be
-+	 * preserved).
-+	 */
-+	if (!ec_dev->wake_enabled)
-+		blocking_notifier_call_chain(&ec_dev->wake_notifier, 1, ec_dev);
-+	enable_irq(ec_dev->irq);
-+
-+	if (ec_dev->wake_enabled) {
-+		disable_irq_wake(ec_dev->irq);
-+		ec_dev->wake_enabled = 0;
-+	}
-+
-+	return 0;
-+}
-+#endif
-diff --git a/include/linux/mfd/cros_ec.h b/include/linux/mfd/cros_ec.h
-new file mode 100644
-index 0000000..3d7cb40
---- /dev/null
-+++ b/include/linux/mfd/cros_ec.h
-@@ -0,0 +1,190 @@
 +/*
-+ * ChromeOS EC multi-function device
-+ *
-+ * Copyright (C) 2012 Google, Inc
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+
-+#ifndef __LINUX_MFD_CROS_EC_H
-+#define __LINUX_MFD_CROS_EC_H
-+
-+struct i2c_msg;
-+
-+#include <linux/mfd/cros_ec_commands.h>
-+
-+/*
-+ * Command interface between EC and AP, for LPC, I2C and SPI interfaces.
-+ */
-+enum {
-+	EC_MSG_TX_HEADER_BYTES	= 3,
-+	EC_MSG_TX_TRAILER_BYTES	= 1,
-+	EC_MSG_TX_PROTO_BYTES	= EC_MSG_TX_HEADER_BYTES +
-+					EC_MSG_TX_TRAILER_BYTES,
-+	EC_MSG_RX_PROTO_BYTES	= 3,
-+
-+	/* Max length of messages */
-+	EC_MSG_BYTES		= EC_HOST_PARAM_SIZE + EC_MSG_TX_PROTO_BYTES,
-+
-+};
-+
-+/**
-+ * struct cros_ec_msg - A message sent to the EC, and its reply
-+ *
-+ * @version: Command version number (often 0)
-+ * @cmd: Command to send (EC_CMD_...)
-+ * @out_buf: Outgoing payload (to EC)
-+ * @outlen: Outgoing length
-+ * @in_buf: Incoming payload (from EC)
-+ * @in_len: Incoming length
-+ */
-+struct cros_ec_msg {
-+	u8 version;
-+	u8 cmd;
-+	uint8_t *out_buf;
-+	int out_len;
-+	uint8_t *in_buf;
-+	int in_len;
-+};
-+
-+/**
-+ * struct cros_ec_device - Information about a ChromeOS EC device
-+ *
-+ * @name: Name of this EC interface
-+ * @priv: Private data
-+ * @irq: Interrupt to use
-+ * @din: input buffer (from EC)
-+ * @dout: output buffer (to EC)
-+ * \note
-+ * These two buffers will always be dword-aligned and include enough
-+ * space for up to 7 word-alignment bytes also, so we can ensure that
-+ * the body of the message is always dword-aligned (64-bit).
-+ *
-+ * We use this alignment to keep ARM and x86 happy. Probably word
-+ * alignment would be OK, there might be a small performance advantage
-+ * to using dword.
-+ * @din_size: size of din buffer
-+ * @dout_size: size of dout buffer
-+ * @command_send: send a command
-+ * @command_recv: receive a command
-+ * @get_name: return name of EC device (e.g. 'chromeos-ec')
-+ * @get_phys_name: return name of physical comms layer (e.g. 'i2c-4')
-+ * @get_parent: return pointer to parent device (e.g. i2c or spi device)
++ * @rows: Number of rows in the keypad
++ * @cols: Number of columns in the keypad
++ * @row_shift: log2 or number of rows, rounded up
++ * @keymap_data: Matrix keymap data used to convert to keyscan values
++ * @ghost_filter: true to enable the matrix key-ghosting filter
++ * @old_state: Previous state of the keyboard matrix (used to calc deltas)
 + * @dev: Device pointer
-+ * dev_lock: Lock to prevent concurrent access
-+ * @wake_enabled: true if this device can wake the system from sleep
++ * @idev: Input device
++ * @ec: Top level ChromeOS device to use to talk to EC
 + * @event_notifier: interrupt event notifier for transport devices
 + * @wake_notifier: wake notfier for client devices (e.g. keyboard). This
 + *	indicates to sub-drivers that we have woken up from resume but we
 + *	were not a wakeup source.
 + */
-+struct cros_ec_device {
-+	const char *name;
-+	void *priv;
-+	int irq;
-+	uint8_t *din;
-+	uint8_t *dout;
-+	int din_size;
-+	int dout_size;
-+	int (*command_send)(struct cros_ec_device *ec,
-+			uint16_t cmd, void *out_buf, int out_len);
-+	int (*command_recv)(struct cros_ec_device *ec,
-+			uint16_t cmd, void *in_buf, int in_len);
-+	int (*command_sendrecv)(struct cros_ec_device *ec,
-+			uint16_t cmd, void *out_buf, int out_len,
-+			void *in_buf, int in_len);
-+	int (*command_xfer)(struct cros_ec_device *ec,
-+			struct cros_ec_msg *msg);
++struct cros_ec_keyb {
++	unsigned int rows;
++	unsigned int cols;
++	int row_shift;
++	const struct matrix_keymap_data *keymap_data;
++	bool ghost_filter;
++	/*
++	 * old_state[matrix code] is 1 when the most recent (valid)
++	 * communication with the keyboard indicated that the key at row/col
++	 * was in the pressed state.
++	 */
++	uint8_t *old_state;
 +
-+	const char *(*get_name)(struct cros_ec_device *ec_dev);
-+
-+	const char *(*get_phys_name)(struct cros_ec_device *ec_dev);
-+
-+	struct device *(*get_parent)(struct cros_ec_device *ec_dev);
-+
-+	/* These are --private-- fields - do not assign */
 +	struct device *dev;
-+	struct mutex dev_lock;
-+	bool wake_enabled;
-+	struct blocking_notifier_head event_notifier;
-+	struct blocking_notifier_head wake_notifier;
++	struct input_dev *idev;
++	struct cros_ec_device *ec;
++	struct notifier_block notifier;
++	struct notifier_block wake_notifier;
 +};
 +
-+/**
-+ * cros_ec_suspend - Handle a suspend operation for the ChromeOS EC device
-+ *
-+ * This can be called by drivers to handle a suspend event.
-+ *
-+ * ec_dev: Device to suspend
-+ * @return 0 if ok, -ve on error
-+ */
-+int cros_ec_suspend(struct cros_ec_device *ec_dev);
 +
-+/**
-+ * cros_ec_resume - Handle a resume operation for the ChromeOS EC device
-+ *
-+ * This can be called by drivers to handle a resume event.
-+ *
-+ * @ec_dev: Device to resume
-+ * @return 0 if ok, -ve on error
++/*
++ * Sends a single key event to the input layer.
 + */
-+int cros_ec_resume(struct cros_ec_device *ec_dev);
++static inline void cros_ec_keyb_send_key_event(struct cros_ec_keyb *ckdev,
++				int row, int col, int pressed)
++{
++	struct input_dev *idev = ckdev->idev;
++	int code = MATRIX_SCAN_CODE(row, col, ckdev->row_shift);
++	const unsigned short *keycodes = idev->keycode;
 +
-+/**
-+ * cros_ec_prepare_tx - Prepare an outgoing message in the output buffer
-+ *
-+ * This is intended to be used by all ChromeOS EC drivers, but at present
-+ * only SPI uses it. Once LPC uses the same protocol it can start using it.
-+ * I2C could use it now, with a refactor of the existing code.
-+ *
-+ * @ec_dev: Device to register
-+ * @msg: Message to write
++	input_report_key(idev, keycodes[code], pressed);
++}
++
++/*
++ * Returns true when there is at least one combination of pressed keys that
++ * results in ghosting.
 + */
-+int cros_ec_prepare_tx(struct cros_ec_device *ec_dev,
-+		       struct cros_ec_msg *msg);
++static bool cros_ec_keyb_has_ghosting(struct cros_ec_keyb *ckdev, uint8_t *buf)
++{
++	int col, row;
++	int mask;
++	int pressed_in_row[ckdev->rows];
++	int row_has_teeth[ckdev->rows];
 +
-+/**
-+ * cros_ec_remove - Remove a ChromeOS EC
-+ *
-+ * Call this to deregister a ChromeOS EC. After this you should call
-+ * cros_ec_free().
-+ *
-+ * @ec_dev: Device to register
-+ * @return 0 if ok, -ve on error
++	memset(pressed_in_row, '\0', sizeof(pressed_in_row));
++	memset(row_has_teeth, '\0', sizeof(row_has_teeth));
++	/*
++	 * Ghosting happens if for any pressed key X there are other keys
++	 * pressed both in the same row and column of X as, for instance,
++	 * in the following diagram:
++	 *
++	 * . . Y . g .
++	 * . . . . . .
++	 * . . . . . .
++	 * . . X . Z .
++	 *
++	 * In this case only X, Y, and Z are pressed, but g appears to be
++	 * pressed too (see Wikipedia).
++	 *
++	 * We can detect ghosting in a single pass (*) over the keyboard state
++	 * by maintaining two arrays.  pressed_in_row counts how many pressed
++	 * keys we have found in a row.  row_has_teeth is true if any of the
++	 * pressed keys for this row has other pressed keys in its column.  If
++	 * at any point of the scan we find that a row has multiple pressed
++	 * keys, and at least one of them is at the intersection with a column
++	 * with multiple pressed keys, we're sure there is ghosting.
++	 * Conversely, if there is ghosting, we will detect such situation for
++	 * at least one key during the pass.
++	 *
++	 * (*) This looks linear in the number of keys, but it's not.  We can
++	 * cheat because the number of rows is small.
++	 */
++	for (row = 0; row < ckdev->rows; row++) {
++		mask = 1 << row;
++		for (col = 0; col < ckdev->cols; col++) {
++			if (buf[col] & mask) {
++				pressed_in_row[row] += 1;
++				row_has_teeth[row] |= buf[col] & ~mask;
++				if (pressed_in_row[row] > 1 &&
++				    row_has_teeth[row]) {
++					/* ghosting */
++					dev_dbg(ckdev->dev,
++						"ghost found at: r%d c%d,"
++						" pressed %d, teeth 0x%x\n",
++						row, col, pressed_in_row[row],
++						row_has_teeth[row]);
++					return true;
++				}
++			}
++		}
++	}
++	return false;
++}
++
++/*
++ * Compares the new keyboard state to the old one and produces key
++ * press/release events accordingly.  The keyboard state is 13 bytes (one byte
++ * per column)
 + */
-+int cros_ec_remove(struct cros_ec_device *ec_dev);
++static void cros_ec_keyb_process(struct cros_ec_keyb *ckdev,
++			 uint8_t *kb_state, int len)
++{
++	int col, row;
++	int new_state;
++	int num_cols;
 +
-+/**
-+ * cros_ec_register - Register a new ChromeOS EC, using the provided info
-+ *
-+ * Before calling this, call cros_ec_alloc() to get a pointer to a new device
-+ * and then fill in all the fields up to the --private-- marker.
-+ *
-+ * @ec_dev: Device to register
-+ * @return 0 if ok, -ve on error
-+ */
-+int cros_ec_register(struct cros_ec_device *ec_dev);
++	num_cols = len;
 +
-+/**
-+ * cros_ec_alloc - Allocate a new ChromeOS EC
-+ *
-+ * @name: Name of EC (typically the interface it connects on)
-+ * @return pointer to created device, or NULL on failure
-+ */
-+struct cros_ec_device *cros_ec_alloc(const char *name);
++	if (ckdev->ghost_filter && cros_ec_keyb_has_ghosting(ckdev, kb_state)) {
++		/*
++		 * Simple-minded solution: ignore this state. The obvious
++		 * improvement is to only ignore changes to keys involved in
++		 * the ghosting, but process the other changes.
++		 */
++		dev_dbg(ckdev->dev, "ghosting found\n");
++		return;
++	}
 +
-+/**
-+ * cros_ec_free - Free a ChromeOS EC, the opposite of cros_ec_alloc().
-+ *
-+ * @ec_dev: Device to free (call cros_ec_remove() first)
-+ */
-+void cros_ec_free(struct cros_ec_device *ec_dev);
++	for (col = 0; col < ckdev->cols; col++) {
++		for (row = 0; row < ckdev->rows; row++) {
++			int code = MATRIX_SCAN_CODE(row, col, ckdev->row_shift);
 +
-+#endif /* __LINUX_MFD_CROS_EC_H */
++			new_state = kb_state[col] & (1 << row);
++			if (!!new_state != ckdev->old_state[code]) {
++				dev_dbg(ckdev->dev,
++					"changed: [r%d c%d]: byte %02x\n",
++					row, col, new_state);
++			}
++			if (new_state && !ckdev->old_state[code]) {
++				/* key press */
++				cros_ec_keyb_send_key_event(ckdev, row, col, 1);
++				ckdev->old_state[code] = 1;
++			} else if (!new_state && ckdev->old_state[code]) {
++				/* key release */
++				cros_ec_keyb_send_key_event(ckdev, row, col, 0);
++				ckdev->old_state[code] = 0;
++			}
++		}
++	}
++	input_sync(ckdev->idev);
++}
++
++static int cros_ec_keyb_open(struct input_dev *dev)
++{
++	struct cros_ec_keyb *ckdev = input_get_drvdata(dev);
++	int ret;
++
++	ret = blocking_notifier_chain_register(&ckdev->ec->event_notifier,
++						&ckdev->notifier);
++	if (ret)
++		return ret;
++	ret = blocking_notifier_chain_register(&ckdev->ec->wake_notifier,
++						&ckdev->wake_notifier);
++	if (ret) {
++		blocking_notifier_chain_unregister(
++			&ckdev->ec->event_notifier, &ckdev->notifier);
++		return ret;
++	}
++
++	return 0;
++}
++
++static void cros_ec_keyb_close(struct input_dev *dev)
++{
++	struct cros_ec_keyb *ckdev = input_get_drvdata(dev);
++
++	blocking_notifier_chain_unregister(&ckdev->ec->event_notifier,
++					   &ckdev->notifier);
++	blocking_notifier_chain_unregister(&ckdev->ec->wake_notifier,
++					   &ckdev->wake_notifier);
++}
++
++static int cros_ec_keyb_get_state(struct cros_ec_keyb *ckdev, uint8_t *kb_state)
++{
++	return ckdev->ec->command_recv(ckdev->ec, EC_CMD_MKBP_STATE,
++					  kb_state, ckdev->cols);
++}
++
++static int cros_ec_keyb_work(struct notifier_block *nb,
++		     unsigned long state, void *_notify)
++{
++	int ret;
++	struct cros_ec_keyb *ckdev = container_of(nb, struct cros_ec_keyb,
++						    notifier);
++	uint8_t kb_state[ckdev->cols];
++
++	ret = cros_ec_keyb_get_state(ckdev, kb_state);
++	if (ret >= 0)
++		cros_ec_keyb_process(ckdev, kb_state, ret);
++
++	return NOTIFY_DONE;
++}
++
++/* On resume, clear any keys in the buffer */
++static int cros_ec_keyb_clear_keyboard(struct notifier_block *nb,
++			       unsigned long state, void *_notify)
++{
++	struct cros_ec_keyb *ckdev = container_of(nb, struct cros_ec_keyb,
++						    wake_notifier);
++	uint8_t old_state[ckdev->cols];
++	uint8_t new_state[ckdev->cols];
++	unsigned long duration;
++	int i, ret;
++
++	/*
++	 * Keep reading until we see that the scan state does not change.
++	 * That indicates that we are done.
++	 *
++	 * Assume that the EC keyscan buffer is at most 32 deep.
++	 */
++	duration = jiffies;
++	ret = cros_ec_keyb_get_state(ckdev, new_state);
++	for (i = 1; !ret && i < 32; i++) {
++		memcpy(old_state, new_state, sizeof(old_state));
++		ret = cros_ec_keyb_get_state(ckdev, new_state);
++		if (0 == memcmp(old_state, new_state, sizeof(old_state)))
++			break;
++	}
++	duration = jiffies - duration;
++	dev_info(ckdev->dev, "Discarded %d keyscan(s) in %dus\n", i,
++		jiffies_to_usecs(duration));
++
++	return 0;
++}
++
++static const struct of_device_id cros_ec_kbc_of_match[] = {
++	{ .compatible = "google,cros-ec-keyb", },
++	{ },
++};
++
++static int cros_ec_keyb_probe(struct platform_device *pdev)
++{
++	struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
++	struct device *dev = ec->dev;
++	struct cros_ec_keyb *ckdev = NULL;
++	struct input_dev *idev = NULL;
++	struct device_node *np;
++	int err;
++
++	np = of_find_matching_node(NULL, cros_ec_kbc_of_match);
++
++	ckdev = kzalloc(sizeof(*ckdev), GFP_KERNEL);
++	if (!ckdev) {
++		dev_err(dev, "cannot allocate memory for ckdev\n");
++		return -ENOMEM;
++	}
++	pdev->dev.of_node = np;
++	err = matrix_keypad_parse_of_params(&pdev->dev, &ckdev->rows,
++					    &ckdev->cols);
++	if (err)
++		goto fail_alloc_dev;
++
++	idev = input_allocate_device();
++	if (!idev) {
++		err = -ENOMEM;
++		dev_err(dev, "cannot allocate memory for input device\n");
++		goto fail_alloc_dev;
++	}
++
++	ckdev->ec = ec;
++	ckdev->notifier.notifier_call = cros_ec_keyb_work;
++	ckdev->wake_notifier.notifier_call = cros_ec_keyb_clear_keyboard;
++	ckdev->dev = dev;
++	dev_set_drvdata(&pdev->dev, ckdev);
++
++	idev->name = ec->get_name(ec);
++	idev->phys = ec->get_phys_name(ec);
++	__set_bit(EV_REP, idev->evbit);
++
++	idev->id.bustype = BUS_VIRTUAL;
++	idev->id.version = 1;
++	idev->id.product = 0;
++	idev->dev.parent = &pdev->dev;
++	idev->open = cros_ec_keyb_open;
++	idev->close = cros_ec_keyb_close;
++
++	ckdev->ghost_filter = of_property_read_bool(np,
++					"google,needs-ghost-filter");
++
++	err = matrix_keypad_build_keymap(NULL, NULL, ckdev->rows, ckdev->cols,
++					 NULL, idev);
++	if (err) {
++		dev_err(dev, "cannot build key matrix\n");
++		goto fail_matrix;
++	}
++
++	ckdev->row_shift = get_count_order(ckdev->cols);
++	ckdev->old_state = kzalloc(idev->keycodemax, GFP_KERNEL);
++	if (!ckdev->old_state) {
++		dev_err(dev, "Cannot allocate memory for old_state\n");
++		err = -ENOMEM;
++		goto fail_old_state;
++	}
++
++	input_set_capability(idev, EV_MSC, MSC_SCAN);
++	input_set_drvdata(idev, ckdev);
++	ckdev->idev = idev;
++	err = input_register_device(ckdev->idev);
++	if (err) {
++		dev_err(dev, "cannot register input device\n");
++		goto fail_register;
++	}
++
++	return 0;
++
++fail_register:
++	kfree(ckdev->old_state);
++fail_old_state:
++	kfree(idev->keycode);
++fail_matrix:
++	input_free_device(idev);
++fail_alloc_dev:
++	kfree(ckdev);
++	return err;
++}
++
++static int cros_ec_keyb_remove(struct platform_device *pdev)
++{
++	struct cros_ec_keyb *ckdev = dev_get_drvdata(&pdev->dev);
++	struct input_dev *idev = ckdev->idev;
++
++	/* I believe we leak a matrix_keymap here */
++	input_unregister_device(idev);
++	kfree(ckdev->old_state);
++	kfree(idev->keycode);
++	input_free_device(idev);
++	kfree(ckdev);
++
++	return 0;
++}
++
++static struct platform_driver cros_ec_keyb_driver = {
++	.probe = cros_ec_keyb_probe,
++	.remove = cros_ec_keyb_remove,
++	.driver = {
++		.name = "cros-ec-keyb",
++	},
++};
++
++module_platform_driver(cros_ec_keyb_driver);
++
++MODULE_LICENSE("GPL");
++MODULE_DESCRIPTION("ChromeOS EC keyboard driver");
++MODULE_ALIAS("platform:cros-ec-keyb");
 -- 
 1.8.1
+
