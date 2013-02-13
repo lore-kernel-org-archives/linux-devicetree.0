@@ -1,102 +1,50 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2 2/4] of/pci: Add of_pci_get_devfn() function
-Date: Wed, 13 Feb 2013 22:59:50 +0000
-Message-ID: <20130213225950.155F93E3557@localhost>
-References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de> <1360570940-17086-3-git-send-email-thierry.reding@avionic-design.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360570940-17086-3-git-send-email-thierry.reding@avionic-design.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Rob Herring <rob.herring@calxeda.com>, Andrew Murray <andrew.murray@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
+Date: Thu, 14 Feb 2013 00:11:33 +0100
+Message-ID: <20130214001133.77e6ba06@skate>
+References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
+	<1357764194-12677-11-git-send-email-thierry.reding@avionic-design.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1357764194-12677-11-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Feb 2013 09:22:18 +0100, Thierry Reding <thierry.reding@avionic-design.de> wrote:
-> This function can be used to parse the device and function number from a
-> standard 5-cell PCI resource. PCI_SLOT() and PCI_FUNC() can be used on
-> the returned value obtain the device and function numbers respectively.
-> 
-> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
-> ---
-> Changes in v2:
-> - rename devfn and err variables for clarity
-> 
->  drivers/of/of_pci.c    | 34 +++++++++++++++++++++++++++++-----
->  include/linux/of_pci.h |  1 +
+Dear Grant Likely,
 
-There isn't a whole lot of value in this patch without another user.
-I'll need to see the other patches that make use of this.
+On Wed, 13 Feb 2013 22:59:50 +0000, Grant Likely wrote:
 
-g.
+> There isn't a whole lot of value in this patch without another user.
+> I'll need to see the other patches that make use of this.
 
->  2 files changed, 30 insertions(+), 5 deletions(-)
-> 
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 13e37e2..4dd7b9b 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -5,14 +5,15 @@
->  #include <asm/prom.h>
->  
->  static inline int __of_pci_pci_compare(struct device_node *node,
-> -				       unsigned int devfn)
-> +				       unsigned int data)
->  {
-> -	unsigned int size;
-> -	const __be32 *reg = of_get_property(node, "reg", &size);
-> +	int devfn;
->  
-> -	if (!reg || size < 5 * sizeof(__be32))
-> +	devfn = of_pci_get_devfn(node);
-> +	if (devfn < 0)
->  		return 0;
-> -	return ((be32_to_cpup(&reg[0]) >> 8) & 0xff) == devfn;
-> +
-> +	return devfn == data;
->  }
->  
->  struct device_node *of_pci_find_child_device(struct device_node *parent,
-> @@ -40,3 +41,26 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
->  	return NULL;
->  }
->  EXPORT_SYMBOL_GPL(of_pci_find_child_device);
-> +
-> +/**
-> + * of_pci_get_devfn() - Get device and function numbers for a device node
-> + * @np: device node
-> + *
-> + * Parses a standard 5-cell PCI resource and returns an 8-bit value that can
-> + * be passed to the PCI_SLOT() and PCI_FUNC() macros to extract the device
-> + * and function numbers respectively. On error a negative error code is
-> + * returned.
-> + */
-> +int of_pci_get_devfn(struct device_node *np)
-> +{
-> +	unsigned int size;
-> +	const __be32 *reg;
-> +
-> +	reg = of_get_property(np, "reg", &size);
-> +
-> +	if (!reg || size < 5 * sizeof(__be32))
-> +		return -EINVAL;
-> +
-> +	return (be32_to_cpup(reg) >> 8) & 0xff;
-> +}
-> +EXPORT_SYMBOL_GPL(of_pci_get_devfn);
-> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> index bb115de..91ec484 100644
-> --- a/include/linux/of_pci.h
-> +++ b/include/linux/of_pci.h
-> @@ -10,5 +10,6 @@ int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
->  struct device_node;
->  struct device_node *of_pci_find_child_device(struct device_node *parent,
->  					     unsigned int devfn);
-> +int of_pci_get_devfn(struct device_node *np);
->  
->  #endif
-> -- 
-> 1.8.1.2
-> 
+See the proposed Marvell PCIe driver and Tegra PCIe driver:
+ http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149232.html
+ http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/140649.html
 
+Both Thierry (doing the Tegra PCIe driver) and myself (doing the
+Marvell PCIe driver) already have fairly long patch series to add
+support for the PCIe interfaces in our respective SoC. In order to ease
+the process of getting those merged, we'd like to get some of the
+base functions we depend on to be merged first, so that our patch
+series become a bit smaller and therefore more manageable. My Marvell
+PCIe patch series already has 32 patches (including the ones we are
+currently discussing), and I will need even more patches for the
+upcoming fourth version (due to additional comments made during the
+review of the third version of the patch set).
+
+So, it would really be helpful if this base infrastructure, for which
+users already exist in the form of submitted patches, that have already
+gone through multiple iterations, could be merged.
+
+Thanks,
+
+Thomas
 -- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
