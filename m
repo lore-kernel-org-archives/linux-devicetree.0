@@ -1,35 +1,33 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH v3 5/5] gpio: Make of_count_named_gpios() use new of_count_phandle_with_args()
-Date: Wed, 13 Feb 2013 11:00:10 +0100
-Message-ID: <511B642A.9000004@gaisler.com>
-References: <1360710401-16757-1-git-send-email-grant.likely@secretlab.ca> <1360710401-16757-6-git-send-email-grant.likely@secretlab.ca>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH] of: Fix locking when calling of_get_next_available_child()
+Date: Wed, 13 Feb 2013 10:08:51 +0000
+Message-ID: <20130213100851.7620A3E23F1@localhost>
+References: <1360621157-23570-1-git-send-email-grant.likely@secretlab.ca> <51197E36.8080704@wwwdotorg.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360710401-16757-6-git-send-email-grant.likely@secretlab.ca>
+In-Reply-To: <51197E36.8080704@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rob Herring <robherring2@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2013-02-13 00:06, Grant Likely wrote:
-> This patch replaces the horribly coded of_count_named_gpios() with a
-> call to of_count_phandle_with_args() which is far more efficient. This
-> also changes the return value of of_gpio_count() & of_gpio_named_count()
-> from 'unsigned int' to 'int' so that it can return an error code. All
-> the users of that function are fixed up to correctly handle a negative
-> return value.
->
-> v2: Split GPIO portion into a separate patch
->
-> Signed-off-by: Grant Likely <grant.likely@secretlab.ca>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Rob Herring <rob.herring@calxeda.com>
-> Cc: Andreas Larsson <andreas@gaisler.com>
+On Mon, 11 Feb 2013 16:26:46 -0700, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 02/11/2013 03:19 PM, Grant Likely wrote:
+> > of_get_next_available_child() obtains the devtree_lock and then calls
+> > of_device_is_available() which also attempts to claim the lock. This is
+> > obviously incorrect and causes a deadlock on boot. Fix issue by adding
+> > an variant of of_device_is_available() which doesn't obtain the lock.
+> 
+> This patch forgets to update __of_device_is_available() to call
+> __of_get_property() rather than of_get_property() and hence doesn't
+> actually solve the problem.
+> 
+> You might want to make __of_device_is_available() static too.
 
-For gpiolib-of.c, of_gpio.h and spi.c:
-Tested-by: Andreas Larsson <andreas@gaisler.com>
+Okay, I've dropped this patch and replaced it with your version since
+you're actually doing better testing that I it would appear. I had to
+respin my tree anyway because I messed up a merge of Rob's branch. :-(
+Sorry for the noise.
 
-Cheers,
-Andreas Larsson
+New version of the tree is pushed out.
+
+g.
