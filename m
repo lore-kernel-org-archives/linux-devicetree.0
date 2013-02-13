@@ -1,156 +1,69 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v9 1/4] genalloc: add devres support, allow to find a managed pool by device
-Date: Wed, 13 Feb 2013 16:46:39 +0100
-Message-ID: <1360770402-23091-2-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v9 4/4] ARM: dts: add sram for imx53 and imx6q
+Date: Wed, 13 Feb 2013 16:46:42 +0100
+Message-ID: <1360770402-23091-5-git-send-email-p.zabel@pengutronix.de>
 References: <1360770402-23091-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360770402-23091-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhao <richard.zhao@freescale.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Philipp Zabel <p.zabel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1360770402-23091-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Javier Martin <javier.martin-N4RbWZIug12MkV8/HQOAswC/G2K4zDHf@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds three exported functions to lib/genalloc.c:
-devm_gen_pool_create, dev_get_gen_pool, and of_get_named_gen_pool.
-
-devm_gen_pool_create is a managed version of gen_pool_create that keeps
-track of the pool via devres and allows the management code to automatically
-destroy it after device removal.
-
-dev_get_gen_pool retrieves the gen_pool for a given device, if it was
-created with devm_gen_pool_create, using devres_find.
-
-of_get_named_gen_pool retrieves the gen_pool for a given device node and
-property name, where the property must contain a phandle pointing to a
-platform device node. The corresponding platform device is then fed into
-dev_get_gen_pool and the resulting gen_pool is returned.
-
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-Acked-by: Grant Likely <grant.likely@secretlab.ca>
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Reviewed-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 ---
- include/linux/genalloc.h |   15 +++++++++
- lib/genalloc.c           |   81 ++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 96 insertions(+)
+Changes since v8:
+ - Changed device tree compatible string to "mmio-sram"
+---
+ arch/arm/boot/dts/imx53.dtsi |    5 +++++
+ arch/arm/boot/dts/imx6q.dtsi |    6 ++++++
+ 2 files changed, 11 insertions(+)
 
-diff --git a/include/linux/genalloc.h b/include/linux/genalloc.h
-index dd7c569..383e8f4 100644
---- a/include/linux/genalloc.h
-+++ b/include/linux/genalloc.h
-@@ -105,4 +105,19 @@ extern unsigned long gen_pool_first_fit(unsigned long *map, unsigned long size,
- extern unsigned long gen_pool_best_fit(unsigned long *map, unsigned long size,
- 		unsigned long start, unsigned int nr, void *data);
+diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+index edc3f1e..69d0680 100644
+--- a/arch/arm/boot/dts/imx53.dtsi
++++ b/arch/arm/boot/dts/imx53.dtsi
+@@ -664,5 +664,10 @@
+ 				status = "disabled";
+ 			};
+ 		};
++
++		ocram: ocram@f8000000 {
++			compatible = "fsl,imx-ocram", "mmio-sram";
++			reg = <0xf8000000 0x20000>;
++		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index ff1205e..73302db 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -124,6 +124,12 @@
+ 			status = "disabled";
+ 		};
  
-+extern struct gen_pool *devm_gen_pool_create(struct device *dev,
-+		int min_alloc_order, int nid);
-+extern struct gen_pool *dev_get_gen_pool(struct device *dev);
++		ocram: ocram@00900000 {
++			compatible = "fsl,imx-ocram", "mmio-sram";
++			reg = <0x00900000 0x3f000>;
++			clocks = <&clks 142>;
++		};
 +
-+struct device_node;
-+#ifdef CONFIG_OF
-+extern struct gen_pool *of_get_named_gen_pool(struct device_node *np,
-+	const char *propname, int index);
-+#else
-+inline struct gen_pool *of_get_named_gen_pool(struct device_node *np,
-+	const char *propname, int index)
-+{
-+	return NULL;
-+}
-+#endif
- #endif /* __GENALLOC_H__ */
-diff --git a/lib/genalloc.c b/lib/genalloc.c
-index 5492043..b35cfa9 100644
---- a/lib/genalloc.c
-+++ b/lib/genalloc.c
-@@ -34,6 +34,8 @@
- #include <linux/rculist.h>
- #include <linux/interrupt.h>
- #include <linux/genalloc.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
- 
- static int set_bits_ll(unsigned long *addr, unsigned long mask_to_set)
- {
-@@ -480,3 +482,82 @@ unsigned long gen_pool_best_fit(unsigned long *map, unsigned long size,
- 	return start_bit;
- }
- EXPORT_SYMBOL(gen_pool_best_fit);
-+
-+static void devm_gen_pool_release(struct device *dev, void *res)
-+{
-+	gen_pool_destroy(*(struct gen_pool **)res);
-+}
-+
-+/**
-+ * devm_gen_pool_create - managed gen_pool_create
-+ * @dev: device that provides the gen_pool
-+ * @min_alloc_order: log base 2 of number of bytes each bitmap bit represents
-+ * @nid: node id of the node the pool structure should be allocated on, or -1
-+ *
-+ * Create a new special memory pool that can be used to manage special purpose
-+ * memory not managed by the regular kmalloc/kfree interface. The pool will be
-+ * automatically destroyed by the device management code.
-+ */
-+struct gen_pool *devm_gen_pool_create(struct device *dev, int min_alloc_order,
-+		int nid)
-+{
-+	struct gen_pool **ptr, *pool;
-+
-+	ptr = devres_alloc(devm_gen_pool_release, sizeof(*ptr), GFP_KERNEL);
-+
-+	pool = gen_pool_create(min_alloc_order, nid);
-+	if (pool) {
-+		*ptr = pool;
-+		devres_add(dev, ptr);
-+	} else {
-+		devres_free(ptr);
-+	}
-+
-+	return pool;
-+}
-+
-+/**
-+ * dev_get_gen_pool - Obtain the gen_pool (if any) for a device
-+ * @dev: device to retrieve the gen_pool from
-+ * @name: Optional name for the gen_pool, usually NULL
-+ *
-+ * Returns the gen_pool for the device if one is present, or NULL.
-+ */
-+struct gen_pool *dev_get_gen_pool(struct device *dev)
-+{
-+	struct gen_pool **p = devres_find(dev, devm_gen_pool_release, NULL,
-+					NULL);
-+
-+	if (!p)
-+		return NULL;
-+	return *p;
-+}
-+EXPORT_SYMBOL_GPL(dev_get_gen_pool);
-+
-+#ifdef CONFIG_OF
-+/**
-+ * of_get_named_gen_pool - find a pool by phandle property
-+ * @np: device node
-+ * @propname: property name containing phandle(s)
-+ * @index: index into the phandle array
-+ *
-+ * Returns the pool that contains the chunk starting at the physical
-+ * address of the device tree node pointed at by the phandle property,
-+ * or NULL if not found.
-+ */
-+struct gen_pool *of_get_named_gen_pool(struct device_node *np,
-+	const char *propname, int index)
-+{
-+	struct platform_device *pdev;
-+	struct device_node *np_pool;
-+
-+	np_pool = of_parse_phandle(np, propname, index);
-+	if (!np_pool)
-+		return NULL;
-+	pdev = of_find_device_by_node(np_pool);
-+	if (!pdev)
-+		return NULL;
-+	return dev_get_gen_pool(&pdev->dev);
-+}
-+EXPORT_SYMBOL_GPL(of_get_named_gen_pool);
-+#endif /* CONFIG_OF */
+ 		timer@00a00600 {
+ 			compatible = "arm,cortex-a9-twd-timer";
+ 			reg = <0x00a00600 0x20>;
 -- 
 1.7.10.4
