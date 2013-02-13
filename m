@@ -1,95 +1,158 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 3/5] arm: dts: omap4-panda: Add I2c pinctrl data
-Date: Wed, 13 Feb 2013 10:06:51 -0600
-Message-ID: <511BBA1B.9050501@ti.com>
-References: <1360747710-1532-1-git-send-email-sourav.poddar@ti.com> <511BB7CE.1020505@ti.com>
+From: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] Added license header to dtc/libfdt/fdt.h and libfdt_env.h
+Date: Wed, 13 Feb 2013 11:32:01 -0500
+Message-ID: <1360773121-25880-1-git-send-email-jsobota@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <511BB7CE.1020505@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: balbi@ti.com, santosh.shilimkar@ti.com, b-cousson@ti.com, tony@atomide.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: jdl-CYoMK+44s/E@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This commit adds a license header to fdt.h and libfdt_env.h because the license was omitted
 
-On 02/13/2013 09:57 AM, Jon Hunter wrote:
-> 
-> On 02/13/2013 03:28 AM, Sourav Poddar wrote:
->> Booting 3.8-rc6 on omap4 panda results in the following error
->>
->> [    0.444427] omap_i2c 48070000.i2c: did not get pins for i2c error: -19
->> [    0.445770] omap_i2c 48070000.i2c: bus 0 rev0.11 at 400 kHz
->> [    0.473937] omap_i2c 48072000.i2c: did not get pins for i2c error: -19
->> [    0.474670] omap_i2c 48072000.i2c: bus 1 rev0.11 at 400 kHz
->> [    0.474822] omap_i2c 48060000.i2c: did not get pins for i2c error: -19
->> [    0.476379] omap_i2c 48060000.i2c: bus 2 rev0.11 at 100 kHz
->> [    0.477294] omap_i2c 48350000.i2c: did not get pins for i2c error: -19
->> [    0.477996] omap_i2c 48350000.i2c: bus 3 rev0.11 at 400 kHz
->> [    0.483398] Switching to clocksource 32k_counter
->>
->> This happens because omap4 panda dts file is not adapted to use i2c through
->> pinctrl framework. Populating i2c pinctrl data to get rid of the error.
-> 
-> What about the panda-es and panda-a4?
-> 
->> Tested on omap4460 panda with 3.8-rc6 kernel.
->>
->> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
->> Reported-by: Luciano Coelho <coelho@ti.com>
->> ---
->>  arch/arm/boot/dts/omap4-panda.dts |   40 +++++++++++++++++++++++++++++++++++++
->>  1 files changed, 40 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
->> index 4122efe..f951e6b 100644
->> --- a/arch/arm/boot/dts/omap4-panda.dts
->> +++ b/arch/arm/boot/dts/omap4-panda.dts
->> @@ -110,9 +110,40 @@
->>  			0x58 0x10b	/* hdmi_hpd.gpio_63 INPUT PULLDOWN | MODE3 */
->>  		>;
->>  	};
->> +
->> +	i2c1_pins: pinmux_i2c1_pins {
->> +		pinctrl-single,pins = <
->> +			0xe2 0x118        /* i2c1_scl PULLUP | INPUTENABLE | MODE0 */
->> +			0xe4 0x118        /* i2c1_sda PULLUP | INPUTENABLE | MODE0 */
->> +		>;
->> +	};
->> +
->> +	i2c2_pins: pinmux_i2c2_pins {
->> +		pinctrl-single,pins = <
->> +			0xe6 0x118        /* i2c2_scl PULLUP | INPUTENABLE | MODE0 */
->> +			0xe8 0x118        /* i2c2_sda PULLUP | INPUTENABLE | MODE0 */
->> +		>;
->> +	};
->> +
->> +	i2c3_pins: pinmux_i2c3_pins {
->> +		pinctrl-single,pins = <
->> +			0xea 0x118        /* i2c3_scl PULLUP | INPUTENABLE | MODE0 */
->> +			0xec 0x118     /* i2c3_sda PULLUP | INPUTENABLE | MODE0 */
->> +		>;
->> +	};
->> +
->> +	i2c4_pins: pinmux_i2c4_pins {
->> +		pinctrl-single,pins = <
->> +			0xee 0x118        /* i2c4_scl PULLUP | INPUTENABLE | MODE0 */
->> +			0xf0 0x118     /* i2c4_sda PULLUP | INPUTENABLE | MODE0 */
->> +		>;
->> +	};
->>  };
-> 
-> A quick look at the data manual shows that omap4430 and omap4460 has the
-> same pin mux options for i2c. Furthermore, the data manual shows only
-> one mux option for i2c1-4. Therefore, should these mux options be placed
-> in omap4.dtsi? Boards not using specific i2c controllers can disabled
-> them in there board dts file (same way we do for mmc).
+Signed-off-by: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
+---
+ libfdt/fdt.h        |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ libfdt/libfdt_env.h |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 100 insertions(+)
+ mode change 100644 => 100755 libfdt/fdt.h
+ mode change 100644 => 100755 libfdt/libfdt_env.h
 
-I guess for i2c, a given omap4 board may use external pull-ups and not
-use the internal ones and so putting this in the omap4.dtsi may not be
-desirable. However, it seems that a common omap4-panda.dtsi could be
-used here.
-
-Cheers
-Jon
+diff --git a/libfdt/fdt.h b/libfdt/fdt.h
+old mode 100644
+new mode 100755
+index 45dd134..4f28b55
+--- a/libfdt/fdt.h
++++ b/libfdt/fdt.h
+@@ -1,5 +1,55 @@
+ #ifndef _FDT_H
+ #define _FDT_H
++/*
++ * libfdt - Flat Device Tree manipulation
++ * Copyright (C) 2006 David Gibson, IBM Corporation.
++ *
++ * libfdt is dual licensed: you can use it either under the terms of
++ * the GPL, or the BSD license, at your option.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this library; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Alternatively,
++ *
++ *  b) Redistribution and use in source and binary forms, with or
++ *     without modification, are permitted provided that the following
++ *     conditions are met:
++ *
++ *     1. Redistributions of source code must retain the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer.
++ *     2. Redistributions in binary form must reproduce the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer in the documentation and/or other materials
++ *        provided with the distribution.
++ *
++ *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
++ *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
++ *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++ *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
++ *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++ *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
++ *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
++ *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
+ 
+ #ifndef __ASSEMBLY__
+ 
+diff --git a/libfdt/libfdt_env.h b/libfdt/libfdt_env.h
+old mode 100644
+new mode 100755
+index 956b4ae..18de839
+--- a/libfdt/libfdt_env.h
++++ b/libfdt/libfdt_env.h
+@@ -1,5 +1,55 @@
+ #ifndef _LIBFDT_ENV_H
+ #define _LIBFDT_ENV_H
++/*
++ * libfdt - Flat Device Tree manipulation
++ * Copyright (C) 2006 David Gibson, IBM Corporation.
++ *
++ * libfdt is dual licensed: you can use it either under the terms of
++ * the GPL, or the BSD license, at your option.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this library; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Alternatively,
++ *
++ *  b) Redistribution and use in source and binary forms, with or
++ *     without modification, are permitted provided that the following
++ *     conditions are met:
++ *
++ *     1. Redistributions of source code must retain the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer.
++ *     2. Redistributions in binary form must reproduce the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer in the documentation and/or other materials
++ *        provided with the distribution.
++ *
++ *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
++ *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
++ *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++ *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
++ *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++ *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
++ *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
++ *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
+ 
+ #include <stddef.h>
+ #include <stdint.h>
+-- 
+1.7.9.5
