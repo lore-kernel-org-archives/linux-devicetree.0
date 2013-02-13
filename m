@@ -1,61 +1,52 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 0/4] Various PCI-related device tree helpers
-Date: Wed, 13 Feb 2013 14:48:44 +0100
-Message-ID: <20130213144844.6faa9ce2@skate>
-References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: Re: [PATCH v3] gpio: Add device driver for GRGPIO cores and support
+ custom accessors with gpio-generic
+Date: Wed, 13 Feb 2013 15:13:53 +0100
+Message-ID: <511B9FA1.1090602@gaisler.com>
+References: <1360653873-25368-1-git-send-email-andreas@gaisler.com> <20130213070550.GA17523@lizard.gateway.2wire.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
+In-Reply-To: <20130213070550.GA17523@lizard.gateway.2wire.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Andrew Murray <andrew.murray@arm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Anton Vorontsov <anton@enomsg.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 2013-02-13 08:05, Anton Vorontsov wrote:
+> On Tue, Feb 12, 2013 at 08:24:33AM +0100, Andreas Larsson wrote:
+>> +	res = platform_get_resource(ofdev, IORESOURCE_MEM, 0);
+>> +	regs = devm_request_and_ioremap(&ofdev->dev, res);
+>
+> Just wonder, is it safe to pass null res to devm_request_and_ioremap()?
 
-On Mon, 11 Feb 2013 09:22:16 +0100, Thierry Reding wrote:
-> Hi,
-> 
-> These patches add a few device tree helpers that are used are partially
-> shared by Thomas' Marvell PCIe controller and my Tegra PCIe controller
-> series. In an attempt to decrease the number of dependencies between
-> trees, it would be nice to get these in for 3.9. There are a few ARM
-> specific patches that the series depend on which have also been
-> submitted and will hopefully make it into 3.9 so we can use the 3.9
-> cycle to focus on getting the driver patches merged.
-> 
-> Thierry
-> 
-> Andrew Murray (1):
->   of/pci: Provide support for parsing PCI DT ranges property
-> 
-> Thierry Reding (3):
->   of/pci: Add of_pci_get_devfn() function
->   of/pci: Add of_pci_get_bus() function
->   of/pci: Add of_pci_parse_bus_range() function
-> 
->  drivers/of/address.c       | 63 ++++++++++++++++++++++++++++++++++++
->  drivers/of/of_pci.c        | 80 +++++++++++++++++++++++++++++++++++++++++++---
->  include/linux/of_address.h |  9 ++++++
->  include/linux/of_pci.h     |  3 ++
->  4 files changed, 150 insertions(+), 5 deletions(-)
+Yes, and it is the preferred sequence of calls according to the 
+documentation of devm_request_and_ioremap.
 
-For the patches:
 
-Tested-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+>> +	label = kstrdup(np->full_name, GFP_KERNEL);
+>> +	if (label)
+>> +		gc->label = label;
+>
+> Do we need to free label? If not, having a comment would be awesome. :)
+> And should we print a warning for !label case?
 
-As Thierry said, we are also using those patches for the Marvell PCIe
-driver, so it would be really nice to have them in 3.9 so that we have a
-bit less patches to worry about when submitting our PCIe driver for
-3.10.
+Yes, it needs to be freed, thanks! The !label case is kind of OK as the 
+gpio system assigns some other label if it is NULL, but I'll require it 
+instead to make things easier.
 
-Thanks,
 
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+>> +static int grgpio_remove(struct platform_device *ofdev)
+>> +{
+>> +	dev_set_drvdata(&ofdev->dev, NULL);
+>
+> Is this really needed?
+
+I guess not.
+
+
+Thanks for the feedback! I take care of the other comments as well.
+
+Cheers,
+Andreas Larsson
