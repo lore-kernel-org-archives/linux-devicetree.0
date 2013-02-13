@@ -1,47 +1,61 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: [PATCH] of: spi: Return error from of_spi_register_master on bad "cs-gpios" property
-Date: Wed, 13 Feb 2013 14:23:24 +0100
-Message-ID: <1360761804-16044-1-git-send-email-andreas@gaisler.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 0/4] Various PCI-related device tree helpers
+Date: Wed, 13 Feb 2013 14:48:44 +0100
+Message-ID: <20130213144844.6faa9ce2@skate>
+References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: spi-devel-general@lists.sourceforge.net, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, software@gaisler.com
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Andrew Murray <andrew.murray@arm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This makes sure that an error is returned on an incorrectly formed
-"cs-gpios" property, but reports success when the "cs-gpios" property is
-well formed or missing.
+Hello,
 
-When holes in the cs-gpios property phandle list is used to indicate
-that some other form of chipselect is to be used it is important that
-failure to read a broken "cs-gpios" property does not silently fail
-leading to the spi controller to use an unintended chipselect.
+On Mon, 11 Feb 2013 09:22:16 +0100, Thierry Reding wrote:
+> Hi,
+> 
+> These patches add a few device tree helpers that are used are partially
+> shared by Thomas' Marvell PCIe controller and my Tegra PCIe controller
+> series. In an attempt to decrease the number of dependencies between
+> trees, it would be nice to get these in for 3.9. There are a few ARM
+> specific patches that the series depend on which have also been
+> submitted and will hopefully make it into 3.9 so we can use the 3.9
+> cycle to focus on getting the driver patches merged.
+> 
+> Thierry
+> 
+> Andrew Murray (1):
+>   of/pci: Provide support for parsing PCI DT ranges property
+> 
+> Thierry Reding (3):
+>   of/pci: Add of_pci_get_devfn() function
+>   of/pci: Add of_pci_get_bus() function
+>   of/pci: Add of_pci_parse_bus_range() function
+> 
+>  drivers/of/address.c       | 63 ++++++++++++++++++++++++++++++++++++
+>  drivers/of/of_pci.c        | 80 +++++++++++++++++++++++++++++++++++++++++++---
+>  include/linux/of_address.h |  9 ++++++
+>  include/linux/of_pci.h     |  3 ++
+>  4 files changed, 150 insertions(+), 5 deletions(-)
 
-Signed-off-by: Andreas Larsson <andreas@gaisler.com>
----
+For the patches:
 
-Can only be applied to devicetree/next as it builds upon the
-"of: Add helper for counting phandle refernces" patch series.
+Tested-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
 
- drivers/spi/spi.c |    5 ++++-
- 1 files changed, 4 insertions(+), 1 deletions(-)
+As Thierry said, we are also using those patches for the Marvell PCIe
+driver, so it would be really nice to have them in 3.9 so that we have a
+bit less patches to worry about when submitting our PCIe driver for
+3.10.
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 21c4748..9b5f024 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1068,8 +1068,11 @@ static int of_spi_register_master(struct spi_master *master)
- 	nb = of_gpio_named_count(np, "cs-gpios");
- 	master->num_chipselect = max(nb, (int)master->num_chipselect);
- 
--	if (nb < 1)
-+	/* Return error only for an incorrectly formed cs-gpios property */
-+	if (nb == 0 || nb == -ENOENT)
- 		return 0;
-+	else if (nb < 0)
-+		return nb;
- 
- 	cs = devm_kzalloc(&master->dev,
- 			  sizeof(int) * master->num_chipselect,
+Thanks,
+
+Thomas
 -- 
-1.7.0.4
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
