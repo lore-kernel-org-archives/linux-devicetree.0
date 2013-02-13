@@ -1,56 +1,89 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v2 1/2] [media] s5p-g2d: Add DT based discovery support
-Date: Thu, 14 Feb 2013 00:34:35 +0100
-Message-ID: <511C230B.5060302@gmail.com>
-References: <1360128584-23167-1-git-send-email-sachin.kamat@linaro.org> <CAK9yfHzaDDD0XEywdv+P6gEapjHwxKEfwHzKKQuXWEPHeAFgCw@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 3/3 v5] ASoC: simple-card: add Device Tree
+	support
+Date: Wed, 13 Feb 2013 16:36:13 -0700
+Message-ID: <511C236D.6060300@wwwdotorg.org>
+References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
+ <87sj6t484z.wl%kuninori.morimoto.gx@renesas.com>
+ <50E71618.8090302@wwwdotorg.org>
+ <20130104193712.GN4627@opensource.wolfsonmicro.com>
+ <87y5fvyy18.wl%kuninori.morimoto.gx@renesas.com>
+ <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
+ <20130127035943.GJ4650@opensource.wolfsonmicro.com>
+ <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
+ <20130129014808.GC4748@opensource.wolfsonmicro.com>
+ <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
+ <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
+ <5107FF97.1070601@wwwdotorg.org>
+ <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
+ <51097F0F.2030501@wwwdotorg.org>
+ <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
+ <5110349D.3050308@wwwdotorg.org>
+ <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
+ <87a9rjrrwt.wl%kuninori.morimoto.gx@renesas.com>
+ <87zjzhymbs.wl%kuninori.morimoto.gx@renesas.com>
+ <51196541.8010207@wwwdotorg.org>
+ <874nhhf22h.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <CAK9yfHzaDDD0XEywdv+P6gEapjHwxKEfwHzKKQuXWEPHeAFgCw@mail.gmail.com>
-Sender: linux-media-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "k.debski@samsung.com" <k.debski@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "patches@linaro.org" <patches@linaro.org>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <874nhhf22h.wl%kuninori.morimoto.gx@renesas.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Linux-ALSA <alsa-devel@alsa-project.org>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/12/2013 06:30 PM, Sachin Kamat wrote:
->
-> Hi Sylwester,
->
-> On Wednesday, 6 February 2013, Sachin Kamat <sachin.kamat@linaro.org> wrote:
->>  This patch adds device tree based discovery support to G2D driver
+On 02/12/2013 06:13 PM, Kuninori Morimoto wrote:
+> 
+> Hi Stephen
+> 
+>>> +- simple-audio,[prefix],bitclock-inversion	: if CPU/CODEC needs clock inversion
+>>> +- simple-audio,[prefix],frame-inversion		: if CPU/CODEC needs frame inversion
+>>> +- simple-audio,[prefix],system-clock-frequency	: system clock rate for each CPU/CODEC
 >>
->>  Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
->>  ---
->>  Based on for_v3.9 branch of below tree:
->>  git://linuxtv.org/snawrocki/samsung.git
->>
->>  Changes since v1:
->>  * Addressed review comments from Sylwester <s.nawrocki@samsung.com>.
->>  * Modified the compatible string as per the discussions at [1].
->>  [1] https://patchwork1.kernel.org/patch/2045821/
->>
->
-> Does this patch look good?
+>> I know Mark had a preference to store DAI-specific data in sub-nodes
+>> rather than using this "[prefix]" thing... If that doesn't end up
+>> happening though, rather than "[prefix],", I think it'd be more typical
+>> to use "[prefix]-" since I've never seen a DT property name with two
+>> ","; "-" is typically used as the word separator in DT property names.
+> 
+> Hmm...
+> If I can use sub-node, I can use below style for getting dai name ?
+> I guess it is easy/simple, but, what do you think about this ?
+> 
+> sound {
+> 	ak4642-hifi {
 
-It looks OK to me. I've sent a pull request including it, but it may
-happen it ends up only in 3.10.
+If you want the "simple-audio" binding and driver to be completely
+generic, you had better name this node something generic like "codec".
 
-I tried to test this patch today and I had to correct some clock
-definitions in the common clock API driver [1]. And we already have
-quite a few fixes to that patch series.
+> 		simple-audio,codec;
 
-Shouldn't you also provide a patch adding related OF_DEV_AUXDATA entry ?
-How did you test this one ?
+Then, you wouldn't need that property to identify what type of child
+node this is.
 
-When the new clocks driver gets merged (I guess it happens only in 3.10)
-I'd like to have the media devices' clock names cleaned up, instead of
-names like: {"sclk_fimg2d", "fimg2d"}, {"sclk_fimc", "fimc"},
-{"sclk_fimd"/"fimd"}, in clock-names property we could have common names,
-e.g. { "sclk", "gate" }. This could simplify a bit subsystems like devfreq.
+> 		simple-audio,dev = <&ak4642>;
 
-Also I noticed there are some issues caused by splitting mux + div + gate
-clocks into 3 different clocks. One solution to this might be to use the
-new composite clock type.
+Make that value <&ak4642 0> in order to select which AK4642 port you
+want to connect.
 
-[1] http://www.spinics.net/lists/arm-kernel/msg214149.html
+> 		...
+> 	}
+> 	fsia-dai {
+
+Name this node something generic like "CPU".
+
+> 		simple-audio,cpu;
+> 		simple-audio,dev = <&sh_fsi2>;
+> 		...
+> 	}
+> }
