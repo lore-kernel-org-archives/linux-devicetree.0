@@ -1,70 +1,72 @@
-From: Vivek Gautam <gautamvivek1987@gmail.com>
-Subject: Re: [PATCH v5 0/2] Adding USB 3.0 DRD-phy support for exynos5250
-Date: Wed, 13 Feb 2013 14:39:32 +0530
-Message-ID: <CAFp+6iEfVSbyGVNhDFc2wW7w=ZMGwVpcc28GAGOgHffCWQRLMQ@mail.gmail.com>
-References: <1360068256-19602-1-git-send-email-gautam.vivek@samsung.com>
-	<1e3101ce09b3$b2e178c0$18a46a40$@kernel.org>
-	<20130213083218.GA2426@arwen.pp.htv.fi>
+From: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] ARM: mvebu: Add support for SPI flash devices in
+	Armada 370/XP
+Date: Wed, 13 Feb 2013 06:24:14 -0300
+Message-ID: <CALF0-+WLh=8QGG4ob8HVq+x4oO_ArdFHd=vH1_OhucH1f9XG3A@mail.gmail.com>
+References: <1360155984-15397-1-git-send-email-ezequiel.garcia@free-electrons.com>
+	<511257C6.2070604@free-electrons.com>
+	<20130206132850.GC14746@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130213083218.GA2426@arwen.pp.htv.fi>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: kgene@kernel.org, linux-samsung-soc@vger.kernel.org, p.paneri@samsung.com, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, tomasz.figa@gmail.com, av.tikhomirov@samsung.com, Vivek Gautam <gautam.vivek@samsung.com>, sylvester.nawrocki@gmail.com, rob.herring@calxeda.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20130206132850.GC14746-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2013 at 2:02 PM, Felipe Balbi <balbi@ti.com> wrote:
-> On Tue, Feb 12, 2013 at 10:31:00PM -0800, kgene@kernel.org wrote:
->> Vivek Gautam wrote:
->> >
->> > Based on 'usb-next'
->> >
->> > Changes from v4:
->> >  - Modifying function names and driver names to follow a common
->> >    naming convention.
->> >         "usb2phy" for samsung-usb2phy driver
->> >         "usb3phy" for samsung-usb3phy driver
->> >  - Changing file names "samsung-usb2.c" to "samsung-usb2phy.c" and,
->> >    "samsung-usb3.c" to "samsung-usb3phy.c"
->> >  - Removing dependencies for SAMSUNG_USB2PHY and
->> > SAMSUNG_USB3PHY.
->> >  - Arranging SAMSUNG_USB2PHY and SAMSUNG_USB3PHY to select
->> > SAMSUNG_USBPHY,
->> >    which is the usb-phy helper driver.
->> >
->> > Vivek Gautam (2):
->> >   usb: phy: samsung: Common out the generic stuff
->> >   usb: phy: samsung: Add PHY support for USB 3.0 controller
->> >
->> >  drivers/usb/phy/Kconfig           |   25 +-
->> >  drivers/usb/phy/Makefile          |    2 +
->> >  drivers/usb/phy/samsung-usb2phy.c |  511
->> > ++++++++++++++++++++++++++
->> >  drivers/usb/phy/samsung-usb3phy.c |  349 ++++++++++++++++++
->> >  drivers/usb/phy/samsung-usbphy.c  |  717
->> +------------------------------------
->> >  drivers/usb/phy/samsung-usbphy.h  |  328 +++++++++++++++++
->> >  6 files changed, 1219 insertions(+), 713 deletions(-)
->> >  create mode 100644 drivers/usb/phy/samsung-usb2phy.c
->> >  create mode 100644 drivers/usb/phy/samsung-usb3phy.c
->> >  create mode 100644 drivers/usb/phy/samsung-usbphy.h
->> >
->> > --
->> > 1.7.6.5
->>
->> For now, looks good to me, and if any enhancement is required, it can be
->> done next time.
->>
->> Felipe, please go ahead with my ack :-)
->> Acked-by: Kukjin Kim <kgene.kim@samsung.com>
->
-> Thank you, but it's too late for v3.9, this will have to wait until
-> v3.10. You will get an email once I apply these to my branch.
->
-Sure, thanks :)
+Hi Jason,
 
+On Wed, Feb 6, 2013 at 10:28 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> On Wed, Feb 06, 2013 at 02:16:54PM +0100, Gregory CLEMENT wrote:
+>> On 02/06/2013 02:06 PM, Ezequiel Garcia wrote:
+>> > This is second version of the SPI patchset for Armada 370/XP.
+>> >
+>> > This series first adds support for the SPI controller
+>> > and then adds the SPI flash for the Armada XP GP board.
+>> >
+>> > This series is based on 3.8-rc5 plus:
+>> >  * "arm: mvebu: support for the new Armada XP development board(DB-MV784MP-GP)"
+>> >  * "arm: mvebu: i2c come back in defconfig"
+>> >
+>> > Feel free to test or provide any feedback!
+>> >
+>> Ezequiel,
+>>
+>> I reviewed the patches, I have nothing more to say, I can add my:
+>>
+>> Acked-by: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>
+>> on the patch that didn't have yet.
+>>
+>> Jason,
+>> could you add this series in your incoming pull request?
+>
+> That's the plan.  I'm waiting for a response from Olof to see If I need
+> to redo /boards and /dt.  In either case, my next round of pull requests
+> with have this and a bunch of other stuff.
+>
+
+Despite we're almost closed for v3.9 new material,
+I hope you don't mind a little ping on the USB and SPI stuff.
+
+I'd *really* love to see these in v3.9, if at all possible.
+
+Thanks,
 
 -- 
-Thanks & Regards
-Vivek
+    Ezequiel
+
+------------------------------------------------------------------------------
+Free Next-Gen Firewall Hardware Offer
+Buy your Sophos next-gen firewall before the end March 2013 
+and get the hardware for free! Learn more.
+http://p.sf.net/sfu/sophos-d2d-feb
