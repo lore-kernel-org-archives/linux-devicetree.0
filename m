@@ -1,73 +1,59 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH 7/7] ARM: dts: Add Samsung G2D DT bindings documentation
-Date: Wed, 13 Feb 2013 23:32:02 +0100
-Message-ID: <511C1462.5060106@gmail.com>
-References: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org> <1360151477-26460-8-git-send-email-sachin.kamat@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1360151477-26460-8-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, s.nawrocki@samsung.com, inki.dae@samsung.com, patches@linaro.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 4/4] of/pci: Add of_pci_parse_bus_range() function
+Date: Wed, 13 Feb 2013 22:58:44 +0000
+Message-ID: <20130213225844.B79093E3557@localhost>
+References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de> <1360570940-17086-5-git-send-email-thierry.reding@avionic-design.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1360570940-17086-5-git-send-email-thierry.reding@avionic-design.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Rob Herring <rob.herring@calxeda.com>, Andrew Murray <andrew.murray@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/2013 12:51 PM, Sachin Kamat wrote:
-> Added documentaion about G2D bindings.
+On Mon, 11 Feb 2013 09:22:20 +0100, Thierry Reding <thierry.reding@avionic-design.de> wrote:
+> This function can be used to parse a bus-range property as specified by
+> device nodes representing PCI bridges.
+> 
+> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
 
-s/documentaion/documentation
+Ditto for this one. We can wait on it until there is a user.
 
-> Signed-off-by: Sachin Kamat<sachin.kamat@linaro.org>
 > ---
->   .../devicetree/bindings/gpu/samsung-g2d.txt        |   30 ++++++++++++++++++++
->   1 files changed, 30 insertions(+), 0 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.txt
->
-> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> new file mode 100644
-> index 0000000..838b26b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
-> @@ -0,0 +1,30 @@
-> +* Samsung 2D Graphics Accelerator
+>  drivers/of/of_pci.c    | 25 +++++++++++++++++++++++++
+>  include/linux/of_pci.h |  1 +
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
+> index d6e6de5..fb92ded 100644
+> --- a/drivers/of/of_pci.c
+> +++ b/drivers/of/of_pci.c
+> @@ -85,3 +85,28 @@ int of_pci_get_devfn(struct device_node *np)
+>  	return (be32_to_cpup(reg) >> 8) & 0xff;
+>  }
+>  EXPORT_SYMBOL_GPL(of_pci_get_devfn);
 > +
-
-> +Samsung FIMG2D is a 2D graphics accelerator which supports Bit Block Transfer.
-> +We set the drawing-context registers for configuring the rendering parameters
-> +and then start rendering.
-> +The G2D has V4L2 as well as DRM framework based driver support.
-
-IMHO this whole paragraph is irrelevant and could be dropped.
-
-> +Required properties:
-> +  - compatible : value should be one among the following
-
-missing colon at the end of line ?
-
-> +	(a) "samsung,s5pv210-g2d" for G2D IP present in S5PV210&  Exynos4210 SoC
-> +	(b) "samsung,exynos4212-g2d" for G2D IP present in Exynos4x12 SoCs
-> +	(b) "samsung,exynos5250-g2d" for G2D IP present in Exynos5250 SoC
-
-s/(b)/(c)
-
+> +/**
+> + * of_pci_parse_bus_range() - parse the bus-range property of a PCI device
+> + * @node: device node
+> + * @res: address to a struct resource to return the bus-range
+> + *
+> + * Returns 0 on success or a negative error-code on failure.
+> + */
+> +int of_pci_parse_bus_range(struct device_node *node, struct resource *res)
+> +{
+> +	const __be32 *values;
+> +	int len;
 > +
-> +  - reg : Physical base address of the IP registers and length of memory
-> +	  mapped region.
+> +	values = of_get_property(node, "bus-range", &len);
+> +	if (!values || len < sizeof(*values) * 2)
+> +		return -EINVAL;
 > +
-> +  - interrupts : G2D interrupt number to the CPU.
-> +
-> +Optional properties:
-> +  - samsung,power-domain : power-domain property defined with a phandle
-> +			   to respective power domain.
-> +
-> +Example:
-> +	g2d@12800000 {
-> +		compatible = "samsung,s5pv210-g2d";
-> +		reg =<0x12800000 0x1000>;
-> +		interrupts =<0 89 0>;
-> +		samsung,power-domain =<&pd_lcd0>;
-> +		status = "disabled";
-> +	};
+> +	res->name = node->name;
+> +	res->start = be32_to_cpup(values++);
+> +	res->end = be32_to_cpup(values);
+> +	res->flags = IORESOURCE_BUS;
 
-Otherwise looks good to me.
+Is there precedence for using struct resource for passing around the PCI
+bus range values? Who will be the user of this function?
+
+g.
