@@ -1,34 +1,94 @@
-From: Cong Ding <dinggnu@gmail.com>
-Subject: Re: [PATCH] of: dma.c: fix memory leakage
-Date: Wed, 13 Feb 2013 12:26:23 +0100
-Message-ID: <20130213112623.GA23860@gmail.com>
-References: <1358600805-20193-1-git-send-email-dinggnu@gmail.com>
- <50FC6EB1.4050704@gmail.com>
- <20130122101053.GA2427@gmail.com>
- <20130212174025.GB17659@intel.com>
+From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v8 0/7] watchdog: dt: add support for the timeout-sec dt
+ property
+Date: Wed, 13 Feb 2013 13:22:23 +0100
+Message-ID: <1360758150-23004-1-git-send-email-fabio.porcedda@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130212174025.GB17659@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 12, 2013 at 09:40:25AM -0800, Vinod Koul wrote:
-> On Tue, Jan 22, 2013 at 10:10:53AM +0000, Cong Ding wrote:
-> > On Sun, Jan 20, 2013 at 04:24:49PM -0600, Rob Herring wrote:
-> > > On 01/19/2013 07:06 AM, Cong Ding wrote:
-> > > > The memory allocated to ofdma might be a leakage when error occurs.
-> > > > 
-> > > > Signed-off-by: Cong Ding <dinggnu@gmail.com>
-> > > 
-> > > You need to send this to whomever is working on DMA bindings.
-> > Thank you bob, I added Vinod the the receiver list.
-> I have moved the of/dma.c to dma/of-dma.c, can you regenerate this patch and
-> resend to me
-Sorry Vinod, I didn't manage to get this commit from either linux-next tree or
-slave-dma tree, and the last commit by you for of/dma.c file is on Jan 7. Did
-you have any hints for me to get the latest version dma/of-dma.c?
- - cong
+Hi all,
+this patchset add the timeout-sec property to the watchdog core,
+to the at91sam9_wdt driver and on all framework enabled watchdog driver
+with dt support.
+The at91sam9_wdt is tested on evk-pr3,
+the other drivers are compile tested only.
+
+Best regards
+Fabio Porcedda
+
+changes:
+v8:
+  - watchdog_is_valid_timeout(): export in watchdog.h
+  - watchdog_is_valid_timeout(): use in watchdog_set_timeout()
+  - watchdog_is_valid_timeout(): split patch
+  - watchdog_init_timeout(): return -EINVAL for out of range values.
+  - watchdog_init_timeout(): use struct device instead of struct device_node
+v7:
+  - rebase over v3.8-rc2
+  - remove the patch already merged
+v6:
+  - remove patch for function of_get_timeout_sec as aked by Rob Herring
+  - add Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+  - add Acked-by: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+v5:
+  - fix codestyle for compilance ti checkpatch.pl about
+    "ERROR: do not initialise statics to 0 or NULL"
+    for s3c2410_wdt.c:56 and at91sam9_wdt.c:63
+v4:
+  - add of_get_timeout_sec
+  - add s3c2410_wdt driver
+  - split driver patch
+  - fixed watchdog_init_timeout handling of min_timeout and max_timeout
+v3:
+  - rename watchdog_probe_dt_timeout ->  watchdog_init_timeout
+  - move the watchdog_init_timeout function from inline to watchdog_core.c
+  - add timeout parameter handling code to watchdog_init_timeout
+  - add timeout-sec property to the pnx4008-wdt driver
+  - add two small commit for fixup and cleanup
+v2:
+  - change "timeout" to "timeout-sec" as asked by Jean-Christophe
+  - at91sam9_wdt: use the new helper function
+  - at91sam9_wdt: add bounds checking
+  - watchdog.h: add bounds checking
+
+Fabio Porcedda (7):
+  watchdog: core: add and use watchdog_is_valid_timeout function
+  watchdog: core: dt: add support for the timeout-sec dt property
+  watchdog: orion_wdt: add timeout-sec property binding
+  watchdog: pnx4008: add timeout-sec property binding
+  watchdog: s3c2410_wdt: add timeout-sec property binding
+  watchdog: at91sam9_wdt: add timeout-sec property binding
+  watchdog: orion_wdt: move the min_timeout initialization
+
+ .../devicetree/bindings/watchdog/atmel-wdt.txt     |  4 ++
+ .../devicetree/bindings/watchdog/marvel.txt        |  5 +++
+ .../devicetree/bindings/watchdog/pnx4008-wdt.txt   |  4 ++
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |  3 ++
+ Documentation/watchdog/watchdog-kernel-api.txt     | 10 +++++
+ drivers/watchdog/Kconfig                           |  1 +
+ drivers/watchdog/at91sam9_wdt.c                    | 16 ++++++--
+ drivers/watchdog/orion_wdt.c                       | 10 ++---
+ drivers/watchdog/pnx4008_wdt.c                     |  7 ++--
+ drivers/watchdog/s3c2410_wdt.c                     |  6 ++-
+ drivers/watchdog/watchdog_core.c                   | 48 ++++++++++++++++++++++
+ drivers/watchdog/watchdog_dev.c                    |  3 +-
+ include/linux/watchdog.h                           |  4 ++
+ 13 files changed, 104 insertions(+), 17 deletions(-)
+
+-- 
+1.8.1.1
