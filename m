@@ -1,58 +1,45 @@
-From: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v8 7/7] watchdog: orion_wdt: move the min_timeout
- initialization
-Date: Wed, 13 Feb 2013 13:22:30 +0100
-Message-ID: <1360758150-23004-8-git-send-email-fabio.porcedda@gmail.com>
-References: <1360758150-23004-1-git-send-email-fabio.porcedda@gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2] gpio: mcp23s08: convert driver to DT
+Date: Wed, 13 Feb 2013 13:51:12 +0100
+Message-ID: <CACRpkdbJ=KiwVoeK2TgO8kMuYQ2U-LaUOdL1d7w-q+9Ggb-JnA@mail.gmail.com>
+References: <1360583563-10707-1-git-send-email-larsi@wh2.tu-dresden.de>
+	<20130211212551.1002A3E3530@localhost>
+	<201302131213.08631.poeschel@lemonage.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360758150-23004-1-git-send-email-fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Wim Van Sebroeck <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe PLAGNIOL-VILLARD <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Andrew Victor <linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201302131213.08631.poeschel@lemonage.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars Poeschel <poeschel@lemonage.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Lars Poeschel <larsi@wh2.tu-dresden.de>, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net
 List-Id: devicetree@vger.kernel.org
 
-Move the min_timeout initialization inside the orion_wdt definition.
+On Wed, Feb 13, 2013 at 12:13 PM, Lars Poeschel <poeschel@lemonage.de> wrote:
+> On Monday 11 February 2013 at 22:25:51, Grant Likely wrote:
+>>
+>> However, is the pullup selection per-gpio line? If so, then why not
+>> encode it into the flags field of the gpio specifier?
+>
+> Yes, the pullup is per-gpio line. I am working on that. It turns out, that
+> this is a bit difficult for me, as there is no real documentation and no
+> other driver is doing it or something similar yet. Exception are very few
+> gpio soc drivers where situation is a bit different. They seem to rely an
+> fixed global gpio numbers and they are always memory mapped.
+> But as I said I am working on it...
 
-Only compile tested.
+Part of your problem is that pull-up is pin control territory.
 
-Signed-off-by: Fabio Porcedda <fabio.porcedda-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Acked-by: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
----
- drivers/watchdog/orion_wdt.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+We invented that subsystem for a reason, and that reason
+was that the GPIO subsystem had a hard time accomodating
+things like this.
 
-diff --git a/drivers/watchdog/orion_wdt.c b/drivers/watchdog/orion_wdt.c
-index 3022a38..da57798 100644
---- a/drivers/watchdog/orion_wdt.c
-+++ b/drivers/watchdog/orion_wdt.c
-@@ -140,6 +140,7 @@ static const struct watchdog_ops orion_wdt_ops = {
- static struct watchdog_device orion_wdt = {
- 	.info = &orion_wdt_info,
- 	.ops = &orion_wdt_ops,
-+	.min_timeout = 1,
- };
- 
- static int orion_wdt_probe(struct platform_device *pdev)
-@@ -164,7 +165,6 @@ static int orion_wdt_probe(struct platform_device *pdev)
- 
- 	wdt_max_duration = WDT_MAX_CYCLE_COUNT / wdt_tclk;
- 
--	orion_wdt.min_timeout = 1;
- 	orion_wdt.timeout = wdt_max_duration;
- 	orion_wdt.max_timeout = wdt_max_duration;
- 	watchdog_init_timeout(&orion_wdt, heartbeat, &pdev->dev);
--- 
-1.8.1.1
+If you look in drivers/pinctrl/pinctrl-abx500.c which is my
+latest submitted pinctrl driver you can see that this is basically
+a quite simple GPIO chip, we just model it as a pin controller
+with a GPIO front-end too exactly because it can do things
+like multiplexing, pull-up and pull-down.
+
+Have you considered this approach?
+
+Yours,
+Linus Walleij
