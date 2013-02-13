@@ -1,50 +1,73 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 10/14] PCI: tegra: Move PCIe driver to drivers/pci/host
-Date: Thu, 14 Feb 2013 00:11:33 +0100
-Message-ID: <20130214001133.77e6ba06@skate>
-References: <1357764194-12677-1-git-send-email-thierry.reding@avionic-design.de>
-	<1357764194-12677-11-git-send-email-thierry.reding@avionic-design.de>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 7/7] ARM: dts: Add Samsung G2D DT bindings documentation
+Date: Thu, 14 Feb 2013 00:17:14 +0100
+Message-ID: <104679815.9jiIT0ld5D@flatron>
+References: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org> <1360151477-26460-8-git-send-email-sachin.kamat@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1357764194-12677-11-git-send-email-thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1360151477-26460-8-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, s.nawrocki@samsung.com, inki.dae@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Grant Likely,
+Hi Sachin,
 
-On Wed, 13 Feb 2013 22:59:50 +0000, Grant Likely wrote:
+On Wednesday 06 of February 2013 17:21:17 Sachin Kamat wrote:
+> Added documentaion about G2D bindings.
+> 
+> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> ---
+>  .../devicetree/bindings/gpu/samsung-g2d.txt        |   30
+> ++++++++++++++++++++ 1 files changed, 30 insertions(+), 0 deletions(-)
+>  create mode 100644
+> Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt new file mode
+> 100644
+> index 0000000..838b26b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> @@ -0,0 +1,30 @@
+> +* Samsung 2D Graphics Accelerator
+> +
+> +Samsung FIMG2D is a 2D graphics accelerator which supports Bit Block
+> Transfer. +We set the drawing-context registers for configuring the
+> rendering parameters +and then start rendering.
+> +The G2D has V4L2 as well as DRM framework based driver support.
+> +
+> +Required properties:
+> +  - compatible : value should be one among the following
+> +	(a) "samsung,s5pv210-g2d" for G2D IP present in S5PV210 & Exynos4210
+> SoC +	(b) "samsung,exynos4212-g2d" for G2D IP present in Exynos4x12
+> SoCs +	(b) "samsung,exynos5250-g2d" for G2D IP present in Exynos5250
+> SoC +
+> +  - reg : Physical base address of the IP registers and length of
+> memory +	  mapped region.
+> +
+> +  - interrupts : G2D interrupt number to the CPU.
+> +
+> +Optional properties:
+> +  - samsung,power-domain : power-domain property defined with a phandle
+> +			   to respective power domain.
 
-> There isn't a whole lot of value in this patch without another user.
-> I'll need to see the other patches that make use of this.
+I'm not sure if samsung,power-domain should be mentioned in this 
+documentation file. The driver itself does not use this property.
 
-See the proposed Marvell PCIe driver and Tegra PCIe driver:
- http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149232.html
- http://lists.infradead.org/pipermail/linux-arm-kernel/2013-January/140649.html
+Otherwise looks fine.
 
-Both Thierry (doing the Tegra PCIe driver) and myself (doing the
-Marvell PCIe driver) already have fairly long patch series to add
-support for the PCIe interfaces in our respective SoC. In order to ease
-the process of getting those merged, we'd like to get some of the
-base functions we depend on to be merged first, so that our patch
-series become a bit smaller and therefore more manageable. My Marvell
-PCIe patch series already has 32 patches (including the ones we are
-currently discussing), and I will need even more patches for the
-upcoming fourth version (due to additional comments made during the
-review of the third version of the patch set).
+Best regards,
+Tomasz
 
-So, it would really be helpful if this base infrastructure, for which
-users already exist in the form of submitted patches, that have already
-gone through multiple iterations, could be merged.
-
-Thanks,
-
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+> +
+> +Example:
+> +	g2d@12800000 {
+> +		compatible = "samsung,s5pv210-g2d";
+> +		reg = <0x12800000 0x1000>;
+> +		interrupts = <0 89 0>;
+> +		samsung,power-domain = <&pd_lcd0>;
+> +		status = "disabled";
+> +	};
