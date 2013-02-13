@@ -1,73 +1,62 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH V4 0/5] Add generic DMA DT binding support
-Date: Wed, 13 Feb 2013 09:52:30 +0530
-Message-ID: <CAAgF-Be1w-8yjuyXT+d8sUO8dee1x7oYFJLXHCmcJSf17eXWyw@mail.gmail.com>
-References: <1360571905-15285-1-git-send-email-padma.v@samsung.com>
-	<20130212144950.GJ3789@intel.com>
+From: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v6 05/12] iommu/exynos: support for device tree
+Date: Tue, 12 Feb 2013 21:33:01 -0800
+Message-ID: <1e0d01ce09ab$98eed690$cacc83b0$@samsung.com>
+References: <003801cde30b$d9667b90$8c3372b0$%cho@samsung.com>
+	<50E1E62B.3090501@gmail.com>
+	<CAHQjnOMav9A43m4=7=N9kzEHTHE_q_ygu8x6mzY6Cus=q0c06A@mail.gmail.com>
+	<20130201135114.GF25591@8bytes.org>
+	<CAHQjnOP1U=LRU-fe-HuWzp=17s=KG8zPvSO3_zeVrrviEkmyHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130212144950.GJ3789@intel.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, arnd@arndb.de, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org, robherring2@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-reply-to: <CAHQjnOP1U=LRU-fe-HuWzp=17s=KG8zPvSO3_zeVrrviEkmyHw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-language: en-us
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: 'KyongHo Cho' <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Joerg Roedel' <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: 'Linux Samsung SOC' <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Hyunwoong Kim' <khw0178.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Prathyush' <prathyush.k-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'devicetree-discuss' <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, 'Subash Patel' <supash.ramaswamy-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Linux Kernel' <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, 'Linux IOMMU' <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, 'Thomas Abraham' <thomas.abraham-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Sylwester Nawrocki' <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Tomasz Figa' <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, 'Linux ARM Kernel' <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, 'Rahul Sharma' <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+KyongHo Cho wrote:
+> 
+> On Fri, Feb 1, 2013 at 10:51 PM, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org> wrote:
+> > Cho,
+> >
+> > On Wed, Jan 02, 2013 at 02:53:49PM +0900, KyongHo Cho wrote:
+> >> On Tuesday, January 1, 2013, Sylwester Nawrocki
+> <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >
+> >> > Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> >
+> > Since patch 7 of this set is already merged, do you mind to re-post the
+> > rest of this patch-set with the latest comments addressed? I can have a
+> > look at it again then and consider it for 3.9.
+> >
+> Thank you for your considerations.
+> 
+> I also think that I need to post the patch set again with some fixes that
+are
+> addressed in the comments.
+> 
+> Due to the heavy workload in my business I have hardly had a chance to
+> handle this patch-set.
+> As soon as the business lets me handle other pending issues, I will
+> work on this patchset.
+> I think I can start to it in the next 2 weeks.
+> 
+OK, I see.
 
-On Tue, Feb 12, 2013 at 8:19 PM, Vinod Koul <vinod.koul@intel.com> wrote:
-> On Mon, Feb 11, 2013 at 02:08:20PM +0530, Padmavathi Venna wrote:
->
-> This looks fine, I have only question. The code seems to assume that pl330 dma
-> controller always uses DT. But I dont see that as dependency for pl330.
->
-> Something tells me withot OF the driver may not build, have you checked it?
->
->> This patch set adds support for generic dma device tree bindings for
->> Samsung platforms and is dependent on the following patches from
->> Vinod Koul next branch
->> 1)of: Add generic device tree DMA helpers
->> 2)dmaengine: add helper function to request a slave DMA channel
->>
->> This patch set is made based Mark Brown next branch
-> Is this targetted for ASoC tree, if so why? It would fail to build if applied
-> there
+Joerg, please hold this on until KyongHo's re-work, probably 3.10?
 
-I have done this for my testing purpose (I expected all will directly
-apply in your branch). But 3rd patch is not applied directly. I will
-resend the patches after re-basing on your tree. 5th patch has to go
-in ASoC tree because it has dependency on "ARM: SAMSUNG: Make dma
-request compatible to generic dma bindings" which is there in ASoC
-tree.
+Thanks.
 
-Hi Mark,
-
-Can you please take the 5th patch in your tree(if there is no issue)
-or should I resend it as a separate patch?
-
->
-> --
-> ~Vinod
->>
->> Padmavathi Venna (5):
->>   DMA: PL330: Add new pl330 filter for DT case.
->>   DMA: PL330: Add xlate function
->>   DMA: PL330: Register the DMA controller with the generic DMA helpers
->>   ARM: dts: pl330: Add #dma-cells for generic dma binding support
->>   ARM: SAMSUNG: dma: Remove unnecessary code
->>
->>  .../devicetree/bindings/dma/arm-pl330.txt          |   21 +++++--
->>  arch/arm/boot/dts/exynos5250.dtsi                  |   12 ++++
->>  arch/arm/mach-s3c24xx/include/mach/dma.h           |    1 -
->>  arch/arm/mach-s3c64xx/include/mach/dma.h           |    1 -
->>  arch/arm/plat-samsung/dma-ops.c                    |   10 +---
->>  arch/arm/plat-samsung/include/plat/dma-ops.h       |    1 -
->>  arch/arm/plat-samsung/include/plat/dma-pl330.h     |    1 -
->>  drivers/dma/pl330.c                                |   64 +++++++++++++++----
->>  8 files changed, 79 insertions(+), 32 deletions(-)
->>
->> --
->> 1.7.4.4
->>
-Thanks
-Padma
+- Kukjin
