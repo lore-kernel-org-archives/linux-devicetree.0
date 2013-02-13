@@ -1,551 +1,301 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v2 6/6] Input: Add ChromeOS EC keyboard driver
-Date: Tue, 12 Feb 2013 18:42:26 -0800
-Message-ID: <1360723347-28701-7-git-send-email-sjg@chromium.org>
-References: <1360723347-28701-1-git-send-email-sjg@chromium.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1360723347-28701-1-git-send-email-sjg@chromium.org>
-Sender: linux-input-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Simon Glass <sjg@chromium.org>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Mike A. Chan" <mikechan@google.com>, Jun Nakajima <jun.nakajima@intel.com>, Tom Keel <thomas.keel@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+From: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: [PATCH 1/9] sh-pfc: Add OF support
+Date: Wed, 13 Feb 2013 12:29:13 +0900
+Message-ID: <1360726161-16072-2-git-send-email-horms+renesas@verge.net.au>
+References: <1360726161-16072-1-git-send-email-horms+renesas@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1360726161-16072-1-git-send-email-horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Use the key-matrix layer to interpret key scan information from the EC
-and inject input based on the FDT-supplied key map. This driver registers
-itself with the ChromeOS EC driver to perform communications.
+From: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
-Additional FDT bindings are provided to specify rows/columns and the
-auto-repeat information.
+Support device instantiation through the device tree. The compatible
+property is used to select the SoC pinmux information.
 
-Signed-off-by: Simon Glass <sjg@chromium.org>
-Signed-off-by: Luigi Semenzato <semenzato@chromium.org>
-Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
+Set the gpio_chip device field to the PFC device to enable automatic
+GPIO OF support.
+
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Signed-off-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 ---
-Changes in v2:
-- Remove use of __devinit/__devexit
-- Use function to read matrix-keypad parameters from DT
-- Remove key autorepeat parameters from DT binding and driver
-- Use unsigned int for rows/cols
+ .../bindings/pinctrl/renesas,pfc-pinctrl.txt       |   77 ++++++++++++++++++++
+ drivers/pinctrl/sh-pfc/core.c                      |   62 +++++++++++++++-
+ drivers/pinctrl/sh-pfc/pinctrl.c                   |   54 ++++++++++++++
+ 3 files changed, 191 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
 
- .../devicetree/bindings/input/cros-ec-keyb.txt     |  72 ++++
- drivers/input/keyboard/Kconfig                     |  12 +
- drivers/input/keyboard/Makefile                    |   1 +
- drivers/input/keyboard/cros_ec_keyb.c              | 394 +++++++++++++++++++++
- 4 files changed, 479 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/cros-ec-keyb.txt
- create mode 100644 drivers/input/keyboard/cros_ec_keyb.c
-
-diff --git a/Documentation/devicetree/bindings/input/cros-ec-keyb.txt b/Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+diff --git a/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
 new file mode 100644
-index 0000000..0f6355c
+index 0000000..77752c2
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/input/cros-ec-keyb.txt
-@@ -0,0 +1,72 @@
-+ChromeOS EC Keyboard
++++ b/Documentation/devicetree/bindings/pinctrl/renesas,pfc-pinctrl.txt
+@@ -0,0 +1,77 @@
++* Renesas GPIO and Pin Mux/Config controller
 +
-+Google's ChromeOS EC Keyboard is a simple matrix keyboard implemented on
-+a separate EC (Embedded Controller) device. It provides a message for reading
-+key scans from the EC. These are then converted into keycodes for processing
-+by the kernel.
++Required Properties:
++- compatible: should be one of the following.
++  - "renesas,pfc-r8a7740": for R8A7740 (R-Mobile A1) compatible pin-controller.
++  - "renesas,pfc-r8a7779": for R8A7779 (R-Car H1) compatible pin-controller.
++  - "renesas,pfc-sh7372": for SH7372 (SH-Mobile AP4) compatible pin-controller.
++  - "renesas,pfc-sh73a0": for SH73A0 (SH-Mobile AG5) compatible pin-controller.
 +
-+This binding is based on matrix-keymap.txt and extends/modifies it as follows:
++- reg: Base address and length of each memory resource used by the pin
++  controller hardware module.
 +
-+Required properties:
-+- compatible: "google,cros-ec-keyb"
++- gpio-controller: Marks the device node as a gpio controller.
 +
-+Optional properties:
-+- google,needs-ghost-filter: True to enable a ghost filter for the matrix
-+keyboard. This is recommended if the EC does not have its own logic or
-+hardware for this.
++- #gpio-cells: Should be 2. The first cell is the pin number and the second cell
++  is used to specify optional parameters as bit flags. Only the GPIO active low
++  flag (bit 0) is currently supported.
 +
 +
-+Example:
++The PFC node also acts as a container for pin control maps represented as
++subnodes. Each subnode contains a function name and one or more pin or pin group
++name. The subnode names are ignored, all subnodes are parsed through phandles
++and processed purely based on their content.
 +
-+cros-ec-keyb {
-+	compatible = "google,cros-ec-keyb";
-+	keypad,num-rows = <8>;
-+	keypad,num-columns = <13>;
-+	google,needs-ghost-filter;
-+	/*
-+	 * Keymap entries take the form of 0xRRCCKKKK where
-+	 * RR=Row CC=Column KKKK=Key Code
-+	 * The values below are for a US keyboard layout and
-+	 * are taken from the Linux driver. Note that the
-+	 * 102ND key is not used for US keyboards.
-+	 */
-+	linux,keymap = <
-+		/* CAPSLCK F1         B          F10     */
-+		0x0001003a 0x0002003b 0x00030030 0x00040044
-+		/* N       =          R_ALT      ESC     */
-+		0x00060031 0x0008000d 0x000a0064 0x01010001
-+		/* F4      G          F7         H       */
-+		0x0102003e 0x01030022 0x01040041 0x01060023
-+		/* '       F9         BKSPACE    L_CTRL  */
-+		0x01080028 0x01090043 0x010b000e 0x0200001d
-+		/* TAB     F3         T          F6      */
-+		0x0201000f 0x0202003d 0x02030014 0x02040040
-+		/* ]       Y          102ND      [       */
-+		0x0205001b 0x02060015 0x02070056 0x0208001a
-+		/* F8      GRAVE      F2         5       */
-+		0x02090042 0x03010029 0x0302003c 0x03030006
-+		/* F5      6          -          \       */
-+		0x0304003f 0x03060007 0x0308000c 0x030b002b
-+		/* R_CTRL  A          D          F       */
-+		0x04000061 0x0401001e 0x04020020 0x04030021
-+		/* S       K          J          ;       */
-+		0x0404001f 0x04050025 0x04060024 0x04080027
-+		/* L       ENTER      Z          C       */
-+		0x04090026 0x040b001c 0x0501002c 0x0502002e
-+		/* V       X          ,          M       */
-+		0x0503002f 0x0504002d 0x05050033 0x05060032
-+		/* L_SHIFT /          .          SPACE   */
-+		0x0507002a 0x05080035 0x05090034 0x050B0039
-+		/* 1       3          4          2       */
-+		0x06010002 0x06020004 0x06030005 0x06040003
-+		/* 8       7          0          9       */
-+		0x06050009 0x06060008 0x0608000b 0x0609000a
-+		/* L_ALT   DOWN       RIGHT      Q       */
-+		0x060a0038 0x060b006c 0x060c006a 0x07010010
-+		/* E       R          W          I       */
-+		0x07020012 0x07030013 0x07040011 0x07050017
-+		/* U       R_SHIFT    P          O       */
-+		0x07060016 0x07070036 0x07080019 0x07090018
-+		/* UP      LEFT    */
-+		0x070b0067 0x070c0069>;
-+};
-diff --git a/drivers/input/keyboard/Kconfig b/drivers/input/keyboard/Kconfig
-index 078305e..3a70be7 100644
---- a/drivers/input/keyboard/Kconfig
-+++ b/drivers/input/keyboard/Kconfig
-@@ -628,4 +628,16 @@ config KEYBOARD_W90P910
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called w90p910_keypad.
++Required Subnode Properties:
++- renesas,pins : An array of strings. Each string contains the name of a pin or
++  pin group.
++- renesas,function: A string containing the name of the function to mux to the
++  pin or pin group.
++
++  Valid values for group and function names can be found in the group and
++  function arrays of the PFC data file corresponding to the SoC
++  (drivers/pinctrl/spear/pfc-*.c)
++
++Please refer to pinctrl-bindings.txt in this directory for details of the common
++pinctrl bindings used by client devices.
++
++
++The syntax of the gpio specifier used by client nodes should be the following
++with values derived from the SoC user manual.
++
++  <[phandle of the gpio controller node]
++   [pin number within the gpio controller]
++   [flags and pull up/down]>
++
++
++Example 1: SH73A0 (SH-Mobile AG5) pin controller node
++
++	gpio: pfc@e6050000 {
++		compatible = "renesas,pfc-sh73a0";
++		reg = <0xe6050000 0x8000>,
++		      <0xe605801c 0x1c>;
++		gpio-controller;
++		#gpio-cells = <2>;
++	};
++
++Example 2: A GPIO LED node that references a GPIO
++
++	leds {
++		compatible = "gpio-leds";
++		led1 {
++			gpios = <&gpio 20 1>; /* Active low */
++		};
++	};
++
++Example 3: KZM-A9-GT (SH-Mobile AG5) default pin state and pin control maps
++           for the LCD device
++
++	&gpio {
++		pinctrl-0 = <&lcd_pins>;
++		pinctrl-names = "default";
++
++		lcd_pins: pfc_lcd_pins {
++			renesas,pins = "lcd_data24", "lcd_sync";
++			renesas,function = "lcd";
++		};
++	};
+diff --git a/drivers/pinctrl/sh-pfc/core.c b/drivers/pinctrl/sh-pfc/core.c
+index 912b579..d0e8e77 100644
+--- a/drivers/pinctrl/sh-pfc/core.c
++++ b/drivers/pinctrl/sh-pfc/core.c
+@@ -19,6 +19,7 @@
+ #include <linux/ioport.h>
+ #include <linux/kernel.h>
+ #include <linux/module.h>
++#include <linux/of_device.h>
+ #include <linux/pinctrl/machine.h>
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+@@ -510,8 +511,55 @@ int sh_pfc_config_gpio(struct sh_pfc *pfc, unsigned gpio, int pinmux_type,
+ 	return sh_pfc_config_mux(pfc, mark, pinmux_type, cfg_mode);
+ }
  
-+config KEYBOARD_CROS_EC
-+	tristate "ChromeOS EC keyboard"
-+	select INPUT_MATRIXKMAP
-+	select MFD_CROS_EC
-+	help
-+	  Say Y here to enable the matrix keyboard used by ChromeOS devices
-+	  and implemented on the ChromeOS EC. You must enable one bus option
-+	  (MFD_CROS_EC_I2C or MFD_CROS_EC_SPI) to use this.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called cros_ec_keyb.
-+
- endif
-diff --git a/drivers/input/keyboard/Makefile b/drivers/input/keyboard/Makefile
-index 49b1645..0c43e8c 100644
---- a/drivers/input/keyboard/Makefile
-+++ b/drivers/input/keyboard/Makefile
-@@ -11,6 +11,7 @@ obj-$(CONFIG_KEYBOARD_AMIGA)		+= amikbd.o
- obj-$(CONFIG_KEYBOARD_ATARI)		+= atakbd.o
- obj-$(CONFIG_KEYBOARD_ATKBD)		+= atkbd.o
- obj-$(CONFIG_KEYBOARD_BFIN)		+= bf54x-keys.o
-+obj-$(CONFIG_KEYBOARD_CROS_EC)		+= cros_ec_keyb.o
- obj-$(CONFIG_KEYBOARD_DAVINCI)		+= davinci_keyscan.o
- obj-$(CONFIG_KEYBOARD_EP93XX)		+= ep93xx_keypad.o
- obj-$(CONFIG_KEYBOARD_GOLDFISH_EVENTS)	+= goldfish_events.o
-diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
-new file mode 100644
-index 0000000..43e5be2
---- /dev/null
-+++ b/drivers/input/keyboard/cros_ec_keyb.c
-@@ -0,0 +1,394 @@
-+/*
-+ * ChromeOS EC keyboard driver
-+ *
-+ * Copyright (C) 2012 Google, Inc
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * This driver uses the Chrome OS EC byte-level message-based protocol for
-+ * communicating the keyboard state (which keys are pressed) from a keyboard EC
-+ * to the AP over some bus (such as i2c, lpc, spi).  The EC does debouncing,
-+ * but everything else (including deghosting) is done here.  The main
-+ * motivation for this is to keep the EC firmware as simple as possible, since
-+ * it cannot be easily upgraded and EC flash/IRAM space is relatively
-+ * expensive.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/i2c.h>
-+#include <linux/input.h>
-+#include <linux/kernel.h>
-+#include <linux/notifier.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/input/matrix_keypad.h>
-+#include <linux/mfd/cros_ec.h>
-+#include <linux/mfd/cros_ec_commands.h>
-+
-+/*
-+ * @rows: Number of rows in the keypad
-+ * @cols: Number of columns in the keypad
-+ * @row_shift: log2 or number of rows, rounded up
-+ * @keymap_data: Matrix keymap data used to convert to keyscan values
-+ * @ghost_filter: true to enable the matrix key-ghosting filter
-+ * @old_state: Previous state of the keyboard matrix (used to calc deltas)
-+ * @dev: Device pointer
-+ * @idev: Input device
-+ * @ec: Top level ChromeOS device to use to talk to EC
-+ * @event_notifier: interrupt event notifier for transport devices
-+ * @wake_notifier: wake notfier for client devices (e.g. keyboard). This
-+ *	indicates to sub-drivers that we have woken up from resume but we
-+ *	were not a wakeup source.
-+ */
-+struct cros_ec_keyb {
-+	unsigned int rows;
-+	unsigned int cols;
-+	int row_shift;
-+	const struct matrix_keymap_data *keymap_data;
-+	bool ghost_filter;
-+	/*
-+	 * old_state[matrix code] is 1 when the most recent (valid)
-+	 * communication with the keyboard indicated that the key at row/col
-+	 * was in the pressed state.
-+	 */
-+	uint8_t *old_state;
-+
-+	struct device *dev;
-+	struct input_dev *idev;
-+	struct cros_ec_device *ec;
-+	struct notifier_block notifier;
-+	struct notifier_block wake_notifier;
-+};
-+
-+
-+/*
-+ * Sends a single key event to the input layer.
-+ */
-+static inline void cros_ec_keyb_send_key_event(struct cros_ec_keyb *ckdev,
-+				int row, int col, int pressed)
-+{
-+	struct input_dev *idev = ckdev->idev;
-+	int code = MATRIX_SCAN_CODE(row, col, ckdev->row_shift);
-+	const unsigned short *keycodes = idev->keycode;
-+
-+	input_report_key(idev, keycodes[code], pressed);
-+}
-+
-+/*
-+ * Returns true when there is at least one combination of pressed keys that
-+ * results in ghosting.
-+ */
-+static bool cros_ec_keyb_has_ghosting(struct cros_ec_keyb *ckdev, uint8_t *buf)
-+{
-+	int col, row;
-+	int mask;
-+	int pressed_in_row[ckdev->rows];
-+	int row_has_teeth[ckdev->rows];
-+
-+	memset(pressed_in_row, '\0', sizeof(pressed_in_row));
-+	memset(row_has_teeth, '\0', sizeof(row_has_teeth));
-+	/*
-+	 * Ghosting happens if for any pressed key X there are other keys
-+	 * pressed both in the same row and column of X as, for instance,
-+	 * in the following diagram:
-+	 *
-+	 * . . Y . g .
-+	 * . . . . . .
-+	 * . . . . . .
-+	 * . . X . Z .
-+	 *
-+	 * In this case only X, Y, and Z are pressed, but g appears to be
-+	 * pressed too (see Wikipedia).
-+	 *
-+	 * We can detect ghosting in a single pass (*) over the keyboard state
-+	 * by maintaining two arrays.  pressed_in_row counts how many pressed
-+	 * keys we have found in a row.  row_has_teeth is true if any of the
-+	 * pressed keys for this row has other pressed keys in its column.  If
-+	 * at any point of the scan we find that a row has multiple pressed
-+	 * keys, and at least one of them is at the intersection with a column
-+	 * with multiple pressed keys, we're sure there is ghosting.
-+	 * Conversely, if there is ghosting, we will detect such situation for
-+	 * at least one key during the pass.
-+	 *
-+	 * (*) This looks linear in the number of keys, but it's not.  We can
-+	 * cheat because the number of rows is small.
-+	 */
-+	for (row = 0; row < ckdev->rows; row++) {
-+		mask = 1 << row;
-+		for (col = 0; col < ckdev->cols; col++) {
-+			if (buf[col] & mask) {
-+				pressed_in_row[row] += 1;
-+				row_has_teeth[row] |= buf[col] & ~mask;
-+				if (pressed_in_row[row] > 1 &&
-+				    row_has_teeth[row]) {
-+					/* ghosting */
-+					dev_dbg(ckdev->dev,
-+						"ghost found at: r%d c%d,"
-+						" pressed %d, teeth 0x%x\n",
-+						row, col, pressed_in_row[row],
-+						row_has_teeth[row]);
-+					return true;
-+				}
-+			}
-+		}
-+	}
-+	return false;
-+}
-+
-+/*
-+ * Compares the new keyboard state to the old one and produces key
-+ * press/release events accordingly.  The keyboard state is 13 bytes (one byte
-+ * per column)
-+ */
-+static void cros_ec_keyb_process(struct cros_ec_keyb *ckdev,
-+			 uint8_t *kb_state, int len)
-+{
-+	int col, row;
-+	int new_state;
-+	int num_cols;
-+
-+	num_cols = len;
-+
-+	if (ckdev->ghost_filter && cros_ec_keyb_has_ghosting(ckdev, kb_state)) {
-+		/*
-+		 * Simple-minded solution: ignore this state. The obvious
-+		 * improvement is to only ignore changes to keys involved in
-+		 * the ghosting, but process the other changes.
-+		 */
-+		dev_dbg(ckdev->dev, "ghosting found\n");
-+		return;
-+	}
-+
-+	for (col = 0; col < ckdev->cols; col++) {
-+		for (row = 0; row < ckdev->rows; row++) {
-+			int code = MATRIX_SCAN_CODE(row, col, ckdev->row_shift);
-+
-+			new_state = kb_state[col] & (1 << row);
-+			if (!!new_state != ckdev->old_state[code]) {
-+				dev_dbg(ckdev->dev,
-+					"changed: [r%d c%d]: byte %02x\n",
-+					row, col, new_state);
-+			}
-+			if (new_state && !ckdev->old_state[code]) {
-+				/* key press */
-+				cros_ec_keyb_send_key_event(ckdev, row, col, 1);
-+				ckdev->old_state[code] = 1;
-+			} else if (!new_state && ckdev->old_state[code]) {
-+				/* key release */
-+				cros_ec_keyb_send_key_event(ckdev, row, col, 0);
-+				ckdev->old_state[code] = 0;
-+			}
-+		}
-+	}
-+	input_sync(ckdev->idev);
-+}
-+
-+static int cros_ec_keyb_open(struct input_dev *dev)
-+{
-+	struct cros_ec_keyb *ckdev = input_get_drvdata(dev);
-+	int ret;
-+
-+	ret = blocking_notifier_chain_register(&ckdev->ec->event_notifier,
-+						&ckdev->notifier);
-+	if (ret)
-+		return ret;
-+	ret = blocking_notifier_chain_register(&ckdev->ec->wake_notifier,
-+						&ckdev->wake_notifier);
-+	if (ret) {
-+		blocking_notifier_chain_unregister(
-+			&ckdev->ec->event_notifier, &ckdev->notifier);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static void cros_ec_keyb_close(struct input_dev *dev)
-+{
-+	struct cros_ec_keyb *ckdev = input_get_drvdata(dev);
-+
-+	blocking_notifier_chain_unregister(&ckdev->ec->event_notifier,
-+					   &ckdev->notifier);
-+	blocking_notifier_chain_unregister(&ckdev->ec->wake_notifier,
-+					   &ckdev->wake_notifier);
-+}
-+
-+static int cros_ec_keyb_get_state(struct cros_ec_keyb *ckdev, uint8_t *kb_state)
-+{
-+	return ckdev->ec->command_recv(ckdev->ec, EC_CMD_MKBP_STATE,
-+					  kb_state, ckdev->cols);
-+}
-+
-+static int cros_ec_keyb_work(struct notifier_block *nb,
-+		     unsigned long state, void *_notify)
-+{
-+	int ret;
-+	struct cros_ec_keyb *ckdev = container_of(nb, struct cros_ec_keyb,
-+						    notifier);
-+	uint8_t kb_state[ckdev->cols];
-+
-+	ret = cros_ec_keyb_get_state(ckdev, kb_state);
-+	if (ret >= 0)
-+		cros_ec_keyb_process(ckdev, kb_state, ret);
-+
-+	return NOTIFY_DONE;
-+}
-+
-+/* On resume, clear any keys in the buffer */
-+static int cros_ec_keyb_clear_keyboard(struct notifier_block *nb,
-+			       unsigned long state, void *_notify)
-+{
-+	struct cros_ec_keyb *ckdev = container_of(nb, struct cros_ec_keyb,
-+						    wake_notifier);
-+	uint8_t old_state[ckdev->cols];
-+	uint8_t new_state[ckdev->cols];
-+	unsigned long duration;
-+	int i, ret;
-+
-+	/*
-+	 * Keep reading until we see that the scan state does not change.
-+	 * That indicates that we are done.
-+	 *
-+	 * Assume that the EC keyscan buffer is at most 32 deep.
-+	 */
-+	duration = jiffies;
-+	ret = cros_ec_keyb_get_state(ckdev, new_state);
-+	for (i = 1; !ret && i < 32; i++) {
-+		memcpy(old_state, new_state, sizeof(old_state));
-+		ret = cros_ec_keyb_get_state(ckdev, new_state);
-+		if (0 == memcmp(old_state, new_state, sizeof(old_state)))
-+			break;
-+	}
-+	duration = jiffies - duration;
-+	dev_info(ckdev->dev, "Discarded %d keyscan(s) in %dus\n", i,
-+		jiffies_to_usecs(duration));
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cros_ec_kbc_of_match[] = {
-+	{ .compatible = "google,cros-ec-keyb", },
++#ifdef CONFIG_OF
++static const struct of_device_id sh_pfc_of_table[] = {
++#ifdef CONFIG_PINCTRL_PFC_R8A7740
++	{
++		.compatible = "renesas,pfc-r8a7740",
++		.data = &r8a7740_pinmux_info,
++	},
++#endif
++#ifdef CONFIG_PINCTRL_PFC_R8A7779
++	{
++		.compatible = "renesas,pfc-r8a7779",
++		.data = &r8a7779_pinmux_info,
++	},
++#endif
++#ifdef CONFIG_PINCTRL_PFC_SH7367
++	{
++		.compatible = "renesas,pfc-sh7367",
++		.data = &sh7367_pinmux_info,
++	},
++#endif
++#ifdef CONFIG_PINCTRL_PFC_SH7372
++	{
++		.compatible = "renesas,pfc-sh7372",
++		.data = &sh7372_pinmux_info,
++	},
++#endif
++#ifdef CONFIG_PINCTRL_PFC_SH7377
++	{
++		.compatible = "renesas,pfc-sh7377",
++		.data = &sh7377_pinmux_info,
++	},
++#endif
++#ifdef CONFIG_PINCTRL_PFC_SH73A0
++	{
++		.compatible = "renesas,pfc-sh73a0",
++		.data = &sh73a0_pinmux_info,
++	},
++#endif
 +	{ },
 +};
++MODULE_DEVICE_TABLE(of, sh_pfc_of_table);
++#endif
 +
-+static int cros_ec_keyb_probe(struct platform_device *pdev)
+ static int sh_pfc_probe(struct platform_device *pdev)
+ {
++	const struct platform_device_id *platid = platform_get_device_id(pdev);
++#ifdef CONFIG_OF
++	struct device_node *np = pdev->dev.of_node;
++#endif
+ 	struct sh_pfc_soc_info *info;
+ 	struct sh_pfc *pfc;
+ 	int ret;
+@@ -521,8 +569,15 @@ static int sh_pfc_probe(struct platform_device *pdev)
+ 	 */
+ 	BUILD_BUG_ON(PINMUX_FLAG_TYPE > ((1 << PINMUX_FLAG_DBIT_SHIFT) - 1));
+ 
+-	info = pdev->id_entry->driver_data
+-	      ? (void *)pdev->id_entry->driver_data : pdev->dev.platform_data;
++	if (platid)
++		info = (void *)platid->driver_data;
++#ifdef CONFIG_OF
++	else if (np)
++		info = (void *)of_match_device(sh_pfc_of_table, &pdev->dev)->data;
++#endif
++	else
++		info = pdev->dev.platform_data;
++
+ 	if (info == NULL)
+ 		return -ENODEV;
+ 
+@@ -646,6 +701,9 @@ static struct platform_driver sh_pfc_driver = {
+ 	.driver		= {
+ 		.name	= DRV_NAME,
+ 		.owner	= THIS_MODULE,
++#ifdef CONFIG_OF
++		.of_match_table = sh_pfc_of_table,
++#endif
+ 	},
+ };
+ 
+diff --git a/drivers/pinctrl/sh-pfc/pinctrl.c b/drivers/pinctrl/sh-pfc/pinctrl.c
+index 6ee4105..78b78d2 100644
+--- a/drivers/pinctrl/sh-pfc/pinctrl.c
++++ b/drivers/pinctrl/sh-pfc/pinctrl.c
+@@ -15,7 +15,9 @@
+ #include <linux/err.h>
+ #include <linux/init.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/pinctrl/consumer.h>
++#include <linux/pinctrl/machine.h>
+ #include <linux/pinctrl/pinconf.h>
+ #include <linux/pinctrl/pinconf-generic.h>
+ #include <linux/pinctrl/pinctrl.h>
+@@ -65,11 +67,63 @@ static void sh_pfc_pin_dbg_show(struct pinctrl_dev *pctldev, struct seq_file *s,
+ 	seq_printf(s, "%s", DRV_NAME);
+ }
+ 
++static int sh_pfc_dt_node_to_map(struct pinctrl_dev *pctldev,
++				 struct device_node *np,
++				 struct pinctrl_map **map, unsigned *num_maps)
 +{
-+	struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
-+	struct device *dev = ec->dev;
-+	struct cros_ec_keyb *ckdev = NULL;
-+	struct input_dev *idev = NULL;
-+	struct device_node *np;
-+	int err;
++	struct sh_pfc_pinctrl *pmx = pinctrl_dev_get_drvdata(pctldev);
++	struct pinctrl_map *maps;
++	struct property *prop;
++	unsigned int index = 0;
++	const char *function;
++	const char *group;
++	int ret;
 +
-+	np = of_find_matching_node(NULL, cros_ec_kbc_of_match);
++	ret = of_property_read_string(np, "renesas,function", &function);
++	if (ret < 0) {
++		dev_err(pmx->pfc->dev, "No function provided in DT\n");
++		return ret;
++	}
 +
-+	ckdev = kzalloc(sizeof(*ckdev), GFP_KERNEL);
-+	if (!ckdev) {
-+		dev_err(dev, "cannot allocate memory for ckdev\n");
++	ret = of_property_count_strings(np, "renesas,pins");
++	if (ret < 0)
++		return ret;
++
++	if (!ret) {
++		dev_err(pmx->pfc->dev, "No pin(group) provided in DT node\n");
++		return -ENODEV;
++	}
++
++	maps = kzalloc(sizeof(*maps) * ret, GFP_KERNEL);
++	if (maps == NULL)
 +		return -ENOMEM;
-+	}
-+	pdev->dev.of_node = np;
-+	err = matrix_keypad_parse_of_params(&pdev->dev, &ckdev->rows,
-+					    &ckdev->cols);
-+	if (err)
-+		goto fail_alloc_dev;
 +
-+	idev = input_allocate_device();
-+	if (!idev) {
-+		err = -ENOMEM;
-+		dev_err(dev, "cannot allocate memory for input device\n");
-+		goto fail_alloc_dev;
++	of_property_for_each_string(np, "renesas,pins", prop, group) {
++		maps[index].type = PIN_MAP_TYPE_MUX_GROUP;
++		maps[index].data.mux.group = group;
++		maps[index].data.mux.function = function;
++		index++;
 +	}
 +
-+	ckdev->ec = ec;
-+	ckdev->notifier.notifier_call = cros_ec_keyb_work;
-+	ckdev->wake_notifier.notifier_call = cros_ec_keyb_clear_keyboard;
-+	ckdev->dev = dev;
-+	dev_set_drvdata(&pdev->dev, ckdev);
-+
-+	idev->name = ec->get_name(ec);
-+	idev->phys = ec->get_phys_name(ec);
-+	__set_bit(EV_REP, idev->evbit);
-+
-+	idev->id.bustype = BUS_VIRTUAL;
-+	idev->id.version = 1;
-+	idev->id.product = 0;
-+	idev->dev.parent = &pdev->dev;
-+	idev->open = cros_ec_keyb_open;
-+	idev->close = cros_ec_keyb_close;
-+
-+	ckdev->ghost_filter = of_property_read_bool(np,
-+					"google,needs-ghost-filter");
-+
-+	err = matrix_keypad_build_keymap(NULL, NULL, ckdev->rows, ckdev->cols,
-+					 NULL, idev);
-+	if (err) {
-+		dev_err(dev, "cannot build key matrix\n");
-+		goto fail_matrix;
-+	}
-+
-+	ckdev->row_shift = get_count_order(ckdev->cols);
-+	ckdev->old_state = kzalloc(idev->keycodemax, GFP_KERNEL);
-+	if (!ckdev->old_state) {
-+		dev_err(dev, "Cannot allocate memory for old_state\n");
-+		err = -ENOMEM;
-+		goto fail_old_state;
-+	}
-+
-+	input_set_capability(idev, EV_MSC, MSC_SCAN);
-+	input_set_drvdata(idev, ckdev);
-+	ckdev->idev = idev;
-+	err = input_register_device(ckdev->idev);
-+	if (err) {
-+		dev_err(dev, "cannot register input device\n");
-+		goto fail_register;
-+	}
++	*map = maps;
++	*num_maps = index;
 +
 +	return 0;
-+
-+fail_register:
-+	kfree(ckdev->old_state);
-+fail_old_state:
-+	kfree(idev->keycode);
-+fail_matrix:
-+	input_free_device(idev);
-+fail_alloc_dev:
-+	kfree(ckdev);
-+	return err;
 +}
 +
-+static int cros_ec_keyb_remove(struct platform_device *pdev)
++static void sh_pfc_dt_free_map(struct pinctrl_dev *pctldev,
++			       struct pinctrl_map *map, unsigned num_maps)
 +{
-+	struct cros_ec_keyb *ckdev = dev_get_drvdata(&pdev->dev);
-+	struct input_dev *idev = ckdev->idev;
-+
-+	/* I believe we leak a matrix_keymap here */
-+	input_unregister_device(idev);
-+	kfree(ckdev->old_state);
-+	kfree(idev->keycode);
-+	input_free_device(idev);
-+	kfree(ckdev);
-+
-+	return 0;
++	kfree(map);
 +}
 +
-+static struct platform_driver cros_ec_keyb_driver = {
-+	.probe = cros_ec_keyb_probe,
-+	.remove = cros_ec_keyb_remove,
-+	.driver = {
-+		.name = "cros-ec-keyb",
-+	},
-+};
-+
-+module_platform_driver(cros_ec_keyb_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_DESCRIPTION("ChromeOS EC keyboard driver");
-+MODULE_ALIAS("platform:cros-ec-keyb");
+ static struct pinctrl_ops sh_pfc_pinctrl_ops = {
+ 	.get_groups_count	= sh_pfc_get_groups_count,
+ 	.get_group_name		= sh_pfc_get_group_name,
+ 	.get_group_pins		= sh_pfc_get_group_pins,
+ 	.pin_dbg_show		= sh_pfc_pin_dbg_show,
++	.dt_node_to_map		= sh_pfc_dt_node_to_map,
++	.dt_free_map		= sh_pfc_dt_free_map,
+ };
+ 
+ static int sh_pfc_get_functions_count(struct pinctrl_dev *pctldev)
 -- 
-1.8.1
-
+1.7.10.4
