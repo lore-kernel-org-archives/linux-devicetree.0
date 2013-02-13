@@ -1,69 +1,92 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v9 4/4] ARM: dts: add sram for imx53 and imx6q
-Date: Wed, 13 Feb 2013 16:46:42 +0100
-Message-ID: <1360770402-23091-5-git-send-email-p.zabel@pengutronix.de>
-References: <1360770402-23091-1-git-send-email-p.zabel@pengutronix.de>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: Use of of_parse_phandle()/of_node_put()
+Date: Wed, 13 Feb 2013 16:52:34 +0100
+Message-ID: <511BB6C2.3060105@ti.com>
+References: <F3DBB1B3EF102E4994C89758CFCA32412C6E52@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360770402-23091-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Paul Gortmaker <paul.gortmaker-CWA4WttNNZF54TAoqtyWWQ@public.gmane.org>, Richard Zhao <richard.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Javier Martin <javier.martin-N4RbWZIug12MkV8/HQOAswC/G2K4zDHf@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Huang Shijie <shijie8-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <F3DBB1B3EF102E4994C89758CFCA32412C6E52@DBDE01.ent.ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "Kumar, Anil" <anilkumar.v@ti.com>
+Cc: Alsa Devel List <alsa-devel@alsa-project.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <liam.r.girdwood@linux.intel.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "jarkko.nikula@bitmer.com" <jarkko.nikula@bitmer.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Reviewed-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
----
-Changes since v8:
- - Changed device tree compatible string to "mmio-sram"
----
- arch/arm/boot/dts/imx53.dtsi |    5 +++++
- arch/arm/boot/dts/imx6q.dtsi |    6 ++++++
- 2 files changed, 11 insertions(+)
+On 02/13/2013 07:04 AM, Kumar, Anil wrote:
+> Hi  Peter,
+>  =
 
-diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
-index edc3f1e..69d0680 100644
---- a/arch/arm/boot/dts/imx53.dtsi
-+++ b/arch/arm/boot/dts/imx53.dtsi
-@@ -664,5 +664,10 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		ocram: ocram@f8000000 {
-+			compatible = "fsl,imx-ocram", "mmio-sram";
-+			reg = <0xf8000000 0x20000>;
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
-index ff1205e..73302db 100644
---- a/arch/arm/boot/dts/imx6q.dtsi
-+++ b/arch/arm/boot/dts/imx6q.dtsi
-@@ -124,6 +124,12 @@
- 			status = "disabled";
- 		};
- 
-+		ocram: ocram@00900000 {
-+			compatible = "fsl,imx-ocram", "mmio-sram";
-+			reg = <0x00900000 0x3f000>;
-+			clocks = <&clks 142>;
-+		};
-+
- 		timer@00a00600 {
- 			compatible = "arm,cortex-a9-twd-timer";
- 			reg = <0x00a00600 0x20>;
--- 
-1.7.10.4
+> Just trying to understand.
+>  =
+
+> In omap-twl4030.c file probe function :-
+>  =
+
+> dai_node =3D of_parse_phandle(node, "ti,mcbsp", 0);
+>                 if (!dai_node) {
+>                         dev_err(&pdev->dev, "McBSP node is not provided\n=
+");
+>                         return -EINVAL;
+>                 }
+>  =
+
+> Here  =93of_parse_phandle()=94  is used to get  =93of_device=94 node poin=
+ter.
+> of_parse_phandle() suggest to use of_node_put()  on it when done.
+>  =
+
+> It looks when code request for an =93of_device=94 node, kernel  maintains
+> =93refcount=94 for this.
+> It check =93refcount=94  before giving pointer of of_device node and  WAR=
+N_ON()
+> in case of refcount  > 0 and increase it on success.
+>  =
+
+> Should this code need to use of_node_put() on the requested =93of_device=
+=94 when done
+> so that this can be get  again ?
+
+Hrm, one thing or sure we should not call it of_node_put() while we have the
+card loaded since the node is used runtime by the core.
+
+However when we unload the machine driver it might be needed, but not sure
+about this. None of the existing machine drivers doing it (tegra, samsung,
+omap, etc).
+But if it is needed it might be better to be done by the core?
+
+>  =
+
+> I am taking reference of Linux-next kernel.
+>  =
+
+> I'm sorry if this question is very vague or  missing something.
+>  =
+
+> Thanks,
+> Anil
+>  =
+
+>  =
+
+>  =
+
+>  =
+
+>  =
+
+>  =
+
+
+
+-- =
+
+P=E9ter
