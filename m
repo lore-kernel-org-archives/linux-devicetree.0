@@ -1,32 +1,59 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v1 1/4] i2c: mux: Add i2c-arbitrator 'mux' driver
-Date: Wed, 13 Feb 2013 10:49:11 -0800
-Message-ID: <CAOesGMjjwiAB2PVDvK-ci05rqYbmrgMUDDZ8GWAetsVhDCQwpQ@mail.gmail.com>
-References: <1360778532-7480-1-git-send-email-dianders@chromium.org>
-	<20130213184559.GA29145@quad.lixom.net>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/4] of/pci: Provide support for parsing PCI DT ranges
+ property
+Date: Wed, 13 Feb 2013 13:54:53 -0600
+Message-ID: <511BEF8D.7060506@gmail.com>
+References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de> <1360570940-17086-2-git-send-email-thierry.reding@avionic-design.de> <511949C7.7070604@gmail.com> <20130212064523.GA28850@avionic-0098.mockup.avionic-design.de> <511BA1E0.9000404@gmail.com> <20130213142521.GA6223@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130213184559.GA29145@quad.lixom.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Wolfram Sang <w.sang@pengutronix.de>, Simon Glass <sjg@chromium.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Yuvaraj Kumar <yuvaraj.cd@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, u.kleine-koenig@pengutronix.de, Mark Brown <broonie@opensource.wolfsonmicro.com>, Girish Shivananjappa <girish.shivananjappa@linaro.org>, bhushan.r@samsung.com, sreekumar.c@samsung.com, Prashanth G <prashanth.g@samsung.com>, Daniel Kurtz <djkurtz@chromium.org>, Grant Grundler <grundler@chromium.org>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Jean Delvare <khali@linux-fr.org>, Peter Korsgaard <peter.korsgaard@barco.com>, Stephen Warren <swarren@nvidia.com>, Guenter Roeck <guenter.roeck@ericsson.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@v
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130213142521.GA6223@avionic-0098.mockup.avionic-design.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Andrew Murray <andrew.murray@arm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2013 at 10:45 AM, Olof Johansson <olof@lixom.net> wrote:
+On 02/13/2013 08:25 AM, Thierry Reding wrote:
+> On Wed, Feb 13, 2013 at 08:23:28AM -0600, Rob Herring wrote:
+>> On 02/12/2013 12:45 AM, Thierry Reding wrote:
+>>> On Mon, Feb 11, 2013 at 01:43:03PM -0600, Rob Herring wrote:
+>>>> On 02/11/2013 02:22 AM, Thierry Reding wrote:
+>>>>> From: Andrew Murray <andrew.murray@arm.com>
+>>
+>>>>> @@ -13,6 +13,7 @@
+>>>>>  #define OF_CHECK_COUNTS(na, ns)	(OF_CHECK_ADDR_COUNT(na) && (ns) > 0)
+>>>>>  
+>>>>>  static struct of_bus *of_match_bus(struct device_node *np);
+>>>>> +static struct of_bus *of_find_bus(const char *name);
+>>>>
+>>>> Can you move this function up to avoid the forward declaration.
+>>>
+>>> It needs to be defined after the of_busses structure, which is defined
+>>> below the CONFIG_PCI block where of_pci_process_ranges() is defined. I'd
+>>> have to move that one as well and add another #ifdef CONFIG_PCI section.
+>>> If you prefer that I can do that.
+>>
+>> Okay, it's fine as is.
+>>
+>>>>> +static struct of_bus *of_find_bus(const char *name)
+>>>>> +{
+>>>>> +	unsigned int i;
+>>>>> +
+>>>>> +	for (i = 0; i < ARRAY_SIZE(of_busses); i++)
+>>>>> +		if (strcmp(name, of_busses[i].name) == 0)
+>>>>                                               ^
+>>>> space needed.
+>>>
+>>> I don't understand. Do you want the space to go between '.' and "name"?
+>>
+>> Must have been some dirt on my screen... Never mind.
+>>
+>> I'll apply these for 3.9.
+> 
+> Great, thanks!
 
->> +             i2c-parent = <&{/i2c@12CA0000}>;
->
-> Why use this custom i2c-parent property? The arbitrator should just be
-> under the i2c controller in the device tree, and thus parent would be
-> derived from the topology there.
+Grant vetoed merging. We need to see the other architectures using these
+functions rather than add yet another copy.
 
-Ah. Reading up on the discussions for the other mux bindings, there's
-the issue of the arbitrator not being addressable/accessible via i2c.
-
-Sigh, awkward and annoying, since it breaks the topography for the
-hardware apart due to the arbitrator. But I guess there's no good
-alternative. :(
-
-
--Olof
+Rob
