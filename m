@@ -1,84 +1,73 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH 3/4] of/pci: Add of_pci_get_bus() function
-Date: Wed, 13 Feb 2013 22:56:07 +0000
-Message-ID: <20130213225607.B31223E3557@localhost>
-References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de> <1360570940-17086-4-git-send-email-thierry.reding@avionic-design.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360570940-17086-4-git-send-email-thierry.reding@avionic-design.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Rob Herring <rob.herring@calxeda.com>, Andrew Murray <andrew.murray@arm.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH 7/7] ARM: dts: Add Samsung G2D DT bindings documentation
+Date: Wed, 13 Feb 2013 23:32:02 +0100
+Message-ID: <511C1462.5060106@gmail.com>
+References: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org> <1360151477-26460-8-git-send-email-sachin.kamat@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1360151477-26460-8-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, s.nawrocki@samsung.com, inki.dae@samsung.com, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 11 Feb 2013 09:22:19 +0100, Thierry Reding <thierry.reding@avionic-design.de> wrote:
-> This function can be used to parse the number of a device's parent PCI
-> bus from a standard 5-cell PCI resource.
-> 
-> Signed-off-by: Thierry Reding <thierry.reding@avionic-design.de>
+On 02/06/2013 12:51 PM, Sachin Kamat wrote:
+> Added documentaion about G2D bindings.
 
-This patch should be deferred until there is another patch in the same
-series that actually uses it.
+s/documentaion/documentation
 
-g.
-
+> Signed-off-by: Sachin Kamat<sachin.kamat@linaro.org>
 > ---
->  drivers/of/of_pci.c    | 21 +++++++++++++++++++++
->  include/linux/of_pci.h |  1 +
->  2 files changed, 22 insertions(+)
-> 
-> diff --git a/drivers/of/of_pci.c b/drivers/of/of_pci.c
-> index 4dd7b9b..d6e6de5 100644
-> --- a/drivers/of/of_pci.c
-> +++ b/drivers/of/of_pci.c
-> @@ -43,6 +43,27 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
->  EXPORT_SYMBOL_GPL(of_pci_find_child_device);
->  
->  /**
-> + * of_pci_get_bus() - Get bus number for a device node
-> + * @np: device node
-> + *
-> + * Parses a standard 5-cell PCI resource and returns the 8-bit bus number of
-> + * the device's parent PCI bus. On error a negative error code is returned.
-> + */
-> +int of_pci_get_bus(struct device_node *np)
-> +{
-> +	unsigned int size;
-> +	const __be32 *reg;
+>   .../devicetree/bindings/gpu/samsung-g2d.txt        |   30 ++++++++++++++++++++
+>   1 files changed, 30 insertions(+), 0 deletions(-)
+>   create mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+>
+> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> new file mode 100644
+> index 0000000..838b26b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+> @@ -0,0 +1,30 @@
+> +* Samsung 2D Graphics Accelerator
 > +
-> +	reg = of_get_property(np, "reg", &size);
-> +
-> +	if (!reg || size < 5 * sizeof(__be32))
-> +		return -EINVAL;
-> +
-> +	return (be32_to_cpup(reg) >> 16) & 0xff;
-> +}
-> +EXPORT_SYMBOL_GPL(of_pci_get_bus);
-> +
-> +/**
->   * of_pci_get_devfn() - Get device and function numbers for a device node
->   * @np: device node
->   *
-> diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-> index 91ec484..9118321 100644
-> --- a/include/linux/of_pci.h
-> +++ b/include/linux/of_pci.h
-> @@ -10,6 +10,7 @@ int of_irq_map_pci(const struct pci_dev *pdev, struct of_irq *out_irq);
->  struct device_node;
->  struct device_node *of_pci_find_child_device(struct device_node *parent,
->  					     unsigned int devfn);
-> +int of_pci_get_bus(struct device_node *np);
->  int of_pci_get_devfn(struct device_node *np);
->  
->  #endif
-> -- 
-> 1.8.1.2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
 
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+> +Samsung FIMG2D is a 2D graphics accelerator which supports Bit Block Transfer.
+> +We set the drawing-context registers for configuring the rendering parameters
+> +and then start rendering.
+> +The G2D has V4L2 as well as DRM framework based driver support.
+
+IMHO this whole paragraph is irrelevant and could be dropped.
+
+> +Required properties:
+> +  - compatible : value should be one among the following
+
+missing colon at the end of line ?
+
+> +	(a) "samsung,s5pv210-g2d" for G2D IP present in S5PV210&  Exynos4210 SoC
+> +	(b) "samsung,exynos4212-g2d" for G2D IP present in Exynos4x12 SoCs
+> +	(b) "samsung,exynos5250-g2d" for G2D IP present in Exynos5250 SoC
+
+s/(b)/(c)
+
+> +
+> +  - reg : Physical base address of the IP registers and length of memory
+> +	  mapped region.
+> +
+> +  - interrupts : G2D interrupt number to the CPU.
+> +
+> +Optional properties:
+> +  - samsung,power-domain : power-domain property defined with a phandle
+> +			   to respective power domain.
+> +
+> +Example:
+> +	g2d@12800000 {
+> +		compatible = "samsung,s5pv210-g2d";
+> +		reg =<0x12800000 0x1000>;
+> +		interrupts =<0 89 0>;
+> +		samsung,power-domain =<&pd_lcd0>;
+> +		status = "disabled";
+> +	};
+
+Otherwise looks good to me.
