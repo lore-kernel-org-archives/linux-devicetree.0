@@ -1,158 +1,39 @@
-From: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] Added license header to dtc/libfdt/fdt.h and libfdt_env.h
-Date: Wed, 13 Feb 2013 11:32:01 -0500
-Message-ID: <1360773121-25880-1-git-send-email-jsobota@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 3/5] arm: dts: omap4-panda: Add I2c pinctrl data
+Date: Wed, 13 Feb 2013 08:40:05 -0800
+Message-ID: <20130213164004.GE7144@atomide.com>
+References: <1360747710-1532-1-git-send-email-sourav.poddar@ti.com>
+ <511BB7CE.1020505@ti.com>
+ <511BBA1B.9050501@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: jdl-CYoMK+44s/E@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <511BBA1B.9050501@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Sourav Poddar <sourav.poddar@ti.com>, balbi@ti.com, santosh.shilimkar@ti.com, b-cousson@ti.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds a license header to fdt.h and libfdt_env.h because the license was omitted
+* Jon Hunter <jon-hunter@ti.com> [130213 08:10]:
+> On 02/13/2013 09:57 AM, Jon Hunter wrote:
+> > On 02/13/2013 03:28 AM, Sourav Poddar wrote:
+> > 
+> > A quick look at the data manual shows that omap4430 and omap4460 has the
+> > same pin mux options for i2c. Furthermore, the data manual shows only
+> > one mux option for i2c1-4. Therefore, should these mux options be placed
+> > in omap4.dtsi? Boards not using specific i2c controllers can disabled
+> > them in there board dts file (same way we do for mmc).
+> 
+> I guess for i2c, a given omap4 board may use external pull-ups and not
+> use the internal ones and so putting this in the omap4.dtsi may not be
+> desirable. However, it seems that a common omap4-panda.dtsi could be
+> used here.
 
-Signed-off-by: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
----
- libfdt/fdt.h        |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
- libfdt/libfdt_env.h |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 100 insertions(+)
- mode change 100644 => 100755 libfdt/fdt.h
- mode change 100644 => 100755 libfdt/libfdt_env.h
+Yes the mux options need to be board specific. If something is complex
+and  common, it's best to put it into omap4-i2c1.dts file that can be
+included from the board specific .dts files as needed.
 
-diff --git a/libfdt/fdt.h b/libfdt/fdt.h
-old mode 100644
-new mode 100755
-index 45dd134..4f28b55
---- a/libfdt/fdt.h
-+++ b/libfdt/fdt.h
-@@ -1,5 +1,55 @@
- #ifndef _FDT_H
- #define _FDT_H
-+/*
-+ * libfdt - Flat Device Tree manipulation
-+ * Copyright (C) 2006 David Gibson, IBM Corporation.
-+ *
-+ * libfdt is dual licensed: you can use it either under the terms of
-+ * the GPL, or the BSD license, at your option.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this library; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Alternatively,
-+ *
-+ *  b) Redistribution and use in source and binary forms, with or
-+ *     without modification, are permitted provided that the following
-+ *     conditions are met:
-+ *
-+ *     1. Redistributions of source code must retain the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer.
-+ *     2. Redistributions in binary form must reproduce the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer in the documentation and/or other materials
-+ *        provided with the distribution.
-+ *
-+ *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
-+ *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-+ *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-+ *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-+ *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-+ *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-+ *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-+ *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-+ *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-+ *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
- 
- #ifndef __ASSEMBLY__
- 
-diff --git a/libfdt/libfdt_env.h b/libfdt/libfdt_env.h
-old mode 100644
-new mode 100755
-index 956b4ae..18de839
---- a/libfdt/libfdt_env.h
-+++ b/libfdt/libfdt_env.h
-@@ -1,5 +1,55 @@
- #ifndef _LIBFDT_ENV_H
- #define _LIBFDT_ENV_H
-+/*
-+ * libfdt - Flat Device Tree manipulation
-+ * Copyright (C) 2006 David Gibson, IBM Corporation.
-+ *
-+ * libfdt is dual licensed: you can use it either under the terms of
-+ * the GPL, or the BSD license, at your option.
-+ *
-+ *  a) This library is free software; you can redistribute it and/or
-+ *     modify it under the terms of the GNU General Public License as
-+ *     published by the Free Software Foundation; either version 2 of the
-+ *     License, or (at your option) any later version.
-+ *
-+ *     This library is distributed in the hope that it will be useful,
-+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ *     GNU General Public License for more details.
-+ *
-+ *     You should have received a copy of the GNU General Public
-+ *     License along with this library; if not, write to the Free
-+ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
-+ *     MA 02110-1301 USA
-+ *
-+ * Alternatively,
-+ *
-+ *  b) Redistribution and use in source and binary forms, with or
-+ *     without modification, are permitted provided that the following
-+ *     conditions are met:
-+ *
-+ *     1. Redistributions of source code must retain the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer.
-+ *     2. Redistributions in binary form must reproduce the above
-+ *        copyright notice, this list of conditions and the following
-+ *        disclaimer in the documentation and/or other materials
-+ *        provided with the distribution.
-+ *
-+ *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
-+ *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-+ *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-+ *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
-+ *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-+ *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
-+ *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-+ *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-+ *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
-+ *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
-+ *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
- 
- #include <stddef.h>
- #include <stdint.h>
--- 
-1.7.9.5
+Regards,
+
+Tony
