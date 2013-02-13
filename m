@@ -1,89 +1,41 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 1/4] of/pci: Provide support for parsing PCI DT ranges
- property
-Date: Wed, 13 Feb 2013 15:25:22 +0100
-Message-ID: <20130213142521.GA6223@avionic-0098.mockup.avionic-design.de>
-References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
- <1360570940-17086-2-git-send-email-thierry.reding@avionic-design.de>
- <511949C7.7070604@gmail.com>
- <20130212064523.GA28850@avionic-0098.mockup.avionic-design.de>
- <511BA1E0.9000404@gmail.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [RFC 1/1] ARM: omap2: gpmc: Move binding documentation to memory-controller
+Date: Wed, 13 Feb 2013 09:13:27 -0600
+Message-ID: <511BAD97.5050602@ti.com>
+References: <1360754003-3988-1-git-send-email-ezequiel.garcia@free-electrons.com> <1360754003-3988-2-git-send-email-ezequiel.garcia@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jI8keyz6grp/JLjh"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <511BA1E0.9000404@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Andrew Murray <andrew.murray@arm.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1360754003-3988-2-git-send-email-ezequiel.garcia@free-electrons.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>, Tony Lindgren <tony@atomide.com>, Afzal Mohammed <afzal@ti.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, device-tree <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
 
---jI8keyz6grp/JLjh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 02/13/2013 05:13 AM, Ezequiel Garcia wrote:
+> GPMC stands for General Purpose Memory Controller, and it's primarily
+> used to handle memories such as NOR, NAND, SRAM.
+> Note that this controller is also used to handle network controllers
+> such as smsc911x.
+> 
+> This patch moves the documentation binding to memory-controllers,
+> where it belongs.
+> 
+> Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+> ---
+>  .../ti-gpmc.txt => memory-controllers/ti/gpmc.txt} |    0
+>  1 files changed, 0 insertions(+), 0 deletions(-)
+>  rename Documentation/devicetree/bindings/{bus/ti-gpmc.txt => memory-controllers/ti/gpmc.txt} (100%)
+> 
+> diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Documentation/devicetree/bindings/memory-controllers/ti/gpmc.txt
+> similarity index 100%
+> rename from Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> rename to Documentation/devicetree/bindings/memory-controllers/ti/gpmc.txt
 
-On Wed, Feb 13, 2013 at 08:23:28AM -0600, Rob Herring wrote:
-> On 02/12/2013 12:45 AM, Thierry Reding wrote:
-> > On Mon, Feb 11, 2013 at 01:43:03PM -0600, Rob Herring wrote:
-> >> On 02/11/2013 02:22 AM, Thierry Reding wrote:
-> >>> From: Andrew Murray <andrew.murray@arm.com>
->=20
-> >>> @@ -13,6 +13,7 @@
-> >>>  #define OF_CHECK_COUNTS(na, ns)	(OF_CHECK_ADDR_COUNT(na) && (ns) > 0)
-> >>> =20
-> >>>  static struct of_bus *of_match_bus(struct device_node *np);
-> >>> +static struct of_bus *of_find_bus(const char *name);
-> >>
-> >> Can you move this function up to avoid the forward declaration.
-> >=20
-> > It needs to be defined after the of_busses structure, which is defined
-> > below the CONFIG_PCI block where of_pci_process_ranges() is defined. I'd
-> > have to move that one as well and add another #ifdef CONFIG_PCI section.
-> > If you prefer that I can do that.
->=20
-> Okay, it's fine as is.
->=20
-> >>> +static struct of_bus *of_find_bus(const char *name)
-> >>> +{
-> >>> +	unsigned int i;
-> >>> +
-> >>> +	for (i =3D 0; i < ARRAY_SIZE(of_busses); i++)
-> >>> +		if (strcmp(name, of_busses[i].name) =3D=3D 0)
-> >>                                               ^
-> >> space needed.
-> >=20
-> > I don't understand. Do you want the space to go between '.' and "name"?
->=20
-> Must have been some dirt on my screen... Never mind.
->=20
-> I'll apply these for 3.9.
+I am fine with that. However, make sure you CC the device-tree mailing list.
 
-Great, thanks!
+Cheers
+Jon
 
-Thierry
-
---jI8keyz6grp/JLjh
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRG6JRAAoJEN0jrNd/PrOhJYsQALAVVLz+8rPIJ79Ncz9y4hKj
-lKG4wpOc+CAVCoiZ+XCOm/zZojDD05Ly9J8seCnP/ssOkgSv2G0c/Kf8MqieB1kK
-mHn5x5lLWlCYJ31k1s9r39KnWYxptLzvd0mrvTi9ntD1ekA7bATsDBU/QUS0LUEY
-8TmwNrOLPxCuEvHh6gandYObEkofCe9CSpunTjnxhn+J69UD9n7ycXn3zGBDyxBZ
-2zVq2xKE0SG6HPpg6+NGWcRNxR/hLrbWHVZN1txDQp5TJBfyeXwsjonmh0s8iv77
-4aae7guvqoN6OgUjlvpI2SDQOhH1iizD0cHXBm6VC5EGQ1X83mtjBB+dEbFA4eoK
-CF6KrXPrYp9SvFnXfbrLna4/54UfJW/qQvMwn0jGMMqetKdy1SwsdBB7IpH5ue+m
-qU2rflXqnjGeu1f7bet1/tJz3F2ODs9CR+rD8K0yrRxDOL/jUfPFLFe8ryy03L8c
-K8QjziE4Vd7XxGIr23datbsSIRjoIFsJbvg63LsI7jG+Y8JAI2jjke3BndglXg+5
-MhPpGi14McQf3B6tePThXdxQW9v4tfjI6V/BNiHSK2hpG+BWW5b0rc38YA2XSDoh
-SRNetvVKcpcvVymXp7mAvTkWz6Wjwj0KkFIyKF81DQYkE0lOEJW3dEOtotFyjRds
-EyWmvsh/X5kUbjRFEH5k
-=7xLs
------END PGP SIGNATURE-----
-
---jI8keyz6grp/JLjh--
