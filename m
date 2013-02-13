@@ -1,321 +1,71 @@
-From: Anton Vorontsov <anton@enomsg.org>
-Subject: Re: [PATCH v3] gpio: Add device driver for GRGPIO cores and support
- custom accessors with gpio-generic
-Date: Tue, 12 Feb 2013 23:05:50 -0800
-Message-ID: <20130213070550.GA17523@lizard.gateway.2wire.net>
-References: <1360653873-25368-1-git-send-email-andreas@gaisler.com>
+From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Subject: Re: [PATCH] of: dma: protect list write operation by spin_lock
+Date: Wed, 13 Feb 2013 09:48:29 +0200
+Message-ID: <1360741709.14581.20.camel@smile>
+References: <1359386694-20548-1-git-send-email-andriy.shevchenko@linux.intel.com>
+ <51069EA0.4040004@gmail.com> <20130128160757.GA6396@intel.com>
+ <5107EC8D.5070001@gmail.com> <20130212172027.GT3789@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1360653873-25368-1-git-send-email-andreas@gaisler.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130212172027.GT3789-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Andy Shevchenko <andriy.shevchenko-b5Z7lJ3WibVrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Feb 12, 2013 at 08:24:33AM +0100, Andreas Larsson wrote:
-> This driver supports GRGPIO gpio cores available in the GRLIB VHDL IP
-> core library from Aeroflex Gaisler.
+On Tue, 2013-02-12 at 09:20 -0800, Vinod Koul wrote: 
+> On Tue, Jan 29, 2013 at 09:36:45AM -0600, Rob Herring wrote:
+> > >> Vinod, it's probably better to move drivers/of/dma.c to drivers/dma.
+> > >> That's been the direction we've been taking with new OF binding code. I
+> > >> must have missed that in the review.
+> > > ok, do you have any patches on your tree for this if not then I can update my tree
+> > > for this change and then we can apply changes thru slave-dma tree.
+> > 
+> > No, I don't have one prepared.
+> Okay, I have committed and pushed drivers/of/dma.c to be moved to
+> drivers/dma/of-dma.c
 > 
-> This also adds support to gpio-generic for using custom accessor
-> functions. The grgpio driver uses this to use ioread32be and iowrite32be
-> for big endian register accesses.
+> From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> Date: Tue, 12 Feb 2013 09:15:02 -0800
+> Subject: [PATCH] dmaengine: move drivers/of/dma.c -> drivers/dma/of-dma.c
 > 
-> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+> as requested by Rob
+> 
+> Suggested-by: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 > ---
-[...]
+>  drivers/{of/dma.c => dma/of-dma.c} |    0
+>  1 files changed, 0 insertions(+), 0 deletions(-)
+>  rename drivers/{of/dma.c => dma/of-dma.c} (100%)
+> 
 
-Overall, the changes look good, so
+What about Kconfig(s) / Makefile(s)?
 
-Reviewed-by: Anton Vorontsov <anton@enomsg.org>
+And I think the of_dma.c looks better as a name of the file.
 
-Though, you might still want to fix some nits down below.
-
-> +/*
-> + * Driver for Aeroflex Gaisler GRGPIO General Purpose I/O cores.
-> + *
-> + * 2013 (c) Aeroflex Gaisler AB
-> + *
-> + * This driver supports the GRGPIO GPIO core available in the GRLIB VHDL IP core
-> + * library.
-> + *
-> + * Full documentation of the GRGPIO core can be found here:
-> + * http://www.gaisler.com/products/grlib/grip.pdf
-> + *
-> + * See "Documentation/devicetree/bindings/gpio/gpio-grgpio.txt" for information
-> + * on open firmware properties.
-> + *
-> + * This program is free software; you can redistribute it and/or modify it
-> + * under the terms of the GNU General Public License as published by the
-> + * Free Software Foundation; either version 2 of the License, or (at your
-> + * option) any later version.
-> + *
-> + * Contributors: Andreas Larsson <andreas@gaisler.com>
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_gpio.h>
-> +#include <linux/of_platform.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/gpio.h>
-> +#include <linux/slab.h>
-> +#include <linux/irq.h>
-> +#include <linux/basic_mmio_gpio.h>
-> +
-> +#define DRV_NAME	"grgpio"
-> +
-> +#define GRGPIO_MAX_NGPIO 32
-> +
-> +struct grgpio_regs {
-> +	u32 data;	/* 0x00 */
-> +	u32 output;	/* 0x04 */
-> +	u32 dir;	/* 0x08 */
-> +	u32 imask;	/* 0x0c */
-> +	u32 ipol;	/* 0x10  */
-> +	u32 iedge;	/* 0x14 */
-> +	u32 bypass;	/* 0x18 */
-> +	u32 __reserved;	/* 0x1c */
-> +	u32 imap[8];	/* 0x20-0x3c */
-> +};
-> +
-> +struct grgpio_priv {
-> +	struct bgpio_chip bgc;
-> +	struct grgpio_regs __iomem *regs;
-> +
-> +	u32 imask;	/* irq mask shadow register */
-> +	s32 *irqmap;	/* maps offset to irq or -1 if no irq */
-> +};
-> +
-> +static unsigned long  grgpio_read_reg(void __iomem *reg)
-> +{
-> +	return ioread32be(reg);
-> +}
-> +
-> +static void grgpio_write_reg(void __iomem *reg, unsigned long data)
-> +{
-> +	iowrite32be(data, reg);
-> +}
-> +
-> +static inline struct grgpio_priv *grgpio_gc_to_priv(struct gpio_chip *gc)
-> +{
-> +	struct bgpio_chip *bgc = to_bgpio_chip(gc);
-
-An empty line here is needed.
-
-> +	return container_of(bgc, struct grgpio_priv, bgc);
-> +}
-> +
-> +static void grgpio_set_imask(struct grgpio_priv *priv, unsigned int offset,
-> +			     int val)
-> +{
-> +	struct bgpio_chip *bgc = &priv->bgc;
-> +	unsigned long mask = bgc->pin2mask(bgc, offset);
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&bgc->lock, flags);
-> +
-> +	if (val)
-> +		priv->imask |= mask;
-> +	else
-> +		priv->imask &= ~mask;
-> +	bgc->write_reg(&priv->regs->imask, priv->imask);
-> +
-> +	spin_unlock_irqrestore(&bgc->lock, flags);
-> +}
-> +
-> +static int grgpio_to_irq(struct gpio_chip *gc, unsigned offset)
-> +{
-> +	struct grgpio_priv *priv = grgpio_gc_to_priv(gc);
-> +	int index, irq;
-
-One variable declaration per line.
-
-> +
-> +	if (!priv->irqmap || offset > gc->ngpio)
-> +		return -ENXIO;
-> +
-> +	index = priv->irqmap[offset];
-> +	if (index < 0)
-> +		return -ENXIO;
-> +
-> +	irq = irq_of_parse_and_map(priv->bgc.gc.dev->of_node, index);
-> +	if (irq) {
-> +		/* Enable interrupt and return irq */
-> +		grgpio_set_imask(priv, offset, 1);
-> +		return irq;
-> +	} else {
-> +		return -ENXIO;
-> +	}
-
-No need for else.
-
-> +}
-> +
-> +static void grgpio_free(struct gpio_chip *gc, unsigned offset)
-> +{
-> +	struct grgpio_priv *priv = grgpio_gc_to_priv(gc);
-> +	struct bgpio_chip *bgc = &priv->bgc;
-> +	unsigned long mask = bgc->pin2mask(bgc, offset);
-> +
-> +	if (unlikely(priv->imask & mask))
-> +		grgpio_set_imask(priv, offset, 0);
-> +}
-> +
-> +static int grgpio_probe(struct platform_device *ofdev)
-> +{
-> +	struct device_node *np = ofdev->dev.of_node;
-> +	struct grgpio_regs __iomem *regs;
-> +	struct gpio_chip *gc;
-> +	struct bgpio_chip *bgc;
-> +	struct grgpio_priv *priv;
-> +	struct resource *res;
-> +	int err, i, size;
-
-One variable declaration per line.
-
-> +	u32 prop;
-> +	s32 *irqmap;
-> +	char *label;
-> +
-> +	priv = devm_kzalloc(&ofdev->dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(ofdev, IORESOURCE_MEM, 0);
-> +	regs = devm_request_and_ioremap(&ofdev->dev, res);
-
-Just wonder, is it safe to pass null res to devm_request_and_ioremap()?
-
-> +	if (!regs) {
-> +		dev_err(&ofdev->dev, "Couldn't map registers\n");
-> +		return -EADDRNOTAVAIL;
-> +	}
-> +
-> +	bgc = &priv->bgc;
-> +	bgc->read_reg = grgpio_read_reg;
-> +	bgc->write_reg = grgpio_write_reg;
-> +	err = bgpio_init(bgc, &ofdev->dev, 4, &regs->data, &regs->output, NULL,
-> +			 &regs->dir, NULL, 0);
-> +	if (err) {
-> +		dev_err(&ofdev->dev, "bgpio_init() failed\n");
-> +		return err;
-> +	}
-> +
-> +	priv->regs = regs;
-> +	priv->imask = bgc->read_reg(&regs->imask);
-> +
-> +	gc = &bgc->gc;
-> +	gc->of_node = np;
-> +	gc->owner = THIS_MODULE;
-> +	gc->to_irq = grgpio_to_irq;
-> +	gc->free = grgpio_free;
-> +
-> +	err = of_property_read_u32(np, "base", &prop);
-> +	if (err) {
-> +		dev_dbg(&ofdev->dev, "No base property: use dynamic base\n");
-> +		gc->base = -1;
-> +	} else {
-> +		gc->base = prop;
-> +	}
-> +
-> +	err = of_property_read_u32(np, "nbits", &prop);
-> +	if (err || prop <= 0 || prop > GRGPIO_MAX_NGPIO) {
-> +		gc->ngpio = GRGPIO_MAX_NGPIO;
-> +		dev_dbg(&ofdev->dev,
-> +			"No or invalid nbits property: assume %d\n", gc->ngpio);
-> +	} else {
-> +		gc->ngpio = prop;
-> +	}
-> +
-> +	irqmap = (s32 *)of_get_property(np, "irqmap", &size);
-> +	if (irqmap) {
-> +		if (size < gc->ngpio) {
-> +			dev_err(&ofdev->dev,
-> +				"irqmap shorter than ngpio (%d < %d)\n",
-> +				size, gc->ngpio);
-> +			return -EINVAL;
-> +		}
-> +
-> +		priv->irqmap = devm_kzalloc(&ofdev->dev,
-> +					    gc->ngpio * sizeof(s32),
-> +					    GFP_KERNEL);
-> +		if (!priv->irqmap)
-> +			return -ENOMEM;
-> +
-> +		for (i = 0; i < gc->ngpio; i++)
-> +			priv->irqmap[i] = irqmap[i];
-> +	} else {
-> +		dev_dbg(&ofdev->dev, "No irqmap\n");
-> +	}
-> +
-> +	label = kstrdup(np->full_name, GFP_KERNEL);
-> +	if (label)
-> +		gc->label = label;
-
-Do we need to free label? If not, having a comment would be awesome. :)
-And should we print a warning for !label case?
-
-> +
-> +	platform_set_drvdata(ofdev, priv);
-> +
-> +	err = gpiochip_add(gc);
-> +	if (err) {
-> +		dev_err(&ofdev->dev, "Couldn't add gpiochip\n");
-> +		return err;
-> +	}
-> +
-> +	dev_info(&ofdev->dev, "regs=0x%p, base=%d, npgio=%d\n",
-> +		 priv->regs, gc->base, gc->ngpio);
-> +
-> +	return 0;
-> +}
-> +
-> +static int grgpio_remove(struct platform_device *ofdev)
-> +{
-> +	dev_set_drvdata(&ofdev->dev, NULL);
-
-Is this really needed?
-
-> +	return 0;
-> +}
-> +
-> +static struct of_device_id grgpio_match[] = {
-> +	{.name = "GAISLER_GPIO"},
-> +	{.name = "01_01a"},
-> +	{},
-> +};
-> +
-> +MODULE_DEVICE_TABLE(of, grgpio_match);
-> +
-> +static struct platform_driver grgpio_driver = {
-> +	.driver = {
-> +		.name = DRV_NAME,
-
-I guess you don't need DRV_NAME definition, you use it just once...
-
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = grgpio_match,
-> +	},
-> +	.probe = grgpio_probe,
-> +	.remove = grgpio_remove,
-> +};
-> +
-No need for this empty line, I think.
-
-> +module_platform_driver(grgpio_driver);
-> +
-> +MODULE_AUTHOR("Aeroflex Gaisler AB.");
-> +MODULE_DESCRIPTION("Driver for Aeroflex Gaisler GRGPIO");
-> +MODULE_LICENSE("GPL");
-> -- 
+> diff --git a/drivers/of/dma.c b/drivers/dma/of-dma.c
+> similarity index 100%
+> rename from drivers/of/dma.c
+> rename to drivers/dma/of-dma.c
+> --
 > 1.7.0.4
+> 
+> Anyone cares to Ack?
+> 
+> --
+> ~Vinod
 
-Thanks!
-
-Anton
+-- 
+Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Intel Finland Oy
