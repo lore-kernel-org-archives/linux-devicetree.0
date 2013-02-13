@@ -1,15 +1,12 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3 v5] ASoC: simple-card: add Device Tree support
-Date: Wed, 13 Feb 2013 16:30:33 -0700
-Message-ID: <511C2219.7010002@wwwdotorg.org>
-References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>	<87sj6t484z.wl%kuninori.morimoto.gx@renesas.com>	<50E71618.8090302@wwwdotorg.org>	<20130104193712.GN4627@opensource.wolfsonmicro.com>	<87y5fvyy18.wl%kuninori.morimoto.gx@renesas.com>	<87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>	<20130127035943.GJ4650@opensource.wolfsonmicro.com>	<87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>	<20130129014808.GC4748@opensource.wolfsonmicro.com>	<87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>	<87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>	<5107FF97.1070601@wwwdotorg.org>	<87halz82bm.wl%kuninori.morimoto.gx@renesas.com>	<51097F0F.2030501@wwwdotorg.org>	<87halw7sij.wl%kuninori.morimoto.gx@renesas.com>	<5110349D.3050308@wwwdotorg.org>	<87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>	<87a9rjrrw
- t.wl%kuninori.morimoto.gx@renesas.com>	<87zjzhymbs.wl%kuninori.morimoto.gx@renesas.com>	<51196541.8010207@wwwdotorg.org>
- <87d2w6f88p.wl%kuninori.morimoto.gx@renesas.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH] Added license header to dtc/libfdt/fdt.h and libfdt_env.h
+Date: Thu, 14 Feb 2013 10:32:56 +1100
+Message-ID: <20130213233255.GU4948@truffula.fritz.box>
+References: <1360773121-25880-1-git-send-email-jsobota@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============4652296581667216449=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <87d2w6f88p.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1360773121-25880-1-git-send-email-jsobota-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,97 +17,196 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/2013 09:48 PM, Kuninori Morimoto wrote:
-> 
-> Hi Stephen
-> 
->>> +sound {
->>> +	compatible = "simple-audio";
->> ...
->>> +	simple-audio,codec,dai = <&ak4648 0>;
->> ...
->>> +sh_fsi2: sh_fsi2@0xec230000 {
->>> +	compatible = "renesas,sh_fsi2";
->>> +	reg = <0xec230000 0x400>;
->>> +	interrupt-parent = <&gic>;
->>> +	interrupts = <0 146 0x4>;
->>> +};
->>
->> Note that the DT binding documentation for renesas,sh_fsi2 needs to define:
->>
->> a) The value of the #sound-dai-cells property that's missing from the
->> sh_fsi2 node.
->>
->> b) The legal values for the "0" in the "simple-audio,codec,dai" property
->> in the "sound" node above, and which DAI on the device each value
->> represents.
-> 
-> Sorry, I couldn't understand this.
-> Do you mean like this ?
-> 
-> This example is assuming like this, and shows FSI-ak4642 sound
-> 
-> FSI port A -- ak4642
->     port B -- HDMI
-> 
-> sh_fsi2 has #sound-dai-cells, and ak4642 doesn't have it.
-> Does this solved a) ?
 
-There should be a file in Documentation/devicetree/bindings that
-describes how to create a "renesas,sh_fsi2" node. The document should
-specify what value that node's #sound-dai-cells property must contain.
+--===============4652296581667216449==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="rG8Oha4Ryswg1dZ8"
+Content-Disposition: inline
 
-> Do you mean sh_fsi2 needs something like "port-a = xxx" settings for b) ??
 
-The binding documentation must specify what values go into the "DAI
-specifier" DT cells. Something like:
+--rG8Oha4Ryswg1dZ8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Required properties:
-- #sound-dai-cells Integer, must be 1.
-  Valid values for the DAI specifier are:
-  0: FSI port A
-  1: FSI port B
+On Wed, Feb 13, 2013 at 11:32:01AM -0500, Justin Sobota wrote:
+> This commit adds a license header to fdt.h and libfdt_env.h because
+> the license was omitted
 
-> sound {
-> 	compatible = "simple-audio";
-> 
-> 	simple-audio,card-name = "FSI2A-AK4648";
-> 	simple-audio,format = "left_j";
-> 	simple-audio,cpu,dai = <&sh_fsi2 0>;
-> 	simple-audio,codec,dai = <&ak4648>;
-> 	simple-audio,codec,bitclock-master;
-> 	simple-audio,codec,frame-master;
-> 	simple-audio,codec,system-clock-frequency = <11289600>;
-> };
-> 
-> &i2c0 {
-> 	ak4648: ak4648@0x12 {
-> 		compatible = "asahi-kasei,ak4648";
-> 		reg = <0x12>;
+So, having a quick look at the git blame for both these files, it
+looks like Kim Phillips (CCed) also touched them substantially.
 
-There should be a #sound-dai-cells property in this node too, since it
-needs to be linked into the sound node.
+Kim, did you want to supply an additional copyright line for these files?
 
-Does this HW only have a single DAI? If so, the value of
-#sound-dai-cells can be 0, since there's no need to distinguish between
-different DAIs.
+>=20
+> Signed-off-by: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
+> ---
+>  libfdt/fdt.h        |   50 +++++++++++++++++++++++++++++++++++++++++++++=
++++++
+>  libfdt/libfdt_env.h |   50 +++++++++++++++++++++++++++++++++++++++++++++=
++++++
+>  2 files changed, 100 insertions(+)
+>  mode change 100644 =3D> 100755 libfdt/fdt.h
+>  mode change 100644 =3D> 100755 libfdt/libfdt_env.h
+>=20
+> diff --git a/libfdt/fdt.h b/libfdt/fdt.h
+> old mode 100644
+> new mode 100755
+> index 45dd134..4f28b55
+> --- a/libfdt/fdt.h
+> +++ b/libfdt/fdt.h
+> @@ -1,5 +1,55 @@
+>  #ifndef _FDT_H
+>  #define _FDT_H
+> +/*
+> + * libfdt - Flat Device Tree manipulation
+> + * Copyright (C) 2006 David Gibson, IBM Corporation.
+> + *
+> + * libfdt is dual licensed: you can use it either under the terms of
+> + * the GPL, or the BSD license, at your option.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + *     You should have received a copy of the GNU General Public
+> + *     License along with this library; if not, write to the Free
+> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+> + *     MA 02110-1301 USA
+> + *
+> + * Alternatively,
+> + *
+> + *  b) Redistribution and use in source and binary forms, with or
+> + *     without modification, are permitted provided that the following
+> + *     conditions are met:
+> + *
+> + *     1. Redistributions of source code must retain the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer.
+> + *     2. Redistributions in binary form must reproduce the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer in the documentation and/or other materials
+> + *        provided with the distribution.
+> + *
+> + *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+> + *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+> + *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+> + *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+> + *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+> + *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+> + *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+> + *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+> + *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+> + *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> =20
+>  #ifndef __ASSEMBLY__
+> =20
+> diff --git a/libfdt/libfdt_env.h b/libfdt/libfdt_env.h
+> old mode 100644
+> new mode 100755
+> index 956b4ae..18de839
+> --- a/libfdt/libfdt_env.h
+> +++ b/libfdt/libfdt_env.h
+> @@ -1,5 +1,55 @@
+>  #ifndef _LIBFDT_ENV_H
+>  #define _LIBFDT_ENV_H
+> +/*
+> + * libfdt - Flat Device Tree manipulation
+> + * Copyright (C) 2006 David Gibson, IBM Corporation.
+> + *
+> + * libfdt is dual licensed: you can use it either under the terms of
+> + * the GPL, or the BSD license, at your option.
+> + *
+> + *  a) This library is free software; you can redistribute it and/or
+> + *     modify it under the terms of the GNU General Public License as
+> + *     published by the Free Software Foundation; either version 2 of the
+> + *     License, or (at your option) any later version.
+> + *
+> + *     This library is distributed in the hope that it will be useful,
+> + *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + *     GNU General Public License for more details.
+> + *
+> + *     You should have received a copy of the GNU General Public
+> + *     License along with this library; if not, write to the Free
+> + *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+> + *     MA 02110-1301 USA
+> + *
+> + * Alternatively,
+> + *
+> + *  b) Redistribution and use in source and binary forms, with or
+> + *     without modification, are permitted provided that the following
+> + *     conditions are met:
+> + *
+> + *     1. Redistributions of source code must retain the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer.
+> + *     2. Redistributions in binary form must reproduce the above
+> + *        copyright notice, this list of conditions and the following
+> + *        disclaimer in the documentation and/or other materials
+> + *        provided with the distribution.
+> + *
+> + *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+> + *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
+> + *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+> + *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+> + *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+> + *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+> + *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+> + *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+> + *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+> + *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+> + *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+> + *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
+> + *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+> + */
+> =20
+>  #include <stddef.h>
+>  #include <stdint.h>
 
-> 	};
-> };
-> 
-> sh_fsi2: sh_fsi2@0xec230000 {
-> 	#sound-dai-cells = <2>;
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
 
-Shouldn't that be 1? This is specifying the number of cells that appear
-after the phandle in the simple-audio,cpu,dai property above, not the
-number of valid values that you could put into the cell.
+--rG8Oha4Ryswg1dZ8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> 	compatible = "renesas,sh_fsi2";
-> 	reg = <0xec230000 0x400>;
-> 	interrupt-parent = <&gic>;
-> 	interrupts = <0 146 0x4>;
-> };
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlEcIqcACgkQaILKxv3ab8b/TQCfcEGk0DXu14FXSqLw3M/bjgR+
+NWgAniCC0nh562Kf9vVTu8kmkzTsVlbO
+=n59U
+-----END PGP SIGNATURE-----
+
+--rG8Oha4Ryswg1dZ8--
+
+--===============4652296581667216449==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4652296581667216449==--
