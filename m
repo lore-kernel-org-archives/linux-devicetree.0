@@ -1,80 +1,56 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 2/3] ASoC: add snd_soc_of_get_port_dai_name()
-Date: Wed, 13 Feb 2013 16:33:54 -0700
-Message-ID: <511C22E2.60701@wwwdotorg.org>
-References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
- <87sj6t484z.wl%kuninori.morimoto.gx@renesas.com>
- <50E71618.8090302@wwwdotorg.org>
- <20130104193712.GN4627@opensource.wolfsonmicro.com>
- <87y5fvyy18.wl%kuninori.morimoto.gx@renesas.com>
- <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
- <20130127035943.GJ4650@opensource.wolfsonmicro.com>
- <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
- <20130129014808.GC4748@opensource.wolfsonmicro.com>
- <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
- <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
- <5107FF97.1070601@wwwdotorg.org>
- <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
- <51097F0F.2030501@wwwdotorg.org>
- <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
- <5110349D.3050308@wwwdotorg.org>
- <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
- <87bobzrry6.wl%kuninori.morimoto.gx@renesas.com>
- <511963F8.5020107@wwwdotorg.org>
- <87bobqf5yq.wl%kuninori.morimoto.gx@renesas.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v2 1/2] [media] s5p-g2d: Add DT based discovery support
+Date: Thu, 14 Feb 2013 00:34:35 +0100
+Message-ID: <511C230B.5060302@gmail.com>
+References: <1360128584-23167-1-git-send-email-sachin.kamat@linaro.org> <CAK9yfHzaDDD0XEywdv+P6gEapjHwxKEfwHzKKQuXWEPHeAFgCw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <87bobqf5yq.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <CAK9yfHzaDDD0XEywdv+P6gEapjHwxKEfwHzKKQuXWEPHeAFgCw@mail.gmail.com>
+Sender: linux-media-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "k.debski@samsung.com" <k.debski@samsung.com>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "patches@linaro.org" <patches@linaro.org>, "inki.dae@samsung.com" <inki.dae@samsung.com>, "s.nawrocki@samsung.com" <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/11/2013 10:37 PM, Kuninori Morimoto wrote:
-> 
-> Hi Stephen
-> 
->> 2) Call an "of_xlate" function on that driver, passing it the "portspec"
->> I mentioned above; the driver will interpret the portspec, maps it to
->> the ASoC port name, and return it.
+On 02/12/2013 06:30 PM, Sachin Kamat wrote:
+>
+> Hi Sylwester,
+>
+> On Wednesday, 6 February 2013, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+>>  This patch adds device tree based discovery support to G2D driver
 >>
->> The DT binding for each audio component must define the list of valid
->> port IDs, and the number of cells used to encode the value.
+>>  Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+>>  ---
+>>  Based on for_v3.9 branch of below tree:
+>>  git://linuxtv.org/snawrocki/samsung.git
 >>
->> See for example the GPIO and PWM subsystem's of_xlate functions.
-> 
-> Hmm...
-> I guess this means struct snd_soc_dai_driver or similar has .of_xlate() callback ?
+>>  Changes since v1:
+>>  * Addressed review comments from Sylwester <s.nawrocki@samsung.com>.
+>>  * Modified the compatible string as per the discussions at [1].
+>>  [1] https://patchwork1.kernel.org/patch/2045821/
+>>
+>
+> Does this patch look good?
 
-Yes, something like that.
+It looks OK to me. I've sent a pull request including it, but it may
+happen it ends up only in 3.10.
 
-> But, this simple-audio is "independent" from cpu/codec.
+I tried to test this patch today and I had to correct some clock
+definitions in the common clock API driver [1]. And we already have
+quite a few fixes to that patch series.
 
-Well, any driver that could be used with it will need to implement the
-.of_xlate() callback. The simple-audio code would still be 100%
-independent from any CPU or CODEC, since of_xlate would be a standard
-interface/API that any CPU or CODEC driver could implement, and any ASoC
-machine driver could call.
+Shouldn't you also provide a patch adding related OF_DEV_AUXDATA entry ?
+How did you test this one ?
 
-> For example, basically, we can use this simple-audio for FSI-wm8903 matching.
-> But, this wm8903 is used on tegra too.
-> Then, FSI-wm8903 (which use simple-audio) needs .of_xlate on wm8903 driver to get interpreted port name,
-> but tegra-wm8903 don't need it.
+When the new clocks driver gets merged (I guess it happens only in 3.10)
+I'd like to have the media devices' clock names cleaned up, instead of
+names like: {"sclk_fimg2d", "fimg2d"}, {"sclk_fimc", "fimc"},
+{"sclk_fimd"/"fimd"}, in clock-names property we could have common names,
+e.g. { "sclk", "gate" }. This could simplify a bit subsystems like devfreq.
 
-Yes, .of_xlate() wouldn't have to be implemented by the WM8903 CODEC
-driver for the tegra-wm8903 machine driver to use the WM8903 CODEC.
-However, if it /was/ implemented, it wouldn't stop tegra-wm8903 from
-working. And later, it may help unify all the simple Tegra machine
-drivers into one, since they could also become CODEC-independent, and
-hence become unified (or at least mostly unified) code.
+Also I noticed there are some issues caused by splitting mux + div + gate
+clocks into 3 different clocks. One solution to this might be to use the
+new composite clock type.
+
+[1] http://www.spinics.net/lists/arm-kernel/msg214149.html
