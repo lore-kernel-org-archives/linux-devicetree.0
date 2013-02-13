@@ -1,140 +1,41 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 1/4] of/pci: Provide support for parsing PCI DT ranges
- property
-Date: Wed, 13 Feb 2013 22:29:51 +0100
-Message-ID: <20130213212951.GA27849@avionic-0098.mockup.avionic-design.de>
-References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
- <1360570940-17086-2-git-send-email-thierry.reding@avionic-design.de>
- <511949C7.7070604@gmail.com>
- <20130212064523.GA28850@avionic-0098.mockup.avionic-design.de>
- <511BA1E0.9000404@gmail.com>
- <20130213142521.GA6223@avionic-0098.mockup.avionic-design.de>
- <511BEF8D.7060506@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1897221276746301240=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <511BEF8D.7060506-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: [PATCH 1/9] ARM: dt: add header to define GPIO flags
+Date: Wed, 13 Feb 2013 14:33:10 -0700
+Message-ID: <1360791198-29462-2-git-send-email-swarren@wwwdotorg.org>
+References: <1360791198-29462-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1360791198-29462-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
---===============1897221276746301240==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
-Content-Disposition: inline
+Many GPIO device tree bindings use the same flags. Create a header to
+define those.
 
+Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+ arch/arm/boot/dts/gpio.h |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 arch/arm/boot/dts/gpio.h
 
---XsQoSWH+UP9D9v3l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, Feb 13, 2013 at 01:54:53PM -0600, Rob Herring wrote:
-> On 02/13/2013 08:25 AM, Thierry Reding wrote:
-> > On Wed, Feb 13, 2013 at 08:23:28AM -0600, Rob Herring wrote:
-> >> On 02/12/2013 12:45 AM, Thierry Reding wrote:
-> >>> On Mon, Feb 11, 2013 at 01:43:03PM -0600, Rob Herring wrote:
-> >>>> On 02/11/2013 02:22 AM, Thierry Reding wrote:
-> >>>>> From: Andrew Murray <andrew.murray-5wv7dgnIgG8@public.gmane.org>
-> >>
-> >>>>> @@ -13,6 +13,7 @@
-> >>>>>  #define OF_CHECK_COUNTS(na, ns)	(OF_CHECK_ADDR_COUNT(na) && (ns) >=
- 0)
-> >>>>> =20
-> >>>>>  static struct of_bus *of_match_bus(struct device_node *np);
-> >>>>> +static struct of_bus *of_find_bus(const char *name);
-> >>>>
-> >>>> Can you move this function up to avoid the forward declaration.
-> >>>
-> >>> It needs to be defined after the of_busses structure, which is defined
-> >>> below the CONFIG_PCI block where of_pci_process_ranges() is defined. =
-I'd
-> >>> have to move that one as well and add another #ifdef CONFIG_PCI secti=
-on.
-> >>> If you prefer that I can do that.
-> >>
-> >> Okay, it's fine as is.
-> >>
-> >>>>> +static struct of_bus *of_find_bus(const char *name)
-> >>>>> +{
-> >>>>> +	unsigned int i;
-> >>>>> +
-> >>>>> +	for (i =3D 0; i < ARRAY_SIZE(of_busses); i++)
-> >>>>> +		if (strcmp(name, of_busses[i].name) =3D=3D 0)
-> >>>>                                               ^
-> >>>> space needed.
-> >>>
-> >>> I don't understand. Do you want the space to go between '.' and "name=
-"?
-> >>
-> >> Must have been some dirt on my screen... Never mind.
-> >>
-> >> I'll apply these for 3.9.
-> >=20
-> > Great, thanks!
->=20
-> Grant vetoed merging. We need to see the other architectures using these
-> functions rather than add yet another copy.
-
-I think I've said this before, but converting the other architectures
-isn't very trivial, mostly because each has a specific way of storing
-the values read from these properties.
-
-So unless we want to block any new drivers from being merged, the only
-alternatives are to either merge these patches or include a copy of the
-same code in each new driver that needs the functionality (or open-code
-the functions in each driver).
-
-There is quite a bit of rework required to unify the architecture
-specific PCI frameworks and I think Bjorn and others have been making
-quite a bit of progress in that direction. I think that these patches
-can help refactor some of those parts.
-
-Thierry
-
---XsQoSWH+UP9D9v3l
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRHAXPAAoJEN0jrNd/PrOhISoP/1xbkU3WM8NJdgOR+FSoQNRK
-bFcXkAGOITvYV5pr4yexW7vJsAAZhy6RvmrmVvLIBDkdmJKy2BF4SkntUYXm5IMM
-k+isXT5ti2PuUgnbFo9kCIwIPXVAuTHj4mYUJCyyon2cSDB2ju6+6jnQBdfd7e2l
-U3MZnSrEaXjkGy3+X4stoTLlCDHeW5yIRRKLUH0Z+E1pf//A35l8S0/o5mZlurqY
-uX/vvnX9YxRE1m9EwLRR23jxFNOkHKjZkQWag2BGWt0s+J7vlhdrmG/HH5J8fLBi
-XwzCK0DY+SBT6jf1BffHvDJhALunCQlVPkdzjzhU0L8n6Xw2fPKie3tDy9GgOdlu
-2idjqDh9rkrlVlPi0S9RRp/k4cMXqCSTNx57JxMsi6tLb6ogbW8JrPygBkeJBR//
-yyK/0GeDyadqYGT9t6MLfzV7dVny1hopL3gDFrWxJGACnleovonRjM3RmsAR//Or
-hp2j25+i2xp/L9NL7hFT3zavfI3mfbmc+gxJE3OpbmXsCFn5M60fOZ+BPT7wmPWy
-DXFNbkJALrwFq7CJQ0A/PUZH90XnnvSinWnPDNkGER922WhAxkskOmn12gge6x9Z
-MlL+SeuQ3WayM+jQPOcsi0iELXz9gDIF7ULzVaW+HHOUjVhtyfGX/bJoFWW4/Nqb
-9P9RZ6XATAeSpUtyMg94
-=9ntJ
------END PGP SIGNATURE-----
-
---XsQoSWH+UP9D9v3l--
-
---===============1897221276746301240==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1897221276746301240==--
+diff --git a/arch/arm/boot/dts/gpio.h b/arch/arm/boot/dts/gpio.h
+new file mode 100644
+index 0000000..4c9da69
+--- /dev/null
++++ b/arch/arm/boot/dts/gpio.h
+@@ -0,0 +1,10 @@
++/*
++ * This header provides constants for most GPIO bindings.
++ *
++ * Most GPIO bindings include a flags cell as part of the GPIO specifier.
++ * In most cases, the format of the flags cell uses the standard values
++ * defined in this header.
++ */
++
++#define GPIO_ACTIVE_HIGH 0
++#define GPIO_ACTIVE_LOW 1
+-- 
+1.7.10.4
