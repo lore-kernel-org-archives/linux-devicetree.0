@@ -1,51 +1,53 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/5] pcmcia: at91_cf: fix gpio_get_value in at91_cf_get_status
-Date: Thu, 14 Feb 2013 18:42:42 +0100
-Message-ID: <1360863766-22511-2-git-send-email-manabian@gmail.com>
+From: Joachim Eastwood <manabian@gmail.com>
+Subject: [PATCH 4/5] pcmcia: at91_cf: clean up header includes
+Date: Thu, 14 Feb 2013 18:42:45 +0100
+Message-ID: <1360863766-22511-5-git-send-email-manabian@gmail.com>
 References: <1360863766-22511-1-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360863766-22511-1-git-send-email-manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-X3ehHDuj6sIIGcDfoQAp7OTW4wlIGRCZ@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-pcmcia-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-pcmcia-bounces+glkpd-linux-pcmcia=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1360863766-22511-1-git-send-email-manabian@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-pcmcia>,
+ <mailto:linux-pcmcia-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-pcmcia/>
+List-Post: <mailto:linux-pcmcia@lists.infradead.org>
+List-Help: <mailto:linux-pcmcia-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-pcmcia>,
+ <mailto:linux-pcmcia-request@lists.infradead.org?subject=subscribe>
+Sender: linux-pcmcia-bounces@lists.infradead.org
+Errors-To: linux-pcmcia-bounces+glkpd-linux-pcmcia=m.gmane.org@lists.infradead.org
+To: linux@dominikbrodowski.net
+Cc: plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, linux-pcmcia@lists.infradead.org, nicolas.ferre@atmel.com, Joachim Eastwood <manabian@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Commit 80af9e6d (pcmcia at91_cf: fix raw gpio number usage) forgot
-to change the parameter in gpio_get_value after adding gpio
-validation.
+Use includes from linux/ instead of asm/ and remove a
+unnecessary mach/ include.
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Signed-off-by: Joachim Eastwood <manabian@gmail.com>
 ---
- drivers/pcmcia/at91_cf.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/pcmcia/at91_cf.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pcmcia/at91_cf.c b/drivers/pcmcia/at91_cf.c
-index 01463c7..1b2c631 100644
+index 43bc342..bce8a64 100644
 --- a/drivers/pcmcia/at91_cf.c
 +++ b/drivers/pcmcia/at91_cf.c
-@@ -100,9 +100,9 @@ static int at91_cf_get_status(struct pcmcia_socket *s, u_int *sp)
- 		int vcc	= gpio_is_valid(cf->board->vcc_pin);
+@@ -18,13 +18,11 @@
+ #include <linux/slab.h>
+ #include <linux/gpio.h>
+ #include <linux/platform_data/atmel.h>
++#include <linux/io.h>
++#include <linux/sizes.h>
  
- 		*sp = SS_DETECT | SS_3VCARD;
--		if (!rdy || gpio_get_value(rdy))
-+		if (!rdy || gpio_get_value(cf->board->irq_pin))
- 			*sp |= SS_READY;
--		if (!vcc || gpio_get_value(vcc))
-+		if (!vcc || gpio_get_value(cf->board->vcc_pin))
- 			*sp |= SS_POWERON;
- 	} else
- 		*sp = 0;
+ #include <pcmcia/ss.h>
+ 
+-#include <mach/hardware.h>
+-#include <asm/io.h>
+-#include <asm/sizes.h>
+-
+ #include <mach/at91rm9200_mc.h>
+ #include <mach/at91_ramc.h>
+ 
 -- 
 1.8.0
