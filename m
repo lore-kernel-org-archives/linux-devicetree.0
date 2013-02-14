@@ -1,50 +1,67 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: Active low GPIOs (was [PATCH v1 1/4] i2c: mux: Add i2c-arbitrator
- 'mux' driver)
-Date: Fri, 15 Feb 2013 01:08:27 +0100
-Message-ID: <CACRpkdabzxuAT9w5WvhM+AayAvyYjTsiN4czZLqL4bmeQx73aA@mail.gmail.com>
-References: <CAD=FV=W7tBOHzwayT5kgtCGmvvGs8RoX7J3rTf2vHT69b4aj6g@mail.gmail.com>
- <511D237D.9000306@wwwdotorg.org>
+From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Subject: Re: [PATCHi v2] net: sh_eth: Add support of device tree probe
+Date: Thu, 14 Feb 2013 11:56:57 +0900
+Message-ID: <511C5279.3070008@renesas.com>
+References: <1360803091-26400-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
+ <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <511D237D.9000306-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Wolfram Sang <wolfram-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Yuvaraj Kumar <yuvaraj.cd@>
+Return-path: <netdev-owner@vger.kernel.org>
+In-reply-to: <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: netdev@vger.kernel.org, horms+renesas@verge.net.au, magnus.damm@gmail.com, devicetree-discuss@lists.ozlabs.org, kda@linux-powerpc.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2013 at 6:48 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+(2013/02/14 10:24), Kuninori Morimoto wrote:
+>
+> Hi Iwamatsu-san
+>
+> Thank you for this patch.
+>
+> Small comment from me
+>
+>> +#ifdef CONFIG_OF
+> (snip)
+>> +sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
+>> +{
+>> +	int ret;
+>> +	struct device_node *np = dev->of_node;
+>> +	struct sh_eth_plat_data *pdata;
+> ...
+>> +#else
+>> +static struct sh_eth_plat_data *
+>> +sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
+>> +{
+>> +	return NULL;
+>> +}
+>> +#endif
+>
+> (snip)
+>
+>>   static int sh_eth_drv_probe(struct platform_device *pdev)
+>>   {
+> ...
+>> +#ifdef CONFIG_OF
+>> +	if (np&&  of_device_is_available(np)) {
+>> +		pd = sh_eth_parse_dt(&pdev->dev, ndev);
+>> +		if (pdev->dev.platform_data) {
+>> +			struct sh_eth_plat_data *tmp =
+>> +				pdev->dev.platform_data;
+>> +			pd->set_mdio_gate = tmp->set_mdio_gate;
+>> +			pd->needs_init = tmp->needs_init;
+>> +		}
+>> +	} else
+>> +#endif
+>
+> sh_eth_parse_dt() was defined for both CONFIG_OF and !CONFIG_OF.
+> But it is called only from CONFIG_OF ?
+>
 
-> This is actually why I rather dislike the idea that device tree has an
-> immutable bindings. To some exten, I imagine that much of
-> Documentation/stable_api_nonsense.txt could apply against device tree!
-> We can't fix problems like this by changing the definition of that
-> binding to remove the cd-inverted property and rely solely on the GPIO
-> specifier flags.
+Because of_device_is_available needs CONFIG_OF.
+I already send a patch which add empty function of of_device_is_available.
+If this was apply, this ifdef becomes without need.
 
-Atleast it could use an "unstable, testing" phase I think.
-But there are others who think breaking support for an old
-device trees is like breaking userspace.
-
-If we shall set DT bindings in stone they need to go through as
-much scrutiny as these IEEE committee products that are
-over at openfirmware.org, so we can at least mitigate the risk
-of horrid mistakes.
-
-I think it was Wolfram who mentioned some DT binding work
-being rushed by engineers constantly keeping a finger
-on the fast-forward button and I agree with that observation. :-(
-
-Yours,
-Linus Walleij
+Best,
+   Nobuhiro
