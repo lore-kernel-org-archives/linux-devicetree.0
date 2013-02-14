@@ -1,72 +1,30 @@
-From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
-Subject: Re: [PATCHi v2] net: sh_eth: Add support of device tree probe
-Date: Fri, 15 Feb 2013 08:07:13 +0900
-Message-ID: <CABMQnVLVW1fbmZSsZeshB8=NgyYLK67Lv9xydLeQmDLdM8FrmA@mail.gmail.com>
-References: <1360803091-26400-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
- <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [v2 1/4] ARM: tegra20: create a DT header defining CLK IDs
+Date: Thu, 14 Feb 2013 16:29:06 -0700
+Message-ID: <511D7342.2070205@wwwdotorg.org>
+References: <1360868369-20093-1-git-send-email-hdoyu@nvidia.com><1360868369-20093-2-git-send-email-hdoyu@nvidia.com><511D45E0.1080105@wwwdotorg.org> <20130214.223422.1106350409475384652.hdoyu@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, horms+renesas@verge.net.au
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130214.223422.1106350409475384652.hdoyu@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Hiroshi Doyu <hdoyu@nvidia.com>
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "sjg@chromium.org" <sjg@chromium.org>, Prashant Gaikwad <pgaikwad@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2013 at 10:24 AM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->
-> Hi Iwamatsu-san
->
-> Thank you for this patch.
->
-> Small comment from me
->
->> +#ifdef CONFIG_OF
-> (snip)
->> +sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
->> +{
->> +     int ret;
->> +     struct device_node *np = dev->of_node;
->> +     struct sh_eth_plat_data *pdata;
-> ...
->> +#else
->> +static struct sh_eth_plat_data *
->> +sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
->> +{
->> +     return NULL;
->> +}
->> +#endif
->
-> (snip)
->
->>  static int sh_eth_drv_probe(struct platform_device *pdev)
->>  {
-> ...
->> +#ifdef CONFIG_OF
->> +     if (np && of_device_is_available(np)) {
->> +             pd = sh_eth_parse_dt(&pdev->dev, ndev);
->> +             if (pdev->dev.platform_data) {
->> +                     struct sh_eth_plat_data *tmp =
->> +                             pdev->dev.platform_data;
->> +                     pd->set_mdio_gate = tmp->set_mdio_gate;
->> +                     pd->needs_init = tmp->needs_init;
->> +             }
->> +     } else
->> +#endif
->
-> sh_eth_parse_dt() was defined for both CO NFIG_OF and !CONFIG_OF.
-> But it is called only from CONFIG_OF ?
->
-Because of_device_is_available depennds CONFIG_OF.
-I already send a patch which add empty fuction of of_device_is_available.
-If this was applied, your point does not need.
+On 02/14/2013 01:34 PM, Hiroshi Doyu wrote:
+> Stephen Warren <swarren@wwwdotorg.org> wrote @ Thu, 14 Feb 2013 21:15:28 +0100:
+> 
+>> Oh, and I don't think you updated e.g. nvidia,tegra20-car.txt to remove
+>> the list of clocks.
+> 
+> Not yet removed. I think that this could be done with the patch which
+> allows kernel source to include DT header files.
 
-OK, I erase empty sh_eth_parse_dt, and if a patch is applied, I will
-update this.
-
-Regards,
- Nobuhiro
-
--- 
-Nobuhiro Iwamatsu
+By defining the header file, you're really causing that header to be
+part of the binding definition. I think we should move the code from the
+binding .txt file to the header, rather than duplicating it and then
+removing it. The kernel doesn't include the binding .txt file right now,
+so I don't see any correlation with making it include the header vs.
+when we remove the list from the binding document.
