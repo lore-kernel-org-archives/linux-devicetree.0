@@ -1,65 +1,73 @@
-From: Thierry Reding <thierry.reding@avionic-design.de>
-Subject: Re: [PATCH 1/4] of/pci: Provide support for parsing PCI DT ranges
- property
-Date: Thu, 14 Feb 2013 20:17:45 +0100
-Message-ID: <20130214191745.GA13875@avionic-0098.mockup.avionic-design.de>
-References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
- <1360570940-17086-2-git-send-email-thierry.reding@avionic-design.de>
- <20130213225311.37FFB3E3557@localhost>
- <20130214165341.GA29199@arm.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v2 0/4] ARM: mvebu: Add support for SPI flash devices
+ in Armada 370/XP
+Date: Thu, 14 Feb 2013 14:34:10 -0500
+Message-ID: <20130214193410.GL14746@titan.lakedaemon.net>
+References: <1360155984-15397-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <511257C6.2070604@free-electrons.com>
+ <20130206132850.GC14746@titan.lakedaemon.net>
+ <CALF0-+WLh=8QGG4ob8HVq+x4oO_ArdFHd=vH1_OhucH1f9XG3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="RnlQjJ0d97Da+TV1"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130214165341.GA29199@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Murray <andrew.murray@arm.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <CALF0-+WLh=8QGG4ob8HVq+x4oO_ArdFHd=vH1_OhucH1f9XG3A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Feb 13, 2013 at 06:24:14AM -0300, Ezequiel Garcia wrote:
+> Hi Jason,
+> 
+> On Wed, Feb 6, 2013 at 10:28 AM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
+> > On Wed, Feb 06, 2013 at 02:16:54PM +0100, Gregory CLEMENT wrote:
+> >> On 02/06/2013 02:06 PM, Ezequiel Garcia wrote:
+> >> > This is second version of the SPI patchset for Armada 370/XP.
+> >> >
+> >> > This series first adds support for the SPI controller
+> >> > and then adds the SPI flash for the Armada XP GP board.
+> >> >
+> >> > This series is based on 3.8-rc5 plus:
+> >> >  * "arm: mvebu: support for the new Armada XP development board(DB-MV784MP-GP)"
+> >> >  * "arm: mvebu: i2c come back in defconfig"
+> >> >
+> >> > Feel free to test or provide any feedback!
+> >> >
+> >> Ezequiel,
+> >>
+> >> I reviewed the patches, I have nothing more to say, I can add my:
+> >>
+> >> Acked-by: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> >>
+> >> on the patch that didn't have yet.
+> >>
+> >> Jason,
+> >> could you add this series in your incoming pull request?
+> >
+> > That's the plan.  I'm waiting for a response from Olof to see If I need
+> > to redo /boards and /dt.  In either case, my next round of pull requests
+> > with have this and a bunch of other stuff.
+> >
+> 
+> Despite we're almost closed for v3.9 new material,
+> I hope you don't mind a little ping on the USB and SPI stuff.
+> 
+> I'd *really* love to see these in v3.9, if at all possible.
 
---RnlQjJ0d97Da+TV1
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yes, I got called out for a few days and just got back into things
+today.  once I've read evreything I'll do what I can.
 
-On Thu, Feb 14, 2013 at 04:53:41PM +0000, Andrew Murray wrote:
-> Thierry,
->=20
-> If you don't have much bandwidth I'd be quite happy to take this on - this
-> would be beneficial for my eventual patchset. I can start by refactoring =
-common
-> implementations of pci_process_bridge_OF_ranges or similar across the
-> architectures as per Grant's suggestion? I didn't do this when I first po=
-sted
-> the patch as I was concerned about the testing effort.
+thx,
 
-Absolutely! Since it was your patch in the first place you're just as
-well suited to do this if you want to and have the time.
-
-Thanks,
-Thierry
-
---RnlQjJ0d97Da+TV1
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRHThZAAoJEN0jrNd/PrOhqSwQAJn6VuXVWNnJ8Lb8M0Y0UGjA
-8afkXuqdUqQ7SVhrFKbd7uMavtROFGAICIHvvs9bj0jyGJRY4rE/Xp+UvEha/1sK
-3YMaOw++5yIFDDO22zTbsvVyqNCl86eGsLdLIR/r4bJ+YsAe2EKvOu+S9s1IYf6x
-24afZfTwhUtJvkbIBH/PwPrUGp6V6b5r9k0x138+rAd3YjsJq7FByBcRzQGD9nu8
-4n1IN65DRENoDs8vWM/V7g95FStfrRaBMD4JtLoht8dI4yS9tvj4UvLWxexUIgWQ
-52GltAwUm6T2bXHQ5Y8PlOvyvP6q6TjAFhI+gMfrADMVTVq+fGQaEGKhZzkEYrIv
-n0g7JxS74Hmpna3wqR2fS/RzsC0LqWIVXKpymRXzYAhlJt0JRcrVM89Qp4qZFVEc
-Vw1ehWlx4m+tAWb2a551MmczUgGqSIt7rKtrdeOP7hVktvbtOzwKQErP/NvI4A+h
-e9CQNXxsOYPS5MAK8qAc8qC7TBlT+UHnnqH37pXXdQgDIfRYZemHqHpDGJxpHd1m
-a07jA1r7bA7CMXe8RqoOjNeA0IReKI2uwDMIOi2zpKElOZA828pjt7sqKo4hg/7V
-1AAgI3w2ffyi+Hdfz+urVLGxOxgQvxWfiDos/oFSvvDeUmxk89Qdc9U6F66wfgTC
-O2R1HPhT/2fNB98R4JEO
-=qUDq
------END PGP SIGNATURE-----
-
---RnlQjJ0d97Da+TV1--
+Jason.
