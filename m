@@ -1,7 +1,7 @@
 From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] of: Add empty of_device_is_available() function
-Date: Thu, 14 Feb 2013 09:35:09 +0900
-Message-ID: <1360802110-19219-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
+Subject: [PATCH v2] of: Add empty of_device_is_available() function
+Date: Thu, 14 Feb 2013 09:37:12 +0900
+Message-ID: <1360802233-19289-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -17,16 +17,16 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Nobuhiro Iwamatsu <nobuhiro.iwamatsu-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
-
-From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 
 This commit adds an empty of_device_is_available() function for
 !CONFIG_OF builds.
 
-Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
+V1: Fix email address.
+
  include/linux/of.h |    5 +++++
  1 file changed, 5 insertions(+)
 
