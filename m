@@ -1,38 +1,31 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH V6 02/10] ASoC: SAMSUNG: Add DT support for i2s
-Date: Thu, 14 Feb 2013 21:33:00 +0100
-Message-ID: <511D49FC.4080402@gmail.com>
-References: <1358509629-20471-1-git-send-email-padma.v@samsung.com> <1358509629-20471-3-git-send-email-padma.v@samsung.com> <511CC11B.5030700@samsung.com> <20130214114337.GD13249@opensource.wolfsonmicro.com>
+From: Hiroshi Doyu <hdoyu@nvidia.com>
+Subject: Re: [v2 1/4] ARM: tegra20: create a DT header defining CLK IDs
+Date: Thu, 14 Feb 2013 21:34:22 +0100
+Message-ID: <20130214.223422.1106350409475384652.hdoyu@nvidia.com>
+References: <1360868369-20093-1-git-send-email-hdoyu@nvidia.com><1360868369-20093-2-git-send-email-hdoyu@nvidia.com><511D45E0.1080105@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130214114337.GD13249@opensource.wolfsonmicro.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Padmavathi Venna <padma.v@samsung.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <511D45E0.1080105@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: "swarren@wwwdotorg.org" <swarren@wwwdotorg.org>
+Cc: "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "sjg@chromium.org" <sjg@chromium.org>, Prashant Gaikwad <pgaikwad@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/14/2013 12:43 PM, Mark Brown wrote:
-> On Thu, Feb 14, 2013 at 11:48:59AM +0100, Sylwester Nawrocki wrote:
->
->> NAK.
->
->> Why we should live with this temporary code when there is already
->> pinctrl support for Exynos SoCs ?
->
->> If the pinctrl driver for Exynos5 was updated you could instead just do
->
->> devm_pinctrl_get_select_default(&i2s->pdev->dev);
->
-> Too late, this stuff is already merged and on its way upstream.
+Stephen Warren <swarren@wwwdotorg.org> wrote @ Thu, 14 Feb 2013 21:15:28 +0100:
 
-My apologies for the late review. It's already sixth version of this patch
-series... But I noticed it just now when applying it for Exynos4. The GPIO
-part of the bindings is now incompatible with Exynos4 and the bindings will
-need to be changed. Leaving the compatibility code in the I2S driver, when
-we could have it done well right from the beginning. If I'm not mistaken
-a file similar to arch/arm/boot/dts/exynos4x12-pinctrl.dtsi with at least
-entries for the I2S devices is needed and an addition of related pinctrl
-nodes in exynos5250.dtsi. But I guess this is not something that could be
-fixed in the -rc period ?
+> Oh, and I don't think you updated e.g. nvidia,tegra20-car.txt to remove
+> the list of clocks.
+
+Not yet removed. I think that this could be done with the patch which
+allows kernel source to include DT header files.
+
+> BTW, I assume this patch includes the changes from my recent "clk:
+> tegra: fix driver to match DT binding" and anything else similar that's
+> in the most recent Tegra for-next?
+
+Of course not, that's a little bit too recent.
+
+I'll rerun my script against the laste Tegra for-next and post them as
+v3(inc. Tegra114)
