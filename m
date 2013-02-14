@@ -1,43 +1,38 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [v2 1/4] ARM: tegra20: create a DT header defining CLK IDs
-Date: Thu, 14 Feb 2013 13:15:28 -0700
-Message-ID: <511D45E0.1080105@wwwdotorg.org>
-References: <1360868369-20093-1-git-send-email-hdoyu@nvidia.com> <1360868369-20093-2-git-send-email-hdoyu@nvidia.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH V6 02/10] ASoC: SAMSUNG: Add DT support for i2s
+Date: Thu, 14 Feb 2013 21:33:00 +0100
+Message-ID: <511D49FC.4080402@gmail.com>
+References: <1358509629-20471-1-git-send-email-padma.v@samsung.com> <1358509629-20471-3-git-send-email-padma.v@samsung.com> <511CC11B.5030700@samsung.com> <20130214114337.GD13249@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1360868369-20093-2-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130214114337.GD13249@opensource.wolfsonmicro.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>, Padmavathi Venna <padma.v@samsung.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/14/2013 11:59 AM, Hiroshi Doyu wrote:
-> To replace magic number in tegra_car:
-> 
-> -               clocks = <&tegra_car 28>;
-> +               clocks = <&tegra_car CLK_HOST1X>;
+On 02/14/2013 12:43 PM, Mark Brown wrote:
+> On Thu, Feb 14, 2013 at 11:48:59AM +0100, Sylwester Nawrocki wrote:
+>
+>> NAK.
+>
+>> Why we should live with this temporary code when there is already
+>> pinctrl support for Exynos SoCs ?
+>
+>> If the pinctrl driver for Exynos5 was updated you could instead just do
+>
+>> devm_pinctrl_get_select_default(&i2s->pdev->dev);
+>
+> Too late, this stuff is already merged and on its way upstream.
 
-> diff --git a/arch/arm/boot/dts/tegra20-car.h b/arch/arm/boot/dts/tegra20-car.h
-
-Sorry, forgot a couple small comments the last time around.
-
-This file should probably have some header indicating which binding it
-describes, rather like the GPIO header in my patch series.
-
-> +#define CLK_CPU 0
-
-I'd suggest naming that TEGRA20_CLK_CPU, so that the various different
-clock headers don't conflict. It's not too likely that more than one of
-the /Tegra/ clock headers will be included at once, but it doesn't seem
-that unlikely that a board file could end up having a Tegra clock header
-included plus various other clock headers for some other chip that has
-some clock outputs.
-
-Oh, and I don't think you updated e.g. nvidia,tegra20-car.txt to remove
-the list of clocks.
-
-BTW, I assume this patch includes the changes from my recent "clk:
-tegra: fix driver to match DT binding" and anything else similar that's
-in the most recent Tegra for-next?
+My apologies for the late review. It's already sixth version of this patch
+series... But I noticed it just now when applying it for Exynos4. The GPIO
+part of the bindings is now incompatible with Exynos4 and the bindings will
+need to be changed. Leaving the compatibility code in the I2S driver, when
+we could have it done well right from the beginning. If I'm not mistaken
+a file similar to arch/arm/boot/dts/exynos4x12-pinctrl.dtsi with at least
+entries for the I2S devices is needed and an addition of related pinctrl
+nodes in exynos5250.dtsi. But I guess this is not something that could be
+fixed in the -rc period ?
