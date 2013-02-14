@@ -1,11 +1,15 @@
-From: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] watchdog: at91rm9200: add DT support
-Date: Thu, 14 Feb 2013 23:02:29 +0100
-Message-ID: <1360879349-17369-1-git-send-email-manabian@gmail.com>
+From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] Device Tree support for CMA (Contiguous Memory
+ Allocator)
+Date: Thu, 14 Feb 2013 23:08:54 +0100
+Message-ID: <511D6076.9090503@gmail.com>
+References: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
+ <20130214213013.GG1906@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130214213013.GG1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,79 +20,43 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org
-Cc: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Joachim Eastwood <manabian-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/watchdog/atmel-at91rm9200-wdt.txt        | 9 +++++++++
- drivers/watchdog/Kconfig                                         | 2 +-
- drivers/watchdog/at91rm9200_wdt.c                                | 9 +++++++++
- 3 files changed, 19 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/watchdog/atmel-at91rm9200-wdt.txt
+Hi,
 
-diff --git a/Documentation/devicetree/bindings/watchdog/atmel-at91rm9200-wdt.txt b/Documentation/devicetree/bindings/watchdog/atmel-at91rm9200-wdt.txt
-new file mode 100644
-index 0000000..d4d86cf
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/atmel-at91rm9200-wdt.txt
-@@ -0,0 +1,9 @@
-+Atmel AT91RM9200 System Timer Watchdog
-+
-+Required properties:
-+- compatible: must be "atmel,at91sam9260-wdt".
-+
-+Example:
-+	watchdog@fffffd00 {
-+		compatible = "atmel,at91rm9200-wdt";
-+	};
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 7f809fd..82ebff9 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -116,7 +116,7 @@ config ARM_SP805_WATCHDOG
- 
- config AT91RM9200_WATCHDOG
- 	tristate "AT91RM9200 watchdog"
--	depends on ARCH_AT91RM9200
-+	depends on ARCH_AT91
- 	help
- 	  Watchdog timer embedded into AT91RM9200 chips. This will reboot your
- 	  system when the timeout is reached.
-diff --git a/drivers/watchdog/at91rm9200_wdt.c b/drivers/watchdog/at91rm9200_wdt.c
-index 89831ed..1c75260 100644
---- a/drivers/watchdog/at91rm9200_wdt.c
-+++ b/drivers/watchdog/at91rm9200_wdt.c
-@@ -24,6 +24,8 @@
- #include <linux/types.h>
- #include <linux/watchdog.h>
- #include <linux/uaccess.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
- #include <mach/at91_st.h>
- 
- #define WDT_DEFAULT_TIME	5	/* seconds */
-@@ -252,6 +254,12 @@ static int at91wdt_resume(struct platform_device *pdev)
- #define at91wdt_resume	NULL
- #endif
- 
-+static const struct of_device_id at91_wdt_dt_ids[] = {
-+	{ .compatible = "atmel,at91rm9200-wdt" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, at91_wdt_dt_ids);
-+
- static struct platform_driver at91wdt_driver = {
- 	.probe		= at91wdt_probe,
- 	.remove		= at91wdt_remove,
-@@ -261,6 +269,7 @@ static struct platform_driver at91wdt_driver = {
- 	.driver		= {
- 		.name	= "at91_wdt",
- 		.owner	= THIS_MODULE,
-+		.of_match_table = of_match_ptr(at91_wdt_dt_ids),
- 	},
- };
- 
--- 
-1.8.0
+On 02/14/2013 10:30 PM, Sascha Hauer wrote:
+> On Thu, Feb 14, 2013 at 01:45:26PM +0100, Marek Szyprowski wrote:
+...
+>> Here is my initial proposal for device tree integration for Contiguous
+>> Memory Allocator. The code is quite straightforward, however I expect
+>> that the memory bindings require some discussion.
+>>
+>> The proposed bindings allows to define contiguous memory regions of
+>> specified base address and size. Then, the defined regions can be
+>> assigned to the given device(s) by adding a property with a phanle to
+>> the defined contiguous memory region. From the device tree perspective
+>> that's all. Once the bindings are added, all the memory allocations from
+>> dma-mapping subsystem will be served from the defined contiguous memory
+>> regions.
+>>
+>
+> I think CMA regions should not be described in the devicetre at all. The
+> devicetree is about hardware description and it should be OS agnostic,
+> but CMA is only a Linux specific implementation detail. It's not even
+> specific to a particular board, it's specific to a particular usecase of
+> a board.
+
+I disagree. For example, in a multiprocessor system describing the memory
+regions this way allows to assign memory to each subsystem, e.g. shared
+memory, so that the memory region constraints are satisfied.
+
+CMA just happens to be an implementation of a method of assigning memory
+to each device in Linux. The constraints on the memory are real hardware
+constraints, resulting from a particular subsystem architecture.
+
+---
+
+Thanks,
+Sylwester
