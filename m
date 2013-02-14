@@ -1,115 +1,327 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v1 1/4] i2c: mux: Add i2c-arbitrator 'mux' driver
-Date: Wed, 13 Feb 2013 17:41:25 -0700
-Message-ID: <511C32B5.20600@wwwdotorg.org>
-References: <1360778532-7480-1-git-send-email-dianders@chromium.org>
- <511BFF77.2090202@wwwdotorg.org>
- <CAD=FV=XUEcUx3NGCm+KijRGujECVTSJ9X5fY=arq-4U_RUdxCQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAD=FV=XUEcUx3NGCm+KijRGujECVTSJ9X5fY=arq-4U_RUdxCQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Peter Korsgaard <peter.>
+From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Subject: [PATCHi v2] net: sh_eth: Add support of device tree probe
+Date: Thu, 14 Feb 2013 09:51:31 +0900
+Message-ID: <1360803091-26400-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: horms+renesas@verge.net.au, magnus.damm@gmail.com, devicetree-discuss@lists.ozlabs.org, kda@linux-powerpc.org, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/13/2013 05:34 PM, Doug Anderson wrote:
-> On Wed, Feb 13, 2013 at 1:02 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 02/13/2013 11:02 AM, Doug Anderson wrote:
->>> The i2c-arbitrator driver implements the arbitration scheme that the
->>> Embedded Controller (EC) on the ARM Chromebook expects to use for bus
->>> multimastering.  This i2c-arbitrator driver could also be used in
->>> other places where standard i2c bus arbitration can't be used and two
->>> extra GPIOs are available for arbitration.
->>>
->>> This driver is based on code that Simon Glass added to the i2c-s3c2410
->>> driver in the Chrome OS kernel 3.4 tree.  The current incarnation as a
->>> mux driver is as suggested by Grant Likely.  See
->>> <https://patchwork.kernel.org/patch/1877311/> for some history.
->>
->>> diff --git a/Documentation/devicetree/bindings/i2c/i2c-arbitrator.txt b/Documentation/devicetree/bindings/i2c/i2c-arbitrator.txt
-...
->>> +Required properties:
->>> +- compatible: i2c-arbitrator
->>
->> That seems pretty generic. What if there are other arbitration schemes?
-> 
-> OK, going to go with i2c-arbitrator-cros-ec.  Hopefully that sounds OK.
+This adds support of device tree probe for Renesas sh-ether driver.
 
-That seems fine. The mechanism seems potentially a little more generic
-than just for cros-ec though, but I guess there's no harm naming it
-after the first implementation. That why "compatible" allows multiple
-entries anyway.
+Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
 
->>> +static int i2c_arbitrator_select(struct i2c_adapter *adap, void *data, u32 chan)
->>> +{
->>> +     const struct i2c_arbitrator_data *arb = data;
->>> +     unsigned long stop_retry, stop_time;
->>> +
->>> +     /* Start a round of trying to claim the bus */
->>> +     stop_time = jiffies + usecs_to_jiffies(arb->wait_free_us) + 1;
->>> +     do {
->>> +             /* Indicate that we want to claim the bus */
->>> +             gpio_set_value(arb->ap_gpio, 0);
->>
->> The GPIO signals appear to be active low in the code. Instead, I think
->> it'd make more sense to extract the polarity of the GPIO from DT, using
->> of_get_named_gpio_flags().
-> 
-> A little torn here.  It adds a bunch of complexity to the code to
-> handle this case and there are no known or anticipated users.  I only
-> wish that the GPIO polarity could be more hidden from drivers (add
-> functions like gpio_assert, gpio_deassert, etc)...
+---
+V2: - Removed ether_setup().
+    - Fixed typo from "sh-etn" to "sh-eth".
+	- Removed "needs-init" and sh-eth,endian from definition of DT.
+	- Changed "sh-eth,edmac-endian" instead of "sh-eth,edmac-big-endain"
+	  in definition of DT.
 
-Yes, that would be nice. Alex, LinusW?
+ Documentation/devicetree/bindings/net/sh_ether.txt |   41 +++++
+ drivers/net/ethernet/renesas/sh_eth.c              |  156 +++++++++++++++++---
+ 2 files changed, 173 insertions(+), 24 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/sh_ether.txt
 
-> In any case, I've done it.  I used the "!!" trick a lot to convert
-> "zero/non-zero" to "0/1" to at least reduce the lines of code a
-> little.  I think this is common enough that it helps readability
-> rather than hurting it.
-
->>> +static int __init i2c_arbitrator_init(void)
->>> +{
->>> +     return platform_driver_register(&i2c_arbitrator_driver);
->>> +}
->>> +subsys_initcall(i2c_arbitrator_init);
->>> +
->>> +static void __exit i2c_arbitrator_exit(void)
->>> +{
->>> +     platform_driver_unregister(&i2c_arbitrator_driver);
->>> +}
->>> +module_exit(i2c_arbitrator_exit);
->>
->> You should be able to replace all that with:
->>
->> module_platform_driver(&i2c_arbitrator_driver);
-> 
-> Sigh.  Yeah, I had that.  ...but it ends up getting initted
-> significantly later in the init process and that was uncovering bugs
-> in other drivers where they weren't expressing their dependencies
-> properly.  I was going to try to fix those bugs separately but it
-> seemed to make some sense to prioritize this bus a little bit anyway
-> by using subsys_initcall().  ...but maybe that's just wrong.
-> 
-> Unless you think it's a bug or terrible form to use subsys_initcall()
-> I'd rather leave that.  Is that OK?
-
-It's certainly a bug if it doesn't work correctly as
-module_platform_driver(). It'll have to be fixed sometime.
-
-I don't think it's a big enough issue for me to object to the patch
-providing it gets fixed sometime, but I've certainly seem other people
-push back harder on using subsys_initcall for expressing dependencies;
-it's not very extensible - what happens if there's another bug in some
-other driver that requires an even earlier level of initcall?
+diff --git a/Documentation/devicetree/bindings/net/sh_ether.txt b/Documentation/devicetree/bindings/net/sh_ether.txt
+new file mode 100644
+index 0000000..7415e54
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/sh_ether.txt
+@@ -0,0 +1,41 @@
++* Renesas Electronics SuperH EMAC
++
++This file provides information, what the device node
++for the sh_eth interface contains.
++
++Required properties:
++- compatible:                   "renesas,sh-eth";
++- interrupt-parent:             The phandle for the interrupt controller that
++                                services interrupts for this device.
++- reg:                          Offset and length of the register set for the
++                                device.
++- interrupts:                   Interrupt mapping for the sh_eth interrupt
++                                sources (vector id).
++- phy-mode:                     String, operation mode of the PHY interface.
++- sh-eth,register-type:         String, register type of sh_eth.
++                                Please select "gigabit", "fast-sh4" or
++                                "fast-sh3-sh2".
++- sh-eth,phy-id:                PHY id.
++
++Optional properties:
++- local-mac-address:            6 bytes, mac address
++- sh-eth,no-ether-link:         Set link control by software. When device does
++                                not support ether-link, set.
++- sh-eth,ether-link-active-low: Set link check method.
++                                When detection of link is treated as active-low,
++                                set.
++- sh-eth,edmac-big-endian:      Set big endian for sh_eth dmac.
++                                It work as little endian when this is not set. 
++- sh-etn,needs-init:            Initialization flag.
++                                When initialize device in probing device, set.
++
++Example (armadillo800eva):
++	sh-eth@e9a00000 {
++		compatible = "renesas,sh-eth";
++		interrupt-parent = <&intca>;
++		reg = <0xe9a00000 0x800>, <0xe9a01800 0x800>;
++		interrupts = <0x500>;
++		phy-mode = "mii";
++		sh-eth,register-type = "gigabit";
++		sh-eth,phy-id = <0>;
++	};
+diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+index 3d70586..15e50b87 100644
+--- a/drivers/net/ethernet/renesas/sh_eth.c
++++ b/drivers/net/ethernet/renesas/sh_eth.c
+@@ -1,7 +1,7 @@
+ /*
+  *  SuperH Ethernet device driver
+  *
+- *  Copyright (C) 2006-2012 Nobuhiro Iwamatsu
++ *  Copyright (C) 2006-2013 Nobuhiro Iwamatsu
+  *  Copyright (C) 2008-2012 Renesas Solutions Corp.
+  *
+  *  This program is free software; you can redistribute it and/or modify it
+@@ -31,6 +31,12 @@
+ #include <linux/platform_device.h>
+ #include <linux/mdio-bitbang.h>
+ #include <linux/netdevice.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_platform.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/of_net.h>
+ #include <linux/phy.h>
+ #include <linux/cache.h>
+ #include <linux/io.h>
+@@ -2347,26 +2353,109 @@ static const struct net_device_ops sh_eth_netdev_ops = {
+ 	.ndo_change_mtu		= eth_change_mtu,
+ };
+ 
++#ifdef CONFIG_OF
++
++static int
++sh_eth_of_get_register_type(struct device_node *np)
++{
++	const char *of_str;
++	int ret = of_property_read_string(np, "sh-eth,register-type", &of_str);
++	if (ret)
++		return ret;
++
++	if (of_str && !strcmp(of_str, "gigabit"))
++		return SH_ETH_REG_GIGABIT;
++
++	else if (of_str && !strcmp(of_str, "fast-sh4"))
++		return SH_ETH_REG_FAST_SH4;
++	else if (of_str && !strcmp(of_str, "fast-sh3-sh2"))
++		return SH_ETH_REG_FAST_SH3_SH2;
++	else
++		return -EINVAL;
++}
++
++static struct sh_eth_plat_data *
++sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
++{
++	int ret;
++	struct device_node *np = dev->of_node;
++	struct sh_eth_plat_data *pdata;
++
++	pdata = devm_kzalloc(dev, sizeof(struct sh_eth_plat_data),
++					GFP_KERNEL);
++	if (!pdata) {
++		dev_err(dev, "%s: failed to allocate config data\n", __func__);
++		return NULL;
++	}
++
++	pdata->phy_interface = of_get_phy_mode(np);
++
++	of_property_read_u32(np, "sh-eth,phy-id", &pdata->phy);
++
++	if (of_find_property(np, "sh-eth,edmac-big-endian", NULL))
++		pdata->edmac_endian = EDMAC_BIG_ENDIAN;
++	else
++		pdata->edmac_endian = EDMAC_LITTLE_ENDIAN;
++
++	if (of_find_property(np, "sh-eth,no-ether-link", NULL))
++		pdata->no_ether_link = 1;
++	else
++		pdata->no_ether_link = 0;
++
++	if (of_find_property(np, "sh-eth,ether-link-active-low", NULL))
++		pdata->ether_link_active_low = 1;
++	else
++		pdata->ether_link_active_low = 0;
++
++	ret = sh_eth_of_get_register_type(np);
++	if (ret < 0)
++		goto error;
++	pdata->register_type = ret;
++
++#ifdef CONFIG_OF_NET
++	if (!is_valid_ether_addr(ndev->dev_addr)) {
++		const char *macaddr = of_get_mac_address(np);
++		if (macaddr)
++			memcpy(pdata->mac_addr, macaddr, ETH_ALEN);
++	}
++#endif
++
++	return pdata;
++
++error:
++	devm_kfree(dev, pdata);
++	return NULL;
++}
++#else
++static struct sh_eth_plat_data *
++sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
++{
++	return NULL;
++}
++#endif
++
+ static int sh_eth_drv_probe(struct platform_device *pdev)
+ {
+-	int ret, devno = 0;
++	int ret = 0, devno = 0;
+ 	struct resource *res;
+ 	struct net_device *ndev = NULL;
+ 	struct sh_eth_private *mdp = NULL;
+ 	struct sh_eth_plat_data *pd;
++	struct device_node *np = pdev->dev.of_node;
++
++	ndev = alloc_etherdev(sizeof(struct sh_eth_private));
++	if (!ndev) {
++		ret = -ENOMEM;
++		goto out;
++	}
+ 
++	mdp = netdev_priv(ndev);
+ 	/* get base addr */
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	if (unlikely(res == NULL)) {
+ 		dev_err(&pdev->dev, "invalid resource\n");
+ 		ret = -EINVAL;
+-		goto out;
+-	}
+-
+-	ndev = alloc_etherdev(sizeof(struct sh_eth_private));
+-	if (!ndev) {
+-		ret = -ENOMEM;
+-		goto out;
++		goto out_release;
+ 	}
+ 
+ 	/* The sh Ether-specific entries in the device structure. */
+@@ -2383,27 +2472,41 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
+ 	}
+ 	ndev->irq = ret;
+ 
+-	SET_NETDEV_DEV(ndev, &pdev->dev);
+-
+-	/* Fill in the fields of the device structure with ethernet values. */
+-	ether_setup(ndev);
+-
+-	mdp = netdev_priv(ndev);
+-	mdp->num_tx_ring = TX_RING_SIZE;
+-	mdp->num_rx_ring = RX_RING_SIZE;
+ 	mdp->addr = ioremap(res->start, resource_size(res));
+ 	if (mdp->addr == NULL) {
+ 		ret = -ENOMEM;
+ 		dev_err(&pdev->dev, "ioremap failed.\n");
+ 		goto out_release;
+ 	}
++#ifdef CONFIG_OF
++	if (np && of_device_is_available(np)) {
++		pd = sh_eth_parse_dt(&pdev->dev, ndev);
++		if (pdev->dev.platform_data) {
++			struct sh_eth_plat_data *tmp =
++				pdev->dev.platform_data;
++			pd->set_mdio_gate = tmp->set_mdio_gate;
++			pd->needs_init = tmp->needs_init;
++		}
++	} else
++#endif
++		pd = (struct sh_eth_plat_data *)(pdev->dev.platform_data);
++	
++	if (!pd) {
++		dev_err(&pdev->dev, "no setup data defined\n");
++		ret = -EINVAL;
++		goto out_release;
++	}
++
++	SET_NETDEV_DEV(ndev, &pdev->dev);
++
++	mdp->num_tx_ring = TX_RING_SIZE;
++	mdp->num_rx_ring = RX_RING_SIZE;
+ 
+ 	spin_lock_init(&mdp->lock);
+ 	mdp->pdev = pdev;
+ 	pm_runtime_enable(&pdev->dev);
+ 	pm_runtime_resume(&pdev->dev);
+ 
+-	pd = (struct sh_eth_plat_data *)(pdev->dev.platform_data);
+ 	/* get PHY ID */
+ 	mdp->phy_id = pd->phy;
+ 	mdp->phy_interface = pd->phy_interface;
+@@ -2412,6 +2515,8 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
+ 	mdp->no_ether_link = pd->no_ether_link;
+ 	mdp->ether_link_active_low = pd->ether_link_active_low;
+ 	mdp->reg_offset = sh_eth_get_register_offset(pd->register_type);
++	/* read and set MAC address */
++	read_mac_address(ndev, pd->mac_addr);
+ 
+ 	/* set cpu data */
+ #if defined(SH_ETH_HAS_BOTH_MODULES)
+@@ -2429,20 +2534,16 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
+ 	/* debug message level */
+ 	mdp->msg_enable = SH_ETH_DEF_MSG_ENABLE;
+ 
+-	/* read and set MAC address */
+-	read_mac_address(ndev, pd->mac_addr);
+-
+ 	/* ioremap the TSU registers */
+ 	if (mdp->cd->tsu) {
+ 		struct resource *rtsu;
+ 		rtsu = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+ 		if (!rtsu) {
+ 			dev_err(&pdev->dev, "Not found TSU resource\n");
+-			ret = -ENODEV;
+ 			goto out_release;
+ 		}
+ 		mdp->tsu_addr = ioremap(rtsu->start,
+-					resource_size(rtsu));
++				resource_size(rtsu));
+ 		mdp->port = devno % 2;
+ 		ndev->features = NETIF_F_HW_VLAN_FILTER;
+ 	}
+@@ -2522,17 +2623,24 @@ static int sh_eth_runtime_nop(struct device *dev)
+ 	return 0;
+ }
+ 
+-static struct dev_pm_ops sh_eth_dev_pm_ops = {
++static const struct dev_pm_ops sh_eth_dev_pm_ops = {
+ 	.runtime_suspend = sh_eth_runtime_nop,
+ 	.runtime_resume = sh_eth_runtime_nop,
+ };
+ 
++static struct of_device_id sh_eth_match[] = {
++	{ .compatible = "renesas,sh-eth",},
++	{},
++};
++MODULE_DEVICE_TABLE(of, sh_eth_match);
++
+ static struct platform_driver sh_eth_driver = {
+ 	.probe = sh_eth_drv_probe,
+ 	.remove = sh_eth_drv_remove,
+ 	.driver = {
+ 		   .name = CARDNAME,
+ 		   .pm = &sh_eth_dev_pm_ops,
++		   .of_match_table = sh_eth_match,
+ 	},
+ };
+ 
+-- 
+1.7.10.4
