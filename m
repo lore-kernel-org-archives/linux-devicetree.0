@@ -1,49 +1,42 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: Use of of_parse_phandle()/of_node_put()
-Date: Thu, 14 Feb 2013 10:26:41 +0100
-Message-ID: <511CADD1.9060104@ti.com>
-References: <F3DBB1B3EF102E4994C89758CFCA32412C6E52@DBDE01.ent.ti.com> <511BB6C2.3060105@ti.com> <CABYxbz6xEEVxL1BBM+Mb7net27d3zTD-6+uoS63LXXvifn_TNw@mail.gmail.com> <CABYxbz7_9cwgswHq2Pq3BWx-8-c0tkJNW8z16u45+pAJV6YS0w@mail.gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V4 0/5] Add generic DMA DT binding support
+Date: Thu, 14 Feb 2013 15:09:57 +0530
+Message-ID: <20130214093957.GB27887@intel.com>
+References: <1360571905-15285-1-git-send-email-padma.v@samsung.com>
+ <20130212144950.GJ3789@intel.com>
+ <CAAgF-Be1w-8yjuyXT+d8sUO8dee1x7oYFJLXHCmcJSf17eXWyw@mail.gmail.com>
+ <20130214044704.GE7777@intel.com>
+ <CAAgF-BfAE4Qt5KOBsn1iD7HW7_1e=TSEbuxNuTk0w8X+t3i-5Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CABYxbz7_9cwgswHq2Pq3BWx-8-c0tkJNW8z16u45+pAJV6YS0w@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Anil Kumar <anilk4.v@gmail.com>
-Cc: "Kumar, Anil" <anilkumar.v@ti.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <liam.r.girdwood@linux.intel.com>, "jarkko.nikula@bitmer.com" <jarkko.nikula@bitmer.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Alsa Devel List <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAAgF-BfAE4Qt5KOBsn1iD7HW7_1e=TSEbuxNuTk0w8X+t3i-5Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padma Venkat <padma.kvr@gmail.com>
+Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, arnd@arndb.de, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/13/2013 06:02 PM, Anil Kumar wrote:
-> ------------8---------------
-> diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-> index b7e84a7..9000f4a 100644
-> --- a/sound/soc/soc-core.c
-> +++ b/sound/soc/soc-core.c
-> @@ -1044,6 +1044,13 @@ static void soc_remove_dai_links(struct
-> snd_soc_card *card)
->                         soc_remove_link_dais(card, dai, order);
->         }
->=20
-> +       /* release cpu_of_node */
-> +       if(card->dai_link) {
-> +               int i;
-> +               for(i =3D 0; i < card->num_links; i++)
-> +                       of_node_put(card->dai_link[i].cpu_of_node);
+On Thu, Feb 14, 2013 at 11:12:51AM +0530, Padma Venkat wrote:
+> Hi Vinod,
+> 
+> On Thu, Feb 14, 2013 at 10:17 AM, Vinod Koul <vinod.koul@intel.com> wrote:
+> > On Wed, Feb 13, 2013 at 09:52:30AM +0530, Padma Venkat wrote:
+> >> Hi Vinod,
+> >>
+> >> On Tue, Feb 12, 2013 at 8:19 PM, Vinod Koul <vinod.koul@intel.com> wrote:
+> >> > On Mon, Feb 11, 2013 at 02:08:20PM +0530, Padmavathi Venna wrote:
+> >> >
+> >> > This looks fine, I have only question. The code seems to assume that pl330 dma
+> >> > controller always uses DT. But I dont see that as dependency for pl330.
+> > Have you checked this?
+> 
+> Sorry I didn't see this comment previously. I verified on SMDK6410
+> board which doesn't have DT support.
+> I didn't see any build error and it detected the sound card.
+Okay, sound good...
 
-and the same for codec_of_node and platform_of_node for that matter.
+I will try the series now.
 
-Mark: what do you think? Does it make sense to do this in the core or s=
-hould
-we let the machine drivers to take care of this?
-
-> +       }
-> +
->=20
-
---=20
-P=E9ter
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+~Vinod
