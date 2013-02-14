@@ -1,53 +1,57 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/9] ARM: dt: add header to define GPIO flags
-Date: Thu, 14 Feb 2013 21:48:16 +0100
-Message-ID: <20130214.224816.1898594449880044716.hdoyu@nvidia.com>
-References: <1360791198-29462-1-git-send-email-swarren@wwwdotorg.org><1360791198-29462-2-git-send-email-swarren@wwwdotorg.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 0/2] Device Tree support for CMA (Contiguous Memory
+ Allocator)
+Date: Thu, 14 Feb 2013 22:30:13 +0100
+Message-ID: <20130214213013.GG1906@pengutronix.de>
+References: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1360791198-29462-2-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org" <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org" <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1360845928-8107-1-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote @ Wed, 13 Feb 2013 22:33:10 +0100:
+Hi Marek,
 
-> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+On Thu, Feb 14, 2013 at 01:45:26PM +0100, Marek Szyprowski wrote:
+> Hello,
 > 
-> Many GPIO device tree bindings use the same flags. Create a header to
-> define those.
+> Here is my initial proposal for device tree integration for Contiguous
+> Memory Allocator. The code is quite straightforward, however I expect
+> that the memory bindings require some discussion.
 > 
-> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  arch/arm/boot/dts/gpio.h |   10 ++++++++++
->  1 file changed, 10 insertions(+)
->  create mode 100644 arch/arm/boot/dts/gpio.h
+> The proposed bindings allows to define contiguous memory regions of
+> specified base address and size. Then, the defined regions can be
+> assigned to the given device(s) by adding a property with a phanle to
+> the defined contiguous memory region. From the device tree perspective
+> that's all. Once the bindings are added, all the memory allocations from
+> dma-mapping subsystem will be served from the defined contiguous memory
+> regions.
 > 
-> diff --git a/arch/arm/boot/dts/gpio.h b/arch/arm/boot/dts/gpio.h
-> new file mode 100644
-> index 0000000..4c9da69
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/gpio.h
-> @@ -0,0 +1,10 @@
-> +/*
-> + * This header provides constants for most GPIO bindings.
-> + *
-> + * Most GPIO bindings include a flags cell as part of the GPIO specifier.
-> + * In most cases, the format of the flags cell uses the standard values
-> + * defined in this header.
-> + */
 
-#ifdef _DTS_GPIO_H
-#define _DTS_GPIO_H
+I think CMA regions should not be described in the devicetre at all. The
+devicetree is about hardware description and it should be OS agnostic,
+but CMA is only a Linux specific implementation detail. It's not even
+specific to a particular board, it's specific to a particular usecase of
+a board.
 
-> +
-> +#define GPIO_ACTIVE_HIGH 0
-> +#define GPIO_ACTIVE_LOW 1
+Sascha
 
-#endif /* _DTS_GPIO_H */
-
-To avoid multple inclusion problems, do we want the above
-ifdef/define/endif for other DT header files as well?
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
