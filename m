@@ -1,97 +1,140 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 6/6] Input: Add ChromeOS EC keyboard driver
-Date: Thu, 14 Feb 2013 09:31:28 -0800
-Message-ID: <20130214173127.GC4007@core.coreip.homeip.net>
-References: <1360723347-28701-1-git-send-email-sjg@chromium.org>
- <1360723347-28701-7-git-send-email-sjg@chromium.org>
- <20130213200232.GB22031@core.coreip.homeip.net>
- <CAPnjgZ2-QV36Ro_G32kcHStpj0SCC_gDoeCPqjN-h6bsBTSGvQ@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v1 1/4] i2c: mux: Add i2c-arbitrator 'mux' driver
+Date: Thu, 14 Feb 2013 10:37:01 -0700
+Message-ID: <511D20BD.5090305@wwwdotorg.org>
+References: <1360778532-7480-1-git-send-email-dianders@chromium.org>
+ <511BFF77.2090202@wwwdotorg.org>
+ <CAD=FV=XUEcUx3NGCm+KijRGujECVTSJ9X5fY=arq-4U_RUdxCQ@mail.gmail.com>
+ <511C32B5.20600@wwwdotorg.org>
+ <CACRpkdaUtOe9g7+T=cWPepeGae6RcJ1nTeGc9opTijcYzfMedQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAPnjgZ2-QV36Ro_G32kcHStpj0SCC_gDoeCPqjN-h6bsBTSGvQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Simon Glass <sjg@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Mike A. Chan" <mikechan@google.com>, Jun Nakajima <jun.nakajima@intel.com>, Tom Keel <thomas.keel@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdaUtOe9g7+T=cWPepeGae6RcJ1nTeGc9opTijcYzfMedQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2013 at 10:45:07PM -0800, Simon Glass wrote:
-> >>
-> >> +config KEYBOARD_CROS_EC
-> >> +     tristate "ChromeOS EC keyboard"
-> >> +     select INPUT_MATRIXKMAP
-> >> +     select MFD_CROS_EC
-> >
-> > Is this select safe? I.e. does MFD_CROS_EC depend on anything else?
+On 02/14/2013 03:01 AM, Linus Walleij wrote:
+> On Thu, Feb 14, 2013 at 1:41 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 02/13/2013 05:34 PM, Doug Anderson wrote:
 > 
-> I'll remove it, since it isn't required, and it's true that it does
-> need other things.
-
-Instead of droppign the dependency completely I think it should "depens
-on MFD_CROS_EC"
-
-> >> +
-> >> +static void cros_ec_keyb_close(struct input_dev *dev)
-> >> +{
-> >> +     struct cros_ec_keyb *ckdev = input_get_drvdata(dev);
-> >> +
-> >> +     blocking_notifier_chain_unregister(&ckdev->ec->event_notifier,
-> >> +                                        &ckdev->notifier);
-> >> +     blocking_notifier_chain_unregister(&ckdev->ec->wake_notifier,
-> >> +                                        &ckdev->wake_notifier);
-> >
-> > Why is this done via a notifier instead of regular resume method?
+>>> A little torn here.  It adds a bunch of complexity to the code to
+>>> handle this case and there are no known or anticipated users.  I only
+>>> wish that the GPIO polarity could be more hidden from drivers (add
+>>> functions like gpio_assert, gpio_deassert, etc)...
+>>
+>> Yes, that would be nice. Alex, LinusW?
 > 
-> Because we only call the notifer in resume when we were not waking on
-> a keyboard event. We use it to flush the keyboard. It was a late
-> change so there might be a better way, but this driver does not have a
-> resume handler.
-
-Right and the question is why does not it have resume handler and why
-you inventing your own resume infrastructure instead of using the
-standard one.
-
-> >> +
-> >> +static int cros_ec_keyb_probe(struct platform_device *pdev)
-> >> +{
-> >> +     struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
-> >> +     struct device *dev = ec->dev;
-> >> +     struct cros_ec_keyb *ckdev = NULL;
-> >> +     struct input_dev *idev = NULL;
-> >> +     struct device_node *np;
-> >> +     int err;
-> >> +
-> >> +     np = of_find_matching_node(NULL, cros_ec_kbc_of_match);
-> >
-> > And if we don't find it?
+> OK so good point since Alex is rewriting the way the external
+> API to GPIOs is done.
 > 
-> Added error checking.
+> So this is one of the evolutionary artifacts of the GPIO subsystem:
+> that it has this concept of clients having to know if they want to
+> drive the line low or high.
 > 
-> >
-> >> +
-> >> +     ckdev = kzalloc(sizeof(*ckdev), GFP_KERNEL);
-> >> +     if (!ckdev) {
-> >> +             dev_err(dev, "cannot allocate memory for ckdev\n");
-> >> +             return -ENOMEM;
-> >> +     }
-> >> +     pdev->dev.of_node = np;
-> >
-> > Huh? I'd expect the platform device be fully set up (including DT data)
-> > before the driver is called.
+> Either way somewhere in the system the knowledge of whether
+> the low or high state counts as asserted must be stored.
 > 
-> This is a child of the mfd driver cros_ec, so I don't think that
-> works. Or maybe I'm just not sure how to plumb it in so it is
-> automatic. Or maybe I just need to add the id to the device info
-> below?
+> The same goes for inputs really: for example we have a
+> platform data flag for drivers/mmc/host/mmci.c that tells
+> whether a card is inserted when the line goes low or high. And
+> this varies between platforms.
+> 
+> So that would lead to gpio_get_value() being rewritten
+> as gpio_is_asserted() as well.
+> 
+> We all agree that the meaning of a certain GPIO pins
+> high vs low state as asserter or deasserted is a machine-
+> specific thing, so it need to come from device tree or platform
+> data.
+> 
+> So what this is really all about is whether that knowledge
+> should be part of the consumer DT node/platform data
+> or the producer DT node/platform data.
+> 
+> I.e. in the MMCI case whether we encode that into the
+> DT node/pdata for the GPIO controller or the MMCI
+> controller.
+> 
+> A bit like whether to eat eggs from the big or little end
+> you could say :-)
+> 
+> But changing it would have very drastic effects.
+> Consider this snippet from
+> arch/arm/boot/dts/snowball.dts:
+> 
+> // External Micro SD slot
+> sdi0_per1@80126000 {
+>       arm,primecell-periphid = <0x10480180>;
+>       max-frequency = <50000000>;
+>       bus-width = <4>;
+>       mmc-cap-mmc-highspeed;
+>       vmmc-supply = <&ab8500_ldo_aux3_reg>;
+> 
+>       cd-gpios  = <&gpio6 26 0x4>; // 218
+>       cd-inverted;
+> 
+>       status = "okay";
+> };
+> 
+> Note property "cd-inverted".
+> 
+> It states whether the GPIO value is active high (default) or
+> active low (this flag set). Ironically the binding document is
+> incomplete but we have to support device trees like this
+> going forward.
+> 
+> How do I make sure that this device tree continue to work
+> as expected if we change the semantic of the GPIO subsystem
+> to only provide gpio_is_asserted()?
+> 
+> You would have to include a function call to the GPIO core
+> and tell it what is asserted and what is not, like
+> gpiod_set_assertion_polarity() so the driver can also
+> tell the GPIO subsystem what is asserted and what is not,
+> rather than encoding that at the GPIO end of things.
+> 
+> So all of a sudden *both* the consumers and the providers
+> can define assertion sematics for the pins. What happens
+> if they are in disagreement?
 
-Who creates this device? Whoever does this should set up the
-pdev->dev.of_node. This is not this driver's responsibility.
+I think it's actually binding-specific.
 
-And then you add the id to the table below and matching is done
-automatically.
+Either a binding assumed that the GPIO specifier might not include an
+inversion flag, and hence included its own alternative (cd-inverted), or
+it assumed that the GPIO specifier would always include this flag, and
+hence relied purely on the GPIO flags.
 
-Thanks.
+Drivers are written to support specific bindings, and hence they know
+which case they fall into.
 
--- 
-Dmitry
+Hence, I think we want something like:
+
+Case 1: Just use GPIO specifier flags:
+
+gpio = of_get_named_gpio_flags(np, name, index, &flags);
+gpio_request_with_flags(gpio, flags);
+
+Case 2: Just use binding-specific property:
+
+gpio = of_get_named_gpio(np, name, index);
+flags = 0;
+if (of_property_read_bool(np, name))
+    flags |= FLAG_INVERTED;
+gpio_request_with_flags(gpio, flags);
+
+Or something like that.
+
+That seems simple enough?
