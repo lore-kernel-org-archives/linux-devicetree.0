@@ -1,14 +1,14 @@
 From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] [media] s5p-g2d: Add DT based discovery support
-Date: Thu, 14 Feb 2013 20:36:23 +0530
-Message-ID: <CAK9yfHyhbpK1GVN2FZSZq_GKFUDNz3zGsdwppbKpgFCb7P2P3Q@mail.gmail.com>
-References: <1360128584-23167-1-git-send-email-sachin.kamat@linaro.org>
- <CAK9yfHzaDDD0XEywdv+P6gEapjHwxKEfwHzKKQuXWEPHeAFgCw@mail.gmail.com>
- <511C230B.5060302@gmail.com>
+Subject: Re: [PATCH 7/7] ARM: dts: Add Samsung G2D DT bindings documentation
+Date: Thu, 14 Feb 2013 21:15:51 +0530
+Message-ID: <CAK9yfHyEfEhRE-7CUeu7x7GbqJZL4aJfgHso2kXoGCWRrxiYWw@mail.gmail.com>
+References: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org>
+ <1360151477-26460-8-git-send-email-sachin.kamat@linaro.org>
+ <511C1462.5060106@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5312233710461916570=="
+Content-Type: multipart/mixed; boundary="===============4175752102429326526=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <511C230B.5060302-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <511C1462.5060106-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,131 +20,165 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <k.debski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---===============5312233710461916570==
-Content-Type: multipart/alternative; boundary=e89a8f83ae1b22015d04d5b09ad9
+--===============4175752102429326526==
+Content-Type: multipart/alternative; boundary=f46d043c80264582bf04d5b127ae
 
---e89a8f83ae1b22015d04d5b09ad9
+--f46d043c80264582bf04d5b127ae
 Content-Type: text/plain; charset=ISO-8859-1
 
 On Thursday, 14 February 2013, Sylwester Nawrocki <
 sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On 02/12/2013 06:30 PM, Sachin Kamat wrote:
+> On 02/06/2013 12:51 PM, Sachin Kamat wrote:
 >>
->> Hi Sylwester,
->>
->> On Wednesday, 6 February 2013, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-wrote:
->>>
->>>  This patch adds device tree based discovery support to G2D driver
->>>
->>>  Signed-off-by: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>  ---
->>>  Based on for_v3.9 branch of below tree:
->>>  git://linuxtv.org/snawrocki/samsung.git
->>>
->>>  Changes since v1:
->>>  * Addressed review comments from Sylwester <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>.
->>>  * Modified the compatible string as per the discussions at [1].
->>>  [1] https://patchwork1.kernel.org/patch/2045821/
->>>
->>
->> Does this patch look good?
+>> Added documentaion about G2D bindings.
 >
-> It looks OK to me. I've sent a pull request including it, but it may
-> happen it ends up only in 3.10.
-
-Thanks. Hope it gets picked for 3.9 itself.
-
->
-> I tried to test this patch today and I had to correct some clock
-> definitions in the common clock API driver [1]. And we already have
-> quite a few fixes to that patch series.
->
-> Shouldn't you also provide a patch adding related OF_DEV_AUXDATA entry ?
-> How did you test this one ?
-
-I tested this without the common clock patches, with the mainline tree. It
-did not require any auxdata  entry.
->
-> When the new clocks driver gets merged (I guess it happens only in 3.10)
-> I'd like to have the media devices' clock names cleaned up, instead of
-> names like: {"sclk_fimg2d", "fimg2d"}, {"sclk_fimc", "fimc"},
-> {"sclk_fimd"/"fimd"}, in clock-names property we could have common names,
-> e.g. { "sclk", "gate" }. This could simplify a bit subsystems like
-devfreq.
-
-Yes. That makes sense.
-
->
-> Also I noticed there are some issues caused by splitting mux + div + gate
-> clocks into 3 different clocks. One solution to this might be to use the
-> new composite clock type.
+> s/documentaion/documentation
 
 Ok.
+>
+>> Signed-off-by: Sachin Kamat<sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/gpu/samsung-g2d.txt        |   30
+++++++++++++++++++++
+>>   1 files changed, 30 insertions(+), 0 deletions(-)
+>>   create mode 100644
+Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+>> new file mode 100644
+>> index 0000000..838b26b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+>> @@ -0,0 +1,30 @@
+>> +* Samsung 2D Graphics Accelerator
+>> +
+>
+>> +Samsung FIMG2D is a 2D graphics accelerator which supports Bit Block
+Transfer.
+>> +We set the drawing-context registers for configuring the rendering
+parameters
+>> +and then start rendering.
+>> +The G2D has V4L2 as well as DRM framework based driver support.
+>
+> IMHO this whole paragraph is irrelevant and could be dropped.
+
+Ok. Had formatted this based on mfc document.
+>
+>> +Required properties:
+>> +  - compatible : value should be one among the following
+>
+> missing colon at the end of line ?
+
+Hmm. I think so.
 
 >
-> [1] http://www.spinics.net/lists/arm-kernel/msg214149.html
+>> +       (a) "samsung,s5pv210-g2d" for G2D IP present in S5PV210&
+ Exynos4210 SoC
+>> +       (b) "samsung,exynos4212-g2d" for G2D IP present in Exynos4x12
+SoCs
+>> +       (b) "samsung,exynos5250-g2d" for G2D IP present in Exynos5250 SoC
 >
+> s/(b)/(c)
+
+Yes, copy paste error :)
+
+>
+>> +
+>> +  - reg : Physical base address of the IP registers and length of memory
+>> +         mapped region.
+>> +
+>> +  - interrupts : G2D interrupt number to the CPU.
+>> +
+>> +Optional properties:
+>> +  - samsung,power-domain : power-domain property defined with a phandle
+>> +                          to respective power domain.
+>> +
+>> +Example:
+>> +       g2d@12800000 {
+>> +               compatible = "samsung,s5pv210-g2d";
+>> +               reg =<0x12800000 0x1000>;
+>> +               interrupts =<0 89 0>;
+>> +               samsung,power-domain =<&pd_lcd0>;
+>> +               status = "disabled";
+>> +       };
+>
+> Otherwise looks good to me.
+
+Thanks for reviewing. Does the filename look good or should it be
+exynos-g2d?
+
+Regards,
+Sachin.
 
 -- 
 With warm regards,
 Sachin
 
---e89a8f83ae1b22015d04d5b09ad9
+--f46d043c80264582bf04d5b127ae
 Content-Type: text/html; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
 <br><br>On Thursday, 14 February 2013, Sylwester Nawrocki &lt;<a href=3D"ma=
 ilto:sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org">sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org</a>&gt; wro=
-te:<br>&gt; On 02/12/2013 06:30 PM, Sachin Kamat wrote:<br>&gt;&gt;<br>&gt;=
-&gt; Hi Sylwester,<br>
-&gt;&gt;<br>&gt;&gt; On Wednesday, 6 February 2013, Sachin Kamat &lt;<a hre=
-f=3D"mailto:sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org">sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&gt; wrote:=
-<br>&gt;&gt;&gt;<br>&gt;&gt;&gt; =A0This patch adds device tree based disco=
-very support to G2D driver<br>
-&gt;&gt;&gt;<br>&gt;&gt;&gt; =A0Signed-off-by: Sachin Kamat &lt;<a href=3D"=
-mailto:sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org">sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&gt;<br>&gt;&gt;=
-&gt; =A0---<br>&gt;&gt;&gt; =A0Based on for_v3.9 branch of below tree:<br>&=
-gt;&gt;&gt; =A0git://<a href=3D"http://linuxtv.org/snawrocki/samsung.git">l=
-inuxtv.org/snawrocki/samsung.git</a><br>
-&gt;&gt;&gt;<br>&gt;&gt;&gt; =A0Changes since v1:<br>&gt;&gt;&gt; =A0* Addr=
-essed review comments from Sylwester &lt;<a href=3D"mailto:s.nawrocki@samsu=
-ng.com">s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org</a>&gt;.<br>&gt;&gt;&gt; =A0* Modified the c=
-ompatible string as per the discussions at [1].<br>
-&gt;&gt;&gt; =A0[1] <a href=3D"https://patchwork1.kernel.org/patch/2045821/=
-">https://patchwork1.kernel.org/patch/2045821/</a><br>&gt;&gt;&gt;<br>&gt;&=
-gt;<br>&gt;&gt; Does this patch look good?<br>&gt;<br>&gt; It looks OK to m=
-e. I&#39;ve sent a pull request including it, but it may<br>
-&gt; happen it ends up only in 3.10.<br><br>Thanks. Hope it gets picked for=
- 3.9 itself.<br><br>&gt;<br>&gt; I tried to test this patch today and I had=
- to correct some clock<br>&gt; definitions in the common clock API driver [=
-1]. And we already have<br>
-&gt; quite a few fixes to that patch series.<br>&gt;<br>&gt; Shouldn&#39;t =
-you also provide a patch adding related OF_DEV_AUXDATA entry ?<br>&gt; How =
-did you test this one ?<br><br>I tested this without the common clock patch=
-es, with the mainline tree. It did not require any auxdata =A0entry.<br>
-&gt;<br>&gt; When the new clocks driver gets merged (I guess it happens onl=
-y in 3.10)<br>&gt; I&#39;d like to have the media devices&#39; clock names =
-cleaned up, instead of<br>&gt; names like: {&quot;sclk_fimg2d&quot;, &quot;=
-fimg2d&quot;}, {&quot;sclk_fimc&quot;, &quot;fimc&quot;},<br>
-&gt; {&quot;sclk_fimd&quot;/&quot;fimd&quot;}, in clock-names property we c=
-ould have common names,<br>&gt; e.g. { &quot;sclk&quot;, &quot;gate&quot; }=
-. This could simplify a bit subsystems like devfreq.<br><br>Yes. That makes=
- sense.<br>
-<br>&gt;<br>&gt; Also I noticed there are some issues caused by splitting m=
-ux + div + gate<br>&gt; clocks into 3 different clocks. One solution to thi=
-s might be to use the<br>&gt; new composite clock type.<br><br>Ok.<br><br>
-&gt;<br>&gt; [1] <a href=3D"http://www.spinics.net/lists/arm-kernel/msg2141=
-49.html">http://www.spinics.net/lists/arm-kernel/msg214149.html</a><br>&gt;=
-<br><br>-- <br><div>With warm regards,</div>
+te:<br>&gt; On 02/06/2013 12:51 PM, Sachin Kamat wrote:<br>&gt;&gt;<br>&gt;=
+&gt; Added documentaion about G2D bindings.<br>
+&gt;<br>&gt; s/documentaion/documentation<br><br>Ok.<br>&gt;<br>&gt;&gt; Si=
+gned-off-by: Sachin Kamat&lt;<a href=3D"mailto:sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org">sac=
+hin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org</a>&gt;<br>&gt;&gt; ---<br>&gt;&gt; =A0 .../devicetree=
+/bindings/gpu/samsung-g2d.txt =A0 =A0 =A0 =A0| =A0 30 ++++++++++++++++++++<=
+br>
+&gt;&gt; =A0 1 files changed, 30 insertions(+), 0 deletions(-)<br>&gt;&gt; =
+=A0 create mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.tx=
+t<br>&gt;&gt;<br>&gt;&gt; diff --git a/Documentation/devicetree/bindings/gp=
+u/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt<b=
+r>
+&gt;&gt; new file mode 100644<br>&gt;&gt; index 0000000..838b26b<br>&gt;&gt=
+; --- /dev/null<br>&gt;&gt; +++ b/Documentation/devicetree/bindings/gpu/sam=
+sung-g2d.txt<br>&gt;&gt; @@ -0,0 +1,30 @@<br>&gt;&gt; +* Samsung 2D Graphic=
+s Accelerator<br>
+&gt;&gt; +<br>&gt;<br>&gt;&gt; +Samsung FIMG2D is a 2D graphics accelerator=
+ which supports Bit Block Transfer.<br>&gt;&gt; +We set the drawing-context=
+ registers for configuring the rendering parameters<br>&gt;&gt; +and then s=
+tart rendering.<br>
+&gt;&gt; +The G2D has V4L2 as well as DRM framework based driver support.<b=
+r>&gt;<br>&gt; IMHO this whole paragraph is irrelevant and could be dropped=
+.<br><br>Ok. Had formatted this based on mfc document.<br>&gt;<br>&gt;&gt; =
++Required properties:<br>
+&gt;&gt; + =A0- compatible : value should be one among the following<br>&gt=
+;<br>&gt; missing colon at the end of line ?<br><br>Hmm. I think so.<br><br=
+>&gt;<br>&gt;&gt; + =A0 =A0 =A0 (a) &quot;samsung,s5pv210-g2d&quot; for G2D=
+ IP present in S5PV210&amp; =A0Exynos4210 SoC<br>
+&gt;&gt; + =A0 =A0 =A0 (b) &quot;samsung,exynos4212-g2d&quot; for G2D IP pr=
+esent in Exynos4x12 SoCs<br>&gt;&gt; + =A0 =A0 =A0 (b) &quot;samsung,exynos=
+5250-g2d&quot; for G2D IP present in Exynos5250 SoC<br>&gt;<br>&gt; s/(b)/(=
+c)<br><br>
+Yes, copy paste error :)<br><br>&gt;<br>&gt;&gt; +<br>&gt;&gt; + =A0- reg :=
+ Physical base address of the IP registers and length of memory<br>&gt;&gt;=
+ + =A0 =A0 =A0 =A0 mapped region.<br>&gt;&gt; +<br>&gt;&gt; + =A0- interrup=
+ts : G2D interrupt number to the CPU.<br>
+&gt;&gt; +<br>&gt;&gt; +Optional properties:<br>&gt;&gt; + =A0- samsung,pow=
+er-domain : power-domain property defined with a phandle<br>&gt;&gt; + =A0 =
+=A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0 =A0to respective power domain.<=
+br>&gt;&gt; +<br>&gt;&gt; +Example:<br>
+&gt;&gt; + =A0 =A0 =A0 g2d@12800000 {<br>&gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0=
+ =A0 compatible =3D &quot;samsung,s5pv210-g2d&quot;;<br>&gt;&gt; + =A0 =A0 =
+=A0 =A0 =A0 =A0 =A0 reg =3D&lt;0x12800000 0x1000&gt;;<br>&gt;&gt; + =A0 =A0=
+ =A0 =A0 =A0 =A0 =A0 interrupts =3D&lt;0 89 0&gt;;<br>
+&gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 samsung,power-domain =3D&lt;&amp;pd_=
+lcd0&gt;;<br>&gt;&gt; + =A0 =A0 =A0 =A0 =A0 =A0 =A0 status =3D &quot;disabl=
+ed&quot;;<br>&gt;&gt; + =A0 =A0 =A0 };<br>&gt;<br>&gt; Otherwise looks good=
+ to me.<br><br>Thanks for reviewing. Does the filename look good or should =
+it be exynos-g2d?<br>
+<br>Regards,<br>Sachin.<br><br>-- <br><div>With warm regards,</div>
 <div>Sachin</div><br>
 
---e89a8f83ae1b22015d04d5b09ad9--
+--f46d043c80264582bf04d5b127ae--
 
---===============5312233710461916570==
+--===============4175752102429326526==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -155,4 +189,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============5312233710461916570==--
+--===============4175752102429326526==--
