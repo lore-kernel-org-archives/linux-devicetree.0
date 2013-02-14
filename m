@@ -1,276 +1,419 @@
-From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 2/2] drivers: dma-contiguous: add initialization from device
- tree
-Date: Thu, 14 Feb 2013 13:45:28 +0100
-Message-ID: <1360845928-8107-3-git-send-email-m.szyprowski@samsung.com>
-References: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-reply-to: <1360845928-8107-1-git-send-email-m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: [PATCH v4 RESEND] gpio: Add device driver for GRGPIO cores and support custom accessors with gpio-generic
+Date: Thu, 14 Feb 2013 14:37:15 +0100
+Message-ID: <1360849035-7420-1-git-send-email-andreas@gaisler.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support for contiguous memory regions defined in device
-tree. Initialization is done in 2 steps. First, the contiguous memory is
-reserved, what happens very early, when only flattened device tree is
-available. Then on device initialization the corresponding cma regions are
-assigned to device structures.
+This driver supports GRGPIO gpio cores available in the GRLIB VHDL IP
+core library from Aeroflex Gaisler.
 
-Signed-off-by: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+This also adds support to gpio-generic for using custom accessor
+functions. The grgpio driver uses this to use ioread32be and iowrite32be
+for big endian register accesses.
+
+Reviewed-by: Anton Vorontsov <anton@enomsg.org>
+Signed-off-by: Andreas Larsson <andreas@gaisler.com>
 ---
- Documentation/devicetree/bindings/memory.txt |  101 ++++++++++++++++++++++++++
- arch/arm/boot/dts/skeleton.dtsi              |    7 +-
- drivers/base/dma-contiguous.c                |   72 ++++++++++++++++++
- 3 files changed, 179 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/memory.txt
 
-diff --git a/Documentation/devicetree/bindings/memory.txt b/Documentation/devicetree/bindings/memory.txt
+[Resent as I forgot to mark it as v4]
+
+Changes since v3:
+- Add Reveiwed-by
+- Fix pointed out style issues
+- Use np->full_name directly instead of kstrdup'ing it as it is a const char*
+- Call gpiochip_remove in grgpio_remove
+
+ .../devicetree/bindings/gpio/gpio-grgpio.txt       |   29 +++
+ drivers/gpio/Kconfig                               |    8 +
+ drivers/gpio/Makefile                              |    1 +
+ drivers/gpio/gpio-generic.c                        |   26 ++-
+ drivers/gpio/gpio-grgpio.c                         |  253 ++++++++++++++++++++
+ 5 files changed, 308 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-grgpio.txt
+ create mode 100644 drivers/gpio/gpio-grgpio.c
+
+diff --git a/Documentation/devicetree/bindings/gpio/gpio-grgpio.txt b/Documentation/devicetree/bindings/gpio/gpio-grgpio.txt
 new file mode 100644
-index 0000000..74e0476
+index 0000000..36f456f
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/memory.txt
-@@ -0,0 +1,101 @@
-+* Memory binding
++++ b/Documentation/devicetree/bindings/gpio/gpio-grgpio.txt
+@@ -0,0 +1,29 @@
++Aeroflex Gaisler GRGPIO General Purpose I/O cores.
 +
-+The /memory node provides basic information about the address and size
-+of the physical memory. This node is usually filled or updated by the
-+bootloader, depending on the actual memory configuration of the given
-+hardware.
++The GRGPIO GPIO core is available in the GRLIB VHDL IP core library.
 +
-+The memory layout is described by the folllowing node:
++Note: In the ordinary ordinary environment for the GRGPIO core, a Leon SPARC
++system, these properties are built from information in the AMBA plug&play.
 +
-+memory {
-+	reg =  <(baseaddr1) (size1)
-+		(baseaddr2) (size2)
-+		...
-+		(baseaddrN) (sizeN)>;
-+};
++Required properties:
 +
-+baseaddrX:	the base address of the defined memory bank
-+sizeX:		the size of the defined memory bank
++- name : Should be "GAISLER_GPIO" or "01_01a"
 +
-+More than one memory bank can be defined.
++- reg : Address and length of the register set for the device
 +
++- interrupts : Interrupt numbers for this device
 +
-+* Memory regions
++Optional properties:
 +
-+In /memory node one can create additional nodes describing particular
-+memory regions, usually for the special usage by various device drivers.
-+A good example are contiguous memory allocations or memory sharing with
-+other operating system on the same hardware board. Those special memory
-+regions might depend on the board configuration and devices used on the
-+target system.
++- base : The base gpio number for the core. A dynamic base is used if not
++	present
 +
-+Parameters for each memory region can be encoded into the device tree
-+wit the following convention:
++- nbits : The number of gpio lines. If not present driver assumes 32 lines.
 +
-+(name): region@(base-address) {
-+	reg = <(baseaddr) (size)>;
-+	(linux,contiguous-region);
-+	(linux,default-contiguous-region);
-+};
++- irqmap : An array with an index for each gpio line. An index is either a valid
++	index into the interrupts property array, or 0xffffffff that indicates
++	no irq for that line. Driver provides no interrupt support if not
++	present.
 +
-+name:		an name given to the defined region.
-+base-address:	the base address of the defined region.
-+size:		the size of the memory region.
-+linux,contiguous-region: property indicating that the defined memory
-+		region is used for contiguous memory allocations,
-+		Linux specific (optional)
-+linux,default-contiguous-region: property indicating that the region
-+		is the default region for all contiguous memory
-+		allocations, Linux specific (optional)
-+
-+
-+* Device nodes
-+
-+Once the regions in the /memory node are defined, they can be assigned
-+to device some device nodes for their special use. The following
-+properties are defined:
-+
-+linux,contiguous-region = <&phandle>;
-+	This property indicates that the device driver should use the
-+	memory region pointed by the given phandle.
-+
-+
-+* Example:
-+
-+This example defines a memory consisting of 4 memory banks. 2 contiguous
-+regions are defined for Linux kernel, one default of all device drivers
-+(named contig_mem, placed at 0x72000000, 64MiB) and one dedicated to the
-+framebuffer device (named display_mem, placed at 0x78000000, 16MiB). The
-+display_mem region is then assigned to fb@12300000 device for contiguous
-+memory allocation with Linux kernel drivers.
-+
-+The reason for creating a separate region for framebuffer device is to
-+match the framebuffer address of from configuration done by bootloader,
-+so once Linux kernel drivers starts, no glitches on the displayed boot
-+logo appears.
-+
-+/ {
-+	/* ... */
-+	memory {
-+		reg =  <0x40000000 0x10000000
-+			0x50000000 0x10000000
-+			0x60000000 0x10000000
-+			0x70000000 0x10000000>;
-+
-+		contig_mem: region@72000000 {
-+			linux,contiguous-region;
-+			linux,default-contiguous-region;
-+			reg = <0x72000000 0x4000000>;
-+		};
-+
-+		display_mem: region@78000000 {
-+			linux,contiguous-region;
-+			reg = <0x78000000 0x1000000>;
-+		};
-+	};
-+
-+	fb@12300000 {
-+		linux,contiguous-region = <&display_mem>;
-+		status = "okay";
-+	};
-+};
-diff --git a/arch/arm/boot/dts/skeleton.dtsi b/arch/arm/boot/dts/skeleton.dtsi
-index b41d241..f9988cd 100644
---- a/arch/arm/boot/dts/skeleton.dtsi
-+++ b/arch/arm/boot/dts/skeleton.dtsi
-@@ -9,5 +9,10 @@
- 	#size-cells = <1>;
- 	chosen { };
- 	aliases { };
--	memory { device_type = "memory"; reg = <0 0>; };
-+	memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		device_type = "memory";
-+		reg = <0 0>;
-+	};
- };
-diff --git a/drivers/base/dma-contiguous.c b/drivers/base/dma-contiguous.c
-index 085389c..5761f73 100644
---- a/drivers/base/dma-contiguous.c
-+++ b/drivers/base/dma-contiguous.c
-@@ -24,6 +24,9 @@
++For further information look in the documentation for the GLIB IP core library:
++http://www.gaisler.com/products/grlib/grip.pdf
+diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+index ab97eb8..5472778 100644
+--- a/drivers/gpio/Kconfig
++++ b/drivers/gpio/Kconfig
+@@ -309,6 +309,14 @@ config GPIO_LYNXPOINT
+ 	  driver for GPIO functionality on Intel Lynxpoint PCH chipset
+ 	  Requires ACPI device enumeration code to set up a platform device.
  
- #include <linux/memblock.h>
- #include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+#include <linux/of_platform.h>
- #include <linux/mm.h>
- #include <linux/mutex.h>
- #include <linux/page-isolation.h>
-@@ -177,6 +180,35 @@ no_mem:
- 	return ERR_PTR(ret);
++config GPIO_GRGPIO
++	tristate "Aeroflex Gaisler GRGPIO support"
++	depends on OF
++	select GPIO_GENERIC
++	help
++	  Select this to support Aeroflex Gaisler GRGPIO cores from the GRLIB
++	  VHDL IP core library.
++
+ comment "I2C GPIO expanders:"
+ 
+ config GPIO_ARIZONA
+diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+index 4398034..f3b49a2 100644
+--- a/drivers/gpio/Makefile
++++ b/drivers/gpio/Makefile
+@@ -26,6 +26,7 @@ obj-$(CONFIG_ARCH_DAVINCI)	+= gpio-davinci.o
+ obj-$(CONFIG_GPIO_EM)		+= gpio-em.o
+ obj-$(CONFIG_GPIO_EP93XX)	+= gpio-ep93xx.o
+ obj-$(CONFIG_GPIO_GE_FPGA)	+= gpio-ge.o
++obj-$(CONFIG_GPIO_GRGPIO)	+= gpio-grgpio.o
+ obj-$(CONFIG_GPIO_ICH)		+= gpio-ich.o
+ obj-$(CONFIG_GPIO_IT8761E)	+= gpio-it8761e.o
+ obj-$(CONFIG_GPIO_JANZ_TTL)	+= gpio-janz-ttl.o
+diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-generic.c
+index 05fcc0f..f854799 100644
+--- a/drivers/gpio/gpio-generic.c
++++ b/drivers/gpio/gpio-generic.c
+@@ -251,24 +251,25 @@ static int bgpio_setup_accessors(struct device *dev,
+ 				 struct bgpio_chip *bgc,
+ 				 bool be)
+ {
++	struct bgpio_chip def;
+ 
+ 	switch (bgc->bits) {
+ 	case 8:
+-		bgc->read_reg	= bgpio_read8;
+-		bgc->write_reg	= bgpio_write8;
++		def.read_reg	= bgpio_read8;
++		def.write_reg	= bgpio_write8;
+ 		break;
+ 	case 16:
+-		bgc->read_reg	= bgpio_read16;
+-		bgc->write_reg	= bgpio_write16;
++		def.read_reg	= bgpio_read16;
++		def.write_reg	= bgpio_write16;
+ 		break;
+ 	case 32:
+-		bgc->read_reg	= bgpio_read32;
+-		bgc->write_reg	= bgpio_write32;
++		def.read_reg	= bgpio_read32;
++		def.write_reg	= bgpio_write32;
+ 		break;
+ #if BITS_PER_LONG >= 64
+ 	case 64:
+-		bgc->read_reg	= bgpio_read64;
+-		bgc->write_reg	= bgpio_write64;
++		def.read_reg	= bgpio_read64;
++		def.write_reg	= bgpio_write64;
+ 		break;
+ #endif /* BITS_PER_LONG >= 64 */
+ 	default:
+@@ -276,7 +277,14 @@ static int bgpio_setup_accessors(struct device *dev,
+ 		return -EINVAL;
+ 	}
+ 
+-	bgc->pin2mask = be ? bgpio_pin2mask_be : bgpio_pin2mask;
++	def.pin2mask = be ? bgpio_pin2mask_be : bgpio_pin2mask;
++
++	if (!bgc->read_reg)
++		bgc->read_reg = def.read_reg;
++	if (!bgc->write_reg)
++		bgc->write_reg = def.write_reg;
++	if (!bgc->pin2mask)
++		bgc->pin2mask = def.pin2mask;
+ 
+ 	return 0;
  }
- 
-+/*****************************************************************************/
+diff --git a/drivers/gpio/gpio-grgpio.c b/drivers/gpio/gpio-grgpio.c
+new file mode 100644
+index 0000000..b1ec475
+--- /dev/null
++++ b/drivers/gpio/gpio-grgpio.c
+@@ -0,0 +1,253 @@
++/*
++ * Driver for Aeroflex Gaisler GRGPIO General Purpose I/O cores.
++ *
++ * 2013 (c) Aeroflex Gaisler AB
++ *
++ * This driver supports the GRGPIO GPIO core available in the GRLIB VHDL IP core
++ * library.
++ *
++ * Full documentation of the GRGPIO core can be found here:
++ * http://www.gaisler.com/products/grlib/grip.pdf
++ *
++ * See "Documentation/devicetree/bindings/gpio/gpio-grgpio.txt" for information
++ * on open firmware properties.
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms of the GNU General Public License as published by the
++ * Free Software Foundation; either version 2 of the License, or (at your
++ * option) any later version.
++ *
++ * Contributors: Andreas Larsson <andreas@gaisler.com>
++ */
 +
-+#ifdef CONFIG_OF
-+int __init cma_fdt_scan(unsigned long node, const char *uname,
-+				int depth, void *data)
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/init.h>
++#include <linux/spinlock.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/of_platform.h>
++#include <linux/of_irq.h>
++#include <linux/gpio.h>
++#include <linux/slab.h>
++#include <linux/irq.h>
++#include <linux/basic_mmio_gpio.h>
++
++#define GRGPIO_MAX_NGPIO 32
++
++struct grgpio_regs {
++	u32 data;	/* 0x00 */
++	u32 output;	/* 0x04 */
++	u32 dir;	/* 0x08 */
++	u32 imask;	/* 0x0c */
++	u32 ipol;	/* 0x10  */
++	u32 iedge;	/* 0x14 */
++	u32 bypass;	/* 0x18 */
++	u32 __reserved;	/* 0x1c */
++	u32 imap[8];	/* 0x20-0x3c */
++};
++
++struct grgpio_priv {
++	struct bgpio_chip bgc;
++	struct grgpio_regs __iomem *regs;
++
++	u32 imask;	/* irq mask shadow register */
++	s32 *irqmap;	/* maps offset to irq or -1 if no irq */
++};
++
++static unsigned long  grgpio_read_reg(void __iomem *reg)
 +{
-+	phys_addr_t base, size;
-+	unsigned long len;
-+	__be32 *prop;
++	return ioread32be(reg);
++}
 +
-+	if (strncmp(uname, "region@", 7) != 0 || depth != 2 ||
-+	    !of_get_flat_dt_prop(node, "contiguous-region", NULL))
-+		return 0;
++static void grgpio_write_reg(void __iomem *reg, unsigned long data)
++{
++	iowrite32be(data, reg);
++}
 +
-+	prop = of_get_flat_dt_prop(node, "reg", &len);
-+	if (!prop || (len != 2 * sizeof(unsigned long)))
-+		return 0;
++static inline struct grgpio_priv *grgpio_gc_to_priv(struct gpio_chip *gc)
++{
++	struct bgpio_chip *bgc = to_bgpio_chip(gc);
 +
-+	base = be32_to_cpu(prop[0]);
-+	size = be32_to_cpu(prop[1]);
++	return container_of(bgc, struct grgpio_priv, bgc);
++}
 +
-+	pr_info("Found %s, memory base %lx, size %ld MiB\n", uname,
-+		(unsigned long)base, (unsigned long)size / SZ_1M);
-+	dma_contiguous_reserve_area(size, &base, 0);
++static void grgpio_set_imask(struct grgpio_priv *priv, unsigned int offset,
++			     int val)
++{
++	struct bgpio_chip *bgc = &priv->bgc;
++	unsigned long mask = bgc->pin2mask(bgc, offset);
++	unsigned long flags;
++
++	spin_lock_irqsave(&bgc->lock, flags);
++
++	if (val)
++		priv->imask |= mask;
++	else
++		priv->imask &= ~mask;
++	bgc->write_reg(&priv->regs->imask, priv->imask);
++
++	spin_unlock_irqrestore(&bgc->lock, flags);
++}
++
++static int grgpio_to_irq(struct gpio_chip *gc, unsigned offset)
++{
++	struct grgpio_priv *priv = grgpio_gc_to_priv(gc);
++	int index;
++	int irq;
++
++	if (!priv->irqmap || offset > gc->ngpio)
++		return -ENXIO;
++
++	index = priv->irqmap[offset];
++	if (index < 0)
++		return -ENXIO;
++
++	irq = irq_of_parse_and_map(priv->bgc.gc.dev->of_node, index);
++	if (irq) {
++		/* Enable interrupt and return irq */
++		grgpio_set_imask(priv, offset, 1);
++		return irq;
++	}
++
++	return -ENXIO;
++}
++
++static void grgpio_free(struct gpio_chip *gc, unsigned offset)
++{
++	struct grgpio_priv *priv = grgpio_gc_to_priv(gc);
++	struct bgpio_chip *bgc = &priv->bgc;
++	unsigned long mask = bgc->pin2mask(bgc, offset);
++
++	if (unlikely(priv->imask & mask))
++		grgpio_set_imask(priv, offset, 0);
++}
++
++static int grgpio_probe(struct platform_device *ofdev)
++{
++	struct device_node *np = ofdev->dev.of_node;
++	struct grgpio_regs __iomem *regs;
++	struct gpio_chip *gc;
++	struct bgpio_chip *bgc;
++	struct grgpio_priv *priv;
++	struct resource *res;
++	int err;
++	int size;
++	u32 prop;
++	s32 *irqmap;
++
++	priv = devm_kzalloc(&ofdev->dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++
++	res = platform_get_resource(ofdev, IORESOURCE_MEM, 0);
++	regs = devm_request_and_ioremap(&ofdev->dev, res);
++	if (!regs) {
++		dev_err(&ofdev->dev, "Couldn't map registers\n");
++		return -EADDRNOTAVAIL;
++	}
++
++	bgc = &priv->bgc;
++	bgc->read_reg = grgpio_read_reg;
++	bgc->write_reg = grgpio_write_reg;
++	err = bgpio_init(bgc, &ofdev->dev, 4, &regs->data, &regs->output, NULL,
++			 &regs->dir, NULL, 0);
++	if (err) {
++		dev_err(&ofdev->dev, "bgpio_init() failed\n");
++		return err;
++	}
++
++	priv->regs = regs;
++	priv->imask = bgc->read_reg(&regs->imask);
++
++	gc = &bgc->gc;
++	gc->of_node = np;
++	gc->owner = THIS_MODULE;
++	gc->to_irq = grgpio_to_irq;
++	gc->free = grgpio_free;
++	gc->label = np->full_name;
++
++	err = of_property_read_u32(np, "base", &prop);
++	if (err) {
++		dev_dbg(&ofdev->dev, "No base property: use dynamic base\n");
++		gc->base = -1;
++	} else {
++		gc->base = prop;
++	}
++
++	err = of_property_read_u32(np, "nbits", &prop);
++	if (err || prop <= 0 || prop > GRGPIO_MAX_NGPIO) {
++		gc->ngpio = GRGPIO_MAX_NGPIO;
++		dev_dbg(&ofdev->dev,
++			"No or invalid nbits property: assume %d\n", gc->ngpio);
++	} else {
++		gc->ngpio = prop;
++	}
++
++	irqmap = (s32 *)of_get_property(np, "irqmap", &size);
++	if (irqmap) {
++		int i;
++
++		if (size < gc->ngpio) {
++			dev_err(&ofdev->dev,
++				"irqmap shorter than ngpio (%d < %d)\n",
++				size, gc->ngpio);
++			return -EINVAL;
++		}
++
++		priv->irqmap = devm_kzalloc(&ofdev->dev,
++					    gc->ngpio * sizeof(s32),
++					    GFP_KERNEL);
++		if (!priv->irqmap)
++			return -ENOMEM;
++
++		for (i = 0; i < gc->ngpio; i++)
++			priv->irqmap[i] = irqmap[i];
++	} else {
++		dev_dbg(&ofdev->dev, "No irqmap\n");
++	}
++
++	platform_set_drvdata(ofdev, priv);
++
++	err = gpiochip_add(gc);
++	if (err) {
++		dev_err(&ofdev->dev, "Couldn't add gpiochip\n");
++		return err;
++	}
++
++	dev_info(&ofdev->dev, "regs=0x%p, base=%d, npgio=%d\n",
++		 priv->regs, gc->base, gc->ngpio);
 +
 +	return 0;
 +}
-+#endif
 +
- /**
-  * dma_contiguous_reserve() - reserve area for contiguous memory handling
-  * @limit: End address of the reserved memory (optional, 0 for any).
-@@ -215,6 +247,9 @@ void __init dma_contiguous_reserve(phys_addr_t limit)
- 		if (dma_contiguous_reserve_area(sel_size, &base, limit) == 0)
- 			dma_contiguous_def_base = base;
- 	}
-+#ifdef CONFIG_OF
-+	of_scan_flat_dt(cma_fdt_scan, NULL);
-+#endif
- };
- 
- /**
-@@ -319,6 +354,40 @@ int __init dma_contiguous_add_device(struct device *dev, phys_addr_t base)
- 	return 0;
- }
- 
-+#ifdef CONFIG_OF
-+static void cma_assign_device_from_dt(struct device *dev)
++static int grgpio_remove(struct platform_device *ofdev)
 +{
-+	struct device_node *node;
-+	struct cma *cma;
-+	u32 value;
++	struct grgpio_priv *priv = platform_get_drvdata(ofdev);
 +
-+	node = of_parse_phandle(dev->of_node, "linux,contiguous-region", 0);
-+	if (!node)
-+		return;
-+	if (of_property_read_u32(node, "reg", &value) && !value)
-+		return;
-+	cma = cma_get_area(value);
-+	if (!cma)
-+		return;
-+
-+	dev_set_cma_area(dev, cma);
-+	pr_info("Assigned CMA region at %lx to %s device\n", (unsigned long)value, dev_name(dev));
++	return gpiochip_remove(&priv->bgc.gc);
 +}
 +
-+static int cma_device_init_notifier_call(struct notifier_block *nb,
-+					 unsigned long event, void *data)
-+{
-+	struct device *dev = data;
-+	if (event == BUS_NOTIFY_ADD_DEVICE && dev->of_node)
-+		cma_assign_device_from_dt(dev);
-+	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block cma_dev_init_nb = {
-+	.notifier_call = cma_device_init_notifier_call,
++static struct of_device_id grgpio_match[] = {
++	{.name = "GAISLER_GPIO"},
++	{.name = "01_01a"},
++	{},
 +};
-+#endif
 +
- static int __init cma_init_reserved_areas(void)
- {
- 	struct cma *cma;
-@@ -340,6 +409,9 @@ static int __init cma_init_reserved_areas(void)
- 		dev_set_cma_area(cma_maps[i].dev, cma);
- 	}
- 
-+#ifdef CONFIG_OF
-+	bus_register_notifier(&platform_bus_type, &cma_dev_init_nb);
-+#endif
- 	return 0;
- }
- core_initcall(cma_init_reserved_areas);
++MODULE_DEVICE_TABLE(of, grgpio_match);
++
++static struct platform_driver grgpio_driver = {
++	.driver = {
++		.name = "grgpio",
++		.owner = THIS_MODULE,
++		.of_match_table = grgpio_match,
++	},
++	.probe = grgpio_probe,
++	.remove = grgpio_remove,
++};
++module_platform_driver(grgpio_driver);
++
++MODULE_AUTHOR("Aeroflex Gaisler AB.");
++MODULE_DESCRIPTION("Driver for Aeroflex Gaisler GRGPIO");
++MODULE_LICENSE("GPL");
 -- 
-1.7.9.5
+1.7.0.4
