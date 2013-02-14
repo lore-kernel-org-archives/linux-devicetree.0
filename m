@@ -1,7 +1,7 @@
 From: Joachim Eastwood <manabian@gmail.com>
-Subject: [PATCH 5/5] pcmcia: at91_cf: add support for DT
-Date: Thu, 14 Feb 2013 18:42:46 +0100
-Message-ID: <1360863766-22511-6-git-send-email-manabian@gmail.com>
+Subject: [PATCH 2/5] pcmcia: at91_cf: convert to dev_ print functions
+Date: Thu, 14 Feb 2013 18:42:43 +0100
+Message-ID: <1360863766-22511-3-git-send-email-manabian@gmail.com>
 References: <1360863766-22511-1-git-send-email-manabian@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,128 +21,101 @@ To: linux@dominikbrodowski.net
 Cc: plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, linux-pcmcia@lists.infradead.org, nicolas.ferre@atmel.com, Joachim Eastwood <manabian@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Convert all pr_* functions to equivalent dev_* functions and
+drop the driver_name variable.
+
 Signed-off-by: Joachim Eastwood <manabian@gmail.com>
 ---
- .../devicetree/bindings/ata/atmel-at91_cf.txt      | 19 +++++++++
- drivers/pcmcia/Kconfig                             |  2 +-
- drivers/pcmcia/at91_cf.c                           | 45 +++++++++++++++++++++-
- 3 files changed, 64 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/atmel-at91_cf.txt
+ drivers/pcmcia/at91_cf.c | 22 ++++++++++------------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/ata/atmel-at91_cf.txt b/Documentation/devicetree/bindings/ata/atmel-at91_cf.txt
-new file mode 100644
-index 0000000..c1d22b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/atmel-at91_cf.txt
-@@ -0,0 +1,19 @@
-+Atmel AT91RM9200 CompactFlash
-+
-+Required properties:
-+- compatible : "atmel,at91rm9200-cf".
-+- reg : should specify localbus address and size used.
-+- gpios : specifies the gpio pins to control the CF device. Detect
-+  and reset gpio's are mandatory while irq and vcc gpio's are
-+  optional and may be set to 0 if not present.
-+
-+Example:
-+compact-flash@50000000 {
-+	compatible = "atmel,at91rm9200-cf";
-+	reg = <0x50000000 0x30000000>;
-+	gpios = <&pioC 13 0	/* irq */
-+		 &pioC 15 0 	/* detect */
-+		 0		/* vcc */
-+		 &pioC  5 0	/* reset */
-+		>;
-+};
-diff --git a/drivers/pcmcia/Kconfig b/drivers/pcmcia/Kconfig
-index 8fd255f..2adad5b 100644
---- a/drivers/pcmcia/Kconfig
-+++ b/drivers/pcmcia/Kconfig
-@@ -288,7 +288,7 @@ config BFIN_CFPCMCIA
- 
- config AT91_CF
- 	tristate "AT91 CompactFlash Controller"
--	depends on PCMCIA && ARCH_AT91RM9200
-+	depends on PCMCIA && ARCH_AT91
- 	help
- 	  Say Y here to support the CompactFlash controller on AT91 chips.
- 	  Or choose M to compile the driver as a module named "at91_cf".
 diff --git a/drivers/pcmcia/at91_cf.c b/drivers/pcmcia/at91_cf.c
-index bce8a64..149b95c 100644
+index 1b2c631..4eec14b 100644
 --- a/drivers/pcmcia/at91_cf.c
 +++ b/drivers/pcmcia/at91_cf.c
-@@ -20,6 +20,9 @@
- #include <linux/platform_data/atmel.h>
- #include <linux/io.h>
- #include <linux/sizes.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_gpio.h>
- 
- #include <pcmcia/ss.h>
- 
-@@ -211,6 +214,37 @@ static struct pccard_operations at91_cf_ops = {
+@@ -41,8 +41,6 @@
  
  /*--------------------------------------------------------------------------*/
  
-+#if defined(CONFIG_OF)
-+static const struct of_device_id at91_cf_dt_ids[] = {
-+	{ .compatible = "atmel,at91rm9200-cf" },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, at91_cf_dt_ids);
-+
-+static int at91_cf_dt_init(struct platform_device *pdev)
-+{
-+	struct at91_cf_data *board;
-+
-+	board = devm_kzalloc(&pdev->dev, sizeof(*board), GFP_KERNEL);
-+	if (!board)
-+		return -ENOMEM;
-+
-+	board->irq_pin = of_get_gpio(pdev->dev.of_node, 0);
-+	board->det_pin = of_get_gpio(pdev->dev.of_node, 1);
-+	board->vcc_pin = of_get_gpio(pdev->dev.of_node, 2);
-+	board->rst_pin = of_get_gpio(pdev->dev.of_node, 3);
-+
-+	pdev->dev.platform_data = board;
-+
-+	return 0;
-+}
-+#else
-+static int at91_cf_dt_init(struct platform_device *pdev)
-+{
-+	return -ENODEV;
-+}
-+#endif
-+
- static int __init at91_cf_probe(struct platform_device *pdev)
- {
- 	struct at91_cf_socket	*cf;
-@@ -218,7 +252,15 @@ static int __init at91_cf_probe(struct platform_device *pdev)
- 	struct resource		*io;
- 	int			status;
+-static const char driver_name[] = "at91_cf";
+-
+ struct at91_cf_socket {
+ 	struct pcmcia_socket	socket;
  
--	if (!board || !gpio_is_valid(board->det_pin) || !gpio_is_valid(board->rst_pin))
-+	if (!board) {
-+		status = at91_cf_dt_init(pdev);
-+		if (status)
-+			return status;
-+
-+		board = pdev->dev.platform_data;
-+	}
-+
-+	if (!gpio_is_valid(board->det_pin) || !gpio_is_valid(board->rst_pin))
- 		return -ENODEV;
+@@ -76,7 +74,7 @@ static irqreturn_t at91_cf_irq(int irq, void *_cf)
+ 		/* kick pccard as needed */
+ 		if (present != cf->present) {
+ 			cf->present = present;
+-			pr_debug("%s: card %s\n", driver_name,
++			dev_dbg(&cf->pdev->dev, "card %s\n",
+ 					present ? "present" : "gone");
+ 			pcmcia_parse_events(&cf->socket, SS_DETECT);
+ 		}
+@@ -134,8 +132,8 @@ at91_cf_set_socket(struct pcmcia_socket *sock, struct socket_state_t *s)
+ 	/* toggle reset if needed */
+ 	gpio_set_value(cf->board->rst_pin, s->flags & SS_RESET);
  
- 	io = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-@@ -360,6 +402,7 @@ static struct platform_driver at91_cf_driver = {
+-	pr_debug("%s: Vcc %d, io_irq %d, flags %04x csc %04x\n",
+-		driver_name, s->Vcc, s->io_irq, s->flags, s->csc_mask);
++	dev_dbg(&cf->pdev->dev, "Vcc %d, io_irq %d, flags %04x csc %04x\n",
++				s->Vcc, s->io_irq, s->flags, s->csc_mask);
+ 
+ 	return 0;
+ }
+@@ -171,10 +169,10 @@ static int at91_cf_set_io_map(struct pcmcia_socket *s, struct pccard_io_map *io)
+ 	 */
+ 	if (!(io->flags & (MAP_16BIT | MAP_AUTOSZ))) {
+ 		csr |= AT91_SMC_DBW_8;
+-		pr_debug("%s: 8bit i/o bus\n", driver_name);
++		dev_dbg(&cf->pdev->dev, "8bit i/o bus\n");
+ 	} else {
+ 		csr |= AT91_SMC_DBW_16;
+-		pr_debug("%s: 16bit i/o bus\n", driver_name);
++		dev_dbg(&cf->pdev->dev, "16bit i/o bus\n");
+ 	}
+ 	at91_ramc_write(0, AT91_SMC_CSR(cf->board->chipselect), csr);
+ 
+@@ -242,7 +240,7 @@ static int __init at91_cf_probe(struct platform_device *pdev)
+ 	status = gpio_request(board->det_pin, "cf_det");
+ 	if (status < 0)
+ 		goto fail0;
+-	status = request_irq(gpio_to_irq(board->det_pin), at91_cf_irq, 0, driver_name, cf);
++	status = request_irq(gpio_to_irq(board->det_pin), at91_cf_irq, 0, "at91_cf detect", cf);
+ 	if (status < 0)
+ 		goto fail00;
+ 	device_init_wakeup(&pdev->dev, 1);
+@@ -268,7 +266,7 @@ static int __init at91_cf_probe(struct platform_device *pdev)
+ 		if (status < 0)
+ 			goto fail0c;
+ 		status = request_irq(gpio_to_irq(board->irq_pin), at91_cf_irq,
+-				IRQF_SHARED, driver_name, cf);
++				IRQF_SHARED, "at91_cf", cf);
+ 		if (status < 0)
+ 			goto fail0d;
+ 		cf->socket.pci_irq = gpio_to_irq(board->irq_pin);
+@@ -284,12 +282,12 @@ static int __init at91_cf_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	/* reserve chip-select regions */
+-	if (!request_mem_region(io->start, resource_size(io), driver_name)) {
++	if (!request_mem_region(io->start, resource_size(io), "at91_cf")) {
+ 		status = -ENXIO;
+ 		goto fail1;
+ 	}
+ 
+-	pr_info("%s: irqs det #%d, io #%d\n", driver_name,
++	dev_info(&pdev->dev, "irqs det #%d, io #%d\n",
+ 		gpio_to_irq(board->det_pin), gpio_to_irq(board->irq_pin));
+ 
+ 	cf->socket.owner = THIS_MODULE;
+@@ -391,7 +389,7 @@ static int at91_cf_resume(struct platform_device *pdev)
+ 
+ static struct platform_driver at91_cf_driver = {
  	.driver = {
- 		.name		= "at91_cf",
+-		.name		= (char *) driver_name,
++		.name		= "at91_cf",
  		.owner		= THIS_MODULE,
-+		.of_match_table = of_match_ptr(at91_cf_dt_ids),
  	},
  	.remove		= __exit_p(at91_cf_remove),
- 	.suspend	= at91_cf_suspend,
 -- 
 1.8.0
