@@ -1,38 +1,55 @@
-From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 1/1] ARM: dt: add header to define tegra20 clocks
-Date: Thu, 14 Feb 2013 14:42:50 +0100
-Message-ID: <20130214.154250.475978229890081002.hdoyu@nvidia.com>
-References: <1360791198-29462-1-git-send-email-swarren@wwwdotorg.org><1360823899-17846-1-git-send-email-hdoyu@nvidia.com><20130214101220.GI3073@tbergstrom-lnx.Nvidia.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] dma: of-dma.c: fix memory leakage
+Date: Thu, 14 Feb 2013 19:12:19 +0530
+Message-ID: <20130214134219.GC29960@intel.com>
+References: <1358600805-20193-1-git-send-email-dinggnu@gmail.com>
+ <50FC6EB1.4050704@gmail.com> <20130122101053.GA2427@gmail.com>
+ <20130212174025.GB17659@intel.com>
+ <20130214101610.GA29017@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130214101220.GI3073-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130214101610.GA29017-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Cong Ding <dinggnu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote @ Thu, 14 Feb 2013 11:12:20 +0100:
-
-> On Thu, Feb 14, 2013 at 07:38:17AM +0100, Hiroshi Doyu wrote:
-> > To replace magic number in "clocks = <&tegra_car 28>;"
-> > 
+On Thu, Feb 14, 2013 at 11:16:10AM +0100, Cong Ding wrote:
+> The memory allocated to ofdma might be a leakage when error occurs.
 > 
-> But then we should probably also remove the enum tegra20_clk and replace it
-> with this header file. We should also consider removing the list of IDs from
-> the documentation and refer to the header file instead. Otherwise we will have
-> 3 places which define the same IDs and we need to be sure they stay in sync...
+> Signed-off-by: Cong Ding <dinggnu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Applied, thanks
 
-Actually I generate "arch/arm/boot/dts/tegra{20,30}-car.h" by parsing
-"enum tegra{20,30}_clk {..};" with a python script.
-
-There could be the same kind of requirement from others that both
-"dtsip" and "C-source" want to share the same header file. If we
-consider that DT is the exact H/W description, C-source should be able
-to include a DT header file.
-
-For example, a C-header file for "enum tegra{20,30}_clk" should be
-generated from "arch/arm/boot/dts/tegra{20,30}-car.h" at runtime, or
-alternatively just "drivers/clk/tegra/clk-tegra{20,30}.c" can include
-"arch/arm/boot/dts/tegra{20,30}-car.h"? The latter may be easier.
+--
+~Vinod
+> ---
+>  drivers/dma/of-dma.c |    1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+> index 59631b2..583e50e3 100644
+> --- a/drivers/dma/of-dma.c
+> +++ b/drivers/dma/of-dma.c
+> @@ -107,6 +107,7 @@ int of_dma_controller_register(struct device_node *np,
+>  	if (!nbcells) {
+>  		pr_err("%s: #dma-cells property is missing or invalid\n",
+>  		       __func__);
+> +		kfree(ofdma);
+>  		return -EINVAL;
+>  	}
+>  
+> -- 
+> 1.7.9.5
+> 
