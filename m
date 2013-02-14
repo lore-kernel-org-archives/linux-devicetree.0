@@ -1,175 +1,85 @@
-From: Joachim Eastwood <manabian@gmail.com>
-Subject: [PATCH 3/5] pcmcia: at91_cf: use devm_ functions for allocations
-Date: Thu, 14 Feb 2013 18:42:44 +0100
-Message-ID: <1360863766-22511-4-git-send-email-manabian@gmail.com>
-References: <1360863766-22511-1-git-send-email-manabian@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: Active low GPIOs (was [PATCH v1 1/4] i2c: mux: Add i2c-arbitrator
+ 'mux' driver)
+Date: Thu, 14 Feb 2013 10:48:45 -0700
+Message-ID: <511D237D.9000306@wwwdotorg.org>
+References: <CAD=FV=W7tBOHzwayT5kgtCGmvvGs8RoX7J3rTf2vHT69b4aj6g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pcmcia-bounces+glkpd-linux-pcmcia=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1360863766-22511-1-git-send-email-manabian@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-pcmcia>,
- <mailto:linux-pcmcia-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-pcmcia/>
-List-Post: <mailto:linux-pcmcia@lists.infradead.org>
-List-Help: <mailto:linux-pcmcia-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-pcmcia>,
- <mailto:linux-pcmcia-request@lists.infradead.org?subject=subscribe>
-Sender: linux-pcmcia-bounces@lists.infradead.org
-Errors-To: linux-pcmcia-bounces+glkpd-linux-pcmcia=m.gmane.org@lists.infradead.org
-To: linux@dominikbrodowski.net
-Cc: plagnioj@jcrosoft.com, devicetree-discuss@lists.ozlabs.org, linux-pcmcia@lists.infradead.org, nicolas.ferre@atmel.com, Joachim Eastwood <manabian@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAD=FV=W7tBOHzwayT5kgtCGmvvGs8RoX7J3rTf2vHT69b4aj6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Wolfram Sang <w.sang@pengutr>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Joachim Eastwood <manabian@gmail.com>
----
- drivers/pcmcia/at91_cf.c | 77 +++++++++++++++---------------------------------
- 1 file changed, 24 insertions(+), 53 deletions(-)
+On 02/14/2013 10:05 AM, Doug Anderson wrote:
+> Linus,
+> 
+> On Thu, Feb 14, 2013 at 2:01 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Thu, Feb 14, 2013 at 1:41 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>> On 02/13/2013 05:34 PM, Doug Anderson wrote:
+>>
+>>>> A little torn here.  It adds a bunch of complexity to the code to
+>>>> handle this case and there are no known or anticipated users.  I only
+>>>> wish that the GPIO polarity could be more hidden from drivers (add
+>>>> functions like gpio_assert, gpio_deassert, etc)...
+>>>
+>>> Yes, that would be nice. Alex, LinusW?
+>>
+>> OK so good point since Alex is rewriting the way the external
+>> API to GPIOs is done.
+>>
+>> So this is one of the evolutionary artifacts of the GPIO subsystem:
+>> that it has this concept of clients having to know if they want to
+>> drive the line low or high.
+...
+>> But changing it would have very drastic effects.
+>> Consider this snippet from
+>> arch/arm/boot/dts/snowball.dts:
+>>
+>> // External Micro SD slot
+>> sdi0_per1@80126000 {
+>>       arm,primecell-periphid = <0x10480180>;
+>>       max-frequency = <50000000>;
+>>       bus-width = <4>;
+>>       mmc-cap-mmc-highspeed;
+>>       vmmc-supply = <&ab8500_ldo_aux3_reg>;
+>>
+>>       cd-gpios  = <&gpio6 26 0x4>; // 218
+>>       cd-inverted;
+> 
+> We're actually kinda screwed today.  What happens if you're on a
+> Samsung SoC and you have:
+>   cd-gpios = <&gpc3 2 2 0x10003 3>;
+>   cd-inverted;
+> 
+> What _should_ we do?  I'd argue that we ought to be using
+> "gpio_is_asserted" and then keeping the existing invert logic.  This
+> is much better than today where you need to do one of:
+> * ignore the active low on this GPIO
+> * ignore the cd-inverted property
+> * manually apply _both_ of these properties.
 
-diff --git a/drivers/pcmcia/at91_cf.c b/drivers/pcmcia/at91_cf.c
-index 4eec14b..43bc342 100644
---- a/drivers/pcmcia/at91_cf.c
-+++ b/drivers/pcmcia/at91_cf.c
-@@ -227,7 +227,7 @@ static int __init at91_cf_probe(struct platform_device *pdev)
- 	if (!io)
- 		return -ENODEV;
- 
--	cf = kzalloc(sizeof *cf, GFP_KERNEL);
-+	cf = devm_kzalloc(&pdev->dev, sizeof(*cf), GFP_KERNEL);
- 	if (!cf)
- 		return -ENOMEM;
- 
-@@ -237,22 +237,25 @@ static int __init at91_cf_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, cf);
- 
- 	/* must be a GPIO; ergo must trigger on both edges */
--	status = gpio_request(board->det_pin, "cf_det");
-+	status = devm_gpio_request(&pdev->dev, board->det_pin, "cf_det");
- 	if (status < 0)
--		goto fail0;
--	status = request_irq(gpio_to_irq(board->det_pin), at91_cf_irq, 0, "at91_cf detect", cf);
-+		return status;
-+
-+	status = devm_request_irq(&pdev->dev, gpio_to_irq(board->det_pin),
-+					at91_cf_irq, 0, "at91_cf detect", cf);
- 	if (status < 0)
--		goto fail00;
-+		return status;
-+
- 	device_init_wakeup(&pdev->dev, 1);
- 
--	status = gpio_request(board->rst_pin, "cf_rst");
-+	status = devm_gpio_request(&pdev->dev, board->rst_pin, "cf_rst");
- 	if (status < 0)
- 		goto fail0a;
- 
- 	if (gpio_is_valid(board->vcc_pin)) {
--		status = gpio_request(board->vcc_pin, "cf_vcc");
-+		status = devm_gpio_request(&pdev->dev, board->vcc_pin, "cf_vcc");
- 		if (status < 0)
--			goto fail0b;
-+			goto fail0a;
- 	}
- 
- 	/*
-@@ -262,29 +265,30 @@ static int __init at91_cf_probe(struct platform_device *pdev)
- 	 * (Note:  DK board doesn't wire the IRQ pin...)
- 	 */
- 	if (gpio_is_valid(board->irq_pin)) {
--		status = gpio_request(board->irq_pin, "cf_irq");
-+		status = devm_gpio_request(&pdev->dev, board->irq_pin, "cf_irq");
- 		if (status < 0)
--			goto fail0c;
--		status = request_irq(gpio_to_irq(board->irq_pin), at91_cf_irq,
--				IRQF_SHARED, "at91_cf", cf);
-+			goto fail0a;
-+
-+		status = devm_request_irq(&pdev->dev, gpio_to_irq(board->irq_pin),
-+					at91_cf_irq, IRQF_SHARED, "at91_cf", cf);
- 		if (status < 0)
--			goto fail0d;
-+			goto fail0a;
- 		cf->socket.pci_irq = gpio_to_irq(board->irq_pin);
- 	} else
- 		cf->socket.pci_irq = nr_irqs + 1;
- 
- 	/* pcmcia layer only remaps "real" memory not iospace */
--	cf->socket.io_offset = (unsigned long)
--			ioremap(cf->phys_baseaddr + CF_IO_PHYS, SZ_2K);
-+	cf->socket.io_offset = (unsigned long) devm_ioremap(&pdev->dev,
-+					cf->phys_baseaddr + CF_IO_PHYS, SZ_2K);
- 	if (!cf->socket.io_offset) {
- 		status = -ENXIO;
--		goto fail1;
-+		goto fail0a;
- 	}
- 
- 	/* reserve chip-select regions */
--	if (!request_mem_region(io->start, resource_size(io), "at91_cf")) {
-+	if (!devm_request_mem_region(&pdev->dev, io->start, resource_size(io), "at91_cf")) {
- 		status = -ENXIO;
--		goto fail1;
-+		goto fail0a;
- 	}
- 
- 	dev_info(&pdev->dev, "irqs det #%d, io #%d\n",
-@@ -301,55 +305,22 @@ static int __init at91_cf_probe(struct platform_device *pdev)
- 
- 	status = pcmcia_register_socket(&cf->socket);
- 	if (status < 0)
--		goto fail2;
-+		goto fail0a;
- 
- 	return 0;
- 
--fail2:
--	release_mem_region(io->start, resource_size(io));
--fail1:
--	if (cf->socket.io_offset)
--		iounmap((void __iomem *) cf->socket.io_offset);
--	if (gpio_is_valid(board->irq_pin)) {
--		free_irq(gpio_to_irq(board->irq_pin), cf);
--fail0d:
--		gpio_free(board->irq_pin);
--	}
--fail0c:
--	if (gpio_is_valid(board->vcc_pin))
--		gpio_free(board->vcc_pin);
--fail0b:
--	gpio_free(board->rst_pin);
- fail0a:
- 	device_init_wakeup(&pdev->dev, 0);
--	free_irq(gpio_to_irq(board->det_pin), cf);
--fail00:
--	gpio_free(board->det_pin);
--fail0:
--	kfree(cf);
- 	return status;
- }
- 
- static int __exit at91_cf_remove(struct platform_device *pdev)
- {
- 	struct at91_cf_socket	*cf = platform_get_drvdata(pdev);
--	struct at91_cf_data	*board = cf->board;
--	struct resource		*io = cf->socket.io[0].res;
- 
- 	pcmcia_unregister_socket(&cf->socket);
--	release_mem_region(io->start, resource_size(io));
--	iounmap((void __iomem *) cf->socket.io_offset);
--	if (gpio_is_valid(board->irq_pin)) {
--		free_irq(gpio_to_irq(board->irq_pin), cf);
--		gpio_free(board->irq_pin);
--	}
--	if (gpio_is_valid(board->vcc_pin))
--		gpio_free(board->vcc_pin);
--	gpio_free(board->rst_pin);
- 	device_init_wakeup(&pdev->dev, 0);
--	free_irq(gpio_to_irq(board->det_pin), cf);
--	gpio_free(board->det_pin);
--	kfree(cf);
-+
- 	return 0;
- }
- 
--- 
-1.8.0
+This is actually why I rather dislike the idea that device tree has an
+immutable bindings. To some exten, I imagine that much of
+Documentation/stable_api_nonsense.txt could apply against device tree!
+We can't fix problems like this by changing the definition of that
+binding to remove the cd-inverted property and rely solely on the GPIO
+specifier flags.
+
+And I think it's ironic that you linked to the commit that adds the
+inverted flag to the Samsung GPIO specifier; IIRC, Samsung's previous
+lack of support for that flags was one of the reasons that a bunch of
+bindings added their own foo-inverted or foo-active-high flags, since
+not all GPIO specifiers could be relied upon to provide that information:-(
