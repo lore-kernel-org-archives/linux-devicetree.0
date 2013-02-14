@@ -1,66 +1,69 @@
-From: Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org>
-Subject: Re: [PATCH v2] gpio: mcp23s08: convert driver to DT
-Date: Thu, 14 Feb 2013 13:22:22 +0100
-Message-ID: <201302141322.22263.poeschel@lemonage.de>
-References: <1360583563-10707-1-git-send-email-larsi@wh2.tu-dresden.de>
-	<201302131213.08631.poeschel@lemonage.de>
-	<CACRpkdbJ=KiwVoeK2TgO8kMuYQ2U-LaUOdL1d7w-q+9Ggb-JnA@mail.gmail.com>
+From: Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 0/2] Device Tree support for CMA (Contiguous Memory Allocator)
+Date: Thu, 14 Feb 2013 13:45:26 +0100
+Message-ID: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <CACRpkdbJ=KiwVoeK2TgO8kMuYQ2U-LaUOdL1d7w-q+9Ggb-JnA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lars Poeschel <larsi-myOXECIRRCL4ajHJ1XSv27NAH6kLmebB@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 13 February 2013 at 13:51:12, Linus Walleij wrote:
-> On Wed, Feb 13, 2013 at 12:13 PM, Lars Poeschel <poeschel-Xtl8qvBWbHwb1SvskN2V4Q@public.gmane.org> 
-wrote:
-> > On Monday 11 February 2013 at 22:25:51, Grant Likely wrote:
-> >> However, is the pullup selection per-gpio line? If so, then why not
-> >> encode it into the flags field of the gpio specifier?
-> > 
-> > Yes, the pullup is per-gpio line. I am working on that. It turns out,
-> > that this is a bit difficult for me, as there is no real documentation
-> > and no other driver is doing it or something similar yet. Exception are
-> > very few gpio soc drivers where situation is a bit different. They seem
-> > to rely an fixed global gpio numbers and they are always memory mapped.
-> > But as I said I am working on it...
-> 
-> Part of your problem is that pull-up is pin control territory.
-> 
-> We invented that subsystem for a reason, and that reason
-> was that the GPIO subsystem had a hard time accomodating
-> things like this.
-> 
-> If you look in drivers/pinctrl/pinctrl-abx500.c which is my
-> latest submitted pinctrl driver you can see that this is basically
-> a quite simple GPIO chip, we just model it as a pin controller
-> with a GPIO front-end too exactly because it can do things
-> like multiplexing, pull-up and pull-down.
-> 
-> Have you considered this approach?
+Hello,
 
-No, I haven't. And although this doesn't solve all my problems, I like the 
-idea very much! Thank you for this! But at the moment it looks to me that 
-this could be a bit overkill for setting this single register and I don't 
-think this is, what Grant meant me to do. 
-Anyway, I will have a deeper look at this.
+Here is my initial proposal for device tree integration for Contiguous
+Memory Allocator. The code is quite straightforward, however I expect
+that the memory bindings require some discussion.
 
-Thanks,
-Lars
+The proposed bindings allows to define contiguous memory regions of
+specified base address and size. Then, the defined regions can be
+assigned to the given device(s) by adding a property with a phanle to
+the defined contiguous memory region. From the device tree perspective
+that's all. Once the bindings are added, all the memory allocations from
+dma-mapping subsystem will be served from the defined contiguous memory
+regions.
 
-------------------------------------------------------------------------------
-Free Next-Gen Firewall Hardware Offer
-Buy your Sophos next-gen firewall before the end March 2013 
-and get the hardware for free! Learn more.
-http://p.sf.net/sfu/sophos-d2d-feb
+Contiguous Memory Allocator is a framework, which lets to provide a
+large contiguous memory buffers for (usually a multimedia) devices. The
+contiguous memory is reserved during early boot and then shared with
+kernel, which is allowed to allocate it for movable pages. Then, when
+device driver requests a contigouous buffer, the framework migrates
+movable pages out of contiguous region and gives it to the driver. When
+device driver frees the buffer, it is added to kernel memory pool again.
+For more information, please refer to commit c64be2bb1c6eb43c838b2c6d57
+("drivers: add Contiguous Memory Allocator") and d484864dd96e1830e76895
+(CMA merge commit).
+
+Best regards
+Marek Szyprowski
+Samsung Poland R&D Center
+
+
+Patch summary:
+
+Marek Szyprowski (2):
+  drivers: dma-contiguous: clean source code and prepare for device
+    tree
+  drivers: dma-contiguous: add initialization from device tree
+
+ Documentation/devicetree/bindings/memory.txt |  101 ++++++++++
+ arch/arm/boot/dts/skeleton.dtsi              |    7 +-
+ drivers/base/dma-contiguous.c                |  278 +++++++++++++++++++-------
+ include/asm-generic/dma-contiguous.h         |    4 +-
+ include/linux/dma-contiguous.h               |   32 ++-
+ 5 files changed, 338 insertions(+), 84 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/memory.txt
+
+-- 
+1.7.9.5
