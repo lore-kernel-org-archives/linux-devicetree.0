@@ -1,65 +1,81 @@
-From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-Subject: Re: [RFC 1/1] ARM: omap2: gpmc: Move binding documentation to
- memory-controller
-Date: Thu, 14 Feb 2013 07:20:37 -0300
-Message-ID: <20130214102036.GB2429@localhost>
-References: <1360754003-3988-1-git-send-email-ezequiel.garcia@free-electrons.com>
- <1360754003-3988-2-git-send-email-ezequiel.garcia@free-electrons.com>
- <511BAD97.5050602@ti.com>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH V6 02/10] ASoC: SAMSUNG: Add DT support for i2s
+Date: Thu, 14 Feb 2013 11:29:24 +0100
+Message-ID: <511CBC84.6080504@samsung.com>
+References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
+ <1358509629-20471-3-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <511BAD97.5050602@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>, Tony Lindgren <tony@atomide.com>, Afzal Mohammed <afzal@ti.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, zonque@gmail.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1358509629-20471-3-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2013 at 09:13:27AM -0600, Jon Hunter wrote:
->=20
-> On 02/13/2013 05:13 AM, Ezequiel Garcia wrote:
-> > GPMC stands for General Purpose Memory Controller, and it's primari=
-ly
-> > used to handle memories such as NOR, NAND, SRAM.
-> > Note that this controller is also used to handle network controller=
-s
-> > such as smsc911x.
-> >=20
-> > This patch moves the documentation binding to memory-controllers,
-> > where it belongs.
-> >=20
-> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
-> > ---
-> >  .../ti-gpmc.txt =3D> memory-controllers/ti/gpmc.txt} |    0
-> >  1 files changed, 0 insertions(+), 0 deletions(-)
-> >  rename Documentation/devicetree/bindings/{bus/ti-gpmc.txt =3D> mem=
-ory-controllers/ti/gpmc.txt} (100%)
-> >=20
-> > diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Do=
-cumentation/devicetree/bindings/memory-controllers/ti/gpmc.txt
-> > similarity index 100%
-> > rename from Documentation/devicetree/bindings/bus/ti-gpmc.txt
-> > rename to Documentation/devicetree/bindings/memory-controllers/ti/g=
-pmc.txt
->=20
-> I am fine with that. However, make sure you CC the device-tree mailin=
-g list.
->=20
+Hi,
 
-Sorry about that. I also forgot to put Daniel Mack in CC, who added thi=
-s
-document in the first place.
+On 01/18/2013 12:47 PM, Padmavathi Venna wrote:
+> Add support for device based discovery.
+> 
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> ---
+>  .../devicetree/bindings/sound/samsung-i2s.txt      |   63 ++++++
+>  sound/soc/samsung/dma.c                            |    3 +-
+>  sound/soc/samsung/dma.h                            |    1 +
+>  sound/soc/samsung/i2s.c                            |  209 +++++++++++++++-----
+>  4 files changed, 230 insertions(+), 46 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/sound/samsung-i2s.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/samsung-i2s.txt 
+> b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+> new file mode 100644
+> index 0000000..3070046
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/samsung-i2s.txt
+> @@ -0,0 +1,63 @@
+> +* Samsung I2S controller
+> +
+...
+> +Required Board Specific Properties:
+> +
+> +- gpios: The gpio specifier for data out,data in, LRCLK, CDCLK and SCLK
+> +  interface lines. The format of the gpio specifier depends on the gpio
+> +  controller.
+> +  The syntax of samsung gpio specifier is
+> +	<[phandle of the gpio controller node]
+> +	 [pin number within the gpio controller]
+> +	 [mux function]
+> +	 [flags and pull up/down]
+> +	 [drive strength]>
 
-@Daniel: what do you think?
+I don't think there is a need to copy the gpio specifier documentation
+over to this file. Moreover this gpio specifier was supposed to be temporary,
+until pinctrl support is added. Now Exynos4 uses generic gpio specifiers
+and pinctrl for pin muxing and Exynos5 is still not converted to that,
+although I believe this wouldn't require much effort now.
 
---=20
-Ezequiel Garc=C3=ADa, Free Electrons
-Embedded Linux, Kernel and Android Engineering
-http://free-electrons.com
+> +Example:
+> +
+...
+> +- Board Specific Portion:
+> +
+> +i2s@03830000 {
+> +	gpios = <&gpz 0 2 0 0>, /* I2S_0_SCLK */
+> +		<&gpz 1 2 0 0>, /* I2S_0_CDCLK */
+> +		<&gpz 2 2 0 0>, /* I2S_0_LRCK */
+> +		<&gpz 3 2 0 0>, /* I2S_0_SDI */
+> +		<&gpz 4 2 0 0>, /* I2S_0_SDO[1] */
+> +		<&gpz 5 2 0 0>, /* I2S_0_SDO[2] */
+> +		<&gpz 6 2 0 0>; /* I2S_0_SDO[3] */
+> +};
+
+We should switch to pinctrl instead. Most of work now seems to be
+to define pinctrl nodes for each Exynos5 device, so there is proper
+pinctrl support for Exynos5.
+
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+Thanks,
+Sylwester
