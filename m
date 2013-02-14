@@ -1,55 +1,63 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] dma: of-dma.c: fix memory leakage
-Date: Thu, 14 Feb 2013 19:12:19 +0530
-Message-ID: <20130214134219.GC29960@intel.com>
-References: <1358600805-20193-1-git-send-email-dinggnu@gmail.com>
- <50FC6EB1.4050704@gmail.com> <20130122101053.GA2427@gmail.com>
- <20130212174025.GB17659@intel.com>
- <20130214101610.GA29017@gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH V4 0/4] Add generic DMA DT binding support
+Date: Thu, 14 Feb 2013 20:13:49 +0530
+Message-ID: <20130214144349.GH29960@intel.com>
+References: <1360813208-9498-1-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130214101610.GA29017-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Cong Ding <dinggnu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1360813208-9498-1-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.kvr@gmail.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, arnd@arndb.de, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, thomas.abraham@linaro.org, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2013 at 11:16:10AM +0100, Cong Ding wrote:
-> The memory allocated to ofdma might be a leakage when error occurs.
-> 
-> Signed-off-by: Cong Ding <dinggnu-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Applied, thanks
+On Thu, Feb 14, 2013 at 09:10:04AM +0530, Padmavathi Venna wrote:
+
+Logically this should have been v5 :)
+
+Applied all, thanks
 
 --
 ~Vinod
-> ---
->  drivers/dma/of-dma.c |    1 +
->  1 file changed, 1 insertion(+)
+> Changes since V3:
+>         - Make dma-cells property optional as suggested by Rob Herring
+>         - Add dma-requests and dma-channels properties to DMA controller
+>           as suggested by Arnd for future-proof
+>         - Add Acked-by for some of the patches
 > 
-> diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-> index 59631b2..583e50e3 100644
-> --- a/drivers/dma/of-dma.c
-> +++ b/drivers/dma/of-dma.c
-> @@ -107,6 +107,7 @@ int of_dma_controller_register(struct device_node *np,
->  	if (!nbcells) {
->  		pr_err("%s: #dma-cells property is missing or invalid\n",
->  		       __func__);
-> +		kfree(ofdma);
->  		return -EINVAL;
->  	}
->  
+> Changes since V2:
+>         - Add new filter function for DT case as suggested by Arnd
+>         - Add xlate as static function
+>         - Use newly added filter function in xlate.
+>         - Add Acked-by for some of the patches
+> 
+> Changes since V1:
+>         - Address the review comments by Arnd Bergmann as below
+>         - Wording of the properties.
+>         - Pass pdmac as third parameter to of_dma_controller_register
+>         - Filter the dma channel based on channel number and dma_device
+> 
+> This patch set adds support for generic dma device tree bindings for
+> Samsung platforms and is dependent on the following patches from
+> Vinod Koul next branch
+> 1)of: Add generic device tree DMA helpers
+> 2)dmaengine: add helper function to request a slave DMA channel
+> 
+> This patch set is made based on Vinod Koul next branch
+> 
+> Padmavathi Venna (4):
+>   DMA: PL330: Add new pl330 filter for DT case.
+>   DMA: PL330: Add xlate function
+>   DMA: PL330: Register the DMA controller with the generic DMA helpers
+>   ARM: dts: pl330: Add #dma-cells for generic dma binding support
+> 
+>  .../devicetree/bindings/dma/arm-pl330.txt          |   21 +++++--
+>  arch/arm/boot/dts/exynos5250.dtsi                  |   12 ++++
+>  drivers/dma/pl330.c                                |   64 +++++++++++++++----
+>  3 files changed, 78 insertions(+), 19 deletions(-)
+> 
 > -- 
-> 1.7.9.5
+> 1.7.4.4
 > 
