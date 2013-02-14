@@ -1,39 +1,65 @@
-From: Cong Ding <dinggnu@gmail.com>
-Subject: [PATCH v2] dma: of-dma.c: fix memory leakage
-Date: Thu, 14 Feb 2013 11:16:10 +0100
-Message-ID: <20130214101610.GA29017@gmail.com>
-References: <1358600805-20193-1-git-send-email-dinggnu@gmail.com>
- <50FC6EB1.4050704@gmail.com>
- <20130122101053.GA2427@gmail.com>
- <20130212174025.GB17659@intel.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [RFC 1/1] ARM: omap2: gpmc: Move binding documentation to
+ memory-controller
+Date: Thu, 14 Feb 2013 07:20:37 -0300
+Message-ID: <20130214102036.GB2429@localhost>
+References: <1360754003-3988-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1360754003-3988-2-git-send-email-ezequiel.garcia@free-electrons.com>
+ <511BAD97.5050602@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130212174025.GB17659@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Rob Herring <robherring2@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+In-Reply-To: <511BAD97.5050602@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Felipe Balbi <balbi@ti.com>, Tony Lindgren <tony@atomide.com>, Afzal Mohammed <afzal@ti.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Gregory Clement <gregory.clement@free-electrons.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, zonque@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-The memory allocated to ofdma might be a leakage when error occurs.
+On Wed, Feb 13, 2013 at 09:13:27AM -0600, Jon Hunter wrote:
+>=20
+> On 02/13/2013 05:13 AM, Ezequiel Garcia wrote:
+> > GPMC stands for General Purpose Memory Controller, and it's primari=
+ly
+> > used to handle memories such as NOR, NAND, SRAM.
+> > Note that this controller is also used to handle network controller=
+s
+> > such as smsc911x.
+> >=20
+> > This patch moves the documentation binding to memory-controllers,
+> > where it belongs.
+> >=20
+> > Signed-off-by: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+> > ---
+> >  .../ti-gpmc.txt =3D> memory-controllers/ti/gpmc.txt} |    0
+> >  1 files changed, 0 insertions(+), 0 deletions(-)
+> >  rename Documentation/devicetree/bindings/{bus/ti-gpmc.txt =3D> mem=
+ory-controllers/ti/gpmc.txt} (100%)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/bus/ti-gpmc.txt b/Do=
+cumentation/devicetree/bindings/memory-controllers/ti/gpmc.txt
+> > similarity index 100%
+> > rename from Documentation/devicetree/bindings/bus/ti-gpmc.txt
+> > rename to Documentation/devicetree/bindings/memory-controllers/ti/g=
+pmc.txt
+>=20
+> I am fine with that. However, make sure you CC the device-tree mailin=
+g list.
+>=20
 
-Signed-off-by: Cong Ding <dinggnu@gmail.com>
----
- drivers/dma/of-dma.c |    1 +
- 1 file changed, 1 insertion(+)
+Sorry about that. I also forgot to put Daniel Mack in CC, who added thi=
+s
+document in the first place.
 
-diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
-index 59631b2..583e50e3 100644
---- a/drivers/dma/of-dma.c
-+++ b/drivers/dma/of-dma.c
-@@ -107,6 +107,7 @@ int of_dma_controller_register(struct device_node *np,
- 	if (!nbcells) {
- 		pr_err("%s: #dma-cells property is missing or invalid\n",
- 		       __func__);
-+		kfree(ofdma);
- 		return -EINVAL;
- 	}
- 
--- 
-1.7.9.5
+@Daniel: what do you think?
+
+--=20
+Ezequiel Garc=C3=ADa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
