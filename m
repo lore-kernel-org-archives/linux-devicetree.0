@@ -1,84 +1,118 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: Active low GPIOs (was [PATCH v1 1/4] i2c: mux: Add
- i2c-arbitrator 'mux' driver)
-Date: Thu, 14 Feb 2013 18:07:24 +0000
-Message-ID: <20130214180724.GV13249@opensource.wolfsonmicro.com>
-References: <CAD=FV=W7tBOHzwayT5kgtCGmvvGs8RoX7J3rTf2vHT69b4aj6g@mail.gmail.com>
- <511D237D.9000306@wwwdotorg.org>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH] mfd: stmpe: Pull IRQ GPIO number from DT during DT-based probe
+Date: Thu, 14 Feb 2013 17:26:15 +0100
+Message-ID: <201302141726.16044.marex@denx.de>
+References: <1357568989-16237-1-git-send-email-marex@denx.de> <CACRpkdZWi4M3HmO_rq1O9aGTKYR0iMLXJo+nos3hYu3C_DFRHQ@mail.gmail.com> <20130208225151.4BF8C3E2C27@localhost>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2921320274253472052=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <511D237D.9000306-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Korsgaard <peter.korsgaard@barco.c>
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <20130208225151.4BF8C3E2C27@localhost>
+Sender: linux-input-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Lee Jones <lee.jones@linaro.org>, devicetree-discuss@lists.ozlabs.org, vipul kumar samar <vipulkumar.samar@st.com>, Samuel Ortiz <sameo@linux.intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Dear Grant Likely,
 
---===============2921320274253472052==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="G9m07da55tKJni3T"
-Content-Disposition: inline
+> On Thu, 10 Jan 2013 12:42:53 +0100, Linus Walleij <linus.walleij@linaro.org> 
+wrote:
+> > On Tue, Jan 8, 2013 at 12:14 PM, Viresh Kumar <viresh.kumar@linaro.org> 
+wrote:
+> > > On 8 January 2013 16:41, Lee Jones <lee.jones@linaro.org> wrote:
+> > >>> Hmm.. I tried a bit, but couldn't find any such call :(
+> > >>> Probably an assumption is taken here. GPIO pins which are going to be
+> > >>> used as interrupt lines, wouldn't be getting set in output mode at
+> > >>> all. So, once they are put
+> > >>> in input mode in beginning, nobody would change it ever.
+> > >>> 
+> > >>> Much of gpio controllers configure gpio pins in input mode in their
+> > >>> probe().
+> > >>> 
+> > >>> Maybe, there is something else :)
+> > >> 
+> > >> Pinctrl?
+> > > 
+> > > I don't think pinctrl is playing with it. I searched for
+> > > "direction_input" string and
+> > > pinctrl routine also had similar name. I couldn't fine use of
+> > > direction_input anywhere
+> > > in kernel, for setting them as irqs for OF cases.
+> > 
+> > pinctrl has pinctrl_gpio_direction_input() and
+> > pinctrl_gpio_direction_output() which are supposed to
+> > be called *only* by GPIOlib frontends using pinctrl
+> > as backend to control the pins.
+> > 
+> > But if it's a pinctrl driver using standard pinconfig from
+> > include/linux/pinctrl/pinconf-generic.h
+> > I'm all for adding a PIN_CONFIG_INPUT_ENABLE
+> > to these definintions so it can be set up as input
+> > at boot from the device tree using hogs or something,
+> > that make things easy when using GPIOs as IRQ
+> > providers only.
+> > 
+> > So the alternative is to just set up the IRQ using the
+> > gpiolib functions for this: of_get_gpio() if you need the
+> > number from DT, then gpio_request() and
+> > gpio_direction_input() as on any GPIO. This can be
+> > done in the device driver or board code depending
+> > on use case.
+> > 
+> > In the Nomadik I did this (maybe ugly) hack for a
+> > similar case:
+> > 
+> > +/*
+> > + * The SMSC911x IRQ is connected to a GPIO pin, but the driver expects
+> > + * to simply request an IRQ passed as a resource. So the GPIO pin needs
+> > + * to be requested by this hog and set as input.
+> > + */
+> > +static int __init cpu8815_eth_init(void)
+> > +{
+> > +       struct device_node *eth;
+> > +       int gpio, irq, err;
+> > +
+> > +       eth =
+> > of_find_node_by_path("/external-bus@34000000/ethernet@300"); +       if
+> > (!eth) {
+> > +               pr_info("could not find any ethernet controller\n");
+> > +               return 0;
+> > +       }
+> > +       gpio = of_get_gpio(eth, 0);
+> > +       err = gpio_request(gpio, "eth_irq");
+> > +       if (err) {
+> > +               pr_info("failed to request ethernet GPIO\n");
+> > +               return -ENODEV;
+> > +       }
+> > +       err = gpio_direction_input(gpio);
+> > +       if (err) {
+> > +               pr_info("failed to set ehernet GPIO as input\n");
+> > +               return -ENODEV;
+> > +       }
+> > +       irq = gpio_to_irq(gpio);
+> > +       pr_info("enabled ethernet GPIO %d, IRQ %d\n", gpio, irq);
+> > +       return 0;
+> > +}
+> > +device_initcall(cpu8815_eth_init);
+> > 
+> > I haven't read review comments on that patch.
+> > 
+> > Maybe it's not such a good idea to add the GPIO to the device itself
+> > when it's being hogged by board code like this. It's a bit of a grey area
+> > so I'm a bit confused here.
+> > 
+> > Maybe the GPIO lib actually needs a "hog" mechanism that can
+> > request and set GPIO pins as input/output on boot and then
+> > forget about them.
+> 
+> That would be reasonable. Probably as properties in the gpio controller
+> node that specify how to set the inital state.
 
+Looks good.
 
---G9m07da55tKJni3T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+btw. I have a feeling this stmpe touchscreen driver has a few more issues, but 
+I'll need to investigate before I jump to any conclusion.
 
-On Thu, Feb 14, 2013 at 10:48:45AM -0700, Stephen Warren wrote:
-
-> This is actually why I rather dislike the idea that device tree has an
-> immutable bindings. To some exten, I imagine that much of
-> Documentation/stable_api_nonsense.txt could apply against device tree!
-> We can't fix problems like this by changing the definition of that
-> binding to remove the cd-inverted property and rely solely on the GPIO
-> specifier flags.
-
-OTOH if you do that you've not really changed things from where we were
-with platform data...
-
---G9m07da55tKJni3T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRHSfTAAoJELSic+t+oim99oAQAIDumZMDJ3yyMijhxO7uYFyh
-mQJfCA585114o/8kLfcuhLtNRIAYNwMRJv9qWn7zV/tjjp76AQIHdWiwo2OR0Lss
-Khk7RtMWEADpLRhEs40SEe/9VfJhpSZeRtHGLYmchALZV9Q5WGsdfaaCZ26+ZHgW
-mFmn6VT/LvQRq89KKy6+t05HLHIECH0zW5MQuct9CH8NkJ+hYWkUvneBajCw6sLo
-Dyn94M2JSF1STQ9aMvJSuIvc+2Boo2qH4XC4a9ge5bSWYj8/e4KfChLvcunZAMDu
-ye3p7XLKVctYD98KAfbjMRCIBEMvj3myFx9kGkF1yyjOIZWuSJOvCTcUd3wrKzqz
-YGqNqENYf2vK5I6wM2JfCek5uxtDjshRrEuz7e6sQzf+2x8pZVazHT29Nzt+RDZ4
-naGNTSCiuLcQt0JzkWlpx5SJO/zogfBfvfZYL6JeiGiBLCKCcNw0+XhTNO5Yx9XD
-HzDJZm3VLTzniUaXezX/3pXwYqWVVjCOOzNy20qCpDXwa4eQgqDaFGFi+RZoe2eV
-Lcaaxhs5oSruxhQDOGiLmksvMCCpsf8t0aLnFaIUQkT9DEfuSkVT0cXQBA6qouAQ
-WLR1ZJtceqC4g+yzg+rvoCAfIgo1CAeW2dizIjiAovL/MU9kqwdhEMd+EW/+1WZS
-a9YBMsvjw2KzFVAwB6bn
-=sjyp
------END PGP SIGNATURE-----
-
---G9m07da55tKJni3T--
-
---===============2921320274253472052==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============2921320274253472052==--
+Best regards,
+Marek Vasut
