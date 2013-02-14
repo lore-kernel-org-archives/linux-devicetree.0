@@ -1,87 +1,72 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v4 02/10] s5p-fimc: Add device tree support for FIMC devices
-Date: Fri, 15 Feb 2013 00:03:42 +0100
-Message-ID: <511D6D4E.9040201@gmail.com>
-References: <1359745771-23684-1-git-send-email-s.nawrocki@samsung.com> <1359745771-23684-3-git-send-email-s.nawrocki@samsung.com> <5112E9EF.8090908@wwwdotorg.org> <5115874A.6050406@gmail.com> <51158873.3060508@wwwdotorg.org> <511592B4.5050406@gmail.com> <5115991E.7050009@wwwdotorg.org> <5116CDBB.4080807@gmail.com> <511967AC.7030909@wwwdotorg.org> <511AC4A7.7030706@gmail.com> <511BFAAC.6020008@wwwdotorg.org>
+From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Subject: Re: [PATCHi v2] net: sh_eth: Add support of device tree probe
+Date: Fri, 15 Feb 2013 08:07:13 +0900
+Message-ID: <CABMQnVLVW1fbmZSsZeshB8=NgyYLK67Lv9xydLeQmDLdM8FrmA@mail.gmail.com>
+References: <1360803091-26400-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
+ <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <511BFAAC.6020008@wwwdotorg.org>
-Sender: linux-media-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-media@vger.kernel.org, kyungmin.park@samsung.com, kgene.kim@samsung.com, rob.herring@calxeda.com, prabhakar.lad@ti.com, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-On 02/13/2013 09:42 PM, Stephen Warren wrote:
-> On 02/12/2013 03:39 PM, Sylwester Nawrocki wrote:
-[...]
->> The whole subsystem topology is exposed to user space through the Media
->> Controller API.
+On Thu, Feb 14, 2013 at 10:24 AM, Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
 >
-> OK, stable user-visible names are a reasonable use for device tree. I
-> still don't think you should use those user-visible IDs for making any
-> other kind of decision though.
-
-OK, I will update the bindings so all variant details are placed in the
-device tree. Then the routing information would mostly be coming from the
-device specific dt properties/the common media bindings and the state of
-links between the media entities, set by the user.
-
->> It's a bit simpler than that. We would need only to look for the reg
->> property in a local port subnode. MIPI-CSIS correspond to physical MIPI
->> CSI-2 bus interface of an SoC, hence it has to have specific reg values
->> that identify each camera input interface.
+> Hi Iwamatsu-san
 >
-> Oh I see. I guess if a device is using its own node to determine its own
-> identify, that's reasonable.
-
-OK, I'm going to post an updated patch series in a week or two.
-
-> I thought you were talking about a situation like:
+> Thank you for this patch.
 >
-> FIMC <--> XXX
+> Small comment from me
 >
-> where FIMC wanted to determine what ID XXX knew that particular FIMC as.
-
-Ah, no. Sorry for the poor explanation. FIMC are on a sort if interconnect
-bus and they can be attached to a single data source, even in parallel,
-and the data source entity don't even need to be fully aware of it.
-
->>>> I can see aliases used in bindings of multiple devices: uart, spi, sound
->>>> interfaces, gpio, ... And all bindings seem to impose some rules on how
->>>> their aliases are created.
->>>
->>> Do you have specific examples? I really don't think the bindings should
->>> be dictating the alias values.
->>
->> I just grepped through the existing bindings documentation:
+>> +#ifdef CONFIG_OF
+> (snip)
+>> +sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
+>> +{
+>> +     int ret;
+>> +     struct device_node *np = dev->of_node;
+>> +     struct sh_eth_plat_data *pdata;
 > ...
->> I think "correctly numbered" in the above statements means there are some
->> specific rules on how the aliases are created, however those seem not
->> clearly communicated.
+>> +#else
+>> +static struct sh_eth_plat_data *
+>> +sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
+>> +{
+>> +     return NULL;
+>> +}
+>> +#endif
 >
-> A binding specifying that an alias must (or even should) exist for each
-> node seems odd to me. In the absence of an explicit rule for how to
-> determine the alias IDs to use, I think the rule would simply be that
-> the aliases must be unique?
-
-I guess so. Inspecting of_alias_get_id() call sites tells us that most 
-drivers
-just fail when alias is not present and only rarely it is not treated as an
-error condition.
-
->> And there is a new patch series that allows I2C bus controller enumeration
->> by means of the aliases:
->>
->> http://www.spinics.net/lists/arm-kernel/msg224162.html
+> (snip)
 >
-> That's not enumerating controllers by alias (they're still enumerated by
-> scanning the DT nodes for buses in the normal way). The change simply
-> assigns the bus ID of each controller from an alias; exactly what
-> aliases are for.
+>>  static int sh_eth_drv_probe(struct platform_device *pdev)
+>>  {
+> ...
+>> +#ifdef CONFIG_OF
+>> +     if (np && of_device_is_available(np)) {
+>> +             pd = sh_eth_parse_dt(&pdev->dev, ndev);
+>> +             if (pdev->dev.platform_data) {
+>> +                     struct sh_eth_plat_data *tmp =
+>> +                             pdev->dev.platform_data;
+>> +                     pd->set_mdio_gate = tmp->set_mdio_gate;
+>> +                     pd->needs_init = tmp->needs_init;
+>> +             }
+>> +     } else
+>> +#endif
+>
+> sh_eth_parse_dt() was defined for both CO NFIG_OF and !CONFIG_OF.
+> But it is called only from CONFIG_OF ?
+>
+Because of_device_is_available depennds CONFIG_OF.
+I already send a patch which add empty fuction of of_device_is_available.
+If this was applied, your point does not need.
 
-OK, that clarifies a bit my understanding of the aliases.
+OK, I erase empty sh_eth_parse_dt, and if a patch is applied, I will
+update this.
 
-Thanks,
-Sylwester
+Regards,
+ Nobuhiro
+
+-- 
+Nobuhiro Iwamatsu
