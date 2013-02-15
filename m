@@ -1,7 +1,7 @@
 From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2 2/3] Add fdtgrep to grep and subset FDTs
-Date: Fri, 15 Feb 2013 14:49:37 -0800
-Message-ID: <1360968578-18443-3-git-send-email-sjg@chromium.org>
+Subject: [PATCH v2 1/3] libfdt: Add function to find regions in an FDT
+Date: Fri, 15 Feb 2013 14:49:36 -0800
+Message-ID: <1360968578-18443-2-git-send-email-sjg@chromium.org>
 References: <1360968578-18443-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,1381 +22,1122 @@ To: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
 Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-fdtgrep operates like a grep for device trees, working on binary .dtb
-files.
+Given a set of nodes and properties, find the regions of the device tree
+which describe those parts.
 
-fdtgrep can find nodes by name or compatible string. It can find properties
-by name. Using a list of of nodes/properties/compatible strings to match,
-fdtgrep creates either .dts text output containing just those matches, or
-.dtb output. In the .dtb case, the output is a valid FDT which only includes
-the selected nodes/properties. This is useful in resource-constrained systems
-where a full FDT is too large to fit in available memory (e.g. U-Boot SPL).
+A test is provided which builds a tree while tracking where the regions
+should be, then calls fdt_first/next_region() to make sure that it agrees.
 
-fdtgrep also supports producing raw binary output, without the normal FDT
-headers. This can be useful for hashing part of an FDT and making sure that
-that part does not change, even if other parts do. This makes it possible to
-detect an important change, while ignoring a change that is of no interest.
-
-At its simplest fdtgrep can be used as follows;
-
-   fdtgrep /holiday tests/grep.dtb
-
-and it produces just that node (with a skeleton to hold it):
-
-/ {
-    holiday {
-        compatible = "ixtapa", "mexico";
-        weather = "sunny";
-        status = "okay";
-    };
-};
-
-The binary form of this is:
-
-   fdtgrep -n /holiday -O dtb tests/grep.dtb
-
-which produces a valid DTB file with just the above nodes.
-
-Various options are provided to search for properties, to ensure that
-nodes/properties are not present, and to search for nodes by compatible
-string.
+Further tests will come as part of fdtgrep.
 
 Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 ---
 Changes in v2:
-- Add local fdt_find_regions() function since libfdt no longer has it
+- Move region code to separate fdt_region.c file
+- Fix info->count <= info->max_regions in fdt_add_region() merge case
+- Add new FDT_ERR_TOODEEP error type and use it
+- Change returned error from BADLAYOUT to BADSTRUCTURE
+- Return FDT_ERR_BADLAYOUT error if strings block is before structure block
+- Add note that changes in node/property order can cause false hash misses
+- Add more comments about the -1 return value from h_include
+- Drop FDT_IS_COMPAT and pass node offset to h_include function
+- Drop stale comment about names / wildcards
+- Move to a model with fdt_first_region()/fdt_next_region()
+- Add long comment explaining theory of operation
 
- .gitignore         |   1 +
- Makefile           |   4 +
- Makefile.utils     |   7 +
- fdtgrep.c          | 838 +++++++++++++++++++++++++++++++++++++++++++++++++++++
- tests/grep.dts     |  23 ++
- tests/run_tests.sh | 348 +++++++++++++++++++++-
- tests/tests.sh     |   1 +
- 7 files changed, 1221 insertions(+), 1 deletion(-)
- create mode 100644 fdtgrep.c
- create mode 100644 tests/grep.dts
+ libfdt/Makefile.libfdt |   3 +-
+ libfdt/fdt_region.c    | 452 +++++++++++++++++++++++++++++++++++++++++++++++++
+ libfdt/libfdt.h        | 213 ++++++++++++++++++++++-
+ tests/.gitignore       |   1 +
+ tests/Makefile.tests   |   3 +-
+ tests/region_tree.c    | 336 ++++++++++++++++++++++++++++++++++++
+ tests/run_tests.sh     |   5 +
+ 7 files changed, 1010 insertions(+), 3 deletions(-)
+ create mode 100644 libfdt/fdt_region.c
+ create mode 100644 tests/region_tree.c
 
-diff --git a/.gitignore b/.gitignore
-index 545b899..9d3a550 100644
---- a/.gitignore
-+++ b/.gitignore
-@@ -12,6 +12,7 @@ lex.yy.c
- /convert-dtsv0
- /version_gen.h
- /fdtget
-+/fdtgrep
- /fdtput
- /patches
- /.pc
-diff --git a/Makefile b/Makefile
-index 1169e6c..96e0488 100644
---- a/Makefile
-+++ b/Makefile
-@@ -112,6 +112,7 @@ BIN += dtc
- BIN += fdtdump
- BIN += fdtget
- BIN += fdtput
-+BIN += fdtgrep
- 
- SCRIPTS = dtdiff
- 
-@@ -124,6 +125,7 @@ ifneq ($(DEPTARGETS),)
- -include $(FDTDUMP_OBJS:%.o=%.d)
- -include $(FDTGET_OBJS:%.o=%.d)
- -include $(FDTPUT_OBJS:%.o=%.d)
-+-include $(FDTGREP_OBJS:%.o=%.d)
- endif
- 
- 
-@@ -188,6 +190,7 @@ fdtget:	$(FDTGET_OBJS) $(LIBFDT_archive)
- 
- fdtput:	$(FDTPUT_OBJS) $(LIBFDT_archive)
- 
-+fdtgrep:	$(FDTGREP_OBJS) $(LIBFDT_archive)
- 
- #
- # Testsuite rules
-@@ -198,6 +201,7 @@ TESTS_BIN += dtc
- TESTS_BIN += convert-dtsv0
- TESTS_BIN += fdtput
- TESTS_BIN += fdtget
-+TESTS_BIN += fdtgrep
- 
- include tests/Makefile.tests
- 
-diff --git a/Makefile.utils b/Makefile.utils
-index 48ece49..f2a7001 100644
---- a/Makefile.utils
-+++ b/Makefile.utils
-@@ -22,3 +22,10 @@ FDTPUT_SRCS = \
- 	util.c
- 
- FDTPUT_OBJS = $(FDTPUT_SRCS:%.c=%.o)
-+
-+
-+FDTGREP_SRCS = \
-+	fdtgrep.c \
-+	util.c
-+
-+FDTGREP_OBJS = $(FDTGREP_SRCS:%.c=%.o)
-diff --git a/fdtgrep.c b/fdtgrep.c
+diff --git a/libfdt/Makefile.libfdt b/libfdt/Makefile.libfdt
+index 91126c0..84769a4 100644
+--- a/libfdt/Makefile.libfdt
++++ b/libfdt/Makefile.libfdt
+@@ -6,5 +6,6 @@
+ LIBFDT_soname = libfdt.$(SHAREDLIB_EXT).1
+ LIBFDT_INCLUDES = fdt.h libfdt.h libfdt_env.h
+ LIBFDT_VERSION = version.lds
+-LIBFDT_SRCS = fdt.c fdt_ro.c fdt_wip.c fdt_sw.c fdt_rw.c fdt_strerror.c fdt_empty_tree.c
++LIBFDT_SRCS = fdt.c fdt_ro.c fdt_wip.c fdt_sw.c fdt_region.c
++LIBFDT_SRCS += fdt_rw.c fdt_strerror.c fdt_empty_tree.c
+ LIBFDT_OBJS = $(LIBFDT_SRCS:%.c=%.o)
+diff --git a/libfdt/fdt_region.c b/libfdt/fdt_region.c
 new file mode 100644
-index 0000000..91f8a6f
+index 0000000..a830526
 --- /dev/null
-+++ b/fdtgrep.c
-@@ -0,0 +1,838 @@
++++ b/libfdt/fdt_region.c
+@@ -0,0 +1,452 @@
 +/*
-+ * Copyright (c) 2013, Google Inc.
++ * libfdt - Flat Device Tree manipulation
++ * Copyright (C) 2013 Google, Inc
 + *
-+ * Perform a grep of an FDT either displaying the source subset or producing
-+ * a new .dtb subset which can be used as required.
++ * libfdt is dual licensed: you can use it either under the terms of
++ * the GPL, or the BSD license, at your option.
 + *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License as
-+ * published by the Free Software Foundation; either version 2 of
-+ * the License, or (at your option) any later version.
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
 + *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
 + *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 59 Temple Place, Suite 330, Boston,
-+ * MA 02111-1307 USA
++ *     You should have received a copy of the GNU General Public
++ *     License along with this library; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Alternatively,
++ *
++ *  b) Redistribution and use in source and binary forms, with or
++ *     without modification, are permitted provided that the following
++ *     conditions are met:
++ *
++ *     1. Redistributions of source code must retain the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer.
++ *     2. Redistributions in binary form must reproduce the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer in the documentation and/or other materials
++ *        provided with the distribution.
++ *
++ *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
++ *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
++ *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++ *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
++ *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++ *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
++ *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
++ *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 + */
 +
-+#include <assert.h>
-+#include <ctype.h>
-+#include <getopt.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <unistd.h>
++#include "libfdt_env.h"
 +
++#include <fdt.h>
 +#include <libfdt.h>
-+#include <libfdt_internal.h>
-+#include "util.h"
 +
-+/* Define DEBUG to get some debugging output on stderr */
-+#ifdef DEBUG
-+#define debug(a, b...) fprintf(stderr, a, ## b)
-+#else
-+#define debug(a, b...)
-+#endif
-+
-+/* A linked list of values we are grepping for */
-+struct value_node {
-+	int type;		/* Types this value matches (FDT_IS... mask) */
-+	int include;		/* 1 to include matches, 0 to exclude */
-+	const char *string;	/* String to match */
-+	struct value_node *next;	/* Pointer to next node, or NULL */
-+};
-+
-+/* Output formats we support */
-+enum output_t {
-+	OUT_DTS,		/* Device tree source */
-+	OUT_DTB,		/* Valid device tree binary */
-+	OUT_BIN,		/* Fragment of .dtb, for hashing */
-+};
-+
-+/* Holds information which controls our output and options */
-+struct display_info {
-+	enum output_t output;	/* Output format */
-+	int all;		/* Display all properties/nodes */
-+	int colour;		/* Display output in ANSI colour */
-+	int region_list;	/* Output a region list */
-+	int flags;		/* Flags (FDT_REG_...) */
-+	int list_strings;	/* List strings in string table */
-+	int show_offset;	/* Show address / offset */
-+	int header;		/* Output an FDT header */
-+	int diff;		/* Show +/- diff markers */
-+	int show_dts_version;	/* Put '/dts-v1/;' on the first line */
-+	int types_inc;		/* Mask of types that we include (FDT_IS...) */
-+	int types_exc;		/* Mask of types that we exclude (FDT_IS...) */
-+	int invert;		/* Invert polarity of match */
-+	struct value_node *value_head;	/* List of values to match */
-+	const char *output_fname;	/* Output filename */
-+	FILE *fout;		/* File to write dts/dtb output */
-+};
-+
-+static void report_error(const char *where, int err)
-+{
-+	fprintf(stderr, "Error at '%s': %s\n", where, fdt_strerror(err));
-+}
-+
-+/* Supported ANSI colours */
-+enum {
-+	COL_BLACK,
-+	COL_RED,
-+	COL_GREEN,
-+	COL_YELLOW,
-+	COL_BLUE,
-+	COL_MAGENTA,
-+	COL_CYAN,
-+	COL_WHITE,
-+
-+	COL_NONE = -1,
-+};
++#include "libfdt_internal.h"
 +
 +/**
-+ * print_ansi_colour() - Print out the ANSI sequence for a colour
++ * fdt_add_region() - Add a new region to our list
 + *
-+ * @fout:	Output file
-+ * @col:	Colour to output (COL_...), or COL_NONE to reset colour
-+ */
-+static void print_ansi_colour(FILE *fout, int col)
-+{
-+	if (col == COL_NONE)
-+		fprintf(fout, "\033[0m");
-+	else
-+		fprintf(fout, "\033[1;%dm", col + 30);
-+}
-+
-+
-+/**
-+ * value_add() - Add a new value to our list of things to grep for
++ * The region is added if there is space, but in any case we increment the
++ * count. If permitted, and the new region overlaps the last one, we merge
++ * them.
 + *
-+ * @disp:	Display structure, holding info about our options
-+ * @headp:	Pointer to header pointer of list
-+ * @type:	Type of this value (FDT_IS_...)
-+ * @include:	1 if we want to include matches, 0 to exclude
-+ * @str:	String value to match
++ * @info: State information
++ * @offset: Start offset of region
++ * @size: Size of region
 + */
-+static int value_add(struct display_info *disp, struct value_node **headp,
-+		     int type, int include, const char *str)
++static int fdt_add_region(struct fdt_region_state *info, int offset, int size)
 +{
-+	struct value_node *node;
++	struct fdt_region *reg = &info->region[info->count - 1];
 +
-+	/*
-+	 * Keep track of which types we are excluding/including. We don't
-+	 * allow both including and excluding things, because it doesn't make
-+	 * sense. 'Including' means that everything not mentioned is
-+	 * excluded. 'Excluding' means that everything not mentioned is
-+	 * included. So using the two together would be meaningless.
-+	 */
-+	if (include)
-+		disp->types_inc |= type;
-+	else
-+		disp->types_exc |= type;
-+	if (disp->types_inc & disp->types_exc & type) {
-+		fprintf(stderr, "Cannot use both include and exclude"
-+			" for '%s'\n", str);
++	if (info->can_merge && info->count &&
++			info->count <= info->max_regions &&
++			offset <= reg->offset + reg->size) {
++		reg->size = offset + size - reg->offset;
++	} else if (info->count++ < info->max_regions) {
++		reg++;
++		reg->offset = offset;
++		reg->size = size;
++	} else {
 +		return -1;
 +	}
-+
-+	str = strdup(str);
-+	node = malloc(sizeof(*node));
-+	if (!str || !node) {
-+		fprintf(stderr, "Out of memory\n");
-+		return -1;
-+	}
-+	node->next = *headp;
-+	node->type = type;
-+	node->include = include;
-+	node->string = str;
-+	*headp = node;
 +
 +	return 0;
 +}
 +
 +/**
-+ * display_fdt_by_regions() - Display regions of an FDT source
++ * fdt_include_supernodes() - Include supernodes required by this node
 + *
-+ * This dumps an FDT as source, but only certain regions of it. This is the
-+ * final stage of the grep - we have a list of regions we want to display,
-+ * and this function displays them.
++ * When we decided to include a node or property which is not at the top
++ * level, this function forces the inclusion of higher level nodes. For
++ * example, given this tree:
 + *
-+ * @disp:	Display structure, holding info about our options
-+ * @blob:	FDT blob to display
-+ * @region:	List of regions to display
-+ * @count:	Number of regions
++ * / {
++ *     testing {
++ *     }
++ * }
++ *
++ * If we decide to include testing then we need the root node to have a valid
++ * tree. This function adds those regions.
++ *
++ * @info: State information
++ * @depth: Current stack depth
 + */
-+static int display_fdt_by_regions(struct display_info *disp, const void *blob,
-+		struct fdt_region region[], int count)
++static int fdt_include_supernodes(struct fdt_region_state *info, int depth)
 +{
-+	struct fdt_region *reg = region, *reg_end = region + count;
-+	uint32_t off_mem_rsvmap = fdt_off_mem_rsvmap(blob);
-+	int base = fdt_off_dt_struct(blob);
-+	int version = fdt_version(blob);
-+	int offset, nextoffset;
-+	int tag, depth, shift;
-+	FILE *f = disp->fout;
-+	uint64_t addr, size;
-+	int in_region;
-+	int file_ofs;
++	int base = fdt_off_dt_struct(info->fdt);
++	int start, stop_at;
 +	int i;
 +
-+	if (disp->show_dts_version)
-+		fprintf(f, "/dts-v1/;\n");
++	/*
++	 * Work down the stack looking for supernodes that we didn't include.
++	 * The algortihm here is actually pretty simple, since we know that
++	 * no previous subnode had to include these nodes, or if it did, we
++	 * marked them as included (on the stack) already.
++	 */
++	for (i = 0; i <= depth; i++) {
++		if (!info->stack[i].included) {
++			start = info->stack[i].offset;
 +
-+	if (disp->header) {
-+		fprintf(f, "// magic:\t\t0x%x\n", fdt_magic(blob));
-+		fprintf(f, "// totalsize:\t\t0x%x (%d)\n", fdt_totalsize(blob),
-+		       fdt_totalsize(blob));
-+		fprintf(f, "// off_dt_struct:\t0x%x\n",
-+			fdt_off_dt_struct(blob));
-+		fprintf(f, "// off_dt_strings:\t0x%x\n",
-+			fdt_off_dt_strings(blob));
-+		fprintf(f, "// off_mem_rsvmap:\t0x%x\n", off_mem_rsvmap);
-+		fprintf(f, "// version:\t\t%d\n", version);
-+		fprintf(f, "// last_comp_version:\t%d\n",
-+		       fdt_last_comp_version(blob));
-+		if (version >= 2) {
-+			fprintf(f, "// boot_cpuid_phys:\t0x%x\n",
-+			       fdt_boot_cpuid_phys(blob));
++			/* Add the FDT_BEGIN_NODE tag of this supernode */
++			fdt_next_tag(info->fdt, start, &stop_at);
++			if (fdt_add_region(info, base + start,
++					stop_at - start))
++				return -1;
++
++			/* Remember that this supernode is now included */
++			info->stack[i].included = 1;
++			info->can_merge = 1;
 +		}
-+		if (version >= 3) {
-+			fprintf(f, "// size_dt_strings:\t0x%x\n",
-+			       fdt_size_dt_strings(blob));
-+		}
-+		if (version >= 17) {
-+			fprintf(f, "// size_dt_struct:\t0x%x\n",
-+			       fdt_size_dt_struct(blob));
-+		}
-+		fprintf(f, "\n");
++
++		/* Force (later) generation of the FDT_END_NODE tag */
++		if (!info->stack[i].want)
++			info->stack[i].want = WANT_NODES_ONLY;
 +	}
 +
-+	if (disp->flags & FDT_REG_ADD_MEM_RSVMAP) {
-+		const struct fdt_reserve_entry *p_rsvmap;
++	return 0;
++}
 +
-+		p_rsvmap = (const struct fdt_reserve_entry *)
-+				((const char *)blob + off_mem_rsvmap);
-+		for (i = 0; ; i++) {
-+			addr = fdt64_to_cpu(p_rsvmap[i].address);
-+			size = fdt64_to_cpu(p_rsvmap[i].size);
-+			if (addr == 0 && size == 0)
-+				break;
++enum {
++	FDT_DONE_NOTHING,
++	FDT_DONE_MEM_RSVMAP,
++	FDT_DONE_STRUCT,
++	FDT_DONE_END,
++	FDT_DONE_STRINGS,
++	FDT_DONE_ALL,
++};
 +
-+			fprintf(f, "/memreserve/ %llx %llx;\n",
-+			(unsigned long long)addr, (unsigned long long)size);
-+		}
++int fdt_first_region(const void *fdt,
++		int (*h_include)(void *priv, const void *fdt, int offset,
++				 int type, const char *data, int size),
++		void *priv, struct fdt_region *region,
++		char *path, int path_len, int flags,
++		struct fdt_region_state *info)
++{
++	struct fdt_region_ptrs *p = &info->ptrs;
++
++	/* Set up our state */
++	info->fdt = fdt;
++	info->can_merge = 1;
++	info->max_regions = 1;
++	info->start = -1;
++	p->want = WANT_NOTHING;
++	p->end = path;
++	*p->end = '\0';
++	p->nextoffset = 0;
++	p->depth = -1;
++	p->done = FDT_DONE_NOTHING;
++
++	return fdt_next_region(fdt, h_include, priv, region,
++			       path, path_len, flags, info);
++}
++
++/*
++ * Theory of operation
++ *
++ *
++ *
++
++Note: in this description 'included' means that a node (or other part of
++the tree) should be included in the region list, i.e. it will have a region
++which covers its part of the tree.
++
++This function maintains some state from the last time it is called. It
++checks the next part of the tree that it is supposed to look at
++(p.nextoffset) to see if that should be included or not. When it finds
++something to include, it sets info->start to its offset. This marks the
++start of the region we want to include.
++
++Once info->start is set to the start (i.e. not -1), we continue scanning
++until we find something that we don't want included. This will be the end
++of a region. At this point we can close off the region and add it to the
++list. So we do so, and reset info->start to -1.
++
++One complication here is that we want to merge regions. So when we come to
++add another region later, we may in fact merge it with the previous one if
++one ends where the other starts.
++
++The function fdt_add_region() will return -1 if it fails to add the region,
++because we already have a region ready to be returned, and the new one
++cannot be merged in with it. In this case, we must return the region we
++found, and wait for another call to this function. When it comes, we will
++repeat the processing of the tag and again try to add a region. This time it
++will succeed.
++
++The current state of the pointers (stack, offset, etc.) is maintained in
++a ptrs member. At the start of every loop iteration we make a copy of it.
++The copy is then updated as the tag is processed. Only if we get to the end
++of the loop iteration (and successfully call fdt_add_region() if we need
++to) can we commit the changes we have made to these pointers. For example,
++if we see an FDT_END_NODE tag we will decrement the depth value. But if we
++need to add a region for this tag (let's say because the previous tag is
++included and this FDT_END_NODE tag is not included) then we will only commit
++the result if we were able to add the region. That allows us to retry again
++next time.
++
++We keep track of a variable called 'want' which tells us what we want to
++include when there is no specific information provided by the h_include
++function for a particular property. This basically handles the inclusion of
++properties which are pulled in by virtue of the node they are in. So if you
++include a node, its properties are also included. In this case 'want' will
++be WANT_NODES_AND_PROPS. The FDT_REG_DIRECT_SUBNODES feature also makes use
++of 'want'. While we are inside the subnode, 'want' will be set to
++WANT_NODES_ONLY, so that only the subnode's FDT_BEGIN_NODE and FDT_END_NODE
++tags will be included, and properties will be skipped. If WANT_NOTHING is
++selected, then we will just rely on what the h_include() function tells us.
++
++Using 'want' we work out 'include', which tells us whether this current tag
++should be included or not. As you can imagine, if the value of 'include'
++changes, that means we are on a boundary between nodes to include and nodes
++to exclude. At this point we either close off a previous region and add it
++to the list, or mark the start of a new region.
++
++Apart from the nodes, we have mem_rsvmap, the FDT_END tag and the string
++list. Each of these dealt with as a whole (i.e. we create a region for each
++if it is to be included). For mem_rsvmap we don't allow it to merge with
++the first struct region. For the stringlist we don't allow it to merge with
++the last struct region (which contains at minimum the FDT_END tag).
++*/
++int fdt_next_region(const void *fdt,
++		int (*h_include)(void *priv, const void *fdt, int offset,
++				 int type, const char *data, int size),
++		void *priv, struct fdt_region *region,
++		char *path, int path_len, int flags,
++		struct fdt_region_state *info)
++{
++	int base = fdt_off_dt_struct(fdt);
++	const char *str;
++
++	info->region = region;
++	info->count = 0;
++	if (info->ptrs.done < FDT_DONE_MEM_RSVMAP &&
++			(flags & FDT_REG_ADD_MEM_RSVMAP)) {
++		/* Add the memory reserve map into its own region */
++		if (fdt_add_region(info, fdt_off_mem_rsvmap(fdt),
++		    fdt_off_dt_struct(fdt) - fdt_off_mem_rsvmap(fdt)))
++			return 0;
++		info->can_merge = 0;	/* Don't allow merging with this */
++		info->ptrs.done = FDT_DONE_MEM_RSVMAP;
 +	}
 +
-+	depth = nextoffset = 0;
-+	shift = 4;	/* 4 spaces per indent */
-+	do {
++	/*
++	 * Work through the tags one by one, deciding whether each needs to
++	 * be included or not. We set the variable 'include' to indicate our
++	 * decision. 'want' is used to track what we want to include - it
++	 * allows us to pick up all the properties (and/or subnode tags) of
++	 * a node.
++	 */
++	while (info->ptrs.done < FDT_DONE_STRUCT) {
 +		const struct fdt_property *prop;
++		struct fdt_region_ptrs p;
 +		const char *name;
-+		int show;
++		int include = 0;
++		int stop_at = 0;
++		uint32_t tag;
++		int offset;
++		int val;
 +		int len;
 +
-+		offset = nextoffset;
++		/*
++		 * Make a copy of our pointers. If we make it to the end of
++		 * this block then we will commit them back to info->ptrs.
++		 * Otherwise we can try again from the same starting state
++		 * next time we are called.
++		 */
++		p = info->ptrs;
 +
 +		/*
-+		 * Work out the file offset of this offset, and decide
-+		 * whether it is in the region list or not
++		 * Find the tag, and the offset of the next one. If we need to
++		 * stop including tags, then by default we stop *after*
++		 * including the current tag
 +		 */
-+		file_ofs = base + offset;
-+		if (reg < reg_end && file_ofs >= reg->offset + reg->size)
-+			reg++;
-+		in_region = reg < reg_end && file_ofs >= reg->offset &&
-+				file_ofs < reg->offset + reg->size;
-+		tag = fdt_next_tag(blob, offset, &nextoffset);
-+
-+		if (tag == FDT_END)
-+			break;
-+		show = in_region || disp->all;
-+		if (show && disp->diff)
-+			fprintf(f, "%c", in_region ? '+' : '-');
-+
-+		if (!show) {
-+			/* Do this here to avoid 'if (show)' in every 'case' */
-+			if (tag == FDT_BEGIN_NODE)
-+				depth++;
-+			else if (tag == FDT_END_NODE)
-+				depth--;
-+			continue;
-+		}
-+		if (disp->show_offset && tag != FDT_END)
-+			fprintf(f, "%4x: ", file_ofs);
-+
-+		/* Green means included, red means excluded */
-+		if (disp->colour)
-+			print_ansi_colour(f, in_region ? COL_GREEN : COL_RED);
++		offset = p.nextoffset;
++		tag = fdt_next_tag(fdt, offset, &p.nextoffset);
++		stop_at = p.nextoffset;
 +
 +		switch (tag) {
 +		case FDT_PROP:
-+			prop = fdt_get_property_by_offset(blob, offset, NULL);
-+			name = fdt_string(blob, fdt32_to_cpu(prop->nameoff));
-+			fprintf(f, "%*s%s", depth * shift, "", name);
-+			utilfdt_print_data(prop->data,
-+					   fdt32_to_cpu(prop->len));
-+			fprintf(f, ";");
++			stop_at = offset;
++			prop = fdt_get_property_by_offset(fdt, offset, NULL);
++			str = fdt_string(fdt, fdt32_to_cpu(prop->nameoff));
++			val = h_include(priv, fdt, offset, FDT_IS_PROP, str,
++					    strlen(str) + 1);
++			if (val == -1) {
++				include = p.want == WANT_NODES_AND_PROPS;
++			} else {
++				include = val;
++				/*
++				 * Make sure we include the } for this block.
++				 * It might be more correct to put this done
++				 * by the call to fdt_include_supernodes() in
++				 * the case where it adds the node we are
++				 * currently in, but this is fairly
++				 * equivalent.
++				 */
++				if ((flags & FDT_REG_SUPERNODES) && val &&
++						!p.want)
++					p.want = WANT_NODES_ONLY;
++			}
++
++			/* Value grepping is not yet supported */
 +			break;
 +
 +		case FDT_NOP:
-+			fprintf(f, "%*s// [NOP]", depth * shift, "");
++			include = p.want == WANT_NODES_AND_PROPS;
++			stop_at = offset;
 +			break;
 +
 +		case FDT_BEGIN_NODE:
-+			name = fdt_get_name(blob, offset, &len);
-+			fprintf(f, "%*s%s {", depth++ * shift, "",
-+			       *name ? name : "/");
++			p.depth++;
++			if (p.depth == FDT_MAX_DEPTH)
++				return -FDT_ERR_TOODEEP;
++			name = fdt_get_name(fdt, offset, &len);
++			if (p.end - path + 2 + len >= path_len)
++				return -FDT_ERR_NOSPACE;
++
++			/* Build the full path of this node */
++			if (p.end != path + 1)
++				*p.end++ = '/';
++			strcpy(p.end, name);
++			p.end += len;
++			info->stack[p.depth].want = p.want;
++			info->stack[p.depth].offset = offset;
++
++			/*
++			 * If we are not intending to include this node, make
++			 * sure we stop *before* its tag.
++			 */
++			if (p.want == WANT_NODES_ONLY ||
++					!(flags & FDT_REG_DIRECT_SUBNODES)) {
++				stop_at = offset;
++				p.want = WANT_NOTHING;
++			}
++			val = h_include(priv, fdt, offset, FDT_IS_NODE, path,
++					p.end - path + 1);
++
++			/* Include this if requested */
++			if (val)
++				p.want = WANT_NODES_AND_PROPS;
++
++			/* If not requested, decay our 'p.want' value */
++			else if (p.want)
++				p.want--;
++
++			/* Not including this tag, so stop now */
++			else
++				stop_at = offset;
++
++			/*
++			 * Decide whether to include this tag, and update our
++			 * stack with the state for this node
++			 */
++			include = p.want;
++			info->stack[p.depth].included = include;
 +			break;
 +
 +		case FDT_END_NODE:
-+			fprintf(f, "%*s};", --depth * shift, "");
++			include = p.want;
++			if (p.depth < 0)
++				return -FDT_ERR_BADSTRUCTURE;
++
++			/*
++			 * If we don't p.want this node, stop right away, unless
++			 * we are including subnodes
++			 */
++			if (!p.want && !(flags & FDT_REG_DIRECT_SUBNODES))
++				stop_at = offset;
++			p.want = info->stack[p.depth].want;
++			p.depth--;
++			while (p.end > path && *--p.end != '/')
++				;
++			*p.end = '\0';
++			break;
++
++		case FDT_END:
++			/* We always include the end tag */
++			include = 1;
++			p.done = FDT_DONE_STRUCT;
 +			break;
 +		}
 +
-+		/* Reset colour back to normal before end of line */
-+		if (disp->colour)
-+			print_ansi_colour(f, COL_NONE);
-+		fprintf(f, "\n");
-+	} while (1);
-+
-+	/* Print a list of strings if requested */
-+	if (disp->list_strings) {
-+		const char *str;
-+		int offset;
-+
-+		for (offset = 0; offset < fdt_size_dt_strings(blob);
-+				offset += strlen(str) + 1) {
-+			str = fdt_string(blob, offset);
-+			int len = strlen(str) + 1;
-+			int show;
-+
-+			/* Only print strings that are in the region */
-+			file_ofs = fdt_off_dt_strings(blob) + offset;
-+			in_region = reg < reg_end &&
-+					file_ofs >= reg->offset &&
-+					file_ofs + len < reg->offset +
-+						reg->size;
-+			show = in_region || disp->all;
-+			if (show && disp->diff)
-+				printf("%c", in_region ? '+' : '-');
-+			if (disp->show_offset)
-+				printf("%4x: ", offset);
-+			printf("%s\n", str);
++		/* If this tag is to be included, mark it as region start */
++		if (include && info->start == -1) {
++			/* Include any supernodes required by this one */
++			if (flags & FDT_REG_SUPERNODES) {
++				if (fdt_include_supernodes(info, p.depth))
++					return 0;
++			}
++			info->start = offset;
 +		}
-+	}
 +
-+	return 0;
-+}
-+
-+/**
-+ * dump_fdt_regions() - Dump regions of an FDT as binary data
-+ *
-+ * This dumps an FDT as binary, but only certain regions of it. This is the
-+ * final stage of the grep - we have a list of regions we want to dump,
-+ * and this function dumps them.
-+ *
-+ * The output of this function may or may not be a valid FDT. To ensure it
-+ * is, these disp->flags must be set:
-+ *
-+ *   FDT_REG_SUPERNODES: ensures that subnodes are preceeded by their
-+ *		parents. Without this option, fragments of subnode data may be
-+ *		output without the supernodes above them. This is useful for
-+ *		hashing but cannot produce a valid FDT.
-+ *   FDT_REG_ADD_STRING_TAB: Adds a string table to the end of the FDT.
-+ *		Without this none of the properties will have names
-+ *   FDT_REG_ADD_MEM_RSVMAP: Adds a mem_rsvmap table - an FDT is invalid
-+ *		without this.
-+ *
-+ * @disp:	Display structure, holding info about our options
-+ * @blob:	FDT blob to display
-+ * @region:	List of regions to display
-+ * @count:	Number of regions
-+ */
-+static int dump_fdt_regions(struct display_info *disp, const void *blob,
-+		struct fdt_region region[], int count)
-+{
-+	struct fdt_header hdr, *fdt = &hdr;
-+	int size, struct_start;
-+	FILE *f = disp->fout;
-+	int i;
-+
-+	/* Set up a basic header (even if we don't actually write it) */
-+	memset(fdt, '\0', sizeof(*fdt));
-+	fdt_set_magic(fdt, FDT_MAGIC);
-+	struct_start = FDT_ALIGN(sizeof(struct fdt_header),
-+					sizeof(struct fdt_reserve_entry));
-+	fdt_set_off_mem_rsvmap(fdt, struct_start);
-+	fdt_set_version(fdt, FDT_LAST_SUPPORTED_VERSION);
-+	fdt_set_last_comp_version(fdt, FDT_FIRST_SUPPORTED_VERSION);
-+
-+	/*
-+	 * Calculate the total size of the regions we are writing out. The
-+	 * first will be the mem_rsvmap if the FDT_REG_ADD_MEM_RSVMAP flag
-+	 * is set. The last will be the string table if FDT_REG_ADD_STRING_TAB
-+	 * is set.
-+	 */
-+	for (i = size = 0; i < count; i++)
-+		size += region[i].size;
-+
-+	/* Bring in the mem_rsvmap section from the old file if requested */
-+	if (count > 0 && (disp->flags & FDT_REG_ADD_MEM_RSVMAP)) {
-+		struct_start += region[0].size;
-+		size -= region[0].size;
-+	}
-+	fdt_set_off_dt_struct(fdt, struct_start);
-+
-+	/* Update the header to have the correct offsets/sizes */
-+	if (count >= 2 && (disp->flags & FDT_REG_ADD_STRING_TAB)) {
-+		int str_size;
-+
-+		str_size = region[count - 1].size;
-+		fdt_set_size_dt_struct(fdt, size - str_size);
-+		fdt_set_off_dt_strings(fdt, struct_start + size - str_size);
-+		fdt_set_size_dt_strings(fdt, str_size);
-+		fdt_set_totalsize(fdt, struct_start + size);
-+	}
-+
-+	/* Write the header if required */
-+	if (disp->header) {
-+		if (sizeof(hdr) != fwrite(fdt, 1, sizeof(hdr), f))
-+			return -1;
-+		for (i = sizeof(hdr); i < fdt_off_mem_rsvmap(&hdr); i++)
-+			fputc('\0', f);
-+	}
-+
-+	/* Output all the nodes including any mem_rsvmap/string table */
-+	for (i = size = 0; i < count; i++) {
-+		struct fdt_region *reg = &region[i];
-+
-+		if (reg->size != fwrite((const char *)blob + reg->offset, 1,
-+				reg->size, f))
-+			return -1;
-+		size += reg->size;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ * show_region_list() - Print out a list of regions
-+ *
-+ * The list includes the region offset (absolute offset from start of FDT
-+ * blob in bytes) and size
-+ *
-+ * @reg:	List of regions to print
-+ * @count:	Number of regions
-+ */
-+static void show_region_list(struct fdt_region *reg, int count)
-+{
-+	int i;
-+
-+	printf("Regions: %d\n", count);
-+	for (i = 0; i < count; i++, reg++) {
-+		printf("%d:  %-10x  %-10x\n", i, reg->offset,
-+		       reg->offset + reg->size);
-+	}
-+}
-+
-+static int check_type_include(void *priv, int type, const char *data, int size)
-+{
-+	struct display_info *disp = priv;
-+	struct value_node *val;
-+	int match, none_match = FDT_IS_ANY;
-+
-+	/* If none of our conditions mention this type, we know nothing */
-+	debug("type=%x, data=%s\n", type, data);
-+	if (!((disp->types_inc | disp->types_exc) & type)) {
-+		debug("   - not in any condition\n");
-+		return -1;
-+	}
-+
-+	/*
-+	 * Go through the list of conditions. For inclusive conditions, we
-+	 * return 1 at the first match. For exclusive conditions, we must
-+	 * check that there are no matches.
-+	 */
-+	for (val = disp->value_head; val; val = val->next) {
-+		if (!(type & val->type))
-+			continue;
-+		match = fdt_stringlist_contains(data, size, val->string);
-+		debug("      - val->type=%x, str='%s', match=%d\n",
-+		      val->type, val->string, match);
-+		if (match && val->include) {
-+			debug("   - match inc %s\n", val->string);
-+			return 1;
-+		}
-+		if (match)
-+			none_match &= ~val->type;
-+	}
-+
-+	/*
-+	 * If this is an exclusive condition, and nothing matches, then we
-+	 * should return 1.
-+	 */
-+	if ((type & disp->types_exc) && (none_match & type)) {
-+		debug("   - match exc\n");
 +		/*
-+		 * Allow FDT_IS_COMPAT to make the final decision in the
-+		 * case where there is no specific type
++		 * If this tag is not to be included, finish up the current
++		 * region.
 +		 */
-+		if (type == FDT_IS_NODE && disp->types_exc == FDT_IS_ANY) {
-+			debug("   - supressed exc node\n");
-+			return -1;
++		if (!include && info->start != -1) {
++			if (fdt_add_region(info, base + info->start,
++				       stop_at - info->start))
++				return 0;
++			info->start = -1;
++			info->can_merge = 1;
 +		}
-+		return 1;
++
++		/* If we have made it this far, we can commit our pointers */
++		info->ptrs = p;
 +	}
 +
-+	/*
-+	 * Allow FDT_IS_COMPAT to make the final decision in the
-+	 * case where there is no specific type (inclusive)
-+	 */
-+	if (type == FDT_IS_NODE && disp->types_inc == FDT_IS_ANY)
-+		return -1;
++	/* Add a region for the END tag and a separate one for string table */
++	if (info->ptrs.done < FDT_DONE_END) {
++		if (info->ptrs.nextoffset != fdt_size_dt_struct(fdt))
++			return -FDT_ERR_BADSTRUCTURE;
 +
-+	debug("   - no match, types_inc=%x, types_exc=%x, none_match=%x\n",
-+	      disp->types_inc, disp->types_exc, none_match);
++		if (fdt_add_region(info, base + info->start,
++			       info->ptrs.nextoffset - info->start))
++			return 0;
++		info->ptrs.done++;
++	}
++	if (info->ptrs.done < FDT_DONE_STRINGS &&
++			(flags & FDT_REG_ADD_STRING_TAB)) {
++		info->can_merge = 0;
++		if (fdt_off_dt_strings(fdt) < base + info->ptrs.nextoffset)
++			return -FDT_ERR_BADLAYOUT;
++		if (fdt_add_region(info, fdt_off_dt_strings(fdt),
++			       fdt_size_dt_strings(fdt)))
++			return 0;
++		info->ptrs.done++;
++	}
++
++	return info->count > 0 ? 0 : -FDT_ERR_NOTFOUND;
++}
+diff --git a/libfdt/libfdt.h b/libfdt/libfdt.h
+index 130789a..fa62ad6 100644
+--- a/libfdt/libfdt.h
++++ b/libfdt/libfdt.h
+@@ -116,7 +116,12 @@
+ 	 * Should never be returned, if it is, it indicates a bug in
+ 	 * libfdt itself. */
+ 
+-#define FDT_ERR_MAX		13
++#define FDT_ERR_TOODEEP		14
++	/* FDT_ERR_TOODEEP: The depth of a node has exceeded the internal
++	 * libfdt limit. This can happen if you have more than
++	 * FDT_MAX_DEPTH nested nodes. */
++
++#define FDT_ERR_MAX		14
+ 
+ /**********************************************************************/
+ /* Low-level functions (you probably don't need these)                */
+@@ -1489,4 +1494,210 @@ int fdt_del_node(void *fdt, int nodeoffset);
+ 
+ const char *fdt_strerror(int errval);
+ 
++struct fdt_region {
++	int offset;
++	int size;
++};
++
++/*
++ * Flags for fdt_find_regions()
++ *
++ * Add a region for the string table (always the last region)
++ */
++#define FDT_REG_ADD_STRING_TAB		(1 << 0)
++
++/* Add the FDT_BEGIN_NODE tags of subnodes, including their names */
++#define FDT_REG_DIRECT_SUBNODES	(1 << 1)
++
++/*
++ * Add all supernodes of a matching node/property, useful for creating a
++ * valid subset tree
++ */
++#define FDT_REG_SUPERNODES		(1 << 2)
++
++/* Add a region for the mem_rsvmap table (always the first region) */
++#define FDT_REG_ADD_MEM_RSVMAP		(1 << 3)
++
++/* Indicates what an fdt part is (node, property, value) */
++#define FDT_IS_NODE			(1 << 0)
++#define FDT_IS_PROP			(1 << 1)
++#define FDT_IS_VALUE			(1 << 2)	/* not supported */
++#define FDT_IS_COMPAT			(1 << 3)	/* used internally */
++
++#define FDT_IS_ANY			15
++
++/* We set a reasonable limit on the number of nested nodes */
++#define FDT_MAX_DEPTH			32
++
++/* Decribes what we want to include from the current tag */
++enum want_t {
++	WANT_NOTHING,
++	WANT_NODES_ONLY,
++	WANT_NODES_AND_PROPS,
++};
++
++/* Keeps track of the state at parent nodes */
++struct fdt_subnode_stack {
++	int offset;		/* Offset of node */
++	enum want_t want;	/* The 'want' value here */
++	int included;		/* 1 if we included this node, 0 if not */
++};
++
++struct fdt_region_ptrs {
++	int depth;			/* Current tree depth */
++	int done;			/* What we have completed scanning */
++	enum want_t want;		/* What we are currently including */
++	char *end;			/* Pointer to end of full node path */
++	int nextoffset;			/* Next node offset to check */
++};
++
++/* The state of our finding algortihm */
++struct fdt_region_state {
++	struct fdt_subnode_stack stack[FDT_MAX_DEPTH];	/* node stack */
++	struct fdt_region *region;	/* Contains list of regions found */
++	int count;			/* Numnber of regions found */
++	const void *fdt;		/* FDT blob */
++	int max_regions;		/* Maximum regions to find */
++	int can_merge;		/* 1 if we can merge with previous region */
++	int start;			/* Start position of current region */
++	struct fdt_region_ptrs ptrs;	/* Pointers for what we are up to */
++};
++
++/**
++ * fdt_first_region() - find regions in device tree
++ *
++ * Given a nodes and properties to include and properties to exclude, find
++ * the regions of the device tree which describe those included parts.
++ *
++ * The use for this function is twofold. Firstly it provides a convenient
++ * way of performing a structure-aware grep of the tree. For example it is
++ * possible to grep for a node and get all the properties associated with
++ * that node. Trees can be subsetted easily, by specifying the nodes that
++ * are required, and then writing out the regions returned by this function.
++ * This is useful for small resource-constrained systems, such as boot
++ * loaders, which want to use an FDT but do not need to know about all of
++ * it.
++ *
++ * Secondly it makes it easy to hash parts of the tree and detect changes.
++ * The intent is to get a list of regions which will be invariant provided
++ * those parts are invariant. For example, if you request a list of regions
++ * for all nodes but exclude the property "data", then you will get the
++ * same region contents regardless of any change to "data" properties.
++ *
++ * This function can be used to produce a byte-stream to send to a hashing
++ * function to verify that critical parts of the FDT have not changed.
++ * Note that semantically null changes in order could still cause false
++ * hash misses. Such reordering might happen if the tree is regenerated
++ * from source, and nodes are reordered (the bytes-stream will be emitted
++ * in a different order and mnay hash functions will detect this). However
++ * if an existing tree is modified using libfdt functions, such as
++ * fdt_add_subnode() and fdt_setprop(), then this problem is avoided.
++ *
++ * The nodes/properties to include/exclude are defined by a function
++ * provided by the caller. This function is called for each node and
++ * property, and must return:
++ *
++ *    0 - to exclude this part
++ *    1 - to include this part
++ *   -1 - for FDT_IS_PROP only: no information is available, so include
++ *		if its containing node is included
++ *
++ * The last case is only used to deal with properties. Often a property is
++ * included if its containing node is included - this is the case where
++ * -1 is returned.. However if the property is specifically required to be
++ * included/excluded, then 0 or 1 can be returned. Note that including a
++ * property when the FDT_REG_SUPERNODES flag is given will force its
++ * containing node to be included since it is not valid to have a property
++ * that is not in a node.
++ *
++ * Using the information provided, the inclusion of a node can be controlled
++ * either by a node name or its compatible string, or any other property
++ * that the function can determine.
++ *
++ * As an example, including node "/" means to include the root node and all
++ * root properties. A flag provides a way of also including supernodes (of
++ * which there is none for the root node), and another flag includes
++ * immediate subnodes, so in this case we would get the FDT_BEGIN_NODE and
++ * FDT_END_NODE of all subnodes of /.
++ *
++ * The subnode feature helps in a hashing situation since it prevents the
++ * root node from changing at all. Any change to non-excluded properties,
++ * names of subnodes or number of subnodes would be detected.
++ *
++ * When used with FITs this provides the ability to hash and sign parts of
++ * the FIT based on different configurations in the FIT. Then it is
++ * impossible to change anything about that configuration (include images
++ * attached to the configuration), but it may be possible to add new
++ * configurations, new images or new signatures within the existing
++ * framework.
++ *
++ * Adding new properties to a device tree may result in the string table
++ * being extended (if the new property names are different from those
++ * already added). This function can optionally include a region for
++ * the string table so that this can be part of the hash too. This is always
++ * the last region.
++ *
++ * The FDT also has a mem_rsvmap table which can also be included, and is
++ * always the first region if so.
++ *
++ * The device tree header is not included in the region list. Since the
++ * contents of the FDT are changing (shrinking, often), the caller will need
++ * to regenerate the header anyway.
++ *
++ * @fdt:	Device tree to check
++ * @h_include:	Function to call to determine whether to include a part or
++ *		not:
++ *
++ *		@priv: Private pointer as passed to fdt_find_regions()
++ *		@fdt: Pointer to FDT blob
++ *		@offset: Offset of this node / property
++ *		@type: Type of this part, FDT_IS_...
++ *		@data: Pointer to data (node name, property name, compatible
++ *			string, value (not yet supported)
++ *		@size: Size of data, or 0 if none
++ *		@return 0 to exclude, 1 to include, -1 if no information is
++ *		available
++ * @priv:	Private pointer passed to h_include
++ * @region:	Returns list of regions, sorted by offset
++ * @max_regions: Maximum length of region list
++ * @path:	Pointer to a temporary string for the function to use for
++ *		building path names
++ * @path_len:	Length of path, must be large enough to hold the longest
++ *		path in the tree
++ * @flags:	Various flags that control the region algortihm, see
++ *		FDT_REG_...
++ * @return number of regions in list. If this is >max_regions then the
++ * region array was exhausted. You should increase max_regions and try
++ * the call again. Only the first max_regions elements are available in the
++ * array.
++ *
++ * On error a -ve value is return, which can be:
++ *
++ *	-FDT_ERR_BADSTRUCTURE (too deep or more END tags than BEGIN tags
++ *	-FDT_ERR_BADLAYOUT
++ *	-FDT_ERR_NOSPACE (path area is too small)
++ */
++int fdt_first_region(const void *fdt,
++		int (*h_include)(void *priv, const void *fdt, int offset,
++				 int type, const char *data, int size),
++		void *priv, struct fdt_region *region,
++		char *path, int path_len, int flags,
++		struct fdt_region_state *info);
++
++/** fdt_next_region() - find next region
++ *
++ * See fdt_first_region() for full description. This function finds the
++ * next region according to the provided parameters, which must be the same
++ * as passed to fdt_first_region().
++ *
++ * This function can additionally return -FDT_ERR_NOTFOUND when there are no
++ * more regions
++ */
++int fdt_next_region(const void *fdt,
++		int (*h_include)(void *priv, const void *fdt, int offset,
++				 int type, const char *data, int size),
++		void *priv, struct fdt_region *region,
++		char *path, int path_len, int flags,
++		struct fdt_region_state *info);
++
+ #endif /* _LIBFDT_H */
+diff --git a/tests/.gitignore b/tests/.gitignore
+index e2aa24a..ecac691 100644
+--- a/tests/.gitignore
++++ b/tests/.gitignore
+@@ -41,6 +41,7 @@ tmp.*
+ /phandle_format
+ /propname_escapes
+ /references
++/region_tree
+ /root_node
+ /rw_tree1
+ /set_name
+diff --git a/tests/Makefile.tests b/tests/Makefile.tests
+index d59bff8..10bbf1b 100644
+--- a/tests/Makefile.tests
++++ b/tests/Makefile.tests
+@@ -20,7 +20,8 @@ LIB_TESTS_L = get_mem_rsv \
+ 	dtb_reverse dtbs_equal_unordered \
+ 	add_subnode_with_nops path_offset_aliases \
+ 	utilfdt_test \
+-	integer-expressions
++	integer-expressions \
++	region_tree
+ LIB_TESTS = $(LIB_TESTS_L:%=$(TESTS_PREFIX)%)
+ 
+ LIBTREE_TESTS_L = truncated_property
+diff --git a/tests/region_tree.c b/tests/region_tree.c
+new file mode 100644
+index 0000000..55ab2d5
+--- /dev/null
++++ b/tests/region_tree.c
+@@ -0,0 +1,336 @@
++/*
++ * hash_tree - Testcase for fdt_find_regions()
++ *
++ * Copyright (c) 2013, Google Inc.
++ *
++ * Copyright (C) 2006 David Gibson, IBM Corporation.
++ *
++ * This library is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU Lesser General Public License
++ * as published by the Free Software Foundation; either version 2.1 of
++ * the License, or (at your option) any later version.
++ *
++ * This library is distributed in the hope that it will be useful, but
++ * WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
++ * Lesser General Public License for more details.
++ *
++ * You should have received a copy of the GNU Lesser General Public
++ * License along with this library; if not, write to the Free Software
++ * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
++ */
++
++#include <ctype.h>
++#include <stdint.h>
++#include <stdio.h>
++#include <stdlib.h>
++#include <string.h>
++
++#include <libfdt_env.h>
++#include <fdt.h>
++#include <libfdt.h>
++
++#include "tests.h"
++#include "testdata.h"
++
++#define SPACE	65536
++
++#define CHECK(code) \
++	{ \
++		err = (code); \
++		if (err) \
++			FAIL(#code ": %s", fdt_strerror(err)); \
++	}
++
++/*
++ * Regions we expect to see returned from fdt_find_regions(). We build up a
++ * list of these as we make the tree, then check the results of
++ * fdt_find_regions() once we are done.
++ */
++static struct fdt_region expect[20];
++
++/* Number of expected regions */
++int expect_count;
++
++/* Mark the start of a new region */
++static void start(void *fdt)
++{
++	expect[expect_count].offset = fdt_size_dt_struct(fdt);
++	verbose_printf("[%d: %x ", expect_count,
++	       fdt_off_dt_struct(fdt) + expect[expect_count].offset);
++}
++
++/* Mark the end of a region */
++static void stop(void *fdt)
++{
++	expect[expect_count].size = fdt_size_dt_struct(fdt) -
++			expect[expect_count].offset;
++	expect[expect_count].offset += fdt_off_dt_struct(fdt);
++	verbose_printf("%x]\n", expect[expect_count].offset +
++			expect[expect_count].size);
++	expect_count++;
++}
++
++/**
++ * build_tree() - Build a tree
++ *
++ * @fdt:	Pointer to place to put tree, assumed to be large enough
++ * @flags:	Flags to control the tree creation (FDT_REG_...)
++ * @space:	Amount of space to create for later tree additions
++ *
++ * This creates a tree modelled on a U-Boot FIT image, with various nodes
++ * and properties which are useful for testing the hashing features of
++ * fdt_find_regions().
++ */
++static void build_tree(void *fdt, int flags, int space)
++{
++	int direct_subnodes = flags & FDT_REG_DIRECT_SUBNODES;
++	int supernodes = flags & FDT_REG_SUPERNODES;
++	int either = direct_subnodes || supernodes;
++	int err;
++
++	CHECK(fdt_create(fdt, SPACE));
++
++	CHECK(fdt_add_reservemap_entry(fdt, TEST_ADDR_1, TEST_SIZE_1));
++	CHECK(fdt_add_reservemap_entry(fdt, TEST_ADDR_2, TEST_SIZE_2));
++	CHECK(fdt_finish_reservemap(fdt));
++
++	start(fdt);	/* region 0 */
++	CHECK(fdt_begin_node(fdt, ""));
++	CHECK(fdt_property_string(fdt, "description", "kernel image"));
++	CHECK(fdt_property_u32(fdt, "#address-cells", 1));
++
++	/* /images */
++	if (!either)
++		stop(fdt);
++	CHECK(fdt_begin_node(fdt, "images"));
++	if (either)
++		stop(fdt);
++	CHECK(fdt_property_u32(fdt, "image-prop", 1));
++
++	/* /images/kernel@1 */
++	start(fdt);	/* region 1 */
++	CHECK(fdt_begin_node(fdt, "kernel@1"));
++	CHECK(fdt_property_string(fdt, "description", "exynos kernel"));
++	stop(fdt);
++	CHECK(fdt_property_string(fdt, "data", "this is the kernel image"));
++	start(fdt);	/* region 2 */
++
++	/* /images/kernel/hash@1 */
++	CHECK(fdt_begin_node(fdt, "hash@1"));
++	CHECK(fdt_property_string(fdt, "algo", "sha1"));
++	CHECK(fdt_end_node(fdt));
++
++	/* /images/kernel/hash@2 */
++	if (!direct_subnodes)
++		stop(fdt);
++	CHECK(fdt_begin_node(fdt, "hash@2"));
++	if (direct_subnodes)
++		stop(fdt);
++	CHECK(fdt_property_string(fdt, "algo", "sha1"));
++	if (direct_subnodes)
++		start(fdt);	/* region 3 */
++	CHECK(fdt_end_node(fdt));
++	if (!direct_subnodes)
++		start(fdt);	/* region 3 */
++
++	CHECK(fdt_end_node(fdt));
++
++	/* /images/fdt@1 */
++	CHECK(fdt_begin_node(fdt, "fdt@1"));
++	CHECK(fdt_property_string(fdt, "description", "snow FDT"));
++	stop(fdt);
++	CHECK(fdt_property_string(fdt, "data", "FDT data"));
++	start(fdt);	/* region 4 */
++
++	/* /images/kernel/hash@1 */
++	CHECK(fdt_begin_node(fdt, "hash@1"));
++	CHECK(fdt_property_string(fdt, "algo", "sha1"));
++	CHECK(fdt_end_node(fdt));
++
++	CHECK(fdt_end_node(fdt));
++
++	if (!either)
++		stop(fdt);
++	CHECK(fdt_end_node(fdt));
++
++	/* /configurations */
++	CHECK(fdt_begin_node(fdt, "configurations"));
++	if (either)
++		stop(fdt);
++	CHECK(fdt_property_string(fdt, "default", "conf@1"));
++
++	/* /configurations/conf@1 */
++	start(fdt);	/* region 6 */
++	CHECK(fdt_begin_node(fdt, "conf@1"));
++	CHECK(fdt_property_string(fdt, "kernel", "kernel@1"));
++	CHECK(fdt_property_string(fdt, "fdt", "fdt@1"));
++	CHECK(fdt_end_node(fdt));
++	stop(fdt);
++
++	/* /configurations/conf@2 */
++	CHECK(fdt_begin_node(fdt, "conf@2"));
++	CHECK(fdt_property_string(fdt, "kernel", "kernel@1"));
++	CHECK(fdt_property_string(fdt, "fdt", "fdt@2"));
++	CHECK(fdt_end_node(fdt));
++
++	if (either)
++		start(fdt);	/* region 7 */
++	CHECK(fdt_end_node(fdt));
++	if (!either)
++		start(fdt);	/* region 7 */
++
++	CHECK(fdt_end_node(fdt));
++
++	CHECK(fdt_finish(fdt));
++	stop(fdt);
++
++	/* Add in the strings */
++	if (flags & FDT_REG_ADD_STRING_TAB) {
++		expect[expect_count].offset = fdt_off_dt_strings(fdt);
++		expect[expect_count].size = fdt_size_dt_strings(fdt);
++		expect_count++;
++	}
++
++	/* Make a bit of space */
++	if (space)
++		CHECK(fdt_open_into(fdt, fdt, fdt_totalsize(fdt) + space));
++
++	verbose_printf("Completed tree, totalsize = %d\n", fdt_totalsize(fdt));
++}
++
++/**
++ * strlist_contains() - Returns 1 if a string is contained in a list
++ *
++ * @list:	List of strings
++ * @count:	Number of strings in list
++ * @str:	String to search for
++ */
++static int strlist_contains(const char * const list[], int count,
++			    const char *str)
++{
++	int i;
++
++	for (i = 0; i < count; i++)
++		if (!strcmp(list[i], str))
++			return 1;
 +
 +	return 0;
 +}
 +
 +/**
-+ * h_include() - Include handler function for fdt_find_regions()
++ * h_include() - Our include handler for fdt_find_regions()
 + *
-+ * This function decides whether to include or exclude a node, property or
-+ * compatible string. The function is defined by fdt_find_regions().
-+ *
-+ * The algorithm is documented in the code - disp->invert is 0 for normal
-+ * operation, and 1 to invert the sense of all matches.
-+ *
-+ * See
++ * This is very simple - we have a list of nodes we are looking for, and
++ * one property that we want to exclude.
 + */
 +static int h_include(void *priv, const void *fdt, int offset, int type,
 +		     const char *data, int size)
 +{
-+	struct display_info *disp = priv;
-+	int inc, len;
++	const char * const inc[] = {
++		"/",
++		"/images/kernel@1",
++		"/images/fdt@1",
++		"/configurations/conf@1",
++		"/images/kernel@1/hash@1",
++		"/images/fdt@1/hash@1",
++	};
 +
-+	inc = check_type_include(priv, type, data, size);
-+
-+	/*
-+	 * If the node name does not tell us anything, check the
-+	 * compatible string
-+	 */
-+	if (inc == -1 && type == FDT_IS_NODE) {
-+		debug("   - checking compatible2\n");
-+		data = fdt_getprop(fdt, offset, "compatible", &len);
-+		inc = check_type_include(priv, FDT_IS_COMPAT, data, len);
++	switch (type) {
++	case FDT_IS_NODE:
++		return strlist_contains(inc, 6, data);
++	case FDT_IS_PROP:
++		return !strcmp(data, "data") ? 0 : -1;
 +	}
 +
-+	switch (inc) {
-+	case 1:
-+		inc = !disp->invert;
-+		break;
-+	case 0:
-+		inc = disp->invert;
-+		break;
-+	}
-+	debug("   - returning %d\n", inc);
-+
-+	return inc;
-+}
-+
-+static int fdt_find_regions(const void *fdt,
-+		int (*h_include)(void *priv, const void *fdt, int offset,
-+				 int type, const char *data, int size),
-+		struct display_info *disp, struct fdt_region *region,
-+		int max_regions, char *path, int path_len, int flags)
-+{
-+	struct fdt_region_state state;
-+	int count;
-+	int ret;
-+
-+	count = 0;
-+	ret = fdt_first_region(fdt, h_include, disp,
-+			&region[count++], path, path_len,
-+			disp->flags, &state);
-+	while (ret == 0) {
-+		ret = fdt_next_region(fdt, h_include, disp,
-+				&region[count], path, path_len,
-+				disp->flags, &state);
-+		if (!ret)
-+			count++;
-+	}
-+
-+	if (ret != -FDT_ERR_NOTFOUND)
-+		return ret;
-+
-+	return count;
++	return 0;
 +}
 +
 +/**
-+ * Run the main fdtgrep operation, given a filename and valid arguments
++ * check_regions() - Check that the regions are as we expect
 + *
-+ * @param disp		Display information / options
-+ * @param filename	Filename of blob file
-+ * @param return 0 if ok, -ve on error
++ * Call fdt_find_regions() and check that the results are as we expect them,
++ * matching the list of expected regions we created at the same time as
++ * the tree.
++ *
++ * @fdt:	Pointer to device tree to check
++ * @flags:	Flags value (FDT_REG_...)
++ * @return 0 if ok, -1 on failure
 + */
-+static int do_fdtgrep(struct display_info *disp, const char *filename)
++static int check_regions(const void *fdt, int flags)
 +{
-+	struct fdt_region *region;
-+	int max_regions;
-+	int count = 100;
++	struct fdt_region_state state;
++	struct fdt_region reg;
++	int err, ret = 0;
 +	char path[1024];
-+	char *blob;
-+	int i, ret;
++	int count;
++	int i;
 +
-+	blob = utilfdt_read(filename);
-+	if (!blob)
-+		return -1;
-+	ret = fdt_check_header(blob);
-+	if (ret) {
-+		fprintf(stderr, "Error: %s\n", fdt_strerror(ret));
-+		return ret;
-+	}
++	ret = fdt_first_region(fdt, h_include, NULL, &reg,
++			       path, sizeof(path), flags, &state);
++	if (ret < 0)
++		CHECK(ret);
 +
-+	/* Allow old files, but they are untested */
-+	if (fdt_version(blob) < 17 && disp->value_head) {
-+		fprintf(stderr, "Warning: fdtgrep does not fully support"
-+			" version %d files\n", fdt_version(blob));
-+	}
++	verbose_printf("Regions: %d\n", count);
++	for (i = 0; ; i++) {
++		struct fdt_region *exp = &expect[i];
 +
-+	/*
-+	 * We do two passes, since we don't know how many regions we need.
-+	 * The first pass will count the regions, but if it is too many,
-+	 * we do another pass to actually record them.
-+	 */
-+	for (i = 0; i < 2; i++) {
-+		region = malloc(count * sizeof(struct fdt_region));
-+		if (!region) {
-+			fprintf(stderr, "Out of memory for %d regions\n",
-+				count);
-+			return -1;
++		verbose_printf("%d:  %-10x  %-10x\n", i, reg.offset,
++		       reg.offset + reg.size);
++		if (memcmp(exp, &reg, sizeof(reg))) {
++			ret = -1;
++			verbose_printf("exp: %-10x  %-10x\n", exp->offset,
++				exp->offset + exp->size);
 +		}
-+		max_regions = count;
-+		count = fdt_find_regions(blob,
-+				h_include, disp,
-+				region, max_regions, path, sizeof(path),
-+				disp->flags);
-+		if (count < 0) {
-+			report_error("fdt_find_regions", count);
-+			return -1;
-+		}
-+		if (count <= max_regions)
++
++		ret = fdt_next_region(fdt, h_include, NULL, &reg,
++				      path, sizeof(path), flags, &state);
++		if (ret < 0) {
++			if (ret == -FDT_ERR_NOTFOUND)
++				ret = 0;
++			CHECK(ret);
 +			break;
-+		free(region);
++		}
 +	}
-+
-+	/* Optionally print a list of regions */
-+	if (disp->region_list)
-+		show_region_list(region, count);
-+
-+	/* Output either source .dts or binary .dtb */
-+	if (disp->output == OUT_DTS) {
-+		ret = display_fdt_by_regions(disp, blob, region, count);
-+	} else {
-+		ret = dump_fdt_regions(disp, blob, region, count);
-+		if (ret)
-+			fprintf(stderr, "Write failure\n");
-+	}
-+
-+	free(blob);
-+	free(region);
 +
 +	return ret;
 +}
 +
-+static const char *usage_msg =
-+	"fdtgrep - extract portions from device tree\n"
-+	"\n"
-+	"Usage:\n"
-+	"	fdtgrep <options> [<match nodes/prop/compat>...] <dt file>|-\n"
-+	"Options:\n"
-+	"\t-a\tDisplay address / offset\n"
-+	"\t-A\tShow all nodes/tags, colour those that match\n"
-+	"\t-c/-C <node>\tCompatible nodes to include/exclude in grep\n"
-+	"\t-d\tDiff: Mark matching nodes with +, others with -\n"
-+	"\t-g/-G <node>\tNode/property/compatible string to include/exclude\n"
-+	"\t-H\tOutput a header\n"
-+	"\t-l\tOutput a region list\n"
-+	"\t-L\tList strings in string table\n"
-+	"\t-m\tInclude mem_rsvmap section in binary output\n"
-+	"\t-n/-N <node>\tNode to include/exclude in grep\n"
-+	"\t-p/-P <node>\tProperty to include/exclude in grep\n"
-+	"\t-s\tInclude direct subnode names of matching nodes\n"
-+	"\t-S\tDon't include supernodes of matching nodes\n"
-+	"\t-t\tInclude string table in binary output\n"
-+	"\t-o <output file>\n"
-+	"\t-O <output format>\n"
-+	"\t\tOutput formats are:\n"
-+	"\t\t\tdts - device tree source text\n"
-+	"\t\t\tdtb - device tree blob (sets -Hmt automatically)\n"
-+	"\t\t\tbin - device tree fragment (may not be a valid .dtb)\n"
-+	"\t-v\tInvert the sense of matching, to select non-matching lines\n"
-+	"\t-V\tPut \"/dts-v1/;\" on first line of dts output\n"
-+	"\t-h\t\tPrint this help\n\n"
-+	USAGE_TYPE_MSG;
-+
-+static void usage(const char *msg)
-+{
-+	if (msg)
-+		fprintf(stderr, "Error: %s\n\n", msg);
-+
-+	fprintf(stderr, "%s", usage_msg);
-+	exit(2);
-+}
-+
-+static void scan_args(struct display_info *disp, int argc, char *argv[])
-+{
-+	for (;;) {
-+		int c = getopt(argc, argv,
-+			       "haAc:C:dg:G:HlLmn:N:o:O:p:P:sStvV");
-+		int type = 0;
-+		int inc = 1;
-+
-+		if (c == -1)
-+			break;
-+
-+		switch (c) {
-+		case 'h':
-+		case '?':
-+			usage(NULL);
-+		case 'a':
-+			disp->show_offset = 1;
-+			break;
-+		case 'A':
-+			disp->all = 1;
-+			break;
-+		case 'C':
-+			inc = 0;
-+			/* no break */
-+		case 'c':
-+			type = FDT_IS_COMPAT;
-+			break;
-+		case 'd':
-+			disp->diff = 1;
-+			break;
-+		case 'G':
-+			inc = 0;
-+			/* no break */
-+		case 'g':
-+			type = FDT_IS_ANY;
-+			break;
-+		case 'H':
-+			disp->header = 1;
-+			break;
-+		case 'l':
-+			disp->region_list = 1;
-+			break;
-+		case 'L':
-+			disp->list_strings = 1;
-+			break;
-+		case 'm':
-+			disp->flags |= FDT_REG_ADD_MEM_RSVMAP;
-+			break;
-+		case 'N':
-+			inc = 0;
-+			/* no break */
-+		case 'n':
-+			type = FDT_IS_NODE;
-+			break;
-+		case 'o':
-+			disp->output_fname = optarg;
-+			break;
-+		case 'O':
-+			if (!strcmp(optarg, "dtb"))
-+				disp->output = OUT_DTB;
-+			else if (!strcmp(optarg, "dts"))
-+				disp->output = OUT_DTS;
-+			else if (!strcmp(optarg, "bin"))
-+				disp->output = OUT_BIN;
-+			else
-+				usage("Unknown output format");
-+			break;
-+		case 'P':
-+			inc = 0;
-+			/* no break */
-+		case 'p':
-+			type = FDT_IS_PROP;
-+			break;
-+		case 's':
-+			disp->flags |= FDT_REG_DIRECT_SUBNODES;
-+			break;
-+		case 'S':
-+			disp->flags &= ~FDT_REG_SUPERNODES;
-+			break;
-+		case 't':
-+			disp->flags |= FDT_REG_ADD_STRING_TAB;
-+			break;
-+		case 'v':
-+			disp->invert = 1;
-+			break;
-+		case 'V':
-+			disp->show_dts_version = 1;
-+			break;
-+		}
-+
-+		if (type && value_add(disp, &disp->value_head, type, inc,
-+					optarg))
-+			usage("Cannot add value");
-+	}
-+
-+	if (disp->invert && disp->types_exc)
-+		usage("-v has no meaning when used with 'exclude' conditions");
-+}
-+
 +int main(int argc, char *argv[])
 +{
-+	char *filename = NULL;
-+	struct display_info disp;
-+	int ret;
++	const char *fname = NULL;
++	int flags = 0;
++	int space = 0;
++	void *fdt;
 +
-+	/* set defaults */
-+	memset(&disp, '\0', sizeof(disp));
-+	disp.flags = FDT_REG_SUPERNODES;	/* Default flags */
-+
-+	scan_args(&disp, argc, argv);
-+
-+	/* Show matched lines in colour if we can */
-+	disp.colour = disp.all && isatty(0);
-+
-+	/* Any additional arguments can match anything, just like -g */
-+	while (optind < argc - 1) {
-+		if (value_add(&disp, &disp.value_head, FDT_IS_ANY, 1,
-+				argv[optind++]))
-+			usage("Cannot add value");
++	test_init(argc, argv);
++	if (argc < 2) {
++		verbose_printf("Usage: %s <flag value> [<space>]"
++				" [<output_fname.dtb>]", argv[0]);
++		FAIL();
 +	}
++	flags = atoi(argv[1]);
++	if (argc >= 3)
++		space = atoi(argv[2]);
++	if (argc >= 4)
++		fname = argv[3];
 +
-+	if (optind < argc)
-+		filename = argv[optind++];
-+	if (!filename)
-+		usage("Missing filename");
++	/*
++	 * Allocate space for the tree and build it, creating a list of
++	 * expected regions.
++	 */
++	fdt = xmalloc(SPACE);
++	build_tree(fdt, flags, space);
 +
-+	/* If a valid .dtb is required, set flags to ensure we get one */
-+	if (disp.output == OUT_DTB) {
-+		disp.header = 1;
-+		disp.flags |= FDT_REG_SUPERNODES;
-+		disp.flags |= FDT_REG_ADD_MEM_RSVMAP | FDT_REG_ADD_STRING_TAB;
-+	}
++	/* Write the tree out if required */
++	if (fname)
++		save_blob(fname, fdt);
 +
-+	if (disp.output_fname) {
-+		disp.fout = fopen(disp.output_fname, "w");
-+		if (!disp.fout)
-+			usage("Cannot open output file");
-+	} else {
-+		disp.fout = stdout;
-+	}
-+
-+	/* Run the grep and output the results */
-+	ret = do_fdtgrep(&disp, filename);
-+	if (disp.output_fname)
-+		fclose(disp.fout);
-+	if (ret)
-+		return 1;
++	/* Check the regions are what we expect */
++	if (check_regions(fdt, flags))
++		FAIL();
++	else
++		PASS();
 +
 +	return 0;
 +}
-diff --git a/tests/grep.dts b/tests/grep.dts
-new file mode 100644
-index 0000000..9600657
---- /dev/null
-+++ b/tests/grep.dts
-@@ -0,0 +1,23 @@
-+/dts-v1/;
-+/memreserve/ 1 2;
-+/ {
-+	model = "MyBoardName";
-+	compatible = "MyBoardName", "MyBoardFamilyName";
-+	#address-cells = <2>;
-+	#size-cells = <2>;
-+	chosen {
-+		bootargs = "root=/dev/sda2";
-+		linux,platform = <0x600>;
-+	};
-+	holiday {
-+		compatible = "ixtapa", "mexico";
-+		weather = "sunny";
-+		status = "okay";
-+		flight@1 {
-+			airline = "alaska";
-+		};
-+		flight@2 {
-+			airline = "lan";
-+		};
-+	};
-+};
 diff --git a/tests/run_tests.sh b/tests/run_tests.sh
-index 372acdd..67040d2 100755
+index b56b626..372acdd 100755
 --- a/tests/run_tests.sh
 +++ b/tests/run_tests.sh
-@@ -587,6 +587,349 @@ utilfdt_tests () {
-     run_test utilfdt_test
+@@ -246,6 +246,11 @@ libfdt_tests () {
+ 
+     # Specific bug tests
+     run_test add_subnode_with_nops
++
++    # Tests for fdt_find_regions()
++    for flags in 0 1 2 3 4 5 6 7; do
++	run_test region_tree ${flags}
++    done
  }
  
-+# Add a property to a tree, then hash it and see if it changed
-+# Args:
-+#   $1: 0 if we expect it to stay the same, 1 if we expect a change
-+#   $2: node to add a property to
-+#   $3: arguments for fdtget
-+#   $4: filename of device tree binary
-+#   $5: hash of unchanged file (empty to calculate it)
-+#   $6: node to add a property to ("testing" by default if empty)
-+check_hash () {
-+    local changed="$1"
-+    local node="$2"
-+    local args="$3"
-+    local tree="$4"
-+    local base="$5"
-+    local nodename="$6"
-+
-+    if [ -z "$nodename" ]; then
-+	nodename=testing
-+    fi
-+    if [ -z "$base" ]; then
-+	base=$($DTGREP ${args} -O bin $tree | sha1sum)
-+    fi
-+    $DTPUT $tree $node $nodename 1
-+    hash=$($DTGREP ${args} -O bin $tree | sha1sum)
-+    if [ "$base" == "$hash" ]; then
-+	if [ "$changed" == 1 ]; then
-+	    echo "$test: Hash should have changed"
-+	    echo base $base
-+	    echo hash $hash
-+	    false
-+	fi
-+    else
-+	if [ "$changed" == 0 ]; then
-+	    echo "$test: Base hash is $base but it was changed to $hash"
-+	    false
-+	fi
-+    fi
-+}
-+
-+# Check the number of lines generated matches what we expect
-+# Args:
-+#   $1: Expected number of lines
-+#   $2...: Command line to run to generate output
-+check_lines () {
-+    local base="$1"
-+
-+    shift
-+    lines=$($@ | wc -l)
-+    if [ "$base" != "$lines" ]; then
-+	echo "Expected $base lines but got $lines lines"
-+	false
-+    fi
-+}
-+
-+# Check the number of bytes generated matches what we expect
-+# Args:
-+#   $1: Expected number of bytes
-+#   $2...: Command line to run to generate output
-+check_bytes () {
-+    local base="$1"
-+
-+    shift
-+    bytes=$($@ | wc -c)
-+    if [ "$base" != "$bytes" ]; then
-+	echo "Expected $base bytes but got $bytes bytes"
-+	false
-+    fi
-+}
-+
-+# Check whether a command generates output which contains a string
-+# Args:
-+#   $1: 0 to expect the string to be absent, 1 to expect it to be present
-+#   $2: text to grep for
-+#   $3...: Command to execute
-+check_contains () {
-+    contains="$1"
-+    text="$2"
-+
-+    shift 2
-+    if $@ | grep -q $text; then
-+	if [ $contains -ne 1 ]; then
-+	    echo "Did not expect to find $text in output"
-+	    false
-+	fi
-+    else
-+	if [ $contains -ne 0 ]; then
-+	    echo "Expected to find $text in output"
-+	    false
-+	fi
-+    fi
-+}
-+
-+# Check that $2 and $3 are equal. $1 is the test name to display
-+equal_test () {
-+    echo -n "$1:	"
-+    if [ "$2" == "$3" ]; then
-+	PASS
-+    else
-+	FAIL "$2 != $3"
-+    fi
-+}
-+
-+fdtgrep_tests () {
-+    local addr
-+    local all_lines        # Total source lines in .dts file
-+    local base
-+    local dt_start
-+    local lines
-+    local node_lines       # Number of lines of 'struct' output
-+    local orig
-+    local string_size
-+    local tmp
-+    local tree
-+
-+    tmp=/tmp/tests.$$
-+    orig=region_tree.test.dtb
-+    ./region_tree 0 1000 ${orig}
-+
-+    # Hash of partial tree
-+    # - modify tree in various ways and check that hash is unaffected
-+    tree=region_tree.mod.dtb
-+    cp $orig $tree
-+    args="-n /images/kernel@1"
-+    run_wrap_test check_hash 0 /images "$args" $tree
-+    run_wrap_test check_hash 0 /images/kernel@1/hash@1 "$args" $tree
-+    run_wrap_test check_hash 0 / "$args" $tree
-+    $DTPUT -c $tree /images/kernel@1/newnode
-+    run_wrap_test check_hash 0 / "$args" $tree
-+    run_wrap_test check_hash 1 /images/kernel@1 "$args" $tree
-+
-+    # Now hash immediate subnodes so we detect a new subnode added
-+    cp $orig $tree
-+    args="-n /images/kernel@1 -s"
-+    run_wrap_test check_hash 0 /images "$args" $tree
-+    run_wrap_test check_hash 0 /images/kernel@1/hash@1 "$args" $tree
-+    run_wrap_test check_hash 0 / "$args" $tree
-+    base=$($DTGREP $args -O bin $tree | sha1sum)
-+    $DTPUT -c $tree /images/kernel@1/newnode
-+    run_wrap_test check_hash 1 / "$args" $tree "$base"
-+    cp $orig $tree
-+    run_wrap_test check_hash 1 /images/kernel@1 "$args" $tree
-+
-+    # Hash the string table, which should change if we add a new property name
-+    # (Adding an existing property name will just reuse that string)
-+    cp $orig $tree
-+    args="-t -n /images/kernel@1"
-+    run_wrap_test check_hash 0 /images "$args" $tree "" data
-+    run_wrap_test check_hash 1 /images/kernel@1 "$args" $tree
-+
-+    dts=grep.dts
-+    dtb=grep.dtb
-+    run_dtc_test -O dtb -p 0x1000 -o $dtb $dts
-+
-+    # Tests for each argument are roughly in alphabetical order
-+    #
-+    # First a sanity check that we can get back the source from the .dtb
-+    all_lines=$(cat $dts | wc -l)
-+    run_wrap_test check_lines ${all_lines} $DTGREP -Vm $dtb
-+    node_lines=$(($all_lines - 2))
-+
-+    # Get the offset of the dt_struct start (also tests -H somewhat)
-+    dt_start=$($DTGREP -H $dtb | awk '/off_dt_struct:/ {print $3}')
-+    dt_size=$($DTGREP -H $dtb | awk '/size_dt_struct:/ {print $3}')
-+
-+    # Check -a: the first line should contain the offset of the dt_start
-+    addr=$($DTGREP -a $dtb | head -1 | tr -d : | awk '{print $1}')
-+    run_wrap_test equal_test "-a offset first" "$dt_start" "0x$addr"
-+
-+    # Last line should be 8 bytes less than the size (NODE, END tags)
-+    addr=$($DTGREP -a $dtb | tail -1 | tr -d : | awk '{print $1}')
-+    last=$(printf "%#x" $(($dt_start + $dt_size - 8)))
-+    run_wrap_test equal_test "-a offset last" "$last" "0x$addr"
-+
-+    # Check that -A controls display of all lines
-+    # The 'chosen' node should only have four output lines
-+    run_wrap_test check_lines $node_lines $DTGREP -S -A -n /chosen $dtb
-+    run_wrap_test check_lines 4 $DTGREP -S -n /chosen $dtb
-+
-+    # Check that -c picks out nodes
-+    run_wrap_test check_lines 5 $DTGREP -S -c ixtapa $dtb
-+    run_wrap_test check_lines $(($node_lines - 5)) $DTGREP -S -C ixtapa $dtb
-+
-+    # -d marks selected lines with +
-+    run_wrap_test check_lines $node_lines $DTGREP -S -Ad -n /chosen $dtb
-+    run_wrap_test check_lines 4 $DTGREP -S -Ad -n /chosen $dtb |grep +
-+
-+    # -g should find a node, property or compatible string
-+    run_wrap_test check_lines 2 $DTGREP -S -g / $dtb
-+    run_wrap_test check_lines 2 $DTGREP -S -g /chosen $dtb
-+    run_wrap_test check_lines $(($node_lines - 2)) $DTGREP -S -G /chosen $dtb
-+
-+    run_wrap_test check_lines 1 $DTGREP -S -g bootargs $dtb
-+    run_wrap_test check_lines $(($node_lines - 1)) $DTGREP -S -G bootargs $dtb
-+
-+    # We should find the /holiday node, so 1 line for 'holiday {', one for '}'
-+    run_wrap_test check_lines 2 $DTGREP -S -g ixtapa $dtb
-+    run_wrap_test check_lines $(($node_lines - 2)) $DTGREP -S -G ixtapa $dtb
-+
-+    run_wrap_test check_lines 3 $DTGREP -S -g ixtapa -g bootargs $dtb
-+    run_wrap_test check_lines $(($node_lines - 3)) $DTGREP -S -G ixtapa \
-+	-G bootargs $dtb
-+
-+    # -l outputs a,list of regions - here we should get 3: one for the header,
-+    # one for the node and one for the 'end' tag.
-+    run_wrap_test check_lines 3 $DTGREP -S -l -n /chosen $dtb -o $tmp
-+
-+    # -L outputs all the strings in the string table
-+    cat >$tmp <<END
-+	#address-cells
-+	airline
-+	bootargs
-+	compatible
-+	linux,platform
-+	model
-+	#size-cells
-+	status
-+	weather
-+END
-+    lines=$(cat $tmp | wc -l)
-+    run_wrap_test check_lines $lines $DTGREP -S -L -n // $dtb
-+
-+    # Check that the -m flag works
-+    run_wrap_test check_contains 1 memreserve $DTGREP -Vm $dtb
-+    run_wrap_test check_contains 0 memreserve $DTGREP -V $dtb
-+
-+    # Test -n
-+    run_wrap_test check_lines 0 $DTGREP -S -n // $dtb
-+    run_wrap_test check_lines 0 $DTGREP -S -n chosen $dtb
-+    run_wrap_test check_lines 0 $DTGREP -S -n holiday $dtb
-+    run_wrap_test check_lines 0 $DTGREP -S -n \"\" $dtb
-+    run_wrap_test check_lines 4 $DTGREP -S -n /chosen $dtb
-+    run_wrap_test check_lines 5 $DTGREP -S -n /holiday $dtb
-+    run_wrap_test check_lines 9 $DTGREP -S -n /chosen -n /holiday $dtb
-+
-+    # Test -N which should list everything except matching nodes
-+    run_wrap_test check_lines $node_lines $DTGREP -S -N // $dtb
-+    run_wrap_test check_lines $node_lines $DTGREP -S -N chosen $dtb
-+    run_wrap_test check_lines $(($node_lines - 4)) $DTGREP -S -N /chosen $dtb
-+    run_wrap_test check_lines $(($node_lines - 5)) $DTGREP -S -N /holiday $dtb
-+    run_wrap_test check_lines $(($node_lines - 9)) $DTGREP -S -N /chosen \
-+	-N /holiday $dtb
-+
-+    # Using -n and -N together is undefined, so we don't have tests for that
-+    # The same applies for -p/-P and -c/-C.
-+    run_wrap_error_test $DTGREP -n chosen -N holiday $dtb
-+    run_wrap_error_test $DTGREP -c chosen -C holiday $dtb
-+    run_wrap_error_test $DTGREP -p chosen -P holiday $dtb
-+
-+    # Test -o: this should output just the .dts file to a file
-+    # Where there is non-dts output it should go to stdout
-+    rm -f $tmp
-+    run_wrap_test check_lines 0 $DTGREP $dtb -o $tmp
-+    run_wrap_test check_lines $node_lines cat $tmp
-+
-+    # Here we expect a region list with a single entry, plus a header line
-+    # on stdout
-+    run_wrap_test check_lines 2 $DTGREP $dtb -o $tmp -l
-+    run_wrap_test check_lines $node_lines cat $tmp
-+
-+    # Here we expect a list of strings on stdout
-+    run_wrap_test check_lines ${lines} $DTGREP $dtb -o $tmp -L
-+    run_wrap_test check_lines $node_lines cat $tmp
-+
-+    # Test -p: with -S we only get the compatible lines themselves
-+    run_wrap_test check_lines 2 $DTGREP -S -p compatible -n // $dtb
-+    run_wrap_test check_lines 1 $DTGREP -S -p bootargs -n // $dtb
-+
-+    # Without -S we also get the node containing these properties
-+    run_wrap_test check_lines 6 $DTGREP -p compatible -n // $dtb
-+    run_wrap_test check_lines 5 $DTGREP -p bootargs -n // $dtb
-+
-+    # Now similar tests for -P
-+    # First get the number of property lines (containing '=')
-+    lines=$(grep "=" $dts |wc -l)
-+    run_wrap_test check_lines $(($lines - 2)) $DTGREP -S -P compatible \
-+	-n // $dtb
-+    run_wrap_test check_lines $(($lines - 1)) $DTGREP -S -P bootargs \
-+	-n // $dtb
-+    run_wrap_test check_lines $(($lines - 3)) $DTGREP -S -P compatible \
-+	-P bootargs -n // $dtb
-+
-+    # Without -S we also get the node containing these properties
-+    run_wrap_test check_lines $(($node_lines - 2)) $DTGREP -P compatible \
-+	-n // $dtb
-+    run_wrap_test check_lines $(($node_lines - 1)) $DTGREP -P bootargs \
-+	-n // $dtb
-+    run_wrap_test check_lines $(($node_lines - 3)) $DTGREP -P compatible \
-+	-P bootargs -n // $dtb
-+
-+    # -s should bring in all sub-nodes
-+    run_wrap_test check_lines 2 $DTGREP -p none -n / $dtb
-+    run_wrap_test check_lines 6 $DTGREP -s -p none -n / $dtb
-+    run_wrap_test check_lines 2 $DTGREP -S -p none -n /holiday $dtb
-+    run_wrap_test check_lines 4 $DTGREP  -p none -n /holiday $dtb
-+    run_wrap_test check_lines 8 $DTGREP -s -p none -n /holiday $dtb
-+
-+    # -v inverts the polarity of any condition
-+    run_wrap_test check_lines $(($node_lines - 2)) $DTGREP -Sv -p none \
-+	-n / $dtb
-+    run_wrap_test check_lines $(($node_lines - 2)) $DTGREP -Sv -p compatible \
-+	-n // $dtb
-+    run_wrap_test check_lines $(($node_lines - 2)) $DTGREP -Sv -g /chosen \
-+	$dtb
-+    run_wrap_test check_lines $node_lines $DTGREP -Sv -n // $dtb
-+    run_wrap_test check_lines $node_lines $DTGREP -Sv -n chosen $dtb
-+    run_wrap_error_test $DTGREP -v -N holiday $dtb
-+
-+    # Check that the -V flag works
-+    run_wrap_test check_contains 1 dts-v1 $DTGREP -V $dtb
-+    run_wrap_test check_contains 0 dts-v1 $DTGREP $dtb
-+
-+    # Now some dtb tests. The dts tests above have tested the basic grepping
-+    # features so we only need to concern ourselves with things that are
-+    # different about dtb/bin output.
-+
-+    # An empty node list should just give us the FDT_END tag
-+    run_wrap_test check_bytes 4 $DTGREP -n // -O bin $dtb
-+
-+    # The mem_rsvmap is two entries of 16 bytes each
-+    run_wrap_test check_bytes $((4 + 32)) $DTGREP -m -n // -O bin $dtb
-+
-+    # Check we can add the string table
-+    string_size=$($DTGREP -H $dtb | awk '/size_dt_strings:/ {print $3}')
-+    run_wrap_test check_bytes $((4 + $string_size)) $DTGREP -t -n // -O bin \
-+	$dtb
-+    run_wrap_test check_bytes $((4 + 32 + $string_size)) $DTGREP -tm \
-+	-n // -O bin $dtb
-+
-+    # Check that a pass-through works ok. fdtgrep aligns the mem_rsvmap table
-+    # to a 16-bytes boundary, but dtc uses 8 bytes so we expect the size to
-+    # increase by 8 bytes...
-+    run_dtc_test -O dtb -o $dtb $dts
-+    base=$(stat -c %s $dtb)
-+    run_wrap_test check_bytes $(($base + 8)) $DTGREP -O dtb $dtb
-+
-+    # ...but we should get the same output from fdtgrep in a second pass
-+    run_wrap_test check_bytes 0 $DTGREP -O dtb $dtb -o $tmp
-+    base=$(stat -c %s $tmp)
-+    run_wrap_test check_bytes $base $DTGREP -O dtb $tmp
-+
-+    rm -f $tmp
-+}
-+
- while getopts "vt:m" ARG ; do
-     case $ARG in
- 	"v")
-@@ -602,7 +945,7 @@ while getopts "vt:m" ARG ; do
- done
- 
- if [ -z "$TESTSETS" ]; then
--    TESTSETS="libfdt utilfdt dtc dtbs_equal fdtget fdtput"
-+    TESTSETS="libfdt utilfdt dtc dtbs_equal fdtget fdtput fdtgrep"
- fi
- 
- # Make sure we don't have stale blobs lying around
-@@ -628,6 +971,9 @@ for set in $TESTSETS; do
- 	"fdtput")
- 	    fdtput_tests
- 	    ;;
-+	"fdtgrep")
-+	    fdtgrep_tests
-+	    ;;
-     esac
- done
- 
-diff --git a/tests/tests.sh b/tests/tests.sh
-index 31530d5..8e4b65b 100644
---- a/tests/tests.sh
-+++ b/tests/tests.sh
-@@ -21,6 +21,7 @@ FAIL_IF_SIGNAL () {
- DTC=../dtc
- DTGET=../fdtget
- DTPUT=../fdtput
-+DTGREP=../fdtgrep
- 
- verbose_run () {
-     if [ -z "$QUIET_TEST" ]; then
+ dtc_tests () {
 -- 
 1.8.1.3
