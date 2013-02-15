@@ -1,112 +1,41 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: [RFC 3/3] power: power_supply: add support for getting supplied-nodes from dt
-Date: Fri, 15 Feb 2013 18:36:56 -0500
-Message-ID: <1360971416-30717-4-git-send-email-rklein@nvidia.com>
-References: <1360971416-30717-1-git-send-email-rklein@nvidia.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v2 4/5] arm: mvebu: update DT to support local timers
+Date: Fri, 15 Feb 2013 16:59:03 -0500
+Message-ID: <20130215215903.GJ14746@titan.lakedaemon.net>
+References: <1359135165-32108-1-git-send-email-gregory.clement@free-electrons.com>
+ <1359135165-32108-5-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360971416-30717-1-git-send-email-rklein@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Rhyland Klein <rklein@nvidia.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1359135165-32108-5-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, John Stultz <johnstul-r/Jw6+rmf7HQT0dZR+AlfA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jani Monoses <jani.monoses-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With the addition of the device_nodes to use similar to how
-supplied_to works, add a helper function which will parse out the
-phandles for the supplied-nodes directly from the node. This
-implmentation requires the property name to be "supplied-nodes".
+On Fri, Jan 25, 2013 at 06:32:44PM +0100, Gregory CLEMENT wrote:
+> Now that the time-armada-370-xp support local timers, updated the
+> device tree to take it into account.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-370-xp.dtsi |    5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
 
-Signed-off-by: Rhyland Klein <rklein@nvidia.com>
----
- drivers/power/power_supply_core.c |   57 +++++++++++++++++++++++++++++++++++++
- include/linux/power_supply.h      |    6 ++++
- 2 files changed, 63 insertions(+)
+Patches 4 and 5 applied to mvebu/dt with a dependency on mvebu/boards
+for patches 1-3 and the previous SMP support.
 
-diff --git a/drivers/power/power_supply_core.c b/drivers/power/power_supply_core.c
-index 9e42702..4bc682b 100644
---- a/drivers/power/power_supply_core.c
-+++ b/drivers/power/power_supply_core.c
-@@ -84,6 +84,63 @@ void power_supply_changed(struct power_supply *psy)
- }
- EXPORT_SYMBOL_GPL(power_supply_changed);
- 
-+#ifdef CONFIG_OF
-+#include <linux/of.h>
-+
-+static int __power_supply_get_supplied_nodes(struct device *dev,
-+					     struct device_node *np,
-+					     struct device_node **supplicants,
-+					     int *count)
-+{
-+	int i = 0;
-+	int num_nodes = 0;
-+	struct device_node *node;
-+
-+	do {
-+		node = of_parse_phandle(np, "power-supply,supplied-nodes", i++);
-+		if (node)
-+			num_nodes++;
-+	} while (node);
-+
-+	if (!num_nodes) {
-+		dev_warn(dev, "No supplicant phandles found.\n");
-+		return -EINVAL;
-+	}
-+
-+	*supplicants = devm_kzalloc(dev, sizeof(struct device_node *) *
-+				    num_nodes, GFP_KERNEL);
-+
-+	if (!*supplicants) {
-+		dev_err(dev, "Failed allocation for memory for supplicants\n");
-+		return -ENOMEM;
-+	}
-+
-+	for (i = 0; i < num_nodes; i++)
-+		supplicants[i] = of_parse_phandle(np,
-+					"power-supply,supplied-nodes", i);
-+
-+	*count = num_nodes;
-+
-+	return 0;
-+}
-+
-+int power_supply_get_supplied_nodes(struct device *dev,
-+				    struct device_node *np,
-+				    struct device_node **supplicants,
-+				    int *count)
-+{
-+	int error;
-+
-+	if (!np || !supplicants)
-+		return -EINVAL;
-+
-+	error = __power_supply_get_supplied_nodes(dev, np, supplicants, count);
-+
-+	return error;
-+}
-+EXPORT_SYMBOL_GPL(power_supply_get_supplied_nodes);
-+#endif
-+
- static int __power_supply_am_i_supplied(struct device *dev, void *data)
- {
- 	union power_supply_propval ret = {0,};
-diff --git a/include/linux/power_supply.h b/include/linux/power_supply.h
-index 8c8693b..359335a 100644
---- a/include/linux/power_supply.h
-+++ b/include/linux/power_supply.h
-@@ -230,6 +230,12 @@ struct power_supply_info {
- 
- extern struct power_supply *power_supply_get_by_name(char *name);
- extern void power_supply_changed(struct power_supply *psy);
-+#ifdef CONFIG_OF
-+extern int power_supply_get_supplied_nodes(struct device *dev,
-+					   struct device_node *np,
-+					   struct device_node **supplicants,
-+					   int *count);
-+#endif
- extern int power_supply_am_i_supplied(struct power_supply *psy);
- extern int power_supply_set_battery_charged(struct power_supply *psy);
- 
--- 
-1.7.9.5
+thx,
+
+Jason.
