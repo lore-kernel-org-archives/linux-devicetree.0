@@ -1,16 +1,12 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [v2 1/4] ARM: tegra20: create a DT header defining CLK IDs
-Date: Fri, 15 Feb 2013 09:45:45 -0700
-Message-ID: <511E6639.1090909@wwwdotorg.org>
-References: <1360868369-20093-1-git-send-email-hdoyu@nvidia.com>
- <1360868369-20093-2-git-send-email-hdoyu@nvidia.com>
- <511D45E0.1080105@wwwdotorg.org>
- <20130215092407.GO3073@tbergstrom-lnx.Nvidia.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Subject: [RFC] DT affinity bindings/representing bus masters with DT
+Date: Fri, 15 Feb 2013 17:21:02 +0000
+Message-ID: <20130215172102.GF3014@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130215092407.GO3073-Rysk9IDjsxmJz7etNGeUX8VPkgjIgRvpAL8bYrjMMd8@public.gmane.org>
+Content-Disposition: inline
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,43 +17,111 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/15/2013 02:24 AM, Peter De Schrijver wrote:
-> On Thu, Feb 14, 2013 at 09:15:28PM +0100, Stephen Warren wrote:
->> On 02/14/2013 11:59 AM, Hiroshi Doyu wrote:
->>> To replace magic number in tegra_car:
->>>
->>> -               clocks = <&tegra_car 28>;
->>> +               clocks = <&tegra_car CLK_HOST1X>;
->>
->>> diff --git a/arch/arm/boot/dts/tegra20-car.h b/arch/arm/boot/dts/tegra20-car.h
->>
->> Sorry, forgot a couple small comments the last time around.
->>
->> This file should probably have some header indicating which binding it
->> describes, rather like the GPIO header in my patch series.
->>
->>> +#define CLK_CPU 0
->>
->> I'd suggest naming that TEGRA20_CLK_CPU, so that the various different
->> clock headers don't conflict. It's not too likely that more than one of
->> the /Tegra/ clock headers will be included at once, but it doesn't seem
->> that unlikely that a board file could end up having a Tegra clock header
->> included plus various other clock headers for some other chip that has
->> some clock outputs.
->>
-> 
-> I would suggest removing this clock. It's not actually implemented in the CCF
-> and rather useless. If you would gate the CPU clock from the CPU by writing to
-> this register, how would you ungate it? :) Note that this would gate the clock
-> to all CPUs.
+Hi all,
 
-(Note that my comment was re: all clocks, not just that one clock)
+in order to come up with a solid solution to the affinity bindings concept
+we are facing in the ARM world, I am posting this RFC so that hopefully people
+on the list can chime in and help us in this endeavour.
 
-Can't the PMC or flow-controller ungate the clock based on some event?
-Either way, that clock definition exists in HW, right? So I don't think
-there's actually any harm in including the definition in the binding
-even if we never implement/use it.
+I tried to keep things simple on purpose and some statements are a bit of an
+oversimplification, we can elaborate on those if needed.
+
+Hereafter a summary of what we are trying to achieve.
+
+Current device tree bindings allow to describe HW configurations of systems
+in a bus like fashion, where each bus contains bus slaves and mapping
+heuristics to translate address spaces across bus layers (AMBA -> PCI).
+
+The device tree by definition represents the view of the system from the
+perspective of the CPU(s). This means that all devices (but CPUs) present
+in the device tree are to be seen as "slave" components, ie devices sitting on
+a bus and accessible from the CPU with an addressing mode that can vary and it
+is defined by the bus the device is sitting on.
+
+There are specific cases in current SoCs though where resources belonging to
+a slave device should be linked to a master in the SoC system hierarchy.
+
+To the best of my knowledge, the mechanism used to implement this linkage is
+not defined by any device tree binding; it probably can be a phandle in the
+device tree syntax, but this has some implications that will be described as
+follows.
+
+A programmable device, let's call it "foo" for the sake of this discussion,
+has several resources (ie memory spaces) that should be mapped to bus masters
+in a SoC hierarchy (each resource "belongs" to a master). The only way this
+can be currently done through a device tree is by linking the resource in
+question to a device representing the master node through a phandle (keeping
+in mind that the concept of master node does not exist in current DT
+bindings).
+
+An example is worth a thousand words (pseudo dts file):
+
+/ {
+	#address-cells = 1;
+	#size-cells = 1;
+
+	acme1: acme@4000000 {
+		reg = <0x4000000 0x1000>;
+	};
+
+	acme2: acme@5000000 {
+		reg = <0x5000000 0x1000>;
+	};
+
+	foo@2000000 {
+		reg = <0x2000000 0x1000
+		       0x2001000 0x1000>;
+		affinity = <&acme1 &acme2>;
+	};
+};
+
+where the "affinity" property contains a number of phandles equal to the number
+of resources (ie reg properties) in the foo@2000000 node. The "affinity"
+property maps a reg property to a device tree node, one phandle per "reg"
+property.
+
+acme1 and acme2 are two bus masters in the system (eg a DMA and a GPU).
+
+Each foo@2000000 reg property maps to a device that represents a bus master
+(to make it clearer, a foo@2000000 reg property defines an address space that
+belongs to a bus master, ie the address space represents a programming
+interface specific to that master; in the bindings above address 0x2000000 is
+the address at which acme1 device can programme its "foo" interface, address
+0x2001000 is the address at which acme2 device can programme its "foo"
+interface).
+
+Now, the dts above links, through a phandle, a reg property to a "slave"
+device not a "master" device, basically to a device tree node representing the
+acme1 device programming interface (address 0x4000000 is the register space of
+the acme1 device, which is used to describe that device in the tree and
+represents its address space, its "slave interface").
+
+The approach above has two drawbacks:
+
+1 - we are using a slave device node to map a resource to a master device.
+    Since there is no notion of "master" device in the current device tree
+    bindings that's our best bet. The approach above works as long as there
+    is a node in the device tree describing the "master" node (through its
+    slave interface), even if it does not have a programming interface (ie it
+    cannot be described in the device tree as a memory mapped/addressable
+    device). This is also the approach taken by the dma bindings described in
+
+    Documentation/devicetree/bindings/dma/dma.txt (currently in linux-next)
+
+2 - By connecting a device's resource to a slave device, to emulate a resource
+    to a bus master connection, we are implicitly taking the assumption that
+    the address space where both eg foo and acme1 devices above reside (acme1
+    programming interface) is the same as the one seen by the acme1 master
+    device (which has no representation in the device tree). This is not a
+    problem for now, but the device tree representation is questionable and
+    we are inquiring on possible issues this might create.
+
+Any bits of advice is welcome on the subject, and the problem can be
+elaborated with further examples to kickstart discussions.
+
+Thank you very much for your feedback,
+Lorenzo
