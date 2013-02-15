@@ -1,67 +1,60 @@
-From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
-Subject: Re: [PATCHi v2] net: sh_eth: Add support of device tree probe
-Date: Thu, 14 Feb 2013 11:56:57 +0900
-Message-ID: <511C5279.3070008@renesas.com>
-References: <1360803091-26400-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
- <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com>
+From: Kim Phillips <kim.phillips-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] Added license header to dtc/libfdt/fdt.h and libfdt_env.h
+Date: Thu, 14 Feb 2013 18:39:36 -0600
+Message-ID: <20130214183936.e82dbf45c5708f8084de2d62@freescale.com>
+References: <1360773121-25880-1-git-send-email-jsobota@ti.com>
+ <20130213233255.GU4948@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-reply-to: <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: netdev@vger.kernel.org, horms+renesas@verge.net.au, magnus.damm@gmail.com, devicetree-discuss@lists.ozlabs.org, kda@linux-powerpc.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130213233255.GU4948-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-(2013/02/14 10:24), Kuninori Morimoto wrote:
->
-> Hi Iwamatsu-san
->
-> Thank you for this patch.
->
-> Small comment from me
->
->> +#ifdef CONFIG_OF
-> (snip)
->> +sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
->> +{
->> +	int ret;
->> +	struct device_node *np = dev->of_node;
->> +	struct sh_eth_plat_data *pdata;
-> ...
->> +#else
->> +static struct sh_eth_plat_data *
->> +sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
->> +{
->> +	return NULL;
->> +}
->> +#endif
->
-> (snip)
->
->>   static int sh_eth_drv_probe(struct platform_device *pdev)
->>   {
-> ...
->> +#ifdef CONFIG_OF
->> +	if (np&&  of_device_is_available(np)) {
->> +		pd = sh_eth_parse_dt(&pdev->dev, ndev);
->> +		if (pdev->dev.platform_data) {
->> +			struct sh_eth_plat_data *tmp =
->> +				pdev->dev.platform_data;
->> +			pd->set_mdio_gate = tmp->set_mdio_gate;
->> +			pd->needs_init = tmp->needs_init;
->> +		}
->> +	} else
->> +#endif
->
-> sh_eth_parse_dt() was defined for both CONFIG_OF and !CONFIG_OF.
-> But it is called only from CONFIG_OF ?
->
+On Thu, 14 Feb 2013 10:32:56 +1100
+David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org> wrote:
 
-Because of_device_is_available needs CONFIG_OF.
-I already send a patch which add empty function of of_device_is_available.
-If this was apply, this ifdef becomes without need.
+> On Wed, Feb 13, 2013 at 11:32:01AM -0500, Justin Sobota wrote:
+> > This commit adds a license header to fdt.h and libfdt_env.h because
+> > the license was omitted
+> 
+> So, having a quick look at the git blame for both these files, it
+> looks like Kim Phillips (CCed) also touched them substantially.
+> 
+> Kim, did you want to supply an additional copyright line for these files?
 
-Best,
-   Nobuhiro
+sure, it'd be:
+
+Copyright 2012 Kim Phillips, Freescale Semiconductor.
+
+I can spin a patch on top of this one, or - wait...
+
+> > Signed-off-by: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
+> > ---
+> >  libfdt/fdt.h        |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  libfdt/libfdt_env.h |   50 ++++++++++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 100 insertions(+)
+> >  mode change 100644 => 100755 libfdt/fdt.h
+> >  mode change 100644 => 100755 libfdt/libfdt_env.h
+
+...what's up with making them executable?
+
+So I'm assuming this patch is going to be respun to not include the
+mode changes, in which case please add the above copyright line
+under David's.
+
+Thanks,
+
+Kim
