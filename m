@@ -1,56 +1,123 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v2 8/8] reset: Add driver for gpio-controlled reset pins
-Date: Fri, 15 Feb 2013 10:27:57 +0100
-Message-ID: <1360920477.4142.18.camel@pizza.hi.pengutronix.de>
-References: <1360776872-18584-1-git-send-email-p.zabel@pengutronix.de>
- <1360776872-18584-9-git-send-email-p.zabel@pengutronix.de>
- <20130214105611.GG17833@n2100.arm.linux.org.uk>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH] arm: dts: Add uart1 and uart2 to igep boards.
+Date: Fri, 15 Feb 2013 10:35:39 +0100
+Message-ID: <CABuKBeJsg_P=aDr0s9iVOD+7YTNoVUFQJCJymJyJ7NqXHUBzKQ@mail.gmail.com>
+References: <1355326422-12357-1-git-send-email-matthias.bgg@gmail.com>
+	<50C8AC3C.9020908@ti.com>
+	<CABuKBeJsHCq98Pe-BwPajbQ+2OLQpwrbtVTJe=j9thPDQCCBrg@mail.gmail.com>
+	<CAAwP0s01Jxh0f-T0sd5D980dZPcEV0J1KzjPbNHkrXLaKA3YUg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130214105611.GG17833-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAAwP0s01Jxh0f-T0sd5D980dZPcEV0J1KzjPbNHkrXLaKA3YUg@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: Javier Martinez Canillas <martinez.javier@gmail.com>, "tony@atomide.com" <tony@atomide.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "elezegarcia@gmail.com" <elezegarcia@gmail.com>, "ebutera@gmail.com" <ebutera@gmail.com>, "javier.martinez@collabora.co.uk" <javier.martinez@collabora.co.uk>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
+2013/1/26 Javier Martinez Canillas <martinez.javier@gmail.com>:
+> On Sat, Jan 26, 2013 at 4:16 PM, Matthias Brugger <matthias.bgg@gmail.com>
+> wrote:
+>> Hi Benoit,
+>>
+>> 2012/12/12 Benoit Cousson <b-cousson@ti.com>:
+>>> Hi Matthias,
+>>>
+>>> On 12/12/2012 04:33 PM, Matthias Brugger wrote:
+>>>> This patch is a follow-up patch for Javier Martinez effort adding
+>>>> initial
+>>>> device tree support to IGEP technology devices. [1]
+>>>>
+>>>> It adds uart1 and uart2 bindings to the generic dtsi for the IGEP
+>>>> boards.
+>>>>
+>>>> [1] http://www.spinics.net/lists/linux-omap/msg83409.html
+>>>>
+>>>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>>>> ---
+>>>>  arch/arm/boot/dts/omap3-igep.dtsi |   24 ++++++++++++++++++++++++
+>>>>  1 file changed, 24 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/omap3-igep.dtsi
+>>>> b/arch/arm/boot/dts/omap3-igep.dtsi
+>>>> index 125fe00..c02e3c0 100644
+>>>> --- a/arch/arm/boot/dts/omap3-igep.dtsi
+>>>> +++ b/arch/arm/boot/dts/omap3-igep.dtsi
+>>>> @@ -27,6 +27,20 @@
+>>>>  };
+>>>>
+>>>>  &omap3_pmx_core {
+>>>> +     uart1_pins: pinmux_uart1_pins {
+>>>> +             pinctrl-single,pins = <
+>>>> +                     0x152 0x100     /* uart1_rx.uart1_rx INPUT | MODE0
+>>>> */
+>>>> +                     0x14c 0         /* uart1_tx.uart1_tx OUTPUT |
+>>>> MODE0 */
+>>>> +             >;
+>>>> +     };
+>>>> +
+>>>> +     uart2_pins: pinmux_uart2_pins {
+>>>> +             pinctrl-single,pins = <
+>>>> +                     0x14a 0x100     /* uart2_rx.uart2_rx INPUT | MODE0
+>>>> */
+>>>> +                     0x148 0         /* uart2_tx.uart2_tx OUTPUT |
+>>>> MODE0 */
+>>>> +             >;
+>>>> +     };
+>>>> +
+>>>>       uart3_pins: pinmux_uart3_pins {
+>>>>               pinctrl-single,pins = <
+>>>>                       0x16e 0x100     /* uart3_rx.uart3_rx INPUT | MODE0
+>>>> */
+>>>> @@ -77,6 +91,16 @@
+>>>>       status = "disabled";
+>>>>  };
+>>>>
+>>>> +&uart1 {
+>>>> +       pinctrl-names = "default";
+>>>> +       pinctrl-0 = <&uart1_pins>;
+>>>> +};
+>>>> +
+>>>> +&uart2 {
+>>>> +       pinctrl-names = "default";
+>>>> +       pinctrl-0 = <&uart2_pins>;
+>>>> +};
+>>>> +
+>>>>  &uart3 {
+>>>>         pinctrl-names = "default";
+>>>>         pinctrl-0 = <&uart3_pins>;
+>>>>
+>>>
+>>> That looks good to me. I'll apply it on top of javier's series for 3.9.
+>>
+>> Can you pin-point me to the repository where this patches are in right
+>> now? I tried to figure it out these days, but didn't found where to
+>> clone the repository from.
+>>
+>> Thanks,
+>> Matthias
+>>
+>
+> Hi Matthias,
+>
+> OMAP DT tree is:
+> git://git.kernel.org/pub/scm/linux/kernel/git/bcousson/linux-omap-dt.git
 
-Am Donnerstag, den 14.02.2013, 10:56 +0000 schrieb Russell King - ARM
-Linux:
-> On Wed, Feb 13, 2013 at 06:34:32PM +0100, Philipp Zabel wrote:
-> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Just be aware that PXA has a "gpio reset" facility which is used for SoC
-> reset - see arch/arm/mach-pxa/reset.c
-> 
-> The use of gpio-reset would be ambiguous... or maybe PXA's usage could be
-> combined somehow with this?
+Hi all,
 
-thank you for pointing this out. The PXA gpio reset code is used for
-system/board reset and fiddles with the reset line to trigger all
-possible types of reset without needing configuration. The code I
-suggest is targeted at resetting peripheral devices, like I2C and SPI
-ICs with a reset line connected via GPIO, and it has to be configured
-for either active-high or active-low GPIOs. Should this be combined?
-I wonder if it would be worth the effort to make the PXA gpio reset go
-through this reset API, as there isn't even a struct device that would
-be the reset "consumer".
+unfortunately I can't find the patch in this tree.
+Benoit, can you pin point me to the right tree/branch? (I had a look
+in for_3.9/dts branch).
 
-In fact, I don't even think most drivers that currently implement gpio
-resets themselves would gain much from switching to another level of
-abstraction, unless the SoC already has an on-chip reset controller
-anyway - in which case this would mostly increase overall consistency.
+Thanks,
+Matthias
 
-regards
-Philipp
+>
+> Hope it helps,
+> Javier
+
+
+
+-- 
+---
+motzblog.wordpress.com
