@@ -1,255 +1,193 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [RFC] ARM: shmobile: add framebuffer and backlight support to
- kzm9g-reference
-Date: Fri, 15 Feb 2013 11:36:29 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1302151127010.7446@axis700.grange>
-References: <Pine.LNX.4.64.1302151101140.7446@axis700.grange>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1302151101140.7446@axis700.grange>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Richard Purdie <rpurdie@rpsys.net>, Andrew Morton <akpm@linux-foundation.org>, linux-fbdev@vger.kernel.org
+From: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH] i2c-designware: Interrupt sharing and SDA hold time
+Date: Fri, 15 Feb 2013 11:11:50 +0100
+Message-ID: <1360923110-21692-1-git-send-email-christian.ruppert@abilis.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <w.sang-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>, Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds support for the framebuffer and an AS3711 PMIC, used for supplying
-power to the CPU, some peripherals and the backlight.
+This patch implements interrupt sharing and SDA hold time configuration in
+the designware i2c driver. Both functions are enabled through platform data
+or device tree. Tested with Linux-3.8rc4 (Synopsys ARC port, see
+https://github.com/foss-for-synopsys-dwc-arc-processors/linux/commits/arc-3.8-baseline).
 
-not-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Signed-off-by: Christian Ruppert <christian.ruppert-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Pierrick Hascoet <pierrick.hascoet-ux6zf3SgZrrQT0dZR+AlfA@public.gmane.org>
 ---
+ .../devicetree/bindings/i2c/i2c-designware.txt     |   18 ++++++++++
+ drivers/i2c/busses/i2c-designware-core.c           |    6 +++
+ drivers/i2c/busses/i2c-designware-core.h           |    2 +
+ drivers/i2c/busses/i2c-designware-platdrv.c        |   34 +++++++++++++++++++-
+ include/linux/i2c/i2c-designware.h                 |   13 +++++++
+ 5 files changed, 72 insertions(+), 1 deletions(-)
+ create mode 100644 include/linux/i2c/i2c-designware.h
 
-As is clear from the not-Sob line and the RFC in the subject, this is not 
-for mainline. This is just an illustration how the recently submitted 
-"mfd: as3711: add OF support" patch can be used with the kzm9g board. I 
-had to add the framebuffer support to kzm9g, because without it the 
-backlight would just be turned on with no image on the LCD, which doesn't 
-look pretty. In the future, if needed, we could first only apply the 
-regulator part of the .dts, leaving the backlight disabled.
-
- arch/arm/boot/dts/sh73a0-kzm9g-reference.dts   |   90 ++++++++++++++++++++++++
- arch/arm/mach-shmobile/board-kzm9g-reference.c |   73 +++++++++++++++++++-
- 2 files changed, 162 insertions(+), 1 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-index b93b16a..a5810fc 100644
---- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-+++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
-@@ -99,6 +99,12 @@
- 		toshiba,mmc-wrprotect-disable;
- 		toshiba,mmc-has-idle-wait;
+diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+index e42a2ee..474386b 100644
+--- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
++++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
+@@ -10,6 +10,12 @@ Recommended properties :
+ 
+  - clock-frequency : desired I2C bus clock frequency in Hz.
+ 
++Optional properties :
++ - interrupts-shared : If this property is present, the interrupt line is
++   considered shared with other devices.
++ - sda-hold-time : If this property is present, the register SDA_HOLD will
++   be initialised with its value.
++
+ Example :
+ 
+ 	i2c@f0000 {
+@@ -20,3 +26,15 @@ Example :
+ 		interrupts = <11>;
+ 		clock-frequency = <400000>;
  	};
 +
-+	/* A dummy LCDC DT node for now */
-+	lcdc: lcdc@0xfe940000 {
-+		compatible = "renesas,sh-mobile-lcdc";
-+		reg = <0xfe940000 0x4000>;
++	i2c@1120000 {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "snps,designware-i2c";
++		reg = <0x1120000 0x1000>;
++		interrupt-parent = <&ictl>;
++		interrupts = <12 1>;
++		interrupts-shared;
++		clock-frequency = <400000>;
++		sda-hold-time = <0x64>;
 +	};
+diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
+index cbba7db..36ba0b5 100644
+--- a/drivers/i2c/busses/i2c-designware-core.c
++++ b/drivers/i2c/busses/i2c-designware-core.c
+@@ -34,6 +34,7 @@
+ #include <linux/io.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/delay.h>
++#include <linux/i2c/i2c-designware.h>
+ #include "i2c-designware-core.h"
+ 
+ /*
+@@ -66,6 +67,7 @@
+ #define DW_IC_STATUS		0x70
+ #define DW_IC_TXFLR		0x74
+ #define DW_IC_RXFLR		0x78
++#define DW_IC_SDA_HOLD		0x7c
+ #define DW_IC_TX_ABRT_SOURCE	0x80
+ #define DW_IC_COMP_PARAM_1	0xf4
+ #define DW_IC_COMP_TYPE		0xfc
+@@ -309,6 +311,10 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
+ 	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
+ 	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT = %d:%d\n", hcnt, lcnt);
+ 
++	/* Configure SDA Hold Time if required */
++	if (dev->pdat_flags & I2C_DW_PDAT_FLAGS_SET_HOLDTIME)
++		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
++
+ 	/* Configure Tx/Rx FIFO threshold levels */
+ 	dw_writel(dev, dev->tx_fifo_depth - 1, DW_IC_TX_TL);
+ 	dw_writel(dev, 0, DW_IC_RX_TL);
+diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
+index 9c1840e..ef20477 100644
+--- a/drivers/i2c/busses/i2c-designware-core.h
++++ b/drivers/i2c/busses/i2c-designware-core.h
+@@ -88,6 +88,8 @@ struct dw_i2c_dev {
+ 	u32			master_cfg;
+ 	unsigned int		tx_fifo_depth;
+ 	unsigned int		rx_fifo_depth;
++	u32			sda_hold_time;
++	unsigned int		pdat_flags;
  };
  
- &i2c3 {
-@@ -106,6 +112,90 @@
- 	pinctrl-0 = <&i2c3_pins>;
- };
+ #define ACCESS_SWAP		0x00000001
+diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
+index 343357a..2ad2da3 100644
+--- a/drivers/i2c/busses/i2c-designware-platdrv.c
++++ b/drivers/i2c/busses/i2c-designware-platdrv.c
+@@ -34,11 +34,13 @@
+ #include <linux/sched.h>
+ #include <linux/err.h>
+ #include <linux/interrupt.h>
++#include <linux/of.h>
+ #include <linux/of_i2c.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm.h>
+ #include <linux/io.h>
+ #include <linux/slab.h>
++#include <linux/i2c/i2c-designware.h>
+ #include "i2c-designware-core.h"
  
-+&i2c0 {
-+	as3711@40 {
-+		compatible = "ams,as3711";
-+		reg = <0x40>;
+ static struct i2c_algorithm i2c_dw_algo = {
+@@ -56,6 +58,28 @@ static int dw_i2c_probe(struct platform_device *pdev)
+ 	struct i2c_adapter *adap;
+ 	struct resource *mem, *ioarea;
+ 	int irq, r;
++	unsigned long irqf;
++	struct i2c_designware_platform_data *pdat = pdev->dev.platform_data;
 +
-+		regulators {
-+			sd1 {
-+				regulator-name = "1.315V CPU";
-+				regulator-min-microvolt = <1315000>;
-+				regulator-max-microvolt = <1335000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			sd2 {
-+				regulator-name = "1.8V";
-+				regulator-min-microvolt = <1800000>;
-+				regulator-max-microvolt = <1800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			sd4 {
-+				regulator-name = "1.215V";
-+				regulator-min-microvolt = <1215000>;
-+				regulator-max-microvolt = <1235000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			ldo2 {
-+				regulator-name = "2.8V CPU";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			ldo3 {
-+				regulator-name = "3.0V CPU";
-+				regulator-min-microvolt = <3000000>;
-+				regulator-max-microvolt = <3000000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			ldo4 {
-+				regulator-name = "2.8V";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			ldo5 {
-+				regulator-name = "2.8V #2";
-+				regulator-min-microvolt = <2800000>;
-+				regulator-max-microvolt = <2800000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			ldo7 {
-+				regulator-name = "1.15V CPU";
-+				regulator-min-microvolt = <1150000>;
-+				regulator-max-microvolt = <1150000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+			ldo8 {
-+				regulator-name = "1.15V CPU #2";
-+				regulator-min-microvolt = <1150000>;
-+				regulator-max-microvolt = <1150000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+			};
-+		};
++	if ((!pdat) && pdev->dev.of_node) {
++		struct device_node *node = pdev->dev.of_node;
 +
-+		backlight {
-+			compatible = "ams,as3711-bl";
-+			su2-dev = <&lcdc>;
-+			su2-max-uA = <36000>;
-+			su2-feedback-curr-auto;
-+			su2-fbprot-gpio4;
-+			su2-auto-curr1;
-+			su2-auto-curr2;
-+			su2-auto-curr3;
-+		};
-+	};
-+};
++		pdat = kmalloc(sizeof(struct i2c_designware_platform_data),
++				GFP_KERNEL);
++		if (!pdat)
++			return -ENOMEM;
 +
- &gpio {
- 	sdhi0_pins: pfc_sdhi0_pins {
- 		renesas,pins = "sdhi0_data4", "sdhi0_ctrl", "sdhi0_wp", "sdhi0_cd";
-diff --git a/arch/arm/mach-shmobile/board-kzm9g-reference.c b/arch/arm/mach-shmobile/board-kzm9g-reference.c
-index 1490246..9d520ca 100644
---- a/arch/arm/mach-shmobile/board-kzm9g-reference.c
-+++ b/arch/arm/mach-shmobile/board-kzm9g-reference.c
-@@ -31,6 +31,7 @@
- #include <linux/regulator/fixed.h>
- #include <linux/regulator/machine.h>
- #include <linux/smsc911x.h>
-+#include <linux/videodev2.h>
- 
- #include <mach/irqs.h>
- #include <mach/sh73a0.h>
-@@ -39,6 +40,62 @@
- #include <asm/mach-types.h>
- #include <asm/mach/arch.h>
- 
-+#include <video/sh_mobile_lcdc.h>
++		pdat->flags = 0;
 +
-+/* LCDC */
-+static struct fb_videomode kzm_lcdc_mode = {
-+	.name		= "WVGA Panel",
-+	.xres		= 800,
-+	.yres		= 480,
-+	.left_margin	= 220,
-+	.right_margin	= 110,
-+	.hsync_len	= 70,
-+	.upper_margin	= 20,
-+	.lower_margin	= 5,
-+	.vsync_len	= 5,
-+	.sync		= 0,
-+};
++		if (of_get_property(node, "interrupts-shared", NULL))
++			pdat->flags |= I2C_DW_PDAT_FLAGS_SHARE_IRQ;
 +
-+static struct sh_mobile_lcdc_info lcdc_info = {
-+	.clock_source = LCDC_CLK_BUS,
-+	.ch[0] = {
-+		.chan		= LCDC_CHAN_MAINLCD,
-+		.fourcc		= V4L2_PIX_FMT_RGB565,
-+		.interface_type	= RGB24,
-+		.lcd_modes	= &kzm_lcdc_mode,
-+		.num_modes	= 1,
-+		.clock_divider	= 5,
-+		.flags		= 0,
-+		.panel_cfg = {
-+			.width	= 152,
-+			.height	= 91,
-+		},
++		if (!of_property_read_u32(node, "sda-hold-time",
++					&pdat->sda_hold_time))
++			pdat->flags |= I2C_DW_PDAT_FLAGS_SET_HOLDTIME;
++
++		pdev->dev.platform_data = pdat;
 +	}
+ 
+ 	/* NOTE: driver uses the static register mapping */
+ 	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -120,12 +144,20 @@ static int dw_i2c_probe(struct platform_device *pdev)
+ 		dev->tx_fifo_depth = ((param1 >> 16) & 0xff) + 1;
+ 		dev->rx_fifo_depth = ((param1 >> 8)  & 0xff) + 1;
+ 	}
++	dev->sda_hold_time = pdat->sda_hold_time;
++	dev->pdat_flags = pdat->flags;
++
+ 	r = i2c_dw_init(dev);
+ 	if (r)
+ 		goto err_iounmap;
+ 
+ 	i2c_dw_disable_int(dev);
+-	r = request_irq(dev->irq, i2c_dw_isr, IRQF_DISABLED, pdev->name, dev);
++
++	irqf = IRQF_DISABLED;
++	if (dev->pdat_flags & I2C_DW_PDAT_FLAGS_SHARE_IRQ)
++		irqf |= IRQF_SHARED;
++
++	r = request_irq(dev->irq, i2c_dw_isr, irqf, pdev->name, dev);
+ 	if (r) {
+ 		dev_err(&pdev->dev, "failure requesting irq %i\n", dev->irq);
+ 		goto err_iounmap;
+diff --git a/include/linux/i2c/i2c-designware.h b/include/linux/i2c/i2c-designware.h
+new file mode 100644
+index 0000000..ea8192a
+--- /dev/null
++++ b/include/linux/i2c/i2c-designware.h
+@@ -0,0 +1,13 @@
++#ifndef __I2C_DESIGNWARE_H__
++#define __I2C_DESIGNWARE_H__
++
++#include <linux/platform_device.h>
++
++struct i2c_designware_platform_data {
++	unsigned int flags;
++#define I2C_DW_PDAT_FLAGS_SHARE_IRQ    (1L<<0)
++#define I2C_DW_PDAT_FLAGS_SET_HOLDTIME (1L<<1)
++	u32          sda_hold_time;
 +};
 +
-+static struct resource lcdc_resources[] = {
-+	[0] = {
-+		.name	= "LCDC",
-+		.start	= 0xfe940000,
-+		.end	= 0xfe943fff,
-+		.flags	= IORESOURCE_MEM,
-+	},
-+	[1] = {
-+		.start	= intcs_evt2irq(0x580),
-+		.flags	= IORESOURCE_IRQ,
-+	},
-+};
-+
-+static struct platform_device lcdc_device = {
-+	.name		= "sh_mobile_lcdc_fb",
-+	.num_resources	= ARRAY_SIZE(lcdc_resources),
-+	.resource	= lcdc_resources,
-+	.dev	= {
-+		.platform_data	= &lcdc_info,
-+		.coherent_dma_mask = ~0,
-+	},
-+};
-+
- /* Dummy supplies, where voltage doesn't matter */
- static struct regulator_consumer_supply dummy_supplies[] = {
- 	REGULATOR_SUPPLY("vddvario", "smsc911x"),
-@@ -79,6 +136,15 @@ static const struct pinctrl_map kzm_pinctrl_map[] = {
- 				  "scifa4_data", "scifa4"),
- 	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "e6050000.pfc",
- 				  "scifa4_ctrl", "scifa4"),
-+	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_lcdc_fb.0", "e6050000.pfc",
-+				  "lcd_data24", "lcd"),
-+	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_lcdc_fb.0", "e6050000.pfc",
-+				  "lcd_sync", "lcd"),
-+};
-+
-+static struct platform_device *kzm_devices[] __initdata = {
-+	&smsc_device,
-+	&lcdc_device,
- };
- 
- static void __init kzm_init(void)
-@@ -88,7 +154,10 @@ static void __init kzm_init(void)
- 	pinctrl_register_mappings(kzm_pinctrl_map, ARRAY_SIZE(kzm_pinctrl_map));
- 
- 	regulator_register_fixed(2, dummy_supplies, ARRAY_SIZE(dummy_supplies));
--	platform_device_register(&smsc_device);
-+
-+	/* LCDC */
-+	gpio_request_one(222, GPIOF_OUT_INIT_HIGH, NULL); /* LCDCDON */
-+	gpio_request_one(226, GPIOF_OUT_INIT_HIGH, NULL); /* SC */
- 
- 	/*
- 	 * Enable SD: this is a pseudo-GPIO, it actually only sets bit 28 in
-@@ -101,6 +170,8 @@ static void __init kzm_init(void)
- 	/* Early BRESP enable, Shared attribute override enable, 64K*8way */
- 	l2x0_init(IOMEM(0xf0100000), 0x40460000, 0x82000fff);
- #endif
-+
-+	platform_add_devices(kzm_devices, ARRAY_SIZE(kzm_devices));
- }
- 
- static void kzm9g_restart(char mode, const char *cmd)
++#endif /* __I2C_DESIGNWARE_H__ */
 -- 
-1.7.2.5
+1.7.1
