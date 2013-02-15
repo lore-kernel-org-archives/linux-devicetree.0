@@ -1,13 +1,14 @@
-From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v4 5/5] ARM: davinci: da850: override mmc DT node device name
-Date: Fri, 15 Feb 2013 11:52:02 +0530
-Message-ID: <1360909322-1858-6-git-send-email-prakash.pm@ti.com>
-References: <1360909322-1858-1-git-send-email-prakash.pm@ti.com>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Active low GPIOs (was [PATCH v1 1/4] i2c: mux: Add i2c-arbitrator
+ 'mux' driver)
+Date: Fri, 15 Feb 2013 16:21:42 +0900
+Message-ID: <511DE206.5000506@nvidia.com>
+References: <CAD=FV=W7tBOHzwayT5kgtCGmvvGs8RoX7J3rTf2vHT69b4aj6g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360909322-1858-1-git-send-email-prakash.pm-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <CAD=FV=W7tBOHzwayT5kgtCGmvvGs8RoX7J3rTf2vHT69b4aj6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,42 +19,64 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, "Manjunathappa,
- Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Guenter Roeck <guenter.roeck-IzeFyvvaP7pWk0Htik3J/w@public.gmane.org>, Alexandre Courbot <gnurou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, "u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVjdc2367bhdW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Populate OF_DEV_AUXDATA with desired device name expected by
-davinci_mmc driver. Without this clk_get of davinci_mmc DT driver
-fails.
+> On Thu, Feb 14, 2013 at 2:01 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Thu, Feb 14, 2013 at 1:41 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>> On 02/13/2013 05:34 PM, Doug Anderson wrote:
+>>
+>>>> A little torn here.  It adds a bunch of complexity to the code to
+>>>> handle this case and there are no known or anticipated users.  I only
+>>>> wish that the GPIO polarity could be more hidden from drivers (add
+>>>> functions like gpio_assert, gpio_deassert, etc)...
+>>>
+>>> Yes, that would be nice. Alex, LinusW?
+>>
+>> OK so good point since Alex is rewriting the way the external
+>> API to GPIOs is done.
+>>
+>> So this is one of the evolutionary artifacts of the GPIO subsystem:
+>> that it has this concept of clients having to know if they want to
+>> drive the line low or high.
+>>
+>> Either way somewhere in the system the knowledge of whether
+>> the low or high state counts as asserted must be stored.
 
-Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
-Cc: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org
-Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
----
-Since v2:
-Rebased on top of v3.9/dt-2 branch of linux_davinci and reordered this patch.
+Interestingly this knowledge is already more or less stored in GPIOlib - 
+all GPIOs descriptors have a FLAG_ACTIVE_LOW, but it can only be set 
+through the sysfs interface does not affect the in-kernel APIs. It does 
+affect what is returned by the "value" sysfs node, though.
 
- arch/arm/mach-davinci/da8xx-dt.c |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+If we are to introduce something similar for the in-kernel interface, it 
+would be nice to keep it consistent with the sysfs behavior, otherwise 
+it will become a nightmare to maintain two different polarity settings 
+for in-kernel and sysfs interfaces. The introduction of the gpiod 
+interface could be helpful here. Since it would work with descriptors 
+obtained through gpiod_get(device, consumer), the polarity could be set 
+transparently from either the DT or platform data (which would then have 
+a "flags" member). Then gpiod_set_value/get_value would take it into 
+account, and behave just like the sysfs interface.
 
-diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
-index 5404e92..2b740a9 100644
---- a/arch/arm/mach-davinci/da8xx-dt.c
-+++ b/arch/arm/mach-davinci/da8xx-dt.c
-@@ -40,6 +40,8 @@ static void __init da8xx_init_irq(void)
- struct of_dev_auxdata da850_auxdata_lookup[] __initdata = {
- 	OF_DEV_AUXDATA("ti,davinci-i2c", 0x01c22000, "i2c_davinci.1", NULL),
- 	OF_DEV_AUXDATA("ti,davinci-wdt", 0x01c21000, "watchdog", NULL),
-+	OF_DEV_AUXDATA("ti,davinci-mmc-da830", 0x01c40000, "davinci-mmc-da830.0",
-+			NULL),
- 	{}
- };
- 
--- 
-1.7.4.1
+So, in short:
+- old gpio_* interface would *not* be polarity-aware
+- new gpiod_* interface *would* be polarity-aware (and get the settings 
+from DT/platform data)
+
+This looks simple but I don't have enough altitude to be sure we won't 
+hit some walls by doing so.
+
+This would make the new gpiod and legacy gpio interfaces behave 
+differently, but at the same time is a good opportunity to have the 
+behavior as sysfs.
+
+An undesirable side-effect would be that the legacy gpio interface could 
+not be built as a simple wrapper around gpiod anymore. That's sad, but 
+presenting interfaces that make sense is more important.
+
+As a side-note, there is also this gpio_sysfs_set_active_low() public 
+interface that only mach-at91 seems to use (once!). Maybe we could try 
+to get rid of it?
+
+Alex.
