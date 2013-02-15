@@ -1,80 +1,255 @@
-From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [PATCH v1 1/4] i2c: mux: Add i2c-arbitrator 'mux' driver
-Date: Fri, 15 Feb 2013 10:26:55 +0000
-Message-ID: <20130215102655.GB22283@opensource.wolfsonmicro.com>
-References: <CAD=FV=USf_YSzW1ZN2NWZKnLk_LPpnFpxRy=AGVyn_YHjRpKyw@mail.gmail.com>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: [RFC] ARM: shmobile: add framebuffer and backlight support to
+ kzm9g-reference
+Date: Fri, 15 Feb 2013 11:36:29 +0100 (CET)
+Message-ID: <Pine.LNX.4.64.1302151127010.7446@axis700.grange>
+References: <Pine.LNX.4.64.1302151101140.7446@axis700.grange>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============9006810516952537219=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAD=FV=USf_YSzW1ZN2NWZKnLk_LPpnFpxRy=AGVyn_YHjRpKyw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wolfram-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Yuvaraj Kumar <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1302151101140.7446@axis700.grange>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Richard Purdie <rpurdie@rpsys.net>, Andrew Morton <akpm@linux-foundation.org>, linux-fbdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This adds support for the framebuffer and an AS3711 PMIC, used for supplying
+power to the CPU, some peripherals and the backlight.
 
---===============9006810516952537219==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TakKZr9L6Hm6aLOc"
-Content-Disposition: inline
+not-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+---
 
+As is clear from the not-Sob line and the RFC in the subject, this is not 
+for mainline. This is just an illustration how the recently submitted 
+"mfd: as3711: add OF support" patch can be used with the kzm9g board. I 
+had to add the framebuffer support to kzm9g, because without it the 
+backlight would just be turned on with no image on the LCD, which doesn't 
+look pretty. In the future, if needed, we could first only apply the 
+regulator part of the .dts, leaving the backlight disabled.
 
---TakKZr9L6Hm6aLOc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ arch/arm/boot/dts/sh73a0-kzm9g-reference.dts   |   90 ++++++++++++++++++++++++
+ arch/arm/mach-shmobile/board-kzm9g-reference.c |   73 +++++++++++++++++++-
+ 2 files changed, 162 insertions(+), 1 deletions(-)
 
-On Thu, Feb 14, 2013 at 05:14:35PM -0800, Doug Anderson wrote:
-
-> The regulator_get() calls are before regulator_init_complete() by
-> quite a margin.  The regulator_init_complete() is a late_initcall, so
-> that's not too surprising.  Are we not supposed to access regulators
-> until after late_init()?  That seems like quite a limitation...
-
-No, they should work fine at all points (the worst that'll happen is
-that you might get a few extra deferrals).
-
---TakKZr9L6Hm6aLOc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRHg1RAAoJELSic+t+oim9/BoQAIGC528aqY932jSquKnvxZT5
-zJmZhIrlggtR7bRZx4mgtCBEoMM2aDFN/iUzMW5dVi2Ck5Bs3G7QFSAbhDhUHAMV
-9fZ34GkMrf9lveh3xiTUFNvDAAE9O+Wob+ZO3JoldWlMYV/QQvfnZFenyA8ck9go
-A7UIAGh/7UWE8eZ+TYBvAE0KO/jTb1Qq8Tb5JkxT8UTI6gvb/omN5PZXeUmplOex
-uxmKMPIKkVAWpEgJtb52HNzpjJl1t8us3j4CclLMgcvrUfLoysBuXym+qgF1EonH
-WMXgFUf1/ffUj4FsluNsP7XC5g6osU69lbfO/Zmea7ncWp/F55QpUgkOwohiBw0o
-Tfq/U/YnP8EOGShvHFBzRUkr1A3F/3k/f1DjCOakz0n7CDgft3bnhW8qKPKQ9h8x
-/QsoL+T6v2VaHsovOAL25kE3zcbFAoiPyxIXXfvdP+cm5JVzvQwJElcHGZRLYWH+
-FZovd2y9abiuKxVe1hHxulQPPfOhcG9O+S5evRGIgTYUJAYc2qv5aSbkMhJd9fC3
-fSPcNNzgjr1bOSnQXqJNKu8JgiEHTmiNBnEMhZ+DiOfv9RORH1km82ZmELEOqQTa
-eN9THFcVQxZwyPjbYcps5WJSW8FpuwtlOYQsQTuR6TBpVDBsbAmGBUkrRjGHDzo0
-0YErr3rTcZ+icGxKNR3U
-=w9aG
------END PGP SIGNATURE-----
-
---TakKZr9L6Hm6aLOc--
-
---===============9006810516952537219==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============9006810516952537219==--
+diff --git a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+index b93b16a..a5810fc 100644
+--- a/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
++++ b/arch/arm/boot/dts/sh73a0-kzm9g-reference.dts
+@@ -99,6 +99,12 @@
+ 		toshiba,mmc-wrprotect-disable;
+ 		toshiba,mmc-has-idle-wait;
+ 	};
++
++	/* A dummy LCDC DT node for now */
++	lcdc: lcdc@0xfe940000 {
++		compatible = "renesas,sh-mobile-lcdc";
++		reg = <0xfe940000 0x4000>;
++	};
+ };
+ 
+ &i2c3 {
+@@ -106,6 +112,90 @@
+ 	pinctrl-0 = <&i2c3_pins>;
+ };
+ 
++&i2c0 {
++	as3711@40 {
++		compatible = "ams,as3711";
++		reg = <0x40>;
++
++		regulators {
++			sd1 {
++				regulator-name = "1.315V CPU";
++				regulator-min-microvolt = <1315000>;
++				regulator-max-microvolt = <1335000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++			sd2 {
++				regulator-name = "1.8V";
++				regulator-min-microvolt = <1800000>;
++				regulator-max-microvolt = <1800000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++			sd4 {
++				regulator-name = "1.215V";
++				regulator-min-microvolt = <1215000>;
++				regulator-max-microvolt = <1235000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++			ldo2 {
++				regulator-name = "2.8V CPU";
++				regulator-min-microvolt = <2800000>;
++				regulator-max-microvolt = <2800000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++			ldo3 {
++				regulator-name = "3.0V CPU";
++				regulator-min-microvolt = <3000000>;
++				regulator-max-microvolt = <3000000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++			ldo4 {
++				regulator-name = "2.8V";
++				regulator-min-microvolt = <2800000>;
++				regulator-max-microvolt = <2800000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++			ldo5 {
++				regulator-name = "2.8V #2";
++				regulator-min-microvolt = <2800000>;
++				regulator-max-microvolt = <2800000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++			ldo7 {
++				regulator-name = "1.15V CPU";
++				regulator-min-microvolt = <1150000>;
++				regulator-max-microvolt = <1150000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++			ldo8 {
++				regulator-name = "1.15V CPU #2";
++				regulator-min-microvolt = <1150000>;
++				regulator-max-microvolt = <1150000>;
++				regulator-always-on;
++				regulator-boot-on;
++			};
++		};
++
++		backlight {
++			compatible = "ams,as3711-bl";
++			su2-dev = <&lcdc>;
++			su2-max-uA = <36000>;
++			su2-feedback-curr-auto;
++			su2-fbprot-gpio4;
++			su2-auto-curr1;
++			su2-auto-curr2;
++			su2-auto-curr3;
++		};
++	};
++};
++
+ &gpio {
+ 	sdhi0_pins: pfc_sdhi0_pins {
+ 		renesas,pins = "sdhi0_data4", "sdhi0_ctrl", "sdhi0_wp", "sdhi0_cd";
+diff --git a/arch/arm/mach-shmobile/board-kzm9g-reference.c b/arch/arm/mach-shmobile/board-kzm9g-reference.c
+index 1490246..9d520ca 100644
+--- a/arch/arm/mach-shmobile/board-kzm9g-reference.c
++++ b/arch/arm/mach-shmobile/board-kzm9g-reference.c
+@@ -31,6 +31,7 @@
+ #include <linux/regulator/fixed.h>
+ #include <linux/regulator/machine.h>
+ #include <linux/smsc911x.h>
++#include <linux/videodev2.h>
+ 
+ #include <mach/irqs.h>
+ #include <mach/sh73a0.h>
+@@ -39,6 +40,62 @@
+ #include <asm/mach-types.h>
+ #include <asm/mach/arch.h>
+ 
++#include <video/sh_mobile_lcdc.h>
++
++/* LCDC */
++static struct fb_videomode kzm_lcdc_mode = {
++	.name		= "WVGA Panel",
++	.xres		= 800,
++	.yres		= 480,
++	.left_margin	= 220,
++	.right_margin	= 110,
++	.hsync_len	= 70,
++	.upper_margin	= 20,
++	.lower_margin	= 5,
++	.vsync_len	= 5,
++	.sync		= 0,
++};
++
++static struct sh_mobile_lcdc_info lcdc_info = {
++	.clock_source = LCDC_CLK_BUS,
++	.ch[0] = {
++		.chan		= LCDC_CHAN_MAINLCD,
++		.fourcc		= V4L2_PIX_FMT_RGB565,
++		.interface_type	= RGB24,
++		.lcd_modes	= &kzm_lcdc_mode,
++		.num_modes	= 1,
++		.clock_divider	= 5,
++		.flags		= 0,
++		.panel_cfg = {
++			.width	= 152,
++			.height	= 91,
++		},
++	}
++};
++
++static struct resource lcdc_resources[] = {
++	[0] = {
++		.name	= "LCDC",
++		.start	= 0xfe940000,
++		.end	= 0xfe943fff,
++		.flags	= IORESOURCE_MEM,
++	},
++	[1] = {
++		.start	= intcs_evt2irq(0x580),
++		.flags	= IORESOURCE_IRQ,
++	},
++};
++
++static struct platform_device lcdc_device = {
++	.name		= "sh_mobile_lcdc_fb",
++	.num_resources	= ARRAY_SIZE(lcdc_resources),
++	.resource	= lcdc_resources,
++	.dev	= {
++		.platform_data	= &lcdc_info,
++		.coherent_dma_mask = ~0,
++	},
++};
++
+ /* Dummy supplies, where voltage doesn't matter */
+ static struct regulator_consumer_supply dummy_supplies[] = {
+ 	REGULATOR_SUPPLY("vddvario", "smsc911x"),
+@@ -79,6 +136,15 @@ static const struct pinctrl_map kzm_pinctrl_map[] = {
+ 				  "scifa4_data", "scifa4"),
+ 	PIN_MAP_MUX_GROUP_DEFAULT("sh-sci.4", "e6050000.pfc",
+ 				  "scifa4_ctrl", "scifa4"),
++	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_lcdc_fb.0", "e6050000.pfc",
++				  "lcd_data24", "lcd"),
++	PIN_MAP_MUX_GROUP_DEFAULT("sh_mobile_lcdc_fb.0", "e6050000.pfc",
++				  "lcd_sync", "lcd"),
++};
++
++static struct platform_device *kzm_devices[] __initdata = {
++	&smsc_device,
++	&lcdc_device,
+ };
+ 
+ static void __init kzm_init(void)
+@@ -88,7 +154,10 @@ static void __init kzm_init(void)
+ 	pinctrl_register_mappings(kzm_pinctrl_map, ARRAY_SIZE(kzm_pinctrl_map));
+ 
+ 	regulator_register_fixed(2, dummy_supplies, ARRAY_SIZE(dummy_supplies));
+-	platform_device_register(&smsc_device);
++
++	/* LCDC */
++	gpio_request_one(222, GPIOF_OUT_INIT_HIGH, NULL); /* LCDCDON */
++	gpio_request_one(226, GPIOF_OUT_INIT_HIGH, NULL); /* SC */
+ 
+ 	/*
+ 	 * Enable SD: this is a pseudo-GPIO, it actually only sets bit 28 in
+@@ -101,6 +170,8 @@ static void __init kzm_init(void)
+ 	/* Early BRESP enable, Shared attribute override enable, 64K*8way */
+ 	l2x0_init(IOMEM(0xf0100000), 0x40460000, 0x82000fff);
+ #endif
++
++	platform_add_devices(kzm_devices, ARRAY_SIZE(kzm_devices));
+ }
+ 
+ static void kzm9g_restart(char mode, const char *cmd)
+-- 
+1.7.2.5
