@@ -1,62 +1,89 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V6 02/10] ASoC: SAMSUNG: Add DT support for i2s
-Date: Fri, 15 Feb 2013 12:01:45 +0000
-Message-ID: <20130215120145.GC22283@opensource.wolfsonmicro.com>
-References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
- <1358509629-20471-3-git-send-email-padma.v@samsung.com>
- <511CC11B.5030700@samsung.com>
- <20130214114337.GD13249@opensource.wolfsonmicro.com>
- <511D49FC.4080402@gmail.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v7 00/12] Tegra114 clockframework
+Date: Fri, 15 Feb 2013 14:36:30 +0200
+Message-ID: <1360931849-7090-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="raC6veAxrt5nqIoY"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <511D49FC.4080402@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Padmavathi Venna <padma.v@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, padma.kvr@gmail.com, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This is the seventh version of the Tegra114 clockframework. It is based on the
+for-next branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/swarren/linux-tegra.git and
+http://www.spinics.net/lists/arm-kernel/msg220452.html.
 
---raC6veAxrt5nqIoY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It has been boottested on Pluto.
 
-On Thu, Feb 14, 2013 at 09:33:00PM +0100, Sylwester Nawrocki wrote:
+Changes from v6:
 
-> My apologies for the late review. It's already sixth version of this patch
-> series... But I noticed it just now when applying it for Exynos4. The GPIO
-> part of the bindings is now incompatible with Exynos4 and the bindings will
-> need to be changed. Leaving the compatibility code in the I2S driver, when
-> we could have it done well right from the beginning. If I'm not mistaken
-> a file similar to arch/arm/boot/dts/exynos4x12-pinctrl.dtsi with at least
-> entries for the I2S devices is needed and an addition of related pinctrl
-> nodes in exynos5250.dtsi. But I guess this is not something that could be
-> fixed in the -rc period ?
+* Remove clock-frequency from DT serial nodes
+* Remove useless 'cpu' clock from binding documentation
+* Use HW gate control for PLLU divided outputs
+* Fix clock ID for 'd_audio' clock
+* Add dummy cpu car ops to ease making a bisectable series
 
-Yes, and incremental fix would be fine.
+Changes from v5:
 
---raC6veAxrt5nqIoY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+* Add initialization code for PLLC
+* Remove some unnecessary clocks
+* Fix bug in PLL locking refactoring
+* Add super clocks
+* Remove most calls to clk_register_clkdev() for the peripheral clocks
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+Changes from v4:
 
-iQIcBAEBAgAGBQJRHiOTAAoJELSic+t+oim9GPEP/AtrJRFWIHCLk4NEnjR/2P+2
-7mppHqMPnc2/7vWPnawjUzwULGLTiJl7WwMtyGcCD82KQJnoLv6kvgRfAiBUwOf+
-lC/P0WPjWHtbEpa9Fi2Z6j1GmpdNorggPTiRFhvoZ+TKxhKRgQyhqxuC8Pgg1rVm
-Kq7HXwg8lDW/6d32luN7jkCT+F2kBg7hhTicSyWpnR1+tbGW1cWdj8qDeY5K46Iz
-H/L1POHTnLVCEb8PmwAithPeHJXYi6hZ69npeob+FvG8MQCtZj3LI2zninincEpE
-F5wt3Gp9N2o5bxtPZFv9XTKJZum0Hsl7hpFHHHvqDKMnX/LZ2pSPnQlNaz6pII69
-XY/rTNYsN71k3LJ+m7DXD1dgEM5z2Bv202ycrQ3OHlFmNqUN9uXQStywnum4qejb
-Lo86uC9mn6sn8ab3TiV793RgkS/2kVq9QU0zAsHjclH3zDBz3WV0ispUyYwEAGp+
-erez1A475WN7QarKpFveHCglz1/nkBpvnnSNsXmdFA8cDhpQXnki3IcLMijjsiWZ
-B7P2Kam5HwJBpt16e20F0yXn1hNOmY0hfwMo9S787ZobwZ5VWMpatw6pWVgDFfCu
-851CcJ4Bh3Mq/lnkdWEGrU8DATTTIJfAgg4z/6IG1lTc+E9uI1MLfKgWEU89Qloj
-bn8sT8HH7WzJ1oDyHTTE
-=hMEl
------END PGP SIGNATURE-----
+* Split the new PLL types patch into smaller patches
+* Fix some bugs in the PLL patches
 
---raC6veAxrt5nqIoY--
+Changes from v3:
+
+* Merge with for-next branch
+* Provide empty tegra_cpu_car_ops to make SMP boot not crash
+
+Changes from v2:
+
+* Added missing PLLs
+* Added bindings to tegra114.dtsi
+* Moved the table patch for clk-mux.c to 'clk: add table lookup to mux'
+* Bugfixes
+
+Changes from v1:
+
+* Remove SATA and PCIe clocks. They don't appear in the internal TRM, so I
+  assume they don't exist.
+* Rebase on top of Hiroshi's latest Tegra114 patches
+* More generic mux code. This is necessary for the AHUB and DAM clocks.
+
+Peter De Schrijver (12):
+  clk: tegra: provide dummy cpu car ops
+  clk: tegra: Refactor PLL programming code
+  clk: tegra: Add TEGRA_PLL_BYPASS flag
+  clk: tegra: Add PLL post divider table
+  clk: tegra: Add new fields and PLL types for Tegra114
+  clk: tegra: Add flags to tegra_clk_periph()
+  clk: tegra: Workaround for Tegra114 MSENC problem
+  ARM: tegra: Define Tegra114 CAR binding
+  clk: tegra: Implement clocks for Tegra114
+  clk: tegra: devicetree match for nvidia,tegra114-car
+  ARM: dt: Add references to tegra_car clocks
+  clk: tegra: Remove forced clk_enable of uartd
+
+ .../bindings/clock/nvidia,tegra114-car.txt         |  316 +++
+ arch/arm/boot/dts/tegra114-dalmore.dts             |    1 -
+ arch/arm/boot/dts/tegra114-pluto.dts               |    1 -
+ arch/arm/boot/dts/tegra114.dtsi                    |    8 +-
+ drivers/clk/tegra/Makefile                         |    1 +
+ drivers/clk/tegra/clk-periph-gate.c                |    9 +
+ drivers/clk/tegra/clk-periph.c                     |   11 +-
+ drivers/clk/tegra/clk-pll.c                        | 1136 ++++++++++-
+ drivers/clk/tegra/clk-tegra114.c                   | 2032 ++++++++++++++++++++
+ drivers/clk/tegra/clk-tegra20.c                    |  153 +-
+ drivers/clk/tegra/clk-tegra30.c                    |  243 ++--
+ drivers/clk/tegra/clk.c                            |    4 +-
+ drivers/clk/tegra/clk.h                            |   90 +-
+ 13 files changed, 3694 insertions(+), 311 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/nvidia,tegra114-car.txt
+ create mode 100644 drivers/clk/tegra/clk-tegra114.c
