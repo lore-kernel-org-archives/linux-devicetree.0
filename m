@@ -1,178 +1,154 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: [PATCH v4 03/13] mmc: provide a standard MMC device-tree binding parser centrally
-Date: Fri, 15 Feb 2013 16:13:52 +0100
-Message-ID: <1360941242-18153-4-git-send-email-g.liakhovetski@gmx.de>
-References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Arnd Bergmann <arnd@arndb.de>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Markus Pargmann <mpa@pengutronix.de>
+From: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] Added license header to dtc/libfdt/fdt.h and libfdt_env.h
+Date: Fri, 15 Feb 2013 11:06:10 -0500
+Message-ID: <1360944370-27323-1-git-send-email-jsobota@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: jdl-CYoMK+44s/E@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-MMC defines a number of standard DT bindings. Having each driver parse
-them individually adds code redundancy and is error prone. Provide a
-standard function to unify the parsing. After all drivers are converted
-to using it instead of their own parsers, this function can be integrated
-into mmc_alloc_host().
+This commit adds a license header to fdt.h and libfdt_env.h because the license was omitted.
 
-Cc: Markus Pargmann <mpa@pengutronix.de>
-Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Signed-off-by: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
 ---
+ libfdt/fdt.h        |   51 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ libfdt/libfdt_env.h |   51 +++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 102 insertions(+)
 
-v4: make the bus-width property optional to match a recent change to 
-mmc.txt, use of_property_read_bool() to obtain a boolean value of a DT 
-property, add comments.
-
- drivers/mmc/core/host.c  |  108 ++++++++++++++++++++++++++++++++++++++++++++++
- include/linux/mmc/host.h |    1 +
- 2 files changed, 109 insertions(+), 0 deletions(-)
-
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index ee2e16b..daa2ed1 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -15,6 +15,8 @@
- #include <linux/device.h>
- #include <linux/err.h>
- #include <linux/idr.h>
-+#include <linux/of.h>
-+#include <linux/of_gpio.h>
- #include <linux/pagemap.h>
- #include <linux/export.h>
- #include <linux/leds.h>
-@@ -23,6 +25,7 @@
- 
- #include <linux/mmc/host.h>
- #include <linux/mmc/card.h>
-+#include <linux/mmc/slot-gpio.h>
- 
- #include "core.h"
- #include "host.h"
-@@ -295,6 +298,111 @@ static inline void mmc_host_clk_sysfs_init(struct mmc_host *host)
- #endif
- 
- /**
-+ *	mmc_of_parse() - parse host's device-tree node
-+ *	@host: host, whose node should be parsed.
+diff --git a/libfdt/fdt.h b/libfdt/fdt.h
+index 45dd134..526aedb 100644
+--- a/libfdt/fdt.h
++++ b/libfdt/fdt.h
+@@ -1,5 +1,56 @@
+ #ifndef _FDT_H
+ #define _FDT_H
++/*
++ * libfdt - Flat Device Tree manipulation
++ * Copyright (C) 2006 David Gibson, IBM Corporation.
++ * Copyright 2012 Kim Phillips, Freescale Semiconductor.
 + *
-+ * To keep the rest of the MMC subsystem unaware of the fact, whether DT has
-+ * been used to to instantiate and configure this host instance or not, we
-+ * parse the properties and set respective generic mmc-host flags and
-+ * parameters.
++ * libfdt is dual licensed: you can use it either under the terms of
++ * the GPL, or the BSD license, at your option.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this library; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Alternatively,
++ *
++ *  b) Redistribution and use in source and binary forms, with or
++ *     without modification, are permitted provided that the following
++ *     conditions are met:
++ *
++ *     1. Redistributions of source code must retain the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer.
++ *     2. Redistributions in binary form must reproduce the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer in the documentation and/or other materials
++ *        provided with the distribution.
++ *
++ *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
++ *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
++ *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++ *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
++ *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++ *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
++ *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
++ *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 + */
-+void mmc_of_parse(struct mmc_host *host)
-+{
-+	struct device_node *np;
-+	u32 bus_width;
-+	bool explicit_inv_wp, gpio_inv_wp = false;
-+	enum of_gpio_flags flags;
-+	int len, ret, gpio;
-+
-+	if (!host->parent || !host->parent->of_node)
-+		return;
-+
-+	np = host->parent->of_node;
-+
-+	/* "bus-width" is translated to MMC_CAP_*_BIT_DATA flags */
-+	if (of_property_read_u32_array(np, "bus-width", &bus_width, 1) < 0)
-+		dev_dbg(host->parent,
-+			"\"bus-width\" property is missing, assuming 1 bit.\n");
-+
-+	switch (bus_width) {
-+	case 8:
-+		host->caps |= MMC_CAP_8_BIT_DATA;
-+		/* Hosts, capable of 8-bit transfers can also do 4 bits */
-+	case 4:
-+		host->caps |= MMC_CAP_4_BIT_DATA;
-+		break;
-+	case 1:
-+		break;
-+	default:
-+		dev_err(host->parent,
-+			"Invalid \"bus-width\" value %ud!\n", bus_width);
-+	}
-+
-+	/* f_max is obtained from the optional "max-frequency" property */
-+	of_property_read_u32_array(np, "max-frequency", &host->f_max, 1);
-+
-+	/*
-+	 * Configure CD and WP pins. They are both by default active low to
-+	 * match the SDHCI spec. If GPIOs are provided for CD and / or WP, the
-+	 * mmc-gpio helpers are used to attach, configure and use them. If
-+	 * polarity inversion is specified in DT, one of MMC_CAP2_CD_ACTIVE_HIGH
-+	 * and MMC_CAP2_RO_ACTIVE_HIGH capability-2 flags is set. If the
-+	 * "broken-cd" property is provided, the MMC_CAP_NEEDS_POLL capability
-+	 * is set. If the "non-removable" property is found, the
-+	 * MMC_CAP_NONREMOVABLE capability is set and no card-detection
-+	 * configuration is performed.
-+	 */
-+
-+	/* Parse Card Detection */
-+	if (of_find_property(np, "non-removable", &len)) {
-+		host->caps |= MMC_CAP_NONREMOVABLE;
-+	} else {
-+		bool explicit_inv_cd, gpio_inv_cd = false;
-+
-+		explicit_inv_cd = of_property_read_bool(np, "cd-inverted");
-+
-+		if (of_find_property(np, "broken-cd", &len))
-+			host->caps |= MMC_CAP_NEEDS_POLL;
-+
-+		gpio = of_get_named_gpio_flags(np, "cd-gpios", 0, &flags);
-+		if (gpio_is_valid(gpio)) {
-+			if (!(flags & OF_GPIO_ACTIVE_LOW))
-+				gpio_inv_cd = true;
-+
-+			ret = mmc_gpio_request_cd(host, gpio);
-+			if (ret < 0)
-+				dev_err(host->parent,
-+					"Failed to request CD GPIO #%d: %d!\n",
-+					gpio, ret);
-+			else
-+				dev_info(host->parent, "Got CD GPIO #%d.\n",
-+					 gpio);
-+		}
-+
-+		if (explicit_inv_cd ^ gpio_inv_cd)
-+			host->caps2 |= MMC_CAP2_CD_ACTIVE_HIGH;
-+	}
-+
-+	/* Parse Write Protection */
-+	explicit_inv_wp = of_property_read_bool(np, "wp-inverted");
-+
-+	gpio = of_get_named_gpio_flags(np, "wp-gpios", 0, &flags);
-+	if (gpio_is_valid(gpio)) {
-+		if (!(flags & OF_GPIO_ACTIVE_LOW))
-+			gpio_inv_wp = true;
-+
-+		ret = mmc_gpio_request_ro(host, gpio);
-+		if (ret < 0)
-+			dev_err(host->parent,
-+				"Failed to request WP GPIO: %d!\n", ret);
-+	}
-+	if (explicit_inv_wp ^ gpio_inv_wp)
-+		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
-+}
-+
-+EXPORT_SYMBOL(mmc_of_parse);
-+
-+/**
-  *	mmc_alloc_host - initialise the per-host structure.
-  *	@extra: sizeof private data structure
-  *	@dev: pointer to host device model structure
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 61a10c1..13c0c8d 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -345,6 +345,7 @@ extern struct mmc_host *mmc_alloc_host(int extra, struct device *);
- extern int mmc_add_host(struct mmc_host *);
- extern void mmc_remove_host(struct mmc_host *);
- extern void mmc_free_host(struct mmc_host *);
-+void mmc_of_parse(struct mmc_host *host);
  
- static inline void *mmc_priv(struct mmc_host *host)
- {
+ #ifndef __ASSEMBLY__
+ 
+diff --git a/libfdt/libfdt_env.h b/libfdt/libfdt_env.h
+index 956b4ae..9dea97d 100644
+--- a/libfdt/libfdt_env.h
++++ b/libfdt/libfdt_env.h
+@@ -1,5 +1,56 @@
+ #ifndef _LIBFDT_ENV_H
+ #define _LIBFDT_ENV_H
++/*
++ * libfdt - Flat Device Tree manipulation
++ * Copyright (C) 2006 David Gibson, IBM Corporation.
++ * Copyright 2012 Kim Phillips, Freescale Semiconductor.
++ *
++ * libfdt is dual licensed: you can use it either under the terms of
++ * the GPL, or the BSD license, at your option.
++ *
++ *  a) This library is free software; you can redistribute it and/or
++ *     modify it under the terms of the GNU General Public License as
++ *     published by the Free Software Foundation; either version 2 of the
++ *     License, or (at your option) any later version.
++ *
++ *     This library is distributed in the hope that it will be useful,
++ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
++ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ *     GNU General Public License for more details.
++ *
++ *     You should have received a copy of the GNU General Public
++ *     License along with this library; if not, write to the Free
++ *     Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
++ *     MA 02110-1301 USA
++ *
++ * Alternatively,
++ *
++ *  b) Redistribution and use in source and binary forms, with or
++ *     without modification, are permitted provided that the following
++ *     conditions are met:
++ *
++ *     1. Redistributions of source code must retain the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer.
++ *     2. Redistributions in binary form must reproduce the above
++ *        copyright notice, this list of conditions and the following
++ *        disclaimer in the documentation and/or other materials
++ *        provided with the distribution.
++ *
++ *     THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
++ *     CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
++ *     INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
++ *     MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ *     DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
++ *     CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
++ *     SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
++ *     NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ *     LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
++ *     HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
++ *     CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
++ *     OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE,
++ *     EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
+ 
+ #include <stddef.h>
+ #include <stdint.h>
 -- 
-1.7.2.5
-
+1.7.9.5
