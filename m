@@ -1,82 +1,62 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 0/2] Device Tree support for CMA (Contiguous Memory
- Allocator)
-Date: Fri, 15 Feb 2013 09:33:04 +0100
-Message-ID: <20130215083304.GK1906@pengutronix.de>
-References: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
- <20130214213013.GG1906@pengutronix.de> <511D6076.9090503@gmail.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [v3 0/6] ARM: tegra: convert device tree files to use CLK defines
+Date: Fri, 15 Feb 2013 10:43:11 +0200
+Message-ID: <1360917814-27236-1-git-send-email-hdoyu@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <511D6076.9090503-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2013 at 11:08:54PM +0100, Sylwester Nawrocki wrote:
-> Hi,
-> 
-> On 02/14/2013 10:30 PM, Sascha Hauer wrote:
-> >On Thu, Feb 14, 2013 at 01:45:26PM +0100, Marek Szyprowski wrote:
-> ...
-> >>Here is my initial proposal for device tree integration for Contiguous
-> >>Memory Allocator. The code is quite straightforward, however I expect
-> >>that the memory bindings require some discussion.
-> >>
-> >>The proposed bindings allows to define contiguous memory regions of
-> >>specified base address and size. Then, the defined regions can be
-> >>assigned to the given device(s) by adding a property with a phanle to
-> >>the defined contiguous memory region. From the device tree perspective
-> >>that's all. Once the bindings are added, all the memory allocations from
-> >>dma-mapping subsystem will be served from the defined contiguous memory
-> >>regions.
-> >>
-> >
-> >I think CMA regions should not be described in the devicetre at all. The
-> >devicetree is about hardware description and it should be OS agnostic,
-> >but CMA is only a Linux specific implementation detail. It's not even
-> >specific to a particular board, it's specific to a particular usecase of
-> >a board.
-> 
-> I disagree. For example, in a multiprocessor system describing the memory
-> regions this way allows to assign memory to each subsystem, e.g. shared
-> memory, so that the memory region constraints are satisfied.
-> 
-> CMA just happens to be an implementation of a method of assigning memory
-> to each device in Linux. The constraints on the memory are real hardware
-> constraints, resulting from a particular subsystem architecture.
+Hi,
 
-If you are talking about DMA controllers which can only access a certain
-memory area, then yes, that's a hardware constraint, I'm not sure though
-if describing this as CMA in the devicetree is the way to go.
+With new dtc+cpp feature, we could get rid of magic numbers in dts*
+files. This patch replaces CLK IDs.
 
-If you are talking about 'on this board I want to have 128MiB for this
-device because I'm doing 1080p while on another board 64MiB are enough
-because I'm doing 720p', then this is not a hardware constraint.
+We also plan to share those DT header files with kernel source
+later[1].
 
-There may be valid scenarios for putting CMA into the devicetrees, but
-doing this also opens the door for abuse of this binding. I for once
-don't want to find areas being allocated for CMA in the devicetree for
-devices I don't care about. I know I can always exchange a devicetree,
-but I think the devicetree should be seen as firmware to a certain
-degree.
+This series depends on:
+  [PATCH 0/9] ARM: tegra: use new dtc+cpp feature
+  http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149613.html
 
-Sascha
+[5/6] and [6/6] depend on:
+  [PATCH v6 00/10] Tegra114 clockframework
+  http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/148895.html
+
+v2:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149816.html
+
+v1:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149672.html
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149804.html
+
+
+Hiroshi Doyu (6):
+  ARM: tegra20: create a DT header defining CLK IDs
+  ARM: tegra20: convert device tree files to use CLK defines
+  ARM: tegra30: create a DT header defining CLK IDs
+  ARM: tegra30: convert device tree files to use CLK defines
+  ARM: tegra114: create a DT header defining CLK IDs
+  ARM: tegra114: convert device tree files to use CLK defines
+
+ .../bindings/clock/nvidia,tegra114-car.txt         |  261 +------------------
+ .../bindings/clock/nvidia,tegra20-car.txt          |  150 +----------
+ .../bindings/clock/nvidia,tegra30-car.txt          |  207 +--------------
+ arch/arm/boot/dts/tegra114-car.h                   |  272 ++++++++++++++++++++
+ arch/arm/boot/dts/tegra114.dtsip                   |   13 +-
+ arch/arm/boot/dts/tegra20-car.h                    |  158 ++++++++++++
+ arch/arm/boot/dts/tegra20-paz00.dtsp               |    2 +-
+ arch/arm/boot/dts/tegra20.dtsip                    |   85 +++---
+ arch/arm/boot/dts/tegra30-car.h                    |  218 ++++++++++++++++
+ arch/arm/boot/dts/tegra30.dtsip                    |   87 +++----
+ 10 files changed, 746 insertions(+), 707 deletions(-)
+ create mode 100644 arch/arm/boot/dts/tegra114-car.h
+ create mode 100644 arch/arm/boot/dts/tegra20-car.h
+ create mode 100644 arch/arm/boot/dts/tegra30-car.h
 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.7.9.5
