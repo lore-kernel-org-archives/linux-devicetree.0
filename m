@@ -1,66 +1,49 @@
-From: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH 1/5] dmaengine: dw_dmac: move to generic DMA binding
-Date: Fri, 15 Feb 2013 10:50:22 +0200
-Message-ID: <1360918222.28241.20.camel@smile>
-References: <1359395857-1235-1-git-send-email-arnd@arndb.de>
- <1359410300-26113-1-git-send-email-arnd@arndb.de>
- <1359410300-26113-2-git-send-email-arnd@arndb.de>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [v2 1/4] ARM: tegra20: create a DT header defining CLK IDs
+Date: Fri, 15 Feb 2013 11:24:07 +0200
+Message-ID: <20130215092407.GO3073@tbergstrom-lnx.Nvidia.com>
+References: <1360868369-20093-1-git-send-email-hdoyu@nvidia.com>
+ <1360868369-20093-2-git-send-email-hdoyu@nvidia.com>
+ <511D45E0.1080105@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1359410300-26113-2-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <511D45E0.1080105-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2013-01-28 at 21:58 +0000, Arnd Bergmann wrote: 
-> The original device tree binding for this driver, from Viresh Kumar
-> unfortunately conflicted with the generic DMA binding, and did not allow
-> to completely seperate slave device configuration from the controller.
+On Thu, Feb 14, 2013 at 09:15:28PM +0100, Stephen Warren wrote:
+> On 02/14/2013 11:59 AM, Hiroshi Doyu wrote:
+> > To replace magic number in tegra_car:
+> > 
+> > -               clocks = <&tegra_car 28>;
+> > +               clocks = <&tegra_car CLK_HOST1X>;
 > 
-> This is an attempt to replace it with an implementation of the generic
-> binding, but it is currently completely untested, because I do not have
-> any hardware with this particular controller.
+> > diff --git a/arch/arm/boot/dts/tegra20-car.h b/arch/arm/boot/dts/tegra20-car.h
 > 
-> The patch applies on top of linux-next, which contains both the base
-> support for the generic DMA binding, as well as the earlier attempt from
-> Viresh. Both of these are currently not merged upstream however.
+> Sorry, forgot a couple small comments the last time around.
 > 
-> There are a couple of TODO items that are left remaining and are open
-> for ideas from other people.
+> This file should probably have some header indicating which binding it
+> describes, rather like the GPIO header in my patch series.
+> 
+> > +#define CLK_CPU 0
+> 
+> I'd suggest naming that TEGRA20_CLK_CPU, so that the various different
+> clock headers don't conflict. It's not too likely that more than one of
+> the /Tegra/ clock headers will be included at once, but it doesn't seem
+> that unlikely that a board file could end up having a Tegra clock header
+> included plus various other clock headers for some other chip that has
+> some clock outputs.
+> 
 
-Have one question and one comment.
+I would suggest removing this clock. It's not actually implemented in the CCF
+and rather useless. If you would gate the CPU clock from the CPU by writing to
+this register, how would you ungate it? :) Note that this would gate the clock
+to all CPUs.
 
-So, what is the status of this work? Do you manage to provide something
-for v3.9? (Oh, two questions :-) )
+Cheers,
 
-> --- a/drivers/dma/dw_dmac.c
-> +++ b/drivers/dma/dw_dmac.c
-
-> @@ -1765,7 +1753,11 @@ static int dw_probe(struct platform_device *pdev)
->  
->  	dma_async_device_register(&dw->dma);
->  
-> -	return 0;
-> +	err = of_dma_controller_register(pdev->dev.of_node, dw_dma_xlate, dw);
-> +	if (err)
-> +		dma_async_device_unregister(&dw->dma);
-
-I don't think this is a good idea. The impossibility to register in the
-of-dma helper is not critical. Just printing debug message is enough.
-
-
--- 
-Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Intel Finland Oy
+Peter.
