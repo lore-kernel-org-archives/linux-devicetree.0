@@ -1,426 +1,190 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH/RFC] mfd: as3711: add OF support
-Date: Sat, 16 Feb 2013 14:54:55 +0900
-Message-ID: <20130216055454.GA17713@verge.net.au>
-References: <Pine.LNX.4.64.1302151101140.7446@axis700.grange>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 03/13] mmc: provide a standard MMC device-tree binding
+ parser centrally
+Date: Sat, 16 Feb 2013 15:05:26 +0900
+Message-ID: <20130216060526.GA20785@verge.net.au>
+References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
+ <1360941242-18153-4-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.1302151101140.7446-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1360941242-18153-4-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2013 at 11:07:16AM +0100, Guennadi Liakhovetski wrote:
-> Add device-tree bindings to the AS3711 regulator and backlight drivers.
+On Fri, Feb 15, 2013 at 04:13:52PM +0100, Guennadi Liakhovetski wrote:
+> MMC defines a number of standard DT bindings. Having each driver parse
+> them individually adds code redundancy and is error prone. Provide a
+> standard function to unify the parsing. After all drivers are converted
+> to using it instead of their own parsers, this function can be integrated
+> into mmc_alloc_host().
 > 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+> Cc: Markus Pargmann <mpa@pengutronix.de>
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 > ---
 > 
-> As usual - comments to the new bindings are very welcome!
+> v4: make the bus-width property optional to match a recent change to 
+> mmc.txt, use of_property_read_bool() to obtain a boolean value of a DT 
+> property, add comments.
 > 
->  Documentation/devicetree/bindings/mfd/as3711.txt |   73 +++++++++++++
->  drivers/mfd/as3711.c                             |   30 +++++-
->  drivers/regulator/as3711-regulator.c             |   69 ++++++++++++-
->  drivers/video/backlight/as3711_bl.c              |  118 +++++++++++++++++++++-
->  4 files changed, 282 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/as3711.txt
+>  drivers/mmc/core/host.c  |  108 ++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/mmc/host.h |    1 +
+>  2 files changed, 109 insertions(+), 0 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/mfd/as3711.txt b/Documentation/devicetree/bindings/mfd/as3711.txt
-> new file mode 100644
-> index 0000000..d98cf18
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/as3711.txt
-> @@ -0,0 +1,73 @@
-> +AS3711 is an I2C PMIC from Austria MicroSystems with multiple DCDC and LDO power
-> +supplies, a battery charger and an RTC. So far only bindings for the two stepup
-> +DCDC converters are defined. Other DCDC and LDO supplies are configured, using
-> +standard regulator properties, they must belong to a sub-node, called
-> +"regulators" and be called "sd1" to "sd4" and "ldo1" to "ldo8." Stepup converter
-> +configuration should be placed in a subnode, called "backlight."
-> +
-> +Compulsory properties:
-> +- compatible		: must be "ams,as3711"
-> +- reg			: specifies the I2C address
-> +
-> +To use the SU1 converter as a backlight source the following two properties must
-> +be provided:
-> +- su1-dev		: framebuffer phandle
-> +- su1-max-uA		: maximum current
-> +
-> +To use the SU2 converter as a backlight source the following two properties must
-> +be provided:
-> +- su2-dev		: framebuffer phandle
-> +- su1-max-uA		: maximum current
-> +
-> +Additionally one of these properties must be provided to select the type of
-> +feedback used:
-> +- su2-feedback-voltage	: voltage feedback is used
-> +- su2-feedback-curr1	: CURR1 input used for current feedback
-> +- su2-feedback-curr2	: CURR2 input used for current feedback
-> +- su2-feedback-curr3	: CURR3 input used for current feedback
-> +- su2-feedback-curr-auto: automatic current feedback selection
-> +
-> +and one of these to select the over-voltage protection pin
-> +- su2-fbprot-lx-sd4	: LX_SD4 is used for over-voltage protection
-> +- su2-fbprot-gpio2	: GPIO2 is used for over-voltage protection
-> +- su2-fbprot-gpio3	: GPIO3 is used for over-voltage protection
-> +- su2-fbprot-gpio4	: GPIO4 is used for over-voltage protection
-> +
-> +If "su2-feedback-curr-auto" is selected, one or more of the following properties
-> +have to be specified:
-> +- su2-auto-curr1	: use CURR1 input for current feedback
-> +- su2-auto-curr2	: use CURR2 input for current feedback
-> +- su2-auto-curr3	: use CURR3 input for current feedback
-> +
-> +Example:
-> +
-> +as3711@40 {
-> +	compatible = "ams,as3711";
-> +	reg = <0x40>;
-> +
-> +	regulators {
-> +		sd4 {
-> +			regulator-name = "1.215V";
-> +			regulator-min-microvolt = <1215000>;
-> +			regulator-max-microvolt = <1235000>;
-> +		};
-> +		ldo2 {
-> +			regulator-name = "2.8V CPU";
-> +			regulator-min-microvolt = <2800000>;
-> +			regulator-max-microvolt = <2800000>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
-> +	};
-> +
-> +	backlight {
-> +		compatible = "ams,as3711-bl";
-> +		su2-dev = <&lcdc>;
-> +		su2-max-uA = <36000>;
-> +		su2-feedback-curr-auto;
-> +		su2-fbprot-gpio4;
-> +		su2-auto-curr1;
-> +		su2-auto-curr2;
-> +		su2-auto-curr3;
-> +	};
-> +};
-> diff --git a/drivers/mfd/as3711.c b/drivers/mfd/as3711.c
-> index e994c96..5e0e8b3 100644
-> --- a/drivers/mfd/as3711.c
-> +++ b/drivers/mfd/as3711.c
-> @@ -112,16 +112,37 @@ static const struct regmap_config as3711_regmap_config = {
->  	.cache_type = REGCACHE_RBTREE,
->  };
->  
-> +#ifdef CONFIG_OF
-> +static struct of_device_id as3711_of_match[] = {
-> +	{.compatible = "ams,as3711",},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, as3711_of_match);
-> +#endif
-> +
->  static int as3711_i2c_probe(struct i2c_client *client,
->  			    const struct i2c_device_id *id)
->  {
->  	struct as3711 *as3711;
-> -	struct as3711_platform_data *pdata = client->dev.platform_data;
-> +	struct as3711_platform_data *pdata;
->  	unsigned int id1, id2;
->  	int ret;
->  
-> -	if (!pdata)
-> -		dev_dbg(&client->dev, "Platform data not found\n");
-> +	if (!client->dev.of_node) {
-> +		pdata = client->dev.platform_data;
-> +		if (!pdata)
-> +			dev_dbg(&client->dev, "Platform data not found\n");
-> +	} else {
-> +		if (!of_device_is_available(client->dev.of_node))
-> +			return -ENODEV;
-
-The wonder that is kbuild tells me that the above call to
-of_device_is_available() may cause a build-time error.
-Perhaps it or this entire else clause should be guarded by CONFIG_OF?
-
-> +
-> +		pdata = devm_kzalloc(&client->dev,
-> +				     sizeof(*pdata), GFP_KERNEL);
-> +		if (!pdata) {
-> +			dev_err(&client->dev, "Failed to allocate pdata\n");
-> +			return -ENOMEM;
-> +		}
-> +	}
->  
->  	as3711 = devm_kzalloc(&client->dev, sizeof(struct as3711), GFP_KERNEL);
->  	if (!as3711) {
-> @@ -193,7 +214,8 @@ static struct i2c_driver as3711_i2c_driver = {
->  	.driver = {
->  		   .name = "as3711",
->  		   .owner = THIS_MODULE,
-> -		   },
-> +		   .of_match_table = of_match_ptr(as3711_of_match),
-> +	},
->  	.probe = as3711_i2c_probe,
->  	.remove = as3711_i2c_remove,
->  	.id_table = as3711_i2c_id,
-> diff --git a/drivers/regulator/as3711-regulator.c b/drivers/regulator/as3711-regulator.c
-> index f0ba8c4..cf145fc 100644
-> --- a/drivers/regulator/as3711-regulator.c
-> +++ b/drivers/regulator/as3711-regulator.c
-> @@ -13,9 +13,11 @@
->  #include <linux/init.h>
->  #include <linux/mfd/as3711.h>
->  #include <linux/module.h>
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index ee2e16b..daa2ed1 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -15,6 +15,8 @@
+>  #include <linux/device.h>
+>  #include <linux/err.h>
+>  #include <linux/idr.h>
 > +#include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/regulator/driver.h>
-> +#include <linux/regulator/of_regulator.h>
->  #include <linux/slab.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/pagemap.h>
+>  #include <linux/export.h>
+>  #include <linux/leds.h>
+> @@ -23,6 +25,7 @@
 >  
->  struct as3711_regulator_info {
-> @@ -276,6 +278,57 @@ static struct as3711_regulator_info as3711_reg_info[] = {
+>  #include <linux/mmc/host.h>
+>  #include <linux/mmc/card.h>
+> +#include <linux/mmc/slot-gpio.h>
 >  
->  #define AS3711_REGULATOR_NUM ARRAY_SIZE(as3711_reg_info)
+>  #include "core.h"
+>  #include "host.h"
+> @@ -295,6 +298,111 @@ static inline void mmc_host_clk_sysfs_init(struct mmc_host *host)
+>  #endif
 >  
-> +static const char *as3711_regulator_of_names[AS3711_REGULATOR_NUM] = {
-> +	[AS3711_REGULATOR_SD_1] = "sd1",
-> +	[AS3711_REGULATOR_SD_2] = "sd2",
-> +	[AS3711_REGULATOR_SD_3] = "sd3",
-> +	[AS3711_REGULATOR_SD_4] = "sd4",
-> +	[AS3711_REGULATOR_LDO_1] = "ldo1",
-> +	[AS3711_REGULATOR_LDO_2] = "ldo2",
-> +	[AS3711_REGULATOR_LDO_3] = "ldo3",
-> +	[AS3711_REGULATOR_LDO_4] = "ldo4",
-> +	[AS3711_REGULATOR_LDO_5] = "ldo5",
-> +	[AS3711_REGULATOR_LDO_6] = "ldo6",
-> +	[AS3711_REGULATOR_LDO_7] = "ldo7",
-> +	[AS3711_REGULATOR_LDO_8] = "ldo8",
-> +};
-> +
-> +static int as3711_regulator_parse_dt(struct device *dev)
+>  /**
+> + *	mmc_of_parse() - parse host's device-tree node
+> + *	@host: host, whose node should be parsed.
+> + *
+> + * To keep the rest of the MMC subsystem unaware of the fact, whether DT has
+> + * been used to to instantiate and configure this host instance or not, we
+> + * parse the properties and set respective generic mmc-host flags and
+> + * parameters.
+> + */
+> +void mmc_of_parse(struct mmc_host *host)
 > +{
-> +	struct as3711_regulator_pdata *pdata = dev_get_platdata(dev);
-> +	struct device_node *regulators =
-> +		of_find_node_by_name(dev->parent->of_node, "regulators");
-> +	struct of_regulator_match *matches, *match;
-> +	const int count = AS3711_REGULATOR_NUM;
-> +	int ret, i;
+> +	struct device_node *np;
+> +	u32 bus_width;
+> +	bool explicit_inv_wp, gpio_inv_wp = false;
+> +	enum of_gpio_flags flags;
+> +	int len, ret, gpio;
 > +
-> +	if (!regulators) {
-> +		dev_err(dev, "regulator node not found\n");
-> +		return -ENODEV;
+> +	if (!host->parent || !host->parent->of_node)
+> +		return;
+> +
+> +	np = host->parent->of_node;
+> +
+> +	/* "bus-width" is translated to MMC_CAP_*_BIT_DATA flags */
+> +	if (of_property_read_u32_array(np, "bus-width", &bus_width, 1) < 0)
+> +		dev_dbg(host->parent,
+> +			"\"bus-width\" property is missing, assuming 1 bit.\n");
+> +
+> +	switch (bus_width) {
+
+kbuild tells me that gcc thinks that bus_width is used without being
+initialised here. Assuming that of_property_read_u32_array always
+initialises bus_width if it returns zero then perhaps it would be worth
+considering using uninitialized_var().
+
+> +	case 8:
+> +		host->caps |= MMC_CAP_8_BIT_DATA;
+> +		/* Hosts, capable of 8-bit transfers can also do 4 bits */
+> +	case 4:
+> +		host->caps |= MMC_CAP_4_BIT_DATA;
+> +		break;
+> +	case 1:
+> +		break;
+> +	default:
+> +		dev_err(host->parent,
+> +			"Invalid \"bus-width\" value %ud!\n", bus_width);
 > +	}
 > +
-> +	matches = devm_kzalloc(dev, sizeof(*matches) * count, GFP_KERNEL);
-> +	if (!matches)
-> +		return -ENOMEM;
+> +	/* f_max is obtained from the optional "max-frequency" property */
+> +	of_property_read_u32_array(np, "max-frequency", &host->f_max, 1);
 > +
-> +	for (i = 0, match = matches; i < count; i++, match++) {
-> +		match->name = as3711_regulator_of_names[i];
-> +		match->driver_data = as3711_reg_info + i;
+> +	/*
+> +	 * Configure CD and WP pins. They are both by default active low to
+> +	 * match the SDHCI spec. If GPIOs are provided for CD and / or WP, the
+> +	 * mmc-gpio helpers are used to attach, configure and use them. If
+> +	 * polarity inversion is specified in DT, one of MMC_CAP2_CD_ACTIVE_HIGH
+> +	 * and MMC_CAP2_RO_ACTIVE_HIGH capability-2 flags is set. If the
+> +	 * "broken-cd" property is provided, the MMC_CAP_NEEDS_POLL capability
+> +	 * is set. If the "non-removable" property is found, the
+> +	 * MMC_CAP_NONREMOVABLE capability is set and no card-detection
+> +	 * configuration is performed.
+> +	 */
+> +
+> +	/* Parse Card Detection */
+> +	if (of_find_property(np, "non-removable", &len)) {
+> +		host->caps |= MMC_CAP_NONREMOVABLE;
+> +	} else {
+> +		bool explicit_inv_cd, gpio_inv_cd = false;
+> +
+> +		explicit_inv_cd = of_property_read_bool(np, "cd-inverted");
+> +
+> +		if (of_find_property(np, "broken-cd", &len))
+> +			host->caps |= MMC_CAP_NEEDS_POLL;
+> +
+> +		gpio = of_get_named_gpio_flags(np, "cd-gpios", 0, &flags);
+> +		if (gpio_is_valid(gpio)) {
+> +			if (!(flags & OF_GPIO_ACTIVE_LOW))
+> +				gpio_inv_cd = true;
+> +
+> +			ret = mmc_gpio_request_cd(host, gpio);
+> +			if (ret < 0)
+> +				dev_err(host->parent,
+> +					"Failed to request CD GPIO #%d: %d!\n",
+> +					gpio, ret);
+> +			else
+> +				dev_info(host->parent, "Got CD GPIO #%d.\n",
+> +					 gpio);
+> +		}
+> +
+> +		if (explicit_inv_cd ^ gpio_inv_cd)
+> +			host->caps2 |= MMC_CAP2_CD_ACTIVE_HIGH;
 > +	}
 > +
-> +	ret = of_regulator_match(dev->parent, regulators, matches, count);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Error parsing regulator init data: %d\n", ret);
-> +		return ret;
+> +	/* Parse Write Protection */
+> +	explicit_inv_wp = of_property_read_bool(np, "wp-inverted");
+> +
+> +	gpio = of_get_named_gpio_flags(np, "wp-gpios", 0, &flags);
+> +	if (gpio_is_valid(gpio)) {
+> +		if (!(flags & OF_GPIO_ACTIVE_LOW))
+> +			gpio_inv_wp = true;
+> +
+> +		ret = mmc_gpio_request_ro(host, gpio);
+> +		if (ret < 0)
+> +			dev_err(host->parent,
+> +				"Failed to request WP GPIO: %d!\n", ret);
 > +	}
-> +
-> +	for (i = 0, match = matches; i < count; i++, match++)
-> +		if (match->of_node)
-> +			pdata->init_data[i] = match->init_data;
-> +
-> +	return 0;
+> +	if (explicit_inv_wp ^ gpio_inv_wp)
+> +		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
 > +}
 > +
->  static int as3711_regulator_probe(struct platform_device *pdev)
+> +EXPORT_SYMBOL(mmc_of_parse);
+> +
+> +/**
+>   *	mmc_alloc_host - initialise the per-host structure.
+>   *	@extra: sizeof private data structure
+>   *	@dev: pointer to host device model structure
+> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+> index 61a10c1..13c0c8d 100644
+> --- a/include/linux/mmc/host.h
+> +++ b/include/linux/mmc/host.h
+> @@ -345,6 +345,7 @@ extern struct mmc_host *mmc_alloc_host(int extra, struct device *);
+>  extern int mmc_add_host(struct mmc_host *);
+>  extern void mmc_remove_host(struct mmc_host *);
+>  extern void mmc_free_host(struct mmc_host *);
+> +void mmc_of_parse(struct mmc_host *host);
+>  
+>  static inline void *mmc_priv(struct mmc_host *host)
 >  {
->  	struct as3711_regulator_pdata *pdata = dev_get_platdata(&pdev->dev);
-> @@ -289,8 +342,18 @@ static int as3711_regulator_probe(struct platform_device *pdev)
->  	int ret;
->  	int id;
->  
-> -	if (!pdata)
-> -		dev_dbg(&pdev->dev, "No platform data...\n");
-> +	if (!pdata) {
-> +		dev_err(&pdev->dev, "No platform data...\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (pdev->dev.parent->of_node) {
-> +		ret = as3711_regulator_parse_dt(&pdev->dev);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "DT parsing failed: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
->  
->  	regs = devm_kzalloc(&pdev->dev, AS3711_REGULATOR_NUM *
->  			sizeof(struct as3711_regulator), GFP_KERNEL);
-> @@ -300,7 +363,7 @@ static int as3711_regulator_probe(struct platform_device *pdev)
->  	}
->  
->  	for (id = 0, ri = as3711_reg_info; id < AS3711_REGULATOR_NUM; ++id, ri++) {
-> -		reg_data = pdata ? pdata->init_data[id] : NULL;
-> +		reg_data = pdata->init_data[id];
->  
->  		/* No need to register if there is no regulator data */
->  		if (!reg_data)
-> diff --git a/drivers/video/backlight/as3711_bl.c b/drivers/video/backlight/as3711_bl.c
-> index c6bc65d..90c9208 100644
-> --- a/drivers/video/backlight/as3711_bl.c
-> +++ b/drivers/video/backlight/as3711_bl.c
-> @@ -257,6 +257,109 @@ static int as3711_bl_register(struct platform_device *pdev,
->  	return 0;
->  }
->  
-> +static int as3711_backlight_parse_dt(struct device *dev)
-> +{
-> +	struct as3711_bl_pdata *pdata = dev_get_platdata(dev);
-> +	struct device_node *bl =
-> +		of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
-> +	int ret;
-> +
-> +	if (!bl) {
-> +		dev_dbg(dev, "backlight node not found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	fb = of_parse_phandle(bl, "su1-dev", 0);
-> +	if (fb) {
-> +		pdata->su1_fb = fb->full_name;
-> +
-> +		ret = of_property_read_u32(bl, "su1-max-uA", &pdata->su1_max_uA);
-> +		if (pdata->su1_max_uA <= 0)
-> +			ret = -EINVAL;
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	fb = of_parse_phandle(bl, "su2-dev", 0);
-> +	if (fb) {
-> +		int count = 0;
-> +
-> +		pdata->su2_fb = fb->full_name;
-> +
-> +		ret = of_property_read_u32(bl, "su2-max-uA", &pdata->su2_max_uA);
-> +		if (pdata->su2_max_uA <= 0)
-> +			ret = -EINVAL;
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (of_find_property(bl, "su2-feedback-voltage", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_VOLTAGE;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr1", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR1;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr2", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR2;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr3", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR3;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr-auto", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR_AUTO;
-> +			count++;
-> +		}
-> +		if (count != 1)
-> +			return -EINVAL;
-> +
-> +		count = 0;
-> +		if (of_find_property(bl, "su2-fbprot-lx-sd4", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_LX_SD4;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio2", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO2;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio3", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO3;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio4", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO4;
-> +			count++;
-> +		}
-> +		if (count != 1)
-> +			return -EINVAL;
-> +
-> +		count = 0;
-> +		if (of_find_property(bl, "su2-auto-curr1", NULL)) {
-> +			pdata->su2_auto_curr1 = true;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-auto-curr2", NULL)) {
-> +			pdata->su2_auto_curr2 = true;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-auto-curr3", NULL)) {
-> +			pdata->su2_auto_curr3 = true;
-> +			count++;
-> +		}
-> +
-> +		/*
-> +		 * At least one su2-auto-curr* must be specified iff
-> +		 * AS3711_SU2_CURR_AUTO is used
-> +		 */
-> +		if (!count ^ pdata->su2_feedback != AS3711_SU2_CURR_AUTO)
-> +			return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int as3711_backlight_probe(struct platform_device *pdev)
->  {
->  	struct as3711_bl_pdata *pdata = dev_get_platdata(&pdev->dev);
-> @@ -266,11 +369,24 @@ static int as3711_backlight_probe(struct platform_device *pdev)
->  	unsigned int max_brightness;
->  	int ret;
->  
-> -	if (!pdata || (!pdata->su1_fb && !pdata->su2_fb)) {
-> +	if (!pdata) {
->  		dev_err(&pdev->dev, "No platform data, exiting...\n");
->  		return -ENODEV;
->  	}
->  
-> +	if (pdev->dev.parent->of_node) {
-> +		ret = as3711_backlight_parse_dt(&pdev->dev);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "DT parsing failed: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (!pdata->su1_fb && !pdata->su2_fb) {
-> +		dev_err(&pdev->dev, "No framebuffer specified\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	/*
->  	 * Due to possible hardware damage I chose to block all modes,
->  	 * unsupported on my hardware. Anyone, wishing to use any of those modes
 > -- 
 > 1.7.2.5
 > 
