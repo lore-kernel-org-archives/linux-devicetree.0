@@ -1,51 +1,145 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 03/13] mmc: provide a standard MMC device-tree binding parser centrally
-Date: Sat, 16 Feb 2013 10:54:36 +0000
-Message-ID: <201302161054.36492.arnd@arndb.de>
-References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de> <1360941242-18153-4-git-send-email-g.liakhovetski@gmx.de> <20130216060526.GA20785@verge.net.au>
+From: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] dmaengine: dw_dmac: move to generic DMA binding
+Date: Sat, 16 Feb 2013 13:13:01 +0200
+Message-ID: <CAHp75VfyO5wep-shvZ_mkwLmL2_Fa2jgq63AvE2t8=TPLZn6yg@mail.gmail.com>
+References: <1360952512-971558-1-git-send-email-arnd@arndb.de>
+ <1360952512-971558-3-git-send-email-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130216060526.GA20785@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Markus Pargmann <mpa@pengutronix.de>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1360952512-971558-3-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 16 February 2013, Simon Horman wrote:
-> > +void mmc_of_parse(struct mmc_host *host)
-> > +{
-> > +     struct device_node *np;
-> > +     u32 bus_width;
-> > +     bool explicit_inv_wp, gpio_inv_wp = false;
-> > +     enum of_gpio_flags flags;
-> > +     int len, ret, gpio;
-> > +
-> > +     if (!host->parent || !host->parent->of_node)
-> > +             return;
-> > +
-> > +     np = host->parent->of_node;
-> > +
-> > +     /* "bus-width" is translated to MMC_CAP_*_BIT_DATA flags */
-> > +     if (of_property_read_u32_array(np, "bus-width", &bus_width, 1) < 0)
-> > +             dev_dbg(host->parent,
-> > +                     "\"bus-width\" property is missing, assuming 1 bit.\n");
-> > +
-> > +     switch (bus_width) {
-> 
-> kbuild tells me that gcc thinks that bus_width is used without being
-> initialised here. Assuming that of_property_read_u32_array always
-> initialises bus_width if it returns zero then perhaps it would be worth
-> considering using uninitialized_var().
+On Fri, Feb 15, 2013 at 8:21 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> The original device tree binding for this driver, from Viresh Kumar
+> unfortunately conflicted with the generic DMA binding, and did not allow
+> to completely seperate slave device configuration from the controller.
+>
+> This is an attempt to replace it with an implementation of the generic
+> binding, but it is currently completely untested, because I do not have
+> any hardware with this particular controller.
+>
+> The patch applies on top of linux-next, which contains both the base
+> support for the generic DMA binding, as well as the earlier attempt from
+> Viresh. Both of these are currently not merged upstream however.
+>
+> There are a couple of TODO items that are left remaining and are open
+> for ideas from other people.
 
-I think this is a false positive that I encountered before and that should be gone
-with gcc-4.7 or higher when using -O2 instead of -Os. I have a patch to disable
--Wmaybe-uninitialized when builing with -Os. If that gets rid of the warning,
-I'd prefer not annotating it here.
+> --- a/drivers/dma/dw_dmac.c
+> +++ b/drivers/dma/dw_dmac.c
 
-There was some discussion about removing uninitialized_var() recently after it
-was found to hide some real bugs.
+> @@ -168,7 +169,13 @@ static void dwc_initialize(struct dw_dma_chan *dwc)
+>         if (dwc->initialized == true)
+>                 return;
+>
+> -       if (dws) {
+> +       if (dws && dws->cfg_hi == 0xffffffff && dws->cfg_lo == 0xffffffff) {
+> +               /* autoconfigure based on request line from DT */
+> +               if (dwc->dma_sconfig.direction == DMA_MEM_TO_DEV)
+> +                       cfghi = DWC_CFGH_DST_PER(dwc->req);
+> +               else if (dwc->dma_sconfig.direction == DMA_DEV_TO_MEM)
+> +                       cfghi = DWC_CFGH_SRC_PER(dwc->req);
 
-	Arnd
+Please, use dwc->direction instead of field in the slave_config. If I
+remember correctly it's marked like obsoleted/deprecated.
+
+> @@ -1179,49 +1186,61 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
+>         dev_vdbg(chan2dev(chan), "%s: done\n", __func__);
+>  }
+>
+> -bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
+> +struct dw_dma_filter_args {
+> +       struct dw_dma *dw;
+> +       u32 req;
+
+Why this is u32 and not unsigned int?
+
+> +       u32 src;
+> +       u32 dst;
+
+And this could be also just unsigned int.
+
+> +static bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
+>  {
+
+> +       dws->cfg_hi     = 0xffffffff;
+> +       dws->cfg_lo     = 0xffffffff;
+
+Agree with Russell about ~0.
+
+> +static struct dma_chan *dw_dma_xlate(struct of_phandle_args *dma_spec,
+> +                                        struct of_dma *ofdma)
+> +{
+> +       struct dw_dma *dw = ofdma->of_dma_data;
+> +       struct dw_dma_filter_args fargs = {
+> +               .dw = dw,
+> +       };
+> +       dma_cap_mask_t cap;
+> +
+> +       if (dma_spec->args_count != 3)
+> +               return NULL;
+> +
+> +       fargs.req = be32_to_cpup(dma_spec->args+0);
+> +       fargs.src = be32_to_cpup(dma_spec->args+1);
+> +       fargs.dst = be32_to_cpup(dma_spec->args+2);
+
+You could cast them to usual C types like unsigned int. I see u32 in
+rare cases in the driver like for reading/writting from/to hw and when
+API contains it. Here I doubt we have to leave them as u32.
+
+> +
+> +       if (WARN_ON(fargs.req >= 16 || fargs.src >= 2 || fargs.dst >= 2))
+> +               return NULL;
+
+16 here is a magic number for me. I would like to see something like
+#define DW_MAX_REQUEST_LINES 16 in the dw_dmac_regs.h.
+
+Besides of that, what 2 does come from?
+
+> @@ -1765,6 +1751,10 @@ static int dw_probe(struct platform_device *pdev)
+>
+>         dma_async_device_register(&dw->dma);
+>
+> +       err = of_dma_controller_register(pdev->dev.of_node, dw_dma_xlate, dw);
+> +       if (err)
+> +               dev_err(&pdev->dev, "could not register of_dma_controller\n");
+
+It's not an error, dev_dbg. Consider case when !CONFIG_OF.
+
+> --- a/drivers/dma/dw_dmac_regs.h
+> +++ b/drivers/dma/dw_dmac_regs.h
+> @@ -213,6 +213,10 @@ struct dw_dma_chan {
+>         /* configuration passed via DMA_SLAVE_CONFIG */
+>         struct dma_slave_config dma_sconfig;
+>
+> +       /* slave configuration from DT */
+> +       unsigned int            req;
+
+Could you use here full name like "request_line"? And I think the
+better place for it in subsection "hardware configuration" (consider
+non-DT cases of use).
+
+>         /* backlink to dw_dma */
+>         struct dw_dma           *dw;
+>  };
+
+We should not have this in linux-next. Are you sure you rebased it on
+top of recent one?
+
+-- 
+With Best Regards,
+Andy Shevchenko
