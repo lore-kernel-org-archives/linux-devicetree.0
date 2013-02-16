@@ -1,11 +1,15 @@
-From: Anil Kumar <anilk4.v-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH V2] ARM: dts: omap3-devkit8000: Enable audio support
-Date: Sat, 16 Feb 2013 13:03:56 +0530
-Message-ID: <1361000036-18121-1-git-send-email-anilk4.v@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 2/4] dmaengine: dw_dmac: move to generic DMA binding
+Date: Sat, 16 Feb 2013 10:07:39 +0000
+Message-ID: <201302161007.39657.arnd@arndb.de>
+References: <1360952512-971558-1-git-send-email-arnd@arndb.de>
+ <1360952512-971558-3-git-send-email-arnd@arndb.de>
+ <CAKohpo=u_b9u1=78+tm-rhVR14P0=2XbLrZEDJrQBY5W8LXiCw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAKohpo=u_b9u1=78+tm-rhVR14P0=2XbLrZEDJrQBY5W8LXiCw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -16,92 +20,33 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-Cc: peter.ujfalusi-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, thomas-xePHB1Atl/Dsq35pWSNszA@public.gmane.org
+To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add the needed sections to enable audio support on
-Devkit8000 when booted with DT blob.
+On Saturday 16 February 2013, Viresh Kumar wrote:
+> On 15 February 2013 23:51, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> > diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
+> > +- #dma-cells: must be <3>
+> 
+> > +DMA clients connected to the Designware DMA controller must use the format
+> > +described in the dma.txt file, using a five-cell specifier for each channel.
+> 
+> s/five/four ?
 
-Signed-off-by: Anil Kumar <anilk4.v-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-This patch is based on top of kernel 3.8-rc5 and
-the following patches.
+Right. I thought I had fixed up all instances.
 
-Peter Ujfalusi:-
-ASoC: twl4030: Correct the support for Voice port
-ASoC: twl4030: Convert MICBIAS to SUPPLY widget
-ASoC: omap-twl4030: Add support for routing, voice port and jack detect
+> > +static bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
+> >  {
+> 
+> > +       dws->cfg_hi     = 0xffffffff;
+> > +       dws->cfg_lo     = 0xffffffff;
+> 
+> s/0xffffffff/-1 ?
 
-Anil Kumar:-
-ARM: dts: add minimal DT support for DevKit8000
-https://patchwork.kernel.org/patch/2122461/
+It's an 'unsigned int'. While -1 would work here, I always find it a little
+odd to rely on that feature of the C language.
 
--Tested for playback and capture on Devkit8000.
+Thannks for the review.
 
- Test process:-
-
- #amixer set 'PredriveR Mixer AudioR2' on
- #amixer set 'PredriveL Mixer AudioL2' on
- #amixer set PreDriv 100 unmute
- #amixer set 'DAC2 Digital Fine' 100
- #amixer cset numid=27 1
- #arecord | aplay
-
-For V2:
- - Remove pin mux as done at device boot time by default.
-
-:100644 100644 6338993... c70116f... M	arch/arm/boot/dts/omap3-devkit8000.dts
- arch/arm/boot/dts/omap3-devkit8000.dts |   23 +++++++++++++++++++----
- 1 files changed, 19 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
-index 6338993..c70116f 100644
---- a/arch/arm/boot/dts/omap3-devkit8000.dts
-+++ b/arch/arm/boot/dts/omap3-devkit8000.dts
-@@ -42,6 +42,19 @@
-                 };
- 
- 	};
-+
-+	sound {
-+		compatible = "ti,omap-twl4030";
-+		ti,model = "devkit8000";
-+
-+		ti,mcbsp = <&mcbsp2>;
-+		ti,codec = <&twl_audio>;
-+		ti,audio-routing =
-+			"Ext Spk", "PREDRIVEL",
-+			"Ext Spk", "PREDRIVER",
-+			"MAINMIC", "Main Mic",
-+			"Main Mic", "Mic Bias 1";
-+	};
- };
- 
- &i2c1 {
-@@ -51,6 +64,12 @@
- 		reg = <0x48>;
- 		interrupts = <7>;	/* SYS_NIRQ cascaded to intc */
- 		interrupt-parent = <&intc>;
-+
-+		twl_audio: audio {
-+			compatible = "ti,twl4030-audio";
-+			codec {
-+			};
-+		};
- 	};
- };
- 
-@@ -86,10 +105,6 @@
- 	status = "disabled";
- };
- 
--&mcbsp2 {
--	status = "disabled";
--};
--
- &mcbsp3 {
- 	status = "disabled";
- };
--- 
-1.7.0.4
+	Arnd
