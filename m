@@ -1,422 +1,348 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH/RFC] mfd: as3711: add OF support
-Date: Sat, 16 Feb 2013 11:26:30 +0900
-Message-ID: <20130216022630.GA11628@verge.net.au>
-References: <Pine.LNX.4.64.1302151101140.7446@axis700.grange>
+Subject: Re: [PATCH v4] net: sh_eth: Add support of device tree probe
+Date: Sat, 16 Feb 2013 11:26:38 +0900
+Message-ID: <20130216022638.GC11628@verge.net.au>
+References: <1360893205-12004-1-git-send-email-iwamatsu@nigauri.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.1302151101140.7446@axis700.grange>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-kernel@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, devicetree-discuss@lists.ozlabs.org, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lrg@ti.com>, Richard Purdie <rpurdie@rpsys.net>, Andrew Morton <akpm@linux-foundation.org>, linux-fbdev@vger.kernel.org
+In-Reply-To: <1360893205-12004-1-git-send-email-iwamatsu@nigauri.org>
+Sender: netdev-owner@vger.kernel.org
+To: Nobuhiro Iwamatsu <iwamatsu@nigauri.org>
+Cc: netdev@vger.kernel.org, horms+renesas@verge.net.au, magnus.damm@gmail.com, devicetree-discuss@lists.ozlabs.org, kda@linux-powerpc.org, kuninori.morimoto.gx@renesas.com, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2013 at 11:07:16AM +0100, Guennadi Liakhovetski wrote:
-> Add device-tree bindings to the AS3711 regulator and backlight drivers.
+On Fri, Feb 15, 2013 at 10:53:25AM +0900, Nobuhiro Iwamatsu wrote:
+> From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+> 
+> This adds support of device tree probe for Renesas sh-ether driver.
 
-Hi,
+Hi Iwamatsu-san,
 
-at this stage I do not expect this code to go through the renesas tree.
-However, in order to provide a basis for work on renesas SoCs I have added
-this patch to the topic/backlight topic branch in the reneas tree on
-kernel.org and merged it into topic/all+next.
+I do not expect this code to go through the renesas tree.  However, in
+order to provide a basis for work on renesas SoCs I have added this patch
+to the topic/sh_eth topic branch in the reneas tree on kernel.org and
+merged it into topic/all+next.
 
 In other words, I am not picking this patch up to merge it or add it to
 linux-next, rather I am storing it for reference.
 
+Also, I do note that there have already been some comments made on this
+patch and I plan to date topic/sh_eth topic branch as new versions are
+posted.
+
+> Signed-off-by: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
 > 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> V4: - Remove empty sh_eth_parse_dt().
+> V3: - Removed sentnece of "needs-init" from document.
+> V2: - Removed ether_setup().
+>     - Fixed typo from "sh-etn" to "sh-eth".
+> 	- Removed "needs-init" and sh-eth,endian from definition of DT.
+> 	- Changed "sh-eth,edmac-endian" instead of "sh-eth,edmac-big-endain"
+> 	  in definition of DT.
 > ---
+>  Documentation/devicetree/bindings/net/sh_ether.txt |   39 +++++
+>  drivers/net/ethernet/renesas/sh_eth.c              |  150 ++++++++++++++++----
+>  2 files changed, 165 insertions(+), 24 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/net/sh_ether.txt
 > 
-> As usual - comments to the new bindings are very welcome!
-> 
->  Documentation/devicetree/bindings/mfd/as3711.txt |   73 +++++++++++++
->  drivers/mfd/as3711.c                             |   30 +++++-
->  drivers/regulator/as3711-regulator.c             |   69 ++++++++++++-
->  drivers/video/backlight/as3711_bl.c              |  118 +++++++++++++++++++++-
->  4 files changed, 282 insertions(+), 8 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/as3711.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/mfd/as3711.txt b/Documentation/devicetree/bindings/mfd/as3711.txt
+> diff --git a/Documentation/devicetree/bindings/net/sh_ether.txt b/Documentation/devicetree/bindings/net/sh_ether.txt
 > new file mode 100644
-> index 0000000..d98cf18
+> index 0000000..f20d66a
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/as3711.txt
-> @@ -0,0 +1,73 @@
-> +AS3711 is an I2C PMIC from Austria MicroSystems with multiple DCDC and LDO power
-> +supplies, a battery charger and an RTC. So far only bindings for the two stepup
-> +DCDC converters are defined. Other DCDC and LDO supplies are configured, using
-> +standard regulator properties, they must belong to a sub-node, called
-> +"regulators" and be called "sd1" to "sd4" and "ldo1" to "ldo8." Stepup converter
-> +configuration should be placed in a subnode, called "backlight."
+> +++ b/Documentation/devicetree/bindings/net/sh_ether.txt
+> @@ -0,0 +1,39 @@
+> +* Renesas Electronics SuperH EMAC
 > +
-> +Compulsory properties:
-> +- compatible		: must be "ams,as3711"
-> +- reg			: specifies the I2C address
+> +This file provides information, what the device node
+> +for the sh_eth interface contains.
 > +
-> +To use the SU1 converter as a backlight source the following two properties must
-> +be provided:
-> +- su1-dev		: framebuffer phandle
-> +- su1-max-uA		: maximum current
+> +Required properties:
+> +- compatible:                   "renesas,sh-eth";
+> +- interrupt-parent:             The phandle for the interrupt controller that
+> +                                services interrupts for this device.
+> +- reg:                          Offset and length of the register set for the
+> +                                device.
+> +- interrupts:                   Interrupt mapping for the sh_eth interrupt
+> +                                sources (vector id).
+> +- phy-mode:                     String, operation mode of the PHY interface.
+> +- sh-eth,register-type:         String, register type of sh_eth.
+> +                                Please select "gigabit", "fast-sh4" or
+> +                                "fast-sh3-sh2".
+> +- sh-eth,phy-id:                PHY id.
 > +
-> +To use the SU2 converter as a backlight source the following two properties must
-> +be provided:
-> +- su2-dev		: framebuffer phandle
-> +- su1-max-uA		: maximum current
+> +Optional properties:
+> +- local-mac-address:            6 bytes, mac address
+> +- sh-eth,no-ether-link:         Set link control by software. When device does
+> +                                not support ether-link, set.
+> +- sh-eth,ether-link-active-low: Set link check method.
+> +                                When detection of link is treated as active-low,
+> +                                set.
+> +- sh-eth,edmac-big-endian:      Set big endian for sh_eth dmac.
+> +                                It work as little endian when this is not set.
 > +
-> +Additionally one of these properties must be provided to select the type of
-> +feedback used:
-> +- su2-feedback-voltage	: voltage feedback is used
-> +- su2-feedback-curr1	: CURR1 input used for current feedback
-> +- su2-feedback-curr2	: CURR2 input used for current feedback
-> +- su2-feedback-curr3	: CURR3 input used for current feedback
-> +- su2-feedback-curr-auto: automatic current feedback selection
-> +
-> +and one of these to select the over-voltage protection pin
-> +- su2-fbprot-lx-sd4	: LX_SD4 is used for over-voltage protection
-> +- su2-fbprot-gpio2	: GPIO2 is used for over-voltage protection
-> +- su2-fbprot-gpio3	: GPIO3 is used for over-voltage protection
-> +- su2-fbprot-gpio4	: GPIO4 is used for over-voltage protection
-> +
-> +If "su2-feedback-curr-auto" is selected, one or more of the following properties
-> +have to be specified:
-> +- su2-auto-curr1	: use CURR1 input for current feedback
-> +- su2-auto-curr2	: use CURR2 input for current feedback
-> +- su2-auto-curr3	: use CURR3 input for current feedback
-> +
-> +Example:
-> +
-> +as3711@40 {
-> +	compatible = "ams,as3711";
-> +	reg = <0x40>;
-> +
-> +	regulators {
-> +		sd4 {
-> +			regulator-name = "1.215V";
-> +			regulator-min-microvolt = <1215000>;
-> +			regulator-max-microvolt = <1235000>;
-> +		};
-> +		ldo2 {
-> +			regulator-name = "2.8V CPU";
-> +			regulator-min-microvolt = <2800000>;
-> +			regulator-max-microvolt = <2800000>;
-> +			regulator-always-on;
-> +			regulator-boot-on;
-> +		};
+> +Example (armadillo800eva):
+> +	sh-eth@e9a00000 {
+> +		compatible = "renesas,sh-eth";
+> +		interrupt-parent = <&intca>;
+> +		reg = <0xe9a00000 0x800>, <0xe9a01800 0x800>;
+> +		interrupts = <0x500>;
+> +		phy-mode = "mii";
+> +		sh-eth,register-type = "gigabit";
+> +		sh-eth,phy-id = <0>;
 > +	};
-> +
-> +	backlight {
-> +		compatible = "ams,as3711-bl";
-> +		su2-dev = <&lcdc>;
-> +		su2-max-uA = <36000>;
-> +		su2-feedback-curr-auto;
-> +		su2-fbprot-gpio4;
-> +		su2-auto-curr1;
-> +		su2-auto-curr2;
-> +		su2-auto-curr3;
-> +	};
-> +};
-> diff --git a/drivers/mfd/as3711.c b/drivers/mfd/as3711.c
-> index e994c96..5e0e8b3 100644
-> --- a/drivers/mfd/as3711.c
-> +++ b/drivers/mfd/as3711.c
-> @@ -112,16 +112,37 @@ static const struct regmap_config as3711_regmap_config = {
->  	.cache_type = REGCACHE_RBTREE,
+> diff --git a/drivers/net/ethernet/renesas/sh_eth.c b/drivers/net/ethernet/renesas/sh_eth.c
+> index 3d70586..b41249a 100644
+> --- a/drivers/net/ethernet/renesas/sh_eth.c
+> +++ b/drivers/net/ethernet/renesas/sh_eth.c
+> @@ -1,7 +1,7 @@
+>  /*
+>   *  SuperH Ethernet device driver
+>   *
+> - *  Copyright (C) 2006-2012 Nobuhiro Iwamatsu
+> + *  Copyright (C) 2006-2013 Nobuhiro Iwamatsu
+>   *  Copyright (C) 2008-2012 Renesas Solutions Corp.
+>   *
+>   *  This program is free software; you can redistribute it and/or modify it
+> @@ -31,6 +31,12 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/mdio-bitbang.h>
+>  #include <linux/netdevice.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_net.h>
+>  #include <linux/phy.h>
+>  #include <linux/cache.h>
+>  #include <linux/io.h>
+> @@ -2347,26 +2353,103 @@ static const struct net_device_ops sh_eth_netdev_ops = {
+>  	.ndo_change_mtu		= eth_change_mtu,
 >  };
 >  
 > +#ifdef CONFIG_OF
-> +static struct of_device_id as3711_of_match[] = {
-> +	{.compatible = "ams,as3711",},
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, as3711_of_match);
-> +#endif
 > +
->  static int as3711_i2c_probe(struct i2c_client *client,
->  			    const struct i2c_device_id *id)
->  {
->  	struct as3711 *as3711;
-> -	struct as3711_platform_data *pdata = client->dev.platform_data;
-> +	struct as3711_platform_data *pdata;
->  	unsigned int id1, id2;
->  	int ret;
->  
-> -	if (!pdata)
-> -		dev_dbg(&client->dev, "Platform data not found\n");
-> +	if (!client->dev.of_node) {
-> +		pdata = client->dev.platform_data;
-> +		if (!pdata)
-> +			dev_dbg(&client->dev, "Platform data not found\n");
-> +	} else {
-> +		if (!of_device_is_available(client->dev.of_node))
-> +			return -ENODEV;
-> +
-> +		pdata = devm_kzalloc(&client->dev,
-> +				     sizeof(*pdata), GFP_KERNEL);
-> +		if (!pdata) {
-> +			dev_err(&client->dev, "Failed to allocate pdata\n");
-> +			return -ENOMEM;
-> +		}
-> +	}
->  
->  	as3711 = devm_kzalloc(&client->dev, sizeof(struct as3711), GFP_KERNEL);
->  	if (!as3711) {
-> @@ -193,7 +214,8 @@ static struct i2c_driver as3711_i2c_driver = {
->  	.driver = {
->  		   .name = "as3711",
->  		   .owner = THIS_MODULE,
-> -		   },
-> +		   .of_match_table = of_match_ptr(as3711_of_match),
-> +	},
->  	.probe = as3711_i2c_probe,
->  	.remove = as3711_i2c_remove,
->  	.id_table = as3711_i2c_id,
-> diff --git a/drivers/regulator/as3711-regulator.c b/drivers/regulator/as3711-regulator.c
-> index f0ba8c4..cf145fc 100644
-> --- a/drivers/regulator/as3711-regulator.c
-> +++ b/drivers/regulator/as3711-regulator.c
-> @@ -13,9 +13,11 @@
->  #include <linux/init.h>
->  #include <linux/mfd/as3711.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/regmap.h>
->  #include <linux/regulator/driver.h>
-> +#include <linux/regulator/of_regulator.h>
->  #include <linux/slab.h>
->  
->  struct as3711_regulator_info {
-> @@ -276,6 +278,57 @@ static struct as3711_regulator_info as3711_reg_info[] = {
->  
->  #define AS3711_REGULATOR_NUM ARRAY_SIZE(as3711_reg_info)
->  
-> +static const char *as3711_regulator_of_names[AS3711_REGULATOR_NUM] = {
-> +	[AS3711_REGULATOR_SD_1] = "sd1",
-> +	[AS3711_REGULATOR_SD_2] = "sd2",
-> +	[AS3711_REGULATOR_SD_3] = "sd3",
-> +	[AS3711_REGULATOR_SD_4] = "sd4",
-> +	[AS3711_REGULATOR_LDO_1] = "ldo1",
-> +	[AS3711_REGULATOR_LDO_2] = "ldo2",
-> +	[AS3711_REGULATOR_LDO_3] = "ldo3",
-> +	[AS3711_REGULATOR_LDO_4] = "ldo4",
-> +	[AS3711_REGULATOR_LDO_5] = "ldo5",
-> +	[AS3711_REGULATOR_LDO_6] = "ldo6",
-> +	[AS3711_REGULATOR_LDO_7] = "ldo7",
-> +	[AS3711_REGULATOR_LDO_8] = "ldo8",
-> +};
-> +
-> +static int as3711_regulator_parse_dt(struct device *dev)
+> +static int
+> +sh_eth_of_get_register_type(struct device_node *np)
 > +{
-> +	struct as3711_regulator_pdata *pdata = dev_get_platdata(dev);
-> +	struct device_node *regulators =
-> +		of_find_node_by_name(dev->parent->of_node, "regulators");
-> +	struct of_regulator_match *matches, *match;
-> +	const int count = AS3711_REGULATOR_NUM;
-> +	int ret, i;
-> +
-> +	if (!regulators) {
-> +		dev_err(dev, "regulator node not found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	matches = devm_kzalloc(dev, sizeof(*matches) * count, GFP_KERNEL);
-> +	if (!matches)
-> +		return -ENOMEM;
-> +
-> +	for (i = 0, match = matches; i < count; i++, match++) {
-> +		match->name = as3711_regulator_of_names[i];
-> +		match->driver_data = as3711_reg_info + i;
-> +	}
-> +
-> +	ret = of_regulator_match(dev->parent, regulators, matches, count);
-> +	if (ret < 0) {
-> +		dev_err(dev, "Error parsing regulator init data: %d\n", ret);
+> +	const char *of_str;
+> +	int ret = of_property_read_string(np, "sh-eth,register-type", &of_str);
+> +	if (ret)
 > +		return ret;
-> +	}
 > +
-> +	for (i = 0, match = matches; i < count; i++, match++)
-> +		if (match->of_node)
-> +			pdata->init_data[i] = match->init_data;
+> +	if (of_str && !strcmp(of_str, "gigabit"))
+> +		return SH_ETH_REG_GIGABIT;
 > +
-> +	return 0;
+> +	else if (of_str && !strcmp(of_str, "fast-sh4"))
+> +		return SH_ETH_REG_FAST_SH4;
+> +	else if (of_str && !strcmp(of_str, "fast-sh3-sh2"))
+> +		return SH_ETH_REG_FAST_SH3_SH2;
+> +	else
+> +		return -EINVAL;
 > +}
 > +
->  static int as3711_regulator_probe(struct platform_device *pdev)
->  {
->  	struct as3711_regulator_pdata *pdata = dev_get_platdata(&pdev->dev);
-> @@ -289,8 +342,18 @@ static int as3711_regulator_probe(struct platform_device *pdev)
->  	int ret;
->  	int id;
->  
-> -	if (!pdata)
-> -		dev_dbg(&pdev->dev, "No platform data...\n");
+> +static struct sh_eth_plat_data *
+> +sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
+> +{
+> +	int ret;
+> +	struct device_node *np = dev->of_node;
+> +	struct sh_eth_plat_data *pdata;
+> +
+> +	pdata = devm_kzalloc(dev, sizeof(struct sh_eth_plat_data),
+> +					GFP_KERNEL);
 > +	if (!pdata) {
-> +		dev_err(&pdev->dev, "No platform data...\n");
-> +		return -ENODEV;
+> +		dev_err(dev, "%s: failed to allocate config data\n", __func__);
+> +		return NULL;
 > +	}
 > +
-> +	if (pdev->dev.parent->of_node) {
-> +		ret = as3711_regulator_parse_dt(&pdev->dev);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "DT parsing failed: %d\n", ret);
-> +			return ret;
-> +		}
+> +	pdata->phy_interface = of_get_phy_mode(np);
+> +
+> +	of_property_read_u32(np, "sh-eth,phy-id", &pdata->phy);
+> +
+> +	if (of_find_property(np, "sh-eth,edmac-big-endian", NULL))
+> +		pdata->edmac_endian = EDMAC_BIG_ENDIAN;
+> +	else
+> +		pdata->edmac_endian = EDMAC_LITTLE_ENDIAN;
+> +
+> +	if (of_find_property(np, "sh-eth,no-ether-link", NULL))
+> +		pdata->no_ether_link = 1;
+> +	else
+> +		pdata->no_ether_link = 0;
+> +
+> +	if (of_find_property(np, "sh-eth,ether-link-active-low", NULL))
+> +		pdata->ether_link_active_low = 1;
+> +	else
+> +		pdata->ether_link_active_low = 0;
+> +
+> +	ret = sh_eth_of_get_register_type(np);
+> +	if (ret < 0)
+> +		goto error;
+> +	pdata->register_type = ret;
+> +
+> +#ifdef CONFIG_OF_NET
+> +	if (!is_valid_ether_addr(ndev->dev_addr)) {
+> +		const char *macaddr = of_get_mac_address(np);
+> +		if (macaddr)
+> +			memcpy(pdata->mac_addr, macaddr, ETH_ALEN);
+> +	}
+> +#endif
+> +
+> +	return pdata;
+> +
+> +error:
+> +	devm_kfree(dev, pdata);
+> +	return NULL;
+> +}
+> +#endif
+> +
+>  static int sh_eth_drv_probe(struct platform_device *pdev)
+>  {
+> -	int ret, devno = 0;
+> +	int ret = 0, devno = 0;
+>  	struct resource *res;
+>  	struct net_device *ndev = NULL;
+>  	struct sh_eth_private *mdp = NULL;
+>  	struct sh_eth_plat_data *pd;
+> +	struct device_node *np = pdev->dev.of_node;
+> +
+> +	ndev = alloc_etherdev(sizeof(struct sh_eth_private));
+> +	if (!ndev) {
+> +		ret = -ENOMEM;
+> +		goto out;
 > +	}
 >  
->  	regs = devm_kzalloc(&pdev->dev, AS3711_REGULATOR_NUM *
->  			sizeof(struct as3711_regulator), GFP_KERNEL);
-> @@ -300,7 +363,7 @@ static int as3711_regulator_probe(struct platform_device *pdev)
+> +	mdp = netdev_priv(ndev);
+>  	/* get base addr */
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	if (unlikely(res == NULL)) {
+>  		dev_err(&pdev->dev, "invalid resource\n");
+>  		ret = -EINVAL;
+> -		goto out;
+> -	}
+> -
+> -	ndev = alloc_etherdev(sizeof(struct sh_eth_private));
+> -	if (!ndev) {
+> -		ret = -ENOMEM;
+> -		goto out;
+> +		goto out_release;
 >  	}
 >  
->  	for (id = 0, ri = as3711_reg_info; id < AS3711_REGULATOR_NUM; ++id, ri++) {
-> -		reg_data = pdata ? pdata->init_data[id] : NULL;
-> +		reg_data = pdata->init_data[id];
+>  	/* The sh Ether-specific entries in the device structure. */
+> @@ -2383,27 +2466,41 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
+>  	}
+>  	ndev->irq = ret;
 >  
->  		/* No need to register if there is no regulator data */
->  		if (!reg_data)
-> diff --git a/drivers/video/backlight/as3711_bl.c b/drivers/video/backlight/as3711_bl.c
-> index c6bc65d..90c9208 100644
-> --- a/drivers/video/backlight/as3711_bl.c
-> +++ b/drivers/video/backlight/as3711_bl.c
-> @@ -257,6 +257,109 @@ static int as3711_bl_register(struct platform_device *pdev,
+> -	SET_NETDEV_DEV(ndev, &pdev->dev);
+> -
+> -	/* Fill in the fields of the device structure with ethernet values. */
+> -	ether_setup(ndev);
+> -
+> -	mdp = netdev_priv(ndev);
+> -	mdp->num_tx_ring = TX_RING_SIZE;
+> -	mdp->num_rx_ring = RX_RING_SIZE;
+>  	mdp->addr = ioremap(res->start, resource_size(res));
+>  	if (mdp->addr == NULL) {
+>  		ret = -ENOMEM;
+>  		dev_err(&pdev->dev, "ioremap failed.\n");
+>  		goto out_release;
+>  	}
+> +#ifdef CONFIG_OF
+> +	if (np && of_device_is_available(np)) {
+> +		pd = sh_eth_parse_dt(&pdev->dev, ndev);
+> +		if (pdev->dev.platform_data) {
+> +			struct sh_eth_plat_data *tmp =
+> +				pdev->dev.platform_data;
+> +			pd->set_mdio_gate = tmp->set_mdio_gate;
+> +			pd->needs_init = tmp->needs_init;
+> +		}
+> +	} else
+> +#endif
+> +		pd = (struct sh_eth_plat_data *)(pdev->dev.platform_data);
+> +
+> +	if (!pd) {
+> +		dev_err(&pdev->dev, "no setup data defined\n");
+> +		ret = -EINVAL;
+> +		goto out_release;
+> +	}
+> +
+> +	SET_NETDEV_DEV(ndev, &pdev->dev);
+> +
+> +	mdp->num_tx_ring = TX_RING_SIZE;
+> +	mdp->num_rx_ring = RX_RING_SIZE;
+>  
+>  	spin_lock_init(&mdp->lock);
+>  	mdp->pdev = pdev;
+>  	pm_runtime_enable(&pdev->dev);
+>  	pm_runtime_resume(&pdev->dev);
+>  
+> -	pd = (struct sh_eth_plat_data *)(pdev->dev.platform_data);
+>  	/* get PHY ID */
+>  	mdp->phy_id = pd->phy;
+>  	mdp->phy_interface = pd->phy_interface;
+> @@ -2412,6 +2509,8 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
+>  	mdp->no_ether_link = pd->no_ether_link;
+>  	mdp->ether_link_active_low = pd->ether_link_active_low;
+>  	mdp->reg_offset = sh_eth_get_register_offset(pd->register_type);
+> +	/* read and set MAC address */
+> +	read_mac_address(ndev, pd->mac_addr);
+>  
+>  	/* set cpu data */
+>  #if defined(SH_ETH_HAS_BOTH_MODULES)
+> @@ -2429,20 +2528,16 @@ static int sh_eth_drv_probe(struct platform_device *pdev)
+>  	/* debug message level */
+>  	mdp->msg_enable = SH_ETH_DEF_MSG_ENABLE;
+>  
+> -	/* read and set MAC address */
+> -	read_mac_address(ndev, pd->mac_addr);
+> -
+>  	/* ioremap the TSU registers */
+>  	if (mdp->cd->tsu) {
+>  		struct resource *rtsu;
+>  		rtsu = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>  		if (!rtsu) {
+>  			dev_err(&pdev->dev, "Not found TSU resource\n");
+> -			ret = -ENODEV;
+>  			goto out_release;
+>  		}
+>  		mdp->tsu_addr = ioremap(rtsu->start,
+> -					resource_size(rtsu));
+> +				resource_size(rtsu));
+>  		mdp->port = devno % 2;
+>  		ndev->features = NETIF_F_HW_VLAN_FILTER;
+>  	}
+> @@ -2522,17 +2617,24 @@ static int sh_eth_runtime_nop(struct device *dev)
 >  	return 0;
 >  }
 >  
-> +static int as3711_backlight_parse_dt(struct device *dev)
-> +{
-> +	struct as3711_bl_pdata *pdata = dev_get_platdata(dev);
-> +	struct device_node *bl =
-> +		of_find_node_by_name(dev->parent->of_node, "backlight"), *fb;
-> +	int ret;
-> +
-> +	if (!bl) {
-> +		dev_dbg(dev, "backlight node not found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	fb = of_parse_phandle(bl, "su1-dev", 0);
-> +	if (fb) {
-> +		pdata->su1_fb = fb->full_name;
-> +
-> +		ret = of_property_read_u32(bl, "su1-max-uA", &pdata->su1_max_uA);
-> +		if (pdata->su1_max_uA <= 0)
-> +			ret = -EINVAL;
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	fb = of_parse_phandle(bl, "su2-dev", 0);
-> +	if (fb) {
-> +		int count = 0;
-> +
-> +		pdata->su2_fb = fb->full_name;
-> +
-> +		ret = of_property_read_u32(bl, "su2-max-uA", &pdata->su2_max_uA);
-> +		if (pdata->su2_max_uA <= 0)
-> +			ret = -EINVAL;
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		if (of_find_property(bl, "su2-feedback-voltage", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_VOLTAGE;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr1", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR1;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr2", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR2;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr3", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR3;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-feedback-curr-auto", NULL)) {
-> +			pdata->su2_feedback = AS3711_SU2_CURR_AUTO;
-> +			count++;
-> +		}
-> +		if (count != 1)
-> +			return -EINVAL;
-> +
-> +		count = 0;
-> +		if (of_find_property(bl, "su2-fbprot-lx-sd4", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_LX_SD4;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio2", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO2;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio3", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO3;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-fbprot-gpio4", NULL)) {
-> +			pdata->su2_fbprot = AS3711_SU2_GPIO4;
-> +			count++;
-> +		}
-> +		if (count != 1)
-> +			return -EINVAL;
-> +
-> +		count = 0;
-> +		if (of_find_property(bl, "su2-auto-curr1", NULL)) {
-> +			pdata->su2_auto_curr1 = true;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-auto-curr2", NULL)) {
-> +			pdata->su2_auto_curr2 = true;
-> +			count++;
-> +		}
-> +		if (of_find_property(bl, "su2-auto-curr3", NULL)) {
-> +			pdata->su2_auto_curr3 = true;
-> +			count++;
-> +		}
-> +
-> +		/*
-> +		 * At least one su2-auto-curr* must be specified iff
-> +		 * AS3711_SU2_CURR_AUTO is used
-> +		 */
-> +		if (!count ^ pdata->su2_feedback != AS3711_SU2_CURR_AUTO)
-> +			return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int as3711_backlight_probe(struct platform_device *pdev)
->  {
->  	struct as3711_bl_pdata *pdata = dev_get_platdata(&pdev->dev);
-> @@ -266,11 +369,24 @@ static int as3711_backlight_probe(struct platform_device *pdev)
->  	unsigned int max_brightness;
->  	int ret;
+> -static struct dev_pm_ops sh_eth_dev_pm_ops = {
+> +static const struct dev_pm_ops sh_eth_dev_pm_ops = {
+>  	.runtime_suspend = sh_eth_runtime_nop,
+>  	.runtime_resume = sh_eth_runtime_nop,
+>  };
 >  
-> -	if (!pdata || (!pdata->su1_fb && !pdata->su2_fb)) {
-> +	if (!pdata) {
->  		dev_err(&pdev->dev, "No platform data, exiting...\n");
->  		return -ENODEV;
->  	}
+> +static struct of_device_id sh_eth_match[] = {
+> +	{ .compatible = "renesas,sh-eth",},
+> +	{},
+> +};
+> +MODULE_DEVICE_TABLE(of, sh_eth_match);
+> +
+>  static struct platform_driver sh_eth_driver = {
+>  	.probe = sh_eth_drv_probe,
+>  	.remove = sh_eth_drv_remove,
+>  	.driver = {
+>  		   .name = CARDNAME,
+>  		   .pm = &sh_eth_dev_pm_ops,
+> +		   .of_match_table = sh_eth_match,
+>  	},
+>  };
 >  
-> +	if (pdev->dev.parent->of_node) {
-> +		ret = as3711_backlight_parse_dt(&pdev->dev);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "DT parsing failed: %d\n", ret);
-> +			return ret;
-> +		}
-> +	}
-> +
-> +	if (!pdata->su1_fb && !pdata->su2_fb) {
-> +		dev_err(&pdev->dev, "No framebuffer specified\n");
-> +		return -EINVAL;
-> +	}
-> +
->  	/*
->  	 * Due to possible hardware damage I chose to block all modes,
->  	 * unsupported on my hardware. Anyone, wishing to use any of those modes
 > -- 
-> 1.7.2.5
+> 1.7.10.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe netdev" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 > 
