@@ -1,66 +1,66 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH v4 03/13] mmc: provide a standard MMC device-tree binding
- parser centrally
-Date: Sat, 16 Feb 2013 15:02:36 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1302161457140.20044@axis700.grange>
-References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
- <1360941242-18153-4-git-send-email-g.liakhovetski@gmx.de>
- <20130216060526.GA20785@verge.net.au> <201302161054.36492.arnd@arndb.de>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH 2/4] dmaengine: dw_dmac: move to generic DMA binding
+Date: Sat, 16 Feb 2013 16:53:08 +0200
+Message-ID: <CAHp75VfL0cQJenHB7A_A1d2eam2dj3k+4yWRE8pC+_gP2j_k2Q@mail.gmail.com>
+References: <1360952512-971558-1-git-send-email-arnd@arndb.de>
+	<1360952512-971558-3-git-send-email-arnd@arndb.de>
+	<CAHp75VfyO5wep-shvZ_mkwLmL2_Fa2jgq63AvE2t8=TPLZn6yg@mail.gmail.com>
+	<201302161400.29064.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <201302161054.36492.arnd@arndb.de>
-Sender: linux-mmc-owner@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201302161400.29064.arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Arnd Bergmann <arnd@arndb.de>
-Cc: Simon Horman <horms@verge.net.au>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Markus Pargmann <mpa@pengutronix.de>
+Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Viresh Kumar <viresh.kumar@linaro.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 16 Feb 2013, Arnd Bergmann wrote:
+On Sat, Feb 16, 2013 at 4:00 PM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Saturday 16 February 2013, Andy Shevchenko wrote:
+>> On Fri, Feb 15, 2013 at 8:21 PM, Arnd Bergmann <arnd@arndb.de> wrote:
 
-> On Saturday 16 February 2013, Simon Horman wrote:
-> > > +void mmc_of_parse(struct mmc_host *host)
-> > > +{
-> > > +     struct device_node *np;
-> > > +     u32 bus_width;
-> > > +     bool explicit_inv_wp, gpio_inv_wp = false;
-> > > +     enum of_gpio_flags flags;
-> > > +     int len, ret, gpio;
-> > > +
-> > > +     if (!host->parent || !host->parent->of_node)
-> > > +             return;
-> > > +
-> > > +     np = host->parent->of_node;
-> > > +
-> > > +     /* "bus-width" is translated to MMC_CAP_*_BIT_DATA flags */
-> > > +     if (of_property_read_u32_array(np, "bus-width", &bus_width, 1) < 0)
-> > > +             dev_dbg(host->parent,
-> > > +                     "\"bus-width\" property is missing, assuming 1 bit.\n");
-> > > +
-> > > +     switch (bus_width) {
-> > 
-> > kbuild tells me that gcc thinks that bus_width is used without being
-> > initialised here. Assuming that of_property_read_u32_array always
-> > initialises bus_width if it returns zero then perhaps it would be worth
-> > considering using uninitialized_var().
-> 
-> I think this is a false positive that I encountered before and that should be gone
-> with gcc-4.7 or higher when using -O2 instead of -Os. I have a patch to disable
-> -Wmaybe-uninitialized when builing with -Os. If that gets rid of the warning,
-> I'd prefer not annotating it here.
+>> > +       if (WARN_ON(fargs.req >= 16 || fargs.src >= 2 || fargs.dst >= 2))
+>> > +               return NULL;
+>>
+>> 16 here is a magic number for me. I would like to see something like
+>> #define DW_MAX_REQUEST_LINES 16 in the dw_dmac_regs.h.
+>
+> Ok.
+>
+>> Besides of that, what 2 does come from?
+>
+> I thought that Viresh had commented that there could only be two masters.
+> It's probably best to compare against dw->nr_masters here.
 
-Unfortunately, this does seem to be a real bug, I lost the default 
-initialisation to one somewhere along the way... I'll send a trivial 
-update. Stupidly, my cross-toolchain doesn't report this error.
+Right.
 
-Thanks
-Guennadi
+>> > @@ -1765,6 +1751,10 @@ static int dw_probe(struct platform_device *pdev)
+>> >
+>> >         dma_async_device_register(&dw->dma);
+>> >
+>> > +       err = of_dma_controller_register(pdev->dev.of_node, dw_dma_xlate, dw);
+>> > +       if (err)
+>> > +               dev_err(&pdev->dev, "could not register of_dma_controller\n");
+>>
+>> It's not an error, dev_dbg. Consider case when !CONFIG_OF.
+>
+> Ah right. I expected of_dma_controller_register to return 0 in that case, but
+> it returns -ENODEV. How about I change this to this?
+>
+>         if (pdev->dev.of_node)
+>                 err = of_dma_controller_register(pdev->dev.of_node, dw_dma_xlate, dw);
+>         if (err && err != -ENODEV)
+>                 dev_err(&pdev->dev, "could not register of_dma_controller\n");
+>
+> That would warn only when we have a dw_dmac device that was registered from
+> device tree but does not follow the binding or gets an -ENOMEM.
 
-> There was some discussion about removing uninitialized_var() recently after it
-> was found to hide some real bugs.
-> 
-> 	Arnd
+I'm okay with it.
 
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+> Thanks for your review!
+
+Thanks for the patch!
+
+-- 
+With Best Regards,
+Andy Shevchenko
