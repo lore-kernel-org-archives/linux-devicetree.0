@@ -1,83 +1,76 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCHv3 2/4] dmaengine: dw_dmac: move to generic DMA binding
-Date: Sun, 17 Feb 2013 00:54:57 +0200
-Message-ID: <CAHp75VeCic+5_zyzFdtpw5dLxRaajD9zv6ZvSoDcHAD1EF=GSw@mail.gmail.com>
-References: <1360952512-971558-1-git-send-email-arnd@arndb.de>
-	<201302161400.29064.arnd@arndb.de>
-	<CAHp75VfL0cQJenHB7A_A1d2eam2dj3k+4yWRE8pC+_gP2j_k2Q@mail.gmail.com>
-	<201302162221.32799.arnd@arndb.de>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v4 12/13] mmc: add DT bindings for more MMC capability
+ flags
+Date: Sun, 17 Feb 2013 02:58:42 +0300
+Message-ID: <51201D32.20006@cogentembedded.com>
+References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de> <1360941242-18153-13-git-send-email-g.liakhovetski@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <201302162221.32799.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Viresh Kumar <viresh.kumar@linaro.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@linux.intel.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1360941242-18153-13-git-send-email-g.liakhovetski@gmx.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 17, 2013 at 12:21 AM, Arnd Bergmann <arnd@arndb.de> wrote:
-> The original device tree binding for this driver, from Viresh Kumar
-> unfortunately conflicted with the generic DMA binding, and did not allow
-> to completely seperate slave device configuration from the controller.
+Hello.
+
+On 02/15/2013 06:14 PM, Guennadi Liakhovetski wrote:
+
+> Many MMC capability flags are platform-dependent and are traditionally set
+> in platform data. With DT often each such capability requires a special
+> binding. Add bindings for MMC_CAP_SD_HIGHSPEED, MMC_CAP_MMC_HIGHSPEED,
+> MMC_CAP_POWER_OFF_CARD and MMC_CAP_SDIO_IRQ capabilities. Also add code to
+> DT parser to look up "keep-power-in-suspend" and "enable-sdio-wakeup"
+> bindings and set MMC_PM_KEEP_POWER and MMC_PM_WAKE_SDIO_IRQ respectively,
+> if found.
 >
-> This is an attempt to replace it with an implementation of the generic
-> binding, but it is currently completely untested, because I do not have
-> any hardware with this particular controller.
+> Signed-off-by: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
+> ---
+>   Documentation/devicetree/bindings/mmc/mmc.txt |    4 ++++
+>   drivers/mmc/core/host.c                       |   13 +++++++++++++
+>   2 files changed, 17 insertions(+), 0 deletions(-)
 >
-> The patch applies on top of the slave-dma tree, which contains both the base
-> support for the generic DMA binding, as well as the earlier attempt from
-> Viresh. Both of these are currently not merged upstream however.
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index 24c8552..d9ab51f 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -25,6 +25,10 @@ Optional properties:
+>   - max-frequency: maximum operating clock frequency
+>   - no-1-8-v: when present, denotes that 1.8v card voltage is not supported on
+>     this system, even if the controller claims it is.
+> +- cap-sd-highspeed: SD high-speed timing is supported
+> +- cap-mmc-highspeed: MMC high-speed timing is supported
+> +- cap-power-off-card: powering off the card is safe
+> +- cap-sdio-irq: enable SDIO IRQ signalling on this interface
 >
-> This version incorporates feedback from Viresh Kumar, Andy Shevchenko
-> and Russell King.
-
-Sorry, few comments below.
-After addressing them take my Acked-by: Andy Shevchenko
-<andriy.shevchenko@linux.intel.com>
-
-> --- a/drivers/dma/dw_dmac.c
-> +++ b/drivers/dma/dw_dmac.c
-
-
-> @@ -1836,6 +1825,12 @@ static int dw_probe(struct platform_device *pdev)
->
->         dma_async_device_register(&dw->dma);
->
-> +       if (pdev->dev.of_node)
-> +               err = of_dma_controller_register(pdev->dev.of_node,
-> +                                                dw_dma_xlate, dw);
-> +       if (err && err != -ENODEV)
-> +               dev_err(&pdev->dev, "could not register of_dma_controller\n");
-
-I believe we may make it as
- if (...of_node) {
-  err = ...register();
-  if (err...)
-    dev_err();
- }
-
-> --- a/drivers/dma/dw_dmac_regs.h
-> +++ b/drivers/dma/dw_dmac_regs.h
-
-> @@ -211,9 +212,15 @@ struct dw_dma_chan {
->         /* hardware configuration */
->         unsigned int            block_size;
->         bool                    nollp;
-> +       unsigned int            request_line;
-> +       struct dw_dma_slave     slave;
+>   *NOTE* on CD and WP polarity. To use common for all SD/MMC host controllers line
+>   polarity properties, we have to fix the meaning of the "normal" and "inverted"
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index daa2ed1..1365466 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -398,6 +398,19 @@ void mmc_of_parse(struct mmc_host *host)
+>   	}
+>   	if (explicit_inv_wp ^ gpio_inv_wp)
+>   		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
 > +
+> +	if (of_find_property(np, "cap-sd-highspeed",&len))
+> +		host->caps |= MMC_CAP_SD_HIGHSPEED;
+> +	if (of_find_property(np, "cap-mmc-highspeed",&len))
+> +		host->caps |= MMC_CAP_MMC_HIGHSPEED;
+> +	if (of_find_property(np, "cap-power-off-card",&len))
+> +		host->caps |= MMC_CAP_POWER_OFF_CARD;
+> +	if (of_find_property(np, "cap-sdio-irq",&len))
+> +		host->caps |= MMC_CAP_SDIO_IRQ;
+> +	if (of_find_property(np, "keep-power-in-suspend",&len))
+> +		host->pm_caps |= MMC_PM_KEEP_POWER;
+> +	if (of_find_property(np, "enable-sdio-wakeup",&len))
+> +		host->pm_caps |= MMC_PM_WAKE_SDIO_IRQ;
+>    
 
-Do we really need an extra empty line here?
+    Why are you not using of_property_read_bool() instead?
 
->
->         /* configuration passed via DMA_SLAVE_CONFIG */
->         struct dma_slave_config dma_sconfig;
-> +
-> +       /* backlink to dw_dma */
-> +       struct dw_dma           *dw;
+WBR, Sergei
 
-Seems it's not needed and came from rebase?
-
--- 
-With Best Regards,
-Andy Shevchenko
