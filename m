@@ -1,54 +1,42 @@
-From: Anil Kumar <anilkumar880@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: OMAP3: Add GPMC controller
-Date: Sat, 16 Feb 2013 18:39:15 +0530
-Message-ID: <CAPjKCR_oh25c4NKUTWjU6BYp64GjPoi2LWDpRhTUkBkRmc_HUw@mail.gmail.com>
-References: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch>
-	<1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/4] dmaengine: dw_dmac: move to generic DMA binding
+Date: Sat, 16 Feb 2013 13:43:43 +0000
+Message-ID: <201302161343.43434.arnd@arndb.de>
+References: <1360952512-971558-1-git-send-email-arnd@arndb.de> <201302161007.39657.arnd@arndb.de> <20130216105159.GN17833@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Daniel Mack <zonque@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130216105159.GN17833@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Viresh Kumar <viresh.kumar@linaro.org>, Vinod Koul <vinod.koul@linux.intel.com>, Vinod Koul <vinod.koul@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Dan Williams <djbw@fb.com>, Olof Johansson <olof@lixom.net>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
+On Saturday 16 February 2013, Russell King - ARM Linux wrote:
+> On Sat, Feb 16, 2013 at 10:07:39AM +0000, Arnd Bergmann wrote:
+> > On Saturday 16 February 2013, Viresh Kumar wrote:
+> > > On 15 February 2013 23:51, Arnd Bergmann <arnd@arndb.de> wrote:
+> > > > +static bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
+> > > >  {
+> > > 
+> > > > +       dws->cfg_hi     = 0xffffffff;
+> > > > +       dws->cfg_lo     = 0xffffffff;
+> > > 
+> > > s/0xffffffff/-1 ?
+> > 
+> > It's an 'unsigned int'. While -1 would work here, I always find it a little
+> > odd to rely on that feature of the C language.
+> 
+> However, relying on an 'int' being 32-bits is also rather odd, and
+> probably much more dubious too.  If you want to set all bits in an
+> int, the portable way to do that is ~0.
 
-On Mon, Jan 28, 2013 at 11:24 PM, Florian Vaussard
-<florian.vaussard@epfl.ch> wrote:
-> Add device-tree support for the GPMC controller on the OMAP3.
->
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> ---
->  arch/arm/boot/dts/omap3.dtsi |   11 +++++++++++
->  1 files changed, 11 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index 6c63118..2ddae38 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -403,5 +403,16 @@
->                         ti,timer-alwon;
->                         ti,timer-secure;
->                 };
-> +
-> +               gpmc: gpmc@6e000000 {
-> +                       compatible = "ti,omap3430-gpmc";
-> +                       ti,hwmods = "gpmc";
-> +                       reg = <0x6e000000 0x1000000>;
-> +                       interrupts = <20>;
-> +                       gpmc,num-cs = <8>;
-> +                       gpmc,num-waitpins = <4>;
-> +                       #address-cells = <2>;
-> +                       #size-cells = <1>;
-> +               };
->         };
->  };
-
-Tested on devkit8000 (omap3 based board)
-
-Please take my Tested-by: Anil Kumar <anilk4.v@gmail.com>
+Right, I can do that, too. All I really need here though is to make sure
+I use the same value in this place and when comparing it in dwc_initialize,
+and it needs to be something that cannot be a valid register setting.
 
 Thanks,
-Anil
+
+	Arnd
