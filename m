@@ -1,41 +1,47 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH V6 02/10] ASoC: SAMSUNG: Add DT support for i2s
-Date: Sun, 17 Feb 2013 06:01:53 +0530
-Message-ID: <CAAgF-BdopAF4CxT4Wb4O6OoYVA0Yib+1hwm7Nu_KkXjFcky2gQ@mail.gmail.com>
-References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
-	<1358509629-20471-3-git-send-email-padma.v@samsung.com>
-	<511CC11B.5030700@samsung.com>
-	<20130214114337.GD13249@opensource.wolfsonmicro.com>
-	<511D49FC.4080402@gmail.com>
-	<20130215120145.GC22283@opensource.wolfsonmicro.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 1/2] arm: mvebu: Add SPI flash on Armada XP-DB board
+Date: Sat, 16 Feb 2013 10:20:16 -0500
+Message-ID: <20130216152016.GU14746@titan.lakedaemon.net>
+References: <1360097695-32663-1-git-send-email-gregory.clement@free-electrons.com>
+	<1360097695-32663-2-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20130215120145.GC22283@opensource.wolfsonmicro.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Padmavathi Venna <padma.v@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1360097695-32663-2-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nicolas Pitre <nico-vtqb6HGKxmzR7s880joybQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, spi
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Feb 05, 2013 at 09:54:54PM +0100, Gregory CLEMENT wrote:
+> This patch add support for the SPI flash M25P64 which is present on
+> the Armada XP DB board. This flash stores the bootloader and its
+> environment.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/armada-xp-db.dts |   12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 
-On Fri, Feb 15, 2013 at 5:31 PM, Mark Brown
-<broonie@opensource.wolfsonmicro.com> wrote:
-> On Thu, Feb 14, 2013 at 09:33:00PM +0100, Sylwester Nawrocki wrote:
->
->> My apologies for the late review. It's already sixth version of this patch
->> series... But I noticed it just now when applying it for Exynos4. The GPIO
->> part of the bindings is now incompatible with Exynos4 and the bindings will
->> need to be changed. Leaving the compatibility code in the I2S driver, when
->> we could have it done well right from the beginning. If I'm not mistaken
->> a file similar to arch/arm/boot/dts/exynos4x12-pinctrl.dtsi with at least
->> entries for the I2S devices is needed and an addition of related pinctrl
->> nodes in exynos5250.dtsi. But I guess this is not something that could be
->> fixed in the -rc period ?
->
-> Yes, and incremental fix would be fine.
+Both 1 and 2 of this series applied to mvebu/dt, resolved add/add
+conflicts in both (usb).
 
-I will send a patch for required pinctrl support soon.
+thx,
 
-Thanks
-Padma
+Jason.
+
+------------------------------------------------------------------------------
+The Go Parallel Website, sponsored by Intel - in partnership with Geeknet, 
+is your hub for all things parallel software development, from weekly thought 
+leadership blogs to news, videos, case studies, tutorials, tech docs, 
+whitepapers, evaluation guides, and opinion stories. Check out the most 
+recent posts - join the conversation now. http://goparallel.sourceforge.net/
