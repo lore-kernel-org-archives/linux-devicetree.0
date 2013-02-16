@@ -1,973 +1,448 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH 3/4] libata: add R-Car SATA driver
-Date: Sun, 17 Feb 2013 01:46:39 +0300
-Message-ID: <201302170146.39599.sergei.shtylyov@cogentembedded.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: [PATCHv3 2/4] dmaengine: dw_dmac: move to generic DMA binding
+Date: Sat, 16 Feb 2013 22:21:32 +0000
+Message-ID: <201302162221.32799.arnd@arndb.de>
+References: <1360952512-971558-1-git-send-email-arnd@arndb.de>
+ <201302161400.29064.arnd@arndb.de>
+ <CAHp75VfL0cQJenHB7A_A1d2eam2dj3k+4yWRE8pC+_gP2j_k2Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: jgarzik@pobox.com, linux-ide@vger.kernel.org
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, vladimir.barinov@cogentembedded.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAHp75VfL0cQJenHB7A_A1d2eam2dj3k+4yWRE8pC+_gP2j_k2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Andy Shevchenko <andy.shevchenko-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+The original device tree binding for this driver, from Viresh Kumar
+unfortunately conflicted with the generic DMA binding, and did not allow
+to completely seperate slave device configuration from the controller.
 
-Add Renesas R-Car on-chip 3Gbps SATA controller driver.
+This is an attempt to replace it with an implementation of the generic
+binding, but it is currently completely untested, because I do not have
+any hardware with this particular controller.
 
-Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
-[Sergei: few bugs fixed, significant cleanup]
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+The patch applies on top of the slave-dma tree, which contains both the base
+support for the generic DMA binding, as well as the earlier attempt from
+Viresh. Both of these are currently not merged upstream however.
 
+This version incorporates feedback from Viresh Kumar, Andy Shevchenko
+and Russell King.
+
+Signed-off-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Acked: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 ---
- drivers/ata/Kconfig     |    8 
- drivers/ata/Makefile    |    1 
- drivers/ata/sata_rcar.c |  909 ++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 918 insertions(+)
+ Documentation/devicetree/bindings/dma/snps-dma.txt |  70 +++++-----
+ drivers/dma/dw_dmac.c                              | 142 ++++++++++-----------
+ drivers/dma/dw_dmac_regs.h                         |  11 +-
+ include/linux/dw_dmac.h                            |   5 -
+ 4 files changed, 112 insertions(+), 116 deletions(-)
 
-Index: renesas/drivers/ata/Kconfig
-===================================================================
---- renesas.orig/drivers/ata/Kconfig
-+++ renesas/drivers/ata/Kconfig
-@@ -247,6 +247,14 @@ config SATA_PROMISE
+diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
+index 5bb3dfb..d58675e 100644
+--- a/Documentation/devicetree/bindings/dma/snps-dma.txt
++++ b/Documentation/devicetree/bindings/dma/snps-dma.txt
+@@ -3,59 +3,61 @@
+ Required properties:
+ - compatible: "snps,dma-spear1340"
+ - reg: Address range of the DMAC registers
+-- interrupt-parent: Should be the phandle for the interrupt controller
+-  that services interrupts for this device
+ - interrupt: Should contain the DMAC interrupt number
+-- nr_channels: Number of channels supported by hardware
+-- is_private: The device channels should be marked as private and not for by the
+-  general purpose DMA channel allocator. False if not passed.
++- dma-channels: Number of channels supported by hardware
++- dma-requests: Number of DMA request lines supported, up to 16
++- dma-masters: Number of AHB masters supported by the controller
++- #dma-cells: must be <3>
+ - chan_allocation_order: order of allocation of channel, 0 (default): ascending,
+   1: descending
+ - chan_priority: priority of channels. 0 (default): increase from chan 0->n, 1:
+   increase from chan n->0
+ - block_size: Maximum block size supported by the controller
+-- nr_masters: Number of AHB masters supported by the controller
+ - data_width: Maximum data width supported by hardware per AHB master
+   (0 - 8bits, 1 - 16bits, ..., 5 - 256bits)
+-- slave_info:
+-	- bus_id: name of this device channel, not just a device name since
+-	  devices may have more than one channel e.g. "foo_tx". For using the
+-	  dw_generic_filter(), slave drivers must pass exactly this string as
+-	  param to filter function.
+-	- cfg_hi: Platform-specific initializer for the CFG_HI register
+-	- cfg_lo: Platform-specific initializer for the CFG_LO register
+-	- src_master: src master for transfers on allocated channel.
+-	- dst_master: dest master for transfers on allocated channel.
++
++
++Optional properties:
++- interrupt-parent: Should be the phandle for the interrupt controller
++  that services interrupts for this device
++- is_private: The device channels should be marked as private and not for by the
++  general purpose DMA channel allocator. False if not passed.
  
- 	  If unsure, say N.
+ Example:
  
-+config SATA_RCAR
-+	tristate "Renesas R-Car SATA support"
-+	depends on ARCH_SHMOBILE && ARCH_R8A7779
-+	help
-+	  This option enables support for Renesas R-Car Serial ATA.
+-	dma@fc000000 {
++	dmahost: dma@fc000000 {
+ 		compatible = "snps,dma-spear1340";
+ 		reg = <0xfc000000 0x1000>;
+ 		interrupt-parent = <&vic1>;
+ 		interrupts = <12>;
+ 
+-		nr_channels = <8>;
++		dma-channels = <8>;
++		dma-requests = <16>;
++		dma-masters = <2>;
++		#dma-cells = <3>;
+ 		chan_allocation_order = <1>;
+ 		chan_priority = <1>;
+ 		block_size = <0xfff>;
+-		nr_masters = <2>;
+ 		data_width = <3 3 0 0>;
++	};
+ 
+-		slave_info {
+-			uart0-tx {
+-				bus_id = "uart0-tx";
+-				cfg_hi = <0x4000>;	/* 0x8 << 11 */
+-				cfg_lo = <0>;
+-				src_master = <0>;
+-				dst_master = <1>;
+-			};
+-			spi0-tx {
+-				bus_id = "spi0-tx";
+-				cfg_hi = <0x2000>;	/* 0x4 << 11 */
+-				cfg_lo = <0>;
+-				src_master = <0>;
+-				dst_master = <0>;
+-			};
+-		};
++DMA clients connected to the Designware DMA controller must use the format
++described in the dma.txt file, using a four-cell specifier for each channel.
++The four cells in order are:
 +
-+	  If unsure, say N.
++1. A phandle pointing to the DMA controller
++2. The DMA request line number
++3. Source master for transfers on allocated channel
++4. Destination master for transfers on allocated channel
 +
- config SATA_SIL
- 	tristate "Silicon Image SATA support"
- 	depends on PCI
-Index: renesas/drivers/ata/Makefile
-===================================================================
---- renesas.orig/drivers/ata/Makefile
-+++ renesas/drivers/ata/Makefile
-@@ -23,6 +23,7 @@ obj-$(CONFIG_ATA_PIIX)		+= ata_piix.o
- obj-$(CONFIG_SATA_MV)		+= sata_mv.o
- obj-$(CONFIG_SATA_NV)		+= sata_nv.o
- obj-$(CONFIG_SATA_PROMISE)	+= sata_promise.o
-+obj-$(CONFIG_SATA_RCAR)		+= sata_rcar.o
- obj-$(CONFIG_SATA_SIL)		+= sata_sil.o
- obj-$(CONFIG_SATA_SIS)		+= sata_sis.o
- obj-$(CONFIG_SATA_SVW)		+= sata_svw.o
-Index: renesas/drivers/ata/sata_rcar.c
-===================================================================
---- /dev/null
-+++ renesas/drivers/ata/sata_rcar.c
-@@ -0,0 +1,909 @@
-+/*
-+ * Renesas R-Car SATA driver
-+ *
-+ * Author: Vladimir Barinov <source@cogentembedded.com>
-+ * Copyright (C) 2013 Cogent Embedded, Inc.
-+ * Copyright (C) 2013 Renesas Solutions Corp.
-+ *
-+ * This program is free software; you can redistribute  it and/or modify it
-+ * under  the terms of  the GNU General  Public License as published by the
-+ * Free Software Foundation;  either version 2 of the  License, or (at your
-+ * option) any later version.
-+ */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/ata.h>
-+#include <linux/libata.h>
-+#include <linux/platform_device.h>
-+#include <linux/clk.h>
-+
-+#define DRV_NAME "sata_rcar"
-+
-+/* SH-Navi2G/ATAPI-ATA compatible task registers */
-+#define DATA_REG			0x100
-+#define SDEVCON_REG			0x138
-+
-+/* SH-Navi2G/ATAPI module compatible control registers */
-+#define ATAPI_CONTROL1_REG		0x180
-+#define ATAPI_STATUS_REG		0x184
-+#define ATAPI_INT_ENABLE_REG		0x188
-+#define ATAPI_DTB_ADR_REG		0x198
-+#define ATAPI_DMA_START_ADR_REG		0x19C
-+#define ATAPI_DMA_TRANS_CNT_REG		0x1A0
-+#define ATAPI_CONTROL2_REG		0x1A4
-+#define ATAPI_SIG_ST_REG		0x1B0
-+#define ATAPI_BYTE_SWAP_REG		0x1BC
-+
-+/* ATAPI control 1 register (ATAPI_CONTROL1) bits */
-+#define ATAPI_CONTROL1_ISM		BIT(16)
-+#define ATAPI_CONTROL1_DTA32M		BIT(11)
-+#define ATAPI_CONTROL1_RESET		BIT(7)
-+#define ATAPI_CONTROL1_DESE		BIT(3)
-+#define ATAPI_CONTROL1_RW		BIT(2)
-+#define ATAPI_CONTROL1_STOP		BIT(1)
-+#define ATAPI_CONTROL1_START		BIT(0)
-+
-+/* ATAPI status register (ATAPI_STATUS) bits */
-+#define ATAPI_STATUS_SATAINT		BIT(11)
-+#define ATAPI_STATUS_DNEND		BIT(6)
-+#define ATAPI_STATUS_DEVTRM		BIT(5)
-+#define ATAPI_STATUS_DEVINT		BIT(4)
-+#define ATAPI_STATUS_ERR		BIT(2)
-+#define ATAPI_STATUS_NEND		BIT(1)
-+#define ATAPI_STATUS_ACT		BIT(0)
-+
-+/* Interrupt enable register (ATAPI_INT_ENABLE) bits */
-+#define ATAPI_INT_ENABLE_SATAINT	BIT(11)
-+#define ATAPI_INT_ENABLE_DNEND		BIT(6)
-+#define ATAPI_INT_ENABLE_DEVTRM		BIT(5)
-+#define ATAPI_INT_ENABLE_DEVINT		BIT(4)
-+#define ATAPI_INT_ENABLE_ERR		BIT(2)
-+#define ATAPI_INT_ENABLE_NEND		BIT(1)
-+#define ATAPI_INT_ENABLE_ACT		BIT(0)
-+
-+/* Access control registers for physical layer control register */
-+#define SATAPHYADDR_REG			0x200
-+#define SATAPHYWDATA_REG		0x204
-+#define SATAPHYACCEN_REG		0x208
-+#define SATAPHYRESET_REG		0x20C
-+#define SATAPHYRDATA_REG		0x210
-+#define SATAPHYACK_REG			0x214
-+
-+/* Physical layer control address command register (SATAPHYADDR) bits */
-+#define SATAPHYADDR_PHYRATEMODE		BIT(10)
-+#define SATAPHYADDR_PHYCMD_READ		BIT(9)
-+#define SATAPHYADDR_PHYCMD_WRITE	BIT(8)
-+
-+/* Physical layer control enable register (SATAPHYACCEN) bits */
-+#define SATAPHYACCEN_PHYLANE		BIT(0)
-+
-+/* Physical layer control reset register (SATAPHYRESET) bits */
-+#define SATAPHYRESET_PHYRST		BIT(1)
-+#define SATAPHYRESET_PHYSRES		BIT(0)
-+
-+/* Physical layer control acknowledge register (SATAPHYACK) bits */
-+#define SATAPHYACK_PHYACK		BIT(0)
-+
-+/* Serial-ATA HOST control registers */
-+#define BISTCONF_REG			0x102C
-+#define SDATA_REG			0x1100
-+#define SSDEVCON_REG			0x1204
-+
-+#define SCRSSTS_REG			0x1400
-+#define SCRSERR_REG			0x1404
-+#define SCRSCON_REG			0x1408
-+#define SCRSACT_REG			0x140C
-+
-+#define SATAINTSTAT_REG			0x1508
-+#define SATAINTMASK_REG			0x150C
-+
-+/* SATA INT status register (SATAINTSTAT) bits */
-+#define SATAINTSTAT_SERR		BIT(3)
-+#define SATAINTSTAT_ATA			BIT(0)
-+
-+/* SATA INT mask register (SATAINTSTAT) bits */
-+#define SATAINTMASK_SERRMSK		BIT(3)
-+#define SATAINTMASK_ERRMSK		BIT(2)
-+#define SATAINTMASK_ERRCRTMSK		BIT(1)
-+#define SATAINTMASK_ATAMSK		BIT(0)
-+
-+#define SATA_RCAR_INT_MASK		(SATAINTMASK_SERRMSK | \
-+					 SATAINTMASK_ATAMSK)
-+
-+/* Physical Layer Control Registers */
-+#define SATAPCTLR1_REG			0x43
-+#define SATAPCTLR2_REG			0x52
-+#define SATAPCTLR3_REG			0x5A
-+#define SATAPCTLR4_REG			0x60
-+
-+/* Descriptor table word 0 bit (when DTA32M = 1) */
-+#define SATA_RCAR_DTEND			BIT(0)
-+
-+struct sata_rcar_priv {
-+	void __iomem *base;
-+	struct clk *clk;
++Example:
++	
++	serial@e0000000 {
++		compatible = "arm,pl011", "arm,primecell";
++		reg = <0xe0000000 0x1000>;
++		interrupts = <0 35 0x4>;
++		status = "disabled";
++		dmas = <&dmahost 12 0 1>,
++			<&dmahost 13 0 1 0>;
++		dma-names = "rx", "rx";
+ 	};
+diff --git a/drivers/dma/dw_dmac.c b/drivers/dma/dw_dmac.c
+index 4c83f18..72d6abf 100644
+--- a/drivers/dma/dw_dmac.c
++++ b/drivers/dma/dw_dmac.c
+@@ -19,6 +19,7 @@
+ #include <linux/interrupt.h>
+ #include <linux/io.h>
+ #include <linux/of.h>
++#include <linux/of_dma.h>
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/platform_device.h>
+@@ -170,7 +171,13 @@ static void dwc_initialize(struct dw_dma_chan *dwc)
+ 	if (dwc->initialized == true)
+ 		return;
+ 
+-	if (dws) {
++	if (dws && dws->cfg_hi == ~0 && dws->cfg_lo == ~0) {
++		/* autoconfigure based on request line from DT */
++		if (dwc->direction == DMA_MEM_TO_DEV)
++			cfghi = DWC_CFGH_DST_PER(dwc->request_line);
++		else if (dwc->direction == DMA_DEV_TO_MEM)
++			cfghi = DWC_CFGH_SRC_PER(dwc->request_line);
++	} else if (dws) {
+ 		/*
+ 		 * We need controller-specific data to set up slave
+ 		 * transfers.
+@@ -1225,49 +1232,64 @@ static void dwc_free_chan_resources(struct dma_chan *chan)
+ 	dev_vdbg(chan2dev(chan), "%s: done\n", __func__);
+ }
+ 
+-bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
++struct dw_dma_filter_args {
++	struct dw_dma *dw;
++	unsigned int req;
++	unsigned int src;
++	unsigned int dst;
 +};
 +
-+static void sata_rcar_phy_initialize(struct sata_rcar_priv *priv)
-+{
-+	/* idle state */
-+	iowrite32(0, priv->base + SATAPHYADDR_REG);
-+	/* reset */
-+	iowrite32(SATAPHYRESET_PHYRST, priv->base + SATAPHYRESET_REG);
-+	udelay(10);
-+	/* deassert reset */
-+	iowrite32(0, priv->base + SATAPHYRESET_REG);
++static bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
+ {
++	struct dw_dma_chan *dwc = to_dw_dma_chan(chan);
+ 	struct dw_dma *dw = to_dw_dma(chan->device);
+-	static struct dw_dma *last_dw;
+-	static char *last_bus_id;
+-	int i = -1;
++	struct dw_dma_filter_args *fargs = param;
++	struct dw_dma_slave *dws = &dwc->slave;
+ 
+-	/*
+-	 * dmaengine framework calls this routine for all channels of all dma
+-	 * controller, until true is returned. If 'param' bus_id is not
+-	 * registered with a dma controller (dw), then there is no need of
+-	 * running below function for all channels of dw.
+-	 *
+-	 * This block of code does this by saving the parameters of last
+-	 * failure. If dw and param are same, i.e. trying on same dw with
+-	 * different channel, return false.
+-	 */
+-	if ((last_dw == dw) && (last_bus_id == param))
+-		return false;
+-	/*
+-	 * Return true:
+-	 * - If dw_dma's platform data is not filled with slave info, then all
+-	 *   dma controllers are fine for transfer.
+-	 * - Or if param is NULL
+-	 */
+-	if (!dw->sd || !param)
+-		return true;
++	/* ensure the device matches our channel */
++        if (chan->device != &fargs->dw->dma)
++                return false;
+ 
+-	while (++i < dw->sd_count) {
+-		if (!strcmp(dw->sd[i].bus_id, param)) {
+-			chan->private = &dw->sd[i];
+-			last_dw = NULL;
+-			last_bus_id = NULL;
++	dws->dma_dev	= dw->dma.dev;
++	dws->cfg_hi	= ~0;
++	dws->cfg_lo	= ~0;
++	dws->src_master	= fargs->src;
++	dws->dst_master	= fargs->dst;
+ 
+-			return true;
+-		}
+-	}
++	dwc->request_line = fargs->req;
++
++	chan->private = dws;
++
++	return true;
 +}
 +
-+static void sata_rcar_phy_write(struct sata_rcar_priv *priv, u16 reg, u32 val,
-+				int group)
++static struct dma_chan *dw_dma_xlate(struct of_phandle_args *dma_spec,
++					 struct of_dma *ofdma)
 +{
-+	int timeout;
-+
-+	/* deassert reset */
-+	iowrite32(0, priv->base + SATAPHYRESET_REG);
-+	/* lane 1 */
-+	iowrite32(SATAPHYACCEN_PHYLANE, priv->base + SATAPHYACCEN_REG);
-+	/* write phy register value */
-+	iowrite32(val, priv->base + SATAPHYWDATA_REG);
-+	/* set register group */
-+	if (group)
-+		reg |= SATAPHYADDR_PHYRATEMODE;
-+	/* write command */
-+	iowrite32(SATAPHYADDR_PHYCMD_WRITE | reg, priv->base + SATAPHYADDR_REG);
-+	/* wait for ack */
-+	for (timeout = 0; timeout < 100; timeout++) {
-+		val = ioread32(priv->base + SATAPHYACK_REG);
-+		if (val & SATAPHYACK_PHYACK)
-+			break;
-+	}
-+	if (timeout >= 100)
-+		pr_err("%s timeout\n", __func__);
-+	/* idle state */
-+	iowrite32(0, priv->base + SATAPHYADDR_REG);
-+}
-+
-+static void sata_rcar_freeze(struct ata_port *ap)
-+{
-+	struct sata_rcar_priv *priv = ap->host->private_data;
-+
-+	/* mask */
-+	iowrite32(0x7ff, priv->base + SATAINTMASK_REG);
-+
-+	ata_sff_freeze(ap);
-+}
-+
-+static void sata_rcar_thaw(struct ata_port *ap)
-+{
-+	struct sata_rcar_priv *priv = ap->host->private_data;
-+
-+	/* ack */
-+	iowrite32(~SATA_RCAR_INT_MASK, priv->base + SATAINTSTAT_REG);
-+
-+	ata_sff_thaw(ap);
-+
-+	/* unmask */
-+	iowrite32(0x7ff & ~SATA_RCAR_INT_MASK, priv->base + SATAINTMASK_REG);
-+}
-+
-+static void sata_rcar_ioread16_rep(void __iomem *reg, void *buffer, int count)
-+{
-+	u16 *ptr = buffer;
-+
-+	while (count--) {
-+		u16 data = ioread32(reg);
-+
-+		*ptr++ = data;
-+	}
-+}
-+
-+static void sata_rcar_iowrite16_rep(void __iomem *reg, void *buffer, int count)
-+{
-+	const u16 *ptr = buffer;
-+
-+	while (count--)
-+		iowrite32(*ptr++, reg);
-+}
-+
-+static u8 sata_rcar_check_status(struct ata_port *ap)
-+{
-+	return ioread32(ap->ioaddr.status_addr);
-+}
-+
-+static u8 sata_rcar_check_altstatus(struct ata_port *ap)
-+{
-+	return ioread32(ap->ioaddr.altstatus_addr);
-+}
-+
-+static void sata_rcar_set_devctl(struct ata_port *ap, u8 ctl)
-+{
-+	iowrite32(ctl, ap->ioaddr.ctl_addr);
-+}
-+
-+static void sata_rcar_dev_select(struct ata_port *ap, unsigned int device)
-+{
-+	iowrite32(ATA_DEVICE_OBS, ap->ioaddr.device_addr);
-+	ata_sff_pause(ap);	/* needed; also flushes, for mmio */
-+}
-+
-+static unsigned int sata_rcar_ata_devchk(struct ata_port *ap,
-+					 unsigned int device)
-+{
-+	struct ata_ioports *ioaddr = &ap->ioaddr;
-+	u8 nsect, lbal;
-+
-+	sata_rcar_dev_select(ap, device);
-+
-+	iowrite32(0x55, ioaddr->nsect_addr);
-+	iowrite32(0xaa, ioaddr->lbal_addr);
-+
-+	iowrite32(0xaa, ioaddr->nsect_addr);
-+	iowrite32(0x55, ioaddr->lbal_addr);
-+
-+	iowrite32(0x55, ioaddr->nsect_addr);
-+	iowrite32(0xaa, ioaddr->lbal_addr);
-+
-+	nsect = ioread32(ioaddr->nsect_addr);
-+	lbal  = ioread32(ioaddr->lbal_addr);
-+
-+	if (nsect == 0x55 && lbal == 0xaa)
-+		return 1;	/* found a device */
-+
-+	return 0;		/* nothing found */
-+}
-+
-+static int sata_rcar_wait_after_reset(struct ata_link *link,
-+				      unsigned long deadline)
-+{
-+	struct ata_port *ap = link->ap;
-+
-+	ata_msleep(ap, ATA_WAIT_AFTER_RESET);
-+
-+	return ata_sff_wait_ready(link, deadline);
-+}
-+
-+static int sata_rcar_bus_softreset(struct ata_port *ap, unsigned long deadline)
-+{
-+	struct ata_ioports *ioaddr = &ap->ioaddr;
-+
-+	DPRINTK("ata%u: bus reset via SRST\n", ap->print_id);
-+
-+	/* software reset.  causes dev0 to be selected */
-+	iowrite32(ap->ctl, ioaddr->ctl_addr);
-+	udelay(20);
-+	iowrite32(ap->ctl | ATA_SRST, ioaddr->ctl_addr);
-+	udelay(20);
-+	iowrite32(ap->ctl, ioaddr->ctl_addr);
-+	ap->last_ctl = ap->ctl;
-+
-+	/* wait the port to become ready */
-+	return sata_rcar_wait_after_reset(&ap->link, deadline);
-+}
-+
-+static int sata_rcar_softreset(struct ata_link *link, unsigned int *classes,
-+			       unsigned long deadline)
-+{
-+	struct ata_port *ap = link->ap;
-+	unsigned int devmask = 0;
-+	int rc;
-+	u8 err;
-+
-+	/* determine if device 0 is present */
-+	if (sata_rcar_ata_devchk(ap, 0))
-+		devmask |= 1 << 0;
-+
-+	/* issue bus reset */
-+	DPRINTK("about to softreset, devmask=%x\n", devmask);
-+	rc = sata_rcar_bus_softreset(ap, deadline);
-+	/* if link is occupied, -ENODEV too is an error */
-+	if (rc && (rc != -ENODEV || sata_scr_valid(link))) {
-+		ata_link_err(link, "SRST failed (errno=%d)\n", rc);
-+		return rc;
-+	}
-+
-+	/* determine by signature whether we have ATA or ATAPI devices */
-+	classes[0] = ata_sff_dev_classify(&link->device[0], devmask, &err);
-+
-+	DPRINTK("classes[0]=%u\n", classes[0]);
-+	return 0;
-+}
-+
-+static void sata_rcar_tf_load(struct ata_port *ap,
-+			      const struct ata_taskfile *tf)
-+{
-+	struct ata_ioports *ioaddr = &ap->ioaddr;
-+	unsigned int is_addr = tf->flags & ATA_TFLAG_ISADDR;
-+
-+	if (tf->ctl != ap->last_ctl) {
-+		iowrite32(tf->ctl, ioaddr->ctl_addr);
-+		ap->last_ctl = tf->ctl;
-+		ata_wait_idle(ap);
-+	}
-+
-+	if (is_addr && (tf->flags & ATA_TFLAG_LBA48)) {
-+		iowrite32(tf->hob_feature, ioaddr->feature_addr);
-+		iowrite32(tf->hob_nsect, ioaddr->nsect_addr);
-+		iowrite32(tf->hob_lbal, ioaddr->lbal_addr);
-+		iowrite32(tf->hob_lbam, ioaddr->lbam_addr);
-+		iowrite32(tf->hob_lbah, ioaddr->lbah_addr);
-+		VPRINTK("hob: feat 0x%X nsect 0x%X, lba 0x%X 0x%X 0x%X\n",
-+			tf->hob_feature,
-+			tf->hob_nsect,
-+			tf->hob_lbal,
-+			tf->hob_lbam,
-+			tf->hob_lbah);
-+	}
-+
-+	if (is_addr) {
-+		iowrite32(tf->feature, ioaddr->feature_addr);
-+		iowrite32(tf->nsect, ioaddr->nsect_addr);
-+		iowrite32(tf->lbal, ioaddr->lbal_addr);
-+		iowrite32(tf->lbam, ioaddr->lbam_addr);
-+		iowrite32(tf->lbah, ioaddr->lbah_addr);
-+		VPRINTK("feat 0x%X nsect 0x%X lba 0x%X 0x%X 0x%X\n",
-+			tf->feature,
-+			tf->nsect,
-+			tf->lbal,
-+			tf->lbam,
-+			tf->lbah);
-+	}
-+
-+	if (tf->flags & ATA_TFLAG_DEVICE) {
-+		iowrite32(tf->device, ioaddr->device_addr);
-+		VPRINTK("device 0x%X\n", tf->device);
-+	}
-+
-+	ata_wait_idle(ap);
-+}
-+
-+static void sata_rcar_tf_read(struct ata_port *ap, struct ata_taskfile *tf)
-+{
-+	struct ata_ioports *ioaddr = &ap->ioaddr;
-+
-+	tf->command = sata_rcar_check_status(ap);
-+	tf->feature = ioread32(ioaddr->error_addr);
-+	tf->nsect = ioread32(ioaddr->nsect_addr);
-+	tf->lbal = ioread32(ioaddr->lbal_addr);
-+	tf->lbam = ioread32(ioaddr->lbam_addr);
-+	tf->lbah = ioread32(ioaddr->lbah_addr);
-+	tf->device = ioread32(ioaddr->device_addr);
-+
-+	if (tf->flags & ATA_TFLAG_LBA48) {
-+		iowrite32(tf->ctl | ATA_HOB, ioaddr->ctl_addr);
-+		tf->hob_feature = ioread32(ioaddr->error_addr);
-+		tf->hob_nsect = ioread32(ioaddr->nsect_addr);
-+		tf->hob_lbal = ioread32(ioaddr->lbal_addr);
-+		tf->hob_lbam = ioread32(ioaddr->lbam_addr);
-+		tf->hob_lbah = ioread32(ioaddr->lbah_addr);
-+		iowrite32(tf->ctl, ioaddr->ctl_addr);
-+		ap->last_ctl = tf->ctl;
-+	}
-+}
-+
-+static void sata_rcar_exec_command(struct ata_port *ap,
-+				   const struct ata_taskfile *tf)
-+{
-+	DPRINTK("ata%u: cmd 0x%X\n", ap->print_id, tf->command);
-+
-+	iowrite32(tf->command, ap->ioaddr.command_addr);
-+	ata_sff_pause(ap);
-+}
-+
-+static unsigned int sata_rcar_data_xfer(struct ata_device *dev,
-+					      unsigned char *buf,
-+					      unsigned int buflen, int rw)
-+{
-+	struct ata_port *ap = dev->link->ap;
-+	void __iomem *data_addr = ap->ioaddr.data_addr;
-+	unsigned int words = buflen >> 1;
-+
-+	/* Transfer multiple of 2 bytes */
-+	if (rw == READ)
-+		sata_rcar_ioread16_rep(data_addr, buf, words);
-+	else
-+		sata_rcar_iowrite16_rep(data_addr, buf, words);
-+
-+	/* Transfer trailing byte, if any. */
-+	if (unlikely(buflen & 0x01)) {
-+		unsigned char pad[2] = { };
-+
-+		/* Point buf to the tail of buffer */
-+		buf += buflen - 1;
-+
-+		/*
-+		 * Use io*16_rep() accessors here as well to avoid pointlessly
-+		 * swapping bytes to and from on the big endian machines...
-+		 */
-+		if (rw == READ) {
-+			sata_rcar_ioread16_rep(data_addr, pad, 1);
-+			*buf = pad[0];
-+		} else {
-+			pad[0] = *buf;
-+			sata_rcar_iowrite16_rep(data_addr, pad, 1);
-+		}
-+		words++;
-+	}
-+
-+	return words << 1;
-+}
-+
-+static void sata_rcar_drain_fifo(struct ata_queued_cmd *qc)
-+{
-+	int count;
-+	struct ata_port *ap;
-+
-+	/* We only need to flush incoming data when a command was running */
-+	if (qc == NULL || qc->dma_dir == DMA_TO_DEVICE)
-+		return;
-+
-+	ap = qc->ap;
-+	/* Drain up to 64K of data before we give up this recovery method */
-+	for (count = 0; (ap->ops->sff_check_status(ap) & ATA_DRQ) &&
-+			count < 65536; count += 2)
-+		ioread32(ap->ioaddr.data_addr);
-+
-+	/* Can become DEBUG later */
-+	if (count)
-+		ata_port_dbg(ap, "drained %d bytes to clear DRQ\n", count);
-+}
-+
-+static int sata_rcar_scr_read(struct ata_link *link, unsigned int sc_reg,
-+			      u32 *val)
-+{
-+	if (sc_reg > SCR_ACTIVE)
-+		return -EINVAL;
-+
-+	*val = ioread32(link->ap->ioaddr.scr_addr + (sc_reg << 2));
-+	return 0;
-+}
-+
-+static int sata_rcar_scr_write(struct ata_link *link, unsigned int sc_reg,
-+			       u32 val)
-+{
-+	if (sc_reg > SCR_ACTIVE)
-+		return -EINVAL;
-+
-+	iowrite32(val, link->ap->ioaddr.scr_addr + (sc_reg << 2));
-+	return 0;
-+}
-+
-+static void sata_rcar_bmdma_fill_sg(struct ata_queued_cmd *qc)
-+{
-+	struct ata_port *ap = qc->ap;
-+	struct ata_bmdma_prd *prd = ap->bmdma_prd;
-+	struct scatterlist *sg;
-+	unsigned int si, pi;
-+
-+	pi = 0;
-+	for_each_sg(qc->sg, sg, qc->n_elem, si) {
-+		u32 addr, sg_len, len;
-+
-+		/*
-+		 * Note: h/w doesn't support 64-bit, so we unconditionally
-+		 * truncate dma_addr_t to u32.
-+		 */
-+		addr = (u32)sg_dma_address(sg);
-+		sg_len = sg_dma_len(sg);
-+
-+		/* H/w transfer count is only 29 bits long, let's be careful */
-+		while (sg_len) {
-+			len = sg_len;
-+			if (len > 0x1ffffffe)
-+				len = 0x1ffffffe;
-+
-+			prd[pi].addr = cpu_to_le32(addr);
-+			prd[pi].flags_len = cpu_to_le32(len);
-+			VPRINTK("PRD[%u] = (0x%X, 0x%X)\n", pi, addr, len);
-+
-+			pi++;
-+			sg_len -= len;
-+			addr += len;
-+		}
-+	}
-+
-+	/* end-of-table flag */
-+	prd[pi - 1].addr |= cpu_to_le32(SATA_RCAR_DTEND);
-+}
-+
-+static void sata_rcar_qc_prep(struct ata_queued_cmd *qc)
-+{
-+	if (!(qc->flags & ATA_QCFLAG_DMAMAP))
-+		return;
-+
-+	sata_rcar_bmdma_fill_sg(qc);
-+}
-+
-+static void sata_rcar_bmdma_setup(struct ata_queued_cmd *qc)
-+{
-+	struct ata_port *ap = qc->ap;
-+	unsigned int rw = qc->tf.flags & ATA_TFLAG_WRITE;
-+	u32 dmactl;
-+	struct sata_rcar_priv *priv = ap->host->private_data;
-+
-+	/* load PRD table addr. */
-+	mb();   /* make sure PRD table writes are visible to controller */
-+	iowrite32(ap->bmdma_prd_dma, priv->base + ATAPI_DTB_ADR_REG);
-+
-+	/* specify data direction, triple-check start bit is clear */
-+	dmactl = ioread32(priv->base + ATAPI_CONTROL1_REG);
-+	dmactl &= ~(ATAPI_CONTROL1_RW | ATAPI_CONTROL1_STOP);
-+	if (dmactl & ATAPI_CONTROL1_START) {
-+		dmactl &= ~ATAPI_CONTROL1_START;
-+		dmactl |= ATAPI_CONTROL1_STOP;
-+	}
-+	if (!rw)
-+		dmactl |= ATAPI_CONTROL1_RW;
-+	iowrite32(dmactl, priv->base + ATAPI_CONTROL1_REG);
-+
-+	/* issue r/w command */
-+	ap->ops->sff_exec_command(ap, &qc->tf);
-+}
-+
-+static void sata_rcar_bmdma_start(struct ata_queued_cmd *qc)
-+{
-+	struct ata_port *ap = qc->ap;
-+	u32 dmactl;
-+	struct sata_rcar_priv *priv = ap->host->private_data;
-+
-+	/* start host DMA transaction */
-+	dmactl = ioread32(priv->base + ATAPI_CONTROL1_REG);
-+	dmactl |= ATAPI_CONTROL1_START;
-+	iowrite32(dmactl, priv->base + ATAPI_CONTROL1_REG);
-+}
-+
-+static void sata_rcar_bmdma_stop(struct ata_queued_cmd *qc)
-+{
-+	struct ata_port *ap = qc->ap;
-+	struct sata_rcar_priv *priv = ap->host->private_data;
-+	u32 dmactl;
-+
-+	/* force termination of DMA transfer if active */
-+	dmactl = ioread32(priv->base + ATAPI_CONTROL1_REG);
-+	if (dmactl & ATAPI_CONTROL1_START) {
-+		dmactl &= ~ATAPI_CONTROL1_START;
-+		dmactl |= ATAPI_CONTROL1_STOP;
-+		iowrite32(dmactl, priv->base + ATAPI_CONTROL1_REG);
-+	}
-+
-+	/* one-PIO-cycle guaranteed wait, per spec, for HDMA1:0 transition */
-+	ata_sff_dma_pause(ap);
-+}
-+
-+static u8 sata_rcar_bmdma_status(struct ata_port *ap)
-+{
-+	struct sata_rcar_priv *priv = ap->host->private_data;
-+	u32 status;
-+	u8 host_stat = 0;
-+
-+	status = ioread32(priv->base + ATAPI_STATUS_REG);
-+	if (status & ATAPI_STATUS_DEVINT)
-+		host_stat |= ATA_DMA_INTR;
-+	if (status & ATAPI_STATUS_ACT)
-+		host_stat |= ATA_DMA_ACTIVE;
-+
-+	return host_stat;
-+}
-+
-+static struct scsi_host_template sata_rcar_sht = {
-+	ATA_BMDMA_SHT(DRV_NAME),
-+};
-+
-+static struct ata_port_operations sata_rcar_port_ops = {
-+	.inherits		= &ata_bmdma_port_ops,
-+
-+	.freeze			= sata_rcar_freeze,
-+	.thaw			= sata_rcar_thaw,
-+	.softreset		= sata_rcar_softreset,
-+
-+	.scr_read		= sata_rcar_scr_read,
-+	.scr_write		= sata_rcar_scr_write,
-+
-+	.sff_dev_select		= sata_rcar_dev_select,
-+	.sff_set_devctl		= sata_rcar_set_devctl,
-+	.sff_check_status	= sata_rcar_check_status,
-+	.sff_check_altstatus	= sata_rcar_check_altstatus,
-+	.sff_tf_load		= sata_rcar_tf_load,
-+	.sff_tf_read		= sata_rcar_tf_read,
-+	.sff_exec_command	= sata_rcar_exec_command,
-+	.sff_data_xfer		= sata_rcar_data_xfer,
-+	.sff_drain_fifo		= sata_rcar_drain_fifo,
-+
-+	.qc_prep		= sata_rcar_qc_prep,
-+
-+	.bmdma_setup		= sata_rcar_bmdma_setup,
-+	.bmdma_start		= sata_rcar_bmdma_start,
-+	.bmdma_stop		= sata_rcar_bmdma_stop,
-+	.bmdma_status		= sata_rcar_bmdma_status,
-+};
-+
-+static int sata_rcar_serr_interrupt(struct ata_port *ap)
-+{
-+	struct sata_rcar_priv *priv = ap->host->private_data;
-+	struct ata_eh_info *ehi = &ap->link.eh_info;
-+	int freeze = 0;
-+	int handled = 0;
-+	u32 serror;
-+
-+	serror = ioread32(priv->base + SCRSERR_REG);
-+	if (!serror)
-+		return 0;
-+
-+	DPRINTK("SError @host_intr: 0x%x\n", serror);
-+
-+	/* first, analyze and record host port events */
-+	ata_ehi_clear_desc(ehi);
-+
-+	if (serror & (SERR_DEV_XCHG | SERR_PHYRDY_CHG)) {
-+		/* Setup a soft-reset EH action */
-+		ata_ehi_hotplugged(ehi);
-+		ata_ehi_push_desc(ehi, "%s", "hotplug");
-+
-+		freeze = serror & SERR_COMM_WAKE ? 0 : 1;
-+		handled = 1;
-+	}
-+
-+	/* freeze or abort */
-+	if (freeze)
-+		ata_port_freeze(ap);
-+	else
-+		ata_port_abort(ap);
-+
-+	return handled;
-+}
-+
-+static int sata_rcar_ata_interrupt(struct ata_port *ap)
-+{
-+	struct ata_queued_cmd *qc;
-+	int handled = 0;
-+
-+	qc = ata_qc_from_tag(ap, ap->link.active_tag);
-+	if (qc)
-+		handled |= ata_bmdma_port_intr(ap, qc);
-+
-+	return handled;
-+}
-+
-+static irqreturn_t sata_rcar_interrupt(int irq, void *dev_instance)
-+{
-+	struct ata_host *host = dev_instance;
-+	struct sata_rcar_priv *priv = host->private_data;
-+	struct ata_port *ap;
-+	unsigned int handled = 0;
-+	u32 sataintstat;
-+	unsigned long flags;
-+
-+	spin_lock_irqsave(&host->lock, flags);
-+
-+	sataintstat = ioread32(priv->base + SATAINTSTAT_REG);
-+	if (!sataintstat)
-+		return IRQ_NONE;
-+	/* ack */
-+	iowrite32(sataintstat & ~SATA_RCAR_INT_MASK,
-+		 priv->base + SATAINTSTAT_REG);
-+
-+	ap = host->ports[0];
-+
-+	if (sataintstat & SATAINTSTAT_ATA)
-+		handled |= sata_rcar_ata_interrupt(ap);
-+
-+	if (sataintstat & SATAINTSTAT_SERR)
-+		handled |= sata_rcar_serr_interrupt(ap);
-+
-+	spin_unlock_irqrestore(&host->lock, flags);
-+
-+	return IRQ_RETVAL(handled);
-+}
-+
-+static void sata_rcar_setup_port(struct ata_host *host)
-+{
-+	struct ata_port *ap = host->ports[0];
-+	struct ata_ioports *ioaddr = &ap->ioaddr;
-+	struct sata_rcar_priv *priv = host->private_data;
-+
-+	ap->ops		= &sata_rcar_port_ops;
-+	ap->pio_mask	= ATA_PIO4;
-+	ap->udma_mask	= ATA_UDMA6;
-+	ap->flags	|= ATA_FLAG_SATA;
-+
-+	ioaddr->cmd_addr = priv->base + SDATA_REG;
-+	ioaddr->ctl_addr = priv->base + SSDEVCON_REG;
-+	ioaddr->scr_addr = priv->base + SCRSSTS_REG;
-+	ioaddr->altstatus_addr = ioaddr->ctl_addr;
-+
-+	ioaddr->data_addr	= ioaddr->cmd_addr + (ATA_REG_DATA << 2);
-+	ioaddr->error_addr	= ioaddr->cmd_addr + (ATA_REG_ERR << 2);
-+	ioaddr->feature_addr	= ioaddr->cmd_addr + (ATA_REG_FEATURE << 2);
-+	ioaddr->nsect_addr	= ioaddr->cmd_addr + (ATA_REG_NSECT << 2);
-+	ioaddr->lbal_addr	= ioaddr->cmd_addr + (ATA_REG_LBAL << 2);
-+	ioaddr->lbam_addr	= ioaddr->cmd_addr + (ATA_REG_LBAM << 2);
-+	ioaddr->lbah_addr	= ioaddr->cmd_addr + (ATA_REG_LBAH << 2);
-+	ioaddr->device_addr	= ioaddr->cmd_addr + (ATA_REG_DEVICE << 2);
-+	ioaddr->status_addr	= ioaddr->cmd_addr + (ATA_REG_STATUS << 2);
-+	ioaddr->command_addr	= ioaddr->cmd_addr + (ATA_REG_CMD << 2);
-+}
-+
-+static void sata_rcar_init_controller(struct ata_host *host)
-+{
-+	struct sata_rcar_priv *priv = host->private_data;
-+	u32 val;
-+
-+	/* reset and setup phy */
-+	sata_rcar_phy_initialize(priv);
-+	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 0);
-+	sata_rcar_phy_write(priv, SATAPCTLR1_REG, 0x00200188, 1);
-+	sata_rcar_phy_write(priv, SATAPCTLR3_REG, 0x0000A061, 0);
-+	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 0);
-+	sata_rcar_phy_write(priv, SATAPCTLR2_REG, 0x20000000, 1);
-+	sata_rcar_phy_write(priv, SATAPCTLR4_REG, 0x28E80000, 0);
-+
-+	/* SATA-IP reset state */
-+	val = ioread32(priv->base + ATAPI_CONTROL1_REG);
-+	val |= ATAPI_CONTROL1_RESET;
-+	iowrite32(val, priv->base + ATAPI_CONTROL1_REG);
-+
-+	/* ISM mode, PRD mode, DTEND flag at bit 0 */
-+	val = ioread32(priv->base + ATAPI_CONTROL1_REG);
-+	val |= ATAPI_CONTROL1_ISM;
-+	val |= ATAPI_CONTROL1_DESE;
-+	val |= ATAPI_CONTROL1_DTA32M;
-+	iowrite32(val, priv->base + ATAPI_CONTROL1_REG);
-+
-+	/* Release the SATA-IP from the reset state */
-+	val = ioread32(priv->base + ATAPI_CONTROL1_REG);
-+	val &= ~ATAPI_CONTROL1_RESET;
-+	iowrite32(val, priv->base + ATAPI_CONTROL1_REG);
-+
-+	/* ack and mask */
-+	iowrite32(0, priv->base + SATAINTSTAT_REG);
-+	iowrite32(0x7ff, priv->base + SATAINTMASK_REG);
-+	/* enable interrupts */
-+	iowrite32(ATAPI_INT_ENABLE_SATAINT, priv->base + ATAPI_INT_ENABLE_REG);
-+}
-+
-+static int sata_rcar_probe(struct platform_device *pdev)
-+{
-+	struct ata_host *host;
-+	struct sata_rcar_priv *priv;
-+	struct resource *mem;
-+	int irq;
-+	int ret = 0;
-+
-+	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	if (mem == NULL)
-+		return -EINVAL;
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq <= 0)
-+		return -EINVAL;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(struct sata_rcar_priv),
-+			   GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(priv->clk)) {
-+		dev_err(&pdev->dev, "failed to get access to sata clock\n");
-+		return PTR_ERR(priv->clk);
-+	}
-+	clk_enable(priv->clk);
-+
-+	host = ata_host_alloc(&pdev->dev, 1);
-+	if (!host) {
-+		dev_err(&pdev->dev, "ata_host_alloc failed\n");
-+		ret = -ENOMEM;
-+		goto cleanup;
-+	}
-+
-+	host->private_data = priv;
-+
-+	priv->base = devm_request_and_ioremap(&pdev->dev, mem);
-+	if (!priv->base) {
-+		ret = -EADDRNOTAVAIL;
-+		goto cleanup;
-+	}
-+
-+	/* setup port */
-+	sata_rcar_setup_port(host);
-+
-+	/* initialize host controller */
-+	sata_rcar_init_controller(host);
-+
-+	ret = ata_host_activate(host, irq, sata_rcar_interrupt, 0,
-+				&sata_rcar_sht);
-+	if (!ret)
-+		return 0;
-+
-+cleanup:
-+	clk_disable(priv->clk);
-+
-+	return ret;
-+}
-+
-+static int sata_rcar_remove(struct platform_device *pdev)
-+{
-+	struct ata_host *host = dev_get_drvdata(&pdev->dev);
-+	struct sata_rcar_priv *priv = host->private_data;
-+
-+	ata_host_detach(host);
-+
-+	/* disable interrupts */
-+	iowrite32(0, priv->base + ATAPI_INT_ENABLE_REG);
-+	/* ack and mask */
-+	iowrite32(0, priv->base + SATAINTSTAT_REG);
-+	iowrite32(0x7ff, priv->base + SATAINTMASK_REG);
-+
-+	clk_disable(priv->clk);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM
-+static int sata_rcar_suspend(struct device *dev)
-+{
-+	struct ata_host *host = dev_get_drvdata(dev);
-+	struct sata_rcar_priv *priv = host->private_data;
-+	int ret;
-+
-+	ret = ata_host_suspend(host, PMSG_SUSPEND);
-+	if (!ret) {
-+		/* disable interrupts */
-+		iowrite32(0, priv->base + ATAPI_INT_ENABLE_REG);
-+		/* mask */
-+		iowrite32(0x7ff, priv->base + SATAINTMASK_REG);
-+
-+		clk_disable(priv->clk);
-+	}
-+
-+	return ret;
-+}
-+
-+static int sata_rcar_resume(struct device *dev)
-+{
-+	struct ata_host *host = dev_get_drvdata(dev);
-+	struct sata_rcar_priv *priv = host->private_data;
-+
-+	clk_enable(priv->clk);
-+
-+	/* ack and mask */
-+	iowrite32(0, priv->base + SATAINTSTAT_REG);
-+	iowrite32(0x7ff, priv->base + SATAINTMASK_REG);
-+	/* enable interrupts */
-+	iowrite32(ATAPI_INT_ENABLE_SATAINT, priv->base + ATAPI_INT_ENABLE_REG);
-+
-+	ata_host_resume(host);
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops sata_rcar_pm_ops = {
-+	.suspend	= sata_rcar_suspend,
-+	.resume		= sata_rcar_resume,
-+};
-+#endif
-+
-+static struct of_device_id sata_rcar_match[] = {
-+	{ .compatible = "renesas,rcar-sata", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, sata_rcar_match);
-+
-+static struct platform_driver sata_rcar_driver = {
-+	.probe		= sata_rcar_probe,
-+	.remove		= sata_rcar_remove,
-+	.driver = {
-+		.name		= DRV_NAME,
-+		.owner		= THIS_MODULE,
-+		.of_match_table	= sata_rcar_match,
-+#ifdef CONFIG_PM
-+		.pm		= &sata_rcar_pm_ops,
-+#endif
-+	},
-+};
-+
-+module_platform_driver(sata_rcar_driver);
-+
-+MODULE_LICENSE("GPL");
-+MODULE_AUTHOR("Vladimir Barinov");
-+MODULE_DESCRIPTION("Renesas R-Car SATA controller low level driver");
++	struct dw_dma *dw = ofdma->of_dma_data;
++	struct dw_dma_filter_args fargs = {
++		.dw = dw,
++	};
++	dma_cap_mask_t cap;
+ 
+-	last_dw = dw;
+-	last_bus_id = param;
+-	return false;
++	if (dma_spec->args_count != 3)
++		return NULL;
++
++	fargs.req = be32_to_cpup(dma_spec->args+0);
++	fargs.src = be32_to_cpup(dma_spec->args+1);
++	fargs.dst = be32_to_cpup(dma_spec->args+2);
++
++	if (WARN_ON(fargs.req >= DW_DMA_MAX_NR_REQUESTS ||
++		    fargs.src >= dw->nr_masters ||
++		    fargs.dst >= dw->nr_masters))
++		return NULL;
++
++	dma_cap_zero(cap);
++	dma_cap_set(DMA_SLAVE, cap);
++
++	/* TODO: there should be a simpler way to do this */
++	return dma_request_channel(cap, dw_dma_generic_filter, &fargs);
+ }
+-EXPORT_SYMBOL(dw_dma_generic_filter);
+ 
+ /* --------------------- Cyclic DMA API extensions -------------------- */
+ 
+@@ -1553,9 +1575,8 @@ static void dw_dma_off(struct dw_dma *dw)
+ static struct dw_dma_platform_data *
+ dw_dma_parse_dt(struct platform_device *pdev)
+ {
+-	struct device_node *sn, *cn, *np = pdev->dev.of_node;
++	struct device_node *np = pdev->dev.of_node;
+ 	struct dw_dma_platform_data *pdata;
+-	struct dw_dma_slave *sd;
+ 	u32 tmp, arr[4];
+ 
+ 	if (!np) {
+@@ -1567,7 +1588,7 @@ dw_dma_parse_dt(struct platform_device *pdev)
+ 	if (!pdata)
+ 		return NULL;
+ 
+-	if (of_property_read_u32(np, "nr_channels", &pdata->nr_channels))
++	if (of_property_read_u32(np, "dma-channels", &pdata->nr_channels))
+ 		return NULL;
+ 
+ 	if (of_property_read_bool(np, "is_private"))
+@@ -1582,7 +1603,7 @@ dw_dma_parse_dt(struct platform_device *pdev)
+ 	if (!of_property_read_u32(np, "block_size", &tmp))
+ 		pdata->block_size = tmp;
+ 
+-	if (!of_property_read_u32(np, "nr_masters", &tmp)) {
++	if (!of_property_read_u32(np, "dma-masters", &tmp)) {
+ 		if (tmp > 4)
+ 			return NULL;
+ 
+@@ -1594,36 +1615,6 @@ dw_dma_parse_dt(struct platform_device *pdev)
+ 		for (tmp = 0; tmp < pdata->nr_masters; tmp++)
+ 			pdata->data_width[tmp] = arr[tmp];
+ 
+-	/* parse slave data */
+-	sn = of_find_node_by_name(np, "slave_info");
+-	if (!sn)
+-		return pdata;
+-
+-	/* calculate number of slaves */
+-	tmp = of_get_child_count(sn);
+-	if (!tmp)
+-		return NULL;
+-
+-	sd = devm_kzalloc(&pdev->dev, sizeof(*sd) * tmp, GFP_KERNEL);
+-	if (!sd)
+-		return NULL;
+-
+-	pdata->sd = sd;
+-	pdata->sd_count = tmp;
+-
+-	for_each_child_of_node(sn, cn) {
+-		sd->dma_dev = &pdev->dev;
+-		of_property_read_string(cn, "bus_id", &sd->bus_id);
+-		of_property_read_u32(cn, "cfg_hi", &sd->cfg_hi);
+-		of_property_read_u32(cn, "cfg_lo", &sd->cfg_lo);
+-		if (!of_property_read_u32(cn, "src_master", &tmp))
+-			sd->src_master = tmp;
+-
+-		if (!of_property_read_u32(cn, "dst_master", &tmp))
+-			sd->dst_master = tmp;
+-		sd++;
+-	}
+-
+ 	return pdata;
+ }
+ #else
+@@ -1704,8 +1695,6 @@ static int dw_probe(struct platform_device *pdev)
+ 	clk_prepare_enable(dw->clk);
+ 
+ 	dw->regs = regs;
+-	dw->sd = pdata->sd;
+-	dw->sd_count = pdata->sd_count;
+ 
+ 	/* get hardware configuration parameters */
+ 	if (autocfg) {
+@@ -1836,6 +1825,12 @@ static int dw_probe(struct platform_device *pdev)
+ 
+ 	dma_async_device_register(&dw->dma);
+ 
++	if (pdev->dev.of_node)
++		err = of_dma_controller_register(pdev->dev.of_node,
++						 dw_dma_xlate, dw);
++	if (err && err != -ENODEV)
++		dev_err(&pdev->dev, "could not register of_dma_controller\n");
++
+ 	return 0;
+ }
+ 
+@@ -1844,6 +1839,7 @@ static int __devexit dw_remove(struct platform_device *pdev)
+ 	struct dw_dma		*dw = platform_get_drvdata(pdev);
+ 	struct dw_dma_chan	*dwc, *_dwc;
+ 
++	of_dma_controller_free(pdev->dev.of_node);
+ 	dw_dma_off(dw);
+ 	dma_async_device_unregister(&dw->dma);
+ 
+diff --git a/drivers/dma/dw_dmac_regs.h b/drivers/dma/dw_dmac_regs.h
+index 88dd8eb..b632082 100644
+--- a/drivers/dma/dw_dmac_regs.h
++++ b/drivers/dma/dw_dmac_regs.h
+@@ -13,6 +13,7 @@
+ #include <linux/dw_dmac.h>
+ 
+ #define DW_DMA_MAX_NR_CHANNELS	8
++#define DW_DMA_MAX_NR_REQUESTS	16
+ 
+ /* flow controller */
+ enum dw_dma_fc {
+@@ -211,9 +212,15 @@ struct dw_dma_chan {
+ 	/* hardware configuration */
+ 	unsigned int		block_size;
+ 	bool			nollp;
++	unsigned int		request_line;
++	struct dw_dma_slave	slave;
++
+ 
+ 	/* configuration passed via DMA_SLAVE_CONFIG */
+ 	struct dma_slave_config dma_sconfig;
++
++	/* backlink to dw_dma */
++	struct dw_dma		*dw;
+ };
+ 
+ static inline struct dw_dma_chan_regs __iomem *
+@@ -239,10 +246,6 @@ struct dw_dma {
+ 	struct tasklet_struct	tasklet;
+ 	struct clk		*clk;
+ 
+-	/* slave information */
+-	struct dw_dma_slave	*sd;
+-	unsigned int		sd_count;
+-
+ 	u8			all_chan_mask;
+ 
+ 	/* hardware configuration */
+diff --git a/include/linux/dw_dmac.h b/include/linux/dw_dmac.h
+index 41766de..481ab23 100644
+--- a/include/linux/dw_dmac.h
++++ b/include/linux/dw_dmac.h
+@@ -27,7 +27,6 @@
+  */
+ struct dw_dma_slave {
+ 	struct device		*dma_dev;
+-	const char		*bus_id;
+ 	u32			cfg_hi;
+ 	u32			cfg_lo;
+ 	u8			src_master;
+@@ -60,9 +59,6 @@ struct dw_dma_platform_data {
+ 	unsigned short	block_size;
+ 	unsigned char	nr_masters;
+ 	unsigned char	data_width[4];
+-
+-	struct dw_dma_slave *sd;
+-	unsigned int sd_count;
+ };
+ 
+ /* bursts size */
+@@ -114,6 +110,5 @@ void dw_dma_cyclic_stop(struct dma_chan *chan);
+ dma_addr_t dw_dma_get_src_addr(struct dma_chan *chan);
+ 
+ dma_addr_t dw_dma_get_dst_addr(struct dma_chan *chan);
+-bool dw_dma_generic_filter(struct dma_chan *chan, void *param);
+ 
+ #endif /* DW_DMAC_H */
+-- 
+1.8.1.2
