@@ -1,97 +1,55 @@
-From: Anil Kumar <anilk4.v-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 2/2] ARM: dts: omap3-devkit8000: add nand dt node
-Date: Sat, 16 Feb 2013 17:08:28 +0530
-Message-ID: <1361014708-1659-3-git-send-email-anilk4.v@gmail.com>
-References: <1361014708-1659-1-git-send-email-anilk4.v@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 03/13] mmc: provide a standard MMC device-tree binding
+ parser centrally
+Date: Sat, 16 Feb 2013 20:41:28 +0900
+Message-ID: <20130216114126.GA8172@verge.net.au>
+References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
+ <1360941242-18153-4-git-send-email-g.liakhovetski@gmx.de>
+ <20130216060526.GA20785@verge.net.au>
+ <201302161054.36492.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1361014708-1659-1-git-send-email-anilk4.v-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, thomas-xePHB1Atl/Dsq35pWSNszA@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201302161054.36492.arnd@arndb.de>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add the needed sections to enable nand support on
-Devkit8000.
+On Sat, Feb 16, 2013 at 10:54:36AM +0000, Arnd Bergmann wrote:
+> On Saturday 16 February 2013, Simon Horman wrote:
+> > > +void mmc_of_parse(struct mmc_host *host)
+> > > +{
+> > > +     struct device_node *np;
+> > > +     u32 bus_width;
+> > > +     bool explicit_inv_wp, gpio_inv_wp = false;
+> > > +     enum of_gpio_flags flags;
+> > > +     int len, ret, gpio;
+> > > +
+> > > +     if (!host->parent || !host->parent->of_node)
+> > > +             return;
+> > > +
+> > > +     np = host->parent->of_node;
+> > > +
+> > > +     /* "bus-width" is translated to MMC_CAP_*_BIT_DATA flags */
+> > > +     if (of_property_read_u32_array(np, "bus-width", &bus_width, 1) < 0)
+> > > +             dev_dbg(host->parent,
+> > > +                     "\"bus-width\" property is missing, assuming 1 bit.\n");
+> > > +
+> > > +     switch (bus_width) {
+> > 
+> > kbuild tells me that gcc thinks that bus_width is used without being
+> > initialised here. Assuming that of_property_read_u32_array always
+> > initialises bus_width if it returns zero then perhaps it would be worth
+> > considering using uninitialized_var().
+> 
+> I think this is a false positive that I encountered before and that should be gone
+> with gcc-4.7 or higher when using -O2 instead of -Os. I have a patch to disable
+> -Wmaybe-uninitialized when builing with -Os. If that gets rid of the warning,
+> I'd prefer not annotating it here.
+> 
+> There was some discussion about removing uninitialized_var() recently after it
+> was found to hide some real bugs.
 
-Add nand partitions information.
-
-Signed-off-by: Anil Kumar <anilk4.v-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
-:100644 100644 6338993... 6c6decf... M	arch/arm/boot/dts/omap3-devkit8000.dts
- arch/arm/boot/dts/omap3-devkit8000.dts |   52 ++++++++++++++++++++++++++++++++
- 1 files changed, 52 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
-index 6338993..6c6decf 100644
---- a/arch/arm/boot/dts/omap3-devkit8000.dts
-+++ b/arch/arm/boot/dts/omap3-devkit8000.dts
-@@ -101,3 +101,55 @@
- &mcbsp5 {
- 	status = "disabled";
- };
-+
-+&gpmc {
-+	ranges = <0 0 0x30000000 0x04>;       /* CS0: NAND */
-+
-+	nand@0,0 {
-+		reg = <0 0 0>; /* CS0, offset 0 */
-+		nand-bus-width = <16>;
-+
-+		gpmc,sync-clk = <0>;
-+		gpmc,cs-on = <0>;
-+		gpmc,cs-rd-off = <44>;
-+		gpmc,cs-wr-off = <44>;
-+		gpmc,adv-on = <6>;
-+		gpmc,adv-rd-off = <34>;
-+		gpmc,adv-wr-off = <44>;
-+		gpmc,we-off = <40>;
-+		gpmc,oe-off = <54>;
-+		gpmc,access = <64>;
-+		gpmc,rd-cycle = <82>;
-+		gpmc,wr-cycle = <82>;
-+		gpmc,wr-access = <40>;
-+		gpmc,wr-data-mux-bus = <0>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		x-loader@0 {
-+			label = "X-Loader";
-+			reg = <0 0x80000>;
-+		};
-+
-+		bootloaders@80000 {
-+			label = "U-Boot";
-+			reg = <0x80000 0x1e0000>;
-+		};
-+
-+		bootloaders_env@260000 {
-+			label = "U-Boot Env";
-+			reg = <0x260000 0x20000>;
-+		};
-+
-+		kernel@280000 {
-+			label = "Kernel";
-+			reg = <0x280000 0x400000>;
-+		};
-+
-+		filesystem@680000 {
-+			label = "File System";
-+			reg = <0x680000 0xf980000>;
-+		};
-+	};
-+};
--- 
-1.7.0.4
+Thanks. I agree that using uninitialized_var() may not be the best idea.
