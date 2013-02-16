@@ -1,54 +1,26 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v4 6/6] Input: Add ChromeOS EC keyboard driver
-Date: Sat, 16 Feb 2013 12:49:54 -0800
-Message-ID: <20130216204954.GA22044@core.coreip.homeip.net>
-References: <1360988172-15380-1-git-send-email-sjg@chromium.org>
- <1360988172-15380-7-git-send-email-sjg@chromium.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/4] R-Car SATA driver and platform data
+Date: Sun, 17 Feb 2013 01:35:27 +0300
+Message-ID: <201302170135.28336.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1360988172-15380-7-git-send-email-sjg@chromium.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Simon Glass <sjg@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Mike A. Chan" <mikechan@google.com>, Jun Nakajima <jun.nakajima@intel.com>, Tom Keel <thomas.keel@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jgarzik@pobox.com, linux-ide@vger.kernel.org
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon,
+Hello.
 
-On Fri, Feb 15, 2013 at 08:16:12PM -0800, Simon Glass wrote:
-> +	for (row = 0; row < ckdev->rows; row++) {
-> +		if (cros_ec_keyb_row_has_ghosting(ckdev, buf, row))
-> +			return true;
-> +	}
+   Here's the set of 4 patches against the Simon Horman's renesas.git repo, 'next' branch:
 
-No need for curly braces here. I would not care if not for below.
+[1/4] ARM: mach-shmobile: r8a7779: SATA DT configuration
+[2/4] ARM: mach-shmobile: r8a7779: add SATA support
+[3/4] libata: add R-Car SATA driver
+[4/4] ARM: mach-shmobile: marzen: add SATA support
 
-> +
-> +	return 0;
-> +
-> +fail_register:
-> +	kfree(idev->keycode);
+Patch 3 also applies to the 'upstream' branch of Jeff Garzik's libata-dev.git repo.
 
-Sorry I did not notice this before, but idev->keycode is devm-managed,
-so you either need to use devm_kfree() or just remove call to kfree()
-and let it clean up automatically (which will happen if binding fails or
-upon removal).
-
-BTW, maybe you should move the whole driver to devm_*? We have
-devm_kzalloc() for ckdev and you can use devm_input_allocate_device().
-Then you can get rid of entire erro handling path and completely remove
-the remove() method as well.
- 
-> +fail_matrix:
-> +	input_free_device(idev);
-> +fail_alloc_dev:
-> +	kfree(ckdev);
-> +	return err;
-> +}
-> +
-
-Thanks.
-
--- 
-Dmitry
+MBR, Sergei
