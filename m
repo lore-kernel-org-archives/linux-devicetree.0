@@ -1,33 +1,116 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/4] dw_dmac: introduce generic DMA binding for DT
-Date: Sat, 16 Feb 2013 08:56:43 +0530
-Message-ID: <CAKohpokMi1apB17T-AUcCx6fLRkYRR2goJ8nC=E9Qc8sVYQZtA@mail.gmail.com>
-References: <1360952512-971558-1-git-send-email-arnd@arndb.de>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH v2 6/6] Input: Add ChromeOS EC keyboard driver
+Date: Fri, 15 Feb 2013 19:56:56 -0800
+Message-ID: <CAPnjgZ2aPJdn8jcSjdYmUoqgh2Z8oVCoCZFfmV5g5NQ80seB0w@mail.gmail.com>
+References: <1360723347-28701-1-git-send-email-sjg@chromium.org>
+	<1360723347-28701-7-git-send-email-sjg@chromium.org>
+	<20130213200232.GB22031@core.coreip.homeip.net>
+	<CAPnjgZ2-QV36Ro_G32kcHStpj0SCC_gDoeCPqjN-h6bsBTSGvQ@mail.gmail.com>
+	<20130214173127.GC4007@core.coreip.homeip.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1360952512-971558-1-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130214173127.GC4007@core.coreip.homeip.net>
+Sender: linux-doc-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Mike A. Chan" <mikechan@google.com>, Jun Nakajima <jun.nakajima@intel.com>, Tom Keel <thomas.keel@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 February 2013 23:51, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> As Andy pointed out today, we don't have a good solution for the
-> dw_dmac DT binding in linux-next yet. I have posted my series
-> once before and then got distracted after getting feedback from
-> Viresh, Andy and Russell. I have now updated my earlier patch
-> based on the feedback and rebased on your tree without any
-> of the arm-soc patches mixed in.
+Hi Dmitry,
 
-Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Thu, Feb 14, 2013 at 9:31 AM, Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Wed, Feb 13, 2013 at 10:45:07PM -0800, Simon Glass wrote:
+>> >>
+>> >> +config KEYBOARD_CROS_EC
+>> >> +     tristate "ChromeOS EC keyboard"
+>> >> +     select INPUT_MATRIXKMAP
+>> >> +     select MFD_CROS_EC
+>> >
+>> > Is this select safe? I.e. does MFD_CROS_EC depend on anything else?
+>>
+>> I'll remove it, since it isn't required, and it's true that it does
+>> need other things.
+>
+> Instead of droppign the dependency completely I think it should "depens
+> on MFD_CROS_EC"
+
+OK, done.
+
+>
+>> >> +
+>> >> +static void cros_ec_keyb_close(struct input_dev *dev)
+>> >> +{
+>> >> +     struct cros_ec_keyb *ckdev = input_get_drvdata(dev);
+>> >> +
+>> >> +     blocking_notifier_chain_unregister(&ckdev->ec->event_notifier,
+>> >> +                                        &ckdev->notifier);
+>> >> +     blocking_notifier_chain_unregister(&ckdev->ec->wake_notifier,
+>> >> +                                        &ckdev->wake_notifier);
+>> >
+>> > Why is this done via a notifier instead of regular resume method?
+>>
+>> Because we only call the notifer in resume when we were not waking on
+>> a keyboard event. We use it to flush the keyboard. It was a late
+>> change so there might be a better way, but this driver does not have a
+>> resume handler.
+>
+> Right and the question is why does not it have resume handler and why
+> you inventing your own resume infrastructure instead of using the
+> standard one.
+
+I will fix that.
+
+>
+>> >> +
+>> >> +static int cros_ec_keyb_probe(struct platform_device *pdev)
+>> >> +{
+>> >> +     struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
+>> >> +     struct device *dev = ec->dev;
+>> >> +     struct cros_ec_keyb *ckdev = NULL;
+>> >> +     struct input_dev *idev = NULL;
+>> >> +     struct device_node *np;
+>> >> +     int err;
+>> >> +
+>> >> +     np = of_find_matching_node(NULL, cros_ec_kbc_of_match);
+>> >
+>> > And if we don't find it?
+>>
+>> Added error checking.
+>>
+>> >
+>> >> +
+>> >> +     ckdev = kzalloc(sizeof(*ckdev), GFP_KERNEL);
+>> >> +     if (!ckdev) {
+>> >> +             dev_err(dev, "cannot allocate memory for ckdev\n");
+>> >> +             return -ENOMEM;
+>> >> +     }
+>> >> +     pdev->dev.of_node = np;
+>> >
+>> > Huh? I'd expect the platform device be fully set up (including DT data)
+>> > before the driver is called.
+>>
+>> This is a child of the mfd driver cros_ec, so I don't think that
+>> works. Or maybe I'm just not sure how to plumb it in so it is
+>> automatic. Or maybe I just need to add the id to the device info
+>> below?
+>
+> Who creates this device? Whoever does this should set up the
+> pdev->dev.of_node. This is not this driver's responsibility.
+>
+> And then you add the id to the table below and matching is done
+> automatically.
+
+OK I see - it comes from mfd and it is easy enough to make it do the
+right thing.
+
+Thanks for your comments and patience. I will send a new patch.
+
+Regards,
+Simon
+
+>
+> Thanks.
+>
+> --
+> Dmitry
