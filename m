@@ -1,42 +1,177 @@
-From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-Subject: Re: [PATCH/RFC] mfd: as3711: add OF support
-Date: Sat, 16 Feb 2013 15:13:13 +0900
-Message-ID: <20130216061312.GA19142@verge.net.au>
-References: <Pine.LNX.4.64.1302151101140.7446@axis700.grange>
- <20130216022630.GA11628@verge.net.au>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130216022630.GA11628-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Richard Purdie <rpurdie-Fm38FmjxZ/leoWH0uzbU5w@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Liam Girdwood <lrg-l0cyMroinI0@public.gmane.org>
+From: Anil Kumar <anilk4.v@gmail.com>
+Subject: [PATCH V3] ARM: dts: add minimal DT support for DevKit8000
+Date: Sat, 16 Feb 2013 12:49:27 +0530
+Message-ID: <1360999167-17606-1-git-send-email-anilk4.v@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, grant.likely@secretlab.ca, thomas@tomweber.eu, anilk4.v@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 16, 2013 at 11:26:30AM +0900, Simon Horman wrote:
-> On Fri, Feb 15, 2013 at 11:07:16AM +0100, Guennadi Liakhovetski wrote:
-> > Add device-tree bindings to the AS3711 regulator and backlight drivers.
-> 
-> Hi,
-> 
-> at this stage I do not expect this code to go through the renesas tree.
-> However, in order to provide a basis for work on renesas SoCs I have added
-> this patch to the topic/backlight topic branch in the reneas tree on
-> kernel.org and merged it into topic/all+next.
-> 
-> In other words, I am not picking this patch up to merge it or add it to
-> linux-next, rather I am storing it for reference.
+DevKit8000 is a beagle board clone from Timll, sold by
+armkits.com. The DevKit8000 has RS232 serial port, LCD, DVI-D,
+S-Video, Ethernet, SD/MMC, keyboard, camera, SPI, I2C, USB and
+JTAG interface.
 
-I have dropped this patch due to the of_device_is_available build error
-reported by kbuild and reported in another sub-thread.
+This patch adds the basic DT support for devkit8000. At this time, Information
+of twl4030 (PMIC), MMC1, I2C1 and leds are added.
+
+Signed-off-by: Anil Kumar <anilk4.v@gmail.com>
+Tested-by: Thomas Weber <thomas@tomweber.eu>
+---
+ -This patch is based on top of kernel 3.8-rc5.
+
+ -Tested on Devkit8000.
+
+For V3:
+ - Remove pin mux as done at device boot time by default.
+
+For V2:
+ - Change model name as "TimLL OMAP3 Devkit8000"
+ - Change compatible as "timll,omap3-devkit8000"
+ - Doing i2c1 pinmux default with pinctrl-single driver instead of i2c1
+   driver probe time.
+
+:100644 100644 5ebb44f... 22ebc76... M	arch/arm/boot/dts/Makefile
+:000000 100644 0000000... 6338993... A	arch/arm/boot/dts/omap3-devkit8000.dts
+:100644 100644 53cb380b.. ccecb76... M	arch/arm/mach-omap2/board-generic.c
+ arch/arm/boot/dts/Makefile             |    1 +
+ arch/arm/boot/dts/omap3-devkit8000.dts |  103 ++++++++++++++++++++++++++++++++
+ arch/arm/mach-omap2/board-generic.c    |    1 +
+ 3 files changed, 105 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 5ebb44f..22ebc76 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -102,6 +102,7 @@ dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
+ 	imx28-tx28.dtb
+ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+ 	omap3-beagle.dtb \
++	omap3-devkit8000.dtb \
+ 	omap3-beagle-xm.dtb \
+ 	omap3-evm.dtb \
+ 	omap3-tobi.dtb \
+diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
+new file mode 100644
+index 0000000..6338993
+--- /dev/null
++++ b/arch/arm/boot/dts/omap3-devkit8000.dts
+@@ -0,0 +1,103 @@
++/*
++ * Author: Anil Kumar <anilk4.v@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ */
++/dts-v1/;
++
++/include/ "omap3.dtsi"
++/ {
++	model = "TimLL OMAP3 Devkit8000";
++	compatible = "timll,omap3-devkit8000", "ti,omap3";
++
++	memory {
++		device_type = "memory";
++		reg = <0x80000000 0x10000000>;	/* 256 MB */
++	};
++
++	leds {
++		compatible = "gpio-leds";
++
++		heartbeat {
++			label = "devkit8000::led1";
++			gpios = <&gpio6 26 0>;	/* 186 -> LED1 */
++			default-state = "on";
++			linux,default-trigger = "heartbeat";
++		};
++
++		mmc {
++			label = "devkit8000::led2";
++			gpios = <&gpio6 3 0>;	/* 163 -> LED2 */
++			default-state = "on";
++			linux,default-trigger = "none";
++		};
++
++		usr {
++			label = "devkit8000::led3";
++			gpios = <&gpio6 4 0>;	/* 164 -> LED3 */
++			default-state = "on";
++			linux,default-trigger = "usr";
++                };
++
++	};
++};
++
++&i2c1 {
++	clock-frequency = <2600000>;
++
++	twl: twl@48 {
++		reg = <0x48>;
++		interrupts = <7>;	/* SYS_NIRQ cascaded to intc */
++		interrupt-parent = <&intc>;
++	};
++};
++
++&i2c2 {
++	status = "disabled";
++};
++
++&i2c3 {
++	status = "disabled";
++};
++
++/include/ "twl4030.dtsi"
++
++&mmc1 {
++	vmmc-supply = <&vmmc1>;
++	vmmc_aux-supply = <&vsim>;
++	bus-width = <8>;
++};
++
++&mmc2 {
++	status = "disabled";
++};
++
++&mmc3 {
++	status = "disabled";
++};
++
++&wdt2 {
++	status = "disabled";
++};
++
++&mcbsp1 {
++	status = "disabled";
++};
++
++&mcbsp2 {
++	status = "disabled";
++};
++
++&mcbsp3 {
++	status = "disabled";
++};
++
++&mcbsp4 {
++	status = "disabled";
++};
++
++&mcbsp5 {
++	status = "disabled";
++};
+diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+index 53cb380..ccecb76 100644
+--- a/arch/arm/mach-omap2/board-generic.c
++++ b/arch/arm/mach-omap2/board-generic.c
+@@ -110,6 +110,7 @@ MACHINE_END
+ 
+ static const char *omap3_gp_boards_compat[] __initdata = {
+ 	"ti,omap3-beagle",
++	"timll,omap3-devkit8000",
+ 	NULL,
+ };
+ 
+-- 
+1.7.0.4
