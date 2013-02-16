@@ -1,103 +1,33 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 2/4] dmaengine: dw_dmac: move to generic DMA binding
-Date: Sat, 16 Feb 2013 08:56:19 +0530
-Message-ID: <CAKohpo=u_b9u1=78+tm-rhVR14P0=2XbLrZEDJrQBY5W8LXiCw@mail.gmail.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 0/4] dw_dmac: introduce generic DMA binding for DT
+Date: Sat, 16 Feb 2013 08:56:43 +0530
+Message-ID: <CAKohpokMi1apB17T-AUcCx6fLRkYRR2goJ8nC=E9Qc8sVYQZtA@mail.gmail.com>
 References: <1360952512-971558-1-git-send-email-arnd@arndb.de>
-	<1360952512-971558-3-git-send-email-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360952512-971558-3-git-send-email-arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@linux.intel.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1360952512-971558-1-git-send-email-arnd-r2nGTMty4D4@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 15 February 2013 23:51, Arnd Bergmann <arnd@arndb.de> wrote:
-> diff --git a/Documentation/devicetree/bindings/dma/snps-dma.txt b/Documentation/devicetree/bindings/dma/snps-dma.txt
-> +- #dma-cells: must be <3>
+On 15 February 2013 23:51, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> As Andy pointed out today, we don't have a good solution for the
+> dw_dmac DT binding in linux-next yet. I have posted my series
+> once before and then got distracted after getting feedback from
+> Viresh, Andy and Russell. I have now updated my earlier patch
+> based on the feedback and rebased on your tree without any
+> of the arm-soc patches mixed in.
 
-> +DMA clients connected to the Designware DMA controller must use the format
-> +described in the dma.txt file, using a five-cell specifier for each channel.
-
-s/five/four ?
-
-> +The four cells in order are:
-> +
-> +1. A phandle pointing to the DMA controller
-> +2. The DMA request line number
-> +3. Source master for transfers on allocated channel
-> +4. Destination master for transfers on allocated channel
-
-> diff --git a/drivers/dma/dw_dmac.c b/drivers/dma/dw_dmac.c
-
-> +static bool dw_dma_generic_filter(struct dma_chan *chan, void *param)
->  {
-
-> +       dws->cfg_hi     = 0xffffffff;
-> +       dws->cfg_lo     = 0xffffffff;
-
-s/0xffffffff/-1 ?
-
-> +       dws->src_master = fargs->src;
-> +       dws->dst_master = fargs->dst;
-> +       dwc->req        = fargs->req;
->
-> -                       return true;
-> -               }
-> -       }
-> +       chan->private = dws;
-> +
-> +       return true;
-> +}
-> +
-> +static struct dma_chan *dw_dma_xlate(struct of_phandle_args *dma_spec,
-> +                                        struct of_dma *ofdma)
-> +{
-> +       struct dw_dma *dw = ofdma->of_dma_data;
-> +       struct dw_dma_filter_args fargs = {
-> +               .dw = dw,
-> +       };
-> +       dma_cap_mask_t cap;
-> +
-> +       if (dma_spec->args_count != 3)
-> +               return NULL;
-> +
-> +       fargs.req = be32_to_cpup(dma_spec->args+0);
-> +       fargs.src = be32_to_cpup(dma_spec->args+1);
-> +       fargs.dst = be32_to_cpup(dma_spec->args+2);
-> +
-> +       if (WARN_ON(fargs.req >= 16 || fargs.src >= 2 || fargs.dst >= 2))
-> +               return NULL;
->
-> -       last_dw = dw;
-> -       last_bus_id = param;
-> -       return false;
-> +       dma_cap_zero(cap);
-> +       dma_cap_set(DMA_SLAVE, cap);
-> +
-> +       /* TODO: there should be a simpler way to do this */
-> +       return dma_request_channel(cap, dw_dma_generic_filter, &dma_spec->args[0]);
->  }
-> -EXPORT_SYMBOL(dw_dma_generic_filter);
->
->  /* --------------------- Cyclic DMA API extensions -------------------- */
->
-> @@ -1510,9 +1529,8 @@ static void dw_dma_off(struct dw_dma *dw)
->  static struct dw_dma_platform_data *
->  dw_dma_parse_dt(struct platform_device *pdev)
->  {
-> -       struct device_node *sn, *cn, *np = pdev->dev.of_node;
-> +       struct device_node *np = pdev->dev.of_node;
->         struct dw_dma_platform_data *pdata;
-> -       struct dw_dma_slave *sd;
->         u32 tmp, arr[4];
->
->         if (!np) {
-> @@ -1524,7 +1542,7 @@ dw_dma_parse_dt(struct platform_device *pdev)
->         if (!pdata)
->                 return NULL;
->
-> -       if (of_property_read_u32(np, "nr_channels", &pdata->nr_channels))
-> +       if (of_property_read_u32(np, "dma-channels", &pdata->nr_channels))
->                 return NULL;
+Acked-by: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
