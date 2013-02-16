@@ -1,60 +1,57 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: mvebu: Update defconfig to select SPI
-	flash and MTD support
-Date: Sat, 16 Feb 2013 12:44:36 -0500
-Message-ID: <20130216174436.GC23237@titan.lakedaemon.net>
-References: <1360155984-15397-1-git-send-email-ezequiel.garcia@free-electrons.com>
-	<1360155984-15397-5-git-send-email-ezequiel.garcia@free-electrons.com>
-	<20130216150228.GR14746@titan.lakedaemon.net>
-	<20130216173445.GA3440@localhost>
+Subject: Re: [PATCH v4 2/2] arm: mvebu: support for the new Armada XP
+ development board(DB-MV784MP-GP)
+Date: Sat, 16 Feb 2013 11:44:57 -0500
+Message-ID: <20130216164457.GA23237@titan.lakedaemon.net>
+References: <1359998469-28133-1-git-send-email-gregory.clement@free-electrons.com>
+ <1359998469-28133-3-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130216173445.GA3440@localhost>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <1359998469-28133-3-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Ike Pan <ike.pan-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, David Marlin <dmarlin-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Yehuda Yitschak <yehuday-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Dan Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Leif Lindholm <leif.lindholm-5wv7dgnIgG8@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chris Van Hoof <vanhoof-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 16, 2013 at 02:34:47PM -0300, Ezequiel Garcia wrote:
-> Hi Jason,
+On Mon, Feb 04, 2013 at 06:21:08PM +0100, Gregory CLEMENT wrote:
+> This is the new Armada XP evaluation board from Marvell. It comes with
+> a RS232 port over USB, a SATA link, an internal SSD, 4 Ethernet
+> Gigabit links.
 > 
-> On Sat, Feb 16, 2013 at 10:02:28AM -0500, Jason Cooper wrote:
-> > On Wed, Feb 06, 2013 at 10:06:24AM -0300, Ezequiel Garcia wrote:
-> > > The Armada XP DB-MV784MP-GP board has an SPI flash device.
-> > > These options allow to access that device over MTD.
-> > > 
-> > > Signed-off-by: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> > > ---
-> > > Depends on patch: "arm: mvebu: i2c come back in defconfig"
-> > > 
-> > >  arch/arm/configs/mvebu_defconfig |    3 +++
-> > >  1 files changed, 3 insertions(+), 0 deletions(-)
-> > 
-> > Applied to mvebu/boards
-> > 
+> Support for USB (Host and device), SDIO, PCIe will be added as drivers
+> when they become available for Armada XP in mainline.
 > 
-> Great!
-> 
-> Are we still in time for a pull request for v3.9
-> with all of these stuff?
+> Tested-by: Simon Guinot <simon.guinot-jKBdWWKqtFpg9hUCZPvPmw@public.gmane.org>
+> Tested-by: Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/Makefile         |    1 +
+>  arch/arm/boot/dts/armada-xp-gp.dts |  101 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 102 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/armada-xp-gp.dts
 
-With any amount of luck, possibly ;-)
+dammit.  I missed v4 and applied v3 of this patch.  The only difference
+is the size of RAM (I applied 3GB, v4 has 4GB).  I'll go ahead and
+apply v4 ATAG defconfig (patch #1 of v4) to mvebu/boards.  Then, we'll
+do a follow-up patch to -rc1 to correct the RAM size.
+
+This is too small a change be worth going through and redoing /boards
+and /dt at this point.
+
+Sorry about that.
+
+thx,
 
 Jason.
-
-------------------------------------------------------------------------------
-The Go Parallel Website, sponsored by Intel - in partnership with Geeknet, 
-is your hub for all things parallel software development, from weekly thought 
-leadership blogs to news, videos, case studies, tutorials, tech docs, 
-whitepapers, evaluation guides, and opinion stories. Check out the most 
-recent posts - join the conversation now. http://goparallel.sourceforge.net/
