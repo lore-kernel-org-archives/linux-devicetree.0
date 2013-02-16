@@ -1,53 +1,45 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v5 03/13] mmc: provide a standard MMC device-tree binding
- parser centrally
-Date: Sat, 16 Feb 2013 17:58:25 +0100
-Message-ID: <20130216165825.GF1906@pengutronix.de>
-References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
- <1360941242-18153-4-git-send-email-g.liakhovetski@gmx.de>
- <Pine.LNX.4.64.1302161613450.20044@axis700.grange>
+From: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ARM: mvebu: Update defconfig to select SPI flash
+ and MTD support
+Date: Sat, 16 Feb 2013 14:34:47 -0300
+Message-ID: <20130216173445.GA3440@localhost>
+References: <1360155984-15397-1-git-send-email-ezequiel.garcia@free-electrons.com>
+ <1360155984-15397-5-git-send-email-ezequiel.garcia@free-electrons.com>
+ <20130216150228.GR14746@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <Pine.LNX.4.64.1302161613450.20044@axis700.grange>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Markus Pargmann <mpa@pengutronix.de>
+In-Reply-To: <20130216150228.GR14746-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, Florian Fainelli <florian-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
-
-On Sat, Feb 16, 2013 at 04:21:16PM +0100, Guennadi Liakhovetski wrote:
-> MMC defines a number of standard DT bindings. Having each driver parse
-> them individually adds code redundancy and is error prone. Provide a
-> standard function to unify the parsing. After all drivers are converted
-> to using it instead of their own parsers, this function can be integrated
-> into mmc_alloc_host().
-> 
-> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> ---
-> 
-> v5:
-> 
-> 1. fix an uninitialised variable warning. Note, I don't actually know, 
-> whether this will fix the error, reported by the kbuild test robot. None 
-> of my compilers reports an error there, at most, I've got a warning with 
-> one of them, and, surprisingly, it is gone after this change. 
-> Surprisingly, because I only add the bus_width initialisation in the error 
-> case - exactly as it actually has to be done. In the success case it is 
-> assigned set by the function. But the compiler cannot know that!
-
-Maybe the build robot builds with devicetree disabled? In this case
-of_property_read_u32_array expands to a static inline function and the
-compiler indeed knows that &bus_width is unitialized. It also knows that
-this function always returns an error, so what you did below should
-silence the compiler.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+SGkgSmFzb24sCgpPbiBTYXQsIEZlYiAxNiwgMjAxMyBhdCAxMDowMjoyOEFNIC0wNTAwLCBKYXNv
+biBDb29wZXIgd3JvdGU6Cj4gT24gV2VkLCBGZWIgMDYsIDIwMTMgYXQgMTA6MDY6MjRBTSAtMDMw
+MCwgRXplcXVpZWwgR2FyY2lhIHdyb3RlOgo+ID4gVGhlIEFybWFkYSBYUCBEQi1NVjc4NE1QLUdQ
+IGJvYXJkIGhhcyBhbiBTUEkgZmxhc2ggZGV2aWNlLgo+ID4gVGhlc2Ugb3B0aW9ucyBhbGxvdyB0
+byBhY2Nlc3MgdGhhdCBkZXZpY2Ugb3ZlciBNVEQuCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEV6
+ZXF1aWVsIEdhcmNpYSA8ZXplcXVpZWwuZ2FyY2lhQGZyZWUtZWxlY3Ryb25zLmNvbT4KPiA+IC0t
+LQo+ID4gRGVwZW5kcyBvbiBwYXRjaDogImFybTogbXZlYnU6IGkyYyBjb21lIGJhY2sgaW4gZGVm
+Y29uZmlnIgo+ID4gCj4gPiAgYXJjaC9hcm0vY29uZmlncy9tdmVidV9kZWZjb25maWcgfCAgICAz
+ICsrKwo+ID4gIDEgZmlsZXMgY2hhbmdlZCwgMyBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygt
+KQo+IAo+IEFwcGxpZWQgdG8gbXZlYnUvYm9hcmRzCj4gCgpHcmVhdCEKCkFyZSB3ZSBzdGlsbCBp
+biB0aW1lIGZvciBhIHB1bGwgcmVxdWVzdCBmb3IgdjMuOQp3aXRoIGFsbCBvZiB0aGVzZSBzdHVm
+Zj8KClRoYW5rcyBhIGxvdCwKLS0gCkV6ZXF1aWVsIEdhcmPDrWEsIEZyZWUgRWxlY3Ryb25zCkVt
+YmVkZGVkIExpbnV4LCBLZXJuZWwgYW5kIEFuZHJvaWQgRW5naW5lZXJpbmcKaHR0cDovL2ZyZWUt
+ZWxlY3Ryb25zLmNvbQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0Bs
+aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0
+cmVlLWRpc2N1c3MK
