@@ -1,16 +1,19 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 3/8] ARM i.MX6q: Add GPU, VPU, IPU, and OpenVG resets
- to System Reset Controller (SRC)
-Date: Sun, 17 Feb 2013 22:57:36 +0800
-Message-ID: <20130217145734.GE6782@S2101-09.ap.freescale.net>
-References: <1360776872-18584-1-git-send-email-p.zabel@pengutronix.de>
- <1360776872-18584-4-git-send-email-p.zabel@pengutronix.de>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH v1 1/4] i2c: mux: Add i2c-arbitrator 'mux' driver
+Date: Sun, 17 Feb 2013 16:03:40 +0000
+Message-ID: <20130217160338.GA1583@opensource.wolfsonmicro.com>
+References: <1360778532-7480-1-git-send-email-dianders@chromium.org>
+ <511BFF77.2090202@wwwdotorg.org>
+ <CAD=FV=XUEcUx3NGCm+KijRGujECVTSJ9X5fY=arq-4U_RUdxCQ@mail.gmail.com>
+ <511C32B5.20600@wwwdotorg.org>
+ <CAD=FV=X=BPQo245kAtPvNUgKjypOYnheYJWcBkq6AA19z99V0w@mail.gmail.com>
+ <CAD=FV=UYEqreNbUAxHydmWH+66pOORMB_uFokivLitsavzTcsQ@mail.gmail.com>
+ <20130215102420.GA22283@opensource.wolfsonmicro.com>
+ <CACRpkdav8WO5yOSLPLtpUCeM41nttrbspRb7YrsqGXJ01ebMhw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============2705750534424647607=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1360776872-18584-4-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <CACRpkdav8WO5yOSLPLtpUCeM41nttrbspRb7YrsqGXJ01ebMhw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,172 +24,63 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Wolfram Sang <wolfram-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Yuvaraj Kumar <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 13, 2013 at 06:34:27PM +0100, Philipp Zabel wrote:
-> The SRC has auto-deasserting reset bits that control reset lines to
-> the GPU, VPU, IPU, and OpenVG IP modules. This patch adds a reset
-> controller that can be controlled by those devices using the
-> reset controller API.
-> 
-> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
-> Changes since v1:
->  - Removed .is_asserted op.
->  - Added struct reset_controller_dev pointer to .reset op.
-> ---
->  .../devicetree/bindings/reset/fsl,imx-src.txt      |   49 ++++++++++++++++++
->  arch/arm/mach-imx/src.c                            |   54 ++++++++++++++++++++
->  2 files changed, 103 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/reset/fsl,imx-src.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/reset/fsl,imx-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
-> new file mode 100644
-> index 0000000..1330177
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/reset/fsl,imx-src.txt
-> @@ -0,0 +1,49 @@
-> +Freescale i.MX System Reset Controller
-> +======================================
-> +
-> +Please also refer to reset.txt in this directory for common reset
-> +controller binding usage.
-> +
-> +Required properties:
-> +- compatible: Should be "fsl,<chip>-src"
-> +- reg: should be register base and length as documented in the
-> +  datasheet
-> +- interrupts: Should contain SRC interrupt and CPU WDOG interrupt,
-> +  in this order.
-> +- #reset-cells: 1, see below
-> +
-> +example:
-> +
-> +src: src@020d8000 {
-> +        compatible = "fsl,imx6q-src";
-> +        reg = <0x020d8000 0x4000>;
-> +        interrupts = <0 91 0x04 0 96 0x04>;
-> +        #reset-cells = <1>;
-> +};
-> +
-> +Specifying reset lines connected to IP modules
-> +==============================================
-> +
-> +The system reset controller can be used to reset the GPU, VPU,
-> +IPU, and OpenVG IP modules on i.MX5 and i.MX6 ICs. Those device
-> +nodes should specify the reset line on the SRC in their resets
-> +property, containing a phandle to the SRC device node and a
-> +RESET_INDEX specifying which module to reset, as described in
-> +reset.txt
-> +
-> +example:
-> +
-> +        ipu1: ipu@02400000 {
-> +                resets = <&src 2>;
-> +        };
-> +        ipu2: ipu@02800000 {
-> +                resets = <&src 4>;
-> +        };
-> +
-> +The following RESET_INDEX values are valid for i.MX5:
-> +GPU_RESET     0
-> +VPU_RESET     1
-> +IPU1_RESET    2
-> +OPEN_VG_RESET 3
-> +The following additional RESET_INDEX value is valid for i.MX6:
-> +IPU2_RESET    4
-> diff --git a/arch/arm/mach-imx/src.c b/arch/arm/mach-imx/src.c
-> index e15f155..3228484 100644
-> --- a/arch/arm/mach-imx/src.c
-> +++ b/arch/arm/mach-imx/src.c
-> @@ -14,17 +14,68 @@
->  #include <linux/io.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> +#include <linux/reset-controller.h>
->  #include <linux/smp.h>
->  #include <asm/smp_plat.h>
->  
->  #define SRC_SCR				0x000
->  #define SRC_GPR1			0x020
->  #define BP_SRC_SCR_WARM_RESET_ENABLE	0
-> +#define BP_SRC_SCR_SW_GPU_RST		1
-> +#define BP_SRC_SCR_SW_VPU_RST		2
-> +#define BP_SRC_SCR_SW_IPU1_RST		3
-> +#define BP_SRC_SCR_SW_OPEN_VG_RST	4
-> +#define BP_SRC_SCR_SW_IPU2_RST		12
->  #define BP_SRC_SCR_CORE1_RST		14
->  #define BP_SRC_SCR_CORE1_ENABLE		22
->  
->  static void __iomem *src_base;
->  
-> +static int sw_reset_bits[5] = {
-> +	BP_SRC_SCR_SW_GPU_RST,
-> +	BP_SRC_SCR_SW_VPU_RST,
-> +	BP_SRC_SCR_SW_IPU1_RST,
-> +	BP_SRC_SCR_SW_OPEN_VG_RST,
-> +	BP_SRC_SCR_SW_IPU2_RST
-> +};
-> +
-> +static int imx_src_reset_module(struct reset_controller_dev *rcdev,
-> +		unsigned long sw_reset_idx)
-> +{
-> +	unsigned long timeout;
-> +	int bit;
-> +	u32 val;
-> +
-> +	if (!src_base)
-> +		return -ENODEV;
-> +
-> +	if (sw_reset_idx >= ARRAY_SIZE(sw_reset_bits))
-> +		return -EINVAL;
-> +
-> +	bit = 1 << sw_reset_bits[sw_reset_idx];
-> +
-> +	val = readl_relaxed(src_base + SRC_SCR);
-> +	val |= bit;
-> +	writel_relaxed(val, src_base + SRC_SCR);
 
-Now, SRC_SCR is read/modify/write in a few contexts.  I'm wondering if
-we need some locking mechanism protecting against it.
+--===============2705750534424647607==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
+Content-Disposition: inline
 
-Shawn
 
-> +
-> +	timeout = jiffies + msecs_to_jiffies(1000);
-> +	while (readl(src_base + SRC_SCR) & bit) {
-> +		if (time_after(jiffies, timeout))
-> +			return -ETIME;
-> +		cpu_relax();
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static struct reset_control_ops imx_src_ops = {
-> +	.reset = imx_src_reset_module,
-> +};
-> +
-> +static struct reset_controller_dev imx_reset_controller = {
-> +	.ops = &imx_src_ops,
-> +};
-> +
->  void imx_enable_cpu(int cpu, bool enable)
->  {
->  	u32 mask, val;
-> @@ -65,6 +116,9 @@ void __init imx_src_init(void)
->  	src_base = of_iomap(np, 0);
->  	WARN_ON(!src_base);
->  
-> +	imx_reset_controller.of_node = np;
-> +	reset_controller_register(&imx_reset_controller);
-> +
->  	/*
->  	 * force warm reset sources to generate cold reset
->  	 * for a more reliable restart
-> -- 
-> 1.7.10.4
-> 
+--zYM0uCDKw75PZbzx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Fri, Feb 15, 2013 at 08:56:42PM +0100, Linus Walleij wrote:
+
+> Hm, totally unrelated but Mark, should we consider marking the
+> kernel tainted when the dummy regulators are in use?
+> (And likewise for the dummy pinctrl I guess.)
+
+It's not a bad idea, though since it tends not to result in kernel
+crashes we wouldn't see the taint report as often as we'd like.
+
+--zYM0uCDKw75PZbzx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRIP9UAAoJELSic+t+oim94UoP/3yq8CkcnDXHN3u/ZZjHBOLO
+Gwm0vvpxgnmm1dxJF6DoBzQbWZ6TRTYnQq06TONH/YSIejnr44ehbgbcG9ZfF8Sm
+qHx1XL0S6KjYkXTbUaq6cGO2RufIiZUD1J5Ps0jHNBRvKJOW+wiVGpB671hc9zQ9
+v6FcK1WbqohsOW8r0fTftSuxlZoTojm0jSLzSR8ZtsM4P02BI5CSuHXkVlXdXlZu
+d0ygFxCr7hGQyKOw3x7PKn9jmrHJzfti4k8T6zIy4GcBpROVwXOLgNk8KxWZ7/TH
+SFF4cLFJfLWJEJ655ZBqw44RdHO9Q68OSUYt36SXHoLNsj9bPO4qLBGZ+v4nlUN9
+MHZ9ex4cWckNsadpMI13Wb72SjISFZWMl+SjfneoyQbIw8l/7fl4sxCZwtjaHIok
+7dy7GYOW18w/3r4kfFbvc1/N5sDf7c3A1D8g16R6ncC+zH4P/6b1+2XT5/GVsLUl
+AD4foxDFrJMeeo/lvho0dgwflO5z5RHr7ZVomKqFF84j+oiUkXk0svwOpUky7dG6
+jsDXt0vPoAlvzDBGyDXHtCz/VaUSHnC1ffsgvVI25WwLl6tna+Yt2oQBlLV0QlMR
+UTy0Btqzyi07mHPzhSmHi/lFGnFvCHBdZ1lc9DlqvXauFLeqPZ6DGmSpdrG43s4F
+vwytciuaunvXz9EfCqiK
+=RzbB
+-----END PGP SIGNATURE-----
+
+--zYM0uCDKw75PZbzx--
+
+--===============2705750534424647607==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============2705750534424647607==--
