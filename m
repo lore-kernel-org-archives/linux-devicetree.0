@@ -1,65 +1,41 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCHv3 2/4] dmaengine: dw_dmac: move to generic DMA binding
-Date: Sat, 16 Feb 2013 23:28:34 +0000
-Message-ID: <201302162328.35068.arnd@arndb.de>
-References: <1360952512-971558-1-git-send-email-arnd@arndb.de> <201302162221.32799.arnd@arndb.de> <CAHp75VeCic+5_zyzFdtpw5dLxRaajD9zv6ZvSoDcHAD1EF=GSw@mail.gmail.com>
+From: Padma Venkat <padma.kvr@gmail.com>
+Subject: Re: [PATCH V6 02/10] ASoC: SAMSUNG: Add DT support for i2s
+Date: Sun, 17 Feb 2013 06:01:53 +0530
+Message-ID: <CAAgF-BdopAF4CxT4Wb4O6OoYVA0Yib+1hwm7Nu_KkXjFcky2gQ@mail.gmail.com>
+References: <1358509629-20471-1-git-send-email-padma.v@samsung.com>
+	<1358509629-20471-3-git-send-email-padma.v@samsung.com>
+	<511CC11B.5030700@samsung.com>
+	<20130214114337.GD13249@opensource.wolfsonmicro.com>
+	<511D49FC.4080402@gmail.com>
+	<20130215120145.GC22283@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHp75VeCic+5_zyzFdtpw5dLxRaajD9zv6ZvSoDcHAD1EF=GSw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc: Vinod Koul <vinod.koul@intel.com>, Dan Williams <djbw@fb.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Viresh Kumar <viresh.kumar@linaro.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Vinod Koul <vinod.koul@linux.intel.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20130215120145.GC22283@opensource.wolfsonmicro.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Cc: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, Padmavathi Venna <padma.v@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, sbkim73@samsung.com, vinod.koul@intel.com, grant.likely@secretlab.ca, swarren@nvidia.com, boojin.kim@samsung.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, thomas.abraham@linaro.org, lrg@ti.com, tiwai@suse.de, ben-linux@fluff.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 16 February 2013, Andy Shevchenko wrote:
+Hi,
 
-> > @@ -1836,6 +1825,12 @@ static int dw_probe(struct platform_device *pdev)
-> >
-> >         dma_async_device_register(&dw->dma);
-> >
-> > +       if (pdev->dev.of_node)
-> > +               err = of_dma_controller_register(pdev->dev.of_node,
-> > +                                                dw_dma_xlate, dw);
-> > +       if (err && err != -ENODEV)
-> > +               dev_err(&pdev->dev, "could not register of_dma_controller\n");
-> 
-> I believe we may make it as
->  if (...of_node) {
->   err = ...register();
->   if (err...)
->     dev_err();
->  }
+On Fri, Feb 15, 2013 at 5:31 PM, Mark Brown
+<broonie@opensource.wolfsonmicro.com> wrote:
+> On Thu, Feb 14, 2013 at 09:33:00PM +0100, Sylwester Nawrocki wrote:
+>
+>> My apologies for the late review. It's already sixth version of this patch
+>> series... But I noticed it just now when applying it for Exynos4. The GPIO
+>> part of the bindings is now incompatible with Exynos4 and the bindings will
+>> need to be changed. Leaving the compatibility code in the I2S driver, when
+>> we could have it done well right from the beginning. If I'm not mistaken
+>> a file similar to arch/arm/boot/dts/exynos4x12-pinctrl.dtsi with at least
+>> entries for the I2S devices is needed and an addition of related pinctrl
+>> nodes in exynos5250.dtsi. But I guess this is not something that could be
+>> fixed in the -rc period ?
+>
+> Yes, and incremental fix would be fine.
 
-I thing the two are equivalent because we only get to the first if()
-when err is 0. However, I agree that your version is a bit clearer,
-so I'll change it.
+I will send a patch for required pinctrl support soon.
 
-> > --- a/drivers/dma/dw_dmac_regs.h
-> > +++ b/drivers/dma/dw_dmac_regs.h
-> 
-> > @@ -211,9 +212,15 @@ struct dw_dma_chan {
-> >         /* hardware configuration */
-> >         unsigned int            block_size;
-> >         bool                    nollp;
-> > +       unsigned int            request_line;
-> > +       struct dw_dma_slave     slave;
-> > +
-> 
-> Do we really need an extra empty line here?
-
-No, that was an accident.
-
-> >         /* configuration passed via DMA_SLAVE_CONFIG */
-> >         struct dma_slave_config dma_sconfig;
-> > +
-> > +       /* backlink to dw_dma */
-> > +       struct dw_dma           *dw;
-> 
-> Seems it's not needed and came from rebase?
-
-Probably. It certainly was not intentional.
-
-	Arnd
+Thanks
+Padma
