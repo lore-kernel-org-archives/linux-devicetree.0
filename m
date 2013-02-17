@@ -1,101 +1,54 @@
-From: Nishanth Peethambaran <nishanth.p@gmail.com>
-Subject: Re: [Linaro-mm-sig] [PATCH 0/2] Device Tree support for CMA
- (Contiguous Memory Allocator)
-Date: Sun, 17 Feb 2013 10:48:21 +0530
-Message-ID: <CAMcxFTQAOjmzy77eB8nj3JDZ-6mwoMpm8yabtQj04tcLw-giLg@mail.gmail.com>
-References: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
- <20130214213013.GG1906@pengutronix.de> <511D6076.9090503@gmail.com>
- <20130215083304.GK1906@pengutronix.de> <511E6143.609@gmail.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v5 03/13] mmc: provide a standard MMC device-tree binding
+ parser centrally
+Date: Sun, 17 Feb 2013 16:52:16 +0900
+Message-ID: <20130217075216.GA3871@verge.net.au>
+References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
+ <1360941242-18153-4-git-send-email-g.liakhovetski@gmx.de>
+ <Pine.LNX.4.64.1302161613450.20044@axis700.grange>
+ <20130216165825.GF1906@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <511E6143.609@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130216165825.GF1906@pengutronix.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Limiting the scope of the product to a particular use-case (720p or
-1080p video playback) will be part of firmware mostly OTP-ed in the
-SoC. Firmware author could decide the amount of CMA memory needed and
-put this as part of DT.
-Number of CMA areas and linking them to devices could be done in DT
-and allows using the same kernel for any of the combinations.
+On Sat, Feb 16, 2013 at 05:58:25PM +0100, Sascha Hauer wrote:
+> Hi Guennadi,
+> 
+> On Sat, Feb 16, 2013 at 04:21:16PM +0100, Guennadi Liakhovetski wrote:
+> > MMC defines a number of standard DT bindings. Having each driver parse
+> > them individually adds code redundancy and is error prone. Provide a
+> > standard function to unify the parsing. After all drivers are converted
+> > to using it instead of their own parsers, this function can be integrated
+> > into mmc_alloc_host().
+> > 
+> > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+> > ---
+> > 
+> > v5:
+> > 
+> > 1. fix an uninitialised variable warning. Note, I don't actually know, 
+> > whether this will fix the error, reported by the kbuild test robot. None 
+> > of my compilers reports an error there, at most, I've got a warning with 
+> > one of them, and, surprisingly, it is gone after this change. 
+> > Surprisingly, because I only add the bus_width initialisation in the error 
+> > case - exactly as it actually has to be done. In the success case it is 
+> > assigned set by the function. But the compiler cannot know that!
+> 
+> Maybe the build robot builds with devicetree disabled? In this case
+> of_property_read_u32_array expands to a static inline function and the
+> compiler indeed knows that &bus_width is unitialized. It also knows that
+> this function always returns an error, so what you did below should
+> silence the compiler.
 
-- Nishanth Peethambaran
-  +91-9448074166
+It seems so. The configuration that flagged the error was atngw100_defconfig.
 
+ARCH=avr32 make atngw100_defconfig
+grep USE_OF .config
+[nothing]
 
-
-On Fri, Feb 15, 2013 at 9:54 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On 02/15/2013 02:33 AM, Sascha Hauer wrote:
->> On Thu, Feb 14, 2013 at 11:08:54PM +0100, Sylwester Nawrocki wrote:
->>> Hi,
->>>
->>> On 02/14/2013 10:30 PM, Sascha Hauer wrote:
->>>> On Thu, Feb 14, 2013 at 01:45:26PM +0100, Marek Szyprowski wrote:
->>> ...
->>>>> Here is my initial proposal for device tree integration for Contiguous
->>>>> Memory Allocator. The code is quite straightforward, however I expect
->>>>> that the memory bindings require some discussion.
->>>>>
->>>>> The proposed bindings allows to define contiguous memory regions of
->>>>> specified base address and size. Then, the defined regions can be
->>>>> assigned to the given device(s) by adding a property with a phanle to
->>>>> the defined contiguous memory region. From the device tree perspective
->>>>> that's all. Once the bindings are added, all the memory allocations from
->>>>> dma-mapping subsystem will be served from the defined contiguous memory
->>>>> regions.
->>>>>
->>>>
->>>> I think CMA regions should not be described in the devicetre at all. The
->>>> devicetree is about hardware description and it should be OS agnostic,
->>>> but CMA is only a Linux specific implementation detail. It's not even
->>>> specific to a particular board, it's specific to a particular usecase of
->>>> a board.
->>>
->>> I disagree. For example, in a multiprocessor system describing the memory
->>> regions this way allows to assign memory to each subsystem, e.g. shared
->>> memory, so that the memory region constraints are satisfied.
->>>
->>> CMA just happens to be an implementation of a method of assigning memory
->>> to each device in Linux. The constraints on the memory are real hardware
->>> constraints, resulting from a particular subsystem architecture.
->>
->> If you are talking about DMA controllers which can only access a certain
->> memory area, then yes, that's a hardware constraint, I'm not sure though
->> if describing this as CMA in the devicetree is the way to go.
->>
->> If you are talking about 'on this board I want to have 128MiB for this
->> device because I'm doing 1080p while on another board 64MiB are enough
->> because I'm doing 720p', then this is not a hardware constraint.
->>
->> There may be valid scenarios for putting CMA into the devicetrees, but
->> doing this also opens the door for abuse of this binding. I for once
->> don't want to find areas being allocated for CMA in the devicetree for
->> devices I don't care about. I know I can always exchange a devicetree,
->> but I think the devicetree should be seen as firmware to a certain
->> degree.
->
-> I agree this does not belong in DT. As a kernel developer, the DT comes
-> from firmware. Can the firmware author decide how much CMA memory is
-> needed? I don't think so.
->
-> I would suggest a kernel command line parameter instead if that does not
-> already exist.
->
-> Rob
->
-> _______________________________________________
-> Linaro-mm-sig mailing list
-> Linaro-mm-sig@lists.linaro.org
-> http://lists.linaro.org/mailman/listinfo/linaro-mm-sig
