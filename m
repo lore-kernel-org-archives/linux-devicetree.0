@@ -1,65 +1,68 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v5 03/13] mmc: provide a standard MMC device-tree binding
- parser centrally
-Date: Sun, 17 Feb 2013 16:58:08 +0900
-Message-ID: <20130217075805.GB3871@verge.net.au>
-References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
- <1360941242-18153-4-git-send-email-g.liakhovetski@gmx.de>
- <Pine.LNX.4.64.1302161613450.20044@axis700.grange>
- <20130216165825.GF1906@pengutronix.de>
- <20130217075216.GA3871@verge.net.au>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v9 4/4] ARM: dts: add sram for imx53 and imx6q
+Date: Sun, 17 Feb 2013 16:08:08 +0800
+Message-ID: <20130217080617.GG15048@S2101-09.ap.freescale.net>
+References: <1360770402-23091-1-git-send-email-p.zabel@pengutronix.de>
+ <1360770402-23091-5-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20130217075216.GA3871@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>, linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Markus Pargmann <mpa@pengutronix.de>
+In-Reply-To: <1360770402-23091-5-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Huang Shijie <shijie8@gmail.com>, Dong Aisheng <dong.aisheng@linaro.org>, Matt Porter <mporter@ti.com>, Fabio Estevam <fabio.estevam@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Feb 17, 2013 at 04:52:16PM +0900, Simon Horman wrote:
-> On Sat, Feb 16, 2013 at 05:58:25PM +0100, Sascha Hauer wrote:
-> > Hi Guennadi,
-> > 
-> > On Sat, Feb 16, 2013 at 04:21:16PM +0100, Guennadi Liakhovetski wrote:
-> > > MMC defines a number of standard DT bindings. Having each driver parse
-> > > them individually adds code redundancy and is error prone. Provide a
-> > > standard function to unify the parsing. After all drivers are converted
-> > > to using it instead of their own parsers, this function can be integrated
-> > > into mmc_alloc_host().
-> > > 
-> > > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > > ---
-> > > 
-> > > v5:
-> > > 
-> > > 1. fix an uninitialised variable warning. Note, I don't actually know, 
-> > > whether this will fix the error, reported by the kbuild test robot. None 
-> > > of my compilers reports an error there, at most, I've got a warning with 
-> > > one of them, and, surprisingly, it is gone after this change. 
-> > > Surprisingly, because I only add the bus_width initialisation in the error 
-> > > case - exactly as it actually has to be done. In the success case it is 
-> > > assigned set by the function. But the compiler cannot know that!
-> > 
-> > Maybe the build robot builds with devicetree disabled? In this case
-> > of_property_read_u32_array expands to a static inline function and the
-> > compiler indeed knows that &bus_width is unitialized. It also knows that
-> > this function always returns an error, so what you did below should
-> > silence the compiler.
+On Wed, Feb 13, 2013 at 04:46:42PM +0100, Philipp Zabel wrote:
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> Reviewed-by: Shawn Guo <shawn.guo@linaro.org>
+> Acked-by: Grant Likely <grant.likely@secretlab.ca>
+> ---
+> Changes since v8:
+>  - Changed device tree compatible string to "mmio-sram"
+
+Will apply it on imx tree after driver part gets applied.
+
+Shawn
+
+> ---
+>  arch/arm/boot/dts/imx53.dtsi |    5 +++++
+>  arch/arm/boot/dts/imx6q.dtsi |    6 ++++++
+>  2 files changed, 11 insertions(+)
 > 
-> It seems so. The configuration that flagged the error was atngw100_defconfig.
+> diff --git a/arch/arm/boot/dts/imx53.dtsi b/arch/arm/boot/dts/imx53.dtsi
+> index edc3f1e..69d0680 100644
+> --- a/arch/arm/boot/dts/imx53.dtsi
+> +++ b/arch/arm/boot/dts/imx53.dtsi
+> @@ -664,5 +664,10 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		ocram: ocram@f8000000 {
+> +			compatible = "fsl,imx-ocram", "mmio-sram";
+> +			reg = <0xf8000000 0x20000>;
+> +		};
+>  	};
+>  };
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index ff1205e..73302db 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -124,6 +124,12 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		ocram: ocram@00900000 {
+> +			compatible = "fsl,imx-ocram", "mmio-sram";
+> +			reg = <0x00900000 0x3f000>;
+> +			clocks = <&clks 142>;
+> +		};
+> +
+>  		timer@00a00600 {
+>  			compatible = "arm,cortex-a9-twd-timer";
+>  			reg = <0x00a00600 0x20>;
+> -- 
+> 1.7.10.4
 > 
-> ARCH=avr32 make atngw100_defconfig
-> grep USE_OF .config
-> [nothing]
-
-In that vein I managed to reproduce the warning using ap4evb_defconfig
-and then enabled MMC. I have also verified that v5 does not produce
-the same warning.
-
-I chose this as I don't have a avr32 cross-compile environment
-but I do have one for ARM and I know that ap4evb doesn't use DT.
-
-I will update topic/mmc with v5.
-
