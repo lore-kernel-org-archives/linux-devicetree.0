@@ -1,70 +1,80 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 13/13] mmc: tmio: add barriers to IO operations
-Date: Mon, 18 Feb 2013 15:05:57 +0000
-Message-ID: <201302181505.58118.arnd@arndb.de>
-References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de> <1360941242-18153-14-git-send-email-g.liakhovetski@gmx.de>
+From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 3/3] driver: net: ethernet: cpsw: dual emac interface
+ implementation
+Date: Mon, 18 Feb 2013 20:40:48 +0530
+Message-ID: <51224478.7050304@ti.com>
+References: <1360612340-9266-1-git-send-email-mugunthanvnm@ti.com>
+ <1360612340-9266-4-git-send-email-mugunthanvnm@ti.com>
+ <87mwv1kaln.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1360941242-18153-14-git-send-email-g.liakhovetski@gmx.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <87mwv1kaln.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 15 February 2013, Guennadi Liakhovetski wrote:
-> Without barriers SDIO operations fail with runtime PM enabled.
+On 2/18/2013 7:06 PM, Peter Korsgaard wrote:
+>>>>>> "M" == Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org> writes:
+>   M> The CPSW switch can act as Dual EMAC by segregating the switch ports
+>   M> using VLAN and port VLAN as per the TRM description in
+>   M> 14.3.2.10.2 Dual Mac Mode
+>
+>   M> Following CPSW components will be common for both the interfaces.
+>   M> * Interrupt source is common for both eth interfaces
+>   M> * Interrupt pacing is common for both interfaces
+>   M> * Hardware statistics is common for all the ports
+>   M> * CPDMA is common for both eth interface
+>   M> * CPTS is common for both the interface and it should not be enabled on
+>   M>   both the interface as timestamping information doesn't contain port
+>   M>   information.
+>
+>   M> Constrains
+>   M> * Reserved VID of One port should not be used in other interface which will
+>   M>   enable switching functionality
+>   M> * Same VID must not be used in both the interface which will enable switching
+>   M>   functionality
+>
+>   M> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+>   M> ---
+>   M>  Documentation/devicetree/bindings/net/cpsw.txt |    2 +
+>   M>  drivers/net/ethernet/ti/cpsw.c                 |  335 ++++++++++++++++++++----
+>   M>  include/linux/platform_data/cpsw.h             |    3 +
+>   M>  3 files changed, 288 insertions(+), 52 deletions(-)
+>
+>   M> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+>   M> index 6ddd028..ecfdf75 100644
+>   M> --- a/Documentation/devicetree/bindings/net/cpsw.txt
+>   M> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
+>   M> @@ -24,6 +24,8 @@ Required properties:
+>   M>  Optional properties:
+>   M>  - ti,hwmods		: Must be "cpgmac0"
+>   M>  - no_bd_ram		: Must be 0 or 1
+>   M> +- dual_emac		: Specifies Switch to act as Dual EMAC
+>   M> +- dual_emac_res_vlan	: Specifies VID to be used to segregate the ports
+>
+> You forgot to CC devicetree-discuss. Properties normally use dashes (-)
+> instead of underscores (_). These properties are more about
+> configuration and not hardware.
+>
+> It is not clear to me from the description that dual_emac is a boolean
+> (0/1). Shouldn't dual_emacs_res_vlan be a property of the slave?
+>
+> It would also be good to update the example below with this.
+Since the series is already applied in net-next tree, i will submit a 
+patch with incorporating
+the above comments. Will add devicetree-discuss in my future patches.
 
-I don't understand how the changeset comment relates to the patch.
-
-> diff --git a/drivers/mmc/host/tmio_mmc.h b/drivers/mmc/host/tmio_mmc.h
-> index d857f5c..a10ebd0 100644
-> --- a/drivers/mmc/host/tmio_mmc.h
-> +++ b/drivers/mmc/host/tmio_mmc.h
-> @@ -159,19 +159,20 @@ int tmio_mmc_host_runtime_resume(struct device *dev);
->  
->  static inline u16 sd_ctrl_read16(struct tmio_mmc_host *host, int addr)
->  {
-> -	return readw(host->ctl + (addr << host->bus_shift));
-> +	return ioread16(host->ctl + (addr << host->bus_shift));
->  }
->  
-
-As far as I know, all architectures are required to have the same barrier
-semantics on readw and ioread16. The only difference between the two is
-that ioread16 must be able top operate on an __iomem token returned by
-ioport_map() or pci_iomap, which readw does not have to, but does on ARM.
-
->  static inline void sd_ctrl_read16_rep(struct tmio_mmc_host *host, int addr,
->  		u16 *buf, int count)
->  {
-> -	readsw(host->ctl + (addr << host->bus_shift), buf, count);
-> +	wmb();
-> +	ioread16_rep(host->ctl + (addr << host->bus_shift), buf, count);
->  }
-
-Same thing here: both readsw and ioread16_rep are supposed to do the same
-thing, and I would assume that they should also include that barrier.
-For some reason I don't understand, they do not have the barrier on
-ARM at the moment, but I cannot say whether that is intentional or not.
-
-Maybe Russell can comment on this.
-
-Also, should the barrier not be /after/ the MMIO read, rather than before it?
-Typically the barrier should ensure that any read from memory after an
-MMIO read reflects the memory contents after any DMA is complete that
-the MMIO read has already claimed to be done.
-
->  static inline void sd_ctrl_write16_rep(struct tmio_mmc_host *host, int addr,
->  		u16 *buf, int count)
->  {
-> -	writesw(host->ctl + (addr << host->bus_shift), buf, count);
-> +	iowrite16_rep(host->ctl + (addr << host->bus_shift), buf, count);
-> +	wmb();
->  }
-
-Similarly here: why do you have the wmb after the iowrite rather than before it?
-
-	Arnd
+Regards
+Mugunthan V N
