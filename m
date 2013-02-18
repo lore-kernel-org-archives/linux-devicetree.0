@@ -1,34 +1,39 @@
-From: J Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 0/4] mfd: Palmas: Correct the DT Node properties naming convention and add documentation.
-Date: Mon, 18 Feb 2013 10:40:15 +0530
-Message-ID: <1361164215-3093-1-git-send-email-j-keerthy@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, b-cousson@ti.com, sameo@linux.intel.com, broonie@opensource.wolfsonmicro.com
-Cc: j-keerthy@ti.com, gg@slimlogic.co.uk
+From: Sachin Kamat <sachin.kamat@linaro.org>
+Subject: [PATCH 4/7] ARM: dts: Add G2D node to exynos4x12.dtsi
+Date: Mon, 18 Feb 2013 10:32:10 +0530
+Message-ID: <1361163733-4338-5-git-send-email-sachin.kamat@linaro.org>
+References: <1361163733-4338-1-git-send-email-sachin.kamat@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1361163733-4338-1-git-send-email-sachin.kamat@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: kgene.kim@samsung.com, s.nawrocki@samsung.com, patches@linaro.org, sachin.kamat@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-The series corrects the DT node properties naming convention and adds
-Documentation for the Palmas PMIC.
+Added G2D DT node to exynos4x12.dtsi file.
 
-Graeme Gregory (1):
-  documentation: add palmas dts definition
+Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+---
+ arch/arm/boot/dts/exynos4x12.dtsi |    7 +++++++
+ 1 files changed, 7 insertions(+), 0 deletions(-)
 
-J Keerthy (3):
-  mfd: palmas: Change the DT node property names to follow the
-    convention
-  regulator: palmas: Removing duplicated code
-  regulator: palmas: Change the DT node property names to follow the
-    convention
-
- Documentation/devicetree/bindings/mfd/palmas.txt |   67 ++++++++++++++++++++++
- drivers/mfd/palmas.c                             |    6 +-
- drivers/regulator/palmas-regulator.c             |   13 +---
- 3 files changed, 74 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
-
+diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+index 179a62e..3721eec 100644
+--- a/arch/arm/boot/dts/exynos4x12.dtsi
++++ b/arch/arm/boot/dts/exynos4x12.dtsi
+@@ -36,6 +36,13 @@
+ 			     <0 16 0>, <0 17 0>, <0 18 0>, <0 19 0>;
+ 	};
+ 
++	g2d@10800000 {
++		compatible = "samsung,exynos4212-g2d";
++		reg = <0x10800000 0x1000>;
++		interrupts = <0 89 0>;
++		status = "disabled";
++	};
++
+ 	pinctrl_0: pinctrl@11400000 {
+ 		compatible = "samsung,pinctrl-exynos4x12";
+ 		reg = <0x11400000 0x1000>;
 -- 
-1.7.5.4
-
+1.7.4.1
