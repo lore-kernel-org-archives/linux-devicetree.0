@@ -1,219 +1,107 @@
-From: Kyungmin Park <kmpark@infradead.org>
-Subject: Re: [PATCH v6 07/16] ARM: Exynos: Initialize the clocks prior to
- timer initialization
-Date: Mon, 18 Feb 2013 17:32:45 +0900
-Message-ID: <CAH9JG2VQTqdwihyPsx-qgE5va3zdm7N+PZSvVu0N-49+sN9MFQ@mail.gmail.com>
-References: <1361175686-19400-1-git-send-email-thomas.abraham@linaro.org>
-	<1361175686-19400-8-git-send-email-thomas.abraham@linaro.org>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v4 12/13] mmc: add DT bindings for more MMC capability
+ flags
+Date: Mon, 18 Feb 2013 09:52:43 +0100 (CET)
+Message-ID: <Pine.LNX.4.64.1302180950310.4526@axis700.grange>
+References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
+ <1360941242-18153-13-git-send-email-g.liakhovetski@gmx.de>
+ <51201D32.20006@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1361175686-19400-8-git-send-email-thomas.abraham@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, mturquette@linaro.org, t.figa@samsung.com, sylvester.nawrocki@gmail.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <51201D32.20006-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2013 at 5:21 PM, Thomas Abraham
-<thomas.abraham@linaro.org> wrote:
-> Since the clock initialization should be completed prior to the mct timer
-> initialization, create a new function 'exynos_init_time' that first sets up
-> the clock and then invokes the timer initialization function. The 'init_time'
-> callback in the board files are updated to invoke this new wrapper function.
->
-> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
-> ---
->  arch/arm/mach-exynos/common.c              |   16 ++++++++++++++++
->  arch/arm/mach-exynos/mach-armlex4210.c     |    2 +-
->  arch/arm/mach-exynos/mach-exynos4-dt.c     |    2 +-
->  arch/arm/mach-exynos/mach-exynos5-dt.c     |    2 +-
->  arch/arm/mach-exynos/mach-nuri.c           |    2 +-
->  arch/arm/mach-exynos/mach-origen.c         |    2 +-
->  arch/arm/mach-exynos/mach-smdk4x12.c       |    4 ++--
->  arch/arm/mach-exynos/mach-smdkv310.c       |    4 ++--
->  arch/arm/mach-exynos/mach-universal_c210.c |    8 +++++++-
->  9 files changed, 32 insertions(+), 10 deletions(-)
->
-> diff --git a/arch/arm/mach-exynos/common.c b/arch/arm/mach-exynos/common.c
-> index 8e4a25c..64585af 100644
-> --- a/arch/arm/mach-exynos/common.c
-> +++ b/arch/arm/mach-exynos/common.c
-> @@ -23,6 +23,8 @@
->  #include <linux/export.h>
->  #include <linux/irqdomain.h>
->  #include <linux/of_address.h>
-> +#include <linux/clocksource.h>
-> +#include <linux/clk-provider.h>
->
->  #include <asm/proc-fns.h>
->  #include <asm/exception.h>
-> @@ -436,6 +438,20 @@ static void __init exynos5440_map_io(void)
->         iotable_init(exynos5440_iodesc0, ARRAY_SIZE(exynos5440_iodesc0));
->  }
->
-> +void __init exynos_init_time(void)
-> +{
-> +       if (of_have_populated_dt()) {
-> +#ifdef CONFIG_OF
-> +               of_clk_init(NULL);
-> +               clocksource_of_init();
-> +#endif
-> +       } else {
-> +               /* todo: remove after migrating legacy E4 platforms to dt */
-> +               exynos4_clk_init(NULL);
-> +               mct_init();
-> +       }
-> +}
-> +
->  #define COMBINER_ENABLE_SET    0x0
->  #define COMBINER_ENABLE_CLEAR  0x4
->  #define COMBINER_INT_STATUS    0xC
-> diff --git a/arch/arm/mach-exynos/mach-armlex4210.c b/arch/arm/mach-exynos/mach-armlex4210.c
-> index e45b4b4..3518ac8 100644
-> --- a/arch/arm/mach-exynos/mach-armlex4210.c
-> +++ b/arch/arm/mach-exynos/mach-armlex4210.c
-> @@ -203,6 +203,6 @@ MACHINE_START(ARMLEX4210, "ARMLEX4210")
->         .handle_irq     = gic_handle_irq,
->         .init_machine   = armlex4210_machine_init,
->         .init_late      = exynos_init_late,
-> -       .init_time      = mct_init,
-> +       .init_time      = exynos_init_time,
->         .restart        = exynos4_restart,
->  MACHINE_END
-> diff --git a/arch/arm/mach-exynos/mach-exynos4-dt.c b/arch/arm/mach-exynos/mach-exynos4-dt.c
-> index 2c25f2c..6c5e068 100644
-> --- a/arch/arm/mach-exynos/mach-exynos4-dt.c
-> +++ b/arch/arm/mach-exynos/mach-exynos4-dt.c
-> @@ -127,7 +127,7 @@ DT_MACHINE_START(EXYNOS4210_DT, "Samsung Exynos4 (Flattened Device Tree)")
->         .init_early     = exynos_firmware_init,
->         .init_machine   = exynos4_dt_machine_init,
->         .init_late      = exynos_init_late,
-> -       .init_time      = clocksource_of_init,
-> +       .init_time      = exynos_init_time,
->         .dt_compat      = exynos4_dt_compat,
->         .restart        = exynos4_restart,
->         .reserve        = exynos4_reserve,
-> diff --git a/arch/arm/mach-exynos/mach-exynos5-dt.c b/arch/arm/mach-exynos/mach-exynos5-dt.c
-> index b5f9549..dfe51ee 100644
-> --- a/arch/arm/mach-exynos/mach-exynos5-dt.c
-> +++ b/arch/arm/mach-exynos/mach-exynos5-dt.c
-> @@ -179,7 +179,7 @@ DT_MACHINE_START(EXYNOS5_DT, "SAMSUNG EXYNOS5 (Flattened Device Tree)")
->         .handle_irq     = gic_handle_irq,
->         .init_machine   = exynos5_dt_machine_init,
->         .init_late      = exynos_init_late,
-> -       .init_time      = clocksource_of_init,
-> +       .init_time      = exynos_init_time,
->         .dt_compat      = exynos5_dt_compat,
->         .restart        = exynos5_restart,
->         .reserve        = exynos5_reserve,
-> diff --git a/arch/arm/mach-exynos/mach-nuri.c b/arch/arm/mach-exynos/mach-nuri.c
-> index c49ec9d..cdae74b 100644
-> --- a/arch/arm/mach-exynos/mach-nuri.c
-> +++ b/arch/arm/mach-exynos/mach-nuri.c
-> @@ -1381,7 +1381,7 @@ MACHINE_START(NURI, "NURI")
->         .handle_irq     = gic_handle_irq,
->         .init_machine   = nuri_machine_init,
->         .init_late      = exynos_init_late,
-> -       .init_time      = mct_init,
-> +       .init_time      = exynos_init_time,
->         .reserve        = &nuri_reserve,
->         .restart        = exynos4_restart,
->  MACHINE_END
-> diff --git a/arch/arm/mach-exynos/mach-origen.c b/arch/arm/mach-exynos/mach-origen.c
-> index 656967d..e9ab921 100644
-> --- a/arch/arm/mach-exynos/mach-origen.c
-> +++ b/arch/arm/mach-exynos/mach-origen.c
-> @@ -816,7 +816,7 @@ MACHINE_START(ORIGEN, "ORIGEN")
->         .handle_irq     = gic_handle_irq,
->         .init_machine   = origen_machine_init,
->         .init_late      = exynos_init_late,
-> -       .init_time      = mct_init,
-> +       .init_time      = exynos_init_time,
->         .reserve        = &origen_reserve,
->         .restart        = exynos4_restart,
->  MACHINE_END
-> diff --git a/arch/arm/mach-exynos/mach-smdk4x12.c b/arch/arm/mach-exynos/mach-smdk4x12.c
-> index c56cc21..71422ad 100644
-> --- a/arch/arm/mach-exynos/mach-smdk4x12.c
-> +++ b/arch/arm/mach-exynos/mach-smdk4x12.c
-> @@ -377,7 +377,7 @@ MACHINE_START(SMDK4212, "SMDK4212")
->         .map_io         = smdk4x12_map_io,
->         .handle_irq     = gic_handle_irq,
->         .init_machine   = smdk4x12_machine_init,
-> -       .init_time      = mct_init,
-> +       .init_time      = exynos_init_time,
->         .restart        = exynos4_restart,
->         .reserve        = &smdk4x12_reserve,
->  MACHINE_END
-> @@ -392,7 +392,7 @@ MACHINE_START(SMDK4412, "SMDK4412")
->         .handle_irq     = gic_handle_irq,
->         .init_machine   = smdk4x12_machine_init,
->         .init_late      = exynos_init_late,
-> -       .init_time      = mct_init,
-> +       .init_time      = exynos_init_time,
->         .restart        = exynos4_restart,
->         .reserve        = &smdk4x12_reserve,
->  MACHINE_END
-> diff --git a/arch/arm/mach-exynos/mach-smdkv310.c b/arch/arm/mach-exynos/mach-smdkv310.c
-> index 9d511f5..eb51c06 100644
-> --- a/arch/arm/mach-exynos/mach-smdkv310.c
-> +++ b/arch/arm/mach-exynos/mach-smdkv310.c
-> @@ -424,7 +424,7 @@ MACHINE_START(SMDKV310, "SMDKV310")
->         .map_io         = smdkv310_map_io,
->         .handle_irq     = gic_handle_irq,
->         .init_machine   = smdkv310_machine_init,
-> -       .init_time      = mct_init,
-> +       .init_time      = exynos_init_time,
->         .reserve        = &smdkv310_reserve,
->         .restart        = exynos4_restart,
->  MACHINE_END
-> @@ -438,7 +438,7 @@ MACHINE_START(SMDKC210, "SMDKC210")
->         .handle_irq     = gic_handle_irq,
->         .init_machine   = smdkv310_machine_init,
->         .init_late      = exynos_init_late,
-> -       .init_time      = mct_init,
-> +       .init_time      = exynos_init_time,
->         .reserve        = &smdkv310_reserve,
->         .restart        = exynos4_restart,
->  MACHINE_END
-> diff --git a/arch/arm/mach-exynos/mach-universal_c210.c b/arch/arm/mach-exynos/mach-universal_c210.c
-> index 3998c81..53de074 100644
-> --- a/arch/arm/mach-exynos/mach-universal_c210.c
-> +++ b/arch/arm/mach-exynos/mach-universal_c210.c
-> @@ -1144,6 +1144,12 @@ static void __init universal_machine_init(void)
->         platform_add_devices(universal_devices, ARRAY_SIZE(universal_devices));
->  }
->
-> +static void __init universal_init_time(void)
-> +{
-> +       exynos4_clk_init(NULL);
-> +       mct_init();
-No, It's not support MCT timer at universal board, please don't modify
-universal board at this time.
-Others are okay.
+Hi Sergei
 
-Thank you,
-Kyungmin Park
-> +}
-> +
->  MACHINE_START(UNIVERSAL_C210, "UNIVERSAL_C210")
->         /* Maintainer: Kyungmin Park <kyungmin.park@samsung.com> */
->         .atag_offset    = 0x100,
-> @@ -1153,7 +1159,7 @@ MACHINE_START(UNIVERSAL_C210, "UNIVERSAL_C210")
->         .handle_irq     = gic_handle_irq,
->         .init_machine   = universal_machine_init,
->         .init_late      = exynos_init_late,
-> -       .init_time      = samsung_timer_init,
-> +       .init_time      = universal_init_time,
->         .reserve        = &universal_reserve,
->         .restart        = exynos4_restart,
->  MACHINE_END
-> --
-> 1.7.5.4
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+On Sun, 17 Feb 2013, Sergei Shtylyov wrote:
+
+> Hello.
+> 
+> On 02/15/2013 06:14 PM, Guennadi Liakhovetski wrote:
+> 
+> > Many MMC capability flags are platform-dependent and are traditionally set
+> > in platform data. With DT often each such capability requires a special
+> > binding. Add bindings for MMC_CAP_SD_HIGHSPEED, MMC_CAP_MMC_HIGHSPEED,
+> > MMC_CAP_POWER_OFF_CARD and MMC_CAP_SDIO_IRQ capabilities. Also add code to
+> > DT parser to look up "keep-power-in-suspend" and "enable-sdio-wakeup"
+> > bindings and set MMC_PM_KEEP_POWER and MMC_PM_WAKE_SDIO_IRQ respectively,
+> > if found.
+> > 
+> > Signed-off-by: Guennadi Liakhovetski<g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+> > ---
+> >   Documentation/devicetree/bindings/mmc/mmc.txt |    4 ++++
+> >   drivers/mmc/core/host.c                       |   13 +++++++++++++
+> >   2 files changed, 17 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt
+> > b/Documentation/devicetree/bindings/mmc/mmc.txt
+> > index 24c8552..d9ab51f 100644
+> > --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> > +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> > @@ -25,6 +25,10 @@ Optional properties:
+> >   - max-frequency: maximum operating clock frequency
+> >   - no-1-8-v: when present, denotes that 1.8v card voltage is not supported
+> > on
+> >     this system, even if the controller claims it is.
+> > +- cap-sd-highspeed: SD high-speed timing is supported
+> > +- cap-mmc-highspeed: MMC high-speed timing is supported
+> > +- cap-power-off-card: powering off the card is safe
+> > +- cap-sdio-irq: enable SDIO IRQ signalling on this interface
+> > 
+> >   *NOTE* on CD and WP polarity. To use common for all SD/MMC host
+> > controllers line
+> >   polarity properties, we have to fix the meaning of the "normal" and
+> > "inverted"
+> > diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> > index daa2ed1..1365466 100644
+> > --- a/drivers/mmc/core/host.c
+> > +++ b/drivers/mmc/core/host.c
+> > @@ -398,6 +398,19 @@ void mmc_of_parse(struct mmc_host *host)
+> >   	}
+> >   	if (explicit_inv_wp ^ gpio_inv_wp)
+> >   		host->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
+> > +
+> > +	if (of_find_property(np, "cap-sd-highspeed",&len))
+> > +		host->caps |= MMC_CAP_SD_HIGHSPEED;
+> > +	if (of_find_property(np, "cap-mmc-highspeed",&len))
+> > +		host->caps |= MMC_CAP_MMC_HIGHSPEED;
+> > +	if (of_find_property(np, "cap-power-off-card",&len))
+> > +		host->caps |= MMC_CAP_POWER_OFF_CARD;
+> > +	if (of_find_property(np, "cap-sdio-irq",&len))
+> > +		host->caps |= MMC_CAP_SDIO_IRQ;
+> > +	if (of_find_property(np, "keep-power-in-suspend",&len))
+> > +		host->pm_caps |= MMC_PM_KEEP_POWER;
+> > +	if (of_find_property(np, "enable-sdio-wakeup",&len))
+> > +		host->pm_caps |= MMC_PM_WAKE_SDIO_IRQ;
+> >    
+> 
+>    Why are you not using of_property_read_bool() instead?
+
+Because it's the same. Where I need a boolean return value I so use 
+of_property_read_bool(), e.g.
+
+	explicit_inv_cd = of_property_read_bool(np, "cd-inverted");
+
+But where I just need to check, whether a property is present, using 
+of_find_property() isn't any worse, IMHO.
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
