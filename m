@@ -1,101 +1,49 @@
-From: J Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 1/4] documentation: add palmas dts definition
-Date: Mon, 18 Feb 2013 10:41:23 +0530
-Message-ID: <1361164283-3133-1-git-send-email-j-keerthy@ti.com>
+From: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/7] ARM: dts: Add Samsung G2D DT bindings documentation
+Date: Mon, 18 Feb 2013 10:45:37 +0530
+Message-ID: <CAK9yfHyvfq0WV5SiB+kSGtMhFDWmc7FK0EXDUtHB_B=C-3ijow@mail.gmail.com>
+References: <1360151477-26460-1-git-send-email-sachin.kamat@linaro.org>
+ <1360151477-26460-8-git-send-email-sachin.kamat@linaro.org>
+ <511C1462.5060106@gmail.com>
+ <CAK9yfHyEfEhRE-7CUeu7x7GbqJZL4aJfgHso2kXoGCWRrxiYWw@mail.gmail.com>
+ <511D0A5E.7060907@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, b-cousson@ti.com
-Cc: j-keerthy@ti.com, gg@slimlogic.co.uk
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <511D0A5E.7060907-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: "inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Graeme Gregory <gg@slimlogic.co.uk>
+Hi Sylwester,
 
-Add the DTS definition for the palmas device including the MFD children.
+On 14 February 2013 21:31, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> On 02/14/2013 04:45 PM, Sachin Kamat wrote:
+>> Thanks for reviewing. Does the filename look good or should it be exynos-g2d?
+>
+> You're welcome. My apologies for being a bit late.
+> I guess exynos-g2d.txt would be more appropriate. OTOH if this document is
+> going to cover all Samsung G2D IP blocks then current name might be better.
+> I used samsung- prefix for fimc and mipi-csis as those documents are supposed
+> to cover the S5P and Exynos4 SoCs.
+>
 
-Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
-[j-keerthy@ti.com: changed the DT node property names to follow the
-convention]
-Signed-off-by: J Keerthy <j-keerthy@ti.com>
----
- Documentation/devicetree/bindings/mfd/palmas.txt |   67 ++++++++++++++++++++++
- 1 files changed, 67 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
+I have retained the filename as it was since it addresses both S5P as
+well as Exynos IPs.
+Thanks for the tip.
+I have resent this series with your other comments addressed.
 
-diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
-new file mode 100644
-index 0000000..5fa922e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/palmas.txt
-@@ -0,0 +1,67 @@
-+Texas Instruments Palmas family
-+
-+The Palmas familly are Integrated Power Management Chips.
-+These chips are connected to an i2c bus.
-+
-+
-+Required properties:
-+- compatible : Must be "ti,palmas";
-+  For Integrated power-management in the palmas series, twl6035, twl6037,
-+  tps65913
-+- interrupts : This i2c device has an IRQ line connected to the main SoC
-+- interrupt-controller : Since the palmas support several interrupts internally,
-+  it is considered as an interrupt controller cascaded to the SoC one.
-+- #interrupt-cells = <1>;
-+- interrupt-parent : The parent interrupt controller.
-+
-+Optional node:
-+- Child nodes contain in the palmas. The palmas family is made of several
-+  variants that support a different number of features.
-+  The child nodes will thus depend of the capability of the variant.
-+- mux-pad1 if a value is given it will be used for the pad1 mux
-+- mux-pad2 if a value us given it will be used for the pad2 mux
-+- power-ctrl if a value is given it will be written to the POWER_CTRL register
-+
-+Example:
-+/*
-+ * Integrated Power Management Chip Palmas
-+ */
-+palmas@48 {
-+    compatible = "ti,palmas";
-+    reg = <0x48>;
-+    interrupts = <39>; /* IRQ_SYS_1N cascaded to gic */
-+    interrupt-controller;
-+    #interrupt-cells = <1>;
-+    interrupt-parent = <&gic>;
-+    #address-cells = <1>;
-+    #size-cells = <0>;
-+
-+	ti,mux-pad1 = <0x00>;
-+	ti,mux-pad2 = <0x00>;
-+	ti,power-ctrl = <0x03>;
-+
-+	palmas_pmic {
-+		compatible = "ti,palmas_pmic";
-+		regulators {
-+			smps12_reg: smps12 {
-+				regulator-min-microvolt = < 600000>;
-+                regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+                ti,warm-sleep = <0>;
-+                ti,roof-floor = <0>;
-+                ti,mode-sleep = <0>;
-+                ti,warm-reset = <0>;
-+                ti,tstep = <0>;
-+                ti,vsel = <0>;
-+			};
-+		};
-+		ti,ldo6-vibrator = <0>;
-+	};
-+
-+    palmas_rtc {
-+        compatible = "ti,palmas_rtc";
-+        interrupts = <8 9>;
-+        reg = <0>;
-+    };
-+};
 -- 
-1.7.5.4
-
+With warm regards,
+Sachin
