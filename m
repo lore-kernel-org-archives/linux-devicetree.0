@@ -1,36 +1,50 @@
 From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 6/7] ARM: dts: Add G2D node to exynos4412-origen
-Date: Mon, 18 Feb 2013 10:32:12 +0530
-Message-ID: <1361163733-4338-7-git-send-email-sachin.kamat@linaro.org>
+Subject: [PATCH 7/7] ARM: dts: Add Samsung G2D DT bindings documentation
+Date: Mon, 18 Feb 2013 10:32:13 +0530
+Message-ID: <1361163733-4338-8-git-send-email-sachin.kamat@linaro.org>
 References: <1361163733-4338-1-git-send-email-sachin.kamat@linaro.org>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 In-Reply-To: <1361163733-4338-1-git-send-email-sachin.kamat@linaro.org>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, s.nawrocki@samsung.com, patches@linaro.org, sachin.kamat@linaro.org
+Cc: kgene.kim@samsung.com, s.nawrocki@samsung.com, patches@linaro.org, sachin.kamat@linaro.org, Tomasz Figa <tomasz.figa@gmail.com>, Inki Dae <inki.dae@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Added G2D DT node to Origen4412 board.
+Added documentaion about G2D bindings.
 
+Cc: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Inki Dae <inki.dae@samsung.com>
 Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
 ---
- arch/arm/boot/dts/exynos4412-smdk4412.dts |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ .../devicetree/bindings/gpu/samsung-g2d.txt        |   20 ++++++++++++++++++++
+ 1 files changed, 20 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.txt
 
-diff --git a/arch/arm/boot/dts/exynos4412-smdk4412.dts b/arch/arm/boot/dts/exynos4412-smdk4412.dts
-index bba53a8..539670b 100644
---- a/arch/arm/boot/dts/exynos4412-smdk4412.dts
-+++ b/arch/arm/boot/dts/exynos4412-smdk4412.dts
-@@ -31,6 +31,10 @@
- 		status = "okay";
- 	};
- 
-+	g2d@10800000 {
-+		status = "okay";
-+	};
+diff --git a/Documentation/devicetree/bindings/gpu/samsung-g2d.txt b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+new file mode 100644
+index 0000000..2b14a94
+--- /dev/null
++++ b/Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+@@ -0,0 +1,20 @@
++* Samsung 2D Graphics Accelerator
 +
- 	sdhci@12530000 {
- 		bus-width = <4>;
- 		pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_bus4 &sd2_cd>;
++Required properties:
++  - compatible : value should be one among the following:
++	(a) "samsung,s5pv210-g2d" for G2D IP present in S5PV210 & Exynos4210 SoC
++	(b) "samsung,exynos4212-g2d" for G2D IP present in Exynos4x12 SoCs
++	(c) "samsung,exynos5250-g2d" for G2D IP present in Exynos5250 SoC
++
++  - reg : Physical base address of the IP registers and length of memory
++	  mapped region.
++
++  - interrupts : G2D interrupt number to the CPU.
++
++Example:
++	g2d@12800000 {
++		compatible = "samsung,s5pv210-g2d";
++		reg = <0x12800000 0x1000>;
++		interrupts = <0 89 0>;
++		status = "disabled";
++	};
 -- 
 1.7.4.1
