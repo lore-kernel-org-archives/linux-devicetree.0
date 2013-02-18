@@ -1,48 +1,37 @@
-From: Tomi Valkeinen <tomba@iki.fi>
-Subject: Re: [PATCH v17 2/7] video: add display_timing and videomode
-Date: Mon, 18 Feb 2013 16:09:25 +0200
-Message-ID: <51223615.4090709@iki.fi>
-References: <1359104515-8907-1-git-send-email-s.trumtrar@pengutronix.de> <1359104515-8907-3-git-send-email-s.trumtrar@pengutronix.de>
+From: Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>
+Subject: Re: [PATCH] Added license header to dtc/libfdt/fdt.h and libfdt_env.h
+Date: Mon, 18 Feb 2013 08:11:18 -0600
+Message-ID: <E1U7RR8-0005v7-FF@jdl.com>
+References: <1360944370-27323-1-git-send-email-jsobota@ti.com>
+ <20130216235049.GC21067@truffula.fritz.box>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1359104515-8907-3-git-send-email-s.trumtrar@pengutronix.de>
-Sender: linux-media-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: devicetree-discuss@lists.ozlabs.org, Dave Airlie <airlied@linux.ie>, Rob Herring <robherring2@gmail.com>, linux-fbdev@vger.kernel.org, dri-devel@lists.freedesktop.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Thierry Reding <thierry.reding@avionic-design.de>, Guennady Liakhovetski <g.liakhovetski@gmx.de>, linux-media@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Stephen Warren <swarren@wwwdotorg.org>, Florian Tobias Schandinat <FlorianSchandinat@gmx.de>, Rob Clark <robdclark@gmail.com>, Leela Krishna Amudala <leelakrishna.a@gmail.com>, "Mohammed, Afzal" <afzal@ti.com>, kernel@pengutronix.de
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <20130216235049.GC21067-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Cc: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Steffen,
+> 
+> On Fri, Feb 15, 2013 at 11:06:10AM -0500, Justin Sobota wrote:
+> > This commit adds a license header to fdt.h and libfdt_env.h because the l=
+> icense was omitted.
+> >=20
+> > Signed-off-by: Justin Sobota <jsobota-l0cyMroinI0@public.gmane.org>
+> Acked-by: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
 
-On 2013-01-25 11:01, Steffen Trumtrar wrote:
+Applied!
 
-> +/* VESA display monitor timing parameters */
-> +#define VESA_DMT_HSYNC_LOW		BIT(0)
-> +#define VESA_DMT_HSYNC_HIGH		BIT(1)
-> +#define VESA_DMT_VSYNC_LOW		BIT(2)
-> +#define VESA_DMT_VSYNC_HIGH		BIT(3)
-> +
-> +/* display specific flags */
-> +#define DISPLAY_FLAGS_DE_LOW		BIT(0)	/* data enable flag */
-> +#define DISPLAY_FLAGS_DE_HIGH		BIT(1)
-> +#define DISPLAY_FLAGS_PIXDATA_POSEDGE	BIT(2)	/* drive data on pos. edge */
-> +#define DISPLAY_FLAGS_PIXDATA_NEGEDGE	BIT(3)	/* drive data on neg. edge */
-> +#define DISPLAY_FLAGS_INTERLACED	BIT(4)
-> +#define DISPLAY_FLAGS_DOUBLESCAN	BIT(5)
-
-<snip>
-
-> +	unsigned int dmt_flags;	/* VESA DMT flags */
-> +	unsigned int data_flags; /* video data flags */
-
-Why did you go for this approach? To be able to represent
-true/false/not-specified?
-
-Would it be simpler to just have "flags" field? What does it give us to
-have those two separately?
-
-Should the above say raising edge/falling edge instead of positive
-edge/negative edge?
-
- Tomi
+Thanks,
+jdl
