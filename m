@@ -1,28 +1,44 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH v3] i2c-designware: make SDA hold time configurable
-Date: Mon, 18 Feb 2013 15:28:44 +0200
-Message-ID: <20130218132843.GA2439@intel.com>
-References: <20130218105742.GK20771@intel.com>
- <1361191905-30099-1-git-send-email-christian.ruppert@abilis.com>
+From: Michal Marek <mmarek@suse.cz>
+Subject: Re: [RFC 1/2] Makefile: Add arch/arch/$(hdr-arch)/boot in header
+ include path
+Date: Mon, 18 Feb 2013 14:26:17 +0100
+Message-ID: <51222BF9.3040802@suse.cz>
+References: <1360918364-27960-1-git-send-email-hdoyu@nvidia.com> <511E617E.6080206@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1361191905-30099-1-git-send-email-christian.ruppert@abilis.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Christian Ruppert <christian.ruppert@abilis.com>
-Cc: Wolfram Sang <w.sang@pengutronix.de>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <511E617E.6080206@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Hiroshi Doyu <hdoyu@nvidia.com>, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>, Mike Turquette <mturquette@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Joseph Lo <josephl@nvidia.com>, linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2013 at 01:51:45PM +0100, Christian Ruppert wrote:
-> This patch makes the SDA hold time configurable through device tree.
-> It was tested on a hybrid of i2c/next and arc-3.8-baseline (see
-> https://github.com/foss-for-synopsys-dwc-arc-processors/linux/commits/arc-3.8-baseline) since our platform is ARC based and this architecture is not yet
-> supported by i2c/next.
-> 
-> Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-> Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
+On 15.2.2013 17:25, Stephen Warren wrote:
+> On 02/15/2013 01:52 AM, Hiroshi Doyu wrote:
+>> This patch allows kernel source to include those DT
+>> headers. For example:
+>>
+>> + #include <dts/tegra20-car.h>
+>>
+>> Signed-off-by: Hiroshi Doyu <hdoyu@nvidia.com>
+>> ---
+>>  Makefile |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Makefile b/Makefile
+>> index 0b4bf62..7f54cdb 100644
+>> --- a/Makefile
+>> +++ b/Makefile
+>> @@ -364,7 +364,7 @@ LINUXINCLUDE    := \
+>>  		-I$(srctree)/arch/$(hdr-arch)/include \
+>>  		-Iarch/$(hdr-arch)/include/generated \
+>>  		$(if $(KBUILD_SRC), -I$(srctree)/include) \
+>> -		-Iinclude \
+>> +		-Iinclude -Iarch/$(hdr-arch)/boot \
 
-Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Would it be possible to use a new directory for this? At least POWER and
+x86 have several unrelated headers in their arch/*/boot that are only
+meant for the bootstrap code.
 
-Thanks!
+Michal
