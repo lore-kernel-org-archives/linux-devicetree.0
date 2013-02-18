@@ -1,56 +1,96 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 13/13] mmc: tmio: add barriers to IO operations
-Date: Mon, 18 Feb 2013 22:11:46 +0000
-Message-ID: <201302182211.46697.arnd@arndb.de>
-References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de> <201302181634.02751.arnd@arndb.de> <Pine.LNX.4.64.1302181808510.4526@axis700.grange>
+From: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/2] Device Tree support for CMA (Contiguous Memory
+ Allocator)
+Date: Mon, 18 Feb 2013 23:25:03 +0100
+Message-ID: <5122AA3F.8030001@gmail.com>
+References: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
+ <20130214213013.GG1906@pengutronix.de> <511D6076.9090503@gmail.com>
+ <20130215083304.GK1906@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1302181808510.4526@axis700.grange>
-Sender: linux-sh-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Russell King - ARM Linux <linux@arm.linux.org.uk>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130215083304.GK1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 18 February 2013, Guennadi Liakhovetski wrote:
-> On Mon, 18 Feb 2013, Arnd Bergmann wrote:
-> 
-> Sorry, I'm not sure how best to describe it, and I don't have sufficient 
-> information myself. In any case on a block-diagram of sh73a0 SDHI devices 
-> aren't directly connected to a common super-highway bus, instead they are 
-> on a bus-splitter. One more thing I forgot to mention - this error has 
-> been observed on SMP.
+On 02/15/2013 09:33 AM, Sascha Hauer wrote:
+> On Thu, Feb 14, 2013 at 11:08:54PM +0100, Sylwester Nawrocki wrote:
+>> On 02/14/2013 10:30 PM, Sascha Hauer wrote:
+>>> On Thu, Feb 14, 2013 at 01:45:26PM +0100, Marek Szyprowski wrote:
+>> ...
+>>>> Here is my initial proposal for device tree integration for Contiguous
+>>>> Memory Allocator. The code is quite straightforward, however I expect
+>>>> that the memory bindings require some discussion.
+>>>>
+>>>> The proposed bindings allows to define contiguous memory regions of
+>>>> specified base address and size. Then, the defined regions can be
+>>>> assigned to the given device(s) by adding a property with a phanle to
+>>>> the defined contiguous memory region. From the device tree perspective
+>>>> that's all. Once the bindings are added, all the memory allocations from
+>>>> dma-mapping subsystem will be served from the defined contiguous memory
+>>>> regions.
+>>>>
+>>>
+>>> I think CMA regions should not be described in the devicetre at all. The
+>>> devicetree is about hardware description and it should be OS agnostic,
+>>> but CMA is only a Linux specific implementation detail. It's not even
+>>> specific to a particular board, it's specific to a particular usecase of
+>>> a board.
+>>
+>> I disagree. For example, in a multiprocessor system describing the memory
+>> regions this way allows to assign memory to each subsystem, e.g. shared
+>> memory, so that the memory region constraints are satisfied.
+>>
+>> CMA just happens to be an implementation of a method of assigning memory
+>> to each device in Linux. The constraints on the memory are real hardware
+>> constraints, resulting from a particular subsystem architecture.
+>
+> If you are talking about DMA controllers which can only access a certain
+> memory area, then yes, that's a hardware constraint, I'm not sure though
+> if describing this as CMA in the devicetree is the way to go.
 
-Ah, I guess that explains it. If you have one CPU filling the buffer
-and another CPU reading it, you need an smp_wmb/wmp_rmb pair.
+My context was a multiprocessor SoC, where one of the processors is somehow
+application specific (e.g. camera ISP) and can be considered as a slave
+subsystem, running it's firmware and sharing system memory with the main
+processor.
 
-That case can easily happen with tmio interrupt handler in PIO
-mode.
+The slave subsystem can have insane constraints on the memory region where
+its firmware is located and which it also uses as its generic purpose RAM.
 
-> I checked clock code under drivers/sh/clk, I don't see any relevant 
-> __raw_* operations there. One I do see, however, GIC code does use 
-> *_relaxed() accessors, but under raw spinlocks... Do those provide 
-> sufficient barriers?
+While the region assigned to such a slave device would also likely include
+a memory for its DMA buffers, the main concern here was an allocation of
+a working memory for the slave processor.
 
-A spinlock by definition contains an SMP barrier, which seems to be
-what is missing here. I don't know if that is enough here, because
-the spinlock only needs barriers to protect against other users
-behind the same spinlock.
+Perhaps the device tree is not a perfect place for defining exact memory
+regions. If we happen to decide against it, then I guess some set of
+properties would be needed, that would allow CMA to assign appropriate
+memory region(s) to a device.
 
-In architecture independent code, any smp_wmb() on the writer side
-must be paired with an smp_rmb on the reader. You probably have the
-sufficient barriers on the side that initiates the I/O because
-that uses a dmb() in the MMIO instructions, but that is only
-by accident and not portable.
+> If you are talking about 'on this board I want to have 128MiB for this
+> device because I'm doing 1080p while on another board 64MiB are enough
+> because I'm doing 720p', then this is not a hardware constraint.
 
-Also, in the uniprocessor case, you have more barriers than you
-need, which limits the performance. The best solution for
-both performance and readability would be to use readw_relaxed()
-and writew_relaxed() and manually add the barriers you actually
-need, i.e. two smp_rmb()/smp_wmb() in the PIO case, and a
-wmb() before you start a real DMA to the device and an rmb()
-after a DMA from the device is complete.
+No, that's not something I was referring to.
 
-	Arnd
+> There may be valid scenarios for putting CMA into the devicetrees, but
+> doing this also opens the door for abuse of this binding. I for once
+> don't want to find areas being allocated for CMA in the devicetree for
+> devices I don't care about. I know I can always exchange a devicetree,
+> but I think the device tree should be seen as firmware to a certain
+> degree.
+
+I agree. You're likely aware of it, I just want to remind that the CMA
+memory can be used by the OS in a normal way, until a device driver
+actually allocates and uses it.
