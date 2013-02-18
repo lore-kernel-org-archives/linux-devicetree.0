@@ -1,276 +1,96 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [RFC PATCH 6/9] hwmon: (lm90) Register to the thermal framework
-Date: Mon, 18 Feb 2013 19:30:28 +0800
-Message-ID: <1361187031-3679-7-git-send-email-wni@nvidia.com>
-References: <1361187031-3679-1-git-send-email-wni@nvidia.com>
+From: Afzal Mohammed <afzal@ti.com>
+Subject: [PATCH, RFC 0/8] ARM: AM43 (OMAP2+) boot support
+Date: Mon, 18 Feb 2013 17:05:00 +0530
+Message-ID: <cover.1361186097.git.afzal@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1361187031-3679-1-git-send-email-wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TZX6JHB/w77yyCwEArCW2h5@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Marc Zyngier <marc.zyngier@arm.com>, Nicolas Pitre <nico@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Will Deacon <will.deacon@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Sekhar Nori <nsekhar@ti.com>, Syed Mohammed Khasim <khasim@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Register the remote sensor to the thermal framework.
-It can support to show the temperature and read/write threshold.
+(Resending, since it seems, LAKML doesn't accept patches with subject
+prefix only as "RFC", but requires "PATCH" prefix also)
 
-Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- arch/arm/boot/dts/tegra30-cardhu.dtsi |    1 +
- drivers/hwmon/lm90.c                  |  182 ++++++++++++++++++++++++++++++++-
- 2 files changed, 182 insertions(+), 1 deletion(-)
+Hi,
 
-diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-index 15ad1ad..3f6ab89 100644
---- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
-+++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
-@@ -279,6 +279,7 @@
- 			reg = <0x4c>;
- 			interrupt-parent = <&gpio>;
- 			interrupts = <226 0x08>; /* gpio PCC2 */
-+			#sensor-cells = <1>;
- 		};
- 	};
- 
-diff --git a/drivers/hwmon/lm90.c b/drivers/hwmon/lm90.c
-index de5a476..0abdedc 100644
---- a/drivers/hwmon/lm90.c
-+++ b/drivers/hwmon/lm90.c
-@@ -91,6 +91,7 @@
- #include <linux/sysfs.h>
- #include <linux/interrupt.h>
- #include <linux/of_irq.h>
-+#include <linux/thermal.h>
- 
- /*
-  * Addresses to scan
-@@ -182,6 +183,15 @@ enum chips { lm90, adm1032, lm99, lm86, max6657, max6659, adt7461, max6680,
- #define LM90_HAVE_BROKEN_ALERT	(1 << 7) /* Broken alert		*/
- 
- /*
-+ * Thermal framework
-+ */
-+enum lm90_thresholds {
-+	LM90_LOW_THRESHOLDS = 0,	/* threshold 0: low limits */
-+	LM90_HIGH_THRESHOLDS,		/* threshold 1: high limits */
-+	LM90_NUM_THRESHOLDS
-+};
-+
-+/*
-  * Driver data (common to all clients)
-  */
- 
-@@ -377,6 +387,9 @@ struct lm90_data {
- 	s16 temp11[TEMP11_REG_NUM];
- 	u8 temp_hyst;
- 	u16 alarms; /* bitvector (upper 8 bits for max6695/96) */
-+
-+	struct thermal_sensor *ts_remote;
-+	struct thermal_sensor *ts_local;
- };
- 
- /*
-@@ -1493,12 +1506,151 @@ static irqreturn_t lm90_irq(int irq, void *dev_id)
- 	return IRQ_HANDLED;
- }
- 
-+static int lm90_read_remote_temp(struct thermal_sensor *ts, long *temp)
-+{
-+	struct i2c_client *client = ts->devdata;
-+	struct device *dev = &client->dev;
-+
-+	_show_temp11(dev, TEMP11_REMOTE_TEMP, (int *)temp);
-+
-+	return 0;
-+}
-+
-+static int lm90_read_remote_threshold(struct thermal_sensor *ts, int th_index,
-+					long *val)
-+{
-+	struct i2c_client *client = ts->devdata;
-+	struct device *dev = &client->dev;
-+	int index;
-+
-+	switch (th_index) {
-+	case LM90_LOW_THRESHOLDS:
-+		/* remote low limit */
-+		index = TEMP11_REMOTE_LOW;
-+		break;
-+	case LM90_HIGH_THRESHOLDS:
-+		/* remote high limit */
-+		index = TEMP11_REMOTE_HIGH;
-+		break;
-+	default:
-+		dev_err(dev, "read remote threshold failed.\n");
-+		return -EINVAL;
-+	}
-+
-+	_show_temp11(dev, index, (int *)val);
-+
-+	return 0;
-+}
-+
-+static int lm90_write_remote_threshold(struct thermal_sensor *ts, int th_index,
-+					long val)
-+{
-+	struct i2c_client *client = ts->devdata;
-+	struct device *dev = &client->dev;
-+	int nr, index;
-+
-+	switch (th_index) {
-+	case LM90_LOW_THRESHOLDS:
-+		/* remote low limit */
-+		nr = NR_CHAN_0_REMOTE_LOW;
-+		index = TEMP11_REMOTE_LOW;
-+		break;
-+	case LM90_HIGH_THRESHOLDS:
-+		/* remote high limit */
-+		nr = NR_CHAN_0_REMOTE_HIGH;
-+		index = TEMP11_REMOTE_HIGH;
-+		break;
-+	default:
-+		dev_err(dev, "write remote threshold failed.\n");
-+		return -EINVAL;
-+	}
-+
-+	_set_temp11(dev, nr, index, val);
-+
-+	return 0;
-+}
-+
-+static struct thermal_sensor_ops remote_ops = {
-+	.get_temp = lm90_read_remote_temp,
-+	.get_threshold = lm90_read_remote_threshold,
-+	.set_threshold = lm90_write_remote_threshold,
-+};
-+
-+static int lm90_read_local_temp(struct thermal_sensor *ts, long *temp)
-+{
-+	struct i2c_client *client = ts->devdata;
-+	struct device *dev = &client->dev;
-+
-+	_show_temp11(dev, TEMP11_LOCAL_TEMP, (int *)temp);
-+
-+	return 0;
-+}
-+
-+static int lm90_read_local_threshold(struct thermal_sensor *ts, int th_index,
-+					long *val)
-+{
-+	struct i2c_client *client = ts->devdata;
-+	struct device *dev = &client->dev;
-+	int index;
-+
-+	switch (th_index) {
-+	case LM90_LOW_THRESHOLDS:
-+		/* local low limit */
-+		index = TEMP8_LOCAL_LOW;
-+		break;
-+	case LM90_HIGH_THRESHOLDS:
-+		/* local high limit */
-+		index = TEMP8_LOCAL_HIGH;
-+		break;
-+	default:
-+		dev_err(dev, "read local threshold failed.\n");
-+		return -EINVAL;
-+	}
-+
-+	_show_temp8(dev, index, (int *)val);
-+
-+	return 0;
-+}
-+
-+static int lm90_write_local_threshold(struct thermal_sensor *ts, int th_index,
-+					long val)
-+{
-+	struct i2c_client *client = ts->devdata;
-+	struct device *dev = &client->dev;
-+	int index;
-+
-+	switch (th_index) {
-+	case LM90_LOW_THRESHOLDS:
-+		/* local low limit */
-+		index = TEMP8_LOCAL_LOW;
-+		break;
-+	case LM90_HIGH_THRESHOLDS:
-+		/* local high limit */
-+		index = TEMP8_LOCAL_HIGH;
-+		break;
-+	default:
-+		dev_err(dev, "write local threshold failed.\n");
-+		return -EINVAL;
-+	}
-+
-+	_set_temp8(dev, index, val);
-+
-+	return 0;
-+}
-+
-+static struct thermal_sensor_ops local_ops = {
-+	.get_temp = lm90_read_local_temp,
-+	.get_threshold = lm90_read_local_threshold,
-+	.set_threshold = lm90_write_local_threshold,
-+};
-+
- static int lm90_probe(struct i2c_client *client,
- 		      const struct i2c_device_id *id)
- {
- 	struct device *dev = &client->dev;
- 	struct i2c_adapter *adapter = to_i2c_adapter(dev->parent);
- 	struct lm90_data *data;
-+	struct node_args np_args;
- 	int err;
- 
- 	data = devm_kzalloc(&client->dev, sizeof(struct lm90_data), GFP_KERNEL);
-@@ -1576,12 +1728,38 @@ static int lm90_probe(struct i2c_client *client,
- 				       "lm90", data);
- 		if (err < 0) {
- 			dev_err(dev, "cannot request interrupt\n");
--			goto exit_remove_files;
-+			goto exit_unregister_hwmon;
- 		}
- 	}
- 
-+	np_args.np = dev->of_node;
-+	np_args.index = 0;
-+	data->ts_remote = thermal_sensor_register("lm90_remote",
-+						LM90_NUM_THRESHOLDS,
-+						&np_args,
-+						&remote_ops, client);
-+	if (IS_ERR(data->ts_remote)) {
-+		dev_err(dev, "cannot register sensor to thermal framework\n");
-+		err = -EINVAL;
-+		goto exit_unregister_hwmon;
-+	}
-+
-+	np_args.index = 1;
-+	data->ts_local = thermal_sensor_register("lm90_local",
-+						LM90_NUM_THRESHOLDS,
-+						&np_args,
-+						&local_ops, client);
-+
-+	if (IS_ERR(data->ts_local)) {
-+		dev_err(dev, "cannot register sensor to thermal framework\n");
-+		err = -EINVAL;
-+		goto exit_unregister_hwmon;
-+	}
-+
- 	return 0;
- 
-+exit_unregister_hwmon:
-+	hwmon_device_unregister(data->hwmon_dev);
- exit_remove_files:
- 	lm90_remove_files(client, data);
- exit_restore:
-@@ -1594,6 +1772,8 @@ static int lm90_remove(struct i2c_client *client)
- 	struct lm90_data *data = i2c_get_clientdata(client);
- 
- 	free_irq(client->irq, data);
-+	thermal_sensor_unregister(data->ts_remote);
-+	thermal_sensor_unregister(data->ts_local);
- 	hwmon_device_unregister(data->hwmon_dev);
- 	lm90_remove_files(client, data);
- 	lm90_restore_conf(client, data);
+This series adds minimal support to boot Linux on platforms having
+AM43 based SoC's.
+
+This is being sent as an RFC to seek opinion about modification in
+twd to register percpu local timer clock event for scheduler tick in
+the case of one core SMP.
+
+AM43 SoC's are based on ARM Cortex-A9. It is an ARM Cortex-A9 SMP
+configuration with one core (not uniprocessor configuration). AM43 is
+similar to AM335x in it's peripheral capabilities, with many of the
+peripheral register mapping's similar like that of uart.
+
+AM43 is in pre-silicon stage and currently there are no public
+documents.
+
+This series has been tested on a pre-silicon platform that emulates
+AM43 SoC, changes proposed here are minimal - to get it booting.
+Kernel was directly run without the help of bootloader - Images were
+directly loaded onto a pre-initialized RAM and ARM registers updated
+as required for booting.
+
+Changes have been made over linux-next (next-20130213) with three "OF"
+related reverts (which otherwise causes problem in other platforms
+also) and compiled with omap2plus_defconfig. Multiplatform option was
+enabled, while most of CONFIG options were deselected for a faster
+boot. Beagle bone boots as earlier with these changes.
+
+An interesting observation is that it may be possible to boot this
+platform to console without any platform specific modification to
+proper Kernel (by that I mean excluding DT sources) using Arnd's,
+
+"[PATCH,RFC] default machine descriptor for multiplatform",
+
+along with a "CLOCKSOURCE_OF_DECLARE" for smp twd.
+
+But later on to make SoC do any really useful work or to get done
+things that the SoC is meant to do, platform changes like omap-hwmod,
+handling power management, clock tree, detecting SoC capabilities etc
+would have to be made, necessitating DT_MACHINE_START at least in
+the foreseeable future.
+
+Patch - 8 that makes AM43 boot on pre-silicon platform would be
+replaced later by a one for original board.
+
+Last but not least, thanks to Ankur Kishore <a-kishore@ti.com>
+(who first made Linux to boot on AM43) for all the help that made
+Linux bringup easier.
+
+Regards
+Afzal
+
+
+Afzal Mohammed (8):
+  ARM: localtimer: return percpu clkevt on register
+  ARM: twd: register clock event for 1 core SMP
+  ARM: twd: clock rate from DT (if no DT clk tree)
+  ARM: am33xx: ll debug config help
+  ARM: OMAP2+: am43: Kconfig
+  ARM: OMAP2+: am43: basic dt support
+  ARM: dts: am4372: initial support
+  ARM: dts: am43-pre-silicon support
+
+ Documentation/devicetree/bindings/arm/twd.txt |  7 +++-
+ arch/arm/Kconfig.debug                        |  3 ++
+ arch/arm/boot/dts/Makefile                    |  3 +-
+ arch/arm/boot/dts/am43-pre-silicon.dts        | 31 +++++++++++++++
+ arch/arm/boot/dts/am4372.dtsi                 | 55 +++++++++++++++++++++++++++
+ arch/arm/include/asm/localtimer.h             |  7 ++--
+ arch/arm/kernel/smp.c                         |  8 ++--
+ arch/arm/kernel/smp_twd.c                     | 16 +++++++-
+ arch/arm/mach-omap2/Kconfig                   | 11 ++++++
+ arch/arm/mach-omap2/board-generic.c           | 18 +++++++++
+ 10 files changed, 148 insertions(+), 11 deletions(-)
+ create mode 100644 arch/arm/boot/dts/am43-pre-silicon.dts
+ create mode 100644 arch/arm/boot/dts/am4372.dtsi
+
 -- 
-1.7.9.5
+1.7.12
+
