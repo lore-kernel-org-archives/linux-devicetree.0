@@ -1,45 +1,47 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [PATCH 1/4] of/pci: Provide support for parsing PCI DT ranges
- property
-Date: Mon, 18 Feb 2013 09:38:28 +0000
-Message-ID: <20130218093828.GA26245@arm.com>
-References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
- <1360570940-17086-2-git-send-email-thierry.reding@avionic-design.de>
- <20130213225311.37FFB3E3557@localhost>
- <20130214165341.GA29199@arm.com>
- <20130214191745.GA13875@avionic-0098.mockup.avionic-design.de>
- <CACRpkdYbzuONVyUZ5V9t5D6nux9G9p1QRS+w7AO-cFZFBGMRFA@mail.gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 12/12] clocksource: samsung-time: Add Device Tree
+ support
+Date: Mon, 18 Feb 2013 09:48:12 +0000
+Message-ID: <20130218094812.GA23831@e106331-lin.cambridge.arm.com>
+References: <1361033044-27629-1-git-send-email-tomasz.figa@gmail.com>
+ <1361033044-27629-13-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYbzuONVyUZ5V9t5D6nux9G9p1QRS+w7AO-cFZFBGMRFA@mail.gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+In-Reply-To: <1361033044-27629-13-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "linux@simtec.co.uk" <linux@simtec.co.uk>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>, "kwangwoo.lee@gmail.com" <kwangwoo.lee@gmail.com>, "jacmet@sunsite.dk" <jacmet@sunsite.dk>, "augulis.darius@gmail.com" <augulis.darius@gmail.com>, "mcuelenaere@gmail.com" <mcuelenaere@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, "buserror@gmail.com" <buserror@gmail.com>, "christer@weinigel.se" <christer@weinigel.se>, "jekhor@gmail.com" <jekhor@gmail.com>, "ghcstop@gmail.com" <ghcstop@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 15, 2013 at 01:16:17PM +0000, Linus Walleij wrote:
-> n Thu, Feb 14, 2013 at 8:17 PM, Thierry Reding
-> <thierry.reding@avionic-design.de> wrote:
-> > On Thu, Feb 14, 2013 at 04:53:41PM +0000, Andrew Murray wrote:
-> >> Thierry,
-> >>
-> >> If you don't have much bandwidth I'd be quite happy to take this on - this
-> >> would be beneficial for my eventual patchset. I can start by refactoring common
-> >> implementations of pci_process_bridge_OF_ranges or similar across the
-> >> architectures as per Grant's suggestion? I didn't do this when I first posted
-> >> the patch as I was concerned about the testing effort.
-> >
-> > Absolutely! Since it was your patch in the first place you're just as
-> > well suited to do this if you want to and have the time.
-> 
-> I am working on device tree patches for the Integrator/AP with it's
-> PCIv3 bridge, and I also follow this with great interest. I was almost
-> going to start the copy/paste cycle but now I think it's better if
-> I wait for this to happen.
+Hi,
 
-No problem - I am currently looking at this.
+[...]
 
-Andrew Murray
+> +static void samsung_timer_parse_dt(struct device_node *np,
+> +					const struct of_device_id *match)
+> +{
+> +	int i;
+> +	u32 val;
+> +
+> +	timer_base = of_iomap(np, 0);
+> +	if (!timer_base)
+> +		panic("failed to map timer registers");
+> +
+> +	for (i = 0; i < SAMSUNG_PWM_NUM; ++i)
+> +		timer_variant.irqs[i] = irq_of_parse_and_map(np, i);
+> +
+> +	if (!timer_variant.irqs[timer_source.event_id])
+> +		panic("no clock event irq provided");
+> +
+> +	switch ((unsigned int)match->data) {
+> +	case TYPE_S3C24XX:
+> +		timer_variant.bits = 16;
+> +		timer_variant.prescale = 25;
+> +		timer_variant.prescale = 50;
+
+Redundant conflicting assignments here.
+
+Thanks,
+Mark.
