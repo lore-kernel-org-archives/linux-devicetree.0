@@ -1,73 +1,45 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH v5 03/13] mmc: provide a standard MMC device-tree binding
- parser centrally
-Date: Mon, 18 Feb 2013 09:54:06 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1302180953140.4526@axis700.grange>
-References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
- <1360941242-18153-4-git-send-email-g.liakhovetski@gmx.de>
- <Pine.LNX.4.64.1302161613450.20044@axis700.grange> <20130216165825.GF1906@pengutronix.de>
- <20130217075216.GA3871@verge.net.au> <20130217075805.GB3871@verge.net.au>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 1/4] of/pci: Provide support for parsing PCI DT ranges
+ property
+Date: Mon, 18 Feb 2013 09:38:28 +0000
+Message-ID: <20130218093828.GA26245@arm.com>
+References: <1360570940-17086-1-git-send-email-thierry.reding@avionic-design.de>
+ <1360570940-17086-2-git-send-email-thierry.reding@avionic-design.de>
+ <20130213225311.37FFB3E3557@localhost>
+ <20130214165341.GA29199@arm.com>
+ <20130214191745.GA13875@avionic-0098.mockup.avionic-design.de>
+ <CACRpkdYbzuONVyUZ5V9t5D6nux9G9p1QRS+w7AO-cFZFBGMRFA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20130217075805.GB3871@verge.net.au>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, linux-mmc@vger.kernel.org, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Magnus Damm <magnus.damm@gmail.com>, Markus Pargmann <mpa@pengutronix.de>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdYbzuONVyUZ5V9t5D6nux9G9p1QRS+w7AO-cFZFBGMRFA@mail.gmail.com>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Grant Likely <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 17 Feb 2013, Simon Horman wrote:
-
-> On Sun, Feb 17, 2013 at 04:52:16PM +0900, Simon Horman wrote:
-> > On Sat, Feb 16, 2013 at 05:58:25PM +0100, Sascha Hauer wrote:
-> > > Hi Guennadi,
-> > > 
-> > > On Sat, Feb 16, 2013 at 04:21:16PM +0100, Guennadi Liakhovetski wrote:
-> > > > MMC defines a number of standard DT bindings. Having each driver parse
-> > > > them individually adds code redundancy and is error prone. Provide a
-> > > > standard function to unify the parsing. After all drivers are converted
-> > > > to using it instead of their own parsers, this function can be integrated
-> > > > into mmc_alloc_host().
-> > > > 
-> > > > Signed-off-by: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> > > > ---
-> > > > 
-> > > > v5:
-> > > > 
-> > > > 1. fix an uninitialised variable warning. Note, I don't actually know, 
-> > > > whether this will fix the error, reported by the kbuild test robot. None 
-> > > > of my compilers reports an error there, at most, I've got a warning with 
-> > > > one of them, and, surprisingly, it is gone after this change. 
-> > > > Surprisingly, because I only add the bus_width initialisation in the error 
-> > > > case - exactly as it actually has to be done. In the success case it is 
-> > > > assigned set by the function. But the compiler cannot know that!
-> > > 
-> > > Maybe the build robot builds with devicetree disabled? In this case
-> > > of_property_read_u32_array expands to a static inline function and the
-> > > compiler indeed knows that &bus_width is unitialized. It also knows that
-> > > this function always returns an error, so what you did below should
-> > > silence the compiler.
-> > 
-> > It seems so. The configuration that flagged the error was atngw100_defconfig.
-> > 
-> > ARCH=avr32 make atngw100_defconfig
-> > grep USE_OF .config
-> > [nothing]
+On Fri, Feb 15, 2013 at 01:16:17PM +0000, Linus Walleij wrote:
+> n Thu, Feb 14, 2013 at 8:17 PM, Thierry Reding
+> <thierry.reding@avionic-design.de> wrote:
+> > On Thu, Feb 14, 2013 at 04:53:41PM +0000, Andrew Murray wrote:
+> >> Thierry,
+> >>
+> >> If you don't have much bandwidth I'd be quite happy to take this on - this
+> >> would be beneficial for my eventual patchset. I can start by refactoring common
+> >> implementations of pci_process_bridge_OF_ranges or similar across the
+> >> architectures as per Grant's suggestion? I didn't do this when I first posted
+> >> the patch as I was concerned about the testing effort.
+> >
+> > Absolutely! Since it was your patch in the first place you're just as
+> > well suited to do this if you want to and have the time.
 > 
-> In that vein I managed to reproduce the warning using ap4evb_defconfig
-> and then enabled MMC. I have also verified that v5 does not produce
-> the same warning.
-> 
-> I chose this as I don't have a avr32 cross-compile environment
-> but I do have one for ARM and I know that ap4evb doesn't use DT.
-> 
-> I will update topic/mmc with v5.
+> I am working on device tree patches for the Integrator/AP with it's
+> PCIv3 bridge, and I also follow this with great interest. I was almost
+> going to start the copy/paste cycle but now I think it's better if
+> I wait for this to happen.
 
-Very good, thanks! So, this way I think, v5 should be ok.
+No problem - I am currently looking at this.
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+Andrew Murray
