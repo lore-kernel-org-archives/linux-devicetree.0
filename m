@@ -1,102 +1,58 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH RFC 1/7] platform: add a device node
-Date: Mon, 18 Feb 2013 14:56:42 +0100
-Message-ID: <5122331A.1020102@collabora.co.uk>
-References: <1360442671-15216-1-git-send-email-javier.martinez@collabora.co.uk> <1360442671-15216-2-git-send-email-javier.martinez@collabora.co.uk> <20130210010246.GA1455@kroah.com> <5116FCA1.40703@collabora.co.uk> <20130210093708.GL17852@n2100.arm.linux.org.uk> <CAAwP0s0fCJmUfTJweGhXj5bXsQ0Gov9JbUJtqYMwL7duNLZv_Q@mail.gmail.com> <CACxGe6sBgXVYVhEyUKnwLDziWCe3973BO4KWNyTye0k9wgbKDA@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 0/4] R-Car SATA driver and platform data
+Date: Mon, 18 Feb 2013 18:04:21 +0400
+Message-ID: <512234E5.5050700@cogentembedded.com>
+References: <201302170135.28336.sergei.shtylyov@cogentembedded.com> <20130218012322.GA11807@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACxGe6sBgXVYVhEyUKnwLDziWCe3973BO4KWNyTye0k9wgbKDA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Javier Martinez Canillas <martinez.javier@gmail.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tony Lindgren <tony@atomide.com>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <b-cousson@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20130218012322.GA11807@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jgarzik@pobox.com, linux-ide@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/18/2013 02:51 PM, Grant Likely wrote:
-> On Sun, Feb 10, 2013 at 11:35 AM, Javier Martinez Canillas
-> <martinez.javier@gmail.com> wrote:
->> On Sun, Feb 10, 2013 at 10:37 AM, Russell King - ARM Linux
->> <linux@arm.linux.org.uk> wrote:
->>> On Sun, Feb 10, 2013 at 02:49:21AM +0100, Javier Martinez Canillas wrote:
->>>> I knew this would be controversial and that's why I didn't mean it to be a patch
->>>> but a RFC :)
->>>>
->>>> The problem basically is that you have to associate the platform device with its
->>>> corresponding DT device node because it can be used in the driver probe function.
->>>
->>> When DT is being used, doesn't DT create the platform devices for you,
->>> with the device node already set correctly?
->>>
->>
->> Well they usually do but not always just like usually you have a
->> platform_device in your board code and call platform_device_register().
->>
->> But in some configurations you can't just define the platform_device
->> required resources (I/O memory, IRQ, etc) as static platform data.
->> In some cases you need a level of indirection.
->>
->> In this particular case a SMSC ethernet chip is connected to an
->> OMAP3 processor through its General-Purpose Memory Controller.
->>
->> You can't just define the I/O memory used by the device since you first
->> need to request that address to the GPMC. The same happens with the
->> IRQ line since a OMAP GPIO pin is used so you have to first configure
->> the GPIO line as input.
->>
->> So in platform code you call to gpmc_smsc911x_init() passing all the
->> GPMC specific configurations (GPIO used for IRQ, GPMC chip select, etc)
->>
->> Then gpmc_smsc911x_init() does all the needed setup, fills a platform_data
->> for the real platform_device and calls  platform_device_register_resndata().
->>
->> From the smsc911x platform_driver probe function point of view it just have
->> resources and doesn't know if it's I/O memory is directly mapped or is
->> through a memory controller as the GPMC. It also doesn't know if the IRQ is
->> a GPIO or not.
-> 
-> It's still the same difference as far as the device is concerned.
-> External bus chip-select lines are well understood. The key here is to
-> encode the CS line number into the reg property of the child node so
-> that the GPMC driver has the information it needs to configure the
-> chip selects. You do this by setting #address-cells to '2' in the GPMC
-> node, and  use the ranges property to map from the gpmc address space
-> to the cpu address space. Like so (if you had 2 Ethernet controllers)
-> 
->         gpmc {
->                 #address-cells = <2>;  // First cell is CS#, second
-> cell is offset from CS base
->                 #size-cells = <1>;
->                 compatible = "ti,gpmc";
->                 ranges = <0 0 0xf1000000 0x1000>, //CS0 mapped to
-> 0xf1000000..0xf1000fff
->                                 <1 0 0xf1001000 0x1000>; //CS1 mapped
-> to 0xf1001000..0xf1001fff
-> 
->                 ethernet@0,0 {
->                         compatible = "smsc,91c111";
->                         reg = <0 0 0x1000>;
->                 }
->                 ethernet@1,0 {
->                         compatible = "smsc,91c111";
->                         reg = <1 0 0x1000>;
->                }
->       }
-> 
-> The GPMC driver can use the information in the ranges property for
-> setting up the chip select mappings. For the smsc,91c111 driver the
-> mapping becomes transparent.
-> 
-> You can see another example of this in
-> arch/powerpc/boot/dts/media5200.dts in the localbus node.
-> 
-> g.
-> 
+Hello.
 
-Hello Grant,
+On 18-02-2013 5:23, Simon Horman wrote:
 
-Thanks a lot for your explanation. Now is very clear to me how this has to be
-done. I'll work on an v2 of this patch-set that do it correctly and will resend.
+>>     Here's the set of 4 patches against the Simon Horman's renesas.git repo, 'next' branch:
 
-Best regards,
-Javier
+>> [1/4] ARM: mach-shmobile: r8a7779: SATA DT configuration
+>> [2/4] ARM: mach-shmobile: r8a7779: add SATA support
+>> [3/4] libata: add R-Car SATA driver
+>> [4/4] ARM: mach-shmobile: marzen: add SATA support
+
+>> Patch 3 also applies to the 'upstream' branch of Jeff Garzik's libata-dev.git repo.
+
+> Hi Sergei, Hi All,
+
+> I do not expect patch 3 of this series to got through
+> the renesas tree, however, I have included it and the other three patches
+> in this series to a topic branch in the renesas tree, topic/r-car-stat.
+
+    I probably make the patch 3 patch 1 in the next posting.
+
+> The base of the topic branch is:
+> * a merge of renesas.git next and libata-dev.git upstream, and;
+> * a boot fix for Marzen which I plan to add to next once it is reviewed:
+>    "ARM: shmobile: r8a7779: Correct TMU clock support again" (v3).
+
+> With this in place I built a kernel using the marzen_defconfig and booted it.
+> However, I wonder if I am missing a kernel option, or perhaps something
+> else of a minor nature as I see the following:
+
+> # dmesg | grep sata
+> sata_rcar sata_rcar: coherent DMA mask is unset
+> sata_rcar sata_rcar: failed to start port 0 (errno=-12)
+> sata_rcar: probe of sata_rcar failed with error -12
+
+    No, it's entirely our fault -- Vladimir didn't test the driver in non-DT 
+mode with DMA support added (due to the above mentioned boot fix missing), and 
+I didn't notice the missing intializers for 
+'sata_device.dev.[coherent_]dma_mask' when reviewing his patches. V2 will be 
+posted soon.
+
+WBR, Sergei
+
