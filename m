@@ -1,84 +1,74 @@
-From: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [v3 0/6] ARM: tegra: convert device tree files to use CLK defines
-Date: Sun, 17 Feb 2013 14:20:03 -0800
-Message-ID: <CAPnjgZ0Bkk0Ock5_WQxsni+qNMQnWURrLLqfNFVfKczN6OgLoQ@mail.gmail.com>
-References: <1360917814-27236-1-git-send-email-hdoyu@nvidia.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko@sntech.de>
+Subject: [PATCH v2 0/3] ARM: S3C24XX: Add devicetree support for s3c2416
+Date: Mon, 18 Feb 2013 01:03:52 +0100
+Message-ID: <201302180103.53084.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1360917814-27236-1-git-send-email-hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: Text/Plain;
+  charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Thomas Abraham <thomas.abraham@linaro.org>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Hiroshi,
+This is the second installment of beginning devicetree support the
+Samsung S3C24xx architectures and focuses on the s3c2416 for now.
 
-On Fri, Feb 15, 2013 at 12:43 AM, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org> wrote:
-> Hi,
->
-> With new dtc+cpp feature, we could get rid of magic numbers in dts*
-> files. This patch replaces CLK IDs.
->
-> We also plan to share those DT header files with kernel source
-> later[1].
->
-> This series depends on:
->   [PATCH 0/9] ARM: tegra: use new dtc+cpp feature
->   http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149613.html
->
-> [5/6] and [6/6] depend on:
->   [PATCH v6 00/10] Tegra114 clockframework
->   http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/148895.html
->
-> v2:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149816.html
->
-> v1:
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149672.html
->
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149804.html
->
->
-> Hiroshi Doyu (6):
->   ARM: tegra20: create a DT header defining CLK IDs
->   ARM: tegra20: convert device tree files to use CLK defines
->   ARM: tegra30: create a DT header defining CLK IDs
->   ARM: tegra30: convert device tree files to use CLK defines
->   ARM: tegra114: create a DT header defining CLK IDs
->   ARM: tegra114: convert device tree files to use CLK defines
+Included is the devicetree support for the s3c24xx irq controller and
+basic support for smdk2416 boards, which can sucessfully boot.
 
-I wonder what sort of error message do you get when you make a mistake
-in the .dts or one of the .dtsi includes? If cpp is handling the
-including, does dtc just see a single file, in which case are the line
-numbers printed with each error not much use? Or does dtc handle the
-#line directives?
 
-Just curious...
+After the discussion with Thomas Abraham on v1 and staring to long at all of
+this, I'm not even sure if having the interrupt mapping in the binding
+is the correct way to go anymore.
 
-Regards,
-Simon
+The key positive aspect of this solution is, that after everything is running
+via dt all the SoC specific mapping tables in the driver can go away, cutting
+its length in half.
 
->
->  .../bindings/clock/nvidia,tegra114-car.txt         |  261 +------------------
->  .../bindings/clock/nvidia,tegra20-car.txt          |  150 +----------
->  .../bindings/clock/nvidia,tegra30-car.txt          |  207 +--------------
->  arch/arm/boot/dts/tegra114-car.h                   |  272 ++++++++++++++++++++
->  arch/arm/boot/dts/tegra114.dtsip                   |   13 +-
->  arch/arm/boot/dts/tegra20-car.h                    |  158 ++++++++++++
->  arch/arm/boot/dts/tegra20-paz00.dtsp               |    2 +-
->  arch/arm/boot/dts/tegra20.dtsip                    |   85 +++---
->  arch/arm/boot/dts/tegra30-car.h                    |  218 ++++++++++++++++
->  arch/arm/boot/dts/tegra30.dtsip                    |   87 +++----
->  10 files changed, 746 insertions(+), 707 deletions(-)
->  create mode 100644 arch/arm/boot/dts/tegra114-car.h
->  create mode 100644 arch/arm/boot/dts/tegra20-car.h
->  create mode 100644 arch/arm/boot/dts/tegra30-car.h
->
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The other option would be as Thomas suggested to define specific irq-controller
+types (i.e. s3c2416-intc, s3c2443-intc, ... resulting in 16 types) and keep
+the mapping data in the code, as it is now.
+
+So I would be very thankful for a bit of guidance on what is the better way.
+
+
+The series depends on the finalized s3c24xx irq rework, which probably won't
+make it into 3.9 and also the clocksource dt support by Tomasz Figa, which
+are not in any tree yet.
+
+
+Changes since v1:
+- adapt to changes in the underlying s3c24xx irq rework
+  = more shared init code
+- use irqchip infrastructure
+- limit number of possible irq-types to not encode implementation details
+  into the binding
+- include new samsung-clocksource
+
+Heiko Stuebner (3):
+  ARM: S3C24XX: move irq driver to drivers/irqchip
+  irqchip: irq-s3c24xx: add devicetree support
+  ARM: S3C24XX: Add devicetree support and dt-board file for s3c2416 SoCs
+
+ .../interrupt-controller/samsung,s3c24xx-irq.txt   |   53 ++++++
+ arch/arm/boot/dts/Makefile                         |    1 +
+ arch/arm/boot/dts/s3c2416-smdk2416.dts             |   79 ++++++++
+ arch/arm/boot/dts/s3c2416.dtsi                     |  193 ++++++++++++++++++++
+ arch/arm/boot/dts/s3c24xx.dtsi                     |  165 +++++++++++++++++
+ arch/arm/mach-s3c24xx/Kconfig                      |   10 +
+ arch/arm/mach-s3c24xx/Makefile                     |    3 +-
+ arch/arm/mach-s3c24xx/mach-s3c2416-dt.c            |   91 +++++++++
+ drivers/irqchip/Makefile                           |    1 +
+ .../irq.c => drivers/irqchip/irq-s3c24xx.c         |  128 +++++++++++++
+ 10 files changed, 723 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/samsung,s3c24xx-irq.txt
+ create mode 100644 arch/arm/boot/dts/s3c2416-smdk2416.dts
+ create mode 100644 arch/arm/boot/dts/s3c2416.dtsi
+ create mode 100644 arch/arm/boot/dts/s3c24xx.dtsi
+ create mode 100644 arch/arm/mach-s3c24xx/mach-s3c2416-dt.c
+ rename arch/arm/mach-s3c24xx/irq.c => drivers/irqchip/irq-s3c24xx.c (92%)
+
+-- 
+1.7.2.3
