@@ -1,86 +1,79 @@
-From: Afzal Mohammed <afzal@ti.com>
-Subject: [PATCH, RFC 7/8] ARM: dts: am4372: initial support
-Date: Mon, 18 Feb 2013 17:08:16 +0530
-Message-ID: <c9c131c0508b875c0893e8557504372a1564568a.1361186097.git.afzal@ti.com>
-References: <cover.1361186097.git.afzal@ti.com>
+From: "Cousson, Benoit" <b-cousson@ti.com>
+Subject: Re: [PATCH 1/2] ARM: dts: OMAP3: Add GPMC controller
+Date: Mon, 18 Feb 2013 13:26:24 +0100
+Message-ID: <51221DF0.2050705@ti.com>
+References: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch> <1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch> <CAPjKCR_oh25c4NKUTWjU6BYp64GjPoi2LWDpRhTUkBkRmc_HUw@mail.gmail.com> <CABxcv=kDw6pSsdE29-dVqkk2cc-RKBZB6GN8cs+M+C4JEeSbdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1361186097.git.afzal@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Marc Zyngier <marc.zyngier@arm.com>, Nicolas Pitre <nico@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Will Deacon <will.deacon@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Sekhar Nori <nsekhar@ti.com>, Syed Mohammed Khasim <khasim@ti.com>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=kDw6pSsdE29-dVqkk2cc-RKBZB6GN8cs+M+C4JEeSbdg@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Anil Kumar <anilkumar880@gmail.com>, Florian Vaussard <florian.vaussard@epfl.ch>, Tony Lindgren <tony@atomide.com>, devicetree-discuss@lists.ozlabs.org, Daniel Mack <zonque@gmail.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
 List-Id: devicetree@vger.kernel.org
 
-DT source (minimal) for AM4372 SoC. Those represented here are the
-minimal DT nodes necessary to get kernel booting.
+Hi Javier,
 
-Signed-off-by: Afzal Mohammed <afzal@ti.com>
----
- arch/arm/boot/dts/am4372.dtsi | 55 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
- create mode 100644 arch/arm/boot/dts/am4372.dtsi
+On 2/16/2013 5:44 PM, Javier Martinez Canillas wrote:
+> On Sat, Feb 16, 2013 at 2:09 PM, Anil Kumar <anilkumar880@gmail.com> wrote:
+>> Hi Florian,
+>>
+>> On Mon, Jan 28, 2013 at 11:24 PM, Florian Vaussard
+>> <florian.vaussard@epfl.ch> wrote:
+>>> Add device-tree support for the GPMC controller on the OMAP3.
+>>>
+>>> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+>>> ---
+>>>   arch/arm/boot/dts/omap3.dtsi |   11 +++++++++++
+>>>   1 files changed, 11 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
+>>> index 6c63118..2ddae38 100644
+>>> --- a/arch/arm/boot/dts/omap3.dtsi
+>>> +++ b/arch/arm/boot/dts/omap3.dtsi
+>>> @@ -403,5 +403,16 @@
+>>>                          ti,timer-alwon;
+>>>                          ti,timer-secure;
+>>>                  };
+>>> +
+>>> +               gpmc: gpmc@6e000000 {
+>>> +                       compatible = "ti,omap3430-gpmc";
+>>> +                       ti,hwmods = "gpmc";
+>>> +                       reg = <0x6e000000 0x1000000>;
+>>> +                       interrupts = <20>;
+>>> +                       gpmc,num-cs = <8>;
+>>> +                       gpmc,num-waitpins = <4>;
+>>> +                       #address-cells = <2>;
+>>> +                       #size-cells = <1>;
+>>> +               };
+>>>          };
+>>>   };
+>>
+>> Tested on devkit8000 (omap3 based board)
+>>
+>> Please take my Tested-by: Anil Kumar <anilk4.v@gmail.com>
+>>
+>> Thanks,
+>> Anil
+>>
+>
+> Hello Tony and Benoit,
+>
+> Could this patch be merged to one of your branches?
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-new file mode 100644
-index 0000000..178c41f
---- /dev/null
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -0,0 +1,55 @@
-+/*
-+ * Device Tree Source for AM4372 SoC
-+ *
-+ * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-+ *
-+ * This file is licensed under the terms of the GNU General Public License
-+ * version 2.  This program is licensed "as is" without any warranty of any
-+ * kind, whether express or implied.
-+ */
-+
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	compatible = "ti,am4372", "ti,am43";
-+	interrupt-parent = <&gic>;
-+
-+
-+	aliases {
-+		serial0 = &uart1;
-+	};
-+
-+	cpus {
-+		cpu@0 {
-+			compatible = "arm,cortex-a9";
-+		};
-+	};
-+
-+	gic: interrupt-controller@48241000 {
-+		compatible = "arm,cortex-a9-gic";
-+		interrupt-controller;
-+		#interrupt-cells = <3>;
-+		reg = <0x48241000 0x1000>,
-+		      <0x48240100 0x0100>;
-+	};
-+
-+	twd1: local-timer@0x48240600 {
-+		compatible = "arm,cortex-a9-twd-timer";
-+		reg = <0x48240600 0x20>;
-+		interrupts = <1 13 0x304>;
-+	};
-+
-+	ocp {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		uart1: serial@44e09000 {
-+			compatible = "ti,am4372-uart","ti,omap2-uart";
-+			clock-frequency = <48000000>;
-+			reg = <0x44e09000 0x2000>;
-+			interrupts = <0 72 0x4>;
-+		};
-+	};
-+};
--- 
-1.7.12
+I'll take it.
+
+> It has already my Reviewed-by and now Anil's Tested-by.
+>
+> Now that Daniel's OMAP GPMC binding were merged, there seems to be
+> many people working on adding support on their boards DT for
+> peripherals connected through the GPMC (NAND, OneNAND, SMSC LAN, etc).
+>
+> I think it will be easier if people can base their work on top of this
+> patch instead of duplicating the work and sending the same patch to
+> add a GPMC device node to omap3.dtsi on each patch-set.
+
+Regards,
+Benoit
+
