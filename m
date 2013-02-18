@@ -1,40 +1,34 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH v2 0/7] Add G2D nodes to Exynos4 machines
-Date: Mon, 18 Feb 2013 10:32:06 +0530
-Message-ID: <1361163733-4338-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, s.nawrocki@samsung.com, patches@linaro.org, sachin.kamat@linaro.org
+From: J Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 0/4] mfd: Palmas: Correct the DT Node properties naming convention and add documentation.
+Date: Mon, 18 Feb 2013 10:40:15 +0530
+Message-ID: <1361164215-3093-1-git-send-email-j-keerthy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, b-cousson@ti.com, sameo@linux.intel.com, broonie@opensource.wolfsonmicro.com
+Cc: j-keerthy@ti.com, gg@slimlogic.co.uk
 List-Id: devicetree@vger.kernel.org
 
-This patch series is based on Kukjin Kim's next/dt-exynos branch of
-git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git
-tree.
+The series corrects the DT node properties naming convention and adds
+Documentation for the Palmas PMIC.
 
-Changes since v1:
-* Removed power-domain entry in patch 1/7 as the driver currently
-  does not use it.
-* Addressed review comments from Sylwester Nawrocki and Tomasz Figa
-  in patch 7/7.
+Graeme Gregory (1):
+  documentation: add palmas dts definition
 
-Sachin Kamat (7):
-  ARM: dts: Add G2D node to exynos4210.dtsi
-  ARM: dts: Add G2D node to SMDKV310
-  ARM: dts: Add G2D node to exynos4210-origen
-  ARM: dts: Add G2D node to exynos4x12.dtsi
-  ARM: dts: Add G2D node to SMDK4412
-  ARM: dts: Add G2D node to exynos4412-origen
-  ARM: dts: Add Samsung G2D DT bindings documentation
+J Keerthy (3):
+  mfd: palmas: Change the DT node property names to follow the
+    convention
+  regulator: palmas: Removing duplicated code
+  regulator: palmas: Change the DT node property names to follow the
+    convention
 
- .../devicetree/bindings/gpu/samsung-g2d.txt        |   20 ++++++++++++++++++++
- arch/arm/boot/dts/exynos4210-origen.dts            |    4 ++++
- arch/arm/boot/dts/exynos4210-smdkv310.dts          |    4 ++++
- arch/arm/boot/dts/exynos4210.dtsi                  |    7 +++++++
- arch/arm/boot/dts/exynos4412-smdk4412.dts          |    8 ++++++++
- arch/arm/boot/dts/exynos4x12.dtsi                  |    7 +++++++
- 6 files changed, 50 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/gpu/samsung-g2d.txt
+ Documentation/devicetree/bindings/mfd/palmas.txt |   67 ++++++++++++++++++++++
+ drivers/mfd/palmas.c                             |    6 +-
+ drivers/regulator/palmas-regulator.c             |   13 +---
+ 3 files changed, 74 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
 
 -- 
-1.7.4.1
+1.7.5.4
+
