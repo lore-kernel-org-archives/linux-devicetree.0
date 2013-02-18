@@ -1,120 +1,168 @@
-From: Christian Ruppert <christian.ruppert@abilis.com>
-Subject: [PATCH v2] i2c-designware: make SDA hold time configurable
-Date: Mon, 18 Feb 2013 11:14:27 +0100
-Message-ID: <1361182467-19184-1-git-send-email-christian.ruppert@abilis.com>
-References: <20130215164937.GV20771@intel.com>
+From: Daniel Mack <zonque@gmail.com>
+Subject: Re: [PATCH] clk: add si5351 i2c common clock driver
+Date: Mon, 18 Feb 2013 11:19:08 +0100
+Message-ID: <5122001C.4010008@gmail.com>
+References: <1360414772-12232-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130215164937.GV20771@intel.com>
+In-Reply-To: <1360414772-12232-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Wolfram Sang <w.sang@pengutronix.de>, "Ben Dooks (embedded platforms)" <ben-linux@fluff.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, Christian Ruppert <christian.ruppert@abilis.com>, Pierrick Hascoet <pierrick.hascoet@abilis.com>
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Stephen Warren <swarren@nvidia.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dom Cobley <popcornmix@gmail.com>, Mike Turquette <mturquette@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Rabeeh Khoury <rabeeh@solid-run.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch makes the SDA hold time configurable through device tree.
-It was tested on a hybrid of i2c/next and arc-3.8-baseline (see
-https://github.com/foss-for-synopsys-dwc-arc-processors/linux/commits/arc-3.8-baseline) since our platform is ARC based and this architecture is not yet
-supported by i2c/next.
+Hi Sebastian,
 
-Signed-off-by: Christian Ruppert <christian.ruppert@abilis.com>
-Signed-off-by: Pierrick Hascoet <pierrick.hascoet@abilis.com>
----
- .../devicetree/bindings/i2c/i2c-designware.txt     |   15 +++++++++++++++
- drivers/i2c/busses/i2c-designware-core.c           |    5 +++++
- drivers/i2c/busses/i2c-designware-core.h           |    1 +
- drivers/i2c/busses/i2c-designware-platdrv.c        |    8 ++++++++
- 4 files changed, 29 insertions(+), 0 deletions(-)
+On 09.02.2013 13:59, Sebastian Hesselbarth wrote:
+> This patch adds a common clock driver for Silicon Labs Si5351a/b/c
+> i2c programmable clock generators. Currently, the driver supports
+> DT kernels only and VXCO feature of si5351b is not implemented. DT
+> bindings selectively allow to overwrite stored Si5351 configuration
+> which is very helpful for clock generators with empty eeprom
+> configuration. Corresponding device tree binding documentation is
+> also added.
 
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-designware.txt b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-index e42a2ee..fb2eac8 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-designware.txt
-@@ -10,6 +10,10 @@ Recommended properties :
- 
-  - clock-frequency : desired I2C bus clock frequency in Hz.
- 
-+Optional properties :
-+ - sda-hold-time : If this property is present, the register SDA_HOLD will
-+   be initialised with its value.
-+
- Example :
- 
- 	i2c@f0000 {
-@@ -20,3 +24,14 @@ Example :
- 		interrupts = <11>;
- 		clock-frequency = <400000>;
- 	};
-+
-+	i2c@1120000 {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		compatible = "snps,designware-i2c";
-+		reg = <0x1120000 0x1000>;
-+		interrupt-parent = <&ictl>;
-+		interrupts = <12 1>;
-+		clock-frequency = <400000>;
-+		sda-hold-time = <0x64>;
-+	};
-diff --git a/drivers/i2c/busses/i2c-designware-core.c b/drivers/i2c/busses/i2c-designware-core.c
-index 94fd818..ba40e14 100644
---- a/drivers/i2c/busses/i2c-designware-core.c
-+++ b/drivers/i2c/busses/i2c-designware-core.c
-@@ -67,6 +67,7 @@
- #define DW_IC_STATUS		0x70
- #define DW_IC_TXFLR		0x74
- #define DW_IC_RXFLR		0x78
-+#define DW_IC_SDA_HOLD		0x7c
- #define DW_IC_TX_ABRT_SOURCE	0x80
- #define DW_IC_COMP_PARAM_1	0xf4
- #define DW_IC_COMP_TYPE		0xfc
-@@ -310,6 +311,10 @@ int i2c_dw_init(struct dw_i2c_dev *dev)
- 	dw_writel(dev, lcnt, DW_IC_FS_SCL_LCNT);
- 	dev_dbg(dev->dev, "Fast-mode HCNT:LCNT = %d:%d\n", hcnt, lcnt);
- 
-+	/* Configure SDA Hold Time if required */
-+	if (dev->sda_hold_time)
-+		dw_writel(dev, dev->sda_hold_time, DW_IC_SDA_HOLD);
-+
- 	/* Configure Tx/Rx FIFO threshold levels */
- 	dw_writel(dev, dev->tx_fifo_depth - 1, DW_IC_TX_TL);
- 	dw_writel(dev, 0, DW_IC_RX_TL);
-diff --git a/drivers/i2c/busses/i2c-designware-core.h b/drivers/i2c/busses/i2c-designware-core.h
-index 9c1840e..33dfec3 100644
---- a/drivers/i2c/busses/i2c-designware-core.h
-+++ b/drivers/i2c/busses/i2c-designware-core.h
-@@ -88,6 +88,7 @@ struct dw_i2c_dev {
- 	u32			master_cfg;
- 	unsigned int		tx_fifo_depth;
- 	unsigned int		rx_fifo_depth;
-+	u32			sda_hold_time;
- };
- 
- #define ACCESS_SWAP		0x00000001
-diff --git a/drivers/i2c/busses/i2c-designware-platdrv.c b/drivers/i2c/busses/i2c-designware-platdrv.c
-index d2a33e9..9cb0100 100644
---- a/drivers/i2c/busses/i2c-designware-platdrv.c
-+++ b/drivers/i2c/busses/i2c-designware-platdrv.c
-@@ -34,6 +34,7 @@
- #include <linux/sched.h>
- #include <linux/err.h>
- #include <linux/interrupt.h>
-+#include <linux/of.h>
- #include <linux/of_i2c.h>
- #include <linux/platform_device.h>
- #include <linux/pm.h>
-@@ -136,6 +137,13 @@ static int dw_i2c_probe(struct platform_device *pdev)
- 	}
- 	clk_prepare_enable(dev->clk);
- 
-+	if (pdev->dev.of_node) {
-+		if (of_property_read_u32(pdev->dev.of_node, "sda-hold-time",
-+						&dev->sda_hold_time))
-+			dev->sda_hold_time = 0;
-+	} else
-+		dev->sda_hold_time = 0;
-+
- 	dev->functionality =
- 		I2C_FUNC_I2C |
- 		I2C_FUNC_10BIT_ADDR |
--- 
-1.7.1
+Thank you very much for your work! I had to wait for OMAP platforms to
+move over to the common clock framework, but with that in place now, I
+could finally give it a test.
+
+Some comments below.
+
+> - The driver has been frequency tested for some common video/audio
+>   clocks and manages it to tune in every frequency successfully. A
+>   comparison with silabs windows tool shows a different heuristic
+>   for vco frequencies. The tests have been comfirmed by visual
+>   check on an 500MHz oscilloscope but no jitter measurements have
+>   been carried out. I will provide comparison by email on request.
+
+I would be interested in more tests, yes. My first checks set up clkout1
+to 32.768 KHz, and on my oscilloscope,  I measured some 1.04 KHz only.
+Will do some debugging later.
+
+> +/*
+> + * Si5351 xtal clock input
+> + */
+> +static int si5351_xtal_prepare(struct clk_hw *hw)
+> +{
+> +	struct si5351_driver_data *drvdata =
+> +		container_of(hw, struct si5351_driver_data, xtal);
+> +	si5351_set_bits(drvdata, SI5351_FANOUT_ENABLE,
+> +			SI5351_XTAL_ENABLE, SI5351_XTAL_ENABLE);
+> +	return 0;
+> +}
+> +
+> +static void si5351_xtal_unprepare(struct clk_hw *hw)
+> +{
+> +	struct si5351_driver_data *drvdata =
+> +		container_of(hw, struct si5351_driver_data, xtal);
+> +	si5351_set_bits(drvdata, SI5351_FANOUT_ENABLE,
+> +			SI5351_XTAL_ENABLE, 0);
+> +}
+> +
+> +static int si5351_xtal_is_enabled(struct clk_hw *hw)
+> +{
+> +	struct si5351_driver_data *drvdata =
+> +		container_of(hw, struct si5351_driver_data, xtal);
+> +	unsigned char reg;
+> +	reg = si5351_reg_read(drvdata, SI5351_FANOUT_ENABLE);
+> +	return (reg & SI5351_XTAL_ENABLE) ? 1 : 0;
+> +}
+
+On an AM33xx platform, I got tons of BUGs like this one:
+
+
+[    5.028525] BUG: scheduling while atomic: swapper/1/0x00000002
+[    5.034600] INFO: lockdep is turned off.
+[    5.038682] Modules linked in:
+[    5.041866] irq event stamp: 136090
+[    5.045496] hardirqs last  enabled at (136089): [<c04ae9bc>]
+_raw_spin_unlock_irqrestore+0x60/0x68
+[    5.054843] hardirqs last disabled at (136090): [<c04ae1f4>]
+_raw_spin_lock_irqsave+0x1c/0x60
+[    5.063733] softirqs last  enabled at (135026): [<c0039d84>]
+__do_softirq+0x150/0x1b4
+[    5.071907] softirqs last disabled at (135019): [<c003a18c>]
+irq_exit+0x98/0xa0
+[    5.079541] [<c0013610>] (unwind_backtrace+0x0/0xf8) from
+[<c0058ec8>] (__schedule_bug+0x58/0x78)
+[    5.088793] [<c0058ec8>] (__schedule_bug+0x58/0x78) from [<c04ad50c>]
+(__schedule+0x3c8/0x45c)
+[    5.097773] [<c04ad50c>] (__schedule+0x3c8/0x45c) from [<c04ab3f0>]
+(schedule_timeout+0x120/0x1d4)
+[    5.107114] [<c04ab3f0>] (schedule_timeout+0x120/0x1d4) from
+[<c003f780>] (msleep+0x14/0x20)
+[    5.115912] [<c003f780>] (msleep+0x14/0x20) from [<c033dd08>]
+(omap_i2c_wait_for_bb+0x68/0xb0)
+[    5.124890] [<c033dd08>] (omap_i2c_wait_for_bb+0x68/0xb0) from
+[<c033e528>] (omap_i2c_xfer+0x3c/0xfc)
+[    5.134503] [<c033e528>] (omap_i2c_xfer+0x3c/0xfc) from [<c033a550>]
+(__i2c_transfer+0x44/0x80)
+[    5.143575] [<c033a550>] (__i2c_transfer+0x44/0x80) from [<c033bab8>]
+(i2c_transfer+0x5c/0xbc)
+[    5.152555] [<c033bab8>] (i2c_transfer+0x5c/0xbc) from [<c02b4458>]
+(regmap_i2c_read+0x4c/0x6c)
+[    5.161625] [<c02b4458>] (regmap_i2c_read+0x4c/0x6c) from
+[<c02b1840>] (_regmap_raw_read+0x98/0xdc)
+[    5.171056] [<c02b1840>] (_regmap_raw_read+0x98/0xdc) from
+[<c02b18e8>] (_regmap_read+0x64/0x9c)
+[    5.180215] [<c02b18e8>] (_regmap_read+0x64/0x9c) from [<c02b1964>]
+(regmap_read+0x44/0x5c)
+[    5.188923] [<c02b1964>] (regmap_read+0x44/0x5c) from [<c036d45c>]
+(si5351_clkout_is_enabled+0x74/0xb8)
+[    5.198720] [<c036d45c>] (si5351_clkout_is_enabled+0x74/0xb8) from
+[<c036a9f4>] (clk_disable_unused_subtree+0x68/0xac)
+[    5.209873] [<c036a9f4>] (clk_disable_unused_subtree+0x68/0xac) from
+[<c036a9ac>] (clk_disable_unused_subtree+0x20/0xac)
+
+This is because clk_disable_unused_subtree() calls ->is_enabled() with a
+spinlock held, but si5351_xtal_is_enabled() will be sleeping, either by
+acquiring a mutex in the regmap core, or in the OMAP's i2c transfer
+routine. So bottom line is to make this callback atomic, and I did that
+locally for now by caching the 'prepare' state of xtal, clkin and the
+individual clocks. I can share a patch if you like.
+
+> +static unsigned long si5351_msynth_recalc_rate(struct clk_hw *hw,
+> +					       unsigned long parent_rate)
+> +{
+> +	struct si5351_hw_data *hwdata =
+> +		container_of(hw, struct si5351_hw_data, hw);
+> +	unsigned char reg = SI5351_CLK0_PARAMETERS +
+> +		(SI5351_PARAMETERS_LENGTH * hwdata->num);
+> +	unsigned long long rate;
+> +	unsigned long m;
+> +
+> +	if (!hwdata->params.valid)
+> +		si5351_read_parameters(hwdata->drvdata, reg, &hwdata->params);
+> +
+> +	if (hwdata->params.p3 == 0)
+> +		return parent_rate;
+> +
+> +	/*
+> +	 * multisync0-5: fOUT = (128 * P3 * fIN) / (P1*P3 + P2 + 512*P3)
+> +	 * multisync6-7: fOUT = fIN / P1
+> +	 */
+> +	rate = parent_rate;
+> +	if (hwdata->num > 5)
+> +		m = hwdata->params.p1;
+> +	else if ((si5351_reg_read(hwdata->drvdata, reg + 2) &
+> +		  SI5351_OUTPUT_CLK_DIVBY4) == SI5351_OUTPUT_CLK_DIVBY4)
+> +		m = 4;
+> +	else {
+> +		rate *= 128 * hwdata->params.p3;
+> +		m = hwdata->params.p1 * hwdata->params.p3;
+> +		m += hwdata->params.p2;
+> +		m += 512 * hwdata->params.p3;
+> +	}
+> +	do_div(rate, m);
+
+For p1 == p2 == p3, this will be a DIV0. I encountered this here by not
+specifying the clkout2 node. I think it's safe to just bail if m == 0?
+
+
+Again, thanks a lot for working on this!
+
+
+Daniel
 
