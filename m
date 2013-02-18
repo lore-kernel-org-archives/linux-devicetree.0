@@ -1,40 +1,56 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [Linaro-mm-sig] [PATCH 0/2] Device Tree support for CMA
- (Contiguous Memory Allocator)
-Date: Mon, 18 Feb 2013 15:58:26 -0600
-Message-ID: <5122A402.7030807@gmail.com>
-References: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
- <20130214213013.GG1906@pengutronix.de> <511D6076.9090503@gmail.com>
- <20130215083304.GK1906@pengutronix.de> <511E6143.609@gmail.com>
- <CAMcxFTQAOjmzy77eB8nj3JDZ-6mwoMpm8yabtQj04tcLw-giLg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 13/13] mmc: tmio: add barriers to IO operations
+Date: Mon, 18 Feb 2013 22:11:46 +0000
+Message-ID: <201302182211.46697.arnd@arndb.de>
+References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de> <201302181634.02751.arnd@arndb.de> <Pine.LNX.4.64.1302181808510.4526@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAMcxFTQAOjmzy77eB8nj3JDZ-6mwoMpm8yabtQj04tcLw-giLg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Nishanth Peethambaran <nishanth.p-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1302181808510.4526@axis700.grange>
+Sender: linux-sh-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Russell King - ARM Linux <linux@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 02/16/2013 11:18 PM, Nishanth Peethambaran wrote:
-> Limiting the scope of the product to a particular use-case (720p or
-> 1080p video playback) will be part of firmware mostly OTP-ed in the
-> SoC. Firmware author could decide the amount of CMA memory needed and
-> put this as part of DT.
+On Monday 18 February 2013, Guennadi Liakhovetski wrote:
+> On Mon, 18 Feb 2013, Arnd Bergmann wrote:
+> 
+> Sorry, I'm not sure how best to describe it, and I don't have sufficient 
+> information myself. In any case on a block-diagram of sh73a0 SDHI devices 
+> aren't directly connected to a common super-highway bus, instead they are 
+> on a bus-splitter. One more thing I forgot to mention - this error has 
+> been observed on SMP.
 
-What kernel developer would want a firmware author deciding how much
-memory is needed? It is not a decision that can be made without
-knowledge of the OS. While the frame size could be determined easily
-enough based on resolution, the number of buffers needed cannot.
+Ah, I guess that explains it. If you have one CPU filling the buffer
+and another CPU reading it, you need an smp_wmb/wmp_rmb pair.
 
-Rob
+That case can easily happen with tmio interrupt handler in PIO
+mode.
+
+> I checked clock code under drivers/sh/clk, I don't see any relevant 
+> __raw_* operations there. One I do see, however, GIC code does use 
+> *_relaxed() accessors, but under raw spinlocks... Do those provide 
+> sufficient barriers?
+
+A spinlock by definition contains an SMP barrier, which seems to be
+what is missing here. I don't know if that is enough here, because
+the spinlock only needs barriers to protect against other users
+behind the same spinlock.
+
+In architecture independent code, any smp_wmb() on the writer side
+must be paired with an smp_rmb on the reader. You probably have the
+sufficient barriers on the side that initiates the I/O because
+that uses a dmb() in the MMIO instructions, but that is only
+by accident and not portable.
+
+Also, in the uniprocessor case, you have more barriers than you
+need, which limits the performance. The best solution for
+both performance and readability would be to use readw_relaxed()
+and writew_relaxed() and manually add the barriers you actually
+need, i.e. two smp_rmb()/smp_wmb() in the PIO case, and a
+wmb() before you start a real DMA to the device and an rmb()
+after a DMA from the device is complete.
+
+	Arnd
