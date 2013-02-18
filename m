@@ -1,36 +1,101 @@
-From: Sachin Kamat <sachin.kamat@linaro.org>
-Subject: [PATCH 2/7] ARM: dts: Add G2D node to SMDKV310
-Date: Mon, 18 Feb 2013 10:32:08 +0530
-Message-ID: <1361163733-4338-3-git-send-email-sachin.kamat@linaro.org>
-References: <1361163733-4338-1-git-send-email-sachin.kamat@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1361163733-4338-1-git-send-email-sachin.kamat@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: kgene.kim@samsung.com, s.nawrocki@samsung.com, patches@linaro.org, sachin.kamat@linaro.org
+From: J Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 1/4] documentation: add palmas dts definition
+Date: Mon, 18 Feb 2013 10:41:23 +0530
+Message-ID: <1361164283-3133-1-git-send-email-j-keerthy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, b-cousson@ti.com
+Cc: j-keerthy@ti.com, gg@slimlogic.co.uk
 List-Id: devicetree@vger.kernel.org
 
-Added G2D DT node to SMDKV310 board.
+From: Graeme Gregory <gg@slimlogic.co.uk>
 
-Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+Add the DTS definition for the palmas device including the MFD children.
+
+Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
+[j-keerthy@ti.com: changed the DT node property names to follow the
+convention]
+Signed-off-by: J Keerthy <j-keerthy@ti.com>
 ---
- arch/arm/boot/dts/exynos4210-smdkv310.dts |    4 ++++
- 1 files changed, 4 insertions(+), 0 deletions(-)
+ Documentation/devicetree/bindings/mfd/palmas.txt |   67 ++++++++++++++++++++++
+ 1 files changed, 67 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
 
-diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-index 2b1e03a..7bb16aa 100644
---- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
-+++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-@@ -43,6 +43,10 @@
- 		status = "okay";
- 	};
- 
-+	g2d@12800000 {
-+		status = "okay";
+diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
+new file mode 100644
+index 0000000..5fa922e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/palmas.txt
+@@ -0,0 +1,67 @@
++Texas Instruments Palmas family
++
++The Palmas familly are Integrated Power Management Chips.
++These chips are connected to an i2c bus.
++
++
++Required properties:
++- compatible : Must be "ti,palmas";
++  For Integrated power-management in the palmas series, twl6035, twl6037,
++  tps65913
++- interrupts : This i2c device has an IRQ line connected to the main SoC
++- interrupt-controller : Since the palmas support several interrupts internally,
++  it is considered as an interrupt controller cascaded to the SoC one.
++- #interrupt-cells = <1>;
++- interrupt-parent : The parent interrupt controller.
++
++Optional node:
++- Child nodes contain in the palmas. The palmas family is made of several
++  variants that support a different number of features.
++  The child nodes will thus depend of the capability of the variant.
++- mux-pad1 if a value is given it will be used for the pad1 mux
++- mux-pad2 if a value us given it will be used for the pad2 mux
++- power-ctrl if a value is given it will be written to the POWER_CTRL register
++
++Example:
++/*
++ * Integrated Power Management Chip Palmas
++ */
++palmas@48 {
++    compatible = "ti,palmas";
++    reg = <0x48>;
++    interrupts = <39>; /* IRQ_SYS_1N cascaded to gic */
++    interrupt-controller;
++    #interrupt-cells = <1>;
++    interrupt-parent = <&gic>;
++    #address-cells = <1>;
++    #size-cells = <0>;
++
++	ti,mux-pad1 = <0x00>;
++	ti,mux-pad2 = <0x00>;
++	ti,power-ctrl = <0x03>;
++
++	palmas_pmic {
++		compatible = "ti,palmas_pmic";
++		regulators {
++			smps12_reg: smps12 {
++				regulator-min-microvolt = < 600000>;
++                regulator-max-microvolt = <1500000>;
++				regulator-always-on;
++				regulator-boot-on;
++                ti,warm-sleep = <0>;
++                ti,roof-floor = <0>;
++                ti,mode-sleep = <0>;
++                ti,warm-reset = <0>;
++                ti,tstep = <0>;
++                ti,vsel = <0>;
++			};
++		};
++		ti,ldo6-vibrator = <0>;
 +	};
 +
- 	codec@13400000 {
- 		samsung,mfc-r = <0x43000000 0x800000>;
- 		samsung,mfc-l = <0x51000000 0x800000>;
++    palmas_rtc {
++        compatible = "ti,palmas_rtc";
++        interrupts = <8 9>;
++        reg = <0>;
++    };
++};
 -- 
-1.7.4.1
+1.7.5.4
+
