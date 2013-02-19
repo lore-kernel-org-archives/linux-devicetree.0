@@ -1,13 +1,14 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3 1/8] dt: describe base reset signal binding
-Date: Tue, 19 Feb 2013 12:35:25 +0100
-Message-ID: <1361273732-23357-2-git-send-email-p.zabel@pengutronix.de>
-References: <1361273732-23357-1-git-send-email-p.zabel@pengutronix.de>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH, RFC 1/8] ARM: localtimer: return percpu clkevt on register
+Date: Tue, 19 Feb 2013 14:10:13 +0200
+Message-ID: <20130219121013.GO23197@arwen.pp.htv.fi>
+References: <cover.1361186097.git.afzal@ti.com>
+ <e7cbb10903841ba23a93f71e7a06ae34a43adc70.1361186097.git.afzal@ti.com>
+Reply-To: balbi-l0cyMroinI0@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============4607571987082558863=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1361273732-23357-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <e7cbb10903841ba23a93f71e7a06ae34a43adc70.1361186097.git.afzal-l0cyMroinI0@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,114 +19,87 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Syed Mohammed Khasim <khasim-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+--===============4607571987082558863==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="acOuGx3oQeOcSZJu"
+Content-Disposition: inline
 
-This binding is intended to represent the hardware reset signals present
-internally in most IC (SoC, FPGA, ...) designs.
-It consists of a binding for a reset controller device (provider), and a
-pair of properties, "resets" and "reset-names", to link a device node
-(consumer) to its reset controller via phandle, similarly to the clock
-and interrupt bindings.
+--acOuGx3oQeOcSZJu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The reset controller has all information necessary to reset the consumer
-device. That could be provided via device tree, or it could be implemented
-in hardware.
-The aim is to enable device drivers to request a framework API to issue a
-reset simply by providing their struct device pointer as the most common
-case.
+Hi,
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Reviewed-by: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/reset/reset.txt |   75 +++++++++++++++++++++
- 1 file changed, 75 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/reset.txt
+On Mon, Feb 18, 2013 at 05:06:39PM +0530, Afzal Mohammed wrote:
+> @@ -315,6 +315,7 @@ static struct local_timer_ops twd_lt_ops __cpuinitdat=
+a =3D {
+>  static int __init twd_local_timer_common_register(struct device_node *np)
+>  {
+>  	int err;
+> +	struct clock_event_device *evt;
+> =20
+>  	twd_evt =3D alloc_percpu(struct clock_event_device *);
+>  	if (!twd_evt) {
+> @@ -328,8 +329,8 @@ static int __init twd_local_timer_common_register(str=
+uct device_node *np)
+>  		goto out_free;
+>  	}
+> =20
+> -	err =3D local_timer_register(&twd_lt_ops);
+> -	if (err)
+> +	evt =3D local_timer_register(&twd_lt_ops);
+> +	if (IS_ERR(evt))
+>  		goto out_irq;
 
-diff --git a/Documentation/devicetree/bindings/reset/reset.txt b/Documentation/devicetree/bindings/reset/reset.txt
-new file mode 100644
-index 0000000..31db6ff
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/reset.txt
-@@ -0,0 +1,75 @@
-+= Reset Signal Device Tree Bindings =
-+
-+This binding is intended to represent the hardware reset signals present
-+internally in most IC (SoC, FPGA, ...) designs. Reset signals for whole
-+standalone chips are most likely better represented as GPIOs, although there
-+are likely to be exceptions to this rule.
-+
-+Hardware blocks typically receive a reset signal. This signal is generated by
-+a reset provider (e.g. power management or clock module) and received by a
-+reset consumer (the module being reset, or a module managing when a sub-
-+ordinate module is reset). This binding exists to represent the provider and
-+consumer, and provide a way to couple the two together.
-+
-+A reset signal is represented by the phandle of the provider, plus a reset
-+specifier - a list of DT cells that represents the reset signal within the
-+provider. The length (number of cells) and semantics of the reset specifier
-+are dictated by the binding of the reset provider, although common schemes
-+are described below.
-+
-+A word on where to place reset signal consumers in device tree: It is possible
-+in hardware for a reset signal to affect multiple logically separate HW blocks
-+at once. In this case, it would be unwise to represent this reset signal in
-+the DT node of each affected HW block, since if activated, an unrelated block
-+may be reset. Instead, reset signals should be represented in the DT node
-+where it makes most sense to control it; this may be a bus node if all
-+children of the bus are affected by the reset signal, or an individual HW
-+block node for dedicated reset signals. The intent of this binding is to give
-+appropriate software access to the reset signals in order to manage the HW,
-+rather than to slavishly enumerate the reset signal that affects each HW
-+block.
-+
-+= Reset providers =
-+
-+Required properties:
-+#reset-cells:	Number of cells in a reset specifier; Typically 0 for nodes
-+		with a single reset output and 1 for nodes with multiple
-+		reset outputs.
-+
-+For example:
-+
-+	rst: reset-controller {
-+		#reset-cells = <1>;
-+	};
-+
-+= Reset consumers =
-+
-+Required properties:
-+resets:		List of phandle and reset specifier pairs, one pair
-+		for each reset signal that affects the device, or that the
-+		device manages. Note: if the reset provider specifies '0' for
-+		#reset-cells, then only the phandle portion of the pair will
-+		appear.
-+
-+Optional properties:
-+reset-names:	List of reset signal name strings sorted in the same order as
-+		the resets property. Consumers drivers will use reset-names to
-+		match reset signal names with reset specifiers.
-+
-+For example:
-+
-+	device {
-+		resets = <&rst 20>;
-+		reset-names = "reset";
-+	};
-+
-+This represents a device with a single reset signal named "reset".
-+
-+	bus {
-+		resets = <&rst 10> <&rst 11> <&rst 12> <&rst 11>;
-+		reset-names = "i2s1", "i2s2", "dma", "mixer";
-+	};
-+
-+This represents a bus that controls the reset signal of each of four sub-
-+ordinate devices. Consider for example a bus that fails to operate unless no
-+child device has reset asserted.
--- 
-1.7.10.4
+this is wrong. Will return 0 even in the error case. Correct version
+would be:
+
+if (IS_ERR(evt)) {
+	err =3D PTR_ERR(evt);
+	goto out_irq;
+}
+
+--=20
+balbi
+
+--acOuGx3oQeOcSZJu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRI2ulAAoJEIaOsuA1yqRELJIP/12ken2QId8yUgcsrXQQLAZ8
+haabqhcm54toRT3V6PcCVxfH71+h+KceD+lte/CMk/mYkfKjdraBUDiBvzqYSZbO
+jbKx+f+C1k7iRIT/6JNxWqrikpaN1+Dfiu9yVTcJx8SuIq5ZHZ4Ep5Mm6J5udsQ3
+iSl0fL/Ua3wQExkfEOMTG9KxHTNxCFTogIMO3ifizP9Rfu90kgTfALdQSv58wxtu
+j9X9uyJmM7SEEOSgjKEtDOuecccVsFIvfMfNq7kvrN2ZfBOUUhFtAskq4NrTx0Dn
+8BqmGHUK+8m6bJmglRlM8HwsGCc623XfhoVIQZ56FDX2+BNlqMt17LKVnUBdCcKm
+y3czUBomoc3YnqlJ5oFaVlqH29//VmRIGyxYzzah/ROo6sZOXekEimFAXWwgmrQn
+bIuaCtuOUGi2D77sxrgtJGMwko59k8rKjUSVLZaKFplJ7Ikqtnn9y2k8z9qMJbJV
+/XcdPWtyhcGuTgDr1nWiXe+T46uODVz8tDwyad6bLfKHw/FvZ0Eu40vEuw6fXqv2
+nmTh6PslKk/kcjM9sMv56wV30FzaNDFtxOQgKxzPHJ9lMonnhi8fF9CkiZaZxwUB
+ZmRuZyUSu/9oeLZv4FoCJBEQrNyRPkCuKdT0Z70hZFTgvsCe2cGcvA2Q1Quu0Y0X
+BT/OSjQTTCt6Iql6V+um
+=ItBP
+-----END PGP SIGNATURE-----
+
+--acOuGx3oQeOcSZJu--
+
+--===============4607571987082558863==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============4607571987082558863==--
