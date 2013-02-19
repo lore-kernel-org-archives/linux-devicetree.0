@@ -1,67 +1,128 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH, RFC 8/8] ARM: dts: am43-pre-silicon support
-Date: Tue, 19 Feb 2013 16:05:22 +0530
-Message-ID: <5123556A.9050109@ti.com>
-References: <cover.1361186097.git.afzal@ti.com>
- <e344f74da47579c11db68d9f6efe25259ed7f25d.1361186097.git.afzal@ti.com>
+From: Wei Ni <wni@nvidia.com>
+Subject: Re: [lm-sensors] [RFC PATCH 3/9] hwmon: (lm90) add support to handle
+ irq
+Date: Tue, 19 Feb 2013 18:43:36 +0800
+Message-ID: <51235758.60902@nvidia.com>
+References: <1361187031-3679-1-git-send-email-wni@nvidia.com> <1361187031-3679-4-git-send-email-wni@nvidia.com> <20130219033419.GB25610@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <e344f74da47579c11db68d9f6efe25259ed7f25d.1361186097.git.afzal@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Afzal Mohammed <afzal@ti.com>
-Cc: Russell King <linux@arm.linux.org.uk>, linux-doc@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Sekhar Nori <nsekhar@ti.com>, devicetree-discuss@lists.ozlabs.org, Nicolas Pitre <nico@linaro.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Marc Zyngier <marc.zyngier@arm.com>, Syed Mohammed Khasim <khasim@ti.com>, Rob Landley <rob@landley.net>, linux-omap@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20130219033419.GB25610@roeck-us.net>
+Sender: linux-pm-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, Matthew Longnecker <MLongnecker@nvidia.com>, "khali@linux-fr.org" <khali@linux-fr.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, Alex Courbot <acourbot@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 18 February 2013 05:08 PM, Afzal Mohammed wrote:
-> AM43 SoC is in pre-silicon stage, meanwhile it has been modelled in
-> a pre-silicon platform. To validate and boot Linux in pre-silicon
-> platform that emulates an AM43 SoC, add DT build support.
->
-> As bootloader is not used, bootargs is passed through DT.
->
-> Note: This would be replaced by an original board support.
->
-> Signed-off-by: Afzal Mohammed <afzal@ti.com>
-> ---
->   arch/arm/boot/dts/Makefile             |  3 ++-
->   arch/arm/boot/dts/am43-pre-silicon.dts | 31 +++++++++++++++++++++++++++++++
->   2 files changed, 33 insertions(+), 1 deletion(-)
->   create mode 100644 arch/arm/boot/dts/am43-pre-silicon.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 94d88b9..b434344 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -124,7 +124,8 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
->   	omap5-evm.dtb \
->   	am335x-evm.dtb \
->   	am335x-evmsk.dtb \
-> -	am335x-bone.dtb
-> +	am335x-bone.dtb \
-> +	am43-pre-silicon.dtb
->   dtb-$(CONFIG_ARCH_ORION5X) += orion5x-lacie-ethernet-disk-mini-v2.dtb
->   dtb-$(CONFIG_ARCH_PRIMA2) += prima2-evb.dtb
->   dtb-$(CONFIG_ARCH_U8500) += snowball.dtb \
-> diff --git a/arch/arm/boot/dts/am43-pre-silicon.dts b/arch/arm/boot/dts/am43-pre-silicon.dts
-> new file mode 100644
-> index 0000000..b9c6297
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/am43-pre-silicon.dts
+On 02/19/2013 11:34 AM, Guenter Roeck wrote:
+> On Mon, Feb 18, 2013 at 07:30:25PM +0800, Wei Ni wrote:
+>> Add support to handle irq. When the temperature touch the limit value, the
+>> driver can handle the interrupt.
+>>
+>> Signed-off-by: Alexandre Courbot <acourbot@nvidia.com>
+>> Signed-off-by: Wei Ni <wni@nvidia.com>
+>> ---
+>>  drivers/hwmon/lm90.c |   38 ++++++++++++++++++++++++++++++++++++++
+>>  1 file changed, 38 insertions(+)
+>>
+>> diff --git a/drivers/hwmon/lm90.c b/drivers/hwmon/lm90.c
+>> index caf01b0..80311ef 100644
+>> --- a/drivers/hwmon/lm90.c
+>> +++ b/drivers/hwmon/lm90.c
+>> @@ -89,6 +89,8 @@
+>>  #include <linux/err.h>
+>>  #include <linux/mutex.h>
+>>  #include <linux/sysfs.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/of_irq.h>
+>>  
+>>  /*
+>>   * Addresses to scan
+>> @@ -302,6 +304,7 @@ static const struct lm90_params lm90_params[] = {
+>>  struct lm90_data {
+>>  	struct device *hwmon_dev;
+>>  	struct mutex update_lock;
+>> +	struct work_struct irq_work;
+>>  	char valid; /* zero until following fields are valid */
+>>  	unsigned long last_updated; /* in jiffies */
+>>  	int kind;
+>> @@ -1418,6 +1421,29 @@ static void lm90_init_client(struct i2c_client *client)
+>>  		i2c_smbus_write_byte_data(client, LM90_REG_W_CONFIG1, config);
+>>  }
+>>  
+>> +static void lm90_alert(struct i2c_client *client, unsigned int flag);
+>> +
+>> +static void lm90_irq_work(struct work_struct *work)
+>> +{
+>> +	struct lm90_data *data = container_of(work, struct lm90_data,
+>> +					      irq_work);
+>> +	struct i2c_client *client = to_i2c_client(data->hwmon_dev->parent);
+>> +
+>> +	lm90_alert(client, 0);
+>> +
+>> +	enable_irq(client->irq);
+>> +}
+>> +
+>> +static irqreturn_t lm90_irq(int irq, void *dev_id)
+>> +{
+>> +	struct lm90_data *data = dev_id;
+>> +
+>> +	disable_irq_nosync(irq);
+>> +	schedule_work(&data->irq_work);
+>> +
+>> +	return IRQ_HANDLED;
+>> +}
+>> +
+>>  static int lm90_probe(struct i2c_client *client,
+>>  		      const struct i2c_device_id *id)
+>>  {
+>> @@ -1494,6 +1520,17 @@ static int lm90_probe(struct i2c_client *client,
+>>  		goto exit_remove_files;
+>>  	}
+>>  
+>> +	if (client->irq >= 0) {
+>> +		INIT_WORK(&data->irq_work, lm90_irq_work);
+>> +		dev_dbg(dev, "lm90 irq: %d\n", client->irq);
+>> +		err = request_irq(client->irq, lm90_irq, IRQF_TRIGGER_LOW,
+>> +				       "lm90", data);
+> 
+> request_threaded_irq or even better devm_request_threaded_irq would be better here.
 
-Well the pre-silicon platform and the SOC are very
-close and at least the support you are adding here is
-exactly same. So lets just use am437x.dtb or something
-like that.
+yes, it's better to use request_threaded_irq here.
+we can set lm90_irq() as interrupt handle, and set lm90_alert() as
+thread function.
+I will try it on my next version.
 
-Regards,
-Santosh
+> 
+>> +		if (err < 0) {
+>> +			dev_err(dev, "cannot request interrupt\n");
+>> +			goto exit_remove_files;
+>> +		}
+>> +	}
+>> +
+>>  	return 0;
+>>  
+>>  exit_remove_files:
+>> @@ -1507,6 +1544,7 @@ static int lm90_remove(struct i2c_client *client)
+>>  {
+>>  	struct lm90_data *data = i2c_get_clientdata(client);
+>>  
+>> +	free_irq(client->irq, data);
+>>  	hwmon_device_unregister(data->hwmon_dev);
+>>  	lm90_remove_files(client, data);
+>>  	lm90_restore_conf(client, data);
+>> -- 
+>> 1.7.9.5
+>>
+>>
+>> _______________________________________________
+>> lm-sensors mailing list
+>> lm-sensors@lm-sensors.org
+>> http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
