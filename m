@@ -1,34 +1,25 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2 0/4] R-Car SATA driver and platform data
-Date: Tue, 19 Feb 2013 12:42:12 +0900
-Message-ID: <20130219034210.GA7701@verge.net.au>
-References: <201302182327.46930.sergei.shtylyov@cogentembedded.com>
+From: Alex Courbot <acourbot@nvidia.com>
+Subject: Re: [RFC PATCH 8/9] ARM: dt: t30 cardhu: add dt entry for thermal
+ driver
+Date: Tue, 19 Feb 2013 12:42:57 +0900
+Message-ID: <5122F4C1.9050108@nvidia.com>
+References: <1361187031-3679-1-git-send-email-wni@nvidia.com> <1361187031-3679-9-git-send-email-wni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201302182327.46930.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jgarzik@pobox.com, linux-ide@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, vladimir.barinov@cogentembedded.com
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1361187031-3679-9-git-send-email-wni@nvidia.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Wei Ni <wni@nvidia.com>
+Cc: "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, Matthew Longnecker <MLongnecker@nvidia.com>, "khali@linux-fr.org" <khali@linux-fr.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.orgrs.org" <linux-kernel@vger.kernel.orgrs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2013 at 11:27:46PM +0300, Sergei Shtylyov wrote:
-> Hello.
-> 
->    Here's the v2 of the set of 4 patches against the Simon Horman's renesas.git
-> repo, 'next' branch:
-> 
-> [1/4] libata: add R-Car SATA driver
-> [2/4] ARM: mach-shmobile: r8a7779: SATA DT configuration
-> [3/4] ARM: mach-shmobile: r8a7779: add SATA support
-> [4/4] ARM: mach-shmobile: marzen: add SATA support
-> 
-> Patch 1 also applies to the 'upstream' branch of Jeff Garzik's libata-dev.git
-> repo.
-> 
-> Patch changes since the initial posting are reported in the individual patches.
+On 02/18/2013 08:30 PM, Wei Ni wrote:
+> diff --git a/Documentation/devicetree/bindings/thermal/tegra3-thermal.txt b/Documentation/devicetree/bindings/thermal/tegra3-thermal.txt
+> new file mode 100644
 
-Thanks, I have updated topic/r-car-sata and verified
-that the SATA driver is successfully initialised for both
-non-DT and DT boot.
+This should go with the previous patch (which introduces the driver) 
+instead of this one. Bindings should be documented with their driver.
+
+Alex.
+
