@@ -1,53 +1,125 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH v4 00/13] mmc: core and driver DT and related development
-Date: Tue, 19 Feb 2013 22:57:05 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1302192253140.22058@axis700.grange>
-References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
- <87k3q5ahl8.fsf@octavius.laptop.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 8/8] reset: Add driver for gpio-controlled reset pins
+Date: Tue, 19 Feb 2013 14:57:21 -0700
+Message-ID: <5123F541.4020407@wwwdotorg.org>
+References: <1361273732-23357-1-git-send-email-p.zabel@pengutronix.de>
+ <1361273732-23357-9-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <87k3q5ahl8.fsf@octavius.laptop.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Chris Ball <cjb@laptop.org>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1361273732-23357-9-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chris
+On 02/19/2013 04:35 AM, Philipp Zabel wrote:
+> This driver implements a reset controller device that toggles gpios
+> connected to reset pins of peripheral ICs. The delay between assertion
+> and de-assertion of the reset signal can be configured.
 
-On Mon, 18 Feb 2013, Chris Ball wrote:
+> diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
 
-> Hi Guennadi,
-> 
-> On Fri, Feb 15 2013, Guennadi Liakhovetski wrote:
-> > This is v4 of a patch-series, extending mmc subsystem device-tree usage 
-> > and adding more advanced DT capabilities to sh_mmcif and sh_mobile_sdhi / 
-> > tmio_mmc drivers. Changes since v3 are described in respective patches. 
-> > Thanks to all who commented on v3.
-> >
-> > Guennadi Liakhovetski (13):
-> >   mmc: sdhi, tmio: only check flags in tmio-mmc driver proper
-> >   mmc: detailed definition of CD and WP MMC line polarities in DT
-> >   mmc: provide a standard MMC device-tree binding parser centrally
-> >   mmc: (cosmetic) remove "extern" from function declarations
-> >   mmc: sh-mmcif: use mmc_of_parse() to parse standard MMC DT bindings
-> >   mmc: tmio-mmc: define device-tree bindings
-> >   mmc: tmio-mmc: parse device-tree bindings
-> >   mmc: sh_mobile_sdhi: remove unused .pdata field
-> >   mmc: sh_mobile_sdhi: use managed resource allocations
-> >   mmc: tmio: remove unused and deprecated symbols
-> >   mmc: tmio: add support for the VccQ regulator
-> >   mmc: add DT bindings for more MMC capability flags
-> >   mmc: tmio: add barriers to IO operations
-> 
-> Thanks!  Pushed to mmc-next, will think about merging for 3.9.
+> +Required properties:
 
-Thanks! Please, push all of them (taking into account v5 of #03/13), but 
-hold back on #13, it'll need some more work.
+> +- reset-delays: List of delays in ms. The corresponding gpio reset line is
+> +                asserted for this duration to reset.
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+mS are quite long. Would it make sense for this property to be uS instead?
+
+> diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
+
+> +static int gpio_reset_probe(struct platform_device *pdev)
+
+> +	if (of_find_property(np, "reset-delays", NULL)) {
+> +		delays = devm_kzalloc(&pdev->dev, sizeof(u32) *
+> +				drvdata->nr_gpios, GFP_KERNEL);
+> +		if (delays == NULL)
+> +			return -ENOMEM;
+
+It'd be nice if there were something like of_property_read_u32_index()
+so you could read each value one-by-one in the loop later on, rather
+than dynamically allocating this temporarily.
+
+> +		ret = of_property_read_u32_array(np, "reset-delays", delays,
+> +				drvdata->nr_gpios);
+> +		if (ret < 0)
+> +			return ret;
+> +	}
+> +
+> +	for (i = 0; i < drvdata->nr_gpios; i++) {
+> +		drvdata->gpios[i].gpio = of_get_named_gpio_flags(np,
+> +				"reset-gpios", i, &flags);
+> +		if (drvdata->gpios[i].gpio < 0) {
+> +			dev_err(&pdev->dev, "invalid gpio for reset %d\n", i);
+
+It's not an error if the value is -EPROBE_DEFERRED; you might want to
+explicitly check for that case and not print anything?
+
+> +			return drvdata->gpios[i].gpio;
+> +		}
+> +
+> +		/*
+> +		 * The flags are also used to remember whether a given GPIO
+> +		 * reset is active-low.
+> +		 */
+> +		if (flags & OF_GPIO_ACTIVE_LOW)
+> +			drvdata->gpios[i].flags = GPIOF_OUT_INIT_HIGH;
+> +		else
+> +			drvdata->gpios[i].flags = GPIOF_OUT_INIT_LOW;
+
+That raises the question: What is the initial reset state expected to
+be? Some devices might want to stay in reset until their driver
+explicitly removes the reset signal.
+
+We could handle that by adding another (optional) property indicating
+the initial reset state of each GPIO; default to initially not-in-reset
+unless that property exists and specifies initially-in-reset.
+
+> +		ret = devm_gpio_request_one(&pdev->dev, drvdata->gpios[i].gpio,
+> +				drvdata->gpios[i].flags, NULL);
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev, "failed to request gpio %d for reset %d\n",
+> +					drvdata->gpios[i].gpio, i);
+> +			return ret;
+> +		}
+
+Perhaps first loop to look up all the GPIOs and initialize data
+structures, then loop to request the GPIOs? That'd prevent lots of HW
+programming and de-programming for the GPIOs near the start of the list,
+in the case where some later GPIO causes -EPROBE_DEFERRED, and so this
+probe() function keeps getting executed over and over.
+
+> +		if (delays != NULL)
+> +			drvdata->gpios[i].delay_ms = delays[i];
+> +		else
+> +			drvdata->gpios[i].delay_ms = -1; /* .reset returns -ENOSYS */
+
+(here is where of_property_read_u32_index() might be handy)
+
+> +static struct platform_driver gpio_reset_driver = {
+> +	.probe = gpio_reset_probe,
+> +	.remove = gpio_reset_remove,
+> +	.driver = {
+> +		.name = "gpio-reset",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = of_match_ptr(gpio_reset_dt_ids),
+> +	},
+> +};
+> +
+> +module_platform_driver(gpio_reset_driver);
+
+You might want to add a few things like MODULE_AUTHOR,
+MODULE_DESCRIPTION,  MODULE_LICENSE,
+MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids), perhaps MODULE_ALIAS for the
+platform device too.
