@@ -1,7 +1,8 @@
 From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v3 8/8] reset: Add driver for gpio-controlled reset pins
-Date: Tue, 19 Feb 2013 12:35:32 +0100
-Message-ID: <1361273732-23357-9-git-send-email-p.zabel@pengutronix.de>
+Subject: [PATCH v3 4/8] ARM i.MX6q: Link system reset controller (SRC) to IPU
+ in DT
+Date: Tue, 19 Feb 2013 12:35:28 +0100
+Message-ID: <1361273732-23357-5-git-send-email-p.zabel@pengutronix.de>
 References: <1361273732-23357-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,284 +23,47 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This driver implements a reset controller device that toggles gpios
-connected to reset pins of peripheral ICs. The delay between assertion
-and de-assertion of the reset signal can be configured.
-
 Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 ---
 Changes since v2:
- - Fill reset_controller_dev.owner field.
- - Renamed "gpios" device tree property to "reset-gpios".
- - Added device tree binding documentation.
+ - Rebased onto next-20120219
 ---
- .../devicetree/bindings/reset/gpio-reset.txt       |   32 ++++
- drivers/reset/Kconfig                              |   13 ++
- drivers/reset/Makefile                             |    1 +
- drivers/reset/gpio-reset.c                         |  189 ++++++++++++++++++++
- 4 files changed, 235 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/reset/gpio-reset.txt
- create mode 100644 drivers/reset/gpio-reset.c
+ arch/arm/boot/dts/imx6q.dtsi   |    1 +
+ arch/arm/boot/dts/imx6qdl.dtsi |    2 ++
+ 2 files changed, 3 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-new file mode 100644
-index 0000000..9dd8781
---- /dev/null
-+++ b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-@@ -0,0 +1,31 @@
-+GPIO reset controller
-+=====================
-+
-+A GPIO reset controller controls a number of GPIOs that are connected
-+to reset pins of peripheral ICs.
-+
-+Please also refer to reset.txt in this directory for common reset
-+controller binding usage.
-+
-+Required properties:
-+- compatible: Should be "gpio-reset"
-+- reset-gpios: List of gpios used as reset lines. The gpio specifier for this
-+               property depends on the gpio controller that provides the gpio.
-+- reset-delays: List of delays in ms. The corresponding gpio reset line is
-+                asserted for this duration to reset.
-+- #reset-cells: 1, see below
-+
-+example:
-+
-+gpio_reset: gpio-reset {
-+	compatible = "gpio-reset";
-+	reset-gpios = <&gpio5 0 1>; /* active-low */
-+	reset-delays = <10>; /* 10 ms */
-+	#reset-cells = <1>;
-+};
-+
-+/* Device with nRESET pin connected to GPIO5_0 */
-+sii902x@39 {
-+	/* ... */
-+	resets = <&gpio_reset 0>; /* active-low GPIO5_0, 10 ms reset delay */
-+};
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index c9d04f7..e728d36 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -11,3 +11,16 @@ menuconfig RESET_CONTROLLER
- 	  via GPIOs or SoC-internal reset controller modules.
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index cba021e..4cd4f8d 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -291,6 +291,7 @@
+ 			interrupts = <0 8 0x4 0 7 0x4>;
+ 			clocks = <&clks 133>, <&clks 134>, <&clks 137>;
+ 			clock-names = "bus", "di0", "di1";
++			resets = <&src 4>;
+ 		};
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index 06ec460..3e21e92 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -516,6 +516,7 @@
+ 				compatible = "fsl,imx6q-src";
+ 				reg = <0x020d8000 0x4000>;
+ 				interrupts = <0 91 0x04 0 96 0x04>;
++				#reset-cells = <1>;
+ 			};
  
- 	  If unsure, say no.
-+
-+if RESET_CONTROLLER
-+
-+config RESET_GPIO
-+	tristate "GPIO reset controller support"
-+	depends on GENERIC_GPIO
-+	help
-+	  This driver provides support for reset lines that are controlled
-+	  directly by GPIOs.
-+	  The delay between assertion and de-assertion of the reset signal
-+	  can be configured.
-+
-+endif
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index 1e2d83f..b854f20 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -1 +1,2 @@
- obj-$(CONFIG_RESET_CONTROLLER) += core.o
-+obj-$(CONFIG_RESET_GPIO) += gpio-reset.o
-diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
-new file mode 100644
-index 0000000..80a1807
---- /dev/null
-+++ b/drivers/reset/gpio-reset.c
-@@ -0,0 +1,189 @@
-+/*
-+ * Copyright 2013 Philipp Zabel, Pengutronix
-+ */
-+#include <linux/delay.h>
-+#include <linux/err.h>
-+#include <linux/gpio.h>
-+#include <linux/module.h>
-+#include <linux/of_gpio.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+
-+struct gpio_reset {
-+	unsigned int gpio;
-+	unsigned long flags;
-+	unsigned int delay_ms;
-+};
-+
-+struct gpio_reset_data {
-+	struct reset_controller_dev rcdev;
-+	struct gpio_reset *gpios;
-+	int nr_gpios;
-+};
-+
-+static void __gpio_reset_set(struct gpio_reset_data *drvdata,
-+		unsigned long gpio_idx, int asserted)
-+{
-+	int value = asserted;
-+
-+	if (drvdata->gpios[gpio_idx].flags == GPIOF_OUT_INIT_HIGH)
-+		value = !value;
-+
-+	gpio_set_value(drvdata->gpios[gpio_idx].gpio, value);
-+}
-+
-+static int gpio_reset(struct reset_controller_dev *rcdev,
-+		unsigned long gpio_idx)
-+{
-+	struct gpio_reset_data *drvdata = container_of(rcdev,
-+			struct gpio_reset_data, rcdev);
-+
-+	if (gpio_idx >= drvdata->nr_gpios)
-+		return -EINVAL;
-+
-+	if (drvdata->gpios[gpio_idx].delay_ms < 0)
-+		return -ENOSYS;
-+
-+	__gpio_reset_set(drvdata, gpio_idx, 1);
-+	mdelay(drvdata->gpios[gpio_idx].delay_ms);
-+	__gpio_reset_set(drvdata, gpio_idx, 0);
-+
-+	return 0;
-+}
-+
-+static int gpio_reset_assert(struct reset_controller_dev *rcdev,
-+		unsigned long gpio_idx)
-+{
-+	struct gpio_reset_data *drvdata = container_of(rcdev,
-+			struct gpio_reset_data, rcdev);
-+
-+	if (gpio_idx >= drvdata->nr_gpios)
-+		return -EINVAL;
-+
-+	__gpio_reset_set(drvdata, gpio_idx, 1);
-+
-+	return 0;
-+}
-+
-+static int gpio_reset_deassert(struct reset_controller_dev *rcdev,
-+		unsigned long gpio_idx)
-+{
-+	struct gpio_reset_data *drvdata = container_of(rcdev,
-+			struct gpio_reset_data, rcdev);
-+
-+	if (gpio_idx >= drvdata->nr_gpios)
-+		return -EINVAL;
-+
-+	__gpio_reset_set(drvdata, gpio_idx, 0);
-+
-+	return 0;
-+}
-+
-+static struct reset_control_ops gpio_reset_ops = {
-+	.reset = gpio_reset,
-+	.assert = gpio_reset_assert,
-+	.deassert = gpio_reset_deassert,
-+};
-+
-+static int gpio_reset_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np = pdev->dev.of_node;
-+	struct gpio_reset_data *drvdata;
-+	enum of_gpio_flags flags;
-+	u32 *delays = NULL;
-+	int ret;
-+	int i;
-+
-+	drvdata = devm_kzalloc(&pdev->dev, sizeof(*drvdata), GFP_KERNEL);
-+	if (drvdata == NULL)
-+		return -ENOMEM;
-+
-+	drvdata->nr_gpios = of_gpio_named_count(np, "reset-gpios");
-+	if (drvdata->nr_gpios < 1)
-+		return -EINVAL;
-+
-+	drvdata->gpios = devm_kzalloc(&pdev->dev, sizeof(struct gpio_reset) *
-+			drvdata->nr_gpios, GFP_KERNEL);
-+	if (drvdata->gpios == NULL)
-+		return -ENOMEM;
-+
-+	if (of_find_property(np, "reset-delays", NULL)) {
-+		delays = devm_kzalloc(&pdev->dev, sizeof(u32) *
-+				drvdata->nr_gpios, GFP_KERNEL);
-+		if (delays == NULL)
-+			return -ENOMEM;
-+
-+		ret = of_property_read_u32_array(np, "reset-delays", delays,
-+				drvdata->nr_gpios);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	for (i = 0; i < drvdata->nr_gpios; i++) {
-+		drvdata->gpios[i].gpio = of_get_named_gpio_flags(np,
-+				"reset-gpios", i, &flags);
-+		if (drvdata->gpios[i].gpio < 0) {
-+			dev_err(&pdev->dev, "invalid gpio for reset %d\n", i);
-+			return drvdata->gpios[i].gpio;
-+		}
-+
-+		/*
-+		 * The flags are also used to remember whether a given GPIO
-+		 * reset is active-low.
-+		 */
-+		if (flags & OF_GPIO_ACTIVE_LOW)
-+			drvdata->gpios[i].flags = GPIOF_OUT_INIT_HIGH;
-+		else
-+			drvdata->gpios[i].flags = GPIOF_OUT_INIT_LOW;
-+
-+		ret = devm_gpio_request_one(&pdev->dev, drvdata->gpios[i].gpio,
-+				drvdata->gpios[i].flags, NULL);
-+		if (ret < 0) {
-+			dev_err(&pdev->dev, "failed to request gpio %d for reset %d\n",
-+					drvdata->gpios[i].gpio, i);
-+			return ret;
-+		}
-+
-+		if (delays != NULL)
-+			drvdata->gpios[i].delay_ms = delays[i];
-+		else
-+			drvdata->gpios[i].delay_ms = -1; /* .reset returns -ENOSYS */
-+	}
-+
-+	devm_kfree(&pdev->dev, delays);
-+
-+	drvdata->rcdev.of_node = np;
-+	drvdata->rcdev.owner = THIS_MODULE;
-+	drvdata->rcdev.ops = &gpio_reset_ops;
-+	reset_controller_register(&drvdata->rcdev);
-+
-+	platform_set_drvdata(pdev, drvdata);
-+
-+	return 0;
-+}
-+
-+static int gpio_reset_remove(struct platform_device *pdev)
-+{
-+	struct gpio_reset_data *drvdata = platform_get_drvdata(pdev);
-+
-+	reset_controller_unregister(&drvdata->rcdev);
-+
-+	return 0;
-+}
-+
-+static struct of_device_id gpio_reset_dt_ids[] = {
-+	{ .compatible = "gpio-reset" },
-+	{ }
-+};
-+
-+static struct platform_driver gpio_reset_driver = {
-+	.probe = gpio_reset_probe,
-+	.remove = gpio_reset_remove,
-+	.driver = {
-+		.name = "gpio-reset",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(gpio_reset_dt_ids),
-+	},
-+};
-+
-+module_platform_driver(gpio_reset_driver);
+ 			gpc: gpc@020dc000 {
+@@ -795,6 +796,7 @@
+ 			interrupts = <0 6 0x4 0 5 0x4>;
+ 			clocks = <&clks 130>, <&clks 131>, <&clks 132>;
+ 			clock-names = "bus", "di0", "di1";
++			resets = <&src 2>;
+ 		};
+ 	};
+ };
 -- 
 1.7.10.4
