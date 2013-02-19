@@ -1,306 +1,33 @@
-From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [lm-sensors] [RFC PATCH 6/9] hwmon: (lm90) Register to the thermal
- framework
-Date: Tue, 19 Feb 2013 18:47:20 +0800
-Message-ID: <51235838.6030505@nvidia.com>
-References: <1361187031-3679-1-git-send-email-wni@nvidia.com> <1361187031-3679-7-git-send-email-wni@nvidia.com> <20130219034205.GC25610@roeck-us.net>
+From: "Mohammed, Afzal" <afzal@ti.com>
+Subject: RE: [PATCH, RFC 8/8] ARM: dts: am43-pre-silicon support
+Date: Tue, 19 Feb 2013 10:52:44 +0000
+Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EAA86DE@DBDE01.ent.ti.com>
+References: <cover.1361186097.git.afzal@ti.com>
+ <e344f74da47579c11db68d9f6efe25259ed7f25d.1361186097.git.afzal@ti.com>
+ <5123556A.9050109@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20130219034205.GC25610-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: "durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5123556A.9050109@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Shilimkar, Santosh" <santosh.shilimkar@ti.com>
+Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Tony Lindgren <tony@atomide.com>, Marc Zyngier <marc.zyngier@arm.com>, Nicolas Pitre <nico@linaro.org>, Will Deacon <will.deacon@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, "Nori, Sekhar" <nsekhar@ti.com>, "Syed Mohammed, Khasim" <khasim@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/19/2013 11:42 AM, Guenter Roeck wrote:
-> On Mon, Feb 18, 2013 at 07:30:28PM +0800, Wei Ni wrote:
->> Register the remote sensor to the thermal framework.
->> It can support to show the temperature and read/write threshold.
->>
->> Signed-off-by: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->> ---
->>  arch/arm/boot/dts/tegra30-cardhu.dtsi |    1 +
->>  drivers/hwmon/lm90.c                  |  182 ++++++++++++++++++++++++++++++++-
->>  2 files changed, 182 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm/boot/dts/tegra30-cardhu.dtsi b/arch/arm/boot/dts/tegra30-cardhu.dtsi
->> index 15ad1ad..3f6ab89 100644
->> --- a/arch/arm/boot/dts/tegra30-cardhu.dtsi
->> +++ b/arch/arm/boot/dts/tegra30-cardhu.dtsi
->> @@ -279,6 +279,7 @@
->>  			reg = <0x4c>;
->>  			interrupt-parent = <&gpio>;
->>  			interrupts = <226 0x08>; /* gpio PCC2 */
->> +			#sensor-cells = <1>;
->>  		};
->>  	};
->>  
->> diff --git a/drivers/hwmon/lm90.c b/drivers/hwmon/lm90.c
->> index de5a476..0abdedc 100644
->> --- a/drivers/hwmon/lm90.c
->> +++ b/drivers/hwmon/lm90.c
->> @@ -91,6 +91,7 @@
->>  #include <linux/sysfs.h>
->>  #include <linux/interrupt.h>
->>  #include <linux/of_irq.h>
->> +#include <linux/thermal.h>
->>  
->>  /*
->>   * Addresses to scan
->> @@ -182,6 +183,15 @@ enum chips { lm90, adm1032, lm99, lm86, max6657, max6659, adt7461, max6680,
->>  #define LM90_HAVE_BROKEN_ALERT	(1 << 7) /* Broken alert		*/
->>  
->>  /*
->> + * Thermal framework
->> + */
->> +enum lm90_thresholds {
->> +	LM90_LOW_THRESHOLDS = 0,	/* threshold 0: low limits */
->> +	LM90_HIGH_THRESHOLDS,		/* threshold 1: high limits */
->> +	LM90_NUM_THRESHOLDS
->> +};
->> +
->> +/*
->>   * Driver data (common to all clients)
->>   */
->>  
->> @@ -377,6 +387,9 @@ struct lm90_data {
->>  	s16 temp11[TEMP11_REG_NUM];
->>  	u8 temp_hyst;
->>  	u16 alarms; /* bitvector (upper 8 bits for max6695/96) */
->> +
->> +	struct thermal_sensor *ts_remote;
->> +	struct thermal_sensor *ts_local;
->>  };
->>  
->>  /*
->> @@ -1493,12 +1506,151 @@ static irqreturn_t lm90_irq(int irq, void *dev_id)
->>  	return IRQ_HANDLED;
->>  }
->>  
->> +static int lm90_read_remote_temp(struct thermal_sensor *ts, long *temp)
->> +{
->> +	struct i2c_client *client = ts->devdata;
->> +	struct device *dev = &client->dev;
->> +
->> +	_show_temp11(dev, TEMP11_REMOTE_TEMP, (int *)temp);
->> +
->> +	return 0;
->> +}
->> +
->> +static int lm90_read_remote_threshold(struct thermal_sensor *ts, int th_index,
->> +					long *val)
->> +{
->> +	struct i2c_client *client = ts->devdata;
->> +	struct device *dev = &client->dev;
->> +	int index;
->> +
->> +	switch (th_index) {
->> +	case LM90_LOW_THRESHOLDS:
->> +		/* remote low limit */
->> +		index = TEMP11_REMOTE_LOW;
->> +		break;
->> +	case LM90_HIGH_THRESHOLDS:
->> +		/* remote high limit */
->> +		index = TEMP11_REMOTE_HIGH;
->> +		break;
->> +	default:
->> +		dev_err(dev, "read remote threshold failed.\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	_show_temp11(dev, index, (int *)val);
-> 
-> Typecasting a pointer like this doesn't work. Try this on a big-endian system with
-> sizeof(int) != sizeof(long). Note that you would not have the problem if you
-> would pass the value instead of the pointer.
-
-Yes, you are right, it will cause problems.
-I will return the value for _show_temp11() and _show_temp8().
-
-> 
->> +
->> +	return 0;
->> +}
->> +
->> +static int lm90_write_remote_threshold(struct thermal_sensor *ts, int th_index,
->> +					long val)
->> +{
->> +	struct i2c_client *client = ts->devdata;
->> +	struct device *dev = &client->dev;
->> +	int nr, index;
->> +
->> +	switch (th_index) {
->> +	case LM90_LOW_THRESHOLDS:
->> +		/* remote low limit */
->> +		nr = NR_CHAN_0_REMOTE_LOW;
->> +		index = TEMP11_REMOTE_LOW;
->> +		break;
->> +	case LM90_HIGH_THRESHOLDS:
->> +		/* remote high limit */
->> +		nr = NR_CHAN_0_REMOTE_HIGH;
->> +		index = TEMP11_REMOTE_HIGH;
->> +		break;
->> +	default:
->> +		dev_err(dev, "write remote threshold failed.\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	_set_temp11(dev, nr, index, val);
->> +
->> +	return 0;
->> +}
->> +
->> +static struct thermal_sensor_ops remote_ops = {
->> +	.get_temp = lm90_read_remote_temp,
->> +	.get_threshold = lm90_read_remote_threshold,
->> +	.set_threshold = lm90_write_remote_threshold,
->> +};
->> +
->> +static int lm90_read_local_temp(struct thermal_sensor *ts, long *temp)
->> +{
->> +	struct i2c_client *client = ts->devdata;
->> +	struct device *dev = &client->dev;
->> +
->> +	_show_temp11(dev, TEMP11_LOCAL_TEMP, (int *)temp);
->> +
-> Same here and everywhere else.
-> 
->> +	return 0;
->> +}
->> +
->> +static int lm90_read_local_threshold(struct thermal_sensor *ts, int th_index,
->> +					long *val)
->> +{
->> +	struct i2c_client *client = ts->devdata;
->> +	struct device *dev = &client->dev;
->> +	int index;
->> +
->> +	switch (th_index) {
->> +	case LM90_LOW_THRESHOLDS:
->> +		/* local low limit */
->> +		index = TEMP8_LOCAL_LOW;
->> +		break;
->> +	case LM90_HIGH_THRESHOLDS:
->> +		/* local high limit */
->> +		index = TEMP8_LOCAL_HIGH;
->> +		break;
->> +	default:
->> +		dev_err(dev, "read local threshold failed.\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	_show_temp8(dev, index, (int *)val);
->> +
->> +	return 0;
->> +}
->> +
->> +static int lm90_write_local_threshold(struct thermal_sensor *ts, int th_index,
->> +					long val)
->> +{
->> +	struct i2c_client *client = ts->devdata;
->> +	struct device *dev = &client->dev;
->> +	int index;
->> +
->> +	switch (th_index) {
->> +	case LM90_LOW_THRESHOLDS:
->> +		/* local low limit */
->> +		index = TEMP8_LOCAL_LOW;
->> +		break;
->> +	case LM90_HIGH_THRESHOLDS:
->> +		/* local high limit */
->> +		index = TEMP8_LOCAL_HIGH;
->> +		break;
->> +	default:
->> +		dev_err(dev, "write local threshold failed.\n");
->> +		return -EINVAL;
->> +	}
->> +
->> +	_set_temp8(dev, index, val);
->> +
->> +	return 0;
->> +}
->> +
->> +static struct thermal_sensor_ops local_ops = {
->> +	.get_temp = lm90_read_local_temp,
->> +	.get_threshold = lm90_read_local_threshold,
->> +	.set_threshold = lm90_write_local_threshold,
->> +};
->> +
->>  static int lm90_probe(struct i2c_client *client,
->>  		      const struct i2c_device_id *id)
->>  {
->>  	struct device *dev = &client->dev;
->>  	struct i2c_adapter *adapter = to_i2c_adapter(dev->parent);
->>  	struct lm90_data *data;
->> +	struct node_args np_args;
->>  	int err;
->>  
->>  	data = devm_kzalloc(&client->dev, sizeof(struct lm90_data), GFP_KERNEL);
->> @@ -1576,12 +1728,38 @@ static int lm90_probe(struct i2c_client *client,
->>  				       "lm90", data);
->>  		if (err < 0) {
->>  			dev_err(dev, "cannot request interrupt\n");
->> -			goto exit_remove_files;
->> +			goto exit_unregister_hwmon;
->>  		}
->>  	}
->>  
->> +	np_args.np = dev->of_node;
->> +	np_args.index = 0;
->> +	data->ts_remote = thermal_sensor_register("lm90_remote",
->> +						LM90_NUM_THRESHOLDS,
->> +						&np_args,
->> +						&remote_ops, client);
->> +	if (IS_ERR(data->ts_remote)) {
->> +		dev_err(dev, "cannot register sensor to thermal framework\n");
->> +		err = -EINVAL;
->> +		goto exit_unregister_hwmon;
->> +	}
->> +
->> +	np_args.index = 1;
->> +	data->ts_local = thermal_sensor_register("lm90_local",
->> +						LM90_NUM_THRESHOLDS,
->> +						&np_args,
->> +						&local_ops, client);
->> +
->> +	if (IS_ERR(data->ts_local)) {
->> +		dev_err(dev, "cannot register sensor to thermal framework\n");
->> +		err = -EINVAL;
->> +		goto exit_unregister_hwmon;
->> +	}
->> +
-> 
-> How about the second remote sensor ? Granted, not all chips supported by this
-> driver have it, but if we are adding this we might as well add it for all
-> sensors on all chips.
-
-Ok, I will improve it.
-
-> 
->>  	return 0;
->>  
->> +exit_unregister_hwmon:
->> +	hwmon_device_unregister(data->hwmon_dev);
->>  exit_remove_files:
->>  	lm90_remove_files(client, data);
->>  exit_restore:
->> @@ -1594,6 +1772,8 @@ static int lm90_remove(struct i2c_client *client)
->>  	struct lm90_data *data = i2c_get_clientdata(client);
->>  
->>  	free_irq(client->irq, data);
->> +	thermal_sensor_unregister(data->ts_remote);
->> +	thermal_sensor_unregister(data->ts_local);
->>  	hwmon_device_unregister(data->hwmon_dev);
->>  	lm90_remove_files(client, data);
->>  	lm90_restore_conf(client, data);
->> -- 
->> 1.7.9.5
->>
->>
->> _______________________________________________
->> lm-sensors mailing list
->> lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
->> http://lists.lm-sensors.org/mailman/listinfo/lm-sensors
->>
+SGkgU2FudG9zaCwNCg0KT24gVHVlLCBGZWIgMTksIDIwMTMgYXQgMTY6MDU6MjIsIFNoaWxpbWth
+ciwgU2FudG9zaCB3cm90ZToNCj4gT24gTW9uZGF5IDE4IEZlYnJ1YXJ5IDIwMTMgMDU6MDggUE0s
+IEFmemFsIE1vaGFtbWVkIHdyb3RlOg0KDQo+ID4gQU00MyBTb0MgaXMgaW4gcHJlLXNpbGljb24g
+c3RhZ2UsIG1lYW53aGlsZSBpdCBoYXMgYmVlbiBtb2RlbGxlZCBpbg0KPiA+IGEgcHJlLXNpbGlj
+b24gcGxhdGZvcm0uIFRvIHZhbGlkYXRlIGFuZCBib290IExpbnV4IGluIHByZS1zaWxpY29uDQo+
+ID4gcGxhdGZvcm0gdGhhdCBlbXVsYXRlcyBhbiBBTTQzIFNvQywgYWRkIERUIGJ1aWxkIHN1cHBv
+cnQuDQoNCj4gPiBOb3RlOiBUaGlzIHdvdWxkIGJlIHJlcGxhY2VkIGJ5IGFuIG9yaWdpbmFsIGJv
+YXJkIHN1cHBvcnQuDQoNCj4gPiAtCWFtMzM1eC1ib25lLmR0Yg0KPiA+ICsJYW0zMzV4LWJvbmUu
+ZHRiIFwNCj4gPiArCWFtNDMtcHJlLXNpbGljb24uZHRiDQoNCj4gV2VsbCB0aGUgcHJlLXNpbGlj
+b24gcGxhdGZvcm0gYW5kIHRoZSBTT0MgYXJlIHZlcnkNCj4gY2xvc2UgYW5kIGF0IGxlYXN0IHRo
+ZSBzdXBwb3J0IHlvdSBhcmUgYWRkaW5nIGhlcmUgaXMNCj4gZXhhY3RseSBzYW1lLiBTbyBsZXRz
+IGp1c3QgdXNlIGFtNDM3eC5kdGIgb3Igc29tZXRoaW5nDQo+IGxpa2UgdGhhdC4NCg0KU29DIHN1
+cHBvcnQgaXMgYWxyZWFkeSBhZGRlZCBpbiBwYXRjaCA3LzguIFRoaXMgaXMgYm9hcmQgKHdoaWNo
+IGRvZXNuJ3QNCmV4aXN0IG5vdykgc3VwcG9ydCwgaGVuY2UgYSBwcmUtc2lsaWNvbiB0ZW1wb3Jh
+cnkgb25lIHRvIHZhbGlkYXRlIGl0Lg0KDQpSZWdhcmRzDQpBZnphbA0KDQo=
