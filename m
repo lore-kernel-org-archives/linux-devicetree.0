@@ -1,31 +1,35 @@
-From: Chris Ball <cjb@laptop.org>
-Subject: Re: [PATCH v4 00/13] mmc: core and driver DT and related development
-Date: Tue, 19 Feb 2013 17:00:26 -0500
-Message-ID: <87k3q4ge11.fsf@octavius.laptop.org>
-References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
-	<87k3q5ahl8.fsf@octavius.laptop.org>
-	<Pine.LNX.4.64.1302192253140.22058@axis700.grange>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC PATCH 1/9] ARM: dt: t30 cardhu: add dt entry for lm90
+Date: Tue, 19 Feb 2013 15:48:35 -0700
+Message-ID: <51240143.3010205@wwwdotorg.org>
+References: <1361187031-3679-1-git-send-email-wni@nvidia.com> <1361187031-3679-2-git-send-email-wni@nvidia.com> <5122F162.9030103@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1302192253140.22058@axis700.grange> (Guennadi
-	Liakhovetski's message of "Tue, 19 Feb 2013 22:57:05 +0100 (CET)")
-Sender: linux-mmc-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, Arnd Bergmann <arnd@arndb.de>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5122F162.9030103-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TZX6JHB/w77yyCwEArCW2h5@public.gmane.org" <linux-kernel-u79uwXL29TZX6JHB/w77yyCwEArCW2h5@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 02/18/2013 08:28 PM, Alex Courbot wrote:
+> On 02/18/2013 08:30 PM, Wei Ni wrote:
+>> Enable thermal sensor lm90 in the dts file.
+> 
+> Acked-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> Btw, shouldn't this patch come last, after all the changes you did to
+> lm90? If you keep the current order, you will need to ensure that the
+> device performs as expected on Cardhu for each of the remaining patches
+> of the series. It is probably safer to just move this one at the end to
+> avoid trouble.
 
-On Tue, Feb 19 2013, Guennadi Liakhovetski wrote:
->> Thanks!  Pushed to mmc-next, will think about merging for 3.9.
->
-> Thanks! Please, push all of them (taking into account v5 of #03/13), but 
-> hold back on #13, it'll need some more work.
+Hmm. This patch on its own seems simple enough, and so I should really
+just apply it as soon as 3.9-rc1 is out.
 
-Okay, I've dropped #13 from mmc-next.
-
-- Chris.
--- 
-Chris Ball   <cjb@laptop.org>   <http://printf.net/>
-One Laptop Per Child
+Note that we (and probably others) have many device trees for boards
+besides Cardhu that instantiate the LM90 driver. The driver has to
+continue to work perfectly for all the patches in the series. Not
+enabling the driver on Cardhu isn't enough to allow patches in the
+middle of the series to break the already-working driver.
