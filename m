@@ -1,70 +1,47 @@
-From: "Mohammed, Afzal" <afzal@ti.com>
-Subject: RE: [RFC 2/8] ARM: twd: register clock event for 1 core SMP
-Date: Tue, 19 Feb 2013 08:00:07 +0000
-Message-ID: <C8443D0743D26F4388EA172BF4E2A7A93EAA8534@DBDE01.ent.ti.com>
-References: <cover.1361166003.git.afzal@ti.com>
- <a7f62b8580aa4b33d5658f4f03371a453adaea9b.1361166003.git.afzal@ti.com>
- <512230F1.8020208@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v4 6/6] Input: Add ChromeOS EC keyboard driver
+Date: Tue, 19 Feb 2013 00:18:34 -0800
+Message-ID: <20130219081834.GB23066@core.coreip.homeip.net>
+References: <1360988172-15380-1-git-send-email-sjg@chromium.org>
+ <1360988172-15380-7-git-send-email-sjg@chromium.org>
+ <20130216204954.GA22044@core.coreip.homeip.net>
+ <CAPnjgZ3Y88uwrwF7M7-EijA3N8y_jgbcOBeSNtM6T6iG8hW0RQ@mail.gmail.com>
+ <1361258443.5920.7.camel@joe-AO722>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <512230F1.8020208@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, "Nori, Sekhar" <nsekhar@ti.com>, Will Deacon <will.deacon@arm.com>, Rob Herring <rob.herring@calxeda.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, "Syed Mohammed, Khasim" <khasim@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1361258443.5920.7.camel@joe-AO722>
+Sender: linux-doc-owner@vger.kernel.org
+To: Joe Perches <joe@perches.com>
+Cc: Simon Glass <sjg@chromium.org>, LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Mike A. Chan" <mikechan@google.com>, Jun Nakajima <jun.nakajima@intel.com>, Tom Keel <thomas.keel@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiBNb24sIEZlYiAxOCwgMjAxMyBhdCAxOToxNzoyOSwgUm9iIEhlcnJpbmcg
-d3JvdGU6DQo+IE9uIDAyLzE4LzIwMTMgMTI6MzAgQU0sIEFmemFsIE1vaGFtbWVkIHdyb3RlOg0K
-DQo+ID4gUmVnaXN0ZXIgcGVyY3B1IGxvY2FsIHRpbWVyIGZvciBzY2hlZHVsZXIgdGljayBpbiB0
-aGUgY2FzZSBvZiBvbmUgY29yZQ0KPiA+IFNNUCBjb25maWd1cmF0aW9uLiBJbiBvdGhlciBjYXNl
-cyAtIHNlY29uZGFyeSBjcHUncyBhcyB3ZWxsIGFzIGJvb3QNCj4gPiBjcHUncyBoYXZpbmcgbW9y
-ZSB0aGFuIG9uZSBjb3JlLCB0aGlzIGlzIGJlaW5nIHJlZ2lzdGVyZWQgYXMgcGVyDQo+ID4gZXhp
-c3RpbmcgYm9vdCBmbG93LCB3aXRoIGEgZGlmZmVyZW5jZSB0aGF0IHRoZXkgaGFwcGVucyBhZnRl
-ciBkZWxheQ0KPiA+IGNhbGlicmF0aW9uLiBSZWdpc3RlcmluZyB0aGUgY2xvY2sgZm9yIHRpY2sg
-aW4gY2FzZSBvZiBvbmUgY29yZSBzaG91bGQNCj4gPiBiZSBkb25lIGJlZm9yZSBLZXJuZWwgY2Fs
-aWJyYXRlcyBkZWxheSAodGhpcyBpcyByZXF1aXJlZCB0byBib290LA0KPiA+IHVubGVzcyBsb2Nh
-bCB0aW1lciBpcyB0aGUgb25seSBvbmUgcmVnaXN0ZXJlZCBmb3IgdGljaykuIFJlZ2lzdGVyaW5n
-DQo+ID4gdHdkIGxvY2FsIHRpbWVyIGF0IGluaXRfdGltZSAod2hpY2ggcGxhdGZvcm1zIGFyZSBk
-b2luZyBub3cpIGhlbHBzDQo+ID4gYWNoaWV2ZSB0aGF0IHdpdGggdGhlIHByb3Bvc2VkIGNoYW5n
-ZS4NCj4gPiANCj4gPiBUaGlzIGhlbHBzIGluIGFuIGFsbW9zdCBib290aW5nIEtlcm5lbCAobWlu
-aW1hbCkgYnkgb25seSByZWx5aW5nIG9uDQo+ID4gQVJNIHBhcnRzIGZvciBhbiBBOSBvbmUgY29y
-ZSBTTVAuDQoNCj4gPiAgYXJjaC9hcm0va2VybmVsL3NtcF90d2QuYyB8IDMgKysrDQo+ID4gIDEg
-ZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9hcm0va2VybmVsL3NtcF90d2QuYyBiL2FyY2gvYXJtL2tlcm5lbC9zbXBfdHdkLmMNCj4gPiBp
-bmRleCA2MTYyNjhjLi4xMThmNGYyIDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvYXJtL2tlcm5lbC9z
-bXBfdHdkLmMNCj4gPiArKysgYi9hcmNoL2FybS9rZXJuZWwvc21wX3R3ZC5jDQo+ID4gQEAgLTMz
-NSw2ICszMzUsOSBAQCBzdGF0aWMgaW50IF9faW5pdCB0d2RfbG9jYWxfdGltZXJfY29tbW9uX3Jl
-Z2lzdGVyKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnApDQo+ID4gIA0KPiA+ICAJdHdkX2dldF9jbG9j
-ayhucCk7DQo+ID4gIA0KPiA+ICsJaWYgKG51bV9wb3NzaWJsZV9jcHVzKCkgPT0gMSkNCj4gPiAr
-CQl0d2RfdGltZXJfc2V0dXAoZXZ0KTsNCj4gPiArDQoNCj4gU2hvdWxkbid0IHRoaXMgYmUgZml4
-ZWQgaW4gdGhlIGNvcmUgY29kZSwgc28gdGhlIHNhbWUgaXNzdWUgaXMgZml4ZWQgZm9yDQo+IGFs
-bCB0aW1lcnM/DQoNCklzIHRoZSBmb2xsb3dpbmcgdGhhdCB5b3UgaGFkIGluIG1pbmQgPyAod2l0
-aCBpdCwgdGhpcyBwYXRjaCBhcyB3ZWxsIGFzDQoxLzggd291bGQgbm90IGJlIHJlcXVpcmVkKSwN
-Cg0KZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2luY2x1ZGUvYXNtL3NtcC5oIGIvYXJjaC9hcm0vaW5j
-bHVkZS9hc20vc21wLmgNCmluZGV4IGQzYTIyYmUuLjJiNjQxN2QgMTAwNjQ0DQotLS0gYS9hcmNo
-L2FybS9pbmNsdWRlL2FzbS9zbXAuaA0KKysrIGIvYXJjaC9hcm0vaW5jbHVkZS9hc20vc21wLmgN
-CkBAIC00Miw2ICs0Miw4IEBAIHZvaWQgaGFuZGxlX0lQSShpbnQgaXBpbnIsIHN0cnVjdCBwdF9y
-ZWdzICpyZWdzKTsNCiAgKi8NCiBleHRlcm4gdm9pZCBzbXBfaW5pdF9jcHVzKHZvaWQpOw0KIA0K
-K2V4dGVybiB2b2lkIHNtcF9tb25vY29yZV90aW1lcl9zZXR1cCh2b2lkKTsNCisNCiANCiAvKg0K
-ICAqIFByb3ZpZGUgYSBmdW5jdGlvbiB0byByYWlzZSBhbiBJUEkgY3Jvc3MgY2FsbCBvbiBDUFVz
-IGluIGNhbGxtYXAuDQpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0va2VybmVsL3NtcC5jIGIvYXJjaC9h
-cm0va2VybmVsL3NtcC5jDQppbmRleCA1ZjczZjcwLi43NDMxYjc3IDEwMDY0NA0KLS0tIGEvYXJj
-aC9hcm0va2VybmVsL3NtcC5jDQorKysgYi9hcmNoL2FybS9rZXJuZWwvc21wLmMNCkBAIC01MDQs
-NiArNTA0LDE1IEBAIGludCBsb2NhbF90aW1lcl9yZWdpc3RlcihzdHJ1Y3QgbG9jYWxfdGltZXJf
-b3BzICpvcHMpDQogfQ0KICNlbmRpZg0KIA0KK3ZvaWQgX19pbml0IHNtcF9tb25vY29yZV90aW1l
-cl9zZXR1cCh2b2lkKQ0KK3sNCisgICAgICAgdW5zaWduZWQgaW50IGNwdSA9IHNtcF9wcm9jZXNz
-b3JfaWQoKTsNCisgICAgICAgc3RydWN0IGNsb2NrX2V2ZW50X2RldmljZSAqZXZ0ID0gJnBlcl9j
-cHUocGVyY3B1X2Nsb2NrZXZlbnQsIGNwdSk7DQorDQorICAgICAgIGlmICghbHRfb3BzKQ0KKyAg
-ICAgICAgICAgICAgIGx0X29wcy0+c2V0dXAoZXZ0KTsNCit9DQorDQogc3RhdGljIHZvaWQgX19j
-cHVpbml0IHBlcmNwdV90aW1lcl9zZXR1cCh2b2lkKQ0KIHsNCiAgICAgICAgdW5zaWduZWQgaW50
-IGNwdSA9IHNtcF9wcm9jZXNzb3JfaWQoKTsNCmRpZmYgLS1naXQgYS9hcmNoL2FybS9rZXJuZWwv
-dGltZS5jIGIvYXJjaC9hcm0va2VybmVsL3RpbWUuYw0KaW5kZXggOTU1ZDkyZC4uZWIwMjNlZSAx
-MDA2NDQNCi0tLSBhL2FyY2gvYXJtL2tlcm5lbC90aW1lLmMNCisrKyBiL2FyY2gvYXJtL2tlcm5l
-bC90aW1lLmMNCkBAIC0xMTYsNSArMTE2LDYgQEAgaW50IF9faW5pdCByZWdpc3Rlcl9wZXJzaXN0
-ZW50X2Nsb2NrKGNsb2NrX2FjY2Vzc19mbiByZWFkX2Jvb3QsDQogdm9pZCBfX2luaXQgdGltZV9p
-bml0KHZvaWQpDQogew0KICAgICAgICBtYWNoaW5lX2Rlc2MtPmluaXRfdGltZSgpOw0KKyAgICAg
-ICBzbXBfbW9ub2NvcmVfdGltZXJfc2V0dXAoKTsNCiAgICAgICAgc2NoZWRfY2xvY2tfcG9zdGlu
-aXQoKTsNCiB9DQoNClJlZ2FyZHMNCkFmemFsDQoNCg==
+On Mon, Feb 18, 2013 at 11:20:43PM -0800, Joe Perches wrote:
+> On Mon, 2013-02-18 at 20:13 -0800, Simon Glass wrote:
+> > On Sat, Feb 16, 2013 at 12:49 PM, Dmitry Torokhov
+> > > On Fri, Feb 15, 2013 at 08:16:12PM -0800, Simon Glass wrote:
+> > >> +     for (row = 0; row < ckdev->rows; row++) {
+> > >> +             if (cros_ec_keyb_row_has_ghosting(ckdev, buf, row))
+> > >> +                     return true;
+> > >> +     }
+> > >
+> > > No need for curly braces here. I would not care if not for below.
+> > 
+> > OK I dont't think I even knew about that rule. Actually, what is that rule?
+> 
+> There is no rule, uses with and without braces
+> exist in about similar numbers in the kernel.
+> 
+> Both are used ~2000 times.
+> 
+> Newer uses more commonly have braces and I think
+> using braces is a better style.
+
+I consider this example of a single statement body (albeit nested) and
+therefore no braces are necessary, as mentioned in out coding style.
+
+Thanks.
+
+-- 
+Dmitry
