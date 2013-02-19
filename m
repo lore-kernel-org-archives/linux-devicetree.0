@@ -1,114 +1,85 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: [PATCH RFC v2 1/2] max77693: added device tree support
-Date: Tue, 19 Feb 2013 16:36:16 +0100
-Message-ID: <1361288177-14452-2-git-send-email-a.hajda@samsung.com>
-References: <1361288177-14452-1-git-send-email-a.hajda@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1361288177-14452-1-git-send-email-a.hajda@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Samuel Ortiz <sameo@linux.intel.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 1/4 v6] ASoC: add .of_xlate_dai_name
+ callback on struct snd_soc_dai_driver
+Date: Tue, 19 Feb 2013 16:50:39 +0100
+Message-ID: <51239F4F.4040605@metafoo.de>
+References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
+ <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
+ <20130127035943.GJ4650@opensource.wolfsonmicro.com>
+ <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
+ <20130129014808.GC4748@opensource.wolfsonmicro.com>
+ <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
+ <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
+ <5107FF97.1070601@wwwdotorg.org>
+ <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
+ <51097F0F.2030501@wwwdotorg.org>
+ <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
+ <5110349D.3050308@wwwdotorg.org>
+ <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
+ <87bobzrry6.wl%kuninori.morimoto.gx@renesas.com>
+ <511963F8.5020107@wwwdotorg.org>
+ <87bobqf5yq.wl%kuninori.morimoto.gx@renesas.com>
+ <511C22E2.60701@wwwdotorg.org>
+ <87obfnofsx.wl%kuninori.morimoto.gx@renesas.com>
+ <511C6A1B.9000507@wwwdotorg.org>
+ <874nhfv5mb.wl%kuninori.morimoto.gx@renesas.com>
+ <8738wzuu9g.wl%kuninori.morimoto.gx@renesas.com>
+ <871ucjuu7g.wl%kuninori.morimoto.gx@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <871ucjuu7g.wl%kuninori.morimoto.gx@renesas.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Linux-ALSA <alsa-devel@alsa-project.org>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-max77693 mfd main device uses only wakeup field
-from max77693_platform_data. This field is mapped
-to wakeup-source property in device tree.
-Device tree bindings doc will be added in max77693-led patch.
+On 02/14/2013 10:21 AM, Kuninori Morimoto wrote:
+[...]
+> +const char *snd_soc_of_get_port_dai_name(struct device_node *of_node,
+> +					 const char *prop)
+> +{
+> +	struct snd_soc_dai *dai;
+> +	struct of_phandle_args args;
+> +	const char *name;
+> +	int ret;
+> +
+> +	ret = of_parse_phandle_with_args(of_node, prop,
+> +					 "#sound-dai-cells", 0, &args);
+> +	if (ret)
+> +		return NULL;
+> +
+> +	of_node_put(args.np);
 
-Signed-off-by: Andrzej Hajda <a.hajda@samsung.com>
-Reviewed-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- drivers/mfd/max77693.c |   40 +++++++++++++++++++++++++++++++++-------
- 1 file changed, 33 insertions(+), 7 deletions(-)
+You should keep the reference until after the link.
 
-diff --git a/drivers/mfd/max77693.c b/drivers/mfd/max77693.c
-index cc5155e..46223da 100644
---- a/drivers/mfd/max77693.c
-+++ b/drivers/mfd/max77693.c
-@@ -106,11 +106,30 @@ static const struct regmap_config max77693_regmap_config = {
- 	.max_register = MAX77693_PMIC_REG_END,
- };
- 
-+static int max77693_get_platform_data(struct max77693_dev *max77693,
-+				      struct device *dev)
-+{
-+	struct device_node *node = dev->of_node;
-+	struct max77693_platform_data *pdata = dev->platform_data;
-+
-+	if (node) {
-+		max77693->wakeup = of_property_read_bool(node, "wakeup-source");
-+		return 0;
-+	}
-+
-+	if (pdata) {
-+		max77693->wakeup = pdata->wakeup;
-+		return 0;
-+	}
-+
-+	dev_err(dev, "No platform data found.\n");
-+	return -EINVAL;
-+}
-+
- static int max77693_i2c_probe(struct i2c_client *i2c,
- 			      const struct i2c_device_id *id)
- {
- 	struct max77693_dev *max77693;
--	struct max77693_platform_data *pdata = i2c->dev.platform_data;
- 	u8 reg_data;
- 	int ret = 0;
- 
-@@ -119,6 +138,10 @@ static int max77693_i2c_probe(struct i2c_client *i2c,
- 	if (max77693 == NULL)
- 		return -ENOMEM;
- 
-+	ret = max77693_get_platform_data(max77693, &i2c->dev);
-+	if (ret < 0)
-+		return ret;
-+
- 	max77693->regmap = devm_regmap_init_i2c(i2c, &max77693_regmap_config);
- 	if (IS_ERR(max77693->regmap)) {
- 		ret = PTR_ERR(max77693->regmap);
-@@ -133,11 +156,6 @@ static int max77693_i2c_probe(struct i2c_client *i2c,
- 	max77693->irq = i2c->irq;
- 	max77693->type = id->driver_data;
- 
--	if (!pdata)
--		goto err_regmap;
--
--	max77693->wakeup = pdata->wakeup;
--
- 	if (max77693_read_reg(max77693->regmap,
- 				MAX77693_PMIC_REG_PMIC_ID2, &reg_data) < 0) {
- 		dev_err(max77693->dev, "device not found on this channel\n");
-@@ -177,7 +195,7 @@ static int max77693_i2c_probe(struct i2c_client *i2c,
- 	if (ret < 0)
- 		goto err_mfd;
- 
--	device_init_wakeup(max77693->dev, pdata->wakeup);
-+	device_init_wakeup(max77693->dev, max77693->wakeup);
- 
- 	return ret;
- 
-@@ -233,11 +251,19 @@ static const struct dev_pm_ops max77693_pm = {
- 	.resume = max77693_resume,
- };
- 
-+#ifdef CONFIG_OF
-+static struct of_device_id max77693_dt_match[] = {
-+	{.compatible = "maxim,max77693"},
-+	{},
-+};
-+#endif
-+
- static struct i2c_driver max77693_i2c_driver = {
- 	.driver = {
- 		   .name = "max77693",
- 		   .owner = THIS_MODULE,
- 		   .pm = &max77693_pm,
-+		   .of_match_table = of_match_ptr(max77693_dt_match),
- 	},
- 	.probe = max77693_i2c_probe,
- 	.remove = max77693_i2c_remove,
--- 
-1.7.10.4
+> +
+> +	list_for_each_entry(dai, &dai_list, list) {
+> +		if (dai->dev->of_node != args.np)
+> +			continue;
+> +
+> +		if (dai->driver->of_xlate_dai_name) {
+> +			name = dai->driver->of_xlate_dai_name(dai, &args);
+> +			if (name)
+> +				return name;
+> +		}
+
+Hm, this is not really a translate function, but rather a match function. It
+iterates over all dais of the device and returns the name of the first one
+which matches. But there is no translation going on. If the dai matches the
+callback will always want to return dai->driver->name. Anything else doesn't
+make much sense.
+
+> +	}
+> +
+> +	return NULL;
+> +}
