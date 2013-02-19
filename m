@@ -1,14 +1,16 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 8/8] reset: Add driver for gpio-controlled reset pins
-Date: Tue, 19 Feb 2013 14:57:21 -0700
-Message-ID: <5123F541.4020407@wwwdotorg.org>
-References: <1361273732-23357-1-git-send-email-p.zabel@pengutronix.de>
- <1361273732-23357-9-git-send-email-p.zabel@pengutronix.de>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v4 13/13] mmc: tmio: add barriers to IO operations
+Date: Tue, 19 Feb 2013 22:59:50 +0100 (CET)
+Message-ID: <Pine.LNX.4.64.1302192257240.22058@axis700.grange>
+References: <1360941242-18153-1-git-send-email-g.liakhovetski@gmx.de>
+ <201302181634.02751.arnd@arndb.de>
+ <Pine.LNX.4.64.1302181808510.4526@axis700.grange>
+ <201302182211.46697.arnd@arndb.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1361273732-23357-9-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <201302182211.46697.arnd-r2nGTMty4D4@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,107 +21,62 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/19/2013 04:35 AM, Philipp Zabel wrote:
-> This driver implements a reset controller device that toggles gpios
-> connected to reset pins of peripheral ICs. The delay between assertion
-> and de-assertion of the reset signal can be configured.
+On Mon, 18 Feb 2013, Arnd Bergmann wrote:
 
-> diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> On Monday 18 February 2013, Guennadi Liakhovetski wrote:
+> > On Mon, 18 Feb 2013, Arnd Bergmann wrote:
+> > 
+> > Sorry, I'm not sure how best to describe it, and I don't have sufficient 
+> > information myself. In any case on a block-diagram of sh73a0 SDHI devices 
+> > aren't directly connected to a common super-highway bus, instead they are 
+> > on a bus-splitter. One more thing I forgot to mention - this error has 
+> > been observed on SMP.
+> 
+> Ah, I guess that explains it. If you have one CPU filling the buffer
+> and another CPU reading it, you need an smp_wmb/wmp_rmb pair.
+> 
+> That case can easily happen with tmio interrupt handler in PIO
+> mode.
 
-> +Required properties:
+Ok, I also managed to reproduce it on UP, and it definitely is related to 
+MMC_CAP_POWER_OFF_CARD, but I'll have to do some more work on it. I asked 
+Chris to hold back on this patch for now.
 
-> +- reset-delays: List of delays in ms. The corresponding gpio reset line is
-> +                asserted for this duration to reset.
+Thanks
+Guennadi
 
-mS are quite long. Would it make sense for this property to be uS instead?
+> > I checked clock code under drivers/sh/clk, I don't see any relevant 
+> > __raw_* operations there. One I do see, however, GIC code does use 
+> > *_relaxed() accessors, but under raw spinlocks... Do those provide 
+> > sufficient barriers?
+> 
+> A spinlock by definition contains an SMP barrier, which seems to be
+> what is missing here. I don't know if that is enough here, because
+> the spinlock only needs barriers to protect against other users
+> behind the same spinlock.
+> 
+> In architecture independent code, any smp_wmb() on the writer side
+> must be paired with an smp_rmb on the reader. You probably have the
+> sufficient barriers on the side that initiates the I/O because
+> that uses a dmb() in the MMIO instructions, but that is only
+> by accident and not portable.
+> 
+> Also, in the uniprocessor case, you have more barriers than you
+> need, which limits the performance. The best solution for
+> both performance and readability would be to use readw_relaxed()
+> and writew_relaxed() and manually add the barriers you actually
+> need, i.e. two smp_rmb()/smp_wmb() in the PIO case, and a
+> wmb() before you start a real DMA to the device and an rmb()
+> after a DMA from the device is complete.
+> 
+> 	Arnd
+> 
 
-> diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
-
-> +static int gpio_reset_probe(struct platform_device *pdev)
-
-> +	if (of_find_property(np, "reset-delays", NULL)) {
-> +		delays = devm_kzalloc(&pdev->dev, sizeof(u32) *
-> +				drvdata->nr_gpios, GFP_KERNEL);
-> +		if (delays == NULL)
-> +			return -ENOMEM;
-
-It'd be nice if there were something like of_property_read_u32_index()
-so you could read each value one-by-one in the loop later on, rather
-than dynamically allocating this temporarily.
-
-> +		ret = of_property_read_u32_array(np, "reset-delays", delays,
-> +				drvdata->nr_gpios);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	for (i = 0; i < drvdata->nr_gpios; i++) {
-> +		drvdata->gpios[i].gpio = of_get_named_gpio_flags(np,
-> +				"reset-gpios", i, &flags);
-> +		if (drvdata->gpios[i].gpio < 0) {
-> +			dev_err(&pdev->dev, "invalid gpio for reset %d\n", i);
-
-It's not an error if the value is -EPROBE_DEFERRED; you might want to
-explicitly check for that case and not print anything?
-
-> +			return drvdata->gpios[i].gpio;
-> +		}
-> +
-> +		/*
-> +		 * The flags are also used to remember whether a given GPIO
-> +		 * reset is active-low.
-> +		 */
-> +		if (flags & OF_GPIO_ACTIVE_LOW)
-> +			drvdata->gpios[i].flags = GPIOF_OUT_INIT_HIGH;
-> +		else
-> +			drvdata->gpios[i].flags = GPIOF_OUT_INIT_LOW;
-
-That raises the question: What is the initial reset state expected to
-be? Some devices might want to stay in reset until their driver
-explicitly removes the reset signal.
-
-We could handle that by adding another (optional) property indicating
-the initial reset state of each GPIO; default to initially not-in-reset
-unless that property exists and specifies initially-in-reset.
-
-> +		ret = devm_gpio_request_one(&pdev->dev, drvdata->gpios[i].gpio,
-> +				drvdata->gpios[i].flags, NULL);
-> +		if (ret < 0) {
-> +			dev_err(&pdev->dev, "failed to request gpio %d for reset %d\n",
-> +					drvdata->gpios[i].gpio, i);
-> +			return ret;
-> +		}
-
-Perhaps first loop to look up all the GPIOs and initialize data
-structures, then loop to request the GPIOs? That'd prevent lots of HW
-programming and de-programming for the GPIOs near the start of the list,
-in the case where some later GPIO causes -EPROBE_DEFERRED, and so this
-probe() function keeps getting executed over and over.
-
-> +		if (delays != NULL)
-> +			drvdata->gpios[i].delay_ms = delays[i];
-> +		else
-> +			drvdata->gpios[i].delay_ms = -1; /* .reset returns -ENOSYS */
-
-(here is where of_property_read_u32_index() might be handy)
-
-> +static struct platform_driver gpio_reset_driver = {
-> +	.probe = gpio_reset_probe,
-> +	.remove = gpio_reset_remove,
-> +	.driver = {
-> +		.name = "gpio-reset",
-> +		.owner = THIS_MODULE,
-> +		.of_match_table = of_match_ptr(gpio_reset_dt_ids),
-> +	},
-> +};
-> +
-> +module_platform_driver(gpio_reset_driver);
-
-You might want to add a few things like MODULE_AUTHOR,
-MODULE_DESCRIPTION,  MODULE_LICENSE,
-MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids), perhaps MODULE_ALIAS for the
-platform device too.
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
