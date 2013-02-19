@@ -1,47 +1,57 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v4 6/6] Input: Add ChromeOS EC keyboard driver
-Date: Tue, 19 Feb 2013 00:18:34 -0800
-Message-ID: <20130219081834.GB23066@core.coreip.homeip.net>
-References: <1360988172-15380-1-git-send-email-sjg@chromium.org>
- <1360988172-15380-7-git-send-email-sjg@chromium.org>
- <20130216204954.GA22044@core.coreip.homeip.net>
- <CAPnjgZ3Y88uwrwF7M7-EijA3N8y_jgbcOBeSNtM6T6iG8hW0RQ@mail.gmail.com>
- <1361258443.5920.7.camel@joe-AO722>
+From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: davinci: da850 evm: update clock rate for UART 1/2 DT
+	nodes
+Date: Tue, 19 Feb 2013 14:02:14 +0530
+Message-ID: <1361262734-8540-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1361258443.5920.7.camel@joe-AO722>
-Sender: linux-doc-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Simon Glass <sjg@chromium.org>, LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Mike A. Chan" <mikechan@google.com>, Jun Nakajima <jun.nakajima@intel.com>, Tom Keel <thomas.keel@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2013 at 11:20:43PM -0800, Joe Perches wrote:
-> On Mon, 2013-02-18 at 20:13 -0800, Simon Glass wrote:
-> > On Sat, Feb 16, 2013 at 12:49 PM, Dmitry Torokhov
-> > > On Fri, Feb 15, 2013 at 08:16:12PM -0800, Simon Glass wrote:
-> > >> +     for (row = 0; row < ckdev->rows; row++) {
-> > >> +             if (cros_ec_keyb_row_has_ghosting(ckdev, buf, row))
-> > >> +                     return true;
-> > >> +     }
-> > >
-> > > No need for curly braces here. I would not care if not for below.
-> > 
-> > OK I dont't think I even knew about that rule. Actually, what is that rule?
-> 
-> There is no rule, uses with and without braces
-> exist in about similar numbers in the kernel.
-> 
-> Both are used ~2000 times.
-> 
-> Newer uses more commonly have braces and I think
-> using braces is a better style.
+DT kernel with latest of denx SPL U-boot boots with garbled UART
+logs. This is because in U-boot UART2 gets sourced by PLL0_SYSCLK2
+configured for 150MHz. But later in kernel UART2 gets mapped to
+PLL1_SYSCLK2 and is configured for 132MHz not for 150MHz.
 
-I consider this example of a single statement body (albeit nested) and
-therefore no braces are necessary, as mentioned in out coding style.
+PLL1 is configured for 264MHz to support mDDR on the EVM. That is
+memory controller driving mDDR can be configured for 150MHz and
+mDDR it self can operate at 132MHz.
 
-Thanks.
+So override UART1 and UART2 DT node clock-frequency property with
+rate available on da850 EVM.
 
+Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
+---
+ arch/arm/boot/dts/da850-evm.dts |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index f712fb6..c359872 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -22,9 +22,11 @@
+ 			status = "okay";
+ 		};
+ 		serial1: serial@1d0c000 {
++			clock-frequency = <132000000>;
+ 			status = "okay";
+ 		};
+ 		serial2: serial@1d0d000 {
++			clock-frequency = <132000000>;
+ 			status = "okay";
+ 		};
+ 		rtc0: rtc@1c23000 {
 -- 
-Dmitry
+1.7.4.1
