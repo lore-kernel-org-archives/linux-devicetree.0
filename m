@@ -1,60 +1,148 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH, RFC 2/8] ARM: twd: register clock event for 1 core SMP
-Date: Tue, 19 Feb 2013 17:50:33 +0530
-Message-ID: <51236E11.1030900@ti.com>
-References: <cover.1361186097.git.afzal@ti.com>
- <a7f62b8580aa4b33d5658f4f03371a453adaea9b.1361186097.git.afzal@ti.com>
- <51235076.8040200@ti.com> <20130219121400.GP23197@arwen.pp.htv.fi>
+From: Dave Martin <dave.martin@linaro.org>
+Subject: Re: [PATCH V4 4/4] ARM: dts: pl330: Add #dma-cells for generic dma
+ binding support
+Date: Tue, 19 Feb 2013 12:38:20 +0000
+Message-ID: <20130219123820.GF1978@linaro.org>
+References: <1360813208-9498-1-git-send-email-padma.v@samsung.com>
+ <1360813208-9498-5-git-send-email-padma.v@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130219121400.GP23197-S8G//mZuvNWo5Im9Ml3/Zg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: balbi-l0cyMroinI0@public.gmane.org
-Cc: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Syed Mohammed Khasim <khasim-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1360813208-9498-5-git-send-email-padma.v@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Padmavathi Venna <padma.v@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.kvr@gmail.com, jassisinghbrar@gmail.com, kgene.kim@samsung.com, arnd@arndb.de, boojin.kim@samsung.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, thomas.abraham@linaro.org, jon-hunter@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 19 February 2013 05:44 PM, Felipe Balbi wrote:
-> On Tue, Feb 19, 2013 at 03:44:14PM +0530, Santosh Shilimkar wrote:
->> On Monday 18 February 2013 05:07 PM, Afzal Mohammed wrote:
->>> Register percpu local timer for scheduler tick in the case of one core
->>> SMP configuration. In other cases - secondary cpu's as well as boot
->>> cpu's having more than one core, this is being registered as per
->>> existing boot flow, with a difference that they happens after delay
->>> calibration. Registering the clock for tick in case of one core should
->>> be done before Kernel calibrates delay (this is required to boot,
->>> unless local timer is the only one registered for tick). Registering
->>> twd local timer at init_time (which platforms are doing now) helps
->>> achieve that with the proposed change.
->>>
->>> This helps in an almost booting Kernel (minimal) by only relying on
->>> ARM parts for an A9 one core SMP.
->>>
->>> Signed-off-by: Afzal Mohammed <afzal-l0cyMroinI0@public.gmane.org>
->>> ---
->> As mentioned in cover-letter, I don't think we have good
->> reasoning to make TWD to work with UP configuration. Even
->> you fix the timer code, there are more cascaded dependencies
->> which is not worth the effort.
->
-> if CONFIG_SMP_ON_UP is enabled, smp_twd.c can still be compiled, right ?
->
-Yep though just from deps pesrpective TWD is made available for ARM SMP
-machines as below
+On Thu, Feb 14, 2013 at 09:10:08AM +0530, Padmavathi Venna wrote:
+> This patch adds #dma-cells property to PL330 DMA controller
+> nodes for supporting generic dma dt bindings on samsung
+> exynos5250 platform.
 
-config HAVE_ARM_TWD
-         bool
-         depends on SMP
+Can you comment on the following thread?
 
-Regards,
-Santosh
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-February/028188.html
+
+
+Describing DMA controllers is part of a wider problem of how to describe
+bus masters in DT.
+
+The key problem is that nobody knows what subset of the bus hierarchy is
+accessed by a DMA controller (or something else) in its master role.
+Currently I think that the PCI-oriented standard bindings in the ePAPR
+specification are not adequate to describe arbitrary SoC platforms,
+but maybe I'm missing something or being too pessimistic...
+
+The "what does a master see" problem is mostly independent of your
+DMA bindings, except that coherency is not specific to DMA controllers,
+and ideally we would describe that in a common way for all masters.
+(Also, in general most devices don't power up coherent -- configuration
+both in the peripheral and in the bus fabric may be needed before
+coherency is established).
+
+Cheers
+---Dave
+
+> 
+> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  .../devicetree/bindings/dma/arm-pl330.txt          |   21 +++++++++++++++----
+>  arch/arm/boot/dts/exynos5250.dtsi                  |   12 +++++++++++
+>  2 files changed, 28 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/arm-pl330.txt b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+> index 36e27d5..2675658 100644
+> --- a/Documentation/devicetree/bindings/dma/arm-pl330.txt
+> +++ b/Documentation/devicetree/bindings/dma/arm-pl330.txt
+> @@ -10,7 +10,11 @@ Required properties:
+>    - interrupts: interrupt number to the cpu.
+>  
+>  Optional properties:
+> -- dma-coherent      : Present if dma operations are coherent
+> +  - dma-coherent      : Present if dma operations are coherent
+> +  - #dma-cells: must be <1>. used to represent the number of integer
+> +    cells in the dmas property of client device.
+> +  - dma-channels: contains the total number of DMA channels supported by the DMAC
+> +  - dma-requests: contains the total number of DMA requests supported by the DMAC
+>  
+>  Example:
+>  
+> @@ -18,16 +22,23 @@ Example:
+>  		compatible = "arm,pl330", "arm,primecell";
+>  		reg = <0x12680000 0x1000>;
+>  		interrupts = <99>;
+> +		#dma-cells = <1>;
+> +		#dma-channels = <8>;
+> +		#dma-requests = <32>;
+>  	};
+>  
+>  Client drivers (device nodes requiring dma transfers from dev-to-mem or
+> -mem-to-dev) should specify the DMA channel numbers using a two-value pair
+> +mem-to-dev) should specify the DMA channel numbers and dma channel names
+>  as shown below.
+>  
+>    [property name]  = <[phandle of the dma controller] [dma request id]>;
+> +  [property name]  = <[dma channel name]>
+>  
+>        where 'dma request id' is the dma request number which is connected
+> -      to the client controller. The 'property name' is recommended to be
+> -      of the form <name>-dma-channel.
+> +      to the client controller. The 'property name' 'dmas' and 'dma-names'
+> +      as required by the generic dma device tree binding helpers. The dma
+> +      names correspond 1:1 with the dma request ids in the dmas property.
+>  
+> -  Example:  tx-dma-channel = <&pdma0 12>;
+> +  Example:  dmas = <&pdma0 12
+> +		    &pdma1 11>;
+> +	    dma-names = "tx", "rx";
+> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+> index 2e3b6ef..c774aae 100644
+> --- a/arch/arm/boot/dts/exynos5250.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250.dtsi
+> @@ -280,24 +280,36 @@
+>  			compatible = "arm,pl330", "arm,primecell";
+>  			reg = <0x121A0000 0x1000>;
+>  			interrupts = <0 34 0>;
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+>  		};
+>  
+>  		pdma1: pdma@121B0000 {
+>  			compatible = "arm,pl330", "arm,primecell";
+>  			reg = <0x121B0000 0x1000>;
+>  			interrupts = <0 35 0>;
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <32>;
+>  		};
+>  
+>  		mdma0: mdma@10800000 {
+>  			compatible = "arm,pl330", "arm,primecell";
+>  			reg = <0x10800000 0x1000>;
+>  			interrupts = <0 33 0>;
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <1>;
+>  		};
+>  
+>  		mdma1: mdma@11C10000 {
+>  			compatible = "arm,pl330", "arm,primecell";
+>  			reg = <0x11C10000 0x1000>;
+>  			interrupts = <0 124 0>;
+> +			#dma-cells = <1>;
+> +			#dma-channels = <8>;
+> +			#dma-requests = <1>;
+>  		};
+>  	};
+>  
+> -- 
+> 1.7.4.4
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
