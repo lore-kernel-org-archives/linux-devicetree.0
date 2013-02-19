@@ -1,58 +1,27 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 1/2] ARM: dts: OMAP3: Add GPMC controller
-Date: Mon, 18 Feb 2013 19:00:21 -0600
-Message-ID: <5122CEA5.5010902@ti.com>
-References: <1359395648-2137-1-git-send-email-florian.vaussard@epfl.ch> <1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch>
+From: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH 1/9] ARM: dt: t30 cardhu: add dt entry for lm90
+Date: Tue, 19 Feb 2013 12:28:34 +0900
+Message-ID: <5122F162.9030103@nvidia.com>
+References: <1361187031-3679-1-git-send-email-wni@nvidia.com> <1361187031-3679-2-git-send-email-wni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1359395648-2137-2-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Daniel Mack <zonque@gmail.com>, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1361187031-3679-2-git-send-email-wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TZX6JHB/w77yyCwEArCW2h5@public.gmane.org" <linux-kernel-u79uwXL29TZX6JHB/w77yyCwEArCW2h5@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 02/18/2013 08:30 PM, Wei Ni wrote:
+> Enable thermal sensor lm90 in the dts file.
 
-On 01/28/2013 11:54 AM, Florian Vaussard wrote:
-> Add device-tree support for the GPMC controller on the OMAP3.
-> 
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> ---
->  arch/arm/boot/dts/omap3.dtsi |   11 +++++++++++
->  1 files changed, 11 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3.dtsi b/arch/arm/boot/dts/omap3.dtsi
-> index 6c63118..2ddae38 100644
-> --- a/arch/arm/boot/dts/omap3.dtsi 
-> +++ b/arch/arm/boot/dts/omap3.dtsi
-> @@ -403,5 +403,16 @@
->  			ti,timer-alwon;
->  			ti,timer-secure;
->  		};
-> +
-> +		gpmc: gpmc@6e000000 {
-> +			compatible = "ti,omap3430-gpmc";
-> +			ti,hwmods = "gpmc";
-> +			reg = <0x6e000000 0x1000000>;
+Acked-by: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Can you make this size smaller? Although the reference manual states
-16MB, the registers use less than 1KB of address space. Hence, it is
-pointless mapping all this address space for the gpmc registers.
+Btw, shouldn't this patch come last, after all the changes you did to 
+lm90? If you keep the current order, you will need to ensure that the 
+device performs as expected on Cardhu for each of the remaining patches 
+of the series. It is probably safer to just move this one at the end to 
+avoid trouble.
 
-> +			interrupts = <20>;
-> +			gpmc,num-cs = <8>;
-> +			gpmc,num-waitpins = <4>;
-> +			#address-cells = <2>;
-> +			#size-cells = <1>;
-> +		};
->  	};
->  };
-
-Otherwise ...
-
-Reviewed-by: Jon Hunter <jon-hunter@ti.com>
-
-Cheers
-Jon
-
+Alex.
