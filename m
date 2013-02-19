@@ -1,148 +1,141 @@
-From: Dave Martin <dave.martin@linaro.org>
-Subject: Re: [PATCH V4 4/4] ARM: dts: pl330: Add #dma-cells for generic dma
- binding support
-Date: Tue, 19 Feb 2013 12:38:20 +0000
-Message-ID: <20130219123820.GF1978@linaro.org>
-References: <1360813208-9498-1-git-send-email-padma.v@samsung.com>
- <1360813208-9498-5-git-send-email-padma.v@samsung.com>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: [GIT PULL] devicetree for v3.9
+Date: Tue, 19 Feb 2013 12:58:10 +0000
+Message-ID: <CACxGe6ty2SwkTcbZKWP2nP3t1R_JV1aG17dJjfyVXaJON0crKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1360813208-9498-5-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Padmavathi Venna <padma.v@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.kvr@gmail.com, jassisinghbrar@gmail.com, kgene.kim@samsung.com, arnd@arndb.de, boojin.kim@samsung.com, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, thomas.abraham@linaro.org, jon-hunter@ti.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Torvalds <torvalds@linux-foundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2013 at 09:10:08AM +0530, Padmavathi Venna wrote:
-> This patch adds #dma-cells property to PL330 DMA controller
-> nodes for supporting generic dma dt bindings on samsung
-> exynos5250 platform.
+Hi Linus,
 
-Can you comment on the following thread?
+Description of changes below and in tag. Please pull.
 
-https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-February/028188.html
+g.
+
+The following changes since commit 88b62b915b0b7e25870eb0604ed9a92ba4bfc9f7:
+
+  Linux 3.8-rc6 (2013-02-01 12:08:14 +1100)
+
+are available in the git repository at:
+
+  git://git.secretlab.ca/git/linux tags/dt-for-linus
+
+for you to fetch changes up to 02bbde7849e68e193cefaa1885fe0df0f03c9fcd:
+
+  Revert "of: use platform_device_add" (2013-02-17 20:03:27 +0000)
+
+----------------------------------------------------------------
+Device tree changes for v3.9
+
+All around device tree changes destined for v3.8. Aside from the
+documentation updates the highlights in this branch include:
+- Kbuild changes for using CPP with .dts files
+- locking fix from preempt_rt patchset
+- include DT alias names in device uevent
+- Selftest bugfixes and improvements
+- New function for counting phandles stanzas in a property
+- constify argument to of_node_full_name()
+- Various bug fixes
+
+This tree did also contain a commit to use platform_device_add instead
+of open-coding the device add code, but it caused problems with amba
+devices and needed to be reverted.
+
+----------------------------------------------------------------
+Ajay Kumar (1):
+      of/exynos_g2d: Add Bindings for exynos G2D driver
+
+Alexander Shiyan (1):
+      of: Add vendor prefix for Cirrus Logic
+
+Grant Likely (11):
+      powerpc/5200: Fix size to request_mem_region() call
+      of: use platform_device_add
+      devicetree: Move NS2 LEDs binding into LEDs directory
+      Merge branch 'robherring/for-next' from
+git://sources.calxeda.com/kernel/linux.git
+      Merge branch 'for-next' from git://sources.calxeda.com/kernel/linux.git
+      of/selftest: Fix GPIOs selftest to cover the 7th case
+      of/selftest: Use selftest() macro throughout
+      of/base: Clean up exit paths for of_parse_phandle_with_args()
+      of: Create function for counting number of phandles in a property
+      gpio: Make of_count_named_gpios() use new of_count_phandle_with_args()
+      Revert "of: use platform_device_add"
+
+Guennadi Liakhovetski (1):
+      DT: add vendor prefixes for Renesas and Toshiba
+
+Masanari Iida (1):
+      documentation/devicetree: Fix typos
+
+Sachin Kamat (1):
+      documentation/devicetree: Fix a typo in exynos-dw-mshc.txt
+
+Simon Glass (1):
+      input: Extend matrix-keypad device tree binding
+
+Steffen Trumtrar (1):
+      of: add 'const' to of_node_full_name parameter
+
+Stepan Moskovchenko (1):
+      of: Output devicetree alias names in uevent
+
+Stephen Warren (3):
+      kbuild: create a rule to run the pre-processor on *.dts files
+      of: fix recursive locking in of_get_next_available_child()
+      kbuild: limit dtc+cpp include path
+
+Thomas Abraham (1):
+      of: fix incorrect return value of of_find_matching_node_and_match()
+
+Thomas Gleixner (2):
+      OF: Fixup resursive locking code paths
+      OF: convert devtree lock from rw_lock to raw spinlock
+
+ .../devicetree/bindings/arm/atmel-aic.txt          |    2 +-
+ Documentation/devicetree/bindings/arm/gic.txt      |    4 +-
+ .../devicetree/bindings/arm/omap/omap.txt          |    6 +-
+ .../devicetree/bindings/drm/exynos/g2d.txt         |   22 ++
+ .../devicetree/bindings/input/lpc32xx-key.txt      |    9 +-
+ .../devicetree/bindings/input/matrix-keymap.txt    |    8 +
+ .../devicetree/bindings/input/omap-keypad.txt      |   13 +-
+ .../devicetree/bindings/input/tca8418_keypad.txt   |    6 +-
+ .../bindings/{gpio => leds}/leds-ns2.txt           |    0
+ .../devicetree/bindings/mips/cavium/dma-engine.txt |    2 +-
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    8 +-
+ .../devicetree/bindings/mmc/samsung-sdhci.txt      |    2 +-
+ .../devicetree/bindings/powerpc/fsl/srio.txt       |    4 +-
+ .../bindings/regulator/tps62360-regulator.txt      |    4 +-
+ Documentation/devicetree/bindings/rtc/s3c-rtc.txt  |    2 +-
+ .../devicetree/bindings/vendor-prefixes.txt        |    3 +
+ .../devicetree/bindings/watchdog/samsung-wdt.txt   |    2 +-
+ Documentation/kbuild/makefiles.txt                 |   23 ++
+ arch/powerpc/sysdev/bestcomm/bestcomm.c            |    2 +-
+ arch/sparc/kernel/prom_common.c                    |    4 +-
+ drivers/gpio/gpiolib-of.c                          |   35 ---
+ drivers/hwmon/gpio-fan.c                           |    4 +-
+ drivers/input/keyboard/matrix_keypad.c             |    8 +-
+ drivers/net/phy/mdio-mux-gpio.c                    |    4 +-
+ drivers/of/base.c                                  |  303 +++++++++++++-------
+ drivers/of/device.c                                |   13 +
+ drivers/of/of_private.h                            |   36 +++
+ drivers/of/selftest.c                              |   54 ++--
+ drivers/spi/spi-fsl-spi.c                          |    4 +-
+ drivers/spi/spi-oc-tiny.c                          |    8 +-
+ drivers/spi/spi-ppc4xx.c                           |    4 +-
+ drivers/spi/spi.c                                  |    5 +-
+ include/linux/of.h                                 |   13 +-
+ include/linux/of_gpio.h                            |   40 +--
+ scripts/Makefile.lib                               |   14 +
+ 35 files changed, 444 insertions(+), 227 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/drm/exynos/g2d.txt
+ rename Documentation/devicetree/bindings/{gpio => leds}/leds-ns2.txt (100%)
+ create mode 100644 drivers/of/of_private.h
 
 
-Describing DMA controllers is part of a wider problem of how to describe
-bus masters in DT.
-
-The key problem is that nobody knows what subset of the bus hierarchy is
-accessed by a DMA controller (or something else) in its master role.
-Currently I think that the PCI-oriented standard bindings in the ePAPR
-specification are not adequate to describe arbitrary SoC platforms,
-but maybe I'm missing something or being too pessimistic...
-
-The "what does a master see" problem is mostly independent of your
-DMA bindings, except that coherency is not specific to DMA controllers,
-and ideally we would describe that in a common way for all masters.
-(Also, in general most devices don't power up coherent -- configuration
-both in the peripheral and in the bus fabric may be needed before
-coherency is established).
-
-Cheers
----Dave
-
-> 
-> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  .../devicetree/bindings/dma/arm-pl330.txt          |   21 +++++++++++++++----
->  arch/arm/boot/dts/exynos5250.dtsi                  |   12 +++++++++++
->  2 files changed, 28 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/arm-pl330.txt b/Documentation/devicetree/bindings/dma/arm-pl330.txt
-> index 36e27d5..2675658 100644
-> --- a/Documentation/devicetree/bindings/dma/arm-pl330.txt
-> +++ b/Documentation/devicetree/bindings/dma/arm-pl330.txt
-> @@ -10,7 +10,11 @@ Required properties:
->    - interrupts: interrupt number to the cpu.
->  
->  Optional properties:
-> -- dma-coherent      : Present if dma operations are coherent
-> +  - dma-coherent      : Present if dma operations are coherent
-> +  - #dma-cells: must be <1>. used to represent the number of integer
-> +    cells in the dmas property of client device.
-> +  - dma-channels: contains the total number of DMA channels supported by the DMAC
-> +  - dma-requests: contains the total number of DMA requests supported by the DMAC
->  
->  Example:
->  
-> @@ -18,16 +22,23 @@ Example:
->  		compatible = "arm,pl330", "arm,primecell";
->  		reg = <0x12680000 0x1000>;
->  		interrupts = <99>;
-> +		#dma-cells = <1>;
-> +		#dma-channels = <8>;
-> +		#dma-requests = <32>;
->  	};
->  
->  Client drivers (device nodes requiring dma transfers from dev-to-mem or
-> -mem-to-dev) should specify the DMA channel numbers using a two-value pair
-> +mem-to-dev) should specify the DMA channel numbers and dma channel names
->  as shown below.
->  
->    [property name]  = <[phandle of the dma controller] [dma request id]>;
-> +  [property name]  = <[dma channel name]>
->  
->        where 'dma request id' is the dma request number which is connected
-> -      to the client controller. The 'property name' is recommended to be
-> -      of the form <name>-dma-channel.
-> +      to the client controller. The 'property name' 'dmas' and 'dma-names'
-> +      as required by the generic dma device tree binding helpers. The dma
-> +      names correspond 1:1 with the dma request ids in the dmas property.
->  
-> -  Example:  tx-dma-channel = <&pdma0 12>;
-> +  Example:  dmas = <&pdma0 12
-> +		    &pdma1 11>;
-> +	    dma-names = "tx", "rx";
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
-> index 2e3b6ef..c774aae 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -280,24 +280,36 @@
->  			compatible = "arm,pl330", "arm,primecell";
->  			reg = <0x121A0000 0x1000>;
->  			interrupts = <0 34 0>;
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
->  		};
->  
->  		pdma1: pdma@121B0000 {
->  			compatible = "arm,pl330", "arm,primecell";
->  			reg = <0x121B0000 0x1000>;
->  			interrupts = <0 35 0>;
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <32>;
->  		};
->  
->  		mdma0: mdma@10800000 {
->  			compatible = "arm,pl330", "arm,primecell";
->  			reg = <0x10800000 0x1000>;
->  			interrupts = <0 33 0>;
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <1>;
->  		};
->  
->  		mdma1: mdma@11C10000 {
->  			compatible = "arm,pl330", "arm,primecell";
->  			reg = <0x11C10000 0x1000>;
->  			interrupts = <0 124 0>;
-> +			#dma-cells = <1>;
-> +			#dma-channels = <8>;
-> +			#dma-requests = <1>;
->  		};
->  	};
->  
-> -- 
-> 1.7.4.4
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+Grant Likely, B.Sc., P.Eng.
+Secret Lab Technologies Ltd.
