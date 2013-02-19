@@ -1,67 +1,55 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: Re: [PATCH v4 6/6] Input: Add ChromeOS EC keyboard driver
-Date: Mon, 18 Feb 2013 20:13:42 -0800
-Message-ID: <CAPnjgZ3Y88uwrwF7M7-EijA3N8y_jgbcOBeSNtM6T6iG8hW0RQ@mail.gmail.com>
-References: <1360988172-15380-1-git-send-email-sjg@chromium.org>
-	<1360988172-15380-7-git-send-email-sjg@chromium.org>
-	<20130216204954.GA22044@core.coreip.homeip.net>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 0/2] Device Tree support for CMA (Contiguous Memory
+ Allocator)
+Date: Mon, 18 Feb 2013 21:03:50 -0800
+Message-ID: <CAOesGMjC97p_5wDCSUhv6DaHdOKJKcARdRtdt5UnYkUCuFou6g@mail.gmail.com>
+References: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
+ <20130214213013.GG1906@pengutronix.de> <511D6076.9090503@gmail.com>
+ <20130215083304.GK1906@pengutronix.de> <5122AA3F.8030001@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130216204954.GA22044@core.coreip.homeip.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Mike A. Chan" <mikechan@google.com>, Jun Nakajima <jun.nakajima@intel.com>, Tom Keel <thomas.keel@intel.com>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5122AA3F.8030001-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+On Mon, Feb 18, 2013 at 2:25 PM, Sylwester Nawrocki
+<sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-On Sat, Feb 16, 2013 at 12:49 PM, Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
-> Hi Simon,
+> My context was a multiprocessor SoC, where one of the processors is somehow
+> application specific (e.g. camera ISP) and can be considered as a slave
+> subsystem, running it's firmware and sharing system memory with the main
+> processor.
 >
-> On Fri, Feb 15, 2013 at 08:16:12PM -0800, Simon Glass wrote:
->> +     for (row = 0; row < ckdev->rows; row++) {
->> +             if (cros_ec_keyb_row_has_ghosting(ckdev, buf, row))
->> +                     return true;
->> +     }
+> The slave subsystem can have insane constraints on the memory region where
+> its firmware is located and which it also uses as its generic purpose RAM.
 >
-> No need for curly braces here. I would not care if not for below.
+> While the region assigned to such a slave device would also likely include
+> a memory for its DMA buffers, the main concern here was an allocation of
+> a working memory for the slave processor.
+>
+> Perhaps the device tree is not a perfect place for defining exact memory
+> regions. If we happen to decide against it, then I guess some set of
+> properties would be needed, that would allow CMA to assign appropriate
+> memory region(s) to a device.
 
-OK I dont't think I even knew about that rule. Actually, what is that rule?
+The place to add such constraints are in the bindings for the camera ISP.
 
->
->> +
->> +     return 0;
->> +
->> +fail_register:
->> +     kfree(idev->keycode);
->
-> Sorry I did not notice this before, but idev->keycode is devm-managed,
-> so you either need to use devm_kfree() or just remove call to kfree()
-> and let it clean up automatically (which will happen if binding fails or
-> upon removal).
->
-> BTW, maybe you should move the whole driver to devm_*? We have
-> devm_kzalloc() for ckdev and you can use devm_input_allocate_device().
-> Then you can get rid of entire erro handling path and completely remove
-> the remove() method as well.
+This isn't that different from how dma-window properties used on some
+of the PowerPC platforms; it specifies (among other things) the
+available address space as seen from the bus/device side.
 
-Yes I was thinking about that - might as well do it now.
 
->
->> +fail_matrix:
->> +     input_free_device(idev);
->> +fail_alloc_dev:
->> +     kfree(ckdev);
->> +     return err;
->> +}
->> +
->
-> Thanks.
->
-> --
-> Dmitry
-
-Regards,
-Simon
+-Olof
