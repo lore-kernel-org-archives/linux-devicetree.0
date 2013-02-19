@@ -1,98 +1,53 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH, RFC 7/8] ARM: dts: am4372: initial support
-Date: Tue, 19 Feb 2013 11:17:28 +0200
-Message-ID: <20130219091728.GF23197@arwen.pp.htv.fi>
-References: <cover.1361186097.git.afzal@ti.com>
- <c9c131c0508b875c0893e8557504372a1564568a.1361186097.git.afzal@ti.com>
- <20130218182240.GA10755@arwen.pp.htv.fi>
- <C8443D0743D26F4388EA172BF4E2A7A93EAA85B2@DBDE01.ent.ti.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Nishanth Peethambaran <nishanth.p@gmail.com>
+Subject: Re: [Linaro-mm-sig] [PATCH 0/2] Device Tree support for CMA
+ (Contiguous Memory Allocator)
+Date: Tue, 19 Feb 2013 14:59:46 +0530
+Message-ID: <CAMcxFTRLpStgR6O9ZJFzs=dODKvVZd5xvPVCkesvhrYx7UVaxw@mail.gmail.com>
+References: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
+ <20130214213013.GG1906@pengutronix.de> <511D6076.9090503@gmail.com>
+ <20130215083304.GK1906@pengutronix.de> <511E6143.609@gmail.com>
+ <CAMcxFTQAOjmzy77eB8nj3JDZ-6mwoMpm8yabtQj04tcLw-giLg@mail.gmail.com>
+ <5122A402.7030807@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1593171007927263183=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <C8443D0743D26F4388EA172BF4E2A7A93EAA85B2-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Nori,
- Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Balbi,
- Felipe" <balbi-l0cyMroinI0@public.gmane.org>, "Shilimkar, Santosh" <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "Syed Mohammed, Khasim" <khasim-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5122A402.7030807@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Michal Nazarewicz <mina86@mina86.com>, linaro-mm-sig@lists.linaro.org, Kyungmin Park <kyungmin.park@samsung.com>, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---===============1593171007927263183==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IvGM3kKqwtniy32b"
-Content-Disposition: inline
+On Tue, Feb 19, 2013 at 3:28 AM, Rob Herring <robherring2@gmail.com> wrote:
+> On 02/16/2013 11:18 PM, Nishanth Peethambaran wrote:
+>> Limiting the scope of the product to a particular use-case (720p or
+>> 1080p video playback) will be part of firmware mostly OTP-ed in the
+>> SoC. Firmware author could decide the amount of CMA memory needed and
+>> put this as part of DT.
+>
+> What kernel developer would want a firmware author deciding how much
+> memory is needed? It is not a decision that can be made without
+> knowledge of the OS. While the frame size could be determined easily
+> enough based on resolution, the number of buffers needed cannot.
+>
+> Rob
+>
 
---IvGM3kKqwtniy32b
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Got your point. Agree that firmware cannot decide on number of buffers.
+Hard coding cma areas, and their relation to devices and CMA areas
+inside kernel would bring back the concept of board files as drivers should
+not have these details. Bootargs support defing cma size but not the relation
+to devices.
+Having a separate system configuration DT file would bring this configuration
+out of firmware. OF format can be reused. System architect should
+own the system configuration DT and not kernel developer.
 
-On Tue, Feb 19, 2013 at 10:10:17AM +0100, Mohammed, Afzal wrote:
-> Hi Felipe,
->=20
-> On Mon, Feb 18, 2013 at 23:52:40, Balbi, Felipe wrote:
-> > On Mon, Feb 18, 2013 at 05:08:16PM +0530, Afzal Mohammed wrote:
->=20
-> > > +		uart1: serial@44e09000 {
-> > > +			compatible =3D "ti,am4372-uart","ti,omap2-uart";
-> > > +			clock-frequency =3D <48000000>;
-> > > +			reg =3D <0x44e09000 0x2000>;
-> > > +			interrupts =3D <0 72 0x4>;
-> >=20
-> > missing ti,hwmods ??
->=20
-> It is a deliberate omission. For minimal bootconsole booting, hwmod
-> help is not required. Hwmod details would be added gradually later,
-> current series doesn't register hwmod.
-
-understood, thanks
-
---=20
-balbi
-
---IvGM3kKqwtniy32b
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRI0MoAAoJEIaOsuA1yqREcWwP/0SaFx29vPQKn8AsgF5j9IPF
-1m5/CxsFSpR3C+voOuJWLW/5JxYHWKiHNucYPyvoyafhFIj3nNrJERW6Bq5PGSSP
-v+AhwNdsQczPSSgaCK+LM/dkssgAoGU8hjbrzSxAAXFYQmfATJqJBAmEDyWfrz4+
-OJrAEAs76InLiC1eYaOgQQIPiHTEsPoWRYxHYQV2O+QKMwn9uMxinVauIVHZ1+2H
-6mKUm1D7HMU7VudxytoMFDfPhDoNR4wlKg3Ri3mXhNG7zy0avyUxPkOyMo+1ycXM
-cQ9HuZNLSNSdoVLuQtcidvNp439eZ0sn/8hZvZLx24PMD2G3laG0ZgIztpgMAhGy
-kC6vE6+r4J3XH/Me1KftAkA3o1d58+lzzaF7NcplgC50HpwNvhSg1vhz4S5dA6BW
-Q2KUpEkco7bv2p3vrpPcBjukfb4ISBUSIq4wYMvhrTiSLh/HDBw9WO3A4Kkwwk1w
-CusS1IfhmmuTPJQ5aNchBCk1CQRZCQZnWH/hVg6uR04TH28hJSBCT2nzLuHmG53U
-eRdmJqdzfjt5XA8yPbMspkrJKJLOcbLCzTZPb+gzAjr0JVfeTwtF+l+7N9cYH5oY
-qGwNpZmxGCd8IfjPPRbKcnCngQCJT2VtVjQ0ACaunKsjsUZaVtS8lOEMkVK6F2WX
-Dj7fH/YDqoaKjrdQbdx/
-=SA+Y
------END PGP SIGNATURE-----
-
---IvGM3kKqwtniy32b--
-
---===============1593171007927263183==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============1593171007927263183==--
+- Nishanth Peethambaran
