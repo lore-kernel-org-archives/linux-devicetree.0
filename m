@@ -1,55 +1,67 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 0/2] Device Tree support for CMA (Contiguous Memory
- Allocator)
-Date: Mon, 18 Feb 2013 21:03:50 -0800
-Message-ID: <CAOesGMjC97p_5wDCSUhv6DaHdOKJKcARdRtdt5UnYkUCuFou6g@mail.gmail.com>
-References: <1360845928-8107-1-git-send-email-m.szyprowski@samsung.com>
- <20130214213013.GG1906@pengutronix.de> <511D6076.9090503@gmail.com>
- <20130215083304.GK1906@pengutronix.de> <5122AA3F.8030001@gmail.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v6 16/16] ARM: dts: add board specific fixed rate clock
+ nodes for Exynos based platforms
+Date: Mon, 18 Feb 2013 21:11:26 -0800
+Message-ID: <CAOesGMjXv6DnGKx3=Xvgae_z=Jj5dZ5ncXyRNQ7wmmpSNkh==g@mail.gmail.com>
+References: <1361175686-19400-1-git-send-email-thomas.abraham@linaro.org>
+	<1361175686-19400-17-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5122AA3F.8030001-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sylwester Nawrocki <sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michal Nazarewicz <mina86-deATy8a+UHjQT0dZR+AlfA@public.gmane.org>, linaro-mm-sig-cunTk1MwBs8s++Sfvej+rw@public.gmane.org, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1361175686-19400-17-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 18, 2013 at 2:25 PM, Sylwester Nawrocki
-<sylvester.nawrocki-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+Hi,
 
-> My context was a multiprocessor SoC, where one of the processors is somehow
-> application specific (e.g. camera ISP) and can be considered as a slave
-> subsystem, running it's firmware and sharing system memory with the main
-> processor.
+On Mon, Feb 18, 2013 at 12:21 AM, Thomas Abraham
+<thomas.abraham@linaro.org> wrote:
+> The clock frequency of xxti and xusbxti clocks is dependent on the frequency of the
+> on-board oscillator that is used to generate these clocks. So allow the frequency
+> of these clocks to be specfied from device tree.
 >
-> The slave subsystem can have insane constraints on the memory region where
-> its firmware is located and which it also uses as its generic purpose RAM.
+> Cc: Kukjin Kim <kgene.kim@samsung.com>
+> Signed-off-by: Thomas Abraham <thomas.abraham@linaro.org>
+> ---
+>  arch/arm/boot/dts/exynos4210-origen.dts   |   12 ++++++++++++
+>  arch/arm/boot/dts/exynos4210-smdkv310.dts |   12 ++++++++++++
+>  arch/arm/boot/dts/exynos4210-trats.dts    |   12 ++++++++++++
+>  arch/arm/boot/dts/exynos4412-odroidx.dts  |   12 ++++++++++++
+>  arch/arm/boot/dts/exynos4412-origen.dts   |   12 ++++++++++++
+>  arch/arm/boot/dts/exynos4412-smdk4412.dts |   12 ++++++++++++
+>  arch/arm/boot/dts/exynos5250-arndale.dts  |    7 +++++++
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts |    7 +++++++
+>  arch/arm/boot/dts/exynos5250-snow.dts     |    7 +++++++
+>  arch/arm/boot/dts/exynos5440-ssdk5440.dts |    7 +++++++
+>  10 files changed, 100 insertions(+), 0 deletions(-)
 >
-> While the region assigned to such a slave device would also likely include
-> a memory for its DMA buffers, the main concern here was an allocation of
-> a working memory for the slave processor.
->
-> Perhaps the device tree is not a perfect place for defining exact memory
-> regions. If we happen to decide against it, then I guess some set of
-> properties would be needed, that would allow CMA to assign appropriate
-> memory region(s) to a device.
+> diff --git a/arch/arm/boot/dts/exynos4210-origen.dts b/arch/arm/boot/dts/exynos4210-origen.dts
+> index 052606b..1b30bc8 100644
+> --- a/arch/arm/boot/dts/exynos4210-origen.dts
+> +++ b/arch/arm/boot/dts/exynos4210-origen.dts
+> @@ -127,4 +127,16 @@
+>                         linux,default-trigger = "heartbeat";
+>                 };
+>         };
+> +
+> +       fixed-rate-clocks {
+> +               xxti {
+> +                       compatible = "samsung,clock-xxti";
+> +                       clock-frequency = <0>;
+> +               };
+> +
+> +               xusbxti {
+> +                       compatible = "samsung,clock-xusbxti";
+> +                       clock-frequency = <24000000>;
+> +               };
+> +       };
 
-The place to add such constraints are in the bindings for the camera ISP.
-
-This isn't that different from how dma-window properties used on some
-of the PowerPC platforms; it specifies (among other things) the
-available address space as seen from the bus/device side.
+Looks like xxti = 0 and xusbxti = 24MHz is the common frequencies on
+nearly all boards. It probably makes sense to add that to the defaults
+in dtsi, and override on the boards where it isn't the case. Saves
+some boilerplate code in the .dts files.
 
 
 -Olof
