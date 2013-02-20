@@ -1,506 +1,313 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v5] iio: Add OF support
-Date: Wed, 20 Feb 2013 11:24:58 -0800
-Message-ID: <20130220192458.GA29247@roeck-us.net>
-References: <1360256940-19438-1-git-send-email-linux@roeck-us.net>
- <51250A0E.80806@gmail.com> <20130220181148.GA19278@roeck-us.net>
- <2dada206-6401-4a35-85d8-298dd08b0420@email.android.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <2dada206-6401-4a35-85d8-298dd08b0420-2ueSQiBKiTY7tOexoI0I+QC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+From: Anatolij Gustschin <agust@denx.de>
+Subject: [PATCH v2] Input: matrix-keypad - support binary column select gpios
+Date: Wed, 20 Feb 2013 20:27:55 +0100
+Message-ID: <1361388475-23705-1-git-send-email-agust@denx.de>
+References: <1359462324-7233-1-git-send-email-agust@denx.de>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1359462324-7233-1-git-send-email-agust@denx.de>
+Sender: linux-input-owner@vger.kernel.org
+To: linux-input@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree-discuss@lists.ozlabs.org, Anatolij Gustschin <agust@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 20, 2013 at 06:51:08PM +0000, Jonathan Cameron wrote:
-> 
-> 
-> Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
-> 
-> >On Wed, Feb 20, 2013 at 11:38:22AM -0600, Rob Herring wrote:
-> >> On 02/07/2013 11:09 AM, Guenter Roeck wrote:
-> >> > Provide bindings and parse OF data during initialization.
-> >> > 
-> >> > Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> >> > ---
-> >> > v5:
-> >> > - Updated examples in bindings.
-> >> > v4:
-> >> > - Fixed wrong parameter to dummy of_iio_channel_get_by_name if
-> >CONFIG_OF is
-> >> >   undefined, and wrong return value.
-> >> > - Initialize indio_dev->of_node in iio_device_register if the
-> >calling driver
-> >> >   neglected to do it.
-> >> > v3:
-> >> > - Cleaned up documentation (formatting, left-over clock references)
-> >> > - Updated bindings description to permit sub-devices
-> >> > - When searching for iio devices, use the pointer to the iio device
-> >type instead
-> >> >   of strcmp. Rename iio_dev_type to iio_device_type (to match other
-> >device
-> >> >   types) and make it global for that purpose. Check the OF node
-> >first, then the
-> >> >   device type, as the node is less likely to match.
-> >> > - Move the common code in of_iio_channel_get and
-> >of_iio_channel_get_all to
-> >> >   __of_iio_channel_get.
-> >> > - Return NULL from of_iio_channel_get_by_name if nothing is found,
-> >or
-> >> >   an error if there is a problem with consistency or if the
-> >provider device is
-> >> >   not yet available.
-> >> > - In iio_channel_get, return if of_iio_channel_get_by_name()
-> >returns a channel
-> >> >   or an error, and continue otherwise.
-> >> > v2:
-> >> > - Rebased to iio/togreg
-> >> > - Documentation update per feedback
-> >> > - Dropped io-channel-output-names from the bindings document. The
-> >property is
-> >> >   not used in the code, and it is not entirely clear what it would
-> >be used for.
-> >> >   If there is a need for it, we can add it back in later on.
-> >> > - Don't export OF specific API calls
-> >> > - For OF support, no longer depend on iio_map
-> >> > - Add #ifdef CONFIG_OF where appropriate, and ensure that the code
-> >still builds
-> >> >   if it is not selected.
-> >> > - Change iio_channel_get to take device pointer as argument instead
-> >of device
-> >> >   name. Retain old API as of_iio_channel_get_sys.
-> >> > - iio_channel_get now works for both OF and non-OF configurations
-> >> > - Use regulator to get vref for max1363 driver.
-> >> > 
-> >> >  .../devicetree/bindings/iio/iio-bindings.txt       |   97
-> >+++++++++++
-> >> >  drivers/iio/iio_core.h                             |    1 +
-> >> >  drivers/iio/industrialio-core.c                    |    8 +-
-> >> >  drivers/iio/inkern.c                               |  171
-> >++++++++++++++++++++
-> >> >  4 files changed, 275 insertions(+), 2 deletions(-)
-> >> >  create mode 100644
-> >Documentation/devicetree/bindings/iio/iio-bindings.txt
-> >> > 
-> >> > diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> >b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> >> > new file mode 100644
-> >> > index 0000000..1182845
-> >> > --- /dev/null
-> >> > +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
-> >> > @@ -0,0 +1,97 @@
-> >> > +This binding is a work-in-progress. It is derived from clock
-> >bindings,
-> >> > +and based on suggestions from Lars-Peter Clausen [1].
-> >> 
-> >> Bindings are an ABI. It should not be a WIP. What part is a WIP?
-> >> 
-> >The text is copied from clock bindings. I do not claim to be better
-> >than the clock subsystem is doing in respect to its bindings.
-> >
-> >I'll be more than happy to take this text out if it is a source of
-> >contention,
-> >even more so if that is what is holding up the patch. Jonathan ?
-> I don't really care about the wording though can see why Rob asked!
-> We will probably have other stuff to add anyway.
-> 
+On hardware with limited gpios one column select gpio can select
+two different rows when using some additional hardware logic:
+high value selects one row, low value selects another row. Add
+support for such matrix keyboards and document device tree
+bindings used to describe them.
 
-Quite likely - for example, I did not add io-output-names since I did not
-know what to do with it.
+Since half of the columns is always not selected, interrupts won't be
+generated for press events on these columns. To generate interrupts
+for not selected columns we need to periodicaly switch to these columns
+in order to catch the potential press events. This is done by additional
+work function.
 
-What do you want me to do ? Submit another version with the sentence deleted,
-or keep it as-is ?
+Signed-off-by: Anatolij Gustschin <agust@denx.de>
+---
+v2:
+ - do not use inline attribute for matrix_keyboard_row_events(),
+   it causes reporting wrong events for some keys if the kernel
+   was built using gcc 4.7.2.
 
-Thanks,
-Guenter
+ .../bindings/input/gpio-matrix-keypad.txt          |    7 ++
+ drivers/input/keyboard/matrix_keypad.c             |  112 ++++++++++++++++----
+ include/linux/input/matrix_keypad.h                |    6 +
+ 3 files changed, 106 insertions(+), 19 deletions(-)
 
-> Jonathan
-> >
-> >Thanks,
-> >Guenter
-> >
-> >> Knowing nothing about IIO, the binding seems sane.
-> >> 
-> >> Rob
-> >> 
-> >> > +Sources of IIO channels can be represented by any node in the
-> >device
-> >> > +tree. Those nodes are designated as IIO providers. IIO consumer
-> >> > +nodes use a phandle and IIO specifier pair to connect IIO provider
-> >> > +outputs to IIO inputs. Similar to the gpio specifiers, an IIO
-> >> > +specifier is an array of one or more cells identifying the IIO
-> >> > +output on a device. The length of an IIO specifier is defined by
-> >the
-> >> > +value of a #io-channel-cells property in the IIO provider node.
-> >> > +
-> >> > +[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
-> >> > +
-> >> > +==IIO providers==
-> >> > +
-> >> > +Required properties:
-> >> > +#io-channel-cells: Number of cells in an IIO specifier; Typically
-> >0 for nodes
-> >> > +		   with a single IIO output and 1 for nodes with multiple
-> >> > +		   IIO outputs.
-> >> > +
-> >> > +Example for a simple configuration with no trigger:
-> >> > +
-> >> > +	adc: voltage-sensor@35 {
-> >> > +		compatible = "maxim,max1139";
-> >> > +		reg = <0x35>;
-> >> > +		#io-channel-cells = <1>;
-> >> > +	};
-> >> > +
-> >> > +Example for a configuration with trigger:
-> >> > +
-> >> > +	adc@35 {
-> >> > +		compatible = "some-vendor,some-adc";
-> >> > +		reg = <0x35>;
-> >> > +
-> >> > +		adc1: iio-device@0 {
-> >> > +			#io-channel-cells = <1>;
-> >> > +			/* other properties */
-> >> > +		};
-> >> > +		adc2: iio-device@1 {
-> >> > +			#io-channel-cells = <1>;
-> >> > +			/* other properties */
-> >> > +		};
-> >> > +	};
-> >> > +
-> >> > +==IIO consumers==
-> >> > +
-> >> > +Required properties:
-> >> > +io-channels:	List of phandle and IIO specifier pairs, one pair
-> >> > +		for each IIO input to the device. Note: if the
-> >> > +		IIO provider specifies '0' for #io-channel-cells,
-> >> > +		then only the phandle portion of the pair will appear.
-> >> > +
-> >> > +Optional properties:
-> >> > +io-channel-names:
-> >> > +		List of IIO input name strings sorted in the same
-> >> > +		order as the io-channels property. Consumers drivers
-> >> > +		will use io-channel-names to match IIO input names
-> >> > +		with IIO specifiers.
-> >> > +io-channel-ranges:
-> >> > +		Empty property indicating that child nodes can inherit named
-> >> > +		IIO channels from this node. Useful for bus nodes to provide
-> >> > +		and IIO channel to their children.
-> >> > +
-> >> > +For example:
-> >> > +
-> >> > +	device {
-> >> > +		io-channels = <&adc 1>, <&ref 0>;
-> >> > +		io-channel-names = "vcc", "vdd";
-> >> > +	};
-> >> > +
-> >> > +This represents a device with two IIO inputs, named "vcc" and
-> >"vdd".
-> >> > +The vcc channel is connected to output 1 of the &adc device, and
-> >the
-> >> > +vdd channel is connected to output 0 of the &ref device.
-> >> > +
-> >> > +==Example==
-> >> > +
-> >> > +	adc: max1139@35 {
-> >> > +		compatible = "maxim,max1139";
-> >> > +		reg = <0x35>;
-> >> > +		#io-channel-cells = <1>;
-> >> > +	};
-> >> > +
-> >> > +	...
-> >> > +
-> >> > +	iio_hwmon {
-> >> > +		compatible = "iio-hwmon";
-> >> > +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
-> >> > +			<&adc 3>, <&adc 4>, <&adc 5>,
-> >> > +			<&adc 6>, <&adc 7>, <&adc 8>,
-> >> > +			<&adc 9>;
-> >> > +	};
-> >> > +
-> >> > +	some_consumer {
-> >> > +		compatible = "some-consumer";
-> >> > +		io-channels = <&adc 10>, <&adc 11>;
-> >> > +		io-channel-names = "adc1", "adc2";
-> >> > +	};
-> >> > diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
-> >> > index f652e6a..05c1b74 100644
-> >> > --- a/drivers/iio/iio_core.h
-> >> > +++ b/drivers/iio/iio_core.h
-> >> > @@ -18,6 +18,7 @@
-> >> >  struct iio_chan_spec;
-> >> >  struct iio_dev;
-> >> >  
-> >> > +extern struct device_type iio_device_type;
-> >> >  
-> >> >  int __iio_add_chan_devattr(const char *postfix,
-> >> >  			   struct iio_chan_spec const *chan,
-> >> > diff --git a/drivers/iio/industrialio-core.c
-> >b/drivers/iio/industrialio-core.c
-> >> > index 8848f16..6d8b027 100644
-> >> > --- a/drivers/iio/industrialio-core.c
-> >> > +++ b/drivers/iio/industrialio-core.c
-> >> > @@ -847,7 +847,7 @@ static void iio_dev_release(struct device
-> >*device)
-> >> >  	kfree(indio_dev);
-> >> >  }
-> >> >  
-> >> > -static struct device_type iio_dev_type = {
-> >> > +struct device_type iio_device_type = {
-> >> >  	.name = "iio_device",
-> >> >  	.release = iio_dev_release,
-> >> >  };
-> >> > @@ -869,7 +869,7 @@ struct iio_dev *iio_device_alloc(int
-> >sizeof_priv)
-> >> >  
-> >> >  	if (dev) {
-> >> >  		dev->dev.groups = dev->groups;
-> >> > -		dev->dev.type = &iio_dev_type;
-> >> > +		dev->dev.type = &iio_device_type;
-> >> >  		dev->dev.bus = &iio_bus_type;
-> >> >  		device_initialize(&dev->dev);
-> >> >  		dev_set_drvdata(&dev->dev, (void *)dev);
-> >> > @@ -960,6 +960,10 @@ int iio_device_register(struct iio_dev
-> >*indio_dev)
-> >> >  {
-> >> >  	int ret;
-> >> >  
-> >> > +	/* If the calling driver did not initialize of_node, do it here
-> >*/
-> >> > +	if (!indio_dev->dev.of_node && indio_dev->dev.parent)
-> >> > +		indio_dev->dev.of_node = indio_dev->dev.parent->of_node;
-> >> > +
-> >> >  	/* configure elements for the chrdev */
-> >> >  	indio_dev->dev.devt = MKDEV(MAJOR(iio_devt), indio_dev->id);
-> >> >  
-> >> > diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
-> >> > index b289915..795d100 100644
-> >> > --- a/drivers/iio/inkern.c
-> >> > +++ b/drivers/iio/inkern.c
-> >> > @@ -10,6 +10,7 @@
-> >> >  #include <linux/export.h>
-> >> >  #include <linux/slab.h>
-> >> >  #include <linux/mutex.h>
-> >> > +#include <linux/of.h>
-> >> >  
-> >> >  #include <linux/iio/iio.h>
-> >> >  #include "iio_core.h"
-> >> > @@ -92,6 +93,164 @@ static const struct iio_chan_spec
-> >> >  	return chan;
-> >> >  }
-> >> >  
-> >> > +#ifdef CONFIG_OF
-> >> > +
-> >> > +static int iio_dev_node_match(struct device *dev, void *data)
-> >> > +{
-> >> > +	return dev->of_node == data && dev->type == &iio_device_type;
-> >> > +}
-> >> > +
-> >> > +static int __of_iio_channel_get(struct iio_channel *channel,
-> >> > +				struct device_node *np, int index)
-> >> > +{
-> >> > +	struct device *idev;
-> >> > +	struct iio_dev *indio_dev;
-> >> > +	int err;
-> >> > +	struct of_phandle_args iiospec;
-> >> > +
-> >> > +	err = of_parse_phandle_with_args(np, "io-channels",
-> >> > +					 "#io-channel-cells",
-> >> > +					 index, &iiospec);
-> >> > +	if (err)
-> >> > +		return err;
-> >> > +
-> >> > +	idev = bus_find_device(&iio_bus_type, NULL, iiospec.np,
-> >> > +			       iio_dev_node_match);
-> >> > +	of_node_put(iiospec.np);
-> >> > +	if (idev == NULL)
-> >> > +		return -EPROBE_DEFER;
-> >> > +
-> >> > +	indio_dev = dev_to_iio_dev(idev);
-> >> > +	channel->indio_dev = indio_dev;
-> >> > +	index = iiospec.args_count ? iiospec.args[0] : 0;
-> >> > +	if (index >= indio_dev->num_channels) {
-> >> > +		return -EINVAL;
-> >> > +		goto err_put;
-> >> > +	}
-> >> > +	channel->channel = &indio_dev->channels[index];
-> >> > +
-> >> > +	return 0;
-> >> > +
-> >> > +err_put:
-> >> > +	iio_device_put(indio_dev);
-> >> > +	return err;
-> >> > +}
-> >> > +
-> >> > +static struct iio_channel *of_iio_channel_get(struct device_node
-> >*np, int index)
-> >> > +{
-> >> > +	struct iio_channel *channel;
-> >> > +	int err;
-> >> > +
-> >> > +	if (index < 0)
-> >> > +		return ERR_PTR(-EINVAL);
-> >> > +
-> >> > +	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
-> >> > +	if (channel == NULL)
-> >> > +		return ERR_PTR(-ENOMEM);
-> >> > +
-> >> > +	err = __of_iio_channel_get(channel, np, index);
-> >> > +	if (err)
-> >> > +		goto err_free_channel;
-> >> > +
-> >> > +	return channel;
-> >> > +
-> >> > +err_free_channel:
-> >> > +	kfree(channel);
-> >> > +	return ERR_PTR(err);
-> >> > +}
-> >> > +
-> >> > +static struct iio_channel *of_iio_channel_get_by_name(struct
-> >device_node *np,
-> >> > +						      const char *name)
-> >> > +{
-> >> > +	struct iio_channel *chan = NULL;
-> >> > +
-> >> > +	/* Walk up the tree of devices looking for a matching iio channel
-> >*/
-> >> > +	while (np) {
-> >> > +		int index = 0;
-> >> > +
-> >> > +		/*
-> >> > +		 * For named iio channels, first look up the name in the
-> >> > +		 * "io-channel-names" property.  If it cannot be found, the
-> >> > +		 * index will be an error code, and of_iio_channel_get()
-> >> > +		 * will fail.
-> >> > +		 */
-> >> > +		if (name)
-> >> > +			index = of_property_match_string(np, "io-channel-names",
-> >> > +							 name);
-> >> > +		chan = of_iio_channel_get(np, index);
-> >> > +		if (!IS_ERR(chan))
-> >> > +			break;
-> >> > +		else if (name && index >= 0) {
-> >> > +			pr_err("ERROR: could not get IIO channel %s:%s(%i)\n",
-> >> > +				np->full_name, name ? name : "", index);
-> >> > +			return chan;
-> >> > +		}
-> >> > +
-> >> > +		/*
-> >> > +		 * No matching IIO channel found on this node.
-> >> > +		 * If the parent node has a "io-channel-ranges" property,
-> >> > +		 * then we can try one of its channels.
-> >> > +		 */
-> >> > +		np = np->parent;
-> >> > +		if (np && !of_get_property(np, "io-channel-ranges", NULL))
-> >> > +			break;
-> >> > +	}
-> >> > +	return chan;
-> >> > +}
-> >> > +
-> >> > +static struct iio_channel *of_iio_channel_get_all(struct device
-> >*dev)
-> >> > +{
-> >> > +	struct iio_channel *chans;
-> >> > +	int i, mapind, nummaps = 0;
-> >> > +	int ret;
-> >> > +
-> >> > +	do {
-> >> > +		ret = of_parse_phandle_with_args(dev->of_node,
-> >> > +						 "io-channels",
-> >> > +						 "#io-channel-cells",
-> >> > +						 nummaps, NULL);
-> >> > +		if (ret < 0)
-> >> > +			break;
-> >> > +	} while (++nummaps);
-> >> > +
-> >> > +	if (nummaps == 0)	/* no error, return NULL to search map table */
-> >> > +		return NULL;
-> >> > +
-> >> > +	/* NULL terminated array to save passing size */
-> >> > +	chans = kcalloc(nummaps + 1, sizeof(*chans), GFP_KERNEL);
-> >> > +	if (chans == NULL)
-> >> > +		return ERR_PTR(-ENOMEM);
-> >> > +
-> >> > +	/* Search for OF matches */
-> >> > +	for (mapind = 0; mapind < nummaps; mapind++) {
-> >> > +		ret = __of_iio_channel_get(&chans[mapind], dev->of_node,
-> >> > +					   mapind);
-> >> > +		if (ret)
-> >> > +			goto error_free_chans;
-> >> > +	}
-> >> > +	return chans;
-> >> > +
-> >> > +error_free_chans:
-> >> > +	for (i = 0; i < mapind; i++)
-> >> > +		iio_device_put(chans[i].indio_dev);
-> >> > +	kfree(chans);
-> >> > +	return ERR_PTR(ret);
-> >> > +}
-> >> > +
-> >> > +#else /* CONFIG_OF */
-> >> > +
-> >> > +static inline struct iio_channel *
-> >> > +of_iio_channel_get_by_name(struct device_node *np, const char
-> >*name)
-> >> > +{
-> >> > +	return NULL;
-> >> > +}
-> >> > +
-> >> > +static inline struct iio_channel *of_iio_channel_get_all(struct
-> >device *dev)
-> >> > +{
-> >> > +	return NULL;
-> >> > +}
-> >> > +
-> >> > +#endif /* CONFIG_OF */
-> >> >  
-> >> >  static struct iio_channel *iio_channel_get_sys(const char *name,
-> >> >  					       const char *channel_name)
-> >> > @@ -150,7 +309,14 @@ struct iio_channel *iio_channel_get(struct
-> >device *dev,
-> >> >  				    const char *channel_name)
-> >> >  {
-> >> >  	const char *name = dev ? dev_name(dev) : NULL;
-> >> > +	struct iio_channel *channel;
-> >> >  
-> >> > +	if (dev) {
-> >> > +		channel = of_iio_channel_get_by_name(dev->of_node,
-> >> > +						     channel_name);
-> >> > +		if (channel != NULL)
-> >> > +			return channel;
-> >> > +	}
-> >> >  	return iio_channel_get_sys(name, channel_name);
-> >> >  }
-> >> >  EXPORT_SYMBOL_GPL(iio_channel_get);
-> >> > @@ -173,6 +339,11 @@ struct iio_channel *iio_channel_get_all(struct
-> >device *dev)
-> >> >  
-> >> >  	if (dev == NULL)
-> >> >  		return ERR_PTR(-EINVAL);
-> >> > +
-> >> > +	chans = of_iio_channel_get_all(dev);
-> >> > +	if (chans)
-> >> > +		return chans;
-> >> > +
-> >> >  	name = dev_name(dev);
-> >> >  
-> >> >  	mutex_lock(&iio_map_list_lock);
-> >> > 
-> >> 
-> >> 
-> 
-> -- 
-> Sent from my Android phone with K-9 Mail. Please excuse my brevity.
-> 
+diff --git a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
+index ead641c..57f4be3 100644
+--- a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
++++ b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
+@@ -23,6 +23,13 @@ Optional Properties:
+ - debounce-delay-ms:	debounce interval in milliseconds
+ - col-scan-delay-us:	delay, measured in microseconds, that is needed
+ 			before we can scan keypad after activating column gpio
++- col-gpios-binary:	specify that high and low states of a column gpio
++			select two different rows (boards with limited gpios
++			could support this by additional hardware logic)
++- col-switch-delay-ms:	column gpio switch interval for selecting alternative
++			rows when using 'col-gpios-binary'. This is needed for
++			periodical selecting of the alternative rows to be able
++			to generate keypad interrupts for them
+ 
+ Example:
+ 	matrix-keypad {
+diff --git a/drivers/input/keyboard/matrix_keypad.c b/drivers/input/keyboard/matrix_keypad.c
+index f4ff0dd..80ddd4c 100644
+--- a/drivers/input/keyboard/matrix_keypad.c
++++ b/drivers/input/keyboard/matrix_keypad.c
+@@ -36,10 +36,12 @@ struct matrix_keypad {
+ 
+ 	uint32_t last_key_state[MATRIX_MAX_COLS];
+ 	struct delayed_work work;
++	struct delayed_work select_cols;
+ 	spinlock_t lock;
+ 	bool scan_pending;
+ 	bool stopped;
+ 	bool gpio_all_disabled;
++	bool last_col_val;
+ };
+ 
+ /*
+@@ -56,7 +58,8 @@ static void __activate_col(const struct matrix_keypad_platform_data *pdata,
+ 		gpio_direction_output(pdata->col_gpios[col], level_on);
+ 	} else {
+ 		gpio_set_value_cansleep(pdata->col_gpios[col], !level_on);
+-		gpio_direction_input(pdata->col_gpios[col]);
++		if (!pdata->col_gpios_binary)
++			gpio_direction_input(pdata->col_gpios[col]);
+ 	}
+ }
+ 
+@@ -111,6 +114,24 @@ static void disable_row_irqs(struct matrix_keypad *keypad)
+ 	}
+ }
+ 
++static void matrix_keyboard_row_events(struct matrix_keypad *keypad,
++		int col, uint32_t row_bits_changed, uint32_t new_state)
++{
++	struct input_dev *input_dev = keypad->input_dev;
++	const unsigned short *keycodes = input_dev->keycode;
++	int code, row;
++
++	for (row = 0; row < keypad->pdata->num_row_gpios; row++) {
++		if ((row_bits_changed & (1 << row)) == 0)
++			continue;
++
++		code = MATRIX_SCAN_CODE(row, col, keypad->row_shift);
++		input_event(input_dev, EV_MSC, MSC_SCAN, code);
++		input_report_key(input_dev, keycodes[code],
++				 new_state & (1 << row));
++	}
++}
++
+ /*
+  * This gets the keys from keyboard and reports it to input subsystem
+  */
+@@ -119,10 +140,9 @@ static void matrix_keypad_scan(struct work_struct *work)
+ 	struct matrix_keypad *keypad =
+ 		container_of(work, struct matrix_keypad, work.work);
+ 	struct input_dev *input_dev = keypad->input_dev;
+-	const unsigned short *keycodes = input_dev->keycode;
+ 	const struct matrix_keypad_platform_data *pdata = keypad->pdata;
+ 	uint32_t new_state[MATRIX_MAX_COLS];
+-	int row, col, code;
++	int row, col, col_idx;
+ 
+ 	/* de-activate all columns for scanning */
+ 	activate_all_cols(pdata, false);
+@@ -133,30 +153,47 @@ static void matrix_keypad_scan(struct work_struct *work)
+ 	for (col = 0; col < pdata->num_col_gpios; col++) {
+ 
+ 		activate_col(pdata, col, true);
++		col_idx = col;
++		if (pdata->col_gpios_binary)
++			col_idx <<= 1;
+ 
+ 		for (row = 0; row < pdata->num_row_gpios; row++)
+-			new_state[col] |=
++			new_state[col_idx] |=
+ 				row_asserted(pdata, row) ? (1 << row) : 0;
+ 
+ 		activate_col(pdata, col, false);
++
++		/*
++		 * if a column gpio selects two columns, read out the
++		 * row status for another column (we switched to the
++		 * other column by previous statement).
++		 */
++		if (pdata->col_gpios_binary) {
++			for (row = 0; row < pdata->num_row_gpios; row++)
++				new_state[col_idx + 1] |=
++				row_asserted(pdata, row) ? (1 << row) : 0;
++		}
+ 	}
+ 
+ 	for (col = 0; col < pdata->num_col_gpios; col++) {
+ 		uint32_t bits_changed;
+ 
+-		bits_changed = keypad->last_key_state[col] ^ new_state[col];
+-		if (bits_changed == 0)
+-			continue;
+-
+-		for (row = 0; row < pdata->num_row_gpios; row++) {
+-			if ((bits_changed & (1 << row)) == 0)
+-				continue;
+-
+-			code = MATRIX_SCAN_CODE(row, col, keypad->row_shift);
+-			input_event(input_dev, EV_MSC, MSC_SCAN, code);
+-			input_report_key(input_dev,
+-					 keycodes[code],
+-					 new_state[col] & (1 << row));
++		col_idx = col;
++		if (pdata->col_gpios_binary)
++			col_idx <<= 1;
++
++		bits_changed = keypad->last_key_state[col_idx] ^
++				new_state[col_idx];
++		if (bits_changed)
++			matrix_keyboard_row_events(keypad, col, bits_changed,
++							new_state[col_idx]);
++
++		if (pdata->col_gpios_binary) {
++			bits_changed = keypad->last_key_state[col_idx + 1] ^
++					new_state[col_idx + 1];
++			if (bits_changed)
++				matrix_keyboard_row_events(keypad, col + 1,
++					bits_changed, new_state[col_idx + 1]);
+ 		}
+ 	}
+ 	input_sync(input_dev);
+@@ -172,6 +209,21 @@ static void matrix_keypad_scan(struct work_struct *work)
+ 	spin_unlock_irq(&keypad->lock);
+ }
+ 
++static void select_cols_work(struct work_struct *work)
++{
++	struct matrix_keypad *keypad =
++		container_of(work, struct matrix_keypad, select_cols.work);
++
++	if (keypad->stopped)
++		return;
++
++	keypad->last_col_val = !keypad->last_col_val;
++	activate_all_cols(keypad->pdata, keypad->last_col_val);
++
++	schedule_delayed_work(&keypad->select_cols,
++	      msecs_to_jiffies(keypad->pdata->col_switch_delay_ms));
++}
++
+ static irqreturn_t matrix_keypad_interrupt(int irq, void *id)
+ {
+ 	struct matrix_keypad *keypad = id;
+@@ -210,6 +262,10 @@ static int matrix_keypad_start(struct input_dev *dev)
+ 	 */
+ 	schedule_delayed_work(&keypad->work, 0);
+ 
++	if (keypad->pdata->col_gpios_binary)
++		schedule_delayed_work(&keypad->select_cols,
++		      msecs_to_jiffies(keypad->pdata->col_switch_delay_ms));
++
+ 	return 0;
+ }
+ 
+@@ -225,6 +281,9 @@ static void matrix_keypad_stop(struct input_dev *dev)
+ 	 * we should disable them now.
+ 	 */
+ 	disable_row_irqs(keypad);
++
++	if (keypad->pdata->col_gpios_binary)
++		cancel_delayed_work_sync(&keypad->select_cols);
+ }
+ 
+ #ifdef CONFIG_PM_SLEEP
+@@ -429,11 +488,20 @@ matrix_keypad_parse_dt(struct device *dev)
+ 		pdata->wakeup = true;
+ 	if (of_get_property(np, "gpio-activelow", NULL))
+ 		pdata->active_low = true;
++	if (of_get_property(np, "col-gpios-binary", NULL))
++		pdata->col_gpios_binary = true;
+ 
+ 	of_property_read_u32(np, "debounce-delay-ms", &pdata->debounce_ms);
+ 	of_property_read_u32(np, "col-scan-delay-us",
+ 						&pdata->col_scan_delay_us);
+ 
++	if (pdata->col_gpios_binary) {
++		of_property_read_u32(np, "col-switch-delay-ms",
++					&pdata->col_switch_delay_ms);
++		if (!pdata->col_switch_delay_ms)
++			pdata->col_switch_delay_ms = 100;
++	}
++
+ 	gpios = devm_kzalloc(dev,
+ 			     sizeof(unsigned int) *
+ 				(pdata->num_row_gpios + pdata->num_col_gpios),
+@@ -470,6 +538,7 @@ static int matrix_keypad_probe(struct platform_device *pdev)
+ 	const struct matrix_keypad_platform_data *pdata;
+ 	struct matrix_keypad *keypad;
+ 	struct input_dev *input_dev;
++	int num_cols;
+ 	int err;
+ 
+ 	pdata = dev_get_platdata(&pdev->dev);
+@@ -491,11 +560,16 @@ static int matrix_keypad_probe(struct platform_device *pdev)
+ 		goto err_free_mem;
+ 	}
+ 
++	num_cols = pdata->num_col_gpios;
++	if (pdata->col_gpios_binary)
++		num_cols *= 2;
++
+ 	keypad->input_dev = input_dev;
+ 	keypad->pdata = pdata;
+-	keypad->row_shift = get_count_order(pdata->num_col_gpios);
++	keypad->row_shift = get_count_order(num_cols);
+ 	keypad->stopped = true;
+ 	INIT_DELAYED_WORK(&keypad->work, matrix_keypad_scan);
++	INIT_DELAYED_WORK(&keypad->select_cols, select_cols_work);
+ 	spin_lock_init(&keypad->lock);
+ 
+ 	input_dev->name		= pdev->name;
+@@ -506,7 +580,7 @@ static int matrix_keypad_probe(struct platform_device *pdev)
+ 
+ 	err = matrix_keypad_build_keymap(pdata->keymap_data, NULL,
+ 					 pdata->num_row_gpios,
+-					 pdata->num_col_gpios,
++					 num_cols,
+ 					 NULL, input_dev);
+ 	if (err) {
+ 		dev_err(&pdev->dev, "failed to build keymap\n");
+diff --git a/include/linux/input/matrix_keypad.h b/include/linux/input/matrix_keypad.h
+index 5f3aa6b..ad4707a 100644
+--- a/include/linux/input/matrix_keypad.h
++++ b/include/linux/input/matrix_keypad.h
+@@ -49,6 +49,10 @@ struct matrix_keymap_data {
+  * @wakeup: controls whether the device should be set up as wakeup
+  *	source
+  * @no_autorepeat: disable key autorepeat
++ * @col_gpios_binary: indicate that one column gpio selects two rows,
++ *	i.e. high selects one row, low selects another row
++ * @col_switch_delay_ms: switching interval for periodical selecting
++ *	of the alternative rows to generate interrupts for them
+  *
+  * This structure represents platform-specific data that use used by
+  * matrix_keypad driver to perform proper initialization.
+@@ -63,6 +67,7 @@ struct matrix_keypad_platform_data {
+ 	unsigned int	num_col_gpios;
+ 
+ 	unsigned int	col_scan_delay_us;
++	unsigned int	col_switch_delay_ms;
+ 
+ 	/* key debounce interval in milli-second */
+ 	unsigned int	debounce_ms;
+@@ -73,6 +78,7 @@ struct matrix_keypad_platform_data {
+ 	bool		active_low;
+ 	bool		wakeup;
+ 	bool		no_autorepeat;
++	bool		col_gpios_binary;
+ };
+ 
+ int matrix_keypad_build_keymap(const struct matrix_keymap_data *keymap_data,
+-- 
+1.7.5.4
+
