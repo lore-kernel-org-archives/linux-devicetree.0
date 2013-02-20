@@ -1,125 +1,102 @@
-From: Anil Kumar <anilk4.v@gmail.com>
-Subject: Re: [PATCH V3] ARM: dts: add minimal DT support for DevKit8000
-Date: Wed, 20 Feb 2013 18:30:34 +0530
-Message-ID: <CABYxbz7gckFTdC+qsD8BYJBM97L6OHHDayg5njfKOp7Vw1yxdA@mail.gmail.com>
-References: <1360999167-17606-1-git-send-email-anilk4.v@gmail.com>
-	<CAKDJKT6uMQN_MaPNDt4dDxEKNZHyuupBzD0KrFUQ2fpiUYzk3w@mail.gmail.com>
+From: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [PATCH] spi: tegra114: add spi driver
+Date: Wed, 20 Feb 2013 13:11:12 +0000
+Message-ID: <20130220131112.GE2726@opensource.wolfsonmicro.com>
+References: <1361281115-20436-1-git-send-email-ldewangan@nvidia.com>
+ <5123C18A.9010604@wwwdotorg.org> <5124C18F.6070108@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAKDJKT6uMQN_MaPNDt4dDxEKNZHyuupBzD0KrFUQ2fpiUYzk3w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Manish Badarkhe <badarkhe.manish@gmail.com>
-Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, b-cousson@ti.com, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, thomas@tomweber.eu
+Content-Type: multipart/mixed; boundary="===============8443615521534515653=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5124C18F.6070108-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Manish,
 
-On Wed, Feb 20, 2013 at 5:28 PM, Manish Badarkhe
-<badarkhe.manish@gmail.com> wrote:
-> On Sat, Feb 16, 2013 at 12:49 PM, Anil Kumar <anilk4.v@gmail.com> wrote:
->> DevKit8000 is a beagle board clone from Timll, sold by
->> armkits.com. The DevKit8000 has RS232 serial port, LCD, DVI-D,
->> S-Video, Ethernet, SD/MMC, keyboard, camera, SPI, I2C, USB and
->> JTAG interface.
->>
->> This patch adds the basic DT support for devkit8000. At this time,
->> Information
->> of twl4030 (PMIC), MMC1, I2C1 and leds are added.
->>
->> Signed-off-by: Anil Kumar <anilk4.v@gmail.com>
->> Tested-by: Thomas Weber <thomas@tomweber.eu>
->> ---
->>  -This patch is based on top of kernel 3.8-rc5.
->>
->>  -Tested on Devkit8000.
->>
->> For V3:
->>  - Remove pin mux as done at device boot time by default.
->>
->> For V2:
->>  - Change model name as "TimLL OMAP3 Devkit8000"
->>  - Change compatible as "timll,omap3-devkit8000"
->>  - Doing i2c1 pinmux default with pinctrl-single driver instead of i2c1
->>    driver probe time.
->>
->> :100644 100644 5ebb44f... 22ebc76... M  arch/arm/boot/dts/Makefile
->> :000000 100644 0000000... 6338993... A
->> arch/arm/boot/dts/omap3-devkit8000.dts
->> :100644 100644 53cb380b.. ccecb76... M
->> arch/arm/mach-omap2/board-generic.c
->>  arch/arm/boot/dts/Makefile             |    1 +
->>  arch/arm/boot/dts/omap3-devkit8000.dts |  103
->> ++++++++++++++++++++++++++++++++
->>  arch/arm/mach-omap2/board-generic.c    |    1 +
->>  3 files changed, 105 insertions(+), 0 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->> index 5ebb44f..22ebc76 100644
->> --- a/arch/arm/boot/dts/Makefile
->> +++ b/arch/arm/boot/dts/Makefile
->> @@ -102,6 +102,7 @@ dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
->>         imx28-tx28.dtb
->>  dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
->>         omap3-beagle.dtb \
->> +       omap3-devkit8000.dtb \
->>         omap3-beagle-xm.dtb \
->>         omap3-evm.dtb \
->>         omap3-tobi.dtb \
->> diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts
->> b/arch/arm/boot/dts/omap3-devkit8000.dts
->> new file mode 100644
->> index 0000000..6338993
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/omap3-devkit8000.dts
->> @@ -0,0 +1,103 @@
->> +/*
->> + * Author: Anil Kumar <anilk4.v@gmail.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +/dts-v1/;
->> +
->> +/include/ "omap3.dtsi"
->> +/ {
->> +       model = "TimLL OMAP3 Devkit8000";
->> +       compatible = "timll,omap3-devkit8000", "ti,omap3";
->> +
->> +       memory {
->> +               device_type = "memory";
->> +               reg = <0x80000000 0x10000000>;  /* 256 MB */
->> +       };
->> +
->> +       leds {
->> +               compatible = "gpio-leds";
->> +
->> +               heartbeat {
->> +                       label = "devkit8000::led1";
->> +                       gpios = <&gpio6 26 0>;  /* 186 -> LED1 */
->> +                       default-state = "on";
->> +                       linux,default-trigger = "heartbeat";
->> +               };
->> +
->> +               mmc {
->> +                       label = "devkit8000::led2";
->> +                       gpios = <&gpio6 3 0>;   /* 163 -> LED2 */
->> +                       default-state = "on";
->> +                       linux,default-trigger = "none";
->> +               };
->> +
->> +               usr {
->> +                       label = "devkit8000::led3";
->> +                       gpios = <&gpio6 4 0>;   /* 164 -> LED3 */
->> +                       default-state = "on";
->> +                       linux,default-trigger = "usr";
->> +                };
->> +
->
-> No need of extra line over here.
+--===============8443615521534515653==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ILuaRSyQpoVaJ1HG"
+Content-Disposition: inline
 
-ok,
 
-Thanks,
-Anil
+--ILuaRSyQpoVaJ1HG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Feb 20, 2013 at 05:59:03PM +0530, Laxman Dewangan wrote:
+> On Tuesday 19 February 2013 11:46 PM, Stephen Warren wrote:
+
+> >In the older Tegra SPI drivers, the PM runtime logic was was of
+> >master->{un,}prepare_transfer. I'm curious why it's implemented
+> >differently here.
+
+> The prepare  is called in atomic context and in this we are calling
+> pm_runtime_get_sync() which is blocking and it can cause issue.
+
+> I have already bug reported by you that sometimes you saw locking in
+> tegra20 slink driver which we need to fix. When testing this, I ran
+> into similar case and hence now moving this out or prepare.
+
+> I will push the change for fixing this in tegra20_slink driver also.
+
+As I think I've said before I keep thinking we ought to just have some
+basic runtime PM code in the core - a substantial proportion of drivers
+end up following the same pattern, it'd be surprising to see hardware
+that needed a different pattern.
+
+> >>+	tspi->clk = devm_clk_get(&pdev->dev, "spi");
+
+> >Does this HW block use multiple clocks? If not, I think s/"spi"/NULL/
+> >there, just like the Tegra20 driver.
+
+> No, spi controller uses the only one clock. I will change to NULL.
+
+I'm never convinced that NULL is a helpful clock name to pick, it's not
+awesome if you ever acquire a second clock.
+
+--ILuaRSyQpoVaJ1HG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRJMtpAAoJELSic+t+oim9kBsQAJY+ECq8UzL+o+K4tOJd1dnm
+3NpsTeMXCZeitEN2HKqTZxHsX/CBKP/59m9ZVQzoF49bH7bIsxOW1V+DE8xT6vmC
+JNQc+3yda9YdIzzBDwi+lQ29DfnxEUmLKlIwPIRnOpUzNPSTjQdJh7PgbwkAAIxW
+ivVMo4UdqKkzhj3db3eIrUNlFDFVfdZqBmn83hGN9A2+jB65E66btbeH+DprrEyY
+KsKGw4lX3xQ7XjdeAICraKlEXcdrmJ+zMsZSxHkZb6p2zWMnLknku0rDE4l9l192
+CXgruSsyqiPEMo/SFSfKbbgE8Ls0qjFcyDzN18tCUuFnqLpXpxYlxFgHzGK5+1iy
+w1MCODkBzpJwxxq6dPPZ1+3QGQUqzYk2YCTJfJ195n2/DXXa46bsff6bozoJvXWM
+7Hnhl16hWkAdeC2+2+Q6lWd9573sC/wccyhCe02HjiVEOnYpgrqmSVMn/EOC6dpG
+K6xpfhH2Qp+gveX/1QgJDkfW5QFWWyuPRf5CwEUduXgGhKDU5jrRpoU0///Tip9I
+EAzaBHRyXKklbXS6GkCUjIh1dwUiqgcU/j8iZOPSIz600n9hpBCLfZpgLwUF7pBb
+Nk1aofsSwgEh2HSESXQngQvItks4RSA9W326ysWcyhYlbauSC9N+a265aDG896ii
+60M8Ex5wnO51wyr+DeKB
+=AR5w
+-----END PGP SIGNATURE-----
+
+--ILuaRSyQpoVaJ1HG--
+
+--===============8443615521534515653==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============8443615521534515653==--
