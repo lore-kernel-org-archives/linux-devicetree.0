@@ -1,109 +1,181 @@
-From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH 4/4 v6] ASoC: simple-card: add Device Tree
- support
-Date: Wed, 20 Feb 2013 13:17:57 +0100
-Message-ID: <5124BEF5.4040703@metafoo.de>
-References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
- <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
- <20130129014808.GC4748@opensource.wolfsonmicro.com>
- <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
- <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
- <5107FF97.1070601@wwwdotorg.org>
- <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
- <51097F0F.2030501@wwwdotorg.org>
- <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
- <5110349D.3050308@wwwdotorg.org>
- <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
- <87bobzrry6.wl%kuninori.morimoto.gx@renesas.com>
- <511963F8.5020107@wwwdotorg.org>
- <87bobqf5yq.wl%kuninori.morimoto.gx@renesas.com>
- <511C22E2.60701@wwwdotorg.org>
- <87obfnofsx.wl%kuninori.morimoto.gx@renesas.com>
- <511C6A1B.9000507@wwwdotorg.org>
- <874nhfv5mb.wl%kuninori.morimoto.gx@renesas.com>
- <8738wzuu9g.wl%kuninori.morimoto.gx@renesas.com>
- <87wqubtfi3.wl%kuninori.morimoto.gx@renesas.com>
- <5123A0F5.2030001@metafoo.de>
- <87r4kb95f3.wl%kuninori.morimoto.gx@renesas.com>
+From: Wei Ni <wni@nvidia.com>
+Subject: Re: [RFC PATCH 7/9] thermal: tegra30: add tegra30 thermal driver
+Date: Wed, 20 Feb 2013 20:23:43 +0800
+Message-ID: <5124C04F.1080200@nvidia.com>
+References: <1361187031-3679-1-git-send-email-wni@nvidia.com> <1361187031-3679-8-git-send-email-wni@nvidia.com> <51240F5A.1060309@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <87r4kb95f3.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <51240F5A.1060309@wwwdotorg.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, Matthew Longnecker <MLongnecker@nvidia.com>, "khali@linux-fr.org" <khali@linux-fr.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-kernel@vger.kernel.orgrs.org" <linux-kernel@vger.kernel.orgrs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/20/2013 01:48 AM, Kuninori Morimoto wrote:
+On 02/20/2013 07:48 AM, Stephen Warren wrote:
+> On 02/18/2013 04:30 AM, Wei Ni wrote:
+>> dd Tegra30 thermal driver support. It create thermal zone with thermal
+>> sensors and cooling device to participate in the linux thermal management.
 > 
-> Hi Lars
+>> diff --git a/drivers/thermal/tegra3_thermal.c b/drivers/thermal/tegra3_thermal.c
 > 
-> Thank you for checking patch
+>> +struct tegra_thermal_data {
 > 
->>> +- simple-audio,dev			: phandle and port for CPU/CODEC
->>> +- simple-audio,frame-master		: frame master
->>> +- simple-audio,bitclock-master		: bitclock master
->>> +#sound-dai-cells integer is required on simple-audio,dev phandle's node
->>
->> Shouldn't the names of '#sound-dai-cells' and 'simple-audio,dev' kind of
->> match? E.g. '#sound-dai-cells' and 'sound-dai'. Maybe drop the sound, since
->> the a in dai kind of implies this.
+> That's not really "thermal data", but that "thermal zone" or "thermal
+> device" itself.
 > 
-> Thank you, but I would like to keep "simple-audio" name for it too.
-> So, can I use
-> simple-audio-dai
-> #simple-audio-dai-cells
+>> +static int
+>> +tegra_throttle_set_cur_state(struct thermal_cooling_device *cdev,
+>> +				unsigned long cur_state)
+>> +{
+>> +	struct balanced_throttle *bthrot = cdev->devdata;
+>> +	int index;
+>> +
+>> +	mutex_lock(&cpu_throttle_lock);
+>> +
+>> +	/* TODO: we will handle the dvfs here */
+> 
+> That seems like rather a large TODO. We don't have any DVFS support for
+> Tegra yet. Is it even worth moving forward with this driver without that?
 
-The requirement to be able to find the DAI via devicetree is not specific to
-the simple-audio driver. I'd prefer if we could come up with a common
-binding which can be used by multiple drivers. Since you also add the xlate
-(or match) function to the sound core it makes sense - in my option - to
-also have a generic phandle -> DAI look-up method in the core.
-
-- Lars
+I think it's better to split this file into two driver, one is for the
+thermal sensor, it can read/write temperature. And the other one is for
+the cooling device, something like tegra3_cooling .c, it will call dvfs
+interface to handle throttling when dvfs is ready.
+And by now, we can focus on this tegra3_thermal.c.
 
 > 
->>> +static struct device_node*
->>> +__asoc_simple_card_parse_of(struct device_node *np,
->>> +			    struct asoc_simple_dai *dai)
->>> +{
->>> +	struct device_node *node;
->>> +	char prop[128];
->>> +
->>> +	/* get "simple-audio,dev = <&phandle port>" */
->>> +	snprintf(prop, sizeof(prop), "simple-audio,dev");
->>
->> Why do you need the extra buffer? Can you just pass, "simple-audio,dev"
->> directly to of_parse_phandle?
+>> +struct thermal_cooling_device *balanced_throttle_register(
+>> +		struct balanced_throttle *bthrot, char *type)
 > 
-> Indeed, thank you.
+> What does "balanced" mean here; isn't balanced a governor, whereas this
+> driver is simply providing the implementation that an arbitrary governor
+> would use to do its will?
 > 
->>> +	node = of_parse_phandle(np, prop, 0);
->>> +	if (!node)
->>> +		return NULL;
->>> +
->>> +	of_node_put(node);
->>
->> You shouldn't drop the reference until you are done processing it. Which in
->> this case is only after the device has been unregistered, since you pass the
->> node on to the ASoC core.
+> This function also appears to be rather generically named. A consistent
+> function/symbol-name prefix of e.g. "tegra30_thermal" would be useful
+> throughout the file.
+
+I port these codes from our downstream kernel, I will move them to the
+new tegra3_cooling.c, and since the dvfs is not ready, I will remain
+simplest codes, and remove the "balanced".
 > 
-> I see, will fix
+>> +static struct tegra_thermal_data * __devinit thermal_tegra_dt_parse_pdata(
+>> +						struct platform_device *pdev)
 > 
-> Best regards
-> ---
-> Kuninori Morimoto
-> _______________________________________________
-> Alsa-devel mailing list
-> Alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
-> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
+> I'd like some slight re-structing here.
+> 
+> Tegra only supports device tree now; no board files (upstream at least,
+> which is all that's relevant here). Hence, none of the Tegra drivers
+> support platform data at all after the last round of cleanup patches I
+> sent on Friday (most of which haven't been checked in yet). Hence, this
+> function is not parsing platform data out of DT, it's plain parsing
+> device tree.
+> 
+> So, can you move the devm_kzalloc of the tdata into probe() right at the
+> start, rename this function tegra30_thermal_parse_dt(), and call it
+> right after allocating "tdata" (which also is more like "tdev" or
+> "tzone" perhaps).
+
+Got it, I will change it.
+
+> 
+> Downstream if you still need to support platform data, you can simply
+> copy the platform data into "tdev" rather than calling
+> tegra30_thermal_parse_dt(); a simple patch to carry.
+> 
+>> +	tdata = devm_kzalloc(&pdev->dev, sizeof(*tdata), GFP_KERNEL);
+>> +	if (!tdata) {
+>> +		dev_err(&pdev->dev, "Can't allocate platform data\n");
+>> +		return NULL;
+>> +	}
+>> +	memset(tdata, 0, sizeof(*tdata));
+> 
+> That last line is kinda the whole point of k*z*alloc...
+
+Yes, I forgot to remove it.
+
+> 
+>> +
+>> +	ret = of_parse_phandle_with_args(np, "sensors", "#sensor-cells", 0,
+>> +					&args);
+>> +	if (ret) {
+>> +		dev_err(&pdev->dev, "Can't get sensor.\n");
+>> +		return NULL;
+>> +	}
+>> +	tdata->np_args.np = args.np;
+>> +	tdata->np_args.index = args.args[0];
+> 
+> That lookup should be implemented as part of the thermal core. It
+> shouldn't be duplicated in every single driver.
+> 
+>> +	ret = of_property_read_u32(np, "passive-delay", &val);
+>> +	if (!ret)
+>> +		tdata->passive_delay = val;
+> 
+> The DT binding documentation doesn't say this property is optional. If
+> you intend it to be, the documentation should say so, and specify what
+> the default is if the property is missing.
+
+Ok, I will change it.
+
+> 
+>> +	ret = of_property_read_u32(np, "num-passive-trips", &val);
+>> +	if (!ret)
+>> +		tdata->trip_ext.num_passive_trips = val;
+>> +
+>> +	if (tdata->trip_ext.num_passive_trips) {
+>> +		tdata->trip_ext.passive_trips = devm_kzalloc(&pdev->dev,
+>> +						sizeof(int) * val, GFP_KERNEL);
+> 
+> DT cells are specifically U32 not int. You probably want the driver to
+> use U32 instead of int to make 100% sure the range matches.
+
+Ok.
+
+> 
+>> +
+>> +		of_property_read_u32_array(np, "passive-trips",
+>> +				(u32 *)(tdata->trip_ext.passive_trips),
+>> +				tdata->trip_ext.num_passive_trips);
+> 
+> ... and then you wouldn't need this cast!
+> 
+>> +	}
+> 
+>> +	of_property_read_u32_array(np, "throt-tab",
+>> +				(u32 *)(&tdata->tj_throttle.throt_tab),
+>> +				tdata->tj_throttle.throt_tab_size * 2);
+> 
+> What about error-handling that API call, and all the others?
+
+I will add it.
+
+> 
+>> +static int tegra30_thermal_probe(struct platform_device *pdev)
+>> +{
+>> +	struct tegra_thermal_data *pdata = pdev->dev.platform_data;
+> 
+> Lets not support platform data at all upstream.
+
+Got it, thanks.
+
+> 
+>> +	/* Register cooling device */
+>> +	cdev = balanced_throttle_register(&pdata->tj_throttle, "cdev_throttle");
+> 
+> Is this picking specific policy ("balanced")? Should it be? What is
+> "cdev_throttle"?
+
+These codes are ported from our downstream kernel, it may handle
+multiple cooling device, so it named as "balanced", but in here we
+didn't use it, so it's better to remove them, and remain simplest codes.
+I will change it as I said above.
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-tegra" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
