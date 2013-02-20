@@ -1,11 +1,9 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 3/4 v6] ASoC: fsi: enable
- .of_xlate_dai_name on struct snd_soc_dai_driver
-Date: Wed, 20 Feb 2013 13:03:56 +0100
-Message-ID: <5124BBAC.30309@metafoo.de>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 4/4 v6] ASoC: simple-card: add Device Tree
+ support
+Date: Wed, 20 Feb 2013 13:17:57 +0100
+Message-ID: <5124BEF5.4040703@metafoo.de>
 References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
- <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
- <20130127035943.GJ4650@opensource.wolfsonmicro.com>
  <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
  <20130129014808.GC4748@opensource.wolfsonmicro.com>
  <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
@@ -24,62 +22,88 @@ References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
  <511C6A1B.9000507@wwwdotorg.org>
  <874nhfv5mb.wl%kuninori.morimoto.gx@renesas.com>
  <8738wzuu9g.wl%kuninori.morimoto.gx@renesas.com>
- <87liaj94nc.wl%kuninori.morimoto.gx@renesas.com>
+ <87wqubtfi3.wl%kuninori.morimoto.gx@renesas.com>
+ <5123A0F5.2030001@metafoo.de>
+ <87r4kb95f3.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <87liaj94nc.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Linux-ALSA <alsa-devel@alsa-project.org>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <87r4kb95f3.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/20/2013 02:04 AM, Kuninori Morimoto wrote:
+On 02/20/2013 01:48 AM, Kuninori Morimoto wrote:
 > 
-> Hi Stephen
+> Hi Lars
 > 
->> Hmm. I think that the .of_xlate_dai_name should be something related to
->> the object (e.g. CODEC) that contains the DAIs, rather than the DAIs
->> themselves. The intent is to ask some object (e.g. CODEC) which of its
->> DAIs is represented by the DT DAI specifier, not to ask each DAI whether
->> it is represented by that particular DT DAI specifier.
+> Thank you for checking patch
+> 
+>>> +- simple-audio,dev			: phandle and port for CPU/CODEC
+>>> +- simple-audio,frame-master		: frame master
+>>> +- simple-audio,bitclock-master		: bitclock master
+>>> +#sound-dai-cells integer is required on simple-audio,dev phandle's node
 >>
->> Aside from that, I'd expect the patch above to be something more like:
->>
->> const char *fsi_xlate_dai_name(struct snd_soc_dai *dai,
->> 				const struct of_phandle_args *args)
->> {
->> 	switch (args[0]) {
->> 	case 0:
->> 		return fsi_soc_dai[0].name;
->> 	case 1:
->> 		return fsi_soc_dai[1].name;
->> 	default:
->> 		return NULL;
->> 	}
->> }
+>> Shouldn't the names of '#sound-dai-cells' and 'simple-audio,dev' kind of
+>> match? E.g. '#sound-dai-cells' and 'sound-dai'. Maybe drop the sound, since
+>> the a in dai kind of implies this.
 > 
-> Thank you for pointing it.
-> I use this style in next patch.
+> Thank you, but I would like to keep "simple-audio" name for it too.
+> So, can I use
+> simple-audio-dai
+> #simple-audio-dai-cells
 
-I don't think this makes any more sense than the current version. You still
-iterate over all dai instances and call the xlate function for the first dai
-where the _parent_ device's of_node matches. You also pass in the this dai
-as the first parameter to the xlate function, which makes even less sense
-since you can use it to lookup the correct name, which may either be the
-dai's name or any of its siblings.
-
-If you want to use the xlate paradigm you really need to keep track of the
-cpu devices and make the xlate callback a property of the cpu device. Well
-or use a match paradigm instead of xlate.
+The requirement to be able to find the DAI via devicetree is not specific to
+the simple-audio driver. I'd prefer if we could come up with a common
+binding which can be used by multiple drivers. Since you also add the xlate
+(or match) function to the sound core it makes sense - in my option - to
+also have a generic phandle -> DAI look-up method in the core.
 
 - Lars
+
+> 
+>>> +static struct device_node*
+>>> +__asoc_simple_card_parse_of(struct device_node *np,
+>>> +			    struct asoc_simple_dai *dai)
+>>> +{
+>>> +	struct device_node *node;
+>>> +	char prop[128];
+>>> +
+>>> +	/* get "simple-audio,dev = <&phandle port>" */
+>>> +	snprintf(prop, sizeof(prop), "simple-audio,dev");
+>>
+>> Why do you need the extra buffer? Can you just pass, "simple-audio,dev"
+>> directly to of_parse_phandle?
+> 
+> Indeed, thank you.
+> 
+>>> +	node = of_parse_phandle(np, prop, 0);
+>>> +	if (!node)
+>>> +		return NULL;
+>>> +
+>>> +	of_node_put(node);
+>>
+>> You shouldn't drop the reference until you are done processing it. Which in
+>> this case is only after the device has been unregistered, since you pass the
+>> node on to the ASoC core.
+> 
+> I see, will fix
+> 
+> Best regards
+> ---
+> Kuninori Morimoto
+> _______________________________________________
+> Alsa-devel mailing list
+> Alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
+> http://mailman.alsa-project.org/mailman/listinfo/alsa-devel
