@@ -1,118 +1,85 @@
-From: Manish Badarkhe <badarkhe.manish@gmail.com>
-Subject: Re: [PATCH V3] ARM: dts: add minimal DT support for DevKit8000
-Date: Wed, 20 Feb 2013 17:28:07 +0530
-Message-ID: <CAKDJKT6uMQN_MaPNDt4dDxEKNZHyuupBzD0KrFUQ2fpiUYzk3w@mail.gmail.com>
-References: <1360999167-17606-1-git-send-email-anilk4.v@gmail.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 3/4 v6] ASoC: fsi: enable
+ .of_xlate_dai_name on struct snd_soc_dai_driver
+Date: Wed, 20 Feb 2013 13:03:56 +0100
+Message-ID: <5124BBAC.30309@metafoo.de>
+References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
+ <87vcazyxr1.wl%kuninori.morimoto.gx@renesas.com>
+ <20130127035943.GJ4650@opensource.wolfsonmicro.com>
+ <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
+ <20130129014808.GC4748@opensource.wolfsonmicro.com>
+ <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
+ <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
+ <5107FF97.1070601@wwwdotorg.org>
+ <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
+ <51097F0F.2030501@wwwdotorg.org>
+ <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
+ <5110349D.3050308@wwwdotorg.org>
+ <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
+ <87bobzrry6.wl%kuninori.morimoto.gx@renesas.com>
+ <511963F8.5020107@wwwdotorg.org>
+ <87bobqf5yq.wl%kuninori.morimoto.gx@renesas.com>
+ <511C22E2.60701@wwwdotorg.org>
+ <87obfnofsx.wl%kuninori.morimoto.gx@renesas.com>
+ <511C6A1B.9000507@wwwdotorg.org>
+ <874nhfv5mb.wl%kuninori.morimoto.gx@renesas.com>
+ <8738wzuu9g.wl%kuninori.morimoto.gx@renesas.com>
+ <87liaj94nc.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1360999167-17606-1-git-send-email-anilk4.v@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Anil Kumar <anilk4.v@gmail.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, grant.likely@secretlab.ca, thomas@tomweber.eu
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <87liaj94nc.wl%kuninori.morimoto.gx@renesas.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Linux-ALSA <alsa-devel@alsa-project.org>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Feb 16, 2013 at 12:49 PM, Anil Kumar <anilk4.v@gmail.com> wrote:
-> DevKit8000 is a beagle board clone from Timll, sold by
-> armkits.com. The DevKit8000 has RS232 serial port, LCD, DVI-D,
-> S-Video, Ethernet, SD/MMC, keyboard, camera, SPI, I2C, USB and
-> JTAG interface.
->
-> This patch adds the basic DT support for devkit8000. At this time,
-> Information
-> of twl4030 (PMIC), MMC1, I2C1 and leds are added.
->
-> Signed-off-by: Anil Kumar <anilk4.v@gmail.com>
-> Tested-by: Thomas Weber <thomas@tomweber.eu>
-> ---
->  -This patch is based on top of kernel 3.8-rc5.
->
->  -Tested on Devkit8000.
->
-> For V3:
->  - Remove pin mux as done at device boot time by default.
->
-> For V2:
->  - Change model name as "TimLL OMAP3 Devkit8000"
->  - Change compatible as "timll,omap3-devkit8000"
->  - Doing i2c1 pinmux default with pinctrl-single driver instead of i2c1
->    driver probe time.
->
-> :100644 100644 5ebb44f... 22ebc76... M  arch/arm/boot/dts/Makefile
-> :000000 100644 0000000... 6338993... A
-> arch/arm/boot/dts/omap3-devkit8000.dts
-> :100644 100644 53cb380b.. ccecb76... M
-> arch/arm/mach-omap2/board-generic.c
->  arch/arm/boot/dts/Makefile             |    1 +
->  arch/arm/boot/dts/omap3-devkit8000.dts |  103
-> ++++++++++++++++++++++++++++++++
->  arch/arm/mach-omap2/board-generic.c    |    1 +
->  3 files changed, 105 insertions(+), 0 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 5ebb44f..22ebc76 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -102,6 +102,7 @@ dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
->         imx28-tx28.dtb
->  dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
->         omap3-beagle.dtb \
-> +       omap3-devkit8000.dtb \
->         omap3-beagle-xm.dtb \
->         omap3-evm.dtb \
->         omap3-tobi.dtb \
-> diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts
-> b/arch/arm/boot/dts/omap3-devkit8000.dts
-> new file mode 100644
-> index 0000000..6338993
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-devkit8000.dts
-> @@ -0,0 +1,103 @@
-> +/*
-> + * Author: Anil Kumar <anilk4.v@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +/dts-v1/;
-> +
-> +/include/ "omap3.dtsi"
-> +/ {
-> +       model = "TimLL OMAP3 Devkit8000";
-> +       compatible = "timll,omap3-devkit8000", "ti,omap3";
-> +
-> +       memory {
-> +               device_type = "memory";
-> +               reg = <0x80000000 0x10000000>;  /* 256 MB */
-> +       };
-> +
-> +       leds {
-> +               compatible = "gpio-leds";
-> +
-> +               heartbeat {
-> +                       label = "devkit8000::led1";
-> +                       gpios = <&gpio6 26 0>;  /* 186 -> LED1 */
-> +                       default-state = "on";
-> +                       linux,default-trigger = "heartbeat";
-> +               };
-> +
-> +               mmc {
-> +                       label = "devkit8000::led2";
-> +                       gpios = <&gpio6 3 0>;   /* 163 -> LED2 */
-> +                       default-state = "on";
-> +                       linux,default-trigger = "none";
-> +               };
-> +
-> +               usr {
-> +                       label = "devkit8000::led3";
-> +                       gpios = <&gpio6 4 0>;   /* 164 -> LED3 */
-> +                       default-state = "on";
-> +                       linux,default-trigger = "usr";
-> +                };
-> +
+On 02/20/2013 02:04 AM, Kuninori Morimoto wrote:
+> 
+> Hi Stephen
+> 
+>> Hmm. I think that the .of_xlate_dai_name should be something related to
+>> the object (e.g. CODEC) that contains the DAIs, rather than the DAIs
+>> themselves. The intent is to ask some object (e.g. CODEC) which of its
+>> DAIs is represented by the DT DAI specifier, not to ask each DAI whether
+>> it is represented by that particular DT DAI specifier.
+>>
+>> Aside from that, I'd expect the patch above to be something more like:
+>>
+>> const char *fsi_xlate_dai_name(struct snd_soc_dai *dai,
+>> 				const struct of_phandle_args *args)
+>> {
+>> 	switch (args[0]) {
+>> 	case 0:
+>> 		return fsi_soc_dai[0].name;
+>> 	case 1:
+>> 		return fsi_soc_dai[1].name;
+>> 	default:
+>> 		return NULL;
+>> 	}
+>> }
+> 
+> Thank you for pointing it.
+> I use this style in next patch.
 
-No need of extra line over here.
+I don't think this makes any more sense than the current version. You still
+iterate over all dai instances and call the xlate function for the first dai
+where the _parent_ device's of_node matches. You also pass in the this dai
+as the first parameter to the xlate function, which makes even less sense
+since you can use it to lookup the correct name, which may either be the
+dai's name or any of its siblings.
 
-Thanks
-Manish Badarkhe
+If you want to use the xlate paradigm you really need to keep track of the
+cpu devices and make the xlate callback a property of the cpu device. Well
+or use a match paradigm instead of xlate.
+
+- Lars
