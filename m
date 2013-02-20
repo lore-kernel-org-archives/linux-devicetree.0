@@ -1,42 +1,101 @@
-From: Alex Courbot <acourbot@nvidia.com>
-Subject: Re: [RFC PATCH 3/9] hwmon: (lm90) add support to handle irq
-Date: Wed, 20 Feb 2013 12:27:23 +0900
-Message-ID: <5124429B.2000404@nvidia.com>
-References: <1361187031-3679-1-git-send-email-wni@nvidia.com> <1361187031-3679-4-git-send-email-wni@nvidia.com> <512403F5.5010005@wwwdotorg.org>
+From: J Keerthy <j-keerthy@ti.com>
+Subject: [PATCH 1/4] documentation: add palmas dts definition
+Date: Wed, 20 Feb 2013 09:30:15 +0530
+Message-ID: <1361332815-2348-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <512403F5.5010005@wwwdotorg.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Wei Ni <wni@nvidia.com>, "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, Matthew Longnecker <MLongnecker@nvidia.com>, "khali@linux-fr.org" <khali@linux-fr.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: j-keerthy@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, gg@slimlogic.co.uk, broonie@opensource.wolfsonmicro.com, sameo@linux.intel.com, liam.r.girdwood@intel.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/20/2013 08:00 AM, Stephen Warren wrote:
-> On 02/18/2013 04:30 AM, Wei Ni wrote:
->> Add support to handle irq. When the temperature touch the limit value, the
->> driver can handle the interrupt.
->
->> diff --git a/drivers/hwmon/lm90.c b/drivers/hwmon/lm90.c
->
->> +static void lm90_irq_work(struct work_struct *work)
-> ...
->> +	enable_irq(client->irq);
->> +}
->> +
->> +static irqreturn_t lm90_irq(int irq, void *dev_id)
->> +{
->> +	struct lm90_data *data = dev_id;
->> +
->> +	disable_irq_nosync(irq);
->
-> I think IRQF_ONESHOT would enable you to remove the manual
-> enable/disable_irq calls.
+From: Graeme Gregory <gg@slimlogic.co.uk>
 
-Oh, right. Using a threaded IRQ with IRQF_ONESHOT would make that happen 
-transparently. Wasn't aware of that, thanks.
+Add the DTS definition for the palmas device including the MFD children.
 
-Alex.
+Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
+[j-keerthy@ti.com: changed the DT node property names to follow the
+convention]
+Signed-off-by: J Keerthy <j-keerthy@ti.com>
+---
+ Documentation/devicetree/bindings/mfd/palmas.txt |   67 ++++++++++++++++++++++
+ 1 files changed, 67 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
 
+diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
+new file mode 100644
+index 0000000..5fa922e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mfd/palmas.txt
+@@ -0,0 +1,67 @@
++Texas Instruments Palmas family
++
++The Palmas familly are Integrated Power Management Chips.
++These chips are connected to an i2c bus.
++
++
++Required properties:
++- compatible : Must be "ti,palmas";
++  For Integrated power-management in the palmas series, twl6035, twl6037,
++  tps65913
++- interrupts : This i2c device has an IRQ line connected to the main SoC
++- interrupt-controller : Since the palmas support several interrupts internally,
++  it is considered as an interrupt controller cascaded to the SoC one.
++- #interrupt-cells = <1>;
++- interrupt-parent : The parent interrupt controller.
++
++Optional node:
++- Child nodes contain in the palmas. The palmas family is made of several
++  variants that support a different number of features.
++  The child nodes will thus depend of the capability of the variant.
++- mux-pad1 if a value is given it will be used for the pad1 mux
++- mux-pad2 if a value us given it will be used for the pad2 mux
++- power-ctrl if a value is given it will be written to the POWER_CTRL register
++
++Example:
++/*
++ * Integrated Power Management Chip Palmas
++ */
++palmas@48 {
++    compatible = "ti,palmas";
++    reg = <0x48>;
++    interrupts = <39>; /* IRQ_SYS_1N cascaded to gic */
++    interrupt-controller;
++    #interrupt-cells = <1>;
++    interrupt-parent = <&gic>;
++    #address-cells = <1>;
++    #size-cells = <0>;
++
++	ti,mux-pad1 = <0x00>;
++	ti,mux-pad2 = <0x00>;
++	ti,power-ctrl = <0x03>;
++
++	palmas_pmic {
++		compatible = "ti,palmas_pmic";
++		regulators {
++			smps12_reg: smps12 {
++				regulator-min-microvolt = < 600000>;
++                regulator-max-microvolt = <1500000>;
++				regulator-always-on;
++				regulator-boot-on;
++                ti,warm-sleep = <0>;
++                ti,roof-floor = <0>;
++                ti,mode-sleep = <0>;
++                ti,warm-reset = <0>;
++                ti,tstep = <0>;
++                ti,vsel = <0>;
++			};
++		};
++		ti,ldo6-vibrator = <0>;
++	};
++
++    palmas_rtc {
++        compatible = "ti,palmas_rtc";
++        interrupts = <8 9>;
++        reg = <0>;
++    };
++};
+-- 
+1.7.5.4
 
