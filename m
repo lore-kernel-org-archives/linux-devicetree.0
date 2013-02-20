@@ -1,58 +1,49 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v5 2/6] mfd: Add ChromeOS EC implementation
-Date: Wed, 20 Feb 2013 10:17:47 -0800
-Message-ID: <20130220181746.GA15152@core.coreip.homeip.net>
+Subject: Re: [PATCH v5 6/6] Input: Add ChromeOS EC keyboard driver
+Date: Wed, 20 Feb 2013 10:21:35 -0800
+Message-ID: <20130220182135.GC15152@core.coreip.homeip.net>
 References: <1361381079-26747-1-git-send-email-sjg@chromium.org>
- <1361381079-26747-3-git-send-email-sjg@chromium.org>
+ <1361381079-26747-7-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1361381079-26747-3-git-send-email-sjg@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <1361381079-26747-7-git-send-email-sjg@chromium.org>
+Sender: linux-doc-owner@vger.kernel.org
 To: Simon Glass <sjg@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Che-Liang Chiou <clchiou@chromium.org>, Jonathan Kliegman <kliegs@chromium.org>, Luigi Semenzato <semenzato@chromium.org>, Olof Johansson <olofj@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org
+Cc: LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Luigi Semenzato <semenzato@chromium.org>, Vincent Palatin <vpalatin@chromium.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Sourav Poddar <sourav.poddar@ti.com>, Felipe Balbi <balbi@ti.com>, Tony Lindgren <tony@atomide.com>, Roland Stigge <stigge@antcom.de>, Wolfram Sang <w.sang@pengutronix.de>, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-input@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 20, 2013 at 09:24:35AM -0800, Simon Glass wrote:
-> This is the base EC implementation, which provides a high level
-> interface to the EC for use by the rest of the kernel. The actual
-> communcations is dealt with by a separate protocol driver which
-> registers itself with this interface.
-> 
-> Interrupts are passed on through a notifier.
-> 
-> A simple message structure is used to pass messages to the
-> protocol driver.
-> Signed-off-by: Simon Glass <sjg@chromium.org>
-> Signed-off-by: Che-Liang Chiou <clchiou@chromium.org>
-> Signed-off-by: Jonathan Kliegman <kliegs@chromium.org>
-> Signed-off-by: Luigi Semenzato <semenzato@chromium.org>
-> Signed-off-by: Olof Johansson <olofj@chromium.org>
-> Signed-off-by: Vincent Palatin <vpalatin@chromium.org>
+On Wed, Feb 20, 2013 at 09:24:39AM -0800, Simon Glass wrote:
+> +
+> +			code = keycodes[pos];
+> +			new_state = kb_state[col] & (1 << row);
+> +			if (!!new_state != test_bit(code, idev->key)) {
+> +				dev_dbg(ckdev->dev,
+> +					"changed: [r%d c%d]: byte %02x\n",
+> +					row, col, new_state);
+> +
+> +			input_report_key(idev, code, new_state);
+
+Incorrect indentation.
+
+
+> +			}
 
 ...
 
->  
-> +config MFD_CROS_EC
-> +	bool "Support ChromeOS Embedded Controller"
-> +	help
-> +	  If you say Y here you get support for the ChromeOS Embedded
-> +	  Controller (EC) providing keyboard, battery and power services.
-> +	  You also ned to enable the driver for the bus you are using. The
-> +	  protocol for talking to the EC is defined by the bus driver.
+> +static int cros_ec_keyb_probe(struct platform_device *pdev)
+> +{
+> +	struct cros_ec_device *ec = dev_get_drvdata(pdev->dev.parent);
+> +	struct device *dev = ec->dev;
+> +	struct cros_ec_keyb *ckdev = NULL;
+> +	struct input_dev *idev = NULL;
 
-Why can't it be a module?
+Why are we assigning these to NULL?
 
-> +
-> +#ifndef __LINUX_MFD_CROS_EC_H
-> +#define __LINUX_MFD_CROS_EC_H
-> +
-> +struct i2c_msg;
+Otherwise
 
-I do not believe this is needed here.
-
-Thanks.
+Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
 
 -- 
 Dmitry
