@@ -1,116 +1,55 @@
-From: Simon Glass <sjg@chromium.org>
-Subject: [PATCH v5 0/6] Add ChromeOS Embedded Controller support
-Date: Wed, 20 Feb 2013 09:24:33 -0800
-Message-ID: <1361381079-26747-1-git-send-email-sjg@chromium.org>
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Simon Glass <sjg@chromium.org>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Wolfram Sang <w.sang@pengutronix.de>, Luigi Semenzato <semenzato@chromium.org>, Rob Herring <rob.herring@calxeda.com>, Che-Liang Chiou <clchiou@chromium.org>, Jonathan Kliegman <kliegs@chromium.org>, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, devicetree-discuss@lists.ozlabs.org, Alban Bedel <alban.bedel@avionic-design.de>, Roland Stigge <stigge@antcom.de>, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier@dowhile0.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-doc@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Bill Pemberton <wfp5p@virginia.edu>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] spi: tegra114: add spi driver
+Date: Wed, 20 Feb 2013 10:25:13 -0700
+Message-ID: <512506F9.2030508@wwwdotorg.org>
+References: <1361281115-20436-1-git-send-email-ldewangan@nvidia.com> <5123C18A.9010604@wwwdotorg.org> <5124C18F.6070108@nvidia.com> <20130220131112.GE2726@opensource.wolfsonmicro.com> <5124CEF5.3060605@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5124CEF5.3060605-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The ChromeOS Embedded Controller (EC) is an Open Source EC implementation
-used on ARM and Intel Chromebooks. Current implementations use a Cortex-M3
-connected on a bus (such as I2C, SPI, LPC) to the AP. A separate interrupt
-line is used to indicate when the EC needs service.
+On 02/20/2013 06:26 AM, Laxman Dewangan wrote:
+> On Wednesday 20 February 2013 06:41 PM, Mark Brown wrote:
+>> * PGP Signed by an unknown key
+>>
+>> On Wed, Feb 20, 2013 at 05:59:03PM +0530, Laxman Dewangan wrote:
+>>>>> +    tspi->clk = devm_clk_get(&pdev->dev, "spi");
+>>>> Does this HW block use multiple clocks? If not, I think s/"spi"/NULL/
+>>>> there, just like the Tegra20 driver.
+>>> No, spi controller uses the only one clock. I will change to NULL.
+>> I'm never convinced that NULL is a helpful clock name to pick, it's not
+>> awesome if you ever acquire a second clock.
+> 
+> I had other idea of okeeping clock name here for power optimization.
+> Spi controller can take the power source ffrom different clock source
+> say clk_m (crystal) and pllp.
+> 
+> I want to set the parent clock dynamically based on required speed so
+> that if the desire speed can be meet from clk_m, no need to increase pll
+> count and possible we may endup with siwtchng off pllp which can save
+> power.
+> 
+> So for this I may require
+> 
+> spi_clk = devm_clk_get(&pdev->dev, "spi");
+> spi_clkm = devm_clk_get(&pdev->dev, "clmkm");
+> spi_pllp = devm_clk_get(&pdev->dev, "pllp");
+> 
+> and call clk_set_parent(spi_clk, spi_clkm) or clk_set_parent(spi_clk,
+> spi_pllp).
 
-Functions performed by the EC vary by platform, but typically include
-battery charging, keyboard scanning and power sequencing.
+OK, so that's certainly an argument for requesting a specific clock name
+rather than NULL.
 
-This series includes support for the EC message protocol, and implements
-a matrix keyboard handler for Linux using the protocol. The EC performs
-key scanning and passes scan data in response to AP requests. This is
-used on the Samsung ARM Chromebook. No driver is available for LPC at
-present.
-
-This series can in principle operate on any hardware, but for it to actually
-work on the Samsung ARM Chromebook, it needs patches which are currently in
-progress to mainline: Exynos FDT interrupt support and I2C bus arbitration.
-
-The driver is device-tree-enabled and a suitable binding is included in
-this series. Example device tree nodes are included in the examples,
-but no device tree patch for exynos5250-snow is provided at this stage, since
-we must wait for the above-mentioned patches to land to avoid errors from
-dtc. This can be added with a follow-on patch when that work is complete.
-
-Changes in v5:
-- Remove cros_ec allocation functions
-- Remove name access functions in cros_ec, using strings instead
-- Fix Kconfig help message for MFD_CROS_EC_I2C
-- Remove I2C retry logic
-- Switch cros_ec_i2c driver to use devm
-- Update cros_ec_i2c to work with new cros_ec interface
-- Switch cros_ec_spi driver to use devm
-- Update cros_ec_spi to work with new cros_ec interface
-- Fix {} style nit in cros_ec_keyb_has_ghosting
-- Correct key lookup logic which was broken in previous version
-- Switch cros_ec_keyb driver to use devm
-
-Changes in v4:
-- Fix up trvial logging comments
-- Remove messages reporting out of memory
-- Add compatible string for cros-ec-keyb
-- Remove wake notifier and let drivers use their own handlers instead
-- Add 'depends on MFD_CROS_EC' to Kconfig
-- Remove use of wake_notifier
-- Remove manual code to locate device tree node
-- Add resume handler to clear keyboard scan buffer if required
-
-Changes in v3:
-- Add stub for matrix_keypad_parse_of_params() when no CONFIG_OF
-- Put back full DT range checking in tca8418 driver
-- Remove 'select MFD_CROS_EC' from Kconfig as it isn't necessary
-- Remove old_state by using input layer's idev->key
-- Move inner loop of cros_ec_keyb_has_ghosting() into its own function and simplify
-- Add check for not finding the device tree node
-- Remove comment about leaking matrix_keypad_build_keymap()
-- Use platform_get_drvdata() where possible
-- Remove call to input_free_device() after input_unregister_device()
-
-Changes in v2:
-- Remove use of __devinit/__devexit
-- Remove use of __devinit/__devexit
-- Remove use of __devinit/__devexit
-- Add new patch to decode matrix-keypad DT binding
-- Remove use of __devinit/__devexit
-- Use function to read matrix-keypad parameters from DT
-- Remove key autorepeat parameters from DT binding and driver
-- Use unsigned int for rows/cols
-
-Simon Glass (6):
-  mfd: Add ChromeOS EC messages header
-  mfd: Add ChromeOS EC implementation
-  mfd: Add ChromeOS EC I2C driver
-  mfd: Add ChromeOS EC SPI driver
-  Input: matrix-keymap: Add function to read the new DT binding
-  Input: Add ChromeOS EC keyboard driver
-
- .../devicetree/bindings/input/cros-ec-keyb.txt     |   72 +
- Documentation/devicetree/bindings/mfd/cros-ec.txt  |   56 +
- drivers/input/keyboard/Kconfig                     |   12 +
- drivers/input/keyboard/Makefile                    |    1 +
- drivers/input/keyboard/cros_ec_keyb.c              |  334 +++++
- drivers/input/keyboard/lpc32xx-keys.c              |   11 +-
- drivers/input/keyboard/omap4-keypad.c              |   16 +-
- drivers/input/keyboard/tca8418_keypad.c            |    7 +-
- drivers/input/matrix-keymap.c                      |   19 +
- drivers/mfd/Kconfig                                |   28 +
- drivers/mfd/Makefile                               |    3 +
- drivers/mfd/cros_ec.c                              |  189 +++
- drivers/mfd/cros_ec_i2c.c                          |  210 +++
- drivers/mfd/cros_ec_spi.c                          |  375 ++++++
- include/linux/input/matrix_keypad.h                |   19 +
- include/linux/mfd/cros_ec.h                        |  172 +++
- include/linux/mfd/cros_ec_commands.h               | 1369 ++++++++++++++++++++
- 17 files changed, 2875 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/input/cros-ec-keyb.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
- create mode 100644 drivers/input/keyboard/cros_ec_keyb.c
- create mode 100644 drivers/mfd/cros_ec.c
- create mode 100644 drivers/mfd/cros_ec_i2c.c
- create mode 100644 drivers/mfd/cros_ec_spi.c
- create mode 100644 include/linux/mfd/cros_ec.h
- create mode 100644 include/linux/mfd/cros_ec_commands.h
-
--- 
-1.8.1.3
-
+But, please do think this approach through fully. The DT binding needs
+to define which clock-names the driver requires to be present, and any
+optional clock names. DT bindings are supposed to be immutable, or
+perhaps extendible in a completely backwards-compatible fashion. This
+implies that you need to have thought through the entire list of clocks
+that the driver might want in the DT clock-names property when you first
+write the DT binding documentation...
