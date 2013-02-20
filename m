@@ -1,43 +1,49 @@
-From: Vinod Koul <vinod.koul@intel.com>
-Subject: Re: [PATCH 0/4] dw_dmac: introduce generic DMA binding for DT
-Date: Wed, 20 Feb 2013 15:28:18 +0530
-Message-ID: <20130220095818.GI23302@intel.com>
-References: <1360952512-971558-1-git-send-email-arnd@arndb.de>
- <20130220080348.GF23302@intel.com>
- <201302200950.26182.arnd@arndb.de>
+From: Wei Ni <wni-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH 3/9] hwmon: (lm90) add support to handle irq
+Date: Wed, 20 Feb 2013 18:27:29 +0800
+Message-ID: <5124A511.1060508@nvidia.com>
+References: <1361187031-3679-1-git-send-email-wni@nvidia.com> <1361187031-3679-4-git-send-email-wni@nvidia.com> <512403F5.5010005@wwwdotorg.org> <5124429B.2000404@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201302200950.26182.arnd@arndb.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Dan Williams <djbw@fb.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Viresh Kumar <viresh.kumar@linaro.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.jf.intel.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5124429B.2000404-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alex Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <durgadoss.r-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <rui.zhang-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Matthew Longnecker <MLongnecker-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org" <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org" <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 20, 2013 at 09:50:25AM +0000, Arnd Bergmann wrote:
-> On Wednesday 20 February 2013, Vinod Koul wrote:
-> > Since there is still churn, would it make sense if I just revert the SPEAr13xx
-> > patch (your first patch) and send a pull request to Linus.
-> > Since there are no users and not much testing has been done, I think we can push
-> > these to 3.10 via arm-soc/slave-dma tree.
-> > 
-> > Gives more testing and usage will go along as well.
-> > Since merge window is open, I would like my pull to go soonish and not churn the
-> > tree much.
+On 02/20/2013 11:27 AM, Alex Courbot wrote:
+> On 02/20/2013 08:00 AM, Stephen Warren wrote:
+>> On 02/18/2013 04:30 AM, Wei Ni wrote:
+>>> Add support to handle irq. When the temperature touch the limit value, the
+>>> driver can handle the interrupt.
+>>
+>>> diff --git a/drivers/hwmon/lm90.c b/drivers/hwmon/lm90.c
+>>
+>>> +static void lm90_irq_work(struct work_struct *work)
+>> ...
+>>> +	enable_irq(client->irq);
+>>> +}
+>>> +
+>>> +static irqreturn_t lm90_irq(int irq, void *dev_id)
+>>> +{
+>>> +	struct lm90_data *data = dev_id;
+>>> +
+>>> +	disable_irq_nosync(irq);
+>>
+>> I think IRQF_ONESHOT would enable you to remove the manual
+>> enable/disable_irq calls.
 > 
-> Reverting the SPEAr13xx would definitely help, yes. The reason why I'd also like
-> to see the second patch get merged is so that we can do the SPEAr changes in 3.10
-> without having an interdependency between the trees. I tried very hard to
-> make the patch have a minimal impact on the non-DT code path to avoid regressions.
-Ok, i have applied your revert patch. Will send the PULL to linus by friday.
+> Oh, right. Using a threaded IRQ with IRQF_ONESHOT would make that happen 
+> transparently. Wasn't aware of that, thanks.
 
-> Maybe you can send your tree now with just the revert applied, and then send the
-> other one separately next week along with any bug fixes that may have accumulated
-> by then?
-And then makes sense to send second PULL with fixes accumulated and the second
-patch, so that 3.10 is easier for all.  think we can compact() patch is second
-request as well
+Oh, yes, I will use it in my next version.
 
---
-~Vinod
+Thanks.
+Wei.
+
+> 
+> Alex.
+> 
+> 
