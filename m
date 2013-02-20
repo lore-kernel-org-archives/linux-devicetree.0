@@ -1,101 +1,97 @@
-From: J Keerthy <j-keerthy@ti.com>
-Subject: [PATCH 1/4] documentation: add palmas dts definition
-Date: Wed, 20 Feb 2013 09:30:15 +0530
-Message-ID: <1361332815-2348-1-git-send-email-j-keerthy@ti.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH 0/4] dw_dmac: introduce generic DMA binding for DT
+Date: Wed, 20 Feb 2013 13:33:48 +0530
+Message-ID: <20130220080348.GF23302@intel.com>
+References: <1360952512-971558-1-git-send-email-arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: j-keerthy@ti.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, gg@slimlogic.co.uk, broonie@opensource.wolfsonmicro.com, sameo@linux.intel.com, liam.r.girdwood@intel.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1360952512-971558-1-git-send-email-arnd@arndb.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Dan Williams <djbw@fb.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Viresh Kumar <viresh.kumar@linaro.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.jf.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Graeme Gregory <gg@slimlogic.co.uk>
+On Fri, Feb 15, 2013 at 07:21:48PM +0100, Arnd Bergmann wrote:
+> Hi Vinod,
+> 
+> As Andy pointed out today, we don't have a good solution for the
+> dw_dmac DT binding in linux-next yet. I have posted my series
+> once before and then got distracted after getting feedback from
+> Viresh, Andy and Russell. I have now updated my earlier patch
+> based on the feedback and rebased on your tree without any
+> of the arm-soc patches mixed in.
+> 
+> Unfortunately the patches have never been tested on real hardware 
+> so I don't think it's a good idea to use them in v3.9 on the
+> spear platform. However, your dma-slave tree still contains Viresh's
+> earlier patches, causing a few problems:
+> 
+> * With those patches, the spear3xx platform currently does not build.
+>   (this one would be easy to fix though)
+> * There is a conflict between those patches and my spear multiplatform
+>   series, which I have not yet queued up for 3.9 because of this,
+>   since that would have meant that Stephen Rothwell would have to
+>   discard either the arm-soc tree or the dma-slave tree from linux-next.
+> * I really don't want the broken binding to appear in 3.9.
+> 
+> I believe the best way out at this point is this series, which first
+> first reverts the patch f9965aa2 "ARM: SPEAr13xx: Pass DW DMAC
+> platform data from DT" from your tree and then adds my update.
+> 
+> This will give us the right DT binding for dw-dmac but no in-tree
+> users, which means that nothing should break if I get it slightly
+> wrong. Please apply the first two patches from these set, and
+> optionally the two patches that based on this convert the pl011
+> uart and pl022 spi controller drivers.
+Arnd,
 
-Add the DTS definition for the palmas device including the MFD children.
+Since there is still churn, would it make sense if I just revert the SPEAr13xx
+patch (your first patch) and send a pull request to Linus.
+Since there are no users and not much testing has been done, I think we can push
+these to 3.10 via arm-soc/slave-dma tree.
 
-Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
-[j-keerthy@ti.com: changed the DT node property names to follow the
-convention]
-Signed-off-by: J Keerthy <j-keerthy@ti.com>
----
- Documentation/devicetree/bindings/mfd/palmas.txt |   67 ++++++++++++++++++++++
- 1 files changed, 67 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
+Gives more testing and usage will go along as well.
+Since merge window is open, I would like my pull to go soonish and not churn the
+tree much.
 
-diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
-new file mode 100644
-index 0000000..5fa922e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/palmas.txt
-@@ -0,0 +1,67 @@
-+Texas Instruments Palmas family
-+
-+The Palmas familly are Integrated Power Management Chips.
-+These chips are connected to an i2c bus.
-+
-+
-+Required properties:
-+- compatible : Must be "ti,palmas";
-+  For Integrated power-management in the palmas series, twl6035, twl6037,
-+  tps65913
-+- interrupts : This i2c device has an IRQ line connected to the main SoC
-+- interrupt-controller : Since the palmas support several interrupts internally,
-+  it is considered as an interrupt controller cascaded to the SoC one.
-+- #interrupt-cells = <1>;
-+- interrupt-parent : The parent interrupt controller.
-+
-+Optional node:
-+- Child nodes contain in the palmas. The palmas family is made of several
-+  variants that support a different number of features.
-+  The child nodes will thus depend of the capability of the variant.
-+- mux-pad1 if a value is given it will be used for the pad1 mux
-+- mux-pad2 if a value us given it will be used for the pad2 mux
-+- power-ctrl if a value is given it will be written to the POWER_CTRL register
-+
-+Example:
-+/*
-+ * Integrated Power Management Chip Palmas
-+ */
-+palmas@48 {
-+    compatible = "ti,palmas";
-+    reg = <0x48>;
-+    interrupts = <39>; /* IRQ_SYS_1N cascaded to gic */
-+    interrupt-controller;
-+    #interrupt-cells = <1>;
-+    interrupt-parent = <&gic>;
-+    #address-cells = <1>;
-+    #size-cells = <0>;
-+
-+	ti,mux-pad1 = <0x00>;
-+	ti,mux-pad2 = <0x00>;
-+	ti,power-ctrl = <0x03>;
-+
-+	palmas_pmic {
-+		compatible = "ti,palmas_pmic";
-+		regulators {
-+			smps12_reg: smps12 {
-+				regulator-min-microvolt = < 600000>;
-+                regulator-max-microvolt = <1500000>;
-+				regulator-always-on;
-+				regulator-boot-on;
-+                ti,warm-sleep = <0>;
-+                ti,roof-floor = <0>;
-+                ti,mode-sleep = <0>;
-+                ti,warm-reset = <0>;
-+                ti,tstep = <0>;
-+                ti,vsel = <0>;
-+			};
-+		};
-+		ti,ldo6-vibrator = <0>;
-+	};
-+
-+    palmas_rtc {
-+        compatible = "ti,palmas_rtc";
-+        interrupts = <8 9>;
-+        reg = <0>;
-+    };
-+};
--- 
-1.7.5.4
-
+--
+~Vinod
+> 
+> I can then decide with Olof whether or not to take the spear multiplatform
+> changes that no longer conflict with the dma slave tree as a "late"
+> branch into 3.9 or wait until 3.10, but that is something you don't
+> need to worry about then. Also the conversion of spear to use
+> the new binding (patch 5 of my original series) can go through the 
+> arm-soc tree for 3.10 after the ST folks have tested that it works.
+> 
+> 	Arnd
+> 
+> Arnd Bergmann (4):
+>   Revert "ARM: SPEAr13xx: Pass DW DMAC platform data from DT"
+>   dmaengine: dw_dmac: move to generic DMA binding
+>   spi: pl022: use generic DMA slave configuration if possible
+>   serial: pl011: use generic DMA slave configuration if possible
+> 
+>  .../devicetree/bindings/arm/primecell.txt          |  19 ++-
+>  Documentation/devicetree/bindings/dma/snps-dma.txt |  70 ++++++-----
+>  Documentation/devicetree/bindings/serial/pl011.txt |  17 +++
+>  .../devicetree/bindings/spi/spi_pl022.txt          |  36 ++++++
+>  arch/arm/boot/dts/spear1340.dtsi                   |  19 ---
+>  arch/arm/boot/dts/spear13xx.dtsi                   |  38 ------
+>  arch/arm/mach-spear13xx/include/mach/spear.h       |   2 +
+>  arch/arm/mach-spear13xx/spear1310.c                |   5 +-
+>  arch/arm/mach-spear13xx/spear1340.c                |  33 +++--
+>  arch/arm/mach-spear13xx/spear13xx.c                |  55 ++++++++-
+>  drivers/dma/dw_dmac.c                              | 137 ++++++++++-----------
+>  drivers/dma/dw_dmac_regs.h                         |   8 +-
+>  drivers/spi/spi-pl022.c                            |  43 ++++++-
+>  drivers/tty/serial/amba-pl011.c                    |  62 ++++++----
+>  include/linux/dw_dmac.h                            |   5 -
+>  15 files changed, 333 insertions(+), 216 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/serial/pl011.txt
+> 
+> -- 
+> 1.8.1.2
+> 
