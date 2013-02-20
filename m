@@ -1,75 +1,132 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 1/4] documentation: add palmas dts definition
-Date: Wed, 20 Feb 2013 11:26:40 +0000
-Message-ID: <20130220112639.GA2726@opensource.wolfsonmicro.com>
-References: <1361332815-2348-1-git-send-email-j-keerthy@ti.com>
+From: Wei Ni <wni@nvidia.com>
+Subject: Re: [RFC PATCH 8/9] ARM: dt: t30 cardhu: add dt entry for thermal
+ driver
+Date: Wed, 20 Feb 2013 19:53:24 +0800
+Message-ID: <5124B934.3020900@nvidia.com>
+References: <1361187031-3679-1-git-send-email-wni@nvidia.com> <1361187031-3679-9-git-send-email-wni@nvidia.com> <51240A95.9070007@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1361332815-2348-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: J Keerthy <j-keerthy@ti.com>
-Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, gg@slimlogic.co.uk, sameo@linux.intel.com, liam.r.girdwood@intel.com
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <51240A95.9070007@wwwdotorg.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, Matthew Longnecker <MLongnecker@nvidia.com>, "khali@linux-fr.org" <khali@linux-fr.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 02/20/2013 07:28 AM, Stephen Warren wrote:
+> On 02/18/2013 04:30 AM, Wei Ni wrote:
+>> Enable thermal driver in the dts file.
+>> Set sensor as lm90 remote sensor, and set throttle data.
+> 
+>> diff --git a/Documentation/devicetree/bindings/thermal/tegra3-thermal.txt b/Documentation/devicetree/bindings/thermal/tegra3-thermal.txt
+> 
+> The DT documentation should be either a separate patch before the one
+> which implements it in the driver, or part of the driver patch. It
+> shouldn't be part of the patch which instantiates the binding in the
+> board DT file.
 
---sdtB3X0nJg68CQEu
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Ok, I will do it.
 
-On Wed, Feb 20, 2013 at 09:30:15AM +0530, J Keerthy wrote:
-> From: Graeme Gregory <gg@slimlogic.co.uk>
->=20
-> Add the DTS definition for the palmas device including the MFD children.
->=20
-> Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
-> [j-keerthy@ti.com: changed the DT node property names to follow the
-> convention]
-> Signed-off-by: J Keerthy <j-keerthy@ti.com>
-> ---
->  Documentation/devicetree/bindings/mfd/palmas.txt |   67 ++++++++++++++++=
-++++++
->  1 files changed, 67 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documenta=
-tion/devicetree/bindings/mfd/palmas.txt
-> new file mode 100644
-> index 0000000..5fa922e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/palmas.txt
-> @@ -0,0 +1,67 @@
-> +Texas Instruments Palmas family
-> +
-> +The Palmas familly are Integrated Power Management Chips.
-> +These chips are connected to an i2c bus.
+> 
+>> +* Nvidia Tegra30 Thermal
+> 
+> NVIDIA is all capitals.
 
-I would expect this to enumerate the regulators that the user can select
-but it doesn't appear to do that.
+Got it.
 
---sdtB3X0nJg68CQEu
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> 
+> It seems like a word is missing: Thermal Management? Control/Zone?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+It's better to use "NVIDIA Tegra30 Thermal Zone".
 
-iQIcBAEBAgAGBQJRJLLcAAoJELSic+t+oim9As8P/35bAdML0+0ZnfYXryHiKfxX
-slMl0SUFTNh+8/j9d5GH7bHOl9USf/7gwG9wl1L4Zq6/YzguatdKrH0fvslEDAEu
-T89vDE3kuWeL/e5D2u3qV332StdqZ2IhNaYCQNXWCsCcCV/N3qMOvqgElGvhFNoC
-R4uYifcwQ7gx+gNsXD9rdHdmmgQcaP0CCEIqRAjpp06pTaMA0BTFiPNU+3SyAGyI
-VuMAt14CCULdkOT7O/ptZlvUQ243nb+8Wfx+ZTCLVYObi0SPSBQNOoxQGVorIXq9
-e9b5SXlghozy6afu5q3olYTgkzj1EbNBMkoHiM6ZXUKz3JXZYVSXkGLYi4BPHc7R
-ssjFnhOdsQa85ZUQDw3AhFzvGTG2Z10fnDoFUBQWaHFgIV7O4KNJhdQlxUq6eRYW
-Velsq548FFrjiaJUzteLjpZ3u7DDhB6Pe+2hYgKMt9UBJ2MspEU0VTcGmZ/yPo1U
-gm5jqYZ3ZOp7lipcl/ZQlPn0bHaT3CzwRcZSUWAHH6JsAfb0UGmrgkHHrwl/TC5Z
-lK4Rzpjp+vAwwo5Q0sD08QZ5d9VDPMU2CGidvEla+r3kjeNVmwlJIXH5G7t+QrdH
-ctbF/B++nBid4ia18ekZ5PUm3ZkLLjrFNPrMBHQvAGlSYLNaQsVPGioDmbyHmLDh
-xXotrWk5VVCXDgD5fCGj
-=hMUI
------END PGP SIGNATURE-----
+> 
+>> +** Thermal node properties:
+>> +
+>> +- compatible : "nvidia,tegra30-thermal";
+>> +- sensors: the sensor device node which we want to use in the thermal zone,
+>> +  the arguments is the index of the sensor in sensor device node;
+> 
+> The arguments should be defined by the DT binding documentation for that
+> referenced device, not by the referencing device.
+> 
+> DT properties that are custom defined for this binding should include
+> the vendor prefix in their name. So, that'd be "nvidia,sensors". This
+> may apply less if a "sensors" becomes a more generic standard, but it
+> surely applies to all the other properties below.
 
---sdtB3X0nJg68CQEu--
+So these properties should be introduced in the DT binding documentation
+of the thermal framework.
+
+> 
+>> +- passive-delay: passive delay;
+> 
+> What does this mean?
+
+This is used for the thermal framework. As you said, this should be
+introduced with the framework.
+
+> 
+>> +- num-passive-trips : number of passive trip points, this is required, set
+>> +  it 0 if none, if greater than 0, the following properties must be defined;
+>> +- passive-trips : temperature of passive trip points;
+> 
+> Presumably "num-passive-trips" can be calculated simply by counting the
+> number of entries in "passive-trips"?
+
+Oh, yes, I can remove it.
+
+> 
+> Please describe what passive and active trips are; someone who just
+> reads this binding document (perhaps in conjunction with some HW
+> documentation and/or other binding documentation) should be able to fill
+> in this binding without other knowledge.
+
+Durgadoss's patches introduced these value in the framework
+documentation, but he didn't touch the DT. So I will add it.
+
+> 
+>> +- num-active-trips: number of active trip points, this is required, set
+>> +  it 0 if none, if greater than 0, the following properties must be defined;
+>> +- active-trips: temperature of active trip points;
+> 
+> Both comments above apply here too.
+> 
+>> +- throt-tab-size: size of the throttle table, it's the max cooling state.
+>> +- throt-tab: throttle table. the cooling state will be defined according to
+>> +  this table.
+> 
+> Both comments above apply here too.
+> 
+> Also, what units are used for all these properties?
+
+they use "int".
+And according to our downstream dvfs driver, the throttle table use
+"unsigned long".
+
+> 
+> Judging by the example below, this property is a list of tuples. The
+> meaning of each field in the tuple needs to be explained.
+> 
+> What happens when the CPU/SoC needs to be throttled? Must some clock or
+> voltage be lowered/limited? If so, you need properties that indicate
+> which clock/voltage/... needs to be acted upon.
+
+This table which will be used by our DVFS driver, although it didn't be
+upstreamed yet. The table set clock frequency limited value with
+different cooling state. When the temperature touch the different
+limited value, we will set difficult cooling state, find the limited
+freq from this table and pass to the dvfs driver.
+I think may be this table should be set for cooling device node. This
+table is only for our tegra dvfs, so I think we can parse this table in
+the tegra3_cooling.c, which will be the new driver for cooling device.
+
+> 
+>> +Usually these properties are separated in board related dts files.
+> 
+> That's not really relevant.
+
+Ok.
+
+> 
+
