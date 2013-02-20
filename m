@@ -1,36 +1,61 @@
-From: Dmitry Eremin-Solenikov <dmitry_eremin@mentor.com>
-Subject: [PATCH] of/i2c: don't register disabled devices
-Date: Wed, 20 Feb 2013 22:28:24 +0400
-Message-ID: <1361384904-13853-1-git-send-email-dmitry_eremin@mentor.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: imx: replace magic number with pin function
+ name
+Date: Wed, 20 Feb 2013 11:46:41 -0700
+Message-ID: <51251A11.2030300@wwwdotorg.org>
+References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
+ <1361344089-16804-3-git-send-email-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree-discuss@lists.ozlabs.org
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1361344089-16804-3-git-send-email-shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?ISO-8859-1?Q?Uwe_Kleine-K=F6?= =?ISO-8859-1?Q?nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Don't register i2c slave device tree nodes which have
-status = "disabled" property.
+On 02/20/2013 12:08 AM, Shawn Guo wrote:
+> This turns the imx pin function number defined by binding document
+> into #define constants in header which can be used in dts and handled
+> by pre-processor to improve the readability of device tree sources.
 
-Signed-off-by: Dmitry Eremin-Solenikov <dmitry_eremin@mentor.com>
----
- drivers/of/of_i2c.c |    3 +++
- 1 file changed, 3 insertions(+)
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx35-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx35-pinctrl.txt
 
-diff --git a/drivers/of/of_i2c.c b/drivers/of/of_i2c.c
-index 1e173f3..63f3236 100644
---- a/drivers/of/of_i2c.c
-+++ b/drivers/of/of_i2c.c
-@@ -35,6 +35,9 @@ void of_i2c_register_devices(struct i2c_adapter *adap)
- 		const __be32 *addr;
- 		int len;
- 
-+		if (!of_device_is_available(node))
-+			continue;
-+
- 		dev_dbg(&adap->dev, "of_i2c: register %s\n", node->full_name);
- 
- 		if (of_modalias_node(node, info.type, sizeof(info.type)) < 0) {
--- 
-1.7.10.4
+> -See below for available PIN_FUNC_ID for imx35:
+> -0 MX35_PAD_CAPTURE__GPT_CAPIN1
+...
+> -951 MX35_PAD_TEST_MODE__TCU_TEST_MODE
+> +Refer to arch/arm/boot/dts/imx35-pinfunc.h for all available imx35 PIN_FUNC_ID.
+
+So that path is specific to the Linux kernel. The DT binding
+documentation isn't supposed to be specific to the Linux kernel. I
+wonder if we shouldn't put all the header files into
+Documentation/devicetree/bindings rather than arch/*/boot/dts. That way,
+you could encode relative path names into the DT binding docs. The
+headers are logically part of the documentation anyway.
+
+This all plays into whatever plans exist for removing the DT binding
+docs and/or .dts files from the kernel, and how things will end up
+getting laid out then though. That's something we should discuss with at
+least Grant and Rob. I note that the DT maintainers weren't Cc'd on this
+series though. I added them for this reply.
+
+Perhaps I should just send a patch to the dtc and kernel include paths
+which implements that, and see what people say.
+
+> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
+
+>  See below for available PIN_FUNC_ID for imx6q:
+> -MX6Q_PAD_SD2_DAT1__USDHC2_DAT1			0
+
+You forgot to add a reference to the header filename to this file.
