@@ -1,132 +1,118 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: Re: [RFC PATCH 8/9] ARM: dt: t30 cardhu: add dt entry for thermal
- driver
-Date: Wed, 20 Feb 2013 19:53:24 +0800
-Message-ID: <5124B934.3020900@nvidia.com>
-References: <1361187031-3679-1-git-send-email-wni@nvidia.com> <1361187031-3679-9-git-send-email-wni@nvidia.com> <51240A95.9070007@wwwdotorg.org>
+From: Manish Badarkhe <badarkhe.manish@gmail.com>
+Subject: Re: [PATCH V3] ARM: dts: add minimal DT support for DevKit8000
+Date: Wed, 20 Feb 2013 17:28:07 +0530
+Message-ID: <CAKDJKT6uMQN_MaPNDt4dDxEKNZHyuupBzD0KrFUQ2fpiUYzk3w@mail.gmail.com>
+References: <1360999167-17606-1-git-send-email-anilk4.v@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <51240A95.9070007@wwwdotorg.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "durgadoss.r@intel.com" <durgadoss.r@intel.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, Matthew Longnecker <MLongnecker@nvidia.com>, "khali@linux-fr.org" <khali@linux-fr.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1360999167-17606-1-git-send-email-anilk4.v@gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Anil Kumar <anilk4.v@gmail.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, b-cousson@ti.com, tony@atomide.com, grant.likely@secretlab.ca, thomas@tomweber.eu
 List-Id: devicetree@vger.kernel.org
 
-On 02/20/2013 07:28 AM, Stephen Warren wrote:
-> On 02/18/2013 04:30 AM, Wei Ni wrote:
->> Enable thermal driver in the dts file.
->> Set sensor as lm90 remote sensor, and set throttle data.
-> 
->> diff --git a/Documentation/devicetree/bindings/thermal/tegra3-thermal.txt b/Documentation/devicetree/bindings/thermal/tegra3-thermal.txt
-> 
-> The DT documentation should be either a separate patch before the one
-> which implements it in the driver, or part of the driver patch. It
-> shouldn't be part of the patch which instantiates the binding in the
-> board DT file.
+On Sat, Feb 16, 2013 at 12:49 PM, Anil Kumar <anilk4.v@gmail.com> wrote:
+> DevKit8000 is a beagle board clone from Timll, sold by
+> armkits.com. The DevKit8000 has RS232 serial port, LCD, DVI-D,
+> S-Video, Ethernet, SD/MMC, keyboard, camera, SPI, I2C, USB and
+> JTAG interface.
+>
+> This patch adds the basic DT support for devkit8000. At this time,
+> Information
+> of twl4030 (PMIC), MMC1, I2C1 and leds are added.
+>
+> Signed-off-by: Anil Kumar <anilk4.v@gmail.com>
+> Tested-by: Thomas Weber <thomas@tomweber.eu>
+> ---
+>  -This patch is based on top of kernel 3.8-rc5.
+>
+>  -Tested on Devkit8000.
+>
+> For V3:
+>  - Remove pin mux as done at device boot time by default.
+>
+> For V2:
+>  - Change model name as "TimLL OMAP3 Devkit8000"
+>  - Change compatible as "timll,omap3-devkit8000"
+>  - Doing i2c1 pinmux default with pinctrl-single driver instead of i2c1
+>    driver probe time.
+>
+> :100644 100644 5ebb44f... 22ebc76... M  arch/arm/boot/dts/Makefile
+> :000000 100644 0000000... 6338993... A
+> arch/arm/boot/dts/omap3-devkit8000.dts
+> :100644 100644 53cb380b.. ccecb76... M
+> arch/arm/mach-omap2/board-generic.c
+>  arch/arm/boot/dts/Makefile             |    1 +
+>  arch/arm/boot/dts/omap3-devkit8000.dts |  103
+> ++++++++++++++++++++++++++++++++
+>  arch/arm/mach-omap2/board-generic.c    |    1 +
+>  3 files changed, 105 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 5ebb44f..22ebc76 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -102,6 +102,7 @@ dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
+>         imx28-tx28.dtb
+>  dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+>         omap3-beagle.dtb \
+> +       omap3-devkit8000.dtb \
+>         omap3-beagle-xm.dtb \
+>         omap3-evm.dtb \
+>         omap3-tobi.dtb \
+> diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts
+> b/arch/arm/boot/dts/omap3-devkit8000.dts
+> new file mode 100644
+> index 0000000..6338993
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/omap3-devkit8000.dts
+> @@ -0,0 +1,103 @@
+> +/*
+> + * Author: Anil Kumar <anilk4.v@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +/dts-v1/;
+> +
+> +/include/ "omap3.dtsi"
+> +/ {
+> +       model = "TimLL OMAP3 Devkit8000";
+> +       compatible = "timll,omap3-devkit8000", "ti,omap3";
+> +
+> +       memory {
+> +               device_type = "memory";
+> +               reg = <0x80000000 0x10000000>;  /* 256 MB */
+> +       };
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               heartbeat {
+> +                       label = "devkit8000::led1";
+> +                       gpios = <&gpio6 26 0>;  /* 186 -> LED1 */
+> +                       default-state = "on";
+> +                       linux,default-trigger = "heartbeat";
+> +               };
+> +
+> +               mmc {
+> +                       label = "devkit8000::led2";
+> +                       gpios = <&gpio6 3 0>;   /* 163 -> LED2 */
+> +                       default-state = "on";
+> +                       linux,default-trigger = "none";
+> +               };
+> +
+> +               usr {
+> +                       label = "devkit8000::led3";
+> +                       gpios = <&gpio6 4 0>;   /* 164 -> LED3 */
+> +                       default-state = "on";
+> +                       linux,default-trigger = "usr";
+> +                };
+> +
 
-Ok, I will do it.
+No need of extra line over here.
 
-> 
->> +* Nvidia Tegra30 Thermal
-> 
-> NVIDIA is all capitals.
-
-Got it.
-
-> 
-> It seems like a word is missing: Thermal Management? Control/Zone?
-
-It's better to use "NVIDIA Tegra30 Thermal Zone".
-
-> 
->> +** Thermal node properties:
->> +
->> +- compatible : "nvidia,tegra30-thermal";
->> +- sensors: the sensor device node which we want to use in the thermal zone,
->> +  the arguments is the index of the sensor in sensor device node;
-> 
-> The arguments should be defined by the DT binding documentation for that
-> referenced device, not by the referencing device.
-> 
-> DT properties that are custom defined for this binding should include
-> the vendor prefix in their name. So, that'd be "nvidia,sensors". This
-> may apply less if a "sensors" becomes a more generic standard, but it
-> surely applies to all the other properties below.
-
-So these properties should be introduced in the DT binding documentation
-of the thermal framework.
-
-> 
->> +- passive-delay: passive delay;
-> 
-> What does this mean?
-
-This is used for the thermal framework. As you said, this should be
-introduced with the framework.
-
-> 
->> +- num-passive-trips : number of passive trip points, this is required, set
->> +  it 0 if none, if greater than 0, the following properties must be defined;
->> +- passive-trips : temperature of passive trip points;
-> 
-> Presumably "num-passive-trips" can be calculated simply by counting the
-> number of entries in "passive-trips"?
-
-Oh, yes, I can remove it.
-
-> 
-> Please describe what passive and active trips are; someone who just
-> reads this binding document (perhaps in conjunction with some HW
-> documentation and/or other binding documentation) should be able to fill
-> in this binding without other knowledge.
-
-Durgadoss's patches introduced these value in the framework
-documentation, but he didn't touch the DT. So I will add it.
-
-> 
->> +- num-active-trips: number of active trip points, this is required, set
->> +  it 0 if none, if greater than 0, the following properties must be defined;
->> +- active-trips: temperature of active trip points;
-> 
-> Both comments above apply here too.
-> 
->> +- throt-tab-size: size of the throttle table, it's the max cooling state.
->> +- throt-tab: throttle table. the cooling state will be defined according to
->> +  this table.
-> 
-> Both comments above apply here too.
-> 
-> Also, what units are used for all these properties?
-
-they use "int".
-And according to our downstream dvfs driver, the throttle table use
-"unsigned long".
-
-> 
-> Judging by the example below, this property is a list of tuples. The
-> meaning of each field in the tuple needs to be explained.
-> 
-> What happens when the CPU/SoC needs to be throttled? Must some clock or
-> voltage be lowered/limited? If so, you need properties that indicate
-> which clock/voltage/... needs to be acted upon.
-
-This table which will be used by our DVFS driver, although it didn't be
-upstreamed yet. The table set clock frequency limited value with
-different cooling state. When the temperature touch the different
-limited value, we will set difficult cooling state, find the limited
-freq from this table and pass to the dvfs driver.
-I think may be this table should be set for cooling device node. This
-table is only for our tegra dvfs, so I think we can parse this table in
-the tegra3_cooling.c, which will be the new driver for cooling device.
-
-> 
->> +Usually these properties are separated in board related dts files.
-> 
-> That's not really relevant.
-
-Ok.
-
-> 
-
+Thanks
+Manish Badarkhe
