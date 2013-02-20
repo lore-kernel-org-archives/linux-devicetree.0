@@ -1,46 +1,162 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 0/4] dw_dmac: introduce generic DMA binding for DT
-Date: Wed, 20 Feb 2013 11:10:07 +0000
-Message-ID: <201302201110.07485.arnd@arndb.de>
-References: <1360952512-971558-1-git-send-email-arnd@arndb.de> <201302200950.26182.arnd@arndb.de> <20130220095818.GI23302@intel.com>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v3 8/8] reset: Add driver for gpio-controlled reset pins
+Date: Wed, 20 Feb 2013 12:22:06 +0100
+Message-ID: <1361359326.4937.38.camel@pizza.hi.pengutronix.de>
+References: <1361273732-23357-1-git-send-email-p.zabel@pengutronix.de>
+ <1361273732-23357-9-git-send-email-p.zabel@pengutronix.de>
+ <5123F541.4020407@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20130220095818.GI23302@intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vinod.koul@intel.com>
-Cc: Dan Williams <djbw@fb.com>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, Viresh Kumar <viresh.kumar@linaro.org>, Olof Johansson <olof@lixom.net>, linux-kernel@vger.kernel.org, Andy Shevchenko <andriy.shevchenko@linux.jf.intel.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5123F541.4020407-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 20 February 2013, Vinod Koul wrote:
-> On Wed, Feb 20, 2013 at 09:50:25AM +0000, Arnd Bergmann wrote:
-> > On Wednesday 20 February 2013, Vinod Koul wrote:
-> > > Since there is still churn, would it make sense if I just revert the SPEAr13xx
-> > > patch (your first patch) and send a pull request to Linus.
-> > > Since there are no users and not much testing has been done, I think we can push
-> > > these to 3.10 via arm-soc/slave-dma tree.
-> > > 
-> > > Gives more testing and usage will go along as well.
-> > > Since merge window is open, I would like my pull to go soonish and not churn the
-> > > tree much.
-> > 
-> > Reverting the SPEAr13xx would definitely help, yes. The reason why I'd also like
-> > to see the second patch get merged is so that we can do the SPEAr changes in 3.10
-> > without having an interdependency between the trees. I tried very hard to
-> > make the patch have a minimal impact on the non-DT code path to avoid regressions.
-> Ok, i have applied your revert patch. Will send the PULL to linus by friday.
+Am Dienstag, den 19.02.2013, 14:57 -0700 schrieb Stephen Warren:
+> On 02/19/2013 04:35 AM, Philipp Zabel wrote:
+> > This driver implements a reset controller device that toggles gpios
+> > connected to reset pins of peripheral ICs. The delay between assertion
+> > and de-assertion of the reset signal can be configured.
+> 
+> > diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
+> 
+> > +Required properties:
+> 
+> > +- reset-delays: List of delays in ms. The corresponding gpio reset line is
+> > +                asserted for this duration to reset.
+> 
+> mS are quite long. Would it make sense for this property to be uS instead?
 
-Ok, thanks.
+All GPIO resets that I've seen so far wait for several milliseconds.
+But I see no downside here to using microseconds instead.
 
-> > Maybe you can send your tree now with just the revert applied, and then send the
-> > other one separately next week along with any bug fixes that may have accumulated
-> > by then?
-> And then makes sense to send second PULL with fixes accumulated and the second
-> patch, so that 3.10 is easier for all.  think we can compact() patch is second
-> request as well
+> > diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
+> 
+> > +static int gpio_reset_probe(struct platform_device *pdev)
+> 
+> > +	if (of_find_property(np, "reset-delays", NULL)) {
+> > +		delays = devm_kzalloc(&pdev->dev, sizeof(u32) *
+> > +				drvdata->nr_gpios, GFP_KERNEL);
+> > +		if (delays == NULL)
+> > +			return -ENOMEM;
+> 
+> It'd be nice if there were something like of_property_read_u32_index()
+> so you could read each value one-by-one in the loop later on, rather
+> than dynamically allocating this temporarily.
 
-Yes, sounds good.
+Yes. Let's defer that to a separate patch.
 
-	Arnd
+> > +		ret = of_property_read_u32_array(np, "reset-delays", delays,
+> > +				drvdata->nr_gpios);
+> > +		if (ret < 0)
+> > +			return ret;
+> > +	}
+> > +
+> > +	for (i = 0; i < drvdata->nr_gpios; i++) {
+> > +		drvdata->gpios[i].gpio = of_get_named_gpio_flags(np,
+> > +				"reset-gpios", i, &flags);
+> > +		if (drvdata->gpios[i].gpio < 0) {
+> > +			dev_err(&pdev->dev, "invalid gpio for reset %d\n", i);
+> 
+> It's not an error if the value is -EPROBE_DEFERRED; you might want to
+> explicitly check for that case and not print anything?
+
+Right, I'll change that.
+
+> > +			return drvdata->gpios[i].gpio;
+> > +		}
+> > +
+> > +		/*
+> > +		 * The flags are also used to remember whether a given GPIO
+> > +		 * reset is active-low.
+> > +		 */
+> > +		if (flags & OF_GPIO_ACTIVE_LOW)
+> > +			drvdata->gpios[i].flags = GPIOF_OUT_INIT_HIGH;
+> > +		else
+> > +			drvdata->gpios[i].flags = GPIOF_OUT_INIT_LOW;
+> 
+> That raises the question: What is the initial reset state expected to
+> be? Some devices might want to stay in reset until their driver
+> explicitly removes the reset signal.
+> 
+> We could handle that by adding another (optional) property indicating
+> the initial reset state of each GPIO; default to initially not-in-reset
+> unless that property exists and specifies initially-in-reset.
+
+As with the time parameter, I wonder if this configuration is something
+we want to have in the consumer device tree node, or in the gpio-reset
+device node:
+
+	gpio_reset: gpio-reset {
+		compatible = "gpio-reset";
+		reset-gpios = <&gpio2 15 0>;
+		reset-delays = <1000>; /* 1 ms */
+		initially-in-reset = <1>;
+	}
+	some-device {
+		resets = <&gpio_reset 0>;
+	}
+vs.
+	gpio_reset: gpio-reset {
+		compatible = "gpio-reset";
+		reset-gpios = <&gpio2 15 0>;
+	}
+	some-device {
+		resets = <&gpio_reset 0 1000>; /* 1 ms */
+		initially-in-reset;
+	}
+
+> > +		ret = devm_gpio_request_one(&pdev->dev, drvdata->gpios[i].gpio,
+> > +				drvdata->gpios[i].flags, NULL);
+> > +		if (ret < 0) {
+> > +			dev_err(&pdev->dev, "failed to request gpio %d for reset %d\n",
+> > +					drvdata->gpios[i].gpio, i);
+> > +			return ret;
+> > +		}
+> 
+> Perhaps first loop to look up all the GPIOs and initialize data
+> structures, then loop to request the GPIOs? That'd prevent lots of HW
+> programming and de-programming for the GPIOs near the start of the list,
+> in the case where some later GPIO causes -EPROBE_DEFERRED, and so this
+> probe() function keeps getting executed over and over.
+> 
+> > +		if (delays != NULL)
+> > +			drvdata->gpios[i].delay_ms = delays[i];
+> > +		else
+> > +			drvdata->gpios[i].delay_ms = -1; /* .reset returns -ENOSYS */
+> 
+> (here is where of_property_read_u32_index() might be handy)
+> 
+> > +static struct platform_driver gpio_reset_driver = {
+> > +	.probe = gpio_reset_probe,
+> > +	.remove = gpio_reset_remove,
+> > +	.driver = {
+> > +		.name = "gpio-reset",
+> > +		.owner = THIS_MODULE,
+> > +		.of_match_table = of_match_ptr(gpio_reset_dt_ids),
+> > +	},
+> > +};
+> > +
+> > +module_platform_driver(gpio_reset_driver);
+> 
+> You might want to add a few things like MODULE_AUTHOR,
+> MODULE_DESCRIPTION,  MODULE_LICENSE,
+> MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids), perhaps MODULE_ALIAS for the
+> platform device too.
+
+Ok.
+
+thanks
+Philipp
