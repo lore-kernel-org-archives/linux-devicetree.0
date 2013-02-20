@@ -1,162 +1,75 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 8/8] reset: Add driver for gpio-controlled reset pins
-Date: Wed, 20 Feb 2013 12:22:06 +0100
-Message-ID: <1361359326.4937.38.camel@pizza.hi.pengutronix.de>
-References: <1361273732-23357-1-git-send-email-p.zabel@pengutronix.de>
- <1361273732-23357-9-git-send-email-p.zabel@pengutronix.de>
- <5123F541.4020407@wwwdotorg.org>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 1/4] documentation: add palmas dts definition
+Date: Wed, 20 Feb 2013 11:26:40 +0000
+Message-ID: <20130220112639.GA2726@opensource.wolfsonmicro.com>
+References: <1361332815-2348-1-git-send-email-j-keerthy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5123F541.4020407-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1361332815-2348-1-git-send-email-j-keerthy@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: J Keerthy <j-keerthy@ti.com>
+Cc: devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, gg@slimlogic.co.uk, sameo@linux.intel.com, liam.r.girdwood@intel.com
 List-Id: devicetree@vger.kernel.org
 
-Am Dienstag, den 19.02.2013, 14:57 -0700 schrieb Stephen Warren:
-> On 02/19/2013 04:35 AM, Philipp Zabel wrote:
-> > This driver implements a reset controller device that toggles gpios
-> > connected to reset pins of peripheral ICs. The delay between assertion
-> > and de-assertion of the reset signal can be configured.
-> 
-> > diff --git a/Documentation/devicetree/bindings/reset/gpio-reset.txt b/Documentation/devicetree/bindings/reset/gpio-reset.txt
-> 
-> > +Required properties:
-> 
-> > +- reset-delays: List of delays in ms. The corresponding gpio reset line is
-> > +                asserted for this duration to reset.
-> 
-> mS are quite long. Would it make sense for this property to be uS instead?
 
-All GPIO resets that I've seen so far wait for several milliseconds.
-But I see no downside here to using microseconds instead.
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > diff --git a/drivers/reset/gpio-reset.c b/drivers/reset/gpio-reset.c
-> 
-> > +static int gpio_reset_probe(struct platform_device *pdev)
-> 
-> > +	if (of_find_property(np, "reset-delays", NULL)) {
-> > +		delays = devm_kzalloc(&pdev->dev, sizeof(u32) *
-> > +				drvdata->nr_gpios, GFP_KERNEL);
-> > +		if (delays == NULL)
-> > +			return -ENOMEM;
-> 
-> It'd be nice if there were something like of_property_read_u32_index()
-> so you could read each value one-by-one in the loop later on, rather
-> than dynamically allocating this temporarily.
+On Wed, Feb 20, 2013 at 09:30:15AM +0530, J Keerthy wrote:
+> From: Graeme Gregory <gg@slimlogic.co.uk>
+>=20
+> Add the DTS definition for the palmas device including the MFD children.
+>=20
+> Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
+> [j-keerthy@ti.com: changed the DT node property names to follow the
+> convention]
+> Signed-off-by: J Keerthy <j-keerthy@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/palmas.txt |   67 ++++++++++++++++=
+++++++
+>  1 files changed, 67 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/palmas.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documenta=
+tion/devicetree/bindings/mfd/palmas.txt
+> new file mode 100644
+> index 0000000..5fa922e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/palmas.txt
+> @@ -0,0 +1,67 @@
+> +Texas Instruments Palmas family
+> +
+> +The Palmas familly are Integrated Power Management Chips.
+> +These chips are connected to an i2c bus.
 
-Yes. Let's defer that to a separate patch.
+I would expect this to enumerate the regulators that the user can select
+but it doesn't appear to do that.
 
-> > +		ret = of_property_read_u32_array(np, "reset-delays", delays,
-> > +				drvdata->nr_gpios);
-> > +		if (ret < 0)
-> > +			return ret;
-> > +	}
-> > +
-> > +	for (i = 0; i < drvdata->nr_gpios; i++) {
-> > +		drvdata->gpios[i].gpio = of_get_named_gpio_flags(np,
-> > +				"reset-gpios", i, &flags);
-> > +		if (drvdata->gpios[i].gpio < 0) {
-> > +			dev_err(&pdev->dev, "invalid gpio for reset %d\n", i);
-> 
-> It's not an error if the value is -EPROBE_DEFERRED; you might want to
-> explicitly check for that case and not print anything?
+--sdtB3X0nJg68CQEu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Right, I'll change that.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-> > +			return drvdata->gpios[i].gpio;
-> > +		}
-> > +
-> > +		/*
-> > +		 * The flags are also used to remember whether a given GPIO
-> > +		 * reset is active-low.
-> > +		 */
-> > +		if (flags & OF_GPIO_ACTIVE_LOW)
-> > +			drvdata->gpios[i].flags = GPIOF_OUT_INIT_HIGH;
-> > +		else
-> > +			drvdata->gpios[i].flags = GPIOF_OUT_INIT_LOW;
-> 
-> That raises the question: What is the initial reset state expected to
-> be? Some devices might want to stay in reset until their driver
-> explicitly removes the reset signal.
-> 
-> We could handle that by adding another (optional) property indicating
-> the initial reset state of each GPIO; default to initially not-in-reset
-> unless that property exists and specifies initially-in-reset.
+iQIcBAEBAgAGBQJRJLLcAAoJELSic+t+oim9As8P/35bAdML0+0ZnfYXryHiKfxX
+slMl0SUFTNh+8/j9d5GH7bHOl9USf/7gwG9wl1L4Zq6/YzguatdKrH0fvslEDAEu
+T89vDE3kuWeL/e5D2u3qV332StdqZ2IhNaYCQNXWCsCcCV/N3qMOvqgElGvhFNoC
+R4uYifcwQ7gx+gNsXD9rdHdmmgQcaP0CCEIqRAjpp06pTaMA0BTFiPNU+3SyAGyI
+VuMAt14CCULdkOT7O/ptZlvUQ243nb+8Wfx+ZTCLVYObi0SPSBQNOoxQGVorIXq9
+e9b5SXlghozy6afu5q3olYTgkzj1EbNBMkoHiM6ZXUKz3JXZYVSXkGLYi4BPHc7R
+ssjFnhOdsQa85ZUQDw3AhFzvGTG2Z10fnDoFUBQWaHFgIV7O4KNJhdQlxUq6eRYW
+Velsq548FFrjiaJUzteLjpZ3u7DDhB6Pe+2hYgKMt9UBJ2MspEU0VTcGmZ/yPo1U
+gm5jqYZ3ZOp7lipcl/ZQlPn0bHaT3CzwRcZSUWAHH6JsAfb0UGmrgkHHrwl/TC5Z
+lK4Rzpjp+vAwwo5Q0sD08QZ5d9VDPMU2CGidvEla+r3kjeNVmwlJIXH5G7t+QrdH
+ctbF/B++nBid4ia18ekZ5PUm3ZkLLjrFNPrMBHQvAGlSYLNaQsVPGioDmbyHmLDh
+xXotrWk5VVCXDgD5fCGj
+=hMUI
+-----END PGP SIGNATURE-----
 
-As with the time parameter, I wonder if this configuration is something
-we want to have in the consumer device tree node, or in the gpio-reset
-device node:
-
-	gpio_reset: gpio-reset {
-		compatible = "gpio-reset";
-		reset-gpios = <&gpio2 15 0>;
-		reset-delays = <1000>; /* 1 ms */
-		initially-in-reset = <1>;
-	}
-	some-device {
-		resets = <&gpio_reset 0>;
-	}
-vs.
-	gpio_reset: gpio-reset {
-		compatible = "gpio-reset";
-		reset-gpios = <&gpio2 15 0>;
-	}
-	some-device {
-		resets = <&gpio_reset 0 1000>; /* 1 ms */
-		initially-in-reset;
-	}
-
-> > +		ret = devm_gpio_request_one(&pdev->dev, drvdata->gpios[i].gpio,
-> > +				drvdata->gpios[i].flags, NULL);
-> > +		if (ret < 0) {
-> > +			dev_err(&pdev->dev, "failed to request gpio %d for reset %d\n",
-> > +					drvdata->gpios[i].gpio, i);
-> > +			return ret;
-> > +		}
-> 
-> Perhaps first loop to look up all the GPIOs and initialize data
-> structures, then loop to request the GPIOs? That'd prevent lots of HW
-> programming and de-programming for the GPIOs near the start of the list,
-> in the case where some later GPIO causes -EPROBE_DEFERRED, and so this
-> probe() function keeps getting executed over and over.
-> 
-> > +		if (delays != NULL)
-> > +			drvdata->gpios[i].delay_ms = delays[i];
-> > +		else
-> > +			drvdata->gpios[i].delay_ms = -1; /* .reset returns -ENOSYS */
-> 
-> (here is where of_property_read_u32_index() might be handy)
-> 
-> > +static struct platform_driver gpio_reset_driver = {
-> > +	.probe = gpio_reset_probe,
-> > +	.remove = gpio_reset_remove,
-> > +	.driver = {
-> > +		.name = "gpio-reset",
-> > +		.owner = THIS_MODULE,
-> > +		.of_match_table = of_match_ptr(gpio_reset_dt_ids),
-> > +	},
-> > +};
-> > +
-> > +module_platform_driver(gpio_reset_driver);
-> 
-> You might want to add a few things like MODULE_AUTHOR,
-> MODULE_DESCRIPTION,  MODULE_LICENSE,
-> MODULE_DEVICE_TABLE(of, gpio_reset_dt_ids), perhaps MODULE_ALIAS for the
-> platform device too.
-
-Ok.
-
-thanks
-Philipp
+--sdtB3X0nJg68CQEu--
