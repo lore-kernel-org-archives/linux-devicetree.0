@@ -1,62 +1,82 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH V2] spi: tegra114: add spi driver
-Date: Thu, 21 Feb 2013 12:15:15 -0700
-Message-ID: <51267243.7090102@wwwdotorg.org>
-References: <1361430631-18894-1-git-send-email-ldewangan@nvidia.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 3/3] pinctrl: imx: move hard-coding data into device tree
+Date: Thu, 21 Feb 2013 12:57:02 -0700
+Message-ID: <51267C0E.6070902@wwwdotorg.org>
+References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
+ <1361344089-16804-4-git-send-email-shawn.guo@linaro.org>
+ <51251E5A.1080806@wwwdotorg.org>
+ <CAP1dx+w2bLcztrRJOYs07xxSqVgo3bggJHMFt5LyL5jXQ-h6Mg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1361430631-18894-1-git-send-email-ldewangan@nvidia.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, linux-tegra@vger.kernel.org, swarren@nvidia.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAP1dx+w2bLcztrRJOYs07xxSqVgo3bggJHMFt5LyL5jXQ-h6Mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?ISO-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/21/2013 12:10 AM, Laxman Dewangan wrote:
-> Add SPI driver for NVIDIA's Tegra114 SPI controller. This controller
-> is different than the older SoCs SPI controller in internal design as
-> well as register interface.
+On 02/21/2013 02:36 AM, Dong Aisheng wrote:
+> On 21 February 2013 03:04, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 02/20/2013 12:08 AM, Shawn Guo wrote:
+>>> Currently, all imx pinctrl drivers maintain a big array of struct
+>>> imx_pin_reg which hard-codes data like register offset and mux mode
+>>> setting for each pin function.  Every time a new imx SoC support is
+>>> added, we need to add such a big mount of data.  With moving to single
+>>> kernel build, it's only matter of time to be blamed on memory consuming.
+>>>
+>>> With DTC pre-processor support in place, the patch moves all these data
+>>> into device tree by redefining the PIN_FUNC_ID in imxXX-pinfunc.h and
+>>> changing the PIN_FUNC_ID parsing code a little bit.
+...
+>> This patch removes a bunch of tables from the kernel. I like having the
+>> tables in the kernel, since in theory it could allow a future debugfs or
+>> sysfs interface to pinctrl that allows manipulation of the pinctrl HW
+>> state at a semantic level.
+> 
+> Right, that's one of the considerations why i kept the register table in driver
+> in the first binding design.
+> 
+>> This is only possible if the DT binding
+>> includes details such as "set this pin to this function", and the driver
+>> includes the tables to convert that into details such as register
+>> address and value. I don't think such an "API" could be implemented for
+>> IMX after this patch.
+> 
+> Theoretically It can, because device tree contains the pin registers
+> informations
 
-Looks good. Just a couple of nits mentioned below, then,
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
+> in this way. But the problem is that it can only manipulate the used pins which
+> are parsed from devices tree. While for those unused pins, since the driver does
+> not have the pin register information, it can not manipulate it.
 
-Note: There are a few minor diffs between this file and
-spi-tegra20-slink.c. It might be worth eliminating as many as possible,
-perhaps in a followon patch.
+Right, that's the main issue I was trying to highlight; the driver no
+longer provides complete knowledge of the HW, but only learns about
+stuff that happens to be used/defined in the board-specific DT.
 
-> diff --git a/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.txt b/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.txt
+> But what i'm wondering now is do we really need to manipulate the unused pins
+> from sysfs or debugfs?
+> I still can not think out a real using case now.
+> Anyone else can think one?
 
-> +NVIDIA Tegra114 SPI controller.
-> +
-> +Required properties:
-> +- compatible : should be "nvidia,tegra114-spi".
-> +- reg: Should contain SPI registers location and length.
-> +- interrupts: Should contain SPI interrupts.
-> +- nvidia,dma-request-selector : The Tegra DMA controller's phandle and
-> +  request selector for this SPI controller.
+For early board bringup, it may be useful to boot with a minimal set of
+entries in the DT (enough to support e.g. serial console and some device
+for a root filesystem) and then interactively tweak the rest of the
+pinmux to define the rest of the board, and perhaps even save the result
+somehow, and add it to the next iteration of the DT.
 
-The binding should specify that a clock named "spi" needs to be
-provided, using the standard properties in ../clock/clock-bindings.txt
-
-> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
-
->  obj-$(CONFIG_SPI_SIRF)		+= spi-sirf.o
->  obj-$(CONFIG_SPI_TEGRA20_SFLASH)	+= spi-tegra20-sflash.o
->  obj-$(CONFIG_SPI_TEGRA20_SLINK)		+= spi-tegra20-slink.o
-> +obj-$(CONFIG_SPI_TEGRA114)		+= spi-tegra114.o
-
-While Tegra114 is newer, it should really be listed before the Tegra20
-entries, since the Makefile is alpha-numerically sorted right now I believe.
-
-> diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
-
-> +static struct platform_driver tegra_spi_driver = {
-> +	.driver = {
-> +		.name		= "spi-tegra114",
-> +		.owner		= THIS_MODULE,
-> +		.pm		= &tegra_spi_pm_ops,
-> +		.of_match_table	= of_match_ptr(tegra_spi_of_match),
-
-No need to use of_match_ptr() there; just use the raw value since
-CONFIG_OF is guaranteed to be enabled.
+Also, consider a hobbyist-oriented board that has 50 unused pins that
+could be GPIO, or mapped to some otherwise unused SD, I2C, SPI, ...
+controller. Do we want to force the user to write a new DT and reboot,
+or would it be better to provide some runtime API to set up those pins
+based on what they had connected to the board, and then instantiate
+drivers or use the sysfs GPIO interface, after doing so?
