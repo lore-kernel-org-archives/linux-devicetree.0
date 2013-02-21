@@ -1,88 +1,117 @@
-From: Rhyland Klein <rklein@nvidia.com>
-Subject: [RFC v2 3/3] power: power_supply: add support for getting supplied-nodes from dt
-Date: Thu, 21 Feb 2013 18:11:12 -0500
-Message-ID: <1361488272-21010-4-git-send-email-rklein@nvidia.com>
-References: <1361488272-21010-1-git-send-email-rklein@nvidia.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [PATCH v2 3/3] RFC: Check offset in fdt_string()
+Date: Fri, 22 Feb 2013 10:35:03 +1100
+Message-ID: <20130221233503.GH21011@truffula.fritz.box>
+References: <1360968578-18443-1-git-send-email-sjg@chromium.org>
+ <1360968578-18443-4-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1361488272-21010-1-git-send-email-rklein@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: linux-tegra@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, Rhyland Klein <rklein@nvidia.com>
+Content-Type: multipart/mixed; boundary="===============9181072468855826790=="
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1360968578-18443-4-git-send-email-sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-With the addition of the device_nodes to use to link suppliers and
-supplicants, its useful to add logic to handle the creation of
-the list in a common place so as to be common for all drivers.
 
-As of now, as long as the supply's device_node is supplied, the core
-will attempt to parse the list of supplies and store it in the
-power_supply structure. In this way, it shouldn't break existing
-drivers, but allow for transition cleanly.
+--===============9181072468855826790==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="e5bfZ/T2xnjpUIbw"
+Content-Disposition: inline
 
-Signed-off-by: Rhyland Klein <rklein@nvidia.com>
----
-v2:
-  - Simplified and renamed the logic to parse dt for the charger list.
-  - Tied the dt parsing directly to power_supply_register to make fewer
-    changes required for converting existing chargers/supplies.
 
- drivers/power/power_supply_core.c |   35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
+--e5bfZ/T2xnjpUIbw
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/drivers/power/power_supply_core.c b/drivers/power/power_supply_core.c
-index a87c5b8..05e2031 100644
---- a/drivers/power/power_supply_core.c
-+++ b/drivers/power/power_supply_core.c
-@@ -86,6 +86,39 @@ void power_supply_changed(struct power_supply *psy)
- }
- EXPORT_SYMBOL_GPL(power_supply_changed);
- 
-+#ifdef CONFIG_OF
-+#include <linux/of.h>
-+
-+int power_supply_register_supplicant(struct power_supply *psy)
-+{
-+	struct device_node *np;
-+	int i = 0;
-+
-+	if (!psy->supplies.node)
-+		return -EINVAL;
-+
-+	do {
-+		struct power_supply_supplies *lst;
-+
-+		np = of_parse_phandle(psy->supplies.node, "power-supply", i++);
-+		if (!np)
-+			continue;
-+
-+		lst = devm_kzalloc(psy->dev->parent, sizeof(*lst), GFP_KERNEL);
-+		if (!lst) {
-+			dev_warn(psy->dev->parent,
-+				 "Failed to alloc mem for supplies list\n");
-+			return -ENOMEM;
-+		}
-+
-+		lst->node = np;
-+		list_add(&(lst->list), &(psy->supplies.list));
-+	} while (np);
-+
-+	return 0;
-+}
-+#endif
-+
- static int __power_supply_am_i_supplied(struct device *dev, void *data)
- {
- 	union power_supply_propval ret = {0,};
-@@ -355,6 +388,8 @@ int power_supply_register(struct device *parent, struct power_supply *psy)
- 
- #ifdef CONFIG_OF
- 	INIT_LIST_HEAD(&psy->supplies.list);
-+
-+	power_supply_register_supplicant(psy);
- #endif
- 	INIT_WORK(&psy->changed_work, power_supply_changed_work);
- 
--- 
-1.7.9.5
+On Fri, Feb 15, 2013 at 02:49:38PM -0800, Simon Glass wrote:
+> (We probably don't want this patch, and certainly can't apply it as is,
+> but I send it in order to find out the intent of fdt_string()).
+>=20
+> At present fdt_string() says that returns:
+>=20
+>    - a pointer to the string, on success
+>    - NULL, if stroffset is out of bounds
+>=20
+> However it does not in fact return NULL. Changing it to do so also
+> breaks 15 tests (segfault).
+>=20
+> What is the intended behaviour of this function, please?
+
+Ah.  Yes.  So I'm guessing the tests that fail are all the tests of
+the sequential write functions (fdt_sw.c).  When the blob is in
+sequential write mode, the string offsets work differently - they're
+negative from a strings block pointer which sits at the end of the
+strings.  That's because as we add new properties, the strings block
+grows downwards.  The offsets get fixed up again in fdt_finish().
+
+So, fdt_string() would need a special case for trees in SW mode.  I
+also have a vague recollection that there was another reason I didn't
+implement the bounds checking, but I seem to have forgotton what it
+was :(.
+
+
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> ---
+> Changes in v2:
+> - Drop patch to replace fdtdump
+>=20
+>  libfdt/fdt_ro.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/libfdt/fdt_ro.c b/libfdt/fdt_ro.c
+> index 50007f6..cba8772 100644
+> --- a/libfdt/fdt_ro.c
+> +++ b/libfdt/fdt_ro.c
+> @@ -77,6 +77,8 @@ static int _fdt_nodename_eq(const void *fdt, int offset,
+> =20
+>  const char *fdt_string(const void *fdt, int stroffset)
+>  {
+> +	if (stroffset < 0 || stroffset >=3D fdt_size_dt_strings(fdt))
+> +		return NULL;
+>  	return (const char *)fdt + fdt_off_dt_strings(fdt) + stroffset;
+>  }
+> =20
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--e5bfZ/T2xnjpUIbw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlEmrycACgkQaILKxv3ab8b9LwCfczpjIPuP7ul3slleCKhfiKDK
+3FQAnRGCkZ5c5PQN3GSGtL4niLdTxwh9
+=+vNu
+-----END PGP SIGNATURE-----
+
+--e5bfZ/T2xnjpUIbw--
+
+--===============9181072468855826790==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============9181072468855826790==--
