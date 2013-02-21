@@ -1,62 +1,85 @@
-From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: imx: replace magic number with pin function
- name
-Date: Thu, 21 Feb 2013 11:57:15 -0600
-Message-ID: <CAKGA1bmf3HXGcEYkw2Gk-uS40=r_ZX-=Dh4G3GGSSwz8HiLqNw@mail.gmail.com>
-References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
- <1361344089-16804-3-git-send-email-shawn.guo@linaro.org>
- <51251A11.2030300@wwwdotorg.org>
- <CAKGA1bkHH1XC38_VM=QhDrr33uqqSbwe0n+GfXEPs43K_Do=CQ@mail.gmail.com>
- <20130221050247.GD17738@S2101-09.ap.freescale.net>
- <CAKGA1bn22xctSj_33HQsWwnVB=RO2OJ=eYvgRD-kF+PiQcnC4Q@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] kbuild: create an "include chroot" for DT bindings
+Date: Thu, 21 Feb 2013 11:43:13 -0700
+Message-ID: <51266AC1.8040507@wwwdotorg.org>
+References: <1361394356-19385-1-git-send-email-swarren@wwwdotorg.org> <20130221043751.GB17738@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAKGA1bn22xctSj_33HQsWwnVB=RO2OJ=eYvgRD-kF+PiQcnC4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <20130221043751.GB17738@S2101-09.ap.freescale.net>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Michal Marek <mmarek@suse.cz>, devicetree-discuss@lists.ozlabs.org, linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Hiroshi Doyu <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-I feel like I should be more concise, so here are what I would
-consider MY goals for iomux definition on Freescale processors;
+On 02/20/2013 09:37 PM, Shawn Guo wrote:
+> On Wed, Feb 20, 2013 at 02:05:56PM -0700, Stephen Warren wrote:
+>> From: Stephen Warren <swarren@nvidia.com>
+>>
+>> The recent dtc+cpp support allows header files and C pre-processor
+>> defines/macros to be used when compiling device tree files. These
+>> headers will typically define various constants that are part of the
+>> device tree bindings.
+>>
+>> The original patch which set up the dtc+cpp include path only considered
+>> using those headers from device tree files. However, they are also
+>> useful for kernel code which needs to interpret the device tree.
+>>
+>> In both the DT files and the kernel, I'd like to include the DT-related
+>> headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
+>> That will simplify any text which discusses the DT header locations.
+>>
+>> Creating a <dt-bindings/> for kernel source to use is as simple as
+>> placing files into include/dt-bindings/.
+>>
+>> However, when compiling DT files, the include path should be restricted
+>> so that only the dt-bindings path is available; arbitrary kernel headers
+>> shouldn't be exposed. For this reason, create a specific include
+>> directory for use by dtc+cpp, and symlink dt-bindings from there to the
+>> actual location of include/dt-bindings/. For want of a better location,
+>> place this "include chroot" into the existing dts/ directory.
+>>
+>> arch/*/boot/dts/include/dt-bindings -> ../../../../../dt-bindings
+> 
+> ../../../../../include/dt-bindings
 
-Freescale provide spreadsheets, GUI tools and XML and C header output
-for the iomux model.
+Yup.
 
-If you can't copy it right from the documentation or a script or
-program (C, Python, whatever) any of the above into a device tree
-without first encoding or parsing the binding in a suitable format for
-the program, then the binding is not desirable - for me, at least. If
-we can't go back to the original data from BSP kernels and port it to
-new device trees without a 3-step cross-reference and a preprocessing
-step for verification, you are adding items to my in tray...
+> And, I would expect only the headers that will actually be referenced
+> by kernel should go into include/dt-bindings.  There is no point to
+> put headers that will not be included by kernel but only by dts files
+> into there, and instead arch/arm/boot/dts/include should just be good
+> enough for them.  With this agreed ...
 
-Usually it's spit out from the IOMUX tool as XML and example C source
-(with certain definitions) with header files for the chip so you can
-drop it right into your bringup tool, bootloader, OS or whatever.
-Using that as a reference worked fine - it's register offsets
-(absolute from IOMUX tool), values. Copy pasting from the spreadsheet
-worked fine. Printing out the docs page and marking the bits worked
-fine. You're now telling me with this patchset that I have to have
-another documentation source and additionally verify that it even
-applies to the board by comparing it to all of the above.
+There are two things that include DT-related headers:
 
-Therefore, nack :D
+a) Device trees (*.dts, *.dtsi)
+b) The kernel
 
-Either use the preprocessor to really verify the data, but don't use
-it just to turn 5 values into a string literal.
+All the headers relevant here fall into category (a) by definition. I'd
+actually expect most to also fall into category (b), although I can see
+that category (b) might be a strict subset of category (a).
 
--- 
-Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Product Development Analyst, Genesi USA, Inc.
+I believe you're proposing only storing category (b) headers in
+include/dt-bindings/, and storing any others I suppose in arch/*/boot/dts/.
+
+But, my thoughts are that /all/ these headers (both categories) should
+be stored in one place for consistency.
+
+That way, if/when the DT binding docs, these headers, and the DT files
+themselves move out of the kernel, we'll end up with some other
+repository/repositories that might have the following top-level
+directories (or at least these sets of logical data):
+
+1) DT binding documents
+2) Headers that define constants for (1)
+3) DT files (*.dts/*.dtsi)
+
+We need at least some of (2) in the kernel for drivers to share the
+constant definitions, so my proposal is to simply copy /all/ the headers
+from (2) into the kernel's include/dt-bindings/. That keeps things
+simple; simply copy everything and maintain the same hierarchy under
+that "root" directory. Otherwise, we'll be constantly wondering which
+headers to copy, perhaps moving things back/forth as people realize that
+the kernel needs them, etc.
