@@ -1,108 +1,74 @@
-From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] pinctrl: imx: move hard-coding data into device tree
-Date: Thu, 21 Feb 2013 17:36:50 +0800
-Message-ID: <CAP1dx+w2bLcztrRJOYs07xxSqVgo3bggJHMFt5LyL5jXQ-h6Mg@mail.gmail.com>
-References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
- <1361344089-16804-4-git-send-email-shawn.guo@linaro.org>
- <51251E5A.1080806@wwwdotorg.org>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] spi: tegra114: add spi driver
+Date: Thu, 21 Feb 2013 11:56:54 +0200
+Message-ID: <20130221095654.GH23234@tbergstrom-lnx.Nvidia.com>
+References: <1361281115-20436-1-git-send-email-ldewangan@nvidia.com>
+	<5123C18A.9010604@wwwdotorg.org> <5124C18F.6070108@nvidia.com>
+	<20130220131112.GE2726@opensource.wolfsonmicro.com>
+	<5124CEF5.3060605@nvidia.com> <512506F9.2030508@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51251E5A.1080806-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <512506F9.2030508-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
+List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
+	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
 To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?ISO-8859-1?Q?Uwe_Kleine=2DK=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 February 2013 03:04, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 02/20/2013 12:08 AM, Shawn Guo wrote:
->> Currently, all imx pinctrl drivers maintain a big array of struct
->> imx_pin_reg which hard-codes data like register offset and mux mode
->> setting for each pin function.  Every time a new imx SoC support is
->> added, we need to add such a big mount of data.  With moving to single
->> kernel build, it's only matter of time to be blamed on memory consuming.
->>
->> With DTC pre-processor support in place, the patch moves all these data
->> into device tree by redefining the PIN_FUNC_ID in imxXX-pinfunc.h and
->> changing the PIN_FUNC_ID parsing code a little bit.
->
-> There are a couple of potential issues with this patch, which I'm in two
-> minds about:
->
-> 1)
->
-> This is an incompatible change to the DT binding definition. A DT
-> written to the old specification won't work with a newer kernel and
-> vice-versa. This isn't supposed to happen with device tree.
->
-> Right now I believe we're still being flexible about DT binding changes,
-> but I've seen hints that this kind of thing will start getting lots of
-> push-back in the near future...
->
-I wonder it may be hard to avoid it, especially for some complicated devices or
-non-standard devices during development process.
-No sure if any better way to control it.
+On Wed, Feb 20, 2013 at 06:25:13PM +0100, Stephen Warren wrote:
+> On 02/20/2013 06:26 AM, Laxman Dewangan wrote:
+> > On Wednesday 20 February 2013 06:41 PM, Mark Brown wrote:
+> >> * PGP Signed by an unknown key
+> >>
+> >> On Wed, Feb 20, 2013 at 05:59:03PM +0530, Laxman Dewangan wrote:
+> >>>>> +    tspi->clk = devm_clk_get(&pdev->dev, "spi");
+> >>>> Does this HW block use multiple clocks? If not, I think s/"spi"/NULL/
+> >>>> there, just like the Tegra20 driver.
+> >>> No, spi controller uses the only one clock. I will change to NULL.
+> >> I'm never convinced that NULL is a helpful clock name to pick, it's not
+> >> awesome if you ever acquire a second clock.
+> > 
+> > I had other idea of okeeping clock name here for power optimization.
+> > Spi controller can take the power source ffrom different clock source
+> > say clk_m (crystal) and pllp.
+> > 
+> > I want to set the parent clock dynamically based on required speed so
+> > that if the desire speed can be meet from clk_m, no need to increase pll
+> > count and possible we may endup with siwtchng off pllp which can save
+> > power.
+> > 
+> > So for this I may require
+> > 
+> > spi_clk = devm_clk_get(&pdev->dev, "spi");
+> > spi_clkm = devm_clk_get(&pdev->dev, "clmkm");
+> > spi_pllp = devm_clk_get(&pdev->dev, "pllp");
+> > 
+> > and call clk_set_parent(spi_clk, spi_clkm) or clk_set_parent(spi_clk,
+> > spi_pllp).
+> 
+> OK, so that's certainly an argument for requesting a specific clock name
+> rather than NULL.
+> 
 
-> That all said, I'd also love to change the Tegra pinctrl binding now
-> that we have CPP, since I could replace all the strings in the current
-> binding with integers and presumably save some space in the .dtb. Hence,
-> I'd love to maintain the flexibility to keep changing the .dts and
-> kernel code in lock-step.
->
-> 2)
->
-> This patch removes a bunch of tables from the kernel. I like having the
-> tables in the kernel, since in theory it could allow a future debugfs or
-> sysfs interface to pinctrl that allows manipulation of the pinctrl HW
-> state at a semantic level.
+The list of possible parents for each clock is determined by the SoC and is
+already known to CCF, so maybe we just need to add a function to CCF to allow
+the drivers to query the list of possible parents?
 
-Right, that's one of the considerations why i kept the register table in driver
-in the first binding design.
+Cheers,
 
-> This is only possible if the DT binding
-> includes details such as "set this pin to this function", and the driver
-> includes the tables to convert that into details such as register
-> address and value. I don't think such an "API" could be implemented for
-> IMX after this patch.
+Peter.
 
-Theoretically It can, because device tree contains the pin registers
-informations
-in this way. But the problem is that it can only manipulate the used pins which
-are parsed from devices tree. While for those unused pins, since the driver does
-not have the pin register information, it can not manipulate it.
-But what i'm wondering now is do we really need to manipulate the unused pins
-from sysfs or debugfs?
-I still can not think out a real using case now.
-Anyone else can think one?
-
-> Still, given the IMX binding already merged "pin"
-> and "function" into a single integer in the binding, I'm not sure if IMX
-> could support that kind of "API" before anyway?
->
-At least PIN config could support.
-For PIN mux, it may also be implementable since we have all the needed
-information
-for a pin in driver whether it's used or not.
-
-Regards
-Dong Aisheng
-
-> This is part of the reason I pushed hard for the pinctrl APIs to operate
-> at the semantic pin/group/function level, and that Tegra's pinctrl
-> drivers explicitly have tables listing all the pins/groups/functions,
-> rather than just putting a bunch of register values into the DT.
->
-> I'm not sure how much of an issue this is, though. LinusW and/or the DT
-> maintainers should probably chime in here.
->
-> I didn't actually read the driver implementation changes in this patch.
+------------------------------------------------------------------------------
+Everyone hates slow websites. So do we.
+Make your web apps faster with AppDynamics
+Download AppDynamics Lite for free today:
+http://p.sf.net/sfu/appdyn_d2d_feb
