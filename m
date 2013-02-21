@@ -1,142 +1,102 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5] iio: Add OF support
-Date: Thu, 21 Feb 2013 21:49:28 +0000
-Message-ID: <51269668.90809@kernel.org>
-References: <1360256940-19438-1-git-send-email-linux@roeck-us.net> <51250A0E.80806@gmail.com> <20130220181148.GA19278@roeck-us.net> <2dada206-6401-4a35-85d8-298dd08b0420@email.android.com> <20130220192458.GA29247@roeck-us.net> <51263441.90300@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Subject: Re: [PATCH 0/6] Introducing Device Tree Overlays
+Date: Thu, 21 Feb 2013 13:53:04 -0800
+Message-ID: <3A37C4DA-4D4D-4370-8305-15625B923E67@antoniou-consulting.com>
+References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com>
+ <CANk1AXQ7ajnwTaHwwbyrri2YkX_60uC9xrQYWuR8u4eT2EQsew@mail.gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <51263441.90300-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CANk1AXQ7ajnwTaHwwbyrri2YkX_60uC9xrQYWuR8u4eT2EQsew-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: delicious quinoa <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matt Porter <mporter-l0cyMroinI0@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russ Dill <Russ.Dill-l0cyMroinI0@public.gmane.org>, Joel A Fernandes <agnel.joel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/21/2013 02:50 PM, Rob Herring wrote:
-> On 02/20/2013 01:24 PM, Guenter Roeck wrote:
->> On Wed, Feb 20, 2013 at 06:51:08PM +0000, Jonathan Cameron wrote:
->>>
->>>
->>> Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
->>>
->>>> On Wed, Feb 20, 2013 at 11:38:22AM -0600, Rob Herring wrote:
->>>>> On 02/07/2013 11:09 AM, Guenter Roeck wrote:
->>>>>> Provide bindings and parse OF data during initialization.
->>>>>>
->>>>>> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
->>>>>> ---
->>>>>> v5:
->>>>>> - Updated examples in bindings.
->>>>>> v4:
->>>>>> - Fixed wrong parameter to dummy of_iio_channel_get_by_name if
->>>> CONFIG_OF is
->>>>>>   undefined, and wrong return value.
->>>>>> - Initialize indio_dev->of_node in iio_device_register if the
->>>> calling driver
->>>>>>   neglected to do it.
->>>>>> v3:
->>>>>> - Cleaned up documentation (formatting, left-over clock references)
->>>>>> - Updated bindings description to permit sub-devices
->>>>>> - When searching for iio devices, use the pointer to the iio device
->>>> type instead
->>>>>>   of strcmp. Rename iio_dev_type to iio_device_type (to match other
->>>> device
->>>>>>   types) and make it global for that purpose. Check the OF node
->>>> first, then the
->>>>>>   device type, as the node is less likely to match.
->>>>>> - Move the common code in of_iio_channel_get and
->>>> of_iio_channel_get_all to
->>>>>>   __of_iio_channel_get.
->>>>>> - Return NULL from of_iio_channel_get_by_name if nothing is found,
->>>> or
->>>>>>   an error if there is a problem with consistency or if the
->>>> provider device is
->>>>>>   not yet available.
->>>>>> - In iio_channel_get, return if of_iio_channel_get_by_name()
->>>> returns a channel
->>>>>>   or an error, and continue otherwise.
->>>>>> v2:
->>>>>> - Rebased to iio/togreg
->>>>>> - Documentation update per feedback
->>>>>> - Dropped io-channel-output-names from the bindings document. The
->>>> property is
->>>>>>   not used in the code, and it is not entirely clear what it would
->>>> be used for.
->>>>>>   If there is a need for it, we can add it back in later on.
->>>>>> - Don't export OF specific API calls
->>>>>> - For OF support, no longer depend on iio_map
->>>>>> - Add #ifdef CONFIG_OF where appropriate, and ensure that the code
->>>> still builds
->>>>>>   if it is not selected.
->>>>>> - Change iio_channel_get to take device pointer as argument instead
->>>> of device
->>>>>>   name. Retain old API as of_iio_channel_get_sys.
->>>>>> - iio_channel_get now works for both OF and non-OF configurations
->>>>>> - Use regulator to get vref for max1363 driver.
->>>>>>
->>>>>>  .../devicetree/bindings/iio/iio-bindings.txt       |   97
->>>> +++++++++++
->>>>>>  drivers/iio/iio_core.h                             |    1 +
->>>>>>  drivers/iio/industrialio-core.c                    |    8 +-
->>>>>>  drivers/iio/inkern.c                               |  171
->>>> ++++++++++++++++++++
->>>>>>  4 files changed, 275 insertions(+), 2 deletions(-)
->>>>>>  create mode 100644
->>>> Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>> b/Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..1182845
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
->>>>>> @@ -0,0 +1,97 @@
->>>>>> +This binding is a work-in-progress. It is derived from clock
->>>> bindings,
->>>>>> +and based on suggestions from Lars-Peter Clausen [1].
->>>>>
->>>>> Bindings are an ABI. It should not be a WIP. What part is a WIP?
->>>>>
->>>> The text is copied from clock bindings. I do not claim to be better
->>>> than the clock subsystem is doing in respect to its bindings.
-> 
-> That should be fixed. The clock bindings are fixed.
->
-I'll delete it from this patch when merging.  Don't think anyone
-will mind.
+Hi Alan,
 
-Jonathan
->>>>
->>>> I'll be more than happy to take this text out if it is a source of
->>>> contention,
->>>> even more so if that is what is holding up the patch. Jonathan ?
->>> I don't really care about the wording though can see why Rob asked!
->>> We will probably have other stuff to add anyway.
->>>
->>
->> Quite likely - for example, I did not add io-output-names since I did not
->> know what to do with it.
+On Feb 21, 2013, at 1:25 PM, delicious quinoa wrote:
+
+> I like where this is heading.  I'm interested in a use case where IP
+> can be loaded into a FPGA, then add a blob to the device tree and load
+> some drivers.
 > 
-> Good because name strings are typically optional.
+> I see your github tree.  If I wanted to cherry-pick your code and play
+> around with it, which branch should I use?  not-capebus-21?
 > 
-> Adding to bindings is fine. Changing what's already there should be
-> avoided. New kernels need to work with old DTBs and vice-versa.
+
+not-capebus-v21 is the latest one and indeed that has it in.
+
+Please note that I had some other FPGA people interested with it.
+Perhaps we can go through use cases to come up with your requirements
+
+
+> Thanks,
+> Alan Tull
+> Altera Corp
 > 
-> Rob
-> 
->> What do you want me to do ? Submit another version with the sentence deleted,
->> or keep it as-is ?
->>
->> Thanks,
->> Guenter
->>
->>> Jonathan
->>>>
->>>> Thanks,
->>>> Guenter
->>>>
->>>>> Knowing nothing about IIO, the binding seems sane.
->>>>>
->>>>> Rob
->>>>>
+
+Regards
+
+-- Pantelis
+
+> On Fri, Jan 4, 2013 at 1:31 PM, Pantelis Antoniou
+> <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org> wrote:
+>> The following patchset introduces Device Tree overlays, a method
+>> of dynamically altering the kernel's live Device Tree.
+>> 
+>> This patchset is against mainline as of Friday Jan 4 2013.
+>> (4956964 Merge tag 'driver-core-3.8-rc2' of \
+>>        git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core)
+>> 
+>> Note that a separate patch for the DTC compiler has been posted and
+>> is required to compile the DTS files according to the documentation.
+>> The patch is "dtc: Dynamic symbols & fixup support"
+>> 
+>> An implementation patchset for a beaglebone cape loader will follow,
+>> but if you want to check out a working kernel for the beaglebone please
+>> pull from:
+>> 
+>> git://github.com/pantoniou/linux-bbxm.git branch not-capebus-v8
+>> 
+>> Pantelis Antoniou (6):
+>>  OF: Introduce device tree node flag helpers.
+>>  OF: export of_property_notify
+>>  OF: Export all DT proc update functions
+>>  OF: Introduce utility helper functions
+>>  OF: Introduce Device Tree resolve support.
+>>  OF: Introduce DT overlay support.
+>> 
+>> .../devicetree/dynamic-resolution-notes.txt        |  25 +
+>> Documentation/devicetree/overlay-notes.txt         | 179 +++++
+>> drivers/of/Kconfig                                 |  19 +
+>> drivers/of/Makefile                                |   4 +-
+>> drivers/of/base.c                                  | 114 +--
+>> drivers/of/overlay.c                               | 831 +++++++++++++++++++++
+>> drivers/of/resolver.c                              | 394 ++++++++++
+>> drivers/of/util.c                                  | 253 +++++++
+>> include/linux/of.h                                 | 243 ++++++
+>> 9 files changed, 2005 insertions(+), 57 deletions(-)
+>> create mode 100644 Documentation/devicetree/dynamic-resolution-notes.txt
+>> create mode 100644 Documentation/devicetree/overlay-notes.txt
+>> create mode 100644 drivers/of/overlay.c
+>> create mode 100644 drivers/of/resolver.c
+>> create mode 100644 drivers/of/util.c
+>> 
+>> --
+>> 1.7.12
+>> 
+>> _______________________________________________
+>> devicetree-discuss mailing list
+>> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>> https://lists.ozlabs.org/listinfo/devicetree-discuss
