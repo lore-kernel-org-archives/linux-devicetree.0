@@ -1,61 +1,61 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v2] Input: matrix-keypad - support binary column select gpios
-Date: Thu, 21 Feb 2013 07:41:51 +0000
-Message-ID: <CACxGe6s8DfU7ahE2nOK+UxqDq06vogADZgoqXPUKBoBaxwoigQ@mail.gmail.com>
-References: <1359462324-7233-1-git-send-email-agust@denx.de> <1361388475-23705-1-git-send-email-agust@denx.de>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 3/3] pinctrl: imx: move hard-coding data into device tree
+Date: Thu, 21 Feb 2013 08:55:39 +0100
+Message-ID: <20130221075539.GI1906@pengutronix.de>
+References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
+ <1361344089-16804-4-git-send-email-shawn.guo@linaro.org>
+ <51251E5A.1080806@wwwdotorg.org>
+ <20130221053020.GE17738@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1361388475-23705-1-git-send-email-agust@denx.de>
-Sender: linux-input-owner@vger.kernel.org
-To: Anatolij Gustschin <agust@denx.de>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, devicetree-discuss <devicetree-discuss@lists.ozlabs.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130221053020.GE17738-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 20, 2013 at 7:27 PM, Anatolij Gustschin <agust@denx.de> wrote:
-> On hardware with limited gpios one column select gpio can select
-> two different rows when using some additional hardware logic:
-> high value selects one row, low value selects another row. Add
-> support for such matrix keyboards and document device tree
-> bindings used to describe them.
->
-> Since half of the columns is always not selected, interrupts won't be
-> generated for press events on these columns. To generate interrupts
-> for not selected columns we need to periodicaly switch to these columns
-> in order to catch the potential press events. This is done by additional
-> work function.
->
-> Signed-off-by: Anatolij Gustschin <agust@denx.de>
-> ---
-> v2:
->  - do not use inline attribute for matrix_keyboard_row_events(),
->    it causes reporting wrong events for some keys if the kernel
->    was built using gcc 4.7.2.
->
->  .../bindings/input/gpio-matrix-keypad.txt          |    7 ++
->  drivers/input/keyboard/matrix_keypad.c             |  112 ++++++++++++++++----
->  include/linux/input/matrix_keypad.h                |    6 +
->  3 files changed, 106 insertions(+), 19 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-> index ead641c..57f4be3 100644
-> --- a/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-> +++ b/Documentation/devicetree/bindings/input/gpio-matrix-keypad.txt
-> @@ -23,6 +23,13 @@ Optional Properties:
->  - debounce-delay-ms:   debounce interval in milliseconds
->  - col-scan-delay-us:   delay, measured in microseconds, that is needed
->                         before we can scan keypad after activating column gpio
-> +- col-gpios-binary:    specify that high and low states of a column gpio
-> +                       select two different rows (boards with limited gpios
-> +                       could support this by additional hardware logic)
-> +- col-switch-delay-ms: column gpio switch interval for selecting alternative
-> +                       rows when using 'col-gpios-binary'. This is needed for
-> +                       periodical selecting of the alternative rows to be able
-> +                       to generate keypad interrupts for them
+On Thu, Feb 21, 2013 at 01:30:22PM +0800, Shawn Guo wrote:
+> On Wed, Feb 20, 2013 at 12:04:58PM -0700, Stephen Warren wrote:
+> > There are a couple of potential issues with this patch, which I'm in two
+> > minds about:
+> > 
+> > 1)
+> > 
+> > This is an incompatible change to the DT binding definition. A DT
+> > written to the old specification won't work with a newer kernel and
+> > vice-versa. This isn't supposed to happen with device tree.
+> > 
+> > Right now I believe we're still being flexible about DT binding changes,
+> > but I've seen hints that this kind of thing will start getting lots of
+> > push-back in the near future...
+> > 
+> Last time I heard of the time frame about doing this is when we get
+> device tree source maintained in a separate repository from the kernel
+> tree.  I'm not sure how far we're still away from that.  But most of
+> sub-architectures (including IMX) have not been converted over to
+> device tree.  And as far as I know, none of IMX based product runs
+> device tree kernel yet.
 
-This seems pretty loosely defined. Which rows are affected by this
-binary property? How common are matrix keypads wired this way, and do
-a lot of them use the same method? It seems to me that the device
-needs to be a lot more specific.
+The nature of open source makes it hard to know which devices ship out
+there, so please don't assume there are none just because you know of
+none.
 
-g.
+Sascha
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
