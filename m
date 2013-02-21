@@ -1,139 +1,142 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: imx: replace magic number with pin
- function name
-Date: Thu, 21 Feb 2013 22:43:03 +0100
-Message-ID: <20130221214303.GB1906@pengutronix.de>
-References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
- <1361344089-16804-3-git-send-email-shawn.guo@linaro.org>
- <51251A11.2030300@wwwdotorg.org>
- <CAKGA1bkHH1XC38_VM=QhDrr33uqqSbwe0n+GfXEPs43K_Do=CQ@mail.gmail.com>
- <20130221050247.GD17738@S2101-09.ap.freescale.net>
- <CAKGA1bn22xctSj_33HQsWwnVB=RO2OJ=eYvgRD-kF+PiQcnC4Q@mail.gmail.com>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5] iio: Add OF support
+Date: Thu, 21 Feb 2013 21:49:28 +0000
+Message-ID: <51269668.90809@kernel.org>
+References: <1360256940-19438-1-git-send-email-linux@roeck-us.net> <51250A0E.80806@gmail.com> <20130220181148.GA19278@roeck-us.net> <2dada206-6401-4a35-85d8-298dd08b0420@email.android.com> <20130220192458.GA29247@roeck-us.net> <51263441.90300@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAKGA1bn22xctSj_33HQsWwnVB=RO2OJ=eYvgRD-kF+PiQcnC4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <51263441.90300-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2013 at 11:36:36AM -0600, Matt Sealey wrote:
-> On Wed, Feb 20, 2013 at 11:02 PM, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Wed, Feb 20, 2013 at 06:03:39PM -0600, Matt Sealey wrote:
-> >> I am not sure I am getting this point across, but.. damn it.. nack nack nack :D
-> >>
-> > Do you see any downgrade side that the series introduces over the
-> > existing implementation?
+On 02/21/2013 02:50 PM, Rob Herring wrote:
+> On 02/20/2013 01:24 PM, Guenter Roeck wrote:
+>> On Wed, Feb 20, 2013 at 06:51:08PM +0000, Jonathan Cameron wrote:
+>>>
+>>>
+>>> Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>>>
+>>>> On Wed, Feb 20, 2013 at 11:38:22AM -0600, Rob Herring wrote:
+>>>>> On 02/07/2013 11:09 AM, Guenter Roeck wrote:
+>>>>>> Provide bindings and parse OF data during initialization.
+>>>>>>
+>>>>>> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>>>>>> ---
+>>>>>> v5:
+>>>>>> - Updated examples in bindings.
+>>>>>> v4:
+>>>>>> - Fixed wrong parameter to dummy of_iio_channel_get_by_name if
+>>>> CONFIG_OF is
+>>>>>>   undefined, and wrong return value.
+>>>>>> - Initialize indio_dev->of_node in iio_device_register if the
+>>>> calling driver
+>>>>>>   neglected to do it.
+>>>>>> v3:
+>>>>>> - Cleaned up documentation (formatting, left-over clock references)
+>>>>>> - Updated bindings description to permit sub-devices
+>>>>>> - When searching for iio devices, use the pointer to the iio device
+>>>> type instead
+>>>>>>   of strcmp. Rename iio_dev_type to iio_device_type (to match other
+>>>> device
+>>>>>>   types) and make it global for that purpose. Check the OF node
+>>>> first, then the
+>>>>>>   device type, as the node is less likely to match.
+>>>>>> - Move the common code in of_iio_channel_get and
+>>>> of_iio_channel_get_all to
+>>>>>>   __of_iio_channel_get.
+>>>>>> - Return NULL from of_iio_channel_get_by_name if nothing is found,
+>>>> or
+>>>>>>   an error if there is a problem with consistency or if the
+>>>> provider device is
+>>>>>>   not yet available.
+>>>>>> - In iio_channel_get, return if of_iio_channel_get_by_name()
+>>>> returns a channel
+>>>>>>   or an error, and continue otherwise.
+>>>>>> v2:
+>>>>>> - Rebased to iio/togreg
+>>>>>> - Documentation update per feedback
+>>>>>> - Dropped io-channel-output-names from the bindings document. The
+>>>> property is
+>>>>>>   not used in the code, and it is not entirely clear what it would
+>>>> be used for.
+>>>>>>   If there is a need for it, we can add it back in later on.
+>>>>>> - Don't export OF specific API calls
+>>>>>> - For OF support, no longer depend on iio_map
+>>>>>> - Add #ifdef CONFIG_OF where appropriate, and ensure that the code
+>>>> still builds
+>>>>>>   if it is not selected.
+>>>>>> - Change iio_channel_get to take device pointer as argument instead
+>>>> of device
+>>>>>>   name. Retain old API as of_iio_channel_get_sys.
+>>>>>> - iio_channel_get now works for both OF and non-OF configurations
+>>>>>> - Use regulator to get vref for max1363 driver.
+>>>>>>
+>>>>>>  .../devicetree/bindings/iio/iio-bindings.txt       |   97
+>>>> +++++++++++
+>>>>>>  drivers/iio/iio_core.h                             |    1 +
+>>>>>>  drivers/iio/industrialio-core.c                    |    8 +-
+>>>>>>  drivers/iio/inkern.c                               |  171
+>>>> ++++++++++++++++++++
+>>>>>>  4 files changed, 275 insertions(+), 2 deletions(-)
+>>>>>>  create mode 100644
+>>>> Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>> b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..1182845
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>>> @@ -0,0 +1,97 @@
+>>>>>> +This binding is a work-in-progress. It is derived from clock
+>>>> bindings,
+>>>>>> +and based on suggestions from Lars-Peter Clausen [1].
+>>>>>
+>>>>> Bindings are an ABI. It should not be a WIP. What part is a WIP?
+>>>>>
+>>>> The text is copied from clock bindings. I do not claim to be better
+>>>> than the clock subsystem is doing in respect to its bindings.
 > 
-> Because it replaces the horribly stupid existing implementation with
-> something that doesn't solve the fundamental logical problems caused
-> by the existing implementation. There are three completely obvious
-> logical inconsistencies with the existing implementation of a pair of
-> <arbitrary_pin_index pad_mode>;
-> 
-> 1) the pin index is completely arbitrary and in any binding every
-> published for any of these SoC, either broken by design (MX5 and MX6
-> have duplicated pin data soaking up arbitrary pin ids in the current
-> binding, or are not defined in SoC register order (i.e. arbitrary
-> renumbering).
-
-The pin index is indeed completely arbitrary, mostly because the iomuxv3
-does not make it possible to number pins. More sane SoCs offered that,
-there a Pin number could be easily translated into a register offset. I
-don't know what drugs the FSL engineers have taken to come up with a
-register layout in which each pin is configured via three register sets
-which do not stand in any relationship to each other.
-
-Unfortunately the pinctrl framework forces us to use a pin index as it
-needs something to detect resource conflicts. BUT, I think I agree here
-with you: This pin number should not be exposed to the devicetree, it
-only adds a level of indirection.
-
-> 
-> 2) the pin index is not internally consistent within the device tree
-> binding - it is a reference to an array inside source code. Your patch
-> hopes to solve this, but also hopes to solve other things too. It
-> fails on the second part.
-> 
-> 3) the pad setting value has been hijacked to include bits that
-> otherwise would not be set in the same register (SION bit and a
-> special flag to mean, set up everything except the pad settings)
-> 
-> What you've fixed it to do, as I read this patch, is this;
-> 
-> <arbitrary_pin_name pad_mode>
-> 
-> which the preprocessor expands to;
-> 
-> <reg_mux mux_mode reg_insel insel_mode reg_pad pad_mode>
-> 
-> The real problem here is as follows;
-> 
-> 1) the pin name and function name are still completely arbitrary (in
-> so far as the old iomux.h macros way, the newer iomux-v3.h way, the
-> current bindings and the new binding you're pushing do not match the
-> CPU documentation at all)
-> 
-> 2) copy pasting a line of 5 values from an example document and adding
-> your pad mode bits to the end is no more time consuming or
-> space-consuming than copying a 38-character macro name. New board
-> designs will use data from the FSL IOMUX tool or other sources and not
-> bother using macro definitions to define pads.
-> 
-> 3) macros can be wrong and they will inherit into every device tree,
-> breaking every board that uses them. That said, so can the examples,
-> but at least reading the device tree for a board you can cross-check
-> all the values against, say, the output of many tools provided by
-> Freescale or existing code or platform support without doing a back
-> reference or preprocessing the device tree and removing comments).
+> That should be fixed. The clock bindings are fixed.
 >
+I'll delete it from this patch when merging.  Don't think anyone
+will mind.
 
-Yes, macros can be wrong, but they tend to get fixed. Duplicated
-information almost never gets fixed in all instances they occur.
-
+Jonathan
+>>>>
+>>>> I'll be more than happy to take this text out if it is a source of
+>>>> contention,
+>>>> even more so if that is what is holding up the patch. Jonathan ?
+>>> I don't really care about the wording though can see why Rob asked!
+>>> We will probably have other stuff to add anyway.
+>>>
+>>
+>> Quite likely - for example, I did not add io-output-names since I did not
+>> know what to do with it.
 > 
-> MX51_PIN_EIM_23__GPIO1_2 0x6528
+> Good because name strings are typically optional.
 > 
-> <
-> MUX_REG(0x174) ALT(0x5|SION) INS_REG(0x3d8) INS(0x7) PAD_REG(0x654)
-> PAD(0x7633|PU_100K), /* MX51_EIM_23 GPIO1_2 */
-> >;
-
-This is basically what the current iomux header do, only that we added
-the mux/padctrl/selinput register triplet to a single macro. This in my
-eyes still makes sense, because digging through the datasheet guessing
-that for a single pin I have to configure registers 0x174, 0x3d8 and
-0x654 is cumbersome.
-
-Where it became ugly is the predefined values for pullup/dse.
-
-Yes, I would really like to have something like you describe above in
-the devicetree together with the register triplets as handy macros.
-Also I still like the <pinname>__<function> naming since that's another
-thing I don't have to look up in the datasheet everytime.
-If your data comes from the iomux tool then you simply wouldn't use the
-register triplet macros.
-
-This would leave the question how we make up a pin number for the
-pinctrl framework, but as said, this should be solved inside the kernel
-and not pushed into the devicetree.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> Adding to bindings is fine. Changing what's already there should be
+> avoided. New kernels need to work with old DTBs and vice-versa.
+> 
+> Rob
+> 
+>> What do you want me to do ? Submit another version with the sentence deleted,
+>> or keep it as-is ?
+>>
+>> Thanks,
+>> Guenter
+>>
+>>> Jonathan
+>>>>
+>>>> Thanks,
+>>>> Guenter
+>>>>
+>>>>> Knowing nothing about IIO, the binding seems sane.
+>>>>>
+>>>>> Rob
+>>>>>
