@@ -1,122 +1,505 @@
-From: Robert MARKLUND <robert.marklund@stericsson.com>
-Subject: RE: CoreSight framework and drivers
-Date: Thu, 21 Feb 2013 15:32:38 +0100
-Message-ID: <2B1D156D95AE9B4EAD379CB9E465FE73272F65EE59@EXDCVYMBSTM005.EQ1STM.local>
-References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v5] iio: Add OF support
+Date: Thu, 21 Feb 2013 08:50:41 -0600
+Message-ID: <51263441.90300@gmail.com>
+References: <1360256940-19438-1-git-send-email-linux@roeck-us.net> <51250A0E.80806@gmail.com> <20130220181148.GA19278@roeck-us.net> <2dada206-6401-4a35-85d8-298dd08b0420@email.android.com> <20130220192458.GA29247@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "pratikp@codeaurora.org" <pratikp@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "will.deacon@arm.com" <will.deacon@arm.com>, Magnus PERSSON <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "jon-hunter@ti.com" <jon-hunter@ti.com>, "d-deao@ti.com" <d-deao@ti.com>, Christian BEJRAM <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130220192458.GA29247@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, devicetree-discuss@lists.ozlabs.org, Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, MyungJoo Ham <myungjoo.ham@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Would it be easy to add dummy sources to control data coming from other ETM sources not controlled by the kernel.
-Also I want the ability to have multiple sinks enabled at one time and just control the flow from the sources to direct where the data goes.
-Not that clear but I hope you understand :)
+On 02/20/2013 01:24 PM, Guenter Roeck wrote:
+> On Wed, Feb 20, 2013 at 06:51:08PM +0000, Jonathan Cameron wrote:
+>>
+>>
+>> Guenter Roeck <linux@roeck-us.net> wrote:
+>>
+>>> On Wed, Feb 20, 2013 at 11:38:22AM -0600, Rob Herring wrote:
+>>>> On 02/07/2013 11:09 AM, Guenter Roeck wrote:
+>>>>> Provide bindings and parse OF data during initialization.
+>>>>>
+>>>>> Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+>>>>> ---
+>>>>> v5:
+>>>>> - Updated examples in bindings.
+>>>>> v4:
+>>>>> - Fixed wrong parameter to dummy of_iio_channel_get_by_name if
+>>> CONFIG_OF is
+>>>>>   undefined, and wrong return value.
+>>>>> - Initialize indio_dev->of_node in iio_device_register if the
+>>> calling driver
+>>>>>   neglected to do it.
+>>>>> v3:
+>>>>> - Cleaned up documentation (formatting, left-over clock references)
+>>>>> - Updated bindings description to permit sub-devices
+>>>>> - When searching for iio devices, use the pointer to the iio device
+>>> type instead
+>>>>>   of strcmp. Rename iio_dev_type to iio_device_type (to match other
+>>> device
+>>>>>   types) and make it global for that purpose. Check the OF node
+>>> first, then the
+>>>>>   device type, as the node is less likely to match.
+>>>>> - Move the common code in of_iio_channel_get and
+>>> of_iio_channel_get_all to
+>>>>>   __of_iio_channel_get.
+>>>>> - Return NULL from of_iio_channel_get_by_name if nothing is found,
+>>> or
+>>>>>   an error if there is a problem with consistency or if the
+>>> provider device is
+>>>>>   not yet available.
+>>>>> - In iio_channel_get, return if of_iio_channel_get_by_name()
+>>> returns a channel
+>>>>>   or an error, and continue otherwise.
+>>>>> v2:
+>>>>> - Rebased to iio/togreg
+>>>>> - Documentation update per feedback
+>>>>> - Dropped io-channel-output-names from the bindings document. The
+>>> property is
+>>>>>   not used in the code, and it is not entirely clear what it would
+>>> be used for.
+>>>>>   If there is a need for it, we can add it back in later on.
+>>>>> - Don't export OF specific API calls
+>>>>> - For OF support, no longer depend on iio_map
+>>>>> - Add #ifdef CONFIG_OF where appropriate, and ensure that the code
+>>> still builds
+>>>>>   if it is not selected.
+>>>>> - Change iio_channel_get to take device pointer as argument instead
+>>> of device
+>>>>>   name. Retain old API as of_iio_channel_get_sys.
+>>>>> - iio_channel_get now works for both OF and non-OF configurations
+>>>>> - Use regulator to get vref for max1363 driver.
+>>>>>
+>>>>>  .../devicetree/bindings/iio/iio-bindings.txt       |   97
+>>> +++++++++++
+>>>>>  drivers/iio/iio_core.h                             |    1 +
+>>>>>  drivers/iio/industrialio-core.c                    |    8 +-
+>>>>>  drivers/iio/inkern.c                               |  171
+>>> ++++++++++++++++++++
+>>>>>  4 files changed, 275 insertions(+), 2 deletions(-)
+>>>>>  create mode 100644
+>>> Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>> b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..1182845
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>> @@ -0,0 +1,97 @@
+>>>>> +This binding is a work-in-progress. It is derived from clock
+>>> bindings,
+>>>>> +and based on suggestions from Lars-Peter Clausen [1].
+>>>>
+>>>> Bindings are an ABI. It should not be a WIP. What part is a WIP?
+>>>>
+>>> The text is copied from clock bindings. I do not claim to be better
+>>> than the clock subsystem is doing in respect to its bindings.
 
-BR
-Robert
+That should be fixed. The clock bindings are fixed.
 
-> -----Original Message-----
-> From: linux-arm-kernel-bounces@lists.infradead.org [mailto:linux-arm-kernel-bounces@lists.infradead.org] On Behalf Of
-> pratikp@codeaurora.org
-> Sent: den 18 december 2012 20:19
-> To: linux-arm-kernel@lists.infradead.org
-> Cc: linux@arm.linux.org.uk; linus.walleij@linaro.org; will.deacon@arm.com; Magnus PERSSON; david.rusling@linaro.org;
-> arve@android.com; dsaxena@linaro.org; john.stultz@linaro.org; jon-hunter@ti.com; d-deao@ti.com; Christian BEJRAM; devicetree-
-> discuss@lists.ozlabs.org
-> Subject: CoreSight framework and drivers
+>>>
+>>> I'll be more than happy to take this text out if it is a source of
+>>> contention,
+>>> even more so if that is what is holding up the patch. Jonathan ?
+>> I don't really care about the wording though can see why Rob asked!
+>> We will probably have other stuff to add anyway.
+>>
 > 
-> This RFC is aimed at introducing CoreSight framework as well as
-> individual CoreSight trace component drivers adhering to ARM
-> CoreSight specification. Some prior discussion on this can be
-> referred at [1].
+> Quite likely - for example, I did not add io-output-names since I did not
+> know what to do with it.
+
+Good because name strings are typically optional.
+
+Adding to bindings is fine. Changing what's already there should be
+avoided. New kernels need to work with old DTBs and vice-versa.
+
+Rob
+
+> What do you want me to do ? Submit another version with the sentence deleted,
+> or keep it as-is ?
 > 
-> There are 3 kinds of CoreSight trace components:
+> Thanks,
+> Guenter
 > 
-> * Sources: Responsible for producing trace data to provide
->   visibility for the associated entity.
-> 
-> * Links: Transport components that carry trace data.
-> 
-> * Sinks: Collectors for storing trace data or acting as conduits
->   for off-chip trace data collection.
-> 
-> These components can be connected in various topologies to suite
-> a particular SoCs tracing needs.
-> 
-> Framework is responsible for gathering and using the information
-> about the registered CoreSight components and their connections
-> to allow it to dynamically deduce the sequence of components
-> representing a connection from a CoreSight source to the
-> currently selected CoreSight sink. This helps the framework to
-> program the correct set of components to satisfy user request.
-> 
-> [1] http://comments.gmane.org/gmane.linux.ports.arm.kernel/204591
-> 
-> Pratik Patel (8):
->   coresight: add CoreSight core layer framework
->   coresight: add CoreSight TMC driver
->   coresight: add CoreSight TPIU driver
->   coresight: add CoreSight ETB driver
->   coresight: add CoreSight Funnel driver
->   coresight: add CoreSight Replicator driver
->   coresight: add CoreSight STM driver
->   coresight: add CoreSight ETM driver
-> 
->  Documentation/devicetree/bindings/arm/coresight.txt |  110 ++
->  arch/arm/include/asm/hardware/cp14.h                |  540 ++++++
->  drivers/Kconfig                                     |    2 +
->  drivers/Makefile                                    |    1 +
->  drivers/coresight/Kconfig                           |   60 +
->  drivers/coresight/Makefile                          |    8 +
->  drivers/coresight/coresight-etb.c                   |  467 +++++
->  drivers/coresight/coresight-etm-cp14.c              |  510 ++++++
->  drivers/coresight/coresight-etm.c                   | 1752 +++++++++++++++++++
->  drivers/coresight/coresight-funnel.c                |  260 +++
->  drivers/coresight/coresight-priv.h                  |   48 +
->  drivers/coresight/coresight-replicator.c            |  211 +++
->  drivers/coresight/coresight-stm.c                   |  819 +++++++++
->  drivers/coresight/coresight-tmc.c                   |  794 +++++++++
->  drivers/coresight/coresight-tpiu.c                  |  232 +++
->  drivers/coresight/coresight.c                       |  681 +++++++
->  drivers/coresight/of_coresight.c                    |   99 ++
->  include/linux/coresight-stm.h                       |   51 +
->  include/linux/coresight.h                           |  167 ++
->  include/linux/of_coresight.h                        |   27 +
->  20 files changed, 6839 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/coresight.txt
->  create mode 100644 arch/arm/include/asm/hardware/cp14.h
->  create mode 100644 drivers/coresight/Kconfig
->  create mode 100644 drivers/coresight/Makefile
->  create mode 100644 drivers/coresight/coresight-etb.c
->  create mode 100644 drivers/coresight/coresight-etm-cp14.c
->  create mode 100644 drivers/coresight/coresight-etm.c
->  create mode 100644 drivers/coresight/coresight-funnel.c
->  create mode 100644 drivers/coresight/coresight-priv.h
->  create mode 100644 drivers/coresight/coresight-replicator.c
->  create mode 100644 drivers/coresight/coresight-stm.c
->  create mode 100644 drivers/coresight/coresight-tmc.c
->  create mode 100644 drivers/coresight/coresight-tpiu.c
->  create mode 100644 drivers/coresight/coresight.c
->  create mode 100644 drivers/coresight/of_coresight.c
->  create mode 100644 include/linux/coresight-stm.h
->  create mode 100644 include/linux/coresight.h
->  create mode 100644 include/linux/of_coresight.h
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>> Jonathan
+>>>
+>>> Thanks,
+>>> Guenter
+>>>
+>>>> Knowing nothing about IIO, the binding seems sane.
+>>>>
+>>>> Rob
+>>>>
+>>>>> +Sources of IIO channels can be represented by any node in the
+>>> device
+>>>>> +tree. Those nodes are designated as IIO providers. IIO consumer
+>>>>> +nodes use a phandle and IIO specifier pair to connect IIO provider
+>>>>> +outputs to IIO inputs. Similar to the gpio specifiers, an IIO
+>>>>> +specifier is an array of one or more cells identifying the IIO
+>>>>> +output on a device. The length of an IIO specifier is defined by
+>>> the
+>>>>> +value of a #io-channel-cells property in the IIO provider node.
+>>>>> +
+>>>>> +[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
+>>>>> +
+>>>>> +==IIO providers==
+>>>>> +
+>>>>> +Required properties:
+>>>>> +#io-channel-cells: Number of cells in an IIO specifier; Typically
+>>> 0 for nodes
+>>>>> +		   with a single IIO output and 1 for nodes with multiple
+>>>>> +		   IIO outputs.
+>>>>> +
+>>>>> +Example for a simple configuration with no trigger:
+>>>>> +
+>>>>> +	adc: voltage-sensor@35 {
+>>>>> +		compatible = "maxim,max1139";
+>>>>> +		reg = <0x35>;
+>>>>> +		#io-channel-cells = <1>;
+>>>>> +	};
+>>>>> +
+>>>>> +Example for a configuration with trigger:
+>>>>> +
+>>>>> +	adc@35 {
+>>>>> +		compatible = "some-vendor,some-adc";
+>>>>> +		reg = <0x35>;
+>>>>> +
+>>>>> +		adc1: iio-device@0 {
+>>>>> +			#io-channel-cells = <1>;
+>>>>> +			/* other properties */
+>>>>> +		};
+>>>>> +		adc2: iio-device@1 {
+>>>>> +			#io-channel-cells = <1>;
+>>>>> +			/* other properties */
+>>>>> +		};
+>>>>> +	};
+>>>>> +
+>>>>> +==IIO consumers==
+>>>>> +
+>>>>> +Required properties:
+>>>>> +io-channels:	List of phandle and IIO specifier pairs, one pair
+>>>>> +		for each IIO input to the device. Note: if the
+>>>>> +		IIO provider specifies '0' for #io-channel-cells,
+>>>>> +		then only the phandle portion of the pair will appear.
+>>>>> +
+>>>>> +Optional properties:
+>>>>> +io-channel-names:
+>>>>> +		List of IIO input name strings sorted in the same
+>>>>> +		order as the io-channels property. Consumers drivers
+>>>>> +		will use io-channel-names to match IIO input names
+>>>>> +		with IIO specifiers.
+>>>>> +io-channel-ranges:
+>>>>> +		Empty property indicating that child nodes can inherit named
+>>>>> +		IIO channels from this node. Useful for bus nodes to provide
+>>>>> +		and IIO channel to their children.
+>>>>> +
+>>>>> +For example:
+>>>>> +
+>>>>> +	device {
+>>>>> +		io-channels = <&adc 1>, <&ref 0>;
+>>>>> +		io-channel-names = "vcc", "vdd";
+>>>>> +	};
+>>>>> +
+>>>>> +This represents a device with two IIO inputs, named "vcc" and
+>>> "vdd".
+>>>>> +The vcc channel is connected to output 1 of the &adc device, and
+>>> the
+>>>>> +vdd channel is connected to output 0 of the &ref device.
+>>>>> +
+>>>>> +==Example==
+>>>>> +
+>>>>> +	adc: max1139@35 {
+>>>>> +		compatible = "maxim,max1139";
+>>>>> +		reg = <0x35>;
+>>>>> +		#io-channel-cells = <1>;
+>>>>> +	};
+>>>>> +
+>>>>> +	...
+>>>>> +
+>>>>> +	iio_hwmon {
+>>>>> +		compatible = "iio-hwmon";
+>>>>> +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
+>>>>> +			<&adc 3>, <&adc 4>, <&adc 5>,
+>>>>> +			<&adc 6>, <&adc 7>, <&adc 8>,
+>>>>> +			<&adc 9>;
+>>>>> +	};
+>>>>> +
+>>>>> +	some_consumer {
+>>>>> +		compatible = "some-consumer";
+>>>>> +		io-channels = <&adc 10>, <&adc 11>;
+>>>>> +		io-channel-names = "adc1", "adc2";
+>>>>> +	};
+>>>>> diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
+>>>>> index f652e6a..05c1b74 100644
+>>>>> --- a/drivers/iio/iio_core.h
+>>>>> +++ b/drivers/iio/iio_core.h
+>>>>> @@ -18,6 +18,7 @@
+>>>>>  struct iio_chan_spec;
+>>>>>  struct iio_dev;
+>>>>>  
+>>>>> +extern struct device_type iio_device_type;
+>>>>>  
+>>>>>  int __iio_add_chan_devattr(const char *postfix,
+>>>>>  			   struct iio_chan_spec const *chan,
+>>>>> diff --git a/drivers/iio/industrialio-core.c
+>>> b/drivers/iio/industrialio-core.c
+>>>>> index 8848f16..6d8b027 100644
+>>>>> --- a/drivers/iio/industrialio-core.c
+>>>>> +++ b/drivers/iio/industrialio-core.c
+>>>>> @@ -847,7 +847,7 @@ static void iio_dev_release(struct device
+>>> *device)
+>>>>>  	kfree(indio_dev);
+>>>>>  }
+>>>>>  
+>>>>> -static struct device_type iio_dev_type = {
+>>>>> +struct device_type iio_device_type = {
+>>>>>  	.name = "iio_device",
+>>>>>  	.release = iio_dev_release,
+>>>>>  };
+>>>>> @@ -869,7 +869,7 @@ struct iio_dev *iio_device_alloc(int
+>>> sizeof_priv)
+>>>>>  
+>>>>>  	if (dev) {
+>>>>>  		dev->dev.groups = dev->groups;
+>>>>> -		dev->dev.type = &iio_dev_type;
+>>>>> +		dev->dev.type = &iio_device_type;
+>>>>>  		dev->dev.bus = &iio_bus_type;
+>>>>>  		device_initialize(&dev->dev);
+>>>>>  		dev_set_drvdata(&dev->dev, (void *)dev);
+>>>>> @@ -960,6 +960,10 @@ int iio_device_register(struct iio_dev
+>>> *indio_dev)
+>>>>>  {
+>>>>>  	int ret;
+>>>>>  
+>>>>> +	/* If the calling driver did not initialize of_node, do it here
+>>> */
+>>>>> +	if (!indio_dev->dev.of_node && indio_dev->dev.parent)
+>>>>> +		indio_dev->dev.of_node = indio_dev->dev.parent->of_node;
+>>>>> +
+>>>>>  	/* configure elements for the chrdev */
+>>>>>  	indio_dev->dev.devt = MKDEV(MAJOR(iio_devt), indio_dev->id);
+>>>>>  
+>>>>> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+>>>>> index b289915..795d100 100644
+>>>>> --- a/drivers/iio/inkern.c
+>>>>> +++ b/drivers/iio/inkern.c
+>>>>> @@ -10,6 +10,7 @@
+>>>>>  #include <linux/export.h>
+>>>>>  #include <linux/slab.h>
+>>>>>  #include <linux/mutex.h>
+>>>>> +#include <linux/of.h>
+>>>>>  
+>>>>>  #include <linux/iio/iio.h>
+>>>>>  #include "iio_core.h"
+>>>>> @@ -92,6 +93,164 @@ static const struct iio_chan_spec
+>>>>>  	return chan;
+>>>>>  }
+>>>>>  
+>>>>> +#ifdef CONFIG_OF
+>>>>> +
+>>>>> +static int iio_dev_node_match(struct device *dev, void *data)
+>>>>> +{
+>>>>> +	return dev->of_node == data && dev->type == &iio_device_type;
+>>>>> +}
+>>>>> +
+>>>>> +static int __of_iio_channel_get(struct iio_channel *channel,
+>>>>> +				struct device_node *np, int index)
+>>>>> +{
+>>>>> +	struct device *idev;
+>>>>> +	struct iio_dev *indio_dev;
+>>>>> +	int err;
+>>>>> +	struct of_phandle_args iiospec;
+>>>>> +
+>>>>> +	err = of_parse_phandle_with_args(np, "io-channels",
+>>>>> +					 "#io-channel-cells",
+>>>>> +					 index, &iiospec);
+>>>>> +	if (err)
+>>>>> +		return err;
+>>>>> +
+>>>>> +	idev = bus_find_device(&iio_bus_type, NULL, iiospec.np,
+>>>>> +			       iio_dev_node_match);
+>>>>> +	of_node_put(iiospec.np);
+>>>>> +	if (idev == NULL)
+>>>>> +		return -EPROBE_DEFER;
+>>>>> +
+>>>>> +	indio_dev = dev_to_iio_dev(idev);
+>>>>> +	channel->indio_dev = indio_dev;
+>>>>> +	index = iiospec.args_count ? iiospec.args[0] : 0;
+>>>>> +	if (index >= indio_dev->num_channels) {
+>>>>> +		return -EINVAL;
+>>>>> +		goto err_put;
+>>>>> +	}
+>>>>> +	channel->channel = &indio_dev->channels[index];
+>>>>> +
+>>>>> +	return 0;
+>>>>> +
+>>>>> +err_put:
+>>>>> +	iio_device_put(indio_dev);
+>>>>> +	return err;
+>>>>> +}
+>>>>> +
+>>>>> +static struct iio_channel *of_iio_channel_get(struct device_node
+>>> *np, int index)
+>>>>> +{
+>>>>> +	struct iio_channel *channel;
+>>>>> +	int err;
+>>>>> +
+>>>>> +	if (index < 0)
+>>>>> +		return ERR_PTR(-EINVAL);
+>>>>> +
+>>>>> +	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
+>>>>> +	if (channel == NULL)
+>>>>> +		return ERR_PTR(-ENOMEM);
+>>>>> +
+>>>>> +	err = __of_iio_channel_get(channel, np, index);
+>>>>> +	if (err)
+>>>>> +		goto err_free_channel;
+>>>>> +
+>>>>> +	return channel;
+>>>>> +
+>>>>> +err_free_channel:
+>>>>> +	kfree(channel);
+>>>>> +	return ERR_PTR(err);
+>>>>> +}
+>>>>> +
+>>>>> +static struct iio_channel *of_iio_channel_get_by_name(struct
+>>> device_node *np,
+>>>>> +						      const char *name)
+>>>>> +{
+>>>>> +	struct iio_channel *chan = NULL;
+>>>>> +
+>>>>> +	/* Walk up the tree of devices looking for a matching iio channel
+>>> */
+>>>>> +	while (np) {
+>>>>> +		int index = 0;
+>>>>> +
+>>>>> +		/*
+>>>>> +		 * For named iio channels, first look up the name in the
+>>>>> +		 * "io-channel-names" property.  If it cannot be found, the
+>>>>> +		 * index will be an error code, and of_iio_channel_get()
+>>>>> +		 * will fail.
+>>>>> +		 */
+>>>>> +		if (name)
+>>>>> +			index = of_property_match_string(np, "io-channel-names",
+>>>>> +							 name);
+>>>>> +		chan = of_iio_channel_get(np, index);
+>>>>> +		if (!IS_ERR(chan))
+>>>>> +			break;
+>>>>> +		else if (name && index >= 0) {
+>>>>> +			pr_err("ERROR: could not get IIO channel %s:%s(%i)\n",
+>>>>> +				np->full_name, name ? name : "", index);
+>>>>> +			return chan;
+>>>>> +		}
+>>>>> +
+>>>>> +		/*
+>>>>> +		 * No matching IIO channel found on this node.
+>>>>> +		 * If the parent node has a "io-channel-ranges" property,
+>>>>> +		 * then we can try one of its channels.
+>>>>> +		 */
+>>>>> +		np = np->parent;
+>>>>> +		if (np && !of_get_property(np, "io-channel-ranges", NULL))
+>>>>> +			break;
+>>>>> +	}
+>>>>> +	return chan;
+>>>>> +}
+>>>>> +
+>>>>> +static struct iio_channel *of_iio_channel_get_all(struct device
+>>> *dev)
+>>>>> +{
+>>>>> +	struct iio_channel *chans;
+>>>>> +	int i, mapind, nummaps = 0;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	do {
+>>>>> +		ret = of_parse_phandle_with_args(dev->of_node,
+>>>>> +						 "io-channels",
+>>>>> +						 "#io-channel-cells",
+>>>>> +						 nummaps, NULL);
+>>>>> +		if (ret < 0)
+>>>>> +			break;
+>>>>> +	} while (++nummaps);
+>>>>> +
+>>>>> +	if (nummaps == 0)	/* no error, return NULL to search map table */
+>>>>> +		return NULL;
+>>>>> +
+>>>>> +	/* NULL terminated array to save passing size */
+>>>>> +	chans = kcalloc(nummaps + 1, sizeof(*chans), GFP_KERNEL);
+>>>>> +	if (chans == NULL)
+>>>>> +		return ERR_PTR(-ENOMEM);
+>>>>> +
+>>>>> +	/* Search for OF matches */
+>>>>> +	for (mapind = 0; mapind < nummaps; mapind++) {
+>>>>> +		ret = __of_iio_channel_get(&chans[mapind], dev->of_node,
+>>>>> +					   mapind);
+>>>>> +		if (ret)
+>>>>> +			goto error_free_chans;
+>>>>> +	}
+>>>>> +	return chans;
+>>>>> +
+>>>>> +error_free_chans:
+>>>>> +	for (i = 0; i < mapind; i++)
+>>>>> +		iio_device_put(chans[i].indio_dev);
+>>>>> +	kfree(chans);
+>>>>> +	return ERR_PTR(ret);
+>>>>> +}
+>>>>> +
+>>>>> +#else /* CONFIG_OF */
+>>>>> +
+>>>>> +static inline struct iio_channel *
+>>>>> +of_iio_channel_get_by_name(struct device_node *np, const char
+>>> *name)
+>>>>> +{
+>>>>> +	return NULL;
+>>>>> +}
+>>>>> +
+>>>>> +static inline struct iio_channel *of_iio_channel_get_all(struct
+>>> device *dev)
+>>>>> +{
+>>>>> +	return NULL;
+>>>>> +}
+>>>>> +
+>>>>> +#endif /* CONFIG_OF */
+>>>>>  
+>>>>>  static struct iio_channel *iio_channel_get_sys(const char *name,
+>>>>>  					       const char *channel_name)
+>>>>> @@ -150,7 +309,14 @@ struct iio_channel *iio_channel_get(struct
+>>> device *dev,
+>>>>>  				    const char *channel_name)
+>>>>>  {
+>>>>>  	const char *name = dev ? dev_name(dev) : NULL;
+>>>>> +	struct iio_channel *channel;
+>>>>>  
+>>>>> +	if (dev) {
+>>>>> +		channel = of_iio_channel_get_by_name(dev->of_node,
+>>>>> +						     channel_name);
+>>>>> +		if (channel != NULL)
+>>>>> +			return channel;
+>>>>> +	}
+>>>>>  	return iio_channel_get_sys(name, channel_name);
+>>>>>  }
+>>>>>  EXPORT_SYMBOL_GPL(iio_channel_get);
+>>>>> @@ -173,6 +339,11 @@ struct iio_channel *iio_channel_get_all(struct
+>>> device *dev)
+>>>>>  
+>>>>>  	if (dev == NULL)
+>>>>>  		return ERR_PTR(-EINVAL);
+>>>>> +
+>>>>> +	chans = of_iio_channel_get_all(dev);
+>>>>> +	if (chans)
+>>>>> +		return chans;
+>>>>> +
+>>>>>  	name = dev_name(dev);
+>>>>>  
+>>>>>  	mutex_lock(&iio_map_list_lock);
+>>>>>
+>>>>
+>>>>
+>>
+>> -- 
+>> Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+>>
