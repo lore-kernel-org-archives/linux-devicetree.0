@@ -1,82 +1,75 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] pinctrl: imx: move hard-coding data into device tree
-Date: Thu, 21 Feb 2013 12:57:02 -0700
-Message-ID: <51267C0E.6070902@wwwdotorg.org>
-References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
- <1361344089-16804-4-git-send-email-shawn.guo@linaro.org>
- <51251E5A.1080806@wwwdotorg.org>
- <CAP1dx+w2bLcztrRJOYs07xxSqVgo3bggJHMFt5LyL5jXQ-h6Mg@mail.gmail.com>
+From: delicious quinoa <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH 0/6] Introducing Device Tree Overlays
+Date: Thu, 21 Feb 2013 15:25:53 -0600
+Message-ID: <CANk1AXQ7ajnwTaHwwbyrri2YkX_60uC9xrQYWuR8u4eT2EQsew@mail.gmail.com>
+References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CAP1dx+w2bLcztrRJOYs07xxSqVgo3bggJHMFt5LyL5jXQ-h6Mg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?ISO-8859-1?Q?Uwe_Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: linux-doc@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, Russ Dill <Russ.Dill@ti.com>, Matt Porter <mporter@ti.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-omap@vger.kernel.org, Matt Ranostay <mranostay@gmail.com>, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, Joel A Fernandes <agnel.joel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/21/2013 02:36 AM, Dong Aisheng wrote:
-> On 21 February 2013 03:04, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 02/20/2013 12:08 AM, Shawn Guo wrote:
->>> Currently, all imx pinctrl drivers maintain a big array of struct
->>> imx_pin_reg which hard-codes data like register offset and mux mode
->>> setting for each pin function.  Every time a new imx SoC support is
->>> added, we need to add such a big mount of data.  With moving to single
->>> kernel build, it's only matter of time to be blamed on memory consuming.
->>>
->>> With DTC pre-processor support in place, the patch moves all these data
->>> into device tree by redefining the PIN_FUNC_ID in imxXX-pinfunc.h and
->>> changing the PIN_FUNC_ID parsing code a little bit.
-...
->> This patch removes a bunch of tables from the kernel. I like having the
->> tables in the kernel, since in theory it could allow a future debugfs or
->> sysfs interface to pinctrl that allows manipulation of the pinctrl HW
->> state at a semantic level.
-> 
-> Right, that's one of the considerations why i kept the register table in driver
-> in the first binding design.
-> 
->> This is only possible if the DT binding
->> includes details such as "set this pin to this function", and the driver
->> includes the tables to convert that into details such as register
->> address and value. I don't think such an "API" could be implemented for
->> IMX after this patch.
-> 
-> Theoretically It can, because device tree contains the pin registers
-> informations
+I like where this is heading.  I'm interested in a use case where IP
+can be loaded into a FPGA, then add a blob to the device tree and load
+some drivers.
 
-> in this way. But the problem is that it can only manipulate the used pins which
-> are parsed from devices tree. While for those unused pins, since the driver does
-> not have the pin register information, it can not manipulate it.
+I see your github tree.  If I wanted to cherry-pick your code and play
+around with it, which branch should I use?  not-capebus-21?
 
-Right, that's the main issue I was trying to highlight; the driver no
-longer provides complete knowledge of the HW, but only learns about
-stuff that happens to be used/defined in the board-specific DT.
+Thanks,
+Alan Tull
+Altera Corp
 
-> But what i'm wondering now is do we really need to manipulate the unused pins
-> from sysfs or debugfs?
-> I still can not think out a real using case now.
-> Anyone else can think one?
-
-For early board bringup, it may be useful to boot with a minimal set of
-entries in the DT (enough to support e.g. serial console and some device
-for a root filesystem) and then interactively tweak the rest of the
-pinmux to define the rest of the board, and perhaps even save the result
-somehow, and add it to the next iteration of the DT.
-
-Also, consider a hobbyist-oriented board that has 50 unused pins that
-could be GPIO, or mapped to some otherwise unused SD, I2C, SPI, ...
-controller. Do we want to force the user to write a new DT and reboot,
-or would it be better to provide some runtime API to set up those pins
-based on what they had connected to the board, and then instantiate
-drivers or use the sysfs GPIO interface, after doing so?
+On Fri, Jan 4, 2013 at 1:31 PM, Pantelis Antoniou
+<panto@antoniou-consulting.com> wrote:
+> The following patchset introduces Device Tree overlays, a method
+> of dynamically altering the kernel's live Device Tree.
+>
+> This patchset is against mainline as of Friday Jan 4 2013.
+> (4956964 Merge tag 'driver-core-3.8-rc2' of \
+>         git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core)
+>
+> Note that a separate patch for the DTC compiler has been posted and
+> is required to compile the DTS files according to the documentation.
+> The patch is "dtc: Dynamic symbols & fixup support"
+>
+> An implementation patchset for a beaglebone cape loader will follow,
+> but if you want to check out a working kernel for the beaglebone please
+> pull from:
+>
+> git://github.com/pantoniou/linux-bbxm.git branch not-capebus-v8
+>
+> Pantelis Antoniou (6):
+>   OF: Introduce device tree node flag helpers.
+>   OF: export of_property_notify
+>   OF: Export all DT proc update functions
+>   OF: Introduce utility helper functions
+>   OF: Introduce Device Tree resolve support.
+>   OF: Introduce DT overlay support.
+>
+>  .../devicetree/dynamic-resolution-notes.txt        |  25 +
+>  Documentation/devicetree/overlay-notes.txt         | 179 +++++
+>  drivers/of/Kconfig                                 |  19 +
+>  drivers/of/Makefile                                |   4 +-
+>  drivers/of/base.c                                  | 114 +--
+>  drivers/of/overlay.c                               | 831 +++++++++++++++++++++
+>  drivers/of/resolver.c                              | 394 ++++++++++
+>  drivers/of/util.c                                  | 253 +++++++
+>  include/linux/of.h                                 | 243 ++++++
+>  9 files changed, 2005 insertions(+), 57 deletions(-)
+>  create mode 100644 Documentation/devicetree/dynamic-resolution-notes.txt
+>  create mode 100644 Documentation/devicetree/overlay-notes.txt
+>  create mode 100644 drivers/of/overlay.c
+>  create mode 100644 drivers/of/resolver.c
+>  create mode 100644 drivers/of/util.c
+>
+> --
+> 1.7.12
+>
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
