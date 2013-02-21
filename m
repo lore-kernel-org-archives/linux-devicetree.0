@@ -1,43 +1,72 @@
-From: Prashant Gaikwad <pgaikwad@nvidia.com>
-Subject: Re: [PATCH v7 00/12] Tegra114 clockframework
-Date: Thu, 21 Feb 2013 18:28:19 +0530
-Message-ID: <512619EB.4030103@nvidia.com>
-References: <1360931849-7090-1-git-send-email-pdeschrijver@nvidia.com> <5123C6E7.9070407@wwwdotorg.org>
+From: Robert MARKLUND <robert.marklund@stericsson.com>
+Subject: RE: [RFC 2/8] coresight: add CoreSight TMC driver
+Date: Thu, 21 Feb 2013 15:20:56 +0100
+Message-ID: <2B1D156D95AE9B4EAD379CB9E465FE73272F65EE48@EXDCVYMBSTM005.EQ1STM.local>
+References: <1355858365-11849-1-git-send-email-pratikp@codeaurora.org>
+ <1355858365-11849-3-git-send-email-pratikp@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5123C6E7.9070407@wwwdotorg.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>, Mike Turquette <mturquette@linaro.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Simon Glass <sjg@chromium.org>, Joseph Lo <josephl@nvidia.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1355858365-11849-3-git-send-email-pratikp@codeaurora.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: linux-arm-kernel-bounces@lists.infradead.org
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "pratikp@codeaurora.org" <pratikp@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "will.deacon@arm.com" <will.deacon@arm.com>, Magnus PERSSON <magnus.p.persson@stericsson.com>, "david.rusling@linaro.org" <david.rusling@linaro.org>, "arve@android.com" <arve@android.com>, "dsaxena@linaro.org" <dsaxena@linaro.org>, "john.stultz@linaro.org" <john.stultz@linaro.org>, "jon-hunter@ti.com" <jon-hunter@ti.com>, "d-deao@ti.com" <d-deao@ti.com>, Christian BEJRAM <christian.bejram@stericsson.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 20 February 2013 12:09 AM, Stephen Warren wrote:
-> On 02/15/2013 05:36 AM, Peter De Schrijver wrote:
->> This is the seventh version of the Tegra114 clockframework. It is based on the
->> for-next branch of
->> git://git.kernel.org/pub/scm/linux/kernel/git/swarren/linux-tegra.git and
->> http://www.spinics.net/lists/arm-kernel/msg220452.html.
-> Mike,
->
-> I think it'd be prudent to take this series through the Tegra tree again
-> for 3.10; patch 11 needs to go in as part of the series due to internal
-> dependencies, and I'm slightly worried that other Tegra DT changes might
-> conflict with that patch (if only for context). Taking this series (and
-> any other Tegra clk driver changes for 3.10) through the Tegra tree
-> could resolve that easily. Do you have a problem with that?
->
-> If that's OK, can you stage the dependency Peter mentioned:
-> http://www.spinics.net/lists/arm-kernel/msg220452.html
-> into a stable branch for me to merge, obviously after 3.9-rc1 is out.
->
-> Thanks.
->
-> Prashant, could you provide a review/ack for this series too.
+There is something fishy here.
 
-For the series
+> +static void __tmc_etb_dump(struct tmc_drvdata *drvdata)
+> +{
+> +	enum tmc_mem_intf_width memwidth;
+> +	uint8_t memwords;
+> +	char *bufp;
+> +	uint32_t read_data;
+> +	int i;
+> +
+> +	memwidth = BMVAL(tmc_readl(drvdata, CORESIGHT_DEVID), 8, 10);
+> +	if (memwidth == TMC_MEM_INTF_WIDTH_32BITS)
+> +		memwords = 1;
+> +	else if (memwidth == TMC_MEM_INTF_WIDTH_64BITS)
+> +		memwords = 2;
+> +	else if (memwidth == TMC_MEM_INTF_WIDTH_128BITS)
+> +		memwords = 4;
+> +	else
+> +		memwords = 8;
+> +
+> +	bufp = drvdata->buf;
+> +	while (1) {
+> +		for (i = 0; i < memwords; i++) {
+> +			read_data = tmc_readl(drvdata, TMC_RRD);
+> +			if (read_data == 0xFFFFFFFF)
+> +				return;
+> +			memcpy(bufp, &read_data, BYTES_PER_WORD);
+> +			bufp += BYTES_PER_WORD;
+> +		}
+This will loop for every if in ETB mode because it will trace the reading because we have not disabled it before this.
+So maybe disable it first and as a security check for buffer size you have it in the drvdata I think.
 
-Reviewed-by: Prashant Gaikwad <pgaikwad@nvidia.com>
+> +	}
+> +}
+> +
+> --
+> Employee of Qualcomm Innovation Center, Inc.
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 
-
+BR
+Robert
