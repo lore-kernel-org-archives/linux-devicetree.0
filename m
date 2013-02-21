@@ -1,61 +1,117 @@
-From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 3/3] pinctrl: imx: move hard-coding data into device tree
-Date: Thu, 21 Feb 2013 08:55:39 +0100
-Message-ID: <20130221075539.GI1906@pengutronix.de>
-References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
- <1361344089-16804-4-git-send-email-shawn.guo@linaro.org>
- <51251E5A.1080806@wwwdotorg.org>
- <20130221053020.GE17738@S2101-09.ap.freescale.net>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5] iio: Add OF support
+Date: Thu, 21 Feb 2013 08:54:06 +0000
+Message-ID: <5125E0AE.302@kernel.org>
+References: <1360256940-19438-1-git-send-email-linux@roeck-us.net> <51250A0E.80806@gmail.com> <20130220181148.GA19278@roeck-us.net> <2dada206-6401-4a35-85d8-298dd08b0420@email.android.com> <20130220192458.GA29247@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130221053020.GE17738-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130220192458.GA29247-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2013 at 01:30:22PM +0800, Shawn Guo wrote:
-> On Wed, Feb 20, 2013 at 12:04:58PM -0700, Stephen Warren wrote:
-> > There are a couple of potential issues with this patch, which I'm in two
-> > minds about:
-> > 
-> > 1)
-> > 
-> > This is an incompatible change to the DT binding definition. A DT
-> > written to the old specification won't work with a newer kernel and
-> > vice-versa. This isn't supposed to happen with device tree.
-> > 
-> > Right now I believe we're still being flexible about DT binding changes,
-> > but I've seen hints that this kind of thing will start getting lots of
-> > push-back in the near future...
-> > 
-> Last time I heard of the time frame about doing this is when we get
-> device tree source maintained in a separate repository from the kernel
-> tree.  I'm not sure how far we're still away from that.  But most of
-> sub-architectures (including IMX) have not been converted over to
-> device tree.  And as far as I know, none of IMX based product runs
-> device tree kernel yet.
+On 02/20/2013 07:24 PM, Guenter Roeck wrote:
+> On Wed, Feb 20, 2013 at 06:51:08PM +0000, Jonathan Cameron wrote:
+>>
+>>
+>> Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wrote:
+>>
+>>> On Wed, Feb 20, 2013 at 11:38:22AM -0600, Rob Herring wrote:
+>>>> On 02/07/2013 11:09 AM, Guenter Roeck wrote:
+>>>>> Provide bindings and parse OF data during initialization.
+>>>>>
+>>>>> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+>>>>> ---
+>>>>> v5:
+>>>>> - Updated examples in bindings.
+>>>>> v4:
+>>>>> - Fixed wrong parameter to dummy of_iio_channel_get_by_name if
+>>> CONFIG_OF is
+>>>>>   undefined, and wrong return value.
+>>>>> - Initialize indio_dev->of_node in iio_device_register if the
+>>> calling driver
+>>>>>   neglected to do it.
+>>>>> v3:
+>>>>> - Cleaned up documentation (formatting, left-over clock references)
+>>>>> - Updated bindings description to permit sub-devices
+>>>>> - When searching for iio devices, use the pointer to the iio device
+>>> type instead
+>>>>>   of strcmp. Rename iio_dev_type to iio_device_type (to match other
+>>> device
+>>>>>   types) and make it global for that purpose. Check the OF node
+>>> first, then the
+>>>>>   device type, as the node is less likely to match.
+>>>>> - Move the common code in of_iio_channel_get and
+>>> of_iio_channel_get_all to
+>>>>>   __of_iio_channel_get.
+>>>>> - Return NULL from of_iio_channel_get_by_name if nothing is found,
+>>> or
+>>>>>   an error if there is a problem with consistency or if the
+>>> provider device is
+>>>>>   not yet available.
+>>>>> - In iio_channel_get, return if of_iio_channel_get_by_name()
+>>> returns a channel
+>>>>>   or an error, and continue otherwise.
+>>>>> v2:
+>>>>> - Rebased to iio/togreg
+>>>>> - Documentation update per feedback
+>>>>> - Dropped io-channel-output-names from the bindings document. The
+>>> property is
+>>>>>   not used in the code, and it is not entirely clear what it would
+>>> be used for.
+>>>>>   If there is a need for it, we can add it back in later on.
+>>>>> - Don't export OF specific API calls
+>>>>> - For OF support, no longer depend on iio_map
+>>>>> - Add #ifdef CONFIG_OF where appropriate, and ensure that the code
+>>> still builds
+>>>>>   if it is not selected.
+>>>>> - Change iio_channel_get to take device pointer as argument instead
+>>> of device
+>>>>>   name. Retain old API as of_iio_channel_get_sys.
+>>>>> - iio_channel_get now works for both OF and non-OF configurations
+>>>>> - Use regulator to get vref for max1363 driver.
+>>>>>
+>>>>>  .../devicetree/bindings/iio/iio-bindings.txt       |   97
+>>> +++++++++++
+>>>>>  drivers/iio/iio_core.h                             |    1 +
+>>>>>  drivers/iio/industrialio-core.c                    |    8 +-
+>>>>>  drivers/iio/inkern.c                               |  171
+>>> ++++++++++++++++++++
+>>>>>  4 files changed, 275 insertions(+), 2 deletions(-)
+>>>>>  create mode 100644
+>>> Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>> b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..1182845
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+>>>>> @@ -0,0 +1,97 @@
+>>>>> +This binding is a work-in-progress. It is derived from clock
+>>> bindings,
+>>>>> +and based on suggestions from Lars-Peter Clausen [1].
+>>>>
+>>>> Bindings are an ABI. It should not be a WIP. What part is a WIP?
+>>>>
+>>> The text is copied from clock bindings. I do not claim to be better
+>>> than the clock subsystem is doing in respect to its bindings.
+>>>
+>>> I'll be more than happy to take this text out if it is a source of
+>>> contention,
+>>> even more so if that is what is holding up the patch. Jonathan ?
+>> I don't really care about the wording though can see why Rob asked!
+>> We will probably have other stuff to add anyway.
+>>
+> 
+> Quite likely - for example, I did not add io-output-names since I did not
+> know what to do with it.
+> 
+> What do you want me to do ? Submit another version with the sentence deleted,
+> or keep it as-is ?
+Keep as is.  Thanks,
 
-The nature of open source makes it hard to know which devices ship out
-there, so please don't assume there are none just because you know of
-none.
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Jonathan
