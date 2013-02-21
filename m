@@ -1,85 +1,62 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] kbuild: create an "include chroot" for DT bindings
-Date: Thu, 21 Feb 2013 11:43:13 -0700
-Message-ID: <51266AC1.8040507@wwwdotorg.org>
-References: <1361394356-19385-1-git-send-email-swarren@wwwdotorg.org> <20130221043751.GB17738@S2101-09.ap.freescale.net>
+Subject: Re: [PATCH V2] spi: tegra114: add spi driver
+Date: Thu, 21 Feb 2013 12:15:15 -0700
+Message-ID: <51267243.7090102@wwwdotorg.org>
+References: <1361430631-18894-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <20130221043751.GB17738@S2101-09.ap.freescale.net>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Michal Marek <mmarek@suse.cz>, devicetree-discuss@lists.ozlabs.org, linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Hiroshi Doyu <hdoyu@nvidia.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1361430631-18894-1-git-send-email-ldewangan@nvidia.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, broonie@opensource.wolfsonmicro.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, linux-tegra@vger.kernel.org, swarren@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On 02/20/2013 09:37 PM, Shawn Guo wrote:
-> On Wed, Feb 20, 2013 at 02:05:56PM -0700, Stephen Warren wrote:
->> From: Stephen Warren <swarren@nvidia.com>
->>
->> The recent dtc+cpp support allows header files and C pre-processor
->> defines/macros to be used when compiling device tree files. These
->> headers will typically define various constants that are part of the
->> device tree bindings.
->>
->> The original patch which set up the dtc+cpp include path only considered
->> using those headers from device tree files. However, they are also
->> useful for kernel code which needs to interpret the device tree.
->>
->> In both the DT files and the kernel, I'd like to include the DT-related
->> headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
->> That will simplify any text which discusses the DT header locations.
->>
->> Creating a <dt-bindings/> for kernel source to use is as simple as
->> placing files into include/dt-bindings/.
->>
->> However, when compiling DT files, the include path should be restricted
->> so that only the dt-bindings path is available; arbitrary kernel headers
->> shouldn't be exposed. For this reason, create a specific include
->> directory for use by dtc+cpp, and symlink dt-bindings from there to the
->> actual location of include/dt-bindings/. For want of a better location,
->> place this "include chroot" into the existing dts/ directory.
->>
->> arch/*/boot/dts/include/dt-bindings -> ../../../../../dt-bindings
-> 
-> ../../../../../include/dt-bindings
+On 02/21/2013 12:10 AM, Laxman Dewangan wrote:
+> Add SPI driver for NVIDIA's Tegra114 SPI controller. This controller
+> is different than the older SoCs SPI controller in internal design as
+> well as register interface.
 
-Yup.
+Looks good. Just a couple of nits mentioned below, then,
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
 
-> And, I would expect only the headers that will actually be referenced
-> by kernel should go into include/dt-bindings.  There is no point to
-> put headers that will not be included by kernel but only by dts files
-> into there, and instead arch/arm/boot/dts/include should just be good
-> enough for them.  With this agreed ...
+Note: There are a few minor diffs between this file and
+spi-tegra20-slink.c. It might be worth eliminating as many as possible,
+perhaps in a followon patch.
 
-There are two things that include DT-related headers:
+> diff --git a/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.txt b/Documentation/devicetree/bindings/spi/nvidia,tegra114-spi.txt
 
-a) Device trees (*.dts, *.dtsi)
-b) The kernel
+> +NVIDIA Tegra114 SPI controller.
+> +
+> +Required properties:
+> +- compatible : should be "nvidia,tegra114-spi".
+> +- reg: Should contain SPI registers location and length.
+> +- interrupts: Should contain SPI interrupts.
+> +- nvidia,dma-request-selector : The Tegra DMA controller's phandle and
+> +  request selector for this SPI controller.
 
-All the headers relevant here fall into category (a) by definition. I'd
-actually expect most to also fall into category (b), although I can see
-that category (b) might be a strict subset of category (a).
+The binding should specify that a clock named "spi" needs to be
+provided, using the standard properties in ../clock/clock-bindings.txt
 
-I believe you're proposing only storing category (b) headers in
-include/dt-bindings/, and storing any others I suppose in arch/*/boot/dts/.
+> diff --git a/drivers/spi/Makefile b/drivers/spi/Makefile
 
-But, my thoughts are that /all/ these headers (both categories) should
-be stored in one place for consistency.
+>  obj-$(CONFIG_SPI_SIRF)		+= spi-sirf.o
+>  obj-$(CONFIG_SPI_TEGRA20_SFLASH)	+= spi-tegra20-sflash.o
+>  obj-$(CONFIG_SPI_TEGRA20_SLINK)		+= spi-tegra20-slink.o
+> +obj-$(CONFIG_SPI_TEGRA114)		+= spi-tegra114.o
 
-That way, if/when the DT binding docs, these headers, and the DT files
-themselves move out of the kernel, we'll end up with some other
-repository/repositories that might have the following top-level
-directories (or at least these sets of logical data):
+While Tegra114 is newer, it should really be listed before the Tegra20
+entries, since the Makefile is alpha-numerically sorted right now I believe.
 
-1) DT binding documents
-2) Headers that define constants for (1)
-3) DT files (*.dts/*.dtsi)
+> diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
 
-We need at least some of (2) in the kernel for drivers to share the
-constant definitions, so my proposal is to simply copy /all/ the headers
-from (2) into the kernel's include/dt-bindings/. That keeps things
-simple; simply copy everything and maintain the same hierarchy under
-that "root" directory. Otherwise, we'll be constantly wondering which
-headers to copy, perhaps moving things back/forth as people realize that
-the kernel needs them, etc.
+> +static struct platform_driver tegra_spi_driver = {
+> +	.driver = {
+> +		.name		= "spi-tegra114",
+> +		.owner		= THIS_MODULE,
+> +		.pm		= &tegra_spi_pm_ops,
+> +		.of_match_table	= of_match_ptr(tegra_spi_of_match),
+
+No need to use of_match_ptr() there; just use the raw value since
+CONFIG_OF is guaranteed to be enabled.
