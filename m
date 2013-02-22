@@ -1,163 +1,78 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: Re: [PATCH v4 5/5] ARM: exynos: dts: Add FIMD DT binding Documentation
-Date: Fri, 22 Feb 2013 12:36:22 +0530
-Message-ID: <CAD025yTb5yfXWpzCnCg7KY9NsTw1wfsLFU6y32aD=WXe23xiwg@mail.gmail.com>
-References: <1360912200-26377-1-git-send-email-vikas.sajjan@linaro.org>
- <1360912200-26377-6-git-send-email-vikas.sajjan@linaro.org>
- <511E1008.6010308@samsung.com> <CAD025yQokBbJwyFWeg8KwzTsE-4jgra5UhLuic5zJnQRt+GNTw@mail.gmail.com>
- <5122A119.7070501@gmail.com> <CAD025yRmvSpnM9RJJvN+FM00Rgz8Bt5msmEYcyFVxNTEKsM2xg@mail.gmail.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: imx: replace magic number with pin
+ function name
+Date: Fri, 22 Feb 2013 08:27:43 +0100
+Message-ID: <20130222072743.GC1906@pengutronix.de>
+References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
+ <1361344089-16804-3-git-send-email-shawn.guo@linaro.org>
+ <51251A11.2030300@wwwdotorg.org>
+ <CAKGA1bkHH1XC38_VM=QhDrr33uqqSbwe0n+GfXEPs43K_Do=CQ@mail.gmail.com>
+ <20130221050247.GD17738@S2101-09.ap.freescale.net>
+ <CAKGA1bn22xctSj_33HQsWwnVB=RO2OJ=eYvgRD-kF+PiQcnC4Q@mail.gmail.com>
+ <20130222055203.GB27371@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD025yRmvSpnM9RJJvN+FM00Rgz8Bt5msmEYcyFVxNTEKsM2xg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, sunil joshi <joshi@samsung.com>, Inki Dae <inki.dae@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130222055203.GB27371-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21 February 2013 12:34, Vikas Sajjan <vikas.sajjan@linaro.org> wrote:
-> Hi,
->
-> On 19 February 2013 03:16, Sylwester Nawrocki
-> <sylvester.nawrocki@gmail.com> wrote:
->> Hi,
->>
->>
->> On 02/18/2013 11:51 AM, Vikas Sajjan wrote:
->>>
->>> On 15 February 2013 16:08, Sylwester Nawrocki<s.nawrocki@samsung.com>
->>> wrote:
->>>>
->>>> On 02/15/2013 08:10 AM, Vikas Sajjan wrote:
->>>>
->>>>> Adds FIMD DT binding documentation both SoC and Board, with an example
->>>>>
->>>>> Signed-off-by: Vikas Sajjan<vikas.sajjan@linaro.org>
->>>>> ---
->>>>>   .../devicetree/bindings/drm/exynos/fimd.txt        |   37
->>>>> ++++++++++++++++++++
->>>>>   1 file changed, 37 insertions(+)
->>>>>   create mode 100644
->>>>> Documentation/devicetree/bindings/drm/exynos/fimd.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/drm/exynos/fimd.txt
->>>>> b/Documentation/devicetree/bindings/drm/exynos/fimd.txt
->>>>> new file mode 100644
->>>>> index 0000000..bec9d07
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/drm/exynos/fimd.txt
->>
->>
->> Wouldn't Documentation/devicetree/bindings/video/exynos-fimd.txt be more
->> appropriate location for this file ? There is also framebuffer driver for
->> FIMD. Even if the framebuffer driver gets phased out it still feels like
->> a more intuitive location for a display controller bindings.
->> This is just my humble suggestion though.
->>
-> I think we can move it there.
->
->> I think you should CC the device tree mailing list and the maintainers.
->>
->>
-> will do.
->
->>>>> @@ -0,0 +1,37 @@
->>>>> +Device-Tree bindings for fimd driver
->>>>> +
->>>>> +FIMD stands for Fully Interactive Mobile Display, is the Display
->>>>> Controller for
->>>>> +the Exynos series of SoCs which transfers the image data from a video
->>>>> buffer
->>>>> +located in the system memory to an external LCD interface.
->>>>> +
->>>>> +Required properties:
->>>>> +- compatible := value should be "samsung,exynos5-fimd" or
->>>>> "samsung,exynos4-fimd"
->>>>
->>>>
->>>> What about older SoCs like S5Pv210 ? There is the FIMD IP block in those
->>>> SoCs
->>>> as well. There are also differences in the FIMD IP block across various
->>>> SoC
->>>> version, so either you need to list the quirks in the bindings or use an
->>>> appropriate compatible properties if there are significant differences
->>>> across
->>>> FIMDs that make them not really compatible.
->>>>
->>> as of now, I was working on Exynos4 and Exynos5 SoC. have to really
->>> see the differences in the previous SoC and how to handle all those
->>> FIMD IPs in the driver.
->>> if you know the differences between these FIMD IPs, please let me know.
->>
->>
->> Please have a look at drivers/video/s3c-fb.c and all driver_data structures
->> defined for various SoCs.
->>
->> [...]
->>
-> I went through the driver_data structures define for s5p64x0,s3c2443,
-> s5pv210, s5pc100 ad 64xx SoCs.
-> there are some differences w.r.t number of windows, osd_stride  length
-> and regsiter offsets.
-> but  I dont have access to all the above mentioned Boards and so that
-> I can modify and test on each one of them.
->
-as far as i know this file exynos_drm_fimd.c is meant only for exynos4
-onwards SoCs,
-( I think Mr. Inki Dae can throw more light on this )
-and also the previous  boards based on  s5p64x0,s3c2443,s5pv210,
-s5pc100 and 64xx, dont have DT support.
-also in the function drm_fimd_get_driver_data(), there is provision to
-get the NON-DT "driver data" as well. So somebody who wants to use
-this driver for the above mentioned SoCs can add the driver-data.
-
-so wanted to know how you want me to go about it.
-
->>> we have 3 interrupts and the Interrupt combiner order is FIFO Level ,
->>> VSYNC  and LCD_SYSTEM.
->>> since we only use VSYNC interrupt , In the driver to get the interrupt
->>> number
->>>
->>> res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
->>>           if (!res) {
->>>                   dev_err(dev, "irq request failed.\n");
->>>                   return -ENXIO;
->>>            }
->>>
->>>   ctx->irq = res->start;
->>>
->>>   I am passing the 3rd parameter as '0' , to get the VSYNC interrupt,
->>> and hence in the DTSI file     i have it in the order  VSYNC,  FIFO
->>> LEVEL and LCD_SYSTEM.
->>
->>
->> Yes, I'm aware what's going on here. Since I had to change the interrupts
->> order when I used one of the first version of patches adding device tree
->> support for FIMD, when I needed working display to test the camera.
->>
->>
->>> what I can do is the pass the 3rd parameter as '1' , and rectify the
->>> order in DTSI file as  FIFO LEVEL, VSYNC and LCD_SYSTEM.
->>
->>
->> Then you would have to do it only for dt case. I guess it is okay to
->> require VSYNC as the first interrupt. I'm fine with that, as long as
->> it is properly documented.
->>
->  So, I shall keep the logic as is, and just document it well. is it ok.?
->> --
->>
->> Regards,
->> Sylwester
->
->
->
-> --
-> Thanks and Regards
->  Vikas Sajjan
-
-
-
--- 
-Thanks and Regards
- Vikas Sajjan
+T24gRnJpLCBGZWIgMjIsIDIwMTMgYXQgMDE6NTI6MDRQTSArMDgwMCwgU2hhd24gR3VvIHdyb3Rl
+Ogo+IE9uIFRodSwgRmViIDIxLCAyMDEzIGF0IDExOjM2OjM2QU0gLTA2MDAsIE1hdHQgU2VhbGV5
+IHdyb3RlOgo+ID4gT24gV2VkLCBGZWIgMjAsIDIwMTMgYXQgMTE6MDIgUE0sIFNoYXduIEd1byA8
+c2hhd24uZ3VvQGxpbmFyby5vcmc+IHdyb3RlOgo+ID4gPiBPbiBXZWQsIEZlYiAyMCwgMjAxMyBh
+dCAwNjowMzozOVBNIC0wNjAwLCBNYXR0IFNlYWxleSB3cm90ZToKPiA+ID4+IEkgYW0gbm90IHN1
+cmUgSSBhbSBnZXR0aW5nIHRoaXMgcG9pbnQgYWNyb3NzLCBidXQuLiBkYW1uIGl0Li4gbmFjayBu
+YWNrIG5hY2sgOkQKPiA+ID4+Cj4gPiA+IERvIHlvdSBzZWUgYW55IGRvd25ncmFkZSBzaWRlIHRo
+YXQgdGhlIHNlcmllcyBpbnRyb2R1Y2VzIG92ZXIgdGhlCj4gPiA+IGV4aXN0aW5nIGltcGxlbWVu
+dGF0aW9uPwo+ID4gCj4gPiBCZWNhdXNlIGl0IHJlcGxhY2VzIHRoZSBob3JyaWJseSBzdHVwaWQg
+ZXhpc3RpbmcgaW1wbGVtZW50YXRpb24gd2l0aAo+ID4gc29tZXRoaW5nIHRoYXQgZG9lc24ndCBz
+b2x2ZSB0aGUgZnVuZGFtZW50YWwgbG9naWNhbCBwcm9ibGVtcyBjYXVzZWQKPiA+IGJ5IHRoZSBl
+eGlzdGluZyBpbXBsZW1lbnRhdGlvbi4KPiAKPiBXaGVuIGRpZCBJIHNheSB0aGF0IHRoZSBzZXJp
+ZXMgaXMgdGFyZ2V0aW5nIHRvIHNvbHZlIHRob3NlICJmdW5kYW1lbnRhbAo+IGxvZ2ljYWwgcHJv
+YmxlbXMiIGluICp5b3VyKiB2aWV3Pwo+IAo+IC4uLgo+IAo+ID4gV2hhdCB5b3UndmUgZml4ZWQg
+aXQgdG8gZG8sIGFzIEkgcmVhZCB0aGlzIHBhdGNoLCBpcyB0aGlzOwo+ID4gCj4gPiA8YXJiaXRy
+YXJ5X3Bpbl9uYW1lIHBhZF9tb2RlPgo+ID4gCj4gTm8sIGl0J3Mgbm90IGFyYml0cmFyeV9waW5f
+bmFtZS4gIEl0J3MgcGluIGZ1bmN0aW9uIG5hbWUgd2hpY2ggY29tZXMKPiBmcm9tIGhhcmR3YXJl
+IG1hbnVhbC4gIEl0IG1heSBub3QgZXhhY3RseSBtYXRjaCB0aGUgcHVibGljIHJlZmVyZW5jZQo+
+IG1hbnVhbCwgYnV0IHRoZXkgYXJlIG9idmlvdXMgdG8gYmUgaWRlbnRpZmllZC4gIEZvciBpbXg2
+cSBwYWQgU0QyX0RBVDEKPiBleGFtcGxlLCB0aGUgbWFudWFsIHNheXM6Cj4gCj4gU2VsZWN0IDEg
+b2YgNiBpb211eCBtb2RlcyB0byBiZSB1c2VkIGZvciBwYWQ6IFNEMl9EQVQxLgo+ICAgMDAwIEFM
+VDAg4oCUIFNlbGVjdCBzaWduYWwgU0QyX0RBVEExLgo+ICAgMDAxIEFMVDEg4oCUIFNlbGVjdCBz
+aWduYWwgRUNTUEk1X1NTMC4KPiAgIDAxMCBBTFQyIOKAlCBTZWxlY3Qgc2lnbmFsIEVJTV9DUzIu
+Cj4gICAwMTEgQUxUMyDigJQgU2VsZWN0IHNpZ25hbCBBVUQ0X1RYRlMuCj4gICAxMDAgQUxUNCDi
+gJQgU2VsZWN0IHNpZ25hbCBLRVlfQ09MNy4KPiAgIDEwMSBBTFQ1IOKAlCBTZWxlY3Qgc2lnbmFs
+IEdQSU8xX0lPMTQuCgpXaGF0IG1ha2VzIHRoZW0gYXJiaXRyYXJ5IGlzIHRoZSBmYWN0IHRoYXQg
+MTEwIGFuZCAxMTEgYXJlIG5vdCBlbmNvZGVkLApzbyB0aGVyZSBpcyBubyB3YXkgdG8gY2FsY3Vs
+YXRlIHRoZSByZWdpc3RlciBudW1iZXIgZnJvbSB0aGUgcGluIG51bWJlci4KCkFsc28KCmNvbW1p
+dCA0YTVmN2VmZjhiMGIzNDM1NGU1YzYzMjcyODM1ZTVlMmRmZTFjOTMzCkF1dGhvcjogRG9uZyBB
+aXNoZW5nIDxkb25nLmFpc2hlbmdAbGluYXJvLm9yZz4KRGF0ZTogICBGcmkgSnVsIDYgMTc6MDk6
+MjMgMjAxMiArMDgwMAoKICAgIHBpbmN0cmw6IHBpbmN0cmwtaW14NnE6IGFkZCBtaXNzZWQgbXV4
+IGZ1bmN0aW9uIGZvciBVU0JPVEdfSUQKClNob3dzIHRoYXQgdGhleSBhcmUgaW5kZWVkIGFyYml0
+cmFyeS4KCkknbSByZWFsbHkgd2l0aCBNYXR0IGhlcmUgd2hlbiBoZSBzYXlzIHRoYXQgdGhpcyBu
+dW1iZXIgZG9lc24ndCBoYXZlIHRvCmJlIGluIHRoZSBiaW5kaW5nLgoKV2hhdCB3ZSBtYWtlIGZy
+b20gdGhpcyBpcyBhbm90aGVyIHN0b3J5LiBDaGFuZ2luZyB0aGlzIHdpbGwgYmUgcGFpbmZ1bC4K
+SXQgd2lsbCBnZXQgZXZlbiBtb3JlIHBhaW5mdWwgdGhvdWdoIHdoZW4gdGhlIGJpbmRpbmdzIGFy
+ZSBtb3JlCmVzdGFibGlzaGVkIGluIHRoZSBmdXR1cmUuCgpTYXNjaGEKCi0tIApQZW5ndXRyb25p
+eCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgfApJbmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAgICAgICAgICAgfCBodHRw
+Oi8vd3d3LnBlbmd1dHJvbml4LmRlLyAgfApQZWluZXIgU3RyLiA2LTgsIDMxMTM3IEhpbGRlc2hl
+aW0sIEdlcm1hbnkgfCBQaG9uZTogKzQ5LTUxMjEtMjA2OTE3LTAgICAgfApBbXRzZ2VyaWNodCBI
+aWxkZXNoZWltLCBIUkEgMjY4NiAgICAgICAgICAgfCBGYXg6ICAgKzQ5LTUxMjEtMjA2OTE3LTU1
+NTUgfApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZp
+Y2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxh
+YnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1
+c3MK
