@@ -1,62 +1,83 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [RFC v2 2/3] power: power_supply: Add core support for supplied_nodes
-Date: Fri, 22 Feb 2013 16:01:09 -0700
-Message-ID: <5127F8B5.10002@wwwdotorg.org>
-References: <1361488272-21010-1-git-send-email-rklein@nvidia.com> <1361488272-21010-3-git-send-email-rklein@nvidia.com> <5127CBD9.9050501@wwwdotorg.org> <5127E95E.4010500@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5127E95E.4010500-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH V2] kbuild: create an "include chroot" for DT bindings
+Date: Fri, 22 Feb 2013 16:16:49 -0700
+Message-ID: <1361575009-20090-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: Michal Marek <mmarek@suse.cz>, devicetree-discuss@lists.ozlabs.org, linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Shawn Guo <shawn.guo@linaro.org>, Hiroshi Doyu <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 02/22/2013 02:55 PM, Rhyland Klein wrote:
-> On 2/22/2013 2:49 PM, Stephen Warren wrote:
->> On 02/21/2013 04:11 PM, Rhyland Klein wrote:
->>> With the growing support for dt, it make sense to try to make use of
->>> dt features to make the general code cleaner. This patch is an
->>> attempt to commonize how chargers and their supplies are linked.
->>>
->>> Following common dt convention, the "supplied-to" char** list is
->>> replaced with phandle lists defined in the supplies which contain
->>> phandles of their suppliers.
->>>
->>> This has the effect however of introducing an inversion in the internal
->>> mechanics of how this information is stored. In the case of non-dt,
->>> the char** list of supplies is stored in the charger. In the dt case,
->>> a device_node * list is stored in the supplies of their chargers,
->>> however this seems to be the only way to support this.
->> When parsing the DT, you can convert from phandle (or struct device_node
->> *) to the name of the referenced supply by simple lookup. So, you could
->> store supply names rather than device_node *. Can't you then also fill
->> in the referenced supply's existing char** list of supplies?
->>
->> Of course, making this interact-with/use -EPROBE_DEFERRED might be
->> challenging, since this would be operating in the inverse order to other
->> producer/consumer relationships, which might cause loops.
-> The main problem I ran into when I was essentially trying to do this,
-> was that the list of names that
-> are used to match the power_supplies are the strings set as "name" in
-> the power_supply structs. This
-> doesn't get set automatically based on their nodes, and it is currently
-> up to each driver to define their
-> own name.
-> 
-> For example, the sbs-battery driver uses the name "sbs-XXX" where XX is
-> its dev_name. Other drivers
-> use "%s-$%d" as i2c_device_id->name, + instance number. Then the only
-> solution I see is to require a new
-> property that defines the power-supply's name in the devicetree.
-> 
-> This solution with device_nodes, while not ideal, seems the be the best
-> bet from what I see. Maybe
-> someone else has a better idea.
+From: Stephen Warren <swarren@nvidia.com>
 
-For other resource types, this is handled by the (phandle -> whatever)
-conversion process actually being a function call on the referenced
-object, so that the driver code for it can look up the data in the
-actual device/... object etc. See the various .of_xlate functions that
-exist in the kernel.
+The recent dtc+cpp support allows header files and C pre-processor
+defines/macros to be used when compiling device tree files. These
+headers will typically define various constants that are part of the
+device tree bindings.
+
+The original patch which set up the dtc+cpp include path only considered
+using those headers from device tree files. However, most are also
+useful for kernel code which needs to interpret the device tree.
+
+In both the DT files and the kernel, I'd like to include the DT-related
+headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
+That will simplify any text which discusses the DT header locations.
+
+Creating a <dt-bindings/> for kernel source to use is as simple as
+placing files into include/dt-bindings/.
+
+However, when compiling DT files, the include path should be restricted
+so that only the dt-bindings path is available; arbitrary kernel headers
+shouldn't be exposed. For this reason, create a specific include
+directory for use by dtc+cpp, and symlink dt-bindings from there to the
+actual location of include/dt-bindings/. For want of a better location,
+place this "include chroot" into the existing dts/ directory.
+
+arch/*/boot/dts/include/dt-bindings -> ../../../../../include/dt-bindings
+
+Some headers used by device tree files may not be useful to the kernel;
+they may be used simply to aid in constructing the DT file (e.g. macros
+to create a node), but not define any information that the kernel needs
+to share. These may be placed directly into arch/*/boot/dts/ along with
+the DT files themselves.
+
+Cc: Shawn Guo <shawn.guo@linaro.org>
+Cc: Hiroshi Doyu <hdoyu@nvidia.com>
+Acked-by: Michal Marek <mmarek@suse.cz>
+Acked-by: Shawn Guo <shawn.guo@linaro.org>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
+---
+v2:
+* Leave arch/*/boot/dts in dtc include path, for any headers that are
+  only included by *.dts and don't need to be shared by the kernel.
+* Fix pathname in commit description.
+---
+ arch/arm/boot/dts/include/dt-bindings |    1 +
+ scripts/Makefile.lib                  |    2 +-
+ 2 files changed, 2 insertions(+), 1 deletion(-)
+ create mode 120000 arch/arm/boot/dts/include/dt-bindings
+
+diff --git a/arch/arm/boot/dts/include/dt-bindings b/arch/arm/boot/dts/include/dt-bindings
+new file mode 120000
+index 0000000..08c00e4
+--- /dev/null
++++ b/arch/arm/boot/dts/include/dt-bindings
+@@ -0,0 +1 @@
++../../../../../include/dt-bindings
+\ No newline at end of file
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 07125e6..af35521 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -158,7 +158,7 @@ ld_flags       = $(LDFLAGS) $(ldflags-y)
+ 
+ dtc_cpp_flags  = -Wp,-MD,$(depfile) -nostdinc                            \
+ 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
+-		 -I$(srctree)/arch/$(SRCARCH)/include/dts                \
++		 -I$(srctree)/arch/$(SRCARCH)/boot/dts/include           \
+ 		 -undef -D__DTS__
+ 
+ # Finds the multi-part object the current object will be linked into
+-- 
+1.7.10.4
+
