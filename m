@@ -1,21 +1,23 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Subject: Re: [PATCH 2/3] ARM: dts: imx: replace magic number with pin
  function name
-Date: Fri, 22 Feb 2013 15:58:49 +0800
-Message-ID: <20130222075848.GD27371@S2101-09.ap.freescale.net>
+Date: Fri, 22 Feb 2013 09:12:43 +0100
+Message-ID: <20130222081243.GD1906@pengutronix.de>
 References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
  <1361344089-16804-3-git-send-email-shawn.guo@linaro.org>
  <51251A11.2030300@wwwdotorg.org>
  <CAKGA1bkHH1XC38_VM=QhDrr33uqqSbwe0n+GfXEPs43K_Do=CQ@mail.gmail.com>
  <20130221050247.GD17738@S2101-09.ap.freescale.net>
  <CAKGA1bn22xctSj_33HQsWwnVB=RO2OJ=eYvgRD-kF+PiQcnC4Q@mail.gmail.com>
- <20130221214303.GB1906@pengutronix.de>
+ <20130222055203.GB27371@S2101-09.ap.freescale.net>
+ <20130222072743.GC1906@pengutronix.de>
+ <20130222073630.GC27371@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130221214303.GB1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20130222073630.GC27371-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -26,16 +28,61 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2013 at 10:43:03PM +0100, Sascha Hauer wrote:
-> This would leave the question how we make up a pin number for the
-> pinctrl framework, but as said, this should be solved inside the kernel
-> and not pushed into the devicetree.
-> 
-Ok, Dong has the same opinion to remove pin number from device tree,
-I start working it out, and will roll out the new version.
-
-Shawn
+T24gRnJpLCBGZWIgMjIsIDIwMTMgYXQgMDM6MzY6MzJQTSArMDgwMCwgU2hhd24gR3VvIHdyb3Rl
+Ogo+IE9uIEZyaSwgRmViIDIyLCAyMDEzIGF0IDA4OjI3OjQzQU0gKzAxMDAsIFNhc2NoYSBIYXVl
+ciB3cm90ZToKPiA+IE9uIEZyaSwgRmViIDIyLCAyMDEzIGF0IDAxOjUyOjA0UE0gKzA4MDAsIFNo
+YXduIEd1byB3cm90ZToKPiA+ID4gT24gVGh1LCBGZWIgMjEsIDIwMTMgYXQgMTE6MzY6MzZBTSAt
+MDYwMCwgTWF0dCBTZWFsZXkgd3JvdGU6Cj4gPiA+ID4gT24gV2VkLCBGZWIgMjAsIDIwMTMgYXQg
+MTE6MDIgUE0sIFNoYXduIEd1byA8c2hhd24uZ3VvQGxpbmFyby5vcmc+IHdyb3RlOgo+ID4gPiA+
+ID4gT24gV2VkLCBGZWIgMjAsIDIwMTMgYXQgMDY6MDM6MzlQTSAtMDYwMCwgTWF0dCBTZWFsZXkg
+d3JvdGU6Cj4gPiA+ID4gPj4gSSBhbSBub3Qgc3VyZSBJIGFtIGdldHRpbmcgdGhpcyBwb2ludCBh
+Y3Jvc3MsIGJ1dC4uIGRhbW4gaXQuLiBuYWNrIG5hY2sgbmFjayA6RAo+ID4gPiA+ID4+Cj4gPiA+
+ID4gPiBEbyB5b3Ugc2VlIGFueSBkb3duZ3JhZGUgc2lkZSB0aGF0IHRoZSBzZXJpZXMgaW50cm9k
+dWNlcyBvdmVyIHRoZQo+ID4gPiA+ID4gZXhpc3RpbmcgaW1wbGVtZW50YXRpb24/Cj4gPiA+ID4g
+Cj4gPiA+ID4gQmVjYXVzZSBpdCByZXBsYWNlcyB0aGUgaG9ycmlibHkgc3R1cGlkIGV4aXN0aW5n
+IGltcGxlbWVudGF0aW9uIHdpdGgKPiA+ID4gPiBzb21ldGhpbmcgdGhhdCBkb2Vzbid0IHNvbHZl
+IHRoZSBmdW5kYW1lbnRhbCBsb2dpY2FsIHByb2JsZW1zIGNhdXNlZAo+ID4gPiA+IGJ5IHRoZSBl
+eGlzdGluZyBpbXBsZW1lbnRhdGlvbi4KPiA+ID4gCj4gPiA+IFdoZW4gZGlkIEkgc2F5IHRoYXQg
+dGhlIHNlcmllcyBpcyB0YXJnZXRpbmcgdG8gc29sdmUgdGhvc2UgImZ1bmRhbWVudGFsCj4gPiA+
+IGxvZ2ljYWwgcHJvYmxlbXMiIGluICp5b3VyKiB2aWV3Pwo+ID4gPiAKPiA+ID4gLi4uCj4gPiA+
+IAo+ID4gPiA+IFdoYXQgeW91J3ZlIGZpeGVkIGl0IHRvIGRvLCBhcyBJIHJlYWQgdGhpcyBwYXRj
+aCwgaXMgdGhpczsKPiA+ID4gPiAKPiA+ID4gPiA8YXJiaXRyYXJ5X3Bpbl9uYW1lIHBhZF9tb2Rl
+Pgo+ID4gPiA+IAo+ID4gPiBObywgaXQncyBub3QgYXJiaXRyYXJ5X3Bpbl9uYW1lLiAgSXQncyBw
+aW4gZnVuY3Rpb24gbmFtZSB3aGljaCBjb21lcwo+ID4gPiBmcm9tIGhhcmR3YXJlIG1hbnVhbC4g
+IEl0IG1heSBub3QgZXhhY3RseSBtYXRjaCB0aGUgcHVibGljIHJlZmVyZW5jZQo+ID4gPiBtYW51
+YWwsIGJ1dCB0aGV5IGFyZSBvYnZpb3VzIHRvIGJlIGlkZW50aWZpZWQuICBGb3IgaW14NnEgcGFk
+IFNEMl9EQVQxCj4gPiA+IGV4YW1wbGUsIHRoZSBtYW51YWwgc2F5czoKPiA+ID4gCj4gPiA+IFNl
+bGVjdCAxIG9mIDYgaW9tdXggbW9kZXMgdG8gYmUgdXNlZCBmb3IgcGFkOiBTRDJfREFUMS4KPiA+
+ID4gICAwMDAgQUxUMCDigJQgU2VsZWN0IHNpZ25hbCBTRDJfREFUQTEuCj4gPiA+ICAgMDAxIEFM
+VDEg4oCUIFNlbGVjdCBzaWduYWwgRUNTUEk1X1NTMC4KPiA+ID4gICAwMTAgQUxUMiDigJQgU2Vs
+ZWN0IHNpZ25hbCBFSU1fQ1MyLgo+ID4gPiAgIDAxMSBBTFQzIOKAlCBTZWxlY3Qgc2lnbmFsIEFV
+RDRfVFhGUy4KPiA+ID4gICAxMDAgQUxUNCDigJQgU2VsZWN0IHNpZ25hbCBLRVlfQ09MNy4KPiA+
+ID4gICAxMDEgQUxUNSDigJQgU2VsZWN0IHNpZ25hbCBHUElPMV9JTzE0Lgo+ID4gCj4gPiBXaGF0
+IG1ha2VzIHRoZW0gYXJiaXRyYXJ5IGlzIHRoZSBmYWN0IHRoYXQgMTEwIGFuZCAxMTEgYXJlIG5v
+dCBlbmNvZGVkLAo+ID4gc28gdGhlcmUgaXMgbm8gd2F5IHRvIGNhbGN1bGF0ZSB0aGUgcmVnaXN0
+ZXIgbnVtYmVyIGZyb20gdGhlIHBpbiBudW1iZXIuCj4gPiAKPiA+IEFsc28KPiA+IAo+ID4gY29t
+bWl0IDRhNWY3ZWZmOGIwYjM0MzU0ZTVjNjMyNzI4MzVlNWUyZGZlMWM5MzMKPiA+IEF1dGhvcjog
+RG9uZyBBaXNoZW5nIDxkb25nLmFpc2hlbmdAbGluYXJvLm9yZz4KPiA+IERhdGU6ICAgRnJpIEp1
+bCA2IDE3OjA5OjIzIDIwMTIgKzA4MDAKPiA+IAo+ID4gICAgIHBpbmN0cmw6IHBpbmN0cmwtaW14
+NnE6IGFkZCBtaXNzZWQgbXV4IGZ1bmN0aW9uIGZvciBVU0JPVEdfSUQKPiA+IAo+ID4gU2hvd3Mg
+dGhhdCB0aGV5IGFyZSBpbmRlZWQgYXJiaXRyYXJ5Lgo+ID4gCj4gPiBJJ20gcmVhbGx5IHdpdGgg
+TWF0dCBoZXJlIHdoZW4gaGUgc2F5cyB0aGF0IHRoaXMgbnVtYmVyIGRvZXNuJ3QgaGF2ZSB0bwo+
+ID4gYmUgaW4gdGhlIGJpbmRpbmcuCj4gCj4gSSB0aGluayB5b3UgYXJlIHN0aWxsIHRhbGtpbmcg
+YWJvdXQgdGhhdCBhcmJpdHJhcnkgaW5kZXggaW4gdGhlIG9sZAo+IGJpbmRpbmcsIHdoaWxlIEkn
+bSBhcmd1aW5nIGFnYWluc3QgTWF0dCdzIHRoZSBjb21tZW50IG9uIHRoZSBuZXcgb25lLAo+IHNh
+eWluZyB0aGUgbWFjcm8vcGluIG5hbWUgaXMgYXJiaXRyYXJ5LgoKU29ycnksIEkgaGF2ZW4ndCBy
+ZWFkIHRoZSBhYm92ZSBjYXJlZnVsbHkgZW5vdWdoLiBXZSBhcmUgdGFsa2luZyBhYm91dAp0aGUg
+bmFtZXMgaGVyZSwgbm90IHRoZSBudW1iZXJzIEkgcmVmZXJyZWQgdG8uCgpTYXNjaGEKCi0tIApQ
+ZW5ndXRyb25peCBlLksuICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfApJbmR1c3RyaWFsIExpbnV4IFNvbHV0aW9ucyAgICAgICAgICAgICAg
+ICAgfCBodHRwOi8vd3d3LnBlbmd1dHJvbml4LmRlLyAgfApQZWluZXIgU3RyLiA2LTgsIDMxMTM3
+IEhpbGRlc2hlaW0sIEdlcm1hbnkgfCBQaG9uZTogKzQ5LTUxMjEtMjA2OTE3LTAgICAgfApBbXRz
+Z2VyaWNodCBIaWxkZXNoZWltLCBIUkEgMjY4NiAgICAgICAgICAgfCBGYXg6ICAgKzQ5LTUxMjEt
+MjA2OTE3LTU1NTUgfApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFpbGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0Bs
+aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0
+cmVlLWRpc2N1c3MK
