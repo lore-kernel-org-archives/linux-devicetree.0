@@ -1,60 +1,106 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] dma: imx-dma: Add oftree support
-Date: Fri, 22 Feb 2013 14:46:06 +0000
-Message-ID: <201302221446.07069.arnd@arndb.de>
-References: <1361543838-12604-1-git-send-email-mpa@pengutronix.de>
+From: delicious quinoa <delicious.quinoa@gmail.com>
+Subject: Re: [PATCH 0/6] Introducing Device Tree Overlays
+Date: Fri, 22 Feb 2013 09:57:39 -0600
+Message-ID: <CANk1AXTji0CB8jsdTRg0+u56m_BiVoBQHaPQzHKoSA3Tr68ZEw@mail.gmail.com>
+References: <1357327870-13615-1-git-send-email-panto@antoniou-consulting.com>
+	<CANk1AXQ7ajnwTaHwwbyrri2YkX_60uC9xrQYWuR8u4eT2EQsew@mail.gmail.com>
+	<3A37C4DA-4D4D-4370-8305-15625B923E67@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1361543838-12604-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <3A37C4DA-4D4D-4370-8305-15625B923E67@antoniou-consulting.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: linux-doc@vger.kernel.org, Koen Kooi <koen@dominion.thruhere.net>, Russ Dill <Russ.Dill@ti.com>, Matt Porter <mporter@ti.com>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, linux-omap@vger.kernel.org, Matt Ranostay <mranostay@gmail.com>, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, Joel A Fernandes <agnel.joel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 22 February 2013, Markus Pargmann wrote:
-> Adding devicetree support for imx-dma driver. Use driver name for
-> function 'imx_dma_is_general_purpose' because the devicename for
-> devicetree initialized devices is different.
-> 
-> Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Our use case is partial reconfiguration of the FPGA.  This will be
+driven from userspace, so the bitstream to program the FPGA will come
+from userspace, then the overlay for the DT, also from userspace.
 
-Hi Markus,
+So we want to take a compiled partial device tree and simply 'cat' it
+to a point under /proc, such as 'cat new-ip.dtb > /proc/device-tree'
 
-Please make sure you are following the generic dma binding from
-Documentation/devicetree/bindings/dma/dma.txt that is getting added
-in Linux-3.9.
+Alan Tull
+Altera Corp.
 
-> +++ b/Documentation/devicetree/bindings/dma/fsl-imx-dma.txt
-> @@ -0,0 +1,13 @@
-> +* Freescale Direct Memory Access (DMA) Controller for i.MX
-> +
-> +Required properties:
-> +- compatible : Should be "fsl,<chip>-dma". chip can be imx1, imx21 or imx27
-> +- reg : Should contain DMA registers location and length
-> +- interrupts : First item should be DMA interrupt, second one is optional and
-> +  should contain DMA Error interrupt
-> +
-> +dma: dma@10001000 {
-> +       compatible = "fsl,imx27-dma";
-> +       reg = <0x10001000 0x1000>;
-> +       interrupts = <32 33>;
-> +};
-
-In particular, the "#dma-cells" property is required here, along with
-dma-channels and dma-requests. You also need to describe the format
-of the "dmas" property in slave drivers referring to this node.
-In a lot of cases, you only need a single cell there, which is the
-request line number.
-
-	Arnd
+On Thu, Feb 21, 2013 at 3:53 PM, Pantelis Antoniou
+<panto@antoniou-consulting.com> wrote:
+> Hi Alan,
+>
+> On Feb 21, 2013, at 1:25 PM, delicious quinoa wrote:
+>
+>> I like where this is heading.  I'm interested in a use case where IP
+>> can be loaded into a FPGA, then add a blob to the device tree and load
+>> some drivers.
+>>
+>> I see your github tree.  If I wanted to cherry-pick your code and play
+>> around with it, which branch should I use?  not-capebus-21?
+>>
+>
+> not-capebus-v21 is the latest one and indeed that has it in.
+>
+> Please note that I had some other FPGA people interested with it.
+> Perhaps we can go through use cases to come up with your requirements
+>
+>
+>> Thanks,
+>> Alan Tull
+>> Altera Corp
+>>
+>
+> Regards
+>
+> -- Pantelis
+>
+>> On Fri, Jan 4, 2013 at 1:31 PM, Pantelis Antoniou
+>> <panto@antoniou-consulting.com> wrote:
+>>> The following patchset introduces Device Tree overlays, a method
+>>> of dynamically altering the kernel's live Device Tree.
+>>>
+>>> This patchset is against mainline as of Friday Jan 4 2013.
+>>> (4956964 Merge tag 'driver-core-3.8-rc2' of \
+>>>        git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/driver-core)
+>>>
+>>> Note that a separate patch for the DTC compiler has been posted and
+>>> is required to compile the DTS files according to the documentation.
+>>> The patch is "dtc: Dynamic symbols & fixup support"
+>>>
+>>> An implementation patchset for a beaglebone cape loader will follow,
+>>> but if you want to check out a working kernel for the beaglebone please
+>>> pull from:
+>>>
+>>> git://github.com/pantoniou/linux-bbxm.git branch not-capebus-v8
+>>>
+>>> Pantelis Antoniou (6):
+>>>  OF: Introduce device tree node flag helpers.
+>>>  OF: export of_property_notify
+>>>  OF: Export all DT proc update functions
+>>>  OF: Introduce utility helper functions
+>>>  OF: Introduce Device Tree resolve support.
+>>>  OF: Introduce DT overlay support.
+>>>
+>>> .../devicetree/dynamic-resolution-notes.txt        |  25 +
+>>> Documentation/devicetree/overlay-notes.txt         | 179 +++++
+>>> drivers/of/Kconfig                                 |  19 +
+>>> drivers/of/Makefile                                |   4 +-
+>>> drivers/of/base.c                                  | 114 +--
+>>> drivers/of/overlay.c                               | 831 +++++++++++++++++++++
+>>> drivers/of/resolver.c                              | 394 ++++++++++
+>>> drivers/of/util.c                                  | 253 +++++++
+>>> include/linux/of.h                                 | 243 ++++++
+>>> 9 files changed, 2005 insertions(+), 57 deletions(-)
+>>> create mode 100644 Documentation/devicetree/dynamic-resolution-notes.txt
+>>> create mode 100644 Documentation/devicetree/overlay-notes.txt
+>>> create mode 100644 drivers/of/overlay.c
+>>> create mode 100644 drivers/of/resolver.c
+>>> create mode 100644 drivers/of/util.c
+>>>
+>>> --
+>>> 1.7.12
+>>>
+>>> _______________________________________________
+>>> devicetree-discuss mailing list
+>>> devicetree-discuss@lists.ozlabs.org
+>>> https://lists.ozlabs.org/listinfo/devicetree-discuss
+>
