@@ -1,22 +1,21 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH 2/3] ARM: dts: imx: replace magic number with pin
  function name
-Date: Fri, 22 Feb 2013 15:36:32 +0800
-Message-ID: <20130222073630.GC27371@S2101-09.ap.freescale.net>
+Date: Fri, 22 Feb 2013 15:58:49 +0800
+Message-ID: <20130222075848.GD27371@S2101-09.ap.freescale.net>
 References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
  <1361344089-16804-3-git-send-email-shawn.guo@linaro.org>
  <51251A11.2030300@wwwdotorg.org>
  <CAKGA1bkHH1XC38_VM=QhDrr33uqqSbwe0n+GfXEPs43K_Do=CQ@mail.gmail.com>
  <20130221050247.GD17738@S2101-09.ap.freescale.net>
  <CAKGA1bn22xctSj_33HQsWwnVB=RO2OJ=eYvgRD-kF+PiQcnC4Q@mail.gmail.com>
- <20130222055203.GB27371@S2101-09.ap.freescale.net>
- <20130222072743.GC1906@pengutronix.de>
+ <20130221214303.GB1906@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20130222072743.GC1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <20130221214303.GB1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -31,46 +30,12 @@ To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBGZWIgMjIsIDIwMTMgYXQgMDg6Mjc6NDNBTSArMDEwMCwgU2FzY2hhIEhhdWVyIHdy
-b3RlOgo+IE9uIEZyaSwgRmViIDIyLCAyMDEzIGF0IDAxOjUyOjA0UE0gKzA4MDAsIFNoYXduIEd1
-byB3cm90ZToKPiA+IE9uIFRodSwgRmViIDIxLCAyMDEzIGF0IDExOjM2OjM2QU0gLTA2MDAsIE1h
-dHQgU2VhbGV5IHdyb3RlOgo+ID4gPiBPbiBXZWQsIEZlYiAyMCwgMjAxMyBhdCAxMTowMiBQTSwg
-U2hhd24gR3VvIDxzaGF3bi5ndW9AbGluYXJvLm9yZz4gd3JvdGU6Cj4gPiA+ID4gT24gV2VkLCBG
-ZWIgMjAsIDIwMTMgYXQgMDY6MDM6MzlQTSAtMDYwMCwgTWF0dCBTZWFsZXkgd3JvdGU6Cj4gPiA+
-ID4+IEkgYW0gbm90IHN1cmUgSSBhbSBnZXR0aW5nIHRoaXMgcG9pbnQgYWNyb3NzLCBidXQuLiBk
-YW1uIGl0Li4gbmFjayBuYWNrIG5hY2sgOkQKPiA+ID4gPj4KPiA+ID4gPiBEbyB5b3Ugc2VlIGFu
-eSBkb3duZ3JhZGUgc2lkZSB0aGF0IHRoZSBzZXJpZXMgaW50cm9kdWNlcyBvdmVyIHRoZQo+ID4g
-PiA+IGV4aXN0aW5nIGltcGxlbWVudGF0aW9uPwo+ID4gPiAKPiA+ID4gQmVjYXVzZSBpdCByZXBs
-YWNlcyB0aGUgaG9ycmlibHkgc3R1cGlkIGV4aXN0aW5nIGltcGxlbWVudGF0aW9uIHdpdGgKPiA+
-ID4gc29tZXRoaW5nIHRoYXQgZG9lc24ndCBzb2x2ZSB0aGUgZnVuZGFtZW50YWwgbG9naWNhbCBw
-cm9ibGVtcyBjYXVzZWQKPiA+ID4gYnkgdGhlIGV4aXN0aW5nIGltcGxlbWVudGF0aW9uLgo+ID4g
-Cj4gPiBXaGVuIGRpZCBJIHNheSB0aGF0IHRoZSBzZXJpZXMgaXMgdGFyZ2V0aW5nIHRvIHNvbHZl
-IHRob3NlICJmdW5kYW1lbnRhbAo+ID4gbG9naWNhbCBwcm9ibGVtcyIgaW4gKnlvdXIqIHZpZXc/
-Cj4gPiAKPiA+IC4uLgo+ID4gCj4gPiA+IFdoYXQgeW91J3ZlIGZpeGVkIGl0IHRvIGRvLCBhcyBJ
-IHJlYWQgdGhpcyBwYXRjaCwgaXMgdGhpczsKPiA+ID4gCj4gPiA+IDxhcmJpdHJhcnlfcGluX25h
-bWUgcGFkX21vZGU+Cj4gPiA+IAo+ID4gTm8sIGl0J3Mgbm90IGFyYml0cmFyeV9waW5fbmFtZS4g
-IEl0J3MgcGluIGZ1bmN0aW9uIG5hbWUgd2hpY2ggY29tZXMKPiA+IGZyb20gaGFyZHdhcmUgbWFu
-dWFsLiAgSXQgbWF5IG5vdCBleGFjdGx5IG1hdGNoIHRoZSBwdWJsaWMgcmVmZXJlbmNlCj4gPiBt
-YW51YWwsIGJ1dCB0aGV5IGFyZSBvYnZpb3VzIHRvIGJlIGlkZW50aWZpZWQuICBGb3IgaW14NnEg
-cGFkIFNEMl9EQVQxCj4gPiBleGFtcGxlLCB0aGUgbWFudWFsIHNheXM6Cj4gPiAKPiA+IFNlbGVj
-dCAxIG9mIDYgaW9tdXggbW9kZXMgdG8gYmUgdXNlZCBmb3IgcGFkOiBTRDJfREFUMS4KPiA+ICAg
-MDAwIEFMVDAg4oCUIFNlbGVjdCBzaWduYWwgU0QyX0RBVEExLgo+ID4gICAwMDEgQUxUMSDigJQg
-U2VsZWN0IHNpZ25hbCBFQ1NQSTVfU1MwLgo+ID4gICAwMTAgQUxUMiDigJQgU2VsZWN0IHNpZ25h
-bCBFSU1fQ1MyLgo+ID4gICAwMTEgQUxUMyDigJQgU2VsZWN0IHNpZ25hbCBBVUQ0X1RYRlMuCj4g
-PiAgIDEwMCBBTFQ0IOKAlCBTZWxlY3Qgc2lnbmFsIEtFWV9DT0w3Lgo+ID4gICAxMDEgQUxUNSDi
-gJQgU2VsZWN0IHNpZ25hbCBHUElPMV9JTzE0Lgo+IAo+IFdoYXQgbWFrZXMgdGhlbSBhcmJpdHJh
-cnkgaXMgdGhlIGZhY3QgdGhhdCAxMTAgYW5kIDExMSBhcmUgbm90IGVuY29kZWQsCj4gc28gdGhl
-cmUgaXMgbm8gd2F5IHRvIGNhbGN1bGF0ZSB0aGUgcmVnaXN0ZXIgbnVtYmVyIGZyb20gdGhlIHBp
-biBudW1iZXIuCj4gCj4gQWxzbwo+IAo+IGNvbW1pdCA0YTVmN2VmZjhiMGIzNDM1NGU1YzYzMjcy
-ODM1ZTVlMmRmZTFjOTMzCj4gQXV0aG9yOiBEb25nIEFpc2hlbmcgPGRvbmcuYWlzaGVuZ0BsaW5h
-cm8ub3JnPgo+IERhdGU6ICAgRnJpIEp1bCA2IDE3OjA5OjIzIDIwMTIgKzA4MDAKPiAKPiAgICAg
-cGluY3RybDogcGluY3RybC1pbXg2cTogYWRkIG1pc3NlZCBtdXggZnVuY3Rpb24gZm9yIFVTQk9U
-R19JRAo+IAo+IFNob3dzIHRoYXQgdGhleSBhcmUgaW5kZWVkIGFyYml0cmFyeS4KPiAKPiBJJ20g
-cmVhbGx5IHdpdGggTWF0dCBoZXJlIHdoZW4gaGUgc2F5cyB0aGF0IHRoaXMgbnVtYmVyIGRvZXNu
-J3QgaGF2ZSB0bwo+IGJlIGluIHRoZSBiaW5kaW5nLgoKSSB0aGluayB5b3UgYXJlIHN0aWxsIHRh
-bGtpbmcgYWJvdXQgdGhhdCBhcmJpdHJhcnkgaW5kZXggaW4gdGhlIG9sZApiaW5kaW5nLCB3aGls
-ZSBJJ20gYXJndWluZyBhZ2FpbnN0IE1hdHQncyB0aGUgY29tbWVudCBvbiB0aGUgbmV3IG9uZSwK
-c2F5aW5nIHRoZSBtYWNyby9waW4gbmFtZSBpcyBhcmJpdHJhcnkuCgpTaGF3bgoKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZGV2aWNldHJlZS1kaXNjdXNz
-IG1haWxpbmcgbGlzdApkZXZpY2V0cmVlLWRpc2N1c3NAbGlzdHMub3psYWJzLm9yZwpodHRwczov
-L2xpc3RzLm96bGFicy5vcmcvbGlzdGluZm8vZGV2aWNldHJlZS1kaXNjdXNzCg==
+On Thu, Feb 21, 2013 at 10:43:03PM +0100, Sascha Hauer wrote:
+> This would leave the question how we make up a pin number for the
+> pinctrl framework, but as said, this should be solved inside the kernel
+> and not pushed into the devicetree.
+> 
+Ok, Dong has the same opinion to remove pin number from device tree,
+I start working it out, and will roll out the new version.
+
+Shawn
