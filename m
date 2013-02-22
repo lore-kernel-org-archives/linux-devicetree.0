@@ -1,65 +1,71 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH V3] spi: tegra114: add spi driver
-Date: Fri, 22 Feb 2013 18:02:26 +0000
-Message-ID: <20130222180226.GC19796@opensource.wolfsonmicro.com>
-References: <1361536659-23225-1-git-send-email-ldewangan@nvidia.com>
- <CAKDJKT5yngpZQC-ZvHSaKeBVHW97wo4QwLSXQ4KsVWCs5J1YKg@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] kbuild: create an "include chroot" for DT bindings
+Date: Fri, 22 Feb 2013 11:11:15 -0700
+Message-ID: <5127B4C3.8070001@wwwdotorg.org>
+References: <1361394356-19385-1-git-send-email-swarren@wwwdotorg.org> <20130221043751.GB17738@S2101-09.ap.freescale.net> <51266AC1.8040507@wwwdotorg.org> <20130222023526.GA27371@S2101-09.ap.freescale.net>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UPT3ojh+0CqEDtpF"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKDJKT5yngpZQC-ZvHSaKeBVHW97wo4QwLSXQ4KsVWCs5J1YKg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Manish Badarkhe <badarkhe.manish@gmail.com>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, spi-devel-general@lists.sourceforge.net, linux-tegra@vger.kernel.org, swarren@nvidia.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <20130222023526.GA27371@S2101-09.ap.freescale.net>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Michal Marek <mmarek@suse.cz>, devicetree-discuss@lists.ozlabs.org, linux-kbuild@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Hiroshi Doyu <hdoyu@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
+On 02/21/2013 07:35 PM, Shawn Guo wrote:
+> On Thu, Feb 21, 2013 at 11:43:13AM -0700, Stephen Warren wrote:
+>> There are two things that include DT-related headers:
+>>
+>> a) Device trees (*.dts, *.dtsi)
+>> b) The kernel
+>>
+>> All the headers relevant here fall into category (a) by definition. I'd
+>> actually expect most to also fall into category (b), although I can see
+>> that category (b) might be a strict subset of category (a).
+>>
+>> I believe you're proposing only storing category (b) headers in
+>> include/dt-bindings/, and storing any others I suppose in arch/*/boot/dts/.
+>>
+>> But, my thoughts are that /all/ these headers (both categories) should
+>> be stored in one place for consistency.
+>>
+>> That way, if/when the DT binding docs, these headers, and the DT files
+>> themselves move out of the kernel, we'll end up with some other
+>> repository/repositories that might have the following top-level
+>> directories (or at least these sets of logical data):
+>>
+>> 1) DT binding documents
+>> 2) Headers that define constants for (1)
+>> 3) DT files (*.dts/*.dtsi)
+>>
+>> We need at least some of (2) in the kernel for drivers to share the
+>> constant definitions, so my proposal is to simply copy /all/ the headers
+>> from (2) into the kernel's include/dt-bindings/. That keeps things
+>> simple; simply copy everything and maintain the same hierarchy under
+>> that "root" directory. Otherwise, we'll be constantly wondering which
+>> headers to copy, perhaps moving things back/forth as people realize that
+>> the kernel needs them, etc.
+> 
+> You need to anyway identify the headers needed by a) but not b) and
+> remove them from linux/include/dt-bindings/, when all DTS gets moved
+> out of kernel tree.  Otherwise, you end up leaving those headers only
+> needed by DTS in the kernel tree.
 
---UPT3ojh+0CqEDtpF
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well that's really my point - do you actually /need/ to do that?
 
-On Fri, Feb 22, 2013 at 07:59:11PM +0530, Manish Badarkhe wrote:
-> On Fri, Feb 22, 2013 at 6:07 PM, Laxman Dewangan <ldewangan@nvidia.com> w=
-rote:
-> > Add SPI driver for NVIDIA's Tegra114 SPI controller. This controller
-> > is different than the older SoCs SPI controller in internal design as
-> > well as register interface.
-> >
-> > This driver supports the:
-> > - non DMA based transfer for smaller transfer i.e. less than FIFO depth.
-> > - APB DMA based transfer for lager transfer i.e. more than FIFO depth.
->=20
-> s/lager/larger
->=20
-> > - Clock gating through runtime PM callbacks.
-> > - registration through DT only.
+What headers would be in (b) but not (a)? We'd typically be defining
+headers for the purpose of defining constants that are part of the
+binding definitions. To keep the kernel and binding documents in sync,
+the kernel should have access to any such header. Hence, I think the set
+of headers only in (a) would be non-existent. Even if there are some,
+presumably there would be so few it wouldn't actually matter if we
+weeded them out.
 
-Delete unneeded context from your replies, we shouldn't need to page
-through the entire patch because you've noticed a spelling error...
-
---UPT3ojh+0CqEDtpF
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRJ7KrAAoJELSic+t+oim99m0P/1Lv2IL0oI8UFS0+iR75/yiE
-TP4aMhgt4h6FdU9YG9xz7tUI2d/ur0J0lHfgcA0jSB+HqdSy/5rNo/FN7j8qMge4
-ydavTAvxGbMBdiEpg9XA2FCaxlNyLAcfOOG3OVDyGpmEQxdI1r5eXXKC8jdR2p8W
-uQ2aSZpxAqwpBDO8jvLkT5f11+EhSKRd0OwyuA2dIYLmeAkQNnWTTttO1VEAfKpy
-69jOUgSFpvuYs7QojdRgFcUKr/BZD4/HCgOcWhHDLT5FUp/fREhb/dKtpGuiePng
-7As38F/nVsu9Sm47FBTMprE4Lxly0/h8j3ywbubHfv69j1L763k/skZsTUkCjsmr
-Y3/kpsXXWMc956pEN8GTltyWIm+NepcGenOQqnT/ViXmjuuIMxFao2GdrOQX/Y1S
-NmO95k9suxTvgi9+y13Cb7G84SI8n7b5kDvjQKx8u3Kz/v7M48xgOpcI/39fjs7R
-UdEmnUUj11ocfCerh+mTgiR9IksGwnXYYNbmXxqBGovdqfEEqoDHYdZUnDocSeT1
-SBZw9TVsGOIHd/1EffEI71mOQfZ/vVri3jUv69+SzJslwvuw/4WTZvku7DpjKCJY
-P+lGNJYwfKdQkepdJ5E4jDPiwImotfzGgEAwiHfBrtcBobdbMka6mzH62xYB5zuF
-X/qwoX2N1Y73F/x0EVDq
-=I72D
------END PGP SIGNATURE-----
-
---UPT3ojh+0CqEDtpF--
+The only exception I can think of right now is the header for the i.MX
+pinctrl bindings, since that's expanding the names into a set of values
+the kernel will use directly rather than as needing to use as table
+indices. I'm not sure if that's the right way to go on the bindings; I
+see you're getting some pushback. But, I guess "pinctrl-simple" would
+end up in the same boat, so perhaps there's some argument for not
+removing boot/dts/ itself from the include path.
