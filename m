@@ -1,93 +1,49 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2] dma: imx-dma: Add oftree support
-Date: Sat, 23 Feb 2013 22:16:21 +0000
-Message-ID: <201302232216.22113.arnd@arndb.de>
-References: <1361543838-12604-1-git-send-email-mpa@pengutronix.de>
- <1361638770-29235-1-git-send-email-mpa@pengutronix.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [v3 0/6] ARM: tegra: convert device tree files to use CLK defines
+Date: Sat, 23 Feb 2013 16:52:56 -0700
+Message-ID: <51295658.7030105@wwwdotorg.org>
+References: <1360917814-27236-1-git-send-email-hdoyu@nvidia.com> <1361138717.29465.2@driftwood> <5123B1F8.4040102@wwwdotorg.org> <1361649074.11282.12@driftwood>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1361638770-29235-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1361649074.11282.12@driftwood>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 23 February 2013, Markus Pargmann wrote:
+On 02/23/2013 12:51 PM, Rob Landley wrote:
+> On 02/19/2013 11:10:16 AM, Stephen Warren wrote:
+>> On 02/17/2013 03:05 PM, Rob Landley wrote:
+>> > On 02/15/2013 02:43:11 AM, Hiroshi Doyu wrote:
+>> >> Hi,
+>> >>
+>> >> With new dtc+cpp feature, we could get rid of magic numbers in dts*
+>> >> files. This patch replaces CLK IDs.
+>> >>
+>> >> We also plan to share those DT header files with kernel source
+>> >> later[1].
+>> > ...
+>> >> [1]
+>> >>
+>> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149804.html
+>>
+>> >>
+>> >
+>> > This really smells like documentation should be updated, probably
+>> > booting-without-of.txt or similar. Alas, I'm not capable of writing
+>> such
+>> > an update...
+>>
+>> I'm not sure what documentation would be updated nor why. Can you
+>> describe that?
+> 
+> "When writing new device tree files, please do not include magic
+> numbers. Here's how to avoid them."
+> 
+> Does something in Documentation already say this somewhere?
 
-> +Required properties:
-> +- compatible : Should be "fsl,<chip>-dma". chip can be imx1, imx21 or imx27
-> +- reg : Should contain DMA registers location and length
-> +- interrupts : First item should be DMA interrupt, second one is optional and
-> +    should contain DMA Error interrupt
-> +- #dma-cells : Has to be 1. imx-dma does not support anything else.
-
-Hmm, so #dma-cells is 1
-
-> @@ -996,13 +1020,33 @@ static void imxdma_issue_pending(struct dma_chan *chan)
->  	spin_unlock_irqrestore(&imxdma->lock, flags);
->  }
->  
-> +bool imxdma_filter_fn(struct dma_chan *chan, void *param)
-> +{
-> +	struct imx_dma_data *data = kzalloc(sizeof(*data), GFP_KERNEL);
-> +	printk("%s\n", __func__);
-> +
-> +	if (!data)
-> +		return false;
-> +
-> +	data->dma_request = *(unsigned *) param;
-> +	data->alloc_ctl_filter = true;
-> +	chan->private = data;
-> +
-> +	return true;
-> +}
-
-which matches the usage here, but 
-
-> diff --git a/include/linux/platform_data/dma-imx.h b/include/linux/platform_data/dma-imx.h
-> index f6d30cc..762a7d0 100644
-> --- a/include/linux/platform_data/dma-imx.h
-> +++ b/include/linux/platform_data/dma-imx.h
-> @@ -51,6 +51,9 @@ struct imx_dma_data {
->  	int dma_request; /* DMA request line */
->  	enum sdma_peripheral_type peripheral_type;
->  	int priority;
-> +
-> +	/* Did the controller's filter function allocated this object? */
-> +	bool alloc_ctl_filter;
->  };
-
-There are actually two more members in the imx_dma_data structure. Shouldn't those
-be encoded in the dma specifier as well?
-  
->  static inline int imx_dma_is_ipu(struct dma_chan *chan)
-> @@ -63,7 +66,8 @@ static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
->  	return strstr(dev_name(chan->device->dev), "sdma") ||
->  		!strcmp(dev_name(chan->device->dev), "imx1-dma") ||
->  		!strcmp(dev_name(chan->device->dev), "imx21-dma") ||
-> -		!strcmp(dev_name(chan->device->dev), "imx27-dma");
-> +		!strcmp(dev_name(chan->device->dev), "imx27-dma") ||
-> +		!strcmp(chan->device->dev->driver->name, "imx-dma");
->  }
-
-Also, your filter function does not actually check
-imx_dma_is_general_purpose() as the old style filter functions
-in the slave drivers do, which breaks when you have more than one dma engine
-in the system.
-
-I think you have to provide your own xlate function, and pass the controller
-and multiple cells into the filter function, or use no filter at all but instead
-find a way to get a channel directly.
-
-	Arnd
+This seems rather basic and not worth documenting. The technique is
+identical to the use of header files in C/assembly/... code. I suppose
+if we document that, then there would be an argument for documenting this.
