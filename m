@@ -1,47 +1,57 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2] Drivers: w1: mxc_w1, Add support for DT
-Date: Sun, 24 Feb 2013 01:18:38 +0400
-Message-ID: <5129322E.9030400@cogentembedded.com>
-References: <1361640958-1876-1-git-send-email-mpa@pengutronix.de>
+From: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
+Subject: Re: [v3 0/6] ARM: tegra: convert device tree files to use CLK defines
+Date: Sat, 23 Feb 2013 13:51:14 -0600
+Message-ID: <1361649074.11282.12@driftwood>
+References: <1360917814-27236-1-git-send-email-hdoyu@nvidia.com>
+ <1361138717.29465.2@driftwood> <5123B1F8.4040102@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"; Format="Flowed"; DelSp="Yes"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1361640958-1876-1-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: linux-arm-kernel-bounces@lists.infradead.org
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: fabio.estevam@freescale.com, gregkh@linuxfoundation.org, s.hauer@pengutronix.de, rob.herring@calxeda.com, grant.likely@secretlab.ca, kernel@pengutronix.de, zbr@ioremap.net, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5123B1F8.4040102-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> (from swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org on
+ Tue Feb 19 11:10:16 2013)
+Content-Disposition: inline
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 02/19/2013 11:10:16 AM, Stephen Warren wrote:
+> On 02/17/2013 03:05 PM, Rob Landley wrote:
+> > On 02/15/2013 02:43:11 AM, Hiroshi Doyu wrote:
+> >> Hi,
+> >>
+> >> With new dtc+cpp feature, we could get rid of magic numbers in dts*
+> >> files. This patch replaces CLK IDs.
+> >>
+> >> We also plan to share those DT header files with kernel source
+> >> later[1].
+> > ...
+> >> [1]
+> >>  
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149804.html
+> >>
+> >
+> > This really smells like documentation should be updated, probably
+> > booting-without-of.txt or similar. Alas, I'm not capable of writing  
+> such
+> > an update...
+> 
+> I'm not sure what documentation would be updated nor why. Can you
+> describe that?
 
-On 23-02-2013 21:35, Markus Pargmann wrote:
+"When writing new device tree files, please do not include magic  
+numbers. Here's how to avoid them."
 
-> Add devicetree support for mxc_w1 driver.
+Does something in Documentation already say this somewhere?
 
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-> ---
->   Documentation/devicetree/bindings/w1/fsl,mxc-w1.txt | 13 +++++++++++++
->   drivers/w1/masters/mxc_w1.c                         |  7 +++++++
->   2 files changed, 20 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/w1/fsl,mxc-w1.txt
-
-> diff --git a/Documentation/devicetree/bindings/w1/fsl,mxc-w1.txt b/Documentation/devicetree/bindings/w1/fsl,mxc-w1.txt
-> new file mode 100644
-> index 0000000..686ced4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/w1/fsl,mxc-w1.txt
-> @@ -0,0 +1,13 @@
-> +Freescale driver for Dalla's 1-wire bus master on imx chips
-
-    You meant "Dallas'".
-
-WBR, Sergei
+Rob
