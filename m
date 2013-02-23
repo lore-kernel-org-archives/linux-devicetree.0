@@ -1,71 +1,39 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCHi v2] net: sh_eth: Add support of device tree probe
-Date: Fri, 22 Feb 2013 10:49:19 -0800
-Message-ID: <20130222184918.GC31345@verge.net.au>
-References: <1360803091-26400-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
- <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com>
- <511C5279.3070008@renesas.com>
+From: Heiko =?utf-8?q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/4] Input: auo_pixcir_ts - add devicetree support
+Date: Sat, 23 Feb 2013 12:55:23 +0100
+Message-ID: <201302231255.23772.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <511C5279.3070008@renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, netdev@vger.kernel.org, magnus.damm@gmail.com, devicetree-discuss@lists.ozlabs.org, kda@linux-powerpc.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 14, 2013 at 11:56:57AM +0900, Nobuhiro Iwamatsu wrote:
-> (2013/02/14 10:24), Kuninori Morimoto wrote:
-> >
-> >Hi Iwamatsu-san
-> >
-> >Thank you for this patch.
-> >
-> >Small comment from me
-> >
-> >>+#ifdef CONFIG_OF
-> >(snip)
-> >>+sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
-> >>+{
-> >>+	int ret;
-> >>+	struct device_node *np = dev->of_node;
-> >>+	struct sh_eth_plat_data *pdata;
-> >...
-> >>+#else
-> >>+static struct sh_eth_plat_data *
-> >>+sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
-> >>+{
-> >>+	return NULL;
-> >>+}
-> >>+#endif
-> >
-> >(snip)
-> >
-> >>  static int sh_eth_drv_probe(struct platform_device *pdev)
-> >>  {
-> >...
-> >>+#ifdef CONFIG_OF
-> >>+	if (np&&  of_device_is_available(np)) {
-> >>+		pd = sh_eth_parse_dt(&pdev->dev, ndev);
-> >>+		if (pdev->dev.platform_data) {
-> >>+			struct sh_eth_plat_data *tmp =
-> >>+				pdev->dev.platform_data;
-> >>+			pd->set_mdio_gate = tmp->set_mdio_gate;
-> >>+			pd->needs_init = tmp->needs_init;
-> >>+		}
-> >>+	} else
-> >>+#endif
-> >
-> >sh_eth_parse_dt() was defined for both CONFIG_OF and !CONFIG_OF.
-> >But it is called only from CONFIG_OF ?
-> >
-> 
-> Because of_device_is_available needs CONFIG_OF.
-> I already send a patch which add empty function of of_device_is_available.
-> If this was apply, this ifdef becomes without need.
+Some small cleanups needed and the parsing of the dt data.
 
-Hi Iwamatsu-san,
+Heiko Stuebner (4):
+  Input: auo-pixcir-ts - set input direction for interrupt gpio
+  Input: auo-pixcir-ts - handle reset gpio directly
+  Input: auo_pixcir_ts - keep own pointer to platform_data
+  Input: auo_pixcir_ts - add devicetree support
 
-could you let me know of the status of that patch?
-Has it been queued-up or merged? If so, where and when?
+ .../bindings/input/touchscreen/auo_pixcir_ts.txt   |   30 ++++++
+ drivers/input/touchscreen/auo-pixcir-ts.c          |  104 +++++++++++++++++--
+ include/linux/input/auo-pixcir-ts.h                |    4 +-
+ 3 files changed, 124 insertions(+), 14 deletions(-)
+ create mode 100644 
+Documentation/devicetree/bindings/input/touchscreen/auo_pixcir_ts.txt
+
+-- 
+1.7.2.3
