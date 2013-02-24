@@ -1,49 +1,233 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [v3 0/6] ARM: tegra: convert device tree files to use CLK defines
-Date: Sat, 23 Feb 2013 16:52:56 -0700
-Message-ID: <51295658.7030105@wwwdotorg.org>
-References: <1360917814-27236-1-git-send-email-hdoyu@nvidia.com> <1361138717.29465.2@driftwood> <5123B1F8.4040102@wwwdotorg.org> <1361649074.11282.12@driftwood>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 4/4] Input: auo_pixcir_ts - add devicetree support
+Date: Sun, 24 Feb 2013 00:00:15 -0800
+Message-ID: <20130224080015.GA20590@core.coreip.homeip.net>
+References: <201302231255.23772.heiko@sntech.de>
+ <201302231258.16498.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1361649074.11282.12@driftwood>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201302231258.16498.heiko@sntech.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/23/2013 12:51 PM, Rob Landley wrote:
-> On 02/19/2013 11:10:16 AM, Stephen Warren wrote:
->> On 02/17/2013 03:05 PM, Rob Landley wrote:
->> > On 02/15/2013 02:43:11 AM, Hiroshi Doyu wrote:
->> >> Hi,
->> >>
->> >> With new dtc+cpp feature, we could get rid of magic numbers in dts*
->> >> files. This patch replaces CLK IDs.
->> >>
->> >> We also plan to share those DT header files with kernel source
->> >> later[1].
->> > ...
->> >> [1]
->> >>
->> http://lists.infradead.org/pipermail/linux-arm-kernel/2013-February/149804.html
->>
->> >>
->> >
->> > This really smells like documentation should be updated, probably
->> > booting-without-of.txt or similar. Alas, I'm not capable of writing
->> such
->> > an update...
->>
->> I'm not sure what documentation would be updated nor why. Can you
->> describe that?
-> 
-> "When writing new device tree files, please do not include magic
-> numbers. Here's how to avoid them."
-> 
-> Does something in Documentation already say this somewhere?
+Hi Heiko,
 
-This seems rather basic and not worth documenting. The technique is
-identical to the use of header files in C/assembly/... code. I suppose
-if we document that, then there would be an argument for documenting this.
+On Sat, Feb 23, 2013 at 12:58:16PM +0100, Heiko St=FCbner wrote:
+> +static struct auo_pixcir_ts_platdata *auo_pixcir_parse_dt(struct dev=
+ice *dev)
+> +{
+> +	struct auo_pixcir_ts_platdata *pdata =3D NULL;
+> +
+> +#ifdef CONFIG_OF
+> +	struct device_node *np =3D dev->of_node;
+> +
+> +	if (!np)
+> +		return NULL;
+> +
+> +	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> +	if (!pdata) {
+> +		dev_err(dev, "failed to allocate platform data\n");
+> +		return NULL;
+> +	}
+
+I disike #ifdefs in the middle of the code, also it would be nice if we
+signal the proper error instead of always using -EINVAL when there are
+issues with platform/DT data.
+
+How about the version of the patch below?
+
+Thanks.
+--=20
+Dmitry
+
+Input: auo_pixcir_ts - add devicetree support
+
+=46rom: Heiko St=FCbner <heiko@sntech.de>
+
+Add the necessary code to create the needed platformdata from devicetre=
+e
+informations.
+
+The interrupt mode of the chip is not set via devicetree, as it is not
+a property of the hardware but instead only a preferred type of operati=
+on.
+This should probably be made settable via configfs in the future.
+The option set as default is the mode the datasheet mentions as default=
+=2E
+
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+---
+ .../bindings/input/touchscreen/auo_pixcir_ts.txt   |   30 ++++++++
+ drivers/input/touchscreen/auo-pixcir-ts.c          |   74 ++++++++++++=
++++++++-
+ 2 files changed, 99 insertions(+), 5 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen=
+/auo_pixcir_ts.txt
+
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/auo_pi=
+xcir_ts.txt b/Documentation/devicetree/bindings/input/touchscreen/auo_p=
+ixcir_ts.txt
+new file mode 100644
+index 0000000..f40f21c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/input/touchscreen/auo_pixcir_ts=
+=2Etxt
+@@ -0,0 +1,30 @@
++* AUO in-cell touchscreen controller using Pixcir sensors
++
++Required properties:
++- compatible: must be "auo,auo_pixcir_ts"
++- reg: I2C address of the chip
++- interrupts: interrupt to which the chip is connected
++- gpios: gpios the chip is connected to
++  first one is the interrupt gpio and second one the reset gpio
++- x-size: horizontal resolution of touchscreen
++- y-size: vertical resolution of touchscreen
++
++Example:
++
++	i2c@00000000 {
++		/* ... */
++
++		auo_pixcir_ts@5c {
++			compatible =3D "auo,auo_pixcir_ts";
++			reg =3D <0x5c>;
++			interrupts =3D <2 0>;
++
++			gpios =3D <&gpf 2 0 2>, /* INT */
++				<&gpf 5 1 0>; /* RST */
++
++			x-size =3D <800>;
++			y-size =3D <600>;
++		};
++
++		/* ... */
++	};
+diff --git a/drivers/input/touchscreen/auo-pixcir-ts.c b/drivers/input/=
+touchscreen/auo-pixcir-ts.c
+index c0a2483..dfa6d54 100644
+--- a/drivers/input/touchscreen/auo-pixcir-ts.c
++++ b/drivers/input/touchscreen/auo-pixcir-ts.c
+@@ -31,6 +31,8 @@
+ #include <linux/delay.h>
+ #include <linux/gpio.h>
+ #include <linux/input/auo-pixcir-ts.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
+=20
+ /*
+  * Coordinate calculation:
+@@ -479,19 +481,72 @@ unlock:
+ }
+ #endif
+=20
+-static SIMPLE_DEV_PM_OPS(auo_pixcir_pm_ops, auo_pixcir_suspend,
+-			 auo_pixcir_resume);
++static SIMPLE_DEV_PM_OPS(auo_pixcir_pm_ops,
++			 auo_pixcir_suspend, auo_pixcir_resume);
++
++#ifdef CONFIG_OF
++static struct auo_pixcir_ts_platdata *auo_pixcir_parse_dt(struct devic=
+e *dev)
++{
++	struct auo_pixcir_ts_platdata *pdata;
++	struct device_node *np =3D dev->of_node;
++
++	if (!np)
++		return ERR_PTR(-ENOENT);
++
++	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
++	if (!pdata) {
++		dev_err(dev, "failed to allocate platform data\n");
++		return ERR_PTR(-ENOMEM);
++	}
++
++	pdata->gpio_int =3D of_get_gpio(np, 0);
++	if (!gpio_is_valid(pdata->gpio_int)) {
++		dev_err(dev, "failed to get interrupt gpio\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	pdata->gpio_rst =3D of_get_gpio(np, 1);
++	if (!gpio_is_valid(pdata->gpio_rst)) {
++		dev_err(dev, "failed to get reset gpio\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	if (of_property_read_u32(np, "x-size", &pdata->x_max)) {
++		dev_err(dev, "failed to get x-size property\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	if (of_property_read_u32(np, "y-size", &pdata->y_max)) {
++		dev_err(dev, "failed to get y-size property\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	/* default to asserting the interrupt when the screen is touched */
++	pdata->int_setting =3D AUO_PIXCIR_INT_TOUCH_IND;
++
++	return pdata;
++}
++#else
++static struct auo_pixcir_ts_platdata *auo_pixcir_parse_dt(struct devic=
+e *dev)
++{
++	return ERR_PTR(-EINVAL);
++}
++#endif
+=20
+ static int auo_pixcir_probe(struct i2c_client *client,
+ 				      const struct i2c_device_id *id)
+ {
+-	const struct auo_pixcir_ts_platdata *pdata =3D client->dev.platform_d=
+ata;
++	const struct auo_pixcir_ts_platdata *pdata;
+ 	struct auo_pixcir_ts *ts;
+ 	struct input_dev *input_dev;
+ 	int ret;
+=20
+-	if (!pdata)
+-		return -EINVAL;
++	pdata =3D dev_get_platdata(&client->dev);
++	if (!pdata) {
++		pdata =3D auo_pixcir_parse_dt(&client->dev);
++		if (IS_ERR(pdata))
++			return PTR_ERR(pdata);
++	}
+=20
+ 	ts =3D kzalloc(sizeof(struct auo_pixcir_ts), GFP_KERNEL);
+ 	if (!ts)
+@@ -647,11 +702,20 @@ static const struct i2c_device_id auo_pixcir_idta=
+ble[] =3D {
+ };
+ MODULE_DEVICE_TABLE(i2c, auo_pixcir_idtable);
+=20
++#ifdef CONFIG_OF
++static struct of_device_id auo_pixcir_ts_dt_idtable[] =3D {
++	{ .compatible =3D "auo,auo_pixcir_ts" },
++	{},
++};
++MODULE_DEVICE_TABLE(of, auo_pixcir_ts_dt_idtable);
++#endif
++
+ static struct i2c_driver auo_pixcir_driver =3D {
+ 	.driver =3D {
+ 		.owner	=3D THIS_MODULE,
+ 		.name	=3D "auo_pixcir_ts",
+ 		.pm	=3D &auo_pixcir_pm_ops,
++		.of_match_table	=3D of_match_ptr(auo_pixcir_ts_dt_idtable),
+ 	},
+ 	.probe		=3D auo_pixcir_probe,
+ 	.remove		=3D auo_pixcir_remove,
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
