@@ -1,133 +1,105 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] Drivers: w1: mxc_w1, Add support for DT
-Date: Sun, 24 Feb 2013 13:36:03 +0100
-Message-ID: <20130224123603.GA11323@pengutronix.de>
-References: <1361640958-1876-1-git-send-email-mpa@pengutronix.de>
- <CALBypN4+ioS=YDrw7YnvtS1AeS+UH=FidYd2zG1_NsBWDh9bgQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CALBypN4+ioS=YDrw7YnvtS1AeS+UH=FidYd2zG1_NsBWDh9bgQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Martin Fuzzey <mfuzzey-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, zbr-i6C2adt8DTjR7s880joybQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH] DMA: of: Constant names
+Date: Sun, 24 Feb 2013 16:36:09 +0100
+Message-ID: <1361720169-3832-1-git-send-email-mpa@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com
+Cc: kernel@pengutronix.de, jon-hunter@ti.com, djbw@fb.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
+No DMA of-function alters the name, so this patch changes the name arguments
+to be constant. Most drivers will probably request DMA channels using a
+constant name.
 
-On Sun, Feb 24, 2013 at 12:37:17PM +0100, Martin Fuzzey wrote:
-> Hi Markus,
-> 
-> I've already submitted basically this and it's in linux-next:
-> http://git.kernel.org/?p=linux/kernel/git/next/linux-next.git;a=commitdiff;h=
-> 28c55dc1acc863cb29832b5be2464ebcdafdc3d5
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+---
+ drivers/dma/dmaengine.c   | 2 +-
+ drivers/dma/of-dma.c      | 6 +++---
+ include/linux/dmaengine.h | 4 ++--
+ include/linux/of_dma.h    | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-Ok, but 2/2 is still needed.
-
-> 
-> Also:
-> +Example:
-> +               w1: w1@10009000 {
-> +                       compatible = "fsl,imx27-w1";
-> +                       reg = <0x10009000 0x1000>;
-> +               };
-> ...
-> +struct of_device_id mxc_w1_of_ids[] = {
-> +       { .compatible = "fsl,imx21-w1", },
-> +       { /* sentinel */ }
-> +};
-> 
-> Isn't there a mismatch imx27 vs imx21 here?
-
-Yes that's a mismatch from a previous version.
-
-Thanks
-
-Markus
-
-> 
-> Regards,
-> 
-> Martin
-> 
-> 
-> 
-> On Sat, Feb 23, 2013 at 6:35 PM, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> 
->     Add devicetree support for mxc_w1 driver.
-> 
->     Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
->     ---
->      Documentation/devicetree/bindings/w1/fsl,mxc-w1.txt | 13 +++++++++++++
->      drivers/w1/masters/mxc_w1.c                         |  7 +++++++
->      2 files changed, 20 insertions(+)
->      create mode 100644 Documentation/devicetree/bindings/w1/fsl,mxc-w1.txt
-> 
->     diff --git a/Documentation/devicetree/bindings/w1/fsl,mxc-w1.txt b/
->     Documentation/devicetree/bindings/w1/fsl,mxc-w1.txt
->     new file mode 100644
->     index 0000000..686ced4
->     --- /dev/null
->     +++ b/Documentation/devicetree/bindings/w1/fsl,mxc-w1.txt
->     @@ -0,0 +1,13 @@
->     +Freescale driver for Dalla's 1-wire bus master on imx chips
->     +
->     +This driver supports imx21,27,31,35.
->     +
->     +Required properties:
->     +- compatible : "fsl,<chip>-w1"
->     +- reg : Should be the memory range.
->     +
->     +Example:
->     +               w1: w1@10009000 {
->     +                       compatible = "fsl,imx27-w1";
->     +                       reg = <0x10009000 0x1000>;
->     +               };
->     diff --git a/drivers/w1/masters/mxc_w1.c b/drivers/w1/masters/mxc_w1.c
->     index 708a25f..827ff7f 100644
->     --- a/drivers/w1/masters/mxc_w1.c
->     +++ b/drivers/w1/masters/mxc_w1.c
->     @@ -186,9 +186,16 @@ static int mxc_w1_remove(struct platform_device *pdev)
->             return 0;
->      }
-> 
->     +struct of_device_id mxc_w1_of_ids[] = {
->     +       { .compatible = "fsl,imx21-w1", },
->     +       { /* sentinel */ }
->     +};
->     +MODULE_DEVICE_TABLE(of, mxc_w1_of_ids);
->     +
->      static struct platform_driver mxc_w1_driver = {
->             .driver = {
->                        .name = "mxc_w1",
->     +                  .of_match_table = mxc_w1_of_ids,
->             },
->             .probe = mxc_w1_probe,
->             .remove = mxc_w1_remove,
->     --
->     1.8.1.2
-> 
-> 
->     _______________________________________________
->     linux-arm-kernel mailing list
->     linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->     http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
-> 
-
+diff --git a/drivers/dma/dmaengine.c b/drivers/dma/dmaengine.c
+index 242b8c0..779f43a 100644
+--- a/drivers/dma/dmaengine.c
++++ b/drivers/dma/dmaengine.c
+@@ -555,7 +555,7 @@ EXPORT_SYMBOL_GPL(__dma_request_channel);
+  * @dev:	pointer to client device structure
+  * @name:	slave channel name
+  */
+-struct dma_chan *dma_request_slave_channel(struct device *dev, char *name)
++struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name)
+ {
+ 	/* If device-tree is present get slave info from here */
+ 	if (dev->of_node)
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index 69d04d2..6036cd0 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -172,8 +172,8 @@ EXPORT_SYMBOL_GPL(of_dma_controller_free);
+  * specifiers, matches the name provided. Returns 0 if the name matches and
+  * a valid pointer to the DMA specifier is found. Otherwise returns -ENODEV.
+  */
+-static int of_dma_match_channel(struct device_node *np, char *name, int index,
+-				struct of_phandle_args *dma_spec)
++static int of_dma_match_channel(struct device_node *np, const char *name,
++				int index, struct of_phandle_args *dma_spec)
+ {
+ 	const char *s;
+ 
+@@ -198,7 +198,7 @@ static int of_dma_match_channel(struct device_node *np, char *name, int index,
+  * Returns pointer to appropriate dma channel on success or NULL on error.
+  */
+ struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+-					      char *name)
++					      const char *name)
+ {
+ 	struct of_phandle_args	dma_spec;
+ 	struct of_dma		*ofdma;
+diff --git a/include/linux/dmaengine.h b/include/linux/dmaengine.h
+index f593999..f062f89 100644
+--- a/include/linux/dmaengine.h
++++ b/include/linux/dmaengine.h
+@@ -968,7 +968,7 @@ enum dma_status dma_sync_wait(struct dma_chan *chan, dma_cookie_t cookie);
+ enum dma_status dma_wait_for_async_tx(struct dma_async_tx_descriptor *tx);
+ void dma_issue_pending_all(void);
+ struct dma_chan *__dma_request_channel(dma_cap_mask_t *mask, dma_filter_fn fn, void *fn_param);
+-struct dma_chan *dma_request_slave_channel(struct device *dev, char *name);
++struct dma_chan *dma_request_slave_channel(struct device *dev, const char *name);
+ void dma_release_channel(struct dma_chan *chan);
+ #else
+ static inline enum dma_status dma_wait_for_async_tx(struct dma_async_tx_descriptor *tx)
+@@ -984,7 +984,7 @@ static inline struct dma_chan *__dma_request_channel(dma_cap_mask_t *mask,
+ 	return NULL;
+ }
+ static inline struct dma_chan *dma_request_slave_channel(struct device *dev,
+-							 char *name)
++							 const char *name)
+ {
+ 	return NULL;
+ }
+diff --git a/include/linux/of_dma.h b/include/linux/of_dma.h
+index d15073e..ce6a8ab 100644
+--- a/include/linux/of_dma.h
++++ b/include/linux/of_dma.h
+@@ -40,7 +40,7 @@ extern int of_dma_controller_register(struct device_node *np,
+ 		void *data);
+ extern int of_dma_controller_free(struct device_node *np);
+ extern struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+-						     char *name);
++						     const char *name);
+ extern struct dma_chan *of_dma_simple_xlate(struct of_phandle_args *dma_spec,
+ 		struct of_dma *ofdma);
+ #else
+@@ -58,7 +58,7 @@ static inline int of_dma_controller_free(struct device_node *np)
+ }
+ 
+ static inline struct dma_chan *of_dma_request_slave_channel(struct device_node *np,
+-						     char *name)
++						     const char *name)
+ {
+ 	return NULL;
+ }
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.8.1.2
