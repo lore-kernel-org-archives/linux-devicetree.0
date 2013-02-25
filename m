@@ -1,92 +1,197 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dma: imx-dma: Add oftree support
-Date: Mon, 25 Feb 2013 17:53:24 +0100
-Message-ID: <20130225165324.GC32025@pengutronix.de>
-References: <1361543838-12604-1-git-send-email-mpa@pengutronix.de>
- <1361808255-17381-1-git-send-email-mpa@pengutronix.de>
- <201302251624.52014.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <201302251624.52014.arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Markus Pargmann <mpa@pengutronix.de>
+Subject: [PATCH] mmc: mxcmmc: DT support
+Date: Mon, 25 Feb 2013 19:28:05 +0100
+Message-ID: <1361816885-3033-1-git-send-email-mpa@pengutronix.de>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: cjb@laptop.org
+Cc: rob.herring@calxeda.com, rob@landley.net, s.hauer@pengutronix.de, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Markus Pargmann <mpa@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 25, 2013 at 04:24:51PM +0000, Arnd Bergmann wrote:
-> On Monday 25 February 2013, Markus Pargmann wrote:
-> > Adding devicetree support for imx-dma driver. Use driver name for
-> > function 'imx_dma_is_general_purpose' because the devicename for
-> > devicetree initialized devices is different.
-> > 
-> > Changes in V3:
-> > - Create a imxdma translate function to pass the device object into the
-> >   filter function.
-> > 
-> > Changes in V2:
-> > - Change the driver to use generic DMA DT bindings.
-> > - Add a imx-dma filter function that sets the dma request line in
-> >   private data.
-> > 
-> > Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> > Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> 
-> Looks correct now,
-> 
-> Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> 
-> I have one idea for an optimization though:
-> 
-> > +static bool imxdma_filter_fn(struct dma_chan *chan, void *param)
-> > +{
-> > +	struct imxdma_filter_data *fdata = param;
-> > +	struct imx_dma_data *data;
-> > +
-> > +	if (chan->device->dev != fdata->imxdma->dev)
-> > +		return false;
-> > +
-> > +	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> > +
-> > +	if (!data)
-> > +		return false;
-> > +
-> > +	data->dma_request = fdata->request;
-> > +	data->alloc_ctl_filter = true;
-> > +	chan->private = data;
-> > +
-> > +	return true;
-> > +}
-> 
-> There is already a "dma_request" member in "struct imxdma_channel", so
-> you could use that instead of allocating the imx_dma_data here.
-> 
-> Then you don't need to keep track of freeing that memory again, but
-> you might have to change a few other functions that look at data->dma_request
-> rather than chan->dma_request at the moment and change them to
-> use the latter instead. You can copy data->dma_request over in the
-> alloc_chan_resources functions for the legacy case.
+Adding devicetree support for imx21-mmc and imx31-mmc. Based on generic
+gpio helper functions by Guennadi and generic DMA devicetree bindings.
 
-Thanks, that is much better than the current use of kzalloc. I updated it for v4.
+Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
+---
+ .../devicetree/bindings/mmc/fsl-imx-mmc.txt        | 24 +++++++
+ drivers/mmc/host/mxcmmc.c                          | 80 +++++++++++++++++-----
+ 2 files changed, 86 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
 
-Markus
-
-> 
-> 	Arnd
-
+diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+new file mode 100644
+index 0000000..a5ab662
+--- /dev/null
++++ b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+@@ -0,0 +1,24 @@
++* Freescale Secure Digital Host Controller for i.MX1/2 series
++
++This file documents differences to the properties defined in mmc.txt.
++
++Required properties:
++- compatible : Should be "fsl,<chip>-mmc", chip can be imx21 or imx31
++
++Optional properties:
++- dmas: One DMA phandle with arguments as defined by the devicetree bindings
++	of the used DMA controller.
++- dma-names: Has to be "rx-tx".
++
++Example:
++
++sdhci1: sdhci@10014000 {
++	compatible = "fsl,imx27-mmc", "fsl,imx21-mmc";
++	reg = <0x10014000 0x1000>;
++	interrupts = <11>;
++	dmas = <&dma 7>;
++	dma-names = "rx-tx";
++	bus-width = <4>;
++	cd-gpios = <&gpio3 29>;
++	status = "okay";
++};
+diff --git a/drivers/mmc/host/mxcmmc.c b/drivers/mmc/host/mxcmmc.c
+index a72936e..626698b 100644
+--- a/drivers/mmc/host/mxcmmc.c
++++ b/drivers/mmc/host/mxcmmc.c
+@@ -34,6 +34,10 @@
+ #include <linux/regulator/consumer.h>
+ #include <linux/dmaengine.h>
+ #include <linux/types.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/of_dma.h>
++#include <linux/of_gpio.h>
+ 
+ #include <asm/dma.h>
+ #include <asm/irq.h>
+@@ -173,6 +177,19 @@ static struct platform_device_id mxcmci_devtype[] = {
+ };
+ MODULE_DEVICE_TABLE(platform, mxcmci_devtype);
+ 
++static const struct of_device_id mxcmci_of_match[] = {
++	{
++		.compatible = "fsl,imx21-mmc",
++		.data = &mxcmci_devtype[IMX21_MMC],
++	}, {
++		.compatible = "fsl,imx31-mmc",
++		.data = &mxcmci_devtype[IMX31_MMC],
++	}, {
++		/* sentinel */
++	}
++};
++MODULE_DEVICE_TABLE(of, mxcmci_of_match);
++
+ static inline int is_imx31_mmc(struct mxcmci_host *host)
+ {
+ 	return host->devtype == IMX31_MMC;
+@@ -935,10 +952,15 @@ static int mxcmci_probe(struct platform_device *pdev)
+ 	struct mxcmci_host *host = NULL;
+ 	struct resource *iores, *r;
+ 	int ret = 0, irq;
++	bool dat3_card_detect = false;
+ 	dma_cap_mask_t mask;
++	const struct of_device_id *of_id;
++	struct imxmmc_platform_data *pdata = pdev->dev.platform_data;
+ 
+ 	pr_info("i.MX SDHC driver\n");
+ 
++	of_id = of_match_device(mxcmci_of_match, &pdev->dev);
++
+ 	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	irq = platform_get_irq(pdev, 0);
+ 	if (!iores || irq < 0)
+@@ -954,8 +976,14 @@ static int mxcmci_probe(struct platform_device *pdev)
+ 		goto out_release_mem;
+ 	}
+ 
++	mmc_of_parse(mmc);
+ 	mmc->ops = &mxcmci_ops;
+-	mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ;
++
++	/* For devicetree parsing, the bus width is read from devicetree */
++	if (pdata)
++		mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ;
++	else
++		mmc->caps |= MMC_CAP_SDIO_IRQ;
+ 
+ 	/* MMC core transfer sizes tunable parameters */
+ 	mmc->max_segs = 64;
+@@ -971,14 +999,25 @@ static int mxcmci_probe(struct platform_device *pdev)
+ 		goto out_free;
+ 	}
+ 
++	if (of_id) {
++		struct platform_device_id *id_entry = of_id->data;
++		host->devtype = id_entry->driver_data;
++	} else {
++		host->devtype = pdev->id_entry->driver_data;
++	}
+ 	host->mmc = mmc;
+-	host->pdata = pdev->dev.platform_data;
+-	host->devtype = pdev->id_entry->driver_data;
++	host->pdata = pdata;
+ 	spin_lock_init(&host->lock);
+ 
++	if (pdata)
++		dat3_card_detect = pdata->dat3_card_detect;
++	else if (!(mmc->caps & MMC_CAP_NONREMOVABLE)
++			&& !of_property_read_bool(pdev->dev.of_node, "cd-gpios"))
++		dat3_card_detect = true;
++
+ 	mxcmci_init_ocr(host);
+ 
+-	if (host->pdata && host->pdata->dat3_card_detect)
++	if (dat3_card_detect)
+ 		host->default_irq_mask =
+ 			INT_CARD_INSERTION_EN | INT_CARD_REMOVAL_EN;
+ 	else
+@@ -1020,21 +1059,25 @@ static int mxcmci_probe(struct platform_device *pdev)
+ 
+ 	writel(host->default_irq_mask, host->base + MMC_REG_INT_CNTR);
+ 
+-	r = platform_get_resource(pdev, IORESOURCE_DMA, 0);
+-	if (r) {
+-		host->dmareq = r->start;
+-		host->dma_data.peripheral_type = IMX_DMATYPE_SDHC;
+-		host->dma_data.priority = DMA_PRIO_LOW;
+-		host->dma_data.dma_request = host->dmareq;
+-		dma_cap_zero(mask);
+-		dma_cap_set(DMA_SLAVE, mask);
+-		host->dma = dma_request_channel(mask, filter, host);
+-		if (host->dma)
+-			mmc->max_seg_size = dma_get_max_seg_size(
+-					host->dma->device->dev);
++	if (!host->pdata) {
++		host->dma = of_dma_request_slave_channel(pdev->dev.of_node,
++				"rx-tx");
++	} else {
++		r = platform_get_resource(pdev, IORESOURCE_DMA, 0);
++		if (r) {
++			host->dmareq = r->start;
++			host->dma_data.peripheral_type = IMX_DMATYPE_SDHC;
++			host->dma_data.priority = DMA_PRIO_LOW;
++			host->dma_data.dma_request = host->dmareq;
++			dma_cap_zero(mask);
++			dma_cap_set(DMA_SLAVE, mask);
++			host->dma = dma_request_channel(mask, filter, host);
++		}
+ 	}
+-
+-	if (!host->dma)
++	if (host->dma)
++		mmc->max_seg_size = dma_get_max_seg_size(
++				host->dma->device->dev);
++	else
+ 		dev_info(mmc_dev(host->mmc), "dma not available. Using PIO\n");
+ 
+ 	INIT_WORK(&host->datawork, mxcmci_datawork);
+@@ -1153,6 +1196,7 @@ static struct platform_driver mxcmci_driver = {
+ #ifdef CONFIG_PM
+ 		.pm	= &mxcmci_pm_ops,
+ #endif
++		.of_match_table	= mxcmci_of_match,
+ 	}
+ };
+ 
 -- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+1.8.1.2
+
