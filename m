@@ -1,7 +1,7 @@
 From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 4/5 v7][RFC] ASoC: ak4642: add .of_xlate_dai_name support
-Date: Mon, 25 Feb 2013 00:57:16 -0800 (PST)
-Message-ID: <874nh0g49j.wl%kuninori.morimoto.gx@renesas.com>
+Subject: [PATCH 5/5 v7][RFC] ASoC: fsi: add .of_xlate_dai_name support
+Date: Mon, 25 Feb 2013 00:57:59 -0800 (PST)
+Message-ID: <8738wkg48c.wl%kuninori.morimoto.gx@renesas.com>
 References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
  <50E71618.8090302@wwwdotorg.org>
  <20130104193712.GN4627@opensource.wolfsonmicro.com>
@@ -46,75 +46,83 @@ To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Mark Brown
 Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-ak4642 driver can be used from simple-card driver
-which requires .of_xlate_dai_name.
-This patch supports it.
+fsi driver can be used from simple-card driver
+which requires .of_xlate_dai_name, and snd_soc_register_cpu()
+This patch supports these.
 
 Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 ---
 v6 -> v7
 
- - .of_xlate_dai_name is on codec driver
+ - used snd_soc_register_cpu()
+ - of_xlate_dai_name is on cpu driver
 
- Documentation/devicetree/bindings/sound/ak4642.txt |    5 +++++
- sound/soc/codecs/ak4642.c                          |   11 +++++++++++
- 2 files changed, 16 insertions(+)
+ .../devicetree/bindings/sound/renesas,fsi.txt      |    9 ++++++++
+ sound/soc/sh/fsi.c                                 |   22 ++++++++++++++++++--
+ 2 files changed, 29 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/sound/ak4642.txt b/Documentation/devicetree/bindings/sound/ak4642.txt
-index 623d4e7..8b6df4d 100644
---- a/Documentation/devicetree/bindings/sound/ak4642.txt
-+++ b/Documentation/devicetree/bindings/sound/ak4642.txt
-@@ -7,10 +7,15 @@ Required properties:
-   - compatible : "asahi-kasei,ak4642" or "asahi-kasei,ak4643" or "asahi-kasei,ak4648"
-   - reg : The chip select number on the I2C bus
+diff --git a/Documentation/devicetree/bindings/sound/renesas,fsi.txt b/Documentation/devicetree/bindings/sound/renesas,fsi.txt
+index c5be003..a403ec1 100644
+--- a/Documentation/devicetree/bindings/sound/renesas,fsi.txt
++++ b/Documentation/devicetree/bindings/sound/renesas,fsi.txt
+@@ -13,9 +13,18 @@ Required properties:
+ - fsib,stream-mode-support	: same as fsia
+ - fsib,use-internal-clock	: same as fsia
  
 +Optional
 +
-+  #sound-dai-cells : enable DAI specifier, it must be 0
++  #sound-dai-cells		: enable DAI specifier, it must be 1
++
++  Valid values for the DAI specifier are:
++  0: FSI port A
++  1: FSI port B
 +
  Example:
  
- &i2c {
- 	ak4648: ak4648@0x12 {
-+		#sound-dai-cells = <0>;
- 		compatible = "asahi-kasei,ak4642";
- 		reg = <0x12>;
- 	};
-diff --git a/sound/soc/codecs/ak4642.c b/sound/soc/codecs/ak4642.c
-index c78794d..5772af1 100644
---- a/sound/soc/codecs/ak4642.c
-+++ b/sound/soc/codecs/ak4642.c
-@@ -485,6 +485,15 @@ static int ak4642_remove(struct snd_soc_codec *codec)
- 	return 0;
- }
+ sh_fsi2: sh_fsi2@0xec230000 {
++	#sound-dai-cells = <1>;
+ 	compatible = "renesas,sh_fsi2";
+ 	reg = <0xec230000 0x400>;
+ 	interrupts = <0 146 0x4>;
+diff --git a/sound/soc/sh/fsi.c b/sound/soc/sh/fsi.c
+index c724026a..f40f731 100644
+--- a/sound/soc/sh/fsi.c
++++ b/sound/soc/sh/fsi.c
+@@ -1886,6 +1886,24 @@ static struct snd_soc_platform_driver fsi_soc_platform = {
+ 	.pcm_free	= fsi_pcm_free,
+ };
  
-+static int ak4642_of_xlate_dai_name(struct snd_soc_codec *codec,
-+				    struct of_phandle_args *spec,
-+				    const char **dai_name)
++static int fsi_of_xlate_dai_name(struct snd_soc_cpu *codec,
++				 const struct of_phandle_args *spec,
++				 const char **dai_name)
 +{
-+	*dai_name = ak4642_dai.name;
++	int id = spec->args[0];
++
++	if (ARRAY_SIZE(fsi_soc_dai) <= id)
++		return -ENODEV;
++
++	*dai_name = fsi_soc_dai[id].name;
 +
 +	return 0;
 +}
 +
- static struct snd_soc_codec_driver soc_codec_dev_ak4642 = {
- 	.probe			= ak4642_probe,
- 	.remove			= ak4642_remove,
-@@ -497,6 +506,7 @@ static struct snd_soc_codec_driver soc_codec_dev_ak4642 = {
- 	.num_dapm_widgets	= ARRAY_SIZE(ak4642_dapm_widgets),
- 	.dapm_routes		= ak4642_intercon,
- 	.num_dapm_routes	= ARRAY_SIZE(ak4642_intercon),
-+	.of_xlate_dai_name	= ak4642_of_xlate_dai_name,
- };
++static const struct snd_soc_cpu_driver fsi_soc_cpu = {
++	.of_xlate_dai_name = fsi_of_xlate_dai_name,
++};
++
+ /*
+  *		platform function
+  */
+@@ -2046,8 +2064,8 @@ static int fsi_probe(struct platform_device *pdev)
+ 		goto exit_fsib;
+ 	}
  
- static struct snd_soc_codec_driver soc_codec_dev_ak4648 = {
-@@ -511,6 +521,7 @@ static struct snd_soc_codec_driver soc_codec_dev_ak4648 = {
- 	.num_dapm_widgets	= ARRAY_SIZE(ak4642_dapm_widgets),
- 	.dapm_routes		= ak4642_intercon,
- 	.num_dapm_routes	= ARRAY_SIZE(ak4642_intercon),
-+	.of_xlate_dai_name	= ak4642_of_xlate_dai_name,
- };
- 
- #if defined(CONFIG_I2C) || defined(CONFIG_I2C_MODULE)
+-	ret = snd_soc_register_dais(&pdev->dev, fsi_soc_dai,
+-				    ARRAY_SIZE(fsi_soc_dai));
++	ret = snd_soc_register_cpu(&pdev->dev, &fsi_soc_cpu,
++				   fsi_soc_dai, ARRAY_SIZE(fsi_soc_dai));
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "cannot snd dai register\n");
+ 		goto exit_snd_soc;
 -- 
 1.7.9.5
