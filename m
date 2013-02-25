@@ -1,197 +1,123 @@
-From: Markus Pargmann <mpa@pengutronix.de>
-Subject: [PATCH] mmc: mxcmmc: DT support
-Date: Mon, 25 Feb 2013 19:28:05 +0100
-Message-ID: <1361816885-3033-1-git-send-email-mpa@pengutronix.de>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: cjb@laptop.org
-Cc: rob.herring@calxeda.com, rob@landley.net, s.hauer@pengutronix.de, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, kernel@pengutronix.de, Markus Pargmann <mpa@pengutronix.de>
+From: Simon Glass <sjg@chromium.org>
+Subject: [PATCH v6 0/6] Add ChromeOS Embedded Controller support
+Date: Mon, 25 Feb 2013 14:08:35 -0800
+Message-ID: <1361830121-32284-1-git-send-email-sjg@chromium.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Simon Glass <sjg@chromium.org>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Wolfram Sang <w.sang@pengutronix.de>, Luigi Semenzato <semenzato@chromium.org>, Rob Herring <rob.herring@calxeda.com>, Che-Liang Chiou <clchiou@chromium.org>, Jonathan Kliegman <kliegs@chromium.org>, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, devicetree-discuss@lists.ozlabs.org, Alban Bedel <alban.bedel@avionic-design.de>, Roland Stigge <stigge@antcom.de>, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier@dowhile0.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-doc@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Bill Pemberton <wfp5p@virginia.edu>
 List-Id: devicetree@vger.kernel.org
 
-Adding devicetree support for imx21-mmc and imx31-mmc. Based on generic
-gpio helper functions by Guennadi and generic DMA devicetree bindings.
+The ChromeOS Embedded Controller (EC) is an Open Source EC implementation
+used on ARM and Intel Chromebooks. Current implementations use a Cortex-M3
+connected on a bus (such as I2C, SPI, LPC) to the AP. A separate interrupt
+line is used to indicate when the EC needs service.
 
-Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
----
- .../devicetree/bindings/mmc/fsl-imx-mmc.txt        | 24 +++++++
- drivers/mmc/host/mxcmmc.c                          | 80 +++++++++++++++++-----
- 2 files changed, 86 insertions(+), 18 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
+Functions performed by the EC vary by platform, but typically include
+battery charging, keyboard scanning and power sequencing.
 
-diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
-new file mode 100644
-index 0000000..a5ab662
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mmc/fsl-imx-mmc.txt
-@@ -0,0 +1,24 @@
-+* Freescale Secure Digital Host Controller for i.MX1/2 series
-+
-+This file documents differences to the properties defined in mmc.txt.
-+
-+Required properties:
-+- compatible : Should be "fsl,<chip>-mmc", chip can be imx21 or imx31
-+
-+Optional properties:
-+- dmas: One DMA phandle with arguments as defined by the devicetree bindings
-+	of the used DMA controller.
-+- dma-names: Has to be "rx-tx".
-+
-+Example:
-+
-+sdhci1: sdhci@10014000 {
-+	compatible = "fsl,imx27-mmc", "fsl,imx21-mmc";
-+	reg = <0x10014000 0x1000>;
-+	interrupts = <11>;
-+	dmas = <&dma 7>;
-+	dma-names = "rx-tx";
-+	bus-width = <4>;
-+	cd-gpios = <&gpio3 29>;
-+	status = "okay";
-+};
-diff --git a/drivers/mmc/host/mxcmmc.c b/drivers/mmc/host/mxcmmc.c
-index a72936e..626698b 100644
---- a/drivers/mmc/host/mxcmmc.c
-+++ b/drivers/mmc/host/mxcmmc.c
-@@ -34,6 +34,10 @@
- #include <linux/regulator/consumer.h>
- #include <linux/dmaengine.h>
- #include <linux/types.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/of_dma.h>
-+#include <linux/of_gpio.h>
- 
- #include <asm/dma.h>
- #include <asm/irq.h>
-@@ -173,6 +177,19 @@ static struct platform_device_id mxcmci_devtype[] = {
- };
- MODULE_DEVICE_TABLE(platform, mxcmci_devtype);
- 
-+static const struct of_device_id mxcmci_of_match[] = {
-+	{
-+		.compatible = "fsl,imx21-mmc",
-+		.data = &mxcmci_devtype[IMX21_MMC],
-+	}, {
-+		.compatible = "fsl,imx31-mmc",
-+		.data = &mxcmci_devtype[IMX31_MMC],
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(of, mxcmci_of_match);
-+
- static inline int is_imx31_mmc(struct mxcmci_host *host)
- {
- 	return host->devtype == IMX31_MMC;
-@@ -935,10 +952,15 @@ static int mxcmci_probe(struct platform_device *pdev)
- 	struct mxcmci_host *host = NULL;
- 	struct resource *iores, *r;
- 	int ret = 0, irq;
-+	bool dat3_card_detect = false;
- 	dma_cap_mask_t mask;
-+	const struct of_device_id *of_id;
-+	struct imxmmc_platform_data *pdata = pdev->dev.platform_data;
- 
- 	pr_info("i.MX SDHC driver\n");
- 
-+	of_id = of_match_device(mxcmci_of_match, &pdev->dev);
-+
- 	iores = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	irq = platform_get_irq(pdev, 0);
- 	if (!iores || irq < 0)
-@@ -954,8 +976,14 @@ static int mxcmci_probe(struct platform_device *pdev)
- 		goto out_release_mem;
- 	}
- 
-+	mmc_of_parse(mmc);
- 	mmc->ops = &mxcmci_ops;
--	mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ;
-+
-+	/* For devicetree parsing, the bus width is read from devicetree */
-+	if (pdata)
-+		mmc->caps = MMC_CAP_4_BIT_DATA | MMC_CAP_SDIO_IRQ;
-+	else
-+		mmc->caps |= MMC_CAP_SDIO_IRQ;
- 
- 	/* MMC core transfer sizes tunable parameters */
- 	mmc->max_segs = 64;
-@@ -971,14 +999,25 @@ static int mxcmci_probe(struct platform_device *pdev)
- 		goto out_free;
- 	}
- 
-+	if (of_id) {
-+		struct platform_device_id *id_entry = of_id->data;
-+		host->devtype = id_entry->driver_data;
-+	} else {
-+		host->devtype = pdev->id_entry->driver_data;
-+	}
- 	host->mmc = mmc;
--	host->pdata = pdev->dev.platform_data;
--	host->devtype = pdev->id_entry->driver_data;
-+	host->pdata = pdata;
- 	spin_lock_init(&host->lock);
- 
-+	if (pdata)
-+		dat3_card_detect = pdata->dat3_card_detect;
-+	else if (!(mmc->caps & MMC_CAP_NONREMOVABLE)
-+			&& !of_property_read_bool(pdev->dev.of_node, "cd-gpios"))
-+		dat3_card_detect = true;
-+
- 	mxcmci_init_ocr(host);
- 
--	if (host->pdata && host->pdata->dat3_card_detect)
-+	if (dat3_card_detect)
- 		host->default_irq_mask =
- 			INT_CARD_INSERTION_EN | INT_CARD_REMOVAL_EN;
- 	else
-@@ -1020,21 +1059,25 @@ static int mxcmci_probe(struct platform_device *pdev)
- 
- 	writel(host->default_irq_mask, host->base + MMC_REG_INT_CNTR);
- 
--	r = platform_get_resource(pdev, IORESOURCE_DMA, 0);
--	if (r) {
--		host->dmareq = r->start;
--		host->dma_data.peripheral_type = IMX_DMATYPE_SDHC;
--		host->dma_data.priority = DMA_PRIO_LOW;
--		host->dma_data.dma_request = host->dmareq;
--		dma_cap_zero(mask);
--		dma_cap_set(DMA_SLAVE, mask);
--		host->dma = dma_request_channel(mask, filter, host);
--		if (host->dma)
--			mmc->max_seg_size = dma_get_max_seg_size(
--					host->dma->device->dev);
-+	if (!host->pdata) {
-+		host->dma = of_dma_request_slave_channel(pdev->dev.of_node,
-+				"rx-tx");
-+	} else {
-+		r = platform_get_resource(pdev, IORESOURCE_DMA, 0);
-+		if (r) {
-+			host->dmareq = r->start;
-+			host->dma_data.peripheral_type = IMX_DMATYPE_SDHC;
-+			host->dma_data.priority = DMA_PRIO_LOW;
-+			host->dma_data.dma_request = host->dmareq;
-+			dma_cap_zero(mask);
-+			dma_cap_set(DMA_SLAVE, mask);
-+			host->dma = dma_request_channel(mask, filter, host);
-+		}
- 	}
--
--	if (!host->dma)
-+	if (host->dma)
-+		mmc->max_seg_size = dma_get_max_seg_size(
-+				host->dma->device->dev);
-+	else
- 		dev_info(mmc_dev(host->mmc), "dma not available. Using PIO\n");
- 
- 	INIT_WORK(&host->datawork, mxcmci_datawork);
-@@ -1153,6 +1196,7 @@ static struct platform_driver mxcmci_driver = {
- #ifdef CONFIG_PM
- 		.pm	= &mxcmci_pm_ops,
- #endif
-+		.of_match_table	= mxcmci_of_match,
- 	}
- };
- 
+This series includes support for the EC message protocol, and implements
+a matrix keyboard handler for Linux using the protocol. The EC performs
+key scanning and passes scan data in response to AP requests. This is
+used on the Samsung ARM Chromebook. No driver is available for LPC at
+present.
+
+This series can in principle operate on any hardware, but for it to actually
+work on the Samsung ARM Chromebook, it needs patches which are currently in
+progress to mainline: Exynos FDT interrupt support and I2C bus arbitration.
+
+The driver is device-tree-enabled and a suitable binding is included in
+this series. Example device tree nodes are included in the examples,
+but no device tree patch for exynos5250-snow is provided at this stage, since
+we must wait for the above-mentioned patches to land to avoid errors from
+dtc. This can be added with a follow-on patch when that work is complete.
+
+Changes in v6:
+- Allow cros_ec to be a module
+- Remove 'struct i2c_msg' definition
+- Use %ph instead of for loop to output packet trace
+- Fix incorrect indentation in cros_ec_keyb_process()
+- Remove unnecessary assignment to NULL in probe function
+
+Changes in v5:
+- Remove cros_ec allocation functions
+- Remove name access functions in cros_ec, using strings instead
+- Fix Kconfig help message for MFD_CROS_EC_I2C
+- Remove I2C retry logic
+- Switch cros_ec_i2c driver to use devm
+- Update cros_ec_i2c to work with new cros_ec interface
+- Switch cros_ec_spi driver to use devm
+- Update cros_ec_spi to work with new cros_ec interface
+- Fix {} style nit in cros_ec_keyb_has_ghosting
+- Correct key lookup logic which was broken in previous version
+- Switch cros_ec_keyb driver to use devm
+
+Changes in v4:
+- Fix up trvial logging comments
+- Remove messages reporting out of memory
+- Add compatible string for cros-ec-keyb
+- Remove wake notifier and let drivers use their own handlers instead
+- Add 'depends on MFD_CROS_EC' to Kconfig
+- Remove use of wake_notifier
+- Remove manual code to locate device tree node
+- Add resume handler to clear keyboard scan buffer if required
+
+Changes in v3:
+- Add stub for matrix_keypad_parse_of_params() when no CONFIG_OF
+- Put back full DT range checking in tca8418 driver
+- Remove 'select MFD_CROS_EC' from Kconfig as it isn't necessary
+- Remove old_state by using input layer's idev->key
+- Move inner loop of cros_ec_keyb_has_ghosting() into its own function and simplify
+- Add check for not finding the device tree node
+- Remove comment about leaking matrix_keypad_build_keymap()
+- Use platform_get_drvdata() where possible
+- Remove call to input_free_device() after input_unregister_device()
+
+Changes in v2:
+- Remove use of __devinit/__devexit
+- Remove use of __devinit/__devexit
+- Remove use of __devinit/__devexit
+- Add new patch to decode matrix-keypad DT binding
+- Remove use of __devinit/__devexit
+- Use function to read matrix-keypad parameters from DT
+- Remove key autorepeat parameters from DT binding and driver
+- Use unsigned int for rows/cols
+
+Simon Glass (6):
+  mfd: Add ChromeOS EC messages header
+  mfd: Add ChromeOS EC implementation
+  mfd: Add ChromeOS EC I2C driver
+  mfd: Add ChromeOS EC SPI driver
+  Input: matrix-keymap: Add function to read the new DT binding
+  Input: Add ChromeOS EC keyboard driver
+
+ .../devicetree/bindings/input/cros-ec-keyb.txt     |   72 +
+ Documentation/devicetree/bindings/mfd/cros-ec.txt  |   56 +
+ drivers/input/keyboard/Kconfig                     |   12 +
+ drivers/input/keyboard/Makefile                    |    1 +
+ drivers/input/keyboard/cros_ec_keyb.c              |  334 +++++
+ drivers/input/keyboard/lpc32xx-keys.c              |   11 +-
+ drivers/input/keyboard/omap4-keypad.c              |   16 +-
+ drivers/input/keyboard/tca8418_keypad.c            |    7 +-
+ drivers/input/matrix-keymap.c                      |   19 +
+ drivers/mfd/Kconfig                                |   28 +
+ drivers/mfd/Makefile                               |    3 +
+ drivers/mfd/cros_ec.c                              |  189 +++
+ drivers/mfd/cros_ec_i2c.c                          |  206 +++
+ drivers/mfd/cros_ec_spi.c                          |  375 ++++++
+ include/linux/input/matrix_keypad.h                |   19 +
+ include/linux/mfd/cros_ec.h                        |  170 +++
+ include/linux/mfd/cros_ec_commands.h               | 1369 ++++++++++++++++++++
+ 17 files changed, 2869 insertions(+), 18 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
+ create mode 100644 drivers/input/keyboard/cros_ec_keyb.c
+ create mode 100644 drivers/mfd/cros_ec.c
+ create mode 100644 drivers/mfd/cros_ec_i2c.c
+ create mode 100644 drivers/mfd/cros_ec_spi.c
+ create mode 100644 include/linux/mfd/cros_ec.h
+ create mode 100644 include/linux/mfd/cros_ec_commands.h
+
 -- 
-1.8.1.2
+1.8.1.3
 
