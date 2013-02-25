@@ -1,14 +1,14 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH V2] dma: imx-dma: Add oftree support
-Date: Mon, 25 Feb 2013 14:31:12 +0000
-Message-ID: <201302251431.12829.arnd@arndb.de>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v3 2/2] DMA: imx-dma: imxdma->dev used uninitialized
+Date: Mon, 25 Feb 2013 17:04:15 +0100
+Message-ID: <1361808255-17381-2-git-send-email-mpa@pengutronix.de>
 References: <1361543838-12604-1-git-send-email-mpa@pengutronix.de>
- <201302232216.22113.arnd@arndb.de> <20130224122748.GF10660@pengutronix.de>
+ <1361808255-17381-1-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130224122748.GF10660-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1361808255-17381-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -19,49 +19,36 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: djbw-b10kYP2dOMg@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 24 February 2013, Markus Pargmann wrote:
-> On Sat, Feb 23, 2013 at 10:16:21PM +0000, Arnd Bergmann wrote:
-> > On Saturday 23 February 2013, Markus Pargmann wrote:
+imxdma->dev is used for dev_warn before it was set.
 
-> > 
-> > There are actually two more members in the imx_dma_data structure. Shouldn't those
-> > be encoded in the dma specifier as well?
-> 
-> imx_dma_data is used by imx-dma and imx-sdma, but imx-dma does not use
-> peripheral_type and priority. When not loaded from devicetree
-> imx_dma_data is constructed by imx drivers without knowledge about the
-> dma driver. This patch moves the initialization to the driver, so I
-> think there is no need to fill all fields. I didn't want to use a new
-> struct because the imx drivers could still use this old way.
+Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/dma/imx-dma.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ok, got it.
-
-> > >  static inline int imx_dma_is_ipu(struct dma_chan *chan)
-> > > @@ -63,7 +66,8 @@ static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
-> > >  	return strstr(dev_name(chan->device->dev), "sdma") ||
-> > >  		!strcmp(dev_name(chan->device->dev), "imx1-dma") ||
-> > >  		!strcmp(dev_name(chan->device->dev), "imx21-dma") ||
-> > > -		!strcmp(dev_name(chan->device->dev), "imx27-dma");
-> > > +		!strcmp(dev_name(chan->device->dev), "imx27-dma") ||
-> > > +		!strcmp(chan->device->dev->driver->name, "imx-dma");
-> > >  }
-> > 
-> > Also, your filter function does not actually check
-> > imx_dma_is_general_purpose() as the old style filter functions
-> > in the slave drivers do, which breaks when you have more than one dma engine
-> > in the system.
-> 
-> Oh yes, in the filter function should be a device driver comparison. But
-> I would prefer a direct check instead of imx_dma_is_general_purpose because
-> I think the driver should not define a filter function that initializes data
-> for another driver (sdma).
-
-Yes, that is also how I did it in the dwdma patches. Basically  I have
-the dma engine object passed into xlate and then from there into the
-filter, where I can compare it against chan->device.
-
-	Arnd
+diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
+index 5856117..5830a0c 100644
+--- a/drivers/dma/imx-dma.c
++++ b/drivers/dma/imx-dma.c
+@@ -1077,6 +1077,7 @@ static int __init imxdma_probe(struct platform_device *pdev)
+ 	if (!imxdma)
+ 		return -ENOMEM;
+ 
++	imxdma->dev = &pdev->dev;
+ 	imxdma->devtype = pdev->id_entry->driver_data;
+ 
+ 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+@@ -1181,7 +1182,6 @@ static int __init imxdma_probe(struct platform_device *pdev)
+ 			      &imxdma->dma_device.channels);
+ 	}
+ 
+-	imxdma->dev = &pdev->dev;
+ 	imxdma->dma_device.dev = &pdev->dev;
+ 
+ 	imxdma->dma_device.device_alloc_chan_resources = imxdma_alloc_chan_resources;
+-- 
+1.8.1.2
