@@ -1,38 +1,58 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
 Subject: Re: [PATCH v4 5/5] ARM: exynos: dts: Add FIMD DT binding Documentation
-Date: Tue, 26 Feb 2013 22:57:15 +0100
-Message-ID: <512D2FBB.5090507@gmail.com>
-References: <1360912200-26377-1-git-send-email-vikas.sajjan@linaro.org> <1360912200-26377-6-git-send-email-vikas.sajjan@linaro.org> <511E1008.6010308@samsung.com> <CAD025yQokBbJwyFWeg8KwzTsE-4jgra5UhLuic5zJnQRt+GNTw@mail.gmail.com> <5122A119.7070501@gmail.com> <CAD025yRmvSpnM9RJJvN+FM00Rgz8Bt5msmEYcyFVxNTEKsM2xg@mail.gmail.com> <CAD025yTb5yfXWpzCnCg7KY9NsTw1wfsLFU6y32aD=WXe23xiwg@mail.gmail.com> <5127E533.4060702@gmail.com> <CAD025yQxOp1nd8N8K5wYco_o2TkW19fk_3jXHYHfVDnsDLR9VQ@mail.gmail.com>
+Date: Tue, 26 Feb 2013 23:11:32 +0100
+Message-ID: <3726480.lf0XiLbqs9@flatron>
+References: <1360912200-26377-1-git-send-email-vikas.sajjan@linaro.org> <CAD025yQxOp1nd8N8K5wYco_o2TkW19fk_3jXHYHfVDnsDLR9VQ@mail.gmail.com> <512D2FBB.5090507@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD025yQxOp1nd8N8K5wYco_o2TkW19fk_3jXHYHfVDnsDLR9VQ@mail.gmail.com>
+In-Reply-To: <512D2FBB.5090507@gmail.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vikas Sajjan <vikas.sajjan@linaro.org>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, sunil joshi <joshi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tom Gall <tom.gall@linaro.org>
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: Vikas Sajjan <vikas.sajjan@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, sunil joshi <joshi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tom Gall <tom.gall@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/26/2013 05:19 AM, Vikas Sajjan wrote:
-> ok thanks. Will modify the documentation as below.
->
-> compatible = "samsung, exynos4-fimd"; for Exynos4 SoCs
-> compatible = "samsung, exynos5-fimd" ; for Exynos5 SoCs
-> compatible = "samsung, s3c64xx-fimd" ; for S3C64XX SoCs
-> compatible = "samsung, s3c24xx-fimd" ; for S3C24XX SoCs
-> compatible = "samsung, s5p64x0-fimd" ; for S5P64X0 SoCs
+On Tuesday 26 of February 2013 22:57:15 Sylwester Nawrocki wrote:
+> On 02/26/2013 05:19 AM, Vikas Sajjan wrote:
+> > ok thanks. Will modify the documentation as below.
+> > 
+> > compatible = "samsung, exynos4-fimd"; for Exynos4 SoCs
+> > compatible = "samsung, exynos5-fimd" ; for Exynos5 SoCs
+> > compatible = "samsung, s3c64xx-fimd" ; for S3C64XX SoCs
+> > compatible = "samsung, s3c24xx-fimd" ; for S3C24XX SoCs
+> > compatible = "samsung, s5p64x0-fimd" ; for S5P64X0 SoCs
+> 
+> There should be no wildcards in the compatible property. I guess we can
+> just add the two first one above for now and leave other out for when
+> someone actually adds support for these SoCs at the drivers.
+> 
+> I suppose we could,  for example, have something like:
+> 
+> compatible = "samsung,s3c2410-fimd";                         // for
+> s3c2410 compatible = "samsung,s3c2440-fimd", "samsung,s3c2410-fimd"; //
+> for s3c2440
+> 
+> etc. But this really needs to be checked with the documentation
+> in each case.
+> 
+> > compatible = "samsung, s5pc100-fimd" ; for S5PC100 SoCs
+> > compatible = "samsung, s5pv210-fimd" ; for S5PV210 SoCs
 
-There should be no wildcards in the compatible property. I guess we can
-just add the two first one above for now and leave other out for when
-someone actually adds support for these SoCs at the drivers.
+We should stick to the rule that compatible value should be named after 
+first specific SoC model in which this particular IP version was included.
 
-I suppose we could,  for example, have something like:
+So this is what I would suggest:
 
-compatible = "samsung,s3c2410-fimd";                         // for s3c2410
-compatible = "samsung,s3c2440-fimd", "samsung,s3c2410-fimd"; // for s3c2440
+compatible = "samsung,s3c2443-fimd"; // for S3C24XX SoCs
+compatible = "samsung,s3c6400-fimd"; // for S3C64XX SoCs
+compatible = "samsung,s5p6440-fimd"; // for S5P64X0 SoCs
+compatible = "samsung,s5pc100-fimd"; // for S5PC100 SoC
+compatible = "samsung,s5pv210-fimd"; // for S5PV210 SoC
+compatible = "samsung,exynos4210-fimd"; // for Exynos4 SoCs
+compatible = "samsung,exynos5250-fimd"; // for Exynos5 SoCs
 
-etc. But this really needs to be checked with the documentation
-in each case.
+(All the hardware variants are taken from s3c-fb driver.)
 
-> compatible = "samsung, s5pc100-fimd" ; for S5PC100 SoCs
-> compatible = "samsung, s5pv210-fimd" ; for S5PV210 SoCs
+Best regards,
+Tomasz
