@@ -1,94 +1,179 @@
-From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 3/3] pinctrl: imx: move hard-coding data into device tree
-Date: Tue, 26 Feb 2013 16:02:22 +0800
-Message-ID: <20130226080220.GA3037@b29396-Latitude-E6410>
-References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
- <1361344089-16804-4-git-send-email-shawn.guo@linaro.org>
- <51251E5A.1080806@wwwdotorg.org>
- <CAP1dx+w2bLcztrRJOYs07xxSqVgo3bggJHMFt5LyL5jXQ-h6Mg@mail.gmail.com>
- <51267C0E.6070902@wwwdotorg.org>
+From: Javier Martinez Canillas <martinez.javier@gmail.com>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Tue, 26 Feb 2013 11:01:20 +0100
+Message-ID: <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
+ <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com>
+ <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com>
+ <4F47AD08.4030504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <51267C0E.6070902-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <4F47AD08.4030504@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Cousson, Benoit" <b-cousson@ti.com>
+Cc: Stephen Warren <swarren@nvidia.com>, Rob Herring <robherring2@gmail.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2013 at 12:57:02PM -0700, Stephen Warren wrote:
-> On 02/21/2013 02:36 AM, Dong Aisheng wrote:
-> > On 21 February 2013 03:04, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> >> On 02/20/2013 12:08 AM, Shawn Guo wrote:
-> >>> Currently, all imx pinctrl drivers maintain a big array of struct
-> >>> imx_pin_reg which hard-codes data like register offset and mux mode
-> >>> setting for each pin function.  Every time a new imx SoC support is
-> >>> added, we need to add such a big mount of data.  With moving to single
-> >>> kernel build, it's only matter of time to be blamed on memory consuming.
-> >>>
-> >>> With DTC pre-processor support in place, the patch moves all these data
-> >>> into device tree by redefining the PIN_FUNC_ID in imxXX-pinfunc.h and
-> >>> changing the PIN_FUNC_ID parsing code a little bit.
-> ...
-> >> This patch removes a bunch of tables from the kernel. I like having the
-> >> tables in the kernel, since in theory it could allow a future debugfs or
-> >> sysfs interface to pinctrl that allows manipulation of the pinctrl HW
-> >> state at a semantic level.
-> > 
-> > Right, that's one of the considerations why i kept the register table in driver
-> > in the first binding design.
-> > 
-> >> This is only possible if the DT binding
-> >> includes details such as "set this pin to this function", and the driver
-> >> includes the tables to convert that into details such as register
-> >> address and value. I don't think such an "API" could be implemented for
-> >> IMX after this patch.
-> > 
-> > Theoretically It can, because device tree contains the pin registers
-> > informations
-> 
-> > in this way. But the problem is that it can only manipulate the used pins which
-> > are parsed from devices tree. While for those unused pins, since the driver does
-> > not have the pin register information, it can not manipulate it.
-> 
-> Right, that's the main issue I was trying to highlight; the driver no
-> longer provides complete knowledge of the HW, but only learns about
-> stuff that happens to be used/defined in the board-specific DT.
-> 
-> > But what i'm wondering now is do we really need to manipulate the unused pins
-> > from sysfs or debugfs?
-> > I still can not think out a real using case now.
-> > Anyone else can think one?
-> 
-> For early board bringup, it may be useful to boot with a minimal set of
-> entries in the DT (enough to support e.g. serial console and some device
-> for a root filesystem) and then interactively tweak the rest of the
-> pinmux to define the rest of the board, and perhaps even save the result
-> somehow, and add it to the next iteration of the DT.
-> 
-> Also, consider a hobbyist-oriented board that has 50 unused pins that
-> could be GPIO, or mapped to some otherwise unused SD, I2C, SPI, ...
-> controller. Do we want to force the user to write a new DT and reboot,
-> or would it be better to provide some runtime API to set up those pins
-> based on what they had connected to the board, and then instantiate
-> drivers or use the sysfs GPIO interface, after doing so?
-> 
+On Fri, Feb 24, 2012 at 4:30 PM, Cousson, Benoit <b-cousson@ti.com> wrote:
+> On 2/22/2012 7:29 PM, Stephen Warren wrote:
+>>
+>> Rob Herring wrote at Wednesday, February 22, 2012 10:23 AM:
+>>>
+>>> On 02/22/2012 08:31 AM, Cousson, Benoit wrote:
+>>>>
+>>>> On 2/22/2012 3:23 PM, Rob Herring wrote:
+>>>>>
+>>>>> On 02/15/2012 10:04 AM, Benoit Cousson wrote:
+>>>>>>
+>>>>>> Adapt the GPIO driver to retrieve information from a DT file.
+>>>>>>
+>>>>>> Allocate the irq_base dynamically and rename bank->virtual_irq_start
+>>>>>> to bank->irq_base.
+>>>>>> Change irq_base type to int instead of u16 to match irq_alloc_descs
+>>>>>> output.
+>>>>>>
+>>>>>> Add documentation for GPIO properties specific to OMAP.
+>>>>>>
+>>>>>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
+>>>>>> Cc: Tarun Kanti DebBarma<tarun.kanti@ti.com>
+>>>>>
+>>>>>
+>>>>> One comment below, but otherwise:
+>>>>>
+>>>>> Acked-by: Rob Herring<rob.herring@calxeda.com>
+>>>>>
+>>>>>> ---
+>>>>>>    .../devicetree/bindings/gpio/gpio-omap.txt         |   30 +++++
+>>>>>>    drivers/gpio/gpio-omap.c                           |  121
+>>>>>> ++++++++++++++++++--
+>>>>>>    2 files changed, 142 insertions(+), 9 deletions(-)
+>>>>>>    create mode 100644
+>>>>>> Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>>>>>> b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>>>>>> new file mode 100644
+>>>>>> index 0000000..c1b3100
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
+>>>>>> @@ -0,0 +1,30 @@
+>>>>>> +OMAP GPIO controller bindings
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible:
+>>>>>> +  - "ti,omap2-gpio" for OMAP2 controllers
+>>>>>> +  - "ti,omap3-gpio" for OMAP3 controllers
+>>>>>> +  - "ti,omap4-gpio" for OMAP4 controllers
+>>>>>> +- #gpio-cells : Should be two.
+>>>>>> +  - first cell is the pin number
+>>>>>> +  - second cell is used to specify optional parameters (unused)
+>>>>>> +- gpio-controller : Marks the device node as a GPIO controller.
+>>>>>> +- #interrupt-cells : Should be one
+>>>>>
+>>>>>
+>>>>> There's no level/edge settings for gpios?
+>>>>
+>>>>
+>>>> That's a good question, because I was wondering as well :-)
+>>>>
+>>>> I did no see how it was done in other GPIO implementation.
+>>>
+>>>
+>>> There's not really a good example that I've found. Many gpio nodes don't
+>>> even have "interrupt-controller" set.
+>>>
+>>> So if you have an irq_set_type function for gpio's, then you should have
+>>> 2 cells.
+>
+>
+> After checking the OMAP gpio code, I do have a gpio_irq_type and the GPIO do
+> support the 4 types. I'm not sure yet about the combinations.
+>
+>
+>> Tegra's GPIO IRQ binding (gpio_nvidia.txt in linux-next at least) says:
+>>
+>> - #interrupt-cells : Should be 2.
+>>    The first cell is the GPIO number.
+>>    The second cell is used to specify flags:
+>>      bits[3:0] trigger type and level flags:
+>>        1 = low-to-high edge triggered.
+>>        2 = high-to-low edge triggered.
+>>        4 = active high level-sensitive.
+>>        8 = active low level-sensitive.
+>>        Valid combinations are 1, 2, 3, 4, 8.
+>
+>
+> Indeed, so I'll just copy / paste Tegra's binding...
+>
+> Thanks,
+> Benoit
+>
+>
 
-Yes, it can be useful sometimes.
-In order to do that, we have to add the whole register table in driver.
-Considering the defects, since using memtool can do the same things,
-maybe it's not worth for IMX to do that.
+Hello,
 
-Regards
-Dong Aisheng
+I was wondering if the level/edge settings for gpios is working on OMAP.
+
+I'm adding DT support for an SMSC911x ethernet chip connected to the
+GPMC for an OMAP3 SoC based board.
+
+In the smsc911x driver probe function (smsc911x_drv_probe() in
+drivers/net/ethernet/smsc/smsc911x.c), a call to request_irq() with
+the flag IRQF_TRIGGER_LOW is needed because of the wiring on my board.
+
+Reading the gpio-omap.txt documentation it says that #interrupt-cells
+should be <2> and that a value of 8 is "active low level-sensitive".
+
+So I tried this:
+
+&gpmc {
+	ethernet@5,0 {
+		pinctrl-names = "default";
+		pinctrl-0 = <&smsc911x_pins>;
+		compatible = "smsc,lan9221", "smsc,lan9115";
+		reg = <5 0 0xff>; /* CS5 */
+		interrupt-parent = <&gpio6>;
+		interrupts = <16 8>; /* gpio line 176 */
+		interrupt-names = "smsc911x irq";
+		vmmc-supply = <&vddvario>;
+		vmmc_aux-supply = <&vdd33a>;
+		reg-io-width = <4>;
+
+		smsc,save-mac-address;
+      };
+};
+
+But in the smsc911x probe function:
+
+irq_res->flags & IRQF_TRIGGER_MASK;
+
+returns 0 which means that no trigger flags where set.
+
+I took a look to the GPIOs device node definition on omap{3,4,5}.dtsi
+and all look like this:
+
+e.g from omap3.dtsi:
+
+                gpio6: gpio@49058000 {
+                        compatible = "ti,omap3-gpio";
+                        ti,hwmods = "gpio6";
+                        gpio-controller;
+                        #gpio-cells = <2>;
+                        interrupt-controller;
+                        #interrupt-cells = <1>;
+                };
+
+So, even when the documentation says that all the GPIO device nodes in
+OMAP2+ should use a #interrupt-cells property value of <2>, they are
+only using <1>. Changing that value to 2 makes hangs the kernel and it
+does not boot.
+
+This is not part of my dayjob and I'm working on this in my free time
+so it would be great if someone can give me some pointers or at least
+confirm that  this is a known issue so I can debug/fix/extend
+drivers/gpio/gpio-omap.c to parse and pass the IRQF_TRIGGER_*  flags
+to the IORESOURCE_IRQ resource structure.
+
+Thanks a lot and best regards,
+Javier
