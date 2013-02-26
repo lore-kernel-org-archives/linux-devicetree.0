@@ -1,62 +1,38 @@
-From: maxin.john-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Subject: [PATCH] i2c: busses: i2c-ocores: Fix PM-related warning
-Date: Tue, 26 Feb 2013 23:53:45 +0200
-Message-ID: <1361915625-24294-1-git-send-email-maxin.john@gmail.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Maxin B. John" <maxin.john-AM1FMPraTHU@public.gmane.org>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v4 5/5] ARM: exynos: dts: Add FIMD DT binding Documentation
+Date: Tue, 26 Feb 2013 22:57:15 +0100
+Message-ID: <512D2FBB.5090507@gmail.com>
+References: <1360912200-26377-1-git-send-email-vikas.sajjan@linaro.org> <1360912200-26377-6-git-send-email-vikas.sajjan@linaro.org> <511E1008.6010308@samsung.com> <CAD025yQokBbJwyFWeg8KwzTsE-4jgra5UhLuic5zJnQRt+GNTw@mail.gmail.com> <5122A119.7070501@gmail.com> <CAD025yRmvSpnM9RJJvN+FM00Rgz8Bt5msmEYcyFVxNTEKsM2xg@mail.gmail.com> <CAD025yTb5yfXWpzCnCg7KY9NsTw1wfsLFU6y32aD=WXe23xiwg@mail.gmail.com> <5127E533.4060702@gmail.com> <CAD025yQxOp1nd8N8K5wYco_o2TkW19fk_3jXHYHfVDnsDLR9VQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD025yQxOp1nd8N8K5wYco_o2TkW19fk_3jXHYHfVDnsDLR9VQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vikas Sajjan <vikas.sajjan@linaro.org>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, sunil joshi <joshi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tom Gall <tom.gall@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: "Maxin B. John" <maxin.john-AM1FMPraTHU@public.gmane.org>
+On 02/26/2013 05:19 AM, Vikas Sajjan wrote:
+> ok thanks. Will modify the documentation as below.
+>
+> compatible = "samsung, exynos4-fimd"; for Exynos4 SoCs
+> compatible = "samsung, exynos5-fimd" ; for Exynos5 SoCs
+> compatible = "samsung, s3c64xx-fimd" ; for S3C64XX SoCs
+> compatible = "samsung, s3c24xx-fimd" ; for S3C24XX SoCs
+> compatible = "samsung, s5p64x0-fimd" ; for S5P64X0 SoCs
 
-Fixes this warning:
-  CC      drivers/i2c/busses/i2c-ocores.o
-drivers/i2c/busses/i2c-ocores.c:460:12: warning: 'ocores_i2c_suspend'
- defined but not used [-Wunused-function]
-drivers/i2c/busses/i2c-ocores.c:471:12: warning: 'ocores_i2c_resume'
-defined but not used [-Wunused-function]
+There should be no wildcards in the compatible property. I guess we can
+just add the two first one above for now and leave other out for when
+someone actually adds support for these SoCs at the drivers.
 
-Signed-off-by: Maxin B. John <maxin.john-AM1FMPraTHU@public.gmane.org>
----
- drivers/i2c/busses/i2c-ocores.c |    9 +++------
- 1 files changed, 3 insertions(+), 6 deletions(-)
+I suppose we could,  for example, have something like:
 
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index 0e1f824..1ecea5e 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -456,7 +456,7 @@ static int ocores_i2c_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
-+#ifdef CONFIG_PM_SLEEP
- static int ocores_i2c_suspend(struct device *dev)
- {
- 	struct ocores_i2c *i2c = dev_get_drvdata(dev);
-@@ -476,12 +476,9 @@ static int ocores_i2c_resume(struct device *dev)
- 
- 	return 0;
- }
-+#endif
- 
- static SIMPLE_DEV_PM_OPS(ocores_i2c_pm, ocores_i2c_suspend, ocores_i2c_resume);
--#define OCORES_I2C_PM	(&ocores_i2c_pm)
--#else
--#define OCORES_I2C_PM	NULL
--#endif
- 
- static struct platform_driver ocores_i2c_driver = {
- 	.probe   = ocores_i2c_probe,
-@@ -490,7 +487,7 @@ static struct platform_driver ocores_i2c_driver = {
- 		.owner = THIS_MODULE,
- 		.name = "ocores-i2c",
- 		.of_match_table = ocores_i2c_match,
--		.pm = OCORES_I2C_PM,
-+		.pm = &ocores_i2c_pm,
- 	},
- };
- 
--- 
-1.7.7
+compatible = "samsung,s3c2410-fimd";                         // for s3c2410
+compatible = "samsung,s3c2440-fimd", "samsung,s3c2410-fimd"; // for s3c2440
+
+etc. But this really needs to be checked with the documentation
+in each case.
+
+> compatible = "samsung, s5pc100-fimd" ; for S5PC100 SoCs
+> compatible = "samsung, s5pv210-fimd" ; for S5PV210 SoCs
