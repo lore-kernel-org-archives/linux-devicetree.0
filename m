@@ -1,168 +1,85 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: Re: [PATCH v4 5/5] ARM: exynos: dts: Add FIMD DT binding Documentation
-Date: Tue, 26 Feb 2013 09:49:53 +0530
-Message-ID: <CAD025yQxOp1nd8N8K5wYco_o2TkW19fk_3jXHYHfVDnsDLR9VQ@mail.gmail.com>
-References: <1360912200-26377-1-git-send-email-vikas.sajjan@linaro.org>
- <1360912200-26377-6-git-send-email-vikas.sajjan@linaro.org>
- <511E1008.6010308@samsung.com> <CAD025yQokBbJwyFWeg8KwzTsE-4jgra5UhLuic5zJnQRt+GNTw@mail.gmail.com>
- <5122A119.7070501@gmail.com> <CAD025yRmvSpnM9RJJvN+FM00Rgz8Bt5msmEYcyFVxNTEKsM2xg@mail.gmail.com>
- <CAD025yTb5yfXWpzCnCg7KY9NsTw1wfsLFU6y32aD=WXe23xiwg@mail.gmail.com> <5127E533.4060702@gmail.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 4/4] Input: auo_pixcir_ts - add devicetree support
+Date: Mon, 25 Feb 2013 23:05:30 -0800
+Message-ID: <20130226070530.GC18407@core.coreip.homeip.net>
+References: <201302231255.23772.heiko@sntech.de>
+ <201302241058.01412.heiko@sntech.de>
+ <20130225030641.GA18433@core.coreip.homeip.net>
+ <201302251447.18385.heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5127E533.4060702@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, sunil joshi <joshi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tom Gall <tom.gall@linaro.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201302251447.18385.heiko@sntech.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Heiko =?iso-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, linux-input@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, Feb 25, 2013 at 02:47:17PM +0100, Heiko St=FCbner wrote:
+> Am Montag, 25. Februar 2013, 04:06:41 schrieb Dmitry Torokhov:
+> > On Sun, Feb 24, 2013 at 10:58:00AM +0100, Heiko St=FCbner wrote:
+> > > Hi Dmitry,
+> > >=20
+> > > Am Sonntag, 24. Februar 2013, 09:00:15 schrieb Dmitry Torokhov:
+> > > > Hi Heiko,
+> > > >=20
+> > > > On Sat, Feb 23, 2013 at 12:58:16PM +0100, Heiko St=FCbner wrote=
+:
+> > > > > +static struct auo_pixcir_ts_platdata *auo_pixcir_parse_dt(st=
+ruct
+> > > > > device *dev) +{
+> > > > > +	struct auo_pixcir_ts_platdata *pdata =3D NULL;
+> > > > > +
+> > > > > +#ifdef CONFIG_OF
+> > > > > +	struct device_node *np =3D dev->of_node;
+> > > > > +
+> > > > > +	if (!np)
+> > > > > +		return NULL;
+> > > > > +
+> > > > > +	pdata =3D devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+> > > > > +	if (!pdata) {
+> > > > > +		dev_err(dev, "failed to allocate platform data\n");
+> > > > > +		return NULL;
+> > > > > +	}
+> > > >=20
+> > > > I disike #ifdefs in the middle of the code, also it would be ni=
+ce if we
+> > > > signal the proper error instead of always using -EINVAL when th=
+ere are
+> > > > issues with platform/DT data.
+> > > >=20
+> > > > How about the version of the patch below?
+> > >=20
+> > > I tested it and everything of course still works :-) .
+> >=20
+> > OK, great, then I will queue these for the next merge window.
+> >=20
+> > Could you also try this patch (it however needs attached patch enha=
+ncing
+> > devres to support custom actions).
+> >=20
+> > Thanks.
+>=20
+> In general looks really nice and also works. I have some small nitpic=
+ks (patch=20
+> desc, reset gpio naming) and it will also need to use=20
+> devm_request_threaded_irq to get the irq correctly freed on removal. =
+[all also=20
+> marked at the corresponding places below]
+>=20
+> Otherwise:
+>=20
+> Tested-by: Heiko Stuebner <heiko@sntech.de>
 
-On 23 February 2013 03:07, Sylwester Nawrocki
-<sylvester.nawrocki@gmail.com> wrote:
-> Hi Vikas,
->
-> On 02/22/2013 08:06 AM, Vikas Sajjan wrote:
->>>>>>>
->>>>>>> +++ b/Documentation/devicetree/bindings/drm/exynos/fimd.txt
->
-> [...]
->
->>>>>>> @@ -0,0 +1,37 @@
->>>>>>> +Device-Tree bindings for fimd driver
->
->
-> Perhaps something like:
->
-> Exynos SoC display controller (FIMD)
->
-> would do ? Even though bindings are to be used by some driver we should
-> be focusing on describing the actual hardware.
->
-OK. will change.
->
->>>>>>> +FIMD stands for Fully Interactive Mobile Display, is the Display
->>>>>>> Controller for
->>>>>>> +the Exynos series of SoCs which transfers the image data from a
->>>>>>> video
->>>>>>> buffer
->>>>>>> +located in the system memory to an external LCD interface.
->>>>>>> +
->>>>>>> +Required properties:
->>>>>>> +- compatible := value should be "samsung,exynos5-fimd" or
->>>>>>> "samsung,exynos4-fimd"
->>>>>>
->>>>>>
->>>>>>
->>>>>> What about older SoCs like S5Pv210 ? There is the FIMD IP block in
->>>>>> those
->>>>>> SoCs
->>>>>> as well. There are also differences in the FIMD IP block across
->>>>>> various
->>>>>> SoC
->>>>>> version, so either you need to list the quirks in the bindings or use
->>>>>> an
->>>>>> appropriate compatible properties if there are significant differences
->>>>>> across
->>>>>> FIMDs that make them not really compatible.
->>>>>>
->>>>> as of now, I was working on Exynos4 and Exynos5 SoC. have to really
->>>>> see the differences in the previous SoC and how to handle all those
->>>>> FIMD IPs in the driver.
->>>>> if you know the differences between these FIMD IPs, please let me know.
->>>>
->>>>
->>>>
->>>> Please have a look at drivers/video/s3c-fb.c and all driver_data
->>>> structures
->>>> defined for various SoCs.
->>>>
->>>> [...]
->>>>
->>> I went through the driver_data structures define for s5p64x0,s3c2443,
->>> s5pv210, s5pc100 ad 64xx SoCs.
->>> there are some differences w.r.t number of windows, osd_stride  length
->>> and regsiter offsets.
->>> but  I dont have access to all the above mentioned Boards and so that
->>> I can modify and test on each one of them.
->
->
-> I don't ask you to add support for all existing FIMD variants. Please just
-> make sure the bindings you're documenting here, with focus on the Exynos
-> SoCs, are also usable for older SoC series.
->
->
->> as far as i know this file exynos_drm_fimd.c is meant only for exynos4
->> onwards SoCs,
->
->
-> Yes, but the bindings are for FIMD IP block and should possibly be
-> consistent
-> across all SoC series. I think we should bear in mind that eventually all
-> these SoCs get device tree support. Actually I've seen already patches for
-> s3c24xx and s3c64xx SoC series.
->
->
->> ( I think Mr. Inki Dae can throw more light on this )
->> and also the previous  boards based on  s5p64x0,s3c2443,s5pv210,
->> s5pc100 and 64xx, dont have DT support.
->
->
-> We can't tell for sure the SoC series listed above won't get device tree
-> support sooner or later, as this is an open source project.
->
->
->> also in the function drm_fimd_get_driver_data(), there is provision to
->> get the NON-DT "driver data" as well. So somebody who wants to use
->> this driver for the above mentioned SoCs can add the driver-data.
->
->
-> I'm not concerned about this particular driver, only about the DT bindings
-> that are not supposed to change over time. So some care needs to be taken
-> when designing the bindings.
->
->
->> so wanted to know how you want me to go about it.
->
->
-> My concern was that you use "samsung,exynos4-fimd" for FIMD IP found on all
-> Exynos4 SoC, whereas there could be some differences for Exynos4210 and
-> Exynos4212/4412. It looks like both are shipped with FIMD rev. 6.0 though.
-> Anyway, still there are some details that may need to be handled, e.g.
-> maximum
-> VCLK frequency is 80 MHz for Exynos4210 FIMD0 and Exynos4412 FIMD (there is
-> only one there in Exynos4412 as opposed to two in Exynos4210), while for
-> Exynos4210 FIMD1 it is only 50 MHz. When there are differences we really
-> care about (and support for FIMD1 is added) I guess things like this could
-> be handled through optional properties.
->
-> I thought about something like:
->
-> compatible = "samsung,exynos4210-fimd"; for Exynos4210 and
-> compatible = "samsung,exynos4212-fimd", "samsung,exynos4210-fimd"; for
->               Exynos4212 and Exynos412,
->
-> but "samsung,exynos4-fimd" seems good enough, since the FIMD IP block
-> appears nearly identical across Exynos4210...Exynos4412.
->
+Thank you Heiko, I made the changes you mentioned and queued with the
+rest of the patches for 3.10.
 
-ok thanks. Will modify the documentation as below.
-
-compatible = "samsung, exynos4-fimd"; for Exynos4 SoCs
-compatible = "samsung, exynos5-fimd" ; for Exynos5 SoCs
-compatible = "samsung, s3c64xx-fimd" ; for S3C64XX SoCs
-compatible = "samsung, s3c24xx-fimd" ; for S3C24XX SoCs
-compatible = "samsung, s5p64x0-fimd" ; for S5P64X0 SoCs
-compatible = "samsung, s5pc100-fimd" ; for S5PC100 SoCs
-compatible = "samsung, s5pv210-fimd" ; for S5PV210 SoCs
-
-> --
->
-> Thanks,
-> Sylwester
-
-
-
--- 
-Thanks and Regards
- Vikas Sajjan
+--=20
+Dmitry
+--
+To unsubscribe from this list: send the line "unsubscribe linux-input" =
+in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
