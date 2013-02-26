@@ -1,179 +1,90 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Tue, 26 Feb 2013 11:01:20 +0100
-Message-ID: <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
- <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com>
- <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com>
- <4F47AD08.4030504@ti.com>
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: Re: [PATCH 1/2] gpio: gpio-generic: Fix bug in big endian bit conversion
+Date: Tue, 26 Feb 2013 11:46:31 +0100
+Message-ID: <512C9287.6000100@gaisler.com>
+References: <1360060383-16880-1-git-send-email-andreas@gaisler.com> <1360060383-16880-2-git-send-email-andreas@gaisler.com> <20130209145855.D517E3E328E@localhost> <20130226075228.A963F3E0AEF@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <4F47AD08.4030504@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Cousson, Benoit" <b-cousson@ti.com>
-Cc: Stephen Warren <swarren@nvidia.com>, Rob Herring <robherring2@gmail.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20130226075228.A963F3E0AEF@localhost>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <rob.herring@calxeda.com>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Feb 24, 2012 at 4:30 PM, Cousson, Benoit <b-cousson@ti.com> wrote:
-> On 2/22/2012 7:29 PM, Stephen Warren wrote:
+On 2013-02-26 08:52, Grant Likely wrote:
+> On Sat, 09 Feb 2013 14:58:55 +0000, Grant Likely <grant.likely@secretlab.ca> wrote:
+>> On Tue,  5 Feb 2013 11:33:02 +0100, Andreas Larsson <andreas@gaisler.com> wrote:
+>>> The swap to convert LE to BE in bgpio_pin2mask_be should be on byte level, not
+>>> on bit level.
+>>>
+>>> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
+>>> ---
+>>>   drivers/gpio/gpio-generic.c |    5 ++++-
+>>>   1 files changed, 4 insertions(+), 1 deletions(-)
+>>>
+>>> diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-generic.c
+>>> index 05fcc0f..7f11537 100644
+>>> --- a/drivers/gpio/gpio-generic.c
+>>> +++ b/drivers/gpio/gpio-generic.c
+>>> @@ -112,7 +112,10 @@ static unsigned long bgpio_pin2mask(struct bgpio_chip *bgc, unsigned int pin)
+>>>   static unsigned long bgpio_pin2mask_be(struct bgpio_chip *bgc,
+>>>   				       unsigned int pin)
+>>>   {
+>>> -	return 1 << (bgc->bits - 1 - pin);
+>>> +	unsigned int bit = pin & 0x7; /* Bit number within byte */
+>>> +	unsigned int base = pin - bit; /* Pin that is bit 0 within byte */
+>>> +
+>>> +	return 1 << ((bgc->bits - base - 8) + bit); /* shifted base + bit */
 >>
->> Rob Herring wrote at Wednesday, February 22, 2012 10:23 AM:
->>>
->>> On 02/22/2012 08:31 AM, Cousson, Benoit wrote:
->>>>
->>>> On 2/22/2012 3:23 PM, Rob Herring wrote:
->>>>>
->>>>> On 02/15/2012 10:04 AM, Benoit Cousson wrote:
->>>>>>
->>>>>> Adapt the GPIO driver to retrieve information from a DT file.
->>>>>>
->>>>>> Allocate the irq_base dynamically and rename bank->virtual_irq_start
->>>>>> to bank->irq_base.
->>>>>> Change irq_base type to int instead of u16 to match irq_alloc_descs
->>>>>> output.
->>>>>>
->>>>>> Add documentation for GPIO properties specific to OMAP.
->>>>>>
->>>>>> Signed-off-by: Benoit Cousson<b-cousson@ti.com>
->>>>>> Cc: Tarun Kanti DebBarma<tarun.kanti@ti.com>
->>>>>
->>>>>
->>>>> One comment below, but otherwise:
->>>>>
->>>>> Acked-by: Rob Herring<rob.herring@calxeda.com>
->>>>>
->>>>>> ---
->>>>>>    .../devicetree/bindings/gpio/gpio-omap.txt         |   30 +++++
->>>>>>    drivers/gpio/gpio-omap.c                           |  121
->>>>>> ++++++++++++++++++--
->>>>>>    2 files changed, 142 insertions(+), 9 deletions(-)
->>>>>>    create mode 100644
->>>>>> Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>>>>> b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..c1b3100
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
->>>>>> @@ -0,0 +1,30 @@
->>>>>> +OMAP GPIO controller bindings
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible:
->>>>>> +  - "ti,omap2-gpio" for OMAP2 controllers
->>>>>> +  - "ti,omap3-gpio" for OMAP3 controllers
->>>>>> +  - "ti,omap4-gpio" for OMAP4 controllers
->>>>>> +- #gpio-cells : Should be two.
->>>>>> +  - first cell is the pin number
->>>>>> +  - second cell is used to specify optional parameters (unused)
->>>>>> +- gpio-controller : Marks the device node as a GPIO controller.
->>>>>> +- #interrupt-cells : Should be one
->>>>>
->>>>>
->>>>> There's no level/edge settings for gpios?
->>>>
->>>>
->>>> That's a good question, because I was wondering as well :-)
->>>>
->>>> I did no see how it was done in other GPIO implementation.
->>>
->>>
->>> There's not really a good example that I've found. Many gpio nodes don't
->>> even have "interrupt-controller" set.
->>>
->>> So if you have an irq_set_type function for gpio's, then you should have
->>> 2 cells.
->
->
-> After checking the OMAP gpio code, I do have a gpio_irq_type and the GPIO do
-> support the 4 types. I'm not sure yet about the combinations.
->
->
->> Tegra's GPIO IRQ binding (gpio_nvidia.txt in linux-next at least) says:
+>> Ah, sorry for my previous reply. I see you have seen gpio-generic.  :-)
 >>
->> - #interrupt-cells : Should be 2.
->>    The first cell is the GPIO number.
->>    The second cell is used to specify flags:
->>      bits[3:0] trigger type and level flags:
->>        1 = low-to-high edge triggered.
->>        2 = high-to-low edge triggered.
->>        4 = active high level-sensitive.
->>        8 = active low level-sensitive.
->>        Valid combinations are 1, 2, 3, 4, 8.
+>> No, the original calculation is correct. BE and LE bit numbering are
+>> opposite, bit Linux always uses LE numbers as far as bit masks are
+>> concerned. Therefore pin 0 is the most significant bit, and
+>> pin (nr_bits-1) is the least significant bit.
 >
+> Hi Andreas,
 >
-> Indeed, so I'll just copy / paste Tegra's binding...
+> Actually I'm wrong here (at least partially) after looking closer at the
+> generic gpio driver. The problem is that things get messed up on 16 or
+> 32 bit access depending on how the hardware expects to be accessed.
+> bgpio always uses iowrite/ioread for register access which is inherently
+> little endian, but if the hardware is wired up as a big-endian device
+> then you have to do the fiddly bit you did above to get the bit
+> positions to line up where you what then. So, there could potentially be
+> 4 different ways to count bits on a value ioread() from a gpio register:
 >
-> Thanks,
-> Benoit
->
->
+> little-endian, LSB = 0 (sane)
+> little-endian, MSB = 0 (odd)
+> big-endian (bytes swapped), MSB = 0 (common on BE platforms)
+> big-endian (bytes swapped), LSB = 0 (why are you making my life hard?)
 
-Hello,
+Yes, in v4 of my patch I solved it using custom accessors set outside of 
+gpio-generic internally using ioread32be/iowrite32be instead of adding a 
+whole set of be variants in gpio-generic.
 
-I was wondering if the level/edge settings for gpios is working on OMAP.
 
-I'm adding DT support for an SMSC911x ethernet chip connected to the
-GPMC for an OMAP3 SoC based board.
+> We /could/ have a ioread32be/write32be mode in the driver, but I don't
+> think that is the right approach. It means we need yet another set of
+> accessors for register except using the 'be' variants. Blech. What I'd
+> actually like to do is add a bitmask field to the gpio_desc which can be
+> calculated ahead of time to whatever madness is required from the way
+> the device is wired. Then the access routines don't need to even care.
+> they just apply the bitmask to ioread/iowrite and it doesn't even need
+> to know what the bit number actually is. The new support for gpio_desc
+> in the core code makes this feasable.
 
-In the smsc911x driver probe function (smsc911x_drv_probe() in
-drivers/net/ethernet/smsc/smsc911x.c), a call to request_irq() with
-the flag IRQF_TRIGGER_LOW is needed because of the wiring on my board.
+I am not sure I understand what you mean here or what new support for 
+gpio_desc you are referring to (looking in gpio/next at 
+git://git.secretlab.ca/git/linux-2.6).
 
-Reading the gpio-omap.txt documentation it says that #interrupt-cells
-should be <2> and that a value of 8 is "active low level-sensitive".
+Do you mean to add something like an 'unsigned long bitmask[64]' bitmap 
+array with one bitmap for each gpio line to struct gpio_desc and use 
+this primarily by gpio-generic.c, populated in bgpio_init? Is gpio_desc 
+now available outside of gpiolib.c in some repository/branch that I 
+might be unaware of?
 
-So I tried this:
-
-&gpmc {
-	ethernet@5,0 {
-		pinctrl-names = "default";
-		pinctrl-0 = <&smsc911x_pins>;
-		compatible = "smsc,lan9221", "smsc,lan9115";
-		reg = <5 0 0xff>; /* CS5 */
-		interrupt-parent = <&gpio6>;
-		interrupts = <16 8>; /* gpio line 176 */
-		interrupt-names = "smsc911x irq";
-		vmmc-supply = <&vddvario>;
-		vmmc_aux-supply = <&vdd33a>;
-		reg-io-width = <4>;
-
-		smsc,save-mac-address;
-      };
-};
-
-But in the smsc911x probe function:
-
-irq_res->flags & IRQF_TRIGGER_MASK;
-
-returns 0 which means that no trigger flags where set.
-
-I took a look to the GPIOs device node definition on omap{3,4,5}.dtsi
-and all look like this:
-
-e.g from omap3.dtsi:
-
-                gpio6: gpio@49058000 {
-                        compatible = "ti,omap3-gpio";
-                        ti,hwmods = "gpio6";
-                        gpio-controller;
-                        #gpio-cells = <2>;
-                        interrupt-controller;
-                        #interrupt-cells = <1>;
-                };
-
-So, even when the documentation says that all the GPIO device nodes in
-OMAP2+ should use a #interrupt-cells property value of <2>, they are
-only using <1>. Changing that value to 2 makes hangs the kernel and it
-does not boot.
-
-This is not part of my dayjob and I'm working on this in my free time
-so it would be great if someone can give me some pointers or at least
-confirm that  this is a known issue so I can debug/fix/extend
-drivers/gpio/gpio-omap.c to parse and pass the IRQF_TRIGGER_*  flags
-to the IORESOURCE_IRQ resource structure.
-
-Thanks a lot and best regards,
-Javier
+Cheers,
+Andreas
