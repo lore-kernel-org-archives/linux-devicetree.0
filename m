@@ -1,62 +1,32 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Tue, 26 Feb 2013 15:44:01 -0700
-Message-ID: <512D3AB1.1080202@wwwdotorg.org>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com> <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com> <512D39DA.7020306@ti.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v4 5/5] ARM: exynos: dts: Add FIMD DT binding Documentation
+Date: Tue, 26 Feb 2013 23:48:24 +0100
+Message-ID: <512D3BB8.50807@gmail.com>
+References: <1360912200-26377-1-git-send-email-vikas.sajjan@linaro.org> <CAD025yQxOp1nd8N8K5wYco_o2TkW19fk_3jXHYHfVDnsDLR9VQ@mail.gmail.com> <512D2FBB.5090507@gmail.com> <3726480.lf0XiLbqs9@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <512D39DA.7020306@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Javier Martinez Canillas <martinez.javier@gmail.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <3726480.lf0XiLbqs9@flatron>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Vikas Sajjan <vikas.sajjan@linaro.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, devicetree-discuss@lists.ozlabs.org, sunil joshi <joshi@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tom Gall <tom.gall@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/26/2013 03:40 PM, Jon Hunter wrote:
-> 
-> On 02/26/2013 04:01 AM, Javier Martinez Canillas wrote:
-> 
-> [snip]
-> 
->> I was wondering if the level/edge settings for gpios is working on OMAP.
->>
->> I'm adding DT support for an SMSC911x ethernet chip connected to the
->> GPMC for an OMAP3 SoC based board.
->>
->> In the smsc911x driver probe function (smsc911x_drv_probe() in
->> drivers/net/ethernet/smsc/smsc911x.c), a call to request_irq() with
->> the flag IRQF_TRIGGER_LOW is needed because of the wiring on my board.
->>
->> Reading the gpio-omap.txt documentation it says that #interrupt-cells
->> should be <2> and that a value of 8 is "active low level-sensitive".
->>
->> So I tried this:
->>
->> &gpmc {
->> 	ethernet@5,0 {
->> 		pinctrl-names = "default";
->> 		pinctrl-0 = <&smsc911x_pins>;
->> 		compatible = "smsc,lan9221", "smsc,lan9115";
->> 		reg = <5 0 0xff>; /* CS5 */
->> 		interrupt-parent = <&gpio6>;
->> 		interrupts = <16 8>; /* gpio line 176 */
->> 		interrupt-names = "smsc911x irq";
->> 		vmmc-supply = <&vddvario>;
->> 		vmmc_aux-supply = <&vdd33a>;
->> 		reg-io-width = <4>;
->>
->> 		smsc,save-mac-address;
->>       };
->> };
-> 
-> Are you requesting the gpio anywhere? If not then this is not going to
-> work as-is. This was discussed fairly recently [1] and the conclusion
-> was that the gpio needs to be requested before we can use as an interrupt.
+On 02/26/2013 11:11 PM, Tomasz Figa wrote:
+> We should stick to the rule that compatible value should be named after
+> first specific SoC model in which this particular IP version was included.
+>
+> So this is what I would suggest:
+>
+> compatible = "samsung,s3c2443-fimd"; // for S3C24XX SoCs
+> compatible = "samsung,s3c6400-fimd"; // for S3C64XX SoCs
+> compatible = "samsung,s5p6440-fimd"; // for S5P64X0 SoCs
+> compatible = "samsung,s5pc100-fimd"; // for S5PC100 SoC
+> compatible = "samsung,s5pv210-fimd"; // for S5PV210 SoC
+> compatible = "samsung,exynos4210-fimd"; // for Exynos4 SoCs
+> compatible = "samsung,exynos5250-fimd"; // for Exynos5 SoCs
 
-That seems wrong; the GPIO/IRQ driver should handle this internally. The
-Ethernet driver shouldn't know/care whether the interrupt it's given is
-some form of dedicated interrupt or a GPIO-based interrupt, and even if
-it somehow did, there's no irq_to_gpio() any more, so the driver can't
-tell which GPIO ID it should request, unless it's given yet another
-property to represent this.
+Yes, that looks good to me. I'm just not sure though if there is
+any reference to "fimd" in the s3c2443 SoC documentation. Or
+is it simply called lcd controller there ?
