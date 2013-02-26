@@ -1,16 +1,18 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] gpio: gpio-generic: Fix bug in big endian bit
- conversion
-Date: Tue, 26 Feb 2013 07:52:28 +0000
-Message-ID: <20130226075228.A963F3E0AEF@localhost>
-References: <1360060383-16880-1-git-send-email-andreas@gaisler.com>
- <1360060383-16880-2-git-send-email-andreas@gaisler.com>
- <20130209145855.D517E3E328E@localhost>
+From: Dong Aisheng <b29396-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 3/3] pinctrl: imx: move hard-coding data into device tree
+Date: Tue, 26 Feb 2013 16:02:22 +0800
+Message-ID: <20130226080220.GA3037@b29396-Latitude-E6410>
+References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
+ <1361344089-16804-4-git-send-email-shawn.guo@linaro.org>
+ <51251E5A.1080806@wwwdotorg.org>
+ <CAP1dx+w2bLcztrRJOYs07xxSqVgo3bggJHMFt5LyL5jXQ-h6Mg@mail.gmail.com>
+ <51267C0E.6070902@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130209145855.D517E3E328E@localhost>
+Content-Disposition: inline
+In-Reply-To: <51267C0E.6070902-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,65 +23,72 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 09 Feb 2013 14:58:55 +0000, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Tue,  5 Feb 2013 11:33:02 +0100, Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> wrote:
-> > The swap to convert LE to BE in bgpio_pin2mask_be should be on byte level, not
-> > on bit level.
+On Thu, Feb 21, 2013 at 12:57:02PM -0700, Stephen Warren wrote:
+> On 02/21/2013 02:36 AM, Dong Aisheng wrote:
+> > On 21 February 2013 03:04, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> >> On 02/20/2013 12:08 AM, Shawn Guo wrote:
+> >>> Currently, all imx pinctrl drivers maintain a big array of struct
+> >>> imx_pin_reg which hard-codes data like register offset and mux mode
+> >>> setting for each pin function.  Every time a new imx SoC support is
+> >>> added, we need to add such a big mount of data.  With moving to single
+> >>> kernel build, it's only matter of time to be blamed on memory consuming.
+> >>>
+> >>> With DTC pre-processor support in place, the patch moves all these data
+> >>> into device tree by redefining the PIN_FUNC_ID in imxXX-pinfunc.h and
+> >>> changing the PIN_FUNC_ID parsing code a little bit.
+> ...
+> >> This patch removes a bunch of tables from the kernel. I like having the
+> >> tables in the kernel, since in theory it could allow a future debugfs or
+> >> sysfs interface to pinctrl that allows manipulation of the pinctrl HW
+> >> state at a semantic level.
 > > 
-> > Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  drivers/gpio/gpio-generic.c |    5 ++++-
-> >  1 files changed, 4 insertions(+), 1 deletions(-)
+> > Right, that's one of the considerations why i kept the register table in driver
+> > in the first binding design.
 > > 
-> > diff --git a/drivers/gpio/gpio-generic.c b/drivers/gpio/gpio-generic.c
-> > index 05fcc0f..7f11537 100644
-> > --- a/drivers/gpio/gpio-generic.c
-> > +++ b/drivers/gpio/gpio-generic.c
-> > @@ -112,7 +112,10 @@ static unsigned long bgpio_pin2mask(struct bgpio_chip *bgc, unsigned int pin)
-> >  static unsigned long bgpio_pin2mask_be(struct bgpio_chip *bgc,
-> >  				       unsigned int pin)
-> >  {
-> > -	return 1 << (bgc->bits - 1 - pin);
-> > +	unsigned int bit = pin & 0x7; /* Bit number within byte */
-> > +	unsigned int base = pin - bit; /* Pin that is bit 0 within byte */
-> > +
-> > +	return 1 << ((bgc->bits - base - 8) + bit); /* shifted base + bit */
+> >> This is only possible if the DT binding
+> >> includes details such as "set this pin to this function", and the driver
+> >> includes the tables to convert that into details such as register
+> >> address and value. I don't think such an "API" could be implemented for
+> >> IMX after this patch.
+> > 
+> > Theoretically It can, because device tree contains the pin registers
+> > informations
 > 
-> Ah, sorry for my previous reply. I see you have seen gpio-generic.  :-)
+> > in this way. But the problem is that it can only manipulate the used pins which
+> > are parsed from devices tree. While for those unused pins, since the driver does
+> > not have the pin register information, it can not manipulate it.
 > 
-> No, the original calculation is correct. BE and LE bit numbering are
-> opposite, bit Linux always uses LE numbers as far as bit masks are
-> concerned. Therefore pin 0 is the most significant bit, and
-> pin (nr_bits-1) is the least significant bit.
+> Right, that's the main issue I was trying to highlight; the driver no
+> longer provides complete knowledge of the HW, but only learns about
+> stuff that happens to be used/defined in the board-specific DT.
+> 
+> > But what i'm wondering now is do we really need to manipulate the unused pins
+> > from sysfs or debugfs?
+> > I still can not think out a real using case now.
+> > Anyone else can think one?
+> 
+> For early board bringup, it may be useful to boot with a minimal set of
+> entries in the DT (enough to support e.g. serial console and some device
+> for a root filesystem) and then interactively tweak the rest of the
+> pinmux to define the rest of the board, and perhaps even save the result
+> somehow, and add it to the next iteration of the DT.
+> 
+> Also, consider a hobbyist-oriented board that has 50 unused pins that
+> could be GPIO, or mapped to some otherwise unused SD, I2C, SPI, ...
+> controller. Do we want to force the user to write a new DT and reboot,
+> or would it be better to provide some runtime API to set up those pins
+> based on what they had connected to the board, and then instantiate
+> drivers or use the sysfs GPIO interface, after doing so?
+> 
 
-Hi Andreas,
+Yes, it can be useful sometimes.
+In order to do that, we have to add the whole register table in driver.
+Considering the defects, since using memtool can do the same things,
+maybe it's not worth for IMX to do that.
 
-Actually I'm wrong here (at least partially) after looking closer at the
-generic gpio driver. The problem is that things get messed up on 16 or
-32 bit access depending on how the hardware expects to be accessed.
-bgpio always uses iowrite/ioread for register access which is inherently
-little endian, but if the hardware is wired up as a big-endian device
-then you have to do the fiddly bit you did above to get the bit
-positions to line up where you what then. So, there could potentially be
-4 different ways to count bits on a value ioread() from a gpio register:
-
-little-endian, LSB = 0 (sane)
-little-endian, MSB = 0 (odd)
-big-endian (bytes swapped), MSB = 0 (common on BE platforms)
-big-endian (bytes swapped), LSB = 0 (why are you making my life hard?)
-
-We /could/ have a ioread32be/write32be mode in the driver, but I don't
-think that is the right approach. It means we need yet another set of
-accessors for register except using the 'be' variants. Blech. What I'd
-actually like to do is add a bitmask field to the gpio_desc which can be
-calculated ahead of time to whatever madness is required from the way
-the device is wired. Then the access routines don't need to even care.
-they just apply the bitmask to ioread/iowrite and it doesn't even need
-to know what the bit number actually is. The new support for gpio_desc
-in the core code makes this feasable.
-
-g.
+Regards
+Dong Aisheng
