@@ -1,48 +1,124 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Wed, 27 Feb 2013 10:50:57 -0700
-Message-ID: <512E4781.8050701@wwwdotorg.org>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com> <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com> <512D39DA.7020306@ti.com> <512D3AB1.1080202@wwwdotorg.org> <512D3EC2.6050408@ti.com> <512D3FE6.1010300@wwwdotorg.org> <512D490B.70900@ti.com> <512D4FC4.2060505@wwwdotorg.org> <512D5C58.4090500@ti.com> <CAAwP0s3rbExrSf-W325uCPfMO=Zk9LefRP0VD4JC1tg_sxS_gQ@mail.gmail.com>
+From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: imx: replace magic number with pin function
+ name
+Date: Wed, 27 Feb 2013 12:16:20 -0600
+Message-ID: <CAKGA1bmqdCiocc_O6hU3ym6uJ-bAjwKMNrt43Qs_dkjEGpX-KQ@mail.gmail.com>
+References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
+ <1361344089-16804-3-git-send-email-shawn.guo@linaro.org>
+ <51251A11.2030300@wwwdotorg.org>
+ <CAKGA1bkHH1XC38_VM=QhDrr33uqqSbwe0n+GfXEPs43K_Do=CQ@mail.gmail.com>
+ <20130221050247.GD17738@S2101-09.ap.freescale.net>
+ <CAKGA1bn22xctSj_33HQsWwnVB=RO2OJ=eYvgRD-kF+PiQcnC4Q@mail.gmail.com>
+ <20130222055203.GB27371@S2101-09.ap.freescale.net>
+ <CAKGA1bmw+CzBDLHty1+L1VdeWLgkPpLSLpGKBJEeQj-ByyzicA@mail.gmail.com>
+ <20130227074404.GD1906@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAAwP0s3rbExrSf-W325uCPfMO=Zk9LefRP0VD4JC1tg_sxS_gQ@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <martinez.javier@gmail.com>
-Cc: Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130227074404.GD1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/26/2013 08:57 PM, Javier Martinez Canillas wrote:
-> On Wed, Feb 27, 2013 at 2:07 AM, Jon Hunter <jon-hunter@ti.com> wrote:
+On Wed, Feb 27, 2013 at 1:44 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> On Wed, Feb 27, 2013 at 12:51:56AM -0600, Matt Sealey wrote:
+>> For example, please explain to me why;
 >>
->> On 02/26/2013 06:13 PM, Stephen Warren wrote:
->>> On 02/26/2013 04:45 PM, Jon Hunter wrote:
-...
->>>> One issue I see is that by not calling gpio_request, then potentially
->>>> you could have someone request a gpio via gpio_request() and someone
->>>> trying to use it as an interrupt source via request_irq(). Now obviously
->>>> that represents a bug because there is only one physical gpio, but I
->>>> gather it is something we need to protect against.
->>>
->>> I'm not sure it's really that much of an issue, but presumably the
->>> solution is for a combined GPIO+IRQ driver to simply call gpio_request
->>> internally from within some irq_chip function. It looks like struct
->>> irq_chip doesn't have a request/free, but perhaps they could be added to
->>> solve this?
+>> MX51_PIN_EIM_23__GPIO1_2 0x6528
 >>
->> Yes I was wondering if we could do something like that. That would work,
->> may be that's what we should propose.
-> 
-> Something like that would definitely solve the GPIO request issue but
-> we still have the issue that the current OMAP GPIO controller binding
-> does not support #interrupt-cells = <2>.
+>> is clearer than;
+>>
+>> 0x174 0x5 0x3d8 0x7 0x654 0x7633, /* EIM_23 GPIO1_2 and some pullup
+>> settings or so comment comment comment */
+>
+> Look what you have to do to get the pin muxing for a single pin from the
+> datasheet.
+>
+> - identify the name, grep for it in the datasheet, find 0x78 for the mux
+>   register.
+> - identify the mode wanted, it's ALT1 for GPIO1_2
+> - Look if it is involved in daisy chain, grep again if it is
+> - grep again for EIM_D23, find 0x40c for the PAD_CTL register
+>
+> That's exactly the steps that are annoying, error prone and you can get
+> rid of by having a macro like we currently have. If you found a bug in
+> the macro, fix it and everyone benefits.
 
-The binding documentation in
-Documentation/devicetree/bindings/gpio/gpio-omap.txt indicates that it
-does. If this doesn't work in practice, it's a driver bug that can
-presumably be easily fixed. And no need to change any ABI definitions:-)
+And everyone ends up with broken device trees until someone notices.
+In my experience, nobody usually notices until a very, very long time
+has passed. At least if the register values you're picking doing board
+support for your boards will only affect your board if they're wrong
+and not be global.
 
-BTW, I notice in that binding document that the description of the two
-cells for #interrupt-cells is actually part of the description of the
-"interrupt-controller" property; it should be moved up one line really.
+> Also you should notice that with the new patches Shawn has posted nobody
+> is forced to use these macros. If you don't like them, go and dump the
+> raw hex numbers into your devicetrees.
+
+I do notice that, what I'm a little perturbed by is that it doesn't
+seem to improve the situation (the amount of work required to use and
+VERIFY the values in each macro - on the assumption that any of them
+could be wrong and cross-check them with the schematics, the board
+designer if necessary, and then put them in a device tree as known
+working. Not all of the data files used in PCB design packages
+actually match the docs anyway so there are some cross-checks against
+yet another Freescale design database. If I asked someone here to go
+find the pin settings for USDHC2 on a board we have, they would first
+have to figure out which pad this was coming out of, go to the manual,
+find the signals that exit on that pad, look at the IOMUX, cross check
+it with some example code and the FSL IOMUX tool... pre-processing and
+using macros doesn't make that any easier until we have a single,
+fixed, totally verified and unchangeable set of macros which will
+cover all the usual cases. If the intent is that we just glob in 2500
+pin definitions at the start and "hope" that someone "eventually"
+notices any errors.. this is not normal in embedded design.
+
+I think that in the grand scheme of things it will just serve to hide
+errors behind a macro..
+
+Shawn, I might be much happier about the patch if I knew for sure that it
+
+a) followed some Freescale design database export of pins vs. alt
+modes and default mux settings (this must exist because the manuals
+and IOMUX tool data are generated from some XML files) and that
+b) that data was available to generate the macros used in the binding.
+
+Assuming the manual is correct is not a bad way to go - sometimes it
+is definitely NOT, but the information we're using right now is
+derived from there anyway.. it should still follow the names listed
+there (i.e. SD2_DAT4__SD2_DAT4 and not SD2_DAT4__USDHC2_DATA4 if the
+first one is what can be derived from the manual)
+
+I would also be MUCH happier if macros were also present to support
+cross-checking the ranges of iomux registers being defined such that
+they can be cross-checked at pre-processing time for those people who
+do not want to use the macros verbatim. This way immediate errors
+(accidental typo putting a wrong register in a field which is out of
+range for the valid addresses for that register block) will be caught
+in using the macros.
+
+I guess I will have to capitulate on it since I've got absolutely no
+power to lock Shawn in a room until it's done right, but I loathe
+automation for automation's sake. There always has to be a human
+present and the amount of work he has to do is not "annoying" when it
+is looking something up in the manual and coding something to suit.
+That's what we all do for a living, for crying out loud. And when a
+human is doing some amount of work, making it easier to make a mistake
+and creating an assumption that there is an easy way out via
+preprocessor macros is counter-productive (someone still has to write
+every macro, and someone still has to verify every single one of them
+at some point).
+
+-- 
+Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Product Development Analyst, Genesi USA, Inc.
