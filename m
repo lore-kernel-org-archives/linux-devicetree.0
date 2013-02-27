@@ -1,108 +1,84 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Tue, 26 Feb 2013 17:13:56 -0700
-Message-ID: <512D4FC4.2060505@wwwdotorg.org>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com> <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com> <512D39DA.7020306@ti.com> <512D3AB1.1080202@wwwdotorg.org> <512D3EC2.6050408@ti.com> <512D3FE6.1010300@wwwdotorg.org> <512D490B.70900@ti.com>
+From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Subject: Re: [PATCHi v2] net: sh_eth: Add support of device tree probe
+Date: Wed, 27 Feb 2013 09:39:15 +0900
+Message-ID: <512D55B3.3070707@renesas.com>
+References: <1360803091-26400-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
+ <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com>
+ <511C5279.3070008@renesas.com> <20130222184918.GC31345@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <512D490B.70900@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Javier Martinez Canillas <martinez.javier@gmail.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-reply-to: <20130222184918.GC31345@verge.net.au>
+Sender: netdev-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, netdev@vger.kernel.org, magnus.damm@gmail.com, devicetree-discuss@lists.ozlabs.org, kda@linux-powerpc.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/26/2013 04:45 PM, Jon Hunter wrote:
-> 
-> On 02/26/2013 05:06 PM, Stephen Warren wrote:
->> On 02/26/2013 04:01 PM, Jon Hunter wrote:
->>>
->>> On 02/26/2013 04:44 PM, Stephen Warren wrote:
->>>> On 02/26/2013 03:40 PM, Jon Hunter wrote:
->>>>>
->>>>> On 02/26/2013 04:01 AM, Javier Martinez Canillas wrote:
->>>>>
->>>>> [snip]
->>>>>
->>>>>> I was wondering if the level/edge settings for gpios is working on OMAP.
->>>>>>
->>>>>> I'm adding DT support for an SMSC911x ethernet chip connected to the
->>>>>> GPMC for an OMAP3 SoC based board.
->>>>>>
->>>>>> In the smsc911x driver probe function (smsc911x_drv_probe() in
->>>>>> drivers/net/ethernet/smsc/smsc911x.c), a call to request_irq() with
->>>>>> the flag IRQF_TRIGGER_LOW is needed because of the wiring on my board.
->>>>>>
->>>>>> Reading the gpio-omap.txt documentation it says that #interrupt-cells
->>>>>> should be <2> and that a value of 8 is "active low level-sensitive".
->>>>>>
->>>>>> So I tried this:
->>>>>>
->>>>>> &gpmc {
->>>>>> 	ethernet@5,0 {
->>>>>> 		pinctrl-names = "default";
->>>>>> 		pinctrl-0 = <&smsc911x_pins>;
->>>>>> 		compatible = "smsc,lan9221", "smsc,lan9115";
->>>>>> 		reg = <5 0 0xff>; /* CS5 */
->>>>>> 		interrupt-parent = <&gpio6>;
->>>>>> 		interrupts = <16 8>; /* gpio line 176 */
->>>>>> 		interrupt-names = "smsc911x irq";
->>>>>> 		vmmc-supply = <&vddvario>;
->>>>>> 		vmmc_aux-supply = <&vdd33a>;
->>>>>> 		reg-io-width = <4>;
->>>>>>
->>>>>> 		smsc,save-mac-address;
->>>>>>       };
->>>>>> };
->>>>>
->>>>> Are you requesting the gpio anywhere? If not then this is not going to
->>>>> work as-is. This was discussed fairly recently [1] and the conclusion
->>>>> was that the gpio needs to be requested before we can use as an interrupt.
->>>>
->>>> That seems wrong; the GPIO/IRQ driver should handle this internally. The
->>>> Ethernet driver shouldn't know/care whether the interrupt it's given is
->>>> some form of dedicated interrupt or a GPIO-based interrupt, and even if
->>>> it somehow did, there's no irq_to_gpio() any more, so the driver can't
->>>> tell which GPIO ID it should request, unless it's given yet another
->>>> property to represent this.
->>>
->>> I agree that ideally this should be handled internally. Did you read the
->>> discussion on the thread that I referenced [1]? If you have any thoughts
->>> we are open to ideas :-)
->>>
->>> Cheers
->>> Jon
->>>
->>> [1] http://comments.gmane.org/gmane.linux.ports.arm.omap/92192
->>
->> Oh, when I clicked that link the first time, all I saw was the patch,
->> not any discussion. I guess it must have timed out finding the other
->> emails or something.
-> 
-> Actually, I sent a slightly different link the 2nd time to ensure you
-> saw the thread. So my fault ;-)
-> 
->> I disagree that the GPIO needs to be requested, and that a custom DT
->> property and associated code are needed for that; simply requesting the
->> IRQ should be enough to make everything work.
->>
->> In the Tegra GPIO IRQ driver for example, the irq_set_type irq_chip op
->> goes and configures the base GPIO HW to enable the pin as a GPIO, just
->> like gpio_request() would. I imagine the OMAP driver can do whatever
->> similar action it needs.
-> 
-> Yes that is similar to what the patch in the thread was attempting to
-> do, but this got shot down.
-> 
-> One issue I see is that by not calling gpio_request, then potentially
-> you could have someone request a gpio via gpio_request() and someone
-> trying to use it as an interrupt source via request_irq(). Now obviously
-> that represents a bug because there is only one physical gpio, but I
-> gather it is something we need to protect against.
+Hi, Simon.
 
-I'm not sure it's really that much of an issue, but presumably the
-solution is for a combined GPIO+IRQ driver to simply call gpio_request
-internally from within some irq_chip function. It looks like struct
-irq_chip doesn't have a request/free, but perhaps they could be added to
-solve this?
+This does not apply yet to upstream.
+I will send a patch without of_device_is_available=E3=80=80function.
+
+Best regards,
+   Nobuhiro
+
+(2013/02/23 3:49), Simon Horman wrote:
+> On Thu, Feb 14, 2013 at 11:56:57AM +0900, Nobuhiro Iwamatsu wrote:
+>> (2013/02/14 10:24), Kuninori Morimoto wrote:
+>>>
+>>> Hi Iwamatsu-san
+>>>
+>>> Thank you for this patch.
+>>>
+>>> Small comment from me
+>>>
+>>>> +#ifdef CONFIG_OF
+>>> (snip)
+>>>> +sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
+>>>> +{
+>>>> +	int ret;
+>>>> +	struct device_node *np =3D dev->of_node;
+>>>> +	struct sh_eth_plat_data *pdata;
+>>> ...
+>>>> +#else
+>>>> +static struct sh_eth_plat_data *
+>>>> +sh_eth_parse_dt(struct device *dev, struct net_device *ndev)
+>>>> +{
+>>>> +	return NULL;
+>>>> +}
+>>>> +#endif
+>>>
+>>> (snip)
+>>>
+>>>>   static int sh_eth_drv_probe(struct platform_device *pdev)
+>>>>   {
+>>> ...
+>>>> +#ifdef CONFIG_OF
+>>>> +	if (np&&   of_device_is_available(np)) {
+>>>> +		pd =3D sh_eth_parse_dt(&pdev->dev, ndev);
+>>>> +		if (pdev->dev.platform_data) {
+>>>> +			struct sh_eth_plat_data *tmp =3D
+>>>> +				pdev->dev.platform_data;
+>>>> +			pd->set_mdio_gate =3D tmp->set_mdio_gate;
+>>>> +			pd->needs_init =3D tmp->needs_init;
+>>>> +		}
+>>>> +	} else
+>>>> +#endif
+>>>
+>>> sh_eth_parse_dt() was defined for both CONFIG_OF and !CONFIG_OF.
+>>> But it is called only from CONFIG_OF ?
+>>>
+>>
+>> Because of_device_is_available needs CONFIG_OF.
+>> I already send a patch which add empty function of of_device_is_avai=
+lable.
+>> If this was apply, this ifdef becomes without need.
+>
+> Hi Iwamatsu-san,
+>
+> could you let me know of the status of that patch?
+> Has it been queued-up or merged? If so, where and when?
+>
+>
