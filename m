@@ -1,40 +1,66 @@
-From: Kim Phillips <kim.phillips@freescale.com>
-Subject: Re: [PATCH 2/3] dtc: import latest upstream dtc
-Date: Wed, 27 Feb 2013 10:45:12 -0600
-Message-ID: <20130227104512.c07c0ade0107aa7f4ec18217@freescale.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/3] libfdt: add fdt type definitions in libfdt_env.h
+Date: Wed, 27 Feb 2013 11:05:24 -0600
+Message-ID: <512E3CD4.6000305@gmail.com>
 References: <1361928975-29395-1-git-send-email-kim.phillips@freescale.com>
-	<1361928975-29395-2-git-send-email-kim.phillips@freescale.com>
-	<1361934486.18483.5@driftwood>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1361934486.18483.5@driftwood>
+In-Reply-To: <1361928975-29395-1-git-send-email-kim.phillips@freescale.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Landley <rob@landley.net>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Kim Phillips <kim.phillips@freescale.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Pitre <nico@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 26 Feb 2013 21:08:06 -0600
-Rob Landley <rob@landley.net> wrote:
-
-> On 02/26/2013 07:36:14 PM, Kim Phillips wrote:
-> > This updates scripts/dtc to upstream dtc commit 27cdc1b
+On 02/26/2013 07:36 PM, Kim Phillips wrote:
+> in preparation for the forthcoming dtc update which adds fdt specific
+> types: fdt{16,32,64}_t.
 > 
-> There's an upstream for dts?
+> Signed-off-by: Kim Phillips <kim.phillips@freescale.com>
+> ---
+>  arch/arm/boot/compressed/libfdt_env.h | 4 ++++
+>  include/linux/libfdt_env.h            | 6 ++++++
 
-dtc - the device tree compiler, yes.
+We should kill off arch/arm/boot/compressed/libfdt_env.h and use
+include/linux/libfdt_env.h instead. The only reason I see why we have
+both is the ARM version was introduced before include/linux/libfdt_env.h
+existed.
 
-> > "Added license header to dtc/libfdt/fdt.h and libfdt_env.h"
-> > from git://git.jdl.com/software/dtc.git.
+Rob
+
+>  2 files changed, 10 insertions(+)
 > 
-> That git repository has a Documentation directory with for example  
-> "dts-format.txt" in it. My current linux git repository does not  
-> contain a file called dts-format.txt.
-
-this patch isn't attempting to update dts-format.txt, or any other
-file that exists in the upstream dtc project that isn't present -
-and used - in the kernel.  The purpose of this patch is to update
-libfdt, which has in-kernel users.
-
-Kim
+> diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
+> index 1f4e718..17ae0f3 100644
+> --- a/arch/arm/boot/compressed/libfdt_env.h
+> +++ b/arch/arm/boot/compressed/libfdt_env.h
+> @@ -5,6 +5,10 @@
+>  #include <linux/string.h>
+>  #include <asm/byteorder.h>
+>  
+> +typedef __be16 fdt16_t;
+> +typedef __be32 fdt32_t;
+> +typedef __be64 fdt64_t;
+> +
+>  #define fdt16_to_cpu(x)		be16_to_cpu(x)
+>  #define cpu_to_fdt16(x)		cpu_to_be16(x)
+>  #define fdt32_to_cpu(x)		be32_to_cpu(x)
+> diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+> index 01508c7..da98097 100644
+> --- a/include/linux/libfdt_env.h
+> +++ b/include/linux/libfdt_env.h
+> @@ -5,6 +5,12 @@
+>  
+>  #include <asm/byteorder.h>
+>  
+> +typedef __be16 fdt16_t;
+> +typedef __be32 fdt32_t;
+> +typedef __be64 fdt64_t;
+> +
+> +#define fdt16_to_cpu(x) be16_to_cpu(x)
+> +#define cpu_to_fdt16(x) cpu_to_be16(x)
+>  #define fdt32_to_cpu(x) be32_to_cpu(x)
+>  #define cpu_to_fdt32(x) cpu_to_be32(x)
+>  #define fdt64_to_cpu(x) be64_to_cpu(x)
+> 
