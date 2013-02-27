@@ -1,66 +1,65 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/3] libfdt: add fdt type definitions in libfdt_env.h
-Date: Wed, 27 Feb 2013 11:05:24 -0600
-Message-ID: <512E3CD4.6000305@gmail.com>
-References: <1361928975-29395-1-git-send-email-kim.phillips@freescale.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Wed, 27 Feb 2013 10:47:39 -0700
+Message-ID: <512E46BB.907@wwwdotorg.org>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com> <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com> <512D39DA.7020306@ti.com> <CAAwP0s3oNaALFfLvEQnZ1m90BXh5pF2_-8FUyi6pQMzb0_FSVQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1361928975-29395-1-git-send-email-kim.phillips@freescale.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kim Phillips <kim.phillips@freescale.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Russell King <linux@arm.linux.org.uk>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas Pitre <nico@linaro.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAAwP0s3oNaALFfLvEQnZ1m90BXh5pF2_-8FUyi6pQMzb0_FSVQ@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <martinez.javier@gmail.com>
+Cc: Jon Hunter <jon-hunter@ti.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/26/2013 07:36 PM, Kim Phillips wrote:
-> in preparation for the forthcoming dtc update which adds fdt specific
-> types: fdt{16,32,64}_t.
+On 02/26/2013 08:33 PM, Javier Martinez Canillas wrote:
+...
+> Yes, I realized that requesting the gpio was necessary so what I did
+> is to use the "regulator-fixed" optional property "gpio" and define
+> the GPIO used as an IRQ in a regulator used by the SMSC chip. So, I
+> have this on my board DT:
 > 
-> Signed-off-by: Kim Phillips <kim.phillips@freescale.com>
-> ---
->  arch/arm/boot/compressed/libfdt_env.h | 4 ++++
->  include/linux/libfdt_env.h            | 6 ++++++
+> vddvario: regulator-vddvario {
+> 	compatible = "regulator-fixed";
+> 	regulator-name = "vddvario";
+> 	regulator-always-on;
+> 	gpio = <&gpio6 16 8>;  /* gpio line 176 */
+> 	enable-active-high;
+> 	gpio-open-drain;
 
-We should kill off arch/arm/boot/compressed/libfdt_env.h and use
-include/linux/libfdt_env.h instead. The only reason I see why we have
-both is the ARM version was introduced before include/linux/libfdt_env.h
-existed.
+While admittedly it's configured as open-drain, that will configure the
+GPIO to be an output, whereas for usage as an interrupt, it really
+should be configured as an input... Perhaps it makes no difference on
+OMAP HW since the I/O paths are separate, but I can easily imagine HW
+where this hack wouldn't work.
 
-Rob
-
->  2 files changed, 10 insertions(+)
+> 	regulator-boot-on;
+> };
 > 
-> diff --git a/arch/arm/boot/compressed/libfdt_env.h b/arch/arm/boot/compressed/libfdt_env.h
-> index 1f4e718..17ae0f3 100644
-> --- a/arch/arm/boot/compressed/libfdt_env.h
-> +++ b/arch/arm/boot/compressed/libfdt_env.h
-> @@ -5,6 +5,10 @@
->  #include <linux/string.h>
->  #include <asm/byteorder.h>
->  
-> +typedef __be16 fdt16_t;
-> +typedef __be32 fdt32_t;
-> +typedef __be64 fdt64_t;
-> +
->  #define fdt16_to_cpu(x)		be16_to_cpu(x)
->  #define cpu_to_fdt16(x)		cpu_to_be16(x)
->  #define fdt32_to_cpu(x)		be32_to_cpu(x)
-> diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
-> index 01508c7..da98097 100644
-> --- a/include/linux/libfdt_env.h
-> +++ b/include/linux/libfdt_env.h
-> @@ -5,6 +5,12 @@
->  
->  #include <asm/byteorder.h>
->  
-> +typedef __be16 fdt16_t;
-> +typedef __be32 fdt32_t;
-> +typedef __be64 fdt64_t;
-> +
-> +#define fdt16_to_cpu(x) be16_to_cpu(x)
-> +#define cpu_to_fdt16(x) cpu_to_be16(x)
->  #define fdt32_to_cpu(x) be32_to_cpu(x)
->  #define cpu_to_fdt32(x) cpu_to_be32(x)
->  #define fdt64_to_cpu(x) be64_to_cpu(x)
+> &gpmc {
+> 	ethernet@5,0 {
+> 		pinctrl-names = "default";
+> 		pinctrl-0 = <&smsc911x_pins>;
+> 		compatible = "smsc,lan9221", "smsc,lan9115";
+> 		reg = <5 0 0xff>;
+> 		interrupt-parent = <&gpio6>;
+> 		interrupts = <16 8>; /* gpio line 176 */
+> 		interrupt-names = "smsc911x irq";
+> 		vmmc-supply = <&vddvario>;
+> 		vmmc_aux-supply = <&vdd33a>;
+> 		reg-io-width = <4>;
 > 
+> 		smsc,save-mac-address;
+>       };
+> };
+> 
+> That way a call to gpio_request_one() is made and the GPIO is requested.
+> 
+> This look a little hack-ish for me but I've seen this in other
+> DeviceTrees like omap4-sdp.dts so I thought it was a common DT
+> pattern.
+
+Indeed; the GPIO is in no way a regulator, so while the above is fine
+for testing, it's in no way a solution that can actually be used and
+checked in.
