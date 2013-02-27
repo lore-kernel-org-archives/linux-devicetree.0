@@ -1,31 +1,55 @@
-From: Sekhar Nori <nsekhar@ti.com>
-Subject: Re: [PATCH v4 1/5] ARM: davinci: mmc: derive version information
- from device name
-Date: Wed, 27 Feb 2013 17:15:59 +0530
-Message-ID: <512DF1F7.6010508@ti.com>
-References: <1360909322-1858-1-git-send-email-prakash.pm@ti.com> <1360909322-1858-2-git-send-email-prakash.pm@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1360909322-1858-2-git-send-email-prakash.pm@ti.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: "Manjunathappa, Prakash" <prakash.pm@ti.com>
-Cc: linux-mmc@vger.kernel.org, grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, linux@arm.linux.org.uk, hs@denx.de, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, cjb@laptop.org, davinci-linux-open-source@linux.davincidsp.com
+From: Ian Lartey <ian@slimlogic.co.uk>
+Subject: [PATCH 2/2] leds: Kconfig for Palmas LEDs
+Date: Wed, 27 Feb 2013 13:13:20 +0000
+Message-ID: <1361970800-31460-2-git-send-email-ian@slimlogic.co.uk>
+References: <1361970800-31460-1-git-send-email-ian@slimlogic.co.uk>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1361970800-31460-1-git-send-email-ian@slimlogic.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-leds@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, ldewangan@nvidia.com, j-keerthy@ti.com, gg@slimlogic.co.uk, cooloney@gmail.com, rpurdie@rpsys.net, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, broonie@opensource.wolfsonmicro.com, Ian Lartey <ian@slimlogic.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 2/15/2013 11:51 AM, Manjunathappa, Prakash wrote:
-> Remove specifying mmc controller IP version information via platform
-> data, instead specify device name so that driver derives it from
-> platform_device_id table. Also change the clock node name to match
-> the changed dev_id.
-> Tested on da850-evm to make sure driver loads without clk_get failures.
-> 
-> Signed-off-by: Manjunathappa, Prakash <prakash.pm@ti.com>
+Add the Kconfig and Makefile for the Palmas LED driver.
 
-The patch looks good to me, but after this patch MMC/SD will be broken.
-I suggest merging this into 2/5. It makes little sense without those
-changes anyway.
+Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
+Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
+---
+ drivers/leds/Kconfig  |    9 +++++++++
+ drivers/leds/Makefile |    1 +
+ 2 files changed, 10 insertions(+), 0 deletions(-)
 
-Thanks,
-Sekhar
+diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+index ec50824..a070e29 100644
+--- a/drivers/leds/Kconfig
++++ b/drivers/leds/Kconfig
+@@ -469,6 +469,15 @@ config LEDS_BLINKM
+ 	  This option enables support for the BlinkM RGB LED connected
+ 	  through I2C. Say Y to enable support for the BlinkM LED.
+ 
++config LEDS_PALMAS
++	bool "LED support for the Palmas family of PMICs"
++	depends on LEDS_CLASS
++	depends on MFD_PALMAS
++	help
++	  This option enables the driver for LED1 & LED2 pins on Palmas PMIC
++	  if these pins are enabled in the mux configuration. The driver support
++	  ON/OFF and blinking with hardware control.
++
+ config LEDS_TRIGGERS
+ 	bool "LED Trigger support"
+ 	depends on LEDS_CLASS
+diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
+index 215e7e3..233023e 100644
+--- a/drivers/leds/Makefile
++++ b/drivers/leds/Makefile
+@@ -52,6 +52,7 @@ obj-$(CONFIG_LEDS_RENESAS_TPU)		+= leds-renesas-tpu.o
+ obj-$(CONFIG_LEDS_MAX8997)		+= leds-max8997.o
+ obj-$(CONFIG_LEDS_LM355x)		+= leds-lm355x.o
+ obj-$(CONFIG_LEDS_BLINKM)		+= leds-blinkm.o
++obj-$(CONFIG_LEDS_PALMAS)		+= leds-palmas.o
+ 
+ # LED SPI Drivers
+ obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
+-- 
+1.7.0.4
