@@ -1,38 +1,43 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [RESEND PATCH v9 0/2] usb: phy: samsung: Introducing usb phy driver for samsung SoCs
-Date: Wed, 27 Feb 2013 09:38:14 +0100
-Message-ID: <48644417.X9XZGCPkgp@flatron>
-References: <1358499623-13901-1-git-send-email-p.paneri@samsung.com> <20130227081521.GG8016@arwen.pp.htv.fi> <CAFp+6iGx1z9BcE3nLTVvOMG6VWVuYhDuKm5wu3DtbL8M1pfUtg@mail.gmail.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 0/4] Enable SPI flash support on da850-evm DT kernel
+Date: Wed, 27 Feb 2013 14:09:57 +0530
+Message-ID: <512DC65D.7080603@ti.com>
+References: <1361789050-637-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAFp+6iGx1z9BcE3nLTVvOMG6VWVuYhDuKm5wu3DtbL8M1pfUtg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Vivek Gautam <gautamvivek1987@gmail.com>
-Cc: balbi@ti.com, Praveen Paneri <p.paneri@samsung.com>, linux-usb@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, gregkh@linuxfoundation.org, thomas.abraham@linaro.org, ben-linux@fluff.org, broonie@opensource.wolfsonmicro.com, l.majewski@samsung.com, kyungmin.park@samsung.com, grant.likely@secretlab.ca, heiko@sntech.de, t.figa@samsung.com, gautam.vivek@samsung.com
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <1361789050-637-1-git-send-email-prakash.pm-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 27 of February 2013 14:00:25 Vivek Gautam wrote:
-> Hi Balbi,
+On 2/25/2013 4:14 PM, Manjunathappa, Prakash wrote:
+> Patch enables support for m25p80 SPI flash support on
+> da850-EVM.
 > 
-> On Wed, Feb 27, 2013 at 1:45 PM, Felipe Balbi <balbi@ti.com> wrote:
-> > Hi,
-> > 
-> > On Fri, Jan 18, 2013 at 02:30:21PM +0530, Praveen Paneri wrote:
-> >> Changes from v8:
-> >> Resending this patch series after rebasing to the latest usb-next
-> >> branch. Rewording inline comments for better readability.
-> >> Removed IS_ENABLED(CONFIG_OF) as pdev->dev.of_node is enough to check
-> >> for dt support. Using of_match_ptr to add of_match_table to
-> >> platform_driver structure. Removed unnecessary variables.
-> > 
-> > trying applying these but it doesn't apply unfortunately.
+> Testing information:
+> da850-evm comes with partitions specified in DT blob.
+> Able to mount/umount and create/delete files on filesystem partition.
 > 
-> Already present in 3.8.0 ? ;-)
+> Depends on below patch in spi-next branch of git://git.secretlab.ca/git/linux-2.6.git.
+> "spi/davinci: add OF support for the spi controller"
+> 
+> Applies on top of below patch under community review:
+> http://www.mail-archive.com/davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org/msg25184.html
 
-That's great. I will send my patch adding Exynos 4x12 support in next 
-days.
+The series looks good to me except a minor comment I gave on 4/4. Patch
+1/4 should be picked by Grant (ideally before v3.9-rc1). I will queue
+rest of patches for v3.10.
 
-Best regards,
-Tomasz
+Thanks,
+Sekhar
