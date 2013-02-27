@@ -1,105 +1,154 @@
-From: "Hebbar, Gururaja" <gururaja.hebbar@ti.com>
-Subject: Re: [PATCH v4 0/3] ASoC davinci/tlv320aic3x updates,
- fixes & DT support
-Date: Wed, 27 Feb 2013 07:10:40 +0000
-Message-ID: <1BAFE6F6C881BF42822005164F1491C33EB76CE8@DBDE01.ent.ti.com>
-References: <1359636786-7056-1-git-send-email-gururaja.hebbar@ti.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: imx: replace magic number with pin
+ function name
+Date: Wed, 27 Feb 2013 08:44:04 +0100
+Message-ID: <20130227074404.GD1906@pengutronix.de>
+References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
+ <1361344089-16804-3-git-send-email-shawn.guo@linaro.org>
+ <51251A11.2030300@wwwdotorg.org>
+ <CAKGA1bkHH1XC38_VM=QhDrr33uqqSbwe0n+GfXEPs43K_Do=CQ@mail.gmail.com>
+ <20130221050247.GD17738@S2101-09.ap.freescale.net>
+ <CAKGA1bn22xctSj_33HQsWwnVB=RO2OJ=eYvgRD-kF+PiQcnC4Q@mail.gmail.com>
+ <20130222055203.GB27371@S2101-09.ap.freescale.net>
+ <CAKGA1bmw+CzBDLHty1+L1VdeWLgkPpLSLpGKBJEeQj-ByyzicA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1359636786-7056-1-git-send-email-gururaja.hebbar@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>
-Cc: "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "tony@atomide.com" <tony@atomide.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob@landley.net" <rob@landley.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKGA1bmw+CzBDLHty1+L1VdeWLgkPpLSLpGKBJEeQj-ByyzicA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
-
-On Thu, Jan 31, 2013 at 18:23:03, Hebbar, Gururaja wrote:
-> 1. Convert tlv320aic3x mic bias to a supply widget and related machine driver
-> 2. Add DT support for Davinci machine platform
-> 3. Remove __dev* attributes
-> 
-> This patch-set is tested on Davinci platform (DA850 EVM). This series applies on
-> top of tag next-20130128 git tree
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
-> 
-> These patches cannot be tested directly on mainline kernel (DT based).
-> This is because dma is not yet completely ported to Davinci ASoC. I had to add
-> few hacks to get Audio working on Davinci DA850 platform.
-> 
-> For reference, I have placed the entire working tree @
-> Tree :  https://github.com/ghebbar/linux.git
-> Branch : dev_next-20130128_davinci_asoc_dt_v3
-
-Only one patch out of the 3 is accepted.  I haven't received any review comments
-from anyone for the other 2.
-
-Kindly let me know if any further changes are required in the remaining changes 
-or if I have missed any of comments.
-
-If not, Could you please accept the remaining patch?
-
-Remaining patches
-ASoC: davinci: remove __dev* attributes [1]
-ASoC: davinci: machine: Add device tree binding [2]
-
-
-[1]
-http://lkml.org/lkml/2013/1/31/243
-
-
-[2]
-http://lkml.org/lkml/2013/1/31/244
-
-
-Regards, 
-Gururaja
-
-> 
-> Changes in v4
-> 	 - updated pending machine driver to change in micbias -> supply widget
-> 	 - merge codec & machine driver change into a single commit
-> 
-> Changes in v3
-> 	- drop mcasp pinctrl handler patch from series as it is now handled
-> 	  centrally.
-> 	- Convert tlv320aic3x mic bias to a supply widget and related machine
-> 	  driver
-> 	- remove __dev* attributes
-> 
-> Changes in v2
-> 	 - Remove reference to Linux & software details from DT binding
-> 
-> Hebbar Gururaja (2):
->   ASoC: tlv320aic3x: Convert mic bias to a supply widget
->   ASoC: davinci: remove __dev* attributes
-> 
-> Hebbar, Gururaja (1):
->   ASoC: davinci: machine: Add device tree binding
-> 
->  .../bindings/sound/davinci-evm-audio.txt           |   53 ++++++
->  .../devicetree/bindings/sound/tlv320aic3x.txt      |    6 +
->  include/sound/tlv320aic3x.h                        |   10 ++
->  sound/soc/codecs/tlv320aic3x.c                     |   83 ++++++++-
->  sound/soc/codecs/tlv320aic3x.h                     |    4 +
->  sound/soc/davinci/davinci-evm.c                    |  185 +++++++++++++++++---
->  sound/soc/omap/n810.c                              |    4 +-
->  sound/soc/omap/rx51.c                              |    8 +-
->  8 files changed, 318 insertions(+), 35 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/sound/davinci-evm-audio.txt
-> 
-> -- 
-> 1.7.9.5
-> 
-> 
+T24gV2VkLCBGZWIgMjcsIDIwMTMgYXQgMTI6NTE6NTZBTSAtMDYwMCwgTWF0dCBTZWFsZXkgd3Jv
+dGU6Cj4gT24gVGh1LCBGZWIgMjEsIDIwMTMgYXQgMTE6NTIgUE0sIFNoYXduIEd1byA8c2hhd24u
+Z3VvQGxpbmFyby5vcmc+IHdyb3RlOgo+ID4gT24gVGh1LCBGZWIgMjEsIDIwMTMgYXQgMTE6MzY6
+MzZBTSAtMDYwMCwgTWF0dCBTZWFsZXkgd3JvdGU6Cj4gPj4gT24gV2VkLCBGZWIgMjAsIDIwMTMg
+YXQgMTE6MDIgUE0sIFNoYXduIEd1byA8c2hhd24uZ3VvQGxpbmFyby5vcmc+IHdyb3RlOgo+ID4+
+ID4gT24gV2VkLCBGZWIgMjAsIDIwMTMgYXQgMDY6MDM6MzlQTSAtMDYwMCwgTWF0dCBTZWFsZXkg
+d3JvdGU6Cj4gPj4gPj4gSSBhbSBub3Qgc3VyZSBJIGFtIGdldHRpbmcgdGhpcyBwb2ludCBhY3Jv
+c3MsIGJ1dC4uIGRhbW4gaXQuLiBuYWNrIG5hY2sgbmFjayA6RAo+ID4+ID4+Cj4gPj4gPiBEbyB5
+b3Ugc2VlIGFueSBkb3duZ3JhZGUgc2lkZSB0aGF0IHRoZSBzZXJpZXMgaW50cm9kdWNlcyBvdmVy
+IHRoZQo+ID4+ID4gZXhpc3RpbmcgaW1wbGVtZW50YXRpb24/Cj4gPj4KPiA+PiBCZWNhdXNlIGl0
+IHJlcGxhY2VzIHRoZSBob3JyaWJseSBzdHVwaWQgZXhpc3RpbmcgaW1wbGVtZW50YXRpb24gd2l0
+aAo+ID4+IHNvbWV0aGluZyB0aGF0IGRvZXNuJ3Qgc29sdmUgdGhlIGZ1bmRhbWVudGFsIGxvZ2lj
+YWwgcHJvYmxlbXMgY2F1c2VkCj4gPj4gYnkgdGhlIGV4aXN0aW5nIGltcGxlbWVudGF0aW9uLgo+
+ID4KPiA+IFdoZW4gZGlkIEkgc2F5IHRoYXQgdGhlIHNlcmllcyBpcyB0YXJnZXRpbmcgdG8gc29s
+dmUgdGhvc2UgImZ1bmRhbWVudGFsCj4gPiBsb2dpY2FsIHByb2JsZW1zIiBpbiAqeW91ciogdmll
+dz8KPiA+Cj4gPiAuLi4KPiAKPiBXaHkgd291bGQgeW91IHN1Ym1pdCBhIHNlcmllcyB0aGF0IGRv
+ZXNuJ3Qgc29sdmUgc3VjaCBwcm9ibGVtcz8gOikKPiAKPiBUbyByZXBsYWNlIGFuIGlsbG9naWNh
+bCwgcmlkaWN1bG91cyBzeXN0ZW0gb2YgYXJiaXRyYXJ5IHBpbiBudW1iZXJpbmcKPiB3aXRoIGFu
+IGlsbG9naWNhbCBtYXBwaW5nIG9mIHJlZ2lzdGVycyB0byBhcmJpdHJhcnkgbmFtZXMgaXMuLgo+
+IGlsbG9naWNhbC4KPiAKPiA+PiBXaGF0IHlvdSd2ZSBmaXhlZCBpdCB0byBkbywgYXMgSSByZWFk
+IHRoaXMgcGF0Y2gsIGlzIHRoaXM7Cj4gPj4KPiA+PiA8YXJiaXRyYXJ5X3Bpbl9uYW1lIHBhZF9t
+b2RlPgo+ID4+Cj4gPiBObywgaXQncyBub3QgYXJiaXRyYXJ5X3Bpbl9uYW1lLiAgSXQncyBwaW4g
+ZnVuY3Rpb24gbmFtZSB3aGljaCBjb21lcwo+ID4gZnJvbSBoYXJkd2FyZSBtYW51YWwuICBJdCBt
+YXkgbm90IGV4YWN0bHkgbWF0Y2ggdGhlIHB1YmxpYyByZWZlcmVuY2UKPiA+IG1hbnVhbCwgYnV0
+IHRoZXkgYXJlIG9idmlvdXMgdG8gYmUgaWRlbnRpZmllZC4gIEZvciBpbXg2cSBwYWQgU0QyX0RB
+VDEKPiA+IGV4YW1wbGUsIHRoZSBtYW51YWwgc2F5czoKPiA+Cj4gPiBTZWxlY3QgMSBvZiA2IGlv
+bXV4IG1vZGVzIHRvIGJlIHVzZWQgZm9yIHBhZDogU0QyX0RBVDEuCj4gPiAgIDAwMCBBTFQwIOKA
+lCBTZWxlY3Qgc2lnbmFsIFNEMl9EQVRBMS4KPiA+ICAgMDAxIEFMVDEg4oCUIFNlbGVjdCBzaWdu
+YWwgRUNTUEk1X1NTMC4KPiA+ICAgMDEwIEFMVDIg4oCUIFNlbGVjdCBzaWduYWwgRUlNX0NTMi4K
+PiA+ICAgMDExIEFMVDMg4oCUIFNlbGVjdCBzaWduYWwgQVVENF9UWEZTLgo+ID4gICAxMDAgQUxU
+NCDigJQgU2VsZWN0IHNpZ25hbCBLRVlfQ09MNy4KPiA+ICAgMTAxIEFMVDUg4oCUIFNlbGVjdCBz
+aWduYWwgR1BJTzFfSU8xNC4KPiA+Cj4gPiBBbmQgaW14NnEtcGluZnVuYy5oIGdpdmVzOgo+ID4K
+PiA+ICAgTVg2UV9QQURfU0QyX0RBVDFfX1VTREhDMl9EQVQxCj4gPiAgIE1YNlFfUEFEX1NEMl9E
+QVQxX19FQ1NQSTVfU1MwCj4gPiAgIE1YNlFfUEFEX1NEMl9EQVQxX19XRUlNX1dFSU1fQ1NfMgo+
+ID4gICBNWDZRX1BBRF9TRDJfREFUMV9fQVVETVVYX0FVRDRfVFhGUwo+ID4gICBNWDZRX1BBRF9T
+RDJfREFUMV9fS1BQX0NPTF83Cj4gPiAgIE1YNlFfUEFEX1NEMl9EQVQxX19HUElPXzFfMTQKPiAK
+PiBTbywgU0QyX0RBVDEgd2l0aCBmdW5jdGlvbiBTRDJfREFUMSBpbiB0aGUgbWFudWFsIGlzIFNE
+Ml9EQVQxX19VU0RIQzJfREFUMSA/Cj4gCj4gS0VZX0NPTDcgLT4gS1BQX0NPTF83Pwo+IEVJTV9D
+UzIgLT4gV0VJTV9XRUlNX0NTXzI/Cj4gQVVENF9UWEZTIC0+IEFVRE1VWF9BVUQ0X1RYRlM/Cj4g
+R1BJTzFfSU8xNCAtPiBHUElPXzFfMTQ/Cj4gCj4gVGhpcyBpcyB3aGF0IEkgY2FsbCBhcmJpdHJh
+cnkuCj4gCj4gU2luY2UgdGhlIGRvY3VtZW50ZWQgTkFNSU5HIG9mIHBpbnMgY2hhbmdlcyBiZXR3
+ZWVuIFNvQyByZXZpc2lvbnMKPiAod2hlcmUgcGlucyBjaGFuZ2UgZGVmaW5pdGlvbiBvciBncm91
+cCksIG1hbnVhbCByZXZpc2lvbnMgKHdoZXJlCj4gcGVvcGxlIGZpeCBkZWZpbml0aW9ucyksIGFu
+ZCBldmVuIGV4aXN0aW5nIHNvdXJjZSBjb2RlLCBpdCBtYWtlcyBubwo+IHNlbnNlIHdoYXRzb2V2
+ZXIgdG8gZ2l2ZSB0aGluZ3MgbGlrZSB0aGlzIGEgbmFtZS4gRXNwZWNpYWxseSBhcyBpdCBpcwo+
+IHBvc3NpYmxlIHRvIGJyZWFrIG91dCB0aGUgcGluIGRlZmluaXRpb25zIGFuZCBzZWUgdGhhdCB5
+b3VyICJ1c2UgYQo+IG1hY3JvIHRvIGVuY29kZSA1IHZhbHVlcyBhdCBvbmNlIGFuZCBsZWF2ZSB0
+aGUgbW9zdC1vZnRlbiBjaGFuZ2luZwo+IHZhbHVlIHRvIHRoZSBkZXZpY2UgdHJlZSIgbWV0aG9k
+IG1pc3NlcyBvbmUgdGhpbmc6IGl0IGlzIG5vdCBlYXN5IHRvCj4gc2V0IHRoZSBTSU9OIGJpdCBp
+biB0aGUgQUxUIHJlZ2lzdGVyIGZvciBlYWNoIG9mIHRoZXNlIHdpdGhvdXQKPiByZXBsYWNpbmcg
+dGhlIG1hY3JvLiBTb21ldGltZXMgU0lPTiBpcyBpbXBvcnRhbnQgZm9yIGRlYnVnZ2luZywKPiBz
+b21ldGltZXMgaXQgaXMgbm90Li4uIHNvbWUgcGlucyBuZWVkIFNJT04gKmZvcmV2ZXIqIGFuZCBv
+dGhlciB0aW1lcy4uCj4gbm90LiBPbiBpLk1YNiB1c2luZyBSTUlJIGV0aGVybmV0LCB5b3UgbmVl
+ZCBTSU9OIHRvIGxvb3BiYWNrIHRoZSBjbG9jawo+IGlucHV0IHRvIHRoZSBNQUMuLiBidXQgaXQn
+cyBwb3NzaWJsZSB5b3UnZCB3YW50IHRvIHRlbXBvcmFyaWx5IGRpc2FibGUKPiB0aGlzIGluIGEg
+YnVpbGQuIFRoZSBvbmx5IHdheSBoZXJlIGlzIHRvIHJlcGxhY2UgdGhlIHBpbiBkZWZpbml0aW9u
+Cj4gbWFjcm8gcGFydCB3aXRoIHRoZSBhY3R1YWwgcmVnaXN0ZXIgdmFsdWVzLCBzZXQgeW91ciBT
+SU9OIGJpdCwgYW5kCj4gcmVidWlsZCB0aGUgZGV2aWNlIHRyZWUuCj4gCj4gVGhlIG9ubHkgY2Fu
+b25pY2FsIHRoaW5nIHlvdSBjYW4gZ3VhcmFudGVlIGlzIHRoYXQgaW4gZ2VuZXJhbCB0aGUKPiBy
+ZWdpc3RlcnMgZml0IHdpdGhpbiBjZXJ0YWluIHJhbmdlcyAoYWx0aG91Z2ggb24gaS5NWDUxIHRo
+ZSByYW5nZXMgZGlkCj4gY2hhbmdlIGJldHdlZW4gcmV2aXNpb25zLCB0aGlzIGlzIGFub3RoZXIg
+cHJvYmxlbSksIGFuZCBhY2NlcHQgY2VydGFpbgo+IHZhbHVlcy4KPiAKPiBUaGUgb25seSByZWFz
+b25hYmxlIHRoaW5nIHdlIGNhbiBiZSBkb2luZyB3aXRoIHByZS1wcm9jZXNzaW5nIElPTVVYCj4g
+ZGF0YSBpcyBtYWtlIHN1cmUgaXQgZml0cyB0aG9zZSByYW5nZXMgKHdpdGhpbiByZWFzb24pIGFu
+ZCBwb3NzaWJseQo+IHVzZSB0aGUgcHJlcHJvY2Vzc2luZyB0byBlbnN1cmUgdGhhdCBpbnZhbGlk
+IHZhbHVlcyBuZXZlciBtYWtlIGl0IGludG8KPiBhIGRldmljZSB0cmVlIChpLmUuIHRoZXJlIGFy
+ZSBiaXRzIGluIHRoZSBwYWQgc2V0dGluZ3Mgd2hpY2ggYXJlCj4gbmV2ZXIsIGV2ZXIgc2V0IG9u
+IGEgcGFydGljdWxhciBTb0MsIGFuZCBtYXNraW5nIGFuZCBiYWlsaW5nIG91dCB1c2luZwo+ICNl
+cnJvciBvciBwaXRjaGluZyBhICN3YXJuaW5nIHdvdWxkIGJlIG11Y2ggbW9yZSB1c2VmdWwgdGhh
+biBhbGxvd2luZwo+IHJhbmRvbSBiaXRzIHRvIGdvIGludG8gcmVnaXN0ZXIgYXJlYXMgdGhhdCBh
+cmUgInJlc2VydmVkIi4KPiAKPiBJIGhhbGYtYWdyZWUgd2l0aCBTYXNjaGEuIEkgYW0gcmVzcG9u
+c2libGUgZm9yIHBvcnRpbmcgdGhlIGkuTVg1MQo+IGlvbXV4LXYzLmggc3R1ZmYgdG8gVS1Cb290
+IGJlY2F1c2UgdXNpbmcgdGhlIG5hbWluZyBzY2hlbWUgd29ya2VkIHNvCj4gbXVjaCBiZXR0ZXIg
+dGhlcmUgdGhhbiBteGNfcmVxdWVzdF9pb211eCBjbHV0dGVyIHNpbmNlIG1vc3QgYm9hcmRzCj4g
+Y2FtZSB3aXRoIGFsbW9zdCBleGFjdGx5IHRoZSBzYW1lIHNldHRpbmdzIG9uIGV4YWN0bHkgdGhl
+IHNhbWUgYnVzZXMKPiBiZWNhdXNlIGl0IHdhcyBhIGxpbWl0ZWQgY2hvaWNlIG9uIGkuTVg1MS4g
+VGhpcyBNT1NUTFkgd29ya3MgYnV0IHRoZXJlCj4gYXJlIHNldmVyYWwgLSBpZiBub3QgYSByaWRp
+Y3Vsb3VzIG51bWJlciAtIG9mIGVudHJpZXMgd2hpY2ggbmVlZGVkIHRvCj4gYmUgbW9kaWZpZWQg
+Zm9yIGFueSBwYXJ0aWN1bGFyIGJvYXJkLiBBbmQgdGhlIHJlbWl0IGNhbWUgZnJvbSB0aGUKPiBV
+LUJvb3QgZ3V5cyBzaW1wbHkgdGhhdCB3ZSBzaG91bGQgbm90IGNvbW1pdCBpbnRvIHRoZSB0cmVl
+IGFueSBwaW5zCj4gd2hpY2ggbm8gYm9hcmQgbWFrZXMgdXNlIG9mLgo+IAo+IEhlcmUsIHdlIGhh
+dmUgcG90ZW50aWFsIGZvciBhIGh1Z2UgZmlsZSBmdWxsIG9mIG1hY3JvcyBvZiB3aGljaCBhIGdv
+b2QKPiBkZWFsIG9mIHRoZW0gd2lsbCBlbmQgdXAgd2l0aCBOT0JPRFkgdXNpbmcsIGFuZCB0aGVy
+ZWZvcmUganVzdCBjbHV0dGVyCj4gdGhlIGZpbGUuIElmIHdlIGdvIHdpdGggdGhlIFUtQm9vdCBt
+b2RlbCwgd2Ugb25seSBhZGQgbWFjcm9zIHRvIGRlZmluZQo+IGEgcGluIGNvbmZpZ3VyYXRpb24g
+c2V0IGlmIGF0IGxlYXN0IE9ORSBib2FyZCByZXF1aXJlcyB0aGF0Cj4gZGVmaW5pdGlvbi4gVGhp
+cyB3aWxsIGtlZXAgaXQgbmljZSBhbmQgY2xlYW4gYW5kIG1ha2Ugc3VyZSBub2JvZHkKPiBjb21t
+aXRzIGh1Z2Ugc3dhdGhzIG9mIG1hY3JvcyB3aGljaCBub2JvZHkgaXMgdGVzdGluZy4KCkdyZWF0
+LCBzbyB5b3UgZW5kIHVwIHBhdGNoaW5nIHRoaXMgZmlsZSBvdmVyIGFuZCBvdmVyIGFnYWluLCBt
+YWludGFpbmluZwpvdXQgb2YgYm9hcmRzIGFsd2F5cyByZXF1aXJlIHBhdGNoZXMgdG8gdGhlIGlv
+bXV4IGZpbGUsIG1haW50YWluZXJzIGhhdmUKdG8gZGVhbCB3aXRoIG1lcmdlIGNvbmZsaWN0cy4K
+Cj4gCj4gU2luY2UgSSBkaWQgdGhhdCB3b3JrLCBJJ3ZlIGNoYW5nZWQgbXkgbWluZDsgYWN0dWFs
+bHkgbmFtaW5nIHRoZSBwaW5zCj4gYnkgdGhlaXIgaW50ZW5kZWQgZnVuY3Rpb24gc2ltcGx5IGRv
+ZXNuJ3QgQUREIGFueXRoaW5nIHRvIHRoZSBkZXZpY2UKPiB0cmVlIGZ1bmN0aW9uYWxpdHksIG5v
+ciBkb2VzIGl0IHJlYWxseSBoZWxwIFNhc2NoYSBvdXQgYW55IG1vcmUgdGhhbgo+IHNpbXBseSBo
+YXZpbmcgYSAqcmVhbGx5IGdvb2QgcmVmZXJlbmNlKiB3b3VsZCBoZWxwIGhpbSBvdXQuCj4gCj4g
+Rm9yIGV4YW1wbGUsIHBsZWFzZSBleHBsYWluIHRvIG1lIHdoeTsKPiAKPiBNWDUxX1BJTl9FSU1f
+MjNfX0dQSU8xXzIgMHg2NTI4Cj4gCj4gaXMgY2xlYXJlciB0aGFuOwo+IAo+IDB4MTc0IDB4NSAw
+eDNkOCAweDcgMHg2NTQgMHg3NjMzLCAvKiBFSU1fMjMgR1BJTzFfMiBhbmQgc29tZSBwdWxsdXAK
+PiBzZXR0aW5ncyBvciBzbyBjb21tZW50IGNvbW1lbnQgY29tbWVudCAqLwoKTG9vayB3aGF0IHlv
+dSBoYXZlIHRvIGRvIHRvIGdldCB0aGUgcGluIG11eGluZyBmb3IgYSBzaW5nbGUgcGluIGZyb20g
+dGhlCmRhdGFzaGVldC4KCi0gaWRlbnRpZnkgdGhlIG5hbWUsIGdyZXAgZm9yIGl0IGluIHRoZSBk
+YXRhc2hlZXQsIGZpbmQgMHg3OCBmb3IgdGhlIG11eAogIHJlZ2lzdGVyLgotIGlkZW50aWZ5IHRo
+ZSBtb2RlIHdhbnRlZCwgaXQncyBBTFQxIGZvciBHUElPMV8yCi0gTG9vayBpZiBpdCBpcyBpbnZv
+bHZlZCBpbiBkYWlzeSBjaGFpbiwgZ3JlcCBhZ2FpbiBpZiBpdCBpcwotIGdyZXAgYWdhaW4gZm9y
+IEVJTV9EMjMsIGZpbmQgMHg0MGMgZm9yIHRoZSBQQURfQ1RMIHJlZ2lzdGVyCgpUaGF0J3MgZXhh
+Y3RseSB0aGUgc3RlcHMgdGhhdCBhcmUgYW5ub3lpbmcsIGVycm9yIHByb25lIGFuZCB5b3UgY2Fu
+IGdldApyaWQgb2YgYnkgaGF2aW5nIGEgbWFjcm8gbGlrZSB3ZSBjdXJyZW50bHkgaGF2ZS4gSWYg
+eW91IGZvdW5kIGEgYnVnIGluCnRoZSBtYWNybywgZml4IGl0IGFuZCBldmVyeW9uZSBiZW5lZml0
+cy4KCkFsc28geW91IHNob3VsZCBub3RpY2UgdGhhdCB3aXRoIHRoZSBuZXcgcGF0Y2hlcyBTaGF3
+biBoYXMgcG9zdGVkIG5vYm9keQppcyBmb3JjZWQgdG8gdXNlIHRoZXNlIG1hY3Jvcy4gSWYgeW91
+IGRvbid0IGxpa2UgdGhlbSwgZ28gYW5kIGR1bXAgdGhlCnJhdyBoZXggbnVtYmVycyBpbnRvIHlv
+dXIgZGV2aWNldHJlZXMuCgpTYXNjaGEKCi0tIApQZW5ndXRyb25peCBlLksuICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfApJbmR1c3RyaWFs
+IExpbnV4IFNvbHV0aW9ucyAgICAgICAgICAgICAgICAgfCBodHRwOi8vd3d3LnBlbmd1dHJvbml4
+LmRlLyAgfApQZWluZXIgU3RyLiA2LTgsIDMxMTM3IEhpbGRlc2hlaW0sIEdlcm1hbnkgfCBQaG9u
+ZTogKzQ5LTUxMjEtMjA2OTE3LTAgICAgfApBbXRzZ2VyaWNodCBIaWxkZXNoZWltLCBIUkEgMjY4
+NiAgICAgICAgICAgfCBGYXg6ICAgKzQ5LTUxMjEtMjA2OTE3LTU1NTUgfApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkZXZpY2V0cmVlLWRpc2N1c3MgbWFp
+bGluZyBsaXN0CmRldmljZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlz
+dHMub3psYWJzLm9yZy9saXN0aW5mby9kZXZpY2V0cmVlLWRpc2N1c3MK
