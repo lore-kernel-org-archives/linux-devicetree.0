@@ -1,150 +1,75 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/4] documentation: add palmas dts definition
-Date: Wed, 27 Feb 2013 11:32:36 -0700
-Message-ID: <512E5144.9020105@wwwdotorg.org>
-References: <1361164283-3133-1-git-send-email-j-keerthy@ti.com>
+From: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: dts: imx: replace magic number with pin
+ function name
+Date: Wed, 27 Feb 2013 21:00:01 +0100
+Message-ID: <20130227200001.GM1906@pengutronix.de>
+References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
+ <1361344089-16804-3-git-send-email-shawn.guo@linaro.org>
+ <51251A11.2030300@wwwdotorg.org>
+ <CAKGA1bkHH1XC38_VM=QhDrr33uqqSbwe0n+GfXEPs43K_Do=CQ@mail.gmail.com>
+ <20130221050247.GD17738@S2101-09.ap.freescale.net>
+ <CAKGA1bn22xctSj_33HQsWwnVB=RO2OJ=eYvgRD-kF+PiQcnC4Q@mail.gmail.com>
+ <20130222055203.GB27371@S2101-09.ap.freescale.net>
+ <CAKGA1bmw+CzBDLHty1+L1VdeWLgkPpLSLpGKBJEeQj-ByyzicA@mail.gmail.com>
+ <20130227074404.GD1906@pengutronix.de>
+ <CAKGA1bmqdCiocc_O6hU3ym6uJ-bAjwKMNrt43Qs_dkjEGpX-KQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1361164283-3133-1-git-send-email-j-keerthy@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: J Keerthy <j-keerthy@ti.com>
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, b-cousson@ti.com, gg@slimlogic.co.uk
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKGA1bmqdCiocc_O6hU3ym6uJ-bAjwKMNrt43Qs_dkjEGpX-KQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
+Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Uwe =?iso-8859-15?Q?Kleine-K=F6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/17/2013 10:11 PM, J Keerthy wrote:
-> Add the DTS definition for the palmas device including the MFD children.
-...
-> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
-...
-> +Texas Instruments Palmas family
-> +
-> +The Palmas familly are Integrated Power Management Chips.
-> +These chips are connected to an i2c bus.
+On Wed, Feb 27, 2013 at 12:16:20PM -0600, Matt Sealey wrote:
+> On Wed, Feb 27, 2013 at 1:44 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > On Wed, Feb 27, 2013 at 12:51:56AM -0600, Matt Sealey wrote:
+> 
+> I do notice that, what I'm a little perturbed by is that it doesn't
+> seem to improve the situation (the amount of work required to use and
+> VERIFY the values in each macro - on the assumption that any of them
+> could be wrong and cross-check them with the schematics, the board
+> designer if necessary, and then put them in a device tree as known
+> working. Not all of the data files used in PCB design packages
+> actually match the docs anyway so there are some cross-checks against
+> yet another Freescale design database. If I asked someone here to go
+> find the pin settings for USDHC2 on a board we have, they would first
+> have to figure out which pad this was coming out of, go to the manual,
+> find the signals that exit on that pad, look at the IOMUX, cross check
+> it with some example code and the FSL IOMUX tool... pre-processing and
+> using macros doesn't make that any easier until we have a single,
+> fixed, totally verified and unchangeable set of macros which will
+> cover all the usual cases. If the intent is that we just glob in 2500
+> pin definitions at the start and "hope" that someone "eventually"
+> notices any errors.. this is not normal in embedded design.
 
-s/familly/family.
+If the macro is unused then who cares about the bugs in it? If on the
+other hand it is used, then people will notice the bugs quite fast and
+will fix them. If you don't like the macros, then don't use them. If
+you have a better idea how the macros should look like, send patches.
 
-> +
-> +Required properties:
-> +- compatible : Must be "ti,palmas";
+Please try and make your point in the amount of text I quoted above,
+preferably even shorter, because that's the maximum amount of text I
+think most people are willing to read per mail. The shorter you write
+the more people will read your mails up to the end and maybe react to
+it.
 
-Do you need a version number there; will there be Palmas v1 HW, then
-later Palmas v2 HW, and so on?
+Sascha
 
-> +  For Integrated power-management in the palmas series, twl6035, twl6037,
-> +  tps65913
-
-If this binding represents multiple different chips, compatible should
-contain both the most chip-specific value (e.g. ti,twl6035 I guess given
-the above) /and/ the more generic "ti,palmas" value. This will allow any
-device-specific quirks to be implemented if needed in the future,
-without having to retrofit the device-specific compatible value into
-.dts files after the fact.
-
-> +- interrupts : This i2c device has an IRQ line connected to the main SoC
-> +- interrupt-controller : Since the palmas support several interrupts internally,
-> +  it is considered as an interrupt controller cascaded to the SoC one.
-> +- #interrupt-cells = <1>;
-
-Why not 2; can't any IRQ flags be represented in DT? 1 seems limiting
-here unless the HW truly can't support configuration of IRQ input
-polarity of edge-vs-level sensitivity.
-
-> +- interrupt-parent : The parent interrupt controller.
-> +
-> +Optional node:
-> +- Child nodes contain in the palmas. The palmas family is made of several
-> +  variants that support a different number of features.
-> +  The child nodes will thus depend of the capability of the variant.
-
-Are there DT bindings for those child nodes anywhere?
-
-Representing each internal component as a separate DT node feels a
-little like designing the DT bindings to model the Linux-internal MFD
-structure. DT bindings should be driven by the HW design and OS-agnostic.
-
->From a DT perspective, is there any need at all to create a separate DT
-node for each component? This would only be needed or useful if the
-child IP blocks (and hence DT bindings for those blocks) could be
-re-used in other top-level devices that aren't represented by this
-top-level ti,palmas DT binding. Are the HW IP blocks here re-used
-anywhere, or will they be?
-
-...
-> +Example:
-> +/*
-> + * Integrated Power Management Chip Palmas
-> + */
-> +palmas@48 {
-
-There's a considerable mix of TAB and space indentation in this example.
-
-> +    compatible = "ti,palmas";
-> +    reg = <0x48>;
-> +    interrupts = <39>; /* IRQ_SYS_1N cascaded to gic */
-
-If that's routed to a regular ARM GIC, then I think you need extra cells
-there; #interrupt-cells=<3> for the ARM GIC.
-
-> +    interrupt-controller;
-> +    #interrupt-cells = <1>;
-> +    interrupt-parent = <&gic>;
-> +    #address-cells = <1>;
-> +    #size-cells = <0>;
-> +
-> +	ti,mux-pad1 = <0x00>;
-> +	ti,mux-pad2 = <0x00>;
-> +	ti,power-ctrl = <0x03>;
-> +
-> +	palmas_pmic {
-
-Just "pmic" seems simpler, although I dare say the node name isn't
-really used for anything.
-
-> +		compatible = "ti,palmas_pmic";
-
-Using _ in compatible values isn't common. "ti,palmas-pmic" instead?
-
-> +		regulators {
-> +			smps12_reg: smps12 {
-
-As I mentioned elsewhere, this binding (or a separate binding doc for
-"ti,palmas_pmic") should contain a list of valid values for these node
-names.
-
-> +				regulator-min-microvolt = < 600000>;
-> +                regulator-max-microvolt = <1500000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +                ti,warm-sleep = <0>;
-> +                ti,roof-floor = <0>;
-> +                ti,mode-sleep = <0>;
-> +                ti,warm-reset = <0>;
-> +                ti,tstep = <0>;
-> +                ti,vsel = <0>;
-> +			};
-> +		};
-> +		ti,ldo6-vibrator = <0>;
-> +	};
-> +
-> +    palmas_rtc {
-> +        compatible = "ti,palmas_rtc";
-> +        interrupts = <8 9>;
-
-Are the interrupt outputs of the RTC fed directly to the GIC interrupt
-mentioned in the top-level Palmas node, or do these interrupts feed into
-a top-level IRQ controller in the Palmas device, which then feeds into
-the external IRQ controller?
-
-If these feed into an on-chip IRQ controller, then you'd need an
-interrupt-parent property here to indicate that.
-
-If these feed directly into an external IRQ controller, it's almost
-certain that IRQ controller's binding uses #interrupt-cells = <3> it
-is's the ARM GIC, and hence you need some extra cells here.
-
-> +        reg = <0>;
-> +    };
-> +};
-
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
