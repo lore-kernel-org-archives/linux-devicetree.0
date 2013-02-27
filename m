@@ -1,75 +1,33 @@
-From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] pinctrl: imx6q: add DTE pinctrl items for mx6q uart
-Date: Wed, 27 Feb 2013 10:50:32 +0800
-Message-ID: <CAP1dx+xbKCVt11XvNqwR2O0KKf6pydeWb-KaHknbKxNdz4SKxw@mail.gmail.com>
-References: <1361932553-8218-1-git-send-email-b32955@freescale.com>
+From: Rob Landley <rob@landley.net>
+Subject: Re: [PATCH 2/3] dtc: import latest upstream dtc
+Date: Tue, 26 Feb 2013 21:08:06 -0600
+Message-ID: <1361934486.18483.5@driftwood>
+References: <1361928975-29395-1-git-send-email-kim.phillips@freescale.com>
+	<1361928975-29395-2-git-send-email-kim.phillips@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1361932553-8218-1-git-send-email-b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii; DelSp=Yes; Format=Flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1361928975-29395-2-git-send-email-kim.phillips@freescale.com>
+	(from kim.phillips@freescale.com on Tue Feb 26 19:36:14 2013)
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kim Phillips <kim.phillips@freescale.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shijie,
+On 02/26/2013 07:36:14 PM, Kim Phillips wrote:
+> This updates scripts/dtc to upstream dtc commit 27cdc1b
 
-On 27 February 2013 10:35, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
-> This patch adds two DTE pinctrl items for UART in mx6q.
->   MX6Q_PAD_EIM_D27__UART2_RXD_DTE: set the RX/TX into DTE mode.
->   MX6Q_PAD_EIM_D29__UART2_RTS_DTE: set the RTS/CTS into DTE mode.
->
-> If the uart want to work in DTE mode and enable the hardware flow control,
-> it must selects these two pinctrl items.
->
-> Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+There's an upstream for dts?
 
-Thanks for the patch.
-We're switching to use pre-proccessor feature provided by dtc and
-changing the binding a bit.
-So this patch may not be needed anymore.
+> "Added license header to dtc/libfdt/fdt.h and libfdt_env.h"
+> from git://git.jdl.com/software/dtc.git.
 
-Regards
-Dong Aisheng
+That git repository has a Documentation directory with for example  
+"dts-format.txt" in it. My current linux git repository does not  
+contain a file called dts-format.txt.
 
->  .../bindings/pinctrl/fsl,imx6q-pinctrl.txt         |    2 ++
->  drivers/pinctrl/pinctrl-imx6q.c                    |    2 ++
->  2 files changed, 4 insertions(+), 0 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
-> index a4119f6..91b8fa5 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/fsl,imx6q-pinctrl.txt
-> @@ -1628,3 +1628,5 @@ MX6Q_PAD_SD2_DAT3__SJC_DONE                       1589
->  MX6Q_PAD_SD2_DAT3__ANATOP_TESTO_3              1590
->  MX6Q_PAD_ENET_RX_ER__ANATOP_USBOTG_ID          1591
->  MX6Q_PAD_GPIO_1__ANATOP_USBOTG_ID              1592
-> +MX6Q_PAD_EIM_D27__UART2_RXD_DTE                        1593
-> +MX6Q_PAD_EIM_D29__UART2_RTS_DTE                        1594
-> diff --git a/drivers/pinctrl/pinctrl-imx6q.c b/drivers/pinctrl/pinctrl-imx6q.c
-> index 663346b..7eaacfb 100644
-> --- a/drivers/pinctrl/pinctrl-imx6q.c
-> +++ b/drivers/pinctrl/pinctrl-imx6q.c
-> @@ -1952,6 +1952,8 @@ static struct imx_pin_reg imx6q_pin_regs[] = {
->         IMX_PIN_REG(MX6Q_PAD_SD2_DAT3, 0x0744, 0x035C, 7, 0x0000, 0), /* MX6Q_PAD_SD2_DAT3__ANATOP_TESTO_3 */
->         IMX_PIN_REG(MX6Q_PAD_ENET_RX_ER, 0x04EC, 0x01D8, 0, 0x0000, 0), /* MX6Q_PAD_ENET_RX_ER__ANATOP_USBOTG_ID */
->         IMX_PIN_REG(MX6Q_PAD_GPIO_1, 0x05F4, 0x0224, 3, 0x0000, 0), /* MX6Q_PAD_GPIO_1__ANATOP_USBOTG_ID */
-> +       IMX_PIN_REG(MX6Q_PAD_EIM_D27, 0x03D4, 0x00C0, 4, 0x0928, 0), /* MX6Q_PAD_EIM_D27__UART2_RXD_DTE */
-> +       IMX_PIN_REG(MX6Q_PAD_EIM_D29, 0x03DC, 0x00C8, 4, 0x0924, 0), /* MX6Q_PAD_EIM_D29__UART2_RTS_DTE */
->  };
->
->  /* Pad names for the pinmux subsystem */
-> --
-> 1.7.1
->
->
+Ummm... huh?
+
+Rob
