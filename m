@@ -1,52 +1,69 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 5/5 v7][RFC] ASoC: fsi: add
-	.of_xlate_dai_name support
-Date: Wed, 27 Feb 2013 16:28:17 -0700
-Message-ID: <512E9691.1030905@wwwdotorg.org>
-References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
- <20130127035943.GJ4650@opensource.wolfsonmicro.com>
- <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
- <20130129014808.GC4748@opensource.wolfsonmicro.com>
- <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
- <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
- <5107FF97.1070601@wwwdotorg.org>
- <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
- <51097F0F.2030501@wwwdotorg.org>
- <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
- <5110349D.3050308@wwwdotorg.org>
- <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
- <87bobzrry6.wl%kuninori.morimoto.gx@renesas.com>
- <511963F8.5020107@wwwdotorg.org>
- <87bobqf5yq.wl%kuninori.morimoto.gx@renesas.com>
- <511C22E2.60701@wwwdotorg.org>
- <87obfnofsx.wl%kuninori.morimoto.gx@renesas.com>
- <511C6A1B.9000507@wwwdotorg.org>
- <874nhfv5mb.wl%kuninori.morimoto.gx@renesas.com>
- <8738wzuu9g.wl%kuninori.morimoto.gx@renesas.com>
- <87a9qsg4lp.wl%kuninori.morimoto.gx@renesas.com>
- <8738wkg48c.wl%kuninori.morimoto.gx@renes as.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Thu, 28 Feb 2013 00:41:06 +0100
+Message-ID: <CACRpkdabXa8tXNeGRPntvY9cx4XWCa7XaEXHmVREeWN-x793ZA@mail.gmail.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
+	<1329321854-24490-4-git-send-email-b-cousson@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <8738wkg48c.wl%kuninori.morimoto.gx@renesas.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1329321854-24490-4-git-send-email-b-cousson@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Benoit Cousson <b-cousson@ti.com>
+Cc: grant.likely@secretlab.ca, khilman@ti.com, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, Tarun Kanti DebBarma <tarun.kanti@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 02/25/2013 01:57 AM, Kuninori Morimoto wrote:
-> fsi driver can be used from simple-card driver
-> which requires .of_xlate_dai_name, and snd_soc_register_cpu()
-> This patch supports these.
+On Wed, Feb 15, 2012 at 5:04 PM, Benoit Cousson <b-cousson@ti.com> wrote:
 
-This also looks fine, although the same comments apply here as for patch
-4/5.
+> @@ -52,7 +55,8 @@ struct gpio_bank {
+>         struct list_head node;
+>         void __iomem *base;
+>         u16 irq;
+> -       u16 virtual_irq_start;
+> +       int irq_base;
+> +       struct irq_domain *domain;
+
+This seems wrong. IRQ domains are used to avoid keeping track of
+irq base offsets. I would even say it's the whole point of irq domains.
+
+> @@ -669,7 +673,7 @@ static void gpio_irq_handler(unsigned int irq, struct irq_desc *desc)
+>                 if (!isr)
+>                         break;
+>
+> -               gpio_irq = bank->virtual_irq_start;
+> +               gpio_irq = bank->irq_base;
+>                 for (; isr != 0; isr >>= 1, gpio_irq++) {
+>                         gpio_index = GPIO_INDEX(bank, irq_to_gpio(gpio_irq));
+>
+
+Use irq_find_mapping(irqdomain, hwirq) in this function.
+
+
+> @@ -915,7 +919,7 @@ static int gpio_2irq(struct gpio_chip *chip, unsigned offset)
+>         struct gpio_bank *bank;
+>
+>         bank = container_of(chip, struct gpio_bank, chip);
+> -       return bank->virtual_irq_start + offset;
+> +       return bank->irq_base + offset;
+
+Use irq_create_mapping() in this function.
+
+> +       bank->irq_base = irq_alloc_descs(-1, 0, bank->width, 0);
+> +       if (bank->irq_base < 0) {
+> +               dev_err(dev, "Couldn't allocate IRQ numbers\n");
+> +               return -ENODEV;
+> +       }
+> +
+> +       bank->domain = irq_domain_add_legacy(node, bank->width, bank->irq_base,
+> +                                            0, &irq_domain_simple_ops, NULL);
+
+Use irq_domain_add_simple() and the descs will be allocated for
+you as part of the domain creation, when using a pre-fixed base.
+
+If you fix this I suspect the device tree discussion also will fix
+itself :-)
+
+Documentation/IRQ-domain.txt
+
+Yours,
+Linus Walleij
