@@ -1,150 +1,40 @@
-From: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v17 2/7] video: add display_timing and videomode
-Date: Wed, 27 Feb 2013 18:13:49 +0200
-Message-ID: <512E30BD.7010603@ti.com>
-References: <1359104515-8907-1-git-send-email-s.trumtrar@pengutronix.de>
- <1359104515-8907-3-git-send-email-s.trumtrar@pengutronix.de>
- <51223615.4090709@iki.fi> <512E2A1B.6040704@ti.com>
- <20130227160540.GA10491@pengutronix.de>
+From: Kim Phillips <kim.phillips@freescale.com>
+Subject: Re: [PATCH 2/3] dtc: import latest upstream dtc
+Date: Wed, 27 Feb 2013 10:45:12 -0600
+Message-ID: <20130227104512.c07c0ade0107aa7f4ec18217@freescale.com>
+References: <1361928975-29395-1-git-send-email-kim.phillips@freescale.com>
+	<1361928975-29395-2-git-send-email-kim.phillips@freescale.com>
+	<1361934486.18483.5@driftwood>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8946138499221894002=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130227160540.GA10491-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="US-ASCII"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1361934486.18483.5@driftwood>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Landley <rob@landley.net>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---===============8946138499221894002==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="------------enig6E8BABB66675C1BD3801463B"
+On Tue, 26 Feb 2013 21:08:06 -0600
+Rob Landley <rob@landley.net> wrote:
 
---------------enig6E8BABB66675C1BD3801463B
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+> On 02/26/2013 07:36:14 PM, Kim Phillips wrote:
+> > This updates scripts/dtc to upstream dtc commit 27cdc1b
+> 
+> There's an upstream for dts?
 
-On 2013-02-27 18:05, Steffen Trumtrar wrote:
-> Ah, sorry. Forgot to answer this.
->=20
-> On Wed, Feb 27, 2013 at 05:45:31PM +0200, Tomi Valkeinen wrote:
->> Ping.
->>
->> On 2013-02-18 16:09, Tomi Valkeinen wrote:
->>> Hi Steffen,
->>>
->>> On 2013-01-25 11:01, Steffen Trumtrar wrote:
->>>
->>>> +/* VESA display monitor timing parameters */
->>>> +#define VESA_DMT_HSYNC_LOW		BIT(0)
->>>> +#define VESA_DMT_HSYNC_HIGH		BIT(1)
->>>> +#define VESA_DMT_VSYNC_LOW		BIT(2)
->>>> +#define VESA_DMT_VSYNC_HIGH		BIT(3)
->>>> +
->>>> +/* display specific flags */
->>>> +#define DISPLAY_FLAGS_DE_LOW		BIT(0)	/* data enable flag */
->>>> +#define DISPLAY_FLAGS_DE_HIGH		BIT(1)
->>>> +#define DISPLAY_FLAGS_PIXDATA_POSEDGE	BIT(2)	/* drive data on pos. =
-edge */
->>>> +#define DISPLAY_FLAGS_PIXDATA_NEGEDGE	BIT(3)	/* drive data on neg. =
-edge */
->>>> +#define DISPLAY_FLAGS_INTERLACED	BIT(4)
->>>> +#define DISPLAY_FLAGS_DOUBLESCAN	BIT(5)
->>>
->>> <snip>
->>>
->>>> +	unsigned int dmt_flags;	/* VESA DMT flags */
->>>> +	unsigned int data_flags; /* video data flags */
->>>
->>> Why did you go for this approach? To be able to represent
->>> true/false/not-specified?
->>>
->=20
-> We decided somewhere between v3 and v8 (I think), that those flags can =
-be
-> high/low/ignored.
+dtc - the device tree compiler, yes.
 
-Okay. Why aren't they enums, though? That always makes more clear which
-defines are to be used with which fields.
+> > "Added license header to dtc/libfdt/fdt.h and libfdt_env.h"
+> > from git://git.jdl.com/software/dtc.git.
+> 
+> That git repository has a Documentation directory with for example  
+> "dts-format.txt" in it. My current linux git repository does not  
+> contain a file called dts-format.txt.
 
->>> Would it be simpler to just have "flags" field? What does it give us =
-to
->>> have those two separately?
->>>
->=20
-> I decided to split them, so it is clear that some flags are VESA define=
-d and
-> the others are "invented" for the display-timings framework and may be
-> extended.
+this patch isn't attempting to update dts-format.txt, or any other
+file that exists in the upstream dtc project that isn't present -
+and used - in the kernel.  The purpose of this patch is to update
+libfdt, which has in-kernel users.
 
-Hmm... Okay. Is it relevant that they are VESA defined? It just feels to
-complicate handling the flags =3D).
-
->>> Should the above say raising edge/falling edge instead of positive
->>> edge/negative edge?
->>>
->=20
-> Hm, I used posedge/negedge because it is shorter (and because of my Ver=
-ilog past
-> pretty natural to me :-) ). I don't know what others are thinking thoug=
-h.
-
-I guess it's quite clear, but it's still different terms than used
-elsewhere, e.g. documentation for videomodes.
-
-Another thing I noticed while using the new videomode, display_timings.h
-has a few names that are quite short and generic. Like "TE_MIN", which
-is now a global define. And "timing_entry". Either name could be well
-used internally in some .c file, and could easily clash.
-
- Tomi
-
-
-
---------------enig6E8BABB66675C1BD3801463B
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-Comment: Using GnuPG with undefined - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJRLjC9AAoJEPo9qoy8lh71m+0P/RPDx491Eic5r4Yc0NlEDMf0
-VL64T3j2dns71crKbMkctgiPOBZDjCzp08xd4UsqNj7hkgu94p+5OyHfmZXq7xJw
-ycJElBI+1y3IhnRWOq+vUgUlGgUFPfDY1OeyKflk8dTK/HwcQex3yyt//kLJS4Ge
-971IZrkVPFnUi00LTgxOf2wVIq5bms+sEG0hbGes7qFkejfkYDMNIUNVt2nRXpf7
-aC8SpmPOsOp5MDeTKCP17m0N8/A7rGM03O9PV6L+xvq6sDRRaBHwLhQG3sCMnvP+
-3OCTmB9EDJOYxmLIu9aqCT0RccZl+y61HYZJm7aXO8iZ+G4NK/62wbO5UDJB7hvl
-6/KIDWM1kz33jynXVOB8aLViyabQ9bqaWGo5waKJKelsZb8G7JrHpfJC/JiN6krv
-LofFbl+C8UEI3kRoDhJ4MZX2OkFy+HeAMQHSKkLUwAYoA9OamgIDK5Em6P1W0X6V
-N1gfDxXbXW5wJ+YBDhs6eauZzVvPNWmWZbB4vL+5JX0et+QtBypEwX56lVUZ7bOD
-cQA762XeYHGkiruzx7idxuw29w9lK7J1xHVqnu6PfLf5Lndgv+lFzphepz1v6mCx
-zJUiDNp/3l8U86eOfoRmriFr2l90i7hkOWQLy1cibBy/gip/KiDtWdWJExvkRkmA
-i1TyIWKhCK+12h3e7//4
-=Lf4m
------END PGP SIGNATURE-----
-
---------------enig6E8BABB66675C1BD3801463B--
-
---===============8946138499221894002==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8946138499221894002==--
+Kim
