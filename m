@@ -1,74 +1,71 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: [PATCH v5 5/5] ARM: exynos: dts: Add FIMD DT binding Documentation
-Date: Wed, 27 Feb 2013 14:13:40 +0530
-Message-ID: <1361954620-20614-6-git-send-email-vikas.sajjan@linaro.org>
-References: <1361954620-20614-1-git-send-email-vikas.sajjan@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1361954620-20614-1-git-send-email-vikas.sajjan@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, inki.dae@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, sachin.kamat@linaro.org, joshi@samsung.com
+From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Subject: RE: [PATCH 4/4] ARM: davinci: da850-evm: add SPI flash support
+Date: Wed, 27 Feb 2013 09:29:13 +0000
+Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA47FC7@DBDE01.ent.ti.com>
+References: <1361789050-637-1-git-send-email-prakash.pm@ti.com>
+	<1361789050-637-5-git-send-email-prakash.pm@ti.com>
+	<512DC2E5.4080603@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+In-Reply-To: <512DC2E5.4080603-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adds FIMD DT binding documentation both SoC and Board, with an example
+On Wed, Feb 27, 2013 at 13:55:09, Nori, Sekhar wrote:
+> On 2/25/2013 4:14 PM, Manjunathappa, Prakash wrote:
+> > Enable m25p80 SPI flash support on da850-EVM. Also
+> > add partition information of SPI flash.
+> > 
+> > Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/da850-evm.dts |   40 +++++++++++++++++++++++++++++++++++++++
+> >  1 files changed, 40 insertions(+), 0 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+> > index 78c8e54..1a28d43 100644
+> > --- a/arch/arm/boot/dts/da850-evm.dts
+> > +++ b/arch/arm/boot/dts/da850-evm.dts
+> > @@ -46,6 +46,46 @@
+> >  			pinctrl-names = "default";
+> >  			pinctrl-0 = <&mmc0_pins>;
+> >  		};
+> > +		spi1: spi@1f0e000 {
+> > +			status = "okay";
+> > +			pinctrl-names = "default";
+> > +			pinctrl-0 = <&spi1_pins>;
+> > +			flash: m25p80@0 {
+> > +				#address-cells = <1>;
+> > +				#size-cells = <1>;
+> > +				compatible = "m25p80";
+> 
+> Are you sure there is a m25p80 part on these boards? On my board using
+> this patch I get:
+> 
+> m25p80 spi32766.0: found m25p64, expected m25p80
+> 
 
-Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
----
- .../devicetree/bindings/video/exynos-fimd.txt      |   46 ++++++++++++++++++++
- 1 file changed, 46 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/exynos-fimd.txt
+On my board also I see this warning. Also there is mistake in filesystem
+partition information specified in this patch, will correct it in next
+version of patch.
 
-diff --git a/Documentation/devicetree/bindings/video/exynos-fimd.txt b/Documentation/devicetree/bindings/video/exynos-fimd.txt
-new file mode 100644
-index 0000000..b3542b9
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/exynos-fimd.txt
-@@ -0,0 +1,46 @@
-+Device-Tree bindings for Exynos SoC display controller (FIMD)
-+
-+FIMD stands for Fully Interactive Mobile Display, is the Display Controller for
-+the Exynos series of SoCs which transfers the image data from a video buffer
-+located in the system memory to an external LCD interface.
-+
-+Required properties:
-+- compatible := value can be one these below
-+		"samsung,s3c2443-fimd"; /* for S3C24XX SoCs */
-+		"samsung,s3c6400-fimd"; /* for S3C64XX SoCs */
-+		"samsung,s5p6440-fimd"; /* for S5P64X0 SoCs */
-+		"samsung,s5pc100-fimd"; /* for S5PC100 SoC  */
-+		"samsung,s5pv210-fimd"; /* for S5PV210 SoC */
-+		"samsung,exynos4210-fimd"; /* for Exynos4 SoCs */
-+		"samsung,exynos5250-fimd"; /* for Exynos5 SoCs */
-+- reg := physical base address of the fimd and length of memory mapped region
-+- interrupt-parent := reference to the interrupt combiner node with phandle
-+- interrupts := interrupt number from the combiner to the cpu
-+		we have 3 interrupts and the Interrupt combiner order is
-+		FIFO Level, VSYNC and LCD_SYSTEM. Make sure to mention order
-+		as VSYNC, FIFO Level and LCD_SYSTEM as show in the example below.
-+- pinctrl := property defining the pinctrl configurations with a phandle
-+- pinctrl-names := name of the pinctrl
-+
-+Optional Properties:
-+- samsung,power-domain := power domain property defined with a phandle
-+
-+Example:
-+
-+SoC specific DT Entry:
-+
-+	fimd@11c00000 {
-+		compatible = "samsung,exynos4210-fimd";
-+		interrupt-parent = <&combiner>;
-+		reg = <0x11c00000 0x20000>;
-+		interrupts = <11 1>, <11 0>, <11 2>;
-+	};
-+
-+Board specific DT Entry:
-+
-+	fimd@11c00000 {
-+		samsung,power-domain = <&pd_lcd0>;
-+		pinctrl-0 = <&lcd_sync &lcd_clk &lcd_en &lcd0_data &pwm1_out>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+	};
--- 
-1.7.9.5
+Thanks,
+Prakash
+
+> I can access the flash just fine though.
+> 
+> Thanks,
+> Sekhar
+> 
