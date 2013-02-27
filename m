@@ -1,71 +1,168 @@
-From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 4/4] ARM: davinci: da850-evm: add SPI flash support
-Date: Wed, 27 Feb 2013 09:29:13 +0000
-Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA47FC7@DBDE01.ent.ti.com>
-References: <1361789050-637-1-git-send-email-prakash.pm@ti.com>
-	<1361789050-637-5-git-send-email-prakash.pm@ti.com>
-	<512DC2E5.4080603@ti.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH] clk: add si5351 i2c common clock driver
+Date: Wed, 27 Feb 2013 11:01:21 +0100
+Message-ID: <CABJ1b_TaQ=AXCM9KKW-hJ0Rgdd+759ia+9P=bdnYbA_HcHP1wQ@mail.gmail.com>
+References: <1360414772-12232-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<5123CF5B.9060804@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <512DC2E5.4080603-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <5123CF5B.9060804@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Daniel Mack <zonque@gmail.com>
+Cc: Stephen Warren <swarren@nvidia.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dom Cobley <popcornmix@gmail.com>, Mike Turquette <mturquette@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Rabeeh Khoury <rabeeh@solid-run.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2013 at 13:55:09, Nori, Sekhar wrote:
-> On 2/25/2013 4:14 PM, Manjunathappa, Prakash wrote:
-> > Enable m25p80 SPI flash support on da850-EVM. Also
-> > add partition information of SPI flash.
-> > 
-> > Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/da850-evm.dts |   40 +++++++++++++++++++++++++++++++++++++++
-> >  1 files changed, 40 insertions(+), 0 deletions(-)
-> > 
-> > diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> > index 78c8e54..1a28d43 100644
-> > --- a/arch/arm/boot/dts/da850-evm.dts
-> > +++ b/arch/arm/boot/dts/da850-evm.dts
-> > @@ -46,6 +46,46 @@
-> >  			pinctrl-names = "default";
-> >  			pinctrl-0 = <&mmc0_pins>;
-> >  		};
-> > +		spi1: spi@1f0e000 {
-> > +			status = "okay";
-> > +			pinctrl-names = "default";
-> > +			pinctrl-0 = <&spi1_pins>;
-> > +			flash: m25p80@0 {
-> > +				#address-cells = <1>;
-> > +				#size-cells = <1>;
-> > +				compatible = "m25p80";
-> 
-> Are you sure there is a m25p80 part on these boards? On my board using
-> this patch I get:
-> 
-> m25p80 spi32766.0: found m25p64, expected m25p80
-> 
+Daniel,
 
-On my board also I see this warning. Also there is mistake in filesystem
-partition information specified in this patch, will correct it in next
-version of patch.
+first of all sorry for the late answer but thanks for testing the driver.
 
-Thanks,
-Prakash
+On 2/19/13, Daniel Mack <zonque@gmail.com> wrote:
+> Hi Sebastian,
+>
+> I did some more tests today and it took me a while to dig for the root
+> cause why things were not working for me in the first place - see below.
+>
+>
+> On 09.02.2013 13:59, Sebastian Hesselbarth wrote:
+>
+>> +==Example==
+>> +
+>> +/* 25MHz reference crystal */
+>> +ref25: ref25M {
+>> +	compatible = "fixed-clock";
+>> +	#clock-cells = <0>;
+>> +	clock-frequency = <25000000>;
+>> +};
+>> +
+>> +i2c-master-node {
+>> +
+>> +	/* Si5351a msop10 i2c clock generator */
+>> +	si5351a: clock-generator@60 {
+>> +		compatible = "silabs,si5351a-msop";
+>> +		reg = <0x60>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		#clock-cells = <1>;
+>> +
+>> +		/* connect xtal input to 25MHz reference */
+>> +		clocks = <&ref25>;
+>
+> As referred to in another thread, registering the ref25M clock that way
+> didn't suffice for me on my platform - but that's a different story.
 
-> I can access the flash just fine though.
-> 
-> Thanks,
-> Sekhar
-> 
+I guess "fixed-clock" isn't registered by OMAP's clock init code? I had
+to do this on dove, too. Actually, I will come back to clock initialization for
+dove later and was hoping that there will be some global way of registering
+core common clock drivers (or at least fixed-clock) until then.
+
+>> +static void si5351_read_parameters(struct si5351_driver_data *drvdata,
+>> +	unsigned char reg, struct si5351_parameters *params)
+>> +{
+>> +	unsigned char buf[SI5351_PARAMETERS_LENGTH];
+>
+> On a general note, I think you can use u8 instead of unsigned char all
+> over the place here, which will save you some indentation trouble.
+
+Ok, I guess I was deriving "unsigned char" usage from other clock drivers
+and never went to u8. But I ll reconsider using u8 when all issues are
+worked out.
+
+>> +static inline int _si5351_clkout_reparent(struct si5351_driver_data
+>> *drvdata,
+>> +				  unsigned char num, unsigned char parent)
+>> +{
+>> +	struct clk *pclk;
+>> +
+>> +	if (num > 8 ||
+>> +	    (drvdata->variant == SI5351_VARIANT_A3 && num > 3))
+>> +		return -EINVAL;
+>> +
+>> +	switch (parent) {
+>> +	case 0:
+>> +		pclk = drvdata->msynth[num].hw.clk;
+>> +		break;
+>> +	case 1:
+>> +		pclk = drvdata->msynth[0].hw.clk;
+>> +		if (num >= 4)
+>> +			pclk = drvdata->msynth[4].hw.clk;
+>> +		break;
+>> +	case 2:
+>> +		pclk = drvdata->xtal.clk;
+>> +		break;
+>> +	case 3:
+>> +		if (drvdata->variant != SI5351_VARIANT_C)
+>> +			return -EINVAL;
+>> +		pclk = drvdata->clkin.clk;
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +	return clk_set_parent(drvdata->clkout[num].hw.clk, pclk);
+>> +}
+>
+> [...]
+>
+>> +static int si5351_clkout_set_parent(struct clk_hw *hw, u8 index)
+>> +{
+>> +	struct si5351_hw_data *hwdata =
+>> +		container_of(hw, struct si5351_hw_data, hw);
+>> +	unsigned val;
+>> +
+>> +	val = 0;
+>> +	hw->clk->flags &= ~CLK_SET_RATE_PARENT;
+>> +	switch (index) {
+>> +	case 0:
+>> +		hw->clk->flags |= CLK_SET_RATE_PARENT;
+>> +		val = SI5351_CLK_INPUT_MULTISYNTH_N;
+>> +		break;
+>
+> I fugured that _si5351_clkout_reparent() wouldn't actually call
+> ->set_parent() on the clock, which leads to the fact that
+> CLK_SET_RATE_PARENT is not set in the flags. That way, only the clkout
+> end leaf is actually supplied with a new rate, which leads to incorrect
+> effective clocks, depending on the current multisynth/pll configuration.
+
+Yeah, true. Unfortunately, _clkout_reparent() is more like a dirty hack to
+allow to reparent the clock output. At registration internal configuration of
+si5351 is not known and when I parse the DT for clock configuration I might
+have been already assigned to the same parent clk that you later explicitly
+configure.
+
+What I basically want for si5351 (or any other eeprom based programmable
+clock gen) is that stored configuration is not touched. But it can be changed
+after eeprom contents have been copied into device's sram - and this _is_
+mandatory for the si5351 that I use on CuBox where there is no useful config
+stored at all.
+
+Anyway, there still seem to be some more issues with doing it right on current
+common clk framwork - thanks for pointing it out.
+
+> The reason for this is in clk_set_parent() itself, which bails if the
+> parent is already set to the passed value:
+>
+> 	if (clk->parent == parent)
+> 		goto out;
+>
+> I fixed that for now by explicitly setting the clock's parent to NULL
+> before calling clk_set_parent() in _si5351_clkout_reparent(), so the
+> calbacks are triggered. But there might be a nicer way, for example to
+> factor out the CLK_SET_RATE_PARENT handling to some function called from
+> _si5351_clkout_reparent() or so.
+>
+> Anyway, with this hack in place along with the other details I mentioned
+> in my first mail, the driver seems to work for me now, which is great. I
+> will do more extensive tests later that week when I have access to
+> better scopes ...
+
+I am happy to hear that you can reproduce different frequencies successfully!
+
+But as you already pointed out before, it would be great to have some long-term
+jitter measurements. I hope the heuristic taken from the referenced Silicon Labs
+application note will still meet jitter requirements. Still, as stated
+on my initial post,
+the pll settings obtained for different frequencies differ from that
+the provided
+windows tool spits out.
+
+Sebastian
