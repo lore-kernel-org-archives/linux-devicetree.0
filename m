@@ -1,43 +1,58 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 0/4] Enable SPI flash support on da850-evm DT kernel
-Date: Wed, 27 Feb 2013 14:09:57 +0530
-Message-ID: <512DC65D.7080603@ti.com>
-References: <1361789050-637-1-git-send-email-prakash.pm@ti.com>
+From: Samuel Ortiz <sameo@linux.intel.com>
+Subject: Re: [PATCH v6 0/6] Add ChromeOS Embedded Controller support
+Date: Wed, 27 Feb 2013 09:40:34 +0100
+Message-ID: <20130227084034.GE16414@sortiz-mobl>
+References: <1361830121-32284-1-git-send-email-sjg@chromium.org>
+ <CAPnjgZ3enERPu1uK5GW9+_ZinhiDmDuoNn2FGhgVNOZbFVQ0tQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1361789050-637-1-git-send-email-prakash.pm-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPnjgZ3enERPu1uK5GW9+_ZinhiDmDuoNn2FGhgVNOZbFVQ0tQ@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Simon Glass <sjg@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Wolfram Sang <w.sang@pengutronix.de>, Luigi Semenzato <semenzato@chromium.org>, Rob Herring <rob.herring@calxeda.com>, Che-Liang Chiou <clchiou@chromium.org>, Jonathan Kliegman <kliegs@chromium.org>, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, devicetree-discuss@lists.ozlabs.org, Alban Bedel <alban.bedel@avionic-design.de>, Roland Stigge <stigge@antcom.de>, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier@dowhile0.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-doc@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Bill Pemberton <wfp5p@virginia.edu>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olofj@chromium.or>
 List-Id: devicetree@vger.kernel.org
 
-On 2/25/2013 4:14 PM, Manjunathappa, Prakash wrote:
-> Patch enables support for m25p80 SPI flash support on
-> da850-EVM.
-> 
-> Testing information:
-> da850-evm comes with partitions specified in DT blob.
-> Able to mount/umount and create/delete files on filesystem partition.
-> 
-> Depends on below patch in spi-next branch of git://git.secretlab.ca/git/linux-2.6.git.
-> "spi/davinci: add OF support for the spi controller"
-> 
-> Applies on top of below patch under community review:
-> http://www.mail-archive.com/davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org/msg25184.html
+Hi Simon,
 
-The series looks good to me except a minor comment I gave on 4/4. Patch
-1/4 should be picked by Grant (ideally before v3.9-rc1). I will queue
-rest of patches for v3.10.
+On Tue, Feb 26, 2013 at 09:13:06PM -0800, Simon Glass wrote:
+> Hi Samuel,
+> 
+> On Mon, Feb 25, 2013 at 2:08 PM, Simon Glass <sjg@chromium.org> wrote:
+> > The ChromeOS Embedded Controller (EC) is an Open Source EC implementation
+> > used on ARM and Intel Chromebooks. Current implementations use a Cortex-M3
+> > connected on a bus (such as I2C, SPI, LPC) to the AP. A separate interrupt
+> > line is used to indicate when the EC needs service.
+> >
+> > Functions performed by the EC vary by platform, but typically include
+> > battery charging, keyboard scanning and power sequencing.
+> >
+> > This series includes support for the EC message protocol, and implements
+> > a matrix keyboard handler for Linux using the protocol. The EC performs
+> > key scanning and passes scan data in response to AP requests. This is
+> > used on the Samsung ARM Chromebook. No driver is available for LPC at
+> > present.
+> >
+> > This series can in principle operate on any hardware, but for it to actually
+> > work on the Samsung ARM Chromebook, it needs patches which are currently in
+> > progress to mainline: Exynos FDT interrupt support and I2C bus arbitration.
+> >
+> > The driver is device-tree-enabled and a suitable binding is included in
+> > this series. Example device tree nodes are included in the examples,
+> > but no device tree patch for exynos5250-snow is provided at this stage, since
+> > we must wait for the above-mentioned patches to land to avoid errors from
+> > dtc. This can be added with a follow-on patch when that work is complete.
+> >
+> 
+> Are you happy with this series? Do you think it is ready to be picked
+> up for mfd?
+It probably is, and it will be part of the next merge window. I'll apply the
+after the merge window closes.
 
-Thanks,
-Sekhar
+Cheers,
+Samuel.
+
+-- 
+Intel Open Source Technology Centre
+http://oss.intel.com/
