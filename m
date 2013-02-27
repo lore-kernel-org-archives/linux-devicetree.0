@@ -1,65 +1,198 @@
-From: Kim Phillips <kim.phillips@freescale.com>
-Subject: [PATCH 3/3] ARM: zImage: sparse fixes
-Date: Tue, 26 Feb 2013 19:36:15 -0600
-Message-ID: <1361928975-29395-3-git-send-email-kim.phillips@freescale.com>
-References: <1361928975-29395-1-git-send-email-kim.phillips@freescale.com>
+From: Anil Kumar <anilk4.v@gmail.com>
+Subject: Re: FW: [PATCH V4] ARM: dts: add minimal DT support for DevKit8000.
+Date: Wed, 27 Feb 2013 08:03:24 +0530
+Message-ID: <CABYxbz5GyxYaHANgdpwBNaaR6tnu=6LJuUNSvL7DEzU=4CPHcA@mail.gmail.com>
+References: <F3DBB1B3EF102E4994C89758CFCA32412CC4E9@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1361928975-29395-1-git-send-email-kim.phillips@freescale.com>
+In-Reply-To: <F3DBB1B3EF102E4994C89758CFCA32412CC4E9@DBDE01.ent.ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Russell King <linux@arm.linux.org.uk>
-Cc: Nicolas Pitre <nico@linaro.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux@arm.linux.org.uk, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@secretlab.ca>, Anil Kumar <anilk4.v@gmail.com>, thomas@tomweber.eu, b-cousson@ti.com
 List-Id: devicetree@vger.kernel.org
 
-arch/arm/boot/compressed/atags_to_fdt.c:107:34: warning: cast to restricted __be32
-arch/arm/boot/compressed/atags_to_fdt.c:107:34: warning: cast to restricted __be32
-arch/arm/boot/compressed/atags_to_fdt.c:107:34: warning: cast to restricted __be32
-arch/arm/boot/compressed/atags_to_fdt.c:107:34: warning: cast to restricted __be32
-arch/arm/boot/compressed/atags_to_fdt.c:107:34: warning: cast to restricted __be32
-arch/arm/boot/compressed/atags_to_fdt.c:107:34: warning: cast to restricted __be32
-arch/arm/boot/compressed/atags_to_fdt.c:140:54: warning: incorrect type in assignment (different base types)
-arch/arm/boot/compressed/atags_to_fdt.c:140:54:    expected unsigned int [unsigned] <noident>
-arch/arm/boot/compressed/atags_to_fdt.c:140:54:    got restricted __be32 [usertype] <noident>
-arch/arm/boot/compressed/atags_to_fdt.c:141:54: warning: incorrect type in assignment (different base types)
-arch/arm/boot/compressed/atags_to_fdt.c:141:54:    expected unsigned int [unsigned] <noident>
-arch/arm/boot/compressed/atags_to_fdt.c:141:54:    got restricted __be32 [usertype] <noident>
+Hi,
+>
+> DevKit8000 is a beagle board clone from Timll, sold by
+> armkits.com. The DevKit8000 has RS232 serial port, LCD, DVI-D,
+> S-Video, Ethernet, SD/MMC, keyboard, camera, SPI, I2C, USB and
+> JTAG interface.
+>
+> This patch adds the basic DT support for devkit8000. At this time, Information
+> of twl4030 (PMIC), MMC1, I2C1 and leds are added.
+>
+> Signed-off-by: Anil Kumar <anilk4.v@gmail.com>
+> Tested-by: Thomas Weber <thomas@tomweber.eu>
 
-Signed-off-by: Kim Phillips <kim.phillips@freescale.com>
----
- arch/arm/boot/compressed/atags_to_fdt.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Gentle Ping. As there are no review comments on this patch,
+Could you please pull this patch ?
 
-diff --git a/arch/arm/boot/compressed/atags_to_fdt.c b/arch/arm/boot/compressed/atags_to_fdt.c
-index aabc02a..b7c4846 100644
---- a/arch/arm/boot/compressed/atags_to_fdt.c
-+++ b/arch/arm/boot/compressed/atags_to_fdt.c
-@@ -16,7 +16,7 @@ static int node_offset(void *fdt, const char *node_path)
- }
- 
- static int setprop(void *fdt, const char *node_path, const char *property,
--		   uint32_t *val_array, int size)
-+		   fdt32_t *val_array, int size)
- {
- 	int offset = node_offset(fdt, node_path);
- 	if (offset < 0)
-@@ -95,7 +95,7 @@ static void merge_fdt_bootargs(void *fdt, const char *fdt_cmdline)
- int atags_to_fdt(void *atag_list, void *fdt, int total_space)
- {
- 	struct tag *atag = atag_list;
--	uint32_t mem_reg_property[2 * NR_BANKS];
-+	fdt32_t mem_reg_property[2 * NR_BANKS];
- 	int memcount = 0;
- 	int ret;
- 
-@@ -104,7 +104,7 @@ int atags_to_fdt(void *atag_list, void *fdt, int total_space)
- 		return 1;
- 
- 	/* if we get a DTB here we're done already */
--	if (*(u32 *)atag_list == fdt32_to_cpu(FDT_MAGIC))
-+	if (*(fdt32_t *)atag_list == cpu_to_fdt32(FDT_MAGIC))
- 	       return 0;
- 
- 	/* validate the ATAG */
--- 
-1.8.1.4
+Thanks,
+Anil
+
+> ---
+>  -This patch is based on top of kernel 3.8-rc5.
+>
+>  -Tested on Devkit8000.
+>
+> For V4:
+>  -Tiny nitpick.
+>
+> For V3:
+>  - Remove pin mux as done at device boot time by default.
+>
+> For V2:
+>  - Change model name as "TimLL OMAP3 Devkit8000"
+>  - Change compatible as "timll,omap3-devkit8000"
+>  - Doing i2c1 pinmux default with pinctrl-single driver instead of i2c1
+>    driver probe time.
+>
+> :100644 100644 5ebb44f... 22ebc76... M  arch/arm/boot/dts/Makefile
+> :000000 100644 0000000... 2e1463a... A  arch/arm/boot/dts/omap3-devkit8000.dts
+> :100644 100644 53cb380b.. ccecb76... M  arch/arm/mach-omap2/board-generic.c
+>  arch/arm/boot/dts/Makefile             |    1 +
+>  arch/arm/boot/dts/omap3-devkit8000.dts |  102 ++++++++++++++++++++++++++++++++
+>  arch/arm/mach-omap2/board-generic.c    |    1 +
+>  3 files changed, 104 insertions(+), 0 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 5ebb44f..22ebc76 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -102,6 +102,7 @@ dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
+>         imx28-tx28.dtb
+>  dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+>         omap3-beagle.dtb \
+> +       omap3-devkit8000.dtb \
+>         omap3-beagle-xm.dtb \
+>         omap3-evm.dtb \
+>         omap3-tobi.dtb \
+> diff --git a/arch/arm/boot/dts/omap3-devkit8000.dts b/arch/arm/boot/dts/omap3-devkit8000.dts
+> new file mode 100644
+> index 0000000..2e1463a
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/omap3-devkit8000.dts
+> @@ -0,0 +1,102 @@
+> +/*
+> + * Author: Anil Kumar <anilk4.v@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +/dts-v1/;
+> +
+> +/include/ "omap3.dtsi"
+> +/ {
+> +       model = "TimLL OMAP3 Devkit8000";
+> +       compatible = "timll,omap3-devkit8000", "ti,omap3";
+> +
+> +       memory {
+> +               device_type = "memory";
+> +               reg = <0x80000000 0x10000000>;  /* 256 MB */
+> +       };
+> +
+> +       leds {
+> +               compatible = "gpio-leds";
+> +
+> +               heartbeat {
+> +                       label = "devkit8000::led1";
+> +                       gpios = <&gpio6 26 0>;  /* 186 -> LED1 */
+> +                       default-state = "on";
+> +                       linux,default-trigger = "heartbeat";
+> +               };
+> +
+> +               mmc {
+> +                       label = "devkit8000::led2";
+> +                       gpios = <&gpio6 3 0>;   /* 163 -> LED2 */
+> +                       default-state = "on";
+> +                       linux,default-trigger = "none";
+> +               };
+> +
+> +               usr {
+> +                       label = "devkit8000::led3";
+> +                       gpios = <&gpio6 4 0>;   /* 164 -> LED3 */
+> +                       default-state = "on";
+> +                       linux,default-trigger = "usr";
+> +                };
+> +       };
+> +};
+> +
+> +&i2c1 {
+> +       clock-frequency = <2600000>;
+> +
+> +       twl: twl@48 {
+> +               reg = <0x48>;
+> +               interrupts = <7>;       /* SYS_NIRQ cascaded to intc */
+> +               interrupt-parent = <&intc>;
+> +       };
+> +};
+> +
+> +&i2c2 {
+> +       status = "disabled";
+> +};
+> +
+> +&i2c3 {
+> +       status = "disabled";
+> +};
+> +
+> +/include/ "twl4030.dtsi"
+> +
+> +&mmc1 {
+> +       vmmc-supply = <&vmmc1>;
+> +       vmmc_aux-supply = <&vsim>;
+> +       bus-width = <8>;
+> +};
+> +
+> +&mmc2 {
+> +       status = "disabled";
+> +};
+> +
+> +&mmc3 {
+> +       status = "disabled";
+> +};
+> +
+> +&wdt2 {
+> +       status = "disabled";
+> +};
+> +
+> +&mcbsp1 {
+> +       status = "disabled";
+> +};
+> +
+> +&mcbsp2 {
+> +       status = "disabled";
+> +};
+> +
+> +&mcbsp3 {
+> +       status = "disabled";
+> +};
+> +
+> +&mcbsp4 {
+> +       status = "disabled";
+> +};
+> +
+> +&mcbsp5 {
+> +       status = "disabled";
+> +};
+> diff --git a/arch/arm/mach-omap2/board-generic.c b/arch/arm/mach-omap2/board-generic.c
+> index 53cb380..ccecb76 100644
+> --- a/arch/arm/mach-omap2/board-generic.c
+> +++ b/arch/arm/mach-omap2/board-generic.c
+> @@ -110,6 +110,7 @@ MACHINE_END
+>
+>  static const char *omap3_gp_boards_compat[] __initdata = {
+>         "ti,omap3-beagle",
+> +       "timll,omap3-devkit8000",
+>         NULL,
+>  };
+>
+> --
+> 1.7.0.4
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
