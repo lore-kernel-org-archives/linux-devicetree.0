@@ -1,96 +1,64 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Wed, 27 Feb 2013 14:13:10 -0600
-Message-ID: <512E68D6.4050906@ti.com>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com> <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com> <512D407C.6090006@ti.com> <CAAwP0s2rMpZXrbTzoU4J=nqdxku7UBrDehAPmtyrns3cn6WHAA@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/5 v7][RFC] ASoC: add
+	snd_soc_register_cpu()
+Date: Wed, 27 Feb 2013 15:45:45 -0700
+Message-ID: <512E8C99.2040708@wwwdotorg.org>
+References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
+ <20130127035943.GJ4650@opensource.wolfsonmicro.com>
+ <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
+ <20130129014808.GC4748@opensource.wolfsonmicro.com>
+ <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
+ <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
+ <5107FF97.1070601@wwwdotorg.org>
+ <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
+ <51097F0F.2030501@wwwdotorg.org>
+ <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
+ <5110349D.3050308@wwwdotorg.org>
+ <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
+ <87bobzrry6.wl%kuninori.morimoto.gx@renesas.com>
+ <511963F8.5020107@wwwdotorg.org>
+ <87bobqf5yq.wl%kuninori.morimoto.gx@renesas.com>
+ <511C22E2.60701@wwwdotorg.org>
+ <87obfnofsx.wl%kuninori.morimoto.gx@renesas.com>
+ <511C6A1B.9000507@wwwdotorg.org>
+ <874nhfv5mb.wl%kuninori.morimoto.gx@renesas.com>
+ <8738wzuu9g.wl%kuninori.morimoto.gx@renesas.com>
+ <87a9qsg4lp.wl%kuninori.morimoto.gx@renesas.com>
+ <878v6cg4io.wl%kuninori.morimoto.gx@renes as.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAAwP0s2rMpZXrbTzoU4J=nqdxku7UBrDehAPmtyrns3cn6WHAA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <martinez.javier@gmail.com>
-Cc: "Cousson, Benoit" <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Rob Herring <robherring2@gmail.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <878v6cg4io.wl%kuninori.morimoto.gx@renesas.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Linux-ALSA <alsa-devel@alsa-project.org>, Lars-Peter Clausen <lars@metafoo.de>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On 02/25/2013 01:51 AM, Kuninori Morimoto wrote:
+> Current ASoC has register function for platform/codec/dai/card,
+> but doesn't have for cpu.
+> It often produces confusion and fault on ASoC.
+> This patch adds very basic register function for cpu
 
-On 02/26/2013 09:47 PM, Javier Martinez Canillas wrote:
-> On Wed, Feb 27, 2013 at 12:08 AM, Jon Hunter <jon-hunter@ti.com> wrote:
->>
->> On 02/26/2013 04:01 AM, Javier Martinez Canillas wrote:
->>
->> [snip]
->>
->>> I was wondering if the level/edge settings for gpios is working on OMAP.
->>>
->>> I'm adding DT support for an SMSC911x ethernet chip connected to the
->>> GPMC for an OMAP3 SoC based board.
->>>
->>> In the smsc911x driver probe function (smsc911x_drv_probe() in
->>> drivers/net/ethernet/smsc/smsc911x.c), a call to request_irq() with
->>> the flag IRQF_TRIGGER_LOW is needed because of the wiring on my board.
->>>
->>> Reading the gpio-omap.txt documentation it says that #interrupt-cells
->>> should be <2> and that a value of 8 is "active low level-sensitive".
->>>
->>> So I tried this:
->>>
->>> &gpmc {
->>>       ethernet@5,0 {
->>>               pinctrl-names = "default";
->>>               pinctrl-0 = <&smsc911x_pins>;
->>>               compatible = "smsc,lan9221", "smsc,lan9115";
->>>               reg = <5 0 0xff>; /* CS5 */
->>>               interrupt-parent = <&gpio6>;
->>>               interrupts = <16 8>; /* gpio line 176 */
->>>               interrupt-names = "smsc911x irq";
->>>               vmmc-supply = <&vddvario>;
->>>               vmmc_aux-supply = <&vdd33a>;
->>>               reg-io-width = <4>;
->>
->> By the way, reg-io-width for omap does not look correct. The GPMC only
->> supports 8-bit or 16-bit devices IIRC. I believe all my omap boards use
->> 16-bit.
->>
-> 
-> I thought that even when the GPMC was a 16-bit external memory
-> controller it could do some access adaptation to support 32-bit
-> devices.
+This seems reasonable to me.
 
-Right the GPMC itself may be able to translate 32-bit accesses into
-16-bit. However, I have not looked at the data sheet for the smsc parts
-to know what impact this would have on any register accesses in the smsc
-device.
+I can't recall how much influence the existing CODEC objects have on the
+various routing/matching decisions inside the ASoC core. While this
+patch does register and unregister CPU objects, I wonder if it should
+have more impact on any of the existing core code? Certainly I'd expect
+the CPU objects to show up in ASoC's debugfs and any similar files...
 
-> By looking at the board files for others OMAP3 based boards
-> (board-{omap3evm,overo,zoom-debugboard}.c) most of them set the struct
-> omap_smsc911x_platform_data .flags member to SMSC911X_USE_32BIT.
+So as far as it goes,
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
 
-I see this too now. I was looking at the
-arch/arm/mach-omap2/gpmc-smc91x.c which has SMC91X_USE_16BIT and
-GPMC_CONFIG1_DEVICESIZE_16. So this is for a slightly different ethernet
-chip but same concept. Hopefully, someone knew what they were doing for
-those other boards!
-
-> And by looking at Documentation/devicetree/bindings/net/smsc911x.txt I
-> thought that the corresponding DT property for this flag was
-> "reg-io-width"
-> 
-> Anyway, I tried using both reg-io-width = <4> and reg-io-width = <2>.
-> The ethernet chip works with both of them and I don't see too much
-> difference in performance:
-> 
-> 16-bit
-> round-trip min/avg/max = 0.611/0.738/0.946 ms
-> 
-> 32-bit
-> round-trip min/avg/max = 0.519/0.690/0.976 ms
-> 
-> So, is your call ;-)
-
-While I can't argue with the fact it works, I would not be prepared to
-make that call without reviewing the documentation for the smsc and the
-driver.
-
-Cheers
-Jon
+But I suspect this patch might need to do a bunch of other stuff too, or
+add a bunch of follow-on patches for that?
