@@ -1,138 +1,137 @@
-From: Javier Martinez Canillas <martinez.javier@gmail.com>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Wed, 27 Feb 2013 04:57:38 +0100
-Message-ID: <CAAwP0s3rbExrSf-W325uCPfMO=Zk9LefRP0VD4JC1tg_sxS_gQ@mail.gmail.com>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com>
- <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com>
- <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com>
- <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com>
- <512D39DA.7020306@ti.com> <512D3AB1.1080202@wwwdotorg.org>
- <512D3EC2.6050408@ti.com> <512D3FE6.1010300@wwwdotorg.org>
- <512D490B.70900@ti.com> <512D4FC4.2060505@wwwdotorg.org> <512D5C58.4090500@ti.com>
+From: Simon Glass <sjg@chromium.org>
+Subject: Re: [PATCH v6 0/6] Add ChromeOS Embedded Controller support
+Date: Tue, 26 Feb 2013 21:13:06 -0800
+Message-ID: <CAPnjgZ3enERPu1uK5GW9+_ZinhiDmDuoNn2FGhgVNOZbFVQ0tQ@mail.gmail.com>
+References: <1361830121-32284-1-git-send-email-sjg@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <512D5C58.4090500@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1361830121-32284-1-git-send-email-sjg@chromium.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: LKML <linux-kernel@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>
+Cc: Simon Glass <sjg@chromium.org>, Rob Landley <rob@landley.net>, Felipe Balbi <balbi@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Wolfram Sang <w.sang@pengutronix.de>, Luigi Semenzato <semenzato@chromium.org>, Rob Herring <rob.herring@calxeda.com>, Che-Liang Chiou <clchiou@chromium.org>, Jonathan Kliegman <kliegs@chromium.org>, linux-input@vger.kernel.org, Sourav Poddar <sourav.poddar@ti.com>, devicetree-discuss@lists.ozlabs.org, Alban Bedel <alban.bedel@avionic-design.de>, Roland Stigge <stigge@antcom.de>, Vincent Palatin <vpalatin@chromium.org>, Javier Martinez Canillas <javier@dowhile0.org>, Mark Brown <broonie@opensource.wolfsonmicro.com>, linux-doc@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Tony Lindgren <tony@atomide.com>, Bill Pemberton <wfp5p@virginia.edu>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olofj@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2013 at 2:07 AM, Jon Hunter <jon-hunter@ti.com> wrote:
+Hi Samuel,
+
+On Mon, Feb 25, 2013 at 2:08 PM, Simon Glass <sjg@chromium.org> wrote:
+> The ChromeOS Embedded Controller (EC) is an Open Source EC implementation
+> used on ARM and Intel Chromebooks. Current implementations use a Cortex-M3
+> connected on a bus (such as I2C, SPI, LPC) to the AP. A separate interrupt
+> line is used to indicate when the EC needs service.
 >
-> On 02/26/2013 06:13 PM, Stephen Warren wrote:
->> On 02/26/2013 04:45 PM, Jon Hunter wrote:
->>>
->>> On 02/26/2013 05:06 PM, Stephen Warren wrote:
->>>> On 02/26/2013 04:01 PM, Jon Hunter wrote:
->>>>>
->>>>> On 02/26/2013 04:44 PM, Stephen Warren wrote:
->>>>>> On 02/26/2013 03:40 PM, Jon Hunter wrote:
->>>>>>>
->>>>>>> On 02/26/2013 04:01 AM, Javier Martinez Canillas wrote:
->>>>>>>
->>>>>>> [snip]
->>>>>>>
->>>>>>>> I was wondering if the level/edge settings for gpios is working on OMAP.
->>>>>>>>
->>>>>>>> I'm adding DT support for an SMSC911x ethernet chip connected to the
->>>>>>>> GPMC for an OMAP3 SoC based board.
->>>>>>>>
->>>>>>>> In the smsc911x driver probe function (smsc911x_drv_probe() in
->>>>>>>> drivers/net/ethernet/smsc/smsc911x.c), a call to request_irq() with
->>>>>>>> the flag IRQF_TRIGGER_LOW is needed because of the wiring on my board.
->>>>>>>>
->>>>>>>> Reading the gpio-omap.txt documentation it says that #interrupt-cells
->>>>>>>> should be <2> and that a value of 8 is "active low level-sensitive".
->>>>>>>>
->>>>>>>> So I tried this:
->>>>>>>>
->>>>>>>> &gpmc {
->>>>>>>>         ethernet@5,0 {
->>>>>>>>                 pinctrl-names = "default";
->>>>>>>>                 pinctrl-0 = <&smsc911x_pins>;
->>>>>>>>                 compatible = "smsc,lan9221", "smsc,lan9115";
->>>>>>>>                 reg = <5 0 0xff>; /* CS5 */
->>>>>>>>                 interrupt-parent = <&gpio6>;
->>>>>>>>                 interrupts = <16 8>; /* gpio line 176 */
->>>>>>>>                 interrupt-names = "smsc911x irq";
->>>>>>>>                 vmmc-supply = <&vddvario>;
->>>>>>>>                 vmmc_aux-supply = <&vdd33a>;
->>>>>>>>                 reg-io-width = <4>;
->>>>>>>>
->>>>>>>>                 smsc,save-mac-address;
->>>>>>>>       };
->>>>>>>> };
->>>>>>>
->>>>>>> Are you requesting the gpio anywhere? If not then this is not going to
->>>>>>> work as-is. This was discussed fairly recently [1] and the conclusion
->>>>>>> was that the gpio needs to be requested before we can use as an interrupt.
->>>>>>
->>>>>> That seems wrong; the GPIO/IRQ driver should handle this internally. The
->>>>>> Ethernet driver shouldn't know/care whether the interrupt it's given is
->>>>>> some form of dedicated interrupt or a GPIO-based interrupt, and even if
->>>>>> it somehow did, there's no irq_to_gpio() any more, so the driver can't
->>>>>> tell which GPIO ID it should request, unless it's given yet another
->>>>>> property to represent this.
->>>>>
->>>>> I agree that ideally this should be handled internally. Did you read the
->>>>> discussion on the thread that I referenced [1]? If you have any thoughts
->>>>> we are open to ideas :-)
->>>>>
->>>>> Cheers
->>>>> Jon
->>>>>
->>>>> [1] http://comments.gmane.org/gmane.linux.ports.arm.omap/92192
->>>>
->>>> Oh, when I clicked that link the first time, all I saw was the patch,
->>>> not any discussion. I guess it must have timed out finding the other
->>>> emails or something.
->>>
->>> Actually, I sent a slightly different link the 2nd time to ensure you
->>> saw the thread. So my fault ;-)
->>>
->>>> I disagree that the GPIO needs to be requested, and that a custom DT
->>>> property and associated code are needed for that; simply requesting the
->>>> IRQ should be enough to make everything work.
->>>>
->>>> In the Tegra GPIO IRQ driver for example, the irq_set_type irq_chip op
->>>> goes and configures the base GPIO HW to enable the pin as a GPIO, just
->>>> like gpio_request() would. I imagine the OMAP driver can do whatever
->>>> similar action it needs.
->>>
->>> Yes that is similar to what the patch in the thread was attempting to
->>> do, but this got shot down.
->>>
->>> One issue I see is that by not calling gpio_request, then potentially
->>> you could have someone request a gpio via gpio_request() and someone
->>> trying to use it as an interrupt source via request_irq(). Now obviously
->>> that represents a bug because there is only one physical gpio, but I
->>> gather it is something we need to protect against.
->>
->> I'm not sure it's really that much of an issue, but presumably the
->> solution is for a combined GPIO+IRQ driver to simply call gpio_request
->> internally from within some irq_chip function. It looks like struct
->> irq_chip doesn't have a request/free, but perhaps they could be added to
->> solve this?
+> Functions performed by the EC vary by platform, but typically include
+> battery charging, keyboard scanning and power sequencing.
 >
-> Yes I was wondering if we could do something like that. That would work,
-> may be that's what we should propose.
+> This series includes support for the EC message protocol, and implements
+> a matrix keyboard handler for Linux using the protocol. The EC performs
+> key scanning and passes scan data in response to AP requests. This is
+> used on the Samsung ARM Chromebook. No driver is available for LPC at
+> present.
 >
-> Thanks
-> Jon
+> This series can in principle operate on any hardware, but for it to actually
+> work on the Samsung ARM Chromebook, it needs patches which are currently in
+> progress to mainline: Exynos FDT interrupt support and I2C bus arbitration.
+>
+> The driver is device-tree-enabled and a suitable binding is included in
+> this series. Example device tree nodes are included in the examples,
+> but no device tree patch for exynos5250-snow is provided at this stage, since
+> we must wait for the above-mentioned patches to land to avoid errors from
+> dtc. This can be added with a follow-on patch when that work is complete.
+>
 
-Something like that would definitely solve the GPIO request issue but
-we still have the issue that the current OMAP GPIO controller binding
-does not support #interrupt-cells = <2>.
+Are you happy with this series? Do you think it is ready to be picked
+up for mfd?
 
-So, we can't pass the trigger type and level flags for an IRQ-GPIO
-when using an GPIO controller as the interrupt-parent for a device
-node.
+Regards,
+Simon
 
-Do you have any comments on that issue?
-
-I'll try to check Stephen's pointers but I'm not familiar with the
-gpio-omap driver neither gpiolib.
-
-Best regards,
-Javier
+> Changes in v6:
+> - Allow cros_ec to be a module
+> - Remove 'struct i2c_msg' definition
+> - Use %ph instead of for loop to output packet trace
+> - Fix incorrect indentation in cros_ec_keyb_process()
+> - Remove unnecessary assignment to NULL in probe function
+>
+> Changes in v5:
+> - Remove cros_ec allocation functions
+> - Remove name access functions in cros_ec, using strings instead
+> - Fix Kconfig help message for MFD_CROS_EC_I2C
+> - Remove I2C retry logic
+> - Switch cros_ec_i2c driver to use devm
+> - Update cros_ec_i2c to work with new cros_ec interface
+> - Switch cros_ec_spi driver to use devm
+> - Update cros_ec_spi to work with new cros_ec interface
+> - Fix {} style nit in cros_ec_keyb_has_ghosting
+> - Correct key lookup logic which was broken in previous version
+> - Switch cros_ec_keyb driver to use devm
+>
+> Changes in v4:
+> - Fix up trvial logging comments
+> - Remove messages reporting out of memory
+> - Add compatible string for cros-ec-keyb
+> - Remove wake notifier and let drivers use their own handlers instead
+> - Add 'depends on MFD_CROS_EC' to Kconfig
+> - Remove use of wake_notifier
+> - Remove manual code to locate device tree node
+> - Add resume handler to clear keyboard scan buffer if required
+>
+> Changes in v3:
+> - Add stub for matrix_keypad_parse_of_params() when no CONFIG_OF
+> - Put back full DT range checking in tca8418 driver
+> - Remove 'select MFD_CROS_EC' from Kconfig as it isn't necessary
+> - Remove old_state by using input layer's idev->key
+> - Move inner loop of cros_ec_keyb_has_ghosting() into its own function and simplify
+> - Add check for not finding the device tree node
+> - Remove comment about leaking matrix_keypad_build_keymap()
+> - Use platform_get_drvdata() where possible
+> - Remove call to input_free_device() after input_unregister_device()
+>
+> Changes in v2:
+> - Remove use of __devinit/__devexit
+> - Remove use of __devinit/__devexit
+> - Remove use of __devinit/__devexit
+> - Add new patch to decode matrix-keypad DT binding
+> - Remove use of __devinit/__devexit
+> - Use function to read matrix-keypad parameters from DT
+> - Remove key autorepeat parameters from DT binding and driver
+> - Use unsigned int for rows/cols
+>
+> Simon Glass (6):
+>   mfd: Add ChromeOS EC messages header
+>   mfd: Add ChromeOS EC implementation
+>   mfd: Add ChromeOS EC I2C driver
+>   mfd: Add ChromeOS EC SPI driver
+>   Input: matrix-keymap: Add function to read the new DT binding
+>   Input: Add ChromeOS EC keyboard driver
+>
+>  .../devicetree/bindings/input/cros-ec-keyb.txt     |   72 +
+>  Documentation/devicetree/bindings/mfd/cros-ec.txt  |   56 +
+>  drivers/input/keyboard/Kconfig                     |   12 +
+>  drivers/input/keyboard/Makefile                    |    1 +
+>  drivers/input/keyboard/cros_ec_keyb.c              |  334 +++++
+>  drivers/input/keyboard/lpc32xx-keys.c              |   11 +-
+>  drivers/input/keyboard/omap4-keypad.c              |   16 +-
+>  drivers/input/keyboard/tca8418_keypad.c            |    7 +-
+>  drivers/input/matrix-keymap.c                      |   19 +
+>  drivers/mfd/Kconfig                                |   28 +
+>  drivers/mfd/Makefile                               |    3 +
+>  drivers/mfd/cros_ec.c                              |  189 +++
+>  drivers/mfd/cros_ec_i2c.c                          |  206 +++
+>  drivers/mfd/cros_ec_spi.c                          |  375 ++++++
+>  include/linux/input/matrix_keypad.h                |   19 +
+>  include/linux/mfd/cros_ec.h                        |  170 +++
+>  include/linux/mfd/cros_ec_commands.h               | 1369 ++++++++++++++++++++
+>  17 files changed, 2869 insertions(+), 18 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/input/cros-ec-keyb.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/cros-ec.txt
+>  create mode 100644 drivers/input/keyboard/cros_ec_keyb.c
+>  create mode 100644 drivers/mfd/cros_ec.c
+>  create mode 100644 drivers/mfd/cros_ec_i2c.c
+>  create mode 100644 drivers/mfd/cros_ec_spi.c
+>  create mode 100644 include/linux/mfd/cros_ec.h
+>  create mode 100644 include/linux/mfd/cros_ec_commands.h
+>
+> --
+> 1.8.1.3
+>
