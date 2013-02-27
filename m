@@ -1,124 +1,50 @@
-From: Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: dts: imx: replace magic number with pin function
- name
-Date: Wed, 27 Feb 2013 12:16:20 -0600
-Message-ID: <CAKGA1bmqdCiocc_O6hU3ym6uJ-bAjwKMNrt43Qs_dkjEGpX-KQ@mail.gmail.com>
-References: <1361344089-16804-1-git-send-email-shawn.guo@linaro.org>
- <1361344089-16804-3-git-send-email-shawn.guo@linaro.org>
- <51251A11.2030300@wwwdotorg.org>
- <CAKGA1bkHH1XC38_VM=QhDrr33uqqSbwe0n+GfXEPs43K_Do=CQ@mail.gmail.com>
- <20130221050247.GD17738@S2101-09.ap.freescale.net>
- <CAKGA1bn22xctSj_33HQsWwnVB=RO2OJ=eYvgRD-kF+PiQcnC4Q@mail.gmail.com>
- <20130222055203.GB27371@S2101-09.ap.freescale.net>
- <CAKGA1bmw+CzBDLHty1+L1VdeWLgkPpLSLpGKBJEeQj-ByyzicA@mail.gmail.com>
- <20130227074404.GD1906@pengutronix.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/4] documentation: add palmas dts definition
+Date: Wed, 27 Feb 2013 11:16:57 -0700
+Message-ID: <512E4D99.6030201@wwwdotorg.org>
+References: <1361332815-2348-1-git-send-email-j-keerthy@ti.com> <20130220112639.GA2726@opensource.wolfsonmicro.com> <DC88CAD03C0052499C1907B327FC63229BBE34@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130227074404.GD1906-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Linux ARM Kernel ML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <DC88CAD03C0052499C1907B327FC63229BBE34@DBDE01.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "J, KEERTHY" <j-keerthy@ti.com>
+Cc: Mark Brown <broonie@opensource.wolfsonmicro.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "liam.r.girdwood@intel.com" <liam.r.girdwood@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Feb 27, 2013 at 1:44 AM, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Wed, Feb 27, 2013 at 12:51:56AM -0600, Matt Sealey wrote:
->> For example, please explain to me why;
+On 02/20/2013 06:49 AM, J, KEERTHY wrote:
+> Mark Brown wrote at Wednesday, February 20, 2013 4:57 PM:
+>> On Wed, Feb 20, 2013 at 09:30:15AM +0530, J Keerthy wrote:
+>>> From: Graeme Gregory <gg@slimlogic.co.uk>
+>>>
+>>> Add the DTS definition for the palmas device including the MFD children.
+...
+>>> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt b/Documentation/devicetree/bindings/mfd/palmas.txt
+...
+>>> +Texas Instruments Palmas family
+>>> +
+>>> +The Palmas familly are Integrated Power Management Chips.
+>>> +These chips are connected to an i2c bus.
 >>
->> MX51_PIN_EIM_23__GPIO1_2 0x6528
->>
->> is clearer than;
->>
->> 0x174 0x5 0x3d8 0x7 0x654 0x7633, /* EIM_23 GPIO1_2 and some pullup
->> settings or so comment comment comment */
->
-> Look what you have to do to get the pin muxing for a single pin from the
-> datasheet.
->
-> - identify the name, grep for it in the datasheet, find 0x78 for the mux
->   register.
-> - identify the mode wanted, it's ALT1 for GPIO1_2
-> - Look if it is involved in daisy chain, grep again if it is
-> - grep again for EIM_D23, find 0x40c for the PAD_CTL register
->
-> That's exactly the steps that are annoying, error prone and you can get
-> rid of by having a macro like we currently have. If you found a bug in
-> the macro, fix it and everyone benefits.
+>> I would expect this to enumerate the regulators that the user can
+>> select but it doesn't appear to do that.
+> 
+> Mark,
+> 
+> Thanks for reviewing the patch.
+> 
+> I went through the DT Documentation files in the regulator/ folder.
+> So shall I add a list of regulators which are in the Palmas device
+> Under a separate file under Documentation/devicetree/bindings/regulator ?
+> Is that what you are looking for?
 
-And everyone ends up with broken device trees until someone notices.
-In my experience, nobody usually notices until a very, very long time
-has passed. At least if the register values you're picking doing board
-support for your boards will only affect your board if they're wrong
-and not be global.
+I believe what Mark wants is something like the following in this file
+(take from Documentation/devicetree/bindings/regulator/tps6586x.txt):
 
-> Also you should notice that with the new patches Shawn has posted nobody
-> is forced to use these macros. If you don't like them, go and dump the
-> raw hex numbers into your devicetrees.
-
-I do notice that, what I'm a little perturbed by is that it doesn't
-seem to improve the situation (the amount of work required to use and
-VERIFY the values in each macro - on the assumption that any of them
-could be wrong and cross-check them with the schematics, the board
-designer if necessary, and then put them in a device tree as known
-working. Not all of the data files used in PCB design packages
-actually match the docs anyway so there are some cross-checks against
-yet another Freescale design database. If I asked someone here to go
-find the pin settings for USDHC2 on a board we have, they would first
-have to figure out which pad this was coming out of, go to the manual,
-find the signals that exit on that pad, look at the IOMUX, cross check
-it with some example code and the FSL IOMUX tool... pre-processing and
-using macros doesn't make that any easier until we have a single,
-fixed, totally verified and unchangeable set of macros which will
-cover all the usual cases. If the intent is that we just glob in 2500
-pin definitions at the start and "hope" that someone "eventually"
-notices any errors.. this is not normal in embedded design.
-
-I think that in the grand scheme of things it will just serve to hide
-errors behind a macro..
-
-Shawn, I might be much happier about the patch if I knew for sure that it
-
-a) followed some Freescale design database export of pins vs. alt
-modes and default mux settings (this must exist because the manuals
-and IOMUX tool data are generated from some XML files) and that
-b) that data was available to generate the macros used in the binding.
-
-Assuming the manual is correct is not a bad way to go - sometimes it
-is definitely NOT, but the information we're using right now is
-derived from there anyway.. it should still follow the names listed
-there (i.e. SD2_DAT4__SD2_DAT4 and not SD2_DAT4__USDHC2_DATA4 if the
-first one is what can be derived from the manual)
-
-I would also be MUCH happier if macros were also present to support
-cross-checking the ranges of iomux registers being defined such that
-they can be cross-checked at pre-processing time for those people who
-do not want to use the macros verbatim. This way immediate errors
-(accidental typo putting a wrong register in a field which is out of
-range for the valid addresses for that register block) will be caught
-in using the macros.
-
-I guess I will have to capitulate on it since I've got absolutely no
-power to lock Shawn in a room until it's done right, but I loathe
-automation for automation's sake. There always has to be a human
-present and the amount of work he has to do is not "annoying" when it
-is looking something up in the manual and coding something to suit.
-That's what we all do for a living, for crying out loud. And when a
-human is doing some amount of work, making it easier to make a mistake
-and creating an assumption that there is an easy way out via
-preprocessor macros is counter-productive (someone still has to write
-every macro, and someone still has to verify every single one of them
-at some point).
-
--- 
-Matt Sealey <matt-sEEEE4iEDtaXzmuOJsdVMQ@public.gmane.org>
-Product Development Analyst, Genesi USA, Inc.
+> - regulators: A node that houses a sub-node for each regulator within the
+>   device. Each sub-node is identified using the node's name (or the deprecated
+>   regulator-compatible property if present), with valid values listed below.
+>   The content of each sub-node is defined by the standard binding for
+>   regulators; see regulator.txt.
+>   sys, sm[0-2], ldo[0-9] and ldo_rtc
