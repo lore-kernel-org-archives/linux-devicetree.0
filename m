@@ -1,51 +1,92 @@
-From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dma: imx-dma: Add oftree support
-Date: Thu, 28 Feb 2013 14:30:27 +0800
-Message-ID: <20130228063026.GC26106@S2101-09.ap.freescale.net>
-References: <1361543838-12604-1-git-send-email-mpa@pengutronix.de>
- <1361808255-17381-1-git-send-email-mpa@pengutronix.de>
+From: Vikas Sajjan <vikas.sajjan@linaro.org>
+Subject: Re: [PATCH v5 5/5] ARM: exynos: dts: Add FIMD DT binding Documentation
+Date: Thu, 28 Feb 2013 12:07:38 +0530
+Message-ID: <CAD025ySw8XZVWjP=bchQypfg6L3fYzvotW+OFMkEzPbnokPkQQ@mail.gmail.com>
+References: <1361954620-20614-1-git-send-email-vikas.sajjan@linaro.org>
+ <1361954620-20614-6-git-send-email-vikas.sajjan@linaro.org> <CAK9yfHyqC4TzR4p+xfYv2LH-mrR=vV3k0C68-Kts_t6M-AMgyg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1361808255-17381-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAK9yfHyqC4TzR4p+xfYv2LH-mrR=vV3k0C68-Kts_t6M-AMgyg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, inki.dae@samsung.com, t.figa@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, joshi@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Feb 25, 2013 at 05:04:14PM +0100, Markus Pargmann wrote:
-> Adding devicetree support for imx-dma driver. Use driver name for
-> function 'imx_dma_is_general_purpose' because the devicename for
-> devicetree initialized devices is different.
+Hi Sachin,
 
-...
+On 28 February 2013 11:42, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+> Hi Vikas,
+>
+> On 27 February 2013 14:13, Vikas Sajjan <vikas.sajjan@linaro.org> wrote:
+>> Adds FIMD DT binding documentation both SoC and Board, with an example
+>>
+>> Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
+>> ---
+>>  .../devicetree/bindings/video/exynos-fimd.txt      |   46 ++++++++++++++++++++
+>>  1 file changed, 46 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/video/exynos-fimd.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/exynos-fimd.txt b/Documentation/devicetree/bindings/video/exynos-fimd.txt
+>> new file mode 100644
+>> index 0000000..b3542b9
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/video/exynos-fimd.txt
+>> @@ -0,0 +1,46 @@
+>> +Device-Tree bindings for Exynos SoC display controller (FIMD)
+>> +
+>> +FIMD stands for Fully Interactive Mobile Display, is the Display Controller for
+>> +the Exynos series of SoCs which transfers the image data from a video buffer
+>
+> I think this should be Samsung series of SoCs intead of Exynos series.
+> As such the file name could be samsung-fimd.txt.
+Right.
+>
+>> +located in the system memory to an external LCD interface.
+>> +
+>> +Required properties:
+>> +- compatible := value can be one these below
+>
+> "value should be one of the following:"
+Ok.
+>
+>
+>> +               "samsung,s3c2443-fimd"; /* for S3C24XX SoCs */
+>> +               "samsung,s3c6400-fimd"; /* for S3C64XX SoCs */
+>> +               "samsung,s5p6440-fimd"; /* for S5P64X0 SoCs */
+>> +               "samsung,s5pc100-fimd"; /* for S5PC100 SoC  */
+>> +               "samsung,s5pv210-fimd"; /* for S5PV210 SoC */
+>> +               "samsung,exynos4210-fimd"; /* for Exynos4 SoCs */
+>> +               "samsung,exynos5250-fimd"; /* for Exynos5 SoCs */
+>
+> blank line here would make it more readable?
+>
+>> +- reg := physical base address of the fimd and length of memory mapped region
+>> +- interrupt-parent := reference to the interrupt combiner node with phandle
+>> +- interrupts := interrupt number from the combiner to the cpu
+>> +               we have 3 interrupts and the Interrupt combiner order is
+>> +               FIFO Level, VSYNC and LCD_SYSTEM. Make sure to mention order
+>> +               as VSYNC, FIFO Level and LCD_SYSTEM as show in the example below.
+>
+> Please rephrase the above as there seems to be difference in order in
+> the above 2 lines itself. :)
 
-> @@ -63,7 +66,8 @@ static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
->  	return strstr(dev_name(chan->device->dev), "sdma") ||
->  		!strcmp(dev_name(chan->device->dev), "imx1-dma") ||
->  		!strcmp(dev_name(chan->device->dev), "imx21-dma") ||
-> -		!strcmp(dev_name(chan->device->dev), "imx27-dma");
-> +		!strcmp(dev_name(chan->device->dev), "imx27-dma") ||
-> +		!strcmp(chan->device->dev->driver->name, "imx-dma");
->  }
+ what it means is the Interrupt combiner order is : FIFO Level, VSYNC
+and LCD_SYSTEM
+but since we use only the VSYNC interrupt and in the driver while
+getting IRQ number we pass 0 as index,
+hence the documentation says
+Make sure to mention order as VSYNC, FIFO Level and LCD_SYSTEM, as
+show in the example below
+ interrupts = <11 1>, <11 0>, <11 2>;
+>
+>
+> --
+> With warm regards,
+> Sachin
 
-So the function could just look like the following?
 
-static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
-{
-        return !strcmp(chan->device->dev->driver->name, "imx-sdma") ||
-                !strcmp(chan->device->dev->driver->name, "imx-dma");
-}
 
-Shawn
+-- 
+Thanks and Regards
+ Vikas Sajjan
