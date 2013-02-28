@@ -1,150 +1,191 @@
-From: Ian Lartey <ian@slimlogic.co.uk>
-Subject: Re: [PATCH 1/2] leds: Add support for Palmas LEDs
-Date: Thu, 28 Feb 2013 11:52:29 +0000
-Message-ID: <512F44FD.2040104@slimlogic.co.uk>
-References: <1361970800-31460-1-git-send-email-ian@slimlogic.co.uk> <512EEECF.5090409@nvidia.com>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH 1/4] documentation: add palmas dts definition
+Date: Thu, 28 Feb 2013 12:09:32 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229BCE15@DBDE01.ent.ti.com>
+References: <1361164283-3133-1-git-send-email-j-keerthy@ti.com>
+ <512E5144.9020105@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <512EEECF.5090409@nvidia.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "j-keerthy@ti.com" <j-keerthy@ti.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "cooloney@gmail.com" <cooloney@gmail.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <512E5144.9020105@wwwdotorg.org>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On 28/02/13 05:44, Laxman Dewangan wrote:
-> On Wednesday 27 February 2013 06:43 PM, Ian Lartey wrote:
->> The Palmas familly of chips has LED support. This is not always muxed
->> to output pins so depending on the setting of the mux this driver
->> will create the appropriate LED class devices.
->>
->> Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
->> Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
->> ---
->
-> Patch 1 and 2 can be merged together as this is makefile, Kconfig and
-> driver addition.
+Hello Stephen,
 
-This could cause a merge conflict for anyone adding files/drivers
-in drivers/leds so it's safer to separate the Kconfig and Makefile
-from the actual drver source code so that can go in conflict free.
+Thanks for a detailed review.
 
->
->
->> +
->> +static int palmas_led_read(struct palmas_leds_data *leds, unsigned
->> int reg,
->> +               unsigned int *dest)
->> +{
->> +       unsigned int addr;
->> +
->> +       addr = PALMAS_BASE_TO_REG(PALMAS_LED_BASE, reg);
-> This is not require. Infact doing this will not work.
+> -----Original Message-----
+> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
+> Sent: Thursday, February 28, 2013 12:03 AM
+> To: J, KEERTHY
+> Cc: grant.likely@secretlab.ca; rob.herring@calxeda.com;
+> rob@landley.net; devicetree-discuss@lists.ozlabs.org; linux-
+> doc@vger.kernel.org; linux-kernel@vger.kernel.org; Cousson, Benoit;
+> gg@slimlogic.co.uk
+> Subject: Re: [PATCH 1/4] documentation: add palmas dts definition
+> 
+> On 02/17/2013 10:11 PM, J Keerthy wrote:
+> > Add the DTS definition for the palmas device including the MFD
+> children.
+> ...
+> > diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt
+> > b/Documentation/devicetree/bindings/mfd/palmas.txt
+> ...
+> > +Texas Instruments Palmas family
+> > +
+> > +The Palmas familly are Integrated Power Management Chips.
+> > +These chips are connected to an i2c bus.
+> 
+> s/familly/family.
 
-Yes, of course, thanks for that.
->
-> palmas_read already take care of proper offset.
->          unsigned int addr =  PALMAS_BASE_TO_REG(base, reg);
->          int slave_id = PALMAS_BASE_TO_SLAVE(base);
->
->          return regmap_read(palmas->regmap[slave_id], addr, val);
->
->
-> same for other places also.
+I will correct this.
 
-ditto.
+> 
+> > +
+> > +Required properties:
+> > +- compatible : Must be "ti,palmas";
+> 
+> Do you need a version number there; will there be Palmas v1 HW, then
+> later Palmas v2 HW, and so on?
 
->
->
->>
->> +static void palmas_leds_work(struct work_struct *work)
->> +{
->> +       struct palmas_led *led = container_of(work, struct palmas_led,
->> work);
->> +       unsigned int period, ctrl;
->> +       unsigned long flags;
->> +
->> +       mutex_lock(&led->mutex);
->> +
->> +       palmas_led_read(led->leds_data, PALMAS_LED_CTRL, &ctrl);
->> +       palmas_led_read(led->leds_data, PALMAS_LED_PERIOD_CTRL, &period);
->> +
->> +       spin_lock_irqsave(&led->value_lock, flags);
->> +
->> +       switch (led->led_no) {
->> +       case 1:
->> +               ctrl &= ~PALMAS_LED_CTRL_LED_1_ON_TIME_MASK;
->> +               period &= ~PALMAS_LED_PERIOD_CTRL_LED_1_PERIOD_MASK;
->> +
->
-> case 1,2,3 and 4 looks same, jus shift/mask are changed. I think this
-> can be rewritten here to reduce code size.
+AFAIK there is no HW version.
+ 
+> 
+> > +  For Integrated power-management in the palmas series, twl6035,
+> > + twl6037,
+> > +  tps65913
+> 
+> If this binding represents multiple different chips, compatible should
+> contain both the most chip-specific value (e.g. ti,twl6035 I guess
+> given the above) /and/ the more generic "ti,palmas" value. This will
+> allow any device-specific quirks to be implemented if needed in the
+> future, without having to retrofit the device-specific compatible value
+> into .dts files after the fact.
 
-Will do.
+Ok.
 
->
->
->> +static int palmas_leds_probe(struct platform_device *pdev)
->> +{
->> +       struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
->> +       struct palmas_leds_platform_data *pdata =
->> pdev->dev.platform_data;
->> +       struct palmas_leds_data *leds_data;
->> +       struct device_node *node = pdev->dev.of_node;
->> +       int ret, i;
->> +       int offset = 0;
->> +
->> +       if (!palmas->led_muxed &&
->> !is_palmas_charger(palmas->product_id)) {
->> +               dev_err(&pdev->dev, "there are no LEDs muxed\n");
->> +               return -EINVAL;
->> +       }
->> +
->> +       /* Palmas charger requires platform data */
->> +       if (is_palmas_charger(palmas->product_id) && node && !pdata) {
->> +               pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata),
->> GFP_KERNEL);
->> +
->> +               if (!pdata)
->> +                       return -ENOMEM;
->> +
->> +               ret = palmas_dt_to_pdata(&pdev->dev, node, pdata);
->> +               if (ret)
->> +                       return ret;
->> +       }
->> +
->> +       if (is_palmas_charger(palmas->product_id) && !pdata)
->> +               return -EINVAL;
->> +
->> +       leds_data = kzalloc(sizeof(*leds_data), GFP_KERNEL);
->
-> Use devm_kzalloc().
+> 
+> > +- interrupts : This i2c device has an IRQ line connected to the main
+> > +SoC
+> > +- interrupt-controller : Since the palmas support several interrupts
+> > +internally,
+> > +  it is considered as an interrupt controller cascaded to the SoC
+> one.
+> > +- #interrupt-cells = <1>;
+> 
+> Why not 2; can't any IRQ flags be represented in DT? 1 seems limiting
+> here unless the HW truly can't support configuration of IRQ input
+> polarity of edge-vs-level sensitivity.
 
-Noted.
+>From the register manual I see that only GPIO has the edge detect capability.
+I agree.
 
->
->
->> +
->> +static int  palmas_leds_init(void)
->> +{
->> +       return platform_driver_register(&palmas_leds_driver);
->> +}
->> +module_init(palmas_leds_init);
->> +
->> +static void palmas_leds_exit(void)
->> +{
->> +       platform_driver_unregister(&palmas_leds_driver);
->> +}
->> +module_exit(palmas_leds_exit);
->
-> use Module_platform_driver().
-
-Will do.
-
+> 
+> > +- interrupt-parent : The parent interrupt controller.
+> > +
+> > +Optional node:
+> > +- Child nodes contain in the palmas. The palmas family is made of
+> > +several
+> > +  variants that support a different number of features.
+> > +  The child nodes will thus depend of the capability of the variant.
+> 
+> Are there DT bindings for those child nodes anywhere?
+> 
+> Representing each internal component as a separate DT node feels a
+> little like designing the DT bindings to model the Linux-internal MFD
+> structure. DT bindings should be driven by the HW design and OS-
+> agnostic.
+> 
+> From a DT perspective, is there any need at all to create a separate DT
+> node for each component? This would only be needed or useful if the
+> child IP blocks (and hence DT bindings for those blocks) could be re-
+> used in other top-level devices that aren't represented by this top-
+> level ti,palmas DT binding. Are the HW IP blocks here re-used anywhere,
+> or will they be?
 >
 
+I guess for now I will drop this patch and will be taken up once we
+Finalize on the design.
+ 
+> ...
+> > +Example:
+> > +/*
+> > + * Integrated Power Management Chip Palmas  */
+> > +palmas@48 {
+> 
+> There's a considerable mix of TAB and space indentation in this
+> example.
+> 
+> > +    compatible = "ti,palmas";
+> > +    reg = <0x48>;
+> > +    interrupts = <39>; /* IRQ_SYS_1N cascaded to gic */
+> 
+> If that's routed to a regular ARM GIC, then I think you need extra
+> cells there; #interrupt-cells=<3> for the ARM GIC.
+> 
+> > +    interrupt-controller;
+> > +    #interrupt-cells = <1>;
+> > +    interrupt-parent = <&gic>;
+> > +    #address-cells = <1>;
+> > +    #size-cells = <0>;
+> > +
+> > +	ti,mux-pad1 = <0x00>;
+> > +	ti,mux-pad2 = <0x00>;
+> > +	ti,power-ctrl = <0x03>;
+> > +
+> > +	palmas_pmic {
+> 
+> Just "pmic" seems simpler, although I dare say the node name isn't
+> really used for anything.
+> 
+> > +		compatible = "ti,palmas_pmic";
+> 
+> Using _ in compatible values isn't common. "ti,palmas-pmic" instead?
+> 
+> > +		regulators {
+> > +			smps12_reg: smps12 {
+> 
+> As I mentioned elsewhere, this binding (or a separate binding doc for
+> "ti,palmas_pmic") should contain a list of valid values for these node
+> names.
+> 
+> > +				regulator-min-microvolt = < 600000>;
+> > +                regulator-max-microvolt = <1500000>;
+> > +				regulator-always-on;
+> > +				regulator-boot-on;
+> > +                ti,warm-sleep = <0>;
+> > +                ti,roof-floor = <0>;
+> > +                ti,mode-sleep = <0>;
+> > +                ti,warm-reset = <0>;
+> > +                ti,tstep = <0>;
+> > +                ti,vsel = <0>;
+> > +			};
+> > +		};
+> > +		ti,ldo6-vibrator = <0>;
+> > +	};
+> > +
+> > +    palmas_rtc {
+> > +        compatible = "ti,palmas_rtc";
+> > +        interrupts = <8 9>;
+> 
+> Are the interrupt outputs of the RTC fed directly to the GIC interrupt
+> mentioned in the top-level Palmas node, or do these interrupts feed
+> into a top-level IRQ controller in the Palmas device, which then feeds
+> into the external IRQ controller?
+> 
+> If these feed into an on-chip IRQ controller, then you'd need an
+> interrupt-parent property here to indicate that.
+> 
+> If these feed directly into an external IRQ controller, it's almost
+> certain that IRQ controller's binding uses #interrupt-cells = <3> it
+> is's the ARM GIC, and hence you need some extra cells here.
+> 
+> > +        reg = <0>;
+> > +    };
+> > +};
 
-Thanks,
-
-Ian
