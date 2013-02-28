@@ -1,80 +1,101 @@
-From: Dinh Nguyen <dinguyen@altera.com>
-Subject: Re: [PATCH v9 0/4] Add generic driver for on-chip SRAM
-Date: Thu, 28 Feb 2013 09:51:58 -0600
-Message-ID: <1362066718.20662.2.camel@linux-builds1>
-References: <1360770402-23091-1-git-send-email-p.zabel@pengutronix.de>
+From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 04/14] ARM: OMAP2+: Add function for configuring GPMC
+ settings
+Date: Thu, 28 Feb 2013 09:52:56 -0600
+Message-ID: <512F7D58.90706@ti.com>
+References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com>
+ <1361899842-30303-5-git-send-email-jon-hunter@ti.com>
+ <518397C60809E147AF5323E0420B992E3EA8F007@DBDE01.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1360770402-23091-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@freescale.com>, Matt Porter <mporter@ti.com>, Dong Aisheng <dong.aisheng@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Richard Zhao <richard.zhao@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, Huang Shijie <shijie8@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <518397C60809E147AF5323E0420B992E3EA8F007-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: "Philip, Avinash" <avinashphilip-l0cyMroinI0@public.gmane.org>
+Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Philipp,
 
-On Wed, 2013-02-13 at 16:46 +0100, Philipp Zabel wrote:
-> These patches add support to configure on-chip SRAM via device-tree
-> node or platform data and to obtain the resulting genalloc pool from
-> the struct device pointer or a phandle pointing at the device tree node.
-> This allows drivers to allocate SRAM with the genalloc API without
-> hard-coding the genalloc pool pointer.
+On 02/28/2013 12:05 AM, Philip, Avinash wrote:
+> On Tue, Feb 26, 2013 at 23:00:31, Hunter, Jon wrote:
+>> The GPMC has various different configuration options such as bus-width,
+>> synchronous or asychronous mode selection, burst mode options etc.
+>> Currently, there is no common function for configuring these options and
+>> various devices set these options by either programming the GPMC CONFIG1
+>> register directly or by calling gpmc_cs_configure() to set some of the
+>> options.
+>>
+>> Add a new function for configuring all of the GPMC options. Having a common
+>> function for configuring this options will simplify code and ease the
+>> migration to device-tree.
+>>
+>> Signed-off-by: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  arch/arm/mach-omap2/gpmc.c |   65 ++++++++++++++++++++++++++++++++++++++++++++
+>>  arch/arm/mach-omap2/gpmc.h |    6 ++++
+>>  2 files changed, 71 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+>> index 465cac9..fb8dfd2 100644
+>> --- a/arch/arm/mach-omap2/gpmc.c
+>> +++ b/arch/arm/mach-omap2/gpmc.c
+>> @@ -1137,6 +1137,71 @@ int gpmc_calc_timings(struct gpmc_timings *gpmc_t,
+>>  	return 0;
+>>  }
+>>  
+>> +int gpmc_cs_program_settings(int cs, struct gpmc_settings *p)
+>> +{
+>> +	u32 config1;
+>> +
+>> +	if ((!p->device_width) || (p->device_width > GPMC_DEVWIDTH_16BIT)) {
+>> +		pr_err("%s: invalid width %d!", __func__, p->device_width);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/* Address-data multiplexing not supported for NAND devices */
+>> +	if (p->device_nand && p->mux_add_data) {
+>> +		pr_err("%s: invalid configuration!\n", __func__);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	/* Page/burst mode supports lengths of 4, 8 and 16 bytes */
+>> +	if (p->burst_read || p->burst_write) {
+>> +		switch (p->burst_len) {
+>> +		case GPMC_BURST_4:
+>> +		case GPMC_BURST_8:
+>> +		case GPMC_BURST_16:
+>> +			break;
+>> +		default:
+>> +			pr_err("%s: invalid page/burst-length (%d)\n",
+>> +			       __func__, p->burst_len);
+>> +			return -EINVAL;
+>> +		}
+>> +	}
+>> +
+>> +	if ((p->wait_on_read || p->wait_on_write) &&
+>> +	    (p->wait_pin > gpmc_nr_waitpins)) {
+>> +		pr_err("%s: invalid wait-pin (%d)\n", __func__, p->wait_pin);
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	config1 = GPMC_CONFIG1_DEVICESIZE((p->device_width - 1));
 > 
-> The on-chip SRAM on i.MX53 and i.MX6q can be registered via device tree
-> and changed to use the simple generic SRAM driver:
-> 
->                 ocram: ocram@00900000 {
->                         compatible = "fsl,imx-ocram", "mmio-sram";
->                         reg = <0x00900000 0x3f000>;
->                 };
-> 
-> A driver that needs to allocate SRAM buffers, like the video processing
-> unit on i.MX53, can retrieve the genalloc pool from a phandle in the
-> device tree using of_get_named_gen_pool(node, "iram", 0) from patch 1:
-> 
->                 vpu@63ff4000 {
->                         /* ... */
->                         iram = <&ocram>;
->                 };
-> 
-> Changes since v8:
->  - The sram driver now matches against the "mmio-sram" compatible string.
->  - Removed a whitespace error in the device tree binding documentation.
-> 
-> regards
-> Philipp
-> 
-> ---
->  Documentation/devicetree/bindings/media/coda.txt |   30 ++++++
->  Documentation/devicetree/bindings/misc/sram.txt  |   16 +++
->  arch/arm/boot/dts/imx53.dtsi                     |    5 +
->  arch/arm/boot/dts/imx6q.dtsi                     |    6 ++
->  drivers/media/platform/Kconfig                   |    1 -
->  drivers/media/platform/coda.c                    |   45 +++++---
->  drivers/misc/Kconfig                             |    9 ++
->  drivers/misc/Makefile                            |    1 +
->  drivers/misc/sram.c                              |  121 ++++++++++++++++++++++
->  include/linux/genalloc.h                         |   15 +++
->  include/linux/platform_data/coda.h               |   18 ++++
->  lib/genalloc.c                                   |   81 +++++++++++++++
->  12 files changed, 333 insertions(+), 15 deletions(-)
-> 
+> Can you consider read_modify approach?
 
-Sorry the late comment, with this patch I think you can probably remove:
+I was purposely trying to avoid that. The intent here is to program all
+the settings and get away from any boot-loader dependencies. If we use a
+read-modify approach then it will never be clear in the kernel what
+should actually be programmed.
 
-linux/platform_data/imx-iram.himx-iram.h
-mach-imx/iram_alloc.c
-
-
-I don't see any usage of iram_init except for coda.
-
-Dinh
-
-
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+Cheers
+Jon
