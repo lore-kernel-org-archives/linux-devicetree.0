@@ -1,55 +1,80 @@
-From: Ian Lartey <ian@slimlogic.co.uk>
-Subject: [PATCH v2 2/2] leds: Kconfig for Palmas LEDs
-Date: Thu, 28 Feb 2013 15:21:49 +0000
-Message-ID: <1362064909-634-2-git-send-email-ian@slimlogic.co.uk>
-References: <1362064909-634-1-git-send-email-ian@slimlogic.co.uk>
+From: Dinh Nguyen <dinguyen@altera.com>
+Subject: Re: [PATCH v9 0/4] Add generic driver for on-chip SRAM
+Date: Thu, 28 Feb 2013 09:51:58 -0600
+Message-ID: <1362066718.20662.2.camel@linux-builds1>
+References: <1360770402-23091-1-git-send-email-p.zabel@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1362064909-634-1-git-send-email-ian@slimlogic.co.uk>
+In-Reply-To: <1360770402-23091-1-git-send-email-p.zabel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-leds@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, ldewangan@nvidia.com, j-keerthy@ti.com, gg@slimlogic.co.uk, cooloney@gmail.com, rpurdie@rpsys.net, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com, broonie@opensource.wolfsonmicro.com, Ian Lartey <ian@slimlogic.co.uk>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, Fabio Estevam <fabio.estevam@freescale.com>, Matt Porter <mporter@ti.com>, Dong Aisheng <dong.aisheng@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>, Paul Gortmaker <paul.gortmaker@windriver.com>, Richard Zhao <richard.zhao@freescale.com>, Javier Martin <javier.martin@vista-silicon.com>, kernel@pengutronix.de, Huang Shijie <shijie8@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the Kconfig and Makefile for the Palmas LED driver.
+Hi Philipp,
 
-Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
-Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
----
- drivers/leds/Kconfig  |    9 +++++++++
- drivers/leds/Makefile |    1 +
- 2 files changed, 10 insertions(+), 0 deletions(-)
+On Wed, 2013-02-13 at 16:46 +0100, Philipp Zabel wrote:
+> These patches add support to configure on-chip SRAM via device-tree
+> node or platform data and to obtain the resulting genalloc pool from
+> the struct device pointer or a phandle pointing at the device tree node.
+> This allows drivers to allocate SRAM with the genalloc API without
+> hard-coding the genalloc pool pointer.
+> 
+> The on-chip SRAM on i.MX53 and i.MX6q can be registered via device tree
+> and changed to use the simple generic SRAM driver:
+> 
+>                 ocram: ocram@00900000 {
+>                         compatible = "fsl,imx-ocram", "mmio-sram";
+>                         reg = <0x00900000 0x3f000>;
+>                 };
+> 
+> A driver that needs to allocate SRAM buffers, like the video processing
+> unit on i.MX53, can retrieve the genalloc pool from a phandle in the
+> device tree using of_get_named_gen_pool(node, "iram", 0) from patch 1:
+> 
+>                 vpu@63ff4000 {
+>                         /* ... */
+>                         iram = <&ocram>;
+>                 };
+> 
+> Changes since v8:
+>  - The sram driver now matches against the "mmio-sram" compatible string.
+>  - Removed a whitespace error in the device tree binding documentation.
+> 
+> regards
+> Philipp
+> 
+> ---
+>  Documentation/devicetree/bindings/media/coda.txt |   30 ++++++
+>  Documentation/devicetree/bindings/misc/sram.txt  |   16 +++
+>  arch/arm/boot/dts/imx53.dtsi                     |    5 +
+>  arch/arm/boot/dts/imx6q.dtsi                     |    6 ++
+>  drivers/media/platform/Kconfig                   |    1 -
+>  drivers/media/platform/coda.c                    |   45 +++++---
+>  drivers/misc/Kconfig                             |    9 ++
+>  drivers/misc/Makefile                            |    1 +
+>  drivers/misc/sram.c                              |  121 ++++++++++++++++++++++
+>  include/linux/genalloc.h                         |   15 +++
+>  include/linux/platform_data/coda.h               |   18 ++++
+>  lib/genalloc.c                                   |   81 +++++++++++++++
+>  12 files changed, 333 insertions(+), 15 deletions(-)
+> 
 
-diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
-index ec50824..a070e29 100644
---- a/drivers/leds/Kconfig
-+++ b/drivers/leds/Kconfig
-@@ -469,6 +469,15 @@ config LEDS_BLINKM
- 	  This option enables support for the BlinkM RGB LED connected
- 	  through I2C. Say Y to enable support for the BlinkM LED.
- 
-+config LEDS_PALMAS
-+	bool "LED support for the Palmas family of PMICs"
-+	depends on LEDS_CLASS
-+	depends on MFD_PALMAS
-+	help
-+	  This option enables the driver for LED1 & LED2 pins on Palmas PMIC
-+	  if these pins are enabled in the mux configuration. The driver support
-+	  ON/OFF and blinking with hardware control.
-+
- config LEDS_TRIGGERS
- 	bool "LED Trigger support"
- 	depends on LEDS_CLASS
-diff --git a/drivers/leds/Makefile b/drivers/leds/Makefile
-index 215e7e3..233023e 100644
---- a/drivers/leds/Makefile
-+++ b/drivers/leds/Makefile
-@@ -52,6 +52,7 @@ obj-$(CONFIG_LEDS_RENESAS_TPU)		+= leds-renesas-tpu.o
- obj-$(CONFIG_LEDS_MAX8997)		+= leds-max8997.o
- obj-$(CONFIG_LEDS_LM355x)		+= leds-lm355x.o
- obj-$(CONFIG_LEDS_BLINKM)		+= leds-blinkm.o
-+obj-$(CONFIG_LEDS_PALMAS)		+= leds-palmas.o
- 
- # LED SPI Drivers
- obj-$(CONFIG_LEDS_DAC124S085)		+= leds-dac124s085.o
--- 
-1.7.0.4
+Sorry the late comment, with this patch I think you can probably remove:
+
+linux/platform_data/imx-iram.himx-iram.h
+mach-imx/iram_alloc.c
+
+
+I don't see any usage of iram_init except for coda.
+
+Dinh
+
+
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss@lists.ozlabs.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+> 
