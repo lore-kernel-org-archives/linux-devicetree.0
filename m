@@ -1,57 +1,83 @@
-From: javier Martin <javier.martin@vista-silicon.com>
-Subject: Re: [PATCH v2 3/3] crypto: sahara: Add device tree binding for SAHARA2.
-Date: Thu, 28 Feb 2013 08:51:14 +0100
-Message-ID: <CACKLOr3h8vNbZCV8HgL2EHtYxLPH+xmueM=JQa4MdRwDbSmiwg@mail.gmail.com>
-References: <1361961711-4603-1-git-send-email-javier.martin@vista-silicon.com>
-	<1361961711-4603-4-git-send-email-javier.martin@vista-silicon.com>
-	<20130227200530.GN1906@pengutronix.de>
+From: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH]qonverge/usb: Add first usb controller node
+Date: Thu, 28 Feb 2013 14:16:45 +0530
+Message-ID: <1362041205-18171-1-git-send-email-ramneek.mehresh@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130227200530.GN1906@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, davem@davemloft.net, herbert@gondor.apana.org.au, kernel@pengutronix.de, gcembed@gmail.com, shawn.guo@linaro.org, arnd@arndb.de, swarren@nvidia.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: kumar.gala-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 27 February 2013 21:05, Sascha Hauer <s.hauer@pengutronix.de> wrote:
-> Hi Javier,
->
-> On Wed, Feb 27, 2013 at 11:41:51AM +0100, Javier Martin wrote:
->>
->> Signed-off-by: Javier Martin <javier.martin@vista-silicon.com>
->> ---
->>  .../devicetree/bindings/crypto/fsl-imx-sahara.txt  |   14 ++++++++++++++
->>  1 file changed, 14 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/crypto/fsl-imx-sahara.txt
->>
->> diff --git a/Documentation/devicetree/bindings/crypto/fsl-imx-sahara.txt b/Documentation/devicetree/bindings/crypto/fsl-imx-sahara.txt
->> new file mode 100644
->> index 0000000..44abf11
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/crypto/fsl-imx-sahara.txt
->> @@ -0,0 +1,14 @@
->> +* Freescale i.MX SAHARA Cryptographic Accelerator
->> +
->> +Required properties:
->> +- compatible : Should be "fsl,<soc>-sahara"
->
-> Please add explicitly which SoCs are supported.
->
-> You can fold this patch into the driver patch. This way people reading
-> the commit history have a direct cross link between the driver and the
-> documentation.
+Add first usb controller node for qonverge qoriq platforms like
+B4860, etc
 
-OK Sascha. Thanks.
+Signed-off-by: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+Applies on git://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc.git
+(branch next)
 
-As we discussed previously it seems only i.MX27 is supported right now.
+ arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi | 41 +++++++++++++++++++++++
+ 1 file changed, 41 insertions(+)
+ create mode 100644 arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi
 
-
+diff --git a/arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi b/arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi
+new file mode 100644
+index 0000000..29dad72
+--- /dev/null
++++ b/arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi
+@@ -0,0 +1,41 @@
++/*
++ * QorIQ Qonverge USB Host device tree stub [ controller @ offset 0x210000 ]
++ *
++ * Copyright 2013 Freescale Semiconductor Inc.
++ *
++ * Redistribution and use in source and binary forms, with or without
++ * modification, are permitted provided that the following conditions are met:
++ *     * Redistributions of source code must retain the above copyright
++ *       notice, this list of conditions and the following disclaimer.
++ *     * Redistributions in binary form must reproduce the above copyright
++ *       notice, this list of conditions and the following disclaimer in the
++ *       documentation and/or other materials provided with the distribution.
++ *     * Neither the name of Freescale Semiconductor nor the
++ *       names of its contributors may be used to endorse or promote products
++ *       derived from this software without specific prior written permission.
++ *
++ *
++ * ALTERNATIVELY, this software may be distributed under the terms of the
++ * GNU General Public License ("GPL") as published by the Free Software
++ * Foundation, either version 2 of that License or (at your option) any
++ * later version.
++ *
++ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
++ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
++ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
++ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
++ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
++ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
++ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
++ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
++ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
++ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
++ */
++
++usb@210000 {
++	compatible = "fsl-usb2-dr";
++	reg = <0x210000 0x1000>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	interrupts = <44 0x2 0 0>;
++};
 -- 
-Javier Martin
-Vista Silicon S.L.
-CDTUC - FASE C - Oficina S-345
-Avda de los Castros s/n
-39005- Santander. Cantabria. Spain
-+34 942 25 32 60
-www.vista-silicon.com
+1.7.11.4
