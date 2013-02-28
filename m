@@ -1,91 +1,128 @@
-From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC v2 2/3] power: power_supply: Add core support for supplied_nodes
-Date: Thu, 28 Feb 2013 14:54:24 -0500
-Message-ID: <512FB5F0.3090805@nvidia.com>
-References: <1361488272-21010-1-git-send-email-rklein@nvidia.com> <1361488272-21010-3-git-send-email-rklein@nvidia.com> <5127CBD9.9050501@wwwdotorg.org> <5127E95E.4010500@nvidia.com> <5127F8B5.10002@wwwdotorg.org>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
+Date: Thu, 28 Feb 2013 14:49:03 -0600
+Message-ID: <512FC2BF.3030106@ti.com>
+References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com> <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com> <512D39DA.7020306@ti.com> <512D3AB1.1080202@wwwdotorg.org> <512D3EC2.6050408@ti.com> <512D3FE6.1010300@wwwdotorg.org> <512D490B.70900@ti.com> <512D4FC4.2060505@wwwdotorg.org> <512D5C58.4090500@ti.com> <CAAwP0s3rbExrSf-W325uCPfMO=Zk9LefRP0VD4JC1tg_sxS_gQ@mail.gmail.com> <512E93B9.8020806@ti.com> <CAAwP0s0ncaZx4F6KuLGihyrykRssyFtb5euCNRutriANH=z4Ng@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5127F8B5.10002-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CAAwP0s0ncaZx4F6KuLGihyrykRssyFtb5euCNRutriANH=z4Ng@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <martinez.javier@gmail.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 2/22/2013 6:01 PM, Stephen Warren wrote:
-> On 02/22/2013 02:55 PM, Rhyland Klein wrote:
->> On 2/22/2013 2:49 PM, Stephen Warren wrote:
->>> On 02/21/2013 04:11 PM, Rhyland Klein wrote:
->>>> With the growing support for dt, it make sense to try to make use of
->>>> dt features to make the general code cleaner. This patch is an
->>>> attempt to commonize how chargers and their supplies are linked.
->>>>
->>>> Following common dt convention, the "supplied-to" char** list is
->>>> replaced with phandle lists defined in the supplies which contain
->>>> phandles of their suppliers.
->>>>
->>>> This has the effect however of introducing an inversion in the internal
->>>> mechanics of how this information is stored. In the case of non-dt,
->>>> the char** list of supplies is stored in the charger. In the dt case,
->>>> a device_node * list is stored in the supplies of their chargers,
->>>> however this seems to be the only way to support this.
->>> When parsing the DT, you can convert from phandle (or struct device_node
->>> *) to the name of the referenced supply by simple lookup. So, you could
->>> store supply names rather than device_node *. Can't you then also fill
->>> in the referenced supply's existing char** list of supplies?
+
+On 02/28/2013 06:17 AM, Javier Martinez Canillas wrote:
+> On Thu, Feb 28, 2013 at 12:16 AM, Jon Hunter <jon-hunter@ti.com> wrote:
+>>
+>> On 02/26/2013 09:57 PM, Javier Martinez Canillas wrote:
+>>
+>> [snip]
+>>
+>>> Something like that would definitely solve the GPIO request issue but
+>>> we still have the issue that the current OMAP GPIO controller binding
+>>> does not support #interrupt-cells = <2>.
 >>>
->>> Of course, making this interact-with/use -EPROBE_DEFERRED might be
->>> challenging, since this would be operating in the inverse order to other
->>> producer/consumer relationships, which might cause loops.
->> The main problem I ran into when I was essentially trying to do this,
->> was that the list of names that
->> are used to match the power_supplies are the strings set as "name" in
->> the power_supply structs. This
->> doesn't get set automatically based on their nodes, and it is currently
->> up to each driver to define their
->> own name.
+>>> So, we can't pass the trigger type and level flags for an IRQ-GPIO
+>>> when using an GPIO controller as the interrupt-parent for a device
+>>> node.
+>>>
+>>> Do you have any comments on that issue?
 >>
->> For example, the sbs-battery driver uses the name "sbs-XXX" where XX is
->> its dev_name. Other drivers
->> use "%s-$%d" as i2c_device_id->name, + instance number. Then the only
->> solution I see is to require a new
->> property that defines the power-supply's name in the devicetree.
+>> Can you elaborate a bit more on why you say this is not supported?
 >>
->> This solution with device_nodes, while not ideal, seems the be the best
->> bet from what I see. Maybe
->> someone else has a better idea.
-> For other resource types, this is handled by the (phandle -> whatever)
-> conversion process actually being a function call on the referenced
-> object, so that the driver code for it can look up the data in the
-> actual device/... object etc. See the various .of_xlate functions that
-> exist in the kernel.
+>> I have been playing with this today on an omap board and if I set the
+>> #interrupt-cells = <2>, then I do see that irq_domain_xlate_onetwocell()
+>> is called and the irq number and flags read as expected. Following which
+>> I then see it will call the omap_irq_type() to set type. So AFAICT it works.
+>>
+> 
+> Yes, it does.
+> 
+> I (wrongly) assumed that it was not working since the GPIO OMAP
+> binding documentation says that #interrupt-cells should be <2> but all
+> OMAP2+ DTs use <1> instead. Also, when trying to change to <2> I had
+> the kernel hang.
+> 
+> But it was indeed that the GPIO bank was not enabled before calling
+> gpio_irq_type() and this made the kernel to hang. Your patch fixed the
+> issue and allowed me to find the cause.
+> 
+> The problem was that when using the DT hack of defining the GPIO in
+> the ethernet chip regulator,  the calls to
+> irq_domain_xlate_onetwocell() and gpio_irq_type() were made before the
+> call to gpio_request_one() so the GPIO bank was not enabled.
+> 
+> If gpio_request() is called in gpmc_probe_dt(), then the GPIO bank is
+> enabled and gpio_irq_type() succeeds.
+> 
+> So, it was just me being stupid and don't understanding the implementation.
 
-I think this makes sense assuming we can change the existing supplies_to 
-property
-to match this style so that there isn't an inversion in the 2 paths.
+No problem. Glad we are on the same page :-)
 
-Then I think the idea of an of_xlate function would work fine given that 
-there are no
-circular dependencies (causes issues with -EPROBE_DEFER). If that is the 
-case, then
-we could add a step to power_supply registration where it would generate the
-char * list of supplies and store it in the power_supply being 
-registered. In that way,
-from then on, it wouldn't matter how the power_supply was registered, 
-and the list
-of supplies would be the same in either case.
+>> Please note I do see that when the SMC driver calls request_irq() in
+>> smc_drv_probe() it is also settings the trigger type to
+>> IRQ_TYPE_EDGE_RISING (default). So if you are setting to low-level
+>> sensitive in DT, then this is being overwritten. We could fix this by
+>> setting SMC_IRQ_FLAGS to -1 for OMAP.
+>>
+> 
+> Please note that I'm using a SMSC 911x chip and not a SMSC 91x, so the
+> driver is not smc91x but smc911x. It has the same behaviour though
+> (IRQ flags overwritten somehow), just to be sure that we are on the
+> same page.
+> 
+> I don't know if just setting SMC_IRQ_FLAGS to -1 will be enough to fix
+> the smc91x since request_irq() is just passing whatever value is in
+> irq_flags.
+> 
+> By looking at the two drivers (smc91x and smsc911x) it seems that the
+> only difference on how they manage the flags is that smc91x does:
+> 
+> unsigned long irq_flags = SMC_IRQ_FLAGS;
+> ...
+>        if (irq_flags == -1 || ires->flags & IRQF_TRIGGER_MASK)
+>                 irq_flags = ires->flags & IRQF_TRIGGER_MASK;
+> 
+> while smsc911x driver's probe function uses the flags from the
+> resource unconditionally:
+> 
+> irq_flags = irq_res->flags & IRQF_TRIGGER_MASK;
+> 
+> So, at the end both will set irq_flags to whatever is on the
+> IORESOURCE_IRQ struct resource flags member.
 
-Anton, David, have you seen it, or can you potentially see a case where 
-circular
-dependencies could arise? I can't but maybe you know of a situation I don't.
+Actually, that's not the case for smc91x. By default SMC_IRQ_FLAGS != -1
+(for omap) and so it will not set irq_flags to ires->flags &
+IRQF_TRIGGER_MASK. However, if I force irq_flags to be -1, then I see
+that irq_flags are to 0.
 
-I will start working on patches to support this, including changing the way
-supplied_to currently works, while I await answers whether or not it 
-would be
-acceptable.
+> The real problem is irq_flags to be 0 instead of the value defined on
+> the second cell of the "interrupts" property.
 
--rhyland
+So the resource flags for each irq is set in
+of_irq_to_resource() which just does ...
 
--- 
-nvpublic
+	r->start = r->end = irq;
+	r->flags = IORESOURCE_IRQ;
+	r->name = name ? name : dev->full_name;
+
+
+of_irq_to_resource() calls irq_to_parse_and_map() which eventually just
+calls irq_set_irq_type() but type/flags is not returned and not populated.
+
+I am wondering if this is intentional. The irq_type is being correctly
+configured by irq_set_irq_type() when of_irq_to_resource() is called. In
+the smc driver, if irq_flags are 0, then when request_irq() is called
+the trigger type will not be set again (which is ok). __setup_irq has
+the following ...
+
+	/* Setup the type (level, edge polarity) if configured: */
+	if (new->flags & IRQF_TRIGGER_MASK) {
+		ret = __irq_set_trigger(desc, irq,
+			new->flags & IRQF_TRIGGER_MASK);
+
+Cheers
+Jon
