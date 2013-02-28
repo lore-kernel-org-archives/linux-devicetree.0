@@ -1,78 +1,59 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/5 v7][RFC] ASoC: simple-card: add Device Tree support
-Date: Thu, 28 Feb 2013 12:16:05 -0700
-Message-ID: <512FACF5.1030608@wwwdotorg.org>
-References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
- <20130127035943.GJ4650@opensource.wolfsonmicro.com>
- <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
- <20130129014808.GC4748@opensource.wolfsonmicro.com>
- <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
- <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
- <5107FF97.1070601@wwwdotorg.org>
- <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
- <51097F0F.2030501@wwwdotorg.org>
- <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
- <5110349D.3050308@wwwdotorg.org>
- <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
- <87bobzrry6.wl%kuninori.morimoto.gx@renesas.com>
- <511963F8.5020107@wwwdotorg.org>
- <87bobqf5yq.wl%kuninori.morimoto.gx@renesas.com>
- <511C22E2.60701@wwwdotorg.org>
- <87obfnofsx.wl%kuninori.morimoto.gx@renesas.com>
- <511C6A1B.9000507@wwwdotorg.org>
- <874nhfv5mb.wl%kuninori.morimoto.gx@renesas.com>
- <8738wzuu9g.wl%kuninori.morimoto.gx@renesas.com>
- <87a9qsg4lp.wl%kuninori.morimoto.gx@renesas.com>
- <87lia9tg1r.wl%kuninori.morimoto.gx@renes as.com>
+From: Rhyland Klein <rklein@nvidia.com>
+Subject: Re: [RFC v2 2/3] power: power_supply: Add core support for supplied_nodes
+Date: Thu, 28 Feb 2013 14:48:03 -0500
+Message-ID: <512FB473.8060309@nvidia.com>
+References: <1361488272-21010-1-git-send-email-rklein@nvidia.com> <1361488272-21010-3-git-send-email-rklein@nvidia.com> <5127D083.6020308@wwwdotorg.org> <5127EA13.9010403@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <87lia9tg1r.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5127EA13.9010403@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Anton Vorontsov <cbou@mail.ru>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/27/2013 05:53 PM, Kuninori Morimoto wrote:
-> 
-> Hi Stephen
-> 
-> Thank you for your reply
-> 
->>> Support for loading the simple-card module via devicetree.
->>> It requests cpu/codec information,
->>> and .of_xlate_dai_name support on each driver for probing.
->>
->>> diff --git a/Documentation/devicetree/bindings/sound/simple-card.txt b/Documentation/devicetree/bindings/sound/simple-card.txt
->>
->>
->>> +Optional properties:
->> ...
->>> +- simple-audio,bitclock-inversion	: bit clock inversion for both CPU/CODEC
->>> +- simple-audio,frame-inversion		: frame inversion for both CPU/CODEC
->>
->> I think that Mark pointed out those would be best stored in the CPU and
->> CODEC child nodes, since random buffering/inverting on the board might
->> make the values at the two DAIs the opposite of each-other.
-> 
-> Sub node has same properties too,
-> and this is hybrid result of your/Mark comments.
-> 
-> If "sound node" has these properties, these will go to both CPU/CODEC,
-> this means "cpu/codec common properties"
-> if "cpu/codec sub node" has it, it will go to itself only.
-> I guess "common property" is useful ?
+On 2/22/2013 4:58 PM, Rhyland Klein wrote:
+> On 2/22/2013 3:09 PM, Stephen Warren wrote:
+>> On 02/21/2013 04:11 PM, Rhyland Klein wrote:
+>>> With the growing support for dt, it make sense to try to make use of
+>>> dt features to make the general code cleaner. This patch is an
+>>> attempt to commonize how chargers and their supplies are linked.
+>>>
+>>> Following common dt convention, the "supplied-to" char** list is
+>>> replaced with phandle lists defined in the supplies which contain
+>>> phandles of their suppliers.
+>>>
+>>> This has the effect however of introducing an inversion in the internal
+>>> mechanics of how this information is stored. In the case of non-dt,
+>>> the char** list of supplies is stored in the charger. In the dt case,
+>>> a device_node * list is stored in the supplies of their chargers,
+>>> however this seems to be the only way to support this.
+>> grep over the whole kernel tree for supplied_to doesn't yield /too/ many
+>> hits, although I didn't look at the complexity of most of them. Would it
+>> be possible to invert all the current in-kernel uses to represent a
+>> supplied_from/by model instead? That would mean the proposed DT binding
+>> would then represent the same relationship ordering as the kernel code,
+>> which would be easier to handle.
+> I think it is surely possible to change all the existing drivers to the
+> inverse logic as
+> you suggested. That might make a good follow patchset.
+>
+> -rhyland
+>
 
-OK, that makes sense. I didn't get that impression from reading the DT
-binding document though. Perhaps I read it too fast. The document should
-explicitly mention which nodes those properties can exist in.
+Anton, David, would you be adverse to the changing of supplied_to from 
+being a
+list of batteries stored in a charger to being a list of chargers stored 
+in batteries?
+
+(I only use terms charger and batteries as it is much clearer for me to 
+read in place
+of terms like supplier and supply which are more accurate but much more 
+confusing
+when used together).
+
+-rhyland
+
+-- 
+nvpublic
