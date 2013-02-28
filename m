@@ -1,83 +1,79 @@
-From: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH]qonverge/usb: Add first usb controller node
-Date: Thu, 28 Feb 2013 14:16:45 +0530
-Message-ID: <1362041205-18171-1-git-send-email-ramneek.mehresh@freescale.com>
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: Re: [PATCH 1/4] documentation: add palmas dts definition
+Date: Thu, 28 Feb 2013 14:22:47 +0530
+Message-ID: <512F1ADF.90906@nvidia.com>
+References: <1361164283-3133-1-git-send-email-j-keerthy@ti.com> <512E5144.9020105@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: kumar.gala-KZfg59tc24xl57MIdRCFDg@public.gmane.org, Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <512E5144.9020105@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: J Keerthy <j-keerthy@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "b-cousson@ti.com" <b-cousson@ti.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Add first usb controller node for qonverge qoriq platforms like
-B4860, etc
+On Thursday 28 February 2013 12:02 AM, Stephen Warren wrote:
+> On 02/17/2013 10:11 PM, J Keerthy wrote:
+> +- interrupt-parent : The parent interrupt controller.
+> +
+> +Optional node:
+> +- Child nodes contain in the palmas. The palmas family is made of several
+> +  variants that support a different number of features.
+> +  The child nodes will thus depend of the capability of the variant.
+> Are there DT bindings for those child nodes anywhere?
+>
+> Representing each internal component as a separate DT node feels a
+> little like designing the DT bindings to model the Linux-internal MFD
+> structure. DT bindings should be driven by the HW design and OS-agnostic.
+>
+>  From a DT perspective, is there any need at all to create a separate DT
+> node for each component? This would only be needed or useful if the
+> child IP blocks (and hence DT bindings for those blocks) could be
+> re-used in other top-level devices that aren't represented by this
+> top-level ti,palmas DT binding. Are the HW IP blocks here re-used
+> anywhere, or will they be?
 
-Signed-off-by: Ramneek Mehresh <ramneek.mehresh-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
----
-Applies on git://git.kernel.org/pub/scm/linux/kernel/git/galak/powerpc.git
-(branch next)
 
- arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi | 41 +++++++++++++++++++++++
- 1 file changed, 41 insertions(+)
- create mode 100644 arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi
+I dont think that child IP block can be used outside of the palma 
+although other mfd device may have same IP.
 
-diff --git a/arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi b/arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi
-new file mode 100644
-index 0000000..29dad72
---- /dev/null
-+++ b/arch/powerpc/boot/dts/fsl/qonverge-usb2-dr-0.dtsi
-@@ -0,0 +1,41 @@
-+/*
-+ * QorIQ Qonverge USB Host device tree stub [ controller @ offset 0x210000 ]
-+ *
-+ * Copyright 2013 Freescale Semiconductor Inc.
-+ *
-+ * Redistribution and use in source and binary forms, with or without
-+ * modification, are permitted provided that the following conditions are met:
-+ *     * Redistributions of source code must retain the above copyright
-+ *       notice, this list of conditions and the following disclaimer.
-+ *     * Redistributions in binary form must reproduce the above copyright
-+ *       notice, this list of conditions and the following disclaimer in the
-+ *       documentation and/or other materials provided with the distribution.
-+ *     * Neither the name of Freescale Semiconductor nor the
-+ *       names of its contributors may be used to endorse or promote products
-+ *       derived from this software without specific prior written permission.
-+ *
-+ *
-+ * ALTERNATIVELY, this software may be distributed under the terms of the
-+ * GNU General Public License ("GPL") as published by the Free Software
-+ * Foundation, either version 2 of that License or (at your option) any
-+ * later version.
-+ *
-+ * THIS SOFTWARE IS PROVIDED BY Freescale Semiconductor ``AS IS'' AND ANY
-+ * EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-+ * WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-+ * DISCLAIMED. IN NO EVENT SHALL Freescale Semiconductor BE LIABLE FOR ANY
-+ * DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-+ * (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-+ * LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
-+ * ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-+ * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-+ */
-+
-+usb@210000 {
-+	compatible = "fsl-usb2-dr";
-+	reg = <0x210000 0x1000>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	interrupts = <44 0x2 0 0>;
-+};
--- 
-1.7.11.4
+The child driver very much used the palma's API for register access and 
+they can not be separated untill driver is write completely independent 
+of palmas API. Currently, child driver include the palma header, uses 
+palma mfd stcruture and plama's api for accessing registers.
+
+>> +    interrupt-controller;
+>> +    #interrupt-cells = <1>;
+>> +    interrupt-parent = <&gic>;
+>> +    #address-cells = <1>;
+>> +    #size-cells = <0>;
+>> +
+>> +	ti,mux-pad1 = <0x00>;
+>> +	ti,mux-pad2 = <0x00>;
+>> +	ti,power-ctrl = <0x03>;
+>> +
+>> +	palmas_pmic {
+> Just "pmic" seems simpler, although I dare say the node name isn't
+> really used for anything.
+
+Stephen,
+Just curios, why do we require the palma_pmic node at all, We can start 
+with regulator node directly. Is it not too much nested here?
+
+
+
+>
+> +
+> +    palmas_rtc {
+> +        compatible = "ti,palmas_rtc";
+> +        interrupts = <8 9>;
+> Are the interrupt outputs of the RTC fed directly to the GIC interrupt
+> mentioned in the top-level Palmas node, or do these interrupts feed into
+> a top-level IRQ controller in the Palmas device, which then feeds into
+> the external IRQ controller?
+
+The interrupt goes to the chip-internal irq, not to external of chip.  
+We have only one int line from chip which can be connected to processor/GIC.
+yes, interrupt parent need to be define here to get the proper interrupt 
+number.
