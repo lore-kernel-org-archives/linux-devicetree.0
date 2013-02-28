@@ -1,82 +1,104 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: [PATCH v6 5/5] ARM: dts: Add FIMD DT binding Documentation
-Date: Thu, 28 Feb 2013 15:12:39 +0530
-Message-ID: <1362044559-7496-6-git-send-email-vikas.sajjan@linaro.org>
-References: <1362044559-7496-1-git-send-email-vikas.sajjan@linaro.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1362044559-7496-1-git-send-email-vikas.sajjan@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, sachin.kamat@linaro.org, t.figa@samsung.com, sylvester.nawrocki@gmail.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, jy0922.shim@samsung.com
+From: Graeme Gregory <gg@slimlogic.co.uk>
+Subject: Re: [PATCH 1/4] documentation: add palmas dts definition
+Date: Thu, 28 Feb 2013 09:58:01 +0000
+Message-ID: <512F2A29.8080708@slimlogic.co.uk>
+References: <1361164283-3133-1-git-send-email-j-keerthy@ti.com> <512E5144.9020105@wwwdotorg.org> <512F1ADF.90906@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <512F1ADF.90906@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, J Keerthy <j-keerthy@ti.com>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "b-cousson@ti.com" <b-cousson@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds FIMD DT binding documentation both Samsung SoC and Board, with an example
+On 28/02/13 08:52, Laxman Dewangan wrote:
+> On Thursday 28 February 2013 12:02 AM, Stephen Warren wrote:
+>> On 02/17/2013 10:11 PM, J Keerthy wrote:
+>> +- interrupt-parent : The parent interrupt controller.
+>> +
+>> +Optional node:
+>> +- Child nodes contain in the palmas. The palmas family is made of
+>> several
+>> +  variants that support a different number of features.
+>> +  The child nodes will thus depend of the capability of the variant.
+>> Are there DT bindings for those child nodes anywhere?
+>>
+>> Representing each internal component as a separate DT node feels a
+>> little like designing the DT bindings to model the Linux-internal MFD
+>> structure. DT bindings should be driven by the HW design and
+>> OS-agnostic.
+>>
+>>  From a DT perspective, is there any need at all to create a separate DT
+>> node for each component? This would only be needed or useful if the
+>> child IP blocks (and hence DT bindings for those blocks) could be
+>> re-used in other top-level devices that aren't represented by this
+>> top-level ti,palmas DT binding. Are the HW IP blocks here re-used
+>> anywhere, or will they be?
+>
+>
+> I dont think that child IP block can be used outside of the palma
+> although other mfd device may have same IP.
+>
+> The child driver very much used the palma's API for register access
+> and they can not be separated untill driver is write completely
+> independent of palmas API. Currently, child driver include the palma
+> header, uses palma mfd stcruture and plama's api for accessing registers.
+>
+I wonder why break good software principles of keeping data and code
+localised? Just because there is no current case where a block is
+re-used does not mean it shall not be so in the future. The original
+information I got from TI when designing this was blocks may be re-used
+in future products.
 
-Signed-off-by: Vikas Sajjan <vikas.sajjan@linaro.org>
----
- .../devicetree/bindings/video/samsung-fimd.txt     |   54 ++++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/samsung-fimd.txt
+This structure also makes it much neater when dealing with palmas
+varients with different IP blocks which already exist.
 
-diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt b/Documentation/devicetree/bindings/video/samsung-fimd.txt
-new file mode 100644
-index 0000000..8d201e7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
-@@ -0,0 +1,54 @@
-+Device-Tree bindings for Samsung SoC display controller (FIMD)
-+
-+FIMD stands for Fully Interactive Mobile Display, is the Display Controller for
-+the Samsung series of SoCs which transfers the image data from a video buffer
-+located in the system memory to an external LCD interface.
-+
-+Required properties:
-+- compatible := value should be one of the following
-+		"samsung,s3c2443-fimd"; /* for S3C24XX SoCs */
-+		"samsung,s3c6400-fimd"; /* for S3C64XX SoCs */
-+		"samsung,s5p6440-fimd"; /* for S5P64X0 SoCs */
-+		"samsung,s5pc100-fimd"; /* for S5PC100 SoC  */
-+		"samsung,s5pv210-fimd"; /* for S5PV210 SoC */
-+		"samsung,exynos4210-fimd"; /* for Exynos4 SoCs */
-+		"samsung,exynos5250-fimd"; /* for Exynos5 SoCs */
-+
-+- reg := physical base address of the fimd and length of memory mapped region
-+
-+- interrupt-parent := reference to the interrupt combiner node with phandle
-+
-+- interrupts := interrupt number from the combiner to the cpu.
-+		We have 3 interrupts and the interrupt combiner order is
-+		FIFO Level, VSYNC, and LCD_SYSTEM.
-+		but since the driver expects VSYNC to be the first IRQ,
-+		make sure to mention order as VSYNC, FIFO Level and LCD_SYSTEM
-+		keeping VSYNC as first IRQ as shown below.
-+		for example: interrupts = <11 1>, <11 0>, <11 2>;
-+
-+- pinctrl := property defining the pinctrl configurations with a phandle
-+
-+- pinctrl-names := name of the pinctrl
-+
-+Optional Properties:
-+- samsung,power-domain := power domain property defined with a phandle
-+
-+Example:
-+
-+SoC specific DT Entry:
-+
-+	fimd@11c00000 {
-+		compatible = "samsung,exynos4210-fimd";
-+		interrupt-parent = <&combiner>;
-+		reg = <0x11c00000 0x20000>;
-+		interrupts = <11 1>, <11 0>, <11 2>;
-+	};
-+
-+Board specific DT Entry:
-+
-+	fimd@11c00000 {
-+		samsung,power-domain = <&pd_lcd0>;
-+		pinctrl-0 = <&lcd_sync &lcd_clk &lcd_en &lcd0_data &pwm1_out>;
-+		pinctrl-names = "default";
-+		status = "okay";
-+	};
--- 
-1.7.9.5
+I also do not see an issue with working like the internal MFD structure,
+I think it is a good design.
+
+>>> +    interrupt-controller;
+>>> +    #interrupt-cells = <1>;
+>>> +    interrupt-parent = <&gic>;
+>>> +    #address-cells = <1>;
+>>> +    #size-cells = <0>;
+>>> +
+>>> +    ti,mux-pad1 = <0x00>;
+>>> +    ti,mux-pad2 = <0x00>;
+>>> +    ti,power-ctrl = <0x03>;
+>>> +
+>>> +    palmas_pmic {
+>> Just "pmic" seems simpler, although I dare say the node name isn't
+>> really used for anything.
+>
+> Stephen,
+> Just curios, why do we require the palma_pmic node at all, We can
+> start with regulator node directly. Is it not too much nested here?
+>
+>
+>
+>>
+>> +
+>> +    palmas_rtc {
+>> +        compatible = "ti,palmas_rtc";
+>> +        interrupts = <8 9>;
+>> Are the interrupt outputs of the RTC fed directly to the GIC interrupt
+>> mentioned in the top-level Palmas node, or do these interrupts feed into
+>> a top-level IRQ controller in the Palmas device, which then feeds into
+>> the external IRQ controller?
+>
+> The interrupt goes to the chip-internal irq, not to external of chip. 
+> We have only one int line from chip which can be connected to
+> processor/GIC.
+> yes, interrupt parent need to be define here to get the proper
+> interrupt number.
+Those interrupt lines are un-needed in the newer version of driver, I
+forgot to remove them. The regmap-irq takes care of this for us without
+needing this information in the DT at all.
+
+But actually the OF handles this without requiring a parent in this
+case. These interrupts are fed to the child nodes inside io_resource
+entries.
+
+Graeme
