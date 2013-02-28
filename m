@@ -1,82 +1,72 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/4] documentation: add palmas dts definition
-Date: Thu, 28 Feb 2013 12:07:24 -0700
-Message-ID: <512FAAEC.5060004@wwwdotorg.org>
-References: <1361164283-3133-1-git-send-email-j-keerthy@ti.com> <512E5144.9020105@wwwdotorg.org> <DC88CAD03C0052499C1907B327FC63229BCE15@DBDE01.ent.ti.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/5 v7][RFC] ASoC: add snd_soc_register_cpu()
+Date: Thu, 28 Feb 2013 12:14:52 -0700
+Message-ID: <512FACAC.1000808@wwwdotorg.org>
+References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
+ <20130127035943.GJ4650@opensource.wolfsonmicro.com>
+ <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
+ <20130129014808.GC4748@opensource.wolfsonmicro.com>
+ <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
+ <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
+ <5107FF97.1070601@wwwdotorg.org>
+ <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
+ <51097F0F.2030501@wwwdotorg.org>
+ <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
+ <5110349D.3050308@wwwdotorg.org>
+ <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
+ <87bobzrry6.wl%kuninori.morimoto.gx@renesas.com>
+ <511963F8.5020107@wwwdotorg.org>
+ <87bobqf5yq.wl%kuninori.morimoto.gx@renesas.com>
+ <511C22E2.60701@wwwdotorg.org>
+ <87obfnofsx.wl%kuninori.morimoto.gx@renesas.com>
+ <511C6A1B.9000507@wwwdotorg.org>
+ <874nhfv5mb.wl%kuninori.morimoto.gx@renesas.com>
+ <8738wzuu9g.wl%kuninori.morimoto.gx@renesas.com>
+ <87a9qsg4lp.wl%kuninori.morimoto.gx@renesas.com>
+ <87mwuptgju.wl%kuninori.morimoto.gx@renes as.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <DC88CAD03C0052499C1907B327FC63229BCE15@DBDE01.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "J, KEERTHY" <j-keerthy@ti.com>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <87mwuptgju.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/28/2013 05:09 AM, J, KEERTHY wrote:
-> Stephen Warren wrote at Thursday, February 28, 2013 12:03 AM:
->> On 02/17/2013 10:11 PM, J Keerthy wrote:
->>> Add the DTS definition for the palmas device including the MFD children.
->> ...
->>> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt
-
->>> +Required properties:
->>> +- compatible : Must be "ti,palmas";
->>
->> Do you need a version number there; will there be Palmas v1 HW, then
->> later Palmas v2 HW, and so on?
+On 02/27/2013 05:42 PM, Kuninori Morimoto wrote:
 > 
-> AFAIK there is no HW version.
-
-My point was more: might there be in the future. However, I guess we can
-go with a first compatible value that has no version, and for any future
-device we can add the version to its compatible value then.
-
->>> +- interrupts : This i2c device has an IRQ line connected to the main SoC
->>> +- interrupt-controller : Since the palmas support several interrupts internally,
->>> +  it is considered as an interrupt controller cascaded to the SoC one.
->>> +- #interrupt-cells = <1>;
->>
->> Why not 2; can't any IRQ flags be represented in DT? 1 seems limiting
->> here unless the HW truly can't support configuration of IRQ input
->> polarity of edge-vs-level sensitivity.
+> Hi Stephen
 > 
-> From the register manual I see that only GPIO has the edge detect capability.
-> I agree.
-
-I'm not sure if you're agreeing that #interrupt-cells should be 2 here
-as I suggested, or with the original code. you say "only GPIO has the
-edge detect capability" which would imply that IRQs don't, which would
-imply no need for a flags cell in DT, so #interrupt-cells=<1> would be
-fine... But then you say "I agree" after I suggested that
-#interrupt-cells=<2> might be better.
-
-BTW, your mailer completely mangled the line-wrapping of my email,
-making the parts you quoted rather harder to read.
-
->>> +Optional node:
->>> +- Child nodes contain in the palmas. The palmas family is made of several
->>> +  variants that support a different number of features.
->>> +  The child nodes will thus depend of the capability of the variant.
+>> On 02/25/2013 01:51 AM, Kuninori Morimoto wrote:
+>>> Current ASoC has register function for platform/codec/dai/card,
+>>> but doesn't have for cpu.
+>>> It often produces confusion and fault on ASoC.
+>>> This patch adds very basic register function for cpu
 >>
->> Are there DT bindings for those child nodes anywhere?
+>> This seems reasonable to me.
 >>
->> Representing each internal component as a separate DT node feels a
->> little like designing the DT bindings to model the Linux-internal MFD
->> structure. DT bindings should be driven by the HW design and OS-
->> agnostic.
->>
->> From a DT perspective, is there any need at all to create a separate DT
->> node for each component? This would only be needed or useful if the
->> child IP blocks (and hence DT bindings for those blocks) could be re-
->> used in other top-level devices that aren't represented by this top-
->> level ti,palmas DT binding. Are the HW IP blocks here re-used anywhere,
->> or will they be?
+>> I can't recall how much influence the existing CODEC objects have on the
+>> various routing/matching decisions inside the ASoC core. While this
+>> patch does register and unregister CPU objects, I wonder if it should
+>> have more impact on any of the existing core code? Certainly I'd expect
+>> the CPU objects to show up in ASoC's debugfs and any similar files...
 > 
-> I guess for now I will drop this patch and will be taken up once we
-> Finalize on the design.
+> This patch doesn't have any impact to existing drivers.
+> It just added new cpu list.
 
-The DT binding has to be fully defined before the code, or how do you
-know what binding you're writing the code for? Dropping this patch and
-then moving forward with posting it (which is what your statement
-implies) doesn't seem correct.
+Sure. My point was that now you've added the list, perhaps the core ASoC
+code might want to make use of it in the same way it makes use of CODEC
+objects, since it's logically equivalent.
+
+Perhaps this could be a separate set of follow-on patches. That's all
+entirely Mark's call.
