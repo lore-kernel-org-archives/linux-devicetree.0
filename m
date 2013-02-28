@@ -1,162 +1,83 @@
-From: Ian Lartey <ian@slimlogic.co.uk>
-Subject: Re: [PATCH 1/2] leds: Add support for Palmas LEDs
-Date: Thu, 28 Feb 2013 13:44:18 +0000
-Message-ID: <512F5F32.90307@slimlogic.co.uk>
-References: <1361970800-31460-1-git-send-email-ian@slimlogic.co.uk> <512EEECF.5090409@nvidia.com> <512F44FD.2040104@slimlogic.co.uk>
+From: javier Martin <javier.martin@vista-silicon.com>
+Subject: Re: [PATCH v2 2/3] crypto: sahara: Add driver for SAHARA2 accelerator.
+Date: Thu, 28 Feb 2013 15:08:13 +0100
+Message-ID: <CACKLOr0y6M4O82KRVWSny-wzwmZPGS3pOGkZtdgc1aynH94LRQ@mail.gmail.com>
+References: <1361961711-4603-1-git-send-email-javier.martin@vista-silicon.com>
+	<1361961711-4603-3-git-send-email-javier.martin@vista-silicon.com>
+	<87vc9chf23.fsf@lebrac.rtp-net.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <512F44FD.2040104@slimlogic.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Laxman Dewangan <ldewangan@nvidia.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "j-keerthy@ti.com" <j-keerthy@ti.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>, "cooloney@gmail.com" <cooloney@gmail.com>, "rpurdie@rpsys.net" <rpurdie@rpsys.net>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "sameo@linux.intel.com" <sameo@linux.intel.com>, "broonie@opensource.wolfsonmicro.com" <broonie@opensource.wolfsonmicro.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <87vc9chf23.fsf@lebrac.rtp-net.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Arnaud Patard <arnaud.patard@rtp-net.org>
+Cc: linux-crypto@vger.kernel.org, swarren@nvidia.com, herbert@gondor.apana.org.au, arnd@arndb.de, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, shawn.guo@linaro.org, davem@davemloft.net, linux-arm-kernel@lists.infradead.org, gcembed@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 28/02/13 11:52, Ian Lartey wrote:
-> On 28/02/13 05:44, Laxman Dewangan wrote:
->> On Wednesday 27 February 2013 06:43 PM, Ian Lartey wrote:
->>> The Palmas familly of chips has LED support. This is not always muxed
->>> to output pins so depending on the setting of the mux this driver
->>> will create the appropriate LED class devices.
->>>
->>> Signed-off-by: Graeme Gregory <gg@slimlogic.co.uk>
->>> Signed-off-by: Ian Lartey <ian@slimlogic.co.uk>
->>> ---
->>
->> Patch 1 and 2 can be merged together as this is makefile, Kconfig and
->> driver addition.
->
-> This could cause a merge conflict for anyone adding files/drivers
-> in drivers/leds so it's safer to separate the Kconfig and Makefile
-> from the actual drver source code so that can go in conflict free.
->
->>
->>
->>> +
->>> +static int palmas_led_read(struct palmas_leds_data *leds, unsigned
->>> int reg,
->>> +               unsigned int *dest)
->>> +{
->>> +       unsigned int addr;
->>> +
->>> +       addr = PALMAS_BASE_TO_REG(PALMAS_LED_BASE, reg);
->> This is not require. Infact doing this will not work.
->
-> Yes, of course, thanks for that.
->>
->> palmas_read already take care of proper offset.
->>          unsigned int addr =  PALMAS_BASE_TO_REG(base, reg);
->>          int slave_id = PALMAS_BASE_TO_SLAVE(base);
->>
->>          return regmap_read(palmas->regmap[slave_id], addr, val);
->>
->>
->> same for other places also.
->
-> ditto.
->
->>
->>
->>>
->>> +static void palmas_leds_work(struct work_struct *work)
->>> +{
->>> +       struct palmas_led *led = container_of(work, struct palmas_led,
->>> work);
->>> +       unsigned int period, ctrl;
->>> +       unsigned long flags;
->>> +
->>> +       mutex_lock(&led->mutex);
->>> +
->>> +       palmas_led_read(led->leds_data, PALMAS_LED_CTRL, &ctrl);
->>> +       palmas_led_read(led->leds_data, PALMAS_LED_PERIOD_CTRL,
->>> &period);
->>> +
->>> +       spin_lock_irqsave(&led->value_lock, flags);
->>> +
->>> +       switch (led->led_no) {
->>> +       case 1:
->>> +               ctrl &= ~PALMAS_LED_CTRL_LED_1_ON_TIME_MASK;
->>> +               period &= ~PALMAS_LED_PERIOD_CTRL_LED_1_PERIOD_MASK;
->>> +
->>
->> case 1,2,3 and 4 looks same, jus shift/mask are changed. I think this
->> can be rewritten here to reduce code size.
->
-> Will do.
+Hi Arnaud,
 
-Hi Laxman,
+On 28 February 2013 12:07, Arnaud Patard <arnaud.patard@rtp-net.org> wrote:
+> Javier Martin <javier.martin@vista-silicon.com> writes:
+>
+> Hi,
+>
+>> SAHARA2 HW module is included in the i.MX27 SoC from
+>> Freescale. It is capable of performing cipher algorithms
+>> such as AES, 3DES..., hashing and RNG too.
+>
+> The rmmod oops is gone with this version, thanks.
+>
+>>
+>> This driver provides support for AES-CBC and AES-ECB
+>> by now.
+>>
+>> Signed-off-by: Javier Martin <javier.martin@vista-silicon.com>
+>> ---
+>>  drivers/crypto/Kconfig  |   10 +
+>>  drivers/crypto/Makefile |    1 +
+>>  drivers/crypto/sahara.c | 1070 +++++++++++++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 1081 insertions(+)
+>>  create mode 100644 drivers/crypto/sahara.c
+>>
+>> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+>> index 87ec4d0..7d73f5a 100644
+>> --- a/drivers/crypto/Kconfig
+>> +++ b/drivers/crypto/Kconfig
+>> @@ -276,6 +276,16 @@ config CRYPTO_DEV_PICOXCELL
+>>
+>>         Saying m here will build a module named pipcoxcell_crypto.
+>>
+>> +config CRYPTO_DEV_SAHARA
+>> +     tristate "Support for SAHARA crypto accelerator"
+>> +     depends on MACH_MX27 && EXPERIMENTAL && OF
+>
+> maybe switch to ARCH_MXC instead of MAC_MX27 ?
+>
+> [...]
+>
+>> +static struct platform_driver sahara_driver = {
+>> +     .probe          = sahara_probe,
+>> +     .remove         = __devexit_p(sahara_remove),
+>
+> Please remove the __devexit_p too.
+>
+>
+> For information, you'll find below what I've changed to test the driver on my
+> imx51. It's not perfect but it's enough for testing things.
+>
+>
 
-Looking at this again I think the cose is as small as it can be
-whilst maintaining readability.
-Is is fairly compact as this is setting up the ctrl, period
-led->blink, and led->brightness values  that are used in the
-next section to actually write to the led control registers.
+Since I have to send v3 anyway to comply with Sascha's request maybe
+it would be worth to include  your changes to provide support for
+i.mx51 too.
 
-Ian
->
->>
->>
->>> +static int palmas_leds_probe(struct platform_device *pdev)
->>> +{
->>> +       struct palmas *palmas = dev_get_drvdata(pdev->dev.parent);
->>> +       struct palmas_leds_platform_data *pdata =
->>> pdev->dev.platform_data;
->>> +       struct palmas_leds_data *leds_data;
->>> +       struct device_node *node = pdev->dev.of_node;
->>> +       int ret, i;
->>> +       int offset = 0;
->>> +
->>> +       if (!palmas->led_muxed &&
->>> !is_palmas_charger(palmas->product_id)) {
->>> +               dev_err(&pdev->dev, "there are no LEDs muxed\n");
->>> +               return -EINVAL;
->>> +       }
->>> +
->>> +       /* Palmas charger requires platform data */
->>> +       if (is_palmas_charger(palmas->product_id) && node && !pdata) {
->>> +               pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata),
->>> GFP_KERNEL);
->>> +
->>> +               if (!pdata)
->>> +                       return -ENOMEM;
->>> +
->>> +               ret = palmas_dt_to_pdata(&pdev->dev, node, pdata);
->>> +               if (ret)
->>> +                       return ret;
->>> +       }
->>> +
->>> +       if (is_palmas_charger(palmas->product_id) && !pdata)
->>> +               return -EINVAL;
->>> +
->>> +       leds_data = kzalloc(sizeof(*leds_data), GFP_KERNEL);
->>
->> Use devm_kzalloc().
->
-> Noted.
->
->>
->>
->>> +
->>> +static int  palmas_leds_init(void)
->>> +{
->>> +       return platform_driver_register(&palmas_leds_driver);
->>> +}
->>> +module_init(palmas_leds_init);
->>> +
->>> +static void palmas_leds_exit(void)
->>> +{
->>> +       platform_driver_unregister(&palmas_leds_driver);
->>> +}
->>> +module_exit(palmas_leds_exit);
->>
->> use Module_platform_driver().
->
-> Will do.
->
->>
->
->
-> Thanks,
->
-> Ian
+Regards.
+
+-- 
+Javier Martin
+Vista Silicon S.L.
+CDTUC - FASE C - Oficina S-345
+Avda de los Castros s/n
+39005- Santander. Cantabria. Spain
++34 942 25 32 60
+www.vista-silicon.com
