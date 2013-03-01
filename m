@@ -1,62 +1,59 @@
 From: Rob Herring <robherring2@gmail.com>
 Subject: Re: [PATCH] <linux/of_platform.h>: fix compilation warnings with
  DT disabled
-Date: Fri, 01 Mar 2013 07:46:23 -0600
-Message-ID: <5130B12F.20409@gmail.com>
-References: <201302190258.25726.sergei.shtylyov@cogentembedded.com> <20130301070925.GA24369@verge.net.au>
+Date: Fri, 01 Mar 2013 07:48:23 -0600
+Message-ID: <5130B1A7.9060001@gmail.com>
+References: <201302190258.25726.sergei.shtylyov@cogentembedded.com> <20130301070925.GA24369@verge.net.au> <5130B12F.20409@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20130301070925.GA24369@verge.net.au>
+In-Reply-To: <5130B12F.20409@gmail.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Cc: linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, vladimir.barinov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/2013 01:09 AM, Simon Horman wrote:
-> On Tue, Feb 19, 2013 at 02:58:25AM +0300, Sergei Shtylyov wrote:
->> Fix the following compilation warnings (in Simon Horman's renesas.gi=
-t repo):
+On 03/01/2013 07:46 AM, Rob Herring wrote:
+> On 03/01/2013 01:09 AM, Simon Horman wrote:
+>> On Tue, Feb 19, 2013 at 02:58:25AM +0300, Sergei Shtylyov wrote:
+>>> Fix the following compilation warnings (in Simon Horman's renesas.g=
+it repo):
+>>>
+>>> In file included from arch/arm/mach-shmobile/setup-r8a7779.c:24:0:
+>>> include/linux/of_platform.h:107:13: warning: =E2=80=98struct of_dev=
+ice_id=E2=80=99 declared
+>>> inside parameter list [enabled by default]
+>>> include/linux/of_platform.h:107:13: warning: its scope is only this=
+ definition
+>>> or declaration, which is probably not what you want [enabled by def=
+ault]
+>>> include/linux/of_platform.h:107:13: warning: =E2=80=98struct device=
+_node=E2=80=99 declared
+>>> inside parameter list [enabled by default]
+>>>
+>>> <linux/of_platform.h> only #include's headers with definitions of t=
+he above
+>>> mentioned structures if CONFIG_OF_DEVICE=3Dy but uses them even if =
+not. One
+>>> solution is to move some #include's out of #ifdef CONFIG_OF_DEVICE =
+and use
+>>> incomplete declarations for the rest of the structures where the #i=
+fdef move
+>>> doesn't help...
+>>>
+>>> Reported-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 >>
->> In file included from arch/arm/mach-shmobile/setup-r8a7779.c:24:0:
->> include/linux/of_platform.h:107:13: warning: =E2=80=98struct of_devi=
-ce_id=E2=80=99 declared
->> inside parameter list [enabled by default]
->> include/linux/of_platform.h:107:13: warning: its scope is only this =
-definition
->> or declaration, which is probably not what you want [enabled by defa=
-ult]
->> include/linux/of_platform.h:107:13: warning: =E2=80=98struct device_=
-node=E2=80=99 declared
->> inside parameter list [enabled by default]
+>> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 >>
->> <linux/of_platform.h> only #include's headers with definitions of th=
-e above
->> mentioned structures if CONFIG_OF_DEVICE=3Dy but uses them even if n=
-ot. One
->> solution is to move some #include's out of #ifdef CONFIG_OF_DEVICE a=
-nd use
->> incomplete declarations for the rest of the structures where the #if=
-def move
->> doesn't help...
->>
->> Reported-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> Grant, could you consider taking this patch?
 >=20
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
->=20
-> Grant, could you consider taking this patch?
+> Yes, I can, but I don't seem to have the original patch. Can you send=
+ it
+> again.
 
-Yes, I can, but I don't seem to have the original patch. Can you send i=
-t
-again.
-
->> ---
->> Actually, it compiles eve without 'struct device_node' declared, I h=
-aven't
->> found the reason of this, so left it there...
-
-device.h has a forward declaration of it.
+Nevermind. Found it. I'll apply it.
 
 Rob
+
