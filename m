@@ -1,7 +1,7 @@
 From: Linus Walleij <linus.walleij@stericsson.com>
-Subject: [PATCH 1/2] mfd: stmpe: DT: Enable no-irq mode configuration
-Date: Fri, 1 Mar 2013 13:07:16 +0100
-Message-ID: <1362139636-23579-1-git-send-email-linus.walleij@stericsson.com>
+Subject: [PATCH 2/2] mfd: stmpe: DT: Add stmpe-i2c dt alias to get id device
+Date: Fri, 1 Mar 2013 13:07:26 +0100
+Message-ID: <1362139646-23613-1-git-send-email-linus.walleij@stericsson.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
@@ -12,30 +12,31 @@ List-Id: devicetree@vger.kernel.org
 
 From: Gabriel Fernandez <gabriel.fernandez@stericsson.com>
 
-If there is no interrupt property into stmpe node
-then activate the no-irq mode by setting the irq
-value to -1.
+This patch augments the STMP driver to read the device id
+from the stmpe-i2c dt alias if present.
 
 Cc: devicetree-discuss@lists.ozlabs.org
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@stericsson.com>
 Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 ---
- drivers/mfd/stmpe.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/mfd/stmpe.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/mfd/stmpe.c b/drivers/mfd/stmpe.c
-index 4b11202..e550dcb 100644
+index e550dcb..bc85877 100644
 --- a/drivers/mfd/stmpe.c
 +++ b/drivers/mfd/stmpe.c
-@@ -1057,6 +1057,9 @@ int stmpe_probe(struct stmpe_client_info *ci, int partnum)
- 			return -ENOMEM;
+@@ -1015,7 +1015,10 @@ void stmpe_of_probe(struct stmpe_platform_data *pdata, struct device_node *np)
+ {
+ 	struct device_node *child;
  
- 		stmpe_of_probe(pdata, np);
+-	pdata->id = -1;
++	pdata->id = of_alias_get_id(np, "stmpe-i2c");
++	if (pdata->id < 0)
++		pdata->id = -1;
 +
-+		if (of_find_property(np, "interrupts", NULL) == NULL)
-+			ci->irq = -1;
- 	}
+ 	pdata->irq_trigger = IRQF_TRIGGER_NONE;
  
- 	stmpe = devm_kzalloc(ci->dev, sizeof(struct stmpe), GFP_KERNEL);
+ 	of_property_read_u32(np, "st,autosleep-timeout",
 -- 
 1.7.11.3
