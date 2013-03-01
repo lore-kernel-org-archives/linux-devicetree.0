@@ -1,64 +1,113 @@
-From: Thomas De Schampheleire <patrickdepinguin+devicetree-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: I2C and devicetrees
-Date: Fri, 1 Mar 2013 20:56:15 +0100
-Message-ID: <CAAXf6LXW7RXUgqOSwKKDfByK24qNdRGHgkEhN7eVN=BQKbAZmg@mail.gmail.com>
-References: <201212052336.24233.PeterHuewe@gmx.de>
-	<CAOesGMhUVwB4+kuCA8hSmfhoVzkznNbjj6hjngDMaQkB83WqjQ@mail.gmail.com>
-	<50C79DE8.2090201@wwwdotorg.org>
-	<20121214203845.5D7ED3E0BDD@localhost>
-	<511A6F26.20801@keymile.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v4 2/8] reset: Add reset controller API
+Date: Fri, 01 Mar 2013 13:00:56 -0700
+Message-ID: <513108F8.30902@wwwdotorg.org>
+References: <1361878774-6382-1-git-send-email-p.zabel@pengutronix.de>
+ <1361878774-6382-3-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <511A6F26.20801-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Peter Huewe <PeterHuewe-Mmb7MZpHnFY@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1361878774-6382-3-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Len Brown <len.brown-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Rafael J. Wysocki" <rjw-KKrjLPT3xs0@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 02/26/2013 04:39 AM, Philipp Zabel wrote:
+> This adds a simple API for devices to request being reset
+> by separate reset controller hardware and implements the
+> reset signal device tree binding.
 
-On Tue, Feb 12, 2013 at 5:34 PM, Gerlando Falauto
-<gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org> wrote:
-> Hi everyone,
->
-> I have a similar question.
-> I'd like to "name" i2c devices so that a userspace application can somehow
-> identify those devices with the same function across different boards (which
-> may have different addresses or be connected to a different i2c bus, or be a
-> physically different chip).
->
-> For instance "hwmon" devices get instantiated within sysfs under
-> /sys/class/hwmon/hwmonX
->
-> # cat /sys/class/hwmon/hwmon0/device/name
-> lm75
->
-> which I would like to be identified by the name "switch" (as in "switch
-> temperature"). I was thinking about instantiating it as something like
-> "lm75:switch" within i2c_board_info.type. For device-tree-less
-> architectures, a trivial change within i2c_match_id() so to ignore the part
-> following ":" seems to do the trick. Don't know about devicetree but I guess
-> a similar approach could be imagined.
->
-> Another example would be given by EEPROMs: all boards are equipped with an
-> EEPROM containing inventory management, which I would like to identify as
-> "ivm". So something like "24c08:ivm".
-> After all, I'd like to be able to achive something like "named MTD
-> partitions" which you can identify by looking at "/proc/mtd".
->
-> Maybe some other symbol could be used instead of ":", but anyhow, does the
-> above make any sense at all to you?
->
+> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
 
-I have exactly the same request: I would like to put logical names in
-the device tree for various devices (i2c, spi, ...) which are in some
-way easily retrievable from a userspace application.
-The purpose seems to be the same as Gerlando's: different boards have
-different physical configuration but logically each has the same set
-of devices.
+> +int of_reset_simple_xlate(struct reset_controller_dev *rcdev,
+> +			  const struct of_phandle_args *reset_spec, u32 *flags)
+> +{
+> +	if (WARN_ON(reset_spec->args_count < rcdev->of_reset_n_cells))
+> +		return -EINVAL;
 
-How can one achieve that?
+Would != make more sense than < ?
 
-Thanks,
-Thomas
+> +
+> +	if (reset_spec->args[0] >= rcdev->nr_resets)
+> +		return -EINVAL;
+> +
+> +	if (flags)
+> +		*flags = reset_spec->args[1];
+
+if (flags)
+    if (reset_spec->args_count > 1)
+        *flags = reset_spec->args[1];
+    else
+        *flags = 0;
+
+?
+
+> +struct reset_control *reset_control_get(struct device *dev, const char *id)
+...
+> +	mutex_lock(&reset_controller_list_mutex);
+> +	rcdev = NULL;
+> +	list_for_each_entry(r, &reset_controller_list, list) {
+> +		if (args.np == r->of_node) {
+> +			rcdev = r;
+> +			break;
+> +		}
+> +	}
+> +	mutex_unlock(&reset_controller_list_mutex);
+
+At this point, rcdev could be removed from that list, and perhaps even
+start to point at free'd memory.
+
+> +	of_node_put(args.np);
+> +
+> +	if (!rcdev)
+> +		return ERR_PTR(-ENODEV);
+> +
+> +	rstc_id = rcdev->of_xlate(rcdev, &args, NULL);
+> +	if (rstc_id < 0)
+> +		return ERR_PTR(rstc_id);
+> +
+> +	try_module_get(rcdev->owner);
+
+What about error-handling here?
+
+I think you want to drop reset_controller_list_mutex only after the call
+to try_module_get()?
+
+> +static int devm_reset_control_match(struct device *dev, void *res, void *data)
+> +{
+> +	struct reset_control **rstc = res;
+> +	if (!rstc || !*rstc) {
+> +		WARN_ON(!rstc || !*rstc);
+
+I think you can if (WARN_ON(...)).
+
+I'm not sure if the error-checks are quite right though;
+reset_control_get always returns an error-pointer for errors, never
+NULL, so the pointer can't ever be NULL. If it somehow was (e.g. client
+usage error), then that NULL pointer would never match anything, so the
+error-check still wouldn't be useful.
+
+I'm not sure why this is a ** here; below in devm_reset_control_put()
+you pass a just a *; are you expected to pass &rstc there instead?
+
+> +void devm_reset_control_put(struct reset_control *rstc)
+> +{
+> +	int ret;
+> +
+> +	ret = devres_release(rstc->dev, devm_reset_control_release,
+> +			     devm_reset_control_match, rstc);
+> +	if (ret)
+> +		WARN_ON(ret);
+> +}
+> +EXPORT_SYMBOL_GPL(devm_reset_control_put);
