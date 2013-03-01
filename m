@@ -1,63 +1,82 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v3 1/2] dma: imx-dma: Add oftree support
-Date: Fri, 1 Mar 2013 14:56:45 +0100
-Message-ID: <20130301135645.GA21700@pengutronix.de>
-References: <1361543838-12604-1-git-send-email-mpa@pengutronix.de>
- <1361808255-17381-1-git-send-email-mpa@pengutronix.de>
- <20130228063026.GC26106@S2101-09.ap.freescale.net>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] <linux/of_platform.h>: fix compilation warnings with
+ DT disabled
+Date: Fri, 01 Mar 2013 08:02:46 -0600
+Message-ID: <5130B506.5020908@gmail.com>
+References: <201302190258.25726.sergei.shtylyov@cogentembedded.com> <20130301070925.GA24369@verge.net.au> <5130B12F.20409@gmail.com> <5130B1A7.9060001@gmail.com> <5130B34F.2090700@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130228063026.GC26106-rvtDTF3kK1ictlrPMvKcciBecyulp+rMXqFh9Ls21Oc@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5130B34F.2090700@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Simon Horman <horms@verge.net.au>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, vladimir.barinov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 28, 2013 at 02:30:27PM +0800, Shawn Guo wrote:
-> On Mon, Feb 25, 2013 at 05:04:14PM +0100, Markus Pargmann wrote:
-> > Adding devicetree support for imx-dma driver. Use driver name for
-> > function 'imx_dma_is_general_purpose' because the devicename for
-> > devicetree initialized devices is different.
-> 
-> ...
-> 
-> > @@ -63,7 +66,8 @@ static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
-> >  	return strstr(dev_name(chan->device->dev), "sdma") ||
-> >  		!strcmp(dev_name(chan->device->dev), "imx1-dma") ||
-> >  		!strcmp(dev_name(chan->device->dev), "imx21-dma") ||
-> > -		!strcmp(dev_name(chan->device->dev), "imx27-dma");
-> > +		!strcmp(dev_name(chan->device->dev), "imx27-dma") ||
-> > +		!strcmp(chan->device->dev->driver->name, "imx-dma");
-> >  }
-> 
-> So the function could just look like the following?
-> 
-> static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
-> {
->         return !strcmp(chan->device->dev->driver->name, "imx-sdma") ||
->                 !strcmp(chan->device->dev->driver->name, "imx-dma");
-> }
+On 03/01/2013 07:55 AM, Sergei Shtylyov wrote:
+> Hello.
+>=20
+> On 01-03-2013 17:48, Rob Herring wrote:
+>=20
+>>>>> Fix the following compilation warnings (in Simon Horman's
+>>>>> renesas.git repo):
+>=20
+>>>>> In file included from arch/arm/mach-shmobile/setup-r8a7779.c:24:0=
+:
+>>>>> include/linux/of_platform.h:107:13: warning: =E2=80=98struct of_d=
+evice_id=E2=80=99
+>>>>> declared
+>>>>> inside parameter list [enabled by default]
+>>>>> include/linux/of_platform.h:107:13: warning: its scope is only th=
+is
+>>>>> definition
+>>>>> or declaration, which is probably not what you want [enabled by
+>>>>> default]
+>>>>> include/linux/of_platform.h:107:13: warning: =E2=80=98struct devi=
+ce_node=E2=80=99
+>>>>> declared
+>>>>> inside parameter list [enabled by default]
+>=20
+>>>>> <linux/of_platform.h> only #include's headers with definitions of
+>>>>> the above
+>>>>> mentioned structures if CONFIG_OF_DEVICE=3Dy but uses them even i=
+f
+>>>>> not. One
+>>>>> solution is to move some #include's out of #ifdef CONFIG_OF_DEVIC=
+E
+>>>>> and use
+>>>>> incomplete declarations for the rest of the structures where the
+>>>>> #ifdef move
+>>>>> doesn't help...
+>=20
+>>>>> Reported-by: Vladimir Barinov <vladimir.barinov@cogentembedded.co=
+m>
+>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.co=
+m>
+>=20
+>>>> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+>=20
+>>>> Grant, could you consider taking this patch?
+>=20
+>>> Yes, I can, but I don't seem to have the original patch. Can you se=
+nd it
+>>> again.
+>=20
+>> Nevermind. Found it. I'll apply it.
+>=20
+>    Will you drop 'struct device_node' declaration then or should I
+> resend? In fact, I think I should better resend it with the changelog
+> somewhat edited.
 
-Yes. For imx-dma there is only imx1, imx21 and imx27 that use imx-dma
-driver. And the devicenames of imx-sdma are imx31-sdma and imx35-sdma,
-so all devices using imx-sdma match. I will change it for v4. Thanks
+No, I plan to leave it as is and not rely on device.h by chance
+declaring device_node.
 
-Markus
+Rob
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+>=20
+>> Rob
+>=20
+> WBR, Sergei
+>=20
+
