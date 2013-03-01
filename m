@@ -1,40 +1,41 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Thu, 28 Feb 2013 18:42:14 -0600
-Message-ID: <512FF966.9060806@ti.com>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <CACRpkdabXa8tXNeGRPntvY9cx4XWCa7XaEXHmVREeWN-x793ZA@mail.gmail.com> <512F55E0.8050501@ti.com> <CACRpkdbY1AQuJWvDaYQFoZbKwNAOGG-p3wjedEgifbSh=1kNmA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH v2] of/pci: Provide support for parsing PCI DT ranges property
+Date: Fri, 1 Mar 2013 02:24:00 +0100
+Message-ID: <CACRpkda9pVafqMRrZ-h6ry6X57754bb4pWRW8CWbF0n37pkVNA@mail.gmail.com>
+References: <20130221154709.GA26660@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbY1AQuJWvDaYQFoZbKwNAOGG-p3wjedEgifbSh=1kNmA@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Benoit Cousson <b-cousson@ti.com>, grant.likely@secretlab.ca, khilman@linaro.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130221154709.GA26660@arm.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Andrew Murray <Andrew.Murray@arm.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Feb 21, 2013 at 4:47 PM, Andrew Murray <Andrew.Murray@arm.com> wrote:
 
-On 02/28/2013 06:09 PM, Linus Walleij wrote:
-> On Thu, Feb 28, 2013 at 2:04 PM, Benoit Cousson <b-cousson@ti.com> wrote:
-> 
->> On 02/28/2013 12:41 AM, Linus Walleij wrote:
->>> On Wed, Feb 15, 2012 at 5:04 PM, Benoit Cousson <b-cousson@ti.com> wrote:
->>
->> Gosh! That's pretty old stuff :-)
-> 
-> Hm yeah, haha :-)
-> 
-> I didn't notice that someone was replying in the thread for
-> some other reason (or maybe using the same subject and
-> confusing my gmail reader?).
-> 
-> Anyway, the basic idea is sound, so are you still working
-> on the patch? I remember discussing this with someone
-> in Denmark...
+> DT bindings for PCI host bridges often use the ranges property to describe
+> memory and IO ranges - this binding tends to be the same across architectures
+> yet several parsing implementations exist, e.g. arch/mips/pci/pci.c,
+> arch/powerpc/kernel/pci-common.c, arch/sparc/kernel/pci.c and
+> arch/microblaze/pci/pci-common.c (clone of PPC). Some of these duplicate
+> functionality provided by drivers/of/address.c.
 
-That was me :-)
+Hm I wanted to test but was blocked by this:
 
-I have the patch, I am testing and will send tomorrow for review.
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 
-Cheers
-Jon
+Making the raw patch look like this:
+
+=09const u32 *ranges;
+-=09int rlen;
+-=09int pna =3D of_n_addr_cells(dev);
+-=09int np =3D pna + 5;
+ =09int memno =3D 0, isa_hole =3D -1;
+
+I bet the other ARM guys can help you get the format right
+somehow... can't you just use git send-email?
+
+Yours,
+Linus Walleij
