@@ -1,131 +1,115 @@
-From: "J, KEERTHY" <j-keerthy@ti.com>
-Subject: RE: [PATCH 1/4] documentation: add palmas dts definition
-Date: Fri, 1 Mar 2013 02:24:03 +0000
-Message-ID: <DC88CAD03C0052499C1907B327FC63229BCF3D@DBDE01.ent.ti.com>
-References: <1361164283-3133-1-git-send-email-j-keerthy@ti.com>
- <512E5144.9020105@wwwdotorg.org>
- <DC88CAD03C0052499C1907B327FC63229BCE15@DBDE01.ent.ti.com>
- <512FAAEC.5060004@wwwdotorg.org>
+From: "Philip, Avinash" <avinashphilip@ti.com>
+Subject: RE: [PATCH 04/14] ARM: OMAP2+: Add function for configuring GPMC
+ settings
+Date: Fri, 1 Mar 2013 05:33:39 +0000
+Message-ID: <518397C60809E147AF5323E0420B992E3EA90C2F@DBDE01.ent.ti.com>
+References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com>
+ <1361899842-30303-5-git-send-email-jon-hunter@ti.com>
+ <518397C60809E147AF5323E0420B992E3EA8F007@DBDE01.ent.ti.com>
+ <512F7D58.90706@ti.com> <512F9005.7040908@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <512FAAEC.5060004@wwwdotorg.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <512F9005.7040908@ti.com>
 Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hunter, Jon" <jon-hunter@ti.com>
+Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-> -----Original Message-----
-> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
-> Sent: Friday, March 01, 2013 12:37 AM
-> To: J, KEERTHY
-> Cc: grant.likely@secretlab.ca; rob.herring@calxeda.com;
-> rob@landley.net; devicetree-discuss@lists.ozlabs.org; linux-
-> doc@vger.kernel.org; linux-kernel@vger.kernel.org; Cousson, Benoit;
-> gg@slimlogic.co.uk
-> Subject: Re: [PATCH 1/4] documentation: add palmas dts definition
+On Thu, Feb 28, 2013 at 22:42:37, Hunter, Jon wrote:
 > 
-> On 02/28/2013 05:09 AM, J, KEERTHY wrote:
-> > Stephen Warren wrote at Thursday, February 28, 2013 12:03 AM:
-> >> On 02/17/2013 10:11 PM, J Keerthy wrote:
-> >>> Add the DTS definition for the palmas device including the MFD
-> children.
-> >> ...
-> >>> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt
-> 
-> >>> +Required properties:
-> >>> +- compatible : Must be "ti,palmas";
+> On 02/28/2013 09:52 AM, Jon Hunter wrote:
+> > 
+> > On 02/28/2013 12:05 AM, Philip, Avinash wrote:
+> >> On Tue, Feb 26, 2013 at 23:00:31, Hunter, Jon wrote:
+> >>> The GPMC has various different configuration options such as bus-width,
+> >>> synchronous or asychronous mode selection, burst mode options etc.
+> >>> Currently, there is no common function for configuring these options and
+> >>> various devices set these options by either programming the GPMC CONFIG1
+> >>> register directly or by calling gpmc_cs_configure() to set some of the
+> >>> options.
+> >>>
+> >>> Add a new function for configuring all of the GPMC options. Having a common
+> >>> function for configuring this options will simplify code and ease the
+> >>> migration to device-tree.
+> >>>
+> >>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> >>> ---
+> >>>  arch/arm/mach-omap2/gpmc.c |   65 ++++++++++++++++++++++++++++++++++++++++++++
+> >>>  arch/arm/mach-omap2/gpmc.h |    6 ++++
+> >>>  2 files changed, 71 insertions(+)
+> >>>
+> >>> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+> >>> index 465cac9..fb8dfd2 100644
+> >>> --- a/arch/arm/mach-omap2/gpmc.c
+> >>> +++ b/arch/arm/mach-omap2/gpmc.c
+> >>> @@ -1137,6 +1137,71 @@ int gpmc_calc_timings(struct gpmc_timings *gpmc_t,
+> >>>  	return 0;
+> >>>  }
+> >>>  
+> >>> +int gpmc_cs_program_settings(int cs, struct gpmc_settings *p)
+> >>> +{
+> >>> +	u32 config1;
+> >>> +
+> >>> +	if ((!p->device_width) || (p->device_width > GPMC_DEVWIDTH_16BIT)) {
+> >>> +		pr_err("%s: invalid width %d!", __func__, p->device_width);
+> >>> +		return -EINVAL;
+> >>> +	}
+> >>> +
+> >>> +	/* Address-data multiplexing not supported for NAND devices */
+> >>> +	if (p->device_nand && p->mux_add_data) {
+> >>> +		pr_err("%s: invalid configuration!\n", __func__);
+> >>> +		return -EINVAL;
+> >>> +	}
+> >>> +
+> >>> +	/* Page/burst mode supports lengths of 4, 8 and 16 bytes */
+> >>> +	if (p->burst_read || p->burst_write) {
+> >>> +		switch (p->burst_len) {
+> >>> +		case GPMC_BURST_4:
+> >>> +		case GPMC_BURST_8:
+> >>> +		case GPMC_BURST_16:
+> >>> +			break;
+> >>> +		default:
+> >>> +			pr_err("%s: invalid page/burst-length (%d)\n",
+> >>> +			       __func__, p->burst_len);
+> >>> +			return -EINVAL;
+> >>> +		}
+> >>> +	}
+> >>> +
+> >>> +	if ((p->wait_on_read || p->wait_on_write) &&
+> >>> +	    (p->wait_pin > gpmc_nr_waitpins)) {
+> >>> +		pr_err("%s: invalid wait-pin (%d)\n", __func__, p->wait_pin);
+> >>> +		return -EINVAL;
+> >>> +	}
+> >>> +
+> >>> +	config1 = GPMC_CONFIG1_DEVICESIZE((p->device_width - 1));
 > >>
-> >> Do you need a version number there; will there be Palmas v1 HW, then
-> >> later Palmas v2 HW, and so on?
-> >
-> > AFAIK there is no HW version.
+> >> Can you consider read_modify approach?
+> > 
+> > I was purposely trying to avoid that. The intent here is to program all
+> > the settings and get away from any boot-loader dependencies. If we use a
+> > read-modify approach then it will never be clear in the kernel what
+> > should actually be programmed.
 > 
-> My point was more: might there be in the future. However, I guess we
-> can go with a first compatible value that has no version, and for any
-> future device we can add the version to its compatible value then.
+> By the way, it would be good to know what your motivation for this is.
 > 
+> My goal is for all gpmc settings to eventually live in the DT blob and
+> there be no dependency on the bootloader whatsoever. That may mean that
+> settings are re-programmed again by the kernel but IMO that is best.
 
-I got it. We can add versioning when we have the next versions available.
+Yes I understood now and the right thing to do.
+Suggested read modify approach because of some confusion as GPMC_CONFIG1 is already
+modified in gpmc_cs_set_timings() and is called from omap2_nand_gpmc_retime().
+So the data modified in gpmc_cs_set_timings() will lost (not significant)
+May be better and cleaner solution is to remove GPMC_CONFIG1 modification in
+gpmc_cs_set_timings() also.
 
-> >>> +- interrupts : This i2c device has an IRQ line connected to the
-> >>> +main SoC
-> >>> +- interrupt-controller : Since the palmas support several
-> >>> +interrupts internally,
-> >>> +  it is considered as an interrupt controller cascaded to the SoC
-> one.
-> >>> +- #interrupt-cells = <1>;
-> >>
-> >> Why not 2; can't any IRQ flags be represented in DT? 1 seems
-> limiting
-> >> here unless the HW truly can't support configuration of IRQ input
-> >> polarity of edge-vs-level sensitivity.
-> >
-> > From the register manual I see that only GPIO has the edge detect
-> capability.
-> > I agree.
+Thanks
+Avinash
 > 
-> I'm not sure if you're agreeing that #interrupt-cells should be 2 here
-> as I suggested, or with the original code. you say "only GPIO has the
-> edge detect capability" which would imply that IRQs don't, which would
-> imply no need for a flags cell in DT, so #interrupt-cells=<1> would be
-> fine... But then you say "I agree" after I suggested that #interrupt-
-> cells=<2> might be better.
-
-Sorry I did not give a detailed explanation earlier. There are 32 sources
-Of interrupts from Palmas but only one physical line coming out. Out of 32
-8 of them are from the GPIO module of palmas. The GPIO module interrupts
-Are edge based. Hence I completely agreed to the point of using
-#interrupt-cells=<2>.
- 
-> 
-> BTW, your mailer completely mangled the line-wrapping of my email,
-> making the parts you quoted rather harder to read.
+> Cheers
+> Jon
 > 
 
-Sorry about that but not quite sure what happened there!
-
-> >>> +Optional node:
-> >>> +- Child nodes contain in the palmas. The palmas family is made of
-> >>> +several
-> >>> +  variants that support a different number of features.
-> >>> +  The child nodes will thus depend of the capability of the
-> variant.
-> >>
-> >> Are there DT bindings for those child nodes anywhere?
-> >>
-> >> Representing each internal component as a separate DT node feels a
-> >> little like designing the DT bindings to model the Linux-internal
-> MFD
-> >> structure. DT bindings should be driven by the HW design and OS-
-> >> agnostic.
-> >>
-> >> From a DT perspective, is there any need at all to create a separate
-> >> DT node for each component? This would only be needed or useful if
-> >> the child IP blocks (and hence DT bindings for those blocks) could
-> be
-> >> re- used in other top-level devices that aren't represented by this
-> >> top- level ti,palmas DT binding. Are the HW IP blocks here re-used
-> >> anywhere, or will they be?
-> >
-> > I guess for now I will drop this patch and will be taken up once we
-> > Finalize on the design.
-> 
-> The DT binding has to be fully defined before the code, or how do you
-> know what binding you're writing the code for? Dropping this patch and
-> then moving forward with posting it (which is what your statement
-> implies) doesn't seem correct.
-
-Since Graeme is planning to redesign a bit I am dropping this patch
-And he plans to send the updated documentation patch. The original
-Intent of this series was to add documentation since the code was
-Defined before Documentation. To make it clear I am not posting
-Any further patches before Documentation/DT binding is completely
-Defined.
-
-Regards,
-Keerthy 
