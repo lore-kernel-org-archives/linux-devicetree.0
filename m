@@ -1,82 +1,335 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] <linux/of_platform.h>: fix compilation warnings with
- DT disabled
-Date: Fri, 01 Mar 2013 08:02:46 -0600
-Message-ID: <5130B506.5020908@gmail.com>
-References: <201302190258.25726.sergei.shtylyov@cogentembedded.com> <20130301070925.GA24369@verge.net.au> <5130B12F.20409@gmail.com> <5130B1A7.9060001@gmail.com> <5130B34F.2090700@cogentembedded.com>
+From: Daniel Mack <zonque@gmail.com>
+Subject: Re: [PATCH] clk: add si5351 i2c common clock driver
+Date: Fri, 01 Mar 2013 16:01:27 +0100
+Message-ID: <5130C2C7.30400@gmail.com>
+References: <1360414772-12232-1-git-send-email-sebastian.hesselbarth@gmail.com> <5123CF5B.9060804@gmail.com> <CABJ1b_TaQ=AXCM9KKW-hJ0Rgdd+759ia+9P=bdnYbA_HcHP1wQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5130B34F.2090700@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Simon Horman <horms@verge.net.au>, linux-sh@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, vladimir.barinov@cogentembedded.com
+Content-Type: multipart/mixed;
+ boundary="------------000707060609010105040207"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABJ1b_TaQ=AXCM9KKW-hJ0Rgdd+759ia+9P=bdnYbA_HcHP1wQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Stephen Warren <swarren@nvidia.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Dom Cobley <popcornmix@gmail.com>, Mike Turquette <mturquette@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Rabeeh Khoury <rabeeh@solid-run.com>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/2013 07:55 AM, Sergei Shtylyov wrote:
-> Hello.
->=20
-> On 01-03-2013 17:48, Rob Herring wrote:
->=20
->>>>> Fix the following compilation warnings (in Simon Horman's
->>>>> renesas.git repo):
->=20
->>>>> In file included from arch/arm/mach-shmobile/setup-r8a7779.c:24:0=
-:
->>>>> include/linux/of_platform.h:107:13: warning: =E2=80=98struct of_d=
-evice_id=E2=80=99
->>>>> declared
->>>>> inside parameter list [enabled by default]
->>>>> include/linux/of_platform.h:107:13: warning: its scope is only th=
-is
->>>>> definition
->>>>> or declaration, which is probably not what you want [enabled by
->>>>> default]
->>>>> include/linux/of_platform.h:107:13: warning: =E2=80=98struct devi=
-ce_node=E2=80=99
->>>>> declared
->>>>> inside parameter list [enabled by default]
->=20
->>>>> <linux/of_platform.h> only #include's headers with definitions of
->>>>> the above
->>>>> mentioned structures if CONFIG_OF_DEVICE=3Dy but uses them even i=
-f
->>>>> not. One
->>>>> solution is to move some #include's out of #ifdef CONFIG_OF_DEVIC=
-E
->>>>> and use
->>>>> incomplete declarations for the rest of the structures where the
->>>>> #ifdef move
->>>>> doesn't help...
->=20
->>>>> Reported-by: Vladimir Barinov <vladimir.barinov@cogentembedded.co=
-m>
->>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.co=
-m>
->=20
->>>> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
->=20
->>>> Grant, could you consider taking this patch?
->=20
->>> Yes, I can, but I don't seem to have the original patch. Can you se=
-nd it
->>> again.
->=20
->> Nevermind. Found it. I'll apply it.
->=20
->    Will you drop 'struct device_node' declaration then or should I
-> resend? In fact, I think I should better resend it with the changelog
-> somewhat edited.
+This is a multi-part message in MIME format.
+--------------000707060609010105040207
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 
-No, I plan to leave it as is and not rely on device.h by chance
-declaring device_node.
+Hi Sebastian,
 
-Rob
+On 27.02.2013 11:01, Sebastian Hesselbarth wrote:
+> first of all sorry for the late answer but thanks for testing the driver.
+> 
+> On 2/19/13, Daniel Mack <zonque@gmail.com> wrote:
+>> Hi Sebastian,
+>>
+>> I did some more tests today and it took me a while to dig for the root
+>> cause why things were not working for me in the first place - see below.
+>>
+>>
+>> On 09.02.2013 13:59, Sebastian Hesselbarth wrote:
+>>
+>>> +==Example==
+>>> +
+>>> +/* 25MHz reference crystal */
+>>> +ref25: ref25M {
+>>> +	compatible = "fixed-clock";
+>>> +	#clock-cells = <0>;
+>>> +	clock-frequency = <25000000>;
+>>> +};
+>>> +
+>>> +i2c-master-node {
+>>> +
+>>> +	/* Si5351a msop10 i2c clock generator */
+>>> +	si5351a: clock-generator@60 {
+>>> +		compatible = "silabs,si5351a-msop";
+>>> +		reg = <0x60>;
+>>> +		#address-cells = <1>;
+>>> +		#size-cells = <0>;
+>>> +		#clock-cells = <1>;
+>>> +
+>>> +		/* connect xtal input to 25MHz reference */
+>>> +		clocks = <&ref25>;
+>>
+>> As referred to in another thread, registering the ref25M clock that way
+>> didn't suffice for me on my platform - but that's a different story.
+> 
+> I guess "fixed-clock" isn't registered by OMAP's clock init code? I had
+> to do this on dove, too. Actually, I will come back to clock initialization for
+> dove later and was hoping that there will be some global way of registering
+> core common clock drivers (or at least fixed-clock) until then.
+> 
+>>> +static void si5351_read_parameters(struct si5351_driver_data *drvdata,
+>>> +	unsigned char reg, struct si5351_parameters *params)
+>>> +{
+>>> +	unsigned char buf[SI5351_PARAMETERS_LENGTH];
+>>
+>> On a general note, I think you can use u8 instead of unsigned char all
+>> over the place here, which will save you some indentation trouble.
+> 
+> Ok, I guess I was deriving "unsigned char" usage from other clock drivers
+> and never went to u8. But I ll reconsider using u8 when all issues are
+> worked out.
+> 
+>>> +static inline int _si5351_clkout_reparent(struct si5351_driver_data
+>>> *drvdata,
+>>> +				  unsigned char num, unsigned char parent)
+>>> +{
+>>> +	struct clk *pclk;
+>>> +
+>>> +	if (num > 8 ||
+>>> +	    (drvdata->variant == SI5351_VARIANT_A3 && num > 3))
+>>> +		return -EINVAL;
+>>> +
+>>> +	switch (parent) {
+>>> +	case 0:
+>>> +		pclk = drvdata->msynth[num].hw.clk;
+>>> +		break;
+>>> +	case 1:
+>>> +		pclk = drvdata->msynth[0].hw.clk;
+>>> +		if (num >= 4)
+>>> +			pclk = drvdata->msynth[4].hw.clk;
+>>> +		break;
+>>> +	case 2:
+>>> +		pclk = drvdata->xtal.clk;
+>>> +		break;
+>>> +	case 3:
+>>> +		if (drvdata->variant != SI5351_VARIANT_C)
+>>> +			return -EINVAL;
+>>> +		pclk = drvdata->clkin.clk;
+>>> +		break;
+>>> +	default:
+>>> +		return -EINVAL;
+>>> +	}
+>>> +	return clk_set_parent(drvdata->clkout[num].hw.clk, pclk);
+>>> +}
+>>
+>> [...]
+>>
+>>> +static int si5351_clkout_set_parent(struct clk_hw *hw, u8 index)
+>>> +{
+>>> +	struct si5351_hw_data *hwdata =
+>>> +		container_of(hw, struct si5351_hw_data, hw);
+>>> +	unsigned val;
+>>> +
+>>> +	val = 0;
+>>> +	hw->clk->flags &= ~CLK_SET_RATE_PARENT;
+>>> +	switch (index) {
+>>> +	case 0:
+>>> +		hw->clk->flags |= CLK_SET_RATE_PARENT;
+>>> +		val = SI5351_CLK_INPUT_MULTISYNTH_N;
+>>> +		break;
+>>
+>> I fugured that _si5351_clkout_reparent() wouldn't actually call
+>> ->set_parent() on the clock, which leads to the fact that
+>> CLK_SET_RATE_PARENT is not set in the flags. That way, only the clkout
+>> end leaf is actually supplied with a new rate, which leads to incorrect
+>> effective clocks, depending on the current multisynth/pll configuration.
+> 
+> Yeah, true. Unfortunately, _clkout_reparent() is more like a dirty hack to
+> allow to reparent the clock output. At registration internal configuration of
+> si5351 is not known and when I parse the DT for clock configuration I might
+> have been already assigned to the same parent clk that you later explicitly
+> configure.
 
->=20
->> Rob
->=20
-> WBR, Sergei
->=20
+Hmm, but then we need to either set the configuration on the chip to
+match the internal state of the driver, or tell the clock framework that
+the current state is not currently known (don't know if that's possible).
 
+> What I basically want for si5351 (or any other eeprom based programmable
+> clock gen) is that stored configuration is not touched. But it can be changed
+> after eeprom contents have been copied into device's sram - and this _is_
+> mandatory for the si5351 that I use on CuBox where there is no useful config
+> stored at all.
+
+Yes, same here. We set up the si5351 from the bootloader with some
+binary blob via i2c to bring some components to live before the kernel
+boots.
+
+> Anyway, there still seem to be some more issues with doing it right on current
+> common clk framwork - thanks for pointing it out.
+
+I'd be happy to test more versions if you have any.
+
+FWIW, attached is a patch for caching the 'prepared' states of the
+clocks. This fixes the 'scheduling while atomic' bug I described earlier
+in this thread. You can squash it into your patch if you want.
+
+
+
+Thanks,
+Daniel
+
+--------------000707060609010105040207
+Content-Type: text/x-patch;
+ name="0001-si5351-cache-prepared-bits-of-clocks.patch"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="0001-si5351-cache-prepared-bits-of-clocks.patch"
+
+>From 3e7a1a8e1f3e472e473e5ab47329bb44a9ec24ba Mon Sep 17 00:00:00 2001
+From: Daniel Mack <zonque@gmail.com>
+Date: Sun, 17 Feb 2013 18:01:08 +0100
+Subject: [PATCH] si5351: cache 'prepared' bits of clocks
+
+---
+ drivers/clk/clk-si5351.c | 47 ++++++++++++++++++++++++++++++++++-------------
+ 1 file changed, 34 insertions(+), 13 deletions(-)
+
+diff --git a/drivers/clk/clk-si5351.c b/drivers/clk/clk-si5351.c
+index b526742..528f88a 100644
+--- a/drivers/clk/clk-si5351.c
++++ b/drivers/clk/clk-si5351.c
+@@ -54,6 +54,7 @@ struct si5351_hw_data {
+ 	struct si5351_driver_data	*drvdata;
+ 	struct si5351_parameters	params;
+ 	unsigned char			num;
++	bool				prepared;
+ };
+ 
+ struct si5351_driver_data {
+@@ -70,6 +71,9 @@ struct si5351_driver_data {
+ 	struct si5351_hw_data	pll[2];
+ 	struct si5351_hw_data	*msynth;
+ 	struct si5351_hw_data	*clkout;
++
++	bool			xtal_prepared;
++	bool			clkin_prepared;
+ };
+ 
+ static const char const *si5351_input_names[] = {
+@@ -223,6 +227,8 @@ static int si5351_xtal_prepare(struct clk_hw *hw)
+ 		container_of(hw, struct si5351_driver_data, xtal);
+ 	si5351_set_bits(drvdata, SI5351_FANOUT_ENABLE,
+ 			SI5351_XTAL_ENABLE, SI5351_XTAL_ENABLE);
++	drvdata->xtal_prepared  = true;
++
+ 	return 0;
+ }
+ 
+@@ -232,15 +238,14 @@ static void si5351_xtal_unprepare(struct clk_hw *hw)
+ 		container_of(hw, struct si5351_driver_data, xtal);
+ 	si5351_set_bits(drvdata, SI5351_FANOUT_ENABLE,
+ 			SI5351_XTAL_ENABLE, 0);
++	drvdata->xtal_prepared  = false;
+ }
+ 
+ static int si5351_xtal_is_enabled(struct clk_hw *hw)
+ {
+ 	struct si5351_driver_data *drvdata =
+ 		container_of(hw, struct si5351_driver_data, xtal);
+-	unsigned char reg;
+-	reg = si5351_reg_read(drvdata, SI5351_FANOUT_ENABLE);
+-	return (reg & SI5351_XTAL_ENABLE) ? 1 : 0;
++	return drvdata->xtal_prepared;
+ }
+ 
+ static const struct clk_ops si5351_xtal_ops = {
+@@ -258,7 +263,8 @@ static int si5351_clkin_prepare(struct clk_hw *hw)
+ 		container_of(hw, struct si5351_driver_data, clkin);
+ 	si5351_set_bits(drvdata, SI5351_FANOUT_ENABLE,
+ 			SI5351_CLKIN_ENABLE, SI5351_CLKIN_ENABLE);
+-	return 0;
++	drvdata->clkin_prepared  = true;
++	return 1;
+ }
+ 
+ static void si5351_clkin_unprepare(struct clk_hw *hw)
+@@ -267,15 +273,14 @@ static void si5351_clkin_unprepare(struct clk_hw *hw)
+ 		container_of(hw, struct si5351_driver_data, clkin);
+ 	si5351_set_bits(drvdata, SI5351_FANOUT_ENABLE,
+ 			SI5351_CLKIN_ENABLE, 0);
++	drvdata->clkin_prepared  = false;
+ }
+ 
+ static int si5351_clkin_is_enabled(struct clk_hw *hw)
+ {
+ 	struct si5351_driver_data *drvdata =
+ 		container_of(hw, struct si5351_driver_data, clkin);
+-	unsigned char reg;
+-	reg = si5351_reg_read(drvdata, SI5351_FANOUT_ENABLE);
+-	return (reg & SI5351_CLKIN_ENABLE) ? 1 : 0;
++	return drvdata->clkin_prepared;
+ }
+ 
+ /*
+@@ -660,6 +665,7 @@ static unsigned long si5351_msynth_recalc_rate(struct clk_hw *hw,
+ 		m += hwdata->params.p2;
+ 		m += 512 * hwdata->params.p3;
+ 	}
++printk(" XXXX m %d (%d)\n", m, hwdata->num);
+ 	do_div(rate, m);
+ 
+ 	dev_dbg(&hwdata->drvdata->client->dev,
+@@ -887,6 +893,8 @@ static int si5351_clkout_prepare(struct clk_hw *hw)
+ 			SI5351_CLK_POWERDOWN, 0);
+ 	si5351_set_bits(hwdata->drvdata, SI5351_OUTPUT_ENABLE_CTRL,
+ 			(1 << hwdata->num), 0);
++	hwdata->prepared = true;
++
+ 	return 0;
+ }
+ 
+@@ -899,21 +907,28 @@ static void si5351_clkout_unprepare(struct clk_hw *hw)
+ 			SI5351_CLK_POWERDOWN, SI5351_CLK_POWERDOWN);
+ 	si5351_set_bits(hwdata->drvdata, SI5351_OUTPUT_ENABLE_CTRL,
+ 			(1 << hwdata->num), (1 << hwdata->num));
++	hwdata->prepared = false;
+ }
+ 
+-static int si5351_clkout_is_enabled(struct clk_hw *hw)
++static void __si5351_read_clkout_prepared(struct si5351_hw_data *hwdata)
+ {
+-	struct si5351_hw_data *hwdata =
+-		container_of(hw, struct si5351_hw_data, hw);
+ 	unsigned char val;
+ 
+ 	val = si5351_reg_read(hwdata->drvdata, SI5351_CLK0_CTRL + hwdata->num);
+ 	if (val & SI5351_CLK_POWERDOWN)
+-		return 0;
++		hwdata->prepared = false;
+ 	val = si5351_reg_read(hwdata->drvdata, SI5351_OUTPUT_ENABLE_CTRL);
+ 	if (val & (1 << hwdata->num))
+-		return 0;
+-	return 1;
++		hwdata->prepared = false;
++	hwdata->prepared = true;
++}
++
++static int si5351_clkout_is_enabled(struct clk_hw *hw)
++{
++	struct si5351_hw_data *hwdata =
++		container_of(hw, struct si5351_hw_data, hw);
++
++	return hwdata->prepared;
+ }
+ 
+ static u8 si5351_clkout_get_parent(struct clk_hw *hw)
+@@ -1306,6 +1321,11 @@ static int si5351_i2c_probe(
+ 		return -EINVAL;
+ 	}
+ 
++	/* read current clock enable bits */
++	ret = si5351_reg_read(drvdata, SI5351_FANOUT_ENABLE);
++	drvdata->xtal_prepared = !!(ret & SI5351_XTAL_ENABLE);
++	drvdata->clkin_prepared  = !!(ret & SI5351_CLKIN_ENABLE);
++
+ 	/* register PLLB or VXCO (Si5351B) */
+ 	drvdata->pll[1].num = 1;
+ 	drvdata->pll[1].drvdata = drvdata;
+@@ -1394,6 +1414,7 @@ static int si5351_i2c_probe(
+ 			return -EINVAL;
+ 		}
+ 		drvdata->onecell.clks[n] = clk;
++		__si5351_read_clkout_prepared(&drvdata->clkout[n]);
+ 	}
+ 
+ 	/* setup clock setup from DT */
+-- 
+1.8.1.2
+
+
+--------------000707060609010105040207--
