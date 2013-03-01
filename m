@@ -1,144 +1,81 @@
-From: Belisko Marek <marek.belisko@gmail.com>
-Subject: Re: [PATCH] arm/dts: Add basic support for gta04 (Openmoko next
- generation) board.
-Date: Fri, 1 Mar 2013 21:40:49 +0100
-Message-ID: <CAAfyv35SUNL81O95JC+7i3-=MmY=1PE7DG2Y=DD7k3oY4bSi0w@mail.gmail.com>
-References: <1359052445-18560-1-git-send-email-marek.belisko@open-nandra.com>
+From: Lars-Peter Clausen <lars@metafoo.de>
+Subject: Re: [PATCH 1/5 v7][RFC] ASoC: add
+	snd_soc_register_cpu()
+Date: Fri, 01 Mar 2013 21:50:07 +0100
+Message-ID: <5131147F.5090901@metafoo.de>
+References: <87zk11487a.wl%kuninori.morimoto.gx@renesas.com>
+ <87vcag3hcj.wl%kuninori.morimoto.gx@renesas.com>
+ <20130129014808.GC4748@opensource.wolfsonmicro.com>
+ <87sj5k3f83.wl%kuninori.morimoto.gx@renesas.com>
+ <87obg8z4u4.wl%kuninori.morimoto.gx@renesas.com>
+ <5107FF97.1070601@wwwdotorg.org>
+ <87halz82bm.wl%kuninori.morimoto.gx@renesas.com>
+ <51097F0F.2030501@wwwdotorg.org>
+ <87halw7sij.wl%kuninori.morimoto.gx@renesas.com>
+ <5110349D.3050308@wwwdotorg.org>
+ <87ehgvrs1h.wl%kuninori.morimoto.gx@renesas.com>
+ <87bobzrry6.wl%kuninori.morimoto.gx@renesas.com>
+ <511963F8.5020107@wwwdotorg.org>
+ <87bobqf5yq.wl%kuninori.morimoto.gx@renesas.com>
+ <511C22E2.60701@wwwdotorg.org>
+ <87obfnofsx.wl%kuninori.morimoto.gx@renesas.com>
+ <511C6A1B.9000507@wwwdotorg.org>
+ <874nhfv5mb.wl%kuninori.morimoto.gx@renesas.com>
+ <8738wzuu9g.wl%kuninori.morimoto.gx@renesas.com>
+ <87a9qsg4lp.wl%kuninori.morimoto.gx@renesas.com>
+ <87mwuptgju.wl%kuninori.morimoto.gx@renes as.com>
+ <512FACAC.1000808@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359052445-18560-1-git-send-email-marek.belisko@open-nandra.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: b-cousson@ti.com, Tony Lindgren <tony@atomide.com>
-Cc: "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Marek Belisko <marek.belisko@open-nandra.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <512FACAC.1000808@wwwdotorg.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Linux-ALSA <alsa-devel@alsa-project.org>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, devicetree-discuss@lists.ozlabs.org, Mark Brown <broonie@opensource.wolfsonmicro.com>, Liam Girdwood <lgirdwood@gmail.com>, Simon <horms@verge.net.au>, Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Ping. Any objections to that patch?
+On 02/28/2013 08:14 PM, Stephen Warren wrote:
+> On 02/27/2013 05:42 PM, Kuninori Morimoto wrote:
+>>
+>> Hi Stephen
+>>
+>>> On 02/25/2013 01:51 AM, Kuninori Morimoto wrote:
+>>>> Current ASoC has register function for platform/codec/dai/card,
+>>>> but doesn't have for cpu.
+>>>> It often produces confusion and fault on ASoC.
+>>>> This patch adds very basic register function for cpu
+>>>
+>>> This seems reasonable to me.
+>>>
+>>> I can't recall how much influence the existing CODEC objects have on the
+>>> various routing/matching decisions inside the ASoC core. While this
+>>> patch does register and unregister CPU objects, I wonder if it should
+>>> have more impact on any of the existing core code? Certainly I'd expect
+>>> the CPU objects to show up in ASoC's debugfs and any similar files...
+>>
+>> This patch doesn't have any impact to existing drivers.
+>> It just added new cpu list.
+> 
+> Sure. My point was that now you've added the list, perhaps the core ASoC
+> code might want to make use of it in the same way it makes use of CODEC
+> objects, since it's logically equivalent.
 
-On Thu, Jan 24, 2013 at 7:34 PM, Marek Belisko
-<marek.belisko@open-nandra.com> wrote:
-> Signed-off-by: Marek Belisko <marek.belisko@open-nandra.com>
-> ---
->  arch/arm/boot/dts/omap3-gta04.dts |   94 +++++++++++++++++++++++++++++++++++++
->  1 file changed, 94 insertions(+)
->  create mode 100644 arch/arm/boot/dts/omap3-gta04.dts
->
-> diff --git a/arch/arm/boot/dts/omap3-gta04.dts b/arch/arm/boot/dts/omap3-gta04.dts
-> new file mode 100644
-> index 0000000..9e7e3ec
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3-gta04.dts
-> @@ -0,0 +1,94 @@
-> +/*
-> + * Copyright (C) 2013 Marek Belisko <marek.belisko@open-nandra.com>
-> + *
-> + * Based on omap3-beagle-xm.dts
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +/dts-v1/;
-> +
-> +/include/ "omap3.dtsi"
-> +
-> +/ {
-> +       model = "OMAP3 GTA04";
-> +       compatible = "ti,omap3-gta04", "ti,omap3";
-> +
-> +       memory {
-> +               device_type = "memory";
-> +               reg = <0x80000000 0x20000000>; /* 512 MB */
-> +       };
-> +
-> +       gpio-keys {
-> +               compatible = "gpio-keys";
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               aux-button {
-> +                       label = "AUX";
-> +                       linux,code = <169>;
-> +                       gpios = <&gpio1 7 1>;
-> +                       gpio-key,wakeup;
-> +               };
-> +       };
-> +};
-> +
-> +&i2c1 {
-> +       clock-frequency = <2600000>;
-> +
-> +       twl: twl@48 {
-> +               reg = <0x48>;
-> +               interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-> +               interrupt-parent = <&intc>;
-> +       };
-> +};
-> +
-> +/include/ "twl4030.dtsi"
-> +
-> +&i2c2 {
-> +       clock-frequency = <400000>;
-> +       /* Pressure Sensor */
-> +       bmp085@77 {
-> +               compatible = "bosch,bmp085";
-> +               reg = <0x77>;
-> +       };
-> +
-> +       /* leds */
-> +       tca6507@45 {
-> +               compatible = "ti,tca6507";
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               reg = <0x45>;
-> +
-> +               gta04_led0: red_aux@0 {
-> +                       label = "gta04:red:aux";
-> +                       reg = <0x0>;
-> +               };
-> +
-> +               gta04_led1: green_aux@1 {
-> +                       label = "gta04:green:aux";
-> +                       reg = <0x1>;
-> +               };
-> +
-> +               gta04_led3: red_power@3 {
-> +                       label = "gta04:red:power";
-> +                       reg = <0x3>;
-> +                       linux,default-trigger = "default-on";
-> +               };
-> +
-> +               gta04_led4: green_power@4 {
-> +                       label = "gta04:green:power";
-> +                       reg = <0x4>;
-> +               };
-> +       };
-> +};
-> +
-> +&i2c3 {
-> +       clock-frequency = <100000>;
-> +};
-> +
-> +&mmc1 {
-> +       vmmc-supply = <&vmmc1>;
-> +       bus-width = <4>;
-> +};
-> +
-> --
-> 1.7.10.4
->
+In my opinion it makes sense to get rid of the distinction between CPU objects
+and CODEC objects in this case and instead introduce some kind of DAI container
+object. I mean the distinction is mostly for historic reasons from a time where
+it was only possible to bind a the cpu_dai of a link to a CPU DAI and the
+codec_dai to a CODEC DAI. But these dais both can for example be bound CODEC
+DAIs. I think to have a common base here would allow us to do some cleanups to
+the ASoC core and also avoid the duplication with snd_soc_of_get_cpu_dai_name
+and snd_soc_of_get_codec_dai_name which was introduced in this series.
 
-Regards,
-
-marek
-
--- 
-as simple and primitive as possible
--------------------------------------------------
-Marek Belisko - OPEN-NANDRA
-Freelance Developer
-
-Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
-Tel: +421 915 052 184
-skype: marekwhite
-twitter: #opennandra
-web: http://open-nandra.com
+- Lars
