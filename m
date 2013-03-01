@@ -1,43 +1,21 @@
-From: Ezequiel Garcia <elezegarcia@gmail.com>
-Subject: Re: [PATCH 12/14] ARM: OMAP2+: Add additional GPMC timing parameters
-Date: Fri, 1 Mar 2013 17:12:47 -0300
-Message-ID: <CALF0-+X4RR2YFAH-W64MV=xuXRnbx04hvYa694DiN8C8h5U_Vg@mail.gmail.com>
-References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com>
-	<1361899842-30303-13-git-send-email-jon-hunter@ti.com>
-	<CALF0-+VVmZHkRggN0Xj-6=gQ9Rm09qU4hKuLoD-iE6_jqPbm+g@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v4 8/8] reset: Add driver for gpio-controlled reset pins
+Date: Fri, 01 Mar 2013 13:13:58 -0700
+Message-ID: <51310C06.2090909@wwwdotorg.org>
+References: <1361878774-6382-1-git-send-email-p.zabel@pengutronix.de> <1361878774-6382-9-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CALF0-+VVmZHkRggN0Xj-6=gQ9Rm09qU4hKuLoD-iE6_jqPbm+g@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1361878774-6382-9-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 1, 2013 at 5:11 PM, Ezequiel Garcia <elezegarcia@gmail.com> wrote:
-> Hi Jon,
->
-> On Tue, Feb 26, 2013 at 2:30 PM, Jon Hunter <jon-hunter@ti.com> wrote:
-> [...]
->>
->> +       if (!of_property_read_u32(np, "gpmc,bus-turnaround", &val))
->> +               gpmc_t->bus_turnaround = val;
->> +
->
-> AFAIK, you don't need to test if the property is defined.
-> You can just read it straightforward, and if the property is not defined
-> then nothing will be stored in your variable:
->
-> of_property_read_u32(np, "gpmc,bus-turnaround", &gpmc_t->bus_turnaround);
->
-> You can simplify *a lot* your patch with this, and I believe you could
-> also clean
-> existent code.
->
+On 02/26/2013 04:39 AM, Philipp Zabel wrote:
+> This driver implements a reset controller device that toggles gpios
+> connected to reset pins of peripheral ICs. The delay between assertion
+> and de-assertion of the reset signal can be configured.
 
-Also, since this is somewhat large patchset: would you mind pushing it somewhere
-so I can just pull a branch?
-
-Thanks,
--- 
-    Ezequiel
+Reviewed-by: Stephen Warren <swarren@nvidia.com>
