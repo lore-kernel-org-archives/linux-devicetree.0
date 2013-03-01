@@ -1,107 +1,91 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH RFC] usb: dwc3: Get PHY from platform specific dwc3 dt
- node.
-Date: Fri, 1 Mar 2013 08:41:29 +0200
-Message-ID: <20130301064129.GF3120@arwen.pp.htv.fi>
-References: <1359631232-7107-1-git-send-email-gautam.vivek@samsung.com>
- <510A56BF.3040804@ti.com>
- <CAFp+6iFkb=U0CJA=3zmQvd5XfMwbROuRJjXoJG7zvvq4_upzNw@mail.gmail.com>
- <20130131152527.GE4064@arwen.pp.htv.fi>
- <CAFp+6iHvKYiF_neANRq5roAEJwhvcaLk7pAd7Dy94Z5XiDkhgA@mail.gmail.com>
- <20130131153836.GF4064@arwen.pp.htv.fi>
- <CAFp+6iGTqZY=+crcYyu9o5uEP9Nv2=haSqB+nCuqA2_iUand6A@mail.gmail.com>
-Reply-To: <balbi@ti.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] <linux/of_platform.h>: fix compilation warnings with DT
+ disabled
+Date: Fri, 1 Mar 2013 16:09:25 +0900
+Message-ID: <20130301070925.GA24369@verge.net.au>
+References: <201302190258.25726.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="924gEkU1VlJlwnwX"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAFp+6iGTqZY=+crcYyu9o5uEP9Nv2=haSqB+nCuqA2_iUand6A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <gautamvivek1987@gmail.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Felipe Balbi <balbi@ti.com>, kishon <kishon@ti.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>
+In-Reply-To: <201302190258.25726.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, devicetree-discuss@lists.ozlabs.org, vladimir.barinov@cogentembedded.com, linux-sh@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---924gEkU1VlJlwnwX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Feb 28, 2013 at 08:09:33PM +0530, Vivek Gautam wrote:
-> On Thu, Jan 31, 2013 at 9:08 PM, Felipe Balbi <balbi@ti.com> wrote:
-> > On Thu, Jan 31, 2013 at 09:00:37PM +0530, Vivek Gautam wrote:
-> >> Hi Felipe,
-> >>
-> >>
-> >> On Thu, Jan 31, 2013 at 8:55 PM, Felipe Balbi <balbi@ti.com> wrote:
-> >> > Hi,
-> >> >
-> >> > On Thu, Jan 31, 2013 at 08:53:27PM +0530, Vivek Gautam wrote:
-> >> >> >> Moreover, SoCs having multiple dwc3 controllers will have multip=
-le
-> >> >> >> PHYs, which eventually be added using usb_add_phy_dev(), and not
-> >> >> >> using usb_add_phy(). So each dwc3 controller won't be able to
-> >> >> >> get PHYs by simply calling devm_usb_get_phy() also.
-> >> >> >
-> >> >> > No. We have added usb_get_phy_dev() for that purpose in the case =
-of non-dt.
-> >> >> > I think, instead you can have a patch to use devm_usb_get_phy_dev=
-() here and
-> >> >> > in exynos platform specific code use usb_bind_phy() to bind the p=
-hy and
-> >> >> > controller till you change it to dt.
-> >> >> >
-> >> >>
-> >> >> We have dt support for dwc3-exynos, in such case we should go ahead=
- with
-> >> >> of_platform_populate(), right ?
-> >> >> But if when i use of_platform_populate() i will not be able to set
-> >> >> dma_mask to dwc3->dev. :-(
-> >> >
-> >> > do you have a special need for dma_mask because OF already sets it.
-> >> >
-> >> If i am not wrong of_platform_device_create_pdata() will set
-> >> "dev->dev.coherent_dma_mask =3D DMA_BIT_MASK(32)"
-> >> and not dma_mask.
-> >> I fact we had some discussion sometime back when we needed the same
-> >> for dwc3-exynos in the thread:
-> >> [PATCH v2 1/2] USB: dwc3-exynos: Add support for device tree
-> >>
-> >> But couldn't get final node on it.
-> >> So suggestions here please. :-)
-> >
-> > hmm.. you're right there. Grant, Rob ? Any hints ?
-> >
+On Tue, Feb 19, 2013 at 02:58:25AM +0300, Sergei Shtylyov wrote:
+> Fix the following compilation warnings (in Simon Horman's renesas.git=
+ repo):
 >=20
-> Any suggestions on this ?
+> In file included from arch/arm/mach-shmobile/setup-r8a7779.c:24:0:
+> include/linux/of_platform.h:107:13: warning: =E2=80=98struct of_devic=
+e_id=E2=80=99 declared
+> inside parameter list [enabled by default]
+> include/linux/of_platform.h:107:13: warning: its scope is only this d=
+efinition
+> or declaration, which is probably not what you want [enabled by defau=
+lt]
+> include/linux/of_platform.h:107:13: warning: =E2=80=98struct device_n=
+ode=E2=80=99 declared
+> inside parameter list [enabled by default]
+>=20
+> <linux/of_platform.h> only #include's headers with definitions of the=
+ above
+> mentioned structures if CONFIG_OF_DEVICE=3Dy but uses them even if no=
+t. One
+> solution is to move some #include's out of #ifdef CONFIG_OF_DEVICE an=
+d use
+> incomplete declarations for the rest of the structures where the #ifd=
+ef move
+> doesn't help...
+>=20
+> Reported-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-anyone ?
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
---=20
-balbi
+Grant, could you consider taking this patch?
 
---924gEkU1VlJlwnwX
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRME2ZAAoJEIaOsuA1yqREwBEQAKJl3/2/4qkkHZwyV+aUYAxX
-goGdCgTswl8ZS7cO7te6OxLLsOJIu9Mh+MjAoKoT3R1xjZ2dSI0OCa6snNAbvx7O
-GR/HyoGXAbHDJVYxSyzc1OL6aXTUVN97TE1/JlpDgdhEknxksaar1O0X572O57sB
-KznO2E36Jc4Pp73I+GkwReYYho92SPkna/5YyNTpnydx/jLka4bF8hm3Z7LcwQo4
-02IMlIP6yHjaAsVsGYvEV57KGM0a1ozFTgJ2ZGH/0x/FNIOqVCXorHFTJojHuTGZ
-kkQDa0JmCdF6wpOMbRizIuRK5GmOfMiqkMsVDfmuoHGZdwMzKD1v34B1n49yi768
-cUM1qd935m3cozRm18GAL6BgXmEUzh3xbUapdC/pwv0Jy2HsL6GoIb29HwZ97h0e
-qJlyC9bxBiOpI0KZYbheSGsw7vRTsXy+edp0XI4LYH9bsoDZumjEV1qbNOMcGWfH
-SwZbxvanMqVdMLTL+XNKeTvogyjg29LNk8uyET9fCJkuqEbyxzOZ2lbiiYcbC65o
-hIfWhxF8X9RscxlFOqQjAS/u4dt7K40nu3CDLMUElGvXTG8yB/oTnunOD1giLzSh
-6ReORjGDgb7eofnrorj7obQUWdqE+Kf1kkvnyPyppBeDZk50BmpxoBCK5KAnFHVD
-lBLPkWR2uFIXNFCFEwOf
-=EfNa
------END PGP SIGNATURE-----
-
---924gEkU1VlJlwnwX--
+> ---
+> Actually, it compiles eve without 'struct device_node' declared, I ha=
+ven't
+> found the reason of this, so left it there...
+>=20
+>  include/linux/of_platform.h |    5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>=20
+> Index: linux/include/linux/of_platform.h
+> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> --- linux.orig/include/linux/of_platform.h
+> +++ linux/include/linux/of_platform.h
+> @@ -11,9 +11,10 @@
+>   *
+>   */
+> =20
+> -#ifdef CONFIG_OF_DEVICE
+>  #include <linux/device.h>
+>  #include <linux/mod_devicetable.h>
+> +
+> +#ifdef CONFIG_OF_DEVICE
+>  #include <linux/pm.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> @@ -100,7 +101,7 @@ extern int of_platform_populate(struct d
+> =20
+>  #if !defined(CONFIG_OF_ADDRESS)
+>  struct of_dev_auxdata;
+> -struct device;
+> +struct device_node;
+>  static inline int of_platform_populate(struct device_node *root,
+>  					const struct of_device_id *matches,
+>  					const struct of_dev_auxdata *lookup,
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" i=
+n
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
