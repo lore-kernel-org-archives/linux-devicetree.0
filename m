@@ -1,87 +1,107 @@
-From: "Philip, Avinash" <avinashphilip@ti.com>
-Subject: RE: [PATCH 06/14] ARM: OMAP2+: Convert NAND to use
- gpmc_cs_program_settings()
-Date: Fri, 1 Mar 2013 05:40:31 +0000
-Message-ID: <518397C60809E147AF5323E0420B992E3EA90C46@DBDE01.ent.ti.com>
-References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com>
- <1361899842-30303-7-git-send-email-jon-hunter@ti.com>
- <518397C60809E147AF5323E0420B992E3EA8F235@DBDE01.ent.ti.com>
- <512F7F79.4020900@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH RFC] usb: dwc3: Get PHY from platform specific dwc3 dt
+ node.
+Date: Fri, 1 Mar 2013 08:41:29 +0200
+Message-ID: <20130301064129.GF3120@arwen.pp.htv.fi>
+References: <1359631232-7107-1-git-send-email-gautam.vivek@samsung.com>
+ <510A56BF.3040804@ti.com>
+ <CAFp+6iFkb=U0CJA=3zmQvd5XfMwbROuRJjXoJG7zvvq4_upzNw@mail.gmail.com>
+ <20130131152527.GE4064@arwen.pp.htv.fi>
+ <CAFp+6iHvKYiF_neANRq5roAEJwhvcaLk7pAd7Dy94Z5XiDkhgA@mail.gmail.com>
+ <20130131153836.GF4064@arwen.pp.htv.fi>
+ <CAFp+6iGTqZY=+crcYyu9o5uEP9Nv2=haSqB+nCuqA2_iUand6A@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <512F7F79.4020900@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Hunter, Jon" <jon-hunter@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, "Cousson, Benoit" <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="924gEkU1VlJlwnwX"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAFp+6iGTqZY=+crcYyu9o5uEP9Nv2=haSqB+nCuqA2_iUand6A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vivek Gautam <gautamvivek1987@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Felipe Balbi <balbi@ti.com>, kishon <kishon@ti.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 28, 2013 at 21:32:01, Hunter, Jon wrote:
-> 
-> On 02/28/2013 04:38 AM, Philip, Avinash wrote:
-> > On Tue, Feb 26, 2013 at 23:00:33, Hunter, Jon wrote:
-> >> Convert the OMAP2+ NAND code to use the gpmc_cs_program_settings()
-> >> function for configuring the various GPMC options instead of directly
-> >> programming the CONFIG1 register.
+--924gEkU1VlJlwnwX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi,
+
+On Thu, Feb 28, 2013 at 08:09:33PM +0530, Vivek Gautam wrote:
+> On Thu, Jan 31, 2013 at 9:08 PM, Felipe Balbi <balbi@ti.com> wrote:
+> > On Thu, Jan 31, 2013 at 09:00:37PM +0530, Vivek Gautam wrote:
+> >> Hi Felipe,
 > >>
-> >> This moves the configuration of some GPMC options outside the
-> >> nand_gpmc_retime() because these options should only need to be set once
-> >> regardless of whether the gpmc timing is changing dynamically at runtime.
-> >> The programming of where the wait-pin is also moved slightly, but this
-> >> will not have any impact to existing devices as no boards are currently
-> >> setting the dev_ready variable.
 > >>
-> >> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
-> >> ---
-> >>  arch/arm/mach-omap2/gpmc-nand.c |   35 +++++++++++++++++++++++------------
-> >>  1 file changed, 23 insertions(+), 12 deletions(-)
+> >> On Thu, Jan 31, 2013 at 8:55 PM, Felipe Balbi <balbi@ti.com> wrote:
+> >> > Hi,
+> >> >
+> >> > On Thu, Jan 31, 2013 at 08:53:27PM +0530, Vivek Gautam wrote:
+> >> >> >> Moreover, SoCs having multiple dwc3 controllers will have multip=
+le
+> >> >> >> PHYs, which eventually be added using usb_add_phy_dev(), and not
+> >> >> >> using usb_add_phy(). So each dwc3 controller won't be able to
+> >> >> >> get PHYs by simply calling devm_usb_get_phy() also.
+> >> >> >
+> >> >> > No. We have added usb_get_phy_dev() for that purpose in the case =
+of non-dt.
+> >> >> > I think, instead you can have a patch to use devm_usb_get_phy_dev=
+() here and
+> >> >> > in exynos platform specific code use usb_bind_phy() to bind the p=
+hy and
+> >> >> > controller till you change it to dt.
+> >> >> >
+> >> >>
+> >> >> We have dt support for dwc3-exynos, in such case we should go ahead=
+ with
+> >> >> of_platform_populate(), right ?
+> >> >> But if when i use of_platform_populate() i will not be able to set
+> >> >> dma_mask to dwc3->dev. :-(
+> >> >
+> >> > do you have a special need for dma_mask because OF already sets it.
+> >> >
+> >> If i am not wrong of_platform_device_create_pdata() will set
+> >> "dev->dev.coherent_dma_mask =3D DMA_BIT_MASK(32)"
+> >> and not dma_mask.
+> >> I fact we had some discussion sometime back when we needed the same
+> >> for dwc3-exynos in the thread:
+> >> [PATCH v2 1/2] USB: dwc3-exynos: Add support for device tree
 > >>
-> >> diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
-> >> index afc1e8c..4bdfea2 100644
-> >> --- a/arch/arm/mach-omap2/gpmc-nand.c
-> >> +++ b/arch/arm/mach-omap2/gpmc-nand.c
-> >> @@ -43,6 +43,10 @@ static struct platform_device gpmc_nand_device = {
-> >>  	.resource	= gpmc_nand_resource,
-> >>  };
-> >>  
-> >> +static struct gpmc_settings nand_settings = {
-> >> +	.device_nand = true,
-> >> +};
-> >> +
-> > 
-> > Is it possible to make it local variable?
-> > It would help GPMC to support NAND device on multiple chip select.
-> 
-> Well gpmc_nand_init() will be called for each NAND device and so I don't
-> see why this would prevent supporting multiple NANDs on multiple
-> chip-selects.
+> >> But couldn't get final node on it.
+> >> So suggestions here please. :-)
+> >
+> > hmm.. you're right there. Grant, Rob ? Any hints ?
+> >
+>=20
+> Any suggestions on this ?
 
-Problem exactly lies here. Here platform device initialized as statically.
-So multiple requests will points to same platform device.
+anyone ?
 
-Recently this issue raised in TI e2e forum and solution being proposed.
-Details can found from
-http://e2e.ti.com/support/arm/sitara_arm/f/791/p/246997/865379.aspx#865379
+--=20
+balbi
 
-I doubt the same is the case for other GPMC client devices also.
+--924gEkU1VlJlwnwX
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> 
-> Once migration to device-tree is complete we could definitely make it
-> local as there will be no need for any static initialisations of the
-> structure as all fields would be read from device-tree.
-> 
-> I can make it local now if that is preferred and seeing that will be the
-> direction once we have migrated to device-tree, is does make sense.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
 
-As far as I understood, here usage of local variable won't break anything?
-If that is the case, better solution would be usage of local variable.
+iQIcBAEBAgAGBQJRME2ZAAoJEIaOsuA1yqREwBEQAKJl3/2/4qkkHZwyV+aUYAxX
+goGdCgTswl8ZS7cO7te6OxLLsOJIu9Mh+MjAoKoT3R1xjZ2dSI0OCa6snNAbvx7O
+GR/HyoGXAbHDJVYxSyzc1OL6aXTUVN97TE1/JlpDgdhEknxksaar1O0X572O57sB
+KznO2E36Jc4Pp73I+GkwReYYho92SPkna/5YyNTpnydx/jLka4bF8hm3Z7LcwQo4
+02IMlIP6yHjaAsVsGYvEV57KGM0a1ozFTgJ2ZGH/0x/FNIOqVCXorHFTJojHuTGZ
+kkQDa0JmCdF6wpOMbRizIuRK5GmOfMiqkMsVDfmuoHGZdwMzKD1v34B1n49yi768
+cUM1qd935m3cozRm18GAL6BgXmEUzh3xbUapdC/pwv0Jy2HsL6GoIb29HwZ97h0e
+qJlyC9bxBiOpI0KZYbheSGsw7vRTsXy+edp0XI4LYH9bsoDZumjEV1qbNOMcGWfH
+SwZbxvanMqVdMLTL+XNKeTvogyjg29LNk8uyET9fCJkuqEbyxzOZ2lbiiYcbC65o
+hIfWhxF8X9RscxlFOqQjAS/u4dt7K40nu3CDLMUElGvXTG8yB/oTnunOD1giLzSh
+6ReORjGDgb7eofnrorj7obQUWdqE+Kf1kkvnyPyppBeDZk50BmpxoBCK5KAnFHVD
+lBLPkWR2uFIXNFCFEwOf
+=EfNa
+-----END PGP SIGNATURE-----
 
-Thanks
-Avinash
-> 
-> Cheers
-> Jon
-> 
-
+--924gEkU1VlJlwnwX--
