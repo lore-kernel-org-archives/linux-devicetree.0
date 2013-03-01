@@ -1,41 +1,131 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC PATCH v2] of/pci: Provide support for parsing PCI DT ranges property
-Date: Fri, 1 Mar 2013 02:24:00 +0100
-Message-ID: <CACRpkda9pVafqMRrZ-h6ry6X57754bb4pWRW8CWbF0n37pkVNA@mail.gmail.com>
-References: <20130221154709.GA26660@arm.com>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: RE: [PATCH 1/4] documentation: add palmas dts definition
+Date: Fri, 1 Mar 2013 02:24:03 +0000
+Message-ID: <DC88CAD03C0052499C1907B327FC63229BCF3D@DBDE01.ent.ti.com>
+References: <1361164283-3133-1-git-send-email-j-keerthy@ti.com>
+ <512E5144.9020105@wwwdotorg.org>
+ <DC88CAD03C0052499C1907B327FC63229BCE15@DBDE01.ent.ti.com>
+ <512FAAEC.5060004@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130221154709.GA26660@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Andrew Murray <Andrew.Murray@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <512FAAEC.5060004@wwwdotorg.org>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, "gg@slimlogic.co.uk" <gg@slimlogic.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Feb 21, 2013 at 4:47 PM, Andrew Murray <Andrew.Murray@arm.com> wrote:
+Hi Stephen,
 
-> DT bindings for PCI host bridges often use the ranges property to describe
-> memory and IO ranges - this binding tends to be the same across architectures
-> yet several parsing implementations exist, e.g. arch/mips/pci/pci.c,
-> arch/powerpc/kernel/pci-common.c, arch/sparc/kernel/pci.c and
-> arch/microblaze/pci/pci-common.c (clone of PPC). Some of these duplicate
-> functionality provided by drivers/of/address.c.
+> -----Original Message-----
+> From: Stephen Warren [mailto:swarren@wwwdotorg.org]
+> Sent: Friday, March 01, 2013 12:37 AM
+> To: J, KEERTHY
+> Cc: grant.likely@secretlab.ca; rob.herring@calxeda.com;
+> rob@landley.net; devicetree-discuss@lists.ozlabs.org; linux-
+> doc@vger.kernel.org; linux-kernel@vger.kernel.org; Cousson, Benoit;
+> gg@slimlogic.co.uk
+> Subject: Re: [PATCH 1/4] documentation: add palmas dts definition
+> 
+> On 02/28/2013 05:09 AM, J, KEERTHY wrote:
+> > Stephen Warren wrote at Thursday, February 28, 2013 12:03 AM:
+> >> On 02/17/2013 10:11 PM, J Keerthy wrote:
+> >>> Add the DTS definition for the palmas device including the MFD
+> children.
+> >> ...
+> >>> diff --git a/Documentation/devicetree/bindings/mfd/palmas.txt
+> 
+> >>> +Required properties:
+> >>> +- compatible : Must be "ti,palmas";
+> >>
+> >> Do you need a version number there; will there be Palmas v1 HW, then
+> >> later Palmas v2 HW, and so on?
+> >
+> > AFAIK there is no HW version.
+> 
+> My point was more: might there be in the future. However, I guess we
+> can go with a first compatible value that has no version, and for any
+> future device we can add the version to its compatible value then.
+> 
 
-Hm I wanted to test but was blocked by this:
+I got it. We can add versioning when we have the next versions available.
 
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+> >>> +- interrupts : This i2c device has an IRQ line connected to the
+> >>> +main SoC
+> >>> +- interrupt-controller : Since the palmas support several
+> >>> +interrupts internally,
+> >>> +  it is considered as an interrupt controller cascaded to the SoC
+> one.
+> >>> +- #interrupt-cells = <1>;
+> >>
+> >> Why not 2; can't any IRQ flags be represented in DT? 1 seems
+> limiting
+> >> here unless the HW truly can't support configuration of IRQ input
+> >> polarity of edge-vs-level sensitivity.
+> >
+> > From the register manual I see that only GPIO has the edge detect
+> capability.
+> > I agree.
+> 
+> I'm not sure if you're agreeing that #interrupt-cells should be 2 here
+> as I suggested, or with the original code. you say "only GPIO has the
+> edge detect capability" which would imply that IRQs don't, which would
+> imply no need for a flags cell in DT, so #interrupt-cells=<1> would be
+> fine... But then you say "I agree" after I suggested that #interrupt-
+> cells=<2> might be better.
 
-Making the raw patch look like this:
+Sorry I did not give a detailed explanation earlier. There are 32 sources
+Of interrupts from Palmas but only one physical line coming out. Out of 32
+8 of them are from the GPIO module of palmas. The GPIO module interrupts
+Are edge based. Hence I completely agreed to the point of using
+#interrupt-cells=<2>.
+ 
+> 
+> BTW, your mailer completely mangled the line-wrapping of my email,
+> making the parts you quoted rather harder to read.
+> 
 
-=09const u32 *ranges;
--=09int rlen;
--=09int pna =3D of_n_addr_cells(dev);
--=09int np =3D pna + 5;
- =09int memno =3D 0, isa_hole =3D -1;
+Sorry about that but not quite sure what happened there!
 
-I bet the other ARM guys can help you get the format right
-somehow... can't you just use git send-email?
+> >>> +Optional node:
+> >>> +- Child nodes contain in the palmas. The palmas family is made of
+> >>> +several
+> >>> +  variants that support a different number of features.
+> >>> +  The child nodes will thus depend of the capability of the
+> variant.
+> >>
+> >> Are there DT bindings for those child nodes anywhere?
+> >>
+> >> Representing each internal component as a separate DT node feels a
+> >> little like designing the DT bindings to model the Linux-internal
+> MFD
+> >> structure. DT bindings should be driven by the HW design and OS-
+> >> agnostic.
+> >>
+> >> From a DT perspective, is there any need at all to create a separate
+> >> DT node for each component? This would only be needed or useful if
+> >> the child IP blocks (and hence DT bindings for those blocks) could
+> be
+> >> re- used in other top-level devices that aren't represented by this
+> >> top- level ti,palmas DT binding. Are the HW IP blocks here re-used
+> >> anywhere, or will they be?
+> >
+> > I guess for now I will drop this patch and will be taken up once we
+> > Finalize on the design.
+> 
+> The DT binding has to be fully defined before the code, or how do you
+> know what binding you're writing the code for? Dropping this patch and
+> then moving forward with posting it (which is what your statement
+> implies) doesn't seem correct.
 
-Yours,
-Linus Walleij
+Since Graeme is planning to redesign a bit I am dropping this patch
+And he plans to send the updated documentation patch. The original
+Intent of this series was to add documentation since the code was
+Defined before Documentation. To make it clear I am not posting
+Any further patches before Documentation/DT binding is completely
+Defined.
+
+Regards,
+Keerthy 
