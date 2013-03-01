@@ -1,73 +1,63 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC PATCH RESEND v2] of/pci: Provide support for parsing PCI
- DT ranges property
-Date: Fri, 01 Mar 2013 09:13:34 -0600
-Message-ID: <5130C59E.8020702@gmail.com>
-References: <1362140616-19346-1-git-send-email-Andrew.Murray@arm.com>
+From: Thomas De Schampheleire <patrickdepinguin+linuxi2c-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: I2C and devicetrees
+Date: Fri, 1 Mar 2013 16:33:06 +0100
+Message-ID: <CAAXf6LXGPEeCaxST6xz8YmzTobesXqOw-BKritG61rU0mv6Srw@mail.gmail.com>
+References: <201212052336.24233.PeterHuewe@gmx.de>
+	<CAOesGMhUVwB4+kuCA8hSmfhoVzkznNbjj6hjngDMaQkB83WqjQ@mail.gmail.com>
+	<50C79DE8.2090201@wwwdotorg.org>
+	<20121214203845.5D7ED3E0BDD@localhost>
+	<511A6F26.20801@keymile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <1362140616-19346-1-git-send-email-Andrew.Murray@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Andrew Murray <Andrew.Murray@arm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <Liviu.Dudau@arm.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <511A6F26.20801-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerlando Falauto <gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <public-grant.likely-s3s/WqlpOiPyB63q8FvJNQ-wOFGN7rlS/M9smdsby/KFg@public.gmane.org>, Stephen Warren <public-swarren-3lzwWm7+Weoh9ZMKESR00Q-wOFGN7rlS/M9smdsby/KFg@public.gmane.org>, Olof Johansson <public-olof-nZhT3qVonbNeoWH0uzbU5w-wOFGN7rlS/M9smdsby/KFg@public.gmane.org>, Peter Huewe <public-PeterHuewe-Mmb7MZpHnFY-wOFGN7rlS/M9smdsby/KFg@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/01/2013 06:23 AM, Andrew Murray wrote:
-> This patch factors out common implementations patterns to reduce overall kernel
-> code and provide a means for host bridge drivers to directly obtain struct
-> resources from the DT's ranges property without relying on architecture specific
-> DT handling. This will make it easier to write archiecture independent host bridge
-> drivers and mitigate against further duplication of DT parsing code.
-> 
-> This patch can be used in the following way:
-> 
-> 	struct of_pci_range_iter iter;
-> 	for_each_of_pci_range(&iter, np) {
-> 
-> 		//directly access properties of the address range, e.g.:
-> 		//iter.pci_space, iter.pci_addr, iter.cpu_addr, iter.size or
-> 		//iter.flags
-> 
-> 		//alternatively obtain a struct resource, e.g.:
-> 		//struct resource res;
-> 		//range_iter_fill_resource(iter, np, res);
-> 	}
-> 
-> Additionally the implementation takes care of adjacent ranges and merges them
-> into a single range (as was the case with powerpc and microblaze).
-> 
-> The modifications to microblaze, mips and powerpc have not been tested.
-> 
-> v2:
->   This follows on from suggestions made by Grant Likely
->   (marc.info/?l=linux-kernel&m=136079602806328)
-> 
-> Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
-> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> ---
->  arch/microblaze/pci/pci-common.c |  100 +++++++++++--------------------------
->  arch/mips/pci/pci.c              |   44 ++++-------------
->  arch/powerpc/kernel/pci-common.c |   93 ++++++++++-------------------------
->  drivers/of/address.c             |   54 ++++++++++++++++++++
->  include/linux/of_address.h       |   30 +++++++++++
->  5 files changed, 151 insertions(+), 170 deletions(-)
+Hi,
 
-The thing is that this still leaves pci_process_bridge_OF_ranges
-basically identical for microblaze and powerpc which is really what
-needs to be moved out to common code. Obviously, struct pci_controller
-vs. struct pci_sys_data on ARM is an issue, but they all have
-fundamentally the same data.
+On Tue, Feb 12, 2013 at 5:34 PM, Gerlando Falauto
+<gerlando.falauto-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org> wrote:
+> Hi everyone,
+>
+> I have a similar question.
+> I'd like to "name" i2c devices so that a userspace application can somehow
+> identify those devices with the same function across different boards (which
+> may have different addresses or be connected to a different i2c bus, or be a
+> physically different chip).
+>
+> For instance "hwmon" devices get instantiated within sysfs under
+> /sys/class/hwmon/hwmonX
+>
+> # cat /sys/class/hwmon/hwmon0/device/name
+> lm75
+>
+> which I would like to be identified by the name "switch" (as in "switch
+> temperature"). I was thinking about instantiating it as something like
+> "lm75:switch" within i2c_board_info.type. For device-tree-less
+> architectures, a trivial change within i2c_match_id() so to ignore the part
+> following ":" seems to do the trick. Don't know about devicetree but I guess
+> a similar approach could be imagined.
+>
+> Another example would be given by EEPROMs: all boards are equipped with an
+> EEPROM containing inventory management, which I would like to identify as
+> "ivm". So something like "24c08:ivm".
+> After all, I'd like to be able to achive something like "named MTD
+> partitions" which you can identify by looking at "/proc/mtd".
+>
+> Maybe some other symbol could be used instead of ":", but anyhow, does the
+> above make any sense at all to you?
 
-All these common fields should be in a common PCI controller struct.
-Perhaps introducing this with just what you need would work. Depending
-how invasive moving those fields to a new struct is, you could have a
-wrapper that just copies/translates the fields to the arch specific struct.
+I have exactly the same request: I would like to put logical names in
+the device tree for various devices (i2c, spi, ...) which are in some
+way easily retrievable from a userspace application.
+The purpose seems to be the same as Gerlando's: different boards have
+different physical configuration but logically each has the same set
+of devices.
 
-There's also things like ioremap of the i/o range. ARM uses a fixed
-virtual address, so we need to do something different. Just returning
-the i/o cpu_addr and moving the ioremap out of this function would solve
-that.
+How can we achieve that?
 
-Rob
+Thanks,
+Thomas
