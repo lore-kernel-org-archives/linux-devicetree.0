@@ -1,13 +1,13 @@
-From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v4 1/2] dma: imx-dma: Add oftree support
-Date: Sat,  2 Mar 2013 17:53:32 +0100
-Message-ID: <1362243213-29399-2-git-send-email-mpa@pengutronix.de>
-References: <1362243213-29399-1-git-send-email-mpa@pengutronix.de>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5] iio: Add OF support
+Date: Sat, 02 Mar 2013 16:57:55 +0000
+Message-ID: <51322F93.7050803@kernel.org>
+References: <1360256940-19438-1-git-send-email-linux@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362243213-29399-1-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1360256940-19438-1-git-send-email-linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,254 +18,426 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: djbw-b10kYP2dOMg@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, MyungJoo Ham <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding devicetree support for imx-dma driver. Use driver name for
-function 'imx_dma_is_general_purpose' because the devicename for
-devicetree initialized devices is different.
+On 02/07/2013 05:09 PM, Guenter Roeck wrote:
+> Provide bindings and parse OF data during initialization.
+> 
+> Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Applied to the togreg branch of iio.git with a small edit wrt
+to removing the WIP line in the binding documenation.
 
-Changes in V4:
-- Directly use "imxdma_channel" as proposed by Arnd. This removes the
-  allocation of imx_dma_data.
-- Simplify function imx_dma_is_general_purpose using driver names.
+I thought about putting something about subject to extension
+but decided that was obviously the case so just removed the statement
+and editting the next bit to make that work without it.
 
-Changes in V3:
-- Create a imxdma translate function to pass the device object into the
-  filter function.
+Thanks for your work on this Guenter.  Looks very good to me and
+is clearly useful to have.
 
-Changes in V2:
-- Change the driver to use generic DMA DT bindings.
-- Add a imx-dma filter function that sets the dma request line in
-  private data.
+Will be in the togreg branch of
+git://git.kernel.org/pub/scm/linux/kernel/git/jic23/iio.git
+shortly.
+(I'll send a pull request to Greg in a week or so depending on
+what else comes along, at that point it will be in the staging-next
+tree and show up in Linux next.)
 
-Signed-off-by: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Reviewed-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
- .../devicetree/bindings/dma/fsl-imx-dma.txt        | 48 ++++++++++++++
- drivers/dma/imx-dma.c                              | 77 +++++++++++++++++++++-
- include/linux/platform_data/dma-imx.h              |  6 +-
- 3 files changed, 126 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/dma/fsl-imx-dma.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-dma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-dma.txt
-new file mode 100644
-index 0000000..04d8e40
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/fsl-imx-dma.txt
-@@ -0,0 +1,48 @@
-+* Freescale Direct Memory Access (DMA) Controller for i.MX
-+
-+This document will only describe differences to the generic DMA Controller and
-+DMA request bindings.
-+
-+* DMA controller
-+
-+Required properties:
-+- compatible : Should be "fsl,<chip>-dma". chip can be imx1, imx21 or imx27
-+- reg : Should contain DMA registers location and length
-+- interrupts : First item should be DMA interrupt, second one is optional and
-+    should contain DMA Error interrupt
-+- #dma-cells : Has to be 1. imx-dma does not support anything else.
-+
-+Optional properties:
-+- #dma-channels : Number of DMA channels supported. Should be 16.
-+- #dma-requests : Number of DMA requests supported.
-+
-+Example:
-+
-+	dma: dma@10001000 {
-+		compatible = "fsl,imx27-dma";
-+		reg = <0x10001000 0x1000>;
-+		interrupts = <32 33>;
-+		#dma-cells = <1>;
-+		#dma-channels = <16>;
-+	};
-+
-+
-+* DMA client
-+
-+Clients have to specify the DMA requests with phandles in a list.
-+
-+Required properties:
-+- dmas: List of one or more DMA request specifiers. One DMA request specifier
-+    consists of a phandle to the DMA controller followed by the integer
-+    specifiying the request line.
-+- dma-names: List of string identifiers for the DMA requests. For the correct
-+    names, have a look at the specific client driver.
-+
-+Example:
-+
-+	sdhci1: sdhci@10013000 {
-+		...
-+		dmas = <&dma 7>;
-+		dma-names = "rx-tx";
-+		...
-+	};
-diff --git a/drivers/dma/imx-dma.c b/drivers/dma/imx-dma.c
-index a7dcf78..847550a 100644
---- a/drivers/dma/imx-dma.c
-+++ b/drivers/dma/imx-dma.c
-@@ -26,6 +26,8 @@
- #include <linux/clk.h>
- #include <linux/dmaengine.h>
- #include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of_dma.h>
- 
- #include <asm/irq.h>
- #include <linux/platform_data/dma-imx.h>
-@@ -185,6 +187,11 @@ struct imxdma_engine {
- 	enum imx_dma_type		devtype;
- };
- 
-+struct imxdma_filter_data {
-+	struct imxdma_engine	*imxdma;
-+	int			 request;
-+};
-+
- static struct platform_device_id imx_dma_devtype[] = {
- 	{
- 		.name = "imx1-dma",
-@@ -201,6 +208,22 @@ static struct platform_device_id imx_dma_devtype[] = {
- };
- MODULE_DEVICE_TABLE(platform, imx_dma_devtype);
- 
-+static const struct of_device_id imx_dma_of_dev_id[] = {
-+	{
-+		.compatible = "fsl,imx1-dma",
-+		.data = &imx_dma_devtype[IMX1_DMA],
-+	}, {
-+		.compatible = "fsl,imx21-dma",
-+		.data = &imx_dma_devtype[IMX21_DMA],
-+	}, {
-+		.compatible = "fsl,imx27-dma",
-+		.data = &imx_dma_devtype[IMX27_DMA],
-+	}, {
-+		/* sentinel */
-+	}
-+};
-+MODULE_DEVICE_TABLE(of, imx_dma_of_dev_id);
-+
- static inline int is_imx1_dma(struct imxdma_engine *imxdma)
- {
- 	return imxdma->devtype == IMX1_DMA;
-@@ -734,8 +757,9 @@ static int imxdma_alloc_chan_resources(struct dma_chan *chan)
- 	struct imxdma_channel *imxdmac = to_imxdma_chan(chan);
- 	struct imx_dma_data *data = chan->private;
- 
--	if (data != NULL)
-+	if (data != NULL) {
- 		imxdmac->dma_request = data->dma_request;
-+	}
- 
- 	while (imxdmac->descs_allocated < IMXDMA_MAX_CHAN_DESCRIPTORS) {
- 		struct imxdma_desc *desc;
-@@ -996,13 +1020,49 @@ static void imxdma_issue_pending(struct dma_chan *chan)
- 	spin_unlock_irqrestore(&imxdma->lock, flags);
- }
- 
-+static bool imxdma_filter_fn(struct dma_chan *chan, void *param)
-+{
-+	struct imxdma_filter_data *fdata = param;
-+	struct imxdma_channel *imxdma_chan = to_imxdma_chan(chan);
-+
-+	if (chan->device->dev != fdata->imxdma->dev)
-+		return false;
-+
-+	imxdma_chan->dma_request = fdata->request;
-+	chan->private = NULL;
-+
-+	return true;
-+}
-+
-+static struct dma_chan *imxdma_xlate(struct of_phandle_args *dma_spec,
-+						struct of_dma *ofdma)
-+{
-+	int count = dma_spec->args_count;
-+	struct imxdma_engine *imxdma = ofdma->of_dma_data;
-+	struct imxdma_filter_data fdata = {
-+		.imxdma = imxdma,
-+		.request = *(unsigned *)&dma_spec->args[0],
-+	};
-+
-+	if (count != 1)
-+		return NULL;
-+
-+	return dma_request_channel(imxdma->dma_device.cap_mask,
-+					imxdma_filter_fn, &fdata);
-+}
-+
- static int __init imxdma_probe(struct platform_device *pdev)
- 	{
- 	struct imxdma_engine *imxdma;
- 	struct resource *res;
-+	const struct of_device_id *of_id;
- 	int ret, i;
- 	int irq, irq_err;
- 
-+	of_id = of_match_device(imx_dma_of_dev_id, &pdev->dev);
-+	if (of_id)
-+		pdev->id_entry = of_id->data;
-+
- 	imxdma = devm_kzalloc(&pdev->dev, sizeof(*imxdma), GFP_KERNEL);
- 	if (!imxdma)
- 		return -ENOMEM;
-@@ -1136,8 +1196,19 @@ static int __init imxdma_probe(struct platform_device *pdev)
- 		goto err;
- 	}
- 
-+	if (pdev->dev.of_node) {
-+		ret = of_dma_controller_register(pdev->dev.of_node,
-+				imxdma_xlate, imxdma);
-+		if (ret) {
-+			dev_err(&pdev->dev, "unable to register of_dma_controller\n");
-+			goto err_of_dma_controller;
-+		}
-+	}
-+
- 	return 0;
- 
-+err_of_dma_controller:
-+	dma_async_device_unregister(&imxdma->dma_device);
- err:
- 	clk_disable_unprepare(imxdma->dma_ipg);
- 	clk_disable_unprepare(imxdma->dma_ahb);
-@@ -1150,6 +1221,9 @@ static int __exit imxdma_remove(struct platform_device *pdev)
- 
-         dma_async_device_unregister(&imxdma->dma_device);
- 
-+	if (pdev->dev.of_node)
-+		of_dma_controller_free(pdev->dev.of_node);
-+
- 	clk_disable_unprepare(imxdma->dma_ipg);
- 	clk_disable_unprepare(imxdma->dma_ahb);
- 
-@@ -1159,6 +1233,7 @@ static int __exit imxdma_remove(struct platform_device *pdev)
- static struct platform_driver imxdma_driver = {
- 	.driver		= {
- 		.name	= "imx-dma",
-+		.of_match_table = imx_dma_of_dev_id,
- 	},
- 	.id_table	= imx_dma_devtype,
- 	.remove		= __exit_p(imxdma_remove),
-diff --git a/include/linux/platform_data/dma-imx.h b/include/linux/platform_data/dma-imx.h
-index f6d30cc..beac6b8 100644
---- a/include/linux/platform_data/dma-imx.h
-+++ b/include/linux/platform_data/dma-imx.h
-@@ -60,10 +60,8 @@ static inline int imx_dma_is_ipu(struct dma_chan *chan)
- 
- static inline int imx_dma_is_general_purpose(struct dma_chan *chan)
- {
--	return strstr(dev_name(chan->device->dev), "sdma") ||
--		!strcmp(dev_name(chan->device->dev), "imx1-dma") ||
--		!strcmp(dev_name(chan->device->dev), "imx21-dma") ||
--		!strcmp(dev_name(chan->device->dev), "imx27-dma");
-+	return !strcmp(chan->device->dev->driver->name, "imx-sdma") ||
-+		!strcmp(chan->device->dev->driver->name, "imx-dma");
- }
- 
- #endif
--- 
-1.8.1.4
+Jonathan
+> ---
+> v5:
+> - Updated examples in bindings.
+> v4:
+> - Fixed wrong parameter to dummy of_iio_channel_get_by_name if CONFIG_OF is
+>   undefined, and wrong return value.
+> - Initialize indio_dev->of_node in iio_device_register if the calling driver
+>   neglected to do it.
+> v3:
+> - Cleaned up documentation (formatting, left-over clock references)
+> - Updated bindings description to permit sub-devices
+> - When searching for iio devices, use the pointer to the iio device type instead
+>   of strcmp. Rename iio_dev_type to iio_device_type (to match other device
+>   types) and make it global for that purpose. Check the OF node first, then the
+>   device type, as the node is less likely to match.
+> - Move the common code in of_iio_channel_get and of_iio_channel_get_all to
+>   __of_iio_channel_get.
+> - Return NULL from of_iio_channel_get_by_name if nothing is found, or
+>   an error if there is a problem with consistency or if the provider device is
+>   not yet available.
+> - In iio_channel_get, return if of_iio_channel_get_by_name() returns a channel
+>   or an error, and continue otherwise.
+> v2:
+> - Rebased to iio/togreg
+> - Documentation update per feedback
+> - Dropped io-channel-output-names from the bindings document. The property is
+>   not used in the code, and it is not entirely clear what it would be used for.
+>   If there is a need for it, we can add it back in later on.
+> - Don't export OF specific API calls
+> - For OF support, no longer depend on iio_map
+> - Add #ifdef CONFIG_OF where appropriate, and ensure that the code still builds
+>   if it is not selected.
+> - Change iio_channel_get to take device pointer as argument instead of device
+>   name. Retain old API as of_iio_channel_get_sys.
+> - iio_channel_get now works for both OF and non-OF configurations
+> - Use regulator to get vref for max1363 driver.
+> 
+>  .../devicetree/bindings/iio/iio-bindings.txt       |   97 +++++++++++
+>  drivers/iio/iio_core.h                             |    1 +
+>  drivers/iio/industrialio-core.c                    |    8 +-
+>  drivers/iio/inkern.c                               |  171 ++++++++++++++++++++
+>  4 files changed, 275 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/iio-bindings.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/iio-bindings.txt b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> new file mode 100644
+> index 0000000..1182845
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/iio-bindings.txt
+> @@ -0,0 +1,97 @@
+> +This binding is a work-in-progress. It is derived from clock bindings,
+> +and based on suggestions from Lars-Peter Clausen [1].
+> +
+> +Sources of IIO channels can be represented by any node in the device
+> +tree. Those nodes are designated as IIO providers. IIO consumer
+> +nodes use a phandle and IIO specifier pair to connect IIO provider
+> +outputs to IIO inputs. Similar to the gpio specifiers, an IIO
+> +specifier is an array of one or more cells identifying the IIO
+> +output on a device. The length of an IIO specifier is defined by the
+> +value of a #io-channel-cells property in the IIO provider node.
+> +
+> +[1] http://marc.info/?l=linux-iio&m=135902119507483&w=2
+> +
+> +==IIO providers==
+> +
+> +Required properties:
+> +#io-channel-cells: Number of cells in an IIO specifier; Typically 0 for nodes
+> +		   with a single IIO output and 1 for nodes with multiple
+> +		   IIO outputs.
+> +
+> +Example for a simple configuration with no trigger:
+> +
+> +	adc: voltage-sensor@35 {
+> +		compatible = "maxim,max1139";
+> +		reg = <0x35>;
+> +		#io-channel-cells = <1>;
+> +	};
+> +
+> +Example for a configuration with trigger:
+> +
+> +	adc@35 {
+> +		compatible = "some-vendor,some-adc";
+> +		reg = <0x35>;
+> +
+> +		adc1: iio-device@0 {
+> +			#io-channel-cells = <1>;
+> +			/* other properties */
+> +		};
+> +		adc2: iio-device@1 {
+> +			#io-channel-cells = <1>;
+> +			/* other properties */
+> +		};
+> +	};
+> +
+> +==IIO consumers==
+> +
+> +Required properties:
+> +io-channels:	List of phandle and IIO specifier pairs, one pair
+> +		for each IIO input to the device. Note: if the
+> +		IIO provider specifies '0' for #io-channel-cells,
+> +		then only the phandle portion of the pair will appear.
+> +
+> +Optional properties:
+> +io-channel-names:
+> +		List of IIO input name strings sorted in the same
+> +		order as the io-channels property. Consumers drivers
+> +		will use io-channel-names to match IIO input names
+> +		with IIO specifiers.
+> +io-channel-ranges:
+> +		Empty property indicating that child nodes can inherit named
+> +		IIO channels from this node. Useful for bus nodes to provide
+> +		and IIO channel to their children.
+> +
+> +For example:
+> +
+> +	device {
+> +		io-channels = <&adc 1>, <&ref 0>;
+> +		io-channel-names = "vcc", "vdd";
+> +	};
+> +
+> +This represents a device with two IIO inputs, named "vcc" and "vdd".
+> +The vcc channel is connected to output 1 of the &adc device, and the
+> +vdd channel is connected to output 0 of the &ref device.
+> +
+> +==Example==
+> +
+> +	adc: max1139@35 {
+> +		compatible = "maxim,max1139";
+> +		reg = <0x35>;
+> +		#io-channel-cells = <1>;
+> +	};
+> +
+> +	...
+> +
+> +	iio_hwmon {
+> +		compatible = "iio-hwmon";
+> +		io-channels = <&adc 0>, <&adc 1>, <&adc 2>,
+> +			<&adc 3>, <&adc 4>, <&adc 5>,
+> +			<&adc 6>, <&adc 7>, <&adc 8>,
+> +			<&adc 9>;
+> +	};
+> +
+> +	some_consumer {
+> +		compatible = "some-consumer";
+> +		io-channels = <&adc 10>, <&adc 11>;
+> +		io-channel-names = "adc1", "adc2";
+> +	};
+> diff --git a/drivers/iio/iio_core.h b/drivers/iio/iio_core.h
+> index f652e6a..05c1b74 100644
+> --- a/drivers/iio/iio_core.h
+> +++ b/drivers/iio/iio_core.h
+> @@ -18,6 +18,7 @@
+>  struct iio_chan_spec;
+>  struct iio_dev;
+>  
+> +extern struct device_type iio_device_type;
+>  
+>  int __iio_add_chan_devattr(const char *postfix,
+>  			   struct iio_chan_spec const *chan,
+> diff --git a/drivers/iio/industrialio-core.c b/drivers/iio/industrialio-core.c
+> index 8848f16..6d8b027 100644
+> --- a/drivers/iio/industrialio-core.c
+> +++ b/drivers/iio/industrialio-core.c
+> @@ -847,7 +847,7 @@ static void iio_dev_release(struct device *device)
+>  	kfree(indio_dev);
+>  }
+>  
+> -static struct device_type iio_dev_type = {
+> +struct device_type iio_device_type = {
+>  	.name = "iio_device",
+>  	.release = iio_dev_release,
+>  };
+> @@ -869,7 +869,7 @@ struct iio_dev *iio_device_alloc(int sizeof_priv)
+>  
+>  	if (dev) {
+>  		dev->dev.groups = dev->groups;
+> -		dev->dev.type = &iio_dev_type;
+> +		dev->dev.type = &iio_device_type;
+>  		dev->dev.bus = &iio_bus_type;
+>  		device_initialize(&dev->dev);
+>  		dev_set_drvdata(&dev->dev, (void *)dev);
+> @@ -960,6 +960,10 @@ int iio_device_register(struct iio_dev *indio_dev)
+>  {
+>  	int ret;
+>  
+> +	/* If the calling driver did not initialize of_node, do it here */
+> +	if (!indio_dev->dev.of_node && indio_dev->dev.parent)
+> +		indio_dev->dev.of_node = indio_dev->dev.parent->of_node;
+> +
+>  	/* configure elements for the chrdev */
+>  	indio_dev->dev.devt = MKDEV(MAJOR(iio_devt), indio_dev->id);
+>  
+> diff --git a/drivers/iio/inkern.c b/drivers/iio/inkern.c
+> index b289915..795d100 100644
+> --- a/drivers/iio/inkern.c
+> +++ b/drivers/iio/inkern.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/export.h>
+>  #include <linux/slab.h>
+>  #include <linux/mutex.h>
+> +#include <linux/of.h>
+>  
+>  #include <linux/iio/iio.h>
+>  #include "iio_core.h"
+> @@ -92,6 +93,164 @@ static const struct iio_chan_spec
+>  	return chan;
+>  }
+>  
+> +#ifdef CONFIG_OF
+> +
+> +static int iio_dev_node_match(struct device *dev, void *data)
+> +{
+> +	return dev->of_node == data && dev->type == &iio_device_type;
+> +}
+> +
+> +static int __of_iio_channel_get(struct iio_channel *channel,
+> +				struct device_node *np, int index)
+> +{
+> +	struct device *idev;
+> +	struct iio_dev *indio_dev;
+> +	int err;
+> +	struct of_phandle_args iiospec;
+> +
+> +	err = of_parse_phandle_with_args(np, "io-channels",
+> +					 "#io-channel-cells",
+> +					 index, &iiospec);
+> +	if (err)
+> +		return err;
+> +
+> +	idev = bus_find_device(&iio_bus_type, NULL, iiospec.np,
+> +			       iio_dev_node_match);
+> +	of_node_put(iiospec.np);
+> +	if (idev == NULL)
+> +		return -EPROBE_DEFER;
+> +
+> +	indio_dev = dev_to_iio_dev(idev);
+> +	channel->indio_dev = indio_dev;
+> +	index = iiospec.args_count ? iiospec.args[0] : 0;
+> +	if (index >= indio_dev->num_channels) {
+> +		return -EINVAL;
+> +		goto err_put;
+> +	}
+> +	channel->channel = &indio_dev->channels[index];
+> +
+> +	return 0;
+> +
+> +err_put:
+> +	iio_device_put(indio_dev);
+> +	return err;
+> +}
+> +
+> +static struct iio_channel *of_iio_channel_get(struct device_node *np, int index)
+> +{
+> +	struct iio_channel *channel;
+> +	int err;
+> +
+> +	if (index < 0)
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	channel = kzalloc(sizeof(*channel), GFP_KERNEL);
+> +	if (channel == NULL)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	err = __of_iio_channel_get(channel, np, index);
+> +	if (err)
+> +		goto err_free_channel;
+> +
+> +	return channel;
+> +
+> +err_free_channel:
+> +	kfree(channel);
+> +	return ERR_PTR(err);
+> +}
+> +
+> +static struct iio_channel *of_iio_channel_get_by_name(struct device_node *np,
+> +						      const char *name)
+> +{
+> +	struct iio_channel *chan = NULL;
+> +
+> +	/* Walk up the tree of devices looking for a matching iio channel */
+> +	while (np) {
+> +		int index = 0;
+> +
+> +		/*
+> +		 * For named iio channels, first look up the name in the
+> +		 * "io-channel-names" property.  If it cannot be found, the
+> +		 * index will be an error code, and of_iio_channel_get()
+> +		 * will fail.
+> +		 */
+> +		if (name)
+> +			index = of_property_match_string(np, "io-channel-names",
+> +							 name);
+> +		chan = of_iio_channel_get(np, index);
+> +		if (!IS_ERR(chan))
+> +			break;
+> +		else if (name && index >= 0) {
+> +			pr_err("ERROR: could not get IIO channel %s:%s(%i)\n",
+> +				np->full_name, name ? name : "", index);
+> +			return chan;
+> +		}
+> +
+> +		/*
+> +		 * No matching IIO channel found on this node.
+> +		 * If the parent node has a "io-channel-ranges" property,
+> +		 * then we can try one of its channels.
+> +		 */
+> +		np = np->parent;
+> +		if (np && !of_get_property(np, "io-channel-ranges", NULL))
+> +			break;
+> +	}
+> +	return chan;
+> +}
+> +
+> +static struct iio_channel *of_iio_channel_get_all(struct device *dev)
+> +{
+> +	struct iio_channel *chans;
+> +	int i, mapind, nummaps = 0;
+> +	int ret;
+> +
+> +	do {
+> +		ret = of_parse_phandle_with_args(dev->of_node,
+> +						 "io-channels",
+> +						 "#io-channel-cells",
+> +						 nummaps, NULL);
+> +		if (ret < 0)
+> +			break;
+> +	} while (++nummaps);
+> +
+> +	if (nummaps == 0)	/* no error, return NULL to search map table */
+> +		return NULL;
+> +
+> +	/* NULL terminated array to save passing size */
+> +	chans = kcalloc(nummaps + 1, sizeof(*chans), GFP_KERNEL);
+> +	if (chans == NULL)
+> +		return ERR_PTR(-ENOMEM);
+> +
+> +	/* Search for OF matches */
+> +	for (mapind = 0; mapind < nummaps; mapind++) {
+> +		ret = __of_iio_channel_get(&chans[mapind], dev->of_node,
+> +					   mapind);
+> +		if (ret)
+> +			goto error_free_chans;
+> +	}
+> +	return chans;
+> +
+> +error_free_chans:
+> +	for (i = 0; i < mapind; i++)
+> +		iio_device_put(chans[i].indio_dev);
+> +	kfree(chans);
+> +	return ERR_PTR(ret);
+> +}
+> +
+> +#else /* CONFIG_OF */
+> +
+> +static inline struct iio_channel *
+> +of_iio_channel_get_by_name(struct device_node *np, const char *name)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline struct iio_channel *of_iio_channel_get_all(struct device *dev)
+> +{
+> +	return NULL;
+> +}
+> +
+> +#endif /* CONFIG_OF */
+>  
+>  static struct iio_channel *iio_channel_get_sys(const char *name,
+>  					       const char *channel_name)
+> @@ -150,7 +309,14 @@ struct iio_channel *iio_channel_get(struct device *dev,
+>  				    const char *channel_name)
+>  {
+>  	const char *name = dev ? dev_name(dev) : NULL;
+> +	struct iio_channel *channel;
+>  
+> +	if (dev) {
+> +		channel = of_iio_channel_get_by_name(dev->of_node,
+> +						     channel_name);
+> +		if (channel != NULL)
+> +			return channel;
+> +	}
+>  	return iio_channel_get_sys(name, channel_name);
+>  }
+>  EXPORT_SYMBOL_GPL(iio_channel_get);
+> @@ -173,6 +339,11 @@ struct iio_channel *iio_channel_get_all(struct device *dev)
+>  
+>  	if (dev == NULL)
+>  		return ERR_PTR(-EINVAL);
+> +
+> +	chans = of_iio_channel_get_all(dev);
+> +	if (chans)
+> +		return chans;
+> +
+>  	name = dev_name(dev);
+>  
+>  	mutex_lock(&iio_map_list_lock);
+> 
