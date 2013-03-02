@@ -1,51 +1,47 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v6 01/16] clk: samsung: add common clock framework helper
- functions for Samsung platforms
-Date: Sun, 03 Mar 2013 12:59:03 +0100
-Message-ID: <51333B07.7050106@gmail.com>
-References: <1361175686-19400-1-git-send-email-thomas.abraham@linaro.org> <1361175686-19400-2-git-send-email-thomas.abraham@linaro.org> <201303030208.49722.heiko@sntech.de> <51333149.1060105@gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v3] gpio: Add device driver for GRGPIO cores and support
+ custom accessors with gpio-generic
+Date: Sat, 02 Mar 2013 20:13:02 +0000
+Message-ID: <20130302201302.E16FE3E219B@localhost>
+References: <1360653873-25368-1-git-send-email-andreas@gaisler.com>
+ <CACRpkdaYQSrzm_Yj3ZH9YZLC_zPJN06X-9ZM9jd7=X0OB1shXQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51333149.1060105@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
-Cc: Thomas Abraham <thomas.abraham@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, mturquette@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CACRpkdaYQSrzm_Yj3ZH9YZLC_zPJN06X-9ZM9jd7=X0OB1shXQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Cc: Anton Vorontsov <anton.vorontsov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, software-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/03/2013 12:17 PM, Sylwester Nawrocki wrote:
-> On 03/03/2013 02:08 AM, Heiko St=C3=BCbner wrote:
->> But is there an easy way to define more than one alias? On the s3c24=
-16
->> for
->> example the hsmmc hclk is the "hsmmc" io-clock, as well as the sourc=
-e
->> for the
->> "mmc_busclk.0". Same for the "uart" pclk, that is also a baud clock
->> source.
-[...]
-> But those multiple aliases are important only for machines with devic=
-e
-                                                              ^^^^^
-Sorry, this should have read "without". Also please note that due to
-representing original struct clk_clksrc objects (mux + div + gate clock=
-)
-with separate primitive clocks device drivers may not work as before
-where clk_{set/get}_parent() was called. I.e. a separate consumer clock
-id needs to be used to control a clock mux. Hmm, however this issue
-doesn't affect anything on s3c24xx, since such composite clocks have
-been introduced only starting from s3c64xx.
+On Fri, 1 Mar 2013 01:24:01 +0100, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, Feb 12, 2013 at 8:24 AM, Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org> wrote:
+> 
+> > This driver supports GRGPIO gpio cores available in the GRLIB VHDL IP
+> > core library from Aeroflex Gaisler.
+> >
+> > This also adds support to gpio-generic for using custom accessor
+> > functions. The grgpio driver uses this to use ioread32be and iowrite32be
+> > for big endian register accesses.
+> >
+> > Signed-off-by: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+> 
+> Can you split this in two patches: one that adds the custom accessors
+> and one that adds the driver?
 
-I guess to create multiple aliases now a new helper function could be
-created that takes as an argument a clock index (as in enum exynos4_clk=
-s)
-and adds a clkdev lookup entry to a matched clk object. Probably it
-wouldn't be difficult to rework the driver to be registering all clkdev
-entries like this.
+Yes please, and as commented on in the other thread you can go ahead and
+add the BE accessors to gpio-generic.c. I would like to optimize things
+in gpiolib to make a lot of gpio-generic.c unnecessary, but that is only
+an idea at this point.
 
-Do you have your source tree in any public git available ? ;) Perhaps
-I could find a time to adjust and try it with s3c2440 based board.
-
-> tree support, aren't they ?
+g.
