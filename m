@@ -1,47 +1,31 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v4 1/2] dma: imx-dma: Add oftree support
-Date: Sat, 2 Mar 2013 22:12:38 +0000
-Message-ID: <201303022212.38322.arnd@arndb.de>
-References: <1362243213-29399-1-git-send-email-mpa@pengutronix.de>
- <1362243213-29399-2-git-send-email-mpa@pengutronix.de>
+From: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC v2 2/3] power: power_supply: Add core support for
+ supplied_nodes
+Date: Sat, 2 Mar 2013 14:48:33 -0800
+Message-ID: <20130302224832.GA16720@lizard.sbx05280.losalca.wayport.net>
+References: <1361488272-21010-1-git-send-email-rklein@nvidia.com>
+ <1361488272-21010-3-git-send-email-rklein@nvidia.com>
+ <5127D083.6020308@wwwdotorg.org>
+ <5127EA13.9010403@nvidia.com>
+ <512FB473.8060309@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362243213-29399-2-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, djbw-b10kYP2dOMg@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <512FB473.8060309-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 02 March 2013, Markus Pargmann wrote:
-> Adding devicetree support for imx-dma driver. Use driver name for
-> function 'imx_dma_is_general_purpose' because the devicename for
-> devicetree initialized devices is different.
- 
-Just one small comment this time:
+On Thu, Feb 28, 2013 at 02:48:03PM -0500, Rhyland Klein wrote:
+[...]
+> Anton, David, would you be adverse to the changing of supplied_to
+> from being a
+> list of batteries stored in a charger to being a list of chargers
+> stored in batteries?
 
-> @@ -734,8 +757,9 @@ static int imxdma_alloc_chan_resources(struct dma_chan *chan)
->  	struct imxdma_channel *imxdmac = to_imxdma_chan(chan);
->  	struct imx_dma_data *data = chan->private;
->  
-> -	if (data != NULL)
-> +	if (data != NULL) {
->  		imxdmac->dma_request = data->dma_request;
-> +	}
->  
->  	while (imxdmac->descs_allocated < IMXDMA_MAX_CHAN_DESCRIPTORS) {
->  		struct imxdma_desc *desc;
+I wonder if we can support both ways?..
 
-I assume that this change wasn't meant to be in here.
-
-	Arnd
+Thanks,
+Anton
