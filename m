@@ -1,68 +1,44 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v4 2/8] reset: Add reset controller API
-Date: Mon, 04 Mar 2013 10:03:31 -0700
-Message-ID: <5134D3E3.9000308@wwwdotorg.org>
-References: <1361878774-6382-1-git-send-email-p.zabel@pengutronix.de>  <1361878774-6382-3-git-send-email-p.zabel@pengutronix.de>  <513108F8.30902@wwwdotorg.org> <1362386007.4988.34.camel@pizza.hi.pengutronix.de>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/9] ARM: dt: add header to define GPIO flags
+Date: Mon, 04 Mar 2013 10:13:57 -0700
+Message-ID: <5134D655.9070608@wwwdotorg.org>
+References: <1360791198-29462-1-git-send-email-swarren@wwwdotorg.org> <1360791198-29462-2-git-send-email-swarren@wwwdotorg.org> <20130304083457.0D4333E206B@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1362386007.4988.34.camel@pizza.hi.pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, Marek Vasut <marex@denx.de>, Fabio Estevam <fabio.estevam@freescale.com>, Sascha Hauer <s.hauer@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, kernel@pengutronix.de, devicetree-discuss@lists.ozlabs.org, Mike Turquette <mturquette@linaro.org>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, "Rafael J. Wysocki" <rjw@sisk.pl>, linux-pm@vger.kernel.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20130304083457.0D4333E206B@localhost>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/2013 01:33 AM, Philipp Zabel wrote:
-> Hi Stephen,
+On 03/04/2013 01:34 AM, Grant Likely wrote:
+> On Wed, 13 Feb 2013 14:33:10 -0700, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>
+>> Many GPIO device tree bindings use the same flags. Create a header to
+>> define those.
+>>
+>> Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  arch/arm/boot/dts/gpio.h |   10 ++++++++++
+>>  1 file changed, 10 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/gpio.h
+>>
+>> diff --git a/arch/arm/boot/dts/gpio.h b/arch/arm/boot/dts/gpio.h
+>> new file mode 100644
+>> index 0000000..4c9da69
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/gpio.h
 > 
-> Am Freitag, den 01.03.2013, 13:00 -0700 schrieb Stephen Warren:
->> On 02/26/2013 04:39 AM, Philipp Zabel wrote:
->>> This adds a simple API for devices to request being reset
->>> by separate reset controller hardware and implements the
->>> reset signal device tree binding.
->>
->>> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
->>
->>> +int of_reset_simple_xlate(struct reset_controller_dev *rcdev,
->>> +			  const struct of_phandle_args *reset_spec, u32 *flags)
->>> +{
->>> +	if (WARN_ON(reset_spec->args_count < rcdev->of_reset_n_cells))
->>> +		return -EINVAL;
->>
->> Would != make more sense than < ?
-> 
-> I copied this from of_gpio_simple_xlate, because the parsing will work
-> if args_count > of_reset_n_cells. In this case the device tree contains
-> a #reset-cells larger than what the reset controller driver expects.
-> Is this reason enough to assume the whole reset_spec is invalid?
+> Stephen, you know better than this. This is common code. Don't put it
+> under arch/arm.
 
-Well, there's certainly something unexpected going on; what are those
-extra cells expected to mean? I'd tend to make that an error myself to
-avoid unexpected symptoms. I'd tend to want to make the same change to
-of_gpio_simple_xlate().
+In V2 of the patch which modifies the dtc+cpp include path:
 
->>> +
->>> +	if (reset_spec->args[0] >= rcdev->nr_resets)
->>> +		return -EINVAL;
->>> +
->>> +	if (flags)
->>> +		*flags = reset_spec->args[1];
->>
->> if (flags)
->>     if (reset_spec->args_count > 1)
->>         *flags = reset_spec->args[1];
->>     else
->>         *flags = 0;
->>
->> ?
-> 
-> In gpiolib, of_get_named_gpio_flags clears the flags, so that the xlate
-> implementations don't have to do it. The core doesn't use the flags, so
-> this is not a problem. I don't see the need for
-> of_get_named_reset_flags, since the reset consumer drivers shouldn't
-> care for those. Maybe it would be better to remove the flags parameter
-> from the xlate function altogether.
+https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-February/028591.html
 
-Yes, since there are no flags, removing the parameter makes most sense.
-
+... I have moved the common headers to top-level include/dt-bindings, so
+it is shared across all arch. I didn't repost all the changes to the *.h
+and *.dts* files yet; I was waiting for any comments on the patch above.
