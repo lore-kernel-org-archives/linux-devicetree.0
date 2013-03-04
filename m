@@ -1,47 +1,66 @@
-From: Anton Vorontsov <anton-9xeibp6oKSgdnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC v2 2/3] power: power_supply: Add core support for
- supplied_nodes
-Date: Mon, 4 Mar 2013 09:47:06 -0800
-Message-ID: <20130304174705.GA31100@lizard.fhda.edu>
-References: <1361488272-21010-1-git-send-email-rklein@nvidia.com>
- <1361488272-21010-3-git-send-email-rklein@nvidia.com>
- <5127D083.6020308@wwwdotorg.org>
- <5127EA13.9010403@nvidia.com>
- <512FB473.8060309@nvidia.com>
- <20130302224832.GA16720@lizard.sbx05280.losalca.wayport.net>
- <5134DAB3.5000604@nvidia.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH 11/14] ARM: OMAP2+: Add device-tree support for NOR flash
+Date: Mon, 4 Mar 2013 11:51:38 -0600
+Message-ID: <5134DF2A.4050209@ti.com>
+References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com> <1361899842-30303-12-git-send-email-jon-hunter@ti.com> <CALF0-+V3A-fL7q2nPRmcgnFKmzRt8KwSLuzrwzyyce6MqHjVpw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5134DAB3.5000604-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CALF0-+V3A-fL7q2nPRmcgnFKmzRt8KwSLuzrwzyyce6MqHjVpw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ezequiel Garcia <elezegarcia@gmail.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 04, 2013 at 12:32:35PM -0500, Rhyland Klein wrote:
-[...]
-> >>Anton, David, would you be adverse to the changing of supplied_to
-> >>from being a
-> >>list of batteries stored in a charger to being a list of chargers
-> >>stored in batteries?
-> >>
-> >I wonder if we can support both ways?..
->
-> Well, the interesting factor becomes either we end up with 2 arrays
-> (supplied_to, supplied_from) or we make 1 array (horray, save space!)
-> but need to then either have a flag or use the power_supply type to
-> know how to interpret the single array (as supplied_to or supplied_from).
+
+On 03/04/2013 05:57 AM, Ezequiel Garcia wrote:
+> Hi Jon,
 > 
-> Adding in the second array and adds a char ** and an int, which doesn't seem
-> like as much overhead as trying to figure out how to interpret the
-> single array
-> so I am inclined to stick with 2 arrays.
+> On Tue, Feb 26, 2013 at 2:30 PM, Jon Hunter <jon-hunter@ti.com> wrote:
+>> +
+>> +Example:
+>> +
+>> +gpmc: gpmc@6e000000 {
+>> +       compatible = "ti,omap3430-gpmc", "simple-bus";
+> 
+> I'm concern about using simple-bus, and I'm not entirely sure this will work.
+> 
+> AFAIK, you can't correlate a parent-child relationship in the device tree
+> to the order in which drivers will be probed,
+> so it's only a matter of coincidence if this is working for you right now.
 
-Yup, two arrays seems very reasonable. Plus that way we don't need to
-convert existing drivers, so we avoid churn.
+Ummm, I am not sure I am convinced. Have you looked at
+of_platform_bus_create() which creates the devices? It is clearly
+creating the child devices after creating the parent device.
 
-Thanks!
+> The GPMC code is in "arch/arm/mach-omap2", is located *before* the mtd code
+> in the Makefile, and thus the GPMC driver loads *before* the MTD code.
 
-Anton
+But shouldn't it only matter in the order in which devices are
+registered? Unless you have a situation in which the devices are
+registered in order (parent then child) but only the driver for the
+child is registered before the parent and child devices are registered.
+I could see that being a problem.
+
+The only other thing that I can think of is if you happen to be creating
+a device both via device-tree and may be you are creating a duplicate
+device and calling platform_device_register() somewhere else in your code.
+
+> Morevore, I believe that when we move GPMC from arch/arm/mach-omap2
+> to drivers/memory where it should be, this 'simple-bus' will stop
+> working properly.
+
+Why? I don't see how the location of files would change this.
+
+> Of course, I can be wrong, but I think you will have to find some other way
+> to initialize the GPMC's childs.
+
+Well isn't this how device-tree is meant to work?
+
+It would be great if you could debug your problem and fully understand
+why this is not working for you, so we can see if there is a real
+problem here. Otherwise this appears to be just guess work.
+
+Jon
+
