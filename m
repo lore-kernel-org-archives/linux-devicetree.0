@@ -1,66 +1,60 @@
-From: <maxin.john-AM1FMPraTHU@public.gmane.org>
-Subject: [PATCH v2] i2c: busses: i2c-ocores: Fix PM-related warning
-Date: Mon, 4 Mar 2013 13:50:15 +0100
-Message-ID: <1362401415-63119-1-git-send-email-maxin.john@enea.com>
+From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2 0/4] Enable SPI flash support on da850-evm DT kernel
+Date: Mon, 4 Mar 2013 18:29:11 +0530
+Message-ID: <1362401955-9616-1-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Maxin B. John" <maxin.john-AM1FMPraTHU@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
+List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
+List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
+	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
+Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
+Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+To: spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, hs-ynQEQJNshbs@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: "Maxin B. John" <maxin.john-AM1FMPraTHU@public.gmane.org>
+Patch enables support for m25p64 SPI flash support on
+da850-EVM.
 
-The suspend/resume callbacks are unused w/o PM_SLEEP
+Testing information:
+da850-evm comes with partitions specified in DT blob.
+Able to mount/umount and create/delete files on filesystem partition.
 
-Fixes this warning:
-  CC      drivers/i2c/busses/i2c-ocores.o
-drivers/i2c/busses/i2c-ocores.c:460:12: warning: 'ocores_i2c_suspend'
- defined but not used [-Wunused-function]
-drivers/i2c/busses/i2c-ocores.c:471:12: warning: 'ocores_i2c_resume'
-defined but not used [-Wunused-function]
+Depends on below patch in spi-next branch of git://git.secretlab.ca/git/linux-2.6.git.
+"spi/davinci: add OF support for the spi controller"
 
-Signed-off-by: Maxin B. John <maxin.john-AM1FMPraTHU@public.gmane.org>
----
- drivers/i2c/busses/i2c-ocores.c |    9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+Applies on top of v3.9/dt-2 branch of linux_davinci tree:
+git://gitorious.org/linux-davinci/linux-davinci.git
 
-diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
-index 0e1f824..1ecea5e 100644
---- a/drivers/i2c/busses/i2c-ocores.c
-+++ b/drivers/i2c/busses/i2c-ocores.c
-@@ -456,7 +456,7 @@ static int ocores_i2c_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_PM
-+#ifdef CONFIG_PM_SLEEP
- static int ocores_i2c_suspend(struct device *dev)
- {
- 	struct ocores_i2c *i2c = dev_get_drvdata(dev);
-@@ -476,12 +476,9 @@ static int ocores_i2c_resume(struct device *dev)
- 
- 	return 0;
- }
-+#endif
- 
- static SIMPLE_DEV_PM_OPS(ocores_i2c_pm, ocores_i2c_suspend, ocores_i2c_resume);
--#define OCORES_I2C_PM	(&ocores_i2c_pm)
--#else
--#define OCORES_I2C_PM	NULL
--#endif
- 
- static struct platform_driver ocores_i2c_driver = {
- 	.probe   = ocores_i2c_probe,
-@@ -490,7 +487,7 @@ static struct platform_driver ocores_i2c_driver = {
- 		.owner = THIS_MODULE,
- 		.name = "ocores-i2c",
- 		.of_match_table = ocores_i2c_match,
--		.pm = OCORES_I2C_PM,
-+		.pm = &ocores_i2c_pm,
- 	},
- };
- 
+Since v1:
+Look for m25p64 instead of m25p80 flash chip and correct partition information.
+
+Dropping below accepted patch:
+"spi/davinci: fix module build error"
+
+Considered below missed out patch:
+spi/davinci: add DT binding documentation
+
+Manjunathappa, Prakash (3):
+  ARM: davinci: da850: add SPI1 DT node
+  ARM: davinci: da850: override SPI DT node device name
+  ARM: davinci: da850-evm: add SPI flash support
+
+Murali Karicheri (1):
+  spi/davinci: add DT binding documentation
+
+ .../devicetree/bindings/spi/spi-davinci.txt        |   51 ++++++++++++++++++++
+ arch/arm/boot/dts/da850-evm.dts                    |   40 +++++++++++++++
+ arch/arm/boot/dts/da850.dtsi                       |   18 +++++++
+ arch/arm/mach-davinci/da8xx-dt.c                   |    1 +
+ 4 files changed, 110 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-davinci.txt
+
 -- 
-1.7.9.5
+1.7.4.1
