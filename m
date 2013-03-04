@@ -1,44 +1,41 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH 1/1] gpio: omap: dts: Move interrupt-controller from #interrupt-cells description
-Date: Mon,  4 Mar 2013 19:35:57 +0100
-Message-ID: <1362422157-32196-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Landley <rob@landley.net>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 0/4] Add support for tps65090-charger
+Date: Mon, 4 Mar 2013 14:01:45 -0500
+Message-ID: <1362423709-29596-1-git-send-email-rklein@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The binding documentation for the OMAP GPIO controller has the description
-for the "#interrupt-cells" property after the "interrupt-controller"
-definition. This is confusing so is better to move "interrupt-controller"
-after the "#interrupt-cells" description.
+This patchset adds support for the TPS65090-charger. This charger is
+registered as a subdevice of the TPS65090 PMIC.
 
-Reported-by: Stephen Warren <swarren@nvidia.com>
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
- .../devicetree/bindings/gpio/gpio-omap.txt         |    2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
+This series includes a fix for the tps65090 header file where all
+the interrupts were shifted by 1.
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-index bff51a2..8b9914c 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-@@ -10,7 +10,6 @@ Required properties:
-   - second cell is used to specify optional parameters (unused)
- - gpio-controller : Marks the device node as a GPIO controller.
- - #interrupt-cells : Should be 2.
--- interrupt-controller: Mark the device node as an interrupt controller
-   The first cell is the GPIO number.
-   The second cell is used to specify flags:
-     bits[3:0] trigger type and level flags:
-@@ -18,6 +17,7 @@ Required properties:
-       2 = high-to-low edge triggered.
-       4 = active high level-sensitive.
-       8 = active low level-sensitive.
-+- interrupt-controller: Mark the device node as an interrupt controller.
- 
- OMAP specific properties:
- - ti,hwmods: Name of the hwmod associated to the GPIO:
+Changes since v1:
+ - cleaned up tps65090 driver per comments (mostly var naming)
+ - flushed out commit description for driver
+ - reordered probe so irq is registered after power_supply and cleaned up 1st
+
+Rhyland Klein (4):
+  mfd: tps65090: Fix enum in header file
+  mfd: tps65090: Add resources for charger
+  power_supply: tps65090-charger: Add binding doc
+  power: tps65090: Add support for tps65090-charger
+
+ .../devicetree/bindings/power_supply/tps65090.txt  |   23 ++
+ drivers/mfd/tps65090.c                             |   10 +
+ drivers/power/Kconfig                              |    7 +
+ drivers/power/Makefile                             |    1 +
+ drivers/power/tps65090-charger.c                   |  316 ++++++++++++++++++++
+ include/linux/mfd/tps65090.h                       |    6 +
+ 6 files changed, 363 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/tps65090.txt
+ create mode 100644 drivers/power/tps65090-charger.c
+
 -- 
-1.7.7.6
-
+1.7.9.5
