@@ -1,60 +1,51 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 1/1] gpio: omap: dts: Move interrupt-controller from #interrupt-cells
- description
-Date: Mon, 4 Mar 2013 13:23:52 -0600
-Message-ID: <5134F4C8.4010003@ti.com>
-References: <1362422157-32196-1-git-send-email-javier.martinez@collabora.co.uk>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [Patch v1 0/3] Add DT Binding for Power-Supply power-supplies property
+Date: Mon, 4 Mar 2013 15:11:55 -0500
+Message-ID: <1362427918-14504-1-git-send-email-rklein@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1362422157-32196-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Landley <rob@landley.net>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This series defines a common way for devicetree initialized
+power_supplies to define their relationships between chargers and
+supplicants.
 
-On 03/04/2013 12:35 PM, Javier Martinez Canillas wrote:
-> The binding documentation for the OMAP GPIO controller has the description
-> for the "#interrupt-cells" property after the "interrupt-controller"
-> definition. This is confusing so is better to move "interrupt-controller"
-> after the "#interrupt-cells" description.
-> 
-> Reported-by: Stephen Warren <swarren@nvidia.com>
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> ---
->  .../devicetree/bindings/gpio/gpio-omap.txt         |    2 +-
->  1 files changed, 1 insertions(+), 1 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-> index bff51a2..8b9914c 100644
-> --- a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-> @@ -10,7 +10,6 @@ Required properties:
->    - second cell is used to specify optional parameters (unused)
->  - gpio-controller : Marks the device node as a GPIO controller.
->  - #interrupt-cells : Should be 2.
-> -- interrupt-controller: Mark the device node as an interrupt controller
->    The first cell is the GPIO number.
->    The second cell is used to specify flags:
->      bits[3:0] trigger type and level flags:
-> @@ -18,6 +17,7 @@ Required properties:
->        2 = high-to-low edge triggered.
->        4 = active high level-sensitive.
->        8 = active low level-sensitive.
-> +- interrupt-controller: Mark the device node as an interrupt controller.
->  
->  OMAP specific properties:
->  - ti,hwmods: Name of the hwmod associated to the GPIO:
-> 
+This series adds a supplied_from array to complement the supplied_to
+array and to allow supplies to define the list of supplies which
+supply them.
 
-Thanks. Do you mind putting "interrupt-controller" before
-"#interrupt-cells" as I see this is how they have it in
-Documenation/devicetree/bindings/interrupt-controller/interrupts.txt?
-Otherwise ...
+Then once this property is supported, we can use a new property for
+devicetree to define the relationships between nodes, and read in this
+property to generate the supplied_from list.
 
-Acked-by: Jon Hunter <jon-hunter@ti.com>
+With this logic in place, all drivers need to do to add support for
+this mechanism, is to store their device tree node in the power_supply
+struct. They should also handle EPROBE_DEFER properly.
 
-Cheers
-Jon
+Changes since:
+RFC v2:
+ - Changed to official Patch set rather than RFC
+ - defined supplied_from char ** array rather than complicated
+   struct device_node related array
+
+RFC v1:
+ - Inverted the logic so that supplies (batteries) contain a list of
+   the supplies (chargers) which supply them.
+
+Rhyland Klein (3):
+  power_supply: Define Binding for power-supplies
+  power: power_supply: Add core support for supplied_from
+  power: power_supply_core: Add support for supplied_from
+
+ .../bindings/power_supply/power_supply.txt         |   23 +++
+ drivers/power/power_supply_core.c                  |  187 ++++++++++++++++++--
+ include/linux/power_supply.h                       |    6 +
+ 3 files changed, 203 insertions(+), 13 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/power_supply.txt
+
+-- 
+1.7.9.5
