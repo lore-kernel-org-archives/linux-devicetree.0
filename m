@@ -1,16 +1,13 @@
-From: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] pinctrl: imx: use pin_func_ids to search the pinctrl
- item.
-Date: Mon, 4 Mar 2013 10:18:53 +0800
-Message-ID: <CAP1dx+xB0O2zouDcjmv3uO1Nk3EGytmAxn18tEO7EzXJOWoh8w@mail.gmail.com>
-References: <1361932553-8218-1-git-send-email-b32955@freescale.com>
- <1361932553-8218-2-git-send-email-b32955@freescale.com>
- <CACRpkdYO5UN=t_nu1XQmBAjH6zWZRgnOY2zSQeO2K=ERrUPQCg@mail.gmail.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [RFCv2 0/2] Representing interrupt affinity in devicetree
+Date: Mon, 04 Mar 2013 10:51:14 +0800
+Message-ID: <20130304025115.05D413E17F8@localhost>
+References: <1355417368-6861-1-git-send-email-mark.rutland@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CACRpkdYO5UN=t_nu1XQmBAjH6zWZRgnOY2zSQeO2K=ERrUPQCg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1355417368-6861-1-git-send-email-mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,41 +18,102 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Will.Deacon-5wv7dgnIgG8@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Linus,
+On Thu, 13 Dec 2012 16:49:26 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> [This is an updated version of my previous RFC, which can be found at
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2012-October/128205.html]
+> 
+> Current devicetree bindings for devices which use cpu-affine shared interrupts
+> assume that interrupts are listed in ascending order of physical cpu id
+> (MPIDR.Aff{2,1,0}). This is problematic for drivers because:
+> 
+> (1) The driver must convert each physical id to a logical id for the purpose of
+>     managing interrupts.
+> 
+> (2) In multi-cluster systems the physical ids are not necessarily contiguous,
+>     and drivers cannot simply iterate over ids from 0 to NR_CPUS.
+> 
+> (3) It is not possible to specify sets of interrupts which are wired to a
+>     subset of cpus (i.e. clusters) not starting at physical id 0, as we can't
+>     specify which cpu to start from, and can't skip cpus. This makes it
+>     impossible to represent some devices (e.g. cpu PMUs) which may not exist
+>     in the first cluster.
+> 
+> (4) Some devices may either be wired with PPIs or SPIs. It is not possible to
+>     differentiate the two cases in general from the interrupts list (e.g. when
+>     a device has multiple PPIs wired to all cpus).
+> 
+> To represent the general case, we require a mechanism to describe the cpu
+> affinity of a device, and a consistent way to map each interrupt to a cpu (or
+> set of cpus). So far, the only workable mechanism I've been able to come up
+> with is the following:
+> 
+> In addition to the interrupts list we add an optional 'interrupts-affinity'
+> list which describes how to map an interrupt to cpu(s). Each interrupt would
+> have a corresponding element in the interrupts-affinity list.
+> 
+> Each element consists of a pair of cells specifying how to test if a cpu is
+> affine. This test specification consists of a most significant affinity level
+> to match, and values for the MPIDR affinity bits down to this level. Each pair
+> of cells has the form:
+> 
+>     < N 0x00AABBCC >
+>        \   \ \ \ \__ MPIDR.Aff0
+>         \   \ \ \___ MPIDR.Aff1
+>          \   \ \____ MPIDR.Aff2
+>           \   \_____ [must be zero]
+>            \________ level-specifier
+> 
+> The level-specifier is in the range [0-3]. When the value is 3, MPIDR affinity
+> levels 2,1,0 are ignored, and thus all cpus are matched. When the value is 0,
+> levels 2,1,0 must all be matched for a cpu to be considered affine. Affinity
+> bits which are not to be matched should be set to zero.
+> 
+> In practice, use of the binding would look something like:
+> 
+> > device@0 {
+> > 	compatible = "example,example-affine-device";
+> > 	interrupts = <0 130 4>,
+> > 	             <0 131 4>,
+> > 	             <1 12 4>;
+> > 	interrupts-affinity = <0 0x00000000>,
+> >	                      <0 0x00000001>,
+> > 	                      <1 0x00000100>;
+> > };
+> 
+> To request/free interrupts, drivers would walk over all interrupts, and request
+> the affine cpu(s), which can be automatically mapped to logical ids by common
+> code. This fixes issues 1, 2, and 3. 4 is partially solved, in that we know
+> whether an interrupt is targeted at a single cpu or multiple cpus (i.e.
+> whether it's an SPI or a PPI), but we can't differentiate multiple interrupts
+> targeted at the same cpu. We could solve this with an additional
+> "interrupt-names" property, or something of that sort.
+> 
+> The following patches implement common code that could be used by drivers to
+> deal with this affinity information, allowing drivers to extract a (logical)
+> cpumask specifying the affinity of each interrupt, and additional information
+> specifying whether an interrupt targets multiple cpus.
+> 
+> The patches are based on rmk's for-next branch.
+> 
+> Any thoughts?
 
-On 1 March 2013 21:07, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Wed, Feb 27, 2013 at 3:35 AM, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
->
->> The uart may works in DTE mode or DCE mode. The customer can sets the different
->> modes by the pinctrl. But the pinctrl items for DTE or DCE may share the
->> same Pad id, such as:
->>   MX6Q_PAD_EIM_D27__UART2_RXD_DTE and MX6Q_PAD_EIM_D27__WEIM_WEIM_D_27
->>   share the same MX6Q_PAD_EIM_D27 pad id.
->>
->> The current code only search the pinctrl items by pad id. So if there two
->> pinctrl items shares the same pad id, the current code only use the first one,
->> even you tell the system to use the second one in the DTS file.
->>
->> This patch adds a new field pin_func_ids to imx_pin_group{}, and uses the
->> pin_func_ids as the index to search the pinctrl items. In this way, we can
->> avoid the issue.
->>
->> Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
->
-> Dong/Shawn: what about this patch?
->
+Hi Mark,
 
-We do not need this patch anymore since we've changed the binding a bit.
+I could use some more context for how this will be used. Do device
+drivers need to be aware of which CPU can handle an interrupt for a
+device, or is it the sort of thing that can be done in the background
+when an irq is requested? What are some examples of device drivers using
+this interface.
 
-Regards
-Dong Aisheng
+Part of the reason why I ask is I see a new function for parsing the
+affinity, but no code that links it into the existing irq
+infrastructure. Would this need to be called automatically when a DT
+interrupt is parsed? Or when the irq is requested? Some guidance would
+help me here.
 
-> The patches anyway has to be merged through the i.MX tree I think,
-> if there is a huge movement in these files currently.
->
-> Yours,
-> Linus Walleij
+Thanks,
+g.
