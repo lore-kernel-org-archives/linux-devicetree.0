@@ -1,41 +1,66 @@
-From: Ezequiel Garcia <elezegarcia@gmail.com>
-Subject: Re: [PATCH 11/14] ARM: OMAP2+: Add device-tree support for NOR flash
-Date: Mon, 4 Mar 2013 08:57:51 -0300
-Message-ID: <CALF0-+V3A-fL7q2nPRmcgnFKmzRt8KwSLuzrwzyyce6MqHjVpw@mail.gmail.com>
-References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com>
-	<1361899842-30303-12-git-send-email-jon-hunter@ti.com>
+From: <maxin.john-AM1FMPraTHU@public.gmane.org>
+Subject: [PATCH v2] i2c: busses: i2c-ocores: Fix PM-related warning
+Date: Mon, 4 Mar 2013 13:50:15 +0100
+Message-ID: <1362401415-63119-1-git-send-email-maxin.john@enea.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1361899842-30303-12-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Maxin B. John" <maxin.john-AM1FMPraTHU@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+From: "Maxin B. John" <maxin.john-AM1FMPraTHU@public.gmane.org>
 
-On Tue, Feb 26, 2013 at 2:30 PM, Jon Hunter <jon-hunter@ti.com> wrote:
-> +
-> +Example:
-> +
-> +gpmc: gpmc@6e000000 {
-> +       compatible = "ti,omap3430-gpmc", "simple-bus";
+The suspend/resume callbacks are unused w/o PM_SLEEP
 
-I'm concern about using simple-bus, and I'm not entirely sure this will work.
+Fixes this warning:
+  CC      drivers/i2c/busses/i2c-ocores.o
+drivers/i2c/busses/i2c-ocores.c:460:12: warning: 'ocores_i2c_suspend'
+ defined but not used [-Wunused-function]
+drivers/i2c/busses/i2c-ocores.c:471:12: warning: 'ocores_i2c_resume'
+defined but not used [-Wunused-function]
 
-AFAIK, you can't correlate a parent-child relationship in the device tree
-to the order in which drivers will be probed,
-so it's only a matter of coincidence if this is working for you right now.
-The GPMC code is in "arch/arm/mach-omap2", is located *before* the mtd code
-in the Makefile, and thus the GPMC driver loads *before* the MTD code.
+Signed-off-by: Maxin B. John <maxin.john-AM1FMPraTHU@public.gmane.org>
+---
+ drivers/i2c/busses/i2c-ocores.c |    9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-Morevore, I believe that when we move GPMC from arch/arm/mach-omap2
-to drivers/memory where it should be, this 'simple-bus' will stop
-working properly.
-
-Of course, I can be wrong, but I think you will have to find some other way
-to initialize the GPMC's childs.
-
+diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+index 0e1f824..1ecea5e 100644
+--- a/drivers/i2c/busses/i2c-ocores.c
++++ b/drivers/i2c/busses/i2c-ocores.c
+@@ -456,7 +456,7 @@ static int ocores_i2c_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
+-#ifdef CONFIG_PM
++#ifdef CONFIG_PM_SLEEP
+ static int ocores_i2c_suspend(struct device *dev)
+ {
+ 	struct ocores_i2c *i2c = dev_get_drvdata(dev);
+@@ -476,12 +476,9 @@ static int ocores_i2c_resume(struct device *dev)
+ 
+ 	return 0;
+ }
++#endif
+ 
+ static SIMPLE_DEV_PM_OPS(ocores_i2c_pm, ocores_i2c_suspend, ocores_i2c_resume);
+-#define OCORES_I2C_PM	(&ocores_i2c_pm)
+-#else
+-#define OCORES_I2C_PM	NULL
+-#endif
+ 
+ static struct platform_driver ocores_i2c_driver = {
+ 	.probe   = ocores_i2c_probe,
+@@ -490,7 +487,7 @@ static struct platform_driver ocores_i2c_driver = {
+ 		.owner = THIS_MODULE,
+ 		.name = "ocores-i2c",
+ 		.of_match_table = ocores_i2c_match,
+-		.pm = OCORES_I2C_PM,
++		.pm = &ocores_i2c_pm,
+ 	},
+ };
+ 
 -- 
-    Ezequiel
+1.7.9.5
