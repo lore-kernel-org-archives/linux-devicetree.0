@@ -1,7 +1,8 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 8/9] rtc: stmp3xxx: Check copy controller state
-Date: Mon,  4 Mar 2013 15:05:47 +0100
-Message-ID: <1362405948-12992-9-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH 1/9] MXS/i.MX28: add the possibility to define the used
+ crystals via device tree
+Date: Mon,  4 Mar 2013 15:05:40 +0100
+Message-ID: <1362405948-12992-2-git-send-email-s.trumtrar@pengutronix.de>
 References: <1362405948-12992-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,195 +20,66 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The stmp3xxx has a copy controller that needs some time to copy the
-analog side to the digital shadow registers. This has implications for
-a correct reset behaviour.
+From: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-The datasheet states that one should not reset the rtc if NEW_REGS != 0 or
-a possible loss of data is to be expected.
-Accordingly, one should not access the registers while STALE_REGS != 0.
-
-If an alarm is written to the shadow registers, the copy controller does not
-persist the values to the analog in every case. This is no problem in the
-running kernel, but leads to lost values in case of a reboot.
-Always check if the rtc is in a clean state, before writing or continueing.
-
+Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/rtc/rtc-stmp3xxx.c |   89 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 88 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/imx28.dtsi |   11 +++++++++++
+ drivers/clk/mxs/clk-imx28.c  |   16 +++++++++++++++-
+ 2 files changed, 26 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
-index f31ac76..be4fd78 100644
---- a/drivers/rtc/rtc-stmp3xxx.c
-+++ b/drivers/rtc/rtc-stmp3xxx.c
-@@ -43,8 +43,18 @@
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+index 7ba4966..958bd10 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -37,6 +37,17 @@
+ 		};
+ 	};
  
- #define STMP3XXX_RTC_STAT			0x10
- #define STMP3XXX_RTC_STAT_STALE_SHIFT		16
-+#define STMP3XXX_RTC_STAT_NEW_SHIFT		8
- #define STMP3XXX_RTC_STAT_RTC_PRESENT		0x80000000
- 
-+#define STMP3XXX_RTC_STAT_PERS0_MASK		(1 << 0)
-+#define STMP3XXX_RTC_STAT_PERS1_MASK		(1 << 1)
-+#define STMP3XXX_RTC_STAT_PERS2_MASK		(1 << 2)
-+#define STMP3XXX_RTC_STAT_PERS3_MASK		(1 << 3)
-+#define STMP3XXX_RTC_STAT_PERS4_MASK		(1 << 4)
-+#define STMP3XXX_RTC_STAT_PERS5_MASK		(1 << 5)
-+#define STMP3XXX_RTC_STAT_ALARM_MASK		(1 << 6)
-+#define STMP3XXX_RTC_STAT_SEC_MASK		(1 << 7)
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <0>;
 +
- #define STMP3XXX_RTC_SECONDS			0x30
- 
- #define STMP3XXX_RTC_ALARM			0x40
-@@ -135,6 +145,33 @@ static void stmp3xxx_wdt_register(struct platform_device *rtc_pdev)
- }
- #endif /* CONFIG_STMP3XXX_RTC_WATCHDOG */
- 
-+static inline void stmp3xxx_wait_copy_ctrl(const struct stmp3xxx_rtc_data *rtc_data,
-+					   const unsigned int shift,
-+					   unsigned int mask)
-+{
-+	/*
-+	 * totally random number, as the datasheet is very unclear
-+	 * about the timings
-+	 */
-+	int timeout = 0x8000;
++		osc24m: system_oscillator {
++			compatible = "fsl,mxs-system", "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <24000000>;
++		};
++	};
 +
-+	while ((readl(rtc_data->io + STMP3XXX_RTC_STAT) &
-+			(mask << shift)) && --timeout)
-+		cpu_relax();
+ 	apb@80000000 {
+ 		compatible = "simple-bus";
+ 		#address-cells = <1>;
+diff --git a/drivers/clk/mxs/clk-imx28.c b/drivers/clk/mxs/clk-imx28.c
+index 76ce6c6..01048b5 100644
+--- a/drivers/clk/mxs/clk-imx28.c
++++ b/drivers/clk/mxs/clk-imx28.c
+@@ -158,7 +158,21 @@ int __init mx28_clocks_init(void)
+ 
+ 	clk_misc_init();
+ 
+-	clks[ref_xtal] = mxs_clk_fixed("ref_xtal", 24000000);
++	/* retrieve the crystal's frequencies from device tree */
++	for_each_compatible_node(np, NULL, "fixed-clock") {
++		u32 rate;
 +
-+	if (unlikely(!timeout))
-+		if (&rtc_data->rtc->dev)
-+			dev_warn(&rtc_data->rtc->dev,
-+				"possible data loss of shadow registers\n");
-+		else
-+			/*
-+			 * When this function is called for the mxs_reset in
-+			 * the probe function, rtc->dev is not yet set
-+			 * FIXME: find a better/correct way to do this
-+			 */
-+			pr_warn("possible data loss of rtc shadow registers\n");
-+}
++		if (of_property_read_u32(np, "clock-frequency", &rate))
++			continue;
 +
- static void stmp3xxx_wait_time(struct stmp3xxx_rtc_data *rtc_data)
- {
- 	/*
-@@ -188,6 +225,9 @@ static irqreturn_t stmp3xxx_rtc_interrupt(int irq, void *dev_id)
-  */
- static void stmp3xxx_alarm_keep_oscillator(const struct stmp3xxx_rtc_data *rtc_data)
- {
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS0_MASK);
++		if (of_device_is_compatible(np, "fsl,mxs-system"))
++			clks[ref_xtal] = mxs_clk_fixed("ref_xtal", rate);
++	}
 +
- 	switch (rtc_data->clk_src) {
- 	case MXS_OSC_24M:
- 		/* keep the 24 MHz oscillator running even in power down */
-@@ -220,6 +260,9 @@ static void stmp3xxx_alarm_keep_oscillator(const struct stmp3xxx_rtc_data *rtc_d
- 	default:
- 		break;
- 	}
++	/* if not set, guess their frequency */
++	if (clks[ref_xtal] == NULL)
++		clks[ref_xtal] = mxs_clk_fixed("ref_xtal", 24000000);
 +
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS0_MASK);
- }
- 
- static int stmp3xxx_alarm_irq_enable(struct device *dev, unsigned int enabled)
-@@ -228,6 +271,10 @@ static int stmp3xxx_alarm_irq_enable(struct device *dev, unsigned int enabled)
- 
- 	stmp3xxx_alarm_keep_oscillator(rtc_data);
- 
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS0_MASK |
-+				STMP3XXX_RTC_STAT_ALARM_MASK);
-+
- 	if (enabled) {
- 		writel(STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE, /* to be able to sleep */
- 			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
-@@ -244,6 +291,10 @@ static int stmp3xxx_alarm_irq_enable(struct device *dev, unsigned int enabled)
- 				rtc_data->io + STMP3XXX_RTC_CTRL_CLR);
- 		writel(0, rtc_data->io + STMP3XXX_RTC_ALARM);
- 	}
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS0_MASK |
-+				STMP3XXX_RTC_STAT_ALARM_MASK);
-+
- 	return 0;
- }
- 
-@@ -253,10 +304,16 @@ static int stmp3xxx_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
- 	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
- 
- 	rtc_tm_to_time(&alm->time, &t);
-+
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
-+				STMP3XXX_RTC_STAT_ALARM_MASK);
-+
- 	writel(t, rtc_data->io + STMP3XXX_RTC_ALARM);
- 
--	stmp3xxx_alarm_irq_enable(dev, alm->enabled);
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
-+				STMP3XXX_RTC_STAT_ALARM_MASK);
- 
-+	stmp3xxx_alarm_irq_enable(dev, alm->enabled);
- 	return 0;
- }
- 
-@@ -291,6 +348,13 @@ static ssize_t stmp3xxx_rtc_persist_read(struct file *filep,
- 	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
- 	ssize_t count;
- 
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS1_MASK |
-+				STMP3XXX_RTC_STAT_PERS2_MASK |
-+				STMP3XXX_RTC_STAT_PERS3_MASK |
-+				STMP3XXX_RTC_STAT_PERS4_MASK |
-+				STMP3XXX_RTC_STAT_PERS5_MASK);
-+
- 	for (count = 0; size; size--, off++, count++)
- 		*buf++ = readl(rtc_data->io + STMP3XXX_RTC_PERSISTENT1 + off);
- 
-@@ -311,6 +375,13 @@ static ssize_t stmp3xxx_rtc_persist_write(struct file *filep,
- 	for (count = 0; size; size--, off++, count++)
- 		writel(*buf++, rtc_data->io + STMP3XXX_RTC_PERSISTENT1 + off);
- 
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS1_MASK |
-+				STMP3XXX_RTC_STAT_PERS2_MASK |
-+				STMP3XXX_RTC_STAT_PERS3_MASK |
-+				STMP3XXX_RTC_STAT_PERS4_MASK |
-+				STMP3XXX_RTC_STAT_PERS5_MASK);
-+
- 	return count;
- }
- #endif
-@@ -384,7 +455,23 @@ static int stmp3xxx_rtc_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, rtc_data);
- 
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS1_MASK |
-+				STMP3XXX_RTC_STAT_PERS2_MASK |
-+				STMP3XXX_RTC_STAT_PERS3_MASK |
-+				STMP3XXX_RTC_STAT_PERS4_MASK |
-+				STMP3XXX_RTC_STAT_PERS5_MASK |
-+				STMP3XXX_RTC_STAT_ALARM_MASK |
-+				STMP3XXX_RTC_STAT_SEC_MASK);
- 	mxs_reset_block(rtc_data->io);
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS1_MASK |
-+				STMP3XXX_RTC_STAT_PERS2_MASK |
-+				STMP3XXX_RTC_STAT_PERS3_MASK |
-+				STMP3XXX_RTC_STAT_PERS4_MASK |
-+				STMP3XXX_RTC_STAT_PERS5_MASK |
-+				STMP3XXX_RTC_STAT_ALARM_MASK |
-+				STMP3XXX_RTC_STAT_SEC_MASK);
- 
- 	/*
- 	 * configure the RTC to provide the correct time
+ 	clks[pll0] = mxs_clk_pll("pll0", "ref_xtal", PLL0CTRL0, 17, 480000000);
+ 	clks[pll1] = mxs_clk_pll("pll1", "ref_xtal", PLL1CTRL0, 17, 480000000);
+ 	clks[pll2] = mxs_clk_pll("pll2", "ref_xtal", PLL2CTRL0, 23, 50000000);
 -- 
 1.7.10.4
