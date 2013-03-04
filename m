@@ -1,93 +1,41 @@
-From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 05/10] ARM: dt: tegra: add bindings of power management configurations for PMC
-Date: Mon, 4 Mar 2013 19:40:41 +0800
-Message-ID: <1362397241-5786-1-git-send-email-josephl@nvidia.com>
+From: Ezequiel Garcia <elezegarcia@gmail.com>
+Subject: Re: [PATCH 11/14] ARM: OMAP2+: Add device-tree support for NOR flash
+Date: Mon, 4 Mar 2013 08:57:51 -0300
+Message-ID: <CALF0-+V3A-fL7q2nPRmcgnFKmzRt8KwSLuzrwzyyce6MqHjVpw@mail.gmail.com>
+References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com>
+	<1361899842-30303-12-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1361899842-30303-12-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The PMC mostly controls the entry and exit of the system from different
-sleep modes. Different platform or system may have different configurations.
-The power management configurations of PMC is represented as some properties.
-The system needs to define the properties when the system supports deep sleep
-mode (i.e. suspend).
+Hi Jon,
 
-Signed-off-by: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 45 +++++++++++++++++++++-
- 1 file changed, 44 insertions(+), 1 deletion(-)
+On Tue, Feb 26, 2013 at 2:30 PM, Jon Hunter <jon-hunter@ti.com> wrote:
+> +
+> +Example:
+> +
+> +gpmc: gpmc@6e000000 {
+> +       compatible = "ti,omap3430-gpmc", "simple-bus";
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-index b5846e2..4216c34 100644
---- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
-@@ -1,14 +1,49 @@
- NVIDIA Tegra Power Management Controller (PMC)
- 
--Properties:
-+The PMC block interacts with an external Power Management Unit. The PMC
-+mostly controls the entry and exit of the system from different sleep
-+modes. It provides power-gating controllers for SoC and CPU power-islands.
-+
-+Required properties:
- - name : Should be pmc
- - compatible : Should contain "nvidia,tegra<chip>-pmc".
- - reg : Offset and length of the register set for the device
-+
-+Optional properties:
- - nvidia,invert-interrupt : If present, inverts the PMU interrupt signal.
-   The PMU is an external Power Management Unit, whose interrupt output
-   signal is fed into the PMC. This signal is optionally inverted, and then
-   fed into the ARM GIC. The PMC is not involved in the detection or
-   handling of this interrupt signal, merely its inversion.
-+- nvidia,suspend-mode : The suspend mode that the platform should use.
-+  Valid valuse are 0, 1 and 2:
-+  0 (LP0): CPU + Core voltage off and DRAM in self-refresh
-+  1 (LP1): CPU vlotage off and DRAM in self-refresh
-+  2 (LP2): CPU voltage off
-+- nvidia,cpu-pwr-good-time : CPU power good time in uS. If not present, the
-+  suspend function will be disabled as default.
-+- nvidia,cpu-pwr-off-time : CPU power off time in uS. If not present, the
-+  suspend function will be disabled as default.
-+- nvidia,core-pwr-good-time : <Oscillator-stable-time Power-stable-time>
-+  Core power good time in uS. If not present, the suspend function will
-+  be disabled as default.
-+- nvidia,core-pwr-off-time : Core power off time in uS. If not present, the
-+  suspend function will be disabled as default.
-+- nvidia,core-power-req-active-high : Boolean, core power request active-high
-+- nvidia,sys-clock-req-active-high : Boolean, system clock request active-high
-+- nvidia,combined-power-req : Boolean, combined power request for CPU & Core
-+- nvidia,cpu-pwr-good-en : Boolean, CPU power good signal (from PMIC to PMC)
-+			   is enabled.
-+
-+Required properties when nvidia,suspend-mode=<0>:
-+- nvidia,lp0-vec : <start length> Starting address and length of LP0 vector
-+  The LP0 vector contains the warm boot code that is executed by AVP when
-+  resuming from the LP0 state. The AVP (Audio-Video Processor) is an ARM7
-+  processor and always being the first boot processor when chip is power on
-+  or resume from deep sleep mode. When the system is resumed from the deep
-+  sleep mode, the warm boot code will restore some PLLs, clocks and then
-+  bring up CPU0 for resuming the system. If the suspend mode is LP0, then
-+  this property is must to have.
- 
- Example:
- 
-@@ -16,4 +51,12 @@ pmc@7000f400 {
- 	compatible = "nvidia,tegra20-pmc";
- 	reg = <0x7000e400 0x400>;
- 	nvidia,invert-interrupt;
-+	nvidia,suspend-mode = <1>;
-+	nvidia,cpu-pwr-good-time = <2000>;
-+	nvidia,cpu-pwr-off-time = <100>;
-+	nvidia,core-pwr-good-ticks = <3845 3845>;
-+	nvidia,core-pwr-off-ticks = <458>;
-+	nvidia,core-power-req-active-high;
-+	nvidia,sys-clock-req-active-high;
-+	nvidia,lp0-vec = <0xbdffd000 0x2000>;
- };
+I'm concern about using simple-bus, and I'm not entirely sure this will work.
+
+AFAIK, you can't correlate a parent-child relationship in the device tree
+to the order in which drivers will be probed,
+so it's only a matter of coincidence if this is working for you right now.
+The GPMC code is in "arch/arm/mach-omap2", is located *before* the mtd code
+in the Makefile, and thus the GPMC driver loads *before* the MTD code.
+
+Morevore, I believe that when we move GPMC from arch/arm/mach-omap2
+to drivers/memory where it should be, this 'simple-bus' will stop
+working properly.
+
+Of course, I can be wrong, but I think you will have to find some other way
+to initialize the GPMC's childs.
+
 -- 
-1.8.1.1
+    Ezequiel
