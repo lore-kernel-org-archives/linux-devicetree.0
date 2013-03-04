@@ -1,66 +1,59 @@
-From: Jon Hunter <jon-hunter@ti.com>
+From: Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org>
 Subject: Re: [PATCH 11/14] ARM: OMAP2+: Add device-tree support for NOR flash
-Date: Mon, 4 Mar 2013 11:51:38 -0600
-Message-ID: <5134DF2A.4050209@ti.com>
-References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com> <1361899842-30303-12-git-send-email-jon-hunter@ti.com> <CALF0-+V3A-fL7q2nPRmcgnFKmzRt8KwSLuzrwzyyce6MqHjVpw@mail.gmail.com>
+Date: Mon, 4 Mar 2013 12:19:10 -0600
+Message-ID: <5134E59E.1000507@ti.com>
+References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com>
+ <1361899842-30303-12-git-send-email-jon-hunter@ti.com>
+ <CALF0-+V3A-fL7q2nPRmcgnFKmzRt8KwSLuzrwzyyce6MqHjVpw@mail.gmail.com>
+ <5134DF2A.4050209@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CALF0-+V3A-fL7q2nPRmcgnFKmzRt8KwSLuzrwzyyce6MqHjVpw@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Ezequiel Garcia <elezegarcia@gmail.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <5134DF2A.4050209-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
-On 03/04/2013 05:57 AM, Ezequiel Garcia wrote:
-> Hi Jon,
+On 03/04/2013 11:51 AM, Jon Hunter wrote:
 > 
-> On Tue, Feb 26, 2013 at 2:30 PM, Jon Hunter <jon-hunter@ti.com> wrote:
->> +
->> +Example:
->> +
->> +gpmc: gpmc@6e000000 {
->> +       compatible = "ti,omap3430-gpmc", "simple-bus";
+> On 03/04/2013 05:57 AM, Ezequiel Garcia wrote:
+>> Hi Jon,
+>>
+>> On Tue, Feb 26, 2013 at 2:30 PM, Jon Hunter <jon-hunter-l0cyMroinI0@public.gmane.org> wrote:
+>>> +
+>>> +Example:
+>>> +
+>>> +gpmc: gpmc@6e000000 {
+>>> +       compatible = "ti,omap3430-gpmc", "simple-bus";
+>>
+>> I'm concern about using simple-bus, and I'm not entirely sure this will work.
+>>
+>> AFAIK, you can't correlate a parent-child relationship in the device tree
+>> to the order in which drivers will be probed,
+>> so it's only a matter of coincidence if this is working for you right now.
 > 
-> I'm concern about using simple-bus, and I'm not entirely sure this will work.
-> 
-> AFAIK, you can't correlate a parent-child relationship in the device tree
-> to the order in which drivers will be probed,
-> so it's only a matter of coincidence if this is working for you right now.
+> Ummm, I am not sure I am convinced. Have you looked at
+> of_platform_bus_create() which creates the devices? It is clearly
+> creating the child devices after creating the parent device.
 
-Ummm, I am not sure I am convinced. Have you looked at
-of_platform_bus_create() which creates the devices? It is clearly
-creating the child devices after creating the parent device.
+Sorry you said order by which drivers are probed. Yes I would agree that
+you cannot control the order drivers are probed, but just the order
+devices are registered.
 
-> The GPMC code is in "arch/arm/mach-omap2", is located *before* the mtd code
-> in the Makefile, and thus the GPMC driver loads *before* the MTD code.
-
-But shouldn't it only matter in the order in which devices are
-registered? Unless you have a situation in which the devices are
-registered in order (parent then child) but only the driver for the
-child is registered before the parent and child devices are registered.
-I could see that being a problem.
-
-The only other thing that I can think of is if you happen to be creating
-a device both via device-tree and may be you are creating a duplicate
-device and calling platform_device_register() somewhere else in your code.
-
-> Morevore, I believe that when we move GPMC from arch/arm/mach-omap2
-> to drivers/memory where it should be, this 'simple-bus' will stop
-> working properly.
-
-Why? I don't see how the location of files would change this.
-
-> Of course, I can be wrong, but I think you will have to find some other way
-> to initialize the GPMC's childs.
-
-Well isn't this how device-tree is meant to work?
-
-It would be great if you could debug your problem and fully understand
-why this is not working for you, so we can see if there is a real
-problem here. Otherwise this appears to be just guess work.
+However, I don't see this as being a device-tree specific issue. Even
+when not using device-tree you would need to ensure that probing the
+parent happens before the child for the GPMC.
 
 Jon
-
