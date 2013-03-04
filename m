@@ -1,14 +1,11 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 1/9] MXS/i.MX28: add the possibility to define the used
- crystals via device tree
-Date: Mon,  4 Mar 2013 15:05:40 +0100
-Message-ID: <1362405948-12992-2-git-send-email-s.trumtrar@pengutronix.de>
-References: <1362405948-12992-1-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH 0/9] rtc: stmp3xxx: DT bindings and wakealarm
+Date: Mon,  4 Mar 2013 15:05:39 +0100
+Message-ID: <1362405948-12992-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362405948-12992-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,66 +17,43 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Hi!
 
-Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx28.dtsi |   11 +++++++++++
- drivers/clk/mxs/clk-imx28.c  |   16 +++++++++++++++-
- 2 files changed, 26 insertions(+), 1 deletion(-)
+This series touches multiple things in the stmp3xxx RTC:
+        - DT bindings and selection for the crystal
+        - add sysfs entry for persistent regs 1-5
+        - check the copy controller on all writes/reads
 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 7ba4966..958bd10 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -37,6 +37,17 @@
- 		};
- 	};
- 
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		osc24m: system_oscillator {
-+			compatible = "fsl,mxs-system", "fixed-clock";
-+			#clock-cells = <0>;
-+			clock-frequency = <24000000>;
-+		};
-+	};
-+
- 	apb@80000000 {
- 		compatible = "simple-bus";
- 		#address-cells = <1>;
-diff --git a/drivers/clk/mxs/clk-imx28.c b/drivers/clk/mxs/clk-imx28.c
-index 76ce6c6..01048b5 100644
---- a/drivers/clk/mxs/clk-imx28.c
-+++ b/drivers/clk/mxs/clk-imx28.c
-@@ -158,7 +158,21 @@ int __init mx28_clocks_init(void)
- 
- 	clk_misc_init();
- 
--	clks[ref_xtal] = mxs_clk_fixed("ref_xtal", 24000000);
-+	/* retrieve the crystal's frequencies from device tree */
-+	for_each_compatible_node(np, NULL, "fixed-clock") {
-+		u32 rate;
-+
-+		if (of_property_read_u32(np, "clock-frequency", &rate))
-+			continue;
-+
-+		if (of_device_is_compatible(np, "fsl,mxs-system"))
-+			clks[ref_xtal] = mxs_clk_fixed("ref_xtal", rate);
-+	}
-+
-+	/* if not set, guess their frequency */
-+	if (clks[ref_xtal] == NULL)
-+		clks[ref_xtal] = mxs_clk_fixed("ref_xtal", 24000000);
-+
- 	clks[pll0] = mxs_clk_pll("pll0", "ref_xtal", PLL0CTRL0, 17, 480000000);
- 	clks[pll1] = mxs_clk_pll("pll1", "ref_xtal", PLL1CTRL0, 17, 480000000);
- 	clks[pll2] = mxs_clk_pll("pll2", "ref_xtal", PLL2CTRL0, 23, 50000000);
+Sorry for the multiple topics. If need be, I can split this up in multiple
+series, but the series is in itself a little interdependent.
+
+The series is based on v3.9-rc1.
+
+Regards,
+Steffen
+
+
+Juergen Beisert (5):
+  MXS/i.MX28: add the possibility to define the used crystals via
+    device tree
+  MXS/i.MX28: add the possibility to define the external RTC crystal
+  MXS/i.MX28: prepare different clocking of the built-in RTC
+  MXS/i.MX28: there is more than one way to clock the RTC
+  MXS/i.MX28: enable RTC to wakeup the system
+
+Steffen Trumtrar (4):
+  rtc: stmp3xxx: add sysfs entries for persistent regs
+  rtc: stmp3xxx: Re-enable active alarm
+  rtc: stmp3xxx: Check copy controller state
+  rtc: stmp3xxx: Replace wait_time function
+
+ arch/arm/boot/dts/imx28.dtsi |   19 +++
+ drivers/clk/mxs/clk-imx28.c  |   20 ++-
+ drivers/rtc/rtc-stmp3xxx.c   |  275 +++++++++++++++++++++++++++++++++++++++---
+ 3 files changed, 297 insertions(+), 17 deletions(-)
+
 -- 
 1.7.10.4
