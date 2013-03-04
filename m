@@ -1,64 +1,51 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH v2 1/1] gpio: omap: dts: Move interrupt-controller from #interrupt-cells description
-Date: Mon,  4 Mar 2013 21:56:37 +0100
-Message-ID: <1362430597-5855-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
+From: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>
+Subject: Re: [PATCHi v2] net: sh_eth: Add support of device tree probe
+Date: Tue, 05 Mar 2013 06:37:12 +0900
+Message-ID: <51351408.8060806@renesas.com>
+References: <1360803091-26400-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com>
+ <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com>
+ <511C5279.3070008@renesas.com> <20130304080509.EDF323E206B@localhost>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-2022-JP
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-reply-to: <20130304080509.EDF323E206B@localhost>
+Sender: netdev-owner@vger.kernel.org
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Landley <rob@landley.net>, Benoit Cousson <b-cousson@ti.com>, Stephen Warren <swarren@nvidia.com>, Jon Hunter <jon-hunter@ti.com>, devicetree-discuss@lists.ozlabs.org, linux-omap <linux-omap@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-The binding documentation for the OMAP GPIO controller has the description
-for the "#interrupt-cells" property after the "interrupt-controller".
-This is confusing so is better to move the "interrupt-controller" after
-"#interrupt-cells" description.
+(2013/03/04 17:05), Grant Likely wrote:
+> On Thu, 14 Feb 2013 11:56:57 +0900, Nobuhiro Iwamatsu<nobuhiro.iwamatsu.yj@renesas.com>  wrote:
+>> (2013/02/14 10:24), Kuninori Morimoto wrote:
+>>>> +#ifdef CONFIG_OF
+>>>> +	if (np&&   of_device_is_available(np)) {
+>>>> +		pd = sh_eth_parse_dt(&pdev->dev, ndev);
+>>>> +		if (pdev->dev.platform_data) {
+>>>> +			struct sh_eth_plat_data *tmp =
+>>>> +				pdev->dev.platform_data;
+>>>> +			pd->set_mdio_gate = tmp->set_mdio_gate;
+>>>> +			pd->needs_init = tmp->needs_init;
+>>>> +		}
+>>>> +	} else
+>>>> +#endif
+>>>
+>>> sh_eth_parse_dt() was defined for both CONFIG_OF and !CONFIG_OF.
+>>> But it is called only from CONFIG_OF ?
+>>>
+>>
+>> Because of_device_is_available needs CONFIG_OF.
+>> I already send a patch which add empty function of of_device_is_available.
+>> If this was apply, this ifdef becomes without need.
+> 
+> Actually, there shouldn't be any reason for a device driver to call
+> of_device_is_available() on its own node at all. If the device is not
+> available, then a platform_device won't be created. "if (np)" here is
+> sufficient.
+> 
 
-While being there, change the properties order to be consistent with
-Documentation/devicetree/bindings/interrupt-controller/interrupts.txt and
-Documentation/devicetree/bindings/gpio/gpio.txt.
+Yes, you are right.
+I re-writed code without of_device_is_available(). I will send new patch soon.
 
-Reported-by: Stephen Warren <swarren@nvidia.com>
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Acked-by: Jon Hunter <jon-hunter@ti.com>
----
-
-Changes since v1:
-  - Change the properties order to be consistent with the rest of the
-    DT bindings docs suggested by Jon Hunter.
-
- .../devicetree/bindings/gpio/gpio-omap.txt         |    8 ++++----
- 1 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-omap.txt b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-index bff51a2..a56e3a5 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-omap.txt
-@@ -5,12 +5,12 @@ Required properties:
-   - "ti,omap2-gpio" for OMAP2 controllers
-   - "ti,omap3-gpio" for OMAP3 controllers
-   - "ti,omap4-gpio" for OMAP4 controllers
-+- gpio-controller : Marks the device node as a GPIO controller.
- - #gpio-cells : Should be two.
-   - first cell is the pin number
-   - second cell is used to specify optional parameters (unused)
--- gpio-controller : Marks the device node as a GPIO controller.
-+- interrupt-controller: Mark the device node as an interrupt controller.
- - #interrupt-cells : Should be 2.
--- interrupt-controller: Mark the device node as an interrupt controller
-   The first cell is the GPIO number.
-   The second cell is used to specify flags:
-     bits[3:0] trigger type and level flags:
-@@ -29,8 +29,8 @@ Example:
- gpio4: gpio4 {
-     compatible = "ti,omap4-gpio";
-     ti,hwmods = "gpio4";
--    #gpio-cells = <2>;
-     gpio-controller;
--    #interrupt-cells = <2>;
-+    #gpio-cells = <2>;
-     interrupt-controller;
-+    #interrupt-cells = <2>;
- };
--- 
-1.7.7.6
-
+Best regards,
+  Nobuhiro
