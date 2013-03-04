@@ -1,36 +1,41 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH] of: Support a PCI device that is compatible with 'simple-bus'
-Date: Mon, 04 Mar 2013 10:55:36 +0800
-Message-ID: <20130304025536.4CC7E3E17F8@localhost>
-References: <20121210215119.GA32011@obsidianresearch.com> <20121214202629.BD40C3E0BDD@localhost> <20121214215814.GA14149@obsidianresearch.com> <20121219125451.3F1FB3E0AD7@localhost> <20121219191800.GA1169@obsidianresearch.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20121219191800.GA1169@obsidianresearch.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Rob Herring <rob.herring@calxeda.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: moving dt binding documents for video devices
+ to common place
+Date: Mon, 04 Mar 2013 11:51:24 +0800
+Message-ID: <20130304035124.A97213E17F8@localhost>
+References: <1360162299-8893-1-git-send-email-rahul.sharma@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1360162299-8893-1-git-send-email-rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, r.sh.open-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 19 Dec 2012 12:18:00 -0700, Jason Gunthorpe <jgunthorpe@obsidianresearch.com> wrote:
-> On Wed, Dec 19, 2012 at 12:54:51PM +0000, Grant Likely wrote:
-> > In both cases, the type of transfer is encoded by the BAR address and
-> > does not get exposed to the child device. Exposing the PCI flags into
-> > the child bus(es) really isn't a very good idea because they don't make
-> > sense in that context. It may seem expedient, but it will be fragile.
+On Wed, 06 Feb 2013 09:51:39 -0500, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Binding Documents for drm-devices are placed in
+> Documentation/devicetree/bindings/drm/*. But these devices are common
+> for v4l framework, hence moved to a common place at
+> Documentation/devicetree/bindings/video/. 'exynos_' prefix is added to
+> associate them with exynos soc series.
 > 
-> Well, it makes as much sense as for a PCI driver - each of the three
-> transfer types has different coding requirements in the driver, so
-> each of the three type must be kept separate.
-> 
-> I haven't looked super closely at this, but the basic desire is to
-> have IORESOURCE_PREFETCH tagged on the struct resource that reaches
-> the platform driver. 'get_flags' for a non-PCI addresses scheme always
-> returns IORESOURCE_MEM, and translating through a ranges doesn't
-> appear to fix that. This is where 3dw is desirable because it uses a
-> get_flags that understands the three resource types.
+> Signed-off-by: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-We could possibly change the ranges translation code to pick up
-IORESOURCE_PREFETCH when a translation crosses a PREFETCH bar. That
-would also ensure that child nodes don't have to keep the flags field
-consistent with the ranges mapping.
+Applied, thanks.
+
+A tip however, if you use the "-M" flag when posting patches it will
+show the files as moved instead of delete the old copy and create a new.
+It makes my life easier when that is done.
 
 g.
