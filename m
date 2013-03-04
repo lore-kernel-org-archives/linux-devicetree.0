@@ -1,180 +1,68 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH 6/9] rtc: stmp3xxx: add sysfs entries for persistent regs
-Date: Mon, 4 Mar 2013 23:14:54 +0800
-Message-ID: <CACxGe6swW-UDH1cUw1D8P+gyhDC8nDZur-A_m_NBfeRUxcg9Jw@mail.gmail.com>
-References: <1362405948-12992-1-git-send-email-s.trumtrar@pengutronix.de>
- <1362405948-12992-7-git-send-email-s.trumtrar@pengutronix.de>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/4] spi/davinci: add DT binding documentation
+Date: Mon, 04 Mar 2013 17:29:16 +0100
+Message-ID: <6918845.dALXSKksQd@wuerfel>
+References: <1362401955-9616-1-git-send-email-prakash.pm@ti.com>
+ <1362401955-9616-2-git-send-email-prakash.pm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362405948-12992-7-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1362401955-9616-2-git-send-email-prakash.pm@ti.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: davinci-linux-open-source@linux.davincidsp.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, nsekhar@ti.com, rob.herring@calxeda.com, grant.likely@secretlab.ca, "Manjunathappa,
+ Prakash" <prakash.pm@ti.com>, Murali Karicheri <m-karicheri2@ti.com>, rob@landley.net, spi-devel-general@lists.sourceforge.net, hs@denx.de
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 4, 2013 at 10:05 PM, Steffen Trumtrar
-<s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> The persistent registers 1-5 are completely software defined. To have access
-> from userspace, export them via sysfs.
->
-> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+On Monday 04 March 2013 18:29:12 Manjunathappa, Prakash wrote:
+> diff --git a/Documentation/devicetree/bindings/spi/spi-davinci.txt b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+> new file mode 100644
+> index 0000000..a62d7a8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/spi/spi-davinci.txt
+> @@ -0,0 +1,51 @@
+> +Davinci SPI controller device bindings
+> +
+> +Required properties:
+> +- #address-cells: number of cells required to define a chip select
+> +	address on the SPI bus. Should be set to 1.
+> +- #size-cells: should be zero.
+> +- compatible:
+> +	- "ti,dm644x-spi" for SPI used similar to that on DM644x SoC family
+> +	- "ti,da8xx-spi" for SPI used similar to that on DA8xx SoC family
 
-Hi Steffen,
+In general, you should avoid wildcards in "compatible" properties.
+Better use the number of the first chip that introduced the specific
+version of the device.
 
-A few comments on this. First and foremost, any additions to the
-kernel sysfs interface must be accompanied with documentation in
-Documentation/ABI/. Second, adding attributes to an existing device
-that has already been registered is almost guaranteed to be wrong. The
-attributes need to be added all at the same time so they are available
-immediately when the new device uevent is issued by the kernel.
+> +- reg: Offset and length of SPI controller register space
+> +- num-cs: Number of chip selects
+> +- ti,davinci-spi-intr-line: interrupt line used to connect the SPI
+> +	IP to the interrupt controller withn the SoC. Possible values
+> +	are 0 and 1. Manual says one of the two possible interrupt
+> +	lines can be tied to the interrupt controller. Set this
+> +	based on a specifc SoC configuration.
+> +- interrupts: interrupt number offset at the irq parent
 
-Instead, the correct thing to do is add an attribute_group to the
-child device before the device gets registered. See the 'attributes'
-section of Documentation/driver-model/device.txt to see how to do
-this.
+I would not call this an "offset". It is an interrupt descriptor
+which may be something other than a simple number.
 
-(I also see that the rtc core code is doing the wrong thing here also.
-rtc_sysfs_add_device(), rtc_sysfs_add_device() should also be replaced
-with an attribute group so that the sysfs files get added
-automatically; but that is outside the scope of this patch)
+Unfortunately, there is no way to provide an "invalid" interrupt,
+otherwise you could just list both interrupts, out of which at
+least one should be valid, and drop the ti,davinci-spi-intr-line
+property.
 
-g.
+One thing you could do instead though is to use the "interrupt-names"
+property to define "irq0" and "irq1" interrupts, and in the
+implementation use the first one you find.
 
-> ---
->  drivers/rtc/rtc-stmp3xxx.c |   69 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->
-> diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
-> index 936b0ca..16b45c8 100644
-> --- a/drivers/rtc/rtc-stmp3xxx.c
-> +++ b/drivers/rtc/rtc-stmp3xxx.c
-> @@ -67,6 +67,8 @@
->  /* missing bitmask in headers */
->  #define STMP3XXX_RTC_PERSISTENT1_FORCE_UPDATER 0x80000000
->
-> +#define STMP3XXX_RTC_PERSISTENT_LEN            (0xC0 - STMP3XXX_RTC_PERSISTENT1)
-> +
->  enum clock_source { MXS_UNKNOWN, MXS_OSC_24M, MXS_OSC_32K, MXS_OSC_32K768 };
->
->  struct stmp3xxx_rtc_data {
-> @@ -74,6 +76,9 @@ struct stmp3xxx_rtc_data {
->         void __iomem *io;
->         int irq_alarm;
->         enum clock_source clk_src;
-> +#if IS_ENABLED(CONFIG_RTC_INTF_SYSFS)
-> +       struct bin_attribute *persist;
-> +#endif
->  };
->
->  #if IS_ENABLED(CONFIG_STMP3XXX_RTC_WATCHDOG)
-> @@ -262,6 +267,42 @@ static int stmp3xxx_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
->         return 0;
->  }
->
-> +#if IS_ENABLED(CONFIG_RTC_INTF_SYSFS)
-> +static ssize_t stmp3xxx_rtc_persist_read(struct file *filep,
-> +                                        struct kobject *kobj,
-> +                                        struct bin_attribute *bin_attr,
-> +                                        char *buf, loff_t off, size_t size)
-> +{
-> +       struct rtc_device *rtc = container_of(kobj, struct rtc_device,
-> +                                             dev.kobj);
-> +       struct device *dev = rtc->dev.parent;
-> +       struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
-> +       ssize_t count;
-> +
-> +       for (count = 0; size; size--, off++, count++)
-> +               *buf++ = readl(rtc_data->io + STMP3XXX_RTC_PERSISTENT1 + off);
-> +
-> +       return count;
-> +}
-> +
-> +static ssize_t stmp3xxx_rtc_persist_write(struct file *filep,
-> +                                         struct kobject *kobj,
-> +                                         struct bin_attribute *bin_attr,
-> +                                         char *buf, loff_t off, size_t size)
-> +{
-> +       struct rtc_device *rtc = container_of(kobj, struct rtc_device,
-> +                                             dev.kobj);
-> +       struct device *dev = rtc->dev.parent;
-> +       struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
-> +       ssize_t count;
-> +
-> +       for (count = 0; size; size--, off++, count++)
-> +               writel(*buf++, rtc_data->io + STMP3XXX_RTC_PERSISTENT1 + off);
-> +
-> +       return count;
-> +}
-> +#endif
-> +
->  static struct rtc_class_ops stmp3xxx_rtc_ops = {
->         .alarm_irq_enable =
->                           stmp3xxx_alarm_irq_enable,
-> @@ -278,6 +319,11 @@ static int stmp3xxx_rtc_remove(struct platform_device *pdev)
->         if (!rtc_data)
->                 return 0;
->
-> +#if IS_ENABLED(CONFIG_RTC_INTF_SYSFS)
-> +       sysfs_remove_bin_file(&pdev->dev.kobj, rtc_data->persist);
-> +       kfree(rtc_data->persist);
-> +#endif
-> +
->         writel(STMP3XXX_RTC_CTRL_ALARM_IRQ_EN,
->                         rtc_data->io + STMP3XXX_RTC_CTRL_CLR);
->         free_irq(rtc_data->irq_alarm, &pdev->dev);
-> @@ -384,8 +430,31 @@ static int stmp3xxx_rtc_probe(struct platform_device *pdev)
->         }
->
->         stmp3xxx_wdt_register(pdev);
-> +
-> +#if IS_ENABLED(CONFIG_RTC_INTF_SYSFS)
-> +       rtc_data->persist = kzalloc(sizeof(struct bin_attribute), GFP_KERNEL);
-> +       if (!rtc_data->persist) {
-> +               err = -ENOMEM;
-> +               goto out_persist;
-> +       }
-> +
-> +       rtc_data->persist->attr.name = "persistent";
-> +       rtc_data->persist->attr.mode = S_IRUGO | S_IWUSR;
-> +       sysfs_bin_attr_init(rtc_data->persist);
-> +       rtc_data->persist->read = stmp3xxx_rtc_persist_read;
-> +       rtc_data->persist->write = stmp3xxx_rtc_persist_write;
-> +       rtc_data->persist->size = STMP3XXX_RTC_PERSISTENT_LEN;
-> +       err = sysfs_create_bin_file(&rtc_data->rtc->dev.kobj,
-> +                               rtc_data->persist);
-> +       if (err) {
-> +               kfree(rtc_data->persist);
-> +               goto out_persist;
-> +       }
-> +#endif
-> +
->         return 0;
->
-> +out_persist:
->  out_irq_alarm:
->         rtc_device_unregister(rtc_data->rtc);
->  out_remap:
-> --
-> 1.7.10.4
->
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-
-
-
---
-Grant Likely, B.Sc., P.Eng.
-Secret Lab Technologies Ltd.
+	Arnd
