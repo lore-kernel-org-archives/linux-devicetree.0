@@ -1,118 +1,100 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: Is registration of IRQ resources dependent on nodes order?
-Date: Mon, 04 Mar 2013 12:30:37 +0800
-Message-ID: <20130304043038.0ABBC3E17F8@localhost>
-References: <5106C858.6090308@sysgo.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5106C858.6090308-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexander Sverdlin <asv-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH] DMA: PL330: Add check if device tree compatible
+Date: Mon, 04 Mar 2013 10:59:03 +0530
+Message-ID: <1362374943-29312-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.kvr@gmail.com, padma.v@samsung.com
+Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, arnd@arndb.de, vinod.koul@intel.com, boojin.kim@samsung.com, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 28 Jan 2013 19:50:00 +0100, Alexander Sverdlin <asv-uSbOeAmDUekAvxtiuMwx3w@public.gmane.org> wrote:
-> Hello!
-> 
-> In our custom MIPS64 based project we are experiencing a problem with
-> of_platform_populate() and in particular, how IRQ resources are added
-> to the populated devices. In our device tree we have a chain of
-> cascaded interrupt-controllers. Following Linux device-driver model we
-> are trying to pair a driver of interrupt-controller with a
-> platform_device that should be registered in of_platform_populate().
-> This works fine, but unfortunately interrupt-generating devices that
-> have this controller as interrupt-parent do not properly receive their
-> IRQ resources in corresponding platform_device structures.
+This patch register the dma controller with generic dma helpers only
+in DT case. This also adds some extra error handling in the driver.
 
-Hmm, yes that would be a problem.
+Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+Reported-by: Sachin Kamat <sachin.kamat@linaro.org>
+---
 
-> The unsuccessful sequence is as following:
-> of_platform_populate() ->
-> ...
-> of_device_alloc() ->
-> of_irq_to_resource_table() ->
-> of_irq_to_resource() ->
-> irq_of_parse_and_map() ->
-> of_irq_map_one() -- this one seems to be ok, because operate only on
-> device-tree, but the next one is irq_create_of_mapping(), which does
-> the following:
-> 
-> 	domain = controller ? irq_find_host(controller) : irq_default_domain;
-> 	if (!domain) {
-> 		...
-> 
-> It might be (and in our case it is so), that there is no domain
-> registered yet at this point, it was not populated yet by
-> of_platform_populate() and therefore controller driver probe()
-> function was not called.
+Based on Vinod Koul next branch
 
-Yes, that would be true. of_platform_populate() creates the
-platform_devices (before initcalls), but probing happens much later at
-initcall time. The interrupt controllers still need to be initialized
-before the IRQ resources can be populated into creating platform
-devices.
+ drivers/dma/pl330.c |   41 ++++++++++++++++++++++++++++++-----------
+ 1 files changed, 30 insertions(+), 11 deletions(-)
 
-> Both ePAPR 1.1 and "Open Firmware Recommended Practice: Interrupt
-> Mapping" do not specify the order how IRQ controller and those nodes
-> that have it as interrupt-parent should follow each other.
-> 
-> DTB unflattening code can be changed and the order how nodes appear in
-> the lists can change. of_platform_populate() must not depend on this
-> order.
-> 
-> Am I missing something there? Or this is really a flaw in current
-> irq_domains - of_* coupling code?  > Any ideas on the possible patch?
-> Should irq_of_parse_and_map() or of_irq_map_one() first check if the
-> corresponding controller node is already populated as platform_device
-> and if not, do it?
-
-DT order does not at all appear to be the problem here.  It really is a
-matter that Linux currently expects all the irq numbers to be available
-when registering platform devices, but when using DT the irq numbers are
-unknown until an irq controller is registered. If the irq controller is
-a platform_device, then initialization won't happen until way after
-of_platform_populate() has completed.
-
-Right now we work around this by using of_irq_init() which finds all the
-irq controllers in the tree, sorts them by dependency order and
-initializes as many of them as possible. However, this isn't the most
-elegant solution and it completely fails any kind of hotplug for irq
-controllers (a bit of a theoretical problem at the moment).
-
-Ideally, I'd like to push DT resource resolution out to driver->probe()
-time. We could do this by hooking into the platform_get_*() apis to
-call out to DT irq and reg parse functions when the device does not have
-a matching resource in the resources table. The only problem with this
-is that there are a lot of drivers directly accessing the resources
-structure instead of using the accessors. Those would need to be fixed
-which is potentially a lot of work.
-
-> Why it works for some existing code in Linux (everything abowe and
-> below is from Linux 3.7):
-> - some IRQ controller drivers register their irq_domain not in the
-> probe function of the drivers, but in some platform init code (before
-> device tree is populated)
-> - many .dts files within Linux source tree have IRQ generating devices
-> described before the controller thanks to some internal dtb-processing
-> code properties, they appear in reverse order in resulting unflattened
-> device tree, so that controller is populated before it's users
-
-Population order really has no bearing on initialization order. In fact,
-the bigest factor in determining probe order of devices is the link
-order of drivers into the kernel.  :-)
-
-g.
-
+diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
+index 7181531..bdad8de 100644
+--- a/drivers/dma/pl330.c
++++ b/drivers/dma/pl330.c
+@@ -2882,7 +2882,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+ {
+ 	struct dma_pl330_platdata *pdat;
+ 	struct dma_pl330_dmac *pdmac;
+-	struct dma_pl330_chan *pch;
++	struct dma_pl330_chan *pch, *_p;
+ 	struct pl330_info *pi;
+ 	struct dma_device *pd;
+ 	struct resource *res;
+@@ -2984,7 +2984,17 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+ 	ret = dma_async_device_register(pd);
+ 	if (ret) {
+ 		dev_err(&adev->dev, "unable to register DMAC\n");
+-		goto probe_err2;
++		goto probe_err3;
++	}
++
++	if (adev->dev.of_node) {
++		ret = of_dma_controller_register(adev->dev.of_node,
++					 of_dma_pl330_xlate, pdmac);
++		if (ret) {
++			dev_err(&adev->dev,
++			"unable to register DMA to the generic DT DMA helpers\n");
++			goto probe_err4;
++		}
+ 	}
+ 
+ 	dev_info(&adev->dev,
+@@ -2995,16 +3005,23 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
+ 		pi->pcfg.data_bus_width / 8, pi->pcfg.num_chan,
+ 		pi->pcfg.num_peri, pi->pcfg.num_events);
+ 
+-	ret = of_dma_controller_register(adev->dev.of_node,
+-					 of_dma_pl330_xlate, pdmac);
+-	if (ret) {
+-		dev_err(&adev->dev,
+-		"unable to register DMA to the generic DT DMA helpers\n");
+-		goto probe_err2;
+-	}
+-
+ 	return 0;
++probe_err4:
++	dma_async_device_unregister(pd);
++probe_err3:
++	amba_set_drvdata(adev, NULL);
+ 
++	/* Idle the DMAC */
++	list_for_each_entry_safe(pch, _p, &pdmac->ddma.channels,
++			chan.device_node) {
++
++		/* Remove the channel */
++		list_del(&pch->chan.device_node);
++
++		/* Flush the channel */
++		pl330_control(&pch->chan, DMA_TERMINATE_ALL, 0);
++		pl330_free_chan_resources(&pch->chan);
++	}
+ probe_err2:
+ 	pl330_del(pi);
+ probe_err1:
+@@ -3023,8 +3040,10 @@ static int pl330_remove(struct amba_device *adev)
+ 	if (!pdmac)
+ 		return 0;
+ 
+-	of_dma_controller_free(adev->dev.of_node);
++	if (adev->dev.of_node)
++		of_dma_controller_free(adev->dev.of_node);
+ 
++	dma_async_device_unregister(&pdmac->ddma);
+ 	amba_set_drvdata(adev, NULL);
+ 
+ 	/* Idle the DMAC */
 -- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
+1.7.4.4
