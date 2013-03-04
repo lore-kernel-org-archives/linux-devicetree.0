@@ -1,13 +1,12 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 4/9] MXS/i.MX28: there is more than one way to clock the RTC
-Date: Mon,  4 Mar 2013 15:05:43 +0100
-Message-ID: <1362405948-12992-5-git-send-email-s.trumtrar@pengutronix.de>
-References: <1362405948-12992-1-git-send-email-s.trumtrar@pengutronix.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] serial/efm32: parse location property
+Date: Mon, 04 Mar 2013 22:38:54 +0800
+Message-ID: <20130304143854.395EF3E206B@localhost>
+References: <1358774576-13275-1-git-send-email-u.kleine-koenig@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============1478199060444048331=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362405948-12992-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1358774576-13275-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,146 +17,165 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+--===============1478199060444048331==
+Content-Type: text/plain
 
-Reflect the possibilities via device tree and configure the RTC correctly
+On Mon, 21 Jan 2013 14:22:56 +0100, Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> The non-dt probing allowed passing the location via platform data from
+> the beginning. So make up leeway for device tree probing.
+> 
+> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
----
- arch/arm/boot/dts/imx28.dtsi |    2 ++
- drivers/rtc/rtc-stmp3xxx.c   |   76 ++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 78 insertions(+)
+Linus, does this look like some thing that should be done using pinctrl?
 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index dcd0844..d89af79 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -818,6 +818,8 @@
- 				compatible = "fsl,imx28-rtc", "fsl,stmp3xxx-rtc";
- 				reg = <0x80056000 0x2000>;
- 				interrupts = <29>;
-+				clocks = <&clks 65>, <&clks 40> ;
-+				clock-names = "32k", "24m";
- 			};
- 
- 			i2c0: i2c@80058000 {
-diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
-index 7311292..fb4b823 100644
---- a/drivers/rtc/rtc-stmp3xxx.c
-+++ b/drivers/rtc/rtc-stmp3xxx.c
-@@ -21,6 +21,7 @@
- #include <linux/module.h>
- #include <linux/io.h>
- #include <linux/init.h>
-+#include <linux/clk.h>
- #include <linux/platform_device.h>
- #include <linux/interrupt.h>
- #include <linux/rtc.h>
-@@ -176,11 +177,55 @@ static irqreturn_t stmp3xxx_rtc_interrupt(int irq, void *dev_id)
- 	return IRQ_NONE;
- }
- 
-+/*
-+ * To keep the energy consumption low, keep only
-+ * the really used oscillator running when the power is down
-+ */
-+static void stmp3xxx_alarm_keep_oscillator(const struct stmp3xxx_rtc_data *rtc_data)
-+{
-+	switch (rtc_data->clk_src) {
-+	case MXS_OSC_24M:
-+		/* keep the 24 MHz oscillator running even in power down */
-+		writel(STMP3XXX_RTC_PERSISTENT0_XTAL32_FREQ | /* 24 MHz / 750 */
-+			STMP3XXX_RTC_PERSISTENT0_XTAL24MHZ_PWRUP,
-+			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_SET);
-+		writel(STMP3XXX_RTC_PERSISTENT0_XTAL32KHZ_PWRUP |
-+			STMP3XXX_RTC_PERSISTENT0_CLOCKSOURCE,
-+			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
-+		break;
-+	case MXS_OSC_32K:
-+		/* keep the 32 kHz oscillator running even in power down */
-+		writel(STMP3XXX_RTC_PERSISTENT0_XTAL32_FREQ | /* 32 kHz */
-+			STMP3XXX_RTC_PERSISTENT0_XTAL32KHZ_PWRUP |
-+			STMP3XXX_RTC_PERSISTENT0_CLOCKSOURCE,
-+			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_SET);
-+		writel(STMP3XXX_RTC_PERSISTENT0_XTAL24MHZ_PWRUP,
-+			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
-+		break;
-+	case MXS_OSC_32K768:
-+		/* keep the 32 kHz oscillator running even in power down */
-+		writel(STMP3XXX_RTC_PERSISTENT0_XTAL32KHZ_PWRUP |
-+			STMP3XXX_RTC_PERSISTENT0_CLOCKSOURCE,
-+			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_SET);
-+		writel(STMP3XXX_RTC_PERSISTENT0_XTAL32_FREQ | /* 32.768 kHz */
-+			STMP3XXX_RTC_PERSISTENT0_XTAL24MHZ_PWRUP,
-+			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
-+		break;
-+	case MXS_UNKNOWN:
-+	default:
-+		break;
-+	}
-+}
-+
- static int stmp3xxx_alarm_irq_enable(struct device *dev, unsigned int enabled)
- {
- 	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
- 
-+	stmp3xxx_alarm_keep_oscillator(rtc_data);
-+
- 	if (enabled) {
-+		writel(STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE, /* to be able to sleep */
-+			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
- 		writel(STMP3XXX_RTC_PERSISTENT0_ALARM_EN |
- 				STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE_EN,
- 				rtc_data->io + STMP3XXX_RTC_PERSISTENT0_SET);
-@@ -248,6 +293,8 @@ static int stmp3xxx_rtc_probe(struct platform_device *pdev)
- {
- 	struct stmp3xxx_rtc_data *rtc_data;
- 	struct resource *r;
-+	struct clk *clk;
-+	unsigned long rate;
- 	int err;
- 
- 	rtc_data = kzalloc(sizeof *rtc_data, GFP_KERNEL);
-@@ -280,6 +327,35 @@ static int stmp3xxx_rtc_probe(struct platform_device *pdev)
- 	platform_set_drvdata(pdev, rtc_data);
- 
- 	mxs_reset_block(rtc_data->io);
-+
-+	/*
-+	 * configure the RTC to provide the correct time
-+	 */
-+	clk = clk_get(&pdev->dev, "32k");
-+	if (IS_ERR(clk)) {
-+		/* just a fall back */
-+		dev_warn(&pdev->dev, "RTC's input clock undefined\n");
-+		rtc_data->clk_src = MXS_OSC_24M;
-+	} else {
-+		rate = clk_get_rate(clk);
-+		if (rate == 0) {
-+			/* no dedicated external crystal */
-+			rtc_data->clk_src = MXS_OSC_24M;
-+			dev_info(&pdev->dev, "Using 24 MHz as RTC's clock\n");
-+		} else if (rate == 32000) {
-+			rtc_data->clk_src = MXS_OSC_32K;
-+			dev_info(&pdev->dev, "Using 32.0 kHz as RTC's clock\n");
-+		} else if (rate == 32768) {
-+			rtc_data->clk_src = MXS_OSC_32K768;
-+			dev_info(&pdev->dev, "Using 32.768 kHz as RTC's clock\n");
-+		} else
-+			dev_warn(&pdev->dev,
-+				"Cannot init the RTC's clock source\n");
-+	}
-+
-+	/* basically configure the RTC's input clock */
-+	stmp3xxx_alarm_keep_oscillator(rtc_data);
-+
- 	writel(STMP3XXX_RTC_PERSISTENT0_ALARM_EN |
- 			STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE_EN |
- 			STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE,
+g.
+
+> ---
+> Hello,
+> 
+> I wonder if the location property should be mandatory. Do you have an
+> opinion? 
+> 
+> BTW, I was surprised that I had to use of_property_read_u32 but not
+> of_property_read_u8. I would have expected that the only difference
+> between those two is the returned type, but actually the format to
+> specify an u8 is different. Is this intended? (Probably it is. If so, is
+> it maybe sensible to accentuate the difference by using a different
+> function name for the u32 case?)
+> 
+> Best regards
+> Uwe
+> 
+>  .../devicetree/bindings/tty/serial/efm32-uart.txt  |    6 ++++
+>  drivers/tty/serial/efm32-uart.c                    |   31 +++++++++++++++-----
+>  2 files changed, 30 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/tty/serial/efm32-uart.txt b/Documentation/devicetree/bindings/tty/serial/efm32-uart.txt
+> index 6588b69..8e080b8 100644
+> --- a/Documentation/devicetree/bindings/tty/serial/efm32-uart.txt
+> +++ b/Documentation/devicetree/bindings/tty/serial/efm32-uart.txt
+> @@ -5,10 +5,16 @@ Required properties:
+>  - reg : Address and length of the register set
+>  - interrupts : Should contain uart interrupt
+>  
+> +Optional properties:
+> +- location : Decides the location of the USART I/O pins.
+> +  Allowed range : [0 .. 5]
+> +  Default: 0
+> +
+>  Example:
+>  
+>  uart@0x4000c400 {
+>  	compatible = "efm32,uart";
+>  	reg = <0x4000c400 0x400>;
+>  	interrupts = <15>;
+> +	location = <0>;
+>  };
+> diff --git a/drivers/tty/serial/efm32-uart.c b/drivers/tty/serial/efm32-uart.c
+> index a8cbb26..67ff23b 100644
+> --- a/drivers/tty/serial/efm32-uart.c
+> +++ b/drivers/tty/serial/efm32-uart.c
+> @@ -81,6 +81,7 @@ struct efm32_uart_port {
+>  	struct uart_port port;
+>  	unsigned int txirq;
+>  	struct clk *clk;
+> +	struct efm32_uart_pdata pdata;
+>  };
+>  #define to_efm_port(_port) container_of(_port, struct efm32_uart_port, port)
+>  #define efm_debug(efm_port, format, arg...)			\
+> @@ -300,13 +301,8 @@ static irqreturn_t efm32_uart_txirq(int irq, void *data)
+>  static int efm32_uart_startup(struct uart_port *port)
+>  {
+>  	struct efm32_uart_port *efm_port = to_efm_port(port);
+> -	u32 location = 0;
+> -	struct efm32_uart_pdata *pdata = dev_get_platdata(port->dev);
+>  	int ret;
+>  
+> -	if (pdata)
+> -		location = UARTn_ROUTE_LOCATION(pdata->location);
+> -
+>  	ret = clk_enable(efm_port->clk);
+>  	if (ret) {
+>  		efm_debug(efm_port, "failed to enable clk\n");
+> @@ -315,7 +311,9 @@ static int efm32_uart_startup(struct uart_port *port)
+>  	port->uartclk = clk_get_rate(efm_port->clk);
+>  
+>  	/* Enable pins at configured location */
+> -	efm32_uart_write32(efm_port, location | UARTn_ROUTE_RXPEN | UARTn_ROUTE_TXPEN,
+> +	efm32_uart_write32(efm_port,
+> +			UARTn_ROUTE_LOCATION(efm_port->pdata.location) |
+> +			UARTn_ROUTE_RXPEN | UARTn_ROUTE_TXPEN,
+>  			UARTn_ROUTE);
+>  
+>  	ret = request_irq(port->irq, efm32_uart_rxirq, 0,
+> @@ -674,11 +672,24 @@ static int efm32_uart_probe_dt(struct platform_device *pdev,
+>  		struct efm32_uart_port *efm_port)
+>  {
+>  	struct device_node *np = pdev->dev.of_node;
+> +	u32 location;
+>  	int ret;
+>  
+>  	if (!np)
+>  		return 1;
+>  
+> +	ret = of_property_read_u32(np, "location", &location);
+> +	if (!ret) {
+> +		if (location > 5) {
+> +			dev_err(&pdev->dev, "invalid location\n");
+> +			return -EINVAL;
+> +		}
+> +		efm_debug(efm_port, "using location %u\n", location);
+> +		efm_port->pdata.location = location;
+> +	} else {
+> +		efm_debug(efm_port, "fall back to location 0\n");
+> +	}
+> +
+>  	ret = of_alias_get_id(np, "serial");
+>  	if (ret < 0) {
+>  		dev_err(&pdev->dev, "failed to get alias id: %d\n", ret);
+> @@ -738,10 +749,16 @@ static int efm32_uart_probe(struct platform_device *pdev)
+>  	efm_port->port.flags = UPF_BOOT_AUTOCONF;
+>  
+>  	ret = efm32_uart_probe_dt(pdev, efm_port);
+> -	if (ret > 0)
+> +	if (ret > 0) {
+>  		/* not created by device tree */
+> +		const struct efm32_uart_pdata *pdata = dev_get_platdata(&pdev->dev);
+> +
+>  		efm_port->port.line = pdev->id;
+>  
+> +		if (pdata)
+> +			efm_port->pdata = *pdata;
+> +	}
+> +
+>  	if (efm_port->port.line >= 0 &&
+>  			efm_port->port.line < ARRAY_SIZE(efm32_uart_ports))
+>  		efm32_uart_ports[efm_port->port.line] = efm_port;
+> -- 
+> 1.7.10.4
+> 
+> _______________________________________________
+> devicetree-discuss mailing list
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+> https://lists.ozlabs.org/listinfo/devicetree-discuss
+
 -- 
-1.7.10.4
+Grant Likely, B.Sc, P.Eng.
+Secret Lab Technologies, Ltd.
+
+--===============1478199060444048331==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+devicetree-discuss mailing list
+devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+https://lists.ozlabs.org/listinfo/devicetree-discuss
+
+--===============1478199060444048331==--
