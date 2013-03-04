@@ -1,181 +1,102 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [PATCH] serial/efm32: parse location property
-Date: Mon, 04 Mar 2013 22:38:54 +0800
-Message-ID: <20130304143854.395EF3E206B@localhost>
-References: <1358774576-13275-1-git-send-email-u.kleine-koenig@pengutronix.de>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH RFC] usb: dwc3: Get PHY from platform specific dwc3 dt
+ node.
+Date: Mon, 4 Mar 2013 17:02:52 +0200
+Message-ID: <20130304150252.GP3397@arwen.pp.htv.fi>
+References: <1359631232-7107-1-git-send-email-gautam.vivek@samsung.com>
+ <510A56BF.3040804@ti.com>
+ <CAFp+6iFkb=U0CJA=3zmQvd5XfMwbROuRJjXoJG7zvvq4_upzNw@mail.gmail.com>
+ <20130131152527.GE4064@arwen.pp.htv.fi>
+ <CAFp+6iHvKYiF_neANRq5roAEJwhvcaLk7pAd7Dy94Z5XiDkhgA@mail.gmail.com>
+ <20130131153836.GF4064@arwen.pp.htv.fi>
+ <CAFp+6iGTqZY=+crcYyu9o5uEP9Nv2=haSqB+nCuqA2_iUand6A@mail.gmail.com>
+ <20130301064129.GF3120@arwen.pp.htv.fi>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1478199060444048331=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1358774576-13275-1-git-send-email-u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Jiri Slaby <jslaby-AlSwsSmVLrQ@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="SlnaBQtdWG0gYnqZ"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130301064129.GF3120@arwen.pp.htv.fi>
+Sender: linux-omap-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>
+Cc: Vivek Gautam <gautamvivek1987@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, kishon <kishon@ti.com>, Vivek Gautam <gautam.vivek@samsung.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-samsung-soc@vger.kernel.org, gregkh@linuxfoundation.org, devicetree-discuss@lists.ozlabs.org, Andrew Morton <akpm@linux-foundation.org>
 List-Id: devicetree@vger.kernel.org
 
---===============1478199060444048331==
-Content-Type: text/plain
-
-On Mon, 21 Jan 2013 14:22:56 +0100, Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> The non-dt probing allowed passing the location via platform data from
-> the beginning. So make up leeway for device tree probing.
-> 
-> Signed-off-by: Uwe Kleine-König <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-Linus, does this look like some thing that should be done using pinctrl?
-
-g.
-
-> ---
-> Hello,
-> 
-> I wonder if the location property should be mandatory. Do you have an
-> opinion? 
-> 
-> BTW, I was surprised that I had to use of_property_read_u32 but not
-> of_property_read_u8. I would have expected that the only difference
-> between those two is the returned type, but actually the format to
-> specify an u8 is different. Is this intended? (Probably it is. If so, is
-> it maybe sensible to accentuate the difference by using a different
-> function name for the u32 case?)
-> 
-> Best regards
-> Uwe
-> 
->  .../devicetree/bindings/tty/serial/efm32-uart.txt  |    6 ++++
->  drivers/tty/serial/efm32-uart.c                    |   31 +++++++++++++++-----
->  2 files changed, 30 insertions(+), 7 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/tty/serial/efm32-uart.txt b/Documentation/devicetree/bindings/tty/serial/efm32-uart.txt
-> index 6588b69..8e080b8 100644
-> --- a/Documentation/devicetree/bindings/tty/serial/efm32-uart.txt
-> +++ b/Documentation/devicetree/bindings/tty/serial/efm32-uart.txt
-> @@ -5,10 +5,16 @@ Required properties:
->  - reg : Address and length of the register set
->  - interrupts : Should contain uart interrupt
->  
-> +Optional properties:
-> +- location : Decides the location of the USART I/O pins.
-> +  Allowed range : [0 .. 5]
-> +  Default: 0
-> +
->  Example:
->  
->  uart@0x4000c400 {
->  	compatible = "efm32,uart";
->  	reg = <0x4000c400 0x400>;
->  	interrupts = <15>;
-> +	location = <0>;
->  };
-> diff --git a/drivers/tty/serial/efm32-uart.c b/drivers/tty/serial/efm32-uart.c
-> index a8cbb26..67ff23b 100644
-> --- a/drivers/tty/serial/efm32-uart.c
-> +++ b/drivers/tty/serial/efm32-uart.c
-> @@ -81,6 +81,7 @@ struct efm32_uart_port {
->  	struct uart_port port;
->  	unsigned int txirq;
->  	struct clk *clk;
-> +	struct efm32_uart_pdata pdata;
->  };
->  #define to_efm_port(_port) container_of(_port, struct efm32_uart_port, port)
->  #define efm_debug(efm_port, format, arg...)			\
-> @@ -300,13 +301,8 @@ static irqreturn_t efm32_uart_txirq(int irq, void *data)
->  static int efm32_uart_startup(struct uart_port *port)
->  {
->  	struct efm32_uart_port *efm_port = to_efm_port(port);
-> -	u32 location = 0;
-> -	struct efm32_uart_pdata *pdata = dev_get_platdata(port->dev);
->  	int ret;
->  
-> -	if (pdata)
-> -		location = UARTn_ROUTE_LOCATION(pdata->location);
-> -
->  	ret = clk_enable(efm_port->clk);
->  	if (ret) {
->  		efm_debug(efm_port, "failed to enable clk\n");
-> @@ -315,7 +311,9 @@ static int efm32_uart_startup(struct uart_port *port)
->  	port->uartclk = clk_get_rate(efm_port->clk);
->  
->  	/* Enable pins at configured location */
-> -	efm32_uart_write32(efm_port, location | UARTn_ROUTE_RXPEN | UARTn_ROUTE_TXPEN,
-> +	efm32_uart_write32(efm_port,
-> +			UARTn_ROUTE_LOCATION(efm_port->pdata.location) |
-> +			UARTn_ROUTE_RXPEN | UARTn_ROUTE_TXPEN,
->  			UARTn_ROUTE);
->  
->  	ret = request_irq(port->irq, efm32_uart_rxirq, 0,
-> @@ -674,11 +672,24 @@ static int efm32_uart_probe_dt(struct platform_device *pdev,
->  		struct efm32_uart_port *efm_port)
->  {
->  	struct device_node *np = pdev->dev.of_node;
-> +	u32 location;
->  	int ret;
->  
->  	if (!np)
->  		return 1;
->  
-> +	ret = of_property_read_u32(np, "location", &location);
-> +	if (!ret) {
-> +		if (location > 5) {
-> +			dev_err(&pdev->dev, "invalid location\n");
-> +			return -EINVAL;
-> +		}
-> +		efm_debug(efm_port, "using location %u\n", location);
-> +		efm_port->pdata.location = location;
-> +	} else {
-> +		efm_debug(efm_port, "fall back to location 0\n");
-> +	}
-> +
->  	ret = of_alias_get_id(np, "serial");
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "failed to get alias id: %d\n", ret);
-> @@ -738,10 +749,16 @@ static int efm32_uart_probe(struct platform_device *pdev)
->  	efm_port->port.flags = UPF_BOOT_AUTOCONF;
->  
->  	ret = efm32_uart_probe_dt(pdev, efm_port);
-> -	if (ret > 0)
-> +	if (ret > 0) {
->  		/* not created by device tree */
-> +		const struct efm32_uart_pdata *pdata = dev_get_platdata(&pdev->dev);
-> +
->  		efm_port->port.line = pdev->id;
->  
-> +		if (pdata)
-> +			efm_port->pdata = *pdata;
-> +	}
-> +
->  	if (efm_port->port.line >= 0 &&
->  			efm_port->port.line < ARRAY_SIZE(efm32_uart_ports))
->  		efm32_uart_ports[efm_port->port.line] = efm_port;
-> -- 
-> 1.7.10.4
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-
--- 
-Grant Likely, B.Sc, P.Eng.
-Secret Lab Technologies, Ltd.
-
---===============1478199060444048331==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+--SlnaBQtdWG0gYnqZ
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
+Hi,
 
---===============1478199060444048331==--
+On Fri, Mar 01, 2013 at 08:41:29AM +0200, Felipe Balbi wrote:
+> > >> >> >> Moreover, SoCs having multiple dwc3 controllers will have mult=
+iple
+> > >> >> >> PHYs, which eventually be added using usb_add_phy_dev(), and n=
+ot
+> > >> >> >> using usb_add_phy(). So each dwc3 controller won't be able to
+> > >> >> >> get PHYs by simply calling devm_usb_get_phy() also.
+> > >> >> >
+> > >> >> > No. We have added usb_get_phy_dev() for that purpose in the cas=
+e of non-dt.
+> > >> >> > I think, instead you can have a patch to use devm_usb_get_phy_d=
+ev() here and
+> > >> >> > in exynos platform specific code use usb_bind_phy() to bind the=
+ phy and
+> > >> >> > controller till you change it to dt.
+> > >> >> >
+> > >> >>
+> > >> >> We have dt support for dwc3-exynos, in such case we should go ahe=
+ad with
+> > >> >> of_platform_populate(), right ?
+> > >> >> But if when i use of_platform_populate() i will not be able to set
+> > >> >> dma_mask to dwc3->dev. :-(
+> > >> >
+> > >> > do you have a special need for dma_mask because OF already sets it.
+> > >> >
+> > >> If i am not wrong of_platform_device_create_pdata() will set
+> > >> "dev->dev.coherent_dma_mask =3D DMA_BIT_MASK(32)"
+> > >> and not dma_mask.
+> > >> I fact we had some discussion sometime back when we needed the same
+> > >> for dwc3-exynos in the thread:
+> > >> [PATCH v2 1/2] USB: dwc3-exynos: Add support for device tree
+> > >>
+> > >> But couldn't get final node on it.
+> > >> So suggestions here please. :-)
+> > >
+> > > hmm.. you're right there. Grant, Rob ? Any hints ?
+> > >
+> >=20
+> > Any suggestions on this ?
+>=20
+> anyone ?
+
+ping ?
+
+--=20
+balbi
+
+--SlnaBQtdWG0gYnqZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRNLecAAoJEIaOsuA1yqRElskP/0tbqXGQqNSsaboaaLXCEKL/
+wOdn6btvDw32bniDijHphIGrw/zwouf2Jsqh8R1Be7ai6xUfqugy1Z097Qo8AlNa
+Ig8QxVSTPonqsTVZjGqHfucbH2sFkS951TdVTV4vGN0P0Ml7h3YhTg4bMfjXoFe/
+DYzDzmuOOPC5msfN6dOpaFq+8rJo3vsZSi6yQ5+ijLCCy5S7ucSGfQ/J8d2zK+Cv
+wSwlje2QRKRuSg/zL8xZxxFGXdJfoL1MVQIrZctWXjUrdxJ7etXqGgHKpbRdfGP2
+e4DGqsG34JmvxgKjmu3QXSejJjkIy0eXFR3Ai+r0sHo1zLtnh0wvlpNT0tEhkwgB
+Q3kzfL3FZIMXDItvS3zDp1JR3oAEViWWgKxINKEqjZJXdtYN0IQLlSB/kwQU8K26
+++Fbae1Wgwoft5lNvRv/Lr9HmZwcRIObxMM+Am6s8sNFxusqHJhrTfhgKxsfciLG
+EKsW2synQjaZHfPvShwLe1DgCRt6S/WcF7DgJfa6f9WSOTo5dArNJ3Pz7WqVym0f
+Wi16IwOL+OAM/PYbkoOPcdAwWFPhZZJqDJ7iMa4g9t9oFl/NF9I4Jm2TfviYGmlC
+iEc0pVz1D4FVBQ+kyRIsUzL5B3fxdC4ItXdyBlLa2D3PURiMaGWHehAZrdPCT4Fy
+nsnjPQbl/kROIsbPfeqD
+=CM64
+-----END PGP SIGNATURE-----
+
+--SlnaBQtdWG0gYnqZ--
