@@ -1,101 +1,94 @@
-From: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH v2 4/4] ARM: davinci: da850-evm: add SPI flash support
-Date: Mon, 4 Mar 2013 13:47:48 +0000
-Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA48421@DBDE01.ent.ti.com>
-References: <1362401955-9616-1-git-send-email-prakash.pm@ti.com>
-	<1362401955-9616-5-git-send-email-prakash.pm@ti.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 7/9] rtc: stmp3xxx: Re-enable active alarm
+Date: Mon,  4 Mar 2013 15:05:46 +0100
+Message-ID: <1362405948-12992-8-git-send-email-s.trumtrar@pengutronix.de>
+References: <1362405948-12992-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-In-Reply-To: <1362401955-9616-5-git-send-email-prakash.pm-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <http://linux.davincidsp.com/mailman/options/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://linux.davincidsp.com/pipermail/davinci-linux-open-source>
-List-Post: <mailto:davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-List-Help: <mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=help>
-List-Subscribe: <http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source>,
-	<mailto:davinci-linux-open-source-request-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org?subject=subscribe>
-Sender: <davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Errors-To: davinci-linux-open-source-bounces-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
-To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>, "spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>
-Cc: "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org" <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1362405948-12992-1-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 04, 2013 at 18:29:15, Manjunathappa, Prakash wrote:
-> Enable m25p64 SPI flash support on da850-EVM. Also
-> add partition information of SPI flash.
-> 
-> Signed-off-by: Manjunathappa, Prakash <prakash.pm-l0cyMroinI0@public.gmane.org>
-> ---
-> Since v1:
-> Look for m25p64 instead of m25p80.
-> Corrected the filesystem partition information.
-> 
->  arch/arm/boot/dts/da850-evm.dts |   40 +++++++++++++++++++++++++++++++++++++++
->  1 files changed, 40 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index c359872..3306d82 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -41,6 +41,46 @@
->  		wdt: wdt@1c21000 {
->  			status = "okay";
->  		};
-> +		spi1: spi@1f0e000 {
-> +			status = "okay";
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&spi1_pins>;
-> +			flash: m25p80@0 {
-> +				#address-cells = <1>;
-> +				#size-cells = <1>;
-> +				compatible = "m25p64";
-> +				spi-max-frequency = <30000000>;
-> +				reg = <0>;
-> +				partition@0 {
-> +					label = "U-Boot-SPL";
-> +					reg = <0x00000000 0x00010000>;
-> +					read-only;
-> +				};
-> +				partition@1 {
-> +					label = "U-Boot";
-> +					reg = <0x00010000 0x00080000>;
-> +					read-only;
-> +				};
-> +				partition@2 {
-> +					label = "U-Boot-Env";
-> +					reg = <0x00090000 0x00010000>;
-> +					read-only;
-> +				};
-> +				partition@3 {
-> +					label = "Kernel";
-> +					reg = <0x000a0000 0x00280000>;
-> +				};
-> +				partition@4 {
-> +					label = "Filesystem";
-> +					reg = <0x00320000 0x00400000>;
-> +				};
-> +				partition@5 {
-> +					label = "MAC-Address";
-> +					reg = <0x00720000 0x00010000>;
+If an alarm is set and the system rebooted, the alarm does not get re-enabled,
+although it may still be valid (i.e. in the future).
 
-Ah... MAC address is at the end of 8MB flash. Need to change above:
-					reg = <0x007f0000 0x00010000>;
-Will send v3 for this.
+The sysfs representation of wakealarms prevents overwriting active alarms. One
+needs to instead write a 0 first and then the new value. Therefore an alarm is
+considered active if
+	wakealarm != 0 && wakealarm > now
 
-Thanks,
-Prakash
+To preserve this information over a reboot, the alarm needs to be re-written
+on startup, if it is still valid. This leads to all flags being reactivated
+and interrupts reenabled.
 
-> +					read-only;
-> +				};
-> +			};
-> +		};
->  	};
->  	nand_cs3@62000000 {
->  		status = "okay";
-> -- 
-> 1.7.4.1
-> 
-> 
+Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ drivers/rtc/rtc-stmp3xxx.c |   26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
+
+diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
+index 16b45c8..f31ac76 100644
+--- a/drivers/rtc/rtc-stmp3xxx.c
++++ b/drivers/rtc/rtc-stmp3xxx.c
+@@ -242,27 +242,39 @@ static int stmp3xxx_alarm_irq_enable(struct device *dev, unsigned int enabled)
+ 				rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
+ 		writel(STMP3XXX_RTC_CTRL_ALARM_IRQ_EN,
+ 				rtc_data->io + STMP3XXX_RTC_CTRL_CLR);
++		writel(0, rtc_data->io + STMP3XXX_RTC_ALARM);
+ 	}
+ 	return 0;
+ }
+ 
+-static int stmp3xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
++static int stmp3xxx_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+ {
++	unsigned long t;
+ 	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
+ 
+-	rtc_time_to_tm(readl(rtc_data->io + STMP3XXX_RTC_ALARM), &alm->time);
++	rtc_tm_to_time(&alm->time, &t);
++	writel(t, rtc_data->io + STMP3XXX_RTC_ALARM);
++
++	stmp3xxx_alarm_irq_enable(dev, alm->enabled);
++
+ 	return 0;
+ }
+ 
+-static int stmp3xxx_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
++static int stmp3xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
+ {
+-	unsigned long t;
+ 	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
++	struct rtc_time now;
++	u32 alarm = readl(rtc_data->io + STMP3XXX_RTC_ALARM);
+ 
+-	rtc_tm_to_time(&alm->time, &t);
+-	writel(t, rtc_data->io + STMP3XXX_RTC_ALARM);
++	rtc_time_to_tm(alarm, &alm->time);
+ 
+-	stmp3xxx_alarm_irq_enable(dev, alm->enabled);
++	stmp3xxx_rtc_gettime(dev, &now);
++	if (rtc_tm_to_ktime(now).tv64 < rtc_tm_to_ktime(alm->time).tv64) {
++		alm->enabled = 1;
++		stmp3xxx_rtc_set_alarm(dev, alm);
++	} else {
++		alm->enabled = 0;
++	}
+ 
+ 	return 0;
+ }
+-- 
+1.7.10.4
