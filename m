@@ -1,48 +1,40 @@
-From: Sascha Hauer <s.hauer@pengutronix.de>
-Subject: Re: [PATCH v3 1/2] i.MX27: Add clock support for SAHARA2.
-Date: Mon, 4 Mar 2013 08:53:06 +0100
-Message-ID: <20130304075306.GA1906@pengutronix.de>
-References: <1362137873-8827-1-git-send-email-javier.martin@vista-silicon.com>
- <1362137873-8827-2-git-send-email-javier.martin@vista-silicon.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-crypto-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1362137873-8827-2-git-send-email-javier.martin@vista-silicon.com>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Javier Martin <javier.martin@vista-silicon.com>
-Cc: linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, davem@davemloft.net, herbert@gondor.apana.org.au, kernel@pengutronix.de, gcembed@gmail.com, shawn.guo@linaro.org, arnd@arndb.de, swarren@nvidia.com
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCHi v2] net: sh_eth: Add support of device tree probe
+Date: Mon, 04 Mar 2013 16:05:09 +0800
+Message-ID: <20130304080509.EDF323E206B@localhost>
+References: <1360803091-26400-1-git-send-email-nobuhiro.iwamatsu.yj@renesas.com> <87mwv7ofgj.wl%kuninori.morimoto.gx@renesas.com> <511C5279.3070008@renesas.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <511C5279.3070008@renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, magnus.damm@gmail.com, kda@linux-powerpc.org, horms+renesas@verge.net.au
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 01, 2013 at 12:37:52PM +0100, Javier Martin wrote:
+On Thu, 14 Feb 2013 11:56:57 +0900, Nobuhiro Iwamatsu <nobuhiro.iwamatsu.yj@renesas.com> wrote:
+> (2013/02/14 10:24), Kuninori Morimoto wrote:
+> >> +#ifdef CONFIG_OF
+> >> +	if (np&&  of_device_is_available(np)) {
+> >> +		pd = sh_eth_parse_dt(&pdev->dev, ndev);
+> >> +		if (pdev->dev.platform_data) {
+> >> +			struct sh_eth_plat_data *tmp =
+> >> +				pdev->dev.platform_data;
+> >> +			pd->set_mdio_gate = tmp->set_mdio_gate;
+> >> +			pd->needs_init = tmp->needs_init;
+> >> +		}
+> >> +	} else
+> >> +#endif
+> >
+> > sh_eth_parse_dt() was defined for both CONFIG_OF and !CONFIG_OF.
+> > But it is called only from CONFIG_OF ?
+> >
 > 
-> Signed-off-by: Javier Martin <javier.martin@vista-silicon.com>
-> ---
->  arch/arm/mach-imx/clk-imx27.c |    2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/mach-imx/clk-imx27.c b/arch/arm/mach-imx/clk-imx27.c
-> index 4c1d1e4..0b9664a 100644
-> --- a/arch/arm/mach-imx/clk-imx27.c
-> +++ b/arch/arm/mach-imx/clk-imx27.c
-> @@ -253,6 +253,8 @@ int __init mx27_clocks_init(unsigned long fref)
->  	clk_register_clkdev(clk[nfc_baud_gate], NULL, "imx27-nand.0");
->  	clk_register_clkdev(clk[vpu_baud_gate], "per", "coda-imx27.0");
->  	clk_register_clkdev(clk[vpu_ahb_gate], "ahb", "coda-imx27.0");
-> +	clk_register_clkdev(clk[sahara_ahb_gate], "ahb", "sahara-imx27.0");
-> +	clk_register_clkdev(clk[sahara_ipg_gate], "ipg", "sahara-imx27.0");
+> Because of_device_is_available needs CONFIG_OF.
+> I already send a patch which add empty function of of_device_is_available.
+> If this was apply, this ifdef becomes without need.
 
-One of the first patches I want to push upstream for the next merge
-window is this one:
+Actually, there shouldn't be any reason for a device driver to call
+of_device_is_available() on its own node at all. If the device is not
+available, then a platform_device won't be created. "if (np)" here is
+sufficient.
 
-https://patchwork.kernel.org/patch/1817741/
-
-So the change above becomes unnecessary
-
-Sascha
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+g.
