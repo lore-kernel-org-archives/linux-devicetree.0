@@ -1,74 +1,87 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH v3] gpio: Add device driver for GRGPIO cores and support
- custom accessors with gpio-generic
-Date: Mon, 04 Mar 2013 10:46:36 +0100
-Message-ID: <51346D7C.5080307@gaisler.com>
-References: <1360653873-25368-1-git-send-email-andreas@gaisler.com> <CACRpkdaYQSrzm_Yj3ZH9YZLC_zPJN06X-9ZM9jd7=X0OB1shXQ@mail.gmail.com>
+From: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Subject: Re: [PATCH] i2c: busses: i2c-ocores: Fix PM-related warning
+Date: Mon, 04 Mar 2013 11:01:40 +0100
+Message-ID: <87ppzfcwl7.fsf@dell.be.48ers.dk>
+References: <1361915625-24294-1-git-send-email-maxin.john@gmail.com>
+	<CAMhs6Yy+CFB-dC7PKCEn=19JbiKz=DqWW1G=QeLUzTvwakE_rg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaYQSrzm_Yj3ZH9YZLC_zPJN06X-9ZM9jd7=X0OB1shXQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMhs6Yy+CFB-dC7PKCEn=19JbiKz=DqWW1G=QeLUzTvwakE_rg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+	(Maxin B. John's message of "Mon, 4 Mar 2013 10:18:20 +0100")
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Maxin B. John" <maxin.john-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "Maxin B. John" <maxin.john-AM1FMPraTHU@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2013-03-01 01:24, Linus Walleij wrote:
-> On Tue, Feb 12, 2013 at 8:24 AM, Andreas Larsson <andreas@gaisler.com> wrote:
->
->> This driver supports GRGPIO gpio cores available in the GRLIB VHDL IP
->> core library from Aeroflex Gaisler.
->>
->> This also adds support to gpio-generic for using custom accessor
->> functions. The grgpio driver uses this to use ioread32be and iowrite32be
->> for big endian register accesses.
->>
->> Signed-off-by: Andreas Larsson <andreas@gaisler.com>
->
-> Can you split this in two patches: one that adds the custom accessors
-> and one that adds the driver?
+>>>>> "Maxin" == Maxin B John <maxin.john-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-Sure!
+ Maxin> On Tue, Feb 26, 2013 at 10:53 PM,  <maxin.john-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+ >> From: "Maxin B. John" <maxin.john-AM1FMPraTHU@public.gmane.org>
+ >> 
+ >> Fixes this warning:
+ >> CC      drivers/i2c/busses/i2c-ocores.o
+ >> drivers/i2c/busses/i2c-ocores.c:460:12: warning: 'ocores_i2c_suspend'
+ >> defined but not used [-Wunused-function]
+ >> drivers/i2c/busses/i2c-ocores.c:471:12: warning: 'ocores_i2c_resume'
+ >> defined but not used [-Wunused-function]
+ >> 
+ >> Signed-off-by: Maxin B. John <maxin.john-AM1FMPraTHU@public.gmane.org>
+ >> ---
+ >> drivers/i2c/busses/i2c-ocores.c |    9 +++------
+ >> 1 files changed, 3 insertions(+), 6 deletions(-)
+ >> 
+ >> diff --git a/drivers/i2c/busses/i2c-ocores.c b/drivers/i2c/busses/i2c-ocores.c
+ >> index 0e1f824..1ecea5e 100644
+ >> --- a/drivers/i2c/busses/i2c-ocores.c
+ >> +++ b/drivers/i2c/busses/i2c-ocores.c
+ >> @@ -456,7 +456,7 @@ static int ocores_i2c_remove(struct platform_device *pdev)
+ >> return 0;
+ >> }
+ >> 
+ >> -#ifdef CONFIG_PM
+ >> +#ifdef CONFIG_PM_SLEEP
+ >> static int ocores_i2c_suspend(struct device *dev)
+ >> {
+ >> struct ocores_i2c *i2c = dev_get_drvdata(dev);
+ >> @@ -476,12 +476,9 @@ static int ocores_i2c_resume(struct device *dev)
+ >> 
+ >> return 0;
+ >> }
+ >> +#endif
+ >> 
+ >> static SIMPLE_DEV_PM_OPS(ocores_i2c_pm, ocores_i2c_suspend,
+ >> ocores_i2c_resume);
 
-> Grant is currently thinking about optimizations on the call graph
-> depths of the GPIO functions and may want to take this opportunity
-> to alter something there.
->
->> +++ b/drivers/gpio/gpio-grgpio.c
-> (...)
->> +struct grgpio_priv {
->> +       struct bgpio_chip bgc;
->> +       struct grgpio_regs __iomem *regs;
->> +
->> +       u32 imask;      /* irq mask shadow register */
->> +       s32 *irqmap;    /* maps offset to irq or -1 if no irq */
->
-> irqmap? Argh what is this... I think you want to use irqdomain
-> for this instead. (Documentation/IRQ-domain.txt)
+A comment explaining that the suspend/resume callbacks are unused in the
+!PM_SLEEP mode would be good.
 
-Yeah, that comment is not clear. An entry in the irqmap array (for a 
-gpio line) can be either -1 indicating no irq for that line or an index 
-into the array of irq:s for the of device. Thus it is simply either -1 
-or a valid second argument to irq_of_parse_and_map.
+With this change we waste ~100 bytes on a dummy dev_pm_ops structure,
+but OK.
 
-Given that this is generally running on SPARC, it seems irqdomain is not 
-an option (IRQ_DOMAIN is not selected by SPARC).
 
-Given this, is just a better formulated comment OK with you in this case?
+ >> -#define OCORES_I2C_PM  (&ocores_i2c_pm)
+ >> -#else
+ >> -#define OCORES_I2C_PM  NULL
+ >> -#endif
+ >> 
+ >> static struct platform_driver ocores_i2c_driver = {
+ >> .probe   = ocores_i2c_probe,
+ >> @@ -490,7 +487,7 @@ static struct platform_driver ocores_i2c_driver = {
+ >> .owner = THIS_MODULE,
+ >> .name = "ocores-i2c",
+ >> .of_match_table = ocores_i2c_match,
+ >> -               .pm = OCORES_I2C_PM,
+ >> +               .pm = &ocores_i2c_pm,
+ >> },
+ >> };
+ >> 
+ >> --
+ >> 1.7.7
+ >> 
 
->
-> Check other GPIO drivers (e.g. STMPE or TC3589x) for some
-> example of how to use irqdomain.
->
->> +static int grgpio_to_irq(struct gpio_chip *gc, unsigned offset)
->> +{
->> +       struct grgpio_priv *priv = grgpio_gc_to_priv(gc);
->> +       int index, irq;
->
-> This is wher you should use irq_create_mapping(domain, hwirq);
+ Maxin> ping..
 
-Thanks for the feedback!
 
-Cheers,
-Andreas
+-- 
+Bye, Peter Korsgaard
