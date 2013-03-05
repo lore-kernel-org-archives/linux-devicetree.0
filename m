@@ -1,40 +1,49 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 3/4] power_supply: tps65090-charger: Add binding doc
-Date: Tue, 05 Mar 2013 11:15:39 -0700
-Message-ID: <5136364B.7000506@wwwdotorg.org>
-References: <1362423709-29596-1-git-send-email-rklein@nvidia.com> <1362423709-29596-4-git-send-email-rklein@nvidia.com>
+Subject: Re: [PATCH] ARM: bcm281xx: Add L2 cache enable code
+Date: Tue, 05 Mar 2013 11:20:32 -0700
+Message-ID: <51363770.5060201@wwwdotorg.org>
+References: <1362451632-18806-1-git-send-email-csd@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1362423709-29596-4-git-send-email-rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <1362451632-18806-1-git-send-email-csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, abhimanyu.kapur-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/2013 12:01 PM, Rhyland Klein wrote:
-> This change adds the binding documentation for the tps65090-charger.
+On 03/04/2013 07:47 PM, Christian Daudt wrote:
+> - Adds a module to provide calls into secure monitor mode
+> - Uses this module to make secure monitor calls to enable L2 cache.
 
-> diff --git a/Documentation/devicetree/bindings/power_supply/tps65090.txt b/Documentation/devicetree/bindings/power_supply/tps65090.txt
-...
+> diff --git a/Documentation/devicetree/bindings/misc/smc.txt b/Documentation/devicetree/bindings/misc/smc.txt
+
 > +Example:
-> +
-> +	tps65090@48 {
-...
-> +		regulators {
-> +			...
-> +		};
-> 
+> +	smc@0x3404c000 {
+> +		compatible = "bcm,kona-smc";
 
-The "regulators" node in the example isn't mentioned in the list of
-properties/nodes that's above. What goes in there? You probably want to
-include text similar to what I've quoted below from
-Documentation/devicetree/bindings/regulator/tps6586x.txt:
+Both here in this example, and ...
 
-> - regulators: A node that houses a sub-node for each regulator within the
->   device. Each sub-node is identified using the node's name (or the deprecated
->   regulator-compatible property if present), with valid values listed below.
->   The content of each sub-node is defined by the standard binding for
->   regulators; see regulator.txt.
->   sys, sm[0-2], ldo[0-9] and ldo_rtc
+> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+
+> +	smc@0x3404c000 {
+> +		compatible = "bcm,kona-smc";
+
+Here in the actual .dts file, you should include the specific ID of the
+SoC too, so that if there are Soc-specific bugs, the compatible property
+that's required to determine this is present from the start. In other words,
+
+compatible = "bcm,bcm11351-smc", "bcm,kona-smc";
+
+(which SoC ID you use in the example is arbitrary, but it may as well
+match the .dts file you're editing in the patch).
