@@ -1,16 +1,13 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 6/9] rtc: stmp3xxx: add sysfs entries for persistent regs
-Date: Tue, 5 Mar 2013 09:02:52 +0100
-Message-ID: <20130305080252.GA7042@pengutronix.de>
-References: <1362405948-12992-1-git-send-email-s.trumtrar@pengutronix.de>
- <1362405948-12992-7-git-send-email-s.trumtrar@pengutronix.de>
- <CACxGe6swW-UDH1cUw1D8P+gyhDC8nDZur-A_m_NBfeRUxcg9Jw@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ARM: bcm281xx: Add L2 cache enable code
+Date: Tue, 5 Mar 2013 09:01:12 +0000
+Message-ID: <201303050901.12317.arnd@arndb.de>
+References: <1362451632-18806-1-git-send-email-csd@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CACxGe6swW-UDH1cUw1D8P+gyhDC8nDZur-A_m_NBfeRUxcg9Jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1362451632-18806-1-git-send-email-csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -21,51 +18,86 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, abhimanyu.kapur-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant!
+On Tuesday 05 March 2013, Christian Daudt wrote:
 
-On Mon, Mar 04, 2013 at 11:14:54PM +0800, Grant Likely wrote:
-> On Mon, Mar 4, 2013 at 10:05 PM, Steffen Trumtrar
-> <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> > The persistent registers 1-5 are completely software defined. To have access
-> > from userspace, export them via sysfs.
-> >
-> > Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-> 
-> Hi Steffen,
-> 
-> A few comments on this. First and foremost, any additions to the
-> kernel sysfs interface must be accompanied with documentation in
-> Documentation/ABI/. Second, adding attributes to an existing device
+> diff --git a/Documentation/devicetree/bindings/misc/smc.txt b/Documentation/devicetree/bindings/misc/smc.txt
+> new file mode 100644
+> index 0000000..cd8c729
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/smc.txt
+> @@ -0,0 +1,14 @@
+> +Broadcom Secure Monitor Bounce buffer
+> +-----------------------------------------------------
+> +This binding defines the location of the bounce buffer
+> +used for non-secure to secure communications.
+> +
+> +Required properties:
+> +- compatible : "bcm,kona-smc"
+> +- reg : Location and size of bounce buffer
+> +
+> +Example:
+> +	smc@0x3404c000 {
+> +		compatible = "bcm,kona-smc";
+> +		reg = <0x3404c000 0x400>; //1 KiB in SRAM
+> +	};
 
-Okay. I forgot that and will add it in the next version.
+For other firmware interfaces like this, we tend to list the specific commands
+that the firmware understands. If you think there might be different versions
+to consider, you might want to model this like
 
-> that has already been registered is almost guaranteed to be wrong. The
-> attributes need to be added all at the same time so they are available
-> immediately when the new device uevent is issued by the kernel.
-> 
-> Instead, the correct thing to do is add an attribute_group to the
-> child device before the device gets registered. See the 'attributes'
-> section of Documentation/driver-model/device.txt to see how to do
-> this.
-> 
-> (I also see that the rtc core code is doing the wrong thing here also.
-> rtc_sysfs_add_device(), rtc_sysfs_add_device() should also be replaced
-> with an attribute group so that the sysfs files get added
-> automatically; but that is outside the scope of this patch)
-> 
+Documentation/devicetree/bindings/arm/psci.txt
+> diff --git a/arch/arm/mach-bcm/bcm_kona_smc_asm.S b/arch/arm/mach-bcm/bcm_kona_smc_asm.S
+> new file mode 100644
+> index 0000000..a160848
+> --- /dev/null
+> +++ b/arch/arm/mach-bcm/bcm_kona_smc_asm.S
+> +/*
+> + * int bcm_kona_smc_asm(u32 service_id, u32 buffer_addr)
+> + */
+> +
+> +ENTRY(bcm_kona_smc_asm)
+> +	stmfd	sp!, {r4-r12, lr}
+> +	mov	r4, r0		@ service_id
+> +	mov	r5, #3		@ Keep IRQ and FIQ off in SM
 
-Hm, I modeled it after other rtcs and the rtc_sysfs. Seems that I have to
-rework this.
+Why not just use an inline assembly?
 
-Thanks,
-Steffen
+> +#ifdef CONFIG_CACHE_L2X0
+> +static int __init kona_l2_cache_init(void)
+> +{
+> +	/*
+> +	 * Currently there is no SSAPI for setting the L2 cache aux register,
+> +	 * so the default value (0x1e050000) applies.
+> +	 */
+> +	bcm_kona_smc(SSAPI_ENABLE_L2_CACHE, 0, 0, 0, 0);
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+This can be written in a nicer way as
+
+static int __init kona_l2_cache_init(void)
+{
+	if (!IS_ENABLED(CONFIG_CACHE_L2X0))
+		return 0;
+	...
+}
+
+To remove the need for the #ifdef.
+
+> +static void __init init_irq(void)
+> +{
+> +	irqchip_init();
+> +	bcm_kona_smc_init();
+> +
+> +#ifdef CONFIG_CACHE_L2X0
+> +	kona_l2_cache_init();
+> +#endif /* CONFIG_CACHE_L2X0 */
+> +}
+
+Why are you calling bcm_kona_smc_init() and kona_l2_cache_init() from init_irq()?
+
+It seems completely unrelated to interrupt handling.
+
+	Arnd
