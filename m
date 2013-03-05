@@ -1,56 +1,74 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] dma: of-dma: return error when 'dma-cells' not found
-Date: Tue, 5 Mar 2013 19:48:02 +0000
-Message-ID: <201303051948.02468.arnd@arndb.de>
-References: <1362475531-32260-1-git-send-email-padma.v@samsung.com> <1859273.NY466Orvuh@wuerfel> <51360797.6000007@gmail.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: RFC: Zynq Clock Controller
+Date: Tue, 5 Mar 2013 12:04:28 -0800
+Message-ID: <37032699-343e-485c-80e0-9b23e3706c58@VA3EHSMHS013.ehs.local>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <51360797.6000007@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, boojin.kim@samsung.com, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, kgene.kim@samsung.com, jon-hunter@ti.com, padma.kvr@gmail.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <pcrost@xilinx.com>, Prashant Gaikwad <pgaikwad@nvidia.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, git@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 05 March 2013, Rob Herring wrote:
-> > Why would you call of_dma_controller_register() for a dma
-> > engine that does not support slave channels, when that is the
-> > only purpose of that interface?
-> 
-> Well maybe then that function should be allowed to fail without erroring
-> out. I just fixed it a the line that failed.
+Hi,
 
-We have a lot of interfaces that fall back to silently doing nothing
-when there is no need.
+As you know, I'm reviewing Zynq's clock implementation and try to find =
+a way to go forward. It looks like most archs contain all clocks within=
+ a clock controller block which provides all the output clocks which ar=
+e then used by device drivers etc. E.g. the Tegra CAR.
 
-> Doing be32_to_cpup directly
-> on a function return that can be NULL is not correct either.
+I do also see some benefits of this approach:
+ - The DT description should never change even when the clock tree and/=
+or functionality within the controller changes (assuming all required o=
+utputs are present)
+ - the controller can handle more sophisticated clock operations, which=
+ go beyond the simple enable/disable the device drivers are doing
 
-Agreed.
- 
-> > Note that the binding defines #dma-cells as required, and it
-> > does not make any sense otherwise.
-> 
-> The 2nd patch I submitted changes that. It does not make sense to
-> require it if you have no requests and hence will never have a phandle
-> reference in a slave device.
+=46or this reasons, I'd like to propose moving Zynq into the same direc=
+tion. I.e. adding a clock controller with the following DT description =
+(details may change but the general idea should become clear):
+	clkc: clkc {
+                #clock-cells =3D <1>;
+                compatible =3D "xlnx,ps7-clkc";
+                ps_clk_frequency =3D <33333333>;	# board x-tal
+                # optional props
+                gem0_emio_clk_freq =3D <125000000>;
+                gem1_emio_clk_freq =3D <50000000>;
+                can_mio_clk_freq_xx =3D <1234>; # this is possible 54 t=
+imes with xx =3D 00..53
+        };
 
-I still don't see why you would want to use the binding for
-dma slaves to describe a dmaengine that does not have slaves.
+=46or the PLLs we can use Josh's implementation and extend it where nee=
+ded. For everything else we can then use the clock primitives instead o=
+f using custom implementations, I think. The node should be a subnode t=
+o Zynq's SLCR.
 
-> The simple fact is that the pl330 had an
-> existing binding that worked for the memory to memory only case and
-> kernel changes broke this. Kernel changes should not break existing
-> device-trees.
+Currently I have identified the following output clocks:
+        armpll, ddrpll, iopll,
+        cpu_6or4x, cpu_3or2x, cpu_2x, cpu_1x,
+        ddr2x, ddr3x, dci,
+        lqspi, smc, pcap, gem0, gem1, fclk0, fclk1, fclk2, fclk3, can0,=
+ can1,
+        sdio0, sdio1, uart0, uart1, spi0, spi1,
+        dma_aper, usb0_aper, usb1_aper, gem0_aper, gem1_aper,
+        sdio0_aper, sdio1_aper, spi0_aper, spi1_aper, can0_aper, can1_a=
+per,
+        i2c0_aper, i2c1_aper, uart0_aper, uart1_aper, gpio_aper, lqspi_=
+aper,
+        smc_aper
 
-Of course we should not break the existing device tree, but I think
-it would be more sensible to change the pl330 specific binding in this
-case to require the use of the generic dma slave binding only when
-there are slaves connected to it.
 
-If the #dma-cells property is absent, the pl330 driver can be changed
-not to call of_dma_controller_register.
+Clock consumers would work as described in the clock bindings:
+	consumer: zynq_dummy_peripheral {
+	        compatible =3D "xlnx,foobar";
+	        clocks =3D <&clkc 69>;
+	};
 
-	Arnd
+
+Is this an acceptable solution? Does anybody see issues or has other fe=
+edback?
+
+	Thanks,
+	S=C3=B6ren
