@@ -1,59 +1,66 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 05/10] ARM: dt: tegra: add bindings of power management
- configurations for PMC
-Date: Tue, 05 Mar 2013 11:54:31 -0700
-Message-ID: <51363F67.8040200@wwwdotorg.org>
-References: <1362397241-5786-1-git-send-email-josephl@nvidia.com>
+From: Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 3/4] power_supply: tps65090-charger: Add binding doc
+Date: Tue, 5 Mar 2013 14:12:38 -0500
+Message-ID: <513643A6.4020109@nvidia.com>
+References: <1362423709-29596-1-git-send-email-rklein@nvidia.com> <1362423709-29596-4-git-send-email-rklein@nvidia.com> <5136364B.7000506@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1362397241-5786-1-git-send-email-josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <5136364B.7000506-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
 Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Bo Yan <byan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Anton Vorontsov <cbou-JGs/UdohzUI@public.gmane.org>, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Laxman Dewangan <ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/2013 04:40 AM, Joseph Lo wrote:
-> The PMC mostly controls the entry and exit of the system from different
-> sleep modes. Different platform or system may have different configurations.
-> The power management configurations of PMC is represented as some properties.
-> The system needs to define the properties when the system supports deep sleep
-> mode (i.e. suspend).
+On 3/5/2013 1:15 PM, Stephen Warren wrote:
+> On 03/04/2013 12:01 PM, Rhyland Klein wrote:
+>> This change adds the binding documentation for the tps65090-charger.
+>> diff --git a/Documentation/devicetree/bindings/power_supply/tps65090.txt b/Documentation/devicetree/bindings/power_supply/tps65090.txt
+> ...
+>> +Example:
+>> +
+>> +	tps65090@48 {
+> ...
+>> +		regulators {
+>> +			...
+>> +		};
+>>
+> The "regulators" node in the example isn't mentioned in the list of
+> properties/nodes that's above. What goes in there? You probably want to
+> include text similar to what I've quoted below from
+> Documentation/devicetree/bindings/regulator/tps6586x.txt:
+>
+>> - regulators: A node that houses a sub-node for each regulator within the
+>>    device. Each sub-node is identified using the node's name (or the deprecated
+>>    regulator-compatible property if present), with valid values listed below.
+>>    The content of each sub-node is defined by the standard binding for
+>>    regulators; see regulator.txt.
+>>    sys, sm[0-2], ldo[0-9] and ldo_rtc
+The reason I didn't bother documenting the regulators node was that 
+since this is a child device
+driver of an mfd device, there is already a child driver for the 
+regulators with its own documentation
 
-One overall question here: For LP0, the idea is that the bootloader
-provides the AVP boot code, puts it in RAM, passes the address to the
-kernel, which then arranges for that code to be executed when the system
-resumes from LP0. Why does the bootloader have to provide the code? Why
-can't the AVP code simply be part of the kernel, just like e.g. the main
-CPU's hotplug/secondary-power-on/power-saving reset vector is part of
-the kernel? If we did that, it'd remove any need for bootloader support
-for LP0 - the kernel would manage it entirely internally. That seems
-much simpler.
+https://patchwork.kernel.org/patch/2051381/
 
-> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+I wasn't sure how I should handle this, as splitting the bindings to 
+make logic sense in the binding
+layout (charger under power_supply, and  regulators under regulator) or 
+combine them somehow
+into a single documentation entry common to the device. The latter seems 
+to make more sense to me,
+but since there aren't any dt specific entries for the core mfd part 
+currently, it doesn't have its own
+documentation, and sticking the charger info under the regulators seemed 
+backwards to me.
 
-> +Optional properties:
-...
-> +  2 (LP2): CPU voltage off
+I thought doing it this way would be a good way of starting a discussion 
+around how to handle this.
 
-I would create a new section here, with title something like:
+thanks for starting it Stephen :)
 
-Required properties when nvidia,suspend-mode is specified:
+-rhyland
 
-> +- nvidia,cpu-pwr-good-time : CPU power good time in uS. If not present, the
-> +  suspend function will be disabled as default.
-
-Then, for many of these properties, you can remove the text "If not
-present, the suspend function will be disabled as default.", since it's
-implicit given that these properties are required.
-
-> +Required properties when nvidia,suspend-mode=<0>:
-> +- nvidia,lp0-vec : <start length> Starting address and length of LP0 vector
-...
-> +  bring up CPU0 for resuming the system. If the suspend mode is LP0, then
-> +  this property is must to have.
-
-Again, you can remove "If the suspend mode is LP0, then this property is
-must to have.", since the property is already in a section named
-"Required properties ...".
+-- 
+nvpublic
