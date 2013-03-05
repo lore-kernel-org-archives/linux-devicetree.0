@@ -1,103 +1,50 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] ARM: bcm281xx: Add L2 cache enable code
-Date: Tue, 5 Mar 2013 09:01:12 +0000
-Message-ID: <201303050901.12317.arnd@arndb.de>
-References: <1362451632-18806-1-git-send-email-csd@broadcom.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362451632-18806-1-git-send-email-csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, abhimanyu.kapur-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Padmavathi Venna <padma.v@samsung.com>
+Subject: [PATCH] dma: of-dma: return error when 'dma-cells' not found
+Date: Tue, 05 Mar 2013 14:55:30 +0530
+Message-ID: <1362475531-32260-1-git-send-email-padma.v@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.v@samsung.com, padma.kvr@gmail.com
+Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, arnd@arndb.de, vinod.koul@intel.com, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, robherring2@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 05 March 2013, Christian Daudt wrote:
+This patch returns error when 'dma-cells' property not found
+in the corresponding device node. With out this change there
+is a crash in the generic dma incompatible platforms.
 
-> diff --git a/Documentation/devicetree/bindings/misc/smc.txt b/Documentation/devicetree/bindings/misc/smc.txt
-> new file mode 100644
-> index 0000000..cd8c729
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/misc/smc.txt
-> @@ -0,0 +1,14 @@
-> +Broadcom Secure Monitor Bounce buffer
-> +-----------------------------------------------------
-> +This binding defines the location of the bounce buffer
-> +used for non-secure to secure communications.
-> +
-> +Required properties:
-> +- compatible : "bcm,kona-smc"
-> +- reg : Location and size of bounce buffer
-> +
-> +Example:
-> +	smc@0x3404c000 {
-> +		compatible = "bcm,kona-smc";
-> +		reg = <0x3404c000 0x400>; //1 KiB in SRAM
-> +	};
+Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+---
 
-For other firmware interfaces like this, we tend to list the specific commands
-that the firmware understands. If you think there might be different versions
-to consider, you might want to model this like
+Based on Vinod Koul next branch.
 
-Documentation/devicetree/bindings/arm/psci.txt
-> diff --git a/arch/arm/mach-bcm/bcm_kona_smc_asm.S b/arch/arm/mach-bcm/bcm_kona_smc_asm.S
-> new file mode 100644
-> index 0000000..a160848
-> --- /dev/null
-> +++ b/arch/arm/mach-bcm/bcm_kona_smc_asm.S
-> +/*
-> + * int bcm_kona_smc_asm(u32 service_id, u32 buffer_addr)
-> + */
-> +
-> +ENTRY(bcm_kona_smc_asm)
-> +	stmfd	sp!, {r4-r12, lr}
-> +	mov	r4, r0		@ service_id
-> +	mov	r5, #3		@ Keep IRQ and FIQ off in SM
+ drivers/dma/of-dma.c |    8 +++++++-
+ 1 files changed, 7 insertions(+), 1 deletions(-)
 
-Why not just use an inline assembly?
-
-> +#ifdef CONFIG_CACHE_L2X0
-> +static int __init kona_l2_cache_init(void)
-> +{
-> +	/*
-> +	 * Currently there is no SSAPI for setting the L2 cache aux register,
-> +	 * so the default value (0x1e050000) applies.
-> +	 */
-> +	bcm_kona_smc(SSAPI_ENABLE_L2_CACHE, 0, 0, 0, 0);
-
-This can be written in a nicer way as
-
-static int __init kona_l2_cache_init(void)
-{
-	if (!IS_ENABLED(CONFIG_CACHE_L2X0))
-		return 0;
-	...
-}
-
-To remove the need for the #ifdef.
-
-> +static void __init init_irq(void)
-> +{
-> +	irqchip_init();
-> +	bcm_kona_smc_init();
-> +
-> +#ifdef CONFIG_CACHE_L2X0
-> +	kona_l2_cache_init();
-> +#endif /* CONFIG_CACHE_L2X0 */
-> +}
-
-Why are you calling bcm_kona_smc_init() and kona_l2_cache_init() from init_irq()?
-
-It seems completely unrelated to interrupt handling.
-
-	Arnd
+diff --git a/drivers/dma/of-dma.c b/drivers/dma/of-dma.c
+index 69d04d2..46aca0d 100644
+--- a/drivers/dma/of-dma.c
++++ b/drivers/dma/of-dma.c
+@@ -92,6 +92,7 @@ int of_dma_controller_register(struct device_node *np,
+ 				void *data)
+ {
+ 	struct of_dma	*ofdma;
++	const	 __be32 *ip;
+ 	int		nbcells;
+ 
+ 	if (!np || !of_dma_xlate) {
+@@ -103,7 +104,12 @@ int of_dma_controller_register(struct device_node *np,
+ 	if (!ofdma)
+ 		return -ENOMEM;
+ 
+-	nbcells = be32_to_cpup(of_get_property(np, "#dma-cells", NULL));
++	ip = of_get_property(np, "#dma-cells", NULL);
++	if (!ip)
++		return -ENXIO;
++
++	nbcells = be32_to_cpup(ip);
++
+ 	if (!nbcells) {
+ 		pr_err("%s: #dma-cells property is missing or invalid\n",
+ 		       __func__);
+-- 
+1.7.4.4
