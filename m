@@ -1,54 +1,56 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] spi/davinci: add DT binding documentation
-Date: Tue, 5 Mar 2013 19:32:41 +0000
-Message-ID: <201303051932.41327.arnd@arndb.de>
-References: <1362401955-9616-1-git-send-email-prakash.pm@ti.com>
-	<6918845.dALXSKksQd@wuerfel>
-	<A73F36158E33644199EB82C5EC81C7BC3EA4854E@DBDE01.ent.ti.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] dma: of-dma: return error when 'dma-cells' not found
+Date: Tue, 5 Mar 2013 19:48:02 +0000
+Message-ID: <201303051948.02468.arnd@arndb.de>
+References: <1362475531-32260-1-git-send-email-padma.v@samsung.com> <1859273.NY466Orvuh@wuerfel> <51360797.6000007@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-In-Reply-To: <A73F36158E33644199EB82C5EC81C7BC3EA4854E-Er742YJ7I/eIQmiDNMet8wC/G2K4zDHf@public.gmane.org>
-List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=spi-devel-general>
-List-Post: <mailto:spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
-List-Help: <mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/spi-devel-general>,
-	<mailto:spi-devel-general-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
-Errors-To: spi-devel-general-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
-To: "Manjunathappa, Prakash" <prakash.pm-l0cyMroinI0@public.gmane.org>
-Cc: "davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org" <davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "Karicheri,
-	Muralidharan" <m-karicheri2-l0cyMroinI0@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "hs-ynQEQJNshbs@public.gmane.org" <hs-ynQEQJNshbs@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <51360797.6000007@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org, Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, boojin.kim@samsung.com, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, kgene.kim@samsung.com, jon-hunter@ti.com, padma.kvr@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 05 March 2013, Manjunathappa, Prakash wrote:
-> On Mon, Mar 04, 2013 at 21:59:16, Arnd Bergmann wrote:
-> > On Monday 04 March 2013 18:29:12 Manjunathappa, Prakash wrote:
-> > > +- reg: Offset and length of SPI controller register space
-> > > +- num-cs: Number of chip selects
-> > > +- ti,davinci-spi-intr-line: interrupt line used to connect the SPI
-> > > +	IP to the interrupt controller withn the SoC. Possible values
-> > > +	are 0 and 1. Manual says one of the two possible interrupt
-> > > +	lines can be tied to the interrupt controller. Set this
-> > > +	based on a specifc SoC configuration.
-> > > +- interrupts: interrupt number offset at the irq parent
-> > 
-> > I would not call this an "offset". It is an interrupt descriptor
-> > which may be something other than a simple number.
-> > 
+On Tuesday 05 March 2013, Rob Herring wrote:
+> > Why would you call of_dma_controller_register() for a dma
+> > engine that does not support slave channels, when that is the
+> > only purpose of that interface?
 > 
-> I am planning to drop from this documentation as it is common property.
+> Well maybe then that function should be allowed to fail without erroring
+> out. I just fixed it a the line that failed.
 
-I think it makese sense to document the fact that there should be exactly
-one interrupt listed in the interrupts property, especially since the
-hardware has two outputs.
+We have a lot of interfaces that fall back to silently doing nothing
+when there is no need.
+
+> Doing be32_to_cpup directly
+> on a function return that can be NULL is not correct either.
+
+Agreed.
+ 
+> > Note that the binding defines #dma-cells as required, and it
+> > does not make any sense otherwise.
+> 
+> The 2nd patch I submitted changes that. It does not make sense to
+> require it if you have no requests and hence will never have a phandle
+> reference in a slave device.
+
+I still don't see why you would want to use the binding for
+dma slaves to describe a dmaengine that does not have slaves.
+
+> The simple fact is that the pl330 had an
+> existing binding that worked for the memory to memory only case and
+> kernel changes broke this. Kernel changes should not break existing
+> device-trees.
+
+Of course we should not break the existing device tree, but I think
+it would be more sensible to change the pl330 specific binding in this
+case to require the use of the generic dma slave binding only when
+there are slaves connected to it.
+
+If the #dma-cells property is absent, the pl330 driver can be changed
+not to call of_dma_controller_register.
 
 	Arnd
-
-------------------------------------------------------------------------------
-Everyone hates slow websites. So do we.
-Make your web apps faster with AppDynamics
-Download AppDynamics Lite for free today:
-http://p.sf.net/sfu/appdyn_d2d_feb
