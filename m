@@ -1,103 +1,112 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [PATCH V2] DMA: PL330: Add check if device tree compatible
-Date: Tue, 05 Mar 2013 14:55:31 +0530
-Message-ID: <1362475531-32260-2-git-send-email-padma.v@samsung.com>
-References: <1362475531-32260-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1362475531-32260-1-git-send-email-padma.v@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.v@samsung.com, padma.kvr@gmail.com
-Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, arnd@arndb.de, vinod.koul@intel.com, grant.likely@secretlab.ca, jon-hunter@ti.com, boojin.kim@samsung.com, robherring2@gmail.com
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v17 2/7] video: add display_timing and videomode
+Date: Tue, 5 Mar 2013 10:24:53 +0100
+Message-ID: <20130305092453.GB7042@pengutronix.de>
+References: <1359104515-8907-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1359104515-8907-3-git-send-email-s.trumtrar@pengutronix.de>
+ <51223615.4090709@iki.fi> <512E2A1B.6040704@ti.com>
+ <20130227160540.GA10491@pengutronix.de> <512E30BD.7010603@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <512E30BD.7010603-l0cyMroinI0@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch register the dma controller with generic dma helpers only
-in DT case. This also adds some extra error handling in the driver.
+Hi!
 
-Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
-Reported-by: Sachin Kamat <sachin.kamat@linaro.org>
----
+On Wed, Feb 27, 2013 at 06:13:49PM +0200, Tomi Valkeinen wrote:
+> On 2013-02-27 18:05, Steffen Trumtrar wrote:
+> > Ah, sorry. Forgot to answer this.
+> > 
+> > On Wed, Feb 27, 2013 at 05:45:31PM +0200, Tomi Valkeinen wrote:
+> >> Ping.
+> >>
+> >> On 2013-02-18 16:09, Tomi Valkeinen wrote:
+> >>> Hi Steffen,
+> >>>
+> >>> On 2013-01-25 11:01, Steffen Trumtrar wrote:
+> >>>
+> >>>> +/* VESA display monitor timing parameters */
+> >>>> +#define VESA_DMT_HSYNC_LOW		BIT(0)
+> >>>> +#define VESA_DMT_HSYNC_HIGH		BIT(1)
+> >>>> +#define VESA_DMT_VSYNC_LOW		BIT(2)
+> >>>> +#define VESA_DMT_VSYNC_HIGH		BIT(3)
+> >>>> +
+> >>>> +/* display specific flags */
+> >>>> +#define DISPLAY_FLAGS_DE_LOW		BIT(0)	/* data enable flag */
+> >>>> +#define DISPLAY_FLAGS_DE_HIGH		BIT(1)
+> >>>> +#define DISPLAY_FLAGS_PIXDATA_POSEDGE	BIT(2)	/* drive data on pos. edge */
+> >>>> +#define DISPLAY_FLAGS_PIXDATA_NEGEDGE	BIT(3)	/* drive data on neg. edge */
+> >>>> +#define DISPLAY_FLAGS_INTERLACED	BIT(4)
+> >>>> +#define DISPLAY_FLAGS_DOUBLESCAN	BIT(5)
+> >>>
+> >>> <snip>
+> >>>
+> >>>> +	unsigned int dmt_flags;	/* VESA DMT flags */
+> >>>> +	unsigned int data_flags; /* video data flags */
+> >>>
+> >>> Why did you go for this approach? To be able to represent
+> >>> true/false/not-specified?
+> >>>
+> > 
+> > We decided somewhere between v3 and v8 (I think), that those flags can be
+> > high/low/ignored.
+> 
+> Okay. Why aren't they enums, though? That always makes more clear which
+> defines are to be used with which fields.
+> 
 
-Based on Vinod Koul next branch.
+Hm...
 
-Changes since V1:
-	- return silently when of_dma_controller_register fails, as
-	  suggested by Arnd.
+> >>> Would it be simpler to just have "flags" field? What does it give us to
+> >>> have those two separately?
+> >>>
+> > 
+> > I decided to split them, so it is clear that some flags are VESA defined and
+> > the others are "invented" for the display-timings framework and may be
+> > extended.
+> 
+> Hmm... Okay. Is it relevant that they are VESA defined? It just feels to
+> complicate handling the flags =).
+> 
+> >>> Should the above say raising edge/falling edge instead of positive
+> >>> edge/negative edge?
+> >>>
+> > 
+> > Hm, I used posedge/negedge because it is shorter (and because of my Verilog past
+> > pretty natural to me :-) ). I don't know what others are thinking though.
+> 
+> I guess it's quite clear, but it's still different terms than used
+> elsewhere, e.g. documentation for videomodes.
+> 
+> Another thing I noticed while using the new videomode, display_timings.h
+> has a few names that are quite short and generic. Like "TE_MIN", which
+> is now a global define. And "timing_entry". Either name could be well
+> used internally in some .c file, and could easily clash.
+> 
 
- drivers/dma/pl330.c |   38 +++++++++++++++++++++++++++-----------
- 1 files changed, 27 insertions(+), 11 deletions(-)
+Yes. You are correct.
+Everyone using this is welcome to send patches now :-)
 
-diff --git a/drivers/dma/pl330.c b/drivers/dma/pl330.c
-index 7181531..5dbc594 100644
---- a/drivers/dma/pl330.c
-+++ b/drivers/dma/pl330.c
-@@ -2882,7 +2882,7 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
- {
- 	struct dma_pl330_platdata *pdat;
- 	struct dma_pl330_dmac *pdmac;
--	struct dma_pl330_chan *pch;
-+	struct dma_pl330_chan *pch, *_p;
- 	struct pl330_info *pi;
- 	struct dma_device *pd;
- 	struct resource *res;
-@@ -2984,7 +2984,16 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
- 	ret = dma_async_device_register(pd);
- 	if (ret) {
- 		dev_err(&adev->dev, "unable to register DMAC\n");
--		goto probe_err2;
-+		goto probe_err3;
-+	}
-+
-+	if (adev->dev.of_node) {
-+		ret = of_dma_controller_register(adev->dev.of_node,
-+					 of_dma_pl330_xlate, pdmac);
-+		if (ret) {
-+			dev_err(&adev->dev,
-+			"unable to register DMA to the generic DT DMA helpers\n");
-+		}
- 	}
- 
- 	dev_info(&adev->dev,
-@@ -2995,16 +3004,21 @@ pl330_probe(struct amba_device *adev, const struct amba_id *id)
- 		pi->pcfg.data_bus_width / 8, pi->pcfg.num_chan,
- 		pi->pcfg.num_peri, pi->pcfg.num_events);
- 
--	ret = of_dma_controller_register(adev->dev.of_node,
--					 of_dma_pl330_xlate, pdmac);
--	if (ret) {
--		dev_err(&adev->dev,
--		"unable to register DMA to the generic DT DMA helpers\n");
--		goto probe_err2;
--	}
--
- 	return 0;
-+probe_err3:
-+	amba_set_drvdata(adev, NULL);
- 
-+	/* Idle the DMAC */
-+	list_for_each_entry_safe(pch, _p, &pdmac->ddma.channels,
-+			chan.device_node) {
-+
-+		/* Remove the channel */
-+		list_del(&pch->chan.device_node);
-+
-+		/* Flush the channel */
-+		pl330_control(&pch->chan, DMA_TERMINATE_ALL, 0);
-+		pl330_free_chan_resources(&pch->chan);
-+	}
- probe_err2:
- 	pl330_del(pi);
- probe_err1:
-@@ -3023,8 +3037,10 @@ static int pl330_remove(struct amba_device *adev)
- 	if (!pdmac)
- 		return 0;
- 
--	of_dma_controller_free(adev->dev.of_node);
-+	if (adev->dev.of_node)
-+		of_dma_controller_free(adev->dev.of_node);
- 
-+	dma_async_device_unregister(&pdmac->ddma);
- 	amba_set_drvdata(adev, NULL);
- 
- 	/* Idle the DMAC */
+Regards,
+Steffen
+
 -- 
-1.7.4.4
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
