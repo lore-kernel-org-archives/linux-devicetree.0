@@ -1,17 +1,15 @@
-From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH v17 2/7] video: add display_timing and videomode
-Date: Tue, 5 Mar 2013 10:24:53 +0100
-Message-ID: <20130305092453.GB7042@pengutronix.de>
-References: <1359104515-8907-1-git-send-email-s.trumtrar@pengutronix.de>
- <1359104515-8907-3-git-send-email-s.trumtrar@pengutronix.de>
- <51223615.4090709@iki.fi> <512E2A1B.6040704@ti.com>
- <20130227160540.GA10491@pengutronix.de> <512E30BD.7010603@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RFCv2 0/2] Representing interrupt affinity in devicetree
+Date: Tue, 5 Mar 2013 09:28:49 +0000
+Message-ID: <20130305092849.GA15661@e106331-lin.cambridge.arm.com>
+References: <1355417368-6861-1-git-send-email-mark.rutland@arm.com>
+ <20130304025115.05D413E17F8@localhost>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <512E30BD.7010603-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <20130304025115.05D413E17F8@localhost>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -22,91 +20,149 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Mohammed, Afzal" <afzal-l0cyMroinI0@public.gmane.org>, Dave Airlie <airlied-cv59FeDIM0c@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Florian Tobias Schandinat <FlorianSchandinat-Mmb7MZpHnFY@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Guennady Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-On Wed, Feb 27, 2013 at 06:13:49PM +0200, Tomi Valkeinen wrote:
-> On 2013-02-27 18:05, Steffen Trumtrar wrote:
-> > Ah, sorry. Forgot to answer this.
+On Mon, Mar 04, 2013 at 02:51:14AM +0000, Grant Likely wrote:
+> On Thu, 13 Dec 2012 16:49:26 +0000, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
+> > [This is an updated version of my previous RFC, which can be found at
+> > http://lists.infradead.org/pipermail/linux-arm-kernel/2012-October/128205.html]
 > > 
-> > On Wed, Feb 27, 2013 at 05:45:31PM +0200, Tomi Valkeinen wrote:
-> >> Ping.
-> >>
-> >> On 2013-02-18 16:09, Tomi Valkeinen wrote:
-> >>> Hi Steffen,
-> >>>
-> >>> On 2013-01-25 11:01, Steffen Trumtrar wrote:
-> >>>
-> >>>> +/* VESA display monitor timing parameters */
-> >>>> +#define VESA_DMT_HSYNC_LOW		BIT(0)
-> >>>> +#define VESA_DMT_HSYNC_HIGH		BIT(1)
-> >>>> +#define VESA_DMT_VSYNC_LOW		BIT(2)
-> >>>> +#define VESA_DMT_VSYNC_HIGH		BIT(3)
-> >>>> +
-> >>>> +/* display specific flags */
-> >>>> +#define DISPLAY_FLAGS_DE_LOW		BIT(0)	/* data enable flag */
-> >>>> +#define DISPLAY_FLAGS_DE_HIGH		BIT(1)
-> >>>> +#define DISPLAY_FLAGS_PIXDATA_POSEDGE	BIT(2)	/* drive data on pos. edge */
-> >>>> +#define DISPLAY_FLAGS_PIXDATA_NEGEDGE	BIT(3)	/* drive data on neg. edge */
-> >>>> +#define DISPLAY_FLAGS_INTERLACED	BIT(4)
-> >>>> +#define DISPLAY_FLAGS_DOUBLESCAN	BIT(5)
-> >>>
-> >>> <snip>
-> >>>
-> >>>> +	unsigned int dmt_flags;	/* VESA DMT flags */
-> >>>> +	unsigned int data_flags; /* video data flags */
-> >>>
-> >>> Why did you go for this approach? To be able to represent
-> >>> true/false/not-specified?
-> >>>
+> > Current devicetree bindings for devices which use cpu-affine shared interrupts
+> > assume that interrupts are listed in ascending order of physical cpu id
+> > (MPIDR.Aff{2,1,0}). This is problematic for drivers because:
 > > 
-> > We decided somewhere between v3 and v8 (I think), that those flags can be
-> > high/low/ignored.
-> 
-> Okay. Why aren't they enums, though? That always makes more clear which
-> defines are to be used with which fields.
-> 
-
-Hm...
-
-> >>> Would it be simpler to just have "flags" field? What does it give us to
-> >>> have those two separately?
-> >>>
+> > (1) The driver must convert each physical id to a logical id for the purpose of
+> >     managing interrupts.
 > > 
-> > I decided to split them, so it is clear that some flags are VESA defined and
-> > the others are "invented" for the display-timings framework and may be
-> > extended.
-> 
-> Hmm... Okay. Is it relevant that they are VESA defined? It just feels to
-> complicate handling the flags =).
-> 
-> >>> Should the above say raising edge/falling edge instead of positive
-> >>> edge/negative edge?
-> >>>
+> > (2) In multi-cluster systems the physical ids are not necessarily contiguous,
+> >     and drivers cannot simply iterate over ids from 0 to NR_CPUS.
 > > 
-> > Hm, I used posedge/negedge because it is shorter (and because of my Verilog past
-> > pretty natural to me :-) ). I don't know what others are thinking though.
+> > (3) It is not possible to specify sets of interrupts which are wired to a
+> >     subset of cpus (i.e. clusters) not starting at physical id 0, as we can't
+> >     specify which cpu to start from, and can't skip cpus. This makes it
+> >     impossible to represent some devices (e.g. cpu PMUs) which may not exist
+> >     in the first cluster.
+> > 
+> > (4) Some devices may either be wired with PPIs or SPIs. It is not possible to
+> >     differentiate the two cases in general from the interrupts list (e.g. when
+> >     a device has multiple PPIs wired to all cpus).
+> > 
+> > To represent the general case, we require a mechanism to describe the cpu
+> > affinity of a device, and a consistent way to map each interrupt to a cpu (or
+> > set of cpus). So far, the only workable mechanism I've been able to come up
+> > with is the following:
+> > 
+> > In addition to the interrupts list we add an optional 'interrupts-affinity'
+> > list which describes how to map an interrupt to cpu(s). Each interrupt would
+> > have a corresponding element in the interrupts-affinity list.
+> > 
+> > Each element consists of a pair of cells specifying how to test if a cpu is
+> > affine. This test specification consists of a most significant affinity level
+> > to match, and values for the MPIDR affinity bits down to this level. Each pair
+> > of cells has the form:
+> > 
+> >     < N 0x00AABBCC >
+> >        \   \ \ \ \__ MPIDR.Aff0
+> >         \   \ \ \___ MPIDR.Aff1
+> >          \   \ \____ MPIDR.Aff2
+> >           \   \_____ [must be zero]
+> >            \________ level-specifier
+> > 
+> > The level-specifier is in the range [0-3]. When the value is 3, MPIDR affinity
+> > levels 2,1,0 are ignored, and thus all cpus are matched. When the value is 0,
+> > levels 2,1,0 must all be matched for a cpu to be considered affine. Affinity
+> > bits which are not to be matched should be set to zero.
+> > 
+> > In practice, use of the binding would look something like:
+> > 
+> > > device@0 {
+> > > 	compatible = "example,example-affine-device";
+> > > 	interrupts = <0 130 4>,
+> > > 	             <0 131 4>,
+> > > 	             <1 12 4>;
+> > > 	interrupts-affinity = <0 0x00000000>,
+> > >	                      <0 0x00000001>,
+> > > 	                      <1 0x00000100>;
+> > > };
+> > 
+> > To request/free interrupts, drivers would walk over all interrupts, and request
+> > the affine cpu(s), which can be automatically mapped to logical ids by common
+> > code. This fixes issues 1, 2, and 3. 4 is partially solved, in that we know
+> > whether an interrupt is targeted at a single cpu or multiple cpus (i.e.
+> > whether it's an SPI or a PPI), but we can't differentiate multiple interrupts
+> > targeted at the same cpu. We could solve this with an additional
+> > "interrupt-names" property, or something of that sort.
+> > 
+> > The following patches implement common code that could be used by drivers to
+> > deal with this affinity information, allowing drivers to extract a (logical)
+> > cpumask specifying the affinity of each interrupt, and additional information
+> > specifying whether an interrupt targets multiple cpus.
+> > 
+> > The patches are based on rmk's for-next branch.
+> > 
+> > Any thoughts?
 > 
-> I guess it's quite clear, but it's still different terms than used
-> elsewhere, e.g. documentation for videomodes.
+> Hi Mark,
+
+Hi,
+
 > 
-> Another thing I noticed while using the new videomode, display_timings.h
-> has a few names that are quite short and generic. Like "TE_MIN", which
-> is now a global define. And "timing_entry". Either name could be well
-> used internally in some .c file, and could easily clash.
+> I could use some more context for how this will be used. Do device
+> drivers need to be aware of which CPU can handle an interrupt for a
+> device, or is it the sort of thing that can be done in the background
+> when an irq is requested? What are some examples of device drivers using
+> this interface.
+
+The main users I can think of for this would be PMUs in multi-cluster systems,
+where we may have differing PMUs in each cluster. The driver for each needs to
+know the set of CPUs it's handling, and which CPU each interrupt is affine to.
+
+With the above binding scheme, we'd describe the A15x2 A7x3 CoreTile's PMUs
+something like:
+
+pmu_a15s {
+	compatible = "arm,cortex-a15-pmu";
+	interrupts = <0 68 4>,
+	             <0 69 4>;
+	interrupts-affinity = <0 0x0>,
+	                      <0 0x1>;
+};
+
+pmu_a7s {
+	compatible = arm,cortex-a7-pmu";
+	interrupts = <0 128 4>,
+	             <0 129 4>,
+	             <0 130 4>;
+	interrupts-affinity = <0 0x100>,
+	                      <0 0x101>,
+	                      <0 0x102>;
+};
+
 > 
+> Part of the reason why I ask is I see a new function for parsing the
+> affinity, but no code that links it into the existing irq
+> infrastructure. Would this need to be called automatically when a DT
+> interrupt is parsed? Or when the irq is requested? Some guidance would
+> help me here.
 
-Yes. You are correct.
-Everyone using this is welcome to send patches now :-)
+I envisage that each driver that requires this information would request it
+manually when parsing the dt, and storing what it needs in an appropriate
+datastructure. For PMUs this could be something like:
 
-Regards,
-Steffen
+struct irq_affinity {
+	cpumask_t mask;
+	int irq;
+} interrupt_data[];
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+When setting up or tearing down interrupts, each CPU can find which
+interrupt(s) it needs, and whether it's a PPI or SPI by iterating over the list
+and checking against a cpumask, and perform the appropriate steps to setup or
+teardown.
+
+Other devices may need affinity information (e.g. which CPUs are connected to
+the ACE ports on CCI) and can be handled by a similar binding.
+
+Thanks,
+Mark.
