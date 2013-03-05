@@ -1,82 +1,83 @@
-From: Padmavathi Venna <padma.v@samsung.com>
-Subject: [PATCH V2] ARM: dts: Modify SPI nodes according generic DMA DT bindings
-Date: Tue, 05 Mar 2013 16:16:34 +0530
-Message-ID: <1362480394-1064-1-git-send-email-padma.v@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, padma.v@samsung.com, padma.kvr@gmail.com
-Cc: sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, arnd@arndb.de, vinod.koul@intel.com, grant.likely@secretlab.ca
+From: "Manjunathappa, Prakash" <prakash.pm@ti.com>
+Subject: RE: [PATCH v4 3/5] mmc: davinci_mmc: add DT support
+Date: Tue, 5 Mar 2013 11:24:43 +0000
+Message-ID: <A73F36158E33644199EB82C5EC81C7BC3EA484E9@DBDE01.ent.ti.com>
+References: <1360909322-1858-1-git-send-email-prakash.pm@ti.com>
+ <1360909322-1858-4-git-send-email-prakash.pm@ti.com> <512DF16F.50702@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <512DF16F.50702@ti.com>
+Content-Language: en-US
+Sender: linux-doc-owner@vger.kernel.org
+To: "Nori, Sekhar" <nsekhar@ti.com>
+Cc: "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "grant.likely@secretlab.ca" <grant.likely@secretlab.ca>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, "rob@landley.net" <rob@landley.net>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "hs@denx.de" <hs@denx.de>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "cjb@laptop.org" <cjb@laptop.org>, "davinci-linux-open-source@linux.davincidsp.com" <davinci-linux-open-source@linux.davincidsp.com>, "Porter, Matt" <mporter@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch removes custom way of adding spi dma channels and
-adds according to new generic DMA DT bindings on samsung exynos4
-and exynos5440 platforms.
-
-Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
----
-
-Changes since V1:
-	- Corrected the pdma phandle in spi1 node.
-
- arch/arm/boot/dts/exynos4.dtsi    |   15 +++++++++------
- arch/arm/boot/dts/exynos5440.dtsi |    5 +++--
- 2 files changed, 12 insertions(+), 8 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 1a62bcf..4521a72 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -235,8 +235,9 @@
- 		compatible = "samsung,exynos4210-spi";
- 		reg = <0x13920000 0x100>;
- 		interrupts = <0 66 0>;
--		tx-dma-channel = <&pdma0 7>; /* preliminary */
--		rx-dma-channel = <&pdma0 6>; /* preliminary */
-+		dmas = <&pdma0 7
-+			&pdma0 6>;
-+		dma-names = "tx", "rx";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		status = "disabled";
-@@ -246,8 +247,9 @@
- 		compatible = "samsung,exynos4210-spi";
- 		reg = <0x13930000 0x100>;
- 		interrupts = <0 67 0>;
--		tx-dma-channel = <&pdma1 7>; /* preliminary */
--		rx-dma-channel = <&pdma1 6>; /* preliminary */
-+		dmas = <&pdma1 7
-+			&pdma1 6>;
-+		dma-names = "tx", "rx";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		status = "disabled";
-@@ -257,8 +259,9 @@
- 		compatible = "samsung,exynos4210-spi";
- 		reg = <0x13940000 0x100>;
- 		interrupts = <0 68 0>;
--		tx-dma-channel = <&pdma0 9>; /* preliminary */
--		rx-dma-channel = <&pdma0 8>; /* preliminary */
-+		dmas = <&pdma0 9
-+			&pdma0 8>;
-+		dma-names = "tx", "rx";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		status = "disabled";
-diff --git a/arch/arm/boot/dts/exynos5440.dtsi b/arch/arm/boot/dts/exynos5440.dtsi
-index 9a99755..31a3626 100644
---- a/arch/arm/boot/dts/exynos5440.dtsi
-+++ b/arch/arm/boot/dts/exynos5440.dtsi
-@@ -79,8 +79,9 @@
- 		compatible = "samsung,exynos4210-spi";
- 		reg = <0xD0000 0x1000>;
- 		interrupts = <0 4 0>;
--		tx-dma-channel = <&pdma0 5>; /* preliminary */
--		rx-dma-channel = <&pdma0 4>; /* preliminary */
-+		dmas = <&pdma0 5
-+			&pdma0 4>;
-+		dma-names = "tx", "rx";
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 	};
--- 
-1.7.4.4
+SGkgU2VraGFyLA0KDQpPbiBXZWQsIEZlYiAyNywgMjAxMyBhdCAxNzoxMzo0MywgTm9yaSwgU2Vr
+aGFyIHdyb3RlOg0KPiBPbiAyLzE1LzIwMTMgMTE6NTIgQU0sIE1hbmp1bmF0aGFwcGEsIFByYWth
+c2ggd3JvdGU6DQo+ID4gQWRkcyBkZXZpY2UgdHJlZSBzdXBwb3J0IGZvciBkYXZpbmNpX21tYy4g
+QWxzbyBhZGQgYmluZGluZyBkb2N1bWVudGF0aW9uLg0KPiA+IEFzIG9mIG5vdyBpbiBub24tZG1h
+IFBJTyBtb2RlIGFuZCB3aXRob3V0IEdQSU8gY2FyZF9kZXRlY3Qvd3JpdGVfcHJvdGVjdA0KPiA+
+IG9wdGlvbiBiZWNhdXNlIG9mIGRlcGVuZGVuY2llcyBvbiBFRE1BIGFuZCBHUElPIG1vZHVsZSBE
+VCBzdXBwb3J0Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hbmp1bmF0aGFwcGEsIFByYWth
+c2ggPHByYWthc2gucG1AdGkuY29tPg0KPiA+IFJldmlld2VkLWJ5OiBNYXJrIFJ1dGxhbmQgPG1h
+cmsucnV0bGFuZEBhcm0uY29tPg0KPiA+IENjOiBsaW51eC1tbWNAdmdlci5rZXJuZWwub3JnDQo+
+ID4gQ2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiA+IENjOiBkYXZp
+bmNpLWxpbnV4LW9wZW4tc291cmNlQGxpbnV4LmRhdmluY2lkc3AuY29tDQo+ID4gQ2M6IGRldmlj
+ZXRyZWUtZGlzY3Vzc0BsaXN0cy5vemxhYnMub3JnDQo+ID4gQ2M6IGNqYkBsYXB0b3Aub3JnDQo+
+ID4gQ2M6IFNla2hhciBOb3JpIDxuc2VraGFyQHRpLmNvbT4NCj4gPiBDYzogbXBvcnRlckB0aS5j
+b20NCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbW1jL2hvc3QvZGF2aW5jaV9tbWMuYyBi
+L2RyaXZlcnMvbW1jL2hvc3QvZGF2aW5jaV9tbWMuYw0KPiA+IGluZGV4IDg3NGRjNjAuLjZiMDhi
+OWEgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9tbWMvaG9zdC9kYXZpbmNpX21tYy5jDQo+ID4g
+KysrIGIvZHJpdmVycy9tbWMvaG9zdC9kYXZpbmNpX21tYy5jDQo+ID4gQEAgLTM0LDYgKzM0LDgg
+QEANCj4gPiAgI2luY2x1ZGUgPGxpbnV4L2RtYS1tYXBwaW5nLmg+DQo+ID4gICNpbmNsdWRlIDxs
+aW51eC9lZG1hLmg+DQo+ID4gICNpbmNsdWRlIDxsaW51eC9tbWMvbW1jLmg+DQo+ID4gKyNpbmNs
+dWRlIDxsaW51eC9vZi5oPg0KPiA+ICsjaW5jbHVkZSA8bGludXgvb2ZfZGV2aWNlLmg+DQo+ID4g
+IA0KPiA+ICAjaW5jbHVkZSA8bGludXgvcGxhdGZvcm1fZGF0YS9tbWMtZGF2aW5jaS5oPg0KPiA+
+ICANCj4gPiBAQCAtMTE1Niw2ICsxMTU4LDcgQEAgc3RhdGljIHZvaWQgX19pbml0IGluaXRfbW1j
+c2RfaG9zdChzdHJ1Y3QgbW1jX2RhdmluY2lfaG9zdCAqaG9zdCkNCj4gPiAgDQo+ID4gIAltbWNf
+ZGF2aW5jaV9yZXNldF9jdHJsKGhvc3QsIDApOw0KPiA+ICB9DQo+ID4gKw0KPiANCj4gU3RyYXkg
+bGluZSBhZGRpdGlvbi4NCj4gDQoNCkkgd2lsbCBmaXggdGhpcy4NCg0KPiA+ICBzdGF0aWMgc3Ry
+dWN0IHBsYXRmb3JtX2RldmljZV9pZCBkYXZpbmNpX21tY19kZXZ0eXBlW10gPSB7DQo+ID4gIAl7
+DQo+ID4gIAkJLm5hbWUJPSAiZGF2aW5jaS1tbWMtZG0zNTUiLA0KPiA+IEBAIC0xMTY4LDkgKzEx
+NzEsNjMgQEAgc3RhdGljIHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2VfaWQgZGF2aW5jaV9tbWNfZGV2
+dHlwZVtdID0gew0KPiA+ICB9Ow0KPiA+ICBNT0RVTEVfREVWSUNFX1RBQkxFKHBsYXRmb3JtLCBk
+YXZpbmNpX21tY19kZXZ0eXBlKTsNCj4gPiAgDQo+ID4gLXN0YXRpYyBpbnQgX19pbml0IGRhdmlu
+Y2lfbW1jc2RfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiArc3RhdGlj
+IGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZGF2aW5jaV9tbWNfZHRfaWRzW10gPSB7DQo+ID4g
+Kwl7DQo+ID4gKwkJLmNvbXBhdGlibGUgPSAidGksZGF2aW5jaS1tbWMtZG0zNTUiLA0KPiA+ICsJ
+CS5kYXRhID0gJmRhdmluY2lfbW1jX2RldnR5cGVbTU1DX0NUTFJfVkVSU0lPTl8xXSwNCj4gPiAr
+CX0sDQo+ID4gKwl7DQo+ID4gKwkJLmNvbXBhdGlibGUgPSAidGksZGF2aW5jaS1tbWMtZGE4MzAi
+LA0KPiA+ICsJCS5kYXRhID0gJmRhdmluY2lfbW1jX2RldnR5cGVbTU1DX0NUTFJfVkVSU0lPTl8y
+XSwNCj4gPiArCX0sDQo+ID4gKwl7fSwNCj4gPiArfTsNCj4gPiArTU9EVUxFX0RFVklDRV9UQUJM
+RShvZiwgZGF2aW5jaV9tbWNfZHRfaWRzKTsNCj4gPiArDQo+ID4gK3N0YXRpYyBzdHJ1Y3QgZGF2
+aW5jaV9tbWNfY29uZmlnDQo+ID4gKwkqbW1jX3BhcnNlX3BkYXRhKHN0cnVjdCBwbGF0Zm9ybV9k
+ZXZpY2UgKnBkZXYpDQo+ID4gIHsNCj4gPiArCXN0cnVjdCBkZXZpY2Vfbm9kZSAqbnA7DQo+ID4g
+IAlzdHJ1Y3QgZGF2aW5jaV9tbWNfY29uZmlnICpwZGF0YSA9IHBkZXYtPmRldi5wbGF0Zm9ybV9k
+YXRhOw0KPiA+ICsJY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCAqbWF0Y2ggPQ0KPiA+ICsJCW9m
+X21hdGNoX2RldmljZShvZl9tYXRjaF9wdHIoZGF2aW5jaV9tbWNfZHRfaWRzKSwgJnBkZXYtPmRl
+dik7DQo+ID4gKwl1MzIgZGF0YTsNCj4gPiArDQo+ID4gKwlucCA9IHBkZXYtPmRldi5vZl9ub2Rl
+Ow0KPiA+ICsJaWYgKCFucCkNCj4gPiArCQlyZXR1cm4gcGRhdGE7DQo+ID4gKw0KPiA+ICsJcGRh
+dGEgPSBkZXZtX2t6YWxsb2MoJnBkZXYtPmRldiwgc2l6ZW9mKCpwZGF0YSksIEdGUF9LRVJORUwp
+Ow0KPiA+ICsJaWYgKCFwZGF0YSkgew0KPiA+ICsJCWRldl9lcnIoJnBkZXYtPmRldiwgIkZhaWxl
+ZCB0byBhbGxvY2F0ZSBtZW1vcnkgZm9yIHN0cnVjdCBkYXZpbmNpX21tY19jb25maWdcbiIpOw0K
+PiA+ICsJCWdvdG8gbm9kYXRhOw0KPiANCj4gZGV2bV9remFsbG9jKCkgcmV0dXJucyBOVUxMIG9u
+IGVycm9yIHNvIHlvdSB3aWxsIGVuZCB1cCByZXR1cm5pbmcNCj4gc3VjY2VzcyBpbiB0aGlzIGNh
+c2UuDQo+IA0KDQpSZXR1cm5zIE5VTEwgb24gZmFpbHVyZSwgY2FsbGVyIGlzIGNoZWNraW5nIG9u
+IE5VTEwgZm9yIGZhaWx1cmVzLg0KDQogICAgICAgIHBkYXRhID0gbW1jX3BhcnNlX3BkYXRhKHBk
+ZXYpOw0KICAgICAgICBpZiAocGRhdGEgPT0gTlVMTCkgew0KICAgICAgICAgICAgICAgIGRldl9l
+cnIoJnBkZXYtPmRldiwgIkNhbiBub3QgZ2V0IHBsYXRmb3JtIGRhdGFcbiIpOw0KICAgICAgICAg
+ICAgICAgIHJldHVybiAtRU5PRU5UOw0KICAgICAgICB9DQoNCj4gPiArCX0NCj4gPiArDQo+ID4g
+KwlpZiAobWF0Y2gpDQo+ID4gKwkJcGRldi0+aWRfZW50cnkgPSBtYXRjaC0+ZGF0YTsNCj4gPiAr
+DQo+ID4gKwlvZl9wcm9wZXJ0eV9yZWFkX3UzMihucCwgIm1heC1mcmVxdWVuY3kiLCAmcGRhdGEt
+Pm1heF9mcmVxKTsNCj4gPiArCWlmICghcGRhdGEtPm1heF9mcmVxKQ0KPiA+ICsJCWRldl9pbmZv
+KCZwZGV2LT5kZXYsICInbWF4LWZyZXF1ZW5jeScgcHJvcGVydHkgbm90IHNwZWNpZmllZCwgZGVm
+YXVsdGluZyB0byAyNU1IelxuIik7DQo+IA0KPiANCj4gb2ZfcHJvcGVydHlfcmVhZF91MzIoKSBy
+ZXR1cm5zIGVycm9yIG9uIGZhaWx1cmUuIHBkYXRhLT5tYXhfZnJlcSBpcyBub3QNCj4gZ3VhcmFu
+dGVlZCB0byBiZSB6ZXJvIGluIGNhc2Ugb2YgZXJyb3IuIFNlZSBjb21tZW50cyBhdG9wDQo+IG9m
+X3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KCkuDQo+IA0KDQpBcyBwZGF0YSBpcyBmcm9tIGt6YWxs
+b2MsIG1heF9mcmVxIHdpbGwgcmVtYWluIE5VTEwgaW4gY2FzZSBvZl9wcm9wZXJ0eV9yZWFkX3Uz
+Ml9hcnJheSBmYWlscy4NCkl0IG1ha2VzIHNlbnNlIHRvIGNoZWNrIGZvciByZXR1cm4gdmFsdWUs
+IEkgYWdyZWUgdG8gY2hhbmdlIHRoaXMuDQoNClRoYW5rcywNClByYWthc2gNCg==
