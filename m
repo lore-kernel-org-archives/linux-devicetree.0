@@ -1,49 +1,119 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] ARM: bcm281xx: Add L2 cache enable code
-Date: Tue, 05 Mar 2013 11:20:32 -0700
-Message-ID: <51363770.5060201@wwwdotorg.org>
-References: <1362451632-18806-1-git-send-email-csd@broadcom.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH 11/14] ARM: OMAP2+: Add device-tree support for NOR flash
+Date: Tue, 5 Mar 2013 12:41:22 -0600
+Message-ID: <51363C52.10503@ti.com>
+References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com> <1361899842-30303-12-git-send-email-jon-hunter@ti.com> <51360271.1030302@mimc.co.uk> <51360562.20309@ti.com> <51361B46.507@mimc.co.uk> <51362BAB.10403@ti.com> <CALF0-+WnOWRD=sXNh_2hJutwxzrs22c97jKLiJa8Xjc=xaESpA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362451632-18806-1-git-send-email-csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, abhimanyu.kapur-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CALF0-+WnOWRD=sXNh_2hJutwxzrs22c97jKLiJa8Xjc=xaESpA@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Ezequiel Garcia <elezegarcia@gmail.com>
+Cc: Mark Jackson <mpfj-list@mimc.co.uk>, device-tree <devicetree-discuss@lists.ozlabs.org>, Rob Herring <rob.herring@calxeda.com>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03/04/2013 07:47 PM, Christian Daudt wrote:
-> - Adds a module to provide calls into secure monitor mode
-> - Uses this module to make secure monitor calls to enable L2 cache.
 
-> diff --git a/Documentation/devicetree/bindings/misc/smc.txt b/Documentation/devicetree/bindings/misc/smc.txt
+On 03/05/2013 11:43 AM, Ezequiel Garcia wrote:
+> Hi Jon,
+> 
+> On Tue, Mar 5, 2013 at 2:30 PM, Jon Hunter <jon-hunter@ti.com> wrote:
+>>
+>> This really highlights a weakness in the GPMC driver, particularly
+>> for NOR, where the child device can only be probed once the parent
+>> is probed. I don't see this as being DT specific issue, because
+>> even on older OMAP boards we always registered the NOR flash device
+>> independently of the GPMC device. So we have always been susceptible to
+>> this problem AFAICT.
+>>
+>> This is admittedly a hack, but I am curious if you add the pinctrl
+>> properties to the NOR node, if this would also defer the probe on the
+>> NOR device?
+>>
+>> Ideally it would be great to defer the probing of the child until the
+>> parent has been probed successfully.
+>>
+> 
+> This seems related to the probing parent-child ordering probing
+> I pointed out in a previous mail, isn't it?
 
-> +Example:
-> +	smc@0x3404c000 {
-> +		compatible = "bcm,kona-smc";
+Yes in this case. However, I have no idea what the problem you are
+having is. So I cannot comment if your problem represents a real
+scenario or not.
 
-Both here in this example, and ...
+> (which by the way, I'll answer when I can gather some more convincing
+> feedback).
 
-> diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+Thanks.
 
-> +	smc@0x3404c000 {
-> +		compatible = "bcm,kona-smc";
+> I don't have OMAP NOR boards, so I'm not entirely familiar to the
+> way GPMC registers the NOR device. However, by looking
+> into board-flash.c:board_nor_init() function, it seems to me that:
+> 
+> 1. first we request the CS with gpmc_cs_request() and
+> 2. later we register the NOR device explicitly with
+>     platform_device_register().
+> 
+> So, unless I'm missing something, we force the NOR device
+> to be probed *after* the GPMC device.
+>
+> This is definitely the way NAND, OneNAND is handled.
+> 
+> On the otherside, by using 'simple-bus' you create your devices
+> first, when the whole device-tree is parsed and later the drivers
+> are probed at module_initcall time.
+> 
+> So, AFAIK, this problem is DT specific.
 
-Here in the actual .dts file, you should include the specific ID of the
-SoC too, so that if there are Soc-specific bugs, the compatible property
-that's required to determine this is present from the start. In other words,
+This assumes that the GPMC driver is registered (and probed) before 1
+and 2 above occur. What is DT specific about when the driver is registered?
 
-compatible = "bcm,bcm11351-smc", "bcm,kona-smc";
+What happens in the non-DT case when the GPMC probe is deferred or fails?
 
-(which SoC ID you use in the example is arbitrary, but it may as well
-match the .dts file you're editing in the patch).
+We would never register the GPMC devices, right? For the deferred case
+that is not so good. So the current implementation is flawed if the
+probe is deferred. However, it would not crash which is a plus.
+
+So my point is in Mark's example, if someone were to add pinctrl support
+to the existing GPMC driver which caused the GPMC probe to be deferred
+then none of the GPMC child devices would ever be registered. I don't
+see that being related to DT either.
+
+What you are also missing is that in the probe_nor() function, if we
+fail to allocate the required resources, then I disable the child node
+and the child is not registered and hence not probed. I have tested this
+and for me this works. I was hoping this would be sufficient to handle
+failure cases and avoid crashes.
+
+> On the other side, when you say we should defer the probing
+> of the child. Do you mean changing something in physmap/NAND/etc. drivers?
+
+Not necessarily.
+
+> Please keep in mind, I have nothing against using simple-bus,
+> since it's a very clean solution. It's just that it seems to me it will
+> be problematic.
+> Moreover, the fix shouldn't be too complicated (still working on this).
+
+I am interested to know what your approach will be. One alternative is
+to call of_platform_device_create() from the GPMC driver. I could see
+this as being a safe option.
+
+> I'll try to post my Device Bus driver soon (similar to GPMC)
+> and also I'll try to answer the previous discussion with some
+> information on why I think this won't work.
+> 
+> (I hope I'm not making too much noise with this)
+
+No it is all good inputs. I am just frustrated to be told that this
+implementation is flawed without being able to tell me exactly why or
+the scenario where it would not work.
+
+The probe deferred case is a good example where this implementation will
+have problems. I see that as legitimate. However, I have no idea if what
+you are reporting is also legitimate or not. May be it is, I just don't
+know.
+
+Jon
+
+
