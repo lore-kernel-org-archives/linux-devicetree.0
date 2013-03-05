@@ -1,124 +1,52 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/4] usb: dwc3: dwc3-omap: set dma_mask for dwc3 inorder
- for host mode to work
-Date: Tue, 5 Mar 2013 16:54:58 +0200
-Message-ID: <20130305145458.GF12123@arwen.pp.htv.fi>
-References: <1362493320-13913-1-git-send-email-kishon@ti.com>
- <1362493320-13913-2-git-send-email-kishon@ti.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] dma: of-dma: return error when 'dma-cells' not found
+Date: Tue, 05 Mar 2013 08:56:23 -0600
+Message-ID: <51360797.6000007@gmail.com>
+References: <1362475531-32260-1-git-send-email-padma.v@samsung.com> <5135BE58.4040105@gmail.com> <1859273.NY466Orvuh@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8413256592767098869=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362493320-13913-2-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s-guiriec-l0cyMroinI0@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1859273.NY466Orvuh@wuerfel>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-arm-kernel@lists.infradead.org, Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, boojin.kim@samsung.com, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, kgene.kim@samsung.com, jon-hunter@ti.com, padma.kvr@gmail.com
 List-Id: devicetree@vger.kernel.org
 
---===============8413256592767098869==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dWYAkE0V1FpFQHQ3"
-Content-Disposition: inline
+On 03/05/2013 04:15 AM, Arnd Bergmann wrote:
+> On Tuesday 05 March 2013 03:43:52 Rob Herring wrote:
+>> On 03/05/2013 03:25 AM, Padmavathi Venna wrote:
+>>> This patch returns error when 'dma-cells' property not found
+>>> in the corresponding device node. With out this change there
+>>> is a crash in the generic dma incompatible platforms.
+>>>
+>>> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
+>>
+>> NAK.
+>>
+>> #dma-cells should be optional. It is not needed for platforms supporting
+>> memory to memory transfers only and should therefore be optional. You
+>> cannot assume the dtb can be updated and kernel changes need to work
+>> with old dtbs. I've submitted patches to address this and fix the crash:
+>>
+>> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-February/028769.html
+> 
+> Why would you call of_dma_controller_register() for a dma
+> engine that does not support slave channels, when that is the
+> only purpose of that interface?
 
---dWYAkE0V1FpFQHQ3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Well maybe then that function should be allowed to fail without erroring
+out. I just fixed it a the line that failed. Doing be32_to_cpup directly
+on a function return that can be NULL is not correct either.
 
-On Tue, Mar 05, 2013 at 07:51:57PM +0530, Kishon Vijay Abraham I wrote:
-> While creating the child devices, *of_platform_populate* sets only
-> coherent_dma_mask but USBHCD sets *uses_dma* (determines whether the
-> controller is DMA'able) based on dma_mask. So If we haven't explicitly set
-> dma_mask, the HCD thinks the controller is not DMA'able and the
-> controller will fail. So explicity set dma_mask for dwc3 after
-> *of_platform_populate*.
->=20
-> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> ---
->  drivers/usb/dwc3/dwc3-omap.c |   10 ++++++++++
->  1 file changed, 10 insertions(+)
->=20
-> diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
-> index 35b9673..19c6e72 100644
-> --- a/drivers/usb/dwc3/dwc3-omap.c
-> +++ b/drivers/usb/dwc3/dwc3-omap.c
-> @@ -277,6 +277,14 @@ static void dwc3_omap_disable_irqs(struct dwc3_omap =
-*omap)
->  	dwc3_omap_writel(omap->base, USBOTGSS_IRQENABLE_SET_0, 0x00);
->  }
-> =20
-> +static u64 dwc3_omap_dma_mask =3D DMA_BIT_MASK(32);
-> +
-> +static int dwc3_omap_set_dmamask(struct device *dev, void *c)
-> +{
-> +	dev->dma_mask =3D &dwc3_omap_dma_mask;
-> +	return 0;
-> +}
-> +
->  static int dwc3_omap_probe(struct platform_device *pdev)
->  {
->  	struct device_node	*node =3D pdev->dev.of_node;
-> @@ -381,6 +389,8 @@ static int dwc3_omap_probe(struct platform_device *pd=
-ev)
->  		return ret;
->  	}
-> =20
-> +	device_for_each_child(&pdev->dev, NULL, dwc3_omap_set_dmamask);
+> Note that the binding defines #dma-cells as required, and it
+> does not make any sense otherwise.
 
-I don't think this is correct. Child should be setting its own by
-copying from parent. In summary I think we should add this to dwc3 core:
+The 2nd patch I submitted changes that. It does not make sense to
+require it if you have no requests and hence will never have a phandle
+reference in a slave device. The simple fact is that the pl330 had an
+existing binding that worked for the memory to memory only case and
+kernel changes broke this. Kernel changes should not break existing
+device-trees.
 
-dma_set_coherent_mask(&pdev->dev, pdev->dev.parent->coherent_dma_mask);
-pdev->dev.dma_mask =3D pdev->dev.parent->dma_mask;
-pdev->dev.dma_parms =3D pdev->dev.parent->dma_parms;
-
-And add the same thing to xhci-plat.c btw.
-
---=20
-balbi
-
---dWYAkE0V1FpFQHQ3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRNgdCAAoJEIaOsuA1yqREZtsP/RvhPw/azCkMKffPn99XgIcn
-bOA9TvJiFEtWc7M7q7DbG+by3/q0WSZCU29LjfXebXRYQ+MOHK7iXb7WGs7ipjra
-M37HjPFCl4jICuGcF2aCi1UXn00JfB9OoeVqZLpF19Ml7zJBZLfKZbjQf3iaHw8J
-Qhg+2gQqMBujLf1dawyr5glLjntiPte6B4YnWp/qgUM58FAd98DcVUxwfVWm4ALM
-umkOvrbOKZ6gyxevcJZfRdSWH1kng8CJWoW70n+MrIfhE07f0vt1/OGoBba3UEzM
-yf6LBxt/Ktxx1LBwkdXuemMiZSm5TYwnJWcisfe9u4z3EOXnmxgpCii03XLu3kL6
-WxAjq9DiZNg/3RoTnucCzHNmoGpiD7LmP9NCQ/5UXKwcLygYP9S+Ru/RqIQbwB3C
-ZbW7CmRL5NECsHYPgIOBwOPLtMDYUbtfECt0IunZ8kKDgpWZjGacGS/7zr7MvSrW
-uYHM2+9gZB8cuncKNkGXSzMZws+eTppnrqdPX3LKIS3ZGmawfKuQ4R/l+jibLqvU
-aA3VuvBTYPOoV6eeayG+W4GURgy6tgtcY6lzCY0Aavz4VNSbqWpRG9qs/TFiYl9f
-R1fhk9HCeTsAttt0Rfaiu0hu1qTuuO94COhhIeW9YJ3f6MpfHZTD9GfBRxmIKzH+
-dMhr/ONZ5QafoeBfcv0l
-=aSct
------END PGP SIGNATURE-----
-
---dWYAkE0V1FpFQHQ3--
-
---===============8413256592767098869==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8413256592767098869==--
+Rob
