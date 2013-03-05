@@ -1,153 +1,80 @@
-From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/4] usb: dwc3: dwc3-omap: return -EPROBE_DEFER if probe
- has not yet executed
-Date: Tue, 5 Mar 2013 17:21:56 +0200
-Message-ID: <20130305152156.GK12123@arwen.pp.htv.fi>
-References: <1362493320-13913-1-git-send-email-kishon@ti.com>
- <1362493320-13913-3-git-send-email-kishon@ti.com>
- <20130305145645.GG12123@arwen.pp.htv.fi> <513608E6.3010502@ti.com>
- <20130305150608.GI12123@arwen.pp.htv.fi> <51360CC0.9080108@ti.com>
-Reply-To: balbi-l0cyMroinI0@public.gmane.org
+From: Mark Jackson <mpfj-list@mimc.co.uk>
+Subject: Re: [PATCH 11/14] ARM: OMAP2+: Add device-tree support for NOR flash
+Date: Tue, 05 Mar 2013 16:20:22 +0000
+Message-ID: <51361B46.507@mimc.co.uk>
+References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com> <1361899842-30303-12-git-send-email-jon-hunter@ti.com> <51360271.1030302@mimc.co.uk> <51360562.20309@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============9170925911298898759=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <51360CC0.9080108-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: kishon <kishon-l0cyMroinI0@public.gmane.org>
-Cc: linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, s-guiriec-l0cyMroinI0@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, ldewangan-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gg-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <51360562.20309@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
---===============9170925911298898759==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UlsYxwg8UDQn+EKZ"
-Content-Disposition: inline
+On 05/03/13 14:46, Jon Hunter wrote:
+> 
+> On 03/05/2013 08:34 AM, Mark Jackson wrote:
+>> On 26/02/13 17:30, Jon Hunter wrote:
+>>> NOR flash is not currently supported when booting with device-tree
+>>> on OMAP2+ devices. Add support to detect and configure NOR devices
+>>> when booting with device-tree.
+>>>
+>>> Add documentation for the TI GPMC NOR binding.
+>>>
+>>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+>>
+>> I'm trying to test this series, and am unable get my NOR device recognised.
+>>
+>> If I remove all reference to NOR (and keep only my NAND device definition), then
+>> everything seems to boot fine (so I'm assuming I've got at least the basics of
+>> the patch set working).
+>>
+>> My GPMC tree looks like this:-
 
---UlsYxwg8UDQn+EKZ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+<snip>
 
-On Tue, Mar 05, 2013 at 08:48:24PM +0530, kishon wrote:
-> Hi,
->=20
-> On Tuesday 05 March 2013 08:36 PM, Felipe Balbi wrote:
-> >On Tue, Mar 05, 2013 at 08:31:58PM +0530, kishon wrote:
-> >>Hi,
-> >>
-> >>On Tuesday 05 March 2013 08:26 PM, Felipe Balbi wrote:
-> >>>On Tue, Mar 05, 2013 at 07:51:58PM +0530, Kishon Vijay Abraham I wrote:
-> >>>>return -EPROBE_DEFER from dwc3_omap_mailbox in dwc3-omap.c, if the pr=
-obe of
-> >>>>dwc3-omap has not yet been executed or failed.
-> >>>>
-> >>>>Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-> >>>>---
-> >>>>  drivers/usb/dwc3/dwc3-omap.c  |    7 +++++--
-> >>>>  include/linux/usb/dwc3-omap.h |    6 +++---
-> >>>>  2 files changed, 8 insertions(+), 5 deletions(-)
-> >>>>
-> >>>>diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-oma=
-p.c
-> >>>>index 19c6e72..9428f4e 100644
-> >>>>--- a/drivers/usb/dwc3/dwc3-omap.c
-> >>>>+++ b/drivers/usb/dwc3/dwc3-omap.c
-> >>>>@@ -138,11 +138,14 @@ static inline void dwc3_omap_writel(void __iome=
-m *base, u32 offset, u32 value)
-> >>>>  	writel(value, base + offset);
-> >>>>  }
-> >>>>
-> >>>>-void dwc3_omap_mailbox(enum omap_dwc3_vbus_id_status status)
-> >>>>+int dwc3_omap_mailbox(enum omap_dwc3_vbus_id_status status)
-> >>>>  {
-> >>>>  	u32			val;
-> >>>>  	struct dwc3_omap	*omap =3D _omap;
-> >>>>
-> >>>>+	if (!omap)
-> >>>>+		return -EPROBE_DEFER;
-> >>>>+
-> >>>>  	switch (status) {
-> >>>>  	case OMAP_DWC3_ID_GROUND:
-> >>>>  		dev_dbg(omap->dev, "ID GND\n");
-> >>>>@@ -185,7 +188,7 @@ void dwc3_omap_mailbox(enum omap_dwc3_vbus_id_sta=
-tus status)
-> >>>>  		dev_dbg(omap->dev, "ID float\n");
-> >>>>  	}
-> >>>>
-> >>>>-	return;
-> >>>>+	return IRQ_HANDLED;
-> >>>
-> >>>IRQ_HANDLED ????
-> >>
-> >>Actually I did it that way since palmas_vbus_wakeup_irq can directly
-> >>return the return value from dwc3_omap_mailbox. If this seems hacky
-> >>to you, I'll change it.
-> >
-> >it does seem hacky :-) Try something like:
-> >
-> >ret =3D dwc3_omap_mailbox();
-> >if (ret)
-> >	print_error();
-> >
-> >return IRQ_HANDLED;
->=20
-> hmm.. But there is one case where palmas_vbus_wakeup_irq should
-> return EPROBE_DEFER. In the cold plug case, if palmas gets loaded
-> before dwc3-omap, omap in dwc3_omap_mailbox will be NULL. So ideally
-> palmas should be probed after dwc3-omap for this case. Returning
-> IRQ_HANDLED or IRQ_NONE wont help here.
+>> 	nor@1,0 {
+>> 		reg = <3 0x00000000 0x04000000>;
+>> 		compatible = "cfi-flash";
+>> 		linux,mtd-name = "spansion,s29gl064n90t";
+>> 		bank-width = <2>;
+>>
+>> 		gpmc,device-width = <1>;
+> 
+> Only bank-width should be necessary for NOR (per the binding
+> documentation). However, if you do specify both, then they should match.
+> Do you have two 8-bits devices? If so may be I need to update the
+> documentation to make it clear this is the total width of all devices
+> for a given chip-select.
 
-you can return IRQ_HANDLED but don't clear the IRQ status bits, which
-will make the IRQ retrigger, right ?
+No ... that was wrong, so I've fixed that.
 
-If you return -EPROBE_DEFER from within the IRQ handler, what will
-happen ? IRQ subsystem only understands IRQ_NONE, IRQ_WAKE_THREAD, and
-IRQ_HANDLED. How do you suppose it will treat -EPROBE_DEFER ?
+<snip>
 
---=20
-balbi
+>> Booting with this NOR device produces the following oops:-
+>>
+>> [    0.000000] Booting Linux on physical CPU 0x0
+>> [    0.000000] Linux version 3.9.0-rc1-12191-ga00d6d1-dirty (mpfj@mpfj-nanobone) (gcc version 4.5.4 (Buildroot 2012.11) ) #33 Tue Mar 5 13:08:25 GMT 2013
+>> [    0.000000] CPU: ARMv7 Processor [413fc082] revision 2 (ARMv7), cr=10c53c7d
 
---UlsYxwg8UDQn+EKZ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+<snip>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
+>> [    0.236730] omap-gpmc 50000000.gpmc: could not find pctldev for node /pinmux@44e10800/gpmc_pins, deferring probe
+>> [    0.236781] platform 50000000.gpmc: Driver omap-gpmc requests probe deferral
+> 
+> This look like your problem. I would figure out why this is failing and
+> try again.
 
-iQIcBAEBAgAGBQJRNg2UAAoJEIaOsuA1yqREyZgP/ib4iFdUWrX8l/CvClRD/WRX
-+U5mcGk+l6YI6zcZOoI6cjk0RFU9DiyDtuBdk62Koo5EinMY+e6ee3c9/1cuVBe3
-Reya75hgchB7TKbr3/Vc0RtBaa6/RM1vNKWRFnGBeAVZl+JvUu/9d1u1XqvO5NPl
-chSCYWFY6D7HDWr0epUO1n1NK5Y9V2/MfRHUEefmZkrDfKUIZ52kU3tyKgGTYyX8
-ElAO9Kai46Yq3jyIUJL4NRZ9qsQtIkoDbOcsMArWcVSlWeu83BSxnB6lJcdcqYH6
-6t+eTyJnDNx+19KfNvfu5x4fSh+DB5BaP9Txqt8YjpzTiU9L4jRqyxxeJvyJQOuC
-XjSrpTh30szs49G4WWWKic9eQjllISyO7wy2zcsHuCgT+40+mfZra4Cf4XxHf+Lf
-YqnHzQRB+d8/KIwRNo7o6uV6i4xQr1F/Ui4/e5AXunbpu6h130DHBlu1ijN7D50X
-peQboN6R648qdQhdvE8Be7wUBtHfhpVwJufPi+206kJE9ympa63UYahf9LsJv2iu
-Xt7whaayneo2xQHA1bQ7UJjy8b62OVL3y3MFbEoGk6L9RKeqjfNPrlAlFtRlpSH5
-IHlCy9oClWHBkIhubIBmPzP+xFBU/TQB4a+EkR9OOwEXZSlp1zvFvup8U/ir7zuy
-KsipPcN7RhoM0o3ybwkv
-=5EF6
------END PGP SIGNATURE-----
+Hmmmm ... I get this even when I've no NOR device defined and the board boots up fine.
 
---UlsYxwg8UDQn+EKZ--
+But I can see in physmap_of.c that the device gets registered without any call to
+devm_pinctrl_get_select_default() and hence no probe deferring takes place is the
+pinctrl device hasn't yet been started (which it hasn't).
 
---===============9170925911298898759==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+Does probe deferral need adding to physmap_of.c, or should the pinctrl device really
+be registered sooner ?
 
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============9170925911298898759==--
+Cheers
+Mark J.
