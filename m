@@ -1,52 +1,92 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] dma: of-dma: return error when 'dma-cells' not found
-Date: Tue, 05 Mar 2013 08:56:23 -0600
-Message-ID: <51360797.6000007@gmail.com>
-References: <1362475531-32260-1-git-send-email-padma.v@samsung.com> <5135BE58.4040105@gmail.com> <1859273.NY466Orvuh@wuerfel>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 2/4] usb: dwc3: dwc3-omap: return -EPROBE_DEFER if probe
+ has not yet executed
+Date: Tue, 5 Mar 2013 16:56:45 +0200
+Message-ID: <20130305145645.GG12123@arwen.pp.htv.fi>
+References: <1362493320-13913-1-git-send-email-kishon@ti.com>
+ <1362493320-13913-3-git-send-email-kishon@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1859273.NY466Orvuh@wuerfel>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: linux-arm-kernel@lists.infradead.org, Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, boojin.kim@samsung.com, sbkim73@samsung.com, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, grant.likely@secretlab.ca, vinod.koul@intel.com, kgene.kim@samsung.com, jon-hunter@ti.com, padma.kvr@gmail.com
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="df+09Je9rNq3P+GE"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1362493320-13913-3-git-send-email-kishon@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, balbi@ti.com, gregkh@linuxfoundation.org, s-guiriec@ti.com, gg@slimlogic.co.uk, sameo@linux.intel.com, broonie@opensource.wolfsonmicro.com, ldewangan@nvidia.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2013 04:15 AM, Arnd Bergmann wrote:
-> On Tuesday 05 March 2013 03:43:52 Rob Herring wrote:
->> On 03/05/2013 03:25 AM, Padmavathi Venna wrote:
->>> This patch returns error when 'dma-cells' property not found
->>> in the corresponding device node. With out this change there
->>> is a crash in the generic dma incompatible platforms.
->>>
->>> Signed-off-by: Padmavathi Venna <padma.v@samsung.com>
->>
->> NAK.
->>
->> #dma-cells should be optional. It is not needed for platforms supporting
->> memory to memory transfers only and should therefore be optional. You
->> cannot assume the dtb can be updated and kernel changes need to work
->> with old dtbs. I've submitted patches to address this and fix the crash:
->>
->> https://lists.ozlabs.org/pipermail/devicetree-discuss/2013-February/028769.html
-> 
-> Why would you call of_dma_controller_register() for a dma
-> engine that does not support slave channels, when that is the
-> only purpose of that interface?
+--df+09Je9rNq3P+GE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Well maybe then that function should be allowed to fail without erroring
-out. I just fixed it a the line that failed. Doing be32_to_cpup directly
-on a function return that can be NULL is not correct either.
+On Tue, Mar 05, 2013 at 07:51:58PM +0530, Kishon Vijay Abraham I wrote:
+> return -EPROBE_DEFER from dwc3_omap_mailbox in dwc3-omap.c, if the probe =
+of
+> dwc3-omap has not yet been executed or failed.
+>=20
+> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> ---
+>  drivers/usb/dwc3/dwc3-omap.c  |    7 +++++--
+>  include/linux/usb/dwc3-omap.h |    6 +++---
+>  2 files changed, 8 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/drivers/usb/dwc3/dwc3-omap.c b/drivers/usb/dwc3/dwc3-omap.c
+> index 19c6e72..9428f4e 100644
+> --- a/drivers/usb/dwc3/dwc3-omap.c
+> +++ b/drivers/usb/dwc3/dwc3-omap.c
+> @@ -138,11 +138,14 @@ static inline void dwc3_omap_writel(void __iomem *b=
+ase, u32 offset, u32 value)
+>  	writel(value, base + offset);
+>  }
+> =20
+> -void dwc3_omap_mailbox(enum omap_dwc3_vbus_id_status status)
+> +int dwc3_omap_mailbox(enum omap_dwc3_vbus_id_status status)
+>  {
+>  	u32			val;
+>  	struct dwc3_omap	*omap =3D _omap;
+> =20
+> +	if (!omap)
+> +		return -EPROBE_DEFER;
+> +
+>  	switch (status) {
+>  	case OMAP_DWC3_ID_GROUND:
+>  		dev_dbg(omap->dev, "ID GND\n");
+> @@ -185,7 +188,7 @@ void dwc3_omap_mailbox(enum omap_dwc3_vbus_id_status =
+status)
+>  		dev_dbg(omap->dev, "ID float\n");
+>  	}
+> =20
+> -	return;
+> +	return IRQ_HANDLED;
 
-> Note that the binding defines #dma-cells as required, and it
-> does not make any sense otherwise.
+IRQ_HANDLED ????
 
-The 2nd patch I submitted changes that. It does not make sense to
-require it if you have no requests and hence will never have a phandle
-reference in a slave device. The simple fact is that the pl330 had an
-existing binding that worked for the memory to memory only case and
-kernel changes broke this. Kernel changes should not break existing
-device-trees.
+--=20
+balbi
 
-Rob
+--df+09Je9rNq3P+GE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRNgetAAoJEIaOsuA1yqRE+7YP/2TwLfmHDDw6P9y3LyGISIS3
+34GgGJLOPO+LORBu/AaAz9w+vjxpkdo17BIMAl5AsfYg6DeZaJF6yO4EA/I2cS0N
+0HJhn/7HFyuxzd1zDHAFHthehdVcLf68q+C3VoCwip382Usverbz0EquVlyg2CTm
+iXXYFiFaWCG/ZTfVbhBtPeMdSs0Y0m8oAUduaTXOIIgZUNUSfFl447KPe/6obtgG
+URjJ/vOQx0RgR75k58mLd97N60jaevVQPRCcvcwtt0+hna0TQNd1SYKixmWjagvu
+BO/r0alGUNoJkxtJVg/BB/8zuvpf4ciDZb5X5RuynzlSqtzdVYzQ90iZ04UucdmT
+jFpUexGMOhavm5yyewWjFJ3ijuiRzi4iZgyNO7TfArSet4In+C/HaeLycVL70+P7
+mLTm4NL3fsC5hHYfYg+DyhgUUa4GS4+SYiL/LOf+CUAwl1LvqfHMjGnWJWOWdMig
+9dQVijJTuekPLOXoG5NYX+aKW3W2d9ILqDSgg8M4BLwhQHnydfLtGalbyXJ2n1bT
+OP+I++VOiNYEU789418obJzjhFoANbgtKgoDrceT+CTOyEEurnrn+mC5yGuchwE6
+greWUtDYheTpkeCDAtOXEbR+Q82OKA+ps1UKUlO9buDINGN1sWLVj6NA3p6JSnvb
+Rf9ho/O1Y7dWGrFeKaRn
+=5IBN
+-----END PGP SIGNATURE-----
+
+--df+09Je9rNq3P+GE--
