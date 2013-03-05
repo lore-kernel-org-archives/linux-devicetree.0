@@ -1,41 +1,54 @@
-From: Padma Venkat <padma.kvr@gmail.com>
-Subject: Re: [PATCH] DMA: PL330: Add check if device tree compatible
-Date: Tue, 5 Mar 2013 11:21:46 +0530
-Message-ID: <CAAgF-Bfw7__aehMT3RBXz4=S7kxd_0frs8v1FqA=gP0Dq5H6hg@mail.gmail.com>
-References: <1362374943-29312-1-git-send-email-padma.v@samsung.com>
-	<201303041258.39222.arnd@arndb.de>
+From: javier Martin <javier.martin@vista-silicon.com>
+Subject: Re: [PATCH v3 1/2] i.MX27: Add clock support for SAHARA2.
+Date: Tue, 5 Mar 2013 08:48:19 +0100
+Message-ID: <CACKLOr2kuWXMreEFA4wqyYVRNnPwmEoHPM2+V+tN5P_1bQ+iJQ@mail.gmail.com>
+References: <1362137873-8827-1-git-send-email-javier.martin@vista-silicon.com>
+	<1362137873-8827-2-git-send-email-javier.martin@vista-silicon.com>
+	<20130304075306.GA1906@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <201303041258.39222.arnd@arndb.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Padmavathi Venna <padma.v@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, sbkim73@samsung.com, broonie@opensource.wolfsonmicro.com, kgene.kim@samsung.com, jassisinghbrar@gmail.com, vinod.koul@intel.com, boojin.kim@samsung.com, robherring2@gmail.com
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <20130304075306.GA1906@pengutronix.de>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Sascha Hauer <s.hauer@pengutronix.de>
+Cc: linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, davem@davemloft.net, herbert@gondor.apana.org.au, kernel@pengutronix.de, gcembed@gmail.com, shawn.guo@linaro.org, arnd@arndb.de, swarren@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd,
+Hi Sascha,
 
-On Mon, Mar 4, 2013 at 6:28 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Monday 04 March 2013, Padmavathi Venna wrote:
->> +
->> +       if (adev->dev.of_node) {
->> +               ret = of_dma_controller_register(adev->dev.of_node,
->> +                                        of_dma_pl330_xlate, pdmac);
->> +               if (ret) {
->> +                       dev_err(&adev->dev,
->> +                       "unable to register DMA to the generic DT DMA helpers\n");
->> +                       goto probe_err4;
->> +               }
->>         }
+On 4 March 2013 08:53, Sascha Hauer <s.hauer@pengutronix.de> wrote:
+> On Fri, Mar 01, 2013 at 12:37:52PM +0100, Javier Martin wrote:
+>>
+>> Signed-off-by: Javier Martin <javier.martin@vista-silicon.com>
+>> ---
+>>  arch/arm/mach-imx/clk-imx27.c |    2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-imx/clk-imx27.c b/arch/arm/mach-imx/clk-imx27.c
+>> index 4c1d1e4..0b9664a 100644
+>> --- a/arch/arm/mach-imx/clk-imx27.c
+>> +++ b/arch/arm/mach-imx/clk-imx27.c
+>> @@ -253,6 +253,8 @@ int __init mx27_clocks_init(unsigned long fref)
+>>       clk_register_clkdev(clk[nfc_baud_gate], NULL, "imx27-nand.0");
+>>       clk_register_clkdev(clk[vpu_baud_gate], "per", "coda-imx27.0");
+>>       clk_register_clkdev(clk[vpu_ahb_gate], "ahb", "coda-imx27.0");
+>> +     clk_register_clkdev(clk[sahara_ahb_gate], "ahb", "sahara-imx27.0");
+>> +     clk_register_clkdev(clk[sahara_ipg_gate], "ipg", "sahara-imx27.0");
 >
-> Hmm, when I did the same thing in dw_dma, Andy commented that this should
-> not be a failure at all, since the device is still usable. Could we
-> instead make of_dma_controller_register return silently when it
-> gets a NULL of_node?
-
-Ok. I will do that.
-
-Thanks
-Padma
+> One of the first patches I want to push upstream for the next merge
+> window is this one:
 >
->         Arnd
+> https://patchwork.kernel.org/patch/1817741/
+>
+> So the change above becomes unnecessary
+
+Very good. Then this patch can be safely dropped.
+
+-- 
+Javier Martin
+Vista Silicon S.L.
+CDTUC - FASE C - Oficina S-345
+Avda de los Castros s/n
+39005- Santander. Cantabria. Spain
++34 942 25 32 60
+www.vista-silicon.com
