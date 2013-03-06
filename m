@@ -1,79 +1,56 @@
-From: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v3 2/2] mmc: omap_hsmmc: add generic DMA request support to
- the DT binding
-Date: Wed,  6 Mar 2013 09:12:08 -0500
-Message-ID: <1362579128-5312-3-git-send-email-mporter@ti.com>
-References: <1362579128-5312-1-git-send-email-mporter@ti.com>
+From: "Christian Daudt" <csd@broadcom.com>
+Subject: Re: [PATCH] ARM: bcm281xx: Add L2 cache enable code
+Date: Wed, 6 Mar 2013 07:05:16 -0800
+Message-ID: <51375B2C.2000005@broadcom.com>
+References: <1362451632-18806-1-git-send-email-csd@broadcom.com>
+ <201303060631.03782.arnd@arndb.de> <5136F816.2070909@broadcom.com>
+ <201303061128.57127.arnd@arndb.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362579128-5312-1-git-send-email-mporter-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Balaji T K <balajitk-l0cyMroinI0@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Dan Williams <djbw-b10kYP2dOMg@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <201303061128.57127.arnd@arndb.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, csd_b@daudt.org, "arm@kernel.org" <arm@kernel.org>, abhimanyu.kapur@outlook.com, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The binding definition is based on the generic DMA request binding.
+On 13-03-06 03:28 AM, Arnd Bergmann wrote:
+>>>> It was originally in init_machine section but I was told that that was
+>>>> too late and init_irq would be better, and I saw that highbank also has
+>>>> it in init_irq. I agree that it is unrelated to irq - is there a better
+>>>> place to put this in ?
+>>> IMHO the later the better. Do you know what issues were caused  by having it
+>>> in init_machine?
+>> This is some feedback I got a while back:
+>> "From kernel 3.4 on-wards i think ( if i remember correctly) cache sync
+>> might be called before your board_init function and you might have to do
+>> this in init_irq. "
+>>
+>> I just looked through where l2x0_of_init is currently called and here's
+>> the list:
+>> early_initcall (exynos4, omap2, sirf, ux500)
+>> init_irq (highbank, imx6q)
+>> init_machine (socfpga, v2m_dt_init)
+>>
+>> so seems to be everywhere :) So I can move it back to init_machineif
+>> that's where itshould be.
+> Hmm, let's try to solve this another time, I don't think there is an easy
+> answer. Maybe we really need a common entry point for the cache
+> controller setup, or move it completely out of platform specific code
+> for the case where it can be probed from DT.
+>
+> Thanks for doing the research!
+>
+So for the time being should it stay in init_irq or init_machine ?
 
-Signed-off-by: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
- .../devicetree/bindings/mmc/ti-omap-hsmmc.txt      |   26 +++++++++++++++++++-
- 1 file changed, 25 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-index ed271fc..8c8908a 100644
---- a/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/ti-omap-hsmmc.txt
-@@ -20,8 +20,29 @@ ti,dual-volt: boolean, supports dual voltage cards
- ti,non-removable: non-removable slot (like eMMC)
- ti,needs-special-reset: Requires a special softreset sequence
- ti,needs-special-hs-handling: HSMMC IP needs special setting for handling High Speed
-+dmas: List of DMA specifiers with the controller specific format
-+as described in the generic DMA client binding. A tx and rx
-+specifier is required.
-+dma-names: List of DMA request names. These strings correspond
-+1:1 with the DMA specifiers listed in dmas. The string naming is
-+to be "rx" and "tx" for RX and TX DMA requests, respectively.
-+
-+Examples:
-+
-+[hwmod populated DMA resources]
-+
-+	mmc1: mmc@0x4809c000 {
-+		compatible = "ti,omap4-hsmmc";
-+		reg = <0x4809c000 0x400>;
-+		ti,hwmods = "mmc1";
-+		ti,dual-volt;
-+		bus-width = <4>;
-+		vmmc-supply = <&vmmc>; /* phandle to regulator node */
-+		ti,non-removable;
-+	};
-+
-+[generic DMA request binding]
- 
--Example:
- 	mmc1: mmc@0x4809c000 {
- 		compatible = "ti,omap4-hsmmc";
- 		reg = <0x4809c000 0x400>;
-@@ -30,4 +51,7 @@ Example:
- 		bus-width = <4>;
- 		vmmc-supply = <&vmmc>; /* phandle to regulator node */
- 		ti,non-removable;
-+		dmas = <&edma 24
-+			&edma 25>;
-+		dma-names = "tx", "rx";
- 	};
--- 
-1.7.9.5
+   Thanks,
+    csd
