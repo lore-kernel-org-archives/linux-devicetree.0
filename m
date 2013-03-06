@@ -1,106 +1,91 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH V2 REPOST] kbuild: create an "include chroot" for DT bindings
-Date: Wed, 06 Mar 2013 00:55:34 -0600
-Message-ID: <5136E866.20008@gmail.com>
-References: <1362506797-21905-1-git-send-email-swarren@wwwdotorg.org>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [PATCH 1/2] ARM: EXYNOS: Add PCIe driver support
+Date: Wed, 6 Mar 2013 08:48:34 +0000
+Message-ID: <20130306084834.GA9721@arm.com>
+References: <016b01ce18c2$2c366f10$84a34d30$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-In-Reply-To: <1362506797-21905-1-git-send-email-swarren@wwwdotorg.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hiroshi Doyu <hdoyu@nvidia.com>, "arm@kernel.org" <arm@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <016b01ce18c2$2c366f10$84a34d30$%han@samsung.com>
+Content-Disposition: inline
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>
+Cc: 'Kukjin Kim' <kgene.kim@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>, thomas.petazzoni@free-electrons.com, thierry.reding@avionic-design.de
 List-Id: devicetree@vger.kernel.org
 
-On 03/05/2013 12:06 PM, Stephen Warren wrote:
-> From: Stephen Warren <swarren@nvidia.com>
+On Mon, Mar 04, 2013 at 10:22:28AM +0000, Jingoo Han wrote:
+> Exynos5440 has two PCIe controllers which can be used as Root Complex.
+> This driver supports the PCIe controllers as Root Complex mode.
 > 
-> The recent dtc+cpp support allows header files and C pre-processor
-> defines/macros to be used when compiling device tree files. These
-> headers will typically define various constants that are part of the
-> device tree bindings.
-> 
-> The original patch which set up the dtc+cpp include path only considered
-> using those headers from device tree files. However, most are also
-> useful for kernel code which needs to interpret the device tree.
-> 
-> In both the DT files and the kernel, I'd like to include the DT-related
-> headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
-> That will simplify any text which discusses the DT header locations.
-> 
-> Creating a <dt-bindings/> for kernel source to use is as simple as
-> placing files into include/dt-bindings/.
-> 
-> However, when compiling DT files, the include path should be restricted
-> so that only the dt-bindings path is available; arbitrary kernel headers
-> shouldn't be exposed. For this reason, create a specific include
-> directory for use by dtc+cpp, and symlink dt-bindings from there to the
-> actual location of include/dt-bindings/. For want of a better location,
-> place this "include chroot" into the existing dts/ directory.
-> 
-> arch/*/boot/dts/include/dt-bindings -> ../../../../../include/dt-bindings
-> 
-> Some headers used by device tree files may not be useful to the kernel;
-> they may be used simply to aid in constructing the DT file (e.g. macros
-> to create a node), but not define any information that the kernel needs
-> to share. These may be placed directly into arch/*/boot/dts/ along with
-> the DT files themselves.
-> 
-> Cc: Hiroshi Doyu <hdoyu@nvidia.com>
-> Acked-by: Michal Marek <mmarek@suse.cz>
-> Acked-by: Shawn Guo <shawn.guo@linaro.org>
-> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+> Signed-off-by: Surendranath Gurivireddy Balla <suren.reddy@samsung.com>
+> Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
+> Signed-off-by: Jingoo Han <jg1.han@samsung.com>
 > ---
-> Grant, Rob,
+>  .../devicetree/bindings/pci/exynos-pcie.txt        |   58 ++
+>  arch/arm/Kconfig                                   |    2 +
+>  arch/arm/mach-exynos/Kconfig                       |    8 +
+>  arch/arm/mach-exynos/Makefile                      |    2 +
+>  arch/arm/mach-exynos/include/mach/pcie.h           |  146 +++
+>  arch/arm/mach-exynos/pcie.c                        | 1009 ++++++++++++++++++++
+>  6 files changed, 1225 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/pci/exynos-pcie.txt
+>  create mode 100644 arch/arm/mach-exynos/include/mach/pcie.h
+>  create mode 100644 arch/arm/mach-exynos/pcie.c
 > 
-> This is a pre-requisite for people to convert their *.dts files to use
-> cpp, and hence is likely to be useful for a number of ARM subarch trees.
-> Perhaps this patch can be placed into a standalone topic branch in the
-> DT repo so we can all merge it. Assuming this patch is OK, I would also
-> repost the patches that create common headers defining IRQ, and GPIO
-> flags, which would place files into the new include/dt-bindings
-> directory.
-
-This looks fine to me. As all these will all be arm-soc branches with
-the dependency, it probably makes more sense for Arnd/Olof to apply this
-and create the branch for this single patch.
-
-Acked-by: Rob Herring <rob.herring@calxeda.com>
-
-Rob
-
-> 
-> v2:
-> * Leave arch/*/boot/dts in dtc include path, for any headers that are
->   only included by *.dts and don't need to be shared by the kernel.
-> * Fix pathname in commit description.
-> ---
->  arch/arm/boot/dts/include/dt-bindings |    1 +
->  scripts/Makefile.lib                  |    2 +-
->  2 files changed, 2 insertions(+), 1 deletion(-)
->  create mode 120000 arch/arm/boot/dts/include/dt-bindings
-> 
-> diff --git a/arch/arm/boot/dts/include/dt-bindings b/arch/arm/boot/dts/include/dt-bindings
-> new file mode 120000
-> index 0000000..08c00e4
+> diff --git a/Documentation/devicetree/bindings/pci/exynos-pcie.txt b/Documentation/devicetree/bindings/pci/exynos-pcie.txt
+> new file mode 100644
+> index 0000000..4fe05b5
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/include/dt-bindings
-> @@ -0,0 +1 @@
-> +../../../../../include/dt-bindings
-> \ No newline at end of file
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 07125e6..af35521 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -158,7 +158,7 @@ ld_flags       = $(LDFLAGS) $(ldflags-y)
->  
->  dtc_cpp_flags  = -Wp,-MD,$(depfile) -nostdinc                            \
->  		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
-> -		 -I$(srctree)/arch/$(SRCARCH)/include/dts                \
-> +		 -I$(srctree)/arch/$(SRCARCH)/boot/dts/include           \
->  		 -undef -D__DTS__
->  
->  # Finds the multi-part object the current object will be linked into
-> 
+> +++ b/Documentation/devicetree/bindings/pci/exynos-pcie.txt
+> @@ -0,0 +1,58 @@
+> +* Samsung Exynos PCIe interface
+> +
+> +Required properties:
+> +-compatible: should be "samsung,pcie-host"
+> +-reg: base addresses and lengths of the pcie conteroller,
+> +       additional register for the pcie controller,
+> +       the phy controller,
+> +       additional register for the phy controller.
+> +- interrupts: interrupt values for level interrupt,
+> +       pulse interrupt, special interrupt.
+> +- pcie-host,io_size: memory size for IO
+> +- pcie-host,cfg0_size: memory size for CFG0
+> +- pcie-host,cfg1_size: memory size for CFG1
+> +- pcie-host,mem_size: memory size for MEM
+> +- pcie-host,in_mem_size: memory size for Inbound MEM
+> +- reset-gpio: gpio pin number of power good signal
+> +
+> +Example:
+> +
+> +SoC specific DT Entry:
+> +
+> +       pcie0@40000000 {
+> +               compatible = "samsung,pcie-host";
+> +               reg = <0x40000000 0x4000
+> +                       0x290000 0x1000
+> +                       0x270000 0x1000
+> +                       0x271000 0x40>;
+> +               interrupts = <0 20 0>, <0 21 0>, <0 22 0>;
+> +               pcie-host,io_size = <0x4000>;
+> +               pcie-host,cfg0_size = <0x100000>;
+> +               pcie-host,cfg1_size = <0x100000>;
+> +               pcie-host,mem_size = <0x10000000>;
+> +               pcie-host,in_mem_size = <0x8000000>;
+> +       };
+> +
 
+It's quite common for information such as mem_size and io_size to be represented
+with the defacto binding ranges  - see
+http://devicetree.org/Device_Tree_Usage#PCI_Address_Translation. Thomas Petazzoni
+and Thierry Reding have recent patch sets that use this representation.
+
+The ranges property is used across many architectures of the kernel, however
+each architecture has its own way of parsing this binding. There isn't an
+accepted version for ARM yet but efforts are underway to add one that doesn't
+duplicate code.
+
+It would probably make sense for all these new PCIe host drivers to be
+consistent where possible.
+
+Andrew Murray
