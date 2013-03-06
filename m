@@ -1,41 +1,35 @@
-From: Ezequiel Garcia <elezegarcia@gmail.com>
-Subject: Re: [PATCH 11/14] ARM: OMAP2+: Add device-tree support for NOR flash
-Date: Wed, 6 Mar 2013 08:58:45 -0300
-Message-ID: <CALF0-+VeU9tGy-dKgmVg1pT0z0ghJBSsughV7kzT5nX7u=9BhA@mail.gmail.com>
-References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com>
-	<1361899842-30303-12-git-send-email-jon-hunter@ti.com>
-	<51360271.1030302@mimc.co.uk>
-	<51360562.20309@ti.com>
-	<51361B46.507@mimc.co.uk>
-	<51362BAB.10403@ti.com>
-	<513664EC.2050508@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <513664EC.2050508@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Mark Jackson <mpfj-list@mimc.co.uk>, Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>
+From: Thomas Abraham <thomas.abraham@linaro.org>
+Subject: [PATCH 0/2] ARM: dts: Add default pin states for client nodes on
+ Exynos4/5 platforms
+Date: Wed, 06 Mar 2013 18:06:36 +0530
+Message-ID: <1362573398-15126-1-git-send-email-thomas.abraham@linaro.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, heiko@sntech.de, linus.walleij@linaro.org, patches@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Jon,
+This patch series populates the default pin states in client nodes
+of Exynos4 and Exynos5 platforms. Exynos4/5 platforms are migrating
+to use pinctrl framework and having the default pin states listed
+in the client nodes allows the device core to setup the default
+pin configuration for all the controllers.
 
-On Tue, Mar 5, 2013 at 6:34 PM, Jon Hunter <jon-hunter@ti.com> wrote:
->
-> By the way, with this version you should remove "simple-bus" from your
-> gpmc node compatible strings. I now call of_platform_device_create() to
-> create the child device during the GPMC probe. I think that this is a
-> safer approach.
->
+This means the old-styled Samsung specific gpio bindings, which have
+been used till now for setting up the pin configurations, will not be
+used anymore. The corresponding changes required in device drivers
+have been posted seperatly.
 
-FWIW, using of_platform_device_create() works for my driver.
-It seems as simple as using a compatible 'simple-bus',
-with the advantage that it allows to create and probe the
-child device from its parent.
+Thomas Abraham (2):
+  ARM: dts: add pin state information in client nodes for Exynos4 platforms
+  ARM: dts: add pin state information in client nodes for Exynos5 platforms
 
-I'll submit this driver by the end of this week, in case you want
-to take a look at it.
-
-Thanks a lot,
--- 
-    Ezequiel
+ arch/arm/boot/dts/cros5250-common.dtsi    |   51 +--
+ arch/arm/boot/dts/exynos4.dtsi            |   10 +
+ arch/arm/boot/dts/exynos4210-smdkv310.dts |   53 +--
+ arch/arm/boot/dts/exynos5250-pinctrl.dtsi |  783 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts |   33 +-
+ arch/arm/boot/dts/exynos5250-snow.dts     |   22 +-
+ arch/arm/boot/dts/exynos5250.dtsi         |  310 +++---------
+ 7 files changed, 923 insertions(+), 339 deletions(-)
+ create mode 100755 arch/arm/boot/dts/exynos5250-pinctrl.dtsi
