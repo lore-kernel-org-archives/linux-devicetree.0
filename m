@@ -1,139 +1,94 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: Re: [PATCH v6 5/5] ARM: dts: Add FIMD DT binding Documentation
-Date: Wed, 6 Mar 2013 15:48:44 +0530
-Message-ID: <CAD025yQA+yAPzATDvE-4HQP+HVbmDQkg+XVKd=VUepL+dM9s9Q@mail.gmail.com>
-References: <1362044559-7496-1-git-send-email-vikas.sajjan@linaro.org>
- <1362044559-7496-6-git-send-email-vikas.sajjan@linaro.org> <5133A068.7060906@gmail.com>
+From: Mark Jackson <mpfj-list@mimc.co.uk>
+Subject: Re: [PATCH 11/14] ARM: OMAP2+: Add device-tree support for NOR flash
+Date: Wed, 06 Mar 2013 10:23:42 +0000
+Message-ID: <5137192E.1010101@mimc.co.uk>
+References: <1361899842-30303-1-git-send-email-jon-hunter@ti.com> <1361899842-30303-12-git-send-email-jon-hunter@ti.com> <51360271.1030302@mimc.co.uk> <51360562.20309@ti.com> <51361B46.507@mimc.co.uk> <51362BAB.10403@ti.com> <513664EC.2050508@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5133A068.7060906@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, jy0922.shim@samsung.com, sunil joshi <joshi@samsung.com>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <513664EC.2050508@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Daniel Mack <zonque@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 4 March 2013 00:41, Sylwester Nawrocki <sylvester.nawrocki@gmail.com> wrote:
-> On 02/28/2013 10:42 AM, Vikas Sajjan wrote:
+On 05/03/13 21:34, Jon Hunter wrote:
+> 
+> On 03/05/2013 11:30 AM, Jon Hunter wrote:
+>> On 03/05/2013 10:20 AM, Mark Jackson wrote:
+> 
+> [snip]
+> 
+>>> But I can see in physmap_of.c that the device gets registered without any call to
+>>> devm_pinctrl_get_select_default() and hence no probe deferring takes place is the
+>>> pinctrl device hasn't yet been started (which it hasn't).
+>>>
+>>> Does probe deferral need adding to physmap_of.c, or should the pinctrl device really
+>>> be registered sooner ?
 >>
->> Adds FIMD DT binding documentation both Samsung SoC and Board, with an
->> example
->>
->> Signed-off-by: Vikas Sajjan<vikas.sajjan@linaro.org>
->> ---
->>   .../devicetree/bindings/video/samsung-fimd.txt     |   54
->> ++++++++++++++++++++
->>   1 file changed, 54 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/video/samsung-fimd.txt
->>
->> diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt
->> b/Documentation/devicetree/bindings/video/samsung-fimd.txt
->> new file mode 100644
->> index 0000000..8d201e7
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
->> @@ -0,0 +1,54 @@
->> +Device-Tree bindings for Samsung SoC display controller (FIMD)
->> +
->> +FIMD stands for Fully Interactive Mobile Display, is the Display
->> Controller for
->> +the Samsung series of SoCs which transfers the image data from a video
->> buffer
->> +located in the system memory to an external LCD interface.
->> +
->> +Required properties:
->> +- compatible := value should be one of the following
->> +               "samsung,s3c2443-fimd"; /* for S3C24XX SoCs */
->> +               "samsung,s3c6400-fimd"; /* for S3C64XX SoCs */
->> +               "samsung,s5p6440-fimd"; /* for S5P64X0 SoCs */
->> +               "samsung,s5pc100-fimd"; /* for S5PC100 SoC  */
->> +               "samsung,s5pv210-fimd"; /* for S5PV210 SoC */
->> +               "samsung,exynos4210-fimd"; /* for Exynos4 SoCs */
->> +               "samsung,exynos5250-fimd"; /* for Exynos5 SoCs */
->> +
->> +- reg := physical base address of the fimd and length of memory mapped
->> region
->
->
-> I think FIMD should be capitalized.
->
-Right.
->
->> +
->> +- interrupt-parent := reference to the interrupt combiner node with
->> phandle
->
->
-> Perhaps this would have been more clear:
->
-> - interrupt-parent : a phandle to the interrupt combiner node;
->
-> ?
-OK.
->
-> And could we just use a colon instead of ":=", to keep it more consistent
-> with other Samsung SoC DT bindings documentation ?
->
-OK.
->
->> +
->> +- interrupts := interrupt number from the combiner to the cpu.
->> +               We have 3 interrupts and the interrupt combiner order is
->> +               FIFO Level, VSYNC, and LCD_SYSTEM.
->> +               but since the driver expects VSYNC to be the first IRQ,
->> +               make sure to mention order as VSYNC, FIFO Level and
->> LCD_SYSTEM
->> +               keeping VSYNC as first IRQ as shown below.
->> +               for example: interrupts =<11 1>,<11 0>,<11 2>;
->
->
-> I have a suggestion here. What about using reg-names property to make this
-> more explicit, e.g.
->
-> - interrupts : should contain a list of all FIMD IP block interrupts:
->   FIFO Level, VSYNC, LCD_SYSTEM. The interrupt specifier format depends
->   on the interrupt controller used;
->
-> - interrupt-names : should contain the interrupt names: "fifo", "vsync",
->   "lcd_sys", in the order in which they were listed in the interrupts
->   property;
->
-Good idea, but i am just wondering is it a good idea to modify the
-fimd driver ?
+>> I see, so the pinctrl driver is not getting probed until later.
+> 
+> Can you give this version of the patch a go? I have re-worked the patch
+> so the NOR device will only be registered after the GPMC probe completes.
+> 
+> By the way, with this version you should remove "simple-bus" from your
+> gpmc node compatible strings. I now call of_platform_device_create() to
+> create the child device during the GPMC probe. I think that this is a
+> safer approach.
 
-> Or something similar to that. Then the drivers would need to be modified
-> to get interrupt resource by name, and not to rely on the VSYNC interrupt
-> be listed as the first one.
->
->
->> +
->> +- pinctrl := property defining the pinctrl configurations with a phandle
->> +
->> +- pinctrl-names := name of the pinctrl
->
->
-> Might be sufficient to just mention that the "default" state needs to be
-> specified in the fimd node, with reference to the pinctrl bindings
-> documentation, e.g.
->
-> "The pinctrl bindings defined in ../../pinctrl/pinctrl-bindings.txt must be
-> used to define a pinctrl state named "default".
->
-> See https://patchwork.kernel.org/patch/2082311.
->
-OK.
->
->> +Optional Properties:
->> +- samsung,power-domain := power domain property defined with a phandle
->
->
-> "a phandle to FIMD power domain node" ?
-OK
+This is better in that the probe *is* now delayed until the gpmc has been setup,
+but I still get an oops.
 
+However, this time it's in the actual cfi query code.
 
--- 
-Thanks and Regards
- Vikas Sajjan
+I've traced it down to when it tries to physically access the memory associated
+with the chip select in question (in this case CS3 @ 0x1a000000).
+
+I printed some debug info to show that the GPMC CONFIG7 register is being setup
+correctly, and I show the physical to virtual memory mapping values, as performed
+in of_flash_probe(), but when I try to do a test raw_readw() on the virtual address,
+I get the following:-
+
+[    1.222950] omap-gpmc 50000000.gpmc: GPMC revision 6.0
+[    1.229002] gpmc_read_settings_dt: read/write wait monitoring not enabled!
+[    1.237916] enabling NAND BCH ecc with 8-bit correction
+[    1.243843] ONFI param page 0 valid
+[    1.247531] ONFI flash detected
+[    1.250856] NAND device: Manufacturer ID: 0x2c, Chip ID: 0xda (Micron MT29F2G08ABAEAWP), 256MiB, page size: 2048, OOB size: 64
+[    1.263149] 8 ofpart partitions found on MTD device omap2-nand.0
+[    1.269492] Creating 8 MTD partitions on "omap2-nand.0":
+[    1.275150] 0x000000000000-0x000000020000 : "spl1"
+[    1.282593] 0x000000020000-0x000000040000 : "spl2"
+[    1.288524] 0x000000040000-0x000000060000 : "spl3"
+[    1.294456] 0x000000060000-0x000000080000 : "spl4"
+[    1.300270] 0x000000080000-0x0000001e0000 : "boot"
+[    1.307224] 0x0000001e0000-0x000000200000 : "env"
+[    1.313093] 0x000000200000-0x000004200000 : "rootfs"
+[    1.373589] 0x000004200000-0x000010000000 : "data"
+[    1.541884] gpmc_probe_nor_child 1
+[    1.545483] GPMC_CS_CONFIG7_0 : 00000f48
+[    1.549621] GPMC_CS_CONFIG7_1 : 00000f58
+[    1.553812] GPMC_CS_CONFIG7_2 : 00000f00
+[    1.557951] GPMC_CS_CONFIG7_3 : 00000c5a
+[    1.564789] of_flash_probe ioremap : phys 1a000000 -> virt d3000000
+[    1.571468] of_flash_probe test read d3000000 ...
+[    1.576440] Unhandled fault: external abort on non-linefetch (0x1028) at 0xd3000000
+[    1.584525] Internal error: : 1028 [#1] ARM
+[    1.588946] CPU: 0    Not tainted  (3.9.0-rc1-12191-ga00d6d1-dirty #57)
+[    1.595943] PC is at of_flash_probe+0x22c/0x5dc
+[    1.600724] LR is at of_flash_probe+0x228/0x5dc
+[    1.605506] pc : [<c023b28c>]    lr : [<c023b288>]    psr: 20000113
+[    1.605506] sp : cf077ba0  ip : cf06c080  fp : c0492150
+[    1.617621] r10: 04000000  r9 : cf2ac6d0  r8 : 00000000
+[    1.623135] r7 : cf2ac6d0  r6 : cf2b9010  r5 : cf2b9000  r4 : c0c81f60
+[    1.630027] r3 : d3000000  r2 : 00000000  r1 : cf06c4d8  r0 : 00000025
+[    1.636921] Flags: nzCv  IRQs on  FIQs on  Mode SVC_32  ISA ARM  Segment kernel
+[    1.644635] Control: 10c5387d  Table: 80004019  DAC: 00000015
+[    1.650703] Process kworker/u:0 (pid: 6, stack limit = 0xcf076238)
+[    1.657225] Stack: (0xcf077ba0 to 0xcf078000)
+
+Any ideas ?
+
+Cheers
+Mark J.
