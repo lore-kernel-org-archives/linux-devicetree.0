@@ -1,7 +1,7 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH 6/7] ARM: dt: add header to define IRQ flags
-Date: Wed,  6 Mar 2013 11:23:02 -0700
-Message-ID: <1362594183-21523-6-git-send-email-swarren@wwwdotorg.org>
+Subject: [PATCH 4/7] kbuild: always run gcc -E on *.dts, remove cmd_dtc_cpp
+Date: Wed,  6 Mar 2013 11:23:00 -0700
+Message-ID: <1362594183-21523-4-git-send-email-swarren@wwwdotorg.org>
 References: <1362594183-21523-1-git-send-email-swarren@wwwdotorg.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1362594183-21523-1-git-send-email-swarren@wwwdotorg.org>
@@ -12,41 +12,47 @@ List-Id: devicetree@vger.kernel.org
 
 From: Stephen Warren <swarren@nvidia.com>
 
-Many IRQ device tree bindings use the same flags. Create a header to
-define those.
+Replace cmd_dtc with cmd_dtc_cpp, and delete the latter.
+
+Previously, a special file extension (.dtsp) was required to trigger
+the C pre-processor to run on device tree files. This was ugly. Now that
+previous changes have enhanced cmd_dtc_cpp to collect dependency
+information from both gcc -E and dtc, we can transparently run the pre-
+processor on all device tree files, irrespective of whether they
 
 Signed-off-by: Stephen Warren <swarren@nvidia.com>
 ---
-v2: Moved header. Added include guard.
----
- include/dt-bindings/interrupt-controller/irq.h |   19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 include/dt-bindings/interrupt-controller/irq.h
+ scripts/Makefile.lib |   12 +++---------
+ 1 file changed, 3 insertions(+), 9 deletions(-)
 
-diff --git a/include/dt-bindings/interrupt-controller/irq.h b/include/dt-bindings/interrupt-controller/irq.h
-new file mode 100644
-index 0000000..33a1003
---- /dev/null
-+++ b/include/dt-bindings/interrupt-controller/irq.h
-@@ -0,0 +1,19 @@
-+/*
-+ * This header provides constants for most IRQ bindings.
-+ *
-+ * Most IRQ bindings include a flags cell as part of the IRQ specifier.
-+ * In most cases, the format of the flags cell uses the standard values
-+ * defined in this header.
-+ */
-+
-+#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
-+#define _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
-+
-+#define IRQ_TYPE_NONE		0
-+#define IRQ_TYPE_EDGE_RISING	1
-+#define IRQ_TYPE_EDGE_FALLING	2
-+#define IRQ_TYPE_EDGE_BOTH	(IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING)
-+#define IRQ_TYPE_LEVEL_HIGH	4
-+#define IRQ_TYPE_LEVEL_LOW	8
-+
-+#endif
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 6104335..ee5cfc4 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -269,21 +269,15 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
+ 	$(call cmd,dt_S_dtb)
+ 
+ quiet_cmd_dtc = DTC     $@
+-cmd_dtc = $(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile) $<
++cmd_dtc = $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
++	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile).dtc $(dtc-tmp) ; \
++	cat $(depfile).pre $(depfile).dtc > $(depfile)
+ 
+ $(obj)/%.dtb: $(src)/%.dts FORCE
+ 	$(call if_changed_dep,dtc)
+ 
+ dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
+ 
+-quiet_cmd_dtc_cpp = DTC+CPP $@
+-cmd_dtc_cpp = $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+-	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile).dtc $(dtc-tmp) ; \
+-	cat $(depfile).pre $(depfile).dtc > $(depfile)
+-
+-$(obj)/%.dtb: $(src)/%.dtsp FORCE
+-	$(call if_changed_dep,dtc_cpp)
+-
+ # Bzip2
+ # ---------------------------------------------------------------------------
+ 
 -- 
 1.7.10.4
