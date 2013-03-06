@@ -1,49 +1,79 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 1/2] ARM: EXYNOS: Add PCIe driver support
-Date: Wed, 6 Mar 2013 14:07:52 +0100
-Message-ID: <20130306140752.7e5d68c8@skate>
-References: <016b01ce18c2$2c366f10$84a34d30$%han@samsung.com>
-	<CAJuYYwTKe6cC+eMmyAAskCJrDrbS3SmYRYhzL9iui5m1zvgbzw@mail.gmail.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 6/9] rtc: stmp3xxx: add sysfs entries for persistent regs
+Date: Wed, 6 Mar 2013 14:27:44 +0100
+Message-ID: <20130306132744.GC13810@pengutronix.de>
+References: <1362405948-12992-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1362405948-12992-7-git-send-email-s.trumtrar@pengutronix.de>
+ <CACxGe6swW-UDH1cUw1D8P+gyhDC8nDZur-A_m_NBfeRUxcg9Jw@mail.gmail.com>
+ <20130305080252.GA7042@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAJuYYwTKe6cC+eMmyAAskCJrDrbS3SmYRYhzL9iui5m1zvgbzw@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thomas Abraham <thomas.abraham@linaro.org>
-Cc: Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Surendranath Gurivireddy Balla <suren.reddy@samsung.com>, Siva Reddy Kallam <siva.kallam@samsung.com>
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20130305080252.GA7042-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree-discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Dear Thomas Abraham,
-
-On Mon, 4 Mar 2013 16:01:59 +0530, Thomas Abraham wrote:
-> On 4 March 2013 15:52, Jingoo Han <jg1.han@samsung.com> wrote:
-> > Exynos5440 has two PCIe controllers which can be used as Root Complex.
-> > This driver supports the PCIe controllers as Root Complex mode.
-> >
-> > Signed-off-by: Surendranath Gurivireddy Balla <suren.reddy@samsung.com>
-> > Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-> > Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-> > ---
-> >  .../devicetree/bindings/pci/exynos-pcie.txt        |   58 ++
-> >  arch/arm/Kconfig                                   |    2 +
-> >  arch/arm/mach-exynos/Kconfig                       |    8 +
-> >  arch/arm/mach-exynos/Makefile                      |    2 +
-> >  arch/arm/mach-exynos/include/mach/pcie.h           |  146 +++
-> >  arch/arm/mach-exynos/pcie.c                        | 1009 ++++++++++++++++++++
+On Tue, Mar 05, 2013 at 09:02:52AM +0100, Steffen Trumtrar wrote:
+> Hi Grant!
 > 
-> Is there any reason to place this code in arch/arm/...? As you know,
-> there is a constant effort to relocate as much code as possible from
-> arch/arm/mach-exynos. So there must be a strong justification for
-> keeping this code in arch/arm/mach-exynos.
+> On Mon, Mar 04, 2013 at 11:14:54PM +0800, Grant Likely wrote:
+> > On Mon, Mar 4, 2013 at 10:05 PM, Steffen Trumtrar
+> > <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > > The persistent registers 1-5 are completely software defined. To have access
+> > > from userspace, export them via sysfs.
+> > >
+> > > Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > 
+> > Hi Steffen,
+> > 
+> > A few comments on this. First and foremost, any additions to the
+> > kernel sysfs interface must be accompanied with documentation in
+> > Documentation/ABI/. Second, adding attributes to an existing device
+> 
+> Okay. I forgot that and will add it in the next version.
+> 
+> > that has already been registered is almost guaranteed to be wrong. The
+> > attributes need to be added all at the same time so they are available
+> > immediately when the new device uevent is issued by the kernel.
+> > 
+> > Instead, the correct thing to do is add an attribute_group to the
+> > child device before the device gets registered. See the 'attributes'
+> > section of Documentation/driver-model/device.txt to see how to do
+> > this.
+> > 
+> > (I also see that the rtc core code is doing the wrong thing here also.
+> > rtc_sysfs_add_device(), rtc_sysfs_add_device() should also be replaced
+> > with an attribute group so that the sysfs files get added
+> > automatically; but that is outside the scope of this patch)
+> > 
+> 
+> Hm, I modeled it after other rtcs and the rtc_sysfs. Seems that I have to
+> rework this.
 
-Indeed. Thierry Reding (doing the Tegra PCIe driver) and myself (doing
-the Marvell PCIe driver) are putting our drivers in drivers/pci/host/,
-in agreement with the PCI maintainers.
+Okay. Wait. I looked at it again. What I want to do is adding the persistent
+registers as a binary-attribute. Basically having nvram like other rtcs.
+Is that even possible with attribute group? Would I add the attr inside the
+bin_attribute to the group then?
+Or is it wrong to add these regs as binary?
 
-Thomas
+Thanks,
+Steffen
+
 -- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
