@@ -1,80 +1,60 @@
-From: Hector Palacios <hector.palacios-i7dp0qKlBMg@public.gmane.org>
-Subject: doubt about where to put pin-mux in MX28 based platform DT
-Date: Wed, 6 Mar 2013 18:02:23 +0100
-Message-ID: <5137769F.1000308@digi.com>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: RFC: Zynq Clock Controller
+Date: Wed, 6 Mar 2013 09:27:46 -0800
+Message-ID: <f288874c-d0ae-4581-8d0f-2b9abe4d3117@CO9EHSMHS002.ehs.local>
+References: <37032699-343e-485c-80e0-9b23e3706c58@VA3EHSMHS013.ehs.local>
+ <1362570681.5269.98.camel@coredoba.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: "fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1362570681.5269.98.camel@coredoba.hi.pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jan =?utf-8?B?TMO8YmJl?= <jlu@pengutronix.de>
+Cc: Sascha Hauer <s.hauer@pengutronix.de>, Mike Turquette <mturquette@linaro.org>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <pcrost@xilinx.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, git@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Jan,
+=20
+what a small world. Good to hear from you.
 
-I'm creating the DT for a custom platform based on Freescale MX28 CPU and I=
- have some =
+On Wed, Mar 06, 2013 at 12:51:21PM +0100, Jan L=C3=BCbbe wrote:
+> Hi S=C3=B6ren,
+>=20
+> On Tue, 2013-03-05 at 12:04 -0800, S=C3=B6ren Brinkmann wrote:
+> > For this reasons, I'd like to propose moving Zynq into the same
+> > direction. I.e. adding a clock controller with the following DT
+> > description (details may change but the general idea should become
+> > clear):
+> > 	clkc: clkc {
+> >                 #clock-cells =3D <1>;
+> >                 compatible =3D "xlnx,ps7-clkc";
+> >                 ps_clk_frequency =3D <33333333>;	# board x-tal
+> >                 # optional props
+> >                 gem0_emio_clk_freq =3D <125000000>;
+> >                 gem1_emio_clk_freq =3D <50000000>;
+> >                 can_mio_clk_freq_xx =3D <1234>; # this is possible =
+54 times with xx =3D 00..53
+> >         };
+>=20
+> The clock controller should only contain properties for input frequen=
+cy
+> (which can obviously not be calculated at run-time).
+>=20
+> Are the gem*, can* properties inputs? If they are actually outputs, t=
+he
+> corresponding frequencies should be requested by the clock consumers =
+and
+> not hard-coded in DT.
+They are inputs. GEM and CAN have the option to be clocked through (E)M=
+IO pins, i.e. some external clock input which cannot be derived from ps=
+_clk like all other clocks. I plan to register a fixed rate, root clock=
+ for each of those properties, if present.
 
-doubts about where to add some pin mux configurations: whether in imx28.dts=
-i or in my =
+>=20
+> Please keep in mind that DT properties use dashes instead of
+> underscores.
+Okay, I'll make that substitution.
 
-platform dts.
-
-A pair of examples folow:
-
-Example #1. My platform is using a valid IOMUX for DUART TX/RX lines which =
-is not =
-
-covered in imx28.dtsi, namely the I2C0 pins. Since this is a valid IOMUX th=
-at can be =
-
-used by other platforms, I'd say I should included it in imx28.dtsi:
-
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 3fa6d19..8928b7b 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -186,6 +186,17 @@
-                                         fsl,pull-up =3D <0>;
-                                 };
-
-+                               duart_pins_c: duart@2 {
-+                                       reg =3D <2>;
-+                                       fsl,pinmux-ids =3D <
-+                                               0x3182 /* MX28_PAD_I2C0_SCL=
-__DUART_RX */
-+                                               0x3192 /* MX28_PAD_I2C0_SDA=
-__DUART_TX */
-+                                       >;
-+                                       fsl,drive-strength =3D <0>;
-+                                       fsl,voltage =3D <1>;
-+                                       fsl,pull-up =3D <0>;
-+                               };
-+
-                                 duart_4pins_a: duart-4pins@0 {
-                                         reg =3D <0>;
-                                         fsl,pinmux-ids =3D <
-
-Example #2. My platform assembles a NAND chip which is powered at 1.8V. The=
- imx28.dtsi =
-
-has a configuration 'gpmi_pins_a: gpmi-nand@0' that configures the pins at =
-3.3V.
-Should I create another entry here 'gpmi_pins_b: gpmi-nand@1' with fsl,volt=
-age =3D <0>; =
-
-or should I create a specific entry in my platform's DT instead?
-What is the convention?
--- =
-
-H=E9ctor Palacios
+	S=C3=B6ren
