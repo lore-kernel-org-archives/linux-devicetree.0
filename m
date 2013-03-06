@@ -1,60 +1,40 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH 5/7] ARM: dt: add header to define GPIO flags
-Date: Wed,  6 Mar 2013 11:23:01 -0700
-Message-ID: <1362594183-21523-5-git-send-email-swarren@wwwdotorg.org>
-References: <1362594183-21523-1-git-send-email-swarren@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362594183-21523-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH V2 1/6] ARM: tegra: device tree whitespace cleanup
+Date: Wed,  6 Mar 2013 11:28:32 -0700
+Message-ID: <1362594517-22099-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Michal Marek <mmarek@suse.cz>, Shawn Guo <shawn.guo@linaro.org>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Stephen Warren <swarren@nvidia.com>
 
-Many GPIO device tree bindings use the same flags. Create a header to
-define those.
+Remove white-space from empty line; triggers checkpatch.
 
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
 ---
-v2: Moved header. Added include guard.
----
- include/dt-bindings/gpio/gpio.h |   15 +++++++++++++++
- 1 file changed, 15 insertions(+)
- create mode 100644 include/dt-bindings/gpio/gpio.h
+Patches 3 and later in his series depends on the kbuild-related series I
+just posted to rework the dtc+cpp logic. I hope to apply them to the Tegra
+tree after merging the previous series from the arm-soc topic branch.
+Patches 1 and 2 are just cleanup that the others depend on.
 
-diff --git a/include/dt-bindings/gpio/gpio.h b/include/dt-bindings/gpio/gpio.h
-new file mode 100644
-index 0000000..e6b1e0a
---- /dev/null
-+++ b/include/dt-bindings/gpio/gpio.h
-@@ -0,0 +1,15 @@
-+/*
-+ * This header provides constants for most GPIO bindings.
-+ *
-+ * Most GPIO bindings include a flags cell as part of the GPIO specifier.
-+ * In most cases, the format of the flags cell uses the standard values
-+ * defined in this header.
-+ */
+ arch/arm/boot/dts/tegra20.dtsi |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
+index 48d00a0..ab9402a 100644
+--- a/arch/arm/boot/dts/tegra20.dtsi
++++ b/arch/arm/boot/dts/tegra20.dtsi
+@@ -208,7 +208,7 @@
+ 		compatible = "nvidia,tegra20-das";
+ 		reg = <0x70000c00 0x80>;
+ 	};
+-	
 +
-+#ifndef _DT_BINDINGS_GPIO_GPIO_H
-+#define _DT_BINDINGS_GPIO_GPIO_H
-+
-+#define GPIO_ACTIVE_HIGH 0
-+#define GPIO_ACTIVE_LOW 1
-+
-+#endif
+ 	tegra_ac97: ac97 {
+ 		compatible = "nvidia,tegra20-ac97";
+ 		reg = <0x70002000 0x200>;
 -- 
 1.7.10.4
+
