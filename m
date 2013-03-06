@@ -1,68 +1,56 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: [PATCH 3/7] kbuild: cmd_dtc_cpp: extract deps from both gcc -E and dtc
-Date: Wed,  6 Mar 2013 11:22:59 -0700
-Message-ID: <1362594183-21523-3-git-send-email-swarren@wwwdotorg.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: [PATCH 7/7] ARM: dt: create a DT header for the GIC
+Date: Wed,  6 Mar 2013 11:23:03 -0700
+Message-ID: <1362594183-21523-7-git-send-email-swarren@wwwdotorg.org>
 References: <1362594183-21523-1-git-send-email-swarren@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362594183-21523-1-git-send-email-swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1362594183-21523-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: arm@kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
+Cc: Michal Marek <mmarek@suse.cz>, Shawn Guo <shawn.guo@linaro.org>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+From: Stephen Warren <swarren@nvidia.com>
 
-Prior to this change, when compiling *.dts to *.dtb, the dependency
-output from dtc would be used, and when compiling *.dtsp to *.dtb, the
-dependency output from gcc -E alone would be used, despite dtc also
-being invoked (on a temporary file that was guaranteed to have no
-dependencies).
+The ARM GIC binding defines a few custom cells and flags for its IRQ
+specifier. Provide names for those.
 
-With this change, when compiling *.dtsp to *.dtb, the dependency files
-from both gcc -E and dtc are used. This will allow cmd_dtc_cpp to
-replace cmd_dtc in a future change. In turn, that will allow the C pre-
-processor to be run transparently on *.dts, without the need to a
-separate rule or file extension to trigger it.
-
-Signed-off-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Stephen Warren <swarren@nvidia.com>
 ---
- scripts/Makefile.lib |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+v2: Moved header. Added include guard.
+---
+ include/dt-bindings/interrupt-controller/arm-gic.h |   22 ++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+ create mode 100644 include/dt-bindings/interrupt-controller/arm-gic.h
 
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index af35521..6104335 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -156,7 +156,7 @@ cpp_flags      = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(LINUXINCLUDE)     \
- 
- ld_flags       = $(LDFLAGS) $(ldflags-y)
- 
--dtc_cpp_flags  = -Wp,-MD,$(depfile) -nostdinc                            \
-+dtc_cpp_flags  = -Wp,-MD,$(depfile).pre -nostdinc                        \
- 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
- 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts/include           \
- 		 -undef -D__DTS__
-@@ -278,7 +278,8 @@ dtc-tmp = $(subst $(comma),_,$(dot-target).dts)
- 
- quiet_cmd_dtc_cpp = DTC+CPP $@
- cmd_dtc_cpp = $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
--	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) $(dtc-tmp)
-+	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 $(DTC_FLAGS) -d $(depfile).dtc $(dtc-tmp) ; \
-+	cat $(depfile).pre $(depfile).dtc > $(depfile)
- 
- $(obj)/%.dtb: $(src)/%.dtsp FORCE
- 	$(call if_changed_dep,dtc_cpp)
+diff --git a/include/dt-bindings/interrupt-controller/arm-gic.h b/include/dt-bindings/interrupt-controller/arm-gic.h
+new file mode 100644
+index 0000000..1ea1b70
+--- /dev/null
++++ b/include/dt-bindings/interrupt-controller/arm-gic.h
+@@ -0,0 +1,22 @@
++/*
++ * This header provides constants for the ARM GIC.
++ */
++
++#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_ARM_GIC_H
++#define _DT_BINDINGS_INTERRUPT_CONTROLLER_ARM_GIC_H
++
++#include <dt-bindings/interrupt-controller/irq.h>
++
++/* interrupt specific cell 0 */
++
++#define GIC_SPI 0
++#define GIC_PPI 1
++
++/*
++ * Interrupt specifier cell 2.
++ * The flaggs in irq.h are valid, plus those below.
++ */
++#define GIC_CPU_MASK_RAW(x) ((x) << 8)
++#define GIC_CPU_MASK_SIMPLE(num) GIC_CPU_MASK_RAW((1 << (num)) - 1)
++
++#endif
 -- 
 1.7.10.4
+
