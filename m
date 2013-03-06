@@ -1,56 +1,73 @@
-From: "Christian Daudt" <csd@broadcom.com>
-Subject: Re: [PATCH] ARM: bcm281xx: Add L2 cache enable code
-Date: Wed, 6 Mar 2013 07:05:16 -0800
-Message-ID: <51375B2C.2000005@broadcom.com>
-References: <1362451632-18806-1-git-send-email-csd@broadcom.com>
- <201303060631.03782.arnd@arndb.de> <5136F816.2070909@broadcom.com>
- <201303061128.57127.arnd@arndb.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH V2 REPOST] kbuild: create an "include chroot" for DT bindings
+Date: Wed, 06 Mar 2013 09:14:38 -0700
+Message-ID: <51376B6E.2060806@wwwdotorg.org>
+References: <1362506797-21905-1-git-send-email-swarren@wwwdotorg.org> <5136E866.20008@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <201303061128.57127.arnd@arndb.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, devicetree-discuss@lists.ozlabs.org, csd_b@daudt.org, "arm@kernel.org" <arm@kernel.org>, abhimanyu.kapur@outlook.com, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <5136E866.20008@gmail.com>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Michal Marek <mmarek@suse.cz>, Stephen Warren <swarren@nvidia.com>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Hiroshi Doyu <hdoyu@nvidia.com>, "arm@kernel.org" <arm@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 13-03-06 03:28 AM, Arnd Bergmann wrote:
->>>> It was originally in init_machine section but I was told that that was
->>>> too late and init_irq would be better, and I saw that highbank also has
->>>> it in init_irq. I agree that it is unrelated to irq - is there a better
->>>> place to put this in ?
->>> IMHO the later the better. Do you know what issues were caused  by having it
->>> in init_machine?
->> This is some feedback I got a while back:
->> "From kernel 3.4 on-wards i think ( if i remember correctly) cache sync
->> might be called before your board_init function and you might have to do
->> this in init_irq. "
+On 03/05/2013 11:55 PM, Rob Herring wrote:
+> On 03/05/2013 12:06 PM, Stephen Warren wrote:
+>> From: Stephen Warren <swarren@nvidia.com>
 >>
->> I just looked through where l2x0_of_init is currently called and here's
->> the list:
->> early_initcall (exynos4, omap2, sirf, ux500)
->> init_irq (highbank, imx6q)
->> init_machine (socfpga, v2m_dt_init)
+>> The recent dtc+cpp support allows header files and C pre-processor
+>> defines/macros to be used when compiling device tree files. These
+>> headers will typically define various constants that are part of the
+>> device tree bindings.
 >>
->> so seems to be everywhere :) So I can move it back to init_machineif
->> that's where itshould be.
-> Hmm, let's try to solve this another time, I don't think there is an easy
-> answer. Maybe we really need a common entry point for the cache
-> controller setup, or move it completely out of platform specific code
-> for the case where it can be probed from DT.
->
-> Thanks for doing the research!
->
-So for the time being should it stay in init_irq or init_machine ?
+>> The original patch which set up the dtc+cpp include path only considered
+>> using those headers from device tree files. However, most are also
+>> useful for kernel code which needs to interpret the device tree.
+>>
+>> In both the DT files and the kernel, I'd like to include the DT-related
+>> headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
+>> That will simplify any text which discusses the DT header locations.
+>>
+>> Creating a <dt-bindings/> for kernel source to use is as simple as
+>> placing files into include/dt-bindings/.
+>>
+>> However, when compiling DT files, the include path should be restricted
+>> so that only the dt-bindings path is available; arbitrary kernel headers
+>> shouldn't be exposed. For this reason, create a specific include
+>> directory for use by dtc+cpp, and symlink dt-bindings from there to the
+>> actual location of include/dt-bindings/. For want of a better location,
+>> place this "include chroot" into the existing dts/ directory.
+>>
+>> arch/*/boot/dts/include/dt-bindings -> ../../../../../include/dt-bindings
+>>
+>> Some headers used by device tree files may not be useful to the kernel;
+>> they may be used simply to aid in constructing the DT file (e.g. macros
+>> to create a node), but not define any information that the kernel needs
+>> to share. These may be placed directly into arch/*/boot/dts/ along with
+>> the DT files themselves.
+>>
+>> Cc: Hiroshi Doyu <hdoyu@nvidia.com>
+>> Acked-by: Michal Marek <mmarek@suse.cz>
+>> Acked-by: Shawn Guo <shawn.guo@linaro.org>
+>> Signed-off-by: Stephen Warren <swarren@nvidia.com>
+>> ---
+>> Grant, Rob,
+>>
+>> This is a pre-requisite for people to convert their *.dts files to use
+>> cpp, and hence is likely to be useful for a number of ARM subarch trees.
+>> Perhaps this patch can be placed into a standalone topic branch in the
+>> DT repo so we can all merge it. Assuming this patch is OK, I would also
+>> repost the patches that create common headers defining IRQ, and GPIO
+>> flags, which would place files into the new include/dt-bindings
+>> directory.
+> 
+> This looks fine to me. As all these will all be arm-soc branches with
+> the dependency, it probably makes more sense for Arnd/Olof to apply this
+> and create the branch for this single patch.
 
-   Thanks,
-    csd
+OK, that'd work fine for me too. I expect that arm-soc branch would also
+include the few patches to create some common headers, once I repost.
+
+
