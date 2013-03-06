@@ -1,67 +1,83 @@
-From: Matt Porter <mporter@ti.com>
-Subject: Re: [PATCH v9 5/9] dmaengine: edma: Add TI EDMA device tree binding
-Date: Wed, 6 Mar 2013 15:31:52 -0500
-Message-ID: <20130306203152.GO6209@beef>
-References: <1362586540-10393-1-git-send-email-mporter@ti.com>
- <1362586540-10393-6-git-send-email-mporter@ti.com>
- <90c29a73df9e495f907517c49dd45b88@DFLE72.ent.ti.com>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [PATCH v6 5/5] ARM: dts: Add FIMD DT binding Documentation
+Date: Wed, 06 Mar 2013 22:13:39 +0100
+Message-ID: <5137B183.6040201@gmail.com>
+References: <1362044559-7496-1-git-send-email-vikas.sajjan@linaro.org> <1362044559-7496-6-git-send-email-vikas.sajjan@linaro.org> <5133A068.7060906@gmail.com> <CAD025yQA+yAPzATDvE-4HQP+HVbmDQkg+XVKd=VUepL+dM9s9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <90c29a73df9e495f907517c49dd45b88@DFLE72.ent.ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Korsgaard <jacmet@sunsite.dk>
-Cc: Tony Lindgren <tony@atomide.com>, "Nori, Sekhar" <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Vinod Koul <vinod.koul@intel.com>, Mark Brown <broonie@opensource.wolfsonmicro.com>, "Cousson, Benoit" <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>, Andrew Morton <akpm@linux-foundation.org>, Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD025yQA+yAPzATDvE-4HQP+HVbmDQkg+XVKd=VUepL+dM9s9Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Vikas Sajjan <vikas.sajjan@linaro.org>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, jy0922.shim@samsung.com, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 06, 2013 at 08:24:06PM +0000, Peter Korsgaard wrote:
-> >>>>> "Matt" == Matt Porter <mporter@ti.com> writes:
-> 
->  Matt> The binding definition is based on the generic DMA controller
->  Matt> binding.
-> 
->  Matt> Signed-off-by: Matt Porter <mporter@ti.com>
->  Matt> ---
->  Matt>  Documentation/devicetree/bindings/dma/ti-edma.txt |   49 +++++++++++++++++++++
->  Matt>  1 file changed, 49 insertions(+)
->  Matt>  create mode 100644 Documentation/devicetree/bindings/dma/ti-edma.txt
-> 
->  Matt> diff --git a/Documentation/devicetree/bindings/dma/ti-edma.txt b/Documentation/devicetree/bindings/dma/ti-edma.txt
->  Matt> new file mode 100644
->  Matt> index 0000000..075a60e3
->  Matt> --- /dev/null
->  Matt> +++ b/Documentation/devicetree/bindings/dma/ti-edma.txt
->  Matt> @@ -0,0 +1,49 @@
->  Matt> +TI EDMA
->  Matt> +
->  Matt> +Required properties:
->  Matt> +- compatible : "ti,edma3"
->  Matt> +- ti,hwmods: Name of the hwmods associated to the EDMA
->  Matt> +- ti,edma-regions: Number of regions
->  Matt> +- ti,edma-slots: Number of slots
->  Matt> +- ti,edma-queue-tc-map: List of transfer control to queue mappings
->  Matt> +- ti,edma-queue-priority-map: List of queue priority mappings
->  Matt> +- ti,edma-default-queue: Default queue value
->  Matt> +
->  Matt> +Optional properties:
->  Matt> +- ti,edma-reserved-channels: List of reserved channel regions
->  Matt> +- ti,edma-reserved-slots: List of reserved slot regions
->  Matt> +- ti,edma-xbar-event-map: Crossbar event to channel map
->  Matt> +
->  Matt> +Example:
->  Matt> +
->  Matt> +edma: edma@49000000 {
->  Matt> +	reg = <0x49000000 0x10000>;
->  Matt> +	interrupt-parent = <&intc>;
->  Matt> +	interrupts = <12 13 14>;
-> 
-> Probably interrupt-parent should be removed from the example as well to
-> match am33xx.dtsi
+On 03/06/2013 11:18 AM, Vikas Sajjan wrote:
+> Good idea, but i am just wondering is it a good idea to modify the
+> fimd driver ?
 
-I'm not sure what the DT maintainers want here. Full context within the
-example or the actual real usage where it's typically inherited.
+I think it is. But it depends what code quality you aim for.
 
-Grant or Rob, any thoughts?
+Is there any issue in making a change as below ? ;)
 
--Matt
+Of course it's all up to you, I've just suggested what I thought was
+an improvement to the current situation.
+
+diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
+index 51afedd..4180247 100644
+--- a/arch/arm/plat-samsung/devs.c
++++ b/arch/arm/plat-samsung/devs.c
+@@ -160,9 +160,9 @@ struct platform_device samsung_asoc_idma = {
+  #ifdef CONFIG_S3C_DEV_FB
+  static struct resource s3c_fb_resource[] = {
+         [0] = DEFINE_RES_MEM(S3C_PA_FB, SZ_16K),
+-       [1] = DEFINE_RES_IRQ(IRQ_LCD_VSYNC),
+-       [2] = DEFINE_RES_IRQ(IRQ_LCD_FIFO),
+-       [3] = DEFINE_RES_IRQ(IRQ_LCD_SYSTEM),
++       [1] = DEFINE_RES_IRQ_NAMED(IRQ_LCD_VSYNC, "vsync"),
++       [2] = DEFINE_RES_IRQ_NAMED(IRQ_LCD_FIFO, "fifo"),
++       [3] = DEFINE_RES_IRQ_NAMED(IRQ_LCD_SYSTEM, "system"),
+  };
+
+  struct platform_device s3c_device_fb = {
+@@ -305,9 +305,9 @@ struct platform_device s5p_device_jpeg = {
+  #ifdef CONFIG_S5P_DEV_FIMD0
+  static struct resource s5p_fimd0_resource[] = {
+         [0] = DEFINE_RES_MEM(S5P_PA_FIMD0, SZ_32K),
+-       [1] = DEFINE_RES_IRQ(IRQ_FIMD0_VSYNC),
+-       [2] = DEFINE_RES_IRQ(IRQ_FIMD0_FIFO),
+-       [3] = DEFINE_RES_IRQ(IRQ_FIMD0_SYSTEM),
++       [1] = DEFINE_RES_IRQ_NAMED(IRQ_FIMD0_VSYNC, "vsync"),
++       [2] = DEFINE_RES_IRQ(IRQ_FIMD0_FIFO, "fifo"),
++       [3] = DEFINE_RES_IRQ(IRQ_FIMD0_SYSTEM, "system"),
+  };
+
+  struct platform_device s5p_device_fimd0 = {
+diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c 
+b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+index 36493ce..5efb4c7 100644
+--- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
++++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
+@@ -917,7 +917,7 @@ static int fimd_probe(struct platform_device *pdev)
+         if (IS_ERR(ctx->regs))
+                 return PTR_ERR(ctx->regs);
+
+-       res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
++       res = platform_get_resource_byname(pdev, IORESOURCE_IRQ, "vsync");
+         if (!res) {
+                 dev_err(dev, "irq request failed.\n");
+                 return -ENXIO;
+diff --git a/drivers/video/s3c-fb.c b/drivers/video/s3c-fb.c
+index 968a625..43af0108 100644
+--- a/drivers/video/s3c-fb.c
++++ b/drivers/video/s3c-fb.c
+@@ -1427,7 +1427,7 @@ static int s3c_fb_probe(struct platform_device *pdev)
+                 goto err_lcd_clk;
+         }
+
+-       res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
++       res = platform_get_resource_byname(pdev, IORESOURCE_IRQ, "vsync");
+         if (!res) {
+                 dev_err(dev, "failed to acquire irq resource\n");
+                 ret = -ENOENT;
