@@ -1,83 +1,52 @@
 From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: [PATCH 1/7] kbuild: create an "include chroot" for DT bindings
-Date: Wed,  6 Mar 2013 11:22:57 -0700
-Message-ID: <1362594183-21523-1-git-send-email-swarren@wwwdotorg.org>
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
+Subject: [PATCH 6/7] ARM: dt: add header to define IRQ flags
+Date: Wed,  6 Mar 2013 11:23:02 -0700
+Message-ID: <1362594183-21523-6-git-send-email-swarren@wwwdotorg.org>
+References: <1362594183-21523-1-git-send-email-swarren@wwwdotorg.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1362594183-21523-1-git-send-email-swarren@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: arm@kernel.org, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>
-Cc: Michal Marek <mmarek@suse.cz>, Shawn Guo <shawn.guo@linaro.org>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>, Hiroshi Doyu <hdoyu@nvidia.com>
+Cc: Michal Marek <mmarek@suse.cz>, Shawn Guo <shawn.guo@linaro.org>, linux-kbuild@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Stephen Warren <swarren@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Stephen Warren <swarren@nvidia.com>
 
-The recent dtc+cpp support allows header files and C pre-processor
-defines/macros to be used when compiling device tree files. These
-headers will typically define various constants that are part of the
-device tree bindings.
+Many IRQ device tree bindings use the same flags. Create a header to
+define those.
 
-The original patch which set up the dtc+cpp include path only considered
-using those headers from device tree files. However, most are also
-useful for kernel code which needs to interpret the device tree.
-
-In both the DT files and the kernel, I'd like to include the DT-related
-headers in the same way, for example, <dt-bindings/gpio/tegra-gpio.h>.
-That will simplify any text which discusses the DT header locations.
-
-Creating a <dt-bindings/> for kernel source to use is as simple as
-placing files into include/dt-bindings/.
-
-However, when compiling DT files, the include path should be restricted
-so that only the dt-bindings path is available; arbitrary kernel headers
-shouldn't be exposed. For this reason, create a specific include
-directory for use by dtc+cpp, and symlink dt-bindings from there to the
-actual location of include/dt-bindings/. For want of a better location,
-place this "include chroot" into the existing dts/ directory.
-
-arch/*/boot/dts/include/dt-bindings -> ../../../../../include/dt-bindings
-
-Some headers used by device tree files may not be useful to the kernel;
-they may be used simply to aid in constructing the DT file (e.g. macros
-to create a node), but not define any information that the kernel needs
-to share. These may be placed directly into arch/*/boot/dts/ along with
-the DT files themselves.
-
-Cc: Shawn Guo <shawn.guo@linaro.org>
-Cc: Hiroshi Doyu <hdoyu@nvidia.com>
-Acked-by: Michal Marek <mmarek@suse.cz>
-Acked-by: Shawn Guo <shawn.guo@linaro.org>
-Acked-by: Rob Herring <rob.herring@calxeda.com>
 Signed-off-by: Stephen Warren <swarren@nvidia.com>
 ---
-This first patch was previously posted separately as V2. I'm including
-it here to keep it with the whole series. I hope this series can be
-applied as a topic branch in arm-soc.
+v2: Moved header. Added include guard.
 ---
- arch/arm/boot/dts/include/dt-bindings |    1 +
- scripts/Makefile.lib                  |    2 +-
- 2 files changed, 2 insertions(+), 1 deletion(-)
- create mode 120000 arch/arm/boot/dts/include/dt-bindings
+ include/dt-bindings/interrupt-controller/irq.h |   19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 include/dt-bindings/interrupt-controller/irq.h
 
-diff --git a/arch/arm/boot/dts/include/dt-bindings b/arch/arm/boot/dts/include/dt-bindings
-new file mode 120000
-index 0000000..08c00e4
+diff --git a/include/dt-bindings/interrupt-controller/irq.h b/include/dt-bindings/interrupt-controller/irq.h
+new file mode 100644
+index 0000000..33a1003
 --- /dev/null
-+++ b/arch/arm/boot/dts/include/dt-bindings
-@@ -0,0 +1 @@
-+../../../../../include/dt-bindings
-\ No newline at end of file
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 07125e6..af35521 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -158,7 +158,7 @@ ld_flags       = $(LDFLAGS) $(ldflags-y)
- 
- dtc_cpp_flags  = -Wp,-MD,$(depfile) -nostdinc                            \
- 		 -I$(srctree)/arch/$(SRCARCH)/boot/dts                   \
--		 -I$(srctree)/arch/$(SRCARCH)/include/dts                \
-+		 -I$(srctree)/arch/$(SRCARCH)/boot/dts/include           \
- 		 -undef -D__DTS__
- 
- # Finds the multi-part object the current object will be linked into
++++ b/include/dt-bindings/interrupt-controller/irq.h
+@@ -0,0 +1,19 @@
++/*
++ * This header provides constants for most IRQ bindings.
++ *
++ * Most IRQ bindings include a flags cell as part of the IRQ specifier.
++ * In most cases, the format of the flags cell uses the standard values
++ * defined in this header.
++ */
++
++#ifndef _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
++#define _DT_BINDINGS_INTERRUPT_CONTROLLER_IRQ_H
++
++#define IRQ_TYPE_NONE		0
++#define IRQ_TYPE_EDGE_RISING	1
++#define IRQ_TYPE_EDGE_FALLING	2
++#define IRQ_TYPE_EDGE_BOTH	(IRQ_TYPE_EDGE_FALLING | IRQ_TYPE_EDGE_RISING)
++#define IRQ_TYPE_LEVEL_HIGH	4
++#define IRQ_TYPE_LEVEL_LOW	8
++
++#endif
 -- 
 1.7.10.4
-
