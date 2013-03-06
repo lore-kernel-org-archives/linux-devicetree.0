@@ -1,101 +1,139 @@
-From: Andrew Murray <andrew.murray@arm.com>
-Subject: Re: [RFC PATCH RESEND v2] of/pci: Provide support for parsing PCI
- DT ranges property
-Date: Wed, 6 Mar 2013 09:42:56 +0000
-Message-ID: <20130306094255.GA9814@arm.com>
-References: <1362140616-19346-1-git-send-email-Andrew.Murray@arm.com>
- <5130C59E.8020702@gmail.com>
+From: Vikas Sajjan <vikas.sajjan@linaro.org>
+Subject: Re: [PATCH v6 5/5] ARM: dts: Add FIMD DT binding Documentation
+Date: Wed, 6 Mar 2013 15:48:44 +0530
+Message-ID: <CAD025yQA+yAPzATDvE-4HQP+HVbmDQkg+XVKd=VUepL+dM9s9Q@mail.gmail.com>
+References: <1362044559-7496-1-git-send-email-vikas.sajjan@linaro.org>
+ <1362044559-7496-6-git-send-email-vikas.sajjan@linaro.org> <5133A068.7060906@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5130C59E.8020702@gmail.com>
-Content-Disposition: inline
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <Liviu.Dudau@arm.com>, jg1.han@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5133A068.7060906@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, jy0922.shim@samsung.com, sunil joshi <joshi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 01, 2013 at 03:13:34PM +0000, Rob Herring wrote:
-> On 03/01/2013 06:23 AM, Andrew Murray wrote:
-> > This patch factors out common implementations patterns to reduce overall kernel
-> > code and provide a means for host bridge drivers to directly obtain struct
-> > resources from the DT's ranges property without relying on architecture specific
-> > DT handling. This will make it easier to write archiecture independent host bridge
-> > drivers and mitigate against further duplication of DT parsing code.
-> > 
-> > This patch can be used in the following way:
-> > 
-> > 	struct of_pci_range_iter iter;
-> > 	for_each_of_pci_range(&iter, np) {
-> > 
-> > 		//directly access properties of the address range, e.g.:
-> > 		//iter.pci_space, iter.pci_addr, iter.cpu_addr, iter.size or
-> > 		//iter.flags
-> > 
-> > 		//alternatively obtain a struct resource, e.g.:
-> > 		//struct resource res;
-> > 		//range_iter_fill_resource(iter, np, res);
-> > 	}
-> > 
-> > Additionally the implementation takes care of adjacent ranges and merges them
-> > into a single range (as was the case with powerpc and microblaze).
-> > 
-> > The modifications to microblaze, mips and powerpc have not been tested.
-> > 
-> > v2:
-> >   This follows on from suggestions made by Grant Likely
-> >   (marc.info/?l=linux-kernel&m=136079602806328)
-> > 
-> > Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > ---
-> >  arch/microblaze/pci/pci-common.c |  100 +++++++++++--------------------------
-> >  arch/mips/pci/pci.c              |   44 ++++-------------
-> >  arch/powerpc/kernel/pci-common.c |   93 ++++++++++-------------------------
-> >  drivers/of/address.c             |   54 ++++++++++++++++++++
-> >  include/linux/of_address.h       |   30 +++++++++++
-> >  5 files changed, 151 insertions(+), 170 deletions(-)
-> 
-> The thing is that this still leaves pci_process_bridge_OF_ranges
-> basically identical for microblaze and powerpc which is really what
-> needs to be moved out to common code. Obviously, struct pci_controller
-> vs. struct pci_sys_data on ARM is an issue, but they all have
-> fundamentally the same data.
-Yes it does. To make things worse struct pci_controller is duplicated and
-pretty much identical between microblaze and powerpc. There is good scope
-for getting rid of lots of code here :).
+Hi,
 
-> 
-> All these common fields should be in a common PCI controller struct.
-> Perhaps introducing this with just what you need would work. Depending
-> how invasive moving those fields to a new struct is, you could have a
-> wrapper that just copies/translates the fields to the arch specific struct.
-Yes I see how this would be a good approach. Though my concern would be how
-quirks are handled - if microblaze has the same quirks as powerpc then you'll
-see the same duplicated code between those two architectures. Or you'd see
-the architecture code pick apart the common pci controller struct... I'll
-investigate and see what can be done.
+On 4 March 2013 00:41, Sylwester Nawrocki <sylvester.nawrocki@gmail.com> wrote:
+> On 02/28/2013 10:42 AM, Vikas Sajjan wrote:
+>>
+>> Adds FIMD DT binding documentation both Samsung SoC and Board, with an
+>> example
+>>
+>> Signed-off-by: Vikas Sajjan<vikas.sajjan@linaro.org>
+>> ---
+>>   .../devicetree/bindings/video/samsung-fimd.txt     |   54
+>> ++++++++++++++++++++
+>>   1 file changed, 54 insertions(+)
+>>   create mode 100644
+>> Documentation/devicetree/bindings/video/samsung-fimd.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/samsung-fimd.txt
+>> b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+>> new file mode 100644
+>> index 0000000..8d201e7
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/video/samsung-fimd.txt
+>> @@ -0,0 +1,54 @@
+>> +Device-Tree bindings for Samsung SoC display controller (FIMD)
+>> +
+>> +FIMD stands for Fully Interactive Mobile Display, is the Display
+>> Controller for
+>> +the Samsung series of SoCs which transfers the image data from a video
+>> buffer
+>> +located in the system memory to an external LCD interface.
+>> +
+>> +Required properties:
+>> +- compatible := value should be one of the following
+>> +               "samsung,s3c2443-fimd"; /* for S3C24XX SoCs */
+>> +               "samsung,s3c6400-fimd"; /* for S3C64XX SoCs */
+>> +               "samsung,s5p6440-fimd"; /* for S5P64X0 SoCs */
+>> +               "samsung,s5pc100-fimd"; /* for S5PC100 SoC  */
+>> +               "samsung,s5pv210-fimd"; /* for S5PV210 SoC */
+>> +               "samsung,exynos4210-fimd"; /* for Exynos4 SoCs */
+>> +               "samsung,exynos5250-fimd"; /* for Exynos5 SoCs */
+>> +
+>> +- reg := physical base address of the fimd and length of memory mapped
+>> region
+>
+>
+> I think FIMD should be capitalized.
+>
+Right.
+>
+>> +
+>> +- interrupt-parent := reference to the interrupt combiner node with
+>> phandle
+>
+>
+> Perhaps this would have been more clear:
+>
+> - interrupt-parent : a phandle to the interrupt combiner node;
+>
+> ?
+OK.
+>
+> And could we just use a colon instead of ":=", to keep it more consistent
+> with other Samsung SoC DT bindings documentation ?
+>
+OK.
+>
+>> +
+>> +- interrupts := interrupt number from the combiner to the cpu.
+>> +               We have 3 interrupts and the interrupt combiner order is
+>> +               FIFO Level, VSYNC, and LCD_SYSTEM.
+>> +               but since the driver expects VSYNC to be the first IRQ,
+>> +               make sure to mention order as VSYNC, FIFO Level and
+>> LCD_SYSTEM
+>> +               keeping VSYNC as first IRQ as shown below.
+>> +               for example: interrupts =<11 1>,<11 0>,<11 2>;
+>
+>
+> I have a suggestion here. What about using reg-names property to make this
+> more explicit, e.g.
+>
+> - interrupts : should contain a list of all FIMD IP block interrupts:
+>   FIFO Level, VSYNC, LCD_SYSTEM. The interrupt specifier format depends
+>   on the interrupt controller used;
+>
+> - interrupt-names : should contain the interrupt names: "fifo", "vsync",
+>   "lcd_sys", in the order in which they were listed in the interrupts
+>   property;
+>
+Good idea, but i am just wondering is it a good idea to modify the
+fimd driver ?
 
-A lack of an accepted way to parse DT ranges on ARM is blocking Thierry,
-Thomas and Jingoo from upstreaming their drivers - do you think there is some
-middle ground or temporary solution for these drivers?
+> Or something similar to that. Then the drivers would need to be modified
+> to get interrupt resource by name, and not to rely on the VSYNC interrupt
+> be listed as the first one.
+>
+>
+>> +
+>> +- pinctrl := property defining the pinctrl configurations with a phandle
+>> +
+>> +- pinctrl-names := name of the pinctrl
+>
+>
+> Might be sufficient to just mention that the "default" state needs to be
+> specified in the fimd node, with reference to the pinctrl bindings
+> documentation, e.g.
+>
+> "The pinctrl bindings defined in ../../pinctrl/pinctrl-bindings.txt must be
+> used to define a pinctrl state named "default".
+>
+> See https://patchwork.kernel.org/patch/2082311.
+>
+OK.
+>
+>> +Optional Properties:
+>> +- samsung,power-domain := power domain property defined with a phandle
+>
+>
+> "a phandle to FIMD power domain node" ?
+OK
 
-> 
-> There's also things like ioremap of the i/o range. ARM uses a fixed
-> virtual address, so we need to do something different. Just returning
-> the i/o cpu_addr and moving the ioremap out of this function would solve
-> that.
-Yes I've noticed this wasn't quite right. I'm not quite sure how this fits
-in with the DT. I guess the DT ranges would contain 0 for the PCI address
-and a physical address which represents the host bridges I/O range. You
-would then use these two addresses as inputs to pci_ioremap_io - and then
-set the start address of the struct resource to 0 and pass to
-pci_add_resource_offset with io_offset set to 0 - does this seem correct for
-ARM?
 
-Andrew Murray
-> 
-> Rob
-> 
-> 
+-- 
+Thanks and Regards
+ Vikas Sajjan
