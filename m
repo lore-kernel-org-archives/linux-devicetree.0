@@ -1,55 +1,86 @@
-From: Jan =?ISO-8859-1?Q?L=FCbbe?= <jlu@pengutronix.de>
-Subject: Re: RFC: Zynq Clock Controller
-Date: Wed, 06 Mar 2013 12:51:21 +0100
-Message-ID: <1362570681.5269.98.camel@coredoba.hi.pengutronix.de>
-References: <37032699-343e-485c-80e0-9b23e3706c58@VA3EHSMHS013.ehs.local>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <37032699-343e-485c-80e0-9b23e3706c58@VA3EHSMHS013.ehs.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, Sascha Hauer <s.hauer@pengutronix.de>
-Cc: Mike Turquette <mturquette@linaro.org>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <pcrost@xilinx.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, git@xilinx.com
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [RFC 00/12] Adding media device driver for Exynos imaging subsystem
+Date: Wed,  6 Mar 2013 17:23:46 +0530
+Message-ID: <1362570838-4737-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org
+Cc: s.nawrocki@samsung.com, shaik.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi S=C3=B6ren,
+The following patchset features:
 
-On Tue, 2013-03-05 at 12:04 -0800, S=C3=B6ren Brinkmann wrote:
-> For this reasons, I'd like to propose moving Zynq into the same
-> direction. I.e. adding a clock controller with the following DT
-> description (details may change but the general idea should become
-> clear):
-> 	clkc: clkc {
->                 #clock-cells =3D <1>;
->                 compatible =3D "xlnx,ps7-clkc";
->                 ps_clk_frequency =3D <33333333>;	# board x-tal
->                 # optional props
->                 gem0_emio_clk_freq =3D <125000000>;
->                 gem1_emio_clk_freq =3D <50000000>;
->                 can_mio_clk_freq_xx =3D <1234>; # this is possible 54=
- times with xx =3D 00..53
->         };
+1] Creating a common pipeline framework which can be used by all
+Exynos series SoCs for developing media device drivers.
+2] Modified the existing fimc-mdevice for exynos4 to use the common
+pipeline framework.
+3] Adding of media device driver for Exynos5 Imaging subsystem.
+4] Upgrading mipi-csis and fimc-lite drivers for Exynos5 SoCs.
+5] Adding DT support to m5mols driver and tested with Exynos5 media
+device driver.
 
-The clock controller should only contain properties for input frequency
-(which can obviously not be calculated at run-time).
+Current changes are not tested on exynos4 series SoCs. Current media
+device driver only support one pipeline (pipeline0) which consists of 
+	Sensor --> MIPI-CSIS --> FIMC-LITE
+	Sensor --> FIMC-LITE
+G-Scaler support to pipeline0 will be added later.
 
-Are the gem*, can* properties inputs? If they are actually outputs, the
-corresponding frequencies should be requested by the clock consumers an=
-d
-not hard-coded in DT.
+Once the fimc-is device driver is posted, one more pipeline (pipeline1)
+will be added for exynos5 media device driver for fimc-is sub-devices.
 
-Please keep in mind that DT properties use dashes instead of
-underscores.
+This patchset is rebased on:
+git://linuxtv.org/media_tree.git:staging/for_v3.9
 
-Best regards,
-Jan
---=20
-Pengutronix e.K.                           |                           =
-  |
-Industrial Linux Solutions                 | http://www.pengutronix.de/=
-  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0  =
-  |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-555=
-5 |
+This patchset depends on:
+    from Thomas Abraham:
+    [1] pinctrl: exynos: add support for Samsung's Exynos5250
+    [2] ARM: dts: add pinctrl nodes for Exynos5250 SoC
+
+from Sylwester Nawrocki:
+    [1] Device tree support for Exynos SoC camera subsystem
+
+Shaik Ameer Basha (12):
+  media: s5p-fimc: modify existing mdev to use common pipeline
+  fimc-lite: Adding Exynos5 compatibility to fimc-lite driver
+  media: fimc-lite: Adding support for Exynos5
+  s5p-csis: Adding Exynos5250 compatibility
+  ARM: EXYNOS: Add devicetree node for mipi-csis driver for exynos5
+  ARM: EXYNOS: Add devicetree node for FIMC-LITE driver for exynos5
+  media: exynos5-is: Adding media device driver for exynos5
+  ARM: dts: add camera specific pinctrl nodes for Exynos5250 SoC
+  ARM: dts: Adding pinctrl support to Exynos5250 i2c nodes
+  ARM: dts: Adding media device nodes to Exynos5 SoCs
+  media: m5mols: Adding dt support to m5mols driver
+  ARM: dts: Add camera node to exynos5250-smdk5250.dts
+
+ arch/arm/boot/dts/exynos5250-pinctrl.dtsi        |   41 +
+ arch/arm/boot/dts/exynos5250-smdk5250.dts        |   65 +-
+ arch/arm/boot/dts/exynos5250.dtsi                |   54 +
+ arch/arm/mach-exynos/clock-exynos5.c             |   20 +-
+ arch/arm/mach-exynos/include/mach/map.h          |    7 +
+ arch/arm/mach-exynos/mach-exynos5-dt.c           |   10 +
+ drivers/media/i2c/m5mols/m5mols_core.c           |   54 +-
+ drivers/media/platform/Kconfig                   |    1 +
+ drivers/media/platform/Makefile                  |    1 +
+ drivers/media/platform/exynos5-is/Kconfig        |    7 +
+ drivers/media/platform/exynos5-is/Makefile       |    4 +
+ drivers/media/platform/exynos5-is/exynos5-mdev.c | 1309 ++++++++++++++++++++++
+ drivers/media/platform/exynos5-is/exynos5-mdev.h |  107 ++
+ drivers/media/platform/s5p-fimc/fimc-capture.c   |   96 +-
+ drivers/media/platform/s5p-fimc/fimc-core.h      |    4 +-
+ drivers/media/platform/s5p-fimc/fimc-lite-reg.c  |   16 +-
+ drivers/media/platform/s5p-fimc/fimc-lite-reg.h  |   41 +-
+ drivers/media/platform/s5p-fimc/fimc-lite.c      |  292 ++++-
+ drivers/media/platform/s5p-fimc/fimc-lite.h      |   12 +-
+ drivers/media/platform/s5p-fimc/fimc-mdevice.c   |  186 ++-
+ drivers/media/platform/s5p-fimc/fimc-mdevice.h   |   41 +-
+ drivers/media/platform/s5p-fimc/mipi-csis.c      |    1 +
+ include/media/s5p_fimc.h                         |   66 +-
+ 23 files changed, 2261 insertions(+), 174 deletions(-)
+ create mode 100644 drivers/media/platform/exynos5-is/Kconfig
+ create mode 100644 drivers/media/platform/exynos5-is/Makefile
+ create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.c
+ create mode 100644 drivers/media/platform/exynos5-is/exynos5-mdev.h
+
+-- 
+1.7.9.5
