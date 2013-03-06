@@ -1,89 +1,101 @@
-From: kishon <kishon@ti.com>
-Subject: Re: [PATCH v2 8/8] ARM: dts: omap5: add dwc3 core dt data
-Date: Wed, 6 Mar 2013 14:51:14 +0530
-Message-ID: <51370A8A.7010304@ti.com>
-References: <1362494223-14151-1-git-send-email-kishon@ti.com> <1362494223-14151-9-git-send-email-kishon@ti.com> <20130305143934.GB12123@arwen.pp.htv.fi> <51370494.7090902@ti.com> <20130306091942.GJ28587@arwen.pp.htv.fi>
+From: Andrew Murray <andrew.murray@arm.com>
+Subject: Re: [RFC PATCH RESEND v2] of/pci: Provide support for parsing PCI
+ DT ranges property
+Date: Wed, 6 Mar 2013 09:42:56 +0000
+Message-ID: <20130306094255.GA9814@arm.com>
+References: <1362140616-19346-1-git-send-email-Andrew.Murray@arm.com>
+ <5130C59E.8020702@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20130306091942.GJ28587@arwen.pp.htv.fi>
-Sender: linux-doc-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5130C59E.8020702@gmail.com>
+Content-Disposition: inline
+Sender: linux-pci-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, "rob.herring@calxeda.com" <rob.herring@calxeda.com>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@avionic-design.de>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Liviu Dudau <Liviu.Dudau@arm.com>, jg1.han@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 06 March 2013 02:49 PM, Felipe Balbi wrote:
-> Hi,
->
-> On Wed, Mar 06, 2013 at 02:25:48PM +0530, kishon wrote:
->> Hi,
->>
->> On Tuesday 05 March 2013 08:09 PM, Felipe Balbi wrote:
->>> Hi,
->>>
->>> On Tue, Mar 05, 2013 at 08:07:03PM +0530, Kishon Vijay Abraham I wrote:
->>>> Add dwc3 core dt data as a subnode to dwc3 omap glue data in omap5 dt
->>>> data file. The information for the entered data node is available @
->>>> Documentation/devicetree/bindings/usb/dwc3.txt
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>   arch/arm/boot/dts/omap5.dtsi |    7 +++++++
->>>>   1 file changed, 7 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
->>>> index c4eb2ec..24dd69f 100644
->>>> --- a/arch/arm/boot/dts/omap5.dtsi
->>>> +++ b/arch/arm/boot/dts/omap5.dtsi
->>>> @@ -514,6 +514,13 @@
->>>>   			#size-cells = <1>;
->>>>   			utmi-mode = <2>;
->>>>   			ranges;
->>>> +			dwc3@4a030000 {
->>>> +				compatible = "synopsys,dwc3";
->>>> +				reg = <0x4a030000 0x1000>;
->>>> +				interrupts = <0 92 4>;
->>>> +				usb-phy = <&usb2_phy>, <&usb3_phy>;
->>>> +				tx-fifo-resize;
->>>
->>> I think this should be merged with previous patch. Also, we need to
->>> check whether tx-fifo-resize is needed with ES2 or not ;-)
->>
->> yeah. ES2 works without tx-fifo-resize.
->
-> Great, I guess we can deprecate that attribute. Can you check if ES2
-> still works with:
->
-> diff --git a/drivers/usb/dwc3/gadget.c b/drivers/usb/dwc3/gadget.c
-> index 82e160e..cad0131 100644
-> --- a/drivers/usb/dwc3/gadget.c
-> +++ b/drivers/usb/dwc3/gadget.c
-> @@ -2029,6 +2029,8 @@ static void dwc3_gadget_usb3_phy_suspend(struct dwc3 *dwc, int suspend)
->   {
->   	u32			reg;
->
-> +	return;
-> +
->   	reg = dwc3_readl(dwc->regs, DWC3_GUSB3PIPECTL(0));
->
->   	if (suspend)
-> @@ -2043,6 +2045,8 @@ static void dwc3_gadget_usb2_phy_suspend(struct dwc3 *dwc, int suspend)
->   {
->   	u32			reg;
->
-> +	return;
-> +
->   	reg = dwc3_readl(dwc->regs, DWC3_GUSB2PHYCFG(0));
->
->   	if (suspend)
->
->
-> starting on 1.94a (IIRC) core was supposed to control PHYs directly and
-> since there's nobody in linux mainline using any version prior to 1.94a,
-> we could drop that too.
+On Fri, Mar 01, 2013 at 03:13:34PM +0000, Rob Herring wrote:
+> On 03/01/2013 06:23 AM, Andrew Murray wrote:
+> > This patch factors out common implementations patterns to reduce overall kernel
+> > code and provide a means for host bridge drivers to directly obtain struct
+> > resources from the DT's ranges property without relying on architecture specific
+> > DT handling. This will make it easier to write archiecture independent host bridge
+> > drivers and mitigate against further duplication of DT parsing code.
+> > 
+> > This patch can be used in the following way:
+> > 
+> > 	struct of_pci_range_iter iter;
+> > 	for_each_of_pci_range(&iter, np) {
+> > 
+> > 		//directly access properties of the address range, e.g.:
+> > 		//iter.pci_space, iter.pci_addr, iter.cpu_addr, iter.size or
+> > 		//iter.flags
+> > 
+> > 		//alternatively obtain a struct resource, e.g.:
+> > 		//struct resource res;
+> > 		//range_iter_fill_resource(iter, np, res);
+> > 	}
+> > 
+> > Additionally the implementation takes care of adjacent ranges and merges them
+> > into a single range (as was the case with powerpc and microblaze).
+> > 
+> > The modifications to microblaze, mips and powerpc have not been tested.
+> > 
+> > v2:
+> >   This follows on from suggestions made by Grant Likely
+> >   (marc.info/?l=linux-kernel&m=136079602806328)
+> > 
+> > Signed-off-by: Andrew Murray <Andrew.Murray@arm.com>
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> > ---
+> >  arch/microblaze/pci/pci-common.c |  100 +++++++++++--------------------------
+> >  arch/mips/pci/pci.c              |   44 ++++-------------
+> >  arch/powerpc/kernel/pci-common.c |   93 ++++++++++-------------------------
+> >  drivers/of/address.c             |   54 ++++++++++++++++++++
+> >  include/linux/of_address.h       |   30 +++++++++++
+> >  5 files changed, 151 insertions(+), 170 deletions(-)
+> 
+> The thing is that this still leaves pci_process_bridge_OF_ranges
+> basically identical for microblaze and powerpc which is really what
+> needs to be moved out to common code. Obviously, struct pci_controller
+> vs. struct pci_sys_data on ARM is an issue, but they all have
+> fundamentally the same data.
+Yes it does. To make things worse struct pci_controller is duplicated and
+pretty much identical between microblaze and powerpc. There is good scope
+for getting rid of lots of code here :).
 
-Will check that in a while.
+> 
+> All these common fields should be in a common PCI controller struct.
+> Perhaps introducing this with just what you need would work. Depending
+> how invasive moving those fields to a new struct is, you could have a
+> wrapper that just copies/translates the fields to the arch specific struct.
+Yes I see how this would be a good approach. Though my concern would be how
+quirks are handled - if microblaze has the same quirks as powerpc then you'll
+see the same duplicated code between those two architectures. Or you'd see
+the architecture code pick apart the common pci controller struct... I'll
+investigate and see what can be done.
 
-Thanks
-Kishon
+A lack of an accepted way to parse DT ranges on ARM is blocking Thierry,
+Thomas and Jingoo from upstreaming their drivers - do you think there is some
+middle ground or temporary solution for these drivers?
+
+> 
+> There's also things like ioremap of the i/o range. ARM uses a fixed
+> virtual address, so we need to do something different. Just returning
+> the i/o cpu_addr and moving the ioremap out of this function would solve
+> that.
+Yes I've noticed this wasn't quite right. I'm not quite sure how this fits
+in with the DT. I guess the DT ranges would contain 0 for the PCI address
+and a physical address which represents the host bridges I/O range. You
+would then use these two addresses as inputs to pci_ioremap_io - and then
+set the start address of the struct resource to 0 and pass to
+pci_add_resource_offset with io_offset set to 0 - does this seem correct for
+ARM?
+
+Andrew Murray
+> 
+> Rob
+> 
+> 
