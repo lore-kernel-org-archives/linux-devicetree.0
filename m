@@ -1,76 +1,61 @@
-From: "Kumar, Anil" <anilkumar.v@ti.com>
-Subject: RE: [PATCH v8 6/9] ARM: dts: add AM33XX EDMA support
-Date: Wed, 6 Mar 2013 04:19:58 +0000
-Message-ID: <F3DBB1B3EF102E4994C89758CFCA32412CD652@DBDE01.ent.ti.com>
-References: <1362516795-6346-1-git-send-email-mporter@ti.com>
- <1362516795-6346-7-git-send-email-mporter@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ARM: bcm281xx: Add L2 cache enable code
+Date: Wed, 6 Mar 2013 06:31:03 +0000
+Message-ID: <201303060631.03782.arnd@arndb.de>
+References: <1362451632-18806-1-git-send-email-csd@broadcom.com>
+ <201303050901.12317.arnd@arndb.de> <513677BB.9010309@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1362516795-6346-7-git-send-email-mporter@ti.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: "Porter, Matt" <mporter@ti.com>, Tony Lindgren <tony@atomide.com>, "Nori, Sekhar" <nsekhar@ti.com>, Grant Likely <grant.likely@secretlab.ca>, Mark Brown <broonie@opensource.wolfsonmicro.com>, "Cousson, Benoit" <b-cousson@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Landley <rob@landley.net>
-Cc: Linux DaVinci Kernel List <davinci-linux-open-source@linux.davincidsp.com>, Arnd Bergmann <arnd@arndb.de>, Linux Documentation List <linux-doc@vger.kernel.org>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <rob.herring@calxeda.com>, Linux SPI Devel List <spi-devel-general@lists.sourceforge.net>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <513677BB.9010309-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Christian Daudt <csd-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, abhimanyu.kapur-1ViLX0X+lBJBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tuesday 05 March 2013, Christian Daudt wrote:
+> On 13-03-05 01:01 AM, Arnd Bergmann wrote:
+> > On Tuesday 05 March 2013, Christian Daudt wrote:
+> > For other firmware interfaces like this, we tend to list the specific commands
+> > that the firmware understands. If you think there might be different versions
+> > to consider, you might want to model this like
+> >
+> > Documentation/devicetree/bindings/arm/psci.txt
+> This interface is stable and in shipping products at this time, and so 
+> the api will remain constant.
 
-On Wed, Mar 06, 2013 at 02:23:12, Porter, Matt wrote:
-> Adds AM33XX EDMA support to the am33xx.dtsi as documented in
-> Documentation/devicetree/bindings/dma/ti-edma.txt
-> 
-> Signed-off-by: Matt Porter <mporter@ti.com>
-> ---
->  arch/arm/boot/dts/am33xx.dtsi |   20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index 0957645..aaf44122 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -87,6 +87,26 @@
->  			reg = <0x48200000 0x1000>;
->  		};
->  
-> +		edma: edma@49000000 {
-> +			compatible = "ti,edma3";
-> +			ti,hwmods = "tpcc", "tptc0", "tptc1", "tptc2";
-> +			reg =	<0x49000000 0x10000>,
-> +				<0x44e10f90 0x10>;
-> +			interrupt-parent = <&intc>;
+But what about future products? Wouldn't they be able to extend the
+current interface in a compatible way?
 
-Is it really need of "interrupt-parent = <&intc>" here ?
-as this property is already with root node.  
-I am taking reference of 3.9-rc1
+> >> +static void __init init_irq(void)
+> >> +{
+> >> +	irqchip_init();
+> >> +	bcm_kona_smc_init();
+> >> +
+> >> +#ifdef CONFIG_CACHE_L2X0
+> >> +	kona_l2_cache_init();
+> >> +#endif /* CONFIG_CACHE_L2X0 */
+> >> +}
+> > Why are you calling bcm_kona_smc_init() and kona_l2_cache_init() from init_irq()?
+> >
+> > It seems completely unrelated to interrupt handling.
+> >
+> It was originally in init_machine section but I was told that that was 
+> too late and init_irq would be better, and I saw that highbank also has 
+> it in init_irq. I agree that it is unrelated to irq - is there a better 
+> place to put this in ?
 
-Thanks,
-Anil
+IMHO the later the better. Do you know what issues were caused  by having it
+in init_machine?
 
-> +			interrupts = <12 13 14>;
-> +			#dma-cells = <1>;
-> +			dma-channels = <64>;
-> +			ti,edma-regions = <4>;
-> +			ti,edma-slots = <256>;
-> +			ti,edma-queue-tc-map = <0 0
-> +						1 1
-> +						2 2>;
-> +			ti,edma-queue-priority-map = <0 0
-> +						      1 1
-> +						      2 2>;
-> +			ti,edma-default-queue = <0>;
-> +		};
-> +
->  		gpio1: gpio@44e07000 {
->  			compatible = "ti,omap4-gpio";
->  			ti,hwmods = "gpio1";
-> -- 
-> 1.7.9.5
-> 
-> _______________________________________________
-> Davinci-linux-open-source mailing list
-> Davinci-linux-open-source@linux.davincidsp.com
-> http://linux.davincidsp.com/mailman/listinfo/davinci-linux-open-source
-> 
-
+	Arnd
