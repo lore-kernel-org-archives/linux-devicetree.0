@@ -1,60 +1,65 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: Re: RFC: Zynq Clock Controller
-Date: Wed, 6 Mar 2013 09:27:46 -0800
-Message-ID: <f288874c-d0ae-4581-8d0f-2b9abe4d3117@CO9EHSMHS002.ehs.local>
-References: <37032699-343e-485c-80e0-9b23e3706c58@VA3EHSMHS013.ehs.local>
- <1362570681.5269.98.camel@coredoba.hi.pengutronix.de>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V4] ARM: dts: add minimal DT support for DevKit8000.
+Date: Wed, 6 Mar 2013 09:53:13 -0800
+Message-ID: <20130306175313.GQ11806@atomide.com>
+References: <F3DBB1B3EF102E4994C89758CFCA32412CC4E9@DBDE01.ent.ti.com>
+ <CABYxbz5GyxYaHANgdpwBNaaR6tnu=6LJuUNSvL7DEzU=4CPHcA@mail.gmail.com>
+ <F3DBB1B3EF102E4994C89758CFCA32412CC74F@DBDE01.ent.ti.com>
+ <CABYxbz62JrMB95p5i9iu2G=B4ETXLrYbLsyFEFR5F+WVD6YNnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1362570681.5269.98.camel@coredoba.hi.pengutronix.de>
+In-Reply-To: <CABYxbz62JrMB95p5i9iu2G=B4ETXLrYbLsyFEFR5F+WVD6YNnQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan =?utf-8?B?TMO8YmJl?= <jlu@pengutronix.de>
-Cc: Sascha Hauer <s.hauer@pengutronix.de>, Mike Turquette <mturquette@linaro.org>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <pcrost@xilinx.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, git@xilinx.com
+To: Anil Kumar <anilk4.v@gmail.com>
+Cc: "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, b-cousson@ti.com, Grant Likely <grant.likely@secretlab.ca>, Thomas Weber <thomas@tomweber.eu>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jan,
-=20
-what a small world. Good to hear from you.
+* Anil Kumar <anilk4.v@gmail.com> [130305 18:40]:
+> Hi Tony,
+> 
+> >> From: linux-arm-kernel [mailto:linux-arm-kernel-
+> >> bounces@lists.infradead.org] On Behalf Of Anil Kumar
+> >> Sent: Wednesday, February 27, 2013 8:03 AM
+> >> To: devicetree-discuss@lists.ozlabs.org; linux-omap@vger.kernel.org;
+> >> linux-kernel@vger.kernel.org; linux-arm-kernel@lists.infradead.org
+> >> Cc: linux@arm.linux.org.uk; Cousson, Benoit; Tony Lindgren; Grant
+> >> Likely; Anil Kumar; thomas@tomweber.eu
+> >> Subject: Re: FW: [PATCH V4] ARM: dts: add minimal DT support for
+> >> DevKit8000.
+> >>
+> >> Hi,
+> >> >
+> >> > DevKit8000 is a beagle board clone from Timll, sold by
+> >> > armkits.com. The DevKit8000 has RS232 serial port, LCD, DVI-D,
+> >> > S-Video, Ethernet, SD/MMC, keyboard, camera, SPI, I2C, USB and
+> >> > JTAG interface.
+> >> >
+> >> > This patch adds the basic DT support for devkit8000. At this time,
+> >> Information
+> >> > of twl4030 (PMIC), MMC1, I2C1 and leds are added.
+> >> >
+> >> > Signed-off-by: Anil Kumar <anilk4.v@gmail.com>
+> >> > Tested-by: Thomas Weber <thomas@tomweber.eu>
+> >>
+> >> Gentle Ping. As there are no review comments on this patch,
+> >> Could you please pull this patch ?
+> 
+> Gentle Ping.
+> 
+> This patch also got Reviewed-by: Manish Badarkhe <badarkhe.manish@gmail.com>
+> and as patch "ARM: dts: omap3-devkit8000: Enable audio support"  has already got
+> "Acked-by: Peter Ujfalusi <peter.ujfalusi@ti.com>" but it is on the
+> top of this patch.
+> So, Could you please pull this patch in one of your omap branch? or
+> you want me to
+> do rebase this patch on top of v3.9-rc1 ?
 
-On Wed, Mar 06, 2013 at 12:51:21PM +0100, Jan L=C3=BCbbe wrote:
-> Hi S=C3=B6ren,
->=20
-> On Tue, 2013-03-05 at 12:04 -0800, S=C3=B6ren Brinkmann wrote:
-> > For this reasons, I'd like to propose moving Zynq into the same
-> > direction. I.e. adding a clock controller with the following DT
-> > description (details may change but the general idea should become
-> > clear):
-> > 	clkc: clkc {
-> >                 #clock-cells =3D <1>;
-> >                 compatible =3D "xlnx,ps7-clkc";
-> >                 ps_clk_frequency =3D <33333333>;	# board x-tal
-> >                 # optional props
-> >                 gem0_emio_clk_freq =3D <125000000>;
-> >                 gem1_emio_clk_freq =3D <50000000>;
-> >                 can_mio_clk_freq_xx =3D <1234>; # this is possible =
-54 times with xx =3D 00..53
-> >         };
->=20
-> The clock controller should only contain properties for input frequen=
-cy
-> (which can obviously not be calculated at run-time).
->=20
-> Are the gem*, can* properties inputs? If they are actually outputs, t=
-he
-> corresponding frequencies should be requested by the clock consumers =
-and
-> not hard-coded in DT.
-They are inputs. GEM and CAN have the option to be clocked through (E)M=
-IO pins, i.e. some external clock input which cannot be derived from ps=
-_clk like all other clocks. I plan to register a fixed rate, root clock=
- for each of those properties, if present.
+Let's wait for Benoit to queue it as he has a bunch of .dts changes already
+applied. Too bad we missed v3.9 merge window for those, but hopefully
+we can get them queued early for v3.10.
 
->=20
-> Please keep in mind that DT properties use dashes instead of
-> underscores.
-Okay, I'll make that substitution.
+Regards,
 
-	S=C3=B6ren
+Tony
