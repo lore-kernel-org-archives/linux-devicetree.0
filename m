@@ -1,10 +1,12 @@
-From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
-Subject: PCI device bindings - Help needed
-Date: Wed, 6 Mar 2013 17:17:06 -0500
-Message-ID: <5137C062.5020208@ti.com>
+From: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
+Subject: Re: [RFC] DT affinity bindings/representing bus masters with DT
+Date: Thu, 7 Mar 2013 08:57:14 +1100
+Message-ID: <20130306215714.GC6740@truffula.fritz.box>
+References: <20130215172102.GF3014@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============4264228269766362790=="
+Content-Type: multipart/mixed; boundary="===============3873370625667465141=="
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130215172102.GF3014-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -15,242 +17,164 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "Chemparathy, Cyril" <cyril-l0cyMroinI0@public.gmane.org>
-Cc: device-tree <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---===============4264228269766362790==
-Content-Type: multipart/alternative;
-	boundary="------------080906040007050208000000"
 
---------------080906040007050208000000
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-
-Grant,
-
-I am developing a PCI Host driver for Keystone devices. I am trying to 
-understand how the device bindings work for PCI Root Complex (RC) Host 
-controller and corresponding  devices on the bus. There are no DT based 
-implementation I can find for the ARM architecture. I have seen some 
-patches posted by Nvidia for Tegra processors. Trying to understand how 
-I write bindings for the host controller,  the interrupt mappings and 
-the driver to parse these bindings.
-
-Address start /Size information from the device spec is given below.
-
-                        0x21800000 0x8000            /* pcie-regs */
-                        0x50000000 0x10000000   /* pcie-nonprefetch 
-memory */
-                        0x70000000 0x4000            /* pcie-io */
-                        0x80000000 0x20000000>; /* pcie-inbound0 */
-
-Need 1:1 mapping between the Root complex address space and the PCI 
-memory address space. In the above it is starting at address 0x50000000 
-and size 0x10000000. I see following bindings from a power PC dts file 
-(powerpc/boot/dts/mpc8541cds.dts)
-
-         pci1: pci@e0009000 {
-                 interrupt-map-mask = <0xf800 0x0 0x0 0x7>;
-                 interrupt-map = <
-
-                         /* IDSEL 0x15 */
-                         0xa800 0x0 0x0 0x1 &mpic 0xb 0x1
-                         0xa800 0x0 0x0 0x2 &mpic 0xb 0x1
-                         0xa800 0x0 0x0 0x3 &mpic 0xb 0x1
-                         0xa800 0x0 0x0 0x4 &mpic 0xb 0x1>;
-                 interrupt-parent = <&mpic>;
-                 interrupts = <25 2>;
-                 bus-range = <0 0>;
-                 ranges = <0x2000000 0x0 0xa0000000 0xa0000000 0x0 
-0x20000000
-                           0x1000000 0x0 0x0 0xe3000000 0x0 0x100000>;
-                 clock-frequency = <66666666>;
-                 #interrupt-cells = <1>;
-                 #size-cells = <2>;
-                 #address-cells = <3>;
-                 reg = <0xe0009000 0x1000>;
-                 compatible = "fsl,mpc8540-pci";
-                 device_type = "pci";
-         };
-
-How do I interpret the ranges in the above bindings? I need to implement 
-only Root complex functionality.Last two cell seem to represent size in 
-64 bit format (2 cells). But what does the first 4 cells represent?
-
-I also need to support Legacy and MSI IRQs. There are 4 legacy IRQs 
-going to GIC. There are 8 MSI IRQs. How does the interrupt map work?
-
-If you could point me to any documentation that explain these, it will 
-be really helpful. Do you think the above bindings  represent a Root 
-Complex Host controllerthat I can re-use for my work?Based on my 
-research so far, it appears that DT based driver configurationon an ARM 
-architecture would involve development ofOF helper functions (currently 
-implemented at different arch level) as well to support the driver. I 
-believe Nvdia and Marvell are currently doing this for ARM and I may be 
-able to re-use their work.
-
-Thanks
-
-Murali Karicheri
+--===============3873370625667465141==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HG+GLK89HZ1zG0kk"
+Content-Disposition: inline
 
 
+--HG+GLK89HZ1zG0kk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
---------------080906040007050208000000
-Content-Type: text/html; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+On Fri, Feb 15, 2013 at 05:21:02PM +0000, Lorenzo Pieralisi wrote:
+> Hi all,
+>=20
+> in order to come up with a solid solution to the affinity bindings concept
+> we are facing in the ARM world, I am posting this RFC so that hopefully p=
+eople
+> on the list can chime in and help us in this endeavour.
+>=20
+> I tried to keep things simple on purpose and some statements are a bit of=
+ an
+> oversimplification, we can elaborate on those if needed.
+>=20
+> Hereafter a summary of what we are trying to achieve.
+>=20
+> Current device tree bindings allow to describe HW configurations of syste=
+ms
+> in a bus like fashion, where each bus contains bus slaves and mapping
+> heuristics to translate address spaces across bus layers (AMBA -> PCI).
+>=20
+> The device tree by definition represents the view of the system from the
+> perspective of the CPU(s). This means that all devices (but CPUs) present
+> in the device tree are to be seen as "slave" components, ie devices sitti=
+ng on
+> a bus and accessible from the CPU with an addressing mode that can vary a=
+nd it
+> is defined by the bus the device is sitting on.
+>=20
+> There are specific cases in current SoCs though where resources belonging=
+ to
+> a slave device should be linked to a master in the SoC system hierarchy.
+>=20
+> To the best of my knowledge, the mechanism used to implement this linkage=
+ is
+> not defined by any device tree binding; it probably can be a phandle in t=
+he
+> device tree syntax, but this has some implications that will be described=
+ as
+> follows.
+>=20
+> A programmable device, let's call it "foo" for the sake of this discussio=
+n,
+> has several resources (ie memory spaces) that should be mapped to bus mas=
+ters
+> in a SoC hierarchy (each resource "belongs" to a master). The only way th=
+is
+> can be currently done through a device tree is by linking the resource in
+> question to a device representing the master node through a phandle (keep=
+ing
+> in mind that the concept of master node does not exist in current DT
+> bindings).
+>=20
+> An example is worth a thousand words (pseudo dts file):
+>=20
+> / {
+> 	#address-cells =3D 1;
+> 	#size-cells =3D 1;
+>=20
+> 	acme1: acme@4000000 {
+> 		reg =3D <0x4000000 0x1000>;
+> 	};
+>=20
+> 	acme2: acme@5000000 {
+> 		reg =3D <0x5000000 0x1000>;
+> 	};
+>=20
+> 	foo@2000000 {
+> 		reg =3D <0x2000000 0x1000
+> 		       0x2001000 0x1000>;
+> 		affinity =3D <&acme1 &acme2>;
+> 	};
+> };
+>=20
+> where the "affinity" property contains a number of phandles equal to the =
+number
+> of resources (ie reg properties) in the foo@2000000 node. The "affinity"
+> property maps a reg property to a device tree node, one phandle per "reg"
+> property.
+>=20
+> acme1 and acme2 are two bus masters in the system (eg a DMA and a GPU).
+>=20
+> Each foo@2000000 reg property maps to a device that represents a bus mast=
+er
+> (to make it clearer, a foo@2000000 reg property defines an address space =
+that
+> belongs to a bus master, ie the address space represents a programming
+> interface specific to that master; in the bindings above address 0x200000=
+0 is
+> the address at which acme1 device can programme its "foo" interface, addr=
+ess
+> 0x2001000 is the address at which acme2 device can programme its "foo"
+> interface).
 
-<html>
-  <head>
+Ok.  I think annotating the existing reg property like this is a very
+bad idea.  I haven't seen all the previous discussion, so I'm not
+totally clean on what this affinity concept is about.  But as I
+understand it, these "slave" resources cannot be treated like an
+ordinary resource in in the reg property.  That means an older client
+will potentially misinterpret "reg" because it doesn't know about
+"affinity".
 
-    <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-  </head>
-  <body bgcolor="#FFFFFF" text="#000000">
-    Grant,<br>
-    <br>
-    I am developing a PCI Host driver for Keystone devices. I am trying
-    to understand how the device bindings work for PCI Root Complex (RC)
-    Host controller and corresponding&nbsp; devices on the bus. There are no
-    DT based implementation I can find for the ARM architecture. I have
-    seen some patches posted by Nvidia for Tegra processors. Trying to
-    understand how I write bindings for the host controller,&nbsp; the
-    interrupt mappings and the driver to parse these bindings.<br>
-    <br>
-    Address start /Size information from the device spec is given below.<br>
-    <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x21800000 0x8000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &nbsp; &nbsp;&nbsp; /* pcie-regs
-    */&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x50000000 0x10000000&nbsp;&nbsp; /* pcie-nonprefetch
-    memory */&nbsp;&nbsp;&nbsp;&nbsp; <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x70000000 0x4000&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* pcie-io
-    */&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
-    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x80000000 0x20000000&gt;; /* pcie-inbound0
-    */ <br>
-    <br>
-    Need
-    <meta http-equiv="Content-Type" content="text/html;
-      charset=ISO-8859-1">
-    <font size="-1"><span style="font-family: Arial; color: black;">1:1
-        mapping between the Root compl<font size="-1">ex</font>
-        address space and the PCI memory address space</span>. In the
-      above it is starti<font size="-1">ng at address 0x50000000 and
-        size 0x10000000.&nbsp; <font size="-1">I see following bindings from
-          a power PC dts file (powerpc/boot/dts/mpc8541cds.dts)</font><br>
-      </font>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <br>
-      <font size="-1">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; pci1: pci@e0009000 {<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; interrupt-map-mask = &lt;0xf800 0x0 0x0 0x7&gt;;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; interrupt-map = &lt;<br>
-        <br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; /* IDSEL 0x15 */<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0xa800 0x0 0x0 0x1 &amp;mpic 0xb 0x1<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0xa800 0x0 0x0 0x2 &amp;mpic 0xb 0x1<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0xa800 0x0 0x0 0x3 &amp;mpic 0xb 0x1<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0xa800 0x0 0x0 0x4 &amp;mpic 0xb
-        0x1&gt;;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; interrupt-parent = &lt;&amp;mpic&gt;;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; interrupts = &lt;25 2&gt;;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bus-range = &lt;0 0&gt;;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ranges = &lt;0x2000000 0x0 0xa0000000 0xa0000000
-        0x0 0x20000000<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 0x1000000 0x0 0x0 0xe3000000 0x0
-        0x100000&gt;;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; clock-frequency = &lt;66666666&gt;;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #interrupt-cells = &lt;1&gt;;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #size-cells = &lt;2&gt;;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; #address-cells = &lt;3&gt;;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; reg = &lt;0xe0009000 0x1000&gt;;<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; compatible = "fsl,mpc8540-pci";<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; device_type = "pci";<br>
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; };<br>
-      </font><br>
-      <font size="-1">How do I <font size="-1"><font size="-1">interpret</font>
-          the ranges in the above bindings? I need to implement onl<font
-            size="-1">y Root complex functionality.<font size="-1">&nbsp; <font
-                size="-1">Last two cell seem to repre<font size="-1">sent
-                  size in 64 bit format (2 cells). But what does the
-                  first 4 cells represent?<br>
-                  <br>
-                  <font size="-1"><font size="-1"><font size="-1">I also
-                        need to support Legacy and MSI IRQs. There are 4
-                        leg<font size="-1">acy IRQs going to GIC<font
-                            size="-1">. There are 8 MSI IR<font
-                              size="-1">Qs. How does the interrupt map
-                              work?<br>
-                              <br>
-                              <font size="-1">I<font size="-1">f you
-                                  could poin<font size="-1">t me to a</font></font></font>ny
-                              documentation that explain these, it <font
-                                size="-1"><font size="-1"><font
-                                    size="-1">will be really helpful.&nbsp;
-                                    Do you t<font size="-1">hink the
-                                      above bindings&nbsp; represent a R<font
-                                        size="-1">oot Complex Host
-                                        controller<font size="-1"> that
-                                          I can re-use for my work?<font
-                                            size="-1"> Based on my
-                                            research so far, it app<font
-                                              size="-1">ears t<font
-                                                size="-1">hat</font> <font
-                                                size="-1">DT based dr<font
-                                                  size="-1"><font
-                                                    size="-1">iver
-                                                    configuration<font
-                                                      size="-1"> o<font
-                                                        size="-1">n an</font>
-                                                      ARM architec<font
-                                                        size="-1">ture
-                                                        would involve
-                                                        devel<font
-                                                          size="-1">opment
-                                                          of</font><font
-                                                          size="-1"><font
-                                                          size="-1"> </font>OF
-                                                          helper
-                                                          functions
-                                                          (currently <font
-                                                          size="-1"><font
-                                                          size="-1">implemented</font>
-                                                          at different
-                                                          arch level) as
-                                                          well to
-                                                          support the dr<font
-                                                          size="-1">iver.
-                                                          I believe <font
-                                                          size="-1">N<font
-                                                          size="-1">vdia
-                                                          <font
-                                                          size="-1">and
-                                                          Marvell are
-                                                          currently <font
-                                                          size="-1">doing
-                                                          this f<font
-                                                          size="-1">or</font>
-                                                          ARM and I <font
-                                                          size="-1">may
-                                                          be able to
-                                                          re-use the<font
-                                                          size="-1">ir
-                                                          work. <br>
-                                                          <br>
-                                                          <font
-                                                          size="-1"><font
-                                                          size="-1">Thanks<br>
-                                                          <br>
-                                                          <font
-                                                          size="-1">Murali
-                                                          Karic<font
-                                                          size="-1">heri<br>
-                                                          <br>
-                                                          </font></font><font
-                                                          size="-1"></font></font></font></font></font></font></font></font></font></font></font></font></font></font></font></font></font></font></font>
-                                        </font></font></font><br>
-                                  </font></font></font></font></font></font></font></font></font></font></font></font></font></font></font></font>
-  </body>
-</html>
+Worse, again, if I've understood correctly, resources with different
+"masters" are essentially in different logical address spaces.  "reg"
+properties should always sit in the logical address space representing
+the parent node's bus.  Different address spaces could also have
+different address sizes, which would really complicate parsing "reg".
 
---------------080906040007050208000000--
+Now, a device tree extension I've considered before for other reasons
+might also be relevant to your case.  That is to add a new "bus-reg"
+property that has a meaning similar to "reg" but contains (phandle,
+address, size) tuples instead of just (address, size) tuples.  The
+phandle in each case would represent the node in whose address space
+this resource appears.  This would generalize the "dcr-reg" and
+"scom-reg" properties we've sometimes used on ppc.
 
---===============4264228269766362790==
+It's not clear if this essentially incompatible extension would be
+worth it, though.  The other way to represent these structures is to
+just split the node for this logical device into different pieces
+under each address space it has resources on.  These pieces are then
+linked together with (binding specific) phandle pointers to each
+other.
+
+--=20
+David Gibson			| I'll have my music baroque, and my code
+david AT gibson.dropbear.id.au	| minimalist, thank you.  NOT _the_ _other_
+				| _way_ _around_!
+http://www.ozlabs.org/~dgibson
+
+--HG+GLK89HZ1zG0kk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlE3u7oACgkQaILKxv3ab8bZcgCaApK0qjI+oB0qgEVeWJRO2Slw
+WM0An2QNsUAA99OFdfD7QamjIeiz3tDh
+=VB6S
+-----END PGP SIGNATURE-----
+
+--HG+GLK89HZ1zG0kk--
+
+--===============3873370625667465141==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -261,4 +185,4 @@ devicetree-discuss mailing list
 devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 https://lists.ozlabs.org/listinfo/devicetree-discuss
 
---===============4264228269766362790==--
+--===============3873370625667465141==--
