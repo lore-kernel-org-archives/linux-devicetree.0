@@ -1,50 +1,70 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 2/3] arm: dts: am33xx: add default ethtool slave to
- cpsw node
-Date: Thu, 7 Mar 2013 08:13:08 -0800
-Message-ID: <20130307161308.GW11806@atomide.com>
+From: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 1/3] driver: net: ethernet: cpsw: implement ethtool get/set
+ phy setting
+Date: Thu, 7 Mar 2013 22:43:12 +0530
+Message-ID: <5138CAA8.1060106@ti.com>
 References: <1362659421-11884-1-git-send-email-mugunthanvnm@ti.com>
- <1362659421-11884-3-git-send-email-mugunthanvnm@ti.com>
+ <1362659421-11884-2-git-send-email-mugunthanvnm@ti.com>
+ <8762135on4.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1362659421-11884-3-git-send-email-mugunthanvnm@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: netdev@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, davem@davemloft.net
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <8762135on4.fsf-D6SC8u56vOOJDPpyT6T3/w@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Peter Korsgaard <jacmet-OfajU3CKLf1/SzgSGea1oA@public.gmane.org>
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* Mugunthan V N <mugunthanvnm@ti.com> [130307 04:35]:
+On 3/7/2013 6:54 PM, Peter Korsgaard wrote:
+>>>>>> "M" == Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org> writes:
+>   M> This patch implements get/set of the phy settings via ethtool apis
+>   M> Signed-off-by: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
+>   M> ---
+>   M>  Documentation/devicetree/bindings/net/cpsw.txt |    3 +++
+>   M>  drivers/net/ethernet/ti/cpsw.c                 |   32 ++++++++++++++++++++++++
+>   M>  include/linux/platform_data/cpsw.h             |    1 +
+>   M>  3 files changed, 36 insertions(+)
+>
+>   M> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+>   M> index ecfdf75..8d61300 100644
+>   M> --- a/Documentation/devicetree/bindings/net/cpsw.txt
+>   M> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
+>   M> @@ -20,6 +20,7 @@ Required properties:
+>   M>  - cpts_clock_shift	: Denominator to convert input clock ticks into nanoseconds
+>   M>  - phy_id		: Specifies slave phy id
+>   M>  - mac-address		: Specifies slave MAC address
+>   M> +- ethtool-active-slave	: Specifies the slave to use for ethtool command
+>
+> That again sounds like something Linux specific rather than a hardware
+> property.
+>
+> It would be good if all these special things (dual emac mode, vlan
+> handling, switching) could be handled using the existing kernel
+> (bridging/vlan) infrastructure, and the driver always just exposing 2
+> network interfaces instead of these configuration properties.
+>
+Switch and Dual Emac modes of operation of CPSW are two different 
+features of the
+hardware and packet routing between the slaves in the hardware are 
+different in
+both the modes.
 
-Can you please add a description and send this separately
-so Benoit can queue it.
+If by default it is brought up as Dual EMAC then hardware switching is 
+blocked and
+use-cases like IP phone etc cannot be achieved.
 
-Thanks,
+Since CPSW as a hardware Switch, it cannot not be handled in existing kernel
+feature.
 
-Tony
-
-> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
-> ---
->  arch/arm/boot/dts/am33xx.dtsi |    1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-> index 0957645..f8c83a1 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -352,6 +352,7 @@
->  			cpts_active_slave = <0>;
->  			cpts_clock_mult = <0x80000000>;
->  			cpts_clock_shift = <29>;
-> +			ethtool-active-slave = <0>;
->  			reg = <0x4a100000 0x800
->  			       0x4a101200 0x100>;
->  			#address-cells = <1>;
-> -- 
-> 1.7.9.5
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss@lists.ozlabs.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
+Regards
+Mugunthan V N
