@@ -1,52 +1,119 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 3/5] gpio/omap: Add DT support to GPIO driver
-Date: Thu, 7 Mar 2013 17:14:09 -0600
-Message-ID: <51391F41.5000303@ti.com>
-References: <1329321854-24490-1-git-send-email-b-cousson@ti.com> <1329321854-24490-4-git-send-email-b-cousson@ti.com> <4F44FA56.7020000@gmail.com> <4F44FC37.2000701@ti.com> <4F452484.5080503@gmail.com> <74CDBE0F657A3D45AFBB94109FB122FF17BD8BC6C1@HQMAIL01.nvidia.com> <4F47AD08.4030504@ti.com> <CAAwP0s0cB368R2mtbJpTZJreR-5GSRLfxC+8DJLo5nw3_OwBuA@mail.gmail.com> <512D39DA.7020306@ti.com> <512D3AB1.1080202@wwwdotorg.org> <512D3EC2.6050408@ti.com> <20130302200524.D230F3E1571@localhost>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: RFC: Zynq Clock Controller
+Date: Thu, 7 Mar 2013 15:25:25 -0800
+Message-ID: <a6c711bf-7722-4eb0-bb72-0e5c00e4ba9d@CO9EHSMHS016.ehs.local>
+References: <37032699-343e-485c-80e0-9b23e3706c58@VA3EHSMHS013.ehs.local>
+ <1362570681.5269.98.camel@coredoba.hi.pengutronix.de>
+ <f288874c-d0ae-4581-8d0f-2b9abe4d3117@CO9EHSMHS002.ehs.local>
+ <51385FA3.8080105@metafoo.de>
+ <2a91857c-473f-4f92-b2b1-e7ac4679b72a@AM1EHSMHS007.ehs.local>
+ <51390E92.2080806@metafoo.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20130302200524.D230F3E1571@localhost>
-Sender: linux-omap-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Stephen Warren <swarren@wwwdotorg.org>, Javier Martinez Canillas <martinez.javier@gmail.com>, Stephen Warren <swarren@nvidia.com>, Kevin Hilman <khilman@deeprootsystems.com>, "devicetree-discuss@lists.ozlabs.org" <devicetree-discuss@lists.ozlabs.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Tarun Kanti DebBarma <tarun.kanti@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <51390E92.2080806@metafoo.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lars-Peter Clausen <lars@metafoo.de>
+Cc: Jan =?utf-8?B?TMO8YmJl?= <jlu@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Mike Turquette <mturquette@linaro.org>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <pcrost@xilinx.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, git@xilinx.com
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Mar 07, 2013 at 11:02:58PM +0100, Lars-Peter Clausen wrote:
+> On 03/07/2013 08:11 PM, S=C3=B6ren Brinkmann wrote:
+> > On Thu, Mar 07, 2013 at 10:36:35AM +0100, Lars-Peter Clausen wrote:
+> >> On 03/06/2013 06:27 PM, S=C3=B6ren Brinkmann wrote:
+> >>> Hi Jan,
+> >>> =20
+> >>> what a small world. Good to hear from you.
+> >>>
+> >>> On Wed, Mar 06, 2013 at 12:51:21PM +0100, Jan L=C3=BCbbe wrote:
+> >>>> Hi S=C3=B6ren,
+> >>>>
+> >>>> On Tue, 2013-03-05 at 12:04 -0800, S=C3=B6ren Brinkmann wrote:
+> >>>>> For this reasons, I'd like to propose moving Zynq into the same
+> >>>>> direction. I.e. adding a clock controller with the following DT
+> >>>>> description (details may change but the general idea should bec=
+ome
+> >>>>> clear):
+> >>>>> 	clkc: clkc {
+> >>>>>                 #clock-cells =3D <1>;
+> >>>>>                 compatible =3D "xlnx,ps7-clkc";
+> >>>>>                 ps_clk_frequency =3D <33333333>;	# board x-tal
+> >>>>>                 # optional props
+> >>>>>                 gem0_emio_clk_freq =3D <125000000>;
+> >>>>>                 gem1_emio_clk_freq =3D <50000000>;
+> >>>>>                 can_mio_clk_freq_xx =3D <1234>; # this is possi=
+ble 54 times with xx =3D 00..53
+> >>>>>         };
+> >>
+> >> I definitely prefer the way it is right now in upstream, where we =
+have one
+> >> dt node per clock. It is more descriptive and also more extensible=
+=2E And you
+> >> also don't have to remember the clock index, and can use the phand=
+le
+> >> directly instead.
+> > The problems I see with that are:
+> >  - with the clock controller we can model the clock tree as we need=
+ without changing the DT all the time
+>=20
+> When do we need to change the clock tree? The clock tree is pretty mu=
+ch fixed
+> in hardware. And the DT describes the hardware, so I don't so a probl=
+em there.
+>=20
+> >  - w/o a clock controller there is no block which has knowledge of =
+the whole clock tree (unless we parse the DT), and could conduct repare=
+nt operations and similar
+>=20
+> The clk framework builds a representation of the clock tree. Each clo=
+ck should
+> be able to handle re-parenting on it's own, without knowing about the=
+ other
+> clocks in the tree, the parent is selected by a field in the clocks r=
+egister.
+> It doesn't even have to know who the parents are, the clk framework w=
+ill take
+> care of all of this and just say, ok, switch your input clock to X, w=
+here X is
+> a simple integer number The clk framework will also take care of re-c=
+alculating
+> all the updates frequencies after re-parenting.
+Nope, clk_set_parent() takes two 'struct *clk' as argument. So, you hav=
+e to have those of the clock to change and all its parents. A device dr=
+iver for example, which gets a clock through clk_get() does not have th=
+at information and should not, since it should not have to be aware of =
+the SOC's clock hierarchy, IMHO.
 
-On 03/02/2013 02:05 PM, Grant Likely wrote:
-> On Tue, 26 Feb 2013 17:01:22 -0600, Jon Hunter <jon-hunter@ti.com> wrote:
->>
->> On 02/26/2013 04:44 PM, Stephen Warren wrote:
->>> On 02/26/2013 03:40 PM, Jon Hunter wrote:
->>>> On 02/26/2013 04:01 AM, Javier Martinez Canillas wrote:
->>>> Are you requesting the gpio anywhere? If not then this is not going to
->>>> work as-is. This was discussed fairly recently [1] and the conclusion
->>>> was that the gpio needs to be requested before we can use as an interrupt.
->>>
->>> That seems wrong; the GPIO/IRQ driver should handle this internally. The
->>> Ethernet driver shouldn't know/care whether the interrupt it's given is
->>> some form of dedicated interrupt or a GPIO-based interrupt, and even if
->>> it somehow did, there's no irq_to_gpio() any more, so the driver can't
->>> tell which GPIO ID it should request, unless it's given yet another
->>> property to represent this.
->>
->> I agree that ideally this should be handled internally. Did you read the
->> discussion on the thread that I referenced [1]? If you have any thoughts
->> we are open to ideas :-)
-> 
-> I'm on an airplane right now, but I agree 100% with Stephen. I'll try to
-> remember to go read that thread and respond, but this falls firmly in
-> the its-a-bug category for me.  :-)
+>=20
+> >  - once the clock controller is properly defined the clock connecti=
+on should be contained in a dtsi which never changes. So, regarding rem=
+embering outputs, I don't see a problem. I rather see issues with havin=
+g a pile of clocks described in the DT. I have currently 44 outputs pro=
+posed, and to model the whole tree a lot of more clocks are used (I sta=
+rted modeling everything with the clock primitives and removed custom c=
+lock implementations, except for the PLLs). Having all those in the DT =
+does not really help, IMHO.
+>=20
+> Well, except if you want to use external clocks for ethernet or CAN. =
+Also you
+> don't need to change the dtsi either if you have a separate node for =
+each clock.
+>=20
+> To avoid misunderstandings let me clarify that I don't want to have o=
+ne node
+> per clock, but rather one node per clock block (or whatever they are =
+called).
+> The combination of input select + divider + output gate. E.g. the UAR=
+T clock
+> block with it's 3 inputs and two outputs.
+>=20
+> Also the APER clocks should probably be one node with 24 outputs.
+Okay, so instead of having one block encapsulating all clocks, you want=
+ it on a finer granularity. I don't see huge differences why that shoul=
+d be advantageous? It would just mean to create several blocks with the=
+ir custom DT bindings instead of a single one. Just the abstraction lev=
+el would be a little different.
 
-Grant, did you have chance to review the thread [1]?
-
-I am trying to figure out if we should just take the original patch
-proposed in the thread (although Linus had some objections) or look at
-alternative solutions such as adding a irq_chip request as Stephen
-suggested.
-
-Cheers
-Jon
-
-[1] comments.gmane.org/gmane.linux.ports.arm.omap/92192
+	S=C3=B6ren
