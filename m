@@ -1,15 +1,16 @@
-From: "Hiremath, Vaibhav" <hvaibhav-l0cyMroinI0@public.gmane.org>
-Subject: RE: [PATCH 2/2] ARM: dts: add AM33XX MMC support
-Date: Thu, 7 Mar 2013 05:29:24 +0000
-Message-ID: <79CD15C6BA57404B839C016229A409A83EC20028@DBDE01.ent.ti.com>
-References: <1362629799-22485-1-git-send-email-mporter@ti.com>
- <1362629799-22485-3-git-send-email-mporter@ti.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/9] MXS/i.MX28: add the possibility to define the used
+ crystals via device tree
+Date: Thu, 7 Mar 2013 14:17:52 +0800
+Message-ID: <20130307061749.GA5372@S2101-09.ap.freescale.net>
+References: <1362405948-12992-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1362405948-12992-2-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <1362629799-22485-3-git-send-email-mporter-l0cyMroinI0@public.gmane.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1362405948-12992-2-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -20,155 +21,84 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: "Porter, Matt" <mporter-l0cyMroinI0@public.gmane.org>, "Krishnamoorthy, Balaji T" <balajitk-l0cyMroinI0@public.gmane.org>, Chris Ball <cjb-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, "Cousson, Benoit" <b-cousson-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Devicetree Discuss <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Linux OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux MMC List <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: linux-omap-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org [mailto:linux-omap-
-> owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org] On Behalf Of Porter, Matt
-> Sent: Thursday, March 07, 2013 9:47 AM
-> To: Krishnamoorthy, Balaji T; Chris Ball; Cousson, Benoit; Tony
-> Lindgren; Russell King
-> Cc: Devicetree Discuss; Linux ARM Kernel List; Linux OMAP List; Linux
-> Kernel Mailing List; Linux MMC List
-> Subject: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+For patches that you intend to go via mxs tree, please prefix it with
+something like "ARM: mxs: ...".
+
+On Mon, Mar 04, 2013 at 03:05:40PM +0100, Steffen Trumtrar wrote:
+> From: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > 
-> Adds AM33XX MMC support for am335x-bone, am335x-evm, and
-> am335x-evmsk.
-> 
-> Signed-off-by: Matt Porter <mporter-l0cyMroinI0@public.gmane.org>
-> Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Please do something with commit log.
+
+> Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->  arch/arm/boot/dts/am335x-bone.dts  |    7 +++++++
->  arch/arm/boot/dts/am335x-evm.dts   |    7 +++++++
->  arch/arm/boot/dts/am335x-evmsk.dts |    7 +++++++
->  arch/arm/boot/dts/am33xx.dtsi      |   28 ++++++++++++++++++++++++++++
->  4 files changed, 49 insertions(+)
+>  arch/arm/boot/dts/imx28.dtsi |   11 +++++++++++
+>  drivers/clk/mxs/clk-imx28.c  |   16 +++++++++++++++-
+>  2 files changed, 26 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/arm/boot/dts/am335x-bone.dts
-> b/arch/arm/boot/dts/am335x-bone.dts
-> index 11b240c..a154ce0 100644
-> --- a/arch/arm/boot/dts/am335x-bone.dts
-> +++ b/arch/arm/boot/dts/am335x-bone.dts
-> @@ -120,6 +120,8 @@
->  		};
-> 
->  		ldo3_reg: regulator@5 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <3300000>;
->  			regulator-always-on;
->  		};
-> 
-> @@ -136,3 +138,8 @@
->  &cpsw_emac1 {
->  	phy_id = <&davinci_mdio>, <1>;
->  };
-> +
-> +&mmc1 {
-> +	status = "okay";
-> +	vmmc-supply = <&ldo3_reg>;
-> +};
-> diff --git a/arch/arm/boot/dts/am335x-evm.dts
-> b/arch/arm/boot/dts/am335x-evm.dts
-> index d649644..2907da6 100644
-> --- a/arch/arm/boot/dts/am335x-evm.dts
-> +++ b/arch/arm/boot/dts/am335x-evm.dts
-> @@ -232,6 +232,8 @@
->  		};
-> 
->  		vmmc_reg: regulator@12 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <3300000>;
->  			regulator-always-on;
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+> index 7ba4966..958bd10 100644
+> --- a/arch/arm/boot/dts/imx28.dtsi
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -37,6 +37,17 @@
 >  		};
 >  	};
-> @@ -244,3 +246,8 @@
->  &cpsw_emac1 {
->  	phy_id = <&davinci_mdio>, <1>;
->  };
+>  
+> +	clocks {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
 > +
-> +&mmc1 {
-> +	status = "okay";
-> +	vmmc-supply = <&vmmc_reg>;
-> +};
-> diff --git a/arch/arm/boot/dts/am335x-evmsk.dts
-> b/arch/arm/boot/dts/am335x-evmsk.dts
-> index f5a6162..f050c46 100644
-> --- a/arch/arm/boot/dts/am335x-evmsk.dts
-> +++ b/arch/arm/boot/dts/am335x-evmsk.dts
-> @@ -244,7 +244,14 @@
->  		};
-> 
->  		vmmc_reg: regulator@12 {
-> +			regulator-min-microvolt = <1800000>;
-> +			regulator-max-microvolt = <3300000>;
->  			regulator-always-on;
->  		};
->  	};
->  };
-> +
-> +&mmc1 {
-> +	status = "okay";
-> +	vmmc-supply = <&vmmc_reg>;
-> +};
-> diff --git a/arch/arm/boot/dts/am33xx.dtsi
-> b/arch/arm/boot/dts/am33xx.dtsi
-> index c3c781a..e029eea 100644
-> --- a/arch/arm/boot/dts/am33xx.dtsi
-> +++ b/arch/arm/boot/dts/am33xx.dtsi
-> @@ -234,6 +234,34 @@
->  			status = "disabled";
->  		};
-> 
-> +		mmc1: mmc@48060000 {
-> +			compatible = "ti,omap3-hsmmc";
-> +			ti,hwmods = "mmc1";
-> +			ti,dual-volt;
-> +			ti,needs-special-reset;
-> +			dmas = <&edma 24
-> +				&edma 25>;
-> +			dma-names = "tx", "rx";
-> +			status = "disabled";
+> +		osc24m: system_oscillator {
+> +			compatible = "fsl,mxs-system", "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <24000000>;
 > +		};
+> +	};
 > +
-> +		mmc2: mmc@481d8000 {
-> +			compatible = "ti,omap3-hsmmc";
-> +			ti,hwmods = "mmc2";
-> +			ti,needs-special-reset;
-> +			dmas = <&edma 2
-> +				&edma 3>;
-> +			dma-names = "tx", "rx";
-> +			status = "disabled";
-> +		};
+>  	apb@80000000 {
+>  		compatible = "simple-bus";
+>  		#address-cells = <1>;
+> diff --git a/drivers/clk/mxs/clk-imx28.c b/drivers/clk/mxs/clk-imx28.c
+> index 76ce6c6..01048b5 100644
+> --- a/drivers/clk/mxs/clk-imx28.c
+> +++ b/drivers/clk/mxs/clk-imx28.c
+> @@ -158,7 +158,21 @@ int __init mx28_clocks_init(void)
+>  
+>  	clk_misc_init();
+>  
+> -	clks[ref_xtal] = mxs_clk_fixed("ref_xtal", 24000000);
+> +	/* retrieve the crystal's frequencies from device tree */
+> +	for_each_compatible_node(np, NULL, "fixed-clock") {
+> +		u32 rate;
 > +
-> +		mmc3: mmc@47810000 {
-> +			compatible = "ti,omap3-hsmmc";
-> +			ti,hwmods = "mmc3";
-> +			ti,needs-special-reset;
-> +			status = "disabled";
-> +		};
-Any specific reason why you did not add edma entry here as well?
-
-Also, I wonder why "interrupt" property is not coming here, I understand
-That hwmod is filling the gap here; but I would still recommend you to complete
-The DT node, as we only support DT boot.
-
-I will test the whole patch series today and update you.
-
-Thanks,
-Vaibhav
-
-
+> +		if (of_property_read_u32(np, "clock-frequency", &rate))
+> +			continue;
 > +
->  		wdt2: wdt@44e35000 {
->  			compatible = "ti,omap3-wdt";
->  			ti,hwmods = "wd_timer2";
-> --
-> 1.7.9.5
+> +		if (of_device_is_compatible(np, "fsl,mxs-system"))
+> +			clks[ref_xtal] = mxs_clk_fixed("ref_xtal", rate);
+> +	}
+> +
+> +	/* if not set, guess their frequency */
+> +	if (clks[ref_xtal] == NULL)
+> +		clks[ref_xtal] = mxs_clk_fixed("ref_xtal", 24000000);
+> +
+
+I think ref_xtal has to be 24 MHz, no?
+
+Shawn
+
+>  	clks[pll0] = mxs_clk_pll("pll0", "ref_xtal", PLL0CTRL0, 17, 480000000);
+>  	clks[pll1] = mxs_clk_pll("pll1", "ref_xtal", PLL1CTRL0, 17, 480000000);
+>  	clks[pll2] = mxs_clk_pll("pll2", "ref_xtal", PLL2CTRL0, 23, 50000000);
+> -- 
+> 1.7.10.4
 > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-omap"
-> in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
