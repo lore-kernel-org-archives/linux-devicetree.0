@@ -1,57 +1,128 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3] gpio: Add device driver for GRGPIO cores and support
- custom accessors with gpio-generic
-Date: Thu, 7 Mar 2013 04:44:48 +0100
-Message-ID: <CACRpkdaC9DsNj56_q33Z5N3_90Ffdq9qZeOxrFdrVSoL4wrTbQ@mail.gmail.com>
-References: <1360653873-25368-1-git-send-email-andreas@gaisler.com>
-	<CACRpkdaYQSrzm_Yj3ZH9YZLC_zPJN06X-9ZM9jd7=X0OB1shXQ@mail.gmail.com>
-	<51346D7C.5080307@gaisler.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+From: Matt Porter <mporter@ti.com>
+Subject: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+Date: Wed,  6 Mar 2013 23:16:39 -0500
+Message-ID: <1362629799-22485-3-git-send-email-mporter@ti.com>
+References: <1362629799-22485-1-git-send-email-mporter@ti.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <51346D7C.5080307@gaisler.com>
+In-Reply-To: <1362629799-22485-1-git-send-email-mporter@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+To: Balaji T K <balajitk@ti.com>, Chris Ball <cjb@laptop.org>, Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>
+Cc: Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Linux OMAP List <linux-omap@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux MMC List <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 4, 2013 at 10:46 AM, Andreas Larsson <andreas@gaisler.com> wrote:
-> [Me]
->>> +struct grgpio_priv {
->>> +       struct bgpio_chip bgc;
->>> +       struct grgpio_regs __iomem *regs;
->>> +
->>> +       u32 imask;      /* irq mask shadow register */
->>> +       s32 *irqmap;    /* maps offset to irq or -1 if no irq */
->>
->>
->> irqmap? Argh what is this... I think you want to use irqdomain
->> for this instead. (Documentation/IRQ-domain.txt)
->
->
-> Yeah, that comment is not clear. An entry in the irqmap array (for a gpio
-> line) can be either -1 indicating no irq for that line or an index into the
-> array of irq:s for the of device. Thus it is simply either -1 or a valid
-> second argument to irq_of_parse_and_map.
+Adds AM33XX MMC support for am335x-bone, am335x-evm, and
+am335x-evmsk.
 
-So just make the mapping function in the irqdomain handle that?
+Signed-off-by: Matt Porter <mporter@ti.com>
+Acked-by: Tony Lindgren <tony@atomide.com>
+---
+ arch/arm/boot/dts/am335x-bone.dts  |    7 +++++++
+ arch/arm/boot/dts/am335x-evm.dts   |    7 +++++++
+ arch/arm/boot/dts/am335x-evmsk.dts |    7 +++++++
+ arch/arm/boot/dts/am33xx.dtsi      |   28 ++++++++++++++++++++++++++++
+ 4 files changed, 49 insertions(+)
 
-Maybe I'm talking weird, I'm not really familiar with
-irq_of_parse_and_map().
-
-> Given that this is generally running on SPARC, it seems irqdomain is not an
-> option (IRQ_DOMAIN is not selected by SPARC).
-
-That has nothing to do with this. This driver can just select IRQ_DOMAIN
-in *it's* Kconfig entry.
-
-Using irqdomain for a certain irq_chip does not at all mandate that the
-entire system has to use irqdomain for everything, and two wrongs does
-not make one right.
-
-> Given this, is just a better formulated comment OK with you in this case?
-
-No...
-
-Yours,
-Linus Walleij
+diff --git a/arch/arm/boot/dts/am335x-bone.dts b/arch/arm/boot/dts/am335x-bone.dts
+index 11b240c..a154ce0 100644
+--- a/arch/arm/boot/dts/am335x-bone.dts
++++ b/arch/arm/boot/dts/am335x-bone.dts
+@@ -120,6 +120,8 @@
+ 		};
+ 
+ 		ldo3_reg: regulator@5 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3300000>;
+ 			regulator-always-on;
+ 		};
+ 
+@@ -136,3 +138,8 @@
+ &cpsw_emac1 {
+ 	phy_id = <&davinci_mdio>, <1>;
+ };
++
++&mmc1 {
++	status = "okay";
++	vmmc-supply = <&ldo3_reg>;
++};
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index d649644..2907da6 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -232,6 +232,8 @@
+ 		};
+ 
+ 		vmmc_reg: regulator@12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3300000>;
+ 			regulator-always-on;
+ 		};
+ 	};
+@@ -244,3 +246,8 @@
+ &cpsw_emac1 {
+ 	phy_id = <&davinci_mdio>, <1>;
+ };
++
++&mmc1 {
++	status = "okay";
++	vmmc-supply = <&vmmc_reg>;
++};
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index f5a6162..f050c46 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -244,7 +244,14 @@
+ 		};
+ 
+ 		vmmc_reg: regulator@12 {
++			regulator-min-microvolt = <1800000>;
++			regulator-max-microvolt = <3300000>;
+ 			regulator-always-on;
+ 		};
+ 	};
+ };
++
++&mmc1 {
++	status = "okay";
++	vmmc-supply = <&vmmc_reg>;
++};
+diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
+index c3c781a..e029eea 100644
+--- a/arch/arm/boot/dts/am33xx.dtsi
++++ b/arch/arm/boot/dts/am33xx.dtsi
+@@ -234,6 +234,34 @@
+ 			status = "disabled";
+ 		};
+ 
++		mmc1: mmc@48060000 {
++			compatible = "ti,omap3-hsmmc";
++			ti,hwmods = "mmc1";
++			ti,dual-volt;
++			ti,needs-special-reset;
++			dmas = <&edma 24
++				&edma 25>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++
++		mmc2: mmc@481d8000 {
++			compatible = "ti,omap3-hsmmc";
++			ti,hwmods = "mmc2";
++			ti,needs-special-reset;
++			dmas = <&edma 2
++				&edma 3>;
++			dma-names = "tx", "rx";
++			status = "disabled";
++		};
++
++		mmc3: mmc@47810000 {
++			compatible = "ti,omap3-hsmmc";
++			ti,hwmods = "mmc3";
++			ti,needs-special-reset;
++			status = "disabled";
++		};
++
+ 		wdt2: wdt@44e35000 {
+ 			compatible = "ti,omap3-wdt";
+ 			ti,hwmods = "wd_timer2";
+-- 
+1.7.9.5
