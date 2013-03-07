@@ -1,100 +1,61 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: RFC: Zynq Clock Controller
-Date: Thu, 07 Mar 2013 23:02:58 +0100
-Message-ID: <51390E92.2080806@metafoo.de>
-References: <37032699-343e-485c-80e0-9b23e3706c58@VA3EHSMHS013.ehs.local> <1362570681.5269.98.camel@coredoba.hi.pengutronix.de> <f288874c-d0ae-4581-8d0f-2b9abe4d3117@CO9EHSMHS002.ehs.local> <51385FA3.8080105@metafoo.de> <2a91857c-473f-4f92-b2b1-e7ac4679b72a@AM1EHSMHS007.ehs.local>
+From: Michael Grzeschik <mgr-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/6] support other fsl SoCs with usbmisc + small
+ fixes
+Date: Thu, 7 Mar 2013 23:54:03 +0100
+Message-ID: <20130307225403.GI29785@pengutronix.de>
+References: <1354033021-10585-1-git-send-email-m.grzeschik@pengutronix.de>
+ <20121128025217.GC18593@nchen-desktop>
+ <87ip6mor1e.fsf@ashishki-desk.ger.corp.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2a91857c-473f-4f92-b2b1-e7ac4679b72a@AM1EHSMHS007.ehs.local>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?U8O2cmVuIEJyaW5rbWFubg==?= <soren.brinkmann@xilinx.com>
-Cc: =?UTF-8?B?SmFuIEzDvGJiZQ==?= <jlu@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Mike Turquette <mturquette@linaro.org>, Josh Cartwright <josh.cartwright@ni.com>, Michal Simek <michal.simek@xilinx.com>, Peter Crosthwaite <pcrost@xilinx.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, git@xilinx.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87ip6mor1e.fsf-qxRn5AmX6ZD9BXuAQUXR0fooFf0ArEBIu+b9c/7xato@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Shishkin <alexander.shishkin-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Michael Grzeschik <m.grzeschik-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/07/2013 08:11 PM, S=C3=B6ren Brinkmann wrote:
-> On Thu, Mar 07, 2013 at 10:36:35AM +0100, Lars-Peter Clausen wrote:
->> On 03/06/2013 06:27 PM, S=C3=B6ren Brinkmann wrote:
->>> Hi Jan,
->>> =20
->>> what a small world. Good to hear from you.
->>>
->>> On Wed, Mar 06, 2013 at 12:51:21PM +0100, Jan L=C3=BCbbe wrote:
->>>> Hi S=C3=B6ren,
->>>>
->>>> On Tue, 2013-03-05 at 12:04 -0800, S=C3=B6ren Brinkmann wrote:
->>>>> For this reasons, I'd like to propose moving Zynq into the same
->>>>> direction. I.e. adding a clock controller with the following DT
->>>>> description (details may change but the general idea should becom=
-e
->>>>> clear):
->>>>> 	clkc: clkc {
->>>>>                 #clock-cells =3D <1>;
->>>>>                 compatible =3D "xlnx,ps7-clkc";
->>>>>                 ps_clk_frequency =3D <33333333>;	# board x-tal
->>>>>                 # optional props
->>>>>                 gem0_emio_clk_freq =3D <125000000>;
->>>>>                 gem1_emio_clk_freq =3D <50000000>;
->>>>>                 can_mio_clk_freq_xx =3D <1234>; # this is possibl=
-e 54 times with xx =3D 00..53
->>>>>         };
->>
->> I definitely prefer the way it is right now in upstream, where we ha=
-ve one
->> dt node per clock. It is more descriptive and also more extensible. =
-And you
->> also don't have to remember the clock index, and can use the phandle
->> directly instead.
-> The problems I see with that are:
->  - with the clock controller we can model the clock tree as we need w=
-ithout changing the DT all the time
+Hey Alex,
 
-When do we need to change the clock tree? The clock tree is pretty much=
- fixed
-in hardware. And the DT describes the hardware, so I don't so a problem=
- there.
+On Thu, Jan 24, 2013 at 11:42:53AM +0200, Alexander Shishkin wrote:
+> Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org> writes:
+> 
+> > On Tue, Nov 27, 2012 at 05:16:55PM +0100, Michael Grzeschik wrote:
+> >> Nearly every SoC from Freescale has this non-core usb registers. This series
+> >> adds support for more users of this driver.
+> >> 
+> >> This series is based on Peter Chen's work. Its needed to merge his master branch
+> >> before applying this series:
+> >> 
+> >> https://github.com/hzpeterchen/linux-usb.git
+> >
+> > I have tested it at i.mx6q sabrelite board, it works good.
+> >
+> > I have pushed your commit to my git, please cc me
+> > your coming chipidea patches, thanks.
+> >
+> > Alex, please add:
+> >
+> > Reviewed-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> > Tested-by: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> 
+> Looks good, queueing this one for submission.
 
->  - w/o a clock controller there is no block which has knowledge of th=
-e whole clock tree (unless we parse the DT), and could conduct reparent=
- operations and similar
+Now that you have your git-tree [1], could you queue that for
+submission?
 
-The clk framework builds a representation of the clock tree. Each clock=
- should
-be able to handle re-parenting on it's own, without knowing about the o=
-ther
-clocks in the tree, the parent is selected by a field in the clocks reg=
-ister.
-It doesn't even have to know who the parents are, the clk framework wil=
-l take
-care of all of this and just say, ok, switch your input clock to X, whe=
-re X is
-a simple integer number The clk framework will also take care of re-cal=
-culating
-all the updates frequencies after re-parenting.
+[1] git://github.com/virtuoso/linux-ci.git ci-for-greg
 
->  - once the clock controller is properly defined the clock connection=
- should be contained in a dtsi which never changes. So, regarding remem=
-bering outputs, I don't see a problem. I rather see issues with having =
-a pile of clocks described in the DT. I have currently 44 outputs propo=
-sed, and to model the whole tree a lot of more clocks are used (I start=
-ed modeling everything with the clock primitives and removed custom clo=
-ck implementations, except for the PLLs). Having all those in the DT do=
-es not really help, IMHO.
+Regards,
+Michael
 
-Well, except if you want to use external clocks for ethernet or CAN. Al=
-so you
-don't need to change the dtsi either if you have a separate node for ea=
-ch clock.
-
-To avoid misunderstandings let me clarify that I don't want to have one=
- node
-per clock, but rather one node per clock block (or whatever they are ca=
-lled).
-The combination of input select + divider + output gate. E.g. the UART =
-clock
-block with it's 3 inputs and two outputs.
-
-Also the APER clocks should probably be one node with 24 outputs.
-
-- Lars
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
