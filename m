@@ -1,99 +1,83 @@
-From: Vikas Sajjan <vikas.sajjan@linaro.org>
-Subject: Re: [PATCH v6 5/5] ARM: dts: Add FIMD DT binding Documentation
-Date: Thu, 7 Mar 2013 12:20:32 +0530
-Message-ID: <CAD025ySF+Ldyh0LUk_AyDQ5nqz8SM-HF5f+fCgKa1BOsoHOidw@mail.gmail.com>
-References: <1362044559-7496-1-git-send-email-vikas.sajjan@linaro.org>
- <1362044559-7496-6-git-send-email-vikas.sajjan@linaro.org>
- <5133A068.7060906@gmail.com> <CAD025yQA+yAPzATDvE-4HQP+HVbmDQkg+XVKd=VUepL+dM9s9Q@mail.gmail.com>
- <5137B183.6040201@gmail.com>
+From: Benoit Cousson <b-cousson-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V4] ARM: dts: add minimal DT support for DevKit8000.
+Date: Thu, 7 Mar 2013 07:51:30 +0100
+Message-ID: <513838F2.60101@ti.com>
+References: <F3DBB1B3EF102E4994C89758CFCA32412CC4E9@DBDE01.ent.ti.com>
+ <CABYxbz5GyxYaHANgdpwBNaaR6tnu=6LJuUNSvL7DEzU=4CPHcA@mail.gmail.com>
+ <F3DBB1B3EF102E4994C89758CFCA32412CC74F@DBDE01.ent.ti.com>
+ <CABYxbz62JrMB95p5i9iu2G=B4ETXLrYbLsyFEFR5F+WVD6YNnQ@mail.gmail.com>
+ <20130306175313.GQ11806@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5137B183.6040201@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, sachin.kamat@linaro.org, t.figa@samsung.com, devicetree-discuss@lists.ozlabs.org, inki.dae@samsung.com, jy0922.shim@samsung.com, sunil joshi <joshi@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130306175313.GQ11806-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Thomas Weber <thomas-xePHB1Atl/Dsq35pWSNszA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 7 March 2013 02:43, Sylwester Nawrocki <sylvester.nawrocki@gmail.com> wrote:
-> On 03/06/2013 11:18 AM, Vikas Sajjan wrote:
+On 03/06/2013 06:53 PM, Tony Lindgren wrote:
+> * Anil Kumar <anilk4.v-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> [130305 18:40]:
+>> Hi Tony,
 >>
->> Good idea, but i am just wondering is it a good idea to modify the
->> fimd driver ?
->
->
-> I think it is. But it depends what code quality you aim for.
->
-> Is there any issue in making a change as below ? ;)
+>>>> From: linux-arm-kernel [mailto:linux-arm-kernel-
+>>>> bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org] On Behalf Of Anil Kumar
+>>>> Sent: Wednesday, February 27, 2013 8:03 AM
+>>>> To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org; linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org;
+>>>> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>>> Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org; Cousson, Benoit; Tony Lindgren; Grant
+>>>> Likely; Anil Kumar; thomas-xePHB1Atl/Dsq35pWSNszA@public.gmane.org
+>>>> Subject: Re: FW: [PATCH V4] ARM: dts: add minimal DT support for
+>>>> DevKit8000.
+>>>>
+>>>> Hi,
+>>>>>
+>>>>> DevKit8000 is a beagle board clone from Timll, sold by
+>>>>> armkits.com. The DevKit8000 has RS232 serial port, LCD, DVI-D,
+>>>>> S-Video, Ethernet, SD/MMC, keyboard, camera, SPI, I2C, USB and
+>>>>> JTAG interface.
+>>>>>
+>>>>> This patch adds the basic DT support for devkit8000. At this time,
+>>>> Information
+>>>>> of twl4030 (PMIC), MMC1, I2C1 and leds are added.
+>>>>>
+>>>>> Signed-off-by: Anil Kumar <anilk4.v-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>>>> Tested-by: Thomas Weber <thomas-xePHB1Atl/Dsq35pWSNszA@public.gmane.org>
+>>>>
+>>>> Gentle Ping. As there are no review comments on this patch,
+>>>> Could you please pull this patch ?
+>>
+>> Gentle Ping.
+>>
+>> This patch also got Reviewed-by: Manish Badarkhe <badarkhe.manish-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>> and as patch "ARM: dts: omap3-devkit8000: Enable audio support"  has already got
+>> "Acked-by: Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>" but it is on the
+>> top of this patch.
+>> So, Could you please pull this patch in one of your omap branch? or
+>> you want me to
+>> do rebase this patch on top of v3.9-rc1 ?
+> 
+> Let's wait for Benoit to queue it as he has a bunch of .dts changes already
+> applied. Too bad we missed v3.9 merge window for those, but hopefully
+> we can get them queued early for v3.10.
 
-Certainly no issue :-)  Will check this idea both on exyno4 and
-exynos5 and shall update.
->
-> Of course it's all up to you, I've just suggested what I thought was
-> an improvement to the current situation.
->
-> diff --git a/arch/arm/plat-samsung/devs.c b/arch/arm/plat-samsung/devs.c
-> index 51afedd..4180247 100644
-> --- a/arch/arm/plat-samsung/devs.c
-> +++ b/arch/arm/plat-samsung/devs.c
-> @@ -160,9 +160,9 @@ struct platform_device samsung_asoc_idma = {
->  #ifdef CONFIG_S3C_DEV_FB
->  static struct resource s3c_fb_resource[] = {
->         [0] = DEFINE_RES_MEM(S3C_PA_FB, SZ_16K),
-> -       [1] = DEFINE_RES_IRQ(IRQ_LCD_VSYNC),
-> -       [2] = DEFINE_RES_IRQ(IRQ_LCD_FIFO),
-> -       [3] = DEFINE_RES_IRQ(IRQ_LCD_SYSTEM),
-> +       [1] = DEFINE_RES_IRQ_NAMED(IRQ_LCD_VSYNC, "vsync"),
-> +       [2] = DEFINE_RES_IRQ_NAMED(IRQ_LCD_FIFO, "fifo"),
-> +       [3] = DEFINE_RES_IRQ_NAMED(IRQ_LCD_SYSTEM, "system"),
->  };
->
->  struct platform_device s3c_device_fb = {
-> @@ -305,9 +305,9 @@ struct platform_device s5p_device_jpeg = {
->  #ifdef CONFIG_S5P_DEV_FIMD0
->  static struct resource s5p_fimd0_resource[] = {
->         [0] = DEFINE_RES_MEM(S5P_PA_FIMD0, SZ_32K),
-> -       [1] = DEFINE_RES_IRQ(IRQ_FIMD0_VSYNC),
-> -       [2] = DEFINE_RES_IRQ(IRQ_FIMD0_FIFO),
-> -       [3] = DEFINE_RES_IRQ(IRQ_FIMD0_SYSTEM),
-> +       [1] = DEFINE_RES_IRQ_NAMED(IRQ_FIMD0_VSYNC, "vsync"),
-> +       [2] = DEFINE_RES_IRQ(IRQ_FIMD0_FIFO, "fifo"),
-> +       [3] = DEFINE_RES_IRQ(IRQ_FIMD0_SYSTEM, "system"),
->  };
->
->  struct platform_device s5p_device_fimd0 = {
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> index 36493ce..5efb4c7 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_fimd.c
-> @@ -917,7 +917,7 @@ static int fimd_probe(struct platform_device *pdev)
->         if (IS_ERR(ctx->regs))
->                 return PTR_ERR(ctx->regs);
->
-> -       res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> +       res = platform_get_resource_byname(pdev, IORESOURCE_IRQ, "vsync");
->         if (!res) {
->                 dev_err(dev, "irq request failed.\n");
->                 return -ENXIO;
-> diff --git a/drivers/video/s3c-fb.c b/drivers/video/s3c-fb.c
-> index 968a625..43af0108 100644
-> --- a/drivers/video/s3c-fb.c
-> +++ b/drivers/video/s3c-fb.c
-> @@ -1427,7 +1427,7 @@ static int s3c_fb_probe(struct platform_device *pdev)
->                 goto err_lcd_clk;
->         }
->
-> -       res = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
-> +       res = platform_get_resource_byname(pdev, IORESOURCE_IRQ, "vsync");
->         if (!res) {
->                 dev_err(dev, "failed to acquire irq resource\n");
->                 ret = -ENOENT;
+Yep, sorry for having missed 3.9, I was a little bit sick at the wrong
+moment :-(
 
+I'm starting queuing the pending patches, and should have enough to push
+to you just after Linaro Connect.
 
-
--- 
-Thanks and Regards
- Vikas Sajjan
+Regards,
+Benoit
