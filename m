@@ -1,55 +1,71 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 1/2] ARM: EXYNOS: Add PCIe driver support
-Date: Thu, 07 Mar 2013 10:17:15 +0900
-Message-ID: <015101ce1ad1$80e4fa20$82aeee60$%kim@samsung.com>
-References: <016b01ce18c2$2c366f10$84a34d30$%han@samsung.com>
- <CAJuYYwTKe6cC+eMmyAAskCJrDrbS3SmYRYhzL9iui5m1zvgbzw@mail.gmail.com>
- <20130306140752.7e5d68c8@skate>
+Subject: RE: [PATCH v6 01/16] clk: samsung: add common clock framework helper
+ functions for Samsung platforms
+Date: Thu, 07 Mar 2013 10:44:30 +0900
+Message-ID: <015a01ce1ad5$4f89a4e0$ee9ceea0$%kim@samsung.com>
+References: <1361175686-19400-1-git-send-email-thomas.abraham@linaro.org>
+ <201303030208.49722.heiko@sntech.de> <51333149.1060105@gmail.com>
+ <2984153.Xctncej7hL@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20130306140752.7e5d68c8@skate>
+In-reply-to: <2984153.Xctncej7hL@flatron>
 Content-language: ko
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Thomas Petazzoni' <thomas.petazzoni@free-electrons.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>
-Cc: 'Jingoo Han' <jg1.han@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, 'Surendranath Gurivireddy Balla' <suren.reddy@samsung.com>, 'Siva Reddy Kallam' <siva.kallam@samsung.com>
+To: 'Tomasz Figa' <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, =?ISO-8859-1?Q?'Heiko_St=FCbner'?= <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, devicetree-discuss@lists.ozlabs.org, 'Thomas Abraham' <thomas.abraham@linaro.org>, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Thomas Petazzoni wrote:
-> 
-> Dear Thomas Abraham,
-> 
-> On Mon, 4 Mar 2013 16:01:59 +0530, Thomas Abraham wrote:
-> > On 4 March 2013 15:52, Jingoo Han <jg1.han@samsung.com> wrote:
-> > > Exynos5440 has two PCIe controllers which can be used as Root Complex.
-> > > This driver supports the PCIe controllers as Root Complex mode.
-> > >
-> > > Signed-off-by: Surendranath Gurivireddy Balla
-> <suren.reddy@samsung.com>
-> > > Signed-off-by: Siva Reddy Kallam <siva.kallam@samsung.com>
-> > > Signed-off-by: Jingoo Han <jg1.han@samsung.com>
-> > > ---
-> > >  .../devicetree/bindings/pci/exynos-pcie.txt        |   58 ++
-> > >  arch/arm/Kconfig                                   |    2 +
-> > >  arch/arm/mach-exynos/Kconfig                       |    8 +
-> > >  arch/arm/mach-exynos/Makefile                      |    2 +
-> > >  arch/arm/mach-exynos/include/mach/pcie.h           |  146 +++
-> > >  arch/arm/mach-exynos/pcie.c                        | 1009
-> ++++++++++++++++++++
+Tomasz Figa wrote:
+>=20
+> Hi,
+>=20
+> On Sunday 03 of March 2013 12:17:29 Sylwester Nawrocki wrote:
+> > Hi,
 > >
-> > Is there any reason to place this code in arch/arm/...? As you know,
-> > there is a constant effort to relocate as much code as possible from
-> > arch/arm/mach-exynos. So there must be a strong justification for
-> > keeping this code in arch/arm/mach-exynos.
-> 
-> Indeed. Thierry Reding (doing the Tegra PCIe driver) and myself (doing
-> the Marvell PCIe driver) are putting our drivers in drivers/pci/host/,
-> in agreement with the PCI maintainers.
-> 
-I agree.
+> > On 03/03/2013 02:08 AM, Heiko St=FCbner wrote:
+> > > But is there an easy way to define more than one alias? On the s3=
+c2416
+> > > for example the hsmmc hclk is the "hsmmc" io-clock, as well as th=
+e
+> > > source for the "mmc_busclk.0". Same for the "uart" pclk, that is =
+also
+> > > a baud clock source.
+> > This driver currently provides for only one additional clkdev looku=
+p
+> > entry per a platform clock. I pointed out this desing issue in the
+> > early version of the patch set. It's because a machine clock defini=
+tion
+> > is coupled with a clock consumer definition. And IMO various
+> > samsung_clock_register_* functions should not have
+> > clk_register_clkdev() inside them. I.e. first step could be registe=
+ring
+> > all machine clocks and in the second one clkdev lookup entries coul=
+d be
+> > created. This is how most (all?) existing SoC clock drivers are
+> > working.
+> >
+> > But those multiple aliases are important only for machines with dev=
+ice
+> > tree support, aren't they ?
+>=20
+> I suppose you meant _without_ device tree support, right?
+>=20
+> > I hope this patch series gets merged early to linux-next in the 3.1=
+0
+> > cycle so the multiple accumulated fixup patches for this clock driv=
+er
+> > can be merged as well and issues like that you pointed out can be
+> > resolved with incremental patches.
+>=20
+> Yes, I hope so too.
+>
+Yes, I will in this weekend.
 
-Jingoo, please move this stuff into drivers/pci when you address comments.
+Note, I will modify [07/16] for universal_c210 as per Kyungmin's reques=
+t,
+I'm not sure about universal_c210 though.
 
 Thanks.
 
