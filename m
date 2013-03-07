@@ -1,46 +1,50 @@
-From: Peter Korsgaard <jacmet@sunsite.dk>
-Subject: Re: [PATCH 1/3] driver: net: ethernet: cpsw: implement ethtool get/set phy setting
-Date: Thu, 07 Mar 2013 14:24:15 +0100
-Message-ID: <8762135on4.fsf@dell.be.48ers.dk>
-References: <1362659421-11884-1-git-send-email-mugunthanvnm@ti.com>
-	<1362659421-11884-2-git-send-email-mugunthanvnm@ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 6/7] ARM: dts: omap5: Add omap-usb3 and omap-usb2 dt data
+Date: Thu, 7 Mar 2013 19:05:19 +0530
+Message-ID: <1362663320-23799-7-git-send-email-kishon@ti.com>
+References: <1362663320-23799-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1362659421-11884-2-git-send-email-mugunthanvnm@ti.com>
-	(Mugunthan V. N.'s message of "Thu, 7 Mar 2013 18:00:19 +0530")
-Sender: netdev-owner@vger.kernel.org
-To: Mugunthan V N <mugunthanvnm@ti.com>
-Cc: netdev@vger.kernel.org, davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, b-cousson@ti.com, paul@pwsan.com
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1362663320-23799-1-git-send-email-kishon@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: grant.likely@secretlab.ca, rob.herring@calxeda.com, rob@landley.net, b-cousson@ti.com, tony@atomide.com, linux@arm.linux.org.uk, balbi@ti.com, kishon@ti.com, devicetree-discuss@lists.ozlabs.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
->>>>> "M" == Mugunthan V N <mugunthanvnm@ti.com> writes:
+Add omap-usb3 and omap-usb2 data node in omap5 device tree file.
+The information for the node added here is available @
+Documentation/devicetree/bindings/usb/usb-phy.txt
 
- M> This patch implements get/set of the phy settings via ethtool apis
- M> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
- M> ---
- M>  Documentation/devicetree/bindings/net/cpsw.txt |    3 +++
- M>  drivers/net/ethernet/ti/cpsw.c                 |   32 ++++++++++++++++++++++++
- M>  include/linux/platform_data/cpsw.h             |    1 +
- M>  3 files changed, 36 insertions(+)
+Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+---
+ arch/arm/boot/dts/omap5.dtsi |   14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
- M> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
- M> index ecfdf75..8d61300 100644
- M> --- a/Documentation/devicetree/bindings/net/cpsw.txt
- M> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
- M> @@ -20,6 +20,7 @@ Required properties:
- M>  - cpts_clock_shift	: Denominator to convert input clock ticks into nanoseconds
- M>  - phy_id		: Specifies slave phy id
- M>  - mac-address		: Specifies slave MAC address
- M> +- ethtool-active-slave	: Specifies the slave to use for ethtool command
-
-That again sounds like something Linux specific rather than a hardware
-property.
-
-It would be good if all these special things (dual emac mode, vlan
-handling, switching) could be handled using the existing kernel
-(bridging/vlan) infrastructure, and the driver always just exposing 2
-network interfaces instead of these configuration properties.
-
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index 230b779..bd73257 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -511,6 +511,20 @@
+ 			#size-cells = <1>;
+ 			ranges;
+ 			ti,hwmods = "ocp2scp1";
++			usb2_phy: usb2phy@4a084000 {
++				compatible = "ti,omap-usb2";
++				reg = <0x4a084000 0x7c>;
++				ctrl-module = <&omap_control_usb>;
++			};
++
++			usb3_phy: usb3phy@4a084400 {
++				compatible = "ti,omap-usb3";
++				reg = <0x4a084400 0x80>,
++				      <0x4a084800 0x64>,
++				      <0x4a084c00 0x40>;
++				reg-names = "phy_rx", "phy_tx", "pll_ctrl";
++				ctrl-module = <&omap_control_usb>;
++			};
+ 		};
+ 	};
+ };
 -- 
-Bye, Peter Korsgaard
+1.7.10.4
+
