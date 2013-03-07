@@ -1,72 +1,56 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v6 01/16] clk: samsung: add common clock framework helper
- functions for Samsung platforms
-Date: Thu, 07 Mar 2013 10:44:30 +0900
-Message-ID: <015a01ce1ad5$4f89a4e0$ee9ceea0$%kim@samsung.com>
-References: <1361175686-19400-1-git-send-email-thomas.abraham@linaro.org>
- <201303030208.49722.heiko@sntech.de> <51333149.1060105@gmail.com>
- <2984153.Xctncej7hL@flatron>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] pinctrl: imx: use pin_func_ids to search the pinctrl
+ item.
+Date: Thu, 7 Mar 2013 04:25:28 +0100
+Message-ID: <CACRpkdYwyB1zC+ZgrJyiAnfEuH758f4q3J6LG-LT=WV25E9sRQ@mail.gmail.com>
+References: <1361932553-8218-1-git-send-email-b32955@freescale.com>
+ <1361932553-8218-2-git-send-email-b32955@freescale.com>
+ <CACRpkdYO5UN=t_nu1XQmBAjH6zWZRgnOY2zSQeO2K=ERrUPQCg@mail.gmail.com>
+ <CAP1dx+xB0O2zouDcjmv3uO1Nk3EGytmAxn18tEO7EzXJOWoh8w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <2984153.Xctncej7hL@flatron>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Tomasz Figa' <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org
-Cc: 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, =?ISO-8859-1?Q?'Heiko_St=FCbner'?= <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, devicetree-discuss@lists.ozlabs.org, 'Thomas Abraham' <thomas.abraham@linaro.org>, t.figa@samsung.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CAP1dx+xB0O2zouDcjmv3uO1Nk3EGytmAxn18tEO7EzXJOWoh8w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tomasz Figa wrote:
->=20
-> Hi,
->=20
-> On Sunday 03 of March 2013 12:17:29 Sylwester Nawrocki wrote:
-> > Hi,
-> >
-> > On 03/03/2013 02:08 AM, Heiko St=FCbner wrote:
-> > > But is there an easy way to define more than one alias? On the s3=
-c2416
-> > > for example the hsmmc hclk is the "hsmmc" io-clock, as well as th=
-e
-> > > source for the "mmc_busclk.0". Same for the "uart" pclk, that is =
-also
-> > > a baud clock source.
-> > This driver currently provides for only one additional clkdev looku=
-p
-> > entry per a platform clock. I pointed out this desing issue in the
-> > early version of the patch set. It's because a machine clock defini=
-tion
-> > is coupled with a clock consumer definition. And IMO various
-> > samsung_clock_register_* functions should not have
-> > clk_register_clkdev() inside them. I.e. first step could be registe=
-ring
-> > all machine clocks and in the second one clkdev lookup entries coul=
-d be
-> > created. This is how most (all?) existing SoC clock drivers are
-> > working.
-> >
-> > But those multiple aliases are important only for machines with dev=
-ice
-> > tree support, aren't they ?
->=20
-> I suppose you meant _without_ device tree support, right?
->=20
-> > I hope this patch series gets merged early to linux-next in the 3.1=
-0
-> > cycle so the multiple accumulated fixup patches for this clock driv=
-er
-> > can be merged as well and issues like that you pointed out can be
-> > resolved with incremental patches.
->=20
-> Yes, I hope so too.
+On Mon, Mar 4, 2013 at 3:18 AM, Dong Aisheng <dong.aisheng-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On 1 March 2013 21:07, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Wed, Feb 27, 2013 at 3:35 AM, Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org> wrote:
+>>
+>>> The uart may works in DTE mode or DCE mode. The customer can sets the different
+>>> modes by the pinctrl. But the pinctrl items for DTE or DCE may share the
+>>> same Pad id, such as:
+>>>   MX6Q_PAD_EIM_D27__UART2_RXD_DTE and MX6Q_PAD_EIM_D27__WEIM_WEIM_D_27
+>>>   share the same MX6Q_PAD_EIM_D27 pad id.
+>>>
+>>> The current code only search the pinctrl items by pad id. So if there two
+>>> pinctrl items shares the same pad id, the current code only use the first one,
+>>> even you tell the system to use the second one in the DTS file.
+>>>
+>>> This patch adds a new field pin_func_ids to imx_pin_group{}, and uses the
+>>> pin_func_ids as the index to search the pinctrl items. In this way, we can
+>>> avoid the issue.
+>>>
+>>> Signed-off-by: Huang Shijie <b32955-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>>
+>> Dong/Shawn: what about this patch?
 >
-Yes, I will in this weekend.
+> We do not need this patch anymore since we've changed the binding a bit.
 
-Note, I will modify [07/16] for universal_c210 as per Kyungmin's reques=
-t,
-I'm not sure about universal_c210 though.
+OK ignoring this then.
 
-Thanks.
-
-- Kukjin
+Yours,
+Linus Walleij
