@@ -1,31 +1,45 @@
-From: Ricardo Ribalda Delgado <ricardo.ribalda@gmail.com>
-Subject: HOWTO Undo/Revert of_platform_populate?
-Date: Thu, 7 Mar 2013 11:32:47 +0100
-Message-ID: <CAPybu_3LfWLYLSn52dgFDuBTASLvQ0_XWsywH=Avpma+4s921g@mail.gmail.com>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH] dma: Remove erroneous __exit and __exit_p() references
+Date: Thu, 7 Mar 2013 16:08:01 +0530
+Message-ID: <20130307103801.GH13370@intel.com>
+References: <1361318824-22287-1-git-send-email-maxin.john@gmail.com>
+ <CACRpkdZamOCWHWMcFYRqQDKJARZOCEP_eSNPNaxSgHfAn2wmEw@mail.gmail.com>
+ <CAMhs6YwC+Lx0Vt=w2MoQV08on+rB1zidGCsNHRqcst8KBrb2XQ@mail.gmail.com>
+ <20130307094735.GG13370@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130307094735.GG13370@intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, devicetree-discuss@lists.ozlabs.org
+To: "Maxin B. John" <maxin.john@gmail.com>
+Cc: gregkh@linuxfoundation.org, djbw@fb.com, nicolas.ferre@atmel.com, linus.walleij@linaro.org, rmk+kernel@arm.linux.org.uk, jassisinghbrar@gmail.com, lars@metafoo.de, grant.likely@secretlab.ca, linux-kernel@vger.kernel.org, rob.herring@calxeda.com, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, "Maxin B. John" <maxin.john@enea.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Thu, Mar 07, 2013 at 03:17:35PM +0530, Vinod Koul wrote:
+> On Thu, Mar 07, 2013 at 10:17:40AM +0100, Maxin B. John wrote:
+> > Hi,
+> > 
+> > On Fri, Feb 22, 2013 at 7:29 PM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> > > On Wed, Feb 20, 2013 at 1:07 AM,  <maxin.john@gmail.com> wrote:
+> > >
+> > >> From: "Maxin B. John" <maxin.john@enea.com>
+> > >>
+> > >> Removing the annotation with __exit and referencing with __exit_p()
+> > >> present in dma driver module remove hooks.
+> > >>
+> > >> Part of the __devexit and __devexit_p() purge.
+> > >>
+> > >> Signed-off-by: Maxin B. John <maxin.john@enea.com>
+> > >
+> > > Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> > 
+> > Gentle ping...
+> ???
+> 
+> Its already in my -next
+Sorry, I have confused with your other patch, applying now...
 
-I have an FPGA attached to the pci bus. The FPGA has an internal bus
-with multiple cores that are already supported in the kernel.
-
-I have made a driver that populates those cores using a user provided
-device tree. I use the function of_platform_populate for that.
-
-All this is working fine, but now I need a method to undo what
-of_platform_populate does when the fpga is reprogrammed.
-
-I haven't found any function that does this in the api.
-
-Before implementing my own I would like to know if am I missing something?
-
-
-Thanks!
-
--- 
-Ricardo Ribalda
+> 
+> --
+> ~Vinod
