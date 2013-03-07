@@ -1,56 +1,79 @@
-From: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-Subject: Re: plat-nand DT support
-Date: Thu, 7 Mar 2013 21:15:08 +0000
-Message-ID: <20130307211508.GP1976@edkhil>
-References: <20130303155226.GA1976@edkhil>
+From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Subject: Re: [PATCH V2] cpufreq: ARM big LITTLE: Add generic cpufreq driver
+ and its DT glue
+Date: Thu, 7 Mar 2013 22:56:54 +0100 (CET)
+Message-ID: <Pine.LNX.4.64.1303072248560.20470@axis700.grange>
+References: <6cba8f153cfd4b0d3075a34a6dfe287bdec2eb06.1362676407.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20130303155226.GA1976@edkhil>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <6cba8f153cfd4b0d3075a34a6dfe287bdec2eb06.1362676407.git.viresh.kumar@linaro.org>
+Sender: cpufreq-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: rjw@sisk.pl, Steve.Bannister@arm.com, linux@arm.linux.org.uk, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, devicetree-discuss@lists.ozlabs.org, Liviu.Dudau@arm.com, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, robin.randhawa@arm.com, linux-arm-kernel@lists.infradead.org, mark.hambleton@broadcom.com, linaro-kernel@lists.linaro.org, charles.garcia-tobin@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Any comments...anyone?
+Hi Viresh
 
-On Sun, Mar 03, 2013 at 03:52:26PM +0000, Alexander Clouter wrote:
->
->I have been busy porting an ARM board (that uses plat_nand) to 
->devicetree and stumbled on John Crispin's patch from last year[1].  
->There was not much online about how to use it, so I went about 
->building upon his work it what seemed to be natural and a good fit.
->
->Attached is the work I have done to the driver its-self (including 
->the much needed bindings documentation), whilst on my github page I 
->have put up an example of its usage:
->
->https://github.com/jimdigriz/ts78xx/blob/gen-nand-dt/arch/arm/mach-orion5x/board-ts7800.c
->https://github.com/jimdigriz/ts78xx/blob/gen-nand-dt/arch/arm/boot/dts/orion5x-ts7800.dts
->
->Am I going in the right direction here?  plat_nand, by its nature, is 
->not very DT, the alternative would be a custom driver for my 
->platform[2] but then are we not just littering drivers/mtd/nand 
->rather than arch/arm/mach-foobar?
->
->Cheers
->
->[1] http://lists.infradead.org/pipermail/linux-mtd/2012-April/041025.html
->[2] could also support the NAND used by arch/arm/mach-ep93xx/ts72xx.c 
->	but the whole SoC has not been ported to DT
+On Fri, 8 Mar 2013, Viresh Kumar wrote:
 
--- 
-Alexander Clouter
-.sigmonster says: The ends justify the means.
-                   		-- after Matthew Prior
+> big LITTLE is ARM's new Architecture focussing power/performance needs of modern
+> world. More information about big LITTLE can be found here:
+> 
+> http://www.arm.com/products/processors/technologies/biglittleprocessing.php
+> http://lwn.net/Articles/481055/
+> 
+> In order to keep cpufreq support for all big LITTLE platforms simple/generic,
+> this patch tries to add a generic cpufreq driver layer for all big LITTLE
+> platforms.
+
+I like generic drivers :) cpufreq-cpu0 is yet another such generic 
+(cpufreq) driver. Now, comparing the functionality of the two:
+
+[snip]
+
+> +/* Set clock frequency */
+> +static int bL_cpufreq_set_target(struct cpufreq_policy *policy,
+> +		unsigned int target_freq, unsigned int relation)
+> +{
+> +	struct cpufreq_freqs freqs;
+> +	u32 cpu = policy->cpu, freq_tab_idx, cur_cluster;
+> +	int ret = 0;
+> +
+> +	cur_cluster = cpu_to_cluster(policy->cpu);
+> +
+> +	freqs.old = bL_cpufreq_get(policy->cpu);
+> +
+> +	/* Determine valid target frequency using freq_table */
+> +	cpufreq_frequency_table_target(policy, freq_table[cur_cluster],
+> +			target_freq, relation, &freq_tab_idx);
+> +	freqs.new = freq_table[cur_cluster][freq_tab_idx].frequency;
+> +
+> +	freqs.cpu = policy->cpu;
+> +
+> +	pr_debug("%s: cpu: %d, cluster: %d, oldfreq: %d, target freq: %d, new freq: %d\n",
+> +			__func__, cpu, cur_cluster, freqs.old, target_freq,
+> +			freqs.new);
+> +
+> +	if (freqs.old == freqs.new)
+> +		return 0;
+> +
+> +	for_each_cpu(freqs.cpu, policy->cpus)
+> +		cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
+> +
+> +	ret = clk_set_rate(clk[cur_cluster], freqs.new * 1000);
+
+we see, that this driver "only" switches CPU clock frequencies. Whereas 
+the cpufreq-cpu0 driver also manipulates a regulator (if available) 
+directly. I understand, power-saving is also an important consideration 
+for big.LITTLE systems. So, I presume, you plan to implement voltage 
+switching in cpufreq notifiers? Now, my question is: is this (notifier) 
+actually the preferred method and the cpufreq-cpu0 driver is doing it 
+"wrongly?"
+
+Thanks
+Guennadi
+---
+Guennadi Liakhovetski, Ph.D.
+Freelance Open-Source Software Developer
+http://www.open-technology.de/
