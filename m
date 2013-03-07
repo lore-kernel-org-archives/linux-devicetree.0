@@ -1,16 +1,16 @@
 From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/9] MXS/i.MX28: add the possibility to define the
- external RTC crystal
-Date: Thu, 7 Mar 2013 14:33:40 +0800
-Message-ID: <20130307063337.GB5372@S2101-09.ap.freescale.net>
+Subject: Re: [PATCH 3/9] MXS/i.MX28: prepare different clocking of the
+ built-in RTC
+Date: Thu, 7 Mar 2013 14:40:54 +0800
+Message-ID: <20130307064052.GC5372@S2101-09.ap.freescale.net>
 References: <1362405948-12992-1-git-send-email-s.trumtrar@pengutronix.de>
- <1362405948-12992-3-git-send-email-s.trumtrar@pengutronix.de>
+ <1362405948-12992-4-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1362405948-12992-3-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1362405948-12992-4-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -25,71 +25,63 @@ To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 04, 2013 at 03:05:41PM +0100, Steffen Trumtrar wrote:
+On Mon, Mar 04, 2013 at 03:05:42PM +0100, Steffen Trumtrar wrote:
 > From: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > 
 > Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-
-You should have your SoB added here.
-
 > ---
->  arch/arm/boot/dts/imx28.dtsi |    6 ++++++
->  drivers/clk/mxs/clk-imx28.c  |    4 +++-
->  2 files changed, 9 insertions(+), 1 deletion(-)
+>  drivers/rtc/rtc-stmp3xxx.c |    8 ++++++++
+>  1 file changed, 8 insertions(+)
+
+So this is a rtc patch, and should be prefixed with "rtc: stmp3xxx: "
+like patches #6~9.
+
+And IMO, all the changes in this patch can just be added together with
+the codes that use them.  IOW, it can be merged into patch #4.
+
 > 
-> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-> index 958bd10..dcd0844 100644
-> --- a/arch/arm/boot/dts/imx28.dtsi
-> +++ b/arch/arm/boot/dts/imx28.dtsi
-> @@ -41,6 +41,12 @@
->  		#address-cells = <1>;
->  		#size-cells = <0>;
->  
-> +		osc32k: rtc_oscillator {
-
-Please use "-" than "_" in node name.
-
-> +			compatible = "fsl,mxs-rtc", "fixed-clock";
-
-I would suggest drop "fsl,mxs-rtc" here, and ...
-
-> +			#clock-cells = <0>;
-> +			clock-frequency = <0>;
-> +		};
+> diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
+> index 98f0d3c..7311292 100644
+> --- a/drivers/rtc/rtc-stmp3xxx.c
+> +++ b/drivers/rtc/rtc-stmp3xxx.c
+> @@ -53,18 +53,26 @@
+>  #define STMP3XXX_RTC_PERSISTENT0		0x60
+>  #define STMP3XXX_RTC_PERSISTENT0_SET		0x64
+>  #define STMP3XXX_RTC_PERSISTENT0_CLR		0x68
+> +#define STMP3XXX_RTC_PERSISTENT0_CLOCKSOURCE	(1 << 0)
+>  #define STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE_EN	0x00000002
+>  #define STMP3XXX_RTC_PERSISTENT0_ALARM_EN	0x00000004
+> +#define STMP3XXX_RTC_PERSISTENT0_XTAL24MHZ_PWRUP (1 << 4)
+> +#define STMP3XXX_RTC_PERSISTENT0_XTAL32KHZ_PWRUP (1 << 5)
+> +#define STMP3XXX_RTC_PERSISTENT0_XTAL32_FREQ	(1 << 6)
 > +
->  		osc24m: system_oscillator {
->  			compatible = "fsl,mxs-system", "fixed-clock";
->  			#clock-cells = <0>;
-> diff --git a/drivers/clk/mxs/clk-imx28.c b/drivers/clk/mxs/clk-imx28.c
-> index 01048b5..a910d72 100644
-> --- a/drivers/clk/mxs/clk-imx28.c
-> +++ b/drivers/clk/mxs/clk-imx28.c
-> @@ -141,7 +141,7 @@ enum imx28_clk {
->  	clk32k_div, rtc, lradc, spdif_div, clk32k, pwm, uart, ssp0,
->  	ssp1, ssp2, ssp3, gpmi, spdif, emi, saif0, saif1, lcdif, etm,
->  	fec, can0, can1, usb0, usb1, usb0_phy, usb1_phy, enet_out,
-> -	clk_max
-> +	rtc_32k, clk_max
-
-Number it in binding doc.
-
->  };
+>  #define STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE	0x00000080
 >  
->  static struct clk *clks[clk_max];
-> @@ -167,6 +167,8 @@ int __init mx28_clocks_init(void)
+>  #define STMP3XXX_RTC_PERSISTENT1		0x70
+>  /* missing bitmask in headers */
+>  #define STMP3XXX_RTC_PERSISTENT1_FORCE_UPDATER	0x80000000
 >  
->  		if (of_device_is_compatible(np, "fsl,mxs-system"))
->  			clks[ref_xtal] = mxs_clk_fixed("ref_xtal", rate);
-> +		else if (of_device_is_compatible(np, "fsl,mxs-rtc"))
+> +enum clock_source { MXS_UNKNOWN, MXS_OSC_24M, MXS_OSC_32K, MXS_OSC_32K768 };
+> +
+We generic write it like
 
-... use node name to match, so that we can save a custom compatible.
+enum clock_source {
+        MXS_UNKNOWN,
+        MXS_OSC_24M,
+        MXS_OSC_32K,
+        MXS_OSC_32K768
+};
 
 Shawn
 
-> +			clks[rtc_32k] = mxs_clk_fixed("rtc32k", rate);
->  	}
+>  struct stmp3xxx_rtc_data {
+>  	struct rtc_device *rtc;
+>  	void __iomem *io;
+>  	int irq_alarm;
+> +	enum clock_source clk_src;
+>  };
 >  
->  	/* if not set, guess their frequency */
+>  #if IS_ENABLED(CONFIG_STMP3XXX_RTC_WATCHDOG)
 > -- 
 > 1.7.10.4
 > 
