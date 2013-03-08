@@ -1,49 +1,56 @@
-From: =?iso-8859-1?Q?=D8yvind_Grotmol?= <o.grotmol@energymicro.com>
-Subject: RE: [Customers.Bosch-Gecko] [PATCH] serial/efm32: parse location	property
-Date: Fri, 8 Mar 2013 09:51:57 +0100 (CET)
-Message-ID: <e276ad4a.00001634.00000007@OGROTMOL-PC.ensemi.local>
-References: <1358774576-13275-1-git-send-email-u.kleine-koenig@pengutronix.de>	<20130304143854.395EF3E206B@localhost>	<CACRpkdZuNOFco+GTe9YOD=qy+dgEaokoqvWaPA2mCxYHs9oxVA@mail.gmail.com> <20130307093829.GG15375@pengutronix.de>
+From: Andreas Larsson <andreas@gaisler.com>
+Subject: Re: [PATCH v3] gpio: Add device driver for GRGPIO cores and
+ support custom accessors with gpio-generic
+Date: Fri, 08 Mar 2013 10:00:17 +0100
+Message-ID: <1362733217.26956.2.camel@andreas>
+References: <1360653873-25368-1-git-send-email-andreas@gaisler.com>
+	 <CACRpkdaYQSrzm_Yj3ZH9YZLC_zPJN06X-9ZM9jd7=X0OB1shXQ@mail.gmail.com>
+	 <51346D7C.5080307@gaisler.com>
+	 <CACRpkdaC9DsNj56_q33Z5N3_90Ffdq9qZeOxrFdrVSoL4wrTbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <20130307093829.GG15375@pengutronix.de>
-Content-Language: no
-Sender: linux-serial-owner@vger.kernel.org
-To: 'PTX Customer Mailing List - Bosch AE / Energy Micro' <customers.bosch-gecko@pengutronix.de>, 'Linus Walleij' <linus.walleij@linaro.org>
-Cc: kernel@pengutronix.de, linux-doc@vger.kernel.org, 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, 'Grant Likely' <grant.likely@secretlab.ca>, linux-serial@vger.kernel.org, 'Jiri Slaby' <jslaby@suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaC9DsNj56_q33Z5N3_90Ffdq9qZeOxrFdrVSoL4wrTbQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: customers.bosch-gecko-bounces@pengutronix.de
-> [mailto:customers.bosch-gecko-bounces@pengutronix.de] On Behalf Of Uw=
-e
-> Kleine-K=F6nig
-> Sent: 7. mars 2013 10:38
->
-> > This is a new oddity: it's like multiplexing is distributed out amo=
-ng
-> > the peripherals on the EFM32, or atleast for this UART, so there is=
- a
-> > register on the peripheral itself selecting where to route it.
+On Thu, 2013-03-07 at 04:44 +0100, Linus Walleij wrote:
+> On Mon, Mar 4, 2013 at 10:46 AM, Andreas Larsson <andreas@gaisler.com> wrote:
+> > [Me]
+> >>> +struct grgpio_priv {
+> >>> +       struct bgpio_chip bgc;
+> >>> +       struct grgpio_regs __iomem *regs;
+> >>> +
+> >>> +       u32 imask;      /* irq mask shadow register */
+> >>> +       s32 *irqmap;    /* maps offset to irq or -1 if no irq */
+> >>
+> >>
+> >> irqmap? Argh what is this... I think you want to use irqdomain
+> >> for this instead. (Documentation/IRQ-domain.txt)
 > >
-> > If all peripherals on the system follows this pattern, like if ther=
-e
-> > is some such "location" register on each and every peripheral,
-> ideally
-> I didn't check if all do, but it's a common pattern for the efm32
-> peripherals to have such a ROUTE register.
+> >
+> > Yeah, that comment is not clear. An entry in the irqmap array (for a gpio
+> > line) can be either -1 indicating no irq for that line or an index into the
+> > array of irq:s for the of device. Thus it is simply either -1 or a valid
+> > second argument to irq_of_parse_and_map.
+> 
+> So just make the mapping function in the irqdomain handle that?
+> 
+> Maybe I'm talking weird, I'm not really familiar with
+> irq_of_parse_and_map().
+> 
+> > Given that this is generally running on SPARC, it seems irqdomain is not an
+> > option (IRQ_DOMAIN is not selected by SPARC).
+> 
+> That has nothing to do with this. This driver can just select IRQ_DOMAIN
+> in *it's* Kconfig entry.
 
-Yes. In general, our analog modules (such as ADC and DAC) have a fixed =
-pin
-location which cannot be changed. All of our digital modules (UART etc)
-have a ROUTE register inside each module. That is the general pattern.
+Oh, excellent! I'll look into an irqdomain solution then.
 
-Best regards,
-=D8yvind
+Thanks for the feedback!
 
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers,
+Andreas Larsson
