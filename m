@@ -1,99 +1,199 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 01/13] usb: phy: nop: Add device tree support and binding
- information
-Date: Fri, 08 Mar 2013 11:46:12 +0100
-Message-ID: <5139C174.7030401@pengutronix.de>
-References: <1359993540-20780-1-git-send-email-rogerq@ti.com> <1359993540-20780-2-git-send-email-rogerq@ti.com>
+From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
+Subject: RE: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+Date: Fri, 8 Mar 2013 12:29:02 +0000
+Message-ID: <79CD15C6BA57404B839C016229A409A83EC213C8@DBDE01.ent.ti.com>
+References: <1362629799-22485-1-git-send-email-mporter@ti.com>
+ <1362629799-22485-3-git-send-email-mporter@ti.com>
+ <41fde401c8e646689123d7c6d3a2dffc@DLEE71.ent.ti.com>
+ <20130307141235.GQ6209@beef>
+ <79CD15C6BA57404B839C016229A409A83EC20C57@DBDE01.ent.ti.com>
+ <20130307144656.GR6209@beef>
+ <79CD15C6BA57404B839C016229A409A83EC20CCA@DBDE01.ent.ti.com>
+ <20130307150408.GU6209@beef>
+ <79CD15C6BA57404B839C016229A409A83EC20D27@DBDE01.ent.ti.com>
+ <20130307160236.GV6209@beef>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2GLGOPPTHXRVNPTOIUVOG"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1359993540-20780-2-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: tony@atomide.com, b-cousson@ti.com, balbi@ti.com, stern@rowland.harvard.edu, linux@arm.linux.org.uk, linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rnayak@ti.com, paul@pwsan.com
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20130307160236.GV6209@beef>
+Content-Language: en-US
+Sender: linux-mmc-owner@vger.kernel.org
+To: "Porter, Matt" <mporter@ti.com>
+Cc: Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "Krishnamoorthy, Balaji T" <balajitk@ti.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2GLGOPPTHXRVNPTOIUVOG
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+> -----Original Message-----
+> From: Matt Porter [mailto:ohiomdp@gmail.com] On Behalf Of Porter, Matt
+> Sent: Thursday, March 07, 2013 9:33 PM
+> To: Hiremath, Vaibhav
+> Cc: Linux OMAP List; Russell King; Krishnamoorthy, Balaji T; Devicetree
+> Discuss; Linux MMC List; Linux Kernel Mailing List; Chris Ball; Linux
+> ARM Kernel List
+> Subject: Re: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+> 
+> On Thu, Mar 07, 2013 at 03:50:01PM +0000, Vaibhav Hiremath wrote:
+> >
+> > > -----Original Message-----
+> > > From: Matt Porter [mailto:ohiomdp@gmail.com] On Behalf Of Porter,
+> Matt
+> > > Sent: Thursday, March 07, 2013 8:34 PM
+> > > To: Hiremath, Vaibhav
+> > > Cc: Chris Ball; Russell King; Krishnamoorthy, Balaji T; Devicetree
+> > > Discuss; Linux MMC List; Linux Kernel Mailing List; Linux OMAP
+> List;
+> > > Linux ARM Kernel List
+> > > Subject: Re: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+> > >
+> > > On Thu, Mar 07, 2013 at 02:59:42PM +0000, Vaibhav Hiremath wrote:
+> > > >
+> > > > > -----Original Message-----
+> > > > > From: Hiremath, Vaibhav
+> > > > > Sent: Thursday, March 07, 2013 8:24 PM
+> > > > > To: Porter, Matt
+> > > > > Cc: Linux OMAP List; Russell King; Krishnamoorthy, Balaji T;
+> > > Devicetree
+> > > > > Discuss; Linux MMC List; Linux Kernel Mailing List; Chris Ball;
+> > > Linux
+> > > > > ARM Kernel List
+> > > > > Subject: RE: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+> > > > >
+> > > > > > -----Original Message-----
+> > > > > > From: Matt Porter [mailto:ohiomdp@gmail.com] On Behalf Of
+> Porter,
+> > > > > Matt
+> > > > > > Sent: Thursday, March 07, 2013 8:17 PM
+> > > > > > To: Hiremath, Vaibhav
+> > > > > > Cc: Linux OMAP List; Russell King; Krishnamoorthy, Balaji T;
+> > > > > Devicetree
+> > > > > > Discuss; Linux MMC List; Linux Kernel Mailing List; Chris
+> Ball;
+> > > Linux
+> > > > > > ARM Kernel List
+> > > > > > Subject: Re: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+> > > > > >
+> > > > > > On Thu, Mar 07, 2013 at 02:39:55PM +0000, Vaibhav Hiremath
+> wrote:
+> > > > > > >
+> > > > > > > > -----Original Message-----
+> > > > > > > > From: Matt Porter [mailto:ohiomdp@gmail.com] On Behalf Of
+> > > Porter,
+> > > > > > Matt
+> > > > > > > > Sent: Thursday, March 07, 2013 7:43 PM
+> > > > > > > > To: Hiremath, Vaibhav
+> > > > > > > > Cc: Krishnamoorthy, Balaji T; Chris Ball; Cousson,
+> Benoit;
+> > > Tony
+> > > > > > > > Lindgren; Russell King; Devicetree Discuss; Linux ARM
+> Kernel
+> > > > > List;
+> > > > > > > > Linux OMAP List; Linux Kernel Mailing List; Linux MMC
+> List
+> > > > > > > > Subject: Re: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+> > > > > > > >
+> > > > > > > > On Thu, Mar 07, 2013 at 05:29:24AM +0000, Vaibhav
+> Hiremath
+> > > wrote:
+> > > > > > > > > > -----Original Message-----
+> > > > > > > > > > From: linux-omap-owner@vger.kernel.org [mailto:linux-
+> > > omap-
+> > > > > > > > > > owner@vger.kernel.org] On Behalf Of Porter, Matt
+> > > > > > > > > > Sent: Thursday, March 07, 2013 9:47 AM
+> > > > > > > > > > To: Krishnamoorthy, Balaji T; Chris Ball; Cousson,
+> > > Benoit;
+> > > > > Tony
+> > > > > > > > > > Lindgren; Russell King
+> > > > > > > > > > Cc: Devicetree Discuss; Linux ARM Kernel List; Linux
+> OMAP
+> > > > > List;
+> > > > > > > > Linux
+> > > > > > > > > > Kernel Mailing List; Linux MMC List
+> > > > > > > > > > Subject: [PATCH 2/2] ARM: dts: add AM33XX MMC support
+> > > > > > > > > >
+> > > > <snip>
+> > > > >
+> > > > > I believe you meant "CONFIG_TI_EDMA" right?
+> > > > >
+> > > > > Yes, I just enabled it and the result is still same.
+> > > > >
+> > > > >
+> > > > >
+> > > > > [root@arago /]# dmesg | grep -ir mmc
+> > > > > [    0.506844] vmmc: 1800 <--> 3300 mV at 3300 mV
+> > > > > [    0.506970] vmmc: supplied by vbat
+> > > > > [root@arago /]#
+> > > > > [root@arago /]#
+> > > > > [root@arago /]# dmesg | grep -ir dma
+> > > > > [    0.217063] DMA: preallocated 256 KiB pool for atomic
+> coherent
+> > > > > allocations
+> > > > > [    0.236321] platform 49000000.edma: alias fck already exists
+> > > > > [    0.236360] platform 49000000.edma: alias fck already exists
+> > > > > [    0.236381] platform 49000000.edma: alias fck already exists
+> > > > > [    0.370705] edma-dma-engine edma-dma-engine.0: TI EDMA DMA
+> > > engine
+> > > > > driver
+> > > > > [    0.445156] omap-dma-engine omap-dma-engine: OMAP DMA engine
+> > > driver
+> > > > > [root@arago /]#
+> > > > > [root@arago /]#
+> > > > >
+> > > > >
+> > > > I have applied below patches from your recent post
+> > > >
+> > > >
+> > > > [2/2] ARM: dts: add AM33XX MMC support
+> > > > [1/2] mmc: omap_hsmmc: set max_segs based on dma engine limits
+> > > > [v4,3/3] mmc: davinci: get SG segment limits with
+> > > dma_get_slave_sg_limits()
+> > > > [v4,2/3] dma: edma: add device_slave_sg_limits() support
+> > > > [v4,1/3] dmaengine: add dma_get_slave_sg_limits()
+> > > > [v9,9/9] ARM: dts: add AM33XX SPI DMA support
+> > > > [v9,8/9] spi: omap2-mcspi: add generic DMA request support to the
+> DT
+> > > binding
+> > > > [v9,7/9] spi: omap2-mcspi: convert to
+> > > dma_request_slave_channel_compat()
+> > > > [v9,6/9] ARM: dts: add AM33XX EDMA support
+> > > > [v9,5/9] dmaengine: edma: Add TI EDMA device tree binding
+> > > > [v9,4/9] dmaengine: edma: enable build for AM33XX
+> > > > [v9,3/9] ARM: edma: add AM33XX support to the private EDMA API
+> > > > [v9,2/9] ARM: edma: remove unused transfer controller handlers
+> > > > [v9,1/9] ARM: davinci: move private EDMA API to arm/common
+> > > > [v3,2/2] mmc: omap_hsmmc: add generic DMA request support to the
+> DT
+> > > binding
+> > > > [v3,1/2] mmc: omap_hsmmc: convert to
+> > > dma_request_slave_channel_compat()
+> > > >
+> > > >
+> > > >
+> > > > Am I missing anything here?
+> > >
+> > > Yes, you missed the
+> > > http://www.spinics.net/lists/arm-kernel/msg227886.html dependency
+> > > mentioned first in the cover letter.
+> > >
+> >
+> > Matt, I manually edited the file with above patch and result is still
+> the same.
+> > Can you point me to branch where you have tested MMC code?
+> 
+> git://github.com/ohporter/linux.git edma-dmaengine-am33xx-mmc-v1
+> 
+> omap2plus_defconfig + CONFIG_TI_EDMA
+> 
+> I just doublechecked MMC rootfs on bone and evmsk as it's the standard
+> smoke test. My EVM is intermittent now so trying to coax it to power up
+> to reverify.
+> 
 
-On 02/04/2013 04:58 PM, Roger Quadros wrote:
-> The PHY clock, clock rate, VCC regulator and RESET regulator
-> can now be provided via device tree.
->=20
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  .../devicetree/bindings/usb/usb-nop-xceiv.txt      |   34 ++++++++++++=
-++++++++
->  drivers/usb/otg/nop-usb-xceiv.c                    |   31 ++++++++++++=
-++++++
->  2 files changed, 65 insertions(+), 0 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/usb-nop-xceiv=
-=2Etxt
->=20
-> diff --git a/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt b/=
-Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-> new file mode 100644
-> index 0000000..d7e2726
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/usb-nop-xceiv.txt
-> @@ -0,0 +1,34 @@
-> +USB NOP PHY
-> +
-> +Required properties:
-> +- compatible: should be usb-nop-xceiv
-> +
-> +Optional properties:
-> +- clocks: phandle to the PHY clock. Use as per Documentation/devicetre=
-e
-> +  /bindings/clock/clock-bindings.txt
-> +  This property is required if clock-frequency is specified.
-> +
-> +- clock-names: Should be "main_clk"
-> +
-> +- clock-frequency: the clock frequency (in Hz) that the PHY clock must=
+Matt,
 
-> +  be configured to.
-> +
-> +- vcc-supply: phandle to the regulator that provides RESET to the PHY.=
+Your branch is working for me, I tested it on EVM. Not sure what is wrong with manual rebasing
+I did yesterday. I will try to nail-down root-cause here.
 
-> +
-> +- reset-supply: phandle to the regulator that provides power to the PH=
-Y.
-> +
-> +Example:
-> +
-> +	hsusb1_phy {
-> +		compatible =3D "usb-nop-xceiv";
-> +		clock-frequency =3D <19200000>;
+And you can submit the next version fixing the comments I have given.
 
-Why do you hardcode the clock frequency here? You should use
-clk_get_rate() to get the frequency from the clock tree.
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
-------enig2GLGOPPTHXRVNPTOIUVOG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlE5wXgACgkQjTAFq1RaXHMTfQCdGkkuce/Ad3ixqfYK5A0746Cw
-krEAnjARGcTjqIvk8A5c337Z1gGZVPLG
-=wvTc
------END PGP SIGNATURE-----
-
-------enig2GLGOPPTHXRVNPTOIUVOG--
+Thanks,
+Vaibhav
