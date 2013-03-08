@@ -1,57 +1,146 @@
-From: Rob Herring <robherring2@gmail.com>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
 Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Fri, 08 Mar 2013 17:12:04 -0600
-Message-ID: <513A7044.1020700@gmail.com>
-References: <20130212223511.GB31555@obsidianresearch.com> <20130306105441.4d24033e@skate> <20130306121118.GA17079@avionic-0098.mockup.avionic-design.de> <20130306180946.GA2433@obsidianresearch.com> <20130307080832.GD3451@avionic-0098.mockup.avionic-design.de> <20130307174955.GC20840@obsidianresearch.com> <20130307194830.GA1811@avionic-0098.mockup.avionic-design.de> <20130307200235.GB20695@obsidianresearch.com> <20130307204726.GB1811@avionic-0098.mockup.avionic-design.de> <51392B4D.9040404@gmail.com> <20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
+Date: Fri, 08 Mar 2013 13:46:13 -1000
+Message-ID: <513A7845.6040304@firmworks.com>
+References: <20130307080832.GD3451@avionic-0098.mockup.avionic-design.de>
+ <20130307174955.GC20840@obsidianresearch.com>
+ <20130307194830.GA1811@avionic-0098.mockup.avionic-design.de>
+ <20130307200235.GB20695@obsidianresearch.com>
+ <20130307204726.GB1811@avionic-0098.mockup.avionic-design.de>
+ <51392B4D.9040404@gmail.com>
+ <20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
+ <20130308165228.GB4094@obsidianresearch.com>
+ <20130308191227.GA6551@avionic-0098.mockup.avionic-design.de>
+ <513A3F4F.2090501@firmworks.com>
+ <20130308200245.GC29435@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, linux-pci@vger.kernel.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Gregory Clement <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130308200245.GC29435-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 03/08/2013 01:14 AM, Thierry Reding wrote:
-> On Thu, Mar 07, 2013 at 06:05:33PM -0600, Rob Herring wrote:
->> On 03/07/2013 02:47 PM, Thierry Reding wrote:
-> [...]
->>> In a nutshell (since some of the context isn't quoted anymore) the
->>> problem that we're trying to solve is that some of the embedded SoCs
->>> require per-root-port registers for configuration. The PCI DT
->>> specification doesn't make any provisions for this. A few alternatives
->>> have been discussed so far:
+On 3/8/2013 10:02 AM, Jason Gunthorpe wrote:
+> On Fri, Mar 08, 2013 at 09:43:11AM -1000, Mitch Bradley wrote:
+> 
+>>>> http://www.spinics.net/lists/arm-kernel/msg228749.html
 >>
->> I'm not sure I follow. This is different than the host controller
->> registers? Why would this not just be multiple entries in the reg property?
+>> The example in that posting looks messed up to me.
+>>
+>> 1) It has "reg = <0x0800 0 0 0 0>", but 0x0800 0 0  is not a valid
+>> address in the address space defined by its parent - because the form of
+>> the parent's ranges property indicates that it's a PCI-style address
+>> form.  0x0800 0 0 lacks the top bits that indicate non-relocatable and
+>> the type (I/O, memory, etc).
 > 
-> Well the register regions are per root-port. On Tegra20 there's 2 of
-> them, Tegra30 has 3 and if I understand correctly Marvell can have up to
-> 10 (!). Adding all of them to the reg property of the host controller
-> could work but it needs some way to match the reg entry to the root port
-> similar to option 1 below.
+> You need to review the OF PCI bindings to make sense of this.  The
+> subnodes are PCI devices. Those PCI devices show up in the
+> configuration space (ie lspci). They are the PCI root port bridges.
 
-The compatible property of the PCI host controller can imply what each
-index of the reg property entries is for.
+As it turns out, I wrote those bindings, almost 20 years ago.
+
+Having dug through old versions of that patch, I think I see the source
+of the confusion.
+
+In a very early version of the patch -
+  http://www.spinics.net/lists/arm-kernel/msg211839.html
+the pcie-controller address space had 1 address cell, essentially
+propagating the CPU address down to the subordinate nodes, and the
+subordinate pcie nodes had no child address specification.  Somebody
+correctly observed that PCI buses need to export 3/2 address/size cells
+to their children.
+
+But that stipulation applies only to the subordinate pcie nodes, not
+necessarily to the enclosing pcie-controller node.
+
+A later version -
+   http://permalink.gmane.org/gmane.linux.kernel.pci/20358
+applied 3/2 PCI addressing at both levels.  That is somewhat sensible if
+you treat the top level as a "PCI root complex" and if the subordinate
+port control registers are really PCI config header blocks.
+
+But look at the ranges entries therein.  PCI config address <0x800 ..>
+maps to CPU address 0xd004000 size 0x2000 and <0x1000 ..> maps to
+0xd0044000 size 0x2000.  0x800 size 0x2000 encroaches into the <0x1000
+..> range.  That can't be right.
+
+That, plus the first version of the patch, makes me think that these
+root-port control registers might not really be PCI config registers, in
+which case the use of PCI addressing at the top level is a fiction.
+
+Furthermore, we have the fact that pcie@0,0 corresponds to
+marvell,pcie-port = <0> and marvell,pcie-lane = <0>, and similarly for
+pcie@0,1 and pcie@0,2.  That correspondence still appears in the recent
+patch.
+
+So it looks like the "@0,0" addressing attempts to represent lane,port
+instead of device,function PCI config space addressing.  0,0 is not the
+right PCI device/function number for reg=<0x800 ...> - 0x800 is device
+1, not device 0.
+
+Another problem is the device_type values.  If the top level is to be
+interpreted as a PCI addressing domain, it should have a device_type=pci
+property.
+
+One solution is for the top node to use 1-cell addresses, passing the
+CPU address to the subordinates.  The subordinate nodes use the standard
+PCI address representation.  The subordinate reg properties just list
+the CPU address of the control registers.  Each subordinate has a ranges
+properties to translate PCI to CPU addresses and a bus-range property
+for PCI bus numbers (unless those are determined dynamically).
+
+What you lose with that is the ability to refer to the nodes by
+port,lane.  If that is important, then the top address domain needs an
+additional cell to say whether a given address is a CPU address or
+port,lane.  The top node would need a ranges to map the various forms
+into CPU addresses.  The child reg properties could use the port,lane
+form, and marvell,pcie-{port,lane} would disappear.
+
+In neither case would you need the controversial "reg-names" thing.
+
+The tradeoff:
+
+Existing proposed patch: Violates addressing rules, requires funny new
+"reg-names" mechanism, pretends to create a PCI bus level that does not
+exist.
+
+One-cell top address: Follows addressing rules, may be able to use
+existing "simple-bus" address translation code, does not permit the
+pretty @lane,port human-readable form.
+
+Two-cell top address: Follows addressing rules, possibly requires new
+code to translate this particular 2-address-cell format, permits
+@lane,port representation.
 
 > 
-> Adding a property in the root port nodes seems like a cleaner and more
-> accurate representation of the hardware to me, but if that's not
-> acceptable perhaps we need to bite the bullet and add the code to look
-> the registers up from the parent's reg property.
+> The reg value follows the OF PCI spec and has the configuration
+> address of the bridge. For the first port's bridge this address in
+> lspci format is 00:01.0 which encodes to <0x800 0 0>
+> 
+> The Linux OF PCI core uses the reg value in this format to match the
+> OF node in the DT to the PCI device node as it does PCI discovery.
+> 
+>> 2) The "@0,0" and "@1,0" suffixes do not correspond to the reg values
+>> <0x0800 0 0 0 0> and <0x1000 0 0 0 0> using any rule that I know.
+> 
+> @0,1,0 (bus,device,fn) could be more appropriate, but that is
+> cosmetic?
 
-What I don't like is a new property defined to describe mmio addresses.
-We already have a property for that and it is "reg". But I think I'm
-still missing something:
+Except that the @0,0 in this case seems to represent port,lane and not
+device,function , as argued above.
 
->>> 			pci@0,1 {
->>> 				...
->>> 				reg = <0x00000800 0 0 0 0>;
-
-Is this a PCI bus address?
-
->>> 				regs = <0x80000000 0x00001000>;
->>> 			};
-
-Rob
+> 
+> Jason
+> 
