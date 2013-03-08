@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 8/9] rtc: stmp3xxx: Check copy controller state
-Date: Fri,  8 Mar 2013 10:01:43 +0100
-Message-ID: <1362733304-23037-9-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH v2 4/9] rtc: stmp3xxx: allow different oscillators
+Date: Fri,  8 Mar 2013 10:01:39 +0100
+Message-ID: <1362733304-23037-5-git-send-email-s.trumtrar@pengutronix.de>
 References: <1362733304-23037-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,197 +19,162 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The stmp3xxx has a copy controller that needs some time to copy the
-analog side to the digital shadow registers. This has implications for
-a correct reset behaviour.
+The RTC can have different input clockrates.
+Configure the RTC accordingly and leave only the one used running.
 
-The datasheet states that one should not reset the rtc if NEW_REGS != 0 or
-a possible loss of data is to be expected.
-Accordingly, one should not access the registers while STALE_REGS != 0.
-
-If an alarm is written to the shadow registers, the copy controller does not
-persist the values to the analog in every case. This is no problem in the
-running kernel, but leads to lost values in case of a reboot.
-Always check if the rtc is in a clean state, before writing or continueing.
-
+Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/rtc/rtc-stmp3xxx.c | 91 +++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 90 insertions(+), 1 deletion(-)
+ drivers/rtc/rtc-stmp3xxx.c | 89 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 89 insertions(+)
 
 diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
-index 90d0804..3de868d 100644
+index 98f0d3c..d2283c5 100644
 --- a/drivers/rtc/rtc-stmp3xxx.c
 +++ b/drivers/rtc/rtc-stmp3xxx.c
-@@ -43,8 +43,18 @@
- 
- #define STMP3XXX_RTC_STAT			0x10
- #define STMP3XXX_RTC_STAT_STALE_SHIFT		16
-+#define STMP3XXX_RTC_STAT_NEW_SHIFT		8
- #define STMP3XXX_RTC_STAT_RTC_PRESENT		0x80000000
- 
-+#define STMP3XXX_RTC_STAT_PERS0_MASK		(1 << 0)
-+#define STMP3XXX_RTC_STAT_PERS1_MASK		(1 << 1)
-+#define STMP3XXX_RTC_STAT_PERS2_MASK		(1 << 2)
-+#define STMP3XXX_RTC_STAT_PERS3_MASK		(1 << 3)
-+#define STMP3XXX_RTC_STAT_PERS4_MASK		(1 << 4)
-+#define STMP3XXX_RTC_STAT_PERS5_MASK		(1 << 5)
-+#define STMP3XXX_RTC_STAT_ALARM_MASK		(1 << 6)
-+#define STMP3XXX_RTC_STAT_SEC_MASK		(1 << 7)
+@@ -21,6 +21,7 @@
+ #include <linux/module.h>
+ #include <linux/io.h>
+ #include <linux/init.h>
++#include <linux/clk.h>
+ #include <linux/platform_device.h>
+ #include <linux/interrupt.h>
+ #include <linux/rtc.h>
+@@ -53,18 +54,31 @@
+ #define STMP3XXX_RTC_PERSISTENT0		0x60
+ #define STMP3XXX_RTC_PERSISTENT0_SET		0x64
+ #define STMP3XXX_RTC_PERSISTENT0_CLR		0x68
++#define STMP3XXX_RTC_PERSISTENT0_CLOCKSOURCE	(1 << 0)
+ #define STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE_EN	0x00000002
+ #define STMP3XXX_RTC_PERSISTENT0_ALARM_EN	0x00000004
++#define STMP3XXX_RTC_PERSISTENT0_XTAL24MHZ_PWRUP (1 << 4)
++#define STMP3XXX_RTC_PERSISTENT0_XTAL32KHZ_PWRUP (1 << 5)
++#define STMP3XXX_RTC_PERSISTENT0_XTAL32_FREQ	(1 << 6)
 +
- #define STMP3XXX_RTC_SECONDS			0x30
+ #define STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE	0x00000080
  
- #define STMP3XXX_RTC_ALARM			0x40
-@@ -140,6 +150,35 @@ static void stmp3xxx_wdt_register(struct platform_device *rtc_pdev)
+ #define STMP3XXX_RTC_PERSISTENT1		0x70
+ /* missing bitmask in headers */
+ #define STMP3XXX_RTC_PERSISTENT1_FORCE_UPDATER	0x80000000
+ 
++enum clock_source {
++	MXS_UNKNOWN,
++	MXS_OSC_24M,
++	MXS_OSC_32K,
++	MXS_OSC_32K768
++};
++
+ struct stmp3xxx_rtc_data {
+ 	struct rtc_device *rtc;
+ 	void __iomem *io;
+ 	int irq_alarm;
++	enum clock_source clk_src;
+ };
+ 
+ #if IS_ENABLED(CONFIG_STMP3XXX_RTC_WATCHDOG)
+@@ -168,11 +182,55 @@ static irqreturn_t stmp3xxx_rtc_interrupt(int irq, void *dev_id)
+ 	return IRQ_NONE;
  }
- #endif /* CONFIG_STMP3XXX_RTC_WATCHDOG */
  
-+static inline void stmp3xxx_wait_copy_ctrl(const struct stmp3xxx_rtc_data *rtc_data,
-+					   const unsigned int shift,
-+					   unsigned int mask)
++/*
++ * To keep the energy consumption low, keep only
++ * the really used oscillator running when the power is down
++ */
++static void stmp3xxx_alarm_keep_oscillator(const struct stmp3xxx_rtc_data *rtc_data)
 +{
-+	/*
-+	 * totally random number, as the datasheet is very unclear
-+	 * about the timings
-+	 */
-+	int timeout = 0x8000;
-+
-+	while ((readl(rtc_data->io + STMP3XXX_RTC_STAT) &
-+			(mask << shift)) && --timeout)
-+		cpu_relax();
-+
-+	if (unlikely(!timeout)) {
-+		if (&rtc_data->rtc->dev) {
-+			dev_warn(&rtc_data->rtc->dev,
-+				"possible data loss of shadow registers\n");
-+		} else {
-+			/*
-+			 * When this function is called for the mxs_reset in
-+			 * the probe function, rtc->dev is not yet set
-+			 * FIXME: find a better/correct way to do this
-+			 */
-+			pr_warn("possible data loss of rtc shadow registers\n");
-+		}
++	switch (rtc_data->clk_src) {
++	case MXS_OSC_24M:
++		/* keep the 24 MHz oscillator running even in power down */
++		writel(STMP3XXX_RTC_PERSISTENT0_XTAL32_FREQ | /* 24 MHz / 750 */
++			STMP3XXX_RTC_PERSISTENT0_XTAL24MHZ_PWRUP,
++			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_SET);
++		writel(STMP3XXX_RTC_PERSISTENT0_XTAL32KHZ_PWRUP |
++			STMP3XXX_RTC_PERSISTENT0_CLOCKSOURCE,
++			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
++		break;
++	case MXS_OSC_32K:
++		/* keep the 32 kHz oscillator running even in power down */
++		writel(STMP3XXX_RTC_PERSISTENT0_XTAL32_FREQ | /* 32 kHz */
++			STMP3XXX_RTC_PERSISTENT0_XTAL32KHZ_PWRUP |
++			STMP3XXX_RTC_PERSISTENT0_CLOCKSOURCE,
++			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_SET);
++		writel(STMP3XXX_RTC_PERSISTENT0_XTAL24MHZ_PWRUP,
++			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
++		break;
++	case MXS_OSC_32K768:
++		/* keep the 32 kHz oscillator running even in power down */
++		writel(STMP3XXX_RTC_PERSISTENT0_XTAL32KHZ_PWRUP |
++			STMP3XXX_RTC_PERSISTENT0_CLOCKSOURCE,
++			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_SET);
++		writel(STMP3XXX_RTC_PERSISTENT0_XTAL32_FREQ | /* 32.768 kHz */
++			STMP3XXX_RTC_PERSISTENT0_XTAL24MHZ_PWRUP,
++			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
++		break;
++	case MXS_UNKNOWN:
++	default:
++		break;
 +	}
 +}
 +
- static void stmp3xxx_wait_time(struct stmp3xxx_rtc_data *rtc_data)
- {
- 	/*
-@@ -193,6 +232,9 @@ static irqreturn_t stmp3xxx_rtc_interrupt(int irq, void *dev_id)
-  */
- static void stmp3xxx_alarm_keep_oscillator(const struct stmp3xxx_rtc_data *rtc_data)
- {
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS0_MASK);
-+
- 	switch (rtc_data->clk_src) {
- 	case MXS_OSC_24M:
- 		/* keep the 24 MHz oscillator running even in power down */
-@@ -225,6 +267,9 @@ static void stmp3xxx_alarm_keep_oscillator(const struct stmp3xxx_rtc_data *rtc_d
- 	default:
- 		break;
- 	}
-+
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS0_MASK);
- }
- 
  static int stmp3xxx_alarm_irq_enable(struct device *dev, unsigned int enabled)
-@@ -233,6 +278,10 @@ static int stmp3xxx_alarm_irq_enable(struct device *dev, unsigned int enabled)
+ {
+ 	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
  
- 	stmp3xxx_alarm_keep_oscillator(rtc_data);
- 
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS0_MASK |
-+				STMP3XXX_RTC_STAT_ALARM_MASK);
++	stmp3xxx_alarm_keep_oscillator(rtc_data);
 +
  	if (enabled) {
- 		writel(STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE, /* to be able to sleep */
- 			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
-@@ -249,6 +298,10 @@ static int stmp3xxx_alarm_irq_enable(struct device *dev, unsigned int enabled)
- 				rtc_data->io + STMP3XXX_RTC_CTRL_CLR);
- 		writel(0, rtc_data->io + STMP3XXX_RTC_ALARM);
- 	}
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS0_MASK |
-+				STMP3XXX_RTC_STAT_ALARM_MASK);
-+
- 	return 0;
- }
++		writel(STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE, /* to be able to sleep */
++			rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
+ 		writel(STMP3XXX_RTC_PERSISTENT0_ALARM_EN |
+ 				STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE_EN,
+ 				rtc_data->io + STMP3XXX_RTC_PERSISTENT0_SET);
+@@ -240,6 +298,8 @@ static int stmp3xxx_rtc_probe(struct platform_device *pdev)
+ {
+ 	struct stmp3xxx_rtc_data *rtc_data;
+ 	struct resource *r;
++	struct clk *clk;
++	unsigned long rate;
+ 	int err;
  
-@@ -258,10 +311,16 @@ static int stmp3xxx_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
- 	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
- 
- 	rtc_tm_to_time(&alm->time, &t);
-+
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
-+				STMP3XXX_RTC_STAT_ALARM_MASK);
-+
- 	writel(t, rtc_data->io + STMP3XXX_RTC_ALARM);
- 
--	stmp3xxx_alarm_irq_enable(dev, alm->enabled);
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
-+				STMP3XXX_RTC_STAT_ALARM_MASK);
- 
-+	stmp3xxx_alarm_irq_enable(dev, alm->enabled);
- 	return 0;
- }
- 
-@@ -296,6 +355,13 @@ static ssize_t stmp3xxx_rtc_persist_read(struct file *filep,
- 	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
- 	ssize_t count;
- 
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS1_MASK |
-+				STMP3XXX_RTC_STAT_PERS2_MASK |
-+				STMP3XXX_RTC_STAT_PERS3_MASK |
-+				STMP3XXX_RTC_STAT_PERS4_MASK |
-+				STMP3XXX_RTC_STAT_PERS5_MASK);
-+
- 	for (count = 0; size; size--, off++, count++)
- 		*buf++ = readl(rtc_data->io + STMP3XXX_RTC_PERSISTENT1 + off);
- 
-@@ -316,6 +382,13 @@ static ssize_t stmp3xxx_rtc_persist_write(struct file *filep,
- 	for (count = 0; size; size--, off++, count++)
- 		writel(*buf++, rtc_data->io + STMP3XXX_RTC_PERSISTENT1 + off);
- 
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS1_MASK |
-+				STMP3XXX_RTC_STAT_PERS2_MASK |
-+				STMP3XXX_RTC_STAT_PERS3_MASK |
-+				STMP3XXX_RTC_STAT_PERS4_MASK |
-+				STMP3XXX_RTC_STAT_PERS5_MASK);
-+
- 	return count;
- }
- #endif
-@@ -389,7 +462,23 @@ static int stmp3xxx_rtc_probe(struct platform_device *pdev)
- 
+ 	rtc_data = kzalloc(sizeof *rtc_data, GFP_KERNEL);
+@@ -272,6 +332,35 @@ static int stmp3xxx_rtc_probe(struct platform_device *pdev)
  	platform_set_drvdata(pdev, rtc_data);
  
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS1_MASK |
-+				STMP3XXX_RTC_STAT_PERS2_MASK |
-+				STMP3XXX_RTC_STAT_PERS3_MASK |
-+				STMP3XXX_RTC_STAT_PERS4_MASK |
-+				STMP3XXX_RTC_STAT_PERS5_MASK |
-+				STMP3XXX_RTC_STAT_ALARM_MASK |
-+				STMP3XXX_RTC_STAT_SEC_MASK);
  	mxs_reset_block(rtc_data->io);
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
-+				STMP3XXX_RTC_STAT_PERS1_MASK |
-+				STMP3XXX_RTC_STAT_PERS2_MASK |
-+				STMP3XXX_RTC_STAT_PERS3_MASK |
-+				STMP3XXX_RTC_STAT_PERS4_MASK |
-+				STMP3XXX_RTC_STAT_PERS5_MASK |
-+				STMP3XXX_RTC_STAT_ALARM_MASK |
-+				STMP3XXX_RTC_STAT_SEC_MASK);
- 
- 	/*
- 	 * configure the RTC to provide the correct time
++
++	/*
++	 * configure the RTC to provide the correct time
++	 */
++	clk = devm_clk_get(&pdev->dev, "32k");
++	if (IS_ERR(clk)) {
++		/* just a fall back */
++		dev_warn(&pdev->dev, "RTC's input clock undefined\n");
++		rtc_data->clk_src = MXS_OSC_24M;
++	} else {
++		rate = clk_get_rate(clk);
++		if (rate == 0) {
++			/* no dedicated external crystal */
++			rtc_data->clk_src = MXS_OSC_24M;
++			dev_info(&pdev->dev, "Using 24 MHz as RTC's clock\n");
++		} else if (rate == 32000) {
++			rtc_data->clk_src = MXS_OSC_32K;
++			dev_info(&pdev->dev, "Using 32.0 kHz as RTC's clock\n");
++		} else if (rate == 32768) {
++			rtc_data->clk_src = MXS_OSC_32K768;
++			dev_info(&pdev->dev, "Using 32.768 kHz as RTC's clock\n");
++		} else
++			dev_warn(&pdev->dev,
++				"Cannot init the RTC's clock source\n");
++	}
++
++	/* basically configure the RTC's input clock */
++	stmp3xxx_alarm_keep_oscillator(rtc_data);
++
+ 	writel(STMP3XXX_RTC_PERSISTENT0_ALARM_EN |
+ 			STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE_EN |
+ 			STMP3XXX_RTC_PERSISTENT0_ALARM_WAKE,
 -- 
 1.8.2.rc2
