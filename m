@@ -1,199 +1,145 @@
-From: "Hiremath, Vaibhav" <hvaibhav@ti.com>
-Subject: RE: [PATCH 2/2] ARM: dts: add AM33XX MMC support
-Date: Fri, 8 Mar 2013 12:29:02 +0000
-Message-ID: <79CD15C6BA57404B839C016229A409A83EC213C8@DBDE01.ent.ti.com>
-References: <1362629799-22485-1-git-send-email-mporter@ti.com>
- <1362629799-22485-3-git-send-email-mporter@ti.com>
- <41fde401c8e646689123d7c6d3a2dffc@DLEE71.ent.ti.com>
- <20130307141235.GQ6209@beef>
- <79CD15C6BA57404B839C016229A409A83EC20C57@DBDE01.ent.ti.com>
- <20130307144656.GR6209@beef>
- <79CD15C6BA57404B839C016229A409A83EC20CCA@DBDE01.ent.ti.com>
- <20130307150408.GU6209@beef>
- <79CD15C6BA57404B839C016229A409A83EC20D27@DBDE01.ent.ti.com>
- <20130307160236.GV6209@beef>
+From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 6/6] ARM: davinci: da850: configure system
+ configuration chip(CFGCHIP3) for emac
+Date: Fri, 8 Mar 2013 18:58:33 +0530
+Message-ID: <CA+V-a8uUFRRKrGRyq3wDs8ks_GzaGZGrTz+SoW9b2VQ8pb+DxA@mail.gmail.com>
+References: <1359380879-26306-1-git-send-email-prabhakar.lad@ti.com>
+ <1359380879-26306-7-git-send-email-prabhakar.lad@ti.com>
+ <510E5BCF.9080006@ti.com>
+ <CA+V-a8uE6jymk5Z14ydCmuoCAkcLM-ZJKpwp2-0CRXWQtXvTSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20130307160236.GV6209@beef>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: "Porter, Matt" <mporter@ti.com>
-Cc: Linux OMAP List <linux-omap@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "Krishnamoorthy, Balaji T" <balajitk@ti.com>, Devicetree Discuss <devicetree-discuss@lists.ozlabs.org>, Linux MMC List <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Chris Ball <cjb@laptop.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <CA+V-a8uE6jymk5Z14ydCmuoCAkcLM-ZJKpwp2-0CRXWQtXvTSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> -----Original Message-----
-> From: Matt Porter [mailto:ohiomdp@gmail.com] On Behalf Of Porter, Matt
-> Sent: Thursday, March 07, 2013 9:33 PM
-> To: Hiremath, Vaibhav
-> Cc: Linux OMAP List; Russell King; Krishnamoorthy, Balaji T; Devicetree
-> Discuss; Linux MMC List; Linux Kernel Mailing List; Chris Ball; Linux
-> ARM Kernel List
-> Subject: Re: [PATCH 2/2] ARM: dts: add AM33XX MMC support
-> 
-> On Thu, Mar 07, 2013 at 03:50:01PM +0000, Vaibhav Hiremath wrote:
-> >
-> > > -----Original Message-----
-> > > From: Matt Porter [mailto:ohiomdp@gmail.com] On Behalf Of Porter,
-> Matt
-> > > Sent: Thursday, March 07, 2013 8:34 PM
-> > > To: Hiremath, Vaibhav
-> > > Cc: Chris Ball; Russell King; Krishnamoorthy, Balaji T; Devicetree
-> > > Discuss; Linux MMC List; Linux Kernel Mailing List; Linux OMAP
-> List;
-> > > Linux ARM Kernel List
-> > > Subject: Re: [PATCH 2/2] ARM: dts: add AM33XX MMC support
-> > >
-> > > On Thu, Mar 07, 2013 at 02:59:42PM +0000, Vaibhav Hiremath wrote:
-> > > >
-> > > > > -----Original Message-----
-> > > > > From: Hiremath, Vaibhav
-> > > > > Sent: Thursday, March 07, 2013 8:24 PM
-> > > > > To: Porter, Matt
-> > > > > Cc: Linux OMAP List; Russell King; Krishnamoorthy, Balaji T;
-> > > Devicetree
-> > > > > Discuss; Linux MMC List; Linux Kernel Mailing List; Chris Ball;
-> > > Linux
-> > > > > ARM Kernel List
-> > > > > Subject: RE: [PATCH 2/2] ARM: dts: add AM33XX MMC support
-> > > > >
-> > > > > > -----Original Message-----
-> > > > > > From: Matt Porter [mailto:ohiomdp@gmail.com] On Behalf Of
-> Porter,
-> > > > > Matt
-> > > > > > Sent: Thursday, March 07, 2013 8:17 PM
-> > > > > > To: Hiremath, Vaibhav
-> > > > > > Cc: Linux OMAP List; Russell King; Krishnamoorthy, Balaji T;
-> > > > > Devicetree
-> > > > > > Discuss; Linux MMC List; Linux Kernel Mailing List; Chris
-> Ball;
-> > > Linux
-> > > > > > ARM Kernel List
-> > > > > > Subject: Re: [PATCH 2/2] ARM: dts: add AM33XX MMC support
-> > > > > >
-> > > > > > On Thu, Mar 07, 2013 at 02:39:55PM +0000, Vaibhav Hiremath
-> wrote:
-> > > > > > >
-> > > > > > > > -----Original Message-----
-> > > > > > > > From: Matt Porter [mailto:ohiomdp@gmail.com] On Behalf Of
-> > > Porter,
-> > > > > > Matt
-> > > > > > > > Sent: Thursday, March 07, 2013 7:43 PM
-> > > > > > > > To: Hiremath, Vaibhav
-> > > > > > > > Cc: Krishnamoorthy, Balaji T; Chris Ball; Cousson,
-> Benoit;
-> > > Tony
-> > > > > > > > Lindgren; Russell King; Devicetree Discuss; Linux ARM
-> Kernel
-> > > > > List;
-> > > > > > > > Linux OMAP List; Linux Kernel Mailing List; Linux MMC
-> List
-> > > > > > > > Subject: Re: [PATCH 2/2] ARM: dts: add AM33XX MMC support
-> > > > > > > >
-> > > > > > > > On Thu, Mar 07, 2013 at 05:29:24AM +0000, Vaibhav
-> Hiremath
-> > > wrote:
-> > > > > > > > > > -----Original Message-----
-> > > > > > > > > > From: linux-omap-owner@vger.kernel.org [mailto:linux-
-> > > omap-
-> > > > > > > > > > owner@vger.kernel.org] On Behalf Of Porter, Matt
-> > > > > > > > > > Sent: Thursday, March 07, 2013 9:47 AM
-> > > > > > > > > > To: Krishnamoorthy, Balaji T; Chris Ball; Cousson,
-> > > Benoit;
-> > > > > Tony
-> > > > > > > > > > Lindgren; Russell King
-> > > > > > > > > > Cc: Devicetree Discuss; Linux ARM Kernel List; Linux
-> OMAP
-> > > > > List;
-> > > > > > > > Linux
-> > > > > > > > > > Kernel Mailing List; Linux MMC List
-> > > > > > > > > > Subject: [PATCH 2/2] ARM: dts: add AM33XX MMC support
-> > > > > > > > > >
-> > > > <snip>
-> > > > >
-> > > > > I believe you meant "CONFIG_TI_EDMA" right?
-> > > > >
-> > > > > Yes, I just enabled it and the result is still same.
-> > > > >
-> > > > >
-> > > > >
-> > > > > [root@arago /]# dmesg | grep -ir mmc
-> > > > > [    0.506844] vmmc: 1800 <--> 3300 mV at 3300 mV
-> > > > > [    0.506970] vmmc: supplied by vbat
-> > > > > [root@arago /]#
-> > > > > [root@arago /]#
-> > > > > [root@arago /]# dmesg | grep -ir dma
-> > > > > [    0.217063] DMA: preallocated 256 KiB pool for atomic
-> coherent
-> > > > > allocations
-> > > > > [    0.236321] platform 49000000.edma: alias fck already exists
-> > > > > [    0.236360] platform 49000000.edma: alias fck already exists
-> > > > > [    0.236381] platform 49000000.edma: alias fck already exists
-> > > > > [    0.370705] edma-dma-engine edma-dma-engine.0: TI EDMA DMA
-> > > engine
-> > > > > driver
-> > > > > [    0.445156] omap-dma-engine omap-dma-engine: OMAP DMA engine
-> > > driver
-> > > > > [root@arago /]#
-> > > > > [root@arago /]#
-> > > > >
-> > > > >
-> > > > I have applied below patches from your recent post
-> > > >
-> > > >
-> > > > [2/2] ARM: dts: add AM33XX MMC support
-> > > > [1/2] mmc: omap_hsmmc: set max_segs based on dma engine limits
-> > > > [v4,3/3] mmc: davinci: get SG segment limits with
-> > > dma_get_slave_sg_limits()
-> > > > [v4,2/3] dma: edma: add device_slave_sg_limits() support
-> > > > [v4,1/3] dmaengine: add dma_get_slave_sg_limits()
-> > > > [v9,9/9] ARM: dts: add AM33XX SPI DMA support
-> > > > [v9,8/9] spi: omap2-mcspi: add generic DMA request support to the
-> DT
-> > > binding
-> > > > [v9,7/9] spi: omap2-mcspi: convert to
-> > > dma_request_slave_channel_compat()
-> > > > [v9,6/9] ARM: dts: add AM33XX EDMA support
-> > > > [v9,5/9] dmaengine: edma: Add TI EDMA device tree binding
-> > > > [v9,4/9] dmaengine: edma: enable build for AM33XX
-> > > > [v9,3/9] ARM: edma: add AM33XX support to the private EDMA API
-> > > > [v9,2/9] ARM: edma: remove unused transfer controller handlers
-> > > > [v9,1/9] ARM: davinci: move private EDMA API to arm/common
-> > > > [v3,2/2] mmc: omap_hsmmc: add generic DMA request support to the
-> DT
-> > > binding
-> > > > [v3,1/2] mmc: omap_hsmmc: convert to
-> > > dma_request_slave_channel_compat()
-> > > >
-> > > >
-> > > >
-> > > > Am I missing anything here?
-> > >
-> > > Yes, you missed the
-> > > http://www.spinics.net/lists/arm-kernel/msg227886.html dependency
-> > > mentioned first in the cover letter.
-> > >
-> >
-> > Matt, I manually edited the file with above patch and result is still
-> the same.
-> > Can you point me to branch where you have tested MMC code?
-> 
-> git://github.com/ohporter/linux.git edma-dmaengine-am33xx-mmc-v1
-> 
-> omap2plus_defconfig + CONFIG_TI_EDMA
-> 
-> I just doublechecked MMC rootfs on bone and evmsk as it's the standard
-> smoke test. My EVM is intermittent now so trying to coax it to power up
-> to reverify.
-> 
+Sekhar,
 
-Matt,
+On Mon, Feb 4, 2013 at 10:33 AM, Prabhakar Lad
+<prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Sekhar ,
+>
+> On Sun, Feb 3, 2013 at 6:15 PM, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> wrote:
+>> On 1/28/2013 7:17 PM, Prabhakar Lad wrote:
+>>> From: Lad, Prabhakar <prabhakar.lad-l0cyMroinI0@public.gmane.org>
+>>>
+>>> The system configuration chip CFGCHIP3, controls the emac module.
+>>> This patch appropriately configures this register for emac and
+>>> sets DA850_MII_MDIO_CLKEN_PIN GPIO pin appropriately.
+>>>
+>>> Signed-off-by: Lad, Prabhakar <prabhakar.lad-l0cyMroinI0@public.gmane.org>
+>>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
+>>> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+>>> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+>>> Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>>> ---
+>>>  arch/arm/mach-davinci/da8xx-dt.c |   28 ++++++++++++++++++++++++++++
+>>>  1 files changed, 28 insertions(+), 0 deletions(-)
+>>>
+>>> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
+>>> index e533a0a..4a096e3 100644
+>>> --- a/arch/arm/mach-davinci/da8xx-dt.c
+>>> +++ b/arch/arm/mach-davinci/da8xx-dt.c
+>>> @@ -8,6 +8,7 @@
+>>>   * published by the Free Software Foundation.
+>>>   */
+>>>  #include <linux/io.h>
+>>> +#include <linux/gpio.h>
+>>>  #include <linux/of_irq.h>
+>>>  #include <linux/of_platform.h>
+>>>  #include <linux/irqdomain.h>
+>>> @@ -39,6 +40,32 @@ static void __init da8xx_init_irq(void)
+>>>
+>>>  #ifdef CONFIG_ARCH_DAVINCI_DA850
+>>>
+>>> +static void __init da8xx_config_emac(void)
+>>> +{
+>>> +#define DA850_MII_MDIO_CLKEN_PIN     GPIO_TO_PIN(2, 6)
+>>> +#define DA850_EMAC_MODE_SELECT               BIT(8)
+>>> +     void __iomem *cfg_chip3_base;
+>>> +     int ret;
+>>> +     u32 val;
+>>> +
+>>> +     cfg_chip3_base = DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG);
+>>> +
+>>> +     val = __raw_readl(cfg_chip3_base);
+>>> +     val &= ~DA850_EMAC_MODE_SELECT;
+>>> +     /* configure the CFGCHIP3 register for MII */
+>>> +     __raw_writel(val, cfg_chip3_base);
+>>
+>> Use readl/writel instead.
+>>
+> Ok.
+>
+>>> +     pr_info("EMAC: MII PHY configured\n");
+>>> +
+>>> +     ret = gpio_request(DA850_MII_MDIO_CLKEN_PIN, "mdio_clk_en");
+>>> +     if (ret) {
+>>> +             pr_warn("Cannot open GPIO %d\n",
+>>> +                                     DA850_MII_MDIO_CLKEN_PIN);
+>>> +             return;
+>>> +     }
+>>> +     /* Enable/Disable MII MDIO clock */
+>>> +     gpio_direction_output(DA850_MII_MDIO_CLKEN_PIN, 0);
+>>> +}
+>>> +
+>>>  struct of_dev_auxdata da8xx_auxdata[] __initdata = {
+>>>       OF_DEV_AUXDATA("ti,davinci_mdio", 0x01e24000, "davinci_mdio.0", NULL),
+>>>       OF_DEV_AUXDATA("ti,davinci-dm6467-emac", 0x01e20000, "davinci_emac.1",
+>>> @@ -52,6 +79,7 @@ static void __init da850_init_machine(void)
+>>>                            da8xx_auxdata, NULL);
+>>>
+>>>       da8xx_uart_clk_enable();
+>>> +     da8xx_config_emac();
+>>
+>> There are couple of issues with this implementation.
+>>
+>> 1) da8xx_config_emac() is specific to DA850 EVM, but masquerades as
+>>    generic for da8xx. Looks like you need two functions, one for soc
+>>    specific configuration and one board specific.
+> Ok.
+>
+>> 2) da8xx_config_emac() goes through all the time, whether the
+>>    particular board has emac module or not. Shouldn't
+>>    da8xx_config_emac() check if emac is actually enabled in the passed
+>>    dtb and only the do the configuration?
+>
+> Ok. Can you give some pointers how we can access the dtb in board files.
+>
+Any pointers on this could be helpful.
 
-Your branch is working for me, I tested it on EVM. Not sure what is wrong with manual rebasing
-I did yesterday. I will try to nail-down root-cause here.
+Regards,
+--Prabhakar
 
-And you can submit the next version fixing the comments I have given.
-
-Thanks,
-Vaibhav
+>> 3) The function assumes mii is used always, you can use the rmii_en dt
+>>    property to check if rmii/mii is enabled and configure the soc/board
+>>    accordingly.
+>
+> Ok.
+>
+>> 4) If the same function can work both for da850 and da830, then it can
+>>    be implemented outside of CONFIG_ARCH_DAVINCI_DA850.
+>>
+> Ok.
+>
+> Regards,
+> --Prabhakar
+>
+>> Thanks,
+>> Sekhar
