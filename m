@@ -1,48 +1,49 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: Re: [PATCH 1/3] driver: net: ethernet: cpsw: implement ethtool get/set
- phy setting
-Date: Fri, 8 Mar 2013 12:53:18 +0530
-Message-ID: <513991E6.5080400@ti.com>
-References: <1362659421-11884-1-git-send-email-mugunthanvnm@ti.com>  <1362659421-11884-2-git-send-email-mugunthanvnm@ti.com>  <8762135on4.fsf@dell.be.48ers.dk> <1362686350.2936.43.camel@bwh-desktop.uk.solarflarecom.com>
+From: =?iso-8859-1?Q?=D8yvind_Grotmol?= <o.grotmol@energymicro.com>
+Subject: RE: [Customers.Bosch-Gecko] [PATCH] serial/efm32: parse location	property
+Date: Fri, 8 Mar 2013 09:51:57 +0100 (CET)
+Message-ID: <e276ad4a.00001634.00000007@OGROTMOL-PC.ensemi.local>
+References: <1358774576-13275-1-git-send-email-u.kleine-koenig@pengutronix.de>	<20130304143854.395EF3E206B@localhost>	<CACRpkdZuNOFco+GTe9YOD=qy+dgEaokoqvWaPA2mCxYHs9oxVA@mail.gmail.com> <20130307093829.GG15375@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1362686350.2936.43.camel@bwh-desktop.uk.solarflarecom.com>
-Sender: netdev-owner@vger.kernel.org
-To: Ben Hutchings <bhutchings@solarflare.com>
-Cc: Peter Korsgaard <jacmet@sunsite.dk>, netdev@vger.kernel.org, davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, b-cousson@ti.com, paul@pwsan.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20130307093829.GG15375@pengutronix.de>
+Content-Language: no
+Sender: linux-serial-owner@vger.kernel.org
+To: 'PTX Customer Mailing List - Bosch AE / Energy Micro' <customers.bosch-gecko@pengutronix.de>, 'Linus Walleij' <linus.walleij@linaro.org>
+Cc: kernel@pengutronix.de, linux-doc@vger.kernel.org, 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>, devicetree-discuss@lists.ozlabs.org, 'Grant Likely' <grant.likely@secretlab.ca>, linux-serial@vger.kernel.org, 'Jiri Slaby' <jslaby@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
-On 3/8/2013 1:29 AM, Ben Hutchings wrote:
-> On Thu, 2013-03-07 at 14:24 +0100, Peter Korsgaard wrote:
->>>>>>> "M" == Mugunthan V N <mugunthanvnm@ti.com> writes:
->>   M> This patch implements get/set of the phy settings via ethtool apis
->>   M> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
->>   M> ---
->>   M>  Documentation/devicetree/bindings/net/cpsw.txt |    3 +++
->>   M>  drivers/net/ethernet/ti/cpsw.c                 |   32 ++++++++++++++++++++++++
->>   M>  include/linux/platform_data/cpsw.h             |    1 +
->>   M>  3 files changed, 36 insertions(+)
->>
->>   M> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
->>   M> index ecfdf75..8d61300 100644
->>   M> --- a/Documentation/devicetree/bindings/net/cpsw.txt
->>   M> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
->>   M> @@ -20,6 +20,7 @@ Required properties:
->>   M>  - cpts_clock_shift	: Denominator to convert input clock ticks into nanoseconds
->>   M>  - phy_id		: Specifies slave phy id
->>   M>  - mac-address		: Specifies slave MAC address
->>   M> +- ethtool-active-slave	: Specifies the slave to use for ethtool command
->>
->> That again sounds like something Linux specific rather than a hardware
->> property.
-> Yes, indeed.  Isn't it redundant with the phy_id?
+> -----Original Message-----
+> From: customers.bosch-gecko-bounces@pengutronix.de
+> [mailto:customers.bosch-gecko-bounces@pengutronix.de] On Behalf Of Uw=
+e
+> Kleine-K=F6nig
+> Sent: 7. mars 2013 10:38
 >
-> Ben.
-phy_id is part of slave data and will be present for both the slaves.
-so phy_id cannot be used for get/set phy setting until phy framework
-allows to change settings without going through eth interface.
+> > This is a new oddity: it's like multiplexing is distributed out amo=
+ng
+> > the peripherals on the EFM32, or atleast for this UART, so there is=
+ a
+> > register on the peripheral itself selecting where to route it.
+> >
+> > If all peripherals on the system follows this pattern, like if ther=
+e
+> > is some such "location" register on each and every peripheral,
+> ideally
+> I didn't check if all do, but it's a common pattern for the efm32
+> peripherals to have such a ROUTE register.
 
-Regards
-Mugunthan V N
+Yes. In general, our analog modules (such as ADC and DAC) have a fixed =
+pin
+location which cannot be changed. All of our digital modules (UART etc)
+have a ROUTE register inside each module. That is the general pattern.
+
+Best regards,
+=D8yvind
+
+--
+To unsubscribe from this list: send the line "unsubscribe linux-serial"=
+ in
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
