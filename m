@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 3/9] ARM: i.MX28: dts: add clocks for stmp3xxx RTC
-Date: Fri,  8 Mar 2013 10:01:38 +0100
-Message-ID: <1362733304-23037-4-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH v2 5/9] rtc: stmp3xxx: enable wakeup functionality
+Date: Fri,  8 Mar 2013 10:01:40 +0100
+Message-ID: <1362733304-23037-6-git-send-email-s.trumtrar@pengutronix.de>
 References: <1362733304-23037-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,26 +22,27 @@ To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06c
 Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The stmp3xxx can handle multiple clocks. Add them to the DT.
+This RTC can wakeup the system. Register the device accordingly.
 
 Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- arch/arm/boot/dts/imx28.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/rtc/rtc-stmp3xxx.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
-index 0393d3f..469a23f 100644
---- a/arch/arm/boot/dts/imx28.dtsi
-+++ b/arch/arm/boot/dts/imx28.dtsi
-@@ -818,6 +818,8 @@
- 				compatible = "fsl,imx28-rtc", "fsl,stmp3xxx-rtc";
- 				reg = <0x80056000 0x2000>;
- 				interrupts = <29>;
-+				clocks = <&clks 65>, <&clks 40> ;
-+				clock-names = "32k", "24m";
- 			};
+diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
+index d2283c5..cd844ec 100644
+--- a/drivers/rtc/rtc-stmp3xxx.c
++++ b/drivers/rtc/rtc-stmp3xxx.c
+@@ -370,6 +370,9 @@ static int stmp3xxx_rtc_probe(struct platform_device *pdev)
+ 			STMP3XXX_RTC_CTRL_ALARM_IRQ_EN,
+ 			rtc_data->io + STMP3XXX_RTC_CTRL_CLR);
  
- 			i2c0: i2c@80058000 {
++	/* this RTC can wake up the system */
++	device_init_wakeup(&pdev->dev, true);
++
+ 	rtc_data->rtc = rtc_device_register(pdev->name, &pdev->dev,
+ 				&stmp3xxx_rtc_ops, THIS_MODULE);
+ 	if (IS_ERR(rtc_data->rtc)) {
 -- 
 1.8.2.rc2
