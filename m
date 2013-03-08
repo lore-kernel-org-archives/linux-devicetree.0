@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 9/9] rtc: stmp3xxx: Replace wait_time function
-Date: Fri,  8 Mar 2013 10:01:44 +0100
-Message-ID: <1362733304-23037-10-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH v2 2/9] ARM: i.MX28: define external RTC crystal in DT
+Date: Fri,  8 Mar 2013 10:01:37 +0100
+Message-ID: <1362733304-23037-3-git-send-email-s.trumtrar@pengutronix.de>
 References: <1362733304-23037-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,56 +19,72 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Replace the wait_time function with the more generic wait_copy_ctrl function.
+From: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
+The RTC in the i.MX28 may be clocked with different crystals.
+Get the rate of the connected one from the DT.
+
+Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/rtc/rtc-stmp3xxx.c | 18 ++++--------------
- 1 file changed, 4 insertions(+), 14 deletions(-)
+ Documentation/devicetree/bindings/clock/imx28-clock.txt | 1 +
+ arch/arm/boot/dts/imx28.dtsi                            | 6 ++++++
+ drivers/clk/mxs/clk-imx28.c                             | 4 +++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
-index 3de868d..687bcb2 100644
---- a/drivers/rtc/rtc-stmp3xxx.c
-+++ b/drivers/rtc/rtc-stmp3xxx.c
-@@ -179,24 +179,13 @@ static inline void stmp3xxx_wait_copy_ctrl(const struct stmp3xxx_rtc_data *rtc_d
+diff --git a/Documentation/devicetree/bindings/clock/imx28-clock.txt b/Documentation/devicetree/bindings/clock/imx28-clock.txt
+index e6587af..c3a9d94 100644
+--- a/Documentation/devicetree/bindings/clock/imx28-clock.txt
++++ b/Documentation/devicetree/bindings/clock/imx28-clock.txt
+@@ -76,6 +76,7 @@ clocks and IDs.
+ 	usb0_phy	62
+ 	usb1_phy	63
+ 	enet_out	64
++	rtc_32k		65
+ 
+ Examples:
+ 
+diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+index b9e3712..0393d3f 100644
+--- a/arch/arm/boot/dts/imx28.dtsi
++++ b/arch/arm/boot/dts/imx28.dtsi
+@@ -46,6 +46,12 @@
+ 			#clock-cells = <0>;
+ 			clock-frequency = <24000000>;
+ 		};
++
++		osc32k: rtc-oscillator {
++			compatible = "fixed-clock";
++			#clock-cells = <0>;
++			clock-frequency = <0>;
++		};
+ 	};
+ 
+ 	apb@80000000 {
+diff --git a/drivers/clk/mxs/clk-imx28.c b/drivers/clk/mxs/clk-imx28.c
+index 01048b5..acf2762 100644
+--- a/drivers/clk/mxs/clk-imx28.c
++++ b/drivers/clk/mxs/clk-imx28.c
+@@ -141,7 +141,7 @@ enum imx28_clk {
+ 	clk32k_div, rtc, lradc, spdif_div, clk32k, pwm, uart, ssp0,
+ 	ssp1, ssp2, ssp3, gpmi, spdif, emi, saif0, saif1, lcdif, etm,
+ 	fec, can0, can1, usb0, usb1, usb0_phy, usb1_phy, enet_out,
+-	clk_max
++	rtc_32k, clk_max
+ };
+ 
+ static struct clk *clks[clk_max];
+@@ -167,6 +167,8 @@ int __init mx28_clocks_init(void)
+ 
+ 		if (of_device_is_compatible(np, "fsl,mxs-system"))
+ 			clks[ref_xtal] = mxs_clk_fixed("ref_xtal", rate);
++		else if (!strncmp(np->name, "rtc-oscillator", strlen("rtc-oscillator")))
++			clks[rtc_32k] = mxs_clk_fixed("rtc32k", rate);
  	}
- }
  
--static void stmp3xxx_wait_time(struct stmp3xxx_rtc_data *rtc_data)
--{
--	/*
--	 * The datasheet doesn't say which way round the
--	 * NEW_REGS/STALE_REGS bitfields go. In fact it's 0x1=P0,
--	 * 0x2=P1, .., 0x20=P5, 0x40=ALARM, 0x80=SECONDS
--	 */
--	while (readl(rtc_data->io + STMP3XXX_RTC_STAT) &
--			(0x80 << STMP3XXX_RTC_STAT_STALE_SHIFT))
--		cpu_relax();
--}
--
- /* Time read/write */
- static int stmp3xxx_rtc_gettime(struct device *dev, struct rtc_time *rtc_tm)
- {
- 	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
- 
--	stmp3xxx_wait_time(rtc_data);
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
-+				STMP3XXX_RTC_STAT_SEC_MASK);
- 	rtc_time_to_tm(readl(rtc_data->io + STMP3XXX_RTC_SECONDS), rtc_tm);
- 	return 0;
- }
-@@ -206,7 +195,8 @@ static int stmp3xxx_rtc_set_mmss(struct device *dev, unsigned long t)
- 	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
- 
- 	writel(t, rtc_data->io + STMP3XXX_RTC_SECONDS);
--	stmp3xxx_wait_time(rtc_data);
-+	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
-+				STMP3XXX_RTC_STAT_SEC_MASK);
- 	return 0;
- }
- 
+ 	/* if not set, guess their frequency */
 -- 
 1.8.2.rc2
