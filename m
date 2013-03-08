@@ -1,35 +1,67 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [RFC 12/12] mipi-csis: Enable all interrupts for fimc-is usage
-Date: Fri, 08 Mar 2013 09:59:25 -0500
-Message-ID: <1362754765-2651-13-git-send-email-arun.kk@samsung.com>
-References: <1362754765-2651-1-git-send-email-arun.kk@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1362754765-2651-1-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
-Cc: s.nawrocki@samsung.com, kgene.kim@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
+From: Ben Hutchings <bhutchings@solarflare.com>
+Subject: Re: [PATCH 1/3] driver: net: ethernet: cpsw: implement ethtool
+ get/set phy setting
+Date: Fri, 8 Mar 2013 14:53:21 +0000
+Message-ID: <1362754401.3248.8.camel@bwh-desktop.uk.solarflarecom.com>
+References: <1362659421-11884-1-git-send-email-mugunthanvnm@ti.com>
+	  <1362659421-11884-2-git-send-email-mugunthanvnm@ti.com>
+	  <8762135on4.fsf@dell.be.48ers.dk>
+	 <1362686350.2936.43.camel@bwh-desktop.uk.solarflarecom.com>
+	 <513991E6.5080400@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <513991E6.5080400@ti.com>
+Sender: netdev-owner@vger.kernel.org
+To: Mugunthan V N <mugunthanvnm@ti.com>
+Cc: Peter Korsgaard <jacmet@sunsite.dk>, netdev@vger.kernel.org, davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, b-cousson@ti.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-FIMC-IS firmware needs all the MIPI-CSIS interrupts to be enabled.
-This patch enables all those MIPI interrupts.
+On Fri, 2013-03-08 at 12:53 +0530, Mugunthan V N wrote:
+> On 3/8/2013 1:29 AM, Ben Hutchings wrote:
+> > On Thu, 2013-03-07 at 14:24 +0100, Peter Korsgaard wrote:
+> >>>>>>> "M" == Mugunthan V N <mugunthanvnm@ti.com> writes:
+> >>   M> This patch implements get/set of the phy settings via ethtool apis
+> >>   M> Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+> >>   M> ---
+> >>   M>  Documentation/devicetree/bindings/net/cpsw.txt |    3 +++
+> >>   M>  drivers/net/ethernet/ti/cpsw.c                 |   32 ++++++++++++++++++++++++
+> >>   M>  include/linux/platform_data/cpsw.h             |    1 +
+> >>   M>  3 files changed, 36 insertions(+)
+> >>
+> >>   M> diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
+> >>   M> index ecfdf75..8d61300 100644
+> >>   M> --- a/Documentation/devicetree/bindings/net/cpsw.txt
+> >>   M> +++ b/Documentation/devicetree/bindings/net/cpsw.txt
+> >>   M> @@ -20,6 +20,7 @@ Required properties:
+> >>   M>  - cpts_clock_shift	: Denominator to convert input clock ticks into nanoseconds
+> >>   M>  - phy_id		: Specifies slave phy id
+> >>   M>  - mac-address		: Specifies slave MAC address
+> >>   M> +- ethtool-active-slave	: Specifies the slave to use for ethtool command
+> >>
+> >> That again sounds like something Linux specific rather than a hardware
+> >> property.
+> > Yes, indeed.  Isn't it redundant with the phy_id?
+> >
+> > Ben.
+> phy_id is part of slave data and will be present for both the slaves.
+> so phy_id cannot be used for get/set phy setting until phy framework
+> allows to change settings without going through eth interface.
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
----
- drivers/media/platform/s5p-fimc/mipi-csis.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Now I've looked at the examples in this file, I think I see what you're
+getting at.  What confused me is that you're adding to a single list of
+properties without a proper distinction of which devices they are
+applied to.  It really ought to be properly divided between switch and
+'slave' properties.
 
-diff --git a/drivers/media/platform/s5p-fimc/mipi-csis.c b/drivers/media/platform/s5p-fimc/mipi-csis.c
-index debda7c..11eef67 100644
---- a/drivers/media/platform/s5p-fimc/mipi-csis.c
-+++ b/drivers/media/platform/s5p-fimc/mipi-csis.c
-@@ -64,7 +64,7 @@ MODULE_PARM_DESC(debug, "Debug level (0-2)");
- 
- /* Interrupt mask */
- #define S5PCSIS_INTMSK			0x10
--#define S5PCSIS_INTMSK_EN_ALL		0xf000103f
-+#define S5PCSIS_INTMSK_EN_ALL		0xfc00103f
- #define S5PCSIS_INTMSK_EVEN_BEFORE	(1 << 31)
- #define S5PCSIS_INTMSK_EVEN_AFTER	(1 << 30)
- #define S5PCSIS_INTMSK_ODD_BEFORE	(1 << 29)
+The 'active slave' property would also be needed for the SIOCGMIIPHY
+ioctl and not just ethtool.  But it's really quite arbitrary.  Perhaps
+each of them should have their own net device (as with DSA).
+
+Ben.
+
 -- 
-1.7.9.5
+Ben Hutchings, Staff Engineer, Solarflare
+Not speaking for my employer; that's the marketing department's job.
+They asked us to note that Solarflare product names are trademarked.
