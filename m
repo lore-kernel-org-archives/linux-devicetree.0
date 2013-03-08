@@ -1,94 +1,96 @@
-From: Thierry Reding <thierry.reding-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
-Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Fri, 8 Mar 2013 21:13:40 +0100
-Message-ID: <20130308201339.GA26322@avionic-0098.mockup.avionic-design.de>
-References: <20130307174955.GC20840@obsidianresearch.com>
- <20130307194830.GA1811@avionic-0098.mockup.avionic-design.de>
- <20130307200235.GB20695@obsidianresearch.com>
- <20130307204726.GB1811@avionic-0098.mockup.avionic-design.de>
- <51392B4D.9040404@gmail.com>
- <20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
- <20130308165228.GB4094@obsidianresearch.com>
- <20130308191227.GA6551@avionic-0098.mockup.avionic-design.de>
- <513A3F4F.2090501@firmworks.com>
- <20130308200245.GC29435@obsidianresearch.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 5/9] ARM: dts: Add GPMC node for OMAP2, OMAP4 and OMAP5
+Date: Fri, 8 Mar 2013 21:25:00 +0100
+Message-ID: <CABxcv==OKX4z8x7ztqDJ5CozNmTQ5UaD43mTLWfQuqUt-y7xcQ@mail.gmail.com>
+References: <1362763654-9660-1-git-send-email-jon-hunter@ti.com>
+	<1362763654-9660-6-git-send-email-jon-hunter@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8965379991851869284=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130308200245.GC29435-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1362763654-9660-6-git-send-email-jon-hunter@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Mar 8, 2013 at 6:27 PM, Jon Hunter <jon-hunter@ti.com> wrote:
+> Add the device-tree node for GPMC on OMAP2, OMAP4 and OMAP5 devices.
+>
+> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> ---
+>  arch/arm/boot/dts/omap2420.dtsi |   11 +++++++++++
+>  arch/arm/boot/dts/omap2430.dtsi |   11 +++++++++++
+>  arch/arm/boot/dts/omap4.dtsi    |   11 +++++++++++
+>  arch/arm/boot/dts/omap5.dtsi    |   11 +++++++++++
+>  4 files changed, 44 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/omap2420.dtsi b/arch/arm/boot/dts/omap2420.dtsi
+> index af65609..d4ce6c2 100644
+> --- a/arch/arm/boot/dts/omap2420.dtsi
+> +++ b/arch/arm/boot/dts/omap2420.dtsi
+> @@ -29,6 +29,17 @@
+>                         pinctrl-single,function-mask = <0x3f>;
+>                 };
+>
+> +               gpmc: gpmc@6800a000 {
+> +                       compatible = "ti,omap2420-gpmc";
+> +                       reg = <0x6800a000 0x1000>;
+> +                       #address-cells = <2>;
+> +                       #size-cells = <1>;
+> +                       interrupts = <20>;
+> +                       gpmc,num-cs = <8>;
+> +                       gpmc,num-waitpins = <4>;
+> +                       ti,hwmods = "gpmc";
+> +               };
+> +
+>                 mcbsp1: mcbsp@48074000 {
+>                         compatible = "ti,omap2420-mcbsp";
+>                         reg = <0x48074000 0xff>;
+> diff --git a/arch/arm/boot/dts/omap2430.dtsi b/arch/arm/boot/dts/omap2430.dtsi
+> index c392445..832f184 100644
+> --- a/arch/arm/boot/dts/omap2430.dtsi
+> +++ b/arch/arm/boot/dts/omap2430.dtsi
+> @@ -29,6 +29,17 @@
+>                         pinctrl-single,function-mask = <0x3f>;
+>                 };
+>
+> +               gpmc: gpmc@6e000000 {
+> +                       compatible = "ti,omap2430-gpmc";
+> +                       reg = <0x6e000000 0x1000>;
+> +                       #address-cells = <2>;
+> +                       #size-cells = <1>;
+> +                       interrupts = <20>;
+> +                       gpmc,num-cs = <8>;
+> +                       gpmc,num-waitpins = <4>;
+> +                       ti,hwmods = "gpmc";
+> +               };
+> +
+>                 mcbsp1: mcbsp@48074000 {
+>                         compatible = "ti,omap2430-mcbsp";
+>                         reg = <0x48074000 0xff>;
+> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+> index 827f6f3..726ef11 100644
+> --- a/arch/arm/boot/dts/omap4.dtsi
+> +++ b/arch/arm/boot/dts/omap4.dtsi
+> @@ -196,6 +196,17 @@
+>                         #interrupt-cells = <1>;
+>                 };
+>
+> +               gpmc: gpmc@50000000 {
+> +                       compatible = "ti,omap4430-gpmc";
+> +                       reg = <0x50000000 0x1000>;
 
---===============8965379991851869284==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="82I3+IH0IqGh5yIs"
-Content-Disposition: inline
+Hi Jon,
 
+By looking at the GPMC Register Summary from both the OMAP4460 and OMAP OMAP35x
+Technical Reference Manuals I see that the GPMC register address space
+is only 720 bytes length. From base address + 0x0 to base address +
+0x02d0.
 
---82I3+IH0IqGh5yIs
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+So shouldn't the regs property be <0x50000000 0x2d0> instead?
 
-On Fri, Mar 08, 2013 at 01:02:46PM -0700, Jason Gunthorpe wrote:
-> On Fri, Mar 08, 2013 at 09:43:11AM -1000, Mitch Bradley wrote:
-[...]
-> > 2) The "@0,0" and "@1,0" suffixes do not correspond to the reg values
-> > <0x0800 0 0 0 0> and <0x1000 0 0 0 0> using any rule that I know.
->=20
-> @0,1,0 (bus,device,fn) could be more appropriate, but that is
-> cosmetic?
+Of course are only a few kilobytes but still I wonder if it makes
+sense to map them when they are not going to be used.
 
-The OF PCI specification is pretty strict about this as well. It says in
-section 2.2.1.3. that only the DD and DD,FF forms can appear in a device
-path.
-
-Thierry
-
---82I3+IH0IqGh5yIs
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.19 (GNU/Linux)
-
-iQIcBAEBAgAGBQJROkZzAAoJEN0jrNd/PrOhjOYQAK2XmBbA+p5sqjGBjfDOxGc/
-Q3Amkf4FE7o2fYrJacrsdo7uMgQQbghzer5JRjj2Qc2g3YMbp3BaQpOrkFRZAHj5
-CQIrkBbRQtvuLC73ojeLuGTUD+eLRMpbByEENMM2kUXIOTQqKmtMcIdVF4vlWrFp
-wvi4TK4YFnybBUP0hX7MRI7qgI4EmfNupPv0aCRbu+mHsEkVA1mF0ELbUtCPpQ8w
-6h7AnawR06KkXIqk5cidcpXEK+XMjwJlEseceMPlQxiVkbDZ68I7DeXe0qjDrizN
-x6uvBNvABkk9YHbKth7g99/I5h8BgCZl8jqVnyFKATifSh6rJ6oQEqXciz/tyxg0
-XT5ZSyLDMeUsO1hfsVfYe56S5Tj9Af9yofSqK6ZGdq/QzXi1hW2mB4ZNsTJigMVx
-RYwg0RKOXXcVXY8l8uiewjV4TyjS2xzWjZbQgvMBG6bzNTRsqKi35MAO/n7YXpfx
-vWrIAiTbCPhN4HEZ2RsNtLSfPr7MJ7BtAaq6vNGhbRtQQjoYoeUlRDEC6yZK1yVA
-y5jy554dwDgquh491iEsHpZkejaAzsdQyp1pO6e6JK8UDWF3NHsG/1ul0bG+Bl66
-8YFGvFrDlUn3wU16wMkWOO6iClzEHVhhfS2yFISIPyYKvJZM3cPxUE+jL3r/2uE3
-LBPdgW+hLfR/NUnHwqf+
-=QXul
------END PGP SIGNATURE-----
-
---82I3+IH0IqGh5yIs--
-
---===============8965379991851869284==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8965379991851869284==--
+Best regards,
+Javier
