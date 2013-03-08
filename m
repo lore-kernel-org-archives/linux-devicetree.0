@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 5/9] rtc: stmp3xxx: enable wakeup functionality
-Date: Fri,  8 Mar 2013 10:01:40 +0100
-Message-ID: <1362733304-23037-6-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH v2 6/9] rtc: stmp3xxx: add sysfs entries for persistent regs
+Date: Fri,  8 Mar 2013 10:01:41 +0100
+Message-ID: <1362733304-23037-7-git-send-email-s.trumtrar@pengutronix.de>
 References: <1362733304-23037-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,30 +19,126 @@ Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06c
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This RTC can wakeup the system. Register the device accordingly.
+The persistent registers 1-5 are completely software defined. To have access
+from userspace, export them via sysfs.
 
-Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/rtc/rtc-stmp3xxx.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/rtc/rtc-stmp3xxx.c | 69 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 69 insertions(+)
 
 diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
-index d2283c5..cd844ec 100644
+index cd844ec..3ca26ac 100644
 --- a/drivers/rtc/rtc-stmp3xxx.c
 +++ b/drivers/rtc/rtc-stmp3xxx.c
-@@ -370,6 +370,9 @@ static int stmp3xxx_rtc_probe(struct platform_device *pdev)
- 			STMP3XXX_RTC_CTRL_ALARM_IRQ_EN,
- 			rtc_data->io + STMP3XXX_RTC_CTRL_CLR);
+@@ -67,6 +67,8 @@
+ /* missing bitmask in headers */
+ #define STMP3XXX_RTC_PERSISTENT1_FORCE_UPDATER	0x80000000
  
-+	/* this RTC can wake up the system */
-+	device_init_wakeup(&pdev->dev, true);
++#define STMP3XXX_RTC_PERSISTENT_LEN            (0xC0 - STMP3XXX_RTC_PERSISTENT1)
 +
- 	rtc_data->rtc = rtc_device_register(pdev->name, &pdev->dev,
- 				&stmp3xxx_rtc_ops, THIS_MODULE);
- 	if (IS_ERR(rtc_data->rtc)) {
+ enum clock_source {
+ 	MXS_UNKNOWN,
+ 	MXS_OSC_24M,
+@@ -79,6 +81,9 @@ struct stmp3xxx_rtc_data {
+ 	void __iomem *io;
+ 	int irq_alarm;
+ 	enum clock_source clk_src;
++#if IS_ENABLED(CONFIG_RTC_INTF_SYSFS)
++	struct bin_attribute *persist;
++#endif
+ };
+ 
+ #if IS_ENABLED(CONFIG_STMP3XXX_RTC_WATCHDOG)
+@@ -267,6 +272,42 @@ static int stmp3xxx_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+ 	return 0;
+ }
+ 
++#if IS_ENABLED(CONFIG_RTC_INTF_SYSFS)
++static ssize_t stmp3xxx_rtc_persist_read(struct file *filep,
++					 struct kobject *kobj,
++					 struct bin_attribute *bin_attr,
++					 char *buf, loff_t off, size_t size)
++{
++	struct rtc_device *rtc = container_of(kobj, struct rtc_device,
++					      dev.kobj);
++	struct device *dev = rtc->dev.parent;
++	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
++	ssize_t count;
++
++	for (count = 0; size; size--, off++, count++)
++		*buf++ = readl(rtc_data->io + STMP3XXX_RTC_PERSISTENT1 + off);
++
++	return count;
++}
++
++static ssize_t stmp3xxx_rtc_persist_write(struct file *filep,
++					  struct kobject *kobj,
++					  struct bin_attribute *bin_attr,
++					  char *buf, loff_t off, size_t size)
++{
++	struct rtc_device *rtc = container_of(kobj, struct rtc_device,
++					      dev.kobj);
++	struct device *dev = rtc->dev.parent;
++	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
++	ssize_t count;
++
++	for (count = 0; size; size--, off++, count++)
++		writel(*buf++, rtc_data->io + STMP3XXX_RTC_PERSISTENT1 + off);
++
++	return count;
++}
++#endif
++
+ static struct rtc_class_ops stmp3xxx_rtc_ops = {
+ 	.alarm_irq_enable =
+ 			  stmp3xxx_alarm_irq_enable,
+@@ -283,6 +324,11 @@ static int stmp3xxx_rtc_remove(struct platform_device *pdev)
+ 	if (!rtc_data)
+ 		return 0;
+ 
++#if IS_ENABLED(CONFIG_RTC_INTF_SYSFS)
++	sysfs_remove_bin_file(&pdev->dev.kobj, rtc_data->persist);
++	kfree(rtc_data->persist);
++#endif
++
+ 	writel(STMP3XXX_RTC_CTRL_ALARM_IRQ_EN,
+ 			rtc_data->io + STMP3XXX_RTC_CTRL_CLR);
+ 	free_irq(rtc_data->irq_alarm, &pdev->dev);
+@@ -389,8 +435,31 @@ static int stmp3xxx_rtc_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	stmp3xxx_wdt_register(pdev);
++
++#if IS_ENABLED(CONFIG_RTC_INTF_SYSFS)
++	rtc_data->persist = kzalloc(sizeof(struct bin_attribute), GFP_KERNEL);
++	if (!rtc_data->persist) {
++		err = -ENOMEM;
++		goto out_persist;
++	}
++
++	rtc_data->persist->attr.name = "persistent";
++	rtc_data->persist->attr.mode = S_IRUGO | S_IWUSR;
++	sysfs_bin_attr_init(rtc_data->persist);
++	rtc_data->persist->read = stmp3xxx_rtc_persist_read;
++	rtc_data->persist->write = stmp3xxx_rtc_persist_write;
++	rtc_data->persist->size = STMP3XXX_RTC_PERSISTENT_LEN;
++	err = sysfs_create_bin_file(&rtc_data->rtc->dev.kobj,
++				rtc_data->persist);
++	if (err) {
++		kfree(rtc_data->persist);
++		goto out_persist;
++	}
++#endif
++
+ 	return 0;
+ 
++out_persist:
+ out_irq_alarm:
+ 	rtc_device_unregister(rtc_data->rtc);
+ out_remap:
 -- 
 1.8.2.rc2
