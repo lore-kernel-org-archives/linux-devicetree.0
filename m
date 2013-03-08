@@ -1,128 +1,181 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: [PATCH 6/9] ARM: dts: Add OMAP3430 SDP flash memory bindings
-Date: Fri, 8 Mar 2013 11:27:30 -0600
-Message-ID: <1362763654-9660-7-git-send-email-jon-hunter@ti.com>
-References: <1362763654-9660-1-git-send-email-jon-hunter@ti.com>
+From: <ludovic.desroches@atmel.com>
+Subject: [PATCH 1/3] can: at91_can: add dt support
+Date: Fri, 8 Mar 2013 18:30:40 +0100
+Message-ID: <1362763842-14924-2-git-send-email-ludovic.desroches@atmel.com>
+References: <1362763842-14924-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1362763654-9660-1-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>
-Cc: device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>, Jon Hunter <jon-hunter@ti.com>
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <1362763842-14924-1-git-send-email-ludovic.desroches@atmel.com>
+Sender: linux-can-owner@vger.kernel.org
+To: linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, mkl@pengutronix.de, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the device-tree nodes for the 128MB ONENAND flash and 256MB NAND
-flash memories found on the OMAP3430 SDP board.
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
 
-Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+Add device tree support.
+
+Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
 ---
- arch/arm/boot/dts/omap3430-sdp.dts |   95 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 95 insertions(+)
+ .../devicetree/bindings/net/can/atmel-can.txt      | 14 ++++
+ drivers/net/can/at91_can.c                         | 75 ++++++++++++++++------
+ 2 files changed, 70 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/can/atmel-can.txt
 
-diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
-index be0650d..c313762 100644
---- a/arch/arm/boot/dts/omap3430-sdp.dts
-+++ b/arch/arm/boot/dts/omap3430-sdp.dts
-@@ -44,3 +44,98 @@
- &mmc3 {
- 	status = "disabled";
+diff --git a/Documentation/devicetree/bindings/net/can/atmel-can.txt b/Documentation/devicetree/bindings/net/can/atmel-can.txt
+new file mode 100644
+index 0000000..69381db
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/atmel-can.txt
+@@ -0,0 +1,14 @@
++* AT91 CAN *
++
++Required properties:
++  - compatible: Should be "atmel,at91sam9263-can" or "atmel,at91sam9x5-can"
++  - reg: Should contain RTC registers location and length
++  - interrupts: Should contain IRQ line for the CAN controller
++
++Example:
++
++	can0: can@f000c000 {
++		compatbile = "atmel,at91sam9x5-can";
++		reg = <0xf000c000 0x300>;
++		interrupts = <40 4 5>
++	};
+diff --git a/drivers/net/can/at91_can.c b/drivers/net/can/at91_can.c
+index 44f3637..c7f70d4 100644
+--- a/drivers/net/can/at91_can.c
++++ b/drivers/net/can/at91_can.c
+@@ -27,6 +27,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/netdevice.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/skbuff.h>
+@@ -155,19 +156,20 @@ struct at91_priv {
+ 	canid_t mb0_id;
  };
-+
-+&gpmc {
-+	ranges = <1 0 0x28000000 0x08000000>,
-+		 <2 0 0x20000000 0x10000000>;
-+
-+	nand@1,0 {
-+		linux,mtd-name= "micron,mt29f1g08abb";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <1 0 0x08000000>;
-+		nand-bus-width = <8>;
-+
-+		gpmc,device_nand;
-+		gpmc,cs-on = <0>;
-+		gpmc,cs-rd-off = <36>;
-+		gpmc,cs-wr-off = <36>;
-+		gpmc,adv-on = <6>;
-+		gpmc,adv-rd-off = <24>;
-+		gpmc,adv-wr-off = <36>;
-+		gpmc,oe-on = <6>;
-+		gpmc,oe-off = <48>;
-+		gpmc,we-on = <6>;
-+		gpmc,we-off = <30>;
-+		gpmc,rd-cycle = <72>;
-+		gpmc,wr-cycle = <72>;
-+		gpmc,access = <54>;
-+		gpmc,wr-access = <30>;
-+
-+		partition@0 {
-+			label = "xloader-nand";
-+			reg = <0 0x80000>;
-+		};
-+		partition@0x80000 {
-+			label = "bootloader-nand";
-+			reg = <0x80000 0x140000>;
-+		};
-+		partition@0x1c0000 {
-+			label = "params-nand";
-+			reg = <0x1c0000 0xc0000>;
-+		};
-+		partition@0x280000 {
-+			label = "kernel-nand";
-+			reg = <0x280000 0x500000>;
-+		};
-+		partition@0x780000 {
-+			label = "filesystem-nand";
-+			reg = <0x780000 0x7880000>;
-+		};
-+	};
-+
-+	onenand@2,0 {
-+		linux,mtd-name= "samsung,kfm2g16q2m-deb8";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		reg = <2 0 0x10000000>;
-+
-+		gpmc,device-width = <2>;
-+		gpmc,mux-add-data = <2>;
-+		gpmc,cs-on = <0>;
-+		gpmc,cs-rd-off = <84>;
-+		gpmc,cs-wr-off = <72>;
-+		gpmc,adv-on = <0>;
-+		gpmc,adv-rd-off = <18>;
-+		gpmc,adv-wr-off = <18>;
-+		gpmc,oe-on = <30>;
-+		gpmc,oe-off = <84>;
-+		gpmc,we-on = <0>;
-+		gpmc,we-off = <42>;
-+		gpmc,rd-cycle = <108>;
-+		gpmc,wr-cycle = <96>;
-+		gpmc,access = <78>;
-+		gpmc,wr-data-mux-bus = <30>;
-+
-+		partition@0 {
-+			label = "xloader-onenand";
-+			reg = <0 0x80000>;
-+		};
-+		partition@0x80000 {
-+			label = "bootloader-onenand";
-+			reg = <0x80000 0x40000>;
-+		};
-+		partition@0xc0000 {
-+			label = "params-onenand";
-+			reg = <0xc0000 0x20000>;
-+		};
-+		partition@0xe0000 {
-+			label = "kernel-onenand";
-+			reg = <0xe0000 0x200000>;
-+		};
-+		partition@0x2e0000 {
-+			label = "filesystem-onenand";
-+			reg = <0x2e0000 0xfd20000>;
-+		};
-+	};
+ 
+-static const struct at91_devtype_data at91_devtype_data[] = {
+-	[AT91_DEVTYPE_SAM9263] = {
+-		.rx_first = 1,
+-		.rx_split = 8,
+-		.rx_last = 11,
+-		.tx_shift = 2,
+-	},
+-	[AT91_DEVTYPE_SAM9X5] = {
+-		.rx_first = 0,
+-		.rx_split = 4,
+-		.rx_last = 5,
+-		.tx_shift = 1,
+-	},
++static struct at91_devtype_data at91_at91sam9263_data = {
++	.rx_first = 1,
++	.rx_split = 8,
++	.rx_last = 11,
++	.tx_shift = 2,
++	.type = AT91_DEVTYPE_SAM9263
 +};
++
++static struct at91_devtype_data at91_at91sam9x5_data = {
++	.rx_first = 0,
++	.rx_split = 4,
++	.rx_last = 5,
++	.tx_shift = 1,
++	.type = AT91_DEVTYPE_SAM9X5
+ };
+ 
+ static const struct can_bittiming_const at91_bittiming_const = {
+@@ -1249,10 +1251,41 @@ static struct attribute_group at91_sysfs_attr_group = {
+ 	.attrs = at91_sysfs_attrs,
+ };
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id at91_can_dt_ids[] = {
++	{
++		.compatible = "atmel,at91sam9x5-can",
++		.data = &at91_at91sam9x5_data,
++	}, {
++		.compatible = "atmel,at91sam9263-can",
++		.data = &at91_at91sam9263_data,
++	}, {
++		/* sentinel */
++	}
++};
++MODULE_DEVICE_TABLE(of, at91_can_dt_ids);
++#else
++#define at91_can_dt_ids NULL
++#endif
++
++static struct at91_devtype_data* at91_can_get_driver_data(
++						struct platform_device *pdev)
++{
++	if (pdev->dev.of_node) {
++		const struct of_device_id *match;
++		match = of_match_node(at91_can_dt_ids, pdev->dev.of_node);
++		if (!match) {
++			dev_err(&pdev->dev, "no matching node found in dtb\n");
++			return NULL;
++		}
++		return (struct at91_devtype_data *)match->data;
++	}
++	return (struct at91_devtype_data *)platform_get_device_id(pdev)->driver_data;
++}
++
+ static int at91_can_probe(struct platform_device *pdev)
+ {
+ 	const struct at91_devtype_data *devtype_data;
+-	enum at91_devtype devtype;
+ 	struct net_device *dev;
+ 	struct at91_priv *priv;
+ 	struct resource *res;
+@@ -1260,8 +1293,12 @@ static int at91_can_probe(struct platform_device *pdev)
+ 	void __iomem *addr;
+ 	int err, irq;
+ 
+-	devtype = pdev->id_entry->driver_data;
+-	devtype_data = &at91_devtype_data[devtype];
++	devtype_data = at91_can_get_driver_data(pdev);
++	if (!devtype_data) {
++		dev_err(&pdev->dev, "no driver data\n");
++		err = -ENODEV;
++		goto exit;
++	}
+ 
+ 	clk = clk_get(&pdev->dev, "can_clk");
+ 	if (IS_ERR(clk)) {
+@@ -1310,7 +1347,6 @@ static int at91_can_probe(struct platform_device *pdev)
+ 	priv->dev = dev;
+ 	priv->reg_base = addr;
+ 	priv->devtype_data = *devtype_data;
+-	priv->devtype_data.type = devtype;
+ 	priv->clk = clk;
+ 	priv->pdata = pdev->dev.platform_data;
+ 	priv->mb0_id = 0x7ff;
+@@ -1373,10 +1409,10 @@ static int at91_can_remove(struct platform_device *pdev)
+ static const struct platform_device_id at91_can_id_table[] = {
+ 	{
+ 		.name = "at91_can",
+-		.driver_data = AT91_DEVTYPE_SAM9263,
++		.driver_data = (unsigned long)&at91_at91sam9x5_data,
+ 	}, {
+ 		.name = "at91sam9x5_can",
+-		.driver_data = AT91_DEVTYPE_SAM9X5,
++		.driver_data = (unsigned long)&at91_at91sam9263_data,
+ 	}, {
+ 		/* sentinel */
+ 	}
+@@ -1389,6 +1425,7 @@ static struct platform_driver at91_can_driver = {
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
+ 		.owner = THIS_MODULE,
++		.of_match_table = at91_can_dt_ids,
+ 	},
+ 	.id_table = at91_can_id_table,
+ };
 -- 
-1.7.10.4
+1.7.11.3
 
