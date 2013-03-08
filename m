@@ -1,155 +1,49 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [PATCH RFC v5 6/6] s5p-fimc: Use pinctrl API for camera ports
- configuration
-Date: Fri, 08 Mar 2013 17:46:06 +0100
-Message-ID: <1362761166-5285-8-git-send-email-s.nawrocki@samsung.com>
-References: <1362761166-5285-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-media-owner@vger.kernel.org>
-In-reply-to: <1362761166-5285-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-media-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: devicetree-discuss@lists.ozlabs.org, swarren@wwwdotorg.org, shaik.samsung@gmail.com, arun.kk@samsung.com, a.hajda@samsung.com, Sylwester Nawrocki <s.nawrocki@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP
+ systems
+Date: Fri, 8 Mar 2013 09:52:28 -0700
+Message-ID: <20130308165228.GB4094@obsidianresearch.com>
+References: <20130306105441.4d24033e@skate>
+ <20130306121118.GA17079@avionic-0098.mockup.avionic-design.de>
+ <20130306180946.GA2433@obsidianresearch.com>
+ <20130307080832.GD3451@avionic-0098.mockup.avionic-design.de>
+ <20130307174955.GC20840@obsidianresearch.com>
+ <20130307194830.GA1811@avionic-0098.mockup.avionic-design.de>
+ <20130307200235.GB20695@obsidianresearch.com>
+ <20130307204726.GB1811@avionic-0098.mockup.avionic-design.de>
+ <51392B4D.9040404@gmail.com>
+ <20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Rob Herring <robherring2@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, linux-pci@vger.kernel.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Gregory Clement <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Before the camera ports can be used the pinmux needs to be configured
-properly. This patch adds a function to set the camera ports pinctrl
-to a default state within the media driver's probe().
-The camera port(s) are then configured for the video bus operation.
+On Fri, Mar 08, 2013 at 08:14:44AM +0100, Thierry Reding wrote:
+> On Thu, Mar 07, 2013 at 06:05:33PM -0600, Rob Herring wrote:
+> > On 03/07/2013 02:47 PM, Thierry Reding wrote:
+> [...]
+> > > In a nutshell (since some of the context isn't quoted anymore) the
+> > > problem that we're trying to solve is that some of the embedded SoCs
+> > > require per-root-port registers for configuration. The PCI DT
+> > > specification doesn't make any provisions for this. A few alternatives
+> > > have been discussed so far:
+> > 
+> > I'm not sure I follow. This is different than the host controller
+> > registers? Why would this not just be multiple entries in the reg property?
+> 
+> Well the register regions are per root-port. On Tegra20 there's 2 of
+> them, Tegra30 has 3 and if I understand correctly Marvell can have up to
+> 10 (!). Adding all of them to the reg property of the host controller
+> could work but it needs some way to match the reg entry to the root port
+> similar to option 1 below.
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
+Thomas just posted an implementation like this, please see:
 
-Changes since v4:
- - added more pinctrl states for camera port A and B normal operation
-   and idle state (with CAMCLK output pin switched to high impedance
-   state)
+http://www.spinics.net/lists/arm-kernel/msg228749.html
 
-Changes since v3:
- - removed the "inactive" pinctrl state, it will be added later if required
----
- .../devicetree/bindings/media/samsung-fimc.txt     |   12 +++++++++
- drivers/media/platform/s5p-fimc/fimc-mdevice.c     |   27 ++++++++++++++++++++
- drivers/media/platform/s5p-fimc/fimc-mdevice.h     |   11 ++++++++
- 3 files changed, 50 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/media/samsung-fimc.txt b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-index 88181d0..e3ac3fe 100644
---- a/Documentation/devicetree/bindings/media/samsung-fimc.txt
-+++ b/Documentation/devicetree/bindings/media/samsung-fimc.txt
-@@ -17,6 +17,15 @@ Required properties:
- 
- - compatible : must be "samsung,fimc", "simple-bus"
- 
-+The pinctrl bindings defined in ../../pinctrl/pinctrl-bindings.txt must be used
-+to define a required pinctrl state named "default" and optional pinctrl states:
-+"idle", "active-a", active-b". These optional states can be used to switch the
-+camera port pinmux at runtime. The "idle" state should configure both the camera
-+ports A and B into high impedance state, especially the CAMCLK clock output
-+should be inactive. For the "active-a" state the camera port A must be activated
-+and the port B deactivated and for the state "active-b" it should be the other
-+way around.
-+
- The 'camera' node must include at least one 'fimc' child node.
- 
- 
-@@ -133,6 +142,9 @@ Example:
- 		#size-cells = <1>;
- 		status = "okay";
- 
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&cam_port_a_clk_active>;
-+
- 		/* parallel camera ports */
- 		parallel-ports {
- 			/* camera A input */
-diff --git a/drivers/media/platform/s5p-fimc/fimc-mdevice.c b/drivers/media/platform/s5p-fimc/fimc-mdevice.c
-index b4c2ca8..590ed82 100644
---- a/drivers/media/platform/s5p-fimc/fimc-mdevice.c
-+++ b/drivers/media/platform/s5p-fimc/fimc-mdevice.c
-@@ -1161,6 +1161,26 @@ static ssize_t fimc_md_sysfs_store(struct device *dev,
- static DEVICE_ATTR(subdev_conf_mode, S_IWUSR | S_IRUGO,
- 		   fimc_md_sysfs_show, fimc_md_sysfs_store);
- 
-+static int fimc_md_get_pinctrl(struct fimc_md *fmd)
-+{
-+	struct device *dev = &fmd->pdev->dev;
-+	struct fimc_pinctrl *pctl = &fmd->pinctl;
-+
-+	pctl->pinctrl = devm_pinctrl_get(dev);
-+	if (IS_ERR(pctl->pinctrl))
-+		return PTR_ERR(pctl->pinctrl);
-+
-+	pctl->state_default = pinctrl_lookup_state(pctl->pinctrl,
-+					PINCTRL_STATE_DEFAULT);
-+	if (IS_ERR(pctl->state_default))
-+		return PTR_ERR(pctl->state_default);
-+
-+	pctl->state_idle = pinctrl_lookup_state(pctl->pinctrl,
-+					PINCTRL_STATE_IDLE);
-+
-+	return pinctrl_select_state(pctl->pinctrl, pctl->state_default);
-+}
-+
- static int fimc_md_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -1204,6 +1224,13 @@ static int fimc_md_probe(struct platform_device *pdev)
- 	/* Protect the media graph while we're registering entities */
- 	mutex_lock(&fmd->media_dev.graph_mutex);
- 
-+	ret = fimc_md_get_pinctrl(fmd);
-+	if (ret < 0) {
-+		if (ret != EPROBE_DEFER)
-+			dev_err(dev, "Failed to get pinctrl: %d\n", ret);
-+		goto err_unlock;
-+	}
-+
- 	if (dev->of_node)
- 		ret = fimc_md_register_of_platform_entities(fmd, dev->of_node);
- 	else
-diff --git a/drivers/media/platform/s5p-fimc/fimc-mdevice.h b/drivers/media/platform/s5p-fimc/fimc-mdevice.h
-index b6ceb59..5d6146e 100644
---- a/drivers/media/platform/s5p-fimc/fimc-mdevice.h
-+++ b/drivers/media/platform/s5p-fimc/fimc-mdevice.h
-@@ -12,6 +12,7 @@
- #include <linux/clk.h>
- #include <linux/platform_device.h>
- #include <linux/mutex.h>
-+#include <linux/pinctrl/consumer.h>
- #include <media/media-device.h>
- #include <media/media-entity.h>
- #include <media/v4l2-device.h>
-@@ -26,6 +27,8 @@
- #define FIMC_IS_OF_NODE_NAME	"fimc-is"
- #define CSIS_OF_NODE_NAME	"csis"
- 
-+#define PINCTRL_STATE_IDLE	"idle"
-+
- /* Group IDs of sensor, MIPI-CSIS, FIMC-LITE and the writeback subdevs. */
- #define GRP_ID_SENSOR		(1 << 8)
- #define GRP_ID_FIMC_IS_SENSOR	(1 << 9)
-@@ -73,6 +76,9 @@ struct fimc_sensor_info {
-  * @media_dev: top level media device
-  * @v4l2_dev: top level v4l2_device holding up the subdevs
-  * @pdev: platform device this media device is hooked up into
-+ * @pinctrl: camera port pinctrl handle
-+ * @state_default: pinctrl default state handle
-+ * @state_idle: pinctrl idle state handle
-  * @user_subdev_api: true if subdevs are not configured by the host driver
-  * @slock: spinlock protecting @sensor array
-  */
-@@ -86,6 +92,11 @@ struct fimc_md {
- 	struct media_device media_dev;
- 	struct v4l2_device v4l2_dev;
- 	struct platform_device *pdev;
-+	struct fimc_pinctrl {
-+		struct pinctrl *pinctrl;
-+		struct pinctrl_state *state_default;
-+		struct pinctrl_state *state_idle;
-+	} pinctl;
- 	bool user_subdev_api;
- 	spinlock_t slock;
- };
--- 
-1.7.9.5
+Jason
