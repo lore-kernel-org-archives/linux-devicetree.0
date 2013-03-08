@@ -1,7 +1,7 @@
 From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH v2 7/9] rtc: stmp3xxx: Re-enable active alarm
-Date: Fri,  8 Mar 2013 10:01:42 +0100
-Message-ID: <1362733304-23037-8-git-send-email-s.trumtrar@pengutronix.de>
+Subject: [PATCH v2 9/9] rtc: stmp3xxx: Replace wait_time function
+Date: Fri,  8 Mar 2013 10:01:44 +0100
+Message-ID: <1362733304-23037-10-git-send-email-s.trumtrar@pengutronix.de>
 References: <1362733304-23037-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,73 +22,53 @@ To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06c
 Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-If an alarm is set and the system rebooted, the alarm does not get re-enabled,
-although it may still be valid (i.e. in the future).
-
-The sysfs representation of wakealarms prevents overwriting active alarms. One
-needs to instead write a 0 first and then the new value. Therefore an alarm is
-considered active if
-	wakealarm != 0 && wakealarm > now
-
-To preserve this information over a reboot, the alarm needs to be re-written
-on startup, if it is still valid. This leads to all flags being reactivated
-and interrupts reenabled.
+Replace the wait_time function with the more generic wait_copy_ctrl function.
 
 Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 ---
- drivers/rtc/rtc-stmp3xxx.c | 26 +++++++++++++++++++-------
- 1 file changed, 19 insertions(+), 7 deletions(-)
+ drivers/rtc/rtc-stmp3xxx.c | 18 ++++--------------
+ 1 file changed, 4 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/rtc/rtc-stmp3xxx.c b/drivers/rtc/rtc-stmp3xxx.c
-index 3ca26ac..90d0804 100644
+index 3de868d..687bcb2 100644
 --- a/drivers/rtc/rtc-stmp3xxx.c
 +++ b/drivers/rtc/rtc-stmp3xxx.c
-@@ -247,27 +247,39 @@ static int stmp3xxx_alarm_irq_enable(struct device *dev, unsigned int enabled)
- 				rtc_data->io + STMP3XXX_RTC_PERSISTENT0_CLR);
- 		writel(STMP3XXX_RTC_CTRL_ALARM_IRQ_EN,
- 				rtc_data->io + STMP3XXX_RTC_CTRL_CLR);
-+		writel(0, rtc_data->io + STMP3XXX_RTC_ALARM);
+@@ -179,24 +179,13 @@ static inline void stmp3xxx_wait_copy_ctrl(const struct stmp3xxx_rtc_data *rtc_d
  	}
- 	return 0;
  }
  
--static int stmp3xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
-+static int stmp3xxx_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
+-static void stmp3xxx_wait_time(struct stmp3xxx_rtc_data *rtc_data)
+-{
+-	/*
+-	 * The datasheet doesn't say which way round the
+-	 * NEW_REGS/STALE_REGS bitfields go. In fact it's 0x1=P0,
+-	 * 0x2=P1, .., 0x20=P5, 0x40=ALARM, 0x80=SECONDS
+-	 */
+-	while (readl(rtc_data->io + STMP3XXX_RTC_STAT) &
+-			(0x80 << STMP3XXX_RTC_STAT_STALE_SHIFT))
+-		cpu_relax();
+-}
+-
+ /* Time read/write */
+ static int stmp3xxx_rtc_gettime(struct device *dev, struct rtc_time *rtc_tm)
  {
-+	unsigned long t;
  	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
  
--	rtc_time_to_tm(readl(rtc_data->io + STMP3XXX_RTC_ALARM), &alm->time);
-+	rtc_tm_to_time(&alm->time, &t);
-+	writel(t, rtc_data->io + STMP3XXX_RTC_ALARM);
-+
-+	stmp3xxx_alarm_irq_enable(dev, alm->enabled);
-+
+-	stmp3xxx_wait_time(rtc_data);
++	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_STALE_SHIFT,
++				STMP3XXX_RTC_STAT_SEC_MASK);
+ 	rtc_time_to_tm(readl(rtc_data->io + STMP3XXX_RTC_SECONDS), rtc_tm);
  	return 0;
  }
- 
--static int stmp3xxx_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alm)
-+static int stmp3xxx_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alm)
- {
--	unsigned long t;
+@@ -206,7 +195,8 @@ static int stmp3xxx_rtc_set_mmss(struct device *dev, unsigned long t)
  	struct stmp3xxx_rtc_data *rtc_data = dev_get_drvdata(dev);
-+	struct rtc_time now;
-+	u32 alarm = readl(rtc_data->io + STMP3XXX_RTC_ALARM);
  
--	rtc_tm_to_time(&alm->time, &t);
--	writel(t, rtc_data->io + STMP3XXX_RTC_ALARM);
-+	rtc_time_to_tm(alarm, &alm->time);
- 
--	stmp3xxx_alarm_irq_enable(dev, alm->enabled);
-+	stmp3xxx_rtc_gettime(dev, &now);
-+	if (rtc_tm_to_ktime(now).tv64 < rtc_tm_to_ktime(alm->time).tv64) {
-+		alm->enabled = 1;
-+		stmp3xxx_rtc_set_alarm(dev, alm);
-+	} else {
-+		alm->enabled = 0;
-+	}
- 
+ 	writel(t, rtc_data->io + STMP3XXX_RTC_SECONDS);
+-	stmp3xxx_wait_time(rtc_data);
++	stmp3xxx_wait_copy_ctrl(rtc_data, STMP3XXX_RTC_STAT_NEW_SHIFT,
++				STMP3XXX_RTC_STAT_SEC_MASK);
  	return 0;
  }
+ 
 -- 
 1.8.2.rc2
