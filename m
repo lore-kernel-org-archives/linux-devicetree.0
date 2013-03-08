@@ -1,67 +1,49 @@
-From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH V2] cpufreq: ARM big LITTLE: Add generic cpufreq driver
- and its DT glue
-Date: Fri, 8 Mar 2013 07:11:28 +0100 (CET)
-Message-ID: <Pine.LNX.4.64.1303080706310.24111@axis700.grange>
-References: <6cba8f153cfd4b0d3075a34a6dfe287bdec2eb06.1362676407.git.viresh.kumar@linaro.org>
- <Pine.LNX.4.64.1303072248560.20470@axis700.grange>
- <CAKohpo=-_uzTi6QR4MnXPd5yAZFTcw-3ZZL-TAVY+drV-bDjNw@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] serial/efm32: parse location property
+Date: Fri, 8 Mar 2013 08:04:25 +0100
+Message-ID: <CACRpkdb5-t-k6B-WKBwyr6hV7qUHv7YiDs1RwPJMxDRZm5pYWQ@mail.gmail.com>
+References: <1358774576-13275-1-git-send-email-u.kleine-koenig@pengutronix.de>
+	<20130304143854.395EF3E206B@localhost>
+	<CACRpkdZuNOFco+GTe9YOD=qy+dgEaokoqvWaPA2mCxYHs9oxVA@mail.gmail.com>
+	<20130307093829.GG15375@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpo=-_uzTi6QR4MnXPd5yAZFTcw-3ZZL-TAVY+drV-bDjNw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: rjw@sisk.pl, Steve.Bannister@arm.com, linux@arm.linux.org.uk, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, devicetree-discuss@lists.ozlabs.org, Liviu.Dudau@arm.com, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, robin.randhawa@arm.com, linux-arm-kernel@lists.infradead.org, mark.hambleton@broadcom.com, linaro-kernel@lists.linaro.org, charles.garcia-tobin@arm.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20130307093829.GG15375@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Uwe_Kleine=2DK=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, devicetree-discuss@lists.ozlabs.org, kernel@pengutronix.de, linux-serial@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Viresh
+On Thu, Mar 7, 2013 at 10:38 AM, Uwe Kleine-K=F6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 
-On Fri, 8 Mar 2013, Viresh Kumar wrote:
+> If you have an idea how to model this such that it fits nicely into t=
+he
+> various subsystems (most interesting: gpio and pinmux), any input is
+> welcome.
 
-> On 8 March 2013 05:56, Guennadi Liakhovetski <g.liakhovetski@gmx.de> wrote:
-> > I like generic drivers :)
-> 
-> Me too :)
-> 
-> > cpufreq-cpu0 is yet another such generic
-> > (cpufreq) driver. Now, comparing the functionality of the two:
-> 
-> Great!!
-> 
-> > we see, that this driver "only" switches CPU clock frequencies. Whereas
-> > the cpufreq-cpu0 driver also manipulates a regulator (if available)
-> > directly. I understand, power-saving is also an important consideration
-> > for big.LITTLE systems. So, I presume, you plan to implement voltage
-> > switching in cpufreq notifiers?
-> 
-> So the platform on which we are currently testing these is ARM TC2 Soc
-> and this switching is done by the firmware instead. And so didn't went
-> for regulator hookups initially.. Obviously in future regulator hookups would
-> find some space in this driver but not required for now.
-> 
-> > Now, my question is: is this (notifier)
-> > actually the preferred method and the cpufreq-cpu0 driver is doing it
-> > "wrongly?"
-> 
-> What notifiers are you talking about? I believe using the regulator framework
-> is the right way of doing this. And that would be part of this code later on.
+Looking at it, and assuming you will use device tree for this, I think
+the best is to have a single driver in drivers/pinctrl/pinctrl-efm32.c
+that handles all muxing, pin direction/biasing/pulling and GPIO.
 
-Also in your driver you're doing
+Let this driver's DT entry reference all the devices with local
+MUX registers and pick out these nodes by reference and
+manipulate them from the pin control driver.
 
-		cpufreq_notify_transition(&freqs, CPUFREQ_PRECHANGE);
-		...
-		cpufreq_notify_transition(&freqs, CPUFREQ_POSTCHANGE);
+You put ampersand nodes into the pin controller node.
 
-So, theoretically you could install such notifiers to adjust CPU voltages 
-(using regulators too). But adding regulator calls directly to the driver 
-would make it consistent with cpufreq-cpu0.c, so, if this doesn't violate 
-any concepts, I think, it would be good to add those when suitable systems 
-appear.
+In the dbx500 pin controller we have this:
 
-Thanks
-Guennadi
----
-Guennadi Liakhovetski, Ph.D.
-Freelance Open-Source Software Developer
-http://www.open-technology.de/
+                pinctrl {
+                        compatible =3D "stericsson,nmk-pinctrl";
+                        prcm =3D <&prcmu>;
+                };
+
+Basically this "prcm" is another peripheral with a set of misc
+registers that also do some pin control, but we let the pin control
+driver grab a handle to that because they are related.
+
+Yours,
+Linus Walleij
