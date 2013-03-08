@@ -1,145 +1,302 @@
-From: Prabhakar Lad <prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 6/6] ARM: davinci: da850: configure system
- configuration chip(CFGCHIP3) for emac
-Date: Fri, 8 Mar 2013 18:58:33 +0530
-Message-ID: <CA+V-a8uUFRRKrGRyq3wDs8ks_GzaGZGrTz+SoW9b2VQ8pb+DxA@mail.gmail.com>
-References: <1359380879-26306-1-git-send-email-prabhakar.lad@ti.com>
- <1359380879-26306-7-git-send-email-prabhakar.lad@ti.com>
- <510E5BCF.9080006@ti.com>
- <CA+V-a8uE6jymk5Z14ydCmuoCAkcLM-ZJKpwp2-0CRXWQtXvTSA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <CA+V-a8uE6jymk5Z14ydCmuoCAkcLM-ZJKpwp2-0CRXWQtXvTSA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Arun Kumar K <arun.kk@samsung.com>
+Subject: [RFC 01/12] exynos-fimc-is: Adding device tree nodes
+Date: Fri, 08 Mar 2013 09:59:14 -0500
+Message-ID: <1362754765-2651-2-git-send-email-arun.kk@samsung.com>
+References: <1362754765-2651-1-git-send-email-arun.kk@samsung.com>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-reply-to: <1362754765-2651-1-git-send-email-arun.kk@samsung.com>
+Sender: linux-media-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
+Cc: s.nawrocki@samsung.com, kgene.kim@samsung.com, kilyeon.im@samsung.com, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Sekhar,
+Add the fimc-is node and the required pinctrl nodes for
+fimc-is driver for Exynos5. Also adds the DT binding documentation
+for the new fimc-is node.
 
-On Mon, Feb 4, 2013 at 10:33 AM, Prabhakar Lad
-<prabhakar.csengg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Sekhar ,
->
-> On Sun, Feb 3, 2013 at 6:15 PM, Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org> wrote:
->> On 1/28/2013 7:17 PM, Prabhakar Lad wrote:
->>> From: Lad, Prabhakar <prabhakar.lad-l0cyMroinI0@public.gmane.org>
->>>
->>> The system configuration chip CFGCHIP3, controls the emac module.
->>> This patch appropriately configures this register for emac and
->>> sets DA850_MII_MDIO_CLKEN_PIN GPIO pin appropriately.
->>>
->>> Signed-off-by: Lad, Prabhakar <prabhakar.lad-l0cyMroinI0@public.gmane.org>
->>> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->>> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Cc: davinci-linux-open-source-VycZQUHpC/PFrsHnngEfi1aTQe2KTcn/@public.gmane.org
->>> Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->>> Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
->>> Cc: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
->>> Cc: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
->>> ---
->>>  arch/arm/mach-davinci/da8xx-dt.c |   28 ++++++++++++++++++++++++++++
->>>  1 files changed, 28 insertions(+), 0 deletions(-)
->>>
->>> diff --git a/arch/arm/mach-davinci/da8xx-dt.c b/arch/arm/mach-davinci/da8xx-dt.c
->>> index e533a0a..4a096e3 100644
->>> --- a/arch/arm/mach-davinci/da8xx-dt.c
->>> +++ b/arch/arm/mach-davinci/da8xx-dt.c
->>> @@ -8,6 +8,7 @@
->>>   * published by the Free Software Foundation.
->>>   */
->>>  #include <linux/io.h>
->>> +#include <linux/gpio.h>
->>>  #include <linux/of_irq.h>
->>>  #include <linux/of_platform.h>
->>>  #include <linux/irqdomain.h>
->>> @@ -39,6 +40,32 @@ static void __init da8xx_init_irq(void)
->>>
->>>  #ifdef CONFIG_ARCH_DAVINCI_DA850
->>>
->>> +static void __init da8xx_config_emac(void)
->>> +{
->>> +#define DA850_MII_MDIO_CLKEN_PIN     GPIO_TO_PIN(2, 6)
->>> +#define DA850_EMAC_MODE_SELECT               BIT(8)
->>> +     void __iomem *cfg_chip3_base;
->>> +     int ret;
->>> +     u32 val;
->>> +
->>> +     cfg_chip3_base = DA8XX_SYSCFG0_VIRT(DA8XX_CFGCHIP3_REG);
->>> +
->>> +     val = __raw_readl(cfg_chip3_base);
->>> +     val &= ~DA850_EMAC_MODE_SELECT;
->>> +     /* configure the CFGCHIP3 register for MII */
->>> +     __raw_writel(val, cfg_chip3_base);
->>
->> Use readl/writel instead.
->>
-> Ok.
->
->>> +     pr_info("EMAC: MII PHY configured\n");
->>> +
->>> +     ret = gpio_request(DA850_MII_MDIO_CLKEN_PIN, "mdio_clk_en");
->>> +     if (ret) {
->>> +             pr_warn("Cannot open GPIO %d\n",
->>> +                                     DA850_MII_MDIO_CLKEN_PIN);
->>> +             return;
->>> +     }
->>> +     /* Enable/Disable MII MDIO clock */
->>> +     gpio_direction_output(DA850_MII_MDIO_CLKEN_PIN, 0);
->>> +}
->>> +
->>>  struct of_dev_auxdata da8xx_auxdata[] __initdata = {
->>>       OF_DEV_AUXDATA("ti,davinci_mdio", 0x01e24000, "davinci_mdio.0", NULL),
->>>       OF_DEV_AUXDATA("ti,davinci-dm6467-emac", 0x01e20000, "davinci_emac.1",
->>> @@ -52,6 +79,7 @@ static void __init da850_init_machine(void)
->>>                            da8xx_auxdata, NULL);
->>>
->>>       da8xx_uart_clk_enable();
->>> +     da8xx_config_emac();
->>
->> There are couple of issues with this implementation.
->>
->> 1) da8xx_config_emac() is specific to DA850 EVM, but masquerades as
->>    generic for da8xx. Looks like you need two functions, one for soc
->>    specific configuration and one board specific.
-> Ok.
->
->> 2) da8xx_config_emac() goes through all the time, whether the
->>    particular board has emac module or not. Shouldn't
->>    da8xx_config_emac() check if emac is actually enabled in the passed
->>    dtb and only the do the configuration?
->
-> Ok. Can you give some pointers how we can access the dtb in board files.
->
-Any pointers on this could be helpful.
+Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+Signed-off-by: Kilyeon Im <kilyeon.im@samsung.com>
+---
+ .../devicetree/bindings/media/soc/exynos5-is.txt   |   81 ++++++++++++++++++++
+ arch/arm/boot/dts/exynos5250-pinctrl.dtsi          |   60 +++++++++++++++
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   54 ++++++++++++-
+ arch/arm/boot/dts/exynos5250.dtsi                  |    8 ++
+ 4 files changed, 201 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/soc/exynos5-is.txt
+ mode change 100644 => 100755 arch/arm/boot/dts/exynos5250-smdk5250.dts
+ mode change 100644 => 100755 arch/arm/boot/dts/exynos5250.dtsi
 
-Regards,
---Prabhakar
-
->> 3) The function assumes mii is used always, you can use the rmii_en dt
->>    property to check if rmii/mii is enabled and configure the soc/board
->>    accordingly.
->
-> Ok.
->
->> 4) If the same function can work both for da850 and da830, then it can
->>    be implemented outside of CONFIG_ARCH_DAVINCI_DA850.
->>
-> Ok.
->
-> Regards,
-> --Prabhakar
->
->> Thanks,
->> Sekhar
+diff --git a/Documentation/devicetree/bindings/media/soc/exynos5-is.txt b/Documentation/devicetree/bindings/media/soc/exynos5-is.txt
+new file mode 100644
+index 0000000..e0fdf02
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/soc/exynos5-is.txt
+@@ -0,0 +1,81 @@
++Samsung EXYNOS SoC Camera Subsystem
++-----------------------------------
++
++The camera subsystem on Samsung Exynos5 SoC has some changes relative
++to previous SoC versions. Exynos5 has almost similar MIPI-CSIS and
++FIMC-LITE IPs but removed the FIMC-CAPTURE. Instead it has an improved
++FIMC-IS which can provide imate data DMA output.
++
++The device tree binding remain similar to the Exynos4 bindings which can
++be seen at samsung-fimc.txt with the addition of fimc-is sub-node which will
++be explained here.
++
++fimc-is subnode of camera node
++------------------------------
++
++Required properties:
++
++- compatible		: must be "samsung,exynos5250-fimc-is"
++- reg			: physical base address and size of the memory mapped
++			  registers
++- interrupt-parent	: Parent interrupt controller
++- interrupts		: fimc-is interrupt to the parent combiner
++
++Board specific properties:
++
++- pinctrl-names    : pinctrl names for camera port pinmux control, at least
++		     "default" needs to be specified.
++- pinctrl-0...N	   : pinctrl properties corresponding to pinctrl-names
++
++Sensor sub-nodes:
++
++FIMC-IS IP supports custom built sensors to be controlled exclusively by
++the FIMC-IS firmware. These sensor properties are to be defined here.
++Sensor nodes are described in the same way as in generic sensors used in
++Exynos4 and described in samsung-fimc.txt.
++
++Example:
++
++SoC common node:
++
++		fimc_is: fimc-is@13000000 {
++			compatible = "samsung,exynos5250-fimc-is";
++			reg = <0x13000000 0x200000>;
++			interrupt-parent = <&combiner>;
++			interrupts = <19 1>;
++			status = "disabled";
++		};
++
++Board specific node:
++
++		fimc-is@13000000 {
++			status = "okay";
++			pinctrl-0 =
++				<&cam_port_a_clk_active
++				&cam_bayer_clk_active
++				&isp_uart
++				&cam_i2c0
++				&cam_i2c1>;
++			pinctrl-names = "default";
++			s5k4e5 {
++				compatible = "samsung,s5k4e5";
++				gpios = <&gpx1 2 1>;
++				clock-frequency = <24000000>;
++				port {
++					is_s5k4e5_ep: endpoint {
++						remote-endpoint = <&csis0_ep>;
++					};
++				};
++			};
++			s5k6a3 {
++				compatible = "samsung,s5k6a3";
++				gpios = <&gpx1 0 1>;
++				clock-frequency = <24000000>;
++				port {
++					is_s5k6a3_ep: endpoint {
++						remote-endpoint = <&csis1_ep>;
++					};
++				};
++			};
++		};
++
+diff --git a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
+index 3caaa21..320c22b 100644
+--- a/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
++++ b/arch/arm/boot/dts/exynos5250-pinctrl.dtsi
+@@ -556,6 +556,38 @@
+ 	};
+ 
+ 	pinctrl@13400000 {
++		gpe1: gpe1 {
++			gpio-controller;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpf0: gpf0 {
++			gpio-controller;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpf1: gpf1 {
++			gpio-controller;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
++		gpg2: gpg2 {
++			gpio-controller;
++			#gpio-cells = <2>;
++
++			interrupt-controller;
++			#interrupt-cells = <2>;
++		};
++
+ 		gph0: gph0 {
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+@@ -594,6 +626,34 @@
+ 			samsung,pin-pud = <0>;
+ 			samsung,pin-drv = <0>;
+ 		};
++
++		cam_bayer_clk_active: cam-bayer-clk-active {
++			samsung,pins = "gpg2-1";
++			samsung,pin-function = <2>;
++			samsung,pin-pud = <0>;
++			samsung,pin-drv = <3>;
++		};
++
++		isp_uart: isp-uart {
++			samsung,pins = "gpe1-0", "gpe1-1";
++			samsung,pin-function = <3>;
++			samsung,pin-pud = <0>;
++			samsung,pin-drv = <3>;
++		};
++
++		cam_i2c0: cam-i2c0 {
++			samsung,pins = "gpf0-0", "gpf0-1";
++			samsung,pin-function = <2>;
++			samsung,pin-pud = <0>;
++			samsung,pin-drv = <3>;
++		};
++
++		cam_i2c1: cam-i2c1 {
++			samsung,pins = "gpf0-2", "gpf0-3";
++			samsung,pin-function = <2>;
++			samsung,pin-pud = <0>;
++			samsung,pin-drv = <3>;
++		};
+ 	};
+ 
+ 	pinctrl_3: pinctrl@03680000 {
+diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+old mode 100644
+new mode 100755
+index 356e014..0a2da64
+--- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
++++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+@@ -92,6 +92,7 @@
+ 
+ 		m5mols@1f {
+ 			compatible = "fujitsu,m-5mols";
++			status = "disabled";
+ 			reg = <0x1F>;
+ 			gpios = <&gpx3 3 0xf>, <&gpx1 2 1>;
+ 			clock-frequency = <24000000>;
+@@ -242,7 +243,7 @@
+ 
+ 		csis_0: csis@13C20000 {
+ 			status = "okay";
+-			clock-frequency = <166000000>;
++			clock-frequency = <267000000>; /* s5k4e5 */
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
+ 
+@@ -250,7 +251,7 @@
+ 			port@3 {
+ 				reg = <3>;
+ 				csis0_ep: endpoint {
+-					remote-endpoint = <&m5mols_ep>;
++					remote-endpoint = <&is_s5k4e5_ep>;
+ 					data-lanes = <1 2 3 4>;
+ 					samsung,csis-hs-settle = <12>;
+ 					samsung,csis-wclk;
+@@ -258,5 +259,54 @@
+ 			};
+ 		};
+ 
++		csis_1: csis@13C30000 {
++			status = "okay";
++			clock-frequency = <160000000>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			/* Camera D (4) MIPI CSI-2 (CSIS1) */
++			port@4 {
++				reg = <4>;
++				csis1_ep: endpoint {
++					remote-endpoint = <&is_s5k6a3_ep>;
++					data-lanes = <1>;
++					samsung,csis-hs-settle = <18>;
++					samsung,csis-wclk;
++				};
++			};
++		};
++
++		fimc-is@13000000 {
++			status = "okay";
++			pinctrl-0 =
++				<&cam_port_a_clk_active
++				&cam_bayer_clk_active
++				&isp_uart
++				&cam_i2c0
++				&cam_i2c1>;
++			pinctrl-names = "default";
++			s5k4e5 {
++				compatible = "samsung,s5k4e5";
++				gpios = <&gpx1 2 1>;
++				clock-frequency = <24000000>;
++				port {
++					is_s5k4e5_ep: endpoint {
++						remote-endpoint = <&csis0_ep>;
++					};
++				};
++			};
++			s5k6a3 {
++				compatible = "samsung,s5k6a3";
++				gpios = <&gpx1 0 1>;
++				clock-frequency = <24000000>;
++				port {
++					is_s5k6a3_ep: endpoint {
++						remote-endpoint = <&csis1_ep>;
++					};
++				};
++			};
++		};
++
+ 	};
+ };
+diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/exynos5250.dtsi
+old mode 100644
+new mode 100755
+index 564c05f..e18df49
+--- a/arch/arm/boot/dts/exynos5250.dtsi
++++ b/arch/arm/boot/dts/exynos5250.dtsi
+@@ -410,5 +410,13 @@
+ 			bus-width = <2>;
+ 			status = "disabled";
+ 		};
++
++		fimc_is: fimc-is@13000000 {
++			compatible = "samsung,exynos5250-fimc-is";
++			reg = <0x13000000 0x200000>;
++			interrupt-parent = <&combiner>;
++			interrupts = <19 1>;
++			status = "disabled";
++		};
+ 	};
+ };
+-- 
+1.7.9.5
