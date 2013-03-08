@@ -1,56 +1,62 @@
-From: Andreas Larsson <andreas@gaisler.com>
-Subject: Re: [PATCH v3] gpio: Add device driver for GRGPIO cores and
- support custom accessors with gpio-generic
-Date: Fri, 08 Mar 2013 10:00:17 +0100
-Message-ID: <1362733217.26956.2.camel@andreas>
-References: <1360653873-25368-1-git-send-email-andreas@gaisler.com>
-	 <CACRpkdaYQSrzm_Yj3ZH9YZLC_zPJN06X-9ZM9jd7=X0OB1shXQ@mail.gmail.com>
-	 <51346D7C.5080307@gaisler.com>
-	 <CACRpkdaC9DsNj56_q33Z5N3_90Ffdq9qZeOxrFdrVSoL4wrTbQ@mail.gmail.com>
+From: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH v2 0/9] rtc: stmp3xxx: DT bindings and wakealarm
+Date: Fri,  8 Mar 2013 10:01:35 +0100
+Message-ID: <1362733304-23037-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaC9DsNj56_q33Z5N3_90Ffdq9qZeOxrFdrVSoL4wrTbQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <rob.herring@calxeda.com>, Anton Vorontsov <anton.vorontsov@linaro.org>, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, software@gaisler.com
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2013-03-07 at 04:44 +0100, Linus Walleij wrote:
-> On Mon, Mar 4, 2013 at 10:46 AM, Andreas Larsson <andreas@gaisler.com> wrote:
-> > [Me]
-> >>> +struct grgpio_priv {
-> >>> +       struct bgpio_chip bgc;
-> >>> +       struct grgpio_regs __iomem *regs;
-> >>> +
-> >>> +       u32 imask;      /* irq mask shadow register */
-> >>> +       s32 *irqmap;    /* maps offset to irq or -1 if no irq */
-> >>
-> >>
-> >> irqmap? Argh what is this... I think you want to use irqdomain
-> >> for this instead. (Documentation/IRQ-domain.txt)
-> >
-> >
-> > Yeah, that comment is not clear. An entry in the irqmap array (for a gpio
-> > line) can be either -1 indicating no irq for that line or an index into the
-> > array of irq:s for the of device. Thus it is simply either -1 or a valid
-> > second argument to irq_of_parse_and_map.
-> 
-> So just make the mapping function in the irqdomain handle that?
-> 
-> Maybe I'm talking weird, I'm not really familiar with
-> irq_of_parse_and_map().
-> 
-> > Given that this is generally running on SPARC, it seems irqdomain is not an
-> > option (IRQ_DOMAIN is not selected by SPARC).
-> 
-> That has nothing to do with this. This driver can just select IRQ_DOMAIN
-> in *it's* Kconfig entry.
+Hi!
 
-Oh, excellent! I'll look into an irqdomain solution then.
+Changes since v1:
+	- renamed patches
+	- reworked commit messages
+	- squashed patches
+	- added missing SOB
+	- match on rtc nodename instead of using a new binding
+	- general cleanup
 
-Thanks for the feedback!
+I did not rework the sysfs stuff, as I'm still not sure if this
+is wrong for bin_attributes or not.
 
-Cheers,
-Andreas Larsson
+Based on v3.9-rc1
+
+Regards,
+Steffen
+
+
+Juergen Beisert (2):
+  ARM: i.MX28: define osc in DT
+  ARM: i.MX28: define external RTC crystal in DT
+
+Steffen Trumtrar (7):
+  ARM: i.MX28: dts: add clocks for stmp3xxx RTC
+  rtc: stmp3xxx: allow different oscillators
+  rtc: stmp3xxx: enable wakeup functionality
+  rtc: stmp3xxx: add sysfs entries for persistent regs
+  rtc: stmp3xxx: Re-enable active alarm
+  rtc: stmp3xxx: Check copy controller state
+  rtc: stmp3xxx: Replace wait_time function
+
+ .../devicetree/bindings/clock/imx28-clock.txt      |   1 +
+ arch/arm/boot/dts/imx28.dtsi                       |  19 ++
+ drivers/clk/mxs/clk-imx28.c                        |  20 +-
+ drivers/rtc/rtc-stmp3xxx.c                         | 282 +++++++++++++++++++--
+ 4 files changed, 305 insertions(+), 17 deletions(-)
+
+-- 
+1.8.2.rc2
