@@ -1,68 +1,49 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP
- systems
-Date: Sat, 9 Mar 2013 09:58:49 +0100
-Message-ID: <20130309095849.639f398e@skate>
-References: <20130306121118.GA17079@avionic-0098.mockup.avionic-design.de>
-	<20130306180946.GA2433@obsidianresearch.com>
-	<20130307080832.GD3451@avionic-0098.mockup.avionic-design.de>
-	<20130307174955.GC20840@obsidianresearch.com>
-	<20130307194830.GA1811@avionic-0098.mockup.avionic-design.de>
-	<20130307200235.GB20695@obsidianresearch.com>
-	<20130307204726.GB1811@avionic-0098.mockup.avionic-design.de>
-	<51392B4D.9040404@gmail.com>
-	<20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
-	<20130308165228.GB4094@obsidianresearch.com>
-	<20130308191227.GA6551@avionic-0098.mockup.avionic-design.de>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v6 01/16] clk: samsung: add common clock framework helper
+ functions for Samsung platforms
+Date: Sat, 09 Mar 2013 18:15:08 +0900
+Message-ID: <042a01ce1ca6$98912140$c9b363c0$%kim@samsung.com>
+References: <1361175686-19400-1-git-send-email-thomas.abraham@linaro.org>
+ <201303030208.49722.heiko@sntech.de> <51333149.1060105@gmail.com>
+ <2984153.Xctncej7hL@flatron>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130308191227.GA6551@avionic-0098.mockup.avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robherring2@gmail.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, linux-pci@vger.kernel.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Gregory Clement <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: 
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Kukjin Kim' <kgene.kim@samsung.com>, 'Tomasz Figa' <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: 'Sylwester Nawrocki' <sylvester.nawrocki@gmail.com>, =?ISO-8859-1?Q?'Heiko_St=FCbner'?= <heiko@sntech.de>, linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, devicetree-discuss@lists.ozlabs.org, 'Thomas Abraham' <thomas.abraham@linaro.org>, t.figa@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-Dear Thierry Reding,
+Kukjin Kim wrote:
 
-On Fri, 8 Mar 2013 20:12:27 +0100, Thierry Reding wrote:
+[...]
 
-> Oh well. I don't like it, but if that's the way it has to be, then so be
-> it.
+Thomas,
 
-I don't like it too much either, but it's not a big problem either. It
-works, and satisfies the DT requirements reasonably.
+As I said, I applied this whole series into Samsung tree, following error
+happens with exynos4_defconfig(non-DT) though.
 
-> Any reason why the reg-names can't match the root port's node name
-> so that it can be used directly instead of going through hoops to
-> construct a string from extra parameters? Like below:
-> 
-> 	pcie-controller {
-> 		regs = <...>;
-> 		reg-names = ..., "pcie@1,0", "pcie@2,0";
-> 
-> 		pcie@1,0 {
-> 			...
-> 		};
-> 
-> 		pcie@2,0 {
-> 			...
-> 		};
-> 	};
+drivers/clk/samsung/clk.c: In function 'samsung_clk_of_register_fixed_ext':
+drivers/clk/samsung/clk.c:251:2: error: implicit declaration of function
+'for_each_matching_node_and_match' [-Werror=implicit-function-declaration]
+drivers/clk/samsung/clk.c:251:60: error: expected ';' before '{' token
+drivers/clk/samsung/clk.c:249:6: warning: unused variable 'freq'
+[-Wunused-variable]
+cc1: some warnings being treated as errors
+make[3]: *** [drivers/clk/samsung/clk.o] Error 1
+make[2]: *** [drivers/clk/samsung] Error 2
+make[2]: *** Waiting for unfinished jobs....
+make[1]: *** [drivers/clk] Error 2
+make[1]: *** Waiting for unfinished jobs....
+make: *** [drivers] Error 2
+make: *** Waiting for unfinished jobs....
 
-Yes, I thought about doing this, but in my driver, I also use the
-"pcie0.0" string to request the address decoding window from the
-mvebu-mbus driver. So I would anyway have to construct this "pciX.Y"
-string. But if you feel like using "pcie@X,Y" for the reg-names is
-better even if I still need to construct the "pcieX.Y" string, then I
-will be perfectly ok with making this change.
+I think, it's time to decide to support non-DT exynos continuously, above
+compilation error can be fixed though.
 
-Best regards,
+Hey guys, how do you think?
 
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+- Kukjin
