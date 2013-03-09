@@ -1,197 +1,210 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: Add missing node iteration stubs for disabled CONFIG_OF
-Date: Sat,  9 Mar 2013 21:15:54 +0100
-Message-ID: <1362860154-3089-1-git-send-email-tomasz.figa@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: [PATCH v3 12/12] clocksource: samsung-time: Add Device Tree support
+Date: Sat,  9 Mar 2013 21:23:21 +0100
+Message-ID: <1362860601-18464-13-git-send-email-tomasz.figa@gmail.com>
+References: <1362860601-18464-1-git-send-email-tomasz.figa@gmail.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1362860601-18464-1-git-send-email-tomasz.figa@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, kyungmin.park@samsung.com, linux@simtec.co.uk, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, buserror@gmail.com, christer@weinigel.se, jekhor@gmail.com, ghcstop@gmail.com, Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-This patch moves several for_each macros out of the #ifdef CONFIG_OF
-block and adds inline stubs for functions used by these macros, compiled
-conditionally when CONFIG_OF is not enabled.
+This patch adds support for parsing all platform-specific data from
+Device Tree and instantiation using clocksource_of_init to samsung-time
+clocksource driver.
 
-This eliminates the need to explicitly check for CONFIG_OF in driver
-code using mentioned functions and macros.
-
-Signed-off-by: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-discuss@lists.ozlabs.org
+Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
 ---
- include/linux/of.h | 92 +++++++++++++++++++++++++++++++++++++-----------------
- 1 file changed, 63 insertions(+), 29 deletions(-)
+ .../devicetree/bindings/timer/samsung-pwm.txt      |  33 ++++++
+ drivers/clocksource/samsung-time.c                 | 116 ++++++++++++++++++++-
+ 2 files changed, 146 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/timer/samsung-pwm.txt
 
-diff --git a/include/linux/of.h b/include/linux/of.h
-index a0f1292..7a736b8 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -86,6 +86,31 @@ static inline struct device_node *of_node_get(struct device_node *node)
- static inline void of_node_put(struct device_node *node) { }
- #endif /* !CONFIG_OF_DYNAMIC */
- 
-+#define for_each_node_by_name(dn, name) \
-+	for (dn = of_find_node_by_name(NULL, name); dn; \
-+	     dn = of_find_node_by_name(dn, name))
-+#define for_each_node_by_type(dn, type) \
-+	for (dn = of_find_node_by_type(NULL, type); dn; \
-+	     dn = of_find_node_by_type(dn, type))
-+#define for_each_compatible_node(dn, type, compatible) \
-+	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
-+	     dn = of_find_compatible_node(dn, type, compatible))
-+#define for_each_matching_node(dn, matches) \
-+	for (dn = of_find_matching_node(NULL, matches); dn; \
-+	     dn = of_find_matching_node(dn, matches))
-+#define for_each_matching_node_and_match(dn, matches, match) \
-+	for (dn = of_find_matching_node_and_match(NULL, matches, match); \
-+	     dn; dn = of_find_matching_node_and_match(dn, matches, match))
-+#define for_each_child_of_node(parent, child) \
-+	for (child = of_get_next_child(parent, NULL); child != NULL; \
-+	     child = of_get_next_child(parent, child))
-+#define for_each_available_child_of_node(parent, child) \
-+	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
-+	     child = of_get_next_available_child(parent, child))
-+#define for_each_node_with_property(dn, prop_name) \
-+	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
-+	     dn = of_find_node_with_property(dn, prop_name))
+diff --git a/Documentation/devicetree/bindings/timer/samsung-pwm.txt b/Documentation/devicetree/bindings/timer/samsung-pwm.txt
+new file mode 100644
+index 0000000..3aabe81
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/samsung-pwm.txt
+@@ -0,0 +1,33 @@
++* Samsung PWM timers
 +
- #ifdef CONFIG_OF
++Samsung SoCs contain PWM timer blocks which can be used for system clock source
++and clock event timers.
++
++Be aware that this configuration is supported only on uniprocessor platforms.
++For SMP SoCs, SMP-aware timers should be used, like MCT.
++
++Required properties:
++- compatible : should be one of following:
++    samsung,s3c24xx-pwm - for 16-bit timers present on S3C24xx
++    samsung,s3c64xx-pwm - for 32-bit timers present on S3C64xx and newer
++- reg: base address and size of register area
++- interrupts: list of timer interrupts (one interrupt per timer, starting at
++  timer 0)
++
++Optional properties:
++- samsung,prescale-divisor: PWM prescaler divisor (from 1 to 256)
++- samsung,divisor: PWM main divider divisor (1, 2, 4, 8 or 16)
++- samsung,pwm-outputs: list of PWM channels reserved for use as PWM outputs
++    - an array of up to 5 elements being indices of PWM channels (from 0 to 4),
++    the order does not matter.
++
++Example:
++	timer@7f006000 {
++		compatible = "samsung,s3c64xx-pwm";
++		reg = <0x7f006000 0x1000>;
++		interrupt-parent = <&vic0>;
++		interrupts = <23>, <24>, <25>, <27>, <28>;
++		samsung,prescale-divisor = <2>;
++		samsung,divisor = <1>;
++		samsung,pwm-outputs = <0>, <1>;
++	};
+diff --git a/drivers/clocksource/samsung-time.c b/drivers/clocksource/samsung-time.c
+index 5c6cfca..dbfc5f2 100644
+--- a/drivers/clocksource/samsung-time.c
++++ b/drivers/clocksource/samsung-time.c
+@@ -14,6 +14,9 @@
+ #include <linux/err.h>
+ #include <linux/clk.h>
+ #include <linux/clockchips.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
+ #include <linux/platform_device.h>
  
- /* Pointer for first entry in chain of all nodes. */
-@@ -167,19 +192,10 @@ static inline const char *of_node_full_name(const struct device_node *np)
+ #include <clocksource/samsung-time.h>
+@@ -412,9 +415,12 @@ static void __init samsung_timer_resources(void)
+ 	unsigned long source_id = timer_source.source_id;
+ 	char devname[15];
  
- extern struct device_node *of_find_node_by_name(struct device_node *from,
- 	const char *name);
--#define for_each_node_by_name(dn, name) \
--	for (dn = of_find_node_by_name(NULL, name); dn; \
--	     dn = of_find_node_by_name(dn, name))
- extern struct device_node *of_find_node_by_type(struct device_node *from,
- 	const char *type);
--#define for_each_node_by_type(dn, type) \
--	for (dn = of_find_node_by_type(NULL, type); dn; \
--	     dn = of_find_node_by_type(dn, type))
- extern struct device_node *of_find_compatible_node(struct device_node *from,
- 	const char *type, const char *compat);
--#define for_each_compatible_node(dn, type, compatible) \
--	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
--	     dn = of_find_compatible_node(dn, type, compatible))
- extern struct device_node *of_find_matching_node_and_match(
- 	struct device_node *from,
- 	const struct of_device_id *matches,
-@@ -190,12 +206,6 @@ static inline struct device_node *of_find_matching_node(
- {
- 	return of_find_matching_node_and_match(from, matches, NULL);
- }
--#define for_each_matching_node(dn, matches) \
--	for (dn = of_find_matching_node(NULL, matches); dn; \
--	     dn = of_find_matching_node(dn, matches))
--#define for_each_matching_node_and_match(dn, matches, match) \
--	for (dn = of_find_matching_node_and_match(NULL, matches, match); \
--	     dn; dn = of_find_matching_node_and_match(dn, matches, match))
- extern struct device_node *of_find_node_by_path(const char *path);
- extern struct device_node *of_find_node_by_phandle(phandle handle);
- extern struct device_node *of_get_parent(const struct device_node *node);
-@@ -207,14 +217,6 @@ extern struct device_node *of_get_next_available_child(
+-	timer_base = ioremap_nocache(timer_variant.reg_base, SZ_4K);
+-	if (!timer_base)
+-		panic("failed to map timer registers");
++	if (!timer_base) {
++		/* Compatibility fallback for non-DT platforms */
++		timer_base = ioremap_nocache(timer_variant.reg_base, SZ_4K);
++		if (!timer_base)
++			panic("failed to map timer registers");
++	}
  
- extern struct device_node *of_get_child_by_name(const struct device_node *node,
- 					const char *name);
--#define for_each_child_of_node(parent, child) \
--	for (child = of_get_next_child(parent, NULL); child != NULL; \
--	     child = of_get_next_child(parent, child))
--
--#define for_each_available_child_of_node(parent, child) \
--	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
--	     child = of_get_next_available_child(parent, child))
--
- static inline int of_get_child_count(const struct device_node *np)
- {
- 	struct device_node *child;
-@@ -228,10 +230,6 @@ static inline int of_get_child_count(const struct device_node *np)
- 
- extern struct device_node *of_find_node_with_property(
- 	struct device_node *from, const char *prop_name);
--#define for_each_node_with_property(dn, prop_name) \
--	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
--	     dn = of_find_node_with_property(dn, prop_name))
--
- extern struct property *of_find_property(const struct device_node *np,
- 					 const char *name,
- 					 int *lenp);
-@@ -353,13 +351,28 @@ static inline struct device_node *of_find_node_by_name(struct device_node *from,
- 	return NULL;
+ 	timerclk = clk_get(NULL, "timers");
+ 	if (IS_ERR(timerclk))
+@@ -447,6 +453,11 @@ static void __init samsung_timer_resources(void)
+ 	clk_enable(tin_source);
  }
  
-+static inline struct device_node *of_find_node_by_type(struct device_node *from,
-+	const char *type)
-+{
-+	return NULL;
-+}
++enum {
++	TYPE_S3C24XX,
++	TYPE_S3C64XX,
++};
 +
- static inline bool of_have_populated_dt(void)
+ void __init samsung_timer_init(void)
  {
- 	return false;
+ 	if (!timer_source.source_id && !timer_source.event_id)
+@@ -459,3 +470,102 @@ void __init samsung_timer_init(void)
+ 	samsung_clockevent_init();
+ 	samsung_clocksource_init();
  }
- 
--#define for_each_child_of_node(parent, child) \
--	while (0)
-+static inline struct device_node *of_get_next_child(const struct device_node *node,
-+					     struct device_node *prev)
-+{
-+	return NULL;
-+}
 +
-+static inline struct device_node *of_get_next_available_child(
-+	const struct device_node *node, struct device_node *prev)
-+{
-+	return NULL;
-+}
- 
- static inline struct device_node *of_get_child_by_name(
- 					const struct device_node *node,
-@@ -373,6 +386,12 @@ static inline int of_get_child_count(const struct device_node *np)
- 	return 0;
- }
- 
-+static inline struct device_node *of_find_node_with_property(
-+	struct device_node *from, const char *prop_name)
-+{
-+	return NULL;
-+}
++#ifdef CONFIG_OF
++static const struct of_device_id samsung_timer_ids[] = {
++	{ .compatible = "samsung,s3c24xx-pwm", .data = (void *)TYPE_S3C24XX, },
++	{ .compatible = "samsung,s3c64xx-pwm", .data = (void *)TYPE_S3C64XX, },
++	{},
++};
 +
- static inline int of_device_is_compatible(const struct device_node *device,
- 					  const char *name)
- {
-@@ -394,6 +413,21 @@ static inline struct device_node *of_find_compatible_node(
- 	return NULL;
- }
- 
-+static inline struct device_node *of_find_matching_node_and_match(
-+	struct device_node *from,
-+	const struct of_device_id *matches,
-+	const struct of_device_id **match)
++static void __init samsung_of_timer_init(void)
 +{
-+	return NULL;
-+}
++	const struct of_device_id *match;
++	u8 channel_mask = (1 << 5) - 1;
++	struct device_node *np;
++	struct property *prop;
++	const __be32 *cur;
++	u32 val;
++	int i;
 +
-+static inline struct device_node *of_find_matching_node(
-+	struct device_node *from,
-+	const struct of_device_id *matches)
-+{
-+	return NULL;
-+}
++	np = of_find_matching_node_and_match(NULL,
++					samsung_timer_ids, &match);
++	if (!np)
++		panic("timer node not found");
 +
- static inline int of_property_read_u8_array(const struct device_node *np,
- 			const char *propname, u8 *out_values, size_t sz)
- {
++	timer_base = of_iomap(np, 0);
++	if (!timer_base)
++		panic("failed to map timer registers");
++
++	for (i = 0; i < SAMSUNG_PWM_NUM; ++i)
++		timer_variant.irqs[i] = irq_of_parse_and_map(np, i);
++
++	if (!timer_variant.irqs[timer_source.event_id])
++		panic("no clock event irq provided");
++
++	switch ((unsigned int)match->data) {
++	case TYPE_S3C24XX:
++		timer_variant.bits = 16;
++		timer_variant.prescale = 25;
++		timer_variant.divisor = 2;
++		timer_variant.has_tint_cstat = false;
++		break;
++	case TYPE_S3C64XX:
++		timer_variant.bits = 32;
++		timer_variant.prescale = 2;
++		timer_variant.divisor = 1;
++		timer_variant.has_tint_cstat = true;
++		break;
++	}
++
++	of_property_for_each_u32(np, "samsung,pwm-outputs", prop, cur, val) {
++		if (val >= SAMSUNG_PWM_NUM) {
++			pr_warning("%s: invalid channel index in samsung,pwm-outputs property\n",
++								__func__);
++			continue;
++		}
++		channel_mask &= ~(1 << val);
++	}
++
++	val = fls(channel_mask);
++	if (!val)
++		panic("failed to find PWM channel for clock source");
++	timer_source.source_id = val - 1;
++	channel_mask &= ~(1 << timer_source.source_id);
++
++	val = fls(channel_mask);
++	if (!val)
++		panic("failed to find PWM channel for clock events");
++	timer_source.event_id = val - 1;
++
++	if (!of_property_read_u32(np, "samsung,prescale-divisor", &val)) {
++		if (val < 1 || val > 256)
++			panic("samsung,prescale-divisor property out of range");
++		timer_variant.prescale = val;
++	}
++
++	if (!of_property_read_u32(np, "samsung,divisor", &val)) {
++		switch (val) {
++		case 1:
++		case 2:
++		case 4:
++		case 8:
++		case 16:
++			timer_variant.divisor = val;
++			break;
++		default:
++			panic("invalid value of samsung,divisor property");
++		}
++	}
++
++	pr_info("samsung-time: using PWM channels %d (source) and %d (event)\n",
++				timer_source.source_id, timer_source.event_id);
++
++	samsung_timer_init();
++}
++#endif /* CONFIG_OF */
++
++CLOCKSOURCE_OF_DECLARE(s3c24xx_timer,
++				"samsung,s3c24xx-pwm", samsung_of_timer_init)
++CLOCKSOURCE_OF_DECLARE(s3c64xx_timer,
++				"samsung,s3c64xx-pwm", samsung_of_timer_init)
 -- 
 1.8.1.5
