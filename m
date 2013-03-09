@@ -1,13 +1,11 @@
-From: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: plat-nand DT support
-Date: Sat, 9 Mar 2013 12:29:00 -0300
-Message-ID: <CALF0-+UGapoPTWdVG4W=5nzHT9NJU2z65g=zi2Dj2=JVA0_u2w@mail.gmail.com>
-References: <20130303155226.GA1976@edkhil>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] of: Add missing node iteration stubs for !CONFIG_OF
+Date: Sat,  9 Mar 2013 21:10:36 +0100
+Message-ID: <1362859836-20221-1-git-send-email-tomasz.figa@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130303155226.GA1976@edkhil>
 List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
  <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
 List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
@@ -18,45 +16,182 @@ List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
 Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 Sender: "devicetree-discuss"
  <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-Cc: hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexander,
+This patch moves several for_each macros out of the #ifdef CONFIG_OF
+block and adds inline stubs for functions used by these macros, compiled
+conditionally when CONFIG_OF is not enabled.
 
-Sorry for the delay.
+This eliminates the need to explicitly check for CONFIG_OF in driver
+code using mentioned functions and macros.
 
-On Sun, Mar 3, 2013 at 12:52 PM, Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org> wrote:
->
-> https://github.com/jimdigriz/ts78xx/blob/gen-nand-dt/arch/arm/mach-orion5x/board-ts7800.c
+Signed-off-by: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ include/linux/of.h | 92 +++++++++++++++++++++++++++++++++++++-----------------
+ 1 file changed, 63 insertions(+), 29 deletions(-)
 
-I'm not too familiar with this whole bus_register_notifier() business.
-So, I can't really answer if this looks sane. However, I have
-a few things to say see below.
-
-> https://github.com/jimdigriz/ts78xx/blob/gen-nand-dt/arch/arm/boot/dts/orion5x-ts7800.dts
->
-
-This device tree node looks okay.
-
->
-> [2] could also support the NAND used by arch/arm/mach-ep93xx/ts72xx.c but
-> the whole SoC has not         been ported to DT
->
-
-Okey, here I think you're going in the wrong direction.
-The current trend -and there are very good reasons for this-
-is to NOT litter arch/arm/mach-foo/ but rather put drivers handling in drivers/
-where they rightfully belong.
-
-In other words, the right direction is to write a nand driver if you need one.
-For instance, I find a bit mixed up to have functions like
-ts7800_nand_write/read_buf() in your board.c file.
-
-BTW, it could be great if you could upstream your work.
-Also, it could be much easier for you to get support and answers if you
-try to upstream.
-
-Hope this helps,
+diff --git a/include/linux/of.h b/include/linux/of.h
+index a0f1292..aca3677 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -167,19 +167,10 @@ static inline const char *of_node_full_name(const struct device_node *np)
+ 
+ extern struct device_node *of_find_node_by_name(struct device_node *from,
+ 	const char *name);
+-#define for_each_node_by_name(dn, name) \
+-	for (dn = of_find_node_by_name(NULL, name); dn; \
+-	     dn = of_find_node_by_name(dn, name))
+ extern struct device_node *of_find_node_by_type(struct device_node *from,
+ 	const char *type);
+-#define for_each_node_by_type(dn, type) \
+-	for (dn = of_find_node_by_type(NULL, type); dn; \
+-	     dn = of_find_node_by_type(dn, type))
+ extern struct device_node *of_find_compatible_node(struct device_node *from,
+ 	const char *type, const char *compat);
+-#define for_each_compatible_node(dn, type, compatible) \
+-	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
+-	     dn = of_find_compatible_node(dn, type, compatible))
+ extern struct device_node *of_find_matching_node_and_match(
+ 	struct device_node *from,
+ 	const struct of_device_id *matches,
+@@ -190,12 +181,6 @@ static inline struct device_node *of_find_matching_node(
+ {
+ 	return of_find_matching_node_and_match(from, matches, NULL);
+ }
+-#define for_each_matching_node(dn, matches) \
+-	for (dn = of_find_matching_node(NULL, matches); dn; \
+-	     dn = of_find_matching_node(dn, matches))
+-#define for_each_matching_node_and_match(dn, matches, match) \
+-	for (dn = of_find_matching_node_and_match(NULL, matches, match); \
+-	     dn; dn = of_find_matching_node_and_match(dn, matches, match))
+ extern struct device_node *of_find_node_by_path(const char *path);
+ extern struct device_node *of_find_node_by_phandle(phandle handle);
+ extern struct device_node *of_get_parent(const struct device_node *node);
+@@ -207,14 +192,6 @@ extern struct device_node *of_get_next_available_child(
+ 
+ extern struct device_node *of_get_child_by_name(const struct device_node *node,
+ 					const char *name);
+-#define for_each_child_of_node(parent, child) \
+-	for (child = of_get_next_child(parent, NULL); child != NULL; \
+-	     child = of_get_next_child(parent, child))
+-
+-#define for_each_available_child_of_node(parent, child) \
+-	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
+-	     child = of_get_next_available_child(parent, child))
+-
+ static inline int of_get_child_count(const struct device_node *np)
+ {
+ 	struct device_node *child;
+@@ -228,10 +205,6 @@ static inline int of_get_child_count(const struct device_node *np)
+ 
+ extern struct device_node *of_find_node_with_property(
+ 	struct device_node *from, const char *prop_name);
+-#define for_each_node_with_property(dn, prop_name) \
+-	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
+-	     dn = of_find_node_with_property(dn, prop_name))
+-
+ extern struct property *of_find_property(const struct device_node *np,
+ 					 const char *name,
+ 					 int *lenp);
+@@ -353,13 +326,28 @@ static inline struct device_node *of_find_node_by_name(struct device_node *from,
+ 	return NULL;
+ }
+ 
++static inline struct device_node *of_find_node_by_type(struct device_node *from,
++	const char *type)
++{
++	return NULL;
++}
++
+ static inline bool of_have_populated_dt(void)
+ {
+ 	return false;
+ }
+ 
+-#define for_each_child_of_node(parent, child) \
+-	while (0)
++static inline struct device_node *of_get_next_child(const struct device_node *node,
++					     struct device_node *prev)
++{
++	return NULL;
++}
++
++static inline struct device_node *of_get_next_available_child(
++	const struct device_node *node, struct device_node *prev)
++{
++	return NULL;
++}
+ 
+ static inline struct device_node *of_get_child_by_name(
+ 					const struct device_node *node,
+@@ -373,6 +361,12 @@ static inline int of_get_child_count(const struct device_node *np)
+ 	return 0;
+ }
+ 
++static inline struct device_node *of_find_node_with_property(
++	struct device_node *from, const char *prop_name)
++{
++	return NULL;
++}
++
+ static inline int of_device_is_compatible(const struct device_node *device,
+ 					  const char *name)
+ {
+@@ -394,6 +388,21 @@ static inline struct device_node *of_find_compatible_node(
+ 	return NULL;
+ }
+ 
++static inline struct device_node *of_find_matching_node_and_match(
++	struct device_node *from,
++	const struct of_device_id *matches,
++	const struct of_device_id **match)
++{
++	return NULL;
++}
++
++static inline struct device_node *of_find_matching_node(
++	struct device_node *from,
++	const struct of_device_id *matches)
++{
++	return NULL;
++}
++
+ static inline int of_property_read_u8_array(const struct device_node *np,
+ 			const char *propname, u8 *out_values, size_t sz)
+ {
+@@ -503,6 +512,31 @@ static inline int of_node_to_nid(struct device_node *np)
+ #define of_node_to_nid of_node_to_nid
+ #endif
+ 
++#define for_each_node_by_name(dn, name) \
++	for (dn = of_find_node_by_name(NULL, name); dn; \
++	     dn = of_find_node_by_name(dn, name))
++#define for_each_node_by_type(dn, type) \
++	for (dn = of_find_node_by_type(NULL, type); dn; \
++	     dn = of_find_node_by_type(dn, type))
++#define for_each_compatible_node(dn, type, compatible) \
++	for (dn = of_find_compatible_node(NULL, type, compatible); dn; \
++	     dn = of_find_compatible_node(dn, type, compatible))
++#define for_each_matching_node(dn, matches) \
++	for (dn = of_find_matching_node(NULL, matches); dn; \
++	     dn = of_find_matching_node(dn, matches))
++#define for_each_matching_node_and_match(dn, matches, match) \
++	for (dn = of_find_matching_node_and_match(NULL, matches, match); \
++	     dn; dn = of_find_matching_node_and_match(dn, matches, match))
++#define for_each_child_of_node(parent, child) \
++	for (child = of_get_next_child(parent, NULL); child != NULL; \
++	     child = of_get_next_child(parent, child))
++#define for_each_available_child_of_node(parent, child) \
++	for (child = of_get_next_available_child(parent, NULL); child != NULL; \
++	     child = of_get_next_available_child(parent, child))
++#define for_each_node_with_property(dn, prop_name) \
++	for (dn = of_find_node_with_property(NULL, prop_name); dn; \
++	     dn = of_find_node_with_property(dn, prop_name))
++
+ /**
+  * of_property_read_bool - Findfrom a property
+  * @np:		device node from which the property value is to be read.
 -- 
-    Ezequiel
+1.8.1.5
