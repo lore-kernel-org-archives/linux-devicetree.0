@@ -1,210 +1,76 @@
 From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: [PATCH v3 12/12] clocksource: samsung-time: Add Device Tree support
-Date: Sat,  9 Mar 2013 21:23:21 +0100
-Message-ID: <1362860601-18464-13-git-send-email-tomasz.figa@gmail.com>
-References: <1362860601-18464-1-git-send-email-tomasz.figa@gmail.com>
+Subject: [PATCH v4 1/4] ARM: common: vic: Parse interrupt and resume masks from device tree
+Date: Sat,  9 Mar 2013 21:29:32 +0100
+Message-ID: <1362860975-18635-2-git-send-email-tomasz.figa@gmail.com>
+References: <1362860975-18635-1-git-send-email-tomasz.figa@gmail.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1362860601-18464-1-git-send-email-tomasz.figa@gmail.com>
+In-Reply-To: <1362860975-18635-1-git-send-email-tomasz.figa@gmail.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, kyungmin.park@samsung.com, linux@simtec.co.uk, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Sylwester Nawrocki <sylvester.nawrocki@gmail.com>, buserror@gmail.com, christer@weinigel.se, jekhor@gmail.com, ghcstop@gmail.com, Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, =?UTF-8?q?Heiko=20St=C3=BCbner?= <heiko@sntech.de>, Rob Herring <robherring2@gmail.com>, devicetree-discuss@lists.ozlabs.org
+To: linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, kgene.kim@samsung.com, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, Rob Herring <robherring2@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for parsing all platform-specific data from
-Device Tree and instantiation using clocksource_of_init to samsung-time
-clocksource driver.
+This patch extends vic_of_init to parse valid interrupt sources
+and resume sources masks from device tree.
 
-Cc: devicetree-discuss@lists.ozlabs.org
+If mask values are not specified in device tree, all sources
+are assumed to be valid, as before this patch.
+
 Signed-off-by: Tomasz Figa <tomasz.figa@gmail.com>
 ---
- .../devicetree/bindings/timer/samsung-pwm.txt      |  33 ++++++
- drivers/clocksource/samsung-time.c                 | 116 ++++++++++++++++++++-
- 2 files changed, 146 insertions(+), 3 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/timer/samsung-pwm.txt
+ Documentation/devicetree/bindings/arm/vic.txt | 6 ++++++
+ drivers/irqchip/irq-vic.c                     | 7 ++++++-
+ 2 files changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/timer/samsung-pwm.txt b/Documentation/devicetree/bindings/timer/samsung-pwm.txt
-new file mode 100644
-index 0000000..3aabe81
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/samsung-pwm.txt
-@@ -0,0 +1,33 @@
-+* Samsung PWM timers
-+
-+Samsung SoCs contain PWM timer blocks which can be used for system clock source
-+and clock event timers.
-+
-+Be aware that this configuration is supported only on uniprocessor platforms.
-+For SMP SoCs, SMP-aware timers should be used, like MCT.
-+
-+Required properties:
-+- compatible : should be one of following:
-+    samsung,s3c24xx-pwm - for 16-bit timers present on S3C24xx
-+    samsung,s3c64xx-pwm - for 32-bit timers present on S3C64xx and newer
-+- reg: base address and size of register area
-+- interrupts: list of timer interrupts (one interrupt per timer, starting at
-+  timer 0)
-+
-+Optional properties:
-+- samsung,prescale-divisor: PWM prescaler divisor (from 1 to 256)
-+- samsung,divisor: PWM main divider divisor (1, 2, 4, 8 or 16)
-+- samsung,pwm-outputs: list of PWM channels reserved for use as PWM outputs
-+    - an array of up to 5 elements being indices of PWM channels (from 0 to 4),
-+    the order does not matter.
-+
-+Example:
-+	timer@7f006000 {
-+		compatible = "samsung,s3c64xx-pwm";
-+		reg = <0x7f006000 0x1000>;
-+		interrupt-parent = <&vic0>;
-+		interrupts = <23>, <24>, <25>, <27>, <28>;
-+		samsung,prescale-divisor = <2>;
-+		samsung,divisor = <1>;
-+		samsung,pwm-outputs = <0>, <1>;
-+	};
-diff --git a/drivers/clocksource/samsung-time.c b/drivers/clocksource/samsung-time.c
-index 5c6cfca..dbfc5f2 100644
---- a/drivers/clocksource/samsung-time.c
-+++ b/drivers/clocksource/samsung-time.c
-@@ -14,6 +14,9 @@
- #include <linux/err.h>
- #include <linux/clk.h>
- #include <linux/clockchips.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
- #include <linux/platform_device.h>
+diff --git a/Documentation/devicetree/bindings/arm/vic.txt b/Documentation/devicetree/bindings/arm/vic.txt
+index 266716b..bb7137c 100644
+--- a/Documentation/devicetree/bindings/arm/vic.txt
++++ b/Documentation/devicetree/bindings/arm/vic.txt
+@@ -18,6 +18,9 @@ Required properties:
+ Optional properties:
  
- #include <clocksource/samsung-time.h>
-@@ -412,9 +415,12 @@ static void __init samsung_timer_resources(void)
- 	unsigned long source_id = timer_source.source_id;
- 	char devname[15];
+ - interrupts : Interrupt source for parent controllers if the VIC is nested.
++- interrupt-mask : Bit mask of valid interrupt sources (defaults to all valid)
++- wakeup-mask : Bit mask of interrupt sources that can wake up the system
++  (defaults to all allowed)
  
--	timer_base = ioremap_nocache(timer_variant.reg_base, SZ_4K);
--	if (!timer_base)
--		panic("failed to map timer registers");
-+	if (!timer_base) {
-+		/* Compatibility fallback for non-DT platforms */
-+		timer_base = ioremap_nocache(timer_variant.reg_base, SZ_4K);
-+		if (!timer_base)
-+			panic("failed to map timer registers");
-+	}
+ Example:
  
- 	timerclk = clk_get(NULL, "timers");
- 	if (IS_ERR(timerclk))
-@@ -447,6 +453,11 @@ static void __init samsung_timer_resources(void)
- 	clk_enable(tin_source);
- }
- 
-+enum {
-+	TYPE_S3C24XX,
-+	TYPE_S3C64XX,
-+};
+@@ -26,4 +29,7 @@ Example:
+ 		interrupt-controller;
+ 		#interrupt-cells = <1>;
+ 		reg = <0x60000 0x1000>;
 +
- void __init samsung_timer_init(void)
++		interrupt-mask = <0xffffff7f>;
++		wakeup-mask = <0x0000ff7f>;
+ 	};
+diff --git a/drivers/irqchip/irq-vic.c b/drivers/irqchip/irq-vic.c
+index 3cf97aa..61602df 100644
+--- a/drivers/irqchip/irq-vic.c
++++ b/drivers/irqchip/irq-vic.c
+@@ -468,6 +468,8 @@ void __init vic_init(void __iomem *base, unsigned int irq_start,
+ int __init vic_of_init(struct device_node *node, struct device_node *parent)
  {
- 	if (!timer_source.source_id && !timer_source.event_id)
-@@ -459,3 +470,102 @@ void __init samsung_timer_init(void)
- 	samsung_clockevent_init();
- 	samsung_clocksource_init();
+ 	void __iomem *regs;
++	u32 interrupt_mask = ~0;
++	u32 wakeup_mask = ~0;
+ 
+ 	if (WARN(parent, "non-root VICs are not supported"))
+ 		return -EINVAL;
+@@ -476,10 +478,13 @@ int __init vic_of_init(struct device_node *node, struct device_node *parent)
+ 	if (WARN_ON(!regs))
+ 		return -EIO;
+ 
++	of_property_read_u32(node, "interrupt-mask", &interrupt_mask);
++	of_property_read_u32(node, "wakeup-mask", &wakeup_mask);
++
+ 	/*
+ 	 * Passing 0 as first IRQ makes the simple domain allocate descriptors
+ 	 */
+-	__vic_init(regs, 0, ~0, ~0, node);
++	__vic_init(regs, 0, interrupt_mask, wakeup_mask, node);
+ 
+ 	return 0;
  }
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id samsung_timer_ids[] = {
-+	{ .compatible = "samsung,s3c24xx-pwm", .data = (void *)TYPE_S3C24XX, },
-+	{ .compatible = "samsung,s3c64xx-pwm", .data = (void *)TYPE_S3C64XX, },
-+	{},
-+};
-+
-+static void __init samsung_of_timer_init(void)
-+{
-+	const struct of_device_id *match;
-+	u8 channel_mask = (1 << 5) - 1;
-+	struct device_node *np;
-+	struct property *prop;
-+	const __be32 *cur;
-+	u32 val;
-+	int i;
-+
-+	np = of_find_matching_node_and_match(NULL,
-+					samsung_timer_ids, &match);
-+	if (!np)
-+		panic("timer node not found");
-+
-+	timer_base = of_iomap(np, 0);
-+	if (!timer_base)
-+		panic("failed to map timer registers");
-+
-+	for (i = 0; i < SAMSUNG_PWM_NUM; ++i)
-+		timer_variant.irqs[i] = irq_of_parse_and_map(np, i);
-+
-+	if (!timer_variant.irqs[timer_source.event_id])
-+		panic("no clock event irq provided");
-+
-+	switch ((unsigned int)match->data) {
-+	case TYPE_S3C24XX:
-+		timer_variant.bits = 16;
-+		timer_variant.prescale = 25;
-+		timer_variant.divisor = 2;
-+		timer_variant.has_tint_cstat = false;
-+		break;
-+	case TYPE_S3C64XX:
-+		timer_variant.bits = 32;
-+		timer_variant.prescale = 2;
-+		timer_variant.divisor = 1;
-+		timer_variant.has_tint_cstat = true;
-+		break;
-+	}
-+
-+	of_property_for_each_u32(np, "samsung,pwm-outputs", prop, cur, val) {
-+		if (val >= SAMSUNG_PWM_NUM) {
-+			pr_warning("%s: invalid channel index in samsung,pwm-outputs property\n",
-+								__func__);
-+			continue;
-+		}
-+		channel_mask &= ~(1 << val);
-+	}
-+
-+	val = fls(channel_mask);
-+	if (!val)
-+		panic("failed to find PWM channel for clock source");
-+	timer_source.source_id = val - 1;
-+	channel_mask &= ~(1 << timer_source.source_id);
-+
-+	val = fls(channel_mask);
-+	if (!val)
-+		panic("failed to find PWM channel for clock events");
-+	timer_source.event_id = val - 1;
-+
-+	if (!of_property_read_u32(np, "samsung,prescale-divisor", &val)) {
-+		if (val < 1 || val > 256)
-+			panic("samsung,prescale-divisor property out of range");
-+		timer_variant.prescale = val;
-+	}
-+
-+	if (!of_property_read_u32(np, "samsung,divisor", &val)) {
-+		switch (val) {
-+		case 1:
-+		case 2:
-+		case 4:
-+		case 8:
-+		case 16:
-+			timer_variant.divisor = val;
-+			break;
-+		default:
-+			panic("invalid value of samsung,divisor property");
-+		}
-+	}
-+
-+	pr_info("samsung-time: using PWM channels %d (source) and %d (event)\n",
-+				timer_source.source_id, timer_source.event_id);
-+
-+	samsung_timer_init();
-+}
-+#endif /* CONFIG_OF */
-+
-+CLOCKSOURCE_OF_DECLARE(s3c24xx_timer,
-+				"samsung,s3c24xx-pwm", samsung_of_timer_init)
-+CLOCKSOURCE_OF_DECLARE(s3c64xx_timer,
-+				"samsung,s3c64xx-pwm", samsung_of_timer_init)
 -- 
 1.8.1.5
