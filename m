@@ -1,45 +1,68 @@
-From: Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 1/3] driver: net: ethernet: cpsw: implement ethtool
- get/set phy setting
-Date: Sat, 9 Mar 2013 07:51:06 +0100
-Message-ID: <20130309065106.GA2588@netboy.at.omicron.at>
-References: <1362659421-11884-1-git-send-email-mugunthanvnm@ti.com>
- <1362659421-11884-2-git-send-email-mugunthanvnm@ti.com>
- <8762135on4.fsf@dell.be.48ers.dk>
- <1362686350.2936.43.camel@bwh-desktop.uk.solarflarecom.com>
- <513991E6.5080400@ti.com>
- <1362754401.3248.8.camel@bwh-desktop.uk.solarflarecom.com>
- <5139FE94.6090004@ti.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP
+ systems
+Date: Sat, 9 Mar 2013 09:58:49 +0100
+Message-ID: <20130309095849.639f398e@skate>
+References: <20130306121118.GA17079@avionic-0098.mockup.avionic-design.de>
+	<20130306180946.GA2433@obsidianresearch.com>
+	<20130307080832.GD3451@avionic-0098.mockup.avionic-design.de>
+	<20130307174955.GC20840@obsidianresearch.com>
+	<20130307194830.GA1811@avionic-0098.mockup.avionic-design.de>
+	<20130307200235.GB20695@obsidianresearch.com>
+	<20130307204726.GB1811@avionic-0098.mockup.avionic-design.de>
+	<51392B4D.9040404@gmail.com>
+	<20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
+	<20130308165228.GB4094@obsidianresearch.com>
+	<20130308191227.GA6551@avionic-0098.mockup.avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5139FE94.6090004-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Mugunthan V N <mugunthanvnm-l0cyMroinI0@public.gmane.org>
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ben Hutchings <bhutchings-s/n/eUQHGBpZroRs9YW3xA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20130308191227.GA6551@avionic-0098.mockup.avionic-design.de>
+Sender: linux-pci-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@avionic-design.de>
+Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Rob Herring <robherring2@gmail.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Stephen Warren <swarren@wwwdotorg.org>, linux-pci@vger.kernel.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Gregory Clement <gregory.clement@free-electrons.com>, Tawfik Bayouk <tawfik@marvell.com>, Grant Likely <grant.likely@secretlab.ca>, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Mar 08, 2013 at 08:37:00PM +0530, Mugunthan V N wrote:
+Dear Thierry Reding,
+
+On Fri, 8 Mar 2013 20:12:27 +0100, Thierry Reding wrote:
+
+> Oh well. I don't like it, but if that's the way it has to be, then so be
+> it.
+
+I don't like it too much either, but it's not a big problem either. It
+works, and satisfies the DT requirements reasonably.
+
+> Any reason why the reg-names can't match the root port's node name
+> so that it can be used directly instead of going through hoops to
+> construct a string from extra parameters? Like below:
 > 
-> As Peter Korsgaard mentioned we need to have infrastructure to handle CPSW
-> kind of hardware.
+> 	pcie-controller {
+> 		regs = <...>;
+> 		reg-names = ..., "pcie@1,0", "pcie@2,0";
+> 
+> 		pcie@1,0 {
+> 			...
+> 		};
+> 
+> 		pcie@2,0 {
+> 			...
+> 		};
+> 	};
 
-This will be a big job, I think, but I agree that it is worth doing.
+Yes, I thought about doing this, but in my driver, I also use the
+"pcie0.0" string to request the address decoding window from the
+mvebu-mbus driver. So I would anyway have to construct this "pciX.Y"
+string. But if you feel like using "pcie@X,Y" for the reg-names is
+better even if I still need to construct the "pcieX.Y" string, then I
+will be perfectly ok with making this change.
 
-I can think of one other switch-with-host-port device. Maybe we should
-start off by making a list of actual products and their capabilities,
-in order to get an overall idea of what we would need to develop.
+Best regards,
 
-Thanks,
-Richard
+Thomas
+-- 
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
