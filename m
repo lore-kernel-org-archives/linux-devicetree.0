@@ -1,74 +1,49 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v3 0/4] Initial Device Tree support for S3C64xx
-Date: Sat, 09 Mar 2013 18:18:26 +0900
-Message-ID: <042b01ce1ca7$0e9ba2c0$2bd2e840$%kim@samsung.com>
-References: <1361036261-8315-1-git-send-email-tomasz.figa@gmail.com>
+From: Peter Korsgaard <jacmet@sunsite.dk>
+Subject: Re: [PATCH 1/3] driver: net: ethernet: cpsw: implement ethtool get/set phy setting
+Date: Sat, 09 Mar 2013 11:49:24 +0100
+Message-ID: <87ehfo4zm3.fsf@dell.be.48ers.dk>
+References: <1362659421-11884-1-git-send-email-mugunthanvnm@ti.com>
+	<1362659421-11884-2-git-send-email-mugunthanvnm@ti.com>
+	<8762135on4.fsf@dell.be.48ers.dk>
+	<1362686350.2936.43.camel@bwh-desktop.uk.solarflarecom.com>
+	<513991E6.5080400@ti.com>
+	<1362754401.3248.8.camel@bwh-desktop.uk.solarflarecom.com>
+	<5139FE94.6090004@ti.com> <20130309065106.GA2588@netboy.at.omicron.at>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1361036261-8315-1-git-send-email-tomasz.figa@gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Tomasz Figa' <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, broonie@opensource.wolfsonmicro.com, kwangwoo.lee@gmail.com, jacmet@sunsite.dk, augulis.darius@gmail.com, mcuelenaere@gmail.com, linux@arm.linux.org.uk, 'Rob Herring' <robherring2@gmail.com>, 'Mark Rutland' <mark.rutland@arm.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20130309065106.GA2588@netboy.at.omicron.at> (Richard Cochran's
+	message of "Sat, 9 Mar 2013 07:51:06 +0100")
+Sender: netdev-owner@vger.kernel.org
+To: Richard Cochran <richardcochran@gmail.com>
+Cc: Mugunthan V N <mugunthanvnm@ti.com>, Ben Hutchings <bhutchings@solarflare.com>, netdev@vger.kernel.org, davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, b-cousson@ti.com, paul@pwsan.com
 List-Id: devicetree@vger.kernel.org
 
-Tomasz Figa wrote:
-> 
-> This series adds Device Tree support for Samsung S3C64xx SoC series.
-> 
-> It fixes several problems preventing from booting an S3C64xx-based system
-> using Device Tree, adds all the infrastructure for Device Tree-based board
-> support, including mach-s3c64xx-dt and dts include files for S3C64xx SoCs, and
-> (very) basic device tree source for FriendlyARM Mini6410 board.
-> 
-> Current support is very limited and allows only basic bootup with UART and
-> SDHCI, but should be fine as a start and will be extended in future, hopefully
-> with help of S3C64xx board maintainers.
-> 
-> This series depends on my other series reworking samsung-time for
-> multiplatform:
-> [PATCH v2 00/12] ARM: samsung-time: Prepare for multiplatform support
-> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/16158
-> 
-Tomasz, can you address comments from ml for above patches? So that this could
-be sent to upstream together :-)
+>>>>> "Richard" == Richard Cochran <richardcochran@gmail.com> writes:
 
-- Kukjin
+Hi,
 
-> Changes since v2:
->  - Updated timer node for next version of samsung-time patches
-> 
-> Changes since v1:
->  - Dropped two VIC-related patches that are no longer necessary
->  - Added Device Tree-based instantation of system timers
->  - Corrected VIC interrupt specifiers
->  - Adjusted CPU compatible values and dropped @id
-> 
-> Tomasz Figa (4):
->   ARM: common: vic: Parse interrupt and resume masks from device tree
->   ARM: s3c64xx: Add board file for boot using Device Tree
->   ARM: dts: Add basic dts include files for Samsung S3C64xx SoCs
->   ARM: dts: Add dts file for S3C6410-based Mini6410 board
-> 
->  Documentation/devicetree/bindings/arm/vic.txt |   6 ++
->  arch/arm/boot/dts/Makefile                    |   1 +
->  arch/arm/boot/dts/s3c6400.dtsi                |  33 ++++++++
->  arch/arm/boot/dts/s3c6410-mini6410.dts        |  50 +++++++++++++
->  arch/arm/boot/dts/s3c6410.dtsi                |  33 ++++++++
->  arch/arm/boot/dts/s3c64xx.dtsi                | 104
-++++++++++++++++++++++++++
->  arch/arm/common/vic.c                         |   7 +-
->  arch/arm/mach-s3c64xx/Kconfig                 |  14 ++++
->  arch/arm/mach-s3c64xx/Makefile                |   1 +
->  arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c       |  94 +++++++++++++++++++++++
->  10 files changed, 342 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/s3c6400.dtsi
->  create mode 100644 arch/arm/boot/dts/s3c6410-mini6410.dts
->  create mode 100644 arch/arm/boot/dts/s3c6410.dtsi
->  create mode 100644 arch/arm/boot/dts/s3c64xx.dtsi
->  create mode 100644 arch/arm/mach-s3c64xx/mach-s3c64xx-dt.c
-> 
-> --
-> 1.8.1.2
+ >> As Peter Korsgaard mentioned we need to have infrastructure to
+ >> handle CPSW kind of hardware.
+
+ Richard> This will be a big job, I think, but I agree that it is worth doing.
+
+ Richard> I can think of one other switch-with-host-port device. Maybe
+ Richard> we should start off by making a list of actual products and
+ Richard> their capabilities, in order to get an overall idea of what we
+ Richard> would need to develop.
+
+Next to the dsa stuff with external switches, I can think of 3 other
+devices off the top of my head:
+
+Freescale imx287:
+http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=i.MX287
+
+Freescale T1022:
+http://www.freescale.com/webapp/sps/site/prod_summary.jsp?code=T1020
+
+Ralink RT3502:
+http://www.netcheif.com/Reviews/VigorFly200/PDF/RT3052-product%20brief.pdf
+
+-- 
+Bye, Peter Korsgaard
