@@ -1,60 +1,114 @@
-From: Francesco Lavra <francescolavra.fl@gmail.com>
-Subject: Re: [PATCH V2] cpufreq: ARM big LITTLE: Add generic cpufreq driver
- and its DT glue
-Date: Sun, 10 Mar 2013 16:58:19 +0100
-Message-ID: <513CAD9B.908@gmail.com>
-References: <6cba8f153cfd4b0d3075a34a6dfe287bdec2eb06.1362676407.git.viresh.kumar@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-Reply-To: <6cba8f153cfd4b0d3075a34a6dfe287bdec2eb06.1362676407.git.viresh.kumar@linaro.org>
-Sender: cpufreq-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: rjw@sisk.pl, Steve.Bannister@arm.com, linux@arm.linux.org.uk, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, devicetree-discuss@lists.ozlabs.org, Liviu.Dudau@arm.com, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, robin.randhawa@arm.com, linux-arm-kernel@lists.infradead.org, mark.hambleton@broadcom.com, linaro-kernel@lists.linaro.org, charles.garcia-tobin@arm.com
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH 1/1] ARM: OMAP: gpmc: request CS address space for ethernet chips
+Date: Sun, 10 Mar 2013 18:18:22 +0100
+Message-ID: <1362935902-29720-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jon Hunter <jon-hunter@ti.com>
+Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-omap <linux-omap@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On 03/07/2013 06:14 PM, Viresh Kumar wrote:
-> big LITTLE is ARM's new Architecture focussing power/performance needs of modern
-> world. More information about big LITTLE can be found here:
-> 
-> http://www.arm.com/products/processors/technologies/biglittleprocessing.php
-> http://lwn.net/Articles/481055/
-> 
-> In order to keep cpufreq support for all big LITTLE platforms simple/generic,
-> this patch tries to add a generic cpufreq driver layer for all big LITTLE
-> platforms.
-> 
-> The driver is divided into two parts:
-> - Core driver: Generic and shared across all big LITTLE SoC's
-> - Glue drivers: Per platform drivers providing ops to the core driver
-> 
-> This patch adds in a generic glue driver which would extract information from
-> Device Tree.
-> 
-> Future SoC's can either reuse the DT glue or write their own depending on the
-> need.
-> 
-> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-[...]
-> +void bL_cpufreq_unregister(struct cpufreq_arm_bL_ops *ops)
-> +{
-> +	if (arm_bL_ops != ops) {
-> +		pr_info("%s: Registered with: %s, can't unregister, exiting\n",
-> +				__func__, arm_bL_ops->name);
-> +	}
+Besides being used to interface with external memory devices,
+the General-Purpose Memory Controller can be used to connect
+Pseudo-SRAM devices such as ethernet controllers to OMAP2+
+processors using the GPMC as a data bus.
 
-The code is not doing what the info message says.
+The actual mapping between the GPMC address space and OMAP2+
+address space is made using the GPMC DT "ranges" property.
+But also a explicit call to gpmc_cs_request() is needed.
 
-> +
-> +	cpufreq_unregister_driver(&bL_cpufreq_driver);
-> +	pr_info("%s: Un-registered platform driver: %s\n", __func__,
-> +			arm_bL_ops->name);
-> +	arm_bL_ops = NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(bL_cpufreq_unregister);
+So, this patch allows an ethernet chip to be defined as an
+GPMC child node an its chip-select memory address be requested.
 
---
-Francesco
+Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+---
+
+Jon,
+
+This patch assumes that we have solved somehow the issue that a
+call to request_irq() is needed before before using a GPIO as an
+IRQ and this is no longer the case when using from Device Trees.
+
+Anyway, this is independent as how we solve this, whether is
+using Jan's patch [1], adding a .request function pointer to
+irq_chip as suggested by Stephen [2], or any other approach.
+
+[1]: https://patchwork.kernel.org/patch/2009331/
+[2]: http://www.mail-archive.com/linux-omap@vger.kernel.org/msg85592.html
+
+ arch/arm/mach-omap2/gpmc.c |   45 ++++++++++++++++++++++++++++++++++++++++++++
+ 1 files changed, 45 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+index 4fe9ee7..d1bf48b 100644
+--- a/arch/arm/mach-omap2/gpmc.c
++++ b/arch/arm/mach-omap2/gpmc.c
+@@ -29,6 +29,7 @@
+ #include <linux/of.h>
+ #include <linux/of_mtd.h>
+ #include <linux/of_device.h>
++#include <linux/of_address.h>
+ #include <linux/mtd/nand.h>
+ 
+ #include <linux/platform_data/mtd-nand-omap2.h>
+@@ -1296,6 +1297,42 @@ static int gpmc_probe_onenand_child(struct platform_device *pdev,
+ }
+ #endif
+ 
++static int gpmc_probe_ethernet_child(struct platform_device *pdev,
++				     struct device_node *child)
++{
++	int ret, cs;
++	unsigned long base;
++	struct resource res;
++	struct platform_device *of_dev;
++
++	if (of_property_read_u32(child, "reg", &cs) < 0) {
++		dev_err(&pdev->dev, "%s has no 'reg' property\n",
++			child->full_name);
++		return -ENODEV;
++	}
++
++	if (of_address_to_resource(child, 0, &res)) {
++		dev_err(&pdev->dev, "%s has malformed 'reg' property\n",
++			child->full_name);
++		return -ENODEV;
++	}
++
++	ret = gpmc_cs_request(cs, resource_size(&res), &base);
++	if (IS_ERR_VALUE(ret)) {
++		dev_err(&pdev->dev, "cannot request GPMC CS %d\n", cs);
++		return ret;
++	}
++
++	of_dev = of_platform_device_create(child, NULL, &pdev->dev);
++	if (!of_dev) {
++		dev_err(&pdev->dev, "cannot create platform device for %s\n",
++			child->full_name);
++		return -ENODEV;
++	}
++
++	return 0;
++}
++
+ static int gpmc_probe_dt(struct platform_device *pdev)
+ {
+ 	int ret;
+@@ -1326,6 +1363,14 @@ static int gpmc_probe_dt(struct platform_device *pdev)
+ 			return ret;
+ 		}
+ 	}
++
++	for_each_node_by_name(child, "ethernet") {
++		ret = gpmc_probe_ethernet_child(pdev, child);
++		if (ret < 0) {
++			of_node_put(child);
++			return ret;
++		}
++	}
+ 	return 0;
+ }
+ #else
+-- 
+1.7.7.6
+
