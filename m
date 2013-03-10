@@ -1,42 +1,43 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAxMC8xMF0gQVNvQzogaW14LXNzaTogQWRkIGlteDI3IGFu?=
- =?UTF-8?B?ZCBwY2ExMDAgRFQgc3VwcG9ydA==?=
-Date: Sun, 10 Mar 2013 22:55:26 +0400
-Message-ID: <1362941726.17062673@f71.mail.ru>
-References: <1362940391-8338-1-git-send-email-mpa@pengutronix.de>
- <1362940391-8338-11-git-send-email-mpa@pengutronix.de>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
+Subject: Re: [RFC 00/12] Adding media device driver for Exynos imaging subsystem
+Date: Sun, 10 Mar 2013 21:36:28 +0100
+Message-ID: <513CEECC.8050903@gmail.com>
+References: <1362570838-4737-1-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1362940391-8338-11-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?TWFya3VzIFBhcmdtYW5u?= <mpa@pengutronix.de>
-Cc: =?UTF-8?B?RmFiaW8gRXN0ZXZhbQ==?= <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, =?UTF-8?B?TWFyayBCcm93bg==?= <broonie@opensource.wolfsonmicro.com>, =?UTF-8?B?TGlhbSBHaXJkd29vZA==?= <lgirdwood@gmail.com>, =?UTF-8?B?R3JhbnQgTGlrZWx5?= <grant.likely@secretlab.ca>, =?UTF-8?B?U2FzY2hhIEhhdWVy?= <kernel@pengutronix.de>, =?UTF-8?B?U2hhd24gR3Vv?= <shawn.guo@linaro.org>, =?UTF-8?B?VGltdXIgVGFiaQ==?= <timur@freescale.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1362570838-4737-1-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Cc: linux-media@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-samsung-soc@vger.kernel.org, s.nawrocki@samsung.com, shaik.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 03/06/2013 12:53 PM, Shaik Ameer Basha wrote:
+> The following patchset features:
+>
+> 1] Creating a common pipeline framework which can be used by all
+> Exynos series SoCs for developing media device drivers.
+> 2] Modified the existing fimc-mdevice for exynos4 to use the common
+> pipeline framework.
+> 3] Adding of media device driver for Exynos5 Imaging subsystem.
+> 4] Upgrading mipi-csis and fimc-lite drivers for Exynos5 SoCs.
+> 5] Adding DT support to m5mols driver and tested with Exynos5 media
+> device driver.
+>
+> Current changes are not tested on exynos4 series SoCs. Current media
+> device driver only support one pipeline (pipeline0) which consists of
+> 	Sensor -->  MIPI-CSIS -->  FIMC-LITE
+> 	Sensor -->  FIMC-LITE
 
-> Add devicetree bindings for generic imx-ssi support and specifically for
-> pca100 with two custom reset functions. At the moment those functions
-> are defined in mach-pca100.c. So until DT is the only method for
-> booting, the ac97 reset functions have to be exported in mach-pca100.c.
-> 
-> Signed-off-by: Markus Pargmann <mpa@pengutronix.de>
-...
-> +		if (of_property_read_bool(pdev->dev.of_node, "imx-ssi-net"))
-> +			ssi->flags |= IMX_SSI_NET;
+Thanks Shaik. My quick review to follow. I'll focus on most significant
+issues for now.
 
-This line does not make sense until the patch is not applied:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2012-June/106482.html
+And here is my updated patch series adding device tree support to
+s5p-fimc driver [1]. I hope it gets merged to v3.10 without significant
+changes. Sorry, for now we need to use that private branch.
 
----
+[1] http://git.linuxtv.org/snawrocki/samsung.git/devicetree-fimc
+
+Regards,
+Sylwester
