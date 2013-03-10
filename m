@@ -1,91 +1,66 @@
-From: Alexander Clouter <alex-L4GPcECwBoDe9xe1eoZjHA@public.gmane.org>
-Subject: Re: plat-nand DT support
-Date: Sun, 10 Mar 2013 11:31:51 +0000
-Message-ID: <20130310113151.GS30947@edkhil>
-References: <20130303155226.GA1976@edkhil>
- <CALF0-+UGapoPTWdVG4W=5nzHT9NJU2z65g=zi2Dj2=JVA0_u2w@mail.gmail.com>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP
+ systems
+Date: Sun, 10 Mar 2013 16:06:15 +0100
+Message-ID: <20130310160615.14ba099c@skate>
+References: <20130212223511.GB31555@obsidianresearch.com>
+	<20130306105441.4d24033e@skate>
+	<20130306121118.GA17079@avionic-0098.mockup.avionic-design.de>
+	<20130306180946.GA2433@obsidianresearch.com>
+	<20130307080832.GD3451@avionic-0098.mockup.avionic-design.de>
+	<20130307174955.GC20840@obsidianresearch.com>
+	<20130307194830.GA1811@avionic-0098.mockup.avionic-design.de>
+	<20130307200235.GB20695@obsidianresearch.com>
+	<20130307204726.GB1811@avionic-0098.mockup.avionic-design.de>
+	<51392B4D.9040404@gmail.com>
+	<20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
+	<513A7044.1020700@gmail.com>
+	<513C1473.60600@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CALF0-+UGapoPTWdVG4W=5nzHT9NJU2z65g=zi2Dj2=JVA0_u2w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Ezequiel Garcia <elezegarcia-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <513C1473.60600@firmworks.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Rob Herring <robherring2@gmail.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Nadav Haklai <nadavh@marvell.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Maen Suleiman <maen@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for replying!
+Dear Mitch Bradley,
 
-On Sat, Mar 09, 2013 at 12:29:00PM -0300, Ezequiel Garcia wrote:
->
->> [2] could also support the NAND used by arch/arm/mach-ep93xx/ts72xx.c but
->> the whole SoC has not been ported to DT
->
->Okey, here I think you're going in the wrong direction. The current trend -and there are very 
->good reasons for this- is to NOT litter arch/arm/mach-foo/ but rather put drivers handling in 
->drivers/ where they rightfully belong.
+On Sat, 09 Mar 2013 19:04:51 -1000, Mitch Bradley wrote:
+ 
+> As stated in my recent reply to Jason, I thing the correct property is
+> "ranges".  "Ranges" translates mappable child address space addresses
+> into parent addresses, and that is exactly what is going on.  A specific
+> subset of config addresses is mappable into parent MMIO space.
 
-I would agree.  However, what nags at me is that this driver would be rather board specific and 
-not SoC/platform so the option for re-use is low; the NAND is implemented in an FPGA.
+The PCI configuration space is *not* mapped in the MMIO space on
+Marvell hardware. In the MMIO space of each PCIe interface, there are
+many registers, only *two* of which are dedicated to accessing the PCI
+configuration space:
 
-I'm trying to get a feeling of what the lesser evil is so that I can avoid "no, please write a 
-proper driver to live in 'drivers'" or "jeez, not another near-identical driver, use plat-nand". 
-:)
+ * One register to set the offset in the PCI configuration space.
 
-Whats are the thoughts from the MTD world?
-  * plat-nand provides all the common boilerplate NAND code that each driver needs and then has 
-the platform specific non-reusable cases hook in via platform_device
-  * if the SoC has be DT'd, then a unique non-reusable driver is the correct approach
+ * One register to read or write a value in the PCI configuration, at
+   the offset specified in the first register.
 
-The only possible other user of the driver is arm/mach-ep93xx (not a DT enabled SoC yet though), 
-but it was made to work with plat-nand:
+See the implementation of mvebu_pcie_hw_rd_conf() and
+mvebu_pcie_hw_wr_conf() in the driver.
 
-http://lists.infradead.org/pipermail/linux-mtd/2009-October/027563.html
+So really, the values specified in the reg = <...> property are *not*
+the PCI configuration spaces mapped in the MMIO space. They represent a
+bunch of per PCIe interface registers used to configure them, get the
+status of the link... and access, through an indirect mechanism, the
+PCI configuration space.
 
-That year it was also suggested I go with plat-nand, which then got accepted upstream, so I guess 
-everyone was happy with it :)
+Does this helps?
 
-http://lists.infradead.org/pipermail/linux-mtd/2009-February/024556.html
+Thanks,
 
-On a passing note, the plat-nand DT hooks do not work.  One core component is that 
-part_probe_types missed 'ofpart' so that is a bit depressing, but the other 
-nr-chips/chip-delay/bank-width/bbt-use-flash options do mean that all the maintainer needs to do 
-is write the ready/cmd hooks.
-
->In other words, the right direction is to write a nand driver if you need one.
->For instance, I find a bit mixed up to have functions like
->ts7800_nand_write/read_buf() in your board.c file.
-
-Maybe there is an appetite for a hybrid?
-
-I could write a drivers/mtd/nand/ts7xxx.c, a DT enabled NAND driver that shims around plat-nand 
-which has my new DT extending patches.  Means it is all pure DT over in arch/arm and there is 
-still where possible re-use of boilerplate code.
-
-plat-nand, to me, makes sense to save code.  With a DT shim, others could crib from it too.
-
-Never-the-less, I am happy to do whatever the MTD folk want, I just really do not want to go down 
-one path and then told to burn everything and do plan B instead.
-
->BTW, it could be great if you could upstream your work. Also, it could be much easier for you to 
->get support and answers if you try to upstream.
-
-This is what I am trying to do.  I am currently trying to port my board 
-arch/arm/mach-orion5x/ts78xx-setup.c (that I am the maintainer for) to DT, the github page is 
-just where I do development on.
-
-Cheers, and thanks again for the reply.
-
+Thomas
 -- 
-Alexander Clouter
-.sigmonster says: He who foresees calamities suffers them twice over.
+Thomas Petazzoni, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
