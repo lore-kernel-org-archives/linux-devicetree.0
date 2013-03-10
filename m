@@ -1,96 +1,109 @@
-From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
-Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
-Date: Sat, 09 Mar 2013 19:04:51 -1000
-Message-ID: <513C1473.60600@firmworks.com>
-References: <20130212223511.GB31555@obsidianresearch.com>
- <20130306105441.4d24033e@skate>
- <20130306121118.GA17079@avionic-0098.mockup.avionic-design.de>
- <20130306180946.GA2433@obsidianresearch.com>
- <20130307080832.GD3451@avionic-0098.mockup.avionic-design.de>
- <20130307174955.GC20840@obsidianresearch.com>
- <20130307194830.GA1811@avionic-0098.mockup.avionic-design.de>
- <20130307200235.GB20695@obsidianresearch.com>
- <20130307204726.GB1811@avionic-0098.mockup.avionic-design.de>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP
+ systems
+Date: Sat, 9 Mar 2013 23:55:39 -0700
+Message-ID: <20130310065539.GA14704@obsidianresearch.com>
+References: <20130307204726.GB1811@avionic-0098.mockup.avionic-design.de>
  <51392B4D.9040404@gmail.com>
  <20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
- <513A7044.1020700@gmail.com>
+ <20130308165228.GB4094@obsidianresearch.com>
+ <20130308191227.GA6551@avionic-0098.mockup.avionic-design.de>
+ <513A3F4F.2090501@firmworks.com>
+ <20130308200245.GC29435@obsidianresearch.com>
+ <513A7845.6040304@firmworks.com>
+ <20130309013152.GA3883@obsidianresearch.com>
+ <513C117D.6080800@firmworks.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <513A7044.1020700-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <513C117D.6080800@firmworks.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Mitch Bradley <wmb@firmworks.com>
+Cc: Thierry Reding <thierry.reding@avionic-design.de>, Lior Amsalem <alior@marvell.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, Shadi Ammouri <shadi@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 3/8/2013 1:12 PM, Rob Herring wrote:
-> On 03/08/2013 01:14 AM, Thierry Reding wrote:
->> On Thu, Mar 07, 2013 at 06:05:33PM -0600, Rob Herring wrote:
->>> On 03/07/2013 02:47 PM, Thierry Reding wrote:
->> [...]
->>>> In a nutshell (since some of the context isn't quoted anymore) the
->>>> problem that we're trying to solve is that some of the embedded SoCs
->>>> require per-root-port registers for configuration. The PCI DT
->>>> specification doesn't make any provisions for this. A few alternatives
->>>> have been discussed so far:
->>>
->>> I'm not sure I follow. This is different than the host controller
->>> registers? Why would this not just be multiple entries in the reg property?
->>
->> Well the register regions are per root-port. On Tegra20 there's 2 of
->> them, Tegra30 has 3 and if I understand correctly Marvell can have up to
->> 10 (!). Adding all of them to the reg property of the host controller
->> could work but it needs some way to match the reg entry to the root port
->> similar to option 1 below.
-> 
-> The compatible property of the PCI host controller can imply what each
-> index of the reg property entries is for.
-> 
->>
->> Adding a property in the root port nodes seems like a cleaner and more
->> accurate representation of the hardware to me, but if that's not
->> acceptable perhaps we need to bite the bullet and add the code to look
->> the registers up from the parent's reg property.
-> 
-> What I don't like is a new property defined to describe mmio addresses.
-> We already have a property for that and it is "reg". But I think I'm
-> still missing something:
+On Sat, Mar 09, 2013 at 06:52:13PM -1000, Mitch Bradley wrote:
 
+> Okay, I think I finally get it.  The Marvell root port bridge setup
+> registers look like standard config headers, even though they aren't
+> really in config space (because you need a different access method for
+> them, compared to real config accesses to downstream devices).
 
-As stated in my recent reply to Jason, I thing the correct property is
-"ranges".  "Ranges" translates mappable child address space addresses
-into parent addresses, and that is exactly what is going on.  A specific
-subset of config addresses is mappable into parent MMIO space.
+Well, thats pretty close. On Marvell the MMIO space has a lot of
+stuff, some of it is config related, lots of it isn't. In fact most of
+it isn't. Tegra is different, the MMIO region is exactly the config
+space of the root port bridge.
 
-When done that way, there is no need for the multi-entry reg property at
-the top level, and the correspondence between specific root port DT
-nodes and their MMIO addresses is easily determined by matching child
-reg properties to parent ranges entries.
+Tegra could probably happily and sanely do as you've described (well,
+see below), but it is wonky for Marvell. It looks like there are more
+drivers coming that have this need - so I had hoped for a general
+answer to the 'per-port MMIO space' problem that is unrelated to the
+MMIO spaces role in config access.
 
+> So, in order for the common code that enumerates the PCI bus to work,
+> you need to "spoof" the config accesses so that when you try to access
+> those particular "pseudo config headers", it uses the MMIO method
+> instead of the real config access method.
+
+There are rules for config access in both Tegra and Marvell that are
+not trivial. Again, the driver takes are of this and all Linux sees is
+a nice compliant config space.
+
+> If that is indeed the case, them I would vote for a slight modification
+> of the intermediate patch that I cited earlier - the one in which the
+> ranges property includes translations from those special config
+> addresses into CPU addresses.  The modification is to fix the sizes,
+> changing 0x2000 to 0x800, so those ranges entries do not overlap in the
+> child address domain.
+
+On Marvell the size of the MMIO space is 0x2000, there are imporant
+registers there beyond index 0x800 (todays driver may not touch them
+but HW has them). Reducing the size doesn't seem appropriate.
+
+> pcie-controller {
+> 	compatible = "marvell,armada-370-pcie";
+> 	status = "disabled";
+
+        device_type = "pci";                                                                    
+
+Here as well, as you noted before?
+
+> 	#address-cells = <3>;
+> 	#size-cells = <2>;
 > 
->>>> 			pci@0,1 {
->>>> 				...
->>>> 				reg = <0x00000800 0 0 0 0>;
+> 	bus-range = <0x00 0xff>;
 > 
-> Is this a PCI bus address?
+> 	ranges = <0x00000800 0 0          0xd4004000 0 0x00000800   /* Root
+> port config header */
+> 	          0x00001000 0 0          0xd4008000 0 0x00000800   /* Root
+> port config header */
+> 		  0x82000000 0 0xe0000000 0xe0000000 0 0x08000000   /*
+> non-prefetchable memory */
+> 	          0x81000000 0 0          0xe8000000 0 0x00100000>; /*
+> downstream I/O */
 > 
->>>> 				regs = <0x80000000 0x00001000>;
->>>> 			};
-> 
-> Rob
-> 
-> _______________________________________________
-> devicetree-discuss mailing list
-> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-> https://lists.ozlabs.org/listinfo/devicetree-discuss
-> 
+> 	pcie@1,0 {
+> 		device_type = "pci";
+> 		reg = <0x0800 0 0 0 0>;
+
+Okay, this was Thierry's original idea, and it was my note that this
+didn't seem like a good choice. I'm not wedded to that, but I'll
+explain my reasoning a bit.
+
+Two things bothered me
+  - Describing a CPU MMIO mapping with a config address space seems
+    wonky
+  - Linux's OF core doesn't parse a 'reg' property under
+    'device_type = "pci"' as something CPU mappable, it only looks
+    to assigned-addresses for that. So the OF core would need to learn
+    how to handle this case, and it would have to be well defined..
+
+    Thierry's original patch avoided this problem by not using
+    device_type = "pci"..
+
+Also, did you mean to have a 0 size for the 'reg'? How will things
+know how big the MMIO region is? Can't just assume 0x800..
+
+Again, thanks!
+Jason
