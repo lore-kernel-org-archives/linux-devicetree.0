@@ -1,55 +1,60 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP
- systems
-Date: Sun, 10 Mar 2013 16:09:37 +0100
-Message-ID: <20130310160937.37df66b2@skate>
-References: <20130307174955.GC20840@obsidianresearch.com>
-	<20130307194830.GA1811@avionic-0098.mockup.avionic-design.de>
-	<20130307200235.GB20695@obsidianresearch.com>
-	<20130307204726.GB1811@avionic-0098.mockup.avionic-design.de>
-	<51392B4D.9040404@gmail.com>
-	<20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
-	<20130308165228.GB4094@obsidianresearch.com>
-	<20130308191227.GA6551@avionic-0098.mockup.avionic-design.de>
-	<513A3F4F.2090501@firmworks.com>
-	<20130308200245.GC29435@obsidianresearch.com>
-	<20130308201339.GA26322@avionic-0098.mockup.avionic-design.de>
+From: Francesco Lavra <francescolavra.fl@gmail.com>
+Subject: Re: [PATCH V2] cpufreq: ARM big LITTLE: Add generic cpufreq driver
+ and its DT glue
+Date: Sun, 10 Mar 2013 16:58:19 +0100
+Message-ID: <513CAD9B.908@gmail.com>
+References: <6cba8f153cfd4b0d3075a34a6dfe287bdec2eb06.1362676407.git.viresh.kumar@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20130308201339.GA26322@avionic-0098.mockup.avionic-design.de>
-Sender: linux-pci-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@avionic-design.de>
-Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Lior Amsalem <alior@marvell.com>, Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Tawfik Bayouk <tawfik@marvell.com>, linux-pci@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, Eran Ben-Avi <benavi@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Maen Suleiman <maen@marvell.com>, Shadi Ammouri <shadi@marvell.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <6cba8f153cfd4b0d3075a34a6dfe287bdec2eb06.1362676407.git.viresh.kumar@linaro.org>
+Sender: cpufreq-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: rjw@sisk.pl, Steve.Bannister@arm.com, linux@arm.linux.org.uk, linux-pm@vger.kernel.org, Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>, devicetree-discuss@lists.ozlabs.org, Liviu.Dudau@arm.com, linux-kernel@vger.kernel.org, cpufreq@vger.kernel.org, robin.randhawa@arm.com, linux-arm-kernel@lists.infradead.org, mark.hambleton@broadcom.com, linaro-kernel@lists.linaro.org, charles.garcia-tobin@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Dear Thierry Reding,
-
-On Fri, 8 Mar 2013 21:13:40 +0100, Thierry Reding wrote:
-> On Fri, Mar 08, 2013 at 01:02:46PM -0700, Jason Gunthorpe wrote:
-> > On Fri, Mar 08, 2013 at 09:43:11AM -1000, Mitch Bradley wrote:
-> [...]
-> > > 2) The "@0,0" and "@1,0" suffixes do not correspond to the reg values
-> > > <0x0800 0 0 0 0> and <0x1000 0 0 0 0> using any rule that I know.
-> > 
-> > @0,1,0 (bus,device,fn) could be more appropriate, but that is
-> > cosmetic?
+Hi,
+On 03/07/2013 06:14 PM, Viresh Kumar wrote:
+> big LITTLE is ARM's new Architecture focussing power/performance needs of modern
+> world. More information about big LITTLE can be found here:
 > 
-> The OF PCI specification is pretty strict about this as well. It says in
-> section 2.2.1.3. that only the DD and DD,FF forms can appear in a device
-> path.
+> http://www.arm.com/products/processors/technologies/biglittleprocessing.php
+> http://lwn.net/Articles/481055/
+> 
+> In order to keep cpufreq support for all big LITTLE platforms simple/generic,
+> this patch tries to add a generic cpufreq driver layer for all big LITTLE
+> platforms.
+> 
+> The driver is divided into two parts:
+> - Core driver: Generic and shared across all big LITTLE SoC's
+> - Glue drivers: Per platform drivers providing ops to the core driver
+> 
+> This patch adds in a generic glue driver which would extract information from
+> Device Tree.
+> 
+> Future SoC's can either reuse the DT glue or write their own depending on the
+> need.
+> 
+> Signed-off-by: Sudeep KarkadaNagesha <sudeep.karkadanagesha@arm.com>
+> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+[...]
+> +void bL_cpufreq_unregister(struct cpufreq_arm_bL_ops *ops)
+> +{
+> +	if (arm_bL_ops != ops) {
+> +		pr_info("%s: Registered with: %s, can't unregister, exiting\n",
+> +				__func__, arm_bL_ops->name);
+> +	}
 
-Note that in the case of my driver, the @X,Y represent the port and
-lane of the PCIe interface. Not sure if it is correct, I can change the
-names to whatever is appropriate, those names aren't used anywhere in
-the driver.
+The code is not doing what the info message says.
 
-Best regards,
+> +
+> +	cpufreq_unregister_driver(&bL_cpufreq_driver);
+> +	pr_info("%s: Un-registered platform driver: %s\n", __func__,
+> +			arm_bL_ops->name);
+> +	arm_bL_ops = NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(bL_cpufreq_unregister);
 
-Thomas
--- 
-Thomas Petazzoni, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+--
+Francesco
