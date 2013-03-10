@@ -1,114 +1,99 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH 1/1] ARM: OMAP: gpmc: request CS address space for ethernet chips
-Date: Sun, 10 Mar 2013 18:18:22 +0100
-Message-ID: <1362935902-29720-1-git-send-email-javier.martinez@collabora.co.uk>
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-omap <linux-omap@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
+Date: Sun, 10 Mar 2013 08:33:08 -1000
+Message-ID: <513CD1E4.6050408@firmworks.com>
+References: <20130212223511.GB31555@obsidianresearch.com>
+ <20130306105441.4d24033e@skate>
+ <20130306121118.GA17079@avionic-0098.mockup.avionic-design.de>
+ <20130306180946.GA2433@obsidianresearch.com>
+ <20130307080832.GD3451@avionic-0098.mockup.avionic-design.de>
+ <20130307174955.GC20840@obsidianresearch.com>
+ <20130307194830.GA1811@avionic-0098.mockup.avionic-design.de>
+ <20130307200235.GB20695@obsidianresearch.com>
+ <20130307204726.GB1811@avionic-0098.mockup.avionic-design.de>
+ <51392B4D.9040404@gmail.com>
+ <20130308071443.GA5772@avionic-0098.mockup.avionic-design.de>
+ <513A7044.1020700@gmail.com> <513C1473.60600@firmworks.com>
+ <20130310160615.14ba099c@skate>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130310160615.14ba099c@skate>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Besides being used to interface with external memory devices,
-the General-Purpose Memory Controller can be used to connect
-Pseudo-SRAM devices such as ethernet controllers to OMAP2+
-processors using the GPMC as a data bus.
+On 3/10/2013 5:06 AM, Thomas Petazzoni wrote:
+> Dear Mitch Bradley,
+> 
+> On Sat, 09 Mar 2013 19:04:51 -1000, Mitch Bradley wrote:
+>  
+>> As stated in my recent reply to Jason, I thing the correct property is
+>> "ranges".  "Ranges" translates mappable child address space addresses
+>> into parent addresses, and that is exactly what is going on.  A specific
+>> subset of config addresses is mappable into parent MMIO space.
+> 
+> The PCI configuration space is *not* mapped in the MMIO space on
+> Marvell hardware. In the MMIO space of each PCIe interface, there are
+> many registers, only *two* of which are dedicated to accessing the PCI
+> configuration space:
+> 
+>  * One register to set the offset in the PCI configuration space.
+> 
+>  * One register to read or write a value in the PCI configuration, at
+>    the offset specified in the first register.
+> 
+> See the implementation of mvebu_pcie_hw_rd_conf() and
+> mvebu_pcie_hw_wr_conf() in the driver.
+> 
+> So really, the values specified in the reg = <...> property are *not*
+> the PCI configuration spaces mapped in the MMIO space. They represent a
+> bunch of per PCIe interface registers used to configure them, get the
+> status of the link... and access, through an indirect mechanism, the
+> PCI configuration space.
+> 
+> Does this helps?
 
-The actual mapping between the GPMC address space and OMAP2+
-address space is made using the GPMC DT "ranges" property.
-But also a explicit call to gpmc_cs_request() is needed.
+I agree that PCI config space accesses to *downstream* devices is via an
+indirect-access register pair.
 
-So, this patch allows an ethernet chip to be defined as an
-GPMC child node an its chip-select memory address be requested.
+The question is, does that indirect-access mechanism apply also to the
+internal config headers for the root port bridges?
 
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
+According to section 20.15 of the MV78230 functional spec that I am
+looking at, the configuration header registers are mapped to the
+internal memory space.  That section is unclear about whether those
+registers are CPU-accessible via indirect-access config transactions.
+When the PCIe hardware is configured for endpoint mode, the internal
+headers can be accessed via PCIe config transactions from an external
+port, but in root complex mode, the possibility of indirect access from
+the CPU is not mentioned.
 
-Jon,
+The manual is a little vague in some respects, but it does say quite
+clearly that MMIO access to the root port bridge config header is
+possible, and it lists the MMIO addresses thereof (section A.10).
 
-This patch assumes that we have solved somehow the issue that a
-call to request_irq() is needed before before using a GPIO as an
-IRQ and this is no longer the case when using from Device Trees.
+So we all agree that access to external (downstream) config registers is
+via the indirect register pair.  The unclear thing is whether the
+internal config registers for the root port bridges can be indirectly
+accessed.
 
-Anyway, this is independent as how we solve this, whether is
-using Jan's patch [1], adding a .request function pointer to
-irq_chip as suggested by Stephen [2], or any other approach.
+Do we have empirical evidence that indirect-access works to the internal
+root port bridge config headers?
 
-[1]: https://patchwork.kernel.org/patch/2009331/
-[2]: http://www.mail-archive.com/linux-omap@vger.kernel.org/msg85592.html
-
- arch/arm/mach-omap2/gpmc.c |   45 ++++++++++++++++++++++++++++++++++++++++++++
- 1 files changed, 45 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-index 4fe9ee7..d1bf48b 100644
---- a/arch/arm/mach-omap2/gpmc.c
-+++ b/arch/arm/mach-omap2/gpmc.c
-@@ -29,6 +29,7 @@
- #include <linux/of.h>
- #include <linux/of_mtd.h>
- #include <linux/of_device.h>
-+#include <linux/of_address.h>
- #include <linux/mtd/nand.h>
- 
- #include <linux/platform_data/mtd-nand-omap2.h>
-@@ -1296,6 +1297,42 @@ static int gpmc_probe_onenand_child(struct platform_device *pdev,
- }
- #endif
- 
-+static int gpmc_probe_ethernet_child(struct platform_device *pdev,
-+				     struct device_node *child)
-+{
-+	int ret, cs;
-+	unsigned long base;
-+	struct resource res;
-+	struct platform_device *of_dev;
-+
-+	if (of_property_read_u32(child, "reg", &cs) < 0) {
-+		dev_err(&pdev->dev, "%s has no 'reg' property\n",
-+			child->full_name);
-+		return -ENODEV;
-+	}
-+
-+	if (of_address_to_resource(child, 0, &res)) {
-+		dev_err(&pdev->dev, "%s has malformed 'reg' property\n",
-+			child->full_name);
-+		return -ENODEV;
-+	}
-+
-+	ret = gpmc_cs_request(cs, resource_size(&res), &base);
-+	if (IS_ERR_VALUE(ret)) {
-+		dev_err(&pdev->dev, "cannot request GPMC CS %d\n", cs);
-+		return ret;
-+	}
-+
-+	of_dev = of_platform_device_create(child, NULL, &pdev->dev);
-+	if (!of_dev) {
-+		dev_err(&pdev->dev, "cannot create platform device for %s\n",
-+			child->full_name);
-+		return -ENODEV;
-+	}
-+
-+	return 0;
-+}
-+
- static int gpmc_probe_dt(struct platform_device *pdev)
- {
- 	int ret;
-@@ -1326,6 +1363,14 @@ static int gpmc_probe_dt(struct platform_device *pdev)
- 			return ret;
- 		}
- 	}
-+
-+	for_each_node_by_name(child, "ethernet") {
-+		ret = gpmc_probe_ethernet_child(pdev, child);
-+		if (ret < 0) {
-+			of_node_put(child);
-+			return ret;
-+		}
-+	}
- 	return 0;
- }
- #else
--- 
-1.7.7.6
-
+> 
+> Thanks,
+> 
+> Thomas
+> 
