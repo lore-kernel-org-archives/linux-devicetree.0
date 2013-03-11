@@ -1,173 +1,133 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [RFC] DT affinity bindings/representing bus masters with DT
-Date: Mon, 11 Mar 2013 17:06:57 +0000
-Message-ID: <20130311170657.GD25250@e102568-lin.cambridge.arm.com>
-References: <20130215172102.GF3014@e102568-lin.cambridge.arm.com>
- <20130306215714.GC6740@truffula.fritz.box>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH 1/1] ARM: OMAP: gpmc: request CS address space for ethernet
+ chips
+Date: Mon, 11 Mar 2013 12:13:19 -0500
+Message-ID: <513E10AF.2080802@ti.com>
+References: <1362935902-29720-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <20130306215714.GC6740-W9XWwYn+TF0XU02nzanrWNbf9cGiqdzd@public.gmane.org>
-Content-Disposition: inline
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: David Gibson <david-xT8FGy+AXnRB3Ne2BGzF6laj5H9X9Tb+@public.gmane.org>
-Cc: "nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org" <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1362935902-29720-1-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-omap <linux-omap@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi David,
 
-thanks for your feedback.
-
-On Wed, Mar 06, 2013 at 09:57:14PM +0000, David Gibson wrote:
-> On Fri, Feb 15, 2013 at 05:21:02PM +0000, Lorenzo Pieralisi wrote:
-> > Hi all,
-> > 
-> > in order to come up with a solid solution to the affinity bindings concept
-> > we are facing in the ARM world, I am posting this RFC so that hopefully people
-> > on the list can chime in and help us in this endeavour.
-> > 
-> > I tried to keep things simple on purpose and some statements are a bit of an
-> > oversimplification, we can elaborate on those if needed.
-> > 
-> > Hereafter a summary of what we are trying to achieve.
-> > 
-> > Current device tree bindings allow to describe HW configurations of systems
-> > in a bus like fashion, where each bus contains bus slaves and mapping
-> > heuristics to translate address spaces across bus layers (AMBA -> PCI).
-> > 
-> > The device tree by definition represents the view of the system from the
-> > perspective of the CPU(s). This means that all devices (but CPUs) present
-> > in the device tree are to be seen as "slave" components, ie devices sitting on
-> > a bus and accessible from the CPU with an addressing mode that can vary and it
-> > is defined by the bus the device is sitting on.
-> > 
-> > There are specific cases in current SoCs though where resources belonging to
-> > a slave device should be linked to a master in the SoC system hierarchy.
-> > 
-> > To the best of my knowledge, the mechanism used to implement this linkage is
-> > not defined by any device tree binding; it probably can be a phandle in the
-> > device tree syntax, but this has some implications that will be described as
-> > follows.
-> > 
-> > A programmable device, let's call it "foo" for the sake of this discussion,
-> > has several resources (ie memory spaces) that should be mapped to bus masters
-> > in a SoC hierarchy (each resource "belongs" to a master). The only way this
-> > can be currently done through a device tree is by linking the resource in
-> > question to a device representing the master node through a phandle (keeping
-> > in mind that the concept of master node does not exist in current DT
-> > bindings).
-> > 
-> > An example is worth a thousand words (pseudo dts file):
-> > 
-> > / {
-> > 	#address-cells = 1;
-> > 	#size-cells = 1;
-> > 
-> > 	acme1: acme@4000000 {
-> > 		reg = <0x4000000 0x1000>;
-> > 	};
-> > 
-> > 	acme2: acme@5000000 {
-> > 		reg = <0x5000000 0x1000>;
-> > 	};
-> > 
-> > 	foo@2000000 {
-> > 		reg = <0x2000000 0x1000
-> > 		       0x2001000 0x1000>;
-> > 		affinity = <&acme1 &acme2>;
-> > 	};
-> > };
-> > 
-> > where the "affinity" property contains a number of phandles equal to the number
-> > of resources (ie reg properties) in the foo@2000000 node. The "affinity"
-> > property maps a reg property to a device tree node, one phandle per "reg"
-> > property.
-> > 
-> > acme1 and acme2 are two bus masters in the system (eg a DMA and a GPU).
-> > 
-> > Each foo@2000000 reg property maps to a device that represents a bus master
-> > (to make it clearer, a foo@2000000 reg property defines an address space that
-> > belongs to a bus master, ie the address space represents a programming
-> > interface specific to that master; in the bindings above address 0x2000000 is
-> > the address at which acme1 device can programme its "foo" interface, address
-> > 0x2001000 is the address at which acme2 device can programme its "foo"
-> > interface).
+On 03/10/2013 12:18 PM, Javier Martinez Canillas wrote:
+> Besides being used to interface with external memory devices,
+> the General-Purpose Memory Controller can be used to connect
+> Pseudo-SRAM devices such as ethernet controllers to OMAP2+
+> processors using the GPMC as a data bus.
 > 
-> Ok.  I think annotating the existing reg property like this is a very
-> bad idea.  I haven't seen all the previous discussion, so I'm not
-> totally clean on what this affinity concept is about.  But as I
-> understand it, these "slave" resources cannot be treated like an
-> ordinary resource in in the reg property.  That means an older client
-> will potentially misinterpret "reg" because it doesn't know about
-> "affinity".
+> The actual mapping between the GPMC address space and OMAP2+
+> address space is made using the GPMC DT "ranges" property.
+> But also a explicit call to gpmc_cs_request() is needed.
 
-Not really, "reg" still complies with the current DT bindings. Affinity
-is there to associate a reg property to a "master" but the reg property
-definition does not change. I do not think backward compatibility is a
-problem per-se here.
+One problem with gpmc_cs_request() is that it will map the chip-select
+to any physical location in the 1GB address space for the gpmc
+controller. So in other words, it will ignore the ranges property
+altogether. If you look at my code for NOR, I have added a
+gpmc_cs_remap() function to remap the cs to the location as specified by
+the device-tree.
 
-> Worse, again, if I've understood correctly, resources with different
-> "masters" are essentially in different logical address spaces.  "reg"
-> properties should always sit in the logical address space representing
-> the parent node's bus.  Different address spaces could also have
-> different address sizes, which would really complicate parsing "reg".
+Ideally we should change gpmc_cs_request() so we can pass the desire
+base address that we want to map the gpmc cs too. I had started out that
+way but it made the code some what messy and so I opted to create a
+gpmc_cs_remap() function instead. The goal will be to get rid of
+gpmc_cs_remap() once DT migration is completed and we can change
+gpmc_cs_request() to map the cs to a specific address (see my FIXME
+comment).
 
-I think we need to post what we have, it is really complex to explain
-the issue without a concrete example. To cut a long story short I
-would not say that the resources sit in different address spaces, it is
-that we need to associate those address ranges with specific bus masters.
+Your code probably works today because the cs is setup by the bootloader
+and so when you request the cs in the kernel the mapping is not changed
+from the bootloader settings. However, if the mapping in DT (ranges
+property) is different from that setup by the bootloader then the kernel
+would probably crash because the kernel would not remap it as expected.
 
-We have to have a way to say:
+> So, this patch allows an ethernet chip to be defined as an
+> GPMC child node an its chip-select memory address be requested.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> ---
+> 
+> Jon,
+> 
+> This patch assumes that we have solved somehow the issue that a
+> call to request_irq() is needed before before using a GPIO as an
+> IRQ and this is no longer the case when using from Device Trees.
+> 
+> Anyway, this is independent as how we solve this, whether is
+> using Jan's patch [1], adding a .request function pointer to
+> irq_chip as suggested by Stephen [2], or any other approach.
+> 
+> [1]: https://patchwork.kernel.org/patch/2009331/
+> [2]: http://www.mail-archive.com/linux-omap@vger.kernel.org/msg85592.html
+> 
+>  arch/arm/mach-omap2/gpmc.c |   45 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 files changed, 45 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
+> index 4fe9ee7..d1bf48b 100644
+> --- a/arch/arm/mach-omap2/gpmc.c
+> +++ b/arch/arm/mach-omap2/gpmc.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/of.h>
+>  #include <linux/of_mtd.h>
+>  #include <linux/of_device.h>
+> +#include <linux/of_address.h>
+>  #include <linux/mtd/nand.h>
+>  
+>  #include <linux/platform_data/mtd-nand-omap2.h>
+> @@ -1296,6 +1297,42 @@ static int gpmc_probe_onenand_child(struct platform_device *pdev,
+>  }
+>  #endif
+>  
+> +static int gpmc_probe_ethernet_child(struct platform_device *pdev,
+> +				     struct device_node *child)
+> +{
+> +	int ret, cs;
+> +	unsigned long base;
+> +	struct resource res;
+> +	struct platform_device *of_dev;
+> +
+> +	if (of_property_read_u32(child, "reg", &cs) < 0) {
+> +		dev_err(&pdev->dev, "%s has no 'reg' property\n",
+> +			child->full_name);
+> +		return -ENODEV;
+> +	}
+> +
+> +	if (of_address_to_resource(child, 0, &res)) {
+> +		dev_err(&pdev->dev, "%s has malformed 'reg' property\n",
+> +			child->full_name);
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = gpmc_cs_request(cs, resource_size(&res), &base);
+> +	if (IS_ERR_VALUE(ret)) {
+> +		dev_err(&pdev->dev, "cannot request GPMC CS %d\n", cs);
+> +		return ret;
+> +	}
+> +
+> +	of_dev = of_platform_device_create(child, NULL, &pdev->dev);
+> +	if (!of_dev) {
+> +		dev_err(&pdev->dev, "cannot create platform device for %s\n",
+> +			child->full_name);
+> +		return -ENODEV;
+> +	}
+> +
+> +	return 0;
+> +}
 
-"Address range 0x80001000 - 0x80001fff is used to programme the control
-registers associated with the port connected to master X".
+So this function does not setup the cs at all and so that means you are
+dependent on having the bootloader configure the cs. I would really like
+to get away from that sort of dependency. In fact I am wondering if we
+could make the gpmc_probe_nor() function a gpmc_probe_generic() that we
+can use for both nor and ethernet as we are doing very similar things
+(if we add the timings and gpmc settings to the ethernet binding).
 
-When a CPU wants to programme a control port for a specific master, it
-needs to know what address range should be programmed.
+Also I think we need to add some DT binding documentation for this as well.
 
-I mentioned "resources" instead of addresses since the problem we are
-having is the same when it comes to map IRQs to set of CPUS. We need
-to associate a resource (IRQ or address) to a set of cpus (or more in
-general, masters).
-
-We will be posting the code we have soon, this will simplify the discussion.
-
-> Now, a device tree extension I've considered before for other reasons
-> might also be relevant to your case.  That is to add a new "bus-reg"
-> property that has a meaning similar to "reg" but contains (phandle,
-> address, size) tuples instead of just (address, size) tuples.  The
-> phandle in each case would represent the node in whose address space
-> this resource appears.  This would generalize the "dcr-reg" and
-> "scom-reg" properties we've sometimes used on ppc.
-
-It might be used that way but I need an example to understand if it fits
-the purpose. We still have to associate that resource to a set of
-masters, so for that to work the address space pointed at by the phandle
-must be capable of defining a master (or set of masters).
-
-I am not sure the problem is identical to dcr-reg though.
-
-> It's not clear if this essentially incompatible extension would be
-> worth it, though.  The other way to represent these structures is to
-> just split the node for this logical device into different pieces
-> under each address space it has resources on.  These pieces are then
-> linked together with (binding specific) phandle pointers to each
-> other.
-
-I think that could be feasible too and we thought about that.
-
-Code coming, let's restart the discussion then to see how we can move
-forward.
-
-Thank you very much,
-Lorenzo
+Cheers
+Jon
