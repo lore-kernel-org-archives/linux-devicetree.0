@@ -1,79 +1,89 @@
-From: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 02/13] USB: phy: nop: Defer probe if device needs VCC/RESET
-Date: Mon, 11 Mar 2013 16:58:15 +0100
-Message-ID: <513DFF17.5010207@pengutronix.de>
-References: <1359993540-20780-1-git-send-email-rogerq@ti.com>
- <1359993540-20780-3-git-send-email-rogerq@ti.com> <51109E95.3000307@ti.com>
- <5110C655.3060305@ti.com> <20130205090920.GH32118@arwen.pp.htv.fi>
- <5110D45A.3040007@ti.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH 1/3] can: at91_can: add dt support
+Date: Mon, 11 Mar 2013 16:59:40 +0100
+Message-ID: <513DFF6C.2050408@pengutronix.de>
+References: <1362763842-14924-1-git-send-email-ludovic.desroches@atmel.com> <1362763842-14924-2-git-send-email-ludovic.desroches@atmel.com> <513A2365.5050803@pengutronix.de> <20130311091722.GA2572@ludovic.desroches@atmel.com> <513DF46E.7000903@pengutronix.de> <20130311153956.GB3198@ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8090482572913820535=="
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-In-Reply-To: <5110D45A.3040007-l0cyMroinI0@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, kishon <kishon-l0cyMroinI0@public.gmane.org>, stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2SPIDKVGVXOTBXUCWNAAQ"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20130311153956.GB3198@ludovic.desroches@atmel.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Ludovic Desroches <ludovic.desroches@atmel.com>
+Cc: linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com
 List-Id: devicetree@vger.kernel.org
 
 This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---===============8090482572913820535==
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2QWRIMRQJILDKOKEGTLSL"
-
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2QWRIMRQJILDKOKEGTLSL
+------enig2SPIDKVGVXOTBXUCWNAAQ
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On 02/05/2013 10:43 AM, Roger Quadros wrote:
-> On 02/05/2013 11:09 AM, Felipe Balbi wrote:
->> On Tue, Feb 05, 2013 at 10:44:05AM +0200, Roger Quadros wrote:
->>>>> diff --git a/include/linux/usb/nop-usb-xceiv.h b/include/linux/usb/=
-nop-usb-xceiv.h
->>>>> index 3265b61..148d351 100644
->>>>> --- a/include/linux/usb/nop-usb-xceiv.h
->>>>> +++ b/include/linux/usb/nop-usb-xceiv.h
->>>>> @@ -6,6 +6,10 @@
->>>>>   struct nop_usb_xceiv_platform_data {
->>>>>       enum usb_phy_type type;
->>>>>       unsigned long clk_rate;
+On 03/11/2013 04:39 PM, Ludovic Desroches wrote:
+> On Mon, Mar 11, 2013 at 04:12:46PM +0100, Marc Kleine-Budde wrote:
+>> On 03/11/2013 10:17 AM, Ludovic Desroches wrote:
+>>> On Fri, Mar 08, 2013 at 06:44:05PM +0100, Marc Kleine-Budde wrote:
+>>>> On 03/08/2013 06:30 PM, ludovic.desroches@atmel.com wrote:
+>>>>> From: Ludovic Desroches <ludovic.desroches@atmel.com>
+>>>>>
+>>>>> Add device tree support.
+>>>>>
+>>>>> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+>>>>> ---
+>>>>>  .../devicetree/bindings/net/can/atmel-can.txt      | 14 ++++
+>>>>>  drivers/net/can/at91_can.c                         | 75 ++++++++++=
+++++++------
+>>>>>  2 files changed, 70 insertions(+), 19 deletions(-)
+>>>>>  create mode 100644 Documentation/devicetree/bindings/net/can/atmel=
+-can.txt
+>>>>>
+>>>>> diff --git a/Documentation/devicetree/bindings/net/can/atmel-can.tx=
+t b/Documentation/devicetree/bindings/net/can/atmel-can.txt
+>>>>> new file mode 100644
+>>>>> index 0000000..69381db
+>>>>> --- /dev/null
+>>>>> +++ b/Documentation/devicetree/bindings/net/can/atmel-can.txt
+>>>>> @@ -0,0 +1,14 @@
+>>>>> +* AT91 CAN *
 >>>>> +
->>>>> +    /* if set fails with -EPROBE_DEFER if can't get regulator */
->>>>> +    unsigned int needs_vcc:1;
->>>>> +    unsigned int needs_reset:1;
+>>>>> +Required properties:
+>>>>> +  - compatible: Should be "atmel,at91sam9263-can" or "atmel,at91sa=
+m9x5-can"
 >>>>
->>>> how about u8 here?
+>>>> On imx we use the oldest SoC with that IP available. Which strategy =
+are
+>>>> you following on at91?
+>>>>
 >>>
->>> Not sure. Bitfields are usually defined as unsigned int.
+>>> We are using the same strategy.
 >>
->> IIRC the benefit is that compiler can try to optimize those flags. I
->> mean, if you have 32 1-bit flags, compiler will combine those in a
->> single u32. Someone correct me if I'm wrong.
+>> But "atmel,at91sam9x5-can" isn't a specific SoC, probably a SoC family=
+=2E
+>> Or are you using "atmel,at91sam9x5-can" for the other devices in the D=
+T,
+>> too.
 >>
 >=20
-> Yes you are right. Kishon was asking me to use u8 instead of unsigned i=
-nt, which
-> I don't think is necessary. AFAIK, it is a norm to use unsigned int whe=
-n defining
-> a bitfield. Compilers are known to behave funny with bitfields. I don't=
- mind
-> using bool for each.
+> You are right at91sam9x5 is not a specific SoC but a family of SoCs:
+> at91sam9g25, at91sam9g35, at91sam9x25 and at91sam9x35. This compatible =
+string
+> is used for all the devices from and after the at91sam9x5 family: at91s=
+am9n12,
+> samad3x, etc.
+>=20
+>> I picked at91sam9x5-can for the non devicetree driver out of the blue,=
 
-In the current version (rogerq/v3.8-usbhost17-dt) of this patch you've
-put both needs_* into the private data struct and the pdata, but it's
-only used inside the probe function.
+>> as there was no scheme established, yet. I'm not hanging on that name,=
 
-regards,
+>> I'd rather appreciate to follow the common at91 DT rules.
+>=20
+> It follows at91 Dt rules, we have atmel,at91sam9x5-i2c, atmel,at91sam9x=
+5-gpio
+> and others.
+
+That's okay then, just wanted to clarify this. Can you send a v2, then
+I'll apply the patches.
+
 Marc
 
 --=20
@@ -83,7 +93,7 @@ Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
 Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
-------enig2QWRIMRQJILDKOKEGTLSL
+------enig2SPIDKVGVXOTBXUCWNAAQ
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
@@ -92,22 +102,9 @@ Content-Disposition: attachment; filename="signature.asc"
 Version: GnuPG v1.4.12 (GNU/Linux)
 Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iEYEARECAAYFAlE9/xsACgkQjTAFq1RaXHOWhgCfXLUu1SsrO85DKNMpgLlsAQry
-EeAAnj2kFjkQh5rLWK61G1Exc68vCfgw
-=ZGO5
+iEYEARECAAYFAlE9/2wACgkQjTAFq1RaXHNy4gCdHhloTCVEzp+YeFilfyRoLAAq
+ylwAnjqXSe/mRXjCeg6/VpicUL1ffPoB
+=UGrr
 -----END PGP SIGNATURE-----
 
-------enig2QWRIMRQJILDKOKEGTLSL--
-
---===============8090482572913820535==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-devicetree-discuss mailing list
-devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-https://lists.ozlabs.org/listinfo/devicetree-discuss
-
---===============8090482572913820535==--
+------enig2SPIDKVGVXOTBXUCWNAAQ--
