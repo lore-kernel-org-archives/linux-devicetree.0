@@ -1,133 +1,182 @@
-From: Jon Hunter <jon-hunter@ti.com>
-Subject: Re: [PATCH 1/1] ARM: OMAP: gpmc: request CS address space for ethernet
- chips
-Date: Mon, 11 Mar 2013 12:13:19 -0500
-Message-ID: <513E10AF.2080802@ti.com>
-References: <1362935902-29720-1-git-send-email-javier.martinez@collabora.co.uk>
+From: <ludovic.desroches@atmel.com>
+Subject: [PATCH v2 1/2] can: at91_can: add dt support
+Date: Mon, 11 Mar 2013 18:26:03 +0100
+Message-ID: <1363022764-7647-1-git-send-email-ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1362935902-29720-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Benoit Cousson <b-cousson@ti.com>, Tony Lindgren <tony@atomide.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@secretlab.ca>, Enric Balletbo i Serra <eballetbo@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-omap <linux-omap@vger.kernel.org>, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-can-owner@vger.kernel.org>
+Sender: linux-can-owner@vger.kernel.org
+To: linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org
+Cc: nicolas.ferre@atmel.com, plagnioj@jcrosoft.com, mkl@pengutronix.de, Ludovic Desroches <ludovic.desroches@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Ludovic Desroches <ludovic.desroches@atmel.com>
 
-On 03/10/2013 12:18 PM, Javier Martinez Canillas wrote:
-> Besides being used to interface with external memory devices,
-> the General-Purpose Memory Controller can be used to connect
-> Pseudo-SRAM devices such as ethernet controllers to OMAP2+
-> processors using the GPMC as a data bus.
-> 
-> The actual mapping between the GPMC address space and OMAP2+
-> address space is made using the GPMC DT "ranges" property.
-> But also a explicit call to gpmc_cs_request() is needed.
+Add device tree support.
 
-One problem with gpmc_cs_request() is that it will map the chip-select
-to any physical location in the 1GB address space for the gpmc
-controller. So in other words, it will ignore the ranges property
-altogether. If you look at my code for NOR, I have added a
-gpmc_cs_remap() function to remap the cs to the location as specified by
-the device-tree.
+Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
+---
+Changes in v2:
+- code cleanup
+- correct typo
 
-Ideally we should change gpmc_cs_request() so we can pass the desire
-base address that we want to map the gpmc cs too. I had started out that
-way but it made the code some what messy and so I opted to create a
-gpmc_cs_remap() function instead. The goal will be to get rid of
-gpmc_cs_remap() once DT migration is completed and we can change
-gpmc_cs_request() to map the cs to a specific address (see my FIXME
-comment).
+ .../devicetree/bindings/net/can/atmel-can.txt      | 14 ++++
+ drivers/net/can/at91_can.c                         | 74 ++++++++++++++++------
+ 2 files changed, 69 insertions(+), 19 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/can/atmel-can.txt
 
-Your code probably works today because the cs is setup by the bootloader
-and so when you request the cs in the kernel the mapping is not changed
-from the bootloader settings. However, if the mapping in DT (ranges
-property) is different from that setup by the bootloader then the kernel
-would probably crash because the kernel would not remap it as expected.
+diff --git a/Documentation/devicetree/bindings/net/can/atmel-can.txt b/Documentation/devicetree/bindings/net/can/atmel-can.txt
+new file mode 100644
+index 0000000..72cf0c5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/atmel-can.txt
+@@ -0,0 +1,14 @@
++* AT91 CAN *
++
++Required properties:
++  - compatible: Should be "atmel,at91sam9263-can" or "atmel,at91sam9x5-can"
++  - reg: Should contain CAN controller registers location and length
++  - interrupts: Should contain IRQ line for the CAN controller
++
++Example:
++
++	can0: can@f000c000 {
++		compatbile = "atmel,at91sam9x5-can";
++		reg = <0xf000c000 0x300>;
++		interrupts = <40 4 5>
++	};
+diff --git a/drivers/net/can/at91_can.c b/drivers/net/can/at91_can.c
+index 44f3637..8c113f5 100644
+--- a/drivers/net/can/at91_can.c
++++ b/drivers/net/can/at91_can.c
+@@ -27,6 +27,7 @@
+ #include <linux/kernel.h>
+ #include <linux/module.h>
+ #include <linux/netdevice.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/rtnetlink.h>
+ #include <linux/skbuff.h>
+@@ -155,19 +156,20 @@ struct at91_priv {
+ 	canid_t mb0_id;
+ };
+ 
+-static const struct at91_devtype_data at91_devtype_data[] = {
+-	[AT91_DEVTYPE_SAM9263] = {
+-		.rx_first = 1,
+-		.rx_split = 8,
+-		.rx_last = 11,
+-		.tx_shift = 2,
+-	},
+-	[AT91_DEVTYPE_SAM9X5] = {
+-		.rx_first = 0,
+-		.rx_split = 4,
+-		.rx_last = 5,
+-		.tx_shift = 1,
+-	},
++static struct at91_devtype_data at91_at91sam9263_data = {
++	.rx_first = 1,
++	.rx_split = 8,
++	.rx_last = 11,
++	.tx_shift = 2,
++	.type = AT91_DEVTYPE_SAM9263,
++};
++
++static struct at91_devtype_data at91_at91sam9x5_data = {
++	.rx_first = 0,
++	.rx_split = 4,
++	.rx_last = 5,
++	.tx_shift = 1,
++	.type = AT91_DEVTYPE_SAM9X5,
+ };
+ 
+ static const struct can_bittiming_const at91_bittiming_const = {
+@@ -1249,10 +1251,40 @@ static struct attribute_group at91_sysfs_attr_group = {
+ 	.attrs = at91_sysfs_attrs,
+ };
+ 
++#if defined(CONFIG_OF)
++static const struct of_device_id at91_can_dt_ids[] = {
++	{
++		.compatible = "atmel,at91sam9x5-can",
++		.data = &at91_at91sam9x5_data,
++	}, {
++		.compatible = "atmel,at91sam9263-can",
++		.data = &at91_at91sam9263_data,
++	}, {
++		/* sentinel */
++	}
++};
++MODULE_DEVICE_TABLE(of, at91_can_dt_ids);
++#else
++#define at91_can_dt_ids NULL
++#endif
++
++static struct at91_devtype_data* at91_can_get_driver_data(struct platform_device *pdev)
++{
++	if (pdev->dev.of_node) {
++		const struct of_device_id *match;
++		match = of_match_node(at91_can_dt_ids, pdev->dev.of_node);
++		if (!match) {
++			dev_err(&pdev->dev, "no matching node found in dtb\n");
++			return NULL;
++		}
++		return (struct at91_devtype_data *)match->data;
++	}
++	return (struct at91_devtype_data *)platform_get_device_id(pdev)->driver_data;
++}
++
+ static int at91_can_probe(struct platform_device *pdev)
+ {
+ 	const struct at91_devtype_data *devtype_data;
+-	enum at91_devtype devtype;
+ 	struct net_device *dev;
+ 	struct at91_priv *priv;
+ 	struct resource *res;
+@@ -1260,8 +1292,12 @@ static int at91_can_probe(struct platform_device *pdev)
+ 	void __iomem *addr;
+ 	int err, irq;
+ 
+-	devtype = pdev->id_entry->driver_data;
+-	devtype_data = &at91_devtype_data[devtype];
++	devtype_data = at91_can_get_driver_data(pdev);
++	if (!devtype_data) {
++		dev_err(&pdev->dev, "no driver data\n");
++		err = -ENODEV;
++		goto exit;
++	}
+ 
+ 	clk = clk_get(&pdev->dev, "can_clk");
+ 	if (IS_ERR(clk)) {
+@@ -1310,7 +1346,6 @@ static int at91_can_probe(struct platform_device *pdev)
+ 	priv->dev = dev;
+ 	priv->reg_base = addr;
+ 	priv->devtype_data = *devtype_data;
+-	priv->devtype_data.type = devtype;
+ 	priv->clk = clk;
+ 	priv->pdata = pdev->dev.platform_data;
+ 	priv->mb0_id = 0x7ff;
+@@ -1373,10 +1408,10 @@ static int at91_can_remove(struct platform_device *pdev)
+ static const struct platform_device_id at91_can_id_table[] = {
+ 	{
+ 		.name = "at91_can",
+-		.driver_data = AT91_DEVTYPE_SAM9263,
++		.driver_data = (unsigned long)&at91_at91sam9x5_data,
+ 	}, {
+ 		.name = "at91sam9x5_can",
+-		.driver_data = AT91_DEVTYPE_SAM9X5,
++		.driver_data = (unsigned long)&at91_at91sam9263_data,
+ 	}, {
+ 		/* sentinel */
+ 	}
+@@ -1389,6 +1424,7 @@ static struct platform_driver at91_can_driver = {
+ 	.driver = {
+ 		.name = KBUILD_MODNAME,
+ 		.owner = THIS_MODULE,
++		.of_match_table = at91_can_dt_ids,
+ 	},
+ 	.id_table = at91_can_id_table,
+ };
+-- 
+1.7.11.3
 
-> So, this patch allows an ethernet chip to be defined as an
-> GPMC child node an its chip-select memory address be requested.
-> 
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> ---
-> 
-> Jon,
-> 
-> This patch assumes that we have solved somehow the issue that a
-> call to request_irq() is needed before before using a GPIO as an
-> IRQ and this is no longer the case when using from Device Trees.
-> 
-> Anyway, this is independent as how we solve this, whether is
-> using Jan's patch [1], adding a .request function pointer to
-> irq_chip as suggested by Stephen [2], or any other approach.
-> 
-> [1]: https://patchwork.kernel.org/patch/2009331/
-> [2]: http://www.mail-archive.com/linux-omap@vger.kernel.org/msg85592.html
-> 
->  arch/arm/mach-omap2/gpmc.c |   45 ++++++++++++++++++++++++++++++++++++++++++++
->  1 files changed, 45 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap2/gpmc.c b/arch/arm/mach-omap2/gpmc.c
-> index 4fe9ee7..d1bf48b 100644
-> --- a/arch/arm/mach-omap2/gpmc.c
-> +++ b/arch/arm/mach-omap2/gpmc.c
-> @@ -29,6 +29,7 @@
->  #include <linux/of.h>
->  #include <linux/of_mtd.h>
->  #include <linux/of_device.h>
-> +#include <linux/of_address.h>
->  #include <linux/mtd/nand.h>
->  
->  #include <linux/platform_data/mtd-nand-omap2.h>
-> @@ -1296,6 +1297,42 @@ static int gpmc_probe_onenand_child(struct platform_device *pdev,
->  }
->  #endif
->  
-> +static int gpmc_probe_ethernet_child(struct platform_device *pdev,
-> +				     struct device_node *child)
-> +{
-> +	int ret, cs;
-> +	unsigned long base;
-> +	struct resource res;
-> +	struct platform_device *of_dev;
-> +
-> +	if (of_property_read_u32(child, "reg", &cs) < 0) {
-> +		dev_err(&pdev->dev, "%s has no 'reg' property\n",
-> +			child->full_name);
-> +		return -ENODEV;
-> +	}
-> +
-> +	if (of_address_to_resource(child, 0, &res)) {
-> +		dev_err(&pdev->dev, "%s has malformed 'reg' property\n",
-> +			child->full_name);
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = gpmc_cs_request(cs, resource_size(&res), &base);
-> +	if (IS_ERR_VALUE(ret)) {
-> +		dev_err(&pdev->dev, "cannot request GPMC CS %d\n", cs);
-> +		return ret;
-> +	}
-> +
-> +	of_dev = of_platform_device_create(child, NULL, &pdev->dev);
-> +	if (!of_dev) {
-> +		dev_err(&pdev->dev, "cannot create platform device for %s\n",
-> +			child->full_name);
-> +		return -ENODEV;
-> +	}
-> +
-> +	return 0;
-> +}
-
-So this function does not setup the cs at all and so that means you are
-dependent on having the bootloader configure the cs. I would really like
-to get away from that sort of dependency. In fact I am wondering if we
-could make the gpmc_probe_nor() function a gpmc_probe_generic() that we
-can use for both nor and ethernet as we are doing very similar things
-(if we add the timings and gpmc settings to the ethernet binding).
-
-Also I think we need to add some DT binding documentation for this as well.
-
-Cheers
-Jon
