@@ -1,40 +1,81 @@
-From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH -next] USB: misc: usb3503: use module_i2c_driver to simplify
- the code
-Date: Mon, 11 Mar 2013 23:23:23 +0800
-Message-ID: <CAPgLHd-=tRN+3pj0o+_OPHkYzjphNEzydz+Q9e-0ut-bRbiejQ@mail.gmail.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] can: at91_can: add dt support
+Date: Mon, 11 Mar 2013 16:39:56 +0100
+Message-ID: <4097.59588442302$1363016445@news.gmane.org>
+References: <1362763842-14924-1-git-send-email-ludovic.desroches@atmel.com>
+ <1362763842-14924-2-git-send-email-ludovic.desroches@atmel.com>
+ <513A2365.5050803@pengutronix.de>
+ <20130311091722.GA2572@ludovic.desroches@atmel.com>
+ <513DF46E.7000903@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
-Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <513DF46E.7000903-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Marc Kleine-Budde <mkl-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-can-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+On Mon, Mar 11, 2013 at 04:12:46PM +0100, Marc Kleine-Budde wrote:
+> On 03/11/2013 10:17 AM, Ludovic Desroches wrote:
+> > On Fri, Mar 08, 2013 at 06:44:05PM +0100, Marc Kleine-Budde wrote:
+> >> On 03/08/2013 06:30 PM, ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org wrote:
+> >>> From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> >>>
+> >>> Add device tree support.
+> >>>
+> >>> Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+> >>> ---
+> >>>  .../devicetree/bindings/net/can/atmel-can.txt      | 14 ++++
+> >>>  drivers/net/can/at91_can.c                         | 75 ++++++++++++++++------
+> >>>  2 files changed, 70 insertions(+), 19 deletions(-)
+> >>>  create mode 100644 Documentation/devicetree/bindings/net/can/atmel-can.txt
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/net/can/atmel-can.txt b/Documentation/devicetree/bindings/net/can/atmel-can.txt
+> >>> new file mode 100644
+> >>> index 0000000..69381db
+> >>> --- /dev/null
+> >>> +++ b/Documentation/devicetree/bindings/net/can/atmel-can.txt
+> >>> @@ -0,0 +1,14 @@
+> >>> +* AT91 CAN *
+> >>> +
+> >>> +Required properties:
+> >>> +  - compatible: Should be "atmel,at91sam9263-can" or "atmel,at91sam9x5-can"
+> >>
+> >> On imx we use the oldest SoC with that IP available. Which strategy are
+> >> you following on at91?
+> >>
+> > 
+> > We are using the same strategy.
+> 
+> But "atmel,at91sam9x5-can" isn't a specific SoC, probably a SoC family.
+> Or are you using "atmel,at91sam9x5-can" for the other devices in the DT,
+> too.
+> 
 
-Use the module_i2c_driver() macro to make the code smaller
-and a bit simpler.
+You are right at91sam9x5 is not a specific SoC but a family of SoCs:
+at91sam9g25, at91sam9g35, at91sam9x25 and at91sam9x35. This compatible string
+is used for all the devices from and after the at91sam9x5 family: at91sam9n12,
+samad3x, etc.
 
-Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
----
- drivers/usb/misc/usb3503.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+> I picked at91sam9x5-can for the non devicetree driver out of the blue,
+> as there was no scheme established, yet. I'm not hanging on that name,
+> I'd rather appreciate to follow the common at91 DT rules.
 
-diff --git a/drivers/usb/misc/usb3503.c b/drivers/usb/misc/usb3503.c
-index f713f6a..d3a1cce 100644
---- a/drivers/usb/misc/usb3503.c
-+++ b/drivers/usb/misc/usb3503.c
-@@ -307,18 +307,7 @@ static struct i2c_driver usb3503_driver = {
- 	.id_table	= usb3503_id,
- };
- 
--static int __init usb3503_init(void)
--{
--	return i2c_add_driver(&usb3503_driver);
--}
--
--static void __exit usb3503_exit(void)
--{
--	i2c_del_driver(&usb3503_driver);
--}
+It follows at91 Dt rules, we have atmel,at91sam9x5-i2c, atmel,at91sam9x5-gpio
+and others.
+
+Regards
+
+Ludovic
