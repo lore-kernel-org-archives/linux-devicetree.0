@@ -1,53 +1,42 @@
-From: Benoit Cousson <b-cousson@ti.com>
-Subject: Re: [Resend/PATCH 0/5] omap4/5: i2c/spi: device tree data
-Date: Mon, 11 Mar 2013 15:32:01 +0100
-Message-ID: <513DEAE1.1050606@ti.com>
-References: <1363009486-19430-1-git-send-email-sourav.poddar@ti.com>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH -next] mmc: wmt-sdmmc: remove unused variable in wmt_complete_data_request()
+Date: Mon, 11 Mar 2013 22:36:09 +0800
+Message-ID: <CAPgLHd-7nVD3=83wpNtw1cBmkr+xs5iD7tuxZM+PdxWPLtwZsQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1363009486-19430-1-git-send-email-sourav.poddar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sourav Poddar <sourav.poddar@ti.com>
-Cc: tony@atomide.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, santosh.shilimkar@ti.com, Andrew Morton <akpm@osdl.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux@prisktech.co.nz, cjb@laptop.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sourav,
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-On 03/11/2013 02:44 PM, Sourav Poddar wrote:
-> Hi Tony/Benoit,
-> 
-> These patches had been sent couple of times before, but there were no comments on it.
+The variable 'mmc' is initialized but never used
+otherwise, so remove the unused variable.
 
-Sorry for that. I got a big flu in Jan and was in Linaro Connect last week.
-Patches look good, I just have to check that they apply nicely to the
-dts/for_3.9 I already prepared.
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+---
+ drivers/mmc/host/wmt-sdmmc.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-I still have to rebase that branch on top of a recent master branch and
-then check your branch.
+diff --git a/drivers/mmc/host/wmt-sdmmc.c b/drivers/mmc/host/wmt-sdmmc.c
+index 154f0e8..41d5802 100644
+--- a/drivers/mmc/host/wmt-sdmmc.c
++++ b/drivers/mmc/host/wmt-sdmmc.c
+@@ -348,13 +348,11 @@ static void wmt_complete_data_request(struct wmt_mci_priv *priv)
+ 
+ static irqreturn_t wmt_mci_dma_isr(int irq_num, void *data)
+ {
+-	struct mmc_host *mmc;
+ 	struct wmt_mci_priv *priv;
+ 
+ 	int status;
+ 
+ 	priv = (struct wmt_mci_priv *)data;
+-	mmc = priv->mmc;
+ 
+ 	status = readl(priv->sdmmc_base + SDDMA_CCR) & 0x0F;
+ 
 
-> If there are no comments, Can these be picked ? 
-
-> 
-> Cc: Andrew Morton <akpm@osdl.org>
->  
-> The following changes since commit f6161aa153581da4a3867a2d1a7caf4be19b6ec9:
-> 
->   Linux 3.9-rc2 (2013-03-10 16:54:19 -0700)
-> 
-> are available in the git repository at:
->   git@gitorious.org:linux-connectivity/linux-connectivity.git omap_i2c_spi_dts_data
-> 
-> Felipe Balbi (1):
->       arm: dts: omap5: add SPI devices to OMAP5 DeviceTree file
-> 
-> Sourav Poddar (4):
->       arm: dts: omap4-sdp: Add I2c pinctrl data
->       arm: dts: omap5-evm: Add I2c pinctrl data
->       arm: dts: omap4-panda: Add I2c pinctrl data
->       arm: dts: omap5-evm: Add mcspi data
-
-Thanks,
-Benoit
 
