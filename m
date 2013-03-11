@@ -1,86 +1,33 @@
-From: Sourav Poddar <sourav.poddar@ti.com>
-Subject: [Resend/PATCH 5/5] arm: dts: omap5-evm: Add mcspi data
-Date: Mon, 11 Mar 2013 19:16:13 +0530
-Message-ID: <1363009573-19596-1-git-send-email-sourav.poddar@ti.com>
+From: Wei Yongjun <weiyj.lk@gmail.com>
+Subject: [PATCH -next] microblaze/PCI: remove duplicated include from pci-common.c
+Date: Mon, 11 Mar 2013 22:13:30 +0800
+Message-ID: <CAPgLHd9ufsjGd9CvVf7y3jMXoN=rh7uc7jxiwZ9FHSeJ+XRzUQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-Sender: linux-omap-owner@vger.kernel.org
-To: tony@atomide.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, santosh.shilimkar@ti.com, b-cousson@ti.com
-Cc: Sourav Poddar <sourav.poddar@ti.com>, Andrew Morton <akpm@osdl.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: monstr@monstr.eu, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add mcspi node and pinmux data for omap5 mcspi controller.
+From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Tested on omap5430 evm with 3.9-rc2 custom kernel.
+Remove duplicated include.
 
-Cc: Andrew Morton <akpm@osdl.org>
-Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 ---
- arch/arm/boot/dts/omap5-evm.dts |   46 +++++++++++++++++++++++++++++++++++++++
- 1 files changed, 46 insertions(+), 0 deletions(-)
+ arch/microblaze/pci/pci-common.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/omap5-evm.dts b/arch/arm/boot/dts/omap5-evm.dts
-index a4784be..d0ea53c 100644
---- a/arch/arm/boot/dts/omap5-evm.dts
-+++ b/arch/arm/boot/dts/omap5-evm.dts
-@@ -115,6 +115,33 @@
- 			0x186 0x100     /* i2c5_sda INPUTENABLE | MODE0 */
- 		>;
- 	};
-+
-+	mcspi2_pins: pinmux_mcspi2_pins {
-+		pinctrl-single,pins = <
-+			0xbc 0x100	/*  MCSPI2_CLK INPUTENABLE | MODE0 */
-+			0xbe 0x100	/*  MCSPI2_SIMO INPUTENABLE | MODE0 */
-+			0xc0 0x118	/*  MCSPI2_SOMI PULLUP | INPUTENABLE | MODE0 */
-+			0xc2 0x0	/*  MCSPI2_CS MODE0 */
-+		>;
-+	};
-+
-+	mcspi3_pins: pinmux_mcspi3_pins {
-+		pinctrl-single,pins = <
-+			0x78 0x101	/*  MCSPI2_SOMI INPUTENABLE | MODE1 */
-+			0x7a 0x101	/*  MCSPI2_CS INPUTENABLE | MODE1 */
-+			0x7c 0x101	/*  MCSPI2_SIMO INPUTENABLE | MODE1 */
-+			0x7e 0x101	/*  MCSPI2_CLK INPUTENABLE | MODE1 */
-+		>;
-+	};
-+
-+	mcspi4_pins: pinmux_mcspi4_pins {
-+		pinctrl-single,pins = <
-+			0x164 0x101	/*  MCSPI2_CLK INPUTENABLE | MODE1 */
-+			0x168 0x101	/*  MCSPI2_SIMO INPUTENABLE | MODE1 */
-+			0x16a 0x101	/*  MCSPI2_SOMI INPUTENABLE | MODE1 */
-+			0x16c 0x101	/*  MCSPI2_CS INPUTENABLE | MODE1 */
-+		>;
-+	};
- };
+diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
+index 9ea521e..bdb8ea1 100644
+--- a/arch/microblaze/pci/pci-common.c
++++ b/arch/microblaze/pci/pci-common.c
+@@ -30,7 +30,6 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
+-#include <linux/pci.h>
+ #include <linux/export.h>
  
- &mmc1 {
-@@ -213,3 +240,22 @@
- 	cs1-used;
- 	device-handle = <&samsung_K3PE0E000B>;
- };
-+
-+&mcspi1 {
-+
-+};
-+
-+&mcspi2 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcspi2_pins>;
-+};
-+
-+&mcspi3 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcspi3_pins>;
-+};
-+
-+&mcspi4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&mcspi4_pins>;
-+};
--- 
-1.7.1
-
+ #include <asm/processor.h>
