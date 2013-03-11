@@ -1,183 +1,56 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: [RFC PATCH 8/8] s5p-fimc: Create media links for the FIMC-IS entities
-Date: Mon, 11 Mar 2013 20:44:52 +0100
-Message-ID: <1363031092-29950-9-git-send-email-s.nawrocki@samsung.com>
-References: <1363031092-29950-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1363031092-29950-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: kyungmin.park@samsung.com, myungjoo.ham@samsung.com, dh09.lee@samsung.com, shaik.samsung@gmail.com, arun.kk@samsung.com, a.hajda@samsung.com, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, Sylwester Nawrocki <s.nawrocki@samsung.com>
+From: Mitch Bradley <wmb-D5eQfiDGL7eakBO8gow8eQ@public.gmane.org>
+Subject: Re: [PATCH 24/32] pci: PCIe driver for Marvell Armada 370/XP systems
+Date: Mon, 11 Mar 2013 09:49:10 -1000
+Message-ID: <513E3536.2060104@firmworks.com>
+References: <20130308191227.GA6551@avionic-0098.mockup.avionic-design.de>
+ <513A3F4F.2090501@firmworks.com>
+ <20130308200245.GC29435@obsidianresearch.com>
+ <513A7845.6040304@firmworks.com> <20130309013152.GA3883@obsidianresearch.com>
+ <513C117D.6080800@firmworks.com>
+ <20130310065539.GA14704@obsidianresearch.com>
+ <513D6F9C.9000100@firmworks.com>
+ <20130311074615.GA6365@avionic-0098.mockup.avionic-design.de>
+ <513E1CBA.4040007@firmworks.com>
+ <20130311182339.GB10992@obsidianresearch.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-Reply-To: <20130311182339.GB10992-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Eran Ben-Avi <benavi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Maen Suleiman <maen-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Shadi Ammouri <shadi-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Create disabled links from the FIMC-LITE subdevs to the FIMC-IS-ISP
-subdev and from FIMC-IS-ISP to all FIMC subdevs.
+On 3/11/2013 8:23 AM, Jason Gunthorpe wrote:
+>> (b) The discovery/enumeration code needs to access config space via
+>> pci_ops.  The root complex driver implements pci_ops based on a trivial
+>> parsing of ranges (omitting irrelevant details):
+>>
+>> pci_op_read(devfn, pos) {
+>>    loop_over_ranges_entries {
+>>       if (to_devfn(ranges_entry.child) == devfn) {
+>>          return mmio_read(ranges_entry.parent + pos);
+>                             ^^^^^^^^^^^^^^^^^^^
+> 
+> This has to be converted through all enclosing node's ranges prior to
+> being used as a CPU address - the OF core has all the code to do this,
+> but a new entry point would be needed for this specific application...
 
-Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Signed-off-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- drivers/media/platform/s5p-fimc/fimc-mdevice.c |   78 +++++++++++++++++++-----
- 1 file changed, 62 insertions(+), 16 deletions(-)
+Agreed.  But I was considering that detail to be outside the scope of
+this discussion because the same thing must happen for any physical
+address at this level of the tree.
 
-diff --git a/drivers/media/platform/s5p-fimc/fimc-mdevice.c b/drivers/media/platform/s5p-fimc/fimc-mdevice.c
-index 1521dec..5304da5 100644
---- a/drivers/media/platform/s5p-fimc/fimc-mdevice.c
-+++ b/drivers/media/platform/s5p-fimc/fimc-mdevice.c
-@@ -807,9 +807,17 @@ static int __fimc_md_create_fimc_sink_links(struct fimc_md *fmd,
- 	struct fimc_sensor_info *s_info = NULL;
- 	struct media_entity *sink;
- 	unsigned int flags = 0;
--	int ret, i;
-+	int i, ret = 0;
- 
--	for (i = 0; i < FIMC_MAX_DEVS; i++) {
-+	if (sensor) {
-+		s_info = v4l2_get_subdev_hostdata(sensor);
-+		/* Skip direct FIMC links in the logical FIMC-IS sensor path */
-+		if (s_info && s_info->pdata.fimc_bus_type ==
-+		    FIMC_BUS_TYPE_ISP_WRITEBACK)
-+			ret = 1;
-+	}
-+
-+	for (i = 0; !ret && i < FIMC_MAX_DEVS; i++) {
- 		if (!fmd->fimc[i])
- 			continue;
- 		/*
-@@ -838,7 +846,7 @@ static int __fimc_md_create_fimc_sink_links(struct fimc_md *fmd,
- 
- 		if (flags == 0 || sensor == NULL)
- 			continue;
--		s_info = v4l2_get_subdev_hostdata(sensor);
-+
- 		if (!WARN_ON(s_info == NULL)) {
- 			unsigned long irq_flags;
- 			spin_lock_irqsave(&fmd->slock, irq_flags);
-@@ -851,25 +859,20 @@ static int __fimc_md_create_fimc_sink_links(struct fimc_md *fmd,
- 		if (!fmd->fimc_lite[i])
- 			continue;
- 
--		if (link_mask & (1 << (i + FIMC_MAX_DEVS)))
--			flags = MEDIA_LNK_FL_ENABLED;
--		else
--			flags = 0;
--
- 		sink = &fmd->fimc_lite[i]->subdev.entity;
- 		ret = media_entity_create_link(source, pad, sink,
--					       FLITE_SD_PAD_SINK, flags);
-+					       FLITE_SD_PAD_SINK, 0);
- 		if (ret)
- 			return ret;
- 
- 		/* Notify FIMC-LITE subdev entity */
- 		ret = media_entity_call(sink, link_setup, &sink->pads[0],
--					&source->pads[pad], flags);
-+					&source->pads[pad], 0);
- 		if (ret)
- 			break;
- 
--		v4l2_info(&fmd->v4l2_dev, "created link [%s] %c> [%s]\n",
--			  source->name, flags ? '=' : '-', sink->name);
-+		v4l2_info(&fmd->v4l2_dev, "created link [%s] -> [%s]\n",
-+			  source->name, sink->name);
- 	}
- 	return 0;
- }
-@@ -878,26 +881,59 @@ static int __fimc_md_create_fimc_sink_links(struct fimc_md *fmd,
- static int __fimc_md_create_flite_source_links(struct fimc_md *fmd)
- {
- 	struct media_entity *source, *sink;
--	unsigned int flags = MEDIA_LNK_FL_ENABLED;
- 	int i, ret = 0;
- 
- 	for (i = 0; i < FIMC_LITE_MAX_DEVS; i++) {
- 		struct fimc_lite *fimc = fmd->fimc_lite[i];
-+
- 		if (fimc == NULL)
- 			continue;
-+
- 		source = &fimc->subdev.entity;
- 		sink = &fimc->vfd.entity;
- 		/* FIMC-LITE's subdev and video node */
- 		ret = media_entity_create_link(source, FLITE_SD_PAD_SOURCE_DMA,
--					       sink, 0, flags);
-+					       sink, 0, 0);
-+		if (ret)
-+			break;
-+		/* Link from FIMC-LITE to IS-ISP subdev */
-+		sink = &fmd->fimc_is->isp.subdev.entity;
-+		ret = media_entity_create_link(source, FLITE_SD_PAD_SOURCE_ISP,
-+					       sink, 0, 0);
- 		if (ret)
- 			break;
--		/* TODO: create links to other entities */
- 	}
- 
- 	return ret;
- }
- 
-+/* Create FIMC-IS links */
-+static int __fimc_md_create_fimc_is_links(struct fimc_md *fmd)
-+{
-+	struct media_entity *source, *sink;
-+	int i, ret;
-+
-+	source = &fmd->fimc_is->isp.subdev.entity;
-+
-+	for (i = 0; i < FIMC_MAX_DEVS; i++) {
-+		if (fmd->fimc[i] == NULL)
-+			continue;
-+
-+		/* Link from IS-ISP subdev to FIMC */
-+		sink = &fmd->fimc[i]->vid_cap.subdev.entity;
-+		ret = media_entity_create_link(source, FIMC_IS_SD_PAD_SRC_FIFO,
-+					       sink, FIMC_SD_PAD_SINK_FIFO, 0);
-+		if (ret)
-+			return ret;
-+	}
-+
-+	/* Link from IS-ISP subdev to is.isp capture video node */
-+	sink = &fmd->fimc_is->isp.vfd.entity;
-+	ret = media_entity_create_link(source, FIMC_IS_SD_PAD_SRC_DMA,
-+					       sink, 0, 0);
-+	return ret;
-+}
-+
- /**
-  * fimc_md_create_links - create default links between registered entities
-  *
-@@ -980,6 +1016,7 @@ static int fimc_md_create_links(struct fimc_md *fmd)
- 	for (i = 0; i < CSIS_MAX_ENTITIES; i++) {
- 		if (fmd->csis[i].sd == NULL)
- 			continue;
-+
- 		source = &fmd->csis[i].sd->entity;
- 		pad = CSIS_PAD_SOURCE;
- 		sensor = csi_sensors[i];
-@@ -994,15 +1031,24 @@ static int fimc_md_create_links(struct fimc_md *fmd)
- 	for (i = 0; i < FIMC_MAX_DEVS; i++) {
- 		if (!fmd->fimc[i])
- 			continue;
-+
- 		source = &fmd->fimc[i]->vid_cap.subdev.entity;
- 		sink = &fmd->fimc[i]->vid_cap.vfd.entity;
-+
- 		ret = media_entity_create_link(source, FIMC_SD_PAD_SOURCE,
- 					      sink, 0, flags);
- 		if (ret)
- 			break;
- 	}
- 
--	return __fimc_md_create_flite_source_links(fmd);
-+	ret = __fimc_md_create_flite_source_links(fmd);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (fmd->use_isp)
-+		ret = __fimc_md_create_fimc_is_links(fmd);
-+
-+	return ret;
- }
- 
- /*
--- 
-1.7.9.5
+> 
+> Cheers,
+> Jason
+> 
