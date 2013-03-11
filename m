@@ -1,230 +1,124 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v2 1/2] can: at91_can: add dt support
-Date: Mon, 11 Mar 2013 18:32:19 +0100
-Message-ID: <513E1523.4010803@pengutronix.de>
-References: <1363022764-7647-1-git-send-email-ludovic.desroches@atmel.com>
+From: Jon Hunter <jon-hunter@ti.com>
+Subject: Re: [PATCH 4/9] ARM: dts: OMAP3: Add support for OMAP3430 SDP board
+Date: Mon, 11 Mar 2013 12:53:32 -0500
+Message-ID: <513E1A1C.8070206@ti.com>
+References: <1362763654-9660-1-git-send-email-jon-hunter@ti.com> <1362763654-9660-5-git-send-email-jon-hunter@ti.com> <CABYxbz7Bg3Uf2wkhH=4d6nEPUjyHF8BiixN6rGCOgEVG_us8Jw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2TSWAPBVOXIMCEXTTRXNJ"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <1363022764-7647-1-git-send-email-ludovic.desroches@atmel.com>
-Sender: linux-can-owner@vger.kernel.org
-To: ludovic.desroches@atmel.com
-Cc: linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <CABYxbz7Bg3Uf2wkhH=4d6nEPUjyHF8BiixN6rGCOgEVG_us8Jw@mail.gmail.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Anil Kumar <anilk4.v@gmail.com>
+Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2TSWAPBVOXIMCEXTTRXNJ
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
 
-On 03/11/2013 06:26 PM, ludovic.desroches@atmel.com wrote:
-> From: Ludovic Desroches <ludovic.desroches@atmel.com>
->=20
-> Add device tree support.
->=20
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> ---
-> Changes in v2:
-> - code cleanup
-> - correct typo
->=20
->  .../devicetree/bindings/net/can/atmel-can.txt      | 14 ++++
->  drivers/net/can/at91_can.c                         | 74 ++++++++++++++=
-++------
->  2 files changed, 69 insertions(+), 19 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/net/can/atmel-can=
-=2Etxt
->=20
-> diff --git a/Documentation/devicetree/bindings/net/can/atmel-can.txt b/=
-Documentation/devicetree/bindings/net/can/atmel-can.txt
-> new file mode 100644
-> index 0000000..72cf0c5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/can/atmel-can.txt
-> @@ -0,0 +1,14 @@
-> +* AT91 CAN *
-> +
-> +Required properties:
-> +  - compatible: Should be "atmel,at91sam9263-can" or "atmel,at91sam9x5=
--can"
-> +  - reg: Should contain CAN controller registers location and length
-> +  - interrupts: Should contain IRQ line for the CAN controller
-> +
-> +Example:
-> +
-> +	can0: can@f000c000 {
-> +		compatbile =3D "atmel,at91sam9x5-can";
-> +		reg =3D <0xf000c000 0x300>;
-> +		interrupts =3D <40 4 5>
-> +	};
-> diff --git a/drivers/net/can/at91_can.c b/drivers/net/can/at91_can.c
-> index 44f3637..8c113f5 100644
-> --- a/drivers/net/can/at91_can.c
-> +++ b/drivers/net/can/at91_can.c
-> @@ -27,6 +27,7 @@
->  #include <linux/kernel.h>
->  #include <linux/module.h>
->  #include <linux/netdevice.h>
-> +#include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/rtnetlink.h>
->  #include <linux/skbuff.h>
-> @@ -155,19 +156,20 @@ struct at91_priv {
->  	canid_t mb0_id;
->  };
-> =20
-> -static const struct at91_devtype_data at91_devtype_data[] =3D {
-> -	[AT91_DEVTYPE_SAM9263] =3D {
-> -		.rx_first =3D 1,
-> -		.rx_split =3D 8,
-> -		.rx_last =3D 11,
-> -		.tx_shift =3D 2,
-> -	},
-> -	[AT91_DEVTYPE_SAM9X5] =3D {
-> -		.rx_first =3D 0,
-> -		.rx_split =3D 4,
-> -		.rx_last =3D 5,
-> -		.tx_shift =3D 1,
-> -	},
-> +static struct at91_devtype_data at91_at91sam9263_data =3D {
-> +	.rx_first =3D 1,
-> +	.rx_split =3D 8,
-> +	.rx_last =3D 11,
-> +	.tx_shift =3D 2,
-> +	.type =3D AT91_DEVTYPE_SAM9263,
-> +};
-> +
-> +static struct at91_devtype_data at91_at91sam9x5_data =3D {
-> +	.rx_first =3D 0,
-> +	.rx_split =3D 4,
-> +	.rx_last =3D 5,
-> +	.tx_shift =3D 1,
-> +	.type =3D AT91_DEVTYPE_SAM9X5,
->  };
-> =20
->  static const struct can_bittiming_const at91_bittiming_const =3D {
-> @@ -1249,10 +1251,40 @@ static struct attribute_group at91_sysfs_attr_g=
-roup =3D {
->  	.attrs =3D at91_sysfs_attrs,
->  };
-> =20
-> +#if defined(CONFIG_OF)
-> +static const struct of_device_id at91_can_dt_ids[] =3D {
-> +	{
-> +		.compatible =3D "atmel,at91sam9x5-can",
-> +		.data =3D &at91_at91sam9x5_data,
-> +	}, {
-> +		.compatible =3D "atmel,at91sam9263-can",
-> +		.data =3D &at91_at91sam9263_data,
-> +	}, {
-> +		/* sentinel */
-> +	}
-> +};
-> +MODULE_DEVICE_TABLE(of, at91_can_dt_ids);
-> +#else
-> +#define at91_can_dt_ids NULL
-> +#endif
-> +
-> +static struct at91_devtype_data* at91_can_get_driver_data(struct platf=
-orm_device *pdev)
-> +{
-> +	if (pdev->dev.of_node) {
-> +		const struct of_device_id *match;
-> +		match =3D of_match_node(at91_can_dt_ids, pdev->dev.of_node);
-> +		if (!match) {
-> +			dev_err(&pdev->dev, "no matching node found in dtb\n");
-> +			return NULL;
-> +		}
-> +		return (struct at91_devtype_data *)match->data;
-> +	}
-> +	return (struct at91_devtype_data *)platform_get_device_id(pdev)->driv=
-er_data;
-> +}
-> +
->  static int at91_can_probe(struct platform_device *pdev)
->  {
->  	const struct at91_devtype_data *devtype_data;
-> -	enum at91_devtype devtype;
->  	struct net_device *dev;
->  	struct at91_priv *priv;
->  	struct resource *res;
-> @@ -1260,8 +1292,12 @@ static int at91_can_probe(struct platform_device=
- *pdev)
->  	void __iomem *addr;
->  	int err, irq;
-> =20
-> -	devtype =3D pdev->id_entry->driver_data;
-> -	devtype_data =3D &at91_devtype_data[devtype];
-> +	devtype_data =3D at91_can_get_driver_data(pdev);
-> +	if (!devtype_data) {
-> +		dev_err(&pdev->dev, "no driver data\n");
-> +		err =3D -ENODEV;
-> +		goto exit;
-> +	}
-> =20
->  	clk =3D clk_get(&pdev->dev, "can_clk");
->  	if (IS_ERR(clk)) {
-> @@ -1310,7 +1346,6 @@ static int at91_can_probe(struct platform_device =
-*pdev)
->  	priv->dev =3D dev;
->  	priv->reg_base =3D addr;
->  	priv->devtype_data =3D *devtype_data;
-> -	priv->devtype_data.type =3D devtype;
->  	priv->clk =3D clk;
->  	priv->pdata =3D pdev->dev.platform_data;
->  	priv->mb0_id =3D 0x7ff;
-> @@ -1373,10 +1408,10 @@ static int at91_can_remove(struct platform_devi=
-ce *pdev)
->  static const struct platform_device_id at91_can_id_table[] =3D {
->  	{
->  		.name =3D "at91_can",
-> -		.driver_data =3D AT91_DEVTYPE_SAM9263,
-> +		.driver_data =3D (unsigned long)&at91_at91sam9x5_data,
->  	}, {
->  		.name =3D "at91sam9x5_can",
-> -		.driver_data =3D AT91_DEVTYPE_SAM9X5,
-> +		.driver_data =3D (unsigned long)&at91_at91sam9263_data,
+On 03/08/2013 08:25 PM, Anil Kumar wrote:
+> Hi Jon,
+> 
+> On Fri, Mar 8, 2013 at 10:57 PM, Jon Hunter <jon-hunter@ti.com> wrote:
+>> Adds basic device-tree support for OMAP3430 SDP board which has 256MB
+>> of RAM and uses the TWL4030 power management IC.
+> 
+> I think this board support should be in separate patch series with
+> related patches.
 
-It's a kernel_ulong_t, not a (unsigned long), I can fix this while
-applying the patch.
+Well I wanted to keep them altogether so that I can send a pull request
+to Benoit and Tony.
 
->  	}, {
->  		/* sentinel */
->  	}
-> @@ -1389,6 +1424,7 @@ static struct platform_driver at91_can_driver =3D=
- {
->  	.driver =3D {
->  		.name =3D KBUILD_MODNAME,
->  		.owner =3D THIS_MODULE,
-> +		.of_match_table =3D at91_can_dt_ids,
->  	},
->  	.id_table =3D at91_can_id_table,
->  };
->=20
+>>
+>> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+>> ---
+>>  arch/arm/boot/dts/Makefile         |    1 +
+>>  arch/arm/boot/dts/omap3430-sdp.dts |   46 ++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 47 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/omap3430-sdp.dts
+>>
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 9c62558..89013ed 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -119,6 +119,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+>>         omap3-beagle-xm.dtb \
+>>         omap3-evm.dtb \
+>>         omap3-tobi.dtb \
+>> +       omap3430-sdp.dtb \
+>>         omap4-panda.dtb \
+>>         omap4-panda-a4.dtb \
+>>         omap4-panda-es.dtb \
+>> diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
+>> new file mode 100644
+>> index 0000000..be0650d
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/omap3430-sdp.dts
+>> @@ -0,0 +1,46 @@
+>> +/*
+>> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +/dts-v1/;
+>> +
+>> +/include/ "omap3.dtsi"
+>> +
+>> +/ {
+>> +       model = "TI OMAP3430 SDP";
+>> +       compatible = "ti,omap3430-sdp", "ti,omap3";
+> 
+> I have not seen any related changes in "board-generic.c" for your board.
+> So just wanted know, how this board is booting ?
 
-Marc
+If you look at board-generic.c you will see that "ti,omap3" will match
+the OMAP3 generic machine. So you don't need to modify the board-generic.c.
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+>> +
+>> +       memory {
+>> +               device_type = "memory";
+>> +               reg = <0x80000000 0x10000000>; /* 256 MB */
+>> +       };
+>> +};
+>> +
+>> +&i2c1 {
+>> +       clock-frequency = <2600000>;
+>> +
+>> +       twl: twl@48 {
+>> +               reg = <0x48>;
+>> +               interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+>> +               interrupt-parent = <&intc>;
+>> +       };
+>> +};
+>> +
+>> +/include/ "twl4030.dtsi"
+>> +
+>> +&mmc1 {
+>> +       vmmc-supply = <&vmmc1>;
+>> +       vmmc_aux-supply = <&vsim>;
+>> +       bus-width = <8>;
+>> +};
+>> +
+>> +&mmc2 {
+>> +       status = "disabled";
+>> +};
+>> +
+>> +&mmc3 {
+>> +       status = "disabled";
+>> +};
+> 
+> I think you should disable modules those are not currently used
+> as they are enabled by default in omap3.dtsi.
+> 
+> exp:-
+> 
+> &mcbsp2 {
+>         status = "disabled";
+> };
 
+Well may be we could do that in a follow-up patch. If you look at other
+omap3 boards we have not gone through and disabled all unused modules
+either. So although I agree, right now I just want to get minimal
+support added.
 
-------enig2TSWAPBVOXIMCEXTTRXNJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlE+FScACgkQjTAFq1RaXHPPJACePULKPaFP+z8QOsMAP0IyF2IA
-fXAAn3WKb4Vel95429RKYL1RzrHxNwZ8
-=fozP
------END PGP SIGNATURE-----
-
-------enig2TSWAPBVOXIMCEXTTRXNJ--
+Jon
