@@ -1,40 +1,44 @@
-From: Herbert Xu <herbert@gondor.apana.org.au>
-Subject: Re: [PATCH v3 1/2] i.MX27: Add clock support for SAHARA2.
-Date: Mon, 11 Mar 2013 09:19:26 +0800
-Message-ID: <20130311011926.GA14930@gondor.apana.org.au>
-References: <1362137873-8827-1-git-send-email-javier.martin@vista-silicon.com>
- <1362137873-8827-2-git-send-email-javier.martin@vista-silicon.com>
- <20130304075306.GA1906@pengutronix.de>
- <CACKLOr2kuWXMreEFA4wqyYVRNnPwmEoHPM2+V+tN5P_1bQ+iJQ@mail.gmail.com>
- <20130310083401.GB10448@gondor.apana.org.au>
- <20130310230856.GU1906@pengutronix.de>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH 1/5] ARM: dts: exynos5250-arndale: Add node entry for
+ gpio-buttons
+Date: Mon, 11 Mar 2013 11:05:03 +0900
+Message-ID: <04ff01ce1dfc$d830bd40$889237c0$%kim@samsung.com>
+References: <1360214129-4096-1-git-send-email-tushar.behera@linaro.org>
+ <8299289.2GSO3WcaG5@amdc1227>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20130310230856.GU1906@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sascha Hauer <s.hauer@pengutronix.de>
-Cc: javier Martin <javier.martin@vista-silicon.com>, linux-crypto@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, davem@davemloft.net, kernel@pengutronix.de, gcembed@gmail.com, shawn.guo@linaro.org, arnd@arndb.de, swarren@nvidia.com
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <8299289.2GSO3WcaG5@amdc1227>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Tomasz Figa' <t.figa@samsung.com>, 'Tushar Behera' <tushar.behera@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, 'Thomas Abraham' <thomas.abraham@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Mar 11, 2013 at 12:08:56AM +0100, Sascha Hauer wrote:
-> On Sun, Mar 10, 2013 at 04:34:01PM +0800, Herbert Xu wrote:
-> > > >
-> > > > https://patchwork.kernel.org/patch/1817741/
-> > > >
-> > > > So the change above becomes unnecessary
-> > > 
-> > > Very good. Then this patch can be safely dropped.
-> > 
-> > So should I take this patch or not?
+Tomasz Figa wrote:
 > 
-> This clk patch, no. The sahara patch, yes, if it is fine for you.
+> Hi,
+> 
+> I'm wondering why Exynos5250 has not been migrated to use pinctrl yet.
+> 
+> Support for it in pinctrl-samsung driver has been already merged, but I
+> don't see any pinctrl nodes in exynos5250.dtsi.
+> 
+> This is important because the legacy gpio-samsung support is going to be
+> dropped, as it already happened in case of Exynos 4.
+> 
+> CC'ing Thomas Abraham as he might know something.
+> 
+Tushar and all,
 
-But will the second patch work fine without the first?
+I agree with Tomasz's opinion to support pinctrl instead of gpio on exynos5250
+stuff.
 
-Thanks,
--- 
-Email: Herbert Xu <herbert@gondor.apana.org.au>
-Home Page: http://gondor.apana.org.au/~herbert/
-PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
+Please re-submit with using pinctrl is in samsung tree.
+
+If any problems, please let us know.
+
+Thanks.
+
+- Kukjin
