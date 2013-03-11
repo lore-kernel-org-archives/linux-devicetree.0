@@ -1,36 +1,53 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next] powerpc: use for_each_compatible_node() macro
-Date: Mon, 11 Mar 2013 22:24:18 +0800
-Message-ID: <CAPgLHd_CZXucALyD4JrDsA9ffYFrcufTyw-Nh0o2sAjg10YsvA@mail.gmail.com>
+From: Benoit Cousson <b-cousson@ti.com>
+Subject: Re: [Resend/PATCH 0/5] omap4/5: i2c/spi: device tree data
+Date: Mon, 11 Mar 2013 15:32:01 +0100
+Message-ID: <513DEAE1.1050606@ti.com>
+References: <1363009486-19430-1-git-send-email-sourav.poddar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: benh@kernel.crashing.org, paulus@samba.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, linuxppc-dev@lists.ozlabs.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1363009486-19430-1-git-send-email-sourav.poddar@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sourav Poddar <sourav.poddar@ti.com>
+Cc: tony@atomide.com, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, linux-arm-kernel@lists.infradead.org, balbi@ti.com, santosh.shilimkar@ti.com, Andrew Morton <akpm@osdl.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+Hi Sourav,
 
-Use for_each_compatible_node() macro instead of open coding it.
+On 03/11/2013 02:44 PM, Sourav Poddar wrote:
+> Hi Tony/Benoit,
+> 
+> These patches had been sent couple of times before, but there were no comments on it.
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- arch/powerpc/include/asm/parport.h | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Sorry for that. I got a big flu in Jan and was in Linaro Connect last week.
+Patches look good, I just have to check that they apply nicely to the
+dts/for_3.9 I already prepared.
 
-diff --git a/arch/powerpc/include/asm/parport.h b/arch/powerpc/include/asm/parport.h
-index 6dc2577..a452968 100644
---- a/arch/powerpc/include/asm/parport.h
-+++ b/arch/powerpc/include/asm/parport.h
-@@ -21,9 +21,7 @@ static int parport_pc_find_nonpci_ports (int autoirq, int autodma)
- 	int count = 0;
- 	int virq;
- 
--	for (np = NULL; (np = of_find_compatible_node(np,
--						      "parallel",
--						      "pnpPNP,400")) != NULL;) {
-+	for_each_compatible_node(np, "parallel", "pnpPNP,400") {
- 		prop = of_get_property(np, "reg", &propsize);
- 		if (!prop || propsize > 6*sizeof(u32))
- 			continue;
+I still have to rebase that branch on top of a recent master branch and
+then check your branch.
+
+> If there are no comments, Can these be picked ? 
+
+> 
+> Cc: Andrew Morton <akpm@osdl.org>
+>  
+> The following changes since commit f6161aa153581da4a3867a2d1a7caf4be19b6ec9:
+> 
+>   Linux 3.9-rc2 (2013-03-10 16:54:19 -0700)
+> 
+> are available in the git repository at:
+>   git@gitorious.org:linux-connectivity/linux-connectivity.git omap_i2c_spi_dts_data
+> 
+> Felipe Balbi (1):
+>       arm: dts: omap5: add SPI devices to OMAP5 DeviceTree file
+> 
+> Sourav Poddar (4):
+>       arm: dts: omap4-sdp: Add I2c pinctrl data
+>       arm: dts: omap5-evm: Add I2c pinctrl data
+>       arm: dts: omap4-panda: Add I2c pinctrl data
+>       arm: dts: omap5-evm: Add mcspi data
+
+Thanks,
+Benoit
+
