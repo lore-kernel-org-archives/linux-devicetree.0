@@ -1,117 +1,78 @@
-From: "Vishwanathrao Badarkhe, Manish" <manishv.b-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH] ARM: dts: omap2plus: remove interrupt-parent property
-Date: Mon, 11 Mar 2013 15:30:02 +0530
-Message-ID: <1362996002-15552-1-git-send-email-manishv.b@ti.com>
+From: Mark Brown <broonie@opensource.wolfsonmicro.com>
+Subject: Re: [PATCH 06/10] ARM: soc-audio phycore-ac97: fix
+	driver init order
+Date: Mon, 11 Mar 2013 11:10:11 +0000
+Message-ID: <20130311111011.GA10617@opensource.wolfsonmicro.com>
+References: <1362940391-8338-1-git-send-email-mpa@pengutronix.de>
+ <1362940391-8338-7-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
-List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
- <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
-Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
-Sender: "devicetree-discuss"
- <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
-To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: manishv.b-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============3069874486960665535=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1362940391-8338-7-git-send-email-mpa@pengutronix.de>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Markus Pargmann <mpa@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Timur Tabi <timur@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Removed interrupt-parent property from dts file as it is already
-with root node in dtsi file.
 
-Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b-l0cyMroinI0@public.gmane.org>
----
-:100644 100644 f624dc8... 36e839a... M	arch/arm/boot/dts/omap3-beagle.dts
-:100644 100644 e8ba1c2... a5375fd... M	arch/arm/boot/dts/omap3-evm.dts
-:100644 100644 4122efe... 389c9c7... M	arch/arm/boot/dts/omap4-panda.dts
-:100644 100644 43e5258... cdf5dfd... M	arch/arm/boot/dts/omap4-sdp.dts
-:100644 100644 6601e6a... 1d4a9d4... M	arch/arm/boot/dts/omap4-var-som.dts
- arch/arm/boot/dts/omap3-beagle.dts  |    1 -
- arch/arm/boot/dts/omap3-evm.dts     |    1 -
- arch/arm/boot/dts/omap4-panda.dts   |    2 --
- arch/arm/boot/dts/omap4-sdp.dts     |    2 --
- arch/arm/boot/dts/omap4-var-som.dts |    1 -
- 5 files changed, 0 insertions(+), 7 deletions(-)
+--===============3069874486960665535==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
-index f624dc8..36e839a 100644
---- a/arch/arm/boot/dts/omap3-beagle.dts
-+++ b/arch/arm/boot/dts/omap3-beagle.dts
-@@ -46,7 +46,6 @@
- 	twl: twl@48 {
- 		reg = <0x48>;
- 		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
--		interrupt-parent = <&intc>;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-evm.dts
-index e8ba1c2..a5375fd 100644
---- a/arch/arm/boot/dts/omap3-evm.dts
-+++ b/arch/arm/boot/dts/omap3-evm.dts
-@@ -34,7 +34,6 @@
- 	twl: twl@48 {
- 		reg = <0x48>;
- 		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
--		interrupt-parent = <&intc>;
- 	};
- };
- 
-diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
-index 4122efe..389c9c7 100644
---- a/arch/arm/boot/dts/omap4-panda.dts
-+++ b/arch/arm/boot/dts/omap4-panda.dts
-@@ -119,7 +119,6 @@
- 		reg = <0x48>;
- 		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
- 		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
--		interrupt-parent = <&gic>;
- 	};
- 
- 	twl6040: twl@4b {
-@@ -127,7 +126,6 @@
- 		reg = <0x4b>;
- 		/* SPI = 0, IRQ# = 119, 4 = active high level-sensitive */
- 		interrupts = <0 119 4>; /* IRQ_SYS_2N cascaded to gic */
--		interrupt-parent = <&gic>;
- 		ti,audpwron-gpio = <&gpio4 31 0>;  /* gpio line 127 */
- 
- 		vio-supply = <&v1v8>;
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index 43e5258..cdf5dfd 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -221,7 +221,6 @@
- 		reg = <0x48>;
- 		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
- 		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
--		interrupt-parent = <&gic>;
- 	};
- 
- 	twl6040: twl@4b {
-@@ -229,7 +228,6 @@
- 		reg = <0x4b>;
- 		/* SPI = 0, IRQ# = 119, 4 = active high level-sensitive */
- 		interrupts = <0 119 4>; /* IRQ_SYS_2N cascaded to gic */
--		interrupt-parent = <&gic>;
- 		ti,audpwron-gpio = <&gpio4 31 0>;  /* gpio line 127 */
- 
- 		vio-supply = <&v1v8>;
-diff --git a/arch/arm/boot/dts/omap4-var-som.dts b/arch/arm/boot/dts/omap4-var-som.dts
-index 6601e6a..1d4a9d4 100644
---- a/arch/arm/boot/dts/omap4-var-som.dts
-+++ b/arch/arm/boot/dts/omap4-var-som.dts
-@@ -35,7 +35,6 @@
- 		reg = <0x48>;
- 		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
- 		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
--		interrupt-parent = <&gic>;
- 	};
- };
- 
--- 
-1.7.4.1
+
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Sun, Mar 10, 2013 at 07:33:07PM +0100, Markus Pargmann wrote:
+> Adding a soc-audio sound driver internally uses snd_soc_register_device,
+> which tries to bind it with the codec. The adding of the driver is
+> deferred because the codec driver is not loaded.
+
+> This patch changes the order of registration. The codec driver is there
+> before the ac97 driver, so the snd_soc_register_device call is
+> successfull.
+
+You shouldn't be using soc-audio in the first place...
+
+--k+w/mQv8wyuph6w0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJRPbtDAAoJELSic+t+oim9aK0P/1mBmdSE+K1b8zRPhhAgvBA2
+fSlPcXyJsJTfFC3oDKCGCASOHQ0AnWloSOtf+D2RoTWXoW24ZAXJTPgqw8z5WOzF
+0cVTVMhYB6KtE7wb82KBXZwhy6Ia6hV+zlVAzQshRYF9czV+JX3qMuKKTK5iErwK
+9movDaKDoErqSOri4BXQlV46oq+PAXeOvays+WzodzDz5NoTLzJKcSq9SpLK6K4Q
+wGMG4Y6jg6Ny7pbTvLiePkTCB9hflummkjbb/ZRphKV9pKJVWfswz2N+z5PgFjnb
+LcycVzxNQZ4ITXiM4BQSXxN0DHdpDN1wuHKOLtUEAN/gFQhhGkGOxcNPYAlxU3mn
+Rlesnt68Z/UkI+klP+EtgzHUxahzgqZtWh9yrVmWdW/mpeniuRn0pxQMGpJaNTPv
+C1ImaRiNU3BVsGtFeYL8Y4y7XKjdTRjdBK6HYztI9TK6kfyyslCvpF/prw63XHfo
+4kSPgdIaUVdPvsBgucXL3puw7YVxxOHxZFn9eE6B9H41/33AFwnJVfhbXJw3RD/Y
+nQUWMfO3zdkTYjkX+YSa7nf1Z8MZelXjzfLzdxoUh6vu9bQtcGyfxHbbV95IwkDW
+v3xso7vd/yYhBHRqdQlGfV1YB3yupxgZ1cFBd9rWvSC3Kh1JNqmvPt16laOfiJd8
+AzSI1cBihc6RSap7P2wK
+=XizF
+-----END PGP SIGNATURE-----
+
+--k+w/mQv8wyuph6w0--
+
+--===============3069874486960665535==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============3069874486960665535==--
