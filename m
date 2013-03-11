@@ -1,44 +1,73 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: Re: [PATCH 1/5] ARM: dts: exynos5250-arndale: Add node entry for
- gpio-buttons
-Date: Mon, 11 Mar 2013 15:14:22 +0530
-Message-ID: <513DA776.4040800@linaro.org>
-References: <1360214129-4096-1-git-send-email-tushar.behera@linaro.org> <8299289.2GSO3WcaG5@amdc1227> <04ff01ce1dfc$d830bd40$889237c0$%kim@samsung.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH 3/3] can: Kconfig: CAN_AT91 depends on ARCH_AT91
+Date: Mon, 11 Mar 2013 10:57:10 +0100
+Message-ID: <513DAA76.6040803@pengutronix.de>
+References: <1362763842-14924-1-git-send-email-ludovic.desroches@atmel.com> <1362763842-14924-4-git-send-email-ludovic.desroches@atmel.com> <513A2396.4080508@pengutronix.de> <20130311092419.GB2572@ludovic.desroches@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <04ff01ce1dfc$d830bd40$889237c0$%kim@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: 'Tomasz Figa' <t.figa@samsung.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, 'Thomas Abraham' <thomas.abraham@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="----enig2PAUKNCNLCAHSNWGJBIUA"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <20130311092419.GB2572@ludovic.desroches@atmel.com>
+Sender: linux-can-owner@vger.kernel.org
+To: Ludovic Desroches <ludovic.desroches@atmel.com>
+Cc: linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com
 List-Id: devicetree@vger.kernel.org
 
-On 03/11/2013 07:35 AM, Kukjin Kim wrote:
-> Tomasz Figa wrote:
->>
->> Hi,
->>
->> I'm wondering why Exynos5250 has not been migrated to use pinctrl yet.
->>
->> Support for it in pinctrl-samsung driver has been already merged, but I
->> don't see any pinctrl nodes in exynos5250.dtsi.
->>
->> This is important because the legacy gpio-samsung support is going to be
->> dropped, as it already happened in case of Exynos 4.
->>
->> CC'ing Thomas Abraham as he might know something.
->>
-> Tushar and all,
-> 
-> I agree with Tomasz's opinion to support pinctrl instead of gpio on exynos5250
-> stuff.
-> 
-> Please re-submit with using pinctrl is in samsung tree.
-> 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+------enig2PAUKNCNLCAHSNWGJBIUA
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Ok. I will rebase the patchset on for-next branch and re-submit.
+On 03/11/2013 10:24 AM, Ludovic Desroches wrote:
+> On Fri, Mar 08, 2013 at 06:44:54PM +0100, Marc Kleine-Budde wrote:
+>> On 03/08/2013 06:30 PM, ludovic.desroches@atmel.com wrote:
+>>> From: Ludovic Desroches <ludovic.desroches@atmel.com>
+>>>
+>>> SAMA5D3 devices also embed CAN feature. Moreover if we want to produc=
+e a single
+>>> kernel image (at least for Atmel devices) it is not useful to be too
+>>> restrictive.
+>>
+>> If it compiles on other ARMs aswell we can make it depend on ARCH_ARM.=
+
+>>=20
+> I was thinking about it but I am wondering if it makes sense. Should we=
+ have a
+> non atmel device with atmel can?
+
+I don't know if atmels sells the IP core separately, but ARM Linux is
+going towards a multi ARCH kernel anyways. So the can core should
+compile on non atmel and/or multi arch kernels.
+
+> I have no position about this point, if you think it's better to make
+> it depending onto ARCH_ARM, I'll change it if there is no compilation
+> issue.
+
+Please make it so.
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
--- 
-Tushar Behera
+------enig2PAUKNCNLCAHSNWGJBIUA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlE9qnkACgkQjTAFq1RaXHO8xQCfW8u8An0yL/5TYieG8UfaHWdq
+O+MAoIrK1EpQ24SI4hxsmwWxtEWtHnvs
+=mTaT
+-----END PGP SIGNATURE-----
+
+------enig2PAUKNCNLCAHSNWGJBIUA--
