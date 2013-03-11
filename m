@@ -1,180 +1,165 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH 1/2] hwmon: ntc: Add DT support to NTC thermistor driver
-Date: Mon, 11 Mar 2013 07:39:46 +0530
-Message-ID: <1362967787-22557-1-git-send-email-ch.naveen@samsung.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, lm-sensors@lm-sensors.org
-Cc: devicetree-discuss@lists.ozlabs.org, khali@linux-fr.org, linux@roeck-us.net, dianders@chromium.org, naveenkrishna.ch@gmail.com, dg77.kim@samsung.com
+From: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 2/2] hwmon: NTC: add IIO get channel and read support
+Date: Mon, 11 Mar 2013 07:39:47 +0530
+Message-ID: <1362967787-22557-2-git-send-email-ch.naveen@samsung.com>
+References: <1362967787-22557-1-git-send-email-ch.naveen@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+In-reply-to: <1362967787-22557-1-git-send-email-ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
+Cc: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dg77.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org, naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the DT support to NTC driver to parse the
-platform data.
+This patch adds the support to work as a iio device.
+iio_get_channel and iio_raw_read works.
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+During the probe ntc driver gets the respective channels of ADC
+and uses iio_raw_read calls to get the ADC converted value.
+
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/hwmon/ntc_thermistor.c |   93 ++++++++++++++++++++++++++++++++--------
- 1 file changed, 75 insertions(+), 18 deletions(-)
+
+Still not sure about the read_uV function parameter change and placement.
+
+There were a few CamelCase warnings during checkpatch run.
+I can clean them if anyone insists.
+
+ drivers/hwmon/ntc_thermistor.c               |   36 +++++++++++++++++++++++++-
+ include/linux/platform_data/ntc_thermistor.h |    7 ++++-
+ 2 files changed, 41 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/hwmon/ntc_thermistor.c b/drivers/hwmon/ntc_thermistor.c
-index d92b237..cfedbd3 100644
+index cfedbd3..1d31260 100644
 --- a/drivers/hwmon/ntc_thermistor.c
 +++ b/drivers/hwmon/ntc_thermistor.c
-@@ -26,6 +26,7 @@
- #include <linux/math64.h>
- #include <linux/platform_device.h>
- #include <linux/err.h>
-+#include <linux/of.h>
+@@ -30,6 +30,11 @@
  
  #include <linux/platform_data/ntc_thermistor.h>
  
-@@ -37,6 +38,41 @@ struct ntc_compensation {
- 	unsigned int	ohm;
- };
++#include <linux/iio/iio.h>
++#include <linux/iio/machine.h>
++#include <linux/iio/driver.h>
++#include <linux/iio/consumer.h>
++
+ #include <linux/hwmon.h>
+ #include <linux/hwmon-sysfs.h>
  
-+static const struct platform_device_id ntc_thermistor_id[] = {
-+	{ "ncp15wb473", TYPE_NCPXXWB473 },
-+	{ "ncp18wb473", TYPE_NCPXXWB473 },
-+	{ "ncp21wb473", TYPE_NCPXXWB473 },
-+	{ "ncp03wb473", TYPE_NCPXXWB473 },
-+	{ "ncp15wl333", TYPE_NCPXXWL333 },
-+	{ },
-+};
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id ntc_match[] = {
-+	{ .compatible = "ntc,ncp15wb473", .data = (void *)TYPE_NCPXXWB473 },
-+	{ .compatible = "ntc,ncp18wb473", .data = (void *)TYPE_NCPXXWB473 },
-+	{ .compatible = "ntc,ncp21wb473", .data = (void *)TYPE_NCPXXWB473 },
-+	{ .compatible = "ntc,ncp03wb473", .data = (void *)TYPE_NCPXXWB473 },
-+	{ .compatible = "ntc,ncp15wl333", .data = (void *)TYPE_NCPXXWL333 },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, ntc_match);
-+#endif
-+
-+/* Get NTC type either from device tree or platform data. */
-+static enum ntc_thermistor_type thermistor_get_type
-+				(struct platform_device *pdev)
-+{
-+	if (pdev->dev.of_node) {
-+		const struct of_device_id *match;
-+		match = of_match_node(of_match_ptr(ntc_match),
-+						pdev->dev.of_node);
-+		return (unsigned int)match->data;
-+	}
-+
-+	return platform_get_device_id(pdev)->driver_data;
-+}
-+
- /*
-  * A compensation table should be sorted by the values of .ohm
-  * in descending order.
-@@ -126,6 +162,27 @@ struct ntc_data {
+@@ -162,6 +167,28 @@ struct ntc_data {
  	char name[PLATFORM_NAME_SIZE];
  };
  
-+#ifdef CONFIG_OF
-+static void ntc_thermistor_parse_dt(struct ntc_thermistor_platform_data *pdata,
-+							struct device_node *np)
++static int ntc_adc_read(struct ntc_thermistor_platform_data *pdata)
 +{
-+	of_property_read_u32(np, "pullup-uV", &pdata->pullup_uV);
-+	of_property_read_u32(np, "pullup-ohm", &pdata->pullup_ohm);
-+	of_property_read_u32(np, "pulldown-ohm", &pdata->pulldown_ohm);
-+	if (of_find_property(np, "connected-positive", NULL))
-+		pdata->connect = NTC_CONNECTED_POSITIVE;
-+	else /* status change should be possible if not always on. */
-+		pdata->connect = NTC_CONNECTED_GROUND;
-+}
-+#else
-+static void
-+static void ntc_thermistor_parse_dt(struct ntc_thermistor_platform_data *pdata,
-+							struct device_node *np)
-+{
-+	return;
-+}
-+#endif
++	struct iio_channel *channel = pdata->chan;
++	unsigned int result;
++	int val, ret;
 +
- static inline u64 div64_u64_safe(u64 dividend, u64 divisor)
- {
- 	if (divisor == 0 && dividend == 0)
-@@ -313,9 +370,19 @@ static const struct attribute_group ntc_attr_group = {
- static int ntc_thermistor_probe(struct platform_device *pdev)
- {
- 	struct ntc_data *data;
--	struct ntc_thermistor_platform_data *pdata = pdev->dev.platform_data;
-+	struct device_node *np = pdev->dev.of_node;
-+	struct ntc_thermistor_platform_data *pdata = NULL;
- 	int ret = 0;
++	if (!channel)
++		return -EINVAL;
++
++	ret = iio_read_channel_raw(channel, &val);
++	if (ret < 0) {
++		pr_err("read channel() error: %d\n", ret);
++		return ret;
++	}
++
++	/* unit: mV */
++	result = pdata->pullup_uV * (s64) val;
++	result >>= 12;
++
++	return result;
++}
++
+ #ifdef CONFIG_OF
+ static void ntc_thermistor_parse_dt(struct ntc_thermistor_platform_data *pdata,
+ 							struct device_node *np)
+@@ -173,6 +200,8 @@ static void ntc_thermistor_parse_dt(struct ntc_thermistor_platform_data *pdata,
+ 		pdata->connect = NTC_CONNECTED_POSITIVE;
+ 	else /* status change should be possible if not always on. */
+ 		pdata->connect = NTC_CONNECTED_GROUND;
++
++	pdata->read_uV = ntc_adc_read;
+ }
+ #else
+ static void
+@@ -317,7 +346,7 @@ static int ntc_thermistor_get_ohm(struct ntc_data *data)
+ 		return data->pdata->read_ohm(data->pdev);
  
-+	if (np) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata)
-+			return -ENOMEM;
+ 	if (data->pdata->read_uV) {
+-		read_uV = data->pdata->read_uV(data->pdev);
++		read_uV = data->pdata->read_uV(data->pdata);
+ 		if (read_uV < 0)
+ 			return read_uV;
+ 		return get_ohm_of_thermistor(data, read_uV);
+@@ -417,6 +446,8 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
+ 	if (!data)
+ 		return -ENOMEM;
+ 
++	pdata->chan = iio_channel_get(&pdev->dev, NULL);
 +
-+		ntc_thermistor_parse_dt(pdata, np);
-+	} else
-+		pdata = pdev->dev.platform_data;
-+
- 	if (!pdata) {
- 		dev_err(&pdev->dev, "No platform init data supplied.\n");
- 		return -ENODEV;
-@@ -353,9 +420,9 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
  	data->dev = &pdev->dev;
  	data->pdev = pdev;
  	data->pdata = pdata;
--	strlcpy(data->name, pdev->id_entry->name, sizeof(data->name));
-+	strncpy(data->name, dev_name(&pdev->dev), PLATFORM_NAME_SIZE);
- 
--	switch (pdev->id_entry->driver_data) {
-+	switch (thermistor_get_type(pdev)) {
- 	case TYPE_NCPXXWB473:
- 		data->comp = ncpXXwb473;
- 		data->n_comp = ARRAY_SIZE(ncpXXwb473);
-@@ -365,9 +432,8 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
- 		data->n_comp = ARRAY_SIZE(ncpXXwl333);
- 		break;
- 	default:
--		dev_err(&pdev->dev, "Unknown device type: %lu(%s)\n",
--				pdev->id_entry->driver_data,
--				pdev->id_entry->name);
-+		dev_err(&pdev->dev, "Unknown device type: %u\n",
-+				thermistor_get_type(pdev));
- 		return -EINVAL;
- 	}
- 
-@@ -386,9 +452,8 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
- 		goto err_after_sysfs;
- 	}
- 
--	dev_info(&pdev->dev, "Thermistor %s:%d (type: %s/%lu) successfully probed.\n",
--			pdev->name, pdev->id, pdev->id_entry->name,
--			pdev->id_entry->driver_data);
-+	dev_info(&pdev->dev, "Thermistor successfully probed.\n");
-+
+@@ -457,15 +488,18 @@ static int ntc_thermistor_probe(struct platform_device *pdev)
  	return 0;
  err_after_sysfs:
  	sysfs_remove_group(&data->dev->kobj, &ntc_attr_group);
-@@ -406,19 +471,11 @@ static int ntc_thermistor_remove(struct platform_device *pdev)
- 	return 0;
++	iio_channel_release(pdata->chan);
+ 	return ret;
  }
  
--static const struct platform_device_id ntc_thermistor_id[] = {
--	{ "ncp15wb473", TYPE_NCPXXWB473 },
--	{ "ncp18wb473", TYPE_NCPXXWB473 },
--	{ "ncp21wb473", TYPE_NCPXXWB473 },
--	{ "ncp03wb473", TYPE_NCPXXWB473 },
--	{ "ncp15wl333", TYPE_NCPXXWL333 },
--	{ },
--};
--
- static struct platform_driver ntc_thermistor_driver = {
- 	.driver = {
- 		.name = "ntc-thermistor",
- 		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(ntc_match),
- 	},
- 	.probe = ntc_thermistor_probe,
- 	.remove = ntc_thermistor_remove,
+ static int ntc_thermistor_remove(struct platform_device *pdev)
+ {
+ 	struct ntc_data *data = platform_get_drvdata(pdev);
++	struct ntc_thermistor_platform_data *pdata = data->pdata;
+ 
+ 	hwmon_device_unregister(data->hwmon_dev);
+ 	sysfs_remove_group(&data->dev->kobj, &ntc_attr_group);
++	iio_channel_release(pdata->chan);
+ 	platform_set_drvdata(pdev, NULL);
+ 
+ 	return 0;
+diff --git a/include/linux/platform_data/ntc_thermistor.h b/include/linux/platform_data/ntc_thermistor.h
+index 18f3c3a..671d056 100644
+--- a/include/linux/platform_data/ntc_thermistor.h
++++ b/include/linux/platform_data/ntc_thermistor.h
+@@ -34,19 +34,24 @@ struct ntc_thermistor_platform_data {
+ 	 *
+ 	 * pullup_uV, pullup_ohm, pulldown_ohm, and connect are required to use
+ 	 * read_uV()
++	 * takes the platform data structure as the parameter
+ 	 *
+ 	 * How to setup pullup_ohm, pulldown_ohm, and connect is
+ 	 * described at Documentation/hwmon/ntc_thermistor
+ 	 *
+ 	 * pullup/down_ohm: 0 for infinite / not-connected
++	 *
++	 * iio_channel to communicate with the ADC which the
++	 * thermistor is using for conversion of the analog values.
+ 	 */
+-	int (*read_uV)(struct platform_device *);
++	int (*read_uV)(struct ntc_thermistor_platform_data *);
+ 	int (*read_ohm)(struct platform_device *);
+ 	unsigned int pullup_uV;
+ 
+ 	unsigned int pullup_ohm;
+ 	unsigned int pulldown_ohm;
+ 	enum { NTC_CONNECTED_POSITIVE, NTC_CONNECTED_GROUND } connect;
++	struct iio_channel *chan;
+ };
+ 
+ #endif /* _LINUX_NTC_H */
 -- 
 1.7.9.5
