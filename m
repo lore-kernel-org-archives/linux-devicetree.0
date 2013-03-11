@@ -1,89 +1,40 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 1/3] can: at91_can: add dt support
-Date: Mon, 11 Mar 2013 16:12:46 +0100
-Message-ID: <513DF46E.7000903@pengutronix.de>
-References: <1362763842-14924-1-git-send-email-ludovic.desroches@atmel.com> <1362763842-14924-2-git-send-email-ludovic.desroches@atmel.com> <513A2365.5050803@pengutronix.de> <20130311091722.GA2572@ludovic.desroches@atmel.com>
+From: Wei Yongjun <weiyj.lk-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH -next] USB: misc: usb3503: use module_i2c_driver to simplify
+ the code
+Date: Mon, 11 Mar 2013 23:23:23 +0800
+Message-ID: <CAPgLHd-=tRN+3pj0o+_OPHkYzjphNEzydz+Q9e-0ut-bRbiejQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2BOULXQOQIPOSOSAFHOGV"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20130311091722.GA2572@ludovic.desroches@atmel.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>
-Cc: linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, tobetter-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, fengguang.wu-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org
+Cc: yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2BOULXQOQIPOSOSAFHOGV
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+From: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
 
-On 03/11/2013 10:17 AM, Ludovic Desroches wrote:
-> On Fri, Mar 08, 2013 at 06:44:05PM +0100, Marc Kleine-Budde wrote:
->> On 03/08/2013 06:30 PM, ludovic.desroches@atmel.com wrote:
->>> From: Ludovic Desroches <ludovic.desroches@atmel.com>
->>>
->>> Add device tree support.
->>>
->>> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
->>> ---
->>>  .../devicetree/bindings/net/can/atmel-can.txt      | 14 ++++
->>>  drivers/net/can/at91_can.c                         | 75 ++++++++++++=
-++++------
->>>  2 files changed, 70 insertions(+), 19 deletions(-)
->>>  create mode 100644 Documentation/devicetree/bindings/net/can/atmel-c=
-an.txt
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/can/atmel-can.txt =
-b/Documentation/devicetree/bindings/net/can/atmel-can.txt
->>> new file mode 100644
->>> index 0000000..69381db
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/net/can/atmel-can.txt
->>> @@ -0,0 +1,14 @@
->>> +* AT91 CAN *
->>> +
->>> +Required properties:
->>> +  - compatible: Should be "atmel,at91sam9263-can" or "atmel,at91sam9=
-x5-can"
->>
->> On imx we use the oldest SoC with that IP available. Which strategy ar=
-e
->> you following on at91?
->>
->=20
-> We are using the same strategy.
+Use the module_i2c_driver() macro to make the code smaller
+and a bit simpler.
 
-But "atmel,at91sam9x5-can" isn't a specific SoC, probably a SoC family.
-Or are you using "atmel,at91sam9x5-can" for the other devices in the DT,
-too.
+Signed-off-by: Wei Yongjun <yongjun_wei-zrsr2BFq86L20UzCJQGyNP8+0UxHXcjY@public.gmane.org>
+---
+ drivers/usb/misc/usb3503.c | 13 +------------
+ 1 file changed, 1 insertion(+), 12 deletions(-)
 
-I picked at91sam9x5-can for the non devicetree driver out of the blue,
-as there was no scheme established, yet. I'm not hanging on that name,
-I'd rather appreciate to follow the common at91 DT rules.
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
-------enig2BOULXQOQIPOSOSAFHOGV
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlE99G4ACgkQjTAFq1RaXHPaHwCdGhiIsbJJmfUQ2yIZUzuXMgCr
-ZL8AoJQgsNaW2xX4hv3RhWYQ2a7JinEW
-=sHTp
------END PGP SIGNATURE-----
-
-------enig2BOULXQOQIPOSOSAFHOGV--
+diff --git a/drivers/usb/misc/usb3503.c b/drivers/usb/misc/usb3503.c
+index f713f6a..d3a1cce 100644
+--- a/drivers/usb/misc/usb3503.c
++++ b/drivers/usb/misc/usb3503.c
+@@ -307,18 +307,7 @@ static struct i2c_driver usb3503_driver = {
+ 	.id_table	= usb3503_id,
+ };
+ 
+-static int __init usb3503_init(void)
+-{
+-	return i2c_add_driver(&usb3503_driver);
+-}
+-
+-static void __exit usb3503_exit(void)
+-{
+-	i2c_del_driver(&usb3503_driver);
+-}
