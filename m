@@ -1,110 +1,70 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 1/3] can: at91_can: add dt support
-Date: Mon, 11 Mar 2013 16:59:40 +0100
-Message-ID: <513DFF6C.2050408@pengutronix.de>
-References: <1362763842-14924-1-git-send-email-ludovic.desroches@atmel.com> <1362763842-14924-2-git-send-email-ludovic.desroches@atmel.com> <513A2365.5050803@pengutronix.de> <20130311091722.GA2572@ludovic.desroches@atmel.com> <513DF46E.7000903@pengutronix.de> <20130311153956.GB3198@ludovic.desroches@atmel.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 1/3] i2c: mux: Add i2c-arbitrator-cros-ec 'mux' driver
+Date: Mon, 11 Mar 2013 09:05:33 -0700
+Message-ID: <CAD=FV=UOeWaLDkycm40vGy3jPT8cPagr8WAjHG5Ukckd2+kTcw@mail.gmail.com>
+References: <1360887677-20758-1-git-send-email-dianders@chromium.org>
+	<1360957573-864-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2SPIDKVGVXOTBXUCWNAAQ"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20130311153956.GB3198@ludovic.desroches@atmel.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>
-Cc: linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1360957573-864-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Yuvaraj Kumar <yuvaraj.cd-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Mark Brown <broonie-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, Girish Shivananjappa <girish.shivananjappa-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bhushan.r" <bhushan.r-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "sreekumar.c" <sreekumar.c-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Prashanth G <prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Daniel Kurtz <djkurtz-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "Ben Dooks (embedded platforms)" <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, Peter Korsgaard <peter.korsgaard-ob4gmnvZ1/cAvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-doc-u79uwXL29TaqPxH82wqD4g@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2SPIDKVGVXOTBXUCWNAAQ
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Wolfram,
 
-On 03/11/2013 04:39 PM, Ludovic Desroches wrote:
-> On Mon, Mar 11, 2013 at 04:12:46PM +0100, Marc Kleine-Budde wrote:
->> On 03/11/2013 10:17 AM, Ludovic Desroches wrote:
->>> On Fri, Mar 08, 2013 at 06:44:05PM +0100, Marc Kleine-Budde wrote:
->>>> On 03/08/2013 06:30 PM, ludovic.desroches@atmel.com wrote:
->>>>> From: Ludovic Desroches <ludovic.desroches@atmel.com>
->>>>>
->>>>> Add device tree support.
->>>>>
->>>>> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
->>>>> ---
->>>>>  .../devicetree/bindings/net/can/atmel-can.txt      | 14 ++++
->>>>>  drivers/net/can/at91_can.c                         | 75 ++++++++++=
-++++++------
->>>>>  2 files changed, 70 insertions(+), 19 deletions(-)
->>>>>  create mode 100644 Documentation/devicetree/bindings/net/can/atmel=
--can.txt
->>>>>
->>>>> diff --git a/Documentation/devicetree/bindings/net/can/atmel-can.tx=
-t b/Documentation/devicetree/bindings/net/can/atmel-can.txt
->>>>> new file mode 100644
->>>>> index 0000000..69381db
->>>>> --- /dev/null
->>>>> +++ b/Documentation/devicetree/bindings/net/can/atmel-can.txt
->>>>> @@ -0,0 +1,14 @@
->>>>> +* AT91 CAN *
->>>>> +
->>>>> +Required properties:
->>>>> +  - compatible: Should be "atmel,at91sam9263-can" or "atmel,at91sa=
-m9x5-can"
->>>>
->>>> On imx we use the oldest SoC with that IP available. Which strategy =
-are
->>>> you following on at91?
->>>>
->>>
->>> We are using the same strategy.
->>
->> But "atmel,at91sam9x5-can" isn't a specific SoC, probably a SoC family=
-=2E
->> Or are you using "atmel,at91sam9x5-can" for the other devices in the D=
-T,
->> too.
->>
->=20
-> You are right at91sam9x5 is not a specific SoC but a family of SoCs:
-> at91sam9g25, at91sam9g35, at91sam9x25 and at91sam9x35. This compatible =
-string
-> is used for all the devices from and after the at91sam9x5 family: at91s=
-am9n12,
-> samad3x, etc.
->=20
->> I picked at91sam9x5-can for the non devicetree driver out of the blue,=
+On Fri, Feb 15, 2013 at 11:46 AM, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> The i2c-arbitrator-cros-ec driver implements the arbitration scheme
+> that the Embedded Controller (EC) on the ARM Chromebook expects to use
+> for bus multimastering.  This i2c-arbitrator-cros-ec driver could also
+> be used in other places where standard I2C bus arbitration can't be
+> used and two extra GPIOs are available for arbitration.
+>
+> This driver is based on code that Simon Glass added to the i2c-s3c2410
+> driver in the Chrome OS kernel 3.4 tree.  The current incarnation as a
+> mux driver is as suggested by Grant Likely.  See
+> <https://patchwork.kernel.org/patch/1877311/> for some history.
+>
+> Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Simon Glass <sjg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Changes in v3:
+> - Handle of_find_i2c_adapter_by_node() failure more properly by
+>   changing init order.
+> - Don't warn on -EPROBE_DEFER from calls that could return it.
+> - Move to module_platform_driver().  As we pull in parts of the system
+>   that rely on devices under this i2c bus we'll need to make sure they
+>   can handle the fact that they'll be initted later now.
+>
+> Changes in v2:
+> - Renamed to i2c-arbitrator-cros-ec.
+> - Documented "microsecond" properties as optional; removed
+>   "bus-arbitration" prefix since it was just extra wordy.
+> - Split GPIOs into two properties to make it cleaner.
+> - Capitalized I2C in freeform text.
+> - Get 'active low' from device tree.
+>
+>  .../bindings/i2c/i2c-arbitrator-cros-ec.txt        |  76 +++++++
+>  drivers/i2c/muxes/Kconfig                          |  11 +
+>  drivers/i2c/muxes/Makefile                         |   2 +
+>  drivers/i2c/muxes/i2c-arbitrator-cros-ec.c         | 222 +++++++++++++++++++++
+>  4 files changed, 311 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-arbitrator-cros-ec.txt
+>  create mode 100644 drivers/i2c/muxes/i2c-arbitrator-cros-ec.c
 
->> as there was no scheme established, yet. I'm not hanging on that name,=
+Is there anything you'd like done before landing this patch for 3.10?
+It's been reviewed by Stephen Warren (thanks Stephen!).  From what I
+remember from Olof's talk at ELC it seems like the best thing would be
+to merge part 1 through i2c tree and then ask Olof to merge parts 2
+and 3 (the dts bits) through the arm-soc tree.
 
->> I'd rather appreciate to follow the common at91 DT rules.
->=20
-> It follows at91 Dt rules, we have atmel,at91sam9x5-i2c, atmel,at91sam9x=
-5-gpio
-> and others.
+I believe you could also add a "Tested-by" from Naveen to patch #1.
+He sent a tested by for parts 2 and 3 so must have also tested part 1
+(the other two don't function without it).
 
-That's okay then, just wanted to clarify this. Can you send a v2, then
-I'll apply the patches.
+Please let me know--I'm happy to spin with any changes needed.  :)
 
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
-------enig2SPIDKVGVXOTBXUCWNAAQ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlE9/2wACgkQjTAFq1RaXHNy4gCdHhloTCVEzp+YeFilfyRoLAAq
-ylwAnjqXSe/mRXjCeg6/VpicUL1ffPoB
-=UGrr
------END PGP SIGNATURE-----
-
-------enig2SPIDKVGVXOTBXUCWNAAQ--
+-Doug
