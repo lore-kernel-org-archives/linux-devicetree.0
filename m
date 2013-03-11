@@ -1,73 +1,117 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 3/3] can: Kconfig: CAN_AT91 depends on ARCH_AT91
-Date: Mon, 11 Mar 2013 10:57:10 +0100
-Message-ID: <513DAA76.6040803@pengutronix.de>
-References: <1362763842-14924-1-git-send-email-ludovic.desroches@atmel.com> <1362763842-14924-4-git-send-email-ludovic.desroches@atmel.com> <513A2396.4080508@pengutronix.de> <20130311092419.GB2572@ludovic.desroches@atmel.com>
+From: "Vishwanathrao Badarkhe, Manish" <manishv.b-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH] ARM: dts: omap2plus: remove interrupt-parent property
+Date: Mon, 11 Mar 2013 15:30:02 +0530
+Message-ID: <1362996002-15552-1-git-send-email-manishv.b@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="----enig2PAUKNCNLCAHSNWGJBIUA"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20130311092419.GB2572@ludovic.desroches@atmel.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>
-Cc: linux-can@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, nicolas.ferre@atmel.com, plagnioj@jcrosoft.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: manishv.b-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
-------enig2PAUKNCNLCAHSNWGJBIUA
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Removed interrupt-parent property from dts file as it is already
+with root node in dtsi file.
 
-On 03/11/2013 10:24 AM, Ludovic Desroches wrote:
-> On Fri, Mar 08, 2013 at 06:44:54PM +0100, Marc Kleine-Budde wrote:
->> On 03/08/2013 06:30 PM, ludovic.desroches@atmel.com wrote:
->>> From: Ludovic Desroches <ludovic.desroches@atmel.com>
->>>
->>> SAMA5D3 devices also embed CAN feature. Moreover if we want to produc=
-e a single
->>> kernel image (at least for Atmel devices) it is not useful to be too
->>> restrictive.
->>
->> If it compiles on other ARMs aswell we can make it depend on ARCH_ARM.=
+Signed-off-by: Vishwanathrao Badarkhe, Manish <manishv.b-l0cyMroinI0@public.gmane.org>
+---
+:100644 100644 f624dc8... 36e839a... M	arch/arm/boot/dts/omap3-beagle.dts
+:100644 100644 e8ba1c2... a5375fd... M	arch/arm/boot/dts/omap3-evm.dts
+:100644 100644 4122efe... 389c9c7... M	arch/arm/boot/dts/omap4-panda.dts
+:100644 100644 43e5258... cdf5dfd... M	arch/arm/boot/dts/omap4-sdp.dts
+:100644 100644 6601e6a... 1d4a9d4... M	arch/arm/boot/dts/omap4-var-som.dts
+ arch/arm/boot/dts/omap3-beagle.dts  |    1 -
+ arch/arm/boot/dts/omap3-evm.dts     |    1 -
+ arch/arm/boot/dts/omap4-panda.dts   |    2 --
+ arch/arm/boot/dts/omap4-sdp.dts     |    2 --
+ arch/arm/boot/dts/omap4-var-som.dts |    1 -
+ 5 files changed, 0 insertions(+), 7 deletions(-)
 
->>=20
-> I was thinking about it but I am wondering if it makes sense. Should we=
- have a
-> non atmel device with atmel can?
-
-I don't know if atmels sells the IP core separately, but ARM Linux is
-going towards a multi ARCH kernel anyways. So the can core should
-compile on non atmel and/or multi arch kernels.
-
-> I have no position about this point, if you think it's better to make
-> it depending onto ARCH_ARM, I'll change it if there is no compilation
-> issue.
-
-Please make it so.
-
-regards,
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
-------enig2PAUKNCNLCAHSNWGJBIUA
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlE9qnkACgkQjTAFq1RaXHO8xQCfW8u8An0yL/5TYieG8UfaHWdq
-O+MAoIrK1EpQ24SI4hxsmwWxtEWtHnvs
-=mTaT
------END PGP SIGNATURE-----
-
-------enig2PAUKNCNLCAHSNWGJBIUA--
+diff --git a/arch/arm/boot/dts/omap3-beagle.dts b/arch/arm/boot/dts/omap3-beagle.dts
+index f624dc8..36e839a 100644
+--- a/arch/arm/boot/dts/omap3-beagle.dts
++++ b/arch/arm/boot/dts/omap3-beagle.dts
+@@ -46,7 +46,6 @@
+ 	twl: twl@48 {
+ 		reg = <0x48>;
+ 		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+-		interrupt-parent = <&intc>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/omap3-evm.dts b/arch/arm/boot/dts/omap3-evm.dts
+index e8ba1c2..a5375fd 100644
+--- a/arch/arm/boot/dts/omap3-evm.dts
++++ b/arch/arm/boot/dts/omap3-evm.dts
+@@ -34,7 +34,6 @@
+ 	twl: twl@48 {
+ 		reg = <0x48>;
+ 		interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+-		interrupt-parent = <&intc>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/omap4-panda.dts b/arch/arm/boot/dts/omap4-panda.dts
+index 4122efe..389c9c7 100644
+--- a/arch/arm/boot/dts/omap4-panda.dts
++++ b/arch/arm/boot/dts/omap4-panda.dts
+@@ -119,7 +119,6 @@
+ 		reg = <0x48>;
+ 		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
+ 		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
+-		interrupt-parent = <&gic>;
+ 	};
+ 
+ 	twl6040: twl@4b {
+@@ -127,7 +126,6 @@
+ 		reg = <0x4b>;
+ 		/* SPI = 0, IRQ# = 119, 4 = active high level-sensitive */
+ 		interrupts = <0 119 4>; /* IRQ_SYS_2N cascaded to gic */
+-		interrupt-parent = <&gic>;
+ 		ti,audpwron-gpio = <&gpio4 31 0>;  /* gpio line 127 */
+ 
+ 		vio-supply = <&v1v8>;
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+index 43e5258..cdf5dfd 100644
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -221,7 +221,6 @@
+ 		reg = <0x48>;
+ 		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
+ 		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
+-		interrupt-parent = <&gic>;
+ 	};
+ 
+ 	twl6040: twl@4b {
+@@ -229,7 +228,6 @@
+ 		reg = <0x4b>;
+ 		/* SPI = 0, IRQ# = 119, 4 = active high level-sensitive */
+ 		interrupts = <0 119 4>; /* IRQ_SYS_2N cascaded to gic */
+-		interrupt-parent = <&gic>;
+ 		ti,audpwron-gpio = <&gpio4 31 0>;  /* gpio line 127 */
+ 
+ 		vio-supply = <&v1v8>;
+diff --git a/arch/arm/boot/dts/omap4-var-som.dts b/arch/arm/boot/dts/omap4-var-som.dts
+index 6601e6a..1d4a9d4 100644
+--- a/arch/arm/boot/dts/omap4-var-som.dts
++++ b/arch/arm/boot/dts/omap4-var-som.dts
+@@ -35,7 +35,6 @@
+ 		reg = <0x48>;
+ 		/* SPI = 0, IRQ# = 7, 4 = active high level-sensitive */
+ 		interrupts = <0 7 4>; /* IRQ_SYS_1N cascaded to gic */
+-		interrupt-parent = <&gic>;
+ 	};
+ };
+ 
+-- 
+1.7.4.1
