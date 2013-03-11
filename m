@@ -1,53 +1,121 @@
-From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH] ASoC: core: fix possible memory leak in snd_soc_bytes_put()
-Date: Tue, 12 Mar 2013 00:35:14 +0800
-Message-ID: <CAPgLHd_DuPDciAt9Qdn-1K2CSL14GDKt6XR+8gaac8hgvLScaw@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 4/6] mfd: max8925: support dt for backlight
+Date: Mon, 11 Mar 2013 16:39:00 +0000
+Message-ID: <201303111639.00553.arnd@arndb.de>
+References: <1359992448-22229-1-git-send-email-haojian.zhuang@linaro.org> <1359992448-22229-4-git-send-email-haojian.zhuang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1359992448-22229-4-git-send-email-haojian.zhuang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: lgirdwood@gmail.com, broonie@opensource.wolfsonmicro.com, perex@perex.cz, tiwai@suse.de, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: Haojian Zhuang <haojian.zhuang@linaro.org>
+Cc: sameo@linux.intel.com, qingx@marvell.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, Haojian Zhuang <haojian.zhuang@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
+On Monday 04 February 2013, Haojian Zhuang wrote:
+> From: Qing Xu <qingx@marvell.com>
+> 
+> Add device tree support in max8925 backlight.
+> 
+> Signed-off-by: Qing Xu <qingx@marvell.com>
+> Signed-off-by: Haojian Zhuang <haojian.zhuang@gmail.com>
 
-'data' is malloced in snd_soc_bytes_put() and should be freed
-before leaving from the error handling cases, otherwise it will cause
-memory leak.
+Sorry, but after finding a build warning in this patch, I looked closer and
+found more issues. I would recommend reverting this patch.
 
-Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
----
- sound/soc/soc-core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> diff --git a/drivers/video/backlight/max8925_bl.c b/drivers/video/backlight/max8925_bl.c
+> index 2c9bce0..5ca11b0 100644
+> --- a/drivers/video/backlight/max8925_bl.c
+> +++ b/drivers/video/backlight/max8925_bl.c
+> @@ -101,6 +101,29 @@ static const struct backlight_ops max8925_backlight_ops = {
+>  	.get_brightness	= max8925_backlight_get_brightness,
+>  };
+>  
+> +#ifdef CONFIG_OF
+> +static int max8925_backlight_dt_init(struct platform_device *pdev,
+> +			      struct max8925_backlight_pdata *pdata)
+> +{
+> +	struct device_node *nproot = pdev->dev.parent->of_node, *np;
+> +	int dual_string;
+> +
+> +	if (!nproot)
+> +		return -ENODEV;
+> +	np = of_find_node_by_name(nproot, "backlight");
+> +	if (!np) {
+> +		dev_err(&pdev->dev, "failed to find backlight node\n");
+> +		return -ENODEV;
+> +	}
 
-diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
-index b7e84a7..93341de 100644
---- a/sound/soc/soc-core.c
-+++ b/sound/soc/soc-core.c
-@@ -3140,7 +3140,7 @@ int snd_soc_bytes_put(struct snd_kcontrol *kcontrol,
- 	if (params->mask) {
- 		ret = regmap_read(codec->control_data, params->base, &val);
- 		if (ret != 0)
--			return ret;
-+			goto out;
- 
- 		val &= params->mask;
- 
-@@ -3158,13 +3158,15 @@ int snd_soc_bytes_put(struct snd_kcontrol *kcontrol,
- 			((u32 *)data)[0] |= cpu_to_be32(val);
- 			break;
- 		default:
--			return -EINVAL;
-+			ret = -EINVAL;
-+			goto out;
- 		}
- 	}
- 
- 	ret = regmap_raw_write(codec->control_data, params->base,
- 			       data, len);
- 
-+out:
- 	kfree(data);
- 
- 	return ret;
+It is nonsense to look at the device node for the parent and then find
+the child by using of_find_node_by_name(). What you should do instead
+is ensure that the backlight platform device gets connected to the
+DT device node by the MFD core. I did not think I'd use the ab8500
+driver as a positive example, but it gets this right by using the
+of_compatible member for the mfd_cell.
+
+> +
+> +	of_property_read_u32(np, "maxim,max8925-dual-string", &dual_string);
+> +	pdata->dual_string = dual_string;
+
+For boolean values, we should use of_property_read_bool, which checks
+the presence of the property and returns "true" if it exists and false
+otherwise. There is no need to assign a value to the property that way,
+and it's more consistent with other drivers.
+
+> +	return 0;
+> +}
+> +#else
+> +#define max8925_backlight_dt_init(x, y)	(-1)
+> +#endif
+
+As I suggested in my earlier patch, the #ifdef is not necessary. I suggested
+using "if (IS_ENABLED(CONFIG_OF))" earlier, but it's actually simpler
+to just return from this function if no node was found. of_find_node_by_name
+is already defined to an empty function returning NULL when CONFIG_OF
+is turned off.
+
+>  static int max8925_backlight_probe(struct platform_device *pdev)
+>  {
+>  	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
+> @@ -147,6 +170,13 @@ static int max8925_backlight_probe(struct platform_device *pdev)
+>  	platform_set_drvdata(pdev, bl);
+>  
+>  	value = 0;
+> +	if (pdev->dev.parent->of_node && !pdata) {
+> +		pdata = devm_kzalloc(&pdev->dev,
+> +				     sizeof(struct max8925_backlight_pdata),
+> +				     GFP_KERNEL);
+
+Using a dynamic allocation for pdata is way overkill here, since the data is
+only used in one place below and then never again. A proper method to
+do this would be
+
+	if (of_property_read_bool(pdev->dev.of_node, "maxim,max8925-dual-string"))
+		value |= 2;
+
+No need to have a separate function or complex parsing at all, and if CONFIG_OF
+is disabled, the code goes away entirely.
+
+
+> +		max8925_backlight_dt_init(pdev, pdata);
+> +	}
+
+Note that when you have a function whose return value is never checked, it
+should not return errors but just "void".
+
+> @@ -158,7 +188,6 @@ static int max8925_backlight_probe(struct platform_device *pdev)
+>  	ret = max8925_set_bits(chip->i2c, data->reg_mode_cntl, 0xfe, value);
+>  	if (ret < 0)
+>  		goto out_brt;
+> -
+>  	backlight_update_status(bl);
+>  	return 0;
+>  out_brt:
+
+Finally, there is no reason to remove the empty line. If it was a good idea
+to remove it, that should probably be a separate patch to clean up the coding
+style.
+
+	Arnd
