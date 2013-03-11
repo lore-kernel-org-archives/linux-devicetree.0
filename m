@@ -1,82 +1,99 @@
-From: Anil Kumar <anilk4.v@gmail.com>
-Subject: Re: [PATCH 4/9] ARM: dts: OMAP3: Add support for OMAP3430 SDP board
-Date: Mon, 11 Mar 2013 08:15:30 +0530
-Message-ID: <CABYxbz78Eu_+__5QGrm5bM2ypJSyds_KJcjWF4SRDj+ZOdV43w@mail.gmail.com>
-References: <1362763654-9660-1-git-send-email-jon-hunter@ti.com>
-	<1362763654-9660-5-git-send-email-jon-hunter@ti.com>
+From: Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/9] ARM: i.MX28: define osc in DT
+Date: Mon, 11 Mar 2013 12:03:17 +0800
+Message-ID: <20130311040315.GF18574@S2101-09.ap.freescale.net>
+References: <1362733304-23037-1-git-send-email-s.trumtrar@pengutronix.de>
+ <1362733304-23037-2-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1362763654-9660-5-git-send-email-jon-hunter@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jon Hunter <jon-hunter@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Benoit Cousson <b-cousson@ti.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1362733304-23037-2-git-send-email-s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+List-Unsubscribe: <https://lists.ozlabs.org/options/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/devicetree-discuss/>
+List-Post: <mailto:devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+List-Help: <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/devicetree-discuss>,
+ <mailto:devicetree-discuss-request-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org?subject=subscribe>
+Errors-To: devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Sender: "devicetree-discuss"
+ <devicetree-discuss-bounces+gldd-devicetree-discuss=m.gmane.org-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, rtc-linux-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
-
-On Fri, Mar 8, 2013 at 10:57 PM, Jon Hunter <jon-hunter@ti.com> wrote:
-> Adds basic device-tree support for OMAP3430 SDP board which has 256MB
-> of RAM and uses the TWL4030 power management IC.
->
-> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+On Fri, Mar 08, 2013 at 10:01:36AM +0100, Steffen Trumtrar wrote:
+> From: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> 
+> Instead of hardcoding the ref_xtal in the clk driver, get it from the DT.
+> 
+> Signed-off-by: Juergen Beisert <jbe-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> Signed-off-by: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 > ---
->  arch/arm/boot/dts/Makefile         |    1 +
->  arch/arm/boot/dts/omap3430-sdp.dts |   46 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 47 insertions(+)
->  create mode 100644 arch/arm/boot/dts/omap3430-sdp.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 9c62558..89013ed 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -119,6 +119,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
->         omap3-beagle-xm.dtb \
->         omap3-evm.dtb \
->         omap3-tobi.dtb \
-> +       omap3430-sdp.dtb \
->         omap4-panda.dtb \
->         omap4-panda-a4.dtb \
->         omap4-panda-es.dtb \
-> diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
-> new file mode 100644
-> index 0000000..be0650d
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/omap3430-sdp.dts
-> @@ -0,0 +1,46 @@
-> +/*
-> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +/dts-v1/;
+>  arch/arm/boot/dts/imx28.dtsi | 11 +++++++++++
+>  drivers/clk/mxs/clk-imx28.c  | 16 +++++++++++++++-
+>  2 files changed, 26 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx28.dtsi b/arch/arm/boot/dts/imx28.dtsi
+> index 7ba4966..b9e3712 100644
+> --- a/arch/arm/boot/dts/imx28.dtsi
+> +++ b/arch/arm/boot/dts/imx28.dtsi
+> @@ -37,6 +37,17 @@
+>  		};
+>  	};
+>  
+> +	clocks {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
 > +
-> +/include/ "omap3.dtsi"
+> +		osc24m: system-oscillator {
+> +			compatible = "fixed-clock";
+> +			#clock-cells = <0>;
+> +			clock-frequency = <24000000>;
+> +		};
+> +	};
 > +
-> +/ {
-> +       model = "TI OMAP3430 SDP";
-> +       compatible = "ti,omap3430-sdp", "ti,omap3";
+>  	apb@80000000 {
+>  		compatible = "simple-bus";
+>  		#address-cells = <1>;
+> diff --git a/drivers/clk/mxs/clk-imx28.c b/drivers/clk/mxs/clk-imx28.c
+> index 76ce6c6..01048b5 100644
+> --- a/drivers/clk/mxs/clk-imx28.c
+> +++ b/drivers/clk/mxs/clk-imx28.c
+> @@ -158,7 +158,21 @@ int __init mx28_clocks_init(void)
+>  
+>  	clk_misc_init();
+>  
+> -	clks[ref_xtal] = mxs_clk_fixed("ref_xtal", 24000000);
+> +	/* retrieve the crystal's frequencies from device tree */
+> +	for_each_compatible_node(np, NULL, "fixed-clock") {
+> +		u32 rate;
 > +
-> +       memory {
-> +               device_type = "memory";
-> +               reg = <0x80000000 0x10000000>; /* 256 MB */
-> +       };
-> +};
+> +		if (of_property_read_u32(np, "clock-frequency", &rate))
+> +			continue;
 > +
-> +&i2c1 {
-> +       clock-frequency = <2600000>;
-> +
-> +       twl: twl@48 {
-> +               reg = <0x48>;
-> +               interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-> +               interrupt-parent = <&intc>;
+> +		if (of_device_is_compatible(np, "fsl,mxs-system"))
 
-No need of  "interrupt-parent = <&intc>" as it is with root node
-already.
+Use node name to save the custom compatible.
 
-Thanks,
-Anil
+But more fundamental question - do you really have a imx28 system
+running a ref_xtal that is not 24 MHz?  Or does imx28 actually support
+any other frequency ref_xtal other than 24 MHz?
 
-[...]
+Shawn
+
+> +			clks[ref_xtal] = mxs_clk_fixed("ref_xtal", rate);
+> +	}
+> +
+> +	/* if not set, guess their frequency */
+> +	if (clks[ref_xtal] == NULL)
+> +		clks[ref_xtal] = mxs_clk_fixed("ref_xtal", 24000000);
+> +
+>  	clks[pll0] = mxs_clk_pll("pll0", "ref_xtal", PLL0CTRL0, 17, 480000000);
+>  	clks[pll1] = mxs_clk_pll("pll1", "ref_xtal", PLL1CTRL0, 17, 480000000);
+>  	clks[pll2] = mxs_clk_pll("pll2", "ref_xtal", PLL2CTRL0, 23, 50000000);
+> -- 
+> 1.8.2.rc2
+> 
