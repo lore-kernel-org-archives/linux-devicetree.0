@@ -1,121 +1,67 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 4/6] mfd: max8925: support dt for backlight
-Date: Mon, 11 Mar 2013 16:39:00 +0000
-Message-ID: <201303111639.00553.arnd@arndb.de>
-References: <1359992448-22229-1-git-send-email-haojian.zhuang@linaro.org> <1359992448-22229-4-git-send-email-haojian.zhuang@linaro.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 2/2] ARM: dts: add pin state information in client nodes
+ for Exynos5 platforms
+Date: Mon, 11 Mar 2013 10:02:24 -0700
+Message-ID: <CAD=FV=Vrv1bvF0rbNkAvbX0dkJ1GxrRUUBNvHmLcWd45omRBag@mail.gmail.com>
+References: <1362573398-15126-1-git-send-email-thomas.abraham@linaro.org>
+	<1362573398-15126-3-git-send-email-thomas.abraham@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1359992448-22229-4-git-send-email-haojian.zhuang@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Haojian Zhuang <haojian.zhuang@linaro.org>
-Cc: sameo@linux.intel.com, qingx@marvell.com, grant.likely@secretlab.ca, rob.herring@calxeda.com, cxie4@marvell.com, linux-kernel@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, patches@linaro.org, Haojian Zhuang <haojian.zhuang@gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1362573398-15126-3-git-send-email-thomas.abraham@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.abraham@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree-discuss@lists.ozlabs.org, Kukjin Kim <kgene.kim@samsung.com>, patches@linaro.org, linux-samsung-soc@vger.kernel.org, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 04 February 2013, Haojian Zhuang wrote:
-> From: Qing Xu <qingx@marvell.com>
-> 
-> Add device tree support in max8925 backlight.
-> 
-> Signed-off-by: Qing Xu <qingx@marvell.com>
-> Signed-off-by: Haojian Zhuang <haojian.zhuang@gmail.com>
+Thomas,
 
-Sorry, but after finding a build warning in this patch, I looked closer and
-found more issues. I would recommend reverting this patch.
+Thank you for doing this!  :)
 
-> diff --git a/drivers/video/backlight/max8925_bl.c b/drivers/video/backlight/max8925_bl.c
-> index 2c9bce0..5ca11b0 100644
-> --- a/drivers/video/backlight/max8925_bl.c
-> +++ b/drivers/video/backlight/max8925_bl.c
-> @@ -101,6 +101,29 @@ static const struct backlight_ops max8925_backlight_ops = {
->  	.get_brightness	= max8925_backlight_get_brightness,
->  };
->  
-> +#ifdef CONFIG_OF
-> +static int max8925_backlight_dt_init(struct platform_device *pdev,
-> +			      struct max8925_backlight_pdata *pdata)
-> +{
-> +	struct device_node *nproot = pdev->dev.parent->of_node, *np;
-> +	int dual_string;
-> +
-> +	if (!nproot)
-> +		return -ENODEV;
-> +	np = of_find_node_by_name(nproot, "backlight");
-> +	if (!np) {
-> +		dev_err(&pdev->dev, "failed to find backlight node\n");
-> +		return -ENODEV;
-> +	}
+On Wed, Mar 6, 2013 at 4:36 AM, Thomas Abraham
+<thomas.abraham@linaro.org> wrote:>
 
-It is nonsense to look at the device node for the parent and then find
-the child by using of_find_node_by_name(). What you should do instead
-is ensure that the backlight platform device gets connected to the
-DT device node by the MFD core. I did not think I'd use the ab8500
-driver as a positive example, but it gets this right by using the
-of_compatible member for the mfd_cell.
+> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+> index 17dd951..434e440 100644
+> --- a/arch/arm/boot/dts/exynos5250-snow.dts
+> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
+> @@ -35,9 +50,8 @@
+>          */
+>         dwmmc3@12230000 {
+>                 slot@0 {
+> -                       gpios = <&gpc4 0 2 0 0>, <&gpc4 1 2 3 0>,
+> -                               <&gpc4 3 2 3 0>, <&gpc4 4 2 3 0>,
+> -                               <&gpc4 5 2 3 0>, <&gpc4 6 2 3 0>;
+> +                       pinctrl-names = "default";
+> +                       pinctrl-0 = <&sd3_clk &sd3_cmd &sd3_bus4>;
 
-> +
-> +	of_property_read_u32(np, "maxim,max8925-dual-string", &dual_string);
-> +	pdata->dual_string = dual_string;
-
-For boolean values, we should use of_property_read_bool, which checks
-the presence of the property and returns "true" if it exists and false
-otherwise. There is no need to assign a value to the property that way,
-and it's more consistent with other drivers.
-
-> +	return 0;
-> +}
-> +#else
-> +#define max8925_backlight_dt_init(x, y)	(-1)
-> +#endif
-
-As I suggested in my earlier patch, the #ifdef is not necessary. I suggested
-using "if (IS_ENABLED(CONFIG_OF))" earlier, but it's actually simpler
-to just return from this function if no node was found. of_find_node_by_name
-is already defined to an empty function returning NULL when CONFIG_OF
-is turned off.
-
->  static int max8925_backlight_probe(struct platform_device *pdev)
->  {
->  	struct max8925_chip *chip = dev_get_drvdata(pdev->dev.parent);
-> @@ -147,6 +170,13 @@ static int max8925_backlight_probe(struct platform_device *pdev)
->  	platform_set_drvdata(pdev, bl);
->  
->  	value = 0;
-> +	if (pdev->dev.parent->of_node && !pdata) {
-> +		pdata = devm_kzalloc(&pdev->dev,
-> +				     sizeof(struct max8925_backlight_pdata),
-> +				     GFP_KERNEL);
-
-Using a dynamic allocation for pdata is way overkill here, since the data is
-only used in one place below and then never again. A proper method to
-do this would be
-
-	if (of_property_read_bool(pdev->dev.of_node, "maxim,max8925-dual-string"))
-		value |= 2;
-
-No need to have a separate function or complex parsing at all, and if CONFIG_OF
-is disabled, the code goes away entirely.
+nit: Move comment about EMI to the "pinctrl@11400000" that you added
+earlier in this file.  ...then move the pinctrl-names and pinctrl-0 to
+"cros5250.dtsi".  This is not major and could be done in a follow-up
+patch.
 
 
-> +		max8925_backlight_dt_init(pdev, pdata);
-> +	}
+I done basic testing of this patch series on exynos5250-snow atop
+linux-next 20130307.  By series I mean these patchwork IDs:
 
-Note that when you have a function whose return value is never checked, it
-should not return errors but just "void".
+2224531 New          mmc: sdhci-s3c: let device core setup the default
+pin configuration
+2224621 New          spi: s3c64xx: let device core setup the default
+pin configuration
+2224731 New          input: samsung-keypad: let device core setup the
+default pin configuration
+2224801 New          ASoC: samsung: let device core setup the default
+pin configuration
+2224851 New          mmc: dwmmc: let device core setup the default pin
+configuration
+2225141 New          [1/2] ARM: dts: add pin state information in
+client nodes for Exynos4 platforms
+2225151 New          [2/2] ARM: dts: add pin state information in
+client nodes for Exynos5 platforms
 
-> @@ -158,7 +188,6 @@ static int max8925_backlight_probe(struct platform_device *pdev)
->  	ret = max8925_set_bits(chip->i2c, data->reg_mode_cntl, 0xfe, value);
->  	if (ret < 0)
->  		goto out_brt;
-> -
->  	backlight_update_status(bl);
->  	return 0;
->  out_brt:
+Tested-by: Doug Anderson <dianders@chromium.org>
 
-Finally, there is no reason to remove the empty line. If it was a good idea
-to remove it, that should probably be a separate patch to clean up the coding
-style.
 
-	Arnd
+This patch looks good to me with or without the above nit fix.
+
+Reviewed-by: Doug Anderson <dianders@chromium.org>
