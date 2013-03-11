@@ -1,33 +1,59 @@
 From: Wei Yongjun <weiyj.lk@gmail.com>
-Subject: [PATCH -next] microblaze/PCI: remove duplicated include from pci-common.c
-Date: Mon, 11 Mar 2013 22:13:30 +0800
-Message-ID: <CAPgLHd9ufsjGd9CvVf7y3jMXoN=rh7uc7jxiwZ9FHSeJ+XRzUQ@mail.gmail.com>
+Subject: [PATCH -next] pinctrl: sirf: using for_each_set_bit to simplify the code
+Date: Mon, 11 Mar 2013 22:23:45 +0800
+Message-ID: <CAPgLHd9n7nmyhUcRgPwEyjweZKA+fgi409yEJgK6LmF2Wu6n-g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: monstr@monstr.eu, grant.likely@secretlab.ca, rob.herring@calxeda.com
-Cc: yongjun_wei@trendmicro.com.cn, microblaze-uclinux@itee.uq.edu.au, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
+To: baohua.song@csr.com, linus.walleij@linaro.org, grant.likely@secretlab.ca, rob.herring@calxeda.com
+Cc: yongjun_wei@trendmicro.com.cn, linux-arm-kernel@lists.infradead.org, devicetree-discuss@lists.ozlabs.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 
-Remove duplicated include.
+Using for_each_set_bit() to simplify the code.
 
 Signed-off-by: Wei Yongjun <yongjun_wei@trendmicro.com.cn>
 ---
- arch/microblaze/pci/pci-common.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/pinctrl/pinctrl-sirf.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/arch/microblaze/pci/pci-common.c b/arch/microblaze/pci/pci-common.c
-index 9ea521e..bdb8ea1 100644
---- a/arch/microblaze/pci/pci-common.c
-+++ b/arch/microblaze/pci/pci-common.c
-@@ -30,7 +30,6 @@
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
--#include <linux/pci.h>
- #include <linux/export.h>
+diff --git a/drivers/pinctrl/pinctrl-sirf.c b/drivers/pinctrl/pinctrl-sirf.c
+index 498b2ba..d6cf500 100644
+--- a/drivers/pinctrl/pinctrl-sirf.c
++++ b/drivers/pinctrl/pinctrl-sirf.c
+@@ -1669,15 +1669,12 @@ static void sirfsoc_gpio_set_pullup(const u32 *pullups)
+ 	const unsigned long *p = (const unsigned long *)pullups;
  
- #include <asm/processor.h>
+ 	for (i = 0; i < SIRFSOC_GPIO_NO_OF_BANKS; i++) {
+-		n = find_first_bit(p + i, BITS_PER_LONG);
+-		while (n < BITS_PER_LONG) {
++		for_each_set_bit(n, p + i, BITS_PER_LONG) {
+ 			u32 offset = SIRFSOC_GPIO_CTRL(i, n);
+ 			u32 val = readl(sgpio_bank[i].chip.regs + offset);
+ 			val |= SIRFSOC_GPIO_CTL_PULL_MASK;
+ 			val |= SIRFSOC_GPIO_CTL_PULL_HIGH;
+ 			writel(val, sgpio_bank[i].chip.regs + offset);
+-
+-			n = find_next_bit(p + i, BITS_PER_LONG, n + 1);
+ 		}
+ 	}
+ }
+@@ -1688,15 +1685,12 @@ static void sirfsoc_gpio_set_pulldown(const u32 *pulldowns)
+ 	const unsigned long *p = (const unsigned long *)pulldowns;
+ 
+ 	for (i = 0; i < SIRFSOC_GPIO_NO_OF_BANKS; i++) {
+-		n = find_first_bit(p + i, BITS_PER_LONG);
+-		while (n < BITS_PER_LONG) {
++		for_each_set_bit(n, p + i, BITS_PER_LONG) {
+ 			u32 offset = SIRFSOC_GPIO_CTRL(i, n);
+ 			u32 val = readl(sgpio_bank[i].chip.regs + offset);
+ 			val |= SIRFSOC_GPIO_CTL_PULL_MASK;
+ 			val &= ~SIRFSOC_GPIO_CTL_PULL_HIGH;
+ 			writel(val, sgpio_bank[i].chip.regs + offset);
+-
+-			n = find_next_bit(p + i, BITS_PER_LONG, n + 1);
+ 		}
+ 	}
+ }
