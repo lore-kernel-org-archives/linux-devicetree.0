@@ -1,78 +1,57 @@
 From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH 08/10] ASoC: dmaengine_pcm: Add open
- function for DT DMA request
-Date: Tue, 12 Mar 2013 19:02:07 +0000
-Message-ID: <20130312190206.GY19942@opensource.wolfsonmicro.com>
-References: <1362940391-8338-1-git-send-email-mpa@pengutronix.de>
- <1362940391-8338-9-git-send-email-mpa@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] leds: Add support for Palmas LEDs
+Date: Tue, 12 Mar 2013 19:10:29 +0000
+Message-ID: <20130312191029.GC19942@opensource.wolfsonmicro.com>
+References: <1362064909-634-1-git-send-email-ian@slimlogic.co.uk>
+ <CAK5ve-+-=R-f1KpEWD=4J3ia+QXmgnGvhDMV9tNf2_3WZupZaA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0911268487793710241=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1362940391-8338-9-git-send-email-mpa@pengutronix.de>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Markus Pargmann <mpa@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, devicetree-discuss@lists.ozlabs.org, Liam Girdwood <lgirdwood@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@linaro.org>, Timur Tabi <timur@freescale.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7KvBbaRjXS2SFKKp"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAK5ve-+-=R-f1KpEWD=4J3ia+QXmgnGvhDMV9tNf2_3WZupZaA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bryan Wu <cooloney@gmail.com>
+Cc: Ian Lartey <ian@slimlogic.co.uk>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, ldewangan@nvidia.com, j-keerthy@ti.com, gg@slimlogic.co.uk, rpurdie@rpsys.net, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
 
---===============0911268487793710241==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ELMKpCVvjiB+uwRu"
-Content-Disposition: inline
-
-
---ELMKpCVvjiB+uwRu
+--7KvBbaRjXS2SFKKp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sun, Mar 10, 2013 at 07:33:09PM +0100, Markus Pargmann wrote:
-> Add a function to open a DMA PCM substream using devicetree data
-> provided via the client device node. The patch introduces a public
-> function and a private subfunction that is called by both open
-> functions.
+On Tue, Mar 12, 2013 at 11:57:50AM -0700, Bryan Wu wrote:
+> On Thu, Feb 28, 2013 at 7:21 AM, Ian Lartey <ian@slimlogic.co.uk> wrote:
 
-Someone (I think it was Shawn) sent a very similar patch just recently
-which appears to have fallen out of my inbox unfortunately - can you
-please check what's going on there and coordinate with them?  Let me
-know if you can't find the patch and I'll dig it out.
+> > +       spinlock_t value_lock;
 
---ELMKpCVvjiB+uwRu
+> I think you don't need this spinlock to protect the value, the mutex is enough.
+
+You need to use a spinlock because values can be set from hard IRQ
+context so you can't take a mutex there.  Someone should really factor
+this out into the framework in their copious free time, the set and
+schedule pattern is very common in drivers.
+
+--7KvBbaRjXS2SFKKp
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1.4.12 (GNU/Linux)
 
-iQIcBAEBAgAGBQJRP3ujAAoJELSic+t+oim9H/8P/j8uNdekHBn0RrtdgHL3ykO5
-NNW26DLgtlvPR7bf4IrdMfLr92c4OWvIKALfZwHgGI3ozaiRSzmEIMWY5wNrhAC9
-UJi+hY+aJjBrd0jK12jOKmKqDVNnEjqD6y+4+bfueGYZ0o8xNo/WlolfjIcpQfvl
-KAPNQ0pmw6LRekNzkTAEYEOR9ZTdYCH1w9n8fw0rVWKgK4ZEkLhrb7aOGsmYqkF5
-oOLgIQdZJtVLLuJngvuzg4HnuXBh6ny+ps8zpjphm+GaCOBVOtrYMg1Oc6HmcV0f
-LRMwmc6tMOcwnwmQiEZ1lJjle8G96WQENM+2uROkGcuJLFMWbaq0sXxGKI+AeYv1
-5Q+zUp99J+42Yfzf2/hZ+4jKT7zYYdDg2oz6njVvu6BCoEZtFgXgGAke8I/JhxYh
-n/T+V18ZDFLvHX0PahmaTw8jLmlB+LcJiA2vN7/RJLcoGQo0+GhowIVoKPAPIK6h
-3jirA2J4hQCMixF1I6uSCVK3Puqbe+E7u1uSLkSR2suUXfuT47dtdf65o9Eq8S76
-zr8Q0B1OtjjfUTigpF2/eEby9LhZhqB/P26oBk5vDQM9KEkFfeho11p5IRNYx+DC
-e3HnlZniFS9gAL+JwI48ko5z7tw12o+OXDfOToI+/Ce5GMhr6dHlFgVghOmHY7tW
-27m3ESkHyOwHy9kBjCjj
-=2vC7
+iQIcBAEBAgAGBQJRP32eAAoJELSic+t+oim9RGIP/jo6uSRcr5LWT6AUeF9MrDJZ
+uJm8hgjX9b2s6Upl4CVa3AIS/78OHiiLwBp3WHhGcpTZ5G8wBQ8iuvP71NsRWG7r
+twJFJIL2EZJT57sFpfuZ25MgDXKhCj3b32/UzwciRB6GwfOYHGfM4lChj3CdaTBU
+fMqxPIK76WcA5MKnvpev9yiBpXGzFduLnpCbqnKSFiJhmtmYoaR8lmMsclYb4A7n
+1xI5B4x8k5VDK3+Vzk0apuOwRIPPoEHdXbrGn+Uz3oBqxDcU+Q8OxWIcNKdrwTWS
+B5lPJuWGsSVqEV6NTFPMIz5nG2ZcLSEMzfgx34fPkQCojDXlJqSddSJPOpOS8mmD
+VtOLHmUY8PlfdM46s+++TL7mvZY5iTqOLvb0G+5+2DduOa+7KRF5ChjYuNmDmxic
+UFHt7305jVhewgN+7f6SM88HE0bLW+JiGJMG9Pm5/teEMJudVn4+TCgrn9QUtoYx
+ycErB9BuEFdaYqYIJq6Pz33RBGWjoVZvdk6wCBPcUBNRqsN5TpKmC7ersWlJ0zO0
+U8eKzAT3/S2Wz1sx3HAQNCBBnCJXLPHsJGxvzOkguXoP+NYxdKwb+1JbjXWgy4BZ
+bNKaMim90nx69wo/o80ETqNbaACTF/YrlUUo50LjaxJc4F41NJo1pq4rnoydo3J2
+TAwaB4QvaA81Q7oDem0F
+=pKAI
 -----END PGP SIGNATURE-----
 
---ELMKpCVvjiB+uwRu--
-
---===============0911268487793710241==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============0911268487793710241==--
+--7KvBbaRjXS2SFKKp--
