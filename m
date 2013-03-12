@@ -1,564 +1,150 @@
-From: Sylwester Nawrocki <sylvester.nawrocki@gmail.com>
-Subject: Re: [PATCH v7] [media] Add a V4L2 OF parser
-Date: Tue, 12 Mar 2013 00:46:43 +0100
-Message-ID: <513E6CE3.70207@gmail.com>
-References: <1362757563-30825-1-git-send-email-s.nawrocki@samsung.com> <Pine.LNX.4.64.1303111442420.21241@axis700.grange>
+From: "Kumar, Anil" <anilkumar.v@ti.com>
+Subject: RE: [PATCH 4/9] ARM: dts: OMAP3: Add support for OMAP3430 SDP board
+Date: Tue, 12 Mar 2013 02:42:49 +0000
+Message-ID: <F3DBB1B3EF102E4994C89758CFCA32412CE371@DBDE01.ent.ti.com>
+References: <1362763654-9660-1-git-send-email-jon-hunter@ti.com>
+ <1362763654-9660-5-git-send-email-jon-hunter@ti.com>
+ <CABYxbz7Bg3Uf2wkhH=4d6nEPUjyHF8BiixN6rGCOgEVG_us8Jw@mail.gmail.com>
+ <513E1A1C.8070206@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1303111442420.21241@axis700.grange>
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, devicetree-discuss@lists.ozlabs.org, linux-media@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <513E1A1C.8070206@ti.com>
+Content-Language: en-US
+Sender: linux-omap-owner@vger.kernel.org
+To: "Hunter, Jon" <jon-hunter@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, Anil Kumar <anilk4.v@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guennadi,
 
-On 03/11/2013 04:03 PM, Guennadi Liakhovetski wrote:
-> Hi Sylwester
->
-> Thanks for continuing this work! You have made a great progress compared
-> to my initial version, and I should really have looked at each your
-> submitted new revision, unfortunately, I haven't managed that. So, sorry
-> for chiming back in so late in the game, but maybe we still manage to get
-> it in on time for 3.10. Let me know if you'd like me to do the next couple
-> of rounds :) Or if you disagree with my comments and prefer your present
-> state.
+On Mon, Mar 11, 2013 at 23:23:32, Hunter, Jon wrote:
+> 
+> On 03/08/2013 08:25 PM, Anil Kumar wrote:
+> > Hi Jon,
+> > 
+> > On Fri, Mar 8, 2013 at 10:57 PM, Jon Hunter <jon-hunter@ti.com> wrote:
+> >> Adds basic device-tree support for OMAP3430 SDP board which has 256MB
+> >> of RAM and uses the TWL4030 power management IC.
+> > 
+> > I think this board support should be in separate patch series with
+> > related patches.
+> 
+> Well I wanted to keep them altogether so that I can send a pull request
+> to Benoit and Tony.
 
-I'm glad to hear you can focus on this again. Please feel free to spin
-next improved version of this. :-)
+Sorry, but can you please tell what makes you to think that you
+can send pull request only when they are altogether ?
 
-And let me hold on predicting in which kernel version this patch has
-a chance to be merged upstream ;) In fact, I couldn't spent as much time
-on this as I would like to..
+Is there any logical dependency with other patches except 
+"[PATCH 6/9] ARM: dts: Add OMAP3430 SDP flash memory bindings" is on 
+top of this patch ?
 
-When we are more or less done with the parser I would like to carry on
-with the asynchronous subdev registration support. I have a bit different
-idea on how it could be implemented, comparing to your latest proposal.
-But don't yet have any POC. My feelings are we should integrate it more
-with existing V4L2 data structures, and have the clocks associated with
-struct device, rather than subdev driver. But then come issues at the
-common clock framework, like not implemented clk_unregister() or no
-clk_get/clk_put per a clock provider driver.
+> 
+> >>
+> >> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
+> >> ---
+> >>  arch/arm/boot/dts/Makefile         |    1 +
+> >>  arch/arm/boot/dts/omap3430-sdp.dts |   46 ++++++++++++++++++++++++++++++++++++
+> >>  2 files changed, 47 insertions(+)
+> >>  create mode 100644 arch/arm/boot/dts/omap3430-sdp.dts
+> >>
+> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> >> index 9c62558..89013ed 100644
+> >> --- a/arch/arm/boot/dts/Makefile
+> >> +++ b/arch/arm/boot/dts/Makefile
+> >> @@ -119,6 +119,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+> >>         omap3-beagle-xm.dtb \
+> >>         omap3-evm.dtb \
+> >>         omap3-tobi.dtb \
+> >> +       omap3430-sdp.dtb \
+> >>         omap4-panda.dtb \
+> >>         omap4-panda-a4.dtb \
+> >>         omap4-panda-es.dtb \
+> >> diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
+> >> new file mode 100644
+> >> index 0000000..be0650d
+> >> --- /dev/null
+> >> +++ b/arch/arm/boot/dts/omap3430-sdp.dts
+> >> @@ -0,0 +1,46 @@
+> >> +/*
+> >> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or modify
+> >> + * it under the terms of the GNU General Public License version 2 as
+> >> + * published by the Free Software Foundation.
+> >> + */
+> >> +/dts-v1/;
+> >> +
+> >> +/include/ "omap3.dtsi"
+> >> +
+> >> +/ {
+> >> +       model = "TI OMAP3430 SDP";
+> >> +       compatible = "ti,omap3430-sdp", "ti,omap3";
+> > 
+> > I have not seen any related changes in "board-generic.c" for your board.
+> > So just wanted know, how this board is booting ?
+> 
+> If you look at board-generic.c you will see that "ti,omap3" will match
+> the OMAP3 generic machine. So you don't need to modify the board-generic.c.
 
-> On Fri, 8 Mar 2013, Sylwester Nawrocki wrote:
->
->> From: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
->>
->> Add a V4L2 OF parser, implementing bindings documented in
->> Documentation/devicetree/bindings/media/video-interfaces.txt.
->>
->> Signed-off-by: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
->> [s.nawrocki@samsung.com: various corrections and improvements
->> since the initial version]
->> Signed-off-by: Sylwester Nawrocki<s.nawrocki@samsung.com>
->> ---
->> The last version of the bindings documentation patch can be found
->> at: https://patchwork.kernel.org/patch/2074951
->>
->> Changes since v6:
->>   - minor v4l2_of_get_remote_port_parent() function cleanup.
->>
->> Changes since v5:
->>   - renamed v4l2_of_parse_mipi_csi2 ->  v4l2_of_parse_csi_bus,
->>   - corrected v4l2_of_get_remote_port_parent() function declaration
->>     for !CONFIG_OF,
->>   - reworked v4l2_of_get_next_endpoint() function to consider the
->>     'port' nodes can be grouped under optional 'ports' node,
->>   - added kerneldoc description for v4l2_of_get_next_endpoint()
->>     function.
->>
->> Changes since v4:
->>   - reworked v4l2_of_get_remote_port() function to consider cases
->>     where 'port' nodes are grouped in a parent 'ports' node,
->>   - rearranged struct v4l2_of_endpoint and related changes added
->>     in the parser code,
->>   - added kerneldoc description for struct v4l2_of_endpoint,
->>   - s/link/endpoint in the comments,
->> ---
->>   drivers/media/v4l2-core/Makefile  |    3 +
->>   drivers/media/v4l2-core/v4l2-of.c |  261 +++++++++++++++++++++++++++++++++++++
->>   include/media/v4l2-of.h           |   98 ++++++++++++++
->>   3 files changed, 362 insertions(+)
->>   create mode 100644 drivers/media/v4l2-core/v4l2-of.c
->>   create mode 100644 include/media/v4l2-of.h
->>
->> diff --git a/drivers/media/v4l2-core/Makefile b/drivers/media/v4l2-core/Makefile
->> index c2d61d4..00f64d6 100644
->> --- a/drivers/media/v4l2-core/Makefile
->> +++ b/drivers/media/v4l2-core/Makefile
->> @@ -9,6 +9,9 @@ videodev-objs	:=	v4l2-dev.o v4l2-ioctl.o v4l2-device.o v4l2-fh.o \
->>   ifeq ($(CONFIG_COMPAT),y)
->>     videodev-objs += v4l2-compat-ioctl32.o
->>   endif
->> +ifeq ($(CONFIG_OF),y)
->> +  videodev-objs += v4l2-of.o
->> +endif
->>
->>   obj-$(CONFIG_VIDEO_DEV) += videodev.o v4l2-int-device.o
->>   obj-$(CONFIG_VIDEO_V4L2) += v4l2-common.o
->> diff --git a/drivers/media/v4l2-core/v4l2-of.c b/drivers/media/v4l2-core/v4l2-of.c
->> new file mode 100644
->> index 0000000..cbd18f6
->> --- /dev/null
->> +++ b/drivers/media/v4l2-core/v4l2-of.c
->> @@ -0,0 +1,261 @@
->> +/*
->> + * V4L2 OF binding parsing library
->> + *
->> + * Copyright (C) 2012 Renesas Electronics Corp.
->> + * Author: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
->> + *
->> + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
->> + * Sylwester Nawrocki<s.nawrocki@samsung.com>
->
-> You probably want to put your copyright at the top as the newer one, isn't
-> it the usual order - newest first?
+According to this omap3-beagle.dts and omap3-beagle-xm.dts are also 
+booting in some way. So it is not clear to me, why there two
+"DT_MACHINE_START" for omap3. I have seen there is only one 
+different in "init_time" for the same. 
 
-Yes, I guess you're right.
+> 
+> >> +
+> >> +       memory {
+> >> +               device_type = "memory";
+> >> +               reg = <0x80000000 0x10000000>; /* 256 MB */
+> >> +       };
+> >> +};
+> >> +
+> >> +&i2c1 {
+> >> +       clock-frequency = <2600000>;
+> >> +
+> >> +       twl: twl@48 {
+> >> +               reg = <0x48>;
+> >> +               interrupts = <7>; /* SYS_NIRQ cascaded to intc */
+> >> +               interrupt-parent = <&intc>;
+> >> +       };
+> >> +};
+> >> +
+> >> +/include/ "twl4030.dtsi"
+> >> +
+> >> +&mmc1 {
+> >> +       vmmc-supply = <&vmmc1>;
+> >> +       vmmc_aux-supply = <&vsim>;
+> >> +       bus-width = <8>;
+> >> +};
+> >> +
+> >> +&mmc2 {
+> >> +       status = "disabled";
+> >> +};
+> >> +
+> >> +&mmc3 {
+> >> +       status = "disabled";
+> >> +};
+> > 
+> > I think you should disable modules those are not currently used
+> > as they are enabled by default in omap3.dtsi.
+> > 
+> > exp:-
+> > 
+> > &mcbsp2 {
+> >         status = "disabled";
+> > };
+> 
+> Well may be we could do that in a follow-up patch. If you look at other
+> omap3 boards we have not gone through and disabled all unused modules
+> either. So although I agree, right now I just want to get minimal
+> support added.
+> 
 
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of version 2 of the GNU General Public License as
->> + * published by the Free Software Foundation.
->> + */
->> +#include<linux/kernel.h>
->> +#include<linux/module.h>
->> +#include<linux/of.h>
->> +#include<linux/string.h>
->> +#include<linux/types.h>
->> +
->> +#include<media/v4l2-of.h>
->> +
->> +/**
->> + * v4l2_of_parse_csi_bus() - parse MIPI CSI-2 bus properties
->> + * @node: pointer to endpoint device_node
->> + * @endpoint: pointer to v4l2_of_endpoint data structure
->> + *
->> + * Return: 0 on success or negative error value otherwise.
->> + */
->> +int v4l2_of_parse_csi_bus(const struct device_node *node,
->> +			  struct v4l2_of_endpoint *endpoint)
->> +{
->> +	struct v4l2_mbus_mipi_csi2 *mipi_csi2 =&endpoint->mbus.mipi_csi2;
->> +	u32 data_lanes[ARRAY_SIZE(mipi_csi2->data_lanes)];
->> +	struct property *prop;
->> +	const __be32 *lane = NULL;
->> +	u32 v;
->> +	int i = 0;
->> +
->> +	prop = of_find_property(node, "data-lanes", NULL);
->> +	if (!prop)
->> +		return -EINVAL;
->
-> Oh... Well, first - this isn't an error to not specify "data-lanes." Below
-> you also try to continue configuring the CSI-2 properties in this "error"
-> case, but since you return here, you skip parsing all clock-related
-> properties...
+Hmm... But it makes the kernel to call unused driver probe and get failed
+those required some platform date from DT? you can see the kernel boot logs.
 
-Yes, that's indeed a bug I've overlooked, we should not return an error
-here and instead read the array when "data-lanes" is available.
-IIRC I have even noticed something is wrong here but have forgotten to
-correct it afterwards.
+Thanks,
+Anil  
 
->> +	do {
->> +		lane = of_prop_next_u32(prop, lane,&data_lanes[i]);
->> +	} while (lane&&  i++<  ARRAY_SIZE(data_lanes));
->
-> you could do this as a "for" loop, but then you'd have an additional
-> if-break check inside, so, maybe your do-while is a prettier solution
-> here.
-
-Whichever looks more readable is fine by me. The "for" version might
-be indeed a better option.
-
-	for (i = 0; i < ARRAY_SIZE(data_lanes); i++) {
-		lane = of_prop_next_u32(prop, lane, &data_lanes[i]);
-		if (!lane)
-			break;
-	}
-
->> +	mipi_csi2->num_data_lanes = i;
->> +	while (i--)
->> +		mipi_csi2->data_lanes[i] = data_lanes[i];
->> +
->> +	if (!of_property_read_u32(node, "clock-lanes",&v))
->> +		mipi_csi2->clock_lane = v;
->> +
->> +	if (of_get_property(node, "clock-noncontinuous",&v))
->> +		endpoint->mbus.flags |= V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK;
->> +
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL(v4l2_of_parse_csi_bus);
->> +
->> +/**
->> + * v4l2_of_parse_parallel_bus() - parse parallel bus properties
->> + * @node: pointer to endpoint device_node
->> + * @endpoint: pointer to v4l2_of_endpoint data structure
->> + */
->> +void v4l2_of_parse_parallel_bus(const struct device_node *node,
->> +				struct v4l2_of_endpoint *endpoint)
->> +{
->> +	unsigned int flags = 0;
->> +	u32 v;
->> +
->> +	if (WARN_ON(!endpoint))
->> +		return;
->> +
->> +	if (!of_property_read_u32(node, "hsync-active",&v))
->> +		flags |= v ? V4L2_MBUS_HSYNC_ACTIVE_HIGH :
->> +			V4L2_MBUS_HSYNC_ACTIVE_LOW;
->> +
->> +	if (!of_property_read_u32(node, "vsync-active",&v))
->> +		flags |= v ? V4L2_MBUS_VSYNC_ACTIVE_HIGH :
->> +			V4L2_MBUS_VSYNC_ACTIVE_LOW;
->> +
->> +	if (!of_property_read_u32(node, "pclk-sample",&v))
->> +		flags |= v ? V4L2_MBUS_PCLK_SAMPLE_RISING :
->> +			V4L2_MBUS_PCLK_SAMPLE_FALLING;
->> +
->> +	if (!of_property_read_u32(node, "field-even-active",&v))
->> +		flags |= v ? V4L2_MBUS_FIELD_EVEN_HIGH :
->> +			V4L2_MBUS_FIELD_EVEN_LOW;
->> +	if (flags)
->> +		endpoint->mbus.type = V4L2_MBUS_PARALLEL;
->> +	else
->> +		endpoint->mbus.type = V4L2_MBUS_BT656;
->> +
->> +	if (!of_property_read_u32(node, "data-active",&v))
->> +		flags |= v ? V4L2_MBUS_DATA_ACTIVE_HIGH :
->> +			V4L2_MBUS_DATA_ACTIVE_LOW;
->> +
->> +	if (of_get_property(node, "slave-mode",&v))
->> +		flags |= V4L2_MBUS_SLAVE;
->> +
->> +	if (!of_property_read_u32(node, "bus-width",&v))
->> +		endpoint->mbus.parallel.bus_width = v;
->> +
->> +	if (!of_property_read_u32(node, "data-shift",&v))
->> +		endpoint->mbus.parallel.data_shift = v;
->> +
->> +	endpoint->mbus.flags = flags;
->> +}
->> +EXPORT_SYMBOL(v4l2_of_parse_parallel_bus);
->> +
->> +/**
->> + * v4l2_of_parse_endpoint() - parse all endpoint node properties
->> + * @node: pointer to endpoint device_node
->> + * @endpoint: pointer to v4l2_of_endpoint data structure
->> + *
->> + * All properties are optional. If none are found, we don't set any flags.
->> + * This means the port has a static configuration and no properties have
->> + * to be specified explicitly.
->> + * If any properties that identify the bus as parallel are found and
->> + * slave-mode isn't set, we set V4L2_MBUS_MASTER. Similarly, if we recognise
->> + * the bus as serial CSI-2 and clock-noncontinuous isn't set, we set the
->> + * V4L2_MBUS_CSI2_CONTINUOUS_CLOCK flag.
->> + * The caller should hold a reference to @node.
->> + */
->> +void v4l2_of_parse_endpoint(const struct device_node *node,
->> +			    struct v4l2_of_endpoint *endpoint)
->> +{
->> +	const struct device_node *port_node = of_get_parent(node);
->> +	struct v4l2_of_mbus *mbus =&endpoint->mbus;
->> +	bool data_lanes_present = false;
->> +
->> +	memset(endpoint, 0, sizeof(*endpoint));
->> +
->> +	endpoint->local_node = node;
->> +	/*
->> +	 * It doesn't matter whether the two calls below succeed. If they
->> +	 * don't then the default value 0 is used.
->> +	 */
->> +	of_property_read_u32(port_node, "reg",&endpoint->port);
->> +	of_property_read_u32(node, "reg",&endpoint->id);
->> +
->> +	v4l2_of_parse_parallel_bus(node, endpoint);
->
-> I don't really know why you export both these helper functions to parse
-> only parallel or CSI-2 bus properties, but if you do - doesn't the code
-> below belong to parsing the parallel bus too?
-
-Yes, I think this comes from when I wasn't really aware what the SLAVE
-and MASTER flags are exactly for. My bad, it indeed belongs to the function
-above.
-
-As to why I want to have separate functions for parsing the serial and the
-parallel bus properties - there are cases when you know which bus a driver
-is interested in. And parsing several properties of a parallel bus in
-a MIPI CSI-2 receiver driver is something I would prefer to avoid. Even
-though it's "only" about 10 properties.
-
->> +
->> +	/* If any parallel bus properties have been found, skip serial ones. */
->> +	if (mbus->parallel.bus_width || mbus->parallel.data_shift ||
->> +	    mbus->flags) {
->> +		/* Default parallel bus-master. */
->> +		if (!(mbus->flags&  V4L2_MBUS_SLAVE))
->> +			mbus->flags |= V4L2_MBUS_MASTER;
->> +		return;
->> +	}
->> +
->> +	mbus->type = V4L2_MBUS_CSI2;
->
-> For symmetry you can move the above assignment inside the CSI2 parser
-> function.
-
-Agreed.
-
->> +	if (!v4l2_of_parse_csi_bus(node, endpoint))
->
-> ditto - don't you want to move setting the continuous clock flag inside
-> the function?
->
->> +		data_lanes_present = true;
->
-> Was this a conscious change in behaviour respective the original version?
-> Your v4l2_of_parse_csi_bus() also returns 0 if no data-lane related
-> properties have been detected, which is different from the original
-> implementation and makes the name of the variable wrong.
-
-Indeed, there is a bug when "data-lanes" is an empty property. Uh, why
-nobody else has noticed it before ?.. :)
-
->> +	if ((mbus->mipi_csi2.clock_lane || data_lanes_present)&&
->> +	    !(mbus->flags&  V4L2_MBUS_CSI2_NONCONTINUOUS_CLOCK)) {
->
-> superfluous braces
-
-I don't like superfluous braces too, but in this case it really looked more
-readable to me.
-
->> +		/* Default CSI-2: continuous clock. */
->> +		mbus->flags |= V4L2_MBUS_CSI2_CONTINUOUS_CLOCK;
->> +	}
->> +}
->> +EXPORT_SYMBOL(v4l2_of_parse_endpoint);
->> +
->> +/**
->> + * v4l2_of_get_next_endpoint() - get next endpoint node
->> + * @parent: pointer to the parent's device node
->> + * @prev: previous endpoint node, or NULL to get first
->> + *
->> + * Return: An 'endpoint' node pointer with refcount incremented. Refcount
->> + * of the passed @prev node is not decremented, the caller have to use
->> + * of_node_put() on it when done.
->> + */
->> +struct device_node *v4l2_of_get_next_endpoint(const struct device_node *parent,
->> +					struct device_node *prev)
->> +{
->> +	struct device_node *endpoint, *port = NULL;
->> +
->> +	if (!parent)
->> +		return NULL;
->> +
->> +	if (!prev) {
->> +		/*
->> +		 * It's the first call, we have to find a port subnode
->> +		 * within this node or within an optional 'ports' node.
->> +		 */
->> +		while ((port = of_get_next_child(parent, port))) {
->
-> Hm, I think such assignment-within-condition is discouraged.
-
-True, anyway nobody complained about it so far ;) I didn't get too many
-reviews of it either though..
-
->> +			if (!of_node_cmp(port->name, "port"))
->> +				break;
->> +			if (!of_node_cmp(port->name, "ports")) {
->> +				parent = port;
->> +				of_node_put(port);
->> +				port = NULL;
->
-> Can we do this a bit differently: you shouldn't have both - a "ports"
-> subnode and single "port" subnodes within this node, right? So, why don't
-> we first check for a "ports" subnode. If we find one - use it as a parent
-> for our scan, if we don't - use the parent from the function argument. If
-> we do find "ports" we can also optionally sanity-check for direct "port"
-> subnodes too.
-
-Not sure if such a sanity check is needed. Nevertheless a warning about 
-such
-a broken device tree structure might be useful.
-
-> Then, after this initial parent discovery, we can use the normal
-> for_each_child_of_node() loop - as in the original version.
-
-Yeah, that sounds much more clean. I wasn't trying hard enough to make it
-using for_each_child_of_node() then. :)
-
->> +		};
->> +		if (port) {
->> +			/* Found a port, get an endpoint. */
->> +			endpoint = of_get_next_child(port, NULL);
->> +			of_node_put(port);
->> +		} else {
->> +			endpoint = NULL;
->> +		}
->> +		if (!endpoint)
->> +			pr_err("%s(): no endpoint nodes specified for %s\n",
->> +			       __func__, parent->full_name);
->> +	} else {
->> +		port = of_get_parent(prev);
->> +		if (!port)
->> +			/* Hm, has someone given us the root node ?... */
->> +			return NULL;
->> +
->> +		/* Avoid dropping prev node refcount to 0. */
->> +		of_node_get(prev);
->> +		endpoint = of_get_next_child(port, prev);
->> +		if (endpoint) {
->> +			of_node_put(port);
->> +			return endpoint;
->> +		}
->> +
->> +		/* No more endpoints under this port, try the next one. */
->> +		do {
->> +			port = of_get_next_child(parent, port);
->> +			if (!port)
->> +				return NULL;
->> +		} while (of_node_cmp(port->name, "port"));
->> +
->> +		/* Pick up the first endpoint in this port. */
->> +		endpoint = of_get_next_child(port, NULL);
->> +		of_node_put(port);
->> +	}
->> +
->> +	return endpoint;
->> +}
->> +EXPORT_SYMBOL(v4l2_of_get_next_endpoint);
->> +
->> +/**
->> + * v4l2_of_get_remote_port_parent() - get remote port's parent node
->> + * @node: pointer to a local endpoint device_node
->> + *
->> + * Return: Remote device node associated with remote endpoint node linked
->> + *	   to @node. Use of_node_put() on it when done.
->> + */
->> +struct device_node *v4l2_of_get_remote_port_parent(
->> +			       const struct device_node *node)
->> +{
->> +	struct device_node *np;
->> +	unsigned int depth = 3;
->> +
->> +	/* Get remote endpoint node. */
->> +	np = of_parse_phandle(node, "remote-endpoint", 0);
->> +
->> +	/* Walk 3 levels up only if there is 'ports' node. */
->> +	while (np&&  --depth>= 0) {
->
-> unsigned int depth>= 0 is always true. Why not
->
-> 	for (depth = 3; depth&&  np; depth--)
->
-> or similar?
-
-Gah, a similar mistake again :( Definitely this needs a correction.
-
->> +		np = of_get_next_parent(np);
->> +		if (depth == 1&&  of_node_cmp(np->name, "ports"))
->> +			break;
->> +	}
->> +	return np;
->> +}
->> +EXPORT_SYMBOL(v4l2_of_get_remote_port_parent);
->> diff --git a/include/media/v4l2-of.h b/include/media/v4l2-of.h
->> new file mode 100644
->> index 0000000..458e97b
->> --- /dev/null
->> +++ b/include/media/v4l2-of.h
->> @@ -0,0 +1,98 @@
->> +/*
->> + * V4L2 OF binding parsing library
->> + *
->> + * Copyright (C) 2012 Renesas Electronics Corp.
->> + * Author: Guennadi Liakhovetski<g.liakhovetski@gmx.de>
->> + *
->> + * Copyright (C) 2012 - 2013 Samsung Electronics Co., Ltd.
->> + * Sylwester Nawrocki<s.nawrocki@samsung.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of version 2 of the GNU General Public License as
->> + * published by the Free Software Foundation.
->> + */
->> +#ifndef _V4L2_OF_H
->> +#define _V4L2_OF_H
->> +
->> +#include<linux/list.h>
->> +#include<linux/types.h>
->> +#include<linux/errno.h>
->> +
->> +#include<media/v4l2-mediabus.h>
->> +
->> +struct device_node;
->> +
->> +struct v4l2_mbus_mipi_csi2 {
->> +	unsigned char data_lanes[4];
->> +	unsigned char clock_lane;
->> +	unsigned short num_data_lanes;
->> +};
->> +
->> +struct v4l2_mbus_parallel {
->> +	unsigned char bus_width;
->> +	unsigned char data_shift;
->> +};
->
-> You really need the above two structs? Even if you do - I wouldn't call
-> them "v4l2_mbus_*" - that's a different namespace.
-
-Now that I look at them again they are not that useful and are used in
-the parser code only. Probably it would be OK to move these definitions
-inside the union below and to make them anonymous structs.
-
->> +/**
->> + * struct v4l2_of_endpoint - the endpoint data structure
->> + * @port: identifier (value of reg property) of a port this endpoint belongs to
->> + * @id: identifier (value of reg property) of this endpoint
->> + * @head: list head for this structure
->> + * @local_node: pointer to device_node of this endpoint
->> + * @remote: phandle to remote endpoint node
->> + * @type: media bus type
->> + * @flags: media bus (V4L2_MBUS_*) flags
->> + * @mipi_csi2: MIPI CSI-2 bus configuration data structure
->> + * @parallel: parallel bus configuration data structure
->> + */
->> +struct v4l2_of_endpoint {
->> +	unsigned int port;
->> +	unsigned int id;
->> +	struct list_head head;
->> +	const struct device_node *local_node;
->> +	const __be32 *remote;
->> +	struct v4l2_of_mbus {
-
-This should probably just be "v4l2_of_bus"
-
->> +		enum v4l2_mbus_type type;
->> +		unsigned int flags;
->> +		union {
->> +			struct v4l2_mbus_mipi_csi2 mipi_csi2;
->> +			struct v4l2_mbus_parallel parallel;
->> +		};
->> +	} mbus;
-
-...and "bus".
-
->> +};
->> +
->> +#ifdef CONFIG_OF
->> +int v4l2_of_parse_csi_bus(const struct device_node *node,
->> +				struct v4l2_of_endpoint *endpoint);
->> +void v4l2_of_parse_parallel_bus(const struct device_node *node,
->> +				struct v4l2_of_endpoint *endpoint);
->
-> You really need to export these two functions? Then you'd also have to
-> provide non-OF stubs for them?
-
-Yes. I'm not entirely convinced we need stubs for all functions,
-probably we do.
-
---
-
-Regards,
-Sylwester
