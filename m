@@ -1,124 +1,110 @@
-From: Mugunthan V N <mugunthanvnm@ti.com>
-Subject: [PATCH v2 2/5] drivers: net: ethernet: cpsw: change cpts_active_slave to active_slave
-Date: Tue, 12 Mar 2013 14:46:35 +0530
-Message-ID: <1363079798-18147-3-git-send-email-mugunthanvnm@ti.com>
-References: <1363079798-18147-1-git-send-email-mugunthanvnm@ti.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH 2/6] mfd: omap-usb-host: Remove PHY reset handling code
+Date: Tue, 12 Mar 2013 12:25:36 +0200
+Message-ID: <1363083940-20050-3-git-send-email-rogerq@ti.com>
+References: <1363083940-20050-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1363079798-18147-1-git-send-email-mugunthanvnm@ti.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, devicetree-discuss@lists.ozlabs.org, linux-omap@vger.kernel.org, b-cousson@ti.com, paul@pwsan.com, Mugunthan V N <mugunthanvnm@ti.com>, Richard Cochran <richardcochran@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1363083940-20050-1-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sameo@linux.intel.com
+Cc: balbi@ti.com, b-cousson@ti.com, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, linux-omap@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, rogerq@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Change cpts_active_slave to active_slave so that the same DT property
-can be used to ethtool and SIOCGMIIPHY.
+PHY reset GPIO handling will be done in the PHY driver
 
-CC: Richard Cochran <richardcochran@gmail.com>
-Signed-off-by: Mugunthan V N <mugunthanvnm@ti.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+Acked-by: Felipe Balbi <balbi@ti.com>
+Acked-by: Samuel Ortiz <sameo@linux.intel.com>
 ---
- Documentation/devicetree/bindings/net/cpsw.txt |    7 ++++---
- arch/arm/boot/dts/am33xx.dtsi                  |    2 +-
- drivers/net/ethernet/ti/cpsw.c                 |   10 +++++-----
- include/linux/platform_data/cpsw.h             |    2 +-
- 4 files changed, 11 insertions(+), 10 deletions(-)
+ drivers/mfd/omap-usb-host.c |   47 -------------------------------------------
+ 1 files changed, 0 insertions(+), 47 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/net/cpsw.txt b/Documentation/devicetree/bindings/net/cpsw.txt
-index 8e49c42..4f2ca6b 100644
---- a/Documentation/devicetree/bindings/net/cpsw.txt
-+++ b/Documentation/devicetree/bindings/net/cpsw.txt
-@@ -15,7 +15,8 @@ Required properties:
- - mac_control		: Specifies Default MAC control register content
- 			  for the specific platform
- - slaves		: Specifies number for slaves
--- cpts_active_slave	: Specifies the slave to use for time stamping
-+- active_slave		: Specifies the slave to use for time stamping,
-+			  ethtool and SIOCGMIIPHY
- - cpts_clock_mult	: Numerator to convert input clock ticks into nanoseconds
- - cpts_clock_shift	: Denominator to convert input clock ticks into nanoseconds
- 
-@@ -52,7 +53,7 @@ Examples:
- 		rx_descs = <64>;
- 		mac_control = <0x20>;
- 		slaves = <2>;
--		cpts_active_slave = <0>;
-+		active_slave = <0>;
- 		cpts_clock_mult = <0x80000000>;
- 		cpts_clock_shift = <29>;
- 		cpsw_emac0: slave@0 {
-@@ -78,7 +79,7 @@ Examples:
- 		rx_descs = <64>;
- 		mac_control = <0x20>;
- 		slaves = <2>;
--		cpts_active_slave = <0>;
-+		active_slave = <0>;
- 		cpts_clock_mult = <0x80000000>;
- 		cpts_clock_shift = <29>;
- 		cpsw_emac0: slave@0 {
-diff --git a/arch/arm/boot/dts/am33xx.dtsi b/arch/arm/boot/dts/am33xx.dtsi
-index 0957645..91fe4f1 100644
---- a/arch/arm/boot/dts/am33xx.dtsi
-+++ b/arch/arm/boot/dts/am33xx.dtsi
-@@ -349,7 +349,7 @@
- 			rx_descs = <64>;
- 			mac_control = <0x20>;
- 			slaves = <2>;
--			cpts_active_slave = <0>;
-+			active_slave = <0>;
- 			cpts_clock_mult = <0x80000000>;
- 			cpts_clock_shift = <29>;
- 			reg = <0x4a100000 0x800
-diff --git a/drivers/net/ethernet/ti/cpsw.c b/drivers/net/ethernet/ti/cpsw.c
-index 01ffbc4..98aa17a 100644
---- a/drivers/net/ethernet/ti/cpsw.c
-+++ b/drivers/net/ethernet/ti/cpsw.c
-@@ -942,7 +942,7 @@ static void cpsw_ndo_change_rx_flags(struct net_device *ndev, int flags)
- 
- static void cpsw_hwtstamp_v1(struct cpsw_priv *priv)
+diff --git a/drivers/mfd/omap-usb-host.c b/drivers/mfd/omap-usb-host.c
+index 0874352..502a779 100644
+--- a/drivers/mfd/omap-usb-host.c
++++ b/drivers/mfd/omap-usb-host.c
+@@ -430,24 +430,10 @@ static unsigned omap_usbhs_rev2_hostconfig(struct usbhs_hcd_omap *omap,
+ static void omap_usbhs_init(struct device *dev)
  {
--	struct cpsw_slave *slave = &priv->slaves[priv->data.cpts_active_slave];
-+	struct cpsw_slave *slave = &priv->slaves[priv->data.active_slave];
- 	u32 ts_en, seq_id;
+ 	struct usbhs_hcd_omap		*omap = dev_get_drvdata(dev);
+-	struct usbhs_omap_platform_data	*pdata = omap->pdata;
+ 	unsigned			reg;
  
- 	if (!priv->cpts->tx_enable && !priv->cpts->rx_enable) {
-@@ -971,7 +971,7 @@ static void cpsw_hwtstamp_v2(struct cpsw_priv *priv)
- 	if (priv->data.dual_emac)
- 		slave = &priv->slaves[priv->emac_port];
- 	else
--		slave = &priv->slaves[priv->data.cpts_active_slave];
-+		slave = &priv->slaves[priv->data.active_slave];
+ 	dev_dbg(dev, "starting TI HSUSB Controller\n");
  
- 	ctrl = slave_read(slave, CPSW2_CONTROL);
- 	ctrl &= ~CTRL_ALL_TS_MASK;
-@@ -1282,12 +1282,12 @@ static int cpsw_probe_dt(struct cpsw_platform_data *data,
- 	}
- 	data->slaves = prop;
+-	if (pdata->phy_reset) {
+-		if (gpio_is_valid(pdata->reset_gpio_port[0]))
+-			gpio_request_one(pdata->reset_gpio_port[0],
+-					 GPIOF_OUT_INIT_LOW, "USB1 PHY reset");
+-
+-		if (gpio_is_valid(pdata->reset_gpio_port[1]))
+-			gpio_request_one(pdata->reset_gpio_port[1],
+-					 GPIOF_OUT_INIT_LOW, "USB2 PHY reset");
+-
+-		/* Hold the PHY in RESET for enough time till DIR is high */
+-		udelay(10);
+-	}
+-
+ 	pm_runtime_get_sync(dev);
  
--	if (of_property_read_u32(node, "cpts_active_slave", &prop)) {
--		pr_err("Missing cpts_active_slave property in the DT.\n");
-+	if (of_property_read_u32(node, "active_slave", &prop)) {
-+		pr_err("Missing active_slave property in the DT.\n");
- 		ret = -EINVAL;
- 		goto error_ret;
- 	}
--	data->cpts_active_slave = prop;
-+	data->active_slave = prop;
+ 	reg = usbhs_read(omap->uhh_base, OMAP_UHH_HOSTCONFIG);
+@@ -476,37 +462,8 @@ static void omap_usbhs_init(struct device *dev)
+ 	dev_dbg(dev, "UHH setup done, uhh_hostconfig=%x\n", reg);
  
- 	if (of_property_read_u32(node, "cpts_clock_mult", &prop)) {
- 		pr_err("Missing cpts_clock_mult property in the DT.\n");
-diff --git a/include/linux/platform_data/cpsw.h b/include/linux/platform_data/cpsw.h
-index 798fb80..bb3cd58 100644
---- a/include/linux/platform_data/cpsw.h
-+++ b/include/linux/platform_data/cpsw.h
-@@ -30,7 +30,7 @@ struct cpsw_platform_data {
- 	u32	channels;	/* number of cpdma channels (symmetric) */
- 	u32	slaves;		/* number of slave cpgmac ports */
- 	struct cpsw_slave_data	*slave_data;
--	u32	cpts_active_slave; /* time stamping slave */
-+	u32	active_slave; /* time stamping, ethtool and SIOCGMIIPHY slave */
- 	u32	cpts_clock_mult;  /* convert input clock ticks to nanoseconds */
- 	u32	cpts_clock_shift; /* convert input clock ticks to nanoseconds */
- 	u32	ale_entries;	/* ale table size */
+ 	pm_runtime_put_sync(dev);
+-	if (pdata->phy_reset) {
+-		/* Hold the PHY in RESET for enough time till
+-		 * PHY is settled and ready
+-		 */
+-		udelay(10);
+-
+-		if (gpio_is_valid(pdata->reset_gpio_port[0]))
+-			gpio_set_value_cansleep
+-				(pdata->reset_gpio_port[0], 1);
+-
+-		if (gpio_is_valid(pdata->reset_gpio_port[1]))
+-			gpio_set_value_cansleep
+-				(pdata->reset_gpio_port[1], 1);
+-	}
+-}
+-
+-static void omap_usbhs_deinit(struct device *dev)
+-{
+-	struct usbhs_hcd_omap		*omap = dev_get_drvdata(dev);
+-	struct usbhs_omap_platform_data	*pdata = omap->pdata;
+-
+-	if (pdata->phy_reset) {
+-		if (gpio_is_valid(pdata->reset_gpio_port[0]))
+-			gpio_free(pdata->reset_gpio_port[0]);
+-
+-		if (gpio_is_valid(pdata->reset_gpio_port[1]))
+-			gpio_free(pdata->reset_gpio_port[1]);
+-	}
+ }
+ 
+-
+ /**
+  * usbhs_omap_probe - initialize TI-based HCDs
+  *
+@@ -710,8 +667,6 @@ static int usbhs_omap_probe(struct platform_device *pdev)
+ 	return 0;
+ 
+ err_alloc:
+-	omap_usbhs_deinit(&pdev->dev);
+-
+ 	for (i = 0; i < omap->nports; i++) {
+ 		if (!IS_ERR(omap->utmi_clk[i]))
+ 			clk_put(omap->utmi_clk[i]);
+@@ -756,8 +711,6 @@ static int usbhs_omap_remove(struct platform_device *pdev)
+ 	struct usbhs_hcd_omap *omap = platform_get_drvdata(pdev);
+ 	int i;
+ 
+-	omap_usbhs_deinit(&pdev->dev);
+-
+ 	for (i = 0; i < omap->nports; i++) {
+ 		if (!IS_ERR(omap->utmi_clk[i]))
+ 			clk_put(omap->utmi_clk[i]);
 -- 
-1.7.9.5
+1.7.4.1
