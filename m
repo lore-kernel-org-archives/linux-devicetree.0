@@ -1,150 +1,232 @@
-From: "Kumar, Anil" <anilkumar.v@ti.com>
-Subject: RE: [PATCH 4/9] ARM: dts: OMAP3: Add support for OMAP3430 SDP board
-Date: Tue, 12 Mar 2013 02:42:49 +0000
-Message-ID: <F3DBB1B3EF102E4994C89758CFCA32412CE371@DBDE01.ent.ti.com>
-References: <1362763654-9660-1-git-send-email-jon-hunter@ti.com>
- <1362763654-9660-5-git-send-email-jon-hunter@ti.com>
- <CABYxbz7Bg3Uf2wkhH=4d6nEPUjyHF8BiixN6rGCOgEVG_us8Jw@mail.gmail.com>
- <513E1A1C.8070206@ti.com>
+From: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH V2 3/9] ARM: dt: tegra: add bindings of power management configurations for PMC
+Date: Tue, 12 Mar 2013 12:02:42 +0800
+Message-ID: <1363060962-9172-1-git-send-email-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <513E1A1C.8070206@ti.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: "Hunter, Jon" <jon-hunter@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, device-tree <devicetree-discuss@lists.ozlabs.org>, linux-omap <linux-omap@vger.kernel.org>, "Cousson, Benoit" <b-cousson@ti.com>, linux-arm <linux-arm-kernel@lists.infradead.org>, Anil Kumar <anilk4.v@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The PMC mostly controls the entry and exit of the system from different
+sleep modes. Different platform or system may have different configurations.
+The power management configurations of PMC is represented as some properties.
+The system needs to define the properties when the system supports deep sleep
+mode (i.e. suspend).
 
-On Mon, Mar 11, 2013 at 23:23:32, Hunter, Jon wrote:
-> 
-> On 03/08/2013 08:25 PM, Anil Kumar wrote:
-> > Hi Jon,
-> > 
-> > On Fri, Mar 8, 2013 at 10:57 PM, Jon Hunter <jon-hunter@ti.com> wrote:
-> >> Adds basic device-tree support for OMAP3430 SDP board which has 256MB
-> >> of RAM and uses the TWL4030 power management IC.
-> > 
-> > I think this board support should be in separate patch series with
-> > related patches.
-> 
-> Well I wanted to keep them altogether so that I can send a pull request
-> to Benoit and Tony.
+Signed-off-by: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+V2:
+* squash the patches that defined the PM bindings for PMC and the
+  implementation
+* replace the "unsigned long" with "u32" for the variables that are parsed
+  from DT
+---
+ .../bindings/arm/tegra/nvidia,tegra20-pmc.txt      | 42 ++++++++++-
+ arch/arm/mach-tegra/pmc.c                          | 83 ++++++++++++++++++++++
+ arch/arm/mach-tegra/pmc.h                          |  8 +++
+ 3 files changed, 132 insertions(+), 1 deletion(-)
 
-Sorry, but can you please tell what makes you to think that you
-can send pull request only when they are altogether ?
-
-Is there any logical dependency with other patches except 
-"[PATCH 6/9] ARM: dts: Add OMAP3430 SDP flash memory bindings" is on 
-top of this patch ?
-
-> 
-> >>
-> >> Signed-off-by: Jon Hunter <jon-hunter@ti.com>
-> >> ---
-> >>  arch/arm/boot/dts/Makefile         |    1 +
-> >>  arch/arm/boot/dts/omap3430-sdp.dts |   46 ++++++++++++++++++++++++++++++++++++
-> >>  2 files changed, 47 insertions(+)
-> >>  create mode 100644 arch/arm/boot/dts/omap3430-sdp.dts
-> >>
-> >> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> >> index 9c62558..89013ed 100644
-> >> --- a/arch/arm/boot/dts/Makefile
-> >> +++ b/arch/arm/boot/dts/Makefile
-> >> @@ -119,6 +119,7 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
-> >>         omap3-beagle-xm.dtb \
-> >>         omap3-evm.dtb \
-> >>         omap3-tobi.dtb \
-> >> +       omap3430-sdp.dtb \
-> >>         omap4-panda.dtb \
-> >>         omap4-panda-a4.dtb \
-> >>         omap4-panda-es.dtb \
-> >> diff --git a/arch/arm/boot/dts/omap3430-sdp.dts b/arch/arm/boot/dts/omap3430-sdp.dts
-> >> new file mode 100644
-> >> index 0000000..be0650d
-> >> --- /dev/null
-> >> +++ b/arch/arm/boot/dts/omap3430-sdp.dts
-> >> @@ -0,0 +1,46 @@
-> >> +/*
-> >> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
-> >> + *
-> >> + * This program is free software; you can redistribute it and/or modify
-> >> + * it under the terms of the GNU General Public License version 2 as
-> >> + * published by the Free Software Foundation.
-> >> + */
-> >> +/dts-v1/;
-> >> +
-> >> +/include/ "omap3.dtsi"
-> >> +
-> >> +/ {
-> >> +       model = "TI OMAP3430 SDP";
-> >> +       compatible = "ti,omap3430-sdp", "ti,omap3";
-> > 
-> > I have not seen any related changes in "board-generic.c" for your board.
-> > So just wanted know, how this board is booting ?
-> 
-> If you look at board-generic.c you will see that "ti,omap3" will match
-> the OMAP3 generic machine. So you don't need to modify the board-generic.c.
-
-According to this omap3-beagle.dts and omap3-beagle-xm.dts are also 
-booting in some way. So it is not clear to me, why there two
-"DT_MACHINE_START" for omap3. I have seen there is only one 
-different in "init_time" for the same. 
-
-> 
-> >> +
-> >> +       memory {
-> >> +               device_type = "memory";
-> >> +               reg = <0x80000000 0x10000000>; /* 256 MB */
-> >> +       };
-> >> +};
-> >> +
-> >> +&i2c1 {
-> >> +       clock-frequency = <2600000>;
-> >> +
-> >> +       twl: twl@48 {
-> >> +               reg = <0x48>;
-> >> +               interrupts = <7>; /* SYS_NIRQ cascaded to intc */
-> >> +               interrupt-parent = <&intc>;
-> >> +       };
-> >> +};
-> >> +
-> >> +/include/ "twl4030.dtsi"
-> >> +
-> >> +&mmc1 {
-> >> +       vmmc-supply = <&vmmc1>;
-> >> +       vmmc_aux-supply = <&vsim>;
-> >> +       bus-width = <8>;
-> >> +};
-> >> +
-> >> +&mmc2 {
-> >> +       status = "disabled";
-> >> +};
-> >> +
-> >> +&mmc3 {
-> >> +       status = "disabled";
-> >> +};
-> > 
-> > I think you should disable modules those are not currently used
-> > as they are enabled by default in omap3.dtsi.
-> > 
-> > exp:-
-> > 
-> > &mcbsp2 {
-> >         status = "disabled";
-> > };
-> 
-> Well may be we could do that in a follow-up patch. If you look at other
-> omap3 boards we have not gone through and disabled all unused modules
-> either. So although I agree, right now I just want to get minimal
-> support added.
-> 
-
-Hmm... But it makes the kernel to call unused driver probe and get failed
-those required some platform date from DT? you can see the kernel boot logs.
-
-Thanks,
-Anil  
-
+diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+index b5846e2..12a436e 100644
+--- a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
++++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
+@@ -1,14 +1,46 @@
+ NVIDIA Tegra Power Management Controller (PMC)
+ 
+-Properties:
++The PMC block interacts with an external Power Management Unit. The PMC
++mostly controls the entry and exit of the system from different sleep
++modes. It provides power-gating controllers for SoC and CPU power-islands.
++
++Required properties:
+ - name : Should be pmc
+ - compatible : Should contain "nvidia,tegra<chip>-pmc".
+ - reg : Offset and length of the register set for the device
++
++Optional properties:
+ - nvidia,invert-interrupt : If present, inverts the PMU interrupt signal.
+   The PMU is an external Power Management Unit, whose interrupt output
+   signal is fed into the PMC. This signal is optionally inverted, and then
+   fed into the ARM GIC. The PMC is not involved in the detection or
+   handling of this interrupt signal, merely its inversion.
++- nvidia,suspend-mode : The suspend mode that the platform should use.
++  Valid valuse are 0, 1 and 2:
++  0 (LP0): CPU + Core voltage off and DRAM in self-refresh
++  1 (LP1): CPU vlotage off and DRAM in self-refresh
++  2 (LP2): CPU voltage off
++- nvidia,core-power-req-active-high : Boolean, core power request active-high
++- nvidia,sys-clock-req-active-high : Boolean, system clock request active-high
++- nvidia,combined-power-req : Boolean, combined power request for CPU & Core
++- nvidia,cpu-pwr-good-en : Boolean, CPU power good signal (from PMIC to PMC)
++			   is enabled.
++
++Required properties when nvidia,suspend-mode is specified:
++- nvidia,cpu-pwr-good-time : CPU power good time in uS.
++- nvidia,cpu-pwr-off-time : CPU power off time in uS.
++- nvidia,core-pwr-good-time : <Oscillator-stable-time Power-stable-time>
++			      Core power good time in uS.
++- nvidia,core-pwr-off-time : Core power off time in uS.
++
++Required properties when nvidia,suspend-mode=<0>:
++- nvidia,lp0-vec : <start length> Starting address and length of LP0 vector
++  The LP0 vector contains the warm boot code that is executed by AVP when
++  resuming from the LP0 state. The AVP (Audio-Video Processor) is an ARM7
++  processor and always being the first boot processor when chip is power on
++  or resume from deep sleep mode. When the system is resumed from the deep
++  sleep mode, the warm boot code will restore some PLLs, clocks and then
++  bring up CPU0 for resuming the system.
+ 
+ Example:
+ 
+@@ -16,4 +48,12 @@ pmc@7000f400 {
+ 	compatible = "nvidia,tegra20-pmc";
+ 	reg = <0x7000e400 0x400>;
+ 	nvidia,invert-interrupt;
++	nvidia,suspend-mode = <1>;
++	nvidia,cpu-pwr-good-time = <2000>;
++	nvidia,cpu-pwr-off-time = <100>;
++	nvidia,core-pwr-good-ticks = <3845 3845>;
++	nvidia,core-pwr-off-ticks = <458>;
++	nvidia,core-power-req-active-high;
++	nvidia,sys-clock-req-active-high;
++	nvidia,lp0-vec = <0xbdffd000 0x2000>;
+ };
+diff --git a/arch/arm/mach-tegra/pmc.c b/arch/arm/mach-tegra/pmc.c
+index b30e921..d331f87 100644
+--- a/arch/arm/mach-tegra/pmc.c
++++ b/arch/arm/mach-tegra/pmc.c
+@@ -20,6 +20,8 @@
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ 
++#include "pmc.h"
++
+ #define PMC_CTRL			0x0
+ #define PMC_CTRL_INTR_LOW		(1 << 17)
+ #define PMC_PWRGATE_TOGGLE		0x30
+@@ -44,6 +46,22 @@ static DEFINE_SPINLOCK(tegra_powergate_lock);
+ static void __iomem *tegra_pmc_base;
+ static bool tegra_pmc_invert_interrupt;
+ 
++struct pmc_pm_data {
++	u32 cpu_good_time;	/* CPU power good time in uS */
++	u32 cpu_off_time;	/* CPU power off time in uS */
++	u32 core_osc_time;	/* Core power good osc time in uS */
++	u32 core_pmu_time;	/* Core power good pmu time in uS */
++	u32 core_off_time;	/* Core power off time in uS */
++	bool corereq_high;	/* Core power request active-high */
++	bool sysclkreq_high;	/* System clock request active-high */
++	bool combined_req;	/* Combined pwr req for CPU & Core */
++	bool cpu_pwr_good_en;	/* CPU power good signal is enabled */
++	u32 lp0_vec_phy_addr;	/* The phy addr of LP0 warm boot code */
++	u32 lp0_vec_size;	/* The size of LP0 warm boot code */
++	enum tegra_suspend_mode suspend_mode;
++};
++static struct pmc_pm_data pmc_pm_data;
++
+ static inline u32 tegra_pmc_readl(u32 reg)
+ {
+ 	return readl(tegra_pmc_base + reg);
+@@ -143,6 +161,10 @@ static const struct of_device_id matches[] __initconst = {
+ static void tegra_pmc_parse_dt(void)
+ {
+ 	struct device_node *np;
++	u32 prop;
++	enum tegra_suspend_mode suspend_mode;
++	u32 core_good_time[2] = {0, 0};
++	u32 lp0_vec[2] = {0, 0};
+ 
+ 	np = of_find_matching_node(NULL, matches);
+ 	BUG_ON(!np);
+@@ -151,6 +173,67 @@ static void tegra_pmc_parse_dt(void)
+ 
+ 	tegra_pmc_invert_interrupt = of_property_read_bool(np,
+ 				     "nvidia,invert-interrupt");
++
++	/* Grabbing the power management configurations */
++	if (of_property_read_u32(np, "nvidia,suspend-mode", &prop)) {
++		suspend_mode = TEGRA_SUSPEND_NONE;
++	} else {
++		switch (prop) {
++		case 0:
++			suspend_mode = TEGRA_SUSPEND_LP0;
++			break;
++		case 1:
++			suspend_mode = TEGRA_SUSPEND_LP1;
++			break;
++		case 2:
++			suspend_mode = TEGRA_SUSPEND_LP2;
++			break;
++		default:
++			suspend_mode = TEGRA_SUSPEND_NONE;
++			break;
++		}
++	}
++
++	if (of_property_read_u32(np, "nvidia,cpu-pwr-good-time", &prop))
++		suspend_mode = TEGRA_SUSPEND_NONE;
++	pmc_pm_data.cpu_good_time = prop;
++
++	if (of_property_read_u32(np, "nvidia,cpu-pwr-off-time", &prop))
++		suspend_mode = TEGRA_SUSPEND_NONE;
++	pmc_pm_data.cpu_off_time = prop;
++
++	if (of_property_read_u32_array(np, "nvidia,core-pwr-good-time",
++			core_good_time, ARRAY_SIZE(core_good_time)))
++		suspend_mode = TEGRA_SUSPEND_NONE;
++	pmc_pm_data.core_osc_time = core_good_time[0];
++	pmc_pm_data.core_pmu_time = core_good_time[1];
++
++	if (of_property_read_u32(np, "nvidia,core-pwr-off-time",
++				 &prop))
++		suspend_mode = TEGRA_SUSPEND_NONE;
++	pmc_pm_data.core_off_time = prop;
++
++	pmc_pm_data.corereq_high = of_property_read_bool(np,
++				"nvidia,core-power-req-active-high");
++
++	pmc_pm_data.sysclkreq_high = of_property_read_bool(np,
++				"nvidia,sys-clock-req-active-high");
++
++	pmc_pm_data.combined_req = of_property_read_bool(np,
++				"nvidia,combined-power-req");
++
++	pmc_pm_data.cpu_pwr_good_en = of_property_read_bool(np,
++				"nvidia,cpu-pwr-good-en");
++
++	if (of_property_read_u32_array(np, "nvidia,lp0-vec", lp0_vec,
++				       ARRAY_SIZE(lp0_vec)))
++		if (suspend_mode == TEGRA_SUSPEND_LP0)
++			suspend_mode = TEGRA_SUSPEND_LP1;
++
++	pmc_pm_data.lp0_vec_phy_addr = lp0_vec[0];
++	pmc_pm_data.lp0_vec_size = lp0_vec[1];
++
++	pmc_pm_data.suspend_mode = suspend_mode;
+ }
+ 
+ void __init tegra_pmc_init(void)
+diff --git a/arch/arm/mach-tegra/pmc.h b/arch/arm/mach-tegra/pmc.h
+index 7d44710..1c4b4de 100644
+--- a/arch/arm/mach-tegra/pmc.h
++++ b/arch/arm/mach-tegra/pmc.h
+@@ -18,6 +18,14 @@
+ #ifndef __MACH_TEGRA_PMC_H
+ #define __MACH_TEGRA_PMC_H
+ 
++enum tegra_suspend_mode {
++	TEGRA_SUSPEND_NONE = 0,
++	TEGRA_SUSPEND_LP2,	/* CPU voltage off */
++	TEGRA_SUSPEND_LP1,	/* CPU voltage off, DRAM self-refresh */
++	TEGRA_SUSPEND_LP0,      /* CPU + core voltage off, DRAM self-refresh */
++	TEGRA_MAX_SUSPEND_MODE,
++};
++
+ bool tegra_pmc_cpu_is_powered(int cpuid);
+ int tegra_pmc_cpu_power_on(int cpuid);
+ int tegra_pmc_cpu_remove_clamping(int cpuid);
+-- 
+1.8.1.5
