@@ -1,57 +1,28 @@
-From: Mark Brown <broonie@opensource.wolfsonmicro.com>
-Subject: Re: [PATCH v2 1/2] leds: Add support for Palmas LEDs
-Date: Tue, 12 Mar 2013 19:10:29 +0000
-Message-ID: <20130312191029.GC19942@opensource.wolfsonmicro.com>
-References: <1362064909-634-1-git-send-email-ian@slimlogic.co.uk>
- <CAK5ve-+-=R-f1KpEWD=4J3ia+QXmgnGvhDMV9tNf2_3WZupZaA@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH V2 3/9] ARM: dt: tegra: add bindings of power management
+ configurations for PMC
+Date: Tue, 12 Mar 2013 13:28:32 -0600
+Message-ID: <513F81E0.5030808@wwwdotorg.org>
+References: <1363060962-9172-1-git-send-email-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="7KvBbaRjXS2SFKKp"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAK5ve-+-=R-f1KpEWD=4J3ia+QXmgnGvhDMV9tNf2_3WZupZaA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bryan Wu <cooloney@gmail.com>
-Cc: Ian Lartey <ian@slimlogic.co.uk>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, devicetree-discuss@lists.ozlabs.org, ldewangan@nvidia.com, j-keerthy@ti.com, gg@slimlogic.co.uk, rpurdie@rpsys.net, grant.likely@secretlab.ca, rob.herring@calxeda.com, sameo@linux.intel.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1363060962-9172-1-git-send-email-josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 03/11/2013 10:02 PM, Joseph Lo wrote:
+> The PMC mostly controls the entry and exit of the system from different
+> sleep modes. Different platform or system may have different configurations.
+> The power management configurations of PMC is represented as some properties.
+> The system needs to define the properties when the system supports deep sleep
+> mode (i.e. suspend).
 
---7KvBbaRjXS2SFKKp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-pmc.txt
 
-On Tue, Mar 12, 2013 at 11:57:50AM -0700, Bryan Wu wrote:
-> On Thu, Feb 28, 2013 at 7:21 AM, Ian Lartey <ian@slimlogic.co.uk> wrote:
+> +  Valid valuse are 0, 1 and 2:
 
-> > +       spinlock_t value_lock;
-
-> I think you don't need this spinlock to protect the value, the mutex is enough.
-
-You need to use a spinlock because values can be set from hard IRQ
-context so you can't take a mutex there.  Someone should really factor
-this out into the framework in their copious free time, the set and
-schedule pattern is very common in drivers.
-
---7KvBbaRjXS2SFKKp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.12 (GNU/Linux)
-
-iQIcBAEBAgAGBQJRP32eAAoJELSic+t+oim9RGIP/jo6uSRcr5LWT6AUeF9MrDJZ
-uJm8hgjX9b2s6Upl4CVa3AIS/78OHiiLwBp3WHhGcpTZ5G8wBQ8iuvP71NsRWG7r
-twJFJIL2EZJT57sFpfuZ25MgDXKhCj3b32/UzwciRB6GwfOYHGfM4lChj3CdaTBU
-fMqxPIK76WcA5MKnvpev9yiBpXGzFduLnpCbqnKSFiJhmtmYoaR8lmMsclYb4A7n
-1xI5B4x8k5VDK3+Vzk0apuOwRIPPoEHdXbrGn+Uz3oBqxDcU+Q8OxWIcNKdrwTWS
-B5lPJuWGsSVqEV6NTFPMIz5nG2ZcLSEMzfgx34fPkQCojDXlJqSddSJPOpOS8mmD
-VtOLHmUY8PlfdM46s+++TL7mvZY5iTqOLvb0G+5+2DduOa+7KRF5ChjYuNmDmxic
-UFHt7305jVhewgN+7f6SM88HE0bLW+JiGJMG9Pm5/teEMJudVn4+TCgrn9QUtoYx
-ycErB9BuEFdaYqYIJq6Pz33RBGWjoVZvdk6wCBPcUBNRqsN5TpKmC7ersWlJ0zO0
-U8eKzAT3/S2Wz1sx3HAQNCBBnCJXLPHsJGxvzOkguXoP+NYxdKwb+1JbjXWgy4BZ
-bNKaMim90nx69wo/o80ETqNbaACTF/YrlUUo50LjaxJc4F41NJo1pq4rnoydo3J2
-TAwaB4QvaA81Q7oDem0F
-=pKAI
------END PGP SIGNATURE-----
-
---7KvBbaRjXS2SFKKp--
+s/valuse/values/
